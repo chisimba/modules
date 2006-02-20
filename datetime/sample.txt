@@ -1,0 +1,26 @@
+<html>
+<head>
+<title>Page title</title>
+</head>
+<body>
+
+<table bgcolor="#c0c0c0" border =1>
+<tr>
+	<td><table width="100%"><tr>
+	
+		<td><center><?php echo "<a href=\"example.php?mes=".($mes-1)."\"><<</a>"; ?></center></td>
+		<td><center><?php echo "<a href=\"example.php?mes=0\">hoy</a>"; ?></center></td>
+    <td><center><?php echo "<a href=\"example.php?mes=".($mes+1)."\">>></a>"; ?></center></td>
+ </tr></table></td>
+</tr>
+<tr><td>
+<?php 
+			include("BaseCalendar.inc");
+			$newCal = new BaseCalendar();
+			$newCal->displayMonth($mes);
+?>
+</td></tr>
+</table>
+</body>
+</html>
+ 

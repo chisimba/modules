@@ -1,0 +1,136 @@
+<?php
+
+//     This Script was originaly written by William J Sanders 
+//     and reprogramed by Jose-Manuel Contardo 
+//
+//     To display the calendar, type: 
+//     include("BaseCalendar.inc");
+//     $newCal = new BaseCalendar();
+//     $newCal->displayMonth($mes);
+
+class BaseCalendar {
+
+var $calLinkto = "http://www.yourdomain.com/folder";
+var $calBorder = "0";
+var $calWidth = "100%";
+var $calBGCellColor = "#6699CC";
+var $calBGCellToday = "#66ff66";
+var $calTextColor = "#000000";
+
+function MonthShort($month) {
+			
+	switch ($month) {
+		case "Jan":
+			return "Ene";
+			break;
+		case "Apr":
+			return "Abr";
+			break;
+		case "Aug":
+			return "Ago";
+			break;
+		case "Dec":
+			return "Dic";
+			break;
+		default:
+			return $month;		 
+	}
+}
+
+function MonthFull($num_month) {
+	 
+	$calMes["01"] = "Enero";
+	$calMes["02"] = "Febrero";
+	$calMes["03"] = "Marzo";
+	$calMes["04"] = "Abril";
+	$calMes["05"] = "Mayo";
+	$calMes["06"] = "Junio";
+	$calMes["07"] = "Julio";
+	$calMes["08"] = "Agosto";
+	$calMes["09"] = "Septiembre";
+	$calMes["10"] = "Octubre";
+	$calMes["11"] = "Noviembre";
+	$calMes["12"] = "Diciembre";
+	
+	return $calMes[$num_month];
+}
+
+function displayMonth($shift=0) {
+//Assign timestamps to dates
+	$today_ts = mktime(0,0,0,date("n"),date("d"),date("Y")); // non relative date
+	$firstday_month_ts = mktime(0,0,0,date("n")+$shift,1,date("Y")); // first day of the month
+	$lastday_month_ts = mktime(0,0,0,date("n")+$shift+1,0,date("Y"));    // last day of the month
+	
+//Assign numbers and text to the month, year and day
+	$numYear = date("Y",$firstday_month_ts);
+    $numMonth = date("m",$firstday_month_ts);
+	$textMonth = $this->MonthShort(date("M",$firstday_month_ts));
+ 	$daysInMonth = date("t",$firstday_month_ts);
+  
+// raplace day 0 for day 7, week starts on monday
+	$dayMonth_start = date("w",$firstday_month_ts);
+	if ($dayMonth_start==0) { $dayMonth_start=7;} 
+	
+	
+	$dayMonth_end = date("w",$lastday_month_ts);
+	if ($dayMonth_end==0) { $dayMonth_end=7; }
+
+	
+// formating output as a table
+	echo "<table border=".($this->calBorder)." cellspacing=3 cellpadding=3 width=".($this->calWidth)."\">\n";
+	echo "<caption><center>".$textMonth."&nbsp;&nbsp;".$numYear."</center></caption>\n";
+	echo "<tr bgcolor=".($this->calBGCellColor).">\n";
+  
+// Day headers, starting from Lunes (monday)
+	echo "<th>Lu</th><th>Ma</th><th>Mi</th><th>Ju</th><th>Vi</th><th>Sa</th><th>Do</th></tr>\n";
+	echo "<tr>\n";
+  
+// Fill with white spaces until the first day
+	for ($k=1; $k<$dayMonth_start; $k++) {echo "<td>&nbsp;</td>\n";}
+// 
+	for ($i=1; $i<=$daysInMonth; $i++) {
+		
+		// Assigns a timestamp to day i
+		$day_i_ts=mktime(0,0,0,date("n",$firstday_month_ts),$i,date("Y",$firstday_month_ts));
+        $day_i = date("w",$day_i_ts);
+		
+		//Placing Domingo (Sunday) as last day of the week
+		if ($day_i==0) { $day_i=7;}
+		
+		// Target link. You should replace this with some function(i)
+		$d2_i = date("d",$day_i_ts);
+	  	$link_i = "<a href=\"".($this->calLinkto)."/".($this->MonthFull($numMonth));
+		$link_i = $link_i."/".($numMonth).($d2_i).($numYear).".html\">".($i)."</a>";
+		// end of funtion
+	
+		// Plancing day i on calendar
+		
+		if ($shift==0 && $today_ts==$day_i_ts) {
+			echo "<td bgcolor=".($this->calBGCellToday)."><strong><center>".$link_i."</center></strong></td>";
+		} 
+		else {
+			echo "<td bgcolor=".($this->calBGCellColor)."><center>".$link_i."</center></td>\n";
+		}
+    	if ($day_i==7 && $i<$daysInMonth) {
+      	   echo "</tr><tr>\n"; 
+		} 
+		else if ($day_i==7 && $i==$daysInMonth) {
+      	   echo "</tr>\n";
+		}
+    	else if ($i==$daysInMonth) {
+      	   for ($h=$dayMonth_end; $h<7; $h++) { 
+        		echo "<td>&nbsp;</td>\n";
+      	    }
+    		echo "</tr>\n";
+    	}
+			 
+  } // end for
+  
+  echo "</table>\n";
+	
+} // end function 
+
+} // end of class
+ ?> 
+
+ 
