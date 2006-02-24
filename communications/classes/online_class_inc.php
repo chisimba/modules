@@ -9,7 +9,7 @@ define ("UNKNOWN", 3);
 * Class to get the online status of a user on a number of instant
 * messenger services. The approach is to find the simplest method
 * available and adapt it to KEWL.NextGen. Adapted by Derek Keats
-* 
+*
 * The get_yahoo_status method was written by Setec Astronomy - setec@freemail.it
 *   then rewritten to return an image by Derek Keats
 * The get_msn_status method was written by
@@ -17,25 +17,25 @@ define ("UNKNOWN", 3);
 * The get_jabber_status method was written by
 */
 
-class online extends object 
+class online extends object
 {
-    
+
     /**
     * The initialize method to set the default properties
     */
-    function init()
+    public function init()
     {
         $this->objConfig=&$this->getObject('config', "config");
         $this->objIcon = &$this->getObject('geticon', 'htmlelements');
     }
 
     /**
-    * This method allows to check the online status of an Yahoo! account.	
+    * This method allows to check the online status of an Yahoo! account.
     * It connects directly to the Yahoo! status server.
-    * 
+    *
     * @param string $yahoo : The user account on yahoo.
     */
-    function getYahooStatus ($yahooId = "")
+    public function getYahooStatus ($yahooId = "")
     {
         // Set up the icons for online offline unknown status
         $this->objIcon->setIcon("yahoo_icon_on");
@@ -46,7 +46,7 @@ class online extends object
         $unknown=$this->objIcon->show();
         $this->objIcon->setIcon("yahoo_icon_noconnection");
         $noconn=$this->objIcon->show();
-        
+
         //The yahoo server
         $yServer = "http://opi.yahoo.com/online?u=";
         //open the connection
@@ -59,48 +59,48 @@ class online extends object
                 return $online;
             } else {
                 return $unknown;
-            } 
+            }
         } else {
             return $noconn;
-        } 
-    } 
+        }
+    }
 
     /**
-    * This method allows to check the online status of a MSN account.	
-    * 
+    * This method allows to check the online status of a MSN account.
+    *
     * @param string $msn : The user account on MSN.
     */
-    function getMsnStatus ($msn = "")
+    public function getMsnStatus ($msn = "")
     {
         //return fopen("http://gateway.messenger.hotmail.com/gateway/gateway.dll?Action=open&Server=NS&IP=messenger.hotmail.com","r");
         //return fopen("http://gateway.messenger.hotmail.com/gateway/gateway.dll?Action=open&Server=NS&IP=messenger.hotmail.com&user=derekkeats@hotmail.com", "r");
         return "{not ready}";
     }
-    
+
     /**
-    * This method allows to check the online status of a ICQ account.	
-    * 
+    * This method allows to check the online status of a ICQ account.
+    *
     * @param string $icq : The user account on ICQ.
     */
-    function getIcqStatus ($icq = "")
+    public function getIcqStatus ($icq = "")
     {
         //This seems to be the simplest method, copied from KEWL
         return "<img src='http://online.mirabilis.com/scripts/online.dll?icq="
           .$icq."&img=5' width= 18 height=18 border=0 align=absmiddle hspace=6>";
     }
-    
+
     /**
-    * This method allows to check the online status of a ICQ account.	
-    * 
+    * This method allows to check the online status of a ICQ account.
+    *
     * @param string $jabber : The user account on the jabber server.
     * @param string $jabberserver: the IP address or name for the jabber server
     */
-    function get_ijabber_status ($jabber = NULL, $jabberserver=NULL)
+    public function get_ijabber_status ($jabber = NULL, $jabberserver=NULL)
     {
         return "Not ready";
     }
-    
-    function getKngStatus($user)
+
+    public function getKngStatus($user)
     {
         // Set up the icons for online offline unknown status
         $this->objIcon->setIcon("kng_on", "png");
@@ -114,8 +114,7 @@ class online extends object
             return $offline;
         }
     }
-    
+
 
 }  // Class
-
 ?>

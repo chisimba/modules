@@ -30,7 +30,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 *
 * The array is in the format $event[$day] => $ content, where:
 * - $event is the array holding the events
-* - $day is the day of the month 
+* - $day is the day of the month
 * - $content is the content you want to have appear
 *
 * An example would be: $event['25'] => 'My Birthday';
@@ -42,67 +42,73 @@ class calendargenerator extends object
     /**
     * @var year The Year for which the calendar should be generated
     */
-    var $year;
-    
+    public $year;
+
     /**
     * @var month The Month for which the calendar should be generated
     */
-    var $month;
-    
+    public $month;
+
     /**
     * @var events An array containing a list of events
     */
-    var $events;
-    
+    public $events;
+
     /**
     * @var size The size of the calendar. either big or small
     */
-    var $size;
-    
+    public $size;
+
     /**
     * @var first_day The First Day of the Week in the Calendar
     */
-    var $first_day;
-    
+    public $first_day;
+
     /**
     * Constructor method for the class
+    *
+    * @access public
+    * @param void
+    * @return void
     */
-    function init()
+    public function init()
     {
-        $this->objSimpleCal =& $this->getObject('simplecal', 'datetime');
+        $this->objSimpleCal =& $this->getObject('datetime','utilities');
         $this->objDateFunctions =& $this->getObject('datefunctions');
         $this->month = date('m');
         $this->year = date('Y');
         $this->size = 'big';
         $this->first_day = 0;
     }
-    
+
     /**
     * Method to set the events array
-    * 
+    *
+    * @access public
     * @param array $events List of Events
+    * @return void
     */
-    function setEvents($events)
+    public function setEvents($events)
     {
         $this->events = $events;
     }
-    
-    
-    
+
     /**
     * Method to generate the calendar
+    *
+    * @access public
+    * @param void
+    * @return string
     */
-    function show()
+    public function show()
     {
         $first_of_month = gmmktime(0,0,0,$this->month,1,$this->year);
         #remember that mktime will automatically correct if invalid dates are entered
         # for instance, mktime(0,0,0,12,32,1997) will be the date for Jan 1, 1998
         # this provides a built in "rounding" feature to generate_calendar()
-        
-        //if ($this->year
-        
+
         $day_names = array(); #generate all the day names according to the current locale
-        
+
         if ($this->first_day == 0) {
             $this->objSimpleCal->startweek='sun';
         }
@@ -115,31 +121,31 @@ class calendargenerator extends object
             $extraCss = ' smallCalendar';
             $width = '';
         }
-    
+
         list($month, $year, $month_name, $weekday) = explode(',',gmstrftime('%m,%Y,%B,%w',$first_of_month));
         $weekday = ($weekday + 7 - $this->first_day) % 7; #adjust for $this->first_day
-        
+
         $calendar = '<table class="calendar'.$extraCss.'">';
         if ($this->size != 'big') {
             $calendar .= '<thead><th colspan="7" align="center">'.$this->objSimpleCal->monthFull($this->month).' '.$this->year.'</th></thead>';
         }
         $calendar .= '<thead>';
-        
-        foreach($day_names as $d) 
+
+        foreach($day_names as $d)
         {
-            $calendar .= '<th '.$width.'>'.$d.'</th>'; 
+            $calendar .= '<th '.$width.'>'.$d.'</th>';
         }
-        
+
         $calendar .= "</thead>\n<tr>";
-        
+
         // Initial Days from previous month
-        if($weekday > 0) { 
+        if($weekday > 0) {
             for ($i=0; $i < $weekday; $i++)
             {
-                $calendar .= '<td class="cal-greyday">&nbsp;</td>';  
+                $calendar .= '<td class="cal-greyday">&nbsp;</td>';
             }
         } // END - Initial Days from previous month
-        
+
         for($day=1,$days_in_month=gmdate('t',$first_of_month); $day<=$days_in_month; $day++,$weekday++)
         {
             if($weekday == 7){
@@ -147,13 +153,13 @@ class calendargenerator extends object
                 $calendar .= "</tr>\n<tr>";
             }
             if(isset($this->events[$day]) ){
-                
+
                 $content = $this->events[$day];
-                
+
                 if(is_null($content)) {
                     $content  = $day;
                 }
-                
+
                 if ($this->year == date('Y') && $this->month == date('n') && $day == date('j') ){
                     $cssClass = 'todaycal';
                 } else {
@@ -164,12 +170,11 @@ class calendargenerator extends object
                 } else {
                     $calendar .= '<td class="'.$cssClass.'">'.$day.'</a>';
                 }
-                
+
                 if (isset($content) && $this->size=='big') {
                     $calendar .= $content;
                 }
                 $calendar .= '</td>';
-                //($link ? '<a href="'.htmlspecialchars($link).'">'.$content.'</a>' : $day.$content)
             }
             else if ($this->year == date('Y') && $this->month == date('n') && $day == date('j') ){
                 $calendar .= '<td class="todaycal">'.$day.'</td>';
@@ -178,19 +183,18 @@ class calendargenerator extends object
                 $calendar .= '<td class="normalday">'.$day.'</td>';
             }
         }
-        
+
         // Rest of days from next month
         if($weekday != 7) {
             for ($i=0; $i < (7 - $weekday); $i++)
             {
-                $calendar .= '<td class="cal-greyday">&nbsp;</td>';  
+                $calendar .= '<td class="cal-greyday">&nbsp;</td>';
             }
         }// END - Rest of days from next month
-        
+
         return $calendar."</tr>\n</table>\n";
     }
 
 
 }
-
 ?>

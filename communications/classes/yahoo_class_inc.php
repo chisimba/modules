@@ -1,53 +1,53 @@
 <?php
 /**
-* 
+*
 * Class for working with Yahoo for a particular user.
-* 
+*
 * @author Derek Keats
-* 
+*
 * This class was written by Derek, but it drew extensively
 * on code by other people who are listed in the appropriate
-* function. Most importantly, I studied the code of Chip Cuccio 
+* function. Most importantly, I studied the code of Chip Cuccio
 * and Setec Astronomy.
-* 
-* 
-* 
+*
+*
+*
 */
 
-class yahoo extends object 
+class yahoo extends object
 {
-   
+
     /**
-    * 
+    *
     * @var object $objIcon Used to hold the icon object
-    * 
+    *
     */
-    var $objIcon;
-    
+    public $objIcon;
+
     /**
-    * 
+    *
     * @var object $objDbUserparams Used to hold the data object for getting user parameters
-    * 
+    *
     */
-    var $objDbUserparams;
-    
+    public $objDbUserparams;
+
     /**
     * The initialize method to set the default properties
     */
-    function init()
+    public function init()
     {
         $this->objLanguage=&$this->getObject('language', 'language');
         $this->objIcon = &$this->getObject('geticon', 'htmlelements');
         $this->objDbUserparams = & $this->getObject('dbuserparams', "userparams");
     }
-    
+
     /**
-    * This method allows to check the online status of an Yahoo! account.	
+    * This method allows to check the online status of an Yahoo! account.
     * It connects directly to the Yahoo! status server.
-    * 
+    *
     * @param string $yahoo : The user account on yahoo.
     */
-    function getStatusIcon($yahooId, $mode='byyahooid')
+    public function getStatusIcon($yahooId, $mode='byyahooid')
     {
         if ( $mode == 'byuserid' ) {
             $yahooId = $this->objDbUserparams->getValue('YAHOO', $yahooId);
@@ -82,18 +82,18 @@ class yahoo extends object
                 break;
         } #switch
 
-    } 
+    }
 
     /**
-    * 
+    *
     * Method to get the online status for the yahooid
     * and return it to the calling function
     *
     * @var string $yahooId The Yahoo user to look up
     * @return the status of the user as string
-    * 
+    *
     */
-    function getYahooStatus($yahooId)
+    public function getYahooStatus($yahooId)
     {
         //The yahoo server
         $yServer = "http://opi.yahoo.com/online?u=";
@@ -107,14 +107,13 @@ class yahoo extends object
                 return "yahoo_online";
             } else {
                 return "yahoo_unknown";
-            } 
+            }
         } else {
             return "yahoo_noconnection";
-        } 
-    
+        }
+
     }
-    
+
 
 }  // Class
-
 ?>

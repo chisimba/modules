@@ -1,25 +1,25 @@
 <?php
 
-class timer
+class timer 
 {
     /**
     * Simple function to time the execution of a script
-    *
+    * 
     * @example $time_start = microtime_float();
-    *
+    * 
     * 	// Sleep for a while
     * 	usleep(100);
-    *
+    * 
     * 	$time_end = microtime_float();
     * 	$time = $time_end - $time_start;
-    *
+    * 
     * 	echo "Did nothing in $time seconds\n";
     */
     function microtime_float()
     {
         list($usec, $sec) = explode(" ", microtime());
         return ((float)$usec + (float)$sec);
-    }
+    } 
 
     function wait($usecs)
     {
@@ -30,13 +30,13 @@ class timer
             $stop = (int)$temp["usec"];
             if ($stop - $start >= $usecs)
                 break;
-        }
-    }
+        } 
+    } 
 
     /**
     * Calculates the difference for two given dates, and returns the result
     * in specified unit.
-    *
+    * 
     * @param string $ Initial date (format: [dd-mm-YYYY hh:mm:ss], hh is in 24hrs format)
     * @param string $ Last date (format: [dd-mm-YYYY hh:mm:ss], hh is in 24hrs format)
     * @param char $ 'd' to obtain results as days, 'h' for hours, 'm' for minutes, 's' for seconds, and 'a' to get an indexed array of days, hours, minutes, and seconds
@@ -52,14 +52,14 @@ class timer
         $dateFromDateElements = split('-', $dateFromElements[0]);
         $dateFromTimeElements = split(':', $dateFromElements[1]);
         $dateToDateElements = split('-', $dateToElements[0]);
-        $dateToTimeElements = split(':', $dateToElements[1]);
+        $dateToTimeElements = split(':', $dateToElements[1]); 
         // Get unix timestamp for both dates
         $date1 = mktime($dateFromTimeElements[0], $dateFromTimeElements[1], $dateFromTimeElements[2], $dateFromDateElements[1], $dateFromDateElements[0], $dateFromDateElements[2]);
         $date2 = mktime($dateToTimeElements[0], $dateToTimeElements[1], $dateToTimeElements[2], $dateToDateElements[1], $dateToDateElements[0], $dateToDateElements[2]);
 
         if ($date1 > $date2) {
             return null;
-        }
+        } 
 
         $diff = $date2 - $date1;
 
@@ -70,11 +70,12 @@ class timer
 
         if ($diff % 86400 <= 0) { // there are 86,400 seconds in a day
                 $days = $diff / 86400;
-        }
+        } 
 
         if ($diff % 86400 > 0) {
             $rest = ($diff % 86400);
             $days = ($diff - $rest) / 86400;
+
             if ($rest % 3600 > 0) {
                 $rest1 = ($rest % 3600);
                 $hours = ($rest - $rest1) / 3600;
@@ -85,11 +86,11 @@ class timer
                     $seconds = $rest2;
                 } else {
                     $minutes = $rest1 / 60;
-                }
+                } 
             } else {
                 $hours = $rest / 3600;
-            }
-        }
+            } 
+        } 
 
         switch ($unit) {
             case 'd':
@@ -145,10 +146,10 @@ class timer
                     );
 
                 break;
-        }
+        } 
 
         return $difference;
-    }
-}
+    } 
+} 
 
 ?>

@@ -20,7 +20,7 @@ class dbeventattachments extends dbTable
     /**
     * Constructor method to define the table
     */
-    function init() {
+    public function init() {
         parent::init('tbl_calendar_event_attachment');
     }
 
@@ -33,7 +33,7 @@ class dbeventattachments extends dbTable
     *
     * @return string Last Insert Id
     */
-    function insertSingle($fileId, $event, $userId)
+    public function insertSingle($fileId, $event, $userId)
     {
         $this->insert(array(
                 'attachment_id' => $fileId,
@@ -41,10 +41,10 @@ class dbeventattachments extends dbTable
                 'userId' => $userId,
                 'dateLastUpdated' => strftime('%Y-%m-%d %H:%M:%S', mktime()))
 		);
-		
+
         return $this->getLastInsertId();
     }
-    
+
     /**
     * Gets the list of attachments for a post
     *
@@ -53,40 +53,37 @@ class dbeventattachments extends dbTable
     *
     * @return array List of Attachments
     */
-    function getListAttachments($id)
+    public function getListAttachments($id)
     {
         $sql = 'SELECT tbl_calendar_event_attachment.id AS attachment_id,
-        tbl_filestore.* FROM tbl_calendar_event_attachment 
+        tbl_filestore.* FROM tbl_calendar_event_attachment
         INNER JOIN tbl_filestore ON (tbl_calendar_event_attachment.attachment_id = tbl_filestore.fileId)
         WHERE tbl_calendar_event_attachment.event_id = "'.$id.'"';
-        
-        return $this->getArray($sql);    
+
+        return $this->getArray($sql);
     }
-	
-	function getFile($attachment_id, $event_id)
+
+	public function getFile($attachment_id, $event_id)
 	{
 		$files = $this->getAll(' WHERE id="'.$attachment_id.'" AND event_id="'.$event_id.'" ');
-		
+
 		if (count($files) == 0) {
 			return FALSE;
 		} else {
 			return $files[0];
 		}
 	}
-	
-	function deleteAttachment($attachment_id, $event_id)
+
+	public function deleteAttachment($attachment_id, $event_id)
 	{
 		$files = $this->getAll(' WHERE id="'.$attachment_id.'" AND event_id="'.$event_id.'" ');
-		
+
 		if (count($files) > 0) {
 			return $this->delete('id', $attachment_id);
 		} else {
 			return FALSE;
 		}
 	}
-    
-
-
 
 } #end of class
 ?>

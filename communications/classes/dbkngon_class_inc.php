@@ -7,25 +7,25 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 
 /**
-* 
+*
 * Model class for the table loggedinusers
-* 
+*
 */
 class dbkngon extends dbTable
 {
     /**
     * Constructor method to define the table
     */
-    function init() 
+    public function init()
     {
         parent::init('tbl_loggedinusers');
         $this->USE_PREPARED_STATEMENTS=True;
     }
-    
+
     /**
     * Method to see if a user is online
     */
-    function isLoggedIn($userId) 
+    public function isLoggedIn($userId)
     {
         return $this->valueExists('userId', $userId);
     }

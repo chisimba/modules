@@ -15,29 +15,29 @@ class loggedin extends dbTable
 	/*
 	*@var contextCode
 	*/
-	var $contextCode;	
-	
-	
+	public $contextCode;
+
+
     /**
     * Constructor method to define the table
     */
-    function init() {
+    public function init() {
         parent::init('tbl_loggedinusers');
 		$objContext=&$this->getObject('dbcontext','context');
-		$this->contextCode=$objContext->getContextCode();		
+		$this->contextCode=$objContext->getContextCode();
     }
 
-   function getLoggedInStudent(){
-   
+   public function getLoggedInStudent(){
+
    }
-   
-   function getLoggedInLecturers(){
-   
+
+   public function getLoggedInLecturers(){
+
    }
-   
-   function getLoggedInUsers(){
+
+   public function getLoggedInUsers(){
 	   return $this->getAll();
    }
-    
+
 } #end of class
 ?>
