@@ -113,7 +113,7 @@ class modulesAdmin extends modules
         $this->executeModSQL($sql);
     }
 
-    
+
     /**
     * This is a method to make SQL params from an assoc array
     * @author James Scoble
@@ -664,7 +664,7 @@ class modulesAdmin extends modules
     * @returns TRUE or FALSE
     */
     function makeTablesForModule($tables)
-    {   
+    {
         $this->objTableInfo=$this->newObject('tableinfo','moduleadmin'); // create object to look at SQL tables
         $this->objKeyMaker=$this->newObject('primarykey','modulelist');
         foreach ($tables as $dline)
@@ -1119,7 +1119,7 @@ class modulesAdmin extends modules
         foreach($data as $line)
         {
             $flag1=1;
-            $content=$line['Content'];
+            $content=$line['content'];
         }
         $sql="SELECT * FROM tbl_languagetext WHERE code='".$code."'";
         $data=$this->getArray($sql);
