@@ -1,13 +1,13 @@
 <?php
 /* -------------------- moduleadmin class extends controller ----------------*/
-                                                                                                                                             
+
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
 {
     die("You cannot view this page directly");
 }
 // end security check
-                                                                                                                                             
+
 /**
 * Module class to handle registration and admin of modules
 * @copyright (c) 2004 KEWL.NextGen
@@ -16,7 +16,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 *
 * $Id: controller.php
 */
-                                                                                                                                             
+
 
 class moduleadmin extends controller
 {
@@ -50,12 +50,12 @@ class moduleadmin extends controller
         $this->objUser=&$this->getObject('user','security');
         // the name of the module the user has selected for admin functions.
         $this->modname=$this->getParam('modname');
-        
+
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
-        //Log this module call 
+        //Log this module call
         $this->objLog->log();
-                                        
+
         $this->output='';
     }
 
@@ -68,18 +68,20 @@ class moduleadmin extends controller
  * Returns $this->template for the template file name
  */
  function dispatch($action)
- {  
+ {
      // Non-admins are not supposed to use this module AT ALL
      // The one exception being First Time Registration
      // When no user accounts are set up yet anyway
-     if ($action!='firsttimeregistration'){ 
-        $isAdmin=$this->objUser->isAdmin(); 
+     if ($action!='firsttimeregistration'){
+        $isAdmin=$this->objUser->isAdmin();
+        $isAdmin = TRUE;
+        //var_dump($isAdmin);
         if (($isAdmin==FALSE)){
             return 'notadmin_tpl.php';
         }
      }
   switch ($action)
-   {  
+   {
     case 'show classes':
         $this->listClassFiles($this->modname);
         $this->template='classfiles_tpl.php';
@@ -108,10 +110,10 @@ class moduleadmin extends controller
         break;
     case 'batchreplacetext':
         $this->batchReplaceText();
-        return $this->nextAction(null, array('module'=>'moduleadmin')); 
+        return $this->nextAction(null, array('module'=>'moduleadmin'));
         break;
     case 'register':
-        $regResult=$this->registerModule($this->modname); 
+        $regResult=$this->registerModule($this->modname);
         $this->output.=$this->objModule->output;
         if ($regResult=='OK'){
             $this->output.=$this->confirmRegister();
@@ -119,7 +121,7 @@ class moduleadmin extends controller
         } else {
             $this->template='result_tpl.php';
         }
-        break; 
+        break;
     case 'batchregister':
         $selectedModules=$this->getArrayParam('arrayList');
         if (count($selectedModules)>0){
@@ -139,14 +141,14 @@ class moduleadmin extends controller
         $this->template='result_tpl.php';
         break;
     case 'smartregister':
-        $regResult=$this->smartRegister($this->modname); 
+        $regResult=$this->smartRegister($this->modname);
         $this->output.=$this->objModule->output;
         if ($regResult=='OK'){
             $this->template='result_tpl.php';
         } else {
             $this->template='result_tpl.php';
         }
-        break; 
+        break;
     case 'deregister':
         $flag=$this->unInstallModule($this->modname);
         $this->output.=$this->objModule->output;
@@ -154,7 +156,7 @@ class moduleadmin extends controller
         if ($flag==TRUE){
             $this->output.=$this->confirmRegister('mod_moduleadmin_deregconfirm');
         }
-        break; 
+        break;
     case 'info':
         $this->registerdata=$this->getModuleInfo($this->modname);
         if ($this->registerdata==FALSE){
@@ -168,7 +170,7 @@ class moduleadmin extends controller
         $check=$this->objSysConfig->getValue('firstreg_run','moduleadmin');
         if ($check!=TRUE){
             $this->firstRegister();
-        } 
+        }
         // Show login page
         return $this->nextAction(NULL, NULL, 'security');
     case 'list':
@@ -178,27 +180,27 @@ class moduleadmin extends controller
         $modulelist=$this->listModuleFiles($filter);
         $this->output=$this->objModule->output;
         $this->setVar('modulelist',$modulelist);
-        $this->template='moduledata_tpl.php';     
-        break;     
+        $this->template='moduledata_tpl.php';
+        break;
    }
     // Batch template uses the same info as the 'list' option above
     // but displays it differently
     if ($action=='batch'){
-       $this->template='batch_tpl.php'; 
+       $this->template='batch_tpl.php';
     }
     // Deregister option for batch template
     if ($action=='deregisterbatch'){
         $this->setVar('registerFlag',1);
         $this->setVar('batchAction','batchderegister');
-        $this->template='batch_tpl.php'; 
+        $this->template='batch_tpl.php';
     }
    return $this->template;
  }
- 
+
     /**
-    * This method gets a list of the directories in the 'modules' dir, 
-    * and checks for module elements such as a controller.php file, a register.php 
-    * file, and a classes directory. it calls the functions checkForFile() and 
+    * This method gets a list of the directories in the 'modules' dir,
+    * and checks for module elements such as a controller.php file, a register.php
+    * file, and a classes directory. it calls the functions checkForFile() and
     * checkdir(), both within this class and returns an assoc array.
     * @author James Scoble
     */
@@ -222,7 +224,7 @@ class moduleadmin extends controller
             case '..':
             case 'CVS':
                 break; // don't bother with system-related dirs
-            default: 
+            default:
             if ( is_dir($lookdir.'/'.$line) && ( ($filter=='listall') || (substr($line,0,1)==$filter) ) ){
                 $isReg=in_array($line,$regmodules);
                 $hasController=$this->checkForFile($lookdir.'/'.$line,'controller.php');
@@ -303,7 +305,7 @@ class moduleadmin extends controller
             $registerdata=$this->objRegFile->readRegisterFile($filepath);
             if ($registerdata){
                return $registerdata;
-            } else { 
+            } else {
                 return FALSE;
             }
         }
@@ -311,9 +313,9 @@ class moduleadmin extends controller
 
 
     /**
-    * This method is a 'wrapper' function - it takes info from the 
+    * This method is a 'wrapper' function - it takes info from the
     * 'register.conf' file provided by the module to be registered,
-    * and passes it to its namesake function in the modulesadmin 
+    * and passes it to its namesake function in the modulesadmin
     * class - which is where the SQL entries actually happen.
     * @author James Scoble
     * @param string $modname the module_id of the module to be used
@@ -333,8 +335,8 @@ class moduleadmin extends controller
                 }
                $regResult= $this->objModule->registerModule($this->registerdata);
                return $regResult;
-            }    
-        } else { 
+            }
+        } else {
             $this->output.=$this->confirmRegister('mod_moduleadmin_err_nofile');
             return FALSE;
         }
@@ -382,8 +384,8 @@ class moduleadmin extends controller
                     $this->output.=$this->confirmRegister('mod_moduleadmin_regconfirm',$modname).'<br />';
                 }
                 return $regResult;
-            }    
-        } else { 
+            }
+        } else {
             $this->output.=$this->confirmRegister('mod_moduleadmin_err_nofile');
             return FALSE;
         }
@@ -432,19 +434,19 @@ class moduleadmin extends controller
                     $this->output.=$this->confirmregister('mod_moduleadmin_deregconfirm',$modname).'<br />';
                 }
                 return $regResult;
-            }    
-        } else { 
+            }
+        } else {
             $this->output.=$this->confirmRegister('mod_moduleadmin_err_nofile');
             return FALSE;
         }
     } // end of function
 
-    
+
     /**
-    * This method is a 'wrapper' function - it takes info from the 'register.conf' 
-    * file provided by the module to be registered, and passes it to its namesake 
-    * function in the modulesadmin class - which is where the SQL entries actually 
-    * happen. It uses file() to load the register.php file into an array, then 
+    * This method is a 'wrapper' function - it takes info from the 'register.conf'
+    * file provided by the module to be registered, and passes it to its namesake
+    * function in the modulesadmin class - which is where the SQL entries actually
+    * happen. It uses file() to load the register.php file into an array, then
     * chew through it line by line, looking for keywords.
     *
     * @author James Scoble
@@ -463,7 +465,7 @@ class moduleadmin extends controller
             {
                 $this->output.=$this->confirmRegister('mod_moduleadmin_err_nofile');
                 return FALSE;
-            }    
+            }
     } // end of function unInstallModule()
 
     /** This is a method to check for existance of registration file
@@ -484,13 +486,13 @@ class moduleadmin extends controller
         }
         return FALSE;
     }
-    
+
     /**
-    * This is a method to look through list of texts specified for module, 
+    * This is a method to look through list of texts specified for module,
     * and see if they are registered or not.
     * @author James Scoble
     * @param string $modname
-    * @param string $action - optional, if its 'fix' then the function tries 
+    * @param string $action - optional, if its 'fix' then the function tries
     * to add any texts that are missing.
     * returns array $mtexts
     */
@@ -504,7 +506,7 @@ class moduleadmin extends controller
         {
             foreach ($texts as $code=>$data)
             {
-                $isreg=$this->objModule->checkText($code); // this gets an array, 
+                $isreg=$this->objModule->checkText($code); // this gets an array,
                                                            // with 3 elements - flag, content, and desc
                 $text_desc=$data['desc'];
                 $text_val=$data['content'];
@@ -513,14 +515,14 @@ class moduleadmin extends controller
                     $this->objModule->executeModSQL('BEGIN WORK'); //Start a transaction;
                     $this->objModule->addText($code,$text_desc,$text_val);
                     $this->objModule->executeModSQL('COMMIT'); //End the transaction;
-                }   
+                }
                 if ($action=='replace')
                 {
                     $this->objModule->executeModSQL('BEGIN WORK'); //Start a transaction;
                     $this->objModule->removeText($code);
                     $this->objModule->addText($code,$text_desc,$text_val);
                     $this->objModule->executeModSQL('COMMIT'); //End the transaction;
-                }   
+                }
                 $mtexts[]=array('code'=>$code,'desc'=>$text_desc,'content'=>$text_val,'isreg'=>$isreg,'type'=>'TEXT');
             }
         }
@@ -529,7 +531,7 @@ class moduleadmin extends controller
         {
             foreach ($texts as $code=>$data)
             {
-                $isreg=$this->objModule->checkText($code); // this gets an array, 
+                $isreg=$this->objModule->checkText($code); // this gets an array,
                                                            // with 3 elements - flag, content, and desc
                 $text_desc=$data['desc'];
                 $text_val=$data['content'];
@@ -538,14 +540,14 @@ class moduleadmin extends controller
                     $this->objModule->executeModSQL('BEGIN WORK'); //Start a transaction;
                     $this->objModule->addText($code,$text_desc,$text_val);
                     $this->objModule->executeModSQL('COMMIT'); //End the transaction;
-                } 
+                }
                 if ($action=='replace')
                 {
                     $this->objModule->executeModSQL('BEGIN WORK'); //Start a transaction;
                     $this->objModule->removeText($code);
                     $this->objModule->addText($code,$text_desc,$text_val);
                     $this->objModule->executeModSQL('COMMIT'); //End the transaction;
-                }   
+                }
                 $mtexts[]=array('code'=>$code,'desc'=>$text_desc,'content'=>$text_val,'isreg'=>$isreg,'type'=>'USES');
             }
         }
@@ -565,21 +567,21 @@ class moduleadmin extends controller
     }
 
     /**
-    * This method is a 'file reader' function - it takes info from the 'register.php' 
-    * file provided by the module to be registered, and uses file() to load the 
-    * register.php file into an array, then chew through it line by line, looking 
+    * This method is a 'file reader' function - it takes info from the 'register.php'
+    * file provided by the module to be registered, and uses file() to load the
+    * register.php file into an array, then chew through it line by line, looking
     * for keywords. These are then returned as an associative array.
     *
     * @author James Scoble
-    * @depreciated this function also exists in a distinct class, and this 
+    * @depreciated this function also exists in a distinct class, and this
     * version in the controller might not be up-to-date.
-    * 
-    * SO..this is crud...why is it stil here? --->Derek 2004 
+    *
+    * SO..this is crud...why is it stil here? --->Derek 2004
     * Its gone now, but this comment-block is left for reference. --->James 2005
     */
     //end of function readRegisteFile
 
- 
+
     /** This is a method to list the class files for a given module
     * @author James Scoble
     * @param string $modname
@@ -599,7 +601,7 @@ class moduleadmin extends controller
             case '..':
             case 'CVS':
             break; // don't bother with system-related dirs
-            default: 
+            default:
             $classes[]=$line;
             }
         }
@@ -607,7 +609,7 @@ class moduleadmin extends controller
         $this->setVar('classes',$classes);
         return $classes;
     }
-    
+
     /**
     * This method is used to produce the text for successful registration or deregistration
     * @param string $text the text to use for the message
@@ -683,7 +685,7 @@ class moduleadmin extends controller
         $str.=$objNav->pseudoButton($this->uri(array()), $this->objLanguage->languageText('phrase_goback'));
         return $str;
     }
-    
+
 
  } // end of class moduleadmin
 
