@@ -3,24 +3,19 @@ ini_set('soap.wsdl_cache_enabled', 0); // disable WSDL cache
 
 class wsdlparser //extends object
 {
+    public $service;
     private $dom;
     private $client;
     private $e; //error messages
-    public $wsdl;
-    public $targetNamespace = '';
+    private $wsdl;
+    private $targetNamespace = '';
     private $doc;
-    public $service;
     private $keywords;
     private $primitive_types;
 
-    public function __construct($wsdl)
+    public function __construct($wsdl, $options)
     {
         $this->wsdl = $wsdl;
-
-        $options = array('proxy_host' => "cache.uwc.ac.za",
-        'proxy_port' => 8080,
-        'proxy_login' => "pscott",
-        'proxy_password' => "scott");
 
         try
         {
@@ -337,6 +332,16 @@ class wsdlparser //extends object
         }
         $code .= $line."\n";
         return $code;
+    }
+
+    public function generateObjFromWSDL()
+    {
+        $this->getDocs();
+        $this->getTargetNameSpace();
+        $this->declareService();
+        $this->getOperations();
+        return $this->writeCode();
+
     }
 }//end class
 ?>
