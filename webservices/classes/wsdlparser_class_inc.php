@@ -1,18 +1,118 @@
 <?PHP
-ini_set('soap.wsdl_cache_enabled', 0); // disable WSDL cache
+/**
+ * This is a class, based on a script by Knut Urdalen, that will enable the user
+ * to connect to any webservice on the internet that provides a WSDL (Web Service
+ * Description Language). WSDL files are generally in the form of an XML document
+ * that describes any number of functions provided by the service layer.
+ *
+ * Webservices have become increasingly popular in the last few years, as a way for
+ * a number of legacy, as well as cross platform, applications to exchange data.
+ * This has far reaching consequences, as diverse applications such as C#, Python, .Net,
+ * Mono and others have the ability to communicate and exchange data in a relatively
+ * standardised environment.
+ *
+ * This PHP Object aims to create an object for use by the end user to create a simple
+ * client interface to communicate with the web services passed to the class constructor.
+ *
+ * The target audience for this object are developers as well as high end end users.
+ * This should not be used as a normal user object.
+ *
+ * @filesource
+ * @author Paul Scott <pscott@uwc.ac.za>
+ * @author Knut Urdalen <knut.urdalen@telio.no>
+ * @link http://fsiu.uwc.ac.za
+ * @link http://www.urdalen.no/wsdl2php
+ * @example wsdl2phptest.php
+ * @package wsdl2php
+ * @subpackage class wsdlparser
+ * @since 07/03/2006
+ * @version 1.0
+ */
 
-class wsdlparser //extends object
+// disable WSDL cache
+ini_set('soap.wsdl_cache_enabled', 0);
+
+class wsdlparser
 {
+    /**
+     * The service description array.
+     *
+     * @access public
+     * @var array
+     */
     public $service;
+
+    /**
+     * DOM Object
+     *
+     * @access private
+     * @var object
+     */
     private $dom;
+
+    /**
+     * Client instance
+     *
+     * @access private
+     * @var object
+     */
     private $client;
-    private $e; //error messages
+
+    /**
+     * Error message
+     *
+     * @access private
+     * @var object
+     */
+    private $e;
+
+    /**
+     * The WSDL passed from the constructor
+     *
+     * @access private
+     * @var mixed
+     */
     private $wsdl;
+
+    /**
+     * Namespace of target
+     *
+     * @access private
+     * @var array
+     */
     private $targetNamespace = '';
+
+    /**
+     * Documentation gleaned from the WSDL (if any)
+     *
+     * @access private
+     * @var array
+     */
     private $doc;
+
+    /**
+     * Reserved keywords that cannot be used in creation of the user object
+     *
+     * @access private
+     * @var array
+     */
     private $keywords;
+
+    /**
+     * Primitive types
+     *
+     * @access private
+     * @var array
+     */
     private $primitive_types;
 
+    /**
+     * Class constructor
+     *
+     * @param mixed (string) $wsdl the wsdl file
+     * @param array $options proxy options
+     * @return void | $e error on failure
+     */
     public function __construct($wsdl, $options)
     {
         $this->wsdl = $wsdl;
@@ -26,10 +126,23 @@ class wsdlparser //extends object
             die($e);
         }
 
-        $this->dom = DOMDocument::load($this->wsdl);
+        try {
+            $this->dom = DOMDocument::load($this->wsdl);
+        }
+        catch (DOMErrorHandler $e)
+        {
+            die($e);
+        }
 
     }
 
+    /**
+     * Method to grab the WSDL documentation from the exposed functions
+     *
+     * @access public
+     * @param void
+     * @return array $doc
+     */
     public function getDocs()
     {
         // get documentation
@@ -50,6 +163,13 @@ class wsdlparser //extends object
 
     }
 
+    /**
+     * Method to get the namespace of the target WSDL file
+     *
+     * @access public
+     * @param void
+     * @return property
+     */
     public function getTargetNameSpace()
     {
         // get targetNamespace
@@ -62,6 +182,13 @@ class wsdlparser //extends object
 
     }
 
+    /**
+     * Method to declare the service
+     *
+     * @access public
+     * @param void
+     * @return property
+     */
     public function declareService()
     {
         // declare service
@@ -103,6 +230,13 @@ class wsdlparser //extends object
 
     }
 
+    /**
+     * Method to get all operations possible via the service WSDL
+     *
+     * @access public
+     * @param void
+     * @return property
+     */
     public function getOperations()
     {
         // get operations
@@ -216,6 +350,13 @@ class wsdlparser //extends object
         }
     }//end function
 
+    /**
+     * Method to return a formatted string of the client code that is generated
+     *
+     * @access public
+     * @param void
+     * @return mixed
+     */
     public function writeCode()
     {
         // add types
@@ -319,6 +460,13 @@ class wsdlparser //extends object
         return $code;
     }
 
+    /**
+     * Method to parse the received documentation
+     *
+     * @param mixed $prefix
+     * @param mixed $doc
+     * @return mixed
+     */
     public function parse_doc($prefix, $doc) {
         $code = "";
         $words = split(' ', $doc);
@@ -334,6 +482,13 @@ class wsdlparser //extends object
         return $code;
     }
 
+    /**
+     * Method to tie it all together
+     *
+     * @access public
+     * @param void
+     * @return mixed
+     */
     public function generateObjFromWSDL()
     {
         $this->getDocs();
