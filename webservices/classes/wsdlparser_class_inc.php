@@ -96,7 +96,7 @@ class wsdlparser
      * @access private
      * @var array
      */
-    private $keywords;
+    private static $keywords;
 
     /**
      * Primitive types
@@ -127,7 +127,7 @@ class wsdlparser
         }
 
         try {
-            $this->dom = DOMDocument::load($this->wsdl);
+            $this->dom = @DOMDocument::load($this->wsdl);
         }
         catch (DOMErrorHandler $e)
         {
@@ -146,7 +146,17 @@ class wsdlparser
     public function getDocs()
     {
         // get documentation
-        $nodes = $this->dom->getElementsByTagName('documentation');
+        if(!isset($this->dom))
+        {
+            die($e);
+        }
+        try {
+            $nodes = @$this->dom->getElementsByTagName('documentation');
+        }
+        catch (DOMErrorHandler $e)
+        {
+            die($e);
+        }
         $doc = array('service' => '',
         'operations' => array());
         foreach($nodes as $node) {
@@ -266,7 +276,7 @@ class wsdlparser
             $function = array('name' => $call,
             'method' => $call,
             'return' => $returns,
-            'doc' => $this->doc['operations'][$call],
+            'doc' => @$this->doc['operations'][$call],
             'params' => $paramsArr);
 
             // ensure legal function name

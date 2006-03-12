@@ -1,5 +1,5 @@
 <?PHP
-/* -------------------- dbTable class ----------------*/
+/* -------------------- dbTable class for dbmanagerdb ----------------*/
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
@@ -16,5 +16,10 @@ class dbmanagerdb extends dbTableManager
     public function getSchema()
     {
         $this->dumpDatabaseToFile('dump','all','dumptest.xml');
+    }
+
+    public function createKNGTable($fields, $tableName, $options)
+    {
+        return $this->createTable($tableName, $fields, $options);
     }
 }

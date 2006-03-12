@@ -2,7 +2,7 @@
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
 {
-	die("You cannot view this page directly");
+    die("You cannot view this page directly");
 }
 // end security check
 
@@ -53,13 +53,94 @@ class dbmanager extends controller
 
             case 'dumpdb':
                 $this->manager->getSchema();
-                return ;
+                echo "Done";
+                break;
 
             case 'parsefile':
                 return ;
 
             case 'getdefinition':
+                $this->manager->getDefFromDb();
+                echo "Done";
                 return;
+
+            case 'createtable':
+                $table = 'tbl_calendar';
+$fields = array(
+	'id' => array(
+		'type' => 'text',
+		'length' => 32,
+		),
+	'multiday_event' => array(
+		'type' => 'text',
+		'length' => 1,
+		'notnull' => 1,
+        'default' => 0,
+		),
+	'eventdate' => array(
+		'type' => 'date',
+		'notnull' => 1,
+		'default' => '0000-00-00',
+		),
+	'multiday_event_start_id' => array(
+		'type' => 'text',
+		),
+	'eventtile' => array(
+		'type' => 'text',
+		'length' => 100,
+		),
+	'eventdetails' => array(
+		'type' => 'text',
+		),
+	'eventurl' => array(
+		'type' => 'text',
+		'length' => 100,
+		),
+	'userorcontext' => array(
+		'type' => 'text',
+		'length' => 1,
+		),
+	'context' => array(
+		'type' => 'text',
+		'length' => 32
+		),
+	'workgroup' => array(
+		'type' => 'text',
+		'length' => 32,
+		),
+	'showusers' => array(
+		'type' => 'text',
+		'length' => 1,
+		),
+	'userFirstEntry' => array(
+		'type' => 'text',
+		'length' => 32,
+		),
+	'userLastModified' => array(
+		'type' => 'text',
+		'length' => 32,
+		),
+	'dateFirstEntry' => array(
+		'type' => 'date',
+		'notnull' => 1,
+		'default' => '0000-00-00 00:00:00',
+		),
+	'dateLastModified' => array(
+		'type' => 'date',
+		'notnull' => 1,
+		'default' => '0000-00-00 00:00:00',
+		),
+	'updated' => array(
+		'type' => 'date',
+		'notnull' => 1,
+		'default' => '0000-00-00 00:00:00',
+		),
+	);
+$options = array('comment' => 'blag', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+//$options = NULL;
+$this->manager->createKNGTable($fields, $table, $options);
+                    echo "Good job";
+                break;
 
 
         }

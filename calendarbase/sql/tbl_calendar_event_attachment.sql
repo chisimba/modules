@@ -8,4 +8,36 @@ $sqldata[]="CREATE TABLE `tbl_calendar_event_attachment` (
   PRIMARY KEY  (`id`),
   KEY `attachment_id` (`event_id`, `attachment_id`, `userId`)
 ) TYPE=InnoDB   COMMENT='This table stores temporary uploads while a post is being created';";
+
+/*
+$table = 'tbl_calendar_event_attachment';
+$fields = array(
+	'id' => array(
+		'type' => 'text',
+		'length' => 32,
+		),
+	'event_id' => array(
+		'type' => 'text',
+		'length' => 32,
+		),
+	'attachment_id => array(
+		'type' => 'text',
+		'length' => 32,
+		),
+	'userId => array(
+		'type' => 'text',
+		'length' => 25,
+		),
+	'dateLastUpdated => array(
+		'type' => 'date',
+		'notnull' => 1,
+		'default' => '0000-00-00 00:00:00',
+		)
+	);
+$index = array(
+             'fields' => array(
+             	'id' => array(),
+		'attachment_id' =>array('event_id','attachment_id','userId')					
+              )
+	 );
 ?>
