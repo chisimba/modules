@@ -22,4 +22,31 @@ class dbmanagerdb extends dbTableManager
     {
         return $this->createTable($tableName, $fields, $options);
     }
+    
+    public function listall()
+    {
+    	$a = $this->createDb('php5alpha');
+    	//echo $a;
+    	//$b = $this->listDatabases();
+    	//print_r($b);
+    	//$func = $this->listDbFunctions();
+    	//print_r($func);
+    	//$c = $this->listDbUsers();
+    	//print_r($c);
+    	//$d = $this->listDbViews();
+    	//print_r($d);
+    	//$listtabs = $this->listDbTables();
+    	//print_r($listtabs);
+    	//$listf = $this->listTableFields('tbl_users');
+    	//print_r($listf);
+    	$db = $this->getDatabase();
+    	print_r($db);
+    	$ver = $this->getServerVersion();
+    	print_r($ver);
+    	
+    	//$e = $this->dropDb('testing123fromclass');
+    	//print_r($e);
+    	
+    	
+    }
 }

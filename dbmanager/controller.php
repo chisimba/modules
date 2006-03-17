@@ -56,7 +56,8 @@ class dbmanager extends controller
                 echo "Done";
                 break;
 
-            case 'parsefile':
+            case 'listall':
+            	echo $this->manager->listall();
                 return ;
 
             case 'getdefinition':
