@@ -1,62 +1,54 @@
-<?
+<?php
 /*
-* Class for manipulating tables
-* @author James Scoble
-* @version $Id$
-* @copyright 2004
-* @license GNU GPL
-*/
-
+ * Class for manipulating tables
+ * @author Paul Scott
+ * @version $Id$
+ * @copyright 2004
+ * @license GNU GPL
+ */
 class tableinfo extends dbtable
 {
-    function init()
+                    
+    public $tables;
+    
+    public function init()
     {
         parent::init('tbl_users');
     }
-                            
-    var $tables; //array
-
-    /**
-    * This is a method to return a list of the tables in the database, by using 'show tables' and putting the result in an array.
-    * @author James Scoble
+    
+   /**
+    * This is a method to return a list of the tables in the database.
+    * 
+    * @access public 
+    * @param void
     * @returns array $list
     */
-    function tablelist()
+    public function tablelist()
     {
-        $sql='show tables';
-        $tbl=$this->getArray($sql);
-        $list=array();
-        foreach ($tbl as $line)
-        {
-            foreach ($line as $key=>$value)
-            {
-                $list[]=$value;
-            }
-        }
-        $this->tables=$list;
-        return $list;
+    	$this->tables = $this->listDbTables();
+    	return $this->tables;
     }
-
+    
     /**
     * This is a method to check if a given table's name is in an array - by default the array used is class variable $tables
-    * @author James Scoble
+    * 
+    * @access public
     * @param string $name
     * @param array $list (optional)
     * @returns TRUE or FALSE
     */
-    function checktable($name,$list=NULL)
+    public function checktable($name,$list=NULL)
     {
-        if ($list==NULL){
-            $list=&$this->tables;
+        if ($list == NULL){
+            $list = $this->tables;
         }
-        if (in_array($name,$list)){
+        if (in_array($name, $list))
+        {
             return TRUE;
-        } else {
+        } 
+        else {
             return FALSE;
         }
     }
-
-
-
 }
 ?>
