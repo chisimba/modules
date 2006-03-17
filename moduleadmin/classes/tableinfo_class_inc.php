@@ -1,6 +1,6 @@
 <?php
 /*
- * Class for manipulating tables
+ * Class for manipulating tables for moduleadmin
  * @author Paul Scott
  * @version $Id$
  * @copyright 2004
