@@ -52,6 +52,14 @@ class cmsutils extends object
     */
     protected $_objFrontPage;
     
+     /**
+     * The User object
+     *
+     * @access private
+     * @var object
+    */
+    protected $_objUser;
+    
     
 
 	/**
@@ -64,6 +72,8 @@ class cmsutils extends object
 			$this->_objCategories = & $this->newObject('dbcategories', 'cmsadmin');
 			$this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
 			$this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
+			$this->_objUser = & $this->newObject('user', 'security');
+			
 			
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
@@ -329,7 +339,7 @@ class cmsutils extends object
 					
 					//title
 					$table->startRow();
-					$table->addCell($page['title']);
+					$table->addHeader(array($page['title']));
 					$table->endRow();
 					
 					//author
@@ -440,7 +450,7 @@ class cmsutils extends object
 	{
 		
 		try {
-			$str = '<b>previous'. $arrSection['title']."<b>";
+			$str = '<h3>'. $arrSection['title']."</h3>";
 			
 			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" ORDER BY ordering');
 			
@@ -456,12 +466,12 @@ class cmsutils extends object
 					
 					$str .= '<li>'. $page['created'].' - '.$link->show() .'</li> ';
 				} else {
-					$strBody = '<b>'.$page['title'].'</b><p>';
+					$strBody = '<h3>'.$page['title'].'</h3>';
 					$strBody .= $page['body'].'<p>';
 				}
 			}
 	
-			return $strBody.'<p>'.$str;
+			return $str.'<p>'.$strBody;
 				
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
@@ -482,7 +492,7 @@ class cmsutils extends object
 	 */
 	private function _layoutSummaries(&$arrSection)
 	{
-		$str = '<b>summaries'. $arrSection['title']."<b>";
+		$str = '<h3>'. $arrSection['title']."</h3>";
 		$objUser = & $this->newObject('user', 'security');
 		
 		$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" ORDER BY ordering');
@@ -495,7 +505,7 @@ class cmsutils extends object
 			
 			//title
 			$table->startRow();
-			$table->addHeader($page['title']);
+			$table->addHeader(array($page['title']));
 			$table->endRow();
 			
 			//author
@@ -542,7 +552,7 @@ class cmsutils extends object
 	 */
 	private function _layoutPage(&$arrSection)
 	{
-		$heading = '<b>page'. $arrSection['title']."<b>";
+		$heading = '<h3>'. $arrSection['title']."</h3>";
 		
 		$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" ORDER BY ordering');
 		
@@ -558,7 +568,7 @@ class cmsutils extends object
 				
 				$str .= $link->show() .' | ';
 			} else {
-				$strBody = '<b>'.$page['title'].'</b><p>';
+				$strBody = '<h3>'.$page['title'].'</h3>';
 				$strBody .= $page['body'].'<p>';
 			}
 		}
@@ -578,7 +588,7 @@ class cmsutils extends object
 	private function _layoutList(&$arrSection)
 	{
 		
-		$str = '<b>list '. $arrSection['title']."<b>";
+		$str = '<h3>'. $arrSection['title']."</h3>";
 		
 		$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" ORDER BY ordering');
 		foreach ($arrPages as $page)
@@ -594,4 +604,22 @@ class cmsutils extends object
 	}
 	
 	
+	/**
+	 * Method to show  the body of a pages
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function showBody()
+	{
+		$contentId = $this->getParam('id');
+		$page = $this->_objContent->getContentPage($contentId);
+		
+		$strBody = '<h3>'.$page['title'].'</h3><p>';
+		$strBody .= '<span class="warning">'.$this->_objUser->fullname($page['created_by']).'</span><p>';
+		$strBody .= '<span class="warning">'.$page['created'].'</span><p>';
+		$strBody .= $page['body'].'<p>';
+		
+		return $strBody;
+	}
 }

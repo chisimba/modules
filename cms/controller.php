@@ -108,7 +108,10 @@ class cms extends controller
             case 'showsection':
             	$this->setVar('content', $this->_objUtils->showSection());
             	return 'cms_section_tpl.php';
-            	
+            case 'showcontent':
+            case 'showfulltext':
+            	$this->setVar('content', $this->_objUtils->showBody());
+            	return 'cms_content_tpl.php';
             
             
 
