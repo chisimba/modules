@@ -230,18 +230,21 @@ class cmsutils extends object
 	 */
 	public function getLayoutOptions($name, $id)
 	{
-		
+		$objLayouts = & $this->newObject('dblayouts', 'cmsadmin');
+		$arrLayouts = $objLayouts->getLayouts();
+		$arrSection = $this->_objSections->getSection($id);
 		$str ='<table><tr>';
-		for ($i = 0; $i < 4 ; $i++)
+		foreach ($arrLayouts as $layout)
 		{
-			if($id == $i)
+		
+			if($arrSection['layout'] == $layout['id'])
 			{
 				$checked = 'checked';
 			} else {
 				$checked = '';
 				
 			}
-			$str .= '<td align="center"><input type="radio" name="'.$name.'" value="'.$i.'" class="transparentbgnb" id="input_layout0" '.$checked.' /><p><label for ="input_layout0"><img src ="'.$this->getResourceUri('section_'.$i.'.gif','cmsadmin').'"></label></td>';
+			$str .= '<td align="center"><input type="radio" name="'.$name.'" value="'.$layout['id'].'" class="transparentbgnb" id="input_layout0" '.$checked.' /><p><label for ="input_layout0"><img src ="'.$this->getResourceUri($layout['imagename'],'cmsadmin').'"></label></td>';
 			
 		}
 		
@@ -417,7 +420,16 @@ class cmsutils extends object
 			
 			//get the layout for this section
 		
-			switch ($arrSection['layout'])
+			$objLayouts = & $this->newObject('dblayouts', 'cmsadmin');
+		
+			$arrLayout = $objLayouts->getLayout($arrSection['layout']);	
+			$functionVariable = '_layout'.trim($arrLayout['name']);
+			//var_dump(function_exists($functionVariable));
+		//var_dump(is_callable($functionVariable, false, $callable_name));
+		//echo $callable_name;
+			return call_user_func(array('cmsutils',$functionVariable),$arrSection);
+			
+			/*switch ($arrSection['layout'])
 			{
 				case null:
 				case 'previous':
@@ -429,8 +441,8 @@ class cmsutils extends object
 				case 'list':
 					return $this->_layoutList($arrSection);
 			}
+			*/
 			
-			return 'this is the section '.	$sectionId;
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
@@ -446,7 +458,7 @@ class cmsutils extends object
 	 * @access private
 	 * @return string
 	 */
-	private function _layoutPrevious(&$arrSection)
+	 function _layoutPrevious(&$arrSection)
 	{
 		
 		try {
@@ -490,7 +502,7 @@ class cmsutils extends object
 	 * @access private
 	 * @return string
 	 */
-	private function _layoutSummaries(&$arrSection)
+	 function _layoutSummaries(&$arrSection)
 	{
 		$str = '<h3>'. $arrSection['title']."</h3>";
 		$objUser = & $this->newObject('user', 'security');
@@ -550,7 +562,7 @@ class cmsutils extends object
 	 * @access private
 	 * @return string
 	 */
-	private function _layoutPage(&$arrSection)
+	 function _layoutPage(&$arrSection)
 	{
 		$heading = '<h3>'. $arrSection['title']."</h3>";
 		
@@ -585,7 +597,7 @@ class cmsutils extends object
 	 * @access private
 	 * @return string
 	 */
-	private function _layoutList(&$arrSection)
+	 function _layoutList(&$arrSection)
 	{
 		
 		$str = '<h3>'. $arrSection['title']."</h3>";

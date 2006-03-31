@@ -72,13 +72,13 @@ if($editmode)
 //title
 $table->startRow();
 $table->addCell('Title');
-$table->addCell($menuTextInput->show().'<p>');
+$table->addCell($titleInput->show().'<p>');
 $table->endRow();
 
 //title name
 $table->startRow();
 $table->addCell('Menu Text');
-$table->addCell($titleInput->show().'<p>');
+$table->addCell($menuTextInput->show().'<p>');
 $table->endRow();
 
 //image
@@ -96,7 +96,7 @@ $table->endRow();
 $table->startRow();
 $table->addCell('Layout');
 
-$table->addCell($this->_objUtils->getLayoutOptions('sectionlayout', $layout).'<p>');
+$table->addCell($this->_objUtils->getLayoutOptions('sectionlayout', $this->getParam('id')).'<p>');
 $table->endRow();
 
 //Ordering

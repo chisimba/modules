@@ -36,7 +36,7 @@ $table->endHeaderRow();
 foreach($arrCategories as $arrCategory)
 {
 	$link->link = $arrCategory['title'];
-	$link->href = $this->uri(array('action' => 'addsection', 'mode' => 'edit', 'id' => $arrCategory['id']));
+	$link->href = $this->uri(array('action' => 'addcategory', 'mode' => 'edit', 'id' => $arrCategory['id']));
 	
 	$table->startRow();
     $table->addCell($cnt++);

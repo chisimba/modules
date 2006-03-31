@@ -105,7 +105,7 @@ class dbcategories extends dbTable
 		try{
 			
 			$id = $this->getParam('id');
-			$section = $this->getParam('$section');
+			$section = $this->getParam('section');
 			$title = $this->getParam('title');
 			$menuText = $this->getParam('menutext');
 			$image = $this->getParam('image');

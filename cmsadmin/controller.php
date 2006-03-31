@@ -140,7 +140,9 @@ class cmsadmin extends controller
 			case 'createcategory';
 				$this->_objCategories->add();
 				return $this->nextAction('categories');
-
+			case 'editcategory':
+				$this->_objCategories->edit();
+				return $this->nextAction('categories');
         }
 	}
 

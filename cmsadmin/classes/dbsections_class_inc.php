@@ -114,7 +114,7 @@ class dbsections extends dbTable
 	public function edit()
 	{
 		try{
-			$id = $this->getParam('id');
+			
 			$id = $this->getParam('id');
 			$title = $this->getParam('title');
 			$menuText = $this->getParam('menutext');

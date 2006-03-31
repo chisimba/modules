@@ -9,7 +9,7 @@
 $table = & $this->newObject('htmltable', 'htmlelements');
 $titleInput = & $this->newObject('textinput', 'htmlelements');
 $menuTextInput = & $this->newObject('textinput', 'htmlelements');
-$bodyInput = & $this->newObject('textarea', 'htmlelements');
+$bodyInput = & $this->newObject('htmlarea', 'htmlelements');
 $h3 = &$this->newObject('htmlheading', 'htmlelements');
 $sections = & $this->newObject('dropdown', 'htmlelements');
 $category = & $this->newObject('dropdown', 'htmlelements');
@@ -56,10 +56,10 @@ $button->value = 'Save';
 
 if($editmode)
 {
-	$arrSection = $this->_objSections->getSection($sectionId);
-	$titleInput->value = $arrSection['title'];
-	$menuTextInput->value = $arrSection['menutext'];
-	$bodyInput->value = $arrSection['description'];
+	$arrCat = $this->_objCategories->getCategory($catId);
+	$titleInput->value = $arrCat['title'];
+	$menuTextInput->value = $arrCat['menutext'];
+	$bodyInput->value = $arrCat['description'];
 	
 } else {
 	$titleInput->value = '';
@@ -86,7 +86,7 @@ $table->endRow();
 $table->startRow();
 $table->addCell('Section');
 $objDropDown->name = 'section';
-$objDropDown->addFromDB($this->_objSections->getSections(), 'menutext','id');
+$objDropDown->addFromDB($this->_objSections->getSections(), 'menutext','id',$arrCat['sectionid']);
 $table->addCell($objDropDown->show());
 $table->endRow();
 
