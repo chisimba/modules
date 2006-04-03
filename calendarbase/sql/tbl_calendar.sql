@@ -22,7 +22,7 @@ $sqldata[]= "CREATE TABLE `tbl_calendar` (
 
 /*
 //5ive definition
-$table = 'tbl_calendar';
+$tablename = 'tbl_calendar';
 //Options line is pending approval of my patch to PEAR::MDB2...
 //$options = array('comment' => 'Table to hold calendar events', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 $fields = array(
@@ -95,5 +95,17 @@ $fields = array(
 		'default' => '0000-00-00 00:00:00',
 		),
 	);
-
+	
+	//create the primary key
+	$indexes = array(
+             'fields' => array(
+             	'id' => array('sorting' => 'ascending', ),					
+              ),
+              'primary' => true
+	 );
+	$name = 'primary';
+	
+	//create other indexes here...
+	
+*/
 ?>
