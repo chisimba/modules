@@ -144,7 +144,7 @@ class dbcontent extends dbTable
 	public function getContentPages()
 	{
 		try{
-			return $this->getAll();
+			return $this->getAll('ORDER BY sectionid,catid');
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();

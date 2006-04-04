@@ -230,26 +230,31 @@ class cmsutils extends object
 	 */
 	public function getLayoutOptions($name, $id)
 	{
-		$objLayouts = & $this->newObject('dblayouts', 'cmsadmin');
-		$arrLayouts = $objLayouts->getLayouts();
-		$arrSection = $this->_objSections->getSection($id);
-		$str ='<table><tr>';
-		foreach ($arrLayouts as $layout)
-		{
-		
-			if($arrSection['layout'] == $layout['id'])
+		try {
+			$objLayouts = & $this->newObject('dblayouts', 'cmsadmin');
+			$arrLayouts = $objLayouts->getLayouts();
+			$arrSection = $this->_objSections->getSection($id);
+			$str ='<table><tr>';
+			foreach ($arrLayouts as $layout)
 			{
-				$checked = 'checked';
-			} else {
-				$checked = '';
+			
+				if($arrSection['layout'] == $layout['id'])
+				{
+					$checked = 'checked';
+				} else {
+					$checked = '';
+					
+				}
+				$str .= '<td align="center"><input type="radio" name="'.$name.'" value="'.$layout['id'].'" class="transparentbgnb" id="input_layout0" '.$checked.' /><p><label for ="input_layout0"><img src ="'.$this->getResourceUri($layout['imagename'],'cmsadmin').'"></label></td>';
 				
 			}
-			$str .= '<td align="center"><input type="radio" name="'.$name.'" value="'.$layout['id'].'" class="transparentbgnb" id="input_layout0" '.$checked.' /><p><label for ="input_layout0"><img src ="'.$this->getResourceUri($layout['imagename'],'cmsadmin').'"></label></td>';
 			
-		}
-		
-		$str .='</tr></table>';
-		return $str;
+			$str .='</tr></table>';
+			return $str;
+		}catch (Exception $e){
+       		echo 'Caught exception: ',  $e->getMessage();
+        	exit();
+        }
 	}
 	
 	
@@ -424,24 +429,10 @@ class cmsutils extends object
 		
 			$arrLayout = $objLayouts->getLayout($arrSection['layout']);	
 			$functionVariable = '_layout'.trim($arrLayout['name']);
-			//var_dump(function_exists($functionVariable));
-		//var_dump(is_callable($functionVariable, false, $callable_name));
-		//echo $callable_name;
+		
+			//call the right function according to the layout of the section
 			return call_user_func(array('cmsutils',$functionVariable),$arrSection);
 			
-			/*switch ($arrSection['layout'])
-			{
-				case null:
-				case 'previous':
-					return $this->_layoutPrevious($arrSection);
-				case 'summaries':
-					return $this->_layoutSummaries($arrSection);
-				case 'page':
-					return $this->_layoutPage($arrSection);
-				case 'list':
-					return $this->_layoutList($arrSection);
-			}
-			*/
 			
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
@@ -462,7 +453,7 @@ class cmsutils extends object
 	{
 		
 		try {
-			$str = '<h3>'. $arrSection['title']."</h3>";
+			$heading = '<h3>'. $arrSection['title']."</h3>";
 			
 			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" ORDER BY ordering');
 			
@@ -483,7 +474,7 @@ class cmsutils extends object
 				}
 			}
 	
-			return $str.'<p>'.$strBody;
+			return $heading.$strBody.'<p>'.$str;
 				
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
@@ -504,54 +495,58 @@ class cmsutils extends object
 	 */
 	 function _layoutSummaries(&$arrSection)
 	{
-		$str = '<h3>'. $arrSection['title']."</h3>";
-		$objUser = & $this->newObject('user', 'security');
-		
-		$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" ORDER BY ordering');
-		foreach ($arrPages as $page)
-		{
+		try{
+			$str = '<h3>'. $arrSection['title']."</h3>";
+			$objUser = & $this->newObject('user', 'security');
 			
-			
-			//display the intro text
-			$table = & $this->newObject('htmltable', 'htmlelements');
-			
-			//title
-			$table->startRow();
-			$table->addHeader(array($page['title']));
-			$table->endRow();
-			
-			//author
-			$table->startRow();
-			$table->addCell('Written by '.$objUser->fullname($page['creator_by']));
-			$table->endRow();
-			
-			//date
-			$table->startRow();
-			$table->addCell($page['created']);
-			$table->endRow();
-			
-			//intor text
-			$table->startRow();
-			$table->addCell('<p>'.$page['introtext']);
-			$table->endRow();
-			
-			if(!$page['body'] == '')
+			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" ORDER BY ordering');
+			foreach ($arrPages as $page)
 			{
-				//read more link .. link to the full text
-				$link = & $this->newObject('link', 'htmlelements');
-				$link->link = 'Read more ..<p><p>';
-				$link->href = $this->uri(array('action' => 'showfulltext', 'id' => $page['id']), 'cms');
 				
+				
+				//display the intro text
+				$table = & $this->newObject('htmltable', 'htmlelements');
+				
+				//title
 				$table->startRow();
-				$table->addCell($link->show());
+				$table->addHeader(array($page['title']));
 				$table->endRow();
 				
+				//author
+				$table->startRow();
+				$table->addCell('Written by '.$objUser->fullname($page['creator_by']));
+				$table->endRow();
+				
+				//date
+				$table->startRow();
+				$table->addCell($page['created']);
+				$table->endRow();
+				
+				//intor text
+				$table->startRow();
+				$table->addCell('<p>'.$page['introtext']);
+				$table->endRow();
+				
+				if(!$page['body'] == '')
+				{
+					//read more link .. link to the full text
+					$link = & $this->newObject('link', 'htmlelements');
+					$link->link = 'Read more ..<p><p>';
+					$link->href = $this->uri(array('action' => 'showfulltext', 'id' => $page['id']), 'cms');
+					
+					$table->startRow();
+					$table->addCell($link->show());
+					$table->endRow();
+					
+				}
+				$str .= $table->show();
 			}
-			$str .= $table->show();
-		}
-		
-		return $str;
-		
+			
+			return $str;
+		}catch (Exception $e){
+       		echo 'Caught exception: ',  $e->getMessage();
+        	exit();
+        }
 	}
 	
 	/**
@@ -564,28 +559,33 @@ class cmsutils extends object
 	 */
 	 function _layoutPage(&$arrSection)
 	{
-		$heading = '<h3>'. $arrSection['title']."</h3>";
-		
-		$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" ORDER BY ordering');
-		
-		$cnt = 0;
-		foreach ($arrPages as $page)
-		{			
-			$cnt++;
-			if($cnt > 1)
-			{
-				$link = & $this->newObject('link', 'htmlelements');
-				$link->link = $page['menutext'];
-				$link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id']), 'cms');
-				
-				$str .= $link->show() .' | ';
-			} else {
-				$strBody = '<h3>'.$page['title'].'</h3>';
-				$strBody .= $page['body'].'<p>';
+		try {
+			$heading = '<h3>'. $arrSection['title']."</h3>";
+			
+			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" ORDER BY ordering');
+			
+			$cnt = 0;
+			foreach ($arrPages as $page)
+			{			
+				$cnt++;
+				if($cnt > 1)
+				{
+					$link = & $this->newObject('link', 'htmlelements');
+					$link->link = $page['menutext'];
+					$link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id']), 'cms');
+					
+					$str .= $link->show() .' | ';
+				} else {
+					$strBody = '<h3>'.$page['title'].'</h3>';
+					$strBody .= $page['body'].'<p>';
+				}
 			}
-		}
-		
-		return $heading.$strBody.'<p>'.$str;
+			
+			return $heading.$strBody.'<p>'.$str;
+		}catch (Exception $e){
+       		echo 'Caught exception: ',  $e->getMessage();
+        	exit();
+        }
 		
 	}
 	
@@ -599,20 +599,24 @@ class cmsutils extends object
 	 */
 	 function _layoutList(&$arrSection)
 	{
-		
-		$str = '<h3>'. $arrSection['title']."</h3>";
-		
-		$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" ORDER BY ordering');
-		foreach ($arrPages as $page)
-		{
-			$link = & $this->newObject('link', 'htmlelements');
-			$link->link = $page['title'];
-			$link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id']),'cms');
+		try {
+			$str = '<h3>'. $arrSection['title']."</h3>";
 			
-			$str .= '<li>'.$page['created'].' - '. $link->show() .'</li>';
-		}
-		
-		return $str;	
+			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" ORDER BY ordering');
+			foreach ($arrPages as $page)
+			{
+				$link = & $this->newObject('link', 'htmlelements');
+				$link->link = $page['title'];
+				$link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id']),'cms');
+				
+				$str .= '<li>'.$page['created'].' - '. $link->show() .'</li>';
+			}
+			
+			return $str;	
+		}catch (Exception $e){
+       		echo 'Caught exception: ',  $e->getMessage();
+        	exit();
+        }
 	}
 	
 	
@@ -624,14 +628,139 @@ class cmsutils extends object
 	 */
 	public function showBody()
 	{
-		$contentId = $this->getParam('id');
-		$page = $this->_objContent->getContentPage($contentId);
-		
-		$strBody = '<h3>'.$page['title'].'</h3><p>';
-		$strBody .= '<span class="warning">'.$this->_objUser->fullname($page['created_by']).'</span><p>';
-		$strBody .= '<span class="warning">'.$page['created'].'</span><p>';
-		$strBody .= $page['body'].'<p>';
-		
-		return $strBody;
+		try {
+			$contentId = $this->getParam('id');
+			$page = $this->_objContent->getContentPage($contentId);
+			
+			$strBody = '<h3>'.$page['title'].'</h3><p>';
+			$strBody .= '<span class="warning">'.$this->_objUser->fullname($page['created_by']).'</span><p>';
+			$strBody .= '<span class="warning">'.$page['created'].'</span><p>';
+			$strBody .= $page['body'].'<p>';
+			
+			return $strBody;
+		}catch (Exception $e){
+       		echo 'Caught exception: ',  $e->getMessage();
+        	exit();
+        }
 	}
+	
+	/**
+	 * Method to format the date
+	 * 
+	 * @param  $date The unformatted date
+	 * @return formatted date string
+	 * @access public
+	 * @version 0.1
+	 * @author Wesley Nitsckie
+	 * @copyright 2004, University of the Western Cape & AVOIR Project
+	 * @license GNU GPL
+	 */
+	public function formatDate($date)
+	{
+		try {
+				return $today = date("m/d/y", $date );
+			}catch (Exception $e){
+       		echo 'Caught exception: ',  $e->getMessage();
+        	exit();
+        }
+		
+	}
+	
+	/**
+	 * Method resolve reordering of pages
+	 * 
+	 * @param  
+	 * @return
+	 * @access public
+	 * @version 0.1
+	 * @author Wesley Nitsckie
+	 * @copyright 2004, University of the Western Cape & AVOIR Project
+	 * @license GNU GPL
+	 */
+	public function _reOrder()
+	{
+		try {
+		
+		}catch (Exception $e){
+       		echo 'Caught exception: ',  $e->getMessage();
+        	exit();
+        }
+		
+		
+	}
+	
+	/**
+	 * Method to the true/false tick
+	 * 
+	 * @param  $isCheck Booleans value with either TRUE|FALSE
+	 * @return string icon
+	 * @access public
+	 * @version 0.1
+	 * @author Wesley Nitsckie
+	 * @copyright 2004, University of the Western Cape & AVOIR Project
+	 * @license GNU GPL
+	 */
+	public function getCheckIcon($isCheck, $returnFalse = TRUE)
+	{
+		try {
+			$objIcon = & $this->newObject('geticon', 'htmlelements');
+			
+			if($isCheck)
+			{
+				$objIcon->setIcon('greentick');
+			} else {
+				if($returnFalse)
+				{
+					$objIcon->setIcon('redcross');
+				}
+			}
+			
+			
+			return $objIcon->show();
+		
+		}catch (Exception $e){
+       		echo 'Caught exception: ',  $e->getMessage();
+        	exit();
+        }
+		
+		
+	}
+	
+	
+	/**
+	 * Method to generate the navigation
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getNav()
+	{
+		
+		$link = & $this->newObject('link', 'htmlelements');
+		
+		
+		//content link
+		$link->link = 'Content';
+		$link->href = $this->uri(array('action' => 'content'));
+		$str.= '<p>'.$link->show();
+		//sections link
+		
+		$link->link = 'Sections';
+		$link->href = $this->uri(array('action' => 'sections'));
+		$str .= '<p>'.$link->show();
+		
+		//categories link
+		$link->link = 'Categories';
+		$link->href = $this->uri(array('action' => 'categories'));
+		$str .= '<p>'.$link->show();
+		
+		//categories link
+		$link->link = 'Media';
+		$link->href = $this->uri(null, 'mediamanager');
+		$str .= '<p>'.$link->show();
+		
+		return $str;
+
+	}
+	
 }

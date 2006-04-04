@@ -24,7 +24,7 @@ $table->startHeaderRow();
 $table->addHeaderCell('#');
 $table->addHeaderCell('Category Name');
 $table->addHeaderCell('Published');
-$table->addHeaderCell('Order');
+//$table->addHeaderCell('Order');
 $table->addHeaderCell('Access');
 $table->addHeaderCell('Section');
 $table->addHeaderCell('Category ID');
@@ -42,7 +42,7 @@ foreach($arrCategories as $arrCategory)
     $table->addCell($cnt++);
     $table->addCell($link->show());
     $table->addCell($arrCategory['published']);
-    $table->addCell($arrCategory['ordering']);
+   // $table->addCell($arrCategory['ordering']);
 	$table->addCell($this->_objUtils->getAccess($arrCategory['access']));
 	
 	$link->link = $this->_objSections->getMenuText($arrCategory['sectionid']);

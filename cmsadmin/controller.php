@@ -72,6 +72,15 @@ class cmsadmin extends controller
     protected $_objUtils;
     
     
+     /**
+     * The user object 
+     *
+     * @access private
+     * @var object
+    */
+    protected $_objUser;
+    
+    
     
     
 	/**
@@ -86,6 +95,7 @@ class cmsadmin extends controller
 			$this->_objCategories = & $this->newObject('dbcategories', 'cmsadmin');
 			$this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
 			$this->_objUtils = & $this->newObject('cmsutils', 'cmsadmin');
+			$this->_objUser = & $this->newObject('user', 'security');
         	$this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
         	
         }catch (Exception $e){
@@ -155,25 +165,8 @@ class cmsadmin extends controller
 	 */
 	public function  getCMSMenu()
 	{
-		$link = & $this->newObject('link', 'htmlelements');
-		
-		
-		//content link
-		$link->link = 'Content';
-		$link->href = $this->uri(array('action' => 'content'));
-		$str.= '<p>'.$link->show();
-		//sections link
-		
-		$link->link = 'Sections';
-		$link->href = $this->uri(array('action' => 'sections'));
-		$str .= '<p>'.$link->show();
-		
-		//categories link
-		$link->link = 'Categories';
-		$link->href = $this->uri(array('action' => 'categories'));
-		$str .= '<p>'.$link->show();
-		
-		return $str;
+
+		return $this->_objUtils->getNav();
 	}
 
 }

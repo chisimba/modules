@@ -24,8 +24,8 @@ $table->addHeaderCell('#');
 $table->addHeaderCell('Title');
 $table->addHeaderCell('Front Page');
 $table->addHeaderCell('Published');
-$table->addHeaderCell('Reorder');
-$table->addHeaderCell('Order');
+//$table->addHeaderCell('Reorder');
+//$table->addHeaderCell('Order');
 $table->addHeaderCell('Access');
 $table->addHeaderCell('Section');
 $table->addHeaderCell('Category');
@@ -46,15 +46,15 @@ foreach($arrPages as $page)
 	$link->href = $this->uri(array('action' => 'addcontent', 'mode' => 'edit', 'id' => $page['id']));
     
 	$table->addCell($link->show());
-	$table->addCell($this->_objFrontPage->isFrontPage($page['id']));
+	$table->addCell($this->_objUtils->getCheckIcon($this->_objFrontPage->isFrontPage($page['id']), FALSE));
     $table->addCell($page['published']);
-    $table->addCell('up down');
-    $table->addCell($page['ordering']);
+  //  $table->addCell('up down');
+    //$table->addCell($page['ordering']);
 	$table->addCell($this->_objUtils->getAccess($page['access']));
 	$table->addCell($this->_objSections->getMenuText($page['sectionid']));
 	$table->addCell($this->_objCategories->getMenuText($page['catid']));
-	$table->addCell($page['created_by']);
-	$table->addCell($page['created']);
+	$table->addCell($this->_objUser->fullname($page['created_by']));
+	$table->addCell($this->_objUtils->formatDate($page['created']));
 
   	$table->endRow();
 	
