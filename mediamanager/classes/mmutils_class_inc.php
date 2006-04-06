@@ -40,6 +40,12 @@ class mmutils extends object
 	 */
 	protected $_folders;
 	
+	/**
+	 * @var array $_files The Media Files
+	 * @access protected
+	 */
+	protected $_files;
+	
 	
 	
 	/**
@@ -52,6 +58,7 @@ class mmutils extends object
 			$this->_objConfig = & $this->newObject('config', 'config');			
 			$this->_rootMediaPath = $this->_objConfig->contentBasePath().'media';	
 			$this->_folders = array();
+			$this->_files = array();
 			
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
@@ -61,10 +68,21 @@ class mmutils extends object
 	
 	
 	
+	/**
+	 * Method to get the image Path
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public  function getRootMediaPath()
+	{
+		return $this->_rootMediaPath;
+	}
+	
 	
 	/**
 	 * Method to remove a folder
-	 * @param string foldername The name of the new folder	 
+	 * @param string $foldername The name of the new folder	 
 	 * @access public
 	 * @return bool
 	 * @version 0.1
@@ -132,12 +150,23 @@ class mmutils extends object
 	            if(is_dir($completepath))
 	            {
 	            	$foldername = str_replace($this->_rootMediaPath, '',$completepath);
-	            	//if ($foldername == '')
-	            	//{
-	            	//	$foldername = '\/';
-	            	//}
+	            	
 	            	$this->_folders[] = array('foldername' => $foldername);
 	            	$this->_recurseFolders($completepath);
+	            } else {
+	            	
+	            	if(is_file($completepath))
+	            	{
+	            		$info = pathinfo($completepath);	
+	            		$newPath = str_replace($this->_rootMediaPath, '', $info['dirname']);
+	            		//var_dump($info);
+	            		$max = count($this->_folders) - 1;
+	            		$value = $newPath.'/'.$info['basename'];  //$this->_folders[$max]['foldername'].'/'.$info['basename'];
+	            		if (!$this->deep_in_array($value, $this->_files)) 
+	            		{         
+	               			$this->_files[] = array('folder' => $value, 'title' => $info['basename']);
+	            		}
+	            	}
 	            }
 	       	}
 	     }catch (Exception $e){
@@ -146,6 +175,27 @@ class mmutils extends object
         }
 	       	
 	}
+	
+	/**
+	 * Method to search within an array 
+	 * @param  string $value the search value
+	 * @param array The Array to be searched
+	 * @access public
+	 * @version 0.1
+	 * @author Wesley Nitsckie
+	 * @return bool
+	 */
+	public 	function deep_in_array($value, $array) 
+	{
+	   foreach($array as $item) {
+	       if(!is_array($item)) continue;
+	       if(in_array($value, $item)) return true;
+	       else if($this->deep_in_array($value, $item)) return true;
+	   }
+  
+    	return false;
+	}
+	
 	
 	
 	/**
@@ -264,6 +314,27 @@ class mmutils extends object
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
 	    }
+	}
+	
+	/**
+	 * Method to get a list of all the images on the file system
+	 * @param 
+	 * @access public
+	 * @return array
+	 */
+	public  function getImages()
+	{
+		try {	
+			$this->getFolders();
+			
+			return $this->_files;
+				
+		}catch (Exception $e){
+       		echo 'Caught exception: ',  $e->getMessage();
+        	exit();
+        }
+		
+		
 	}
 
 }

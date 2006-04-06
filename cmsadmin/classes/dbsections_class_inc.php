@@ -44,12 +44,18 @@ class dbsections extends dbTable
 	/**
 	 * Methode to get the list of sections
 	 * @access public
+	 * @param bool $isPublished TRUE | FALSE To get published sections
 	 * @return array
 	 */
-	public function getSections()
+	public function getSections($isPublished = FALSE)
 	{
 		try {
-			return $this->getAll();
+			if($isPublished)
+			{
+				return $this->getAll('WHERE published = 1');
+			} else {
+				return $this->getAll();
+			}
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
@@ -58,7 +64,7 @@ class dbsections extends dbTable
 	
 	/**
 	 * Method to get a Section
-	 * @var string id The section id
+	 * @param  string $id The section id
 	 * @return array
 	 * @access public
 	 */
@@ -82,7 +88,7 @@ class dbsections extends dbTable
 			$title = $this->getParam('title');
 			$menuText = $this->getParam('menutext');
 			$image = $this->getParam('image');
-			$imagePostion = $this->getParam('imagepostion');
+			$imagePostion = $this->getParam('imageposition');
 			$access = $this->getParam('access');
 			$desciption = $this->getParam('description');
 			$published = $this->getParam('published');
@@ -119,7 +125,7 @@ class dbsections extends dbTable
 			$title = $this->getParam('title');
 			$menuText = $this->getParam('menutext');
 			$image = $this->getParam('image');
-			$imagePostion = $this->getParam('imagepostion');
+			$imagePostion = $this->getParam('imageposition');
 			$access = $this->getParam('access');
 			$desciption = $this->getParam('description');
 			$published = $this->getParam('published');
@@ -147,7 +153,7 @@ class dbsections extends dbTable
 	/**
 	 * Method to get the Order List List dropdown
 	 * 
-	 * @var string $name The name of the radio box
+	 * @param  string $name The name of the radio box
 	 * @access public
 	 * @return string
 	 */
@@ -188,7 +194,7 @@ class dbsections extends dbTable
 	 * Method to get the menutext for a section
 	 * @return string
 	 * @access public
-	 * @param string id 
+	 * @param string $id 
 	 */
 	public function getMenuText($id)
 	{

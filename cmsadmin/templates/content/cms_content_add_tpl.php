@@ -16,6 +16,8 @@ $sections = & $this->newObject('dropdown', 'htmlelements');
 $category = & $this->newObject('dropdown', 'htmlelements');
 $button =  & $this->newObject('button', 'htmlelements');
 $table2 = & $this->newObject('htmltable', 'htmlelements');
+$frontPage = & $this->newObject('checkbox', 'htmlelements');
+$published = & $this->newObject('checkbox', 'htmlelements');
 
 $objForm = $this->newObject('form','htmlelements');
      
@@ -29,8 +31,7 @@ if($this->getParam('id') == '')
 	$titleInput->value = '';
 	$menuTextInput->value = '';
 	$introInput->value = '';
-	
-
+	$published->setChecked(TRUE);
 	
 } else {
 	$action = 'editcontent';
@@ -43,7 +44,8 @@ if($this->getParam('id') == '')
 	$introInput->setContent($arrContent['introtext']);
 	$bodyInput->setContent($arrContent['fulltext']);
 
-	
+	$frontPage->setChecked($this->_objFrontPage->isFrontPage($arrContent['id']));
+	$published->setChecked($arrContent['published']);
 }
 
 
@@ -74,15 +76,19 @@ $bodyInput->name = 'body';
 $introInput->name = 'intro';
 
 $sections->name= 'section';
-$sections->addFromDB($this->_objSections->getSections(),'title','id');
+$sections->addFromDB($this->_objSections->getSections(),'title','id',$arrContent['sectionid']);
 $sections->label='Sections';
 
 $category->name= 'catid';
-$category->addFromDB($this->_objCategories->getCategories(),'title','id');
+$category->addFromDB($this->_objCategories->getCategories(),'title','id',$arrContent['catid']);
 $category->label='Sections';
 
 $button->setToSubmit();
 $button->value = 'Save';
+
+$published->name = 'published';
+
+$frontPage->name = 'frontpage';
 
 
 $table->startRow();
@@ -98,6 +104,13 @@ $table->addCell('Menu Text');
 $table->addCell($menuTextInput->show());
 $table->addCell('Categories');
 $table->addCell($category->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell('Show on Front Page');
+$table->addCell($frontPage->show());
+$table->addCell('Published');
+$table->addCell($published->show());
 $table->endRow();
 
 $table2->startRow();

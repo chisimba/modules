@@ -28,33 +28,38 @@ $table->addHeaderCell('Published');
 $table->addHeaderCell('Access');
 $table->addHeaderCell('Section');
 $table->addHeaderCell('Category ID');
-$table->addHeaderCell('#Active');
+//$table->addHeaderCell('#Active');
 
 $table->endHeaderRow();   
+
+$rowcount = 0;
 
 //setup the tables rows  and loop though the records
 foreach($arrCategories as $arrCategory)
 {
 	$link->link = $arrCategory['title'];
 	$link->href = $this->uri(array('action' => 'addcategory', 'mode' => 'edit', 'id' => $arrCategory['id']));
+
+	$oddOrEven = ($rowcount == 0) ? "even" : "odd";
 	
-	$table->startRow();
-    $table->addCell($cnt++);
-    $table->addCell($link->show());
-    $table->addCell($arrCategory['published']);
+    $tableRow = array();
+    $tableRow[]=$cnt++;
+    $tableRow[]=$link->show();
+    $tableRow[]=$this->_objUtils->getCheckIcon($arrCategory['published'], FALSE);
    // $table->addCell($arrCategory['ordering']);
-	$table->addCell($this->_objUtils->getAccess($arrCategory['access']));
+	$tableRow[]=$this->_objUtils->getAccess($arrCategory['access']);
 	
 	$link->link = $this->_objSections->getMenuText($arrCategory['sectionid']);
 	$link->href = $this->uri(array('action' => 'addsection', 'mode' => 'edit', 'id' => $arrCategory['sectionid']));
 	
-	$table->addCell($link->show());
-	$table->addCell($arrCategory['id']);
+	$tableRow[]=$link->show();
+	$tableRow[]=$arrCategory['id'];
 	//$table->addCell($this->_objCategories->getCatCount($section['id']));
 	//$table->addCell($section['created']);
 
-  	$table->endRow();
-	
+  	
+	$table->addRow($tableRow, $oddOrEven);
+	 $rowcount = ($rowcount == 0) ? 1 : 0;
 	
 }
 

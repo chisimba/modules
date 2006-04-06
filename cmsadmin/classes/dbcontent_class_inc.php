@@ -26,6 +26,13 @@ class dbcontent extends dbTable
 	protected $_objUser;
 	
 	
+	/**
+	 * @var object $_objFrontPage t
+	 * 
+	 * @access protected
+	 */
+	protected $_objFrontPage;
+	
 	
 	/**
 	* Constructor
@@ -34,7 +41,7 @@ class dbcontent extends dbTable
 	{
 		parent::init('tbl_cms_content');
 		$this->_objUser = & $this->getObject('user', 'security');
-		
+		$this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
 	}
 	
 	/**
@@ -55,6 +62,8 @@ class dbcontent extends dbTable
 			$introText = $this->getParam('intro');
 			$fullText = $this->getParam('body');
 			
+			
+			
 			$newArr = array(
 							'title' => $title ,
 							'menutext' => $menuText,
@@ -65,13 +74,23 @@ class dbcontent extends dbTable
 							'access' => $access,
 							'ordering' => 0,
 							'published' => $published,
+							'created' => $this->now(),
+							'modified' => time(),
 							'created_by' => $creatorid
 							);
-			//var_dump($newArr);
-			//				die;
-			$this->insert($newArr);
+			
+			$newId = 	$this->insert($newArr);
+			
+			//process the forntpage
+			$isFrontPage = $this->getParam('frontpage');
+			
+			if($isFrontPage == 'on')
+			{				
+				$this->_objFrontPage->add($newId);
+			}
 		
-			//print 'Saving new record';
+			return $newId;
+			
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
@@ -93,7 +112,7 @@ class dbcontent extends dbTable
 			$title = $this->getParam('title');
 			$menuText = $this->getParam('menutext');
 			$sectionid = $this->getParam('section');
-			$published = $this->getParam('published');
+			$published = ($this->getParam('published') == 'on') ? '1':'0';
 			$creatorid = $this->_objUser->userId();
 			$access = $this->getParam('access');
 			$catid = $this->getParam('catid');
@@ -103,16 +122,28 @@ class dbcontent extends dbTable
 			$newArr = array(
 							'title' => $title ,
 							'menutext' => $menuText,
-							'sectionid' => intval($sectionid),
-							'catid' => intval($catid),							
+							'sectionid' => $sectionid,
+							'catid' => $catid,							
 							'access' => $access,
 							'introtext' => $introText,
-							'fulltext' => $fullText,							
-							'ordering' => 0,
+							'body' => $fullText,		
+							'modified' => $this->now(),					
+							'ordering' => 0,							
 							'published' => $published,
 							'created_by' => $creatorid
 							);
 		
+			//process the forntpage
+			$isFrontPage = $this->getParam('frontpage');
+			
+			if($isFrontPage == 'on')
+			{				
+				$this->_objFrontPage->add($id);
+			} else {
+				$this->_objFrontPage->remove($id);
+			}
+		
+			
 			return $this->update('id', $id, $newArr);
 		
 			//print 'Saving new record';

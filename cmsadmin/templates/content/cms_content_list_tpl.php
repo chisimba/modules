@@ -33,31 +33,35 @@ $table->addHeaderCell('Author');
 $table->addHeaderCell('Date');
 $table->endHeaderRow();   
 
+$rowcount = 0;
+
 //setup the tables rows  and loop though the records
 foreach($arrPages as $page)
 {
-	
-	$table->startRow();
-    $table->addCell($cnt++);
+	 $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+	//$table->startRow();
+    $tableRow = array();
+	$tableRow[]=$cnt++;
     
     
     
     $link->link = $page['title'];
 	$link->href = $this->uri(array('action' => 'addcontent', 'mode' => 'edit', 'id' => $page['id']));
     
-	$table->addCell($link->show());
-	$table->addCell($this->_objUtils->getCheckIcon($this->_objFrontPage->isFrontPage($page['id']), FALSE));
-    $table->addCell($page['published']);
+	$tableRow[]=$link->show();
+	$tableRow[]=$this->_objUtils->getCheckIcon($this->_objFrontPage->isFrontPage($page['id']), FALSE);
+    $tableRow[]=$this->_objUtils->getCheckIcon($page['published'], false);
   //  $table->addCell('up down');
     //$table->addCell($page['ordering']);
-	$table->addCell($this->_objUtils->getAccess($page['access']));
-	$table->addCell($this->_objSections->getMenuText($page['sectionid']));
-	$table->addCell($this->_objCategories->getMenuText($page['catid']));
-	$table->addCell($this->_objUser->fullname($page['created_by']));
-	$table->addCell($this->_objUtils->formatDate($page['created']));
+	$tableRow[]=$this->_objUtils->getAccess($page['access']);
+	$tableRow[]=$this->_objSections->getMenuText($page['sectionid']);
+	$tableRow[]=$this->_objCategories->getMenuText($page['catid']);
+	$tableRow[]=$this->_objUser->fullname($page['created_by']);
+	$tableRow[]=$this->_objUtils->formatShortDate($page['created']);
 
-  	$table->endRow();
-	
+  	//$table->endRow();
+  	$table->addRow($tableRow, $oddOrEven);
+	 $rowcount = ($rowcount == 0) ? 1 : 0;
 	
 }
 

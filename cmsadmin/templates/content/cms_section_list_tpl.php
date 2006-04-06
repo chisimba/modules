@@ -29,9 +29,11 @@ $table->addHeaderCell('Published');
 $table->addHeaderCell('Access');
 $table->addHeaderCell('Section ID');
 $table->addHeaderCell('#Categories');
-$table->addHeaderCell('#Active');
+//$table->addHeaderCell('#Active');
 
 $table->endHeaderRow();   
+
+$rowcount = 0;
 
 //setup the tables rows  and loop though the records
 foreach($arrSections as $section)
@@ -39,19 +41,22 @@ foreach($arrSections as $section)
 	$link->link = $section['title'];
 	$link->href = $this->uri(array('action' => 'addsection', 'mode' => 'edit', 'id' => $section['id']));
 	
-	$table->startRow();
-    $table->addCell($cnt++);
-    $table->addCell($link->show());
-    $table->addCell($section['published']);
+	$oddOrEven = ($rowcount == 0) ? "even" : "odd";
+	
+    $tableRow = array();
+	$tableRow[]=$cnt++;
+    $tableRow[]=$link->show();
+    $tableRow[]=$this->_objUtils->getCheckIcon($section['published']);
    // $table->addCell('up down');
     //$table->addCell($section['ordering']);
-	$table->addCell($this->_objUtils->getAccess($section['access']));
-	$table->addCell($section['id']);
+	$tableRow[]=$this->_objUtils->getAccess($section['access']);
+	$tableRow[]=$section['id'];
 	//$table->addCell($section['catid']);
-	$table->addCell($this->_objCategories->getCatCount($section['id']));
+	$tableRow[]=$this->_objCategories->getCatCount($section['id']);
 	//$table->addCell($section['created']);
 
-  	$table->endRow();
+  	$table->addRow($tableRow, $oddOrEven);
+	$rowcount = ($rowcount == 0) ? 1 : 0;
 	
 	
 }

@@ -60,13 +60,16 @@ if($editmode)
 	$menuTextInput->value = $arrSection['menutext'];
 	$bodyInput->value = $arrSection['description'];
 	$layout = $arrSection['layout'];
+	$selected = $arrSection['image'];
+	$imageSRC = $this->_objConfig->siteRoot().'/usrfiles/media'.$selected;
+	$isPublished = ($arrSection['published'] == 1) ? 'Yes' : 'No';
 	
 } else {
 	$titleInput->value = '';
 	$menuTextInput->value = '';
 	$bodyInput->value = '';
 	$layout = 0;
-	
+	$imageSRC = $this->_objConfig->siteRoot().'skins/_common/blank.png"';
 }
 
 //title
@@ -84,7 +87,8 @@ $table->endRow();
 //image
 $table->startRow();
 $table->addCell('Image');
-$table->addCell($this->_objUtils->getImageList('image').'<p>');
+$table->addCell($this->_objUtils->getImageList('image', $selected).'&nbsp;<img src="'.$imageSRC.'"  name="imagelib" width="80" height="80" border="2" alt="Preview" /><p>', 'top');
+
 $table->endRow();
 
 //image postion
@@ -121,7 +125,7 @@ $table->endRow();
 //published
 $table->startRow();
 $table->addCell('Published');
-$table->addCell($this->_objUtils->getYesNoRadion('published'));
+$table->addCell($this->_objUtils->getYesNoRadion('published', $isPublished));
 $table->endRow();
 
 //description

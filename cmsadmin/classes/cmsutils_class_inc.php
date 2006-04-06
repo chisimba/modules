@@ -123,28 +123,39 @@ class cmsutils extends object
 	/**
 	 * Method to get the images dropdown
 	 * @access public
-	 * @var  string $name The name of the field
+	 * @param   string $name The name of the field
+	 * @param  string $selected the selected value
 	 * @return string
 	 */
-	public function  getImageList($name)
+	public function  getImageList($name, $selected)
 	{
 		try {
 			$objDropDown = & $this->newObject('dropdown', 'htmlelements');
+			$objConfig = & $this->newObject('config' , 'config');
+			
+			$objMedia = & $this->newObject('mmutils', 'mediamanager');
+			$objMedia->getImages();
 			$objDropDown->name = $name;
 			//fill the drop down with the list of images
-			//TODO
+			$path = $objConfig->siteRoot().'usrfiles/media';
+			
 			$objDropDown->addOption('0',' - Select Image - ');
+			$objDropDown->addFromDB($objMedia->getImages(),'title','folder',$selected);
+			$objDropDown->extra = 'onchange="javascript:if (document.forms[0].'.$name.'.options[selectedIndex].value!=\'\') {document.imagelib.src=\''. $path.'\' + document.forms[0].image.options[selectedIndex].value} else {document.imagelib.src=\'http://localhost/5ive/app/skins/_common/blank.png\'}"';
 			return $objDropDown->show();		
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
-	}
+	}	
+	
+	
+	
 	
 	/**
 	 * Method to get the image position dropdown
 	 * @access public
-	 * @var  string $name The name of the field
+	 * @param   string $name The name of the field
 	 * @return string
 	 */
 	public function  getImagePostionList($name)
@@ -170,18 +181,19 @@ class cmsutils extends object
 	/**
 	 * Method to get the Yes/No radio  box
 	 * 
-	 * @var string $name The name of the radio box
+	 * @param  string $name The name of the radio box
 	 * @access public
 	 * @return string
 	 */
-	public function  getYesNoRadion($name)
+	public function  getYesNoRadion($name, $selected = 'Yes')
 	{
 		try {
 			$objRadio = & $this->newObject('radio', 'htmlelements');
 			$objRadio->name = $name;
 			$objRadio->addOption('0','No');		
 			$objRadio->addOption('1','Yes');		
-			$objRadio->setSelected('1');
+			$selected = ($selected == 'No') ? '0' : '1';
+			$objRadio->setSelected($selected);
 			
 			return $objRadio->show();		
 		}catch (Exception $e){
@@ -195,6 +207,7 @@ class cmsutils extends object
 	 * 
 	 * @var string $name The name of the radio box
 	 * @access public
+	 * @param string $name The name of the field
 	 * @return string
 	 */
 	public function  getAccessList($name)
@@ -284,7 +297,7 @@ class cmsutils extends object
 			$table->addCell($link->show() );
 			$table->endRow();
 			
-			$arrSections = $this->_objSections->getSections();
+			$arrSections = $this->_objSections->getSections(TRUE);
 			foreach ($arrSections as $section)
 			{
 				
@@ -357,7 +370,7 @@ class cmsutils extends object
 					
 					//date
 					$table->startRow();
-					$table->addCell($page['created']);
+					$table->addCell($this->formatDate($page['created']));
 					$table->endRow();
 					
 					//intor text
@@ -455,7 +468,7 @@ class cmsutils extends object
 		try {
 			$heading = '<h3>'. $arrSection['title']."</h3>";
 			
-			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" ORDER BY ordering');
+			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
 			
 			$cnt = 0;
 			foreach ($arrPages as $page)
@@ -467,7 +480,7 @@ class cmsutils extends object
 					$link->link = $page['menutext'];
 					$link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id']), 'cms');
 					
-					$str .= '<li>'. $page['created'].' - '.$link->show() .'</li> ';
+					$str .= '<li>'. $this->formatDate($page['created']).' - '.$link->show() .'</li> ';
 				} else {
 					$strBody = '<h3>'.$page['title'].'</h3>';
 					$strBody .= $page['body'].'<p>';
@@ -496,10 +509,13 @@ class cmsutils extends object
 	 function _layoutSummaries(&$arrSection)
 	{
 		try{
-			$str = '<h3>'. $arrSection['title']."</h3>";
-			$objUser = & $this->newObject('user', 'security');
 			
-			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" ORDER BY ordering');
+			$objUser = & $this->newObject('user', 'security');
+			$objConfig = & $this->newObject('config', 'config');
+			
+			$str = '<h3>'. $arrSection['title'].'</h3><img src="'.$objConfig->siteRoot().'usrfiles/media'.$arrSection['image'].'" >';
+			
+			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
 			foreach ($arrPages as $page)
 			{
 				
@@ -519,7 +535,7 @@ class cmsutils extends object
 				
 				//date
 				$table->startRow();
-				$table->addCell($page['created']);
+				$table->addCell($this->formatDate($page['created']));
 				$table->endRow();
 				
 				//intor text
@@ -562,7 +578,7 @@ class cmsutils extends object
 		try {
 			$heading = '<h3>'. $arrSection['title']."</h3>";
 			
-			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" ORDER BY ordering');
+			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
 			
 			$cnt = 0;
 			foreach ($arrPages as $page)
@@ -602,14 +618,14 @@ class cmsutils extends object
 		try {
 			$str = '<h3>'. $arrSection['title']."</h3>";
 			
-			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" ORDER BY ordering');
+			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
 			foreach ($arrPages as $page)
 			{
 				$link = & $this->newObject('link', 'htmlelements');
 				$link->link = $page['title'];
 				$link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id']),'cms');
 				
-				$str .= '<li>'.$page['created'].' - '. $link->show() .'</li>';
+				$str .= '<li>'.$this->formatDate($page['created']).' - '. $link->show() .'</li>';
 			}
 			
 			return $str;	
@@ -647,7 +663,8 @@ class cmsutils extends object
 	/**
 	 * Method to format the date
 	 * 
-	 * @param  $date The unformatted date
+	 * @example Thursday, 12 November 2006
+	 * @param  date $date The unformatted date
 	 * @return formatted date string
 	 * @access public
 	 * @version 0.1
@@ -658,11 +675,37 @@ class cmsutils extends object
 	public function formatDate($date)
 	{
 		try {
-				return $today = date("m/d/y", $date );
-			}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
-        }
+				return  date("l, d F o", gmmktime($date));
+			}
+			catch (Exception $e){
+       			echo 'Caught exception: ',  $e->getMessage();
+        		exit();
+        	}
+		
+	}
+	
+	
+	/**
+	 * Method to format the date
+	 * 
+	 * @example 01/12/2006
+	 * @param  date $date The unformatted date
+	 * @return formatted date string
+	 * @access public
+	 * @version 0.1
+	 * @author Wesley Nitsckie
+	 * @copyright 2004, University of the Western Cape & AVOIR Project
+	 * @license GNU GPL
+	 */
+	public function formatShortDate($date)
+	{
+		try {
+				return  date("m/d/o",gmmktime($date) );
+			}
+			catch (Exception $e){
+       			echo 'Caught exception: ',  $e->getMessage();
+        		exit();
+        	}
 		
 	}
 	

@@ -39,20 +39,24 @@ class dbcontentfrontpage extends dbTable
 	
 	/**
 	 * MEthod to save a record to the database
+	 * 
+	 * @param string $contentId The neContent Id
+	 * @param int $ordering
 	 * @access public
 	 * @return bool
 	 */
-	public function add()
+	public function add($contentId, $ordering = 0)
 	{
-		try{
-			$contentId = $this->getParam(id);
-			$ordering = $this->getParam('ordering');
+		try{		
 			
-			$this->insert(array(
+			if(!$this->valueExists('content_id',$contentId))
+			{
+				
+				return $this->insert(array(
 							'content_id' => $contentId,
 							'ordering' => $ordering			
 							));
-		
+			}
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();

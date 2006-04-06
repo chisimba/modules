@@ -81,6 +81,13 @@ class cmsadmin extends controller
     protected $_objUser;
     
     
+    /**
+     * The config object 
+     *
+     * @access private
+     * @var object
+    */
+    protected $_objConfig;
     
     
 	/**
@@ -97,6 +104,7 @@ class cmsadmin extends controller
 			$this->_objUtils = & $this->newObject('cmsutils', 'cmsadmin');
 			$this->_objUser = & $this->newObject('user', 'security');
         	$this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
+        	$this->_objConfig = & $this->newObject('config', 'config');
         	
         }catch (Exception $e){
        	echo 'Caught exception: ',  $e->getMessage();
