@@ -19,7 +19,7 @@ class splashscreenrender extends object
     function init()
     {
         // Get an instance of the config object
-        $this->objConfig=& $this->getObject('config','config');
+        $this->objConfig=& $this->getObject('altconfig','config');
         //Get an instance of the language object
         $this->objLanguage = &$this->getObject('language', 'language');
         //Get an instance of the skin
@@ -43,7 +43,7 @@ class splashscreenrender extends object
     */
     function putSplashScreen($goplace = '') {
         // Create help object
-        $helpText = $this->objLanguage->languageText('mod_useradmin_help');
+        $helpText = $this->objLanguage->languageText('mod_useradmin_help','useradmin');
         $helpIcon = $this->objHelp->show('register', 'useradmin', $helpText);
 
 
@@ -56,38 +56,38 @@ class splashscreenrender extends object
         }
         $startForm=$startForm."\">";
         //the link to registration
-        $registerModule=$this->objConfig->getValue('SELFREGISTER_MODULE') or $registerModule='useradmin';
+        $registerModule='useradmin';
         $registerLink="<a href='".$this->uri(array('action'=>'register'),$registerModule)."'>".
-        $this->objLanguage->languageText('word_register')."</a>\n";
+        $this->objLanguage->languageText('word_register','security')."</a>\n";
         // the link for resetting passwords
         $resetLink="<a href='".$this->uri(array('action'=>'needpassword'),'useradmin')."'>".
-        $this->objLanguage->languageText('mod_security_forgotpassword')."</a>\n";
+        $this->objLanguage->languageText('mod_security_forgotpassword','security')."</a>\n";
         // the help link
         $resetLink .= '<br><br>'.$helpIcon;
 
         //the variable to hold the username textbox
-        $userNameBox=$this->objLanguage->languageText("word_username")
+        $userNameBox=$this->objLanguage->languageText("word_username",'useradmin')
             .':<br/><input name="username" type="text" id="username" class="text" />';
         //the variable to hold the password textbox
-        $passwordBox=$this->objLanguage->languageText("word_password")
+        $passwordBox=$this->objLanguage->languageText("word_password",'security')
             .':<br/><input name="password" type="password" id="password" class="text" />';
         //the variable to hold the useLDAP checkbox
         $useLdapCheck='<input type="checkbox" name="useLdap" value="yes" class="transparentbgnb">'
-            .$this->objLanguage->languageText("phrase_networkid");
+            .$this->objLanguage->languageText("phrase_networkid",'security');
         //the variable to hold the login button
 
-        $jsWarning = '<noscript><span class="error"><strong>'.$this->objLanguage->languageText('mod_security_javascriptwarning').'</strong></span><br /></noscript>';
+        $jsWarning = '<noscript><span class="error"><strong>'.$this->objLanguage->languageText('mod_security_javascriptwarning','security').'</strong></span><br /></noscript>';
 
         $loginButton= $jsWarning.'<input name="Submit" type="submit" class="button"
           onclick="KEWL_validateForm(\'username\',\'\',\'R\',\'password\',\'\',\'R\');'
           .'return document.KEWL_returnValue" value="'
-          .$this->objLanguage->languageText("word_login").'"/>';
+          .$this->objLanguage->languageText("word_login",'security').'"/>';
         $login=$userNameBox.'&nbsp;&nbsp;&nbsp;'
             .$passwordBox.'&nbsp;&nbsp;&nbsp;'
         .$useLdapCheck.'&nbsp;&nbsp;&nbsp;'.$loginButton;
         //Open and parse the template file for the skin (splash_readfile_template.php)
         $splashFile=$this->objSkin->getSkinLocation().'splashscreen/splash_readfile_template.php';
-        $ts=fopen($splashFile,"r") or die($this->objLanguage->languageText("error_splashscrmissing")
+        $ts=fopen($splashFile,"r") or die($this->objLanguage->languageText("error_splashscrmissing",'security')
             .": ".$splashFile.".");
         $ts_content=fread($ts, filesize($splashFile));
 
@@ -100,7 +100,7 @@ class splashscreenrender extends object
         $ts_content=str_replace("[-PASSWORDBOX-]", $passwordBox, $ts_content);
 
         // Display the LDAP checkbox only if this site is using LDAP
-        if ($this->objConfig->useLDAP()){
+        if ($this->objConfig->getuseLDAP()){
             $ts_content=str_replace("[-USELDAPCHECK-]", $useLdapCheck, $ts_content);
         } else {
             $ts_content=str_replace("[-USELDAPCHECK-]",NULL, $ts_content);
@@ -122,7 +122,7 @@ class splashscreenrender extends object
         $languageChooser=$this->objLanguage->putlanguageChooser();
     $ts_content=str_replace("[-LANGUAGECHOOSER-]",$languageChooser, $ts_content);
         // Put registration link only if allowselfregister is true
-        if ($this->objConfig->allowSelfRegister()) {
+        if ($this->objConfig->getallowSelfRegister()) {
             $ts_content=str_replace("[-REGISTER-]", $registerLink, $ts_content);
         } else {
             $ts_content=str_replace("[-REGISTER-]", NULL, $ts_content);

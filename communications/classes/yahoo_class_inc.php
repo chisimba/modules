@@ -52,7 +52,7 @@ class yahoo extends object
         if ( $mode == 'byuserid' ) {
             $yahooId = $this->objDbUserparams->getValue('YAHOO', $yahooId);
             if (!$yahooId) {
-                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_yahoonoidreg");
+                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_yahoonoidreg",'communications');
                 $this->objIcon->setIcon("yahoo_noid");
                 return $this->objIcon->show();
             }
@@ -61,23 +61,23 @@ class yahoo extends object
         switch ( $this->getYahooStatus($yahooId) ) {
             case "yahoo_offline":
                 $this->objIcon->setIcon("yahoo_off");
-                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_yahoooff");
+                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_yahoooff",'communications');
                 return $this->objIcon->show();
                 break;
             case "yahoo_online":
                 $this->objIcon->setIcon("yahoo_on");
-                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_yahooon");
+                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_yahooon",'communications');
                 return $this->objIcon->show();
                 break;
             case "yahoo_noconnection":
                 $this->objIcon->setIcon("yahoo_nocon");
-                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_yahoonocon");
+                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_yahoonocon",'communications');
                 return $this->objIcon->show();
                 break;
             case "yahoo_unknown":
             default:
                 $this->objIcon->setIcon("yahoo_on");
-                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_yahoounk");
+                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_yahoounk",'communications');
                 return $this->objIcon->show();
                 break;
         } #switch

@@ -532,8 +532,8 @@ class dbcalendar extends dbTable
         $eventsTable->cellpadding='5';
 
         $eventsTable->startHeaderRow();
-        $eventsTable->addHeaderCell($this->objLanguage->languageText('word_date'), '100');
-        $eventsTable->addHeaderCell($this->objLanguage->languageText('mod_calendarbase_eventdetails'));
+        $eventsTable->addHeaderCell($this->objLanguage->languageText('word_date','calendar'), '100');
+        $eventsTable->addHeaderCell($this->objLanguage->languageText('mod_calendarbase_eventdetails','calendar'));
         $eventsTable->endHeaderRow();
 
 		// Find the module to go to for editing events
@@ -634,7 +634,7 @@ class dbcalendar extends dbTable
 
                 $array = array('action'=>'delete', 'id'=>$eventId);
 
-                $editDeleteIcons .= ' '.$icon->getDeleteIconWithConfirm($eventId, $array, $internaleditmodule, $this->objLanguage->languageText('mod_calendarbase_eventdeleterequestconfirm'));
+                $editDeleteIcons .= ' '.$icon->getDeleteIconWithConfirm($eventId, $array, $internaleditmodule, $this->objLanguage->languageText('mod_calendarbase_eventdeleterequestconfirm','calendar'));
 
 
                 if ($this->editDeletePermission[$event['userorcontext']]) {
@@ -647,7 +647,7 @@ class dbcalendar extends dbTable
                 $cellContent = '<div class="'.$tdclass.'">'.$editDeleteIcons .'<strong>'.stripslashes($event['eventtitle']).'</strong><p>'.stripslashes($event['eventdetails']).'</p>';
 
                 if ($event['eventurl'] != '') {
-                    $cellContent .= '<p>'.$this->objLanguage->languageText('mod_calendarbase_relatedwebsite').': <a href="'.$event['eventurl'].'" target="calendarpop">'.$event['eventurl'].'</a></p>';
+                    $cellContent .= '<p>'.$this->objLanguage->languageText('mod_calendarbase_relatedwebsite','calendar').': <a href="'.$event['eventurl'].'" target="calendarpop">'.$event['eventurl'].'</a></p>';
                 }
 
 				// Attachments
@@ -656,7 +656,7 @@ class dbcalendar extends dbTable
 					$nextLine = '';
 					if (count($files) > 0) {
 						//$cellContent .= '<hr width="50%" align="left" size="1" />';
-						$cellContent .= '<br /><p><em>'.$this->objLanguage->languageText('word_attachments').':</em></p>';
+						$cellContent .= '<br /><p><em>'.$this->objLanguage->languageText('word_attachments','calendar').':</em></p>';
 						$cellContent .= '<div style="padding-left: 20px;">';
 
 						foreach ($files as $file)
@@ -727,7 +727,7 @@ class dbcalendar extends dbTable
             } // End of For Loop
         } else {
             $eventsTable->startRow();
-            $eventsTable->addCell('<span class="noRecordsMessage">'.$this->objLanguage->languageText('mod_calendarbase_noeventsforthismonth', 'No Events for this month').'</span>', NULL, 'center', 'center', NULL, 'colspan="2"');
+            $eventsTable->addCell('<span class="noRecordsMessage">'.$this->objLanguage->languageText('mod_calendarbase_noeventsforthismonth','calendar', 'No Events for this month').'</span>', NULL, 'center', 'center', NULL, 'colspan="2"');
             $eventsTable->endRow();
         }
 
@@ -751,8 +751,8 @@ class dbcalendar extends dbTable
         $eventsTable->cellpadding='3';
 
         $eventsTable->startHeaderRow();
-        $eventsTable->addHeaderCell($this->objLanguage->languageText('word_date'), '50');
-        $eventsTable->addHeaderCell($this->objLanguage->languageText('word_event'));
+        $eventsTable->addHeaderCell($this->objLanguage->languageText('word_date'),'calendar', '50');
+        $eventsTable->addHeaderCell($this->objLanguage->languageText('word_event','calendar'));
         $eventsTable->endHeaderRow();
 
         if (count($events) > 0) {
@@ -765,7 +765,7 @@ class dbcalendar extends dbTable
             }
         } else {
             $eventsTable->startRow();
-            $eventsTable->addCell('<span class="noRecordsMessage">'.$this->objLanguage->languageText('mod_calendarbase_noeventsforthismonth', 'No Events for this month'), NULL, 'center', 'center', NULL, 'colspan="2"');
+            $eventsTable->addCell('<span class="noRecordsMessage">'.$this->objLanguage->languageText('mod_calendarbase_noeventsforthismonth','calendar', 'No Events for this month'), NULL, 'center', 'center', NULL, 'colspan="2"');
             $eventsTable->endRow();
         }
 
@@ -800,7 +800,7 @@ class dbcalendar extends dbTable
 
         $previousIcon =& $this->getObject('geticon', 'htmlelements');
         $previousIcon->setIcon('prev');
-        $previousIcon->title = $this->objLanguage->languageText('mod_calendarbase_previousmonth');
+        $previousIcon->title = $this->objLanguage->languageText('mod_calendarbase_previousmonth','calendar');
 
         $previousMonthLink = new link($this->uri(array('action' => 'cal_view', 'month' => $previousMonth['month'], 'year' => $previousMonth['year'], 'events'=>$this->eventsTag), $this->module));
         $previousMonthLink->link = $previousIcon->show().' '.$this->objSimpleCal->monthFull($previousMonth['month']).' '.$previousMonth['year'];
@@ -810,7 +810,7 @@ class dbcalendar extends dbTable
 
         $nextIcon =& $this->getObject('geticon', 'htmlelements');
         $nextIcon->setIcon('next');
-        $nextIcon->title = $this->objLanguage->languageText('mod_calendarbase_nextmonth');
+        $nextIcon->title = $this->objLanguage->languageText('mod_calendarbase_nextmonth','calendar');
 
         $nextMonthLink = new link($this->uri(array('action' => 'cal_view', 'month' => $nextMonth['month'], 'year' => $nextMonth['year'], 'events'=>$this->eventsTag), $this->module));
         $nextMonthLink->link = $this->objSimpleCal->monthFull($nextMonth['month']).' '.$nextMonth['year'].$nextIcon->show();

@@ -56,7 +56,7 @@ class icq extends object
         if ( $mode == 'byuserid' ) {
             $icq = $this->objDbUserparams->getValue('ICQ', $icq);
             if (!$icq) {
-                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_icqnoidreg");
+                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_icqnoidreg",'communications');
                 $this->objIcon->setIcon("icq_noid");
                 return $this->objIcon->show();
             }
@@ -66,32 +66,32 @@ class icq extends object
             //If there is an error connecting to the server
             case "error_connecting":
                 $this->objIcon->setIcon("icq_errcon");
-                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_icqconerr");
+                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_icqconerr",'communications');
                 return $this->objIcon->show();
                 break;
             //If we get a user is online message
             case "user_online":
                 $this->objIcon->setIcon("icq_on");
-                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_icqonline");
+                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_icqonline",'communications');
                 return $this->objIcon->show();
                 break;
             //If we get a user offline message
             case "user_offline":
                 $this->objIcon->setIcon("icq_off");
-                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_icqoffline");
+                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_icqoffline",'communications');
                 return $this->objIcon->show();
                 break;
             //If the user has not activated online status indicator
             case "user_deactivated":
                 $this->objIcon->setIcon("icq_noac");
-                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_icqdeact");
+                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_icqdeact",'communications');
                 return $this->objIcon->show();
                 break;
             //Any error or unknown message
             case "error_unknownerror":
             default:
                 $this->objIcon->setIcon("icq_err");
-                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_icqerror");
+                $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_icqerror",'communications');
                 return $this->objIcon->show();
                 break;
         } #switch
