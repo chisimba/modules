@@ -38,7 +38,7 @@ class moduleadmin extends controller
     function init()
     {
         // instantiate the basic config object
-        $this->objConfig=&$this->getObject('config','config');
+        $this->objConfig=&$this->getObject('altconfig','config');
         // Language Object
         $this->objLanguage=&$this->getObject('language','language');
 
@@ -212,7 +212,7 @@ class moduleadmin extends controller
         {
             $regmodules[]=$line['module_id'];
         }
-        $lookdir=$this->objConfig->siteRootPath()."/modules";
+        $lookdir=$this->objConfig->getSiteRootPath()."/modules";
         $modlist=$this->checkdir($lookdir);
         natsort($modlist);
         $modulelist=array();
@@ -264,7 +264,7 @@ class moduleadmin extends controller
     */
     function hasController($modname)
     {
-        $lookdir=$this->objConfig->siteRootPath()."/modules/".$modname;
+        $lookdir=$this->objConfig->getSiteRootPath()."/modules/".$modname;
         if (is_dir($lookdir)){
             return $this->checkForFile($lookdir,'controller.php');
         } else {
@@ -476,7 +476,7 @@ class moduleadmin extends controller
     function findregisterfile($modname)
     {
         $endings=array('php','conf');
-        $path=$this->objConfig->siteRootPath()."/modules/".$modname."/register.";
+        $path=$this->objConfig->getSiteRootPath()."/modules/".$modname."/register.";
         foreach ($endings as $line)
         {
             if (file_exists($path.$line))
