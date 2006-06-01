@@ -282,45 +282,52 @@ class cmsutils extends object
 	public  function getSectionMenu()
 	{
 		try {
-			$link = & $this->newObject('link', 'htmlelements');
-			$table = & $this->newObject('htmltable', 'htmlelements');
 			
-			$table->width='100%';
-	        $table->cellspacing='0';
-	        $table->cellpadding='0';
+			//initiate the objects
+			$objSideBar = $this->newObject('sidebar', 'navigation');
 			
-	        //add the home link
-	        $link->link = 'Home';
-	        $link->href = $this->uri(null, 'cms');
-	        $link->cssClass = 'mainmenu1';
-	        $table->startRow();
-			$table->addCell($link->show() );
-			$table->endRow();
+			//create the nodes array
+			$nodes = array();
 			
+			//get the section id
+			$section = $this->getParam('id');
+			
+			//create the home like first
+			$nodes[] = array('text' => 'Home', 'uri' => $this->uri(null, 'cms'));
+						
+			//get the all the sections from the database
 			$arrSections = $this->_objSections->getSections(TRUE);
+			
+			
+			//start looping through the sections
 			foreach ($arrSections as $section)
 			{
 				
 				//add the sections
-		        $link->link = $section['menutext'];
-		        $link->href = $this->uri(array('action' => 'showsection', 'id' => $section['id']), 'cms');
-		        $link->cssClass = 'mainmenu1';
-		        $table->startRow();
-				$table->addCell($link->show() );
-				$table->endRow();
+		        if(($this->getParam('action') ==  'showsection') && ($this->getParam('id') == $section['id']))
+		        {
+		        	
+		        	$pagenodes = array();
+		        	$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$section['id'].'" AND published=1 ORDER BY ordering');
+		        	
+		        	foreach( $arrPages as $page)
+		        	{
+		        		$pagenodes[] = array('text' => $page['menutext'] , 'uri' =>$this->uri(array('action' => 'showcontent', 'id' => $page['id']), 'cms'));
+		        		
+		        	}
+		        	
+		        	$nodes[] = array('text' =>$section['menutext'], 'uri' => $this->uri(array('action' => 'showsection', 'id' => $section['id']), 'cms'), 'sectionid' => $section['id'], 'haschildren' => $pagenodes);
+		        	$pagenodes = null;
+		        	
+		        } else {
+		        	$nodes[] = array('text' =>$section['menutext'], 'uri' => $this->uri(array('action' => 'showsection', 'id' => $section['id']), 'cms'), 'sectionid' => $section['id']);	
+		        }
 				
 			}
-			
 			//add the admin link
-			$link->link = 'Administration';
-	        $link->href = $this->uri(null, 'cmsadmin');
-	        $link->cssClass = 'mainmenu1';
-	        $table->startRow();
-			$table->addCell($link->show() );
-			$table->endRow();
-			
-			return $table->show();
-				
+			$nodes[] = array('text' => 'Administration', 'uri' =>$this->uri(null, 'cmsadmin'));
+						
+			return $objSideBar->show($nodes, $this->getParam('id'));
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
@@ -342,6 +349,7 @@ class cmsutils extends object
 		try {
 			$objUser = & $this->newObject('user', 'security');
 			$arrFrontPages = $this->_objFrontPage->getFrontPages();
+			$objFeatureBox = $this->newObject('featurebox', 'navigation');
 			
 			//set a counter for the records .. display on the first 2  the rest will be dsiplayed as links
 			$cnt  = 0 ;
@@ -391,7 +399,7 @@ class cmsutils extends object
 						
 					}
 					
-					$str .= $table->show();
+					$str .= '';//$table->show();
 				} else {
 					//display as links
 					
@@ -406,10 +414,16 @@ class cmsutils extends object
 					$table->addCell($link->show());
 					$table->endRow();
 					
-					$str .= $table->show();
+					//$str .= $table->show();
 					
 				}
 				
+				//make feature boxes of the front page post
+				
+				//$str .= '<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
+				//$str .= '<p>'.$page['introtext'].'<a href="devtodo" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
+				$content = '<span class="date">'.$this->formatDate($page['created']).'</span> <p>'.$page['introtext'].'<a href="devtodo" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
+				$str .= $objFeatureBox->show($page['title'], $content);
 			}
 			return $str;
 				
@@ -511,9 +525,9 @@ class cmsutils extends object
 		try{
 			
 			$objUser = & $this->newObject('user', 'security');
-			$objConfig = & $this->newObject('config', 'config');
+			$objConfig = & $this->newObject('altconfig', 'config');
 			
-			$str = '<h3>'. $arrSection['title'].'</h3><img src="'.$objConfig->siteRoot().'usrfiles/media'.$arrSection['image'].'" >';
+			$str = '<h3>'. $arrSection['title'].'</h3><img src="'.$objConfig->getSiteRoot().'usrfiles/media'.$arrSection['image'].'" >';
 			
 			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
 			foreach ($arrPages as $page)
@@ -555,7 +569,10 @@ class cmsutils extends object
 					$table->endRow();
 					
 				}
-				$str .= $table->show();
+				//$str .= $table->show();
+				$str .= '<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
+				$str .= '<p>'.$page['introtext'].'<a href="devtodo" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
+
 			}
 			
 			return $str;
@@ -802,7 +819,15 @@ class cmsutils extends object
 		$link->href = $this->uri(null, 'mediamanager');
 		$str .= '<p>'.$link->show();
 		
-		return $str;
+		$nodes = array();
+		$nodes[] = array('text' => 'Content', 'uri' => $this->uri(array('action' => 'content')));
+		$nodes[] = array('text' => 'Sections', 'uri' => $this->uri(array('action' => 'sections')));
+		$nodes[] = array('text' => 'Categories', 'uri' => $this->uri(array('action' => 'categories')));
+		$nodes[] = array('text' => 'Media', 'uri' => $this->uri(null,'mediamanager'))	;	
+		
+		$objNav = $this->newObject('sidebar', 'navigation');
+		
+		return $objNav->show($nodes);
 
 	}
 	

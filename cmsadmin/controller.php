@@ -97,7 +97,7 @@ class cmsadmin extends controller
 	{
 		// instantiate object
         try{
-        	$this->_objContextCore = & $this->newObject('dbcontextcore', 'contextcore');
+        	//$this->_objContextCore = & $this->newObject('dbcontextcore', 'contextcore');
 			$this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
 			$this->_objCategories = & $this->newObject('dbcategories', 'cmsadmin');
 			$this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
