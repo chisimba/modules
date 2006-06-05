@@ -99,6 +99,8 @@ class splashscreenrender extends object
         $ts_content=str_replace("[-USERNAMEBOX-]", $userNameBox, $ts_content);
         $ts_content=str_replace("[-PASSWORDBOX-]", $passwordBox, $ts_content);
 
+	$ts_content=str_replace("[-SITENAME-]", $this->objConfig->getSiteName(), $ts_content);
+
         // Display the LDAP checkbox only if this site is using LDAP
         if ($this->objConfig->getuseLDAP()){
             $ts_content=str_replace("[-USELDAPCHECK-]", $useLdapCheck, $ts_content);
