@@ -33,7 +33,7 @@
         $objTable->width='';
         $objTable->attributes=" align='center' border=0";
         $objTable->startRow();
-        $objTable->addCell('<b>'.$this->objLanguage->languageText('mod_moduleadmin_problem1','Problems detected').':</b>', "", NULL, NULL, 'odd');
+        $objTable->addCell('<b>'.$this->objLanguage->languageText('mod_moduleadmin_problem1','moduleadmin','Problems detected').':</b>', "", NULL, NULL, 'odd');
         $objTable->endRow();
         $objTable->startRow();
         $objTable->addCell($this->objModule->errorText, "", NULL, NULL, 'odd');
@@ -49,12 +49,8 @@
     $objTblclass->attributes=" align='center' border=0";
     $objTblclass->width='100%';
     $objTblclass->startRow();
-    //$objTblclass->addCell($objButtons->pseudoButton($this->uri(array()),$objLanguage->languagetext('word_ok','OK')),"",NULL,'center',NULL,NULL);
-    $objTblclass->addCell($objButtons->pseudoButton($this->uri(array()),$this->objLanguage->languageText('mod_moduleadmin_return')),"",NULL,'center',NULL,NULL);
+    $objTblclass->addCell($objButtons->pseudoButton($this->uri(array()),$this->objLanguage->languageText('mod_moduleadmin_return','moduleadmin')),"",NULL,'center',NULL,NULL);
     $objTblclass->addCell('','',NULL,NULL,NULL,NULL);
     $objTblclass->endRow();
     print $objTblclass->show();
-
-    
 ?>
-

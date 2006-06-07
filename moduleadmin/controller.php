@@ -175,7 +175,7 @@ class moduleadmin extends controller
         return $this->nextAction(NULL, NULL, 'security');
     case 'list':
     default:
-        $filter=$this->getParam('filter',$this->getSession('filter','a'));
+        $filter=$this->getParam('filter',$this->getSession('filter','listall'));
         $this->setSession('filter',$filter);
         $modulelist=$this->listModuleFiles($filter);
         $this->output=$this->objModule->output;
@@ -212,7 +212,7 @@ class moduleadmin extends controller
         {
             $regmodules[]=$line['module_id'];
         }
-        $lookdir=$this->objConfig->getSiteRootPath()."/modules";
+        $lookdir=$this->objConfig->getSiteRootPath()."modules";
         $modlist=$this->checkdir($lookdir);
         natsort($modlist);
         $modulelist=array();
@@ -225,14 +225,14 @@ class moduleadmin extends controller
             case 'CVS':
                 break; // don't bother with system-related dirs
             default:
-            if ( is_dir($lookdir.'/'.$line) && ( ($filter=='listall') || (substr($line,0,1)==$filter) ) ){
-                $isReg=in_array($line,$regmodules);
-                $hasController=$this->checkForFile($lookdir.'/'.$line,'controller.php');
-                $hasRegFile=($this->checkForFile($lookdir.'/'.$line,'register.conf')+$this->checkForFile($lookdir.'/'.$line,'register.php'));
-                $modulelist[$line]['hasController']=$hasController;
-                $modulelist[$line]['hasRegFile']=$hasRegFile;
-                $modulelist[$line]['hasClasses']=$this->checkForFile($lookdir.'/'.$line,'classes');
-                $modulelist[$line]['isReg']=$isReg;
+            	if ( is_dir($lookdir.'/'.$line) && ( ($filter=='listall') || (strtolower(substr($line,0,1))==strtolower($filter)) ) ){
+                	$isReg=in_array($line,$regmodules);
+                	$hasController=$this->checkForFile($lookdir.'/'.$line,'controller.php');
+                	$hasRegFile=($this->checkForFile($lookdir.'/'.$line,'register.conf')+$this->checkForFile($lookdir.'/'.$line,'register.php'));
+                	$modulelist[$line]['hasController']=$hasController;
+                	$modulelist[$line]['hasRegFile']=$hasRegFile;
+                	$modulelist[$line]['hasClasses']=$this->checkForFile($lookdir.'/'.$line,'classes');
+                	$modulelist[$line]['isReg']=$isReg;
                 }
             }
         }

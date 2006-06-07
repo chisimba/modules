@@ -35,19 +35,19 @@
     $desc=$this->objLanguage->languageText('mod_'.$this->modname.'_desc');
 
     // Loading the data into the tables
-    $objTbl2->addRow(array('<b>'.$this->objLanguage->languageText('mod_moduleadmin_modname').':</b>',$longName));
-    $objTbl2->addRow(array('<b>'.$this->objLanguage->languageText('mod_moduleadmin_worddesc').':</b>',$desc));
-    $objTbl2->addRow(array('<b>'.$this->objLanguage->languageText('mod_moduleadmin_authors').':</b>',$authors));
-    $objTbl2->addRow(array('<b>'.$this->objLanguage->languageText('mod_moduleadmin_rdate').':</b>',$releaseDate));
-    $objTbl2->addRow(array('<b>'.$this->objLanguage->languageText('mod_moduleadmin_version').':</b>',$version));
+    $objTbl2->addRow(array('<b>'.$this->objLanguage->languageText('mod_moduleadmin_modname','moduleadmin').':</b>',$longName));
+    $objTbl2->addRow(array('<b>'.$this->objLanguage->languageText('mod_moduleadmin_worddesc','moduleadmin').':</b>',$desc));
+    $objTbl2->addRow(array('<b>'.$this->objLanguage->languageText('mod_moduleadmin_authors','moduleadmin').':</b>',$authors));
+    $objTbl2->addRow(array('<b>'.$this->objLanguage->languageText('mod_moduleadmin_rdate','moduleadmin').':</b>',$releaseDate));
+    $objTbl2->addRow(array('<b>'.$this->objLanguage->languageText('mod_moduleadmin_version','moduleadmin').':</b>',$version));
     if (isset($this->registerdata['MENU_CATEGORY'])){
         foreach ($this->registerdata['MENU_CATEGORY'] as $line)
         {
-            $objTbl2->addRow(array('<b>'.$this->objLanguage->languageText('mod_moduleadmin_menucat').':</b>',$line));
+            $objTbl2->addRow(array('<b>'.$this->objLanguage->languageText('mod_moduleadmin_menucat','moduleadmin').':</b>',$line));
         }
     }
 
-    $str='<b>'.$this->objLanguage->languageText('mod_moduleadmin_tables').":</b>\n";
+    $str='<b>'.$this->objLanguage->languageText('mod_moduleadmin_tables','moduleadmin').":</b>\n";
     if (isset($this->registerdata['TABLE'])){
         $str.="<ul>\n";
         foreach ($this->registerdata['TABLE'] as $table)
@@ -65,7 +65,7 @@
     // Now in case of errors
     if ($this->objModule->errorText){
         $objTblClass->startRow();
-        $objTblClass->addCell('<b>'.$this->objLanguage->languageText('mod_moduleadmin_problem1','Problems detected').':</b>', "", NULL, NULL, 'odd',"colspan=2");
+        $objTblClass->addCell('<b>'.$this->objLanguage->languageText('mod_moduleadmin_problem1','moduleadmin','Problems detected').':</b>', "", NULL, NULL, 'odd',"colspan=2");
         $objTblClass->endRow();
         $objTblClass->startRow();
         $objTblClass->addCell($this->objModule->errorText, "", NULL, NULL, 'odd','colspan=2');
@@ -73,10 +73,10 @@
     }
  
     // Now the link to go back
-    $link1="<a href='".$this->uri(array(),'moduleadmin')."'>".$this->objLanguage->languageText('mod_moduleadmin_return')."</a>";
+    $link1="<a href='".$this->uri(array(),'moduleadmin')."'>".$this->objLanguage->languageText('mod_moduleadmin_return','moduleadmin')."</a>";
     if ($this->hasController($this->modname)){
         $link2="<a href='".$this->uri(array(),$this->modname)."'>"
-        .$this->objLanguage->languageText('mod_moduleadmin_go')."&nbsp;<b>"
+        .$this->objLanguage->languageText('mod_moduleadmin_go','moduleadmin')."&nbsp;<b>"
         .$this->modname."</b></a>";
         $space='&nbsp;<b>/</b>&nbsp;';
     } else {

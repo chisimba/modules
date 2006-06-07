@@ -11,13 +11,13 @@
     $count=0;
     $missing=0;
     
-    echo '<h1>'.$objLanguage->languagetext('mod_moduleadmin_textelementsfor').' <em>'.$modname.'</em></h1>';
+    echo '<h1>'.$objLanguage->languagetext('mod_moduleadmin_textelementsfor','moduleadmin').' <em>'.$modname.'</em></h1>';
 
 
     // Now in case of errors
     if ($this->objModule->errorText){
         $objTblclass->startRow();
-        $objTblclass->addCell('<b>'.$this->objLanguage->languageText('mod_moduleadmin_problem1','Problems detected').':</b>', "", NULL, NULL, 'heading',"colspan=1");
+        $objTblclass->addCell('<b>'.$this->objLanguage->languageText('mod_moduleadmin_problem1','moduleadmin','Problems detected').':</b>', "", NULL, NULL, 'heading',"colspan=1");
         $objTblclass->addCell($this->objModule->errorText, "", NULL, NULL, 'odd','colspan=4');
         $objTblclass->endRow();
     }
@@ -58,7 +58,7 @@
     if ($missing>0)
     {
         //$objTbl2->startRow();
-        $addphrase=$objLanguage->languageText('mod_word_addtext','Add Missing Texts');
+        $addphrase=$objLanguage->languageText('mod_word_addtext','moduleadmin','Add Missing Texts');
         $addlink=$objButtons->pseudoButton($this->uri(array('action'=>'addtext','modname'=>$modname)),$addphrase);
         $objTbl2->addCell($addlink,'',NULL,'center',NULL,NULL);
         //$objTbl2->endRow();
@@ -66,13 +66,13 @@
 
     // Button to replace all Texts
     if ($count>0){ 
-        $rphrase=$objLanguage->languageText('mod_moduleadmin_replacetext'); 
+        $rphrase=$objLanguage->languageText('mod_moduleadmin_replacetext','moduleadmin'); 
         $rlink=$objButtons->pseudoButton($this->uri(array('action'=>'replacetext','modname'=>$modname)),$rphrase); 
         $objTbl2->addCell($rlink,'',NULL,'center',NULL,NULL);
     }
 
     // Button to return to main menu
-    $objTbl2->addCell($objButtons->pseudoButton($this->uri(array()),$objLanguage->languagetext('phrase_goback')),"",NULL,'center',NULL,NULL);
+    $objTbl2->addCell($objButtons->pseudoButton($this->uri(array()),$objLanguage->languagetext('phrase_goback','moduleadmin')),"",NULL,'center',NULL,NULL);
     
     $objTbl2->endRow();
 
@@ -85,9 +85,8 @@
     }
     else
     {
-        print $objLanguage->languageText('mod_no_text',"No Text elements")."<br>\n";
+        print $objLanguage->languageText('mod_no_text','moduleadmin',"No Text elements")."<br>\n";
         print $objTbl2->show();
     }
 
 ?>
-
