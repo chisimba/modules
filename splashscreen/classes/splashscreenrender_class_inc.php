@@ -54,7 +54,7 @@ class splashscreenrender extends object
         if ($goplace!="") {
             $startForm=$startForm.'&goplace='.$goplace;
         }
-        $startForm=$startForm."\">";
+        $startForm=$startForm.'">';
         //the link to registration
         $registerModule='useradmin';
         $registerLink="<a href='".$this->uri(array('action'=>'register'),$registerModule)."'>".
@@ -63,16 +63,16 @@ class splashscreenrender extends object
         $resetLink="<a href='".$this->uri(array('action'=>'needpassword'),'useradmin')."'>".
         $this->objLanguage->languageText('mod_security_forgotpassword','security')."</a>\n";
         // the help link
-        $resetLink .= '<br><br>'.$helpIcon;
+        $resetLink .= '<br /><br />'.$helpIcon;
 
         //the variable to hold the username textbox
         $userNameBox=$this->objLanguage->languageText("word_username",'useradmin')
-            .':<br/><input name="username" type="text" id="username" class="text" />';
+            .':<br /><input name="username" type="text" id="username" class="text" />';
         //the variable to hold the password textbox
         $passwordBox=$this->objLanguage->languageText("word_password",'security')
-            .':<br/><input name="password" type="password" id="password" class="text" />';
+            .':<br /><input name="password" type="password" id="password" class="text" />';
         //the variable to hold the useLDAP checkbox
-        $useLdapCheck='<input type="checkbox" name="useLdap" value="yes" class="transparentbgnb">'
+        $useLdapCheck='<input type="checkbox" name="useLdap" value="yes" class="transparentbgnb" />'
             .$this->objLanguage->languageText("phrase_networkid",'security');
         //the variable to hold the login button
 
@@ -81,7 +81,7 @@ class splashscreenrender extends object
         $loginButton= $jsWarning.'<input name="Submit" type="submit" class="button"
           onclick="KEWL_validateForm(\'username\',\'\',\'R\',\'password\',\'\',\'R\');'
           .'return document.KEWL_returnValue" value="'
-          .$this->objLanguage->languageText("word_login",'security').'"/>';
+          .$this->objLanguage->languageText("word_login",'security').'" />';
         $login=$userNameBox.'&nbsp;&nbsp;&nbsp;'
             .$passwordBox.'&nbsp;&nbsp;&nbsp;'
         .$useLdapCheck.'&nbsp;&nbsp;&nbsp;'.$loginButton;
