@@ -18,24 +18,24 @@ $objAlphabet=& $this->getObject('alphabet','navigation');
     $objTblclass=$this->newObject('htmltable','htmlelements');
     $objTblclass->active_rows=TRUE;
     $objTblclass->width='';
-    $objTblclass->attributes=" align='center' border=0";
+    $objTblclass->attributes=" align='center' border='0'";
     $objTblclass->cellspacing='2';
     $objTblclass->cellpadding='2';
 
     $objTblclass->startRow();
     // Additional Column for Icon
-    $objTblclass->addCell('&nbsp;', "", NULL, 'center', 'heading', 'colspan=1');
-    $objTblclass->addCell($objLanguage->languageText('mod_word_module','moduleadmin','Module'), "", NULL, 'center', 'heading', 'colspan=1');
-    $objTblclass->addCell($objLanguage->languageText('has_controller','moduleadmin','Has Controller'), "", NULL, 'center', 'heading', 'colspan=1');
-    $objTblclass->addCell($objLanguage->languageText('has_registration_file','moduleadmin','Has Registration File'), "", NULL, 'center', 'heading', 'colspan=1');
-    $objTblclass->addCell($objLanguage->languageText('has_classes','moduleadmin','Has Classes'), "", NULL, 'center', 'heading', 'colspan=1');
-    $objTblclass->addCell($objLanguage->languageText('is_registered','moduleadmin','Is Registered'), "", NULL, 'center', 'heading', 'colspan=1');
-    $objTblclass->addCell($objLanguage->languageText('mod_word_options','moduleadmin','Options'), "", NULL, 'center', 'heading', 'colspan=3');
+    $objTblclass->addCell('&nbsp;', "", NULL, 'center', 'heading', 'colspan="1"');
+    $objTblclass->addCell($objLanguage->languageText('mod_word_module','moduleadmin','Module'), "", NULL, 'center', 'heading', 'colspan="1"');
+    $objTblclass->addCell($objLanguage->languageText('has_controller','moduleadmin','Has Controller'), "", NULL, 'center', 'heading', 'colspan="1"');
+    $objTblclass->addCell($objLanguage->languageText('has_registration_file','moduleadmin','Has Registration File'), "", NULL, 'center', 'heading', 'colspan="1"');
+    $objTblclass->addCell($objLanguage->languageText('has_classes','moduleadmin','Has Classes'), "", NULL, 'center', 'heading', 'colspan="1"');
+    $objTblclass->addCell($objLanguage->languageText('is_registered','moduleadmin','Is Registered'), "", NULL, 'center', 'heading', 'colspan="1"');
+    $objTblclass->addCell($objLanguage->languageText('mod_word_options','moduleadmin','Options'), "", NULL, 'center', 'heading', 'colspan="3"');
     $objTblclass->endRow();
 
     $boolean=array('0'=>'N','1'=>'Y','2'=>'Y');
 
-    $attrib='colpan=1';
+    $attrib='colspan="1"';
     $rowcount=1; // this will control odd or even lines
     foreach ($modulelist as $module=>$data)
     {
@@ -67,7 +67,7 @@ $objAlphabet=& $this->getObject('alphabet','navigation');
         {
             $objTblclass->addCell($boolean[$flag], "", NULL, 'center', $cellClass, $attrib);
         }
-        $links=array('text'=>'&nbsp;','reg'=>'&nbsp;','classes'=>'&nbsp;','info'=>'&nbsp');
+        $links=array('text'=>'&nbsp;','reg'=>'&nbsp;','classes'=>'&nbsp;','info'=>'&nbsp;');
         
         //if (($data['isReg']==0)&&($data['hasController'])&&($data['hasRegFile'])) // testig new conditions
         if (($data['isReg']==0)&&($data['hasRegFile']))
@@ -100,8 +100,8 @@ $objAlphabet=& $this->getObject('alphabet','navigation');
     $objTbl2->addRow(array('',$objTblclass->show()));
     print "<div align='center'>\n";
     print "<h1>".$objLanguage->languageText('mod_moduleadmin_name','moduleadmin','Module Administration')."</h1>\n";
-    print "<a href='".$this->uri(array('action'=>'batch'))."'>".$objLanguage->languageText('mod_moduleadmin_batch1','moduleadmin','Batch Registration Menu')."</a><br \>\n";
-    print "<a href='".$this->uri(array('action'=>'deregisterbatch'))."'>".$objLanguage->languageText('mod_moduleadmin_deregisterbatch1','moduleadmin','Batch DeRegistration Menu')."</a><br \>\n";
+    print "<a href='".$this->uri(array('action'=>'batch'))."'>".$objLanguage->languageText('mod_moduleadmin_batch1','moduleadmin','Batch Registration Menu')."</a><br />\n";
+    print "<a href='".$this->uri(array('action'=>'deregisterbatch'))."'>".$objLanguage->languageText('mod_moduleadmin_deregisterbatch1','moduleadmin','Batch DeRegistration Menu')."</a><br />\n";
 
     print $objAlphabet->putAlpha($this->uri(array('action'=>$this->getParam('action'),'filter'=>'LETTER')),FALSE);
     print $objTbl2->show();

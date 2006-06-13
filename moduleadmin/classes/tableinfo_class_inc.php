@@ -8,8 +8,6 @@
  */
 class tableinfo extends dbtable
 {
-                    
-    public $tables;
     
     public function init()
     {
@@ -25,8 +23,7 @@ class tableinfo extends dbtable
     */
     public function tablelist()
     {
-    	$this->tables = $this->listDbTables();
-    	return $this->tables;
+    	return  $this->listDbTables();
     }
     
     /**
@@ -40,7 +37,7 @@ class tableinfo extends dbtable
     public function checktable($name,$list=NULL)
     {
         if ($list == NULL){
-            $list = $this->tables;
+            $list = $this->tablelist();
         }
         if (in_array($name, $list))
         {
