@@ -6,14 +6,14 @@
     // The first is the main table
     $objTblClass=&$this->newObject('htmltable','htmlelements');
     $objTblClass->width='';
-    $objTblClass->attributes=" align='center' border=0";
+    $objTblClass->attributes=" align='center' border='0'";
     $objTblClass->cellspacing='10';
     $objTblClass->cellpadding='2';
                                   
     // The second table will have the register.conf main data
     $objTbl2=&$this->newObject('htmltable','htmlelements');
     $objTbl2->width='';
-    $objTbl2->attributes=" align='center' border=0";
+    $objTbl2->attributes=" align='center' border='0'";
     $objTbl2->cellspacing='2';
     $objTbl2->cellpadding='2';
 
@@ -23,7 +23,7 @@
     
     // Here we add the title
     $objTblClass->startRow();
-    $objTblClass->addCell("<h1>".$this->confirmRegister('mod_moduleadmin_info',$this->modname)."</h1>", "", NULL, 'center',NULL, 'colspan=2');
+    $objTblClass->addCell("<h1>".$this->confirmRegister('mod_moduleadmin_info',$this->modname)."</h1>", "", NULL, 'center',NULL, 'colspan="2"');
     $objTblClass->endRow();
 
     // Now we get the data for the tables
@@ -78,10 +78,10 @@
     // Now in case of errors
     if ($this->objModule->errorText){
         $objTblClass->startRow();
-        $objTblClass->addCell('<b>'.$this->objLanguage->languageText('mod_moduleadmin_problem1','moduleadmin','Problems detected').':</b>', "", NULL, NULL, 'odd',"colspan=2");
+        $objTblClass->addCell('<b>'.$this->objLanguage->languageText('mod_moduleadmin_problem1','moduleadmin','Problems detected').':</b>', "", NULL, NULL, 'odd',"colspan='2'");
         $objTblClass->endRow();
         $objTblClass->startRow();
-        $objTblClass->addCell($this->objModule->errorText, "", NULL, NULL, 'odd','colspan=2');
+        $objTblClass->addCell($this->objModule->errorText, "", NULL, NULL, 'odd','colspan="2"');
         $objTblClass->endRow();
     }
  
@@ -102,7 +102,7 @@
     }
     
     $objTblClass->startRow();
-    $objTblClass->addCell($link2.$space.$link1, "", NULL, 'center',NULL, 'colspan=2');
+    $objTblClass->addCell($link2.$space.$link1, "", NULL, 'center',NULL, 'colspan="2"');
     $objTblClass->endRow();
 
     print $objTblClass->show();

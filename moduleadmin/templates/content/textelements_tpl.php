@@ -4,7 +4,7 @@
     $objButtons=&$this->getObject('navbuttons','navigation');
     $objTblclass=$this->newObject('htmltable','htmlelements');
     $objTblclass->width='';
-    $objTblclass->attributes=" align='center' border=0";
+    $objTblclass->attributes=" align='center' border='0'";
     $objTblclass->cellspacing='2';
     $objTblclass->cellpadding='2';
     
@@ -17,16 +17,16 @@
     // Now in case of errors
     if ($this->objModule->errorText){
         $objTblclass->startRow();
-        $objTblclass->addCell('<b>'.$this->objLanguage->languageText('mod_moduleadmin_problem1','moduleadmin','Problems detected').':</b>', "", NULL, NULL, 'heading',"colspan=1");
-        $objTblclass->addCell($this->objModule->errorText, "", NULL, NULL, 'odd','colspan=4');
+        $objTblclass->addCell('<b>'.$this->objLanguage->languageText('mod_moduleadmin_problem1','moduleadmin','Problems detected').':</b>', "", NULL, NULL, 'heading',"colspan='1'");
+        $objTblclass->addCell($this->objModule->errorText, "", NULL, NULL, 'odd','colspan="4"');
         $objTblclass->endRow();
     }
 
     // Display the headings
     $objTblclass->startRow();
     $objTblclass->addCell("&nbsp;", "", NULL, NULL, 'heading', NULL);
-    $objTblclass->addCell("register.conf", "", NULL, 'center', 'heading', 'colspan=2');
-    $objTblclass->addCell("dbkewl", "", NULL, 'center', 'heading', 'colspan=2');
+    $objTblclass->addCell("register.conf", "", NULL, 'center', 'heading', 'colspan="2"');
+    $objTblclass->addCell("dbkewl", "", NULL, 'center', 'heading', 'colspan="2"');
     $objTblclass->endRow(); 
     
 
@@ -48,7 +48,7 @@
     // Table for the navigation buttons
     $objButtons=&$this->getObject('navbuttons','navigation');
     $objTbl2=$this->newObject('htmltable','htmlelements');
-    $objTbl2->attributes=" align='center' border=0";
+    $objTbl2->attributes=" align='center' border='0'";
     $objTbl2->cellspacing='2';
     $objTbl2->width='30%';
     
@@ -85,7 +85,7 @@
     }
     else
     {
-        print $objLanguage->languageText('mod_no_text','moduleadmin',"No Text elements")."<br>\n";
+        print $objLanguage->languageText('mod_no_text','moduleadmin',"No Text elements")."<br />\n";
         print $objTbl2->show();
     }
 

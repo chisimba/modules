@@ -14,7 +14,7 @@ class filereader extends object
 
     function init ()
     {
-        $this->objConfig=&$this->getObject('config','config');
+        $this->objConfig=&$this->getObject('altconfig','config');
     }
 
     /**
@@ -138,7 +138,7 @@ class filereader extends object
     function findregisterfile($modname)
     {
         $endings=array('php','conf');
-        $path=$this->objConfig->siteRootPath()."/modules/".$modname."/register.";
+        $path=$this->objConfig->getsiteRootPath()."/modules/".$modname."/register.";
         foreach ($endings as $line)
         {
             if (file_exists($path.$line))
