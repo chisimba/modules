@@ -135,12 +135,12 @@ class modules extends dbTable
     * This method returns the version of a module in the database 
     * ie: The version level of the emodule at the time it was registered.  
     * @param string $module the module to lookup 
-    * @returns string $version the version in the database 
+    * @returns string $version the version in the database | FALSE
     */ 
     public function getVersion($module)
     {
         $row=$this->getRow('module_id',$module);
-        return !empty($row)) ? $row['module_version'] : false;
+        return !empty($row)) ? $row['module_version'] : FALSE;
 
     }
 } 

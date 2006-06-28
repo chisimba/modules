@@ -9,31 +9,33 @@ if (!$GLOBALS['kewl_entry_point_run'])
 // end security check
 
 /**
-* Subclass of modules to add administrative functionality.
+* Descendant of modules which adds administrative functionality.
 * Dividing the class in two like this avoids loading this
 * file when only the basic user functionality is needed.
-*
-*
 * @author Derek Keats
 * @author Sean Legassick
 * @author James Scoble
 * @author Megan Watson
 * @author Jeremy O'Connor
-*
 * $Id$
 */
 
-require_once "modules_class_inc.php";
+// PEAR
 require_once "DB.php";
+
+// 5ive
+require_once "modules_class_inc.php";
 
 class modulesAdmin extends modules
 {
 
-    private $objTableInfo; //handle for tableinfo class object
-    private $objKeyMaker; //handle for primary key generation
-    private $MODULE_ID; // replaces use of defined constant.
+    // replaces use of defined constant.
+    private $MODULE_ID; 
     private $MODULE_NAME;
     private $MODULE_DESCRIPTION;
+
+    private $objTableInfo; //handle for tableinfo class object
+    private $objKeyMaker; //handle for primary key generation
     private $update=FALSE;
     private $output=''; // for any feedback messages from internal functions.
     private $errorText=''; // for any feedback messages from internal functions.
@@ -47,14 +49,17 @@ class modulesAdmin extends modules
     * 'Show users who are logged in'
     * @param string $moduleId The identifier of the module,
     * @returns boolen TRUE|FALSE
+    * @deprecated Already in modules_class_inc.php
     */
+    /*
      public function checkIfRegistered($moduleName, $moduleId=NULL)
      {
         if (is_null($moduleId)){
             $moduleId=$moduleName;
         }
-	return !empty($this->getRow('module_id',$moduleId));
+        return !empty($this->getRow('module_id',$moduleId));
      }  #end of checkIfRegistered() function
+    */
 
     /**
     * This is a method to check if a dependent module is installed.
@@ -92,18 +97,18 @@ class modulesAdmin extends modules
     }
 
     /**
-    * This is a method to make SQL params from an assoc array
+    * This is a method to make SQL params from an array
     * @author James Scoble
-    * @param $arraydata assoc array
+    * @param $data array Fields and values
     * @returns string $sql
     */
-    function makeSQLParams($arraydata)
+    function makeSQLParams($data)
     {
         $sql='';
         $comma='';
-        foreach ($arraydata as $key=>$value)
+        foreach ($data as $key=>$value)
         {
-            $sql.=$comma.' '.$key."='".$value."'";
+            $sql.="$comma $key = '$value'";
             $comma=',';
         }
         return $sql;
@@ -118,15 +123,11 @@ class modulesAdmin extends modules
     * @author James Scoble
     * @author Megan Watson
     * @param array $registerdata - all the info from the register.conf file.
-    * @returns boolean TRUE|FALSE
+    * @returns mixed OK | FALSE
     */
-    function registerModule($registerdata)
+    public function registerModule(&$registerdata)
     {
-        if (defined('MODULE_ID'))
-        {
-            $moduleId=MODULE_ID;
-        }
-        elseif (isset($registerdata['MODULE_ID']))
+        if (isset($registerdata['MODULE_ID']))
         {
             $moduleId=$registerdata['MODULE_ID'];
         }
@@ -134,47 +135,43 @@ class modulesAdmin extends modules
         {
             return FALSE; // If we can't find the name of the module we're supposed to be registering, what are we doing here?
         }
-        $this->MODULE_ID=$moduleId;
+
+        $this->MODULE_ID=$registerdata['MODULE_ID'];
         $this->MODULE_NAME=$registerdata['MODULE_NAME'];
         $this->MODULE_DESCRIPTION=$registerdata['MODULE_DESCRIPTION'];
 
         $this->executeModSQL('BEGIN WORK'); //Start a transaction;
 
         //If the module already exists, do not register it, else register it
-        if ($this->checkIfRegistered($this->MODULE_NAME, $moduleId) && !($this->update))
+        if ($this->checkIfRegistered($this->MODULE_NAME, $moduleId) && !$this->update)
         {
-            if ($this->update){ print "BOOOOM!"; die; }
             return FALSE;
         }
         else
         {
             // check for modules this one is dependant on
-            if (isset($registerdata['DEPENDS'][0]))
+            if (isset($registerdata['DEPENDS']))
             {
-                foreach ($registerdata['DEPENDS'] as $dline)
+                foreach ($registerdata['DEPENDS'] as $depends)
                 {
-                    $test=$this->checkDependency($dline);
-                    if ($test==FALSE)
+                    if (!$this->checkDependency($depends))
                     {
                         $text=$this->objLanguage->languageText('mod_moduleadmin_needmodule');
-                        $text=str_replace('{MODULE}',$dline,$text);
+                        $text=str_replace('{MODULE}',$depends,$text);
                         $this->output.='<b>'.$text.'</b><br />';
-                            //"<b>Cannot register module - needs module $dline to be registered first!</b><br>\n";
                         return FALSE;
                     }
                 }
             }
             // Now we add the tables
-            if (isset($registerdata['TABLE'][0]))
+            if (isset($registerdata['TABLE']))
             {
-                $this->objTableInfo=$this->newObject('tableinfo','moduleadmin'); // create object to look at SQL tables
-                $this->objKeyMaker=$this->newObject('primarykey','modulelist');
-                foreach ($registerdata['TABLE'] as $dline)
+                //$this->objKeyMaker=$this->newObject('primarykey','moduleadmin');
+                //$this->objTableInfo=$this->newObject('tableinfo','moduleadmin'); 
+                foreach ($registerdata['TABLE'] as $table)
                 {
-                    $test=$this->makeNewTable($dline);
-                    if ($test==FALSE)
+                    if (!$this->makeNewTable($table))
                     {
-                        //"<b>Cannot register module - needs info to create table $dline first!</b><br>\n";
                         $text=$this->objLanguage->languageText('mod_moduleadmin_needinfo');
                         $text=str_replace('{MODULE}',$dline,$text);
                         $this->output.='<b>'.$text.'</b><br />';
@@ -182,21 +179,23 @@ class modulesAdmin extends modules
                     }
                     else
                     {
+                        // Delete the table from the records.
                         $sql="DELETE FROM tbl_modules_owned_tables WHERE kng_module='".$moduleId."' and tablename='".$dline."'";
                         $this->executeModSQL( $sql );
+                        // Add the table to the records.
                         $sql="INSERT INTO tbl_modules_owned_tables (kng_module,tablename) VALUES ('".$moduleId."','".$dline."')";
-                        $this->executeModSQL($sql); // Add the table to the records.
+                        $this->executeModSQL($sql); 
                     }
                 }
             }
 
             // Here we load data into tables from files of SQL statements
-            if (isset($registerdata['BIGDATA'][0]))
+            if (isset($registerdata['BIGDATA']))
             {
-                $this->objKeyMaker=$this->newObject('primarykey','modulelist');
-                foreach ($registerdata['BIGDATA'] as $dline)
+                //$this->objKeyMaker=$this->newObject('primarykey','moduleadmin');
+                foreach ($registerdata['BIGDATA'] as $bigdata)
                 {
-                    $test=$this->loadData($dline);
+                    $this->loadData($bigdata);
                 }
             }
 
@@ -207,37 +206,44 @@ class modulesAdmin extends modules
             //}
 
             // Create directory and subdirectory
-            if(isset($registerdata['DIRECTORY'][0])){
-                $path = $this->objConfig->contentBasePath().'/'.$registerdata['DIRECTORY'][0].'/';
-                if(!is_dir($path)){
-                    mkdir($path, 0777);
-                }
-
-                if(isset($registerdata['SUBDIRECTORY'][0])){
-                    foreach($registerdata['SUBDIRECTORY'] as $line){
-                        $subPath = $path.$line.'/';
-                        if(!is_dir($subPath)){
-                            mkdir($subPath, 0777);
-                        }
+            if(isset($registerdata['DIRECTORY'])){
+                foreach ($registerdata['DIRECTORY'] as $directory) {
+                    $path = 
+                        $this->objConfig->contentBasePath()
+                        .'/'.$directory
+                        .'/';
+                    if (!is_dir($path)) {
+                        mkdir($path, 0777);
                     }
                 }
             }
 
+            /* @deprecated SUBDIRECTORY */
+
             // Set up data for the site navigation: toolbar, sidemenus and pages
-            $isAdmin = 0; $isContext = 0; $aclList = ''; $permList = array(); $groupArray = array();
+
+            $isAdmin = 0; 
+            $isContext = 0; 
+            $aclList = ''; 
+            $permList = array(); 
+            $groupArray = array();
             $groupArray2 = array();
+
             if(isset($registerdata['MODULE_ISADMIN'])){
                 $isAdmin = $registerdata['MODULE_ISADMIN'];
             }
+
             if(isset($registerdata['DEPENDS_CONTEXT'])){
                 $isContext = $registerdata['DEPENDS_CONTEXT'];
             }
 
-            /* Set up permissions for the module.
-               Set up a module specific ACL, set up module specific groups and add them
-               to the acl.
+            /*
+               Set up permissions for the module.
+               Set up a module specific ACL, set up module specific groups and add 
+               them to the acl.
                If there is no ACL, set up groups.
             */
+
             if(isset($registerdata['ACL'][0])){
                 $objPerm = $this->getObject('permissions_model', 'permissions');
                 $objGroups = $this->getObject('groupAdminModel', 'groupadmin');
@@ -438,45 +444,55 @@ class modulesAdmin extends modules
                     }
                 }
             }
+
             // end Permissions and Security
 
             // Site Navigation
+
             // Menu category
-            if (isset($registerdata['MENU_CATEGORY'][0]))
+
+            if (isset($registerdata['MENU_CATEGORY']))
             {
-                foreach ($registerdata['MENU_CATEGORY'] as $line)
+                foreach ($registerdata['MENU_CATEGORY'] as $menu_category)
                 {
-                    $line=strtolower($line);
-                    $sql="INSERT INTO tbl_menu_category
-                    (id,category,module,adminOnly,permissions,dependsContext)
-                    values ('";
-                    $sql.='init@'.time().rand(1000,9999)."','$line',";
-                    $sql.="'$moduleId','$isAdmin',";
-                    $sql.="'$aclList','$isContext')";
+                    $menu_category=strtolower($menu_category);
+                    $sql="INSERT INTO tbl_menu_category (
+                        id,
+                        category,
+                        module,
+                        adminOnly,
+                        permissions,
+                        dependsContext
+                    )
+                    VALUES (
+                        'init@".time().rand(1000,9999)."'
+                        ,'$menu_category'
+                        ,'$moduleId'
+                        ,'$isAdmin'
+                        ,'$aclList'
+                        ,'$isContext'
+                    )";
                     $this->executeModSQL($sql);
                 }
             }// end menu category
 
             // Side menus
-            if (isset($registerdata['SIDEMENU'][0]))
+            if (isset($registerdata['SIDEMENU']))
             {
                 $objGroups = $this->getObject('groupAdminModel', 'groupadmin');
-                foreach ($registerdata['SIDEMENU'] as $line)
+                foreach ($registerdata['SIDEMENU'] as $sidemenu)
                 {
                     $admin = $isAdmin;
                     $groupList = '';
-                    $line=strtolower($line);
-
-                    $actions = array();
-                    $actions = explode('|', $line);
-
+                    $sidemenu=strtolower($sidemenu);
+                    $actions = explode('|', $sidemenu);
                     if(isset($actions[1]) && !empty($actions[1])){
-                        $line = str_replace($actions[1],'',$line);
-
-                        $conGroups = ''; $siteGroups = ''; $acls = '';
+                        $sidemenu = str_replace($actions[1],'',$sidemenu);
+                        $conGroups = ''; 
+                        $siteGroups = ''; 
+                        $acls = '';
                         $access = explode(',',$actions[1]);
                         $admin = 0;
-
                         foreach($access as $val){
                             // check for context groups
                             if(!(strpos($val, 'con_') === FALSE)){
@@ -484,9 +500,9 @@ class modulesAdmin extends modules
                                     $conGroups .= ',';
                                 }
                                 $conGroups .= ucwords(str_replace('con_','',$val));
-
+                            }
                             // check for module permissions, create if don't exist
-                            }else if(!(strpos($val, 'acl_') === FALSE)){
+                            else if(!(strpos($val, 'acl_') === FALSE)){
                                 $perm = str_replace('acl_','',$val);
                                 $permId = $objPerm->getId($moduleId.'_'.$perm);
                                 if(empty($permId)){
@@ -498,8 +514,9 @@ class modulesAdmin extends modules
                                 }
                                 $acls .= $permId;
 
+                            }
                             // check for module groups, create if don't exist
-                            }else{
+                            else{
                                 // check for sitewide access
                                 if(strtolower($val) == 'site'){
                                     $siteGroups .= 'site';
@@ -522,14 +539,26 @@ class modulesAdmin extends modules
                         }
                         // build permissions string
                         $groupList = $acls.'|'.$siteGroups.'|_con_'.$conGroups;
-                    }else{
+                    }
+                    else {
                         $groupList = $aclList;
                     }
-                    $sql="INSERT INTO tbl_menu_category (id, category, module,";
-                    $sql.="adminOnly,permissions,dependsContext) values ('";
-                    $sql.='init@'.time().rand(1000,9999)."','menu_$line',";
-                    $sql.="'$moduleId','$admin',";
-                    $sql.="'$groupList','$isContext')";
+                    $sql="INSERT INTO tbl_menu_category (
+                        id, 
+                        category, 
+                        module,
+                        adminOnly,
+                        permissions,
+                        dependsContext
+                    )
+                    VALUES (
+                        'init@".time().rand(1000,9999)."'
+                        ,'menu_{$line}'
+                        ,'$moduleId'
+                        ,'$admin'
+                        ,'$groupList'
+                        ,'$isContext'
+                    )";
                     $this->executeModSQL($sql);
                 }
             }// end side menu
@@ -548,15 +577,27 @@ class modulesAdmin extends modules
                             $admin = 0;
                         }
                     }
-                    $sql = 'INSERT INTO tbl_menu_category (id, category, module,';
-                    $sql .= "adminOnly, permissions, dependsContext) values ('";
-                    $sql .= 'init@'.time().rand(1000,9999)."','page_$line',";
-                    $sql .= "'$moduleId','$admin','$aclList','$isContext')";
+                    $sql = "INSERT INTO tbl_menu_category (
+                        id, 
+                        category, 
+                        module,
+                        adminOnly, 
+                        permissions, 
+                        dependsContext
+                    ) 
+                    VALUES ('
+                        'init@".time().rand(1000,9999)."'
+                        ,'page_{$line}'
+                        ,'$moduleId'
+                        ,'$admin'
+                        ,'$aclList'
+                        ,'$isContext'
+                    )";
                     $this->executeModSQL($sql);
                 }
             }// end pages
-            // end Site Navigation
 
+            // end Site Navigation
 
             // Here we pass CONFIG data to the sysconfig module
             if (isset($registerdata['CONFIG']))
@@ -572,54 +613,56 @@ class modulesAdmin extends modules
             }
 
             // Now the main data entry - building up arrays of the essential params
-
-            $fields=array('module_id','module_authors','module_releasedate','module_version','module_path','isAdmin','isVisible','hasAdminPage');
-            $values=array($moduleId,addslashes($registerdata['MODULE_AUTHORS']),$registerdata['MODULE_RELEASEDATE'],$registerdata['MODULE_VERSION'],$registerdata['MODULE_PATH'],$registerdata['MODULE_ISADMIN'],$registerdata['MODULE_ISVISIBLE'],$registerdata['MODULE_HASADMINPAGE']);
-            foreach($fields as $key)
-            {
-                $sql_str[$key]=array_shift($values);
-            }
-
+            $sql_arr = array(
+                'module_id' => $moduleId
+                ,'module_authors' => addslashes($registerdata['MODULE_AUTHORS'])
+                ,'module_releasedate' => $registerdata['MODULE_RELEASEDATE']
+                ,'module_version' => $registerdata['MODULE_VERSION']
+                ,'module_path' => $registerdata['MODULE_PATH']
+                ,'isAdmin' => $registerdata['MODULE_ISADMIN']
+                ,'isVisible' => $registerdata['MODULE_ISVISIBLE']
+                ,'hasAdminPage' => $registerdata['MODULE_HASADMINPAGE']
+            );
             if (isset($registerdata['CONTEXT_AWARE'])){
-                $sql_str['isContextAware']=$registerdata['CONTEXT_AWARE'];
+                $sql_arr['isContextAware']=$registerdata['CONTEXT_AWARE'];
             }
             if (isset($registerdata['DEPENDS_CONTEXT'])){
-                $sql_str['dependsContext']=$registerdata['DEPENDS_CONTEXT'];
+                $sql_arr['dependsContext']=$registerdata['DEPENDS_CONTEXT'];
             }
-
-            $this->localinsert($sql_str);
-            if ($this->update){
-                $this->localEdit($sql_str,"where module_id='$moduleId'");
+            $this->localInsert($sql_arr);
+            if ($this->update) {
+                $this->localUpdate($sql_arr,"WHERE module_id='$moduleId'");
             }
             //indicate success
             // put the language information for name and description
             $this->pokeLanguage();
             // insert the list of language codes used by the module if any
+            /*
             if (defined('MODULE_LANGTERMS'))
             {
                 $this->pokeTerms(MODULE_LANGTERMS);
             }
+            */
             $texts=$this->listTexts($registerdata); // get list of all specified texts
-            if ($texts!=FALSE)
-            {
-                foreach ($texts as $key=>$line)
+            if ($texts !== false) {
+                foreach ($texts as $key=>$value)
                 {
                     $test=$this->checkText($key);
                     if ($test['flag']!=11)
                     {
-                        $this->addText($key,$line['desc'],$line['content']);
+                        $this->addText($key,$value['desc'],$value['content']);
                     }
                 }
             }
             $texts=$this->listTexts($registerdata,'USES');
-            if ($texts!=FALSE)
+            if ($texts !== false)
             {
-                foreach ($texts as $key=>$line)
+                foreach ($texts as $key=>$value)
                 {
                     $test=$this->checkText($key);
                     if ($test['flag']!=11)
                     {
-                        $this->addText($key,$line['desc'],$line['content']);
+                        $this->addText($key,$value['desc'],$value['content']);
                     }
                 }
             }
@@ -627,10 +670,8 @@ class modulesAdmin extends modules
             {
                 $this->recordDependentModules($moduleId,$registerdata['DEPENDS']);
             }
-           // $sql="DELETE FROM tbl_languagetext WHERE whereUsed='".$moduleId."'";
+            // $sql="DELETE FROM tbl_languagetext WHERE whereUsed='".$moduleId."'";
         }
-
-
         $this->executeModSQL('COMMIT'); //End the transaction;
         return "OK";
     } #end of registerModule() function
@@ -638,25 +679,23 @@ class modulesAdmin extends modules
     /**
     * This method looks at the registration data and tries to create any tables specified
     * @param array $tables
-    * @returns TRUE or FALSE
+    * @returns boolean TRUE|FALSE
     */
-    function makeTablesForModule($tables)
+    private function makeTablesForModule($tables)
     {
-        $this->objTableInfo=$this->newObject('tableinfo','moduleadmin'); // create object to look at SQL tables
-        $this->objKeyMaker=$this->newObject('primarykey','modulelist');
-        foreach ($tables as $dline)
+        $this->objKeyMaker=&$this->newObject('primarykey','moduleadmin');
+        $this->objTableInfo=&$this->newObject('tableinfo','moduleadmin'); 
+        foreach ($tables as $table)
         {
-            $test=$this->makeNewTable($dline);
-            if ($test==FALSE){
-                //"<b>Cannot register module - needs info to create table $dline first!</b><br>\n";
+            if (!$this->makeNewTable($table)){
                 $text=$this->objLanguage->languageText('mod_moduleadmin_needinfo');
                 $text=str_replace('{MODULE}',$dline,$text);
                 $this->output.='<b>'.$text.'</b><br />';
                 return FALSE;
           } else {
-                $sql="DELETE FROM tbl_modules_owned_tables WHERE kng_module='".$moduleId."' and tablename='".$dline."'";
+                $sql="DELETE FROM tbl_modules_owned_tables WHERE kng_module='$moduleId' AND tablename='$table'";
                 $this->executeModSQL( $sql );
-                $sql="INSERT INTO tbl_modules_owned_tables (kng_module,tablename) VALUES ('".$moduleId."','".$dline."')";
+                $sql="INSERT INTO tbl_modules_owned_tables (kng_module,tablename) VALUES ('$moduleId','$table')";
                 $this->executeModSQL($sql); // Add the table to the records.
           }
         }
@@ -666,10 +705,9 @@ class modulesAdmin extends modules
 
     /**
     * This is a method to read data from a file and use it to create a table.
-    *
     * @author James Scoble
-    * @param string $tablefile the name of the file
-    * @param string $moduleId the id of the module
+    * @param string $tablefile The file that contains the sql
+    * @param string $moduleId The id of the module
     * @returns boolean TRUE|FALSE
     */
     function makeNewTable($tablefile,$moduleId='NONE')
@@ -682,17 +720,16 @@ class modulesAdmin extends modules
         {
             return TRUE; // table already exists, don't try to create it over again!
         }
-
         $sqlfile=$this->objConfig->siteRootPath().'/modules/'.$moduleId.'/'.$tablefile.'.sql';
         if (!file_exists($sqlfile)){
             $sqlfile=$this->objConfig->siteRootPath().'/modules/'.$moduleId.'/sql/'.$tablefile.'.sql';
         }
         if (file_exists($sqlfile)){
             include($sqlfile);
-            foreach ($sqldata as $line)
+            foreach ($sqldata as $sql)
             {
-                $line=str_replace('PKVALUE',($this->objKeyMaker->newkey($tablefile)),$line);
-                $this->executeModSQL($line);
+                $sql=str_replace('PKVALUE',($this->objKeyMaker->newkey($tablefile)),$sql);
+                $this->executeModSQL($sql);
             }
             return TRUE;
         } else {
@@ -715,16 +752,18 @@ class modulesAdmin extends modules
             $moduleId=$this->MODULE_ID;
         }
         $sqlfile=$this->objConfig->siteRootPath().'/modules/'.$moduleId.'/'.$tablefile.'.sql';
+        if (!file_exists($sqlfile)){
+            $sqlfile=$this->objConfig->siteRootPath().'/modules/'.$moduleId.'/sql/'.$tablefile.'.sql';
+        }
         if (file_exists($sqlfile))
         {
             ini_set('max_execution_time','120');
             $handle=fopen($sqlfile,'r');
-            $line=fgets($handle,2048); // 2k ought to be enough.
-            while ($line)
+            while (!feof($handle))
             {
+            	$line=fgets($handle,16384); // 16KB
                 $line=str_replace('PKVALUE',($this->objKeyMaker->newkey($tablefile)),$line);
                 $this->executeModSQL($line);
-                $line=fgets($handle,2048);
             }
             fclose($handle);
             return TRUE;
@@ -743,11 +782,11 @@ class modulesAdmin extends modules
     */
     function moveIcons($moduleId,$icons)
     {
-        $sourcedir=$this->objConfig->siteRootPath().'/modules/'.$moduleId.'/icons/';
+        $srcdir=$this->objConfig->siteRootPath().'/modules/'.$moduleId.'/icons/';
         $destdir=$this->objConfig->siteRootPath().'skins/'.$this->objConfig->defaultSkin().'/icons/';
-        foreach ($icons as $line)
+        foreach ($icons as $icon)
         {
-            copy($sourcedir.$line,$destdir.$line);
+            copy($srcdir.$icon,$destdir.$icon);
         }
     }
 
@@ -756,68 +795,39 @@ class modulesAdmin extends modules
     * It first inserts the name of the module and then inserts the
     * description of the module into the English column
     */
-    function pokeLanguage() {
+    private function pokeLanguage() {
         $modTitle="mod_".$this->MODULE_ID."_name";
         $modDescription="mod_".$this->MODULE_ID."_desc";
-        //$whereUsed="/modules/";
         $isInNextGen=TRUE;
-        // Store the name
-        $sql="delete from tbl_english where code='".$modTitle."'";
+        $sql="DELETE FROM tbl_english WHERE code='".$modTitle."'";
         $this->executeModSQL($sql);
-        $sql="delete from tbl_languagetext where code='".$modTitle."'";
+        $sql="DELETE FROM tbl_languagetext WHERE code='".$modTitle."'";
         $this->executeModSQL($sql);
-        /*$sql="insert into tbl_english
-            (code, description,  English, isInNextGen)
-            values ('".$modTitle."', '".addslashes(MODULE_NAME)."', '".addslashes(MODULE_NAME)."', ".
-            $isInNextGen.")"; */
-        $sql="insert into tbl_languagetext (code,description) values
-        ('".$modTitle."', '".addslashes($this->MODULE_NAME)."')";
+        $sql="INSERT INTO tbl_languagetext (code,description) VALUES ('".$modTitle."', '".addslashes($this->MODULE_NAME)."')";
         $this->executeModSQL($sql);
-        $sql="insert into tbl_english
-            (code, Content,isInNextGen)
-            values ('".$modTitle."', '".addslashes($this->MODULE_NAME)."', '".$isInNextGen."')";
+        $sql="INSERT INTO tbl_english (code, Content,isInNextGen) VALUES ('".$modTitle."', '".addslashes($this->MODULE_NAME)."', '".$isInNextGen."')";
         $this->executeModSQL($sql);
-        // JAMES says: The bridge_lang_to_mod table is depreciated.
-        //Make the language bridge for the name
-        //$sql="delete from bridge_lang_to_mod where module_id='".$this->MODULE_ID."'";
-        //$this->executeModSQL($sql);
-        //$sql="insert into bridge_lang_to_mod (module_id, code) values ('".MODULE_ID."', '".$modTitle."')";
-        //$this->executeModSQL($sql);
-
         // Store the description
-        $sql="insert into tbl_languagetext (code,description) values
-        ('".$modDescription."', '".addslashes($this->MODULE_DESCRIPTION)."')";
+        $sql="INSERT INTO tbl_languagetext (code,description) VALUES ('".$modDescription."', '".addslashes($this->MODULE_DESCRIPTION)."')";
         $this->executeModSQL($sql);
-        $sql="delete from tbl_english where code='".$modDescription."'";
+        $sql="DELETE FROM tbl_english WHERE code='".$modDescription."'";
         $this->executeModSQL($sql);
-        $sql="insert into tbl_english
-            (code, Content, isInNextGen)
-            values ('".$modDescription."', '".addslashes($this->MODULE_DESCRIPTION)."', '".$isInNextGen."')";
+        $sql="INSERT INTO tbl_english (code, Content, isInNextGen) VALUES ('".$modDescription."', '".addslashes($this->MODULE_DESCRIPTION)."', '".$isInNextGen."')";
         $this->executeModSQL($sql);
-        //Make the language bridge for the description
-        //$sql="insert into bridge_lang_to_mod (module_id, code)  values ('".MODULE_ID."', '".$modDescription."')";
-        //$this->executeModSQL($sql);
     } #end of pokeLanguage() function
-
-
 
     /**
     * This is a method to add language terms to the database
     * @param string $terms A comma delimited string of
     * terms that are used in the language database
     */
-    function pokeTerms($terms) {
-        $terms_array=explode(',', $terms);
-        for ($i=0; $i < count($terms_array); $i++) {
-            $terms=$terms_array[$i];
-            $sql="INSERT INTO tbl_language_modules (module_id, code)
-              VALUES ('".$this->MODULE_ID."', '".$terms."')";
-          //echo $sql;
+    private function pokeTerms($terms) {
+        $terms_arr=explode(',', $terms);
+        foreach ($terms_arr as $term) {
+            $sql="INSERT INTO tbl_language_modules (module_id, code) VALUES ('{$this->MODULE_ID}', '$term')";
             $this->executeModSQL($sql);
         }
     } #end of pokeTerms() function
-
-
 
     /**
     * This is a method to execute additional SQL statements used to
@@ -825,51 +835,46 @@ class modulesAdmin extends modules
     * to execute all SQL needed to effect a new module.
     * This doesn't go through the dbtable class, as these changes
     * are not intended to propagate across a server cluster.
-    *
     * @param string $sql Any valid SQL query passed to the method.
     */
-    function executeModSQL($sql)
+    private function executeModSQL($sql)
     {
-        //$this->output.="<p>".$sql."</p>\n";
         $globalObjDb=&$this->objEngine->getDbObj();
         $globalObjDb->query($sql);
     } //end of executeModSQL() function
-
-
 
     /**
     * This is a method to check for modules that depend on this one
     * 14/06/2004 - I've changed things to fit the framework- James.
     * @author Derek Keats ?
     * @author James Scoble
-    * @param string $moduleId
-    * returns array $dep
+    * @param string $moduleId The module ID
+    * returns array
     */
-    function checkForDependentModules($moduleId)
+    private function checkForDependentModules($moduleId)
     {
-        $dep=array();
-        $sql="SELECT module_id FROM tbl_modules_dependencies WHERE dependency='".$moduleId."'";
+        $sql="SELECT module_id FROM tbl_modules_dependencies WHERE dependency='$moduleId'";
         $rs = $this->getArray( $sql );
-        foreach ($rs as $line)
+        $dep=array();
+        foreach ($rs as $rec)
          {
-          $dep[]=$line['module_id'];
+          $dep[]=$rec['module_id'];
          }
         return $dep;
     } #end of checkForDependentModules() function
 
-
     /**
-    * This is a method to record modules this one depends on
+    * Records modules that this module depends on
     * @author James Scoble
-    * @param string $moduleId
-    * @param $modulesNeeded array
+    * @param string $moduleId The module ID
+    * @param $modulesNeeded array The modules this module depends on
     *
     */
-    function recordDependentModules($moduleId,$modulesNeeded)
+    private function recordDependentModules($moduleId,$modulesNeeded)
     {
-        foreach ($modulesNeeded as $line)
+        foreach ($modulesNeeded as $moduleNeeded)
         {
-            $sql="insert into tbl_modules_dependencies (module_id,dependency) values ('".$moduleId."','".$line."')";
+            $sql="INSERT INTO tbl_modules_dependencies (module_id,dependency) VALUES ('$moduleId','$moduleNeeded')";
             $rs = $this->executeModSQL($sql);
         }
     } // end of recordDependentModules() function
@@ -878,90 +883,80 @@ class modulesAdmin extends modules
     * This is a method to drop tables for the current module. This method
     * gets the list of owned tables from tbl_modules_owned_tables
     * and removes them one at a time
-    * 14/06/2004 - I've changed things to fit the framework- James.
-    *
+    * 14/06/2004 - I've changed things to fit the framework- James
     * @author Derek Keats ?
     * @author James Scoble
     * @param string $moduleId
     * @returns array $droppedTables list of the dropped tables
     */
-    function dropTables($moduleId)
+    private function dropTables($moduleId)
     {
-        $sql="SELECT tablename FROM tbl_modules_owned_tables WHERE kng_module='".$moduleId."'";
+        $sql = "SELECT tablename FROM tbl_modules_owned_tables WHERE kng_module='$moduleId'";
         $rs = $this->getArray( $sql );
+        $rs_reversed=array_reverse($rs, TRUE);
         $droppedTables=array();
-        $rs_reversed=array_reverse($rs,TRUE);
-        foreach ($rs_reversed as $line)
+        foreach ($rs_reversed as $rec)
             {
-                $table=$line['tablename'];
+                $table=$rec['tablename'];
                 $droppedTables[]=$table;
-                $sql="DROP TABLE IF EXISTS ".$table;
+                $sql="DROP TABLE IF EXISTS {$table}";
                 $this->executeModSQL($sql);
-                $sql="DROP TABLE IF EXISTS ".$table."_seq";
+                $sql="DROP TABLE IF EXISTS {$table}_seq";
                 $this->executeModSQL($sql);
             }
         return $droppedTables;
     } #end of dropTables() function
 
-
-
     /**
-    * This is a method to uninstall (unregister) a module.
+    * This is a method to uninstall (deregister) a module.
     * This method should check for modules that depend on the current module
     * and refuse to uninstall where there are dependencies. Instead of uninstalling
     * a module that has dependencies, it should give the option to remove the user
     * interface files and set the module isVisible flag to 0
-    *
-    * 14/06/2004 - I've changed things to fit the framework- James.
+    * 14/06/2004 - I've changed things to fit the framework- James
     * @author Derek Keats ?
     * @author James Scoble
     * @param string $moduleId the id of the module
     * @param string $registerdata - array of info from the registration file
     * @returns boolean TRUE or FALSE
     */
-    function unInstall($moduleId='NONE',$registerdata)
+    public function unInstall($moduleId,&$registerdata)
     {
-        if ($moduleId=='NONE'){
+        if (is_null($moduleId)) {
             $moduleId=$registerdata['MODULE_ID'];
         }
-
-        $modTitle="mod_".$moduleId."_name";
-        $modDescription="mod_".$moduleId."_desc";
+        $modTitle="mod_{$moduleId}_name";
+        $modDescription="mod_{$moduleId}_desc";
         //Check if there are modules that depend on this one
-        $mList=$this->checkForDependentModules($moduleId);
-        if (count($mList)>0)
+        $dependantModules=$this->checkForDependentModules($moduleId);
+        if (!empty($dependantModules))
         {
-            $this->objLanguage->languageText('mod_hasdependants');
-            $outstr="<b>".$this->objLanguage->languageText('mod_hasdependants')."</b><br\>\n";
-            foreach ($mList as $line)
+            $str="<b>".$this->objLanguage->languageText('mod_hasdependants')."</b><br/>";
+            foreach ($dependantModules as $dependantModule)
             {
-                $outstr.=$line."<br />\n";
+                $str.=$dependantModule."<br />";
             }
-            $this->output.= $outstr;
-            //define('OUTPUT',$outstr);
+            $this->output.= $str;
             return FALSE;
         }
         else
         {
             $this->executeModSQL('BEGIN WORK'); //Start a transaction;
 
-            //$outstr= "<br>Removing title from language text.<br/>\n";
-            $sql="DELETE FROM tbl_english WHERE code='".$modTitle."'";
+            $sql="DELETE FROM tbl_english WHERE code='{$modTitle}'";
             $this->executeModSQL($sql);
-            $sql="DELETE FROM tbl_languagetext WHERE code='".$modTitle."'";
-            $this->executeModSQL($sql);
-
-            //$outstr.="Removing description from language text.<br/>\n";
-            $sql="DELETE FROM tbl_english WHERE code='".$modDescription."'";
-            $this->executeModSQL($sql);
-            $sql="DELETE FROM tbl_languagetext WHERE code='".$modDescription."'";
+            $sql="DELETE FROM tbl_languagetext WHERE code='{$modTitle}'";
             $this->executeModSQL($sql);
 
+            $sql="DELETE FROM tbl_english WHERE code='{$modDescription}'";
+            $this->executeModSQL($sql);
+            $sql="DELETE FROM tbl_languagetext WHERE code='{$modDescription.}'";
+            $this->executeModSQL($sql);
 
             $texts=$this->listTexts($registerdata); // remove all specified texts
-            if ($texts!=FALSE)
+            if ($texts!==FALSE)
             {
-                foreach ($texts as $key=>$line)
+                foreach ($texts as $key=>$value)
                 {
                     $this->removeText($key);
                 }
@@ -1009,7 +1004,7 @@ class modulesAdmin extends modules
             }
 
             // Remove navigation links
-            $sql="delete from tbl_menu_category where module='$moduleId'";
+            $sql="DELETE FROM tbl_menu_category WHERE module='$moduleId'";
             $this->executeModSQL($sql);
 
             // Here we remove CONFIG data from the sysconfig module
@@ -1017,28 +1012,26 @@ class modulesAdmin extends modules
             $this->objSysConfig->deleteModuleValues($moduleId);
 
             // Here we remove any SOAP files
+            /*
             if (isset($registerdata['SOAP_CONTROLLER'][0])&&($registerdata['SOAP_CONTROLLER'][0]==1))
             {
                 $this->soapFileRemover($moduleId);
             }
+            */
 
             // Drop tables
-            $droppedtables=$this->dropTables($moduleId);
+            $droppedTables=$this->dropTables($moduleId);
 
-            //$outstr.="Removing names for owned tables.<br/>\n";
-            $sql="DELETE FROM tbl_modules_owned_tables WHERE kng_module='".$moduleId."'";
+            $sql="DELETE FROM tbl_modules_owned_tables WHERE kng_module='$moduleId'";
             $this->executeModSQL($sql);
 
-            //$outstr.="Deleting module from list of available modules.<br/>\n";
-            $sql="DELETE FROM tbl_modules WHERE module_id='".$moduleId."'";
+            $sql="DELETE FROM tbl_modules WHERE module_id='$moduleId'";
             $this->executeModSQL($sql);
 
-            //$outstr.="Removing language entries for the module.<br/>\n";
-            $sql="DELETE FROM tbl_language_modules WHERE module_id='".$moduleId."'";
+            $sql="DELETE FROM tbl_language_modules WHERE module_id='$moduleId'";
             $this->executeModSQL($sql);
 
-            //$outstr.="Removing module dependancy entries for the module.<br/>\n";
-            $sql="DELETE FROM tbl_modules_dependencies WHERE module_id='".$moduleId."'";
+            $sql="DELETE FROM tbl_modules_dependencies WHERE module_id='$moduleId'";
             $this->executeModSQL($sql);
 
             $this->executeModSQL('COMMIT'); //End the transaction;
@@ -1048,68 +1041,75 @@ class modulesAdmin extends modules
     }  #end of unInstall() function
 
 
-    /********
+    /**
     * This is a method to add specified text entries from both tbl_languagetext and tbl_english
     * @author James Scoble
     * @param $code,$description,$content
     */
-    function addText($code,$description,$content)
+    private function addText($code,$description,$content)
     {
-        $this->removeText($code); // clean-up here
+        // clean-up here
+        $this->removeText($code);
+        
         $code=addslashes($code);
         $description=addslashes($description);
         $content=addslashes($content);
-        $sql="insert into tbl_languagetext (code,description) values ('".$code."', '".$description."')";
-        //print $sql."<br>\n";
+        
+        $sql="INSERT INTO tbl_languagetext (code,description) VALUES ('$code', '$description')";
         $this->executeModSQL($sql);
-        $sql="insert into tbl_english (code, Content,isInNextGen) values ('".$code."', '".$content."', '1')";
+        
+        $sql="INSERT INTO tbl_english (code,Content,isInNextGen) VALUES ('$code', '$content', '1')";
         $this->executeModSQL($sql);
     }
 
-    /********
+    /**
     * This is a method to remove specified text entries from both tbl_languagetext and tbl_english
     * @author James Scoble
     * @param $code
     */
-    function removeText($code)
+    private function removeText($code)
     {
         $code=addslashes($code);
-        $sql="DELETE FROM tbl_english WHERE code='".$code."'";
+        
+        $sql="DELETE FROM tbl_english WHERE code='$code'";
         $this->executeModSQL($sql);
-        $sql="DELETE FROM tbl_languagetext WHERE code='".$code."'";
+        
+        $sql="DELETE FROM tbl_languagetext WHERE code='$code'";
         $this->executeModSQL($sql);
     }
 
-    /********
+    /**
     * This is a method to check for specified text entries from both tbl_languagetext and tbl_english
     * @author James Scoble
     * @param $code
     * @returns array with elements flag = 0, 1, 10, or 11, content and desc
     */
-    function checkText($code)
+    private function checkText($code)
     {
         $flag['flag']=0;
+        
         $sql="SELECT * FROM tbl_english WHERE code='".$code."'";
-        $data=$this->getArray($sql);
+        $arr=$this->getArray($sql);
         $flag1=0;
         $content='';
-        foreach($data as $line)
+        foreach($arr as $el)
         {
             $flag1=1;
-            $content=$line['content'];
+            $content=$el['content'];
         }
+        
         $sql="SELECT * FROM tbl_languagetext WHERE code='".$code."'";
-        $data=$this->getArray($sql);
+        $arr=$this->getArray($sql);
         $flag2=0;
-        $desc='';
-        foreach($data as $line)
+        $description='';
+        foreach($arr as $el)
         {
             $flag2=10;
-            $desc=$line['description'];
+            $description=$el['description'];
         }
         $flag['flag']=$flag1+$flag2;
-        $flag['desc']=$desc;
         $flag['content']=$content;
+        $flag['desc']=$description;
         return $flag;
     }
 
@@ -1119,21 +1119,23 @@ class modulesAdmin extends modules
     * @param string $index type of text to be added
     * @returns FALSE or array $texts
     */
-    function listTexts($rdata,$index='TEXT')
+    private function listTexts($rdata,$index='TEXT')
     {
         $texts=array();
         if (is_array($rdata) && array_key_exists($index,$rdata) && is_array($rdata[$index]))
         {
             foreach ($rdata[$index] as $line)
             {
-                (@list($code,$description,$content)=explode('|',$line));
+                list($code,$description,$content)=explode('|',$line);
                 if ($content){
-                    $texts[$code]['desc']=$description;
                     $texts[$code]['content']=$content;
+                    $texts[$code]['desc']=$description;
                 } else {
                     $module=$rdata['MODULE_ID'];
-                    $errorText=$this->objLanguage->languageText('mod_moduleadmin_textproblem',"Module <b>[MODULE]</b> has invalid text defintion for '[CODE]' ");
-                    $this->errorText.=str_replace("[MODULE]",$module,str_replace("[CODE]",$code,$errorText))."<br />\n";
+                    $errorText=$this->objLanguage->languageText('mod_moduleadmin_textproblem',"Module <b>{MODULE}</b> has invalid text defintion for '{CODE}'<br/>";
+                    $errorText = str_replace("{MODULE}",$module,$errorText);
+                    $errorText = str_replace("{CODE}",$code,$errorText);
+                    $this->errorText .= $errorText;
                 }
             }
             return $texts;
@@ -1149,12 +1151,19 @@ class modulesAdmin extends modules
     * @param string $moduleId
     * @returns array $result
     */
-    function getModuleInfo($moduleId)
+    private function getModuleInfo($moduleId)
     {
-        $result=array('isreg'=>FALSE,'name'=>'');
-        if ($this->checkIfRegistered(' ',$moduleId)){
-            $result['isreg']=TRUE;
-            $result['name']=$this->objLanguage->code2Txt('mod_'.$moduleId.'_name');
+        if ($this->checkIfRegistered($moduleId)){
+            $result = array(
+                'isreg'=>TRUE,
+                'name'=>$this->objLanguage->code2Txt('mod_'.$moduleId.'_name')
+            );
+        }
+        else {
+            $result=array(
+                'isreg'=>FALSE,
+                'name'=>''
+            );
         }
         return $result;
     }
@@ -1163,7 +1172,7 @@ class modulesAdmin extends modules
     * This is a method to create a SOAP file
     * @param string $moduleId
     */
-    function soapFileMaker($moduleId)
+    private function soapFileMaker($moduleId)
     {
         $path=$this->objConfig->siteRootPath()."/soap/";
         if ((file_exists($path))&&(!file_exists($path.$moduleId.".php"))){
@@ -1181,7 +1190,7 @@ class modulesAdmin extends modules
     * This is a method to remove a SOAP file
     * @param string $moduleId
     */
-    function soapFileRemover($moduleId)
+    private function soapFileRemover($moduleId)
     {
         $path=$this->objConfig->siteRootPath()."/soap/";
         if (file_exists($path.$moduleId.".php")){
@@ -1190,6 +1199,4 @@ class modulesAdmin extends modules
     }
 
 } # end of class
-
-
 ?>
