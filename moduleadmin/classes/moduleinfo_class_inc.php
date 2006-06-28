@@ -10,16 +10,18 @@
 class moduleinfo extends object
 {
 
-    var $objConfig;
+    private $objConfig;
+    private $objModulesAdmin;
+    private $objFileReader;
 
-    function init ()
+    public function init ()
     {
         //Instantiate the configuration object
         $this->objConfig=&$this->getObject('config','config');
         // instantiate the main class for module registration:
-        $this->objModule=&$this->getObject('modulesadmin','modulelist');
+        $this->objModulesAdmin=&$this->getObject('modulesadmin','moduleadmin');
         // the class for reading register.conf files
-        $this->objRegFile=$this->newObject('filereader','moduleadmin');
+        $this->objFileReader=&$this->newObject('filereader','moduleadmin');
     }
 
 
@@ -27,37 +29,32 @@ class moduleinfo extends object
     * This method gets a list of the directories in the 'modules' dir,
     * and checks for module elements such as a controller.php file, a register.php
     * file, and a classes directory. it calls the functions checkForFile() and
-    * checkdir(), both within this class and returns an assoc array.
+    * checkDir(), both within this class and returns an array.
     * @author James Scoble
     */
-    function listModuleFiles()
+    public function listModuleFiles()
     {
-        $lookdir=$this->objConfig->siteRootPath()."/modules";
-        $modlist=$this->checkdir($lookdir);
+        $dir=$this->objConfig->siteRootPath()."/modules";
+        $modlist=$this->listDir($dir);
         natsort($modlist);
         $k=0;
-        foreach ($modlist as $line) {
-            switch ($line) {
+        foreach ($modlist as $mod) {
+            switch ($mod) {
             case '.':
             case '..':
             case 'CVS':
                 break; // don't bother with system-related dirs
             default:
-                if (is_dir($lookdir.'/'.$line)) {
+                if (is_dir($dir.'/'.$mod)) {
                     $ret[$k]['Counter'] = $k+1;
-                    $ret[$k]['Module'] = $line;
-                    $filepath=$this->findRegisterFile($line);
-                    if ($filepath) {
-                        $registerdata=$this->objRegFile->readRegisterFile($filepath);
-                        if (isset($registerdata['MODULE_NAME'])) {
-                            $ret[$k]['Name'] = $registerdata['MODULE_NAME'];
-                        } else {
-                            $ret[$k]['Name'] = "ERROR!No module name";
-                        }
+                    $ret[$k]['Module'] = $mod;
+                    $filepath=$this->findRegisterFile($mod);
+                    if ($filepath !== FALSE) {
+                        $registerdata=$this->objFileReader->readRegisterFile($filepath);
+                        $ret[$k]['Name'] = $registerdata['MODULE_NAME'];
                         $ret[$k]['Description'] = $registerdata['MODULE_DESCRIPTION'];
                         $ret[$k]['Authors'] = $registerdata['MODULE_AUTHORS'];
                         $ret[$k]['KINKY purpose'] = " ";
-
                     }
                     $k++;
                 }
@@ -69,14 +66,14 @@ class moduleinfo extends object
 
     
     /**
-    * This method takes one parameter, which it treats as a directory name.
-    * It returns an array - listing the files in the specified dir.
+    * Lists the files in the specified dir.
     * @author James Scoble
-    * @param string $file - directory/folder
+    * @param string $path Directory to search
     * @returns array $list
     */
-    function checkdir($file)
+    private function listDir($file)
     {
+        $list = array();
         $dirObj = dir($file);
         while (false !== ($entry = $dirObj->read()))
         {
@@ -90,20 +87,13 @@ class moduleinfo extends object
     /**
     * Boolean test for the existance of file $fname, in directory $where
     * @author James Scoble
-    * @param string $where file path
-    * @param string $fname file name
+    * @param string $path Directory
+    * @param string $filename File Name
     * @returns boolean TRUE or FALSE
     */
-    function checkForFile($where,$fname)
+    private function checkForFile($path,$filename)
     {
-        if (file_exists($where."/".$fname))
-        {
-            return TRUE;
-        }
-        else
-        {
-            return FALSE;
-        }
+        return file_exists($path."/".$filename);
     }
 
     /** This is a method to check for existance of registration file
@@ -111,15 +101,15 @@ class moduleinfo extends object
     * @param string modname
     * @returns FALSE on error, string filepatch on success
     */
-    function findregisterfile($modname)
+    private function findRegisterFile($modname)
     {
-        $endings=array('php','conf');
-        $path=$this->objConfig->siteRootPath()."/modules/".$modname."/register.";
-        foreach ($endings as $line)
+        $extensions=array('.conf', '.php'); // Search for .conf first
+        $filepath=$this->objConfig->siteRootPath()."/modules/".$modname."/register";
+        foreach ($extensions as $extension)
         {
-            if (file_exists($path.$line))
+            if (file_exists($filepath.$extension))
             {
-                return $path.$line;
+                return $filepath.$extension;
             }
         }
         return FALSE;
@@ -128,24 +118,21 @@ class moduleinfo extends object
     /**
     * Method to get information about a specified module
     * by reading from the register.conf files
-    * @param string $modname the module
+    * @param string $modName the module
     * @returns array $registerdata
     */
-    function getModuleInfo($modname)
+    public function getModuleInfo($modName)
     {
-        $filepath=$this->findRegisterFile($modname);
-        if ($filepath) // if there were no file it would be FALSE
+        $filepath=$this->findRegisterFile($modName);
+        if ($filepath !== FALSE)
         {
-            $registerdata=$this->objRegFile->readRegisterFile($filepath);
-            if ($registerdata){
+            $registerdata=$this->objFileReader->readRegisterFile($filepath);
+            if ($registerdata !== FALSE){
                return $registerdata;
             } else {
                 return FALSE;
             }
         }
     } // end of function
-    
-
 } //end of class definition
-
 ?>

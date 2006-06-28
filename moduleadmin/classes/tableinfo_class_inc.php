@@ -23,7 +23,7 @@ class tableinfo extends dbtable
     */
     public function tablelist()
     {
-    	return  $this->listDbTables();
+    	return $this->listDbTables();
     }
     
     /**
@@ -36,16 +36,10 @@ class tableinfo extends dbtable
     */
     public function checktable($name,$list=NULL)
     {
-        if ($list == NULL){
+        if (is_null($list)){
             $list = $this->tablelist();
         }
-        if (in_array($name, $list))
-        {
-            return TRUE;
-        } 
-        else {
-            return FALSE;
-        }
+        return in_array($name, $list);
     }
 }
 ?>

@@ -10,48 +10,56 @@
 class filereader extends object
 {
 
-    var $objConfig;
+    private $objConfig;
 
-    function init ()
+    public function init ()
     {
         $this->objConfig=&$this->getObject('altconfig','config');
     }
 
     /**
-    * This method is a 'file reader' function - it takes info from the 'register.conf' file provided by the module to be registered,
-    * and uses file() to load the register.php file into an array, then chew through it line by line, looking for keywords.
+    * Reads the 'register.conf' file provided by the module to be registered
+    * and uses file() to load the contents into an array, then read through it
+    * line by line, looking for keywords.
     * These are then returned as an associative array.
-    *
     * @author James Scoble
     * @param string $filepath  path and filename of file.
     * @param boolean $useDefine determine use of defined constants
     * @returns array $registerdata all the info from the register.conf file
     */
-    function readRegisterFile($filepath,$useDefine=FALSE)
+    public function readRegisterFile($filepath,$useDefine=FALSE)
     {
         if (file_exists($filepath))
         {
             $registerdata=array();
             $registerdata['flag']='1'; // puts something in the array so it will be returned as one.
-            $farray=file($filepath);
-            foreach ($farray as $line)
+            $lines=file($filepath);
+            foreach ($lines as $line)
             {
-                $start=substr($line,0,7);
-                if ($start=="define(")
+                $line = strtoupper($line)
+                /*
+                if (substr($line,0,7)=="DEFINE(")
                 {
                     eval($line);
                 }
                 else
+                */
                 {
-                    $params=explode(': ',$line);
+                    $params=explode(':',$line);
+                    $len = count($params);
+                    for ($i=0; $i<$len; $i++) {
+                        $params[$i] = trim($params[$i]);
+                    }
                     switch ($params[0])
                     {
+                    /*
                     case 'DEFINE':
                         $registerdata[$params[1]]=$params[2];
                         if ($useDefine)
                         {
                             define(rtrim($params[1]),rtrim($params[2])); // depreciated, but we still need it for now.
                         }
+                    */
                     case 'MODULE_ID':
                     case 'MODULE_NAME':
                     case 'MODULE_DESCRIPTION':
@@ -66,31 +74,33 @@ class filereader extends object
                     case 'CONTEXT_AWARE':
                     case 'DEPENDS_CONTEXT':
                         $registerdata[$params[0]]=rtrim($params[1]);
+                        /*
                         if ($useDefine)
                         {
                             define($params[0],rtrim($params[1])); // depreciated, but we still need it for now.
                         }
+                        */
                         break;
-                    case 'ICON':    // images for each module
+                    case 'ICON': // images for each module
                     case 'NEWPAGE': // Add a new page
                     case 'NEWPAGECATEGORY': // Add a new page category
                     case 'NEWSIDEMENU': // Add a new sidemenu
                     case 'NEWTOOLBARCATEGORY': // Add a new toolbar category
                     case 'MENU_CATEGORY': // when the menu should display a link to this
                     case 'SIDEMENU': // the side menus in the content page
-                    case 'PAGE':  // lecturer or admin page links
-                    case 'SYSTEM_TYPE':   // system type for text abstraction _Kevin Cyster
-                    case 'SYSTEM_TEXT':   // text items for text abstraction _Kevin Cyster
-                    case 'ACL':   // access permissions for the module
-                    case 'USE_GROUPS':   // access groups for the module
-                    case 'USE_CONTEXT_GROUPS':   // access groups for a context dependent module
-                    case 'USE_CONDITION':    // use an existing security condition
-                    case 'CONDITION':    // create a security condition
-                    case 'CONDITION_TYPE':     // Create a condition type
-                    case 'RULE':    // Create a rule linking conditions and actions
-                    case 'DIRECTORY':    // Create a directory in content folder
-                    case 'SUBDIRECTORY':    // Create a subdirectory in above directory
-                    case 'TABLE':  // Names of SQL tables
+                    case 'PAGE': // lecturer or admin page links
+                    case 'SYSTEM_TYPE': // system type for text abstraction _Kevin Cyster
+                    case 'SYSTEM_TEXT': // text items for text abstraction _Kevin Cyster
+                    case 'ACL': // access permissions for the module
+                    case 'USE_GROUPS': // access groups for the module
+                    case 'USE_CONTEXT_GROUPS': // access groups for a context dependent module
+                    case 'USE_CONDITION': // use an existing security condition
+                    case 'CONDITION': // create a security condition
+                    case 'CONDITION_TYPE': // Create a condition type
+                    case 'RULE': // Create a rule linking conditions and actions
+                    case 'DIRECTORY': // Create a directory in content folder
+                    case 'SUBDIRECTORY': // Create a subdirectory in above directory
+                    case 'TABLE': // Names of SQL tables
                     case 'BIGDATA': // data too large for the table-creation method
                     case 'DEPENDS': // modules this module needs
                     case 'CLASSES':
@@ -106,11 +116,11 @@ class filereader extends object
                             $registerdata[$params[0]][]=array('pname'=>trim($confArray[0]),'pvalue'=>trim($confArray[1]));
                         }
                         break;
-                    case 'TEXT':   // Languagetext items
+                    case 'TEXT': // Languagetext items
                         $registerdata['TEXT'][]=$params[1]; // Need to think this one out some more.
                         break;
                     case 'USES':
-                    case 'USESTEXT':   // Languagetext items not loaded but used.
+                    case 'USESTEXT': // Languagetext items not loaded but used.
                         $registerdata['USES'][]=$params[1];
                         break;
                     default:
@@ -134,7 +144,9 @@ class filereader extends object
     * @author James Scoble
     * @param string modname
     * @returns FALSE on error, string filepatch on success
+    * @deprecated Already in moduleinfo_class_inc.php
     */
+    /*
     function findregisterfile($modname)
     {
         $endings=array('php','conf');
@@ -148,8 +160,6 @@ class filereader extends object
         }
         return FALSE;
     }
-
-
+    */
 } //end of class definition
-
 ?>
