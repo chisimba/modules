@@ -25,7 +25,8 @@ define('GET_USERVISIBLE', 3);
 class modules extends dbTable 
 {
     private $objLanguage;
-    private $objConfig;
+    //private $objConfig;
+    public $objConfig;
 
     // Handle for config object
     private $config;
@@ -105,7 +106,7 @@ class modules extends dbTable
     public function isAdminModule($moduleId)
     {
         $result=$this->getAll("WHERE module_id='$moduleId'");
-        if (!empty($result) && isset($result[0]) {
+        if (!empty($result) && isset($result[0])) {
             return $result[0]['isAdmin'] == '1';
         }
         else {
@@ -128,7 +129,8 @@ class modules extends dbTable
         if (is_null($moduleId)) {
             $moduleId=$moduleName;
         }
-        return !empty($this->getRow('module_id',$moduleId));
+        $row = $this->getRow('module_id',$moduleId);
+        return !empty($row);
      }  #end of checkIfRegistered() function
      
     /** 
@@ -137,10 +139,10 @@ class modules extends dbTable
     * @param string $module the module to lookup 
     * @returns string $version the version in the database | FALSE
     */ 
-    public function getVersion($module)
+    public function getVersion($moduleId)
     {
-        $row=$this->getRow('module_id',$module);
-        return !empty($row)) ? $row['module_version'] : FALSE;
+        $row=$this->getRow('module_id',$moduleId);
+        return !empty($row) ? $row['module_version'] : FALSE;
 
     }
 } 

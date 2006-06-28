@@ -68,7 +68,7 @@ class modulesAdmin extends modules
     * @returns boolean TRUE|FALSE
     */
     public function checkDependency($moduleId) {
-        return $this->checkIfRegistered(NULL,$moduleId));
+        return $this->checkIfRegistered(NULL,$moduleId);
     } #end of checkDependency() function
 
     /**
@@ -950,7 +950,7 @@ class modulesAdmin extends modules
 
             $sql="DELETE FROM tbl_english WHERE code='{$modDescription}'";
             $this->executeModSQL($sql);
-            $sql="DELETE FROM tbl_languagetext WHERE code='{$modDescription.}'";
+            $sql="DELETE FROM tbl_languagetext WHERE code='{$modDescription}'";
             $this->executeModSQL($sql);
 
             $texts=$this->listTexts($registerdata); // remove all specified texts
@@ -1132,7 +1132,7 @@ class modulesAdmin extends modules
                     $texts[$code]['desc']=$description;
                 } else {
                     $module=$rdata['MODULE_ID'];
-                    $errorText=$this->objLanguage->languageText('mod_moduleadmin_textproblem',"Module <b>{MODULE}</b> has invalid text defintion for '{CODE}'<br/>";
+                    $errorText=$this->objLanguage->languageText('mod_moduleadmin_textproblem',"Module <b>{MODULE}</b> has invalid text defintion for '{CODE}'<br/>");
                     $errorText = str_replace("{MODULE}",$module,$errorText);
                     $errorText = str_replace("{CODE}",$code,$errorText);
                     $this->errorText .= $errorText;
