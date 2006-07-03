@@ -10,7 +10,7 @@
 class filereader extends object
 {
 
-    private $objConfig;
+    public $objConfig;
 
     public function init ()
     {
