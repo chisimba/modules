@@ -55,8 +55,18 @@ class mmutils extends object
 	{
 		try {
 			
-			$this->_objConfig = & $this->newObject('config', 'config');			
-			$this->_rootMediaPath = $this->_objConfig->contentBasePath().'media';	
+			$this->_objConfig = & $this->newObject('altconfig', 'config');			
+			$this->_rootMediaPath = $this->_objConfig->getContentBasePath().'media';	
+			//$this->_rootMediaPath = $this->_objConfig->getSiteRoot().'usrfiles/media';	
+			//print $this->_rootMediaPath;
+			//check if the media folder exist
+			
+			if(!is_dir($this->_rootMediaPath))
+			{
+				mkdir($this->_rootMediaPath);
+			}
+			
+			//var_dump($this->_rootMediaPath);die;
 			$this->_folders = array();
 			$this->_files = array();
 			
@@ -235,27 +245,54 @@ class mmutils extends object
 	 * @return array
 	 */
 	private function _getFiles($folder = NULL)
-	{
+	{ 
 		try 
+		
 		{
 			$baseDir=$folder;
+			
 		    $hndl=opendir($baseDir);
+		    
 			$arrFiles = array();
+			
 	       	while($file=readdir($hndl)) 
+	       	
 	       	{
+	       	
+	       		if (!strcmp(".", $file))continue; // this may not the most efficient way to detect the . and .. entries
+	       		
+	            if (!strcmp("..", $file))continue; // but it is the easiest to understand
+	            
+	            if (!strcmp("CVS", $file))continue; // ignore CVS folders
+	            
+	            if (!strcmp("config", $file))continue; // do not display config folder
+	            
+	            if (!strcmp("_vti_cnf", $file))continue;//ignore frontpage crap
+          
 	       		$completepath=$baseDir.'/'.$file;
+	       		
+	       	
+	       		  
 	    		if(is_file($completepath)) 
 	    		{
-	    			$path = str_replace($this->_objConfig->siteRootPath(),  $this->_objConfig->siteRoot(),$completepath);
-	       			$arrFiles[] = array('path' => $path , 'name' => $file);
+	    			$repl = str_replace("\\", "/",$this->_objConfig->getsiteRootPath());
+	    			
+	    			$subj = str_replace( "\\" , "/",$completepath);
+	    			
+	    			$path = str_replace($repl,  $this->_objConfig->getsiteRoot(),$subj);
+	       			
+	    			$arrFiles[] = array('path' => $path , 'name' => $file);
 	    		 	
 	    		}
 	       	}		 
 	       	
 	       	return $arrFiles;
+	       	
 	    }catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
+       		
+	        echo 'Caught exception: ',  $e->getMessage();
+        	
+	        exit();
 	    }
 	}
 	

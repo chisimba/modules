@@ -61,7 +61,7 @@ if($editmode)
 	$bodyInput->value = $arrSection['description'];
 	$layout = $arrSection['layout'];
 	$selected = $arrSection['image'];
-	$imageSRC = $this->_objConfig->siteRoot().'/usrfiles/media'.$selected;
+	$imageSRC = $this->_objConfig->getsiteRoot().'/usrfiles/media'.$selected;
 	$isPublished = ($arrSection['published'] == 1) ? 'Yes' : 'No';
 	
 } else {

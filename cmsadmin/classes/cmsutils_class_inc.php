@@ -131,13 +131,13 @@ class cmsutils extends object
 	{
 		try {
 			$objDropDown = & $this->newObject('dropdown', 'htmlelements');
-			$objConfig = & $this->newObject('config' , 'config');
+			$objConfig = & $this->newObject('altconfig' , 'config');
 			
 			$objMedia = & $this->newObject('mmutils', 'mediamanager');
 			$objMedia->getImages();
 			$objDropDown->name = $name;
 			//fill the drop down with the list of images
-			$path = $objConfig->siteRoot().'usrfiles/media';
+			$path = $objConfig->getsiteRoot().'usrfiles/media';
 			
 			$objDropDown->addOption('0',' - Select Image - ');
 			$objDropDown->addFromDB($objMedia->getImages(),'title','folder',$selected);
@@ -293,7 +293,7 @@ class cmsutils extends object
 			$section = $this->getParam('id');
 			
 			//create the home like first
-			$nodes[] = array('text' => 'Home', 'uri' => $this->uri(null, 'cms'));
+			//$nodes[] = array('text' => 'Home', 'uri' => $this->uri(null, 'cms'));
 						
 			//get the all the sections from the database
 			$arrSections = $this->_objSections->getSections(TRUE);
@@ -304,7 +304,7 @@ class cmsutils extends object
 			{
 				
 				//add the sections
-		        if(($this->getParam('action') ==  'showsection') && ($this->getParam('id') == $section['id']))
+		        if(($this->getParam('action') ==  'showsection') && ($this->getParam('id') == $section['id']) || $this->getParam('sectionid') == $section['id'])
 		        {
 		        	
 		        	$pagenodes = array();
@@ -312,7 +312,7 @@ class cmsutils extends object
 		        	
 		        	foreach( $arrPages as $page)
 		        	{
-		        		$pagenodes[] = array('text' => $page['menutext'] , 'uri' =>$this->uri(array('action' => 'showcontent', 'id' => $page['id']), 'cms'));
+		        		$pagenodes[] = array('text' => $page['menutext'] , 'uri' =>$this->uri(array('action' => 'showfulltext', 'id' => $page['id'], 'sectionid' => $section['id']), 'cms'));
 		        		
 		        	}
 		        	
@@ -571,7 +571,8 @@ class cmsutils extends object
 				}
 				//$str .= $table->show();
 				$str .= '<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
-				$str .= '<p>'.$page['introtext'].'<a href="devtodo" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
+				$uri = $this->uri(array('action' => 'showfulltext', 'sectionid' => $arrSection['id'], 'id' => $page['id']), 'cms');
+				$str .= '<p>'.$page['introtext'].'<a href="'.$uri.'" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
 
 			}
 			
@@ -829,6 +830,22 @@ class cmsutils extends object
 		
 		return $objNav->show($nodes);
 
+	}
+	
+	/**
+	 * Method to show the full content of a page
+	 * 
+	 * @access public 
+	 * @return string
+	 * @param $string contentId The id of the content
+	 * @param string sectionId The section Id
+	 * 
+	 */
+	public function getFullContent($contentId, $sectionId)
+	{
+		
+		
+		
 	}
 	
 }

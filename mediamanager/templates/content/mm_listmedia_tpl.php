@@ -43,6 +43,7 @@ $table = & $this->newObject('htmltable' , 'htmlelements');
 $rowCount = 4;
 $cnt = 0;
 $table->startRow();
+
 if($files)
 {
 	foreach($files as $file)

@@ -67,12 +67,13 @@ $smalltable->endRow();
 
 
 
-$fieldset2->setLegend('Media Mananger');
+$fieldset2->setLegend('<h1>Media Mananger</h1>');
 $this->_objMedia->getFolders();
 
 $dropdown->addFromDB($this->_objMedia->getFolders(),'foldername','foldername',$this->getParam('folder'));
 $dropdown->extra = ' onchange="goUpDir()"';
 $dropdown->name = 'dirPath';
+$dropdown->id = 'dirPath';
 
 $iframe->width = '100%';
 $iframe->height = '170';
@@ -102,7 +103,6 @@ echo $form->show();
 echo $form2->show();
 
 ?>
-
 <script language="javascript" type="text/javascript">
 	function dirup(){
 		var urlquery=frames['<?php echo $iframe->name;?>'].location.search.substring(1);
@@ -113,21 +113,21 @@ echo $form2->show();
 
 	function newFolder()
 	{
-		var selection = document.forms[0].createfolder;
-		var newSelection = document.forms[1].newfolder;
+		var selection = document.forms[1].createfolder;
+		var newSelection = document.forms[0].newfolder;
 		newSelection.value = selection.value;
-		document.forms[1].submit();
+		document.forms[0].submit();
 		//alert(input.value);
 		
 	}
 
 	function goUpDir()
 	{
-		var selection = document.forms[0].dirPath;
+		var selection = document.forms[1].dirPath;
 		var dir = selection.options[selection.selectedIndex].value;
-		document.forms[0].action = document.forms[0].action +'&folder='  + dir;
+		document.forms[1].action = document.forms[1].action +'&folder='  + dir;
 		
-		frames['<?php echo $iframe->name;?>'].location.href='<?php  echo $this->uri(array('action' => 'showmedia'))?>&folder=' + dir;
+		frames['<?php echo $iframe->name;?>'].location.href='<?php  echo str_replace("&amp;", "&", $this->uri(array('action' => 'showmedia')))?>&folder=' + dir;
 	}
 
 	</script>

@@ -104,7 +104,7 @@ class cmsadmin extends controller
 			$this->_objUtils = & $this->newObject('cmsutils', 'cmsadmin');
 			$this->_objUser = & $this->newObject('user', 'security');
         	$this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
-        	$this->_objConfig = & $this->newObject('config', 'config');
+        	$this->_objConfig = & $this->newObject('altconfig', 'config');
         	
         }catch (Exception $e){
        	echo 'Caught exception: ',  $e->getMessage();

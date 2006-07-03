@@ -113,12 +113,13 @@ class mediamanager extends controller
         		$this->setLayoutTemplate('mm_layout_tpl.php');
         		return 'mm_main_tpl.php';
         	case 'showmedia':
+        	
         		$this->setVar('pageSuppressContainer', TRUE);
 	            $this->setVar('pageSuppressBanner', TRUE);
 	            $this->setVar('pageSuppressToolbar', TRUE);
 	            $this->setVar('suppressFooter', TRUE);
 	            $this->setVar('pageSuppressIM', TRUE);
-	            
+	          
 	            $this->setVar('files', $this->_objMedia->getFiles($this->getParam('folder')));
         		return 'mm_listmedia_tpl.php';
         	case 'upload':        
