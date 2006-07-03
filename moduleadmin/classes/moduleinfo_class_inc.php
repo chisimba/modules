@@ -34,37 +34,41 @@ class moduleinfo extends object
     */
     public function listModuleFiles()
     {
-        $dir=$this->objConfig->siteRootPath()."/modules";
-        $modlist=$this->listDir($dir);
-        natsort($modlist);
-        $k=0;
-        foreach ($modlist as $mod) {
-            switch ($mod) {
-            case '.':
-            case '..':
-            case 'CVS':
-                break; // don't bother with system-related dirs
-            default:
-                if (is_dir($dir.'/'.$mod)) {
-                    $ret[$k]['Counter'] = $k+1;
-                    $ret[$k]['Module'] = $mod;
-                    $filepath=$this->findRegisterFile($mod);
-                    if ($filepath !== FALSE) {
-                        $registerdata=$this->objFileReader->readRegisterFile($filepath);
-                        $ret[$k]['Name'] = $registerdata['MODULE_NAME'];
-                        $ret[$k]['Description'] = $registerdata['MODULE_DESCRIPTION'];
-                        $ret[$k]['Authors'] = $registerdata['MODULE_AUTHORS'];
-                        $ret[$k]['KINKY purpose'] = " ";
+        try {
+            $dir=$this->objConfig->siteRootPath()."/modules";
+            $modules=$this->listDir($dir);
+            natsort($modulelist);
+            $k=0;
+            foreach ($modules as $module) {
+                switch ($module) {
+                case '.':
+                case '..':
+                case 'CVS':
+                    break; // don't bother with system-related dirs
+                default:
+                    if (is_dir($dir.'/'.$module)) {
+                        $ret[$k]['Counter'] = $k+1;
+                        $ret[$k]['Module'] = $module;
+                        $filepath=$this->findRegisterFile($module);
+                        if ($filepath !== FALSE) {
+                            $registerdata=$this->objFileReader->readRegisterFile($filepath);
+                            $ret[$k]['Name'] = $registerdata['MODULE_NAME'];
+                            $ret[$k]['Description'] = $registerdata['MODULE_DESCRIPTION'];
+                            $ret[$k]['Authors'] = $registerdata['MODULE_AUTHORS'];
+                            $ret[$k]['KINKY purpose'] = " ";
+                        }
+                        $k++;
                     }
-                    $k++;
                 }
             }
+            return $ret;
         }
-        return $ret;
+        catch (Exception $e) {
+            echo $e->getMessage();
+            exit(0);
+        }
     }
-        
 
-    
     /**
     * Lists the files in the specified dir.
     * @author James Scoble

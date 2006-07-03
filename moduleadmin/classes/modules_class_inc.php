@@ -18,12 +18,12 @@ $Id$
 
 // Constants for $getType parameter of getModules
 
-define('GET_ALL', 1);
-define('GET_VISIBLE', 2);
-define('GET_USERVISIBLE', 3);
-
-class modules extends dbTable 
+class modules extends dbTable
 {
+    const GET_ALL = 1;
+    const GET_VISIBLE = 2;
+    const GET_USERVISIBLE = 3;
+
     private $objLanguage;
     //private $objConfig;
     public $objConfig;
@@ -93,7 +93,7 @@ class modules extends dbTable
             $_module['description'] = $this->objLanguage->languagetext('mod_' . $module['module_id'] . '_desc');
             $_modules[] = $_module;
         }
-        return !empty($_modules) ? $_modules : false;
+        return !empty($_modules) ? $_modules : FALSE;
     } 
 
     /**
