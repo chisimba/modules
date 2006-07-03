@@ -37,7 +37,7 @@ class modulesAdmin extends modules
     private $objTableInfo; //handle for tableinfo class object
     private $objKeyMaker; //handle for primary key generation
     private $update=FALSE;
-    private $output=''; // for any feedback messages from internal functions.
+    public $output=''; // for any feedback messages from internal functions.
     private $errorText=''; // for any feedback messages from internal functions.
 
     /**
