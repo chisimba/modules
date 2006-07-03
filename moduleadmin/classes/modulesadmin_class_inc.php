@@ -877,7 +877,7 @@ class modulesAdmin extends modules
             $sqlfile=$this->objConfig->siteRootPath().'/modules/'.$moduleId.'/sql/'.$tablefile.'.sql';
         }
         if (!file_exists($sqlfile)){
-            throw new Exception("<b>$sqlfile</b>".$this->objLanguage->languageText('phrase_notfound')."<br />")
+            throw new Exception("<b>$sqlfile</b>".$this->objLanguage->languageText('phrase_notfound')."<br />");
         }
         include($sqlfile);
         foreach ($sqldata as $sql)
