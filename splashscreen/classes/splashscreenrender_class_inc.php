@@ -21,7 +21,7 @@ class splashscreenrender extends object
         try 
         {
         	// Get an instance of the config object
-        	$this->objConfig=& $this->getObject('altconfig2','config');
+        	$this->objConfig=& $this->getObject('altconfig','config');
         	//Get an instance of the language object
         	$this->objLanguage = &$this->getObject('language', 'language');
         	//Get an instance of the skin
