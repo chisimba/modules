@@ -18,18 +18,26 @@ class splashscreenrender extends object
     */
     function init()
     {
-        // Get an instance of the config object
-        $this->objConfig=& $this->getObject('altconfig','config');
-        //Get an instance of the language object
-        $this->objLanguage = &$this->getObject('language', 'language');
-        //Get an instance of the skin
-        $this->objSkin = &$this->getObject('skin', 'skin');
-        //Get an instance of the help object
-        $this->objHelp=& $this->getObject('helplink','help');
-        //Create an instance of the module object
-        $this->objModule=& $this->getObject('modulesadmin','modulelist');
-        // Create an instance of the help object
-        $this->objHelp =& $this->getObject('help', 'help');
+        try 
+        {
+        	// Get an instance of the config object
+        	$this->objConfig=& $this->getObject('altconfig2','config');
+        	//Get an instance of the language object
+        	$this->objLanguage = &$this->getObject('language', 'language');
+        	//Get an instance of the skin
+        	$this->objSkin = &$this->getObject('skin', 'skin');
+        	//Get an instance of the help object
+        	$this->objHelp=& $this->getObject('helplink','help');
+        	//Create an instance of the module object
+        	$this->objModule=& $this->getObject('modulesadmin','modulelist');
+        	// Create an instance of the help object
+        	$this->objHelp =& $this->getObject('help', 'help');
+        }
+        catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
+        }
     }
 
 
