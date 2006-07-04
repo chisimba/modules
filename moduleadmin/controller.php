@@ -688,6 +688,4 @@ class moduleadmin extends controller
 
 
  } // end of class moduleadmin
-
-
 ?>
