@@ -77,15 +77,6 @@ $fields = array(
 		),
 	);
 	
-//create the primary key
-$indexes = array(
-        'fields' => array(
-      	'id' => array('sorting' => 'ascending', ),					
-         ),
-        'primary' => true
- );
-
-$name = 'primary';
 //create other indexes here...
 	
 
