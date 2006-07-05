@@ -80,18 +80,18 @@ $iframe->height = '170';
 $iframe->name = 'list';
 $iframe->marginwidth = '0';
 $iframe->marginheight = '0';
-$iframe->align = 'top';
+//$iframe->align = 'top';
 $iframe->scrolling ='auto';
 $iframe->frameborder = '0';
 $iframe->src = $this->uri(array('action' => 'showmedia', 'folder' => $this->getParam('folder')), 'mediamanager');
 
-$frame = $iframe->show();
+$frame = $iframe->show().'</p>';
 //$up = '<a href="javascript:dirup()"><img src="components/com_media/images/btnFolderUp.gif" width="15" height="15" border="0" alt="Up"></a>';
 
 $fieldset->addContent('Directory   '.$dropdown->show().'&nbsp;'.$up.'<p>'. $frame);
 
 $fieldset2->addContent('<p>&nbsp;</p>'.$fieldset->show());
-$fieldset2->addContent($createButton->show().$uploadButton->show().'<p>'.$smalltable->show());
+$fieldset2->addContent($createButton->show().$uploadButton->show().'<p></p>'.$smalltable->show());
 //$fieldset2->addContent('<p>Create Folder   '.$input2->show());
 
 
@@ -103,7 +103,9 @@ echo $form->show();
 echo $form2->show();
 
 ?>
+
 <script language="javascript" type="text/javascript">
+<![CDATA[
 	function dirup(){
 		var urlquery=frames['<?php echo $iframe->name;?>'].location.search.substring(1);
 		var curdir= urlquery.substring(urlquery.indexOf('folder=')+8);
@@ -129,5 +131,6 @@ echo $form2->show();
 		
 		frames['<?php echo $iframe->name;?>'].location.href='<?php  echo str_replace("&amp;", "&", $this->uri(array('action' => 'showmedia')))?>&folder=' + dir;
 	}
-
+]]>
 	</script>
+	
