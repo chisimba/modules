@@ -258,7 +258,7 @@ class cmsutils extends object
 					$checked = '';
 					
 				}
-				$str .= '<td align="center"><input type="radio" name="'.$name.'" value="'.$layout['id'].'" class="transparentbgnb" id="input_layout0" '.$checked.' /><p><label for ="input_layout0"><img src ="'.$this->getResourceUri($layout['imagename'],'cmsadmin').'"></label></td>';
+				$str .= '<td align="center"><input type="radio" name="'.$name.'" value="'.$layout['id'].'" class="transparentbgnb" id="input_layout0" '.$checked.' /><p><label for ="input_layout0"><img src ="'.$this->getResourceUri($layout['imagename'],'cmsadmin').'"/></label></td>';
 				
 			}
 			
