@@ -22,20 +22,27 @@ class dbmanager extends controller
 	*/
     function init()
     {
-        $this->manager =& $this->getObject('dbmanagerdb');
+        try {
+    		$this->manager =& $this->getObject('dbmanagerdb');
 
-        // User Details
-        $this->objUser =& $this->getObject('user', 'security');
-        $this->userId =& $this->objUser->userId();
+        	// User Details
+        	$this->objUser =& $this->getObject('user', 'security');
+        	$this->userId =& $this->objUser->userId();
 
-        // Load Language Class
-        $this->objLanguage = &$this->getObject('language', 'language');
-        $this->setVarByRef('objLanguage', $this->objLanguage);
+        	// Load Language Class
+        	$this->objLanguage = &$this->getObject('language', 'language');
+        	$this->setVarByRef('objLanguage', $this->objLanguage);
 
-        //Get the activity logger class
-        $this->objLog=$this->newObject('logactivity', 'logger');
-        //Log this module call
-        $this->objLog->log();
+        	//Get the activity logger class
+        	$this->objLog=$this->newObject('logactivity', 'logger');
+        	//Log this module call
+        	$this->objLog->log();
+        }
+        catch (customException $e)
+        {
+        	echo customException::cleanUp();
+        	die();
+        }
     }
 
     /**
