@@ -39,20 +39,24 @@ $fields = array(
 		)
 	);
 
-//create the primary key
-$indexes = array(
-        'fields' => array(
-        'id' => array('sorting' => 'ascending', ), 
-         ),
-        'primary' => true
- );
-
 $name = 'primary';
 
 //create other indexes here...
 
+ndexes = array(
+                'fields' => array(
+                        'event_id' => array(),
+                        'attachment_id' => array(),
+                        'userId' => array()
+                )
+        );
+
+$name = 'attachment_id';
 
 
 
 
-?>
+
+
+
+
