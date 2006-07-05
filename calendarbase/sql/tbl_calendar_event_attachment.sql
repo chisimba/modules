@@ -1,4 +1,5 @@
 <?
+/*
 $sqldata[]="CREATE TABLE `tbl_calendar_event_attachment` (
   `id` varchar(32) NOT NULL default '',
   `event_id` varchar(32) NOT NULL default '',
@@ -8,9 +9,12 @@ $sqldata[]="CREATE TABLE `tbl_calendar_event_attachment` (
   PRIMARY KEY  (`id`),
   KEY `attachment_id` (`event_id`, `attachment_id`, `userId`)
 ) TYPE=InnoDB   COMMENT='This table stores temporary uploads while a post is being created';";
+*/
 
-/*
-$table = 'tbl_calendar_event_attachment';
+$tablename = 'tbl_calendar_event_attachment';
+
+$options = array('comment' => 'This table stores temporary uploads while a post is being created', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+
 $fields = array(
 	'id' => array(
 		'type' => 'text',
@@ -34,10 +38,21 @@ $fields = array(
 		'default' => '0000-00-00 00:00:00',
 		)
 	);
-$index = array(
-             'fields' => array(
-             	'id' => array(),
-		'attachment_id' =>array('event_id','attachment_id','userId')					
-              )
-	 );
+
+//create the primary key
+$indexes = array(
+        'fields' => array(
+        'id' => array('sorting' => 'ascending', ), 
+         ),
+        'primary' => true
+ );
+
+$name = 'primary';
+
+//create other indexes here...
+
+
+
+
+
 ?>
