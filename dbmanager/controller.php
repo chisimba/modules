@@ -144,9 +144,19 @@ $fields = array(
 		'default' => '0000-00-00 00:00:00',
 		),
 	);
+	//create the primary key
+    $index = array(
+             'fields' => array(
+                'id' => array('sorting' => 'ascending', ),
+              ),
+              'primary' => true
+         );
+     $name = 'primary';
+
 $options = array('comment' => 'blag', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 //$options = NULL;
-$this->manager->createKNGTable($fields, $table, $options);
+$this->manager->createDBTable($fields, $table, $options);
+$this->manager->createTableIndex($table, $name, $index);
                     echo "Good job";
                 break;
 
