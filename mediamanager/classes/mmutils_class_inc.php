@@ -8,8 +8,8 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 // end security check
 /**
 * This object manages the media folders and files
-* @package mmutils
-* @category mmutils
+* @package media manager
+* @category document manager
 * @copyright 2004, University of the Western Cape & AVOIR Project
 * @license GNU GPL
 * @version
