@@ -8,8 +8,8 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 // end security check
 /**
 * Class to access the ContextCore Tables
-* @package dbcategories
-* @category dbcategories
+* @package cms
+* @category cmsadmin
 * @copyright 2004, University of the Western Cape & AVOIR Project
 * @license GNU GPL
 * @version

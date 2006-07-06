@@ -8,8 +8,8 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 // end security check
 /**
 * This object hold all the utility method that the cms modules might need
-* @package cmsutils
-* @category cmsutils
+* @package cms
+* @category cmsadmin
 * @copyright 2004, University of the Western Cape & AVOIR Project
 * @license GNU GPL
 * @version
@@ -127,7 +127,7 @@ class cmsutils extends object
 	 * @param  string $selected the selected value
 	 * @return string
 	 */
-	public function  getImageList($name, $selected)
+	public function  getImageList($name, $selected = null)
 	{
 		try {
 			$objDropDown = & $this->newObject('dropdown', 'htmlelements');
@@ -253,12 +253,18 @@ class cmsutils extends object
 			
 				if($arrSection['layout'] == $layout['id'])
 				{
-					$checked = 'checked';
+					$checked = 'checked="checked"';
 				} else {
 					$checked = '';
 					
 				}
-				$str .= '<td align="center"><input type="radio" name="'.$name.'" value="'.$layout['id'].'" class="transparentbgnb" id="input_layout0" '.$checked.' /><p><label for ="input_layout0"><img src ="'.$this->getResourceUri($layout['imagename'],'cmsadmin').'"/></label></td>';
+				$str .= '<td align="center">
+				            <input type="radio" name="'.$name.'" value="'.$layout['id'].'" class="transparentbgnb" id="input_layout0" '.$checked.' />
+				                <p/>
+				                <label for ="input_layout0">
+				                    <img src ="'.$this->getResourceUri($layout['imagename'],'cmsadmin').'"/>
+				                </label>
+				         </td>';
 				
 			}
 			
