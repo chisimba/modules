@@ -1,3 +1,3 @@
 <?php
-$this->loadClass('modules','moduleadmin');
+$this->loadClass('modules','modulecatalogue');
 ?>

@@ -1,3 +1,3 @@
 <?
-$this->loadClass('primarykey','moduleadmin');
+$this->loadClass('primarykey','modulecatalogue');
 ?>
