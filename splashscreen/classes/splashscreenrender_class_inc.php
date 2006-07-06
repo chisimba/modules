@@ -18,7 +18,7 @@ class splashscreenrender extends object
     */
     function init()
     {
-        try 
+        try
         {
         	// Get an instance of the config object
         	$this->objConfig=& $this->getObject('altconfig','config');
@@ -141,8 +141,17 @@ class splashscreenrender extends object
         // Put the link to reset the user's password
         $ts_content=str_replace("[-NEWPASSWORD-]", $resetLink, $ts_content);
 
+        try {
         //Create an instance of the module object
         $this->objModule=& $this->getObject('modulesadmin','modulelist');
+        }
+        catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
+        }
+
+
         if($this->objModule->checkIfRegistered('stories','stories')){
             $this->objStories=& $this->getObject('sitestories', 'stories');
             $ts_content=str_replace('[-PRELOGINSTORIES-]', $this->objStories->fetchCategory('prelogin'), $ts_content);
