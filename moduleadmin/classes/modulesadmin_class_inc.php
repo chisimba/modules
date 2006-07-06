@@ -68,9 +68,8 @@ class modulesAdmin extends modules
     * @returns boolean TRUE|FALSE
     */
     public function checkDependency($moduleId) {
-        return $this->checkIfRegistered(NULL,$moduleId);
-    } #end of checkDependency() function
-
+        return $this->checkIfRegistered($moduleId);
+    }
     /**
     * @deprecated See checkDependantModules
     */
@@ -864,6 +863,8 @@ class modulesAdmin extends modules
     */
     private function makeTable($tablefile,$moduleId='NONE')
     {
+        $this->objKeyMaker=&$this->newObject('primarykey','moduleadmin');
+        $this->objTableInfo=&$this->newObject('tableinfo','moduleadmin'); 
         if ($moduleId=='NONE'){
             $moduleId=$this->MODULE_ID;
         }
@@ -872,9 +873,9 @@ class modulesAdmin extends modules
         {
             return TRUE; // table already exists, don't try to create it over again!
         }
-        $sqlfile=$this->objConfig->siteRootPath().'/modules/'.$moduleId.'/'.$tablefile.'.sql';
+        $sqlfile=$this->objConfig->getsiteRootPath().'/modules/'.$moduleId.'/'.$tablefile.'.sql';
         if (!file_exists($sqlfile)){
-            $sqlfile=$this->objConfig->siteRootPath().'/modules/'.$moduleId.'/sql/'.$tablefile.'.sql';
+            $sqlfile=$this->objConfig->getsiteRootPath().'/modules/'.$moduleId.'/sql/'.$tablefile.'.sql';
         }
         if (!file_exists($sqlfile)){
             throw new Exception("<b>$sqlfile</b>".$this->objLanguage->languageText('phrase_notfound')."<br />");

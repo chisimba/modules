@@ -24,15 +24,15 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32,
 		),
-	'attachment_id => array(
+	'attachment_id' => array(
 		'type' => 'text',
 		'length' => 32,
 		),
-	'userId => array(
+	'userId' => array(
 		'type' => 'text',
 		'length' => 25,
 		),
-	'dateLastUpdated => array(
+	'dateLastUpdated' => array(
 		'type' => 'date',
 		'notnull' => 1,
 		'default' => '0000-00-00 00:00:00',
@@ -43,11 +43,11 @@ $name = 'primary';
 
 //create other indexes here...
 
-ndexes = array(
+$indexes = array(
                 'fields' => array(
-                        'event_id' => array(),
-                        'attachment_id' => array(),
-                        'userId' => array()
+                	'event_id' => array(),
+                	'attachment_id' => array(),
+                	'userId' => array()
                 )
         );
 

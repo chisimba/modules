@@ -28,15 +28,12 @@ class modules extends dbTable
     //private $objConfig;
     public $objConfig;
 
-    // Handle for config object
-    private $config;
-
     public function init()
     {
         parent::init('tbl_modules');
-        // Config and Language Objects
+        //Config and Language Objects
         $this->objLanguage =& $this->getObject('language', 'language');
-        $this->objConfig =& $this->getObject('config','config');
+        $this->objConfig =& $this->getObject('altconfig','config');
     } 
 
     /**
@@ -98,51 +95,68 @@ class modules extends dbTable
 
     /**
     * Method to check if a module is Admin-only or not.
-    * Added 10 March 2005
-    * @author James Scoble
     * @param string $moduleId
-    * @returns Boolean TRUE|FALSE
+    * @return Boolean TRUE|FALSE
     */
     public function isAdminModule($moduleId)
     {
-        $result=$this->getAll("WHERE module_id='$moduleId'");
-        if (!empty($result) && isset($result[0])) {
-            return $result[0]['isAdmin'] == '1';
-        }
-        else {
-            return FALSE;
-        }
+        $row=$this->getRow('module_id',$moduleId);
+        return !empty($row) ? $row['isAdmin'] : FALSE;
     }
 
     /**
     * This is a method to check if the module is registered already.
     * Returns TRUE if the module is registered and FALSE if
     * it is not registered.
-    * @param string $moduleName The name of the module, in
-    * a form that is meaningful to users, for example
-    * 'Show users who are logged in'.
     * @param string $moduleId The identifier of the module.
-    * @returns boolen TRUE|FALSE
+    * @return boolen TRUE|FALSE
     */
-     public function checkIfRegistered($moduleName, $moduleId=NULL) 
+     public function checkIfRegistered($moduleId) 
      {
-        if (is_null($moduleId)) {
-            $moduleId=$moduleName;
-        }
         $row = $this->getRow('module_id',$moduleId);
         return !empty($row);
-     }  #end of checkIfRegistered() function
+     }
      
     /** 
     * This method returns the version of a module in the database 
     * ie: The version level of the emodule at the time it was registered.  
     * @param string $module the module to lookup 
-    * @returns string $version the version in the database | FALSE
+    * @return string $version the version in the database | FALSE
     */ 
     public function getVersion($moduleId)
     {
         $row=$this->getRow('module_id',$moduleId);
         return !empty($row) ? $row['module_version'] : FALSE;
-
     }
-} 
+    
+    /**
+     * Method to return the dependents of a module
+     * @param string $moduleId the module to check
+     * @return mixed the modules dependents
+     */
+    public function getDependencies($moduleId) {
+    	$sql = "SELECT module_id FROM tbl_modules_dependencies WHERE dependency='$moduleId'";
+        $rs = $this->getArray($sql);
+        $dep = array();
+        foreach ($rs as $rec) {
+        	$dep[] = $rec['module_id'];
+         }
+        return $dep;
+    }
+    
+    /**
+    * This is a method to check if a module is registered and turn the result as an array
+    * @param string $moduleId
+    * @returns array $result
+    */
+    public function getModuleInfo($moduleId) {
+        if ($this->checkIfRegistered($moduleId)){
+            $result = array('isreg'=>TRUE,
+                'name'=>$this->objLanguage->code2Txt('mod_'.$moduleId.'_name'));
+        } else {
+            $result = array('isreg'=>FALSE,'name'=>'');
+        }
+        return $result;
+    }
+}
+?>
