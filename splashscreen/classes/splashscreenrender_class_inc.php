@@ -74,7 +74,7 @@ class splashscreenrender extends object
         $resetLink .= '<br /><br />'.$helpIcon;
 
         //the variable to hold the username textbox
-        $userNameBox=$this->objLanguage->languageText("word_username",'useradmin')
+        $userNameBox=$this->objLanguage->languageText("word_username",'security')
             .':<br /><input name="username" type="text" id="username" class="text" />';
         //the variable to hold the password textbox
         $passwordBox=$this->objLanguage->languageText("word_password",'security')
