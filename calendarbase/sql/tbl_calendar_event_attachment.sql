@@ -39,7 +39,7 @@ $fields = array(
 		)
 	);
 
-$name = 'primary';
+
 
 //create other indexes here...
 
