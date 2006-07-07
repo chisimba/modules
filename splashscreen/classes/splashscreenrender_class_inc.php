@@ -29,7 +29,7 @@ class splashscreenrender extends object
         	//Get an instance of the help object
         	$this->objHelp=& $this->getObject('helplink','help');
         	//Create an instance of the module object
-        	$this->objModule=& $this->getObject('modulesadmin','modulelist');
+        	$this->objModule=& $this->getObject('modules','modulecatalogue');
         	// Create an instance of the help object
         	$this->objHelp =& $this->getObject('help', 'help');
         }
@@ -140,16 +140,6 @@ class splashscreenrender extends object
 
         // Put the link to reset the user's password
         $ts_content=str_replace("[-NEWPASSWORD-]", $resetLink, $ts_content);
-
-        try {
-        //Create an instance of the module object
-        $this->objModule=& $this->getObject('modulesadmin','modulelist');
-        }
-        catch (customException $e)
-        {
-        	echo customException::cleanUp($e);
-        	die();
-        }
 
 
         if($this->objModule->checkIfRegistered('stories','stories')){
