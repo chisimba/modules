@@ -18,30 +18,31 @@ $options = array('comment' => 'This table stores temporary uploads while a post 
 $fields = array(
 	'id' => array(
 		'type' => 'text',
-		'length' => 32,
+		'length' => 32
 		),
 	'event_id' => array(
 		'type' => 'text',
-		'length' => 32,
+		'length' => 32
 		),
 	'attachment_id' => array(
 		'type' => 'text',
-		'length' => 32,
+		'length' => 32
 		),
 	'userId' => array(
 		'type' => 'text',
-		'length' => 25,
+		'length' => 25
 		),
 	'dateLastUpdated' => array(
 		'type' => 'date',
 		'notnull' => 1,
-		'default' => '0000-00-00 00:00:00',
+		'default' => '0000-00-00 00:00:00'
 		)
 	);
 
 
-
 //create other indexes here...
+
+$name = 'attachment_id';
 
 $indexes = array(
                 'fields' => array(
@@ -51,12 +52,4 @@ $indexes = array(
                 )
         );
 
-$name = 'attachment_id';
-
-
-
-
-
-
-
-
+?>

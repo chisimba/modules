@@ -1,4 +1,5 @@
 <?
+/*
 $sqldata[]="CREATE TABLE tbl_dublincoremetadata (
   id VARCHAR(32) NOT NULL ,
   provider varchar(255),
@@ -27,4 +28,114 @@ $sqldata[]="CREATE TABLE tbl_dublincoremetadata (
   dc_audience VARCHAR(255) NULL,
   updated TIMESTAMP(14) NOT NULL,
   PRIMARY KEY(id)))TYPE=INNODB;";  
+*/
+$tablename = 'tbl_dublincoremetadata';
+
+$options = array('collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+
+$fields = array(
+	'id' => array(
+		'type' => 'text',
+		'length' => 32
+		),
+	'provider' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+	'url' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'enterdate' => array(
+		'type' => 'datetime'
+		),
+	'oai_identifier' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'oai_set' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+	'datestamp' => array(
+		'type' => 'datetime'
+		),
+    'deleted' => array(
+		'type' => 'text',
+        'length' => 10
+		),
+	'dc_title' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'dc_subject' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'dc_description' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'dc_type' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'dc_source' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'dc_sourceurl' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'dc_relationship' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'dc_coverage' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'dc_creator' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'dc_publisher' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'dc_contributor' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'dc_rights' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'dc_date' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'dc_format' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'dc_identifier' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'dc_language' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'dc_audience' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'updated' => array(
+        'type' => 'timestamp'
+        )
+    );
+    
+  
 ?>
