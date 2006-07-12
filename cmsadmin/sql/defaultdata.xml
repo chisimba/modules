@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<defaultdata>
+  <!-- Table tbl_cms_layouts -->
+    <tbl_cms_layouts>
+        <id>1</id>
+        <name>previous</name>
+        <imagename>section_previous.gif</imagename>
+        <desciption>previous layout</desciption>
+    </tbl_cms_layouts>
+    <tbl_cms_layouts>
+        <id>2</id>
+        <name>page</name>
+        <imagename>section_page.gif</imagename>
+        <desciption>Page Layout</desciption>
+    </tbl_cms_layouts>
+    <tbl_cms_layouts>
+        <id>3</id>
+        <name>summaries</name>
+        <imagename>section_summaries.gif</imagename>
+        <desciption>Summaries Layout</desciption>
+    </tbl_cms_layouts>
+    <tbl_cms_layouts>
+        <id>4</id>
+        <name>list</name>
+        <imagename>section_list.gif</imagename>
+        <desciption>List Layout</desciption>
+    </tbl_cms_layouts>
+</defaultdata>
