@@ -102,7 +102,7 @@ $objAlphabet=& $this->getObject('alphabet','navigation');
     print "<h1>".$objLanguage->languageText('mod_moduleadmin_name','moduleadmin','Module Administration')."</h1>\n";
     print "<a href='".$this->uri(array('action'=>'batch'))."'>".$objLanguage->languageText('mod_moduleadmin_batch1','moduleadmin','Batch Registration Menu')."</a><br />\n";
     print "<a href='".$this->uri(array('action'=>'deregisterbatch'))."'>".$objLanguage->languageText('mod_moduleadmin_deregisterbatch1','moduleadmin','Batch DeRegistration Menu')."</a><br />\n";
-
+      
     print $objAlphabet->putAlpha($this->uri(array('action'=>$this->getParam('action'),'filter'=>'LETTER')),FALSE);
     print $objTbl2->show();
     print "</div>";

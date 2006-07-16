@@ -627,7 +627,7 @@ class moduleadmin extends controller
             $bclose='';
         }
         $objLanguage=& $this->getObject('language','language');
-        $outstr=$objLanguage->languageText($text);
+        $outstr=$objLanguage->languageText($text,'_site');
         //$outstr=str_replace('USER',$bopen.$this->objUser->fullname().$bclose,$outstr);
         $outstr=str_replace('MODULE',$bopen.$modname.$bclose,$outstr);
         return $outstr;
