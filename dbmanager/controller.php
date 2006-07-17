@@ -73,90 +73,108 @@ class dbmanager extends controller
                 return;
 
             case 'createtable':
-                $table = 'tbl_calendar';
+
+            	$table = 'bullshit';
+            	// Table Name
+
+
+//Options line for comments, encoding and character set
+$options = array('comment' => 'cms categories', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+
+// Fields
 $fields = array(
 	'id' => array(
 		'type' => 'text',
+		'length' => 32
+		),
+	'parent_id' => array(
+		'type' => 'text',
 		'length' => 32,
+        	'notnull' => TRUE,
+		'default' => '0'
 		),
-	'multiday_event' => array(
+    'title' => array(
 		'type' => 'text',
-		'length' => 1,
-		'notnull' => 1,
-        'default' => 0,
+		'length' => 50
 		),
-	'eventdate' => array(
+    'menutext' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'image' => array(
+		'type' => 'text',
+		'length' => 100
+		),
+    'sectionid' => array(
+		'type' => 'text',
+		'length' => 50
+		),
+    'image_position' => array(
+		'type' => 'text',
+		'length' => 10
+		),
+    'description' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'published' => array(
+		'type' => 'integer',
+		'length' => 1,
+        'notnull' => TRUE,
+		'default' => '0'
+		),
+    'checked_out' => array(
+		'type' => 'int',
+		'length' => 11,
+        'notnull' => TRUE,
+		'default' => '0'
+		),
+    'checked_out_time' => array(
 		'type' => 'date',
-		'notnull' => 1,
-		'default' => '0000-00-00',
+		'notnull' => TRUE,
+		'default' => '0000-00-00 00:00:00'
 		),
-	'multiday_event_start_id' => array(
-		'type' => 'text',
-		),
-	'eventtile' => array(
-		'type' => 'text',
-		'length' => 100,
-		),
-	'eventdetails' => array(
-		'type' => 'text',
-		),
-	'eventurl' => array(
-		'type' => 'text',
-		'length' => 100,
-		),
-	'userorcontext' => array(
-		'type' => 'text',
-		'length' => 1,
-		),
-	'context' => array(
+    'editor' => array(
 		'type' => 'text',
 		'length' => 32
 		),
-	'workgroup' => array(
+    'ordering' => array(
 		'type' => 'text',
-		'length' => 32,
+		'length' => 32
 		),
-	'showusers' => array(
+    'access' => array(
 		'type' => 'text',
-		'length' => 1,
+		'length' => 32
 		),
-	'userFirstEntry' => array(
-		'type' => 'text',
-		'length' => 32,
-		),
-	'userLastModified' => array(
-		'type' => 'text',
-		'length' => 32,
-		),
-	'dateFirstEntry' => array(
-		'type' => 'date',
-		'notnull' => 1,
-		'default' => '0000-00-00 00:00:00',
-		),
-	'dateLastModified' => array(
-		'type' => 'date',
-		'notnull' => 1,
-		'default' => '0000-00-00 00:00:00',
-		),
-	'updated' => array(
-		'type' => 'date',
-		'notnull' => 1,
-		'default' => '0000-00-00 00:00:00',
-		),
-	);
-	//create the primary key
-    $index = array(
-             'fields' => array(
-                'id' => array('sorting' => 'ascending', ),
-              ),
-              'primary' => true
-         );
-     $name = 'primary';
+    'count' => array(
+		'type' => 'integer',
+		'length' => 11,
 
-$options = array('comment' => 'blag', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
-//$options = NULL;
+		),
+    'params' => array(
+		'type' => 'text',
+		'length' =>255
+		)
+    );
+
+//create other indexes here...
+
+$name = 'cat';
+
+$indexes = array(
+                'fields' => array(
+                	'sectionid' => array(),
+                	'published' => array(),
+                	'access' => array(),
+                    'checked_out' => array(),
+                )
+        );
+
+
 $this->manager->createDBTable($fields, $table, $options);
-$this->manager->createTableIndex($table, $name, $index);
+$this->manager->createPK($table);
+$this->manager->createTableIndex($table, $name, $indexes);
+
                     echo "Good job";
                 break;
 
