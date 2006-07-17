@@ -2,7 +2,7 @@
 
 $tablename = 'tbl_cms_sections';
 
-$options = array('collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'cms sections', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 $fields = array(
 	'id' => array(
@@ -26,10 +26,12 @@ $fields = array(
 		'length' => 10
 		),
 	'description' => array(
-		'type' => 'text'
+		'type' => 'text',
+		'length' => 255
 		),
 	'published' => array(
 		'type' => 'integer',
+		'length' => 255,
 		'default' => 0
 		),
     'checked_out' => array(
@@ -39,7 +41,7 @@ $fields = array(
         'default' => 0
 		),
     'checked_out_time' => array(
-		'type' => 'datetime',
+		'type' => 'date',
 		'default' => '0000-00-00 00:00:00'
 		),
     'ordering' => array(
@@ -59,7 +61,8 @@ $fields = array(
         'default' => 0
 		),
 	'params' => array(
-		'type' => 'text'
+		'type' => 'text',
+		'length' => 255
 		),
 	'layout' => array(
 		'type' => 'text',

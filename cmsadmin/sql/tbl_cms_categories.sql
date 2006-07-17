@@ -28,7 +28,7 @@
 $tablename = 'tbl_cms_categories';
 
 //Options line for comments, encoding and character set
-$options = array('collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'cms categories', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 // Fields
 $fields = array(
@@ -39,7 +39,7 @@ $fields = array(
 	'parent_id' => array(
 		'type' => 'text',
 		'length' => 32,
-        'notnull' => 1,
+        	'notnull' => TRUE,
 		'default' => '0'
 		),
     'title' => array(
@@ -63,7 +63,8 @@ $fields = array(
 		'length' => 10
 		),
     'description' => array(
-		'type' => 'text'
+		'type' => 'text',
+		'length' => 255
 		),
     'published' => array(
 		'type' => 'integer',
@@ -78,7 +79,7 @@ $fields = array(
 		'default' => '0'
 		),
     'checked_out_time' => array(
-		'type' => 'datetime',
+		'type' => 'date',
 		'notnull' => TRUE,
 		'default' => '0000-00-00 00:00:00'
 		),
@@ -97,16 +98,17 @@ $fields = array(
     'count' => array(
 		'type' => 'integer',
 		'length' => 11,
-        'default' => '0'
+    
 		),
     'params' => array(
-		'type' => 'text'
+		'type' => 'text',
+		'length' =>255
 		)
     );
 
 //create other indexes here...
 
-$name = 'cat_idx';
+$name = 'cat';
 
 $indexes = array(
                 'fields' => array(

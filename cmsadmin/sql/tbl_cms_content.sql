@@ -40,13 +40,13 @@
 
 $tablename = 'tbl_cms_content';
 
-$options = array('collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'cms_contents', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 $fields = array(
 	'id' => array(
 		'type' => 'text',
 		'length' => 32,
-        'notnull' => TRUE
+
 		),
 	'title' => array(
 		'type' => 'text',
@@ -57,10 +57,12 @@ $fields = array(
 		'length' => 100
 		),
 	'introtext' => array(
-		'type' => 'text'
+		'type' => 'text',
+		'length' => 255
 		),
     'body' => array(
-		'type' => 'text'
+		'type' => 'text',
+		'length' => 255
 		),
     'published' => array(
 		'type' => 'integer',
@@ -77,7 +79,7 @@ $fields = array(
         'length' => 32
 		),
 	'created' => array(
-		'type' => 'datetime',
+		'type' => 'date',
 		'default' => '0000-00-00 00:00:00'
 		),
     'created_by' => array(
@@ -90,7 +92,7 @@ $fields = array(
         'length' => 100
 		),
     'modified' => array(
-		'type' => 'datetime',
+		'type' => 'date',
 		'default' => '0000-00-00 00:00:00'
 		),
     'modified_by' => array(
@@ -106,25 +108,28 @@ $fields = array(
         'default' => 0
 		),
     'checked_out_time' => array(
-		'type' => 'datetime',
+		'type' => 'date',
 		'default' => '0000-00-00 00:00:00'
 		),
     'publish_up' => array(
-		'type' => 'datetime',
+		'type' => 'date',
 		'default' => '0000-00-00 00:00:00'
 		),
     'publish_down' => array(
-		'type' => 'datetime',
+		'type' => 'date',
 		'default' => '0000-00-00 00:00:00'
 		),
     'images' => array(
-		'type' => 'text'
+		'type' => 'text',
+		'length' => 255
 		),
     'urls' => array(
-		'type' => 'text'
+		'type' => 'text',
+		'length' => 255
 		),
     'attribs' => array(
-		'type' => 'text'
+		'type' => 'text',
+		'length' => 255
 		),
     'version' => array(
 		'type' => 'integer',
@@ -144,10 +149,12 @@ $fields = array(
         'default' => 0
 		),
     'metakey' => array(
-		'type' => 'text'
+		'type' => 'text',
+		'length' => 255
 		),
     'metadesc' => array(
-		'type' => 'text'
+		'type' => 'text',
+		'length' => 255
 		),
     'access' => array(
 		'type' => 'integer',
