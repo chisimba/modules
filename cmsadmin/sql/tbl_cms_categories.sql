@@ -1,29 +1,4 @@
 <?php
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Table Name
 $tablename = 'tbl_cms_categories';
 

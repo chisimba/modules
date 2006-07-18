@@ -19,7 +19,7 @@ $sqldata[] ='INSERT INTO `tbl_cms_layouts` VALUES ('4', 'list', 'section_list.gi
 $tablename = 'tbl_cms_layouts';
 
 //Options line for comments, encoding and character set
-$options = array('collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'cms layouts', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 $fields = array(
 	'id' => array(

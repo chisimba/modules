@@ -80,7 +80,7 @@ $fields = array(
 		),
 	'created' => array(
 		'type' => 'date',
-		'default' => '0000-00-00 00:00:00'
+
 		),
     'created_by' => array(
 		'type' => 'text',
@@ -93,7 +93,7 @@ $fields = array(
 		),
     'modified' => array(
 		'type' => 'date',
-		'default' => '0000-00-00 00:00:00'
+
 		),
     'modified_by' => array(
 		'type' => 'integer',
@@ -109,15 +109,15 @@ $fields = array(
 		),
     'checked_out_time' => array(
 		'type' => 'date',
-		'default' => '0000-00-00 00:00:00'
+
 		),
     'publish_up' => array(
 		'type' => 'date',
-		'default' => '0000-00-00 00:00:00'
+
 		),
     'publish_down' => array(
 		'type' => 'date',
-		'default' => '0000-00-00 00:00:00'
+
 		),
     'images' => array(
 		'type' => 'text',

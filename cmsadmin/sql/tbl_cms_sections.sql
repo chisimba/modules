@@ -42,7 +42,7 @@ $fields = array(
 		),
     'checked_out_time' => array(
 		'type' => 'date',
-		'default' => '0000-00-00 00:00:00'
+
 		),
     'ordering' => array(
 		'type' => 'integer',
