@@ -18,14 +18,14 @@ class dbmanagerdb extends dbTableManager
         $this->dumpDatabaseToFile('dump','all','dumptest.xml');
     }
 
-    public function createKNGTable($fields, $tableName, $options)
+    public function createDBTable($fields, $tableName, $options)
     {
         return $this->createTable($tableName, $fields, $options);
     }
-    
+
     public function listall()
     {
-    	$a = $this->createDb('php5alpha');
+    	$a = $this->createDb('punani');
     	//echo $a;
     	//$b = $this->listDatabases();
     	//print_r($b);
@@ -43,10 +43,10 @@ class dbmanagerdb extends dbTableManager
     	print_r($db);
     	$ver = $this->getServerVersion();
     	print_r($ver);
-    	
+
     	//$e = $this->dropDb('testing123fromclass');
     	//print_r($e);
-    	
-    	
+
+
     }
 }
