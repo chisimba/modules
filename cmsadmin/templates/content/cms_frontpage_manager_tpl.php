@@ -49,7 +49,7 @@ foreach($files as $file)
     $tableRow = array();
     $tableRow[]=$cnt++;
     $tableRow[]=$link->show();
-    $tableRow[]=$this->_objUtils->getCheckIcon($arrFile['published'], FALSE);
+    $tableRow[]=$this->_objUtils->getCheckIcon($arrFile['published'], TRUE);
    // $table->addCell($arrCategory['ordering']);
 	$tableRow[]=$this->_objUtils->getAccess($arrFile['access']);
 	

@@ -45,7 +45,7 @@ foreach($arrCategories as $arrCategory)
     $tableRow = array();
     $tableRow[]=$cnt++;
     $tableRow[]=$link->show();
-    $tableRow[]=$this->_objUtils->getCheckIcon($arrCategory['published'], FALSE);
+    $tableRow[]=$this->_objUtils->getCheckIcon($arrCategory['published'], TRUE);
    // $table->addCell($arrCategory['ordering']);
 	$tableRow[]=$this->_objUtils->getAccess($arrCategory['access']);
 	
