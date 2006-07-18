@@ -69,6 +69,11 @@ $fields = array(
         'length' => 1,
         'default' => 0
 		),
+	'sectionid' => array(
+		'type' => 'text',
+		'length' => 32,
+		'default' => ''
+		),
     'mask' => array(
 		'type' => 'integer',
         'unsigned' => TRUE,
