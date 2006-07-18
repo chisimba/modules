@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title><?php echo $objConfig->siteName(); ?></title>
+<title>Chat<?php /*echo $objConfig->siteName();*/ ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <!--<meta HTTP-EQUIV=Refresh CONTENT="30;URL=index.php">-->
 <!--<meta HTTP-EQUIV="Refresh" CONTENT="30">-->

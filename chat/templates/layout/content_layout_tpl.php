@@ -6,7 +6,7 @@ $content = $this->getContent();
 echo $content;
 ?>';
 //scrolltoend();
-parent.document.getElementById("contentdiv").scrollTop=parent.document.getElementById("contentdiv").scrollHeight;
+//parent.document.getElementById("contentdiv").scrollTop=parent.document.getElementById("contentdiv").scrollHeight;
 </script>
 <?php
 //Put the main content

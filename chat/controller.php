@@ -337,13 +337,11 @@ class chat extends controller
             }
             //$this->setPageTemplate("input_page_tpl.php");
             $this->setVar('pageSuppressIM', TRUE);
-            $this->setVar('pageSuppressContainer', TRUE);
             $this->setVar('pageSuppressBanner', TRUE);
             $this->setVar('pageSuppressToolbar', TRUE);
+            $this->setVar('pageSuppressContainer', TRUE);
             $this->setVar('suppressFooter', TRUE);
 			$this->setVar('pageSuppressTrailingDiv', TRUE);
-            $bodyParams=' onLoad="document.getElementById(\'input_text\').focus()" ';
-            $this->setVarByRef('bodyParams',$bodyParams);
             $script = '
 			<SCRIPT TYPE="text/javascript" language="JavaScript">
 			function submitenter(myfield,e)
@@ -364,6 +362,8 @@ class chat extends controller
 			</SCRIPT>
             ';
             $this->appendArrayVar('headerParams', $script);
+            //$bodyParams=' onLoad="document.getElementById(\'input_text\').focus()" ';
+            //$this->setVarByRef('bodyParams',$bodyParams);
             return "input_tpl.php";
         }
         // Turn on persistent logging
@@ -410,21 +410,36 @@ class chat extends controller
         $this->setVarByRef("contextType", $contextType);
         // Get content of chat
         if ($action == "content") {
-            //$this->setPageTemplate("content_page_tpl.php");
             $list = $this->objDbChatUsers->listSingle($contextId, $this->objUser->userName());
             // Get start timestamp for user
             $start = $list[0]["start"];
             // Get content of chat, starting from $start
             $content = $this->objDbChat->listAll($contextId, $this->objUser->userName(), $start, true);
             $this->setVarByRef("content", $content);
-            //$this->setVar('pageSuppressContainer', TRUE);
-            //$this->setVar('pageSuppressBanner', TRUE);
-            //$this->setVar('pageSuppressToolbar', TRUE);
-            //$this->setVar('suppressFooter', TRUE);
-            //$this->setVar('pageSuppressIM', TRUE);
-            //$this->appendArrayVar('headerParams',$headerParams);
+            $this->setVar('pageSuppressIM', TRUE);
+            $this->setVar('pageSuppressBanner', TRUE);
+            $this->setVar('pageSuppressToolbar', TRUE);
+            $this->setVar('pageSuppressContainer', TRUE);
+            $this->setVar('suppressFooter', TRUE);
+			$headerParams = '
+			<script type="text/javascript" language="JavaScript">
+			function StartTimer()
+			{
+				window.setInterval(\'UpdateTimer()\', 10000);
+			}
+			function UpdateTimer()
+			{
+				//alert(\'OK\');
+				//window.location.href=\'index.php\';
+			    window.location.reload();
+			}
+			</script>
+			';	
+            $this->appendArrayVar('headerParams',$headerParams);
+			$bodyParams = 'onload="StartTimer()"';
+            $this->setVarByRef('bodyParams',$bodyParams);
+            //$this->setPageTemplate('content_page_tpl.php');
             $this->setLayoutTemplate("content_layout_tpl.php");
-            $this->setPageTemplate('content_page_tpl.php');
             return "content_tpl.php";
         }
         // Ban a user
@@ -476,8 +491,30 @@ class chat extends controller
             }
             $users = $this->objDbChatUsers->listAll($contextId);
             $this->setVarByRef("users", $users);
+            $this->setVar('pageSuppressIM', TRUE);
+            $this->setVar('pageSuppressBanner', TRUE);
+            $this->setVar('pageSuppressToolbar', TRUE);
+            $this->setVar('pageSuppressContainer', TRUE);
+            $this->setVar('suppressFooter', TRUE);
+			$headerParams = '
+			<script type="text/javascript" language="JavaScript">
+			function StartTimer()
+			{
+				window.setInterval(\'UpdateTimer()\', 30000);
+			}
+			function UpdateTimer()
+			{
+				//alert(\'OK\');
+				//window.location.href=\'index.php\';
+			    window.location.reload();
+			}
+			</script>
+			';
+            $this->appendArrayVar('headerParams',$headerParams);
+			$bodyParams = 'onload="StartTimer()"';
+            $this->setVarByRef('bodyParams',$bodyParams);
+            //$this->setPageTemplate('users_page_tpl.php');
             $this->setLayoutTemplate("users_layout_tpl.php");
-            $this->setPageTemplate('users_page_tpl.php');
             return "users_tpl.php";
         }
         // View the log
