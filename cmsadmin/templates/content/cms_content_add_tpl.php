@@ -33,6 +33,11 @@ if($this->getParam('id') == '')
 	$introInput->value = '';
 	$published->setChecked(TRUE);
 	
+	if( $this->getParam('frontpage') == 'true')
+	{
+	   $frontPage->setChecked(TRUE);
+	}
+	
 } else {
 	$action = 'editcontent';
 	$contentId = $this->getParam('id');
@@ -87,8 +92,10 @@ $button->setToSubmit();
 $button->value = 'Save';
 
 $published->name = 'published';
+$published->id = 'published';
 
 $frontPage->name = 'frontpage';
+$frontPage->id = 'frontpage';
 
 
 $table->startRow();

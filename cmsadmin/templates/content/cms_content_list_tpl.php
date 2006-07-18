@@ -50,7 +50,7 @@ foreach($arrPages as $page)
     
 	$tableRow[]=$link->show();
 	$tableRow[]=$this->_objUtils->getCheckIcon($this->_objFrontPage->isFrontPage($page['id']), FALSE);
-    $tableRow[]=$this->_objUtils->getCheckIcon($page['published'], false);
+    $tableRow[]=$this->_objUtils->getCheckIcon($page['published'], TRUE);
   //  $table->addCell('up down');
     //$table->addCell($page['ordering']);
 	$tableRow[]=$this->_objUtils->getAccess($page['access']);

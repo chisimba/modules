@@ -20,10 +20,14 @@ if($this->getParam('id') == '')
 {
 	$action = 'createcategory';
 	$editmode = FALSE;
+	//create heading
+    $h3->str = 'Category: New';
 } else {
 	$action = 'editcategory';
 	$catId = $this->getParam('id');
 	$editmode = TRUE;
+	//create heading
+    $h3->str = 'Category: New';
 }
 
 $objForm = $this->newObject('form','htmlelements');
@@ -40,8 +44,7 @@ $tablee->border='1';
 $table->cellspacing='1';
 $tablee->cellpadding='1';
 
-//create heading
-$h3->str = 'Category: New';
+
 
 
 $titleInput->name = 'title';

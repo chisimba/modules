@@ -105,10 +105,11 @@ class cmsadmin extends controller
 			$this->_objUser = & $this->newObject('user', 'security');
         	$this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
         	$this->_objConfig = & $this->newObject('altconfig', 'config');
-        	
-        }catch (Exception $e){
-       	echo 'Caught exception: ',  $e->getMessage();
-        	exit();
+        }	
+        catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
         }
 	
 	}
@@ -119,48 +120,62 @@ class cmsadmin extends controller
 	*/
 	public function dispatch()
 	{
-		$action = $this->getParam('action');
-		$this->setLayoutTemplate('cms_layout_tpl.php');
-        switch ($action){
-                   	
-        	case null:
-            	
-            
-            case 'content':
-            	return 'cms_content_list_tpl.php';            	
-            case 'addcontent':
-				return 'cms_content_add_tpl.php';			
-			case 'createcontent':
-				$this->_objContent->add();
-				return $this->nextAction('content');
-			case 'editcontent':
-				$this->_objContent->edit();
-				return $this->nextAction('content');
-			
-			
-			
-			case 'sections':
-				return 'cms_section_list_tpl.php';
-			case 'addsection':
-				return 'cms_section_add_tpl.php';
-			case 'createsection':			
-				$this->_objSections->add();
-				return $this->nextAction('sections');
-			case 'editsection';
-				$this->_objSections->edit();
-				return $this->nextAction('sections');
-				
-				
-			case 'categories':
-				return 'cms_category_list_tpl.php';
-			case 'addcategory':
-				return 'cms_category_add_tpl.php';
-			case 'createcategory';
-				$this->_objCategories->add();
-				return $this->nextAction('categories');
-			case 'editcategory':
-				$this->_objCategories->edit();
-				return $this->nextAction('categories');
+	    try{
+    		$action = $this->getParam('action');
+    		$this->setLayoutTemplate('cms_layout_tpl.php');
+            switch ($action){
+                       	
+            	case null:
+                	
+                
+                case 'content':
+                	return 'cms_content_list_tpl.php';            	
+                case 'addcontent':
+    				return 'cms_content_add_tpl.php';			
+    			case 'createcontent':
+    				$this->_objContent->add();
+    				return $this->nextAction('content');
+    			case 'editcontent':
+    				$this->_objContent->edit();
+    				return $this->nextAction('content');
+    			
+    			
+    			
+    			case 'sections':
+    				return 'cms_section_list_tpl.php';
+    			case 'addsection':
+    				return 'cms_section_add_tpl.php';
+    			case 'createsection':			
+    				$this->_objSections->add();
+    				return $this->nextAction('sections');
+    			case 'editsection';
+    				$this->_objSections->edit();
+    				return $this->nextAction('sections');
+    			case 'sectionpublish':
+    			    $this->_objSections->togglePublish($this->getParam('id'));
+    			    return $this->nextAction('sections');
+    				
+    				
+    			case 'categories':
+    				return 'cms_category_list_tpl.php';
+    			case 'addcategory':
+    				return 'cms_category_add_tpl.php';
+    			case 'createcategory';
+    				$this->_objCategories->add();
+    				return $this->nextAction('categories');
+    			case 'editcategory':
+    				$this->_objCategories->edit();
+    				return $this->nextAction('categories');
+    				
+    		    case 'frontpages':
+    		        $this->setVar('files', $this->_objFrontPage->getFrontPages());
+    		        return 'cms_frontpage_manager_tpl.php';
+            }
+	    }
+        catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
         }
 	}
 

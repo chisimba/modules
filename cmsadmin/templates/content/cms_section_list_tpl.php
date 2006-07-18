@@ -46,7 +46,11 @@ foreach($arrSections as $section)
     $tableRow = array();
 	$tableRow[]=$cnt++;
     $tableRow[]=$link->show();
-    $tableRow[]=$this->_objUtils->getCheckIcon($section['published']);
+    
+    $link->href = $this->uri(array('action' => 'sectionpublish', 'id' => $section['id']));
+    $link->link = $this->_objUtils->getCheckIcon($section['published']);
+    
+    $tableRow[]=$link->show();
    // $table->addCell('up down');
     //$table->addCell($section['ordering']);
 	$tableRow[]=$this->_objUtils->getAccess($section['access']);

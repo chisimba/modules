@@ -203,4 +203,25 @@ class dbsections extends dbTable
 		return $line['menutext'];
 	}
 	
+
+	/**
+	 * Method to toggle the publish field 
+	 * 
+	 * @param string id The id if the section
+	 * @access public
+	 * @return boolean
+	 * @author Wesley Nitsckie
+	 */
+	public function togglePublish($id)
+	{
+	   $row = $this->getSection($id);
+	   if($row['published'] == 1)
+	   {    
+	       return $this->update('id', $id , array('published' => 0) );    
+	   } else {
+	       return $this->update('id', $id , array('published' => 1) );    
+	   }
+	    
+	}
+	
 }

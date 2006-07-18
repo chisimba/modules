@@ -75,32 +75,32 @@ if($editmode)
 //title
 $table->startRow();
 $table->addCell('Title');
-$table->addCell($titleInput->show().'<p>');
+$table->addCell($titleInput->show().'<p/>');
 $table->endRow();
 
 //title name
 $table->startRow();
 $table->addCell('Menu Text');
-$table->addCell($menuTextInput->show().'<p>');
+$table->addCell($menuTextInput->show().'<p/>');
 $table->endRow();
 
 //image
 $table->startRow();
 $table->addCell('Image');
-$table->addCell($this->_objUtils->getImageList('image', $selected).'&nbsp;<img src="'.$imageSRC.'"  name="imagelib" width="80" height="80" border="2" alt="Preview" /><p>', 'top');
+$table->addCell($this->_objUtils->getImageList('image', $selected).'&nbsp;<img src="'.$imageSRC.'"  name="imagelib" width="80" height="80" border="2" alt="Preview" /><p/>', 'top');
 
 $table->endRow();
 
 //image postion
 $table->startRow();
 $table->addCell('Image Position');
-$table->addCell($this->_objUtils->getImagePostionList('imageposition').'<p>');
+$table->addCell($this->_objUtils->getImagePostionList('imageposition').'<p/>');
 $table->endRow();
 
 $table->startRow();
 $table->addCell('Layout');
 
-$table->addCell($this->_objUtils->getLayoutOptions('sectionlayout', $this->getParam('id')).'<p>');
+$table->addCell($this->_objUtils->getLayoutOptions('sectionlayout', $this->getParam('id')).'<p/>');
 $table->endRow();
 
 //Ordering
@@ -108,9 +108,9 @@ $table->startRow();
 $table->addCell('Ordering');
 if(editmode)
 {	
-	$table->addCell($this->_objSections->getOrderList('ordering').'<p>');
+	$table->addCell($this->_objSections->getOrderList('ordering').'<p />');
 } else {
-	$table->addCell('New items default to the last place. Ordering can be changed after this item is saved.').'<p>';
+	$table->addCell('New items default to the last place. Ordering can be changed after this item is saved.').'<p/>';
 }
 $table->endRow();
 
@@ -118,7 +118,7 @@ $table->endRow();
 //access level
 $table->startRow();
 $table->addCell('Access Level');
-$table->addCell($this->_objUtils->getAccessList('access').'<p>');
+$table->addCell($this->_objUtils->getAccessList('access').'<p/>');
 $table->endRow();
 
 

@@ -428,7 +428,8 @@ class cmsutils extends object
 				
 				//$str .= '<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
 				//$str .= '<p>'.$page['introtext'].'<a href="devtodo" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
-				$content = '<span class="date">'.$this->formatDate($page['created']).'</span> <p>'.$page['introtext'].'<a href="devtodo" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
+				$moreLink = $this->uri(array('action' => 'showfulltext', 'sectionid' => $arrSection['id'], 'id' => $page['id']), 'cms');
+				$content = '<span class="date">'.$this->formatDate($page['created']).'</span> <p>'.$page['introtext'].'<a href="'.$moreLink.'" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
 				$str .= $objFeatureBox->show($page['title'], $content);
 			}
 			return $str;
@@ -503,11 +504,11 @@ class cmsutils extends object
 					$str .= '<li>'. $this->formatDate($page['created']).' - '.$link->show() .'</li> ';
 				} else {
 					$strBody = '<h3>'.$page['title'].'</h3>';
-					$strBody .= $page['body'].'<p>';
+					$strBody .= $page['body'].'<p/>';
 				}
 			}
 	
-			return $heading.$strBody.'<p>'.$str;
+			return $heading.$strBody.'<p/>'.$str;
 				
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
@@ -533,7 +534,7 @@ class cmsutils extends object
 			$objUser = & $this->newObject('user', 'security');
 			$objConfig = & $this->newObject('altconfig', 'config');
 			
-			$str = '<h3>'. $arrSection['title'].'</h3><img src="'.$objConfig->getSiteRoot().'usrfiles/media'.$arrSection['image'].'" >';
+			$str = '<h3>'. $arrSection['title'].'</h3><img src="'.$objConfig->getSiteRoot().'usrfiles/media'.$arrSection['image'].'" />';
 			
 			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
 			foreach ($arrPages as $page)
@@ -567,7 +568,7 @@ class cmsutils extends object
 				{
 					//read more link .. link to the full text
 					$link = & $this->newObject('link', 'htmlelements');
-					$link->link = 'Read more ..<p><p>';
+					$link->link = 'Read more ..<p/><p/>';
 					$link->href = $this->uri(array('action' => 'showfulltext', 'id' => $page['id']), 'cms');
 					
 					$table->startRow();
@@ -617,11 +618,11 @@ class cmsutils extends object
 					$str .= $link->show() .' | ';
 				} else {
 					$strBody = '<h3>'.$page['title'].'</h3>';
-					$strBody .= $page['body'].'<p>';
+					$strBody .= $page['body'].'<p/>';
 				}
 			}
 			
-			return $heading.$strBody.'<p>'.$str;
+			return $heading.$strBody.'<p/>'.$str;
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
@@ -672,10 +673,10 @@ class cmsutils extends object
 			$contentId = $this->getParam('id');
 			$page = $this->_objContent->getContentPage($contentId);
 			
-			$strBody = '<h3>'.$page['title'].'</h3><p>';
-			$strBody .= '<span class="warning">'.$this->_objUser->fullname($page['created_by']).'</span><p>';
-			$strBody .= '<span class="warning">'.$page['created'].'</span><p>';
-			$strBody .= $page['body'].'<p>';
+			$strBody = '<h3>'.$page['title'].'</h3><p/>';
+			$strBody .= '<span class="warning">'.$this->_objUser->fullname($page['created_by']).'</span><p/>';
+			$strBody .= '<span class="warning">'.$page['created'].'</span><p/>';
+			$strBody .= $page['body'].'<p/>';
 			
 			return $strBody;
 		}catch (Exception $e){
@@ -774,11 +775,11 @@ class cmsutils extends object
 			
 			if($isCheck)
 			{
-				$objIcon->setIcon('greentick');
+				$objIcon->setIcon('ok','png');
 			} else {
 				if($returnFalse)
 				{
-					$objIcon->setIcon('redcross');
+					$objIcon->setIcon('failed', 'png');
 				}
 			}
 			
@@ -830,6 +831,7 @@ class cmsutils extends object
 		$nodes[] = array('text' => 'Content', 'uri' => $this->uri(array('action' => 'content')));
 		$nodes[] = array('text' => 'Sections', 'uri' => $this->uri(array('action' => 'sections')));
 		$nodes[] = array('text' => 'Categories', 'uri' => $this->uri(array('action' => 'categories')));
+		$nodes[] = array('text' => 'Front Page', 'uri' => $this->uri(array('action' => 'frontpages')));
 		$nodes[] = array('text' => 'Media', 'uri' => $this->uri(null,'mediamanager'))	;	
 		
 		$objNav = $this->newObject('sidebar', 'navigation');
