@@ -27,7 +27,7 @@ $sqldata[]="CREATE TABLE tbl_dublincoremetadata (
   dc_language VARCHAR(255) NULL,
   dc_audience VARCHAR(255) NULL,
   updated TIMESTAMP(14) NOT NULL,
-  PRIMARY KEY(id)))TYPE=INNODB;";  
+  PRIMARY KEY(id)))TYPE=INNODB;";
 */
 $tablename = 'tbl_dublincoremetadata';
 
@@ -47,7 +47,7 @@ $fields = array(
 		'length' => 255
 		),
     'enterdate' => array(
-		'type' => 'datetime'
+		'type' => 'date'
 		),
 	'oai_identifier' => array(
 		'type' => 'text',
@@ -58,7 +58,7 @@ $fields = array(
 		'length' => 255
 		),
 	'datestamp' => array(
-		'type' => 'datetime'
+		'type' => 'date'
 		),
     'deleted' => array(
 		'type' => 'text',
@@ -136,6 +136,14 @@ $fields = array(
         'type' => 'timestamp'
         )
     );
-    
-  
+//create other indexes here...
+
+$name = 'ind_dcmd';
+
+$indexes = array(
+                'fields' => array(
+                	'id' => array()
+                )
+        );
+
 ?>
