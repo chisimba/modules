@@ -80,8 +80,8 @@ $fields = array(
 		),
     'checked_out_time' => array(
 		'type' => 'date',
-		'notnull' => TRUE,
-		'default' => '0000-00-00 00:00:00'
+
+
 		),
     'editor' => array(
 		'type' => 'text',
