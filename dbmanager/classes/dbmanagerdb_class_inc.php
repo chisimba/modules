@@ -25,7 +25,7 @@ class dbmanagerdb extends dbTableManager
 
     public function listall()
     {
-    	$a = $this->createDb('punani');
+    	//$a = $this->createDb('punani');
     	//echo $a;
     	//$b = $this->listDatabases();
     	//print_r($b);
