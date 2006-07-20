@@ -28,7 +28,7 @@
 <!--<div style="background-color: #000080; padding:5px;">-->
 <!--<p style="color:#ffffff">-->
 <?php
-    echo "<h3>" . $objLanguage->languageText("chat_room") . " : <b>" . $context . "</b></h3>";
+    echo "<h3>" . $objLanguage->languageText("chat_room",'chat') . " : <b>" . $context . "</b></h3>";
 ?>
 <!--</p>-->
     <div style="background-color: #FFFFFF;"><!-- padding:5px;-->
@@ -96,7 +96,7 @@
     $icon = $this->getObject('geticon','htmlelements');
     $icon->setIcon('chat/leaveroom');
     $icon->align=false;
-    $icon->alt = $objLanguage->languageText("mod_chat_leaveroom");
+    $icon->alt = $objLanguage->languageText("mod_chat_leaveroom",'chat');
     echo "<a href=\"".$uri."\">".$icon->show()."</a>";
 ?>
     </td>
@@ -135,7 +135,7 @@
         $frmContext->addToForm($dropdown);
         $button=new button();
         $button->setToSubmit();
-        $button->setValue($this->objLanguage->languageText('word_go'));
+        $button->setValue($this->objLanguage->languageText('word_go','chat'));
         $frmContext->addToForm($button);
         echo $frmContext->show();
     }
@@ -166,7 +166,7 @@
     $icon = $this->getObject('geticon','htmlelements');
     $icon->setIcon('add');
     $icon->align=false;
-    $icon->alt = $objLanguage->languageText("mod_chat_createroom");
+    $icon->alt = $objLanguage->languageText("mod_chat_createroom",'chat');
     echo $icon->show();
 ?>
     </a>
@@ -189,7 +189,7 @@
     $form->setDisplayType(3);
     //$form->addToForm($objLanguage->languageText('chat_new_room').":");
     $form->addToForm(new textinput("newcontext",""));
-    $button = new button("submit", $objLanguage->languageText("chat_create"));
+    $button = new button("submit", $objLanguage->languageText("chat_create",'chat'));
     $button->setToSubmit();
     $form->addToForm($button);
     echo $form->show();
@@ -227,7 +227,7 @@
     $icon = $this->getObject('geticon','htmlelements');
     $icon->setIcon('user_user');
     $icon->align=false;
-    $icon->alt = $objLanguage->languageText("mod_chat_adduser");
+    $icon->alt = $objLanguage->languageText("mod_chat_adduser",'chat');
     echo $icon->show();
 ?>
     </a>
@@ -251,7 +251,7 @@
     $form->setDisplayType(3);
     //$form->addToForm($objLanguage->languageText('chat_new_room').":");
     $form->addToForm(new textinput("username",""));
-    $button = new button("submit", $objLanguage->languageText("chat_add"));
+    $button = new button("submit", $objLanguage->languageText("chat_add",'chat'));
     $button->setToSubmit();
     $form->addToForm($button);
     echo $form->show();
@@ -276,7 +276,7 @@
     $icon = $this->getObject('geticon','htmlelements');
     $icon->setIcon('chat/viewlog');
     $icon->align=false;
-    $icon->alt = $objLanguage->languageText("mod_chat_viewlog");
+    $icon->alt = $objLanguage->languageText("mod_chat_viewlog",'chat');
     echo $icon->show();
     echo "</a>";
     // Show the clear log icon.
@@ -291,7 +291,7 @@
         $icon = $this->getObject('geticon','htmlelements');
         $icon->setIcon('chat/clearlog');
         $icon->align=false;
-        $icon->alt = $objLanguage->languageText("chat_clear_log");
+        $icon->alt = $objLanguage->languageText("chat_clear_log",'chat');
         echo $icon->show();
         echo "</a>";
     }
@@ -307,7 +307,7 @@
         $icon = $this->getObject('geticon','htmlelements');
         $icon->setIcon('chat/toggleloggingon');
         $icon->align=false;
-        $icon->alt = $objLanguage->languageText("mod_chat_persistentloggingon");
+        $icon->alt = $objLanguage->languageText("mod_chat_persistentloggingon",'chat');
         echo $icon->show();
         echo "</a>";
     }
@@ -322,7 +322,7 @@
         $icon = $this->getObject('geticon','htmlelements');
         $icon->setIcon('chat/toggleloggingoff');
         $icon->align=false;
-        $icon->alt = $objLanguage->languageText("mod_chat_persistentloggingoff");
+        $icon->alt = $objLanguage->languageText("mod_chat_persistentloggingoff",'chat');
         echo $icon->show();
         echo "</a>";
     }

@@ -21,6 +21,12 @@ function ToggleBan()
 }
 </script>
 <?php
+/*
+echo "[".(mktime()-30*60)."]";
+echo('<pre>');
+print_r($users[0]);
+echo('</pre>');
+*/
 //Put the main content
 //echo $this->getContent();
 //Use to check for admin user:

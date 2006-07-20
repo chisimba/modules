@@ -12,9 +12,11 @@ foreach ($users as $user) {
 	//$fullName = preg_replace("/'/","&#39;",$fullName);
 	echo $fullName;
 	echo "&nbsp;";
+	/*
 	$imPopup =& $this->getObject('popup','instantmessaging');
 	$imPopup->setup($user['userId'], null, '');
 	echo preg_replace("/'/","\'",$imPopup->show()); 
+	*/
 	echo "<br>";
 }
 ?>

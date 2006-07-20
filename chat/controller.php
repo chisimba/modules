@@ -214,8 +214,8 @@ class chat extends controller
                     array(
                         'COUNT'=>$count,
                         'USERS'=>($count==1
-                            ?$this->objLanguage->languageText('word_user')
-                            :$this->objLanguage->languageText('word_users')
+                            ?$this->objLanguage->languageText('word_user','chat')
+                            :$this->objLanguage->languageText('word_users','chat')
                         )
                     )
                  );
@@ -258,7 +258,7 @@ class chat extends controller
                         $this->objDbChat->insertSingle(
                             $contextId,
                             "",
-                            "<b>" . $this->objUser->userName() . "</b> " . $this->objLanguage->languageText("chat_you_are_banned"),
+                            "<b>" . $this->objUser->userName() . "</b> " . $this->objLanguage->languageText("chat_you_are_banned",'chat'),
                             "All",
                             mktime()
                         );
@@ -486,7 +486,7 @@ class chat extends controller
             $users = $this->objDbChatUsers->listAll($contextId);
             foreach ($users as $user) {
                 // If the user has not been active for the last 30 minutes...
-                if ($user['lastActive'] < (mktime()-30*60)) {
+                if ($user['lastactive'] < (mktime()-30*60)) {
                     $this->objDbChatUsers->deleteSingle($contextId, $user['username']);
                 }
             }
@@ -639,7 +639,7 @@ class chat extends controller
         $this->objDbChat->insertSingle(
             $contextId,
             "",
-            "<b>" . $this->objUser->userName() . "</b> " . $this->objLanguage->languageText("chat_has_entered") . ".",
+            "<b>" . $this->objUser->userName() . "</b> " . $this->objLanguage->languageText("chat_has_entered",'chat') . ".",
             "All",
             mktime()
         );
@@ -659,7 +659,7 @@ class chat extends controller
         $this->objDbChat->insertSingle(
             $contextId,
             "",
-            "<b>" . $this->objUser->userName() . "</b> " . $this->objLanguage->languageText("chat_has_left") . ".",
+            "<b>" . $this->objUser->userName() . "</b> " . $this->objLanguage->languageText("chat_has_left",'chat') . ".",
             "All",
             mktime()
         );

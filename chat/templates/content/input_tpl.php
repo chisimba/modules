@@ -88,7 +88,7 @@
 	$icon = $this->getObject('geticon','htmlelements');
 	$icon->setIcon('chat/smiley');
 	$icon->align=false;
-	$icon->alt = $objLanguage->languageText("chat_smileys");
+	$icon->alt = $objLanguage->languageText("chat_smileys",'chat');
 	echo $icon->show();
 ?>
 	</a>
@@ -114,7 +114,7 @@
 	$icon = $this->getObject('geticon','htmlelements');
 	$icon->setIcon('chat/font');
 	$icon->align=false;
-	$icon->alt = $objLanguage->languageText('chat_change_font');
+	$icon->alt = $objLanguage->languageText('chat_change_font','chat');
 	echo $icon->show();
 ?>
 	</a>
