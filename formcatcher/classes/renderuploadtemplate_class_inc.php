@@ -23,7 +23,7 @@ class renderuploadtemplate extends object
     * @var string object $objLanguage A string to hold the language object
     * 
     */
-    var $objLanguage;
+    public $objLanguage;
     
     /**
     * 
@@ -31,7 +31,7 @@ class renderuploadtemplate extends object
     * user objects. 
     * 
     */
-    function init() 
+    public function init() 
     {
         //Create an instance of the language object
         $this->objLanguage = & $this->getObject('language', 'language');
@@ -47,7 +47,7 @@ class renderuploadtemplate extends object
     * @return The rendered form
     * 
     */
-    function renderUploadForm()
+    public function renderUploadForm()
     {
         $mode = $this->getParam('mode', 'create');
         $id = $this->getParam('id', NULL);
@@ -143,7 +143,7 @@ class renderuploadtemplate extends object
     * @return the hidden text field for the form
     * 
     */ 
-    function __getMaxFileSize()
+    private function __getMaxFileSize()
     {
         $objElement = new textinput ("MAX_FILE_SIZE");
         //Set the field type to upload
@@ -161,7 +161,7 @@ class renderuploadtemplate extends object
     * @return the file upload field for the form
     * 
     */ 
-    function __getFileElement()
+    private function __getFileElement()
     {
         if ( $this->getParam('mode', 'add' == 'edit') ) {
             if ( isset($this->filename) ) {
@@ -185,7 +185,7 @@ class renderuploadtemplate extends object
     * @return the upload button for the form
     * 
     */ 
-    function __getUploadButton()
+    private function __getUploadButton()
     {
         // Create an instance of the button object
         $this->loadClass('button', 'htmlelements');
@@ -215,7 +215,7 @@ class renderuploadtemplate extends object
     * @return the Title text input for the form
     * 
     */ 
-    function __getTitleElement()
+    private function __getTitleElement()
     {
         //Create an element for the input of title
         $objElement = new textinput ("title");
@@ -237,7 +237,7 @@ class renderuploadtemplate extends object
     * @return the Title text input for the form
     * 
     */ 
-    function __getEmailElement()
+    private function __getEmailElement()
     {
         //Create an element for the input of title
         $objElement = new textinput ("email");
@@ -261,7 +261,7 @@ class renderuploadtemplate extends object
     * @return the Description text area for the form
     * 
     */
-    function __getDescriptionElement()
+    private function __getDescriptionElement()
     {
         //Load the textarea class 
         $this->loadClass('textarea','htmlelements');
@@ -284,7 +284,7 @@ class renderuploadtemplate extends object
     * @return the Description text area for the form
     * 
     */
-    function __getUseFullpageElement()
+    private function __getUseFullpageElement()
     {
         //Load the textarea class 
         $this->loadClass('radio','htmlelements');
@@ -302,7 +302,7 @@ class renderuploadtemplate extends object
         return $objElement->show();
     } #getDescriptionElement
     
-    function __getEmailToWhere()
+    private function __getEmailToWhere()
     {
         //Load the textarea class 
         $this->loadClass('radio','htmlelements');

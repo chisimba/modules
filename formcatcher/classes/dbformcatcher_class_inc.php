@@ -14,12 +14,12 @@ if (!$GLOBALS['kewl_entry_point_run'])
 class dbformcatcher extends dbTable
 {
     //Context code property
-    var $contextCode;
+    public $contextCode;
     
     /**
     * Constructor method to define the table
     */
-    function init() {
+    public function init() {
         parent::init('tbl_formcatcher');
         // Context Code
         $this->contextObject =& $this->getObject('dbcontext', 'context');
@@ -28,7 +28,7 @@ class dbformcatcher extends dbTable
         $this->objUser =  & $this->getObject("user", "security");
     }
     
-    function getCurrentContext()
+    public function getCurrentContext()
     {
         return $this->getAll("WHERE context='" 
           . $this->contextCode . "'");
@@ -38,7 +38,7 @@ class dbformcatcher extends dbTable
     * Save method for editing a record in this table
     *@param string $mode: edit if coming from edit, add if coming from add
     */
-    function saveRecord($filename)
+    public function saveRecord($filename)
     {
         $mode = $this->getParam('mode', 'create');
         //Get the fields that must be in both add and edit

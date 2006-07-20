@@ -23,28 +23,28 @@ class viewform extends object
     * @var string $contextCode The code for the current context
     * 
     */
-    var $contextCode;
+    public $contextCode;
     
     /**
     * 
     * @var string object $objLanguage A string to hold the language object
     * 
     */
-    var $objLanguage;
+    public $objLanguage;
 
     /**
     * 
     * @var string object $contextObject A string to hold the context object
     * 
     */
-    var $contextObject;
+    public $contextObject;
     
     /**
     * 
     * @var string $form A string to hold the form contents
     * 
     */
-    var $form; 
+    public $form; 
     
     /**
     * 
@@ -52,7 +52,7 @@ class viewform extends object
     * user objects. 
     * 
     */
-    function init() 
+    public function init() 
     {
         //Create an instance of the language object
         $this->objLanguage = & $this->getObject('language', 'language');
@@ -69,7 +69,7 @@ class viewform extends object
     * @return The rendered form
     *
     */
-    function show()
+    public function show()
     {
         return $this->getContents();
     
@@ -84,7 +84,7 @@ class viewform extends object
     * @return string The contents of the form or a string error message
     * 
     */
-    function getContents()
+    public function getContents()
     {
         //Get an instance of of the formuloader class
         $objFmUp = & $this->getObject('formuploader');
@@ -136,7 +136,7 @@ class viewform extends object
     * @return boolean TRUE | FALSE
     * 
     */
-    function testIfValid()
+    public function testIfValid()
     {
         $pos = strpos($this->form, "[[EMAIL]]");
         if ($pos === false) {
@@ -155,7 +155,7 @@ class viewform extends object
     }
     
     
-    function getFormAction()
+    public function getFormAction()
     {
       //  $regExPattern = "/<form(.*)action";
     }
