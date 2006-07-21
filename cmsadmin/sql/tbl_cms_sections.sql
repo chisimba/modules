@@ -32,13 +32,13 @@ $fields = array(
 	'published' => array(
 		'type' => 'integer',
 		'length' => 255,
-		'default' => 0
+
 		),
     'checked_out' => array(
 		'type' => 'integer',
         'length' => 11,
         'unsigned' => TRUE,
-        'default' => 0
+
 		),
     'checked_out_time' => array(
 		'type' => 'date',
@@ -47,18 +47,18 @@ $fields = array(
     'ordering' => array(
 		'type' => 'integer',
         'length' => 11,
-        'default' => 0
+
 		),
     'access' => array(
 		'type' => 'integer',
         'length' => 3,
         'unsigned' => TRUE,
-        'default' => 0
+
 		),
     'count' => array(
 		'type' => 'integer',
         'length' => 11,
-        'default' => 0
+
 		),
 	'params' => array(
 		'type' => 'text',

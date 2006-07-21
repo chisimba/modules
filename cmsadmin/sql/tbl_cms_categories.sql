@@ -73,7 +73,7 @@ $fields = array(
     'count' => array(
 		'type' => 'integer',
 		'length' => 11,
-    
+
 		),
     'params' => array(
 		'type' => 'text',
