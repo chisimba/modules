@@ -1,3 +1,0 @@
-<?
-$this->loadClass('primarykey','modulecatalogue');
-?>

@@ -18,33 +18,33 @@ if (!$GLOBALS['kewl_entry_point_run'])
 class modulelist extends controller
 {
     var $objUser;
-    
+
     function init()
     {
         $this->objUser =& $this->getObject('user', 'security');
     }
-    
+
     function dispatch($action)
     {
         // ignore action at moment as we only do one thing - list modules
-        
+
         // load the data object (calls the magical getObject which finds the
         // appropriate file, includes it, and either instantiates the object,
         // or returns the existing instance if there is one
-        $objModules =& $this->getObject('modules');
-        
+        $objModules =& $this->getObject('modules','modulecatalogue');
+
         // fetch the module list and make available to the template
-        $getType = $this->objUser->isAdmin() 
-                        ? $objModules->GET_VISIBLE 
+        $getType = $this->objUser->isAdmin()
+                        ? $objModules->GET_VISIBLE
                         : $objModules->GET_USERVISIBLE;
-                        
+
         $moduleList = $objModules->getModules($getType);
         $this->setVar('moduleList', $moduleList);
-                
+
         // return the name of the template to use  because it is a page content template
         // the file must live in the templates/content subdir of the module directory
         return "list_tpl.php";
     }
 }
-        
+
 ?>
