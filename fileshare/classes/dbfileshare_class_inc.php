@@ -1,10 +1,10 @@
 <?
 /**
 * Manage workgroup files.
-* @author James Scoble Jeremy O'Connor
-* @version $Id$
-* @copyright 2004,2005,2006 UWC
+* @copyright (C) 2004,2005,2006 UWC
 * @license GNU GPL
+* @author James Scoble
+* @author Jeremy O'Connor
 */
 
 class dbfileshare extends dbtable

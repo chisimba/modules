@@ -8,30 +8,31 @@ if (!$GLOBALS['kewl_entry_point_run'])
 // end security check
 
 /**
-* Controller class for the fileshare module
-* @copyright KEWL.NextGen 2004
-* @author James Scoble Jeremy O'Connor
-*
-* $Id: controller.php
+* Controller class for the fileshare module.
+* @author James Scoble
+* @author Jeremy O'Connor
+* @copyright (C) 2006 UWC
 */
 
 class fileshare extends controller
 {
-    private $objDbFileShare;
+	private $objLanguage;
+	private $objConfig;
+    private $objDbContext;
     private $objDbWorkgroup;
-    private $workgroupId;
+    private $objDbFileShare;
 
     public function init()
     {
-        $this->objLanguage= & $this->getObject('language','language');
+        $this->objLanguage =& $this->getObject('language','language');
         $this->objConfig = &$this->getObject('altconfig','config');
 		/*
         $this->objUser=& $this->getObject('user', 'security');
         $this->userId=$this->objUser->userId();
 		*/
-        $this->objDbFileShare=$this->getobject('dbfileshare');
-        // Get the workgroup object
+		//$this->objDbContext = &$this->getObject('dbcontext','context');
         //$this->objDbWorkgroup=$this->getobject('dbworkgroup', 'workgroup');
+        $this->objDbFileShare=$this->getobject('dbfileshare');
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
         //Log this module call
@@ -50,8 +51,8 @@ class fileshare extends controller
         $isAlumni = false; //($systemType == "alumni");
 
 		// Get context description
-		//$objDbContext = &$this->getObject('dbcontext','context');
-		$this->contextCode = '0'; //$objDbContext->getContextCode();
+		//$this->objDbContext = &$this->getObject('dbcontext','context');
+		$this->contextCode = '0'; //$this->objDbContext->getContextCode();
         $this->setVar('contextCode',$this->contextCode);
 		if (is_null($this->contextCode)) {
             if ($isAlumni) {
@@ -60,7 +61,7 @@ class fileshare extends controller
                 die('Access denied');
             }
 		} else {
-			$this->contextTitle = 'Context0'; //$objDbContext->getTitle();
+			$this->contextTitle = 'Context0'; //$this->objDbContext->getTitle();
 		}
         $this->setVar('contextTitle',$this->contextTitle);
 
