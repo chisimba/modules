@@ -17,7 +17,11 @@ if (!$GLOBALS['kewl_entry_point_run'])
 */
 class modulelist extends controller
 {
-    var $objUser;
+	//not using constants anymore
+    //const GET_VISIBLE = 2;
+    //const GET_USERVISIBLE = 3;
+
+	var $objUser;
 
     function init()
     {
@@ -35,9 +39,8 @@ class modulelist extends controller
 
         // fetch the module list and make available to the template
         $getType = $this->objUser->isAdmin()
-                        ? $objModules->GET_VISIBLE
-                        : $objModules->GET_USERVISIBLE;
-
+                        ? 2
+                        : 3;
         $moduleList = $objModules->getModules($getType);
         $this->setVar('moduleList', $moduleList);
 
