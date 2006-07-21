@@ -462,6 +462,7 @@ class cmsutils extends object
 			$objLayouts = & $this->newObject('dblayouts', 'cmsadmin');
 		
 			$arrLayout = $objLayouts->getLayout($arrSection['layout']);	
+			$arrLayout['name'] = ($arrLayout['name']=='') ? 'List' : $arrLayout['name'];
 			$functionVariable = '_layout'.trim($arrLayout['name']);
 		
 			//call the right function according to the layout of the section
