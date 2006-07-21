@@ -10,7 +10,7 @@
     $this->loadClass("textinput","htmlelements");
     $this->loadClass("dropdown","htmlelements");
     $this->loadClass("button","htmlelements");
-    
+
 ?>
 <!--<div style="background-color: #008080;">-->
 <?php
@@ -135,7 +135,7 @@
         $frmContext->addToForm($dropdown);
         $button=new button();
         $button->setToSubmit();
-        $button->setValue($this->objLanguage->languageText('word_go','chat'));
+        $button->setValue($this->objLanguage->languageText('word_go','postlogin'));
         $frmContext->addToForm($button);
         echo $frmContext->show();
     }

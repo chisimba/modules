@@ -18,7 +18,7 @@ class block_chat extends object
     public function init()
     {
         $this->objLanguage =& $this->getObject('language','language');
-        $this->title = $this->objLanguage->languageText('mod_chat_lastpostinchat');
+        $this->title = $this->objLanguage->languageText('mod_chat_lastpostinchat','chat');
         $this->loadClass('link', 'htmlelements');
     }
 
@@ -28,11 +28,11 @@ class block_chat extends object
         $url = $this->uri('', 'chat');
         $icon = $this->newObject('geticon', 'htmlelements');
         $icon->setModuleIcon('chat');
-        $icon->alt = $this->objLanguage->languageText('mod_chat_join');
+        $icon->alt = $this->objLanguage->languageText('mod_chat_join','chat');
         $objLinkIcon = new link($url);
         $objLinkIcon->link = $icon->show();
         $objLinkText = new link($url);
-        $objLinkText->link = $this->objLanguage->languageText('mod_chat_name');
+        $objLinkText->link = $this->objLanguage->languageText('mod_chat_name','chat');
         $chatLink = '<p>'.$objLinkIcon->show().'&nbsp;'.$objLinkText->show().'</p>';
 
         // Build up output string.
@@ -56,7 +56,7 @@ class block_chat extends object
         // Get context ID.
         $list = $objDbChatContexts->listSingle($context);
         if (empty($list)) {
-            return $this->objLanguage->languageText('mod_chat_noposts').$chatLink;
+            return $this->objLanguage->languageText('mod_chat_noposts','chat').$chatLink;
         }
         $contextId = $list[0]["id"];
         // Get dbChat object.
@@ -64,7 +64,7 @@ class block_chat extends object
         // Get the last post.
         $content = $objDbChat->listLast($contextId, $objUser->userName());
         if (empty($content)) {
-            return $this->objLanguage->languageText('mod_chat_noposts').$chatLink;
+            return $this->objLanguage->languageText('mod_chat_noposts','chat').$chatLink;
         }
         else {
             $entry = $content[0];
@@ -102,12 +102,12 @@ class block_chat extends object
         $count = $list[0]["COUNT(*)"];
         $str .= "<br/>".
             $this->objLanguage->code2Txt(
-                'mod_chat_usersonline',
+                'mod_chat_usersonline','chat',
                 array(
                     'COUNT'=>$count,
                     'USERS'=>($count==1
-                        ?$this->objLanguage->languageText('word_user')
-                        :$this->objLanguage->languageText('word_users')
+                        ?$this->objLanguage->languageText('word_user','chat')
+                        :$this->objLanguage->languageText('word_users','chat')
                     )
                 )
              );
@@ -126,7 +126,7 @@ class block_chat extends object
 		$username = preg_replace("/'/","&#39;",$username);
 		return $username;
 	}
-	    
+
     /**
     * Function to parse the content
     * @param string The content
@@ -170,7 +170,7 @@ class block_chat extends object
 	    // Remove carriage returns
 		//$content = preg_replace("/\r/"," ",$content);
 	    // Replace single quotes with the HTML single quote
-		$content = preg_replace("/'/","&#39;",$content);        
+		$content = preg_replace("/'/","&#39;",$content);
 	    $content = preg_replace("/\[(.*)\]/",'<img src="skins/_common/icons/smileys/\\1.gif" border="0"/>',$content);
 	    return $content;
         /*
