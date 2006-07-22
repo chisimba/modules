@@ -30,6 +30,7 @@ class mail extends controller
     */
     function dispatch()
     {
+    		$this->setVar('str', 'There is no end user functionality in this module')
             return "dump_tpl.php";
     }
 }    
