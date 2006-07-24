@@ -416,7 +416,7 @@ class dbcalendar extends dbTable
 
         $navigation = $this->generateCalendarNavigation ($month, $year);
 
-        return $navigation.$calendar.'<br><br>'.$eventsList;
+        return $navigation.$calendar.'<br /><br />'.$eventsList;
     }
 
 
@@ -678,7 +678,7 @@ class dbcalendar extends dbTable
                     // Start New Row
                     $eventsTable->startRow();
                     // Big Number on the Left Hand Side
-                    $dateCell = '<a name="'.$currentDay.'"></a><div class="bigDayNum">'.$currentDay.'</div><br>';
+                    $dateCell = '<a name="'.$currentDay.'"></a><div class="bigDayNum">'.$currentDay.'</div><br />';
                     $month = $this->objDateFunctions->getMonthNumber($event['eventdate']);
                     $month = $this->objSimpleCal->monthFull($month);
                     $year = $this->objDateFunctions->getYearNumber($event['eventdate']);
@@ -710,7 +710,7 @@ class dbcalendar extends dbTable
                     // Start New Row
                     $eventsTable->startRow();
                     // Big Number on the Left Hand Side
-                    $dateCell = '<a name="'.$currentDay.'"></a><div class="bigDayNum">'.$currentDay.'</div><br>';
+                    $dateCell = '<a name="'.$currentDay.'"></a><div class="bigDayNum">'.$currentDay.'</div><br />';
                     $month = $this->objDateFunctions->getMonthNumber($event['eventdate']);
                     $month = $this->objSimpleCal->monthFull($month);
                     $year = $this->objDateFunctions->getYearNumber($event['eventdate']);
