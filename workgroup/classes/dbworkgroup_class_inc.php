@@ -1,0 +1,191 @@
+<?php
+/* ----------- data class extends dbTable for tbl_blog------------*/// security check - must be included in all scripts
+if (!$GLOBALS['kewl_entry_point_run'])
+    {
+        die("You cannot view this page directly");
+    }
+
+
+/**
+* Model class for the table tbl_faq
+* @author Jeremy O'Connor
+* @copyright 2004 University of the Western Cape
+*/
+class dbWorkgroup extends dbTable
+{
+    /**
+    * Constructor method to define the table
+    */
+    function init() 
+    {
+        parent::init('tbl_workgroup');
+        //$this->USE_PREPARED_STATEMENTS=True;
+    }
+
+    /**
+    * Sets the workgroupId session variable
+    * @param string The workgroup ID
+    */
+    function setWorkgroupId($workgroupId)
+    {
+        $this->setSession('workgroupId',$workgroupId);
+    }
+
+    /**
+    * Return the workgroupId session variable
+    * @return string The workgroup ID
+    */
+    function getWorkgroupId()
+    {
+        return $this->getSession('workgroupId',NULL);
+    }
+
+    /**
+    * Unsets the workgroupId session variable
+    * @param string The workgroup ID
+    */
+    function unsetWorkgroupId()
+    {
+        $this->unsetSession('workgroupId');
+    }
+
+	/**
+	* Return the ID for a workgroup given its description.
+	* @param string The description of the workgroup
+	* @return string The ID of the workgroup or false if the workgroup was not found
+	*/
+	function getId($description)
+	{
+		$sql = "SELECT id FROM $this->_tableName WHERE description = '$description'";
+		$list = $this->getArray($sql);
+		if (empty($list)) {
+		    return false;
+		}
+		else {
+			return $list[0]['id'];
+		}
+		//return $this->getRow("id", $id);
+	}
+
+	/**
+	* Return the workgroup description
+	* @param string The id of the workgroup
+	* @return string The workgroup description
+	*/	
+    function getDescription($id)
+    {
+        $list = $this->listSingle($id);
+        if (empty($list)) {
+            return "";
+        }
+        else {
+            return $list[0]['description'];
+        }
+    }
+
+    /**
+    * Return all records
+	* @param string The context code
+	* @return array Workgroups for a context
+    */
+	function getAll($contextCode)
+    {
+        if ($contextCode == NULL) {
+            return parent::getAll("WHERE contextcode IS NULL ORDER BY description");
+        }
+        else {
+		    return parent::getAll("WHERE contextcode='".$contextCode."' ORDER BY description");
+        }
+    }
+    
+    /**
+    * Return all records for a user
+	* @param string The context code
+	* @return array Workgroups for a context
+    */
+	function getAllForUser($contextCode, $userId)
+    {
+        $sql = "SELECT 
+            {$this->_tableName}.id,
+            {$this->_tableName}.description
+            FROM {$this->_tableName}, tbl_workgroup_users
+            WHERE {$this->_tableName}.id = tbl_workgroup_users.workgroupid";
+        if ($contextCode == NULL) {
+            $sql .= " AND {$this->_tableName}.contextcode IS NULL";
+        }
+        else {
+            $sql .= " AND {$this->_tableName}.contextcode = '$contextCode'";
+        }
+        $sql .= 
+            " AND tbl_workgroup_users.userid = '$userId'
+            ORDER BY {$this->_tableName}.description";
+        return $this->getArray($sql);
+    }
+
+    /**
+    * Return all records
+	* @param string The context code
+	* @return array Workgroups for a context
+    */
+	function listAll($contextCode)
+	{
+		//$sql = "SELECT id, question, answer FROM tbl_faq";
+		//return $this->getArray($sql);
+        if ($contextCode == NULL) {
+		    return parent::getAll("WHERE contextcode IS NULL ORDER BY description");
+        }
+        else {
+		    return parent::getAll("WHERE contextcode='".$contextCode."' ORDER BY description");
+        }
+	}
+
+	/**
+	* Return a single record
+	* @param string The id of the workgroup
+	* @return array The workgroup
+	*/	
+	function listSingle($id)
+	{
+		$sql = "SELECT * FROM $this->_tableName WHERE id = '" . $id . "'";
+		return $this->getArray($sql);
+		//return $this->getRow("id", $id);
+	}
+
+	/**
+	* Insert a record
+	* @param string The context code
+	* @param string The description
+	* @return string The ID
+	*/
+	function insertSingle($contextCode, $description)
+	{
+		return $this->insert(array(
+			'contextcode'=>$contextCode, 
+			'description'=>$description
+		));
+	}
+
+	/**
+	* Update a record
+	* @param string The workgroup id
+	* @param string The description
+	*/
+	function updateSingle($id, $description)
+	{
+		$this->update("id", $id, 
+			array(
+				'description'=>$description
+			)
+		);
+	}
+	
+	/**
+	* Delete a record
+	* @param string The workgroup id
+	*/
+	function deleteSingle($id)
+	{
+		$this->delete("id", $id);
+	}
+}
+?>
