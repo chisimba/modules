@@ -16,11 +16,12 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 class fileshare extends controller
 {
-	private $objLanguage;
-	private $objConfig;
+	public $objConfig;
+	public $objLanguage;
+    public $objDbFileShare;
+
     private $objDbContext;
     private $objDbWorkgroup;
-    private $objDbFileShare;
 
     public function init()
     {

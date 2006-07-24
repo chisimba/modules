@@ -10,7 +10,7 @@
 class dbfileshare extends dbtable
 {
 
-    private $objConfig;
+    public $objConfig;
     //var $objUser;
 
     public function init()
