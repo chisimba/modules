@@ -55,7 +55,7 @@ class dbcontent extends dbTable
 			$title = $this->getParam('title');
 			$menuText = $this->getParam('menutext');
 			$sectionid = $this->getParam('section');			
-			$published = $this->getParam('published');
+			$published = ($this->getParam('published') == 'on') ? 1 : 0;
 			$creatorid = $this->_objUser->userId();
 			$access = $this->getParam('access');
 			$catid = $this->getParam('catid');
@@ -72,7 +72,7 @@ class dbcontent extends dbTable
 							'introtext' => $introText,
 							'body' => $fullText,							
 							'access' => $access,
-							'ordering' => 0,
+							'ordering' => $this->getNewOrder(),
 							'published' => $published,
 							'created' => $this->now(),
 							'modified' => time(),
@@ -195,5 +195,19 @@ class dbcontent extends dbTable
 		
 		return $this->getRow('id', $id );
 	}
+	
+	/**
+	 * Method to the order number for the page
+	 * @param 
+	 * @access public
+	 * @return int
+	 */
+	public function getNewOrder()
+	{
+		$arr = $this->getArray('Select max("ordering") as neworder from tbl_cms_content');
+		
+		return 0;	
+	}
+	
 }
 ?>
