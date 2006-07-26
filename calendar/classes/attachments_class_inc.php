@@ -87,7 +87,9 @@ class attachments extends object {
 			unlink($file['path']);
 		}
 		$dir = "{$siteRootPath}{$contentPath}/calendar/attachments/$id";
-		rmdir($dir);
+		if (file_exists($dir)) {
+			rmdir($dir);
+		}
 	}
 	function transfer($tempId, $event)
 	{
