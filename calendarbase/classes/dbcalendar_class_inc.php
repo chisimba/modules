@@ -70,7 +70,8 @@ class dbcalendar extends dbTable
         // Load Language Class
         $this->objLanguage = &$this->getObject('language', 'language');
 
-		$this->objEventAttachments =& $this->getObject('dbeventattachments');
+		//$this->objEventAttachments =& $this->getObject('dbeventattachments');
+		$this->objEventAttachments =& $this->getObject('attachments','calendar');
 		$this->objFileIcons =& $this->getObject('fileicons', 'files');
     }
 
@@ -533,7 +534,7 @@ class dbcalendar extends dbTable
 
         $eventsTable->startHeaderRow();
         $eventsTable->addHeaderCell($this->objLanguage->languageText('word_date','calendar'), '100');
-        $eventsTable->addHeaderCell($this->objLanguage->languageText('mod_calendarbase_eventdetails','calendar'));
+        $eventsTable->addHeaderCell($this->objLanguage->languageText('mod_calendarbase_eventdetails','calendarbase'));
         $eventsTable->endHeaderRow();
 
 		// Find the module to go to for editing events
@@ -652,7 +653,8 @@ class dbcalendar extends dbTable
 
 				// Attachments
 				if ($event['attachment_id'] != '' || $event['multiday_attachment_id'] != '') {
-					$files = $this->objEventAttachments->getListAttachments($eventId);
+					//$files = $this->objEventAttachments->getListAttachments($eventId);
+					$files = $this->objEventAttachments->listFiles($eventId);
 					$nextLine = '';
 					if (count($files) > 0) {
 						//$cellContent .= '<hr width="50%" align="left" size="1" />';
@@ -661,7 +663,10 @@ class dbcalendar extends dbTable
 
 						foreach ($files as $file)
 						{
-							$downloadLink = new link ($this->uri(array('action'=>'downloadattachment', 'id'=>$file['attachment_id'], 'event'=>$event['id']), $this->module));
+							//$downloadLink = new link ($this->uri(array('action'=>'downloadattachment', 'id'=>$file['attachment_id'], 'event'=>$event['id']), $this->module));
+							//$downloadLink->link = $file['filename'];
+							//$cellContent .= $nextLine.$this->objFileIcons->getFileIcon($file['filename']).' '.$downloadLink->show();
+							$downloadLink = new link ($file['path']);
 							$downloadLink->link = $file['filename'];
 							$cellContent .= $nextLine.$this->objFileIcons->getFileIcon($file['filename']).' '.$downloadLink->show();
 							$nextLine =  '<br />';
