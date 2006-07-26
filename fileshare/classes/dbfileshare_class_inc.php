@@ -136,12 +136,6 @@ class dbfileshare extends dbtable
     {
         $objFileUpload =& $this->newObject('fileupload','utilities');
 		try {
-	        if (!is_uploaded_file($_FILES['upload']['tmp_name'])) {
-	            throw new CustomException($this->objLanguage->languageText('mod_contextfiles_errorupload'));
-	        }
-            else if ($_FILES['upload']['error'] != UPLOAD_ERR_OK) {
-                throw new CustomException($objFileUpload->checkError($_FILES['file']['error']));
-            }
             //$objConfig =& $this->getObject('config', 'config');
             //$siteRoot = $objConfig->siteRoot();
             //$userfiles = $objConfig->userfiles();
@@ -170,9 +164,6 @@ class dbfileshare extends dbtable
             }
 			//$dir = "{$siteRootPath}{$contentPath}/content/$contextCode/workgroup/$workgroupId/$filetype";
 			$dir = "{$siteRootPath}{$contentPath}";
-			if (!file_exists($dir)) {
-			    mkdir($dir,0777);
-			}
 			$filename = $objFileUpload->upload_file($dir.'/', false, true);
 	        $filetype=$_FILES['upload']['type'];
 	        $filesize=$_FILES['upload']['size'];
