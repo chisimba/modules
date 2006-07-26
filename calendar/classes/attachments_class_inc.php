@@ -1,10 +1,16 @@
 <?php
-
+/**
+* Handles attachments to events.
+*/
 class attachments extends object {
+	/**
+	* Constructor
+	*/
 	function init()
 	{
 		$this->objConfig=$this->getObject('altconfig','config');
 	    $this->objFileUpload =& $this->newObject('fileupload','utilities');
+		// Create directory structure if neccessary
         $siteRootPath = $this->objConfig->getsiteRootPath();
         $contentPath = $this->objConfig->getcontentPath();
         $contentPath = substr($contentPath,0,strlen($contentPath)-1);
@@ -20,15 +26,9 @@ class attachments extends object {
 	function uploadFile($id)
 	{
 		try {
-	         //$this->objUser=$this->getObject('user','security');
-            //$objConfig =& $this->getObject('config', 'config');
-            //$siteRoot = $objConfig->siteRoot();
-            //$userfiles = $objConfig->userfiles();
             $siteRootPath = $this->objConfig->getsiteRootPath();
             $contentPath = $this->objConfig->getcontentPath();
             $contentPath = substr($contentPath,0,strlen($contentPath)-1);
-            //$contextCode = $this->contextCode;
-			//$dir = "{$siteRootPath}{$contentPath}/content/$contextCode/workgroup/$workgroupId/$filetype";
 			$dir = "{$siteRootPath}{$contentPath}/calendar/attachments/$id";
 			if (!file_exists($dir)) {
 			    mkdir($dir,0777);
@@ -45,13 +45,11 @@ class attachments extends object {
 		$siteRootPath = $this->objConfig->getsiteRootPath();
 		$contentPath = $this->objConfig->getcontentPath();
 		$contentPath = substr($contentPath,0,strlen($contentPath)-1);
-		//$contextCode = $this->contextCode;
-		//$dir = "{$siteRootPath}{$contentPath}/content/$contextCode/workgroup/$workgroupId/$filetype";
 		$dir = "{$siteRootPath}{$contentPath}/calendar/attachments/$id";
-		$files = array();
 		if (!file_exists($dir)) {
-		    return $files;
+		    return array();
 		}
+		$files = array();
 		if ($handle = opendir($dir)) {
 		    while (false !== ($file = readdir($handle))) { 
 		        if ($file != "." && $file != ".." && is_file($dir.'/'.$file)) { 
@@ -70,8 +68,6 @@ class attachments extends object {
 		$siteRootPath = $this->objConfig->getsiteRootPath();
 		$contentPath = $this->objConfig->getcontentPath();
 		$contentPath = substr($contentPath,0,strlen($contentPath)-1);
-		//$contextCode = $this->contextCode;
-		//$dir = "{$siteRootPath}{$contentPath}/content/$contextCode/workgroup/$workgroupId/$filetype";
 		$path = "{$siteRootPath}{$contentPath}/calendar/attachments/$id/$filename";
 		unlink($path);
 	}
@@ -80,8 +76,6 @@ class attachments extends object {
 		$siteRootPath = $this->objConfig->getsiteRootPath();
 		$contentPath = $this->objConfig->getcontentPath();
 		$contentPath = substr($contentPath,0,strlen($contentPath)-1);
-		//$contextCode = $this->contextCode;
-		//$dir = "{$siteRootPath}{$contentPath}/content/$contextCode/workgroup/$workgroupId/$filetype";
 		$files = $this->listFiles($id);
 		foreach ($files as $file) {
 			unlink($file['path']);
@@ -96,8 +90,6 @@ class attachments extends object {
 		$siteRootPath = $this->objConfig->getsiteRootPath();
 		$contentPath = $this->objConfig->getcontentPath();
 		$contentPath = substr($contentPath,0,strlen($contentPath)-1);
-		//$contextCode = $this->contextCode;
-		//$dir = "{$siteRootPath}{$contentPath}/content/$contextCode/workgroup/$workgroupId/$filetype";
 		$tempDir = "{$siteRootPath}{$contentPath}/calendar/attachments/$tempId";
 		$dir = "{$siteRootPath}{$contentPath}/calendar/attachments/$event";
 		if (file_exists($tempDir)) {
