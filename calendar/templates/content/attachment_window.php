@@ -11,7 +11,7 @@ $objFileIcons =& $this->getObject('fileicons', 'files');
 $objIcon = $this->getObject('geticon', 'htmlelements');
 
 if (count($files) == 0) {
-	echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('phrase_noattachments_at_present', 'No Attachments at Present').'</div>';
+	echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('phrase_noattachments_at_present', 'calendar', 'No Attachments at Present').'</div>';
 } else {
 	$table = $this->getObject('htmltable', 'htmlelements');
 	$table->cellpadding = 4;
@@ -22,8 +22,8 @@ if (count($files) == 0) {
 		$table->addCell($objFileIcons->getFileIcon($file['filename']), 20);
 		$table->addCell($file['filename'], '90%');
 		
-		$array = array('action'=>'deleteattachment', 'id'=>$file['attachment_id'], 'mode'=>$mode, 'tempid'=>$id);
-		$deleteIcon = $objIcon->getDeleteIconWithConfirm($file['attachment_id'], $array, 'calendar', $this->objLanguage->languageText('phrase_confirm_delete_attachment', 'Are you sure you want to delete this attachment?'));
+		$array = array('action'=>'deleteattachment', 'filename'=>$file['filename'], 'mode'=>$mode, 'id'=>$id);
+		$deleteIcon = $objIcon->getDeleteIconWithConfirm(NULL, $array, 'calendar', $this->objLanguage->languageText('phrase_confirm_delete_attachment', 'Are you sure you want to delete this attachment?'));
 
 		$table->addCell($deleteIcon, 20);
 		$table->endRow();
@@ -32,14 +32,14 @@ if (count($files) == 0) {
 }
 
 
-$form = new form('uploadimage', $this->uri(array('action' => 'uploadattachment')));
+$form = new form('upload', $this->uri(array('action' => 'uploadattachment')));
     
 $form->extra = 'enctype="multipart/form-data"';
 
 
 
 
-$fileInput = new textinput('userFile');
+$fileInput = new textinput('upload');
 $fileInput->fldType = 'file';
 $fileInput->size = 50;
 

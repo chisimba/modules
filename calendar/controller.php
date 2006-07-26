@@ -87,13 +87,14 @@ class calendar extends controller
         $this->objLog=$this->newObject('logactivity', 'logger');
         //Log this module call
         $this->objLog->log();
-		
+
+		$this->objAttachments =& $this->getObject('attachments');
 		
 		// Load File Upload Class for attachments
-        //$this->objUploader =& $this->getObject('fileupload', 'filestore');
-		$this->objTempAttachments =& $this->getObject('dbtempattachments', 'calendarbase');
-        $this->objEventAttachments =& $this->getObject('dbeventattachments', 'calendarbase');
-    }
+//        $this->objUploader =& $this->getObject('fileupload'/*, 'filestore'*/);
+//		$this->objTempAttachments =& $this->getObject('dbtempattachments', 'calendarbase');
+//        $this->objEventAttachments =& $this->getObject('dbeventattachments', 'calendarbase');
+	}
     
     /**
 	* Method to process actions to be taken
@@ -102,6 +103,7 @@ class calendar extends controller
 	*/
     function dispatch($action=Null)
     {
+		$this->setVar('pageSuppressXML',true);
         $this->setLayoutTemplate('calendar_layout_tpl.php');
         
         switch ($action)
@@ -131,7 +133,7 @@ class calendar extends controller
 				return $this->downloadAttachment($this->getParam('id'), $this->getParam('event'));
 				
 			case 'deleteattachment':
-				return $this->deleteAttachment($this->getParam('id'), $this->getParam('mode'), $this->getParam('tempid'));
+				return $this->deleteAttachment($this->getParam('id'), $this->getParam('mode'), $this->getParam('filename'));
                 
             default:
                 return $this->showEvents();
@@ -271,15 +273,17 @@ class calendar extends controller
         $monthYear = $this->dateFunctions->getMonthYear($date);
 		
 		// Get List of Temporary Files
-		$files = $this->objTempAttachments->getTransferList($_POST['temporary_id']);
-		
+//		$files = $this->objTempAttachments->getTransferList($_POST['temporary_id']);
+//
 		// Transfer as Proper Attachment
-		foreach ($files as $file)
-		{
-			$this->objEventAttachments->insertSingle($file['attachment_id'], $event, $file['userId']);
-			$this->objTempAttachments->deleteAttachment($file['id'], $_POST['temporary_id']);
-		}
-        
+//		foreach ($files as $file)
+//		{
+//			$this->objEventAttachments->insertSingle($file['attachment_id'], $event, $file['userId']);
+//			$this->objTempAttachments->deleteAttachment($file['id'], $_POST['temporary_id']);
+//		}
+//      
+		$this->objAttachments->transfer($_POST['temporary_id'],$event);
+
         return $this->nextAction(NULL, array('message'=>'eventadded', 'month'=>$monthYear['month'], 'year'=>$monthYear['year'], 'events'=>$eventsList));
     }
     
@@ -487,6 +491,9 @@ class calendar extends controller
         } else {
 			$returnArray['message'] = 'notallowedtodelete';
 		}
+
+		$this->objAttachments->deleteAllFiles($id);
+
         
         // Return to Calendar
         return $this->nextAction(NULL, $returnArray);
@@ -511,9 +518,9 @@ class calendar extends controller
 		$this->setVarByRef('mode', $mode);
 		
 		if ($mode == 'add') {
-			$files = $this->objTempAttachments->getList($id);
+			$files = $this->objAttachments->listFiles($id);
 		} else if ($mode == 'edit') {
-			$files = $this->objEventAttachments->getListAttachments($id);
+			$files = $this->objAttachments->listFiles($id);
 		}
 		
 		$this->setVarByRef('files', $files);
@@ -528,16 +535,21 @@ class calendar extends controller
 	{
 		$id = $_POST['id'];
 		$mode = $_POST['mode'];
-		
-		if ($_FILES['userFile']['error'] != 4) {
-			$fileId = $this->objUploader->uploadFile($_FILES['userFile']);
-			if ($mode == 'add') {
-				$this->objTempAttachments->insertSingle($id, $fileId, $this->userId);
-			} else if ($mode == 'edit') {
-				$this->objEventAttachments->insertSingle($fileId, $id, $this->userId);
-			}
-		} 
-		
+		try {
+			$this->objAttachments->uploadFile($id);
+		}
+		catch (CustomException $e)
+		{
+			die($e);
+		}
+//		if ($_FILES['userFile']['error'] != 4) {
+//			$fileId = 
+//			if ($mode == 'add') {
+//				$this->objTempAttachments->insertSingle($id, $fileId, $this->userId);
+//			} else if ($mode == 'edit') {
+//				$this->objEventAttachments->insertSingle($fileId, $id, $this->userId);
+//			}
+//		} 
 		return $this->nextAction('tempframe', array('id'=>$id, 'mode'=>$mode));
 	}
 	
@@ -557,14 +569,9 @@ class calendar extends controller
 		}
 	}
 	
-	function deleteAttachment($id, $mode, $tempId)
+	function deleteAttachment($id, $mode, $filename)
 	{
-		if ($mode == 'edit') {
-			$this->objEventAttachments->deleteAttachment($id, $tempId);
-		} else if ($mode == 'add') {
-			$this->objTempAttachments->deleteAttachment($id, $tempId);
-		}
-		
+		$this->objAttachments->deleteFile($id, $filename);
 		return $this->nextAction('tempframe', array('id'=>$tempId, 'mode'=>$mode));
 	}
 	
@@ -585,26 +592,26 @@ class calendar extends controller
 		
 		
 		// Check if User has access to edit the event
-		if ($event['userorcontext'] == 0 && $event['userFirstEntry'] != $this->userId) {
-			$okToEdit = FALSE;
-		}
+//		if ($event['userorcontext'] == 0 && $event['userFirstEntry'] != $this->userId) {
+//			$okToEdit = FALSE;
+//		}
 		//echo $okToEdit;
 		// Check that event is either for the current context or a site event
-		if ($event['userorcontext'] == 1 && ($event['context'] == $this->contextCode || $event['context'] == 'root')) {
-			$okToEdit = TRUE;
-		} else if ($event['userorcontext'] == 1) { // Additional if to only use context events
-			$okToEdit = FALSE;
-		}
+//		if ($event['userorcontext'] == 1 && ($event['context'] == $this->contextCode || $event['context'] == 'root')) {
+//			$okToEdit = TRUE;
+//		} else if ($event['userorcontext'] == 1) { // Additional if to only use context events
+//			$okToEdit = FALSE;
+//		}
 		
 		// If event is for current event - check if user is lecturer
-		if ($event['userorcontext'] == 1 && $event['context'] == $this->contextCode && !$this->isContextLecturer) {
-			$okToEdit = FALSE;
-		}
+//		if ($event['userorcontext'] == 1 && $event['context'] == $this->contextCode && !$this->isContextLecturer) {
+//			$okToEdit = FALSE;
+//		}
 		
 		// If event is a site event - check if user is admin
-		if ($event['userorcontext'] == 1 && $event['context'] == 'root' && !$this->manageSiteCalendar) {
-			$okToEdit = FALSE;
-		}
+//		if ($event['userorcontext'] == 1 && $event['context'] == 'root' && !$this->manageSiteCalendar) {
+//			$okToEdit = FALSE;
+//		}
 		
 		// Redirect if no permission
 		if ($okToEdit == FALSE) {

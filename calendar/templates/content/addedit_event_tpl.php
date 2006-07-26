@@ -31,11 +31,11 @@ $this->objHelp=& $this->getObject('help','help');
 
 if ($mode == 'edit') {
     $action = 'updateevent';
-    $title = $this->objLanguage->languageText('mod_calendarbase_editevent');
+    $title = $this->objLanguage->languageText('mod_calendarbase_editevent', 'calendarbase');
 } else {
     $mode = 'add';
     $action = 'saveevent';
-    $title = $this->objLanguage->languageText('mod_calendarbase_addevent').$this->objHelp->show();
+    $title = $this->objLanguage->languageText('mod_calendarbase_addevent', 'calendarbase').$this->objHelp->show();
 }
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
@@ -78,13 +78,13 @@ if ($mode =='edit' && $event['multiday_event'] == 1) {
 $multiDayChoice->setBreakSpace(' / ');
 $multiDayChoice->extra='onClick="toggleMultiDayInput()"';
 
-$text = $this->objLanguage->languageText('mod_calendarbase_isthisamultidayevent', 'Is this a multiday event? ').$multiDayChoice->show();
+$text = $this->objLanguage->languageText('mod_calendarbase_isthisamultidayevent', 'calendarbase', 'Is this a multiday event? ').$multiDayChoice->show();
 
 $table->addCell($text, NULL, NULL, NULL, NULL, 'colspan="3"');
 $table->endRow();
 
 $table->startRow();
-$dateLabel = new label($this->objLanguage->languageText('mod_calendarbase_dateofevent').':', 'input_date');
+$dateLabel = new label($this->objLanguage->languageText('mod_calendarbase_dateofevent', 'calendarbase').':', 'input_date');
 $table->addCell($dateLabel->show());
 
 
@@ -102,7 +102,7 @@ $table->addCell($dateInput->show());
 
 // --- SECOND DATE --- //
 
-$dateLabel2 = new label($this->objLanguage->languageText('mod_calendarbase_dateofevent').':', 'input_date');
+$dateLabel2 = new label($this->objLanguage->languageText('mod_calendarbase_dateofevent', 'calendarbase').':', 'input_date');
 
 if ($mode =='add' || $event['multiday_event'] != 1) {
     $style=' style="visibility:hidden"';
@@ -146,20 +146,20 @@ It will default to the users personal calendar
 	
 $eventfor = new radio('eventfor');
 $eventfor->setBreakSpace('<br />');
-$eventfor->addOption('0', $this->objLanguage->languageText('mod_calendarbase_mypersonalcalendar', 'My Personal Calendar'));
+$eventfor->addOption('0', $this->objLanguage->languageText('mod_calendarbase_mypersonalcalendar', 'calendarbase', 'My Personal Calendar'));
 if ($isInContext && $isContextLecturer) {
-	$courselabel = ucwords($this->objLanguage->code2Txt('mod_calendarbase_coursecalendar', NULL, '{COURSE} [-context-] Calendar'));
+	$courselabel = ucwords($this->objLanguage->code2Txt('mod_calendarbase_coursecalendar', 'calendarbase', NULL, '{COURSE} [-context-] Calendar'));
 	$courselabel = str_replace('{COURSE}', $courseTitle, $courselabel);
 	$eventfor->addOption('1', $courselabel);
     $eventfor->setSelected('1');
 }
 if ($isAdmin) {
-	$eventfor->addOption('3', $this->objLanguage->languageText('mod_calendarbase_sitecalendar', 'Site Calendar'));
+	$eventfor->addOption('3', $this->objLanguage->languageText('mod_calendarbase_sitecalendar', 'calendarbase', 'Site Calendar'));
 }
 
 if (count($eventfor->options) > 1 && $mode != 'edit') { // Only show Radio buttons if more than one option is available
 	$table->startRow();
-	$titleLabel = new label($this->objLanguage->languageText('mod_calendarbase_addeventto', 'Add Event to').':', 'input_eventfor');
+	$titleLabel = new label($this->objLanguage->languageText('mod_calendarbase_addeventto', 'calendarbase', 'Add Event to').':', 'input_eventfor');
 	$table->addCell($titleLabel->show());
 	$table->addCell($eventfor->show());
 	$table->endRow();
@@ -168,7 +168,7 @@ if (count($eventfor->options) > 1 && $mode != 'edit') { // Only show Radio butto
 
 
 $table->startRow();
-$titleLabel = new label($this->objLanguage->languageText('mod_calendarbase_eventtitle').':', 'input_title');
+$titleLabel = new label($this->objLanguage->languageText('mod_calendarbase_eventtitle', 'calendarbase').':', 'input_title');
 $table->addCell($titleLabel->show());
 
 $titleInput = new textinput('title');
@@ -182,7 +182,7 @@ $table->addCell($titleInput->show(), NULL, NULL, NULL, NULL, 'colspan="3"');
 $table->endRow();
     
 $table->startRow();
-$detailsLabel = new label($this->objLanguage->languageText('mod_calendarbase_eventdetails').':', 'input_details');
+$detailsLabel = new label($this->objLanguage->languageText('mod_calendarbase_eventdetails', 'calendarbase').':', 'input_details');
 $table->addCell($detailsLabel->show());
 
 $detailsTextArea = new textarea('details');
@@ -193,7 +193,7 @@ $table->addCell($detailsTextArea->show(), NULL, NULL, NULL, NULL, 'colspan="3"')
 $table->endRow();
 
 $table->startRow();
-$urlLabel = new label($this->objLanguage->languageText('mod_calendarbase_relatedwebsite').':', 'input_url');
+$urlLabel = new label($this->objLanguage->languageText('mod_calendarbase_relatedwebsite', 'calendarbase').':', 'input_url');
 $table->addCell($urlLabel->show());
 
 $urlInput = new textinput('url');
@@ -214,7 +214,7 @@ $iframe->width = 450;
 $iframe->height = 120;
 
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('word_attachments', 'Attachments').':');
+$table->addCell($this->objLanguage->languageText('word_attachments', 'calendarbase', 'Attachments').':');
 $table->addCell($iframe->show(), NULL, NULL, NULL, NULL, 'colspan="2"');
 $table->endRow();
 
@@ -237,7 +237,7 @@ if ($mode == 'edit') {
     
 }
 
-$submitButton = new button('submitform', $this->objLanguage->languageText('mod_calendarbase_saveevent'));
+$submitButton = new button('submitform', $this->objLanguage->languageText('mod_calendarbase_saveevent', 'calendarbase'));
 $submitButton->setToSubmit();
 
 $cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel'));
