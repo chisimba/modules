@@ -19,8 +19,8 @@ if (!$GLOBALS['kewl_entry_point_run'])
 */
 interface ifsendmail
 {
-    abstract public function send();
-    abstract public function attach($file);
-    abstract public function clearAttachments();
+    function send();
+    function attach($file);
+    function clearAttachments();
 }
 ?>
