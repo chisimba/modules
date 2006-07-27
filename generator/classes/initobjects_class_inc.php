@@ -22,34 +22,31 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * @licence GNU/GPL
 *
 */
-class initobjects extends getset
+class initobjects
 {
 	/**
 	 * Method to generate the class for the controller
 	 */
-	function generate()
+	function show($arObjs=array())
 	{
-	    //
+		$ret = "";
+	    foreach (arObjs as $obj) {
+	        $ret .= $this->formatObject($obj);
+	    }
+	    return $ret;
 	}
 	
 	/**
-	* 
-	* Method to build the dispatch method of the controller class
-	* 
-	*/
-    function makeDispatch()
-    {
-        //
-    }
-    
-    function makeInit()
-    {
-        //
-    }
-    
-    function buildDynamicMethods()
-    {
-        //
-    }
+	 * 
+	 * Method to get the user
+	 * 
+	 */
+	 function formatObject($obj)
+	 {
+	     return "    /**\n\    *\n    * @public string object \$" . $obj 
+	       . " to hold an instance of the $obj \n*\n*/\n"
+	       . "    public \$$obj\n\n";
+
+	 }
 }
 ?>

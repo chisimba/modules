@@ -10,7 +10,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * 
 * Class to generate a Chisimba controller
 * 
-* Usaeage: class mygeneratorclass extends abgenerator implements ifgenerator
+* Usaeage: class gencontroller extends abgenerator implements ifgenerator
 *
 * @author Derek Keats
 * @category Chisimba
