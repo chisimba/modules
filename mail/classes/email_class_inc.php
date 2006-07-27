@@ -114,7 +114,9 @@ class email extends absendmail implements ifsendmail
 		//Add the CC addresses to the mailer
 		if (isset($this->cc)) {
 			if (isarray($this->cc)) {
-			    
+			    foreach ($this->cc as $address) {
+			        $this->objBaseMail->AddCC($address);
+			    }
 			} else {
 			    $this->objBaseMail->AddCC($this->cc); 
 			}
@@ -122,7 +124,9 @@ class email extends absendmail implements ifsendmail
 		//Add the BCC addresses to the mailer
 		if (isset($this->bc)) {
 			if (isarray($this->bcc)) {
-			    
+			    foreach ($this->bcc as $address) {
+			        $this->objBaseMail->AddBCC($address);
+			    }
 			} else {
 			    $this->objBaseMail->AddBCC($this->bcc); 
 			}
