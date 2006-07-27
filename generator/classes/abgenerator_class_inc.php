@@ -39,6 +39,13 @@ abstract class abgenertor
     */
 	 protected $className;
 
+    /**
+    *
+    * @var string array $initObjects An array of the objects to be provided in the init class
+    *
+    */
+	 protected $initObjects = array();
+
 	/**
 	 * 
 	 * Method to return the initial security settings for the top of the page

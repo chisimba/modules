@@ -8,9 +8,12 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 * 
-* Class to generate a Chisimba controller
+* Class to return the init strings for common objects that can be instantiated
+* in the init method of a class being generated
 * 
-* Usaeage: class mygeneratorclass extends abgenerator implements ifgenerator
+* Usaeage: $iO = this->getObject('initobjects');
+*          $iO->objectList=array('$objUser', '$objConfig');
+*          echo $this->iO->show();
 *
 * @author Derek Keats
 * @category Chisimba
@@ -19,7 +22,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * @licence GNU/GPL
 *
 */
-class gencontroller extends abgenerator implements ifgenerator
+class initobjects extends getset
 {
 	/**
 	 * Method to generate the class for the controller
