@@ -3,7 +3,7 @@
 
 $objFeatureBox = $this->newObject('featurebox', 'navigation');
 $objBlocks = & $this->newObject('blocks', 'blocks');
-
+$objLucene = & $this->newObject('results', 'lucene');
 
 /******************* BEGIN RIGHTSIDE BLOCKS ******************************/
 // Right Column initialize
@@ -26,10 +26,16 @@ $rightSideColumn .= $objBlocks->showBlock('wikipedia', 'websearch');
 $rightSideColumn .= $objBlocks->showBlock('dictionary', 'dictionary');
 /******************* END  RIGHTSIDE BLOCKS ******************************/
 
+if(!$this->getParam('query') == '')
+{
+	
+	$searchResults = $objLucene->show($this->getParam('query'));
+}
+
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
        $cssLayout->setNumColumns(3);
        $cssLayout->setLeftColumnContent($this->getSectionMenu());
-       $cssLayout->setMiddleColumnContent($this->getContent());
+       $cssLayout->setMiddleColumnContent($this->getContent().$searchResults.$this->footerStr);
        $cssLayout->setRightColumnContent($rightSideColumn);
        echo $cssLayout->show(); 
 
