@@ -52,7 +52,7 @@ if($files)
 		
 		$smalltable = & $this->newObject('htmltable' , 'htmlelements');
 		$smalltable->startRow();
-		$smalltable->addCell('<img src="'.$file['path'].'" width="80" height="77" alt="'.$file['name'].' - 3.31 Kb" border="0">');
+		$smalltable->addCell('<img src="'.$file['path'].'" width="80" height="77" alt="'.$file['name'].'" border="0" />');
 		$smalltable->endRow();
 		
 		$smalltable->startRow();

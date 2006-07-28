@@ -16,6 +16,7 @@ $inputNewFolder = & $this->newObject('textinput', 'htmlelements');
 
 //form for creating folders
 $form2->name = 'frmlist';
+$form2->id = 'frmlist';
 $form2->setAction($this->uri(array('action' => 'createfolder', 'folder' => $this->getParam('folder')), 'mediamanager'));
 $inputNewFolder->name = 'newfolder';
 $inputNewFolder->value = '';
@@ -25,6 +26,7 @@ $form2->addToForm($inputNewFolder);
 
 //create the form
 $form->name = 'frmmedia';
+$form->id = 'frmmedia';
 $form->setAction($this->uri(array('action' => 'upload', 'folder' => $this->getParam('folder')), 'mediamanager'));
 $form->extra = 'enctype="multipart/form-data"';
 //$form->displayType = 4;
@@ -52,6 +54,7 @@ $input->size = '59';
 //create folder
 $input2->value = '';
 $input2->name = 'createfolder';
+$input2->setId('createfolder');
 $input2->size = '70';
 
 $smalltable->cellspacing = 10;
@@ -67,7 +70,7 @@ $smalltable->endRow();
 
 
 
-$fieldset2->setLegend('<h1>Media Mananger</h1>');
+$fieldset2->setLegend('<h1>Media Manager</h1>');
 $this->_objMedia->getFolders();
 
 $dropdown->addFromDB($this->_objMedia->getFolders(),'foldername','foldername',$this->getParam('folder'));
@@ -115,11 +118,12 @@ echo $form2->show();
 
 	function newFolder()
 	{
-		var selection = document.forms[1].createfolder;
-		var newSelection = document.forms[0].newfolder;
+		
+		var selection = document.forms['<?php echo $form->name ?>'].createfolder;
+		var newSelection = document.forms['<?php echo $form2->name ?>'].newfolder;
 		newSelection.value = selection.value;
-		document.forms[0].submit();
-		//alert(input.value);
+		document.forms['<?php echo $form->name ?>'].submit();
+		alert(input.value);
 		
 	}
 
