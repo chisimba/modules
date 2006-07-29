@@ -33,8 +33,6 @@ $fields = array(
 		),
 	'dateLastUpdated' => array(
 		'type' => 'date',
-		'notnull' => 1,
-		'default' => '0000-00-00 00:00:00'
 		)
 	);
 

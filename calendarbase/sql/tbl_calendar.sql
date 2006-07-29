@@ -13,14 +13,12 @@ $fields = array(
 		),
 	'multiday_event' => array(
 		'type' => 'text',
-		'length' => 1,
+		'length' => 10,
 		'notnull' => 1,
         'default' => 0
 		),
 	'eventdate' => array(
 		'type' => 'date',
-		'notnull' => 1,
-		'default' => '0000-00-00'
 		),
 	'multiday_event_start_id' => array(
 		'type' => 'text'
@@ -30,7 +28,8 @@ $fields = array(
 		'length' => 100
 		),
 	'eventdetails' => array(
-		'type' => 'text'
+		'type' => 'text',
+		'length' => 255
 		),
 	'eventurl' => array(
 		'type' => 'text',
@@ -38,7 +37,7 @@ $fields = array(
 		),
 	'userorcontext' => array(
 		'type' => 'text',
-		'length' => 1
+		'length' => 10
 		),
 	'context' => array(
 		'type' => 'text',
@@ -50,7 +49,7 @@ $fields = array(
 		),
 	'showusers' => array(
 		'type' => 'text',
-		'length' => 1
+		'length' => 10
 		),
 	'userFirstEntry' => array(
 		'type' => 'text',
@@ -62,22 +61,16 @@ $fields = array(
 		),
 	'dateFirstEntry' => array(
 		'type' => 'date',
-		'notnull' => 1,
-		'default' => '0000-00-00 00:00:00'
 		),
 	'dateLastModified' => array(
 		'type' => 'date',
-		'notnull' => 1,
-		'default' => '0000-00-00 00:00:00'
 		),
 	'updated' => array(
 		'type' => 'date',
-		'notnull' => 1,
-		'default' => '0000-00-00 00:00:00'
 		),
 	);
-	
+
 //create other indexes here...
-	
+
 
 ?>
