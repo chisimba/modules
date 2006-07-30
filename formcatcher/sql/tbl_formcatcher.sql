@@ -1,17 +1,59 @@
 <?php
-$sqldata[] = "CREATE TABLE tbl_formcatcher (
-   `id` varchar(32) NOT NULL,
-   `creatorId` varchar(25) NOT NULL,
-   `dateCreated` datetime NOT NULL,
-   `modifierId` varchar(25) NULL,
-   `dateModified` datetime NULL,
-   `usefullpage` char(1) NOT NULL DEFAULT 0,
-   `title` varchar(250) NULL,
-   `email` varchar(250) NULL,
-   `link` varchar(250) NULL,
-   `filename` varchar(250) NULL,
-   `description` varchar(250) NULL,
-   `modified` timestamp(14) NOT NULL,
-   `context` varchar(50) NOT NULL,
- PRIMARY KEY (id)) TYPE=INNODB ";
+//5ive definition
+$tablename = 'tbl_formcatcher';
+
+//Options line for comments, encoding and character set
+$options = array('comment' => 'Metadata for uploaded forms used in the Formcatcher module.', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+
+$fields = array(
+	'id' => array(
+		'type' => 'text',
+		'length' => 32
+	),
+	'creatorId' => array(
+		'type' => 'text',
+		'length' => 25
+	),
+	'dateCreated' => array(
+		'type' => 'timestamp'
+	),
+	'modifierId' => array(
+		'type' => 'text',
+		'length' => 26
+	),	
+	'dateModified' => array(
+		'type' =>  'timestamp'
+	),	
+	'usefullpage' => array(
+		'type' => 'text',
+		'length' => 1
+	),
+	'title' => array(
+		'type' => 'text',
+		'length' => 250
+	),
+	'email' => array(
+		'type' => 'text',
+		'length' => 250
+	),
+	'link' => array(
+		'type' => 'text',
+		'length' => 250
+	),
+	'filename' => array(
+		'type' => 'text',
+		'length' => 250
+	),
+	'description' => array(
+		'type' => 'text',
+		'length' => 250
+	),
+	'context' => array(
+		'type' => 'text',
+		'length' => 50
+	),
+	'updated' => array(
+		'type' => 'timestamp'
+	)
+);
 ?>

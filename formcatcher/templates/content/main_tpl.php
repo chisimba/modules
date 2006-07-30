@@ -115,11 +115,6 @@ if (isset($ar)) {
             } else {
                 $ed = "&nbsp;";
             }
-            
-            
-            
-
-
             // Show add icon only if a valid action
             if( $this->isValid('delete') ) {
                 // The delete icon with link uses confirm delete utility
@@ -138,9 +133,6 @@ if (isset($ar)) {
             } else {
                 $conf = "&nbsp;";
             }
-
-
-            
             $myTable->addCell($ed . " " . $conf, $oddOrEven);
             $myTable->endRow(); 
             $rowcount = ($rowcount == 0) ? 1 : 0;
@@ -153,7 +145,7 @@ if ($arFound !== TRUE) {
     $myTable->startRow();
     $myTable->addCell("<div class=\"noRecordsMessage\">"
        . $objLanguage->languageText("mod_formcatcher_errnoforms")
-       ."</div>", "odd", "colspan=\"4\"");
+       ."</div>", NULL, NULL, NULL, "odd", "colspan=\"4\"");
     $myTable->endRow(); 
 }
 

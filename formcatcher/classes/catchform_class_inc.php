@@ -9,7 +9,8 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 * 
-* Gets a formatted list of sound files in the current context.
+* Catches an uploaded form and processes it, either sending
+* via email or saving it to a delimited file.
 * 
 * @author Derek Keats
 * 
