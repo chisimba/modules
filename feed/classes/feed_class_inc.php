@@ -30,6 +30,7 @@ class feed extends object
 	 * @access public
 	 * @copyright AVOIR
 	 * @author Paul Scott
+	 * @filesource
 	 */
 
 }
