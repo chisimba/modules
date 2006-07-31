@@ -30,7 +30,7 @@ $table->addHeaderCell('Published');
 //$table->addHeaderCell('Order');
 $table->addHeaderCell('Access');
 $table->addHeaderCell('Section');
-$table->addHeaderCell('Category');
+//$table->addHeaderCell('Category');
 //$table->addHeaderCell('#Active');
 
 $table->endHeaderRow();   
@@ -42,8 +42,7 @@ $rowcount = 0;
 foreach($files as $file)
 {
     $arrFile = $this->_objContent->getContentPage($file['content_id']);
-   // print_r($arrFile).'<br />';
-	print $file['content_id'];
+   
    $link->link = $arrFile['title'];
 	$link->href = $this->uri(array('action' => 'addcontent', 'mode' => 'edit', 'id' => $arrFile['id']));
 
@@ -60,7 +59,7 @@ foreach($files as $file)
 	$link->href = $this->uri(array('action' => 'addsection', 'mode' => 'edit', 'id' => $arrFile['sectionid']));
 	
 	$tableRow[]=$link->show();
-	$tableRow[]=$this->_objCategories->getMenuText($arrFile['catid']);
+	//$tableRow[]=$this->_objCategories->getMenuText($arrFile['catid']);
 	//$table->addCell($this->_objCategories->getCatCount($section['id']));
 	//$table->addCell($section['created']);
 
