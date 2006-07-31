@@ -27,6 +27,8 @@ class feed extends object
 	 * Feeds and Entries, specific implementations of feeds and entries for RSS and Atom, and a behind-the-scenes helper for making the natural
 	 * syntax magic work.
 	 *
+	 * This module will depend on another module called httpclient heavily to fetch the feeds
+	 *
 	 * @access public
 	 * @copyright AVOIR
 	 * @author Paul Scott
