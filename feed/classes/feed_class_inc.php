@@ -33,4 +33,54 @@ class feed extends object
 	 * @filesource
 	 */
 
-}
+	/**
+	 * The language object
+	 *
+	 * @var object $objLanguage
+	 * @access public
+	 */
+	public $objLanguage;
+
+	/**
+     * HTTP client object to use for retrieving feeds
+     *
+     * @var abHttpClient
+     * @access protected
+     */
+    protected static $_httpClient = null;
+
+    /**
+     * Override HTTP PUT and DELETE request methods?
+     *
+     * @var boolean
+     * @access protected
+     */
+    protected static $_httpMethodOverride = false;
+
+    /**
+     * Namespaces array that we will be using.
+     *
+     * @var array
+     * @access protected
+     */
+    protected static $_namespaces = array(
+        'opensearch' => 'http://a9.com/-/spec/opensearchrss/1.0/',
+        'atom' => 'http://www.w3.org/2005/Atom',
+        'rss' => 'http://blogs.law.harvard.edu/tech/rss',
+    );
+
+	/**
+	 * Standard engine init method to get the necessary objects for the module to function correctly
+	 *
+	 * @access public
+	 * @param void
+	 * @return void
+	 */
+	public function init()
+	{
+		//Load the language object to the public property $objLanguage
+		$this->objLanguage = $this->getObject('language', 'language');
+	}
+
+}//end class
+?>
