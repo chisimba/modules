@@ -23,7 +23,7 @@ class feed extends object
 	 * It provides a natural syntax for accessing elements of feeds, feed attributes, and entry attributes.
 	 * Feed also has extensive support for modifying feed and entry structure with the same natural syntax, and turning the result back into XML.
 	 * In the future, this modification support could provide support for the Atom Publishing Protocol.
-	 * Programmatically, Feed consists of a base Feed class, abstract Feed_Abstract and Feed_EntryAbstract base classes for representing
+	 * Programmatically, Feed consists of a base Feed class, abstract abFeedAbstract and abFeedEntryAbstract base classes for representing
 	 * Feeds and Entries, specific implementations of feeds and entries for RSS and Atom, and a behind-the-scenes helper for making the natural
 	 * syntax magic work.
 	 *
