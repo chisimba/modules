@@ -28,7 +28,7 @@ $table->addHeaderCell('Published');
 //$table->addHeaderCell('Order');
 $table->addHeaderCell('Access');
 $table->addHeaderCell('Section ID');
-$table->addHeaderCell('#Categories');
+//$table->addHeaderCell('#Categories');
 //$table->addHeaderCell('#Active');
 
 $table->endHeaderRow();   
@@ -56,7 +56,7 @@ foreach($arrSections as $section)
 	$tableRow[]=$this->_objUtils->getAccess($section['access']);
 	$tableRow[]=$section['id'];
 	//$table->addCell($section['catid']);
-	$tableRow[]=$this->_objCategories->getCatCount($section['id']);
+	//$tableRow[]=$this->_objCategories->getCatCount($section['id']);
 	//$table->addCell($section['created']);
 
   	$table->addRow($tableRow, $oddOrEven);

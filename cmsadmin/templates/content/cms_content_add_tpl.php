@@ -56,7 +56,7 @@ if($this->getParam('id') == '')
 
 //setup form
 $objForm->name='addfrm';
-$objForm->setAction($this->uri(array('action'=> $action, 'id' => $contentId),'cmsadmin'));
+$objForm->setAction($this->uri(array('action'=> $action, 'id' => $contentId, 'frontpage' => $this->getParam('frontpage')),'cmsadmin'));
 $objForm->setDisplayType(1);   
 
 
@@ -109,8 +109,8 @@ $table->endRow();
 $table->startRow();
 $table->addCell('Menu Text');
 $table->addCell($menuTextInput->show());
-$table->addCell('Categories');
-$table->addCell($category->show());
+//$table->addCell('Categories');
+//$table->addCell($category->show());
 $table->endRow();
 
 $table->startRow();
@@ -157,9 +157,9 @@ $objForm->addToForm($table2);
 //$objForm->addToForm($bodyInput);
 //$objForm->addToForm($button);
 
-print  $h3->show();
+echo   $h3->show();
 
-print $objForm->show();
-
+echo $objForm->show();
+//echo $introInput->show();
 
 ?>

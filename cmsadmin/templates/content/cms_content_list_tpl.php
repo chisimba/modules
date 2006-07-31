@@ -28,7 +28,7 @@ $table->addHeaderCell('Published');
 //$table->addHeaderCell('Order');
 $table->addHeaderCell('Access');
 $table->addHeaderCell('Section');
-$table->addHeaderCell('Category');
+//$table->addHeaderCell('Category');
 $table->addHeaderCell('Author');
 $table->addHeaderCell('Date');
 $table->endHeaderRow();   
@@ -50,12 +50,17 @@ foreach($arrPages as $page)
     
 	$tableRow[]=$link->show();
 	$tableRow[]=$this->_objUtils->getCheckIcon($this->_objFrontPage->isFrontPage($page['id']), FALSE);
-    $tableRow[]=$this->_objUtils->getCheckIcon($page['published'], TRUE);
+	
+	//the publish link
+	$link->href = $this->uri(array('action' => 'contentpublish', 'id' => $page['id']));
+    $link->link = $this->_objUtils->getCheckIcon($page['published']);
+    
+    $tableRow[]= $link->show(); //$this->_objUtils->getCheckIcon($page['published'], TRUE);
   //  $table->addCell('up down');
     //$table->addCell($page['ordering']);
 	$tableRow[]=$this->_objUtils->getAccess($page['access']);
 	$tableRow[]=$this->_objSections->getMenuText($page['sectionid']);
-	$tableRow[]=$this->_objCategories->getMenuText($page['catid']);
+	//$tableRow[]=$this->_objCategories->getMenuText($page['catid']);
 	$tableRow[]=$this->_objUser->fullname($page['created_by']);
 	$tableRow[]=$this->_objUtils->formatShortDate($page['created']);
 

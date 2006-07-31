@@ -38,11 +38,14 @@ $table->endHeaderRow();
 $rowcount = 0;
 //var_dump($files);
 //setup the tables rows  and loop though the records
+
 foreach($files as $file)
 {
     $arrFile = $this->_objContent->getContentPage($file['content_id']);
-	$link->link = $arrFile['title'];
-	$link->href = $this->uri(array('action' => 'addcategory', 'mode' => 'edit', 'id' => $arrFile['id']));
+   // print_r($arrFile).'<br />';
+	print $file['content_id'];
+   $link->link = $arrFile['title'];
+	$link->href = $this->uri(array('action' => 'addcontent', 'mode' => 'edit', 'id' => $arrFile['id']));
 
 	$oddOrEven = ($rowcount == 0) ? "even" : "odd";
 	

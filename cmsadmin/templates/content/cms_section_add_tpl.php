@@ -69,7 +69,7 @@ if($editmode)
 	$menuTextInput->value = '';
 	$bodyInput->value = '';
 	$layout = 0;
-	$imageSRC = $this->_objConfig->getsiteRoot().'skins/_common/blank.png"';
+	$imageSRC = $this->_objConfig->getsiteRoot().'skins/_common/blank.png';
 }
 
 //title

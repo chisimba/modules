@@ -831,7 +831,7 @@ class cmsutils extends object
 		$nodes = array();
 		$nodes[] = array('text' => 'Content', 'uri' => $this->uri(array('action' => 'content')));
 		$nodes[] = array('text' => 'Sections', 'uri' => $this->uri(array('action' => 'sections')));
-		$nodes[] = array('text' => 'Categories', 'uri' => $this->uri(array('action' => 'categories')));
+		//$nodes[] = array('text' => 'Categories', 'uri' => $this->uri(array('action' => 'categories')));
 		$nodes[] = array('text' => 'Front Page', 'uri' => $this->uri(array('action' => 'frontpages')));
 		$nodes[] = array('text' => 'Media', 'uri' => $this->uri(null,'mediamanager'))	;	
 		

@@ -209,5 +209,25 @@ class dbcontent extends dbTable
 		return 0;	
 	}
 	
+	/**
+	 * Method to toggle the publish field 
+	 * 
+	 * @param string id The id if the content
+	 * @access public
+	 * @return boolean
+	 * @author Wesley Nitsckie
+	 */
+	public function togglePublish($id)
+	{
+	   $row = $this->getContentPage($id);
+	   if($row['published'] == 1)
+	   {    
+	       return $this->update('id', $id , array('published' => 0) );    
+	   } else {
+	       return $this->update('id', $id , array('published' => 1) );    
+	   }
+	    
+	}
+	
 }
 ?>

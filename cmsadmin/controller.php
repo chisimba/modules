@@ -127,19 +127,39 @@ class cmsadmin extends controller
                        	
             	case null:
                 	
-                
+                //content section
                 case 'content':
                 	return 'cms_content_list_tpl.php';            	
+                
                 case 'addcontent':
-    				return 'cms_content_add_tpl.php';			
-    			case 'createcontent':
+                	return 'cms_content_add_tpl.php';			                	
+    			
+                case 'createcontent':
     				$this->_objContent->add();
-    				return $this->nextAction('content');
+
+    				if($this->getParam('frontpage') == 'true')
+                	{
+                		return $this->nextAction(array('action' => 'frontpages'), 'cmsadmin');
+                	} else {
+    					return $this->nextAction('content');    					
+                	}    				
+    				
     			case 'editcontent':
     				$this->_objContent->edit();
-    				return $this->nextAction('content');
+    				
+    				if($this->getParam('frontpage') == 'true')
+                	{
+                		return $this->nextAction(array('action' => 'frontpages'), 'cmsadmin');
+                	} else {
+    					return $this->nextAction('content');
+                	}
+                	
+    			case 'contentpublish':
+    			    $this->_objContent->togglePublish($this->getParam('id'));
+    			    return $this->nextAction('content');
     			
     			
+    			//section section
     			
     			case 'sections':
     				return 'cms_section_list_tpl.php';
@@ -155,7 +175,8 @@ class cmsadmin extends controller
     			    $this->_objSections->togglePublish($this->getParam('id'));
     			    return $this->nextAction('sections');
     				
-    				
+    			//categories section	
+    			/*
     			case 'categories':
     				return 'cms_category_list_tpl.php';
     			case 'addcategory':
@@ -166,7 +187,10 @@ class cmsadmin extends controller
     			case 'editcategory':
     				$this->_objCategories->edit();
     				return $this->nextAction('categories');
+    				*/
     				
+    			//front page section	
+    			
     		    case 'frontpages':
     		        $this->setVar('files', $this->_objFrontPage->getFrontPages());
     		        return 'cms_frontpage_manager_tpl.php';
