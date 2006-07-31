@@ -9,10 +9,9 @@ $fields = array(
 		'length' => 32
 		),
 	'content_id' => array(
-		'type' => 'integer',
-		'length' => 11,
-        'notnull' => TRUE,
-        'default' => '0'
+		'type' => 'varchar',
+		'length' => 32,
+        'notnull' => TRUE,        
 		),
 	'ordering' => array(
 		'type' => 'integer',
