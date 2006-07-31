@@ -30,6 +30,12 @@ class client extends object
 		}
 	}
 
+	/**
+	 * Method to get a specified url and return it to the calling class
+	 *
+	 * @param mixed $url
+	 * @return string
+	 */
 	public function getURL($url)
 	{
 		$http = new httpclients($url);
