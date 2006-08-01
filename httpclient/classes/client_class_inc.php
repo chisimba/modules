@@ -38,9 +38,11 @@ class client extends object
 	 * @return string
 	 * @example $this->getUrl('http://5ive.uwc.ac.za/, array('Accept: text/html', 'Accept-Language: en-us,en;q=0.5'));
 	 */
-	public function getURL($url, $headers = 'Accept: text/html')
+	public function getURL($url, $headers = 'Accept: text/html', $proxy = array())
 	{
 		$http = new httpclients();
+		$http->setProxy($proxy);
+		$http->setAuth($proxy['user'],$proxy['password']);
 		$http->setUri($url,$headers);
         $response = $http->get();
         if ($response->isSuccessful()) {
@@ -73,5 +75,7 @@ class client extends object
     		return $httpResponse;
     	}
     }
+
+
 }
 ?>

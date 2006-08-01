@@ -5,6 +5,34 @@ require_once('abhttpclient_class_inc.php');
 class httpclients extends abhttpclient
 {
     /**
+     * Supported HTTP Authentication methods
+     *
+     */
+    const AUTH_BASIC = 'basic';
+    //const AUTH_DIGEST = 'digest'; <-- not implemented yet
+
+	/**
+     * HTTP proxy settings
+     *
+     * @var array
+     */
+    protected $proxy = array('host' => null, 'port' => null, 'user' => null, 'password' => null);
+
+    /**
+     * HTTP Authentication settings
+     *
+     * Expected to be an associative array with this structure:
+     * $this->auth = array('user' => 'username', 'password' => 'password', 'type' => 'basic')
+     * Where 'type' should be one of the supported authentication types (see the AUTH_*
+     * constants), for example 'basic' or 'digest'.
+     *
+     * If null, no authentication will be used.
+     *
+     * @var array|null
+     */
+    protected $auth;
+
+    /**
      * Class Constructor, create and validate Uri object
      *
      * @param  string|Uri|null $uri
@@ -22,6 +50,57 @@ class httpclients extends abhttpclient
     	}
     }
 
+    /**
+     * Set a proxy server for the request
+     *
+     * @param string|null $host Hostname or null to disable proxy
+     * @param int $port
+     * @param string $user
+     * @param string $password
+     */
+    public function setProxy($host, $port = 8080, $user = null, $password = null)
+    {
+        $this->proxy = array(
+            'host' => $host,
+            'port' => $port,
+            'user' => $user,
+            'password' => $password
+        );
+    }
+
+    /**
+     * Set HTTP authentication parameters
+     *
+     * $type should be one of the supported types - see the self::AUTH_*
+     * constants.
+     *
+     * To disable authentication:
+     *     @example $this->setAuth(false);
+     *
+     * @see http://www.faqs.org/rfcs/rfc2617.html
+     * @param string|false $user User name or false disable authentication
+     * @param string $password Password
+     * @param string $type Authentication type
+     */
+    public function setAuth($user, $password = '', $type = self::AUTH_BASIC)
+    {
+        // If we got false or null, disable authentication
+        if ($user === false || $user === null) {
+            $this->auth = null;
+
+        // Else, set up authentication
+        } else {
+            // Check we got a proper authentication type
+            if (! defined('self::AUTH_' . strtoupper($type)))
+                throw new customException("Invalid or not supported authentication type: '$auth'");
+
+            $this->auth = array(
+                'user' => (string) $user,
+                'password' => (string) $password,
+                'type' => $type
+            );
+        }
+    }
 
    /**
      * Send a GET HTTP Request
@@ -224,6 +303,42 @@ class httpclients extends abhttpclient
         fclose($socket);
 
         return new httpresponse($responseCode, $responseHeaders, $responseBody);
+    }
+
+    /**
+     * Create a HTTP authentication "Authorization:" header according to the
+     * specified user, password and authentication method.
+     *
+     * @see http://www.faqs.org/rfcs/rfc2617.html
+     * @param string $user
+     * @param string $password
+     * @param string $type
+     * @return string
+     */
+    static public function encodeAuthHeader($user, $password, $type = self::AUTH_BASIC)
+    {
+        $authHeader = null;
+
+        switch ($type) {
+            case self::AUTH_BASIC:
+                // In basic authentication, the user name cannot contain ":"
+                if (strpos($user, ':') !== false)
+                    throw new customException("The user name cannot contain ':' in 'Basic' HTTP authentication");
+
+                $authHeader = 'Basic ' . base64_encode($user . ':' . $password);
+                break;
+
+            //case self::AUTH_DIGEST:
+                /**
+                 * @todo Implement digest authentication
+                 */
+            //    break;
+
+            default:
+                throw new customException("Not a supported HTTP authentication type: '$type'");
+        }
+
+        return $authHeader;
     }
 }
 ?>
