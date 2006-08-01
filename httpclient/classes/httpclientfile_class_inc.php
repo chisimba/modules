@@ -51,7 +51,7 @@ class httpclientfile extends abhttpclient
     {
         // if the filename was never set or set to '', fake a code 400
         if (empty($this->_filename)) {
-            return httpresponse::factory(400, array(), '');
+            return new httpresponse(400, array(), '');
         }
 
         $file = @file_get_contents($this->_filename);
@@ -59,7 +59,7 @@ class httpclientfile extends abhttpclient
             throw new customException("Failed reading file \"{$this->_filename}\"");
         }
 
-        return httpresponse::factory(200, array(), $file);
+        return new httpresponse(200, array(), $file);
     }
 
 
@@ -81,7 +81,7 @@ class httpclientfile extends abhttpclient
               . implode("\n", $request) . "\n\n"
               . $data . "\n" );
 
-        return httpresponse::factory(201, array(), '');
+        return new httpresponse(201, array(), '');
     }
 
 
@@ -103,7 +103,7 @@ class httpclientfile extends abhttpclient
               . implode("\n", $request) . "\n\n"
               . $data . "\n" );
 
-        return httpresponse::factory(200, array(), '');
+        return new httpresponse(200, array(), '');
     }
 
 
@@ -121,7 +121,7 @@ class httpclientfile extends abhttpclient
               . " does not support DELETE. Would issue the following request:\n\n"
               . implode("\n", $request) . "\n" );
 
-        return httpresponse::factory(204, array(), '');
+        return new httpresponse(204, array(), '');
     }
 
 }

@@ -47,7 +47,15 @@ class httpclient extends controller
         {
             default:
                 try {
-                	echo $this->objClient->getUrl('http://www.google.com',$headers);
+                	$proxy = array(
+          			  'host' => $host,
+            		  'port' => $port,
+            		  'user' => $user,
+            		  'password' => $pass
+        			);
+
+
+                	echo $this->objClient->getUrl('http://www.google.com/','Accept: text/html',$proxy);
     			} catch (customException $e) {
         			echo $e->getMessage();
     			}
