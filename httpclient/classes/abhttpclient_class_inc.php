@@ -91,7 +91,7 @@ abstract class abhttpclient
         if ($uri instanceof aburi) {
             $this->_uri = $uri;
         } else {
-            // $uri string will be validated automatically by Zend_Uri.
+            // $uri string will be validated automatically by Uri.
             $this->_uri = aburi::factory($uri);
         }
 
