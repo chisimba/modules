@@ -113,14 +113,17 @@ class mediamanager extends controller
         		$this->setLayoutTemplate('mm_layout_tpl.php');
         		return 'mm_main_tpl.php';
         	case 'showmedia':
-        	
-        		$this->setVar('pageSuppressContainer', TRUE);
+        		//$this->setLayoutTemplate('mm_layout_tpl.php');
+        		
+        		/*$this->setVar('pageSuppressContainer', TRUE);
 	            $this->setVar('pageSuppressBanner', TRUE);
 	            $this->setVar('pageSuppressToolbar', TRUE);
 	            $this->setVar('suppressFooter', TRUE);
 	            $this->setVar('pageSuppressIM', TRUE);
-	          
+	          */
 	            $this->setVar('files', $this->_objMedia->getFiles($this->getParam('folder')));
+	            $this->setVar('folders', $this->_objMedia->getFolderFolders($this->getParam('folder')));
+	            $this->setPageTemplate('mm_page_tpl.php');
         		return 'mm_listmedia_tpl.php';
         	case 'upload':        
         		$this->_objMedia->upload();
@@ -133,7 +136,11 @@ class mediamanager extends controller
             		$newFolder = '';
             	}
             	return $this->nextAction('frontpage', array('folder' => $this->getParam('folder').$newFolder));
-           
+            	
+           //delete an image
+           case 'delimage';
+           		$this->_objMedia->removeFile($this->getParam('path'));
+           		return $this->nextAction(array('action' => 'frontpage' , 'folder' => $this->getParam('folder')));
         }
 	}
 

@@ -61,11 +61,13 @@ $smalltable->cellspacing = 10;
 $smalltable->startRow();
 $smalltable->addCell('Upload');
 $smalltable->addCell($input->show().'<span class="warning" >Max size = 16M</span>');
+$smalltable->addCell($uploadButton->show());
 $smalltable->endRow();
 
 $smalltable->startRow();
 $smalltable->addCell('Create Folder');
 $smalltable->addCell($input2->show());
+$smalltable->addCell($createButton->show());
 $smalltable->endRow();
 
 
@@ -79,8 +81,9 @@ $dropdown->name = 'dirPath';
 $dropdown->id = 'dirPath';
 
 $iframe->width = '100%';
-$iframe->height = '170';
+$iframe->height = '270';
 $iframe->name = 'list';
+$iframe->id = 'list';
 $iframe->marginwidth = '0';
 $iframe->marginheight = '0';
 //$iframe->align = 'top';
@@ -94,7 +97,7 @@ $frame = $iframe->show().'</p>';
 $fieldset->addContent('Directory   '.$dropdown->show().'&nbsp;'.$up.'<p>'. $frame);
 
 $fieldset2->addContent('<p>&nbsp;</p>'.$fieldset->show());
-$fieldset2->addContent($createButton->show().$uploadButton->show().'<p></p>'.$smalltable->show());
+$fieldset2->addContent('<p></p>'.$smalltable->show());
 //$fieldset2->addContent('<p>Create Folder   '.$input2->show());
 
 
@@ -122,18 +125,19 @@ echo $form2->show();
 		var selection = document.forms['<?php echo $form->name ?>'].createfolder;
 		var newSelection = document.forms['<?php echo $form2->name ?>'].newfolder;
 		newSelection.value = selection.value;
-		document.forms['<?php echo $form->name ?>'].submit();
+		document.forms['<?php echo $form2->name ?>'].submit();
 		alert(input.value);
 		
 	}
 
 	function goUpDir()
 	{
-		var selection = document.forms[1].dirPath;
+		var selection = document.forms['<?php echo $form->name ?>'].dirPath;
 		var dir = selection.options[selection.selectedIndex].value;
-		document.forms[1].action = document.forms[1].action +'&folder='  + dir;
+		document.forms['<?php echo $form->name ?>'].action = document.forms['<?php echo $form->name ?>'].action +'&folder='  + dir;
 		
-		frames['<?php echo $iframe->name;?>'].location.href='<?php  echo str_replace("&amp;", "&", $this->uri(array('action' => 'showmedia')))?>&folder=' + dir;
+		//frames['<?php echo $iframe->name;?>'].location.href='<?php  echo str_replace("&amp;", "&", $this->uri(array('action' => 'showmedia')))?>&folder=' + dir;
+		document.getElementById("<?php echo $iframe->name;?>").src='<?php  echo str_replace("&amp;", "&", $this->uri(array('action' => 'showmedia')))?>&folder=' + dir ;
 	}
 ]]>
 	</script>

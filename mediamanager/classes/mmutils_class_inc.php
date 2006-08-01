@@ -56,7 +56,9 @@ class mmutils extends object
 		try {
 			
 			$this->_objConfig = & $this->newObject('altconfig', 'config');			
-			$this->_rootMediaPath = $this->_objConfig->getContentBasePath().'media';	
+			$this->_objSkin = & $this->newObject('skin' , 'skin');
+			$this->_rootMediaPath = $this->_objSkin->getSkinLocation(); // $this->_objConfig->getContentBasePath().'media';	
+		
 			//$this->_rootMediaPath = $this->_objConfig->getSiteRoot().'usrfiles/media';	
 			//print $this->_rootMediaPath;
 			//check if the media folder exist
@@ -70,9 +72,11 @@ class mmutils extends object
 			$this->_folders = array();
 			$this->_files = array();
 			
-		}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
+		}
+		catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
         }
 	}
 	
@@ -102,13 +106,60 @@ class mmutils extends object
 	{
 		try {
 			
-		}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
+		}
+		catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
         }
 		
 	}
 	
+	/**
+	* Method to get the folders for a current folder path
+	* Please note that this method is a deliberate etempt 
+	* to see if PHP5 can handle poly-morphism
+	* 
+	* @param string $path The path of the folder
+	* @return array The list of folders in the given path
+	* @access public 
+	* @author Wesley Nitsckie
+	*/
+	public function getFolderFolders($path = '')
+	{
+		try
+		{
+			$arrFolders = array();
+			
+			
+			$baseDir=$this->_rootMediaPath.$path;
+		    $hndl=opendir($baseDir);
+	
+	       	while($file=readdir($hndl)) 
+	       	{
+	    		$completepath=$baseDir.'/'.$file;
+	    		if (!strcmp(".", $file))continue; // this may not the most efficient way to detect the . and .. entries
+	            if (!strcmp("..", $file))continue; // but it is the easiest to understand
+	            if (!strcmp("CVS", $file))continue; // ignore CVS folders
+	            if (!strcmp("config", $file))continue; // do not display config folder
+	            if (!strcmp("_vti_cnf", $file))continue;//ignore frontpage crap  
+	            if(is_dir($completepath))
+	            {
+	            	$foldername = str_replace($this->_rootMediaPath.$path, '',$completepath);
+	            	
+	            	$arrFolders[] = array('foldername' => $foldername, 'path' => $path.'/'.$file);
+	            	
+	            }
+	       	}
+	       	
+	       	return $arrFolders;
+		}
+		catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
+        }
+	}
 	
 	/**
 	 * Method to get the list of folders
@@ -126,9 +177,11 @@ class mmutils extends object
 			$this->_folders[] = array('foldername' => '/');
 			$this->_recurseFolders($this->_rootMediaPath);
 			return $this->_folders;
-		}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
+		}
+		catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
         }
 	}
 	
@@ -169,7 +222,7 @@ class mmutils extends object
 	            	{
 	            		$info = pathinfo($completepath);	
 	            		$newPath = str_replace($this->_rootMediaPath, '', $info['dirname']);
-	            		//var_dump($info);
+	            		
 	            		$max = count($this->_folders) - 1;
 	            		$value = $newPath.'/'.$info['basename'];  //$this->_folders[$max]['foldername'].'/'.$info['basename'];
 	            		if (!$this->deep_in_array($value, $this->_files)) 
@@ -179,9 +232,11 @@ class mmutils extends object
 	            	}
 	            }
 	       	}
-	     }catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
+	    }
+		catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
         }
 	       	
 	}
@@ -197,7 +252,8 @@ class mmutils extends object
 	 */
 	public 	function deep_in_array($value, $array) 
 	{
-	   foreach($array as $item) {
+	   foreach($array as $item) 
+	   {
 	       if(!is_array($item)) continue;
 	       if(in_array($value, $item)) return true;
 	       else if($this->deep_in_array($value, $item)) return true;
@@ -229,9 +285,11 @@ class mmutils extends object
 				return 	$this->_getFiles($this->_rootMediaPath.$folder);
 			}
 			
-		}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
+		}
+		catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
         }
 			
 	}
@@ -248,7 +306,7 @@ class mmutils extends object
 	{ 
 		try 
 		
-		{
+		{echo $folder;
 			$baseDir=$folder;
 			
 		    $hndl=opendir($baseDir);
@@ -281,19 +339,21 @@ class mmutils extends object
 	    			
 	    			$path = str_replace($repl,  $this->_objConfig->getsiteRoot(),$subj);
 	       			
-	    			$arrFiles[] = array('path' => $path , 'name' => $file);
+	    			if($this->isImage($completepath))
+	    			{
+	    				$arrFiles[] = array('path' => $path , 'name' => $file);
+	    			}
 	    		 	
 	    		}
 	       	}		 
 	       	
 	       	return $arrFiles;
-	       	
-	    }catch (Exception $e){
-       		
-	        echo 'Caught exception: ',  $e->getMessage();
-        	
-	        exit();
-	    }
+		}	
+	    catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
+        }
 	}
 	
 	
@@ -319,12 +379,14 @@ class mmutils extends object
 			} else {
 				$uploadFile = $this->_rootMediaPath.$currentFolder.'/';
 			}
-			//die ($uploadFile);
+			
 			return $objFileMan->upload_file($uploadFile,null,true,0);
-		}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
-	    }
+		}
+		catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
+        }
 	}
 	
 	/**
@@ -347,10 +409,12 @@ class mmutils extends object
 			{ 
 				return mkdir($newDir);
 			}
-		}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
-	    }
+		}
+		catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
+        }
 	}
 	
 	/**
@@ -365,13 +429,59 @@ class mmutils extends object
 			$this->getFolders();
 			
 			return $this->_files;
-				
-		}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
+		}		
+		catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
         }
 		
 		
 	}
+	
+	
+	/**
+	* Method to remove a file
+	*
+	* @param string $path
+	* @return bool
+	* @access public
+	* @author Wesley Nitsckie
+	*/
+	public function removeFile($path)
+	{
+		try{
+					
+			return unlink($path);
+		}
+		catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
+        }
+	}
+	
+	/**
+	* Method to check if the file is 
+	* an image
+	* @param string $path the Path to the file
+	* @return boolean
+	* @access public
+	*/
+	public function isImage($path)
+	{
+		
+		$_type = mime_content_type($path);
+        $error .= "Unzipped $_type<br>";
+        $pos = strpos($_type, "/");
+        $type_l = substr($_type,0,$pos);
+        $type_r = substr($_type,$pos+1,255);
+        if ($type_l == "image") {
+            return true;
+        } else {
+        	return false;
+        }
+	}
+
 
 }
