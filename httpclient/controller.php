@@ -24,8 +24,6 @@ class httpclient extends controller
     {
         try {
         	$this->objClient = $this->getObject('client');
-        	//$this->objFilters = $this->getObject('filter','filters');
-        	//$this->objResponse = $this->getObject('httpresponse');
         	//Get the activity logger class
         	$this->objLog=$this->newObject('logactivity', 'logger');
         	//Log this module call
@@ -49,9 +47,9 @@ class httpclient extends controller
         {
             default:
                 try {
-                	echo $this->objClient->getUrl('http://www.google.com');
+                	echo $this->objClient->getUrl('http://www.google.com',$headers);
     			} catch (customException $e) {
-        			echo '<p>An error occurred (' .$e->getMessage(). ')</p>';
+        			echo $e->getMessage();
     			}
                 break;
         }
