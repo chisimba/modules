@@ -46,6 +46,7 @@ class httpclient extends controller
         switch ($action)
         {
             default:
+            	$url = $this->getParam('url');
                 try {
                 	$proxy = array(
           			  'host' => $host,
@@ -55,7 +56,7 @@ class httpclient extends controller
         			);
 
 
-                	echo $this->objClient->getUrl('http://5ive.uwc.ac.za/app/index.php?module=splashscreen','Accept: text/html',$proxy);
+                	echo $this->objClient->getUrl($url,$proxy);
     			} catch (customException $e) {
         			echo $e->getMessage();
     			}
