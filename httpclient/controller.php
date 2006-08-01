@@ -55,7 +55,7 @@ class httpclient extends controller
         			);
 
 
-                	echo $this->objClient->getUrl('http://www.google.com/','Accept: text/html',$proxy);
+                	echo $this->objClient->getUrl('http://5ive.uwc.ac.za/app/index.php?module=splashscreen','Accept: text/html',$proxy);
     			} catch (customException $e) {
         			echo $e->getMessage();
     			}
