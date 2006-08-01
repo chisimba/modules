@@ -194,7 +194,7 @@ class httpclients extends abhttpclient
     /**
      * Read Data from the Socket
      *
-     * @param Resource $socket Socket returned by {@see Zend_Http_Client::_openConnection()}
+     * @param Resource $socket Socket returned
      * @return httpresponse
      */
     protected function _read($socket)
