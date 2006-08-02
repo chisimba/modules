@@ -17,10 +17,15 @@ if (!$GLOBALS['kewl_entry_point_run'])
 class feed extends controller
 {
 
-    /**
+    public $objFeed;
+    public $objFeedCreator;
+    public $objClient;
+    public $objLog;
+
+	/**
 	* Constructor method to instantiate objects and get variables
 	*/
-    function init()
+    public function init()
     {
         try {
         	$this->objFeed = $this->getObject('feeds');
@@ -43,7 +48,7 @@ class feed extends controller
     *
     * @param string $action String indicating action to be taken
 	*/
-    function dispatch($action=Null)
+    public function dispatch($action=Null)
     {
         switch ($action)
         {
@@ -52,7 +57,7 @@ class feed extends controller
             	$url = $this->getParam('url');
                 try {
                 	$feed1 = $this->objClient->getUrl('http://avoir.uwc.ac.za/avoir/index.php?module=cms&action=rssfeed&id=gen12Srv48Nme23_8');
-					//$feed = $this->objFeed->importFile('http://alexharden.org/blog/atom.xml');
+					//$feed = $this->objFeed->importFile($feed1);
 					$feed = $this->objFeed->importString($feed1);
 
                 	foreach ($feed->items as $item) {
@@ -66,7 +71,9 @@ class feed extends controller
                 break;
             case 'createfeed':
             		$format = $this->getParam('format');
-            		$this->objFeedCreator->setupFeed(FALSE, 'test feed', "A test feed from the Chisimba Framework", 'http://5ive.uwc.ac.za', 'http://127.0.0.1/chi/5ive/app/index.php?module=feed&action=createfeed');
+            		$this->objFeedCreator->setrssImage('pic', 'http://www.dailyphp.net/images/logo.gif', '', 'some image', $iTruncSize = 500, $desHTMLSyn = true);
+            		$this->objFeedCreator->setupFeed(TRUE, 'test feed', "A test feed from the Chisimba Framework", 'http://5ive.uwc.ac.za', 'http://127.0.0.1/chi/5ive/app/index.php?module=feed&action=createfeed');
+
 
             		$this->objFeedCreator->addItem('testing 123', 'http://5ive.uwc.ac.za/apidocs/dev', 'API Docs now available', 'here', 'Paul');
             		switch ($format) {
