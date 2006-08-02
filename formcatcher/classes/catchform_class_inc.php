@@ -68,12 +68,12 @@ class catchform extends object
     {
         //Make sure they are sending a POST form
         if (!$this->__validateForPost()==TRUE) {
-             return $this->objLanguage->languageText("mod_formcatcher_errpostnotused");
+             return $this->objLanguage->languageText("mod_formcatcher_errpostnotused", "formcatcher");
         } else {
             if ($this->id !== NULL) {
                 $body = $this->extractDataAsText() 
                   . "\n\n-------------------------------------------------------------\n"
-                  . $this->objLanguage->languageText("mod_formcatcher_formresults");
+                  . $this->objLanguage->languageText("mod_formcatcher_formresults", "formcatcher");
                 //Create an instance of the database class for this module
                 $objDbFc = & $this->getObject("dbformcatcher");
                 $rec = $objDbFc->getRow('id', $this->id);
@@ -83,7 +83,7 @@ class catchform extends object
                 $fm = $this->objUser->email();
                 //Allow for anonymous posting
                 if ($fm == "") {
-                    $fm = $this->objLanguage->languageText("mod_formcatcher_anon");
+                    $fm = $this->objLanguage->languageText("mod_formcatcher_anon", "formcatcher");
                 }
                 //If they want to use internal email or both
                 if ($emailtowhere == "0" || $emailtowhere == "2") {
@@ -103,13 +103,13 @@ class catchform extends object
 
 
                 //Send back a confirmation page
-                $fullPost = "<b>" . $this->objLanguage->languageText("word_to") 
+                $fullPost = "<b>" . $this->objLanguage->languageText("word_to", "formcatcher") 
                   . "</b>: " . $to . "<br />"
-                  . "<b>" . $this->objLanguage->languageText("word_from") 
+                  . "<b>" . $this->objLanguage->languageText("word_from", "formcatcher") 
                   . "</b>: " . $fm  . "<br />"
-                  . "<b>" . $this->objLanguage->languageText("word_subject") 
+                  . "<b>" . $this->objLanguage->languageText("word_subject", "formcatcher") 
                   . "</b>: " . $subject  . "<br />"
-                  . "<b>" . $this->objLanguage->languageText("mod_formcatcher_formresults") 
+                  . "<b>" . $this->objLanguage->languageText("mod_formcatcher_formresults", "formcatcher") 
                   . "</b>:<br /><br />" . str_replace("\n", "<br />", $body) . "<br />";
                 
                 
@@ -118,7 +118,7 @@ class catchform extends object
                 //sendMail($name, $subject, $email, $body, $html = TRUE, $attachment = NULL, $attachment_descrip=NULL)
                 return $fullPost;
             } else {
-                return $this->objLanguage->languageText("mod_formcatcher_errcantfinddata");
+                return $this->objLanguage->languageText("mod_formcatcher_errcantfinddata", "formcatcher");
             }
         }
     } #emailForm
@@ -133,7 +133,7 @@ class catchform extends object
     {
         //Make sure they are sending a POST form
         if (!$this->__validateForPost()==TRUE) {
-             return $this->objLanguage->languageText("mod_formcatcher_errpostnotused");
+             return $this->objLanguage->languageText("mod_formcatcher_errpostnotused", "formcatcher");
         } else {
             //Retrieve the name of the file
             $objDbFc = & $this->getObject("dbformcatcher");
@@ -167,7 +167,7 @@ class catchform extends object
     {
         //Make sure they are sending a POST form
         if (!$this->__validateForPost()==TRUE) {
-             return $this->objLanguage->languageText("mod_formcatcher_errpostnotused");
+             return $this->objLanguage->languageText("mod_formcatcher_errpostnotused", "formcatcher");
         } else {
             //Retrieve the name of the file
             $objDbFc = & $this->getObject("dbformcatcher");

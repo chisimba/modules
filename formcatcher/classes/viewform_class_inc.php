@@ -122,7 +122,7 @@ class viewform extends object
             }
         } else {
             //Return an error that the form could not be read
-            $this->form = $this->objLanguage->languageText("mod_formcatcher_unreadablefm");
+            $this->form = $this->objLanguage->languageText("mod_formcatcher_unreadablefm", "formcatcher");
         }
         return $this->form;
     }

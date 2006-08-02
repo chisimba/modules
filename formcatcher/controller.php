@@ -77,7 +77,7 @@ class formcatcher extends controller
                 $objUpit = & $this->getObject('formuploader');
                 $results = $objUpit->uploadForm();
                 if ($results="1") {
-                    $results = $this->objLanguage->languageText("mod_formcatcher_upsucceed");
+                    $results = $this->objLanguage->languageText("mod_formcatcher_upsucceed", "formcatcher");
                 }
                 return $this->nextAction('listforms',array('message'=>$results));
                 break;
@@ -86,9 +86,9 @@ class formcatcher extends controller
                 //Create an instance of the database class for this module
                 $objDbFc = & $this->getObject("dbformcatcher");
                 if ( $objDbFc->saveRecord( $this->getParam('filename', NULL)==TRUE ) ) {
-                    $results = $this->objLanguage->languageText("mod_formcatcher_updatesucceed");
+                    $results = $this->objLanguage->languageText("mod_formcatcher_updatesucceed", "formcatcher");
                 } else {
-                    $results = $this->objLanguage->languageText("mod_formcatcher_updatefail");
+                    $results = $this->objLanguage->languageText("mod_formcatcher_updatefail", "formcatcher");
                 }
                 return $this->nextAction('listforms',array('message'=>$results));
                 break;
@@ -110,7 +110,7 @@ class formcatcher extends controller
                     $this->setVar('str', $str);
                     return "addform_tpl.php";
                 } else {
-                    $this->setVar('str', $this->objLanguage->languageText("mod_formcatcher_errrecordnotfound"));
+                    $this->setVar('str', $this->objLanguage->languageText("mod_formcatcher_errrecordnotfound", "formcatcher"));
                     return "dump_tpl.php"; 
                 }   
                 break;
@@ -119,7 +119,7 @@ class formcatcher extends controller
                 $objUpit = & $this->getObject('formuploader');
                 $results = $objUpit->deleteFile();
                 if ($results="1") {
-                    $results = $this->objLanguage->languageText("mod_formcatcher_delsucceed");
+                    $results = $this->objLanguage->languageText("mod_formcatcher_delsucceed", "formcatcher");
                 }
                 return $this->nextAction('listforms',array('message'=>$results));
                 break;
@@ -171,7 +171,7 @@ class formcatcher extends controller
                 break;
             //When action is not recognized
             default:
-                $this->setVar('str', $this->objLanguage->languageText("phrase_actionunknown").": ".$action);
+                $this->setVar('str', $this->objLanguage->languageText("phrase_actionunknown", "formcatcher").": ".$action);
                 return 'dump_tpl.php';
         }#switch
     } # dispatch

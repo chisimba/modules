@@ -70,7 +70,7 @@ class formuploader extends object
             $objDbUpit->saveRecord($objUp->name);
             
         } else {
-            $res = $this->objLanguage->code2txt("mod_formcatcher_notincontext");
+            $res = $this->objLanguage->code2txt("mod_formcatcher_notincontext", "formcatcher");
         }
 
         return $res;

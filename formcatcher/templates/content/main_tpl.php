@@ -6,10 +6,10 @@ $cssLayout->setNumColumns(3);
 // Add the heading to the content of the middle column
 $objH =& $this->getObject('htmlheading', 'htmlelements');
 $objH->type=3;
-$objH->str=$objLanguage->languageText("mod_formcatcher_name");
+$objH->str=$objLanguage->languageText("mod_formcatcher_name", "formcatcher");
 $leftSideColumn = $objH->show();
 //Set the content of the left side column
-$leftSideColumn .= $objLanguage->languageText("mod_formcatcher_leftcolinfo");
+$leftSideColumn .= $objLanguage->languageText("mod_formcatcher_leftcolinfo", "formcatcher");
 
 
 
@@ -20,7 +20,7 @@ $leftSideColumn .= $objLanguage->languageText("mod_formcatcher_leftcolinfo");
 // Add the heading to the content
 $objH =& $this->getObject('htmlheading', 'htmlelements');
 $objH->type=3; //Heading <h3>
-$objH->str=$objLanguage->languageText("mod_formcatcher_availfms");
+$objH->str=$objLanguage->languageText("mod_formcatcher_availfms", "formcatcher");
 $middleColumn = $objH->show();
 
 $saveMsg = $this->getParam('message', NULL);
@@ -44,10 +44,10 @@ $objDelIcon = $this->newObject('geticon', 'htmlelements');
 
 //Create the table header for display
 $myTable->startHeaderRow();
-$myTable->addHeaderCell($objLanguage->languageText("word_title"));
-$myTable->addHeaderCell($objLanguage->languageText("word_description"));
-$myTable->addHeaderCell($objLanguage->languageText("word_file"));
-$myTable->addHeaderCell($objLanguage->languageText("word_data"));
+$myTable->addHeaderCell($objLanguage->languageText("word_title", "formcatcher"));
+$myTable->addHeaderCell($objLanguage->languageText("word_description", "formcatcher"));
+$myTable->addHeaderCell($objLanguage->languageText("word_file", "formcatcher"));
+$myTable->addHeaderCell($objLanguage->languageText("word_data", "formcatcher"));
 
 //Add the icon for uploading a new form
 if( $this->isValid('addform') ) {
@@ -110,7 +110,7 @@ if (isset($ar)) {
                   'action' => 'edit',
                   'mode' => 'edit',
                   'id' =>$line['id']));
-                $objEditIcon->alt=$this->objLanguage->languageText("mod_formcatcher_editalt");
+                $objEditIcon->alt=$this->objLanguage->languageText("mod_formcatcher_editalt", "formcatcher");
                 $ed = $objEditIcon->getEditIcon($editLink);
             } else {
                 $ed = "&nbsp;";
@@ -119,7 +119,7 @@ if (isset($ar)) {
             if( $this->isValid('delete') ) {
                 // The delete icon with link uses confirm delete utility
                 $objDelIcon->setIcon("delete");
-                $objDelIcon->alt=$this->objLanguage->languageText("mod_formcatcher_delalt");
+                $objDelIcon->alt=$this->objLanguage->languageText("mod_formcatcher_delalt", "formcatcher");
                 $delLink = $this->uri(array(
                   'action' => 'delete',
                   'confirm' => 'yes',
@@ -128,7 +128,7 @@ if (isset($ar)) {
                 $objConfirm = & $this->newObject('confirm','utilities');
                 $rep = array('ITEM' => $line['title']);
                 $objConfirm->setConfirm($objDelIcon->show(),
-                $delLink,$this->objLanguage->code2Txt("mod_formcatcher_confirm", $rep));
+                $delLink,$this->objLanguage->code2Txt("mod_formcatcher_confirm", $rep, "formcatcher"));
                 $conf = $objConfirm->show();
             } else {
                 $conf = "&nbsp;";
@@ -144,7 +144,7 @@ if (isset($ar)) {
 if ($arFound !== TRUE) {
     $myTable->startRow();
     $myTable->addCell("<div class=\"noRecordsMessage\">"
-       . $objLanguage->languageText("mod_formcatcher_errnoforms")
+       . $objLanguage->languageText("mod_formcatcher_errnoforms", "formcatcher")
        ."</div>", NULL, NULL, NULL, "odd", "colspan=\"4\"");
     $myTable->endRow(); 
 }
@@ -165,7 +165,7 @@ $cssLayout->setLeftColumnContent($leftSideColumn);
 $cssLayout->setMiddleColumnContent($middleColumn);
 
 // Add Right Column
-$cssLayout->setRightColumnContent($objLanguage->languageText("mod_formcatcher_defaultright"));
+$cssLayout->setRightColumnContent($objLanguage->languageText("mod_formcatcher_defaultright", "formcatcher"));
 
 //Output the content to the page
 echo $cssLayout->show();

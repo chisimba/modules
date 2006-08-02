@@ -6,10 +6,10 @@ $cssLayout->setNumColumns(3);
 // Add the heading to the content of the middle column
 $objH =& $this->getObject('htmlheading', 'htmlelements');
 $objH->type=3;
-$objH->str=$objLanguage->languageText("mod_formcatcher_complete");
+$objH->str=$objLanguage->languageText("mod_formcatcher_complete", "formcatcher");
 $leftSideColumn = $objH->show();
 //Set the content of the left side column
-$leftSideColumn .= $objLanguage->languageText("mod_formcatcher_doforminfo");
+$leftSideColumn .= $objLanguage->languageText("mod_formcatcher_doforminfo", "formcatcher");
 
 
 //Add the form
@@ -30,7 +30,7 @@ $cssLayout->setLeftColumnContent($leftSideColumn);
 $cssLayout->setMiddleColumnContent($middleColumn);
 
 // Add Right Column
-$cssLayout->setRightColumnContent($objLanguage->languageText("mod_formcatcher_defaultright"));
+$cssLayout->setRightColumnContent($objLanguage->languageText("mod_formcatcher_defaultright", "formcatcher"));
 
 //Output the content to the page
 echo $cssLayout->show();

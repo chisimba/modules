@@ -87,38 +87,38 @@ class renderuploadtemplate extends object
         
         //Create an element for the input of file and add it to the table
         $myTable->startRow();
-        $myTable->addCell($this->objLanguage->languageText("word_file"));
+        $myTable->addCell($this->objLanguage->languageText("word_file", "formcatcher"));
         $myTable->addCell($this->__getFileElement());
         $myTable->endRow();
 
         //Create an element for the input of email and add it to the table
         $myTable->startRow();
-        $myTable->addCell($this->objLanguage->languageText("word_email"));
+        $myTable->addCell($this->objLanguage->languageText("word_email", "formcatcher"));
         $myTable->addCell($this->__getEmailElement());
         $myTable->endRow();
         
         
         //Create an element for the input of title and add it to the table
         $myTable->startRow();
-        $myTable->addCell($this->objLanguage->languageText("word_title"));
+        $myTable->addCell($this->objLanguage->languageText("word_title", "formcatcher"));
         $myTable->addCell($this->__getTitleElement());
         $myTable->endRow();
         
         //Create an element for the input of description and add it to the table
         $myTable->startRow();
-        $myTable->addCell($this->objLanguage->languageText("word_description"));
+        $myTable->addCell($this->objLanguage->languageText("word_description", "formcatcher"));
         $myTable->addCell($this->__getDescriptionElement());
         $myTable->endRow();
         
         //Create an element for the input of whether or not to use fullpage
         $myTable->startRow();
-        $myTable->addCell($this->objLanguage->languageText("mod_formcatcher_usefullpage"));
+        $myTable->addCell($this->objLanguage->languageText("mod_formcatcher_usefullpage", "formcatcher"));
         $myTable->addCell($this->__getUseFullpageElement());
         $myTable->endRow();
         
         //Create an element for the input of where to send email
         $myTable->startRow();
-        $myTable->addCell($this->objLanguage->languageText("mod_formcatcher_emailtowhere"));
+        $myTable->addCell($this->objLanguage->languageText("mod_formcatcher_emailtowhere", "formcatcher"));
         $myTable->addCell($this->__getEmailToWhere());
         $myTable->endRow();
         
@@ -196,10 +196,10 @@ class renderuploadtemplate extends object
         // Use the language object to add the word save
         if ( $this->getParam('mode', 'create' == 'edit') ) {
             $objElement->setValue(' '
-              .$this->objLanguage->languageText("word_save").' ');
+              .$this->objLanguage->languageText("word_save", "formcatcher").' ');
         } else {
             $objElement->setValue(' '
-              .$this->objLanguage->languageText("word_upload").' ');
+              .$this->objLanguage->languageText("word_upload", "formcatcher").' ');
         }
         
         // return the button to the form
@@ -290,8 +290,8 @@ class renderuploadtemplate extends object
         $this->loadClass('radio','htmlelements');
         //Create an element for the input of description
         $objElement = new radio("usefullpage");
-    	$objElement->addOption('0',$this->objLanguage->languageText("word_no"));
-    	$objElement->addOption('1',$this->objLanguage->languageText("word_yes"));
+    	$objElement->addOption('0',$this->objLanguage->languageText("word_no", "formcatcher"));
+    	$objElement->addOption('1',$this->objLanguage->languageText("word_yes", "formcatcher"));
         //Set the value of the element  
         if (isset($this->usefullpage)) {
             $objElement->setSelected($this->usefullpage);
@@ -308,9 +308,9 @@ class renderuploadtemplate extends object
         $this->loadClass('radio','htmlelements');
         //Create an element for the input of description
         $objElement = new radio("emailtowhere");
-    	$objElement->addOption('0',$this->objLanguage->languageText("mod_formcatcher_emailinternal"));
-    	$objElement->addOption('1',$this->objLanguage->languageText("mod_formcatcher_emailexternal"));
-        $objElement->addOption('2',$this->objLanguage->languageText("mod_formcatcher_emailboth"));
+    	$objElement->addOption('0',$this->objLanguage->languageText("mod_formcatcher_emailinternal", "formcatcher"));
+    	$objElement->addOption('1',$this->objLanguage->languageText("mod_formcatcher_emailexternal", "formcatcher"));
+        $objElement->addOption('2',$this->objLanguage->languageText("mod_formcatcher_emailboth", "formcatcher"));
         if (isset($this->emailtowhere)) {
             $objElement->setSelected($this->emailtowhere);
         } else {

@@ -6,10 +6,10 @@ $cssLayout->setNumColumns(3);
 // Add the heading to the content of the middle column
 $objH =& $this->getObject('htmlheading', 'htmlelements');
 $objH->type=3;
-$objH->str=$objLanguage->languageText("mod_formcatcher_name");
+$objH->str=$objLanguage->languageText("mod_formcatcher_name", "formcatcher");
 $leftSideColumn = $objH->show();
 //Set the content of the left side column
-$leftSideColumn .= $objLanguage->languageText("mod_formcatcher_leftcolinfo");
+$leftSideColumn .= $objLanguage->languageText("mod_formcatcher_leftcolinfo", "formcatcher");
 
 
 
@@ -19,9 +19,9 @@ $leftSideColumn .= $objLanguage->languageText("mod_formcatcher_leftcolinfo");
 $objH =& $this->getObject('htmlheading', 'htmlelements');
 $objH->type=3;
 if ($this->getParam('mode', 'add')=='edit') {
-    $objH->str=$objLanguage->languageText("mod_formcatcher_edit");
+    $objH->str=$objLanguage->languageText("mod_formcatcher_edit", "formcatcher");
 } else {
-    $objH->str=$objLanguage->languageText("mod_formcatcher_upload");
+    $objH->str=$objLanguage->languageText("mod_formcatcher_upload", "formcatcher");
 }
 
 $middleColumn = $objH->show();
@@ -39,7 +39,7 @@ $cssLayout->setLeftColumnContent($leftSideColumn);
 $cssLayout->setMiddleColumnContent($middleColumn);
 
 // Add Right Column
-$cssLayout->setRightColumnContent($objLanguage->languageText("mod_formcatcher_defaultright"));
+$cssLayout->setRightColumnContent($objLanguage->languageText("mod_formcatcher_defaultright", "formcatcher"));
 
 //Output the content to the page
 echo $cssLayout->show();
