@@ -41,8 +41,6 @@ class client extends object
 	public function getURL($url, $headers = 'Accept: text/html', $proxy = array())
 	{
 		$http = new httpclients();
-		$http->setProxy($proxy);
-		$http->setAuth($proxy['user'],$proxy['password']);
 		$http->setUri($url,$headers);
         $response = $http->get();
         if ($response->isSuccessful()) {

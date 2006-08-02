@@ -72,6 +72,7 @@ abstract class aburi
          * scheme, return an instance of that class. Otherwise, a customException is thrown.
          */
         switch ($scheme) {
+
             case 'mailto':
                 // fall through to next case
             case 'http':
