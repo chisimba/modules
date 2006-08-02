@@ -306,7 +306,7 @@ class mmutils extends object
 	{ 
 		try 
 		
-		{echo $folder;
+		{
 			$baseDir=$folder;
 			
 		    $hndl=opendir($baseDir);
