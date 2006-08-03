@@ -90,7 +90,7 @@ $this->uri(array('action'=>'leaveworkgroup'))
 $rightContent = NULL;
 
 // Check if Instant Messaging is registered
-$moduleCheck =& $this->getObject('modules', 'modulelist');
+$moduleCheck =& $this->getObject('modules', 'modulecatalogue');
 $instantMessaging = $moduleCheck->checkIfRegistered('instantmessaging');
 
 if (!empty($lecturers)) {
