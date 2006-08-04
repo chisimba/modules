@@ -6,18 +6,17 @@ $options = array('comment' => 'cms front page','collate' => 'utf8_general_ci', '
 $fields = array(
 	'id' => array(
 		'type' => 'text',
-		'length' => 32
+		'length' => 32,
 		),
 	'content_id' => array(
-		'type' => 'varchar',
+		'type' => 'text',
 		'length' => 32,
-        'notnull' => TRUE,        
 		),
 	'ordering' => array(
-		'type' => 'integer',
+		'type' => 'text',
 		'length' => 11,
         'notnull' => TRUE,
-        'default' => '0'
+        'default' => 0
 		)
     );
 
