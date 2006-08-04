@@ -1666,7 +1666,7 @@ class GeSHi
 		//
 		// Highlight methods and fields in objects
 		//
-		if ( $this->lexic_permissions['METHODS'] && $this->language_data['OOLANG'] && (false !== stristr($stuff_to_parse, $this->language_data['OBJECT_SPLITTER'])) )
+		if ( $this->lexic_permissions['METHODS'] && $this->language_data['OOLANG'] && (false !== stristr($stuff_to_parse, $this->language_data['OBJECT_SPLITTERS'])) )
 		{
 			if ( !$this->use_classes )
 			{
