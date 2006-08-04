@@ -75,7 +75,7 @@ class dbcontent extends dbTable
 							'ordering' => $this->getNewOrder(),
 							'published' => $published,
 							'created' => $this->now(),
-							'modified' => time(),
+							'modified' => $this->now(),
 							'created_by' => $creatorid
 							);
 			
