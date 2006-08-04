@@ -47,7 +47,7 @@ if($this->getParam('id') == '')
 	$titleInput->value = $arrContent['title'];
 	$menuTextInput->value = $arrContent['menutext'];
 	$introInput->setContent($arrContent['introtext']);
-	$bodyInput->setContent($arrContent['fulltext']);
+	$bodyInput->setContent($arrContent['body']);
 
 	$frontPage->setChecked($this->_objFrontPage->isFrontPage($arrContent['id']));
 	$published->setChecked($arrContent['published']);

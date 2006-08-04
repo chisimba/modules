@@ -137,6 +137,17 @@ class cms extends controller
 		return $this->_objUtils->getSectionMenu();
 	}
 
+	
+	/**
+	 * Method to get the Bread Crumbs
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getBreadCrumbs()
+	{
+		return $this->_objUtils->getBreadCrumbs();
+	}
 
 }
 

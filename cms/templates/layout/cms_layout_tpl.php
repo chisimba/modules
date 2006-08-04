@@ -35,7 +35,7 @@ if(!$this->getParam('query') == '')
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
        $cssLayout->setNumColumns(3);
        $cssLayout->setLeftColumnContent($this->getSectionMenu());
-       $cssLayout->setMiddleColumnContent($this->getContent().$searchResults.$this->footerStr);
+       $cssLayout->setMiddleColumnContent($this->getBreadCrumbs().$this->getContent().$searchResults.$this->footerStr);
        $cssLayout->setRightColumnContent($rightSideColumn);
        echo $cssLayout->show(); 
 
