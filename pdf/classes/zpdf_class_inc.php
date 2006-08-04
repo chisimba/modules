@@ -4,12 +4,199 @@ require_once("modules/pdf/resources/Pdf.php");
 
 class zpdf extends object
 {
+	static $size = "SIZE_A4";
+
+
 	public $pdf;
+	private $style;
 
 	public function init()
 	{
+
+	}
+
+	/**
+	 * Load methods
+	 */
+
+	/**
+	 * Method to load a PDF file for use/edit
+	 *
+	 * @param file $file
+	 * @param integer $revision
+	 */
+	public function loadPdf($file, $revision=NULL)
+	{
+		$this->pdf = Zend_Pdf::load($file, $revision);
+	}
+
+	/**
+	 * Create a new PDF
+	 *
+	 * @param void
+	 * @return void
+	 */
+	public function newPdf()
+	{
 		$this->pdf = new Zend_Pdf();
 	}
+
+	/**
+	 * Load and parse a PDF string
+	 *
+	 * @param string $string
+	 */
+	public function loadPdfString($string)
+	{
+		$this->pdf = Zend_Pdf::parse($pdfString);
+	}
+
+	/**
+	 * Load a specific revision of a PDF file
+	 * This method will roll back to the specified revision in history
+	 * for example $revisionNo = 1 will rollback one revision NOT rollback to revision 1
+	 *
+	 * @param file $file
+	 * @param integer $revisionNo
+	 */
+	public function loadRevision($file, $revisionNo)
+	{
+		$this->pdf = Zend_Pdf::load($file);
+		$revisions = $this->pdf->revisions();
+		$this->pdf->rollback($revisions - $revisionNo);
+	}
+
+	/**
+	 * Save methods
+	 *
+	 */
+
+	/**
+	 * Method to save a PDF as a file
+	 *
+	 * @param mixed $fileName
+	 * @param boolean $update
+	 * @param mixed $newFileName
+	 */
+	public function savePdf($fileName, $update=TRUE, $newFileName = '')
+	{
+		if($update == TRUE)
+		{
+			// Update document
+			$this->pdf->save($fileName, true);
+		}
+		else {
+			// Save document as a new file
+			$this->pdf->save($newFileName);
+		}
+	}
+
+	/**
+	 * Method to return the PDF as a string
+	 *
+	 * @return string $pdfString
+	 */
+	public function pdfToString()
+	{
+		$pdfString = $this->pdf->render();
+		return $pdfString;
+	}
+
+	/**
+	 * Document Page methods
+	 *
+	 * newPage() method and the Page constructor take the same set of parameters.
+	 * It either the size of page ($x, $y) in a points (1/72 inch), or predefined constant, which is treated as a page type:
+	 *
+	 * Page::SIZE_A4
+	 * Page::SIZE_A4_LANDSCAPE
+	 * Page::SIZE_LETTER
+	 * Page::SIZE_LETTER_LANDSCAPE
+	 *
+	 * Document pages are stored in $pages public member of the Zend_Pdf class.
+	 * It's an array of Zend_Pdf_Page objects.
+	 * It completely defines set and order of document pages and can be manipulated as a common array:
+	 */
+
+	/**
+	 * Page setup method. This MUST be called BEFORE adding your page set, otherwise page order will be reversed.
+	 *
+	 * @param void
+	 * @return void
+	 */
+	public function setupPages()
+	{
+		//$this->size = $size;
+		// Reverse page order
+		$this->pdf->pages = array_reverse($this->pdf->pages);
+		//create the initial page
+		$this->pdf->pages[] = new Zend_Pdf_Page(Zend_Pdf_Page::SIZE_A4); // $this->size);
+	}
+
+	/**
+	 * Method to add a new page to the PDF
+	 * When using the edit option, new pages are appended onto the end of the pdf and the revision altered
+	 *
+	 * @param const $size
+	 */
+	public function newPdfPage()
+	{
+		//echo $this->size;
+		//$this->size = $size;
+		$this->pdf->pages[] = $this->pdf->newPage(Zend_Pdf_Page::SIZE_A4); //$this->size);
+	}
+
+	/**
+	 * Method to remove a Page from the PDF
+	 *
+	 * @param array_key $id
+	 * @return TRUE on success
+	 */
+	public function removePage($id)
+	{
+		// Remove specified page.
+		unset($this->pdf->pages[$id]);
+		return TRUE;
+	}
+
+	/**
+	 * Styles manipulation methods
+	 *
+	 */
+
+	public function newStyle()
+	{
+		$this->style = new Zend_Pdf_Style();
+		return TRUE;
+	}
+
+	public function setFillColour($r, $g, $b)
+	{
+		$this->style->setFillColor(new Zend_Pdf_Color_RGB($r,$g,$b));
+	}
+
+	public function setLineColour($greylevel)
+	{
+		$this->style->setLineColor(new Zend_Pdf_Color_GrayScale($greylevel));
+	}
+
+	public function setLineWidths($width)
+	{
+		$this->style->setLineWidth($width);
+	}
+
+	public function setLineDash($array, $float)
+	{
+		$this->style->setLineDashingPattern($arr, $float);
+	}
+
+	public function setFont($font, $size)
+	{
+		$this->style->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES_ROMAN), 32);
+	}
+
+
+
 
 	public function dotest()
 	{

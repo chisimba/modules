@@ -50,7 +50,15 @@ class pdf extends controller
             default:
             case 'genpdf':
             	try {
-            		$this->objPdf->dotest();
+            		$this->objPdf->newPdf();
+            		$this->objPdf->setupPages();
+            		$this->objPdf->newPdfPage();
+
+
+
+            		//save
+            		$this->objPdf->savePdf('/var/www/chi/test123.pdf', TRUE, $newFileName = '');
+
 
 				} catch (customException $e) {
         			echo $e->getMessage();
