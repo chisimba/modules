@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file is a code generation template for Chisimba class generator -->
+<chisimba_code>
+<security>
+// security check - must be included in all Chisimba scripts
+if (!$GLOBALS['kewl_entry_point_run'])
+{
+	die("You cannot view this page directly");
+}
+// end security check
+</security>
+<class>
+<comment>
+/**
+*
+* !PLACEHOLDER: CLASS.DESCRIPTION
+*
+* @author !PLACEHOLDER: AUTHOR
+* @package !PLACEHOLDER: PACKAGE
+*
+*/
+</comment>
+<classname>
+class !PLACEHOLDER: CLASSNAME !PLACEHOLDER: EXTENDS !PLACEHOLDER: IMPLEMENTS
+{
+</classname>
+<properties>
+!PLACEHOLDER: PROPERTIES
+</properties>
+<methods>
+<initmethod>
+    /**
+    *
+    * Standard init method for Chisimba controller
+    * !PLACEHOLDER: INITPURPOSE
+    *
+    */
+    function init()
+    {
+
+    }
+</initmethod>
+<othermethods>
+!PLACEHOLDER: OTHERMETHODS
+</othermethods>
+</methods>
+
+
+<endclass>
+}
+</endclass>
+</class>
+</chisimba_code>
