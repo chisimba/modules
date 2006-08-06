@@ -44,7 +44,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 class {CLASS} {EXTENDS} {IMPLEMENTS}
 {
 
-    {PARAMETERS}
+    {PROPERTIES}
 
     {METHODS}
 

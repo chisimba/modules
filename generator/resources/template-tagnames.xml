@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+  This file is used in code generation for Chisimba. It provides the
+  name, tag and description of all Chisimba code generation template
+  tag. Please note that all tags are in UPPERCASE, all tagnames are in
+  lowercase.
+-->
+
+<chisimba_template_tagnames>
+
+  <tag>
+    <tagname>startphp</tagname>
+    <tagtext>{STARTPHP}</tagtext>
+    <description>The code to start PHP</description>
+  </tag>
+  
+    <tag>
+    <tagname>purpose</tagname>
+    <tagtext>{PURPOSE}</tagtext>
+    <description>The purpose and description of the class to insert into the class PHP Documentor comments at the beginning of the class.</description>
+  </tag>
+  
+  <tag>
+    <tagname>author</tagname>
+    <tagtext>{AUTHOR}</tagtext>
+    <description>The author of the module for which classes are being generated.</description>
+  </tag>
+  
+  
+  <tag>
+    <tagname>package</tagname>
+    <tagtext>{PACKAGE}</tagtext>
+    <description>The Chisimba module (package) for which classes are being generated.</description>
+  </tag>
+  
+  <tag>
+    <tagname>copyright</tagname>
+    <tagtext>{COPYRIGHT}</tagtext>
+    <description>The copyright holder on the module being generated.</description>
+  </tag>
+  
+  <tag>
+    <tagname>class</tagname>
+    <tagtext>{CLASS}</tagtext>
+    <description>The class being generated.</description>
+  </tag>
+  
+  <tag>
+    <tagname>extends</tagname>
+    <tagtext>{EXTENDS}</tagtext>
+    <description>The name of the class that the generated class extends</description>
+  </tag>
+  
+  <tag>
+    <tagname>implements</tagname>
+    <tagtext>{IMPLEMENTS}</tagtext>
+    <description>The name of the interface class that the class being generated implements.</description>
+  </tag>
+  
+  <tag>
+    <tagname>properties</tagname>
+    <tagtext>{PROPERTIES}</tagtext>
+    <description>Replaced by all the properties for the class being generated.</description>
+  </tag>
+  
+  <tag>
+    <tagname>methods</tagname>
+    <tagtext>{METHODS}</tagtext>
+    <description>Replaced by all the methods of the generated class.</description>
+  </tag>
+  
+  <tag>
+    <tagname>endphp</tagname>
+    <tagtext>{ENDPHP}</tagtext>
+    <description>The code to end PHP.</description>
+  </tag>
+  
+  <tag>
+    <tagname></tagname>
+    <tagtext></tagtext>
+    <description></description>
+  </tag>
+  
+  <tag>
+    <tagname>dataclass</tagname>
+    <tagtext>{DATACLASS}</tagtext>
+    <description>The name of the database access class being referenced.</description>
+  </tag>
+  
+  <tag>
+    <tagname>objects</tagname>
+    <tagtext>{OBJECTS}</tagtext>
+    <description>The Chisimba objects to be loaded in the init method of the generated class.</description>
+  </tag>
+
+  <tag>
+    <tagname>logger</tagname>
+    <tagtext>{LOGGER}</tagtext>
+    <description>The code for the Chisimba logger</description>
+  </tag>
+  
+</chisimba_template_tagnames>

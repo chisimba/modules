@@ -112,6 +112,27 @@ abstract class abgenertor extends object
         //Put in the end php code
         $this->classCode = str_replace('{ENDPHP}', '?>', $this->classCode);
     }
+    
+    /**
+     * 
+     * Method to cleanup unused {TAGS} in from the XML template.
+     * It reads an XML file containing the tags to be cleaned up. By
+     * using an XML file, we can keep the tags out of the code and
+     * keep this code quite simple.
+     * 
+     */
+    function cleanUp()
+    {
+    	$chk = $this->getParam('bypasscleanup', FALSE);
+    	if ($chk !== 'TRUE') {
+	        //Load the XML template tagnames for scrubbing
+	        $xml = simplexml_load_file("modules/generator/resources/template-tagnames.xml");
+	        //Loop through and clean up any unused tags in the code
+	        foreach($xml->tag as $tag) {
+	            $this->classCode = str_replace($tag->tagtext, NULL, $this->classCode);
+	        }
+    	}	        
+    }
 
     /**
     * Method to set the values of protected/private properties. Note that it 

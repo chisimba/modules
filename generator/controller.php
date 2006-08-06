@@ -160,6 +160,16 @@ class generator extends controller
         }
     }
     
+    /**
+     * 
+     * Method to show all generator template tags as used
+     * in the XML templates
+     * 
+     */
+    function __showTemplateTags()
+    {
+        return 'showtemplatetags_tpl.php';
+    }
     
     /**
     * 

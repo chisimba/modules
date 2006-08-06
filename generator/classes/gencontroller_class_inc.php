@@ -40,6 +40,8 @@ class gencontroller extends abgenertor implements ifgenerator
         $this->setupClass('dummy4test', 'controller', $classImplements=NULL);
         //Insert the default controller methods
         $this->classCode = str_replace('{METHODS}', $this->getDefaultMethods() . "\n{SPECIALMETHODS}\n", $this->classCode);
+        //Clean up unused template tags
+        $this->cleanUp();
         $this->prepareForDump();
 	    return $this->classCode;
 	}
