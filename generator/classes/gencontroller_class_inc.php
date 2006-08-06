@@ -32,13 +32,23 @@ class gencontroller extends abgenertor implements ifgenerator
 		/*$ret = $this->startPhp();
 		$ret .= $this->getIntialSecurity();
 	    $ret .= $this->startClass($className, 'controller');
-	    $ret .= $this->getDefaultMethods();
+	    $ret .= 
         
 	    $ret .= $this->endClass();
 	    $ret .= $this->endPhp();*/
         $this->prepareClass();
         $this->setupClass('dummy4test', 'controller', $classImplements=NULL);
-	    return nl2br(htmlentities($this->classCode));
+        //Insert the default controller methods
+        $this->classCode = str_replace('{METHODS}', $this->getDefaultMethods() . "\n{SPECIALMETHODS}\n", $this->classCode);
+        $this->prepareForDump();
+	    return $this->classCode;
+	}
+	
+	private function prepareForDump()
+	{
+		$this->classCode = htmlentities($this->classCode);
+	    $this->classCode = str_replace(' ', '&nbsp;', $this->classCode);
+	    $this->classCode = nl2br($this->classCode);
 	}
 	
     /**

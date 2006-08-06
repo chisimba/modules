@@ -33,9 +33,9 @@ class generator extends controller
     public $objLog;
 
     /**
-     * Intialiser for the stories controller
+     * 
+     * Constructor for the generator controller
      *
-     * @param byref $ string $engine the engine object
      */
     public function init()
     {

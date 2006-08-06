@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- This file is a code generation template for Chisimba controller methods -->
 <chisimba_controller_methods>
+
+<method>
+  <name>
+  	init
+  </name>
+  <code>
+    /**
+    *
+    * Constructor for the module controller
+    *
+    */
+    public function init()
+    {
+{OBJECTS}
+{LOGGER}
+    }
+  </code>
+</method>
+
 <method>
   <name>
     dispatch
@@ -51,7 +70,7 @@
     private function __view()
     {
         $filter = NULL;
-        $ar = $this->objDbStories->fetchStories($filter);
+        $ar = $this->{DATACLASS}->fetchStories($filter);
         $this->setVarByRef('ar', $ar);
         return "main_tpl.php";
     }
