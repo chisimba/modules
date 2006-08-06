@@ -121,7 +121,7 @@ abstract class abgenertor extends object
      * keep this code quite simple.
      * 
      */
-    function cleanUp()
+    public function cleanUp()
     {
     	$chk = $this->getParam('bypasscleanup', FALSE);
     	if ($chk !== 'TRUE') {
@@ -132,6 +132,22 @@ abstract class abgenertor extends object
 	            $this->classCode = str_replace($tag->tagtext, NULL, $this->classCode);
 	        }
     	}	        
+    }
+    
+    /**
+     * 
+     * Method to insert the logger code into the init statement
+     * by replacing the {LOGGER} template code.
+     * 
+     */
+    public function initLogger()
+    {
+        $str = "        //Get the activity logger class\n"
+          . "        \$this->objLog=\$this->newObject('logactivity', 'logger');\n"
+          . "        //Log this module call\n"
+          ."        \$this->objLog->log();\n";
+        $this->classCode = str_replace("{LOGGER}", $str, $this->classCode);
+        return TRUE;
     }
 
     /**

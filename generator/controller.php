@@ -92,10 +92,55 @@ class generator extends controller
     private function __buildcontroller()
     {
     	$objGenController = $this->getObject('gencontroller');
-        $this->setVar('str', 'we are working here');
         $this->setVar('str', $objGenController->generate('dummyclass4test'));
         return "dump_tpl.php";
     }
+    
+    /**
+    * 
+    * Method to get a database schema from the database
+    * 
+    */
+    private function __getxmlschema()
+    {
+    	$objSch = $this->getObject('getschema');
+        $this->setVar('str', $objSch->getXmlSchema());
+        return "dump_tpl.php";
+    } 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     /**
     * 

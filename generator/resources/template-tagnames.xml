@@ -88,6 +88,13 @@
   </tag>
   
   <tag>
+    <tagname>databasetable</tagname>
+    <tagtext>{DATABASETABLE}</tagtext>
+    <description>The name of the database table for the dbtable class being generated.</description>
+  </tag>
+  
+  
+  <tag>
     <tagname>objects</tagname>
     <tagtext>{OBJECTS}</tagtext>
     <description>The Chisimba objects to be loaded in the init method of the generated class.</description>
@@ -98,5 +105,13 @@
     <tagtext>{LOGGER}</tagtext>
     <description>The code for the Chisimba logger</description>
   </tag>
+  
+  <tag>
+    <tagname>specialmethods</tagname>
+    <tagtext>{SPECIALMETHODS}</tagtext>
+    <description>A tag in case there are special methods to insert after parsing the {METHODS} code. It is added and then removed if it is not needed.</description>
+  </tag>
+  
+  
   
 </chisimba_template_tagnames>

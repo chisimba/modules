@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file is a code generation template for Chisimba dbtable methods -->
+<chisimba_dbtable_methods>
+
+<method>
+  <name>
+  	init
+  </name>
+  <code>
+    /**
+    *
+    * Constructor for the module dbtable class for {DATABASETABLE}
+    *
+    */
+    public function init()
+    {
+        parent::init('{DATABASETABLE}');
+    }
+  </code>
+</method>
+
+<method>
+  <name>
+  </name>
+  <code>
+    /**
+    *
+    * Delete a record from {DATABASETABLE}
+    *
+    * @param string $id The id of the record to delete
+    */
+    public function deleteRecord($id)
+    {
+       $this->delete('id', $id);
+    }
+  </code>
+</method>
+
+<!--
+<method>
+  <name>
+  </name>
+  <code>
+  </code>
+</method>
+-->
+
+</chisimba_dbtable_methods>
