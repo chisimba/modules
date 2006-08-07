@@ -24,12 +24,15 @@ class getschema extends dbTableManager
     */
     public function init()
     {
-        //parent::init('tbl_chat_contexts');
+        parent::init();
     }
     
     public function getXmlSchema()
     {
-        return $this->getDefFromDb();
+        //return $this->getDefFromDb('tbl_calendar');
+        $def = $this->getDefFromDb();
+        echo ">>>>" . $def;
+		return $def;
     }
 }
 ?>
