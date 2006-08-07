@@ -29,7 +29,12 @@ class dbUsers extends dbTable
 	function listAll()
 	{
 		$sql = "SELECT userid, CONCAT(firstname, ' ', surname) AS fullname FROM {$this->_tableName} ORDER BY fullname";
-		return $this->getArray($sql);
+		$rows = $this->getArray($sql);
+		$count = count($rows);
+		for ($i = 0; $i < $count; $i++) {
+			$rows[$i]['fullname'] = stripslashes($rows[$i]['fullname']);
+		}
+		return $rows;
 	}
 }
 ?>

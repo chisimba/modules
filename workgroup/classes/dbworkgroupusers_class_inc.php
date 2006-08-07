@@ -75,7 +75,12 @@ class dbWorkgroupUsers extends dbTable
 		WHERE {$this->_tableName}.userid=tbl_users.userid
         AND {$this->_tableName}.workgroupid='" . $workgroupId . "'
 		ORDER BY fullname";
-		return $this->getArray($sql);
+		$rows = $this->getArray($sql);
+		$count = count($rows);
+		for ($i = 0; $i < $count; $i++) {
+			$rows[$i]['fullname'] = stripslashes($rows[$i]['fullname']);
+		}
+		return $rows;
 		//return $this->getAll("WHERE workgroupId='".$workgroupId."'");
 	}
 
@@ -87,12 +92,17 @@ class dbWorkgroupUsers extends dbTable
     */
 	function listSingle($workgroupId, $userId)
 	{
-		$sql = "SELECT {$this->_tableName}.userid, tbl_users.surname, tbl_users.firstname FROM $this->_tableName, tbl_users
+		$sql = "SELECT {$this->_tableName}.userid, CONCAT(tbl_users.firstname, ' ', tbl_users.surname) AS fullname FROM $this->_tableName, tbl_users
 		WHERE {$this->_tableName}.userid=tbl_users.userid
 		AND {$this->_tableName}.workgroupid='" . $workgroupId . "'
 		AND {$this->_tableName}.userid='" . $userId . "'
-		ORDER BY tbl_users.firstname, tbl_users.surname";
-		return $this->getArray($sql);
+		ORDER BY fullname";
+		$rows = $this->getArray($sql);
+		$count = count($rows);
+		for ($i = 0; $i < $count; $i++) {
+			$rows[$i]['fullname'] = stripslashes($rows[$i]['fullname']);
+		}
+		return $rows;
 		//return $this->getAll("WHERE workgroupId='".$workgroupId."'");
 	}
 
