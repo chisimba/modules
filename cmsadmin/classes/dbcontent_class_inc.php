@@ -229,5 +229,25 @@ class dbcontent extends dbTable
 	    
 	}
 	
+	
+	
+	/**
+	* Method to update all the content with the 
+	* sections that will be deleted
+	* @param string $sectionId The section Id
+	* @return boolean
+	* @access public
+	*/
+	public  function resetSection($sectionId)
+	{
+		
+		$arrContent = $this->getAll('WHERE sectionid = "'.$id.'"');
+		foreach ($arrContent as $page)
+		{
+			$this->update('id', $page['id'], array('sectionid' => 'no-id'));
+		}
+		return ;
+	}
+	
 }
 ?>
