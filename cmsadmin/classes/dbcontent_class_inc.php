@@ -91,9 +91,11 @@ class dbcontent extends dbTable
 		
 			return $newId;
 			
-		}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
+		} 
+		catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
         }
 		
 		
@@ -147,38 +149,80 @@ class dbcontent extends dbTable
 			return $this->update('id', $id, $newArr);
 		
 			//print 'Saving new record';
-		}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
+		}
+		 catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
         }
 		
 		
 	}
 	
+	
+	
+	
 	/**
-	 * Method delete a record
+	 * Method move a record to trash
 	 * @param string $id The id of the record that needs to be deleted
 	 * @access public
 	 * @return bool
 	 */
-	public function trash()
+	public function trashContent($id)
 	{
 		
+		return $this->update('id', $id, array('trash' => 1));
+	}
+	
+	
+	
+	
+	/**
+	 * Method to undelete content
+	 * @param string $id The id of the record that needs to be deleted
+	 * @access public
+	 * @return bool
+	 */
+	public function undelete($id)
+	{
 		
+		return $this->update('id', $id, array('trash' => 0));
+	}
+	
+	
+	
+	/**
+	* Method to delete a content page
+	* @param string $id
+	* @return boolean
+	* @access public
+	*/
+	public function deleteContent($id)
+	{
+		return $this->delete('id', $id);	
 	}
 	
 	/**
 	 * Method to get the content
 	 * @return  array
 	 * @access public
+	 * @param string filter The Filter 
 	 */
-	public function getContentPages()
+	public function getContentPages($filter = '')
 	{
 		try{
-			return $this->getAll('ORDER BY sectionid,catid');
-		}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
+			if($filter == 'trash')
+			{
+				$filter = ' WHERE trash=1 ';
+			} else {
+				$filter = ' WHERE trash=0 ';
+			}
+			return $this->getAll($filter.' ORDER BY sectionid,catid');
+		}
+		 catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
         }
 		
 	}
@@ -219,13 +263,20 @@ class dbcontent extends dbTable
 	 */
 	public function togglePublish($id)
 	{
-	   $row = $this->getContentPage($id);
-	   if($row['published'] == 1)
-	   {    
-	       return $this->update('id', $id , array('published' => 0) );    
-	   } else {
-	       return $this->update('id', $id , array('published' => 1) );    
-	   }
+		try{
+		   $row = $this->getContentPage($id);
+		   if($row['published'] == 1)
+		   {    
+		       return $this->update('id', $id , array('published' => 0) );    
+		   } else {
+		       return $this->update('id', $id , array('published' => 1) );    
+		   }
+		} 
+		catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
+        }
 	    
 	}
 	
@@ -240,13 +291,19 @@ class dbcontent extends dbTable
 	*/
 	public  function resetSection($sectionId)
 	{
-		
-		$arrContent = $this->getAll('WHERE sectionid = "'.$id.'"');
-		foreach ($arrContent as $page)
-		{
-			$this->update('id', $page['id'], array('sectionid' => 'no-id'));
+		try{	
+			$arrContent = $this->getAll('WHERE sectionid = "'.$id.'"');
+			foreach ($arrContent as $page)
+			{
+				$this->update('id', $page['id'], array('sectionid' => 'no-id'));
+			}
+			return ;
 		}
-		return ;
+		 catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
+        }
 	}
 	
 }

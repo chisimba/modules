@@ -314,7 +314,7 @@ class cmsutils extends object
 		        {
 		        	
 		        	$pagenodes = array();
-		        	$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$section['id'].'" AND published=1 ORDER BY ordering');
+		        	$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$section['id'].'" AND published=1 and trash=0 ORDER BY ordering');
 		        	
 		        	foreach( $arrPages as $page)
 		        	{
@@ -537,7 +537,7 @@ class cmsutils extends object
 			
 			$str = '<h3>'. $arrSection['title'].'</h3><img src="'.$objConfig->getSiteRoot().'usrfiles/media'.$arrSection['image'].'" />';
 			
-			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
+			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 and trash=0  ORDER BY ordering');
 			foreach ($arrPages as $page)
 			{
 				
@@ -604,7 +604,7 @@ class cmsutils extends object
 		try {
 			$heading = '<h3>'. $arrSection['title']."</h3>";
 			
-			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
+			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 and trash=0  ORDER BY ordering');
 			
 			$cnt = 0;
 			foreach ($arrPages as $page)
@@ -644,7 +644,7 @@ class cmsutils extends object
 		try {
 			$str = '<h3>'. $arrSection['title']."</h3>";
 			
-			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
+			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 and trash=0 ORDER BY ordering');
 			foreach ($arrPages as $page)
 			{
 				$link = & $this->newObject('link', 'htmlelements');

@@ -29,7 +29,7 @@ $table->addHeaderCell('Published');
 $table->addHeaderCell('Access');
 $table->addHeaderCell('Section ID');
 //$table->addHeaderCell('#Categories');
-//$table->addHeaderCell('#Active');
+$table->addHeaderCell('&nbsp;');
 
 $table->endHeaderRow();   
 
@@ -38,6 +38,7 @@ $rowcount = 0;
 //setup the tables rows  and loop though the records
 foreach($arrSections as $section)
 {
+	//edit link
 	$link->link = $section['title'];
 	$link->href = $this->uri(array('action' => 'addsection', 'mode' => 'edit', 'id' => $section['id']));
 	
@@ -47,6 +48,7 @@ foreach($arrSections as $section)
 	$tableRow[]=$cnt++;
     $tableRow[]=$link->show();
     
+    //publish
     $link->href = $this->uri(array('action' => 'sectionpublish', 'id' => $section['id']));
     $link->link = $this->_objUtils->getCheckIcon($section['published']);
     
@@ -58,7 +60,12 @@ foreach($arrSections as $section)
 	//$table->addCell($section['catid']);
 	//$tableRow[]=$this->_objCategories->getCatCount($section['id']);
 	//$table->addCell($section['created']);
-
+	
+	//delete link
+	$objIcon->setIcon('delete');
+	$link->href = $this->uri(array('action' => 'sectiondelete', 'id' => $section['id']));
+    $link->link = $objIcon->show();
+	$tableRow[] = $link->show();
   	$table->addRow($tableRow, $oddOrEven);
 	$rowcount = ($rowcount == 0) ? 1 : 0;
 	

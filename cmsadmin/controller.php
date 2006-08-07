@@ -97,7 +97,7 @@ class cmsadmin extends controller
 	{
 		// instantiate object
         try{
-        	//$this->_objContextCore = & $this->newObject('dbcontextcore', 'contextcore');
+        	
 			$this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
 			$this->_objCategories = & $this->newObject('dbcategories', 'cmsadmin');
 			$this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
@@ -123,20 +123,22 @@ class cmsadmin extends controller
 	    try{
     		$action = $this->getParam('action');
     		$this->setLayoutTemplate('cms_layout_tpl.php');
+    		//$this->setVar('bodyParams', ' id="type-b" ');
             switch ($action){
                        	
             	case null:
                 	
+            	
+            	
                 //content section
                 case 'content':
-                	return 'cms_content_list_tpl.php';            	
-                
-                case 'addcontent':
-                	return 'cms_content_add_tpl.php';			                	
-    			
+                	return 'cms_content_list_tpl.php';            
+                	
+                case 'addcontent':                	
+                	return 'cms_content_add_tpl.php';			                	    			
+                	
                 case 'createcontent':
     				$this->_objContent->add();
-
     				if($this->getParam('frontpage') == 'true')
                 	{
                 		return $this->nextAction(array('action' => 'frontpages'), 'cmsadmin');
@@ -145,8 +147,7 @@ class cmsadmin extends controller
                 	}    				
     				
     			case 'editcontent':
-    				$this->_objContent->edit();
-    				
+    				$this->_objContent->edit();    				
     				if($this->getParam('frontpage') == 'true')
                 	{
                 		return $this->nextAction(array('action' => 'frontpages'), 'cmsadmin');
@@ -158,6 +159,15 @@ class cmsadmin extends controller
     			    $this->_objContent->togglePublish($this->getParam('id'));
     			    return $this->nextAction('content');
     			
+    			case 'trashcontent':
+    				$this->_objContent->trashContent($this->getParam('id'));
+    				return $this->nextAction('content');
+    				
+    			case 'deletecontent':
+    				$this->_objContent->deleteContent($this->getParam('id'));
+    				return $this->nextAction('content',array('filter'=>'trash'));
+    				
+    				
     			
     			//section section
     			
@@ -174,6 +184,9 @@ class cmsadmin extends controller
     			case 'sectionpublish':
     			    $this->_objSections->togglePublish($this->getParam('id'));
     			    return $this->nextAction('sections');
+    			case 'sectiondelete':
+    				$this->_objSections->deleteSection($this->getParam('id'));
+    				return $this->nextAction('sections');
     				
     			//categories section	
     			/*
@@ -188,6 +201,8 @@ class cmsadmin extends controller
     				$this->_objCategories->edit();
     				return $this->nextAction('categories');
     				*/
+    			
+    			
     				
     			//front page section	
     			
