@@ -857,4 +857,40 @@ class cmsutils extends object
 		
 	}
 	
+	/**
+	* Method to generate the bread crumbs
+	* @param void
+	* @return string
+	* @access public
+	*/
+	public function getBreadCrumbs()
+	{
+		if ($this->getParam('action') == '')
+		{
+			return '';	
+		}
+		
+		$link = &  $this->newObject('link', 'htmlelements');
+		$link->href = $this->uri(null , 'cms');
+		$link->link = 'Home';
+		$str = $link->show() .' / ';
+		
+		if ($this->getParam('action') == 'showsection')
+		{
+			
+			$str .= $this->_objSections->getMenuText($this->getParam('id'));	
+		}
+		
+		if($this->getParam('action') == 'showfulltext')
+		{
+			$link->href = $this->uri(null , 'cms');
+			$link->link = $this->_objSections->getMenuText($this->getParam('sectionid'));	
+			$str .= $link->show() .' / ';
+			$page = $this->_objContent->getContentPage($this->getParam('id'));
+			$str .= $page['menutext'];
+				
+		}
+		return '<div id="breadcrumb">'. $str .'</div>';
+	}
+	
 }
