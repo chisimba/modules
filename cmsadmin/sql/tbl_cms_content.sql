@@ -32,6 +32,12 @@ $fields = array(
         'notnull' => TRUE,
         'default' => '0'
 		),
+	'trash' => array(
+		'type' => 'integer',
+        'length' => 1,
+        'notnull' => TRUE,
+        'default' => '0'
+		),
 	'sectionid' => array(
 		'type' => 'text',
 		'length' => 32,
