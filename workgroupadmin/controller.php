@@ -137,11 +137,11 @@ class workgroupadmin extends controller
                     
                     // Get list of lecturers
     				$gid=$groups->getLeafId(array($contextCode,'Lecturers'));
-    				$lecturers = $groups->getGroupUsers($gid, array('userId',"CONCAT(firstname, ' ', surName) AS fullName"), "ORDER BY fullName");
+    				$lecturers = $groups->getGroupUsers($gid, array('userid',"CONCAT(firstname, ' ', surname) AS fullname"), "ORDER BY fullname");
 
                     // Get list of students
     				$gid=$groups->getLeafId(array($contextCode,'Students'));
-    				$students = $groups->getGroupUsers($gid, array('userId',"CONCAT(firstname, ' ', surName) AS fullName"), "ORDER BY fullName");
+    				$students = $groups->getGroupUsers($gid, array('userid',"CONCAT(firstname, ' ', surname) AS fullname"), "ORDER BY fullname");
 
     				$_users = array_merge($lecturers, $students);
 
@@ -149,7 +149,7 @@ class workgroupadmin extends controller
                     foreach ($_users as $_user) {
                         $inWorkgroup = false;
                         foreach ($members as $member) {
-                            if ($_user['userId'] == $member['userId']) {
+                            if ($_user['userid'] == $member['userid']) {
                                 $inWorkgroup = true;
                                 break;
                             }

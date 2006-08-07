@@ -105,7 +105,7 @@ if (!empty($lecturers)) {
     foreach ($lecturers as $lecturer) {
         $table->startRow();    
         $oddOrEven = ($oddOrEven=="even")? "odd":"even";	
-        $table->addCell($lecturer['fullName'], "null", "top", "left", $oddOrEven, null);
+        $table->addCell($lecturer['fullname'], "null", "top", "left", $oddOrEven, null);
         
         // Only show Instant Messaging if it is registered
         if ($instantMessaging) {
