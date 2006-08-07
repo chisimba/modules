@@ -111,7 +111,7 @@ if (!empty($lecturers)) {
         if ($instantMessaging) {
             // Display IM button.        
 			$imPopup =& $this->getObject('popup','instantmessaging');
-			$imPopup->setup($lecturer['userId'], null, $objLanguage->languageText('phrase_sendinstantmessage'));
+			$imPopup->setup($lecturer['userid'], null, $objLanguage->languageText('phrase_sendinstantmessage'));
 			$option = $imPopup->show(); 
             $table->addCell($option, "null", "top", "left", $oddOrEven, null);
         }
@@ -131,7 +131,7 @@ if (empty($members)) {
     // Check if user is a lecturer.
     $objContextCondition = &$this->getObject('contextcondition','contextpermissions');
     if ($objContextCondition->isContextMember('Lecturers')) {
-        $href = $this->uri(array('action'=>'manage', 'workgroupId'=>$this->workgroupId),'workgroupadmin');
+        $href = $this->uri(array('action'=>'manage', 'workgroupid'=>$this->workgroupId),'workgroupadmin');
         $url = "<a href=\"$href\">".$objLanguage->languageText('word_here')."</a>";
         $rightContent .= $objLanguage->code2Txt('mod_workgroup_nomembers','workgroup',array('URL'=>$url));
     }
