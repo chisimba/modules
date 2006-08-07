@@ -28,6 +28,12 @@ class dbsections extends dbTable
 	
 	
 	/**
+	 * @var object $_objDBContent
+	 * @access protected
+	 */
+	protected $_objDBContent;
+	
+	/**
 	* Constructor
 	*/
 	public function init()
@@ -35,6 +41,7 @@ class dbsections extends dbTable
 		try {
 			parent::init('tbl_cms_sections');
 			$this->_objDBCategory = $this->getObject('dbcategories', 'cmsadmin');
+			$this->_objDBContent = $this->getObject('dbcontent', 'cmsadmin');
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
@@ -224,4 +231,21 @@ class dbsections extends dbTable
 	    
 	}
 	
+	
+	
+	/**
+	* Method to delete a section 
+	* 
+	*
+	* 
+	* @param $string $id The section id
+	* @access public
+	* @return boolean
+	*/
+	public function deleteSection($id)
+	{
+		$this->_objDBContent->resetSection($id);
+		return $this->delete('id', $id);
+			
+	}
 }
