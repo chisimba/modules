@@ -39,11 +39,17 @@ class gendbtable extends abgenertor implements ifgenerator
 	    return $this->classCode;
 	}
 	
+    /**
+    * 
+    * Format the code for display as HTML
+    * 
+    */
 	private function prepareForDump()
 	{
 		$this->classCode = htmlentities($this->classCode);
 	    $this->classCode = str_replace(' ', '&nbsp;', $this->classCode);
 	    $this->classCode = nl2br($this->classCode);
+        return TRUE;
 	}
 	
     /**
