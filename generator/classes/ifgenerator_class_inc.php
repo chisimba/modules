@@ -19,7 +19,6 @@ if (!$GLOBALS['kewl_entry_point_run'])
 */
 interface ifgenerator
 {
-    public function generate($className);
-    //public function getXmlSpeficication($file);
+    public function generate();
 }
 ?>

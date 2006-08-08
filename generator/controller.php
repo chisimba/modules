@@ -62,7 +62,7 @@ class generator extends controller
     public function dispatch()
     {
         //Get action from query string and set default to view
-        $action=$this->getParam('action', 'buildcontroller');
+        $action=$this->getParam('action', 'start'); //buildcontroller
         // retrieve the mode (edit/add/translate) from the querystring
         $mode = $this->getParam("mode", null);
         // retrieve the sort order from the querystring
@@ -81,6 +81,32 @@ class generator extends controller
     
     
     /*------------- BEGIN: Set of methods to replace case selection ------------*/
+    
+    /**
+    * 
+    * Method corresponding to the start action. It presents a screen for use in 
+    * designing the module being generated.
+    * @access private
+    * 
+    */
+    private function __start()
+    {
+    	$this->setVar('page', 1);
+        return 'start_tpl.php';
+    }
+    
+    /**
+    * 
+    * Method corresponding to the page2 action. It presents a screen for use in 
+    * designing the module being generated.
+    * @access private
+    * 
+    */
+    private function __page2()
+    {
+    	$this->setVar('page', 2);
+        return 'page2_tpl.php';
+    }
 
     /**
     * 
@@ -92,8 +118,12 @@ class generator extends controller
     private function __buildcontroller()
     {
     	$objGenController = $this->getObject('gencontroller');
-        $this->setVar('str', $objGenController->generate('dummyclass4test'));
-        return "dump_tpl.php";
+        $this->setVar('cont', $objGenController->generate());
+        $objGenRegister = $this->getObject('genregister');
+        $this->setVar('reg', $objGenRegister->generate());
+        unset($objGenController);
+        unset($objGenRegister);
+        return "contreg_tpl.php";
     }
     
     /**

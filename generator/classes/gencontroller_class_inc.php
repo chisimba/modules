@@ -27,19 +27,25 @@ class gencontroller extends abgenertor implements ifgenerator
 	/**
 	 * Method to generate the class for the controller
 	 */
-	function generate($className)
+	function generate()
 	{
-		/*$ret = $this->startPhp();
-		$ret .= $this->getIntialSecurity();
-	    $ret .= $this->startClass($className, 'controller');
-	    $ret .= 
-        
-	    $ret .= $this->endClass();
-	    $ret .= $this->endPhp();*/
+		//Read all the required info into variables
+		$moduleCode = $this->getParam('modulecode', '{UNSPECIFIED}');
+		$moduleName = $this->getParam('modulename', '{UNSPECIFIED}');
+		$moduleDescription = $this->getParam('moduledescription', '{UNSPECIFIED}');
+		$purpose = $moduleName . '\n' . $moduleDescription;
+
+	
+		
         $this->prepareClass();
-        $this->setupClass('dummy4test', 'controller', $classImplements=NULL);
+        //Set up the class with the name specified by module code
+        $this->setupClass($moduleCode, 'controller');
+        //Insert the module name and description
+        $this->classCode = str_replace('{PURPOSE}', $purpose, $this->classCode);
         //Insert the default controller methods
         $this->classCode = str_replace('{METHODS}', $this->getDefaultMethods() . "\n{SPECIALMETHODS}\n", $this->classCode);
+
+        
         //Add code for logging
         $this->initLogger();
         //Clean up unused template tags
@@ -52,7 +58,7 @@ class gencontroller extends abgenertor implements ifgenerator
 	{
 		$this->classCode = htmlentities($this->classCode);
 	    $this->classCode = str_replace(' ', '&nbsp;', $this->classCode);
-	    $this->classCode = nl2br($this->classCode);
+	   // $this->classCode = nl2br($this->classCode);
 	}
 	
     /**

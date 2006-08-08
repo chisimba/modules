@@ -112,6 +112,60 @@
     <description>A tag in case there are special methods to insert after parsing the {METHODS} code. It is added and then removed if it is not needed.</description>
   </tag>
   
+  <tag>
+    <tagname>module_id</tagname>
+    <tagtext>{MODULE_ID}</tagtext>
+    <description>The module ID of the module as used in the module registration file.</description>
+  </tag>
   
+  <tag>
+    <tagname>module_name</tagname>
+    <tagtext>{MODULE_NAME}</tagtext>
+    <description>The name of the moule as used in the module registration file. For a controller it will be the same as the class name.</description>
+  </tag>
   
+  <tag>
+    <tagname>module_description</tagname>
+    <tagtext>{MODULE_DESCRIPTION}</tagtext>
+    <description></description>
+  </tag>
+  
+  <tag>
+    <tagname>module_authors</tagname>
+    <tagtext>{MODULE_AUTHORS}</tagtext>
+    <description>The authors of the moule as used in the module registration file.</description>
+  </tag>
+  
+  <tag>
+    <tagname>module_realeasedate</tagname>
+    <tagtext>{MODULE_RELEASEDATE}</tagtext>
+    <description>The release date of the moule as used in the module registration file.</description>
+  </tag>
+  
+  <tag>
+    <tagname>menu_category</tagname>
+    <tagtext>{MENU_CATEGORY}</tagtext>
+    <description>The menu category of the moule as used in the module registration file. This is only inserted if required.</description>
+  </tag>
+  
+  <tag>
+    <tagname>context_aware</tagname>
+    <tagtext>{CONTEXT_AWARE}</tagtext>
+    <description>Indicates whether the module is context aware or not, as used in the module registration file.</description>
+  </tag>
+  
+  <tag>
+    <tagname>depends_context</tagname>
+    <tagtext>{DEPENDS_CONTEXT}</tagtext>
+    <description>Indicates if the module depends on context or not, as used in the module registration file.</description>
+  </tag>
+  
+<!--
+  <tag>
+    <tagname></tagname>
+    <tagtext>{}</tagtext>
+    <description></description>
+  </tag>
+-->
+
 </chisimba_template_tagnames>
