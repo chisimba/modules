@@ -135,7 +135,7 @@
         $frmContext->addToForm($dropdown);
         $button=new button();
         $button->setToSubmit();
-        $button->setValue($this->objLanguage->languageText('word_go','postlogin'));
+        $button->setValue($this->objLanguage->languageText('word_go'));
         $frmContext->addToForm($button);
         echo $frmContext->show();
     }
