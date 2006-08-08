@@ -59,6 +59,7 @@ class genregister extends abgenertor implements ifgenerator
 	    return $this->registerCode;
 	}
 	
+    ///-----------------REMOVE?
 	private function prepareForDump()
 	{
 		$this->classCode = htmlentities($this->classCode);
@@ -66,6 +67,16 @@ class genregister extends abgenertor implements ifgenerator
 	    $this->classCode = nl2br($this->classCode);
 	}
 	
+    /**
+    * 
+    * Method to read the register.conf XML template and format the 
+    * basic REGISTER.CONF file format, without parsing any template
+    * codes.
+    * 
+    * @return string The raw REGISTER.CONF text with the template
+    * codes still in place.
+    * 
+    */
 	function readRegisterTemplate()
 	{
         $ret="";

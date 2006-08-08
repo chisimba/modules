@@ -42,6 +42,15 @@ class tpstart extends object
         $this->loadClass('textinput','htmlelements');
     }
     
+    /**
+    * 
+    * Standard show method that returns the rendered template with the 
+    * form for the start template. The form allows the creation of 
+    * the controller and register.conf files.
+    * 
+    * @return string The formatted form for creating controller and register
+    * 
+    */
     function show()
     {
     	//Set up the form action to generate the controller and register.conf
@@ -237,8 +246,6 @@ class tpstart extends object
         // Use the language object to add the word save
         $objElement->setValue(' ' . $this->objLanguage->languageText("mod_generator_generate", 
   		  "generator").' ');
-
-        
         // return the button to the form
         return "&nbsp;" . $objElement->show()  
           . "<br />&nbsp;";

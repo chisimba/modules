@@ -27,6 +27,13 @@ class getschema extends dbTableManager
         parent::init();
     }
     
+    /**
+    * 
+    * Method to get the XML schema for a table.
+    * 
+    * @param $tableName The table for which to look up the schema
+    * 
+    */
     public function getXmlSchema()
     {
         //return $this->getDefFromDb('tbl_calendar');

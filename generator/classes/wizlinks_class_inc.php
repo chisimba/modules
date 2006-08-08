@@ -26,6 +26,11 @@ class wizlinks extends object
     * 
     */
     public $objLanguage;
+    /**
+    * 
+    * @var string $page The page that we are on in the wizard templates
+    * 
+    */
     private $page;
     
     /**
@@ -43,6 +48,14 @@ class wizlinks extends object
 		$this->objH =& $this->getObject('htmlheading', 'htmlelements');
     }
     
+    /**
+    * 
+    * Show method to render the output of the links menu to the
+    * template
+    * 
+    * @return string The formatted menu of links
+    * 
+    */
     public function show()
     {
     	//Let the methods know what page we are on
@@ -54,11 +67,17 @@ class wizlinks extends object
 		$retstr .= $this->page2Link() . "<br />";
 		$retstr .= $this->page3Link() . "<br />";
 		$retstr .= $this->page4Link() . "<br />";
-		
-		
 		return $retstr;
     }
     
+    /**
+    * 
+    * Method to generate a link to the start template. It is not active 
+    * if we are on the start page.
+    * 
+    * @return string The link to the start page
+    * 
+    */
     private function startLink()
     {
 
@@ -75,6 +94,14 @@ class wizlinks extends object
         return $ret;
     }
     
+    /**
+    * 
+    * Method to generate a link to the page2 template. It is not active 
+    * if we are on the page2 page.
+    * 
+    * @return string The link to the page2 page
+    * 
+    */
     private function page2Link()
     {
         if ($this->page == 'page2') {
@@ -87,7 +114,15 @@ class wizlinks extends object
         }
         return $ret;
     }
-    
+
+    /**
+    * 
+    * Method to generate a link to the page3 template. It is not active 
+    * if we are on the page3 page.
+    * 
+    * @return string The link to the page3 page
+    * 
+    */
     private function page3Link()
     {
         if ($this->page == 'page3') {
@@ -101,6 +136,14 @@ class wizlinks extends object
         return $ret;
     }
     
+    /**
+    * 
+    * Method to generate a link to the page4 template. It is not active 
+    * if we are on the page4 page.
+    * 
+    * @return string The link to the page4 page
+    * 
+    */
     private function page4Link()
     {
         if ($this->page == 'page4') {
@@ -114,6 +157,14 @@ class wizlinks extends object
         return $ret;
     }
     
+    /**
+    * 
+    * Method to return standard text for the left column in the 3 column
+    * layout of the wizards.
+    * 
+    * @return string The standard left column text
+    * 
+    */
     function putStandardLeftTxt()
     {
         // Add the heading to the content of the left column
