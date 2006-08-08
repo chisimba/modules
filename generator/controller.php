@@ -107,6 +107,32 @@ class generator extends controller
     	$this->setVar('page', 2);
         return 'page2_tpl.php';
     }
+    
+    /**
+    * 
+    * Method corresponding to the page3 action. It presents a screen for use in 
+    * entering the table name for the dbTable class to build.
+    * @access private
+    * 
+    */
+    private function __page3()
+    {
+    	$this->setVar('page', 3);
+        return 'page3_tpl.php';
+    }
+
+    /**
+    * 
+    * Method corresponding to the page3 action. It presents a screen for use in 
+    * entering the table name for the dbTable class to build.
+    * @access private
+    * 
+    */
+    private function __builddbtable()
+    {
+    	$this->setVar('page', 3);
+        return 'builddbtable_tpl.php';
+    }
 
     /**
     * 
