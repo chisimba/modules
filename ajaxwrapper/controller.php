@@ -12,7 +12,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * @copyright 2005 KEWL.NextGen
 * @author Tohir Solomons
 */
-class xajaxwrapper extends controller
+class ajaxwrapper extends controller
 {
 
     /**
