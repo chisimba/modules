@@ -332,8 +332,8 @@ class instantmessaging extends controller
 			return "ICQConfirm_tpl.php";
 		}
 		if ($action=='options') {
-			$this->setVar('notifyLogin',$this->objDbOptions->get('notifyLogin'));
-			$this->setVar('notifyReceive',$this->objDbOptions->get('notifyReceive'));
+			$this->setVar('notifylogin',$this->objDbOptions->get('notifylogin'));
+			$this->setVar('notifyreceive',$this->objDbOptions->get('notifyreceive'));
 			$this->setVar('pageSimpleSkin', TRUE);
             $this->setVar('pageSuppressContainer', TRUE);
             $this->setVar('pageSuppressBanner', TRUE);
