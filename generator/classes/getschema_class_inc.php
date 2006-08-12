@@ -34,12 +34,21 @@ class getschema extends dbTableManager
     * @param $tableName The table for which to look up the schema
     * 
     */
-    public function getXmlSchema()
+    public function getXmlSchema($table)
     {
-        //return $this->getDefFromDb('tbl_calendar');
-        $def = $this->getDefFromDb();
-        echo ">>>>" . $def;
-		return $def;
+        return $this->getTableSchema($table);
+    }
+    
+    public function getFieldNamesAsArray($table)
+    {
+    	$ret=array();
+        $schema = $this->getXmlSchema($table);
+        $structure = $schema['fields'];
+        unset($schema);
+        foreach ($structure as $key=>$valueArray) {
+			$ret[] = $key;
+        }
+        return $ret;
     }
 }
 ?>

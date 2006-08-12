@@ -16,10 +16,25 @@ $objH->type=3;
 $objH->str=$objLanguage->languageText("mod_generator_page" . $page . "_instructions", "generator");
 $middleColumn = $objH->show();
 
-//Do the work of generating the code
+//Get the table & class names
+$table = $this->getParam('tablename', 'tbl_users');
+$className = $this->getParam('classname', '{UNSPECIFIED}');
+
+//---Do the work of generating the code
+//Get an instance of the dbtable class generator
 $objDbTb = $this->getObject('gendbtable');
+//Get an instance of the schema generator
+$objSchema = $this->getObject('getschema');
+//Get the fields
+$arFlds = $objSchema->getFieldNamesAsArray($table);
+//Pass the fields to the data object
+$objDbTb->arrayOfFields = $arFlds;
+
+
+
+
 $middleColumn .= "<textarea name=\"datamodel\" cols=\"90\" rows=\"30\">" 
-  . $objDbTb->generate('temporary_for_tessting_the_module') . "</textarea>";
+  . $objDbTb->generate($className) . "</textarea>";
 
 //Variable for the rightside column text
 $objWiz = $this->getObject('wizlinks');

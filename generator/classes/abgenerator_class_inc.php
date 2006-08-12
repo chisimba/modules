@@ -71,6 +71,23 @@ abstract class abgenertor extends object
     * 
     */
     public $package;
+    
+    /**
+    * 
+    * @var string object $objUser String to hold the user object
+    * 
+    */
+    public $objUser;
+    
+    /**
+    * 
+    * Standard init method
+    * 
+    */
+    function init()
+    {
+        $this->objUser = $this->getObject('user', 'security');
+    }
 
 
     /**
@@ -199,6 +216,18 @@ abstract class abgenertor extends object
             return null;
         } 
     } 
+    
+    /**
+    * 
+    * Method to return the module author as the logged in user
+    * 
+    * @return string The full name of the author
+    * 
+    */
+    function getAuthor()
+    {
+        return $this->objUser->fullName();
+    }
     
 } 
 

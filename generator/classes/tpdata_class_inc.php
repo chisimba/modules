@@ -79,6 +79,24 @@ class tpdata extends object
         $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_tablename", "generator"));
         $myTable->addCell($this->__getTableNameElement());
         $myTable->endRow();
+        
+        //Create an element for the input of table name and add it to the table
+        $myTable->startRow();
+        $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_classname", "generator"));
+        $myTable->addCell($this->__getClassNameElement());
+        $myTable->endRow();
+        
+        //Create an element for the input of modulename and add it to the table
+        $myTable->startRow();
+        $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_modname", "generator"));
+        $myTable->addCell($this->__getModuleNameElement());
+        $myTable->endRow();
+        
+        //Create an element for the input of copyright info and add it to the table
+        $myTable->startRow();
+        $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_copyright", "generator"));
+        $myTable->addCell($this->__getModuleCopyrightElement());
+        $myTable->endRow();
 
         //Create an element for the submit (upload) button and add it to the table
         $myTable->startRow();
@@ -116,6 +134,72 @@ class tpdata extends object
         return $objElement->show();
     }
 
+    /**
+    * 
+    * Method to return classname text input to the form
+    * 
+    * @access private
+    * @return the module code text input for the form
+    * 
+    */ 
+    private function __getClassNameElement()
+    {
+        //Create an element for the input of module code
+        $objElement = new textinput ("classname");
+        //Set the field type to text
+        $objElement->fldType="text";
+        $objElement->size=40;
+        if (isset($this->classname)) {
+            $objElement->value=$this->classname;
+        }
+        //Add the $title element to the form
+        return $objElement->show();
+    }
+    
+    /**
+    * 
+    * Method to return sideMenuCategory text input to the form
+    * 
+    * @access private
+    * @return the module code text input for the form
+    * 
+    */ 
+    private function __getModuleCopyrightElement()
+    {
+        //Create an element for the input of module code
+        $objElement = new textinput ("copyright");
+        //Set the field type to text
+        $objElement->fldType="text";
+        $objElement->size=40;
+        if (isset($this->copyright)) {
+            $objElement->value=$this->copyright;
+        }
+        //Add the copyright element to the form
+        return $objElement->show();
+    }
+    
+    /**
+    * 
+    * Method to return modulename text input to the form
+    * 
+    * @access private
+    * @return the module code text input for the form
+    * 
+    */ 
+    private function __getModuleNameElement()
+    {
+        //Create an element for the input of module code
+        $objElement = new textinput ("modulename");
+        //Set the field type to text
+        $objElement->fldType="text";
+        $objElement->size=40;
+        if (isset($this->modulename)) {
+            $objElement->value=$this->modulename;
+        }
+        //Add the $title element to the form
+        return $objElement->show();
+    }
+    
     
     /**
     * 

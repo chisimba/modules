@@ -32,7 +32,7 @@ class gencontroller extends abgenertor implements ifgenerator
     
     function init()
     {
-        $this->objUser = $this->getObject('user', 'security');
+        
     }
     
 	/**
@@ -143,11 +143,6 @@ class gencontroller extends abgenertor implements ifgenerator
         }
         return $ret;
     }
-    
-    
-    function getAuthor()
-    {
-        return $this->objUser->fullName();
-    }
+
 }
 ?>
