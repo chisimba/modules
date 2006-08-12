@@ -1,5 +1,5 @@
 <?php
-
+/*
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 
@@ -8,3 +8,5 @@ $header->type = 1;
 $header->str = $this->objLanguage->languageText('mod_beautifier_heading', 'beautifier');
 
 //echo $header->show();
+*/
+?>
