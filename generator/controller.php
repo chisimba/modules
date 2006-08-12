@@ -120,6 +120,20 @@ class generator extends controller
     	$this->setVar('page', 3);
         return 'page3_tpl.php';
     }
+    
+    /**
+    * 
+    * Method corresponding to the page4 action. It presents a screen for building
+    * the edit/add template
+    * 
+    * @access private
+    * 
+    */
+    private function __page4()
+    {
+    	$this->setVar('page', 4);
+        return 'page4_tpl.php';
+    }
 
     /**
     * 
@@ -151,6 +165,19 @@ class generator extends controller
         unset($objGenController);
         unset($objGenRegister);
         return "contreg_tpl.php";
+    }
+    
+    /**
+    * 
+    * Method corresponding to the genedit action. It generates an
+    * edit template and puts it into a text box.
+    * 
+    * @access private
+    * 
+    */
+    private function __genedit()
+    {
+        return "genedit_tpl.php";
     }
     
     /**
