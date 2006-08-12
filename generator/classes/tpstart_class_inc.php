@@ -40,6 +40,8 @@ class tpstart extends object
         $this->loadClass('form','htmlelements');
         //Load the textinput class 
         $this->loadClass('textinput','htmlelements');
+        //Load the radio class 
+        $this->loadClass('radio','htmlelements');
     }
     
     /**
@@ -92,6 +94,12 @@ class tpstart extends object
         $myTable->addCell($this->__getModuleDescriptionElement());
         $myTable->endRow();
         
+        //Create an element for the input of copyright info and add it to the table
+        $myTable->startRow();
+        $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_copyright", "generator"));
+        $myTable->addCell($this->__getModuleCopyrightElement());
+        $myTable->endRow();
+        
         //Create an element for the input of menu category and add it to the table
         $myTable->startRow();
         $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_menucat", "generator"));
@@ -102,6 +110,18 @@ class tpstart extends object
         $myTable->startRow();
         $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_sidemenucat", "generator"));
         $myTable->addCell($this->__getSideMenuCategoryElement());
+        $myTable->endRow();
+        
+        //Create an element for the input of dependscontext and add it to the table
+        $myTable->startRow();
+        $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_dependscontext", "generator"));
+        $myTable->addCell($this->__getDependsContextElement());
+        $myTable->endRow();
+        
+        //Create an element for the input of contextaware and add it to the table
+        $myTable->startRow();
+        $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_contextaware", "generator"));
+        $myTable->addCell($this->__getContextAwareElement());
         $myTable->endRow();
         
         //Create an element for the submit (upload) button and add it to the table
@@ -202,7 +222,7 @@ class tpstart extends object
         if (isset($this->menucategory)) {
             $objElement->value=$this->menucategory;
         }
-        //Add the $title element to the form
+        //Add the menu category element to the form
         return $objElement->show();
     }
     
@@ -224,9 +244,52 @@ class tpstart extends object
         if (isset($this->sidemenucategory)) {
             $objElement->value=$this->sidemenucategory;
         }
-        //Add the $title element to the form
+        //Add the sidemenu catetory  element to the form
         return $objElement->show();
     }
+    
+    /**
+    * 
+    * Method to return sideMenuCategory text input to the form
+    * 
+    * @access private
+    * @return the module code text input for the form
+    * 
+    */ 
+    private function __getModuleCopyrightElement()
+    {
+        //Create an element for the input of module code
+        $objElement = new textinput ("copyright");
+        //Set the field type to text
+        $objElement->fldType="text";
+        $objElement->size=40;
+        if (isset($this->copyright)) {
+            $objElement->value=$this->copyright;
+        }
+        //Add the copyright element to the form
+        return $objElement->show();
+    }
+    
+    private function __getDependsContextElement()
+    {
+        //Create an element for the input of module code
+        $objElement = new radio ("dependscontext");
+        $objElement->addOption("0", " " . $this->objLanguage->languageText("mod_generator_no", "generator") . " ");
+        $objElement->addOption("2", " " . $this->objLanguage->languageText("mod_generator_yes", "generator") . " ");
+        //Add the element to the form
+        return $objElement->show();
+    }
+    
+    private function __getContextAwareElement()
+    {
+     //Create an element for the input of module code
+        $objElement = new radio ("contextaware");
+        $objElement->addOption("0", " " . $this->objLanguage->languageText("mod_generator_no", "generator") . " ");
+        $objElement->addOption("2", " " . $this->objLanguage->languageText("mod_generator_yes", "generator") . " ");
+        //Add the element to the form
+        return $objElement->show();
+    }
+    
     /**
     * 
     * Method to return upload (submit) button to the form

@@ -160,6 +160,14 @@
     <description>Indicates if the module depends on context or not, as used in the module registration file.</description>
   </tag>
   
+  <tag>
+    <tagname>savecode</tagname>
+    <tagtext>{SAVECODE}</tagtext>
+    <description>Used to represent the code for saving when generating a dbTable class.</description>
+  </tag>
+  
+
+  
 <!--
   <tag>
     <tagname></tagname>

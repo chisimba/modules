@@ -30,7 +30,7 @@ class gendbtable extends abgenertor implements ifgenerator
 	function generate($className)
 	{
         $this->prepareClass();
-        $this->setupClass('dummy4test', 'dbtable', $classImplements=NULL);
+        $this->setupClass($className, 'model', $classImplements=NULL);
         //Insert the default controller methods
         $this->classCode = str_replace('{METHODS}', $this->getDefaultMethods() . "\n{SPECIALMETHODS}\n", $this->classCode);
         //Clean up unused template tags

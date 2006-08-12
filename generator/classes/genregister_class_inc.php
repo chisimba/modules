@@ -25,10 +25,15 @@ class genregister extends abgenertor implements ifgenerator
 {
 	public $registerCode;
     
+    function init()
+    {
+        $this->objUser = $this->getObject('user', 'security');
+    }
+    
 	/**
 	 * Method to generate the class for the controller
 	 */
-	function generate()
+	function generate($className)
 	{
 		//Initialize the register code
 		$this->registerCode="";
@@ -36,8 +41,11 @@ class genregister extends abgenertor implements ifgenerator
 		$this->moduleCode = $this->getParam('modulecode', '{UNSPECIFIED}');
 		$this->moduleName = $this->getParam('modulename', '{UNSPECIFIED}');
 		$this->moduleDescription = $this->getParam('moduledescription', '{UNSPECIFIED}');
+        $this->copyright = $this->getParam('copyright', '{UNSPECIFIED}');
 		$this->menuCategory = $this->getParam('menucategory', NULL);
 		$this->sideMenuCategory = $this->getParam('sidemenucategory', NULL);
+        $this->contextAware = $this->getParam('contextaware', NULL);
+        $this->dependsContext = $this->getParam('dependscontext', NULL);
 		
 		//Read the XML template
 		$this->registerCode = $this->readRegisterTemplate();
@@ -45,11 +53,14 @@ class genregister extends abgenertor implements ifgenerator
 		$this->registerCode = str_replace('{MODULE_NAME}', $this->moduleName, $this->registerCode);
 		$this->registerCode = str_replace('{MODULE_ID}', $this->moduleCode, $this->registerCode);
 		$this->registerCode = str_replace('{MODULE_DESCRIPTION}', $this->moduleDescription, $this->registerCode);
-		$this->registerCode = str_replace('{MENU_CATEGORY}', $this->menuCategory, $this->registerCode);
+        $this->registerCode = str_replace('{MODULE_AUTHORS}', $this->objUser->fullName(), $this->registerCode);
+        $this->registerCode = str_replace('{MODULE_RELEASEDATE}', date("F j, Y, g:i a"), $this->registerCode);
+        $this->registerCode = str_replace('{MENU_CATEGORY}', $this->menuCategory, $this->registerCode);
+		$this->registerCode = str_replace('{SIDEMENU_CATEGORY}', $this->sideMenuCategory, $this->registerCode);
 		$this->registerCode = str_replace('{MODULE_DESCRIPTION}', $this->moduleDescription, $this->registerCode);
+        $this->registerCode = str_replace('{CONTEXT_AWARE}', $this->contextAware, $this->registerCode);
+        $this->registerCode = str_replace('{DEPENDS_CONTEXT}', $this->dependsContext, $this->registerCode);
 	
-//CONTEXT_AWARE: {CONTEXT_AWARE}
-//DEPENDS_CONTEXT: {DEPENDS_CONTEXT}
 
 
         /*

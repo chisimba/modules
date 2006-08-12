@@ -26,14 +26,14 @@
     {
         parent::init('{DATABASETABLE}');
         //Instantiate the user object
-        $this->objUser =& $this->getObject('user', 'security');
+        $this->objUser = $this->getObject('user', 'security');
     }
   </code>
 </method>
 
 <method>
   <name>saveData</name>
-  <code>
+  <code> 
     /**
     *
     * Save method for {DATABASETABLE}
@@ -72,8 +72,7 @@
 </method>
 
 <method>
-  <name>
-  </name>
+  <name>deleterecord</name>
   <code>
     /**
     *

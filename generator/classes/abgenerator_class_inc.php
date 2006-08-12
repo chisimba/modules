@@ -44,13 +44,32 @@ abstract class abgenertor extends object
 
     /**
     * 
-    * @var string array $initObjects An array of the objects to be provided in the init class
+    * @var string $initObjects String containing the code for the objects to be 
+    * provided in the init class
     * 
     */
-    public $initObjects = array();
+    public $initObjects;
     
+    /** 
+    * 
+    * @var string $author String  The author of the module, usually the logged in user.
+    * 
+    */
     public $author;
+    
+    /**
+    * 
+    * @var string $copyRight String The module copyright owner
+    * 
+    */
     public $copyRight;
+    
+    /**
+    * 
+    * @var string $package String The package that the class belongs to,
+    * usually the same as the module code
+    * 
+    */
     public $package;
 
 

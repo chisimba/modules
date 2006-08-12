@@ -14,8 +14,7 @@
     */
     public function init()
     {
-{OBJECTS}
-{LOGGER}
+{OBJECTS}{LOGGER}
     }
   </code>
 </method>

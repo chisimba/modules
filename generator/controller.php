@@ -131,7 +131,7 @@ class generator extends controller
     private function __builddbtable()
     {
     	$this->setVar('page', 3);
-        return 'builddbtable_tpl.php';
+        return 'gendbtable_tpl.php';
     }
 
     /**
@@ -143,10 +143,11 @@ class generator extends controller
     */
     private function __buildcontroller()
     {
+        $className = $this->getParam('classname', 'change_my_name');
     	$objGenController = $this->getObject('gencontroller');
-        $this->setVar('cont', $objGenController->generate());
+        $this->setVar('cont', $objGenController->generate($className));
         $objGenRegister = $this->getObject('genregister');
-        $this->setVar('reg', $objGenRegister->generate());
+        $this->setVar('reg', $objGenRegister->generate($className));
         unset($objGenController);
         unset($objGenRegister);
         return "contreg_tpl.php";
