@@ -15,7 +15,7 @@
         //Include the class file to wrap 
         require_once('{WRAPCLASSSFULLPATH}');
         //Instantiate the class
-        $this->$obj{WRAPCLASS} = new {WRAPCLASS}();
+        $this->$obj{WRAPCLASS} = new {WRAPCLASSINSTANCE}({WRAPCLASSPARAMS});
     }
 </code>
 </item>
@@ -25,7 +25,11 @@
 <code>
 /**
 *
-* Wrapper class for {WRAPCLASS}
+* Wrapper class for {WRAPCLASS}. This wrapper was generated
+* using the generate module of the Chisimba framework as
+* developed by Derek Keats on his birthday in 2006. For 
+* further information about the class being wrapped, see
+* the {WRAPCLASS} documentation.
 *
 */
 class {WRAPPERCLASS} extends object
@@ -33,13 +37,6 @@ class {WRAPPERCLASS} extends object
 	{PROPERTIES}
 	{METHODS}
 }
-</code>
-</item>
-
-<item name="xx">
-<purpose>xx</purpose>
-<code>
-xx
 </code>
 </item>
 

@@ -50,6 +50,8 @@ class genwrapper extends abgenerator implements ifgenerator
     * 
     */
     public $className;
+    
+    public $strClass;
    
     /**
     * 
@@ -80,19 +82,24 @@ class genwrapper extends abgenerator implements ifgenerator
         $this->objToWrap = $this->getWrapClassName();
         $this->prepareWrapper();
         //Replace template elemente for name of class
-        $this->classCode = str_replace('{WRAPCLASS}', $this->objToWrap, $this->classCode);
-        $this->classCode = str_replace('{WRAPPERCLASS}', $this->className, $this->classCode);
+        $this->classCode = str_replace('{WRAPCLASS}', 
+          $this->objToWrap, $this->classCode);
+        $this->classCode = str_replace('{WRAPCLASSINSTANCE}', 
+          $this->objToWrap, $this->classCode);
+        $this->classCode = str_replace('{WRAPCLASSPARAMS}', 
+          $this->getConstructorParams(), $this->classCode);
+        $this->classCode = str_replace('{WRAPPERCLASS}', 
+          $this->className, $this->classCode);
         $this->classCode = str_replace('{WRAPCLASSSFULLPATH}', 
           "modules/" . $this->module . "/lib/" . $this->classFile,
           $this->classCode);
-        $objWrapee = $this->instantiateClass(); ///????????
-        
-        $this->classCode = str_replace('{METHODS}', $this->getMethods($this->objToWrap), $this->classCode);
+        //Start up the class
+        $objWrapee = $this->instantiateClass();
+        $this->classCode = str_replace('{METHODS}', 
+          $this->getMethods($this->objToWrap), $this->classCode);
 
-        
-                
         //Clean up unused template tags
-        //$this->cleanUp();
+        $this->cleanUp();
         $this->prepareForDump();
 	    return $this->classCode;
 	}
@@ -122,11 +129,11 @@ class genwrapper extends abgenerator implements ifgenerator
           . "/lib/" . $this->classFile;
         //Read the file into a string
         $fp = fopen($f, "r");
-        $strClass = fread($fp, filesize($f));
+        $this->strClass = fread($fp, filesize($f));
         fclose($fp);
         //Parse the string and extract the class name
         $regExpr = "/(class )(.*)(\{)/isU";
-        if (preg_match($regExpr, $strClass, $elems)) { 
+        if (preg_match($regExpr, $this->strClass, $elems)) { 
             $ret = $elems[2];
         } else {
             $ret = "{COULDNOTEXTRACTCLASSNAME}";
@@ -141,11 +148,12 @@ class genwrapper extends abgenerator implements ifgenerator
     */
     private function instantiateClass()
     {
+        $params = $this->getConstructorParams();
         //Add params if any are required
-        if (isSet($this->params) && $this->params !== NULL) {
-            $this->objWrapped = new $this->objToWrap($this->params); #can this work???????
+        if ($params !== "") {
+            @$this->objWrapped = new $this->objToWrap($params); #can this work???????
         } else {
-            $this->objWrapped = new $this->objToWrap();
+            @$this->objWrapped = new $this->objToWrap();
         }
     }
 
@@ -189,19 +197,58 @@ class genwrapper extends abgenerator implements ifgenerator
         $ret="";
         foreach ($mth as $method) {
             if (trim($method) != "__construct") {
+                $params = $this->extractParams($method);
                 $ret .= "\n    /**\n    *\n    * Wrapper method for " 
                   . $method . " in the " . $this->objToWrap . "\n    * "
                   . "class being wrapped. "
-                  . "See that class for details of the " . $method 
-                  . "method.\n    *\n    */\n"
-                  . "    public " . $method . "()\n    {\n"
+                  . "See that class for details of the \n" 
+                  . "    * ". $method . "method.\n    *\n    */\n"
+                  . "    public " . $method . "(" . $params . ")\n    {\n"
                   . "        return \$this->" . $this->objToWrap . "->" 
-                  . $method . "();\n    }\n";
+                  . $method . "(". $params . ");\n    }\n";
             }
         }
         return $ret;
     }
+    
+    /**
+    * 
+    * Method to extract the parameters from the method
+    * being processed
+    * 
+    * @param string $mthd The method being parsed
+    * 
+    */
+    function extractParams($mthd)
+    {
+        
+        //Create a regex to match the current pattern
+        $regExpr = "/(" . $mthd . "*\()(.*)(\))/isU";
+        //echo $regExpr . "<br /><br /><br />";
+        if (preg_match($regExpr, $this->strClass, $elems)) { 
+            $ret = $elems[2];
+            
+        } else {
+            $ret = NULL;
+        }
+        /**if ($ret == "") {
+            echo "Did not find params in $mthd <br />";
+        } else {
+            echo "Found $ret in $mthd <br />";
+        }*/
+        return $ret;
+    }
 
+    /**
+    * 
+    * Method to get the constructor class methods
+    * for use in instantiating the class
+    * 
+    */
+    function getConstructorParams()
+    {
+        return $this->extractParams('__construct');
+    }
 
     /**
     * 

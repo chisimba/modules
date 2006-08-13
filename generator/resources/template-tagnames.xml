@@ -21,6 +21,13 @@
   </tag>
   
   <tag>
+    <tagname>wrapclassinstance</tagname>
+    <tagtext>{WRAPCLASSINSTANCE}</tagtext>
+    <description>The named instance of a class that is being wrapped in genwrapper</description>
+  </tag>
+  
+  
+  <tag>
     <tagname>wraperclass</tagname>
     <tagtext>{WRAPPERCLASS}</tagtext>
     <description>The name of the wrapper class for a class that is being wrapped in genwrapper</description>

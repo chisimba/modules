@@ -27,7 +27,7 @@ class GoogleTranslate{
   
   var $post_data = NULL;
   
-function __construct() {
+function __construct($langFrom, $langTo, $text) {
 //$langFrom, $langTo, $text
 
   $this->google_url = "http://translate.google.com/translate_t";
