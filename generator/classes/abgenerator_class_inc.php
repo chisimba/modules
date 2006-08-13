@@ -224,10 +224,23 @@ abstract class abgenerator extends object
     * @return string The full name of the author
     * 
     */
-    function getAuthor()
+    protected function getAuthor()
     {
         return $this->objUser->fullName();
     }
+
+    /**
+    * 
+    * Format the code for display as HTML
+    * 
+    */
+	protected function prepareForDump()
+	{
+		$this->classCode = htmlentities($this->classCode);
+	    $this->classCode = str_replace(' ', '&nbsp;', $this->classCode);
+	    $this->classCode = nl2br($this->classCode);
+        return TRUE;
+	}
     
 } 
 

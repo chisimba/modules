@@ -23,19 +23,47 @@ require_once('modules/generator/classes/ifgenerator_class_inc.php');
 */
 class genwrapper extends abgenerator implements ifgenerator
 {
+    /**
+    * 
+    * @param string $module The module in which the class is found
+    * 
+    */
     private $module;
+    
+    /**
+    * 
+    * @param string $classFile The filename of the class being wrapped
+    * 
+    */
     private $classFile;
-    privte $objToWrap;
-    private $xml;
+    
+    /**
+    * 
+    * @param string $objToWrap The name of the class being wrapped
+    * 
+    */
+    private $objToWrap;
+    
+    /**
+    * 
+    * @param string $className The name of the class being created as the wrapper
+    * 
+    */
+    public $className;
    
     /**
     * 
-    * Standard init method
+    * Standard init method reading the parameters from the
+    * form that has been submitted
     * 
     */
     function init()
     {
-    
+        //Get the values needed to do the work
+        $this->classFile = $this->getParam('filename', NULL);
+        $this->module = $this->getParam('module', NULL);
+        $this->params = $this->getParam('params', NULL);
+        $this->className = $this->getParam('classname', NULL);
     }
    
 	/**
@@ -48,11 +76,23 @@ class genwrapper extends abgenerator implements ifgenerator
 	*/
 	public function generate($className)
 	{
+        $this->loadWrapClass();
+        $this->objToWrap = $this->getWrapClassName();
         $this->prepareWrapper();
+        //Replace template elemente for name of class
+        $this->classCode = str_replace('{WRAPCLASS}', $this->objToWrap, $this->classCode);
+        $this->classCode = str_replace('{WRAPPERCLASS}', $this->className, $this->classCode);
+        $this->classCode = str_replace('{WRAPCLASSSFULLPATH}', 
+          "modules/" . $this->module . "/lib/" . $this->classFile,
+          $this->classCode);
+        $objWrapee = $this->instantiateClass(); ///????????
+        
+        $this->classCode = str_replace('{METHODS}', $this->getMethods($this->objToWrap), $this->classCode);
 
         
+                
         //Clean up unused template tags
-        $this->cleanUp();
+        //$this->cleanUp();
         $this->prepareForDump();
 	    return $this->classCode;
 	}
@@ -78,16 +118,20 @@ class genwrapper extends abgenerator implements ifgenerator
     */
     private function getWrapClassName()
     {
+        $f = "modules/" . $this->module 
+          . "/lib/" . $this->classFile;
         //Read the file into a string
-        $fp = fopen($this->file, "r");
-        $strClass = fread($fp, filesize($this->file));
+        $fp = fopen($f, "r");
+        $strClass = fread($fp, filesize($f));
         fclose($fp);
         //Parse the string and extract the class name
         $regExpr = "/(class )(.*)(\{)/isU";
-        
-        
-        $ret="";
-        $return $ret;
+        if (preg_match($regExpr, $strClass, $elems)) { 
+            $ret = $elems[2];
+        } else {
+            $ret = "{COULDNOTEXTRACTCLASSNAME}";
+        }
+        return $ret;
     }
     
     /**
@@ -98,10 +142,10 @@ class genwrapper extends abgenerator implements ifgenerator
     private function instantiateClass()
     {
         //Add params if any are required
-        if (isSet($this->params) {
-            $this->objToWrap = new $this->className($this->params); #can this work???????
+        if (isSet($this->params) && $this->params !== NULL) {
+            $this->objWrapped = new $this->objToWrap($this->params); #can this work???????
         } else {
-            $this->objToWrap = new $this->className();
+            $this->objWrapped = new $this->objToWrap();
         }
     }
 
@@ -109,18 +153,31 @@ class genwrapper extends abgenerator implements ifgenerator
     * 
     * Method to get all properties of the class to be wrapped
     * 
+    * Note: This will not return private and protected properties
+    * which is exactly as we want it. We do not want to wrap
+    * private properties.
+    * 
     * @return string array An array of all the properties of the
     * class being wrapped
     * 
     */
     private function getProperties()
     {
-        return get_object_vars($this->objToWrap);
+        $prp = get_object_vars($this->objWrapped);
+        $ret="";
+        foreach ($prp as $property) {
+            $ret .= "public " . $property . "\n";
+        }
+        return $ret;
     }
     
     /**
     * 
     * Method to get all methods of the class to be wrapped
+    * 
+    * Note: This will not return private and protected methods
+    * which is exactly as we want it. We do not want to wrap
+    * private methods.
     * 
     * @return string array An array of all the methods of the
     * class being wrapped
@@ -128,23 +185,24 @@ class genwrapper extends abgenerator implements ifgenerator
     */
     private function getMethods()
     {
-        return get_class_methods($this->objToWrap);
+        $mth = get_class_methods($this->objWrapped);
+        $ret="";
+        foreach ($mth as $method) {
+            if (trim($method) != "__construct") {
+                $ret .= "\n    /**\n    *\n    * Wrapper method for " 
+                  . $method . " in the " . $this->objToWrap . "\n    * "
+                  . "class being wrapped. "
+                  . "See that class for details of the " . $method 
+                  . "method.\n    *\n    */\n"
+                  . "    public " . $method . "()\n    {\n"
+                  . "        return \$this->" . $this->objToWrap . "->" 
+                  . $method . "();\n    }\n";
+            }
+        }
+        return $ret;
     }
 
-    
-    /**
-    * 
-    * Format the code for display as HTML
-    * 
-    */
-	private function prepareForDump()
-	{
-		$this->classCode = htmlentities($this->classCode);
-	    $this->classCode = str_replace(' ', '&nbsp;', $this->classCode);
-	    $this->classCode = nl2br($this->classCode);
-        return TRUE;
-	}
-	
+
     /**
     * 
     * Method to prepare the template for the code
@@ -154,24 +212,14 @@ class genwrapper extends abgenerator implements ifgenerator
     */
     private function prepareWrapper()
     {
-    
-    
-    
-    
-    ///--------------------------------------old code working here-----------------------
-        $xml = simplexml_load_file("modules/generator/resources/edit-template-items.xml");
-        //Initialize the template
-        $ret = $xml->xpath("//item[@name = 'initializeTemplate']");
-        $this->classCode = $ret[0]->code;
-        //Add the heading to the template
-        $ret = $xml->xpath("//item[@name = 'createHeading']");
+        $xml = simplexml_load_file("modules/generator/resources/wrapper-items.xml");
+        //Initialize the class
+        $ret = $xml->xpath("//item[@name = 'buildClass']");
         $this->classCode .= $ret[0]->code;
-        //Set up the area for the code to create the edit form
-        $ret = $xml->xpath("//item[@name = 'makeeditform']");
-        $this->classCode .= $ret[0]->code;
-        //Set up the render output code
-        $ret = $xml->xpath("//item[@name = 'renderOutput']");
-        $this->classCode .= $ret[0]->code;
+        //Add the init method
+        $ret = $xml->xpath("//item[@name = 'initializeClass']");
+        $tmp .= $ret[0]->code;
+        $this->classCode = str_replace('{METHODS}', $tmp . "{METHODS}", $this->classCode);
         //Return a casual true
         return TRUE;
     }

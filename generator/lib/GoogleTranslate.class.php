@@ -27,13 +27,13 @@ class GoogleTranslate{
   
   var $post_data = NULL;
   
-function __construct($langFrom, $langTo, $text) {
-
+function __construct() {
+//$langFrom, $langTo, $text
 
   $this->google_url = "http://translate.google.com/translate_t";
-  $this->langFrom = $langFrom;
-  $this->langTo = $langTo;
-  $this->text = $text; //text to translate to
+  $this->langFrom = "en";
+  $this->langTo = "fr";
+  $this->text = "Now is the time for all good men to come to the aid of the party"; //text to translate to
 
 
  $this->languages= array ( //elligable languages (I've only included common Euro langs)

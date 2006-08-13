@@ -134,6 +134,20 @@ class generator extends controller
     	$this->setVar('page', 4);
         return 'page4_tpl.php';
     }
+    
+    /**
+    * 
+    * Method corresponding to the page5 action. It presents a screen for building
+    * the foreign class wrapper template
+    * 
+    * @access private
+    * 
+    */
+    private function __page5()
+    {
+    	$this->setVar('page', 5);
+        return 'page5_tpl.php';
+    }
 
     /**
     * 
@@ -177,8 +191,24 @@ class generator extends controller
     */
     private function __genedit()
     {
+        $this->setVar('page', 4);
         return "genedit_tpl.php";
     }
+    
+    /**
+    * 
+    * Method corresponding to the genedit action. It generates an
+    * edit template and puts it into a text box.
+    * 
+    * @access private
+    * 
+    */
+    private function __genwrapper()
+    {
+        $this->setVar('page', 5);
+        return "genwrapper_tpl.php";
+    }
+    
     
     /**
     * 

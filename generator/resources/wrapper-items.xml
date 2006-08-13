@@ -5,23 +5,23 @@
 <item name="initializeClass">
 <purpose>Initializes the class ({WRAPCLASS}) being wrapped</purpose>
 <code>
-	/**
-	* Standard init method to initialize the class 
-	* ({WRAPCLASS}) being wrapped.
-	*
-	*/
-	public function init()
-	{
-		//Include the class file to wrap
-		require_once('{WRAPCLASSSFULLPATH}');
-		//Instantiate the class
-		$this->$obj{WRAPCLASS} = new '{WRAPCLASS}';
-	}
+    /**
+    * Standard init method to initialize the class 
+    * ({WRAPCLASS}) being wrapped.
+    *
+    */
+    public function init()
+    {
+        //Include the class file to wrap 
+        require_once('{WRAPCLASSSFULLPATH}');
+        //Instantiate the class
+        $this->$obj{WRAPCLASS} = new {WRAPCLASS}();
+    }
 </code>
 </item>
 
 <item name="buildClass">
-<purpose>xx</purpose>
+<purpose>Created the tagged skeleton of the class</purpose>
 <code>
 /**
 *

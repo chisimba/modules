@@ -21,7 +21,7 @@ require_once('modules/generator/classes/ifgenerator_class_inc.php');
 * @licence GNU/GPL
 *
 */
-class genedit extends abgenertor implements ifgenerator
+class genedit extends abgenerator implements ifgenerator
 {
     private $dataClass;
     private $xml;
@@ -39,22 +39,7 @@ class genedit extends abgenertor implements ifgenerator
         $this->prepareForDump();
 	    return $this->classCode;
 	}
-    
 
-	
-    /**
-    * 
-    * Format the code for display as HTML
-    * 
-    */
-	private function prepareForDump()
-	{
-		$this->classCode = htmlentities($this->classCode);
-	    $this->classCode = str_replace(' ', '&nbsp;', $this->classCode);
-	    $this->classCode = nl2br($this->classCode);
-        return TRUE;
-	}
-	
     /**
     * 
     * Method to prepare the template for the code

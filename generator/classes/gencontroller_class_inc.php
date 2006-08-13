@@ -77,12 +77,7 @@ class gencontroller extends abgenerator implements ifgenerator
 	    return $this->classCode;
 	}
 	
-	private function prepareForDump()
-	{
-		$this->classCode = htmlentities($this->classCode);
-	    $this->classCode = str_replace(' ', '&nbsp;', $this->classCode);
-	   // $this->classCode = nl2br($this->classCode);
-	}
+
 	
     /**
     * 

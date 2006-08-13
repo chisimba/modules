@@ -67,6 +67,7 @@ class wizlinks extends object
 		$retstr .= $this->page2Link() . "<br />";
 		$retstr .= $this->page3Link() . "<br />";
 		$retstr .= $this->page4Link() . "<br />";
+        $retstr .= $this->page5Link() . "<br />";
 		return $retstr;
     }
     
@@ -153,6 +154,27 @@ class wizlinks extends object
 			$this->objLink->href =  $href;
 			$this->objLink->link = $this->objLanguage->languageText("mod_generator_bldtmplatefmdb", "generator");
 			$ret ="4. " . $this->objLink->show();
+        }
+        return $ret;
+    }
+    
+    /**
+    * 
+    * Method to generate a link to the page4 template. It is not active 
+    * if we are on the page4 page.
+    * 
+    * @return string The link to the page4 page
+    * 
+    */
+    private function page5Link()
+    {
+        if ($this->page == 'page5') {
+            $ret =   "5. " . $this->objLanguage->languageText("mod_generator_page5_instructions", "generator");
+        } else {
+        	$href = $this->uri(array('action' => 'page5', 'page' => 'page5'));
+			$this->objLink->href =  $href;
+			$this->objLink->link = $this->objLanguage->languageText("mod_generator_page5_instructions", "generator");
+			$ret ="5. " . $this->objLink->show();
         }
         return $ret;
     }
