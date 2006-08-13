@@ -21,7 +21,7 @@ require_once('modules/generator/classes/ifgenerator_class_inc.php');
 * @licence GNU/GPL
 *
 */
-class gencontroller extends abgenertor implements ifgenerator
+class gencontroller extends abgenerator implements ifgenerator
 {
     /**
     * 

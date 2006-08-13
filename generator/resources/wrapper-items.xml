@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file is a code generation template for Chisimba wrapper template layout -->
+<chisimba_wrap_template>
+
+<item name="initializeClass">
+<purpose>Initializes the class ({WRAPCLASS}) being wrapped</purpose>
+<code>
+	/**
+	* Standard init method to initialize the class 
+	* ({WRAPCLASS}) being wrapped.
+	*
+	*/
+	public function init()
+	{
+		//Include the class file to wrap
+		require_once('{WRAPCLASSSFULLPATH}');
+		//Instantiate the class
+		$this->$obj{WRAPCLASS} = new '{WRAPCLASS}';
+	}
+</code>
+</item>
+
+<item name="buildClass">
+<purpose>xx</purpose>
+<code>
+/**
+*
+* Wrapper class for {WRAPCLASS}
+*
+*/
+class {WRAPPERCLASS} extends object
+{
+	{PROPERTIES}
+	{METHODS}
+}
+</code>
+</item>
+
+<item name="xx">
+<purpose>xx</purpose>
+<code>
+xx
+</code>
+</item>
+
+</chisimba_wrap_template>

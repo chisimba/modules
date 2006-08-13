@@ -21,7 +21,7 @@ require_once('modules/generator/classes/ifgenerator_class_inc.php');
 * @licence GNU/GPL
 *
 */
-class genregister extends abgenertor implements ifgenerator
+class genregister extends abgenerator implements ifgenerator
 {
 	public $registerCode;
     

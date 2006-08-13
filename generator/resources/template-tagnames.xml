@@ -9,6 +9,24 @@
 <chisimba_template_tagnames>
 
   <tag>
+    <tagname>wrapclass</tagname>
+    <tagtext>{WRAPCLASS}</tagtext>
+    <description>A class that is being wrapped in genwrapper</description>
+  </tag>
+  
+  <tag>
+    <tagname>wrapclassfullpath</tagname>
+    <tagtext>{WRAPCLASSSFULLPATH}</tagtext>
+    <description>The full filesystem path to a class that is being wrapped in genwrapper</description>
+  </tag>
+  
+  <tag>
+    <tagname>wraperclass</tagname>
+    <tagtext>{WRAPPERCLASS}</tagtext>
+    <description>The name of the wrapper class for a class that is being wrapped in genwrapper</description>
+  </tag>
+
+  <tag>
     <tagname>startphp</tagname>
     <tagtext>{STARTPHP}</tagtext>
     <description>The code to start PHP</description>

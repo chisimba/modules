@@ -1,4 +1,4 @@
-<?php
+a<?php
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
 {
@@ -21,7 +21,7 @@ require_once('modules/generator/classes/ifgenerator_class_inc.php');
 * @licence GNU/GPL
 *
 */
-class gendbtable extends abgenertor implements ifgenerator
+class gendbtable extends abgenerator implements ifgenerator
 {
     private $dataClass;
     public $arrayOfFields=array();
