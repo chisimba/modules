@@ -123,12 +123,12 @@ class tpwrapper extends object
     private function __getModuleElement()
     {
         //Create an element for the input of module code
-        $objElement = new textinput ("module");
+        $objElement = new textinput ("wrModule");
         //Set the field type to text
         $objElement->fldType="text";
         $objElement->size=40;
-        if (isset($this->module)) {
-            $objElement->value=$this->module;
+        if (isset($this->wrModule)) {
+            $objElement->value=$this->wrModule;
         }
         //Add the $title element to the form
         return $objElement->show();
