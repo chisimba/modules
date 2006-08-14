@@ -102,6 +102,7 @@ class calendargenerator extends object
     */
     public function show()
     {
+    	$this->appendArrayVar('headerParams','<link href="modules/calendarbase/resources/calendarstyle.css" rel="stylesheet" type="text/css"/>');
         $first_of_month = gmmktime(0,0,0,$this->month,1,$this->year);
         #remember that mktime will automatically correct if invalid dates are entered
         # for instance, mktime(0,0,0,12,32,1997) will be the date for Jan 1, 1998
@@ -113,36 +114,36 @@ class calendargenerator extends object
             $this->objSimpleCal->startweek='sun';
         }
         if ($this->size == 'big') {
-            $day_names = $this->objSimpleCal->getDaysAsArray('3letter');
-            $extraCss = ' bigheight';
+            $day_names = $this->objSimpleCal->getDaysAsArray();
+            $extraCss = ' mainTableTOC';
             $width = 'width="14%"';
         } else {
             $day_names = $this->objSimpleCal->getDaysAsArray('1letter');
-            $extraCss = ' smallCalendar';
+            $extraCss = 'mainTable';
             $width = '';
         }
 
         list($month, $year, $month_name, $weekday) = explode(',',gmstrftime('%m,%Y,%B,%w',$first_of_month));
         $weekday = ($weekday + 7 - $this->first_day) % 7; #adjust for $this->first_day
 
-        $calendar = '<table class="calendar'.$extraCss.'">';
+        $calendar = '<table class="'.$extraCss.'" cellspacing="1" cellpadding="0" border="0">';
         if ($this->size != 'big') {
-            $calendar .= '<thead><th colspan="7" align="center">'.$this->objSimpleCal->monthFull($this->month).' '.$this->year.'</th></thead>';
+            $calendar .= '<thead><th  colspan="7" align="center">'.$this->objSimpleCal->monthFull($this->month).' '.$this->year.'</th></thead>';
         }
-        $calendar .= '<thead>';
+        $calendar .= '<thead class="dayNamesTextTOC">';
 
         foreach($day_names as $d)
         {
-            $calendar .= '<th '.$width.'>'.$d.'</th>';
+            $calendar .= '<th class="dayNamesRowTOC" '.$width.'>'.$d.'</th>';
         }
 
-        $calendar .= "</thead>\n<tr>";
+        $calendar .= "</thead>\n<tr class=\"rowsTOC\">";
 
         // Initial Days from previous month
         if($weekday > 0) {
             for ($i=0; $i < $weekday; $i++)
             {
-                $calendar .= '<td class="cal-greyday">&nbsp;</td>';
+                $calendar .= '<td class="sOtherTOC">&nbsp;</td>';
             }
         } // END - Initial Days from previous month
 
@@ -150,7 +151,7 @@ class calendargenerator extends object
         {
             if($weekday == 7){
                 $weekday   = 0; // start a new week
-                $calendar .= "</tr>\n<tr>";
+                $calendar .= "</tr>\n<tr class=\"rowsTOC\">";
             }
             if(isset($this->events[$day]) ){
 
@@ -177,10 +178,12 @@ class calendargenerator extends object
                 $calendar .= '</td>';
             }
             else if ($this->year == date('Y') && $this->month == date('n') && $day == date('j') ){
-                $calendar .= '<td class="todaycal">'.$day.'</td>';
+                $calendar .= '<td class="s20TOC"><div class="todayTOC">'.$day.'</div></td>';
             }
             else {
-                $calendar .= '<td class="normalday">'.$day.'</td>';
+            	
+            	$cssClass = ($weekday == 0 || $weekday==6) ? 's20TOC0' : 's20TOC'; 
+                $calendar .= '<td class="'.$cssClass.'"><div class="daynumTOC">'.$day.'</div></td>';
             }
         }
 
@@ -188,7 +191,7 @@ class calendargenerator extends object
         if($weekday != 7) {
             for ($i=0; $i < (7 - $weekday); $i++)
             {
-                $calendar .= '<td class="cal-greyday">&nbsp;</td>';
+                $calendar .= '<td class="sOtherTOC">&nbsp;</td>';
             }
         }// END - Rest of days from next month
 
