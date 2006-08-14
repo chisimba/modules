@@ -69,10 +69,15 @@
 		</style>
 <?php
 
+$filter = 'image';
+$mode = "insert";
+
 $link = & $this->newObject('link', 'htmlelements');
 $domTT = & $this->newObject('domtt', 'htmlelements');
 $delImage = $this->newObject('geticon', 'htmlelements');
 $folImage = $this->newObject('geticon', 'htmlelements');
+$this->_objSkin = & $this->newObject('skin' , 'skin');
+			
 
 $delImage->setIcon('edit_trash');
 $folImage->setIcon('folder3');
@@ -138,12 +143,20 @@ if($files)
 		$link->target = "_top";
 		$link->title = "Delete Item";
 		$delLink = $link->show();
-		
-		$ttText = 'Width = 23px <br />';
-		$ttText .= 'Height = 23px <br />';
-		$ttText .= 'Filesize = 2.23Kb <p /><br />';
+		//print_r($file['sizes']);
+		$ttText = 'Width = '.$file['sizes'][0].'px <br />';
+		$ttText .= 'Height = '.$file['sizes'][1].'px <br />';
+		$ttText .= 'File Type = '.$file['sizes']['mime'].' <br />';
+		$ttText .= 'Filesize = '.$file['filesize'].' bytes<p /><br />';
 		
 		$ttText .= 'Click to view the enlarged image';
+		$uri = $this->_objSkin->getSkinUrl().$this->getParam('folder').'/'.$file['name'];
+		if($mode == "insert")
+		{
+			$imgOnclick = " onclick=\"insertImage('".$file["path"]."')\" ";
+		} else {
+			$imgOnclick = " onclick=\"javascript: window.open( '". $uri ."', 'win1', 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=1.5,height=1.5,directories=no,location=no,left=120,top=80'); \"";
+		}
 		
 		$wrap = '<div class="image">
 			
@@ -154,7 +167,7 @@ if($files)
 						<div class="imgTotal"  onmouseover="" onmouseout="">
 							<div align="center" class="imgBorder">
 								
-							'.$domTT->show($file['name'], $ttText, $wrap).'
+							'.$domTT->show($file['name'], $ttText, $wrap, '#', $imgOnclick).'
 						
 									
 							</div>
@@ -180,5 +193,23 @@ if($files)
 		$str .= '<div align="center" style="font-size:large;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">No Media Files Found</div>';
 	}
 	echo $str;
-
+//$str .='<form id="images" name="images"><input type="text" name="hideme" id="hideme" ><form>';
+print $str;
 ?>
+
+<script type="text/javascript" language="javascript">
+
+	function 1insertImage(path)
+	{
+	//	alert(path);	
+		document.forms[0].hideme.value = path;
+	}
+	
+	function insertImage(symbol) 
+	{alert('here');
+	  if (window.opener && !window.opener.closed)
+	  alert('moving' + symbol);
+	    window.opener.document.imgform.hiddenimg.value = symbol;
+	  window.close();
+	}
+</script>

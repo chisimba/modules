@@ -92,7 +92,7 @@ $iframe->frameborder = '0';
 $iframe->src = $this->uri(array('action' => 'showmedia', 'folder' => $this->getParam('folder')), 'mediamanager');
 
 $frame = $iframe->show().'</p>';
-//$up = '<a href="javascript:dirup()"><img src="components/com_media/images/btnFolderUp.gif" width="15" height="15" border="0" alt="Up"></a>';
+$up = '<a href="javascript:dirup()"><img src="components/com_media/images/btnFolderUp.gif" width="15" height="15" border="0" alt="Up" /></a>';
 
 $fieldset->addContent('Directory   '.$dropdown->show().'&nbsp;'.$up.'<p>'. $frame);
 
@@ -112,11 +112,15 @@ echo $form2->show();
 
 <script language="javascript" type="text/javascript">
 <![CDATA[
-	function dirup(){
+	function dirup()
+	{ 
 		var urlquery=frames['<?php echo $iframe->name;?>'].location.search.substring(1);
 		var curdir= urlquery.substring(urlquery.indexOf('folder=')+8);
 		var listdir=curdir.substring(0,curdir.lastIndexOf('/'));
-		frames['<?php echo $iframe->name;?>'].location.href='<?php  echo $this->uri(array('action' => 'showmedia'))?>&folder=' + listdir;
+		//frames['<?php echo $iframe->name;?>'].location.href='<?php  echo $this->uri(array('action' => 'showmedia'))?>&folder=' + listdir;
+		
+		document.getElementById("<?php echo $iframe->name;?>").src='<?php  echo str_replace("&amp;", "&", $this->uri(array('action' => 'showmedia')))?>&folder=' + listdir;
+		//setDropSelect(listdir);
 	}
 
 	function newFolder()
@@ -126,7 +130,7 @@ echo $form2->show();
 		var newSelection = document.forms['<?php echo $form2->name ?>'].newfolder;
 		newSelection.value = selection.value;
 		document.forms['<?php echo $form2->name ?>'].submit();
-		alert(input.value);
+		
 		
 	}
 
@@ -138,6 +142,17 @@ echo $form2->show();
 		
 		//frames['<?php echo $iframe->name;?>'].location.href='<?php  echo str_replace("&amp;", "&", $this->uri(array('action' => 'showmedia')))?>&folder=' + dir;
 		document.getElementById("<?php echo $iframe->name;?>").src='<?php  echo str_replace("&amp;", "&", $this->uri(array('action' => 'showmedia')))?>&folder=' + dir ;
+		//setDropSelect(dir);
+	}
+	
+	function setDropSelect(val)
+	{
+		//document.forms['<?php echo $form->name ?>'].dirPath;
+		var selection = document.forms['<?php echo $form->name ?>'].dirPath;
+		//alert(selection.options[selection.selectedIndex].value);
+		alert(val);
+		alert(selection.selectedIndex.value);
+		selection.options[selection.selectedIndex].value = val;
 	}
 ]]>
 	</script>

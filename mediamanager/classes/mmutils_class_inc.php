@@ -341,7 +341,7 @@ class mmutils extends object
 	       			
 	    			if($this->isImage($completepath))
 	    			{
-	    				$arrFiles[] = array('path' => $path , 'name' => $file);
+	    				$arrFiles[] = array('path' => $path , 'name' => $file, 'filesize' => filesize($completepath), 'filetype' => mime_content_type($completepath) , 'sizes' => getimagesize($completepath));
 	    			}
 	    		 	
 	    		}
