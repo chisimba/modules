@@ -162,12 +162,12 @@ class calendargenerator extends object
                 }
 
                 if ($this->year == date('Y') && $this->month == date('n') && $day == date('j') ){
-                    $cssClass = 'todaycal';
+                    $cssClass = 's20TOC';
                 } else {
-                    $cssClass = 'eventday';
+                    $cssClass = 's20TOC';
                 }
                 if ($this->size == 'big') {
-                    $calendar .= '<td class="'.$cssClass.'"><a href="#'.$day.'">'.$day.'</a>';
+                    $calendar .= '<td class="'.$cssClass.'"><div class="daynumTOC"><a href="#'.$day.'">'.$day.'</div></a>';
                 } else {
                     $calendar .= '<td class="'.$cssClass.'">'.$day.'</a>';
                 }

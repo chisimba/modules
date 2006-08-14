@@ -46,6 +46,7 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 $this->loadClass('iframe', 'htmlelements');
+$bodyInput = & $this->newObject('htmlarea', 'htmlelements');
 
 $headerParams=$this->getJavascriptFile('ts_picker.js','htmlelements');
 $headerParams.="<script>/*Script by Denis Gritcyuk: tspicker@yahoo.com
@@ -185,7 +186,8 @@ $table->startRow();
 $detailsLabel = new label($this->objLanguage->languageText('mod_calendarbase_eventdetails', 'calendarbase').':', 'input_details');
 $table->addCell($detailsLabel->show());
 
-$detailsTextArea = new textarea('details');
+$detailsTextArea =  & $this->newObject('htmlarea', 'htmlelements');//new textarea('details');
+
 if ($mode == 'edit') {
     $detailsTextArea->value = $event['eventdetails'];
 }
