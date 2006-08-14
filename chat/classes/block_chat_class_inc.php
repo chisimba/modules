@@ -99,7 +99,7 @@ class block_chat extends object
         // Show number of users online.
         $objDbChatUsers =& $this->getObject('dbchatusers');
         $list = $objDbChatUsers->listCount($contextId);
-        $count = $list[0]["COUNT(*)"];
+        $count = $list[0]["count(*)"];
         $str .= "<br/>".
             $this->objLanguage->code2Txt(
                 'mod_chat_usersonline','chat',
