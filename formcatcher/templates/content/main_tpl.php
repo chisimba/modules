@@ -57,7 +57,7 @@ if( $this->isValid('addform') ) {
     $myTable->addHeaderCell("&nbsp;");
 }
 
-$myTable->endHeaderRow();   
+$myTable->endHeaderRow();
 
 $objDlIcon = $this->newObject('geticon', 'htmlelements');
 $objDlIcon->setIcon('download');
@@ -86,7 +86,7 @@ if (isset($ar)) {
             $objLn->href = $openLink;
             $objLn->link = $line['filename'];
             $myTable->addCell($objLn->show(), $oddOrEven);
-            
+
             //Check if there is a data file and link to it
             $objPath = & $this->getObject('formuploader');
             $fullFile = $objPath->getUploadPath()
@@ -95,7 +95,7 @@ if (isset($ar)) {
                 // Context Code
                 $objContext =& $this->getObject('dbcontext', 'context');
  		        $contextCode = $objContext->getContextCode();
-                $objLn->href = "usrfiles/formcatcher/" . $contextCode 
+                $objLn->href = "usrfiles/formcatcher/" . $contextCode
                   . "/" . $line['filename'].".dat";
                 $objLn->alt = $line['filename'].".dat";
                 $objLn->link = $objDlIcon->show();
@@ -103,7 +103,7 @@ if (isset($ar)) {
             } else {
                 $myTable->addCell("&nbsp;", $oddOrEven);
             }
-            
+
             if( $this->isValid('edit') ) {
                 //The URL for the edit link if they have permissions
                 $editLink=$this->uri(array(
@@ -134,10 +134,10 @@ if (isset($ar)) {
                 $conf = "&nbsp;";
             }
             $myTable->addCell($ed . " " . $conf, $oddOrEven);
-            $myTable->endRow(); 
+            $myTable->endRow();
             $rowcount = ($rowcount == 0) ? 1 : 0;
         }
-    } 
+    }
 }
 
 //If there are no uploaded forms
@@ -146,7 +146,7 @@ if ($arFound !== TRUE) {
     $myTable->addCell("<div class=\"noRecordsMessage\">"
        . $objLanguage->languageText("mod_formcatcher_errnoforms", "formcatcher")
        ."</div>", NULL, NULL, NULL, "odd", "colspan=\"4\"");
-    $myTable->endRow(); 
+    $myTable->endRow();
 }
 
 //Add the table to the output layer
