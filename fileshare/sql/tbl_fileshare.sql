@@ -11,6 +11,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
+	'fileid' => array(
+		'type' => 'text',
+		'length' => 32
+		),
 	'contextcode' => array(
 		'type' => 'text',
 		'length' => 255
@@ -29,6 +33,7 @@ $fields = array(
 		'type' => 'text',
 		'length' => 255
 		),
+	/*
 	'filetype' => array(
 		'type' => 'text',
 		'length' => 32
@@ -40,6 +45,7 @@ $fields = array(
 		'type' => 'text',
 		'length' => 255
 		),
+	*/
 	'title' => array(
 		'type' => 'text',
 		'length' => 255
