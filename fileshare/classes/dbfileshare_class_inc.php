@@ -27,11 +27,16 @@ class dbfileshare extends dbtable
     */
     public function listAll($contextCode, $workgroupId)
     {
-        return $this->getAll("WHERE 
-			contextcode = '$contextCode' 
-			AND workgroupid = '$workgroupId'
-		");
-    }
+		$sql = "SELECT {$this->_tableName}.*, tbl_files.path
+		FROM {$this->_tableName}, tbl_files
+		WHERE {$this->_tableName}.fileid = tbl_files.id
+		ORDER BY {$this->_tableName}.filename";
+		return $this->getArray($sql);
+//        return $this->getAll("WHERE 
+//			contextcode = '$contextCode' 
+//			AND workgroupid = '$workgroupId'
+//		");
+  	}
 
     /**
     * Method to list a singe file.
@@ -55,12 +60,13 @@ class dbfileshare extends dbtable
 	* @param string $version
     */
     public function insertFile(
+		$fileid,
 		$contextCode,
 		$workgroupId,
 		$filename,
-		$filetype,
-		$filesize,
-		$path,
+		//$filetype,
+		//$filesize,
+		//$path,
 		$title,
 		$description,
 		$version
@@ -72,12 +78,13 @@ class dbfileshare extends dbtable
 		//}
     	//$filename = preg_replace('/^(.*)\.php$/i', '\\1.phps', $filename);
         $sql=array(
+			'fileid'=>$fileid,
 			'contextCode'=>$contextCode,
 			'workgroupid'=>$workgroupId,
 			'filename'=>$filename,
-			'filetype'=>$filetype,
-			'filesize'=>$filesize,
-			'path'=>$path,
+			//'filetype'=>$filetype,
+			//'filesize'=>$filesize,
+			//'path'=>$path,
 			'title'=>$title,
 			'description'=>$description,
 			'version'=>$version,
@@ -111,10 +118,12 @@ class dbfileshare extends dbtable
     */
     public function deleteFile($id)
     {
+		/*
 		$records = $this->listSingle($id);
 		$record = $records[0];
 		@unlink($record['path']);
         $this->delete('id',$id);
+		*/
     }
 
     /**
@@ -126,6 +135,34 @@ class dbfileshare extends dbtable
 	* @param string $version Version
     * @return boolean 
     */
+    public function uploadFile(
+		$contextCode,
+		$workgroupId,
+		$title,
+		$description,
+		$version
+	)
+	{
+		$this->objUpload =& $this->getObject('upload','filemanager');
+		$result = $this->objUpload->uploadFile('upload');
+		if ($result['success']=='1') {
+            $this->insertFile(
+				$result['fileid'],
+				$contextCode,
+				$workgroupId,
+				$result['name'],
+				//$filetype,
+				//$filesize,
+				//$path,
+				$title,
+				$description,
+				$version
+			);
+		    
+		}
+		
+	}
+	/*
     public function uploadFile(
 		$contextCode,
 		$workgroupId,
@@ -185,5 +222,6 @@ class dbfileshare extends dbtable
 			return false;			
 		}
     }
+	*/
 }
 ?>

@@ -32,7 +32,7 @@ class fileshare extends controller
         $this->userId=$this->objUser->userId();
 		*/
 		//$this->objDbContext = &$this->getObject('dbcontext','context');
-        //$this->objDbWorkgroup=$this->getobject('dbworkgroup', 'workgroup');
+        $this->objDbWorkgroup=$this->getobject('dbworkgroup', 'workgroup');
         $this->objDbFileShare=$this->getobject('dbfileshare');
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
@@ -66,7 +66,7 @@ class fileshare extends controller
 		}
         $this->setVar('contextTitle',$this->contextTitle);
 
-        $this->workgroupId = 0; //$this->objDbWorkgroup->getWorkgroupId();
+        $this->workgroupId = $this->objDbWorkgroup->getWorkgroupId();
         if (is_null($this->workgroupId)) {
             die("Access denied");
         }

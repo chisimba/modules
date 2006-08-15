@@ -33,9 +33,9 @@ class filesharelist extends dbtable
     * At the moment, it only shows an unordered list
     * @param string $workgroup Record Id of the Workgroup
     */
-    function getFormattedDisplay($workgroup)
+    function getFormattedDisplay($workgroupId)
     {
-        $filesList = $this->getWorkgroupFiles($workgroup);        
+        $filesList = $this->getWorkgroupFiles($workgroupId);        
         if (count($filesList) == 0) {
             return '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_fileshare_norecords').'</div>';
         } else {

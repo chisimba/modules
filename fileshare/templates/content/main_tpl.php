@@ -45,7 +45,7 @@
 	
 	$objTable->startHeaderRow();
 	$objTable->addHeaderCell($objLanguage->languageText('mod_fileshare_filename','fileshare'));
-	$objTable->addHeaderCell($objLanguage->languageText('mod_fileshare_size','fileshare'));
+	//$objTable->addHeaderCell($objLanguage->languageText('mod_fileshare_size','fileshare'));
 	$objTable->addHeaderCell($objLanguage->languageText('mod_fileshare_title','fileshare'));
 	$objTable->addHeaderCell($objLanguage->languageText('mod_fileshare_description','fileshare'));
 	$objTable->addHeaderCell($objLanguage->languageText('mod_fileshare_version','fileshare'));
@@ -64,13 +64,14 @@
         {
             $id=$file['id'];
             $filename=$file['filename'];
-			$filesize=$file['filesize'];
+			//$filesize=$file['filesize'];
 			$title=$file['title'];
 			$description=$file['description'];
 			$version=$file['version'];
+			$path = $file['path'];
 			//
             //$uri="{$siteRoot}{$contentRoot}/content/$contextCode/workgroup/$workgroupId/$filetype/$filename";
-			$uri="{$siteRoot}{$contentPath}/$filename";
+			$uri="{$siteRoot}{$contentPath}/$path";
 			$iconDownload = $this->getObject('geticon','htmlelements');
 			$iconDownload->setIcon('download');
 			$iconDownload->alt = $objLanguage->languageText('mod_fileshare_download','fileshare');
@@ -98,7 +99,7 @@
             $deletelink=$objConfirm->show();
 			$objTable->startRow($rowClass);
 			$objTable->addCell($filename);
-			$objTable->addCell($filesize);
+			//$objTable->addCell($filesize);
 			$objTable->addCell($title);
 			$objTable->addCell($description);
 			$objTable->addCell($version);
