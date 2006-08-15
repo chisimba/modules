@@ -249,24 +249,29 @@ class dbForum extends dbTable
             ));
             
            
-            $newForumId = $this->getLastInsertId();
-            
-            $userId = $this->objUser->userId();
-            $objForumDefaultRatings =& $this->getObject('dbforum_default_ratings', 'forum');
-            $objForumRatings =& $this->getObject('dbforum_ratings', 'forum');
-            
-            $defaultRatings = $objForumDefaultRatings->getDefaultList();
-            
-            foreach ($defaultRatings as $rating)
-            {
-                $objForumRatings->insertSingle(
-                                $newForumId, 
-                                $rating['rating_description'], 
-                                $rating['rating_point'], 
-                                $userId, 
-                                mktime()
-                            );
-            }
+        $newForumId = $this->getLastInsertId();
+        
+        // Done to Avoid Null Values
+        if ($forum_workgroup == '') {
+            $this->update('id', $newForumId, array('forum_workgroup'=>''));
+        }
+        
+        $userId = $this->objUser->userId();
+        $objForumDefaultRatings =& $this->getObject('dbforum_default_ratings', 'forum');
+        $objForumRatings =& $this->getObject('dbforum_ratings', 'forum');
+        
+        $defaultRatings = $objForumDefaultRatings->getDefaultList();
+        
+        foreach ($defaultRatings as $rating)
+        {
+            $objForumRatings->insertSingle(
+                            $newForumId, 
+                            $rating['rating_description'], 
+                            $rating['rating_point'], 
+                            $userId, 
+                            mktime()
+                        );
+        }
     	
     	return $newForumId;
     }
@@ -317,8 +322,6 @@ class dbForum extends dbTable
     * Update settings of a forum
     *
     * @param string $forum_id:      Context for which this forum applies
-    * @param string $forum_context:      Context for which this forum applies
-    * @param string $forum_workgroup:   Workgroup the forum belongs to
     * @param string $forum_name:          Name of the Forum
     * @param string $forum_description: Description of the forum
     * @param string $forum_visible:       Is the forum visible-
@@ -329,11 +332,10 @@ class dbForum extends dbTable
     * @param string $moderation:          Can users moderate posts in the forum // Under construction
     * @param string $archiveDate:        Date to start Archiving from // NULL if archiving is disabled
     */
-    function updateSingle($forum_id, $forum_context, $forum_workgroup, $forum_name, $forum_description,  $forum_visible, $forum_locked, $ratingsenabled, $studentstarttopic, $attachments, $subscriptions, $moderation, $archive)
+    function updateSingle($forum_id, $forum_name, $forum_description,  $forum_visible, $forum_locked, $ratingsenabled, $studentstarttopic, $attachments, $subscriptions, $moderation, $archiveDate)
     {
-    	$this->update('id', $forum_id, array(
-                'forum_context' => $forum_context,
-                'forum_workgroup' => $forum_workgroup,
+    	
+        return $this->update('id', $forum_id, array(
                 'forum_name' => $forum_name,
                 'forum_description' => $forum_description,
                 'forum_visible' => $forum_visible,
@@ -343,10 +345,9 @@ class dbForum extends dbTable
                 'attachments' => $attachments,
                 'subscriptions' => $subscriptions,
                 'moderation' => $moderation,
-                'archivedate' => $archive
+                'archivedate' => $archiveDate
             ));
     	
-    	return;
     }
     
     /**
@@ -468,17 +469,7 @@ class dbForum extends dbTable
     */
     function deleteForum($id)
     {
-        // Get List of Attachments
-        $objForumAttachments = $this->getObject('dbforumattachments');
-        
-        $this->beginTransaction();
-            $this->delete('id', $id); // Delete the Forum
-            $objForumAttachments->deleteForumAttachments($id); // Delete all attachments related to the forum.
-            // Additional Cleanup
-            // Needed to clean up tbl_forum_attachments as well tbl_filestore.
-        $this->commitTransaction();
-        
-        return ;
+        return $this->delete('id', $id);;
     }
     
     /**

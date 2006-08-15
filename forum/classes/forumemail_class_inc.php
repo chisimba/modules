@@ -107,7 +107,7 @@ class forumemail extends object
             $subject = '['.$forum.'] '.$title;
             $name = 'Not Needed';
             
-            $line1 = $this->objLanguage->languageText('mod_forum_emailtextline1', '{NAME} has posted the following message to the {FORUM} discussion forum:');
+            $line1 = $this->objLanguage->languageText('mod_forum_emailtextline1', '{NAME} has posted the following message to the {FORUM} discussion forum').':';
             $line1 = str_replace('{NAME}', $this->objUser->fullname($senderId), $line1); 
             $line1 = str_replace('{FORUM}', $forum, $line1);
             

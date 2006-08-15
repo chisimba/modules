@@ -97,7 +97,6 @@ class forum extends controller
         
         // Forum Attachments
         $this->objTempAttachments =& $this->getObject('dbtempattachments');
-        $this->objForumAttachments =& $this->getObject('dbforumattachments');
         $this->objPostAttachments =& $this->getObject('dbpostattachments');
         
         $this->objForumRatings =& $this->getObject('dbforum_ratings');
@@ -365,6 +364,7 @@ class forum extends controller
 
         
         $forumNum = $this->objForum->getNumForums($this->contextCode);
+        
         
         if ($forumNum == 0)
         {
@@ -1194,21 +1194,21 @@ class forum extends controller
     {
         $forum_context      = $this->contextCode;
         $forum_workgroup = '';
-        $forum_name          = $_POST['name'];
-        $forum_description = $_POST['description'];
+        $forum_name          = $this->getParam('name');
+        $forum_description = $this->getParam('description');
         $defaultForum         = 'N';
-        $forum_visible         = $_POST['visible'];
+        $forum_visible         = $this->getParam('visible');
         $forumLocked         = 'N';
-        $ratingsenabled      = $_POST['ratings'];
-        $studentstarttopic   = $_POST['student'];
-        $attachments          = $_POST['attachments'];
-        $subscriptions         = $_POST['subscriptions'];
+        $ratingsenabled      = $this->getParam('ratings');
+        $studentstarttopic   = $this->getParam('student');
+        $attachments          = $this->getParam('attachments');
+        $subscriptions         = $this->getParam('subscriptions');
         // Needs to be worked on
         $moderation            = 'N';
         
-        $this->objForum->insertSingle($forum_context, $forum_workgroup, $forum_name, $forum_description,  $defaultForum, $forum_visible, $forumLocked, $ratingsenabled, $studentstarttopic, $attachments, $subscriptions, $moderation);
+        $forum = $this->objForum->insertSingle($forum_context, $forum_workgroup, $forum_name, $forum_description,  $defaultForum, $forum_visible, $forumLocked, $ratingsenabled, $studentstarttopic, $attachments, $subscriptions, $moderation);
         
-        return $this->nextAction('administration', array('message'=>'forumcreated'));
+        return $this->nextAction('administration', array('message'=>'forumcreated', 'id'=>$forum));
     }
     
     /**
@@ -1233,7 +1233,7 @@ class forum extends controller
             $this->setVarByRef('action', $action);
             
             $this->setVarByRef('forum', $forum);
-            $this->appendArrayVar('bodyOnLoad', 'toggleArchiveInput();');
+            
             return 'forum_createedit.php';
         }
     }
@@ -1245,41 +1245,40 @@ class forum extends controller
     */
     function editForumSave()
     {
-        $forum_id              = $_POST['id'];
-        $forum_context      = $this->contextCode;
-        $forum_workgroup = '';
-        $forum_name          = $_POST['name'];
-        $forum_description = $_POST['description'];
+        $forum_id            = $this->getParam('id');
         
-        $forum_visible         = $_POST['visible'];
+        $forum_name          = stripslashes($this->getParam('name'));
+        $forum_description   = stripslashes($this->getParam('description'));
         
-        $forumLocked         = $_POST['lockforum'];
+        $forum_visible       = $this->getParam('visible');
+        
+        $forumLocked         = $this->getParam('lockforum');
         
         if ($forum_visible == 'default')
         {
             $forum_visible = 'Y';
         }
         
-        $ratingsenabled      = $_POST['ratings'];
-        $studentstarttopic   = $_POST['student'];
-        $attachments         = $_POST['attachments'];
-        $subscriptions       = $_POST['subscriptions'];
+        $ratingsenabled      = $this->getParam('ratings');
+        $studentstarttopic   = $this->getParam('student');
+        $attachments         = $this->getParam('attachments');
+        $subscriptions       = $this->getParam('subscriptions');
         
         // Needs to be worked on
         $moderation          = 'N';
         
         // Archiving
-        $doArchive           = $_POST['archivingRadio'];
+        $doArchive           = $this->getParam('archivingRadio');
         
         if ($doArchive == 'Y') {
-            $archiveDate = $_POST['archive'];
+            $archiveDate = $this->getParam('archivedate');
         } else {
             $archiveDate = NULL;
         }
         
-        $this->objForum->updateSingle($forum_id, $forum_context, $forum_workgroup, $forum_name, $forum_description,  $forum_visible, $forumLocked, $ratingsenabled, $studentstarttopic, $attachments, $subscriptions, $moderation, $archiveDate);
+        $this->objForum->updateSingle($forum_id, $forum_name, $forum_description,  $forum_visible, $forumLocked, $ratingsenabled, $studentstarttopic, $attachments, $subscriptions, $moderation, $archiveDate);
         
-        return $this->nextAction('administration', array('message'=>'forumupdated'));
+        return $this->nextAction('administration', array('message'=>'forumupdated', 'id'=>$forum_id));
     }
     
     /**

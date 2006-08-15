@@ -9,29 +9,29 @@ $this->loadClass('hiddeninput', 'htmlelements');
 
 $Header =& $this->getObject('htmlheading', 'htmlelements');
 $Header->type=1;
-$Header->str=$this->objLanguage->languageText('mod_forum_deleteforum').': '.$forum['forum_name'];
+$Header->str=$this->objLanguage->languageText('mod_forum_deleteforum', 'forum').': '.$forum['forum_name'];
 
 echo $Header->show();
 
-echo '<p><strong>'.$this->objLanguage->languageText('mod_forum_forumdescription').'</strong>: '.$forum['forum_description'].'</p>';
+echo '<p><strong>'.$this->objLanguage->languageText('mod_forum_forumdescription', 'forum').'</strong>: '.$forum['forum_description'].'</p>';
 
 if ($forum['defaultforum'] == 'Y') {
-    echo '<p class="error">'.$this->objLanguage->code2Txt('mod_forum_defaultforumcannotbedeleted').'</p>';
-    echo '<p>'.$this->objLanguage->languageText('mod_forum_createanotherforumfirst').'</p>';
+    echo '<p class="error">'.$this->objLanguage->code2Txt('mod_forum_defaultforumcannotbedeleted', 'forum').'</p>';
+    echo '<p>'.$this->objLanguage->languageText('mod_forum_createanotherforumfirst', 'forum').'</p>';
     
     $returnLink = new link ($this->uri(array('action'=>'administration')));
-    $returnLink->link = $this->objLanguage->languageText('mod_forum_returntoforumadministration');
+    $returnLink->link = $this->objLanguage->languageText('mod_forum_returntoforumadministration', 'forum');
     
     echo '<p>'.$returnLink->show().'</p>';
 } else {
     
     
     // First Cell - Deleting the Forum
-    $firstCell = '<p><strong>'.$this->objLanguage->languageText('mod_forum_optiononedeleteforum').'</strong></p>';
+    $firstCell = '<p><strong>'.$this->objLanguage->languageText('mod_forum_optiononedeleteforum', 'forum').'</strong></p>';
     
-    $firstCell .= '<p class="warning"><strong>'.$this->objLanguage->languageText('mod_forum_warningphrase').'</strong> '.$this->objLanguage->languageText('mod_forum_entireforumdeleted').'</p>';
+    $firstCell .= '<p class="warning"><strong>'.$this->objLanguage->languageText('mod_forum_warningphrase', 'forum').':</strong> '.$this->objLanguage->languageText('mod_forum_entireforumdeleted', 'forum').'</p>';
     
-    $firstCell .= '<p>'.$this->objLanguage->languageText('mod_forum_confirmdeleteforum').'</p>';
+    $firstCell .= '<p>'.$this->objLanguage->languageText('mod_forum_confirmdeleteforum', 'forum').'</p>';
     
     $form1 = new form ('deleteforum', $this->uri(array('action'=>'deleteforumconfirm')));
     $hiddenInput = new hiddeninput('id', $forum['id']);
@@ -39,7 +39,7 @@ if ($forum['defaultforum'] == 'Y') {
     
     
     $button = new button('deleteforum');
-    $button->value = $this->objLanguage->languageText('mod_forum_confirmdeleteforumbutton');
+    $button->value = $this->objLanguage->languageText('mod_forum_confirmdeleteforumbutton', 'forum');
     $button->setToSubmit();
     
     $button2 = new button ('cancel');
@@ -51,14 +51,14 @@ if ($forum['defaultforum'] == 'Y') {
     $firstCell .= $form1->show();
     
     // Second Cell - Making it Invisible
-    $secondCell = '<p><strong>'.$this->objLanguage->languageText('mod_forum_optiontwomakeforuminvisible').'</strong></p>';
+    $secondCell = '<p><strong>'.$this->objLanguage->languageText('mod_forum_optiontwomakeforuminvisible', 'forum').'</strong></p>';
     
-    $secondCell .= '<p>'.$this->objLanguage->languageText('mod_forum_preservesforumcontent').'</p>';
+    $secondCell .= '<p>'.$this->objLanguage->languageText('mod_forum_preservesforumcontent', 'forum').'</p>';
     
-    $form2 = new form ('makeinvisible', $this->uri(array('action'=>'changevisibilityconfirm')));
+    $form2 = new form ('makeinvisible', $this->uri(array('action'=>'changevisibilityconfirm', 'forum')));
     $radio = new radio ('visible');
-    $radio->addOption('Y', $this->objLanguage->languageText('mod_forum_makeforumvisible'));
-    $radio->addOption('N', $this->objLanguage->languageText('mod_forum_hideforum'));
+    $radio->addOption('Y', $this->objLanguage->languageText('mod_forum_makeforumvisible', 'forum'));
+    $radio->addOption('N', $this->objLanguage->languageText('mod_forum_hideforum', 'forum'));
     $radio->setBreakSpace(' / ');
     
     $radio->setSelected($forum['forum_visible']);
@@ -66,7 +66,7 @@ if ($forum['defaultforum'] == 'Y') {
     $form2->addToForm('<p>'.$radio->show().'</p>');
     
     $button = new button('changevisibility');
-    $button->value = $this->objLanguage->languageText('mod_forum_updateforumvisibility');
+    $button->value = $this->objLanguage->languageText('mod_forum_updateforumvisibility', 'forum');
     $button->setToSubmit();
     
     $form2->addToForm('<p>'.$button->show().'</p>');
@@ -88,7 +88,7 @@ if ($forum['defaultforum'] == 'Y') {
     
     
     $returnLink = new link ($this->uri(array('action'=>'administration')));
-    $returnLink->link = $this->objLanguage->languageText('mod_forum_returntoforumadministration');
+    $returnLink->link = $this->objLanguage->languageText('mod_forum_returntoforumadministration', 'forum');
     
     echo '<p align="center">'.$returnLink->show().'</p>';
 }

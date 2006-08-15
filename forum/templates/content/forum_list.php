@@ -27,7 +27,7 @@ switch (strtolower($this->getParam('error')))
 $header = new htmlheading();
 $header->type=1;
 
-$string = str_replace('{Context}', $contextTitle, $this->objLanguage->languageText('mod_forum_forumsInContext'));
+$string = str_replace('{Context}', $contextTitle, $this->objLanguage->languageText('mod_forum_forumsInContext', 'forum'));
 
 $header->str=$string;
 
@@ -45,10 +45,10 @@ $tblclass->width='99%';
 
 $tblclass->startHeaderRow();
 $tblclass->addHeaderCell('&nbsp;', 10, 'center');
-$tblclass->addHeaderCell('<strong>'.$this->objLanguage->languageText('mod_forum').'</strong>', '40%');
-$tblclass->addHeaderCell('<strong><nobr>'.$this->objLanguage->languageText('word_topics').'</nobr></strong>', 100, NULL,'center');
-$tblclass->addHeaderCell('<strong><nobr>'.$this->objLanguage->languageText('word_posts').'</nobr></strong>', 100, NULL, 'center');
-$tblclass->addHeaderCell('<strong><nobr>'.$this->objLanguage->languageText('mod_forum_lastpost').'</nobr></strong>', 100);
+$tblclass->addHeaderCell('<strong>'.$this->objLanguage->languageText('mod_forum', 'forum').'</strong>', '40%');
+$tblclass->addHeaderCell('<strong><nobr>'.$this->objLanguage->languageText('word_topics', 'forum').'</nobr></strong>', 100, NULL,'center');
+$tblclass->addHeaderCell('<strong><nobr>'.$this->objLanguage->languageText('word_posts', 'forum').'</nobr></strong>', 100, NULL, 'center');
+$tblclass->addHeaderCell('<strong><nobr>'.$this->objLanguage->languageText('mod_forum_lastpost', 'forum').'</nobr></strong>', 100);
 $tblclass->endHeaderRow();
 
 $dropdown = new dropdown('forum');
@@ -64,16 +64,16 @@ foreach ($forums as $forum)
     $forumName = $forumLink->show();
     
     if ($forum['defaultforum'] == 'Y') {
-        $forumName .= '<em> - '.$this->objLanguage->languageText('mod_forum_defaultForum').'</em>';
+        $forumName .= '<em> - '.$this->objLanguage->languageText('mod_forum_defaultForum', 'forum').'</em>';
     }
     
     $objIcon = $this->getObject('geticon', 'htmlelements');
     if ($forum['forumlocked'] == 'Y') {
         $objIcon->setIcon('lock', NULL, 'icons/forum/');
-        $objIcon->title = $this->objLanguage->languageText('mod_forum_forumislocked');
+        $objIcon->title = $this->objLanguage->languageText('mod_forum_forumislocked', 'forum');
     } else {
         $objIcon->setIcon('unlock', NULL, 'icons/forum/');
-        $objIcon->title = $this->objLanguage->languageText('mod_forum_forumisopen');
+        $objIcon->title = $this->objLanguage->languageText('mod_forum_forumisopen', 'forum');
     }
     
     $tblclass->startRow();
@@ -85,12 +85,12 @@ foreach ($forums as $forum)
     $post = $this->objPost->getLastPost($forum['forum_id']);
     
     if ($post == FALSE) {
-        $postDetails = '<em>'.$this->objLanguage->languageText('mod_forum_nopostsyet').'</em>';
+        $postDetails = '<em>'.$this->objLanguage->languageText('mod_forum_nopostsyet', 'forum').'</em>';
         $cssClass= NULL;
     } else {
         $cssClass = 'smallText';
         $postLink = new link($this->uri(array( 'module'=> 'forum', 'action' => 'viewtopic', 'id' => $post['topic_id'], 'post'=>$post['post_id'])));
-        $postLink->link = stripslashes($post['post_title']);
+        $postLink->link = stripslashes($post['post_title'], 'forum');
         $postDetails = '<strong>'.$postLink->show().'</strong>';
         $postDetails .= '<br />'.$this->trimstrObj->strTrim(stripslashes(str_replace("\r\n", ' ', strip_tags($post['post_text']))), 80);
         
@@ -101,7 +101,7 @@ foreach ($forums as $forum)
         }
         
         if (formatDate($post['dateLastUpdated']) == date('j F Y')) {
-            $datefield = $this->objLanguage->languageText('mod_forum_todayat').' '.formatTime($post['dateLastUpdated']);
+            $datefield = $this->objLanguage->languageText('mod_forum_todayat', 'forum').' '.formatTime($post['dateLastUpdated']);
         } else {
             $datefield = formatDate($post['dateLastUpdated']).' - '.formatTime($post['dateLastUpdated']);
         }
@@ -120,7 +120,7 @@ echo $objSearch->show();
 
 if ($this->isValid('administration') && $this->isLoggedIn) {
     $administrationLink = new link($this->uri(array( 'module'=> 'forum', 'action' => 'administration')));
-    $administrationLink->link = $this->objLanguage->languageText('mod_forum_forumAdministration');
+    $administrationLink->link = $this->objLanguage->languageText('mod_forum_forumAdministration', 'forum');
     echo '<p><strong>'.$administrationLink->show().'</strong></p>';
 }
 
