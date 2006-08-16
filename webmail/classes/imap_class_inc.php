@@ -5,24 +5,57 @@ class imap //extends object
 	public $server;
 	public $user;
 	public $pass;
-	public $protocol = "imap";
-	public $mailbox = "INBOX";
-	public $port = 143;
+	public $protocol;
+	public $mailbox;
+	public $port;
 	public $overview;
 	public $alerts;
+	public $imapdsn = array(
+	'imapserver'  => false,
+	'imapuser' => false,
+	'imappass' => false,
+	'imapprotocol' => false,
+	'imapport'     => false,
+	'imapmailbox' => false,
+	);
+
 	private $conn;
 	private $headers;
 	private $numEmails;
 	private $mailHeader;
+	private $currdsn;
 
-
-	public function setconn($server, $user, $pass, $port = 143, $protocol = "imap", $mailbox = "INBOX")
+	public function init()
 	{
-		$this->server = $server;
-		$this->user = $user;
-		$this->pass = $pass;
-		$this->protocol = $protocol;
-		$this->mailbox = $mailbox;
+
+	}
+
+	public function factory($dsn)
+	{
+		$this->setconn($dsn);
+		$this->connect();
+		//$this->getHeaders();
+		if($this->alerts)
+		{
+			return $this->alerts;
+		}
+	}
+
+	private function setconn($dsn)
+	{
+		$this->currdsn = $dsn;
+		$conarr = $this->parseDSN($dsn);
+		//print_r($conarr);
+		$this->server = $conarr['imapserver'];
+		$this->user = $conarr['imapuser'];
+		$this->pass = $conarr['imappass'];
+		$this->protocol = $conarr['imapprotocol'];
+		$this->mailbox = $conarr['imapmailbox'];
+		$this->port = $conarr['imapport'];
+	}
+
+	private function connect()
+	{
 		$this->conn = @imap_open("{".$this->server. ":" . $this->port . "/" . $this->protocol . "}" . $this->mailbox, $this->user, $this->pass);
 		if(!$this->conn)
 		{
@@ -40,6 +73,65 @@ class imap //extends object
 				return $this->alerts;
 			}
 		}
+	}
+
+	public function setAddress($user, $domain, $name)
+	{
+		return imap_rfc822_write_address($user, $domain, $name);
+	}
+
+	public function checkMailboxStatus()
+	{
+		$check = imap_mailboxmsginfo($this->conn);
+		return $check;
+	}
+
+	public function getACL()
+	{
+		return @imap_getacl($this->conn, $this->mailbox);
+	}
+
+	public function pingServer()
+	{
+		if(!(imap_ping($this->conn)))
+		{
+			$this->connect();
+		}
+		else {
+			return TRUE;
+		}
+	}
+
+	public function listMailBoxes()
+	{
+		$list = imap_getmailboxes($this->conn, "{$this->server}", "*");
+		if (is_array($list)) {
+   			return $list;
+			//foreach ($list as $key => $val) {
+       		//echo "($key) ";
+       		//echo imap_utf7_decode($val->name) . ",";
+       		//echo "'" . $val->delimiter . "',";
+       		//echo $val->attributes . "<br />\n";
+   		//}
+		} else {
+   			return FALSE;
+		}
+	}
+
+	public function getQuotas()
+	{
+		$quota_values = @imap_get_quotaroot($this->conn, $this->mailbox);
+		if (is_array($quota_values)) {
+   			return $quota_values;
+		}
+		//	$storage = $quota_values['STORAGE'];
+   		//	echo "STORAGE usage level is: " .  $storage['usage'];
+   		//	echo "STORAGE limit level is: " .  $storage['limit'];
+
+   		//	$message = $quota_values['MESSAGE'];
+   		//	echo "MESSAGE usage level is: " .  $message['usage'];
+   		//	echo "MESSAGE limit is: " .  $message['limit'];
+
 	}
 
 	public function getHeaders()
@@ -128,7 +220,7 @@ class imap //extends object
 					if (strtoupper($parts[$i]->disposition) == "ATTACHMENT") {
 						$attachment[] = array("filename" => $parts[$i]->parameters[0]->value,
 						"filedata" => imap_fetchbody($this->conn, $messageNum, $partstring));
-					// Message
+						// Message
 					} elseif (strtoupper($parts[$i]->subtype) == "PLAIN") {
 						$content .= imap_fetchbody($this->conn, $messageNum, $partstring);
 					}
@@ -148,6 +240,64 @@ class imap //extends object
 		return $messagearr;
 	}
 
+	private function parseDSN($dsn)
+	{
+		$parsed = $this->imapdsn;
+
+		if (is_array($dsn)) {
+			$dsn = array_merge($parsed, $dsn);
+			return $dsn;
+		}
+		//find the protocol
+		if (($pos = strpos($dsn, '://')) !== false) {
+			$str = substr($dsn, 0, $pos);
+			$dsn = substr($dsn, $pos + 3);
+		} else {
+			$str = $dsn;
+			$dsn = null;
+		}
+		if (preg_match('|^(.+?)\((.*?)\)$|', $str, $arr)) {
+			$parsed['imapprotocol']  = $arr[1];
+			$parsed['imapprotocol'] = !$arr[2] ? $arr[1] : $arr[2];
+		} else {
+			$parsed['imapprotocol']  = $str;
+			$parsed['imapprotocol'] = $str;
+		}
+
+		if (!count($dsn)) {
+			return $parsed;
+		}
+		// Get (if found): username and password
+		if (($at = strrpos($dsn,'@')) !== false) {
+			$str = substr($dsn, 0, $at);
+			$dsn = substr($dsn, $at + 1);
+			if (($pos = strpos($str, ':')) !== false) {
+				$parsed['imapuser'] = rawurldecode(substr($str, 0, $pos));
+				$parsed['imappass'] = rawurldecode(substr($str, $pos + 1));
+			} else {
+				$parsed['imapuser'] = rawurldecode($str);
+			}
+		}
+
+		//server
+		if (($col = strrpos($dsn,':')) !== false) {
+			$strcol = substr($dsn, 0, $col);
+			$dsn = substr($dsn, $col + 1);
+			if (($pos = strpos($strcol, '/')) !== false) {
+				$parsed['imapserver'] = rawurldecode(substr($strcol, 0, $pos));
+			} else {
+				$parsed['imapserver'] = rawurldecode($strcol);
+			}
+		}
+
+		//now we are left with the port and mailbox so we can just explode the string and clobber the arrays together
+		$pm = explode("/",$dsn);
+		$parsed['imapport'] = $pm[0];
+		$parsed['imapmailbox'] = $pm[1];
+		$dsn = NULL;
+
+		return $parsed;
+	}
 
 	public function __destruct()
 	{
