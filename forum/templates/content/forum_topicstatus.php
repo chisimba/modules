@@ -85,7 +85,6 @@ $editor->setContent('');
 $editor->setRows(10);
 $editor->setColumns('100%');
 $editor->setContent($topic['lockReason']);
-$editor->setDefaultToolBarSetWithoutSave();
 $editor->context = TRUE;
 
 $topicStatusForm->addToForm( $editor);

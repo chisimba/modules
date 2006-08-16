@@ -159,7 +159,6 @@ $editor->setName('message');
 $editor->setContent('');
 $editor->setRows(20);
 $editor->setColumns('100');
-$editor->setDefaultToolBarSetWithoutSave();
 
 $objContextCondition = &$this->getObject('contextcondition','contextpermissions');
 $this->isContextLecturer = $objContextCondition->isContextMember('Lecturers');

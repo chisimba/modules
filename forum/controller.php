@@ -477,7 +477,7 @@ class forum extends controller
         $forum = $this->objForum->getForum($id);
         
         // Check if user has access to workgroup forum else redirect
-        $this->checkWorkgroupAccessOrRedirect($forum);
+        //$this->checkWorkgroupAccessOrRedirect($forum);
         
         // Start checking whether to show the link
         // Check if the forum is locked
@@ -937,7 +937,7 @@ class forum extends controller
             $this->objMenuTools->addToBreadCrumbs(array($forumLink->show(),$post['post_title'])); 
             
             // return the template
-            return 'forum_topic_flatthreadview.php';
+            return 'forum_topic_flatview.php';
         }
     
     

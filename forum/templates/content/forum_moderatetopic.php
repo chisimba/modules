@@ -281,7 +281,6 @@ $editor->setName('reason');
 $editor->setRows(10);
 $editor->setColumns('100%');
 $editor->setContent($reasonContent);
-$editor->setDefaultToolBarSetWithoutSave();
 $editor->context = TRUE;
 
 $topicStatusForm->addToForm( $editor);

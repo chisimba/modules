@@ -95,7 +95,7 @@ class dbPost extends dbTable
         $this->objMediaFilter = $this->getObject('parse4mmedia', 'filters');
         $this->objStringsFilter = $this->getObject('parse4display', 'strings');
         
-        $this->objIcon = $this->getObject('geticon', 'htmlelements');
+        $this->objIcon = $this->newObject('geticon', 'htmlelements');
         
         $this->objScriptClear = $this->getObject('script', 'utilities');
         
@@ -391,8 +391,8 @@ class dbPost extends dbTable
         
         $this->objIcon->setIcon('delete');
         $this->objIcon->align = 'right';
-        $this->objIcon->alt = $this->objLanguage->languageText('mod_forum_moderatepost');
-        $this->objIcon->title = $this->objLanguage->languageText('mod_forum_moderatepost');
+        $this->objIcon->alt = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
+        $this->objIcon->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
         // Set up Alt Text
         $moderatePostIcon = $this->objIcon->show();
         
@@ -400,12 +400,12 @@ class dbPost extends dbTable
         //$return .= $post['post_parent'].' '.$post['post_id']; - just for testing
         $return .= '<div class="newForumContainer" '.$margin.'>'."\r\n";
             $return .= '<div class="newForumTopic">'."\r\n";
-                $return .= '<img class="forumUserPicture" src="'.$this->objUserPic->smallUserPicture($post['userId']).'"  /> ';
+                $return .= '<img class="forumUserPicture" src="'.$this->objUserPic->smallUserPicture($post['userid']).'"  /> ';
                 
                 if ($this->showModeration) {
                     $deleteLink = new link ($this->uri(array('action'=>'moderatepost', 'id'=>$post['post_id'])));
                     $deleteLink->link = $moderatePostIcon;
-                    $deleteLink->title = $this->objLanguage->languageText('mod_forum_moderatepost');
+                    $deleteLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
                     $return .= $deleteLink->show();
                 }
                 
@@ -418,7 +418,7 @@ class dbPost extends dbTable
                 
                 
                 // Start of the Title Area
-                $return .= '<div class="forumTopicTitle"><strong>'.stripslashes($post['post_title']).'</strong><br />by '.$post['firstName'].' '.$post['surname'].' - '.formatDate($post['dateLastUpdated']).' at '.formatTime($post['dateLastUpdated']).' ('.$this->objTranslatedDate->getDifference($post['dateLastUpdated']).') </div>';
+                $return .= '<div class="forumTopicTitle"><strong>'.stripslashes($post['post_title']).'</strong><br />by '.$post['firstname'].' '.$post['surname'].' - '.formatDate($post['datelastupdated']).' at '.formatTime($post['datelastupdated']).' ('.$this->objTranslatedDate->getDifference($post['datelastupdated']).') </div>';
                 // Ebd Title Area
             $return .= '</div>'."\r\n";
             
@@ -435,7 +435,7 @@ class dbPost extends dbTable
                     $link->link = stripslashes($tangentParent['post_title']);
                     $link->anchor = $tangentParent['post_id'];
                     
-                    $return .= '<strong>'.$this->objLanguage->languageText('mod_forum_topicisatangentto').' '.$link->show().' by '.$tangentParent['firstName'].' '.$tangentParent['surname'].'</strong><br /><br />';
+                    $return .= '<strong>'.$this->objLanguage->languageText('mod_forum_topicisatangentto', 'forum').' '.$link->show().' by '.$tangentParent['firstName'].' '.$tangentParent['surname'].'</strong><br /><br />';
                     $return .= $this->objScriptClear->removeScript($tangentParent['post_text']);
                     $return .= '</div>';
                 }
@@ -453,7 +453,7 @@ class dbPost extends dbTable
                     
                     // By Pass if attachment has been deleted.
                     if (count($attachments) != 0) {
-                        $return .= '<p><strong>'.$this->objLanguage->languageText('word_attachments').':</strong></p>';
+                        $return .= '<p><strong>'.$this->objLanguage->languageText('word_attachments', 'forum').':</strong></p>';
                         
                         
                         $return .= '<ul>';
@@ -480,7 +480,7 @@ class dbPost extends dbTable
                     $dropdown = new dropdown($post['post_id']);
                     
                     if ($post['rating'] == NULL) {
-                        $dropdown->addOption('n/a', $this->objLanguage->languageText('mod_forum_selectarating').'...');
+                        $dropdown->addOption('n/a', $this->objLanguage->languageText('mod_forum_selectarating', 'forum').'...');
                     }
                     
                     foreach ($this->forumRatingsArray as $rating)
@@ -500,12 +500,12 @@ class dbPost extends dbTable
                 if ($this->repliesAllowed) {
                     $link =& $this->getObject ('link', 'htmlelements');
                     $link->href=$this->uri(array('action'=>'postreply', 'id'=>$post['post_id'], 'type'=>$this->forumtype));
-                    $link->link = $this->objLanguage->languageText('mod_forum_postreply');
+                    $link->link = $this->objLanguage->languageText('mod_forum_postreply', 'forum');
                     $return .= '<p>'.$link->show();
                 }
                 
                 // Check if user can edit post
-                if ($this->editingPostsAllowed && $post['replyPost'] == NULL && $this->checkOkToEdit($post['dateLastUpdated'], $post['userId'], $post['replyPost']) ) {
+                if ($this->editingPostsAllowed && $post['replypost'] == NULL && $this->checkOkToEdit($post['datelastupdated'], $post['userid'], $post['replypost']) ) {
                     
                     // Check whether to start a paragraph or pipe
                     if ($this->repliesAllowed) {
@@ -516,7 +516,7 @@ class dbPost extends dbTable
                     
                     $editlink =& $this->getObject ('link', 'htmlelements');
                     $editlink->href=$this->uri(array('action'=>'editpost', 'id'=>$post['post_id'], 'type'=>$this->forumtype));
-                    $editlink->link = $this->objLanguage->languageText('mod_forum_editpost');
+                    $editlink->link = $this->objLanguage->languageText('mod_forum_editpost', 'forum');
                     
                     $return .= $editlink->show();
                 }
@@ -526,13 +526,13 @@ class dbPost extends dbTable
                 
                 $return .= '<hr />';
                 
-                $return .= $this->objLanguage->languageText('mod_forum_postmadein').' <strong>'.$this->objLanguageCode->getLanguage($post['language']).' ('.strtoupper($post['language']).')</strong>. ';
+                $return .= $this->objLanguage->languageText('mod_forum_postmadein', 'forum').' <strong>'.$this->objLanguageCode->getLanguage($post['language']).' ('.strtoupper($post['language']).')</strong>. ';
                 
                 // Check if other languages exist
                 if (isset($post['anotherLanguage']) && $post['anotherLanguage'] != '') {
                     
                     // Start text
-                    $return .= $this->objLanguage->languageText('mod_forum_alsoavailablein').' ';
+                    $return .= $this->objLanguage->languageText('mod_forum_alsoavailablein', 'forum').' ';
                     
                     // Get list of languages
                     $languages = $this->objPostText->getPostLanguages($post['post_id'], $post['language']);
@@ -558,7 +558,7 @@ class dbPost extends dbTable
                 if ($this->forumLocked == FALSE) {
                     $translateLink =& $this->getObject ('link', 'htmlelements');
                     $translateLink->href=$this->uri(array('action'=>'translate', 'id'=>$post['post_id'], 'type'=>$this->forumtype));
-                    $translateLink->link = $this->objLanguage->languageText('mod_forum_translatepost');
+                    $translateLink->link = $this->objLanguage->languageText('mod_forum_translatepost', 'forum');
                     
                     $return .= $translateLink->show();
                 }
@@ -746,7 +746,7 @@ class dbPost extends dbTable
         $text = str_replace("\r\n", ' ', $text);
         
         if (formatDate($post['dateLastUpdated']) == date('j F Y')) {
-            $datefield = $this->objLanguage->languageText('mod_forum_todayat').' '.formatTime($post['dateLastUpdated']);
+            $datefield = $this->objLanguage->languageText('mod_forum_todayat', 'forum').' '.formatTime($post['dateLastUpdated']);
         } else {
             $datefield = formatDate($post['dateLastUpdated']).' - '.formatTime($post['dateLastUpdated']);
         }
@@ -808,7 +808,7 @@ class dbPost extends dbTable
         // If none exists, return a message saying no records
         // no forum is automatically created here. left until someone actually visits the forum
         if ($workgroupForum == NULL) {
-            return '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_forum_nopostsinforum').'</div>';
+            return '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_forum_nopostsinforum', 'forum').'</div>';
         } else {
             // If forum exists, get the last '10' posts or whatever limit is specified
             $sql = 'SELECT tbl_forum_post_text. * , tbl_forum_post.topic_id, tbl_users.firstName, tbl_users.surname
@@ -822,7 +822,7 @@ class dbPost extends dbTable
             
             // If there are no posts, return a message saying no recordss
             if (count($results) == 0) {
-                return '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_forum_nopostsinforum').'</div>';
+                return '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_forum_nopostsinforum', 'forum').'</div>';
             } else {
                 
                 // Else prepare a table to display results
@@ -831,9 +831,9 @@ class dbPost extends dbTable
                 $objTable->cellspacing = 1;
                 
                 $objTable->startHeaderRow();
-                $objTable->addHeaderCell($this->objLanguage->languageText('mod_forum_topicconversation'));
-                $objTable->addHeaderCell($this->objLanguage->languageText('word_message'), '60%');
-                $objTable->addHeaderCell($this->objLanguage->languageText('word_author'), 100);
+                $objTable->addHeaderCell($this->objLanguage->languageText('mod_forum_topicconversation', 'forum'));
+                $objTable->addHeaderCell($this->objLanguage->languageText('word_message', 'forum'), '60%');
+                $objTable->addHeaderCell($this->objLanguage->languageText('word_author', 'forum'), 100);
                 $objTable->endHeaderRow();
                 
                 // Load Link class
@@ -926,7 +926,7 @@ class dbPost extends dbTable
             // Start of Form
             $postReplyForm = new form('postReplyForm', $this->uri( array('action'=>'savepostreply', 'type'=>$this->forumtype)));
             $postReplyForm->displayType = 3;
-            $postReplyForm->addRule('title', $this->objLanguage->languageText('mod_forum_addtitle'), 'required');
+            $postReplyForm->addRule('title', $this->objLanguage->languageText('mod_forum_addtitle', 'forum'), 'required');
             
             
             $addTable = $this->getObject('htmltable', 'htmlelements');
@@ -936,7 +936,7 @@ class dbPost extends dbTable
             
             
             $addTable->startRow();
-            $subjectLabel = new label($this->objLanguage->languageText('word_subject').':', 'input_title');
+            $subjectLabel = new label($this->objLanguage->languageText('word_subject', 'forum').':', 'input_title');
             $addTable->addCell($subjectLabel->show(), 100);
             
             $titleInput = new textinput('title');
@@ -951,11 +951,11 @@ class dbPost extends dbTable
             // type of post
             $addTable->startRow();
             
-            $addTable->addCell('<nobr>'.$this->objLanguage->languageText('mod_forum_typeofreply').':</nobr>', 100);
+            $addTable->addCell('<nobr>'.$this->objLanguage->languageText('mod_forum_typeofreply', 'forum').':</nobr>', 100);
             
             $objElement = new radio('replytype');
-            $objElement->addOption('reply',$this->objLanguage->languageText('mod_forum_postasreply'));
-            $objElement->addOption('tangent', $this->objLanguage->languageText('mod_forum_postastangent'));
+            $objElement->addOption('reply',$this->objLanguage->languageText('mod_forum_postasreply', 'forum'));
+            $objElement->addOption('tangent', $this->objLanguage->languageText('mod_forum_postastangent', 'forum'));
             //$objElement->addOption('moderate','Post Reply as Moderator');
             
             if ($mode == 'fix') {
@@ -974,21 +974,20 @@ class dbPost extends dbTable
             
             $addTable->startRow();
             
-                $languageLabel = new label($this->objLanguage->languageText('word_language').':', 'input_language');
+                $languageLabel = new label($this->objLanguage->languageText('word_language', 'forum').':', 'input_language');
                 $addTable->addCell($languageLabel->show(), 100);
                 
-                $language =& $this->newObject('language','language');
                 $languageList = new dropdown('language');
-                $languageCodes = & $this->newObject('languagecode','language');
+                $languageCodes = & $this->getObject('languagecode','language');
                 
                 // Sort Associative Array by Language, not ISO Code
-                asort($languageCodes->iso_639_2_tags); 
+                asort($languageCodes->iso_639_2_tags->codes); 
                 
-                foreach ($languageCodes->iso_639_2_tags as $key => $value) {
+                foreach ($languageCodes->iso_639_2_tags->codes as $key => $value) {
                     $languageList->addOption($key, $value);
                 }
                 
-                $languageList->setSelected($languageCodes->getISO($language->currentLanguage()));
+                $languageList->setSelected($languageCodes->getISO($this->objLanguage->currentLanguage()));
                     
                 $addTable->addCell($languageList->show());
             
@@ -996,14 +995,13 @@ class dbPost extends dbTable
             
             $addTable->startRow();
             
-            $addTable->addCell($this->objLanguage->languageText('word_message').':', 140);
+            $addTable->addCell($this->objLanguage->languageText('word_message', 'forum').':', 140);
             
             $editor=&$this->newObject('htmlarea','htmlelements');
             $editor->setName('message');
             $editor->setContent('');
             $editor->setRows(20);
             $editor->setColumns('100');
-            $editor->setDefaultToolBarSetWithoutSave();
             
             $objContextCondition = &$this->getObject('contextcondition','contextpermissions');
             $this->isContextLecturer = $objContextCondition->isContextMember('Lecturers');
@@ -1025,7 +1023,7 @@ class dbPost extends dbTable
             if ($forum['attachments'] == 'Y') {
                 $addTable->startRow();
                 
-                $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments').':', 'attachments');
+                $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
                 $addTable->addCell($attachmentsLabel->show(), 100);
                 
                 $attachmentIframe = new iframe();
@@ -1054,22 +1052,22 @@ class dbPost extends dbTable
                 $forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($post['forum_id'], $this->objUser->userId());
                 
                 $addTable->startRow();
-                $addTable->addCell($this->objLanguage->languageText('mod_forum_emailnotification', 'Email Notification').':');
+                $addTable->addCell($this->objLanguage->languageText('mod_forum_emailnotification', 'forum', 'Email Notification').':');
                 $subscriptionsRadio = new radio ('subscriptions');
-                $subscriptionsRadio->addOption('nosubscriptions', $this->objLanguage->languageText('mod_forum_donotsubscribetothread', 'Do not subscribe to this thread'));
-                $subscriptionsRadio->addOption('topicsubscribe', $this->objLanguage->languageText('mod_forum_notifytopic', 'Notify me via email when someone replies to this thread'));
-                $subscriptionsRadio->addOption('forumsubscribe', $this->objLanguage->languageText('mod_forum_notifyforum', 'Notify me of ALL new topics and replies in this forum.'));
+                $subscriptionsRadio->addOption('nosubscriptions', $this->objLanguage->languageText('mod_forum_donotsubscribetothread', 'forum', 'Do not subscribe to this thread'));
+                $subscriptionsRadio->addOption('topicsubscribe', $this->objLanguage->languageText('mod_forum_notifytopic', 'forum', 'Notify me via email when someone replies to this thread'));
+                $subscriptionsRadio->addOption('forumsubscribe', $this->objLanguage->languageText('mod_forum_notifyforum', 'forum', 'Notify me of ALL new topics and replies in this forum.'));
                 $subscriptionsRadio->setBreakSpace('<br />');
                 
                 if ($forumSubscription) {
                     $subscriptionsRadio->setSelected('forumsubscribe');
-                    $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtoforum', 'You are currently subscribed to the forum, receiving notification of all new posts and replies.');
+                    $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtoforum', 'forum', 'You are currently subscribed to the forum, receiving notification of all new posts and replies.');
                 } else if ($topicSubscription) { 
                     $subscriptionsRadio->setSelected('topicsubscribe');
-                    $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtotopic', 'You are already subscribed to this topic.');
+                    $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtotopic', 'forum', 'You are already subscribed to this topic.');
                 } else {
                     $subscriptionsRadio->setSelected('nosubscriptions');
-                    $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtonumbertopic', 'You are currently subscribed to [NUM] topics.');
+                    $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtonumbertopic', 'forum', 'You are currently subscribed to [NUM] topics.');
                     $subscribeMessage = str_replace('[NUM]', $numTopicSubscriptions, $subscribeMessage);
                 }
                 
@@ -1150,7 +1148,7 @@ function clearForTangent()
         
         if (document.postReplyForm.title.value == \"".addslashes($title)."\".split(\"'\").join(\"\'\"))
         {
-            alert ('".$this->objLanguage->languageText('mod_forum_tangentsowntitles')." \"".addslashes($title)."\".\\n".$this->objLanguage->languageText('mod_forum_changetitle').".');
+            alert ('".$this->objLanguage->languageText('mod_forum_tangentsowntitles', 'forum')." \"".addslashes($title)."\".\\n".$this->objLanguage->languageText('mod_forum_changetitle', 'forum').".');
             document.postReplyForm.title.value = '';
             document.postReplyForm.title.focus();
             

@@ -189,7 +189,7 @@ $tblTopic->endHeaderRow();
                 }
                 
                 $tblTopic->addCell($sticky.$link->show(), '30%', 'center');
-                $tblTopic->addCell($topic['firstName'].' '.$topic['surname'], Null, 'center', 'center');
+                $tblTopic->addCell($topic['firstname'].' '.$topic['surname'], Null, 'center', 'center');
                 $tblTopic->addCell($topic['replies'], Null, 'center', 'center');
                 $tblTopic->addCell($topic['views'], Null, 'center', 'center');
                 
@@ -207,13 +207,13 @@ $tblTopic->endHeaderRow();
                 $lastPostLink = new link ($this->uri(array('action'=>'viewtopic', 'id'=>$topic['topic_id'], 'post'=>$topic['last_post'], 'type'=>$forumtype)));
                 $lastPostLink->link = $objIcon->show();
                 
-                $tblTopic->addCell($datefield.'<br />'.$topic['lastFirstName'].' '.$topic['lastSurname'].$lastPostLink->show(), Null, 'center', 'right', 'smallText');
+                $tblTopic->addCell($datefield.'<br />'.$topic['lastfirstname'].' '.$topic['lastsurname'].$lastPostLink->show(), Null, 'center', 'right', 'smallText');
                 
                 $objIcon->align='absmiddle';
                 
                 $tblTopic->endRow();
                 
-                if ($topic['tangentCheck'] != '') {
+                if ($topic['tangentcheck'] != '') {
                     $tangents = $this->objTopic->getTangents($topic['topic_id']);
                     foreach ($tangents as $tangent)
                     {

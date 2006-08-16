@@ -70,7 +70,6 @@ $editor->setName('message');
 $editor->setContent($post['post_text']);
 $editor->setRows(20);
 $editor->setColumns('100');
-$editor->setDefaultToolBarSetWithoutSave();
 $editor->context = TRUE;
 		
 $addTable->addCell($editor->show());

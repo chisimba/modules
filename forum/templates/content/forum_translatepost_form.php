@@ -75,8 +75,6 @@ $editor->setName('message');
 $editor->setContent('');
 $editor->setRows(20);
 $editor->setColumns('100');
-$editor->setDefaultToolBarSetWithoutSave();
-$editor->context = TRUE;
 
 $formTable->addCell($editor->show());
 

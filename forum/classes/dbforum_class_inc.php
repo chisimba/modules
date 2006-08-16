@@ -509,15 +509,15 @@ class dbForum extends dbTable
         $link = new link ($this->uri(array('action'=>'forum', 'id'=>$forum_id, 'order'=>$sort, 'direction'=>$direction)));
         
         $link->link = $textLink;
-        $link->title = $this->objLanguage->languageText('sort_by', 'Sort by').' '.$textLink;
+        $link->title = $this->objLanguage->languageText('sort_by', 'forum', 'Sort by').' '.$textLink;
         
         if ($this->order == $sort) {
             if ($direction == 'asc') {
                 $image = 'mvup';
-                $alt = $this->objLanguage->languageText('current_sort_descending', 'Current Sort - Descending');
+                $alt = $this->objLanguage->languageText('current_sort_descending', 'forum', 'Current Sort - Descending');
             } else {
                 $image = 'mvdown';
-                $alt = $this->objLanguage->languageText('current_sort_ascending', 'Current Sort - Ascending');
+                $alt = $this->objLanguage->languageText('current_sort_ascending', 'forum', 'Current Sort - Ascending');
             }
             
             $icon->setIcon($image);
