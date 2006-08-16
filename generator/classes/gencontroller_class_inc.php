@@ -30,9 +30,14 @@ class gencontroller extends abgenerator implements ifgenerator
     */
     private $dataClass;
     
+    /**
+     * 
+     * Standard init, calls parent init method to instantiate user
+     * 
+     */
     function init()
     {
-        $this->objUser = $this->getObject('user', 'security');
+        parent::init();
     }
     
 	/**
@@ -46,9 +51,14 @@ class gencontroller extends abgenerator implements ifgenerator
 		$moduleDescription = $this->getParam('moduledescription', '{UNSPECIFIED}');
         $copyright = $this->getParam('copyright', '{UNSPECIFIED}');
 		$purpose = $moduleName . '\n' . $moduleDescription;
-
+		//Serialize the variables to the session
+		$this->setSession('moduleCode', $moduleCode);
+		$this->setSession('moduleName', $moduleName);
+	    $this->setSession('moduleDescription', $moduleDescription);
+	    $this->setSession('copyright', $copyright);
+	    $this->setSession('purpose', $purpose); 
 	
-		
+		//Off we go to prepare the class from the XML		
         $this->prepareClass();
         //Set up the class with the name specified by module code
         $this->setupClass($moduleCode, 'controller');

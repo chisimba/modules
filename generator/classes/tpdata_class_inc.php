@@ -77,7 +77,9 @@ class tpdata extends object
         //Create an element for the input of table name and add it to the table
         $myTable->startRow();
         $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_tablename", "generator"));
-        $myTable->addCell($this->__getTableNameElement());
+        $myTable->addCell($this->__getTablesAsDropDown()); //__getTableNameElement()
+        
+        
         $myTable->endRow();
         
         //Create an element for the input of table name and add it to the table
@@ -166,6 +168,8 @@ class tpdata extends object
     */ 
     private function __getModuleCopyrightElement()
     {
+        //Check for serialized element
+    	$this->copyright = $this->getSession('copyright', NULL);
         //Create an element for the input of module code
         $objElement = new textinput ("copyright");
         //Set the field type to text
@@ -188,6 +192,8 @@ class tpdata extends object
     */ 
     private function __getModuleNameElement()
     {
+        //Check for serialized element
+    	$this->modulename = $this->getSession('moduleName', NULL);
         //Create an element for the input of module code
         $objElement = new textinput ("modulename");
         //Set the field type to text
@@ -223,6 +229,19 @@ class tpdata extends object
         // return the button to the form
         return "&nbsp;" . $objElement->show()  
           . "<br />&nbsp;";
+    }
+    
+    private function __getTablesAsDropDown()
+    {
+        //Get an instance of the schema generator
+		$objSchema = $this->getObject('getschema');
+		$ar = $objSchema->listDbTables();
+		$objDropDown = $this->getObject('dropdown', 'htmlelements');
+		foreach ($ar as $entry) {
+		    $objDropDown->addOption($entry, $entry);
+		}
+		return $objDropDown->show();
+		
     }
 }
 ?>

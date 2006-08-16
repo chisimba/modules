@@ -50,5 +50,11 @@ class getschema extends dbTableManager
         }
         return $ret;
     }
+    
+    public function getArrayOfTables()
+    {
+        return $this->listDbTables();
+    }
+    
 }
 ?>

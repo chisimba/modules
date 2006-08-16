@@ -25,9 +25,14 @@ class genregister extends abgenerator implements ifgenerator
 {
 	public $registerCode;
     
+    /**
+     * 
+     * Standard init, calls parent init method to instantiate user
+     * 
+     */
     function init()
     {
-        $this->objUser = $this->getObject('user', 'security');
+        parent::init();
     }
     
 	/**

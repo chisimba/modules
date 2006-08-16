@@ -23,7 +23,7 @@ $middleColumn .= $objTbName->show();
 
 //Variable for the rightside column text
 $objWiz = $this->getObject('wizlinks');
-$rightSideColumn .= $objWiz->show();
+$rightSideColumn = $objWiz->show();
 
 //------------------- RENDER IT OUT -------------------------
 

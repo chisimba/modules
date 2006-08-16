@@ -38,7 +38,7 @@ $middleColumn .= "<textarea name=\"datamodel\" cols=\"90\" rows=\"30\">"
 
 //Variable for the rightside column text
 $objWiz = $this->getObject('wizlinks');
-$rightSideColumn .= $objWiz->show();
+$rightSideColumn = $objWiz->show();
 
 //------------------- RENDER IT OUT -------------------------
 

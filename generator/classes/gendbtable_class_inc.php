@@ -26,6 +26,16 @@ class gendbtable extends abgenerator implements ifgenerator
     private $dataClass;
     public $arrayOfFields=array();
     
+     /**
+     * 
+     * Standard init, calls parent init method to instantiate user
+     * 
+     */
+    function init()
+    {
+        parent::init();
+    }
+    
 	/**
 	 * Method to generate the class for the controller
 	 */

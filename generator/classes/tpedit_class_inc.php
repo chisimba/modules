@@ -166,6 +166,8 @@ class tpedit extends object
     */ 
     private function __getModuleCopyrightElement()
     {
+        //Check for serialized element
+    	$this->copyright = $this->getSession('copyright', NULL);
         //Create an element for the input of module code
         $objElement = new textinput ("copyright");
         //Set the field type to text
@@ -188,6 +190,8 @@ class tpedit extends object
     */ 
     private function __getModuleNameElement()
     {
+        //Check for serialized element
+    	$this->modulename = $this->getSession('moduleName', NULL);
         //Create an element for the input of module code
         $objElement = new textinput ("modulename");
         //Set the field type to text

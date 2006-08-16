@@ -66,6 +66,7 @@ class genwrapper extends abgenerator implements ifgenerator
         $this->wrModule = $this->getParam('wrModule', NULL);
         $this->params = $this->getParam('params', NULL);
         $this->className = $this->getParam('classname', NULL);
+        parent::init();
     }
    
 	/**

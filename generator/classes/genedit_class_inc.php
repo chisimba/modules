@@ -26,6 +26,16 @@ class genedit extends abgenerator implements ifgenerator
     private $dataClass;
     private $xml;
    
+    /**
+     * 
+     * Standard init, calls parent init method to instantiate user
+     * 
+     */
+    function init()
+    {
+        parent::init();
+    }
+   
 	/**
 	 * Method to generate the class for the controller
 	 */

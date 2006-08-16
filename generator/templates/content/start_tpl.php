@@ -13,12 +13,12 @@ $leftSideColumn = $objWiz->putStandardLeftTxt();
 $objH =& $this->getObject('htmlheading', 'htmlelements');
 //Heading <h3>
 $objH->type=3;
-$objH->str=$objLanguage->languageText("mod_generator_page" . $page . "_instructions", "generator");
+$objH->str=$objLanguage->languageText("mod_generator_startheading", "generator");
 $middleColumn = $objH->show();
 
 //Add the form to the template
 $objStart = $this->getObject('tpstart');
-$middleColumn .= "Working here";
+$middleColumn .= $objLanguage->languageText("mod_generator_starttext","generator");
 //$objStart->show();
 
 
