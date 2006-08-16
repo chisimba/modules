@@ -32,7 +32,7 @@ class gencontroller extends abgenerator implements ifgenerator
     
     function init()
     {
-        
+        $this->objUser = $this->getObject('user', 'security');
     }
     
 	/**

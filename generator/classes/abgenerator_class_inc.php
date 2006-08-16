@@ -81,17 +81,6 @@ abstract class abgenerator extends object
     
     /**
     * 
-    * Standard init method
-    * 
-    */
-    function init()
-    {
-        $this->objUser = $this->getObject('user', 'security');
-    }
-
-
-    /**
-    * 
     * Method to setup the class definition line of a templated class
     * by replacing {CLASS} {EXTENDS} {IMPLEMENTS} in the template
     * 

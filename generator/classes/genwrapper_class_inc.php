@@ -25,10 +25,10 @@ class genwrapper extends abgenerator implements ifgenerator
 {
     /**
     * 
-    * @param string $module The module in which the class is found
+    * @param string $wrModule The module in which the class is found
     * 
     */
-    private $module;
+    private $wrModule;
     
     /**
     * 
@@ -63,7 +63,7 @@ class genwrapper extends abgenerator implements ifgenerator
     {
         //Get the values needed to do the work
         $this->classFile = $this->getParam('filename', NULL);
-        $this->module = $this->getParam('module', NULL);
+        $this->wrModule = $this->getParam('wrModule', NULL);
         $this->params = $this->getParam('params', NULL);
         $this->className = $this->getParam('classname', NULL);
     }
@@ -91,7 +91,7 @@ class genwrapper extends abgenerator implements ifgenerator
         $this->classCode = str_replace('{WRAPPERCLASS}', 
           $this->className, $this->classCode);
         $this->classCode = str_replace('{WRAPCLASSSFULLPATH}', 
-          "modules/" . $this->module . "/lib/" . $this->classFile,
+          "modules/" . $this->wrModule . "/lib/" . $this->classFile,
           $this->classCode);
         //Start up the class
         $objWrapee = $this->instantiateClass();
@@ -112,7 +112,7 @@ class genwrapper extends abgenerator implements ifgenerator
     private function loadWrapClass()
     {
         //load the class
-        require_once("modules/" . $this->module . "/lib/" . $this->classFile);
+        require_once("modules/" . $this->wrModule . "/lib/" . $this->classFile);
     }
     
     /**
@@ -125,7 +125,7 @@ class genwrapper extends abgenerator implements ifgenerator
     */
     private function getWrapClassName()
     {
-        $f = "modules/" . $this->module 
+        $f = "modules/" . $this->wrModule 
           . "/lib/" . $this->classFile;
         //Read the file into a string
         $fp = fopen($f, "r");
