@@ -238,6 +238,7 @@ class tpdata extends object
 		$ar = $objSchema->listDbTables();
 		$objDropDown = $this->getObject('dropdown', 'htmlelements');
 		$objDropDown->name='tablename';
+		$objDropDown->cssId = 'input_tablename';
 		foreach ($ar as $entry) {
 		    $objDropDown->addOption($entry, $entry);
 		}
