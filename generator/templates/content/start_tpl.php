@@ -12,7 +12,7 @@ $leftSideColumn = $objWiz->putStandardLeftTxt();
 // Add the heading to the content
 $objH =& $this->getObject('htmlheading', 'htmlelements');
 //Heading <h3>
-$objH->type=3; 
+$objH->type=3;
 $objH->str=$objLanguage->languageText("mod_generator_page" . $page . "_instructions", "generator");
 $middleColumn = $objH->show();
 
@@ -24,7 +24,7 @@ $middleColumn .= "Working here";
 
 //Variable for the rightside column text
 
-$rightSideColumn .= $objWiz->show();
+$rightSideColumn = $objWiz->show();
 
 
 //------------------- RENDER IT OUT -------------------------
