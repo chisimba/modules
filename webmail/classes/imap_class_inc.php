@@ -1,9 +1,9 @@
 <?php
 /* -------------------- imap class ----------------*/
 // security check - must be included in all scripts
-//if (!$GLOBALS['kewl_entry_point_run']) {
-//    die("You cannot view this page directly");
-//}
+if (!$GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
+}
 // end security check
 
 //do the check for the IMAP C extension
@@ -168,6 +168,9 @@ class imap //extends object
 		{
 			return $this->alerts;
 		}
+		else {
+			return TRUE;
+		}
 	}
 
 	/**
@@ -202,7 +205,7 @@ class imap //extends object
 		$this->conn = @imap_open("{".$this->server. ":" . $this->port . "/" . $this->protocol . "}" . $this->mailbox, $this->user, $this->pass);
 		if(!$this->conn)
 		{
-			throw new /*custom*/Exception("Could not connect to " . $this->protocol . " Server at " . $this->server . " on port " . $this->port . " using mailbox " . $this->mailbox);
+			throw new customException("Could not connect to " . $this->protocol . " Server at " . $this->server . " on port " . $this->port . " using mailbox " . $this->mailbox);
 		}
 		else {
 			//get any alerts (like mailbox full or something)
@@ -279,7 +282,7 @@ class imap //extends object
 	{
 		if(!(imap_ping($this->conn)))
 		{
-			$this->connect();
+			return $this->connect();
 		}
 		else {
 			return TRUE;
@@ -323,6 +326,9 @@ class imap //extends object
 		$quota_values = @imap_get_quotaroot($this->conn, $this->mailbox);
 		if (is_array($quota_values)) {
    			return $quota_values;
+		}
+		else {
+			return FALSE;
 		}
 		//	$storage = $quota_values['STORAGE'];
    		//	echo "STORAGE usage level is: " .  $storage['usage'];
@@ -487,7 +493,7 @@ class imap //extends object
 	private function parseDSN($dsn)
 	{
 		$parsed = $this->imapdsn;
-
+		$arr = NULL;
 		if (is_array($dsn)) {
 			$dsn = array_merge($parsed, $dsn);
 			return $dsn;
