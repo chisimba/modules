@@ -1,11 +1,15 @@
 <?php
 
 require_once("imap_class_inc.php");
+if(extension_loaded("imap"))
+{
+	echo "party time";
+}
 try {
 	//$dsn = 'imap://kcyster:81141@itsnw.uwc.ac.za:143/INBOX';
-	//$dsn = 'imap://pmbekwa:prince@itsnw.uwc.ac.za:143/INBOX';
+	$dsn = 'imap4rev1://pmbekwa:prince@itsnw.uwc.ac.za:143/INBOX';
 	//$dsn = 'imap://fsiu:fsiu@itsnw.uwc.ac.za:143/INBOX';
-	$dsn = 'imap://pscott:scott@itsnw.uwc.ac.za:143/INBOX';
+	//$dsn = 'imap://pscott:scott@itsnw.uwc.ac.za:143/INBOX';
 
 	//$dsn = 'pop://fsiu:fsiu@itsnw.uwc.ac.za:110/INBOX';
 	//$dsn = array(
@@ -17,8 +21,9 @@ try {
 	//	'imapmailbox' => 'INBOX',
 	//	);
 	$m = new imap;
-	//$m->factory($dsn);
-	echo $m->setAddress('pscott', 'uwc.ac.za', 'Paul Scott');
+	$m->factory($dsn);
+	//echo $m->setAddress('pscott', 'uwc.ac.za', 'Paul Scott');
+	//var_dump($m->checkMailboxStatus());
 	//$m->pingServer();
 	//$m->listMailBoxes();
 	//$acl = $m->getACL();
@@ -34,7 +39,8 @@ try {
 	//var_dump($thebox);
 	//$theheads = $m->getHeaderInfo(21);
 	//var_dump($theheads);
-	//$themess = $m->getMessage(21);
+	$themess = $m->getMessage(648);
+	var_dump($themess);
 	//header('Content-type: image/jpg');
 	//echo base64_decode($themess[1][0]['filedata']);
 	//echo "<h1>$nummails</h1>";

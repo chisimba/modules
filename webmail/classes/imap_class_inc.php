@@ -562,6 +562,61 @@ class imap //extends object
 	}
 
 	/**
+	 * Method to populate the Inbox, Sentitems and Trash
+	 * It will return a multidimensional array of the message id's that
+	 * can be used to retrieve the message bodies.
+	 *
+	 * @access public
+	 * @param stdClass object of the mailbox
+	 * @return array
+	 */
+	public function populateFolders($mailbox)
+	{
+		$numUnread = 0;
+		$inbox = array();
+		$trash = array();
+		$sentitems = array();
+		//iterate through the messages and populate the "Folders"
+		foreach ($mailbox as $messages)
+		{
+			if($messages->seen == 0)
+			{
+				$numUnread++;
+			}
+			//populate the inbox
+			if ($messages->deleted != 1)
+			{
+				$inbox[] .= $messages->uid;
+			}
+			//populate the trash (deleted items)
+			if ($messages->deleted == 1)
+			{
+				$trash[] .= $messages->uid;
+			}
+			//populate the sent items
+			if ($messages->answered == 1)
+			{
+				$sentitems[] .= $messages->uid;
+			}
+		}
+
+		//create a multidimensional array of the information
+		$folders = array('unread' => $numUnread, 'inbox' => $inbox, 'trash' => $trash, 'sentitems' => $sentitems);
+		return $folders;
+
+	}
+
+	/*public function populateMsgList($folderarray)
+	{
+		foreach ($folderarray['inbox'] as $msgId)
+		{
+			$messages .= $this->getHeaderInfo($msgId);
+		}
+		return $messages;
+	}
+*/
+
+	/**
 	 * Method to close the connection and destruct the class
 	 *
 	 * @access public
