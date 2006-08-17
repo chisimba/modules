@@ -1,15 +1,99 @@
 <?php
+/* -------------------- imap class ----------------*/
+// security check - must be included in all scripts
+if (!$GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
+}
+// end security check
 
-class imap //extends object
+
+/**
+ * This is a full(ish) implementation of the C-client IMAP extension for PHP5 and above.
+ * It is written in native PHP5.
+ * Most of the IMAP functions are available, except some of the aliases, these were left out due to imminemt deprecation
+ * by the PHP team. This class allows you to send and receive mail by one of 3 protocols:
+ * <pre>
+ * <li> POP 3 </li>
+ * <li> NNTP </li>
+ * <li> or IMAP </li>
+ * </pre>
+ *
+ * The class incorporates functionality that can be used to easily create a webmail application
+ *
+ * @author Paul Scott
+ * @package webmail
+ * @copyright AVOIR
+ * @category Chisimba
+ *
+ */
+class imap extends object
 {
+	/**
+	 * Property to hold the server that you want to connect to (NNTP, POP, IMAP)
+	 *
+	 * @var string
+	 */
 	public $server;
+
+	/**
+	 * The user (mail user)
+	 *
+	 * @var string
+	 */
 	public $user;
+
+	/**
+	 * Password used for server authentication
+	 *
+	 * @var string
+	 */
 	public $pass;
+
+	/**
+	 * The protocol that you would like to connect with (IMAP, NNTP, POP...)
+	 *
+	 * @var string
+	 */
 	public $protocol;
+
+	/**
+	 * The name of your mailbox (INBOX, INBOX.paul, INBOX.Sent...)
+	 *
+	 * @var string
+	 */
 	public $mailbox;
+
+	/**
+	 * The port at which you will connect to the server
+	 * <pre>
+	 * <li>POP = 110 </li>
+	 * <li>IMAP = 143 </li>
+	 * </pre>
+	 *
+	 * @var unknown_type
+	 */
 	public $port;
+
+	/**
+	 * An overview of your mail box
+	 *
+	 * @var object
+	 */
 	public $overview;
+
+	/**
+	 * IMAP Server generated alerts (Mailbox full etc)
+	 *
+	 * @var array
+	 */
 	public $alerts;
+
+	/**
+	 * Default DSN for the IMAP server
+	 * Should be in the form of imap://user:pass@server/mailbox
+	 *
+	 * @var string | array
+	 */
 	public $imapdsn = array(
 	'imapserver'  => false,
 	'imapuser' => false,
@@ -19,15 +103,49 @@ class imap //extends object
 	'imapmailbox' => false,
 	);
 
+	/**
+	 * The IMAP connection resource stream
+	 *
+	 * @var object
+	 */
 	private $conn;
+
+	/**
+	 * Mail headers for the connection
+	 *
+	 * @var StdObject
+	 */
 	private $headers;
+
+	/**
+	 * Number of emails gained from the current overview
+	 *
+	 * @var integer
+	 */
 	private $numEmails;
+
+	/**
+	 * All of the mail headers from the current overview
+	 *
+	 * @var StdObject
+	 */
 	private $mailHeader;
+
+	/**
+	 * The full current DSN
+	 *
+	 * @var string
+	 */
 	private $currdsn;
 
+	/**
+	 * Standard init method
+	 *
+	 * @param void
+	 * @return void
+	 */
 	public function init()
 	{
-
 	}
 
 	public function factory($dsn)
