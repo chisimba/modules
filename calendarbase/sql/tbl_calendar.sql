@@ -23,7 +23,7 @@ $fields = array(
 	'multiday_event_start_id' => array(
 		'type' => 'text'
 		),
-	'eventtile' => array(
+	'eventtitle' => array(
 		'type' => 'text',
 		'length' => 100
 		),
@@ -67,6 +67,14 @@ $fields = array(
 		),
 	'updated' => array(
 		'type' => 'date',
+		),
+	'timefrom' => array(
+		'type' => 'text',
+		'length' => 32
+		),
+	'timeto' => array(
+		'type' => 'text',
+		'length' => 32
 		),
 	);
 
