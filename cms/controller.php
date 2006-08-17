@@ -76,6 +76,7 @@ class cms extends controller
 			$this->_objCategories = & $this->newObject('dbcategories', 'cmsadmin');
 			$this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
 			$this->_objUtils = & $this->newObject('cmsutils', 'cmsadmin');
+			$this->_objICal = & $this->newObject('icalendar', 'ical');
         
         }catch (Exception $e){
        	echo 'Caught exception: ',  $e->getMessage();
@@ -114,7 +115,9 @@ class cms extends controller
 	            case 'showfulltext':
 	            	$this->setVar('content', $this->_objUtils->showBody());
 	            	return 'cms_content_tpl.php';
-	            
+	            case 'ical':
+	               $this->setVar('content', $this->_objICal->GetCalendar());
+	            	return 'cms_section_tpl.php';
 	            
 	
 	        }
@@ -134,7 +137,9 @@ class cms extends controller
 	 */
 	public function getSectionMenu()
 	{
-		return $this->_objUtils->getSectionMenu();
+	   $calArr =  array('text' => 'Calendar', 'uri' => $this->uri(array('action' => 'ical')));
+	   
+		return $this->_objUtils->getSectionMenu($calArr);
 	}
 
 	
