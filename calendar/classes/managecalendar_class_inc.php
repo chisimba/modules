@@ -71,7 +71,7 @@ class managecalendar extends object
     * @param string $multidaystart - Record ID of the Start (First Day) of the multiday event
     * @return string $lastInsert - Record Id of the event that has just been added
     */
-    function insertSingleUserEvent($date, $eventtitle, $eventdetails, $eventurl, $user, $multidayevent = 0, $multidaystart = NULL)
+    function insertSingleUserEvent($date, $eventtitle, $eventdetails, $eventurl, $user, $multidayevent = 0, $multidaystart = NULL, $timeFrom = NULL, $timeTo = NULL)
     {
         $lastInsert = $this->objCalendar->insertSingle(
                 $date, // Date of Event
@@ -87,7 +87,9 @@ class managecalendar extends object
                 $user, // Use First Entry
                 NULL, // User Last Modified
                 strftime('%Y-%m-%d %H:%M:%S', mktime()), // date first entry
-                strftime('%Y-%m-%d %H:%M:%S', mktime()) // date of last entry
+                strftime('%Y-%m-%d %H:%M:%S', mktime()), // date of last entry
+                $timeFrom,
+                $timeTo
             );
         
         return $lastInsert;

@@ -231,6 +231,10 @@ class calendar extends controller
         $eventurl  = $this->getParam('url');
         $multidayevent  = $this->getParam('multidayevent');
 		$eventFor = $this->getParam('eventfor', '0');
+		$timeFrom = $this->getParam('timefrom');
+		$timeTo = $this->getParam('timeto');
+		
+		
 		
 		$eventsList = 'all';
         
@@ -242,7 +246,7 @@ class calendar extends controller
 			switch ($eventFor)
 			{
 				case 0: // Save User Event
-					$event = $this->objCalendar->insertMultiDayUserEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $this->userId, $this->userId);
+					$event = $this->objCalendar->insertMultiDayUserEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $this->userId, $this->userId, $timeFrom, $timeTo);
 					break;
 				case 1: // Save Course Event
 					$event = $this->objCalendar->insertMultiDayContextEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $this->contextCode, $this->userId, $this->userId);
@@ -257,7 +261,8 @@ class calendar extends controller
 			switch ($eventFor)
 			{
 				case 0: // Save Single User Event
-					$event = $this->objCalendar->insertSingleUserEvent($date, $eventtitle, $eventdetails, $eventurl, $this->userId);
+				
+					$event = $this->objCalendar->insertSingleUserEvent($date, $eventtitle, $eventdetails, $eventurl,null,0, $this->userId, $timeFrom, $timeTo);
 					break;
 				case 1: // Save Single Course Event
 					$event = $this->objCalendar->insertSingleContextEvent($date, $eventtitle, $eventdetails, $eventurl, $this->contextCode, $this->userId);

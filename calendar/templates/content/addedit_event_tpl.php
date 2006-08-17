@@ -89,6 +89,7 @@ $dateLabel = new label($this->objLanguage->languageText('mod_calendarbase_dateof
 $table->addCell($dateLabel->show());
 
 
+
 $dateInput = $this->newObject('datepicker', 'htmlelements');
 $dateInput->setName('date');
 if ($mode == 'edit') {
@@ -131,6 +132,57 @@ $table->addCell('<div id="cal_input2" '.$style.'>'.$dateInput2->show().'</div>')
 
 $table->endRow();
 
+
+$table->startRow();
+$timeLabel = new label($this->objLanguage->languageText('mod_calendarbase_time', 'calendarbase').':', 'input_time');
+
+$timeInput = new textinput('input_time');
+if ($mode == 'edit') {
+    $timeInput->value = $event['eventime'];
+}
+
+$timeFromdropdown = new dropdown('timefrom');
+
+
+$timeFromdropdown->addOption('7:00','7:00');
+$timeFromdropdown->addOption('7:30','7:30');
+$timeFromdropdown->addOption('8:00','8:00');
+$timeFromdropdown->addOption('8:30','8:30');
+$timeFromdropdown->addOption('9:00','9:00');
+$timeFromdropdown->addOption('9:30','9:30');
+$timeFromdropdown->addOption('10:00','10:00');
+$timeFromdropdown->addOption('10:30','10:30');
+$timeFromdropdown->addOption('11:00','11:00');
+$timeFromdropdown->addOption('11:30','11:30');
+$timeFromdropdown->addOption('12:00','12:00');
+$timeFromdropdown->addOption('12:30','12:30');
+$timeFromdropdown->addOption('13:00','13:00');
+$timeFromdropdown->addOption('13:30','13:30');
+$timeFromdropdown->addOption('14:00','14:00');
+$timeFromdropdown->addOption('14:30','14:30');
+$timeFromdropdown->addOption('15:00','15:00');
+$timeFromdropdown->addOption('15:30','15:30');
+$timeFromdropdown->addOption('16:00','16:00');
+$timeFromdropdown->addOption('16:30','16:30');
+$timeFromdropdown->addOption('17:00','17:00');
+$timeFromdropdown->addOption('17:30','17:30');
+$timeFromdropdown->addOption('18:00','18:00');
+$timeFromdropdown->addOption('18:30','18:30');
+$timeFromdropdown->addOption('19:00','19:00');
+$timeFromdropdown->addOption('19:30','19:30');
+$timeFromdropdown->addOption('20:00','20:00');
+$timeFromdropdown->addOption('20:30','20:30');
+$timeFromdropdown->addOption('21:00','21:00');
+$timeFromdropdown->addOption('21:30','21:30');
+$timeFromdropdown->addOption('22:00','22:00');
+$timeFromdropdown->addOption('22:30','22:30');
+
+$table->addCell($timeLabel->show());
+$from = $timeFromdropdown->show();
+$timeFromdropdown->name = 'timeto';
+$to = $timeFromdropdown->show();
+$table->addCell('From '.$from.'&nbsp;To '.$to );
+$table->endRow();
 // end - date inputs //
 
 /*
