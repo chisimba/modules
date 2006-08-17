@@ -1,9 +1,9 @@
 <?php
 /* -------------------- imap class ----------------*/
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run']) {
-    die("You cannot view this page directly");
-}
+//if (!$GLOBALS['kewl_entry_point_run']) {
+//    die("You cannot view this page directly");
+//}
 // end security check
 
 
@@ -26,7 +26,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * @category Chisimba
  *
  */
-class imap extends object
+class imap //extends object
 {
 	/**
 	 * Property to hold the server that you want to connect to (NNTP, POP, IMAP)
@@ -148,17 +148,30 @@ class imap extends object
 	{
 	}
 
+	/**
+	 * Factory method to instantiate and build the class(es)
+	 *
+	 * @param string $dsn
+	 * @return array $alerts on alert | void
+	 * @access public
+	 */
 	public function factory($dsn)
 	{
 		$this->setconn($dsn);
 		$this->connect();
-		//$this->getHeaders();
 		if($this->alerts)
 		{
 			return $this->alerts;
 		}
 	}
 
+	/**
+	 * Method to set the connection and parse the DSN
+	 *
+	 * @param string $dsn
+	 * @access private
+	 * @return void
+	 */
 	private function setconn($dsn)
 	{
 		$this->currdsn = $dsn;
@@ -172,6 +185,13 @@ class imap extends object
 		$this->port = $conarr['imapport'];
 	}
 
+	/**
+	 * Method to connect to the server
+	 *
+	 * @return array alerts | bool
+	 * @param void
+	 * @access private
+	 */
 	private function connect()
 	{
 		$this->conn = @imap_open("{".$this->server. ":" . $this->port . "/" . $this->protocol . "}" . $this->mailbox, $this->user, $this->pass);
@@ -193,22 +213,63 @@ class imap extends object
 		}
 	}
 
+	/**
+	 * Method to create an RFC822 formatted email address eg Paul Scott <pscott@uwc.ac.za>
+	 *
+	 * @access public
+	 * @param string $user - pscott
+	 * @param string $domain - uwc.ac.za
+	 * @param string $name - Paul Scott
+	 * @return email address
+	 */
 	public function setAddress($user, $domain, $name)
 	{
 		return imap_rfc822_write_address($user, $domain, $name);
 	}
 
+	/**
+	 * Method to check the status of a mailbox
+	 * Will return info like:
+	 * Number of unread mails
+	 * Number of new mails
+	 * Number of recent mails
+	 * number of total messages
+	 * Size in bytes
+	 * Date
+	 * Driver used
+	 * Mailbox used
+	 * etc...
+	 *
+	 * @access public
+	 * @param void
+	 * @return stdObject
+	 */
 	public function checkMailboxStatus()
 	{
 		$check = imap_mailboxmsginfo($this->conn);
 		return $check;
 	}
 
+	/**
+	 * Management function to get the ACL's listed on the server
+	 *
+	 * @param void
+	 * @access public
+	 * @return stdObject
+	 */
 	public function getACL()
 	{
 		return @imap_getacl($this->conn, $this->mailbox);
 	}
 
+	/**
+	 * Public method to ping the server in order to keep the connection alive
+	 * If the server has disconnected, it will reconnect, else return the connection true
+	 *
+	 * @access public
+	 * @param void
+	 * @return unknown
+	 */
 	public function pingServer()
 	{
 		if(!(imap_ping($this->conn)))
@@ -220,6 +281,13 @@ class imap extends object
 		}
 	}
 
+	/**
+	 * Management function to list the mailboxes on the server
+	 *
+	 * @param void
+	 * @return stdObject
+	 * @access public
+	 */
 	public function listMailBoxes()
 	{
 		$list = imap_getmailboxes($this->conn, "{$this->server}", "*");
@@ -236,6 +304,15 @@ class imap extends object
 		}
 	}
 
+	/**
+	 * Method to get the quota limits asssociated with the mailbox and user
+	 * This is not implemented on the test IMAP server, so it is untested
+	 * Please could someone test this method on a fully implemented IMAP server and let me know?
+	 *
+	 * @access public
+	 * @param void
+	 * @return stdObject
+	 */
 	public function getQuotas()
 	{
 		$quota_values = @imap_get_quotaroot($this->conn, $this->mailbox);
@@ -252,12 +329,27 @@ class imap extends object
 
 	}
 
+	/**
+	 * Method to get the headers from the current mailbox stream
+	 *
+	 * @access public
+	 * @param void
+	 * @return stdClass object
+	 */
 	public function getHeaders()
 	{
 		$this->headers = imap_headers($this->conn);
 		return $this->headers;
 	}
 
+	/**
+	 * Method to glean slightly more information about the headers
+	 * of a PARTICULAR message.
+	 *
+	 * @access public
+	 * @param integer $messageNum - UID of the message
+	 * @return stdClass
+	 */
 	public function getHeaderInfo($messageNum)
 	{
 		$this->mailHeader = @imap_headerinfo($this->conn, $messageNum);
@@ -270,11 +362,26 @@ class imap extends object
 		*/
 	}
 
+	/**
+	 * Method to count the number of mails in the mailbox
+	 *
+	 * @param void
+	 * @access public
+	 * @return integer
+	 */
 	public function numMails()
 	{
 		return sizeof($this->headers);
 	}
 
+	/**
+	 * Method to check the mailbox. Will return a stdObject of all the mail headers with size, date, to, from, etc
+	 * as well as the message flags such as read, seen, replied, deleted etc
+	 *
+	 * @access public
+	 * @param void
+	 * @return stddClass object
+	 */
 	public function checkMbox()
 	{
 		$this->overview = imap_check($this->conn);
@@ -283,6 +390,13 @@ class imap extends object
 		return $overview;
 	}
 
+	/**
+	 * Method to retrieve a specific message according to the message number (UID)
+	 *
+	 * @access public
+	 * @param integer $messageNum
+	 * @return array + array of attachments
+	 */
 	public function getMessage($messageNum)
 	{
 		//fetch the structure
@@ -358,6 +472,13 @@ class imap extends object
 		return $messagearr;
 	}
 
+	/**
+	 * Method to parse the DSN
+	 *
+	 * @access private
+	 * @param string $dsn
+	 * @return void
+	 */
 	private function parseDSN($dsn)
 	{
 		$parsed = $this->imapdsn;
@@ -417,6 +538,24 @@ class imap extends object
 		return $parsed;
 	}
 
+	/**
+	 * Method to close the connection
+	 *
+	 * @access public
+	 * @return bool
+	 */
+	public function close()
+	{
+		@imap_close($this->conn);
+		return TRUE;
+	}
+
+	/**
+	 * Method to close the connection and destruct the class
+	 *
+	 * @access public
+	 * @return bool
+	 */
 	public function __destruct()
 	{
 		@imap_close($this->conn);
