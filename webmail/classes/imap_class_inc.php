@@ -6,6 +6,11 @@
 //}
 // end security check
 
+//do the check for the IMAP C extension
+if(!extension_loaded("imap"))
+{
+	die("This module requires the IMAP C Extension to be loaded, please consult your PHP manual or system administrator to enable it!");
+}
 
 /**
  * This is a full(ish) implementation of the C-client IMAP extension for PHP5 and above.
