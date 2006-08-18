@@ -135,8 +135,7 @@ class chat extends controller
                 $context = "Lobby";
             }
             else {
-                $contextRecord = $this->objDbContext->getContextDetails($this->contextCode);
-                $context = $contextRecord['title'];
+            	$context = $this->objDbContext->getTitle();
             }
         }
         // Leave the chat room
@@ -422,6 +421,7 @@ class chat extends controller
             $this->setVar('pageSuppressToolbar', TRUE);
             $this->setVar('pageSuppressContainer', TRUE);
             $this->setVar('suppressFooter', TRUE);
+			$this->setVar('pageSuppressTrailingDiv', TRUE);
 			$headerParams = '
 			<script type="text/javascript" language="JavaScript">
 			function StartTimer()
@@ -497,6 +497,7 @@ class chat extends controller
             $this->setVar('pageSuppressToolbar', TRUE);
             $this->setVar('pageSuppressContainer', TRUE);
             $this->setVar('suppressFooter', TRUE);
+			$this->setVar('pageSuppressTrailingDiv', TRUE);
 			$headerParams = '
 			<script type="text/javascript" language="JavaScript">
 			function StartTimer()

@@ -54,7 +54,7 @@ if (($contextType == 'private' && $contextUsername == $this->objUser->userName()
 	$icon = $this->getObject('geticon','htmlelements');
 	$icon->setIcon('chat/banuser');
 	$icon->align=false;
-	$icon->alt = $objLanguage->languageText('mod_chat_banuser');
+	$icon->alt = $objLanguage->languageText('mod_chat_banuser','chat');
 	echo $icon->show();
 ?></a></td><td><?php
     // Display the ban user layer.
@@ -67,7 +67,7 @@ if (($contextType == 'private' && $contextUsername == $this->objUser->userName()
 		))	
 	);
 	$form->setDisplayType(1);
-	$form->addToForm($objLanguage->languageText("chat_ban"));
+	$form->addToForm($objLanguage->languageText("chat_ban",'chat'));
     // Display a list of users to ban.
 	$dropdown = new dropdown("username");
 	foreach ($users as $user) {
