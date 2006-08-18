@@ -48,8 +48,7 @@ class {CLASS} {EXTENDS} {IMPLEMENTS}
 
     {METHODS}
 
-}
-  </code>
+}</code>
 </section>
 
 <section>

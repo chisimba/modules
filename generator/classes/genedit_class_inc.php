@@ -33,7 +33,21 @@ class genedit extends abgenerator implements ifgenerator
      */
     function init()
     {
+        //Run the parent init to create common objects
         parent::init();
+        //Load the XML file of template fields
+        $xml = simplexml_load_file("modules/generator/resources/edit-template-fields.xml");
+        //Extract the id field code using Xpath method
+        $item = $xml->xpath("//field[@type = 'id']");
+        $this->id = $item[0]->code;
+        //Extract the textinput field code using Xpath method
+        $item = $xml->xpath("//field[@type = 'textinput']");
+        $this->textInput = $item[0]->code;
+        //Extract the textarea field code using Xpath method
+        $item = $xml->xpath("//field[@type = 'textarea']");
+        $this->textArea = $item[0]->code;
+        //Get the table name'
+        $this->tableName = $this->getParam('tablename', NULL);
     }
    
 	/**
@@ -41,11 +55,81 @@ class genedit extends abgenerator implements ifgenerator
 	 */
 	function generate($className)
 	{
+        //Prepare the template from the XML template
         $this->prepareTemplate();
-
-        
+        //Get the data fields and structure
+        $ar = $this->getFields();
+        foreach ($ar as $record) {
+            //Get the fieldname
+            if (isset($record['fieldname'])) {
+                $fieldName = $record['fieldname'];
+            } else {
+                $fieldName = "{UNDEFINED}";
+            }
+            $readField = "    \$" . $fieldName . " = \$ar['" . $fieldName . "'];\n";
+            //Get the fieldType
+            if (isset($record['type'])) {
+                $fieldType = $record['type'];
+            } else {
+                $fieldType = "";
+            }
+            //Get the fieldLength
+            if (isset($record['length'])) {
+                $fieldLength = $record['length'];
+            } else {
+                $fieldLength = "0";
+            }
+            if ($fieldName=='id') {
+                $fldCode = $this->id;
+                $fldCode = str_replace('{FIELDNAME}', $fieldName, $fldCode);
+                $this->classCode = str_replace('{EDITFORM}', $fldCode . "{EDITFORM}", $this->classCode);
+                $this->classCode = str_replace('{EDITGETFIELDS}', $readField . "{EDITGETFIELDS}", $this->classCode);
+            } else {
+                switch($fieldName){
+                    //The ones that we skip because they are internally generated
+                	case "dateCreated":
+                    case "datecreated":
+                    case "creatorid":
+                    case "creatorId":
+                    case "modifierid":
+                    case "modifierId":
+                    case "datemodified":
+                    case "dateModified":
+                    case "updated":
+                		break;
+                    //The ones we don't want to skip
+                	default:
+                         switch ($fieldType) {
+                            case 'text':
+                                if ($fieldLength < 100) {
+                                    $fldCode = $this->textInput;
+                                } else {
+                                    $fldCode = $this->textArea;
+                                }
+                                break;
+                            case 'timestamp':
+                                $fldCode = $this->textInput;
+                                break;
+                            default;
+                                $fldCode = $this->textInput;
+                                break;
+                         } #switch
+                        $fldCode = str_replace('{FIELDNAME}', $fieldName, $fldCode);
+                        $this->classCode = str_replace('{EDITFORM}', $fldCode . "{EDITFORM}", $this->classCode);
+                        $this->classCode = str_replace('{EDITGETFIELDS}', $readField . "{EDITGETFIELDS}", $this->classCode);
+                        
+                		break;
+                } // switch
+            }
+        }
+        //Insert the module clodes
+        $moduleCode = $this->getParam('modulecode', '____ERROR_NOMODULECODESPECIFIED');
+        $this->classCode = str_replace('{MODULECODE}', $moduleCode, $this->classCode);
         //Clean up unused template tags
+        $this->classCode = str_replace('{EDITFORM}', "", $this->classCode);
+        $this->classCode = str_replace('{EDITGETFIELDS}', "", $this->classCode);        
         $this->cleanUp();
+
         $this->prepareForDump();
 	    return $this->classCode;
 	}
@@ -74,6 +158,19 @@ class genedit extends abgenerator implements ifgenerator
         $this->classCode .= $ret[0]->code;
         //Return a casual true
         return TRUE;
+    }
+    
+    /**
+    * 
+    * Method to return a simple array of fields in the table
+    * 
+    */
+    function getFields()
+    {
+        //Get an instance of the schema generator
+		$objSchema = $this->getObject('getschema');
+		$ar = $objSchema->getFieldSchema($this->tableName);
+        return $ar;
     }
 }
 ?>

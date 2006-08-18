@@ -26,14 +26,7 @@ $objGenEdit = $this->getObject('genEdit');
 //Get an instance of the schema generator
 $objSchema = $this->getObject('getschema');
 
-
-
-
-
-
-
-
-$middleColumn .= "<textarea name=\"datamodel\" cols=\"90\" rows=\"30\">" 
+$middleColumn .= "<textarea name=\"datamodel\" cols=\"76\" rows=\"30\">" 
   . $objGenEdit->generate($className) . "</textarea>";
 
 //Variable for the rightside column text

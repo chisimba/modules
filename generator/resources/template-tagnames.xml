@@ -9,10 +9,31 @@
 <chisimba_template_tagnames>
 
   <tag>
+    <tagname>fieldname</tagname>
+    <tagtext>{FIELDNAME}</tagtext>
+    <description>Used in generating a data edit template, where it is replaced by the field name</description>
+  </tag>
+  
+  <tag>
+    <tagname>editgetfields</tagname>
+    <tagtext>{EDITGETFIELDS}</tagtext>
+    <description>Used in generating a data edit template, where it is replaced by the code to read each field from the array of fields.</description>
+  </tag>
+  
+
+  <tag>
+    <tagname>array_for_radio</tagname>
+    <tagtext>{ARRAY_FOR_RADIO}</tagtext>
+    <description>Used in generating a radio set for a edit template</description>
+  </tag>
+
+  <tag>
     <tagname>wrapclass</tagname>
     <tagtext>{WRAPCLASS}</tagtext>
     <description>A class that is being wrapped in genwrapper</description>
   </tag>
+  
+  
   
   <tag>
     <tagname>wrapclassfullpath</tagname>

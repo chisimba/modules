@@ -25,16 +25,16 @@
   </name>
   <code>
     /**
-     * 
-     * The standard dispatch method for a Chisimba module. The dispatch() 
-     * method uses methods determined from the action parameter of the 
-     * querystring and executes the appropriate method, returning its 
-     * body template. This body template which renders the module
-     * output.
-     * 
-     * @access public
-     * 
-     */
+    * 
+    * The standard dispatch method for a Chisimba module. The dispatch() 
+    * method uses methods determined from the action parameter of the 
+    * querystring and executes the appropriate method, returning its 
+    * body template. This body template which renders the module
+    * output.
+    * 
+    * @access public
+    * 
+    */
     public function dispatch()
     {
         //Get action from query string and set default to view

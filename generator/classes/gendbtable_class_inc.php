@@ -1,4 +1,4 @@
-a<?php
+<?php
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
 {
@@ -42,7 +42,7 @@ class gendbtable extends abgenerator implements ifgenerator
 	function generate($className)
 	{
         $this->prepareClass();
-        $this->setupClass($className, 'model', $classImplements=NULL);
+        $this->setupClass($className, 'model');
         //Insert the default controller methods
         $this->classCode = str_replace('{METHODS}', $this->getDefaultMethods(), $this->classCode);
         //Insert the save methods (must have the array set first)
@@ -53,12 +53,16 @@ class gendbtable extends abgenerator implements ifgenerator
         $this->classCode = str_replace('{AUTHOR}', $this->getAuthor(), $this->classCode);
         //Insert the database table
         $table = $this->getParam('tablename', '{TABLENAME}');
+        //Serialize the tablename
+        $this->setSession('tablename', $table);
         $this->classCode = str_replace('{DATABASETABLE}', $table, $this->classCode);
         //Insert the package name
         $package = $this->getParam('modulename', '{UNSPECIFIED}');
+        $this->setSession('modulename', $package);
         $this->classCode = str_replace('{PACKAGE}', $package, $this->classCode);
         //Insert the copyright
         $copy = $this->getParam('copyright', '{UNSPECIFIED}');
+        $this->setSession('copyright', $copy);
         $this->classCode = str_replace('{COPYRIGHT}', $copy, $this->classCode);
         //Clean up unused template tags
         $this->cleanUp();

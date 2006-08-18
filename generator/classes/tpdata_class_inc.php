@@ -78,14 +78,6 @@ class tpdata extends object
         $myTable->startRow();
         $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_tablename", "generator"));
         $myTable->addCell($this->__getTablesAsDropDown()); //__getTableNameElement()
-        
-        
-        $myTable->endRow();
-        
-        //Create an element for the input of table name and add it to the table
-        $myTable->startRow();
-        $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_classname", "generator"));
-        $myTable->addCell($this->__getClassNameElement());
         $myTable->endRow();
         
         //Create an element for the input of modulename and add it to the table
@@ -136,28 +128,7 @@ class tpdata extends object
         return $objElement->show();
     }
 
-    /**
-    * 
-    * Method to return classname text input to the form
-    * 
-    * @access private
-    * @return the module code text input for the form
-    * 
-    */ 
-    private function __getClassNameElement()
-    {
-        //Create an element for the input of module code
-        $objElement = new textinput ("classname");
-        //Set the field type to text
-        $objElement->fldType="text";
-        $objElement->size=40;
-        if (isset($this->classname)) {
-            $objElement->value=$this->classname;
-        }
-        //Add the $title element to the form
-        return $objElement->show();
-    }
-    
+   
     /**
     * 
     * Method to return sideMenuCategory text input to the form
@@ -193,7 +164,7 @@ class tpdata extends object
     private function __getModuleNameElement()
     {
         //Check for serialized element
-    	$this->modulename = $this->getSession('moduleName', NULL);
+    	$this->modulename = $this->getSession('modulename', NULL);
         //Create an element for the input of module code
         $objElement = new textinput ("modulename");
         //Set the field type to text

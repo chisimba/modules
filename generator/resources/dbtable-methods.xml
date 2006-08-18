@@ -40,7 +40,8 @@
     * @param string $mode: edit if coming from edit, add if coming from add
     *
     */
-    public function saveData($mode) {
+    public function saveData($mode) 
+    {
 {SAVECODE}
     }
   </code>

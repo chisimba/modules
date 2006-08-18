@@ -80,10 +80,10 @@ class tpedit extends object
         $myTable->addCell($this->__getTableNameElement());
         $myTable->endRow();
         
-        //Create an element for the input of table name and add it to the table
+        //Create an element for the input of modulecode and add it to the table
         $myTable->startRow();
-        $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_classname", "generator"));
-        $myTable->addCell($this->__getClassNameElement());
+        $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_mcode", "generator"));
+        $myTable->addCell($this->__getModuleCodeElement());
         $myTable->endRow();
         
         //Create an element for the input of modulename and add it to the table
@@ -122,6 +122,8 @@ class tpedit extends object
     */ 
     private function __getTableNameElement()
     {
+    	//Check for serialized element
+    	$this->tablename = $this->getSession('tablename', NULL);
         //Create an element for the input of module code
         $objElement = new textinput ("tablename");
         //Set the field type to text
@@ -133,24 +135,26 @@ class tpedit extends object
         //Add the $title element to the form
         return $objElement->show();
     }
-
+    
     /**
     * 
-    * Method to return classname text input to the form
+    * Method to return modulecode text input to the form
     * 
     * @access private
     * @return the module code text input for the form
     * 
     */ 
-    private function __getClassNameElement()
+    private function __getModuleCodeElement()
     {
+        //Check for serialized element
+    	$this->modulecode = $this->getSession('modulecode', NULL);
         //Create an element for the input of module code
-        $objElement = new textinput ("classname");
+        $objElement = new textinput ("modulecode");
         //Set the field type to text
         $objElement->fldType="text";
         $objElement->size=40;
-        if (isset($this->classname)) {
-            $objElement->value=$this->classname;
+        if (isset($this->modulecode)) {
+            $objElement->value=$this->modulecode;
         }
         //Add the $title element to the form
         return $objElement->show();
@@ -191,7 +195,7 @@ class tpedit extends object
     private function __getModuleNameElement()
     {
         //Check for serialized element
-    	$this->modulename = $this->getSession('moduleName', NULL);
+    	$this->modulename = $this->getSession('modulename', NULL);
         //Create an element for the input of module code
         $objElement = new textinput ("modulename");
         //Set the field type to text

@@ -52,9 +52,9 @@ class gencontroller extends abgenerator implements ifgenerator
         $copyright = $this->getParam('copyright', '{UNSPECIFIED}');
 		$purpose = $moduleName . '\n' . $moduleDescription;
 		//Serialize the variables to the session
-		$this->setSession('moduleCode', $moduleCode);
-		$this->setSession('moduleName', $moduleName);
-	    $this->setSession('moduleDescription', $moduleDescription);
+		$this->setSession('modulecode', $moduleCode);
+		$this->setSession('modulename', $moduleName);
+	    $this->setSession('moduledescription', $moduleDescription);
 	    $this->setSession('copyright', $copyright);
 	    $this->setSession('purpose', $purpose); 
 	

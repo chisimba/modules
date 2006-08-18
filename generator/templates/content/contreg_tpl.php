@@ -1,5 +1,46 @@
-Controller<br />
-<textarea name="controller" cols="90" rows="30"><?php echo $cont; ?></textarea><br /><br />
+<?php
+// Create an instance of the css layout class
+$cssLayout = & $this->newObject('csslayout', 'htmlelements');
+// Set columns to 3
+$cssLayout->setNumColumns(3);
+//Create the wizzard links object
+$objWiz = $this->getObject('wizlinks');
 
-Register<br />
-<textarea name="controller" cols="90" rows="30"><?php echo $reg; ?></textarea>
+//Put in the standard left column text
+$leftSideColumn = $objWiz->putStandardLeftTxt();
+
+//Get the page
+$page = $this->getParam('page', NULL);
+
+// Add the heading to the content
+$objH =& $this->getObject('htmlheading', 'htmlelements');
+//Heading <h3>
+$objH->type=3;
+$objH->str=$objLanguage->languageText("mod_generator_" . $page . "_instructions", "generator");
+$middleColumn = $objH->show();
+
+$middleColumn .= 'Controller<br />'
+	. '<textarea name="controller" cols="78" rows="30">' . $cont 
+	. '</textarea><br /><br />'
+	. 'Register<br /><textarea name="controller" '
+	. 'cols="78" rows="30">'. $reg . '</textarea>';
+
+//Variable for the rightside column text
+$objWiz = $this->getObject('wizlinks');
+$rightSideColumn = $objWiz->show();
+
+//------------------- RENDER IT OUT -------------------------
+
+// Add Left column
+$cssLayout->setLeftColumnContent($leftSideColumn);
+
+// Add middle Column
+$cssLayout->setMiddleColumnContent($middleColumn);
+
+// Add Right Column
+$cssLayout->setRightColumnContent($rightSideColumn);
+
+//Output the content to the page
+echo $cssLayout->show();
+
+?>

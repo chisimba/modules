@@ -41,7 +41,7 @@ class genregister extends abgenerator implements ifgenerator
 	function generate($className)
 	{
 		//Initialize the register code
-		$this->registerCode="";
+		$this->registerCode='';
 		//Read all the required info into variables
 		$this->moduleCode = $this->getParam('modulecode', '{UNSPECIFIED}');
 		$this->moduleName = $this->getParam('modulename', '{UNSPECIFIED}');
@@ -94,14 +94,14 @@ class genregister extends abgenerator implements ifgenerator
         foreach($xml->entry as $entry) {
         	if ($entry->param == "MENU_CATEGORY") {
         	    if ($this->menuCategory !== NULL) {
-					$ret .= $entry->param . ": " . $entry->value . "\n";
+					$ret .= trim($entry->param) . ": " . trim($entry->value) . "\n";
         	    }
         	} elseif ($entry->param == "SIDEMENU_CATEGORY") {
         	    if ($this->sideMenuCategory !== NULL) {
 					$ret .= $entry->param . ": " . $entry->value . "\n";
         	    }
         	} else {
-        	    $ret .= $entry->param . ": " . $entry->value . "\n";
+        	    $ret .= trim($entry->param) . ": " . trim($entry->value) . "\n";
         	}
         }
 	    return $ret;
