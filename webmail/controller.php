@@ -9,6 +9,11 @@ class webmail extends controller
 	public $objImap;
 	public $objLog;
 	public $objLanguage;
+	public $thebox;
+	public $folders;
+	public $msgCount;
+	public $conn;
+	public $dsn;
 
 
 	/**
@@ -39,37 +44,36 @@ class webmail extends controller
 		switch ($action) {
 			default:
 				//Mailbox DSN
-				$dsn = "imap://fsiu:fsiu@itsnw.uwc.ac.za:143/Inbox";
+				$this->dsn = "imap://fsiu:fsiu@itsnw.uwc.ac.za:143/INBOX";
 				try {
 					//connect to the server
-					$this->objImap->factory($dsn);
+					$this->conn = $this->objImap->factory($this->dsn);
 					$this->objImap->getHeaders();
 					//check mail
-					$thebox = $this->objImap->checkMbox();
+					$this->thebox = $this->objImap->checkMbox();
 					//var_dump($thebox);
-					$folders = $this->objImap->populateFolders($thebox);
-					$msgCount = $this->objImap->numMails();
+					$this->folders = $this->objImap->populateFolders($this->thebox);
+					$this->msgCount = $this->objImap->numMails();
 					$this->setVarByRef('folders', $folders);
 
 					//get the meassge headers
 					$i = 1;
-					while ($i <= $msgCount)
+					while ($i <= $this->msgCount)
 					{
 						//echo $i;
 						$headerinfo = @$this->objImap->getHeaderInfo($i);
 						//from
-						$address[] .= @$headerinfo->fromaddress;
+						$address = @$headerinfo->fromaddress;
 						//subject
-						$subject[] .= @$headerinfo->subject;
+						$subject = @$headerinfo->subject;
 						//date
-						$date[] .= @$headerinfo->Date;
+						$date = @$headerinfo->Date;
+
+						$data[] = array('address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i);
 
 						$i++;
 					}
-
-					$infoArr = array($address, $subject, $date);
-
-					$this->setVarByRef('infoArr', $infoArr);
+					$this->setVarByRef('data', $data);
 
 					return "inbox_tpl.php";
 
@@ -87,7 +91,7 @@ class webmail extends controller
 					$calbox = $this->objImap->checkMbox();
 					//var_dump($calbox);
 					$calfolders = $this->objImap->populateFolders($calbox);
-					print_r($calfolders);
+					//print_r($calfolders);
 					$this->setVarByRef('calfolders', $calfolders);
 				}
 				catch(customException $e) {
@@ -95,54 +99,17 @@ class webmail extends controller
 				}
 				break;
 
-			case 'msglist':
-				//$this->setLayoutTemplate('null_tpl.php');
-				$this->setVar('pageSuppressIM', TRUE);
-            	$this->setVar('pageSuppressBanner', TRUE);
-            	$this->setVar('pageSuppressToolbar', TRUE);
-            	$this->setVar('pageSuppressContainer', TRUE);
-            	$this->setVar('suppressFooter', TRUE);
-            	$this->footerStr = NULL;
-				//$this->setVar('pageSuppressTrailingDiv', TRUE);
-				$dsn = "imap://fsiu:fsiu@itsnw.uwc.ac.za:143/Inbox";
-				try {
-					//connect to the server
-					$this->objImap->factory($dsn);
-					$this->objImap->getHeaders();
-					//check mail
-					$thebox = $this->objImap->checkMbox();
-					$folders = $this->objImap->populateFolders($thebox);
-					$msgCount = $this->objImap->numMails();
-
-					//get the meassge headers
-					$i = 1;
-					while ($i <= $msgCount)
-					{
-						//echo $i;
-						$headerinfo = @$this->objImap->getHeaderInfo($i);
-						//from
-						$address = @$headerinfo->fromaddress;
-						//subject
-						$subject = @$headerinfo->subject;
-						//date
-						$date = @$headerinfo->Date;
-
-						$data[] = array('address' => $address, 'subject' => $subject, 'date' => $date);
-
-						$i++;
-					}
-					$this->setVarByRef('data', $data);
-
-					return "msglist_tpl.php";
-					break;
-
-					//$line = $infoArr['addy'][0] . $infoArr['subject'][0] . $infoArr['date'][0];
-					//echo $line;
-
-				}
-				catch (customException $e)
+			case 'getmessage':
 				{
-					exit;
+					$msgid = $this->getParam('msgid');
+					//Mailbox DSN
+					$this->dsn = "imap://fsiu:fsiu@itsnw.uwc.ac.za:143/INBOX";
+					$this->conn = $this->objImap->factory($this->dsn);
+					$this->objImap->getHeaders();
+					$themess = $this->objImap->getMessage($msgid);
+					$this->setVarByRef('message',$themess);
+					print_r($themess);
+
 				}
 
 
