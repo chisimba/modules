@@ -68,8 +68,10 @@ class webmail extends controller
 						$subject = @$headerinfo->subject;
 						//date
 						$date = @$headerinfo->Date;
+						//message flag
+						$read = @$headerinfo->Unseen;
 
-						$data[] = array('address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i);
+						$data[] = array('address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read);
 
 						$i++;
 					}
@@ -101,6 +103,15 @@ class webmail extends controller
 
 			case 'getmessage':
 				{
+					$this->setVar('pageSuppressIM', TRUE);
+            		$this->setVar('pageSuppressBanner', TRUE);
+            		$this->setVar('pageSuppressToolbar', TRUE);
+            		$this->setVar('pageSuppressContainer', TRUE);
+            		$this->setVar('suppressFooter', TRUE);
+					$this->setVar('pageSuppressTrailingDiv', TRUE);
+
+					$this->footerStr = NULL;
+
 					$msgid = $this->getParam('msgid');
 					//Mailbox DSN
 					$this->dsn = "imap://fsiu:fsiu@itsnw.uwc.ac.za:143/INBOX";
@@ -108,8 +119,22 @@ class webmail extends controller
 					$this->objImap->getHeaders();
 					$themess = $this->objImap->getMessage($msgid);
 					$this->setVarByRef('message',$themess);
-					print_r($themess);
+					//print_r($themess);
+					//sort out the attachments
+					if(empty($themess[1]))
+					{
+						$attachments = NULL;
+					}
+					else {
+						$attachments = $themess[1];
+					}
+					$this->setVarByRef('attachments', $attachments);
 
+					$message = htmlentities($themess[0]);
+					$this->setVarByRef('message', $message);
+
+					return 'msgview_tpl.php';
+					break;
 				}
 
 

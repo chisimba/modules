@@ -1,4 +1,10 @@
 <?php
+//print_r($data);
+//die();
+$this->objPop= &$this->getObject('windowpop', 'htmlelements');
+$this->objPop=&new windowpop;
+
+
 $userMenu  = &$this->newObject('usermenu','toolbar');
 //user cal
 $userCal = &$this->newObject('usercalendar','calendar');
@@ -56,9 +62,35 @@ if (isset($data))
         foreach ($data as $line)
         {
         	$oddOrEven = ($rowcount == 0) ? "odd" : "even";
-        	$tableRow[]=etrimstr($line['address']);
-        	$tableRow[]= etrimstr($line['subject']);
-			$tableRow[]=etrimstr(fixdate($line['date']));
+        	$messageid = $line['messageid'];
+        	$unseen = $line['read'];
+        	$subject = etrimstr($line['subject']);
+        	$mess = $this->uri(array('module' => 'webmail', 'action' => 'getmessage', 'msgid' => $messageid));
+        	$this->objPop->set('location',$mess);
+        	$this->objPop->set('linktext', $subject);
+        	$this->objPop->set('width','500');
+			$this->objPop->set('height','500');
+			$this->objPop->set('left','500');
+			$this->objPop->set('top','600');
+			$this->objPop->set('scrollbars', 'yes');
+			$this->objPop->putJs();
+			$linktxt = $this->objPop->show();
+
+			if ($unseen != ' ')
+        	{
+        		$subject = "<strong>" . $linktxt . "</strong>";
+        		$address = "<strong>" . etrimstr($line['address']) . "</strong>";
+        		$date = "<strong>" . substr((fixdate($line['date'])),0,16) . "</strong>";
+        	}
+        	else {
+        		$subject = $linktxt; //$this->href->showlink($mess, $line['subject']);
+        		$address = etrimstr($line['address']);
+        		$date = substr((fixdate($line['date'])),0,16);
+        	}
+
+        	$tableRow[]=$address;
+        	$tableRow[]= $subject;
+			$tableRow[]=$date;
 			$table->addRow($tableRow, $oddOrEven);
             $tableRow=array();
             $rowcount = ($rowcount == 0) ? 1 : 0;
@@ -71,53 +103,4 @@ $cssLayout->setMiddleColumnContent($table->show());
 
 echo $cssLayout->show();
 
-/**
-// Create an instance of the postlogin menu on the side
-$userMenu  = &$this->newObject('usermenu','toolbar');
-$msgList = &$this->newObject('iframe','htmlelements');
-$msgView = &$this->newObject('iframe','htmlelements');
-
-//set up the iFrames
-$msgList->width = '100%';
-$msgView->width = '100%';
-$msgList->height = 150;
-$msgView->height = 400;
-
-$msgList->frameborder = 1;
-$msgView->frameborder = 1;
-
-$msgList->name = "msglist";
-$msgView->name = "msgview";
-$msgList->id = "msglist";
-$msgView->id = "msgview";
-
-$msgList->src = $this->uri(array(
-            'module'=>'webmail',
-            'action'=>'msglist',
-        ));
-//user cal
-$userCal = &$this->newObject('usercalendar','calendar');
-// Create an instance of the css layout class
-$cssLayout =& $this->newObject('csslayout', 'htmlelements');
-// Set columns to 2
-$cssLayout->setNumColumns(3);
-
-// Add Post login menu to left column
-$leftSideColumn ='';
-$leftSideColumn = $userMenu->show();
-$rightSideColumn = "Simple calendar plus menu for other folders like calendars etc";
-$middleColumn = $msgList->show(); //$folders;
-$middleColumn .= $msgView->show();
-
-// Add Left column
-$cssLayout->setLeftColumnContent($leftSideColumn);
-// Add Right Column
-$cssLayout->setRightColumnContent($rightSideColumn);
-//add middle column
-$cssLayout->setMiddleColumnContent($middleColumn);
-echo $cssLayout->show();
-
-//print_r(($infoArr));
-
-*/
 ?>
