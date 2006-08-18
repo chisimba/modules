@@ -24,6 +24,8 @@ class webmail extends controller
 		try {
 			$this->objLanguage = $this->getObject('language', 'language');
 			$this->objImap = $this->getObject('imap');
+			$this->objFiles = $this->getObject('upload', 'filemanager');
+			$this->objConfig = $this->getObject('altconfig','config');
 			//Get the activity logger class
 			$this->objLog = $this->newObject('logactivity', 'logger');
 			//Log this module call
@@ -103,6 +105,7 @@ class webmail extends controller
 
 			case 'getmessage':
 				{
+
 					$this->setVar('pageSuppressIM', TRUE);
             		$this->setVar('pageSuppressBanner', TRUE);
             		$this->setVar('pageSuppressToolbar', TRUE);
