@@ -50,6 +50,7 @@ class gencontroller extends abgenerator implements ifgenerator
 		$moduleName = $this->getParam('modulename', '{UNSPECIFIED}');
 		$moduleDescription = $this->getParam('moduledescription', '{UNSPECIFIED}');
         $copyright = $this->getParam('copyright', '{UNSPECIFIED}');
+        $databaseclass = $this->getParam('databaseclass', '{UNSPECIFIED}');
 		$purpose = $moduleName . '\n' . $moduleDescription;
 		//Serialize the variables to the session
 		$this->setSession('modulecode', $moduleCode);
@@ -57,6 +58,8 @@ class gencontroller extends abgenerator implements ifgenerator
 	    $this->setSession('moduledescription', $moduleDescription);
 	    $this->setSession('copyright', $copyright);
 	    $this->setSession('purpose', $purpose); 
+	    $this->setSession('databaseclass', $databaseclass); 
+	    
 	
 		//Off we go to prepare the class from the XML		
         $this->prepareClass();
@@ -78,11 +81,13 @@ class gencontroller extends abgenerator implements ifgenerator
           . "\n{SPECIALMETHODS}\n", $this->classCode);
          //Insert the standard methods to init()
         $this->classCode = str_replace('{OBJECTS}', $this->initObjects, $this->classCode);
+        //Insert the database classname
+        $this->classCode = str_replace('{DATACLASS}', $databaseclass, $this->classCode);
         
         //Add code for logging
         $this->initLogger();
         //Clean up unused template tags
-        //$this->cleanUp();
+        $this->cleanUp();
         $this->prepareForDump();
 	    return $this->classCode;
 	}

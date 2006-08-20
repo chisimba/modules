@@ -53,7 +53,8 @@ class {CLASS} {EXTENDS} {IMPLEMENTS}
 
 <section>
   <name>endphp</name>
-  <code>{ENDPHP}</code>
+  <code>
+{ENDPHP}</code>
 </section>
 
 

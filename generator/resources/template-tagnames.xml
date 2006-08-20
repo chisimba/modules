@@ -212,6 +212,11 @@
     <description>Used to represent the code for saving when generating a dbTable class.</description>
   </tag>
   
+  <tag>
+    <tagname>search_box_code</tagname>
+    <tagtext>{SEARCH_BOX_CODE}</tagtext>
+    <description>Used in some templates to insert a search input box</description>
+  </tag>
 
   
 <!--

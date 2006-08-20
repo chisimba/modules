@@ -94,6 +94,12 @@ class tpstart extends object
         $myTable->addCell($this->__getModuleDescriptionElement());
         $myTable->endRow();
         
+        //Create an element for the input of Datbase table class and add it to the table
+        $myTable->startRow();
+        $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_dbclass", "generator"));
+        $myTable->addCell($this->__getModuleDataTableElement());
+        $myTable->endRow();
+        
         //Create an element for the input of copyright info and add it to the table
         $myTable->startRow();
         $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_copyright", "generator"));
@@ -155,6 +161,28 @@ class tpstart extends object
         $objElement->size=40;
         if (isset($this->modulecode)) {
             $objElement->value=$this->modulecode;
+        }
+        //Add the $title element to the form
+        return $objElement->show();
+    }
+    
+    /**
+    * 
+    * Method to return database classname input to the form
+    * 
+    * @access private
+    * @return the database classtext input for the form
+    * 
+    */ 
+    private function __getModuleDataTableElement()
+    {
+        //Create an element for the input of module code
+        $objElement = new textinput ("databaseclass");
+        //Set the field type to text
+        $objElement->fldType="text";
+        $objElement->size=40;
+        if (isset($this->databaseclass)) {
+            $objElement->value=$this->databaseclass;
         }
         //Add the $title element to the form
         return $objElement->show();

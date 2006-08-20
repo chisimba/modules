@@ -56,8 +56,12 @@ class gendbtable extends abgenerator implements ifgenerator
         //Serialize the tablename
         $this->setSession('tablename', $table);
         $this->classCode = str_replace('{DATABASETABLE}', $table, $this->classCode);
+        //Get the class name
+        $databaseclass = $this->getParam('databaseclass', '{UNSPECIFIED_DATABASE_CLASSNAME}');
+        //Serialize the database class name just in case
+        $this->setSession('databaseclass', $databaseclass);
         //Insert the package name
-        $package = $this->getParam('modulename', '{UNSPECIFIED}');
+        $package = $this->getParam('modulename', '{UNSPECIFIED_MODULE_NAME}');
         $this->setSession('modulename', $package);
         $this->classCode = str_replace('{PACKAGE}', $package, $this->classCode);
         //Insert the copyright

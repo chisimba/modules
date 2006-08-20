@@ -18,7 +18,7 @@ $middleColumn = $objH->show();
 
 //Get the table & class names
 $table = $this->getParam('tablename', 'tbl_users');
-$className = $this->getParam('classname', '{UNSPECIFIED}');
+$className = $this->getParam('databaseclass', '{UNSPECIFIED_CLASS_NAME_IN_GENDBTABLE_TPL}');
 
 //---Do the work of generating the code
 //Get an instance of the dbtable class generator

@@ -80,6 +80,12 @@ class tpdata extends object
         $myTable->addCell($this->__getTablesAsDropDown()); //__getTableNameElement()
         $myTable->endRow();
         
+        //Create an element for the input of Datbase table class and add it to the table
+        $myTable->startRow();
+        $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_dbclass", "generator"));
+        $myTable->addCell($this->__getModuleDataTableElement());
+        $myTable->endRow();
+        
         //Create an element for the input of modulename and add it to the table
         $myTable->startRow();
         $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_modname", "generator"));
@@ -150,6 +156,30 @@ class tpdata extends object
             $objElement->value=$this->copyright;
         }
         //Add the copyright element to the form
+        return $objElement->show();
+    }
+    
+    /**
+    * 
+    * Method to return database classname input to the form
+    * 
+    * @access private
+    * @return the database classtext input for the form
+    * 
+    */ 
+    private function __getModuleDataTableElement()
+    {
+    	//Check for serialized element
+    	$this->databaseclass = $this->getSession('databaseclass', NULL);
+        //Create an element for the input of module code
+        $objElement = new textinput ("databaseclass");
+        //Set the field type to text
+        $objElement->fldType="text";
+        $objElement->size=40;
+        if (isset($this->databaseclass)) {
+            $objElement->value=$this->databaseclass;
+        }
+        //Add the $title element to the form
         return $objElement->show();
     }
     
