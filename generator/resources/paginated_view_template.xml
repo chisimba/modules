@@ -1,8 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- This file is a code generation template for Chisimba for generating code for paginated record set -->
-<chisimba_paginate_view_template>
+<chisimba_paginated_view_template>
 
-<item name="putpagnav">
+<item name="mk_init">
+<purpose>Method to make the init function of the class</purpose>
+<code>
+/*
+* Constructor method to define the parent table
+* and initialize commonly used classes
+*/
+function init()
+{
+    parent::init('{DATABASETABLE}');
+    //Create an instance of the user object
+    $this->objUser =  $this->getObject('user', 'security');
+    //Create an instance of the recordset navigation icons
+    $this->objNav =  $this->getObject('rsnavicons', 'display');
+ }
+</code>
+
+<item name="mk_getarraypaginated">
+<purpose>Method to make the function to get an array paginated</purpose>
+<code>
+    /**
+    *
+    * Method to return an array of data set for pagination
+    *
+    */
+    function getArrayPaginated($columns = "*", $pageSize = 20, $order = null)
+    {
+		// retrieve the page number or set it to zero if none\n"
+		$this->pageNo = $this->getParam('pageno', 0); 
+		// set the next page to display 
+		 $this->pageNoDisp = $this->pageNo + 1;
+		// first record to show from the recordset 
+		$startRow = $this->pageNo * $pageSize;
+		//You could add a filter here if you want to
+		$filter = "";
+		//Get a count of the records
+		$records = $this->getRecordCount($filter);
+		// the number of pages that will be displayed 
+		$this->totalPages = intval($records / $pageSize) + 1;
+		// create the SQL for the query
+		$sql = "SELECT " . $columns
+		  . " FROM " . $this->_table 
+		  . " " . $filter . " ORDER BY dateCreated DESC ";
+		// return the recordset resulting from the query
+		return $this->getArrayWithLimit($sql, $startRow, $pageSize);
+    }
+</code>
+</item>
+
+<item name="mk_putpagnav">
 <purpose>Generates a method to put the page navigation on the output page</purpose>
 <code>
     /**
@@ -34,6 +83,7 @@
         //Create the return string for adding to it
         $ret = '';
         $search={SEARCH_BOX_CODE};
+        
         //Build the navigation table with left nav
         if ($pageNo > 0) {
             $prev = $pageNo-1;
@@ -61,18 +111,15 @@
         } else {
             $rightNav = "<td align=\"right\" class=\"rsnav\">"
               . $this->objNav->nextPageDisabled() . " "
-              . $this->objNav->lastPageDisabled() . "</td>";
+              view. $this->objNav->lastPageDisabled() . "</td>";
         }
         //Finish up & display page of page number
+        $ret .="<table width=\"100%\"><tr>"
+          . $leftNav . "<td  align=\"center\" class=\"rsnav\">Page: "
+          . $rightNav . "</tr></table>";
+        return $ret;
     }
 </code>
 </item>
 
-<item name="xx">
-<purpose>xx</purpose>
-<code>
-
-</code>
-</item>
-
-</chisimba_paginate_view_template>
+</chisimba_paginated_view_template>

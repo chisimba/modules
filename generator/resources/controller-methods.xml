@@ -14,7 +14,9 @@
     */
     public function init()
     {
-{OBJECTS}{LOGGER}
+{OBJECTS}    //Get an instance of the data access class for this module
+	$this->{DATACLASS} = $this->getObject('{DATACLASS}');
+{LOGGER}
     }
   </code>
 </method>
@@ -68,8 +70,7 @@
     */
     private function __view()
     {
-        $filter = NULL;
-        $ar = $this->{DATACLASS}->fetchStories($filter);
+        $ar = $this->{DATACLASS}->getAll($filter);
         $this->setVarByRef('ar', $ar);
         return "main_tpl.php";
     }

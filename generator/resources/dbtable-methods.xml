@@ -48,8 +48,7 @@
 </method>
 
 <method>
-  <name>
-  </name>
+  <name>getforedit</name>
   <code>
     /**
     * Method to retrieve the data for edit and prepare the vars for

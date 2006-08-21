@@ -174,7 +174,7 @@ class gendbtable extends abgenerator implements ifgenerator
         //Set up the top of the edit/save area
         $ret = "\n        //If coming from edit use the update code\n"
           . "        if (\$mode==\"edit\") {\n"
-          . "            \$ar = (\n";
+          . "            \$ar = array(\n";
         //How many fields are there
         $fldCount = count($this->arrayOfFields);
         //Set the index pointer to 0
@@ -186,7 +186,7 @@ class gendbtable extends abgenerator implements ifgenerator
         }
         $ret .= "            \$this->update('id', \$id, \$ar);\n"
           . "        } else {\n"
-          . "            \$ar = (\n";
+          . "            \$ar = array(\n";
         //Set the index pointer to 0
         $iIndex = 0;
         //Loop over the items
@@ -213,6 +213,7 @@ class gendbtable extends abgenerator implements ifgenerator
     {
         //Index and field count should be real numbers not array index
         $iIndex = $iIndex + 1; 
+        $comma="";
         //Close up the array if we are at the end, else add , and new line
         if ($iIndex < $fldCount) {
             $comma = ",\n";
@@ -281,7 +282,7 @@ class gendbtable extends abgenerator implements ifgenerator
             case "creatorId":
             case "creatorid":
                 $ret = "              '" . $fieldName 
-                  . "' => \$this->objUser->fullName();\n";
+                  . "' => \$this->objUser->fullName()" . $comma;
                 break;
             //The default method to return the getting of the value
             default:
