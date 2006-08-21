@@ -80,7 +80,7 @@ $this->_objSkin = & $this->newObject('skin' , 'skin');
 			
 
 $delImage->setIcon('edit_trash');
-$folImage->setIcon('folder3');
+$folImage->setIcon('folder');
 	$folImage->width = "15";
 	$folImage->height="15";
 	$folImage->border = "0";
@@ -192,7 +192,7 @@ if($files)
 	{
 		$str .= '<div align="center" style="font-size:large;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">No Media Files Found</div>';
 	}
-	echo $str;
+	//echo $str;
 //$str .='<form id="images" name="images"><input type="text" name="hideme" id="hideme" ><form>';
 print $str;
 ?>
