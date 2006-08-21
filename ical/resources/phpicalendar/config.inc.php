@@ -65,7 +65,7 @@ $ftp_calendar_path		= '';				// Only used if $auth_method='ftp'. The full path t
 // You can increase the number of unique colors by adding additional images (monthdot_n.gif) 
 // and in the css file (default.css) classes .alldaybg_n, .eventbg_n and .eventbg2_n
 // Colors will repeat from the beginning for calendars past $unique_colors (7 by default), with no limit.
-$unique_colors			= '7';				
+$unique_colors			= '6';				
 
 $blacklisted_cals[] = '';					// Fill in between the quotes the name of the calendars 
 $blacklisted_cals[] = '';					// you wish to 'blacklist' or that you don't want to show up in your calendar

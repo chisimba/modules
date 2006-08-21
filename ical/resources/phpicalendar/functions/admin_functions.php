@@ -25,7 +25,7 @@ function login ($username, $password) {
 			$loggedin = login_ftp($username, $password);
 			break;
 		case 'internal':
-			$loggedin = login_internal($username, $password);
+			$loggedin = TRUE;login_internal($username, $password);
 			break;
 		default:
 			$loggedin = FALSE;

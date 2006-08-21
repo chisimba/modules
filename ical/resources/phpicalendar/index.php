@@ -14,7 +14,7 @@ if ($printview_default == 'yes') {
 	if (in_array($default_view, $check)) {
 		$default_view = $default_view . '.php';
 	} else {
-		die;
+		die('here');
 	}
 }
 if(isset($_GET['cpath'])){
