@@ -1,5 +1,5 @@
 <?php
-$this->setVar('pageSuppressXML',true);
+//$this->setVar('pageSuppressXML',true);
 /**
 * This template displays a topic in a flat view format
 */

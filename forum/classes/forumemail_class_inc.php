@@ -67,7 +67,7 @@ class forumemail extends object
         // Add the Email to the array
         foreach ($topicSubscribers as $user)
         {
-            array_push($this->emailList, $user['emailAddress']);
+            array_push($this->emailList, $user['emailaddress']);
         }
         
         $objTopic =& $this->getObject('dbtopic');
@@ -80,7 +80,7 @@ class forumemail extends object
         // Add the Email to the array
         foreach ($forumSubscribers as $user)
         {
-            array_push($this->emailList, $user['emailAddress']);
+            array_push($this->emailList, $user['emailaddress']);
         }
         
         // Remove duplicate emails
@@ -107,7 +107,7 @@ class forumemail extends object
             $subject = '['.$forum.'] '.$title;
             $name = 'Not Needed';
             
-            $line1 = $this->objLanguage->languageText('mod_forum_emailtextline1', '{NAME} has posted the following message to the {FORUM} discussion forum').':';
+            $line1 = $this->objLanguage->languageText('mod_forum_emailtextline1', 'forum', '{NAME} has posted the following message to the {FORUM} discussion forum').':';
             $line1 = str_replace('{NAME}', $this->objUser->fullname($senderId), $line1); 
             $line1 = str_replace('{FORUM}', $forum, $line1);
             
@@ -118,12 +118,12 @@ class forumemail extends object
             $replyLink = new link($replyUrl);
             $replyLink->link = $replyUrl;
             
-            $line2 = $this->objLanguage->languageText('mod_forum_emailtextline2', 'To reply to this message, go to: {URL}');
+            $line2 = $this->objLanguage->languageText('mod_forum_emailtextline2', 'forum', 'To reply to this message, go to: {URL}');
             $line2 = str_replace('{URL}', $replyLink->show(), $line2); 
             
             $message = '------------------------------------------------<br />'."\r\n";
             $message .= $title."<br />\r\n";
-            $message .= ucfirst($this->objLanguage->languageText('word_by', 'By')).' '.$this->objUser->fullname($senderId)."<br />\r\n";
+            $message .= ucfirst($this->objLanguage->languageText('word_by', 'forum', 'By')).' '.$this->objUser->fullname($senderId)."<br />\r\n";
             $message .= '------------------------------------------------<br />'."\r\n";
             //$message .= '<p>'.$line1.'</p>'."\r\n\r\n";
             $message .= str_replace('&nbsp;', ' ', $text)."\r\n\r\n";

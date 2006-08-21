@@ -23,6 +23,7 @@ class dbpostattachments extends dbTable
     */
     function init() {
         parent::init('tbl_forum_post_attachment');
+        $this->objFileRegister =& $this->getObject('registerfileusage', 'filemanager');
     }
 
     /**
@@ -35,12 +36,12 @@ class dbpostattachments extends dbTable
     */
     function insertSingle($post_id, $attachment_id, $userId, $dateLastUpdated)
     {
-        $this->insert(array(
+        $recordId = $this->insert(array(
                 'post_id' => $post_id,
                 'attachment_id' => $attachment_id,
-                'userId' => $userId,
-                'dateLastUpdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)));
-        
+                'userid' => $userId,
+                'datecreated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)));
+        $this->objFileRegister->registerUse($attachment_id, 'forum', 'tbl_forum_post_attachment', $recordId, 'attachment_id');
     }
     
     /**
@@ -51,9 +52,8 @@ class dbpostattachments extends dbTable
     */
     function getAttachments($post_id)
     {
-        $sql = 'SELECT tbl_forum_post_attachment.id AS id, filename,  tbl_forum_attachments.id AS attachment_id FROM tbl_forum_post_attachment 
-        INNER JOIN tbl_forum_attachments ON (attachment_id = tbl_forum_attachments.id) 
-        INNER JOIN tbl_filestore ON (tbl_forum_attachments.fileId = tbl_filestore.fileId) 
+        $sql = 'SELECT tbl_forum_post_attachment.id AS id, filename FROM tbl_forum_post_attachment 
+        INNER JOIN tbl_files ON (attachment_id = tbl_files.id)
         WHERE tbl_forum_post_attachment.post_id="'.$post_id.'"';
         
         return $this->getArray($sql);

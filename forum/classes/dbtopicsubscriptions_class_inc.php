@@ -40,7 +40,7 @@ class dbtopicsubscriptions extends dbtable
         $sql = ' SELECT count( tbl_forum_subscribe_topic.id ) AS subscribecount
         FROM tbl_forum_subscribe_topic
         INNER JOIN tbl_forum_topic ON ( tbl_forum_subscribe_topic.topic_id = tbl_forum_topic.id ) 
-        WHERE tbl_forum_topic.forum_id = "'.$forum_id.'" AND tbl_forum_subscribe_topic.userId = "'.$userId.'"';
+        WHERE tbl_forum_topic.forum_id = "'.$forum_id.'" AND tbl_forum_subscribe_topic.userid = "'.$userId.'"';
         
         $number = $this->getArray($sql);
         
@@ -51,9 +51,9 @@ class dbtopicsubscriptions extends dbtable
     {
         return $this->insert(array(
             'topic_id'=>$topic_id, 
-            'userId'=>$userId, 
+            'userid'=>$userId, 
             'external'=>'Y', 
-            'dateLastUpdated'=>strftime('%Y-%m-%d %H:%M:%S', mktime())
+            'datecreated'=>strftime('%Y-%m-%d %H:%M:%S', mktime())
         ));
     }
     
@@ -67,7 +67,7 @@ class dbtopicsubscriptions extends dbtable
     */
     function isSubscribedToTopic($topic_id, $userId)
     {
-        $sql = 'WHERE topic_id = "'.$topic_id.'" AND userId = "'.$userId.'"'; 
+        $sql = 'WHERE topic_id = "'.$topic_id.'" AND userid = "'.$userId.'"'; 
         
         $number = $this->getRecordCount($sql);
         
@@ -80,7 +80,7 @@ class dbtopicsubscriptions extends dbtable
     
     function getUsersSubscribedTopic($topic_id)
     {
-        $sql = 'SELECT DISTINCT emailAddress FROM tbl_forum_subscribe_topic INNER JOIN tbl_users ON ( tbl_forum_subscribe_topic.userId = tbl_users.userId ) WHERE topic_id = "'.$topic_id.'"';
+        $sql = 'SELECT DISTINCT emailAddress FROM tbl_forum_subscribe_topic INNER JOIN tbl_users ON ( tbl_forum_subscribe_topic.userid = tbl_users.userid ) WHERE topic_id = "'.$topic_id.'"';
         return $this->getArray($sql);
     }
     

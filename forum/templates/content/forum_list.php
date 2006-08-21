@@ -90,20 +90,20 @@ foreach ($forums as $forum)
     } else {
         $cssClass = 'smallText';
         $postLink = new link($this->uri(array( 'module'=> 'forum', 'action' => 'viewtopic', 'id' => $post['topic_id'], 'post'=>$post['post_id'])));
-        $postLink->link = stripslashes($post['post_title'], 'forum');
+        $postLink->link = stripslashes($post['post_title']);
         $postDetails = '<strong>'.$postLink->show().'</strong>';
         $postDetails .= '<br />'.$this->trimstrObj->strTrim(stripslashes(str_replace("\r\n", ' ', strip_tags($post['post_text']))), 80);
         
-        if ($post['firstName'] != '') {
-            $user = 'By: '.$post['firstName'].' '.$post['surname'].' - ';
+        if ($post['firstname'] != '') {
+            $user = 'By: '.$post['firstname'].' '.$post['surname'].' - ';
         } else {
             $user = '';
         }
         
-        if (formatDate($post['dateLastUpdated']) == date('j F Y')) {
-            $datefield = $this->objLanguage->languageText('mod_forum_todayat', 'forum').' '.formatTime($post['dateLastUpdated']);
+        if (formatDate($post['datelastupdated']) == date('j F Y')) {
+            $datefield = $this->objLanguage->languageText('mod_forum_todayat', 'forum').' '.formatTime($post['datelastupdated']);
         } else {
-            $datefield = formatDate($post['dateLastUpdated']).' - '.formatTime($post['dateLastUpdated']);
+            $datefield = formatDate($post['datelastupdated']).' - '.formatTime($post['datelastupdated']);
         }
         
         $postDetails .= '<br /><strong>'.$user.$datefield.'</strong>';
@@ -120,7 +120,7 @@ echo $objSearch->show();
 
 if ($this->isValid('administration') && $this->isLoggedIn) {
     $administrationLink = new link($this->uri(array( 'module'=> 'forum', 'action' => 'administration')));
-    $administrationLink->link = $this->objLanguage->languageText('mod_forum_forumAdministration', 'forum');
+    $administrationLink->link = $this->objLanguage->languageText('mod_forum_forumadministration', 'forum');
     echo '<p><strong>'.$administrationLink->show().'</strong></p>';
 }
 

@@ -1,8 +1,9 @@
-<script src="modules/tree/resources/TreeMenu.js" language="JavaScript" type="text/javascript"></script>
 <?php
 /**
 * This template displays a topic in a single view format
 */
+
+$this->setVar('pageSuppressXML',true);
 
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
@@ -24,8 +25,8 @@ $header->str=$headerString;
 
 if ($this->isValid('moderatetopic') && !$forumlocked && $forumtype != 'workgroup' && $this->isLoggedIn) {
     $objIcon->setIcon('moderate');
-    $objIcon->title = $this->objLanguage->languageText('mod_forum_moderatetopic');
-    $objIcon->alt = $this->objLanguage->languageText('mod_forum_moderatetopic');
+    $objIcon->title = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
+    $objIcon->alt = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
     
     $moderateTopicLink = new link($this->uri(array('action'=>'moderatetopic', 'id'=>$post['topic_id'], 'type'=>$forumtype)));
     $moderateTopicLink->link = $objIcon->show();
@@ -38,19 +39,19 @@ echo $header->show();
 //Confirmation messages
 if ($this->getParam('message') == 'save') {
     $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
-    $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_postsaved'));
+    $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_postsaved', 'forum'));
     $timeoutMessage->setTimeout(20000);
     echo ('<p>'.$timeoutMessage->show().'</p>');
 }
 if ($this->getParam('message') == 'postupdated') {
     $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
-    $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_postupdated'));
+    $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_postupdated', 'forum'));
     $timeoutMessage->setTimeout(10000);
     echo ('<p>'.$timeoutMessage->show().'</p>');
 }
 if ($this->getParam('message') == 'replysaved') {
     $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
-    $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_replysaved'));
+    $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_replysaved', 'forum'));
     $timeoutMessage->setTimeout(10000);
     echo ('<p>'.$timeoutMessage->show().'</p>');
 }
@@ -67,7 +68,7 @@ echo $changeDisplayForm;
 
 if ($post['status'] =='CLOSE') {
     echo '<div class="forumTangentIndent">';
-    echo '<strong>'.$this->objLanguage->languageText('mod_forum_topiclockedby').' '.$this->objUser->fullname($post['lockuser']).' on '.formatdate($post['lockdate']).'</strong>';
+    echo '<strong>'.$this->objLanguage->languageText('mod_forum_topiclockedby', 'forum').' '.$this->objUser->fullname($post['lockuser']).' on '.formatdate($post['lockdate']).'</strong>';
     echo '<p>'.$post['lockReason'].'</p>';
     echo '</div>';
 }
@@ -80,7 +81,7 @@ $ratingsForm->addToForm($postDisplay);
 // Without this button, form is a waste, but need to make efficient
 if ($showRatingsForm) {
     $objButton=&new button('submitForm');
-    $objButton->setValue($this->objLanguage->languageText('mod_forum_sendratings'));
+    $objButton->setValue($this->objLanguage->languageText('mod_forum_sendratings', 'forum'));
     $objButton->setToSubmit();
     
     if ($post['status'] != 'CLOSE' && !$forumlocked) {
@@ -122,11 +123,11 @@ if ($post['topic_tangent_parent'] == '0' && count($tangents) > 0) {
     $table->cellpadding = 5;
     $table->cellspacing = 1;
     $table->startHeaderRow();
-    $table->addHeaderCell($this->objLanguage->languageText('mod_forum_topicconversation'));
-    $table->addHeaderCell($this->objLanguage->languageText('word_author'), NULL, NULL, 'center');
-    $table->addHeaderCell($this->objLanguage->languageText('word_replies'), NULL, NULL, 'center');
-    $table->addHeaderCell($this->objLanguage->languageText('word_views'), NULL, NULL, 'center');
-    $table->addHeaderCell($this->objLanguage->languageText('mod_forum_lastpost'), NULL, NULL, 'center');
+    $table->addHeaderCell($this->objLanguage->languageText('mod_forum_topicconversation', 'forum'));
+    $table->addHeaderCell($this->objLanguage->languageText('word_author', 'forum'), NULL, NULL, 'center');
+    $table->addHeaderCell($this->objLanguage->languageText('word_replies', 'forum'), NULL, NULL, 'center');
+    $table->addHeaderCell($this->objLanguage->languageText('word_views', 'forum'), NULL, NULL, 'center');
+    $table->addHeaderCell($this->objLanguage->languageText('mod_forum_lastpost', 'forum'), NULL, NULL, 'center');
     $table->endHeaderRow();
     
     $row = 'odd';
@@ -148,7 +149,7 @@ if ($post['topic_tangent_parent'] == '0' && count($tangents) > 0) {
         $lastPostLink->link = $objIcon->show();
         
         if (formatDate($tangent['lastdate']) == date('j F Y')) {
-            $datefield = $this->objLanguage->languageText('mod_forum_todayat').' '.formatTime($tangent['lastdate']);
+            $datefield = $this->objLanguage->languageText('mod_forum_todayat', 'forum').' '.formatTime($tangent['lastdate']);
         } else {
             $datefield = formatDate($tangent['lastdate']).' - '.formatTime($tangent['lastdate']);
         }
@@ -164,24 +165,24 @@ if ($post['topic_tangent_parent'] == '0' && count($tangents) > 0) {
 }
 
 $replylink = new link($this->uri(array('action'=>'postreply', 'id'=>$post['post_id'], 'type'=>$forumtype)));
-$replylink->link = $this->objLanguage->languageText('mod_forum_replytotopic');
+$replylink->link = $this->objLanguage->languageText('mod_forum_replytotopic', 'forum');
 
 $newtopiclink = new link($this->uri(array('action'=>'newtopic', 'id'=>$post['forum_id'], 'type'=>$forumtype)));
-$newtopiclink->link = $this->objLanguage->languageText('mod_forum_startnewtopic');
+$newtopiclink->link = $this->objLanguage->languageText('mod_forum_startnewtopic', 'forum');
 
 $changetopicstatus = new link($this->uri(array('action'=>'topicstatus', 'id'=>$post['topic_id'])));
-$changetopicstatus->link = $this->objLanguage->languageText('mod_forum_changetopicstatus');
+$changetopicstatus->link = $this->objLanguage->languageText('mod_forum_changetopicstatus', 'forum');
 
 $returntoforum = new link($this->uri(array('action'=>'forum', 'id'=>$post['forum_id'], 'type'=>$forumtype)));
-$returntoforum->link = $this->objLanguage->languageText('mod_forum_returntoforum');
+$returntoforum->link = $this->objLanguage->languageText('mod_forum_returntoforum', 'forum');
 
 $moderateTopicLink = new link($this->uri(array('action'=>'moderatetopic', 'id'=>$post['topic_id'], 'type'=>$forumtype)));
-$moderateTopicLink->link = $this->objLanguage->languageText('mod_forum_moderatetopic');
+$moderateTopicLink->link = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
 
 if ($post['status'] != 'CLOSE' && !$forumlocked && $this->isLoggedIn) {
     $header = new htmlheading();
     $header->type=3;
-    $header->str = $this->objLanguage->languageText('mod_forum_postreply');
+    $header->str = $this->objLanguage->languageText('mod_forum_postreply', 'forum');
     
     echo $header->show();
     

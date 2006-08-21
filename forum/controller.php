@@ -258,6 +258,9 @@ class forum extends controller
             case 'attachments':
                 return $this->showAttachments($this->getParam('id'), $this->getParam('forum'));
                 
+            case 'saveattachment':
+                return $this->saveAttachment();
+                
             case 'attachmentwindow':
                 return $this->attachmentWindow($this->getParam('elementid'), $this->getParam('forum'));
                 
@@ -1364,12 +1367,10 @@ class forum extends controller
     * Template that shows in the iframe when a user is busy with a topic/reply
     *
     * @param $id Record Id of the Temporary ID
-    * @param $forum The forum where the post will be made in
     */
-    function showAttachments($id, $forum)
+    function showAttachments($id)
     {
         $this->setVarByRef('id', $id);
-        $this->setVarByRef('forum', $forum);
         
         $files = $this->objTempAttachments->getList($id);
         
@@ -1382,6 +1383,25 @@ class forum extends controller
         $this->setVar('suppressFooter', TRUE);
         
         return 'forum_attachments.php';
+    }
+    
+    /**
+    * Method to add an attachment to a file
+    */
+    function saveAttachment()
+    {
+        
+        $temp_id = $this->getParam('id');
+        $userId = $this->objUser->userId();
+        $dateLastUpdated = mktime();
+        
+        $attachment_id = $this->getParam('attachment');
+        
+        if ($attachment_id != '') {
+            $this->objTempAttachments->insertSingle($temp_id, $attachment_id, $userId, $dateLastUpdated);
+        }
+        
+        return $this->nextAction('attachments', array('id'=>$temp_id, 'attachment'=>$attachment_id));
     }
     
     /**
@@ -2288,7 +2308,7 @@ class forum extends controller
             $nodeDetails['edgeWidth'] = 8;
             
             // Start text of the node
-            $text = $topic['firstName'].' '.$topic['surname'].' ';
+            $text = $topic['firstname'].' '.$topic['surname'].' ';
             
             // Check if Start of Topic or Reply
             if ($topic['post_parent'] == '0') {
@@ -2310,7 +2330,7 @@ class forum extends controller
             $icons = array();
             
             // Add a Cloud Colour - dynamic generation
-            if ($topic['replyPost'] != '' && !in_array($topic['post_id'], $rootNodes)) {
+            if ($topic['replypost'] != '' && !in_array($topic['post_id'], $rootNodes)) {
                 $nodeDetails['cloud'] = TRUE;
                 $nodeDetails['cloudcolor'] = $objColorGenerator->generateColor();
             } else {

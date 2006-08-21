@@ -387,6 +387,13 @@ class dbPost extends dbTable
                     $this->numOpenThreadDisplayDivs -=1;
                 }
             }
+            
+            
+            $this->appendArrayVar('headerParams', '
+<style type="text/css" title="text/css">
+.switchcontent{display:none;}
+</style>
+                    ');
         }
         
         $this->objIcon->setIcon('delete');
@@ -411,7 +418,8 @@ class dbPost extends dbTable
                 
                 // Check if the contractible layers should be implemented
                 if ($makeContractible) {
-                    $return .= '<img src="modules/forum/resources/contract.gif" align="right" onClick="expandcontent(\''.$post['post_id'].'\')"  style="cursor:hand; cursor:pointer; padding-right: 20px;">';
+                    $return .= '<img src="modules/forum/resources/contract.gif" align="right" onclick="expandcontent(\''.$post['post_id'].'\')"  style="cursor:hand; cursor:pointer; padding-right: 20px;" />';
+                    
                 }
                 
                 
@@ -453,20 +461,21 @@ class dbPost extends dbTable
                     
                     // By Pass if attachment has been deleted.
                     if (count($attachments) != 0) {
-                        $return .= '<p><strong>'.$this->objLanguage->languageText('word_attachments', 'forum').':</strong></p>';
+                        $return .= '<br /><br /><br /><p><strong>'.$this->objLanguage->languageText('word_attachments').':</strong></p>';
                         
+                        $this->objFileIcons = $this->newObject('fileicons', 'files');
                         
-                        $return .= '<ul>';
+                        //$return .= '<ul>';
                         
                         foreach ($attachments AS $attachment) 
                         {
                             $downloadlink = new link($this->uri(array('action'=>'downloadattachment', 'id'=>$attachment['id'], 'topic'=> $post['topic_id'], 'type'=>$this->forumtype)));
                             $downloadlink->link = $attachment['filename'];
                             //$downloadlink->target = '_blank';
-                            $return .= '<li>'.$downloadlink->show().'</li>';
+                            $return .= $this->objFileIcons->getFileIcon($attachment['filename']).' '.$downloadlink->show().'<br />';
                         }
                         
-                        $return .= '</ul>';
+                        //$return .= '</ul>';
                     }
                     
                 }
@@ -501,7 +510,7 @@ class dbPost extends dbTable
                     $link =& $this->getObject ('link', 'htmlelements');
                     $link->href=$this->uri(array('action'=>'postreply', 'id'=>$post['post_id'], 'type'=>$this->forumtype));
                     $link->link = $this->objLanguage->languageText('mod_forum_postreply', 'forum');
-                    $return .= '<p>'.$link->show();
+                    $return .= $link->show();
                 }
                 
                 // Check if user can edit post
@@ -520,8 +529,6 @@ class dbPost extends dbTable
                     
                     $return .= $editlink->show();
                 }
-                
-                $return .= '</p>';
                 
                 
                 $return .= '<hr />';
@@ -562,9 +569,6 @@ class dbPost extends dbTable
                     
                     $return .= $translateLink->show();
                 }
-                
-                
-                $return .='</p>';
                  
                  
             $return .= '</div>'."\r\n";// End newForumContent
@@ -686,6 +690,7 @@ class dbPost extends dbTable
         $this->loadClass('treemenu','tree');
 		$this->loadClass('treenode','tree');		
 		$this->loadClass('dhtml','tree');
+		$this->loadClass('htmllist','tree');
         
         if ($threadArray[0]['post_id'] == $highlightPostId) {
             $highlightPost = TRUE;
@@ -726,7 +731,8 @@ class dbPost extends dbTable
         
         $treeMenu->addItem($rootNode);
         
-        $tree = &new dhtml($treeMenu, array('images' => $this->objSkin->getSkinURL().'treeimages/imagesAlt2'), FALSE);
+        $tree = &new htmllist($treeMenu, array('images' => $this->objSkin->getSkinURL().'treeimages/imagesAlt2'), FALSE);
+        //$this->appendArrayVar('headerParams', '<script src="modules/tree/resources/TreeMenu.js" language="JavaScript" type="text/javascript"></script>');
         
         return $tree->getMenu();
     }
@@ -745,22 +751,22 @@ class dbPost extends dbTable
         // Additional Filter to remove line breaks
         $text = str_replace("\r\n", ' ', $text);
         
-        if (formatDate($post['dateLastUpdated']) == date('j F Y')) {
-            $datefield = $this->objLanguage->languageText('mod_forum_todayat', 'forum').' '.formatTime($post['dateLastUpdated']);
+        if (formatDate($post['datelastupdated']) == date('j F Y')) {
+            $datefield = $this->objLanguage->languageText('mod_forum_todayat', 'forum').' '.formatTime($post['datelastupdated']);
         } else {
-            $datefield = formatDate($post['dateLastUpdated']).' - '.formatTime($post['dateLastUpdated']);
+            $datefield = formatDate($post['datelastupdated']).' - '.formatTime($post['datelastupdated']);
         }
         
         if ($highlightPost) {
             $cssClass = 'confirm';
-            $treenode = '<strong> '.$post['firstName'].' '.$post['surname'].'</strong> -  <em>'.trim($text).'</em> ('.$datefield.')';
+            $treenode = '<strong> '.$post['firstname'].' '.$post['surname'].'</strong> -  <em>'.trim($text).'</em> ('.$datefield.')';
         } else {
             $cssClass = NULL;
             $link =& $this->getObject('link', 'htmlelements');
             $link->href = $this->uri(array('action'=>'viewtopic', 'id'=>$post['topic_id'], 'post'=>$post['post_id']));
             $link->link = $text;
             //$link->anchor = 'post_'.$post['topic_id'];
-            $treenode = '<strong> '.$post['firstName'].' '.$post['surname'].'</strong> -  <em>'.$link->show().'</em> ('.$datefield.')';
+            $treenode = '<strong> '.$post['firstname'].' '.$post['surname'].'</strong> -  <em>'.$link->show().'</em> ('.$datefield.')';
         }
         
         $icon =& $this->getObject('geticon', 'htmlelements');
@@ -936,7 +942,7 @@ class dbPost extends dbTable
             
             
             $addTable->startRow();
-            $subjectLabel = new label($this->objLanguage->languageText('word_subject', 'forum').':', 'input_title');
+            $subjectLabel = new label($this->objLanguage->languageText('word_subject', 'system').':', 'input_title');
             $addTable->addCell($subjectLabel->show(), 100);
             
             $titleInput = new textinput('title');
@@ -965,7 +971,7 @@ class dbPost extends dbTable
             }
             $objElement->setBreakSpace('<br />');
             
-            $objElement->extra = ' onClick="clearForTangent()"';
+            $objElement->extra = ' onclick="clearForTangent()"';
                 
             
             $addTable->addCell($objElement->show());
@@ -974,7 +980,7 @@ class dbPost extends dbTable
             
             $addTable->startRow();
             
-                $languageLabel = new label($this->objLanguage->languageText('word_language', 'forum').':', 'input_language');
+                $languageLabel = new label($this->objLanguage->languageText('word_language', 'system').':', 'input_language');
                 $addTable->addCell($languageLabel->show(), 100);
                 
                 $languageList = new dropdown('language');
@@ -1096,6 +1102,8 @@ class dbPost extends dbTable
             } else {
                 $addTable->addCell($submitButton->show());
             }
+            
+            $addTable->endRow();
             
             $postReplyForm->addToForm($addTable);
             
@@ -1392,6 +1400,7 @@ function clearForTangent()
         $this->loadClass('treemenu','tree');
 		$this->loadClass('treenode','tree');		
 		$this->loadClass('dhtml','tree');
+		$this->loadClass('htmllist','tree');
         
         $treeMenu = new treemenu();
         
@@ -1411,9 +1420,9 @@ function clearForTangent()
             }
         }
         
-        $tree = &new dhtml($treeMenu, array('images' => $this->objSkin->getSkinURL().'treeimages/imagesAlt2'), FALSE);
+        $tree = &new htmllist($treeMenu, array('images' => $this->objSkin->getSkinURL().'treeimages/imagesAlt2'), FALSE);
         
-        $this->appendArrayVar('headerParams', '<script src="modules/tree/resources/TreeMenu.js" language="JavaScript" type="text/javascript"></script>');
+        //$this->appendArrayVar('headerParams', '<script src="modules/tree/resources/TreeMenu.js" language="JavaScript" type="text/javascript"></script>');
         return $tree->getMenu();
     }
     

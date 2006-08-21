@@ -33,10 +33,9 @@ class dbtempattachments extends dbTable
     function getList($id)
     {
         $sql = 'SELECT tbl_forum_temp_attachment.id AS attachment_id,
-        tbl_forum_attachments.description, tbl_filestore.* FROM tbl_forum_temp_attachment 
-        INNER JOIN tbl_forum_attachments ON (tbl_forum_temp_attachment.attachment_id = tbl_forum_attachments.id)
-        INNER JOIN tbl_filestore ON (tbl_forum_attachments.fileId = tbl_filestore.fileId)
-        WHERE tbl_forum_temp_attachment.temp_id = "'.$id.'"';
+        tbl_files.* FROM tbl_forum_temp_attachment 
+        INNER JOIN tbl_files ON (tbl_forum_temp_attachment.attachment_id = tbl_files.id)
+        WHERE tbl_forum_temp_attachment.temp_id = "'.$id.'" ORDER BY filename';
         
         return $this->getArray($sql);
     
@@ -64,14 +63,13 @@ class dbtempattachments extends dbTable
     * @param string $userId: User Id of the person 
     * @param string $dateLastUpdated: Date attachment is added
     */
-    function insertSingle($temp_id, $attachment_id, $forum_id, $userId, $dateLastUpdated)
+    function insertSingle($temp_id, $attachment_id, $userId, $dateLastUpdated)
     {
         $this->insert(array(
                 'temp_id' => $temp_id,
                 'attachment_id' => $attachment_id,
-                'forum_id' => $forum_id,
-                'userId' => $userId,
-                'dateLastUpdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)));
+                'userid' => $userId,
+                'datecreated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)));
     }
     
     /**

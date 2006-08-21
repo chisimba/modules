@@ -1,10 +1,10 @@
 <?php
 
 
-$js = $this->getJavascriptFile('radioselect.js', 'forum');
-$this->appendArrayVar('headerParams', $js);
+// $js = $this->getJavascriptFile('radioselect.js', 'forum');
+// $this->appendArrayVar('headerParams', $js);
 
-$this->setVar('bodyParams', 'onLoad="changeLabel();"');
+// $this->setVar('bodyParams', 'onLoad="changeLabel();"');
 
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -90,7 +90,7 @@ $addTable->startRow();
         
         $objRadioButton->addOption($element['id'], $objIcon->show().' '.htmlentities($element['type_name']));
         
-        $objRadioButton->extra = 'onclick="changeLabel();"';
+        //$objRadioButton->extra = 'onclick="changeLabel();"';
     }
     
     // TODO: Set to NULL and add client side validation
@@ -100,7 +100,6 @@ $addTable->startRow();
         $objRadioButton->setSelected($discussionTypes[0]['id']);
     }
     
-    //$addTable->addCell('saasas');
     $addTable->addCell($objRadioButton->show());
     
     
@@ -185,10 +184,10 @@ $addTable->endRow();
 
 // Only show if forum attachments are allowed
 
-if ($forum['attachments'] == 'Yaaa') {
+if ($forum['attachments'] == 'Y') {
     $addTable->startRow();
     
-    $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments').':', 'attachments');
+    $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
     $addTable->addCell($attachmentsLabel->show(), 120);
     
     $attachmentIframe = new iframe();

@@ -300,7 +300,7 @@ GROUP BY tbl_forum_topic.id                ';
         }
         
         // Return String
-        return $string;
+        return $string.'</p>';
     }
     
     /**

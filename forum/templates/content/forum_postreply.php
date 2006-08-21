@@ -1,5 +1,9 @@
 <?php
 
+//$this->setVar('pageSuppressXML',true);
+
+$objHighlightLabels = $this->getObject('highlightlabels', 'htmlelements');
+echo $objHighlightLabels->show();
 
 // Check if Title has Re: attached to it   
 if (substr($post['post_title'], 0, 3) == 'Re:') {
@@ -21,6 +25,7 @@ if ($mode == 'fix') {
 
 ?>
 <script type="text/javascript">
+//<![CDATA[
 function clearForTangent()
 {
     postTitle = "<?php echo (addslashes($defaultTitle)); ?>";
@@ -31,7 +36,7 @@ function clearForTangent()
         
         if (document.postReplyForm.title.value == "<?php echo addslashes($originalTitle); ?>".split("'").join("\'"))
         {
-            alert ('<?php echo $this->objLanguage->languageText('mod_forum_tangentsowntitles'); ?> "<?php echo addslashes($originalTitle); ?>"\n<?php echo $this->objLanguage->languageText('mod_forum_changetitle'); ?>.');
+            alert ('<?php echo $this->objLanguage->languageText('mod_forum_tangentsowntitles', 'forum'); ?> "<?php echo addslashes($originalTitle); ?>"\n<?php echo $this->objLanguage->languageText('mod_forum_changetitle', 'forum'); ?>.');
             document.postReplyForm.title.value = '';
             document.postReplyForm.title.focus();
             
@@ -51,6 +56,7 @@ function clearForTangent()
 
 
 }
+//]]>
 </script>
 <?php
 
@@ -67,11 +73,11 @@ $this->loadClass('iframe', 'htmlelements');
 
 $header = new htmlheading();
 $header->type=3;
-$header->str=$this->objLanguage->languageText('mod_forum_postreply').': '.stripslashes($post['post_title']);
+$header->str=$this->objLanguage->languageText('mod_forum_postreply', 'forum').': '.stripslashes($post['post_title']);
 echo $header->show();
 
 if ($mode == 'fix') {
-    echo '<span class="noRecordsMessage error"><strong>'.$this->objLanguage->languageText('mod_forum_messageisblank').'</strong><br />&nbsp;</span>';
+    echo '<span class="noRecordsMessage error"><strong>'.$this->objLanguage->languageText('mod_forum_messageisblank', 'forum').'</strong><br />&nbsp;</span>';
 }
 
 echo $postDisplay;
@@ -79,7 +85,7 @@ echo $postDisplay;
 echo '<br/>';
 $postReplyForm = new form('postReplyForm', $this->uri( array('action'=>'savepostreply', 'type'=>$forumtype)));
 $postReplyForm->displayType = 3;
-$postReplyForm->addRule('title', $this->objLanguage->languageText('mod_forum_addtitle'), 'required');
+$postReplyForm->addRule('title', $this->objLanguage->languageText('mod_forum_addtitle', 'forum'), 'required');
 
 
 $addTable = $this->getObject('htmltable', 'htmlelements');
@@ -89,7 +95,7 @@ $addTable->cellpadding = 10;
 
 
 $addTable->startRow();
-$subjectLabel = new label($this->objLanguage->languageText('word_subject').':', 'input_title');
+$subjectLabel = new label($this->objLanguage->languageText('word_subject', 'system').':', 'input_title');
 $addTable->addCell($subjectLabel->show(), 100);
 
 $titleInput = new textinput('title');
@@ -104,11 +110,11 @@ $addTable->endRow();
 // type of post
 $addTable->startRow();
 
-$addTable->addCell('<nobr>'.$this->objLanguage->languageText('mod_forum_typeofreply').':</nobr>', 100);
+$addTable->addCell('<nobr>'.$this->objLanguage->languageText('mod_forum_typeofreply', 'forum').':</nobr>', 100);
 
 $objElement = new radio('replytype');
-$objElement->addOption('reply',$this->objLanguage->languageText('mod_forum_postasreply'));
-$objElement->addOption('tangent', $this->objLanguage->languageText('mod_forum_postastangent'));
+$objElement->addOption('reply',$this->objLanguage->languageText('mod_forum_postasreply', 'forum'));
+$objElement->addOption('tangent', $this->objLanguage->languageText('mod_forum_postastangent', 'forum'));
 //$objElement->addOption('moderate','Post Reply as Moderator');
 
 if ($mode == 'fix') {
@@ -118,7 +124,7 @@ if ($mode == 'fix') {
 }
 $objElement->setBreakSpace('<br />');
 
-$objElement->extra = ' onClick="clearForTangent()"';
+$objElement->extra = ' onclick="clearForTangent()"';
     
 
 $addTable->addCell($objElement->show());
@@ -127,24 +133,23 @@ $addTable->endRow();
 
 $addTable->startRow();
 
-    $languageLabel = new label($this->objLanguage->languageText('word_language').':', 'input_language');
+    $languageLabel = new label($this->objLanguage->languageText('word_language', 'system').':', 'input_language');
     $addTable->addCell($languageLabel->show(), 100);
     
-    $language =& $this->newObject('language','language');
     $languageList = new dropdown('language');
     $languageCodes = & $this->newObject('languagecode','language');
     
     // Sort Associative Array by Language, not ISO Code
-    asort($languageCodes->iso_639_2_tags); 
+    asort($languageCodes->iso_639_2_tags->codes); 
     
-    foreach ($languageCodes->iso_639_2_tags as $key => $value) {
+    foreach ($languageCodes->iso_639_2_tags->codes as $key => $value) {
         $languageList->addOption($key, $value);
     }
     
     if ($mode == 'fix') {
         $languageList->setSelected($details['language']);
     } else {
-        $languageList->setSelected($languageCodes->getISO($language->currentLanguage()));
+        $languageList->setSelected($languageCodes->getISO($this->objLanguage->currentLanguage()));
     }
     $addTable->addCell($languageList->show());
 
@@ -152,7 +157,7 @@ $addTable->endRow();
 
 $addTable->startRow();
 
-$addTable->addCell($this->objLanguage->languageText('word_message').':', 140);
+$addTable->addCell($this->objLanguage->languageText('word_message', 'forum').':', 140);
 
 $editor=&$this->newObject('htmlarea','htmlelements');
 $editor->setName('message');
@@ -180,7 +185,7 @@ $addTable->endRow();
 if ($forum['attachments'] == 'Y') {
     $addTable->startRow();
     
-    $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments').':', 'attachments');
+    $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
     $addTable->addCell($attachmentsLabel->show(), 100);
     
     $attachmentIframe = new iframe();
@@ -200,22 +205,22 @@ if ($forum['attachments'] == 'Y') {
 
 if ($forum['subscriptions'] == 'Y') {
 	$addTable->startRow();
-	$addTable->addCell($this->objLanguage->languageText('mod_forum_emailnotification', 'Email Notification').':');
+	$addTable->addCell($this->objLanguage->languageText('mod_forum_emailnotification', 'forum', 'Email Notification').':');
 	$subscriptionsRadio = new radio ('subscriptions');
-	$subscriptionsRadio->addOption('nosubscriptions', $this->objLanguage->languageText('mod_forum_donotsubscribetothread', 'Do not subscribe to this thread'));
-	$subscriptionsRadio->addOption('topicsubscribe', $this->objLanguage->languageText('mod_forum_notifytopic', 'Notify me via email when someone replies to this thread'));
-	$subscriptionsRadio->addOption('forumsubscribe', $this->objLanguage->languageText('mod_forum_notifyforum', 'Notify me of ALL new topics and replies in this forum.'));
+	$subscriptionsRadio->addOption('nosubscriptions', $this->objLanguage->languageText('mod_forum_donotsubscribetothread', 'forum', 'Do not subscribe to this thread'));
+	$subscriptionsRadio->addOption('topicsubscribe', $this->objLanguage->languageText('mod_forum_notifytopic', 'forum', 'Notify me via email when someone replies to this thread'));
+	$subscriptionsRadio->addOption('forumsubscribe', $this->objLanguage->languageText('mod_forum_notifyforum', 'forum', 'Notify me of ALL new topics and replies in this forum.'));
 	$subscriptionsRadio->setBreakSpace('<br />');
 	
 	if ($forumSubscription) {
 		$subscriptionsRadio->setSelected('forumsubscribe');
-		$subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtoforum', 'You are currently subscribed to the forum, receiving notification of all new posts and replies.');
+		$subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtoforum', 'forum', 'You are currently subscribed to the forum, receiving notification of all new posts and replies.');
 	} else if ($topicSubscription) { 
         $subscriptionsRadio->setSelected('topicsubscribe');
-		$subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtotopic', 'You are already subscribed to this topic.');
+		$subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtotopic', 'forum', 'You are already subscribed to this topic.');
     } else {
 		$subscriptionsRadio->setSelected('nosubscriptions');
-        $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtonumbertopic', 'You are currently subscribed to [NUM] topics.');
+        $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtonumbertopic', 'forum', 'You are currently subscribed to [NUM] topics.');
         $subscribeMessage = str_replace('[NUM]', $numTopicSubscriptions, $subscribeMessage);
 	}
 	
@@ -231,14 +236,16 @@ $addTable->startRow();
 
 $addTable->addCell(' ');
 
-$submitButton = new button('submit', $this->objLanguage->languageText('word_submit'));
+$submitButton = new button('submit', $this->objLanguage->languageText('word_submit', 'system'));
 $submitButton->setToSubmit();
 
-$cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+$cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel', 'system'));
 $returnUrl = $this->uri(array('action'=>'thread', 'id'=>$post['topic_id'], 'type'=>$forumtype));
 $cancelButton->setOnClick("window.location='$returnUrl'");
 
 $addTable->addCell($submitButton->show().' / '.$cancelButton->show());
+
+$addTable->endRow();
 
 $postReplyForm->addToForm($addTable);
 
