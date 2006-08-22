@@ -356,7 +356,7 @@ class cmsutils extends object
 			$objUser = & $this->newObject('user', 'security');
 			$arrFrontPages = $this->_objFrontPage->getFrontPages();
 			$objFeatureBox = $this->newObject('featurebox', 'navigation');
-			
+			$str = '';
 			//set a counter for the records .. display on the first 2  the rest will be dsiplayed as links
 			$cnt  = 0 ;
 			
@@ -379,7 +379,7 @@ class cmsutils extends object
 					
 					//author
 					$table->startRow();
-					$table->addCell('Written by '.$objUser->fullname($page['creator_by']));
+					$table->addCell('Written by '.$objUser->fullname($page['created_by']));
 					$table->endRow();
 					
 					//date
@@ -392,7 +392,7 @@ class cmsutils extends object
 					$table->addCell('<p>'.$page['introtext']);
 					$table->endRow();
 					
-					if(!$page['fulltext'] == '')
+					if(!$page['body'] == '')
 					{
 						//read more link .. link to the full text
 						$link = & $this->newObject('link', 'htmlelements');
@@ -428,7 +428,7 @@ class cmsutils extends object
 				
 				//$str .= '<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
 				//$str .= '<p>'.$page['introtext'].'<a href="devtodo" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
-				$moreLink = $this->uri(array('action' => 'showfulltext', 'sectionid' => $arrSection['id'], 'id' => $page['id']), 'cms');
+				$moreLink = $this->uri(array('action' => 'showfulltext', 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
 				$content = '<span class="date">'.$this->formatDate($page['created']).'</span> <p>'.$page['introtext'].'<a href="'.$moreLink.'" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
 				$str .= $objFeatureBox->show($page['title'], $content);
 			}
@@ -701,7 +701,14 @@ class cmsutils extends object
 	public function formatDate($date)
 	{
 		try {
-				return  date("l, d F o", gmmktime($date));
+		      /*if(!checkdate($date))
+		      {
+		        $gm =  gmmktime($date);
+				return  date("l, d F o",$gm);
+		      } else {
+*/
+		      return $date;
+	//	      }
 			}
 			catch (Exception $e){
        			echo 'Caught exception: ',  $e->getMessage();

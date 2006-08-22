@@ -30,6 +30,8 @@ if(!$this->getParam('query') == '')
 {
 	
 	$searchResults = $objLucene->show($this->getParam('query'));
+} else {
+    $searchResults = '';
 }
 
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
