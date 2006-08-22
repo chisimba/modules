@@ -35,7 +35,7 @@ class beautifier extends controller
      */
     public function dispatch($action = Null)
     {
-        $this->setLayoutTemplate('beautifier_layout_tpl.php');
+        //$this->setLayoutTemplate('beautifier_layout_tpl.php');
 
         switch ($action) {
             default:

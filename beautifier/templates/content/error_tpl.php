@@ -26,10 +26,13 @@ $instructions->type = 4;
 $instructions->str = $this->objLanguage->languageText('mod_beautifier_instructions', 'beautifier');
 
 $middleColumn = $header->show();
-//$leftSideColumn .= $instructions->show();
-$modarr = array();
 
-//echo $header->show();
+//create the form
+$objForm = new form('beautifier',$this->uri(array('action'=>'')));
+$objForm->displayType = 4;
+$objForm->addToFormEx($objLanguage->languageText('mod_beautifier_submitmod', 'beautifier'));
+
+
 $modarr = array();
 
 if ($handle = opendir('modules/')) {
@@ -47,8 +50,21 @@ foreach($modarr as $options)
 	$dd->addOption($options, $options);
 }
 
-$middleColumn .= $instructions->show();
-$middleColumn .= $dd->show();
+$objForm->addToFormEx($objLanguage->languageText('mod_beautifier_ddlabel', 'beautifier'),$dd->show());
+
+$this->objButton=&new button($objLanguage->languageText('mod_beautifier_beautify', 'beautifier'));
+$this->objButton->setValue($objLanguage->languageText('mod_beautifier_beautify', 'beautifier'));
+//$this->objButton->setOnClick('alert(\'Processing\')');
+$this->objButton->setToSubmit();
+
+
+
+$objForm->addToFormEx($this->objButton->show());
+
+
+
+$middleColumn .= $objForm->show(); //$instructions->show();
+//$middleColumn .= $dd->show();
 
 
 //add left column
