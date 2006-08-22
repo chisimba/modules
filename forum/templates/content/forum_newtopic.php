@@ -1,10 +1,7 @@
 <?php
 
-
-// $js = $this->getJavascriptFile('radioselect.js', 'forum');
-// $this->appendArrayVar('headerParams', $js);
-
-// $this->setVar('bodyParams', 'onLoad="changeLabel();"');
+$objHighlightLabels = $this->getObject('highlightlabels', 'htmlelements');
+echo $objHighlightLabels->show();
 
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -114,8 +111,11 @@ if ($this->isValid('moderatetopic') || $this->isValid('moderatetopic')) {
     $addTable->addCell($this->objLanguage->languageText('mod_forum_stickytopic', 'forum', 'Sticky Topic').':');
     
     $sticky = new radio ('stickytopic');
-    $sticky->addOption('1', $this->objLanguage->languageText('word_yes'));
-    $sticky->addOption('0', $this->objLanguage->languageText('word_no'));
+    
+    $objIcon->setIcon('sticky_yes');
+    $sticky->addOption('1', $objIcon->show().$this->objLanguage->languageText('word_yes'));
+    $objIcon->setIcon('sticky_no');
+    $sticky->addOption('0', $objIcon->show().$this->objLanguage->languageText('word_no'));
     $sticky->setSelected('0');
     $sticky->setBreakSpace(' &nbsp; ');
     $addTable->addCell($sticky->show());
