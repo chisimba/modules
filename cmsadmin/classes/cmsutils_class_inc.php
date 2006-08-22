@@ -733,7 +733,8 @@ class cmsutils extends object
 	public function formatShortDate($date)
 	{
 		try {
-				return  date("m/d/o",gmmktime($date) );
+		      return $date;
+				//return  date("m/d/o",gmmktime($date) );
 			}
 			catch (Exception $e){
        			echo 'Caught exception: ',  $e->getMessage();
