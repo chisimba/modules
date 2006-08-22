@@ -126,7 +126,11 @@ if($folders)
 		</div>';
 	} 
 }
-
+/*
+echo '<pre>';
+var_dump($files);
+echo '</pre>';
+*/
 if($files)
 {
 	
@@ -192,9 +196,9 @@ if($files)
 	{
 		$str .= '<div align="center" style="font-size:large;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">No Media Files Found</div>';
 	}
-	//echo $str;
+	echo $str;
 //$str .='<form id="images" name="images"><input type="text" name="hideme" id="hideme" ><form>';
-print $str;
+//print $str;
 ?>
 
 <script type="text/javascript" language="javascript">

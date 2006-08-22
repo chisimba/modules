@@ -58,6 +58,7 @@ class mmutils extends object
 			$this->_objConfig = & $this->newObject('altconfig', 'config');			
 			$this->_objSkin = & $this->newObject('skin' , 'skin');
 			$this->_rootMediaPath = $this->_objSkin->getSkinLocation(); // $this->_objConfig->getContentBasePath().'media';	
+			$this->_rootMediaPath = substr($this->_rootMediaPath, 0, strlen($this->_rootMediaPath)-1);
 		
 			//$this->_rootMediaPath = $this->_objConfig->getSiteRoot().'usrfiles/media';	
 			//print $this->_rootMediaPath;
@@ -304,6 +305,7 @@ class mmutils extends object
 	 */
 	private function _getFiles($folder = NULL)
 	{ 
+		//echo "[$folder]";
 		try 
 		
 		{
@@ -328,11 +330,10 @@ class mmutils extends object
 	            if (!strcmp("_vti_cnf", $file))continue;//ignore frontpage crap
           
 	       		$completepath=$baseDir.'/'.$file;
-	       		
-	       	
-	       		  
+	       		      		  
 	    		if(is_file($completepath)) 
 	    		{
+					//echo "($completepath)";
 	    			$repl = str_replace("\\", "/",$this->_objConfig->getsiteRootPath());
 	    			
 	    			$subj = str_replace( "\\" , "/",$completepath);
@@ -470,9 +471,8 @@ class mmutils extends object
 	*/
 	public function isImage($path)
 	{
-		
+		return true;
 		$_type = mime_content_type($path);
-        $error .= "Unzipped $_type<br>";
         $pos = strpos($_type, "/");
         $type_l = substr($_type,0,$pos);
         $type_r = substr($_type,$pos+1,255);
