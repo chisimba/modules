@@ -813,7 +813,7 @@ class cmsutils extends object
 	{
 		
 		$link = & $this->newObject('link', 'htmlelements');
-		
+		$str = '';
 		
 		//content link
 		$link->link = 'Content';
