@@ -138,7 +138,7 @@ class calendargenerator extends object
 
         foreach($day_names as $d)
         {
-            $calendar .= '<th class="dayNamesRow'.$toc.'" '.$width.'>E</th>';
+            $calendar .= '<th class="dayNamesRow'.$toc.'" '.$width.'>'.$d.'</th>';
         }
 
         $calendar .= "</thead>\n<tr class=\"rows'.$toc.'\">";
@@ -174,7 +174,7 @@ class calendargenerator extends object
                     $cssClass = 's20'.$toc;
                 }
                 if ($this->size == 'big') {
-                    $calendar .= '<td class="'.$cssClass.'"><div class="daynum'.$toc.'"><a href="#'.$day.'">'.$day.'</div></a>';
+                    $calendar .= '<td class="'.$cssClass.'"><div class="daynum'.$toc.'"><a href="#'.$day.'">'.$day.'</a></div>';
                 } else {
                     $calendar .= '<td class="'.$cssClass.'">'.$day;
                 }

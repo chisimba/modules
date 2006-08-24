@@ -533,7 +533,7 @@ class dbcalendar extends dbTable
         $eventsTable->cellpadding='5';
 
         $eventsTable->startHeaderRow();
-        $eventsTable->addHeaderCell($this->objLanguage->languageText('word_date','calendar'), '100');
+        $eventsTable->addHeaderCell($this->objLanguage->languageText('word_date'), '100');
         $eventsTable->addHeaderCell($this->objLanguage->languageText('mod_calendarbase_eventdetails','calendarbase'));
         $eventsTable->endHeaderRow();
 
@@ -756,8 +756,8 @@ class dbcalendar extends dbTable
         $eventsTable->cellpadding='3';
 
         $eventsTable->startHeaderRow();
-        $eventsTable->addHeaderCell($this->objLanguage->languageText('word_date'),'calendar', '50');
-        $eventsTable->addHeaderCell($this->objLanguage->languageText('word_event','calendar'));
+        $eventsTable->addHeaderCell($this->objLanguage->languageText('word_date'), '50');
+        $eventsTable->addHeaderCell($this->objLanguage->languageText('word_event'));
         $eventsTable->endHeaderRow();
 
         if (count($events) > 0) {
@@ -776,14 +776,15 @@ class dbcalendar extends dbTable
         }
 
         //return $eventsTable->show();
-        $str = '<hr /><ul>';
+        $str = '<hr /><ul>Today';
         foreach ($events as $event)
         {
             $dDate = $this->objDateFunctions->reformatDateSmallMonth($event['eventdate']);
             $str .= '<li><span class="date">'.$dDate.'</span></li>';
         }
         $str .= '</ul><hr/>';
-        
+       // print '<pre>';
+       // print_r($events).'</pre>';
         return $str;
     }
 
