@@ -12,7 +12,7 @@ $this->loadClass('htmlheading', 'htmlelements');
 
 $header = new htmlheading();
 $header->type=1;
-$header->str=$this->objLanguage->languageText('mod_forum_translateposttitle');
+$header->str=$this->objLanguage->languageText('mod_forum_translateposttitle', 'forum');
 echo $header->show();
 
 
@@ -31,24 +31,23 @@ $formTable->startRow();
     $languageLabel = new label($this->objLanguage->languageText('word_language').':', 'input_language');
     $formTable->addCell($languageLabel->show(), 100);
     
-    $language =& $this->newObject('language','language');
     $languageList = $this->newObject('dropdown', 'htmlelements');
     $languageList->name = 'language';
     $languageCodes = & $this->newObject('languagecode','language');
     
     // Sort Associative Array by Language, not ISO Code
-    asort($languageCodes->iso_639_2_tags);
+    asort($languageCodes->iso_639_2_tags->codes);
     
     // Remove existing languages that have already been translated
     foreach ($postLanguages AS $postLanguage)
     {
-        unset ($languageCodes->iso_639_2_tags[$postLanguage['language']]); 
+        unset ($languageCodes->iso_639_2_tags->codes[$postLanguage['language']]); 
     }
     
-    foreach ($languageCodes->iso_639_2_tags as $key => $value) {
+    foreach ($languageCodes->iso_639_2_tags->codes as $key => $value) {
         $languageList->addOption($key, $value);
     }
-    $languageList->setSelected($languageCodes->getISO($language->currentLanguage()));
+    $languageList->setSelected($languageCodes->getISO($this->objLanguage->currentLanguage()));
     $formTable->addCell($languageList->show());
 
 $formTable->endRow();
@@ -68,7 +67,7 @@ $formTable->endRow();
 
 $formTable->startRow();
 
-$formTable->addCell($this->objLanguage->languageText('word_message').':', 140);
+$formTable->addCell($this->objLanguage->languageText('word_message', 'forum').':', 140);
 
 $editor=&$this->newObject('htmlarea','htmlelements');
 $editor->setName('message');
@@ -92,6 +91,8 @@ $returnUrl = $this->uri(array('action'=>'thread', 'id'=>$post['topic_id'], 'type
 $cancelButton->setOnClick("window.location='$returnUrl'");
 
 $formTable->addCell($submitButton->show().' / '.$cancelButton->show());
+
+$formTable->endRow();
 
 $translateForm->addToForm($formTable);
 

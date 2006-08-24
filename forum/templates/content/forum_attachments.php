@@ -4,6 +4,8 @@ $this->loadClass('form', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 
+$objIcon = $this->newObject('geticon', 'htmlelements');
+
 $form = new form('saveattachment', $this->uri(array('action'=>'saveattachment')));
 
 // Todo Implement WorkGroup
@@ -12,7 +14,7 @@ $objSelectFile = $this->newObject('selectfile', 'filemanager');
 $objSelectFile->name = 'attachment';
 $form->addToForm($objSelectFile->show());
 
-$button = new button('save', 'Save');
+$button = new button('save', 'Attach File');
 $button->setToSubmit();
 $form->addToForm(' &nbsp; &nbsp; '.$button->show());
 
@@ -27,7 +29,8 @@ if (count($files) > 0) {
     
     foreach ($files AS $file)
     {
-        echo ('<li>'.$file['filename'].'</li>');
+        $icon = $objIcon->getDeleteIconWithConfirm($file['id'], array('action'=>'deleteattachment', 'id'=>$file['id'], 'attachmentwindow'=>$id), 'forum', 'Are you sure wou want to remove this attachment');
+        echo ('<li>'.$file['filename'].' '.$icon.'</li>');
     
     }
     

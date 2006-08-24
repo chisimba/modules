@@ -73,6 +73,26 @@ class dbtempattachments extends dbTable
     }
     
     /**
+    * Method to Delete an Attachment
+    * @param string $temp_id Record Id of the Temporary Post
+    * @param string $attachment_id Record Id of the Attachment
+    *
+    */
+    function deleteAttachment($temp_id, $attachment_id)
+    {
+        $list = $this->getAll('WHERE temp_id="'.$temp_id.'" AND attachment_id="'.$attachment_id.'"');
+        
+        if (count($list) > 0) {
+            foreach ($list as $item)
+            {
+                $this->delete('id', $item['id']);
+            }
+        }
+        
+        return ;
+    }
+    
+    /**
     * Method to delete the temporary records for attachments
     *
     * @param string $id Temporary Post Id

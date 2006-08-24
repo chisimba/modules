@@ -1,6 +1,6 @@
 <?php
 
-echo '<h1>'.$objLanguage->languageText('mod_forum_searchresultsfor', 'Search Results for').': <em>'.htmlentities($searchTerm).'</em></h1>';
+echo '<h1>'.$objLanguage->languageText('mod_forum_searchresultsfor', 'forum', 'Search Results for').': <em>'.htmlentities($searchTerm).'</em></h1>';
 
 if (count($errors > 0)) {
 

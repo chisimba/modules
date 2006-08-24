@@ -12,7 +12,7 @@ $objIcon = $this->getObject('geticon', 'htmlelements');
 $objHighlightLabels = $this->getObject('highlightlabels', 'htmlelements');
 echo $objHighlightLabels->show();
 
-echo '<h1>'.$this->objLanguage->languageText('mod_forum_moderatepost').': <em>'.$post['post_title'].'</em></h1>';
+echo '<h1>'.$this->objLanguage->languageText('mod_forum_moderatepost', 'forum').': <em>'.$post['post_title'].'</em></h1>';
 
 echo $postDisplay;
 
@@ -38,21 +38,21 @@ if ($post['postleft'] == 1) {
     $hiddenId = new hiddeninput('id', $post['post_id']);
     $form->addToForm($hiddenId->show());
 
-    $form->addToForm('<h3><strong>'.$this->objLanguage->languageText('mod_forum_confirmdeletepost').'</strong></h3>');
+    $form->addToForm('<h3><strong>'.$this->objLanguage->languageText('mod_forum_confirmdeletepost', 'forum').'</strong></h3>');
 
     $radio = new radio('confirmdelete');
-    $radio->addOption('N', '<strong>'.$this->objLanguage->languageText('word_no').'</strong> - '.$this->objLanguage->languageText('mod_forum_donotdeletepost'));
-    $radio->addOption('Y', '<strong>'.$this->objLanguage->languageText('word_yes').'</strong> - '.$this->objLanguage->languageText('mod_forum_deletepost'));
+    $radio->addOption('N', '<strong>'.$this->objLanguage->languageText('word_no').'</strong> - '.$this->objLanguage->languageText('mod_forum_donotdeletepost', 'forum'));
+    $radio->addOption('Y', '<strong>'.$this->objLanguage->languageText('word_yes').'</strong> - '.$this->objLanguage->languageText('mod_forum_deletepost', 'forum'));
     $radio->setSelected('N');
     $radio->setBreakspace(' <br /><br />  ');
 
     $form->addToForm($radio->show());
 
     if ($post['postright'] - $post['postleft'] > 1) {
-        $form->addToForm('<div class="forumTangentIndent"><span class="warning">'.$this->objLanguage->languageText('word_warning').'</span>: '.$this->objLanguage->languageText('mod_forum_confirmdeletepost').'<br /><br />'.$replies.'</div>');
+        $form->addToForm('<div class="forumTangentIndent"><span class="warning">'.$this->objLanguage->languageText('word_warning').'</span>: '.$this->objLanguage->languageText('mod_forum_warndeletepostreplies', 'forum').'<br /><br />'.$replies.'</div>');
     }
 
-    $button = new button('save', $this->objLanguage->languageText('mod_forum_confirmdelete'));
+    $button = new button('save', $this->objLanguage->languageText('mod_forum_confirmdelete', 'forum'));
     $button->setToSubmit();
     $form->addToForm('<p>'.$button->show().'</p>');
     

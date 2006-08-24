@@ -41,67 +41,67 @@ function createUserInArray(&$array, $userId, $name, $role)
 
 foreach ($posterStats as $posterStat)
 {
-    createUserInArray($userStats, $posterStat['userId'], $posterStat['firstName'].' '.$posterStat['surname'], 'unknown');
+    createUserInArray($userStats, $posterStat['userid'], $posterStat['firstname'].' '.$posterStat['surname'], 'unknown');
 }
 
 // Fis
 $guests = $objManageGroups->contextUsers('Guests', $contextCode);
 foreach ($guests as $guest)
 {
-    createUserInArray($userStats, $guest['userId'], $guest['fullName'], 'guest');
+    createUserInArray($userStats, $guest['userid'], $guest['fullname'], 'guest');
 }
 
 $students = $objManageGroups->contextUsers('Students', $contextCode);
 foreach ($students as $student)
 {
-    createUserInArray($userStats, $student['userId'], $student['fullName'], 'student');
+    createUserInArray($userStats, $student['userid'], $student['fullname'], 'student');
 }
 
 $lecturers = $objManageGroups->contextUsers('Lecturers', $contextCode);
 foreach ($lecturers as $lecturer)
 {
-    createUserInArray($userStats, $lecturer['userId'], $lecturer['fullName'], 'lecturer');
+    createUserInArray($userStats, $lecturer['userid'], $lecturer['fullname'], 'lecturer');
 }
 
 // Done adding users to list
 
 foreach ($posterStats as $posterStat)
 {
-    $userStats[$posterStat['userId']]['posts'] = $posterStat['posts'];
+    $userStats[$posterStat['userid']]['posts'] = $posterStat['posts'];
 }
 
 foreach ($posterTopics as $posterTopic)
 {
-    $userStats[$posterTopic['userId']]['topics'] = $posterTopic['topics'];
+    $userStats[$posterTopic['userid']]['topics'] = $posterTopic['topics'];
 }
 
 foreach ($posterTangents as $posterTangent)
 {
-    $userStats[$posterTangent['userId']]['tangents'] = $posterTangent['tangents'];
+    $userStats[$posterTangent['userid']]['tangents'] = $posterTangent['tangents'];
 }
 
 foreach ($userRatesOther as $userRates)
 {
-    $userStats[$userRates['userId']]['otherpostsrated'] = $userRates['postsrated'];
-    $userStats[$userRates['userId']]['otherpostssumrated'] = $userRates['totalvalue'];
-    $userStats[$userRates['userId']]['otherpostsmaxrated'] = $userRates['maxvalue'];
-    $userStats[$userRates['userId']]['otherpostsminrated'] = $userRates['minvalue'];
+    $userStats[$userRates['userid']]['otherpostsrated'] = $userRates['postsrated'];
+    $userStats[$userRates['userid']]['otherpostssumrated'] = $userRates['totalvalue'];
+    $userStats[$userRates['userid']]['otherpostsmaxrated'] = $userRates['maxvalue'];
+    $userStats[$userRates['userid']]['otherpostsminrated'] = $userRates['minvalue'];
 }
 
 foreach ($userRatesSelf as $userRates)
 {
-    $userStats[$userRates['userId']]['selfpostsrated'] = $userRates['postsrated'];
-    $userStats[$userRates['userId']]['selfpostssumrated'] = $userRates['totalvalue'];
-    $userStats[$userRates['userId']]['selfpostsmaxrated'] = $userRates['maxvalue'];
-    $userStats[$userRates['userId']]['selfpostsminrated'] = $userRates['minvalue'];
+    $userStats[$userRates['userid']]['selfpostsrated'] = $userRates['postsrated'];
+    $userStats[$userRates['userid']]['selfpostssumrated'] = $userRates['totalvalue'];
+    $userStats[$userRates['userid']]['selfpostsmaxrated'] = $userRates['maxvalue'];
+    $userStats[$userRates['userid']]['selfpostsminrated'] = $userRates['minvalue'];
 }
 
 foreach ($userWordCount as $userWords)
 {
-    $userStats[$userWords['userId']]['wordcountposts'] = $userWords['postscounted'];
-    $userStats[$userWords['userId']]['wordcountsum'] = $userWords['totalwords'];
-    $userStats[$userWords['userId']]['wordcountmax'] = $userWords['maxvalue'];
-    $userStats[$userWords['userId']]['wordcountmin'] = $userWords['minvalue'];
+    $userStats[$userWords['userid']]['wordcountposts'] = $userWords['postscounted'];
+    $userStats[$userWords['userid']]['wordcountsum'] = $userWords['totalwords'];
+    $userStats[$userWords['userid']]['wordcountmax'] = $userWords['maxvalue'];
+    $userStats[$userWords['userid']]['wordcountmin'] = $userWords['minvalue'];
 }
 
 
@@ -109,36 +109,36 @@ foreach ($userWordCount as $userWords)
 
 $header = new htmlheading();
 $header->type=1;
-$header->str=$this->objLanguage->languageText('mod_forum_forumstatisticsfor').' '.$forumDetails['forum_name'];
+$header->str=$this->objLanguage->languageText('mod_forum_forumstatisticsfor', 'forum').' '.$forumDetails['forum_name'];
 echo $header->show();
 
 echo '<h3>';
-echo $this->objLanguage->languageText('mod_forum_foruminformation');
+echo $this->objLanguage->languageText('mod_forum_foruminformation', 'forum');
 echo '</h3>';
 
-$table = $this->getObject('htmltable', 'htmlelements');
+$table = $this->newObject('htmltable', 'htmlelements');
 $table->cellpadding = 5;
 
 // Name of Forum
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_forum_nameofforum'), NULL, NULL, 'right');
+$table->addCell($this->objLanguage->languageText('mod_forum_nameofforum', 'forum'), NULL, NULL, 'right');
 $table->addCell($forumDetails['forum_name'], NULL, NULL, NULL, NULL, 'colspan="3"');
 $table->endRow();
 
 // Description
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_forum_forumdescription'), NULL, NULL, 'right');
+$table->addCell($this->objLanguage->languageText('mod_forum_forumdescription', 'forum'), NULL, NULL, 'right');
 $table->addCell($forumDetails['forum_description'], NULL, NULL, NULL, NULL, 'colspan="3"');
 $table->endRow();
 
 // Forum Locked
 $table->startRow();
 
-$table->addCell($this->objLanguage->languageText('mod_forum_forumvisible'), NULL, NULL, 'right');
+$table->addCell($this->objLanguage->languageText('mod_forum_forumvisible', 'forum'), NULL, NULL, 'right');
 $results = ($forumDetails['forum_visible'] == 'Y') ? $this->objLanguage->languageText('word_yes') : $this->objLanguage->languageText('word_no');
 $table->addCell($results);
 
-$table->addCell($this->objLanguage->languageText('mod_forum_forumlocked'), NULL, NULL, 'right');
+$table->addCell($this->objLanguage->languageText('mod_forum_forumlocked', 'forum'), NULL, NULL, 'right');
 $results = ($forumDetails['forumlocked'] == 'Y') ? $this->objLanguage->languageText('word_yes') : $this->objLanguage->languageText('word_no');
 $table->addCell($results);
 
@@ -147,11 +147,11 @@ $table->endRow();
 // ---------------------------
 $table->startRow();
 
-$table->addCell($this->objLanguage->languageText('mod_forum_ratingposts'), NULL, NULL, 'right');
+$table->addCell($this->objLanguage->languageText('mod_forum_ratingposts', 'forum'), NULL, NULL, 'right');
 $results = ($forumDetails['ratingsenabled'] == 'Y') ? $this->objLanguage->languageText('word_yes') : $this->objLanguage->languageText('word_no');
 $table->addCell($results);
 
-$table->addCell(ucwords($this->objLanguage->code2Txt('mod_forum_studentsstartTopics')), NULL, NULL, 'right');
+$table->addCell(ucwords($this->objLanguage->code2Txt('mod_forum_studentsstarttopics', 'forum')), NULL, NULL, 'right');
 $results = ($forumDetails['studentstarttopic'] == 'Y') ? $this->objLanguage->languageText('word_yes') : $this->objLanguage->languageText('word_no');
 $table->addCell($results);
 
@@ -160,11 +160,11 @@ $table->endRow();
 // ---------------------------
 $table->startRow();
 
-$table->addCell($this->objLanguage->languageText('mod_forum_attachmentsallowed'), NULL, NULL, 'right');
+$table->addCell($this->objLanguage->languageText('mod_forum_attachmentsallowed', 'forum'), NULL, NULL, 'right');
 $results = ($forumDetails['attachments'] == 'Y') ? $this->objLanguage->languageText('word_yes') : $this->objLanguage->languageText('word_no');
 $table->addCell($results);
 
-$table->addCell($this->objLanguage->languageText('mod_forum_emailsubscriptions'), NULL, NULL, 'right');
+$table->addCell($this->objLanguage->languageText('mod_forum_emailsubscriptions', 'forum'), NULL, NULL, 'right');
 $results = ($forumDetails['subscriptions'] == 'Y') ? $this->objLanguage->languageText('word_yes') : $this->objLanguage->languageText('word_no');
 $table->addCell($results);
 
@@ -173,25 +173,25 @@ $table->endRow();
 echo $table->show();
 
 echo '<h3>';
-echo $this->objLanguage->languageText('mod_forum_forumsummarystatistics');
+echo $this->objLanguage->languageText('mod_forum_forumsummarystatistics', 'forum');
 echo '</h3>';
 
-$table = $this->getObject('htmltable', 'htmlelements');
+$table = $this->newObject('htmltable', 'htmlelements');
 $table->cellpadding = 5;
 
 
 $table->startRow();
-$table->addCell('<strong>'.$this->objLanguage->languageText('mod_forum_numberofthreads').'</strong>', '30%');
+$table->addCell('<strong>'.$this->objLanguage->languageText('mod_forum_numberofthreads', 'forum').'</strong>', '30%');
 $table->addCell($forumSummaryStats['topics'], '50%');
 $table->endRow();
 
 $table->startRow();
-$table->addCell('<strong>'.$this->objLanguage->languageText('mod_forum_numberofposts').'</strong>', '30%');
+$table->addCell('<strong>'.$this->objLanguage->languageText('mod_forum_numberofposts', 'forum').'</strong>', '30%');
 $table->addCell($forumSummaryStats['posts'], '50%');
 $table->endRow();
 
 $table->startRow();
-$table->addCell('<strong>'.$this->objLanguage->languageText('mod_forum_numberoftangents').'</strong>', '30%');
+$table->addCell('<strong>'.$this->objLanguage->languageText('mod_forum_numberoftangents', 'forum').'</strong>', '30%');
 if ($tangents['tangents'] == '') {
     $tangentNum = 0;
 } else {
@@ -201,7 +201,7 @@ $table->addCell($tangentNum, '50%');
 $table->endRow();
 
 $table->startRow();
-$table->addCell('<strong>'.$this->objLanguage->languageText('mod_forum_threadpostratio').'</strong>', '30%');
+$table->addCell('<strong>'.$this->objLanguage->languageText('mod_forum_threadpostratio', 'forum').'</strong>', '30%');
 
 if ($forumSummaryStats['posts'] == 0 || $forumSummaryStats['topics'] == 0) {
     $results = 0;
@@ -212,7 +212,7 @@ $table->addCell($results, '50%');
 $table->endRow();
 
 $table->startRow();
-$table->addCell('<strong>'.$this->objLanguage->languageText('mod_forum_numberofuniqueposters').'</strong>', '30%');
+$table->addCell('<strong>'.$this->objLanguage->languageText('mod_forum_numberofuniqueposters', 'forum').'</strong>', '30%');
 $table->addCell($posters['posters'], '50%');
 $table->endRow();
 
@@ -245,16 +245,16 @@ echo $table->show();
 
 // Put User Stats into table
 
-$table = $this->getObject('htmltable', 'htmlelements');
+$table = $this->newObject('htmltable', 'htmlelements');
 $table->cellpadding = 5;
 
 $table->startHeaderRow();
-$table->addHeaderCell($this->objLanguage->languageText('word_role'), 20);
-$table->addHeaderCell($this->objLanguage->languageText('mod_forum_nameofuser'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_forum_topicsstarted'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_forum_tangentsstarted'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_forum_numberofposts'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_forum_percentagetotalposts'));
+$table->addHeaderCell($this->objLanguage->languageText('word_role', 'forum'), 20);
+$table->addHeaderCell($this->objLanguage->languageText('mod_forum_nameofuser', 'forum'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_forum_topicsstarted', 'forum'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_forum_tangentsstarted', 'forum'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_forum_numberofposts', 'forum'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_forum_percentagetotalposts', 'forum'));
 
 $table->endHeaderRow();
 
@@ -263,8 +263,8 @@ foreach ($userStats as $userStat)
     $table->startRow();
     if ($userStat['role'] == 'unknown') {
         $icon->setIcon('cancel');
-        $icon->title = $this->objLanguage->languageText('word_unknown');
-        $icon->alt = $this->objLanguage->languageText('word_unknown');
+        $icon->title = $this->objLanguage->languageText('word_unknown', 'forum');
+        $icon->alt = $this->objLanguage->languageText('word_unknown', 'forum');
     } else {
         $icon->setIcon($userStat['role']);
         $icon->title = $userStat['role'];
@@ -288,33 +288,35 @@ foreach ($userStats as $userStat)
     $table->endRow();
 }
 
-echo '<h3>'.$this->objLanguage->languageText('mod_forum_userstatistics').'</h3>';
+echo '<h3>'.$this->objLanguage->languageText('mod_forum_userstatistics', 'forum').'</h3>';
 echo $table->show();
 // END - User Stats
 
 // Language Statistics
-$table = $this->getObject('htmltable', 'htmlelements');
+$table = $this->newObject('htmltable', 'htmlelements');
 $table->cellpadding = 5;
 
 $table->startHeaderRow();
-$table->addHeaderCell($this->objLanguage->languageText('word_role'), 20);
-$table->addHeaderCell($this->objLanguage->languageText('mod_forum_nameofuser'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_forum_minimumwords'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_forum_maximumwords'));
-$table->addHeaderCell($this->objLanguage->languageText('word_average'));
+$table->addHeaderCell($this->objLanguage->languageText('word_role', 'forum'), 20);
+$table->addHeaderCell($this->objLanguage->languageText('mod_forum_nameofuser', 'forum'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_forum_minimumwords', 'forum'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_forum_maximumwords', 'forum'));
+$table->addHeaderCell($this->objLanguage->languageText('word_average', 'forum'));
 $table->endHeaderRow();
 
 foreach ($userStats as $userStat)
 {
     if ($userStat['role'] == 'unknown') {
         $icon->setIcon('cancel');
-        $icon->title = $this->objLanguage->languageText('word_unknown');
-        $icon->alt = $this->objLanguage->languageText('word_unknown');
+        $icon->title = $this->objLanguage->languageText('word_unknown', 'forum');
+        $icon->alt = $this->objLanguage->languageText('word_unknown', 'forum');
     } else {
         $icon->setIcon($userStat['role']);
         $icon->title = $userStat['role'];
         $icon->alt = $userStat['role'];
     }
+    
+    $table->startRow();
     
     $table->addCell($icon->show());
     $table->addCell($userStat['name'], '30%');
@@ -331,34 +333,36 @@ foreach ($userStats as $userStat)
     $table->endRow();
 }
 
-echo '<h3>'.$this->objLanguage->languageText('mod_forum_languagestatistics').'</h3>';
-echo '<p>'.$this->objLanguage->languageText('mod_forum_languagestatisticsinfor').'</p>';
+echo '<h3>'.$this->objLanguage->languageText('mod_forum_languagestatistics', 'forum').'</h3>';
+echo '<p>'.$this->objLanguage->languageText('mod_forum_languagestatisticsinfor', 'forum').'</p>';
 echo $table->show();
 
 // User Ratings Received
-$table = $this->getObject('htmltable', 'htmlelements');
+$table = $this->newObject('htmltable', 'htmlelements');
 $table->cellpadding = 5;
 
 $table->startHeaderRow();
-$table->addHeaderCell($this->objLanguage->languageText('word_role'), 20);
-$table->addHeaderCell($this->objLanguage->languageText('mod_forum_nameofuser'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_forum_numpostsrated'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_forum_minimumratingsreceived'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_forum_maximumratingsreceived'));
-$table->addHeaderCell($this->objLanguage->languageText('word_average'));
+$table->addHeaderCell($this->objLanguage->languageText('word_role', 'forum'), 20);
+$table->addHeaderCell($this->objLanguage->languageText('mod_forum_nameofuser', 'forum'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_forum_numpostsrated', 'forum'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_forum_minimumratingsreceived', 'forum'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_forum_maximumratingsreceived', 'forum'));
+$table->addHeaderCell($this->objLanguage->languageText('word_average', 'forum'));
 $table->endHeaderRow();
 
 foreach ($userStats as $userStat)
 {
     if ($userStat['role'] == 'unknown') {
         $icon->setIcon('cancel');
-        $icon->title = $this->objLanguage->languageText('word_unknown');
-        $icon->alt = $this->objLanguage->languageText('word_unknown');
+        $icon->title = $this->objLanguage->languageText('word_unknown', 'forum');
+        $icon->alt = $this->objLanguage->languageText('word_unknown', 'forum');
     } else {
         $icon->setIcon($userStat['role']);
         $icon->title = $userStat['role'];
         $icon->alt = $userStat['role'];
     }
+    
+    $table->startRow();
     
     $table->addCell($icon->show());
     $table->addCell($userStat['name'], '30%');
@@ -375,34 +379,36 @@ foreach ($userStats as $userStat)
     $table->endRow();
 }
 
-echo '<h3>'.$this->objLanguage->languageText('mod_forum_ratingofpostsreceived').'</h3>';
-echo '<p>'.$this->objLanguage->languageText('mod_forum_ratingofpostsreceivedinfo').'</p>';
+echo '<h3>'.$this->objLanguage->languageText('mod_forum_ratingofpostsreceived', 'forum').'</h3>';
+echo '<p>'.$this->objLanguage->languageText('mod_forum_ratingofpostsreceivedinfo', 'forum').'</p>';
 echo $table->show();
 
 // User Ratings
-$table = $this->getObject('htmltable', 'htmlelements');
+$table = $this->newObject('htmltable', 'htmlelements');
 $table->cellpadding = 5;
 
 $table->startHeaderRow();
-$table->addHeaderCell($this->objLanguage->languageText('word_role'), 20);
-$table->addHeaderCell($this->objLanguage->languageText('mod_forum_nameofuser'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_forum_numpostsrated'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_forum_minimumratingsgiven'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_forum_maximumratingsgiven'));
-$table->addHeaderCell($this->objLanguage->languageText('word_average'));
+$table->addHeaderCell($this->objLanguage->languageText('word_role', 'forum'), 20);
+$table->addHeaderCell($this->objLanguage->languageText('mod_forum_nameofuser', 'forum'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_forum_numpostsrated', 'forum'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_forum_minimumratingsgiven', 'forum'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_forum_maximumratingsgiven', 'forum'));
+$table->addHeaderCell($this->objLanguage->languageText('word_average', 'forum'));
 $table->endHeaderRow();
 
 foreach ($userStats as $userStat)
 {
     if ($userStat['role'] == 'unknown') {
         $icon->setIcon('cancel');
-        $icon->title = $this->objLanguage->languageText('word_unknown');
-        $icon->alt = $this->objLanguage->languageText('word_unknown');
+        $icon->title = $this->objLanguage->languageText('word_unknown', 'forum');
+        $icon->alt = $this->objLanguage->languageText('word_unknown', 'forum');
     } else {
         $icon->setIcon($userStat['role']);
         $icon->title = $userStat['role'];
         $icon->alt = $userStat['role'];
     }
+    
+    $table->startRow();
     
     $table->addCell($icon->show());
     $table->addCell($userStat['name'], '30%');
@@ -419,8 +425,8 @@ foreach ($userStats as $userStat)
     $table->endRow();
 }
 
-echo '<h3>'.$this->objLanguage->languageText('mod_forum_ratingofpostsgiven').'</h3>';
-echo '<p>'.$this->objLanguage->languageText('mod_forum_ratingofpostsgiveninfo').'</p>';
+echo '<h3>'.$this->objLanguage->languageText('mod_forum_ratingofpostsgiven', 'forum').'</h3>';
+echo '<p>'.$this->objLanguage->languageText('mod_forum_ratingofpostsgiveninfo', 'forum').'</p>';
 echo $table->show();
 
 
@@ -431,14 +437,14 @@ echo $table->show();
 // Footer
 echo '<p>';
 $backtoForumLink = new link ($this->uri(array('action'=>'forum', 'id'=>$id)));
-$backtoForumLink->link = $this->objLanguage->languageText('mod_forum_backtoforum');
+$backtoForumLink->link = $this->objLanguage->languageText('mod_forum_backtoforum', 'forum');
 
 echo $backtoForumLink->show();
 
 echo ' / ';
 
 $backtoAllForumsLink = new link ($this->uri(NULL));
-$backtoAllForumsLink->link = $this->objLanguage->languageText('mod_forum_backtoforumsincontent').' '.$contextTitle;
+$backtoAllForumsLink->link = $this->objLanguage->languageText('mod_forum_backtoforumsincontent', 'forum').' '.$contextTitle;
 
 echo $backtoAllForumsLink->show();
 

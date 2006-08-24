@@ -52,7 +52,7 @@ class dbpostattachments extends dbTable
     */
     function getAttachments($post_id)
     {
-        $sql = 'SELECT tbl_forum_post_attachment.id AS id, filename FROM tbl_forum_post_attachment 
+        $sql = 'SELECT tbl_forum_post_attachment.id AS id, filename, attachment_id FROM tbl_forum_post_attachment 
         INNER JOIN tbl_files ON (attachment_id = tbl_files.id)
         WHERE tbl_forum_post_attachment.post_id="'.$post_id.'"';
         
@@ -66,9 +66,8 @@ class dbpostattachments extends dbTable
     */
     function downloadAttachment($attachment_id)
     {
-        $sql = 'SELECT tbl_filestore.fileId FROM tbl_forum_post_attachment 
-        INNER JOIN tbl_forum_attachments ON (attachment_id = tbl_forum_attachments.id) 
-        INNER JOIN tbl_filestore ON (tbl_forum_attachments.fileId = tbl_filestore.fileId) 
+        $sql = 'SELECT tbl_files.id, filename FROM tbl_forum_post_attachment 
+        INNER JOIN tbl_files ON (attachment_id = tbl_files.id)
         WHERE tbl_forum_post_attachment.id="'.$attachment_id.'"';
         
         return $this->getArray($sql); 

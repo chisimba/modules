@@ -229,7 +229,7 @@ $tblTopic->endHeaderRow();
                         $objIcon->title = $this->objLanguage->languageText('word_tangent');
                         
                         $tblTopic->addCell($objIcon->show().' '.$link->show(), Null, 'center');
-                        $tblTopic->addCell($tangent['firstName'].' '.$tangent['surname'], Null, 'center', 'center');
+                        $tblTopic->addCell($tangent['firstname'].' '.$tangent['surname'], Null, 'center', 'center');
                         $tblTopic->addCell($tangent['replies'], Null, 'center', 'center');
                         $tblTopic->addCell($tangent['views'], Null, 'center', 'center');
                         
@@ -251,7 +251,7 @@ $tblTopic->endHeaderRow();
                         
                         $objIcon->setIcon('gotopost', NULL, 'icons/forum/');
                         
-                        $tblTopic->addCell($datefield.'<br />'.$tangent['lastFirstName'].' '.$tangent['lastSurname'].$lastPostLink->show(), Null, 'center', 'right', 'smallText');
+                        $tblTopic->addCell($datefield.'<br />'.$tangent['lastfirstname'].' '.$tangent['lastsurname'].$lastPostLink->show(), Null, 'center', 'right', 'smallText');
                         
                         $tblTopic->endRow();
                     }

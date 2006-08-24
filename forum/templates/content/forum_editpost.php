@@ -13,14 +13,14 @@ $this->loadClass('iframe', 'htmlelements');
 
 $header = new htmlheading();
 $header->type=1;
-$header->str=$this->objLanguage->languageText('mod_forum_editposttitle').': '.stripslashes($post['post_title']);
+$header->str=$this->objLanguage->languageText('mod_forum_editposttitle', 'forum').': '.stripslashes($post['post_title']);
 echo $header->show();
 
 
 echo '<br/>';
 $postReplyForm = new form('postReplyForm', $this->uri( array('module'=>'forum', 'action'=>'updatepost')));
 $postReplyForm->displayType = 3;
-$postReplyForm->addRule('title', $this->objLanguage->languageText('mod_forum_addtitle'), 'required');
+$postReplyForm->addRule('title', $this->objLanguage->languageText('mod_forum_addtitle', 'forum'), 'required');
 
 
 $addTable = $this->getObject('htmltable', 'htmlelements');
@@ -48,12 +48,11 @@ $addTable->startRow();
     $languageLabel = new label($this->objLanguage->languageText('word_language').':', 'input_language');
     $addTable->addCell($languageLabel->show(), 100);
     
-    $language =& $this->newObject('language','language');
     $languageList = $this->newObject('dropdown', 'htmlelements');
     $languageList->name = 'language';
     $languageCodes = & $this->newObject('languagecode','language');
     
-    foreach ($languageCodes->iso_639_2_tags as $key => $value) {
+    foreach ($languageCodes->iso_639_2_tags->codes as $key => $value) {
         $languageList->addOption($key, $value);
     }
     $languageList->setSelected($post['language']);
@@ -63,7 +62,7 @@ $addTable->endRow();
 
 $addTable->startRow();
 
-$addTable->addCell($this->objLanguage->languageText('word_message').':', 140);
+$addTable->addCell($this->objLanguage->languageText('word_message', 'forum').':', 140);
 
 $editor=&$this->newObject('htmlarea','htmlelements');
 $editor->setName('message');
@@ -81,7 +80,7 @@ $addTable->endRow();
 if ($forum['attachments'] == 'Y') {
     $addTable->startRow();
     
-    $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments').':', 'attachments');
+    $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
     $addTable->addCell($attachmentsLabel->show(), 100);
     
     $attachmentIframe = new iframe();
@@ -109,6 +108,8 @@ $returnUrl = $this->uri(array('action'=>'thread', 'id'=>$post['topic_id']));
 $cancelButton->setOnClick("window.location='$returnUrl'");
 
 $addTable->addCell($submitButton->show().' / '.$cancelButton->show());
+
+$addTable->endRow();
 
 $postReplyForm->addToForm($addTable);
 

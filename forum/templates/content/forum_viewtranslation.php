@@ -19,7 +19,7 @@ echo $header->show();
 
 if ($this->getParam('message') == 'translationsaved') {
     $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
-    $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_translationsaved'));
+    $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_translationsaved', 'forum'));
     $timeoutMessage->setTimeout(10000);
     echo ('<p>'.$timeoutMessage->show().'</p>');
 }

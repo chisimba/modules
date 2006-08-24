@@ -90,9 +90,6 @@ $moderateTopicLink->link = $this->objLanguage->languageText('mod_forum_moderatet
 $newtopiclink = new link($this->uri(array('action'=>'newtopic', 'id'=>$post['forum_id'], 'type'=>$forumtype)));
 $newtopiclink->link = $this->objLanguage->languageText('mod_forum_startnewtopic', 'forum');
 
-$changetopicstatus = new link($this->uri(array('action'=>'topicstatus', 'id'=>$post['topic_id'], 'type'=>$forumtype)));
-$changetopicstatus->link = $this->objLanguage->languageText('mod_forum_changetopicstatus', 'forum');
-
 $returntoforum = new link($this->uri(array('action'=>'forum', 'id'=>$post['forum_id'], 'type'=>$forumtype)));
 $returntoforum->link = $this->objLanguage->languageText('mod_forum_returntoforum', 'forum');
 

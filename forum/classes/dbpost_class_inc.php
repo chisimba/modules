@@ -87,6 +87,7 @@ class dbPost extends dbTable
 		$this->objTopicSubscriptions =& $this->getObject('dbtopicsubscriptions');
         
         $this->objTranslatedDate = $this->getObject('translatedatedifference', 'utilities');
+        $this->objDateTime = $this->getObject('datetime', 'utilities');
         
         // Get Context Code Settings
         $this->contextObject =& $this->getObject('dbcontext', 'context');
@@ -96,6 +97,8 @@ class dbPost extends dbTable
         $this->objStringsFilter = $this->getObject('parse4display', 'strings');
         
         $this->objIcon = $this->newObject('geticon', 'htmlelements');
+        
+        $this->loadClass('link', 'htmlelements');
         
         $this->objScriptClear = $this->getObject('script', 'utilities');
         
@@ -148,7 +151,7 @@ class dbPost extends dbTable
             'lft'                => $leftPointer,
             'rght'                => $rightPointer,
             'level'                => $level,
-    		'dateLastUpdated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
+    		'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
     	));
     	
     	return $this->getLastInsertId();
@@ -239,13 +242,13 @@ class dbPost extends dbTable
     {
         $pointers = $this->getTopicPointer($topic_id);
         
-        $sql = 'SELECT tbl_forum_post.*, tbl_forum_post_text.*, tbl_users.firstName, tbl_users.surname, 
-        tbl_forum_post_attachment.attachment_id, replyPost.id AS replyPost, languageCheck.id AS anotherLanguage, tbl_forum_post_ratings.rating FROM tbl_forum_post 
+        $sql = 'SELECT tbl_forum_post.*, tbl_forum_post_text.*, tbl_users.firstname, tbl_users.surname, 
+        tbl_forum_post_attachment.attachment_id, replypost.id AS replypost, languagecheck.id AS anotherlanguage, tbl_forum_post_ratings.rating FROM tbl_forum_post 
         INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id AND tbl_forum_post_text.original_post = "1") 
         LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId ) 
         LEFT JOIN tbl_forum_post_attachment ON (tbl_forum_post.id = tbl_forum_post_attachment.post_id)
-        LEFT JOIN tbl_forum_post AS replyPost ON (tbl_forum_post.id = replyPost.post_parent)
-        LEFT JOIN tbl_forum_post_text AS languageCheck ON (tbl_forum_post.id = languageCheck.post_id AND languageCheck.original_post="0" AND tbl_forum_post_text.language != languageCheck.language)
+        LEFT JOIN tbl_forum_post AS replypost ON (tbl_forum_post.id = replypost.post_parent)
+        LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND languageCheck.original_post="0" AND tbl_forum_post_text.language != languagecheck.language)
         LEFT JOIN tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id)
         WHERE tbl_forum_post.topic_id = "'.$topic_id.'" AND tbl_forum_post.lft >= "'.$pointers['lft']. '" AND tbl_forum_post.rght <= "'.$pointers['rght'].'" 
         GROUP BY tbl_forum_post.id ORDER BY lft';
@@ -261,14 +264,14 @@ class dbPost extends dbTable
     */
     function getFlatThread($topic)
     {
-        $sql = 'SELECT tbl_forum_post.*,  tbl_forum_post_text.*, tbl_users.firstName, tbl_users.surname, 
-        tbl_forum_post_attachment.attachment_id, replyPost.id AS replyPost, languageCheck.id AS anotherLanguage, tbl_forum_post_ratings.rating
+        $sql = 'SELECT tbl_forum_post.*,  tbl_forum_post_text.*, tbl_users.firstname, tbl_users.surname, 
+        tbl_forum_post_attachment.attachment_id, replypost.id AS replypost, languagecheck.id AS anotherlanguage, tbl_forum_post_ratings.rating
         FROM tbl_forum_post 
         INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id  AND tbl_forum_post_text.original_post = "1") 
         LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId ) 
         LEFT JOIN tbl_forum_post_attachment ON (tbl_forum_post.id = tbl_forum_post_attachment.post_id)
-        LEFT JOIN tbl_forum_post AS replyPost ON (tbl_forum_post.id = replyPost.post_parent)
-        LEFT JOIN tbl_forum_post_text AS languageCheck ON (tbl_forum_post.id = languageCheck.post_id AND languageCheck.original_post="0" AND tbl_forum_post_text.language != languageCheck.language) 
+        LEFT JOIN tbl_forum_post AS replypost ON (tbl_forum_post.id = replypost.post_parent)
+        LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND languagecheck.original_post="0" AND tbl_forum_post_text.language != languagecheck.language) 
         LEFT JOIN tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id) 
         WHERE tbl_forum_post.topic_id = "'.$topic.'" GROUP BY tbl_forum_post.id ORDER BY post_order';
         
@@ -282,8 +285,8 @@ class dbPost extends dbTable
     */
     function getRootPost ($topic)
     {
-        $sql = 'SELECT tbl_forum_post.*, tbl_forum_topic.*,  tbl_forum_post_text.*, forum_name, forum_id, tbl_users.firstName, tbl_users.surname, 
-        tbl_forum_post_attachment.attachment_id, replyPost.id AS replyPost, languageCheck.id AS anotherLanguage, 
+        $sql = 'SELECT tbl_forum_post.*, tbl_forum_topic.*,  tbl_forum_post_text.*, forum_name, forum_id, tbl_users.firstname, tbl_users.surname, 
+        tbl_forum_post_attachment.attachment_id, replyPost.id AS replypost, languageCheck.id AS anotherlanguage, 
         tbl_forum_post_ratings.rating, tbl_forum_post.lft as postleft, tbl_forum_post.rght as postright
         FROM tbl_forum_post INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id AND tbl_forum_post_text.original_post="1") 
         INNER JOIN tbl_forum_topic ON (tbl_forum_topic.id = tbl_forum_post.topic_id) 
@@ -312,7 +315,7 @@ class dbPost extends dbTable
     */
     function getPostWithText ($post)
     {
-        $sql = 'SELECT tbl_forum_post.*, tbl_forum_post_text.*, tbl_forum_topic.*, tbl_users.firstName, tbl_users.surname, tbl_forum_post.dateLastUpdated AS dateLastUpdated, tbl_forum_post_attachment.attachment_id, replyPost.id AS replyPost, languageCheck.id AS anotherLanguage, tbl_forum_post_ratings.rating, tbl_forum_post.lft as postleft, tbl_forum_post.rght as postright
+        $sql = 'SELECT tbl_forum_post.*, tbl_forum_post_text.*, tbl_forum_topic.*, tbl_users.firstname, tbl_users.surname, tbl_forum_post.datelastupdated AS datelastupdated, tbl_forum_post_attachment.attachment_id, replyPost.id AS replypost, languageCheck.id AS anotherlanguage, tbl_forum_post_ratings.rating, tbl_forum_post.lft as postleft, tbl_forum_post.rght as postright
         FROM tbl_forum_post 
         INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id AND tbl_forum_post_text.original_post="1" ) 
         INNER JOIN tbl_forum_topic ON (tbl_forum_post.topic_id = tbl_forum_topic.id) 
@@ -341,7 +344,7 @@ class dbPost extends dbTable
     */
     function getPostInLanguage($postTextId)
     {
-        $sql = 'SELECT tbl_forum_post.*, tbl_forum_post_text.*, tbl_forum_topic.*, tbl_users.firstName, tbl_users.surname, tbl_forum_post.dateLastUpdated AS dateLastUpdated, tbl_forum_post_attachment.attachment_id, replyPost.id AS replyPost, languageCheck.id AS anotherLanguage 
+        $sql = 'SELECT tbl_forum_post.*, tbl_forum_post_text.*, tbl_forum_topic.*, tbl_users.firstname, tbl_users.surname, tbl_forum_post.datelastupdated AS datelastupdated, tbl_forum_post_attachment.attachment_id, replyPost.id AS replypost, languageCheck.id AS anotherlanguage 
         FROM tbl_forum_post 
         INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id ) 
         INNER JOIN tbl_forum_topic ON (tbl_forum_post.topic_id = tbl_forum_topic.id) 
@@ -376,6 +379,7 @@ class dbPost extends dbTable
             $margin = NULL;
         }
         $return = NULL;
+        
         
         if ($makeContractible) {
             if ($post['level'] <= $this->threadDisplayLevel) {
@@ -426,7 +430,7 @@ class dbPost extends dbTable
                 
                 
                 // Start of the Title Area
-                $return .= '<div class="forumTopicTitle"><strong>'.stripslashes($post['post_title']).'</strong><br />by '.$post['firstname'].' '.$post['surname'].' - '.formatDate($post['datelastupdated']).' at '.formatTime($post['datelastupdated']).' ('.$this->objTranslatedDate->getDifference($post['datelastupdated']).') </div>';
+                $return .= '<div class="forumTopicTitle"><strong>'.stripslashes($post['post_title']).'</strong><br />by '.$post['firstname'].' '.$post['surname'].' - '.$this->objDateTime->formatDateOnly($post['datelastupdated']).' at '.$this->objDateTime->formatTime($post['datelastupdated']).' ('.$this->objTranslatedDate->getDifference($post['datelastupdated']).') </div>';
                 // Ebd Title Area
             $return .= '</div>'."\r\n";
             
@@ -443,16 +447,16 @@ class dbPost extends dbTable
                     $link->link = stripslashes($tangentParent['post_title']);
                     $link->anchor = $tangentParent['post_id'];
                     
-                    $return .= '<strong>'.$this->objLanguage->languageText('mod_forum_topicisatangentto', 'forum').' '.$link->show().' by '.$tangentParent['firstName'].' '.$tangentParent['surname'].'</strong><br /><br />';
+                    $return .= '<strong>'.$this->objLanguage->languageText('mod_forum_topicisatangentto', 'forum').' '.$link->show().' by '.$tangentParent['firstname'].' '.$tangentParent['surname'].'</strong><br /><br />';
                     $return .= $this->objScriptClear->removeScript($tangentParent['post_text']);
                     $return .= '</div>';
                 }
-                $return .= $this->objStringsFilter->prepare(// Apply String Filters
+                $return .= '<div id="text_'.$post['post_id'].'">'.$this->objStringsFilter->prepare(// Apply String Filters
                                 $this->objMediaFilter->parseAll( // Apply Media Filters
                                     $this->objScriptClear->removeScript( // Apply Script Removal Filters
                                         stripslashes( // Remove Slashes
                                             $post['post_text']
-                            ))));
+                            )))).'</div>';
                 
                 // Check if the post has attachments
                 if ($post['attachment_id'] != NULL) {
@@ -507,8 +511,7 @@ class dbPost extends dbTable
                 
                 //Check if replies allowed
                 if ($this->repliesAllowed) {
-                    $link =& $this->getObject ('link', 'htmlelements');
-                    $link->href=$this->uri(array('action'=>'postreply', 'id'=>$post['post_id'], 'type'=>$this->forumtype));
+                    $link = new link($this->uri(array('action'=>'postreply', 'id'=>$post['post_id'], 'type'=>$this->forumtype)));
                     $link->link = $this->objLanguage->languageText('mod_forum_postreply', 'forum');
                     $return .= $link->show();
                 }
@@ -523,8 +526,7 @@ class dbPost extends dbTable
                         $return .= '<p>';
                     }
                     
-                    $editlink =& $this->getObject ('link', 'htmlelements');
-                    $editlink->href=$this->uri(array('action'=>'editpost', 'id'=>$post['post_id'], 'type'=>$this->forumtype));
+                    $editlink = new link($this->uri(array('action'=>'editpost', 'id'=>$post['post_id'], 'type'=>$this->forumtype)));
                     $editlink->link = $this->objLanguage->languageText('mod_forum_editpost', 'forum');
                     
                     $return .= $editlink->show();
@@ -533,10 +535,14 @@ class dbPost extends dbTable
                 
                 $return .= '<hr />';
                 
-                $return .= $this->objLanguage->languageText('mod_forum_postmadein', 'forum').' <strong>'.$this->objLanguageCode->getLanguage($post['language']).' ('.strtoupper($post['language']).')</strong>. ';
+                
                 
                 // Check if other languages exist
-                if (isset($post['anotherLanguage']) && $post['anotherLanguage'] != '') {
+                if (isset($post['anotherlanguage']) && $post['anotherlanguage'] != '') {
+                    $link = new link ('javascript:xajax_loadTranslation(\''.$post['post_id'].'\', \''.$post['id'].'\');');
+                    $link-> link = $this->objLanguageCode->getLanguage($post['language']).' ('.strtoupper($post['language']).')';
+                    
+                    $return .= $this->objLanguage->languageText('mod_forum_postmadein', 'forum').' <strong>'.$link->show().'</strong>. ';
                     
                     // Start text
                     $return .= $this->objLanguage->languageText('mod_forum_alsoavailablein', 'forum').' ';
@@ -549,8 +555,8 @@ class dbPost extends dbTable
                     // Loop through the languages
                     foreach ($languages as $language)
                     {
-                        $link =& $this->getObject ('link', 'htmlelements');
-                        $link->href = $this->uri(array('action'=>'viewtranslation', 'id'=>$language['id'], 'type'=>$this->forumtype));
+                        $link = new link('javascript:xajax_loadTranslation(\''.$post['post_id'].'\', \''.$language['id'].'\');');
+                        //$link->href = $this->uri(array('action'=>'viewtranslation', 'id'=>$language['id'], 'type'=>$this->forumtype));
                         $link->link = $this->objLanguageCode->getLanguage($language['language']).' ('.strtoupper($language['language']).')';
                         
                         $return .= $comma.$link->show();
@@ -560,6 +566,8 @@ class dbPost extends dbTable
                     // Add a full stop for courtesy
                     $return .= '. ';
                     
+                } else {
+                    $return .= $this->objLanguage->languageText('mod_forum_postmadein', 'forum').' <strong>'.$this->objLanguageCode->getLanguage($post['language']).' ('.strtoupper($post['language']).')</strong>. ';
                 }
                 
                 if ($this->forumLocked == FALSE) {
@@ -751,10 +759,10 @@ class dbPost extends dbTable
         // Additional Filter to remove line breaks
         $text = str_replace("\r\n", ' ', $text);
         
-        if (formatDate($post['datelastupdated']) == date('j F Y')) {
-            $datefield = $this->objLanguage->languageText('mod_forum_todayat', 'forum').' '.formatTime($post['datelastupdated']);
+        if ($this->objDateTime->formatDateOnly($post['datelastupdated']) == date('j F Y')) {
+            $datefield = $this->objLanguage->languageText('mod_forum_todayat', 'forum').' '.$this->objDateTime->formatTime($post['datelastupdated']);
         } else {
-            $datefield = formatDate($post['datelastupdated']).' - '.formatTime($post['datelastupdated']);
+            $datefield = $this->objDateTime->formatDateOnly($post['datelastupdated']).' - '.$this->objDateTime->formatTime($post['datelastupdated']);
         }
         
         if ($highlightPost) {
@@ -783,12 +791,12 @@ class dbPost extends dbTable
     */
     function getLastPost($forum)
     {
-        $sql = 'SELECT tbl_forum_post_text. * , tbl_forum_post.topic_id, tbl_users.firstName, tbl_users.surname
+        $sql = 'SELECT tbl_forum_post_text. * , tbl_forum_post.topic_id, tbl_users.firstname, tbl_users.surname
         FROM tbl_forum_post INNER JOIN tbl_forum_post_text ON ( tbl_forum_post_text.post_id = tbl_forum_post.id AND tbl_forum_post_text.original_post="1")
         INNER JOIN tbl_forum_topic ON ( tbl_forum_post.topic_id = tbl_forum_topic.id )
         LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId ) 
         WHERE tbl_forum_topic.forum_id = "'.$forum.'"
-        ORDER BY tbl_forum_post.dateLastUpdated DESC LIMIT 1';
+        ORDER BY tbl_forum_post.datelastupdated DESC LIMIT 1';
         
         $results = $this->getArray($sql);
         
@@ -817,7 +825,7 @@ class dbPost extends dbTable
             return '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_forum_nopostsinforum', 'forum').'</div>';
         } else {
             // If forum exists, get the last '10' posts or whatever limit is specified
-            $sql = 'SELECT tbl_forum_post_text. * , tbl_forum_post.topic_id, tbl_users.firstName, tbl_users.surname
+            $sql = 'SELECT tbl_forum_post_text. * , tbl_forum_post.topic_id, tbl_users.firstname, tbl_users.surname
             FROM tbl_forum_post INNER JOIN tbl_forum_post_text ON ( tbl_forum_post_text.post_id = tbl_forum_post.id AND tbl_forum_post_text.original_post="1")
             INNER JOIN tbl_forum_topic ON ( tbl_forum_post.topic_id = tbl_forum_topic.id )
             LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId ) 
@@ -862,7 +870,7 @@ class dbPost extends dbTable
                     $text = str_replace("\r\n", ' ', $text);
                     
                     $objTable->addCell($text);
-                    $objTable->addCell('<nobr>'.$post['firstName'].' '.$post['surname'].'</nobr>');
+                    $objTable->addCell('<nobr>'.$post['firstname'].' '.$post['surname'].'</nobr>');
                     $objTable->endRow();
                 }
                 
@@ -935,7 +943,7 @@ class dbPost extends dbTable
             $postReplyForm->addRule('title', $this->objLanguage->languageText('mod_forum_addtitle', 'forum'), 'required');
             
             
-            $addTable = $this->getObject('htmltable', 'htmlelements');
+            $addTable = $this->newObject('htmltable', 'htmlelements');
             $addTable->width='99%';
             $addTable->align='center';
             $addTable->cellpadding = 10;
@@ -1151,25 +1159,25 @@ function clearForTangent()
     postTitle = \"".addslashes($title)."\";
 
     
-    if (document.postReplyForm.replytype[1].checked)
+    if (document.forms[\"postReplyForm\"].replytype[1].checked)
     {
         
-        if (document.postReplyForm.title.value == \"".addslashes($title)."\".split(\"'\").join(\"\'\"))
+        if (document.forms[\"postReplyForm\"].title.value == \"".addslashes($title)."\".split(\"'\").join(\"\'\"))
         {
             alert ('".$this->objLanguage->languageText('mod_forum_tangentsowntitles', 'forum')." \"".addslashes($title)."\".\\n".$this->objLanguage->languageText('mod_forum_changetitle', 'forum').".');
-            document.postReplyForm.title.value = '';
-            document.postReplyForm.title.focus();
+            document.forms[\"postReplyForm\"].title.value = '';
+            document.forms[\"postReplyForm\"].title.focus();
             
             
         }
     }
     
-    if (document.postReplyForm.replytype[0].checked)
+    if (document.forms[\"postReplyForm\"].replytype[0].checked)
     {
-        if (document.postReplyForm.title.value == '')
+        if (document.forms[\"postReplyForm\"].title.value == '')
         {
-            document.postReplyForm.title.value = postTitle.split(\"'\").join(\"\'\");
-            document.postReplyForm.title.focus();
+            document.forms[\"postReplyForm\"].title.value = postTitle.split(\"'\").join(\"\'\");
+            document.forms[\"postReplyForm\"].title.focus();
         }
     }
 
@@ -1428,7 +1436,7 @@ function clearForTangent()
     
     function getChildPostsSQL($topic, $left, $right)
     {
-        $sql = 'SELECT tbl_forum_post.*, tbl_forum_post_text.*, tbl_users.firstName, tbl_users.surname FROM tbl_forum_post 
+        $sql = 'SELECT tbl_forum_post.*, tbl_forum_post_text.*, tbl_users.firstname, tbl_users.surname FROM tbl_forum_post 
         INNER JOIN tbl_forum_post_text ON ( tbl_forum_post_text.post_id = tbl_forum_post.id AND tbl_forum_post_text.original_post="1")
         LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId ) 
         WHERE topic_id="'.$topic.'" AND lft>'.$left.' AND rght<'.$right.' ORDER BY lft';

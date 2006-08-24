@@ -100,10 +100,10 @@ foreach ($forums as $forum)
             $user = '';
         }
         
-        if (formatDate($post['datelastupdated']) == date('j F Y')) {
-            $datefield = $this->objLanguage->languageText('mod_forum_todayat', 'forum').' '.formatTime($post['datelastupdated']);
+        if ($this->objDateTime->formatDateOnly($post['datelastupdated']) == date('j F Y')) {
+            $datefield = $this->objLanguage->languageText('mod_forum_todayat', 'forum').' '.$this->objDateTime->formatTime($post['datelastupdated']);
         } else {
-            $datefield = formatDate($post['datelastupdated']).' - '.formatTime($post['datelastupdated']);
+            $datefield = $this->objDateTime->formatDateOnly($post['datelastupdated']).' - '.$this->objDateTime->formatTime($post['datelastupdated']);
         }
         
         $postDetails .= '<br /><strong>'.$user.$datefield.'</strong>';

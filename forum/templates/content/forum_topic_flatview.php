@@ -98,58 +98,8 @@ echo $ratingsForm->show();
 
 ///----------------------------------------------------------
 
-if ($post['topic_tangent_parent'] == '0' && count($tangents) > 0) {
-
-    $header = new htmlheading();
-    $header->type=3;
-    $header->str = 'Tangents';
-    
-    echo $header->show();
-    
-    $table = $this->getObject('htmltable', 'htmlelements');
-    $table->cellpadding = 5;
-    $table->cellspacing = 1;
-    $table->startHeaderRow();
-    $table->addHeaderCell($this->objLanguage->languageText('mod_forum_topicconversation', 'forum'));
-    $table->addHeaderCell($this->objLanguage->languageText('word_author', 'forum'), NULL, NULL, 'center');
-    $table->addHeaderCell($this->objLanguage->languageText('word_replies', 'forum'), NULL, NULL, 'center');
-    $table->addHeaderCell($this->objLanguage->languageText('word_views', 'forum'), NULL, NULL, 'center');
-    $table->addHeaderCell($this->objLanguage->languageText('mod_forum_lastpost', 'forum'), NULL, NULL, 'center');
-    $table->endHeaderRow();
-    
-    $row = 'odd';
-    foreach ($tangents AS $tangent)
-    {
-        $table->startRow();
-        
-        $titleLink = new link($this->uri(array('action'=>'viewtopic', 'id'=>$tangent['id'], 'type'=>$forumtype)));
-        $titleLink->link = $tangent['post_title'];
-        
-        $table->addCell($titleLink->show(), NULL, NULL, NULL, $row);
-        $table->addCell($tangent['firstName'].' '.$tangent['surname'], NULL, NULL, 'center', $row);
-        $table->addCell($tangent['replies'], NULL, NULL, 'center', $row);
-        $table->addCell($tangent['views'], NULL, NULL, 'center', $row);
-        
-        $objIcon = $this->getObject('geticon', 'htmlelements');
-        $objIcon->setIcon('gotopost', NULL, 'icons/forum/');
-        
-        $lastPostLink = new link ($this->uri(array('action'=>'viewtopic', 'id'=>$tangent['id'], 'post'=>$tangent['last_post'], 'type'=>$forumtype)));
-        $lastPostLink->link = $objIcon->show();
-        
-        if (formatDate($tangent['lastdate']) == date('j F Y')) {
-            $datefield = $this->objLanguage->languageText('mod_forum_todayat', 'forum').' '.formatTime($tangent['lastdate']);
-        } else {
-            $datefield = formatDate($tangent['lastdate']).' - '.formatTime($tangent['lastdate']);
-        }
-        
-        $table->addCell($datefield.'<br />'.$tangent['lastFirstName'].' '.$tangent['lastSurname'].$lastPostLink->show(), Null, 'center', 'right', $row.' smallText');
-        
-        $table->endRow();
-        
-        $row = $row=='odd' ? 'even' : 'odd';
-    }
-    
-    echo $table->show();
+if (isset($tangentsTable)) {
+    echo $tangentsTable;
 }
 
 /* 
@@ -176,9 +126,6 @@ $moderateTopicLink->link = $this->objLanguage->languageText('mod_forum_moderatet
 
 $newtopiclink = new link($this->uri(array('action'=>'newtopic', 'id'=>$post['forum_id'], 'type'=>$forumtype)));
 $newtopiclink->link = $this->objLanguage->languageText('mod_forum_startnewtopic', 'forum');
-
-$changetopicstatus = new link($this->uri(array('action'=>'topicstatus', 'id'=>$post['topic_id'], 'type'=>$forumtype)));
-$changetopicstatus->link = $this->objLanguage->languageText('mod_forum_changetopicstatus', 'forum');
 
 $returntoforum = new link($this->uri(array('action'=>'forum', 'id'=>$post['forum_id'], 'type'=>$forumtype)));
 $returntoforum->link = $this->objLanguage->languageText('mod_forum_returntoforum', 'forum');

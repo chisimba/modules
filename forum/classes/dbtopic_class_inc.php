@@ -33,6 +33,7 @@ class dbtopic extends dbTable
         $this->objPost =& $this->getObject('dbpost');
         
         $this->objIcon = $this->getObject('geticon', 'htmlelements');
+        $this->objDateTime =& $this->getObject('datetime', 'utilities');
     }
     
     /**
@@ -138,7 +139,7 @@ class dbtopic extends dbTable
     */ 
     function showTopicsInForum($forum_id, $userId, $archiveDate = NULL, $order=NULL, $direction=NULL, $additionalWhere = NULL, $limit = NULL)
     {
-        $sql = 'SELECT tbl_forum_topic.id AS topic_id,tbl_forum_topic.*, tbl_forum_topic.status AS topicstatus, tbl_users.firstName, tbl_users.surname, tbl_forum_discussiontype.*, tbl_forum_post_text.post_title, tbl_forum_topic_read.id AS readtopic, tbl_forum_topic_read.post_id AS lastreadpost, lastPostUser.firstName AS lastFirstName, lastPostUser.surname AS lastSurname, post2.dateLastUpdated AS lastdate, tangentCheck.id AS tangentCheck'
+        $sql = 'SELECT tbl_forum_topic.id AS topic_id,tbl_forum_topic.*, tbl_forum_topic.status AS topicstatus, tbl_users.firstname, tbl_users.surname, tbl_forum_discussiontype.*, tbl_forum_post_text.post_title, tbl_forum_topic_read.id AS readtopic, tbl_forum_topic_read.post_id AS lastreadpost, lastPostUser.firstname AS lastfirstname, lastPostUser.surname AS lastsurname, post2.datelastupdated AS lastdate, tangentCheck.id AS tangentcheck'
         
         .' FROM tbl_forum_topic'
         
@@ -223,7 +224,7 @@ class dbtopic extends dbTable
     */
     function getTangents($topic)
     {
-        $sql = 'SELECT tbl_forum_topic. * , tbl_forum_post_text.post_title, tbl_users.firstName, tbl_users.surname,lastPostUser.firstName AS lastFirstName, lastPostUser.surname AS lastSurname, post2.dateLastUpdated AS lastdate
+        $sql = 'SELECT tbl_forum_topic. * , tbl_forum_post_text.post_title, tbl_users.firstname, tbl_users.surname,lastPostUser.firstName AS lastFirstName, lastPostUser.surname AS lastSurname, post2.dateLastUpdated AS lastdate
                 FROM tbl_forum_topic
                 INNER JOIN tbl_forum_post ON ( tbl_forum_post.topic_id = tbl_forum_topic.id AND tbl_forum_post.post_parent="0")
                 INNER JOIN tbl_forum_post_text ON ( tbl_forum_post_text.post_id = tbl_forum_post.id )
@@ -233,6 +234,73 @@ class dbtopic extends dbTable
                 WHERE tbl_forum_topic.topic_tangent_parent = "'.$topic.'"
 GROUP BY tbl_forum_topic.id                ';
         return $this->getArray($sql);
+    }
+    
+    /**
+    *
+    *
+    *
+    */
+    function showTangentsTable($topic)
+    {
+        $tangents = $this->getTangents($topic);
+        
+        if (count($tangents) == 0) {
+            return NULL;
+        } else {
+            
+            $this->loadClass('link', 'htmlelements');
+            $this->loadClass('htmlheading', 'htmlelements');
+            
+            $header = new htmlheading();
+            $header->type=3;
+            $header->str = 'Tangents';
+            
+            $table = $this->newObject('htmltable', 'htmlelements');
+            $table->cellpadding = 5;
+            $table->cellspacing = 1;
+            $table->startHeaderRow();
+            $table->addHeaderCell($this->objLanguage->languageText('mod_forum_topicconversation', 'forum'));
+            $table->addHeaderCell($this->objLanguage->languageText('word_author', 'forum'), NULL, NULL, 'center');
+            $table->addHeaderCell($this->objLanguage->languageText('word_replies', 'forum'), NULL, NULL, 'center');
+            $table->addHeaderCell($this->objLanguage->languageText('word_views', 'forum'), NULL, NULL, 'center');
+            $table->addHeaderCell($this->objLanguage->languageText('mod_forum_lastpost', 'forum'), NULL, NULL, 'center');
+            $table->endHeaderRow();
+            
+            $row = 'odd';
+            foreach ($tangents AS $tangent)
+            {
+                $table->startRow();
+                
+                $titleLink = new link($this->uri(array('action'=>'viewtopic', 'id'=>$tangent['id'])));
+                $titleLink->link = $tangent['post_title'];
+                
+                $table->addCell($titleLink->show(), NULL, NULL, NULL, $row);
+                $table->addCell($tangent['firstname'].' '.$tangent['surname'], NULL, NULL, 'center', $row);
+                $table->addCell($tangent['replies'], NULL, NULL, 'center', $row);
+                $table->addCell($tangent['views'], NULL, NULL, 'center', $row);
+                
+                $objIcon = $this->getObject('geticon', 'htmlelements');
+                $objIcon->setIcon('gotopost', NULL, 'icons/forum/');
+                
+                $lastPostLink = new link ($this->uri(array('action'=>'viewtopic', 'id'=>$tangent['id'], 'post'=>$tangent['last_post'])));
+                $lastPostLink->link = $objIcon->show();
+                
+                if ($this->objDateTime->formatDateOnly($tangent['lastdate']) == date('j F Y')) {
+                    $datefield = $this->objLanguage->languageText('mod_forum_todayat', 'forum').' '.$this->objDateTime->formatTime($tangent['lastdate']);
+                } else {
+                    $datefield = $this->objDateTime->formatDateOnly($tangent['lastdate']).' - '.$this->objDateTime->formatTime($tangent['lastdate']);
+                }
+                
+                $table->addCell($datefield.'<br />'.$tangent['lastfirstname'].' '.$tangent['lastsurname'].$lastPostLink->show(), Null, 'center', 'right', $row.' smallText');
+                
+                $table->endRow();
+                
+                $row = $row=='odd' ? 'even' : 'odd';
+            }
+            
+            return $header->show().$table->show();
+        }
     }
     
     /**

@@ -31,26 +31,26 @@ function clearForTangent()
     postTitle = "<?php echo (addslashes($defaultTitle)); ?>";
 
     
-    if (document.postReplyForm.replytype[1].checked)
+    if (document.forms["postReplyForm"].replytype[1].checked)
     {
         
-        if (document.postReplyForm.title.value == "<?php echo addslashes($originalTitle); ?>".split("'").join("\'"))
+        if (document.forms["postReplyForm"].title.value == "<?php echo addslashes($originalTitle); ?>".split("'").join("\'"))
         {
             alert ('<?php echo $this->objLanguage->languageText('mod_forum_tangentsowntitles', 'forum'); ?> "<?php echo addslashes($originalTitle); ?>"\n<?php echo $this->objLanguage->languageText('mod_forum_changetitle', 'forum'); ?>.');
-            document.postReplyForm.title.value = '';
-            document.postReplyForm.title.focus();
+            document.forms["postReplyForm"].title.value = '';
+            document.forms["postReplyForm"].title.focus();
             
             
         }
     }
     
-    if (document.postReplyForm.replytype[0].checked)
+    if (document.forms["postReplyForm"].replytype[0].checked)
     {
-        if (document.postReplyForm.title.value == '')
+        if (document.forms["postReplyForm"].title.value == '')
         {
-            document.postReplyForm.title.value = postTitle.split("'").join("\'");
+            document.forms["postReplyForm"].title.value = postTitle.split("'").join("\'");
             //"<?php echo (stripslashes($originalTitle)); ?>";
-            document.postReplyForm.title.focus();
+            document.forms["postReplyForm"].title.focus();
         }
     }
 
