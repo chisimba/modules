@@ -48,12 +48,13 @@ class httpclient extends controller
             default:
             	$url = $this->getParam('url');
                 try {
-                	$proxy = array(
-          			  'host' => $host,
-            		  'port' => $port,
-            		  'user' => $user,
-            		  'password' => $pass
-        			);
+                	//$proxy = array(
+          			//  'host' => $host,
+            		//  'port' => $port,
+            		//  'user' => $user,
+            		//  'password' => $pass
+        			//);
+        			$proxy=array();
 
 
                 	echo $this->objClient->getUrl($url,$proxy);

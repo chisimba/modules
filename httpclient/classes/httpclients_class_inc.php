@@ -71,7 +71,7 @@ class httpclients extends abhttpclient
                         	$this->setUri($headerValue);
                         } else {
                         	// Split into path and query and set the query
-                    	    list($headerValue, $query) = explode('?', $headerValue, 2);
+                    	    @list($headerValue, $query) = explode('?', $headerValue, 2);
                     	    $this->_uri->setQueryString($query);
 
                         	if (strpos($headerValue, '/') === 0) {
