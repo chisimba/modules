@@ -764,18 +764,27 @@ class dbcalendar extends dbTable
             foreach ($events as $event)
             {
                 $eventsTable->startRow();
-                $eventsTable->addCell('<nobr>'.$this->objDateFunctions->reformatDateSmallMonth($event['eventdate'].'</nobr>'));
+                $dDate = $this->objDateFunctions->reformatDateSmallMonth($event['eventdate']);
+                $eventsTable->addCell('<nobr>'.$dDate.'</nobr>');
                 $eventsTable->addCell(stripslashes($event['eventtitle']));
                 $eventsTable->endRow();
             }
         } else {
             $eventsTable->startRow();
-            $eventsTable->addCell('<span class="noRecordsMessage">'.$this->objLanguage->languageText('mod_calendarbase_noeventsforthismonth','calendar', 'No Events for this month'), NULL, 'center', 'center', NULL, 'colspan="2"');
+            $eventsTable->addCell('<span class="noRecordsMessage">'.$this->objLanguage->languageText('mod_calendarbase_noeventsforthismonth','calendar', 'No Events for this month').'</span>', NULL, 'center', 'center', NULL, 'colspan="2"');
             $eventsTable->endRow();
         }
 
-        return $eventsTable->show();
-
+        //return $eventsTable->show();
+        $str = '<hr /><ul>';
+        foreach ($events as $event)
+        {
+            $dDate = $this->objDateFunctions->reformatDateSmallMonth($event['eventdate']);
+            $str .= '<li><span class="date">'.$dDate.'</span></li>';
+        }
+        $str .= '</ul><hr/>';
+        
+        return $str;
     }
 
     /**

@@ -76,7 +76,7 @@ class cms extends controller
 			$this->_objCategories = & $this->newObject('dbcategories', 'cmsadmin');
 			$this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
 			$this->_objUtils = & $this->newObject('cmsutils', 'cmsadmin');
-			$this->_objICal = & $this->newObject('icalendar', 'ical');
+			//$this->_objICal = & $this->newObject('icalendar', 'ical');
         
         }catch (Exception $e){
        	echo 'Caught exception: ',  $e->getMessage();
@@ -116,8 +116,12 @@ class cms extends controller
 	            	$this->setVar('content', $this->_objUtils->showBody());
 	            	return 'cms_content_tpl.php';
 	            case 'ical':
-	               $this->setVar('content', $this->_objICal->GetCalendar());
-	            	return 'cms_section_tpl.php';
+	               $objBlocks = & $this->newObject('blocks', 'blocks');
+	               //$objBlocks->showBlock('calendar', 'calendar')
+	               $objCal = & $this->newObject('block_calendar', 'calendar');
+	               $this->setVar('content', $objCal->show());
+	               $this->setVar('title', $objCal->title);
+	            	return 'cms_calendar_tpl.php';
 	            
 	
 	        }

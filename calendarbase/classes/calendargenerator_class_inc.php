@@ -109,16 +109,20 @@ class calendargenerator extends object
         # this provides a built in "rounding" feature to generate_calendar()
 
         $day_names = array(); #generate all the day names according to the current locale
+        
 
         if ($this->first_day == 0) {
             $this->objSimpleCal->startweek='sun';
         }
+       
         if ($this->size == 'big') {
             $day_names = $this->objSimpleCal->getDaysAsArray();
-            $extraCss = ' mainTableTOC';
+            $toc = 'TOC';
+            $extraCss = ' mainTable'.$toc;
             $width = 'width="14%"';
         } else {
             $day_names = $this->objSimpleCal->getDaysAsArray('1letter');
+            $toc = '';
             $extraCss = 'mainTable';
             $width = '';
         }
@@ -130,14 +134,14 @@ class calendargenerator extends object
         if ($this->size != 'big') {
             $calendar .= '<thead><th  colspan="7" align="center">'.$this->objSimpleCal->monthFull($this->month).' '.$this->year.'</th></thead>';
         }
-        $calendar .= '<thead class="dayNamesTextTOC">';
+        $calendar .= '<thead class="dayNamesText'.$toc.'">';
 
         foreach($day_names as $d)
         {
-            $calendar .= '<th class="dayNamesRowTOC" '.$width.'>'.$d.'</th>';
+            $calendar .= '<th class="dayNamesRow'.$toc.'" '.$width.'>E</th>';
         }
 
-        $calendar .= "</thead>\n<tr class=\"rowsTOC\">";
+        $calendar .= "</thead>\n<tr class=\"rows'.$toc.'\">";
 
         // Initial Days from previous month
         if($weekday > 0) {
@@ -147,11 +151,14 @@ class calendargenerator extends object
             }
         } // END - Initial Days from previous month
 
+        //return $this->showSimple($day_names, $weekday);
+
         for($day=1,$days_in_month=gmdate('t',$first_of_month); $day<=$days_in_month; $day++,$weekday++)
         {
             if($weekday == 7){
                 $weekday   = 0; // start a new week
-                $calendar .= "</tr>\n<tr class=\"rowsTOC\">";
+                
+                $calendar .= "</tr>\n<tr class=\"rows".$toc."\">";
             }
             if(isset($this->events[$day]) ){
 
@@ -162,14 +169,14 @@ class calendargenerator extends object
                 }
 
                 if ($this->year == date('Y') && $this->month == date('n') && $day == date('j') ){
-                    $cssClass = 's20TOC';
+                    $cssClass = 's20'.$toc;
                 } else {
-                    $cssClass = 's20TOC';
+                    $cssClass = 's20'.$toc;
                 }
                 if ($this->size == 'big') {
-                    $calendar .= '<td class="'.$cssClass.'"><div class="daynumTOC"><a href="#'.$day.'">'.$day.'</div></a>';
+                    $calendar .= '<td class="'.$cssClass.'"><div class="daynum'.$toc.'"><a href="#'.$day.'">'.$day.'</div></a>';
                 } else {
-                    $calendar .= '<td class="'.$cssClass.'">'.$day.'</a>';
+                    $calendar .= '<td class="'.$cssClass.'">'.$day;
                 }
 
                 if (isset($content) && $this->size=='big') {
@@ -178,12 +185,12 @@ class calendargenerator extends object
                 $calendar .= '</td>';
             }
             else if ($this->year == date('Y') && $this->month == date('n') && $day == date('j') ){
-                $calendar .= '<td class="s20TOC"><div class="todayTOC">'.$day.'</div></td>';
+                $calendar .= '<td class="s20'.$toc.'"><div class="today'.$toc.'">'.$day.'</div></td>';
             }
             else {
             	
-            	$cssClass = ($weekday == 0 || $weekday==6) ? 's20TOC0' : 's20TOC'; 
-                $calendar .= '<td class="'.$cssClass.'"><div class="daynumTOC">'.$day.'</div></td>';
+            	$cssClass = ($weekday == 0 || $weekday==6) ? 's20'.$toc.'0' : 's20'.$toc; 
+                $calendar .= '<td class="'.$cssClass.'"><div class="daynum'.$toc.'">'.$day.'</div></td>';
             }
         }
 
@@ -191,13 +198,110 @@ class calendargenerator extends object
         if($weekday != 7) {
             for ($i=0; $i < (7 - $weekday); $i++)
             {
-                $calendar .= '<td class="sOtherTOC">&nbsp;</td>';
+                $calendar .= '<td class="sOther'.$toc.'">&nbsp;</td>';
             }
         }// END - Rest of days from next month
 
         return $calendar."</tr>\n</table>\n";
+        
+       
     }
-
+    
+    /**
+     * Method to show the simple calendar
+     * @return string
+     * @author Wesley Nitsckie
+     * @param 
+     * @param 
+     * @access public
+     */
+    public function showSimple($day_names , $weekday)
+    {
+        
+        $str = '<table class="mainTable" cellspacing="1" cellpadding="0">';
+        $str .= ' <tr>
+          <td class="monthYearText monthYearRow" colspan="7" title="EasyPHPCalendar 6">';
+        $str .='    August 2006';
+        $str .='  </td>
+         </tr>
+         <tr class="dayNamesText">';
+        foreach ($day_names as $d) {
+        	$str .= '<td class="dayNamesRow" width="14%">W</td>';
+        }
+          
+          $str .= '</tr>
+         <tr class="rows" onclick="location.href=\'http://www.easyphpcalendar.com/demo.php\';" style="cursor: pointer;">';
+          if($weekday > 0) {
+            for ($i=0; $i < $weekday; $i++)
+            {
+                $str .= '<td class="sOther">&nbsp;</td>';
+            }
+        }
+          $str .='
+          <td class="s2">1</td>
+          <td class="s2">2</td>
+        
+          <td class="s2">3</td>
+          <td class="s2">4</td>
+          <td class="s200">5</td>
+        </tr>
+         <tr class="rows" onclick="location.href=\'http://www.easyphpcalendar.com/demo.php\';" style="cursor: pointer;">
+          <td class="s22">6</td>
+          <td class="s22">7</td>
+        
+          <td class="s22">8</td>
+          <td class="s2">9</td>
+          <td class="s24">10</td>
+          <td class="s23">11</td>
+          <td class="s23">12</td>
+        </tr>
+         <tr class="rows" onclick="location.href=\'http://www.easyphpcalendar.com/demo.php\';" style="cursor: pointer;">
+        
+          <td class="s23">13</td>
+          <td class="s23">14</td>
+          <td class="s23">15</td>
+          <td class="s23">16</td>
+          <td class="s23">17</td>
+          <td class="s2">18</td>
+        
+          <td class="s200">19</td>
+        </tr>
+         <tr class="rows" onclick="location.href=\'http://www.easyphpcalendar.com/demo.php\';" style="cursor: pointer;">
+          <td class="s200">20</td>
+          <td class="s2">21</td>
+          <td class="s2">22</td>
+          <td class="s22 today">23</td>
+        
+          <td class="s2">24</td>
+          <td class="s2">25</td>
+          <td class="s200">26</td>
+        </tr>
+         <tr class="rows" onclick="location.href=\'http://www.easyphpcalendar.com/demo.php\';" style="cursor: pointer;">
+          <td class="s200">27</td>
+          <td class="s2">28</td>
+        
+          <td class="s2">29</td>
+          <td class="s2">30</td>
+          <td class="s22">31</td>
+          <td class="sOther">1</td>
+          <td class="sOther">2</td>
+        </tr>
+         <tr class="rows" onclick="location.href=\'http://www.easyphpcalendar.com/demo.php\';" style="cursor: pointer;">
+        
+          <td class="sOther">3</td>
+          <td class="sOther">4</td>
+          <td class="sOther">5</td>
+          <td class="sOther">6</td>
+          <td class="sOther">7</td>
+          <td class="sOther">8</td>
+        
+          <td class="sOther">9</td>
+        </tr>
+        </table>';
+        
+        return $str;
+            
+    }
 
 }
 ?>

@@ -4,6 +4,8 @@
 $objFeatureBox = $this->newObject('featurebox', 'navigation');
 $objBlocks = & $this->newObject('blocks', 'blocks');
 $objLucene = & $this->newObject('results', 'lucene');
+$objModule = & $this->newObject('modules', 'modulecatalogue');
+
 
 /******************* BEGIN RIGHTSIDE BLOCKS ******************************/
 // Right Column initialize
@@ -24,7 +26,21 @@ $rightSideColumn .= $objBlocks->showBlock('scholarg', 'websearch');
 $rightSideColumn .= $objBlocks->showBlock('wikipedia', 'websearch');
 //Put a dictionary lookup
 $rightSideColumn .= $objBlocks->showBlock('dictionary', 'dictionary');
+
+
 /******************* END  RIGHTSIDE BLOCKS ******************************/
+
+
+
+
+/*****************LEFT SIDE ***************************************/
+//Navigation
+$leftSide = $this->getSectionMenu();
+//simple calendar
+//$leftSide .= '<br />'. $objBlocks->showBlock('calendar', 'calendar');
+
+
+/***************** END OF LEFT SIDE *******************************/
 
 if(!$this->getParam('query') == '')
 {
@@ -34,11 +50,10 @@ if(!$this->getParam('query') == '')
     $searchResults = '';
 }
 
-$cssLayout =& $this->newObject('csslayout', 'htmlelements');
+       $cssLayout =& $this->newObject('csslayout', 'htmlelements');
        $cssLayout->setNumColumns(3);
-       $cssLayout->setLeftColumnContent($this->getSectionMenu());
+       $cssLayout->setLeftColumnContent($leftSide);
        $cssLayout->setMiddleColumnContent($this->getBreadCrumbs().$this->getContent().$searchResults.$this->footerStr);
        $cssLayout->setRightColumnContent($rightSideColumn);
        echo $cssLayout->show(); 
 
-?>

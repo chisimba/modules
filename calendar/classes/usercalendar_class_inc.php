@@ -45,7 +45,7 @@ class usercalendar extends object
         
         $events2 = $this->objCalendar->getEvents('user', $objUser->userId(), (date('Y-m-').'01'), NULL, 10);
         
-        $title = '<h1>'.$this->objLanguage->languageText('word_calendar').'</h1>';
+        $title ='';// '<h1>'.$this->objLanguage->languageText('word_calendar').'</h1>';
         
         $eventsList = $this->objCalendar->generateSmallListing ($events2, 'calendar');
         
@@ -53,12 +53,12 @@ class usercalendar extends object
         
         $uri = $this->uri(NULL, 'calendar');
         
-        $link = '<br /><p><a href="'.$uri.'">'.$this->objLanguage->languageText('word_calendar').'</a></p>';
+        $link ='';// '<br /><p><a href="'.$uri.'">'.$this->objLanguage->languageText('word_calendar').'</a></p>';
         
-        return $title.' '.$calendar.'<br /><br />'.$eventsList.$link ;
+        return $title.' '.$calendar.'<br />'.$eventsList.$link ;
     }
 
-
+    
 
 } #end of class
 ?>
