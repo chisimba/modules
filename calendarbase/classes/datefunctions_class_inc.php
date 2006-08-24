@@ -39,9 +39,14 @@ class datefunctions extends object
     * @param date $givenDate Date to convert
     * @return string Timestamp of the date
     */
-    public function convertDateToTimestamp ($givenDate)
+    public function convertDateToTimestamp ($givenDate = NULL)
     {
+        if(is_null($givenDate))
+        {
+            return $givenDate;
+        }
         $date = explode('-',$givenDate);
+       
         return mktime('0','0','0',$date[1], $date[2], $date[0]);
     }
 
