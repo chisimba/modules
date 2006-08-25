@@ -150,7 +150,7 @@ for($i = 0; $i < 4; $i++){
 		
 		$contactType = $this->studentinfo->studentAddress($stdnum);
         $link->link= $typesnames[$i];
-		$datype .=$link->show()."<br>"; 
+		$datype .=$link->show()."</br>";
 	}
 }
 
@@ -207,8 +207,8 @@ echo $this->contentNav->addToLayer();
 
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(3);
-$cssLayout->setLeftColumnContent($left);
-$cssLayout->setRightColumnContent($right);
+$cssLayout->setLeftColumnContent($right);
+$cssLayout->setRightColumnContent($left);
 $cssLayout->setMiddleColumnContent($content);
 
 echo $cssLayout->show();

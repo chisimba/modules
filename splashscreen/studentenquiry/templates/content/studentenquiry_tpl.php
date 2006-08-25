@@ -106,8 +106,8 @@ $this->footerNav->str = $bottom;
 
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(3);
-$cssLayout->setLeftColumnContent($left);
-$cssLayout->setRightColumnContent($right);
+$cssLayout->setLeftColumnContent($right);
+$cssLayout->setRightColumnContent($left);
 $cssLayout->setMiddleColumnContent($content);
 
 echo $cssLayout->show();

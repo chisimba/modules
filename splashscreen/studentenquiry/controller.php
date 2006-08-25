@@ -49,7 +49,7 @@ class studentenquiry extends controller
 		switch($action){
 			case null: 
 			case 'ok':
-    $this->setVarByRef('stdinfo',$this->studentinfo->search());
+                $this->setVarByRef('stdinfo',$this->studentinfo->search());
 				return 'studentlist_tpl.php';
     //$this->setVarByRef('stdinfo',$this->studentinfo->getAllStudents());
 				//return 'studentlist_tpl.php';

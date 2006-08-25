@@ -154,7 +154,7 @@ if(is_array($financer) and count($financer)>  0){
 
 		$table->startRow();
 		$table->addCell('<b>Contact Details');
-		$table->addCell("(Tel)  &nbsp;".$data['telephone']." <br>(Cell) &nbsp;".$data['cellphone']);
+		$table->addCell("(Tel)  &nbsp;".$data['telephone']." </br>(Cell) &nbsp;".$data['cellphone']);
 		$table->endRow();
 	}
 }

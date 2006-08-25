@@ -96,7 +96,7 @@ for($j = 0; $j < count($stcrse); $j++)
    if($year == $stcrse[$j]->YEAR){
      $course = $this->studentinfo->getCourseDesc($stcrse[$j]->CRSCDE);
      $details .= "Description: " . $course[0]->LNGDSC;
-     $details .= "<br>Year: ".$year."<p>";
+     $details .= "</br>Year: ".$year."<p>";
    }
 }
 $years = array();
