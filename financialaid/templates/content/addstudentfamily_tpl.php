@@ -10,14 +10,10 @@ $table->cellspacing = 2;
 $table->cellpadding = 2;
 
 $firstname = new textinput('firstname');
-$relationship = new textinput('relationship');
-$dependantReason = new textinput('dependantreason');
-$hasIncome = new dropdown('hasIncome');
-$hasIncome->addOption('yes', $objLanguage->languagetext('word_yes'));
-$hasIncome->addOption('no', $objLanguage->languagetext('word_no'));
-$incomeType = new textinput('incomeType');
-$incomeAmount = new textinput('incomeAmount');
-$category = new textinput('category');
+$institution = new textinput('institution');
+$course = new textinput('course');
+$year = new textinput('year');
+$stdnum = new textinput('stdnum');
 
 $addbut= new button('add');
 $addbut->setToSubmit();
@@ -28,42 +24,30 @@ $cancelbut->setToSubmit();
 $cancelbut->setValue($objLanguage->languagetext('word_cancel'));
 
 
-
 $table->startRow();
 $table->addCell($objLanguage->languagetext('mod_financialaid_firstname','financialaid'));
 $table->addCell($firstname->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_howrelated','financialaid'));
-$table->addCell($relationship->show());
+$table->addCell($objLanguage->languagetext('mod_financialaid_institution','financialaid'));
+$table->addCell($institution->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_dependantreason','financialaid'));
-$table->addCell($dependantReason->show());
+$table->addCell($objLanguage->languagetext('word_course'));
+$table->addCell($course->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_category','financialaid'));
-$table->addCell($category->show());
+$table->addCell($objLanguage->languagetext('mod_financialaid_yearofstudy','financialaid'));
+$table->addCell($year->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_hasincome','financialaid'));
-$table->addCell($hasIncome->show());
+$table->addCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid'));
+$table->addCell($stdnum->show());
 $table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_incometype','financialaid'));
-$table->addCell($incomeType->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_incomeamount','financialaid'));
-$table->addCell($incomeAmount->show());
-$table->endRow();
-
 
 $table->startRow();
 $table->addCell($addbut->show());
@@ -71,11 +55,10 @@ $table->addCell($cancelbut->show());
 $table->endRow();
 
 
-
 $content = "<center>".$details."  ".$table->show()."</center>";
 
 $objForm = new form('theform');
-$objForm->setAction($this->uri(array('action'=>'savedependant')));
+$objForm->setAction($this->uri(array('action'=>'savestudentfamily')));
 $objForm->setDisplayType(2);
 
 $objForm->addToForm($content);

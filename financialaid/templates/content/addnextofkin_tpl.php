@@ -34,92 +34,92 @@ $maritalSts->addOption('1','Married');
 $maritalSts->addOption('2','Single');
 $maritalSts->addOption('3','Divorced');
 
-$ok= new button('next');
-$ok->setToSubmit();
-$ok->setValue('Next');
+$addbut= new button('add');
+$addbut->setToSubmit();
+$addbut->setValue($objLanguage->languagetext('word_add'));
 
-$cancel= new button('cancel');
-$cancel->setToSubmit();
-$cancel->setValue('Cancel');
+$cancelbut= new button('cancel');
+$cancelbut->setToSubmit();
+$cancelbut->setValue($objLanguage->languagetext('word_cancel'));
+
 
 
 $table->startRow();
-$table->addCell('ID Number');
+$table->addCell($objLanguage->languagetext('mod_financialaid_idnumber','financialaid'));
 $table->addCell($idNum->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell('Surname');
+$table->addCell($objLanguage->languagetext('mod_financialaid_surname','financialaid'));
 $table->addCell($surname->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell('First Names');
+$table->addCell($objLanguage->languagetext('mod_financialaid_firstnames','financialaid'));
 $table->addCell($firstname->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell('Relationship');
+$table->addCell($objLanguage->languagetext('mod_financialaid_relationship','financialaid'));
 $table->addCell($relationship->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell('Home Address');
+$table->addCell($objLanguage->languagetext('mod_financialaid_homeaddress','financialaid'));
 $table->addCell($straddress->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell('Suburb');
+$table->addCell($objLanguage->languagetext('mod_financialaid_suburb','financialaid'));
 $table->addCell($suburb->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell('City');
+$table->addCell($objLanguage->languagetext('mod_financialaid_city','financialaid'));
 $table->addCell($city->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell('Postcode');
+$table->addCell($objLanguage->languagetext('mod_financialaid_postcode','financialaid'));
 $table->addCell($postcode->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell('Marital Status');
+$table->addCell($objLanguage->languagetext('mod_financialaid_maritalsts','financialaid'));
 $table->addCell($maritalSts->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell('Spouse');
+$table->addCell($objLanguage->languagetext('mod_financialaid_spouse','financialaid'));
 $table->addCell($spouse->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell('Occupation');
+$table->addCell($objLanguage->languagetext('mod_financialaid_occupation','financialaid'));
 $table->addCell($occupation->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell('Employer\'s Details');
+$table->addCell($objLanguage->languagetext('mod_financialaid_empdetails','financialaid'));
 $table->addCell($employerDetails->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell('Employer\'s Tel Number');
+$table->addCell($objLanguage->languagetext('mod_financialaid_emptelno','financialaid'));
 $table->addCell($employerTelNo->show());
 $table->endRow();
 
-
-
 $table->startRow();
-$table->addCell($ok->show());
-$table->addCell($cancel->show());
+$table->addCell($addbut->show());
+$table->addCell($cancelbut->show());
 $table->endRow();
+
 
 
 $content = "<center>".$details."  ".$table->show()."</center>";
 
 $objForm = new form('theform');
-$objForm->setAction($this->uri(array('action'=>'adddependant')));
+$objForm->setAction($this->uri(array('action'=>'savenextofkin')));
 $objForm->setDisplayType(2);
 
 $objForm->addToForm($content);

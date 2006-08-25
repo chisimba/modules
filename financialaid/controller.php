@@ -81,6 +81,19 @@ class financialaid extends controller
                  return 'addnextofkin_tpl.php';
             case 'adddependant':
                  return 'adddependant_tpl.php';
+            case 'addparttimejob':
+                 return 'addparttimejob_tpl.php';
+            case 'addstudentfamily':
+                 return 'addstudentfamily_tpl.php';
+                 
+            case 'saveapplication':
+                 return 'studentinfo_tpl.php';
+            case 'savenextofkin':
+                 return 'studentinfo_tpl.php';
+            case 'savedependant':
+                 return 'studentinfo_tpl.php';
+            case 'saveparttimejob':
+                 return 'studentinfo_tpl.php';
             //----------------
             //Test action
             case 'test':

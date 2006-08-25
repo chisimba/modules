@@ -13,64 +13,74 @@ $stdNum = new textinput('stdnum');
 $idNum = new textinput('idNum');
 $surname = new textinput('surname');
 $firstname = new textinput('firstname');
-$gender = new textinput('firstname');
+$gender = new dropdown('gender');
+$gender->addOption('1','Male');
+$gender->addOption('2','Female');
+
 $SACitizen = new dropdown('saCitizen');
-$SACitizen->addOption('yes','Yes');
-$SACitizen->addOption('no','No');
+$SACitizen->addOption('yes',$objLanguage->languagetext('word_yes'));
+$SACitizen->addOption('no',$objLanguage->languagetext('word_no'));
 
-$marticalSts = new textinput('firstname');
-$supportingSelf = new dropdown('firstname');
-$supportingSelf->addOption('yes','Yes');
-$supportingSelf->addOption('no','No');
+$maritalSts = new textinput('maritalsts');
+$supportingSelf = new dropdown('supportingself');
+$supportingSelf->addOption('yes',$objLanguage->languagetext('word_yes'));
+$supportingSelf->addOption('no',$objLanguage->languagetext('word_no'));
 
-$ok= new button('next');
-$ok->setToSubmit();
-$ok->setValue('Next');
+$addbut= new button('add');
+$addbut->setToSubmit();
+$addbut->setValue($objLanguage->languagetext('word_add'));
 
-$cancel= new button('cancel');
-$cancel->setToSubmit();
-$cancel->setValue('Cancel');
+$cancelbut= new button('cancel');
+$cancelbut->setToSubmit();
+$cancelbut->setValue($objLanguage->languagetext('word_cancel'));
+
 
 $table->startRow();
-$table->addCell('Student Number');
+$table->addCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid'));
 $table->addCell($stdNum->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell('ID Number');
+$table->addCell($objLanguage->languagetext('mod_financialaid_idnumber','financialaid'));
 $table->addCell($idNum->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell('Surname');
+$table->addCell($objLanguage->languagetext('mod_financialaid_surname','financialaid'));
 $table->addCell($surname->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell('First Names');
+$table->addCell($objLanguage->languagetext('mod_financialaid_firstnames','financialaid'));
 $table->addCell($firstname->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell('Are you a SA citizen?');
+$table->addCell($objLanguage->languagetext('mod_financialaid_gender','financialaid'));
+$table->addCell($gender->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objLanguage->languagetext('mod_financialaid_sacitizen','financialaid'));
 $table->addCell($SACitizen->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell('Have you been supporting yourself financially for a period longer than 3 years?');
+$table->addCell($objLanguage->languagetext('mod_financialaid_supportingself','financialaid'));
 $table->addCell($supportingSelf->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($ok->show());
-$table->addCell($cancel->show());
+$table->addCell($addbut->show());
+$table->addCell($cancelbut->show());
 $table->endRow();
+
 
 
 $content = "<center>".$details."  ".$table->show()."</center>";
 
 $objForm = new form('theform');
-$objForm->setAction($this->uri(array('action'=>'addnextofkin')));
+$objForm->setAction($this->uri(array('action'=>'saveapplication')));
 $objForm->setDisplayType(2);
 
 $objForm->addToForm($content);
