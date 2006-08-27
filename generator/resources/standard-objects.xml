@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- This file is a code generation template for Chisimba standard objects -->
+<!-- 
+This file is a code generation template for Chisimba standard objects. 
+Its purpose is to allow objects to be added by including a parsecode
+that references them. For example to add the language object just put
+...WORKING HERE..INCOMPLETE -->
 <chisimba_standard_objects>
 
 	<object>

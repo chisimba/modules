@@ -32,7 +32,7 @@ class gencontroller extends abgenerator implements ifgenerator
     
     /**
      * 
-     * Standard init, calls parent init method to instantiate user
+     * Standard init, calls parent init method to instantiate user and other objects
      * 
      */
     function init()
@@ -46,39 +46,21 @@ class gencontroller extends abgenerator implements ifgenerator
 	function generate($className)
 	{
 		//Read all the required info into variables
-		$moduleCode = $this->getParam('modulecode', '{UNSPECIFIED}');
-		$moduleName = $this->getParam('modulename', '{UNSPECIFIED}');
-		$moduleDescription = $this->getParam('moduledescription', '{UNSPECIFIED}');
         $copyright = $this->getParam('copyright', '{UNSPECIFIED}');
         $databaseclass = $this->getParam('databaseclass', '{UNSPECIFIED}');
-		$purpose = $moduleName . '\n' . $moduleDescription;
 		//Serialize the variables to the session
-		$this->setSession('modulecode', $moduleCode);
-		$this->setSession('modulename', $moduleName);
-	    $this->setSession('moduledescription', $moduleDescription);
 	    $this->setSession('copyright', $copyright);
-	    $this->setSession('purpose', $purpose); 
 	    $this->setSession('databaseclass', $databaseclass); 
 	    
 	
-		//Off we go to prepare the class from the XML		
-        $this->prepareClass();
-        //Set up the class with the name specified by module code
-        $this->setupClass($moduleCode, 'controller');
-        //Insert the standard properties for holding objects
-        $this->classCode = str_replace('{PROPERTIES}', 
-          $this->getStandardObjectDefinitions(), $this->classCode);
-        //Insert the module name and description
-        $this->classCode = str_replace('{PURPOSE}', $purpose, $this->classCode);
-        //Insert the author
-        $this->classCode = str_replace('{AUTHOR}', $this->getAuthor(), $this->classCode);
-        //Insert the package name
-        $this->classCode = str_replace('{PACKAGE}', $moduleCode, $this->classCode);
+		//Load the skeleton file for the class from the XML		
+        $this->loadSkeleton('controller');
+        //Insert the properties
+        $this->insertItem('controller', 'properties');
+        //Insert the properties
+        $this->insertItem('controller', 'methods');
         //Insert the copyright
         $this->classCode = str_replace('{COPYRIGHT}', $copyright, $this->classCode);
-        //Insert the default controller methods
-        $this->classCode = str_replace('{METHODS}', $this->getDefaultMethods() 
-          . "\n{SPECIALMETHODS}\n", $this->classCode);
          //Insert the standard methods to init()
         $this->classCode = str_replace('{OBJECTS}', $this->initObjects, $this->classCode);
         //Insert the database classname
@@ -94,31 +76,6 @@ class gencontroller extends abgenerator implements ifgenerator
 	
 
 	
-    /**
-    * 
-    * Method to load an XML definition file to extract the method 
-    * code. The XML file is named 
-    * and is structured as: controller-methods.xml located in the
-    * resources folder of this module. It uses simplexml_load_file
-    * to do the work.
-    * <method>
-    *  <name>
-    *  </name>
-    *  <code>
-    *  </code>
-    * </method>
-    * 
-    */
-    function getDefaultMethods()
-    {
-        $ret="";
-        $xml = simplexml_load_file("modules/generator/resources/controller-methods.xml"); 
-        //Loop through and include the code
-        foreach($xml->method as $method) {
-            $ret .= $method->code;
-        }
-        return $ret;
-    }
     
     /**
     * 
