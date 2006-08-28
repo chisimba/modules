@@ -4,6 +4,7 @@ $right = $right->show($this->getParam('module','studentenquiry'));
 
 $left =& $this->getObject('financialaidleftblock');
 $left = $left->show();
+$details = "<h2>".$objLanguage->languagetext('mod_financialaid_addnextofkin','financialaid')."</h2>";
 
 $table =& $this->newObject('htmltable','htmlelements');
 $table->cellspacing = 2;

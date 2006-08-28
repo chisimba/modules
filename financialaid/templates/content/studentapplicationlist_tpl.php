@@ -15,6 +15,7 @@ $centersearch = $centersearch->show($this->getParam('module','studentenquiry'));
 
 $left =& $this->getObject('financialaidleftblock');
 $left = $left->show();
+$details = "<h2>".$objLanguage->languagetext('mod_financialaid_searchapp','financialaid')."</h2>";
 
 
 //echo "$numrecords --- $allrecords";
@@ -196,7 +197,7 @@ if ($foundStudents == false) {
         $records = '';
 }
 
-$content = "<center>".$pagelinks." ".$content . "</center>";
+$content = "<center>".$details.$pagelinks." ".$content . "</center>";
 $left = $left."<br />".$records;
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(3);

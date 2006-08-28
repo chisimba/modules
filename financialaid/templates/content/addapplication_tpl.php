@@ -8,7 +8,7 @@ $left = $left->show();
 $table =& $this->newObject('htmltable','htmlelements');
 $table->cellspacing = 2;
 $table->cellpadding = 2;
-
+$details = "<h2>".$objLanguage->languagetext('mod_financialaid_addapp','financialaid')."</h2>";
 $appNum = new textinput('appnum');
 $stdNum = new textinput('stdnum');
 $idNum = new textinput('idNum');
