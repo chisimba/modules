@@ -32,7 +32,8 @@ if($this->getParam('id') == '')
 	$menuTextInput->value = '';
 	$introInput->value = '';
 	$published->setChecked(TRUE);
-	
+	$contentId = '';
+	$arrContent = null;
 	if( $this->getParam('frontpage') == 'true')
 	{
 	   $frontPage->setChecked(TRUE);
