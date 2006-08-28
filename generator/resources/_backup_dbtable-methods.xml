@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file is a code generation template for Chisimba dbtable methods -->
+<chisimba_dbtable_methods>
+
+<method>
+  <name>declareproperties</name>
+  <code>
+    /**
+    *
+    * @param string object $objUser String to hold the user object
+    *
+    */
+    public $objUser;
+  </code>
+</method>
+
+<method>
+  <name>init</name>
+  <code>
+    /**
+    *
+    * Constructor for the module dbtable class for {DATABASETABLE}
+    *
+    */
+    public function init()
+    {
+        parent::init('{DATABASETABLE}');
+        //Instantiate the user object
+        $this->objUser = $this->getObject('user', 'security');
+    }
+  </code>
+</method>
+
+<method>
+  <name>saveData</name>
+  <code> 
+    /**
+    *
+    * Save method for {DATABASETABLE}
+    * @param string $mode: edit if coming from edit, add if coming from add
+    *
+    */
+    public function saveData($mode) 
+    {
+{SAVECODE}
+    }
+  </code>
+</method>
+
+<method>
+  <name>getforedit</name>
+  <code>
+    /**
+    * Method to retrieve the data for edit and prepare the vars for
+    * the edit template.
+    * 
+    * @param string $mode The mode should be edit or add 
+    */
+    public function getForEdit()
+    {
+        $order = $this->getParam("order", NULL);
+        // retrieve the group ID from the querystring
+        $keyvalue=$this->getParam("id", NULL);
+        if (!$keyvalue) {
+          die($this->objLanguage->languageText("modules_badkey").": ".$keyvalue); 
+        }
+        // Get the data for edit
+        $key="id";
+        return $this->getRow($key, $keyvalue);
+    }
+  </code>
+</method>
+
+<method>
+  <name>deleterecord</name>
+  <code>
+    /**
+    *
+    * Delete a record from {DATABASETABLE}. Use cautiously as it can delete
+    * all records by accident if the wrong key is used.
+    *
+    * @param string $key The key of the record to delete
+    * @param string $keyValue The value of the key where deletion should take place
+    *
+    */
+    public function deleteRecord($key, $keyValue)
+    {
+       $this->delete($key, $keyValue);
+    }
+  </code>
+</method>
+
+<!--
+
+<method>
+  <name>
+  </name>
+  <code>
+  </code>
+</method>
+
+
+<method>
+  <name>
+  </name>
+  <code>
+  </code>
+</method>
+-->
+
+</chisimba_dbtable_methods>

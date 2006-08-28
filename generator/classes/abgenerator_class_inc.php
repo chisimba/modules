@@ -103,7 +103,7 @@ abstract class abgenerator extends object
     public function loadSkeleton($classItem)
     {
         //Load the XML class template
-        $xml = simplexml_load_file("modules/generator/resources/" . $classItem . "class_skeleton.xml"); 
+        $xml = simplexml_load_file("modules/generator/resources/" . $classItem . "_class_skeleton.xml"); 
         //Loop through and include the code
         foreach($xml->item as $item) {
             $this->classCode .= $item->code;
@@ -131,18 +131,18 @@ abstract class abgenerator extends object
      * @access Private
      * 
      */
-     private function insertItem($classItem, $itemType)
+     public function insertItem($classItem, $itemType)
      {
          //Load the XML class template
         $xml = simplexml_load_file("modules/generator/resources/" 
-          . $classItem . "class_" . $itemType . ".xml");
+          . $classItem . "_class_" . $itemType . ".xml");
         //Initialize the string that we are reading into
         $classInsert=""; 
         //Loop through and include the code
         foreach($xml->item as $item) {
             $classInsert .= $item->code;
         }
-        $pattern = "{" . str2upper($itemType) . "}";
+        $pattern = "{" . strtoupper($itemType) . "}";
         //Insert the classProperties in place of the parsecode {PROPERTIES}
         $this->classCode = str_replace($pattern, $classInsert, $this->classCode);
      }
@@ -156,7 +156,7 @@ abstract class abgenerator extends object
     * @access Private
     * 
     */
-    private function author()
+    public function author()
     {
         $author = $this->objUser->fullName();
         $this->classCode = str_replace("{AUTHOR}", $author, $this->classCode);
@@ -171,7 +171,7 @@ abstract class abgenerator extends object
     * @access Private
     * 
     */
-    private function modulecode()
+    public function modulecode()
     {
     	//Get the module code from parameter
         $moduleCode = $this->getParam('modulecode', NULL);
@@ -195,7 +195,7 @@ abstract class abgenerator extends object
     * @access Private
     * 
     */
-    private function modulename()
+    public function modulename()
     {
     	//Get the module code from parameter
         $moduleName = $this->getParam('modulename', NULL);
@@ -219,9 +219,9 @@ abstract class abgenerator extends object
     * @access Private
     * 
     */
-    private function moduledescription()
+    public function moduledescription()
     {
-    	//Get the module code from parameter
+    	//Get the module description from parameter
         $moduleDescription = $this->getParam('moduledescription', NULL);
         //If there is no parameter, check the session cookies
         if ($moduleDescription == NULL) {
@@ -234,6 +234,30 @@ abstract class abgenerator extends object
         $this->classCode = str_replace("{MODULEDESCRIPTION}", $moduleDescription, $this->classCode);
         return TRUE;
     }
+    
+    /**
+    * 
+    * Method to return the copyright and insert it into the code of the 
+    * class being built in place of the {MODULENAME} parsecode
+    *  
+    * @access Private
+    * 
+    */
+    public function copyright()
+    {
+        //Get the module sopyright from parameter
+        $copyRight = $this->getParam('copyright', NULL);
+        //If there is no parameter, check the session cookies
+        if ($copyRight == NULL) {
+            $copyRight = $this->getSession('copyright', '{COPYRIGHT_UNSPECIFIED}');
+        } else {
+            //Serialize the variable to the session since we are geting it from a param
+			$this->setSession('copyright', $copyRight);
+        }
+        //Insert the copyright
+        $this->classCode = str_replace('{COPYRIGHT}', $copyRight, $this->classCode);
+    }
+            
 
     
 
@@ -274,7 +298,7 @@ abstract class abgenerator extends object
     * Format the code for display as HTML
     * 
     */
-	protected function prepareForDump()
+	public function prepareForDump()
 	{
 		$this->classCode = htmlentities($this->classCode);
 	    $this->classCode = str_replace(' ', '&nbsp;', $this->classCode);
@@ -290,7 +314,7 @@ abstract class abgenerator extends object
 	 * @param string $methodName The name of the method to extract from the class
 	 * 
 	 */
-	function getMethod($classItem, $methodName)
+	public function getMethod($classItem, $methodName)
 	{
 	    if ($this->methodXml == NULL || $this->methodXML="") {
 	    	$this->methodXml = simplexml_load_file("modules/generator/resources/" 
@@ -299,49 +323,7 @@ abstract class abgenerator extends object
 	    $xPathParam = "//item[@name = '" . $methodName . "'";
 	    $ret = $xml->xpath($xPathParam);
 	}
-    
-    ///------------old methods to be deprecated
-    
-    
-    /**
-    * 
-    * Method to setup the class definition line of a templated class
-    * by replacing {CLASS} {EXTENDS} {IMPLEMENTS} in the template
-    * 
-    * @param string $classname the Name of the class we are starting
-    * @param string $classType the type of class to create with valid class
-    *    types being controller, view, helper and model.
-    * @return string $ret the class code
-    */
-    function setupClass($className, $classType = NULL, $classImplements=NULL)
-    {
-        //Insert the class name
-        $this->classCode = str_replace('{CLASS}', $className, $this->classCode);
-        //Switchboard based on class type
-        switch ($classType) {
-            case NULL:
-            case "view":
-            case "helper":
-                $this->classCode = str_replace('{EXTENDS}', '', $this->classCode);
-                break;
-            case "controller":
-                $this->classCode = str_replace('{EXTENDS}', 'extends controller', $this->classCode);
-                break;
-            case "model":
-                $this->classCode = str_replace('{EXTENDS}', 'extends dbTable', $this->classCode);
-                break;
-            default:
-                $this->classCode = str_replace('{EXTENDS}', '', $this->classCode);
-                break;
-        } #switch
-        if ($classImplements=NULL) {
-            $this->classCode = str_replace('{IMPLEMENTS}', '', $this->classCode);
-        } else {
-            $this->classCode = str_replace('{IMPLEMENTS}', $classImplements, $this->classCode);
-        }
-        return TRUE;
-    } 
-
+	
    
     /**
      * 
@@ -369,6 +351,8 @@ abstract class abgenerator extends object
      * Method to insert the logger code into the init statement
      * by replacing the {LOGGER} template code.
      * 
+     * @TODO bring this in line with the new approach ===================================================
+     * 
      */
     public function initLogger()
     {
@@ -379,37 +363,6 @@ abstract class abgenerator extends object
         $this->classCode = str_replace("{LOGGER}", $str, $this->classCode);
         return TRUE;
     }
-
-    /**
-    * Method to set the values of protected/private properties. Note that it 
-    * prevents the sloppy approach of adding poperties that are not defined.
-    * 
-    * @param string $itemName The name of the property whose value is being set.
-    * @param string $itemValue The value of the property being set
-    */
-    public function setValue($itemName, $itemValue)
-    {
-        if (property_exists($itemName, $this)) {
-            $this->$itemName = $itemValue;
-            return true;
-        } else {
-            return false;
-        } 
-    } 
-
-    /**
-    * Method to set the values of protected/private properties
-    * 
-    * @param string $itemName The name of the property whose value is being retrieved.
-    */
-    public function getValue($itemName)
-    {
-        if (isset($this->$itemName)) {
-            return $this->$itemName;
-        } else {
-            return null;
-        } 
-    } 
     
     /**
     * 
@@ -422,9 +375,5 @@ abstract class abgenerator extends object
     {
         return $this->objUser->fullName();
     }
-
-
-    
 } 
-
 ?>

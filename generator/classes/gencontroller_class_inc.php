@@ -45,12 +45,7 @@ class gencontroller extends abgenerator implements ifgenerator
 	 */
 	function generate($className)
 	{
-		//Read all the required info into variables
-        $copyright = $this->getParam('copyright', '{UNSPECIFIED}');
-        $databaseclass = $this->getParam('databaseclass', '{UNSPECIFIED}');
-		//Serialize the variables to the session
-	    $this->setSession('copyright', $copyright);
-	    $this->setSession('databaseclass', $databaseclass); 
+
 	    
 	
 		//Load the skeleton file for the class from the XML		
@@ -59,13 +54,13 @@ class gencontroller extends abgenerator implements ifgenerator
         $this->insertItem('controller', 'properties');
         //Insert the properties
         $this->insertItem('controller', 'methods');
+        //Insert the module description
+        $this->moduledescription();
         //Insert the copyright
-        $this->classCode = str_replace('{COPYRIGHT}', $copyright, $this->classCode);
-         //Insert the standard methods to init()
-        $this->classCode = str_replace('{OBJECTS}', $this->initObjects, $this->classCode);
-        //Insert the database classname
-        $this->classCode = str_replace('{DATACLASS}', $databaseclass, $this->classCode);
-        
+        $this->copyright();
+        //Insert the database class
+        $this->databaseclass();
+
         //Add code for logging
         $this->initLogger();
         //Clean up unused template tags
@@ -74,9 +69,17 @@ class gencontroller extends abgenerator implements ifgenerator
 	    return $this->classCode;
 	}
 	
-
+	function databaseclass()
+	{
+	    //Read the database class
+        $databaseclass = $this->getParam('databaseclass', '{UNSPECIFIED}');
+		//Serialize the variables to the session
+	    $this->setSession('databaseclass', $databaseclass); 
+        //Insert the database classname
+        $this->classCode = str_replace('{DATACLASS}', $databaseclass, $this->classCode);
+	}
 	
-    
+    //OLD CRUD TO BE CLEANED UP
     /**
     * 
     * Method to read the standard objects to build in init() from
@@ -86,7 +89,7 @@ class gencontroller extends abgenerator implements ifgenerator
     * 
     * @return string $ret The property definitions
     * 
-    */
+    *
     function getStandardObjectDefinitions()
     {
         $ret="";
@@ -99,7 +102,7 @@ class gencontroller extends abgenerator implements ifgenerator
               . "@var string object \$" . $object->name
               . "String to hold the instance of the object " 
               . $object->name . "\n    * which is " 
-              . $object->comment . ".\n    *\n    */\n" 
+              . $object->comment . ".\n    *\n    *====================================================================/\n" 
               . "    public \$" . $object->name . ";";
             //Set up an array to be used for instantiating the objects in init()
             $this->initObjects .= "        //" . $object->comment
@@ -109,7 +112,7 @@ class gencontroller extends abgenerator implements ifgenerator
             
         }
         return $ret;
-    }
+    }*/
 
 }
 ?>

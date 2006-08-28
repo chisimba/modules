@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- This file is a code generation template for Chisimba controller class methods -->
+<!-- This file is a code generation template for Chisimba controller methods -->
 <chisimba_controller_methods>
 
-<item name="init" type="method">
-  <description>Code to generate the init() connstructor for the controller</description>
+<method>
+  <name>
+  	init
+  </name>
   <code>
     /**
     *
@@ -12,16 +14,17 @@
     */
     public function init()
     {
-        //Get an instance of the data access class for this module
-        $this->{DATACLASS} = $this->getObject('{DATACLASS}');
-{OBJECTS}
+{OBJECTS}    //Get an instance of the data access class for this module
+	$this->{DATACLASS} = $this->getObject('{DATACLASS}');
 {LOGGER}
     }
   </code>
-</item>
+</method>
 
-<item name="dispatch" type="method">
- <description>Coded to generate the dispatch method for the controller</description>
+<method>
+  <name>
+    dispatch
+  </name>
   <code>
     /**
     * 
@@ -50,10 +53,12 @@
         return $this->$method();
     }
   </code>
-</item>
+</method>
 
-<item name="view" type="method">
-  <description>Coded to generate the view method for the controller</description>
+<method>
+  <name>
+    view
+  </name>
   <code>
     /**
     * 
@@ -70,11 +75,13 @@
         return "main_tpl.php";
     }
   </code>
-</item>
+</method>
 
 
-<item name="edit" type="method">
-    <description>Coded to generate the edit method for the controller</description>
+<method>
+  <name>
+    edit
+  </name>
   <code>
     /**
     * 
@@ -90,10 +97,12 @@
         return 'editform_tpl.php';
     }
   </code>
-</item>
+</method>
 
-<item name="add" type="method">
-    <description>Coded to generate the add method for the controller</description>
+<method>
+  <name>
+    add
+  </name>
   <code>
     /**
     * 
@@ -108,10 +117,12 @@
         return 'editform_tpl.php';
     }
   </code>
-</item>
+</method>
 
-<item name="save" type="method">
-  <description>Coded to generate the save method for the controller</description>
+<method>
+  <name>
+    save
+  </name>
   <code>
     /**
     * 
@@ -130,10 +141,12 @@
     }
     
   </code>
-</item>
+</method>
 
-<item name="delete" type="method">
-  <description>Coded to generate the delete method for the controller</description>
+<method>
+  <name>
+    delete
+  </name>
   <code>
     /**
     * 
@@ -155,12 +168,12 @@
         }
     }
   </code>
-</item>
+</method>
 
-<item name="actionerror" type="method">
-  <description>Coded to generate the actionerror method for the controller, 
-  which is the method called when the action does not correspond to 
-  a method of the controller class.</description>
+<method>
+  <name>
+    actionerror
+  </name>
   <code>
     /**
     * 
@@ -179,12 +192,12 @@
         return 'dump_tpl.php';
     }
   </code>
-</item>
+</method>
 
-<item name="validaction" type="method">
-  <description>Coded to generate the validaction method for the 
-  controller, which is a method to check if a given action is a 
-  valid method</description>
+<method>
+  <name>
+    validaction
+  </name>
   <code>
     /**
     * 
@@ -207,12 +220,12 @@
         }
     }
   </code>
-</item>
+</method>
 
-<item name="getmethod" type="method">
-  <description>Coded to generate the getmethod method for the 
-  controller, which is a method to convert the action parameter 
-  into the name of a method of this clas</description>
+<method>
+  <name>
+    getmethod
+  </name>
   <code>
     /**
     * 
@@ -233,6 +246,15 @@
         }
     }
   </code>
-</item>
+</method>
+
+<!--
+<method>
+  <name>
+  </name>
+  <code>
+  </code>
+</method>
+-->
 
 </chisimba_controller_methods>
