@@ -8,11 +8,12 @@ $left = $left->show();
 $table =& $this->newObject('htmltable','htmlelements');
 $table->cellspacing = 2;
 $table->cellpadding = 2;
+$appnum = $this->getParam('appnum');
 
-$idNum = new textinput('idNum');
+$appnumfield = new textinput("appnum", $appnum,  "hidden", NULL);;
+$idNum = new textinput('idnum');
 $surname = new textinput('surname');
 $firstname = new textinput('firstname');
-$relationship = new textinput('relationship');
 $straddress = new textinput('straddress');
 $suburb = new textinput('suburb');
 $city = new textinput('city');
@@ -23,7 +24,7 @@ $employerDetails = new textinput('employerdetails');
 $employerTelNo = new textinput('employertelno');
 
 
-$relationship = new dropdown('saCitizen');
+$relationship = new dropdown('relationship');
 $relationship->addOption('1','Father');
 $relationship->addOption('2','Mother');
 $relationship->addOption('3','Guardian');
@@ -42,7 +43,10 @@ $cancelbut= new button('cancel');
 $cancelbut->setToSubmit();
 $cancelbut->setValue($objLanguage->languagetext('word_cancel'));
 
+$table->startRow();
 
+$table->addCell($appnumfield->show());
+$table->endRow();
 
 $table->startRow();
 $table->addCell($objLanguage->languagetext('mod_financialaid_idnumber','financialaid'));

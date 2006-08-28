@@ -9,22 +9,23 @@ $table =& $this->newObject('htmltable','htmlelements');
 $table->cellspacing = 2;
 $table->cellpadding = 2;
 
+$appNum = new textinput('appnum');
 $stdNum = new textinput('stdnum');
 $idNum = new textinput('idNum');
 $surname = new textinput('surname');
 $firstname = new textinput('firstname');
 $gender = new dropdown('gender');
-$gender->addOption('1','Male');
-$gender->addOption('2','Female');
+$gender->addOption('Male',$objLanguage->languagetext('word_male'));
+$gender->addOption('Female',$objLanguage->languagetext('word_female'));
 
 $SACitizen = new dropdown('saCitizen');
-$SACitizen->addOption('yes',$objLanguage->languagetext('word_yes'));
-$SACitizen->addOption('no',$objLanguage->languagetext('word_no'));
+$SACitizen->addOption('1',$objLanguage->languagetext('word_yes'));
+$SACitizen->addOption('0',$objLanguage->languagetext('word_no'));
 
 $maritalSts = new textinput('maritalsts');
 $supportingSelf = new dropdown('supportingself');
-$supportingSelf->addOption('yes',$objLanguage->languagetext('word_yes'));
-$supportingSelf->addOption('no',$objLanguage->languagetext('word_no'));
+$supportingSelf->addOption('1',$objLanguage->languagetext('word_yes'));
+$supportingSelf->addOption('0',$objLanguage->languagetext('word_no'));
 
 $addbut= new button('add');
 $addbut->setToSubmit();
@@ -34,6 +35,11 @@ $cancelbut= new button('cancel');
 $cancelbut->setToSubmit();
 $cancelbut->setValue($objLanguage->languagetext('word_cancel'));
 
+
+$table->startRow();
+$table->addCell($objLanguage->languagetext('mod_financialaid_appnumber','financialaid'));
+$table->addCell($appNum->show());
+$table->endRow();
 
 $table->startRow();
 $table->addCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid'));

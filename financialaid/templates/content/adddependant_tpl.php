@@ -8,13 +8,15 @@ $left = $left->show();
 $table =& $this->newObject('htmltable','htmlelements');
 $table->cellspacing = 2;
 $table->cellpadding = 2;
+$appnum = $this->getParam('appnum');
 
+$appnumfield = new textinput("appnum", $appnum,  "hidden", NULL);
 $firstname = new textinput('firstname');
 $relationship = new textinput('relationship');
 $dependantReason = new textinput('dependantreason');
 $hasIncome = new dropdown('hasIncome');
-$hasIncome->addOption('yes', $objLanguage->languagetext('word_yes'));
-$hasIncome->addOption('no', $objLanguage->languagetext('word_no'));
+$hasIncome->addOption('1', $objLanguage->languagetext('word_yes'));
+$hasIncome->addOption('0', $objLanguage->languagetext('word_no'));
 $incomeType = new textinput('incomeType');
 $incomeAmount = new textinput('incomeAmount');
 $category = new textinput('category');
@@ -28,6 +30,9 @@ $cancelbut->setToSubmit();
 $cancelbut->setValue($objLanguage->languagetext('word_cancel'));
 
 
+$table->startRow();
+$table->addCell($appnumfield->show());
+$table->endRow();
 
 $table->startRow();
 $table->addCell($objLanguage->languagetext('mod_financialaid_firstname','financialaid'));

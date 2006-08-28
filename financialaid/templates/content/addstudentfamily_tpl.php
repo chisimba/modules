@@ -8,7 +8,9 @@ $left = $left->show();
 $table =& $this->newObject('htmltable','htmlelements');
 $table->cellspacing = 2;
 $table->cellpadding = 2;
+$appnum = $this->getParam('appnum');
 
+$appnumfield = new textinput("appnum", $appnum,  "hidden", NULL);
 $firstname = new textinput('firstname');
 $institution = new textinput('institution');
 $course = new textinput('course');
@@ -23,6 +25,10 @@ $cancelbut= new button('cancel');
 $cancelbut->setToSubmit();
 $cancelbut->setValue($objLanguage->languagetext('word_cancel'));
 
+
+$table->startRow();
+$table->addCell($appnumfield->show());
+$table->endRow();
 
 $table->startRow();
 $table->addCell($objLanguage->languagetext('mod_financialaid_firstname','financialaid'));

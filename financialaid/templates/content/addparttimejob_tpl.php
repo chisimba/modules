@@ -8,7 +8,9 @@ $left = $left->show();
 $table =& $this->newObject('htmltable','htmlelements');
 $table->cellspacing = 2;
 $table->cellpadding = 2;
+$appnum = $this->getParam('appnum');
 
+$appnumfield = new textinput("appnum", $appnum,  "hidden", NULL);
 $jobTitle = new textinput('jobtitle');
 $employersDetails = new textinput('employersdetails');
 $employersTelNo = new textinput('employerstelno');
@@ -21,6 +23,9 @@ $cancelbut= new button('cancel');
 $cancelbut->setToSubmit();
 $cancelbut->setValue($objLanguage->languagetext('word_cancel'));
 
+$table->startRow();
+$table->addCell($appnumfield->show());
+$table->endRow();
 
 $table->startRow();
 $table->addCell($objLanguage->languagetext('mod_financialaid_jobtitle','financialaid'));

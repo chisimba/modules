@@ -18,7 +18,12 @@ class financialaid extends controller
     var $objUser;
     var $objLanguage;
     var $studentinfo;
- 
+    var $objDBApplication;
+    var $objDBNextofkin;
+    var $objDBDependants;
+    var $objDBParttimejobs;
+    var $objDBStudentFamily;
+
 	function init(){
 		$this->objUser =& $this->getObject('user','security');
     	$this->objLanguage = &$this->getObject('language','language');
@@ -35,6 +40,11 @@ class financialaid extends controller
 		$this->loadClass('tabbedbox', 'htmlelements');
 		$this->loadclass('link','htmlelements');
 		$this->loadclass('dropdown','htmlelements');
+		$this->objDBApplication =& $this->getObject('dbapplication');
+		$this->objDBNextofkin =& $this->getObject('dbnextofkin');
+		$this->objDBDependants =& $this->getObject('dbdependants');
+		$this->objDBParttimejobs =& $this->getObject('dbparttimejobs');
+		$this->objDBStudentFamily =& $this->getObject('dbstudentfamily');
 
 		$this->module = $this->getParam('module');
 
@@ -47,8 +57,8 @@ class financialaid extends controller
             //----------------
             //Default action
 			case 'ok':
-                $this->setVarByRef('stdinfo',$this->studentinfo->search());
-				return 'studentlist_tpl.php';
+               // $this->setVarByRef('stdinfo',$this->studentinfo->search());
+				return 'studentapplicationlist_tpl.php';
 
             //----------------
             //Student details actions
@@ -73,6 +83,11 @@ class financialaid extends controller
 				$this->setVarByRef('stdinfo',$this->studentinfo->search());
 				return 'studentlist_tpl.php';
 
+			case 'searchapplications':
+				return 'studentapplicationlist_tpl.php';
+    
+			case 'applicationinfo':
+				return 'studentapplicationinfo_tpl.php';
             //----------------
             //Application actions
             case 'addapplication':
@@ -87,13 +102,20 @@ class financialaid extends controller
                  return 'addstudentfamily_tpl.php';
                  
             case 'saveapplication':
-                 return 'studentinfo_tpl.php';
+                 $this->objDBApplication->saveRecord('add', $this->objUser->userId());
+                 return 'addapplication_tpl.php';
             case 'savenextofkin':
-                 return 'studentinfo_tpl.php';
+                 $this->objDBNextofkin->saveRecord('add', $this->objUser->userId());
+                 return 'addnextofkin_tpl.php';
             case 'savedependant':
-                 return 'studentinfo_tpl.php';
+                 $this->objDBDependants->saveRecord('add', $this->objUser->userId());
+                 return 'adddependant_tpl.php';
             case 'saveparttimejob':
-                 return 'studentinfo_tpl.php';
+                 $this->objDBParttimejobs->saveRecord('add', $this->objUser->userId());
+                 return 'addparttimejob_tpl.php';
+            case 'savestudentfamily':
+                 $this->objDBStudentFamily->saveRecord('add', $this->objUser->userId());
+                 return 'addstudentfamily_tpl.php';
             //----------------
             //Test action
             case 'test':
