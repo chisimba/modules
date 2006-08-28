@@ -41,25 +41,33 @@ class gendbtable extends abgenerator implements ifgenerator
 	 */
 	function generate($className)
 	{
-		//Load the skeleton file for the class from the XML		
-        $this->loadSkeleton('dbtable');
-        //Insert the properties
-        $this->insertItem('dbtable', 'properties');
-        //Insert the properties
-        $this->insertItem('dbtable', 'methods');
+        $this->prepareClass();
+        $this->setupClass($className, 'model');
+        //Insert the default controller methods
+        $this->classCode = str_replace('{METHODS}', $this->getDefaultMethods(), $this->classCode);
         //Insert the save methods (must have the array set first)
         $this->classCode = str_replace('{SAVECODE}', $this->getSaveMethods(), $this->classCode);
-        //Insert the module description
-        $this->moduledescription();
-        //Insert the copyright
-        $this->copyright();
+        //Insert the purpose in the comments
+        $this->classCode = str_replace('{PURPOSE}', $this->getPurpose(), $this->classCode);
+        //Insert the author
+        $this->classCode = str_replace('{AUTHOR}', $this->getAuthor(), $this->classCode);
         //Insert the database table
-        $this->databasetable();
-
+        $table = $this->getParam('tablename', '{TABLENAME}');
+        //Serialize the tablename
+        $this->setSession('tablename', $table);
+        $this->classCode = str_replace('{DATABASETABLE}', $table, $this->classCode);
         //Get the class name
         $databaseclass = $this->getParam('databaseclass', '{UNSPECIFIED_DATABASE_CLASSNAME}');
         //Serialize the database class name just in case
         $this->setSession('databaseclass', $databaseclass);
+        //Insert the package name
+        $package = $this->getParam('modulename', '{UNSPECIFIED_MODULE_NAME}');
+        $this->setSession('modulename', $package);
+        $this->classCode = str_replace('{PACKAGE}', $package, $this->classCode);
+        //Insert the copyright
+        $copy = $this->getParam('copyright', '{UNSPECIFIED}');
+        $this->setSession('copyright', $copy);
+        $this->classCode = str_replace('{COPYRIGHT}', $copy, $this->classCode);
         //Clean up unused template tags
         $this->cleanUp();
         $this->prepareForDump();
@@ -80,7 +88,7 @@ class gendbtable extends abgenerator implements ifgenerator
     *  </code>
     * </method>
     * 
-    *
+    */
     function getDefaultMethods()
     {
         $ret="";
@@ -90,7 +98,7 @@ class gendbtable extends abgenerator implements ifgenerator
             $ret .= $method->code;
         }
         return $ret;
-    }*/
+    }
     
     /**
     * 

@@ -238,7 +238,7 @@ abstract class abgenerator extends object
     /**
     * 
     * Method to return the copyright and insert it into the code of the 
-    * class being built in place of the {MODULENAME} parsecode
+    * class being built in place of the {COPYRIGHT} parsecode
     *  
     * @access Private
     * 
@@ -258,7 +258,28 @@ abstract class abgenerator extends object
         $this->classCode = str_replace('{COPYRIGHT}', $copyRight, $this->classCode);
     }
             
-
+    /**
+    * 
+    * Method to return the databasetable and insert it into the code of the 
+    * class being built in place of the {DATABASETABLE} parsecode
+    *  
+    * @access Private
+    * 
+    */
+    public function databasetable()
+    {
+        //Get the module sopyright from parameter
+        $databaseTable = $this->getParam('databasetable', NULL);
+        //If there is no parameter, check the session cookies
+        if ($databaseTable == NULL) {
+            $databaseTable = $this->getSession('databasetable', '{DATABASETABLE_UNSPECIFIED}');
+        } else {
+            //Serialize the variable to the session since we are geting it from a param
+			$this->setSession('databasetable', $databaseTable);
+        }
+        //Insert the copyright
+        $this->classCode = str_replace('{COPYRIGHT}', $databaseTable, $this->classCode);
+    }
     
 
     /**
