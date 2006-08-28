@@ -23,9 +23,11 @@ class financialaidleftblock extends object
 
 	function show(){
     	$this->objLanguage = &$this->getObject('language','language');
+   		$this->objDBApplication =& $this->getObject('dbapplication');
+
         $appnum = $this->getParam('appnum');
 
-		$list = array('ok'=>$this->objLanguage->languagetext('mod_financialaid_search','financialaid'));
+		$list = array('search'=>$this->objLanguage->languagetext('mod_financialaid_search','financialaid'));
 //		$list = array('ok'=>'Search', 'markrange'=>'Search by marks range');
 		$links = "";
 		foreach($list as $key=>$value){
@@ -52,11 +54,34 @@ class financialaidleftblock extends object
             $links.=$href->show()."<br />";
             $href = new href("index.php?module=financialaid&amp;action=addstudentfamily&amp;appnum=$appnum",$this->objLanguage->languagetext('mod_financialaid_addstudentfamily','financialaid'));
             $links.=$href->show()."<br />";
+            $appinfo = $this->objDBApplication->getApplication($appnum);
+            $studentid = $appinfo[0]['studentnumber'];
+        }else{
+		    $studentid = $this->getParam('id');
         }
-		
-		$studentid = $this->getParam('id');
 		if ($studentid) {
 			$links .= "<strong>".$this->objLanguage->languagetext('mod_financialaid_stddetails','financialaid')."</strong><br />";
+$link = new link();
+$link->href=$this->uri(array('action'=>'applicationinfo','appnum'=>$appnum));
+$link->link= $this->objLanguage->languagetext('mod_financialaid_showappdetails','financialaid');
+$links.=$link->show()."<br />";
+$link = new link();
+$link->href=$this->uri(array('action'=>'shownextofkin','appnum'=>$appnum));
+$link->link= $this->objLanguage->languagetext('mod_financialaid_showappnextofkindetails','financialaid');
+$links.=$link->show()."<br />";
+$link = new link();
+$link->href=$this->uri(array('action'=>'showdependants','appnum'=>$appnum));
+$link->link= $this->objLanguage->languagetext('mod_financialaid_showappdependantsdetails','financialaid');
+$links.=$link->show()."<br />";
+$link = new link();
+$link->href=$this->uri(array('action'=>'showparttimejob','appnum'=>$appnum));
+$link->link= $this->objLanguage->languagetext('mod_financialaid_showappparttimejobdetails','financialaid');
+$links.=$link->show()."<br />";
+$link = new link();
+$link->href=$this->uri(array('action'=>'showstudentfamily','appnum'=>$appnum));
+$link->link= $this->objLanguage->languagetext('mod_financialaid_showappstudentfamilydetails','financialaid');
+$links.=$link->show()."<br /><br />";
+
 			$href = new href("index.php?module=financialaid&amp;action=info&amp;id=$studentid",$this->objLanguage->languagetext('mod_financialaid_basic','financialaid'));
 			$links.=$href->show()."<br />";
 			$href = new href("index.php?module=financialaid&amp;action=results&amp;id=$studentid",$this->objLanguage->languagetext('mod_financialaid_course','financialaid'));

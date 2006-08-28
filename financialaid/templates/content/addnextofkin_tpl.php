@@ -1,5 +1,5 @@
 <?
-$right =& $this->getObject('blocksearchbox','studentenquiry');
+$right =& $this->getObject('applicationblocksearchbox');
 $right = $right->show($this->getParam('module','studentenquiry'));
 
 $left =& $this->getObject('financialaidleftblock');

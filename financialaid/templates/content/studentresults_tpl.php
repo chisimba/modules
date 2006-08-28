@@ -1,6 +1,6 @@
 <?
 
-$right =& $this->getObject('blocksearchbox','studentenquiry');
+$right =& $this->getObject('applicationblocksearchbox');
 $right = $right->show($this->getParam('module','studentenquiry'));
 
 $left =& $this->getObject('financialaidleftblock');
@@ -75,6 +75,7 @@ if(is_array($results)){
           {
             $sa = 1;
            // $stdave = 0;
+            $table->startRow();
             $table->addCell($objLanguage->languagetext('mod_financialaid_finalmark','financialaid'));
 			$table->addCell($objLanguage->languagetext('mod_financialaid_nomarks','financialaid'));
 			$table->addCell($objLanguage->languagetext('mod_financialaid_available','financialaid'));

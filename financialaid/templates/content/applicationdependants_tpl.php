@@ -1,7 +1,7 @@
 <?
 $appnum = $this->getParam('appnum');
 
-$right =& $this->getObject('blocksearchbox','studentenquiry');
+$right =& $this->getObject('applicationblocksearchbox');
 $right = $right->show($this->getParam('module','studentenquiry'));
 $this->objDBApplication =& $this->getObject('dbapplication');
 
@@ -53,34 +53,6 @@ if(count($dependants) > 0){
         $table->endRow();
     }
 }
-
-$table->startRow();
-$link = new link();
-$link->href=$this->uri(array('action'=>'applicationinfo','appnum'=>$appnum));
-$link->link= $objLanguage->languagetext('mod_financialaid_showappdetails','financialaid');
-$table->addCell($link->show());
-$table->endRow();
-
-$table->startRow();
-$link = new link();
-$link->href=$this->uri(array('action'=>'shownextofkin','appnum'=>$appnum));
-$link->link= $objLanguage->languagetext('mod_financialaid_showappnextofkindetails','financialaid');
-$table->addCell($link->show());
-$table->endRow();
-
-$table->startRow();
-$link = new link();
-$link->href=$this->uri(array('action'=>'showparttimejob','appnum'=>$appnum));
-$link->link= $objLanguage->languagetext('mod_financialaid_showappparttimejobdetails','financialaid');
-$table->addCell($link->show());
-$table->endRow();
-
-$table->startRow();
-$link = new link();
-$link->href=$this->uri(array('action'=>'showstudentfamily','appnum'=>$appnum));
-$link->link= $objLanguage->languagetext('mod_financialaid_showappstudentfamilydetails','financialaid');
-$table->addCell($link->show());
-$table->endRow();
 
 $content = "<center>".$details." ".$table->show(). "</center>";
 

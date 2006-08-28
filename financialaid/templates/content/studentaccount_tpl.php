@@ -4,7 +4,7 @@ $applnum = $this->getParam('applicationNumber');
 $surname = $this->getParam('surname');
 $idnumber = $this->getParam('idNumber');
   
-$right =& $this->getObject('blocksearchbox','studentenquiry');
+$right =& $this->getObject('applicationblocksearchbox');
 $right = $right->show($this->getParam('module','studentenquiry'));
 
 $stname = $stdinfo[0]['FSTNAM'];

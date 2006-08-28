@@ -3,7 +3,7 @@
 $this->objLanguage = &$this->getObject('language','language');
 $this->objDBApplication =& $this->getObject('dbapplication');
 
-$right =& $this->getObject('blocksearchbox','studentenquiry');
+$right =& $this->getObject('applicationblocksearchbox');
 $this->objUser =& $this->getObject('user','security');
 $right = $right->show($this->getParam('module','studentenquiry'));
 
@@ -23,24 +23,26 @@ $oddEven = 'odd';
 $foundStudents = false;
 
 $stdnum = strtoupper($this->getParam('studentNumber'));
-//$applnum = strtoupper($this->getParam('applicationNumber'));
+$applnum = strtoupper($this->getParam('applicationNumber'));
 $surname = $this->getParam('surname');
 $idnumber = strtoupper($this->getParam('idNumber'));
 
-if (!is_null($stdnum)) {
+if (strlen($stdnum) > 0) {
     $where = " WHERE studentNumber='" . $stdnum ."'";
-}else if (!is_null($surname)){
+}else if (strlen($surname) > 0){
     $where = " WHERE surname='" . $surname ."'";
-}else if (!is_null($idnumber)){
+}else if (strlen($idnumber) > 0){
     $where = " WHERE idNumber='" . $idnumber ."'";
+}else if (strlen($applnum) > 0){
+    $where = " WHERE appNumber='" . $applnum ."'";
 }else{
     $where = "";
 }
 $stdinfo = $this->objDBApplication->getAll($where);
 if(count($stdinfo) > 0){
         $cnt = count($stdinfo);
-/*        //***start of pages***
-                //output code to var, then strip off last "|" separater
+        //***start of pages***
+    /*            //output code to var, then strip off last "|" separater
                 $ncnt = $cnt/25;
                 $showlinks =& $this->getObject('htmlHeading','htmlelements');
                 $ncnt = strtok(($ncnt+1), ".");
@@ -128,7 +130,7 @@ if(count($stdinfo) > 0){
                 $Rectbl->endRow();
                 $records = $Rectbl->show();
                 //***end of pagination***
-        */
+      */
         $table =& $this->getObject('htmltable','htmlelements');
 
 	$table->width = '100%';
@@ -163,15 +165,6 @@ if(count($stdinfo) > 0){
             $stsname = $stdinfo[$i]['surname'];
             $stid = $stdinfo[$i]['idnumber'];
             $stnum = $stdinfo[$i]['studentnumber'];
-			$address = $this->studentinfo->studentAddress($stnum,35);
-
-			$corre = new link();
-			$corre->href=$this->uri(array('moduleTo'=>$this->getParam('module'),'action'=>'new',
-            'moduleAction'=>'ok', 'userToName'=>$stname,'userToTitle'=>$title,'studentNo'=>$stnum,
-            'fromUserId'=>$this->objUser->userId(),'detail'=>$address[0]->EMLADD,
-            'type'=>'email'),'correspondence');
-
-			$corre->link = "Correspondence";
 
 			$table->startRow();
 			$table->addCell($stname);

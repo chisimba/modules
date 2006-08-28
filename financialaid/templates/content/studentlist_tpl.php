@@ -2,7 +2,7 @@
 //require_once('columns_tpl.php');
 $this->objLanguage = &$this->getObject('language','language');
 
-$right =& $this->getObject('blocksearchbox','studentenquiry');
+$right =& $this->getObject('applicationblocksearchbox');
 $this->objUser =& $this->getObject('user','security');
 $right = $right->show($this->getParam('module','studentenquiry'));
 
