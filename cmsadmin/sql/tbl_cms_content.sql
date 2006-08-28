@@ -19,12 +19,10 @@ $fields = array(
 		'length' => 100
 		),
 	'introtext' => array(
-		'type' => 'text',
-		'length' => 255
+		'type' => 'clob',
 		),
     'body' => array(
-		'type' => 'text',
-		'length' => 255
+		'type' => 'clob',
 		),
     'published' => array(
 		'type' => 'integer',
