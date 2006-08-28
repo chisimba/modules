@@ -76,7 +76,7 @@ class dbparttimejobs extends dbTable
 
     function getParttimeJobs($appnum)
     {
-        $where = " WHERE appNumber ='" . $appNum ."'";
+        $where = " WHERE appNumber ='" . $appnum ."'";
         return $this->getAll($where);
     }
 } #end of class

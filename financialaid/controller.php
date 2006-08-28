@@ -85,9 +85,18 @@ class financialaid extends controller
 
 			case 'searchapplications':
 				return 'studentapplicationlist_tpl.php';
-    
+
 			case 'applicationinfo':
 				return 'studentapplicationinfo_tpl.php';
+
+			case 'shownextofkin':
+				return 'applicationnextofkin_tpl.php';
+			case 'showdependants':
+				return 'applicationdependants_tpl.php';
+			case 'showparttimejob':
+				return 'applicationparttimejobs_tpl.php';
+			case 'showstudentfamily':
+				return 'applicationstudentfamily_tpl.php';
             //----------------
             //Application actions
             case 'addapplication':
@@ -106,16 +115,16 @@ class financialaid extends controller
                  return 'addapplication_tpl.php';
             case 'savenextofkin':
                  $this->objDBNextofkin->saveRecord('add', $this->objUser->userId());
-                 return 'addnextofkin_tpl.php';
+                 return 'studentapplicationinfo_tpl.php';
             case 'savedependant':
                  $this->objDBDependants->saveRecord('add', $this->objUser->userId());
-                 return 'adddependant_tpl.php';
+                 return 'studentapplicationinfo_tpl.php';
             case 'saveparttimejob':
                  $this->objDBParttimejobs->saveRecord('add', $this->objUser->userId());
-                 return 'addparttimejob_tpl.php';
+                 return 'studentapplicationinfo_tpl.php';
             case 'savestudentfamily':
                  $this->objDBStudentFamily->saveRecord('add', $this->objUser->userId());
-                 return 'addstudentfamily_tpl.php';
+                 return 'studentapplicationinfo_tpl.php';
             //----------------
             //Test action
             case 'test':
