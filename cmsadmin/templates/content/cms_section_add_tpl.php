@@ -106,7 +106,7 @@ $table->endRow();
 //Ordering
 $table->startRow();
 $table->addCell('Ordering');
-if(editmode)
+if($editmode)
 {	
 	$table->addCell($this->_objSections->getOrderList('ordering').'<p />');
 } else {

@@ -14,6 +14,9 @@ $h3->str = ' Content Items Manager '.$objIcon->getAddIcon($this->uri(array('acti
 //counter for records
 $cnt = 1;
 
+//init mode
+$mode = '';
+
 //check for filter
 if($this->getParam('filter') == 'trash')
 {
