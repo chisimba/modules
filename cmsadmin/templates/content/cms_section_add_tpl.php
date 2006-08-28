@@ -20,6 +20,7 @@ if($this->getParam('id') == '')
 {
 	$action = 'createsection';
 	$editmode = FALSE;
+	$sectionId='';
 } else {
 	$action = 'editsection';
 	$sectionId = $this->getParam('id');
@@ -68,7 +69,9 @@ if($editmode)
 	$titleInput->value = '';
 	$menuTextInput->value = '';
 	$bodyInput->value = '';
+	$selected = '';
 	$layout = 0;
+	$isPublished = 'Yes';
 	$imageSRC = $this->_objConfig->getsiteRoot().'skins/_common/blank.png';
 }
 
