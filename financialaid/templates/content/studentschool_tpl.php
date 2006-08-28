@@ -7,8 +7,8 @@ $idnumber = $this->getParam('idNumber');
 $right =& $this->getObject('applicationblocksearchbox');
 $right = $right->show($this->getParam('module','studentenquiry'));
 
-$stname = $stdinfo[0]['FSTNAM'];
-$stsname = $stdinfo[0]['SURNAM'];
+$stname = $stdinfo[0]->FSTNAM;
+$stsname = $stdinfo[0]->SURNAM;
 
 $rep = array(
       'FIRSTNAME' => $stname,

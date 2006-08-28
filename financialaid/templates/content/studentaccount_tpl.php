@@ -7,8 +7,8 @@ $idnumber = $this->getParam('idNumber');
 $right =& $this->getObject('applicationblocksearchbox');
 $right = $right->show($this->getParam('module','studentenquiry'));
 
-$stname = $stdinfo[0]['FSTNAM'];
-$stsname = $stdinfo[0]['SURNAM'];
+$stname = $stdinfo[0]->FSTNAM;
+$stsname = $stdinfo[0]->SURNAM;
 
 
 $rep = array(
@@ -17,8 +17,8 @@ $rep = array(
 
 $details = "<p><b>".$objLanguage->code2Txt('mod_financialaid_accounttitle','financialaid',$rep)."</b></p>";
 
-$idnumber = $stdinfo[0]['IDN'];
-$stdnum = $stdinfo[0]['STDNUM'];
+$idnumber = $stdinfo[0]->IDN;
+$stdnum = $stdinfo[0]->STDNUM;
 $table =& $this->newObject('htmltable','htmlelements');
 
 $left =& $this->getObject('financialaidleftblock');
