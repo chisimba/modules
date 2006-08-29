@@ -122,6 +122,7 @@ class splashscreenrender extends object
 
         // Course Chooser
         $ts_content=str_replace("[-CONTEXTCHOOSER-]", $this->getContextDropDown(), $ts_content);
+		$ts_content=str_replace("[-CONTEXT-]", ucwords($this->objLanguage->code2Txt('mod_context_context','context')), $ts_content);
 
         //Resource Kit Link
         $ts_content=str_replace('[-RESOURCEKIT-]', $this->uri(array(),'resourcekit'), $ts_content);
