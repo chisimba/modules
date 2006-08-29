@@ -37,14 +37,14 @@
         <ordering>0</ordering>        
     </tbl_cms_sections>
    <tbl_cms_content>
-        <id>  	</id>  	
-    	<title> </title>
-    	<menutext></menutext>
-    	<introtext>&lt;p&gt;Chisimba is an advanced rapid application development platform and next generation framework with features similar to common proprietary systems. It is free software (open source) released under the GNU GPL, and available for download via cvs checkout from http://cvs2.uwc.ac.za/ .&lt;/p&gt;&lt;p&gt;Chisimba was developed based on several years of experience in software design and architecture at the University of the Western Cape and partner institutions using its predecessor KEWL.NextGen, and is under active development by a team of developers in 16 African higher education institutions.&lt;/p&gt;</introtext>
-    	<body> 	</body>
-    	<published></published>
-    	<trash></trash>
-    	<sectionid></sectionid>
+        <id>init_1</id>  	
+    	<title>Welcome to Chisimba </title>
+    	<menutext>Welcome</menutext>
+    	<introtext>Chisimba is a next-generation using the Model-View-Controller (MVC) extensible framework architecture. Unlike other platforms, Chisimba moves beyond the sphere of merely being a 'web software'.</introtext>
+    	<body>Chisimba is a next-generation using the Model-View-Controller (MVC) extensible framework architecture. Unlike other platforms, Chisimba moves beyond the sphere of merely being a 'web software'.</body>
+    	<published>1</published>
+    	<trash>0</trash>
+    	<sectionid>init_1</sectionid>
     	<mask> </mask>
     	<catid> </catid>
     	<created></created>
@@ -61,41 +61,11 @@
     	<attribs></attribs>
     	<version></version>
     	<parentid></parentid>
-    	<ordering></ordering>
+    	<ordering>0</ordering>
     	<metakey></metakey>
     	<metadesc></metadesc>
     	<access></access>
-    	<hits></hits>
+    	<hits>1</hits>
    </tbl_cms_content>
-   <tbl_cms_content>
-        <id>  	</id>  	
-    	<title> </title>
-    	<menutext></menutext>
-    	<introtext></introtext>
-    	<body> 	</body>
-    	<published></published>
-    	<trash></trash>
-    	<sectionid></sectionid>
-    	<mask> </mask>
-    	<catid> </catid>
-    	<created></created>
-    	<created_by> </created_by>
-    	<created_by_alias> </created_by_alias>
-    	<modified></modified>
-    	<modified_by> </modified_by> 
-    	<checked_out> </checked_out> 
-    	<checked_out_time></checked_out_time>
-    	<publish_up></publish_up>
-    	<publish_down> </publish_down> 
-    	<images></images>
-    	<urls></urls>
-    	<attribs></attribs>
-    	<version></version>
-    	<parentid></parentid>
-    	<ordering></ordering>
-    	<metakey></metakey>
-    	<metadesc></metadesc>
-    	<access></access>
-    	<hits></hits>
-   </tbl_cms_content>
+  
 </defaultdata>
