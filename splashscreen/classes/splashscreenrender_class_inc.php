@@ -75,10 +75,10 @@ class splashscreenrender extends object
 
         //the variable to hold the username textbox
         $userNameBox=$this->objLanguage->languageText("word_username")
-            .':<br /><input name="username" type="text" id="username" class="text" />';
+            .':<br /><input name="username" type="text" id="username" class="text" size="15"/>';
         //the variable to hold the password textbox
         $passwordBox=$this->objLanguage->languageText("word_password")
-            .':<br /><input name="password" type="password" id="password" class="text" />';
+            .':<br /><input name="password" type="password" id="password" class="text" size="15" />';
         //the variable to hold the useLDAP checkbox
         $useLdapCheck='<input type="checkbox" name="useLdap" value="yes" class="transparentbgnb" />'
             .$this->objLanguage->languageText("phrase_networkid");
