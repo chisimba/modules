@@ -1,8 +1,6 @@
 <?
 $appnum = $this->getParam('appnum');
 
-$right =& $this->getObject('applicationblocksearchbox');
-$right = $right->show($this->getParam('module','studentenquiry'));
 $this->objDBApplication =& $this->getObject('dbapplication');
 
 $stdinfo = $this->objDBApplication->getApplication($appnum);
@@ -18,10 +16,6 @@ $idnumber = $stdinfo[0]['idnumber'];
 $stdnum = $stdinfo[0]['studentnumber'];
 $table =& $this->newObject('htmltable','htmlelements');
 
-$left =& $this->getObject('financialaidleftblock');
-
-
-$left = $left->show();
 $nextofkin = $this->objDBNextofkin->getNextofkin($appnum);
 
 if(count($nextofkin) > 0){
@@ -99,14 +93,6 @@ if(count($nextofkin) > 0){
 
 $content = "<center>".$details." ".$table->show(). "</center>";
 
-// Create an instance of the css layout class
-$cssLayout =& $this->newObject('csslayout', 'htmlelements');
-$cssLayout->setNumColumns(3);
-$cssLayout->setLeftColumnContent($left);
-$cssLayout->setRightColumnContent($right);
-$cssLayout->setMiddleColumnContent($content);
-
-echo $cssLayout->show();
-
+echo $content;
 
 ?>

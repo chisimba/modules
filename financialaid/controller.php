@@ -23,6 +23,9 @@ class financialaid extends controller
     var $objDBDependants;
     var $objDBParttimejobs;
     var $objDBStudentFamily;
+    
+    var $objLeftBar;
+    var $objRightBar;
 
 	function init(){
 		$this->objUser =& $this->getObject('user','security');
@@ -47,11 +50,16 @@ class financialaid extends controller
 		$this->objDBParttimejobs =& $this->getObject('dbparttimejobs');
 		$this->objDBStudentFamily =& $this->getObject('dbstudentfamily');
 
+        $this->objLeftBar =& $this->getObject('financialaidleftblock');
+        $this->objRightBar =& $this->getObject('applicationblocksearchbox');;
 		$this->module = $this->getParam('module');
 
 	}
 
 	function dispatch(){
+
+		$this->setLayoutTemplate('financialaid_layout.php');
+
 		$action = $this->getParam('action');
 		switch($action){
 			case null:

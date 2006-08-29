@@ -4,9 +4,6 @@ $applnum = $this->getParam('applicationNumber');
 $surname = $this->getParam('surname');
 $idnumber = $this->getParam('idNumber');
   
-$right =& $this->getObject('applicationblocksearchbox');
-$right = $right->show($this->getParam('module','studentenquiry'));
-
 $stname = $stdinfo[0]->FSTNAM;
 $stsname = $stdinfo[0]->SURNAM;
 
@@ -20,22 +17,18 @@ $idnumber = $stdinfo[0]->IDN;
 $stdnum = $stdinfo[0]->STDNUM;
 $table =& $this->newObject('htmltable','htmlelements');
 
-$left =& $this->getObject('financialaidleftblock');
-
-
-$left = $left->show();
 $this->studentinfo =& $this->getObject('dbstudentinfo','studentenquiry');
 $this->objDbFinAid =& $this->getObject('dbfinaid');
 
 //var_dump($student);
 if(is_array($stdinfo)){
 	//for($i = 0;$i < count($stdinfo);$i++){
-     $race = $stdinfo[0]['RCE'];
-     $gender = $stdinfo[0]['SEX'];
-     $marsts = $stdinfo[0]['MARSTS'];
-     $title = $stdinfo[0]['TTL'];
-     $sttype = $stdinfo[0]['STDTYP'];
-     $stnum = $stdinfo[0]['STDNUM'];
+     $race = $stdinfo[0]->RCE;
+     $gender = $stdinfo[0]->SEX;
+     $marsts = $stdinfo[0]->MARSTS;
+     $title = $stdinfo[0]->TTL;
+     $sttype = $stdinfo[0]->STDTYP;
+     $stnum = $stdinfo[0]->STDNUM;
      
 	//}
 //echo "<br><pre>stdinfo: " ;    print_r($stdinfo);  echo "</pre><br>" ;
@@ -89,105 +82,31 @@ if(is_array($stdinfo)){
         $oddEven = 'odd';
         foreach($studentSchoolSubj as $data){
 
-
-    		$oddEven = $oddEven == 'odd'?'even':'odd';
-            $tableSchoolSubj->row_attributes = " class = \"$oddEven\"";
-            $tableSchoolSubj->startRow();
-            $tableSchoolSubj->addCell($data->MTRSBJCDE);
-            $schoolSubj = $this->objDbFinAid->getMatricSubjectDetails($data->MTRSBJCDE);
-            $tableSchoolSubj->addCell($schoolSubj[0]->LNGDSC);
-  	        $tableSchoolSubj->addCell($data->MTRSBJGRD);
-  	        $tableSchoolSubj->addCell($data->SBL);
-  	        $tableSchoolSubj->addCell($data->MTRSBJYR);
-            $tableSchoolSubj->endRow();
-
-    		$oddEven = $oddEven == 'odd'?'even':'odd';
-            $tableSchoolSubj->row_attributes = " class = \"$oddEven\"";
-            $tableSchoolSubj->startRow();
-            $tableSchoolSubj->addCell($data->MTRSBJCDE2);
-            $schoolSubj = $this->objDbFinAid->getMatricSubjectDetails($data->MTRSBJCDE2);
-            $tableSchoolSubj->addCell($schoolSubj[0]->LNGDSC);
-  	        $tableSchoolSubj->addCell($data->MTRSBJGRD2);
-  	        $tableSchoolSubj->addCell($data->SBL2);
-  	        $tableSchoolSubj->addCell($data->MTRSBJYR2);
-            $tableSchoolSubj->endRow();
-
-    		$oddEven = $oddEven == 'odd'?'even':'odd';
-            $tableSchoolSubj->row_attributes = " class = \"$oddEven\"";
-            $tableSchoolSubj->startRow();
-            $tableSchoolSubj->addCell($data->MTRSBJCDE3);
-            $schoolSubj = $this->objDbFinAid->getMatricSubjectDetails($data->MTRSBJCDE3);
-            $tableSchoolSubj->addCell($schoolSubj[0]->LNGDSC);
-  	        $tableSchoolSubj->addCell($data->MTRSBJGRD3);
-  	        $tableSchoolSubj->addCell($data->SBL3);
-  	        $tableSchoolSubj->addCell($data->MTRSBJYR3);
-            $tableSchoolSubj->endRow();
-
-    		$oddEven = $oddEven == 'odd'?'even':'odd';
-            $tableSchoolSubj->row_attributes = " class = \"$oddEven\"";
-            $tableSchoolSubj->startRow();
-            $tableSchoolSubj->addCell($data->MTRSBJCDE4);
-            $schoolSubj = $this->objDbFinAid->getMatricSubjectDetails($data->MTRSBJCDE4);
-            $tableSchoolSubj->addCell($schoolSubj[0]->LNGDSC);
-  	        $tableSchoolSubj->addCell($data->MTRSBJGRD4);
-  	        $tableSchoolSubj->addCell($data->SBL4);
-  	        $tableSchoolSubj->addCell($data->MTRSBJYR4);
-            $tableSchoolSubj->endRow();
-
-    		$oddEven = $oddEven == 'odd'?'even':'odd';
-            $tableSchoolSubj->row_attributes = " class = \"$oddEven\"";
-            $tableSchoolSubj->startRow();
-            $tableSchoolSubj->addCell($data->MTRSBJCDE5);
-            $schoolSubj = $this->objDbFinAid->getMatricSubjectDetails($data->MTRSBJCDE5);
-            $tableSchoolSubj->addCell($schoolSubj[0]->LNGDSC);
-  	        $tableSchoolSubj->addCell($data->MTRSBJGRD5);
-  	        $tableSchoolSubj->addCell($data->SBL5);
-  	        $tableSchoolSubj->addCell($data->MTRSBJYR5);
-            $tableSchoolSubj->endRow();
-
-    		$oddEven = $oddEven == 'odd'?'even':'odd';
-            $tableSchoolSubj->row_attributes = " class = \"$oddEven\"";
-            $tableSchoolSubj->startRow();
-            $tableSchoolSubj->addCell($data->MTRSBJCDE6);
-            $schoolSubj = $this->objDbFinAid->getMatricSubjectDetails($data->MTRSBJCDE6);
-            $tableSchoolSubj->addCell($schoolSubj[0]->LNGDSC);
-  	        $tableSchoolSubj->addCell($data->MTRSBJGRD6);
-  	        $tableSchoolSubj->addCell($data->SBL6);
-  	        $tableSchoolSubj->addCell($data->MTRSBJYR6);
-            $tableSchoolSubj->endRow();
-
-    		$oddEven = $oddEven == 'odd'?'even':'odd';
-            $tableSchoolSubj->row_attributes = " class = \"$oddEven\"";
-            $tableSchoolSubj->startRow();
-            $tableSchoolSubj->addCell($data->MTRSBJCDE7);
-            $schoolSubj = $this->objDbFinAid->getMatricSubjectDetails($data->MTRSBJCDE7);
-            $tableSchoolSubj->addCell($schoolSubj[0]->LNGDSC);
-  	        $tableSchoolSubj->addCell($data->MTRSBJGRD7);
-  	        $tableSchoolSubj->addCell($data->SBL7);
-  	        $tableSchoolSubj->addCell($data->MTRSBJYR7);
-            $tableSchoolSubj->endRow();
-
-    		$oddEven = $oddEven == 'odd'?'even':'odd';
-            $tableSchoolSubj->row_attributes = " class = \"$oddEven\"";
-            $tableSchoolSubj->startRow();
-            $tableSchoolSubj->addCell($data->MTRSBJCDE8);
-            $schoolSubj = $this->objDbFinAid->getMatricSubjectDetails($data->MTRSBJCDE8);
-            $tableSchoolSubj->addCell($schoolSubj[0]->LNGDSC);
-  	        $tableSchoolSubj->addCell($data->MTRSBJGRD8);
-  	        $tableSchoolSubj->addCell($data->SBL8);
-  	        $tableSchoolSubj->addCell($data->MTRSBJYR8);
-            $tableSchoolSubj->endRow();
-
-    		$oddEven = $oddEven == 'odd'?'even':'odd';
-            $tableSchoolSubj->row_attributes = " class = \"$oddEven\"";
-            $tableSchoolSubj->startRow();
-            $tableSchoolSubj->addCell($data->MTRSBJCDE9);
-            $schoolSubj = $this->objDbFinAid->getMatricSubjectDetails($data->MTRSBJCDE9);
-            $tableSchoolSubj->addCell($schoolSubj[0]->LNGDSC);
-  	        $tableSchoolSubj->addCell($data->MTRSBJGRD9);
-  	        $tableSchoolSubj->addCell($data->SBL9);
-  	        $tableSchoolSubj->addCell($data->MTRSBJYR9);
-            $tableSchoolSubj->endRow();
+            for($i = 1; $i <= 9; $i++){
+                if ($i > 1){
+                    $sbjcodefield = 'MTRSBJCDE'.$i;
+                    $gradefield = 'MTRSBJGRD'.$i;
+                    $symbolfield = 'SBL'.$i;
+                    $yearfield = 'MTRSBJYR'.$i;
+                }else{
+                    $sbjcodefield = 'MTRSBJCDE';
+                    $gradefield = 'MTRSBJGRD';
+                    $symbolfield = 'SBL';
+                    $yearfield = 'MTRSBJYR';
+                }
+                if ($data->$sbjcodefield != 0){
+                    $oddEven = $oddEven == 'odd'?'even':'odd';
+                    $tableSchoolSubj->row_attributes = " class = \"$oddEven\"";
+                    $tableSchoolSubj->startRow();
+                    $tableSchoolSubj->addCell($data->$sbjcodefield);
+                    $schoolSubj = $this->objDbFinAid->getMatricSubjectDetails($data->$sbjcodefield);
+                    $tableSchoolSubj->addCell($schoolSubj[0]->LNGDSC);
+  	                $tableSchoolSubj->addCell($data->$gradefield);
+  	                $tableSchoolSubj->addCell($data->$symbolfield);
+         	        $tableSchoolSubj->addCell($data->$yearfield);
+                    $tableSchoolSubj->endRow();
+                }
+            }
 
             $tables .= "<br />" . $tableSchoolSubj->show();
 
@@ -195,12 +114,5 @@ if(is_array($stdinfo)){
     }
   $content = "<center>".$details." ".$table->show(). $tables. "</center>";
 
-// Create an instance of the css layout class
-$cssLayout =& $this->newObject('csslayout', 'htmlelements');
-$cssLayout->setNumColumns(3);
-$cssLayout->setLeftColumnContent($left);
-$cssLayout->setRightColumnContent($right);
-$cssLayout->setMiddleColumnContent($content);
-
-echo $cssLayout->show();
+echo $content;
 ?>

@@ -2,18 +2,11 @@
 //require_once('columns_tpl.php');
 $this->objLanguage = &$this->getObject('language','language');
 
-$right =& $this->getObject('applicationblocksearchbox');
 $this->objUser =& $this->getObject('user','security');
-$right = $right->show($this->getParam('module','studentenquiry'));
 
 $centersearch =& $this->getObject('blockcentersearchbox','studentenquiry');
 $this->objUser =& $this->getObject('user','security');
 $centersearch = $centersearch->show($this->getParam('module','studentenquiry'));
-//$left =& $this->getObject('blockleftcolumn');
-//$left = $left->show();
-
-$left =& $this->getObject('financialaidleftblock');
-$left = $left->show();
 
 $this->studentinfo =& $this->getObject('dbstudentinfo','studentenquiry');
 
@@ -209,14 +202,9 @@ if ($foundStudents == false) {
 }
 
 $content = "<center>".$pagelinks." ".$content . "</center>";
-$left = $left."<br />".$records;
-$cssLayout =& $this->newObject('csslayout', 'htmlelements');
-$cssLayout->setNumColumns(3);
-$cssLayout->setLeftColumnContent($left);
-$cssLayout->setRightColumnContent($right);
-$cssLayout->setMiddleColumnContent($content);
+//$left = $left."<br />".$records;
 
-echo $cssLayout->show();
+echo $content;
 
 
 ?>

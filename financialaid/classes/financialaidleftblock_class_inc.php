@@ -27,6 +27,7 @@ class financialaidleftblock extends object
 
         $appnum = $this->getParam('appnum');
 
+        $header = "<h1>".$this->objLanguage->languagetext('mod_financialaid_financialaid','financialaid')."</h1>";
 		$list = array('search'=>$this->objLanguage->languagetext('mod_financialaid_search','financialaid'));
 //		$list = array('ok'=>'Search', 'markrange'=>'Search by marks range');
 		$links = "";
@@ -104,7 +105,7 @@ class financialaidleftblock extends object
    //     $links .="<p>&nbsp;&nbsp;&nbsp;".$href->show()."</p>";
 
 
-		return $links;
+		return $header.$links;
 	}
 	
 	

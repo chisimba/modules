@@ -1,11 +1,5 @@
 <?
 
-$right =& $this->getObject('applicationblocksearchbox');
-$right = $right->show($this->getParam('module','studentenquiry'));
-
-$left =& $this->getObject('financialaidleftblock');
-$left = $left->show();
-
 $stname = $stdinfo[0]->FSTNAM;
 $stsname = $stdinfo[0]->SURNAM;
 
@@ -18,7 +12,7 @@ $details = "<h2>".$objLanguage->code2Txt('mod_financialaid_resultstitle','financ
 $idnumber = $stdinfo[0]->IDN;
 $stdnum = $stdinfo[0]->STDNUM;
 
-$this->studentinfo =& $this->getObject('dbstudentinfo','studentenquiry');
+$this->objDbStudentInfo =& $this->getObject('dbstudentinfo','studentenquiry');
 
 $year = $this->getParam('year');
 if(is_null($year)){
@@ -41,7 +35,7 @@ if(is_array($results)){
 	$table->addCell($objLanguage->languagetext('mod_financialaid_mark','financialaid'));
 	$table->endRow();
 	//foreach($results as $values){
-		//$marks = $this->studentinfo->getCourseResuts($results[0]->SBJCDE,$results[0]->YEAR);
+		//$marks = $this->objDbStudentInfo->getCourseResuts($results[0]->SBJCDE,$results[0]->YEAR);
 		$ave = 0;
 		//if(is_array($marks)){
 			//foreach($marks as $mark){
@@ -94,11 +88,11 @@ if(is_array($results)){
 		$table->endRow();
 
 
-$stcrse = $this->studentinfo->getStudentCourse($results[0]->STDNUM);
+$stcrse = $this->objDbStudentInfo->getStudentCourse($results[0]->STDNUM);
 for($j = 0; $j < count($stcrse); $j++)
 {
    if($year == $stcrse[$j]->YEAR){
-     $course = $this->studentinfo->getCourseDesc($stcrse[$j]->CRSCDE);
+     $course = $this->objDbStudentInfo->getCourseDesc($stcrse[$j]->CRSCDE);
      $details .= "<p>".$objLanguage->languagetext('mod_financialaid_desc','financialaid').": " . $course[0]->LNGDSC;
      $details .= "<br />".$objLanguage->languagetext('mod_financialaid_year','financialaid').": ".$year."</p>";
    }
@@ -148,33 +142,7 @@ echo $this->rightNav->addToLayer();
            */
 $content = "<center>".$details." ".$table->show()."</center>";
 
-$objForm = new form('theform');
-$objForm->setAction($this->uri(array('action'=>'ok','id'=>$stdnum)));
-$objForm->setDisplayType(2);
-
-/*
-$ok= new button('ok');
-$ok->setToSubmit();
-$ok->setValue('OK');
-*/
-
-$objForm->addToForm($content);
-//$objForm->addToForm($ok);
-
-   /*
-$this->contentNav = $this->getObject('layer','htmlelements');
-$this->contentNav->id = "content";
-$this->contentNav->str = $objForm->show().'<br /><br /><br /><br />';
-//$this->contentNav->height="300px";
-echo $this->contentNav->addToLayer();
-     */
-$cssLayout =& $this->newObject('csslayout', 'htmlelements');
-$cssLayout->setNumColumns(3);
-$cssLayout->setLeftColumnContent($left);
-$cssLayout->setRightColumnContent($right);
-$cssLayout->setMiddleColumnContent($content);
-
-echo $cssLayout->show();
+echo $content;
 
 
 ?>

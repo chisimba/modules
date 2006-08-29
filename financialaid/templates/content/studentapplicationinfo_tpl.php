@@ -2,8 +2,6 @@
 if (!isset($appnum)){
     $appnum = $this->getParam('appnum');
 }
-$right =& $this->getObject('applicationblocksearchbox');
-$right = $right->show($this->getParam('module','studentenquiry'));
 $this->objDBApplication =& $this->getObject('dbapplication');
 
 $stdinfo = $this->objDBApplication->getApplication($appnum);
@@ -18,11 +16,6 @@ $details = "<h2>".$objLanguage->code2Txt('mod_financialaid_infotitle','financial
 $idnumber = $stdinfo[0]['idnumber'];
 $stdnum = $stdinfo[0]['studentnumber'];
 $table =& $this->newObject('htmltable','htmlelements');
-
-$left =& $this->getObject('financialaidleftblock');
-
-
-$left = $left->show();
 
 if(count($stdinfo) > 0){
     $gender = $stdinfo[0]['gender'];
@@ -60,14 +53,6 @@ if(count($stdinfo) > 0){
 
 $content = "<center>".$details." ".$table->show(). "</center>";
 
-// Create an instance of the css layout class
-$cssLayout =& $this->newObject('csslayout', 'htmlelements');
-$cssLayout->setNumColumns(3);
-$cssLayout->setLeftColumnContent($left);
-$cssLayout->setRightColumnContent($right);
-$cssLayout->setMiddleColumnContent($content);
-
-echo $cssLayout->show();
-
+echo $content;
 
 ?>

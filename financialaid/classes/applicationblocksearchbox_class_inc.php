@@ -37,22 +37,22 @@ class applicationblocksearchbox extends object
 		$save= new button('save');
 		$save->setToSubmit();
 		$save->setValue('Search');
-        $surlabel=$this->objLanguage->languageText('mod_studentenquiry_surname','studentenquiry').":";
+        $surlabel=$this->objLanguage->languageText('mod_financialaid_surname','financialaid').":";
 		$objForm->addToForm($surlabel);
 		$objForm->addToForm($surname);
-        $stdlabel=$this->objLanguage->languageText('mod_studentenquiry_stdnum','studentenquiry').":";
+        $stdlabel=$this->objLanguage->languageText('mod_financialaid_stdnum','financialaid').":";
         $objForm->addToForm($stdlabel);
 		$objForm->addToForm($stdnum);
         $applabel="App Num".":";
         $objForm->addToForm($applabel);
 		$objForm->addToForm($applicationum);
-        $idlabel=$this->objLanguage->languageText('mod_studentenquiry_idnum','studentenquiry').":";
+        $idlabel=$this->objLanguage->languageText('mod_financialaid_idnum','financialaid').":";
         $objForm->addToForm($idlabel);
 		$objForm->addToForm($idnum);
 		$objForm->addToForm($save);
 		
 		$objElement = new tabbedbox();
-		$objElement->addTabLabel($this->objLanguage->languageText('mod_studentenquiry_quicksrch','studentenquiry'));
+		$objElement->addTabLabel($this->objLanguage->languageText('mod_financialaid_quicksrch','financialaid'));
 		$objElement->addBoxContent($objForm->show());	
 		return $objElement->show();
 	}

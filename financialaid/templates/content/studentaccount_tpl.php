@@ -3,9 +3,6 @@ $stdnum = $this->getParam('studentNumber');
 $applnum = $this->getParam('applicationNumber');
 $surname = $this->getParam('surname');
 $idnumber = $this->getParam('idNumber');
-  
-$right =& $this->getObject('applicationblocksearchbox');
-$right = $right->show($this->getParam('module','studentenquiry'));
 
 $stname = $stdinfo[0]->FSTNAM;
 $stsname = $stdinfo[0]->SURNAM;
@@ -21,10 +18,6 @@ $idnumber = $stdinfo[0]->IDN;
 $stdnum = $stdinfo[0]->STDNUM;
 $table =& $this->newObject('htmltable','htmlelements');
 
-$left =& $this->getObject('financialaidleftblock');
-
-
-$left = $left->show();
 $this->studentinfo =& $this->getObject('dbstudentinfo','studentenquiry');
 $this->objDbFinAid =& $this->getObject('dbfinaid');
 
@@ -96,16 +89,6 @@ if(is_null($year)){
 
 $content = "<center>".$details." ".$table->show(). "<br />" . $tableAccount->show()."</center>";
 
-
-
-
-// Create an instance of the css layout class
-$cssLayout =& $this->newObject('csslayout', 'htmlelements');
-$cssLayout->setNumColumns(3);
-$cssLayout->setLeftColumnContent($left);
-$cssLayout->setRightColumnContent($right);
-$cssLayout->setMiddleColumnContent($content);
-
-echo $cssLayout->show();
+echo $content;
 
 ?>

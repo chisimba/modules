@@ -4,9 +4,6 @@ $applnum = $this->getParam('applicationNumber');
 $surname = $this->getParam('surname');
 $idnumber = $this->getParam('idNumber');
 
-$right =& $this->getObject('applicationblocksearchbox');
-$right = $right->show($this->getParam('module','studentenquiry'));
-
 $stname = $stdinfo[0]->FSTNAM;
 $stsname = $stdinfo[0]->SURNAM;
 
@@ -19,11 +16,7 @@ $idnumber = $stdinfo[0]->IDN;
 $stdnum = $stdinfo[0]->STDNUM;
 $table =& $this->newObject('htmltable','htmlelements');
 
-$left =& $this->getObject('financialaidleftblock');
-
-
-$left = $left->show();
-$this->studentinfo =& $this->getObject('dbstudentinfo','studentenquiry');
+$this->objDbStudentInfo =& $this->getObject('dbstudentinfo','studentenquiry');
 
 //var_dump($student);
 if(is_array($stdinfo)){
@@ -42,17 +35,17 @@ if(is_array($stdinfo)){
 
         $table->startRow();
 		$table->addCell($objLanguage->languagetext('mod_financialaid_race','financialaid'), '15%');
-		$table->addCell($this->studentinfo->getRace($race));
+		$table->addCell($this->objDbStudentInfo->getRace($race));
 		$table->endRow();
 
         $table->startRow();
 		$table->addCell($objLanguage->languagetext('mod_financialaid_gender','financialaid'), '15%');
-		$table->addCell($this->studentinfo->getGender($gender));
+		$table->addCell($this->objDbStudentInfo->getGender($gender));
 		$table->endRow();
 
         $table->startRow();
 		$table->addCell($objLanguage->languagetext('mod_financialaid_mrtsts','financialaid'), '15%');
-		$table->addCell($this->studentinfo->getMarStatus($marsts));
+		$table->addCell($this->objDbStudentInfo->getMarStatus($marsts));
 		$table->endRow();
 
         $table->startRow();
@@ -132,7 +125,7 @@ if(is_array($stdaddress) and count($stdaddress) > 0){
 
 
 
-//$contactType = $this->studentinfo->getLookupInfo($values->contactTypeID);
+//$contactType = $this->objDbStudentInfo->getLookupInfo($values->contactTypeID);
 
 $addresstype = $this->getParam('address');
 //echo "<br />(info)addresstype: " . print_r($stdaddress) . "<br />";
@@ -142,7 +135,7 @@ for($i = 0; $i < 4; $i++){
 		$link = new link();
 		$link->href=$this->uri(array('action'=>'info','id'=>$stdnum,'address'=>$types[$i]));
 
-		$contactType = $this->studentinfo->studentAddress($stdnum);
+		$contactType = $this->objDbStudentInfo->studentAddress($stdnum);
         $link->link= $typesnames[$i];
 		$datype .=$link->show()."<br />";
 	}
@@ -171,26 +164,7 @@ if($this->getParam('module') === "studentenquiry"){
 
 $content = "<center>".$details." ".$table->show(). "</center>";
 
-$objForm = new form('theform');
-$objForm->setAction($this->uri(array('action'=>'enquiry','id'=>$idnumber)));
-$objForm->setDisplayType(2);
-
-$ok= new button('ok');
-$ok->setToSubmit();
-$ok->setValue('OK');
-
-$objForm->addToForm($content);
-//$objForm->addToForm($ok);
-
-
-// Create an instance of the css layout class
-$cssLayout =& $this->newObject('csslayout', 'htmlelements');
-$cssLayout->setNumColumns(3);
-$cssLayout->setLeftColumnContent($left);
-$cssLayout->setRightColumnContent($right);
-$cssLayout->setMiddleColumnContent($content);
-
-echo $cssLayout->show();
+echo $content;
 
 
 ?>

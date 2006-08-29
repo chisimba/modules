@@ -1,9 +1,4 @@
 <?
-$right =& $this->getObject('applicationblocksearchbox');
-$right = $right->show($this->getParam('module','studentenquiry'));
-
-$left =& $this->getObject('financialaidleftblock');
-$left = $left->show();
 $details = "<h2>".$objLanguage->languagetext('mod_financialaid_addparttimejob','financialaid')."</h2>";
 
 $table =& $this->newObject('htmltable','htmlelements');
@@ -57,15 +52,7 @@ $objForm->setDisplayType(2);
 
 $objForm->addToForm($content);
 
-
-// Create an instance of the css layout class
-$cssLayout =& $this->newObject('csslayout', 'htmlelements');
-$cssLayout->setNumColumns(3);
-$cssLayout->setLeftColumnContent($left);
-$cssLayout->setRightColumnContent($right);
-$cssLayout->setMiddleColumnContent($objForm->show());
-
-echo $cssLayout->show();
+echo $objForm->show();
 
 
 ?>

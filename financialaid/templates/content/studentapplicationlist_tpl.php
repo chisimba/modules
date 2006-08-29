@@ -3,18 +3,11 @@
 $this->objLanguage = &$this->getObject('language','language');
 $this->objDBApplication =& $this->getObject('dbapplication');
 
-$right =& $this->getObject('applicationblocksearchbox');
 $this->objUser =& $this->getObject('user','security');
-$right = $right->show($this->getParam('module','studentenquiry'));
 
 $centersearch =& $this->getObject('blockcentersearchappbox');
 $this->objUser =& $this->getObject('user','security');
 $centersearch = $centersearch->show($this->getParam('module','studentenquiry'));
-//$left =& $this->getObject('blockleftcolumn');
-//$left = $left->show();
-
-$left =& $this->getObject('financialaidleftblock');
-$left = $left->show();
 $details = "<h2>".$objLanguage->languagetext('mod_financialaid_searchapp','financialaid')."</h2>";
 
 
@@ -196,16 +189,9 @@ if ($foundStudents == false) {
         $pagelinks = '';
         $records = '';
 }
+$left = $left."<br />".$records;
 
 $content = "<center>".$details.$pagelinks." ".$content . "</center>";
-$left = $left."<br />".$records;
-$cssLayout =& $this->newObject('csslayout', 'htmlelements');
-$cssLayout->setNumColumns(3);
-$cssLayout->setLeftColumnContent($left);
-$cssLayout->setRightColumnContent($right);
-$cssLayout->setMiddleColumnContent($content);
 
-echo $cssLayout->show();
-
-
+echo $content;
 ?>
