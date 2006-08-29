@@ -1,6 +1,7 @@
 <?
-$appnum = $this->getParam('appnum');
-
+if (!isset($appnum)){
+    $appnum = $this->getParam('appnum');
+}
 $right =& $this->getObject('applicationblocksearchbox');
 $right = $right->show($this->getParam('module','studentenquiry'));
 $this->objDBApplication =& $this->getObject('dbapplication');
@@ -26,7 +27,7 @@ $left = $left->show();
 if(count($stdinfo) > 0){
     $gender = $stdinfo[0]['gender'];
     $saCitizen = $stdinfo[0]['sacitizen'];
-    $supportingSelf = $stdinfo[0]['supportingSelf'];
+    $supportingSelf = $stdinfo[0]['supportingself'];
 
     $table->startRow();
     $table->addCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid'));

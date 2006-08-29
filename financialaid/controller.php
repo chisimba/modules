@@ -40,6 +40,7 @@ class financialaid extends controller
 		$this->loadClass('tabbedbox', 'htmlelements');
 		$this->loadclass('link','htmlelements');
 		$this->loadclass('dropdown','htmlelements');
+		$this->loadclass('radio','htmlelements');
 		$this->objDBApplication =& $this->getObject('dbapplication');
 		$this->objDBNextofkin =& $this->getObject('dbnextofkin');
 		$this->objDBDependants =& $this->getObject('dbdependants');
@@ -87,6 +88,7 @@ class financialaid extends controller
 				return 'studentapplicationlist_tpl.php';
 
 			case 'applicationinfo':
+                $this->setVar('appnum', $this->getParam('appnum', NULL));
 				return 'studentapplicationinfo_tpl.php';
 
 			case 'shownextofkin':
@@ -100,31 +102,36 @@ class financialaid extends controller
             //----------------
             //Application actions
             case 'addapplication':
-                 return 'addapplication_tpl.php';
+                return 'addapplication_tpl.php';
             case 'addnextofkin':
-                 return 'addnextofkin_tpl.php';
+                return 'addnextofkin_tpl.php';
             case 'adddependant':
-                 return 'adddependant_tpl.php';
+                return 'adddependant_tpl.php';
             case 'addparttimejob':
-                 return 'addparttimejob_tpl.php';
+                return 'addparttimejob_tpl.php';
             case 'addstudentfamily':
-                 return 'addstudentfamily_tpl.php';
+                return 'addstudentfamily_tpl.php';
                  
             case 'saveapplication':
-                 $this->objDBApplication->saveRecord('add', $this->objUser->userId());
-                 return 'addapplication_tpl.php';
+                $this->objDBApplication->saveRecord('add', $this->objUser->userId());
+                $this->setVar('appnum', $this->getParam('appnum', NULL));
+                return 'studentapplicationinfo_tpl.php';
             case 'savenextofkin':
-                 $this->objDBNextofkin->saveRecord('add', $this->objUser->userId());
-                 return 'studentapplicationinfo_tpl.php';
+                $this->objDBNextofkin->saveRecord('add', $this->objUser->userId());
+                $this->setVar('appnum', $this->getParam('appnum', NULL));
+                return 'studentapplicationinfo_tpl.php';
             case 'savedependant':
-                 $this->objDBDependants->saveRecord('add', $this->objUser->userId());
-                 return 'studentapplicationinfo_tpl.php';
+                $this->objDBDependants->saveRecord('add', $this->objUser->userId());
+                $this->setVar('appnum', $this->getParam('appnum', NULL));
+                return 'studentapplicationinfo_tpl.php';
             case 'saveparttimejob':
-                 $this->objDBParttimejobs->saveRecord('add', $this->objUser->userId());
-                 return 'studentapplicationinfo_tpl.php';
+                $this->objDBParttimejobs->saveRecord('add', $this->objUser->userId());
+                $this->setVar('appnum', $this->getParam('appnum', NULL));
+                return 'studentapplicationinfo_tpl.php';
             case 'savestudentfamily':
-                 $this->objDBStudentFamily->saveRecord('add', $this->objUser->userId());
-                 return 'studentapplicationinfo_tpl.php';
+                $this->objDBStudentFamily->saveRecord('add', $this->objUser->userId());
+                $this->setVar('appnum', $this->getParam('appnum', NULL));
+                return 'studentapplicationinfo_tpl.php';
             //----------------
             //Test action
             case 'test':

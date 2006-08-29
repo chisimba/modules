@@ -15,9 +15,11 @@ $appnumfield = new textinput("appnum", $appnum,  "hidden", NULL);
 $firstname = new textinput('firstname');
 $relationship = new textinput('relationship');
 $dependantReason = new textinput('dependantreason');
-$hasIncome = new dropdown('hasIncome');
+$hasIncome = new radio('hasIncome');
 $hasIncome->addOption('1', $objLanguage->languagetext('word_yes'));
 $hasIncome->addOption('0', $objLanguage->languagetext('word_no'));
+$hasIncome->setBreakSpace('  ');
+
 $incomeType = new textinput('incomeType');
 $incomeAmount = new textinput('incomeAmount');
 $category = new textinput('category');

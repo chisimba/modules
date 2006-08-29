@@ -93,5 +93,11 @@ class dbapplication extends dbTable
         $where = " WHERE appNumber ='" . $appnum ."'";
         return $this->getAll($where);
     }
+    
+    function getApplicationByStdnum($stdnum)
+    {
+        $where = " WHERE studentNumber ='" . $stdnum ."'";
+        return $this->getAll($where);
+    }
 } #end of class
 ?>

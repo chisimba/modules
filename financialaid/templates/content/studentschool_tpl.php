@@ -14,7 +14,7 @@ $rep = array(
       'FIRSTNAME' => $stname,
       'LASTNAME' => $stsname);
 
-$details = "<p><b>".$objLanguage->code2Txt('mod_financialaid_matrictitle','financialaid',$rep)."</b></p>";
+$details = "<h2>".$objLanguage->code2Txt('mod_financialaid_matrictitle','financialaid',$rep)."</h2>";
 
 $idnumber = $stdinfo[0]->IDN;
 $stdnum = $stdinfo[0]->STDNUM;

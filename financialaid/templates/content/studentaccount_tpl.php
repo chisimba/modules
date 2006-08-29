@@ -15,7 +15,7 @@ $rep = array(
       'FIRSTNAME' => $stname,
       'LASTNAME' => $stsname);
 
-$details = "<p><b>".$objLanguage->code2Txt('mod_financialaid_accounttitle','financialaid',$rep)."</b></p>";
+$details = "<h2>".$objLanguage->code2Txt('mod_financialaid_accounttitle','financialaid',$rep)."</h2>";
 
 $idnumber = $stdinfo[0]->IDN;
 $stdnum = $stdinfo[0]->STDNUM;
@@ -78,11 +78,11 @@ if(is_null($year)){
                 $tableAccount->startRow();
      	        $tableAccount->addCell($data->DTEYMD);
   	            $tableAccount->addCell($data->DOCNUM);
-  	            $tableAccount->addCell($data->DOCSRC);
+  	            $tableAccount->addCell(htmlspecialchars($data->DOCSRC));
       	        $tableAccount->addCell($data->TRNCDE);
 
                 $transDetails = $this->objDbFinAid->getTransactionDetails($data->TRNCDE);
-  	            $tableAccount->addCell($transDetails[0]->MEDDSC);
+  	            $tableAccount->addCell(htmlspecialchars($transDetails[0]->MEDDSC));
 
       	        $tableAccount->addCell($data->AMT);
 

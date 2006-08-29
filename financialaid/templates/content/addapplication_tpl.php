@@ -14,18 +14,24 @@ $stdNum = new textinput('stdnum');
 $idNum = new textinput('idNum');
 $surname = new textinput('surname');
 $firstname = new textinput('firstname');
-$gender = new dropdown('gender');
+$maritalSts = new textinput('maritalsts');
+
+$gender = new radio('gender');
 $gender->addOption('Male',$objLanguage->languagetext('word_male'));
 $gender->addOption('Female',$objLanguage->languagetext('word_female'));
+$gender->setBreakSpace('  ');
 
-$SACitizen = new dropdown('saCitizen');
+$SACitizen = new radio('saCitizen');
 $SACitizen->addOption('1',$objLanguage->languagetext('word_yes'));
 $SACitizen->addOption('0',$objLanguage->languagetext('word_no'));
+$SACitizen->setSelected('1');
+$SACitizen->setBreakSpace('  ');
 
-$maritalSts = new textinput('maritalsts');
-$supportingSelf = new dropdown('supportingself');
+$supportingSelf = new radio('supportingself');
 $supportingSelf->addOption('1',$objLanguage->languagetext('word_yes'));
 $supportingSelf->addOption('0',$objLanguage->languagetext('word_no'));
+$supportingSelf->setSelected('1');
+$supportingSelf->setBreakSpace('  ');
 
 $addbut= new button('add');
 $addbut->setToSubmit();

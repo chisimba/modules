@@ -16,30 +16,28 @@ $this->objDbFinAid =& $this->getObject('dbfinaid');
 $table =& $this->newObject('htmltable','htmlelements');
         $table =& $this->newObject('htmltable','htmlelements');
         $table->startHeaderRow();
-        $table->addHeaderCell('ID');
-        $table->addHeaderCell('Code');
-        $table->addHeaderCell('Desc');
+        $table->addHeaderCell('Allowance Code');
+        $table->addHeaderCell('Amt');
 
         $table->endHeaderRow();
 
-for($i = 0; $i < 50; $i++)
+for($i = 1; $i < 9; $i++)
 {
-    $result = $this->objDbFinAid->getParam($i);
+    $result = $this->objDbFinAid->getBursaryAllowance($i, 'ALWCDE');
     $oddEven = 'odd';
     if (is_array($result)){
         foreach($result as $data){
   			    $oddEven = $oddEven == 'odd'?'even':'odd';
                 $table->row_attributes = " class = \"$oddEven\"";
                 $table->startRow();
-  	            $table->addCell($data['PRMIDN']);
-  	            $table->addCell($data['PRMCDE']);
-      	        $table->addCell($data['LNGDSC']);
+  	            $table->addCell($data->ALWCDE);
+  	            $table->addCell($data->AMT);
                 $table->endRow();
         }
     }
 
 }
-$content = "<center>".$details." ".$table->show();
+$content = "<center>".$details." ".$table->show()."</center>";
 
 
 // Create an instance of the css layout class

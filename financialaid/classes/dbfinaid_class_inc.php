@@ -135,5 +135,16 @@ class dbfinaid extends object
     function getStudent($value, $field = 'STDNUM'){
   		return $this->objSoapClient->getlimitSTDET($field, $value, 0, 0);
     }
- 
+
+    function getBursary($value, $field = 'BRSCDE'){
+  		return $this->objSoapClient->getlimitBRSRY($field, $value, 0, 0);
+    }
+
+    function getBursaryApp($value, $field = 'BSTDNUM'){
+  		return $this->objSoapClient->getlimitSTBAD($field, $value, 0, 0);
+    }
+
+    function getBursaryAllowance($value, $field = 'ALWCDE'){
+  		return $this->objSoapClient->getlimitALWNC($field, $value, 0, 0);
+    }
 }

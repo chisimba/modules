@@ -85,12 +85,12 @@ $table->addCell($city->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_postcode','financialaid'));
+$table->addCell($objLanguage->languagetext('mod_financialaid_pcode','financialaid'));
 $table->addCell($postcode->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_maritalsts','financialaid'));
+$table->addCell($objLanguage->languagetext('mod_financialaid_mrtsts','financialaid'));
 $table->addCell($maritalSts->show());
 $table->endRow();
 
