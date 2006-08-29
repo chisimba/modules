@@ -5,6 +5,19 @@
  * This template will create new content item
  */
 
+//first check if there is sections
+
+if($this->_objSections->isSections())
+{
+    $str ='<script language="javascript">
+           <![CDATA[
+            alert(\'Please add a section before creating content\');
+            ]]>
+            </script>';
+    print $str;
+} else {
+    
+
 //initiate objects
 $table = & $this->newObject('htmltable', 'htmlelements');
 $titleInput = & $this->newObject('textinput', 'htmlelements');
@@ -162,5 +175,5 @@ echo   $h3->show();
 
 echo $objForm->show();
 //echo $introInput->show();
-
+}
 ?>

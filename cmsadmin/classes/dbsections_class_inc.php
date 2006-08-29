@@ -194,7 +194,22 @@ class dbsections extends dbTable
 		
 	}
 	
-	
+	/**
+	 * Method to check if there is sections
+	 * @access public
+	 * @return boolean
+	 * 
+	 */
+	public function isSections()
+	{
+	    $list = $this->getAll();
+	    if(count($list) > 0)
+	    {
+	        return TRUE;
+	    } else {
+	        return FALSE;
+	    }
+	}
 	
 	
 	/**
