@@ -45,7 +45,7 @@
 	$dropdown = new dropdown("recipient");
 	$dropdown->addOption("All","All");
 	foreach ($users as $item) {
-		$dropdown->addOption($item["username"],$item["firstName"] . " " . $item["surname"]);
+		$dropdown->addOption($item["username"],$item["firstname"] . " " . $item["surname"]);
 	}
 	echo "<td>";
 	echo $dropdown->show();
