@@ -9,6 +9,12 @@
 <chisimba_template_tagnames>
 
   <tag>
+    <tagname>templatecode</tagname>
+    <tagtext>{TEMPLATECODE}</tagtext>
+    <description>Used in generating a template skeleton, where it is replaced by the code that will be in the template</description>
+  </tag>
+
+  <tag>
     <tagname>fieldname</tagname>
     <tagtext>{FIELDNAME}</tagtext>
     <description>Used in generating a data edit template, where it is replaced by the field name</description>
