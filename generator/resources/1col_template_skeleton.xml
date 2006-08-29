@@ -2,20 +2,6 @@
 <!-- This file is a code generation skeletong for Chisimba 2 col template layout -->
 <chisimba_template_skeleton_2col>
 
-<item name="initializeTemplate" type="templatecode">
-<description>Initializes the 2 column layout for the edit template</description>
-<code>
-//Create an instance of the css layout class
-$cssLayout = $this->newObject('csslayout', 'htmlelements');
-//Set columns to 2
-$cssLayout->setNumColumns(2);
-//Initialize NULL content for the left side column
-$leftSideColumn = "";
-//Initialize NULL content for the main column
-$rightSideColumn = "";
-</code>
-</item>
-
 <item name="renderOutput" type="parsecode">
 <description>Used in generating a data edit template, where it is replaced by the field name</description>
 <code>{TEMPLATECODE}</code>
@@ -24,12 +10,9 @@ $rightSideColumn = "";
 <item name="renderOutput" type="templatecode">
 <description>Render the output strings and display the output</description>
 <code>
-//Add Left column
-$cssLayout->setLeftColumnContent($leftSideColumn);
-// Add Right Column
-$cssLayout->setMiddleColumnContent($rightSideColumn);
+//------------------- RENDER IT OUT -------------------------
 //Output the content to the page
-echo $cssLayout->show();
+echo $contentTxt;
 </code>
 </item>
 

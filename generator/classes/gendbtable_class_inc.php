@@ -42,56 +42,40 @@ class gendbtable extends abgenerator implements ifgenerator
 	function generate($className)
 	{
 		//Load the skeleton file for the class from the XML		
-        $this->loadSkeleton('dbtable');
+        $this->loadSkeleton('dbtable', 'class');
         //Insert the properties
-        $this->insertItem('dbtable', 'properties');
+        $this->insertItem('dbtable', 'class', 'properties');
         //Insert the properties
-        $this->insertItem('dbtable', 'methods');
-        //Insert the save methods (must have the array set first)
-        $this->classCode = str_replace('{SAVECODE}', $this->getSaveMethods(), $this->classCode);
+        $this->insertItem('dbtable', 'class', 'methods');
+		//Insert the save code in place of {SAVECODE}
+		$this->savecode();
         //Insert the module description
         $this->moduledescription();
         //Insert the copyright
         $this->copyright();
         //Insert the database table
         $this->databasetable();
-
-        //Get the class name
-        $databaseclass = $this->getParam('databaseclass', '{UNSPECIFIED_DATABASE_CLASSNAME}');
-        //Serialize the database class name just in case
-        $this->setSession('databaseclass', $databaseclass);
+        //Insert the database class info
+        $this->databaseclass();
         //Clean up unused template tags
         $this->cleanUp();
         $this->prepareForDump();
 	    return $this->classCode;
 	}
 	
-    /**
-    * 
-    * Method to load an XML definition file to extract the method 
-    * code. The XML file is named 
-    * and is structured as: controller-methods.xml located in the
-    * resources folder of this module. It uses simplexml_load_file
-    * to do the work.
-    * <method>
-    *  <name>
-    *  </name>
-    *  <code>
-    *  </code>
-    * </method>
-    * 
-    *
-    function getDefaultMethods()
-    {
-        $ret="";
-        $xml = simplexml_load_file("modules/generator/resources/dbtable-methods.xml"); 
-        //Loop through and include the code
-        foreach($xml->method as $method) {
-            $ret .= $method->code;
-        }
-        return $ret;
-    }*/
-    
+	/**
+	 * 
+	 * Method ot insert the code for saving in place of {SAVECODE}
+	 * 
+	 * @access Private
+	 * 
+	 */
+	private function savecode()
+	{
+	    //Insert the save methods (must have the array set first)
+        $this->classCode = str_replace('{SAVECODE}', $this->getSaveMethods(), $this->classCode);
+	}
+	
     /**
     * 
     * Method to return the save methods for the data
@@ -283,19 +267,6 @@ class gendbtable extends abgenerator implements ifgenerator
                 break;
         }
         return $ret;
-    }
-    
-    /**
-    * 
-    * Simple method to insert text in place of {PURPOSE} in the generated
-    * code. 
-    * 
-    * @return string The text
-    * 
-    */
-    function getPurpose()
-    {
-        return "Data access class";
     }
 }
 ?>

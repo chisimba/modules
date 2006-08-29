@@ -9,22 +9,23 @@ $objWiz = $this->getObject('wizlinks');
 //Put in the standard left column text
 $leftSideColumn = $objWiz->putStandardLeftTxt();
 
+//Get the page
+$page = $this->getParam('page', NULL);
+
 // Add the heading to the content
 $objH =& $this->getObject('htmlheading', 'htmlelements');
 //Heading <h3>
 $objH->type=3;
-$objH->str=$objLanguage->languageText("mod_generator_startheading", "generator");
+$objH->str=$objLanguage->languageText("mod_generator_" . $page . "_instructions", "generator");
 $middleColumn = $objH->show();
 
-//Add the form to the template
-$objStart = $this->getObject('tpstart');
-$middleColumn .= $objLanguage->languageText("mod_generator_starttext","generator");
-
+$middleColumn .= 'Controller<br />'
+	. '<textarea name="controller" cols="78" rows="30">' . $cont 
+	. '</textarea><br /><br />';
 
 //Variable for the rightside column text
-
+$objWiz = $this->getObject('wizlinks');
 $rightSideColumn = $objWiz->show();
-
 
 //------------------- RENDER IT OUT -------------------------
 
@@ -39,4 +40,5 @@ $cssLayout->setRightColumnContent($rightSideColumn);
 
 //Output the content to the page
 echo $cssLayout->show();
+
 ?>

@@ -23,60 +23,11 @@ abstract class abgenerator extends object
 {
     /**
     * 
-    * @var string $methodXML Property to hold the methodXML when read using getMethod()
-    */
-	private $methodXml;
-	
-    /**
-    * 
-    * @var string $moduleName String the name of the module being created
-    */
-    public $moduleName;
-
-    /**
-    * 
-    * @var string $className String the name of the class being created
-    * 
-    */
-    public $className;
-    
-    /**
-    * 
     * @var string $classCode String to hold the content of the 
     * class being created
     * 
     */
     public $classCode;
-
-    /**
-    * 
-    * @var string $initObjects String containing the code for the objects to be 
-    * provided in the init class
-    * 
-    */
-    public $initObjects;
-    
-    /** 
-    * 
-    * @var string $author String  The author of the module, usually the logged in user.
-    * 
-    */
-    public $author;
-    
-    /**
-    * 
-    * @var string $copyRight String The module copyright owner
-    * 
-    */
-    public $copyRight;
-    
-    /**
-    * 
-    * @var string $package String The package that the class belongs to,
-    * usually the same as the module code
-    * 
-    */
-    public $package;
     
     /**
     * 
@@ -97,13 +48,14 @@ abstract class abgenerator extends object
     
     /**
      * 
-     * Method to read the class skeleton
+     * Method to read the object skeleton
      * 
      */
-    public function loadSkeleton($classItem)
+    public function loadSkeleton($classItem, $objectType='class')
     {
         //Load the XML class template
-        $xml = simplexml_load_file("modules/generator/resources/" . $classItem . "_class_skeleton.xml"); 
+        $xml = simplexml_load_file("modules/generator/resources/" 
+          . $classItem . "_" . $objectType . "_skeleton.xml"); 
         //Loop through and include the code
         foreach($xml->item as $item) {
             $this->classCode .= $item->code;
@@ -131,11 +83,11 @@ abstract class abgenerator extends object
      * @access Private
      * 
      */
-     public function insertItem($classItem, $itemType)
+     public function insertItem($classItem, $objectType, $itemType)
      {
          //Load the XML class template
         $xml = simplexml_load_file("modules/generator/resources/" 
-          . $classItem . "_class_" . $itemType . ".xml");
+          . $classItem . "_" . $objectType  . "_" . $itemType . ".xml");
         //Initialize the string that we are reading into
         $classInsert=""; 
         //Loop through and include the code
@@ -280,6 +232,29 @@ abstract class abgenerator extends object
         //Insert the copyright
         $this->classCode = str_replace('{COPYRIGHT}', $databaseTable, $this->classCode);
     }
+    
+    /**
+    * 
+    * Method to return the databaseclass and insert it into the code of the 
+    * class being built in place of the {DATABASECLASE} parsecode
+    *  
+    * @access Private
+    * 
+    */
+	function databaseclass()
+	{
+	    //Read the database class
+        $databaseclass = $this->getParam('databaseclass', NULL);
+        //If there is no parameter, check the session cookies
+        if ($databaseclass == NULL) {
+            $databaseclass = $this->getSession('databaseclass', '{DATABASECLASS_UNSPECIFIED}');
+        } else {
+            //Serialize the variable to the session since we are geting it from a param
+			$this->setSession('databaseclass', $databaseclass);
+        }
+        //Insert the database classname
+        $this->classCode = str_replace('{DATACLASS}', $databaseclass, $this->classCode);
+	}
     
 
     /**

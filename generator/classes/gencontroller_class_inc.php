@@ -45,22 +45,18 @@ class gencontroller extends abgenerator implements ifgenerator
 	 */
 	function generate($className)
 	{
-
-	    
-	
 		//Load the skeleton file for the class from the XML		
-        $this->loadSkeleton('controller');
+        $this->loadSkeleton('controller', 'class');
         //Insert the properties
-        $this->insertItem('controller', 'properties');
+        $this->insertItem('controller', 'class', 'properties');
         //Insert the properties
-        $this->insertItem('controller', 'methods');
+        $this->insertItem('controller', 'class', 'methods');
         //Insert the module description
         $this->moduledescription();
         //Insert the copyright
         $this->copyright();
         //Insert the database class
         $this->databaseclass();
-
         //Add code for logging
         $this->initLogger();
         //Clean up unused template tags
@@ -68,51 +64,5 @@ class gencontroller extends abgenerator implements ifgenerator
         $this->prepareForDump();
 	    return $this->classCode;
 	}
-	
-	function databaseclass()
-	{
-	    //Read the database class
-        $databaseclass = $this->getParam('databaseclass', '{UNSPECIFIED}');
-		//Serialize the variables to the session
-	    $this->setSession('databaseclass', $databaseclass); 
-        //Insert the database classname
-        $this->classCode = str_replace('{DATACLASS}', $databaseclass, $this->classCode);
-	}
-	
-    //OLD CRUD TO BE CLEANED UP
-    /**
-    * 
-    * Method to read the standard objects to build in init() from
-    * the file standard-objects.xml. It builds the property definitions
-    * as well as the code to do the instantiation, which is placed
-    * int $this->initObjects for later use.
-    * 
-    * @return string $ret The property definitions
-    * 
-    *
-    function getStandardObjectDefinitions()
-    {
-        $ret="";
-        
-        $xml = simplexml_load_file("modules/generator/resources/standard-objects.xml"); 
-        //Loop through and include the code
-        foreach($xml->object as $object) {
-            //Set up the defining of the properties
-            $ret .= "\n    /**\n    *\n    *"
-              . "@var string object \$" . $object->name
-              . "String to hold the instance of the object " 
-              . $object->name . "\n    * which is " 
-              . $object->comment . ".\n    *\n    *====================================================================/\n" 
-              . "    public \$" . $object->name . ";";
-            //Set up an array to be used for instantiating the objects in init()
-            $this->initObjects .= "        //" . $object->comment
-              . "\n        \$this->" . $object->name
-              . " = \$this->getObject(\"" .  $object->obclass 
-              . "\", \"" . $object->module . "\");\n";
-            
-        }
-        return $ret;
-    }*/
-
 }
 ?>
