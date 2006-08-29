@@ -64,7 +64,7 @@ class block_chat extends object
         // Get the last post.
         $content = $objDbChat->listLast($contextId, $objUser->userName());
         if (empty($content)) {
-            return $this->objLanguage->languageText('mod_chat_noposts','chat').$chatLink;
+            $str .= $this->objLanguage->languageText('mod_chat_noposts','chat').$chatLink;
         }
         else {
             $entry = $content[0];
@@ -97,10 +97,10 @@ class block_chat extends object
             */
         }
         // Show number of users online.
-		/*
         $objDbChatUsers =& $this->getObject('dbchatusers');
-        $list = $objDbChatUsers->listCount($contextId);
-        $count = $list[0]["count(*)"];
+        //$list = $objDbChatUsers->listCount($contextId);
+        //$count = $list[0]["count(*)"];
+		$count = $objDbChatUsers->listCount($contextId);
         $str .= "<br/>".
             $this->objLanguage->code2Txt(
                 'mod_chat_usersonline','chat',
@@ -112,7 +112,6 @@ class block_chat extends object
                     )
                 )
              );
-		*/
         $str .= '<br/>'.$chatLink;
         // Return block output string.
         return $str;

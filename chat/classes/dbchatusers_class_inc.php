@@ -86,10 +86,13 @@ class dbChatUsers extends dbTable
 	public function listCount($contextId)
 	{
         $now = mktime()-30*60;
+		/*
 		$sql = "SELECT count(*) FROM tbl_chat_users
 		WHERE (contextId='" . $contextId . "')
         AND (lastActive > $now)";
 		return $this->getArray($sql);
+		*/
+		return $this->getRecordCount("WHERE (contextId='" . $contextId . "') AND (lastActive > $now)");
 	}
 	
 	/**
