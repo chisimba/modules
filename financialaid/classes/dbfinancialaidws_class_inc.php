@@ -21,7 +21,7 @@ class dbfinancialaidws extends object
     
 	function init(){
 		parent::init();
-        $this->NAMESPACE="http://127.0.0.1/webservices/testws4.php?wsdl";
+        $this->NAMESPACE="http://127.0.0.1/webservices/testws5.php?wsdl";
         $this->objSoapClient = new SoapClient($this->NAMESPACE);
         
     }
@@ -38,6 +38,19 @@ class dbfinancialaidws extends object
     */
     function getApplication($value, $field = 'appNumber'){
   		return $this->objSoapClient->getApplication($field, $value, 0, 0);
+    }
+    
+    /**
+    *
+    * Function to retrieve all application details from the database
+    *
+    * @param string $value: The value to search for in the database
+    * @param string $field: The field to search on in the database
+    * @return array: The array of matching records from the database
+    *
+    */
+    function getAllApplications(){
+  		return $this->objSoapClient->getAllApplications(0, 0);
     }
 
     /**
@@ -125,7 +138,7 @@ class dbfinancialaidws extends object
     *
     */
     function saveDependant($mode, $fields){
-  		return $this->objSoapClient->saveDependants($mode, $fields);
+  		return $this->objSoapClient->saveDependant($mode, $fields);
     }
 
     /**
@@ -149,6 +162,6 @@ class dbfinancialaidws extends object
     *
     */
     function saveStudentInFamily($mode, $fields){
-  		return $this->objSoapClient->saveStudentsInFamily($mode, $fields);
+  		return $this->objSoapClient->saveStudentInFamily($mode, $fields);
     }
 }

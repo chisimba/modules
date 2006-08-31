@@ -96,6 +96,10 @@ class financialaid extends controller
 
 			case 'searchapplications':
 				return 'studentapplicationlist_tpl.php';
+			case 'searchmarkrange':
+				return 'markrangesearch_tpl.php';
+			case 'listmarkrange':
+				return 'markrangelist_tpl.php';
 
 			case 'applicationinfo':
                 $this->setVar('appnum', $this->getParam('appnum', NULL));
