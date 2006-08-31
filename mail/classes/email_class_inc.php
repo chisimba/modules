@@ -14,11 +14,11 @@ require_once("ifsendmail_class_inc.php");
 
 /**
 *
-* HTML email sending class for Chisimba 
-* 
+* HTML email sending class for Chisimba
+*
 * This class provides a wrapper for PHPMailer, which is available from
 *  http://phpmailer.sourceforge.net/
-* 
+*
 * Features include:
 * Class Features:
 *  - Send emails with multiple TOs, CCs, BCCs and REPLY-TOs
@@ -29,7 +29,7 @@ require_once("ifsendmail_class_inc.php");
 *  - SMTP authentication
 *  - Native language support
 *  - Word wrap, and more!
-* 
+*
 * See documentation in the lib directory of this module for more information
 * and credits for the library
 *
@@ -43,9 +43,9 @@ require_once("ifsendmail_class_inc.php");
 class email extends absendmail implements ifsendmail
 {
 	/**
-	 * 
+	 *
 	 * @var string Object $objBaseMail String object to hold the mailer instance
-	 * 
+	 *
 	 */
 	private $objBaseMail;
 
@@ -54,11 +54,11 @@ class email extends absendmail implements ifsendmail
     * Standard init method
     *
     */
-    function init()
+    function __construct()
     {
-		$this->objBaseMail = new PHPMailer();
-        //Get an instance of the config object
-        $objConfig=&$this->newObject('config','config');
+    	$this->objBaseMail = new PHPMailer;
+	    //Get an instance of the config object
+        $objConfig=&$this->newObject('altconfig','config');
         //Get the value of the delimiter
         $method = $objConfig->getValue('MAIL_SEND_METHOD', 'mail');
         switch ($method) {
@@ -73,18 +73,22 @@ class email extends absendmail implements ifsendmail
             	    $this->objBaseMail->Password = $objConfig->getValue('MAIL_SMTP_PASSWORD', 'mail');
             	}
             	break;
-            	
+
             default:
-            	die ("still working on non-SMTP based methods");
+            	//Sets Mailer to send message using PHP mail() function.
+            	$this->objBaseMail->IsMail();
+            	$this->objBaseMail->Host = "localhost";
+
+            	//die ("still working on non-SMTP based methods");
                 break;
 
         }
         //Check if we should use HTML mail
         $useHTMLMail = $objConfig->getValue('MAIL_USE_HTML_AS_DEFAULT', 'mail');
         if ($useHTMLMail == "true") {
-        	$this->objBaseMail->IsHTML(TRUE); 
+        	$this->objBaseMail->IsHTML(TRUE);
         } else {
-            $this->objBaseMail->IsHTML(FALSE); 
+            $this->objBaseMail->IsHTML(FALSE);
         }
         //Set the default wordwrap
 		$this->objBaseMail->WordWrap = 50;
@@ -106,10 +110,10 @@ class email extends absendmail implements ifsendmail
 		$this->objBaseMail->AltBody = $this->altBody;
 		$this->objBaseMail->mailer = $this->mailer;
 		//Add the addresses to the mailer
-		if (isarray($this->to)) {
-		    
+		if (is_array($this->to)) {
+
 		} else {
-		    $this->objBaseMail->AddAddress($this->to); 
+		    $this->objBaseMail->AddAddress($this->to);
 		}
 		//Add the CC addresses to the mailer
 		if (isset($this->cc)) {
@@ -118,7 +122,7 @@ class email extends absendmail implements ifsendmail
 			        $this->objBaseMail->AddCC($address);
 			    }
 			} else {
-			    $this->objBaseMail->AddCC($this->cc); 
+			    $this->objBaseMail->AddCC($this->cc);
 			}
 		}
 		//Add the BCC addresses to the mailer
@@ -128,7 +132,7 @@ class email extends absendmail implements ifsendmail
 			        $this->objBaseMail->AddBCC($address);
 			    }
 			} else {
-			    $this->objBaseMail->AddBCC($this->bcc); 
+			    $this->objBaseMail->AddBCC($this->bcc);
 			}
 		}
 		//Send it and let us know if it was sent
@@ -138,8 +142,8 @@ class email extends absendmail implements ifsendmail
             return FALSE;
         }
     }
-    
-    
+
+
     /**
     *
     * Method to attach a file
@@ -149,36 +153,36 @@ class email extends absendmail implements ifsendmail
     {
        $this->objBaseMail->AddAttachment($file);
     }
-    
+
     /**
-     * 
+     *
      * Method to provide access to the properties of the base
      * mailer class.
-     * 
+     *
      * @param string $bmProperty The property to set
      * @param string $value THe value to be set
-     * 
+     *
      */
     public function setBaseMailerProperty($bmProperty, $value)
     {
         $this->objBaseMail->$bmProperty = $value;
     }
-    
+
     /**
-     * 
+     *
      * Method to clear attachments
-     * 
+     *
      */
     public function clearAttachments()
     {
-    	$this->objBaseMail->ClearAttachments(); 
+    	$this->objBaseMail->ClearAttachments();
     }
-    
+
     /**
-     * 
+     *
      * Method to clear addresses
-     * 
-     */    
+     *
+     */
     public function clearAddresses()
     {
         $this->objBaseMail->ClearAddresses();
