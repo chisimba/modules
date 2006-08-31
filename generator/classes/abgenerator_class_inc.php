@@ -37,6 +37,13 @@ abstract class abgenerator extends object
     public $objUser;
     
     /**
+    * 
+    * @var string array $unDeclaredMethods String to hold the array of undeclared methods
+    * 
+    */
+    public $unDeclaredMethods;
+    
+    /**
      * 
      * Standard init method, instantiates user object
      * 
@@ -80,23 +87,25 @@ abstract class abgenerator extends object
      * 
      * @param string $classItem The class type being built (eg controller, db, etc)
      * @param string $itemType The item type being inserted (must be either properties or methods)
-     * @access Private
+     * @access Public
      * 
      */
      public function insertItem($classItem, $objectType, $itemType)
      {
          //Load the XML class template
-        $xml = simplexml_load_file("modules/generator/resources/" 
-          . $classItem . "_" . $objectType  . "_" . $itemType . ".xml");
-        //Initialize the string that we are reading into
-        $classInsert=""; 
-        //Loop through and include the code
-        foreach($xml->item as $item) {
-            $classInsert .= $item->code;
-        }
-        $pattern = "{" . strtoupper($itemType) . "}";
-        //Insert the classProperties in place of the parsecode {PROPERTIES}
-        $this->classCode = str_replace($pattern, $classInsert, $this->classCode);
+         $fileName = "modules/generator/resources/" 
+          . $classItem . "_" . $objectType  . "_" 
+          . $itemType . ".xml";
+			$xml = simplexml_load_file($fileName);
+         //Initialize the string that we are reading into
+         $classInsert=""; 
+         //Loop through and include the code
+         foreach($xml->item as $item) {
+             $classInsert .= $item->code;
+         }
+         $pattern = "{" . strtoupper($itemType) . "}";
+         //Insert the classProperties in place of the parsecode {PROPERTIES}
+         $this->classCode = str_replace($pattern, $classInsert, $this->classCode);
      }
      
     /**
@@ -105,7 +114,7 @@ abstract class abgenerator extends object
     * it into the code of the class being built in place of the {AUTHOR} 
     * parsecode
     * 
-    * @access Private
+    * @access Public
     * 
     */
     public function author()
@@ -120,7 +129,7 @@ abstract class abgenerator extends object
     * Method to return the module code and insert it into the code of the 
     * class being built in place of the {MODULECODE} parsecode
     *  
-    * @access Private
+    * @access Public
     * 
     */
     public function modulecode()
@@ -144,7 +153,7 @@ abstract class abgenerator extends object
     * Method to return the module name and insert it into the code of the 
     * class being built in place of the {MODULENAME} parsecode
     *  
-    * @access Private
+    * @access Public
     * 
     */
     public function modulename()
@@ -160,6 +169,30 @@ abstract class abgenerator extends object
         }
         //Do the replace
         $this->classCode = str_replace("{MODULENAME}", $moduleCode, $this->classCode);
+        return TRUE;
+    }
+    
+    /**
+    * 
+    * Method to return the classname name and insert it into the code of the 
+    * class being built in place of the {CLASSNAME} parsecode
+    *  
+    * @access Public
+    * 
+    */
+    public function classname()
+    {
+    	//Get the module code from parameter
+        $moduleName = $this->getParam('classname', NULL);
+        //If there is no parameter, check the session cookies
+        if ($classname == NULL) {
+            $classname = $this->getSession('classname', '{CLASSNAME_UNSPECIFIED}');
+        } else {
+            //Serialize the variable to the session since we are geting it from a param
+			$this->setSession('classname', $classname);
+        }
+        //Do the replace
+        $this->classCode = str_replace("{CLASSNAME}", $classname, $this->classCode);
         return TRUE;
     }
 
@@ -255,6 +288,13 @@ abstract class abgenerator extends object
         //Insert the database classname
         $this->classCode = str_replace('{DATACLASS}', $databaseclass, $this->classCode);
 	}
+	/**
+	 * 
+	 * A method corresponding to the {SPECIALMETHODS} parsecode that
+	 * must be replaced if you have any special methods 
+	 * 
+	 */
+	public function specialmethods() {}
     
 
     /**
@@ -350,7 +390,7 @@ abstract class abgenerator extends object
      * @TODO bring this in line with the new approach ===================================================
      * 
      */
-    public function initLogger()
+    public function logger()
     {
         $str = "        //Get the activity logger class\n"
           . "        \$this->objLog=\$this->newObject('logactivity', 'logger');\n"
@@ -371,5 +411,44 @@ abstract class abgenerator extends object
     {
         return $this->objUser->fullName();
     }
+    
+    /**
+     * 
+     * Method to validate that all the placeholders (parsecodes of form {CODE}) 
+     * have a method in the class corresponding to them
+     * 
+     * @return FALSE | array of missing codes
+     *  
+     */
+     function validateParseCodes()
+     {
+     	$arParseCodes = $this->getParseCodes();
+     	$arMethods = get_class_methods($this);
+     	foreach ($arParseCodes as $cd) {
+     		$cd = strtolower($cd);
+     	    if (!in_array($cd, $arMethods)) {
+   				$ret[]=$cd;
+		    }
+     	}
+     	if (count($ret) > 0) {
+     		$this->unDeclaredMethods=$ret;
+     	    return FALSE;
+     	} else {
+     	    return TRUE;
+     	}
+     }
+     
+     function getParseCodes()
+     {
+        $regExpr = "/\{([A-Z]*)\}/sU";
+		if (preg_match_all($regExpr, $this->classCode, $elems)) { 
+        	foreach ($elems[1] as $elem) {
+        	    $ret[]=$elem;
+        	}
+        } else {
+            $ret = NULL;
+        }
+        return $ret;
+     }
 } 
 ?>

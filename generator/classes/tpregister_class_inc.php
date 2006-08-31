@@ -18,7 +18,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * @licence GNU/GPL
 *
 */
-class tpstart extends object
+class tpregister extends object
 {
     /**
     * 
@@ -57,8 +57,8 @@ class tpstart extends object
     {
     	//Set up the form action to generate the controller and register.conf
         $paramArray=array(
-          'action'=>'buildcontroller',
-          'page'=>'page2');
+          'action'=>'buildregister',
+          'page'=>'page3');
         $formAction=$this->uri($paramArray);
         //Create an instance of the form class
         $objForm = new form('startform');
@@ -96,23 +96,48 @@ class tpstart extends object
         
         //Create an element for the input of Datbase table class and add it to the table
         $myTable->startRow();
-        $myTable->addCell( $this->objLanguage->languageText("mod_generator_controller_dbclass", "generator") );
+        $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_dbclass", "generator"));
         $myTable->addCell($this->__getModuleDataTableElement());
         $myTable->endRow();
         
         //Create an element for the input of copyright info and add it to the table
         $myTable->startRow();
-        $myTable->addCell( $this->objLanguage->languageText("mod_generator_controller_copyright", "generator") );
-        $myTable->addCell( $this->__getModuleCopyrightElement() );
+        $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_copyright", "generator"));
+        $myTable->addCell($this->__getModuleCopyrightElement());
         $myTable->endRow();
+        
+        //Create an element for the input of menu category and add it to the table
+        $myTable->startRow();
+        $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_menucat", "generator"));
+        $myTable->addCell($this->__getMenuCategoryElement());
+        $myTable->endRow();
+        
+        //Create an element for the input of sdie menu category and add it to the table
+        $myTable->startRow();
+        $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_sidemenucat", "generator"));
+        $myTable->addCell($this->__getSideMenuCategoryElement());
+        $myTable->endRow();
+        
+        //Create an element for the input of dependscontext and add it to the table
+        $myTable->startRow();
+        $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_dependscontext", "generator"));
+        $myTable->addCell($this->__getDependsContextElement());
+        $myTable->endRow();
+        
+        //Create an element for the input of contextaware and add it to the table
+        $myTable->startRow();
+        $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_contextaware", "generator"));
+        $myTable->addCell($this->__getContextAwareElement());
+        $myTable->endRow();
+        
         //Create an element for the submit (upload) button and add it to the table
         $myTable->startRow();
-        $myTable->addCell( $this->__getSubmitButton() );
+        $myTable->addCell($this->__getSubmitButton());
         $myTable->addCell("");
         $myTable->endRow();
-        //Add the table
-        $objFset->addContent( $myTable->show() );
-		//Add the fieldset
+        
+        $objFset->addContent($myTable->show());
+
         $objForm->addToForm( $objFset->show() );
         //Render the form & return it
         return $objForm->show();
@@ -129,13 +154,16 @@ class tpstart extends object
     */ 
     private function __getModuleCodeElement()
     {
+    	//Check for serialized element
+    	$this->modulecode = $this->getSession('modulecode', NULL);
         //Create an element for the input of module code
         $objElement = new textinput ("modulecode");
         //Set the field type to text
         $objElement->fldType="text";
         $objElement->size=40;
         if (isset($this->modulecode)) {
-            $objElement->value=$this->modulecode;
+            //$objElement->value=$this->modulecode;
+            return $this->modulecode;
         }
         //Add the $title element to the form
         return $objElement->show();
@@ -151,13 +179,15 @@ class tpstart extends object
     */ 
     private function __getModuleDataTableElement()
     {
+    	//Check for serialized element
+    	$this->databaseclass = $this->getSession('databaseclass', NULL);
         //Create an element for the input of module code
         $objElement = new textinput ("databaseclass");
         //Set the field type to text
         $objElement->fldType="text";
         $objElement->size=40;
         if (isset($this->databaseclass)) {
-            $objElement->value=$this->databaseclass;
+            return $this->databaseclass;
         }
         //Add the $title element to the form
         return $objElement->show();
@@ -173,15 +203,17 @@ class tpstart extends object
     */ 
     private function __getModuleNameElement()
     {
+    	//Check for serialized element
+    	$this->modulename = $this->getSession('modulename', NULL);
         //Create an element for the input of module code
         $objElement = new textinput ("modulename");
         //Set the field type to text
         $objElement->fldType="text";
         $objElement->size=40;
         if (isset($this->modulename)) {
-            $objElement->value=$this->modulename;
+            return $this->modulename;
         }
-        //Add the $title element to the form
+        //Add the modulename element to the form
         return $objElement->show();
     }
     
@@ -195,13 +227,15 @@ class tpstart extends object
     */ 
     private function __getModuleDescriptionElement()
     {
+    	//Check for serialized element
+    	$this->moduledescription = $this->getSession('moduledescription', NULL);
         //Create an element for the input of module code
         $objElement = new textinput ("moduledescription");
         //Set the field type to text
         $objElement->fldType="text";
         $objElement->size=40;
         if (isset($this->moduledescription)) {
-            $objElement->value=$this->moduledescription;
+            return $this->moduledescription;
         }
         //Add the $title element to the form
         return $objElement->show();
@@ -261,13 +295,15 @@ class tpstart extends object
     */ 
     private function __getModuleCopyrightElement()
     {
+    	//Check for serialized element
+    	$this->copyright = $this->getSession('copyright', NULL);
         //Create an element for the input of module code
         $objElement = new textinput ("copyright");
         //Set the field type to text
         $objElement->fldType="text";
         $objElement->size=40;
         if (isset($this->copyright)) {
-            $objElement->value=$this->copyright;
+            return $this->copyright;
         }
         //Add the copyright element to the form
         return $objElement->show();

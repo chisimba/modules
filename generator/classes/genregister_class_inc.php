@@ -33,6 +33,8 @@ class genregister extends abgenerator implements ifgenerator
     function init()
     {
         parent::init();
+		//Initialize the register classcode
+		$this->classCode='';
     }
     
 	/**
@@ -40,72 +42,175 @@ class genregister extends abgenerator implements ifgenerator
 	 */
 	function generate($className)
 	{
-		//Initialize the register code
-		$this->registerCode='';
-		//Read all the required info into variables
-		$this->moduleCode = $this->getParam('modulecode', '{UNSPECIFIED}');
-		$this->moduleName = $this->getParam('modulename', '{UNSPECIFIED}');
-		$this->moduleDescription = $this->getParam('moduledescription', '{UNSPECIFIED}');
-        $this->copyright = $this->getParam('copyright', '{UNSPECIFIED}');
-		$this->menuCategory = $this->getParam('menucategory', NULL);
-		$this->sideMenuCategory = $this->getParam('sidemenucategory', NULL);
-        $this->contextAware = $this->getParam('contextaware', NULL);
-        $this->dependsContext = $this->getParam('dependscontext', NULL);
-		
-		//Read the XML template
-		$this->registerCode = $this->readRegisterTemplate();
-		//Replace the template tags with actual values
-		$this->registerCode = str_replace('{MODULE_NAME}', $this->moduleName, $this->registerCode);
-		$this->registerCode = str_replace('{MODULE_ID}', $this->moduleCode, $this->registerCode);
-		$this->registerCode = str_replace('{MODULE_DESCRIPTION}', $this->moduleDescription, $this->registerCode);
-        $this->registerCode = str_replace('{MODULE_AUTHORS}', $this->objUser->fullName(), $this->registerCode);
-        $this->registerCode = str_replace('{MODULE_RELEASEDATE}', date("F j, Y, g:i a"), $this->registerCode);
-        $this->registerCode = str_replace('{MENU_CATEGORY}', $this->menuCategory, $this->registerCode);
-		$this->registerCode = str_replace('{SIDEMENU_CATEGORY}', $this->sideMenuCategory, $this->registerCode);
-		$this->registerCode = str_replace('{MODULE_DESCRIPTION}', $this->moduleDescription, $this->registerCode);
-        $this->registerCode = str_replace('{CONTEXT_AWARE}', $this->contextAware, $this->registerCode);
-        $this->registerCode = str_replace('{DEPENDS_CONTEXT}', $this->dependsContext, $this->registerCode);
-	
-
-
-        /*
-         *  //Clean up unused template tags
+		//Load the skeleton file for the register.conf from the XML		
+        $this->loadSkeleton('register', 'conf');
+        //Load the register.conf basic
+        $this->coreparams();
+        
+        //Make sure we are not missing any parsecodes
+        if ($this->validateParseCodes() !==TRUE) {
+            foreach ($this->unDeclaredMethods as $missingMethod) {
+                echo "The handler has no method corresponding to: $missingMethod <br />";
+            }
+            die();
+        }
+        //Insert the module description
+        $this->moduledescription();
+        //Put in the author
+        $this->author();
+        //Put in the module code
+        $this->modulecode();
+        //Put in the module name
+        $this->modulename();
+        	$this->menucategory();
+        	$this->sidemenucategory();
+			$this->modulereleasedate();
+			$this->contextaware();
+			$this->dependscontext();
+        //Clean up unused template tags
         $this->cleanUp();
-        $this->prepareForDump();*/
-	    return $this->registerCode;
+        //Parse for dumping to screen
+        $this->prepareForDump();
+        //Return the template
+	    return $this->classCode;
+	}
+	
+	/**
+	 * 
+	 * Method to load the basic properties
+	 * 
+	 */
+	function coreparams()
+	{
+	    //Insert the core parameter properties
+        $this->insertItem('register', 'conf', 'basic');
 	}
 	
     /**
     * 
-    * Method to read the register.conf XML template and format the 
-    * basic REGISTER.CONF file format, without parsing any template
-    * codes.
-    * 
-    * @return string The raw REGISTER.CONF text with the template
-    * codes still in place.
+    * Method to return the menucategory and insert it into the code of the 
+    * register.conf being built in place of the {MENUCATEGORY} parsecode
+    *  
+    * @access Public
     * 
     */
-	function readRegisterTemplate()
-	{
-        $ret="";
-        $xml = simplexml_load_file("modules/generator/resources/register_conf_txt.xml"); 
-        //Loop through and include the code
-        $addIt=TRUE;
-        foreach($xml->entry as $entry) {
-        	if ($entry->param == "MENU_CATEGORY") {
-        	    if ($this->menuCategory !== NULL) {
-					$ret .= trim($entry->param) . ": " . trim($entry->value) . "\n";
-        	    }
-        	} elseif ($entry->param == "SIDEMENU_CATEGORY") {
-        	    if ($this->sideMenuCategory !== NULL) {
-					$ret .= $entry->param . ": " . $entry->value . "\n";
-        	    }
-        	} else {
-        	    $ret .= trim($entry->param) . ": " . trim($entry->value) . "\n";
-        	}
+    public function menucategory()
+    {
+    	//Get the module code from parameter
+        $menucategory = $this->getParam('menucategory', NULL);
+        //If there is no parameter, check the session cookies
+        if ($menucategory == NULL) {
+            $menucategory = $this->getSession('menucategory', '{MENUCATEGORY_UNSPECIFIED}');
+        } else {
+            //Serialize the variable to the session since we are geting it from a param
+			$this->setSession('menucategory', $menucategory);
         }
-	    return $ret;
-	}
-
+        //Do the replace
+        $this->classCode = str_replace("{MENUCATEGORY}", $menucategory, $this->classCode);
+        return TRUE;
+    }
+	
+    /**
+    * 
+    * Method to return the sidemenucategory and insert it into the code of the 
+    * register.conf being built in place of the {SIDEMENUCATEGORY} parsecode
+    *  
+    * @access Public
+    * 
+    */
+    public function sidemenucategory()
+    {
+    	//Get the module code from parameter
+        $sidemenucategory = $this->getParam('sidemenucategory', NULL);
+        //If there is no parameter, check the session cookies
+        if ($sidemenucategory == NULL) {
+            $sidemenucategory = $this->getSession('sidemenucategory', '{SIDEMENUCATEGORY_UNSPECIFIED}');
+        } else {
+            //Serialize the variable to the session since we are geting it from a param
+			$this->setSession('sidemenucategory', $sidemenucategory);
+        }
+        //Do the replace
+        $this->classCode = str_replace("{SIDEMENUCATEGORY}", $sidemenucategory, $this->classCode);
+        return TRUE;
+    }
+	
+    /**
+    * 
+    * Method to return the modulereleasedate and insert it into the code of the 
+    * register.conf being built in place of the {MODULERELEASEDATE} parsecode
+    *  
+    * @access Public
+    * 
+    */
+    public function modulereleasedate()
+    {
+    	//Get the module code from parameter
+        $modulereleasedate = $this->getParam('modulereleasedate', NULL);
+        //If there is no parameter, check the session cookies
+        if ($modulereleasedate == NULL) {
+            $modulereleasedate = $this->getSession('modulereleasedate', '{MODULERELEASEDATE_UNSPECIFIED}');
+        } else {
+            //Serialize the variable to the session since we are geting it from a param
+			$this->setSession('modulereleasedate', $modulereleasedate);
+        }
+        //Do the replace
+        $this->classCode = str_replace("{MODULERELEASEDATE}", $modulereleasedate, $this->classCode);
+        return TRUE;
+    }
+    
+    /**
+    * 
+    * Method to return the contextaware and insert it into the code of the 
+    * register.conf being built in place of the {CONTEXTAWARE} parsecode
+    *  
+    * @access Public
+    * 
+    */
+    public function contextaware()
+    {
+    	//Get the module code from parameter
+        $contextaware = $this->getParam('contextaware', NULL);
+        //If there is no parameter, check the session cookies
+        if ($contextaware == NULL) {
+            $contextaware = $this->getSession('contextaware', '{CONTEXTAWARE_UNSPECIFIED}');
+        } else {
+            //Serialize the variable to the session since we are geting it from a param
+			$this->setSession('contextaware', $contextaware);
+        }
+        //Do the replace
+        $this->classCode = str_replace("{CONTEXTAWARE}", $contextaware, $this->classCode);
+        return TRUE;
+    }
+    
+    /**
+    * 
+    * Method to return the dependscontext and insert it into the code of the 
+    * register.conf being built in place of the {DEPENDSCONTEXT} parsecode
+    *  
+    * @access Public
+    * 
+    */
+    public function dependscontext()
+    {
+    	//Get the module code from parameter
+        $dependscontext = $this->getParam('dependscontext', NULL);
+        //If there is no parameter, check the session cookies
+        if ($dependscontext == NULL) {
+            $dependscontext = $this->getSession('dependscontext', '{DEPENDSCONTEXT_UNSPECIFIED}');
+        } else {
+            //Serialize the variable to the session since we are geting it from a param
+			$this->setSession('dependscontext', $dependscontext);
+        }
+        //Do the replace
+        $this->classCode = str_replace("{DEPENDSCONTEXT}", $dependscontext, $this->classCode);
+        return TRUE;
+    }
+    
+    /**
+    *
+    * Method for inserting language elements. TODO
+    *
+    */
+    public function languageelems(){}
 }
 ?>

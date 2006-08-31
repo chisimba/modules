@@ -45,12 +45,22 @@ class gencontroller extends abgenerator implements ifgenerator
 	 */
 	function generate($className)
 	{
-		//Load the skeleton file for the class from the XML		
+		  //Load the skeleton file for the class from the XML		
         $this->loadSkeleton('controller', 'class');
-        //Insert the properties
-        $this->insertItem('controller', 'class', 'properties');
-        //Insert the properties
-        $this->insertItem('controller', 'class', 'methods');
+		  //Insert the properties
+		  $this->properties();
+		  //Insert the methods
+		  $this->methods();
+        //Make sure we are not missing any parsecodes
+        if ($this->validateParseCodes() !==TRUE) {
+            foreach ($this->unDeclaredMethods as $missingMethod) {
+                echo "The handler has no method corresponding to: $missingMethod <br />";
+            }
+            die();
+        }		  
+        //Insert the classname first setting it in the session since its a controller
+        $this->setSession('classname', $this->getParam('modulecode', NULL));
+        $this->classname();
         //Insert the module description
         $this->moduledescription();
         //Insert the copyright
@@ -58,11 +68,35 @@ class gencontroller extends abgenerator implements ifgenerator
         //Insert the database class
         $this->databaseclass();
         //Add code for logging
-        $this->initLogger();
+        $this->logger();
         //Clean up unused template tags
         $this->cleanUp();
         $this->prepareForDump();
-	    return $this->classCode;
+	     return $this->classCode;
+	}
+	
+	/**
+	 * 
+	 * Method ot insert the properties. It is required by 
+	 * validation to be in its own method.
+	 * 
+	 */
+	function properties()
+	{
+	    //Insert the properties
+        $this->insertItem('controller', 'class', 'properties');
+	}
+	
+	/**
+	 * 
+	 * Method ot insert the methods. It is required by 
+	 * validation to be in its own method.
+	 * 
+	 */
+	function methods()
+	{
+	    //Insert the methods
+        $this->insertItem('controller', 'class', 'methods');
 	}
 }
 ?>

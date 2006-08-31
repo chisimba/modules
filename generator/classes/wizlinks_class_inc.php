@@ -67,7 +67,8 @@ class wizlinks extends object
 		$retstr .= $this->page2Link() . "<br />";
 		$retstr .= $this->page3Link() . "<br />";
 		$retstr .= $this->page4Link() . "<br />";
-        $retstr .= $this->page5Link() . "<br />";
+		$retstr .= $this->page5Link() . "<br />";
+        $retstr .= $this->page6Link() . "<br />";
 		return $retstr;
     }
     
@@ -98,7 +99,7 @@ class wizlinks extends object
     /**
     * 
     * Method to generate a link to the page2 template. It is not active 
-    * if we are on the page2 page.
+    * if we are on the page3 page.
     * 
     * @return string The link to the page2 page
     * 
@@ -127,16 +128,16 @@ class wizlinks extends object
     private function page3Link()
     {
         if ($this->page == 'page3') {
-            $ret =   "3. " . $this->objLanguage->languageText("mod_generator_blddatafmdb", "generator");
+            $ret =   "3. " . $this->objLanguage->languageText("mod_generator_bldregister", "generator");
         } else {
         	$href = $this->uri(array('action' => 'page3', 'page' => 'page3'));
 			$this->objLink->href =  $href;
-			$this->objLink->link = $this->objLanguage->languageText("mod_generator_blddatafmdb", "generator");
+			$this->objLink->link = $this->objLanguage->languageText("mod_generator_bldregister", "generator");
 			$ret = "3. " . $this->objLink->show();
         }
         return $ret;
     }
-    
+
     /**
     * 
     * Method to generate a link to the page4 template. It is not active 
@@ -148,12 +149,33 @@ class wizlinks extends object
     private function page4Link()
     {
         if ($this->page == 'page4') {
-            $ret =   "4. " . $this->objLanguage->languageText("mod_generator_bldtmplatefmdb", "generator");
+            $ret =   "4. " . $this->objLanguage->languageText("mod_generator_blddatafmdb", "generator");
         } else {
         	$href = $this->uri(array('action' => 'page4', 'page' => 'page4'));
 			$this->objLink->href =  $href;
+			$this->objLink->link = $this->objLanguage->languageText("mod_generator_blddatafmdb", "generator");
+			$ret = "4. " . $this->objLink->show();
+        }
+        return $ret;
+    }
+    
+    /**
+    * 
+    * Method to generate a link to the page5 template. It is not active 
+    * if we are on the page5 page.
+    * 
+    * @return string The link to the page4 page
+    * 
+    */
+    private function page5Link()
+    {
+        if ($this->page == 'page5') {
+            $ret =   "5. " . $this->objLanguage->languageText("mod_generator_bldtmplatefmdb", "generator");
+        } else {
+        	$href = $this->uri(array('action' => 'page5', 'page' => 'page5'));
+			$this->objLink->href =  $href;
 			$this->objLink->link = $this->objLanguage->languageText("mod_generator_bldtmplatefmdb", "generator");
-			$ret ="4. " . $this->objLink->show();
+			$ret ="5. " . $this->objLink->show();
         }
         return $ret;
     }
@@ -166,15 +188,15 @@ class wizlinks extends object
     * @return string The link to the page4 page
     * 
     */
-    private function page5Link()
+    private function page6Link()
     {
-        if ($this->page == 'page5') {
-            $ret =   "5. " . $this->objLanguage->languageText("mod_generator_page5_instructions", "generator");
+        if ($this->page == 'page6') {
+            $ret =   "6. " . $this->objLanguage->languageText("mod_generator_page5_instructions", "generator");
         } else {
-        	$href = $this->uri(array('action' => 'page5', 'page' => 'page5'));
+        	$href = $this->uri(array('action' => 'page6', 'page' => 'page6'));
 			$this->objLink->href =  $href;
 			$this->objLink->link = $this->objLanguage->languageText("mod_generator_page5_instructions", "generator");
-			$ret ="5. " . $this->objLink->show();
+			$ret ="6. " . $this->objLink->show();
         }
         return $ret;
     }
