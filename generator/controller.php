@@ -174,11 +174,27 @@ class generator extends controller
         $className = $this->getParam('classname', 'change_my_name');
     	$objGenController = $this->getObject('gencontroller');
         $this->setVar('cont', $objGenController->generate($className));
+        //$objGenRegister = $this->getObject('genregister');
+        //$this->setVar('reg', $objGenRegister->generate($className));
+        unset($objGenController);
+        //unset($objGenRegister);
+        return "controller_tpl.php";
+    }
+    
+    /**
+    * 
+    * Method corresponding to the view action. It fetches the stories
+    * into an array and passes it to a main_tpl content template.
+    * @access private
+    * 
+    */
+    private function __buildregister()
+    {
+        $className = $this->getParam('classname', 'change_my_name');
         $objGenRegister = $this->getObject('genregister');
         $this->setVar('reg', $objGenRegister->generate($className));
-        unset($objGenController);
         unset($objGenRegister);
-        return "contreg_tpl.php";
+        return "register_tpl.php";
     }
     
     /**
