@@ -81,7 +81,7 @@ $objForm->setDisplayType(2);
 
 
 
-$objForm->addToForm($content.'</br></br></br></br></br></br></br></br></br>');
+$objForm->addToForm($content.'<br /><br /><br /><br /><br /><br /><br /><br /><br />');
 //$objForm->addToForm($ok);
 
 /*

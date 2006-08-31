@@ -115,8 +115,8 @@ $content = $details."  ".$table->show();
 
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(3);
-$cssLayout->setLeftColumnContent($right);
-$cssLayout->setRightColumnContent($left);
+$cssLayout->setLeftColumnContent($left);
+$cssLayout->setRightColumnContent($right);
 $cssLayout->setMiddleColumnContent($content);
 
 echo $cssLayout->show();

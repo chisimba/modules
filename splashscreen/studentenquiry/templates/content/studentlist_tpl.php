@@ -76,7 +76,7 @@ if(is_array($stdinfo)){
                     $viewn = $viewnext->show();
                 }
                 $showlinks->str = $this->objLanguage->languageText('mod_studentenquiry_respage','studentenquiry') .
-                                  " </br></br>$viewp $links_code $viewn";
+                                  " <br /><br />$viewp $links_code $viewn";
                 $showlinks->align="center";
                 $pagelinks = $showlinks->show();
                 $Rectbl =& $this->getObject('htmlTable','htmlelements');
@@ -84,33 +84,33 @@ if(is_array($stdinfo)){
               if($this->getParam('surname'))
               {
                 if($endl==25)  {
-                    $Rectbl->addCell("<b>".$this->objLanguage->languageText('mod_studentenquiry_page','studentenquiry')); $Rectbl->endRow();
-                    $Rectbl->startRow(); $Rectbl->addCell("<b>1");
+                    $Rectbl->addCell("<b>".$this->objLanguage->languageText('mod_studentenquiry_page','studentenquiry')."</b>"); $Rectbl->endRow();
+                    $Rectbl->startRow(); $Rectbl->addCell("<b>1</b>");
                     $Rectbl->endRow();   $endl = $endl - 1;
-                    $Rectbl->startRow(); $Rectbl->addCell("</br>"); $Rectbl->endRow();
+                    $Rectbl->startRow(); $Rectbl->addCell("<br />"); $Rectbl->endRow();
                     $Rectbl->startRow();
-                    $Rectbl->addCell("<b>".$this->objLanguage->languageText('mod_studentenquiry_record','studentenquiry')); $Rectbl->endRow();
-                    $Rectbl->startRow();  $Rectbl->addCell("<b>0  to $endl");
+                    $Rectbl->addCell("<b>".$this->objLanguage->languageText('mod_studentenquiry_record','studentenquiry')."</b>"); $Rectbl->endRow();
+                    $Rectbl->startRow();  $Rectbl->addCell("<b>0  to $endl</b>");
                     $Rectbl->endRow();
                    $stdinfo = $this->financialaid->listsurn(0);
                 }
                 else {
                    $page = $this->getParam('pg');
-                   $Rectbl->addCell("<b>".$this->objLanguage->languageText('mod_studentenquiry_page','studentenquiry')); $Rectbl->endRow();
-                   $Rectbl->startRow(); $Rectbl->addCell("<b>$page");
+                   $Rectbl->addCell("<b>".$this->objLanguage->languageText('mod_studentenquiry_page','studentenquiry')."</b>"); $Rectbl->endRow();
+                   $Rectbl->startRow(); $Rectbl->addCell("<b>$page</b>");
                    $Rectbl->endRow();
-                   $Rectbl->startRow(); $Rectbl->addCell("</br>"); $Rectbl->endRow();
+                   $Rectbl->startRow(); $Rectbl->addCell("<br />"); $Rectbl->endRow();
                    $Rectbl->startRow();
-                   $Rectbl->addCell("<b>".$this->objLanguage->languageText('mod_studentenquiry_record','studentenquiry')); $Rectbl->endRow();  $Rectbl->startRow();
-                   if($endl < $cnt){  $Rectbl->addCell("<b>$startl to $endl");  }
-                   else {  $Rectbl->addCell("<b>$startl to $cnt");  }
+                   $Rectbl->addCell("<b>".$this->objLanguage->languageText('mod_studentenquiry_record','studentenquiry')."</b>"); $Rectbl->endRow();  $Rectbl->startRow();
+                   if($endl < $cnt){  $Rectbl->addCell("<b>$startl to $endl</b>");  }
+                   else {  $Rectbl->addCell("<b>$startl to $cnt</b>");  }
                    $Rectbl->endRow();
                    $stdinfo = $this->financialaid->listsurn($startl);
                 }
               }
-                $Rectbl->startRow(); $Rectbl->addCell("</br>"); $Rectbl->endRow();
+                $Rectbl->startRow(); $Rectbl->addCell("<br />"); $Rectbl->endRow();
                 $Rectbl->startRow();
-                $Rectbl->addCell("<b>".$this->objLanguage->languageText('mod_studentenquiry_resfnd','studentenquiry'));  $Rectbl->endRow();
+                $Rectbl->addCell("<b>".$this->objLanguage->languageText('mod_studentenquiry_resfnd','studentenquiry')."</b>");  $Rectbl->endRow();
                 $Rectbl->startRow(); $Rectbl->addCell("<b>$cnt</b>");
                 $Rectbl->endRow();
                 $records = $Rectbl->show();
@@ -124,10 +124,10 @@ if(is_array($stdinfo)){
 
 	$table->startHeaderRow();
 	$table->addHeaderCell($objLanguage->languageText("mod_studentenquiry_fstname",'studentenquiry'));		           //
-	$table->addHeaderCell('Surname');
+	$table->addHeaderCell($objLanguage->languageText("mod_studentenquiry_surname",'studentenquiry'));
 	//$table->addHeaderCell('Student Number');
-	$table->addHeaderCell('ID Number');
-	$table->addHeaderCell('Details');
+	$table->addHeaderCell($objLanguage->languageText("mod_studentenquiry_idnum2",'studentenquiry'));
+	$table->addHeaderCell($objLanguage->languageText("mod_studentenquiry_details",'studentenquiry'));
 
 	$table->endHeaderRow();
 
@@ -205,7 +205,7 @@ if ($ncnt <= 1)
 if ($foundStudents == false) {
 
 	$right = '';
-	$content = "</br></br></br>" . $centersearch;
+	$content = "<br /><br /><br />" . $centersearch;
         $pagelinks = '';
         $records = '';
 }
@@ -236,12 +236,12 @@ $this->contentNav->height="800px";
 $this->contentNav->width="850px";
 echo $this->contentNav->addToLayer();
 */
-$content = "<center>".$pagelinks." ".$content."</center>";
-$left = $left."</br>".$records;
+$content = $pagelinks." ".$content;
+$left = $left."</br></br>".$records;
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(3);
-$cssLayout->setLeftColumnContent($right);
-$cssLayout->setRightColumnContent($left);
+$cssLayout->setLeftColumnContent($left);
+$cssLayout->setRightColumnContent($right);
 $cssLayout->setMiddleColumnContent($content);
 
 echo $cssLayout->show();

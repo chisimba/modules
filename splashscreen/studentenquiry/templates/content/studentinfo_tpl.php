@@ -20,7 +20,7 @@ $rep = array('FIRSTNAME' => $stname, 'LASTNAME' => $stsname);
 // Set up the variable $hi with the value of the string
 $pgtitle = $objLanguage->code2Txt("mod_studentenquiry_infotitle",'studentenquiry', $rep);
 
-$details .= "<b>". $pgtitle . "</p>";
+$details .= "<b>". $pgtitle . "</b></p>";
 //$details = "<p><b>Details of ".$stname."  ".$stsname."</p>";
 $idnumber = $stdinfo[0]->IDN;
 $stdnum = $stdinfo[0]->STDNUM;
@@ -207,8 +207,8 @@ echo $this->contentNav->addToLayer();
 
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(3);
-$cssLayout->setLeftColumnContent($right);
-$cssLayout->setRightColumnContent($left);
+$cssLayout->setLeftColumnContent($left);
+$cssLayout->setRightColumnContent($right);
 $cssLayout->setMiddleColumnContent($content);
 
 echo $cssLayout->show();
