@@ -17,6 +17,7 @@ $stdnum = strtoupper($this->getParam('studentNumber'));
 $applnum = strtoupper($this->getParam('applicationNumber'));
 $surname = $this->getParam('surname');
 $idnumber = strtoupper($this->getParam('idNumber'));
+$all = $this->getParam('all', NULL);
 
 //$startat = $this->getParam('start_at', NULL);
 
@@ -34,8 +35,12 @@ if (strlen($stdnum) > 0) {
     $wherevalue = $applnum;
 }
 
-if (!is_null($wherefield)){
-    $stdinfo = $this->objDBFinancialAidWS->getApplication($wherevalue, $wherefield);
+if (!is_null($all)){
+    $stdinfo = $this->objDBFinancialAidWS->getAllApplications();
+}else{
+    if(!is_null($wherefield)){
+        $stdinfo = $this->objDBFinancialAidWS->getApplication($wherevalue, $wherefield);
+    }
 }
 //if (is_null($start_at)){
 //    $start_at = 0;
@@ -149,6 +154,7 @@ if(count($stdinfo) > 0){
 	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_firstname','financialaid'));
 	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_surname','financialaid'));
 	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_idnum','financialaid'));
+	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid'));
 	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_details','financialaid'));
 
 	$table->endHeaderRow();
@@ -157,11 +163,6 @@ if(count($stdinfo) > 0){
          for($i = 0; $i < count($stdinfo); $i++)
          {
 			$table->row_attributes = " class = \"$oddEven\"";
-
-			$link = new link();
-
-			$link->href=$this->uri(array('action'=>'applicationinfo','appnum'=>$stdinfo[$i]->appnumber));
-			$link->link = $stdinfo[$i]->firstNames;
 
 			$viewdetails = new link();
 			$viewdetails->href=$this->uri(array('action'=>'applicationinfo','appnum'=>$stdinfo[$i]->appNumber));
@@ -177,6 +178,7 @@ if(count($stdinfo) > 0){
 			$table->addCell($stname);
 			$table->addCell($stsname);
 			$table->addCell($stid);
+			$table->addCell($stnum);
 			$table->addCell($viewdetails->show());
 
 			$table->endRow();
