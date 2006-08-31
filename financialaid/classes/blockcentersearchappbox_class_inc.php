@@ -1,14 +1,11 @@
 <?php
-/* ----------- data class extends dbTable for tbl_guestbook------------*/
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
     {
         die("You cannot view this page directly");
     }
 
-
 /**
-* Model class for the table  
 * Creates the centre-aligned search box
 */
 class blockcentersearchappbox extends object
@@ -27,16 +24,16 @@ class blockcentersearchappbox extends object
 		$objForm->setDisplayType(2);
 
 		$surname= new textinput('surname',null,null,40);
-		$surname->label=$this->objLanguage->languageText('mod_studentenquiry_surname','studentenquiry').":";
+		$surname->label=$this->objLanguage->languageText('mod_financialaid_surname','financialaid').":";
 
 		$stdnum= new textinput('studentNumber',null,null,40);
-		$stdnum->label=$this->objLanguage->languageText('mod_studentenquiry_stdnum','studentenquiry').":";
+		$stdnum->label=$this->objLanguage->languageText('mod_financialaid_stdnum2','financialaid').":";
 		
-		//$applicationum= new textinput('applicationNumber',null,null,40);
-		//$applicationum->label='App Num:';
+		$applicationum= new textinput('applicationNumber',null,null,40);
+		$applicationum->label=$this->objLanguage->languageText('mod_financialaid_appnumber','financialaid').":";
 
 		$idnum= new textinput('idNumber',null,null,40);
-		$idnum->label='&nbsp;&nbsp;'.$this->objLanguage->languageText('mod_studentenquiry_idnum','studentenquiry').":";
+		$idnum->label=$this->objLanguage->languageText('mod_financialaid_idnumber','financialaid').":";
 		
 		$save= new button($this->objLanguage->languageText('mod_studentenquiry_save','studentenquiry'));
 		$save->setToSubmit();
@@ -44,7 +41,7 @@ class blockcentersearchappbox extends object
 		
 		$objForm->addToForm($surname);
 		$objForm->addToForm($stdnum);
-		//$objForm->addToForm($applicationum);
+		$objForm->addToForm($applicationum);
 		$objForm->addToForm($idnum);
 		$objForm->addToForm($save);
 		
@@ -54,5 +51,4 @@ class blockcentersearchappbox extends object
   
 		return $objElement->show();
 	}
-
 }

@@ -20,56 +20,50 @@ $this->objDbStudentInfo =& $this->getObject('dbstudentinfo','studentenquiry');
 
 //var_dump($student);
 if(is_array($stdinfo)){
-	//for($i = 0;$i < count($stdinfo);$i++){
-     $race = $stdinfo[0]->RCE;
-     $gender = $stdinfo[0]->SEX;
-     $marsts = $stdinfo[0]->MARSTS;
-     $title = $stdinfo[0]->TTL;
-     $sttype = $stdinfo[0]->STDTYP;
-     $stnum = $stdinfo[0]->STDNUM;
+    $race = $stdinfo[0]->RCE;
+    $gender = $stdinfo[0]->SEX;
+    $marsts = $stdinfo[0]->MARSTS;
+    $title = $stdinfo[0]->TTL;
+    $sttype = $stdinfo[0]->STDTYP;
+    $stnum = $stdinfo[0]->STDNUM;
 
-        $table->startRow();
-		$table->addCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid'), '15%');
-		$table->addCell($stnum);
-		$table->endRow();
+    $table->startRow();
+    $table->addCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid'), '15%');
+    $table->addCell($stnum);
+    $table->endRow();
 
-        $table->startRow();
-		$table->addCell($objLanguage->languagetext('mod_financialaid_race','financialaid'), '15%');
-		$table->addCell($this->objDbStudentInfo->getRace($race));
-		$table->endRow();
+    $table->startRow();
+    $table->addCell($objLanguage->languagetext('mod_financialaid_race','financialaid'), '15%');
+    $table->addCell($this->objDbStudentInfo->getRace($race));
+    $table->endRow();
 
-        $table->startRow();
-		$table->addCell($objLanguage->languagetext('mod_financialaid_gender','financialaid'), '15%');
-		$table->addCell($this->objDbStudentInfo->getGender($gender));
-		$table->endRow();
+    $table->startRow();
+    $table->addCell($objLanguage->languagetext('mod_financialaid_gender','financialaid'), '15%');
+    $table->addCell($this->objDbStudentInfo->getGender($gender));
+    $table->endRow();
 
-        $table->startRow();
-		$table->addCell($objLanguage->languagetext('mod_financialaid_mrtsts','financialaid'), '15%');
-		$table->addCell($this->objDbStudentInfo->getMarStatus($marsts));
-		$table->endRow();
+    $table->startRow();
+	$table->addCell($objLanguage->languagetext('mod_financialaid_mrtsts','financialaid'), '15%');
+	$table->addCell($this->objDbStudentInfo->getMarStatus($marsts));
+	$table->endRow();
 
-        $table->startRow();
-		$table->addCell($objLanguage->languagetext('mod_financialaid_stdtitle','financialaid'), '15%');
-		$table->addCell($title);
-		$table->endRow();
+    $table->startRow();
+	$table->addCell($objLanguage->languagetext('mod_financialaid_stdtitle','financialaid'), '15%');
+	$table->addCell($title);
+	$table->endRow();
 
-        $table->startRow();
-		$table->addCell($objLanguage->languagetext('mod_financialaid_stdtype','financialaid'), '15%');
-		$table->addCell($sttype);
-		$table->endRow();
-	//}
-//echo "<br /><pre>stdinfo: " ;    print_r($stdinfo);  echo "</pre><br />" ;
+    $table->startRow();
+	$table->addCell($objLanguage->languagetext('mod_financialaid_stdtype','financialaid'), '15%');
+	$table->addCell($sttype);
+	$table->endRow();
 }
 
 $types = array('B','N','P','R');
 $typesnames = array($objLanguage->languagetext('mod_financialaid_boarding','financialaid'),$objLanguage->languagetext('mod_financialaid_nextofkin','financialaid'),$objLanguage->languagetext('mod_financialaid_padd','financialaid'),$objLanguage->languagetext('mod_financialaid_stdres','financialaid'));
-//echo "<br />(test)studentaddress: " ;   print_r($stdaddress);   echo "<br />" ;
 $addtype = 0;
 $addresstype = $this->getParam('address');
-//echo "<br />(info1)addresstype: " . $addresstype . "<br />";
-if(!is_null($stdaddress))
-if(is_array($stdaddress) and count($stdaddress) > 0){
-	//var_dump($stdaddress);
+if(!is_null($stdaddress)){
+    if(is_array($stdaddress) and count($stdaddress) > 0){
         if($addresstype == 'B') { $addtype=0; }
         else if($addresstype == 'N') { $addtype=1; }
         else if($addresstype == 'P') { $addtype=2; }
@@ -116,19 +110,13 @@ if(is_array($stdaddress) and count($stdaddress) > 0){
 		$table->endRow();
         $table->startRow();
         $table->addCell('');
-}else{
+    }else{
         $table->startRow();
         $table->addCell($objLanguage->languagetext('mod_financialaid_addtype','financialaid'));
+    }
 }
 
-
-
-
-
-//$contactType = $this->objDbStudentInfo->getLookupInfo($values->contactTypeID);
-
 $addresstype = $this->getParam('address');
-//echo "<br />(info)addresstype: " . print_r($stdaddress) . "<br />";
 $datype = "";
 for($i = 0; $i < 4; $i++){
 	if($types[$i] != $addresstype){
@@ -143,9 +131,6 @@ for($i = 0; $i < 4; $i++){
 
 $table->addCell($datype);
 $table->endRow();
-
-
-
 
 $link = new link();
 if($this->getParam('module') === "financialaid"){
@@ -165,6 +150,4 @@ if($this->getParam('module') === "studentenquiry"){
 $content = "<center>".$details." ".$table->show(). "</center>";
 
 echo $content;
-
-
 ?>

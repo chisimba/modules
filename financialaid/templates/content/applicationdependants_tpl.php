@@ -1,22 +1,22 @@
 <?
 $appnum = $this->getParam('appnum');
 
-$this->objDBApplication =& $this->getObject('dbapplication');
+$this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
 
-$stdinfo = $this->objDBApplication->getApplication($appnum);
-$stname = $stdinfo[0]['firstnames'];
-$stsname = $stdinfo[0]['surname'];
+$stdinfo = $this->objDBFinancialAidWS->getApplication($appnum);
+$stname = $stdinfo[0]->firstNames;
+$stsname = $stdinfo[0]->surname;
 
 $rep = array(
       'FIRSTNAME' => $stname,
       'LASTNAME' => $stsname);
       
 $details = "<h2>".$objLanguage->code2Txt('mod_financialaid_dependantstitle','financialaid',$rep)."</h2>";
-$idnumber = $stdinfo[0]['idnumber'];
-$stdnum = $stdinfo[0]['studentnumber'];
+$idnumber = $stdinfo[0]->idNumber;
+$stdnum = $stdinfo[0]->studentNumber;
 $table =& $this->newObject('htmltable','htmlelements');
 
-$dependants = $this->objDBDependants->getDependants($appnum);
+$dependants = $this->objDBFinancialAidWS->getDependants($appnum);
 
 if(count($dependants) > 0){
     $table->startHeaderRow();
@@ -33,17 +33,17 @@ if(count($dependants) > 0){
     foreach($dependants as $data)
     {
         $table->startRow();
-        $table->addCell($data['firstname']);
-        $table->addCell($data['relationship']);
-        $table->addCell($data['dependantreason']);
-        $table->addCell($data['category']);
-        if($data['hasIncome'] == 0){
+        $table->addCell($data->firstName);
+        $table->addCell($data->relationship);
+        $table->addCell($data->dependantReason);
+        $table->addCell($data->category);
+        if($data->hasIncome == 0){
             $table->addCell('No');
         }else{
             $table->addCell('Yes');
         }
-        $table->addCell($data['incometype']);
-        $table->addCell($data['incomeamount']);
+        $table->addCell($data->incomeType);
+        $table->addCell($data->incomeAmount);
         $table->endRow();
     }
 }

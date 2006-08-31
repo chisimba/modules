@@ -57,6 +57,7 @@ class financialaidleftblock extends object
             $links.=$href->show()."<br />";
             $appinfo = $this->objDBApplication->getApplication($appnum);
             $studentid = $appinfo[0]['studentnumber'];
+            $links.="<br />";
         }else{
 		    $studentid = $this->getParam('id');
         }

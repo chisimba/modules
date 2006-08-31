@@ -40,13 +40,13 @@ class applicationblocksearchbox extends object
         $surlabel=$this->objLanguage->languageText('mod_financialaid_surname','financialaid').":";
 		$objForm->addToForm($surlabel);
 		$objForm->addToForm($surname);
-        $stdlabel=$this->objLanguage->languageText('mod_financialaid_stdnum','financialaid').":";
+        $stdlabel=$this->objLanguage->languageText('mod_financialaid_stdnum2','financialaid').":";
         $objForm->addToForm($stdlabel);
 		$objForm->addToForm($stdnum);
-        $applabel="App Num".":";
+        $applabel=$this->objLanguage->languageText('mod_financialaid_appnumber','financialaid').":";
         $objForm->addToForm($applabel);
 		$objForm->addToForm($applicationum);
-        $idlabel=$this->objLanguage->languageText('mod_financialaid_idnum','financialaid').":";
+        $idlabel=$this->objLanguage->languageText('mod_financialaid_idnumber','financialaid').":";
         $objForm->addToForm($idlabel);
 		$objForm->addToForm($idnum);
 		$objForm->addToForm($save);

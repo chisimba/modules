@@ -1,5 +1,4 @@
 <?php
-//require_once('columns_tpl.php');
 $this->objLanguage = &$this->getObject('language','language');
 
 $this->objUser =& $this->getObject('user','security');
@@ -10,7 +9,6 @@ $centersearch = $centersearch->show($this->getParam('module','studentenquiry'));
 
 $this->studentinfo =& $this->getObject('dbstudentinfo','studentenquiry');
 
-//echo "$numrecords --- $allrecords";
 $content = "";
 $oddEven = 'odd';
 $foundStudents = false;
@@ -21,7 +19,7 @@ if(is_array($stdinfo)){
                 //output code to var, then strip off last "|" separater
                 $ncnt = $cnt/25;
                 $showlinks =& $this->getObject('htmlHeading','htmlelements');
-                $ncnt = strtok(($ncnt+1), ".");
+               $ncnt = strtok(($ncnt+1), ".");
                 $links_code = "";
                 $ncnt = $cnt/25; //assumes $total_rows is a var
                 //get exact number of pages, divide by 30 and get remainder
@@ -67,44 +65,46 @@ if(is_array($stdinfo)){
                     $viewnext->link = $objLanguage->languagetext('mod_financialaid_next','financialaid');
                     $viewn = $viewnext->show();
                 }
-                $showlinks->str = $objLanguage->languagetext('mod_financialaid_respage','financialaid')."<br /><br />$viewp $links_code $viewn";
-                $showlinks->align="center";
-                $pagelinks = $showlinks->show();
                 $Rectbl =& $this->getObject('htmlTable','htmlelements');
                 $Rectbl->startRow();
               if($this->getParam('surname'))
               {
                 if($endl==25)  {
-                    $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_page','financialaid')."</b>"); $Rectbl->endRow();
-                    $Rectbl->startRow(); $Rectbl->addCell("<b>1</b>");
-                    $Rectbl->endRow();   $endl = $endl - 1;
-                    $Rectbl->startRow(); $Rectbl->addCell("<br />"); $Rectbl->endRow();
+                    $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_page','financialaid').":</b>", "20%");
+                    $Rectbl->addCell("1");
+                    $Rectbl->endRow();
+                    $endl = $endl - 1;
                     $Rectbl->startRow();
-                    $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_record','financialaid')."</b>"); $Rectbl->endRow();
-                    $Rectbl->startRow();  $Rectbl->addCell("<b>0  to $endl</b>");
+                    $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_record','financialaid').":</b>",  "20%");
+                    $Rectbl->addCell("0  to $endl");
                     $Rectbl->endRow();
                    $stdinfo = $this->studentinfo->listsurn(0);
                 }
                 else {
                    $page = $this->getParam('pg');
-                   $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_page','financialaid')."</b>"); $Rectbl->endRow();
-                   $Rectbl->startRow(); $Rectbl->addCell("<b>$page</b>");
+                   $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_page','financialaid').":</b>", "20%");
+                   $Rectbl->addCell("$page");
                    $Rectbl->endRow();
-                   $Rectbl->startRow(); $Rectbl->addCell("<br />"); $Rectbl->endRow();
                    $Rectbl->startRow();
-                   $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_record','financialaid')."</b>"); $Rectbl->endRow();  $Rectbl->startRow();
-                   if($endl < $cnt){  $Rectbl->addCell("<b>$startl to $endl</b>");  }
-                   else {  $Rectbl->addCell("<b>$startl to $cnt</b>");  }
+                   $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_record','financialaid').":</b>", "20%");
+                   $Rectbl->endRow();
+                   $Rectbl->startRow();
+                   if($endl < $cnt){
+                       $Rectbl->addCell("$startl to $endl");  }
+                   else {
+                       $Rectbl->addCell("startl to $cnt");  }
                    $Rectbl->endRow();
                    $stdinfo = $this->studentinfo->listsurn($startl);
                 }
               }
-                $Rectbl->startRow(); $Rectbl->addCell("<br />"); $Rectbl->endRow();
                 $Rectbl->startRow();
-                $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_resfnd','financialaid')."</b>");  $Rectbl->endRow();
-                $Rectbl->startRow(); $Rectbl->addCell("<b>$cnt</b>");
+                $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_resfnd','financialaid').":</b>", "20%");
+                $Rectbl->addCell("$cnt");
                 $Rectbl->endRow();
                 $records = $Rectbl->show();
+                $showlinks->str = "$viewp $links_code $viewn";
+                $showlinks->align="center";
+                $pagelinks = "<h2>".$objLanguage->languagetext('mod_financialaid_respage','financialaid')."</h2>".$records.$showlinks->show();
                 //***end of pagination***
 
         $table =& $this->getObject('htmltable','htmlelements');
@@ -122,14 +122,11 @@ if(is_array($stdinfo)){
 
 	$table->endHeaderRow();
 
-//echo "<br />student info: "; print_r($stdinfo); echo "<br />";
 
 
 	if(is_array($stdinfo)){
-      // echo "count: " . count($stdinfo);
-         for($i = 0; $i < count($stdinfo); $i++)
-         {
-  		   //foreach($stdinfo as $data){
+        for($i = 0; $i < count($stdinfo); $i++)
+        {
 			$table->row_attributes = " class = \"$oddEven\"";
 
 			$link = new link();
@@ -154,7 +151,6 @@ if(is_array($stdinfo)){
             $stid = $stdinfo[$i]->IDN;
             $title = $stdinfo[$i]->TTL;
             $stnum = $stdinfo[$i]->STDNUM;
-           // echo "<br />stnum: ".$stnum;
 			$address = $this->studentinfo->studentAddress($stnum,35);
 
 			$corre = new link();
@@ -163,8 +159,6 @@ if(is_array($stdinfo)){
             'fromUserId'=>$this->objUser->userId(),'detail'=>$address[0]->EMLADD,
             'type'=>'email'),'correspondence');
 
-			//$corre->href="index.php?module=correspondence&action=new&extToSubject=testing&extType=email&extUserToTitle=toSimangMang";
-			$corre->link = "Correspondence";
 
 			$enquiry = new link();
 			$enquiry->href=$this->uri(array('action'=>'enquiry','id'=>$stid));
@@ -173,17 +167,14 @@ if(is_array($stdinfo)){
 			$table->startRow();
 			$table->addCell($stname);
 			$table->addCell($stsname);
-			//$table->addCell($data->studentNumber);
 			$table->addCell($stid);
 			$table->addCell($viewdetails->show());
 
 			$table->endRow();
 
 			$oddEven = $oddEven == 'odd'?'even':'odd';
-
 		}
 		$foundStudents = true;
-
 	}
 $content = $table->show();
 }
@@ -197,14 +188,11 @@ if ($foundStudents == false) {
 
 	$right = '';
 	$content = "<br /><br /><br />" . $centersearch;
-        $pagelinks = '';
-        $records = '';
+    $pagelinks = '';
+    $records = '';
 }
 
-$content = "<center>".$pagelinks." ".$content . "</center>";
-//$left = $left."<br />".$records;
+$content = "<center>".$pagelinks." ".$content. "</center>";
 
 echo $content;
-
-
 ?>

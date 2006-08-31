@@ -23,6 +23,7 @@ class financialaid extends controller
     var $objDBDependants;
     var $objDBParttimejobs;
     var $objDBStudentFamily;
+    var $objDBFinancialAidWS;
     
     var $objLeftBar;
     var $objRightBar;
@@ -49,6 +50,7 @@ class financialaid extends controller
 		$this->objDBDependants =& $this->getObject('dbdependants');
 		$this->objDBParttimejobs =& $this->getObject('dbparttimejobs');
 		$this->objDBStudentFamily =& $this->getObject('dbstudentfamily');
+        $this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
 
         $this->objLeftBar =& $this->getObject('financialaidleftblock');
         $this->objRightBar =& $this->getObject('applicationblocksearchbox');;
@@ -121,23 +123,75 @@ class financialaid extends controller
                 return 'addstudentfamily_tpl.php';
                  
             case 'saveapplication':
-                $this->objDBApplication->saveRecord('add', $this->objUser->userId());
+                $fields = array('appNumber' => $this->getParam('appnum', ''),
+                            'studentNumber' => $this->getParam('stdnum', ''),
+                            'idNumber' => $this->getParam('idNum', ''),
+                            'surname' => $this->getParam('surname', ''),
+                            'firstNames' => $this->getParam('firstname', ''),
+                            'gender' => $this->getParam('gender', ''),
+                            'saCitizen' => $this->getParam('saCitizen', ''),
+                            'supportingSelf' => $this->getParam('supportingself', ''),
+                            'dateCreated' => date("Y-m-d H:i:s"),
+                            'creatorId' => $this->objUser->userId());
+                $this->objDBFinancialAidWS->saveApplication('add', $fields);
                 $this->setVar('appnum', $this->getParam('appnum', NULL));
+
                 return 'studentapplicationinfo_tpl.php';
             case 'savenextofkin':
-                $this->objDBNextofkin->saveRecord('add', $this->objUser->userId());
+                $fields = array('appNumber' => $this->getParam('appnum', ''),
+                            'idNumber' => $this->getParam('idnum', ''),
+                            'surname' => $this->getParam('surname', ''),
+                            'firstNames' => $this->getParam('firstname', ''),
+                            'relationship' => $this->getParam('gender', ''),
+                            'strAddress' => $this->getParam('straddress', ''),
+                            'suburb' => $this->getParam('suburb', ''),
+                            'city' => $this->getParam('city', ''),
+                            'postcode' => $this->getParam('postcode', ''),
+                            'maritalStatus' => $this->getParam('maritalstatus', ''),
+                            'spouse' => $this->getParam('spouse', ''),
+                            'occupation' => $this->getParam('occupation', ''),
+                            'employersDetails' => $this->getParam('employerdetails', ''),
+                            'employersTelNo' => $this->getParam('employertelno', ''),
+                            'dateCreated' => date("Y-m-d H:i:s"),
+                            'creatorId' => $this->objUser->userId());
+                $this->objDBFinancialAidWS->saveNextofkin('add', $fields);
                 $this->setVar('appnum', $this->getParam('appnum', NULL));
                 return 'studentapplicationinfo_tpl.php';
             case 'savedependant':
-                $this->objDBDependants->saveRecord('add', $this->objUser->userId());
+                $fields = array('appNumber' => $this->getParam('appnum', ''),
+                            'firstName' => $this->getParam('firstname', ''),
+                            'relationship' => $this->getParam('relationship', ''),
+                            'dependantReason' => $this->getParam('dependantreason', ''),
+                            'category' => $this->getParam('category', ''),
+                            'hasIncome' => $this->getParam('hasIncome', ''),
+                            'incomeType' => $this->getParam('incomeType', ''),
+                            'incomeAmount' => $this->getParam('incomeAmount', ''),
+                            'dateCreated' => date("Y-m-d H:i:s"),
+                            'creatorId' => $this->objUser->userId());
+                $this->objDBFinancialAidWS->saveDependant('add', $fields);
                 $this->setVar('appnum', $this->getParam('appnum', NULL));
                 return 'studentapplicationinfo_tpl.php';
             case 'saveparttimejob':
-                $this->objDBParttimejobs->saveRecord('add', $this->objUser->userId());
+                $fields = array('appNumber' => $this->getParam('appnum', ''),
+                            'jobTitle' => $this->getParam('jobtitle', ''),
+                            'employersDetails' => $this->getParam('employersdetails', ''),
+                            'employersTelNo' => $this->getParam('employerstelno', ''),
+                            'dateCreated' => date("Y-m-d H:i:s"),
+                            'creatorId' => $this->objUser->userId());
+                var_dump($fields);
+                var_dump($this->objDBFinancialAidWS->saveParttimejob('add', $fields));
                 $this->setVar('appnum', $this->getParam('appnum', NULL));
                 return 'studentapplicationinfo_tpl.php';
             case 'savestudentfamily':
-                $this->objDBStudentFamily->saveRecord('add', $this->objUser->userId());
+                $fields = array('appNumber' => $this->getParam('appnum', ''),
+                            'firstName' => $this->getParam('firstname', ''),
+                            'institution' => $this->getParam('institution', ''),
+                            'course' => $this->getParam('course', ''),
+                            'yearOfStudy' => $this->getParam('year', ''),
+                            'studentNumber' => $this->getParam('stdnum', ''),
+                            'dateCreated' => date("Y-m-d H:i:s"),
+                            'creatorId' => $this->objUser->userId());
+                $this->objDBFinancialAidWS->saveStudentInFamily('add', $fields);
                 $this->setVar('appnum', $this->getParam('appnum', NULL));
                 return 'studentapplicationinfo_tpl.php';
             //----------------

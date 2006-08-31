@@ -21,10 +21,7 @@ class dbfinaid extends object
     
 	function init(){
 		parent::init();
-        //Uses NUSOAP
-        //require_once("lib/nusoap/nusoap.php");
-      $this->NAMESPACE="http://172.16.65.134/webserviceDEV/studentinfo4.php?wsdl";
-
+        $this->NAMESPACE="http://172.16.65.134/webserviceDEV/studentinfo4.php?wsdl";
         $this->objSoapClient = new SoapClient($this->NAMESPACE);
 	}
 
@@ -124,6 +121,19 @@ class dbfinaid extends object
    	function getStudentSchool($value, $field = 'STDNUM'){
   		return $this->objSoapClient->getlimitSTSCL($field, $value, 0, 0);
 	}
+ 
+    /**
+    *
+    * Function to retrieve subject details from the database
+    *
+    * @param string $value: The value to search for in the database
+    * @param string $field: The field to search on in the database
+    * @return array: The array of matching records from the database
+    *
+    */
+   	function getSubject($value, $field = 'SBJCDE'){
+  		return $this->objSoapClient->getlimitSBJCT($field, $value, 0, 0);
+	}
 
 
    //--------------------------------------------------
@@ -131,11 +141,16 @@ class dbfinaid extends object
    	function getParam($value, $field = 'PRMIDN'){
   		return $this->objSoapClient->getlimitPARAM($field, $value, 0, 0);
 	}
- 
+   	function getParam2($value, $field = 'PRMCOD'){
+  		return $this->objSoapClient->getlimitPARM2($field, $value, 0, 0);
+	}
+
     function getStudent($value, $field = 'STDNUM'){
   		return $this->objSoapClient->getlimitSTDET($field, $value, 0, 0);
     }
-
+    function getStudentSubjects($value, $field = 'STDNUM'){
+  		return $this->objSoapClient->getlimitSTSBJ($field, $value, 0, 0);
+    }
     function getBursary($value, $field = 'BRSCDE'){
   		return $this->objSoapClient->getlimitBRSRY($field, $value, 0, 0);
     }
