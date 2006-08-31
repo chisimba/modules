@@ -1,4 +1,6 @@
 <?php
+//----TEMPLATE FOR BUILDING WRAPPER
+
 // Create an instance of the css layout class
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');
 // Set columns to 3
@@ -9,21 +11,17 @@ $objWiz = $this->getObject('wizlinks');
 //Put in the standard left column text
 $leftSideColumn = $objWiz->putStandardLeftTxt();
 
-//Get the page
-$page = $this->getParam('page', NULL);
-
 // Add the heading to the content
 $objH =& $this->getObject('htmlheading', 'htmlelements');
 //Heading <h3>
-$objH->type=3;
-$objH->str=$objLanguage->languageText("mod_generator_" . $page . "_instructions", "generator");
+$objH->type=3; 
+$objH->str=$objLanguage->languageText("mod_generator_page" . $page . "_instructions", "generator");
 $middleColumn = $objH->show();
 
-$middleColumn .= 'Controller<br />'
-	. '<textarea name="controller" cols="78" rows="30">' . $cont 
-	. '</textarea><br /><br />'
-	. 'Register<br /><textarea name="controller" '
-	. 'cols="78" rows="30">'. $reg . '</textarea>';
+//Add the form to the template
+$objTpWrapper = $this->getObject('tpwrapper');
+$middleColumn .= $objTpWrapper->show();
+
 
 //Variable for the rightside column text
 $objWiz = $this->getObject('wizlinks');
@@ -42,5 +40,4 @@ $cssLayout->setRightColumnContent($rightSideColumn);
 
 //Output the content to the page
 echo $cssLayout->show();
-
 ?>

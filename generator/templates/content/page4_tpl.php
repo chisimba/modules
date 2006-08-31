@@ -17,8 +17,8 @@ $objH->str=$objLanguage->languageText("mod_generator_page" . $page . "_instructi
 $middleColumn = $objH->show();
 
 //Add the form to the template
-$objTpEdit = $this->getObject('tpedit');
-$middleColumn .= $objTpEdit->show();
+$objTbName = $this->getObject('tpdata');
+$middleColumn .= $objTbName->show();
 
 
 //Variable for the rightside column text

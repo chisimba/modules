@@ -9,17 +9,18 @@ $objWiz = $this->getObject('wizlinks');
 //Put in the standard left column text
 $leftSideColumn = $objWiz->putStandardLeftTxt();
 
+//Get the page
+$page = $this->getParam('page', NULL);
+
 // Add the heading to the content
 $objH =& $this->getObject('htmlheading', 'htmlelements');
 //Heading <h3>
-$objH->type=3; 
-$objH->str=$objLanguage->languageText("mod_generator_page" . $page . "_instructions", "generator");
+$objH->type=3;
+$objH->str=$objLanguage->languageText("mod_generator_" . $page . "_instructions", "generator");
 $middleColumn = $objH->show();
 
-//Add the form to the template
-$objTpEdit = $this->getObject('tpedit');
-$middleColumn .= $objTpEdit->show();
-
+$middleColumn .= 'Register<br /><textarea name="controller" '
+	. 'cols="78" rows="30">'. $reg . '</textarea>';
 
 //Variable for the rightside column text
 $objWiz = $this->getObject('wizlinks');
@@ -38,4 +39,5 @@ $cssLayout->setRightColumnContent($rightSideColumn);
 
 //Output the content to the page
 echo $cssLayout->show();
+
 ?>
