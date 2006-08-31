@@ -13,8 +13,7 @@
     public function init()
     {
         //Get an instance of the data access class for this module
-        $this->{DATACLASS} = $this->getObject('{DATACLASS}');
-{OBJECTS}
+        $this->{DATABASECLASS} = $this->getObject('{DATABASECLASS}');
 {LOGGER}
     }
   </code>
@@ -42,7 +41,7 @@
         * Convert the action into a method (alternative to 
         * using case selections)
         */
-        $method = $this->__getMethod($action);
+        $method = $this->_getMethod($action);
         /*
         * Return the template determined by the method resulting 
         * from action
@@ -63,9 +62,9 @@
     * @access private
     * 
     */
-    private function __view()
+    private function _view()
     {
-        $ar = $this->{DATACLASS}->getAll($filter);
+        $ar = $this->{DATABASECLASS}->getAll($filter);
         $this->setVarByRef('ar', $ar);
         return "main_tpl.php";
     }
@@ -84,7 +83,7 @@
     * @access private
     * 
     */
-    private function __edit()
+    private function _edit()
     {
         $this->setvar('mode', "edit");
         return 'editform_tpl.php';
@@ -102,7 +101,7 @@
     * @access private
     * 
     */
-    private function __add()
+    private function _add()
     {
         $this->setvar('mode', 'add');
         return 'editform_tpl.php';
@@ -122,10 +121,10 @@
     * @access private
     * 
     */
-    private function __save()
+    private function _save()
     {
         $mode = $this->getParam("mode", NULL);
-        $this->{DATACLASS}->saveItem($mode);
+        $this->{DATABASECLASS}->saveItem($mode);
         return $this->nextAction(NULL);
     }
     
@@ -145,12 +144,12 @@
     * @access private
     * 
     */
-    private function __delete()
+    private function _delete()
     {
         // retrieve the confirmation code from the querystring
         $confirm=$this->getParam("confirm", "no");
         if ($confirm=="yes") {
-            $this->{DATACLASS}->deleteItem();
+            $this->{DATABASECLASS}->deleteItem();
             return $this->nextAction(NULL);
         }
     }
@@ -171,7 +170,7 @@
     * @return string The dump template populated with the error message
     * 
     */
-    private function __actionError()
+    private function _actionError()
     {
         $this->setVar('str', "<h3>"
           . $this->objLanguage->languageText("phrase_unrecognizedaction")
@@ -189,7 +188,7 @@
     /**
     * 
     * Method to check if a given action is a valid method
-    * of this class preceded by double underscore (__). If the action 
+    * of this class preceded by double underscore (_). If the action 
     * is not a valid method it returns FALSE, if it is a valid method
     * of this class it returns TRUE.
     * 
@@ -198,9 +197,9 @@
     * @return boolean TRUE|FALSE
     * 
     */
-    private function __validAction($action)
+    private function _validAction($action)
     {
-        if (method_exists($this, "__".$action)) {
+        if (method_exists($this, "_".$action)) {
             return TRUE;
         } else {
             return FALSE;
@@ -224,12 +223,12 @@
     * @return stromg the name of the method
     * 
     */
-    private function __getMethod($action)
+    private function _getMethod($action)
     {
-        if ($this->__validAction($action)) {
-            return "__" . $action;
+        if ($this->_validAction($action)) {
+            return "_" . $action;
         } else {
-            return "__actionError";
+            return "_actionError";
         }
     }
   </code>

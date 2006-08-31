@@ -46,7 +46,7 @@ of the items.
 * @licence GNU/GPL
 *
 */
-class {CLASS} extends controller
+class {CLASSNAME} extends controller
 
     {PROPERTIES}
 
