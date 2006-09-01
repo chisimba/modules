@@ -32,6 +32,7 @@ $objForm = $this->newObject('form','htmlelements');
 
 //setup form
 $objForm->name='addsectionfrm';
+$objForm->id='addsectionfrm';
 $objForm->setAction($this->uri(array('action'=>$action, 'id' => $sectionId),'cmsadmin'));
 $objForm->setDisplayType(3);   
 
@@ -44,16 +45,21 @@ $tablee->cellpadding='1';
 //create heading
 $h3->str = 'Section: New';
 
-
+//the title
 $titleInput->name = 'title';
+$titleInput->id = 'title';
 $titleInput->size = 50;
+$objForm->addRule('title', 'Please add a Title', 'required');
+
 $menuTextInput->name = 'menutext';
 $menuTextInput->size = 50;
+$objForm->addRule('menutext', 'Please add a Menu Text', 'required');
+
 $bodyInput->name = 'description';
 
-$button->setToSubmit();
+//$button->setToSubmit();
 $button->value = 'Save';
-
+$button->setToSubmit();//onclick = 'return validate_addsectionfrm_form(this.form) ';
 if($editmode)
 {
 	$arrSection = $this->_objSections->getSection($sectionId);
@@ -90,7 +96,8 @@ $table->endRow();
 //image
 $table->startRow();
 $table->addCell('Image');
-$table->addCell($this->_objUtils->getImageList('image', $selected).'&nbsp;<img src="'.$imageSRC.'"  name="imagelib" width="80" height="80" border="2" alt="Preview" /><p/>', 'top');
+$table->addCell($this->_objUtils->getImageList('image',$objForm->name, $selected).'&nbsp;<img src="'.$imageSRC.'" 
+					 id="imagelib" name="imagelib" border="2" alt="Preview" /><p/>', 'top');
 
 $table->endRow();
 
@@ -151,3 +158,21 @@ print $objForm->show();
 
 
 ?>
+
+<script language="javascript" type="text/javascript">
+<![CDATA[
+	function changeImage(el, frm)
+	{
+		fe = document.getElementById('imagelib');
+		//alert(fe.name);
+		if (el.options[el.selectedIndex].value!='')
+		{
+			fe.src= 'skins/echo' + el.options[el.selectedIndex].value;
+		} else {
+			fe.src='http://localhost/5ive/app/skins/_common/blank.png';
+		}
+			
+	}
+
+]]>
+	</script>

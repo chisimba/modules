@@ -127,7 +127,7 @@ class cmsutils extends object
 	 * @param  string $selected the selected value
 	 * @return string
 	 */
-	public function  getImageList($name, $selected = null)
+	public function  getImageList($name, $formName, $selected = null)
 	{
 		try {
 			$objDropDown = & $this->newObject('dropdown', 'htmlelements');
@@ -141,7 +141,7 @@ class cmsutils extends object
 			
 			$objDropDown->addOption('0',' - Select Image - ');
 			$objDropDown->addFromDB($objMedia->getImages(),'title','folder',$selected);
-			$objDropDown->extra = 'onchange="javascript:if (document.forms[0].'.$name.'.options[selectedIndex].value!=\'\') {document.imagelib.src=\''. $path.'\' + document.forms[0].image.options[selectedIndex].value} else {document.imagelib.src=\'http://localhost/5ive/app/skins/_common/blank.png\'}"';
+			$objDropDown->extra = 'onchange=" return changeImage(this, this.form) "';
 			return $objDropDown->show();		
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
