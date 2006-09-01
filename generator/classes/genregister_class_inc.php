@@ -61,18 +61,25 @@ class genregister extends abgenerator implements ifgenerator
         //Put in the module code
         $this->modulecode();
         //Put in the module name
-        $this->modulename();
-        	$this->menucategory();
-        	$this->sidemenucategory();
-			$this->modulereleasedate();
-			$this->contextaware();
-			$this->dependscontext();
+        $this->modulename();        
+        //Put in the menu category
+        $this->menucategory();
+        //Put in sidemenu category if exists
+        $this->sidemenucategory();
+        //Put today in for the module releasedate
+        $this->modulereleasedate();
+        //Put in whether the module is context aware or not
+		  $this->contextaware();
+		  //Put in whether the module has a dependency on contex or not
+		  $this->dependscontext();
+		  //Insert the basic language elements
+		  $this->languageelems();
         //Clean up unused template tags
         $this->cleanUp();
         //Parse for dumping to screen
         $this->prepareForDump();
         //Return the template
-	    return $this->classCode;
+	     return $this->classCode;
 	}
 	
 	/**
@@ -124,13 +131,17 @@ class genregister extends abgenerator implements ifgenerator
         $sidemenucategory = $this->getParam('sidemenucategory', NULL);
         //If there is no parameter, check the session cookies
         if ($sidemenucategory == NULL) {
-            $sidemenucategory = $this->getSession('sidemenucategory', '{SIDEMENUCATEGORY_UNSPECIFIED}');
+            $sidemenucategory = $this->getSession('sidemenucategory', NULL);
         } else {
             //Serialize the variable to the session since we are geting it from a param
 			$this->setSession('sidemenucategory', $sidemenucategory);
         }
         //Do the replace
-        $this->classCode = str_replace("{SIDEMENUCATEGORY}", $sidemenucategory, $this->classCode);
+        if ($sidemenucategory !== NULL) {
+            $this->classCode = str_replace("{SIDEMENUCATEGORY}", $sidemenucategory, $this->classCode);
+        } else {
+            $this->classCode = str_replace("SIDEMENU_CATEGORY: {SIDEMENUCATEGORY}", "COMMENT: No sidemenu category (insert SIDEMENU_CATEGORY here if this changes)", $this->classCode);
+        }
         return TRUE;
     }
 	
@@ -211,6 +222,14 @@ class genregister extends abgenerator implements ifgenerator
     * Method for inserting language elements. TODO
     *
     */
-    public function languageelems(){}
+    public function languageelems()
+    {
+        $str = "TEXT: mod_" . $this->getItem('modulecode') . "__about_title|Title of the module|" 
+          . $this->getItem('modulename') . "\n";
+        $str .= "TEXT: mod_" . $this->getItem('modulecode') . "__about|Description of the module|" 
+          . $this->getItem('moduledescription') . "\n";
+        $this->classCode = str_replace("{LANGUAGEELEMS}", $str, $this->classCode);
+
+    }
 }
 ?>
