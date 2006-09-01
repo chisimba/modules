@@ -29,8 +29,9 @@ if (count($appinfo) > 0)
 	$table->endHeaderRow();
  
     for ($i = 0; $i < count($appinfo); $i++){
+
         $avg = $this->objFinancialAidCustomWS->getAvgMark($appinfo[$i]->studentNumber, $year);
-        if (($avg < $upperMark) && ($avg > $lowerMark))
+        if (($avg < $upperMark) && ($avg >= $lowerMark))
         {
             $stdinfo = $this->objStudentInfo->getPersonInfo($appinfo[$i]->studentNumber);
             if (count($stdinfo) > 0)
@@ -40,7 +41,7 @@ if (count($appinfo) > 0)
 		    	$link = new link();
 
     			$viewdetails = new link();
-    			$viewdetails->href=$this->uri(array('action'=>'info','id'=>$stdinfo[0]->STDNUM));
+    			$viewdetails->href=$this->uri(array('action'=>'applicationinfo','appid'=>$appinfo[$i]->id));
     			$viewdetails->link = $objLanguage->languagetext('mod_financialaid_view','financialaid');
 
                 $stname = $stdinfo[0]->FSTNAM;

@@ -1,6 +1,5 @@
 <?
 $stdnum = $this->getParam('studentNumber');
-$applnum = $this->getParam('applicationNumber');
 $surname = $this->getParam('surname');
 $idnumber = $this->getParam('idNumber');
 

@@ -30,8 +30,6 @@ class applicationblocksearchbox extends object
 
 		$stdnum= new textinput('studentNumber',null,null,15);
 
-		$applicationum= new textinput('applicationNumber',null,null,15);
-
 		$idnum= new textinput('idNumber',null,null,15);
 
 		$save= new button('save');
@@ -43,9 +41,6 @@ class applicationblocksearchbox extends object
         $stdlabel=$this->objLanguage->languageText('mod_financialaid_stdnum2','financialaid').":";
         $objForm->addToForm($stdlabel);
 		$objForm->addToForm($stdnum);
-        $applabel=$this->objLanguage->languageText('mod_financialaid_appnumber','financialaid').":";
-        $objForm->addToForm($applabel);
-		$objForm->addToForm($applicationum);
         $idlabel=$this->objLanguage->languageText('mod_financialaid_idnumber','financialaid').":";
         $objForm->addToForm($idlabel);
 		$objForm->addToForm($idnum);

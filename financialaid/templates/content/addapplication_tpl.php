@@ -4,7 +4,9 @@ $table =& $this->newObject('htmltable','htmlelements');
 $table->cellspacing = 2;
 $table->cellpadding = 2;
 $details = "<h2>".$objLanguage->languagetext('mod_financialaid_addapp','financialaid')."</h2>";
-$appNum = new textinput('appnum');
+
+$addid = "init" . "_" . rand(1000,9999) . "_" . time();
+$appidfield = new textinput("appid", $appid,  "hidden", NULL);
 $stdNum = new textinput('stdnum');
 $idNum = new textinput('idNum');
 $surname = new textinput('surname');

@@ -29,9 +29,6 @@ class blockcentersearchappbox extends object
 		$stdnum= new textinput('studentNumber',null,null,40);
 		$stdnum->label=$this->objLanguage->languageText('mod_financialaid_stdnum2','financialaid').":";
 		
-		$applicationum= new textinput('applicationNumber',null,null,40);
-		$applicationum->label=$this->objLanguage->languageText('mod_financialaid_appnumber','financialaid').":";
-
 		$idnum= new textinput('idNumber',null,null,40);
 		$idnum->label=$this->objLanguage->languageText('mod_financialaid_idnumber','financialaid').":";
 		
@@ -41,7 +38,6 @@ class blockcentersearchappbox extends object
 		
 		$objForm->addToForm($surname);
 		$objForm->addToForm($stdnum);
-		$objForm->addToForm($applicationum);
 		$objForm->addToForm($idnum);
 		$objForm->addToForm($save);
 		

@@ -4,9 +4,9 @@ $details = "<h2>".$objLanguage->languagetext('mod_financialaid_addparttimejob','
 $table =& $this->newObject('htmltable','htmlelements');
 $table->cellspacing = 2;
 $table->cellpadding = 2;
-$appnum = $this->getParam('appnum');
+$appid = $this->getParam('appid');
 
-$appnumfield = new textinput("appnum", $appnum,  "hidden", NULL);
+$appidfield = new textinput("appid", $appid,  "hidden", NULL);
 $jobTitle = new textinput('jobtitle');
 $employersDetails = new textinput('employersdetails');
 $employersTelNo = new textinput('employerstelno');
@@ -20,7 +20,7 @@ $cancelbut->setToSubmit();
 $cancelbut->setValue($objLanguage->languagetext('word_cancel'));
 
 $table->startRow();
-$table->addCell($appnumfield->show());
+$table->addCell($appidfield->show());
 $table->endRow();
 
 $table->startRow();

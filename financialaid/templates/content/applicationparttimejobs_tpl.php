@@ -1,9 +1,9 @@
 <?
-$appnum = $this->getParam('appnum');
+$appid = $this->getParam('appid');
 
 $this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
 
-$stdinfo = $this->objDBFinancialAidWS->getApplication($appnum);
+$stdinfo = $this->objDBFinancialAidWS->getApplication($appid);
 $stname = $stdinfo[0]->firstNames;
 $stsname = $stdinfo[0]->surname;
 
@@ -16,7 +16,7 @@ $idnumber = $stdinfo[0]->idNumber;
 $stdnum = $stdinfo[0]->studentNumber;
 $table =& $this->newObject('htmltable','htmlelements');
 
-$parttimejobs = $this->objDBFinancialAidWS->getParttimejob($appnum);
+$parttimejobs = $this->objDBFinancialAidWS->getParttimejob($appid);
 
 if(count($parttimejobs) > 0){
     $table->startHeaderRow();

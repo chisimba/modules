@@ -4,9 +4,9 @@ $details = "<h2>".$objLanguage->languagetext('mod_financialaid_adddependant','fi
 $table =& $this->newObject('htmltable','htmlelements');
 $table->cellspacing = 2;
 $table->cellpadding = 2;
-$appnum = $this->getParam('appnum');
+$appid = $this->getParam('appid');
 
-$appnumfield = new textinput("appnum", $appnum,  "hidden", NULL);
+$appidfield = new textinput("appid", $appid,  "hidden", NULL);
 $firstname = new textinput('firstname');
 $relationship = new textinput('relationship');
 $dependantReason = new textinput('dependantreason');
@@ -29,7 +29,7 @@ $cancelbut->setValue($objLanguage->languagetext('word_cancel'));
 
 
 $table->startRow();
-$table->addCell($appnumfield->show());
+$table->addCell($appidfield->show());
 $table->endRow();
 
 $table->startRow();

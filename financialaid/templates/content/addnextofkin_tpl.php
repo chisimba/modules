@@ -5,9 +5,9 @@ $details = "<h2>".$objLanguage->languagetext('mod_financialaid_addnextofkin','fi
 $table =& $this->newObject('htmltable','htmlelements');
 $table->cellspacing = 2;
 $table->cellpadding = 2;
-$appnum = $this->getParam('appnum');
+$appid = $this->getParam('appid');
 
-$appnumfield = new textinput("appnum", $appnum,  "hidden", NULL);;
+$appidfield = new textinput("appid", $appid,  "hidden", NULL);;
 $idNum = new textinput('idnum');
 $surname = new textinput('surname');
 $firstname = new textinput('firstname');
@@ -42,7 +42,7 @@ $cancelbut->setValue($objLanguage->languagetext('word_cancel'));
 
 $table->startRow();
 
-$table->addCell($appnumfield->show());
+$table->addCell($appidfield->show());
 $table->endRow();
 
 $table->startRow();

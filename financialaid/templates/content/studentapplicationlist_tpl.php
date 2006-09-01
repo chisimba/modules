@@ -14,7 +14,6 @@ $oddEven = 'odd';
 $foundStudents = false;
 
 $stdnum = strtoupper($this->getParam('studentNumber'));
-$applnum = strtoupper($this->getParam('applicationNumber'));
 $surname = $this->getParam('surname');
 $idnumber = strtoupper($this->getParam('idNumber'));
 $all = $this->getParam('all', NULL);
@@ -30,9 +29,6 @@ if (strlen($stdnum) > 0) {
 }else if (strlen($idnumber) > 0){
     $wherefield = "idNumber";
     $wherevalue = $idnumber;
-}else if (strlen($applnum) > 0){
-    $wherefield = "appNumber";
-    $wherevalue = $applnum;
 }
 
 if (!is_null($all)){
@@ -165,7 +161,7 @@ if(count($stdinfo) > 0){
 			$table->row_attributes = " class = \"$oddEven\"";
 
 			$viewdetails = new link();
-			$viewdetails->href=$this->uri(array('action'=>'applicationinfo','appnum'=>$stdinfo[$i]->appNumber));
+			$viewdetails->href=$this->uri(array('action'=>'applicationinfo','appid'=>$stdinfo[$i]->id));
 			$viewdetails->link = $objLanguage->languagetext('mod_financialaid_view','financialaid');
 
 

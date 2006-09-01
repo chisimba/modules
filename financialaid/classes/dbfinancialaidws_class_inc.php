@@ -36,7 +36,7 @@ class dbfinancialaidws extends object
     * @return array: The array of matching records from the database
     *
     */
-    function getApplication($value, $field = 'appNumber'){
+    function getApplication($value, $field = 'id'){
   		return $this->objSoapClient->getApplication($field, $value, 0, 0);
     }
     
@@ -62,7 +62,7 @@ class dbfinancialaidws extends object
     * @return array: The array of matching records from the database
     *
     */
-    function getNextofkin($value, $field = 'appNumber'){
+    function getNextofkin($value, $field = 'appId'){
   		return $this->objSoapClient->getNextofkin($field, $value, 0, 0);
     }
     
@@ -75,7 +75,7 @@ class dbfinancialaidws extends object
     * @return array: The array of matching records from the database
     *
     */
-    function getDependants($value, $field = 'appNumber'){
+    function getDependants($value, $field = 'appId'){
   		return $this->objSoapClient->getDependants($field, $value, 0, 0);
     }
 
@@ -88,7 +88,7 @@ class dbfinancialaidws extends object
     * @return array: The array of matching records from the database
     *
     */
-    function getParttimejob($value, $field = 'appNumber'){
+    function getParttimejob($value, $field = 'appId'){
   		return $this->objSoapClient->getParttimejob($field, $value, 0, 0);
     }
     
@@ -101,7 +101,7 @@ class dbfinancialaidws extends object
     * @return array: The array of matching records from the database
     *
     */
-    function getStudentsInFamily($value, $field = 'appNumber'){
+    function getStudentsInFamily($value, $field = 'appId'){
   		return $this->objSoapClient->getStudentsInFamily($field, $value, 0, 0);
     }
 

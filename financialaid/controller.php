@@ -102,7 +102,7 @@ class financialaid extends controller
 				return 'markrangelist_tpl.php';
 
 			case 'applicationinfo':
-                $this->setVar('appnum', $this->getParam('appnum', NULL));
+                $this->setVar('appid', $this->getParam('appid', NULL));
 				return 'studentapplicationinfo_tpl.php';
 
 			case 'shownextofkin':
@@ -127,7 +127,7 @@ class financialaid extends controller
                 return 'addstudentfamily_tpl.php';
                  
             case 'saveapplication':
-                $fields = array('appNumber' => $this->getParam('appnum', ''),
+                $fields = array('id' => $this->getParam('appid', ''),
                             'studentNumber' => $this->getParam('stdnum', ''),
                             'idNumber' => $this->getParam('idNum', ''),
                             'surname' => $this->getParam('surname', ''),
@@ -138,11 +138,11 @@ class financialaid extends controller
                             'dateCreated' => date("Y-m-d H:i:s"),
                             'creatorId' => $this->objUser->userId());
                 $this->objDBFinancialAidWS->saveApplication('add', $fields);
-                $this->setVar('appnum', $this->getParam('appnum', NULL));
+                $this->setVar('appid', $this->getParam('appid', NULL));
 
                 return 'studentapplicationinfo_tpl.php';
             case 'savenextofkin':
-                $fields = array('appNumber' => $this->getParam('appnum', ''),
+                $fields = array('appId' => $this->getParam('appid', ''),
                             'idNumber' => $this->getParam('idnum', ''),
                             'surname' => $this->getParam('surname', ''),
                             'firstNames' => $this->getParam('firstname', ''),
@@ -159,10 +159,10 @@ class financialaid extends controller
                             'dateCreated' => date("Y-m-d H:i:s"),
                             'creatorId' => $this->objUser->userId());
                 $this->objDBFinancialAidWS->saveNextofkin('add', $fields);
-                $this->setVar('appnum', $this->getParam('appnum', NULL));
+                $this->setVar('appid', $this->getParam('appid', NULL));
                 return 'studentapplicationinfo_tpl.php';
             case 'savedependant':
-                $fields = array('appNumber' => $this->getParam('appnum', ''),
+                $fields = array('appId' => $this->getParam('appid', ''),
                             'firstName' => $this->getParam('firstname', ''),
                             'relationship' => $this->getParam('relationship', ''),
                             'dependantReason' => $this->getParam('dependantreason', ''),
@@ -173,21 +173,20 @@ class financialaid extends controller
                             'dateCreated' => date("Y-m-d H:i:s"),
                             'creatorId' => $this->objUser->userId());
                 $this->objDBFinancialAidWS->saveDependant('add', $fields);
-                $this->setVar('appnum', $this->getParam('appnum', NULL));
+                $this->setVar('appid', $this->getParam('appid', NULL));
                 return 'studentapplicationinfo_tpl.php';
             case 'saveparttimejob':
-                $fields = array('appNumber' => $this->getParam('appnum', ''),
+                $fields = array('appId' => $this->getParam('appid', ''),
                             'jobTitle' => $this->getParam('jobtitle', ''),
                             'employersDetails' => $this->getParam('employersdetails', ''),
                             'employersTelNo' => $this->getParam('employerstelno', ''),
                             'dateCreated' => date("Y-m-d H:i:s"),
                             'creatorId' => $this->objUser->userId());
-                var_dump($fields);
-                var_dump($this->objDBFinancialAidWS->saveParttimejob('add', $fields));
-                $this->setVar('appnum', $this->getParam('appnum', NULL));
+                $this->objDBFinancialAidWS->saveParttimejob('add', $fields);
+                $this->setVar('appid', $this->getParam('appid', NULL));
                 return 'studentapplicationinfo_tpl.php';
             case 'savestudentfamily':
-                $fields = array('appNumber' => $this->getParam('appnum', ''),
+                $fields = array('appId' => $this->getParam('appid', ''),
                             'firstName' => $this->getParam('firstname', ''),
                             'institution' => $this->getParam('institution', ''),
                             'course' => $this->getParam('course', ''),
@@ -196,7 +195,7 @@ class financialaid extends controller
                             'dateCreated' => date("Y-m-d H:i:s"),
                             'creatorId' => $this->objUser->userId());
                 $this->objDBFinancialAidWS->saveStudentInFamily('add', $fields);
-                $this->setVar('appnum', $this->getParam('appnum', NULL));
+                $this->setVar('appid', $this->getParam('appid', NULL));
                 return 'studentapplicationinfo_tpl.php';
             //----------------
             //Test action

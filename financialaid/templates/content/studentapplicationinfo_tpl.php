@@ -1,10 +1,10 @@
 <?
-if (!isset($appnum)){
-    $appnum = $this->getParam('appnum');
+if (!isset($appid)){
+    $appid = $this->getParam('appid');
 }
 $this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
 
-$stdinfo = $this->objDBFinancialAidWS->getApplication($appnum);
+$stdinfo = $this->objDBFinancialAidWS->getApplication($appid);
 $stname = $stdinfo[0]->firstNames;
 $stsname = $stdinfo[0]->surname;
 
