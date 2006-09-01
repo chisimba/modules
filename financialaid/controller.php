@@ -134,6 +134,12 @@ class financialaid extends controller
                             'firstNames' => $this->getParam('firstname', ''),
                             'gender' => $this->getParam('gender', ''),
                             'saCitizen' => $this->getParam('saCitizen', ''),
+                            'maritalStatus' => $this->getParam('maritalsts', ''),
+                            'course' => $this->getParam('course', ''),
+                            'fulltime' => $this->getParam('fulltime', ''),
+                            'majors' => $this->getParam('majors', ''),
+                            'hometelno' => $this->getParam('hometelno', ''),
+                            'cellno' => $this->getParam('cellno', ''),
                             'supportingSelf' => $this->getParam('supportingself', ''),
                             'dateCreated' => date("Y-m-d H:i:s"),
                             'creatorId' => $this->objUser->userId());

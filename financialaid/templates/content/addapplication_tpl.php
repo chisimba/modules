@@ -5,13 +5,17 @@ $table->cellspacing = 2;
 $table->cellpadding = 2;
 $details = "<h2>".$objLanguage->languagetext('mod_financialaid_addapp','financialaid')."</h2>";
 
-$addid = "init" . "_" . rand(1000,9999) . "_" . time();
+$appid = "init" . "_" . rand(1000,9999) . "_" . time();
 $appidfield = new textinput("appid", $appid,  "hidden", NULL);
 $stdNum = new textinput('stdnum');
 $idNum = new textinput('idNum');
 $surname = new textinput('surname');
 $firstname = new textinput('firstname');
-$maritalSts = new textinput('maritalsts');
+$maritalSts = new dropdown('maritalsts');
+$maritalSts->addOption('Single', $objLanguage->languagetext('word_single'));
+$maritalSts->addOption('Married', $objLanguage->languagetext('word_married'));
+$maritalSts->addOption('Divorced', $objLanguage->languagetext('word_divorced'));
+$maritalSts->addOption('Widowed', $objLanguage->languagetext('word_widowed'));
 
 $gender = new radio('gender');
 $gender->addOption('Male',$objLanguage->languagetext('word_male'));
@@ -30,6 +34,17 @@ $supportingSelf->addOption('0',$objLanguage->languagetext('word_no'));
 $supportingSelf->setSelected('1');
 $supportingSelf->setBreakSpace('  ');
 
+$course = new textinput('course');
+$majors = new textinput('majors');
+$hometelno = new textinput('hometelno');
+$cellno = new textinput('cellno');
+
+$fulltime = new radio('fulltime');
+$fulltime->addOption('1',$objLanguage->languagetext('word_yes'));
+$fulltime->addOption('0',$objLanguage->languagetext('word_no'));
+$fulltime->setSelected('1');
+$fulltime->setBreakSpace('  ');
+
 $addbut= new button('add');
 $addbut->setToSubmit();
 $addbut->setValue($objLanguage->languagetext('word_add'));
@@ -40,8 +55,7 @@ $cancelbut->setValue($objLanguage->languagetext('word_cancel'));
 
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_appnumber','financialaid'));
-$table->addCell($appNum->show());
+$table->addCell($appidfield->show());
 $table->endRow();
 
 $table->startRow();
@@ -75,6 +89,36 @@ $table->addCell($SACitizen->show());
 $table->endRow();
 
 $table->startRow();
+$table->addCell($objLanguage->languagetext('mod_financialaid_mrtsts','financialaid'));
+$table->addCell($maritalSts->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objLanguage->languagetext('mod_financialaid_courseofstudy','financialaid'));
+$table->addCell($course->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objLanguage->languagetext('mod_financialaid_fulltime','financialaid'));
+$table->addCell($fulltime->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objLanguage->languagetext('mod_financialaid_majorsubjects','financialaid'));
+$table->addCell($majors->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objLanguage->languagetext('mod_financialaid_hometelno','financialaid'));
+$table->addCell($hometelno->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objLanguage->languagetext('mod_financialaid_cellno','financialaid'));
+$table->addCell($cellno->show());
+$table->endRow();
+
+$table->startRow();
 $table->addCell($objLanguage->languagetext('mod_financialaid_supportingself','financialaid'));
 $table->addCell($supportingSelf->show());
 $table->endRow();
@@ -93,6 +137,8 @@ $objForm->setAction($this->uri(array('action'=>'saveapplication')));
 $objForm->setDisplayType(2);
 
 $objForm->addToForm($content);
+
+$objForm->addRule('stdnum', 'Student number must not be blank', 'required');
 
 echo $objForm->show();
 
