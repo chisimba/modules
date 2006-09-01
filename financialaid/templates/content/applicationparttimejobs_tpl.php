@@ -12,8 +12,6 @@ $rep = array(
       'LASTNAME' => $stsname);
       
 $details = "<h2>".$objLanguage->code2Txt('mod_financialaid_parttimejobtitle','financialaid',$rep)."</h2>";
-$idnumber = $stdinfo[0]->idNumber;
-$stdnum = $stdinfo[0]->studentNumber;
 $table =& $this->newObject('htmltable','htmlelements');
 
 $parttimejobs = $this->objDBFinancialAidWS->getParttimejob($appid);
@@ -24,7 +22,6 @@ if(count($parttimejobs) > 0){
     $table->addHeaderCell($objLanguage->languagetext('mod_financialaid_empdetails','financialaid'));
     $table->addHeaderCell($objLanguage->languagetext('mod_financialaid_emptelno','financialaid'));
     $table->endHeaderRow();
-
 
     foreach($parttimejobs as $data)
     {
@@ -38,8 +35,5 @@ if(count($parttimejobs) > 0){
 
 $content = "<center>".$details." ".$table->show(). "</center>";
 
-// Create an instance of the css layout class
-
 echo $content;
-
 ?>

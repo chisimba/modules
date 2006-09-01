@@ -8,7 +8,7 @@ $details = "<h2>".$objLanguage->languagetext('mod_financialaid_addapp','financia
 $appid = "init" . "_" . rand(1000,9999) . "_" . time();
 $appidfield = new textinput("appid", $appid,  "hidden", NULL);
 $stdNum = new textinput('stdnum');
-$idNum = new textinput('idNum');
+$idNum = new textinput('idnum');
 $surname = new textinput('surname');
 $firstname = new textinput('firstname');
 $maritalSts = new dropdown('maritalsts');
@@ -138,7 +138,10 @@ $objForm->setDisplayType(2);
 
 $objForm->addToForm($content);
 
-$objForm->addRule('stdnum', 'Student number must not be blank', 'required');
+$objForm->addRule('stdnum', 'Please enter a student number', 'required');
+$objForm->addRule('surname', 'Please enter a surname', 'required');
+$objForm->addRule('idnum', 'Please enter an ID number', 'required');
+$objForm->addRule('gender', 'Please select a gender', 'required');
 
 echo $objForm->show();
 

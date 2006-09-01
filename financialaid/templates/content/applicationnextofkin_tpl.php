@@ -12,14 +12,11 @@ $rep = array(
       'LASTNAME' => $stsname);
       
 $details = "<h2>".$objLanguage->code2Txt('mod_financialaid_nextofkintitle','financialaid',$rep)."</h2>";
-$idnumber = $stdinfo[0]->idNumber;
-$stdnum = $stdinfo[0]->studentNumber;
 $table =& $this->newObject('htmltable','htmlelements');
 
 $nextofkin = $this->objDBFinancialAidWS->getNextofkin($appid);
 
 if(count($nextofkin) > 0){
-
     foreach($nextofkin as $data)
     {
         $table->startRow();
@@ -86,13 +83,10 @@ if(count($nextofkin) > 0){
         $table->addCell($objLanguage->languagetext('mod_financialaid_emptelno','financialaid'));
         $table->addCell($data->employersTelNo);
         $table->endRow();
-
     }
 }
-
 
 $content = "<center>".$details." ".$table->show(). "</center>";
 
 echo $content;
-
 ?>

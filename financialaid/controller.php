@@ -68,7 +68,6 @@ class financialaid extends controller
             //----------------
             //Default action
 			case 'ok':
-               // $this->setVarByRef('stdinfo',$this->studentinfo->search());
 				return 'studentapplicationlist_tpl.php';
 
             //----------------
@@ -129,7 +128,7 @@ class financialaid extends controller
             case 'saveapplication':
                 $fields = array('id' => $this->getParam('appid', ''),
                             'studentNumber' => $this->getParam('stdnum', ''),
-                            'idNumber' => $this->getParam('idNum', ''),
+                            'idNumber' => $this->getParam('idnum', ''),
                             'surname' => $this->getParam('surname', ''),
                             'firstNames' => $this->getParam('firstname', ''),
                             'gender' => $this->getParam('gender', ''),

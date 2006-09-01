@@ -12,8 +12,6 @@ $rep = array(
       'LASTNAME' => $stsname);
       
 $details = "<h2>".$objLanguage->code2Txt('mod_financialaid_dependantstitle','financialaid',$rep)."</h2>";
-$idnumber = $stdinfo[0]->idNumber;
-$stdnum = $stdinfo[0]->studentNumber;
 $table =& $this->newObject('htmltable','htmlelements');
 
 $dependants = $this->objDBFinancialAidWS->getDependants($appid);
@@ -51,5 +49,4 @@ if(count($dependants) > 0){
 $content = "<center>".$details." ".$table->show(). "</center>";
 
 echo $content;
-
 ?>
