@@ -44,17 +44,17 @@ $table->addCell($upperMark->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell('year');
+$table->addCell($objLanguage->languagetext('word_year'));
 $table->addCell($years->show());
 $table->endRow();
 
 $ok= new button('ok');
 $ok->setToSubmit();
-$ok->setValue('OK');
+$ok->setValue($objLanguage->languagetext('word_ok'));
 
 $cancel= new button('cancel');
 $cancel->setToSubmit();
-$cancel->setValue('cancel');
+$cancel->setValue($objLanguage->languagetext('word_cancel'));
 
 $table->startRow();
 $table->addCell($ok->show());
