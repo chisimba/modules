@@ -7,7 +7,7 @@
 
 //first check if there is sections
 
-if($this->_objSections->isSections())
+if(!$this->_objSections->isSections())
 {
     $str ='<script language="javascript">
            <![CDATA[
