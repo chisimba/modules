@@ -71,12 +71,6 @@ abstract class abgenerator extends object
         $this->startphp();
         //Put in the end php code
         $this->endphp();
-        //Put in the author
-        $this->author();
-        //Put in the module code
-        $this->modulecode();
-        //Put in the module name
-        $this->modulename();
         return TRUE;
     }
     
@@ -135,14 +129,7 @@ abstract class abgenerator extends object
     public function modulecode()
     {
     	//Get the module code from parameter
-        $moduleCode = $this->getParam('modulecode', NULL);
-        //If there is no parameter, check the session cookies
-        if ($moduleCode == NULL) {
-            $moduleCode = $this->getSession('modulecode', '{MODULECODE_UNSPECIFIED}');
-        } else {
-            //Serialize the variable to the session since we are geting it from a param
-			$this->setSession('modulecode', $moduleCode);
-        }
+        $moduleCode = $this->getItem('modulecode');
         //Do the replace
         $this->classCode = str_replace("{MODULECODE}", $moduleCode, $this->classCode);
         return TRUE;
@@ -159,16 +146,9 @@ abstract class abgenerator extends object
     public function modulename()
     {
     	//Get the module code from parameter
-        $moduleName = $this->getParam('modulename', NULL);
-        //If there is no parameter, check the session cookies
-        if ($moduleName == NULL) {
-            $moduleName = $this->getSession('modulename', '{MODULENAME_UNSPECIFIED}');
-        } else {
-            //Serialize the variable to the session since we are geting it from a param
-			$this->setSession('modulename', $moduleName);
-        }
+        $moduleName = $this->getItem('modulename');
         //Do the replace
-        $this->classCode = str_replace("{MODULENAME}", $moduleCode, $this->classCode);
+        $this->classCode = str_replace("{MODULENAME}", $moduleName, $this->classCode);
         return TRUE;
     }
     
@@ -183,14 +163,7 @@ abstract class abgenerator extends object
     public function classname()
     {
     	//Get the module code from parameter
-        $moduleName = $this->getParam('classname', NULL);
-        //If there is no parameter, check the session cookies
-        if ($classname == NULL) {
-            $classname = $this->getSession('classname', '{CLASSNAME_UNSPECIFIED}');
-        } else {
-            //Serialize the variable to the session since we are geting it from a param
-			$this->setSession('classname', $classname);
-        }
+        $classname = $this->getItem('classname');
         //Do the replace
         $this->classCode = str_replace("{CLASSNAME}", $classname, $this->classCode);
         return TRUE;
@@ -207,14 +180,7 @@ abstract class abgenerator extends object
     public function moduledescription()
     {
     	//Get the module description from parameter
-        $moduleDescription = $this->getParam('moduledescription', NULL);
-        //If there is no parameter, check the session cookies
-        if ($moduleDescription == NULL) {
-            $moduleDescription = $this->getSession('moduledescription', '{MODULEDESCRIPTION_UNSPECIFIED}');
-        } else {
-            //Serialize the variable to the session since we are geting it from a param
-			$this->setSession('moduledescription', $moduleDescription);
-        }
+        $moduleDescription = $this->getItem('moduledescription');
         //Do the replace
         $this->classCode = str_replace("{MODULEDESCRIPTION}", $moduleDescription, $this->classCode);
         return TRUE;
@@ -231,14 +197,7 @@ abstract class abgenerator extends object
     public function copyright()
     {
         //Get the module sopyright from parameter
-        $copyRight = $this->getParam('copyright', NULL);
-        //If there is no parameter, check the session cookies
-        if ($copyRight == NULL) {
-            $copyRight = $this->getSession('copyright', '{COPYRIGHT_UNSPECIFIED}');
-        } else {
-            //Serialize the variable to the session since we are geting it from a param
-			$this->setSession('copyright', $copyRight);
-        }
+        $copyRight = $this->getItem('copyright');
         //Insert the copyright
         $this->classCode = str_replace('{COPYRIGHT}', $copyRight, $this->classCode);
     }
@@ -254,14 +213,7 @@ abstract class abgenerator extends object
     public function databasetable()
     {
         //Get the module sopyright from parameter
-        $databaseTable = $this->getParam('databasetable', NULL);
-        //If there is no parameter, check the session cookies
-        if ($databaseTable == NULL) {
-            $databaseTable = $this->getSession('databasetable', '{DATABASETABLE_UNSPECIFIED}');
-        } else {
-            //Serialize the variable to the session since we are geting it from a param
-			$this->setSession('databasetable', $databaseTable);
-        }
+        $databaseTable = $this->getItem('databasetable');
         //Insert the copyright
         $this->classCode = str_replace('{COPYRIGHT}', $databaseTable, $this->classCode);
     }
@@ -277,25 +229,10 @@ abstract class abgenerator extends object
 	function databaseclass()
 	{
 	    //Read the database class
-        $databaseclass = $this->getParam('databaseclass', NULL);
-        //If there is no parameter, check the session cookies
-        if ($databaseclass == NULL) {
-            $databaseclass = $this->getSession('databaseclass', '{DATABASECLASS_UNSPECIFIED}');
-        } else {
-            //Serialize the variable to the session since we are geting it from a param
-			$this->setSession('databaseclass', $databaseclass);
-        }
+        $databaseclass = $this->getItem('databaseclass');
         //Insert the database classname
         $this->classCode = str_replace('{DATACLASS}', $databaseclass, $this->classCode);
-	}
-	/**
-	 * 
-	 * A method corresponding to the {SPECIALMETHODS} parsecode that
-	 * must be replaced if you have any special methods 
-	 * 
-	 */
-	public function specialmethods() {}
-    
+	}  
 
     /**
      * 
@@ -438,6 +375,13 @@ abstract class abgenerator extends object
      	}
      }
      
+     /**
+     *
+     * Method to return the parsecodes (place holders) from the text
+     * so they can be validated to make sure that the class doing the 
+     * parsing has a method conforming to the parsecode (in lower case)
+     *
+     */
      function getParseCodes()
      {
         $regExpr = "/\{([A-Z]*)\}/sU";
@@ -447,6 +391,26 @@ abstract class abgenerator extends object
         	}
         } else {
             $ret = NULL;
+        }
+        return $ret;
+     }
+     
+     /**
+     *
+     * Method to return the value of an item by looking in params
+     * and then in the session cookies.
+     *
+     */
+     public function getItem($item)
+     {
+        //Get the item from parameter
+        $ret = $this->getParam($item, NULL);
+        //If there is no parameter, check the session cookies
+        if ($ret == NULL) {
+            $ret = $this->getSession($item, strtoupper($item) . '{_UNSPECIFIED}');
+        }  else {
+            //Serialize the variable to the session since we are geting it from a param
+			$this->setSession($item, $item);
         }
         return $ret;
      }
