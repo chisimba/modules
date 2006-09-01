@@ -56,7 +56,7 @@ class tpdata extends object
     	//Set up the form action to generate the controller and register.conf
         $paramArray=array(
           'action'=>'builddbtable',
-          'page'=>'page3');
+          'page'=>'page4');
         $formAction=$this->uri($paramArray);
         //Create an instance of the form class
         $objForm = new form('startform');
