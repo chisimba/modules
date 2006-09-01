@@ -4,8 +4,7 @@
 
 <item name="overviewcomment" type="comment">
 <description>Inserts a comment at the top of the register.conf file</description>
-<code>
-COMMENT:  REGISTER.CONF file for Chisimba module {MODULENAME}
+<code>COMMENT: ---- REGISTER.CONF file for Chisimba module {MODULENAME} ----
 </code>
 </item>
 

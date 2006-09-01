@@ -5,61 +5,61 @@
 <item name="moduleid" type="regparam">
   <description>Paramerter for the module id</description>
   <code>MODULE_ID: {MODULECODE}
-  </code>
+</code>
 </item>
 
 <item name="modulename" type="regparam">
   <description>Parameter for the name of the module</description>
   <code>MODULE_NAME: {MODULENAME}
-  </code>
+</code>
 </item>
 
 <item name="moduledescription" type="regparam">
   <description>Parameter for the module description</description>
   <code>MODULE_DESCRIPTION: {MODULEDESCRIPTION}
-  </code>
+</code>
 </item>
 
 <item name="moduleauthor" type="regparam">
   <description></description>
   <code>MODULE_AUTHORS: {AUTHOR}
-  </code>
+</code>
 </item>
 
 <item name="modulerealeasedate" type="regparam">
   <description>Parameter for the module release date</description>
   <code>MODULE_RELEASEDATE: {MODULERELEASEDATE}
-  </code>
+</code>
 </item>
 
 <item name="moduleversion" type="regparam">
   <description>Parameter for the module version, starts at 0.01 on creation</description>
   <code>MODULE_VERSION: 0.01
-  </code>
+</code>
 </item>
 
 <item name=">menucategory" type="regparam">
   <description>Parameter for the menu category (optional)</description>
   <code>MENU_CATEGORY: {MENUCATEGORY}
-  </code>
+</code>
 </item>
 
 <item name="sidemenucategory" type="regparam">
   <description>Parameter for the side menu category (optional)</description>
   <code>SIDEMENU_CATEGORY: {SIDEMENUCATEGORY}
-  </code>
+</code>
 </item>
 
 <item name="context_aware" type="regparam">
   <description>Parameter for indicating whether the module is context-aware</description>
   <code>CONTEXT_AWARE: {CONTEXTAWARE}
-  </code>
+</code>
 </item>
 
 <item name="depends_context" type="regparam">
   <description>Parameter for indicating if the module depends on context</description>
   <code>DEPENDS_CONTEXT: {DEPENDSCONTEXT}
-  </code>
+</code>
 </item>
 
 </chisimba_register_conf_basic>
