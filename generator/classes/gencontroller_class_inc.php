@@ -45,12 +45,12 @@ class gencontroller extends abgenerator implements ifgenerator
 	 */
 	function generate($className)
 	{
-		  //Load the skeleton file for the class from the XML		
+        //Load the skeleton file for the class from the XML		
         $this->loadSkeleton('controller', 'class');
-		  //Insert the properties
-		  $this->properties();
-		  //Insert the methods
-		  $this->methods();
+		//Insert the properties
+		$this->properties();
+		//Insert the methods
+		$this->methods();
         //Make sure we are not missing any parsecodes
         if ($this->validateParseCodes() !==TRUE) {
             foreach ($this->unDeclaredMethods as $missingMethod) {

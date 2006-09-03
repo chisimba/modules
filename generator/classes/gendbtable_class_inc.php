@@ -31,7 +31,7 @@ class gendbtable extends abgenerator implements ifgenerator
      * Standard init, calls parent init method to instantiate user
      * 
      */
-    function init()
+    public function init()
     {
         parent::init();
     }
@@ -39,7 +39,7 @@ class gendbtable extends abgenerator implements ifgenerator
 	/**
 	 * Method to generate the class for the controller
 	 */
-	function generate($className)
+	public function generate($className)
 	{
 		//Load the skeleton file for the class from the XML		
         $this->loadSkeleton('dbtable', 'class');
@@ -47,8 +47,19 @@ class gendbtable extends abgenerator implements ifgenerator
         $this->insertItem('dbtable', 'class', 'properties');
         //Insert the properties
         $this->insertItem('dbtable', 'class', 'methods');
+        //Make sure we are not missing any parsecodes
+        if ($this->validateParseCodes() !==TRUE) {
+            foreach ($this->unDeclaredMethods as $missingMethod) {
+                echo "The handler has no method corresponding to: $missingMethod <br />";
+            }
+            die();
+        }
 		//Insert the save code in place of {SAVECODE}
 		$this->savecode();
+        //Insert the module name
+        $this->modulename();
+        //Insert the module code
+        $this->modulecode();
         //Insert the module description
         $this->moduledescription();
         //Insert the copyright
@@ -56,11 +67,24 @@ class gendbtable extends abgenerator implements ifgenerator
         //Insert the database table
         $this->databasetable();
         //Insert the database class info
-        $this->databaseclass();
+        $this->dbtableclassname();
         //Clean up unused template tags
         $this->cleanUp();
         $this->prepareForDump();
 	    return $this->classCode;
+	}
+	
+	function dbtableclassname()
+	{
+	    $tableName = $this->getParam('tablename', NULL);
+	    if ($tableName !== NULL) {
+	        $ar = explode("_", $tableName);
+	        $rep = "db" . $ar[count($ar)-1];
+	    } else {
+	        $rep = "db_{UNSPECIFIED}";
+	    }
+	    //Do the replace
+        $this->classCode = str_replace("{DBTABLECLASSNAME}", $rep, $this->classCode);
 	}
 	
 	/**
@@ -70,7 +94,7 @@ class gendbtable extends abgenerator implements ifgenerator
 	 * @access Private
 	 * 
 	 */
-	private function savecode()
+	public function savecode()
 	{
 	    //Insert the save methods (must have the array set first)
         $this->classCode = str_replace('{SAVECODE}', $this->getSaveMethods(), $this->classCode);
@@ -83,7 +107,7 @@ class gendbtable extends abgenerator implements ifgenerator
     * @return String $ret The formatted code
     * 
     */
-    function getSaveMethods()
+    private function getSaveMethods()
     {
         //Initialize the return string
         $ret="";
@@ -104,7 +128,7 @@ class gendbtable extends abgenerator implements ifgenerator
     * @return string $ret The formatted getparam statement
     * 
     */
-    function makeGetParam($fieldName)
+    private function makeGetParam($fieldName)
     {
         switch ($fieldName) {
             case "id":
@@ -145,7 +169,7 @@ class gendbtable extends abgenerator implements ifgenerator
     * @return string $ret The save part of the code
     * 
     */
-    function makeSave()
+    private function makeSave()
     {
         //Set up the top of the edit/save area
         $ret = "\n        //If coming from edit use the update code\n"
@@ -185,7 +209,7 @@ class gendbtable extends abgenerator implements ifgenerator
     * @param string $iIndex The position in the array of fields being processed
     * 
     */
-    function makeSaveFromEditItem($fieldName, $fldCount, $iIndex)
+    private function makeSaveFromEditItem($fieldName, $fldCount, $iIndex)
     {
         //Index and field count should be real numbers not array index
         $iIndex = $iIndex + 1; 
@@ -240,7 +264,7 @@ class gendbtable extends abgenerator implements ifgenerator
     * @param string $iIndex The position in the array of fields being processed
     * 
     */
-    function makeSaveFromAddItem($fieldName, $fldCount, $iIndex)
+    private function makeSaveFromAddItem($fieldName, $fldCount, $iIndex)
     {
         //Index and field count should be real numbers not array index
         $iIndex = $iIndex + 1; 

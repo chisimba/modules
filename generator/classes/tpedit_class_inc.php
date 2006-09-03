@@ -56,7 +56,7 @@ class tpedit extends object
     	//Set up the form action to generate the controller and register.conf
         $paramArray=array(
           'action'=>'genedit',
-          'page'=>'page4');
+          'page'=>'page5');
         $formAction=$this->uri($paramArray);
         //Create an instance of the form class
         $objForm = new form('startform');
@@ -77,7 +77,7 @@ class tpedit extends object
         //Create an element for the input of table name and add it to the table
         $myTable->startRow();
         $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_tablename", "generator"));
-        $myTable->addCell($this->__getTableNameElement());
+        $myTable->addCell($this->__getTablesAsDropDown()); 
         $myTable->endRow();
         
         //Create an element for the input of modulecode and add it to the table
@@ -113,27 +113,23 @@ class tpedit extends object
     
     
     /**
-    * 
-    * Method to return modulecode text input to the form
-    * 
-    * @access private
-    * @return the module code text input for the form
-    * 
-    */ 
-    private function __getTableNameElement()
+    *
+    * Method to provide a dropdown list of tables
+    *
+    */
+    private function __getTablesAsDropDown()
     {
-    	//Check for serialized element
-    	$this->tablename = $this->getSession('tablename', NULL);
-        //Create an element for the input of module code
-        $objElement = new textinput ("tablename");
-        //Set the field type to text
-        $objElement->fldType="text";
-        $objElement->size=40;
-        if (isset($this->tablename)) {
-            $objElement->value=$this->tablename;
-        }
-        //Add the $title element to the form
-        return $objElement->show();
+        //Get an instance of the schema generator
+		$objSchema = $this->getObject('getschema');
+		$ar = $objSchema->listDbTables();
+		$objDropDown = $this->getObject('dropdown', 'htmlelements');
+		$objDropDown->name='tablename';
+		$objDropDown->cssId = 'input_tablename';
+		foreach ($ar as $entry) {
+		    $objDropDown->addOption($entry, $entry);
+		}
+		return $objDropDown->show();
+		
     }
     
     /**

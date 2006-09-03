@@ -61,8 +61,9 @@ abstract class abgenerator extends object
     public function loadSkeleton($classItem, $objectType='class')
     {
         //Load the XML class template
-        $xml = simplexml_load_file("modules/generator/resources/" 
-          . $classItem . "_" . $objectType . "_skeleton.xml"); 
+        $xml = simplexml_load_file("modules/generator/generators/" 
+          . $classItem . "/" . $classItem . "_" . $objectType 
+          . "_skeleton.xml"); 
         //Loop through and include the code
         foreach($xml->item as $item) {
             $this->classCode .= $item->code;
@@ -73,6 +74,17 @@ abstract class abgenerator extends object
         $this->endphp();
         return TRUE;
     }
+    
+
+    /**
+    *
+    * Method to load an XML file for processing
+    *
+    */
+    function readXmlFile($filePath)
+    {
+        return simplexml_load_file($filePath); 
+    }        
     
     /**
      * 
@@ -87,8 +99,8 @@ abstract class abgenerator extends object
      public function insertItem($classItem, $objectType, $itemType)
      {
          //Load the XML class template
-         $fileName = "modules/generator/resources/" 
-          . $classItem . "_" . $objectType  . "_" 
+         $fileName = "modules/generator/generators/" 
+          . $classItem . "/" . $classItem . "_" . $objectType  . "_" 
           . $itemType . ".xml";
 			$xml = simplexml_load_file($fileName);
          //Initialize the string that we are reading into
@@ -231,7 +243,7 @@ abstract class abgenerator extends object
 	    //Read the database class
         $databaseclass = $this->getItem('databaseclass');
         //Insert the database classname
-        $this->classCode = str_replace('{DATACLASS}', $databaseclass, $this->classCode);
+        $this->classCode = str_replace('{DATABASECLASS}', $databaseclass, $this->classCode);
 	}  
 
     /**
@@ -404,15 +416,15 @@ abstract class abgenerator extends object
      public function getItem($item)
      {
         //Get the item from parameter
-        $ret = $this->getParam($item, NULL);
+        $value = $this->getParam($item, NULL);
         //If there is no parameter, check the session cookies
-        if ($ret == NULL) {
-            $ret = $this->getSession($item, strtoupper($item) . '{_UNSPECIFIED}');
+        if ($value == NULL) {
+            $value = $this->getSession($item, strtoupper($item) . '{_UNSPECIFIED}');
         }  else {
             //Serialize the variable to the session since we are geting it from a param
-			$this->setSession($item, $item);
+			$this->setSession($item, $value);
         }
-        return $ret;
+        return $value;
      }
 } 
 ?>

@@ -6,6 +6,8 @@ if (!$GLOBALS['kewl_entry_point_run'])
 }
 // end security check
 
+///Load the abstract common template class
+require_once('modules/generator/classes/abtpcommon_class_inc.php');
 
 /**
 * 
@@ -18,14 +20,8 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * @licence GNU/GPL
 *
 */
-class tpdata extends object
+class tpdata extends abtpcommon
 {
-    /**
-    * 
-    * @var string object $objLanguage A string to hold the language object
-    * 
-    */
-    public $objLanguage;
     
     /**
     * 
@@ -34,12 +30,8 @@ class tpdata extends object
     */
     public function init() 
     {
-        //Create an instance of the language object
-        $this->objLanguage = & $this->getObject('language', 'language');
-        //Load the form class 
-        $this->loadClass('form','htmlelements');
-        //Load the textinput class 
-        $this->loadClass('textinput','htmlelements');
+        //Run the parent init methods
+        parent::init();
     }
     
     /**
@@ -77,30 +69,30 @@ class tpdata extends object
         //Create an element for the input of table name and add it to the table
         $myTable->startRow();
         $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_tablename", "generator"));
-        $myTable->addCell($this->__getTablesAsDropDown()); //__getTableNameElement()
+        $myTable->addCell($this->getTablesAsDropDown()); 
         $myTable->endRow();
         
         //Create an element for the input of Datbase table class and add it to the table
         $myTable->startRow();
         $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_dbclass", "generator"));
-        $myTable->addCell($this->__getModuleDataTableElement());
+        $myTable->addCell($this->getModuleDataTableElement());
         $myTable->endRow();
         
         //Create an element for the input of modulename and add it to the table
         $myTable->startRow();
         $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_modname", "generator"));
-        $myTable->addCell($this->__getModuleNameElement());
+        $myTable->addCell($this->getModuleNameElement());
         $myTable->endRow();
         
         //Create an element for the input of copyright info and add it to the table
         $myTable->startRow();
         $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_copyright", "generator"));
-        $myTable->addCell($this->__getModuleCopyrightElement());
+        $myTable->addCell($this->getModuleCopyrightElement());
         $myTable->endRow();
 
         //Create an element for the submit (upload) button and add it to the table
         $myTable->startRow();
-        $myTable->addCell($this->__getSubmitButton());
+        $myTable->addCell($this->getSubmitButton());
         $myTable->addCell("");
         $myTable->endRow();
         
@@ -110,141 +102,6 @@ class tpdata extends object
         //Render the form & return it
         return $objForm->show();
     }
-    
-    
-    /**
-    * 
-    * Method to return modulecode text input to the form
-    * 
-    * @access private
-    * @return the module code text input for the form
-    * 
-    */ 
-    private function __getTableNameElement()
-    {
-        //Create an element for the input of module code
-        $objElement = new textinput ("tablename");
-        //Set the field type to text
-        $objElement->fldType="text";
-        $objElement->size=40;
-        if (isset($this->tablename)) {
-            $objElement->value=$this->tablename;
-        }
-        //Add the $title element to the form
-        return $objElement->show();
-    }
 
-   
-    /**
-    * 
-    * Method to return sideMenuCategory text input to the form
-    * 
-    * @access private
-    * @return the module code text input for the form
-    * 
-    */ 
-    private function __getModuleCopyrightElement()
-    {
-        //Check for serialized element
-    	$this->copyright = $this->getSession('copyright', NULL);
-        //Create an element for the input of module code
-        $objElement = new textinput ("copyright");
-        //Set the field type to text
-        $objElement->fldType="text";
-        $objElement->size=40;
-        if (isset($this->copyright)) {
-            $objElement->value=$this->copyright;
-        }
-        //Add the copyright element to the form
-        return $objElement->show();
-    }
-    
-    /**
-    * 
-    * Method to return database classname input to the form
-    * 
-    * @access private
-    * @return the database classtext input for the form
-    * 
-    */ 
-    private function __getModuleDataTableElement()
-    {
-    	//Check for serialized element
-    	$this->databaseclass = $this->getSession('databaseclass', NULL);
-        //Create an element for the input of module code
-        $objElement = new textinput ("databaseclass");
-        //Set the field type to text
-        $objElement->fldType="text";
-        $objElement->size=40;
-        if (isset($this->databaseclass)) {
-            $objElement->value=$this->databaseclass;
-        }
-        //Add the $title element to the form
-        return $objElement->show();
-    }
-    
-    /**
-    * 
-    * Method to return modulename text input to the form
-    * 
-    * @access private
-    * @return the module code text input for the form
-    * 
-    */ 
-    private function __getModuleNameElement()
-    {
-        //Check for serialized element
-    	$this->modulename = $this->getSession('modulename', NULL);
-        //Create an element for the input of module code
-        $objElement = new textinput ("modulename");
-        //Set the field type to text
-        $objElement->fldType="text";
-        $objElement->size=40;
-        if (isset($this->modulename)) {
-            $objElement->value=$this->modulename;
-        }
-        //Add the $title element to the form
-        return $objElement->show();
-    }
-    
-    
-    /**
-    * 
-    * Method to return upload (submit) button to the form
-    * 
-    * @access private
-    * @return the upload button for the form
-    * 
-    */ 
-    private function __getSubmitButton()
-    {
-        // Create an instance of the button object
-        $this->loadClass('button', 'htmlelements');
-        // Create a submit button
-        $objElement = new button('submit');	
-        // Set the button type to submit
-        $objElement->setToSubmit();	
-        // Use the language object to add the word save
-        $objElement->setValue(' ' . $this->objLanguage->languageText("mod_generator_generate", 
-  		  "generator").' ');
-        // return the button to the form
-        return "&nbsp;" . $objElement->show()  
-          . "<br />&nbsp;";
-    }
-    
-    private function __getTablesAsDropDown()
-    {
-        //Get an instance of the schema generator
-		$objSchema = $this->getObject('getschema');
-		$ar = $objSchema->listDbTables();
-		$objDropDown = $this->getObject('dropdown', 'htmlelements');
-		$objDropDown->name='tablename';
-		$objDropDown->cssId = 'input_tablename';
-		foreach ($ar as $entry) {
-		    $objDropDown->addOption($entry, $entry);
-		}
-		return $objDropDown->show();
-		
-    }
 }
 ?>

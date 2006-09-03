@@ -35,19 +35,8 @@ class genedit extends abgenerator implements ifgenerator
     {
         //Run the parent init to create common objects
         parent::init();
-        //Load the XML file of template fields
-        $xml = simplexml_load_file("modules/generator/resources/edit-template-fields.xml");
-        //Extract the id field code using Xpath method
-        $item = $xml->xpath("//field[@type = 'id']");
-        $this->id = $item[0]->code;
-        //Extract the textinput field code using Xpath method
-        $item = $xml->xpath("//field[@type = 'textinput']");
-        $this->textInput = $item[0]->code;
-        //Extract the textarea field code using Xpath method
-        $item = $xml->xpath("//field[@type = 'textarea']");
-        $this->textArea = $item[0]->code;
-        //Get the table name'
-        $this->tableName = $this->getParam('tablename', NULL);
+        
+
     }
    
 	/**
@@ -55,8 +44,53 @@ class genedit extends abgenerator implements ifgenerator
 	 */
 	function generate($className)
 	{
-        //Prepare the template from the XML template
-        $this->prepareTemplate();
+	    //Load the skeleton file for the class from the XML		
+        $this->loadSkeleton('edit', 'template');
+        //Load the fields into properties
+        $this->loadFields();
+	    /* NOTE: We cannot insert validateParseCodes() here because 
+	             of the way in which the parsecodes are handled, both
+	             inside the same loop */
+	    $this->insertDataCode();
+        //Insert the module clodes
+        $this->moduleCode();
+
+        //Clean up unused template tags
+        $this->classCode = str_replace('{EDITFORM}', "", $this->classCode);
+        $this->classCode = str_replace('{EDITGETFIELDS}', "", $this->classCode);        
+        $this->cleanUp();
+
+        $this->prepareForDump();
+	    return $this->classCode;
+	}
+	
+	/**
+	*
+	* Method to load the fields from the edit_template_fields.xml file
+	* as properties of the current class for later handling. This file 
+	* contains the methods that are used multiple times in building
+	* the edit template.
+	*
+	*/
+	function loadFields()
+	{
+        //Load the XML file of template fields
+        $xml = simplexml_load_file("modules/generator/generators/edit/edit_template_fields.xml");
+        //Extract the id field code using Xpath method
+        $item = $xml->xpath("//item[@name = 'id']");
+        $this->id = $item[0]->code;
+        //Extract the textinput field code using Xpath method
+        $item = $xml->xpath("//item[@name = 'textinput']");
+        $this->textInput = $item[0]->code;
+        //Extract the textarea field code using Xpath method
+        $item = $xml->xpath("//item[@name = 'textarea']");
+        $this->textArea = $item[0]->code;
+        //Get the table name'
+        $this->tableName = $this->getParam('tablename', NULL);
+    }
+    
+    function insertDataCode()
+    {
         //Get the data fields and structure
         $ar = $this->getFields();
         foreach ($ar as $record) {
@@ -120,19 +154,9 @@ class genedit extends abgenerator implements ifgenerator
                         
                 		break;
                 } // switch
-            }
-        }
-        //Insert the module clodes
-        $moduleCode = $this->getParam('modulecode', '____ERROR_NOMODULECODESPECIFIED');
-        $this->classCode = str_replace('{MODULECODE}', $moduleCode, $this->classCode);
-        //Clean up unused template tags
-        $this->classCode = str_replace('{EDITFORM}', "", $this->classCode);
-        $this->classCode = str_replace('{EDITGETFIELDS}', "", $this->classCode);        
-        $this->cleanUp();
-
-        $this->prepareForDump();
-	    return $this->classCode;
-	}
+            } // if
+        } // foreach
+    } //fn
 
     /**
     * 
@@ -143,7 +167,7 @@ class genedit extends abgenerator implements ifgenerator
     */
     function prepareTemplate()
     {
-        $xml = simplexml_load_file("modules/generator/resources/edit-template-items.xml");
+        $xml = simplexml_load_file("modules/generator/resources/-----edit-template-items.xml");
         //Initialize the template
         $ret = $xml->xpath("//item[@name = 'initializeTemplate']");
         $this->classCode = $ret[0]->code;
