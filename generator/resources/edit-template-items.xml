@@ -58,10 +58,12 @@ $objForm->addToForm('<br />'.$objElement->show());
 <code>
 //Retrieve the data if the array of data is set
 if (isset($ar)) {
-
 {EDITGETFIELDS}
 }
+
+//--------------Generated edit form--------------//
 {EDITFORM}
+//----------End of generated edit form-----------//
 </code>
 </item>
 

@@ -46,14 +46,12 @@ of the items.
 * @licence GNU/GPL
 *
 */
-class {CLASS} extends dbtable
+class {DBTABLECLASSNAME} extends dbtable
 {
 
     {PROPERTIES}
 
     {METHODS}
-    
-    {SPECIALMETHODS}
 
 }</code>
 </item>
