@@ -11,6 +11,7 @@ class apachelog extends controller
     public $objLanguage;
     public $objlogparser;
     public $objFile;
+    public $objGraph;
 
     /**
      * Constructor method to instantiate objects and get variables
@@ -22,6 +23,8 @@ class apachelog extends controller
             $this->objFile = $this->getObject('dbfile', 'filemanager');
             $this->objlogparser = $this->getObject('logparser');
             $this->objDbApachelog = $this->getObject('dbapachelog');
+            $this->objGraph = $this->getObject('graph');
+
             //Get the activity logger class
             $this->objLog = $this->newObject('logactivity', 'logger');
             //Log this module call
@@ -65,8 +68,8 @@ class apachelog extends controller
                     		//insert to the table
                     		$this->objDbApachelog->dumpData($insarr);
                     	}
-						//return a success template
-						//return 'success_tpl.php';
+                    	//nextaction = display
+						$this->nextAction('viewlogfile');
 
                     }
                     catch(customException $e) {
@@ -75,6 +78,15 @@ class apachelog extends controller
                     break;
             case 'viewlogfile':
             	try {
+            		$this->objGraph->setup(600, 600);
+
+            		$this->objGraph->addSimpleData(array('month' => 'june', 'hits' => 100), 'month', 'hits');
+            		$this->objGraph->addSimpleData(array('month' => 'july', 'hits' => 300), 'month', 'hits');
+            		$this->objGraph->addSimpleData(array('month' => 'august', 'hits' => 132), 'month', 'hits');
+
+            		$this->objGraph->addPlotArea('bar', 'gray', 'red');
+            		$this->objGraph->show('/var/www/graphicaltest.png');
+
 
             	}
             	catch (customException $e)
