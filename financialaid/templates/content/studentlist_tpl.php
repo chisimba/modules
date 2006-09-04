@@ -176,14 +176,15 @@ if(is_array($stdinfo)){
 		}
 		$foundStudents = true;
 	}
-$content = $table->show();
-}
-
-if ($ncnt <= 1)
-{
+    $content = $table->show();
+    if ($ncnt <= 1)
+    {
         $pagelinks = "";
         $records = "";
+    }
 }
+
+
 if ($foundStudents == false) {
 
 	$right = '';

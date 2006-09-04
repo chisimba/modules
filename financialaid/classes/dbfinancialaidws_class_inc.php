@@ -21,8 +21,7 @@ class dbfinancialaidws extends object
     
 	function init(){
 		parent::init();
-        $this->NAMESPACE="http://127.0.0.1/webservices/testws5.php?wsdl";
-        $this->objSoapClient = new SoapClient($this->NAMESPACE);
+        $this->objSoapClient = new SoapClient("http://127.0.0.1/webservices/simpletest.php?wsdl");
         
     }
 
@@ -37,7 +36,12 @@ class dbfinancialaidws extends object
     *
     */
     function getApplication($value, $field = 'id'){
-  		return $this->objSoapClient->getApplication($field, $value, 0, 0);
+        try{
+  		  //  return $this->objSoapClient->getApplication($field, $value, 0, 0);
+        }catch(Exception $e){
+          //  echo $e->getMessage();
+            return NULL;
+        }
     }
     
     /**
@@ -50,7 +54,12 @@ class dbfinancialaidws extends object
     *
     */
     function getAllApplications(){
-  		return $this->objSoapClient->getAllApplications(0, 0);
+        try{
+  		    return $this->objSoapClient->getAllApplications(0, 0);
+        }catch(Exception $e){
+            echo $e->getMessage();
+            return NULL;
+        }
     }
 
     /**
@@ -63,7 +72,11 @@ class dbfinancialaidws extends object
     *
     */
     function getNextofkin($value, $field = 'appId'){
-  		return $this->objSoapClient->getNextofkin($field, $value, 0, 0);
+        try{
+  		    return $this->objSoapClient->getNextofkin($field, $value, 0, 0);
+        }catch(Exception $e){
+            return NULL;
+        }
     }
     
     /**
@@ -76,7 +89,11 @@ class dbfinancialaidws extends object
     *
     */
     function getDependants($value, $field = 'appId'){
-  		return $this->objSoapClient->getDependants($field, $value, 0, 0);
+        try{
+  		    return $this->objSoapClient->getDependants($field, $value, 0, 0);
+        }catch(Exception $e){
+            return NULL;
+        }
     }
 
     /**
@@ -89,7 +106,11 @@ class dbfinancialaidws extends object
     *
     */
     function getParttimejob($value, $field = 'appId'){
-  		return $this->objSoapClient->getParttimejob($field, $value, 0, 0);
+        try{
+  		    return $this->objSoapClient->getParttimejob($field, $value, 0, 0);
+        }catch(Exception $e){
+            return NULL;
+        }
     }
     
     /**
@@ -102,7 +123,11 @@ class dbfinancialaidws extends object
     *
     */
     function getStudentsInFamily($value, $field = 'appId'){
-  		return $this->objSoapClient->getStudentsInFamily($field, $value, 0, 0);
+        try{
+  		    return $this->objSoapClient->getStudentsInFamily($field, $value, 0, 0);
+        }catch(Exception $e){
+            return NULL;
+        }
     }
 
     /**
@@ -114,7 +139,11 @@ class dbfinancialaidws extends object
     *
     */
     function saveApplication($mode, $fields){
-  		return $this->objSoapClient->saveApplication($mode, $fields);
+        try{
+     		return $this->objSoapClient->saveApplication($mode, $fields);
+        }catch(Exception $e){
+            return NULL;
+        }
     }
 
     /**
@@ -126,7 +155,11 @@ class dbfinancialaidws extends object
     *
     */
     function saveNextofkin($mode, $fields){
-  		return $this->objSoapClient->saveNextofkin($mode, $fields);
+        try{
+  		    return $this->objSoapClient->saveNextofkin($mode, $fields);
+        }catch(Exception $e){
+            return NULL;
+        }
     }
 
     /**
@@ -138,7 +171,11 @@ class dbfinancialaidws extends object
     *
     */
     function saveDependant($mode, $fields){
-  		return $this->objSoapClient->saveDependant($mode, $fields);
+        try{
+  		    return $this->objSoapClient->saveDependant($mode, $fields);
+        }catch(Exception $e){
+            return NULL;
+        }
     }
 
     /**
@@ -150,7 +187,11 @@ class dbfinancialaidws extends object
     *
     */
     function saveParttimejob($mode, $fields){
-  		return $this->objSoapClient->saveParttimejob($mode, $fields);
+        try{
+  		    return $this->objSoapClient->saveParttimejob($mode, $fields);
+        }catch(Exception $e){
+            return NULL;
+        }
     }
 
     /**
@@ -162,6 +203,10 @@ class dbfinancialaidws extends object
     *
     */
     function saveStudentInFamily($mode, $fields){
-  		return $this->objSoapClient->saveStudentInFamily($mode, $fields);
+        try{
+  		    return $this->objSoapClient->saveStudentInFamily($mode, $fields);
+        }catch(Exception $e){
+            return NULL;
+        }
     }
 }

@@ -29,10 +29,13 @@ if (strlen($stdnum) > 0) {
 }else if (strlen($idnumber) > 0){
     $wherefield = "idNumber";
     $wherevalue = $idnumber;
+}else{
+    $wherefield = NULL;
 }
 
 if (!is_null($all)){
     $stdinfo = $this->objDBFinancialAidWS->getAllApplications();
+    echo $stdinfo;
 }else{
     if(!is_null($wherefield)){
         $stdinfo = $this->objDBFinancialAidWS->getApplication($wherevalue, $wherefield);
@@ -44,7 +47,8 @@ if (!is_null($all)){
 //$where .= "LIMIT 25,".$start_at ;
 
 //$stdinfo = $this->objDBApplication->getAll($where);
-if(count($stdinfo) > 0){
+if (isset($stdinfo)){
+  if(count($stdinfo) > 0){
         $cnt = count($stdinfo);
         //***start of pages***
 /*        echo($cnt);
@@ -183,18 +187,18 @@ if(count($stdinfo) > 0){
 
 		}
         $foundStudents = TRUE;
-        if ($ncnt <= 1){
+   /*     if ($ncnt <= 1){
             $pagelinks = "";
             $records = "";
         }
+        */
         $content = $table->show();
 	}
-
+  }
 }
 
 if ($foundStudents == FALSE) {
 
-	$right = '';
 	$content = "<br /><br /><br />" . $centersearch;
     $pagelinks = '';
     $records = '';
