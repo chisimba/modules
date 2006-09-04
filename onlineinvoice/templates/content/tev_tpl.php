@@ -24,9 +24,11 @@
   /**
   *create heading -- travel itenirary
   */  
-    $this->objIteninary =& $this->newObject('htmlheading','htmlelements');
-    $this->objIteninary->type = 3;
-    $this->objIteninary->str=$objLanguage->languageText('phrase_traveleritenirary');
+  $this->objIteninary =& $this->newObject('htmlheading','htmlelements');
+  $this->objIteninary->type = 3;
+  $this->objIteninary->str=$objLanguage->languageText('phrase_traveleritenirary');
+    
+
 
 /************************************************************************************************************************************************/
 
@@ -40,7 +42,8 @@
   $province = $this->objLanguage->languageText('word_province');
   $postalcode = $this->objLanguage->languageText('phrase_postalcode');
   $country  = $this->objLanguage->languageText('word_country');
-  $btnSave  = $this->objLanguage->languageText('word_save');
+  $btnsave  = $this->objLanguage->languageText('word_save');
+  $strsave  = strtoupper($btnsave);
   $btnEdit  = $this->objLanguage->languageText('word_edit');
   $description = $this->objLanguage->languageText('mod_onlineinvoice_descriptionoftravelpurpose','onlineinvoice'); 
   $exit  = $this->objLanguage->languageText('phrase_exit');
@@ -49,6 +52,19 @@
   $iteniraryM  = $this->objLanguage->languageText('mod_onlineinvoice_completeitinerarym','onlineinvoice');
   $showitenirary = $this->objLanguage->languageText('word_itinerary');
   $showitenirarymulti = $this->objLanguage->languageText('phrase_itinerarymulti');
+  $oneway = $this->objLanguage->languageText('phrase_oneway');
+  $multidestination = $this->objLanguage->languageText('phrase_multidestination');
+  $information  = $this->objLanguage->languageText('mod_onlineinvoice_requiredfields','onlineinvoice');
+  $strinfo  = strtoupper($information);
+  $itineraryinfo  = $this->objLanguage->languageText('mod_onlineinvoice_itineraryinfo','onlineinvoice');
+  $valname  = $this->objLanguage->languageText('mod_onlineinvoice_entername','onlineinvoice');
+  $valtitle  = $this->objLanguage->languageText('mod_onlineinvoice_entertitle','onlineinvoice');
+  $valaddress = $this->objLanguage->languageText('mod_onlineinvoice_enteraddress','onlineinvoice');
+  $valcity  = $this->objLanguage->languageText('mod_onlineinvoice_entercity','onlineinvoice');
+  $valprovince  = $this->objLanguage->languageText('mod_onlineinvoice_enterprovince','onlineinvoice');
+  $valpostal  = $this->objLanguage->languageText('mod_onlineinvoice_enterpostal','onlineinvoice');
+  $valcountry = $this->objLanguage->languageText('mod_onlineinvoice_entercountry','onlineinvoice');
+  $travpurpose  = $this->objLanguage->languageText('mod_onlineinvoice_enterpurpose','onlineinvoice');
 /************************************************************************************************************************************************/
 
   /**
@@ -97,33 +113,39 @@
   /**
    *create all text input boxes
    */
+   
+   $this->loadClass('textinput', 'htmlelements');
 
-  $this->objtxtname = $this->newObject('textinput','htmlelements');
-  $this->objtxtname->name   = "txtClaimantName";
-  $this->objtxtname->value  = "";
-
+  //$this->objtxtname = $this->newObject('textinput','htmlelements');
+  //$this->objtxtname->name   = 'txtClaimantName';
+  $this->objtxtname = new textinput('txtClaimantName');
+  $this->objtxtname->id = 'txtClaimantName';
+  //$this->objtxtname->value  = "";
+  //$this->objpopup = $this->newObject('mousepopup','htmlelements');
+  //$this->objpopup->mouseoverpopup('name','enter name','enter name',$this->objtxtname); 
+  
   $this->objtxttitle = $this->newObject('textinput','htmlelements');
-  $this->objtxttitle->name   = "txtTitle";
+  $this->objtxttitle->name   = 'txtTitle';
   $this->objtxttitle->value  = "";
 
   $this->objtxtaddress = $this->newObject('textinput','htmlelements');
-  $this->objtxtaddress->name   = "txtAddress";
+  $this->objtxtaddress->name   = 'txtAddress';
   $this->objtxtaddress->value  = "";
 
   $this->objtxtcity = $this->newObject('textinput','htmlelements');
-  $this->objtxtcity->name   = "txtCity";
+  $this->objtxtcity->name   = 'txtCity';
   $this->objtxtcity->value  = "";
 
   $this->objtxtprovince = $this->newObject('textinput','htmlelements');
-  $this->objtxtprovince->name   = "txtprovince";
+  $this->objtxtprovince->name   = 'txtprovince';
   $this->objtxtprovince->value  = "";
 
   $this->objtxtpostalcode = $this->newObject('textinput','htmlelements');
-  $this->objtxtpostalcode->name   = "txtpostalcode";
+  $this->objtxtpostalcode->name   = 'txtpostalcode';
   $this->objtxtpostalcode->value  = "";
 
   $this->objtxtcountry = $this->newObject('textinput','htmlelements');
-  $this->objtxtcountry->name   = "txtcountry";
+  $this->objtxtcountry->name   = 'txtcountry';
   $this->objtxtcountry->value  = "";
 
 
@@ -132,9 +154,10 @@
   /**
    *create form buttons
    */
-
+  
   $this->objButtonSubmit  = $this->newobject('button','htmlelements');
-  $this->objButtonSubmit->setValue($btnSave);
+  $this->objButtonSubmit->setValue($strsave);
+  $this->objButtonSubmit->name = 'submit';
   $this->objButtonSubmit->setToSubmit();
 
   $this->objButtonEdit  = $this->newobject('button','htmlelements');
@@ -146,22 +169,21 @@
   /**
    *create links for exit and next page
    */
-  $this->objexit  =& $this->newobject('link','htmlelements');
-  $this->objexit->link($this->uri(array('action'=>'NULL')));  /* -- returns banck to original invoice template*/
-  $this->objexit->link = $exit;
 
-  $this->objnext  =& $this->newobject('link','htmlelements');
-  $this->objnext->link($this->uri(array('action'=>'createexpenses'))); /*takes user to the next template -- per diem expense*/
-  $this->objnext->link = $next;
-
-  $this->objcompleteitenirary  =& $this->newobject('link','htmlelements');
-  $this->objcompleteitenirary->link($this->uri(array('action'=>'createitenirary'))); /*shows the intenirary template*/
-  $this->objcompleteitenirary->link = $showitenirary;
   
-  $this->objcompleteitenirarymulti  =& $this->newobject('link','htmlelements');
+/*  $this->objcompleteitenirarymulti  =& $this->newobject('link','htmlelements');
+  $strshowitenirary = strtoupper($showitenirary); 
   $this->objcompleteitenirarymulti->link($this->uri(array('action'=>'createmultiitenirary'))); /*shows the intenirary multi template*/
-  $this->objcompleteitenirarymulti->link = $showitenirarymulti;
+  //$this->objcompleteitenirarymulti->link = $strshowitenirary;/*$showitenirarymulti;*/
+  
+  $urltext = 'Itinerary';
+  $content = 'Complete itinerary for the travel';
+  $caption = '';
+  $url = $this->uri(array('action'=>'createmultiitenirary'));
+  $this->objitinerarylink  = & $this->newObject('mouseoverpopup','htmlelements');
+  $this->objitinerarylink->mouseoverpopup($urltext,$content,$caption,$url);
 
+  
 /************************************************************************************************************************************************/
 
   /**
@@ -169,7 +191,7 @@
    */
 
   $textArea = 'travel';
-  $this->objPurposeArea = $this->newobject('textarea','htmlelements');
+  $this->objPurposeArea = $this->newobject('textArea','htmlelements');
   $this->objPurposeArea->setRows(2);
   $this->objPurposeArea->setColumns(30);
   $this->objPurposeArea->setName($textArea);
@@ -183,7 +205,8 @@
     $this->objradio = $this->newobject('radio','htmlelements');
     $this->objradio->addOption('o','One Way');    
     $this->objradio->addOption('m','Multi Destination -- requires more thatn one destination');
- 	  $this->objradio->setSelected('o');    
+ 	  $this->objradio->setSelected('o'); 
+        
 /************************************************************************************************************************************************/
 
   /**
@@ -191,7 +214,7 @@
    */
 
         $myTable=$this->newObject('htmltable','htmlelements');
-        $myTable->width='60%';
+        $myTable->width='100%';
         $myTable->border='0';
         $myTable->cellspacing='1';
         $myTable->cellpadding='10';
@@ -237,12 +260,12 @@
         $myTable->endRow();
         
 
-        $myTable->startRow();
+        /*$myTable->startRow();
         $myTable->addCell($itenirary);
         $myTable->addCell($this->objcompleteitenirary->show());
         $myTable->addCell($iteniraryM);
         $myTable->addCell($this->objcompleteitenirarymulti->show());
-        $myTable->endRow();
+        $myTable->endRow();*/
 
         $myTable->startRow();
         $myTable->addCell($this->objButtonSubmit->show());
@@ -252,28 +275,40 @@
   /**
    *create tabbox for traveler information
    */
+//$this->loadclass('navbuttons','htmlelements');
+//$objicon = $this->newObject('navbuttons','htmlelements');
+//$objicon = new navButtons();
+//$objicon->putInfoButton();   
 
+$striconinfo = $information ;//. $objicon->show(); 
 $this->loadClass('tabbedbox', 'htmlelements');
 $objtraveler = new tabbedbox();
 $objtraveler->addTabLabel('Traveler Information');
-$objtraveler->addBoxContent($myTable->show()  . ',<br>' );
+$objtraveler->addBoxContent('<br>'  . "<div align=\"center\">" .$striconinfo . "</div>" . '<br>'  . $myTable->show()  . '<br>' );
 
 $this->loadClass('tabbedbox', 'htmlelements');
 $objitinerary = new tabbedbox();
 $objitinerary->addTabLabel('Itinerary');
-$objitinerary->addBoxContent('<br>'. $this->objradio->show() . '<br>'  . '<br>'  . $this->objexit->show() . " "  . $this->objnext->show());
-        
+$objitinerary->addBoxContent('<br>'.'<br>'.$itineraryinfo.'<br>'. ' ' .$this->objitinerarylink->show(). '<br>'  . '<br>'); /* . '<br>'  . $this->objexit->show() . " "  . $this->objnext->show());*/
+        //$this->objcompleteitenirary->show() . 
 /************************************************************************************************************************************************/
   /**
    *create form to place all elements in
    */
               
   $this->loadClass('form','htmlelements');
-  $objtevForm = new form('lodging',$this->uri(array('action'=>'createtev')));
+  $objtevForm = new form('tev',$this->uri(array('action'=>'submitclaimantinfo')));
+  $objtevForm->id = 'tev';
   $objtevForm->displayType = 3;
-  $objtevForm->addToForm($objtraveler->show() . '<br>'  . $objitinerary->show());	
-  //$objLodgeForm->addRule('txtDate', 'Must be number','required'); 
-
+  $objtevForm->addToForm($objtraveler->show() . '<br>'  . $objitinerary->show());
+  $objtevForm->addRule('txtClaimantName',$valname,'required');
+  $objtevForm->addRule('txtTitle', $valtitle,'required');
+  $objtevForm->addRule('txtAddress',$valaddress,'required');
+  $objtevForm->addRule('txtCity',$valcity,'required');
+  $objtevForm->addRule('txtprovince',$valprovince,'required');
+  $objtevForm->addRule('txtpostalcode',$valpostal,'required');
+  $objtevForm->addRule('txtcountry',$valcountry,'required');
+  $objtevForm->addRule('travel',$travpurpose,'required');
 /************************************************************************************************************************************************/ 
 
   /**
@@ -281,7 +316,6 @@ $objitinerary->addBoxContent('<br>'. $this->objradio->show() . '<br>'  . '<br>' 
    */
 
   echo  "<div align=\"center\">" . $this->objMainheading->show() . "</div>";
-  /*echo  '<br>'.$this->objheading->show();*/ 
   echo  $objtevForm->show();
 
 
