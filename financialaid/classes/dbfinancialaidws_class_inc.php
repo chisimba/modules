@@ -21,7 +21,11 @@ class dbfinancialaidws extends object
     
 	function init(){
 		parent::init();
-        $this->objSoapClient = new SoapClient("http://127.0.0.1/webservices/simpletest.php?wsdl");
+        try{
+            $this->objSoapClient = new SoapClient("http://127.0.0.1/webservices/testws5.php?wsdl");
+        }catch(Exception $e){
+            echo $e->getMessage();
+        }
         
     }
 
@@ -37,7 +41,7 @@ class dbfinancialaidws extends object
     */
     function getApplication($value, $field = 'id'){
         try{
-  		  //  return $this->objSoapClient->getApplication($field, $value, 0, 0);
+  		    return $this->objSoapClient->getApplication($field, $value, 0, 0);
         }catch(Exception $e){
           //  echo $e->getMessage();
             return NULL;

@@ -15,9 +15,9 @@ $rep = array(
 $details = "<h2>".$objLanguage->code2Txt('mod_financialaid_markrangetitle','financialaid',$rep)."</h2>";
 
 $appinfo = $this->objDBFinancialAidWS->getAllApplications();
+$table =& $this->newObject('htmltable','htmlelements');
 if (count($appinfo) > 0)
 {
-    $table =& $this->newObject('htmltable','htmlelements');
 
     $table->startHeaderRow();
 	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_firstname','financialaid'));
