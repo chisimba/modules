@@ -21,7 +21,7 @@ class apachelog extends controller
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objFile = $this->getObject('dbfile', 'filemanager');
             $this->objlogparser = $this->getObject('logparser');
-            //$this->objDbApachelog = $this->getObject('dbapachelog');
+            $this->objDbApachelog = $this->getObject('dbapachelog');
             //Get the activity logger class
             $this->objLog = $this->newObject('logactivity', 'logger');
             //Log this module call
@@ -63,10 +63,10 @@ class apachelog extends controller
                     	{
                     		$insarr = $this->objlogparser->parselogEntry($line);
                     		//insert to the table
-							//print_r($insarr);
-
+                    		$this->objDbApachelog->dumpData($insarr);
                     	}
-
+						//return a success template
+						//return 'success_tpl.php';
 
                     }
                     catch(customException $e) {

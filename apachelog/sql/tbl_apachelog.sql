@@ -18,7 +18,7 @@ $fields = array(
 		'length' => 255
 		),
 	'log_date' => array(
-		'type' => 'timestamp',
+		'type' => 'text',
 		),
 	'request' => array(
 		'type' => 'clob',

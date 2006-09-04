@@ -46,7 +46,7 @@ class logparser extends object
 		$requrl = $stuff[3];
 		$useragent = $stuff[5];
 
-		$requestarr = array('ip' => $ip, 'date' => $date, 'request' => $request, 'servercode' => $servercode, 'requrl' => $requrl, 'useragent' => $useragent);
+		$requestarr = array('fullrecord' => $line, 'ip' => $ip, 'date' => $date, 'request' => $request, 'servercode' => $servercode, 'requrl' => $requrl, 'useragent' => $useragent);
 
 		return $requestarr;
 	}
