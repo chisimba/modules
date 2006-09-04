@@ -71,8 +71,7 @@ if($editmode)
 	$selected = $arrSection['image'];
 	$imageSRC = $objSkin->getSkinUrl().$selected;//$this->_objConfig->getsiteRoot().'/usrfiles/media'.$selected;
 	$isPublished = ($arrSection['published'] == 1) ? 'Yes' : 'No';
-	$loadImage = "changeImage(document.getElementById('image') );
-	   alert(document.getElementById('image').src)";
+	
 	
 } else {
 	$titleInput->value = '';
@@ -82,7 +81,7 @@ if($editmode)
 	$layout = 0;
 	$isPublished = 'Yes';
 	$imageSRC = $this->_objConfig->getsiteRoot().'skins/_common/blank.png';
-	$loadImage = '';
+	
 }
 
 //title

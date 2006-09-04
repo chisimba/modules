@@ -91,8 +91,10 @@ $h3->str = 'Content Item: New';
 
 $titleInput->name = 'title';
 $menuTextInput->name = 'menutext';
+$objForm->addRule('title', 'Please add a Title', 'required');
 $bodyInput->name = 'body';
 $introInput->name = 'intro';
+$objForm->addRule('menutext', 'Please add a Menu Text', 'required');
 
 $sections->name= 'section';
 $sections->addFromDB($this->_objSections->getSections(),'title','id',$arrContent['sectionid']);

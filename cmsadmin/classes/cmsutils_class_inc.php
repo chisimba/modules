@@ -498,7 +498,7 @@ class cmsutils extends object
 		        $image = '';
 		    }
 		    
-			$heading = '<h3>'. $arrSection['title']."</h3>";
+			$heading = '<h3>'. $arrSection['title']. $image."</h3>";
 			
 			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
 			
@@ -521,7 +521,7 @@ class cmsutils extends object
 				}
 			}
 	
-			return $image.$heading.$strBody.'<p/>'.$str;
+			return $heading.$strBody.'<p/>'.$str;
 				
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
@@ -553,7 +553,7 @@ class cmsutils extends object
 			$objUser = & $this->newObject('user', 'security');
 			$objConfig = & $this->newObject('altconfig', 'config');
 			
-			$str = '<h3>'. $arrSection['title'].'</h3><img src="'.$objConfig->getSiteRoot().'usrfiles/media'.$arrSection['image'].'" />';
+			$str = '<h3>'.$image. $arrSection['title'].'</h3>';
 			
 			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 and trash=0  ORDER BY ordering');
 			foreach ($arrPages as $page)
@@ -596,7 +596,7 @@ class cmsutils extends object
 					
 				}
 				//$str .= $table->show();
-				$str .= $image.'<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
+				$str .= '<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
 				$uri = $this->uri(array('action' => 'showfulltext', 'sectionid' => $arrSection['id'], 'id' => $page['id']), 'cms');
 				$str .= '<p>'.$page['introtext'].'<a href="'.$uri.'" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
 
@@ -627,7 +627,7 @@ class cmsutils extends object
 		        $image = '';
 		    }
 		    
-			$heading = '<h3>'. $arrSection['title']."</h3>";
+			$heading = '<h3>'. $arrSection['title'].$image."</h3>";
 			
 			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 and trash=0  ORDER BY ordering');
 			
@@ -652,7 +652,7 @@ class cmsutils extends object
 			
 			
 			
-			return $image.$heading.$strBody.'<p/>'.$str;
+			return $heading.$strBody.'<p/>'.$str;
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
@@ -671,7 +671,14 @@ class cmsutils extends object
 	 function _layoutList(&$arrSection)
 	{
 		try {
-			$str = '<h3>'. $arrSection['title']."</h3>";
+		     if(!empty($arrSection['image']))
+		    {
+		        $image = $this->generateImageTag($arrSection['image']);
+		    } else {
+		        $image = '';
+		    }
+		    
+			$str = '<h3>'. $arrSection['title'].$image."</h3>";
 			
 			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 and trash=0 ORDER BY ordering');
 			foreach ($arrPages as $page)
