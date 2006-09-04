@@ -1,28 +1,62 @@
 <?php
+
 class dbInvoice extends dbTable{
-	
-	/* Constructor*/
-	
-	function init()
-	{
-		parent::init('tbl_invoice');
-	}
 
-	function addinvoice()
-	{
-  /*add an invoice to db*/
-  /*create array of field data*/
-  
-  }
+	    /**
+        * varaible $begindate used to store the value user selects as the start of the invoice
+        * @public 
+     */     
+             
+      public  $begindate = null;
 	
-	function deleteinvoice()
-	{
-  /*remove an invoice */
-  }
+	    /**
+        * variable $enddate used to store the value user selects as the start of the invoice
+        * @public 
+     */     
+             
+      public  $enddate = null;
+      
+        
+    /**
+      * Constructor of the dbInvoice class
+    */   
+	   function init()
+  	{
+	   	parent::init('tbl_invoice');
+    }
+    
+    /**
+     *function to add invoice dates to the db
+     */         
+  	
+     function addinvoice($invdates)
+	   {
+        $results = $this->insert($invdates);
+        return $results;
+     }
+     
+     /**
+      *function to remove invoice details from the db
+      */
+                          
+	   function deleteinvoice()
+	   {
+       /*remove an invoice */
+     }
+    
+    /**
+     *function to get invoice details from the db
+     */
+     
+  	function getinvoicedates()
+  	{
+   /**
+    *function used to get invoice details from the db table -- invoice
+   */
 
-	function getinvoice()
-	{
-  /*remove an invoice */
-  }  
+    }
+
+
+
 }
 ?>
