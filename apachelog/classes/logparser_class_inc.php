@@ -34,12 +34,14 @@ class logparser extends object
 		unset($stuff[4]);
 		unset($stuff[6]);
 		//split the first line into ip and date
-		$ipdate = explode(" - - ", $stuff[0]);
-		$ip = $ipdate[0];
-		$date = $ipdate[1];
+		$comps = explode(" ", $stuff[0]);
+		$ip = $comps[0];
+		$date = $comps[3].$comps[4];
+
 		//fix up the date to be more readable
 		$date = str_replace("[","",$date);
 		$date = str_replace("]","",$date);
+
 		$date = $this->fixDates($date);
 		$request = $stuff[1];
 		$servercode = $stuff[2];
@@ -53,8 +55,25 @@ class logparser extends object
 
 	private function fixDates($datetime)
 	{
-		$date = strtotime($datetime);
+		$datetime = explode("/", $datetime);
+
+		$day = $datetime[0];
+		$month = $datetime[1];
+		$yearandtime = $datetime[2];
+		$yndarr = explode(":", $yearandtime);
+		$year = $yndarr[0];
+		$hours = $yndarr[1];
+		$minutes = $yndarr[2];
+		$secsandtz = $yndarr[3];
+
+		$sarr = explode("+",$secsandtz);
+		$seconds = $sarr[0];
+		$tz = $sarr[1];
+
+		$datestring = $day . " " . $month . " " . $year . " " . $hours . ":" . $minutes . ":" . $seconds . " " . "+" . $tz;
+		$date = strtotime($datestring);
 		$ref = date('r', $date);
+
 		return $ref;
 	}
 }
