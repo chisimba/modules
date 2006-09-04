@@ -99,7 +99,7 @@ class dbsections extends dbTable
 			$access = $this->getParam('access');
 			$desciption = $this->getParam('description');
 			$published = $this->getParam('published');
-			$layout = $this->getParam('layout');
+			$layout = $this->getParam('sectionlayout');
 			
 			return $this->insert(array(
 							'title' => $title,

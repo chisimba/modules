@@ -49,7 +49,8 @@ $h3->str = 'Section: New';
 $titleInput->name = 'title';
 $titleInput->id = 'title';
 $titleInput->size = 50;
-$objForm->addRule('title', 'Please add a Title', 'required');
+
+$objForm->addRule('title','Please enter a title','required');
 
 $menuTextInput->name = 'menutext';
 $menuTextInput->size = 50;
@@ -68,8 +69,10 @@ if($editmode)
 	$bodyInput->value = $arrSection['description'];
 	$layout = $arrSection['layout'];
 	$selected = $arrSection['image'];
-	$imageSRC = $this->_objConfig->getsiteRoot().'/usrfiles/media'.$selected;
+	$imageSRC = $objSkin->getSkinUrl().$selected;//$this->_objConfig->getsiteRoot().'/usrfiles/media'.$selected;
 	$isPublished = ($arrSection['published'] == 1) ? 'Yes' : 'No';
+	$loadImage = "changeImage(document.getElementById('image') );
+	   alert(document.getElementById('image').src)";
 	
 } else {
 	$titleInput->value = '';
@@ -79,6 +82,7 @@ if($editmode)
 	$layout = 0;
 	$isPublished = 'Yes';
 	$imageSRC = $this->_objConfig->getsiteRoot().'skins/_common/blank.png';
+	$loadImage = '';
 }
 
 //title
@@ -96,8 +100,8 @@ $table->endRow();
 //image
 $table->startRow();
 $table->addCell('Image');
-$table->addCell($this->_objUtils->getImageList('image',$objForm->name, $selected).'&nbsp;<img src="'.$imageSRC.'" 
-					 id="imagelib" name="imagelib" border="2" alt="Preview" /><p/>', 'top');
+$table->addCell($this->_objUtils->getImageList('image',$objForm->name, $selected).'&nbsp;<span class="thumbnail"><img src="'.$imageSRC.'" 
+					 id="imagelib" name="imagelib" border="2" alt="Preview" /></span><p/>', 'top');
 
 $table->endRow();
 
@@ -173,6 +177,7 @@ print $objForm->show();
 		}
 			
 	}
+	
 
 ]]>
 	</script>

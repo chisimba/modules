@@ -248,6 +248,7 @@ class cmsutils extends object
 			$arrLayouts = $objLayouts->getLayouts();
 			$arrSection = $this->_objSections->getSection($id);
 			$str ='<table><tr>';
+			$firstOneChecked = 'checked="checked"';
 			foreach ($arrLayouts as $layout)
 			{
 			
@@ -258,6 +259,8 @@ class cmsutils extends object
 					$checked = '';
 					
 				}
+				$checked = $firstOneChecked;
+				$firstOneChecked = '';
 				$str .= '<td align="center">
 				            <input type="radio" name="'.$name.'" value="'.$layout['id'].'" class="transparentbgnb" id="input_layout0" '.$checked.' />
 				                <p/>
@@ -488,11 +491,20 @@ class cmsutils extends object
 	{
 		
 		try {
+		    if(!empty($arrSection['image']))
+		    {
+		        $image = $this->generateImageTag($arrSection['image']);
+		    } else {
+		        $image = '';
+		    }
+		    
 			$heading = '<h3>'. $arrSection['title']."</h3>";
 			
 			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
 			
 			$cnt = 0;
+			$strBody = '';
+			$str = '';
 			foreach ($arrPages as $page)
 			{			
 				$cnt++;
@@ -509,7 +521,7 @@ class cmsutils extends object
 				}
 			}
 	
-			return $heading.$strBody.'<p/>'.$str;
+			return $image.$heading.$strBody.'<p/>'.$str;
 				
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
@@ -531,6 +543,12 @@ class cmsutils extends object
 	 function _layoutSummaries(&$arrSection)
 	{
 		try{
+		    if(!empty($arrSection['image']))
+		    {
+		        $image = $this->generateImageTag($arrSection['image']);
+		    } else {
+		        $image = '';
+		    }
 			
 			$objUser = & $this->newObject('user', 'security');
 			$objConfig = & $this->newObject('altconfig', 'config');
@@ -578,7 +596,7 @@ class cmsutils extends object
 					
 				}
 				//$str .= $table->show();
-				$str .= '<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
+				$str .= $image.'<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
 				$uri = $this->uri(array('action' => 'showfulltext', 'sectionid' => $arrSection['id'], 'id' => $page['id']), 'cms');
 				$str .= '<p>'.$page['introtext'].'<a href="'.$uri.'" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
 
@@ -602,11 +620,20 @@ class cmsutils extends object
 	 function _layoutPage(&$arrSection)
 	{
 		try {
+		    if(!empty($arrSection['image']))
+		    {
+		        $image = $this->generateImageTag($arrSection['image']);
+		    } else {
+		        $image = '';
+		    }
+		    
 			$heading = '<h3>'. $arrSection['title']."</h3>";
 			
 			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 and trash=0  ORDER BY ordering');
 			
 			$cnt = 0;
+			$strBody = '';
+			$str = '';
 			foreach ($arrPages as $page)
 			{			
 				$cnt++;
@@ -621,9 +648,11 @@ class cmsutils extends object
 					$strBody = '<h3>'.$page['title'].'</h3>';
 					$strBody .= $page['body'].'<p/>';
 				}
-			}
+			} 
 			
-			return $heading.$strBody.'<p/>'.$str;
+			
+			
+			return $image.$heading.$strBody.'<p/>'.$str;
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
@@ -901,4 +930,20 @@ class cmsutils extends object
 		return '<div id="breadcrumb">'. $str .'</div>';
 	}
 	
+	
+	/**
+	 * Method to generate the img tag for the section 
+	 * thumbnail
+	 * 
+	 * @param string src The path the image
+	 * @return string
+	 * @access public
+	 * @author Wesley Nitsckie
+	 */
+	public function generateImageTag($src)
+	{
+	    $objSkin = $this->newObject('skin', 'skin');
+	   
+	    return '<span class="thumbnail"><center><img src="'.$objSkin->getSkinUrl().$src.'" /></center></span>';
+	}
 }
