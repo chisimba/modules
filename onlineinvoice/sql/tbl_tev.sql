@@ -64,7 +64,12 @@ $fields = array(
       'type'        =>  'text',
       'length'      =>  32,
       'notnull'     => 1
-    )      
+    ),
+   'travelpurpose' => array(
+   'type'   =>  'text',
+   'length' =>  32,
+   'notnull'     => 1
+   ),         
     );
 
 

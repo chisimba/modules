@@ -66,7 +66,7 @@ class onlineinvoice extends controller
         $this->setVarByRef('fullname', $this->objUser->fullname());
         $this->userId = $this->objUser->userId();
 	     	$this->getObject('sidemenu','toolbar');
-        $this->setLayoutTemplate('calendar_layout_tpl.php');
+        $this->setLayoutTemplate('invoice_layout_tpl.php');
        
         
         
