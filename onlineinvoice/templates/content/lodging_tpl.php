@@ -78,17 +78,40 @@ $this->objButtonCreate  = $this->newObject('button','htmlelements');
 $this->objButtonCreate->setValue($create);
 $this->objButtonCreate->setOnClick('alert(\'An onclick Event\')');
 /*********************************************************************************************************************************************************************/
-
+//$this->objnext->link($this->uri(array('action'=>'createlodging')));
 $this->objnext  =& $this->newobject('link','htmlelements');
-$this->objnext->link($this->uri(array('action=NULL')));
+$this->objnext->link($this->uri(array('action'=>'showclaimantoutput')));
 $this->objnext->link = $next;
 
 /*********************************************************************************************************************************************************************/
+/*create a table for lodge details*/
 
+        $myTabLodgeheading  = $this->newObject('htmltable','htmlelements');
+        $myTabLodgeheading->width='80%';
+        $myTabLodgeheading->border='0';
+        $myTabLodgeheading->cellspacing = '10';
+        $myTabLodgeheading->cellpadding ='10';
+
+        $myTabLodgeheading->startRow();
+        $myTabLodgeheading->addCell($lodgeHint);
+        $myTabLodgeheading->endRow();
+        
+        $myTabLodgeheading->startRow();
+        $myTabLodgeheading->addCell($lodgeExchangeRate);
+        $myTabLodgeheading->endRow();
+        
+        $myTabLodgeheading->startRow();
+        $myTabLodgeheading->addCell($lodgeSuggestedExRate);
+        $myTabLodgeheading->endRow();
+        
+        $myTabLodgeheading->startRow();
+        $myTabLodgeheading->addCell($lodgeExpenditures);
+        $myTabLodgeheading->endRow();
+/*********************************************************************************************************************************************************************/
 /*create a table for lodge details*/
 
         $myTabLodge  = $this->newObject('htmltable','htmlelements');
-        $myTabLodge->width='20%';
+        $myTabLodge->width='80%';
         $myTabLodge->border='0';
         $myTabLodge->cellspacing = '10';
         $myTabLodge->cellpadding ='10';
@@ -118,7 +141,7 @@ $this->objnext->link = $next;
 /*create table for exchangerate information*/
 
         $myTabExchange  = $this->newObject('htmltable','htmlelements');
-        $myTabExchange->width='20%';
+        $myTabExchange->width='55%';
         $myTabExchange->border='0';
         $myTabExchange->cellspacing = '10';
         $myTabExchange->cellpadding ='10';
@@ -171,7 +194,7 @@ $objtabexchange = new tabbedbox();
 
 $objtabexchange->addTabLabel('Exchange Rate Information');
 
-$objtabexchange->addBoxContent($myTabExchange->show() . '<br>'  . $lblchoice  . '<br>' ."<div align=\"left\">" . $this->objButtonAttach->show() . " " . $this->objButtonQuote->show() . "</div>" );
+$objtabexchange->addBoxContent($myTabExchange->show() . '<br>'  . $lblchoice  . '<br>'. "<div align=\"left\">" . $this->objButtonAttach->show() . " " . $this->objButtonQuote->show() . "</div>" );
 
 
 
@@ -183,7 +206,7 @@ $objtabreceipt = new tabbedbox();
 
 $objtabreceipt->addTabLabel('Receipt Information');
 
-$objtabreceipt->addBoxContent($receipt  . '<br>' ."<div align=\"left\">"  .$this->objButtonUploadReceipt->show() . " " . $this->objButtonCreate->show(). "</div>" );
+$objtabreceipt->addBoxContent('<br>'  . $receipt  . '<br>' ."<div align=\"left\">"  .$this->objButtonUploadReceipt->show() . " " . $this->objButtonCreate->show(). "</div>" );
 
 /*********************************************************************************************************************************************************************/
 
@@ -209,13 +232,13 @@ $objLodgeForm->addToForm($objtabbedbox->show()  .  '<br>' . $objtabexchange->sho
 
 echo "<div align=\"center\">" . $this->objlodgeHeading->show()  . "</div>";
 
-echo "<div align=\"center\">" .'<br>'  . $lodgeHint . "</div>";
+echo "<div align=\"center\">" .'<br>'  . $myTabLodgeheading->show() . "</div>";
 
-echo "<div align=\"center\">" .'<br>'  . $lodgeExchangeRate . "</div>";
+//echo "<div align=\"center\">" .'<br>'  . $lodgeExchangeRate . "</div>";
 
-echo "<div align=\"center\">" .'<br>'  . $lodgeSuggestedExRate  . "</div>";
+//echo "<div align=\"center\">" .'<br>'  . $lodgeSuggestedExRate  . "</div>";
 
-echo "<div align=\"center\">" .'<br>'  . $lodgeExpenditures . "</div>";
+//echo "<div align=\"center\">" .'<br>'  . $lodgeExpenditures . "</div>";
 
 /*echo '<br>' . $objtabbedbox->show();
 
