@@ -24,7 +24,7 @@ class dbfinancialaidws extends object
         try{
             $this->objSoapClient = new SoapClient("http://127.0.0.1/webservices/testws5.php?wsdl");
         }catch(Exception $e){
-            echo $e->getMessage();
+            die($e->getMessage());
         }
         
     }
