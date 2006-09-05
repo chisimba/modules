@@ -18,6 +18,7 @@ $rate = $this->objLanguage->languageText('mod_onlineinvoice_exchangerate','onlin
 $lblchoice  = $this->objLanguage->languageText('mod_onlineinvoice_verifyexchangerate','onlineinvoice');
 $attachfile = $this->objLanguage->languageText('mod_onlineinvoice_attachfile','onlineinvoice');
 $quotesource  = $this->objLanguage->languageText('mod_onlineinvoice_quotesource','onlineinvoice');
+$strquote = ucfirst($quotesource);
 $receipt  = $this->objLanguage->languageText('mod_onlineinvoice_uploadreceipts','onlineinvoice');
 $uploadbutton = $this->objLanguage->languageText('mod_onlineinvoice_uploadbutton','onlineinvoice');
 $create = $this->objLanguage->languageText('mod_onlineinvoice_create','onlineinvoice');
@@ -44,17 +45,56 @@ $this->objlodgedate->setDateFormat($format);
 $this->objtxtvendor = $this->newobject('textinput','htmlelements');
 $this->objtxtvendor->textinput("txtvendor","",'text');
 
-$this->objtxtcurrency  = $this->newobject('textinput','htmlelements');
-$this->objtxtcurrency->textinput("txtcurrency","","text");
+//$this->objtxtcurrency  = $this->newobject('textinput','htmlelements');
+//$this->objtxtcurrency->textinput("txtcurrency","","text");
 
 $this->objtxtcost  = $this->newobject('textinput','htmlelements');
 $this->objtxtcost->textinput("txtcost","","text");
 
-
-
 $this->objtxtexchange = $this->newobject('textinput','htmlelements');
 $this->objtxtexchange->textinput("txtexchange","","text");
+
+$this->objtxtbrowse = $this->newobject('textinput','htmlelements');
+$this->objtxtbrowse->textinput("txtexchange","","text");
+$this->objtxtbrowse->size = 40;
 /*********************************************************************************************************************************************************************/
+
+   $currencyvals  = 'currency';
+   $this->objcurrencydropdown  = $this->newObject('dropdown','htmlelements');
+   $this->objcurrencydropdown->dropdown($currencyvals);
+   $this->objcurrencydropdown->addOption('AED','AED') ;
+   $this->objcurrencydropdown->addOption('ALL','ALL') ;
+   $this->objcurrencydropdown->addOption('AMD','AMD') ;
+   $this->objcurrencydropdown->addOption('ARS','ARS') ;
+   $this->objcurrencydropdown->addOption('AUD','AUD') ;
+   $this->objcurrencydropdown->addOption('AZM','AZM') ;
+   $this->objcurrencydropdown->addOption('BGL','BGL') ;
+   $this->objcurrencydropdown->addOption('BHD','BHD') ;
+   $this->objcurrencydropdown->addOption('BND','BND') ;
+   $this->objcurrencydropdown->addOption('BOB','BOB') ;
+   $this->objcurrencydropdown->addOption('BRL','BRL') ;
+   $this->objcurrencydropdown->addOption('BYB','BYB') ;
+   $this->objcurrencydropdown->addOption('BZD','BZD') ;
+   $this->objcurrencydropdown->addOption('CAD','CAD') ;
+   $this->objcurrencydropdown->addOption('CHF','CHF') ;
+   $this->objcurrencydropdown->addOption('CLP','CLP') ;
+   $this->objcurrencydropdown->addOption('BRL','BRL') ;
+   $this->objcurrencydropdown->addOption('CNY','CNY') ;
+   $this->objcurrencydropdown->addOption('COP','COP') ;
+   $this->objcurrencydropdown->addOption('CRC','CRC') ;
+   $this->objcurrencydropdown->addOption('CZK','CZK') ;
+   $this->objcurrencydropdown->addOption('DKK','DKK') ;
+   $this->objcurrencydropdown->addOption('DOP','DOP') ;
+   $this->objcurrencydropdown->addOption('DZD','DZD') ;
+   $this->objcurrencydropdown->addOption('ECS','ECS') ;
+   $this->objcurrencydropdown->addOption('EEK','EEK') ;
+   $this->objcurrencydropdown->addOption('EGP','EGP') ;
+   $this->objcurrencydropdown->addOption('EUR','EUR') ;
+   $this->objcurrencydropdown->addOption('GBP','GBP') ;
+   $this->objcurrencydropdown->size = 50;
+   
+
+/***********************************************************************************************************************************************************************/   
 
 /*create all button elements*/
 $this->objButtonAttach  = $this->newObject('button','htmlelements');
@@ -72,7 +112,11 @@ $this->objButtonUploadReceipt  = $this->newObject('button','htmlelements');
 $this->objButtonUploadReceipt->setValue($uploadbutton);
 $this->objButtonUploadReceipt->setOnClick('alert(\'An onclick Event\')');
 
-
+$btnbrowse  = $this->objLanguage->languageText('word_browse');
+$strbrowse = ucfirst($btnbrowse);
+$this->objbuttonbrowse  = $this->newObject('button','htmlelements');
+$this->objbuttonbrowse->setValue($strbrowse);
+    
 
 $this->objButtonCreate  = $this->newObject('button','htmlelements');
 $this->objButtonCreate->setValue($create);
@@ -128,7 +172,7 @@ $this->objnext->link = $next;
 
         $myTabLodge->startRow();
         $myTabLodge->addCell($currency);
-        $myTabLodge->addCell($this->objtxtcurrency->show());
+        $myTabLodge->addCell($this->objcurrencydropdown->show());
         $myTabLodge->endRow();
 
         $myTabLodge->startRow();
@@ -141,7 +185,7 @@ $this->objnext->link = $next;
 /*create table for exchangerate information*/
 
         $myTabExchange  = $this->newObject('htmltable','htmlelements');
-        $myTabExchange->width='55%';
+        $myTabExchange->width='80%';
         $myTabExchange->border='0';
         $myTabExchange->cellspacing = '10';
         $myTabExchange->cellpadding ='10';
@@ -151,6 +195,19 @@ $this->objnext->link = $next;
         $myTabExchange->addCell($this->objtxtexchange->show());
         $myTabExchange->endRow();
 
+        $myTabExchange->startRow();
+        $myTabExchange->addCell(ucfirst($attachfile));
+        $myTabExchange->addCell($this->objtxtbrowse->show());
+        $myTabExchange->addCell($this->objbuttonbrowse->show());
+        $myTabExchange->addCell($this->objButtonAttach->show());
+        $myTabExchange->endRow();
+        
+        $myTabExchange->startRow();
+        $myTabExchange->addCell($strquote);
+        $myTabExchange->addCell($this->objButtonQuote->show());
+        //$myTabExchange->addCell($this->objbuttonbrowse->show());
+        //$myTabExchange->addCell($this->objButtonAttach->show());
+        $myTabExchange->endRow();
 
 
 /*create table for exchangerate information*/        
@@ -175,26 +232,23 @@ $this->objButtonSubmit  = $this->newObject('button','htmlelements');
 $this->objButtonSubmit->setValue($btnSubmit);
 $this->objButtonSubmit->setToSubmit();
 
+//$this->objButtonbrowse->setToSubmit();
+
 /*********************************************************************************************************************************************************************/        
 
 /*create tabbox for lodge information*/
 $this->loadClass('tabbedbox', 'htmlelements');
 $objtabbedbox = new tabbedbox();
 $objtabbedbox->addTabLabel('Lodge Information');
-
 $objtabbedbox->addBoxContent($myTabLodge->show());
 
 
 
 /*create tabbox for attaching lodge echange rate file*/
-
 $this->loadClass('tabbedbox', 'htmlelements');
-
 $objtabexchange = new tabbedbox();
-
 $objtabexchange->addTabLabel('Exchange Rate Information');
-
-$objtabexchange->addBoxContent($myTabExchange->show() . '<br>'  . $lblchoice  . '<br>'. "<div align=\"left\">" . $this->objButtonAttach->show() . " " . $this->objButtonQuote->show() . "</div>" );
+$objtabexchange->addBoxContent($myTabExchange->show());// . $lblchoice  . '<br>'. "<div align=\"left\">" . $this->objButtonAttach->show() . " " . $this->objButtonQuote->show() . "</div>" );
 
 
 

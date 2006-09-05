@@ -43,7 +43,7 @@
   $postalcode = $this->objLanguage->languageText('phrase_postalcode');
   $country  = $this->objLanguage->languageText('word_country');
   $btnsave  = $this->objLanguage->languageText('word_save');
-  $strsave  = strtoupper($btnsave);
+  $strsave  = ucfirst($btnsave);
   $btnEdit  = $this->objLanguage->languageText('word_edit');
   $description = $this->objLanguage->languageText('mod_onlineinvoice_descriptionoftravelpurpose','onlineinvoice'); 
   $exit  = $this->objLanguage->languageText('phrase_exit');

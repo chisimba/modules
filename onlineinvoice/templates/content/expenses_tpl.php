@@ -75,34 +75,21 @@ $this->objrate->label($rate,$lblRate);
 
 //create all form buttons
 
-$btnSubmit  = $this->objLanguage->languageText('word_submit');
-$this->objButtonSubmit  = $this->newObject('button','htmlelements');
-$this->objButtonSubmit->setValue($btnSubmit);
+$btnsave  = $this->objLanguage->languageText('word_save');
+$strsave = ucfirst($btnsave);
+$this->loadclass('button','htmlelements');
+$this->objButtonSubmit  = new button('saveperdiem', $strsave);
 $this->objButtonSubmit->setToSubmit();
 
 /**
  *button to add more expenses
  */
  $btnadd  = $this->objLanguage->LanguageText('mod_onlineinvoice_addperdiem','onlineinvoice');
- $this->objAddperdiem  = $this->newObject('button','htmlelements');
- $this->objAddperdiem->setValue($btnadd);
+ $stradd = ucfirst($btnadd);
+ $this->objAddperdiem  = new button('addperdiem', $stradd);
  $this->objAddperdiem->setToSubmit();
 
   
-
-/**************************************************************************************************************/
-
-$btnEdit  = $this->objLanguage->languageText('word_edit');
-$this->objButtonEdit  = $this->newObject('button','htmlelements');
-$this->objButtonEdit->setValue($btnEdit);
-//$this->objButtonEdit->setOnClick('alert(\'An onclick Event\')');
-
-/**************************************************************************************************************/
-
-$btnAdd  = $this->objLanguage->languageText('word_addanotherday');
-$this->objButtonAdd  = $this->newObject('button','htmlelements');
-$this->objButtonAdd->setValue($btnAdd);
-$this->objButtonAdd->setOnClick('alert(\'Add another leg\')');
 
 /**************************************************************************************************************/
 
@@ -111,20 +98,17 @@ $this->objButtonAdd->setOnClick('alert(\'Add another leg\')');
 
 $this->loadClass('checkbox', 'htmlelements');
 $objB = new checkbox('b');
-$objB->setLabel($breakfast);
-$objB->setChecked(true);
+$objB->checkbox('breakfast',$breakfast,$ischecked=true);
 $checkbreak= $objB->show();
 
 $this->loadClass('checkbox', 'htmlelements');
 $objL = new checkbox('l');
-$objL->setLabel($lunch);
-$objB->setChecked(false);
+$objL->checkbox('lunch',$lunch,$ischecked=false);
 $checklunch= $objL->show();
 
 $this->loadClass('checkbox', 'htmlelements');
 $objD = new checkbox('d');
-$objD->setLabel($dinner);
-$objB->setChecked(false);
+$objL->checkbox('dinner',$dinner,$ischecked=false);
 $checkdinner= $objD->show();
 
 
@@ -136,49 +120,51 @@ $this->objexpensesdate->setName($name);
 $this->objexpensesdate->setDefaultDate($date);
 $this->objexpensesdate->setDateFormat($format);
 
+/************************************************************************************************************/
+  /**
+   *create all text inputs elements
+   */     
+$this->objtxtbreakfastloc = $this->newObject('textinput','htmlelements');
+$this->objtxtbreakfastloc->name   = "txtbreakfastLocation";
+$this->objtxtbreakfastloc->value  = "";
 
+$this->objtxtbreakfastrate = $this->newObject('textinput','htmlelements');
+$this->objtxtbreakfastrate->name   = "txtbreakfastRate";
+$this->objtxtbreakfastrate->value  = "0.00";
 
-$this->objtxtlocation = $this->newObject('textinput','htmlelements');
-$this->objtxtlocation->name   = "txtlunchLocation";
-$this->objtxtlocation->value  = "";
+$this->objtxtlunchloc = $this->newObject('textinput','htmlelements');
+$this->objtxtlunchloc->name   = "txtlunchLocation";
+$this->objtxtlunchloc->value  = "";
 
-$this->objtxtrate = $this->newObject('textinput','htmlelements');
-$this->objtxtrate->name   = "txtlunchRate";
-$this->objtxtrate->value  = "0.00";
+$this->objtxtlunchrate = $this->newObject('textinput','htmlelements');
+$this->objtxtlunchrate->name   = "txtlunchRate";
+$this->objtxtlunchrate->value  = "0.00";
 
-$this->objtxtlocation = $this->newObject('textinput','htmlelements');
-$this->objtxtlocation->name   = "txtbreakfastLocation";
-$this->objtxtlocation->value  = "";
+$this->objtxtdinnerloc = $this->newObject('textinput','htmlelements');
+$this->objtxtdinnerloc->name   = "txtdinnerLocation";
+$this->objtxtdinnerloc->value  = "";
 
-$this->objtxtrate = $this->newObject('textinput','htmlelements');
-$this->objtxtrate->name   = "txtbreakfastRate";
-$this->objtxtrate->value  = "0.00";
+$this->objtxtdinnerrate = $this->newObject('textinput','htmlelements');
+$this->objtxtdinnerrate->name   = "txtdinnerRate";
+$this->objtxtdinnerrate->value  = "0.00";
 
-$this->objtxtlocation = $this->newObject('textinput','htmlelements');
-$this->objtxtlocation->name   = "txtdinnerLocation";
-$this->objtxtlocation->value  = "";
-
-$this->objtxtrate = $this->newObject('textinput','htmlelements');
-$this->objtxtrate->name   = "txtdinnerRate";
-$this->objtxtrate->value  = "0.0";
-
-$this->objadditinerary  =& $this->newObject('link','htmlelements');
-$this->objadditinerary->link($this->uri(array('action' =>'createexpenses')));
-$this->objadditinerary->link = $add;
+//$this->objadditinerary  =& $this->newObject('link','htmlelements');
+//$this->objadditinerary->link($this->uri(array('action' =>'createexpenses')));
+//$this->objadditinerary->link = $add;
 /**************************************************************************************************************/
 //create a table to place form LABELS in
 
         $myTablabel  = $this->newObject('htmltable','htmlelements');
         $myTablabel->width='80%';
         $myTablabel->border='0';
-        $myTablabel->cellspacing = '10';
+        $myTablabel->cellspacing = '1';
         $myTablabel->cellpadding ='10';
 
         $myTablabel->startRow();
-        $myTablabel->addCell($this->objforeignheading->show());
+        $myTablabel->addCell("<div align=\"left\">" .$this->objforeignheading->show() . "</div>");
         $myTablabel->endRow();
         $myTablabel->startRow();
-        $myTablabel->addCell($this->objdomesticheading->show());
+        $myTablabel->addCell("<div align=\"left\">" .$this->objdomesticheading->show() . "</div>");
         $myTablabel->endRow();
 
 /**************************************************************************************************************/
@@ -200,32 +186,35 @@ $this->objadditinerary->link = $add;
         $myTabExpenses->addCell($this->objbreakfast->show());
         $myTabExpenses->addCell($checkbreak);
         $myTabExpenses->addCell($this->objLocation->show());
-        $myTabExpenses->addCell($this->objtxtlocation->show());
+        $myTabExpenses->addCell($this->objtxtbreakfastloc->show());
         $myTabExpenses->addCell($this->objrate->show());
-        $myTabExpenses->addCell($this->objtxtrate->show());
+        $myTabExpenses->addCell($this->objtxtbreakfastrate->show());
         $myTabExpenses->endRow();
 
         $myTabExpenses->startRow();
         $myTabExpenses->addCell($this->objlunch->show());
         $myTabExpenses->addCell($checklunch);
         $myTabExpenses->addCell($this->objLocation->show());
-
-        $myTabExpenses->addCell($this->objtxtlocation->show());
+        $myTabExpenses->addCell($this->objtxtlunchloc->show());
         $myTabExpenses->addCell($this->objrate->show());
-        $myTabExpenses->addCell($this->objtxtrate->show());
+        $myTabExpenses->addCell($this->objtxtlunchrate->show());
         $myTabExpenses->endRow();
 
         $myTabExpenses->startRow();
         $myTabExpenses->addCell($this->objdinner->show());
         $myTabExpenses->addCell($checkdinner);
         $myTabExpenses->addCell($this->objLocation->show());
-        $myTabExpenses->addCell($this->objtxtlocation->show());
+        $myTabExpenses->addCell($this->objtxtdinnerloc->show());
         $myTabExpenses->addCell($this->objrate->show());
-        $myTabExpenses->addCell($this->objtxtrate->show());
+        $myTabExpenses->addCell($this->objtxtdinnerrate->show());
         $myTabExpenses->endRow();
 
-               
-
+        $myTabExpenses->startRow();
+        $myTabExpenses->addCell($this->objButtonSubmit->show());
+        $myTabExpenses->addCell('');
+        $myTabExpenses->addCell('');
+        $myTabExpenses->addCell($this->objAddperdiem->show());       
+        $myTabExpenses->endRow();
 
 
         /*create a table to place buttons in*/
@@ -237,8 +226,9 @@ $this->objadditinerary->link = $add;
         $myTabButtons->cellpadding ='10';
         
         $myTabButtons->startRow();
-        $myTabButtons->addCell($this->objAddperdiem->show());    
         $myTabButtons->addCell($this->objButtonSubmit->show());
+        $myTabButtons->addCell($this->objAddperdiem->show());    
+
         //$myTabButtons->addCell($this->objButtonEdit->show());
         //$myTabButtons->addCell($this->objButtonAdd->show());
         $myTabButtons->endRow();
@@ -266,7 +256,7 @@ $this->objnext->link = $next;
 $this->loadClass('tabbedbox', 'htmlelements');
 $objtabbedbox = new tabbedbox();
 $objtabbedbox->addTabLabel('Per Diem Expenses');
-$objtabbedbox->addBoxContent($myTabExpenses->show(). '<br>' . $myTabButtons->show() . '<br>'  . $this->objexit->show()  . " " .$this->objnext->show().'<br>'.'<br>') ;
+$objtabbedbox->addBoxContent($myTabExpenses->show(). '<br>' . '<br>'  . $this->objexit->show()  . " " .$this->objnext->show().'<br>'.'<br>') ;
 
 /**************************************************************************************************************/
 
@@ -282,7 +272,7 @@ $objForm->addToForm($objtabbedbox->show());
 
 echo  "<div align=\"center\">" . $this->objMainheading->show() . "</div>";
 echo  '<br>'  . '<br>';
-echo  "<div align=\"center\">" . $myTablabel->show() . "</div>";
+echo  "<div align=\"right\">" . $myTablabel->show() . "</div>";
 //echo  '<br>'  . "<div align=\"center\">" . $this->objdomesticheading->show() . "</div>";
 echo  '<br>'  . '<br>'.'<br>';
 echo  "<div align=\"left\">"  . $objForm->show() . "</div";

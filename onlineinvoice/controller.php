@@ -40,6 +40,13 @@ class onlineinvoice extends controller
     public  $objinvdate = NULL;
     
     /**
+      * $objdbperdiem is an object from the per diem class, used to hold user per diem information
+      * @public 
+        
+    */ 
+    public $objdbperdiem = NULL;
+    
+    /**
          
 	* Constructor method to instantiate objects and get variables
 	*/
@@ -54,11 +61,11 @@ class onlineinvoice extends controller
         //$this->setVarByRef('objLanguage', $this->objLanguage);
         $this->objLanguage =& $this->getObject('language', 'language');
         $this->objUser =& $this->getObject('user', 'security');
-        $this->objdblodging = & $this->getObject('dbLodging','onlineinvoice');
+        $this->objdblodging = & $this->getObject('dblodging','onlineinvoice');
         $this->objdbinvoice = & $this->getObject('dbinvoice','onlineinvoice');
         $this->objdbtev = & $this->getObject('dbtev','onlineinvoice');
         $this->objdbitinerary  = & $this->getObject('dbitinerary','onlineinvoice');
-        
+      //  $this->objdbperdiem  = & $this->getObject('dbperdiem','onlineinvoice'); 
         /**
          *pass variables to the template
          */         
@@ -147,18 +154,20 @@ class onlineinvoice extends controller
            *creates a session variable to hold the information of the itinerary
            *returns back to the itinerary form                       
            */  
-           $saveitinerary  = $this->getParam('saveitinerary');
-           $add     = $this->getParam('add');
-           if(isset($submit)) {
-            $this->getMultiItinerarydetails();
-            $addmultiitineraryinfo = $this->getSession('addmultiitinerary');
-            var_dump($addmultiitineraryinfo);
-            return 'itenirarymulti_tpl.php';
+              $saveitinerary  = $this->getParam('save');
+              $additinerary     = $this->getParam('add');
+              if(isset($saveitinerary)) {
+              $addmultiitineraryinfo = $this->getMultiItinerarydetails();
+              $multiitineraryinfo = $this->getSession('addmultiitinerary');
+              var_dump($multiitineraryinfo);
+              return 'itenirarymulti_tpl.php';
            }else{
-            //$addmultiitinerary  =   $this->getMultiItinerarydetails();
-            $this->getMultiItinerarydetails();
-            $addmultiitineraryinfo = $this->getSession('addmultiitinerary');
-            var_dump($addmultiitineraryinfo);
+              $this->getMultiItinerarydetails();
+              $multiitineraryinfo = $this->getSession('addmultiitinerary');
+              var_dump($multiitineraryinfo); 
+              
+            //$addmultiitineraryinfo = $this->getSession('addmultiitinerary');
+            //var_dump($addmultiitineraryinfo);
             return 'itenirarymulti_tpl.php';
            }                   
             break;
@@ -171,7 +180,25 @@ class onlineinvoice extends controller
           break;
           
           case  'submitexpenses':
-             /*code to return to the expenses form and show msg box for submit sucessfull*/
+             /**
+              *determines which button is clicked and then perform related action
+              *if the saveperdiem - clicked then save values into a session variable
+              *else if the add another perdiem expense clicked -- add data to a multi-dim array                            
+              */
+              $saveperdiem = $this->getParam('saveperdiem');
+              $addperdiem = $this->getParam('addperdiem');
+              if(isset($saveperdiem)) {
+                  $this->getPerDiemExpenses();
+                  //$perdiemdata = $this->getSession('perdiemdetails');
+                  //var_dump($perdiemdata);
+                  return  'expenses_tpl.php';
+              }else{
+                  $this->getPerDiemExpenses();
+                  return  'expenses_tpl.php';
+              }                           
+             $this->getPerDiemExpenses();
+             //$perdiemdata = $this->getSession('perdiemdetails');
+             var_dump($perdiemdata);
              return  'expenses_tpl.php';
              break;
              
@@ -188,6 +215,8 @@ class onlineinvoice extends controller
           case  'showclaimantoutput':
             return 'claimantoutput_tpl.php';
             break;
+          case 'createservice';
+            return 'service_tpl.php';
           case  'savealldetails':
           /**
            *save all claimant information
@@ -217,9 +246,16 @@ class onlineinvoice extends controller
                * call the function in the dbitinerary class using an object --> objdbitinerary
                * return the template and a msessage indicating that its save                                            
                */
-               /*PROBLEM SYNTAX*///$itinerarydetails  = $this->getSession('addmultiitinerary');
-               //var_dump($itinerarydetails);
-               /*PROBLEM SYNTAX*///$this->objdbitinerary->additinerary($itinerarydetails); 
+               $itinerarydetails  = $this->getSession('addmultiitinerary');
+               $this->objdbitinerary->additinerary($itinerarydetails);
+              /**save per diem details
+               * call the session that contains the data entered by the user
+               * call the function in the dbperdiem class using an object --> objdbperdiem
+               * return the template and a msessage indicating that its save                                            
+               */
+               $perdiemdetails = $this->getSession('perdiemdetails');
+               //$this->objdbperdiem->addperdiem($perdiemdetails);
+                
                //echo 'claimant info submitted';
                return 'claimantoutput_tpl.php';
             }else{
@@ -262,7 +298,13 @@ class onlineinvoice extends controller
        *create an array - $invoicedate to store the invoice dates that the user selects
        *create a session variable to store the array data in       
        */
-       $invoicedate  = array('begindate'  =>  $this->getParam('txtbegindate'),
+       
+       $invoicedate  = array('createdby'    =>  $this->objUser->fullname(),
+                             'datecreated'  =>  '2006-09-04',
+                             'modifiedby'   =>  $this->objUser->fullname(),
+                             'datemodified' =>  '2006-09-04',
+                             'updated'      =>  '2006-09-04',
+                             'begindate'  =>  $this->getParam('txtbegindate'),
                              'enddate'    =>  $this->getParam('txtenddate'),
                         );
         $this->setSession('invoicedata',$invoicedate);
@@ -275,7 +317,12 @@ class onlineinvoice extends controller
        *create a session variable claimantdata to store the array data
        */
        
-       $claimantinfo = array('claimanantname' => $this->getParam('txtClaimantName'),
+       $claimantinfo = array('createdby'    =>  $this->objUser->fullname(),
+                             'datecreated'  =>  '2006-09-04',
+                             'modifiedby'   =>  $this->objUser->fullname(),
+                             'datemodified' =>  '2006-09-04',
+                             'updated'      =>  '2006-09-04',
+                             'claimanantname' => $this->getParam('txtClaimantName'),
                              'title'          => $this->getParam('txtTitle'),
                              'mailaddress'    => $this->getParam('txtAddress'),
                              'city'           => $this->getParam('txtCity'),
@@ -307,27 +354,44 @@ class onlineinvoice extends controller
 /*******************************************************************************************************************************************************************/                          
   private function getMultiItinerarydetails()
   {
-      
-      $itinerarydata = array('departuredate' => $this->getParam('txtdeptddate'),
-                             'departuretime' => $strhrs = $this->getParam('departuretime') .$this->getParam('minutes'),
-                             'departurecity' => $this->getParam('txttxtdeptcity'),
+        /**
+       *create array to hold the users itinerary information
+       *store array data in session variable ititenrarydata
+       */
+      $itinerarydata = array('createdby'    =>  $this->objUser->fullname(),
+                             'datecreated'  =>  '2006-09-04',
+                             'modifiedby'   =>  $this->objUser->fullname(),
+                             'datemodified' =>  '2006-09-04',
+                             'updated'      =>  '2006-09-04',
+                             'departuredate' => $this->getParam('txtdeptddate'),
+                             'departuretime' => $this->getParam('departuretime') .$this->getParam('minutes') . ':00',
+                             'departurecity' => $this->getParam('txtdeptcity'),
                              'arrivaledate'  => $this->getParam('txtarraivaldate'),
-                             'arrivaltime'   => $this->getParam('arrivaltime'). $this->getParam('minutes'),
+                             'arrivaltime'   => $this->getParam('arrivaltime'). $this->getParam('minutes') . ':00',
                              'arrivalcity'   => $this->getParam('txtarrivcity')
-                    );
+                            );
                     
         
-      $itineraryinfo[] = $itinerarydata;
-      $this->setSession('addmultiitinerary',$itineraryinfo);
+      //$itineraryinfo[] = $itinerarydata;
+      $this->setSession('addmultiitinerary',$itinerarydata);
   }
 /*******************************************************************************************************************************************************************/                          
   private function getPerDiemExpenses()
   {
-      $perdiemdata[0] = $this->getParam('txtexpensesdate');
-      $perdiemdata[1] = $this->getParam('b');
-      //$perdiemdata
-      $perdiemdata[2] = $this->getParam('l');
-      $perdiemdata[3] = $this->getParam('d');
+      $perdiemdata = array('date'             =>  $this->getParam('txtexpensesdate'),
+                           'breakfastchoice'  =>  $this->getParam('breakfast'),
+                           'breakfastlocation' => $this->getParam('txtbreakfastLocation'),
+                           'breakfastrate'      =>  $this->getParam('txtbreakfastRate'),
+                           'lunchchoice'        =>  $this->getParam('lunch'),
+                           'lunchlocation'      =>  $this->getParam('txtlunchLocation'),
+                           'txtlunchRate'       =>  $this->getParam('txtlunchRate'),
+                           'dinnerchoice'       =>  $this->getParam('dinner'),
+                           'dinnerlocation'     =>  $this->getParam('txtdinnerLocation'),
+                           'dinnerrate'         =>  $this->getParam('txtdinnerRate')
+                           );
+                           
+      //$perdieminformation[] =  $perdiemdata;
+      $this->setSession('perdiemdetails',$perdiemdata);                          
       
   }
 /*******************************************************************************************************************************************************************/                          

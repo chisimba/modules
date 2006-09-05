@@ -6,17 +6,18 @@
   there after the heading is set to type 2
   and is then assigned the title -- WEB BASED INVOICING SYSTEM*/
 
+
 $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
 $this->objMainheading->type=2;
 $this->objMainheading->str=$objLanguage->languageText('mod_onlineinvoice_webbasedinvoicingsystem','onlineinvoice');
 
 /*create all language elements for labels*/
-$dateRange = $objLanguage->languageText('mod_onlineinvoice_whatisthedaterangeofyourinvoice?','onlineinvoice');
+$dateRange = $objLanguage->languageText('mod_onlineinvoice_whatisthedaterangeofyourinvoice','onlineinvoice');
 $beginDate = $objLanguage->languageText('phrase_begindate');
 $endDate  = $objLanguage->languageText('phrase_enddate');
 $travelExpenses = $objLanguage->languageText('mod_onlineinvoice_travelexpensesupdate','onlineinvoice');
 $btnSubmit  = $this->objLanguage->languageText('word_submit');
-$str1 = strtoupper($btnSubmit);
+$str1 = ucfirst($btnSubmit);
 $btnEdit  = $this->objLanguage->languageText('word_edit');
 $createTEV  = $this->objLanguage->languageText('phrase_yescreatenewtev');
 $nextCategory  = $this->objLanguage->languageText('phrase_nomovetonextcategory');
@@ -27,10 +28,6 @@ $sucessfull = strtoupper($strsucessfull);
 
 /*********************************************************************************************************************************************************/
 
-/*create a link to move to tev_template*/
-/*$this->objTEVlink  =& $this->newobject('link','htmlelements');
-$this->objTEVlink->link($this->uri(array('action'=>'createtev')));
-$this->objTEVlink->link = $createTEV;*/
 
 $urltext = 'YES - Create TEV';
 $content = 'Complete a travel expense voucher';
@@ -42,7 +39,7 @@ $this->objcreatelink->mouseoverpopup($urltext,$content,$caption,$url);
 $urltext = 'NO - Move To Next Category';
 $content = 'Complete any service expenses';
 $caption = '';
-$url = $this->uri(array('action'=>'NULL'));
+$url = $this->uri(array('action'=>'createservice'));
 $this->objnextlink  = & $this->newObject('mouseoverpopup','htmlelements');
 $this->objnextlink->mouseoverpopup($urltext,$content,$caption,$url);
 

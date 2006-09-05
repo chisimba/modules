@@ -16,14 +16,14 @@
     $arrivalTime  = $this->objLanguage->languageText('phrase_arrivaltime');
     $arrivalCity  = $this->objLanguage->languageText('phrase_arrivalcity');
     $btnsave  = $this->objLanguage->languageText('word_save');
-    $strsave = strtoupper($btnsave);
+    $strsave = ucfirst($btnsave);
     $return = $this->objLanguage->languageText('mod_onlineinvoice_returntotravelexpense','onlineinvoice');
     $addanotheritinerary = $this->objLanguage->languageText('mod_onlineinvoice_addanotheritenirary','onlineinvoice');
     $exit  = $this->objLanguage->languageText('phrase_exit');
     $next = $this->objLanguage->languageText('phrase_next');
     //$btnsave  = $this->objLanguage->languageText('word_save');
     $btnAdd = $this->objLanguage->languageText('mod_onlineinvoice_addanotheritenirary','onlineinvoice');
-    $stradd = strtoupper($btnAdd);
+    $stradd = ucfirst($btnAdd);
     $error_message = $this->objLanguage->languageText('phrase_dateerror');
     $strerror  =  strtoupper($error_message);
     $strsucessfull = $this->objLanguage->languageText('mod_onlineinvoice_valuessubmitted','onlineinvoice');
@@ -97,7 +97,7 @@
     $this->objtxtdepttime->size = 20*/
 
     $this->objtxtdeptcity = $this->newObject('textinput','htmlelements');
-    $this->objtxtdeptcity->name   = "txttxtdeptcity";
+    $this->objtxtdeptcity->name   = "txtdeptcity";
     $this->objtxtdeptcity->value  = "";
     $this->objtxtdeptcity->size = 24;
     
@@ -112,52 +112,81 @@
    *create all form buttons 
    */
    
-    /*$this->objButtonSave  = new button('save', $btnsave);
-    $this->objButtonSave->setToSubmit();*/
     
-    $this->objButtonSubmit  = new button('submit', $strsave);
+    
+    $this->objButtonSubmit  = new button('save', $strsave);
     $this->objButtonSubmit->setToSubmit();
     
-    $onClick = 'var list_from = document.itinerarymulti.txtdeptddate;
-					    var list_to = document.itinerarymulti.txtarraivaldate;
+    $onClick = 'var dept_date = document.itinerarymulti.txtdeptddate;
+					     var arrive_date = document.itinerarymulti.txtarraivaldate;
 					 
 					 
 					 
-					    var acceptance = true;
-					   //value of the begin date
-  					 var value_begin = list_from.value;
-	   				 //value of the end date
-		  			 var value_end = list_to.value;
+					     var acceptance = true;
+					      
+					  /*value of the begin date and value of the end date*/
+					    
+		  			   var value_end   = arrive_date.value;
+					     var value_begin = dept_date.value;
 					 
+					 /*checks if dates are right*/
 					 
-					 //checks if dates are right
 					 if(value_begin > value_end){
 					 	acceptance = false;
-						
 					 }
 					 
 							 
-					 //check final condition
+					 /*check final condition*/
 					 if(!acceptance){
 					 	alert(\''.$strerror .'\');
 						acceptance = true;
 						return false;
 					 }else{
-           alert(\''.$sucessfull.'\')
+          // alert(\''.$sucessfull.'\')
            }';
-				$this->objButtonSubmit->extra = sprintf(' onClick ="javascript: %s"', $onClick );
- 
+   $this->objButtonSubmit->extra = sprintf(' onClick ="javascript: %s"', $onClick );
+            
+            /******************************************************/
     
     $this->objAddItinerary  = new button('add', $stradd);
     $this->objAddItinerary->setToSubmit();
+    
+        $onClick = 'var dept_date = document.itinerarymulti.txtdeptddate;
+					     var arrive_date = document.itinerarymulti.txtarraivaldate;
+					 
+					 
+					 
+					     var acceptance = true;
+					      
+					  /*value of the begin date and value of the end date*/
+					    
+		  			   var value_end   = arrive_date.value;
+					     var value_begin = dept_date.value;
+					 
+					 /*checks if dates are right*/
+					 
+					 if(value_begin > value_end){
+					 	acceptance = false;
+					 }
+					 
+							 
+					 /*check final condition*/
+					 if(!acceptance){
+					 	alert(\''.$strerror .'\');
+						acceptance = true;
+						return false;
+					 }else{
+          // alert(\''.$sucessfull.'\')
+           }';
+      $this->objAddItinerary->extra = sprintf(' onClick ="javascript: %s"', $onClick );
 /************************************************************************************************************************************************/
   /**
    *create instance of the dropdown list class
    */
    
-   $name  = 'departuretime';
+   $departurename  = 'departuretime';
    $this->objdeparturetimedropdown  = $this->newObject('dropdown','htmlelements');
-   $this->objdeparturetimedropdown->dropdown($name);
+   $this->objdeparturetimedropdown->dropdown($departurename);
    $this->objdeparturetimedropdown->addOption('00:','00:') ;
    $this->objdeparturetimedropdown->addOption('01:','01:') ;
    $this->objdeparturetimedropdown->addOption('02:','02: ') ;
@@ -215,67 +244,67 @@
    $minutesname  = 'minutes';
    $this->objminutes  = $this->newObject('dropdown','htmlelements');
    $this->objminutes->dropdown($minutesname);
-   $this->objminutes->addOption('00:00','00:00') ;
-   $this->objminutes->addOption('00:01','00:01') ;
-   $this->objminutes->addOption('00:02','00:02') ;
-   $this->objminutes->addOption('00:03','00:03') ;
-   $this->objminutes->addOption('00:04','00:04') ;
-   $this->objminutes->addOption('00:05','00:05') ;
-   $this->objminutes->addOption('00:06','00:06') ; 
-   $this->objminutes->addOption('00:07','00:07') ; 
-   $this->objminutes->addOption('00:08','00:08') ;
-   $this->objminutes->addOption('00:09','00:09') ;
-   $this->objminutes->addOption('00:10','00:10') ;
-   $this->objminutes->addOption('00:11','00:11') ;
-   $this->objminutes->addOption('00:12','00:12') ;
-   $this->objminutes->addOption('00:13','00:13') ;
-   $this->objminutes->addOption('00:14','00:14') ;
-   $this->objminutes->addOption('00:15','00:15') ;
-   $this->objminutes->addOption('00:16','00:16') ;
-   $this->objminutes->addOption('00:17','00:17') ;
-   $this->objminutes->addOption('00:18','00:18') ;
-   $this->objminutes->addOption('00:19','00:19') ;
-   $this->objminutes->addOption('00:20','00:20') ;
-   $this->objminutes->addOption('00:21','00:21') ;
-   $this->objminutes->addOption('00:22','00:22') ;
-   $this->objminutes->addOption('00:23','00:23') ;
-   $this->objminutes->addOption('00:24','00:24') ;
-   $this->objminutes->addOption('00:25','00:25') ;
-   $this->objminutes->addOption('00:26','00:26') ; 
-   $this->objminutes->addOption('00:27','00:27') ; 
-   $this->objminutes->addOption('00:28','00:28') ;
-   $this->objminutes->addOption('00:29','00:29') ;
-   $this->objminutes->addOption('00:30','00:30') ;
-   $this->objminutes->addOption('00:31','00:31') ;
-   $this->objminutes->addOption('00:32','00:32') ;
-   $this->objminutes->addOption('00:33','00:33') ;
-   $this->objminutes->addOption('00:34','00:34') ;
-   $this->objminutes->addOption('00:35','00:35') ;
-   $this->objminutes->addOption('00:36','00:36') ;
-   $this->objminutes->addOption('00:37','00:37') ;
-   $this->objminutes->addOption('00:38','00:38') ;
-   $this->objminutes->addOption('00:39','00:39') ;
-   $this->objminutes->addOption('00:40','00:40') ;
-   $this->objminutes->addOption('00:41','00:41') ;
-   $this->objminutes->addOption('00:42','00:42') ;
-   $this->objminutes->addOption('00:43','00:43') ;
-   $this->objminutes->addOption('00:44','00:44') ;
-   $this->objminutes->addOption('00:45','00:45') ;
-   $this->objminutes->addOption('00:46','00:46') ; 
-   $this->objminutes->addOption('00:47','00:47') ; 
-   $this->objminutes->addOption('00:48','00:48') ;
-   $this->objminutes->addOption('00:49','00:49') ;
-   $this->objminutes->addOption('00:50','00:50') ;
-   $this->objminutes->addOption('00:51','00:51') ;
-   $this->objminutes->addOption('00:52','00:52') ;
-   $this->objminutes->addOption('00:53','00:53') ;
-   $this->objminutes->addOption('00:54','00:54') ;
-   $this->objminutes->addOption('00:55','00:55') ;
-   $this->objminutes->addOption('00:56','00:56') ; 
-   $this->objminutes->addOption('00:57','00:57') ; 
-   $this->objminutes->addOption('00:58','00:58') ;
-   $this->objminutes->addOption('00:59','00:59') ;
-   $this->objminutes->addOption('00:60','00:60') ;
+   $this->objminutes->addOption('00','00') ;
+   $this->objminutes->addOption('01','01') ;
+   $this->objminutes->addOption('02','02') ;
+   $this->objminutes->addOption('03','03') ;
+   $this->objminutes->addOption('04','04') ;
+   $this->objminutes->addOption('05','05') ;
+   $this->objminutes->addOption('06','06') ; 
+   $this->objminutes->addOption('07','07') ; 
+   $this->objminutes->addOption('08','08') ;
+   $this->objminutes->addOption('09','09') ;
+   $this->objminutes->addOption('10','10') ;
+   $this->objminutes->addOption('11','11') ;
+   $this->objminutes->addOption('12','12') ;
+   $this->objminutes->addOption('13','13') ;
+   $this->objminutes->addOption('14','14') ;
+   $this->objminutes->addOption('15','15') ;
+   $this->objminutes->addOption('16','16') ;
+   $this->objminutes->addOption('17','17') ;
+   $this->objminutes->addOption('18','18') ;
+   $this->objminutes->addOption('19','19') ;
+   $this->objminutes->addOption('20','20') ;
+   $this->objminutes->addOption('21','21') ;
+   $this->objminutes->addOption('22','22') ;
+   $this->objminutes->addOption('23','23') ;
+   $this->objminutes->addOption('24','24') ;
+   $this->objminutes->addOption('25','25') ;
+   $this->objminutes->addOption('26','26') ; 
+   $this->objminutes->addOption('27','27') ; 
+   $this->objminutes->addOption('28','28') ;
+   $this->objminutes->addOption('29','29') ;
+   $this->objminutes->addOption('30','30') ;
+   $this->objminutes->addOption('31','31') ;
+   $this->objminutes->addOption('32','32') ;
+   $this->objminutes->addOption('33','33') ;
+   $this->objminutes->addOption('34','34') ;
+   $this->objminutes->addOption('35','35') ;
+   $this->objminutes->addOption('36','36') ;
+   $this->objminutes->addOption('37','37') ;
+   $this->objminutes->addOption('38','38') ;
+   $this->objminutes->addOption('39','39') ;
+   $this->objminutes->addOption('40','40') ;
+   $this->objminutes->addOption('41','41') ;
+   $this->objminutes->addOption('42','42') ;
+   $this->objminutes->addOption('43','43') ;
+   $this->objminutes->addOption('44','44') ;
+   $this->objminutes->addOption('45','45') ;
+   $this->objminutes->addOption('46','46') ; 
+   $this->objminutes->addOption('47','47') ; 
+   $this->objminutes->addOption('48','48') ;
+   $this->objminutes->addOption('49','49') ;
+   $this->objminutes->addOption('50','50') ;
+   $this->objminutes->addOption('51','51') ;
+   $this->objminutes->addOption('52','52') ;
+   $this->objminutes->addOption('53','53') ;
+   $this->objminutes->addOption('54','54') ;
+   $this->objminutes->addOption('55','55') ;
+   $this->objminutes->addOption('56','56') ; 
+   $this->objminutes->addOption('57','57') ; 
+   $this->objminutes->addOption('58','58') ;
+   $this->objminutes->addOption('59','59') ;
+   $this->objminutes->addOption('60','60') ;
      
 /************************************************************************************************************************************************/
     
@@ -362,10 +391,10 @@
         $myTabIten->startRow();
         $myTabIten->endRow();
         
-        $myTabIten->startRow();
-        $myTabIten->addCell($this->objexit->show());
-        $myTabIten->addCell($this->objnext->show());
-        $myTabIten->endRow();
+        //$myTabIten->startRow();
+        //$myTabIten->addCell($this->objexit->show());
+        //$myTabIten->addCell($this->objnext->show());
+        //$myTabIten->endRow();
         
         
 
@@ -379,7 +408,7 @@
 $this->loadClass('tabbedbox', 'htmlelements');
 $objmultiitinerary = new tabbedbox();
 $objmultiitinerary->addTabLabel('Travelers Itinerary');
-$objmultiitinerary->addBoxContent('<br>' . $myTabIten->show() . '<br>' . '<br>' /*. $myTabItenMulti->show()*/);               
+$objmultiitinerary->addBoxContent('<br>' . $myTabIten->show() . '<br>' . '<br>' .$this->objexit->show() .' '. $this->objnext->show()  . '<br />' . '<br />');               
 
         
 /************************************************************************************************************************************************/
@@ -391,8 +420,8 @@ $objmultiitinerary->addBoxContent('<br>' . $myTabIten->show() . '<br>' . '<br>' 
       $objitenirarymultiForm = new form('itinerarymulti',$this->uri(array('action'=>'submitmultiitinerary')));
       $objitenirarymultiForm->displayType = 3;
       $objitenirarymultiForm->addToForm($objmultiitinerary->show());	
-      $objitenirarymultiForm->addRule('txttxtdeptcity', 'Please enter departure city','required');
-      $objitenirarymultiForm->addRule('txtarrivcity', 'Please enter departure city','required'); 
+      $objitenirarymultiForm->addRule('txtdeptcity', 'Please enter departure city','required');
+      $objitenirarymultiForm->addRule('txtarrivcity', 'Please enter arrival city','required'); 
 /************************************************************************************************************************************************/
     
             

@@ -13,6 +13,7 @@
       $this->loadClass('htmltable','htmlelements');
       $this->loadClass('tabbedbox', 'htmlelements');
       $this->loadClass('button','htmlelements');
+      $this->loadClass('checkbox','htmlelements');
        //$heading = $this->new
 /****************************************************************************************************************************/      
       /**
@@ -147,29 +148,79 @@
          *loop through the array variable and assign each element to a variable
          */         
          $itinerarydetails  = $this->getSession('addmultiitinerary');
-            while(list($start,$result)  = each($itinerarydetails)) {
-              if($start == 'departuredate') {
-              $displaydepdate = $result;
-              }
-              if($start == 'departuretime') {
-              $displaydepttime == $result;
-              }
-              if($start == 'departurecity') {
-              $displaydeptcity == $result;
-              }
-              if($start == 'arrivaledate') {
-              $displayarrivdate = $result;
-              }
-              if($start == 'arrivaltime') {
-              $displayarrivtime = $result;
-              }
-              if($start == 'arrivalcity') {
-              $displayarrivcity = $result;
+            while(list($subkey,$subval)  = each($itinerarydetails)) 
+            {
+              //while(list($subkey,$subval) = each($result))
+              //{
+                  //echo 'hi';
+                  //die;
+                  if($subkey == 'departuredate') {
+                  $displaydepdate = $subval;
+                  //echo $displaydepdate;
+                  //die; 
+                  }
+                  if($subkey == 'departuretime') {
+                  $displaydepttime == $subval;
+                  }
+                  if($subkey == 'departurecity') {
+                  $displaydeptcity == $subval;
+                  }
+                  if($subkey == 'arrivaledate') {
+                  $displayarrivdate = $subval;
+                  }
+                  if($subkey == 'arrivaltime') {
+                  $displayarrivtime = $subval;
+                  }
+                  if($subkey == 'arrivalcity') {
+                  $displayarrivcity = $subval;
+                //  }
               }
               
             
-            }                                  
-/****************************************************************************************************************************/                 
+           }                                  
+/****************************************************************************************************************************/
+      /**
+       *call the session variable that contains the array o information entered by the user
+       *assign the array session to a variable $itineraryinfo
+       *loop through the array variable and assign each element to a varaible
+       */
+       
+       $perdiemdetails = $this->getSession('perdiemdetails'); 
+          while(list($num,$listval) = each($perdiemdetails))  {
+          if($num ==  'date') {
+          $showperdiemdate  = $listval;
+          }
+          if($num == 'breakfastchoice')  {
+          $breakfastchoice = $listval;
+          }
+          if($num == 'breakfastlocation')  {
+          $breakfastloc   = $listval;
+          }
+          if($num ==  'breakfastrate') {
+          $breakfastrate  = $listval;
+          }
+          if($num == 'lunchchoice') {
+          $lunchchoice  = $listval;
+          }
+          if($num == 'lunchlocation') {
+          $lunchlocation = $listval;
+          }
+          if($num ==  'txtlunchRate')  {
+          $txtlunchRate = $listval;
+          }
+          if($num == 'dinnerchoice') {
+          $dinnerchoice = $listval;
+          }
+          if($num == 'dinnerlocation') {
+          $dinnerlocation = $listval;
+          }
+          if($num == 'dinnerrate') {
+          $dinnerrate = $listval;
+          }    
+       
+       }              
+                 
+/****************************************************************************************************************************/ 
         /**
          *create a table to place all claimant form elements in
          */ 
@@ -254,14 +305,14 @@
          $myTabItinerary->cellspacing = '30';
          $myTabItinerary->cellpadding ='10';
 
-         $myTabItinerary->startRow();
-         $myTabItinerary->addCell($str1);
-         $myTabItinerary->addCell($str2);
-         $myTabItinerary->addCell($str3);
-         $myTabItinerary->addCell($str4);
-         $myTabItinerary->addCell($str5);
-         $myTabItinerary->addCell($str6);
-         $myTabItinerary->endRow();
+         $myTabItinerary->startHeaderRow();
+         $myTabItinerary->addHeaderCell($str1);
+         $myTabItinerary->addHeaderCell($str2);
+         $myTabItinerary->addHeaderCell($str3);
+         $myTabItinerary->addHeaderCell($str4);
+         $myTabItinerary->addHeaderCell($str5);
+         $myTabItinerary->addHeaderCell($str6);
+         $myTabItinerary->endHeaderRow();
          
          $myTabItinerary->startRow();
          $myTabItinerary->addCell($displaydepdate);
@@ -276,28 +327,59 @@
           *create a table to place per diem expenses in
           */                   
           
-         $myTabExpense =  new htmlTable;      
-         $myTabExpense->width='100%';
-         $myTabExpense->border='0';
-         $myTabExpense->cellspacing = '30';
-         $myTabItinerary->cellpadding ='10';
-
-         $myTabExpense->startRow();
-         $myTabExpense->addCell($strdate);
-         $myTabExpense->addCell($strbreakfast);
-         $myTabExpense->addCell($strlunch);
-         $myTabExpense->addCell($strdinner);
-         $myTabExpense->endRow();
          
-         $myTabExpense->startRow();
-         $myTabExpense->addCell('');
-         $myTabExpense->addCell('Location');
-         $myTabExpense->addCell('Rate');
-         $myTabExpense->addCell('Location');
-         $myTabExpense->addCell('Rate');
-         $myTabExpense->addCell('Location');
-          $myTabExpense->addCell('Rate');
-         $myTabExpense->endRow(); 
+        $myTablePerdiem = $this->newObject('htmltable','htmlelements');
+        $myTablePerdiem->width='40%';
+        $myTablePerdiem->border= '5';
+        $myTablePerdiem->cellspacing='5';
+        $myTablePerdiem->cellpadding='5';
+            
+        $myTablePerdiem->startHeaderRow();
+        $myTablePerdiem->addHeader('Breakfast');
+        $myTablePerdiem->addHeaderCell('Location');
+        $myTablePerdiem->addHeaderCell('Rate');
+        $myTablePerdiem->endHeaderRow();    
+
+        $myTablePerdiem->startRow();
+        $myTablePerdiem->addCell($breakfastloc);
+        $myTablePerdiem->addCell($breakfastrate);
+        $myTablePerdiem->endRow();
+      /********************************************************************/  
+        $myTablelunch = $this->newObject('htmltable','htmlelements');
+        $myTablelunch->width='40%';
+        $myTablelunch->border='5';
+        $myTablelunch->cellspacing='5';
+        $myTablelunch->cellpadding='5';
+            
+        $myTablelunch->startHeaderRow();
+        $myTablelunch->addHeader('Lunch');
+        $myTablelunch->addHeaderCell('Location');
+        $myTablelunch->addHeaderCell('Rate');
+        $myTablelunch->endHeaderRow();    
+
+        $myTablelunch->startRow();
+        $myTablelunch->addCell($lunchlocation);
+        $myTablelunch->addCell($txtlunchRate);
+        $myTablelunch->endRow();  
+
+      /********************************************************************/  
+        $myTabledinner = $this->newObject('htmltable','htmlelements');
+        $myTabledinner->width='40%';
+        $myTabledinner->border='5';
+        $myTabledinner->cellspacing='5';
+        $myTabledinner->cellpadding='5';
+            
+        $myTabledinner->startHeaderRow();
+        $myTabledinner->addHeader('Dinner');
+        $myTabledinner->addHeaderCell('Location');
+        $myTabledinner->addHeaderCell('Rate');
+        $myTabledinner->endHeaderRow();    
+
+        $myTabledinner->startRow();
+        $myTabledinner->addCell($dinnerlocation);
+        $myTabledinner->addCell($dinnerrate);
+        $myTabledinner->endRow();  
+  
 /****************************************************************************************************************************/
         /**
          *create a tabbed box element
@@ -313,7 +395,7 @@
          
          $objtabExpense = new tabbedbox();
          $objtabExpense->addTabLabel('Per Diem Expenses');
-         $objtabExpense->addBoxContent($myTabExpense->show());
+         $objtabExpense->addBoxContent('<br />' . $myTablePerdiem->show() . ' ' . $myTablelunch->show() . $myTabledinner->show()  . '<br / >');
                
 /****************************************************************************************************************************/
                                 
@@ -323,7 +405,7 @@
                   
         $objClaimantForm = new form('claimantoutput',$this->uri(array('action'=>'savealldetails')));
         $objClaimantForm->displayType = 3;
-        $objClaimantForm->addToForm($objtabbedbox->show() . '<br>'  . $objtabItinerary->show() .  '<br>' . $myTabbuttons->show() . '<br>'  .$objtabExpense->show());	
+        $objClaimantForm->addToForm($objtabbedbox->show() . '<br>'  . $objtabItinerary->show() .  '<br>' .  '<br>'  .$objtabExpense->show() . $myTabbuttons->show());	
         //$objClaimantForm->addRule('txtDate', 'Must be number','required');             
 
 /****************************************************************************************************************************/
