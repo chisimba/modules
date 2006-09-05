@@ -89,7 +89,7 @@ class apachelog extends controller
 
             		$yearcount = $this->objDbApachelog->getYearStats($year);
             		echo "Year count of hits is: " .$yearcount . "<br />";
-$start = $this->microtime_float();
+					$start = $this->microtime_float();
             		$montharr = array(1,2,3,4,5,6,7,8,9,10,11,12);
             		foreach ($montharr as $months)
             		{
