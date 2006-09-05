@@ -28,7 +28,6 @@
     <tbl_cms_sections>
         <id>init_1</id>
         <title>Welcome to Chisimba</title>
-        <infotext>Welcome to Chisimba, a rapid application development platform and next generation framework produced by the African Virtual Open Initiatives and Resources (AVOIR) project.</infotext>
         <menutext>Welcome </menutext>
         <image></image>
         <image_position>one</image_position>
