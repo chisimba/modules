@@ -135,7 +135,18 @@ class dbfinaid extends object
   		return $this->objSoapClient->getlimitSBJCT($field, $value, 0, 0);
 	}
 
-
+    /**
+    *
+    * Function to retrieve sponsor details from the database
+    *
+    * @param string $value: The value to search for in the database
+    * @param string $field: The field to search on in the database
+    * @return array: The array of matching records from the database
+    *
+    */
+   	function getSponsor($value, $field = 'BRSCDE'){
+  		return $this->objSoapClient->getlimitBRSRY($field, $value, 0, 0);
+	}
    //--------------------------------------------------
    // Test functions
    	function getParam($value, $field = 'PRMIDN'){

@@ -103,8 +103,13 @@ class financialaidleftblock extends object
 			$href = new href("index.php?module=financialaid&amp;action=account&amp;id=$studentid",$this->objLanguage->languagetext('mod_financialaid_account','financialaid'));
 			$links.=$href->show()."<br />";
 			$href = new href("index.php?module=financialaid&amp;action=matric&amp;id=$studentid",$this->objLanguage->languagetext('mod_financialaid_matric','financialaid'));
-			$links.=$href->show()."<br />";
+			$links.=$href->show()."<br /><br />";
 		}
+  
+		$links .= "<strong>".$this->objLanguage->languagetext('word_sponsors')."</strong><br />";
+		$href = new href("index.php?module=financialaid&amp;action=searchsponsors&amp;all=yes",$this->objLanguage->languagetext('mod_financialaid_listsponsors','financialaid'));
+		$links.=$href->show()."<br />";
+
 
 		return $header.$links;
 	}

@@ -17,6 +17,21 @@ $maritalSts->addOption('Married', $objLanguage->languagetext('word_married'));
 $maritalSts->addOption('Divorced', $objLanguage->languagetext('word_divorced'));
 $maritalSts->addOption('Widowed', $objLanguage->languagetext('word_widowed'));
 
+$year = new dropdown('year');
+$start = date("Y");
+for($i = 0; $i < 16; $i ++){
+	$year->addOption($start,$start);
+	$start--;
+}
+
+$semester = new radio('semester');
+for($i = 1; $i <= 2; $i ++){
+	$semester->addOption($i,$i);
+}
+$semester->setSelected('1');
+$semester->setBreakSpace('  ');
+
+
 $gender = new radio('gender');
 $gender->addOption('Male',$objLanguage->languagetext('word_male'));
 $gender->addOption('Female',$objLanguage->languagetext('word_female'));
@@ -45,6 +60,15 @@ $fulltime->addOption('0',$objLanguage->languagetext('word_no'));
 $fulltime->setSelected('1');
 $fulltime->setBreakSpace('  ');
 
+$studyAddress1 = new textinput('studyaddress1');
+$studyAddress2 = new textinput('studyaddress2');
+$studyAddress3 = new textinput('studyaddress3');
+$studyPostcode = new textinput('studypostcode');
+$homeAddress1 = new textinput('homeaddress1');
+$homeAddress2 = new textinput('homeaddress2');
+$homeAddress3 = new textinput('homeaddress3');
+$homePostcode = new textinput('homepostcode');
+
 $addbut= new button('add');
 $addbut->setToSubmit();
 $addbut->setValue($objLanguage->languagetext('word_add'));
@@ -56,6 +80,16 @@ $cancelbut->setValue($objLanguage->languagetext('word_cancel'));
 
 $table->startRow();
 $table->addCell($appidfield->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objLanguage->languagetext('word_year'));
+$table->addCell($year->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objLanguage->languagetext('word_semester'));
+$table->addCell($semester->show());
 $table->endRow();
 
 $table->startRow();
@@ -124,6 +158,46 @@ $table->addCell($supportingSelf->show());
 $table->endRow();
 
 $table->startRow();
+$table->addCell($objLanguage->languagetext('mod_financialaid_studyaddress','financialaid'));
+$table->addCell($studyAddress1->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objLanguage->languagetext('mod_financialaid_suburb','financialaid'));
+$table->addCell($studyAddress2->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objLanguage->languagetext('mod_financialaid_city','financialaid'));
+$table->addCell($studyAddress3->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objLanguage->languagetext('mod_financialaid_pcode','financialaid'));
+$table->addCell($studyPostcode->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objLanguage->languagetext('mod_financialaid_homeaddress','financialaid'));
+$table->addCell($homeAddress1->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objLanguage->languagetext('mod_financialaid_suburb','financialaid'));
+$table->addCell($homeAddress2->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objLanguage->languagetext('mod_financialaid_city','financialaid'));
+$table->addCell($homeAddress3->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objLanguage->languagetext('mod_financialaid_pcode','financialaid'));
+$table->addCell($homePostcode->show());
+$table->endRow();
+
+$table->startRow();
 $table->addCell($addbut->show());
 $table->addCell($cancelbut->show());
 $table->endRow();
@@ -141,7 +215,6 @@ $objForm->addToForm($content);
 $objForm->addRule('stdnum', 'Please enter a student number', 'required');
 $objForm->addRule('surname', 'Please enter a surname', 'required');
 $objForm->addRule('idnum', 'Please enter an ID number', 'required');
-$objForm->addRule('gender', 'Please select a gender', 'required');
 
 echo $objForm->show();
 

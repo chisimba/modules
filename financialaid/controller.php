@@ -51,6 +51,7 @@ class financialaid extends controller
 		$this->objDBParttimejobs =& $this->getObject('dbparttimejobs');
 		$this->objDBStudentFamily =& $this->getObject('dbstudentfamily');
         $this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
+        $this->objFinancialAidReports = & $this->getObject('financialaidreports');
 
         $this->objLeftBar =& $this->getObject('financialaidleftblock');
         $this->objRightBar =& $this->getObject('applicationblocksearchbox');;
@@ -127,6 +128,8 @@ class financialaid extends controller
                  
             case 'saveapplication':
                 $fields = array('id' => $this->getParam('appid', ''),
+                            'year' => $this->getParam('year', ''),
+                            'semester' => $this->getParam('semester', ''),
                             'studentNumber' => $this->getParam('stdnum', ''),
                             'idNumber' => $this->getParam('idnum', ''),
                             'surname' => $this->getParam('surname', ''),
@@ -140,6 +143,14 @@ class financialaid extends controller
                             'hometelno' => $this->getParam('hometelno', ''),
                             'cellno' => $this->getParam('cellno', ''),
                             'supportingSelf' => $this->getParam('supportingself', ''),
+                            'studyAddress1' => $this->getParam('studyaddress1', ''),
+                            'studyAddress2' => $this->getParam('studyaddress2', ''),
+                            'studyAddress3' => $this->getParam('studyaddress3', ''),
+                            'studyPostcode' => $this->getParam('studypostcode', ''),
+                            'homeAddress1' => $this->getParam('homeaddress1', ''),
+                            'homeAddress2' => $this->getParam('homeaddress2', ''),
+                            'homeAddress3' => $this->getParam('homeaddress3', ''),
+                            'homePostcode' => $this->getParam('homepostcode', ''),
                             'dateCreated' => date("Y-m-d H:i:s"),
                             'creatorId' => $this->objUser->userId());
                 $this->objDBFinancialAidWS->saveApplication('add', $fields);
@@ -202,10 +213,20 @@ class financialaid extends controller
                 $this->objDBFinancialAidWS->saveStudentInFamily('add', $fields);
                 $this->setVar('appid', $this->getParam('appid', NULL));
                 return 'studentapplicationinfo_tpl.php';
+
+            //----------------
+            //Sponsor action
+			case 'searchsponsors':
+				return 'sponsorlist_tpl.php';
+			case 'showsponsor':
+				return 'sponsorinfo_tpl.php';
             //----------------
             //Test action
             case 'test':
                 return 'test_tpl.php';
+            case 'report':
+                $this->objFinancialAidReports->getMeansTestInput('report.csv', 2006);
+                return 'studentapplicationinfo_tpl.php';
 
     	}
 	}

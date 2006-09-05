@@ -3,7 +3,7 @@
 $details = "<h2>Search By Average Marks Range</h2>";
 $table =& $this->newObject('htmltable','htmlelements');
 
-$years = new dropdown('resultyear','studentenquiry');
+$years = new dropdown('resultyear');
 $date = date("Y");
 $start = date("Y");
 for($i = 0; $i < 16; $i ++){

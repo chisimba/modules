@@ -46,11 +46,23 @@ class financialaidcustomws extends object
     *
     * @param string $stdnum: The student in the database
     * @param string $year: The relevant year
-    * @return int: The number of pased subjects
+    * @return int: The number of passed subjects
     *
     */
     function getPassedSubjects($stdnum, $year){
   		return $this->objSoapClient->getPASSEDSUBJECTS($stdnum, $year);
+    }
+    
+    /**
+    *
+    * Function to retrieve sponsor details from the database
+    *
+    * @return array: The sponsor list
+    *
+    */
+    function getAllSponsors(){
+  		//return $this->objSoapClient->getAllBRSRY(0,0);
+        return NULL;
     }
 
 }

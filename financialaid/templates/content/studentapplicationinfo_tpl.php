@@ -18,6 +18,16 @@ $table =& $this->newObject('htmltable','htmlelements');
 
 if(count($stdinfo) > 0){
     $table->startRow();
+    $table->addCell($objLanguage->languagetext('word_year'));
+    $table->addCell($stdinfo[0]->year);
+    $table->endRow();
+
+    $table->startRow();
+    $table->addCell($objLanguage->languagetext('word_semester'));
+    $table->addCell($stdinfo[0]->semester);
+    $table->endRow();
+
+    $table->startRow();
     $table->addCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid'));
     $table->addCell($stdinfo[0]->studentNumber);
     $table->endRow();
@@ -90,6 +100,45 @@ if(count($stdinfo) > 0){
     }
    	$table->endRow();
 
+    $table->startRow();
+    $table->addCell($objLanguage->languagetext('mod_financialaid_studyaddress','financialaid'));
+    $table->addCell($stdinfo[0]->studyAddress1);
+    $table->endRow();
+
+    $table->startRow();
+    $table->addCell("&nbsp;&nbsp;&nbsp;".$objLanguage->languagetext('mod_financialaid_suburb','financialaid'));
+    $table->addCell($stdinfo[0]->studyAddress2);
+    $table->endRow();
+
+    $table->startRow();
+    $table->addCell("&nbsp;&nbsp;&nbsp;".$objLanguage->languagetext('mod_financialaid_city','financialaid'));
+    $table->addCell($stdinfo[0]->studyAddress3);
+    $table->endRow();
+
+    $table->startRow();
+    $table->addCell("&nbsp;&nbsp;&nbsp;".$objLanguage->languagetext('mod_financialaid_pcode','financialaid'));
+    $table->addCell($stdinfo[0]->studyPostcode);
+    $table->endRow();
+
+    $table->startRow();
+    $table->addCell($objLanguage->languagetext('mod_financialaid_homeaddress','financialaid'));
+    $table->addCell($stdinfo[0]->homeAddress1);
+    $table->endRow();
+
+    $table->startRow();
+    $table->addCell("&nbsp;&nbsp;&nbsp;".$objLanguage->languagetext('mod_financialaid_suburb','financialaid'));
+    $table->addCell($stdinfo[0]->homeAddress2);
+    $table->endRow();
+
+    $table->startRow();
+    $table->addCell("&nbsp;&nbsp;&nbsp;".$objLanguage->languagetext('mod_financialaid_city','financialaid'));
+    $table->addCell($stdinfo[0]->homeAddress3);
+    $table->endRow();
+
+    $table->startRow();
+    $table->addCell("&nbsp;&nbsp;&nbsp;".$objLanguage->languagetext('mod_financialaid_pcode','financialaid'));
+    $table->addCell($stdinfo[0]->homePostcode);
+    $table->endRow();
 }
 
 $content = "<center>".$details." ".$table->show(). "</center>";
