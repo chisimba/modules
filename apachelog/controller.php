@@ -12,6 +12,7 @@ class apachelog extends controller
     public $objlogparser;
     public $objFile;
     public $objGraph;
+    public $objdt;
 
     /**
      * Constructor method to instantiate objects and get variables
@@ -24,6 +25,7 @@ class apachelog extends controller
             $this->objlogparser = $this->getObject('logparser');
             $this->objDbApachelog = $this->getObject('dbapachelog');
             $this->objGraph = $this->getObject('graph');
+            $this->objdt = $this->getObject('datetime', 'utilities');
 
             //Get the activity logger class
             $this->objLog = $this->newObject('logactivity', 'logger');
@@ -78,13 +80,34 @@ class apachelog extends controller
                     break;
             case 'viewlogfile':
             	try {
+            		//set up the graph
             		$this->objGraph->setup(600, 600);
+            		//get the record count for the month
+            		$year = '2006';
+            		$month = '01';
+            		$month = $this->objdt->monthFull($month);
 
-            		$this->objGraph->addSimpleData(array('month' => 'june', 'hits' => 100), 'month', 'hits');
-            		$this->objGraph->addSimpleData(array('month' => 'july', 'hits' => 300), 'month', 'hits');
-            		$this->objGraph->addSimpleData(array('month' => 'august', 'hits' => 132), 'month', 'hits');
+            		$yearcount = $this->objDbApachelog->getYearStats($year);
+            		echo "Year count of hits is: " .$yearcount . "<br />";
+$start = $this->microtime_float();
+            		$montharr = array(1,2,3,4,5,6,7,8,9,10,11,12);
+            		foreach ($montharr as $months)
+            		{
 
-            		$this->objGraph->addPlotArea('bar', 'gray', 'red');
+            			$month = $this->objdt->monthFull($months);
+            			$hits = $this->objDbApachelog->getMonthlyStats($month . ' ' . $year);
+            			$this->objGraph->addSimpleData(array('month' => $month, 'hits' => $hits ), 'month', 'hits');
+
+            		}
+            		$end = $this->microtime_float();
+            		$total = $end - $start;
+            		echo "Graph with $yearcount rows was built in $total secs";
+            		$this->objGraph->addPlotArea('bar', 'black', 'yellow');
+            		//$this->objGraph->addPlotArea('smooth_area', 'black', 'red');
+            		//$this->objGraph->addPlotArea('smooth_line', 'black', 'blue');
+
+            		$this->objGraph->labelAxes('Month', 'Hits');
+
             		$this->objGraph->show('/var/www/graphicaltest.png');
 
 
@@ -95,5 +118,12 @@ class apachelog extends controller
             	}
         }
      }
+
+     public function microtime_float()
+    {
+        list($usec, $sec) = explode(" ", microtime());
+        return ((float)$usec + (float)$sec);
+    }
+
 }
 ?>

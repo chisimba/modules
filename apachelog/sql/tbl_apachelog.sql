@@ -20,6 +20,9 @@ $fields = array(
 	'log_date' => array(
 		'type' => 'text',
 		),
+	'log_ts' => array(
+		'type' => 'text',
+		),
 	'request' => array(
 		'type' => 'clob',
 		),

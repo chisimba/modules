@@ -43,12 +43,13 @@ class logparser extends object
 		$date = str_replace("]","",$date);
 
 		$date = $this->fixDates($date);
+		$ts = strtotime($date);
 		$request = $stuff[1];
 		$servercode = $stuff[2];
 		$requrl = $stuff[3];
 		$useragent = $stuff[5];
 
-		$requestarr = array('fullrecord' => $line, 'ip' => $ip, 'date' => $date, 'request' => $request, 'servercode' => $servercode, 'requrl' => $requrl, 'useragent' => $useragent);
+		$requestarr = array('fullrecord' => $line, 'ip' => $ip, 'date' => $date, 'ts' => $ts, 'request' => $request, 'servercode' => $servercode, 'requrl' => $requrl, 'useragent' => $useragent);
 
 		return $requestarr;
 	}

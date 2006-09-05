@@ -1,4 +1,5 @@
 <?php
+ini_set("max_execution_time", -1);
 // security check - must be included in all Chisimba scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
@@ -42,6 +43,7 @@ class dbapachelog extends dbtable
         parent::init('tbl_apachelog');
         //Instantiate the user object
         $this->objUser = $this->getObject('user', 'security');
+        $this->objdt = $this->getObject('datetime', 'utilities');
     }
 
     public function dumpData($dataArr)
@@ -50,6 +52,7 @@ class dbapachelog extends dbtable
     		'fullrecord' => $dataArr['fullrecord'],
     		'ip_addr' => $dataArr['ip'],
     		'log_date' => $dataArr['date'],
+    		'log_ts' => $dataArr['ts'],
     		'request' => $dataArr['request'],
     		'servercode' => $dataArr['servercode'],
     		'requrl' => $dataArr['requrl'],
@@ -63,6 +66,32 @@ class dbapachelog extends dbtable
     	//print_r($data);
     	$this->insert($data);
 
+    }
+
+    /**
+     * Method to get the month by month hits
+     *
+     * @access public
+     * @param
+     * @return void
+     */
+    public function getMonthlyStats($month)
+    {
+    	$startdate = strtotime($month);
+    	$datePlusOneMonth = mktime(0, 0, 0, date("m", $startdate)+1, date("d", $startdate),  date("Y", $startdate));
+		$thismonth = date("r", $datePlusOneMonth);
+		$enddate = strtotime($thismonth);
+
+    	$ret = $this->getRecordCount("WHERE log_ts <= '$enddate' AND log_ts >= '$startdate'");
+    	return $ret;
+    }
+
+    public function getYearStats($year)
+    {
+    	$startdate = strtotime('January' . $year);
+    	$end = strtotime('December' . $year);
+    	$ret = $this->getRecordCount("WHERE log_ts <= '$end' AND log_ts >= '$startdate'");
+    	return $ret;
     }
 
     /**

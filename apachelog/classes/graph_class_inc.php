@@ -10,6 +10,12 @@ class graph extends object
 	public $plotarea;
 	public $plot;
 	public $dataset;
+	//primary axes
+	public $xaxis;
+	public $yaxis;
+	//secondary axes
+	public $secXaxis;
+	public $secYaxis;
 
 	public function init()
 	{
@@ -36,6 +42,16 @@ class graph extends object
 		$this->plot->setLineColor($linecolour);
 		// set a standard fill style
 		$this->plot->setFillColor($fillcolour);
+	}
+
+	public function labelAxes($xaxistitle = "X - Values", $yaxistitle = "Y - Values")
+	{
+		$this->xaxis =& $this->plotarea->getAxis(IMAGE_GRAPH_AXIS_X);
+		$this->xaxis->setTitle($xaxistitle);
+		$this->yaxis =& $this->plotarea->getAxis(IMAGE_GRAPH_AXIS_Y);
+		$this->yaxis->setTitle($yaxistitle, 'vertical');
+		//$this->secYaxis =& $this->plotarea->getAxis(IMAGE_GRAPH_AXIS_Y_SECONDARY);
+		//$this->secYaxis->setTitle($secytitle, 'vertical2');
 	}
 
 	public function show($filename)
