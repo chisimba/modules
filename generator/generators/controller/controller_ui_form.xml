@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file is a code generation template for Chisimba controller class properties -->
+<chisimba_controller_ui_form>
+
+<form name="controller_generator">
+<action>buildcontroller</action>
+<page>buildcontroller</page>
+<items>
+
+<item name="modulecode">
+<type>textinput</type>
+<width>65</width>
+<label>Module code</label>
+<validation/>
+<description>Provide the input of the module code for the module for which a controller is being generated. </description>
+</item>
+
+<item name="modulename">
+<type>textinput</type>
+<width>65</width>
+<label>Module name</label>
+<validation/>
+<description>Provide the name of the module that you are generating as you wish it to appear on menus and in the module catalogue.</description>
+</item>
+
+<item name="moduledescription">
+<type>textinput</type>
+<width>65</width>
+<label>Module description</label>
+<validation/>
+<description>Provide description of the module that you are generating as you wish it to appear in the module catalogue. Please do not use place holder text, rather provide a full description that users can understand.</description>
+</item>
+
+<item name="dataclass">
+<type>textinput</type>
+<width>65</width>
+<label>Name of data access class</label>
+<validation/>
+<description>Provide the name of the main data access class to be used by this module (e.g. dbmydataclass).</description>
+</item>
+
+<item name="copyright">
+<type>textinput</type>
+<width>65</width>
+<label>Copyright holder</label>
+<validation/>
+<description>Provide the name of the copyright holder of the code that you are generating.</description>
+</item>
+
+<item name="submit_button">
+<type>submit</type>
+<width/>
+<label>Generate</label>
+<validation/>
+<description>Provide the input of the module code for the module for which
+a controller is being generated. </description>
+</item>
+
+</items>
+</form>
+
+</chisimba_controller_properties>
