@@ -13,11 +13,38 @@ if (($page['rght'] - $page['lft'] - 1) == 0) {
 }
 $deleteLink->link = 'Delete Page';
 
+$list = array();
+
+if ($this->isValid('addpage')) {
+    $list[] = $addLink->show();
+}
+
+if ($this->isValid('editpage')) {
+    $list[] = $editLink->show();
+}
+
+if ($this->isValid('deletepage')) {
+    $list[] = $deleteLink->show();
+}
+
+if (count($list) == 0) {
+    $middle = '&nbsp;';
+} else {
+    $middle = '';
+    $divider = '';
+    
+    foreach ($list as $item)
+    {
+        $middle .= $divider.$item;
+        $divider = ' / ';
+    }
+}
+
 
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 $table->addCell($prevPage, '33%', 'top');
-$table->addCell($addLink->show().' / '.$editLink->show().' / '.$deleteLink->show(), '33%', 'top', 'center');
+$table->addCell($middle, '33%', 'top', 'center');
 $table->addCell($nextPage, '33%', 'top', 'right');
 $table->endRow();
 
