@@ -109,6 +109,10 @@ if ($mode == 'edit') {
     $form->addToForm($hiddeninput->show());
 }
 
+// Rules
+
+$form->addRule('menutitle', 'This field is required', 'required');
+
 echo $form->show();
 
 ?>
