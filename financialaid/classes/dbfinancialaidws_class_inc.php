@@ -22,7 +22,7 @@ class dbfinancialaidws extends object
 	function init(){
 		parent::init();
         try{
-            $this->objSoapClient = new SoapClient("http://127.0.0.1/webservices/testws5.php?wsdl");
+            $this->objSoapClient = new SoapClient("http://127.0.0.1/webservices/testws12.php?wsdl");
         }catch(Exception $e){
             die($e->getMessage());
         }
@@ -39,15 +39,49 @@ class dbfinancialaidws extends object
     * @return array: The array of matching records from the database
     *
     */
-    function getApplication($value, $field = 'id'){
+    function getApplication($value, $field = 'id', $start = 0, $limit = 100000000000){
         try{
-  		    return $this->objSoapClient->getApplication($field, $value, 0, 0);
+  		    return $this->objSoapClient->getApplication($field, $value, $start, $limit);
         }catch(Exception $e){
           //  echo $e->getMessage();
             return NULL;
         }
     }
     
+    /**
+    *
+    * Function to retrieve number of application from the database
+    *
+    * @param string $value: The value to search for in the database
+    * @param string $field: The field to search on in the database
+    * @return array: The array of matching records from the database
+    *
+    */
+    function getApplicationCount($where = ''){
+        try{
+  		    return $this->objSoapClient->getApplicationCount($where);
+        }catch(Exception $e){
+          //  echo $e->getMessage();
+            return NULL;
+        }
+    }
+    /**
+    *
+    * Function to retrieve number of application from the database
+    *
+    * @param string $value: The value to search for in the database
+    * @param string $field: The field to search on in the database
+    * @return array: The array of matching records from the database
+    *
+    */
+    function getAppCount($field = '', $value = ''){
+        try{
+  		    return $this->objSoapClient->getAppCount($field, $value);
+        }catch(Exception $e){
+          //  echo $e->getMessage();
+            return NULL;
+        }
+    }
     /**
     *
     * Function to retrieve all application details from the database
@@ -57,9 +91,9 @@ class dbfinancialaidws extends object
     * @return array: The array of matching records from the database
     *
     */
-    function getAllApplications(){
+    function getAllApplications($start = 0, $limit = 100000000000){
         try{
-  		    return $this->objSoapClient->getAllApplications(0, 0);
+  		    return $this->objSoapClient->getAllApplications($start, $limit);
         }catch(Exception $e){
             echo $e->getMessage();
             return NULL;

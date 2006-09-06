@@ -91,7 +91,7 @@ class financialaid extends controller
 
 
 			case 'search':
-				$this->setVarByRef('stdinfo',$this->studentinfo->search());
+			//	$this->setVarByRef('stdinfo',$this->studentinfo->search());
 				return 'studentlist_tpl.php';
 
 			case 'searchapplications':

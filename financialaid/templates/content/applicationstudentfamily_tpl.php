@@ -35,8 +35,11 @@ if(count($parttimejobs) > 0){
         $table->addCell($data->studentNumber);
         $table->endRow();
     }
+    $content = $table->show();
+}else{
+    $content = "<div class='noRecordsMessage'>".$objLanguage->languagetext('mod_financialaid_nodependants','financialaid')."</div>";
 }
-$content = "<center>".$details." ".$table->show(). "</center>";
+$content = "<center>".$details." ".$content. "</center>";
 
 echo $content;
 ?>

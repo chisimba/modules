@@ -2,6 +2,7 @@
 $this->objLanguage = &$this->getObject('language','language');
 $this->objDBApplication =& $this->getObject('dbapplication');
 $this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
+$this->objFinancialAidCustomWS = & $this->getObject('financialaidcustomws');
 $this->objUser =& $this->getObject('user','security');
 
 $centersearch =& $this->getObject('blockcentersearchappbox');
@@ -12,12 +13,13 @@ $content = "";
 $oddEven = 'odd';
 $foundStudents = false;
 
-$stdnum = strtoupper($this->getParam('studentNumber'));
-$surname = $this->getParam('surname');
-$idnumber = strtoupper($this->getParam('idNumber'));
-$all = $this->getParam('all', NULL);
+$stdnum = $this->getParam('studentNumber', '');
+$surname = $this->getParam('surname', '');
+$idnumber = $this->getParam('idNumber', '');
+$all = $this->getParam('all', '');
 
-//$startat = $this->getParam('start_at', NULL);
+$startat = $this->getParam('startat', 0);
+$dispCount = 25;
 
 if (strlen($stdnum) > 0) {
     $wherefield = "studentNumber";
@@ -29,119 +31,140 @@ if (strlen($stdnum) > 0) {
     $wherefield = "idNumber";
     $wherevalue = $idnumber;
 }else{
-    $wherefield = NULL;
+    $wherefield = '';
 }
 
-if (!is_null($all)){
-    $stdinfo = $this->objDBFinancialAidWS->getAllApplications();
+if ($wherefield = ''){
+    $appCount = $this->objDBFinancialAidWS->getApplicationCount();
+}else{
+    $appCount = $this->objDBFinancialAidWS->getAppCount($wherefield, $wherevalue);
+}
+
+if ($appCount > 0){
+
+    //***start of pages***
+    $links_code = "";
+
+    $pageCount = $appCount/$dispCount;
+
+    $showlinks =& $this->getObject('htmlHeading','htmlelements');
+    if ($pageCount != floor($pageCount)) {
+       $pageCount = strtok(($pageCount+1), ".");
+    }
+
+    $viewpages = new link();
+    for ($n=0; $n < $pageCount; $n++) {
+        $appCountR = ($n * $dispCount);
+        $num = $n + 1;
+        if (strlen($all) > 0){
+            $viewpages->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$num, 'all'=>$all));
+        }else{
+            $viewpages->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$num, 'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
+        }
+        $viewpages->link = "$num";
+        $links_code .= $viewpages->show();
+        if ($num == $pageCount){
+            $links_code .= " ";
+        }else if($n < $pageCount){
+            $links_code .= " | ";
+        }
+    }
+    $endl = $startat + $dispCount;
+
+    $viewp ="";
+    $viewn ="";
+
+    if ($startat > 1){
+        $page = $this->getParam('pg');
+        $page -= 1;
+        $appCountR = $startat - $dispCount;
+
+        $viewprev = new link();
+        if (strlen($all) > 0){
+            $viewprev->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$page, 'all'=>$all));
+        }else{
+            $viewprev->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$page,  'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
+        }
+        $viewprev->link = $objLanguage->languagetext('mod_financialaid_prev','financialaid');
+        $viewp = $viewprev->show();
+    }
+    $vntest = $appCount - $dispCount;
+    if ($startat <= $vntest){
+        $page = $this->getParam('pg');
+        $page += 1;
+        $appCountR = $startat + $dispCount;
+
+        $viewnext = new link();
+        if (strlen($all) > 0){
+            $viewnext->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$page, 'all'=>$all));
+        }else{
+            $viewnext->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$page,  'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
+        }
+        $viewnext->link = $objLanguage->languagetext('mod_financialaid_next','financialaid');
+        $viewn = $viewnext->show();
+    }
+
+    $Rectbl =& $this->getObject('htmlTable','htmlelements');
+    if($endl == $dispCount)  {
+        $Rectbl->startRow();
+        $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_page','financialaid').":</b>", "20%");
+        $Rectbl->addCell("1");
+        $Rectbl->endRow();
+
+        $endl -= 1;
+            
+        $Rectbl->startRow();
+        $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_record','financialaid').":</b>",  "20%");
+        $Rectbl->addCell("0  to $endl");
+        $Rectbl->endRow();
+    }else{
+        $page = $this->getParam('pg');
+        $Rectbl->startRow();
+        $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_page','financialaid').":</b>", "20%");
+        $Rectbl->addCell("$page");
+        $Rectbl->endRow();
+        
+        $endl -= 1;
+        $Rectbl->startRow();
+        $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_record','financialaid').":</b>", "20%");
+        if($endl < $appCount){
+            $Rectbl->addCell("$startat to $endl");
+        }else {
+            $Rectbl->addCell("$startat to $appCount");
+        }
+        $Rectbl->endRow();
+    }
+    $Rectbl->startRow();
+    $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_resfnd','financialaid').":</b>", "20%");
+    $Rectbl->addCell("$appCount");
+    $Rectbl->endRow();
+    $records = $Rectbl->show();
+
+    $showlinks->str = "$viewp $links_code $viewn";
+    $showlinks->align="center";
+    
+    if($appCount < $dispCount){
+        $pagelinks = "";
+    }else{
+        $pagelinks = $records.$showlinks->show();
+    }
+    //***end of pagination***
+}else{
+    $pagelinks = "";
+    $records = "";
+}
+
+if (strlen($all) > 0){
+    $stdinfo = $this->objDBFinancialAidWS->getAllApplications($startat, $dispCount);
 }else{
     if(!is_null($wherefield)){
-        $stdinfo = $this->objDBFinancialAidWS->getApplication($wherevalue, $wherefield);
+        $stdinfo = $this->objDBFinancialAidWS->getApplication($wherevalue, $wherefield, $startat, $dispCount);
     }
 }
-//if (is_null($start_at)){
-//    $start_at = 0;
-//}
-//$where .= "LIMIT 25,".$start_at ;
 
-//$stdinfo = $this->objDBApplication->getAll($where);
 if (isset($stdinfo)){
   if(count($stdinfo) > 0){
-        $cnt = count($stdinfo);
-        //***start of pages***
-/*        echo($cnt);
-                //output code to var, then strip off last "|" separater
-                $ncnt = $cnt/25;
-                $showlinks =& $this->getObject('htmlHeading','htmlelements');
-               $ncnt = strtok(($ncnt+1), ".");
-                $links_code = "";
-                $ncnt = $cnt/25; //assumes $total_rows is a var
-                //get exact number of pages, divide by 30 and get remainder
-                if ($ncnt != floor($ncnt)) {
-                //sum has a remainder, so extra page needed for last rows
-                $ncnt = strtok(($ncnt+1), ".");
-                }
-                $links_code = "";
-                $viewpages = new link();
-                for ($n=0; $n<$ncnt; $n++) {
-                $cntr = ($n * 25) + 1;
-                $num = $n + 1;
-                $viewpages->href=$this->uri(array('action'=>'searchapplications','surname'=>$stdinfo[0]->SURNAM,'start_at'=>$cntr,'pg'=>$num));
-                $viewpages->link = "$num";
-                $links_code .= $viewpages->show();
-                if ($num==$ncnt)
-                  $links_code .= " ";
-                else if($n < $ncnt)
-                  $links_code .= " | ";
 
-                }
-                $startl = $this->getParam('start_at');
-                $endl = $startl + 25;
-                 $viewp ="";
-                 $viewn ="";
-
-                if ($startl > 1)
-                {   $page = $this->getParam('pg');
-                    $page = $page - 1;
-                    $cntr = $startl - 25;
-                    $viewpre = new link();
-                    $viewpre->href=$this->uri(array('action'=>'searchapplications','surname'=>$stdinfo[0]->SURNAM,'start_at'=>$cntr,'pg'=>$page));
-                    $viewpre->link = $objLanguage->languagetext('mod_financialaid_prev','financialaid');
-                    $viewp = $viewpre->show();
-                }
-                $vntest = $cnt - 25;
-                if ($startl <= $vntest)
-                {   $page = $this->getParam('pg');
-                    $page = $page + 1;
-                    $cntr = $startl + 25;
-                    $viewnext = new link();
-                    $viewnext->href=$this->uri(array('action'=>'searchapplications','surname'=>$stdinfo[0]->SURNAM,'start_at'=>$cntr,'pg'=>$page));
-                    $viewnext->link = $objLanguage->languagetext('mod_financialaid_next','financialaid');
-                    $viewn = $viewnext->show();
-                }
-                $Rectbl =& $this->getObject('htmlTable','htmlelements');
-              if($this->getParam('surname'))
-              {
-                if($endl==25)  {
-                $Rectbl->startRow();
-                    $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_page','financialaid').":</b>", "20%");
-                    $Rectbl->addCell("1");
-                    $Rectbl->endRow();
-                    $endl = $endl - 1;
-                    $Rectbl->startRow();
-                    $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_record','financialaid').":</b>",  "20%");
-                    $Rectbl->addCell("0  to $endl");
-                    $Rectbl->endRow();
-                   $stdinfo = $this->studentinfo->listsurn(0);
-                }
-                else {
-                   $page = $this->getParam('pg');
-                $Rectbl->startRow();
-                   $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_page','financialaid').":</b>", "20%");
-                   $Rectbl->addCell("$page");
-                   $Rectbl->endRow();
-                   $Rectbl->startRow();
-                   $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_record','financialaid').":</b>", "20%");
-                   $Rectbl->endRow();
-                   $Rectbl->startRow();
-                   if($endl < $cnt){
-                       $Rectbl->addCell("$startl to $endl");  }
-                   else {
-                       $Rectbl->addCell("startl to $cnt");  }
-                   $Rectbl->endRow();
-                   $stdinfo = $this->studentinfo->listsurn($startl);
-                }
-              }
-                $Rectbl->startRow();
-                $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_resfnd','financialaid').":</b>", "20%");
-                $Rectbl->addCell("$cnt");
-                $Rectbl->endRow();
-                $records = $Rectbl->show();
-                $showlinks->str = "$viewp $links_code $viewn";
-                $showlinks->align="center";
-                $pagelinks = $records.$showlinks->show();
-                //***end of pagination***
-        */
     $table =& $this->getObject('htmltable','htmlelements');
 
 	$table->width = '100%';
@@ -180,11 +203,7 @@ if (isset($stdinfo)){
 			$oddEven = $oddEven == 'odd'?'even':'odd';
 		}
         $foundStudents = TRUE;
-   /*     if ($ncnt <= 1){
-            $pagelinks = "";
-            $records = "";
-        }
-        */
+
         $content = $table->show();
 	}
   }

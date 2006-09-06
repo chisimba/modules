@@ -52,7 +52,7 @@ class financialaidleftblock extends object
         if(!is_null($studentid)){
             $appinfo = $this->objDBFinancialAidWS->getApplication($studentid, 'studentNumber');
             if (count($appinfo) > 0){
-                $appid = $appinfo[0]->appidber;
+                $appid = $appinfo[0]->id;
             }
         }else{
             $appinfo = $this->objDBFinancialAidWS->getApplication($appid);

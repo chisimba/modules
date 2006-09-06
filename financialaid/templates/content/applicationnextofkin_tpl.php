@@ -83,10 +83,13 @@ if(count($nextofkin) > 0){
         $table->addCell($objLanguage->languagetext('mod_financialaid_emptelno','financialaid'));
         $table->addCell($data->employersTelNo);
         $table->endRow();
+        $content = $table->show();
     }
+}else{
+    $content = "<div class='noRecordsMessage'>".$objLanguage->languagetext('mod_financialaid_nonextofkin','financialaid')."</div>";
 }
 
-$content = "<center>".$details." ".$table->show(). "</center>";
+$content = "<center>".$details." ".$content. "</center>";
 
 echo $content;
 ?>
