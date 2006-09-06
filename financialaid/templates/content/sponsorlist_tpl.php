@@ -2,127 +2,143 @@
 $this->objLanguage = &$this->getObject('language','language');
 $this->objUser =& $this->getObject('user','security');
 $this->objFinancialAidCustomWS =& $this->getObject('financialaidcustomws','financialaid');
+$this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
 
 $content = "";
 $oddEven = 'odd';
-$sponsors = $this->objFinancialAidCustomWS->getAllSponsors();
-$pagelinks = '';
-if(isset($sponsors)){
-   if(is_array($sponsors)){
-        $cnt = count($sponsors);
-        /*
-        //***start of pages***
-                //output code to var, then strip off last "|" separater
-                $ncnt = $cnt/25;
-                $showlinks =& $this->getObject('htmlHeading','htmlelements');
-               $ncnt = strtok(($ncnt+1), ".");
-                $links_code = "";
-                $ncnt = $cnt/25; //assumes $total_rows is a var
-                //get exact number of pages, divide by 30 and get remainder
-                if ($ncnt != floor($ncnt)) {
-                //sum has a remainder, so extra page needed for last rows
-                $ncnt = strtok(($ncnt+1), ".");
-                }
-                $links_code = "";
-                $viewpages = new link();
-                for ($n=0; $n<$ncnt; $n++) {
-                $cntr = ($n * 25) + 1;
-                $num = $n + 1;
-                $viewpages->href=$this->uri(array('action'=>'search','surname'=>$sponsors[0]->SURNAM,'start_at'=>$cntr,'pg'=>$num));
-                $viewpages->link = "$num";
-                $links_code .= $viewpages->show();
-                if ($num==$ncnt)
-                  $links_code .= " ";
-                else if($n < $ncnt)
-                  $links_code .= " | ";
 
-                }
-                $startl = $this->getParam('start_at');
-                $endl = $startl + 25;
-                 $viewp ="";
-                 $viewn ="";
 
-                if ($startl > 1)
-                {   $page = $this->getParam('pg');
-                    $page = $page - 1;
-                    $cntr = $startl - 25;
-                    $viewpre = new link();
-                    $viewpre->href=$this->uri(array('action'=>'search','surname'=>$sponsors[0]->SURNAM,'start_at'=>$cntr,'pg'=>$page));
-                    $viewpre->link = $objLanguage->languagetext('mod_financialaid_prev','financialaid');
-                    $viewp = $viewpre->show();
-                }
-                $vntest = $cnt - 25;
-                if ($startl <= $vntest)
-                {   $page = $this->getParam('pg');
-                    $page = $page + 1;
-                    $cntr = $startl + 25;
-                    $viewnext = new link();
-                    $viewnext->href=$this->uri(array('action'=>'search','surname'=>$sponsors[0]->SURNAM,'start_at'=>$cntr,'pg'=>$page));
-                    $viewnext->link = $objLanguage->languagetext('mod_financialaid_next','financialaid');
-                    $viewn = $viewnext->show();
-                }
-                $Rectbl =& $this->getObject('htmlTable','htmlelements');
-                $Rectbl->startRow();
-              if($this->getParam('surname'))
-              {
-                if($endl==25)  {
-                    $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_page','financialaid').":</b>", "20%");
-                    $Rectbl->addCell("1");
-                    $Rectbl->endRow();
-                    $endl = $endl - 1;
-                    $Rectbl->startRow();
-                    $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_record','financialaid').":</b>",  "20%");
-                    $Rectbl->addCell("0  to $endl");
-                    $Rectbl->endRow();
-                   $sponsors = $this->studentinfo->listsurn(0);
-                }
-                else {
-                   $page = $this->getParam('pg');
-                   $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_page','financialaid').":</b>", "20%");
-                   $Rectbl->addCell("$page");
-                   $Rectbl->endRow();
-                   $Rectbl->startRow();
-                   $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_record','financialaid').":</b>", "20%");
-                   $Rectbl->endRow();
-                   $Rectbl->startRow();
-                   if($endl < $cnt){
-                       $Rectbl->addCell("$startl to $endl");  }
-                   else {
-                       $Rectbl->addCell("startl to $cnt");  }
-                   $Rectbl->endRow();
-                   $sponsors = $this->studentinfo->listsurn($startl);
-                }
-              }
-                $Rectbl->startRow();
-                $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_resfnd','financialaid').":</b>", "20%");
-                $Rectbl->addCell("$cnt");
-                $Rectbl->endRow();
-                $records = $Rectbl->show();
-                $showlinks->str = "$viewp $links_code $viewn";
-                $showlinks->align="center";
-                $pagelinks = "<h2>".$objLanguage->languagetext('mod_financialaid_respage','financialaid')."</h2>".$records.$showlinks->show();
-                //***end of pagination***
-              */
+$startat = $this->getParam('startat', 0);
+$dispCount = 25;
+
+
+$sponsorCount = $this->objFinancialAidCustomWS->getsponsorCount();
+
+if ($sponsorCount > 0){
+
+    //***start of pages***
+    $links_code = "";
+
+    $pageCount = $sponsorCount/$dispCount;
+
+    $showlinks =& $this->getObject('htmlHeading','htmlelements');
+    if ($pageCount != floor($pageCount)) {
+       $pageCount = strtok(($pageCount+1), ".");
+    }
+
+    $viewpages = new link();
+    for ($n=0; $n < $pageCount; $n++) {
+        $sponsorCountR = ($n * $dispCount);
+        $num = $n + 1;
+        $viewpages->href=$this->uri(array('action'=>'searchsponsors','startat'=>$sponsorCountR,'pg'=>$num, 'all'=>$all));
+        $viewpages->link = "$num";
+        $links_code .= $viewpages->show();
+        if ($num == $pageCount){
+            $links_code .= " ";
+        }else if($n < $pageCount){
+            $links_code .= " | ";
+        }
+    }
+    $endl = $startat + $dispCount;
+
+    $viewp ="";
+    $viewn ="";
+
+    if ($startat > 1){
+        $page = $this->getParam('pg');
+        $page -= 1;
+        $sponsorCountR = $startat - $dispCount;
+
+        $viewprev = new link();
+        $viewprev->href=$this->uri(array('action'=>'searchsponsors','startat'=>$sponsorCountR,'pg'=>$page, 'all'=>$all));
+        $viewprev->link = $objLanguage->languagetext('mod_financialaid_prev','financialaid');
+        $viewp = $viewprev->show();
+    }
+    $vntest = $sponsorCount - $dispCount;
+    if ($startat <= $vntest){
+        $page = $this->getParam('pg');
+        $page += 1;
+        $sponsorCountR = $startat + $dispCount;
+
+        $viewnext = new link();
+        $viewnext->href=$this->uri(array('action'=>'searchsponsors','startat'=>$sponsorCountR,'pg'=>$page, 'all'=>$all));
+        $viewnext->link = $objLanguage->languagetext('mod_financialaid_next','financialaid');
+        $viewn = $viewnext->show();
+    }
+
+    $Rectbl =& $this->getObject('htmlTable','htmlelements');
+    if($endl == $dispCount)  {
+        $Rectbl->startRow();
+        $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_page','financialaid').":</b>", "20%");
+        $Rectbl->addCell("1");
+        $Rectbl->endRow();
+
+        $endl -= 1;
+
+        $Rectbl->startRow();
+        $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_record','financialaid').":</b>",  "20%");
+        $Rectbl->addCell("0  to $endl");
+        $Rectbl->endRow();
+    }else{
+        $page = $this->getParam('pg');
+        $Rectbl->startRow();
+        $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_page','financialaid').":</b>", "20%");
+        $Rectbl->addCell("$page");
+        $Rectbl->endRow();
+
+        $endl -= 1;
+        $Rectbl->startRow();
+        $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_record','financialaid').":</b>", "20%");
+        if($endl < $sponsorCount){
+            $Rectbl->addCell("$startat to $endl");
+        }else {
+            $Rectbl->addCell("$startat to $sponsorCount");
+        }
+        $Rectbl->endRow();
+    }
+    $Rectbl->startRow();
+    $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_resfnd','financialaid').":</b>", "20%");
+    $Rectbl->addCell("$sponsorCount");
+    $Rectbl->endRow();
+    $records = $Rectbl->show();
+
+    $showlinks->str = "$viewp $links_code $viewn";
+    $showlinks->align="center";
+
+    if($sponsorCount < $dispCount){
+        $pagelinks = "";
+    }else{
+        $pagelinks = $records.$showlinks->show();
+    }
+    //***end of pagination***
+}else{
+    $pagelinks = "";
+    $records = "";
+}
+
+var_dump($startat);
+var_dump($dispCount);
+
+$sponsors = $this->objFinancialAidCustomWS->getAllSponsors('BRSCDE', $startat, $dispCount);
+
+if(is_array($sponsors)){
+   if(count($sponsors) > 0){
         $table =& $this->getObject('htmltable','htmlelements');
 
-	$table->width = '100%';
-	$table->cellpadding = 5;
-	$table->cellspacing = 2;
+    	$table->width = '100%';
+    	$table->cellpadding = 5;
+    	$table->cellspacing = 2;
 
-	$table->startHeaderRow();
-	$table->addHeaderCell('Bursor Code');
-	$table->addHeaderCell('Bursor');
-	$table->addHeaderCell('Category');
-	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_details','financialaid'));
+    	$table->startHeaderRow();
+    	$table->addHeaderCell('Bursor Code');
+    	$table->addHeaderCell('Bursor');
+    	$table->addHeaderCell('Category');
+    	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_details','financialaid'));
+    	$table->endHeaderRow();
 
-	$table->endHeaderRow();
-
-
-
-	if(is_array($sponsors)){
         for($i = 0; $i < count($sponsors); $i++)
         {
-           $table->row_attributes = " class = \"$oddEven\"";
+            $table->row_attributes = " class = \"$oddEven\"";
 
       		$viewdetails = new link();
 			$viewdetails->href=$this->uri(array('action'=>'showsponsor','id'=>$sponsors[$i]->BRSCDE));
@@ -130,23 +146,15 @@ if(isset($sponsors)){
 
 			$table->startRow();
 			$table->addCell($sponsors[$i]->BRSCDE);
-			$table->addCell($sponsors[$i]->XTRALNGDSC);
+			$table->addCell(htmlspecialchars($sponsors[$i]->XTRLNGDSC));
 			$table->addCell($sponsors[$i]->BRSCTGY);
 			$table->addCell($viewdetails->show());
-
-			$table->endRow();
+    		$table->endRow();
 
 			$oddEven = $oddEven == 'odd'?'even':'odd';
 		}
 	}
     $content = $table->show();
- /*  if ($ncnt <= 1)
-    {
-        $pagelinks = "";
-        $records = "";
-    }
-    */
-  }
 }
 
 

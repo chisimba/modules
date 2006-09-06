@@ -21,9 +21,7 @@ class financialaidcustomws extends object
     
 	function init(){
 		parent::init();
-        $this->NAMESPACE="http://172.16.65.134/webserviceDEV/finaid5.php?wsdl";
-        $this->objSoapClient = new SoapClient($this->NAMESPACE);
-        
+        $this->objSoapClient = new SoapClient('http://172.16.65.134/webserviceDEV/finaid7.php?wsdl');
     }
 
 
@@ -84,9 +82,8 @@ class financialaidcustomws extends object
     * @return array: The sponsor list
     *
     */
-    function getAllSponsors(){
-  		return $this->objSoapClient->getAllBRSRY(0,0);
-        return NULL;
+    function getAllSponsors($orderby = 'BRSCDE', $start = 0, $offset = 0){
+  		return $this->objSoapClient->getAllBRSRY($orderby,$start,$start + $offset);
     }
 
 }

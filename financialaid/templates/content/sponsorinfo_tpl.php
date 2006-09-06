@@ -2,11 +2,10 @@
 $this->objLanguage = &$this->getObject('language','language');
 $this->objUser =& $this->getObject('user','security');
 $this->objDBFinAid =& $this->getObject('dbfinaid','financialaid');
-$sponsorid = getParam('id', NULL);
+$sponsorid = $this->getParam('id', NULL);
 $content = "";
 $oddEven = 'odd';
 $sponsors = $this->objDBFinAid->getSponsor($sponsorid);
-
 
 if(isset($sponsors)){
    if(count($sponsors) > 0){
@@ -20,49 +19,49 @@ if(isset($sponsors)){
 
 	$table->startRow();
     $table->addCell('Bursor Code');
-    $table->addCell($sponsors[$i]->BRSCDE);
+    $table->addCell($sponsors[0]->BRSCDE);
 	$table->endRow();
 	$oddEven = $oddEven == 'odd'?'even':'odd';
  
 	$table->startRow();
     $table->addCell('Bursor');
-    $table->addCell($sponsors[$i]->XTRALNGDSC);
+    $table->addCell(htmlspecialchars($sponsors[0]->XTRLNGDSC));
 	$table->endRow();
 	$oddEven = $oddEven == 'odd'?'even':'odd';
 
     $table->startRow();
     $table->addCell('Contact');
-    $table->addCell($sponsors[$i]->XXLNGDSC);
+    $table->addCell(htmlspecialchars($sponsors[0]->XXLNGDSC));
 	$table->endRow();
 	$oddEven = $oddEven == 'odd'?'even':'odd';
 
 	$table->startRow();
     $table->addCell('Category');
-    $table->addCell($sponsors[$i]->BRSCTGY);
+    $table->addCell($sponsors[0]->BRSCTGY);
 	$table->endRow();
 	$oddEven = $oddEven == 'odd'?'even':'odd';
  
 	$table->startRow();
     $table->addCell('Address 1');
-    $table->addCell($sponsors[$i]->AD1);
+    $table->addCell($sponsors[0]->AD1);
 	$table->endRow();
 	$oddEven = $oddEven == 'odd'?'even':'odd';
 
 	$table->startRow();
     $table->addCell('Address 2');
-    $table->addCell($sponsors[$i]->AD2);
+    $table->addCell($sponsors[0]->AD2);
 	$table->endRow();
 	$oddEven = $oddEven == 'odd'?'even':'odd';
 
 	$table->startRow();
     $table->addCell('Address 3');
-    $table->addCell($sponsors[$i]->AD3);
+    $table->addCell($sponsors[0]->AD3);
 	$table->endRow();
 	$oddEven = $oddEven == 'odd'?'even':'odd';
 
 	$table->startRow();
     $table->addCell('Postcode');
-    $table->addCell($sponsors[$i]->PSTCDE);
+    $table->addCell($sponsors[0]->PSTCDE);
 	$table->endRow();
 	$oddEven = $oddEven == 'odd'?'even':'odd';
 
