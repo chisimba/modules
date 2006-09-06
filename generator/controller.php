@@ -83,6 +83,39 @@ class generator extends controller
     /*------------- BEGIN: Set of methods to replace case selection ------------*/
     
     /**
+    *
+    * Method to get the User Interface for a particular generator
+    * The user Interface can be a class or a wizard
+    *
+    * @param string $generator The name of the generator we are working with
+    * @access Public
+    *
+    */
+    public function getUi($generator)
+    {
+    
+    }
+    
+    /**
+    *
+    * Method to process the results of form input for a particular generator
+    *
+    * @param string $generator The name of the generator we are working with
+    * @access Public
+    *
+    */
+    public function processResults($generator)
+    {
+    
+    }
+    
+    
+    
+    
+    
+    
+    
+    /**
     * 
     * Method corresponding to the start action. It presents a screen for use in 
     * designing the module being generated.
