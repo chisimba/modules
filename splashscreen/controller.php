@@ -59,7 +59,7 @@ class splashscreen extends controller
         $this->setVar('pageSuppressToolbar', TRUE);
 
         //Suppress IM
-        $this->setVar('pageSuppressToolbar', TRUE);
+        $this->setVar('pageSuppressBanner', TRUE);
 
         // Set Layout Template To Null
         $this->setLayoutTemplate(NULL);
