@@ -95,9 +95,6 @@ class generator extends controller
     {
     	
     }
-    }
-    
-    }
     
     /**
     *
