@@ -5,6 +5,7 @@ if (!isset($appid)){
 $this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
 
 $stdinfo = $this->objDBFinancialAidWS->getApplication($appid);
+
 $stname = $stdinfo[0]->firstNames;
 $stsname = $stdinfo[0]->surname;
 

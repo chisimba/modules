@@ -22,7 +22,7 @@ class dbfinancialaidws extends object
 	function init(){
 		parent::init();
         try{
-            $this->objSoapClient = new SoapClient("http://127.0.0.1/webservices/testws12.php?wsdl");
+            $this->objSoapClient = new SoapClient("http://172.16.65.128/webservices/testws12.php?wsdl");
         }catch(Exception $e){
             die($e->getMessage());
         }
