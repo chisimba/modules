@@ -14,7 +14,7 @@ $foundStudents = false;
 
 
 $stdnum = $this->getParam('studentNumber', '');
-$surname = $this->getParam('surname', '');
+$surname = strtoupper($this->getParam('surname', ''));
 $idnumber = $this->getParam('idNumber', '');
 
 if (strlen($stdnum) > 0) {

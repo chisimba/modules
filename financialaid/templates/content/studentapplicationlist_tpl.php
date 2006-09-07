@@ -14,27 +14,26 @@ $oddEven = 'odd';
 $foundStudents = false;
 
 $stdnum = $this->getParam('studentNumber', '');
-$surname = $this->getParam('surname', '');
+$surname = strtoupper($this->getParam('surname', ''));
 $idnumber = $this->getParam('idNumber', '');
 $all = $this->getParam('all', '');
 
 $startat = $this->getParam('startat', 0);
 $dispCount = 25;
 
+$wherefield = '';
 if (strlen($stdnum) > 0) {
     $wherefield = "studentNumber";
     $wherevalue = $stdnum;
-}else if (strlen($surname) > 0){
+}elseif (strlen($surname) > 0){
     $wherefield = "surname";
     $wherevalue = $surname;
-}else if (strlen($idnumber) > 0){
+}elseif (strlen($idnumber) > 0){
     $wherefield = "idNumber";
     $wherevalue = $idnumber;
-}else{
-    $wherefield = '';
 }
 
-if ($wherefield = ''){
+if ($wherefield == ''){
     $appCount = $this->objDBFinancialAidWS->getApplicationCount();
 }else{
     $appCount = $this->objDBFinancialAidWS->getAppCount($wherefield, $wherevalue);
@@ -157,7 +156,7 @@ if ($appCount > 0){
 if (strlen($all) > 0){
     $stdinfo = $this->objDBFinancialAidWS->getAllApplications($startat, $dispCount);
 }else{
-    if(!is_null($wherefield)){
+    if(strlen($wherefield) > 0){
         $stdinfo = $this->objDBFinancialAidWS->getApplication($wherevalue, $wherefield, $startat, $dispCount);
     }
 }

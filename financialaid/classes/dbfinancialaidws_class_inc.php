@@ -41,7 +41,8 @@ class dbfinancialaidws extends object
     */
     function getApplication($value, $field = 'id', $start = 0, $limit = 100000000000){
         try{
-  		    return $this->objSoapClient->getApplication($field, $value, $start, $limit);
+            return $this->objSoapClient->getApplication($field, $value, $start, $limit);
+
         }catch(Exception $e){
           //  echo $e->getMessage();
             return NULL;
