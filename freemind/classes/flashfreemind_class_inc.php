@@ -79,11 +79,19 @@ class flashfreemind extends object
     }
     
     /**
+    *
+    */
+    function getMindmapScript()
+    {
+        return $this->getJavascriptFile('flashobject.js', 'freemind');
+    }   
+    
+    /**
     * Method to show the Flash Freemind Object
     */
     function show()
     {
-        $this->appendArrayVar('headerParams', $this->getJavascriptFile('flashobject.js', 'freemind'));
+        $this->appendArrayVar('headerParams', $this->getMindmapScript());
         
         return '<div id="flashcontent_'.$this->mindMapId.'" style="width:'.$this->width.'; height:'.$this->height.'">
 		 Flash plugin or Javascript are turned off.
