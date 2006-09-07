@@ -17,18 +17,18 @@ $stdnum = $this->getParam('studentNumber', '');
 $surname = strtoupper($this->getParam('surname', ''));
 $idnumber = $this->getParam('idNumber', '');
 
+$wherefield = '';
 if (strlen($stdnum) > 0) {
     $wherefield = "STDNUM";
     $wherevalue = $stdnum;
-}else if (strlen($surname) > 0){
+}elseif (strlen($surname) > 0){
     $wherefield = "SURNAM";
     $wherevalue = $surname;
-}else if (strlen($idnumber) > 0){
+}elseif (strlen($idnumber) > 0){
     $wherefield = "IDNUM";
     $wherevalue = $idnumber;
-}else{
-    $wherefield = '';
 }
+
 
 if ($wherefield == ''){
     $stdCount = 0;

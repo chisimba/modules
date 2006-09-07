@@ -116,9 +116,6 @@ if ($sponsorCount > 0){
     $records = "";
 }
 
-var_dump($startat);
-var_dump($dispCount);
-
 $sponsors = $this->objFinancialAidCustomWS->getAllSponsors('BRSCDE', $startat, $dispCount);
 
 if(is_array($sponsors)){

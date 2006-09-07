@@ -20,6 +20,7 @@ class financialaidreports extends object
     var $objDBFinancialAidWS;
     var $objFinancialAidCustomWS;
     var $objUser;
+    var $objStudyFeeCalc;
 
     
 	function init(){
@@ -30,6 +31,8 @@ class financialaidreports extends object
         $this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
         $this->objFinancialAidCustomWS = & $this->getObject('financialaidcustomws');
         $this->objUser =& $this->getObject('user','security');
+        $this->objStudyFeeCalc =& $this->getObject('studyfeecalc','financialaid');
+
 	}
 
 
@@ -110,8 +113,10 @@ class financialaidreports extends object
                     }
                     $contents .= ",".$data->homePostcode;
                     $contents .= ",".$this->objFinancialAidCustomWS->getAvgMark($data->studentNumber, $year - 1);
-                    $fees = 0;
-                    $hostelfees = 0;
+                    $registrationfee = $this->objStudyFeeCalc->getRegistrationFee($stdnum);
+                    $tuitionfee = $this->objStudyFeeCalc->getTuitionFee($stdnum);
+                    $hostelfees = $this->objStudyFeeCalc->getHostelFee($stdnum);
+                    $fees = $registrationfee + $tuitionfee;
                     $altfunding = 0;
        			    $contents .= ",".$fees;
                     $contents .= ",".$hostelfees;

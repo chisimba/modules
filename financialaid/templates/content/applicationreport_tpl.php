@@ -102,9 +102,11 @@ if (isset($appinfo)){
             }
 			$table->addCell($data->homePostcode);
             $table->addCell($this->objFinancialAidCustomWS->getAvgMark($data->studentNumber, $year - 1));
-            $fees = 0;
-            $hostelfees = 0;
             $altfunding = 0;
+          //  $registrationfee = $this->objStudyFeeCalc->getRegistrationFee($stdnum);
+          //  $tuitionfee = $this->objStudyFeeCalc->getTuitionFee($stdnum);
+          //  $hostelfees = $this->objStudyFeeCalc->getHostelFee($stdnum);
+          //  $fees = $registrationfee + $tuitionfee;
 			$table->addCell($fees);
 			$table->addCell($hostelfees);
 			$table->addCell($altfunding);

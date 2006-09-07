@@ -15,13 +15,12 @@ class financialaidcustomws extends object
 {
 
  //Web services variables
-    var $NAMESPACE;
     var $objSoapClient;
 
     
 	function init(){
 		parent::init();
-        $this->objSoapClient = new SoapClient('http://172.16.65.134/webserviceDEV/finaid7.php?wsdl');
+        $this->objSoapClient = new SoapClient('http://172.16.65.134/webserviceDEV/finaid8.php?wsdl');
     }
 
 
@@ -48,6 +47,27 @@ class financialaidcustomws extends object
     */
     function getStudentCount($value, $field = 'STDNUM'){
   		return $this->objSoapClient->getSTDETCOUNT($field, $value);
+    }
+    /**
+    *
+    * Function to retrieve avg mark for student from the database
+    *
+    * @param string $stdnum: The student in the database
+    * @param string $year: The relevant year
+    * @return int: The avg of the students marks
+    *
+    */
+    /**
+    *
+    * Function to retrieve avg mark for student from the database
+    *
+    * @param string $stdnum: The student in the database
+    * @param string $year: The relevant year
+    * @return int: The avg of the students marks
+    *
+    */
+    function getStudentAccount($stdnum, $type){
+  		return $this->objSoapClient->getSTACC($stdnum, $type, 0, 100000000000);
     }
     /**
     *

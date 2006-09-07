@@ -15,7 +15,6 @@ class dbfinancialaidws extends object
 {
 
  //Web services variables
-    var $NAMESPACE;
     var $objSoapClient;
 
     

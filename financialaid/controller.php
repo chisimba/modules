@@ -45,12 +45,12 @@ class financialaid extends controller
 		$this->loadclass('link','htmlelements');
 		$this->loadclass('dropdown','htmlelements');
 		$this->loadclass('radio','htmlelements');
-		$this->objDBApplication =& $this->getObject('dbapplication');
-		$this->objDBNextofkin =& $this->getObject('dbnextofkin');
-		$this->objDBDependants =& $this->getObject('dbdependants');
-		$this->objDBParttimejobs =& $this->getObject('dbparttimejobs');
-		$this->objDBStudentFamily =& $this->getObject('dbstudentfamily');
-        $this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
+	//	$this->objDBApplication =& $this->getObject('dbapplication');
+	//	$this->objDBNextofkin =& $this->getObject('dbnextofkin');
+	//	$this->objDBDependants =& $this->getObject('dbdependants');
+	//	$this->objDBParttimejobs =& $this->getObject('dbparttimejobs');
+	//	$this->objDBStudentFamily =& $this->getObject('dbstudentfamily');
+   //     $this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
         $this->objFinancialAidReports = & $this->getObject('financialaidreports');
 
         $this->objLeftBar =& $this->getObject('financialaidleftblock');
