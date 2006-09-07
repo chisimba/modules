@@ -10,7 +10,7 @@ class foafcreator extends object
 	/**
      * @var object XML_Tree object containing the FOAF RDF/XML Tree
      */
-    public $foaf = null;
+    public $foaftree = null;
 
     /**
      * @var array Contains all namespaces in use
@@ -122,16 +122,16 @@ class foafcreator extends object
         $this->agent = $agent_type;
         switch ($agent_type) {
             case 'group':
-                $this->foaf =& $this->xml_tree->addRoot('foaf:Group');
+                $this->foaftree =& $this->xml_tree->addRoot('foaf:Group');
                 break;
             case 'organization':
-                $this->foaf =& $this->xml_tree->addRoot('foaf:Organization');
+                $this->foaftree =& $this->xml_tree->addRoot('foaf:Organization');
                 break;
             case 'agent':
-                $this->foaf =& $this->xml_tree->addRoot('foaf:Agent');
+                $this->foaftree =& $this->xml_tree->addRoot('foaf:Agent');
             case 'person':
             default:
-                $this->foaf =& $this->xml_tree->addRoot('foaf:Person');
+                $this->foaftree =& $this->xml_tree->addRoot('foaf:Person');
                 break;
         }
     }
@@ -147,7 +147,7 @@ class foafcreator extends object
      */
     public function setName($name)
     {
-        $this->children['name'] =& $this->foaf->addChild('foaf:name', $name);
+        $this->children['name'] =& $this->foaftree->addChild('foaf:name', $name);
     }
 
     /**
@@ -160,7 +160,7 @@ class foafcreator extends object
      */
     public function addDepiction($uri)
     {
-        $this->children['depiction'][] =& $this->foaf->addChild('foaf:depiction', '', array('rdf:resource' => $uri));
+        $this->children['depiction'][] =& $this->foaftree->addChild('foaf:depiction', '', array('rdf:resource' => $uri));
     }
 
     /**
@@ -173,7 +173,7 @@ class foafcreator extends object
      */
     public function addFundedBy($uri)
     {
-        $this->children['fundedby'][] =& $this->foaf->addChild('foaf:fundedBy', '', array('rdf:resource' => $uri));
+        $this->children['fundedby'][] =& $this->foaftree->addChild('foaf:fundedBy', '', array('rdf:resource' => $uri));
     }
 
     /**
@@ -186,7 +186,7 @@ class foafcreator extends object
      */
     public function addLogo($uri)
     {
-        $this->children['logo'][] =& $this->foaf->addChild('foaf:logo', '', array('rdf:resource' => $uri));
+        $this->children['logo'][] =& $this->foaftree->addChild('foaf:logo', '', array('rdf:resource' => $uri));
     }
 
     /**
@@ -201,7 +201,7 @@ class foafcreator extends object
      */
     public function addPage($document_uri,$title = null,$description = null)
     {
-        $page =& $this->foaf->addChild('foaf:page');
+        $page =& $this->foaftree->addChild('foaf:page');
         $document =& $page->addChild('foaf:Document', '', array('rdf:about' => $document_uri));
         if(!is_null($title)) {
             $document->addChild('dc:title', $title);
@@ -222,7 +222,7 @@ class foafcreator extends object
      */
     public function addTheme($uri)
     {
-        $this->children['theme'][] =& $this->foaf->addChild('foaf:theme', '', array('rdf:resource' => $uri));
+        $this->children['theme'][] =& $this->foaftree->addChild('foaf:theme', '', array('rdf:resource' => $uri));
     }
 
     /**
@@ -235,7 +235,7 @@ class foafcreator extends object
      */
     public function setTitle($title)
     {
-        $this->children['title'] =& $this->foaf->addChild('foaf:title', $title);
+        $this->children['title'] =& $this->foaftree->addChild('foaf:title', $title);
     }
 
     /**
@@ -248,7 +248,7 @@ class foafcreator extends object
      */
     public function addNick($nick)
     {
-        $this->children['nick'][] =& $this->foaf->addChild('foaf:nick', $nick);
+        $this->children['nick'][] =& $this->foaftree->addChild('foaf:nick', $nick);
     }
 
     /**
@@ -261,7 +261,7 @@ class foafcreator extends object
      */
     public function setGivenName($given_name)
     {
-        $this->children['givenname'] =& $this->foaf->addChild('foaf:givenname', $given_name);
+        $this->children['givenname'] =& $this->foaftree->addChild('foaf:givenname', $given_name);
     }
 
     /**
@@ -277,7 +277,7 @@ class foafcreator extends object
         if (substr($phone,0,4) != 'tel:') {
             $phone = 'tel:' .$phone;
         }
-        $this->children['phone'][] =& $this->foaf->addChild('foaf:phone', '', array('rdf:resource' => $phone));
+        $this->children['phone'][] =& $this->foaftree->addChild('foaf:phone', '', array('rdf:resource' => $phone));
     }
 
     /**
@@ -302,9 +302,9 @@ class foafcreator extends object
             if ($is_sha1_hash == false) {
                 $mbox = sha1($mbox);
             }
-            $this->children['mbox_sha1sum'][] =& $this->foaf->addChild('foaf:mbox_sha1sum', $mbox);
+            $this->children['mbox_sha1sum'][] =& $this->foaftree->addChild('foaf:mbox_sha1sum', $mbox);
         } else {
-            $this->children['mbox'][] =& $this->foaf->addChild('foaf:mbox', '', array('rdf:resource' => $mbox));
+            $this->children['mbox'][] =& $this->foaftree->addChild('foaf:mbox', '', array('rdf:resource' => $mbox));
         }
 
     }
@@ -333,7 +333,7 @@ class foafcreator extends object
      */
     public function setGender($gender)
     {
-        $this->children['gender'] =& $this->foaf->addChild('foaf:gender', strtolower($gender));
+        $this->children['gender'] =& $this->foaftree->addChild('foaf:gender', strtolower($gender));
     }
 
     /**
@@ -346,7 +346,7 @@ class foafcreator extends object
      */
     public function addJabberID($jabber_id)
     {
-        $this->children['jabbberid'][] =& $this->foaf->addChild('foaf:jabberID', $jabber_id);
+        $this->children['jabbberid'][] =& $this->foaftree->addChild('foaf:jabberID', $jabber_id);
     }
 
     /**
@@ -359,7 +359,7 @@ class foafcreator extends object
      */
     public function addAimChatID($aim_chat_id)
     {
-        $this->children['aimchatid'][] =& $this->foaf->addChild('foaf:aimChatID', $aim_chat_id);
+        $this->children['aimchatid'][] =& $this->foaftree->addChild('foaf:aimChatID', $aim_chat_id);
     }
 
     /**
@@ -372,7 +372,7 @@ class foafcreator extends object
      */
     public function addIcqChatID($icq_chat_id)
     {
-        $this->children['icqchatid'][] =& $this->foaf->addChild('foaf:icqChatID', $icq_chat_id);
+        $this->children['icqchatid'][] =& $this->foaftree->addChild('foaf:icqChatID', $icq_chat_id);
     }
 
     /**
@@ -385,7 +385,7 @@ class foafcreator extends object
      */
     public function addYahooChatID($yahoo_chat_id)
     {
-        $this->children['yahoochatid'][] =& $this->foaf->addChild('foaf:yahooChatID', $yahoo_chat_id);
+        $this->children['yahoochatid'][] =& $this->foaftree->addChild('foaf:yahooChatID', $yahoo_chat_id);
     }
 
     /**
@@ -398,7 +398,7 @@ class foafcreator extends object
      */
     public function addMsnChatID($msn_chat_id)
     {
-        $this->children['msnchatid'][] =& $this->foaf->addChild('foaf:msnChatID', $msn_chat_id);
+        $this->children['msnchatid'][] =& $this->foaftree->addChild('foaf:msnChatID', $msn_chat_id);
     }
 
     /**
@@ -418,7 +418,7 @@ class foafcreator extends object
      */
     public function addOnlineAccount($account_name,$account_service_homepage = null,$account_type = null)
     {
-        $holds_account =& $this->foaf->addChild('foaf:holdsAccount');
+        $holds_account =& $this->foaftree->addChild('foaf:holdsAccount');
         $online_account =& $holds_account->addChild('foaf:OnlineAccount');
         $online_account->addChild('foaf:accountName', $account_name);
         if (!is_null($account_service_homepage)) {
@@ -446,7 +446,7 @@ class foafcreator extends object
      */
     public function addOnlineChatAccount($account_name,$account_service_homepage)
     {
-        $holds_account =& $this->foaf->addChild('foaf:holdsAccount');
+        $holds_account =& $this->foaftree->addChild('foaf:holdsAccount');
         $online_chat_account =& $holds_account->addChild('foaf:OnlineChatAccount');
         $online_chat_account->addChild('foaf:accountName', $account_name);
         if (!is_null($account_service_homepage)) {
@@ -471,7 +471,7 @@ class foafcreator extends object
      */
     public function addOnlineGamingAccount($account_name,$account_service_homepage)
     {
-        $holds_account =& $this->foaf->addChild('foaf:holdsAccount');
+        $holds_account =& $this->foaftree->addChild('foaf:holdsAccount');
         $online_gaming_account =& $holds_account->addChild('foaf:OnlineGamingAccount');
         $online_gaming_account->addChild('foaf:accountName', $account_name);
         if (!is_null($account_service_homepage)) {
@@ -496,7 +496,7 @@ class foafcreator extends object
      */
     public function addOnlineEcommerceAccount($account_name,$account_service_homepage)
     {
-        $holds_account =& $this->foaf->addChild('foaf:holdsAccount');
+        $holds_account =& $this->foaftree->addChild('foaf:holdsAccount');
         $online_ecommerce_account =& $holds_account->addChild('foaf:OnlineEcommerceAccount');
         $online_ecommerce_account->addChild('foaf:accountName', $account_name);
         if (!is_null($account_service_homepage)) {
@@ -515,7 +515,7 @@ class foafcreator extends object
      */
     public function addHomepage($uri)
     {
-        $this->children['homepage'][] =& $this->foaf->addChild('foaf:homepage', '', array('rdf:resource' => $uri));
+        $this->children['homepage'][] =& $this->foaftree->addChild('foaf:homepage', '', array('rdf:resource' => $uri));
     }
 
     /**
@@ -528,7 +528,7 @@ class foafcreator extends object
      */
     public function addWeblog($uri)
     {
-        $this->children['weblog'][] =& $this->foaf->addChild('foaf:weblog', '', array('rdf:resource' => $uri));
+        $this->children['weblog'][] =& $this->foaftree->addChild('foaf:weblog', '', array('rdf:resource' => $uri));
     }
 
     /**
@@ -541,7 +541,7 @@ class foafcreator extends object
      */
     public function addMade($uri)
     {
-        $this->children['made'][] =& $this->foaf->addChild('foaf:made', '', array('rdf:resource' => $uri));
+        $this->children['made'][] =& $this->foaftree->addChild('foaf:made', '', array('rdf:resource' => $uri));
     }
 
     /* foaf:Person */
@@ -559,7 +559,7 @@ class foafcreator extends object
     public function setGeekcode($geek_code)
     {
         if($this->isAllowedForAgent('geekcode')) {
-            $this->children['geekcode'] =& $this->foaf->addChild('foaf:geekcode', $geek_code);
+            $this->children['geekcode'] =& $this->foaftree->addChild('foaf:geekcode', $geek_code);
             return true;
         } else {
             return false;
@@ -578,7 +578,7 @@ class foafcreator extends object
     public function setFirstName($first_name)
     {
         if($this->isAllowedForAgent('firstname')) {
-            $this->children['firstname'] =& $this->foaf->addChild('foaf:firstName', $first_name);
+            $this->children['firstname'] =& $this->foaftree->addChild('foaf:firstName', $first_name);
             return true;
         } else {
             return false;
@@ -596,7 +596,7 @@ class foafcreator extends object
     public function setSurname($surname)
     {
         if($this->isAllowedForAgent('surname')) {
-            $this->children['surname'] =& $this->foaf->addChild('foaf:surname', $surname);
+            $this->children['surname'] =& $this->foaftree->addChild('foaf:surname', $surname);
             return true;
         } else {
             return false;
@@ -614,7 +614,7 @@ class foafcreator extends object
     public function setFamilyName($family_name)
     {
         if($this->isAllowedForAgent('family_name')) {
-            $this->children['familyname'] =& $this->foaf->addChild('foaf:family_name', $family_name);
+            $this->children['familyname'] =& $this->foaftree->addChild('foaf:family_name', $family_name);
             return true;
         } else {
             return false;
@@ -632,7 +632,7 @@ class foafcreator extends object
     public function setPlan($plan)
     {
         if($this->isAllowedForAgent('plan')) {
-            $this->children['plan'] =& $this->foaf->addChild('foaf:plan', $plan);
+            $this->children['plan'] =& $this->foaftree->addChild('foaf:plan', $plan);
             return true;
         } else {
             return false;
@@ -650,7 +650,7 @@ class foafcreator extends object
     public function addImg($uri)
     {
         if($this->isAllowedForAgent('img')) {
-            $this->children['img'][] =& $this->foaf->addChild('foaf:img', '', array('rdf:resource' => $uri));
+            $this->children['img'][] =& $this->foaftree->addChild('foaf:img', '', array('rdf:resource' => $uri));
             return true;
         } else {
             return false;
@@ -669,7 +669,7 @@ class foafcreator extends object
     public function addMyersBriggs($myers_briggs)
     {
         if($this->isAllowedForAgent('myersbriggs')) {
-            $this->children['myersbriggs'][] =& $this->foaf->addChild('foaf:myersBriggs', $myers_briggs);
+            $this->children['myersbriggs'][] =& $this->foaftree->addChild('foaf:myersBriggs', $myers_briggs);
             return true;
         } else {
             return false;
@@ -687,7 +687,7 @@ class foafcreator extends object
     public function addWorkplaceHomepage($uri)
     {
         if ($this->isAllowedForAgent('workplaceHomepage')) {
-            $this->children['workplacehomepage'][] =& $this->foaf->addChild('foaf:workplaceHomepage', '', array('rdf:resource' => $uri));
+            $this->children['workplacehomepage'][] =& $this->foaftree->addChild('foaf:workplaceHomepage', '', array('rdf:resource' => $uri));
             return true;
         } else {
             return false;
@@ -705,7 +705,7 @@ class foafcreator extends object
     public function addWorkInfoHomepage($uri)
     {
         if($this->isAllowedForAgent('workInfoHomepage')) {
-            $this->children['workinfohomepage'][] =& $this->foaf->addChild('foaf:workInfoHomepage', '', array('rdf:resource' => $uri));
+            $this->children['workinfohomepage'][] =& $this->foaftree->addChild('foaf:workInfoHomepage', '', array('rdf:resource' => $uri));
             return true;
         } else {
             return false;
@@ -723,7 +723,7 @@ class foafcreator extends object
     public function addSchoolHomepage($uri)
     {
         if($this->isAllowedForAgent('schoolHomepage')) {
-            $this->childen['schoolhomepage'][] = $this->foaf->addChild('foaf:schoolHomepage', '', array('rdf:resource' => $uri));
+            $this->childen['schoolhomepage'][] = $this->foaftree->addChild('foaf:schoolHomepage', '', array('rdf:resource' => $uri));
             return true;
         } else {
             return false;
@@ -741,7 +741,7 @@ class foafcreator extends object
     public function addPublications($uri)
     {
         if($this->isAllowedForAgent('publications')) {
-            $this->children['publications'][] =& $this->foaf->addChild('foaf:publications', '', array('rdf:resource' => $uri));
+            $this->children['publications'][] =& $this->foaftree->addChild('foaf:publications', '', array('rdf:resource' => $uri));
             return true;
         } else {
             return false;
@@ -759,7 +759,7 @@ class foafcreator extends object
     public function addCurrentProject($uri)
     {
         if($this->isAllowedForAgent('currentProject')) {
-            $this->children['currentproject'][] =& $this->foaf->addChild('foaf:currentProject', '', array('rdf:resource' => $uri));
+            $this->children['currentproject'][] =& $this->foaftree->addChild('foaf:currentProject', '', array('rdf:resource' => $uri));
             return true;
         } else {
             return false;
@@ -777,7 +777,7 @@ class foafcreator extends object
     public function addPastProject($uri)
     {
         if($this->isAllowedForAgent('pastProject')) {
-            $this->children['pastproject'][] =& $this->foaf->addChild('foaf:pastProject', '', array('rdf:resource' => $uri));
+            $this->children['pastproject'][] =& $this->foaftree->addChild('foaf:pastProject', '', array('rdf:resource' => $uri));
             return true;
         } else {
             return false;
@@ -800,7 +800,7 @@ class foafcreator extends object
     {
         if($this->isAllowedForAgent('based_near')) {
             $this->namespaces['geo'] = 'http://www.w3.org/2003/01/geo/wgs84_pos#';
-            $based_near =& $this->foaf->addChild('foaf:based_near');
+            $based_near =& $this->foaftree->addChild('foaf:based_near');
             $geo_point =& $based_near->addChild('geo:Point', '', array('geo:lat' => $geo_lat, 'geo:long' => $geo_long));
             $this->children['basednear'][] =& $based_near;
             return true;
@@ -822,7 +822,7 @@ class foafcreator extends object
     public function addInterest($uri)
     {
         if($this->isAllowedForAgent('interest')) {
-            $this->children['interest'][] =& $this->foaf->addChild('foaf:interest', '', array('rdf:resource' => $uri));
+            $this->children['interest'][] =& $this->foaftree->addChild('foaf:interest', '', array('rdf:resource' => $uri));
         } else {
             return FALSE;
         }
@@ -841,7 +841,7 @@ class foafcreator extends object
     public function &addMember(&$foaf_agent)
     {
         if($this->isAllowedForAgent('member')) {
-            $member =& $this->foaf->addChild('foaf:member');
+            $member =& $this->foaftree->addChild('foaf:member');
             $member->addChild($foaf_agent);
             $this->children['member'][] =& $member;
             return true;
@@ -864,9 +864,9 @@ class foafcreator extends object
             if (is_string($membership_class)) {
                 $membership_tree = new XML_Tree;
                 $membership_tree->getTreeFromString($membership_class);
-                $this->children['membershipclass'] =& $this->foaf->addChild($membership_tree);
+                $this->children['membershipclass'] =& $this->foaftree->addChild($membership_tree);
             } else {
-                $this->children['membershipclass'] =& $this->foaf->addChild($membership_class);
+                $this->children['membershipclass'] =& $this->foaftree->addChild($membership_class);
             }
             return true;
         } else {
@@ -886,7 +886,7 @@ class foafcreator extends object
      */
     public function addSeeAlso($uri)
     {
-        $this->children['seealso'][] =& $this->foaf->addChild('rdfs:seeAlso', '', array('rdf:resource' => $uri));
+        $this->children['seealso'][] =& $this->foaftree->addChild('rdfs:seeAlso', '', array('rdf:resource' => $uri));
     }
 
     /**
@@ -899,7 +899,7 @@ class foafcreator extends object
      */
     public function addKnows(&$foaf_agent)
     {
-        $this->knows =& $this->foaf->addChild('foaf:knows');
+        $this->knows =& $this->foaftree->addChild('foaf:knows');
         $this->knows->addChild($foaf_agent->foaf);
         return true;
     }
@@ -925,9 +925,9 @@ class foafcreator extends object
             if (is_string($xml_tree)) {
                 $tree = new XML_Tree;
                 $tree->getTreeFromString($xml_tree);
-                $this->foaf->addChild($tree);
+                $this->foaftree->addChild($tree);
             } else {
-                $this->foaf->addChild($xml_tree);
+                $this->foaftree->addChild($xml_tree);
             }
         }
     }
@@ -955,9 +955,9 @@ class foafcreator extends object
     public function toXML($without_rdf = false)
     {
         if ($without_rdf == false) {
-            $foaf = "<rdf:RDF " .$this->_getXmlns(). ">\n" .$this->foaf->get(). "\n</rdf:RDF>";
+            $foaf = "<rdf:RDF " .$this->_getXmlns(). ">\n" .$this->foaftree->get(). "\n</rdf:RDF>";
         } else {
-            $foaf = $this->foaf->get();
+            $foaf = $this->foaftree->get();
         }
         require_once 'XML/Beautifier.php';
         $beautifier = new XML_Beautifier();
