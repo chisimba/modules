@@ -10,7 +10,10 @@ $stsname = $stdinfo[0]->surname;
 $rep = array(
       'FIRSTNAME' => $stname,
       'LASTNAME' => $stsname);
-      
+$yesno = array(
+             '0'=>'No',
+             '1'=>'Yes');
+
 $details = "<h2>".$objLanguage->code2Txt('mod_financialaid_dependantstitle','financialaid',$rep)."</h2>";
 $table =& $this->newObject('htmltable','htmlelements');
 
@@ -35,11 +38,7 @@ if(count($dependants) > 0){
         $table->addCell($data->relationship);
         $table->addCell($data->dependantReason);
         $table->addCell($data->category);
-        if($data->hasIncome == 0){
-            $table->addCell('No');
-        }else{
-            $table->addCell('Yes');
-        }
+        $table->addCell($yesno[$data->hasIncome]);
         $table->addCell($data->incomeType);
         $table->addCell($data->incomeAmount);
         $table->endRow();
