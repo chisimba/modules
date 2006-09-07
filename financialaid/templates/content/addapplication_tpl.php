@@ -12,17 +12,20 @@ $idNum = new textinput('idnum');
 $surname = new textinput('surname');
 $firstname = new textinput('firstname');
 $maritalSts = new dropdown('maritalsts');
-$maritalSts->addOption('Single', $objLanguage->languagetext('word_single'));
-$maritalSts->addOption('Married', $objLanguage->languagetext('word_married'));
-$maritalSts->addOption('Divorced', $objLanguage->languagetext('word_divorced'));
-$maritalSts->addOption('Widowed', $objLanguage->languagetext('word_widowed'));
+$maritalSts->addOption('1', $objLanguage->languagetext('word_single'));
+$maritalSts->addOption('2', $objLanguage->languagetext('word_married'));
+$maritalSts->addOption('3', $objLanguage->languagetext('word_divorced'));
+$maritalSts->addOption('4', $objLanguage->languagetext('word_widowed'));
 
-$year = new dropdown('year');
-$start = date("Y");
-for($i = 0; $i < 16; $i ++){
-	$year->addOption($start,$start);
-	$start--;
-}
+//$year = new dropdown('year');
+$startyear = date("Y");
+//for($i = 0; $i < 16; $i ++){
+//	$year->addOption($start,$start);
+//	$start--;
+//}
+
+$year = new textinput("year", $start,  "hidden", NULL);
+
 
 $semester = new radio('semester');
 for($i = 1; $i <= 2; $i ++){
@@ -33,8 +36,8 @@ $semester->setBreakSpace('  ');
 
 
 $gender = new radio('gender');
-$gender->addOption('Male',$objLanguage->languagetext('word_male'));
-$gender->addOption('Female',$objLanguage->languagetext('word_female'));
+$gender->addOption('0',$objLanguage->languagetext('word_male'));
+$gender->addOption('1',$objLanguage->languagetext('word_female'));
 $gender->setBreakSpace('  ');
 
 $SACitizen = new radio('saCitizen');
@@ -84,7 +87,8 @@ $table->endRow();
 
 $table->startRow();
 $table->addCell($objLanguage->languagetext('word_year'));
-$table->addCell($year->show());
+//$table->addCell($year->show());
+$table->addCell($startyear);
 $table->endRow();
 
 $table->startRow();
@@ -212,9 +216,9 @@ $objForm->setDisplayType(2);
 
 $objForm->addToForm($content);
 
-$objForm->addRule('stdnum', 'Please enter a student number', 'required');
-$objForm->addRule('surname', 'Please enter a surname', 'required');
-$objForm->addRule('idnum', 'Please enter an ID number', 'required');
+//$objForm->addRule('stdnum', 'Please enter a student number', 'required');
+//$objForm->addRule('surname', 'Please enter a surname', 'required');
+//$objForm->addRule('idnum', 'Please enter an ID number', 'required');
 
 echo $objForm->show();
 

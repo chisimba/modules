@@ -9,6 +9,23 @@ $stdinfo = $this->objDBFinancialAidWS->getApplication($appid);
 $stname = $stdinfo[0]->firstNames;
 $stsname = $stdinfo[0]->surname;
 
+$gender = array(
+             '0'=>'Male',
+             '1'=>'Female');
+$yesno = array(
+             '0'=>'No',
+             '1'=>'Yes');
+
+$maritalstatus = array(
+                  '1'=>'Single',
+                  '2'=>'Married',
+                  '3'=>'Divorced',
+                  '4'=>'Widowed');
+$relationship = array(
+                  '1'=>'Father',
+                  '2'=>'Mother',
+                  '3'=>'Gaurdian',
+                  '4'=>'Spouse');
 $rep = array(
       'FIRSTNAME' => $stname,
       'LASTNAME' => $stsname);
@@ -45,13 +62,8 @@ if(count($stdinfo) > 0){
 
     $table->startRow();
     $table->addCell($objLanguage->languagetext('mod_financialaid_sacitizen','financialaid'));
-    if ($stdinfo[0]->saCitizen == 1){
-       $table->addCell($objLanguage->languagetext('word_yes'));
-    }else{
-        if (!is_null($stdinfo[0]->saCitizen)){
-            $table->addCell($objLanguage->languagetext('word_no'));
-        }
-    }
+    $table->addCell($yesno[$stdinfo[0]->saCitizen]);
+
 	$table->endRow();
 
     $table->startRow();
@@ -66,13 +78,7 @@ if(count($stdinfo) > 0){
 
     $table->startRow();
     $table->addCell($objLanguage->languagetext('mod_financialaid_fulltime','financialaid'));
-    if ($stdinfo[0]->fulltime == 1){
-	   $table->addCell($objLanguage->languagetext('word_yes'));
-    }else{
-        if (!is_null($stdinfo[0]->fulltime)){
-            $table->addCell($objLanguage->languagetext('word_no'));
-        }
-    }
+    $table->addCell($yesno[$stdinfo[0]->fulltime]);
     $table->endRow();
 
     $table->startRow();
@@ -92,13 +98,7 @@ if(count($stdinfo) > 0){
 
     $table->startRow();
     $table->addCell($objLanguage->languagetext('mod_financialaid_supportingself','financialaid'));
-    if ($stdinfo[0]->supportingSelf == 1){
-	   $table->addCell($objLanguage->languagetext('word_yes'));
-    }else{
-        if (!is_null($stdinfo[0]->supportingSelf)){
-            $table->addCell($objLanguage->languagetext('word_no'));
-        }
-    }
+    $table->addCell($yesno[$stdinfo[0]->supportingSelf]);
    	$table->endRow();
 
     $table->startRow();

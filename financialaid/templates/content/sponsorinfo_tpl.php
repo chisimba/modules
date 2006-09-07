@@ -2,7 +2,7 @@
 $this->objLanguage = &$this->getObject('language','language');
 $this->objUser =& $this->getObject('user','security');
 $this->objDBFinAid =& $this->getObject('dbfinaid','financialaid');
-$sponsorid = $this->getParam('id', NULL);
+$sponsorid = $this->getParam('sponsorid', NULL);
 $content = "";
 $oddEven = 'odd';
 $sponsors = $this->objDBFinAid->getSponsor($sponsorid);

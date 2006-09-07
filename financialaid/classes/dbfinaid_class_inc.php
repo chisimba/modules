@@ -36,7 +36,11 @@ class dbfinaid extends object
     *
     */
     function getStudentAccountDetails($value, $field = 'STDNUM'){
-  		return $this->objSoapClient->getlimitSTACC($field, $value, 0, 0);
+        try{
+     		return $this->objSoapClient->getlimitSTACC($field, $value, 0, 0);
+        }catch(Exception $e){
+            return NULL;
+        }
     }
 
 
@@ -52,7 +56,11 @@ class dbfinaid extends object
     *
     */
     function getStudentAccountHistory($value, $field = 'STDNUM'){
-  		return $this->objSoapClient->getlimitSTACH($field, $value, 0, 0);
+        try{
+     		return $this->objSoapClient->getlimitSTACH($field, $value, 0, 0);
+        }catch(Exception $e){
+            return NULL;
+        }
     }
 
     /**
@@ -66,7 +74,11 @@ class dbfinaid extends object
     */
     function getTransactionDetails($value, $field = 'TRNCDE')
     {
-  		return $this->objSoapClient->getlimitTRNAC($field, $value, 0, 0);
+        try{
+     		return $this->objSoapClient->getlimitTRNAC($field, $value, 0, 0);
+        }catch(Exception $e){
+            return NULL;
+        }
     }
 
     /**
@@ -79,7 +91,11 @@ class dbfinaid extends object
     *
     */
     function getStudentMatricSubjects($value, $field = 'STDNUM'){
-  		return $this->objSoapClient->getlimitSCLSB($field, $value, 0, 0);
+        try{
+     		return $this->objSoapClient->getlimitSCLSB($field, $value, 0, 0);
+        }catch(Exception $e){
+            return NULL;
+        }
     }
 
     /**
@@ -92,7 +108,11 @@ class dbfinaid extends object
     *
     */
     function getMatricSubjectDetails($value, $field = 'MTRSBJCDE'){
-  		return $this->objSoapClient->getlimitMTRSB($field, $value, 0, 0);
+        try{
+     		return $this->objSoapClient->getlimitMTRSB($field, $value, 0, 0);
+        }catch(Exception $e){
+            return NULL;
+        }
     }
     
     /**
@@ -106,7 +126,11 @@ class dbfinaid extends object
     */
     function getSecondarySchoolDetails($value, $field = 'SCLCDE')
     {
-  		return $this->objSoapClient->getlimitSCHL($field, $value, 0, 0);
+        try{
+     		return $this->objSoapClient->getlimitSCHL($field, $value, 0, 0);
+        }catch(Exception $e){
+            return NULL;
+        }
     }
     
     /**
@@ -118,8 +142,13 @@ class dbfinaid extends object
     * @return array: The array of matching records from the database
     *
     */
-   	function getStudentSchool($value, $field = 'STDNUM'){
-  		return $this->objSoapClient->getlimitSTSCL($field, $value, 0, 0);
+   	function getStudentSchool($value, $field = 'STDNUM')
+    {
+        try{
+     		return $this->objSoapClient->getlimitSTSCL($field, $value, 0, 0);
+        }catch(Exception $e){
+            return NULL;
+        }
 	}
  
     /**
@@ -131,8 +160,13 @@ class dbfinaid extends object
     * @return array: The array of matching records from the database
     *
     */
-   	function getSubject($value, $field = 'SBJCDE'){
-  		return $this->objSoapClient->getlimitSBJCT($field, $value, 0, 0);
+   	function getSubject($value, $field = 'SBJCDE')
+    {
+        try{
+     		return $this->objSoapClient->getlimitSBJCT($field, $value, 0, 0);
+        }catch(Exception $e){
+            return NULL;
+        }
 	}
 
     /**
@@ -144,8 +178,13 @@ class dbfinaid extends object
     * @return array: The array of matching records from the database
     *
     */
-   	function getSponsor($value, $field = 'BRSCDE'){
-  		return $this->objSoapClient->getlimitBRSRY($field, $value, 0, 0);
+   	function getSponsor($value, $field = 'BRSCDE')
+    {
+        try{
+    		return $this->objSoapClient->getlimitBRSRY($field, $value, 0, 0);
+        }catch(Exception $e){
+            return NULL;
+        }
 	}
    //--------------------------------------------------
    // Test functions

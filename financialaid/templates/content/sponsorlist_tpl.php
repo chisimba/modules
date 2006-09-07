@@ -138,7 +138,7 @@ if(is_array($sponsors)){
             $table->row_attributes = " class = \"$oddEven\"";
 
       		$viewdetails = new link();
-			$viewdetails->href=$this->uri(array('action'=>'showsponsor','id'=>$sponsors[$i]->BRSCDE));
+			$viewdetails->href=$this->uri(array('action'=>'showsponsor','sponsorid'=>$sponsors[$i]->BRSCDE));
 			$viewdetails->link = $objLanguage->languagetext('mod_financialaid_view','financialaid');
 
 			$table->startRow();

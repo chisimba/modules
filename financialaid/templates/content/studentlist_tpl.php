@@ -30,6 +30,7 @@ if (strlen($stdnum) > 0) {
 }
 
 
+
 if ($wherefield == ''){
     $stdCount = 0;
 }else{
@@ -137,7 +138,7 @@ if ($stdCount > 0){
     }
     //***end of pagination***
 
-    $stdinfo = $this->studentinfo->listsurn($startat);
+    $stdinfo = $this->studentinfo->listsurn($startat, $wherefield);
     $address = $this->getParam('address');
     if(!is_null($address)){
         $stdaddress = $this->studentinfo->studentAddress($stdinfo[0]->STDNUM);

@@ -50,7 +50,7 @@ class financialaid extends controller
 	//	$this->objDBDependants =& $this->getObject('dbdependants');
 	//	$this->objDBParttimejobs =& $this->getObject('dbparttimejobs');
 	//	$this->objDBStudentFamily =& $this->getObject('dbstudentfamily');
-   //     $this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
+        $this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
         $this->objFinancialAidReports = & $this->getObject('financialaidreports');
 
         $this->objLeftBar =& $this->getObject('financialaidleftblock');
@@ -162,7 +162,7 @@ class financialaid extends controller
                             'idNumber' => $this->getParam('idnum', ''),
                             'surname' => $this->getParam('surname', ''),
                             'firstNames' => $this->getParam('firstname', ''),
-                            'relationship' => $this->getParam('gender', ''),
+                            'relationship' => $this->getParam('relationship', ''),
                             'strAddress' => $this->getParam('straddress', ''),
                             'suburb' => $this->getParam('suburb', ''),
                             'city' => $this->getParam('city', ''),

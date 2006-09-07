@@ -7,15 +7,25 @@ $stdinfo = $this->objDBFinancialAidWS->getApplication($appid);
 $stname = $stdinfo[0]->firstNames;
 $stsname = $stdinfo[0]->surname;
 
+$maritalstatus = array('1'=>'Single',
+                  '2'=>'Married',
+                  '3'=>'Divorced',
+                  '4'=>'Widowed');
+$relationship = array('1'=>'Father',
+                  '2'=>'Mother',
+                  '3'=>'Gaurdian',
+                  '4'=>'Spouse');
+
+
 $rep = array(
       'FIRSTNAME' => $stname,
       'LASTNAME' => $stsname);
       
 $details = "<h2>".$objLanguage->code2Txt('mod_financialaid_nextofkintitle','financialaid',$rep)."</h2>";
-$table =& $this->newObject('htmltable','htmlelements');
 
 $nextofkin = $this->objDBFinancialAidWS->getNextofkin($appid);
-
+$content = '';
+$table =& $this->newObject('htmltable','htmlelements');
 if(count($nextofkin) > 0){
     foreach($nextofkin as $data)
     {
@@ -36,7 +46,7 @@ if(count($nextofkin) > 0){
         
         $table->startRow();
         $table->addCell($objLanguage->languagetext('word_relationship'));
-        $table->addCell($data->relationship);
+        $table->addCell($relationship[$data->relationship]);
         $table->endRow();
 
         $table->startRow();
@@ -59,9 +69,10 @@ if(count($nextofkin) > 0){
         $table->addCell($data->postcode);
         $table->endRow();
 
+
         $table->startRow();
         $table->addCell($objLanguage->languagetext('mod_financialaid_mrtsts','financialaid'));
-        $table->addCell($data->maritalStatus);
+        $table->addCell($maritalstatus[$data->maritalStatus]);
         $table->endRow();
 
         $table->startRow();
@@ -83,8 +94,12 @@ if(count($nextofkin) > 0){
         $table->addCell($objLanguage->languagetext('mod_financialaid_emptelno','financialaid'));
         $table->addCell($data->employersTelNo);
         $table->endRow();
-        $content = $table->show();
+        
+        $table->startRow();
+        $table->addCell('&nbsp;');
+        $table->endRow();
     }
+    $content .= $table->show();
 }else{
     $content = "<div class='noRecordsMessage'>".$objLanguage->languagetext('mod_financialaid_nonextofkin','financialaid')."</div>";
 }

@@ -31,6 +31,7 @@ $maritalSts = new dropdown('maritalstatus');
 $maritalSts->addOption('1','Married');
 $maritalSts->addOption('2','Single');
 $maritalSts->addOption('3','Divorced');
+$maritalSts->addOption('4','Widowed');
 
 $addbut= new button('add');
 $addbut->setToSubmit();

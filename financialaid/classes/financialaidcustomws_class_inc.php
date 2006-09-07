@@ -20,7 +20,12 @@ class financialaidcustomws extends object
     
 	function init(){
 		parent::init();
-        $this->objSoapClient = new SoapClient('http://172.16.65.134/webserviceDEV/finaid8.php?wsdl');
+        try{
+            $this->objSoapClient = new SoapClient('http://172.16.65.134/webserviceDEV/finaid8.php?wsdl');
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
+
     }
 
 
@@ -34,7 +39,11 @@ class financialaidcustomws extends object
     *
     */
     function getAvgMark($stdnum, $year){
-  		return $this->objSoapClient->getAVGMARK($stdnum, $year);
+        try{
+  		    return $this->objSoapClient->getAVGMARK($stdnum, $year);
+        }catch(Exception $e){
+            return NULL;
+        }
     }
     /**
     *
@@ -46,40 +55,47 @@ class financialaidcustomws extends object
     *
     */
     function getStudentCount($value, $field = 'STDNUM'){
-  		return $this->objSoapClient->getSTDETCOUNT($field, $value);
+        try{
+  		    return $this->objSoapClient->getSTDETCOUNT($field, $value);
+        }catch(Exception $e){
+            return NULL;
+        }
+    }
+
+    /**
+    *
+    * Function to retrieve account info from the database
+    *
+    * @param string $stdnum: The student in the database
+    * @param string $year: The relevant year
+    * @return int: The avg of the students marks
+    *
+    */
+    function getStudentAccount($stdnum, $type)
+    {
+        try{
+  		    return $this->objSoapClient->getSTACC($stdnum, $type, 0, 100000000000);
+        }catch(Exception $e){
+            return NULL;
+        }
+
     }
     /**
     *
-    * Function to retrieve avg mark for student from the database
+    * Function to retrieve number of sponsors from the database
     *
     * @param string $stdnum: The student in the database
     * @param string $year: The relevant year
     * @return int: The avg of the students marks
     *
     */
-    /**
-    *
-    * Function to retrieve avg mark for student from the database
-    *
-    * @param string $stdnum: The student in the database
-    * @param string $year: The relevant year
-    * @return int: The avg of the students marks
-    *
-    */
-    function getStudentAccount($stdnum, $type){
-  		return $this->objSoapClient->getSTACC($stdnum, $type, 0, 100000000000);
-    }
-    /**
-    *
-    * Function to retrieve avg mark for student from the database
-    *
-    * @param string $stdnum: The student in the database
-    * @param string $year: The relevant year
-    * @return int: The avg of the students marks
-    *
-    */
-    function getSponsorCount(){
-  		return $this->objSoapClient->getBRSRYCOUNT();
+    function getSponsorCount()
+    {
+        try{
+  		    return $this->objSoapClient->getBRSRYCOUNT();
+        }catch(Exception $e){
+            return NULL;
+        }
     }
 
     /**
@@ -91,8 +107,13 @@ class financialaidcustomws extends object
     * @return int: The number of passed subjects
     *
     */
-    function getPassedSubjects($stdnum, $year){
-  		return $this->objSoapClient->getPASSEDSUBJECTS($stdnum, $year);
+    function getPassedSubjects($stdnum, $year)
+    {
+        try{
+            return $this->objSoapClient->getPASSEDSUBJECTS($stdnum, $year);
+        }catch(Exception $e){
+            return NULL;
+        }
     }
     
     /**
@@ -102,8 +123,12 @@ class financialaidcustomws extends object
     * @return array: The sponsor list
     *
     */
-    function getAllSponsors($orderby = 'BRSCDE', $start = 0, $offset = 0){
-  		return $this->objSoapClient->getAllBRSRY($orderby,$start,$start + $offset);
+    function getAllSponsors($orderby = 'BRSCDE', $start = 0, $offset = 0)
+    {
+        try{
+  		    return $this->objSoapClient->getAllBRSRY($orderby,$start,$start + $offset);
+        }catch(Exception $e){
+            return NULL;
+        }
     }
-
 }
