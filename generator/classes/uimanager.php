@@ -95,14 +95,13 @@ class uimanager extends object
     */
     public function getFormAction()
     {
-	    $action = $this->formXml->action;
-	    $page = $this->formXml->page;
+	    $action = $this->formXml->form[0]->action;
+	    $page = $this->formXml->form[0]->page;
         //Set up the form action to generate the item
         $paramArray=array(
           'action'=>$action,
           'page'=>$page);
         return $this->uri($paramArray);
-    
     }
 
     /**
@@ -112,7 +111,7 @@ class uimanager extends object
     */
     public functin getFormName()
     {
-    
+      $this->formXml->form[0]->name;
     }
 
 

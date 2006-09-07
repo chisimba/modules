@@ -191,11 +191,11 @@ class wizlinks extends object
     private function page6Link()
     {
         if ($this->page == 'page6') {
-            $ret =   "6. " . $this->objLanguage->languageText("mod_generator_page5_instructions", "generator");
+            $ret =   "6. " . $this->objLanguage->languageText("mod_generator_page6_instructions", "generator");
         } else {
         	$href = $this->uri(array('action' => 'page6', 'page' => 'page6'));
 			$this->objLink->href =  $href;
-			$this->objLink->link = $this->objLanguage->languageText("mod_generator_page5_instructions", "generator");
+			$this->objLink->link = $this->objLanguage->languageText("mod_generator_page6_instructions", "generator");
 			$ret ="6. " . $this->objLink->show();
         }
         return $ret;

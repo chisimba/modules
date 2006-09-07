@@ -93,6 +93,9 @@ class generator extends controller
     */
     public function getUi($generator)
     {
+    	
+    }
+    }
     
     }
     
@@ -144,7 +147,7 @@ class generator extends controller
     /**
     * 
     * Method corresponding to the page3 action. It presents a screen for use in 
-    * entering the table name for the dbTable class to build.
+    * building register.conf
     * @access private
     * 
     */
@@ -156,9 +159,8 @@ class generator extends controller
     
     /**
     * 
-    * Method corresponding to the page4 action. It presents a screen for building
-    * the edit/add template
-    * 
+    * Method corresponding to the page3 action. It presents a screen for use in 
+    * entering the table name for the dbTable class to build.
     * @access private
     * 
     */
@@ -170,8 +172,8 @@ class generator extends controller
     
     /**
     * 
-    * Method corresponding to the page5 action. It presents a screen for building
-    * the foreign class wrapper template
+    * Method corresponding to the page4 action. It presents a screen for building
+    * the edit/add template
     * 
     * @access private
     * 
@@ -180,6 +182,20 @@ class generator extends controller
     {
     	$this->setVar('page', 5);
         return 'page5_tpl.php';
+    }
+    
+    /**
+    * 
+    * Method corresponding to the page5 action. It presents a screen for building
+    * the foreign class wrapper template
+    * 
+    * @access private
+    * 
+    */
+    private function __page6()
+    {
+    	$this->setVar('page', 6);
+        return 'page6_tpl.php';
     }
 
     /**
@@ -240,7 +256,7 @@ class generator extends controller
     */
     private function __genedit()
     {
-        $this->setVar('page', 4);
+        $this->setVar('page', 5);
         return "genedit_tpl.php";
     }
     
@@ -254,7 +270,7 @@ class generator extends controller
     */
     private function __genwrapper()
     {
-        $this->setVar('page', 5);
+        $this->setVar('page', 6);
         return "genwrapper_tpl.php";
     }
     
