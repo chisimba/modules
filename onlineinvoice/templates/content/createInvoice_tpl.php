@@ -1,17 +1,24 @@
 <?php
 
-/*this template contains the content for creating the initial invoice
-//create the heading of the template
-/*the heading is created by creating an instance of the heading class
+/**
+ *this template contains the content for creating the initial invoice
+ */
+  
+/**
+ *create the heading of the template
+ *the heading is created by creating an instance of the heading class
   there after the heading is set to type 2
-  and is then assigned the title -- WEB BASED INVOICING SYSTEM*/
+  and is then assigned the title -- WEB BASED INVOICING SYSTEM
+ */
 
 
 $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
 $this->objMainheading->type=2;
 $this->objMainheading->str=$objLanguage->languageText('mod_onlineinvoice_webbasedinvoicingsystem','onlineinvoice');
 
-/*create all language elements for labels*/
+/**
+ *create all language elements for labels
+ */
 $dateRange = $objLanguage->languageText('mod_onlineinvoice_whatisthedaterangeofyourinvoice','onlineinvoice');
 $beginDate = $objLanguage->languageText('phrase_begindate');
 $endDate  = $objLanguage->languageText('phrase_enddate');
@@ -22,34 +29,38 @@ $btnEdit  = $this->objLanguage->languageText('word_edit');
 $createTEV  = $this->objLanguage->languageText('phrase_yescreatenewtev');
 $nextCategory  = $this->objLanguage->languageText('phrase_nomovetonextcategory');
 $error_message = $this->objLanguage->languageText('phrase_dateerror');
-$strerror  =  strtoupper($error_message);
+$strerror  =  ucfirst($error_message);
 $strsucessfull = $this->objLanguage->languageText('mod_onlineinvoice_valuessubmitted','onlineinvoice');
-$sucessfull = strtoupper($strsucessfull);
+$sucessfull = ucfirst($strsucessfull);
+$tooltipcontent = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_tooltipcontent','onlineinvoice'));
+$nextcatcontent = $this->objLanguage->languageText('mod_onlineinvoice_nextcaption','onlineinvoice');
 
 /*********************************************************************************************************************************************************/
 
+/**
+ *create all link elements
+ */ 
 
-$urltext = 'YES - Create TEV';
-$content = 'Complete a travel expense voucher';
+$urltext = $createTEV;
+$content = $tooltipcontent;
 $caption = '';
 $url = $this->uri(array('action'=>'createtev'));
 $this->objcreatelink  = & $this->newObject('mouseoverpopup','htmlelements');
 $this->objcreatelink->mouseoverpopup($urltext,$content,$caption,$url);
 
-$urltext = 'NO - Move To Next Category';
-$content = 'Complete any service expenses';
+$urltext = $nextCategory;
+$content = $nextcatcontent;
 $caption = '';
 $url = $this->uri(array('action'=>'createservice'));
 $this->objnextlink  = & $this->newObject('mouseoverpopup','htmlelements');
 $this->objnextlink->mouseoverpopup($urltext,$content,$caption,$url);
 
-/*$this->objnextCategorylink  = $this->newobject('link','htmlelements');
-$this->objnextCategorylink->link($this->uri(array('action'=>'NULL')));
-$this->objnextCategorylink->link = $nextCategory ;*/
-
 /*********************************************************************************************************************************************************/
 
-/*create new instance of the label class for each form label*/
+/**
+ *create new instance of the label class for each form label
+ */
+ 
 //Label -- What is the date range of your invoice
 $lblName  = lbldate;
 $this->objDateRange  = $this->newObject('label','htmlelements');
@@ -71,21 +82,11 @@ $this->objtravelExpenses->label($travelExpenses,$lblTravelID);
 
 /*********************************************************************************************************************************************************/
 
-/*create all text input boxes */
-/*$this->objtxtbegin = $this->newObject('textinput','htmlelements');
-$this->objtxtbegin->name   = "txtBeginDate";
-$this->objtxtbegin->value  = "";
 
-create an instance of the calendar control
-$name = 'txtbegindate';
-$mth  = '08';
-$day  = '2';
-$year = '2006';
-$this->objbegindate = $this->newObject('calendar','htmlelements');
-$this->objbegindate->caledar($name,$value=null);
-$this->objbegindate->setDate($mth,$day,$year);*/
-
-/*create an instance of the datepicker class to create a calendar control*/
+/**
+  *create an instance of the datepicker class to create a calendar control
+  */
+  
 $this->objbegindate = $this->newObject('datepicker','htmlelements');
 $name = 'txtbegindate';
 $date = '2006-01-01';
@@ -102,17 +103,21 @@ $this->objenddate->setName($name);
 $this->objenddate->setDefaultDate($date);
 $this->objenddate->setDateFormat($format);
 
-/*$this->objtxtEnd = $this->newObject('textinput','htmlelements');
-$this->objtxtEnd->name   = "txtEndDate";
-$this->objtxtEnd->value  = "";*/
 /*********************************************************************************************************************************************************/
-/*create all form buttons*/
+
+/**
+ *create all form buttons
+ */
+ 
 /*button -submit*/
 $this->objButtonSubmit  = $this->newobject('button','htmlelements');
 $this->objButtonSubmit->setValue($str1);
 $this->objButtonSubmit->setToSubmit();
 
-
+  /**
+   *validate the date fields using javascript
+   *check that the start date of the invoice is not later than the end date
+   */         
 	$onClick = 'var list_from = document.invoice.txtbegindate;
 					    var list_to = document.invoice.txtenddate;
 					 
@@ -142,9 +147,6 @@ $this->objButtonSubmit->setToSubmit();
            }';
 				$this->objButtonSubmit->extra = sprintf(' onClick ="javascript: %s"', $onClick );
  
-$this->objButtonEdit  = $this->newobject('button','htmlelements');
-$this->objButtonEdit->setValue($btnEdit);
-//$this->objButton->setOnClick('alert(\'An onclick Event\')');
 /*********************************************************************************************************************************************************/ 
 
 /*create table to place form elements in  --  date values*/
@@ -157,13 +159,11 @@ $this->objButtonEdit->setValue($btnEdit);
         $myTable->startRow();
         $myTable->addCell($this->objBegin->show());
         $myTable->addCell($this->objbegindate->show());
-        //$myTable->addCell($this->objtxtbegin->show());
         $myTable->endRow();
 
         $myTable->startRow();
         $myTable->addCell($this->objEndDate->show());
         $myTable->addCell($this->objenddate->show());
-        //$myTable->addCell($this->objtxtEnd->show());
         $myTable->endRow();
 
         $myTable->startRow();
@@ -180,7 +180,6 @@ $this->objButtonEdit->setValue($btnEdit);
 
         $myTable->startRow();
         $myTable->addCell($this->objButtonSubmit->show());
-        //$myTable->addCell($this->objButtonEdit->show());
         $myTable->endRow();
 
 /*********************************************************************************************************************************************************/        

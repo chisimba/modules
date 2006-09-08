@@ -1,6 +1,15 @@
 <?php
 
-//create tev template
+  /**
+   *create tev template
+   */   
+   
+   /***********************************************************************************************************
+    *                                                 TO LIST FOR FORM                                        *
+    *validate the field lenghts, field type etc                                                               *
+    *change the itinerary form link to a button then add validation ...cannot move next b4 all fields entered *
+    *get an icon and add tool tip tect informing user canot move forward unless info is entered               *
+    ***********************************************************************************************************/                      
 
 
   /**  create the heading -- Travel expense voucher
@@ -65,6 +74,7 @@
   $valpostal  = $this->objLanguage->languageText('mod_onlineinvoice_enterpostal','onlineinvoice');
   $valcountry = $this->objLanguage->languageText('mod_onlineinvoice_entercountry','onlineinvoice');
   $travpurpose  = $this->objLanguage->languageText('mod_onlineinvoice_enterpurpose','onlineinvoice');
+  $strnext  = ucfirst($next);
 /************************************************************************************************************************************************/
 
   /**
@@ -116,13 +126,8 @@
    
    $this->loadClass('textinput', 'htmlelements');
 
-  //$this->objtxtname = $this->newObject('textinput','htmlelements');
-  //$this->objtxtname->name   = 'txtClaimantName';
   $this->objtxtname = new textinput('txtClaimantName');
   $this->objtxtname->id = 'txtClaimantName';
-  //$this->objtxtname->value  = "";
-  //$this->objpopup = $this->newObject('mousepopup','htmlelements');
-  //$this->objpopup->mouseoverpopup('name','enter name','enter name',$this->objtxtname); 
   
   $this->objtxttitle = $this->newObject('textinput','htmlelements');
   $this->objtxttitle->name   = 'txtTitle';
@@ -155,35 +160,28 @@
    *create form buttons
    */
   
-  $this->objButtonSubmit  = $this->newobject('button','htmlelements');
-  $this->objButtonSubmit->setValue($strsave);
-  $this->objButtonSubmit->name = 'submit';
-  $this->objButtonSubmit->setToSubmit();
+  //$this->objButtonSubmit  = $this->newobject('button','htmlelements');
+  //$this->objButtonSubmit->setValue($strsave);
+  //$this->objButtonSubmit->name = 'submit';
+  //$this->objButtonSubmit->setToSubmit();
 
-  $this->objButtonEdit  = $this->newobject('button','htmlelements');
-  $this->objButtonEdit->setValue($btnEdit);
-  $this->objButtonEdit->setOnClick('alert(\'An onclick Event\')');
+  $this->objButtonNext  = $this->newobject('button','htmlelements');
+  $this->objButtonNext->setValue($strnext);
+  $this->objButtonNext->name = 'next';
+  $this->objButtonNext->setToSubmit();
 
 /************************************************************************************************************************************************/
 
   /**
-   *create links for exit and next page
+   *create link to move to the itinerary page
    */
-
   
-/*  $this->objcompleteitenirarymulti  =& $this->newobject('link','htmlelements');
-  $strshowitenirary = strtoupper($showitenirary); 
-  $this->objcompleteitenirarymulti->link($this->uri(array('action'=>'createmultiitenirary'))); /*shows the intenirary multi template*/
-  //$this->objcompleteitenirarymulti->link = $strshowitenirary;/*$showitenirarymulti;*/
-  
-  $urltext = 'Itinerary';
-  $content = 'Complete itinerary for the travel';
-  $caption = '';
-  $url = $this->uri(array('action'=>'createmultiitenirary'));
-  $this->objitinerarylink  = & $this->newObject('mouseoverpopup','htmlelements');
-  $this->objitinerarylink->mouseoverpopup($urltext,$content,$caption,$url);
-
-  
+  //$urltext = ucfirst($showitenirary);
+  //$content = 'Complete itinerary for the travel';
+  //$caption = '';
+  //$url = $this->uri(array('action'=>'createmultiitenirary'));
+  //$this->objitinerarylink  = & $this->newObject('mouseoverpopup','htmlelements');
+  //$this->objitinerarylink->mouseoverpopup($urltext,$content,$caption,$url);
 /************************************************************************************************************************************************/
 
   /**
@@ -197,16 +195,6 @@
   $this->objPurposeArea->setName($textArea);
   $this->objPurposeArea->setContent("");
 
-/************************************************************************************************************************************************/
-  /**
-   *create radiobuttons for itenirary choice
-   */
-  
-    $this->objradio = $this->newobject('radio','htmlelements');
-    $this->objradio->addOption('o','One Way');    
-    $this->objradio->addOption('m','Multi Destination -- requires more thatn one destination');
- 	  $this->objradio->setSelected('o'); 
-        
 /************************************************************************************************************************************************/
 
   /**
@@ -258,17 +246,10 @@
         $myTable->addCell($this->objDescription->show());
         $myTable->addCell($this->objPurposeArea->show());
         $myTable->endRow();
-        
-
-        /*$myTable->startRow();
-        $myTable->addCell($itenirary);
-        $myTable->addCell($this->objcompleteitenirary->show());
-        $myTable->addCell($iteniraryM);
-        $myTable->addCell($this->objcompleteitenirarymulti->show());
-        $myTable->endRow();*/
 
         $myTable->startRow();
-        $myTable->addCell($this->objButtonSubmit->show());
+        //$myTable->addCell($this->objButtonSubmit->show());
+        $myTable->addCell($this->objButtonNext->show());
         $myTable->endRow();
         
 /************************************************************************************************************************************************/        
@@ -276,31 +257,33 @@
    *create tabbox for traveler information
    */
 //$this->loadclass('navbuttons','htmlelements');
-//$objicon = $this->newObject('navbuttons','htmlelements');
-//$objicon = new navButtons();
-//$objicon->putInfoButton();   
+//$this->objicon =& $this->newObject('navbuttons','htmlelements');
+//$this->objicon->putInfoButton();
+//$objicon = new navbuttons();
+   
 
-$striconinfo = $information ;//. $objicon->show(); 
+$striconinfo = $information ; 
 $this->loadClass('tabbedbox', 'htmlelements');
 $objtraveler = new tabbedbox();
 $objtraveler->addTabLabel('Traveler Information');
 $objtraveler->addBoxContent('<br>'  . "<div align=\"center\">" .$striconinfo . "</div>" . '<br>'  . $myTable->show()  . '<br>' );
 
-$this->loadClass('tabbedbox', 'htmlelements');
-$objitinerary = new tabbedbox();
-$objitinerary->addTabLabel('Itinerary');
-$objitinerary->addBoxContent('<br>'.'<br>'.$itineraryinfo.'<br>'. ' ' .$this->objitinerarylink->show(). '<br>'  . '<br>'); /* . '<br>'  . $this->objexit->show() . " "  . $this->objnext->show());*/
+//$this->loadClass('tabbedbox', 'htmlelements');
+//$objitinerary = new tabbedbox();
+//$objitinerary->addTabLabel('Itinerary');
+//$objitinerary->addBoxContent('<br>'.'<br>'.$itineraryinfo.'<br>'. ' ' .$this->objitinerarylink->show(). '<br>'  . '<br>'); /* . '<br>'  . $this->objexit->show() . " "  . $this->objnext->show());*/
         //$this->objcompleteitenirary->show() . 
 /************************************************************************************************************************************************/
   /**
    *create form to place all elements in
+   *create validation on these fields, required and maxlength   
    */
               
   $this->loadClass('form','htmlelements');
   $objtevForm = new form('tev',$this->uri(array('action'=>'submitclaimantinfo')));
   $objtevForm->id = 'tev';
   $objtevForm->displayType = 3;
-  $objtevForm->addToForm($objtraveler->show() . '<br>'  . $objitinerary->show());
+  $objtevForm->addToForm($objtraveler->show()); //. '<br>'  . $objitinerary->show());
   $objtevForm->addRule('txtClaimantName',$valname,'required');
   $objtevForm->addRule('txtTitle', $valtitle,'required');
   $objtevForm->addRule('txtAddress',$valaddress,'required');
@@ -309,6 +292,8 @@ $objitinerary->addBoxContent('<br>'.'<br>'.$itineraryinfo.'<br>'. ' ' .$this->ob
   $objtevForm->addRule('txtpostalcode',$valpostal,'required');
   $objtevForm->addRule('txtcountry',$valcountry,'required');
   $objtevForm->addRule('travel',$travpurpose,'required');
+  
+  
 /************************************************************************************************************************************************/ 
 
   /**
@@ -317,10 +302,6 @@ $objitinerary->addBoxContent('<br>'.'<br>'.$itineraryinfo.'<br>'. ' ' .$this->ob
 
   echo  "<div align=\"center\">" . $this->objMainheading->show() . "</div>";
   echo  $objtevForm->show();
-
-
-
-
 
 ?>
 

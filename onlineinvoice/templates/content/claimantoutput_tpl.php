@@ -94,7 +94,7 @@
           *assign the array session to a variable $dateinfo
           *loop through the array variable and assign each element to a variable                    
           */
-          $dateinfo     =  $this->getSession('invoicedata');
+          $dateinfo []    =  $this->getSession('invoicedata');
           while (list ($count, $values)  = each ($dateinfo)) {
               if($count == 'begindate') {
               $bdate = $values;
@@ -148,10 +148,10 @@
          *loop through the array variable and assign each element to a variable
          */         
          $itinerarydetails  = $this->getSession('addmultiitinerary');
-            while(list($subkey,$subval)  = each($itinerarydetails)) 
+            while(list($key,$val)  = each($itinerarydetails)) 
             {
-              //while(list($subkey,$subval) = each($result))
-              //{
+              while(list($subkey,$subval) = each($val))
+              {
                   //echo 'hi';
                   //die;
                   if($subkey == 'departuredate') {
@@ -173,7 +173,7 @@
                   }
                   if($subkey == 'arrivalcity') {
                   $displayarrivcity = $subval;
-                //  }
+                  }
               }
               
             
@@ -219,18 +219,117 @@
           }    
        
        }              
+/****************************************************************************************************************************/         
+         /**
+          *get dedailts from the lodge info by calling the session variable
+          */
+          
+         // $lodgedetails = array();
+          $lodgeinfo [] = $this->getSession('lodgedetails');
+             while(list($lodgekey,$lodgeval) = each($lodgeinfo)) {
+               while(list($subkey,$subval) = each($lodgeval))
+                {
                  
+                if($lodgekey  ==  'date'){
+                $lodgedate  = $subval;
+                //echo $lodgedate;
+                //  die;
+                }
+                if($lodgekey  ==  'vendor'){
+                $lodgevendor  = $subval;
+                //echo $lodgevendor;
+                //die;
+                }
+                if($lodgekey  ==  'currency'){
+                $lodgecurrency  = $subval;
+                }
+                if($lodgekey  ==  'cost'){
+                $lodgecost  = $subval;
+                }
+                if($lodgekey  ==  'exchangerate'){
+                $lodgerate  = $subval;
+                }
+              }
+            }
+                             
+         
 /****************************************************************************************************************************/ 
+       /**
+        *create a table to place all lodge info in
+        */
+         $myTableLodge =  new htmlTable;      
+         $myTableLodge->width='70%';
+         $myTableLodge->border='10';
+         $myTableLodge->cellspacing = '5';
+         $myTableLodge->cellpadding ='5';
+
+         $myTableLodge->startRow();
+         $myTableLodge->addCell('Date');
+         $myTableLodge->addCell($lodgedate);
+         $myTableLodge->endRow();
+         
+         $myTableLodge->startRow();
+         $myTableLodge->addCell('Vendor');
+         $myTableLodge->addCell($lodgevendor);
+         $myTableLodge->endRow();
+         
+         $myTableLodge->startRow();
+         $myTableLodge->addCell('Currency');
+         $myTableLodge->addCell($lodgecurrency);
+         $myTableLodge->endRow();
+
+         $myTableLodge->startRow();
+         $myTableLodge->addCell('Cost');
+         $myTableLodge->addCell($lodgecost);
+         $myTableLodge->endRow();
+         
+         $myTableLodge->startRow();
+         $myTableLodge->addCell('Exchange Rate');
+         $myTableLodge->addCell($lodgerate);
+         $myTableLodge->endRow();
+       
+/****************************************************************************************************************************/
         /**
          *create a table to place all claimant form elements in
          */ 
          
          $myTable =  new htmlTable;      
          $myTable->width='70%';
-         $myTable->border='0';
-         $myTable->cellspacing = '10';
-         $myTable->cellpadding ='10';
+         $myTable->border='10';
+         $myTable->cellspacing = '5';
+         $myTable->cellpadding ='5';
 
+         
+/*        $myTable->startHeaderRow();
+        $myTable->addHeaderCell($beginDate);
+        $myTable->addHeaderCell($endDate);
+        $myTable->addHeaderCell($name);
+        $myTable->addHeaderCell($title);
+        $myTable->addHeaderCell($address);
+        $myTable->addHeaderCell($city);
+        $myTable->addHeaderCell($province);
+        $myTable->addHeaderCell($postalcode);
+        $myTable->addHeaderCell($country);
+        $myTable->addHeaderCell($travelpurpose);
+        $myTable->endHeaderRow();
+        
+        $myTable->startRow();
+        $myTable->addCell($bdate);
+        $myTable->addCell($edate);
+        $myTable->addCell($n);
+        $myTable->addCell($t);
+        $myTable->addCell($p);
+        $myTable->addCell($a);
+        
+        $myTable->addCell($ct);
+        $myTable->addCell($p);
+        $myTable->addCell($po);
+        $myTable->addCell($coun);
+        $myTable->addCell($purpose);
+        $myTable->endRow();*/
+         
+         
+         
          $myTable->startRow();
          $myTable->addCell($beginDate);
          $myTable->addCell($bdate);
@@ -277,10 +376,10 @@
          $myTable->endRow();
          
          $myTable->startRow();
-         $myTable->addCell($travelpurpose);
+         $myTable->addCell(ucfirst($travelpurpose));
          $myTable->addCell($purpose);
-         $myTable->endRow();
-         
+         $myTable->endRow(); 
+/******************************************************************************************************************************************************/         
          /**
           *create a table for form buttons
           */                    
@@ -295,31 +394,52 @@
          $myTabbuttons->addCell($objsavebutton->show());
          $myTabbuttons->addCell($objeditbutton->show());
          $myTabbuttons->endRow();
-         
+/******************************************************************************************************************************************************/         
         /**
          *create a table to place all itinerary elements in
          */                  
          $myTabItinerary =  new htmlTable;      
-         $myTabItinerary->width='100%';
-         $myTabItinerary->border='0';
-         $myTabItinerary->cellspacing = '30';
-         $myTabItinerary->cellpadding ='10';
+         $myTabItinerary->width='70%';
+         $myTabItinerary->border='10';
+         $myTabItinerary->cellspacing = '5';
+         $myTabItinerary->cellpadding ='5';
 
-         $myTabItinerary->startHeaderRow();
+         /*$myTabItinerary->startHeaderRow();
          $myTabItinerary->addHeaderCell($str1);
          $myTabItinerary->addHeaderCell($str2);
          $myTabItinerary->addHeaderCell($str3);
          $myTabItinerary->addHeaderCell($str4);
          $myTabItinerary->addHeaderCell($str5);
          $myTabItinerary->addHeaderCell($str6);
-         $myTabItinerary->endHeaderRow();
+         $myTabItinerary->endHeaderRow();*/
          
          $myTabItinerary->startRow();
+         $myTabItinerary->addCell($str1);
          $myTabItinerary->addCell($displaydepdate);
+         $myTabItinerary->endRow();
+         
+         $myTabItinerary->startRow();
+         $myTabItinerary->addCell($str2);
          $myTabItinerary->addCell($displaydepttime);
+         $myTabItinerary->endRow();
+         
+         $myTabItinerary->startRow();
+         $myTabItinerary->addCell($str3);
          $myTabItinerary->addCell($displaydeptcity);
+         $myTabItinerary->endRow();
+         
+         $myTabItinerary->startRow();
+         $myTabItinerary->addCell($str4);
          $myTabItinerary->addCell($displayarrivdate);
+         $myTabItinerary->endRow();
+         
+         $myTabItinerary->startRow();
+         $myTabItinerary->addCell($str5);
          $myTabItinerary->addCell($displayarrivtime);
+         $myTabItinerary->endRow();
+         
+         $myTabItinerary->startRow();
+         $myTabItinerary->addCell($str6);
          $myTabItinerary->addCell($displayarrivcity);
          $myTabItinerary->endRow();
          
@@ -329,7 +449,7 @@
           
          
         $myTablePerdiem = $this->newObject('htmltable','htmlelements');
-        $myTablePerdiem->width='40%';
+        $myTablePerdiem->width='70%';
         $myTablePerdiem->border= '5';
         $myTablePerdiem->cellspacing='5';
         $myTablePerdiem->cellpadding='5';
@@ -346,7 +466,7 @@
         $myTablePerdiem->endRow();
       /********************************************************************/  
         $myTablelunch = $this->newObject('htmltable','htmlelements');
-        $myTablelunch->width='40%';
+        $myTablelunch->width='70%';
         $myTablelunch->border='5';
         $myTablelunch->cellspacing='5';
         $myTablelunch->cellpadding='5';
@@ -364,7 +484,7 @@
 
       /********************************************************************/  
         $myTabledinner = $this->newObject('htmltable','htmlelements');
-        $myTabledinner->width='40%';
+        $myTabledinner->width='70%';
         $myTabledinner->border='5';
         $myTabledinner->cellspacing='5';
         $myTabledinner->cellpadding='5';
@@ -387,15 +507,19 @@
          
          $objtabbedbox = new tabbedbox();
          $objtabbedbox->addTabLabel('Claimant Information');
-         $objtabbedbox->addBoxContent($myTable->show());        
+         $objtabbedbox->addBoxContent("<div align=\"center\">" . '<br />' . $myTable->show()  . "</div>"  . '<br />');        
          
          $objtabItinerary = new tabbedbox();
          $objtabItinerary->addTabLabel('Itinerary Information');
-         $objtabItinerary->addBoxContent($myTabItinerary->show());        
+         $objtabItinerary->addBoxContent("<div align=\"center\">" . '<br />' .$myTabItinerary->show()  . "</div>". '<br />');        
          
          $objtabExpense = new tabbedbox();
          $objtabExpense->addTabLabel('Per Diem Expenses');
-         $objtabExpense->addBoxContent('<br />' . $myTablePerdiem->show() . ' ' . $myTablelunch->show() . $myTabledinner->show()  . '<br / >');
+         $objtabExpense->addBoxContent("<div align=\"center\">" .'<br />' . $myTablePerdiem->show() . ' ' . $myTablelunch->show() . $myTabledinner->show()  . '<br / >'. "</div>");
+         
+         $objtablodgeExpense = new tabbedbox();
+         $objtablodgeExpense->addTabLabel('Lodge Expenses');
+         $objtablodgeExpense->addBoxContent("<div align=\"center\">" . '<br />' . $myTableLodge->show(). '<br / >' . "</div>");
                
 /****************************************************************************************************************************/
                                 
@@ -405,7 +529,7 @@
                   
         $objClaimantForm = new form('claimantoutput',$this->uri(array('action'=>'savealldetails')));
         $objClaimantForm->displayType = 3;
-        $objClaimantForm->addToForm($objtabbedbox->show() . '<br>'  . $objtabItinerary->show() .  '<br>' .  '<br>'  .$objtabExpense->show() . $myTabbuttons->show());	
+        $objClaimantForm->addToForm($objtabbedbox->show() . '<br>'  . $objtabItinerary->show() .  '<br>' .  '<br>'  .$objtabExpense->show() .$objtablodgeExpense->show(). $myTabbuttons->show());	
         //$objClaimantForm->addRule('txtDate', 'Must be number','required');             
 
 /****************************************************************************************************************************/

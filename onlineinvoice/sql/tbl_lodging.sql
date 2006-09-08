@@ -11,24 +11,29 @@ $fields = array(
 	'id' => array(
     'type' => 'text',
     'length' => 32,
+    'notnull'     => 1,
     'notnull'     => 1
     ),
   'createdby'  => array(
      'type'  =>  'text',
-     'length'=>  32
+     'length'=>  32,
+     'notnull'     => 1
     ),
   'datecreated' =>  array(
-      'type'  =>  'date'
+      'type'  =>  'date',
+      'notnull'     => 1
     ),
   'modifiedby'  =>  array(
       'type'    =>  'text',
-      'length'  =>  32
+      'length'  =>  32,
+      'notnull'     => 1
     ),
    'datemodified' =>  array(
     'type'        =>  'date'
     ),
     'updated'     =>  array(
-    'type'        =>  'date'
+    'type'        =>  'date',
+    'notnull'     => 1
     ),
    'date'         =>  array(
       'type'      =>  'date',
@@ -51,6 +56,9 @@ $fields = array(
    'exchangerate' =>  array(
     'type'        =>  'float',
     'notnull'     => 1
-    ) 
+    ),
+    'filename' =>  array(
+    'type'        =>  'text',
+    'notnull'     => 1 
     );
 ?>

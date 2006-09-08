@@ -75,11 +75,24 @@ $this->objrate->label($rate,$lblRate);
 
 //create all form buttons
 
-$btnsave  = $this->objLanguage->languageText('word_save');
-$strsave = ucfirst($btnsave);
+//$btnsave  = $this->objLanguage->languageText('word_save');
+//$strsave = ucfirst($btnsave);
+//$this->loadclass('button','htmlelements');
+//$this->objButtonSubmit  = new button('saveperdiem', $strsave);
+//$this->objButtonSubmit->setToSubmit();
+
+$next  = $this->objLanguage->languageText('phrase_next');
+$strnext = ucfirst($next);
 $this->loadclass('button','htmlelements');
-$this->objButtonSubmit  = new button('saveperdiem', $strsave);
-$this->objButtonSubmit->setToSubmit();
+$this->objButtonNext  = new button('saveperdiem', $strnext);
+$this->objButtonNext->setToSubmit();
+
+$exit  = $this->objLanguage->languageText('phrase_exit');
+$strexit = ucfirst($exit);
+$this->loadclass('button','htmlelements');
+$this->objButtonExit  = new button('exitform', $strexit);
+$this->objButtonExit->setToSubmit();
+
 
 /**
  *button to add more expenses
@@ -207,10 +220,14 @@ $this->objtxtdinnerrate->value  = "0.00";
         $myTabExpenses->addCell($this->objtxtdinnerloc->show());
         $myTabExpenses->addCell($this->objrate->show());
         $myTabExpenses->addCell($this->objtxtdinnerrate->show());
+        //$myTabExpenses->addCell($this->objAddperdiem->show());
         $myTabExpenses->endRow();
 
         $myTabExpenses->startRow();
-        $myTabExpenses->addCell($this->objButtonSubmit->show());
+        //$myTabExpenses->addCell($this->objButtonSubmit->show());
+        $myTabExpenses->addCell('');
+        $myTabExpenses->addCell('');
+        $myTabExpenses->addCell('');
         $myTabExpenses->addCell('');
         $myTabExpenses->addCell('');
         $myTabExpenses->addCell($this->objAddperdiem->show());       
@@ -226,7 +243,7 @@ $this->objtxtdinnerrate->value  = "0.00";
         $myTabButtons->cellpadding ='10';
         
         $myTabButtons->startRow();
-        $myTabButtons->addCell($this->objButtonSubmit->show());
+        $myTabButtons->addCell($this->objButtonNext->show());
         $myTabButtons->addCell($this->objAddperdiem->show());    
 
         //$myTabButtons->addCell($this->objButtonEdit->show());
@@ -256,7 +273,7 @@ $this->objnext->link = $next;
 $this->loadClass('tabbedbox', 'htmlelements');
 $objtabbedbox = new tabbedbox();
 $objtabbedbox->addTabLabel('Per Diem Expenses');
-$objtabbedbox->addBoxContent($myTabExpenses->show(). '<br>' . '<br>'  . $this->objexit->show()  . " " .$this->objnext->show().'<br>'.'<br>') ;
+$objtabbedbox->addBoxContent($myTabExpenses->show(). '<br>' . '<br>'  . "<div align=\"left\">".$this->objButtonExit->show()  . " " .$this->objButtonNext->show().'<br>'.'<br>' . "</div>") ;
 
 /**************************************************************************************************************/
 

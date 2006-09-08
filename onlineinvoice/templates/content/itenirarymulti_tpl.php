@@ -1,13 +1,31 @@
 <?php
+
+    /************************************************************************
+     *                  to do list                                          *
+     * 1)either change save button to next -- save session variable in next action
+     * 1.1 then add another leg in add button as normal multi array tho into session
+     * 2)else get code for both add and save the same -- instrcut user SOMEHOW not to save after adding another day
+     * check that all text elements within the form is in reg file   
+     * code sytax for next,exit,add another itinerary buttons 
+     * ???get multi itinerary button to work
+     * take validation out of the exit button                 
+     * /    
+                                               
     /**
-     *create template for multiple itinerary 
+     *create template for multiple / single itinerary 
      */
-     /**
-    *create all languge elements for all form labels
-    */
-        
+     
+     
+    /**
+     *loadclass classes to use elements within form
+     */             
     $this->loadClass('textinput', 'htmlelements');
     $this->loadClass('button', 'htmlelements');
+    
+    
+    /**
+    *create all languge elements for all form labels
+    */
            
     $deptDate  = $this->objLanguage->languageText('phrase_departuredate');
     $deptTime  = $this->objLanguage->languageText('phrase_departuretime');
@@ -26,12 +44,13 @@
     $stradd = ucfirst($btnAdd);
     $error_message = $this->objLanguage->languageText('phrase_dateerror');
     $strerror  =  strtoupper($error_message);
+    $strexitform  = $this->objLanguage->languageText('mod_onlineinvoice_exitform','onlineinvoice');
     $strsucessfull = $this->objLanguage->languageText('mod_onlineinvoice_valuessubmitted','onlineinvoice');
     $sucessfull = strtoupper($strsucessfull);
 /************************************************************************************************************************************************/
-  /**
-  *create heading -- travel itenirary
-  */  
+   /**
+     *create heading -- travel itenirary
+     */  
     $this->objIteninary =& $this->newObject('htmlheading','htmlelements');
     $this->objIteninary->type = 3;
     $this->objIteninary->str=$objLanguage->languageText('phrase_traveleritenirary');
@@ -91,18 +110,11 @@
    *create all text inputs 
    */     
    
-   /* $this->objtxtdepttime = $this->newObject('textinput','htmlelements');
-    $this->objtxtdepttime->name   = "txtdepttime";
-    $this->objtxtdepttime->value  = "";
-    $this->objtxtdepttime->size = 20*/
-
     $this->objtxtdeptcity = $this->newObject('textinput','htmlelements');
     $this->objtxtdeptcity->name   = "txtdeptcity";
     $this->objtxtdeptcity->value  = "";
     $this->objtxtdeptcity->size = 24;
     
-    //$this->objtxtarrivtime = new textinput("txtarrivtime", '');
-
     $this->objtxtarrivcity = $this->newObject('textinput','htmlelements');
     $this->objtxtarrivcity->name   = "txtarrivcity";
     $this->objtxtarrivcity->value  = "";
@@ -113,21 +125,25 @@
    */
    
     
+    //$this->objButtonSubmit  = new button('save', $strsave);
+    //$this->objButtonSubmit->setToSubmit();
+    $this->objnext  = new button('next', $next);
+    $this->objnext->setToSubmit();
     
-    $this->objButtonSubmit  = new button('save', $strsave);
-    $this->objButtonSubmit->setToSubmit();
-    
+    /**
+     *validate dates to check that arrive date is not before departure date
+     */         
     $onClick = 'var dept_date = document.itinerarymulti.txtdeptddate;
-					     var arrive_date = document.itinerarymulti.txtarraivaldate;
+		  			     var arrive_date = document.itinerarymulti.txtarraivaldate;
 					 
 					 
 					 
-					     var acceptance = true;
+			   	  var acceptance = true;
 					      
-					  /*value of the begin date and value of the end date*/
+			      /*value of the arrival date and value of the departure date*/
 					    
-		  			   var value_end   = arrive_date.value;
-					     var value_begin = dept_date.value;
+		  		   var value_end   = arrive_date.value;
+					  var value_begin = dept_date.value;
 					 
 					 /*checks if dates are right*/
 					 
@@ -144,41 +160,20 @@
 					 }else{
           // alert(\''.$sucessfull.'\')
            }';
-   $this->objButtonSubmit->extra = sprintf(' onClick ="javascript: %s"', $onClick );
-            
-            /******************************************************/
+  // $this->objButtonSubmit->extra = sprintf(' onClick ="javascript: %s"', $onClick );
+   $this->objnext->extra = sprintf(' onClick ="javascript: %s"', $onClick );
+   
+   $this->objexit  = new button('exit',$exit);
+   $this->objexit->setToSubmit();
+/***********************************************************************************************************************************************/   
+   $onSelect  = 'alert(\''.$strexitform .'\'); ';
+   $this->objexit->extra  = sprintf(' onClick ="javascript: %s"', $onSelect);
+     
+/************************************************************************************************************************************************/
     
     $this->objAddItinerary  = new button('add', $stradd);
     $this->objAddItinerary->setToSubmit();
-    
-        $onClick = 'var dept_date = document.itinerarymulti.txtdeptddate;
-					     var arrive_date = document.itinerarymulti.txtarraivaldate;
-					 
-					 
-					 
-					     var acceptance = true;
-					      
-					  /*value of the begin date and value of the end date*/
-					    
-		  			   var value_end   = arrive_date.value;
-					     var value_begin = dept_date.value;
-					 
-					 /*checks if dates are right*/
-					 
-					 if(value_begin > value_end){
-					 	acceptance = false;
-					 }
-					 
-							 
-					 /*check final condition*/
-					 if(!acceptance){
-					 	alert(\''.$strerror .'\');
-						acceptance = true;
-						return false;
-					 }else{
-          // alert(\''.$sucessfull.'\')
-           }';
-      $this->objAddItinerary->extra = sprintf(' onClick ="javascript: %s"', $onClick );
+    $this->objAddItinerary->extra = sprintf(' onClick ="javascript: %s"', $onClick );
 /************************************************************************************************************************************************/
   /**
    *create instance of the dropdown list class
@@ -312,32 +307,23 @@
      *create a link to return to the tev emplate
      */         
     
-    $this->objreturn  =& $this->newobject('link','htmlelements');
-    $this->objreturn->link($this->uri(array('action'=>'createtev'))); /*takes user to the next template -- per diem expense*/
-    $this->objreturn->link = $return;
+    //$this->objreturn  =& $this->newobject('link','htmlelements');
+    //$this->objreturn->link($this->uri(array('action'=>'createtev'))); /*takes user to the previous template -- tev*/
+    //$this->objreturn->link = $return;
     
     /*$this->objmulti  =& $this->newobject('link','htmlelements');
     $this->objmulti->link($this->uri(array('action'=>'addmultiitenirary'))); /*takes user to the next template -- per diem expense*/
     //$this->objmulti->link = $addanotheritinerary;
     
-    $this->objexit  =& $this->newobject('link','htmlelements');
-    $this->objexit->link($this->uri(array('action'=>'NULL')));  /* -- returns banck to original invoice template*/
-    $this->objexit->link = $exit;
+    //$this->objexit  =& $this->newobject('link','htmlelements');
+    //$this->objexit->link($this->uri(array('action'=>'NULL')));  /* -- returns banck to original invoice template*/
+    //$this->objexit->link = $exit;
 
-    $this->objnext  =& $this->newobject('link','htmlelements');
-    $this->objnext->link($this->uri(array('action'=>'createexpenses'))); /*takes user to the next template -- per diem expense*/
-    $this->objnext->link = $next;
+    //$this->objnext  =& $this->newobject('link','htmlelements');
+    //$this->objnext->link($this->uri(array('action'=>'createexpenses'))); /*takes user to the next template -- per diem expense*/
+    //$this->objnext->link = $next;
 /************************************************************************************************************************************************/   
 
-    /*$this->objButtonSubmit  = $this->newobject('button','htmlelements');
-    $this->objButtonSubmit->setValue($btnSubmit);
-    $this->objButtonSubmit->setToSubmit();
-    
-    $this->objAddItinerary  = $this->newobject('button','htmlelements');
-    $this->objAddItinerary->setValue($btnSubmit);
-    $this->objButtonSubmit->setToSubmit();*/
-    
-/************************************************************************************************************************************************/
     /**
      *create table to place all form elements for the itenirary template 
     */
@@ -384,18 +370,14 @@
 
         
         $myTabIten->startRow();
-        $myTabIten->addCell($this->objButtonSubmit->show());
+//        $myTabIten->addCell($this->objButtonSubmit->show());
+        $myTabIten->addCell('');
         $myTabIten->addCell($this->objAddItinerary->show());
         $myTabIten->endRow();
         
-        $myTabIten->startRow();
-        $myTabIten->endRow();
-        
-        //$myTabIten->startRow();
-        //$myTabIten->addCell($this->objexit->show());
-        //$myTabIten->addCell($this->objnext->show());
-        //$myTabIten->endRow();
-        
+        /*$myTabIten->startRow();
+        $myTabIten->addCell($this->objButtonSubmit->show());
+        $myTabIten->endRow();*/
         
 
         /*$myTabIten->startRow();
@@ -408,7 +390,7 @@
 $this->loadClass('tabbedbox', 'htmlelements');
 $objmultiitinerary = new tabbedbox();
 $objmultiitinerary->addTabLabel('Travelers Itinerary');
-$objmultiitinerary->addBoxContent('<br>' . $myTabIten->show() . '<br>' . '<br>' .$this->objexit->show() .' '. $this->objnext->show()  . '<br />' . '<br />');               
+$objmultiitinerary->addBoxContent('<br>' . $myTabIten->show() . '<br>' . '<br>' ."<div align=\"left\">" .$this->objexit->show() .' '. $this->objnext->show(). "</div>"  . '<br />' . '<br />');               
 
         
 /************************************************************************************************************************************************/
