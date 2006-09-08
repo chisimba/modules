@@ -12,6 +12,8 @@ $objModule = & $this->newObject('modules', 'modulecatalogue');
 $rightSideColumn = "";
 //Add the getting help block
 $rightSideColumn .= $objBlocks->showBlock('gettinghelp', 'help');
+//simple calendar
+$rightSideColumn .= '<br />'. $objBlocks->showBlock('calendar', 'calendar');
 //Add the latest in blog as a a block
 $rightSideColumn .= $objBlocks->showBlock('latest', 'blog');
 //Add the latest in blog as a a block
@@ -36,8 +38,7 @@ $rightSideColumn .= $objBlocks->showBlock('dictionary', 'dictionary');
 /*****************LEFT SIDE ***************************************/
 //Navigation
 $leftSide = $this->getSectionMenu();
-//simple calendar
-//$leftSide .= '<br />'. $objBlocks->showBlock('calendar', 'calendar');
+
 
 
 /***************** END OF LEFT SIDE *******************************/

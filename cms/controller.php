@@ -119,7 +119,8 @@ class cms extends controller
 	               $objBlocks = & $this->newObject('blocks', 'blocks');
 	               //$objBlocks->showBlock('calendar', 'calendar')
 	               $objCal = & $this->newObject('block_calendar', 'calendar');
-	               $this->setVar('content', $objCal->show());
+	            
+	               $this->setVar('content', $objCal->show(TRUE));
 	               $this->setVar('title', $objCal->title);
 	            	return 'cms_calendar_tpl.php';
 	            
