@@ -36,7 +36,63 @@ class dbcontextcmscontent extends dbTable  {
      */
     public function getSections($contextCode)
     {
-        return $this->getAll("WHERE contextcode = '".$contextCode."'");
+        try{
+            
+            
+            $objSections = $this->newObject('dbsections', 'cmsadmin');
+            
+            $arrSections = $this->getAll("WHERE contextcode = '".$contextCode."'");
+            
+            $newArray = array();
+            
+            foreach ($arrSections as $sections)
+            {
+                $newArray[] = $objSections->getRow('id', $sections['sectionid']);
+            }
+            
+            return $newArray;
+        }
+        catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
+        }
+    }
+    
+    /**
+     * Method to get all the pages for the context
+     * @param string $contextCode The context Code
+     * @return array
+     * @access public
+     * 
+     */
+    public function getContextPages($contextCode)
+    {
+        try{    
+                $objContent = & $this->newObject('dbcontent', 'cmsadmin');
+                
+                $sectionArr = $this->getSections($contextCode);
+                $newArray = array();
+                 print '<pre>';
+              //  print_r($sectionArr);
+                print '</pre>';
+                foreach($sectionArr as $section)
+                {
+                    $arr = $objContent->getAll("WHERE sectionid = '".trim($section['id'])."'");
+                   
+                    foreach ($arr as $ar)
+                    {
+                        $newArray[] = $ar;    
+                    }
+                    
+                }
+                
+                return $newArray;
+        }catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
+        }
         
     }
     

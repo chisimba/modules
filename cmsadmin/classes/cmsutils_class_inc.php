@@ -870,7 +870,7 @@ class cmsutils extends object
 		$link->href = $this->uri(array('action' => 'categories'));
 		$str .= '<p>'.$link->show();
 		
-		//categories link
+		//media link
 		$link->link = 'Media';
 		$link->href = $this->uri(null, 'mediamanager');
 		$str .= '<p>'.$link->show();
@@ -879,6 +879,8 @@ class cmsutils extends object
 		$nodes[] = array('text' => 'Content', 'uri' => $this->uri(array('action' => 'content')));
 		$nodes[] = array('text' => 'Sections', 'uri' => $this->uri(array('action' => 'sections')));
 		//$nodes[] = array('text' => 'Categories', 'uri' => $this->uri(array('action' => 'categories')));
+		
+		
 		$nodes[] = array('text' => 'Front Page', 'uri' => $this->uri(array('action' => 'frontpages')));
 		$nodes[] = array('text' => 'Media', 'uri' => $this->uri(null,'mediamanager'))	;	
 		

@@ -24,7 +24,15 @@ if($this->getParam('filter') == 'trash')
 }
 
 //get the pages
-$arrPages = $this->_objContent->getContentPages($this->getParam('filter'));
+if($this->inContextMode)
+{
+    $objContextContent = $this->newObject('dbcontextcmscontent', 'contextcmscontent');
+    $arrPages = $objContextContent->getContextPages($this->contextCode);
+} 
+else 
+{
+    $arrPages = $this->_objContent->getContentPages($this->getParam('filter'));
+}
 //
 
 
@@ -82,11 +90,11 @@ if ($arrPages)
 	    $tableRow[]= $link->show(); //$this->_objUtils->getCheckIcon($page['published'], TRUE);
 	  //  $table->addCell('up down');
 	    //$table->addCell($page['ordering']);
-		$tableRow[]=$this->_objUtils->getAccess($page['access']);
-		$tableRow[]=$this->_objSections->getMenuText($page['sectionid']);
+		$tableRow[]='<span class="subdued">'.$this->_objUtils->getAccess($page['access']).'</span>';
+		$tableRow[]='<b>'.$this->_objSections->getMenuText($page['sectionid']).'</b>';
 		//$tableRow[]=$this->_objCategories->getMenuText($page['catid']);
-		$tableRow[]=$this->_objUser->fullname($page['created_by']);
-		$tableRow[]=$this->_objUtils->formatShortDate($page['created']);
+		$tableRow[]='<span class="subdued">'.$this->_objUser->fullname($page['created_by']).'</span>';
+		$tableRow[]='<span class="subdued">'.$this->_objUtils->formatShortDate($page['created']).'</span>';
 	
 		//trash or delete link depending on the mode
 		if($mode == 'trash')

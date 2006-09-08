@@ -105,6 +105,17 @@ class cmsadmin extends controller
 			$this->_objUser = & $this->newObject('user', 'security');
         	$this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
         	$this->_objConfig = & $this->newObject('altconfig', 'config');
+        	$this->_objContext = & $this->newObject('dbcontext', 'context');
+        	
+        	$objModule = & $this->newObject('modules', 'modulecatalogue');
+			
+			if($objModule->checkIfRegistered('context'))
+			{
+			     $this->inContextMode = $this->_objContext->getContextCode();
+			     $this->contextCode = $this->_objContext->getContextCode();
+			} else {
+			    $this->inContextMode = FALSE;
+			}
         }	
         catch (customException $e)
         {

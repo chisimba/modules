@@ -15,7 +15,15 @@ $h3->str = ' Section Manager  '.$objIcon->getAddIcon($this->uri(array('action' =
 //counter for records
 $cnt = 1;
 //get the pages
-$arrSections = $this->_objSections->getSections();
+if($this->inContextMode)
+{
+    $objContextContent = $this->newObject('dbcontextcmscontent', 'contextcmscontent');
+    $arrSections = $objContextContent->getSections($this->contextCode);
+} 
+else 
+{
+    $arrSections = $this->_objSections->getSections();
+}
 //
 
 

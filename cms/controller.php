@@ -61,7 +61,21 @@ class cms extends controller
     */
     protected $_objUtils;
     
+     /**
+     * The contextCode
+     *
+     * @access private
+     * @var object
+    */
+    protected $contextCode;
     
+     /**
+     * The contextCode
+     *
+     * @access private
+     * @var object
+    */
+    protected $inContextMode;
     
     
 	/**
@@ -76,6 +90,18 @@ class cms extends controller
 			$this->_objCategories = & $this->newObject('dbcategories', 'cmsadmin');
 			$this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
 			$this->_objUtils = & $this->newObject('cmsutils', 'cmsadmin');
+			$this->_objContext = & $this->newObject('dbcontext', 'context');
+			
+			$objModule = & $this->newObject('modules', 'moduleacatelogue');
+			
+			if($objModule->checkIfRegistered('context'))
+			{
+			     $this->inContextMode = $this->_objContext->getContextCode();
+			     $this->contextCode = $this->_objContext->getContextCode();
+			} else {
+			    $this->inContextMode = FALSE;
+			}
+			
 			//$this->_objICal = & $this->newObject('icalendar', 'ical');
         
         }catch (Exception $e){
