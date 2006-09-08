@@ -12,10 +12,10 @@ $idNum = new textinput('idnum');
 $surname = new textinput('surname');
 $firstname = new textinput('firstname');
 $maritalSts = new dropdown('maritalsts');
-$maritalSts->addOption('single', $objLanguage->languagetext('word_single'));
-$maritalSts->addOption('married', $objLanguage->languagetext('word_married'));
-$maritalSts->addOption('divorced', $objLanguage->languagetext('word_divorced'));
-$maritalSts->addOption('widowed', $objLanguage->languagetext('word_widowed'));
+$maritalSts->addOption('1', $objLanguage->languagetext('word_single'));
+$maritalSts->addOption('2', $objLanguage->languagetext('word_married'));
+$maritalSts->addOption('3', $objLanguage->languagetext('word_divorced'));
+$maritalSts->addOption('4', $objLanguage->languagetext('word_widowed'));
 
 //$year = new dropdown('year');
 $startyear = date("Y");
@@ -28,29 +28,28 @@ $year = new textinput("year", $start,  "hidden", NULL);
 
 
 $semester = new radio('semester');
-for($i = 1; $i <= 2; $i ++){
-	$semester->addOption($i,$i);
-}
+$semester->addOption('1',$objLanguage->languagetext('word_first'));
+$semester->addOption('2',$objLanguage->languagetext('word_second'));
 $semester->setSelected('1');
-$semester->setBreakSpace('  ');
+$semester->setBreakSpace('&nbsp;&nbsp;');
 
 
 $gender = new radio('gender');
-$gender->addOption('male',$objLanguage->languagetext('word_male'));
-$gender->addOption('female',$objLanguage->languagetext('word_female'));
+$gender->addOption('0',$objLanguage->languagetext('word_male'));
+$gender->addOption('1',$objLanguage->languagetext('word_female'));
 $gender->setBreakSpace('  ');
 
 $SACitizen = new radio('saCitizen');
 $SACitizen->addOption('1',$objLanguage->languagetext('word_yes'));
 $SACitizen->addOption('0',$objLanguage->languagetext('word_no'));
 $SACitizen->setSelected('1');
-$SACitizen->setBreakSpace('  ');
+$SACitizen->setBreakSpace('&nbsp;&nbsp;');
 
 $supportingSelf = new radio('supportingself');
 $supportingSelf->addOption('1',$objLanguage->languagetext('word_yes'));
 $supportingSelf->addOption('0',$objLanguage->languagetext('word_no'));
 $supportingSelf->setSelected('1');
-$supportingSelf->setBreakSpace('  ');
+$supportingSelf->setBreakSpace('&nbsp;&nbsp;');
 
 $course = new textinput('course');
 $majors = new textinput('majors');
@@ -61,7 +60,7 @@ $fulltime = new radio('fulltime');
 $fulltime->addOption('1',$objLanguage->languagetext('word_yes'));
 $fulltime->addOption('0',$objLanguage->languagetext('word_no'));
 $fulltime->setSelected('1');
-$fulltime->setBreakSpace('  ');
+$fulltime->setBreakSpace('&nbsp;&nbsp;');
 
 $studyAddress1 = new textinput('studyaddress1');
 $studyAddress2 = new textinput('studyaddress2');

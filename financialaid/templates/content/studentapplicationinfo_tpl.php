@@ -10,22 +10,25 @@ $stname = $stdinfo[0]->firstNames;
 $stsname = $stdinfo[0]->surname;
 
 $gender = array(
-             '0'=>'Male',
-             '1'=>'Female');
+             '0'=>$objLanguage->languagetext('word_male'),
+             '1'=>$objLanguage->languagetext('word_female'));
 $yesno = array(
-             '0'=>'No',
-             '1'=>'Yes');
+             '0'=>$objLanguage->languagetext('word_no'),
+             '1'=>$objLanguage->languagetext('word_yes'));
+             
+$semester = array(
+             '1',$objLanguage->languagetext('word_first'),
+             '2',$objLanguage->languagetext('word_second'));
 
-$maritalstatus = array(
-                  '1'=>'Single',
-                  '2'=>'Married',
-                  '3'=>'Divorced',
-                  '4'=>'Widowed');
-$relationship = array(
-                  '1'=>'Father',
-                  '2'=>'Mother',
-                  '3'=>'Gaurdian',
-                  '4'=>'Spouse');
+
+$maritalStatus = array('1'=>$objLanguage->languagetext('word_single'),
+                  '2'=>$objLanguage->languagetext('word_married'),
+                  '3'=>$objLanguage->languagetext('word_divorced'),
+                  '4'=>$objLanguage->languagetext('word_widowed'));
+$relationship = array('1'=>$objLanguage->languagetext('word_father'),
+                  '2'=>$objLanguage->languagetext('word_mother'),
+                  '3'=>$objLanguage->languagetext('word_guardian'),
+                  '4'=>$objLanguage->languagetext('word_spouse'));
 $rep = array(
       'FIRSTNAME' => $stname,
       'LASTNAME' => $stsname);
@@ -42,7 +45,7 @@ if(count($stdinfo) > 0){
 
     $table->startRow();
     $table->addCell($objLanguage->languagetext('word_semester'));
-    $table->addCell($stdinfo[0]->semester);
+    $table->addCell($semester[$stdinfo[0]->semester]);
     $table->endRow();
 
     $table->startRow();
@@ -57,7 +60,7 @@ if(count($stdinfo) > 0){
 
     $table->startRow();
     $table->addCell($objLanguage->languagetext('mod_financialaid_gender','financialaid'));
-    $table->addCell($stdinfo[0]->gender);
+    $table->addCell($gender[$stdinfo[0]->gender]);
     $table->endRow();
 
     $table->startRow();
@@ -68,7 +71,7 @@ if(count($stdinfo) > 0){
 
     $table->startRow();
     $table->addCell($objLanguage->languagetext('mod_financialaid_mrtsts','financialaid'));
-    $table->addCell($stdinfo[0]->maritalStatus);
+    $table->addCell($maritalStatus[$stdinfo[0]->maritalStatus]);
     $table->endRow();
 
     $table->startRow();

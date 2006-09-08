@@ -19,7 +19,7 @@ $idnumber = $this->getParam('idNumber', '');
 $all = $this->getParam('all', '');
 
 $startat = $this->getParam('startat', 0);
-$dispCount = 25;
+$dispCount = 5;
 
 $wherefield = '';
 if (strlen($stdnum) > 0) {
@@ -52,18 +52,23 @@ if ($appCount > 0){
     }
 
     $viewpages = new link();
+    $page = $this->getParam('pg', '1');
     for ($n=0; $n < $pageCount; $n++) {
         $appCountR = ($n * $dispCount);
         $num = $n + 1;
-        if (strlen($all) > 0){
-            $viewpages->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$num, 'all'=>$all));
+        if ($num != $page){
+            if (strlen($all) > 0){
+                $viewpages->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$num, 'all'=>$all));
+            }else{
+                $viewpages->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$num, 'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
+            }
+            $viewpages->link = "$num";
+            $links_code .= $viewpages->show();
         }else{
-            $viewpages->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$num, 'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
+            $links_code .= "$num";
         }
-        $viewpages->link = "$num";
-        $links_code .= $viewpages->show();
         if ($num == $pageCount){
-            $links_code .= " ";
+         //   $links_code .= " ";
         }else if($n < $pageCount){
             $links_code .= " | ";
         }
@@ -74,37 +79,35 @@ if ($appCount > 0){
     $viewn ="";
 
     if ($startat > 1){
-        $page = $this->getParam('pg');
-        $page -= 1;
         $appCountR = $startat - $dispCount;
-
+        $pg = $page - 1;
         $viewprev = new link();
         if (strlen($all) > 0){
-            $viewprev->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$page, 'all'=>$all));
+            $viewprev->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$pg, 'all'=>$all));
         }else{
-            $viewprev->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$page,  'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
+            $viewprev->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$pg,  'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
         }
         $viewprev->link = $objLanguage->languagetext('mod_financialaid_prev','financialaid');
-        $viewp = $viewprev->show();
+        $viewp = $viewprev->show()." |";
     }
     $vntest = $appCount - $dispCount;
-    if ($startat <= $vntest){
-        $page = $this->getParam('pg');
-        $page += 1;
+
+    if ($startat < $vntest){
         $appCountR = $startat + $dispCount;
+        $pg = $page + 1;
 
         $viewnext = new link();
         if (strlen($all) > 0){
-            $viewnext->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$page, 'all'=>$all));
+            $viewnext->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$pg, 'all'=>$all));
         }else{
-            $viewnext->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$page,  'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
+            $viewnext->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$pg,  'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
         }
         $viewnext->link = $objLanguage->languagetext('mod_financialaid_next','financialaid');
-        $viewn = $viewnext->show();
+        $viewn = "| ".$viewnext->show();
     }
 
     $Rectbl =& $this->getObject('htmlTable','htmlelements');
-    if($endl == $dispCount)  {
+/*    if($endl == $dispCount)  {
         $Rectbl->startRow();
         $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_page','financialaid').":</b>", "20%");
         $Rectbl->addCell("1");
@@ -132,7 +135,7 @@ if ($appCount > 0){
             $Rectbl->addCell("$startat to $appCount");
         }
         $Rectbl->endRow();
-    }
+    } */
     $Rectbl->startRow();
     $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_resfnd','financialaid').":</b>", "20%");
     $Rectbl->addCell("$appCount");

@@ -22,16 +22,16 @@ $employerTelNo = new textinput('employertelno');
 
 
 $relationship = new dropdown('relationship');
-$relationship->addOption('1','Father');
-$relationship->addOption('2','Mother');
-$relationship->addOption('3','Guardian');
-$relationship->addOption('4','Spouse');
+$relationship->addOption('1',$objLanguage->languagetext('mod_word_father'));
+$relationship->addOption('2',$objLanguage->languagetext('mod_word_mother'));
+$relationship->addOption('3',$objLanguage->languagetext('mod_word_guardian'));
+$relationship->addOption('4',$objLanguage->languagetext('mod_word_widowed'));
 
 $maritalSts = new dropdown('maritalstatus');
-$maritalSts->addOption('1','Married');
-$maritalSts->addOption('2','Single');
-$maritalSts->addOption('3','Divorced');
-$maritalSts->addOption('4','Widowed');
+$maritalSts->addOption('1',$objLanguage->languagetext('mod_word_single'));
+$maritalSts->addOption('2',$objLanguage->languagetext('mod_word_married'));
+$maritalSts->addOption('3',$objLanguage->languagetext('mod_word_divorced'));
+$maritalSts->addOption('4',$objLanguage->languagetext('mod_word_widowed'));
 
 $addbut= new button('add');
 $addbut->setToSubmit();

@@ -7,14 +7,14 @@ $stdinfo = $this->objDBFinancialAidWS->getApplication($appid);
 $stname = $stdinfo[0]->firstNames;
 $stsname = $stdinfo[0]->surname;
 
-$maritalstatus = array('1'=>'Single',
-                  '2'=>'Married',
-                  '3'=>'Divorced',
-                  '4'=>'Widowed');
-$relationship = array('1'=>'Father',
-                  '2'=>'Mother',
-                  '3'=>'Gaurdian',
-                  '4'=>'Spouse');
+$maritalstatus = array('1'=>$objLanguage->languagetext('word_single'),
+                  '2'=>$objLanguage->languagetext('word_married'),
+                  '3'=>$objLanguage->languagetext('word_divorced'),
+                  '4'=>$objLanguage->languagetext('word_widowed'));
+$relationship = array('1'=>$objLanguage->languagetext('word_father'),
+                  '2'=>$objLanguage->languagetext('word_mother'),
+                  '3'=>$objLanguage->languagetext('word_guardian'),
+                  '4'=>$objLanguage->languagetext('word_spouse'));
 
 
 $rep = array(

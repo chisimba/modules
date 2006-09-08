@@ -51,16 +51,21 @@ if ($stdCount > 0){
     if ($pageCount != floor($pageCount)) {
        $pageCount = strtok(($pageCount+1), ".");
     }
+   $page = $this->getParam('pg', '1');
 
     $viewpages = new link();
     for ($n=0; $n < $pageCount; $n++) {
         $stdCountR = ($n * $dispCount);
         $num = $n + 1;
-        $viewpages->href=$this->uri(array('action'=>'search','startat'=>$stdCountR,'pg'=>$num, 'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
-        $viewpages->link = "$num";
-        $links_code .= $viewpages->show();
+        if ($num != $page){
+            $viewpages->href=$this->uri(array('action'=>'search','startat'=>$stdCountR,'pg'=>$num, 'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
+            $viewpages->link = "$num";
+            $links_code .= $viewpages->show();
+        }else{
+            $links_code .= "$num";
+        }
         if ($num == $pageCount){
-            $links_code .= " ";
+           // $links_code .= " ";
         }else if($n < $pageCount){
             $links_code .= " | ";
         }
@@ -72,28 +77,27 @@ if ($stdCount > 0){
 
     if ($startat > 1){
         $page = $this->getParam('pg');
-        $page -= 1;
+        $pg = $page - 1;
         $stdCountR = $startat - $dispCount;
 
         $viewprev = new link();
-        $viewprev->href=$this->uri(array('action'=>'search','startat'=>$stdCountR,'pg'=>$page,  'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
+        $viewprev->href=$this->uri(array('action'=>'search','startat'=>$stdCountR,'pg'=>$pg,  'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
         $viewprev->link = $objLanguage->languagetext('mod_financialaid_prev','financialaid');
-        $viewp = $viewprev->show();
+        $viewp = $viewprev->show()." |";
     }
     $vntest = $stdCount - $dispCount;
     if ($startat <= $vntest){
-        $page = $this->getParam('pg');
-        $page += 1;
+        $pg = $page + 1;
         $stdCountR = $startat + $dispCount;
 
         $viewnext = new link();
-        $viewnext->href=$this->uri(array('action'=>'search','startat'=>$stdCountR,'pg'=>$page,  'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
+        $viewnext->href=$this->uri(array('action'=>'search','startat'=>$stdCountR,'pg'=>$pg,  'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
         $viewnext->link = $objLanguage->languagetext('mod_financialaid_next','financialaid');
-        $viewn = $viewnext->show();
+        $viewn = "| ".$viewnext->show();
     }
 
     $Rectbl =& $this->getObject('htmlTable','htmlelements');
-    if($endl == $dispCount)  {
+ /*   if($endl == $dispCount)  {
         $Rectbl->startRow();
         $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_page','financialaid').":</b>", "20%");
         $Rectbl->addCell("1");
@@ -121,7 +125,7 @@ if ($stdCount > 0){
             $Rectbl->addCell("$startat to $stdCount");
         }
         $Rectbl->endRow();
-    }
+    }        */
     $Rectbl->startRow();
     $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_resfnd','financialaid').":</b>", "20%");
     $Rectbl->addCell("$stdCount");

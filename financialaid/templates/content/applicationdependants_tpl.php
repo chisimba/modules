@@ -11,8 +11,8 @@ $rep = array(
       'FIRSTNAME' => $stname,
       'LASTNAME' => $stsname);
 $yesno = array(
-             '0'=>'No',
-             '1'=>'Yes');
+             '0'=>$objLanguage->languagetext('mod_word_no'),
+             '1'=>$objLanguage->languagetext('mod_word_yes'));
 
 $details = "<h2>".$objLanguage->code2Txt('mod_financialaid_dependantstitle','financialaid',$rep)."</h2>";
 $table =& $this->newObject('htmltable','htmlelements');
