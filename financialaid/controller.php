@@ -69,7 +69,7 @@ class financialaid extends controller
             //----------------
             //Default action
 			case 'ok':
-				return 'studentapplicationlist_tpl.php';
+				return 'startup_tpl.php';
 
             //----------------
             //Student details actions

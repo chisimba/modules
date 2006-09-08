@@ -28,20 +28,12 @@ class financialaidleftblock extends object
         $appid = $this->getParam('appid');
 
         $header = "<h1>".$this->objLanguage->languagetext('mod_financialaid_financialaid','financialaid')."</h1>";
-		$list = array('search'=>$this->objLanguage->languagetext('mod_financialaid_search','financialaid'));
-		$links = "";
-		foreach($list as $key=>$value){
-			$link = new link();
-			$link->href = $this->uri(array('action'=>$key));
-			$link->link = $value;
-			$links .= $link->show()."<br /><br />";
-		}
 
 		$links .= "<strong>".$this->objLanguage->languagetext('mod_financialaid_applications','financialaid')."</strong><br />";
-		$href = new href("index.php?module=financialaid&amp;action=searchapplications&amp;all=yes",$this->objLanguage->languagetext('mod_financialaid_showallapps','financialaid'));
+		$href = new href("index.php?module=financialaid&amp;action=searchapplications&amp;all=yes&amp;dispcount=25",$this->objLanguage->languagetext('mod_financialaid_showallapps','financialaid'));
 		$links.=$href->show()."<br />";
-		$href = new href("index.php?module=financialaid&amp;action=searchapplications",$this->objLanguage->languagetext('mod_financialaid_searchapp','financialaid'));
-		$links.=$href->show()."<br />";
+//		$href = new href("index.php?module=financialaid&amp;action=searchapplications",$this->objLanguage->languagetext('mod_financialaid_searchapp','financialaid'));
+//		$links.=$href->show()."<br />";
 		$href = new href("index.php?module=financialaid&amp;action=searchmarkrange",$this->objLanguage->languagetext('mod_financialaid_searchmarkrange','financialaid'));
 		$links.=$href->show()."<br />";
 		$href = new href("index.php?module=financialaid&amp;action=addapplication",$this->objLanguage->languagetext('mod_financialaid_addapp','financialaid'));

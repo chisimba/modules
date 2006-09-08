@@ -24,7 +24,7 @@ $startyear = date("Y");
 //	$start--;
 //}
 
-$year = new textinput("year", $start,  "hidden", NULL);
+$year = new textinput("year", $startyear,  "hidden", NULL);
 
 
 $semester = new radio('semester');
@@ -82,6 +82,9 @@ $cancelbut->setValue($objLanguage->languagetext('word_cancel'));
 
 $table->startRow();
 $table->addCell($appidfield->show());
+$table->endRow();
+$table->startRow();
+$table->addCell($year->show());
 $table->endRow();
 
 $table->startRow();

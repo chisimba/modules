@@ -31,7 +31,12 @@ class blockcentersearchappbox extends object
 		
 		$idnum= new textinput('idNumber',null,null,40);
 		$idnum->label=$this->objLanguage->languageText('mod_financialaid_idnumber','financialaid').":";
-		
+        $dispcount = new dropdown('dispcount', null, null, 4);
+        $dispcount->addOption('10', '10');
+        $dispcount->addOption('25', '25');
+        $dispcount->addOption('50', '50');
+        $dispcount->addOption('75', '75');
+        $dispcount->addOption('100', '100');
 		$save= new button($this->objLanguage->languageText('mod_studentenquiry_save','studentenquiry'));
 		$save->setToSubmit();
 		$save->setValue($this->objLanguage->languageText('mod_studentenquiry_search','studentenquiry'));
@@ -39,6 +44,8 @@ class blockcentersearchappbox extends object
 		$objForm->addToForm($surname);
 		$objForm->addToForm($stdnum);
 		$objForm->addToForm($idnum);
+        $objForm->addToForm($this->objLanguage->languageText('mod_financialaid_resultsperpage','financialaid').":");
+		$objForm->addToForm($dispcount);
 		$objForm->addToForm($save);
 		
 		$objElement = new tabbedbox();

@@ -31,6 +31,13 @@ class applicationblocksearchbox extends object
 		$stdnum= new textinput('studentNumber',null,null,15);
 
 		$idnum= new textinput('idNumber',null,null,15);
+  
+        $dispcount = new dropdown('dispcount', null, null, 4);
+        $dispcount->addOption('10', '10');
+        $dispcount->addOption('25', '25');
+        $dispcount->addOption('50', '50');
+        $dispcount->addOption('75', '75');
+        $dispcount->addOption('100', '100');
 
 		$save= new button('save');
 		$save->setToSubmit();
@@ -44,6 +51,8 @@ class applicationblocksearchbox extends object
         $idlabel=$this->objLanguage->languageText('mod_financialaid_idnumber','financialaid').":";
         $objForm->addToForm($idlabel);
 		$objForm->addToForm($idnum);
+        $objForm->addToForm($this->objLanguage->languageText('mod_financialaid_resultsperpage','financialaid').":");
+		$objForm->addToForm($dispcount);
 		$objForm->addToForm($save);
 		
 		$objElement = new tabbedbox();

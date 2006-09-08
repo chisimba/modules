@@ -7,7 +7,6 @@ $this->objUser =& $this->getObject('user','security');
 
 $centersearch =& $this->getObject('blockcentersearchappbox');
 $centersearch = $centersearch->show($this->getParam('module','studentenquiry'));
-$details = "<h2>".$objLanguage->languagetext('mod_financialaid_searchapp','financialaid')."</h2>";
 
 $content = "";
 $oddEven = 'odd';
@@ -19,7 +18,7 @@ $idnumber = $this->getParam('idNumber', '');
 $all = $this->getParam('all', '');
 
 $startat = $this->getParam('startat', 0);
-$dispCount = 5;
+$dispCount = $this->getParam('dispcount', 25);
 
 $wherefield = '';
 if (strlen($stdnum) > 0) {
@@ -31,6 +30,17 @@ if (strlen($stdnum) > 0) {
 }elseif (strlen($idnumber) > 0){
     $wherefield = "idNumber";
     $wherevalue = $idnumber;
+}
+
+if (strlen($all) > 0){
+    $details = "<h2>".$objLanguage->languagetext('mod_financialaid_allapplications','financialaid')."</h2>";
+}elseif (strlen($wherefield) > 0){
+    $rep = array(
+      'SEARCHVALUE' => $wherevalue);
+
+    $details = "<h2>".$objLanguage->code2Txt('mod_financialaid_searchresults','financialaid',$rep)."</h2>";
+}else{
+    $details = "<h2>".$objLanguage->languagetext('mod_financialaid_searchapp','financialaid')."</h2>";
 }
 
 if ($wherefield == ''){
@@ -58,9 +68,9 @@ if ($appCount > 0){
         $num = $n + 1;
         if ($num != $page){
             if (strlen($all) > 0){
-                $viewpages->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$num, 'all'=>$all));
+                $viewpages->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$num, 'all'=>$all, 'dispcount'=>$dispCount));
             }else{
-                $viewpages->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$num, 'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
+                $viewpages->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$num, 'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum, 'dispcount'=>$dispCount));
             }
             $viewpages->link = "$num";
             $links_code .= $viewpages->show();
@@ -83,9 +93,9 @@ if ($appCount > 0){
         $pg = $page - 1;
         $viewprev = new link();
         if (strlen($all) > 0){
-            $viewprev->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$pg, 'all'=>$all));
+            $viewprev->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$pg, 'all'=>$all, 'dispcount'=>$dispCount));
         }else{
-            $viewprev->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$pg,  'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
+            $viewprev->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$pg,  'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum, 'dispcount'=>$dispCount));
         }
         $viewprev->link = $objLanguage->languagetext('mod_financialaid_prev','financialaid');
         $viewp = $viewprev->show()." |";
@@ -98,9 +108,9 @@ if ($appCount > 0){
 
         $viewnext = new link();
         if (strlen($all) > 0){
-            $viewnext->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$pg, 'all'=>$all));
+            $viewnext->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$pg, 'all'=>$all, 'dispcount'=>$dispCount));
         }else{
-            $viewnext->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$pg,  'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
+            $viewnext->href=$this->uri(array('action'=>'searchapplications','startat'=>$appCountR,'pg'=>$pg,  'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum, 'dispcount'=>$dispCount));
         }
         $viewnext->link = $objLanguage->languagetext('mod_financialaid_next','financialaid');
         $viewn = "| ".$viewnext->show();
@@ -213,7 +223,7 @@ if (isset($stdinfo)){
 
 if ($foundStudents == FALSE) {
 
-	$content = "<br /><br /><br />" . $centersearch;
+	$content = '<div class="noRecordsMessage">'. $objLanguage->languagetext('mod_financialaid_noapplications','financialaid').'</div>';
     $pagelinks = '';
     $records = '';
 }

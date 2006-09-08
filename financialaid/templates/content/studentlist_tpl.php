@@ -29,7 +29,14 @@ if (strlen($stdnum) > 0) {
     $wherevalue = $idnumber;
 }
 
+if (strlen($wherefield) > 0){
+    $rep = array(
+      'SEARCHVALUE' => $wherevalue);
 
+    $details = "<h2>".$objLanguage->code2Txt('mod_financialaid_searchresults','financialaid',$rep)."</h2>";
+}else{
+    $details = "<h2>".$objLanguage->languagetext('mod_financialaid_search','financialaid')."</h2>";
+}
 
 if ($wherefield == ''){
     $stdCount = 0;
@@ -38,7 +45,7 @@ if ($wherefield == ''){
 }
 
 $startat = $this->getParam('startat', 0);
-$dispCount = 25;
+$dispCount = $this->getParam('dispcount', 25);
 
 if ($stdCount > 0){
 
@@ -53,12 +60,13 @@ if ($stdCount > 0){
     }
    $page = $this->getParam('pg', '1');
 
+
     $viewpages = new link();
     for ($n=0; $n < $pageCount; $n++) {
         $stdCountR = ($n * $dispCount);
         $num = $n + 1;
         if ($num != $page){
-            $viewpages->href=$this->uri(array('action'=>'search','startat'=>$stdCountR,'pg'=>$num, 'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
+            $viewpages->href=$this->uri(array('action'=>'search','startat'=>$stdCountR,'pg'=>$num, 'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum, 'dispcount'=>$dispCount));
             $viewpages->link = "$num";
             $links_code .= $viewpages->show();
         }else{
@@ -81,7 +89,7 @@ if ($stdCount > 0){
         $stdCountR = $startat - $dispCount;
 
         $viewprev = new link();
-        $viewprev->href=$this->uri(array('action'=>'search','startat'=>$stdCountR,'pg'=>$pg,  'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
+        $viewprev->href=$this->uri(array('action'=>'search','startat'=>$stdCountR,'pg'=>$pg,  'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum, 'dispcount'=>$dispCount));
         $viewprev->link = $objLanguage->languagetext('mod_financialaid_prev','financialaid');
         $viewp = $viewprev->show()." |";
     }
@@ -91,7 +99,7 @@ if ($stdCount > 0){
         $stdCountR = $startat + $dispCount;
 
         $viewnext = new link();
-        $viewnext->href=$this->uri(array('action'=>'search','startat'=>$stdCountR,'pg'=>$pg,  'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum));
+        $viewnext->href=$this->uri(array('action'=>'search','startat'=>$stdCountR,'pg'=>$pg,  'surname'=>$surname,  'idNumber'=>$idnumber,  'studentNumber'=>$stdnum, 'dispcount'=>$dispCount));
         $viewnext->link = $objLanguage->languagetext('mod_financialaid_next','financialaid');
         $viewn = "| ".$viewnext->show();
     }
@@ -214,13 +222,12 @@ if ($stdCount > 0){
 
 if ($foundStudents == false) {
 
-	$right = '';
-	$content = "<br /><br /><br />" . $centersearch;
+	$content = '<br />'.$centersearch;
     $pagelinks = '';
     $records = '';
 }
 
-$content = "<center>".$pagelinks." ".$content. "</center>";
+$content = "<center>".$details.$pagelinks." ".$content. "</center>";
 
 echo $content;
 ?>
