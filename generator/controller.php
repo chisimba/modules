@@ -91,9 +91,13 @@ class generator extends controller
     * @access Public
     *
     */
-    public function getUi($generator)
+    public function __getui()
     {
+    	$objUi = $this->getObject('uimanager');
+    	$this->objUi->objectType = $this->getParam('objecttype', NULL);
     	
+    	$this->setVar('str', $this->objUi->objectType);
+    	return 'dump_tpl.php';    	
     }
     
     /**
@@ -104,7 +108,7 @@ class generator extends controller
     * @access Public
     *
     */
-    public function processResults($generator)
+    public function __processresults()
     {
     
     }

@@ -194,7 +194,11 @@ class wizlinks extends object
             $ret =   "6. " . $this->objLanguage->languageText("mod_generator_page6_instructions", "generator");
         } else {
         	$href = $this->uri(array('action' => 'page6', 'page' => 'page6'));
-			$this->objLink->href =  $href;
+			$this->ob        //Create an element for the input of Datbase table class and add it to the table
+        $myTable->startRow();
+        $myTable->addCell( $this->objLanguage->languageText("mod_generator_controller_dbclass", "generator") );
+        $myTable->addCell($this->getModuleDataTableElement());
+        $myTable->endRow();jLink->href =  $href;
 			$this->objLink->link = $this->objLanguage->languageText("mod_generator_page6_instructions", "generator");
 			$ret ="6. " . $this->objLink->show();
         }

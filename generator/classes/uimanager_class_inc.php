@@ -6,9 +6,6 @@ if (!$GLOBALS['kewl_entry_point_run'])
 }
 // end security check
 
-///Load the abstract common template class
-require_once('modules/generator/classes/abtpcommon_class_inc.php');
-
 /**
 * 
 * Class to read the XML templates for the generator UI and render
@@ -109,7 +106,7 @@ class uimanager extends object
     * Method to return the name of the form
     *
     */
-    public functin getFormName()
+    public function getFormName()
     {
       $this->formXml->form[0]->name;
     }

@@ -21,7 +21,7 @@ catch ({EXCEPTIONOBJECT} $e)
 </code>
 
 
-<parsecode name="MAILOBJECT">
+<parsecode name="{MAILOBJECT}">
 <helptext>The email module base class to be used in all mail framework methods</helptext>
 </parsecode>
 
