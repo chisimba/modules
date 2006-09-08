@@ -36,6 +36,9 @@ class utils extends object
     {
         $this->_objDBContextCMSContent = $this->newObject('dbcontextcmscontent', 'contextcmscontent' );
         $this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
+        $this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
+		$this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
+		$this->_objUser = & $this->newObject('user', 'security');
     }
     
     
@@ -64,8 +67,27 @@ class utils extends object
             foreach($arrSections as $sections)
             {
                 $section = $this->_objSections->getRow('id',$sections['sectionid']);
-              //  print_r($sections);
-                $nodes[] = array('text' =>$section['menutext'], 'uri' => $this->uri(array('action' => 'showsection', 'id' => $section['id']), $modulename), 'sectionid' => $section['id']);
+              
+                if(($this->getParam('action') ==  'showsection') && ($this->getParam('id') == $section['id']) || $this->getParam('sectionid') == $section['id'])
+		        {
+		        	
+		        	$pagenodes = array();
+		        	$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$section['id'].'" AND published=1 and trash=0 ORDER BY ordering');
+		        	
+		        	foreach( $arrPages as $page)
+		        	{
+		        		$pagenodes[] = array('text' => $page['menutext'] , 'uri' =>$this->uri(array('action' => 'showfulltext', 'id' => $page['id'], 'sectionid' => $section['id']), $modulename));
+		        		
+		        	}
+		        	
+		        	$nodes[] = array('text' =>$section['menutext'], 'uri' => $this->uri(array('action' => 'showsection', 'id' => $section['id']), $modulename), 'sectionid' => $section['id'], 'haschildren' => $pagenodes);
+		        	$pagenodes = null;
+		        	
+		        } else {
+		        	$nodes[] = array('text' =>$section['menutext'], 'uri' => $this->uri(array('action' => 'showsection', 'id' => $section['id']), $modulename), 'sectionid' => $section['id']);	
+		        }
+		        
+                //$nodes[] = array('text' =>$section['menutext'], 'uri' => $this->uri(array('action' => 'showsection', 'id' => $section['id']), $modulename), 'sectionid' => $section['id']);
             }
            
             return $objSideBar->show($nodes, $this->getParam('id'));

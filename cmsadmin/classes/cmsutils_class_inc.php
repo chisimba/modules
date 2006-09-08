@@ -288,10 +288,13 @@ class cmsutils extends object
 	 * @return string
 	 * 
 	 */
-	public  function getSectionMenu()
+	public  function getSectionMenu($modulename = null)
 	{
 		try {
-			
+			if(empty($modulename))
+			{
+			    $modulename = 'cms';
+			}
 			//initiate the objects
 			$objSideBar = $this->newObject('sidebar', 'navigation');
 			
@@ -321,15 +324,15 @@ class cmsutils extends object
 		        	
 		        	foreach( $arrPages as $page)
 		        	{
-		        		$pagenodes[] = array('text' => $page['menutext'] , 'uri' =>$this->uri(array('action' => 'showfulltext', 'id' => $page['id'], 'sectionid' => $section['id']), 'cms'));
+		        		$pagenodes[] = array('text' => $page['menutext'] , 'uri' =>$this->uri(array('action' => 'showfulltext', 'id' => $page['id'], 'sectionid' => $section['id']), $modulename));
 		        		
 		        	}
 		        	
-		        	$nodes[] = array('text' =>$section['menutext'], 'uri' => $this->uri(array('action' => 'showsection', 'id' => $section['id']), 'cms'), 'sectionid' => $section['id'], 'haschildren' => $pagenodes);
+		        	$nodes[] = array('text' =>$section['menutext'], 'uri' => $this->uri(array('action' => 'showsection', 'id' => $section['id']), $modulename), 'sectionid' => $section['id'], 'haschildren' => $pagenodes);
 		        	$pagenodes = null;
 		        	
 		        } else {
-		        	$nodes[] = array('text' =>$section['menutext'], 'uri' => $this->uri(array('action' => 'showsection', 'id' => $section['id']), 'cms'), 'sectionid' => $section['id']);	
+		        	$nodes[] = array('text' =>$section['menutext'], 'uri' => $this->uri(array('action' => 'showsection', 'id' => $section['id']), $modulename), 'sectionid' => $section['id']);	
 		        }
 				
 			}
@@ -451,7 +454,7 @@ class cmsutils extends object
 	 * @access public
 	 * @return string
 	 */
-	public function showSection()
+	public function showSection($module = "cms")
 	{
 		try {
 			
@@ -469,7 +472,7 @@ class cmsutils extends object
 			$functionVariable = '_layout'.trim($arrLayout['name']);
 		
 			//call the right function according to the layout of the section
-			return call_user_func(array('cmsutils',$functionVariable),$arrSection);
+			return call_user_func(array('cmsutils',$functionVariable),$arrSection,$module);
 			
 			
 		}catch (Exception $e){
@@ -487,7 +490,7 @@ class cmsutils extends object
 	 * @access private
 	 * @return string
 	 */
-	 function _layoutPrevious(&$arrSection)
+	 function _layoutPrevious(&$arrSection, $module)
 	{
 		
 		try {
@@ -512,7 +515,7 @@ class cmsutils extends object
 				{
 					$link = & $this->newObject('link', 'htmlelements');
 					$link->link = $page['menutext'];
-					$link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id']), 'cms');
+					$link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id']), $module);
 					
 					$str .= '<li>'. $this->formatDate($page['created']).' - '.$link->show() .'</li> ';
 				} else {
@@ -540,7 +543,7 @@ class cmsutils extends object
 	 * @access private
 	 * @return string
 	 */
-	 function _layoutSummaries(&$arrSection)
+	 function _layoutSummaries(&$arrSection, $module)
 	{
 		try{
 		    if(!empty($arrSection['image']))
@@ -588,7 +591,7 @@ class cmsutils extends object
 					//read more link .. link to the full text
 					$link = & $this->newObject('link', 'htmlelements');
 					$link->link = 'Read more ..<p/><p/>';
-					$link->href = $this->uri(array('action' => 'showfulltext', 'id' => $page['id']), 'cms');
+					$link->href = $this->uri(array('action' => 'showfulltext', 'id' => $page['id']), $module);
 					
 					$table->startRow();
 					$table->addCell($link->show());
@@ -597,7 +600,7 @@ class cmsutils extends object
 				}
 				//$str .= $table->show();
 				$str .= '<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
-				$uri = $this->uri(array('action' => 'showfulltext', 'sectionid' => $arrSection['id'], 'id' => $page['id']), 'cms');
+				$uri = $this->uri(array('action' => 'showfulltext', 'sectionid' => $arrSection['id'], 'id' => $page['id']), $module);
 				$str .= '<p>'.$page['introtext'].'<a href="'.$uri.'" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
 
 			}
@@ -617,7 +620,7 @@ class cmsutils extends object
 	 * @access private
 	 * @return string
 	 */
-	 function _layoutPage(&$arrSection)
+	 function _layoutPage(&$arrSection, $module)
 	{
 		try {
 		    if(!empty($arrSection['image']))
@@ -641,7 +644,7 @@ class cmsutils extends object
 				{
 					$link = & $this->newObject('link', 'htmlelements');
 					$link->link = $page['menutext'];
-					$link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id']), 'cms');
+					$link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id']), $module);
 					
 					$str .= $link->show() .' | ';
 				} else {
@@ -668,7 +671,7 @@ class cmsutils extends object
 	 * @access private
 	 * @return string
 	 */
-	 function _layoutList(&$arrSection)
+	 function _layoutList(&$arrSection, $module)
 	{
 		try {
 		     if(!empty($arrSection['image']))
@@ -685,7 +688,7 @@ class cmsutils extends object
 			{
 				$link = & $this->newObject('link', 'htmlelements');
 				$link->link = $page['title'];
-				$link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id']),'cms');
+				$link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id']), $module);
 				
 				$str .= '<li>'.$this->formatDate($page['created']).' - '. $link->show() .'</li>';
 			}
@@ -907,7 +910,7 @@ class cmsutils extends object
 	* @return string
 	* @access public
 	*/
-	public function getBreadCrumbs()
+	public function getBreadCrumbs($module = 'cms')
 	{
 		if ($this->getParam('action') == '')
 		{
@@ -915,7 +918,7 @@ class cmsutils extends object
 		}
 		
 		$link = &  $this->newObject('link', 'htmlelements');
-		$link->href = $this->uri(null , 'cms');
+		$link->href = $this->uri(null , $module);
 		$link->link = 'Home';
 		$str = $link->show() .' / ';
 		
@@ -927,7 +930,7 @@ class cmsutils extends object
 		
 		if($this->getParam('action') == 'showfulltext')
 		{
-			$link->href = $this->uri(null , 'cms');
+			$link->href = $this->uri(array('action' => 'showsection', 'id' => $this->getParam('sectionid')) , $module);
 			$link->link = $this->_objSections->getMenuText($this->getParam('sectionid'));	
 			$str .= $link->show() .' / ';
 			$page = $this->_objContent->getContentPage($this->getParam('id'));

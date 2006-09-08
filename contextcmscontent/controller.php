@@ -153,8 +153,12 @@ class contextcmscontent extends controller {
                 	case 'main':
                 	   return 'default_tpl.php';
                 	case 'showsection':
-	            	  $this->setVar('content', $this->_objCMSUtils->showSection());
+	            	  $this->setVar('content', $this->_objCMSUtils->showSection('contextcmscontent'));
 	            	  return 'cms_section_tpl.php';
+	            	  case 'showcontent':
+	                case 'showfulltext':
+	            	  $this->setVar('content', $this->_objCMSUtils->showBody());
+	            	  return 'cms_content_tpl.php';
                 }
             } else {
                 return "error_tpl.php";
@@ -205,7 +209,7 @@ class contextcmscontent extends controller {
 	 */
 	public function getBreadCrumbs()
 	{
-		return $this->_objCMSUtils->getBreadCrumbs();
+		return $this->_objCMSUtils->getBreadCrumbs('contextcmscontent');
 	}
 
 }
