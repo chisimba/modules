@@ -3,7 +3,7 @@
 $details = "<h2>Search By Average Marks Range</h2>";
 $table =& $this->newObject('htmltable','htmlelements');
 
-$years = new dropdown('resultyear');
+$years = new dropdown('resultyear', null, null, 6);
 $date = date("Y");
 $start = date("Y");
 for($i = 0; $i < 16; $i ++){
@@ -62,14 +62,15 @@ $table->addCell($cancel->show());
 $table->endRow();
 
 
-$content = "<center>".$details."  ".$table->show()."</center>";
 
 $objForm = new form('theform');
 $objForm->setAction($this->uri(array('action'=>'listmarkrange')));
 $objForm->setDisplayType(2);
 
-$objForm->addToForm($content);
+$objForm->addToForm($table->show());
 
-echo $objForm->show();
+$content = "<center>".$details.$objForm->show()."</center>";
+
+echo $content;
 
 ?>

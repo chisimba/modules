@@ -3,7 +3,7 @@
 $table =& $this->newObject('htmltable','htmlelements');
 $table->cellspacing = 2;
 $table->cellpadding = 2;
-$details = "<h2>".$objLanguage->languagetext('mod_financialaid_addapp','financialaid')."</h2>";
+$details = "<h2>".$objLanguage->languagetext('mod_financialaid_addstudent','financialaid')."</h2>";
 
 $appid = "init" . "_" . rand(1000,9999) . "_" . time();
 $appidfield = new textinput("appid", $appid,  "hidden", NULL);

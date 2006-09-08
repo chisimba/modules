@@ -57,13 +57,14 @@ if (count($appinfo) > 0)
     			$table->addCell($stnum);
     			$table->addCell($avg);
     			$table->addCell($viewdetails->show());
-
     			$table->endRow();
 
     			$oddEven = $oddEven == 'odd'?'even':'odd';
             }
         }
     }
+}else{
+	$content = '<div class="noRecordsMessage">'. $objLanguage->languagetext('mod_financialaid_noapplications','financialaid').'</div>';
 }
 
 
