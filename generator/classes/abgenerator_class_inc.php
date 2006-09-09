@@ -305,7 +305,7 @@ abstract class abgenerator extends object
 	    	$this->methodXml = simplexml_load_file("modules/generator/resources/" 
               . $classItem . "class_methods.xml");
 	    }
-	    $xPathParam = "//item[@name = '" . $methodName . "'";
+	    $xPathParam = "//item[@name = '" . $methodName . "']";
 	    $ret = $xml->xpath($xPathParam);
 	}
 	
