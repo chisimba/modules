@@ -43,6 +43,12 @@ class uimanager extends object
     {
         //Create an instance of the language object
         $this->objLanguage = & $this->getObject('language', 'language');
+        //Load the form class 
+        $this->loadClass('form','htmlelements');
+        //Load the textinput class 
+        $this->loadClass('textinput','htmlelements');
+        //Load the radio class 
+        $this->loadClass('radio','htmlelements');
     }
     
 
@@ -51,18 +57,18 @@ class uimanager extends object
     *
     * Method to read the form to build the UI for the particular
     * itemType (e.g. controller, dbtable). 
-    * It looks in modules/generators/$itemType for a file called
-    * $itemType_ui_form.xml (e.g. controller_ui_form)
+    * It looks in modules/generators/$objectType for a file called
+    * $objectType_ui_form.xml (e.g. controller_ui_form)
     * The form XML is read into memory for processing
     *
     * @param string $itemType The type of item being generated 
     *
     */
-    public function readFormXml($itemType)
+    public function readFormXml($objectType)
     {
         //Load the XML  
         $this->formXml = simplexml_load_file("modules/generator/generators/" 
-          . $itemType . "/ui_form.xml"); 
+          . $objectType . "/" . $objectType . "_ui_form.xml"); 
     }
 
 
@@ -80,6 +86,36 @@ class uimanager extends object
         $objForm->setAction( $this->getFormAction() );
         //Set the displayType to 3 for freeform so we can make our own table
         $objForm->displayType=3;
+        //Put the layout in a table
+        $myTable = $this->newObject('htmltable', 'htmlelements');
+        $myTable->cellspacing="2";
+        $myTable->width="98%";
+        $myTable->attributes="align=\"center\"";
+        //Add the form title as the header
+		// Add the heading to the content
+		$objH =& $this->getObject('htmlheading', 'htmlelements');
+		//Heading <h3>
+		$objH->type=3;
+		$objH->str=$this->formXml->form[0]->title;
+		$objForm->addToForm( $objH->show() );
+		$ov = "<em>" . $this->formXml->form[0]->overview . "</em><br /><br />";
+		$objForm->addToForm( $ov);
+        foreach ($this->formXml->form[0]->items[0]->item as $formElement) {
+        	//Create a tempvar for the form element in case there are 
+        	//   radio and other array types in it.
+        	$this->tmp = $formElement;
+	        //Create an element for the input of the item and add it to the table
+	        $myTable->startRow();
+	        $myTable->addCell($formElement->label);
+	        $method = trim($formElement->type);
+	        $myTable->addCell($this->$method($formElement->name));
+	        $myTable->addCell($formElement->description);
+	        $myTable->endRow();
+        }
+        //Add the table
+        $objForm->addToForm( $myTable->show() );
+        //Render the form & return it
+        return $objForm->show();
     }
 
     /**
@@ -104,6 +140,8 @@ class uimanager extends object
     /**
     *
     * Method to return the name of the form
+    * 
+    * @return The name of the form
     *
     */
     public function getFormName()
@@ -112,90 +150,86 @@ class uimanager extends object
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
+	/**
+	 * 
+	 * Method to create a text input based on data in the 
+	 * XML form template
+	 * 
+	 * @param string $name The name for the textinput
+	 * @return string The HTML code for the textinput
+	 * 
+	 */
+	public function textinput($name)
+	{
+    	//Check for serialized element
+    	$this->$name = $this->getSession($name, NULL);
+        //Create an element for the input ofthe element value
+        $objElement = new textinput($name);
+        //Set the field type to text
+        $objElement->fldType="text";
+        $objElement->size = 60;
+        if (isset($this->$name)) {
+            return $this->$name;
+        } else {
+            //Add the named element to the form
+            return $objElement->show();
+        }
+	}
+	
+	/**
+	 * 
+	 * Method to create a radio button based on data in the 
+	 * XML form template
+	 * 
+	 * @param string $name The name for the radio button
+	 * @return string The HTML code for the radio button
+	 * 
+	 */
+	 function radiobutton($name)
+	 {
+	    //Check for serialized element
+    	$this->$name = $this->getSession($name, NULL);
+        //Create an element for the input ofthe element value
+        $objElement = new radio($name);
+        //Get the item using Xpath
+		$xPathParam = "//form/items/item[@elementname = '" . $name . "']";
+		$opAr = $this->formXml->xpath($xPathParam);
+        //Get an array of options and values
+        $ret="";
+        foreach ($opAr[0]->options[0] as $option) {
+        	$v = trim( " " . $option->value[0]); #crude conversion to string
+        	$l = " " . $option->txt[0] . " ";
+        	$objElement->addOption($v, $l);
+        }
+        //Set the selected element
+        if ($this->name !==NULL) {
+            $objElement->setSelected($this->name);
+        }
+	    return $objElement->show();
+	 }
 
     /**
     * 
-    * Standard show method that returns the rendered template with the 
-    * form for the start template. The form allows the creation of 
-    * the controller and register.conf files.
+    * Method to return submit generator button to the form
     * 
-    * @return string The formatted form for creating controller and register
+    * @access public
+    * @return the upload button for the form
     * 
-    */
-    function show()
+    */ 
+    public function submitbutton($name)
     {
-    	//Set up the form action to generate the controller and register.conf
-        $paramArray=array(
-          'action'=>'buildcontroller',
-          'page'=>'page2');
-        $formAction=$this->uri($paramArray);
-        //Create an instance of the form class
-        $objForm = new form('startform');
-        //Set the action for the form to the uri with paramArray
-        $objForm->setAction($formAction);
-        //Set the displayType to 3 for freeform
-        $objForm->displayType=3;
-        //Put first data in a fieldset
-        $objFset = $this->newobject('fieldset', 'htmlelements');
-        $objFset->setLegend($this->objLanguage->languageText("mod_generator_controller_fs", "generator"));
-        
-        //Put the layout in a table
-        $myTable = $this->newObject('htmltable', 'htmlelements');
-        $myTable->cellspacing="2";
-        $myTable->width="98%";
-        $myTable->attributes="align=\"center\"";
-        
-        //Create an element for the input of modulecode and add it to the table
-        $myTable->startRow();
-        $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_mcode", "generator"));
-        $myTable->addCell($this->getModuleCodeElement());
-        $myTable->endRow();
-        
-        //Create an element for the input of modulename and add it to the table
-        $myTable->startRow();
-        $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_modname", "generator"));
-        $myTable->addCell($this->getModuleNameElement());
-        $myTable->endRow();
-        
-        //Create an element for the input of moduledescription and add it to the table
-        $myTable->startRow();
-        $myTable->addCell($this->objLanguage->languageText("mod_generator_controller_moddesc", "generator"));
-        $myTable->addCell($this->getModuleDescriptionElement());
-        $myTable->endRow();
-        
-        //Create an element for the input of Datbase table class and add it to the table
-        $myTable->startRow();
-        $myTable->addCell( $this->objLanguage->languageText("mod_generator_controller_dbclass", "generator") );
-        $myTable->addCell($this->getModuleDataTableElement());
-        $myTable->endRow();
-        
-        //Create an element for the input of copyright info and add it to the table
-        $myTable->startRow();
-        $myTable->addCell( $this->objLanguage->languageText("mod_generator_controller_copyright", "generator") );
-        $myTable->addCell( $this->getModuleCopyrightElement() );
-        $myTable->endRow();
-        //Create an element for the submit (upload) button and add it to the table
-        $myTable->startRow();
-        $myTable->addCell( $this->getSubmitButton() );
-        $myTable->addCell("");
-        $myTable->endRow();
-        //Add the table
-        $objFset->addContent( $myTable->show() );
-		//Add the fieldset
-        $objForm->addToForm( $objFset->show() );
-        //Render the form & return it
-        return $objForm->show();
+        // Create an instance of the button object
+        $this->loadClass('button', 'htmlelements');
+        // Create a submit button
+        $objElement = new button('submit');	
+        // Set the button type to submit
+        $objElement->setToSubmit();	
+        // Use the language object to add the word save
+        $objElement->setValue(' ' . $this->objLanguage->languageText("mod_generator_generate", 
+  		  "generator").' ');
+        // return the button to the form
+        return "&nbsp;" . $objElement->show()  
+          . "<br />&nbsp;";
     }
 }
 ?>

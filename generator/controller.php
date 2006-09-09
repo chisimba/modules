@@ -85,7 +85,9 @@ class generator extends controller
     /**
     *
     * Method to get the User Interface for a particular generator
-    * The user Interface can be a class or a wizard
+    * The user interface is built by parsing a file in the generators
+    * directory under the object type (e.g controller/) called
+    * OBJECTYPE_ui_form.xml.
     *
     * @param string $generator The name of the generator we are working with
     * @access Public
@@ -94,9 +96,13 @@ class generator extends controller
     public function __getui()
     {
     	$objUi = $this->getObject('uimanager');
-    	$this->objUi->objectType = $this->getParam('objecttype', NULL);
+    	//Get the type of object that we are generating
+    	$objectType = $this->getParam('objecttype', NULL);
+    	$objUi->readFormXml($objectType);
     	
-    	$this->setVar('str', $this->objUi->objectType);
+    	$str=$objUi->generateForm();
+    	
+    	$this->setVar('str', $str);
     	return 'dump_tpl.php';    	
     }
     
