@@ -62,7 +62,7 @@ class generator extends controller
     public function dispatch()
     {
         //Get action from query string and set default to view
-        $action=$this->getParam('action', 'start'); //buildcontroller
+        $action=$this->getParam('action', 'getui'); 
         // retrieve the mode (edit/add/translate) from the querystring
         $mode = $this->getParam("mode", null);
         // retrieve the sort order from the querystring
@@ -97,7 +97,7 @@ class generator extends controller
     {
     	$objUi = $this->getObject('uimanager');
     	//Get the type of object that we are generating
-    	$objectType = $this->getParam('objecttype', NULL);
+    	$objectType = $this->getParam('objecttype', 'start');
     	//Get the XML into memory for handling
     	$objUi->readFormXml($objectType);
     	//Generate the input form
@@ -208,6 +208,7 @@ class generator extends controller
     *
     * @param string $str The string to insert into the textarea
     * @param string $areaName The name for the textarea
+    * @TODO replace this with a call to HTMLELEMENTS textarea
     *
     */
     private function getOutputStr($str, $areaName)
@@ -233,7 +234,7 @@ class generator extends controller
     * 
     * Method corresponding to the genedit action. It generates an
     * edit template and puts it into a text box.
-    * 
+    *  //////////WORK IN PROGRESS LEAVE IT FOR NOW
     * @access private
     * 
     */
@@ -246,13 +247,13 @@ class generator extends controller
     
     /**
     * 
-    * Method to get a database schema from the database
+    * Method to get a database schema from the database //////////WORK IN PROGRESS LEAVE IT FOR NOW
     * 
     */
     private function __getxmlschema()
     {
     	$objSch = $this->getObject('getschema');
-        $this->setVar('str', $objSch->getXmlSchema());
+        $this->setVar('str', $objSch->getXmlSchema('tbl_users'));
         return "dump_tpl.php";
     } 
     
