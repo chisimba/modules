@@ -11,10 +11,8 @@ $leftSideColumn = $objWiz->putStandardLeftTxt();
 
 // Add the heading to the content
 $objH =& $this->getObject('htmlheading', 'htmlelements');
-//Heading <h3>
-$objH->type=3;
-$objH->str=$objLanguage->languageText("mod_generator_startheading", "generator");
-$middleColumn = $objH->show();
+
+$middleColumn = "";
 
 //Add the form to the template
 $objStart = $this->getObject('tpstart');
