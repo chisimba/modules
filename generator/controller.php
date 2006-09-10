@@ -98,12 +98,13 @@ class generator extends controller
     	$objUi = $this->getObject('uimanager');
     	//Get the type of object that we are generating
     	$objectType = $this->getParam('objecttype', NULL);
+    	//Get the XML into memory for handling
     	$objUi->readFormXml($objectType);
-    	
+    	//Generate the input form
     	$str=$objUi->generateForm();
-    	
-    	$this->setVar('str', $str);
-    	return 'dump_tpl.php';    	
+    	//Send the formatted string to the template
+    	$this->setVarByRef('str', $str);
+    	return 'main_tpl.php';    	
     }
     
     /**
@@ -116,279 +117,19 @@ class generator extends controller
     */
     public function __processresults()
     {
-    
-    }
-    
-    
-    
-    
-    
-    
-    
-    /**
-    * 
-    * Method corresponding to the start action. It presents a screen for use in 
-    * designing the module being generated.
-    * @access private
-    * 
-    */
-    private function __start()
-    {
-    	$this->setVar('page', 1);
-        return 'start_tpl.php';
-    }
-    
-    /**
-    * 
-    * Method corresponding to the page2 action. It presents a screen for use in 
-    * designing the module being generated.
-    * @access private
-    * 
-    */
-    private function __page2()
-    {
-    	$this->setVar('page', 2);
-        return 'page2_tpl.php';
-    }
-    
-    /**
-    * 
-    * Method corresponding to the page3 action. It presents a screen for use in 
-    * building register.conf
-    * @access private
-    * 
-    */
-    private function __page3()
-    {
-    	$this->setVar('page', 3);
-        return 'page3_tpl.php';
-    }
-    
-    /**
-    * 
-    * Method corresponding to the page3 action. It presents a screen for use in 
-    * entering the table name for the dbTable class to build.
-    * @access private
-    * 
-    */
-    private function __page4()
-    {
-    	$this->setVar('page', 4);
-        return 'page4_tpl.php';
-    }
-    
-    /**
-    * 
-    * Method corresponding to the page4 action. It presents a screen for building
-    * the edit/add template
-    * 
-    * @access private
-    * 
-    */
-    private function __page5()
-    {
-    	$this->setVar('page', 5);
-        return 'page5_tpl.php';
-    }
-    
-    /**
-    * 
-    * Method corresponding to the page5 action. It presents a screen for building
-    * the foreign class wrapper template
-    * 
-    * @access private
-    * 
-    */
-    private function __page6()
-    {
-    	$this->setVar('page', 6);
-        return 'page6_tpl.php';
-    }
-
-    /**
-    * 
-    * Method corresponding to the page3 action. It presents a screen for use in 
-    * entering the table name for the dbTable class to build.
-    * @access private
-    * 
-    */
-    private function __builddbtable()
-    {
-    	$this->setVar('page', 3);
-        return 'gendbtable_tpl.php';
-    }
-
-    /**
-    * 
-    * Method corresponding to the view action. It fetches the stories
-    * into an array and passes it to a main_tpl content template.
-    * @access private
-    * 
-    */
-    private function __buildcontroller()
-    {
-        $className = $this->getParam('classname', 'change_my_name');
-    	$objGenController = $this->getObject('gencontroller');
-        $this->setVar('cont', $objGenController->generate($className));
-        //$objGenRegister = $this->getObject('genregister');
-        //$this->setVar('reg', $objGenRegister->generate($className));
-        unset($objGenController);
-        //unset($objGenRegister);
-        return "controller_tpl.php";
-    }
-    
-    /**
-    * 
-    * Method corresponding to the view action. It fetches the stories
-    * into an array and passes it to a main_tpl content template.
-    * @access private
-    * 
-    */
-    private function __buildregister()
-    {
-        $className = $this->getParam('classname', 'change_my_name');
-        $objGenRegister = $this->getObject('genregister');
-        $this->setVar('reg', $objGenRegister->generate($className));
-        unset($objGenRegister);
-        return "register_tpl.php";
-    }
-    
-    /**
-    * 
-    * Method corresponding to the genedit action. It generates an
-    * edit template and puts it into a text box.
-    * 
-    * @access private
-    * 
-    */
-    private function __genedit()
-    {
-        $this->setVar('page', 5);
-        return "genedit_tpl.php";
-    }
-    
-    /**
-    * 
-    * Method corresponding to the genedit action. It generates an
-    * edit template and puts it into a text box.
-    * 
-    * @access private
-    * 
-    */
-    private function __genwrapper()
-    {
-        $this->setVar('page', 6);
-        return "genwrapper_tpl.php";
-    }
-    
-    
-    /**
-    * 
-    * Method to get a database schema from the database
-    * 
-    */
-    private function __getxmlschema()
-    {
-    	$objSch = $this->getObject('getschema');
-        $this->setVar('str', $objSch->getXmlSchema());
-        return "dump_tpl.php";
-    } 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    /**
-    * 
-    * Method corresponding to the edit action. It sets the mode to 
-    * edit and returns the edit template.
-    * @access private
-    * 
-    */
-    private function __edit()
-    {
-        $this->setvar('mode', "edit");
-        return 'editform_tpl.php';
-    }
-
-    /**
-    * 
-    * Method corresponding to the add action. It sets the mode to 
-    * add and returns the edit content template.
-    * @access private
-    * 
-    */
-    private function __add()
-    {
-        $this->setvar('mode', 'add');
-        return 'editform_tpl.php';
-    }
-    
-   
-    /**
-    * 
-    * Method corresponding to the save action. It gets the mode from 
-    * the querystring to and saves the data then sets nextAction to be 
-    * null, which returns the {yourmodulename} module in view mode. 
-    * 
-    * @access private
-    * 
-    */
-    private function __save()
-    {
-        $mode = $this->getParam("mode", NULL);
-        $this->objDb{yourmodulename}->save($mode);
-        return $this->nextAction(NULL);
-    }
-    
-    /**
-    * 
-    * Method corresponding to the delete action. It requires a 
-    * confirmation, and then delets the item, and then sets 
-    * nextAction to be null, which returns the {yourmodulename} module 
-    * in view mode. 
-    * 
-    * @access private
-    * 
-    */
-    private function __delete()
-    {
-        // retrieve the confirmation code from the querystring
-        $confirm=$this->getParam("confirm", "no");
-        if ($confirm=="yes") {
-            $this->deleteItem();
-            return $this->nextAction(NULL);
-        }
+    	//Get the type of object that we are generating
+    	$objectType = $this->getParam('objecttype', NULL);
+        //Setup the appropriate generator class to use
+        $rGen = 'gen' . $objectType;
+        //Instantiate the appropriate generator
+        $objGen = $this->getObject($rGen);
+        //Get the output from the apporpriate generator
+        $str = $objGen->generate();
+        //Stick it in a textarea
+        $str = $this->getOutputStr($str, $objectType);
+        //Pass the output to the template
+        $this->setVarByRef('str', $str);
+        return 'main_tpl.php';
     }
     
     /**
@@ -458,6 +199,100 @@ class generator extends controller
             return "__actionError";
         }
     }
+    
+    /*------------- END: Set of methods to replace case selection ------------*/
+    
+    /**
+    *
+    * Method to render output inside a text area
+    *
+    * @param string $str The string to insert into the textarea
+    * @param string $areaName The name for the textarea
+    *
+    */
+    private function getOutputStr($str, $areaName)
+    {
+        return '<textarea name="' . $areaName 
+          . '" cols="90" rows="30">' 
+          . $str . '</textarea>';
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    ///----------------------old stuff remove ----------------------------
+    
+    
+    
+    
+    /**
+    * 
+    * Method corresponding to the genedit action. It generates an
+    * edit template and puts it into a text box.
+    * 
+    * @access private
+    * 
+    */
+    private function __genwrapper()
+    {
+        $this->setVar('page', 6);
+        return "genwrapper_tpl.php";
+    }
+    
+    
+    /**
+    * 
+    * Method to get a database schema from the database
+    * 
+    */
+    private function __getxmlschema()
+    {
+    	$objSch = $this->getObject('getschema');
+        $this->setVar('str', $objSch->getXmlSchema());
+        return "dump_tpl.php";
+    } 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
+
     
     /*------------- END: Set of methods to replace case selection ------------*/
     

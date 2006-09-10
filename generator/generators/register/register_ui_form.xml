@@ -3,7 +3,8 @@
 <chisimba_register_ui_form>
 
 <form code="register_generator">
-<action>buildregister</action>
+<action>processresults</action>
+<task>buildregister</task>
 <generatorname>genregister</generatorname>
 <page>buildregister</page>
 <title>Build a register.conf file</title>
@@ -40,15 +41,6 @@ the Generate button.</overview>
 <label>Module description</label>
 <validation/>
 <description>Provide description of the module that you are generating as you wish it to appear in the module catalogue. Please do not use place holder text, rather provide a full description that users can understand.</description>
-</item>
-
-<item elementname="dataclass">
-<name>dataclass</name>
-<type>textinput</type>
-<width>65</width>
-<label>Name of data access class</label>
-<validation/>
-<description>Provide the name of the main data access class to be used by this module (e.g. dbmydataclass).</description>
 </item>
 
 <item elementname="copyright">

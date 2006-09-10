@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- This file is a code generation template for Chisimba controller generation input of user data -->
-<chisimba_controller_ui_form>
+<!-- This file is a code generation template for Chisimba edit form generation input of user data -->
+<chisimba_edit_ui_form>
 
-<form elementname="controller_generator">
+<form element="edit_generator">
 <action>processresults</action>
-<task>buildcontroller</task>
-<generatorname>gencontroller</generatorname>
-<page>buildcontroller</page>
-<title>Build a controller</title>
+<task>buildedit</task>
+<generatorname>genedit</generatorname>
+<page>buildedit</page>
+<title>Build a edit/add form from a table</title>
 <overview>This form allows you to input the basic information needed to build a 
-controller class for your module. Fill in the information required and click
-the Generate button.</overview>
+form for editing or adding data for a particular table for your module. Select the database
+table from the dropdown, and fill in the information required and click the Generate 
+button.</overview>
 <items>
+
+<item elementname="tablename">
+<name>dropdownfromtable</name>
+<type>dropdownfromtable</type>
+<label>Select table</label>
+<validation/>
+<description>Select the table for which you wish to build a model class.</description>
+</item>
 
 <item elementname="modulecode">
 <name>modulecode</name>
@@ -29,15 +38,6 @@ the Generate button.</overview>
 <label>Module name</label>
 <validation/>
 <description>Provide the name of the module that you are generating as you wish it to appear on menus and in the module catalogue.</description>
-</item>
-
-<item elementname="moduledescription">
-<name>moduledescription</name>
-<type>textinput</type>
-<width>65</width>
-<label>Module description</label>
-<validation/>
-<description>Provide description of the module that you are generating as you wish it to appear in the module catalogue. Please do not use place holder text, rather provide a full description that users can understand.</description>
 </item>
 
 <item elementname="copyright">
@@ -61,4 +61,4 @@ the Generate button.</overview>
 </items>
 </form>
 
-</chisimba_controller_ui_form>
+</chisimba_edit_ui_form>
