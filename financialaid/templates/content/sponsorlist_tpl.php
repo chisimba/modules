@@ -30,7 +30,7 @@ if ($sponsorCount > 0){
     for ($n=0; $n < $pageCount; $n++) {
         $sponsorCountR = ($n * $dispCount);
         $num = $n + 1;
-        $viewpages->href=$this->uri(array('action'=>'searchsponsors','startat'=>$sponsorCountR,'pg'=>$num, 'all'=>$all));
+        $viewpages->href=$this->uri(array('action'=>'searchsponsors','startat'=>$sponsorCountR,'pg'=>$num));
         $viewpages->link = "$num";
         $links_code .= $viewpages->show();
         if ($num == $pageCount){
@@ -50,7 +50,7 @@ if ($sponsorCount > 0){
         $sponsorCountR = $startat - $dispCount;
 
         $viewprev = new link();
-        $viewprev->href=$this->uri(array('action'=>'searchsponsors','startat'=>$sponsorCountR,'pg'=>$page, 'all'=>$all));
+        $viewprev->href=$this->uri(array('action'=>'searchsponsors','startat'=>$sponsorCountR,'pg'=>$page));
         $viewprev->link = $objLanguage->languagetext('mod_financialaid_prev','financialaid');
         $viewp = $viewprev->show();
     }
@@ -61,7 +61,7 @@ if ($sponsorCount > 0){
         $sponsorCountR = $startat + $dispCount;
 
         $viewnext = new link();
-        $viewnext->href=$this->uri(array('action'=>'searchsponsors','startat'=>$sponsorCountR,'pg'=>$page, 'all'=>$all));
+        $viewnext->href=$this->uri(array('action'=>'searchsponsors','startat'=>$sponsorCountR,'pg'=>$page));
         $viewnext->link = $objLanguage->languagetext('mod_financialaid_next','financialaid');
         $viewn = $viewnext->show();
     }

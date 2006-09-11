@@ -21,6 +21,7 @@ $startat = $this->getParam('startat', 0);
 $dispCount = $this->getParam('dispcount', 25);
 
 $wherefield = '';
+$wherevalue = '';
 if (strlen($stdnum) > 0) {
     $wherefield = "studentNumber";
     $wherevalue = $stdnum;
