@@ -158,6 +158,10 @@ class residence extends controller
 			if(!$this->getParam('studentNumber')==null){
 				$studentNumber = $this->getParam('studentNumber');
 				$stdinfo = $this->financialaid->searchStudent('STDNUM',$studentNumber);
+				}else if(!$this->getParam('idNumber')==null){
+				$idNumber = $this->getParam('idNumber');
+				$stdinfo = $this->financialaid->searchStudent('IDN',$idNumber);
+				$this->setVarByRef('stdinfo',$stdinfo);			
 				}else{
 				$surname = $this->getParam('surname');
 				$surname = strtoupper($surname);

@@ -1,7 +1,7 @@
 <?
 // Create an instance of the css layout class
 $cssLayout2 = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
-$cssLayout2->setNumColumns(1);
+$cssLayout2->setNumColumns(3);
 
 $right =& $this->getObject('blocksearchbox','residence');
 $right = $right->show($this->getParam('module'));
@@ -98,7 +98,6 @@ $this->leftNav = $this->getObject('layer','htmlelements');
 $this->leftNav->id = "leftnav";
 $this->leftNav->str=$left;
 //echo $this->leftNav->addToLayer();
-$cssLayout2->setLeftColumnContent($right);
 
 $this->rightNav = $this->getObject('layer','htmlelements');
 $this->rightNav->id = "rightnav";
@@ -123,6 +122,8 @@ $this->contentNav = $this->getObject('layer','htmlelements');
 $this->contentNav->id = "content";
 $this->contentNav->str = $objForm->show();
 $cssLayout2->setMiddleColumnContent($objForm->show());
+$cssLayout2->setRightColumnContent($right);
+
 //$this->contentNav->height="300px";
 //echo $this->contentNav->addToLayer();
 

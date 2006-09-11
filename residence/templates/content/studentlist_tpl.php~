@@ -1,12 +1,12 @@
 <?
-
+print_r($stdinfo);
 //require_once('columns_tpl.php');
 
 $this->objUser =& $this->getObject('user','security');
 
 // Create an instance of the css layout class
 $cssLayout2 = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
-$cssLayout2->setNumColumns(1);
+$cssLayout2->setNumColumns(3);
 
 // Add Right Column
 //$rightSideColumn2= 'right';
@@ -189,14 +189,20 @@ $leftSideColumn2 = $right."<p>$left</p>";
 $this->contentNav = $this->newObject('layer','htmlelements');
 $this->contentNav->id = "content";
 $this->contentNav->str = $content;
-$this->contentNav->height="300px";
-echo $this->contentNav->show();
+$cssLayout2->setMiddleColumnContent($content);
+$this->contentNav->height="70px";
+//echo $this->contentNav->show();
 
-
-
+$cssLayout2->setRightColumnContent($leftSideColumn2);
+//$leftSideColumn2 = $right."<p>$left</p>";
 // Add Left column
-$cssLayout2->setLeftColumnContent($leftSideColumn2);
+$cssLayout2->setLeftColumnContent('');
 //Output the content to the page
+
+
+
+//echo $this->contentNav->addToLayer();
+
 echo $cssLayout2->show();
 
 

@@ -37,7 +37,7 @@ class blocksearchbox extends object
 		$objForm->addToForm($surname);
 		$objForm->addToForm($stdnum);
 		//$objForm->addToForm($applicationum);
-		//$objForm->addToForm($idnum);
+		$objForm->addToForm($idnum);
 		$objForm->addToForm($save);
 		
 		$objElement = new tabbedbox();

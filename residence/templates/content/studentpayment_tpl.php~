@@ -1,4 +1,7 @@
 <?
+$cssLayout2 = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
+$cssLayout2->setNumColumns(3);
+
 $right =& $this->getObject('blocksearchbox','residence');
 $right = $right->show($this->getParam('module'));
 
@@ -94,9 +97,9 @@ if(is_array($payments)){
 	//print_r($info->DOCSRC);
 	//die;
 		$table->startRow();
-		$table->addCell("$info->DTEYMD");
-		$table->addCell("number_format($info->AMT,2)");
-		$table->addCell("$info->DOCSRC");
+		$table->addCell($info->DTEYMD);
+		$table->addCell(number_format($info->AMT,2));
+		$table->addCell($info->DOCSRC);
 		$table->endRow();
 		$total += $info->AMT;		
 		
@@ -148,12 +151,20 @@ else{
 $this->leftNav = $this->getObject('layer','htmlelements');
 $this->leftNav->id = "leftnav";
 $this->leftNav->str=$left;
-echo $this->leftNav->addToLayer();
+//echo $this->leftNav->addToLayer();
 
 $this->rightNav = $this->getObject('layer','htmlelements');
 $this->rightNav->id = "rightnav";
 $this->rightNav->str = $right;
-echo $this->rightNav->addToLayer();
+//echo $this->rightNav->addToLayer();
+
+$leftSideColumn2 = $right;//$right
+
+// Add Left column
+$cssLayout2->setRightColumnContent($leftSideColumn2);
+//Output the content to the page
+
+
 
 $content = $details." ".$table1->show().$table->show()." ".$application->show();
 
@@ -173,7 +184,12 @@ $this->contentNav = $this->getObject('layer','htmlelements');
 $this->contentNav->id = "content";
 $this->contentNav->str = $objForm->show();
 $this->contentNav->height="7400px";
-echo $this->contentNav->addToLayer();
+
+$cssLayout2->setMiddleColumnContent($objForm->show());
+//echo $this->contentNav->addToLayer();
+
+echo $cssLayout2->show();
+
 
 
 ?>

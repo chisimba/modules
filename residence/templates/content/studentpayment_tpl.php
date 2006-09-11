@@ -1,6 +1,6 @@
 <?
 $cssLayout2 = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
-$cssLayout2->setNumColumns(1);
+$cssLayout2->setNumColumns(3);
 
 $right =& $this->getObject('blocksearchbox','residence');
 $right = $right->show($this->getParam('module'));
@@ -161,7 +161,7 @@ $this->rightNav->str = $right;
 $leftSideColumn2 = $right;//$right
 
 // Add Left column
-$cssLayout2->setLeftColumnContent($leftSideColumn2);
+$cssLayout2->setRightColumnContent($leftSideColumn2);
 //Output the content to the page
 
 
