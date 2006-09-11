@@ -29,7 +29,17 @@ class dbfinancialaid extends object
         // Pull in the NuSOAP code
 		//require_once('lib/nusoap/nusoap.php');
 		// Create the client instance
-		$this->objSoapClient = new SoapClient($name);
+		/*$client = new SoapClient("some.wsdl", array('proxy_host'    => "localhost",
+                                           'proxy_port'    => 8080,
+                                           'proxy_login'    => "some_name",
+                                           'proxy_password' => "some_password"));
+
+*/
+
+		$this->objSoapClient = new SoapClient($name,array('proxy_host'    => "uwcinternet1.uwc.ac.za",
+                                           'proxy_port'    => 8080,
+                                           'proxy_login'    => "jadam",
+                                           'proxy_password' => "adam1234"));
 		//parent::init();
 		//$this->remotedb =& $this->newObject('remotedb','remotedatasource');
 		//$this->objUser =& $this->newObject('user','security');
@@ -55,7 +65,10 @@ class dbfinancialaid extends object
 		$this->NAMESPACE2 = 'http://172.16.65.134/webserviceDEV/studentinfo4.php?wsdl';
         // Pull in the NuSOAP code
 		// Create the client instance
-		$this->objSoapClient2 = new SoapClient($this->NAMESPACE2);
+		$this->objSoapClient2 = new SoapClient($this->NAMESPACE2,array('proxy_host'    => "uwcinternet1.uwc.ac.za",
+                                           'proxy_port'    => 8080,
+                                           'proxy_login'    => "jadam",
+                                           'proxy_password' => "adam1234"));
 		
         
        return $this->objSoapClient2->getlimitSTDET($field,$value,$start,$offset);
