@@ -138,7 +138,7 @@ $timeLabel = new label($this->objLanguage->languageText('mod_calendarbase_time',
 
 $timeInput = new textinput('input_time');
 if ($mode == 'edit') {
-    $timeInput->value = $event['eventime'];
+    //$timeInput->value = $event['eventime'];
 }
 
 $timeFromdropdown = new dropdown('timefrom');
