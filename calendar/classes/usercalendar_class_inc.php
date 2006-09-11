@@ -32,30 +32,42 @@ class usercalendar extends object
         
         // Set the calling module
         $this->objCalendar->module = 'calendar';
+        $this->getListing = TRUE;
         
     }
     
     /**
     * Method to show a small calendar with list of events. Used for the Personal Space module.
     */
-    function show()
+    function show($userSimple = TRUE)
     {
         $objUser =& $this->getObject('user', 'security');
         
         
         $events2 = $this->objCalendar->getEvents('user', $objUser->userId(), (date('Y-m-').'01'), NULL, 10);
-        
+       
         $title ='';// '<h1>'.$this->objLanguage->languageText('word_calendar').'</h1>';
         
         $eventsList = $this->objCalendar->generateSmallListing ($events2, 'calendar');
         
-        $calendar = $this->objCalendar->generateSmallCalendar('user', $objUser->userId());
+        if(!$userSimple)
+        {
+            $calendar = $this->objCalendar->generateSmallCalendar('user', $objUser->userId());
+        } else {
+            $calendar = $this->objCalendar->generateCalendar('user', $objUser->userId());
+        }
+            
         
         $uri = $this->uri(NULL, 'calendar');
         
         $link ='';// '<br /><p><a href="'.$uri.'">'.$this->objLanguage->languageText('word_calendar').'</a></p>';
         
-        return $title.' '.$calendar.'<br />'.$eventsList.$link ;
+        if($this->getListing){
+            return $title.' '.$calendar.'<br />'.$eventsList.$link ;    
+        } else {
+            return $title.' '.$calendar ;
+        }
+        
     }
 
     
