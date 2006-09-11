@@ -92,7 +92,7 @@ class cms extends controller
 			$this->_objUtils = & $this->newObject('cmsutils', 'cmsadmin');
 			$this->_objContext = & $this->newObject('dbcontext', 'context');
 			
-			$objModule = & $this->newObject('modules', 'moduleacatelogue');
+			$objModule = & $this->newObject('modules', 'modulecatalogue');
 			
 			if($objModule->checkIfRegistered('context'))
 			{
@@ -170,7 +170,7 @@ class cms extends controller
 	{
 	   $calArr =  array('text' => 'Calendar', 'uri' => $this->uri(array('action' => 'ical')));
 	   
-		return $this->_objUtils->getSectionMenu($calArr);
+		return $this->_objUtils->getSectionMenu();
 	}
 
 	
