@@ -157,7 +157,7 @@ class dbuserparamsadmin extends object
 			$result = $this->objConf->writeConfig("{$iniPath}"."{$iniName}", "INIFile");
 			
 			if ($result==false) {
-				throw new Exception('Can not write INIFile. Check permissions or file path if its correct');
+				throw new Exception($this->Text('word_read_fail'));
 			}
     	}catch (Exception $e){
     		$this->errorCallback($e);
