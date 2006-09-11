@@ -5,15 +5,17 @@ $objFeatureBox = $this->newObject('featurebox', 'navigation');
 $objBlocks = & $this->newObject('blocks', 'blocks');
 $objLucene = & $this->newObject('results', 'lucene');
 $objModule = & $this->newObject('modules', 'modulecatalogue');
-
+$objLink = & $this->newObject('link', 'htmlelements');
 
 /******************* BEGIN RIGHTSIDE BLOCKS ******************************/
 // Right Column initialize
 $rightSideColumn = "";
 //Add the getting help block
+$objLink->href = $this->uri(null, 'calendar');
+$objLink->link = $objBlocks->showBlock('calendar', 'calendar');
 $rightSideColumn .= $objBlocks->showBlock('gettinghelp', 'help');
 //simple calendar
-$rightSideColumn .= '<br />'. $objBlocks->showBlock('calendar', 'calendar');
+$rightSideColumn .= '<br />'. $objLink->show();
 //Add the latest in blog as a a block
 $rightSideColumn .= $objBlocks->showBlock('latest', 'blog');
 //Add the latest in blog as a a block
