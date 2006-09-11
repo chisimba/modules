@@ -102,7 +102,13 @@ class dbuserparamsadmin extends object
      * @var string
     */
     protected $_root = false;
-    
+    /**
+     * languagetext object
+     *
+     * @var object
+     */
+    public $Text;
+
     
     //Initialize class
     function init() {
@@ -110,6 +116,7 @@ class dbuserparamsadmin extends object
     		$this->objConf = new Config();
     		$this->sysconf = & $this->getObject('altconfig','config');
             $this->objUser = & $this->getObject("user", "security");
+            $this->Text = &$this->newObject('language','language');
             
     }
      /**
@@ -203,12 +210,12 @@ class dbuserparamsadmin extends object
 			
 
 	    	if ($this->objConf!=TRUE) {
-				throw new Exception('Can not write file userconfig_properties');
+				throw new Exception($this->Text('word_read_fail'));
 			}else{
 				return true;
 			}
     	}catch (Exception $e){
-    		$this->errorCallback ('Caught exception: '.$e->getMessage());
+    		$this->errorCallback ($this->Text('word_caught_exception').$e->getMessage());
     		exit();
     	}
 
@@ -253,7 +260,7 @@ class dbuserparamsadmin extends object
     		return $this->_root;
     	}catch (Exception $e)
     	{
-    		 $this->errorCallback ('Caught exception: '.$e->getMessage());
+    		 $this->errorCallback ($this->Text('word_caught_exception').$e->getMessage());
     	}
 
     }
@@ -321,7 +328,7 @@ class dbuserparamsadmin extends object
     		return true;
     	}catch (Exception $e)
     	{
-    		 $this->errorCallback ('Caught exception: '.$e->getMessage());
+    		 $this->errorCallback ($this->Text('word_caught_exception').$e->getMessage());
     		 exit();
     	}
 
@@ -363,7 +370,7 @@ class dbuserparamsadmin extends object
         		
 
     	}catch (Exception $e){
-    		$this->errorCallback ('Caught exception: '.$e->getMessage());
+    		$this->errorCallback ($this->Text('word_caught_exception').$e->getMessage());
     		exit();
     	}
     } #function getItem
@@ -396,7 +403,7 @@ class dbuserparamsadmin extends object
         		
 
     	}catch (Exception $e){
-    		$this->errorCallback ('Caught exception: '.$e->getMessage());
+    		$this->errorCallback ($this->Text('word_caught_exception').$e->getMessage());
     		exit();
     	}
     } #function setItem
