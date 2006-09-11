@@ -94,8 +94,8 @@ class financialaidleftblock extends object
             $links.=$href->show()."<br />";
             $href = new href("index.php?module=financialaid&amp;action=adddependant&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_adddependant','financialaid'));
             $links.=$href->show()."<br />";
-            $href = new href("index.php?module=financialaid&amp;action=addstudentfamily&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_addstudentfamily','financialaid'));
-            $links.=$href->show()."<br />";
+//            $href = new href("index.php?module=financialaid&amp;action=addstudentfamily&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_addstudentfamily','financialaid'));
+//            $links.=$href->show()."<br />";
             $links.="<br />";
         }
 

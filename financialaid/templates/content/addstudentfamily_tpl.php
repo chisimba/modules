@@ -8,7 +8,11 @@ $table->cellpadding = 2;
 $appid = $this->getParam('appid');
 
 $appidfield = new textinput("appid", $appid,  "hidden", NULL);
-$firstname = new textinput('firstname');
+if (isset($fname)){
+    $firstname = new textinput('firstname', $fname, "hidden",NULL);
+}else{
+    $firstname = new textinput('firstname');
+}
 $institution = new textinput('institution');
 $course = new textinput('course');
 $year = new textinput('year');
@@ -27,9 +31,19 @@ $table->startRow();
 $table->addCell($appidfield->show());
 $table->endRow();
 
+if(isset($fname)){
+    $table->startRow();
+    $table->addCell($firstname->show());
+    $table->endRow();
+}
+
 $table->startRow();
 $table->addCell($objLanguage->languagetext('mod_financialaid_firstname','financialaid'));
-$table->addCell($firstname->show());
+if(isset($fname)){
+    $table->addCell($fname);
+}else{
+    $table->addCell($firstname->show());
+}
 $table->endRow();
 
 $table->startRow();

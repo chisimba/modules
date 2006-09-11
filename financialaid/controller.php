@@ -185,12 +185,19 @@ class financialaid extends controller
                             'category' => $this->getParam('category', ''),
                             'hasIncome' => $this->getParam('hasIncome', ''),
                             'incomeType' => $this->getParam('incomeType', ''),
-                            'incomeAmount' => $this->getParam('incomeAmount', ''),
+                            'incomeAmount' => $this->getParam('incomeAmount', '0'),
                             'dateCreated' => date("Y-m-d H:i:s"),
                             'creatorId' => $this->objUser->userId());
                 $this->objDBFinancialAidWS->saveDependant('add', $fields);
                 $this->setVar('appid', $this->getParam('appid', NULL));
-                return 'studentapplicationinfo_tpl.php';
+                
+                $isstudent = $this->getParam('isstudent', 0);
+                if($isstudent == 1){
+                    $this->setVar('fname',$this->getParam('firstname',''));
+                    return 'addstudentfamily_tpl.php';
+                }else{
+                    return 'studentapplicationinfo_tpl.php';
+                }
             case 'saveparttimejob':
                 $fields = array('appId' => $this->getParam('appid', ''),
                             'jobTitle' => $this->getParam('jobtitle', ''),

@@ -13,7 +13,12 @@ $dependantReason = new textinput('dependantreason');
 $hasIncome = new radio('hasIncome');
 $hasIncome->addOption('1', $objLanguage->languagetext('word_yes'));
 $hasIncome->addOption('0', $objLanguage->languagetext('word_no'));
-$hasIncome->setBreakSpace('  ');
+$hasIncome->setBreakSpace('&nbsp;&nbsp;');
+
+$isStudent = new radio('isstudent');
+$isStudent->addOption('1', $objLanguage->languagetext('word_yes'));
+$isStudent->addOption('0', $objLanguage->languagetext('word_no'));
+$isStudent->setBreakSpace('&nbsp;&nbsp;');
 
 $incomeType = new textinput('incomeType');
 $incomeAmount = new textinput('incomeAmount');
@@ -67,6 +72,10 @@ $table->addCell($objLanguage->languagetext('mod_financialaid_incomeamount','fina
 $table->addCell($incomeAmount->show());
 $table->endRow();
 
+$table->startRow();
+$table->addCell('Is this family memeber a tertiary level student?');
+$table->addCell($isStudent->show());
+$table->endRow();
 
 $table->startRow();
 $table->addCell($addbut->show());
