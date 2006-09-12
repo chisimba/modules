@@ -1,4 +1,8 @@
 <?
+// Create an instance of the css layout class
+$cssLayout2 = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
+$cssLayout2->setNumColumns(3);
+
 $right =& $this->getObject('blocksearchbox','residence');
 $right = $right->show($this->getParam('module'));
 
@@ -55,8 +59,8 @@ echo $this->leftNav->addToLayer();
 $this->rightNav = $this->getObject('layer','htmlelements');
 $this->rightNav->id = "rightnav";
 $this->rightNav->str = $right;
-echo $this->rightNav->addToLayer();
-
+//echo $this->rightNav->addToLayer();
+$cssLayout2->setRightColumnContent($right);
 $ok= new button('ok');
 $ok->setToSubmit();
 $ok->setValue('OK');
@@ -70,7 +74,7 @@ $table->addCell($ok->show());
 $table->addCell($new->show());
 $table->endRow();
 
-$content = "<center>".$details." ".$table->show();
+$content = "<center>".$details." ".$table->show()."</center>";
 
 $objForm = new form('theform');
 $objForm->setAction($this->uri(array('action'=>'enquiry','id'=>$idnumber)));
@@ -79,14 +83,16 @@ $objForm->setDisplayType(2);
 
 
 $objForm->addToForm($content);
+
 //$objForm->addToForm($ok);
 
 
 $this->contentNav = $this->getObject('layer','htmlelements');
 $this->contentNav->id = "content";
 $this->contentNav->str = $objForm->show();
+$cssLayout2->setMiddleColumnContent($objForm->show());
 //$this->contentNav->height="300px";
-echo $this->contentNav->addToLayer();
-
+//echo $this->contentNav->addToLayer();
+echo $cssLayout2->show();
 
 ?>

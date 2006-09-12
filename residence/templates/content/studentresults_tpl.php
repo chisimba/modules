@@ -1,4 +1,5 @@
 <?
+$this->loadClass('link', 'htmlelements');
 // Create an instance of the css layout class
 $cssLayout2 = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
 $cssLayout2->setNumColumns(3);
@@ -122,6 +123,8 @@ $this->contentNav = $this->getObject('layer','htmlelements');
 $this->contentNav->id = "content";
 $this->contentNav->str = $objForm->show();
 $cssLayout2->setMiddleColumnContent($objForm->show());
+$cssLayout2->setLeftColumnContent($objForm->show());
+
 $cssLayout2->setRightColumnContent($right);
 
 //$this->contentNav->height="300px";

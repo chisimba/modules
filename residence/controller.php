@@ -18,7 +18,7 @@ class residence extends controller
 	var $personid;
 	function init(){
 		$this->objUser =& $this->getObject('user','security');
-		$this->financialaid =& $this->getObject('dbfinancialaid','residence');
+		$this->financialaid =& $this->getObject('dbresidence','residence');
 		//$this->misc =& $this->getObject('dbmiscinfo','studentfinance');
 		$this->personid = $this->getParam('id');
 		$this->loadClass('button', 'htmlelements');
@@ -191,8 +191,8 @@ class residence extends controller
 				}
 				
 		case 'enquiry':
-				return $this->control->enquiry($this->getParam('id',null));
-							
+				//return $this->control->enquiry($this->getParam('id',null));
+					return 'enquiry_tpl.php';		
 		case 'nextofkin':
 				$this->setVarByRef('stdinfo',$this->financialaid->getAllStudents(" where p.personID = '".$this->getParam('id')."'"));
 				$this->setVarByRef('stdfamily',$this->financialaid->getStudentFamily($this->personid));
@@ -224,7 +224,19 @@ class residence extends controller
 				return $this->control->financialaidApp();
 
 		case 'resapp':
-				return $this->control->residenceApp();
+				$field = 'STDNUM'; //'2219065';
+				$value = $this->getParam('id',null);
+				$this->financialaid->getResidence($field,$value);
+				//return $this->control->residenceApp();
+				$finapplication = $this->financialaid->getResidence($field,$value);
+				$stundent =  $this->financialaid->getPersonInfo($field,$value);
+				//print_r($stundent);die;
+				//echo '<pre>';
+				//print_r($stundent);die;	
+				$this->setVarByRef('stundent',$stundent);
+				$this->setVarByRef('finapplication',$finapplication);
+				
+				return 'resapplication_tpl.php';
 				
 
 		case 'finapplication':
