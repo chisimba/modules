@@ -89,7 +89,7 @@ $this->objtravelExpenses->label($travelExpenses,$lblTravelID);
   
 $this->objbegindate = $this->newObject('datepicker','htmlelements');
 $name = 'txtbegindate';
-$date = '2006-01-01';
+$date = date('Y-m-d');
 $format = 'YYYY-MM-DD';
 $this->objbegindate->setName($name);
 $this->objbegindate->setDefaultDate($date);
@@ -97,7 +97,7 @@ $this->objbegindate->setDateFormat($format);
 
 $this->objenddate = $this->newObject('datepicker','htmlelements');
 $name = 'txtenddate';
-$date = '2006-01-01';
+$date = date('Y-m-d');
 $format = 'YYYY-MM-DD';
 $this->objenddate->setName($name);
 $this->objenddate->setDefaultDate($date);
