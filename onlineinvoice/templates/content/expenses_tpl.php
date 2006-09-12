@@ -74,13 +74,6 @@ $this->objrate->label($rate,$lblRate);
 /**************************************************************************************************************/
 
 //create all form buttons
-
-//$btnsave  = $this->objLanguage->languageText('word_save');
-//$strsave = ucfirst($btnsave);
-//$this->loadclass('button','htmlelements');
-//$this->objButtonSubmit  = new button('saveperdiem', $strsave);
-//$this->objButtonSubmit->setToSubmit();
-
 $next  = $this->objLanguage->languageText('phrase_next');
 $strnext = ucfirst($next);
 $this->loadclass('button','htmlelements');
@@ -123,11 +116,32 @@ $this->loadClass('checkbox', 'htmlelements');
 $objD = new checkbox('d');
 $objL->checkbox('dinner',$dinner,$ischecked=false);
 $checkdinner= $objD->show();
+/*****************************************************************************************************************/
+/**
+ *get the depature date from itinerary and use as date for per diem expense
+ */
+/************************************************************************************************/ 
+ //$valuedate   = $this->getParam('txtdeptddate');
+ //$valenddate  = $this->getParam('txtarraivaldate');
+  $dates  =     $this->getSession('daterange');
+/**
+ *initial depature daparture date from array of itinerary
+ */
 
+ //initail
+//$initial =  $itineraryinfo[0]['departuredate'];
+//last
+//$count = count($itineraryinfo);
+//$num = $count + 1;
+//$last = $itineraryinfo[$num]['departuredate'];
+//
+//for($i = $date1; $i <= $date2; $i = $this->nextDay){
+//$i = $this->nextDay;
+/************************************************************************************************/  
 
 $this->objexpensesdate = $this->newObject('datepicker','htmlelements');
 $name = 'txtexpensesdate';
-$date = '2006-01-01';
+$date = date('Y-m-d');
 $format = 'YYYY-MM-DD';
 $this->objexpensesdate->setName($name);
 $this->objexpensesdate->setDefaultDate($date);
@@ -136,10 +150,16 @@ $this->objexpensesdate->setDateFormat($format);
 /************************************************************************************************************/
   /**
    *create all text inputs elements
-   */     
+   */    
+  /**
+   *get the depature city form itinerary and use as defualt location
+   */
+  
+  $valdeptlocation  = $this->getParam('txtdeptcity');
+             
 $this->objtxtbreakfastloc = $this->newObject('textinput','htmlelements');
 $this->objtxtbreakfastloc->name   = "txtbreakfastLocation";
-$this->objtxtbreakfastloc->value  = "";
+$this->objtxtbreakfastloc->value  = "$valdeptlocation";
 
 $this->objtxtbreakfastrate = $this->newObject('textinput','htmlelements');
 $this->objtxtbreakfastrate->name   = "txtbreakfastRate";
@@ -147,7 +167,7 @@ $this->objtxtbreakfastrate->value  = "0.00";
 
 $this->objtxtlunchloc = $this->newObject('textinput','htmlelements');
 $this->objtxtlunchloc->name   = "txtlunchLocation";
-$this->objtxtlunchloc->value  = "";
+$this->objtxtlunchloc->value  = "$valdeptlocation";
 
 $this->objtxtlunchrate = $this->newObject('textinput','htmlelements');
 $this->objtxtlunchrate->name   = "txtlunchRate";
@@ -155,7 +175,7 @@ $this->objtxtlunchrate->value  = "0.00";
 
 $this->objtxtdinnerloc = $this->newObject('textinput','htmlelements');
 $this->objtxtdinnerloc->name   = "txtdinnerLocation";
-$this->objtxtdinnerloc->value  = "";
+$this->objtxtdinnerloc->value  = "$valdeptlocation";
 
 $this->objtxtdinnerrate = $this->newObject('textinput','htmlelements');
 $this->objtxtdinnerrate->name   = "txtdinnerRate";
@@ -185,14 +205,14 @@ $this->objtxtdinnerrate->value  = "0.00";
 //create a table to place form elements in
 
         $myTabExpenses  = $this->newObject('htmltable','htmlelements');
-        $myTabExpenses->width='20%';
+        $myTabExpenses->width='100%';
         $myTabExpenses->border='0';
         $myTabExpenses->cellspacing = '10';
         $myTabExpenses->cellpadding ='10';
 
         $myTabExpenses->startRow();
         $myTabExpenses->addCell($this->objdate->show());
-        $myTabExpenses->addCell($this->objexpensesdate->show());
+        $myTabExpenses->addCell($dates);
         $myTabExpenses->endRow();
 
         $myTabExpenses->startRow();
@@ -220,11 +240,9 @@ $this->objtxtdinnerrate->value  = "0.00";
         $myTabExpenses->addCell($this->objtxtdinnerloc->show());
         $myTabExpenses->addCell($this->objrate->show());
         $myTabExpenses->addCell($this->objtxtdinnerrate->show());
-        //$myTabExpenses->addCell($this->objAddperdiem->show());
         $myTabExpenses->endRow();
 
         $myTabExpenses->startRow();
-        //$myTabExpenses->addCell($this->objButtonSubmit->show());
         $myTabExpenses->addCell('');
         $myTabExpenses->addCell('');
         $myTabExpenses->addCell('');
@@ -233,7 +251,9 @@ $this->objtxtdinnerrate->value  = "0.00";
         $myTabExpenses->addCell($this->objAddperdiem->show());       
         $myTabExpenses->endRow();
 
-
+        //$myTabExpenses->startRow();
+        //$myTabExpenses->addCell('');
+        //$myTabExpenses->endRow();
         /*create a table to place buttons in*/
 
         $myTabButtons  = $this->newObject('htmltable','htmlelements');
@@ -245,14 +265,7 @@ $this->objtxtdinnerrate->value  = "0.00";
         $myTabButtons->startRow();
         $myTabButtons->addCell($this->objButtonNext->show());
         $myTabButtons->addCell($this->objAddperdiem->show());    
-
-        //$myTabButtons->addCell($this->objButtonEdit->show());
-        //$myTabButtons->addCell($this->objButtonAdd->show());
         $myTabButtons->endRow();
-    
-       // $myTabExpenses->startRow();    
-       // $myTabButtons->addCell($this->objadditinerary->show());
-       // $myTabButtons->endRow();
 
 /**************************************************************************************************************/        
 
