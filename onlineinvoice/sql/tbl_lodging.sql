@@ -57,8 +57,13 @@ $fields = array(
     'type'        =>  'float',
     'notnull'     => 1
     ),
-    'filename' =>  array(
+    'quotesource' =>  array(
     'type'        =>  'text',
+    'length'      =>  32,
+    )
+    'exchangefile' =>  array(
+    'type'        =>  'file',
     'notnull'     => 1 
-    );
+    )
+  );
 ?>
