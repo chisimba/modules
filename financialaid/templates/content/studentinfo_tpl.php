@@ -107,11 +107,6 @@ if(!is_null($stdaddress)){
 		$table->addCell($objLanguage->languagetext('mod_financialaid_addtype','financialaid'), '15%');
         $table->addCell($typesnames[$addtype]);
 		$table->endRow();
-        $table->startRow();
-        $table->addCell('');
-    }else{
-        $table->startRow();
-        $table->addCell($objLanguage->languagetext('mod_financialaid_addtype','financialaid'));
     }
 }
 
@@ -122,29 +117,19 @@ for($i = 0; $i < 4; $i++){
 		$link = new link();
 		$link->href=$this->uri(array('action'=>'info','id'=>$stdnum,'address'=>$types[$i]));
 
-		$contactType = $this->objDbStudentInfo->studentAddress($stdnum);
-        $link->link= $typesnames[$i];
-		$datype .=$link->show()."<br />";
+	    $link->link= $typesnames[$i];
+		$datype .=$link->show()."&nbsp;";
 	}
+    else if($types[$i] == $addresstype){
+       $details .= "<center>" . $this->objLanguage->languageText('mod_studentenquiry_addtype','studentenquiry');
+       $details .= ": " . $typesnames[$addtype] . "</center><br />";
+    }
 }
 
-$table->addCell($datype);
-$table->endRow();
 
-$link = new link();
-if($this->getParam('module') === "financialaid"){
-	$link->href=$this->uri(array('action'=>'nextofkin','id'=>$idnumber));
-	$link->link="Show Family Member(s)";
-}
-if($this->getParam('module') === "residence"){
-	$link->href=$this->uri(array('action'=>'resapplication','id'=>$idnumber));
-	$link->link="Click here for Application(s) for Residence";
-}
 
-if($this->getParam('module') === "studentenquiry"){
-	$link->href=$this->uri(array('action'=>'nextofkin','id'=>$idnumber));
-	//$link->link="Show Family Member(s)";
-}
+$details .= "<center>Address Types: ";
+$details .= $datype . "</center>";
 
 $content = "<center>".$details." ".$table->show(). "</center>";
 

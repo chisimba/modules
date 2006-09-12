@@ -15,14 +15,11 @@ class dbfinaid extends object
 {
 
  //Web services variables
-    var $NAMESPACE;
     var $objSoapClient;
 
-    
 	function init(){
 		parent::init();
-        $this->NAMESPACE="http://172.16.65.134/webserviceDEV/studentinfo4.php?wsdl";
-        $this->objSoapClient = new SoapClient($this->NAMESPACE);
+        $this->objSoapClient = new SoapClient("http://172.16.65.134/webserviceDEV/studentinfo4.php?wsdl");
 	}
 
 
