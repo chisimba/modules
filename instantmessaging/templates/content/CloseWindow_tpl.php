@@ -6,7 +6,7 @@
 </div>
 </div>
 </center>
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 function _close_window() {
 	window.close();
 }
