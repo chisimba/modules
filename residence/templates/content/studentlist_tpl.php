@@ -85,9 +85,11 @@ if(isset($stdinfo)){
 			'correspondence');
 		
 			//$corre->href="index.php?module=correspondence&action=new&extToSubject=testing&extType=email&extUserToTitle=toSimangMang";
-			$corre->link = "Correspondence";
-			$enquiry = new link();
-			$enquiry->href=$this->uri(array('action'=>'enquiry','id'=>$key->STDNUM));
+			//$corre->link = "Correspondence";
+			$enquiry = new link($this->uri(array('action'=>'enquiry','id'=>$key->STDNUM)));
+			//$enquiry->href=$this->uri(array('action'=>'enquiry','id'=>$key->STDNUM));
+			//$objLink = new link($this->uri(null,'contextadmin'));
+			//$objLink->link='contextadmin';
 			$enquiry->link='Enquiry';
 			$table->startRow();
 			$table->addCell($link->show());
@@ -96,7 +98,7 @@ if(isset($stdinfo)){
 		
 			$table->addCell($results->show());
 			$table->addCell($payment->show());
-			$table->addCell($corre->show());
+			//$table->addCell($corre->show());
 			$table->addCell($enquiry->show());
 			$table->endRow();
 			$oddEven = $oddEven == 'odd'?'even':'odd';

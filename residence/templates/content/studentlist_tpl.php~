@@ -1,5 +1,5 @@
 <?
-print_r($stdinfo);
+//print_r($stdinfo);
 //require_once('columns_tpl.php');
 
 $this->objUser =& $this->getObject('user','security');
@@ -85,9 +85,11 @@ if(isset($stdinfo)){
 			'correspondence');
 		
 			//$corre->href="index.php?module=correspondence&action=new&extToSubject=testing&extType=email&extUserToTitle=toSimangMang";
-			$corre->link = "Correspondence";
-			$enquiry = new link();
-			$enquiry->href=$this->uri(array('action'=>'enquiry','id'=>$key->STDNUM));
+			//$corre->link = "Correspondence";
+			$enquiry = new link($this->uri(array('action'=>'enquiry','id'=>$key->STDNUM)));
+			//$enquiry->href=$this->uri(array('action'=>'enquiry','id'=>$key->STDNUM));
+			//$objLink = new link($this->uri(null,'contextadmin'));
+			//$objLink->link='contextadmin';
 			$enquiry->link='Enquiry';
 			$table->startRow();
 			$table->addCell($link->show());

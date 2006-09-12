@@ -19,7 +19,8 @@ class residence extends controller
 	function init(){
 		$this->objUser =& $this->getObject('user','security');
 		$this->financialaid =& $this->getObject('dbresidence','residence');
-		//$this->misc =& $this->getObject('dbmiscinfo','studentfinance');
+		$this->Kewlproxy =& $this->getObject('altconfig','config');
+		
 		$this->personid = $this->getParam('id');
 		$this->loadClass('button', 'htmlelements');
 		$this->loadClass('textinput','htmlelements');
@@ -44,6 +45,8 @@ class residence extends controller
 	switch($action)
 	{
 		case null: 
+			print $this->Kewlproxy-getProxy;
+			die;
 			return 'studentlist_tpl.php';
 		
 		case 'ok':
@@ -191,7 +194,11 @@ class residence extends controller
 				}
 				
 		case 'enquiry':
-				//return $this->control->enquiry($this->getParam('id',null));
+				   
+					$personid = $this->getParam(id,null);
+					$stdinfo  = $this->financialaid->enquire($personid);
+					$this->setVarByRef('stdinfo',$stdinfo);
+					//print_r($stdinfo); die;
 					return 'enquiry_tpl.php';		
 		case 'nextofkin':
 				$this->setVarByRef('stdinfo',$this->financialaid->getAllStudents(" where p.personID = '".$this->getParam('id')."'"));

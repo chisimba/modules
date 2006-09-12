@@ -74,6 +74,21 @@ class dbresidence extends object
        return $this->objSoapClient2->getlimitSTDET($field,$value,$start,$offset);
 	}
 
+function enquire($personid){
+		//$this->objUser = & $this->newObject("user", "security");
+		$this->NAMESPACE2 = 'http://172.16.65.134/webserviceDEV/studentinfo4.php?wsdl';
+        // Pull in the NuSOAP code
+		// Create the client instance
+		$this->objSoapClient2 = new SoapClient($this->NAMESPACE2,array('proxy_host'    => "uwcinternet1.uwc.ac.za",
+                                           'proxy_port'    => 8080,
+                                           'proxy_login'    => "jadam",
+                                           'proxy_password' => "adam1234"));
+		
+        
+       return $this->objSoapClient2->getlimitSTDET('STDNUM',"$personid",0,0);
+       
+        
+    }
 
 	function getAdditionalInfo($field,$value)
 	{
