@@ -55,14 +55,27 @@ $fields = array(
    'exchangerate' =>  array(
       'type'      =>  'float',
       'notnull'     => 1
+  ),
+  
+  'incidentratefile'  =>  array(
+      'type'          =>  'file'
+  ),
+  'quotesource'     =>  array(
+      'type'        =>  'text',
+      'length'      =>  32
+  ),
+  'receiptfiles'    =>  array(
+      'type'        =>  'file',
+      'notnull'     =>1
   )
   );
-
-//create other indexes here...
-
-
-
 ?>
+
+/*create other indexes here...
+
+
+
+
 //create other indexes here...
 
 /*$name = 'ind_groups_FK';
