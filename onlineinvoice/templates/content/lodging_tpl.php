@@ -1,7 +1,8 @@
 <?php
-      /**
-       *create a template for lodge expenses the files
-       */
+
+/**
+  *create a template for lodge expenses the files
+  */
        
 
 /*create template for lodging expenses*/
@@ -18,11 +19,23 @@ $lodgeExpenditures = $this->objLanguage->languageText('mod_onlineinvoice_itemize
 $expensesdate = $this->objLanguage->languageText('word_date');
 $vendor = $this->objLanguage->languageText('word_vendor');
 $currency = $this->objLanguage->languageText('word_currency');
-$cost = $this->objLanguage->languageText('word_cost');
 $rate = $this->objLanguage->languageText('mod_onlineinvoice_exchangerate','onlineinvoice');
-$next = $this->objLanguage->languageText('phrase_next');
-$exit = $this->objLanguage->languageText('phrase_exit');
-  
+$next = ucfirst($this->objLanguage->languageText('phrase_next'));
+$exit = ucfirst($this->objLanguage->languageText('phrase_exit'));
+$back = ucfirst($this->objLanguage->languageText('word_back'));
+$ratevalue = $this->objLanguage->languageText('word_rate');
+$lblchoice  = $this->objLanguage->languageText('mod_onlineinvoice_verifyexchangerate','onlineinvoice');
+$addreceipt = $this->objLanguage->languageText('mod_onlineinvoice_addreceipt','onlineinvoice');
+$quotesource  = $this->objLanguage->languageText('mod_onlineinvoice_quotesource','onlineinvoice');
+$strquote = ucfirst($quotesource);
+$receipt  = $this->objLanguage->languageText('mod_onlineinvoice_uploadreceipts','onlineinvoice');
+$upload = $this->objLanguage->languageText('mod_onlineinvoice_uploadbutton','onlineinvoice');
+$create = $this->objLanguage->languageText('mod_onlineinvoice_create','onlineinvoice');
+
+
+$this->objInfoIcon = $this->newObject('geticon','htmlelements');
+$this->objInfoIcon->setModuleIcon('freemind');
+    
 
 /*********************************************************************************************************************************************************************/
 
@@ -33,8 +46,8 @@ $this->objdate->label($expensesdate,$lblDate);
 
 $this->objlodgedate = $this->newObject('datepicker','htmlelements');
 $name = 'txtlodgedate';
-$date = '01-01-2006';
-$format = 'DD-MM-YYYY';
+$date = date('Y-m-d');
+$format = 'YYYY-M-DD';
 $this->objlodgedate->setName($name);
 $this->objlodgedate->setDefaultDate($date);
 $this->objlodgedate->setDateFormat($format);
@@ -47,10 +60,26 @@ $this->objtxtvendor = $this->newobject('textinput','htmlelements');
 $this->objtxtvendor->textinput("txtvendor","",'text');
 
 $this->objtxtcost  = $this->newobject('textinput','htmlelements');
-$this->objtxtcost->textinput("txtcost","","text");
+$this->objtxtcost->textinput("txtcost","0.00","text");
 
 $this->objtxtexchange = $this->newobject('textinput','htmlelements');
 $this->objtxtexchange->textinput("txtexchange","","text");
+
+$this->loadClass('textinput', 'htmlelements');
+$this->objtxtfilerate = new textinput('upload',' ','FILE');
+$this->objtxtfilerate->id = 'txtfilereceipt';
+
+$this->loadClass('textinput', 'htmlelements');
+$this->objtxtfilereceipt = new textinput('upload',' ','FILE');
+$this->objtxtfilereceipt->id = 'txtfilerate';
+
+//$strupload = ucfirst($upload);
+$this->objtxtquotesource  = new textinput('txtquotesource', ' ','text');
+$this->objtxtquotesource->id = 'txtquotesource';
+
+$this->objtxtcreateaffidavit  = new textinput('txtcreateaffidavit', ' ','text');
+$this->objtxtcreateaffidavit->id = 'txtcreateaffidavit';
+
 /*********************************************************************************************************************************************************************/
     /**
      *create a dropdown list to hold all currency values
@@ -166,36 +195,51 @@ $this->objnext->setToSubmit();
 $this->objexit  = new button('exit', $exit);
 $this->objexit->setToSubmit();
 
+$this->objBack  = new button('back', $back);
+$this->objBack->setToSubmit();
 
-/*$btnsave  = $this->objLanguage->languageText('word_save');
+
+/*$strfile = ucfirst($addreceipt);
+$this->objButtonAdd  = new button('addreceipt', $strfile);
+$this->objButtonAdd->setToSubmit();
+
+$strquote = ucfirst($quotesource);
+$this->objButtonQuote  = new button('quotesource', $strquote);
+$this->objButtonQuote->setToSubmit();
+
+$strupload = ucfirst($upload);
+$this->objButtonUploadReceipt  = new button('uploadfiles', $strupload);
+$this->objButtonUploadReceipt->setToSubmit();
+
+$btnsave  = $this->objLanguage->languageText('word_save');
 $strsave  = ucfirst($btnsave);
 $this->objButtonSubmit  = new button('submit', $strsave);
-$this->objButtonSubmit->setToSubmit();*/
+$this->objButtonSubmit->setToSubmit();
+
 
 /*********************************************************************************************************************************************************************/
 /**
  *create a table for lodge details  - place all form headings in*/
 
         $myTabLodgeheading  = $this->newObject('htmltable','htmlelements');
-        $myTabLodgeheading->width='80%';
+        $myTabLodgeheading->width='100%';
         $myTabLodgeheading->border='0';
         $myTabLodgeheading->cellspacing = '10';
         $myTabLodgeheading->cellpadding ='10';
 
         $myTabLodgeheading->startRow();
-        $myTabLodgeheading->addCell("<div align=\"left\">"  . $lodgeHint . "</div>");
         $myTabLodgeheading->endRow();
         
         $myTabLodgeheading->startRow();
-        $myTabLodgeheading->addCell("<div align=\"left\">"  . $lodgeExchangeRate  . "</div>");
+        $myTabLodgeheading->addCell("<div align=\"left\">" ."<div class=\"error\">" . $this->objInfoIcon->show()  . $lodgeExchangeRate  . "</div>");
         $myTabLodgeheading->endRow();
         
         $myTabLodgeheading->startRow();
-        $myTabLodgeheading->addCell("<div align=\"left\">"  . $lodgeSuggestedExRate . "</div>");
+        $myTabLodgeheading->addCell("<div align=\"left\">"  .'<b />'. $lodgeSuggestedExRate . "</div>");
         $myTabLodgeheading->endRow();
         
         $myTabLodgeheading->startRow();
-        $myTabLodgeheading->addCell("<div align=\"left\">"  . $lodgeExpenditures  . "</div>");
+        $myTabLodgeheading->addCell("<div align=\"left\">"  . '<b />'. $lodgeExpenditures  . "</div>");
         $myTabLodgeheading->endRow();
 /*********************************************************************************************************************************************************************/
 /*create a table for lodge details*/
@@ -211,6 +255,7 @@ $this->objButtonSubmit->setToSubmit();*/
         $myTabLodge->addCell($this->objlodgedate->show());
         $myTabLodge->endRow();
 
+
         $myTabLodge->startRow();
         $myTabLodge->addCell($vendor);
         $myTabLodge->addCell($this->objtxtvendor->show());
@@ -222,7 +267,7 @@ $this->objButtonSubmit->setToSubmit();*/
         $myTabLodge->endRow();
 
         $myTabLodge->startRow();
-        $myTabLodge->addCell($cost);
+        $myTabLodge->addCell($ratevalue);
         $myTabLodge->addCell($this->objtxtcost->show());
         $myTabLodge->endRow();
         
@@ -231,33 +276,91 @@ $this->objButtonSubmit->setToSubmit();*/
         $myTabLodge->addCell($this->objtxtexchange->show());
         $myTabLodge->endRow();
         
-        //$myTabLodge->startRow();
-        //$myTabLodge->addCell($cost);
-        //$myTabLodge->addCell($this->objButtonSubmit->show());
-        //$myTabLodge->endRow();
+/*********************************************************************************************************************************************************************/
 
+/*create table for exchangerate information*/
+        
+        $myTabExchange  = $this->newObject('htmltable','htmlelements');
+        $myTabExchange->width='90%';
+        $myTabExchange->border='0';
+        $myTabExchange->cellspacing = '10';
+        $myTabExchange->cellpadding ='10';
+
+
+        $myTabExchange->startRow();
+        $myTabExchange->addCell(ucfirst('Attach File')); 
+        $myTabExchange->addCell($this->objtxtfilerate->show());
+        $myTabExchange->endRow();
+        
+        $myTabExchange->startRow();
+        $myTabExchange->addCell($strquote);
+        $myTabExchange->addCell($this->objtxtquotesource->show());
+        $myTabExchange->endRow();
+
+
+/*create table for receipt information*/        
+
+        $myTabReceipt  = $this->newObject('htmltable','htmlelements');
+        $myTabReceipt->width='75%';
+        $myTabReceipt->border='0';
+        $myTabReceipt->cellspacing = '10';
+        $myTabReceipt->cellpadding ='10';
+        
+        
+        $myTabReceipt->startRow();
+        $myTabReceipt->addCell('Upload Receipt');
+        //$myTabReceipt->addCell($this->objtxtfilereceipt->show());
+        $myTabReceipt->endRow();
+        
+        $myTabReceipt->startRow();
+        $myTabReceipt->addCell('Create an Affidavit');
+        $myTabReceipt->addCell($this->objtxtcreateaffidavit->show());
+        $myTabReceipt->endRow();
+        
+        $myTabReceipt->startRow();
+        $myTabReceipt->addCell(' ');
+//        $myTabReceipt->addCell($this->objButtonUploadReceipt->show());
+        $myTabReceipt->endRow();
+        
+        $myTabReceipt->startRow();
+        $myTabReceipt->endRow();
+        
+        
 
 /*********************************************************************************************************************************************************************/        
+        
 
 /*create tabbox for lodge information*/
 $this->loadClass('tabbedbox', 'htmlelements');
 $objtabbedbox = new tabbedbox();
 $objtabbedbox->addTabLabel('Lodge Information');
-$objtabbedbox->addBoxContent($myTabLodge->show()  . "<div align=\"left\">"  . $this->objnext->show().' ' . $this->objexit->show() . "</div");
+$objtabbedbox->addBoxContent($myTabLodge->show());
+
+/*create tabbox for attaching lodge echange rate file*/
+$this->loadClass('tabbedbox', 'htmlelements');
+$objtabexchange = new tabbedbox();
+$objtabexchange->addTabLabel('Verify Echange Rate');
+$objtabexchange->addBoxContent("<div align=\"center\">" ."<div class=\"error\">" .'Verify exchange rate by attachning a file or quote a reliable source' ."</div". "</div". $myTabExchange->show());
+
+//$objtabreceipt = new tabbedbox();
+//$objtabreceipt->addTabLabel('Receipt Information');
+//$objtabreceipt->addBoxContent('<br>'  . '<b />' .$receipt  . '<br>' ."<div align=\"left\">"  .$myTabReceipt->show());
+
 
 /*********************************************************************************************************************************************************************/
 
 $objLodgeForm = new form('lodging',$this->uri(array('action'=>'submitlodgeexpenses')));
 $objLodgeForm->displayType = 3;
-$objLodgeForm->addToForm($objtabbedbox->show());	
-//$formlodging = '<form name="lodging" id="lodging" enctype="multipart/form-data" method="post" action="'.$this->formaction.'">';
+$objLodgeForm->addToForm($objtabbedbox->show()  . '<br />' . '<br />' .$objtabexchange->show() . '<br />' .'<br />' . "<div align=\"center\">" . $this->objBack->show(). $this->objnext->show() . ' ' . $this->objexit->show()."</div");	
 $objLodgeForm->addRule('txtvendor', 'Please enter vendor name','required');
 $objLodgeForm->addRule('txtcost', 'Please enter cost amount','required');
-$objLodgeForm->addRule('txtexchange', 'Please enter the exchange rate','required');
+$objLodgeForm->addRule('txtcost', 'Please enter a numerical value for cost amount','numeric');
+$objLodgeForm->addRule('txtexchange', 'Please enter exchange rate','required');
+$objLodgeForm->addRule('upload', 'You have to load a file','required');
+$objLodgeForm->addRule('txtexchange', 'Please enter a numerical value for exchange rate','numeric');
+$objLodgeForm->extra="enctype='multipart/form-data'";
 
 /*********************************************************************************************************************************************************************/
-  
-
 //display screen content
 echo "<div align=\"center\">" . $this->objlodgeHeading->show()  . "</div>";
 echo "<div align=\"right\">" .'<br>'  . $myTabLodgeheading->show() . "</div>";

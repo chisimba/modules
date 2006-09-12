@@ -7,7 +7,6 @@
    /***********************************************************************************************************
     *                                                 TO LIST FOR FORM                                        *
     *validate the field lenghts, field type etc                                                               *
-    *change the itinerary form link to a button then add validation ...cannot move next b4 all fields entered *
     *get an icon and add tool tip tect informing user canot move forward unless info is entered               *
     ***********************************************************************************************************/                      
 
@@ -36,6 +35,12 @@
   $this->objIteninary =& $this->newObject('htmlheading','htmlelements');
   $this->objIteninary->type = 3;
   $this->objIteninary->str=$objLanguage->languageText('phrase_traveleritenirary');
+  
+  /**
+   *getIcon for information
+   */     
+  $this->objInfoIcon = $this->newObject('geticon','htmlelements');
+  $this->objInfoIcon->setModuleIcon('freemind');
     
 
 
@@ -190,10 +195,17 @@
 
   $textArea = 'travel';
   $this->objPurposeArea = $this->newobject('textArea','htmlelements');
-  $this->objPurposeArea->setRows(2);
-  $this->objPurposeArea->setColumns(30);
+  $this->objPurposeArea->setRows(1);
+  $this->objPurposeArea->setColumns(16);
   $this->objPurposeArea->setName($textArea);
   $this->objPurposeArea->setContent("");
+
+  $textAreaaddy = 'address';
+  $this->objAdressArea = $this->newobject('textArea','htmlelements');
+  $this->objAdressArea->setRows(1);
+  $this->objAdressArea->setColumns(16);
+  $this->objAdressArea->setName($textAreaaddy);
+  $this->objAdressArea->setContent("");
 
 /************************************************************************************************************************************************/
 
@@ -219,7 +231,7 @@
 
         $myTable->startRow();
         $myTable->addCell($this->objaddress->show());
-        $myTable->addCell($this->objtxtaddress->show());
+        $myTable->addCell($this->objAdressArea->show());
         $myTable->endRow();
 
         $myTable->startRow();
@@ -248,8 +260,63 @@
         $myTable->endRow();
 
         $myTable->startRow();
-        //$myTable->addCell($this->objButtonSubmit->show());
-        $myTable->addCell($this->objButtonNext->show());
+        $myTable->endRow();
+        
+        $myTable->startRow();
+        $myTable->endRow();
+        
+        $myTable->startRow();
+        $myTable->endRow();
+        
+        $myTable->startRow();
+        $myTable->endRow();
+        
+                
+        $myTable->startRow();
+        $myTable->endRow();
+        
+        $myTable->startRow();
+        $myTable->endRow();
+        
+        $myTable->startRow();
+        $myTable->endRow();
+        
+        $myTable->startRow();
+        $myTable->endRow();
+        
+        $myTable->startRow();
+        $myTable->endRow();
+        
+        $myTable->startRow();
+        $myTable->endRow();
+        
+        $myTable->startRow();
+        $myTable->endRow();
+        
+        $myTable->startRow();
+        $myTable->endRow();
+        
+                
+        $myTable->startRow();
+        $myTable->endRow();
+        
+        $myTable->startRow();
+        $myTable->endRow();
+        
+        $myTable->startRow();
+        $myTable->endRow();
+        
+        $myTable->startRow();
+        $myTable->endRow();
+        
+        $myTable->startRow();
+        $myTable->endRow();
+        
+        $myTable->startRow();
+        $myTable->endRow();
+
+        
+        $myTable->addCell("<div align=\"right\">".$this->objButtonNext->show()."</div>" );
         $myTable->endRow();
         
 /************************************************************************************************************************************************/        
@@ -266,13 +333,7 @@ $striconinfo = $information ;
 $this->loadClass('tabbedbox', 'htmlelements');
 $objtraveler = new tabbedbox();
 $objtraveler->addTabLabel('Traveler Information');
-$objtraveler->addBoxContent('<br>'  . "<div align=\"center\">" .$striconinfo . "</div>" . '<br>'  . $myTable->show()  . '<br>' );
-
-//$this->loadClass('tabbedbox', 'htmlelements');
-//$objitinerary = new tabbedbox();
-//$objitinerary->addTabLabel('Itinerary');
-//$objitinerary->addBoxContent('<br>'.'<br>'.$itineraryinfo.'<br>'. ' ' .$this->objitinerarylink->show(). '<br>'  . '<br>'); /* . '<br>'  . $this->objexit->show() . " "  . $this->objnext->show());*/
-        //$this->objcompleteitenirary->show() . 
+$objtraveler->addBoxContent('<br>' ."<div align=\"center\">".  "<div class=\"error\">".$this->objInfoIcon->show() .$striconinfo . "</div>" . '<br>'  . $myTable->show()  . '<br>' );
 /************************************************************************************************************************************************/
   /**
    *create form to place all elements in
@@ -286,7 +347,7 @@ $objtraveler->addBoxContent('<br>'  . "<div align=\"center\">" .$striconinfo . "
   $objtevForm->addToForm($objtraveler->show()); //. '<br>'  . $objitinerary->show());
   $objtevForm->addRule('txtClaimantName',$valname,'required');
   $objtevForm->addRule('txtTitle', $valtitle,'required');
-  $objtevForm->addRule('txtAddress',$valaddress,'required');
+  $objtevForm->addRule('address',$valaddress,'required');
   $objtevForm->addRule('txtCity',$valcity,'required');
   $objtevForm->addRule('txtprovince',$valprovince,'required');
   $objtevForm->addRule('txtpostalcode',$valpostal,'required');

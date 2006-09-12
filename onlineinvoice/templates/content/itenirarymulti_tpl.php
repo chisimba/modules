@@ -37,8 +37,9 @@
     $strsave = ucfirst($btnsave);
     $return = $this->objLanguage->languageText('mod_onlineinvoice_returntotravelexpense','onlineinvoice');
     $addanotheritinerary = $this->objLanguage->languageText('mod_onlineinvoice_addanotheritenirary','onlineinvoice');
-    $exit  = $this->objLanguage->languageText('phrase_exit');
-    $next = $this->objLanguage->languageText('phrase_next');
+    $exit  = ucfirst($this->objLanguage->languageText('phrase_exit'));
+    $next = ucfirst($this->objLanguage->languageText('phrase_next'));
+    $back = ucfirst($this->objLanguage->languageText('word_back'));
     //$btnsave  = $this->objLanguage->languageText('word_save');
     $btnAdd = $this->objLanguage->languageText('mod_onlineinvoice_addanotheritenirary','onlineinvoice');
     $stradd = ucfirst($btnAdd);
@@ -88,10 +89,24 @@
   /**
    *  create an instance of the datepicker class
    */ 
-   
+    
+    /**
+     *get the initial date of the start of invoice to display in departure date
+     */
+     
+     //$startdate = $this->getParam('txtbegindate');
+     //while (list ($key, $val)  = each ($startdate)) {
+       //       if($count == 'begindate') {
+         //     $bdate = $val;
+           //   }
+            //var_dump($bdate);
+            //die;  
+     //}
+/***********************************************************************************************************************************************/              
+       
     $this->objdeptdate = $this->newObject('datepicker','htmlelements');
     $name = 'txtdeptddate';
-    $date = '2006-01-01';
+    $date = date('Y-m-d');
     $format = 'YYYY-MM-DD';
     $this->objdeptdate->setName($name);
     $this->objdeptdate->setDefaultDate($date);
@@ -99,7 +114,7 @@
 
     $this->objarrivaldateobj = $this->newObject('datepicker','htmlelements');
     $name = 'txtarraivaldate';
-    $date = '2006-01-01';
+    $date = date('Y-m-d');
     $format = 'YYYY-MM-DD';
     $this->objarrivaldateobj->setName($name);
     $this->objarrivaldateobj->setDefaultDate($date);
@@ -123,10 +138,7 @@
   /**
    *create all form buttons 
    */
-   
-    
-    //$this->objButtonSubmit  = new button('save', $strsave);
-    //$this->objButtonSubmit->setToSubmit();
+
     $this->objnext  = new button('next', $next);
     $this->objnext->setToSubmit();
     
@@ -134,7 +146,8 @@
      *validate dates to check that arrive date is not before departure date
      */         
     $onClick = 'var dept_date = document.itinerarymulti.txtdeptddate;
-		  			     var arrive_date = document.itinerarymulti.txtarraivaldate;
+		  			    var arrive_date = document.itinerarymulti.txtarraivaldate;
+		  			     
 					 
 					 
 					 
@@ -142,8 +155,9 @@
 					      
 			      /*value of the arrival date and value of the departure date*/
 					    
-		  		   var value_end   = arrive_date.value;
-					  var value_begin = dept_date.value;
+		  		   var value_end     = arrive_date.value;
+					   var value_begin   = dept_date.value;
+					   
 					 
 					 /*checks if dates are right*/
 					 
@@ -160,12 +174,11 @@
 					 }else{
           // alert(\''.$sucessfull.'\')
            }';
-  // $this->objButtonSubmit->extra = sprintf(' onClick ="javascript: %s"', $onClick );
    $this->objnext->extra = sprintf(' onClick ="javascript: %s"', $onClick );
    
+/***********************************************************************************************************************************************/
    $this->objexit  = new button('exit',$exit);
    $this->objexit->setToSubmit();
-/***********************************************************************************************************************************************/   
    $onSelect  = 'alert(\''.$strexitform .'\'); ';
    $this->objexit->extra  = sprintf(' onClick ="javascript: %s"', $onSelect);
      
@@ -174,6 +187,11 @@
     $this->objAddItinerary  = new button('add', $stradd);
     $this->objAddItinerary->setToSubmit();
     $this->objAddItinerary->extra = sprintf(' onClick ="javascript: %s"', $onClick );
+    
+    
+    $this->objBack  = new button('back', $back);
+    $this->objBack->setToSubmit();
+
 /************************************************************************************************************************************************/
   /**
    *create instance of the dropdown list class
@@ -341,7 +359,7 @@
 
         $myTabIten->startRow();
         $myTabIten->addCell($this->objdeparturetime->show());
-        $myTabIten->addCell($this->objdeparturetimedropdown->show() .  ' ' . $this->objminutes->show());
+        $myTabIten->addCell($this->objdeparturetimedropdown->show() .  'hr ' . $this->objminutes->show()  . 'min');
         $myTabIten->endRow();
 
         $myTabIten->startRow();
@@ -356,7 +374,7 @@
 
         $myTabIten->startRow();
         $myTabIten->addCell($this->objarrivaltime->show());
-        $myTabIten->addCell($this->objarrivaltimedropdown->show() . ' ' . $this->objminutes->show());
+        $myTabIten->addCell($this->objarrivaltimedropdown->show() . 'hr ' . $this->objminutes->show()  . 'min');
         $myTabIten->endRow();
 
         $myTabIten->startRow();
@@ -390,7 +408,7 @@
 $this->loadClass('tabbedbox', 'htmlelements');
 $objmultiitinerary = new tabbedbox();
 $objmultiitinerary->addTabLabel('Travelers Itinerary');
-$objmultiitinerary->addBoxContent('<br>' . $myTabIten->show() . '<br>' . '<br>' ."<div align=\"left\">" .$this->objexit->show() .' '. $this->objnext->show(). "</div>"  . '<br />' . '<br />');               
+$objmultiitinerary->addBoxContent('<br>' . $myTabIten->show() . '<br>' . '<br>' ."<div align=\"center\">" .$this->objBack->show() .' '. $this->objnext->show() . ' ' . $this->objexit->show() ."</div>"  . '<br />' . '<br />');               
 
         
 /************************************************************************************************************************************************/

@@ -67,5 +67,6 @@ $fields = array(
       'type'         =>  'float',
       'notnull'     => 1
     )
+    
     );
 ?>

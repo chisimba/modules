@@ -29,7 +29,7 @@ $fields = array(
     'updated'     =>  array(
     'type'        =>  'date'
     ),
-   'claimanantname' =>  array(
+   'name' =>  array(
       'type'        =>  'text',
       'length'      =>  32,
       'notnull'     => 1
@@ -39,7 +39,7 @@ $fields = array(
       'length'      =>  32,
       'notnull'     => 1
     ),
-    'mailaddress'   =>  array(
+    'address'   =>  array(
       'type'        =>  'text',
       'length'      =>  255,
       'notnull'     => 1
