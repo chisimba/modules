@@ -1,7 +1,7 @@
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 
 if(!document.getElementById && document.all)
-document.getElementById = function(id){ return document.all[id]} 
+document.getElementById = function(id){ return document.all[id]}
 
 
     function toggleMultiDayInput()
@@ -14,9 +14,9 @@ document.getElementById = function(id){ return document.all[id]}
                 showhide('cal_input2', 'hidden');
                 showhide('cal_label2', 'hidden');
             }
-            
+
     }
-    
+
     function showhide (id, visible)
     {
         var style = document.getElementById(id).style
@@ -145,7 +145,7 @@ $titleInput->size = '50';
 
 $table->addCell($titleInput->show(), NULL, NULL, NULL, NULL, 'colspan="3"');
 $table->endRow();
-    
+
 $table->startRow();
 $detailsLabel = new label($this->objLanguage->languageText('mod_calendarbase_eventdetails').':', 'input_details');
 $table->addCell($detailsLabel->show());
@@ -181,14 +181,14 @@ if ($mode == 'edit') {
     $idInput->value = $event['id'];
     $idInput->fldType = 'hidden';
     $form->addToForm($idInput->show());
-    
+
     if ($event['multiday_event'] == 1) {
         $multidayOriginalInput = new textinput('multiday_event_original');
         $multidayOriginalInput->value = $event['multiday_event_start_id'];
         $multidayOriginalInput->fldType = 'hidden';
         $form->addToForm($multidayOriginalInput->show());
     }
-    
+
 }
 
 $submitButton = new button('submit', $this->objLanguage->languageText('mod_calendarbase_saveevent'));

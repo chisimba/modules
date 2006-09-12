@@ -1,8 +1,8 @@
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 
 if(!document.getElementById && document.all)
-document.getElementById = function(id){ return document.all[id]} 
+document.getElementById = function(id){ return document.all[id]}
 
 
     function showReasonForm()
@@ -13,7 +13,7 @@ document.getElementById = function(id){ return document.all[id]}
             } else{
                     showhide('closeReason', 'none');
             }
-            
+
     }
 
     function showhide (id, visible)
@@ -27,7 +27,7 @@ document.getElementById = function(id){ return document.all[id]}
         } else {
             itemstyle.style.display = 'block';
         }*/
-    } 
+    }
 </script>
 <?php
 

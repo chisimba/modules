@@ -9,14 +9,14 @@
 
 if(!$this->_objSections->isSections())
 {
-    $str ='<script language="javascript">
+    $str ='<script language="javascript" type="text/JavaScript">
            <![CDATA[
             alert(\'Please add a section before creating content\');
             ]]>
             </script>';
     print $str;
 } else {
-    
+
 
 //initiate objects
 $table = & $this->newObject('htmltable', 'htmlelements');
@@ -33,14 +33,14 @@ $frontPage = & $this->newObject('checkbox', 'htmlelements');
 $published = & $this->newObject('checkbox', 'htmlelements');
 
 $objForm = $this->newObject('form','htmlelements');
-     
+
 
 if($this->getParam('id') == '')
 {
-	
+
 	$action = 'createcontent';
 	$editmode = FALSE;
-	
+
 	$titleInput->value = '';
 	$menuTextInput->value = '';
 	$introInput->value = '';
@@ -51,12 +51,12 @@ if($this->getParam('id') == '')
 	{
 	   $frontPage->setChecked(TRUE);
 	}
-	
+
 } else {
 	$action = 'editcontent';
 	$contentId = $this->getParam('id');
 	$editmode = TRUE;
-	
+
 	$arrContent = $this->_objContent->getContentPage($contentId);
 	$titleInput->value = $arrContent['title'];
 	$menuTextInput->value = $arrContent['menutext'];
@@ -71,7 +71,7 @@ if($this->getParam('id') == '')
 //setup form
 $objForm->name='addfrm';
 $objForm->setAction($this->uri(array('action'=> $action, 'id' => $contentId, 'frontpage' => $this->getParam('frontpage')),'cmsadmin'));
-$objForm->setDisplayType(1);   
+$objForm->setDisplayType(1);
 
 
 

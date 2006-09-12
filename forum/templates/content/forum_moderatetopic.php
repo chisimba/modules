@@ -54,91 +54,91 @@ $deleteForm = new form ('moderate_deletetopic', $this->uri(array('action'=>'mode
 if ($topicParent != '') {
     $moderateParent = new link ($this->uri(array('action'=>'moderatetopic', 'id'=>$topicParent['topic_id'])));
     $moderateParent->link = 'click here';
-    
+
     $str = $this->objLanguage->languageText('mod_forum_warntopicistangent', 'forum', 'This topic is a tangent to <strong>[-POSTTITLE-]</strong>. This option will only affect this tangent. <br />If you would like to moderate the parent topic, please [-CLICKHERE-]');
-    
+
     $str = str_replace('[-CLICKHERE-]', $moderateParent->show(), $str);
-    
+
     $str = str_replace('[-POSTTITLE-]', $topicParent['post_title'], $str);
-    
+
     $deleteForm->addToForm($str);
-    
+
     //$deleteForm->addToForm('<p>This topic is a tangent to <strong>'.$topicParent['post_title'].'</strong>. This option will only affect this tangent. <br />If you would like to moderate the parent topic, please '.$moderateParent->show().'.</p>');
-    
-} 
-    
+
+}
+
     if (count($tangents) > 0) {
 		$str = $this->objLanguage->languageText('mod_forum_topichasfollwoingtangents', 'forum', 'This topic has the following [-COUNTTANGENTS-] tangent(s). Please indicate what you would like to happen to them as well?');
-		
+
 		$str = str_replace('[-COUNTTANGENTS-]', count($tangents), $str);
-		
+
 		$deleteForm->addToForm($str);
-        
+
         $tangentList = '<ul>';
         foreach ($tangents as $tangent)
         {
             $tangentList .= '<li>'.$tangent['post_title'].'</li>';
         }
         $tangentList .= '</ul>';
-        
+
         $deleteForm->addToForm($tangentList);
     }
-    
+
     $deleteForm->addToForm('<fieldset><legend>'.$this->objLanguage->languageText('mod_forum_deleteoptions', 'forum', 'Delete Options').'</legend><p><strong>');
-    
+
     if (count($tangents) > 0) {
         $deleteForm->addToForm('a) ');
     }
-    
+
     $deleteForm->addToForm($this->objLanguage->languageText('mod_forum_confirmdeletetopic', 'forum', 'Are you sure you want to delete this topic?').'</strong> ');
-    
+
     $deleteConfirm = new radio ('delete');
     $deleteConfirm->addOption('0', '<strong><span class="error">'.$this->objLanguage->languageText('word_no', 'system', 'No').'</span></strong>');
     $deleteConfirm->addOption('1', '<strong><span class="error">'.$this->objLanguage->languageText('word_yes', 'system', 'Yes').'</span></strong>');
     $deleteConfirm->setBreakSpace(' &nbsp; ');
     $deleteConfirm->setSelected('0');
-    
+
     $deleteForm->addToForm($deleteConfirm->show().'</p>');
-    
+
     if (count($tangents) > 0) {
         $deleteForm->addToForm('<p>b) '.$this->objLanguage->languageText('mod_forum_whathappentotangents', 'forum', 'What should happen to the tangents?').'</p>');
-        
+
         $tangentOption = new radio ('tangentoption');
         $tangentOption->addOption('delete', $this->objLanguage->languageText('mod_forum_deletealltangents', 'forum', 'Delete all Tangents related to this topic'));
-        
+
         $dropdown = new dropdown ('topicmove');
-        
+
         if (count($otherTopicsInForum) > 0) {
             foreach ($otherTopicsInForum as $forumtopic)
             {
                 $dropdown->addOption($forumtopic['topic_id'], $forumtopic['post_title']);
             }
             $tangentOption->addOption('move', $this->objLanguage->languageText('mod_forum_movetangentstofollowingtopic', 'forum', 'Move them to the following topic').' - '.$dropdown->show());
-        } 
-        
+        }
+
         $tangentOption->addOption('newtopic', $this->objLanguage->languageText('mod_forum_movetangentstonewtopic', 'forum', 'Move the Tangents to Topics. Each Tangent will be a new topic.'));
-        
+
         // Preserve Users Default Selected Option
         $defaultOption = strtolower($this->getParam('option', NULL));
-        
+
         if ($defaultOption == 'delete' || $defaultOption == 'move' || $defaultOption == 'newtopic') {
             $tangentOption->setSelected($defaultOption);
         } else {
             $tangentOption->setSelected('delete');
         }
         // End: Preserve
-        
+
         $tangentOption->setBreakSpace('<br />');
-        
+
         $deleteForm->addToForm('<blockquote>'.$tangentOption->show().'</blockquote>');
     }
-    
+
     $button = new button ('confirmdelete');
     $button->value = $this->objLanguage->languageText('mod_forum_confirmdelete', 'forum', 'Confirm Delete');
     $button->setToSubmit();
-    
 
-    
+
+
     $deleteForm->addToForm('<p align="center">'.$button->show().'</p></fieldset>');
 
 
@@ -166,7 +166,7 @@ if (count($otherTopicsInForum) > 0) {
 
     $moveToTangentForm = new form ('moderate_movetotangent', $this->uri(array('action'=>'moderate_movetotangent')));
     $dropdown = new dropdown ('topicmove');
-    
+
     foreach ($otherTopicsInForum as $forumtopic)
     {
         if ($forumtopic['topic_id'] != $topic['topic_tangent_parent']) {
@@ -174,24 +174,24 @@ if (count($otherTopicsInForum) > 0) {
         }
     }
     $moveToTangentForm->addToForm($this->objLanguage->languageText('mod_forum_movetopicastangent', 'forum', 'Move the Topic as a tangent to the following topic').': '.$dropdown->show());
-    
+
     if (count($tangents) > 0) {
 		$str = $this->objLanguage->languageText('mod_forum_tangentsmovedwithtopic', 'forum', '<strong>Note</strong> This topic has [-COUNTTANGENTS-] tangent(s). They will automatically become tangents to the selected topic.');
 		$str = str_replace('[-COUNTTANGENTS-]', count($tangents), $str);
         $moveToTangentForm->addToForm('<p>'.$str.'</p>');
     }
-    
+
     $button = new button ('confirmmovetotangent');
     $button->value = $this->objLanguage->languageText('mod_forum_confirmmovetopic', 'forum', 'Confirm Move Topic');
     $button->setToSubmit();
-    
+
     /// CONTINUE ADD BUTTON TO FORM
-    
+
     $moveToTangentForm->addToForm('<p>'.$button->show().'</p>');
-    
+
     //Add Hidden Id - Common to both
     $moveToTangentForm->addToForm($hiddeninput->show());
-    
+
     $switchmenu->addBlock($optionsCount.') '.$this->objLanguage->languageText('mod_forum_movetopicastangent', 'forum', 'Move it as a Tangent to another Topic'), $moveToTangentForm->show(), 'switchmenutext');
 
 }
@@ -206,30 +206,30 @@ if (count($otherTopicsInForum) > 0) {
 if ($topic['topic_tangent_parent'] != '0') {
     // Increase Options Count for next item
     $optionsCount++;
-    
+
     $moveToNewTopicForm = new form ('moderate_movetonewtopic', $this->uri(array('action'=>'moderate_movetonewtopic')));
-    
+
     $moveToNewTopicForm->addToForm($this->objLanguage->languageText('mod_forum_confirmovetopicastangent', 'forum', 'Are you sure you want to move this tangent to a new topic?').' ');
-    
+
     $moveConfirm = new radio ('move');
     $moveConfirm->addOption('0', '<strong><span class="error">'.$this->objLanguage->languageText('word_no', 'No').'</span></strong>');
     $moveConfirm->addOption('1', '<strong><span class="error">'.$this->objLanguage->languageText('word_yes', 'Yes').'</span></strong>');
     $moveConfirm->setBreakSpace(' &nbsp; ');
     $moveConfirm->setSelected('0');
-    
+
     $moveToNewTopicForm->addToForm($deleteConfirm->show().'</p>');
-    
+
     $button = new button ('confirmdelete');
     $button->value = $this->objLanguage->languageText('mod_forum_confirmmovetonewtopic', 'forum', 'Confirm Move to New Topic');
     $button->setToSubmit();
-    
+
     $moveToNewTopicForm->addToForm('<p>'.$button->show().'</p>');
-    
+
     //Add Hidden Id - Common to both
     $moveToNewTopicForm->addToForm($hiddeninput->show());
-    
+
     $switchmenu->addBlock($optionsCount.') '.$this->objLanguage->languageText('mod_forum_confirmmovingnewtopic', 'forum', 'Move it as a New Topic'), $moveToNewTopicForm->show(), 'switchmenutext');
-    
+
 }
 
 /**************************************************************************************
@@ -239,9 +239,9 @@ if ($topic['topic_tangent_parent'] != '0') {
 
 // Increase Options Count for next item
 $optionsCount++;
-    
-    
-    
+
+
+
 
 
 $topicStatusForm = new form('topicStatusForm', $this->uri( array('module'=>'forum', 'action'=>'changetopicstatus')));
@@ -317,18 +317,18 @@ if ($topic['topic_tangent_parent'] == '0') {
     $objElement = new radio('stickytopic');
     $objElement->addOption('1','<strong>'.$this->objLanguage->languageText('word_sticky', 'forum', 'Sticky').'</strong> - '.$this->objLanguage->languageText('mod_forum_stickytopicexplained', 'forum', 'A Sticky topic always appears (sticks) on the top of a forum.'));
     $objElement->addOption('0','<strong>'.$this->objLanguage->languageText('word_notsticky', 'forum', 'Not Sticky').'</strong> - '.$this->objLanguage->languageText('mod_forum_notstickytopicexplained', 'forum', 'The topic will appear according to standard sorting criteria.'));
-    
+
     $objElement->setSelected($topic['sticky']);
 
 
     $objElement->setBreakSpace('<br />');
     $stickyTopicForm->addToForm('<p>'.$objElement->show().'</p>');
-    
+
     $submitButton = new button('submit', $this->objLanguage->languageText('mod_forum_updatestickystatus', 'forum', 'Update Sticky Status'));
     $submitButton->setToSubmit();
 
     $stickyTopicForm->addToForm('<p>'.$submitButton->show().'</p>');
-    
+
     $stickyTopicForm->addToForm($hiddeninput->show());
 
     $switchmenu->addBlock($optionsCount.') '.$this->objLanguage->languageText('mod_forum_makingtopicsticky', 'forum', 'Making a Topic Sticky or Not'), $stickyTopicForm->show(), 'switchmenutext');
@@ -352,10 +352,10 @@ echo '<p align="center">'.$returnLink->show().' / '.$returnForumLink->show().'</
 //print_r($topic);
 
 ?>
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 //<![CDATA[
 if(!document.getElementById && document.all)
-document.getElementById = function(id){ return document.all[id]} 
+document.getElementById = function(id){ return document.all[id]}
 
 
 
@@ -365,27 +365,27 @@ document.getElementById = function(id){ return document.all[id]}
             {
                     showhide('closeReason', 'block');
                     // var oEditor = FCKeditorAPI.GetInstance('reason') ;
-                    // try 
+                    // try
                     // {
                         // oEditor.MakeEditable();
-                        
+
                     // }
                     // catch (e) {}
                     // oEditor.Focus();
             } else{
                     showhide('closeReason', 'none');
             }
-            
+
     }
 
     function showhide (id, visible)
     {
         var itemstyle = document.getElementById(id).style
         itemstyle.display = visible;
-    } 
-    
+    }
+
     //var collAll = document.frames("reason___Frame").document.all;
     //var oEditor = collAll.FCKeditorAPI.GetInstance('reason') ;
-    
+
 //]]>
 </script>
