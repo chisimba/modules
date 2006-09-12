@@ -37,7 +37,10 @@ class financialaidleftblock extends object
 		$href = new href("index.php?module=financialaid&amp;action=searchmarkrange",$this->objLanguage->languagetext('mod_financialaid_searchmarkrange','financialaid'));
 		$links.=$href->show()."<br />";
         $links.="<br />";
-        
+        $links .="<b>".$this->objLanguage->languagetext('mod_financialaid_addapp','financialaid')."</b><br />";
+		$href = new href("index.php?module=financialaid&amp;action=addapplication",$this->objLanguage->languagetext('mod_financialaid_addstudent','financialaid'));
+  		$links.=$href->show()."<br /><br />";
+
         $studentid = $this->getParam('id', NULL);
         if(!is_null($studentid)){
             $appinfo = $this->objDBFinancialAidWS->getApplication($studentid, 'studentNumber');
@@ -49,6 +52,20 @@ class financialaidleftblock extends object
             if (count($appinfo) > 0){
                 $studentid = $appinfo[0]->studentNumber;
             }
+        }
+        
+        if (strlen($appid) > 0){
+            $links .="<b>".$this->objLanguage->languagetext('mod_financialaid_addappinfo','financialaid')."</b><br />";
+            $href = new href("index.php?module=financialaid&amp;action=addparttimejob&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_addparttimejob','financialaid'));
+            $links.=$href->show()."<br />";
+            $href = new href("index.php?module=financialaid&amp;action=addnextofkin&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_addnextofkin','financialaid'));
+            $links.=$href->show()."<br />";
+            $href = new href("index.php?module=financialaid&amp;action=adddependant&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_adddependant','financialaid'));
+            $links.=$href->show()."<br /><br />";
+
+
+//            $href = new href("index.php?module=financialaid&amp;action=addstudentfamily&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_addstudentfamily','financialaid'));
+//            $links.=$href->show()."<br />";
         }
 		if ($studentid) {
 			$links .= "<strong>".$this->objLanguage->languagetext('mod_financialaid_stddetails','financialaid')."</strong><br />";
@@ -84,20 +101,7 @@ class financialaidleftblock extends object
 			$href = new href("index.php?module=financialaid&amp;action=matric&amp;id=$studentid",$this->objLanguage->languagetext('mod_financialaid_matric','financialaid'));
 			$links.=$href->show()."<br /><br />";
 		}
-        $links .="<b>".$this->objLanguage->languagetext('mod_financialaid_addapp','financialaid')."</b><br />";
-		$href = new href("index.php?module=financialaid&amp;action=addapplication",$this->objLanguage->languagetext('mod_financialaid_addstudent','financialaid'));
-  		$links.=$href->show()."<br /><br />";
-        if (strlen($appid) > 0){
-            $href = new href("index.php?module=financialaid&amp;action=addparttimejob&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_addparttimejob','financialaid'));
-            $links.=$href->show()."<br />";
-            $href = new href("index.php?module=financialaid&amp;action=addnextofkin&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_addnextofkin','financialaid'));
-            $links.=$href->show()."<br />";
-            $href = new href("index.php?module=financialaid&amp;action=adddependant&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_adddependant','financialaid'));
-            $links.=$href->show()."<br />";
-//            $href = new href("index.php?module=financialaid&amp;action=addstudentfamily&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_addstudentfamily','financialaid'));
-//            $links.=$href->show()."<br />";
-            $links.="<br />";
-        }
+
 
 		$links .= "<strong>".$this->objLanguage->languagetext('word_sponsors')."</strong><br />";
 		$href = new href("index.php?module=financialaid&amp;action=searchsponsors&amp;all=yes",$this->objLanguage->languagetext('mod_financialaid_listsponsors','financialaid'));

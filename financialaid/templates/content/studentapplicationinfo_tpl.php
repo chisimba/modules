@@ -33,7 +33,7 @@ $rep = array(
       'FIRSTNAME' => $stname,
       'LASTNAME' => $stsname);
       
-$details = "<h2>".$objLanguage->code2Txt('mod_financialaid_infotitle','financialaid',$rep)."</h2>";
+$details = "<h2>".$objLanguage->code2Txt('mod_financialaid_apptitle','financialaid',$rep)."</h2>";
 
 $table =& $this->newObject('htmltable','htmlelements');
 
