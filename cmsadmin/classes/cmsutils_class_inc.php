@@ -245,7 +245,8 @@ class cmsutils extends object
 	{
 		try {
 			$objLayouts = & $this->newObject('dblayouts', 'cmsadmin');
-			$arrLayouts = $objLayouts->getLayouts();
+			$arrLayouts = $objLayouts->getLayouts();				
+			
 			$arrSection = $this->_objSections->getSection($id);
 			$str ='<table><tr>';
 			$firstOneChecked = 'checked="checked"';
@@ -649,6 +650,7 @@ class cmsutils extends object
 					$str .= $link->show() .' | ';
 				} else {
 					$strBody = '<h3>'.$page['title'].'</h3>';
+					$strBody .= $page['introtext'].'<p/>';
 					$strBody .= $page['body'].'<p/>';
 				}
 			} 
@@ -714,8 +716,9 @@ class cmsutils extends object
 			$page = $this->_objContent->getContentPage($contentId);
 			
 			$strBody = '<h3>'.$page['title'].'</h3><p/>';
-			$strBody .= '<span class="warning">'.$this->_objUser->fullname($page['created_by']).'</span><p/>';
+			$strBody .= '<span class="warning">'.$this->_objUser->fullname($page['created_by']).'</span><br />';
 			$strBody .= '<span class="warning">'.$page['created'].'</span><p/>';
+			$strBody .= $page['introtext'].'<p/>';			
 			$strBody .= $page['body'].'<p/>';
 			
 			return $strBody;
