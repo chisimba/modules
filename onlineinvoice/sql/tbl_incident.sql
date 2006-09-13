@@ -65,7 +65,7 @@ $fields = array(
       'length'      =>  32
   ),
   'receiptfiles'    =>  array(
-      'type'        =>  'file',
+      'type'        =>  'text',
       'notnull'     =>1
   )
   );

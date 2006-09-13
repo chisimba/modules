@@ -62,7 +62,7 @@ $fields = array(
     'length'      =>  32,
     )
     'exchangefile' =>  array(
-    'type'        =>  'file',
+    'type'        =>  'text',
     'notnull'     => 1 
     )
   );
