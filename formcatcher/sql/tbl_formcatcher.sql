@@ -48,6 +48,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 250
 	),
+    'emailtowhere' => array(
+		'type' => 'text',
+		'length' => 32
+	),
 	'context' => array(
 		'type' => 'text',
 		'length' => 50
