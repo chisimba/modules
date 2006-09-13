@@ -58,7 +58,7 @@ $fields = array(
   ),
   
   'incidentratefile'  =>  array(
-      'type'          =>  'file'
+      'type'          =>  'text'
   ),
   'quotesource'     =>  array(
       'type'        =>  'text',
