@@ -45,11 +45,6 @@ class financialaid extends controller
 		$this->loadclass('link','htmlelements');
 		$this->loadclass('dropdown','htmlelements');
 		$this->loadclass('radio','htmlelements');
-	//	$this->objDBApplication =& $this->getObject('dbapplication');
-	//	$this->objDBNextofkin =& $this->getObject('dbnextofkin');
-	//	$this->objDBDependants =& $this->getObject('dbdependants');
-	//	$this->objDBParttimejobs =& $this->getObject('dbparttimejobs');
-	//	$this->objDBStudentFamily =& $this->getObject('dbstudentfamily');
         $this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
         $this->objFinancialAidReports = & $this->getObject('financialaidreports');
 
@@ -91,7 +86,6 @@ class financialaid extends controller
 
 
 			case 'search':
-			//	$this->setVarByRef('stdinfo',$this->studentinfo->search());
 				return 'studentlist_tpl.php';
 
 			case 'searchapplications':
@@ -156,7 +150,7 @@ class financialaid extends controller
                 $this->objDBFinancialAidWS->saveApplication('add', $fields);
                 $this->setVar('appid', $this->getParam('appid', NULL));
 
-                return 'studentapplicationinfo_tpl.php';
+                return 'addmoreinfo_tpl.php';
             case 'savenextofkin':
                 $fields = array('appId' => $this->getParam('appid', ''),
                             'idNumber' => $this->getParam('idnum', ''),
@@ -176,7 +170,7 @@ class financialaid extends controller
                             'creatorId' => $this->objUser->userId());
                 $this->objDBFinancialAidWS->saveNextofkin('add', $fields);
                 $this->setVar('appid', $this->getParam('appid', NULL));
-                return 'studentapplicationinfo_tpl.php';
+                return 'addmoreinfo_tpl.php';
             case 'savedependant':
                 $fields = array('appId' => $this->getParam('appid', ''),
                             'firstName' => $this->getParam('firstname', ''),
@@ -196,7 +190,7 @@ class financialaid extends controller
                     $this->setVar('fname',$this->getParam('firstname',''));
                     return 'addstudentfamily_tpl.php';
                 }else{
-                    return 'studentapplicationinfo_tpl.php';
+                    return 'addmoreinfo_tpl.php';
                 }
             case 'saveparttimejob':
                 $fields = array('appId' => $this->getParam('appid', ''),
@@ -207,7 +201,7 @@ class financialaid extends controller
                             'creatorId' => $this->objUser->userId());
                 $this->objDBFinancialAidWS->saveParttimejob('add', $fields);
                 $this->setVar('appid', $this->getParam('appid', NULL));
-                return 'studentapplicationinfo_tpl.php';
+                return 'addmoreinfo_tpl.php';
             case 'savestudentfamily':
                 $fields = array('appId' => $this->getParam('appid', ''),
                             'firstName' => $this->getParam('firstname', ''),
@@ -219,7 +213,7 @@ class financialaid extends controller
                             'creatorId' => $this->objUser->userId());
                 $this->objDBFinancialAidWS->saveStudentInFamily('add', $fields);
                 $this->setVar('appid', $this->getParam('appid', NULL));
-                return 'studentapplicationinfo_tpl.php';
+                return 'addmoreinfo_tpl.php';
 
             //----------------
             //Sponsor action

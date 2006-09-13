@@ -29,6 +29,9 @@ class financialaidleftblock extends object
 
         $header = "<h1>".$this->objLanguage->languagetext('mod_financialaid_financialaid','financialaid')."</h1>";
 
+		$href = new href("index.php?module=financialaid",$this->objLanguage->languagetext('word_introduction'));
+		$links.=$href->show()."<br /><br />";
+
 		$links .= "<strong>".$this->objLanguage->languagetext('mod_financialaid_applications','financialaid')."</strong><br />";
 		$href = new href("index.php?module=financialaid&amp;action=searchapplications&amp;all=yes&amp;dispcount=25",$this->objLanguage->languagetext('mod_financialaid_showallapps','financialaid'));
 		$links.=$href->show()."<br />";
