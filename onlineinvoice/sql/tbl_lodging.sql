@@ -60,7 +60,7 @@ $fields = array(
     'quotesource' =>  array(
     'type'        =>  'text',
     'length'      =>  32,
-    )
+    ),
     'exchangefile' =>  array(
     'type'        =>  'text',
     'notnull'     => 1 

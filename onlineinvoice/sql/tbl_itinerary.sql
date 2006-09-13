@@ -56,7 +56,7 @@ $fields = array(
       'notnull'     => 1
    )
    );
-//create other indexes here...
+/*create other indexes here...*/
 
 
 
