@@ -70,20 +70,3 @@ $fields = array(
   )
   );
 ?>
-
-/*create other indexes here...
-
-
-
-
-//create other indexes here...
-
-/*$name = 'ind_groups_FK';
-
-$indexes = array(
-                'fields' => array(
-                	'parent_id' => array()
-                )
-        );
-
-*/

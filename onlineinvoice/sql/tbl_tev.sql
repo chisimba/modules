@@ -70,21 +70,5 @@ $fields = array(
    'length' =>  32,
    'notnull'     => 1
    ),         
-    );
-
-
-
-
-
+   );
 ?>
-/*create other indexes here...
-
-/*$name = 'ind_groups_FK';
-
-$indexes = array(
-                'fields' => array(
-                	'parent_id' => array()
-                )
-        );
-
-*/
