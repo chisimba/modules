@@ -113,20 +113,22 @@ class formuploader extends object
         $id=$this->getParam('id', NULL);
         //Create an instance of the database class for this module
         $objDbFc = & $this->getObject("dbformcatcher");
-        $file = $this->getParam('filename', NULL);
-        $uploadFolder = $this->getUploadPath();
-        $fileToDel = $uploadFolder . $file;
-        $fileToDel = str_replace("\\", "/", $fileToDel);
-        $fileToDel = str_replace("//", "/", $fileToDel);
-        $objDel = & $this->getObject('del', 'files');
-        $objDel->fullFilePath = $fileToDel;
-        $objDel->delete();
-        if ($objDel->err != NULL) {
-            return $objDel->errMsg;
-        } else {
-            $objDbFc->delete("id", $id);
-            return TRUE;
-        }
+        return $objDbFc->delete("id", $id);
+        
+        // $file = $this->getParam('filename', NULL);
+        // $uploadFolder = $this->getUploadPath();
+        // $fileToDel = $uploadFolder . $file;
+        // $fileToDel = str_replace("\\", "/", $fileToDel);
+        // $fileToDel = str_replace("//", "/", $fileToDel);
+        // $objDel = & $this->getObject('del', 'files');
+        // $objDel->fullFilePath = $fileToDel;
+        // $objDel->delete();
+        // if ($objDel->err != NULL) {
+            // return $objDel->errMsg;
+        // } else {
+            // $objDbFc->delete("id", $id);
+            // return TRUE;
+        // }
     
     }
 }#end of class
