@@ -45,8 +45,7 @@ class residence extends controller
 	switch($action)
 	{
 		case null: 
-			print $this->Kewlproxy-getProxy;
-			die;
+			
 			return 'studentlist_tpl.php';
 		
 		case 'ok':

@@ -98,7 +98,7 @@ if(isset($stdinfo)){
 		
 			$table->addCell($results->show());
 			$table->addCell($payment->show());
-			$table->addCell($corre->show());
+			//$table->addCell($corre->show());
 			$table->addCell($enquiry->show());
 			$table->endRow();
 			$oddEven = $oddEven == 'odd'?'even':'odd';
@@ -185,7 +185,7 @@ $this->leftNav->position = 'bottom';
 $this->rightNav = $this->newObject('layer','htmlelements');
 $this->rightNav->id = "rightnav";
 $this->rightNav->str = $right;
-$leftSideColumn2 = $right."<p>$left</p>";
+$leftSideColumn2 = $right;
 //echo $this->rightNav->show();
 		
 $this->contentNav = $this->newObject('layer','htmlelements');
@@ -198,7 +198,10 @@ $this->contentNav->height="70px";
 $cssLayout2->setRightColumnContent($leftSideColumn2);
 //$leftSideColumn2 = $right."<p>$left</p>";
 // Add Left column
-$cssLayout2->setLeftColumnContent('');
+
+$home = new link($this->uri(array('action'=>' ')));
+$home->link = 'Home';
+$cssLayout2->setLeftColumnContent($home->show());
 //Output the content to the page
 
 
