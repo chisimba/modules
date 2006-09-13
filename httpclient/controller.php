@@ -47,6 +47,7 @@ class httpclient extends controller
         {
             default:
             	$url = $this->getParam('url');
+            	$url = "http://avoir.uwc.ac.za/";
                 try {
                 	//$proxy = array(
           			//  'host' => $host,
@@ -54,10 +55,10 @@ class httpclient extends controller
             		//  'user' => $user,
             		//  'password' => $pass
         			//);
-        			$proxy=array();
+        			//$proxy=array();
 
 
-                	echo $this->objClient->getUrl($url,$proxy);
+                	echo $this->objClient->getUrl($url, $proxy);
     			} catch (customException $e) {
         			echo $e->getMessage();
     			}
