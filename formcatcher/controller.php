@@ -34,6 +34,11 @@ class formcatcher extends controller
     */
     public $objLog;
     
+    /**
+    * @var string object $objFile string to hold the file object
+    */
+    public $objFile;
+    
     
     /**
     * Standard constructor method 
@@ -48,6 +53,9 @@ class formcatcher extends controller
         $this->objLog=$this->newObject('logactivity', 'logger');
         //Log this module call
         $this->objLog->log();
+        
+        // Load the File Class from File Manager
+        $this->objFile =& $this->getObject('dbfile', 'filemanager');
     }
 
     /**
@@ -102,7 +110,7 @@ class formcatcher extends controller
                     $objShUp = & $this->getObject('renderuploadtemplate');
                     $objShUp->mail = $rec['email'];
                     $objShUp->title = $rec['title'];
-                    $objShUp->filename = $rec['filename'];
+                    $objShUp->filename = $this->objFile->getFileName($rec['filename']);
                     $objShUp->description = $rec['description'];
                     $objShUp->usefullpage = $rec['usefullpage'];
                     $objShUp->emailtowhere = $rec['emailtowhere'];
@@ -145,6 +153,9 @@ class formcatcher extends controller
                     }
                 } 
                 $this->setVar('str', $objViewFm->show());
+                
+                $this->setVar('pageSuppressXML', TRUE);
+                
                 return $template;
                 break;
             //Form handling - process incomin g form

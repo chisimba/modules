@@ -59,6 +59,9 @@ class viewform extends object
         // Context Code
         $this->contextObject =& $this->getObject('dbcontext', 'context');
  		$this->contextCode = $this->contextObject->getContextCode();
+        
+        // Load File Class
+        $this->objFile =& $this->getObject('dbfile', 'filemanager');
     }
     
     /**
@@ -86,6 +89,7 @@ class viewform extends object
     */
     public function getContents()
     {
+        /*
         //Get an instance of of the formuloader class
         $objFmUp = & $this->getObject('formuploader');
         //Get the path to the form
@@ -94,6 +98,11 @@ class viewform extends object
         $fuploadPath = str_replace("\\", "/", $fuploadPath);
         $fuploadPath = str_replace("//", "/", $fuploadPath);
         $fileFullPath = $fuploadPath . $this->getParam('filename', NULL);
+        */
+        
+        //Get the path to the form
+        $fileFullPath = $this->objFile->getFullFilePath($this->getParam('filename', NULL));
+        
         //Open the form for reading
         $fh= @fopen($fileFullPath, "r");
         //If the file is open read it, else return error string

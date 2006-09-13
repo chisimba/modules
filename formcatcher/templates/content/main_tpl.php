@@ -15,8 +15,6 @@ $leftSideColumn .= $objLanguage->languageText("mod_formcatcher_leftcolinfo", "fo
 
 
 
-
-
 // Add the heading to the content
 $objH =& $this->getObject('htmlheading', 'htmlelements');
 $objH->type=3; //Heading <h3>
@@ -77,6 +75,8 @@ if (isset($ar)) {
             $myTable->startRow();
             $myTable->addCell($line['title'], $oddOrEven);
             $myTable->addCell($line['description'], $oddOrEven);
+            
+            $filename = $this->objFile->getFileName($line['filename']);
             //Add file with link to open form
             $openLink = $this->uri(array(
               'action' => 'view',
@@ -84,7 +84,7 @@ if (isset($ar)) {
               'filename' => $line['filename']));
             $objLn = $this->getObject('link', 'htmlelements');
             $objLn->href = $openLink;
-            $objLn->link = $line['filename'];
+            $objLn->link = $filename;
             $myTable->addCell($objLn->show(), $oddOrEven);
 
             //Check if there is a data file and link to it
@@ -128,7 +128,7 @@ if (isset($ar)) {
                 $objConfirm = & $this->newObject('confirm','utilities');
                 $rep = array('ITEM' => $line['title']);
                 $objConfirm->setConfirm($objDelIcon->show(),
-                $delLink,$this->objLanguage->code2Txt("mod_formcatcher_confirm", $rep, "formcatcher"));
+                $delLink,$this->objLanguage->code2Txt("mod_formcatcher_confirm", "formcatcher", $rep));
                 $conf = $objConfirm->show();
             } else {
                 $conf = "&nbsp;";

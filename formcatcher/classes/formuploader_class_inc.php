@@ -49,6 +49,7 @@ class formuploader extends object
     function uploadForm()
     {
         if ($this->contextCode!==NULL) {
+            /*
             //Create an instance of the upload class
             $objUp = & $this->getObject('upload', 'files');
             //Set it to allow overwrite
@@ -64,10 +65,16 @@ class formuploader extends object
             }
             //Do the upload
             $res = $objUp->doUpload(); 
-            //$title = $this->getParam('title', NULL);
-            //$description = $this->getParam('description', NULL);
-            $objDbUpit = & $this->getObject('dbformcatcher');
-            $objDbUpit->saveRecord($objUp->name);
+            */
+            
+            $filename = $this->getParam('fileupload');
+            if ($filename == '') {
+                $res = FALSE;
+            } else {
+                $objDbUpit = & $this->getObject('dbformcatcher');
+                $objDbUpit->saveRecord($filename);
+                $res = TRUE;
+            }
             
         } else {
             $res = $this->objLanguage->code2txt("mod_formcatcher_notincontext", "formcatcher");
@@ -84,7 +91,7 @@ class formuploader extends object
     function getUploadPath()
     {
         //Instantiate config to get the filesystem path to site root
-        $objConfig = & $this->getObject('config', 'config');
+        $objConfig = & $this->getObject('altconfig', 'config');
         //Set the upload path
         $ret = $objConfig->getValue('KEWL_SITEROOT_PATH')
             . $objConfig->getValue('KEWL_CONTENT_PATH') .  "/formcatcher/" 

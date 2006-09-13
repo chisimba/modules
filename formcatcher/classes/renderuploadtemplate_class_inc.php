@@ -71,10 +71,11 @@ class renderuploadtemplate extends object
         $objForm->setAction($formAction);
         //Set the displayType to 3 for freeform
         $objForm->displayType=3;
+        /*
         if ( $this->getParam('mode', 'create') !== 'edit' ) {
             //Set the enctype for multipart file upload
             $objForm->extra = " enctype=\"multipart/form-data\"";
-        }
+        }*/
         //Add an element for the max_file_Size to form
         $objForm->addToForm($this->__getMaxFileSize());
         
@@ -169,11 +170,16 @@ class renderuploadtemplate extends object
             }
         } else {
             //Create an element for the input of title
-            $objElement = new textinput ("fileupload");
+            //$objElement = new textinput ("fileupload");
             //Set the field type to upload
-            $objElement->fldType="file";
+            //$objElement->fldType="file";
             //Add the $title element to the form
-            return $objElement->show();
+            //return $objElement->show();
+            
+            $objSelectFile = $this->getObject('selectfile', 'filemanager');
+            $objSelectFile->name = 'fileupload';
+            $objSelectFile->restrictFileList = array('htm', 'html');
+            return $objSelectFile->show();
         }
     }
 
@@ -196,7 +202,7 @@ class renderuploadtemplate extends object
         // Use the language object to add the word save
         if ( $this->getParam('mode', 'create' == 'edit') ) {
             $objElement->setValue(' '
-              .$this->objLanguage->languageText("word_save", "formcatcher").' ');
+              .$this->objLanguage->languageText("word_save", "system").' ');
         } else {
             $objElement->setValue(' '
               .$this->objLanguage->languageText("word_upload", "formcatcher").' ');

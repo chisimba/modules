@@ -87,7 +87,7 @@ class catchform extends object
                 }
                 //If they want to use internal email or both
                 if ($emailtowhere == "0" || $emailtowhere == "2") {
-                    $toInternal = $rec['creatorId'];
+                    $toInternal = $rec['creatorid'];
                     $fmInternal = $this->objUser->userId();
                     //Get the mailer and sent the mail
                     $objInternalEmail =& $this->getObject('kngmail', 'email');
