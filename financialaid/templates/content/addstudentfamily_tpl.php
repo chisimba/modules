@@ -1,6 +1,13 @@
 <?
+$appid = $this->getParam('appid');
+$stdinfo = $this->objDBFinancialAidWS->getApplication($appid);
 
-$details = "<h2>".$objLanguage->languagetext('mod_financialaid_addstudentfamily','financialaid')."</h2>";
+$rep = array(
+      'FIRSTNAME' => $stdinfo[0]->firstNames,
+      'LASTNAME' => $stdinfo[0]->surname);
+
+$details = "<h2>".$objLanguage->code2Txt('mod_financialaid_addstudentfamilytitle','financialaid',$rep)."</h2>";
+
 
 $table =& $this->newObject('htmltable','htmlelements');
 $table->cellspacing = 2;
@@ -72,7 +79,7 @@ $table->addCell($cancelbut->show());
 $table->endRow();
 
 
-$content = "<center>".$details."  ".$table->show()."</center>";
+$content = $table->show();
 
 $objForm = new form('theform');
 $objForm->setAction($this->uri(array('action'=>'savestudentfamily')));
@@ -80,7 +87,7 @@ $objForm->setDisplayType(2);
 
 $objForm->addToForm($content);
 
-echo $objForm->show();
+echo "<center>".$details."  ".$objForm->show()."</center>";
 
 
 ?>

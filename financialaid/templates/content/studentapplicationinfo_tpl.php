@@ -35,9 +35,9 @@ $rep = array(
       
 $details = "<h2>".$objLanguage->code2Txt('mod_financialaid_apptitle','financialaid',$rep)."</h2>";
 
-$table =& $this->newObject('htmltable','htmlelements');
 
 if(count($stdinfo) > 0){
+    $table =& $this->newObject('htmltable','htmlelements');
     $table->startRow();
     $table->addCell($objLanguage->languagetext('word_year'));
     $table->addCell($stdinfo[0]->year);
@@ -72,21 +72,6 @@ if(count($stdinfo) > 0){
     $table->startRow();
     $table->addCell($objLanguage->languagetext('mod_financialaid_mrtsts','financialaid'));
     $table->addCell($maritalStatus[$stdinfo[0]->maritalStatus]);
-    $table->endRow();
-
-    $table->startRow();
-    $table->addCell($objLanguage->languagetext('mod_financialaid_courseofstudy','financialaid'));
-    $table->addCell($stdinfo[0]->course);
-    $table->endRow();
-
-    $table->startRow();
-    $table->addCell($objLanguage->languagetext('mod_financialaid_fulltime','financialaid'));
-    $table->addCell($yesno[$stdinfo[0]->fulltime]);
-    $table->endRow();
-
-    $table->startRow();
-    $table->addCell($objLanguage->languagetext('mod_financialaid_majorsubjects','financialaid'));
-    $table->addCell($stdinfo[0]->majors);
     $table->endRow();
 
     $table->startRow();
@@ -143,9 +128,29 @@ if(count($stdinfo) > 0){
     $table->addCell("&nbsp;&nbsp;&nbsp;".$objLanguage->languagetext('mod_financialaid_pcode','financialaid'));
     $table->addCell($stdinfo[0]->homePostcode);
     $table->endRow();
+
+    $personalTable = "<h3>Personal Info</h3>".$table->show()."<br />";
+    
+    $table =& $this->newObject('htmltable','htmlelements');
+
+    $table->startRow();
+    $table->addCell($objLanguage->languagetext('mod_financialaid_courseofstudy','financialaid'));
+    $table->addCell($stdinfo[0]->course);
+    $table->endRow();
+
+    $table->startRow();
+    $table->addCell($objLanguage->languagetext('mod_financialaid_fulltime','financialaid'));
+    $table->addCell($yesno[$stdinfo[0]->fulltime]);
+    $table->endRow();
+
+    $table->startRow();
+    $table->addCell($objLanguage->languagetext('mod_financialaid_majorsubjects','financialaid'));
+    $table->addCell($stdinfo[0]->majors);
+    $table->endRow();
+    $studyTable = "<h3>Study Info</h3>".$table->show();
 }
 
-$content = "<center>".$details." ".$table->show(). "</center>";
+$content = "<center>".$details." ".$personalTable.$studyTable. "</center>";
 
 echo $content;
 

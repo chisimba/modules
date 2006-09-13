@@ -54,19 +54,6 @@ class financialaidleftblock extends object
             }
         }
         
-        if (strlen($appid) > 0){
-            $links .="<b>".$this->objLanguage->languagetext('mod_financialaid_addappinfo','financialaid')."</b><br />";
-            $href = new href("index.php?module=financialaid&amp;action=addparttimejob&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_addparttimejob','financialaid'));
-            $links.=$href->show()."<br />";
-            $href = new href("index.php?module=financialaid&amp;action=addnextofkin&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_addnextofkin','financialaid'));
-            $links.=$href->show()."<br />";
-            $href = new href("index.php?module=financialaid&amp;action=adddependant&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_adddependant','financialaid'));
-            $links.=$href->show()."<br /><br />";
-
-
-//            $href = new href("index.php?module=financialaid&amp;action=addstudentfamily&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_addstudentfamily','financialaid'));
-//            $links.=$href->show()."<br />";
-        }
 		if ($studentid) {
 			$links .= "<strong>".$this->objLanguage->languagetext('mod_financialaid_stddetails','financialaid')."</strong><br />";
    
@@ -102,6 +89,19 @@ class financialaidleftblock extends object
 			$links.=$href->show()."<br /><br />";
 		}
 
+        if (strlen($appid) > 0){
+            $links .="<b>".$this->objLanguage->languagetext('mod_financialaid_addappinfo','financialaid')."</b><br />";
+            $href = new href("index.php?module=financialaid&amp;action=addparttimejob&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_addparttimejob','financialaid'));
+            $links.=$href->show()."<br />";
+            $href = new href("index.php?module=financialaid&amp;action=addnextofkin&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_addnextofkin','financialaid'));
+            $links.=$href->show()."<br />";
+            $href = new href("index.php?module=financialaid&amp;action=adddependant&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_adddependant','financialaid'));
+            $links.=$href->show()."<br /><br />";
+
+
+//            $href = new href("index.php?module=financialaid&amp;action=addstudentfamily&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_addstudentfamily','financialaid'));
+//            $links.=$href->show()."<br />";
+        }
 
 		$links .= "<strong>".$this->objLanguage->languagetext('word_sponsors')."</strong><br />";
 		$href = new href("index.php?module=financialaid&amp;action=searchsponsors&amp;all=yes",$this->objLanguage->languagetext('mod_financialaid_listsponsors','financialaid'));

@@ -1,10 +1,16 @@
 <?
-$details = "<h2>".$objLanguage->languagetext('mod_financialaid_adddependant','financialaid')."</h2>";
+$appid = $this->getParam('appid');
+$stdinfo = $this->objDBFinancialAidWS->getApplication($appid);
+
+$rep = array(
+      'FIRSTNAME' => $stdinfo[0]->firstNames,
+      'LASTNAME' => $stdinfo[0]->surname);
+
+$details = "<h2>".$objLanguage->code2Txt('mod_financialaid_adddependanttitle','financialaid',$rep)."</h2>";
 
 $table =& $this->newObject('htmltable','htmlelements');
 $table->cellspacing = 2;
 $table->cellpadding = 2;
-$appid = $this->getParam('appid');
 
 $appidfield = new textinput("appid", $appid,  "hidden", NULL);
 $firstname = new textinput('firstname');
@@ -84,7 +90,7 @@ $table->endRow();
 
 
 
-$content = "<center>".$details."  ".$table->show()."</center>";
+$content = $table->show();
 
 $objForm = new form('theform');
 $objForm->setAction($this->uri(array('action'=>'savedependant')));
@@ -92,7 +98,7 @@ $objForm->setDisplayType(2);
 
 $objForm->addToForm($content);
 
-echo $objForm->show();
+echo "<center>".$details."  ".$objForm->show()."</center>";
 
 
 ?>
