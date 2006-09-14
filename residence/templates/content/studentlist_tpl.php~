@@ -18,7 +18,7 @@ $cssLayout2->setNumColumns(3);
 //$left = $left->show(); 
 
 $this->loadClass('form','htmlelements');
-$this->financialaid =& $this->getObject('dbfinancialaid','residence');
+$this->financialaid =& $this->getObject('dbresidence','residence');
 $dropdown =& $this->newObject("dropdown", "htmlelements");
 
 	

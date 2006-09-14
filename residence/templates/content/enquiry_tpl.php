@@ -249,6 +249,11 @@ $this->contentNav->str = $objForm->show();
 $cssLayout2->setMiddleColumnContent($objForm->show());
 //$this->contentNav->height="300px";
 //echo $this->contentNav->addToLayer();
+$home = new link($this->uri(array('action'=>' ')));
+$home->link = 'Home';
+$cssLayout2->setLeftColumnContent($home->show());
+
+
 echo $cssLayout2->show();
 
 ?>

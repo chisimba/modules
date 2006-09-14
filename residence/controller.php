@@ -45,7 +45,9 @@ class residence extends controller
 	switch($action)
 	{
 		case null: 
-			
+			//echo '<pre>';
+			//print_r($this->financialaid->getSTHSL('STDNUM','2219065',0,0));
+			//die('hgfh');
 			return 'studentlist_tpl.php';
 		
 		case 'ok':
@@ -275,7 +277,7 @@ class residence extends controller
 	}
 	
 	function studentPayment(){
-		$this->financialaid =& $this->getObject('dbfinancialaid');
+		//$this->financialaid =& $this->getObject('dbresidence');
 		//$filter = " where p.personid = '$this->personid'";
 		//$year = $this->getParam('year');
 		//if(is_null($year)){
