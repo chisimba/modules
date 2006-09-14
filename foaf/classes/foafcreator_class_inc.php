@@ -899,8 +899,9 @@ class foafcreator extends object
      */
     public function addKnows(&$foaf_agent)
     {
-        $this->knows =& $this->foaftree->addChild('foaf:knows');
-        $this->knows->addChild($foaf_agent->foaf);
+        //var_dump($foaf_agent);
+    	$this->knows =& $this->foaftree->addChild('foaf:knows');
+        $this->knows->addChild($foaf_agent->foaftree);
         return true;
     }
 
@@ -1011,6 +1012,44 @@ class foafcreator extends object
             $namespaces .= ' xmlns:' .$qualifier. ' = "' .$uri. '"';
         }
         return $namespaces;
+    }
+
+    public function foafFactory($person, $organization, $knows)
+    {
+    	//person details
+    	$firstname = $person['firstname'];
+    	$surname = $person['surname'];
+    	$name = $firstname . " " . $surname;
+    	$title = $person['title'];
+    	$mbox = $person['email'];
+    	$homepage = $person['homepage'];
+    	$weblog = $person['weblog'];
+    	$seealso = $person['seealso'];
+
+    	//organization
+    	$oVar = $organization['name'];
+    	$oName = $organization['name'];
+    	$oHomepage = $organization['homepage'];
+
+    	//knows
+    	//@todo
+
+    	//construct the foaf
+    	$this->newAgent('Person');
+    	$this->setName($name);
+    	$this->setTitle($title);
+    	$this->setFirstName($firstname);
+    	$this->setSurname($surname);
+    	$this->addMbox($mbox);
+    	$this->addHomepage($homepage);
+    	$this->addWeblog($weblog);
+    	$this->addSeeAlso($seealso);
+
+    	//$this->newAgent('Organization');
+
+
+
+
     }
 
     /**
