@@ -15,7 +15,7 @@ $yesno = array(
              '0'=>$objLanguage->languagetext('word_no'),
              '1'=>$objLanguage->languagetext('word_yes'));
 
-$details = "<h2>".$objLanguage->code2Txt('mod_financialaid_dependantstitle','financialaid',$rep)."</h2>";
+$details = "<center><h2>".$objLanguage->code2Txt('mod_financialaid_dependantstitle','financialaid',$rep)."</h2></center>";
 $table =& $this->newObject('htmltable','htmlelements');
 
 $dependants = $this->objDBFinancialAidWS->getDependants($appid);
@@ -114,7 +114,7 @@ if(count($dependants) > 0){
     $content = "<div class='noRecordsMessage'>".$objLanguage->languagetext('mod_financialaid_nodependants','financialaid')."</div>";
 }
 
-$content = "<center>".$details." ".$content. "</center>";
+$content = $details.$content;
 
 echo $content;
 ?>

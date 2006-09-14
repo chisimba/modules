@@ -65,7 +65,7 @@ if ($sponsorCount > 0){
         $viewnext->link = $objLanguage->languagetext('mod_financialaid_next','financialaid');
         $viewn = $viewnext->show();
     }
-
+    /*
     $Rectbl =& $this->getObject('htmlTable','htmlelements');
     if($endl == $dispCount)  {
         $Rectbl->startRow();
@@ -101,11 +101,21 @@ if ($sponsorCount > 0){
     $Rectbl->addCell("$sponsorCount");
     $Rectbl->endRow();
     $records = $Rectbl->show();
+    */
+    $endat = $startat + $dispCount;
+    if ($endat > $sponsorCount){
+        $endat = $sponsorCount;
+    }
 
+    $rep = array(
+      'RANGE' => ($startat+1).'-'.$endat,
+      'TOTAL' => $sponsorCount);
+
+    $records = $objLanguage->code2Txt('mod_financialaid_resultsfound','financialaid',$rep);
     $showlinks->str = "$viewp $links_code $viewn";
     $showlinks->align="center";
 
-    if($sponsorCount < $dispCount){
+    if($sponsorCount <= $dispCount){
         $pagelinks = "";
     }else{
         $pagelinks = $records.$showlinks->show();

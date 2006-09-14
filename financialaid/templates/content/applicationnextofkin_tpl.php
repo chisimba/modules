@@ -54,62 +54,62 @@ if(count($nextofkin) > 0){
         {
             if ($nextofkin[$i]->id == $nextofkinid){
                 $table->startRow();
-                $table->addCell($objLanguage->languagetext('mod_financialaid_idnumber','financialaid'));
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_idnumber','financialaid'));
                 $table->addCell($nextofkin[$i]->idNumber);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell($objLanguage->languagetext('mod_financialaid_surname','financialaid'));
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_surname','financialaid'));
                 $table->addCell($nextofkin[$i]->surname);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell($objLanguage->languagetext('mod_financialaid_firstnames','financialaid'));
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_firstnames','financialaid'));
                 $table->addCell($nextofkin[$i]->firstNames);
                 $table->endRow();
         
                 $table->startRow();
-                $table->addCell($objLanguage->languagetext('word_relationship'));
+                $table->addCell("<b>".$objLanguage->languagetext('word_relationship'));
                 $table->addCell($relationship[$nextofkin[$i]->relationship]);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell($objLanguage->languagetext('mod_financialaid_homeaddress','financialaid'));
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_homeaddress','financialaid'));
                 $table->addCell($nextofkin[$i]->strAddress);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell($objLanguage->languagetext('mod_financialaid_suburb','financialaid'));
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_suburb','financialaid'));
                 $table->addCell($nextofkin[$i]->suburb);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell($objLanguage->languagetext('mod_financialaid_city','financialaid'));
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_city','financialaid'));
                 $table->addCell($nextofkin[$i]->city);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell($objLanguage->languagetext('mod_financialaid_pcode','financialaid'));
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_pcode','financialaid'));
                 $table->addCell($nextofkin[$i]->postcode);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell($objLanguage->languagetext('mod_financialaid_mrtsts','financialaid'));
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_mrtsts','financialaid'));
                 $table->addCell($maritalstatus[$nextofkin[$i]->maritalStatus]);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell($objLanguage->languagetext('mod_financialaid_spouse','financialaid'));
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_spouse','financialaid'));
                 $table->addCell($nextofkin[$i]->spouse);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell($objLanguage->languagetext('mod_financialaid_occupation','financialaid'));
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_occupation','financialaid'));
                 $table->addCell($nextofkin[$i]->occupation);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell($objLanguage->languagetext('mod_financialaid_empdetails','financialaid'));
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_empdetails','financialaid'));
                 $table->addCell($nextofkin[$i]->employersDetails);
                 $table->endRow();
 
@@ -151,7 +151,7 @@ if(count($nextofkin) > 0){
     $content = "<div class='noRecordsMessage'>".$objLanguage->languagetext('mod_financialaid_nonextofkin','financialaid')."</div>";
 }
 
-$content = "<center>".$details." ".$content. "</center>";
+$content = "<center>".$details. "</center>".$content;
 
 echo $content;
 ?>

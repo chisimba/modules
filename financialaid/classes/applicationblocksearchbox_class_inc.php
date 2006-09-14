@@ -35,9 +35,7 @@ class applicationblocksearchbox extends object
         $dispcount = new dropdown('dispcount', null, null, 4);
         $dispcount->addOption('10', '10');
         $dispcount->addOption('25', '25');
-        $dispcount->addOption('50', '50');
-        $dispcount->addOption('75', '75');
-        $dispcount->addOption('100', '100');
+        $dispcount->addOption('50', '50&nbsp;&nbsp;');
 
 		$save= new button('save');
 		$save->setToSubmit();

@@ -133,17 +133,28 @@ if ($stdCount > 0){
             $Rectbl->addCell("$startat to $stdCount");
         }
         $Rectbl->endRow();
-    }        */
+    }
     $Rectbl->startRow();
     $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_resfnd','financialaid').":</b>", "20%");
     $Rectbl->addCell("$stdCount");
     $Rectbl->endRow();
     $records = $Rectbl->show();
+    */
+    $endat = $startat + $dispCount;
+    if ($endat > $stdCount){
+        $endat = $stdCount;
+    }
+
+    $rep = array(
+      'RANGE' => ($startat+1).'-'.$endat,
+      'TOTAL' => $stdCount);
+
+    $records = $objLanguage->code2Txt('mod_financialaid_resultsfound','financialaid',$rep);
 
     $showlinks->str = "$viewp $links_code $viewn";
     $showlinks->align="center";
 
-    if($stdCount < $dispCount){
+    if($stdCount <= $dispCount){
         $pagelinks = "";
     }else{
         $pagelinks = $records.$showlinks->show();

@@ -6,7 +6,8 @@ $rep = array(
       'FIRSTNAME' => $stdinfo[0]->firstNames,
       'LASTNAME' => $stdinfo[0]->surname);
 
-$details = "<h2>".$objLanguage->code2Txt('mod_financialaid_adddependanttitle','financialaid',$rep)."</h2>";
+$details = "<center><h2>".$objLanguage->code2Txt('mod_financialaid_adddependanttitle','financialaid',$rep)."</h2></center>";
+$details .="<center><div class='error'>".$objLanguage->languagetext('mod_financialaid_requiredfields','financialaid')."</div></center>";
 
 $table =& $this->newObject('htmltable','htmlelements');
 $table->cellspacing = 2;
@@ -44,7 +45,7 @@ $table->addCell($appidfield->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_firstname','financialaid'));
+$table->addCell($objLanguage->languagetext('mod_financialaid_firstname','financialaid').'<span class="error">&nbsp;*</span>');
 $table->addCell($firstname->show());
 $table->endRow();
 
@@ -98,7 +99,9 @@ $objForm->setDisplayType(2);
 
 $objForm->addToForm($content);
 
-echo "<center>".$details."  ".$objForm->show()."</center>";
+$objForm->addRule('firstname', $objLanguage->languagetext('mod_financialaid_firstnamerequired','financialaid'), 'required');
+
+echo $details.$objForm->show();
 
 
 ?>

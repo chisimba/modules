@@ -3,7 +3,8 @@
 $table =& $this->newObject('htmltable','htmlelements');
 $table->cellspacing = 2;
 $table->cellpadding = 2;
-$details = "<h2>".$objLanguage->languagetext('mod_financialaid_addstudent','financialaid')."</h2>";
+$details = "<center><h2>".$objLanguage->languagetext('mod_financialaid_addstudent','financialaid')."</h2></center>";
+$details .="<center><div class='error'>".$objLanguage->languagetext('mod_financialaid_requiredfields','financialaid')."</div></center>";
 
 $appid = "init" . "_" . rand(1000,9999) . "_" . time();
 $appidfield = new textinput("appid", $appid,  "hidden", NULL);
@@ -12,10 +13,10 @@ $idNum = new textinput('idnum');
 $surname = new textinput('surname');
 $firstname = new textinput('firstname');
 $maritalSts = new dropdown('maritalsts');
-$maritalSts->addOption('1', $objLanguage->languagetext('word_single'));
-$maritalSts->addOption('2', $objLanguage->languagetext('word_married'));
-$maritalSts->addOption('3', $objLanguage->languagetext('word_divorced'));
-$maritalSts->addOption('4', $objLanguage->languagetext('word_widowed'));
+$maritalSts->addOption('1', $objLanguage->languagetext('word_single').'&nbsp;&nbsp;');
+$maritalSts->addOption('2', $objLanguage->languagetext('word_married').'&nbsp;&nbsp;');
+$maritalSts->addOption('3', $objLanguage->languagetext('word_divorced').'&nbsp;&nbsp;');
+$maritalSts->addOption('4', $objLanguage->languagetext('word_widowed').'&nbsp;&nbsp;');
 
 //$year = new dropdown('year');
 $startyear = date("Y");
@@ -99,22 +100,22 @@ $table->addCell($semester->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid'));
+$table->addCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid').'<span class="error">&nbsp;*</span>');
 $table->addCell($stdNum->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_idnumber','financialaid'));
+$table->addCell($objLanguage->languagetext('mod_financialaid_idnumber','financialaid').'<span class="error">&nbsp;*</span>');
 $table->addCell($idNum->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_surname','financialaid'));
+$table->addCell($objLanguage->languagetext('mod_financialaid_surname','financialaid').'<span class="error">&nbsp;*</span>');
 $table->addCell($surname->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_firstnames','financialaid'));
+$table->addCell($objLanguage->languagetext('mod_financialaid_firstnames','financialaid').'<span class="error">&nbsp;*</span>');
 $table->addCell($firstname->show());
 $table->endRow();
 
@@ -210,7 +211,7 @@ $table->endRow();
 
 
 
-$content = "<center>".$details."  ".$table->show()."</center>";
+$content = $details.$table->show();
 
 $objForm = new form('theform');
 $objForm->setAction($this->uri(array('action'=>'saveapplication')));
@@ -218,9 +219,14 @@ $objForm->setDisplayType(2);
 
 $objForm->addToForm($content);
 
-//$objForm->addRule('stdnum', 'Please enter a student number', 'required');
-//$objForm->addRule('surname', 'Please enter a surname', 'required');
-//$objForm->addRule('idnum', 'Please enter an ID number', 'required');
+$objForm->addRule('stdnum', $objLanguage->languagetext('mod_financialaid_stdnumrequired','financialaid'), 'required');
+$objForm->addRule('stdnum', $objLanguage->languagetext('mod_financialaid_stdnumnumeric','financialaid'), 'numeric');
+$objForm->addRule(array('name'=>'stdnum', 'lower'=>'6', 'upper'=>'6'), $objLanguage->languagetext('mod_financialaid_stdnumsetlength','financialaid'), 'rangelength');
+$objForm->addRule('idnum', $objLanguage->languagetext('mod_financialaid_idnumrequired','financialaid'), 'required');
+$objForm->addRule('idnum', $objLanguage->languagetext('mod_financialaid_idnumnumeric','financialaid'), 'numeric');
+$objForm->addRule(array('name'=>'idnum', 'lower'=>'13', 'upper'=>'13'), $objLanguage->languagetext('mod_financialaid_idnumsetlength','financialaid'), 'rangelength');
+$objForm->addRule('surname', $objLanguage->languagetext('mod_financialaid_surnamerequired','financialaid'), 'required');
+$objForm->addRule('firstname', $objLanguage->languagetext('mod_financialaid_firstnamerequired','financialaid'), 'required');
 
 echo $objForm->show();
 

@@ -11,7 +11,7 @@ $rep = array(
       'FIRSTNAME' => $stname,
       'LASTNAME' => $stsname);
       
-$details = "<h2>".$objLanguage->code2Txt('mod_financialaid_parttimejobtitle','financialaid',$rep)."</h2>";
+$details = "<center><h2>".$objLanguage->code2Txt('mod_financialaid_parttimejobtitle','financialaid',$rep)."</h2></center>";
 $table =& $this->newObject('htmltable','htmlelements');
 
 $parttimejobs = $this->objDBFinancialAidWS->getParttimejob($appid);
@@ -36,7 +36,7 @@ if(count($parttimejobs) > 0){
     $content = "<div class='noRecordsMessage'>".$objLanguage->languagetext('mod_financialaid_noparttimejob','financialaid')."</div>";
 }
 
-$content = "<center>".$details." ".$content. "</center>";
+$content = $details.$content;
 
 echo $content;
 ?>

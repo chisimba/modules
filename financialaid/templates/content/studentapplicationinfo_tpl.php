@@ -33,7 +33,7 @@ $rep = array(
       'FIRSTNAME' => $stname,
       'LASTNAME' => $stsname);
       
-$details = "<h2>".$objLanguage->code2Txt('mod_financialaid_apptitle','financialaid',$rep)."</h2>";
+$details = "<center><h2>".$objLanguage->code2Txt('mod_financialaid_apptitle','financialaid',$rep)."</h2></center>";
 
 
 if(count($stdinfo) > 0){
@@ -129,7 +129,7 @@ if(count($stdinfo) > 0){
     $table->addCell($stdinfo[0]->homePostcode);
     $table->endRow();
 
-    $personalTable = "<h3>Personal Info</h3>".$table->show()."<br />";
+    $personalTable = "<center><h3>Personal Info</h3></center>".$table->show()."<br />";
     
     $table =& $this->newObject('htmltable','htmlelements');
 
@@ -147,10 +147,10 @@ if(count($stdinfo) > 0){
     $table->addCell($objLanguage->languagetext('mod_financialaid_majorsubjects','financialaid'));
     $table->addCell($stdinfo[0]->majors);
     $table->endRow();
-    $studyTable = "<h3>Study Info</h3>".$table->show();
+    $studyTable = "<center><h3>Study Info</h3></center>".$table->show();
 }
 
-$content = "<center>".$details." ".$personalTable.$studyTable. "</center>";
+$content = $details.$personalTable.$studyTable;
 
 echo $content;
 

@@ -34,7 +34,7 @@ if (strlen($stdnum) > 0) {
 }
 
 if (strlen($all) > 0){
-    $details = "<h2>".$objLanguage->languagetext('mod_financialaid_allapplications','financialaid')."</h2>";
+    $details = "<center><h2>".$objLanguage->languagetext('mod_financialaid_allapplications','financialaid')."</h2></center>";
 }elseif (strlen($wherefield) > 0){
     $rep = array(
       'SEARCHVALUE' => $wherevalue);
@@ -146,17 +146,28 @@ if ($appCount > 0){
             $Rectbl->addCell("$startat to $appCount");
         }
         $Rectbl->endRow();
-    } */
+    }
     $Rectbl->startRow();
     $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_resfnd','financialaid').":</b>", "20%");
     $Rectbl->addCell("$appCount");
     $Rectbl->endRow();
     $records = $Rectbl->show();
+    */
 
+    $endat = $startat + $dispCount;
+    if ($endat > $appCount){
+        $endat = $appCount;
+    }
+
+    $rep = array(
+      'RANGE' => ($startat+1).'-'.$endat,
+      'TOTAL' => $appCount);
+
+    $records = $objLanguage->code2Txt('mod_financialaid_resultsfound','financialaid',$rep);
     $showlinks->str = "$viewp $links_code $viewn";
     $showlinks->align="center";
     
-    if($appCount < $dispCount){
+    if($appCount <= $dispCount){
         $pagelinks = "";
     }else{
         $pagelinks = $records.$showlinks->show();
@@ -229,7 +240,7 @@ if ($foundStudents == FALSE) {
     $records = '';
 }
 
-$content = "<center>".$details.$pagelinks." ".$content . "</center>";
+$content = $details.$pagelinks.$content;
 
 echo $content;
 ?>

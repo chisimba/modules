@@ -12,7 +12,7 @@ $rep = array(
       'FIRSTNAME' => $stname,
       'LASTNAME' => $stsname);
       
-$details = "<h2>".$objLanguage->code2Txt('mod_financialaid_studentfamilytitle','financialaid',$rep)."</h2>";
+$details = "<center><h2>".$objLanguage->code2Txt('mod_financialaid_studentfamilytitle','financialaid',$rep)."</h2></center>";
 $table =& $this->newObject('htmltable','htmlelements');
 
 $studentfamily = $this->objDBFinancialAidWS->getStudentsInFamily($appid);
@@ -97,7 +97,7 @@ if(count($studentfamily) > 0){
 }else{
     $content = "<div class='noRecordsMessage'>".$objLanguage->languagetext('mod_financialaid_nostudentfamily','financialaid')."</div>";
 }
-$content = "<center>".$details." ".$content. "</center>";
+$content = $details.$content;
 
 echo $content;
 ?>

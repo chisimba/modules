@@ -12,7 +12,7 @@ $rep = array(
       'UPPERMARK' => $upperMark . "%",
       'YEAR' => $year);
       
-$details = "<h2>".$objLanguage->code2Txt('mod_financialaid_markrangetitle','financialaid',$rep)."</h2>";
+$details = "<center><h2>".$objLanguage->code2Txt('mod_financialaid_markrangetitle','financialaid',$rep)."</h2></center>";
 
 $appinfo = $this->objDBFinancialAidWS->getAllApplications();
 
@@ -95,7 +95,7 @@ if (count($selectedapps) > 0)
         $viewnext->link = $objLanguage->languagetext('mod_financialaid_next','financialaid');
         $viewn = $viewnext->show();
     }
-
+    /*
     $Rectbl =& $this->getObject('htmlTable','htmlelements');
     if($endl == $dispCount)  {
         $Rectbl->startRow();
@@ -131,11 +131,21 @@ if (count($selectedapps) > 0)
     $Rectbl->addCell("$appCount");
     $Rectbl->endRow();
     $records = $Rectbl->show();
+    */
+    $endat = $startat + $dispCount;
+    if ($endat > $appCount){
+        $endat = $appCount;
+    }
 
+    $rep = array(
+      'RANGE' => ($startat+1).'-'.$endat,
+      'TOTAL' => $appCount);
+
+    $records = $objLanguage->code2Txt('mod_financialaid_resultsfound','financialaid',$rep);
     $showlinks->str = "$viewp $links_code $viewn";
     $showlinks->align="center";
 
-    if($appCount < $dispCount){
+    if($appCount <= $dispCount){
         $pagelinks = "";
     }else{
         $pagelinks = $records.$showlinks->show();
@@ -184,7 +194,7 @@ if (count($selectedapps) > 0)
 }
 
 
-$content = "<center>".$details."  ".$content."</center>";
+$content = $details.$content;
 
 echo $content;
 

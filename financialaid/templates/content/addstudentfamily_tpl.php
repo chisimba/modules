@@ -6,8 +6,8 @@ $rep = array(
       'FIRSTNAME' => $stdinfo[0]->firstNames,
       'LASTNAME' => $stdinfo[0]->surname);
 
-$details = "<h2>".$objLanguage->code2Txt('mod_financialaid_addstudentfamilytitle','financialaid',$rep)."</h2>";
-
+$details = "<center><h2>".$objLanguage->code2Txt('mod_financialaid_addstudentfamilytitle','financialaid',$rep)."</h2></center>";
+$details .="<center><div class='error'>".$objLanguage->languagetext('mod_financialaid_requiredfields','financialaid')."</div></center>";
 
 $table =& $this->newObject('htmltable','htmlelements');
 $table->cellspacing = 2;
@@ -45,7 +45,7 @@ if(isset($fname)){
 }
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_firstname','financialaid'));
+$table->addCell($objLanguage->languagetext('mod_financialaid_firstname','financialaid').'<span class="error">&nbsp;*</span>');
 if(isset($fname)){
     $table->addCell($fname);
 }else{
@@ -54,7 +54,7 @@ if(isset($fname)){
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_institution','financialaid'));
+$table->addCell($objLanguage->languagetext('mod_financialaid_institution','financialaid').'<span class="error">&nbsp;*</span>');
 $table->addCell($institution->show());
 $table->endRow();
 
@@ -86,8 +86,10 @@ $objForm->setAction($this->uri(array('action'=>'savestudentfamily')));
 $objForm->setDisplayType(2);
 
 $objForm->addToForm($content);
+$objForm->addRule('firstname', $objLanguage->languagetext('mod_financialaid_firstnamerequired','financialaid'), 'required');
+$objForm->addRule('institution', $objLanguage->languagetext('mod_financialaid_institutionrequired','financialaid'), 'required');
 
-echo "<center>".$details."  ".$objForm->show()."</center>";
+echo $details.$objForm->show();
 
 
 ?>
