@@ -2,7 +2,7 @@
 //Table Name
 $tablename = 'tbl_quotes';
 
-////Options line for comments, encoding and character set
+//Options line for comments, encoding and character set
 $options = array('comment' => 'Table to hold the random quotes', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 //

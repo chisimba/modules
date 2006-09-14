@@ -16,10 +16,10 @@ if ($width && $height) {
 }
 
 //Set up the output
-//$out = "<div align=\"center\" style=\"line-height: +1\">"
-//  . "<font size=\"+6\">" . $ar[0]['quote'] . "</font>"
-//  . "<br /><font size=\"+3\">--" . $ar[0]['whosaidit']
-//  . "</div>";
+$out = "<div align=\"center\" style=\"line-height: +1\">"
+  . "<font size=\"+6\">" . $ar[0]['quote'] . "</font>"
+  . "<br /><font size=\"+3\">--" . $ar[0]['whosaidit']. "</font>"
+  . "</div>";
 
 //Output the content to the page
 echo $out;
