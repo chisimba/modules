@@ -15,6 +15,7 @@
   $this->loadClass('featurebox','navigation');
   $this->loadClass('form','htmlelements');
   $this->loadClass('htmltable','htmlelements');
+  $this->objUser =& $this->getObject('user', 'security');
           //$myTab = $this->newObject('htmltable','htmlelements');
 /************************************************************************************************************************************************/
 
@@ -41,13 +42,13 @@
    
         //$myTab = $this->newObject('htmltable','htmlelements');
      $myTab = new htmltable('myTab');   
-     $myTab->width='80%';
+     $myTab->width='100%';
      $myTab->border='0';
      $myTab->cellspacing='5';
      $myTab->cellpadding='5';
    
      $myTab->startRow();
-     $myTab->addCell(ucfirst('<b />' .$welcome));
+     $myTab->addCell(ucfirst('<b />' .$welcome . ' ' . strtoupper($this->objUser->fullname())));
      $myTab->endRow();
      
      $myTab->startRow();
