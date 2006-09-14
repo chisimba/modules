@@ -60,9 +60,11 @@ $this->Table->addHeader($tableHd, "heading");
 
 //Loop through and display the records
 $rowcount = 0;
-
-$ar = $ar['root']['Settings'];
-
+if (isset($ar['root']['Settings'][1])){
+$ar = $ar['root']['Settings'][0];
+}else{
+	$ar = $ar['root']['Settings'];
+}
 if (isset($ar)) {
     if (count($ar) > 0) {
     	
