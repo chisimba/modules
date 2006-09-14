@@ -110,6 +110,7 @@ class dbuserparamsadmin extends object
      */
     public $Text;
     
+    public $file;
     
     //Initialize class
     function init() {
@@ -118,6 +119,7 @@ class dbuserparamsadmin extends object
     		$this->sysconf = & $this->getObject('altconfig','config');
             $this->objUser = & $this->getObject("user", "security");
             $this->Text = &$this->newObject('language','language');
+    		$this->file =& $this->getObject('mkdir','files');        
             
     }
      /**
@@ -250,7 +252,11 @@ class dbuserparamsadmin extends object
 								'Yahoo ID'=>'',
 								'Skype ID'=>'',
 								'MSN ID' =>'');
-			  $result = $this->createConfig('Settings',$values,$path,'userconfig_properties.ini');
+			  $result = $this->file->mkdirs($path);
+			  if ($result==true) {
+			  	$result = $this->createConfig('Settings',$values,$path,'userconfig_properties.ini');
+			  }
+			  
 			}  		
               $this->_root =& $this->objConf->parseConfig("{$path}".'userconfig_properties.ini','IniFile');
 			
