@@ -85,6 +85,9 @@ class onlineinvoice extends controller
         $this->objuploadfile  = & $this->getObject('fileupload','utilities');
         $this->objdbsys = & $this->getObject('altconfig','config');
         $this->objdbperdiem = & $this->getObject('dbperdiem','onlineinvoice');
+        
+        
+        $this->objFile = & $this->getObject('dbfile', 'filemanager');
        
         /**
          *pass variables to the template
@@ -111,7 +114,10 @@ class onlineinvoice extends controller
         switch($action){
               
              case 'createinvoice':
-                  return 'main_tpl.php';            /** display the initial log - in template **/ 
+                $this->setLayoutTemplate('postlogin_layout_tpl.php');
+              //return 'createInvoice_tpl.php';
+              return 'postlogin_tpl.php';
+                //  return 'main_tpl.php';            /** display the initial log - in template **/ 
               //  return 'createInvoice_tpl.php';   /*  display initial invoice   */
              break;
             
@@ -163,13 +169,8 @@ class onlineinvoice extends controller
               if(isset($nextsection)) {
                     $this->getMultiItinerarydetails();                           
                     $this->setLayoutTemplate('invoice_layout_tpl.php');  
-                    //$addmultiitineraryinfo = $this->getSession('addmultiitinerary'); /** get the session with the multi dim array and assign to a variable **/   
-                    //var_dump($addmultiitineraryinfo);            
                     return  'expenses_tpl.php';                 
               }elseif(isset($additinerary)){
-                    $this->getMultiItinerarydetails();                               /** call the function in which the session variable is set containing the multi dim array  **/
-                    //$addmultiitineraryinfo = $this->getSession('addmultiitinerary'); /** get the session with the multi dim array and assign to a variable **/   
-                    //var_dump($addmultiitineraryinfo);                                /** dump the info on screen **/
                     $this->setLayoutTemplate('invoice_layout_tpl.php');              
                     return 'itenirarymulti_tpl.php';                                 /** back to this form to fill in another itinerary**/
               }elseif(isset($back)){
@@ -224,23 +225,10 @@ class onlineinvoice extends controller
              $back  = $this->getParam('back');
              if(isset($next))  {
                 /**
-                 *call function to save all lodge info -- date, vendor, currency, exchange rate,  cost....and upload / save files
-                 *assign values to a session variable     date, vendor, currency, exchange rate,  cost -- save to session variable ...
-                 *show next template -- to upload files                 
+                 *call the function that stores users values into a session variable
+                 *display the next template -- lodgereceipt                                  
                  */
-                 $rename = true;
-                 $replace = true;
-                 $file_max_size = 16;
-                 $check_type="";
-                 $dir_name  = 'onlineinvoice';
-                 
-                 
-                 $dir_path = $this->objdbsys->getcontentBasePath() . $dir_name.'/';
-                 $this->objuploadfile->set_directory($dir_path);
-                 $this->objuploadfile->check_for_directory();
-                 $this->objuploadfile->upload_file($dir_path,true,true,50);
-                 
-                 $this->getLodgeexpenses();                 
+                 $this->getLodgeexpenses();
                  $this->setLayoutTemplate('invoice_layout_tpl.php');
                  return 'lodgereceipt_tpl.php';
              }elseif(isset($back)){
@@ -261,18 +249,9 @@ class onlineinvoice extends controller
                 $back  = $this->getParam('back');
              if(isset($next))  {
                 /**
-                 *call function to save all lodge info -- date, vendor, currency, exchange rate,  cost....and upload / save files
-                 *assign values to a session variable     date, vendor, currency, exchange rate,  cost -- save to session variable ...
-                 *show next template -- to upload files                 
-                 */
-                 $dir_name  = 'onlineinvoice';
-                 $dir_path = $this->objdbsys->getcontentBasePath() . $dir_name.'/';
-                
-                 $this->objuploadfile->set_directory($dir_path);
-                 $this->objuploadfile->check_for_directory();
-                 $this->objuploadfile->upload_file($dir_path,true,true,50);
-                
-                 //$this->getLodgeexpenses();                 
+                 *call the function to stores the loge receipt / affidavit files into session variable
+                 */                 
+                 $this->getLodgeReceiptFiles();
                  $this->setLayoutTemplate('invoice_layout_tpl.php');
                  return 'incidentinfo_tpl.php'; 
              }elseif(isset($back)){
@@ -294,21 +273,10 @@ class onlineinvoice extends controller
               
                if(isset($next))  {
                 /**
-                 *call function to save all lodge info -- date, vendor, currency, exchange rate,  cost....and upload / save files
-                 *assign values to a session variable     date, vendor, currency, exchange rate,  cost -- save to session variable ...
-                 *show next template -- to upload files                 
-                 */
-                  $dir_name  = 'onlineinvoice';
-                  $dir_path = $this->objdbsys->getcontentBasePath() . $dir_name.'/';
-                
-                  $this->objuploadfile->set_directory($dir_path);
-                  $this->objuploadfile->check_for_directory();
-                  $this->objuploadfile->upload_file($dir_path,true,true,50);
-                  
+                  *call the function that saves all lodge information
+                  */                  
                   $this->getIncidentinfo();
-                
-                 //$this->getLodgeexpenses(); -- getfunction to save all incident information into variable session                 
-                   $this->setLayoutTemplate('invoice_layout_tpl.php');
+                  $this->setLayoutTemplate('invoice_layout_tpl.php');
                    return 'incidentfiles_tpl.php';   
                }elseif(isset($exit)){
                   //return the next template to upload the files for incident
@@ -327,20 +295,11 @@ class onlineinvoice extends controller
               
                if(isset($next))  {
                 /**
-                 *call function to save all lodge info -- date, vendor, currency, exchange rate,  cost....and upload / save files
-                 *assign values to a session variable     date, vendor, currency, exchange rate,  cost -- save to session variable ...
-                 *show next template -- to upload files                 
-                 */
-                  $dir_name  = 'onlineinvoice';
-                  $dir_path = $this->objdbsys->getcontentBasePath() . $dir_name.'/';
-                
-                  $this->objuploadfile->set_directory($dir_path);
-                  $this->objuploadfile->check_for_directory();
-                  $this->objuploadfile->upload_file($dir_path,true,true,50);
-                
-                 //$this->getLodgeexpenses(); -- getfunction to save all incident information into variable session                 
-                   //$this->setLayoutTemplate('invoice_layout_tpl.php');
-                   return 'tevoutput_tpl.php';   
+                  *call the function for incident receipts and save into session variable 
+                  */                  
+                  $this->getIncidentReceiptFiles(); //-- getfunction to save all incident information into variable session
+                  $this->setLayoutTemplate('invoice_layout_tpl.php');
+                   return 'addtravel_tpl.php';
                }elseif(isset($exit)){
                   //return the next template to upload the files for incident
                   $this->setLayoutTemplate('invoice_layout_tpl.php');
@@ -349,7 +308,17 @@ class onlineinvoice extends controller
                 $this->setLayoutTemplate('invoice_layout_tpl.php');
                 return 'incidentfiles_tpl.php';
                }                                     
-          break;                                          
+          break;     
+          
+          case 'viewtraveloutput':
+              //$this->setLayoutTemplate('invoice_layout_tpl.php');
+              return 'tevoutput_tpl.php';
+          break;
+          
+          case  'addanothertev':
+              $this->setLayoutTemplate('invoice_layout_tpl.php');
+              return 'createInvoice_tpl.php';
+          break;                                     
           
 
           case  'savealldetails':
@@ -408,12 +377,8 @@ class onlineinvoice extends controller
               return 'service_tpl.php';
           break;
           
-          case  'verifylogin':
-              $this->setLayoutTemplate('postlogin_layout_tpl.php');
-              //return 'createInvoice_tpl.php';
-              return 'postlogin_tpl.php';
-              break;
-          case 'createnewinvoice':
+          
+          case 'initialinvoice':
               $this->setLayoutTemplate('invoice_layout_tpl.php');
               return 'createInvoice_tpl.php';
               break;                  
@@ -490,31 +455,10 @@ class onlineinvoice extends controller
       $itineraryinfo = $this->getSession('addmultiitinerary');  
       $itineraryinfo[] = $itinerarydata;
       $this->setSession('addmultiitinerary',$itineraryinfo);
-      
-      
-/*******************************************************************************************************************************************************************/      
-       //get the initial date from 1st array 
-          $initial =  $itineraryinfo[0]['departuredate'];     //get the date user selected at initial leg
-       //get the last date from the last array added
-          $count = count($itineraryinfo);
-          $num = $count + 1;
-          $last = $itineraryinfo[$num]['departuredate'];
-          
-          $daterange  = $initial  .  '-'  . $last;
-          $this->setSession('daterange',$daterange); 
-      /********************************************************************/    
-    //display the next day after the initial dept date
-    //for($i = $date1; $i <= $date2; $i = $this->nextDay){
-    //$i = $this->nextDay;
 
   }
 /*******************************************************************************************************************************************************************/                          
   private function getPerDiemExpenses()
-  
- // fucntion calucrate($brate,$lrate,$drate)
-   
-  
-  
   {
   
    $brate  = $this->getParam('txtbreakfastRate');
@@ -548,8 +492,9 @@ class onlineinvoice extends controller
     /**
      *get all lodge information
      * function to add lodge expenses to a session variable
-     * @private
+     * @private     
      */
+     
     private function getLodgeexpenses()
     {
        $lodgedata  = array(
@@ -564,7 +509,7 @@ class onlineinvoice extends controller
                   'cost'              =>  $this->getParam('txtcost'),
                   'quotesource'       =>  $this->getParam('txtquotesource'),
                   'exchangerate'      =>  $this->getParam('txtexchange'),
-                  'exchangefile'      =>  $this->getParam('upload')
+                  'exchangefile'      =>  $this->objFile->getFileName($this->getParam('exchangeratefile'))
                   
    
                 );
@@ -572,7 +517,16 @@ class onlineinvoice extends controller
        $this->setSession('lodgedetails',$lodgedata);
     }
 /*******************************************************************************************************************************************************************/
+    private function getLodgeReceiptfiles()
+    {
+        $lodgereceipt = array(
+                        'receiptfilename'   =>  $this->objFile->getFileName($this->getParam('receiptfile')),
+                        'affidavitfilename' =>  $this->objFile->getFileName($this->getParam('affidavitfile')),
+                         );
+         $this->setSession('receiptinfo',$lodgereceipt);                
+    }
 
+/*******************************************************************************************************************************************************************/  
    private function getIncidentinfo()
    {
       $incidentdata = array(
@@ -586,14 +540,23 @@ class onlineinvoice extends controller
                             'description'   =>  $this->getParam('description'),
                             'currency'      =>  $this->getParam('currency'),
                             'cost'          =>  $this->getParam('txtcost'),
-                            'quotesource'       =>  $this->getParam('txtquotesource'),  
+                            'quotesource'   =>  $this->getParam('txtquotesource'),  
                             'exchangerate'  =>  $this->getParam('txtexchange'),
-                            'incidentratefile'  => $this->getParam('upload')
+                            'incidentratefile'  => $this->objFile->getFileName($this->getParam('incidentratefile'))
                     
                            );
       $this->setSession('incidentdetails',$incidentdata);
    
    }
+/*******************************************************************************************************************************************************************/
+  private function getIncidentReceiptFiles()
+  {
+      $lodgereceipt = array(
+                            'receiptfiles' =>  $this->objFile->getFileName($this->getParam('incidentreceipt')),
+                            'affidavitfiles'     =>  $this->objFile->getFileName($this->getParam('incidentaffidavit'))
+                      );
+      $this->setSession('incidentreceipt',$lodgereceipt);
+  }   
 }
 
 ?>

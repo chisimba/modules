@@ -37,7 +37,7 @@
     $urltext = $createinvoice;
     $content = $createinvoice;
     $caption = '';
-    $url = $this->uri(array('action'=>'createnewinvoice'));
+    $url = $this->uri(array('action'=>'initialinvoice'));
     $this->objcreateinvoice  = & $this->newObject('mouseoverpopup','htmlelements');
     $this->objcreateinvoice->mouseoverpopup($urltext,$content,$caption,$url);
 
@@ -93,7 +93,7 @@
       */
                  
      $myTab = $this->newObject('htmltable','htmlelements');
-     $myTab->width='80%';
+     $myTab->width='100%';
      $myTab->border='0';
      $myTab->cellspacing='5';
      $myTab->cellpadding='5';

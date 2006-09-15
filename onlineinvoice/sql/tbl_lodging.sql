@@ -64,6 +64,14 @@ $fields = array(
     'exchangefile' =>  array(
     'type'        =>  'text',
     'notnull'     => 1 
+    ),
+    'receiptfilename' => array(
+    'type'            =>  'text',
+    'length'          =>  32
+    ),
+    'affidavitfilename' =>  array(
+    'type'              =>  'text',
+    'length'            =>  32
     )
   );
 ?>

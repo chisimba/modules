@@ -17,22 +17,35 @@
      $next = ucfirst($this->objLanguage->languageText('phrase_next'));
      $exit = ucfirst($this->objLanguage->languageText('phrase_exit'));
      $back = ucfirst($this->objLanguage->languageText('word_back'));
+     $link = '<a href=http://www.myAffidavit.com/>www.myAffidavit.com</a>';
+     $createaffidavit = ucfirst($this->objLanguage->languageText('phrase_create'));
+     
+     //$urltext = 'www.myAffidavit.com';
+     //$content = 'Fill out an Affidavit of lost receipt';
+     //$caption = '';
+     //$url = $this->uri(array('action'=>'<a href=http://www.myAffidavit.com/>www.myAffidavit.com</a>'));
+     //$this->objaffidavit  = & $this->newObject('mouseoverpopup','htmlelements');
+     //$this->objaffidavit->mouseoverpopup($urltext,$content,$caption,$url);
 
      
 /*********************************************************************************************************************************************************************/     
      /**
       *create all text inputs
       */
-      
-   //$this->objtxtquotesource  = new textinput('txtquotesource', ' ','text');
-   //$this->objtxtquotesource->id = 'txtquotesource';
-   
-   $this->loadClass('textinput', 'htmlelements');
-   $this->objtxtfilereceipt = new textinput('upload',' ','FILE');
-   $this->objtxtfilereceipt->id = 'txtfilereceipt';
 
-   $this->objtxtcreateaffidavit  = new textinput('txtcreateaffidavit', ' ','text');
-   $this->objtxtcreateaffidavit->id = 'txtcreateaffidavit';
+/**
+ *create all file info 
+ */
+ $objReceiptFile = $this->newObject('selectfile', 'filemanager');
+ $objReceiptFile->name = 'receiptfile'; 
+ $objReceiptFile->context = false;
+ $objReceiptFile->workgroup = false;
+ 
+ $objAffidavitFile = $this->newObject('selectfile', 'filemanager');
+ $objAffidavitFile->name = 'affidavitfile'; 
+ $objAffidavitFile->context = false;
+ $objAffidavitFile->workgroup = false;
+ 
    
 /*********************************************************************************************************************************************************************/   
    /*create all button elements*/
@@ -53,8 +66,8 @@
 
 /*create table for receipt information*/        
 
-        $myTabReceipt  = $this->newObject('htmltable','htmlelements');
-        $myTabReceipt->width='75%';
+       $myTabReceipt  = $this->newObject('htmltable','htmlelements');
+        $myTabReceipt->width='100%';
         $myTabReceipt->border='0';
         $myTabReceipt->cellspacing = '10';
         $myTabReceipt->cellpadding ='10';
@@ -62,12 +75,17 @@
         
         $myTabReceipt->startRow();
         $myTabReceipt->addCell('Upload Receipt');
-        $myTabReceipt->addCell($this->objtxtfilereceipt->show());
+        $myTabReceipt->addCell($objReceiptFile->show());
         $myTabReceipt->endRow();
         
         $myTabReceipt->startRow();
-        $myTabReceipt->addCell('Create an Affidavit');
-        $myTabReceipt->addCell($this->objtxtcreateaffidavit->show());
+        $myTabReceipt->addCell('Create Affidavit');
+        $myTabReceipt->addCell($link);
+        $myTabReceipt->endRow();
+        
+        $myTabReceipt->startRow();
+        $myTabReceipt->addCell('Upload Affidavit');
+        $myTabReceipt->addCell($objAffidavitFile->show());
         $myTabReceipt->endRow();
         
         $myTabReceipt->startRow();
@@ -97,11 +115,18 @@
      
      $objLodgeReceipt = new form('lodging',$this->uri(array('action'=>'submitlodgereceipt')));
      $objLodgeReceipt->displayType = 3;
-     $objLodgeReceipt->addToForm('<br> />'.$objtabreceipt->show().'<br />' . "<div align=\"center\">" . $this->objBack->show(). $this->objnext->show() . ' ' . $this->objexit->show()."</div");
-     $objLodgeReceipt->addRule('upload','You have to insert a file','required');	
-     $objLodgeReceipt->extra="enctype='multipart/form-data'";      
+     $objLodgeReceipt->addToForm('<br> />'.$objtabreceipt->show().'<br />' . "<div align=\"center\">" . $this->objBack->show(). $this->objnext->show() . ' ' . $this->objexit->show()."</div>");
+     //$objLodgeReceipt->addRule('upload','You have to insert a file','required');	
+    // $objLodgeReceipt->extra="enctype='multipart/form-data'";      
+     
+     /**
+      *create a form to place the file upload for affidavit application 
+      */
+     //$objAffidavit  = new form('affidavit',$this->uri(array('action'=>'submitlodgereceipt')));
+     //$objAffidavit->displayType = 3;
+     //$objAffidavit->addToForm($objtxtcreateaffidavit->show());            
 /*********************************************************************************************************************************************************************/     
      echo "<div align=\"center\">" . $this->objlodgeHeading->show()  . "</div>";
-     echo "<div align=\"center\">"."<div class=\"error\">" .'<br>'  . $lodgeExpenditures . "</div>";
-     echo  "<div align=\"left\">"  . $objLodgeReceipt->show() . "</div";   
+     echo "<div align=\"center\">"."<div class=\"error\">" .'<br />'  . $lodgeExpenditures . "</div>";
+     echo  "<div align=\"left\">"  . $objLodgeReceipt->show() . '<br />' ."</div>";   
 ?>

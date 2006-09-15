@@ -118,25 +118,34 @@ $objL->checkbox('dinner',$dinner,$ischecked=false);
 $checkdinner= $objD->show();
 /*****************************************************************************************************************/
 /**
- *get the depature date from itinerary and use as date for per diem expense
+ *get the depature date from itinerary and use as date values for per diem expense
  */
-/************************************************************************************************/ 
- //$valuedate   = $this->getParam('txtdeptddate');
- //$valenddate  = $this->getParam('txtarraivaldate');
-  $dates  =     $this->getSession('daterange');
-/**
- *initial depature daparture date from array of itinerary
- */
+//get the inital departure date from 1st leg of itinerary
+//$this->unsetSession('addmultiitinerary');
+$itineraryinfo = $this->getSession('addmultiitinerary');
+$initial =  $itineraryinfo[0]['departuredate'];
 
- //initail
-//$initial =  $itineraryinfo[0]['departuredate'];
-//last
-//$count = count($itineraryinfo);
-//$num = $count + 1;
-//$last = $itineraryinfo[$num]['departuredate'];
-//
-//for($i = $date1; $i <= $date2; $i = $this->nextDay){
-//$i = $this->nextDay;
+//get the arrival date from the itinerary from the last leg of the itinerary
+$count = count($itineraryinfo);
+$num = $count - 1;
+$last = $itineraryinfo[$num]['departuredate'];
+
+//get the days in between initial and last date of departure
+$this->objDateFunctions =& $this->newObject('datefunctions', 'calendarbase');
+$datesBetween = array();
+          
+             
+for($i = $initial; $i <= $last; $i = $this->objDateFunctions->nextDay($i)){
+  $datesBetween[] = $i;
+  
+}
+
+$displayDates = "";
+
+foreach($datesBetween as $dbtn){
+      $displayDates .= $this->objDateFunctions->reformatDateSmallMonth($dbtn). '<br />';
+}
+
 /************************************************************************************************/  
 
 $this->objexpensesdate = $this->newObject('datepicker','htmlelements');
@@ -204,53 +213,66 @@ $this->objtxtdinnerrate->value  = "0.00";
 
 //create a table to place form elements in
 
-        $myTabExpenses  = $this->newObject('htmltable','htmlelements');
-        $myTabExpenses->width='100%';
-        $myTabExpenses->border='0';
-        $myTabExpenses->cellspacing = '10';
-        $myTabExpenses->cellpadding ='10';
+        //create a table to place form elements in
 
-        $myTabExpenses->startRow();
-        $myTabExpenses->addCell($this->objdate->show());
-        $myTabExpenses->addCell($dates);
-        $myTabExpenses->endRow();
+       $myTabExpenses  = $this->newObject('htmltable','htmlelements');
+       $myTabExpenses->width='100%';
+       $myTabExpenses->border='0';
+       $myTabExpenses->cellspacing = '10';
+       $myTabExpenses->cellpadding ='10';
 
-        $myTabExpenses->startRow();
-        $myTabExpenses->addCell($this->objbreakfast->show());
-        $myTabExpenses->addCell($checkbreak);
-        $myTabExpenses->addCell($this->objLocation->show());
-        $myTabExpenses->addCell($this->objtxtbreakfastloc->show());
-        $myTabExpenses->addCell($this->objrate->show());
-        $myTabExpenses->addCell($this->objtxtbreakfastrate->show());
-        $myTabExpenses->endRow();
+       $myTabExpenses->startRow();
+       $myTabExpenses->addCell(' ');
+       $myTabExpenses->addCell(' ');
+       $myTabExpenses->addCell(ucfirst('<b />' . 'First Date'));
+       $myTabExpenses->addCell('<b />' . $this->objDateFunctions->reformatDateSmallMonth($initial));
+       $myTabExpenses->addCell('<b />'.'LastDate');
+       $myTabExpenses->addCell('<b />' .$this->objDateFunctions->reformatDateSmallMonth($last));
+       $myTabExpenses->endRow();
+       
+       $myTabExpenses->startRow();
+       $myTabExpenses->addCell(' ');
+       $myTabExpenses->addCell(' ');
+       $myTabExpenses->addCell('<b />' .'Days between:');
+       $myTabExpenses->addCell($displayDates);
+     //  $myTabExpenses->addCell($datesBetween);
+       $myTabExpenses->endRow();
 
-        $myTabExpenses->startRow();
-        $myTabExpenses->addCell($this->objlunch->show());
-        $myTabExpenses->addCell($checklunch);
-        $myTabExpenses->addCell($this->objLocation->show());
-        $myTabExpenses->addCell($this->objtxtlunchloc->show());
-        $myTabExpenses->addCell($this->objrate->show());
-        $myTabExpenses->addCell($this->objtxtlunchrate->show());
-        $myTabExpenses->endRow();
+       $myTabExpenses->startRow();
+       $myTabExpenses->addCell($this->objbreakfast->show());
+       $myTabExpenses->addCell($checkbreak);
+       $myTabExpenses->addCell($this->objLocation->show());
+       $myTabExpenses->addCell($this->objtxtbreakfastloc->show());
+       $myTabExpenses->addCell($this->objrate->show());
+       $myTabExpenses->addCell($this->objtxtbreakfastrate->show());
+       $myTabExpenses->endRow();
 
-        $myTabExpenses->startRow();
-        $myTabExpenses->addCell($this->objdinner->show());
-        $myTabExpenses->addCell($checkdinner);
-        $myTabExpenses->addCell($this->objLocation->show());
-        $myTabExpenses->addCell($this->objtxtdinnerloc->show());
-        $myTabExpenses->addCell($this->objrate->show());
-        $myTabExpenses->addCell($this->objtxtdinnerrate->show());
-        $myTabExpenses->endRow();
+       $myTabExpenses->startRow();
+       $myTabExpenses->addCell($this->objlunch->show());
+       $myTabExpenses->addCell($checklunch);
+       $myTabExpenses->addCell($this->objLocation->show());
+       $myTabExpenses->addCell($this->objtxtlunchloc->show());
+       $myTabExpenses->addCell($this->objrate->show());
+       $myTabExpenses->addCell($this->objtxtlunchrate->show());
+       $myTabExpenses->endRow();
 
-        $myTabExpenses->startRow();
-        $myTabExpenses->addCell('');
-        $myTabExpenses->addCell('');
-        $myTabExpenses->addCell('');
-        $myTabExpenses->addCell('');
-        $myTabExpenses->addCell('');
-        $myTabExpenses->addCell($this->objAddperdiem->show());       
-        $myTabExpenses->endRow();
+       $myTabExpenses->startRow();
+       $myTabExpenses->addCell($this->objdinner->show());
+       $myTabExpenses->addCell($checkdinner);
+       $myTabExpenses->addCell($this->objLocation->show());
+       $myTabExpenses->addCell($this->objtxtdinnerloc->show());
+       $myTabExpenses->addCell($this->objrate->show());
+       $myTabExpenses->addCell($this->objtxtdinnerrate->show());
+       $myTabExpenses->endRow();
 
+       $myTabExpenses->startRow();
+       $myTabExpenses->addCell('');
+       $myTabExpenses->addCell('');
+       $myTabExpenses->addCell('');
+       $myTabExpenses->addCell('');
+       $myTabExpenses->addCell('');
+       $myTabExpenses->addCell($this->objAddperdiem->show());       
+       $myTabExpenses->endRow();
         //$myTabExpenses->startRow();
         //$myTabExpenses->addCell('');
         //$myTabExpenses->endRow();
