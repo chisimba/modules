@@ -156,8 +156,8 @@ $sideMenuBar=& $this->getObject('sidemenu','toolbar');
     /**
      * create a feature box to place login details on
      */
-    public $val = null;
-    public $val2 = null;  
+   // public $val = null;
+    //public $val2 = null;  
     $user = ucfirst($username);
     $objfeature = new featurebox($val,$val2);
     $objfeature->show('<b />'. ucfirst($username) . ' ' . '<b />'. $this->objtxtusername->show() . '<br />'  . '<b />'. ucfirst($password) . ' ' . '<b />'. $this->objtxtusername->show() .'<br />' . '<b />'.$this->objsubmit->show());
