@@ -3,7 +3,9 @@ $this->objLanguage = &$this->getObject('language','language');
 $this->objDBApplication =& $this->getObject('dbapplication');
 $this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
 $this->objFinancialAidCustomWS = & $this->getObject('financialaidcustomws');
+$this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
 $this->objUser =& $this->getObject('user','security');
+$this->objDbStudentInfo =& $this->getObject('dbstudentinfo','studentenquiry');
 
 $centersearch =& $this->getObject('blockcentersearchappbox');
 $centersearch = $centersearch->show($this->getParam('module','studentenquiry'));
@@ -12,27 +14,17 @@ $content = "";
 $oddEven = 'odd';
 $foundStudents = false;
 
-$stdnum = $this->getParam('studentNumber', '');
-$surname = strtoupper($this->getParam('surname', ''));
-$idnumber = $this->getParam('idNumber', '');
+$wherefield = $this->getParam('searchfield', '');
+$wherevalue = strtoupper($this->getParam('searchvalue', ''));
 $all = $this->getParam('all', '');
 
 $startat = $this->getParam('startat', 0);
 $dispCount = $this->getParam('dispcount', 25);
 
-$wherefield = '';
-$wherevalue = '';
-if (strlen($stdnum) > 0) {
-    $wherefield = "studentNumber";
-    $wherevalue = $stdnum;
-}elseif (strlen($surname) > 0){
-    $wherefield = "surname";
-    $wherevalue = $surname;
-}elseif (strlen($idnumber) > 0){
-    $wherefield = "idNumber";
-    $wherevalue = $idnumber;
-}
-
+$semester = array(
+             '1',$objLanguage->languagetext('word_first'),
+             '2',$objLanguage->languagetext('word_second'));
+             
 if (strlen($all) > 0){
     $details = "<center><h2>".$objLanguage->languagetext('mod_financialaid_allapplications','financialaid')."</h2></center>";
 }elseif (strlen($wherefield) > 0){
@@ -117,43 +109,6 @@ if ($appCount > 0){
         $viewn = "| ".$viewnext->show();
     }
 
-    $Rectbl =& $this->getObject('htmlTable','htmlelements');
-/*    if($endl == $dispCount)  {
-        $Rectbl->startRow();
-        $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_page','financialaid').":</b>", "20%");
-        $Rectbl->addCell("1");
-        $Rectbl->endRow();
-
-        $endl -= 1;
-            
-        $Rectbl->startRow();
-        $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_record','financialaid').":</b>",  "20%");
-        $Rectbl->addCell("0  to $endl");
-        $Rectbl->endRow();
-    }else{
-        $page = $this->getParam('pg');
-        $Rectbl->startRow();
-        $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_page','financialaid').":</b>", "20%");
-        $Rectbl->addCell("$page");
-        $Rectbl->endRow();
-        
-        $endl -= 1;
-        $Rectbl->startRow();
-        $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_record','financialaid').":</b>", "20%");
-        if($endl < $appCount){
-            $Rectbl->addCell("$startat to $endl");
-        }else {
-            $Rectbl->addCell("$startat to $appCount");
-        }
-        $Rectbl->endRow();
-    }
-    $Rectbl->startRow();
-    $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_resfnd','financialaid').":</b>", "20%");
-    $Rectbl->addCell("$appCount");
-    $Rectbl->endRow();
-    $records = $Rectbl->show();
-    */
-
     $endat = $startat + $dispCount;
     if ($endat > $appCount){
         $endat = $appCount;
@@ -198,33 +153,37 @@ if (isset($stdinfo)){
 	$table->startHeaderRow();
 	$table->addHeaderCell($objLanguage->languagetext('word_year'));
 	$table->addHeaderCell($objLanguage->languagetext('word_semester'));
+	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid'));
 	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_firstname','financialaid'));
 	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_surname','financialaid'));
 	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_idnum','financialaid'));
-	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid'));
 	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_details','financialaid'));
 	$table->endHeaderRow();
 
 	if(is_array($stdinfo)){
          for($i = 0; $i < count($stdinfo); $i++)
          {
-			$table->row_attributes = " class = \"$oddEven\"";
+            $studentinfo = $this->objDbStudentInfo->getPersonInfo($stdinfo[$i]->studentNumber);
 
-			$viewdetails = new link();
-			$viewdetails->href=$this->uri(array('action'=>'applicationinfo','appid'=>$stdinfo[$i]->id));
-			$viewdetails->link = $objLanguage->languagetext('mod_financialaid_view','financialaid');
+            if(count($studentinfo) > 0){
+    			$table->row_attributes = " class = \"$oddEven\"";
 
-			$table->startRow();
-			$table->addCell($stdinfo[$i]->year);
-			$table->addCell($stdinfo[$i]->semester);
-			$table->addCell($stdinfo[$i]->firstNames);
-			$table->addCell($stdinfo[$i]->surname);
-			$table->addCell($stdinfo[$i]->idNumber);
-			$table->addCell($stdinfo[$i]->studentNumber);
-			$table->addCell($viewdetails->show());
-			$table->endRow();
+    			$viewdetails = new link();
+    			$viewdetails->href=$this->uri(array('action'=>'applicationinfo','appid'=>$stdinfo[$i]->id));
+    			$viewdetails->link = $objLanguage->languagetext('mod_financialaid_view','financialaid');
 
-			$oddEven = $oddEven == 'odd'?'even':'odd';
+    			$table->startRow();
+    			$table->addCell($stdinfo[$i]->year);
+    			$table->addCell($semester[$stdinfo[$i]->semester]);
+    			$table->addCell($stdinfo[$i]->studentNumber);
+    			$table->addCell($studentinfo[0]->FSTNAM);
+    			$table->addCell($studentinfo[0]->SURNAM);
+    			$table->addCell($studentinfo[0]->IDN);
+    			$table->addCell($viewdetails->show());
+    			$table->endRow();
+
+    			$oddEven = $oddEven == 'odd'?'even':'odd';
+            }
 		}
         $foundStudents = TRUE;
 

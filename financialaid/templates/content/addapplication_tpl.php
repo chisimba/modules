@@ -4,73 +4,8 @@ $table =& $this->newObject('htmltable','htmlelements');
 $table->cellspacing = 2;
 $table->cellpadding = 2;
 $details = "<center><h2>".$objLanguage->languagetext('mod_financialaid_addstudent','financialaid')."</h2></center>";
-$details .="<center><div class='error'>".$objLanguage->languagetext('mod_financialaid_requiredfields','financialaid')."</div></center>";
 
-$appid = "init" . "_" . rand(1000,9999) . "_" . time();
-$appidfield = new textinput("appid", $appid,  "hidden", NULL);
 $stdNum = new textinput('stdnum');
-$idNum = new textinput('idnum');
-$surname = new textinput('surname');
-$firstname = new textinput('firstname');
-$maritalSts = new dropdown('maritalsts');
-$maritalSts->addOption('1', $objLanguage->languagetext('word_single').'&nbsp;&nbsp;');
-$maritalSts->addOption('2', $objLanguage->languagetext('word_married').'&nbsp;&nbsp;');
-$maritalSts->addOption('3', $objLanguage->languagetext('word_divorced').'&nbsp;&nbsp;');
-$maritalSts->addOption('4', $objLanguage->languagetext('word_widowed').'&nbsp;&nbsp;');
-
-//$year = new dropdown('year');
-$startyear = date("Y");
-//for($i = 0; $i < 16; $i ++){
-//	$year->addOption($start,$start);
-//	$start--;
-//}
-
-$year = new textinput("year", $startyear,  "hidden", NULL);
-
-
-$semester = new radio('semester');
-$semester->addOption('1',$objLanguage->languagetext('word_first'));
-$semester->addOption('2',$objLanguage->languagetext('word_second'));
-$semester->setSelected('1');
-$semester->setBreakSpace('&nbsp;&nbsp;');
-
-
-$gender = new radio('gender');
-$gender->addOption('0',$objLanguage->languagetext('word_male'));
-$gender->addOption('1',$objLanguage->languagetext('word_female'));
-$gender->setBreakSpace('  ');
-
-$SACitizen = new radio('saCitizen');
-$SACitizen->addOption('1',$objLanguage->languagetext('word_yes'));
-$SACitizen->addOption('0',$objLanguage->languagetext('word_no'));
-$SACitizen->setSelected('1');
-$SACitizen->setBreakSpace('&nbsp;&nbsp;');
-
-$supportingSelf = new radio('supportingself');
-$supportingSelf->addOption('1',$objLanguage->languagetext('word_yes'));
-$supportingSelf->addOption('0',$objLanguage->languagetext('word_no'));
-$supportingSelf->setSelected('1');
-$supportingSelf->setBreakSpace('&nbsp;&nbsp;');
-
-$course = new textinput('course');
-$majors = new textinput('majors');
-$hometelno = new textinput('hometelno');
-$cellno = new textinput('cellno');
-
-$fulltime = new radio('fulltime');
-$fulltime->addOption('1',$objLanguage->languagetext('word_yes'));
-$fulltime->addOption('0',$objLanguage->languagetext('word_no'));
-$fulltime->setSelected('1');
-$fulltime->setBreakSpace('&nbsp;&nbsp;');
-
-$studyAddress1 = new textinput('studyaddress1');
-$studyAddress2 = new textinput('studyaddress2');
-$studyAddress3 = new textinput('studyaddress3');
-$studyPostcode = new textinput('studypostcode');
-$homeAddress1 = new textinput('homeaddress1');
-$homeAddress2 = new textinput('homeaddress2');
-$homeAddress3 = new textinput('homeaddress3');
-$homePostcode = new textinput('homepostcode');
 
 $addbut= new button('add');
 $addbut->setToSubmit();
@@ -82,126 +17,8 @@ $cancelbut->setValue($objLanguage->languagetext('word_cancel'));
 
 
 $table->startRow();
-$table->addCell($appidfield->show());
-$table->endRow();
-$table->startRow();
-$table->addCell($year->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('word_year'));
-//$table->addCell($year->show());
-$table->addCell($startyear);
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('word_semester'));
-$table->addCell($semester->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid').'<span class="error">&nbsp;*</span>');
+$table->addCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid'));
 $table->addCell($stdNum->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_idnumber','financialaid').'<span class="error">&nbsp;*</span>');
-$table->addCell($idNum->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_surname','financialaid').'<span class="error">&nbsp;*</span>');
-$table->addCell($surname->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_firstnames','financialaid').'<span class="error">&nbsp;*</span>');
-$table->addCell($firstname->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_gender','financialaid'));
-$table->addCell($gender->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_sacitizen','financialaid'));
-$table->addCell($SACitizen->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_mrtsts','financialaid'));
-$table->addCell($maritalSts->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_courseofstudy','financialaid'));
-$table->addCell($course->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_fulltime','financialaid'));
-$table->addCell($fulltime->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_majorsubjects','financialaid'));
-$table->addCell($majors->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_hometelno','financialaid'));
-$table->addCell($hometelno->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_cellno','financialaid'));
-$table->addCell($cellno->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_supportingself','financialaid'));
-$table->addCell($supportingSelf->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_studyaddress','financialaid'));
-$table->addCell($studyAddress1->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_suburb','financialaid'));
-$table->addCell($studyAddress2->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_city','financialaid'));
-$table->addCell($studyAddress3->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_pcode','financialaid'));
-$table->addCell($studyPostcode->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_homeaddress','financialaid'));
-$table->addCell($homeAddress1->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_suburb','financialaid'));
-$table->addCell($homeAddress2->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_city','financialaid'));
-$table->addCell($homeAddress3->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_pcode','financialaid'));
-$table->addCell($homePostcode->show());
 $table->endRow();
 
 $table->startRow();
@@ -210,23 +27,18 @@ $table->addCell($cancelbut->show());
 $table->endRow();
 
 
-
 $content = $details.$table->show();
 
-$objForm = new form('theform');
-$objForm->setAction($this->uri(array('action'=>'saveapplication')));
+$objForm = new form('applicationform');
+$objForm->setAction($this->uri(array('action'=>'addapplication2')));
 $objForm->setDisplayType(2);
 
 $objForm->addToForm($content);
 
 $objForm->addRule('stdnum', $objLanguage->languagetext('mod_financialaid_stdnumrequired','financialaid'), 'required');
 $objForm->addRule('stdnum', $objLanguage->languagetext('mod_financialaid_stdnumnumeric','financialaid'), 'numeric');
-$objForm->addRule(array('name'=>'stdnum', 'lower'=>'6', 'upper'=>'6'), $objLanguage->languagetext('mod_financialaid_stdnumsetlength','financialaid'), 'rangelength');
-$objForm->addRule('idnum', $objLanguage->languagetext('mod_financialaid_idnumrequired','financialaid'), 'required');
-$objForm->addRule('idnum', $objLanguage->languagetext('mod_financialaid_idnumnumeric','financialaid'), 'numeric');
-$objForm->addRule(array('name'=>'idnum', 'lower'=>'13', 'upper'=>'13'), $objLanguage->languagetext('mod_financialaid_idnumsetlength','financialaid'), 'rangelength');
-$objForm->addRule('surname', $objLanguage->languagetext('mod_financialaid_surnamerequired','financialaid'), 'required');
-$objForm->addRule('firstname', $objLanguage->languagetext('mod_financialaid_firstnamerequired','financialaid'), 'required');
+$objForm->addRule(array('name'=>'stdnum', 'lower'=>'6', 'upper'=>'7'), $objLanguage->languagetext('mod_financialaid_stdnumsetlength','financialaid'), 'rangelength');
+
 
 echo $objForm->show();
 

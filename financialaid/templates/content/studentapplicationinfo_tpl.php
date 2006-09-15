@@ -1,8 +1,13 @@
 <?
+$this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
+$this->objLanguage = &$this->getObject('language','language');
+$this->objFinancialAidCustomWS = & $this->getObject('financialaidcustomws');
+$this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
+$this->objDbStudentInfo =& $this->getObject('dbstudentinfo','studentenquiry');
+
 if (!isset($appid)){
     $appid = $this->getParam('appid');
 }
-$this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
 
 $stdinfo = $this->objDBFinancialAidWS->getApplication($appid);
 

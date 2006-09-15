@@ -97,7 +97,7 @@ class financialaid extends controller
 
 			case 'applicationinfo':
                 $this->setVar('appid', $this->getParam('appid', NULL));
-				return 'studentapplicationinfo_tpl.php';
+				return 'viewapplication_tpl.php';
 
 			case 'shownextofkin':
 				return 'applicationnextofkin_tpl.php';
@@ -111,6 +111,8 @@ class financialaid extends controller
             //Application actions
             case 'addapplication':
                 return 'addapplication_tpl.php';
+            case 'addapplication2':
+                return 'addapplication2_tpl.php';
             case 'addnextofkin':
                 return 'addnextofkin_tpl.php';
             case 'adddependant':
@@ -125,26 +127,7 @@ class financialaid extends controller
                             'year' => $this->getParam('year', ''),
                             'semester' => $this->getParam('semester', ''),
                             'studentNumber' => $this->getParam('stdnum', ''),
-                            'idNumber' => $this->getParam('idnum', ''),
-                            'surname' => $this->getParam('surname', ''),
-                            'firstNames' => $this->getParam('firstname', ''),
-                            'gender' => $this->getParam('gender', ''),
-                            'saCitizen' => $this->getParam('saCitizen', ''),
-                            'maritalStatus' => $this->getParam('maritalsts', ''),
-                            'course' => $this->getParam('course', ''),
-                            'fulltime' => $this->getParam('fulltime', ''),
-                            'majors' => $this->getParam('majors', ''),
-                            'hometelno' => $this->getParam('hometelno', ''),
-                            'cellno' => $this->getParam('cellno', ''),
                             'supportingSelf' => $this->getParam('supportingself', ''),
-                            'studyAddress1' => $this->getParam('studyaddress1', ''),
-                            'studyAddress2' => $this->getParam('studyaddress2', ''),
-                            'studyAddress3' => $this->getParam('studyaddress3', ''),
-                            'studyPostcode' => $this->getParam('studypostcode', ''),
-                            'homeAddress1' => $this->getParam('homeaddress1', ''),
-                            'homeAddress2' => $this->getParam('homeaddress2', ''),
-                            'homeAddress3' => $this->getParam('homeaddress3', ''),
-                            'homePostcode' => $this->getParam('homepostcode', ''),
                             'dateCreated' => date("Y-m-d H:i:s"),
                             'creatorId' => $this->objUser->userId());
                 $this->objDBFinancialAidWS->saveApplication('add', $fields);
@@ -224,7 +207,7 @@ class financialaid extends controller
             //----------------
             //Test action
             case 'test':
-                return 'test_tpl.php';
+                return 'viewapplication_tpl.php';
             case 'report':
                 $this->objFinancialAidReports->getMeansTestInput('report.csv', 2006);
                 return 'studentapplicationinfo_tpl.php';

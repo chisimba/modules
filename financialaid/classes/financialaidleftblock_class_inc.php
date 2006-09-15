@@ -28,15 +28,13 @@ class financialaidleftblock extends object
         $appid = $this->getParam('appid');
 
         $header = "<h1>".$this->objLanguage->languagetext('mod_financialaid_financialaid','financialaid')."</h1>";
-
+        $links = '';
 		$href = new href("index.php?module=financialaid",$this->objLanguage->languagetext('word_introduction'));
 		$links.=$href->show()."<br /><br />";
 
 		$links .= "<strong>".$this->objLanguage->languagetext('mod_financialaid_applications','financialaid')."</strong><br />";
 		$href = new href("index.php?module=financialaid&amp;action=searchapplications&amp;all=yes&amp;dispcount=25",$this->objLanguage->languagetext('mod_financialaid_showallapps','financialaid'));
 		$links.=$href->show()."<br />";
-//		$href = new href("index.php?module=financialaid&amp;action=searchapplications",$this->objLanguage->languagetext('mod_financialaid_searchapp','financialaid'));
-//		$links.=$href->show()."<br />";
 		$href = new href("index.php?module=financialaid&amp;action=searchmarkrange",$this->objLanguage->languagetext('mod_financialaid_searchmarkrange','financialaid'));
 		$links.=$href->show()."<br />";
         $links.="<br />";
@@ -56,7 +54,7 @@ class financialaidleftblock extends object
                 $studentid = $appinfo[0]->studentNumber;
             }
         }
-        
+/*
 		if ($studentid) {
 			$links .= "<strong>".$this->objLanguage->languagetext('mod_financialaid_stddetails','financialaid')."</strong><br />";
    
@@ -91,7 +89,7 @@ class financialaidleftblock extends object
 			$href = new href("index.php?module=financialaid&amp;action=matric&amp;id=$studentid",$this->objLanguage->languagetext('mod_financialaid_matric','financialaid'));
 			$links.=$href->show()."<br /><br />";
 		}
-
+         */
         if (strlen($appid) > 0){
             $links .="<b>".$this->objLanguage->languagetext('mod_financialaid_addappinfo','financialaid')."</b><br />";
             $href = new href("index.php?module=financialaid&amp;action=addparttimejob&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_addparttimejob','financialaid'));
@@ -110,8 +108,8 @@ class financialaidleftblock extends object
 		$href = new href("index.php?module=financialaid&amp;action=searchsponsors&amp;all=yes",$this->objLanguage->languagetext('mod_financialaid_listsponsors','financialaid'));
 		$links.=$href->show()."<br />";
 
-
-		return $header.$links;
+        $buffer="<br /><br /><br /><br /><br /><br /><br /><br />";
+		return $header.$links.$buffer;
 	}
 }
 

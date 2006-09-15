@@ -1,22 +1,24 @@
 <?
+$this->objDbStudentInfo =& $this->getObject('dbstudentinfo','studentenquiry');
+$this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
+
 if (!isset($appid)){
     $appid = $this->getParam('appid');
 }
-$this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
 
-$stdinfo = $this->objDBFinancialAidWS->getApplication($appid);
+$appinfo = $this->objDBFinancialAidWS->getApplication($appid);
 
-$stname = $stdinfo[0]->firstNames;
-$stsname = $stdinfo[0]->surname;
+if (count($appinfo) > 0){
+    $studentinfo = $this->objDbStudentInfo->getPersonInfo($appinfo[0]->studentNumber);
+}
 
-$rep = array(
-      'FIRSTNAME' => $stname,
-      'LASTNAME' => $stsname);
+if (count($studentinfo) > 0){
+    $rep = array(
+          'FIRSTNAME' => $studentinfo[0]->FSTNAM,
+          'LASTNAME' => $studentinfo[0]->SURNAM);
       
-$details = "<h2>".$objLanguage->code2Txt('mod_financialaid_recordadded','financialaid',$rep)."</h2>";
+    $details = "<h2>".$objLanguage->code2Txt('mod_financialaid_recordadded','financialaid',$rep)."</h2>";
 
-
-if(count($stdinfo) > 0){
     $content = $objLanguage->languagetext('mod_financialaid_addmoreinfo','financialaid')."<br /><br />";
     $href = new href("index.php?module=financialaid&amp;action=addparttimejob&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_addparttimejob','financialaid'));
     $content.=$href->show()."<br />";
@@ -27,9 +29,9 @@ if(count($stdinfo) > 0){
     $content .= $objLanguage->languagetext('mod_financialaid_addmoreinfoalternative','financialaid')."&nbsp;";
     $href = new href("index.php?module=financialaid&amp;action=applicationinfo",$this->objLanguage->languagetext('mod_financialaid_here','financialaid'));
     $content.=$href->show()."<br /><br />";
-}
-$content = "<center>".$details." ".$content. "</center>";
 
+    $content = "<center>".$details." ".$content. "</center>";
+}
 echo $content;
 
 ?>

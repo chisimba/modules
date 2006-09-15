@@ -26,30 +26,31 @@ class applicationblocksearchbox extends object
 		$objForm->setAction($this->uri(array('action'=>'searchapplications'),$this->getParam('module')));
 		$objForm->setDisplayType(2);
 
-		$surname= new textinput('surname',null,null,15);
+		$searchval = new textinput('searchValue',null,null,15);
 
-		$stdnum= new textinput('studentNumber',null,null,15);
+        $searchfield = new radio('searchfield');
+        $searchfield->addOption('surname', $this->objLanguage->languageText('mod_financialaid_surname','financialaid'));
+        $searchfield->addOption('studentNumber', $this->objLanguage->languageText('mod_financialaid_stdnum2','financialaid'));
+        $searchfield->addOption('idNumber', $this->objLanguage->languageText('mod_financialaid_idnumber','financialaid'));
+        $searchfield->setSelected('surname');
+        $searchfield->setBreakSpace('<br />');
 
-		$idnum= new textinput('idNumber',null,null,15);
-  
-        $dispcount = new dropdown('dispcount', null, null, 4);
+
+        $dispcount = new radio('dispcount', null, null, 4);
         $dispcount->addOption('10', '10');
         $dispcount->addOption('25', '25');
         $dispcount->addOption('50', '50&nbsp;&nbsp;');
+        $dispcount->setSelected('25');
+        $dispcount->setBreakSpace('&nbsp;&nbsp;&nbsp;');
 
 		$save= new button('save');
 		$save->setToSubmit();
 		$save->setValue('Search');
-        $surlabel=$this->objLanguage->languageText('mod_financialaid_surname','financialaid').":";
-		$objForm->addToForm($surlabel);
-		$objForm->addToForm($surname);
-        $stdlabel=$this->objLanguage->languageText('mod_financialaid_stdnum2','financialaid').":";
-        $objForm->addToForm($stdlabel);
-		$objForm->addToForm($stdnum);
-        $idlabel=$this->objLanguage->languageText('mod_financialaid_idnumber','financialaid').":";
-        $objForm->addToForm($idlabel);
-		$objForm->addToForm($idnum);
-        $objForm->addToForm($this->objLanguage->languageText('mod_financialaid_resultsperpage','financialaid').":");
+        $objForm->addToForm('<b>'.$this->objLanguage->languageText('mod_financialaid_searchfield','financialaid').'</b>');
+		$objForm->addToForm($searchfield);
+        $objForm->addToForm('<br /><b>'.$this->objLanguage->languageText('mod_financialaid_searchvalue','financialaid').'</b>');
+		$objForm->addToForm($searchval);
+        $objForm->addToForm('<br /><b>'.$this->objLanguage->languageText('mod_financialaid_resultsperpage','financialaid')."</b>");
 		$objForm->addToForm($dispcount);
 		$objForm->addToForm($save);
 		
