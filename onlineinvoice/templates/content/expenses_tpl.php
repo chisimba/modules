@@ -1,70 +1,63 @@
 <?php
 
   /**
-   *create template for per diem expenses
+   *create template for per diem expenses of the travel journey
    */
+
   /**
-   *create main heading
+   *create all form headings
    */   
 
     $this->objMainheading = $this->newObject('htmlheading','htmlelements');
-    $this->objMainheading->type = 2;
+    $this->objMainheading->type = 1;
     $this->objMainheading->str=$objLanguage->languageText('mod_onlineinvoice_travelperdiemexpenses','onlineinvoice');
 
     $foreignRate  = '<a href=http://www.state.gov/m/a/als/prdm/>www.state.gov/m/a/als/prdm</a>';
     $this->objforeignheading = $this->newObject('htmlheading','htmlelements');
-    $this->objforeignheading->type = 4;
+    $this->objforeignheading->type = 5;
     $this->objforeignheading->str=$objLanguage->languageText('mod_onlineinvoice_foreignrateperdiem','onlineinvoice')." " .$foreignRate;
 
     $domesticRate  = '<a href=http://www.gsa.gov/>www.gsa.gov</a>';
     $this->objdomesticheading = $this->newObject('htmlheading','htmlelements');
-    $this->objdomesticheading->type = 4;
+    $this->objdomesticheading->type = 5;
     $this->objdomesticheading->str=$objLanguage->languageText('mod_onlineinvoice_domesticrateperdiem','onlineinvoice') .' ' .$domesticRate;
 
     $exit  = $this->objLanguage->languageText('phrase_exit');
     $next = $this->objLanguage->languageText('phrase_next');
     $add  = $this->objLanguage->languageText('mod_onlineinvoice_addexpense','onlineinvoice');
 
-
-
-//create all form labesl
-
-/**************************************************************************************************************/
-
+    $this->objHelp=& $this->getObject('helplink','help');
+    $displayhelp  = $this->objHelp->show('mod_onlineinvoice_helpinstruction');
+    
+/**************************************************************************************************************/    
+/**
+ *create all form labels
+ */ 
+ 
 $expensesdate = $this->objLanguage->languageText('word_date');
 $lblDate = lbldate;
 $this->objdate  = $this->newObject('label','htmlelements');
 $this->objdate->label($expensesdate,$lblDate);
-
-/**************************************************************************************************************/
 
 $breakfast  = $this->objLanguage->languageText('word_breakfast');
 $lblBreakfast = lblbreakfast;
 $this->objbreakfast  = $this->newObject('label','htmlelements');
 $this->objbreakfast->label($breakfast,$lblBreakfast);
 
-/**************************************************************************************************************/
-
 $lunch  = $this->objLanguage->languageText('word_lunch');
 $lblLunch = lblLunch;
 $this->objlunch  = $this->newObject('label','htmlelements');
 $this->objlunch->label($lunch,$lblLunch);
-
-/**************************************************************************************************************/
 
 $dinner = $this->objLanguage->languageText('word_dinner');
 $lblDinner = lblDinner;
 $this->objdinner = $this->newObject('label','htmlelements');
 $this->objdinner->label($dinner,$lblDinner);
 
-/**************************************************************************************************************/
-
 $location = $this->objLanguage->languageText('word_location');
 $lblLocation = lblLocation;
 $this->objLocation = $this->newObject('label','htmlelements');
 $this->objLocation->label($location,$lblLocation);
-
-/**************************************************************************************************************/
 
 $rate = $this->objLanguage->languageText('word_rate');
 $lblRate = lblRate;
@@ -72,6 +65,56 @@ $this->objrate = $this->newObject('label','htmlelements');
 $this->objrate->label($rate,$lblRate);
 
 /**************************************************************************************************************/
+/**
+ *get the inital departure date from 1st leg of itinerary and to display on the form
+ */ 
+//$this->unsetSession('addmultiitinerary');
+$itineraryinfo = $this->getSession('addmultiitinerary');
+$initial =  $itineraryinfo[0]['departuredate'];
+
+/**
+ *get the arrival date from the itinerary from the last leg of the itinerary
+ */ 
+$count = count($itineraryinfo);
+$num = $count - 1;
+$last = $itineraryinfo[$num]['departuredate'];
+
+//get the days in between initial and last date of departure
+$this->objDateFunctions =& $this->newObject('datefunctions', 'calendarbase');
+$datesBetween = array();
+
+for($i = $initial; $i <= $last; $i = $this->objDateFunctions->nextDay($i)){
+  $datesBetween[] = $i;
+}
+
+//Create a dropdown list and populate with all values of expenses for each day of the travel leg
+$this->loadClass('dropdown', 'htmlelements');
+$expDates = new dropdown('expdate');
+//Get exp dates already in sesion
+$sessionDates = $this->getSession('perdiemdetails');
+//Create arrays for dates not in session
+$notInSession = array();
+
+if(!empty($sessionDates)){
+  foreach($datesBetween as $dbtwn){
+     $isIn = 'no';
+     foreach($sessionDates as $sd){
+        if($dbtwn == $sd['date']){
+          $isIn = 'yes';
+        }
+     }
+     if($isIn == 'no'){
+       $notInSession[] = $dbtwn;
+     }   
+  }
+} else {
+    $notInSession = $datesBetween;
+}
+//Add dates not yet in session to dropdown
+foreach($notInSession as $ar){
+   $expDates->addOption($ar, $this->objDateFunctions->reformatDateSmallMonth($ar));
+}
+/*************************************************************************************************************************************************************/
 
 //create all form buttons
 $next  = $this->objLanguage->languageText('phrase_next');
@@ -82,23 +125,15 @@ $this->objButtonNext->setToSubmit();
 
 $exit  = $this->objLanguage->languageText('phrase_exit');
 $strexit = ucfirst($exit);
-$this->loadclass('button','htmlelements');
+
 $this->objButtonExit  = new button('exitform', $strexit);
 $this->objButtonExit->setToSubmit();
 
-
-/**
- *button to add more expenses
- */
- $btnadd  = $this->objLanguage->LanguageText('mod_onlineinvoice_addperdiem','onlineinvoice');
- $stradd = ucfirst($btnadd);
- $this->objAddperdiem  = new button('addperdiem', $stradd);
- $this->objAddperdiem->setToSubmit();
-
-  
-
+$btnadd  = $this->objLanguage->LanguageText('mod_onlineinvoice_addperdiem','onlineinvoice');
+$stradd = ucfirst($btnadd);
+$this->objAddperdiem  = new button('addperdiem', $stradd);
+$this->objAddperdiem->setToSubmit();
 /**************************************************************************************************************/
-
 
 //create all checkboxes
 
@@ -107,62 +142,30 @@ $objB = new checkbox('b');
 $objB->checkbox('breakfast',$breakfast,$ischecked=true);
 $checkbreak= $objB->show();
 
-$this->loadClass('checkbox', 'htmlelements');
 $objL = new checkbox('l');
 $objL->checkbox('lunch',$lunch,$ischecked=false);
 $checklunch= $objL->show();
 
-$this->loadClass('checkbox', 'htmlelements');
 $objD = new checkbox('d');
 $objL->checkbox('dinner',$dinner,$ischecked=false);
 $checkdinner= $objD->show();
 /*****************************************************************************************************************/
-/**
- *get the depature date from itinerary and use as date values for per diem expense
- */
-//get the inital departure date from 1st leg of itinerary
-//$this->unsetSession('addmultiitinerary');
-$itineraryinfo = $this->getSession('addmultiitinerary');
-$initial =  $itineraryinfo[0]['departuredate'];
 
-//get the arrival date from the itinerary from the last leg of the itinerary
-$count = count($itineraryinfo);
-$num = $count - 1;
-$last = $itineraryinfo[$num]['departuredate'];
-
-//get the days in between initial and last date of departure
-$this->objDateFunctions =& $this->newObject('datefunctions', 'calendarbase');
-$datesBetween = array();
-          
-             
-for($i = $initial; $i <= $last; $i = $this->objDateFunctions->nextDay($i)){
-  $datesBetween[] = $i;
-  
-}
-
-$displayDates = "";
-
-foreach($datesBetween as $dbtn){
-      $displayDates .= $this->objDateFunctions->reformatDateSmallMonth($dbtn). '<br />';
-}
-
-/************************************************************************************************/  
-
-$this->objexpensesdate = $this->newObject('datepicker','htmlelements');
-$name = 'txtexpensesdate';
-$date = date('Y-m-d');
-$format = 'YYYY-MM-DD';
-$this->objexpensesdate->setName($name);
-$this->objexpensesdate->setDefaultDate($date);
-$this->objexpensesdate->setDateFormat($format);
+//$this->objexpensesdate = $this->newObject('datepicker','htmlelements');
+//$name = 'txtexpensesdate';
+//$date = date('Y-m-d');
+//$format = 'YYYY-MM-DD';
+//$this->objexpensesdate->setName($name);
+//$this->objexpensesdate->setDefaultDate($date);
+//$this->objexpensesdate->setDateFormat($format);
 
 /************************************************************************************************************/
   /**
    *create all text inputs elements
-   */    
-  /**
-   *get the depature city form itinerary and use as defualt location
    */
+       
+  //get the depature city form itinerary and use as default location for the 1st leg only
+   
   
   $valdeptlocation  = $this->getParam('txtdeptcity');
              
@@ -190,9 +193,15 @@ $this->objtxtdinnerrate = $this->newObject('textinput','htmlelements');
 $this->objtxtdinnerrate->name   = "txtdinnerRate";
 $this->objtxtdinnerrate->value  = "0.00";
 
-//$this->objadditinerary  =& $this->newObject('link','htmlelements');
-//$this->objadditinerary->link($this->uri(array('action' =>'createexpenses')));
-//$this->objadditinerary->link = $add;
+/**************************************************************************************************************/
+//Radio button Group -- used to determine whether rate is foreign or domestic
+  $this->loadClass('radio','htmlelements');
+  
+	$objRates = new radio('rates_radio');
+	$objRates->addOption('foreign','Foreign Rate');
+	$objRates->addOption('domestic','Domestic Rate');
+	$objRates->setSelected('foreign');
+
 /**************************************************************************************************************/
 //create a table to place form LABELS in
 
@@ -211,8 +220,6 @@ $this->objtxtdinnerrate->value  = "0.00";
 
 /**************************************************************************************************************/
 
-//create a table to place form elements in
-
         //create a table to place form elements in
 
        $myTabExpenses  = $this->newObject('htmltable','htmlelements');
@@ -225,19 +232,41 @@ $this->objtxtdinnerrate->value  = "0.00";
        $myTabExpenses->addCell(' ');
        $myTabExpenses->addCell(' ');
        $myTabExpenses->addCell(ucfirst('<b />' . 'First Date'));
-       $myTabExpenses->addCell('<b />' . $this->objDateFunctions->reformatDateSmallMonth($initial));
-       $myTabExpenses->addCell('<b />'.'LastDate');
-       $myTabExpenses->addCell('<b />' .$this->objDateFunctions->reformatDateSmallMonth($last));
+       $myTabExpenses->addCell("<div class=\"warning\">" . $this->objDateFunctions->reformatDateSmallMonth($initial));
+       $myTabExpenses->addCell(ucfirst('<b />'.'Last Date'));
+       $myTabExpenses->addCell("<div class=\"warning\">" .$this->objDateFunctions->reformatDateSmallMonth($last));
+       $myTabExpenses->addCell(' ');
+       $myTabExpenses->addCell(' ');
+       $myTabExpenses->addCell($displayhelp);
        $myTabExpenses->endRow();
        
        $myTabExpenses->startRow();
        $myTabExpenses->addCell(' ');
        $myTabExpenses->addCell(' ');
-       $myTabExpenses->addCell('<b />' .'Days between:');
-       $myTabExpenses->addCell($displayDates);
-     //  $myTabExpenses->addCell($datesBetween);
+       $myTabExpenses->addCell('<b />' .'Date:');
+//display dates dates in drop down if any dates else if no more dates then display msg
+       if(count($notInSession) > '0'){
+         $myTabExpenses->addCell($expDates->show());
+       } else {
+           $myTabExpenses->addCell('All dates added');
+       }  
        $myTabExpenses->endRow();
 
+       $myTabExpenses->startRow();
+       $myTabExpenses->endRow();
+       
+       $myTabExpenses->startRow();
+       $myTabExpenses->addCell('');
+       $myTabExpenses->addCell('');
+       $myTabExpenses->addCell("<div align=\"left\">" .$objRates->show(), '', '', '', '', 'colspan = 3' );
+       $myTabExpenses->endRow();
+         
+       $myTabExpenses->startRow();
+       $myTabExpenses->endRow();
+       
+       $myTabExpenses->startRow();
+       $myTabExpenses->endRow();
+       
        $myTabExpenses->startRow();
        $myTabExpenses->addCell($this->objbreakfast->show());
        $myTabExpenses->addCell($checkbreak);
@@ -271,12 +300,16 @@ $this->objtxtdinnerrate->value  = "0.00";
        $myTabExpenses->addCell('');
        $myTabExpenses->addCell('');
        $myTabExpenses->addCell('');
-       $myTabExpenses->addCell($this->objAddperdiem->show());       
+       if(count($notInSession) > '0'){
+         $myTabExpenses->addCell($this->objAddperdiem->show()); 
+       } else {
+           $myTabExpenses->addCell('');
+       }        
        $myTabExpenses->endRow();
-        //$myTabExpenses->startRow();
-        //$myTabExpenses->addCell('');
-        //$myTabExpenses->endRow();
-        /*create a table to place buttons in*/
+       
+       /**
+        *table form buttons
+        */               
 
         $myTabButtons  = $this->newObject('htmltable','htmlelements');
         $myTabButtons->width='20%';
@@ -290,25 +323,12 @@ $this->objtxtdinnerrate->value  = "0.00";
         $myTabButtons->endRow();
 
 /**************************************************************************************************************/        
-
-/*create all links -- exit and next*/
-
-$this->objexit  =& $this->newObject('link','htmlelements');
-$this->objexit->link($this->uri(array('action'=>'NULL')));
-$this->objexit->link = $exit;
-
-$this->objnext  =& $this->newObject('link','htmlelements');
-$this->objnext->link($this->uri(array('action'=>'createlodging')));
-$this->objnext->link = $next;
-
-
-/**************************************************************************************************************/ 
 /*create tabbox*/
 
 $this->loadClass('tabbedbox', 'htmlelements');
 $objtabbedbox = new tabbedbox();
 $objtabbedbox->addTabLabel('Per Diem Expenses');
-$objtabbedbox->addBoxContent($myTabExpenses->show(). '<br>' . '<br>'  . "<div align=\"left\">".$this->objButtonExit->show()  . " " .$this->objButtonNext->show().'<br>'.'<br>' . "</div>") ;
+$objtabbedbox->addBoxContent($myTabExpenses->show(). "<div align=\"center\">".$this->objButtonExit->show()  . " " .$this->objButtonNext->show().'<br>'.'<br>' . "</div>") ;
 
 /**************************************************************************************************************/
 
@@ -316,19 +336,56 @@ $this->loadClass('form','htmlelements');
 $objForm = new form('expenses',$this->uri(array('action'=>'submitexpenses')));
 $objForm->displayType = 3;
 $objForm->addToForm($objtabbedbox->show());	
-//$objForm->addRule('txtDate', 'Must be number','required');        
+
 
 /**************************************************************************************************************/        
 
+if(!empty($sessionDates)){
+//Create table to display dates in session and the rates for breakfast, lunch and dinner and the total rate 
+  $objExpByDateTable =& $this->newObject('htmltable', 'htmlelements');
+  $objExpByDateTable->cellspacing = '2';
+  $objExpByDateTable->cellpadding = '2';
+  $objExpByDateTable->border='1';
+  $objExpByDateTable->width = '100%';
+  
+  $objExpByDateTable->startHeaderRow();
+  $objExpByDateTable->addHeaderCell('Date ');
+  $objExpByDateTable->addHeaderCell('Breakfast Location' );
+  $objExpByDateTable->addHeaderCell('Breakfast Rate');
+  $objExpByDateTable->addHeaderCell('Lunch Location');
+  $objExpByDateTable->addHeaderCell('Lunch Rate');
+  $objExpByDateTable->addHeaderCell('Dinner Location');
+  $objExpByDateTable->addHeaderCell('Dinner Rate');
+  $objExpByDateTable->addHeaderCell('Total');
+  $objExpByDateTable->endHeaderRow();
+
+  
+  $rowcount = '0';
+  
+  foreach($sessionDates as $sesDat){
+     
+     $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+     
+     $objExpByDateTable->startRow();
+     $objExpByDateTable->addCell($sesDat['date'], '', '', '', $oddOrEven);
+     $objExpByDateTable->addCell($sesDat['blocation'], '', '', '', $oddOrEven);
+     $objExpByDateTable->addCell($sesDat['btrate'], '', '', '', $oddOrEven);
+     $objExpByDateTable->addCell($sesDat['llocation'], '', '', '', $oddOrEven);
+     $objExpByDateTable->addCell($sesDat['lRate'], '', '', '', $oddOrEven);
+     $objExpByDateTable->addCell($sesDat['dlocation'], '', '', '', $oddOrEven);
+     $objExpByDateTable->addCell($sesDat['drrate'], '', '', '', $oddOrEven);
+     $objExpByDateTable->addCell($sesDat['total'], '', '', '', $oddOrEven);
+     $objExpByDateTable->endRow();
+  }
+}
 //Display out to the screen
 
 echo  "<div align=\"center\">" . $this->objMainheading->show() . "</div>";
-echo  '<br>'  . '<br>';
-echo  "<div align=\"right\">" . $myTablabel->show() . "</div>";
-//echo  '<br>'  . "<div align=\"center\">" . $this->objdomesticheading->show() . "</div>";
-echo  '<br>'  . '<br>'.'<br>';
-echo  "<div align=\"left\">"  . $objForm->show() . "</div";
-
+echo  "<div align=\"center\">" . $myTablabel->show() . "</div>";
+echo '<br />'.  "<div align=\"left\">"  . $objForm->show() . "</div>";
+if(!empty($sessionDates)){
+  echo "<div align=\"left\">" . $objExpByDateTable->show() . "</div>";
+}
 
 
 

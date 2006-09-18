@@ -1,18 +1,7 @@
 <?php
-
-    /************************************************************************
-     *                  to do list                                          *
-     * 1)either change save button to next -- save session variable in next action
-     * 1.1 then add another leg in add button as normal multi array tho into session
-     * 2)else get code for both add and save the same -- instrcut user SOMEHOW not to save after adding another day
-     * check that all text elements within the form is in reg file   
-     * code sytax for next,exit,add another itinerary buttons 
-     * ???get multi itinerary button to work
-     * take validation out of the exit button                 
-     * /    
-                                               
+                                           
     /**
-     *create template for multiple / single itinerary 
+     *create template for multiple / single itinerary details 
      */
      
      
@@ -40,7 +29,6 @@
     $exit  = ucfirst($this->objLanguage->languageText('phrase_exit'));
     $next = ucfirst($this->objLanguage->languageText('phrase_next'));
     $back = ucfirst($this->objLanguage->languageText('word_back'));
-    //$btnsave  = $this->objLanguage->languageText('word_save');
     $btnAdd = $this->objLanguage->languageText('mod_onlineinvoice_addanotheritenirary','onlineinvoice');
     $stradd = ucfirst($btnAdd);
     $error_message = $this->objLanguage->languageText('phrase_dateerror');
@@ -53,8 +41,8 @@
      *create heading -- travel itenirary
      */  
     $this->objIteninary =& $this->newObject('htmlheading','htmlelements');
-    $this->objIteninary->type = 3;
-    $this->objIteninary->str=$objLanguage->languageText('phrase_traveleritenirary');
+    $this->objIteninary->type = 1;
+    $this->objIteninary->str=$objLanguage->languageText('phrase_travelitenirary');
 
 /************************************************************************************************************************************************/
    
@@ -86,24 +74,11 @@
     $this->objarrivalcity  = $this->newObject('label','htmlelements');
     $this->objarrivalcity->label($arrivalCity,$lblArrivalecity);
 /************************************************************************************************************************************************/
-  /**
-   *  create an instance of the datepicker class
-   */ 
-    
-    /**
-     *get the initial date of the start of invoice to display in departure date
-     */
-     
-     //$startdate = $this->getParam('txtbegindate');
-     //while (list ($key, $val)  = each ($startdate)) {
-       //       if($count == 'begindate') {
-         //     $bdate = $val;
-           //   }
-            //var_dump($bdate);
-            //die;  
-     //}
-/***********************************************************************************************************************************************/              
-       
+
+   /**
+    *create all date elements
+    */
+              
     $this->objdeptdate = $this->newObject('datepicker','htmlelements');
     $name = 'txtdeptddate';
     $date = date('Y-m-d');
@@ -188,13 +163,13 @@
     $this->objAddItinerary->setToSubmit();
     $this->objAddItinerary->extra = sprintf(' onClick ="javascript: %s"', $onClick );
     
-    
     $this->objBack  = new button('back', $back);
     $this->objBack->setToSubmit();
 
 /************************************************************************************************************************************************/
   /**
    *create instance of the dropdown list class
+   *list contians time values hrs   and minutes
    */
    
    $departurename  = 'departuretime';
@@ -224,6 +199,7 @@
    $this->objdeparturetimedropdown->addOption('21:','21:') ;
    $this->objdeparturetimedropdown->addOption('22:','22:') ;
    $this->objdeparturetimedropdown->addOption('23:','23:') ;
+   $this->objdeparturetimedropdown->size = 20;
    
    $arrivalname  = 'arrivaltime';
    $this->objarrivaltimedropdown  = $this->newObject('dropdown','htmlelements');
@@ -252,9 +228,9 @@
    $this->objarrivaltimedropdown->addOption('21:','21:') ;
    $this->objarrivaltimedropdown->addOption('22:','22:') ;
    $this->objarrivaltimedropdown->addOption('23:','23:') ;
+   $this->objarrivaltimedropdown->size = 20;
    
-   
-   $minutesname  = 'minutes';
+   $minutesname  = 'minutes';               
    $this->objminutes  = $this->newObject('dropdown','htmlelements');
    $this->objminutes->dropdown($minutesname);
    $this->objminutes->addOption('00','00') ;
@@ -317,31 +293,9 @@
    $this->objminutes->addOption('57','57') ; 
    $this->objminutes->addOption('58','58') ;
    $this->objminutes->addOption('59','59') ;
-   $this->objminutes->addOption('60','60') ;
+   $this->objminutes->objarrivaltimedropdown->size = 20;
      
 /************************************************************************************************************************************************/
-    
-    /**
-     *create a link to return to the tev emplate
-     */         
-    
-    //$this->objreturn  =& $this->newobject('link','htmlelements');
-    //$this->objreturn->link($this->uri(array('action'=>'createtev'))); /*takes user to the previous template -- tev*/
-    //$this->objreturn->link = $return;
-    
-    /*$this->objmulti  =& $this->newobject('link','htmlelements');
-    $this->objmulti->link($this->uri(array('action'=>'addmultiitenirary'))); /*takes user to the next template -- per diem expense*/
-    //$this->objmulti->link = $addanotheritinerary;
-    
-    //$this->objexit  =& $this->newobject('link','htmlelements');
-    //$this->objexit->link($this->uri(array('action'=>'NULL')));  /* -- returns banck to original invoice template*/
-    //$this->objexit->link = $exit;
-
-    //$this->objnext  =& $this->newobject('link','htmlelements');
-    //$this->objnext->link($this->uri(array('action'=>'createexpenses'))); /*takes user to the next template -- per diem expense*/
-    //$this->objnext->link = $next;
-/************************************************************************************************************************************************/   
-
     /**
      *create table to place all form elements for the itenirary template 
     */
@@ -388,27 +342,16 @@
 
         
         $myTabIten->startRow();
-//        $myTabIten->addCell($this->objButtonSubmit->show());
         $myTabIten->addCell('');
         $myTabIten->addCell($this->objAddItinerary->show());
         $myTabIten->endRow();
         
-        /*$myTabIten->startRow();
-        $myTabIten->addCell($this->objButtonSubmit->show());
-        $myTabIten->endRow();*/
-        
-
-        /*$myTabIten->startRow();
-        $myTabIten->addCell($this->objButtonSave->show());
-        $myTabIten->addCell($this->objreturn->show());
-        $myTabIten->endRow();*/
- 
 /************************************************************************************************************************************************/
         
 $this->loadClass('tabbedbox', 'htmlelements');
 $objmultiitinerary = new tabbedbox();
 $objmultiitinerary->addTabLabel('Travelers Itinerary');
-$objmultiitinerary->addBoxContent('<br>' . $myTabIten->show() . '<br>' . '<br>' ."<div align=\"center\">" .$this->objBack->show() .' '. $this->objnext->show() . ' ' . $this->objexit->show() ."</div>"  . '<br />' . '<br />');               
+$objmultiitinerary->addBoxContent('<br />' . $myTabIten->show() . '<br />' . '<br />' ."<div align=\"center\">" .$this->objBack->show() .' '. $this->objnext->show() . ' ' . $this->objexit->show() ."</div>"  . '<br />' . '<br />');               
 
         
 /************************************************************************************************************************************************/

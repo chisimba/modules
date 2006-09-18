@@ -4,22 +4,29 @@
  *this template contains the content for creating the initial invoice
  */
   
+
 /**
  *create the heading of the template
  *the heading is created by creating an instance of the heading class
   there after the heading is set to type 2
   and is then assigned the title -- WEB BASED INVOICING SYSTEM
  */
-
-
 $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
-$this->objMainheading->type=2;
+$this->objMainheading->type=1;
 $this->objMainheading->str=$objLanguage->languageText('mod_onlineinvoice_webbasedinvoicingsystem','onlineinvoice');
 
+
+$invoicedata = $this->getSession('invoicedata');
+if(!empty($invoicedata)){
+  $hasSubmitted = 'yes';
+} else {
+    $hasSubmitted = 'no'; 
+}
+/**************************************************************************************************************************************************************/
 /**
  *create all language elements for labels
  */
-$dateRange = $objLanguage->languageText('mod_onlineinvoice_whatisthedaterangeofyourinvoice','onlineinvoice');
+$dateRange = $objLanguage->languageText('mod_onlineinvoice_whatisthedaterangeofyourinvoice','onlineinvoice') ;
 $beginDate = $objLanguage->languageText('phrase_begindate');
 $endDate  = $objLanguage->languageText('phrase_enddate');
 $travelExpenses = $objLanguage->languageText('mod_onlineinvoice_travelexpensesupdate','onlineinvoice');
@@ -34,29 +41,9 @@ $strsucessfull = $this->objLanguage->languageText('mod_onlineinvoice_valuessubmi
 $sucessfull = ucfirst($strsucessfull);
 $tooltipcontent = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_tooltipcontent','onlineinvoice'));
 $nextcatcontent = $this->objLanguage->languageText('mod_onlineinvoice_nextcaption','onlineinvoice');
+$alertmsg = $this->objLanguage->languageText('mod_onlineinvoice_alertmsg','onlineinvoice');
 
 /*********************************************************************************************************************************************************/
-
-/**
- *create all link elements
- */ 
-
-$urltext = $createTEV;
-$content = $tooltipcontent;
-$caption = '';
-$url = $this->uri(array('action'=>'createtev'));
-$this->objcreatelink  = & $this->newObject('mouseoverpopup','htmlelements');
-$this->objcreatelink->mouseoverpopup($urltext,$content,$caption,$url);
-
-$urltext = $nextCategory;
-$content = $nextcatcontent;
-$caption = '';
-$url = $this->uri(array('action'=>'createservice'));
-$this->objnextlink  = & $this->newObject('mouseoverpopup','htmlelements');
-$this->objnextlink->mouseoverpopup($urltext,$content,$caption,$url);
-
-/*********************************************************************************************************************************************************/
-
 /**
  *create new instance of the label class for each form label
  */
@@ -82,9 +69,43 @@ $this->objtravelExpenses->label($travelExpenses,$lblTravelID);
 
 /*********************************************************************************************************************************************************/
 
+/**
+ *create link to start capturing travel expenses
+ *checks that before moving to next section -- user needs to submit the invoice dates 1st 
+ */ 
+
+$urltext = $createTEV;
+$content = $tooltipcontent;
+$caption = '';
+if($hasSubmitted == 'yes'){
+  $url = $this->uri(array('action'=>'createtev'));
+  $this->objcreatelink  = & $this->newObject('mouseoverpopup','htmlelements');
+  $this->objcreatelink->mouseoverpopup($urltext,$content,$caption,$url);
+} else {
+  $url = $this->uri(array('action'=>'initialinvoice', 'submitdatesmsg' => 'yes'));
+  $this->objcreatelink  = & $this->newObject('mouseoverpopup','htmlelements');
+  $this->objcreatelink->mouseoverpopup($urltext,$content,$caption,$url);
+}
+
+$urltext = $nextCategory;
+$content = $nextcatcontent;
+$caption = '';
+if($hasSubmitted == 'yes'){
+  $url = $this->uri(array('action'=>'createservice'));
+  $this->objnextlink  = & $this->newObject('mouseoverpopup','htmlelements');
+  $this->objnextlink->mouseoverpopup($urltext,$content,$caption,$url);
+} else {
+  $url = $this->uri(array('action'=>'initialinvoice', 'submitdatesmsg' => 'yes'));
+  $this->objnextlink  = & $this->newObject('mouseoverpopup','htmlelements');
+  $this->objnextlink->mouseoverpopup($urltext,$content,$caption,$url);
+}
+
+/*********************************************************************************************************************************************************/
+
 
 /**
   *create an instance of the datepicker class to create a calendar control
+  *used for inv begin date and inv end date  
   */
   
 $this->objbegindate = $this->newObject('datepicker','htmlelements');
@@ -114,10 +135,10 @@ $this->objButtonSubmit  = $this->newobject('button','htmlelements');
 $this->objButtonSubmit->setValue($str1);
 $this->objButtonSubmit->setToSubmit();
 
-  /**
-   *validate the date fields using javascript
-   *check that the start date of the invoice is not later than the end date
-   */         
+/**
+  *validate the date fields using javascript
+  *check that the start date of the invoice is not later than the end date
+  */         
 	$onClick = 'var list_from = document.invoice.txtbegindate;
 					    var list_to = document.invoice.txtenddate;
 					 
@@ -145,13 +166,13 @@ $this->objButtonSubmit->setToSubmit();
 					 }else{
            alert(\''.$sucessfull.'\')
            }';
-				$this->objButtonSubmit->extra = sprintf(' onClick ="javascript: %s"', $onClick );
+	$this->objButtonSubmit->extra = sprintf(' onClick ="javascript: %s"', $onClick );
  
 /*********************************************************************************************************************************************************/ 
 
 /*create table to place form elements in  --  date values*/
         $myTable=$this->newObject('htmltable','htmlelements');
-        $myTable->width='40%';
+        $myTable->width='60%';
         $myTable->border='0';
         $myTable->cellspacing='1';
         $myTable->cellpadding='10';
@@ -187,7 +208,7 @@ $this->objButtonSubmit->setToSubmit();
 /*create table to place form elements in  --  create TEV OR move to next category*/        
 
         $myTab=$this->newObject('htmltable','htmlelements');
-        $myTab->width='40%';
+        $myTab->width='60%';
         $myTab->border='0';
         $myTab->cellspacing='10';
         $myTab->cellpadding='10';
@@ -202,22 +223,39 @@ $this->objButtonSubmit->setToSubmit();
 $this->loadClass('form','htmlelements');
 $objcreateInvoiceForm = new form('invoice',$this->uri(array('action'=>'submitinvoicedates')));
 $objcreateInvoiceForm->displayType = 3;
-$objcreateInvoiceForm->addToForm($myTable->show()  .  '<br>' . '<br>' . $this->objtravelExpenses->show()  . '<br>'  . $myTab->show());
+$objcreateInvoiceForm->addToForm($myTable->show()  .  '<br />' . '<br />' . $this->objtravelExpenses->show()  . '<br />'  . $myTab->show());
 
 /*********************************************************************************************************************************************************/
 /*create tabbox for intial invoice*/
 $this->loadClass('tabbedbox', 'htmlelements');
 $objcreateinvtab = new tabbedbox();
 $objcreateinvtab->addTabLabel('Create Invoice');
-$objcreateinvtab->addBoxContent('<br>'  . $this->objDateRange->show() . '<br>'. '<br>'  . $objcreateInvoiceForm->show());
+$objcreateinvtab->addBoxContent('<br />'  . $this->objDateRange->show() . '<br />'. '<br />'  . $objcreateInvoiceForm->show());
 
 /*********************************************************************************************************************************************************/
+/**
+ *determines if the session if the session variable containing the invoice dates is empty or not
+ */  
+
+/***************************************************************************************************************************************************************/
+
 
 /*Display output to screen*/
 echo  "<div align=\"center\">" . $this->objMainheading->show() . "</div>";
-echo  '<br>';
-echo  '<br>';
-echo  '<br>'  . $objcreateinvtab->show();
+
+/** 
+ *Create timeout message to inform user that they need to submit inv dates
+ */ 
+if($submitdatesmsg == 'yes'){
+  $tomsg =& $this->newObject('timeoutmessage', 'htmlelements');
+  $tomsg->setMessage($alertmsg);
+  
+  echo $tomsg->show();
+}
+
+echo  '<br />';
+echo  '<br />';
+echo  '<br />'  . $objcreateinvtab->show();
 
 ?>
 

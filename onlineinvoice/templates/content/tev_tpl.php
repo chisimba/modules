@@ -3,13 +3,7 @@
   /**
    *create tev template
    */   
-   
-   /***********************************************************************************************************
-    *                                                 TO LIST FOR FORM                                        *
-    *validate the field lenghts, field type etc                                                               *
-    *get an icon and add tool tip tect informing user canot move forward unless info is entered               *
-    ***********************************************************************************************************/                      
-
+/***********************************************************************************************************************************************/   
 
   /**  create the heading -- Travel expense voucher
    *   the heading is created by creating an instance of the heading class
@@ -18,7 +12,7 @@
    */
 
   $this->objMainheading = $this->newObject('htmlheading','htmlelements');
-  $this->objMainheading->type = 2;
+  $this->objMainheading->type = 1;
   $this->objMainheading->str=$objLanguage->languageText('mod_onlineinvoice_travelexpensevoucher','onlineinvoice');
 
   /**
@@ -29,12 +23,6 @@
   $this->objheading->type = 3;
   $this->objheading->str=$objLanguage->languageText('mod_onlineinvoice_travelerinformation','onlineinvoice');
 
-  /**
-  *create heading -- travel itenirary
-  */  
-  $this->objIteninary =& $this->newObject('htmlheading','htmlelements');
-  $this->objIteninary->type = 3;
-  $this->objIteninary->str=$objLanguage->languageText('phrase_traveleritenirary');
   
   /**
    *getIcon for information
@@ -42,7 +30,11 @@
   $this->objInfoIcon = $this->newObject('geticon','htmlelements');
   $this->objInfoIcon->setModuleIcon('freemind');
     
-
+  /**
+    *help information
+    */   
+    $this->objHelp=& $this->getObject('helplink','help');
+    $displayhelp  = $this->objHelp->show('mod_onlineinvoice_helpinstruction');
 
 /************************************************************************************************************************************************/
 
@@ -81,11 +73,6 @@
   $travpurpose  = $this->objLanguage->languageText('mod_onlineinvoice_enterpurpose','onlineinvoice');
   $strnext  = ucfirst($next);
 /************************************************************************************************************************************************/
-
-  /**
-   *create new instance of the label class for each form label*
-   */
-
   /**
    *Create all labels-- for Claimant details
    */
@@ -129,47 +116,31 @@
    *create all text input boxes
    */
    
-   $this->loadClass('textinput', 'htmlelements');
+  $this->loadClass('textinput', 'htmlelements');
 
   $this->objtxtname = new textinput('txtClaimantName');
   $this->objtxtname->id = 'txtClaimantName';
   
-  $this->objtxttitle = $this->newObject('textinput','htmlelements');
-  $this->objtxttitle->name   = 'txtTitle';
+  $this->objtxttitle = new textinput('txtTitle');
   $this->objtxttitle->value  = "";
 
-  $this->objtxtaddress = $this->newObject('textinput','htmlelements');
-  $this->objtxtaddress->name   = 'txtAddress';
+  $this->objtxtaddress = new textinput('txtAddress');
   $this->objtxtaddress->value  = "";
 
-  $this->objtxtcity = $this->newObject('textinput','htmlelements');
-  $this->objtxtcity->name   = 'txtCity';
+  $this->objtxtcity = new textinput('txtCity');
   $this->objtxtcity->value  = "";
 
-  $this->objtxtprovince = $this->newObject('textinput','htmlelements');
-  $this->objtxtprovince->name   = 'txtprovince';
+  $this->objtxtprovince = new textinput('txtprovince');
   $this->objtxtprovince->value  = "";
 
-  $this->objtxtpostalcode = $this->newObject('textinput','htmlelements');
-  $this->objtxtpostalcode->name   = 'txtpostalcode';
+  $this->objtxtpostalcode = new textinput('txtpostalcode');
   $this->objtxtpostalcode->value  = "";
 
-  $this->objtxtcountry = $this->newObject('textinput','htmlelements');
-  $this->objtxtcountry->name   = 'txtcountry';
+  $this->objtxtcountry = new textinput('txtcountry');
   $this->objtxtcountry->value  = "";
 
 
 /************************************************************************************************************************************************/
-
-  /**
-   *create form buttons
-   */
-  
-  //$this->objButtonSubmit  = $this->newobject('button','htmlelements');
-  //$this->objButtonSubmit->setValue($strsave);
-  //$this->objButtonSubmit->name = 'submit';
-  //$this->objButtonSubmit->setToSubmit();
-
   $this->objButtonNext  = $this->newobject('button','htmlelements');
   $this->objButtonNext->setValue($strnext);
   $this->objButtonNext->name = 'next';
@@ -178,23 +149,11 @@
 /************************************************************************************************************************************************/
 
   /**
-   *create link to move to the itinerary page
-   */
-  
-  //$urltext = ucfirst($showitenirary);
-  //$content = 'Complete itinerary for the travel';
-  //$caption = '';
-  //$url = $this->uri(array('action'=>'createmultiitenirary'));
-  //$this->objitinerarylink  = & $this->newObject('mouseoverpopup','htmlelements');
-  //$this->objitinerarylink->mouseoverpopup($urltext,$content,$caption,$url);
-/************************************************************************************************************************************************/
-
-  /**
    *create text area for travel purpose
    */
 
   $textArea = 'travel';
-  $this->objPurposeArea = $this->newobject('textArea','htmlelements');
+  $this->objPurposeArea =& $this->newobject('textArea','htmlelements');
   $this->objPurposeArea->setRows(1);
   $this->objPurposeArea->setColumns(16);
   $this->objPurposeArea->setName($textArea);
@@ -213,7 +172,7 @@
    *create table to place form elements in for travel expense voucher "tev-template"   
    */
 
-        $myTable=$this->newObject('htmltable','htmlelements');
+        $myTable=& $this->newObject('htmltable','htmlelements');
         $myTable->width='100%';
         $myTable->border='0';
         $myTable->cellspacing='1';
@@ -315,25 +274,18 @@
         $myTable->startRow();
         $myTable->endRow();
 
-        
+        $myTable->startRow();
         $myTable->addCell("<div align=\"right\">".$this->objButtonNext->show()."</div>" );
         $myTable->endRow();
         
 /************************************************************************************************************************************************/        
-  /**
-   *create tabbox for traveler information
-   */
-//$this->loadclass('navbuttons','htmlelements');
-//$this->objicon =& $this->newObject('navbuttons','htmlelements');
-//$this->objicon->putInfoButton();
-//$objicon = new navbuttons();
    
 
 $striconinfo = $information ; 
 $this->loadClass('tabbedbox', 'htmlelements');
 $objtraveler = new tabbedbox();
 $objtraveler->addTabLabel('Traveler Information');
-$objtraveler->addBoxContent('<br>' ."<div align=\"center\">".  "<div class=\"error\">".$this->objInfoIcon->show() .$striconinfo . "</div>" . '<br>'  . $myTable->show()  . '<br>' );
+$objtraveler->addBoxContent('<br />' ."<div align=\"center\">".  "<div class=\"error\">".$this->objInfoIcon->show() .$striconinfo .' '. $displayhelp. "</div>" . "</div>".'<br />'  . $myTable->show()  . '<br/>' );
 /************************************************************************************************************************************************/
   /**
    *create form to place all elements in
@@ -356,6 +308,8 @@ $objtraveler->addBoxContent('<br>' ."<div align=\"center\">".  "<div class=\"err
   
   
 /************************************************************************************************************************************************/ 
+
+
 
   /**
    *display output to screen
