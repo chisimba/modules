@@ -169,16 +169,15 @@
  $objElement->addTab(array('name'=>'Intinerary Information','url'=>'http://localhost','content' => $objitinerarybox->show()));
  $objElement->addTab(array('name'=>'Per Diem Information','url'=>'http://localhost','content' => $objperdiembox->show()));
  $objElement->addTab(array('name'=>'Lodge Expenses','url'=>'http://localhost','content' => $objlodgebox->show()));
- 
  $objElement->addTab(array('name'=>'Incident Expenses','url'=>'http://localhost','content' => $objincidentbox->show()));
-  echo $objElement->show();
-  //die;
+ 
+  
 
 /********************************************************************************************************************************/         
       /**
        *display the output
        */
-       
+        echo $objElement->show();
     /*   echo  "<div align=\"center\">" . $objtravelsheet->show() . "</div>";
        echo   '<br />'   . $objtabbedinvoice->show();               
        echo   '<br />'  . $objtabbedbox->show();
