@@ -18,8 +18,8 @@ class blocksearchbox extends object
 		$objForm->setAction($this->uri(array('action'=>'search'),$this->getParam('module')));
 		$objForm->setDisplayType(2);
 
-		$surname= new textinput('surname',null,null,8);
-		$surname->label='Surname';		
+		$search= new textinput('search',null,null,8);
+		$search->label='Search';		
 
 		$stdnum= new textinput('studentNumber',null,null,8);
 		$stdnum->label='Student Number';
@@ -34,10 +34,26 @@ class blocksearchbox extends object
 		$save->setToSubmit();
 		$save->setValue('Search');
 		
-		$objForm->addToForm($surname);
-		$objForm->addToForm($stdnum);
+		//Radio Buttons------
+		 $this->loadClass('radio', 'htmlelements');
+		
+		$objElement = new radio('sex_radio');
+		
+		$objElement->addOption('surname','<p>'.'Surname'.'</p>');
+		$objElement->addOption('studentid','<p>'.'Student Id'.'</p>');
+		$objElement->addOption('idNumber','<p>'.'Id Number'.'</p>');
+		$objElement->setSelected('surname');
+		$radio= $objElement->show();
+		//Radion button Group
+
+
+
+		$objForm->addToForm($search);
+		
+		$objForm->addToForm($radio);
+		//$objForm->addToForm($stdnum);
 		//$objForm->addToForm($applicationum);
-		$objForm->addToForm($idnum);
+		//$objForm->addToForm($idnum);
 		$objForm->addToForm($save);
 		
 		$objElement = new tabbedbox();

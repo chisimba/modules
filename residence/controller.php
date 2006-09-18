@@ -32,6 +32,19 @@ class residence extends controller
 		$this->loadClass('tabbedbox', 'htmlelements');
 		$this->loadclass('link','htmlelements');
 		$this->loadclass('dropdown','htmlelements');
+        $this->loadclass('radio', 'htmlelements');
+        $this->loadClass('htmltable', 'htmlelements');
+        $this->loadClass('language', 'language');
+		$this->loadClass('button', 'htmlelements');
+		$this->loadClass('textinput','htmlelements');
+		$this->loadClass('textarea','htmlelements');
+		$this->loadClass('layer','htmlelements');
+		$this->loadClass('form','htmlelements');
+		$this->loadClass('multitabbedbox','htmlelements');
+		$this->loadClass('href','htmlelements');
+		$this->loadClass('tabbedbox', 'htmlelements');
+		$this->loadclass('link','htmlelements');
+		$this->loadclass('dropdown','htmlelements');
 
 		//$this->student =& $this->getObject('student','studentmodule');
 		//$this->dbstudent =& $this->getObject('dbstudents','residence');
@@ -48,7 +61,7 @@ class residence extends controller
 			//echo '<pre>';
 			//print_r($this->financialaid->getSTHSL('STDNUM','2219065',0,0));
 			//die('hgfh');
-			return 'studentlist_tpl.php';
+			return 'startup_tpl.php';
 		
 		case 'ok':
 				$id = $this->getParam('id',null);
@@ -159,15 +172,21 @@ class residence extends controller
 				$this->setVarByRef('sponsorlist',$this->financialaid->sponsorList());
 				return 'sponsorlist_tpl.php';
 		case 'search':
-			if(!$this->getParam('studentNumber')==null){
-				$studentNumber = $this->getParam('studentNumber');
+		//	echo '<pre>';
+			//print_r($_POST);
+			
+			$radiooption = $this->getParam('searchid');
+			//print_r($radiooption); die;
+
+			if($radiooption=='2'){
+				$studentNumber = $this->getParam('search');
 				$stdinfo = $this->financialaid->searchStudent('STDNUM',$studentNumber);
-				}else if(!$this->getParam('idNumber')==null){
-				$idNumber = $this->getParam('idNumber');
+				}else if($radiooption=='3'){
+				$idNumber = $this->getParam('search');
 				$stdinfo = $this->financialaid->searchStudent('IDN',$idNumber);
 				$this->setVarByRef('stdinfo',$stdinfo);			
 				}else{
-				$surname = $this->getParam('surname');
+				$surname = $this->getParam('search');
 				$surname = strtoupper($surname);
 				$start=0;
 				$offset=6;

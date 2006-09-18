@@ -40,7 +40,8 @@ class dbresidence extends object
                                            'proxy_port'    => 8080,
                                            'proxy_login'    => "jadam",
                                            'proxy_password' => "adam1234"));
-		//parent::init();
+	
+	//parent::init();
 		//$this->remotedb =& $this->newObject('remotedb','remotedatasource');
 		//$this->objUser =& $this->newObject('user','security');
 		//$this->student =& $this->newObject('student','studentmodule');

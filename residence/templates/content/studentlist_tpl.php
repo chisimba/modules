@@ -4,6 +4,7 @@
 
 $this->objUser =& $this->getObject('user','security');
 
+$tabpane =& $this->newObject('tabpane', 'htmlelements');
 // Create an instance of the css layout class
 $cssLayout2 = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
 $cssLayout2->setNumColumns(3);
@@ -22,7 +23,7 @@ $this->financialaid =& $this->getObject('dbresidence','residence');
 $dropdown =& $this->newObject("dropdown", "htmlelements");
 
 	
-
+echo '<h3>'.'Residence and Catering Service'.'</h3>';
 //echo "$numrecords --- $allrecords";
 $content = "";
 $oddEven = 'odd';
@@ -30,16 +31,28 @@ $oddEven = 'odd';
 if(isset($stdinfo)){
 	
 	
+	$objHeading = &$this->getObject('htmlheading','htmlelements');
+	$pgTitle = $objHeading;
+	$pgTitle->type = 1;
+	$nbsp = "&nbsp;";
+	$pgTitle->str ="Search Results for".'&nbsp;'.ucfirst($stdinfo[0]->SURNAM);
+	
+	
 	
 	$table =& $this->getObject('htmltable','htmlelements');
 	
 	$table->width = '99%';
-	$table->cellpadding = 5;
-	$table->cellspacing = 2;
+	$table->cellpadding = 3;
+	$table->cellspacing = 3;
+	
+	//echo $pgTitle->show();
+//	$table->startHeaderRow();
+	//$table->addHeaderCell($pgTitle->show());		
+//	$table->endHeaderRow();
 	
 	$table->startHeaderRow();
-	$table->addHeaderCell('name');		
-	$table->addHeaderCell('surname');
+	$table->addHeaderCell('Name');		
+	$table->addHeaderCell('Surname');
 	$table->addHeaderCell(' ');
 	$table->addHeaderCell(' ');
 	$table->addHeaderCell(' ');
@@ -140,7 +153,7 @@ if(isset($stdinfo)){
 	$form->addToForm($button->show()."&nbsp;".$button1->show());
 	//---------------------------------------------------------------------------------
 	
-$content = $table->show().'<p>'.'&nbsp;&nbsp;'.'Next List'.'</p>'.$form->show();
+$content = '<p>'.$pgTitle->show().'</p>'.$table->show().'<p>'.'&nbsp;&nbsp;'.'Next List'.'</p>'.$form->show();
 	
 
 
@@ -166,7 +179,7 @@ $content = $table->show().'<p>'.'&nbsp;&nbsp;'.'Next List'.'</p>'.$form->show();
         $this->clear = null;
 */
 //--------End Div
-$right =& $this->getObject('blocksearchbox','residence');
+$right =& $this->getObject('blocksearchbox','studentenquiry');
 $right = $right->show();//$this->getParam('module'));
 
 $left =& $this->getObject('leftblock','residence');
@@ -191,6 +204,27 @@ $leftSideColumn2 = $right;
 $this->contentNav = $this->newObject('layer','htmlelements');
 $this->contentNav->id = "content";
 $this->contentNav->str = $content;
+
+
+
+/*
+$appTabBox = & $this->newObject('tabbox','financialaid');
+$appTabBox->tabName = ;
+$appTabBox->tabName = '';
+$appTabBox->tabName = '';
+
+$appTabBox->addTab('courseDetails', '', $courseDisplay='ioo');
+*/
+
+
+
+/*
+$content .= '<p>';
+$content .= $appTabBox->show();
+$content .= '</p>';
+*/
+
+
 $cssLayout2->setMiddleColumnContent($content);
 $this->contentNav->height="70px";
 //echo $this->contentNav->show();
@@ -207,6 +241,11 @@ $cssLayout2->setLeftColumnContent($home->show());
 
 
 //echo $this->contentNav->addToLayer();
+
+
+
+
+//echo $objElement->show();
 
 echo $cssLayout2->show();
 

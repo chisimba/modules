@@ -2,7 +2,7 @@
 $cssLayout2 = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
 $cssLayout2->setNumColumns(3);
 
-$right =& $this->getObject('blocksearchbox','residence');
+$right =& $this->getObject('blocksearchbox','studentenquiry');
 $right = $right->show($this->getParam('module'));
 
 $left =& $this->getObject('leftblock');

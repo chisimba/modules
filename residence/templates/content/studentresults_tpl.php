@@ -123,7 +123,7 @@ $this->contentNav = $this->getObject('layer','htmlelements');
 $this->contentNav->id = "content";
 $this->contentNav->str = $objForm->show();
 $cssLayout2->setMiddleColumnContent($objForm->show());
-$cssLayout2->setLeftColumnContent($objForm->show());
+$cssLayout2->setLeftColumnContent('');
 
 $cssLayout2->setRightColumnContent($right);
 
