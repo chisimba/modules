@@ -15,6 +15,8 @@ $h3->str = ' Section Manager  '.$objIcon->getAddIcon($this->uri(array('action' =
 //counter for records
 $cnt = 1;
 //get the pages
+$arrSections = $this->_objSections->getSections();
+
 if($this->inContextMode)
 {
     $objContextContent = $this->newObject('dbcontextcmscontent', 'contextcmscontent');
@@ -24,8 +26,9 @@ else
 {
     $arrSections = $this->_objSections->getSections();
 }
-//
 
+//Get cms type
+$cmsType = 'treeMenu';
 
 //setup the table headings
 $table->startHeaderRow();
@@ -46,14 +49,14 @@ $rowcount = 0;
 //setup the tables rows  and loop though the records
 foreach($arrSections as $section)
 {
-	//edit link
-	$link->link = $section['title'];
+  $link->link = $section['title'];
+  //edit link
 	$link->href = $this->uri(array('action' => 'addsection', 'mode' => 'edit', 'id' => $section['id']));
-	
+
 	$oddOrEven = ($rowcount == 0) ? "even" : "odd";
 	
     $tableRow = array();
-	$tableRow[]=$cnt++;
+	  $tableRow[]=$cnt++;
     $tableRow[]=$link->show();
     
     //publish

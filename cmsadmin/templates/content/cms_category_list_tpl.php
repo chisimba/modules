@@ -11,7 +11,7 @@ $objIcon = & $this->newObject('geticon', 'htmlelements');
 
 
 //create a heading 
-$h3->str = ' Category Manager  '.$objIcon->getAddIcon($this->uri(array('action' => 'addcategory')));
+$h3->str = ' Category Manager  '.$objIcon->getAddIcon($this->uri(array('action' => 'addcat')));
 //counter for records
 $cnt = 1;
 //get the pages
@@ -28,6 +28,7 @@ $table->addHeaderCell('Published');
 $table->addHeaderCell('Access');
 $table->addHeaderCell('Section');
 $table->addHeaderCell('Category ID');
+$table->addHeaderCell(' ');
 //$table->addHeaderCell('#Active');
 
 $table->endHeaderRow();   
@@ -38,7 +39,7 @@ $rowcount = 0;
 foreach($arrCategories as $arrCategory)
 {
 	$link->link = $arrCategory['title'];
-	$link->href = $this->uri(array('action' => 'addcategory', 'mode' => 'edit', 'id' => $arrCategory['id']));
+	$link->href = $this->uri(array('action' => 'addcat', 'mode' => 'edit', 'id' => $arrCategory['id']));
 
 	$oddOrEven = ($rowcount == 0) ? "even" : "odd";
 	
@@ -56,8 +57,14 @@ foreach($arrCategories as $arrCategory)
 	$tableRow[]=$arrCategory['id'];
 	//$table->addCell($this->_objCategories->getCatCount($section['id']));
 	//$table->addCell($section['created']);
-
-  	
+  
+  //delete link
+  $objIcon->setIcon('delete');
+  $link->link = $objIcon->show();
+  $link->href = $this->uri(array('action' => 'deletecategory', 'id' => $arrCategory['id']));
+	//add icon to table
+  $tableRow[]=$link->show();
+	
 	$table->addRow($tableRow, $oddOrEven);
 	 $rowcount = ($rowcount == 0) ? 1 : 0;
 	

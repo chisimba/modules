@@ -60,8 +60,6 @@ class cmsutils extends object
     */
     protected $_objUser;
     
-    
-
 	/**
 	 * Constructor
 	 */
@@ -881,9 +879,8 @@ class cmsutils extends object
 		$nodes = array();
 		$nodes[] = array('text' => 'Content', 'uri' => $this->uri(array('action' => 'content')));
 		$nodes[] = array('text' => 'Sections', 'uri' => $this->uri(array('action' => 'sections')));
+		$nodes[] = array('text' => 'Categories', 'uri' => $this->uri(array('action' => 'categories')));
 		//$nodes[] = array('text' => 'Categories', 'uri' => $this->uri(array('action' => 'categories')));
-		
-		
 		$nodes[] = array('text' => 'Front Page', 'uri' => $this->uri(array('action' => 'frontpages')));
 		$nodes[] = array('text' => 'Media', 'uri' => $this->uri(null,'mediamanager'))	;	
 		
@@ -961,4 +958,125 @@ class cmsutils extends object
 	   
 	    return '<span class="thumbnail"><center><img src="'.$objSkin->getSkinUrl().$src.'" /></center></span>';
 	}
+
+	/**
+	 * Method to generate the dropdown with tree indentations for selecting parent category
+	 * 
+	 * @return string Generated HTML for the dropdown 
+	 * @access public
+	 * @author Warren Windvogel
+	 */
+	public function getTreeDropdown()
+	{
+	    //Create dropdown 
+      $treeDrop =& $this->newObject('dropdown', 'htmlelements');
+	    $treeDrop->name = 'parent';
+	    $treeDrop->addOption(NULL, ' - Select parent - ');
+	    //Get all available sections
+	    $availsections = $this->_objSections->getSections();
+	    if(!empty($availsections)){
+	      //initiate sequential tree structured array to be inserted into dropdown
+	      $treeArray = array();
+	      //add nodes for each section
+	      foreach($availsections as $section){
+	         //initiate prefix for nodes
+	         $prefix = ''; 
+	         //add root(secion) to dropdown
+ 	         $treeArray[] = array('title' => $section['menutext'], 'id' => 'section:'.$section['id']);
+	         //get number of node levels 
+           $numLevels = $this->getNumNodeLevels($section['id']);
+           //check if section has categories
+           if($numLevels > '0'){
+             //loop through each level and add all cats in level
+             for($i = '1'; $i <= $numLevels; $i++){
+                $prefix .= '- ';
+                //get all cats in section on level
+                $cats = $this->_objCategories->getCategoryInSection($section['id'], $i);
+                foreach($cats as $cat){
+                  //if its the 1st node just add it under the section
+                  if($i == '1'){
+                    $treeArray[] = array('title' => $prefix.$cat['menutext'], 'id' => 'category:'.$cat['id']);
+                  //else find the parent node and include it after this node
+                  } else {
+                      $parentId = $cat['parent_id'];
+                      $catTitle = $this->_objCategories->getMenuText($parentId);
+                      $count = $this->_objCategories->getCatLevel($parentId);
+                      $searchPrefix = "";
+                      for($num = '1'; $num <= $count; $num++){
+                         $searchPrefix .= '- ';
+                      }
+                      $needle = array('title' => $searchPrefix.$catTitle, 'id' => 'category:'.$parentId);
+                      $entNum = array_search($needle, $treeArray);
+                      $newEnt = array('title' => $prefix.$cat['menutext'], 'id' => 'category:'.$cat['id']);
+                      $treeArray = $this->addToTreeArray($treeArray, $entNum, $newEnt);
+                  }                
+                }
+             }
+           }
+         }
+         //Add array to dropdown
+         foreach($treeArray as $node){
+            $treeDrop->addOption($node['id'], $node['title']);
+         }
+      }   
+      return $treeDrop->show();
+	}
+
+	/**
+	 * Method to return the number of node levels in a section
+	 * 
+	 * @param string $sectionid The id(pk) of the section 
+	 * @return int $numLevels The number of node levels in the setion
+	 * @access public
+	 * @author Warren Windvogel
+	 */
+	public function getNumNodeLevels($sectionid)
+  {
+      //get all categories in section
+      $categories = $this->_objCategories->getCategoryInSection($sectionid);
+      //se number of levels
+      $numLevels = '0';
+      if(!empty($categories)){
+        foreach($categories as $cat){
+           if($cat['count'] > $numLevels){
+             $numLevels = $cat['count'];
+           }  
+        }
+      }
+      return $numLevels;
+  } 
+	/**
+	 * Method to insert data into an array at a specific entry pushing entries below
+	 * this down
+	 * 
+	 * @param array $dataArray The array to add the data to
+	 * @param int $entryNumber The place to add the data  
+	 * @param mixed $newEntry The new data to be added
+	 * @return array $newArray The array with the new entry
+	 * @access public
+	 * @author Warren Windvogel
+	 */
+	public function addToTreeArray($dataArray, $entryNumber, $newEntry)
+  {
+      //create new array
+      $newArray = array();
+      $counter = '0';
+      //loop thru array adding entries before $entryNumber entry as usual
+      foreach($dataArray as $ar){
+         if($counter < $entryNumber){
+           $newArray[$counter] = $ar;
+         } else if($counter == $entryNumber){
+              $newArray[$counter] = $ar;
+              $num = $counter + '1';  
+              $newArray[$num] = $newEntry;
+         } else {
+              $num = $counter + '1';  
+              $newArray[$num] = $ar;
+         }
+         $counter++;
+      }
+      return $newArray;
+  }
+	
 }
+?>

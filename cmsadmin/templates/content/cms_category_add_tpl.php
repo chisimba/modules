@@ -11,11 +11,11 @@ $titleInput = & $this->newObject('textinput', 'htmlelements');
 $menuTextInput = & $this->newObject('textinput', 'htmlelements');
 $bodyInput = & $this->newObject('htmlarea', 'htmlelements');
 $h3 = &$this->newObject('htmlheading', 'htmlelements');
-$sections = & $this->newObject('dropdown', 'htmlelements');
-$category = & $this->newObject('dropdown', 'htmlelements');
+//$sections = & $this->newObject('dropdown', 'htmlelements');
 $button =  & $this->newObject('button', 'htmlelements');
-$objDropDown =& $this->newObject('dropdown', 'htmlelements');
+//$objDropDown =& $this->newObject('dropdown', 'htmlelements');
 
+if($task != 'selectsection'){
 if($this->getParam('id') == '')
 {
 	$action = 'createcategory';
@@ -27,24 +27,26 @@ if($this->getParam('id') == '')
 	$catId = $this->getParam('id');
 	$editmode = TRUE;
 	//create heading
-    $h3->str = 'Category: New';
+    $h3->str = 'Category: Edit';
 }
-
-$objForm = $this->newObject('form','htmlelements');
-     
-
+}
 //setup form
+$objForm = &$this->newObject('form','htmlelements');
 $objForm->name='addsectionfrm';
 $objForm->setAction($this->uri(array('action'=>$action, 'id' => $catId),'cmsadmin'));
 $objForm->setDisplayType(3);   
-
+/*
+//setup form for selectng section to populate category dropdown
+$objSectionForm = &$this->newObject('form','htmlelements');    
+$objSectionForm->name= 'selectsectionfromdrop';
+$objSectionForm->setAction($this->uri(array('action'=>'selectsectionfromdrop', 'editmode' => $editmode),'cmsadmin'));
+$objSectionForm->setDisplayType(3);   
+*/
 
 $table->width='60%';
 $tablee->border='1';
 $table->cellspacing='1';
 $tablee->cellpadding='1';
-
-
 
 
 $titleInput->name = 'title';
@@ -57,21 +59,25 @@ $bodyInput->name = 'description';
 $button->setToSubmit();
 $button->value = 'Save';
 
-if($editmode)
-{
-	$arrCat = $this->_objCategories->getCategory($catId);
-	$titleInput->value = $arrCat['title'];
-	$menuTextInput->value = $arrCat['menutext'];
-	$bodyInput->value = $arrCat['description'];
+if($task != 'selectsection'){
+  if($editmode)
+  {
+	  $arrCat = $this->_objCategories->getCategory($catId);
+	  $titleInput->value = $arrCat['title'];
+	  $menuTextInput->value = $arrCat['menutext'];
+	  $bodyInput->value = $arrCat['description'];
 	
+  } else {
+	    $titleInput->value = '';
+	    $menuTextInput->value = '';
+	    $bodyInput->value = '';
+	
+  }
 } else {
-	$titleInput->value = '';
-	$menuTextInput->value = '';
-	$bodyInput->value = '';
-	
-	
+   $titleInput->value = $title;
+ 	 $menuTextInput->value = $menuText;
+	 $bodyInput->value = $description;
 }
-
 //title
 $table->startRow();
 $table->addCell('Category Title');
@@ -84,19 +90,47 @@ $table->addCell('Category Menu Text');
 $table->addCell($titleInput->show());
 $table->endRow();
 
-
+/*
 //section 
 $table->startRow();
 $table->addCell('Section');
 $objDropDown->name = 'section';
-$objDropDown->addFromDB($this->_objSections->getSections(), 'menutext','id',$arrCat['sectionid']);
-$table->addCell($objDropDown->show());
+$objDropDown->addOption(NULL, 'Select section');
+$objDropDown->setSelected(NULL);
+if($task != 'selectsection'){
+  if($editmode){
+    $objDropDown->addFromDB($this->_objSections->getSections(), 'menutext','id',$arrCat['sectionid']);
+   } else {
+       $objDropDown->addFromDB($this->_objSections->getSections(), 'menutext','id');
+  }
+} else {
+    $objDropDown->addFromDB($this->_objSections->getSections(), 'menutext','id',$selectedSection);
+}     
+//Set dropdown to submit so that category dropdown can be populated accordingly
+$objDropDown->extra = 'onchange="document.selectsectionfromdrop.submit()"'; 
+
+//Add elements to form
+$titleInput->fldType = 'hidden';
+$menuTextInput->fldType = 'hidden';
+
+$objSectionForm->addToForm($titleInput->show());
+$objSectionForm->addToForm($menuTextInput->show());
+$objSectionForm->addToForm($objDropDown->show());
+
+$table->addCell($objSectionForm->show());
+$table->endRow();
+*/
+
+//parent category
+$table->startRow();
+$table->addCell('Parent');
+$table->addCell($this->_objUtils->getTreeDropdown());
 $table->endRow();
 
 //image
 $table->startRow();
 $table->addCell('Image');
-$table->addCell($this->_objUtils->getImageList('image'));
+$table->addCell($this->_objUtils->getImageList('image', 'addsectionfrm'));
 $table->endRow();
 
 //image postion
@@ -109,9 +143,8 @@ $table->endRow();
 //Ordering
 $table->startRow();
 $table->addCell('Ordering');
-if(editmode)
-{	
-	$table->addCell($this->_objSections->getOrderList('ordering'));
+if(editmode){	
+	$table->addCell($this->_objSections->getOrderList('Ordering'));
 } else {
 	$table->addCell('New items default to the last place. Ordering can be changed after this item is saved.');
 }
@@ -143,7 +176,7 @@ $table->addCell('&nbsp;');
 $table->addCell($button->show());
 $table->endRow();
 
-$objForm->addToForm($table);
+$objForm->addToForm($table->show());
 
 print  $h3->show();
 

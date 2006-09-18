@@ -14,7 +14,7 @@ $fields = array(
 	'parent_id' => array(
 		'type' => 'text',
 		'length' => 32,
-        	'notnull' => TRUE,
+    'notnull' => TRUE,
 		'default' => '0'
 		),
     'title' => array(

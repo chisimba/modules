@@ -200,10 +200,10 @@ class cmsadmin extends controller
     				return $this->nextAction('sections');
     				
     			//categories section	
-    			/*
+
     			case 'categories':
     				return 'cms_category_list_tpl.php';
-    			case 'addcategory':
+    			case 'addcat':
     				return 'cms_category_add_tpl.php';
     			case 'createcategory';
     				$this->_objCategories->add();
@@ -211,10 +211,11 @@ class cmsadmin extends controller
     			case 'editcategory':
     				$this->_objCategories->edit();
     				return $this->nextAction('categories');
-    				*/
-    			
-    			
-    				
+    			case 'deletecategory';
+    			  $id = $this->getParam('id');
+    				$this->_objCategories->deleteCat($id);
+    				return $this->nextAction('categories');
+
     			//front page section	
     			
     		    case 'frontpages':
