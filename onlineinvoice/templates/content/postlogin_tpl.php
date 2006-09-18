@@ -16,8 +16,9 @@
   $this->loadClass('form','htmlelements');
   $this->loadClass('htmltable','htmlelements');
   $this->objUser =& $this->getObject('user', 'security');
+  $this->objLogger =& $this->getObject('loggedInUsers', 'security');
   
-  
+  $userId = $this->objUser->getUserId($this->objUser->fullname());
   
           //$myTab = $this->newObject('htmltable','htmlelements');
 /************************************************************************************************************************************************/
@@ -27,7 +28,7 @@
    */    
    
   $objloginHeading  = new htmlheading('Mainheading'); 
-  $objloginHeading->type = 1;
+  $objloginHeading->type = 2;
   $objloginHeading->str=ucfirst($objLanguage->languageText('mod_onlineinvoice_mainheading','onlineinvoice'));
 /************************************************************************************************************************************************/
   /**
@@ -45,25 +46,25 @@
    
         //$myTab = $this->newObject('htmltable','htmlelements');
      $myTab = new htmltable('myTab');   
-     $myTab->width='100%';
+     $myTab->width='150%';
      $myTab->border='0';
      $myTab->cellspacing='5';
      $myTab->cellpadding='5';
    
      $myTab->startRow();
-     $myTab->addCell(ucfirst('<b />' .$welcome . ' ' . strtoupper($this->objUser->fullname())));
+     $myTab->addCell(ucfirst($welcome . ' : '. strtoupper($this->objUser->fullname() )));
      $myTab->endRow();
      
      $myTab->startRow();
-     $myTab->addCell(ucfirst('<b />' .$lastacces));
+     $myTab->addCell(ucfirst($lastacces .' : '. 'NEED TO BE FIXED AND KNW HOW'));//. ':' . ucfirst($this->objUser->getLastLoginDate($userId))));
      $myTab->endRow();
      
      $myTab->startRow();
-     $myTab->addCell(ucfirst('<b />' .$invoicesubmitted));
+     $myTab->addCell(ucfirst($invoicesubmitted) . ' :');
      $myTab->endRow();
      
      $myTab->startRow();
-     $myTab->addCell(ucfirst('<b />' .$numlogin));
+     $myTab->addCell(ucfirst($numlogin . ': '. $this->objUser->logins($userId)));
      $myTab->endRow();
      
 /************************************************************************************************************************************************/
