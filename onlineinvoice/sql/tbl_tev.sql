@@ -34,7 +34,7 @@ $fields = array(
     'type'        =>  'date',
     'notnull'=> 1
     ),
-   'name' =>  array(
+   'name'     =>    array(
       'type'        =>  'text',
       'length'      =>  32,
       'notnull'     => 1

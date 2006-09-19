@@ -244,6 +244,7 @@ class onlineinvoice extends controller
                   return  'perdiemoutput_tpl.php';
               }elseif(isset($addperdiem)){
                   $total  =  $this->objdbperdiem->calculate();
+                  $finaltotal = $this->objdbperdiem->calcutotal();
                   $this->getPerDiemExpenses($total,$finaltotal);
                   $this->setLayoutTemplate('invoice_layout_tpl.php');
                   return  'expenses_tpl.php';
@@ -476,7 +477,7 @@ class onlineinvoice extends controller
                              'modifiedby'     =>  $this->objUser->fullname(),
                              'datemodified'   =>  date('Y-m-d'),
                              'updated'        =>  date('Y-m-d'),
-                             'name' => $this->getParam('txtClaimantName'),
+                             'name'           =>    $this->getParam('txtClaimantName'),
                              'title'          => $this->getParam('txtTitle'),
                              'address'    => $this->getParam('address'),
                              'city'           => $this->getParam('txtCity'),

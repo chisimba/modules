@@ -58,21 +58,21 @@ $alertmsg = $this->objLanguage->languageText('mod_onlineinvoice_alertmsg','onlin
  */
  
 //Label -- What is the date range of your invoice
-$lblName  = lbldate;
+$lblName  = 'lbldate';
 $this->objDateRange  = $this->newObject('label','htmlelements');
 $this->objDateRange->setLabel($dateRange);
 $this->objDateRange->setForId($lblName);
 //Label --  Begin Date
-$lblBName  = lblBegin;
+$lblBName  = 'lblBegin';
 $this->objBegin  = $this->newObject('label','htmlelements');
 $this->objBegin->setLabel($beginDate);
 $this->objBegin->setForId($lblBName);
 //label --  End Date
-$lblTravelID = lblEnd;
+$lblTravelID = 'lblEnd';
 $this->objEndDate  = $this->newObject('label','htmlelements');
 $this->objEndDate->label($endDate,$lblTravelID);
 //Label -- Do you have travel expenses to input at this time
-$lblTravelID = lblTravel;
+$lblTravelID = 'blTravel';
 $this->objtravelExpenses  = $this->newObject('label','htmlelements');
 $this->objtravelExpenses->label($travelExpenses,$lblTravelID);
 
@@ -263,6 +263,7 @@ echo  "<div align=\"center\">" . $this->objMainheading->show() . "</div>";
 /** 
  *Create timeout message to inform user that they need to submit inv dates
  */ 
+$submitdatesmsg = '';
 if($submitdatesmsg == 'yes'){
   $tomsg =& $this->newObject('timeoutmessage', 'htmlelements');
   $tomsg->setMessage($alertmsg);

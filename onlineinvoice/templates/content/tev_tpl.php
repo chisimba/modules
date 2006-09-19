@@ -77,32 +77,32 @@
    *Create all labels-- for Claimant details
    */
   
-  $lblName  = lblcname;
+  $lblName  = 'lblcname';
   $this->objcname  = $this->newObject('label','htmlelements');
   $this->objcname->setLabel($name);
   $this->objcname->setForId($lblName);
 
-  $lblTitle = lbltitle;
+  $lblTitle = 'lbltitle';
   $this->objtitle  = $this->newObject('label','htmlelements');
   $this->objtitle->label($title,$lblTitle);
 
-  $lblAddress = lbladdress;
+  $lblAddress = 'lbladdress';
   $this->objaddress  = $this->newObject('label','htmlelements');
   $this->objaddress->label($address,$lblAddress);
 
-  $lblCity = lblcity;
+  $lblCity = 'lblcity';
   $this->objcity  = $this->newObject('label','htmlelements');
   $this->objcity->label($city,$lblCity);
 
-  $lblProvince = lblprovince;
+  $lblProvince = 'lblprovince';
   $this->objprovince  = $this->newObject('label','htmlelements');
   $this->objprovince->label($province,$lblProvince);
 
-  $lblPostalcode = lblpostalcode;
+  $lblPostalcode = 'lblpostalcode';
   $this->objpostalcode  = $this->newObject('label','htmlelements');
   $this->objpostalcode->label($postalcode,$lblPostalcode);
 
-  $lblCountry = $lblCountry;
+  $lblCountry = '$lblCountry';
   $this->objCountry  = $this->newObject('label','htmlelements');
   $this->objCountry->label($country,$lblCountry);
 

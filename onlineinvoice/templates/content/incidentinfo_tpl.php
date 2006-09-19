@@ -45,7 +45,7 @@ $this->objInfoIcon = $this->newObject('geticon','htmlelements');
 $this->objInfoIcon->setModuleIcon('freemind');
 /*********************************************************************************************************************************************************************/
 
-$lblDate = lbldate;
+$lblDate = 'lbldate';
 $this->objdate  = $this->newObject('label','htmlelements');
 $this->objdate->label($expensesdate,$lblDate);
 

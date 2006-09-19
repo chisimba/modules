@@ -24,7 +24,7 @@ class dbincident extends dbTable{
  	    function addincident($incidentdetails)
 	    {
         $results = $this->insert($incidentdetails);
-        return results;
+        return $results;
       }
 
 

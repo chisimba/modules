@@ -1,4 +1,4 @@
-<?php
+$results<?php
       /**
        *create a layout for the postlogin form to display 3 columns
        */
@@ -136,10 +136,10 @@
      $rightcolumn  = $myTab->show();
      
      $this->loadClass('featurebox','navigation');
-     $objfeature = new featurebox($val,$val2);
+     $objfeature = new featurebox($val,$val);
      $display = $objfeature->show($rightcolumn);
     
-     $objfeatureleft = new featurebox($val,$val2);
+     $objfeatureleft = new featurebox($val,$val);
      $featureleft = $objfeatureleft->show($this->sideMenuBar->userDetails());
     
     

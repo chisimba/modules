@@ -35,32 +35,32 @@
  */ 
  
 $expensesdate = $this->objLanguage->languageText('word_date');
-$lblDate = lbldate;
+$lblDate = 'lbldate';
 $this->objdate  = $this->newObject('label','htmlelements');
 $this->objdate->label($expensesdate,$lblDate);
 
 $breakfast  = $this->objLanguage->languageText('word_breakfast');
-$lblBreakfast = lblbreakfast;
+$lblBreakfast = 'lblbreakfast';
 $this->objbreakfast  = $this->newObject('label','htmlelements');
 $this->objbreakfast->label($breakfast,$lblBreakfast);
 
 $lunch  = $this->objLanguage->languageText('word_lunch');
-$lblLunch = lblLunch;
+$lblLunch = 'lblLunch';
 $this->objlunch  = $this->newObject('label','htmlelements');
 $this->objlunch->label($lunch,$lblLunch);
 
 $dinner = $this->objLanguage->languageText('word_dinner');
-$lblDinner = lblDinner;
+$lblDinner = 'lblDinner';
 $this->objdinner = $this->newObject('label','htmlelements');
 $this->objdinner->label($dinner,$lblDinner);
 
 $location = $this->objLanguage->languageText('word_location');
-$lblLocation = lblLocation;
+$lblLocation = 'lblLocation';
 $this->objLocation = $this->newObject('label','htmlelements');
 $this->objLocation->label($location,$lblLocation);
 
 $rate = $this->objLanguage->languageText('word_rate');
-$lblRate = lblRate;
+$lblRate = 'lblRate';
 $this->objrate = $this->newObject('label','htmlelements');
 $this->objrate->label($rate,$lblRate);
 

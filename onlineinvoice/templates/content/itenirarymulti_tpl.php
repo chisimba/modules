@@ -50,27 +50,27 @@
     *create all label elements
     */
            
-    $lblDeparturedate = $Departuredate;
+    $lblDeparturedate = '$Departuredate';
     $this->objdeparturedate  = $this->newObject('label','htmlelements');
     $this->objdeparturedate->label($deptDate,$lblDeparturedate);
 
-    $lblDeparturetime= $Time;
+    $lblDeparturetime= '$Time';
     $this->objdeparturetime  = $this->newObject('label','htmlelements');
     $this->objdeparturetime->label($deptTime,$lblDeparturetime);
 
-    $lblDeparturecity= $City;
+    $lblDeparturecity= '$City';
     $this->objdeparturecity  = $this->newObject('label','htmlelements');
     $this->objdeparturecity->label($deptCity,$lblDeparturetime);
 
-    $lblArrivaldate = $Adate;
+    $lblArrivaldate = '$Adate';
     $this->objarrivaldate  = $this->newObject('label','htmlelements');
     $this->objarrivaldate->label($arrivalDate,$lblArrivaldate);
   
-    $lblArrivaltime= $ATime;
+    $lblArrivaltime= '$ATime';
     $this->objarrivaltime  = $this->newObject('label','htmlelements');
     $this->objarrivaltime->label($arrivalTime,$lblArrivaltime);
 
-    $lblArrivalecity  = $ACity;
+    $lblArrivalecity  = '$ACity';
     $this->objarrivalcity  = $this->newObject('label','htmlelements');
     $this->objarrivalcity->label($arrivalCity,$lblArrivalecity);
 /************************************************************************************************************************************************/

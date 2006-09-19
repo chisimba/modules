@@ -59,17 +59,18 @@ $help = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_helptext','o
 
 //$rightcolumn = $this->objlogoutlink->show();  
 
-
+//var $val = 15;
+//public $var $val2 = 15;
 $this->loadClass('featurebox','navigation');
-$objfeature = new featurebox($val,$val2);
+$objfeature = new featurebox($val,$val);
 $displaylink = $objfeature->show($showlinklogout);
 
 
 
-$objfeaturehelp = new featurebox($val,$val2);
+$objfeaturehelp = new featurebox($val,$val);
 $display = $objfeaturehelp->show($help  . " " .'<br />' . $displayhelp);
 
-$objuserdetails = new featurebox($val,$val2);
+$objuserdetails = new featurebox($val,$val);
 $displayleft = $objuserdetails->show($this->sideMenuBar->userDetails());
         
 

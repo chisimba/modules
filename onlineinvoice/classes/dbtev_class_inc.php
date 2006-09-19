@@ -25,9 +25,9 @@ class dbTev extends dbTable{
    */     
 
  	function addclaimant($claimantdetails)
-	{
+	{   $results = '';
       $results = $this->insert($claimantdetails);
-      return results;
+      return $results;
   }
 
 

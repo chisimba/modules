@@ -78,7 +78,7 @@
   $objpostloginForm = new form('postlogin',$this->uri(array('action'=>'NULL')));  
   $objpostloginForm->id = 'postlogin';
   $objpostloginForm->displayType = 3;
-  $objpostloginForm->addToForm($objloginHeading->show() .  '<br />' . '<br />'  . $myTab->show() . $values);
+  $objpostloginForm->addToForm($objloginHeading->show() .  '<br />' . '<br />'  . $myTab->show());// . $values);
   
   
 /************************************************************************************************************************************************/
