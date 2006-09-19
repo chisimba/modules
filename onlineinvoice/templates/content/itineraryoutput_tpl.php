@@ -62,22 +62,27 @@
      $objItineraryTable->endRow();
   }
 }
- 
+/*************************************************************************************************************************************************/
+$this->loadClass('tabbedbox', 'htmlelements');
+$objcreateinvtab = new tabbedbox();
+$objcreateinvtab->addTabLabel('Traveler Itinerary');
+$objcreateinvtab->addBoxContent('<br />'  . $objItineraryTable->show() . '<br />'. '<br />'  . $this->objSave->show() . ' ' . $this->objEdit->show());
+/*************************************************************************************************************************************************/
 /**
  *create form to place save and edit button on
  */
 $this->loadClass('form','htmlelements');
-$objForm = new form('claiminfo',$this->uri(array('action'=>'itineraryoutput')));
+$objForm = new form('initineraryout',$this->uri(array('action'=>'itineraryoutput')));
 $objForm->displayType = 3;
-$objForm->addToForm($this->objSave->show() . ' ' . $this->objEdit->show());// . ' ' . $this->objNext->show());	
+$objForm->addToForm($objcreateinvtab->show());// . ' ' . $this->objNext->show());	
 
 echo "<div align=\"center\">" . $this->objMainheading->show(). "</div>". '<br />' . '<br />';
 
 if(!empty($sessionItinerary)){
-  echo "<div align=\"left\">" . $objItineraryTable->show() . "</div>";
+  echo "<div align=\"left\">" . $objForm->show() . "</div>";
 }
 
 echo '<br />' . '<br />'. '<br />'.'<br />';
-echo "<div align=\"left\">" .$objForm->show(). "</div>"; 
+//echo "<div align=\"left\">" .$objForm->show(). "</div>"; 
  
 ?>

@@ -61,8 +61,27 @@
   $objExpByDateTable->addCell($sesDat['drrate'], '', '', '', $oddOrEven);
   $objExpByDateTable->addCell($sesDat['total'], '', '', '', $oddOrEven);
   $objExpByDateTable->endRow();
+  
+  $objExpByDateTable->startRow();
+  $objExpByDateTable->addCell(' ');
+  $objExpByDateTable->addCell(' ');
+  $objExpByDateTable->addCell(' ');
+  $objExpByDateTable->addCell(' ');
+  $objExpByDateTable->addCell(' ');
+  $objExpByDateTable->addCell(' ');
+  $objExpByDateTable->addCell(' ');
+  $objExpByDateTable->addCell(' ');
+  $objExpByDateTable->addCell('Total: ' .$sesDat['finaltotal'], '', '', '', $oddOrEven);
+  $objExpByDateTable->endRow();
   }
 }
+/**************************************************************************************************************************************************/
+$this->loadClass('tabbedbox', 'htmlelements');
+$objcreatetab = new tabbedbox();
+$objcreatetab->addTabLabel('Per Diem Expenses');
+$objcreatetab->addBoxContent('<br />'  . $objExpByDateTable->show() . '<br />'. '<br />'  . $this->objSave->show() . ' ' . $this->objEdit->show());
+
+
 /*************************************************************************************************************************************************/
 /**
  *create form to place save and edit button on
@@ -70,16 +89,16 @@
 $this->loadClass('form','htmlelements');
 $objForm = new form('claiminfo',$this->uri(array('action'=>'perdiemoutput')));
 $objForm->displayType = 3;
-$objForm->addToForm($this->objSave->show() . ' ' . $this->objEdit->show());// . ' ' . $this->objNext->show());	
+$objForm->addToForm($objcreatetab->show());// . ' ' . $this->objNext->show());	
 
 
 /*************************************************************************************************************************************************/
 //display all headings
 echo "<div align=\"center\">" . $this->objMainheading->show(). "</div>". '<br />' . '<br />';
 if(!empty($sessionPerdiem)){
-  echo "<div align=\"left\">" . $objExpByDateTable->show() . "</div>";
+  echo "<div align=\"left\">" . $objForm->show() . "</div>";
 } 
-echo '<br />' . '<br />'. '<br />'.'<br />';
-echo "<div align=\"left\">" .$objForm->show(). "</div>"; 
+//echo '<br />' . '<br />'. '<br />'.'<br />';
+//echo "<div align=\"left\">" .$objForm->show(). "</div>"; 
 
 ?>

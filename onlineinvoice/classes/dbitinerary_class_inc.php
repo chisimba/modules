@@ -12,10 +12,8 @@
 class dbitinerary extends dbTable{
 
 	/**
-
-	* Constructor
-
-	*/
+    * Constructor
+    */
 
 	function init()
 	{
@@ -33,24 +31,11 @@ class dbitinerary extends dbTable{
         return $results;
   }
 
-	
-
 	function getitinerary()
 	{
       /**
        *get all information from the itinerary form 
       */
-      
-      /*$data = array('departuredate' => $this->getParam('txtdeptddate'),
-                    'departuretime' => $this->getParam('departuretime'),
-                    'departurecity' => $this->getParam('txttxtdeptcity'),
-                    'arrivaledate'  => $this->getParam('txtarraivaldate'),
-                    'arrivaltime'   => $this->getParam('arrivaltime'),
-                    'arrivalcity'   => $this->getParam('arrivalcity')
-                    );
-                    return $data;*/        
-      
-                   
   }
   
 

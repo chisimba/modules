@@ -15,57 +15,70 @@ $fields = array(
     ),
   'createdby'  => array(
      'type'  =>  'text',
-     'length'=>  32
+     'length'=>  32,
+     'notnull'     => 1
     ),
   'datecreated' =>  array(
-      'type'  =>  'date'
+      'type'  =>  'date',
+      'notnull'     => 1
     ),
   'modifiedby'  =>  array(
       'type'    =>  'text',
       'length'  =>  32
     ),
    'datemodified' =>  array(
-    'type'        =>  'date'
+    'type'        =>  'date',
+    'notnull'     => 1
     ),
     'updated'     =>  array(
-      'type'        =>  'date'
-    ),
-    'date'        =>  array(
       'type'        =>  'date',
       'notnull'     => 1
     ),
-    'breakfastchoice' => array(
+    'foreignordomestic'  => array(
+      'type'      =>  'boolean'
+    ), 
+    'date'        =>  array(
+      'type'        =>  'date'
+      
+    ),
+    'bchoice' => array(
       'type'          => 'boolean'
     ),
-    'breakfastlocation' =>  array(
+    'blocation' =>  array(
       'type'            =>  'text',
       'length'          =>  32
     ),
-    'breakfastrate' =>  array(
-      'type'        =>  'float',
-      'notnull'     => 1
+    'btrate' =>  array(
+      'type'        =>  'float'
     ),
-    'lunchchoice' => array(
+    'lchoice' => array(
       'type'     => 'boolean'
     ),
-    'lunchlocation' =>  array(
+    'llocation' =>  array(
       'type'        =>  'text',
       'length'      =>  32
+      
     ),
-    'lunchrate'     =>  array(
+    'lRate'     =>  array(
       'type'        =>  'float',
       'notnull'     => 1
     ),
-    'dinnerchoice' => array(
+    'dchoice' => array(
       'type'       => 'boolean'
     ),
-    'dinnerlocation' =>  array(
+    'dlocation' =>  array(
       'type'         =>  'text',
       'length'       =>  32
     ),
-    'dinnerrate'     =>  array(
+    'drrate'     =>  array(
       'type'         =>  'float',
       'notnull'     => 1
+    ),
+    'total'   =>  array(
+    'type'    =>  'float'
+    ),
+    'finaltotal'  =>array(
+    'type'        => 'float'
     )
     
     );

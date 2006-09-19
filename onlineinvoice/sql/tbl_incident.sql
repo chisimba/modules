@@ -14,20 +14,25 @@ $fields = array(
     ),
   'createdby'  => array(
      'type'  =>  'text',
-     'length'=>  32
+     'length'=>  32,
+     'notnull'     => 1
     ),
   'datecreated' =>  array(
-      'type'  =>  'date'
+      'type'  =>  'date',
+      'notnull'     => 1
     ),
   'modifiedby'  =>  array(
       'type'    =>  'text',
-      'length'  =>  32
+      'length'  =>  32,
+      'notnull'     => 1
     ),
    'datemodified' =>  array(
-    'type'        =>  'date'
+    'type'        =>  'date',
+    'notnull'     => 1
     ),
     'updated'     =>  array(
-    'type'        =>  'date'
+    'type'        =>  'date',
+    'notnull'     => 1
     ),
    'date'         =>  array(
     'type'        =>  'date',
@@ -40,12 +45,11 @@ $fields = array(
    ),
    'description'   => array(
     'type'         => 'text',
-    'length'       => 255,
-    'notnull'     => 1
+    'length'       => 255
    ),
    'currency'      => array(
     'type'         => 'text',
-    'length'       => 3,
+    'length'       => 255,
     'notnull'     => 1
    ),
    'cost'         =>  array(
@@ -60,13 +64,17 @@ $fields = array(
   'incidentratefile'  =>  array(
       'type'          =>  'text'
   ),
+  
   'quotesource'     =>  array(
       'type'        =>  'text',
       'length'      =>  32
   ),
   'receiptfiles'    =>  array(
-      'type'        =>  'text',
-      'notnull'     =>1
+      'type'        =>  'text'
+  ),
+  'affidavitfiles'  =>  array(
+      'type'        =>  'text'
+      
   )
   );
 ?>

@@ -41,12 +41,12 @@ $fields = array(
    ),
    'vendor'       =>  array(
       'type'      =>  'text',
-      'length'    =>  32,
+      'length'    =>  255,
       'notnull'     => 1
    ),
    'currency'     =>  array(
       'type'      =>  'text',
-      'length'    =>  3,
+      'length'    =>  255,
       'notnull'     => 1
    ),
    'cost'         =>  array(
@@ -63,15 +63,15 @@ $fields = array(
     ),
     'exchangefile' =>  array(
     'type'        =>  'text',
-    'notnull'     => 1 
     ),
     'receiptfilename' => array(
     'type'            =>  'text',
-    'length'          =>  32
     ),
     'affidavitfilename' =>  array(
     'type'              =>  'text',
-    'length'            =>  32
+    ),
+    'totroomrate'   =>  array(
+    'type'          =>  'float',
     )
   );
 ?>

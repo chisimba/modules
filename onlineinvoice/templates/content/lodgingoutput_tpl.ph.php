@@ -62,7 +62,14 @@
   $objLodgeTable->addCell($sesDat['exchangefile'], '', '', '', $oddOrEven);
   $objLodgeTable->addCell($sesDat['receiptfilename'], '', '', '', $oddOrEven);
   $objLodgeTable->addCell($sesDat['affidavitfilename'], '', '', '', $oddOrEven);
+  //$objLodgeTable->addCell($sesDat['totroomrate'], '', '', '', $oddOrEven);            need to fix up
   $objLodgeTable->endRow();
+  
+  /**$objLodgeTable->startRow();
+  $objLodgeTable->addCell('');
+  $objLodgeTable->addCell($sesDat['rateto'], '', '', '', $oddOrEven);
+  $objLodgeTable->endRow();*/
+
   }
 }
 /*************************************************************************************************************************************************/

@@ -14,7 +14,7 @@
     *create all language items
     */       
    $serviceinputs = $this->objLanguage->languageText('mod_onlinveinvoice_serviceinputs','onlineinvoice');
-   $strserviceinfo  = strtoupper($serviceinputs);
+   $strserviceinfo  = ucfirst($serviceinputs);
    $nextCategory  = $this->objLanguage->languageText('phrase_nomovetonextcategory');
    $nextcatcontent = $this->objLanguage->languageText('mod_onlineinvoice_nextcaption','onlineinvoice');
 /****************************************************************************************************************************************/
@@ -41,6 +41,20 @@
     $url = $this->uri(array('action'=>'null'));
     $this->objnextcat  = & $this->newObject('mouseoverpopup','htmlelements');
     $this->objnextcat->mouseoverpopup($urltext,$content,$caption,$url);
+    
+    /*create table to place form elements in */        
+
+        $myTab=$this->newObject('htmltable','htmlelements');
+        $myTab->width='60%';
+        $myTab->border='0';
+        $myTab->cellspacing='10';
+        $myTab->cellpadding='10';
+
+        $myTab->startRow();
+        $myTab->addCell($this->objnextlink->show());
+        $myTab->addCell($this->objnextcat->show());
+        $myTab->endRow();
+
 
 /****************************************************************************************************************************************/    
     /**
@@ -49,7 +63,7 @@
      
      $objcreateinvtab = new tabbedbox();
      $objcreateinvtab->addTabLabel('Service Information');
-     $objcreateinvtab->addBoxContent('<br>'  . $strserviceinfo . '<br />'.  '<br />' . $this->objnextlink->show(). ' ' .$this->objnextcat->show(). '<br />');
+     $objcreateinvtab->addBoxContent('<br>'  . '<b>'. $strserviceinfo . '<b />' .'<br />'.  '<br />' . $myTab->show(). '<br />');
 /****************************************************************************************************************************************/              
     /**
      *display screen output

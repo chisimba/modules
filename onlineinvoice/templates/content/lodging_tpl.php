@@ -48,7 +48,8 @@ $displayhelp  = $this->objHelp->show('mod_onlineinvoice_helpinstruction');
 $this->objInfoIcon = $this->newObject('geticon','htmlelements');
 $this->objInfoIcon->setModuleIcon('freemind');
 
-
+//$incidentratefile = $this->getParam('incidentratefile');
+//$qtesource  = $this->getParam('txtquotesource');
     
 
 /*********************************************************************************************************************************************************************/
@@ -311,6 +312,37 @@ $this->objtxtquotesource->id = 'txtquotesource';
 $this->loadclass('button','htmlelements');
 $this->objnext  = new button('next', $next);
 $this->objnext->setToSubmit();
+$strerror = 'select file';
+
+	$onClick = 'var exratefile = document.lodging.exchangeratefile;
+					    var exqtesource = document.lodging.txtquotesource;
+					 
+					 
+					 
+					    var acceptance = true;
+					   //value of the begin date
+  					 var exchgfile = exratefile.text;
+	   				 //value of the end date
+		  			 var exchgsource = exqtesource.value;
+					 
+					 
+					 //checks if dates are right
+					 if(exchgsource == " "){
+					 	acceptance = false;
+						
+					 }
+					 
+							 
+					 //check final condition
+					 if(!acceptance){
+					 	alert(\''.$strerror .'\');
+						acceptance = true;
+						return false;
+					 }else{
+          // alert(\''.$sucessfull.'\')
+           }';
+	$this->objnext->extra = sprintf(' onClick ="javascript: %s"', $onClick );
+
 
 $this->objexit  = new button('exit', $exit);
 $this->objexit->setToSubmit();
@@ -506,9 +538,11 @@ $objLodgeForm->addRule('txtexchange', 'Please enter a numerical value for exchan
 //}
 
 //display screen content
+
 echo "<div align=\"center\">" . $this->objlodgeHeading->show()  . "</div>";
 echo "<div align=\"right\">" .'<br />'  . $myTabLodgeheading->show() . "</div>";
 echo  "<div align=\"left\">"  . $objLodgeForm->show() . "</div>";
+
 
 
 

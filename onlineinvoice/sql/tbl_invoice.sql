@@ -14,20 +14,25 @@ $fields = array(
     ),
   'createdby'  => array(
      'type'  =>  'text',
-     'length'=>  32
+     'length'=>  32,
+     'notnull'     => 1
     ),
   'datecreated' =>  array(
-      'type'  =>  'date'
+      'type'  =>  'date',
+      'notnull'     => 1
     ),
   'modifiedby'  =>  array(
       'type'    =>  'text',
-      'length'  =>  32
+      'length'  =>  32,
+      'notnull'     => 1
     ),
    'datemodified' =>  array(
-    'type'        =>  'date'
+    'type'        =>  'date',
+    'notnull'     => 1
     ),
    'updated'     =>  array(
-    'type'       =>  'date'
+    'type'       =>  'date',
+    'notnull'     => 1
     ),    
    'begindate'   => array(
     'type'       => 'date',

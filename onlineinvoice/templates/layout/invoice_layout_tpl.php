@@ -11,7 +11,8 @@ $this->sideMenuBar=& $this->getObject('sidemenu','toolbar');
 $cssLayout->setNumColumns(3);
 
 $this->objHelp=& $this->getObject('helplink','help');
-
+$objskin  = & $this->newObject('skin','skin');
+$showlinklogout = $objskin->putLogout();
 /**
  *define all items to display within the help popup window
  */
@@ -45,23 +46,23 @@ $sideMenuBar=& $this->getObject('sidemenu','toolbar');
 /**
  *create a log out link and add to rightcolumn
  */
-$logout    = ucfirst($this->objLanguage->languageText('word_logout'));
-$logmessage = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_logoutsystem','onlineinvoice'));
+//$logout    = ucfirst($this->objLanguage->languageText('word_logout'));
+//$logmessage = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_logoutsystem','onlineinvoice'));
 $help = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_helptext','onlineinvoice'));
  
-$urltext = $logout;
-$content = $logmessage;
-$caption = '';
-$url = $this->uri(array('action'=>NULL));
-$this->objlogoutlink  = & $this->newObject('mouseoverpopup','htmlelements');
-$this->objlogoutlink->mouseoverpopup($urltext,$content,$caption,$url);
+//$urltext = $logout;
+//$content = $logmessage;
+//$caption = '';
+//$url = $this->uri(array('action'=>NULL));
+//$this->objlogoutlink  = & $this->newObject('mouseoverpopup','htmlelements');
+//$this->objlogoutlink->mouseoverpopup($urltext,$content,$caption,$url);
 
-$rightcolumn = $this->objlogoutlink->show();  
+//$rightcolumn = $this->objlogoutlink->show();  
 
 
 $this->loadClass('featurebox','navigation');
 $objfeature = new featurebox($val,$val2);
-$displaylink = $objfeature->show($rightcolumn);
+$displaylink = $objfeature->show($showlinklogout);
 
 
 
@@ -75,8 +76,8 @@ $displayleft = $objuserdetails->show($this->sideMenuBar->userDetails());
 /**
  * Set the Content of left side column and right side column and middle column
  */  
-$cssLayout->setLeftColumnContent($displayleft);
-$cssLayout->setRightColumnContent($displaylink . '<br />' . '<br />' . '<br />' .$display);
+$cssLayout->setLeftColumnContent($displayleft );
+$cssLayout->setRightColumnContent($displaylink . '<br />' .'<br />' . '<br />' . '<br />'. $display);
 $cssLayout->setMiddleColumnContent($this->getContent()); 
 
 /**

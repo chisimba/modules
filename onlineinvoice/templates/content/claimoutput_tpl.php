@@ -36,10 +36,12 @@
  if(!empty($sessionClaimant)){
 //Create table to display dates in session and the rates for breakfast, lunch and dinner and the total rate 
   $objClaimantTable =& $this->newObject('htmltable', 'htmlelements');
-  $objClaimantTable->cellspacing = '10';
+  $objClaimantTable->cellspacing = '1';
   $objClaimantTable->cellpadding = '2';
-  $objClaimantTable->border='2';
+  $objClaimantTable->border='1';
   $objClaimantTable->width = '100%';
+  $objClaimantTable->cssClass = 'webfx-tab-style-sheet';
+  $objClaimantTable->footing = 'Please submit or edit information';
   
   $objClaimantTable->startHeaderRow();
   $objClaimantTable->addHeaderCell('Name');
@@ -71,23 +73,34 @@
      $objClaimantTable->endRow();
   }
 }
+/***************************************************************************************************************************************************************/
+/**
+ *create a tabbed box
+ */
  
+$this->loadClass('tabbedbox', 'htmlelements');
+$objcreateinvtab = new tabbedbox();
+$objcreateinvtab->addTabLabel('Traveler Information');
+$objcreateinvtab->addBoxContent('<br />' .$objClaimantTable->show() . '<br />' . "<div align=\"left\">" . $this->objSave->show() . ' ' . $this->objEdit->show()  ."</div>" . '<br />');
+ 
+
+/***************************************************************************************************************************************************************/ 
 /**
  *create form to place save and edit button on
  */
 $this->loadClass('form','htmlelements');
 $objForm = new form('claiminfo',$this->uri(array('action'=>'claimantoutput')));
 $objForm->displayType = 3;
-$objForm->addToForm($this->objSave->show() . ' ' . $this->objEdit->show());// . ' ' . $this->objNext->show());	
+$objForm->addToForm($objcreateinvtab->show());// . ' ' . $this->objEdit->show());// . ' ' . $this->objNext->show());	
 
 echo "<div align=\"center\">" . $this->objMainheading->show(). "</div>". '<br />' . '<br />';
 
 if(!empty($sessionClaimant)){
-  echo "<div align=\"left\">" . $objClaimantTable->show() . "</div>";
+  echo "<div align=\"left\">" . $objForm->show() . "</div>";
 }
 
-echo '<br />' . '<br />'. '<br />'.'<br />';
-echo "<div align=\"left\">" .$objForm->show(). "</div>"; 
+//echo '<br />' . '<br />'. '<br />'.'<br />';
+//echo "<div align=\"left\">" .$objForm->show(). "</div>"; 
  
 
 ?>

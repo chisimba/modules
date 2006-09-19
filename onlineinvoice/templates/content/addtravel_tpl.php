@@ -41,11 +41,11 @@
      
        
   $objtabbedinfo = new tabbedbox();
-  //$objtabbedinfo->addTabLabel('');
-  $objtabbedinfo->addBoxContent("<div align=\"center\">" . '<br />'. $this->objcreatelink->show() .  $this->objlink->show() .'<br />'."</div>");
+  
+  $objtabbedinfo->addBoxContent('<br />'. $this->objcreatelink->show() .   $this->objlink->show() .'<br />');
   
   echo "<div align=\"center\">" . $objtravelsheet->show() . "</div>";
-  echo "<div align=\"left\">" . $objtabbedinfo->show() . "</div>";
+  echo $objtabbedinfo->show() ;
   
      
 ?>

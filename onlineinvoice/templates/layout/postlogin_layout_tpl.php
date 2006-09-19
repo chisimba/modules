@@ -6,6 +6,9 @@
        
     $cssLayout =& $this->newObject('csslayout', 'htmlelements');
     $this->sideMenuBar=& $this->getObject('sidemenu','toolbar');
+    
+    $objskin  = & $this->newObject('skin','skin');
+    $showlinklogout = $objskin->putLogout();
 
     $cssLayout->setNumColumns(3);
     $sideMenuBar=& $this->getObject('sidemenu','toolbar');
@@ -27,12 +30,6 @@
   /**
    *create all link elements
    */     
-    $urltext = $logout;
-    $content = $logout;
-    $caption = '';
-    $url = $this->uri(array('action'=>NULL));
-    $this->objlogoutlink  = & $this->newObject('mouseoverpopup','htmlelements');
-    $this->objlogoutlink->mouseoverpopup($urltext,$content,$caption,$url);
     
     $urltext = $createinvoice;
     $content = $createinvoice;
@@ -60,7 +57,7 @@
     $urltext = $submittedinvoices;
     $content = $submittedinvoices;
     $caption = '';
-    $url = $this->uri(array('action'=>logout));
+    $url = $this->uri(array('action'=>NULL));
     $this->objsubmitinvoice  = & $this->newObject('mouseoverpopup','htmlelements');
     $this->objsubmitinvoice->mouseoverpopup($urltext,$content,$caption,$url);
 
@@ -74,7 +71,7 @@
     $urltext = $email;
     $content = $email;
     $caption = '';
-    $url = $this->uri(array('action'=>NULL));
+    $url = $this->uri(array('action'=>'sendemail'));
     $this->objemail  = & $this->newObject('mouseoverpopup','htmlelements');
     $this->objemail->mouseoverpopup($urltext,$content,$caption,$url);
 
@@ -103,7 +100,7 @@
      $myTab->endRow();
                 
      $myTab->startRow();
-     $myTab->addCell($this->objlogoutlink->show());
+     $myTab->addCell($showlinklogout);
      $myTab->endRow();
      
      

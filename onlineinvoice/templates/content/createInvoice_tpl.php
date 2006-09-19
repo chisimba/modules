@@ -15,7 +15,16 @@ $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
 $this->objMainheading->type=1;
 $this->objMainheading->str=$objLanguage->languageText('mod_onlineinvoice_webbasedinvoicingsystem','onlineinvoice');
 
-
+/**
+  *help information
+  */   
+$this->objHelp=& $this->getObject('helplink','help');
+$displayhelp  = $this->objHelp->show('mod_onlineinvoice_helpinstruction');
+/**************************************************************************************************************************************************************/
+/**
+ *determine if the session contianing inv dates is empty or not
+ *if empty then user cannot move to next pg or cat before submitting inv dates
+ */  
 $invoicedata = $this->getSession('invoicedata');
 if(!empty($invoicedata)){
   $hasSubmitted = 'yes';
@@ -172,14 +181,22 @@ $this->objButtonSubmit->setToSubmit();
 
 /*create table to place form elements in  --  date values*/
         $myTable=$this->newObject('htmltable','htmlelements');
-        $myTable->width='60%';
+        $myTable->width='100%';
         $myTable->border='0';
         $myTable->cellspacing='1';
         $myTable->cellpadding='10';
 
+
         $myTable->startRow();
         $myTable->addCell($this->objBegin->show());
         $myTable->addCell($this->objbegindate->show());
+        $myTable->addCell(' ');
+        $myTable->addCell(' ');
+        $myTable->addCell(' ');
+        $myTable->addCell(' ');
+        $myTable->addCell(' ');
+        $myTable->addCell(' ');
+        $myTable->addCell($displayhelp); 
         $myTable->endRow();
 
         $myTable->startRow();
