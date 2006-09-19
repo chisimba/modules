@@ -107,6 +107,16 @@ class financialaid extends controller
 				return 'applicationparttimejobs_tpl.php';
 			case 'showstudentfamily':
 				return 'applicationstudentfamily_tpl.php';
+    
+            case 'addappinfo':
+                $appid = $this->getParam('appid', '');
+                $studentNumber = $this->getParam('stdnum','');
+                if ((strlen($appid) == 0) && (strlen($studentNumber) == 0)){
+                    return 'addappinfo_tpl.php';
+                }else{
+                    return 'addappinfo2_tpl.php';
+                }
+
             //----------------
             //Application actions
             case 'addapplication':
@@ -127,12 +137,17 @@ class financialaid extends controller
                             'year' => $this->getParam('year', ''),
                             'semester' => $this->getParam('semester', ''),
                             'studentNumber' => $this->getParam('stdnum', ''),
+                            'surname' => $this->getParam('surname', ''),
+                            'idNumber' => $this->getParam('idnumber', ''),
                             'supportingSelf' => $this->getParam('supportingself', ''),
                             'dateCreated' => date("Y-m-d H:i:s"),
                             'creatorId' => $this->objUser->userId());
-                $this->objDBFinancialAidWS->saveApplication('add', $fields);
-                $this->setVar('appid', $this->getParam('appid', NULL));
-
+                if ($this->objDBFinancialAidWS->applicationExists($this->getParam('stdnum', ''), $this->getParam('year', ''), $this->getParam('semester', ''))){
+                    return 'saveerror_tpl.php';
+                }else{
+                    $this->objDBFinancialAidWS->saveApplication('add', $fields);
+                    $this->setVar('appid', $this->getParam('appid', NULL));
+                }
                 return 'addmoreinfo_tpl.php';
             case 'savenextofkin':
                 $fields = array('appId' => $this->getParam('appid', ''),

@@ -1,4 +1,6 @@
 <?php
+$style = '<link rel="stylesheet" type="text/css" href="modules/financialaid/resources/finaid.css" />';
+
 $this->objLanguage = &$this->getObject('language','language');
 $this->objUser =& $this->getObject('user','security');
 $this->objFinancialAidCustomWS =& $this->getObject('financialaidcustomws','financialaid');
@@ -65,43 +67,7 @@ if ($sponsorCount > 0){
         $viewnext->link = $objLanguage->languagetext('mod_financialaid_next','financialaid');
         $viewn = $viewnext->show();
     }
-    /*
-    $Rectbl =& $this->getObject('htmlTable','htmlelements');
-    if($endl == $dispCount)  {
-        $Rectbl->startRow();
-        $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_page','financialaid').":</b>", "20%");
-        $Rectbl->addCell("1");
-        $Rectbl->endRow();
 
-        $endl -= 1;
-
-        $Rectbl->startRow();
-        $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_record','financialaid').":</b>",  "20%");
-        $Rectbl->addCell("0  to $endl");
-        $Rectbl->endRow();
-    }else{
-        $page = $this->getParam('pg');
-        $Rectbl->startRow();
-        $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_page','financialaid').":</b>", "20%");
-        $Rectbl->addCell("$page");
-        $Rectbl->endRow();
-
-        $endl -= 1;
-        $Rectbl->startRow();
-        $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_record','financialaid').":</b>", "20%");
-        if($endl < $sponsorCount){
-            $Rectbl->addCell("$startat to $endl");
-        }else {
-            $Rectbl->addCell("$startat to $sponsorCount");
-        }
-        $Rectbl->endRow();
-    }
-    $Rectbl->startRow();
-    $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_resfnd','financialaid').":</b>", "20%");
-    $Rectbl->addCell("$sponsorCount");
-    $Rectbl->endRow();
-    $records = $Rectbl->show();
-    */
     $endat = $startat + $dispCount;
     if ($endat > $sponsorCount){
         $endat = $sponsorCount;
@@ -131,16 +97,16 @@ $sponsors = $this->objFinancialAidCustomWS->getAllSponsors('BRSCDE', $startat, $
 if(is_array($sponsors)){
    if(count($sponsors) > 0){
         $table =& $this->getObject('htmltable','htmlelements');
+        $table->css_class = 'highlightrows';
 
     	$table->width = '100%';
     	$table->cellpadding = 5;
-    	$table->cellspacing = 2;
+    	$table->cellspacing = 0;
 
     	$table->startHeaderRow();
-    	$table->addHeaderCell('Bursor Code');
-    	$table->addHeaderCell('Bursor');
-    	$table->addHeaderCell('Category');
-    	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_details','financialaid'));
+    	$table->addHeaderCell('Bursor Code',null,'top','left','header');
+    	$table->addHeaderCell('Bursor',null,'top','left','header');
+    	$table->addHeaderCell('Category',null,'top','left','header');
     	$table->endHeaderRow();
 
         for($i = 0; $i < count($sponsors); $i++)
@@ -149,13 +115,14 @@ if(is_array($sponsors)){
 
       		$viewdetails = new link();
 			$viewdetails->href=$this->uri(array('action'=>'showsponsor','sponsorid'=>$sponsors[$i]->BRSCDE));
-			$viewdetails->link = $objLanguage->languagetext('mod_financialaid_view','financialaid');
 
 			$table->startRow();
-			$table->addCell($sponsors[$i]->BRSCDE);
-			$table->addCell(htmlspecialchars($sponsors[$i]->XTRLNGDSC));
-			$table->addCell($sponsors[$i]->BRSCTGY);
-			$table->addCell($viewdetails->show());
+			$viewdetails->link = $sponsors[$i]->BRSCDE;
+			$table->addCell($viewdetails->show(), null, 'top', null, 'widelink');
+			$viewdetails->link = htmlspecialchars($sponsors[$i]->XTRLNGDSC);
+			$table->addCell($viewdetails->show(), null, 'top', null, 'widelink');
+			$viewdetails->link = $sponsors[$i]->BRSCTGY;
+			$table->addCell($viewdetails->show(), null, 'top', null, 'widelink');
     		$table->endRow();
 
 			$oddEven = $oddEven == 'odd'?'even':'odd';
@@ -165,7 +132,7 @@ if(is_array($sponsors)){
 }
 
 
-$content = "<center>".$pagelinks." ".$content. "</center>";
+$content = $style."<center>".$pagelinks." ".$content. "</center>";
 
 echo $content;
 ?>

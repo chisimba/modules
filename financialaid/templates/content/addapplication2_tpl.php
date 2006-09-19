@@ -21,6 +21,8 @@ if (is_array($studentinfo)){
         $appidfield = new textinput("appid", $appid,  "hidden", NULL);
         $year = new textinput("year", $startyear,  "hidden", NULL);
         $snum = new textinput("stdnum", $stdNum,  "hidden", NULL);
+        $surname = new textinput("surname", $studentinfo[0]->SURNAM,  "hidden", NULL);
+        $idnum = new textinput("idnumber", $studentinfo[0]->IDN,  "hidden", NULL);
 
         $semester = new radio('semester');
         $semester->addOption('1',$objLanguage->languagetext('word_first'));
@@ -54,7 +56,15 @@ if (is_array($studentinfo)){
         $table->startRow();
         $table->addCell($snum->show());
         $table->endRow();
-        
+
+        $table->startRow();
+        $table->addCell($surname->show());
+        $table->endRow();
+
+        $table->startRow();
+        $table->addCell($idnum->show());
+        $table->endRow();
+
         $table->startRow();
         $table->addCell($objLanguage->languagetext('word_year'));
         $table->addCell($startyear);
@@ -110,6 +120,7 @@ if (is_array($studentinfo)){
         $objForm->setDisplayType(2);
 
         $objForm->addToForm($details.$table->show());
+        $content = $objForm->show();
     }else{
         $noStudent = TRUE;
     }
@@ -118,17 +129,14 @@ if (is_array($studentinfo)){
 }
 
 if ($noStudent == TRUE){
-
-        $objForm = new form('applicationform');
-        $objForm->setAction($this->uri(array('action'=>'addapplication')));
-        $objForm->setDisplayType(2);
-
-        $objForm->addToForm($details.$table->show());
+        $link = new link();
+        $link->href=$this->uri(array('action'=>'addapplication'));
+       	$link->link = $objLanguage->languagetext('mod_financialaid_addanotherstudent','financialaid');
+        $content = $details."<center><div class='error'>".$objLanguage->languagetext('mod_financialaid_studentnotexisting','financialaid')."</div><br />";
+        $content .= $link->show()."</center>";
 }
 
-$content = $objForm->show();
-
-echo $objForm->show();
+echo $content;
 
 
 ?>

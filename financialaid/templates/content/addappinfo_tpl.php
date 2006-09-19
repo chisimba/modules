@@ -3,7 +3,7 @@
 $table =& $this->newObject('htmltable','htmlelements');
 $table->cellspacing = 2;
 $table->cellpadding = 2;
-$details = "<center><h2>".$objLanguage->languagetext('mod_financialaid_addstudent','financialaid')."</h2></center>";
+$details = "<center><h2>".$objLanguage->languagetext('mod_financialaid_addappinfo','financialaid')."</h2></center>";
 
 $stdNum = new textinput('stdnum');
 
@@ -30,7 +30,7 @@ $table->endRow();
 $content = $details.$table->show();
 
 $objForm = new form('applicationform');
-$objForm->setAction($this->uri(array('action'=>'addapplication2')));
+$objForm->setAction($this->uri(array('action'=>'addappinfo')));
 $objForm->setDisplayType(2);
 
 $objForm->addToForm($content);

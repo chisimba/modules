@@ -50,6 +50,31 @@ class dbfinancialaidws extends object
     
     /**
     *
+    * Function to retrieve application details from the database
+    *
+    * @param string $value: The value to search for in the database
+    * @param string $field: The field to search on in the database
+    * @return bool: The array of matching records from the database
+    *
+    */
+    function applicationExists($studentNumber, $year, $semester){
+        try{
+            $where = "WHERE studentNumber = '".$studentNumber."' AND year = '".$year."' AND semester = '".$semester."'";
+            
+            $appCount = $this->objSoapClient->getApplicationCount($where);
+            if ($appCount > 0){
+                return TRUE;
+            }else{
+                return FALSE;
+            }
+
+        }catch(Exception $e){
+          //  echo $e->getMessage();
+            return NULL;
+        }
+    }
+    /**
+    *
     * Function to retrieve number of application from the database
     *
     * @param string $value: The value to search for in the database

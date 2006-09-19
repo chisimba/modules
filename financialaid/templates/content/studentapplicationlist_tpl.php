@@ -1,4 +1,8 @@
 <?php
+$style = '<link rel="stylesheet" type="text/css" href="modules/financialaid/resources/finaid.css" />';
+
+
+
 $this->objLanguage = &$this->getObject('language','language');
 $this->objDBApplication =& $this->getObject('dbapplication');
 $this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
@@ -7,15 +11,13 @@ $this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
 $this->objUser =& $this->getObject('user','security');
 $this->objDbStudentInfo =& $this->getObject('dbstudentinfo','studentenquiry');
 
-$centersearch =& $this->getObject('blockcentersearchappbox');
-$centersearch = $centersearch->show($this->getParam('module','studentenquiry'));
-
 $content = "";
 $oddEven = 'odd';
 $foundStudents = false;
 
 $wherefield = $this->getParam('searchfield', '');
 $wherevalue = strtoupper($this->getParam('searchvalue', ''));
+
 $all = $this->getParam('all', '');
 
 $startat = $this->getParam('startat', 0);
@@ -24,7 +26,7 @@ $dispCount = $this->getParam('dispcount', 25);
 $semester = array(
              '1',$objLanguage->languagetext('word_first'),
              '2',$objLanguage->languagetext('word_second'));
-             
+
 if (strlen($all) > 0){
     $details = "<center><h2>".$objLanguage->languagetext('mod_financialaid_allapplications','financialaid')."</h2></center>";
 }elseif (strlen($wherefield) > 0){
@@ -118,19 +120,18 @@ if ($appCount > 0){
       'RANGE' => ($startat+1).'-'.$endat,
       'TOTAL' => $appCount);
 
-    $records = $objLanguage->code2Txt('mod_financialaid_resultsfound','financialaid',$rep);
+    $records = "<center>".$objLanguage->code2Txt('mod_financialaid_resultsfound','financialaid',$rep)."</center><br />";
     $showlinks->str = "$viewp $links_code $viewn";
     $showlinks->align="center";
     
     if($appCount <= $dispCount){
-        $pagelinks = "";
+        $pagelinks = $records;
     }else{
         $pagelinks = $records.$showlinks->show();
     }
     //***end of pagination***
 }else{
     $pagelinks = "";
-    $records = "";
 }
 
 if (strlen($all) > 0){
@@ -151,13 +152,12 @@ if (isset($stdinfo)){
 	$table->cellspacing = 2;
 
 	$table->startHeaderRow();
-	$table->addHeaderCell($objLanguage->languagetext('word_year'));
-	$table->addHeaderCell($objLanguage->languagetext('word_semester'));
-	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid'));
-	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_firstname','financialaid'));
-	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_surname','financialaid'));
-	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_idnum','financialaid'));
-	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_details','financialaid'));
+	$table->addHeaderCell($objLanguage->languagetext('word_year'),null,'top','left','header');
+	$table->addHeaderCell($objLanguage->languagetext('word_semester'),null,'top','left','header');
+	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid'),null,'top','left','header');
+	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_firstname','financialaid'),null,'top','left','header');
+	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_surname','financialaid'),null,'top','left','header');
+	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_idnum','financialaid'),null,'top','left','header');
 	$table->endHeaderRow();
 
 	if(is_array($stdinfo)){
@@ -167,19 +167,26 @@ if (isset($stdinfo)){
 
             if(count($studentinfo) > 0){
     			$table->row_attributes = " class = \"$oddEven\"";
-
+           //     $table->cellpadding = '10';
+                $table->cellspacing = 0;
+                
     			$viewdetails = new link();
     			$viewdetails->href=$this->uri(array('action'=>'applicationinfo','appid'=>$stdinfo[$i]->id));
-    			$viewdetails->link = $objLanguage->languagetext('mod_financialaid_view','financialaid');
-
+               // $viewdetails->cssClass = 'tablelink';
+                $table->css_class = 'highlightrows';
     			$table->startRow();
-    			$table->addCell($stdinfo[$i]->year);
-    			$table->addCell($semester[$stdinfo[$i]->semester]);
-    			$table->addCell($stdinfo[$i]->studentNumber);
-    			$table->addCell($studentinfo[0]->FSTNAM);
-    			$table->addCell($studentinfo[0]->SURNAM);
-    			$table->addCell($studentinfo[0]->IDN);
-    			$table->addCell($viewdetails->show());
+    			$viewdetails->link = $stdinfo[$i]->year;
+    			$table->addCell("<span class='tablelink'>".$viewdetails->show()."</span>", null, 'top', null, 'widelink');
+    			$viewdetails->link = $stdinfo[$i]->semester;
+    			$table->addCell("<span class='tablelink'>".$viewdetails->show()."</span>", null, 'top', null, 'widelink');
+    			$viewdetails->link = $stdinfo[$i]->studentNumber;
+    			$table->addCell("<span class='tablelink'>".$viewdetails->show()."</span>", null, 'top', null, 'widelink');
+    			$viewdetails->link = $studentinfo[0]->FSTNAM;
+    			$table->addCell("<span class='tablelink'>".$viewdetails->show()."</span>", null, 'top', null, 'widelink');
+    			$viewdetails->link = $studentinfo[0]->SURNAM;
+    			$table->addCell("<span class='tablelink'>".$viewdetails->show()."</span>", null, 'top', null, 'widelink');
+    			$viewdetails->link = $studentinfo[0]->IDN;
+    			$table->addCell("<span class='tablelink'>".$viewdetails->show()."</span>", null, 'top', null, 'widelink');
     			$table->endRow();
 
     			$oddEven = $oddEven == 'odd'?'even':'odd';
@@ -199,7 +206,7 @@ if ($foundStudents == FALSE) {
     $records = '';
 }
 
-$content = $details.$pagelinks.$content;
+$content = $style.$details.$pagelinks.$content;
 
 echo $content;
 ?>

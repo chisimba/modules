@@ -26,7 +26,7 @@ class applicationblocksearchbox extends object
 		$objForm->setAction($this->uri(array('action'=>'searchapplications'),$this->getParam('module')));
 		$objForm->setDisplayType(2);
 
-		$searchval = new textinput('searchValue',null,null,15);
+		$searchval = new textinput('searchvalue',null,null,15);
 
         $searchfield = new radio('searchfield');
         $searchfield->addOption('surname', $this->objLanguage->languageText('mod_financialaid_surname','financialaid'));

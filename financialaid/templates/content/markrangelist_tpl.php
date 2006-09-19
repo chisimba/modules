@@ -95,43 +95,7 @@ if (count($selectedapps) > 0)
         $viewnext->link = $objLanguage->languagetext('mod_financialaid_next','financialaid');
         $viewn = $viewnext->show();
     }
-    /*
-    $Rectbl =& $this->getObject('htmlTable','htmlelements');
-    if($endl == $dispCount)  {
-        $Rectbl->startRow();
-        $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_page','financialaid').":</b>", "20%");
-        $Rectbl->addCell("1");
-        $Rectbl->endRow();
 
-        $endl -= 1;
-
-        $Rectbl->startRow();
-        $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_record','financialaid').":</b>",  "20%");
-        $Rectbl->addCell("0  to $endl");
-        $Rectbl->endRow();
-    }else{
-        $page = $this->getParam('pg');
-        $Rectbl->startRow();
-        $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_page','financialaid').":</b>", "20%");
-        $Rectbl->addCell("$page");
-        $Rectbl->endRow();
-
-        $endl -= 1;
-        $Rectbl->startRow();
-        $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_record','financialaid').":</b>", "20%");
-        if($endl < $appCount){
-            $Rectbl->addCell("$startat to $endl");
-        }else {
-            $Rectbl->addCell("$startat to $appCount");
-        }
-        $Rectbl->endRow();
-    }
-    $Rectbl->startRow();
-    $Rectbl->addCell("<b>".$objLanguage->languagetext('mod_financialaid_resfnd','financialaid').":</b>", "20%");
-    $Rectbl->addCell("$appCount");
-    $Rectbl->endRow();
-    $records = $Rectbl->show();
-    */
     $endat = $startat + $dispCount;
     if ($endat > $appCount){
         $endat = $appCount;
@@ -153,21 +117,24 @@ if (count($selectedapps) > 0)
     //***end of pagination***
 
     $table =& $this->newObject('htmltable','htmlelements');
-
+   	$table->width = '100%';
+  	$table->cellpadding = 5;
+   	$table->cellspacing = 0;
     $table->startHeaderRow();
-	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_firstname','financialaid'));
-	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_surname','financialaid'));
-	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_idnum','financialaid'));
-	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid'));
-	$table->addHeaderCell($objLanguage->languagetext('word_average'));
-	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_details','financialaid'));
+	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_firstname','financialaid'),null,'top','left','header');
+	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_surname','financialaid'),null,'top','left','header');
+	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_idnum','financialaid'),null,'top','left','header');
+	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid'),null,'top','left','header');
+	$table->addHeaderCell($objLanguage->languagetext('word_average'),null,'top','left','header');
 	$table->endHeaderRow();
  
-
+     $table->css_class = 'highlightrows';
      $endat = $startat + $dispCount;
      if ($endat > $appCount){
          $endat = $appCount;
      }
+     
+     $oddEven = 'odd';
      
      for ($i = $startat; $i < $endat; $i++){
 		$table->row_attributes = " class = \"$oddEven\"";
@@ -176,15 +143,18 @@ if (count($selectedapps) > 0)
 
   		$viewdetails = new link();
   		$viewdetails->href=$this->uri(array('action'=>'applicationinfo','appid'=>$appinfo[$i]->id));
-  		$viewdetails->link = $objLanguage->languagetext('mod_financialaid_view','financialaid');
 
 		$table->startRow();
-		$table->addCell($selectedapps[$i]['FSTNAM']);
-		$table->addCell($selectedapps[$i]['SURNAM']);
-		$table->addCell($selectedapps[$i]['IDN']);
-		$table->addCell($selectedapps[$i]['STDNUM']);
-		$table->addCell($selectedapps[$i]['AVG']);
-		$table->addCell($viewdetails->show());
+  		$viewdetails->link = $selectedapps[$i]['FSTNAM'];
+		$table->addCell($viewdetails->show(), null, 'top',null, 'widelink');
+  		$viewdetails->link = $selectedapps[$i]['SURNAM'];
+		$table->addCell($viewdetails->show(), null, 'top',null, 'widelink');
+  		$viewdetails->link = $selectedapps[$i]['IDN'];
+		$table->addCell($viewdetails->show(), null, 'top',null, 'widelink');
+  		$viewdetails->link = $selectedapps[$i]['STDNUM'];
+		$table->addCell($viewdetails->show(), null, 'top',null, 'widelink');
+  		$viewdetails->link = $selectedapps[$i]['AVG'];
+		$table->addCell($viewdetails->show(), null, 'top',null, 'widelink');
 		$table->endRow();
 		$oddEven = $oddEven == 'odd'?'even':'odd';
     }
