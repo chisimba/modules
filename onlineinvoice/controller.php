@@ -124,6 +124,8 @@ class onlineinvoice extends controller
               /** call the function that stores date values entered by user into a session variable -- therefore setting the session
                 *  return to the invoice template            
                 */
+                  $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
+                  $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
                   $this->getInvoicedates();
                   $this->setLayoutTemplate('invoice_layout_tpl.php');
                   return 'createInvoice_tpl.php';
@@ -195,6 +197,8 @@ class onlineinvoice extends controller
                     $this->setLayoutTemplate('invoice_layout_tpl.php');
                     return 'tev_tpl.php';
               }else{
+                  $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
+                  $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
                   $this->setLayoutTemplate('invoice_layout_tpl.php');
                   return 'createInvoice_tpl.php';                                    /** change template to return to post-login? **/ 
               }
@@ -249,6 +253,8 @@ class onlineinvoice extends controller
                   $this->setLayoutTemplate('invoice_layout_tpl.php');
                   return  'expenses_tpl.php';
               }else{                           
+                $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
+                $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
                 $this->setLayoutTemplate('invoice_layout_tpl.php');
                 return 'createInvoice_tpl.php';
               }  
@@ -317,6 +323,8 @@ class onlineinvoice extends controller
                 /**
                  *exit the form without submitting the invoice
                  */
+                 $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
+                 $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
                  $this->setLayoutTemplate('invoice_layout_tpl.php');
                  return 'createInvoice_tpl.php';                                              
              }
@@ -369,9 +377,11 @@ class onlineinvoice extends controller
                   $this->setLayoutTemplate('invoice_layout_tpl.php');
                    return 'incidentinfo_tpl.php';     
                }elseif(isset($exit)){
-                  //return the next template to upload the files for incident
-                  $this->setLayoutTemplate('invoice_layout_tpl.php');
-                  return 'createInvoice_tpl.php';
+                 $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
+                 $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
+                 //return the next template to upload the files for incident
+                 $this->setLayoutTemplate('invoice_layout_tpl.php');
+                 return 'createInvoice_tpl.php';
                }else{
                 $this->setLayoutTemplate('invoice_layout_tpl.php');
                 return  'lodging_tpl.php';
@@ -410,6 +420,8 @@ class onlineinvoice extends controller
 /**************************************************************************************************************************************************/          
           
           case  'addanothertev':
+              $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
+              $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
               $this->setLayoutTemplate('invoice_layout_tpl.php');
               return 'createInvoice_tpl.php';
           break;                                     

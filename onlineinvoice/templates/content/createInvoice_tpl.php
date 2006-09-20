@@ -275,17 +275,10 @@ $objcreateinvtab->addBoxContent('<br />'  . $this->objDateRange->show() . '<br /
   $objDateTable->endHeaderRow();
   
   
-  $rowcount = '0';
-  
-  foreach($invoicedata as $sesDat){
-     
-     $oddOrEven = ($rowcount == 0) ? "odd" : "even";
-     
-     $objDateTable->startRow();
-     $objDateTable->addCell($sesDat['begindate'], '', '', '', $oddOrEven);
-     $objDateTable->addCell($sesDat['enddate'], '', '', '', $oddOrEven);
-     $objDateTable->endRow();
-  }
+  $objDateTable->startRow();
+  $objDateTable->addCell($invoicedata['begindate'], '', '', '', '');
+  $objDateTable->addCell($invoicedata['enddate'], '', '', '', '');
+  $objDateTable->endRow();
 }
 
 /***************************************************************************************************************************************************************/
