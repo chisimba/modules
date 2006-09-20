@@ -13,7 +13,8 @@ $cssLayout2->setNumColumns(3);
 //$rightSideColumn2= 'right';
 //$cssLayout2->setMiddleColumnContent($rightSideColumn2);
 
-
+$left =& $this->getObject('leftblock','residence');
+//$left = $left->show();
 
 //$left =& $this->getObject('blockleftcolumn');
 //$left = $left->show(); 
@@ -23,7 +24,7 @@ $this->financialaid =& $this->getObject('dbresidence','residence');
 $dropdown =& $this->newObject("dropdown", "htmlelements");
 
 	
-echo '<h3>'.'Residence and Catering Service'.'</h3>';
+echo '<center>'.'<h3>'.'Residence and Catering Service'.'</h3>'.'</center>';
 //echo "$numrecords --- $allrecords";
 $content = "";
 $oddEven = 'odd';
@@ -33,9 +34,9 @@ if(isset($stdinfo)){
 	
 	$objHeading = &$this->getObject('htmlheading','htmlelements');
 	$pgTitle = $objHeading;
-	$pgTitle->type = 1;
+	$pgTitle->type = 3;
 	$nbsp = "&nbsp;";
-	$pgTitle->str ="Search Results for".'&nbsp;'.ucfirst($stdinfo[0]->SURNAM);
+	$pgTitle->str ='<center>'."Search Results for".'&nbsp;'.ucfirst($stdinfo[0]->SURNAM).'</center>';
 	
 	
 	
@@ -53,10 +54,10 @@ if(isset($stdinfo)){
 	$table->startHeaderRow();
 	$table->addHeaderCell('Name');		
 	$table->addHeaderCell('Surname');
+	$table->addHeaderCell('Student ID');
+	$table->addHeaderCell('ID Number');
 	$table->addHeaderCell(' ');
-	$table->addHeaderCell(' ');
-	$table->addHeaderCell(' ');
-	$table->addHeaderCell(' ');
+	//$table->addHeaderCell(' ');
 	$table->endHeaderRow();
 
 
@@ -72,12 +73,12 @@ if(isset($stdinfo)){
 			$link->link = $key->FSTNAM;
 
 			$results = new link();
-			$results->href=$this->uri(array('action'=>'results','id'=>$key->STDNUM));		
-			$results->link = "Course Information";
+			$results->href=$this->uri(array('action'=>'info','id'=>$key->STDNUM));		
+			$results->link = $key->STDNUM;
 
 			$payment = new link();
-			$payment->href = $this->uri(array('action'=>'payment','id'=>$key->STDNUM));
-			$payment->link = "Payment Information";
+			$payment->href = $this->uri(array('action'=>'info','id'=>$key->STDNUM));
+			$payment->link = $key->IDN;
 
 			$address = $this->financialaid->studentAddress($key->STDNUM,35);
 			$title = $this->financialaid->getLookupInfo($key->titleID);
@@ -99,20 +100,20 @@ if(isset($stdinfo)){
 		
 			//$corre->href="index.php?module=correspondence&action=new&extToSubject=testing&extType=email&extUserToTitle=toSimangMang";
 			//$corre->link = "Correspondence";
-			$enquiry = new link($this->uri(array('action'=>'enquiry','id'=>$key->STDNUM)));
+			$enquiry = new link($this->uri(array('action'=>'info','id'=>$key->STDNUM)));
 			//$enquiry->href=$this->uri(array('action'=>'enquiry','id'=>$key->STDNUM));
 			//$objLink = new link($this->uri(null,'contextadmin'));
 			//$objLink->link='contextadmin';
-			$enquiry->link='Enquiry';
+			$enquiry->link=$key->SURNAM;
 			$table->startRow();
 			$table->addCell($link->show());
-			$table->addCell($key->SURNAM);
+			$table->addCell($enquiry->show());
 			$surname = $key->SURNAM;
 		
 			$table->addCell($results->show());
 			$table->addCell($payment->show());
 			//$table->addCell($corre->show());
-			$table->addCell($enquiry->show());
+			//$table->addCell($enquiry->show());
 			$table->endRow();
 			$oddEven = $oddEven == 'odd'?'even':'odd';
 
@@ -125,35 +126,37 @@ if(isset($stdinfo)){
 	
    	$surname = $this->getParam('surname');
    
-	//$form->addToForm();
-	//echo ;
-	//echo $form->show();
-	
-	//drop down ----|
-	$dropdown =& $this->newObject("dropdown", "htmlelements");
-	$dropdown->name = 'nextlist';
-	for ($i = null; $i <= 100; $i++){
-	$dropdown->addOption($i,$i);
-	}
-	$form->addToForm($dropdown->show());
-	
-	
-	 //---------------------------------Save button------------------------------
+		 //---------------------------------Save button------------------------------
    	$this->loadClass('button','htmlelements');
    	$button = & $this->newObject('button','htmlelements');
    	$button1 = & $this->newObject('button','htmlelements');
    
    	$button = new button("submit",
-	$objLanguage->code2Txt("word_save"));    //word_save
+	'Go');    //word_save
 	$button->setToSubmit();
 	$button1 = new button("cancel",
 	$objLanguage->code2Txt("word_cancel")); 
 	$button1->setToSubmit();
 	$row = array($button->show()."&nbsp;".$button1->show());
-	$form->addToForm($button->show()."&nbsp;".$button1->show());
+	//$form->addToForm($button->show());
 	//---------------------------------------------------------------------------------
 	
-$content = '<p>'.$pgTitle->show().'</p>'.$table->show().'<p>'.'&nbsp;&nbsp;'.'Next List'.'</p>'.$form->show();
+	//drop down ----|
+	$dropdown =& $this->newObject("dropdown", "htmlelements");
+	$dropdown->name = 'nextlist';
+	for ($i = 1; $i <= count($stdinfo); $i++){
+	$dropdown->addOption($i,$i);
+	}
+	$form->addToForm('<center>'.'Page '.$dropdown->show().' of '.'<b>'.count($stdinfo).'</b>'.' '.$button->show().'</center>');
+	
+	
+
+	
+$tablelist =& $this->getObject('htmltable','htmlelements');
+
+	$searchresults =$form->show();
+
+$content = '<p>'.$pgTitle->show().'</p>'.$searchresults.'<p>'.$table->show().'&nbsp;&nbsp;'.'</p>';
 	
 
 
@@ -183,7 +186,7 @@ $right =& $this->getObject('blocksearchbox','studentenquiry');
 $right = $right->show();//$this->getParam('module'));
 
 $left =& $this->getObject('leftblock','residence');
-$left = $left->show();
+$left = $left->show($id=null);
 
 
 
@@ -233,9 +236,8 @@ $cssLayout2->setRightColumnContent($leftSideColumn2);
 //$leftSideColumn2 = $right."<p>$left</p>";
 // Add Left column
 
-$home = new link($this->uri(array('action'=>' ')));
-$home->link = 'Home';
-$cssLayout2->setLeftColumnContent($home->show());
+$left =& $this->getObject('leftblock','residence');
+$cssLayout2->setLeftColumnContent($left->show($id=null));
 //Output the content to the page
 
 

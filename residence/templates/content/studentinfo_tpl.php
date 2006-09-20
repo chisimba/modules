@@ -2,17 +2,20 @@
 $cssLayout2 = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
 $cssLayout2->setNumColumns(3);
 
-$right =& $this->getObject('blocksearchbox','residence');
+$right =& $this->getObject('blocksearchbox','studentenquiry');
 $right = $right->show();
 
 $details = "<p><b>Details of ".ucfirst($studentdetails[0]->FSTNAM)."  ".ucfirst($studentdetails[0]->SURNAM)."</b></p>";
 $idnumber = $studentdetails[0]->STDNUM;
 $table =& $this->newObject('htmltable','htmlelements');
 //print_r($studentdetails);
-$left =& $this->getObject('leftblock');
-$left = $left->show();
+$left =& $this->getObject('leftblock','residence');
 
-$this->financialaid =& $this->getObject('dbfinancialaid');
+//send link thru --> left block
+$id = $idnumber;
+$left = $left->show($id);
+
+//$this->financialaid =& $this->getObject('dbfinancialaid');
 
 //var_dump($student);
 
@@ -161,7 +164,7 @@ if($this->getParam('module') === "residence"){
 	$link->href=$this->uri(array('action'=>'resapp','id'=>$idnumber));
 	$link->link="Click here for Application(s) for Residence";	
 }
-$content = "<center>".$details." ".$table->show()." ".$link->show()."</center>";
+$content = "<center>".$details." ".$table->show()." "."</center>";
 
 $objForm = new form('theform');
 $objForm->setAction($this->uri(array('action'=>'ok','id'=>$idnumber)));
@@ -172,7 +175,7 @@ $ok->setToSubmit();
 $ok->setValue('OK');
 
 $objForm->addToForm($content);
-$objForm->addToForm($ok);
+//$objForm->addToForm($ok);
 
 $appTabBox = & $this->newObject('tabbox','financialaid');
 $appTabBox->tabName = 'Studentinfo';
@@ -184,7 +187,7 @@ $studentNumber = $studentdetails[0]->STDNUM;
 $tabletab =& $this->newObject('htmltable','htmlelements');
 		//student number
 				$tabletab->startRow($rowClass);
-				$tabletab->addCell('<p>'.'Student Id'.'</p>');
+				$tabletab->addCell('Student Id');
 				$tabletab->addCell(' ');
 				$tabletab->addCell($studentdetails[0]->STDNUM);
 				$tabletab->endRow($rowClass);
@@ -192,108 +195,100 @@ $tabletab =& $this->newObject('htmltable','htmlelements');
 	
 		//ACALNG name
 				$tabletab->startRow($rowClass);
-				$tabletab->addCell('<p>'.'ACALNG'.'</p>');
+				$tabletab->addCell('Academic Lang.');
 				$tabletab->addCell(' ');
 				$tabletab->addCell($studentdetails[0]->ACALNG);
 				$tabletab->endRow($rowClass);
 		//ATRNY name
 				$tabletab->startRow($rowClass);
-				$tabletab->addCell('<p>'.'ATRNY'.'</p>');
+				$tabletab->addCell('Attorney flag');
 				$tabletab->addCell(' ');
 				$tabletab->addCell($studentdetails[0]->ATRNY);
 				$tabletab->endRow($rowClass);
 		
 		//HMELNG name
 				$tabletab->startRow($rowClass);
-				$tabletab->addCell('<p>'.'HMELNG'.'</p>');
+				$tabletab->addCell('Home Language');
 				$tabletab->addCell(' ');
 				$tabletab->addCell($studentdetails[0]->HMELNG);
 				$tabletab->endRow($rowClass);
 
 		//PRVREGYR name
 				$tabletab->startRow($rowClass);
-				$tabletab->addCell('<p>'.'PRVREGYR'.'</p>');
+				$tabletab->addCell('Prev. reg. yr.');
 				$tabletab->addCell(' ');
 				$tabletab->addCell($studentdetails[0]->PRVREGYR);
 				$tabletab->endRow($rowClass);
 		//STDSTS name
 				$tabletab->startRow($rowClass);
-				$tabletab->addCell('<p>'.'STDSTS'.'</p>');
+				$tabletab->addCell('Student Status');
 				$tabletab->addCell(' ');
 				$tabletab->addCell($studentdetails[0]->STDSTS);
 				$tabletab->endRow($rowClass);
 		//STDACCBAL name
 				$tabletab->startRow($rowClass);
-				$tabletab->addCell('<p>'.'STDACCBAL'.'</p>');
+				$tabletab->addCell('Student Acc. Bal');
 				$tabletab->addCell(' ');
 				$tabletab->addCell($studentdetails[0]->STDACCBAL);
 				$tabletab->endRow($rowClass);
 		//STDACCSTS name
 				$tabletab->startRow($rowClass);
-				$tabletab->addCell('<p>'.'STDACCSTS'.'</p>');
+				$tabletab->addCell('Stud Acc Status');
 				$tabletab->addCell(' ');
 				$tabletab->addCell($studentdetails[0]->STDACCSTS);
 				$tabletab->endRow($rowClass);
 		//MARSTS name
 				$tabletab->startRow($rowClass);
-				$tabletab->addCell('<p>'.'MARSTS'.'</p>');
+				$tabletab->addCell('Marital Status');
 				$tabletab->addCell(' ');
 				$tabletab->addCell($studentdetails[0]->MARSTS);
 				$tabletab->endRow($rowClass);
-		//ATRNY name
-				$tabletab->startRow($rowClass);
-				$tabletab->addCell('<p>'.'ATRNY'.'</p>');
-				$tabletab->addCell(' ');
-				$tabletab->addCell($studentdetails[0]->ATRNY);
-				$tabletab->endRow($rowClass);
+		
 		//DBTPCKDTE name
-				$tabletab->startRow($rowClass);
-				$tabletab->addCell('<p>'.'DBTPCKDTE'.'</p>');
+	/*			$tabletab->startRow($rowClass);
+				$tabletab->addCell('DBTPCKDTE');
 				$tabletab->addCell(' ');
 				$tabletab->addCell($studentdetails[0]->DBTPCKDTE);
 				$tabletab->endRow($rowClass);
 		//DBTPCKSTS name
 				$tabletab->startRow($rowClass);
-				$tabletab->addCell('<p>'.'DBTPCKSTS'.'</p>');
+				$tabletab->addCell('DBTPCKSTS');
 				$tabletab->addCell(' ');
 				$tabletab->addCell($studentdetails[0]->DBTPCKSTS);
 				$tabletab->endRow($rowClass);
+	*/
 		//DRVCDE name
 				$tabletab->startRow($rowClass);
-				$tabletab->addCell('<p>'.'DRVCDE'.'</p>');
+				$tabletab->addCell('Drivers Code');
 				$tabletab->addCell(' ');
 				$tabletab->addCell($studentdetails[0]->DRVCDE);
 				$tabletab->endRow($rowClass);
 		//IGNRHMS name
 				$tabletab->startRow($rowClass);
-				$tabletab->addCell('<p>'.'IGNRHMS'.'</p>');
+				$tabletab->addCell('IGNRHMS');
 				$tabletab->addCell(' ');
 				$tabletab->addCell($studentdetails[0]->IGNRHMS);
 				$tabletab->endRow($rowClass);
-		//DRVCDE name
-				$tabletab->startRow($rowClass);
-				$tabletab->addCell('<p>'.'DRVCDE'.'</p>');
-				$tabletab->addCell(' ');
-				$tabletab->addCell($studentdetails[0]->DRVCDE);
-				$tabletab->endRow($rowClass);
+		
 		//INI name
 				$tabletab->startRow($rowClass);
-				$tabletab->addCell('<p>'.'INI'.'</p>');
+				$tabletab->addCell('Initials');
 				$tabletab->addCell(' ');
 				$tabletab->addCell($studentdetails[0]->INI);
 				$tabletab->endRow($rowClass);
-		//LNKNUM name
+	/*	//LNKNUM name
 				$tabletab->startRow($rowClass);
-				$tabletab->addCell('<p>'.'LNKNUM'.'</p>');
+				$tabletab->addCell('Link number');
 				$tabletab->addCell(' ');
 				$tabletab->addCell($studentdetails[0]->LNKNUM);
 				$tabletab->endRow($rowClass);
 		//VDATE name
 				$tabletab->startRow($rowClass);
-				$tabletab->addCell('<p>'.'VDATE'.'</p>');
+				$tabletab->addCell('VDATE');
 				$tabletab->addCell(' ');
 				$tabletab->addCell($studentdetails[0]->VDATE);
 				$tabletab->endRow($rowClass);
+*/
 //-----------------------------------------------end student info
 $tabletaba =& $this->newObject('htmltable','htmlelements');
 $payments 	= $this->financialaid->getAccountInformation('STDNUM',$studentNumber);
@@ -314,9 +309,7 @@ if(is_array($payments)){
 	$tabletaba->endHeaderRow();
 	$total = 0;
 	foreach($payments as $pay=>$info){
-	//echo '<pre>';
-	//print_r($info->DOCSRC);
-	//die;
+	
 		$tabletaba->startRow();
 		$tabletaba->addCell($info->DTEYMD);
 		$tabletaba->addCell(number_format($info->AMT,2));
@@ -400,14 +393,267 @@ if(is_array($results)){
 		$tabletabb->endRow();
 }else{}
 
+		$field = 'STDNUM'; //'2219065';
+		$tabletabbres =& $this->newObject('htmltable','htmlelements');
+
+		$this->financialaid->getResidence($field,$studentNumber);
+		$finapplication = $this->financialaid->getResidence($field,$studentNumber);
+		$student =  $this->financialaid->getPersonInfo($field,$studentNumber);
+		$rowClass ='odd';
 
 
+
+if(!$finapplication==null){
+	foreach($finapplication as $app){
+				$tabletabbres->startRow($rowClass);
+				$tabletabbres->addCell("<p>".'Phone Code'."</p>");
+				$tabletabbres->addCell(' ');
+				$tabletabbres->addCell("<p>".$app->PHNCDE."</p>");
+				$tabletabbres->endRow($rowClass);
+		
+				$tabletabbres->startRow($rowClass);
+				$tabletabbres->addCell("<p>".'Phone Number'."</p>");
+				$tabletabbres->addCell(' ');
+				$tabletabbres->addCell("<p>".$app->PHNNUM."</p>");
+				$tabletabbres->endRow($rowClass);
+
+				$tabletabbres->startRow($rowClass);
+				$tabletabbres->addCell("<p>".'Residence Block Number'."</p>");
+				$tabletabbres->addCell(' ');
+				$tabletabbres->addCell("<p>".$app->RESBLKNUM."</p>");
+				$tabletabbres->endRow($rowClass);
+
+				$tabletabbres->startRow($rowClass);
+				$tabletabbres->addCell("<p>".'Residence Floor Number'."</p>");
+				$tabletabbres->addCell(' ');
+				$tabletabbres->addCell("<p>".$app->RESFLOORNO."</p>");
+				$tabletabbres->endRow($rowClass);
+
+				$tabletabbres->startRow($rowClass);
+				$tabletabbres->addCell("<p>".'Residence Block Room Number'."</p>");
+				$tabletabbres->addCell(' ');
+				$tabletabbres->addCell("<p>".$app->RESRMBDNUM."</p>");
+				$tabletabbres->endRow($rowClass);
+				$tabletabbres->startRow($rowClass);
+				$tabletabbres->addCell("<p>".'Residence Room Number'."</p>");
+				$tabletabbres->addCell(' ');
+				$tabletabbres->addCell("<p>".$app->RESRMNUM."</p>");
+				$tabletabbres->endRow($rowClass);
+				$tabletabbres->startRow($rowClass);
+				$tabletabbres->addCell("<p>".'Residence Room Type'."</p>");
+				$tabletabbres->addCell(' ');
+				$tabletabbres->addCell("<p>".$app->RESRMTYP."</p>");
+				$tabletabbres->endRow($rowClass);
+		
+				$tabletabbres->startRow($rowClass);
+				$tabletabbres->addCell("<p>".'Residence Year'."</p>");
+				$tabletabbres->addCell(' ');
+				$tabletabbres->addCell("<p>".$app->YEAR."</p>");
+				$tabletabbres->endRow($rowClass);
+		
+	
+		}
+$appTabBox->addTab('Residence Info', 'Residence Info', $Display=$tabletabbres->show());
+}else{}
+				
 $appTabBox->addTab('Student Info', 'Student Info', $Display=$tabletab->show());
 $appTabBox->addTab('Payment Info', 'Payment Info', $Display=$tabletaba->show());
-$appTabBox->addTab('Course Info', 'Course Info', $Display=$tabletabb->show());
-$appTabBox->addTab('Residence Info', 'Residence Info', $Display=$tabletabb->show());
+
+		$linkcrs = new link();
+		$linkcrs->href=$this->uri(array('action'=>'results','id'=>$this->getParam('id')));
+		$linkcrs->link="CourseInfo";
 
 
+
+//=================>
+$this->dbres =& $this->getObject('dbresidence','residence');
+$stdinfo = $this->dbres->getPersonInfo('STDNUM',$this->getParam('id'));
+$results = $this->dbres->getCourseInfo4($this->getParam('id'), $year);
+/////////////////////////
+$table8 =& $this->newObject('htmltable','htmlelements');
+$table8->cellspacing = 2;
+$table8->cellpadding = 2;
+
+//echo "<br>results: ";    print_r($results);  echo "<br>";
+$sa = 0;
+$stdave = 0;
+
+$this->tabbox1 =& $this->newObject('tabsbox','studentenquiry');
+$this->tabbox1->tabName='Address';
+$years = array();
+$j = 1;
+if(isset($results[0]->YEAR))
+{
+
+  $years[0] = $results[0]->YEAR;
+
+}
+for($i = 1; $i < count($results); $i++)
+{
+    if($results[$i]->YEAR != $results[$i-1]->YEAR)
+    {
+        $years[$j] = $results[$i]->YEAR;
+        $j++;
+    }
+}
+if($year == '2006')
+          {
+           // $stdave = 0;
+           $table8->startRow();
+            $table8->addCell(" ",null,null, "center");
+            $table8->addCell(" ",null,null, "center");
+			$table8->addCell('<b>No Marks Available for 2006</b>',null,null, "center");
+			$table8->addCell(' ',null,null, "center");
+			$table8->endRow();
+            $tshow1 = $table8->show();
+          }
+ $years = array();
+$j = 1;
+if(isset($results[0]->YEAR))
+{
+
+  $years[0] = $results[0]->YEAR;
+
+
+for($i = 1; $i < count($results); $i++)
+{
+    if($results[$i]->YEAR != $results[$i-1]->YEAR)
+    {
+        $years[$j] = $results[$i]->YEAR;
+        $j++;
+    }
+}
+
+//echo "<br>count: ". count($years). "<br>years:<pre>" ;  print_r($years);   echo "</pre>";
+
+if(is_array($years)){
+
+	$links = "";
+ for($i = count($years)-1; $i >= 0; $i--){
+        if ($year != $years[$i]){
+
+    		$link = new link();
+    		$link->href = $this->uri(array('action'=>'results','id'=>$stdnum,'year'=>$years[$i]));
+     		$link->link = "<strong>" . $years[$i] . "</strong>";
+            $link->style = "text-decoration:none";
+    		$links .=$link->show()."  ";
+
+
+        }else{
+            $links .=$years[$i]."  ";
+        }
+	}
+}
+
+
+
+$stcrse = $this->dbres->getStudentCourse($results[0]->STDNUM);
+ /*
+for($j = 0; $j < count($stcrse); $j++)
+{
+   if($year == $stcrse[$j]->YEAR){
+
+     $course = $this->dbres->getCourseDesc($stcrse[$j]->CRSCDE);
+     $details .= "<center>Year: ".$year."<br />Description: " . htmlentities($course[0]->LNGDSC);
+     $details .= "</center><p></p>";
+   }
+   }
+      if(count($years) > 1)
+         $details .= "<center>Years of Study: ";
+      else
+         $details .= "<center>Year of Study: ";
+      $details .= $links . "</center><br />";
+                 */
+
+}
+if(is_array($results)){
+    $table2 = new htmltable('table2');
+	$table2->startRow();
+	$table2->addCell('<b>Subject Code</b>',null,null, "center");
+    $table2->addCell('<b>Subject</b>',null,null, "center");
+	$table2->addCell('<b>Assessment Type</b>',null,null, "center");
+	$table2->addCell('<b>Assessment Date</b>',null,null, "center");
+	$table2->addCell('<b>Mark</b>',null,null, "center");
+	$table2->endRow();
+    $table2->startRow();
+    $table2->addCell('<hr />', null,null,null,null,"colspan='5'");
+    $table2->endRow();
+	//foreach($results as $values){
+
+		//$marks = $this->dbres->getCourseResuts($results[0]->SBJCDE,$results[0]->YEAR);
+		$ave = 0;
+		//if(is_array($marks)){
+			//foreach($marks as $mark){
+      // echo "count: " . count($results);
+      $details2 = "";
+         /* for($j = 0; $j < count($stcrse); $j++)
+              {
+               if($year == $stcrse[$j]->YEAR){
+                  $course = $this->dbres->getCourseDesc($stcrse[$j]->CRSCDE);
+                  $details2 .= "<center>Year: ".$year."<br />Description: " . htmlentities($course[0]->LNGDSC);
+                  $details2 .= "</center><p></p>";
+               }
+              }
+      if(count($years) > 1)
+         $details2 .= "<center>Years of Study: ";
+      else
+         $details2 .= "<center>Year of Study: ";
+      $details2 .= $links . "</center><br />";   */
+       for($i = count($years)-1; $i >= 0; $i--)
+         {
+          //   if($results[$i]->YEAR == $year)
+          //   {
+                 for($j = 0; $j < count($stcrse); $j++)
+              {
+               if($years[$i] == $stcrse[$j]->YEAR){
+                  $course = $this->dbres->getCourseDesc($stcrse[$j]->CRSCDE);
+                  $details2 = "<center><b>Year: ".$years[$i]."<br />Description: " . htmlentities($course[0]->LNGDSC);
+                  $details2 .= "</b></center><p></p>";
+               }
+              }
+                $table2->startRow();
+		        $table2->addCell($results[$i]->SBJCDE,null,null, "center");
+                $subject = $this->dbres->getSubject($results[$i]->SBJCDE);
+                $table2->addCell(htmlspecialchars($subject[0]->SBJDSC));
+                $table2->addCell("Final Mark",null,null, "center");
+                $table2->addCell($results[$i]->YEAR,null,null, "center");
+                $table2->addCell($results[$i]->FNLMRK,null,null, "center");
+  		        $table2->endRow();
+
+		      //$a++;
+		        $sa++;
+    		//$ave += $results[$a]->FNLMRK;
+		        $stdave += $results[$i]->FNLMRK;
+              if($sa != 0)
+       {
+        $table3 = new htmltable('table3');
+        $table3->startRow();
+		$table3->addCell("&nbsp;",null,null, "center");
+		$table3->endRow();
+		$table3->startRow();
+		$table3->addCell('<b>Student Average</b>',null,null, "center");
+		$table3->addCell('  ',null,null, "center");
+		$stdave = number_format(($stdave/$sa),2);
+		$table3->addCell(' ');
+		$table3->addCell('<b>'.$stdave.'</b>',null,null, "center");
+		$table3->endRow();
+        $table3->startRow();
+		$table3->addCell("&nbsp;",null,null, "center");
+		$table3->endRow();
+        $tshow3 = $table3->show();
+       }
+        $tshow = $table2->show();
+        $this->tabbox1->addTab("$i", "$years[$i]", "$details2 $tshow $tshow3");
+
+        }
+}
+
+//=================>
+$tab1=$this->tabbox1->show();
+$appTabBox->addTab('Course Info', 'Course Info', $tab1);
+
+
+$cssLayout2->setLeftColumnContent($left);
 $cssLayout2->setMiddleColumnContent($objForm->show().'<p>'.$appTabBox->show().'</p>');
 
 

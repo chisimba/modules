@@ -13,27 +13,45 @@ if (!$GLOBALS['kewl_entry_point_run'])
 class leftblock extends object
 {
 
-	function show(){
+	function show($id){
+		if($id==null){
 		$list = "";
-		if($this->getParam('module') === "financialaid"){
-			$list = array('sponsorlist'=>'Sponsor List','ok'=>'Student List');
-		}
-	
-		if($this->getParam('module') === "residence"){
-			$list = array('ok'=>'Student List');
-		}
-		$links = "";
-
-		foreach($list as $key=>$value){
-			$link = new link();
-			$link->href = $this->uri(array('action'=>$key));
-			$link->link = $value;
-			$links .= "<p>".$link->show()."</p>";
-		}
-		return '<p>'.$links.'</p>';
+		$list .='<h3>'.'Residence and Catering Service'.'</h3>';
 		
-	}
+		
+		$linkintro = new link();
+		$linkintro->href=$this->uri(array('action'=>''));
+		$linkintro->link="Introduction";
+		
+		$list .=$linkintro->show();
+		
+		return $list;
+	
+}else{
+		$list = "";
+		$list .='<h3>'.'Residence and Catering Service'.'</h3>';
+		
+		
+		$linkintro = new link();
+		$linkintro->href=$this->uri(array('action'=>''));
+		$linkintro->link="Introduction";
 
-}
+		$linkres = new link();
+		print $link1;
+		$linkres->href=$this->uri(array('action'=>'resapp','id'=>$id));
+		$linkres->link="Add Student";
+		
+		$list .='<p>'.$linkintro->show().'</p>';
+			
+		$list .='<h3>'.'Residence Application'.'</h3>';
+			
+
+		$list .='<p>'.$linkres->show().'</p>';
+		
+		return $list;
+
+}//else
+}//fnction
+}//end class
 
 ?>

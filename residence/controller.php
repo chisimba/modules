@@ -58,11 +58,20 @@ class residence extends controller
 	switch($action)
 	{
 		case null: 
-			//echo '<pre>';
-			//print_r($this->financialaid->getSTHSL('STDNUM','2219065',0,0));
-			//die('hgfh');
+			
 			return 'startup_tpl.php';
 		
+
+		case 'searchres':
+		$year = $this->getParam('year',null);
+		echo '<pre>';
+		print_r($stdinfo = $this->financialaid->getREGCL('STDNUM',2219065,0,0));
+		die;
+		$this->setvarByRef('stdinfo',$stdinfo);
+		return 'reslist_tpl.php';
+	
+			
+
 		case 'ok':
 				$id = $this->getParam('id',null);
 				if(!$id==null){
@@ -254,13 +263,11 @@ class residence extends controller
 				$field = 'STDNUM'; //'2219065';
 				$value = $this->getParam('id',null);
 				$this->financialaid->getResidence($field,$value);
-				//return $this->control->residenceApp();
+				
 				$finapplication = $this->financialaid->getResidence($field,$value);
-				$stundent =  $this->financialaid->getPersonInfo($field,$value);
-				//print_r($stundent);die;
-				//echo '<pre>';
-				//print_r($stundent);die;	
-				$this->setVarByRef('stundent',$stundent);
+				$student =  $this->financialaid->getPersonInfo($field,$value);
+				
+				$this->setVarByRef('student',$student);
 				$this->setVarByRef('finapplication',$finapplication);
 				
 				return 'resapplication_tpl.php';

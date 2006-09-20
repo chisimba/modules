@@ -4,12 +4,12 @@ $cssLayout2 = & $this->newObject('csslayout', 'htmlelements');// Set columns to 
 $cssLayout2->setNumColumns(3);
 
 
-$right =& $this->getObject('blocksearchbox','residence');
+$right =& $this->getObject('blocksearchbox','studentenquiry');
 $right = $right->show($this->getParam('module'));
 
 
 $left =& $this->getObject('leftblock');
-$left = $left->show();
+$left = $left->show($id);
 
 $this->leftNav = $this->getObject('layer','htmlelements');
 $this->leftNav->id = "leftnav";
@@ -28,14 +28,14 @@ $table->width='99%';
         $table->border='0';
         $table->cellspacing='0';
         //$table->cellpadding='10';
-
+$applicationYear = 2006;
 $id=$this->getParam('id');
 if(!$finapplication==null){
 
-$applicationYear = 2006;
 
 
-	$header->str = "Residence Application for ".$stundent[0]->FSTNAM." ".$stundent[0]->SURNAM." for $applicationYear ";
+
+	$header->str = "Residence Application for ".$student[0]->FSTNAM." ".$student[0]->SURNAM." for ".$applicationYear;
 	$id = $finapplication[0]->STDNUM;
 
 $table->startHeaderRow();
@@ -111,62 +111,38 @@ $table->startHeaderRow();
 	}
 }
 else{
-	$header->str = "This student Has no Residence Application for $applicationYear ";
-}
+	$header->str = "This student Has no Residence Application for ".$applicationYear;
+		$form = new form('metadata',$this->uri(array('action'=>'confirmstudentapp','id'=>$id)));
+	
 
-/*
-if(is_array($studyYears)){
-	$table->startRow();
-	$table->addCell('Other years of Study ');
-	$links = "";
-	foreach($studyYears as $years){
 		
-		$link = new link();
-		$link->href = $this->uri(array('action'=>'resapplication','id'=>$id,'year'=>$years['yearOfStudy']));
-		$link->link = $years['yearOfStudy'];
-		$links .=$link->show()."  ";
+		$textarea = & $this->newObject('textinput','htmlelements');
+        $textarea->size = '30';
+        $textarea->value = '';
+        $textarea->setId(null);
 
-	}
+ 		
+ 		//title
+        $title = $textarea;
+        $title->name = 'student';
+        // $title->setValue($arr['title']);
+        $title->label = "Student Number";
+ 		
+		$table1 = & $this->newObject('htmltable','htmlelements');
+        $table1->width = '75%';
+		$table1->addRow(array($title->label,$title->show()),'even');
 
-	$table->addCell($links,$width=null, $valign="top", $align=null, $class=null, "colspan=2");
-	$table->endRow();		
+	$button = new button("submit",
+	$objLanguage->code2Txt("word_save"));    //word_save
+	$button->setToSubmit();
+	$row = array($button->show());
+	$table1->addRow($row);
 
+	$form->addToForm($table1->show());
+
+$heading = '<h3>'.'Add Student To Residece Application List'.'</h3>';
+$cssLayout2->setMiddleColumnContent('<p>'.$heading.'</p>'.$form->show());
 }
-*/
-
-$ok= new button('edit');
-$ok->setToSubmit();
-$ok->setValue('edit');
-
-$cancel= new button('cancel');
-$cancel->setToSubmit();
-$cancel->setValue('cancel');
-/*
-$table->startRow();
-$table->addCell($ok->show());
-$table->addCell($cancel->show());
-$table->endRow();
-*/
-
-//var_dump($stdres);
-
-$content = "<center>".$header->show()."  ".$table->show()."</center>";
-$year = "";
-if(!$this->getParam('year'))$year = $applicationYear;
-else $year = $this->getParam('year');
-
-$objForm = new form('theform');
-$objForm->setAction($this->uri(array('action'=>'resapplication','id'=>$id,'year'=>$year)));
-$objForm->setDisplayType(1);
-
-$objForm->addToForm('<p>'.$content.'</p>');
-
-$this->contentNav = $this->getObject('layer','htmlelements');
-$this->contentNav->id = "content";
-$this->contentNav->str = $objForm->show();
-//$this->contentNav->height="300px";
-//echo $this->contentNav->addToLayer();
-$cssLayout2->setMiddleColumnContent($objForm->show().'<p>'.$ok->show().$cancel->show().'</p>');
-
+$cssLayout2->setLeftColumnContent($left);
 echo $cssLayout2->show();
 ?>

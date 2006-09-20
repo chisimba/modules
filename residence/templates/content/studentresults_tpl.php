@@ -1,134 +1,255 @@
 <?
-$this->loadClass('link', 'htmlelements');
-// Create an instance of the css layout class
-$cssLayout2 = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
-$cssLayout2->setNumColumns(3);
 
-$right =& $this->getObject('blocksearchbox','residence');
+$this->dbres =& $this->getObject('dbresidence','residence');
+$stdinfo = $this->dbres->getPersonInfo('STDNUM',$this->getParam('id'));
+$results = $this->dbres->getCourseInfo4($this->getParam('id'), $year);
+
+$right =& $this->getObject('blocksearchbox','studentenquiry');
 $right = $right->show($this->getParam('module'));
 
 $left =& $this->getObject('leftblock');
 $left = $left->show();
 
-$details = "<p><b>Course Details of ".ucfirst($studentdetails[0]->FSTNAM)."  ".ucfirst($studentdetails[0]->SURNAM)."  for $resultsYear </b></p>";
-$idnumber = $studentNumber;
+$stname = $stdinfo[0]->FSTNAM;
+$stsname = $stdinfo[0]->SURNAM;
 
-$this->financialaid =& $this->getObject('dbfinancialaid');
+$details = "<center><p><h3>Course Details of ".$stname."  ".$stsname."</h3></p></center>";
+$idnumber = $stdinfo[0]->IDN;
+$stdnum = $stdinfo[0]->STDNUM;
 
-$details .= "<p><b>".$stdinfo[0]->value." Student"."</b></p>";
+//$details = "<p><b>Course Details of ".ucfirst($results->firstname)."  ".ucfirst($results->surname)."  for $resultsYear </b></p>";
+//$idnumber = $results->idno;
+//$this->dbres =& $this->getObject('dbstudentinfo');
 
+$year = $this->getParam('year');
+if(is_null($year)){
+  $year = date('Y');
+}
+  
+/////////////////////////
 $table =& $this->newObject('htmltable','htmlelements');
 $table->cellspacing = 2;
 $table->cellpadding = 2;
 
-$results = $marksarr;
-if(is_array($results)){
-	$table->startRow();
-	$table->addCell('Course Code');
-	$table->addCell('Assessment Type');
-	$table->addCell('Assessment Date');
-	$table->addCell('Mark');
-	$table->endRow();
-	
-	//$results = $stdinfo;
-	$dev = count($results);
-	
-	foreach($results as $values=>$key){
-	$ave +=  $key->FNLMRK;
-	}
-	
-	foreach($results as $values=>$key){
-				//print_r($key);die;
-				$table->startRow();
-				$table->addCell($key->SBJCDE);
-				$assessmentType = $key->STYTYP;
-				//$this->financialaid->getLookupInfo($mark['assessmentTypeID']);
-				$table->addCell($key->STYTYP);
-				$table->addCell($key->YEAR);
-				$table->addCell($key->FNLMRK);
-				$table->endRow();
-				
-				
-				
-				
-				
-	
-		
-		$table->startRow();
-		$table->addCell('<b>'.$values->SBJCDE.'</b>');
-		$ave = number_format(($ave/$dev),2);
-		$table->addCell('<b>Average Mark'.'</b>');
-		$table->addCell('  ');
-		$table->addCell('<b>'.$ave.'</b>');
-		$table->endRow();
-		
-		
-	}
+//echo "<br>results: ";    print_r($results);  echo "<br>";
+$sa = 0;
+$stdave = 0;
 
-		$table->startRow();
-		$table->addCell("&nbsp;");
-		$table->endRow();
-		$table->startRow();
-		$table->addCell('<b>'.'Student Averege'.'</b>');
-		$table->addCell('  ');
-		//$stdave = number_format(($stdave/$j),2);
-		//$table->addCell(' ');
-		//$table->addCell($stdave);
-		$table->endRow();
+$this->tabbox1 =& $this->newObject('tabsbox','studentenquiry');
+$this->tabbox1->tabName='Address';
+$years = array();
+$j = 1;
+if(isset($results[0]->YEAR))
+{
+
+  $years[0] = $results[0]->YEAR;
+
+}
+for($i = 1; $i < count($results); $i++)
+{
+    if($results[$i]->YEAR != $results[$i-1]->YEAR)
+    {
+        $years[$j] = $results[$i]->YEAR;
+        $j++;
+    }
+}
+if($year == '2006')
+          {
+           // $stdave = 0;
+           $table->startRow();
+            $table->addCell(" ",null,null, "center");
+            $table->addCell(" ",null,null, "center");
+			$table->addCell('<b>No Marks Available for 2006</b>',null,null, "center");
+			$table->addCell(' ',null,null, "center");
+			$table->endRow();
+            $tshow1 = $table->show();
+          }
+ $years = array();
+$j = 1;
+if(isset($results[0]->YEAR))
+{
+
+  $years[0] = $results[0]->YEAR;
+
+
+for($i = 1; $i < count($results); $i++)
+{
+    if($results[$i]->YEAR != $results[$i-1]->YEAR)
+    {
+        $years[$j] = $results[$i]->YEAR;
+        $j++;
+    }
 }
 
-if(is_array($studyYears)){
-	$table->startRow();
-	$table->addCell('Other years of Study ');
+//echo "<br>count: ". count($years). "<br>years:<pre>" ;  print_r($years);   echo "</pre>";
+
+if(is_array($years)){
+
 	$links = "";
-	foreach($studyYears as $years){
-		
-		$link = new link();
-		$link->href = $this->uri(array('action'=>'results','id'=>$idnumber,'year'=>$years['yearOfStudy']));
-		$link->link = $years['yearOfStudy'];
-		$links .=$link->show()."  ";
+ for($i = count($years)-1; $i >= 0; $i--){
+        if ($year != $years[$i]){
 
+    		$link = new link();
+    		$link->href = $this->uri(array('action'=>'results','id'=>$stdnum,'year'=>$years[$i]));
+     		$link->link = "<strong>" . $years[$i] . "</strong>";
+            $link->style = "text-decoration:none";
+    		$links .=$link->show()."  ";
+
+
+        }else{
+            $links .=$years[$i]."  ";
+        }
 	}
-
-	$table->addCell($links,$width=null, $valign="top", $align=null, $class=null, "colspan=2");
-	$table->endRow();		
-
 }
 
+
+
+$stcrse = $this->dbres->getStudentCourse($results[0]->STDNUM);
+ /*
+for($j = 0; $j < count($stcrse); $j++)
+{
+   if($year == $stcrse[$j]->YEAR){
+
+     $course = $this->dbres->getCourseDesc($stcrse[$j]->CRSCDE);
+     $details .= "<center>Year: ".$year."<br />Description: " . htmlentities($course[0]->LNGDSC);
+     $details .= "</center><p></p>";
+   }
+   }
+      if(count($years) > 1)
+         $details .= "<center>Years of Study: ";
+      else
+         $details .= "<center>Year of Study: ";
+      $details .= $links . "</center><br />";
+                 */
+
+}
+if(is_array($results)){
+    $table2 = new htmltable('table2');
+	$table2->startRow();
+	$table2->addCell('<b>Subject Code</b>',null,null, "center");
+    $table2->addCell('<b>Subject</b>',null,null, "center");
+	$table2->addCell('<b>Assessment Type</b>',null,null, "center");
+	$table2->addCell('<b>Assessment Date</b>',null,null, "center");
+	$table2->addCell('<b>Mark</b>',null,null, "center");
+	$table2->endRow();
+    $table2->startRow();
+    $table2->addCell('<hr />', null,null,null,null,"colspan='5'");
+    $table2->endRow();
+	//foreach($results as $values){
+
+		//$marks = $this->dbres->getCourseResuts($results[0]->SBJCDE,$results[0]->YEAR);
+		$ave = 0;
+		//if(is_array($marks)){
+			//foreach($marks as $mark){
+      // echo "count: " . count($results);
+      $details2 = "";
+         /* for($j = 0; $j < count($stcrse); $j++)
+              {
+               if($year == $stcrse[$j]->YEAR){
+                  $course = $this->dbres->getCourseDesc($stcrse[$j]->CRSCDE);
+                  $details2 .= "<center>Year: ".$year."<br />Description: " . htmlentities($course[0]->LNGDSC);
+                  $details2 .= "</center><p></p>";
+               }
+              }
+      if(count($years) > 1)
+         $details2 .= "<center>Years of Study: ";
+      else
+         $details2 .= "<center>Year of Study: ";
+      $details2 .= $links . "</center><br />";   */
+       for($i = count($years)-1; $i >= 0; $i--)
+         {
+          //   if($results[$i]->YEAR == $year)
+          //   {
+                 for($j = 0; $j < count($stcrse); $j++)
+              {
+               if($years[$i] == $stcrse[$j]->YEAR){
+                  $course = $this->dbres->getCourseDesc($stcrse[$j]->CRSCDE);
+                  $details2 = "<center><b>Year: ".$years[$i]."<br />Description: " . htmlentities($course[0]->LNGDSC);
+                  $details2 .= "</b></center><p></p>";
+               }
+              }
+                $table2->startRow();
+		        $table2->addCell($results[$i]->SBJCDE,null,null, "center");
+                $subject = $this->dbres->getSubject($results[$i]->SBJCDE);
+                $table2->addCell(htmlspecialchars($subject[0]->SBJDSC));
+                $table2->addCell("Final Mark",null,null, "center");
+                $table2->addCell($results[$i]->YEAR,null,null, "center");
+                $table2->addCell($results[$i]->FNLMRK,null,null, "center");
+  		        $table2->endRow();
+
+		      //$a++;
+		        $sa++;
+    		//$ave += $results[$a]->FNLMRK;
+		        $stdave += $results[$i]->FNLMRK;
+              if($sa != 0)
+       {
+        $table3 = new htmltable('table3');
+        $table3->startRow();
+		$table3->addCell("&nbsp;",null,null, "center");
+		$table3->endRow();
+		$table3->startRow();
+		$table3->addCell('<b>Student Average</b>',null,null, "center");
+		$table3->addCell('  ',null,null, "center");
+		$stdave = number_format(($stdave/$sa),2);
+		$table3->addCell(' ');
+		$table3->addCell('<b>'.$stdave.'</b>',null,null, "center");
+		$table3->endRow();
+        $table3->startRow();
+		$table3->addCell("&nbsp;",null,null, "center");
+		$table3->endRow();
+        $tshow3 = $table3->show();
+       }
+        $tshow = $table2->show();
+        $this->tabbox1->addTab("$i", "$years[$i]", "$details2 $tshow $tshow3");
+
+        }
+}
+
+
+
+/*
 $this->leftNav = $this->getObject('layer','htmlelements');
 $this->leftNav->id = "leftnav";
 $this->leftNav->str=$left;
-//echo $this->leftNav->addToLayer();
+echo $this->leftNav->addToLayer();
 
 $this->rightNav = $this->getObject('layer','htmlelements');
 $this->rightNav->id = "rightnav";
 $this->rightNav->str = $right;
-//echo $this->rightNav->addToLayer();
-
-$content = "<center>".$details." ".$table->show()."</center>";
+$this->rightNav->width="200px";
+echo $this->rightNav->addToLayer();
+*/
+//$content = " "." ".$table->show()." ";
+$tab1=$this->tabbox1->show();
+$content .= $details. "<h3>Years of Study</h3>" . $tab1. "<br />";
 
 $objForm = new form('theform');
-$objForm->setAction($this->uri(array('action'=>'ok','id'=>$idnumber)));
+$objForm->setAction($this->uri(array('action'=>'ok','id'=>$stdnum)));
 $objForm->setDisplayType(2);
 
+/*
 $ok= new button('ok');
 $ok->setToSubmit();
 $ok->setValue('OK');
+*/
 
 $objForm->addToForm($content);
-$objForm->addToForm($ok);
+//$objForm->addToForm($ok);
 
-
+/*
 $this->contentNav = $this->getObject('layer','htmlelements');
 $this->contentNav->id = "content";
-$this->contentNav->str = $objForm->show();
-$cssLayout2->setMiddleColumnContent($objForm->show());
-$cssLayout2->setLeftColumnContent('');
-
-$cssLayout2->setRightColumnContent($right);
-
+$this->contentNav->str = $objForm->show().'<br><br><br><br>';
 //$this->contentNav->height="300px";
-//echo $this->contentNav->addToLayer();
+echo $this->contentNav->addToLayer();
+*/
+$cssLayout =& $this->newObject('csslayout', 'htmlelements');
+$cssLayout->setNumColumns(3);
+$cssLayout->setLeftColumnContent($left);
+$cssLayout->setRightColumnContent($right);
+$cssLayout->setMiddleColumnContent($content);
 
-echo $cssLayout2->show();
+echo $cssLayout->show();
+
+
 ?>
