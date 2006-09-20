@@ -15,9 +15,9 @@ class dbfinaid extends object
 {
 
  //Web services variables
-    var $objSoapClient;
+    public $objSoapClient;
 
-	function init(){
+	public function init(){
 		parent::init();
         $this->objSoapClient = new SoapClient("http://172.16.65.134/webserviceDEV/studentinfo4.php?wsdl");
 	}
@@ -25,14 +25,14 @@ class dbfinaid extends object
 
     /**
     *
-    * Function to retrieve student account details from the database
+    * public function to retrieve student account details from the database
     *
     * @param string $value: The value to search for in the database
     * @param string $field: The field to search on in the database
     * @return array: The array of matching records from the database
     *
     */
-    function getStudentAccountDetails($value, $field = 'STDNUM'){
+    public function getStudentAccountDetails($value, $field = 'STDNUM'){
         try{
      		return $this->objSoapClient->getlimitSTACC($field, $value, 0, 0);
         }catch(Exception $e){
@@ -45,14 +45,14 @@ class dbfinaid extends object
     
     /**
     *
-    * Function to retrieve student account history details from the database
+    * public function to retrieve student account history details from the database
     *
     * @param string $value: The value to search for in the database
     * @param string $field: The field to search on in the database
     * @return array: The array of matching records from the database
     *
     */
-    function getStudentAccountHistory($value, $field = 'STDNUM'){
+    public function getStudentAccountHistory($value, $field = 'STDNUM'){
         try{
      		return $this->objSoapClient->getlimitSTACH($field, $value, 0, 0);
         }catch(Exception $e){
@@ -62,14 +62,14 @@ class dbfinaid extends object
 
     /**
     *
-    * Function to retrieve transaction details from the database
+    * public function to retrieve transaction details from the database
     *
     * @param string $value: The value to search for in the database
     * @param string $field: The field to search on in the database
     * @return array: The array of matching records from the database
     *
     */
-    function getTransactionDetails($value, $field = 'TRNCDE')
+    public function getTransactionDetails($value, $field = 'TRNCDE')
     {
         try{
      		return $this->objSoapClient->getlimitTRNAC($field, $value, 0, 0);
@@ -80,14 +80,14 @@ class dbfinaid extends object
 
     /**
     *
-    * Function to retrieve matric subject details from the database
+    * public function to retrieve matric subject details from the database
     *
     * @param string $value: The value to search for in the database
     * @param string $field: The field to search on in the database
     * @return array: The array of matching records from the database
     *
     */
-    function getStudentMatricSubjects($value, $field = 'STDNUM'){
+    public function getStudentMatricSubjects($value, $field = 'STDNUM'){
         try{
      		return $this->objSoapClient->getlimitSCLSB($field, $value, 0, 0);
         }catch(Exception $e){
@@ -97,31 +97,48 @@ class dbfinaid extends object
 
     /**
     *
-    * Function to retrieve matric subject details from the database
+    * public function to retrieve matric subject details from the database
     *
     * @param string $value: The value to search for in the database
     * @param string $field: The field to search on in the database
     * @return array: The array of matching records from the database
     *
     */
-    function getMatricSubjectDetails($value, $field = 'MTRSBJCDE'){
+    public function getMatricSubjectDetails($value, $field = 'MTRSBJCDE'){
         try{
      		return $this->objSoapClient->getlimitMTRSB($field, $value, 0, 0);
         }catch(Exception $e){
             return NULL;
         }
     }
-    
+
     /**
     *
-    * Function to retrieve school details from the database
+    * public function to retrieve faculty details from the database
     *
     * @param string $value: The value to search for in the database
     * @param string $field: The field to search on in the database
     * @return array: The array of matching records from the database
     *
     */
-    function getSecondarySchoolDetails($value, $field = 'SCLCDE')
+    public function getFacultyDetails($value, $field = 'FCLTYCDE'){
+        try{
+     		return $this->objSoapClient->getlimitFCLTY($field, $value, 0, 0);
+        }catch(Exception $e){
+            return NULL;
+        }
+    }
+
+    /**
+    *
+    * public function to retrieve school details from the database
+    *
+    * @param string $value: The value to search for in the database
+    * @param string $field: The field to search on in the database
+    * @return array: The array of matching records from the database
+    *
+    */
+    public function getSecondarySchoolDetails($value, $field = 'SCLCDE')
     {
         try{
      		return $this->objSoapClient->getlimitSCHL($field, $value, 0, 0);
@@ -132,14 +149,14 @@ class dbfinaid extends object
     
     /**
     *
-    * Function to retrieve student school details from the database
+    * public function to retrieve student school details from the database
     *
     * @param string $value: The value to search for in the database
     * @param string $field: The field to search on in the database
     * @return array: The array of matching records from the database
     *
     */
-   	function getStudentSchool($value, $field = 'STDNUM')
+   	public function getStudentSchool($value, $field = 'STDNUM')
     {
         try{
      		return $this->objSoapClient->getlimitSTSCL($field, $value, 0, 0);
@@ -150,14 +167,14 @@ class dbfinaid extends object
  
     /**
     *
-    * Function to retrieve subject details from the database
+    * public function to retrieve subject details from the database
     *
     * @param string $value: The value to search for in the database
     * @param string $field: The field to search on in the database
     * @return array: The array of matching records from the database
     *
     */
-   	function getSubject($value, $field = 'SBJCDE')
+   	public function getSubject($value, $field = 'SBJCDE')
     {
         try{
      		return $this->objSoapClient->getlimitSBJCT($field, $value, 0, 0);
@@ -168,14 +185,14 @@ class dbfinaid extends object
 
     /**
     *
-    * Function to retrieve sponsor details from the database
+    * public function to retrieve sponsor details from the database
     *
     * @param string $value: The value to search for in the database
     * @param string $field: The field to search on in the database
     * @return array: The array of matching records from the database
     *
     */
-   	function getSponsor($value, $field = 'BRSCDE')
+   	public function getSponsor($value, $field = 'BRSCDE')
     {
         try{
     		return $this->objSoapClient->getlimitBRSRY($field, $value, 0, 0);
@@ -184,29 +201,29 @@ class dbfinaid extends object
         }
 	}
    //--------------------------------------------------
-   // Test functions
-   	function getParam($value, $field = 'PRMIDN'){
+   // Test public functions
+   	public function getParam($value, $field = 'PRMIDN'){
   		return $this->objSoapClient->getlimitPARAM($field, $value, 0, 0);
 	}
-   	function getParam2($value, $field = 'PRMCOD'){
+   	public function getParam2($value, $field = 'PRMCOD'){
   		return $this->objSoapClient->getlimitPARM2($field, $value, 0, 0);
 	}
 
-    function getStudent($value, $field = 'STDNUM'){
+    public function getStudent($value, $field = 'STDNUM'){
   		return $this->objSoapClient->getlimitSTDET($field, $value, 0, 0);
     }
-    function getStudentSubjects($value, $field = 'STDNUM'){
+    public function getStudentSubjects($value, $field = 'STDNUM'){
   		return $this->objSoapClient->getlimitSTSBJ($field, $value, 0, 0);
     }
-    function getBursary($value, $field = 'BRSCDE'){
+    public function getBursary($value, $field = 'BRSCDE'){
   		return $this->objSoapClient->getlimitBRSRY($field, $value, 0, 0);
     }
 
-    function getBursaryApp($value, $field = 'BSTDNUM'){
+    public function getBursaryApp($value, $field = 'BSTDNUM'){
   		return $this->objSoapClient->getlimitSTBAD($field, $value, 0, 0);
     }
 
-    function getBursaryAllowance($value, $field = 'ALWCDE'){
+    public function getBursaryAllowance($value, $field = 'ALWCDE'){
   		return $this->objSoapClient->getlimitALWNC($field, $value, 0, 0);
     }
 }

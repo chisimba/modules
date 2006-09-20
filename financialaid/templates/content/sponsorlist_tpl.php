@@ -1,5 +1,5 @@
 <?php
-$style = '<link rel="stylesheet" type="text/css" href="modules/financialaid/resources/finaid.css" />';
+$this->appendArrayVar('headerParams','<link rel="stylesheet" type="text/css" href="modules/financialaid/resources/finaid.css" />');
 
 $this->objLanguage = &$this->getObject('language','language');
 $this->objUser =& $this->getObject('user','security');
@@ -132,7 +132,7 @@ if(is_array($sponsors)){
 }
 
 
-$content = $style."<center>".$pagelinks." ".$content. "</center>";
+$content = "<center>".$pagelinks." ".$content. "</center>";
 
 echo $content;
 ?>

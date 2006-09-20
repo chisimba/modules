@@ -13,33 +13,28 @@ if (!$GLOBALS['kewl_entry_point_run'])
 */
 class tabbox extends object
 {
-    var $tabs;
-    var $tabCount;
-    var $tabName;
+    public $tabs;
+    public $tabCount;
+    public $tabName;
     
-    function tabbox(){
+    public function init(){
         $this->tabs = array();
         $this->tabCount = 0;
     }
     
-    function addTab($name, $caption, $content){
+    public function addTab($name, $caption, $content){
         $this->tabs[$this->tabCount]['name'] = $name;
         $this->tabs[$this->tabCount]['caption'] = $caption;
         $this->tabs[$this->tabCount]['content'] = $content;
         $this->tabCount++;
     }
     
-	function show($includeHeader = TRUE){
+	public function show($includeHeader = TRUE){
         if ($this->tabCount > 0){
             if($includeHeader == TRUE){
-                $content = '<link rel="stylesheet" type="text/css" href="modules/financialaid/resources/tabcontent.css" />';
-                $content .='<script type="text/javascript" src="modules/financialaid/resources/tabcontent.js">';
-                $content .='/***********************************************';
-                $content .='* Tab Content script- © Dynamic Drive DHTML code library (www.dynamicdrive.com)';
-                $content .='* This notice MUST stay intact for legal use';
-                $content .='* Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code';
-                $content .='***********************************************/';
-                $content .='</script>';
+                $this->appendArrayVar('headerParams','<link rel="stylesheet" type="text/css" href="modules/financialaid/resources/tabcontent.css" />');
+                $this->appendArrayVar('headerParams', $this->getJavascriptFile('tabcontent.js', 'financialaid'));
+
             }
             $content .='<ol id="'.$this->tabName.'" class="shadetabs">';
             $content .='<li class="selected"><a href="#" rel="'.$this->tabs[0]['name'].'">'.$this->tabs[0]['caption'].'</a></li>';

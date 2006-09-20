@@ -21,9 +21,11 @@ class financialaidleftblock extends object
     */
 
 
-	function show(){
+	public function show(){
 
-        $style = '<link rel="stylesheet" type="text/css" href="modules/financialaid/resources/finaid.css" />';
+//        $style = '<link rel="stylesheet" type="text/css" href="modules/financialaid/resources/finaid.css" />';
+        $this->appendArrayVar('headerParams','<link rel="stylesheet" type="text/css" href="modules/financialaid/resources/finaid.css" />');
+
     	$this->objLanguage = &$this->getObject('language','language');
         $this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
 
@@ -91,7 +93,7 @@ class financialaidleftblock extends object
 		$links.="<span class='menulink'>".$link->show()."</span><br />";
 
         $buffer="<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />";
-		return $style.$header.$links.$buffer;
+		return $header.$links.$buffer;
 	}
 }
 

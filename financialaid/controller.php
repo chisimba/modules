@@ -14,19 +14,19 @@
  */
 class financialaid extends controller
 {
-    var $personid;
-    var $objUser;
-    var $objLanguage;
-    var $studentinfo;
-    var $objDBApplication;
-    var $objDBNextofkin;
-    var $objDBDependants;
-    var $objDBParttimejobs;
-    var $objDBStudentFamily;
-    var $objDBFinancialAidWS;
+    public $personid;
+    public $objUser;
+    public $objLanguage;
+    public $studentinfo;
+    public $objDBApplication;
+    public $objDBNextofkin;
+    public $objDBDependants;
+    public $objDBParttimejobs;
+    public $objDBStudentFamily;
+    public $objDBFinancialAidWS;
     
-    var $objLeftBar;
-    var $objRightBar;
+    public $objLeftBar;
+    public $objRightBar;
 
 	function init(){
 		$this->objUser =& $this->getObject('user','security');
@@ -172,12 +172,14 @@ class financialaid extends controller
             case 'savedependant':
                 $fields = array('appId' => $this->getParam('appid', ''),
                             'firstName' => $this->getParam('firstname', ''),
+                            'surname' => $this->getParam('surname', ''),
+                            'idNumber' => $this->getParam('idnumber', ''),
                             'relationship' => $this->getParam('relationship', ''),
                             'dependantReason' => $this->getParam('dependantreason', ''),
                             'category' => $this->getParam('category', ''),
                             'hasIncome' => $this->getParam('hasIncome', ''),
                             'incomeType' => $this->getParam('incomeType', ''),
-                            'incomeAmount' => $this->getParam('incomeAmount', '0'),
+                            'incomeAmount' => ($this->getParam('incomeAmount', '0') * $this->getParam('incomePeriod', '1')),
                             'dateCreated' => date("Y-m-d H:i:s"),
                             'creatorId' => $this->objUser->userId());
                 $this->objDBFinancialAidWS->saveDependant('add', $fields);
@@ -195,6 +197,7 @@ class financialaid extends controller
                             'jobTitle' => $this->getParam('jobtitle', ''),
                             'employersDetails' => $this->getParam('employersdetails', ''),
                             'employersTelNo' => $this->getParam('employerstelno', ''),
+                            'salary' => $this->getParam('salary', ''),
                             'dateCreated' => date("Y-m-d H:i:s"),
                             'creatorId' => $this->objUser->userId());
                 $this->objDBFinancialAidWS->saveParttimejob('add', $fields);
@@ -222,7 +225,7 @@ class financialaid extends controller
             //----------------
             //Test action
             case 'test':
-                return 'viewapplication_tpl.php';
+                return 'test_tpl.php';
             case 'report':
                 $this->objFinancialAidReports->getMeansTestInput('report.csv', 2006);
                 return 'studentapplicationinfo_tpl.php';

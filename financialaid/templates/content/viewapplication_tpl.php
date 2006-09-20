@@ -49,37 +49,37 @@ if (count($appInfo) > 0){
         //Create the personal details
         $table =& $this->newObject('htmltable','htmlelements');
         $table->startRow();
-        $table->addCell("<b>".$objLanguage->languagetext('word_year')."</b>");
+        $table->addCell("<b>".$objLanguage->languagetext('word_year')."</b>", '45%');
         $table->addCell($appInfo[0]->year);
         $table->endRow();
 
         $table->startRow();
-        $table->addCell("<b>".$objLanguage->languagetext('word_semester')."</b>");
+        $table->addCell("<b>".$objLanguage->languagetext('word_semester')."</b>", '45%');
         $table->addCell($semester[$appInfo[0]->semester]);
         $table->endRow();
 
         $table->startRow();
-        $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_stdnum2','financialaid')."</b>");
+        $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_stdnum2','financialaid')."</b>", '45%');
         $table->addCell($appInfo[0]->studentNumber);
         $table->endRow();
 
         $table->startRow();
-        $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_idnumber','financialaid')."</b>");
+        $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_idnumber','financialaid')."</b>", '45%');
         $table->addCell($studentInfo[0]->IDN);
         $table->endRow();
 
         $table->startRow();
-        $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_gender','financialaid')."</b>");
+        $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_gender','financialaid')."</b>", '45%');
         $table->addCell($this->objDbStudentInfo->getGender($studentInfo[0]->SEX));
         $table->endRow();
 
         $table->startRow();
-        $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_mrtsts','financialaid')."</b>");
+        $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_mrtsts','financialaid')."</b>", '45%');
         $table->addCell($this->objDbStudentInfo->getMarStatus($studentInfo[0]->MARSTS));
         $table->endRow();
 
         $table->startRow();
-        $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_supportingself','financialaid')."</b>");
+        $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_supportingself','financialaid')."</b>", '45%');
         $table->addCell($yesno[$appInfo[0]->supportingSelf]);
    	    $table->endRow();
 
@@ -115,6 +115,9 @@ if (count($appInfo) > 0){
                     if($years[$j] == $studentCourse[$k]->YEAR){
                         $course = $this->objDbStudentInfo->getCourseDesc($studentCourse[$k]->CRSCDE);
                         $courseDetails = "<center>".$course[0]->LNGDSC."</center>";
+
+                        $faculty = $this->objDbFinAid->getFacultyDetails($course[0]->FCLTYCDE);
+                        $courseDetails .= "<center>".htmlspecialchars($faculty[0]->MEDDSC)."</center>";
                     }
                 }
 
@@ -156,19 +159,19 @@ if (count($appInfo) > 0){
             foreach($studentSchool as $data){
                 $tableSchool->startRow();
                 $schoolDetails  = $this->objDbFinAid->getSecondarySchoolDetails($data->SCLCDE);
-                $tableSchool->addCell("<b>".$objLanguage->languagetext('mod_financialaid_school','financialaid')."</b>");
+                $tableSchool->addCell("<b>".$objLanguage->languagetext('mod_financialaid_school','financialaid')."</b>", "40%");
                 $tableSchool->addCell($schoolDetails[0]->LNGDSC);
                 $tableSchool->endRow();
                 $tableSchool->startRow();
-                $tableSchool->addCell("<b>".$objLanguage->languagetext('mod_financialaid_exemptionsts','financialaid')."</b>");
+                $tableSchool->addCell("<b>".$objLanguage->languagetext('mod_financialaid_exemptionsts','financialaid')."</b>", "40%");
                 $tableSchool->addCell($data->EXMPTNSTS);
                 $tableSchool->endRow();
                 $tableSchool->startRow();
-                $tableSchool->addCell("<b>".$objLanguage->languagetext('mod_financialaid_assessmark','financialaid')."</b>");
+                $tableSchool->addCell("<b>".$objLanguage->languagetext('mod_financialaid_assessmark','financialaid')."</b>", "40%");
                 $tableSchool->addCell($data->ASMMRK);
                 $tableSchool->endRow();
                 $tableSchool->startRow();
-                $tableSchool->addCell("<b>".$objLanguage->languagetext('mod_financialaid_symbol','financialaid')."</b>");
+                $tableSchool->addCell("<b>".$objLanguage->languagetext('mod_financialaid_symbol','financialaid')."</b>", "40%");
                 $tableSchool->addCell($data->SBL);
                 $tableSchool->endRow();
             }
@@ -241,48 +244,53 @@ if (count($appInfo) > 0){
         $total = $registrationfee + $tuitionfee + $hostelfee;
         $tableAccount =& $this->newObject('htmltable','htmlelements');
         $tableAccount->startRow();
-        $tableAccount->addCell("<b>".'Registration Fee'."</b>");
+        $tableAccount->addCell("<b>".$objLanguage->languagetext('mod_financialaid_registrationfee','financialaid')."</b>", "40%");
         $tableAccount->addCell($registrationfee);
         $tableAccount->endRow();
         $tableAccount->startRow();
-        $tableAccount->addCell("<b>".'Tuition Fee'."</b>");
+        $tableAccount->addCell("<b>".$objLanguage->languagetext('mod_financialaid_tuitionfee','financialaid')."</b>", "40%");
         $tableAccount->addCell($tuitionfee);
         $tableAccount->endRow();
         $tableAccount->startRow();
-        $tableAccount->addCell("<b>".'Hostel Fee'."</b>");
+        $tableAccount->addCell("<b>".$objLanguage->languagetext('mod_financialaid_hostelfee','financialaid')."</b>", "40%");
         $tableAccount->addCell($hostelfee);
         $tableAccount->endRow();
         $tableAccount->startRow();
         $tableAccount->addCell("&nbsp;");
         $tableAccount->endRow();
         $tableAccount->startRow();
-        $tableAccount->addCell("<b>".'Total'."</b>");
+        $tableAccount->addCell("<b>".$objLanguage->languagetext('word_total')."</b>");
         $tableAccount->addCell("<b>".$total."</b>");
         $tableAccount->endRow();
         $appTabBox->addTab('accountDetails', $objLanguage->languagetext('word_account'), $tableAccount->show());
 
 
-        //Create the employement details tab
+        //Create the employment details tab
         $parttimejobs = $this->objDBFinancialAidWS->getParttimejob($appid);
 
         if(count($parttimejobs) > 0){
             foreach($parttimejobs as $data){
                 $table =& $this->newObject('htmltable','htmlelements');
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_jobtitle','financialaid')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_jobtitle','financialaid')."</b>", "40%");
                 $table->addCell($data->jobTitle);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_empdetails','financialaid')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_empdetails','financialaid')."</b>", "40%");
                 $table->addCell($data->employersTelNo);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_emptelno','financialaid')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_emptelno','financialaid')."</b>", "40%");
                 $table->addCell($data->employersDetails);
                 $table->endRow();
-                
+
+                $table->startRow();
+                $table->addCell("<b>".$objLanguage->languagetext('word_salary')."</b>");
+                $table->addCell($data->salary);
+                $table->endRow();
+
                 $table->startRow();
                 $table->addCell('&nbsp;');
                 $table->endRow();            }
@@ -302,57 +310,57 @@ if (count($appInfo) > 0){
                 $table =& $this->newObject('htmltable','htmlelements');
 
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_idnumber','financialaid')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_idnumber','financialaid')."</b>", "40%");
                 $table->addCell($nextofkin[$i]->idNumber);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('word_relationship')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('word_relationship')."</b>", "40%");
                 $table->addCell($relationship[$nextofkin[$i]->relationship]);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_homeaddress','financialaid')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_homeaddress','financialaid')."</b>", "40%");
                 $table->addCell($nextofkin[$i]->strAddress);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_suburb','financialaid')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_suburb','financialaid')."</b>", "40%");
                 $table->addCell($nextofkin[$i]->suburb);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_city','financialaid')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_city','financialaid')."</b>", "40%");
                 $table->addCell($nextofkin[$i]->city);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_pcode','financialaid')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_pcode','financialaid')."</b>", "40%");
                 $table->addCell($nextofkin[$i]->postcode);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_mrtsts','financialaid')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_mrtsts','financialaid')."</b>", "40%");
                 $table->addCell($maritalstatus[$nextofkin[$i]->maritalStatus]);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_spouse','financialaid')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_spouse','financialaid')."</b>", "40%");
                 $table->addCell($nextofkin[$i]->spouse);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_occupation','financialaid')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_occupation','financialaid')."</b>", "40%");
                 $table->addCell($nextofkin[$i]->occupation);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_empdetails','financialaid')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_empdetails','financialaid')."</b>", "40%");
                 $table->addCell($nextofkin[$i]->employersDetails);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_emptelno','financialaid')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_emptelno','financialaid')."</b>", "40%");
                 $table->addCell($nextofkin[$i]->employersTelNo);
                 $table->endRow();
                 $nextofkinTabBox->addTab($nextofkin[$i]->id, $nextofkin[$i]->firstNames.'&nbsp;'.$nextofkin[$i]->surname, $table->show());
@@ -376,38 +384,48 @@ if (count($appInfo) > 0){
             for($i = 0; $i < count($dependants); $i++){
                 $table =& $this->newObject('htmltable','htmlelements');
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('word_relationship')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('word_surname')."</b>", "60%");
+                $table->addCell($dependants[$i]->surname);
+                $table->endRow();
+
+                $table->startRow();
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_idnumber','financialaid')."</b>", "60%");
+                $table->addCell($dependants[$i]->idnumber);
+                $table->endRow();
+
+                $table->startRow();
+                $table->addCell("<b>".$objLanguage->languagetext('word_relationship')."</b>", "60%");
                 $table->addCell($dependants[$i]->relationship);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_dependantreason','financialaid')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_dependantreason','financialaid')."</b>", "60%");
                 $table->addCell($dependants[$i]->dependantReason);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_category','financialaid')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_category','financialaid')."</b>", "60%");
                 $table->addCell($dependants[$i]->category);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_hasincome','financialaid')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_hasincome','financialaid')."</b>", "60%");
                 $table->addCell($yesno[$dependants[$i]->hasIncome]);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_incometype','financialaid')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_incometype','financialaid')."</b>", "60%");
                 $table->addCell($dependants[$i]->incomeType);
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_incomeamount','financialaid')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_incomeamount','financialaid')."</b>", "60%");
                 $table->addCell($dependants[$i]->incomeAmount);
                 $table->endRow();
 
                 //If dependant is also a student show this info
                 for($j = 0; $j < count($dependantStudents); $j++){
-                    if ($dependantStudents[$j]->firstName == $dependants[$j]->firstName){
+                    if ($dependantStudents[$j]->firstName == $dependants[$i]->firstName){
 
                         $table->startRow();
                         $table->addCell("&nbsp;");
@@ -418,22 +436,22 @@ if (count($appInfo) > 0){
                         $table->endRow();
 
                         $table->startRow();
-                        $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_institution','financialaid')."</b>");
+                        $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_institution','financialaid')."</b>", "60%");
                         $table->addCell($dependantStudents[$j]->institution);
                         $table->endRow();
 
                         $table->startRow();
-                        $table->addCell("<b>".$objLanguage->languagetext('word_course')."</b>");
+                        $table->addCell("<b>".$objLanguage->languagetext('word_course')."</b>", "60%");
                         $table->addCell($dependantStudents[$j]->course);
                         $table->endRow();
 
                         $table->startRow();
-                        $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_yearofstudy','financialaid')."</b>");
+                        $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_yearofstudy','financialaid')."</b>", "60%");
                         $table->addCell($dependantStudents[$j]->yearOfStudy);
                         $table->endRow();
 
                         $table->startRow();
-                        $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_stdnum2','financialaid')."</b>");
+                        $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_stdnum2','financialaid')."</b>", "60%");
                         $table->addCell($dependantStudents[$j]->studentNumber);
                         $table->endRow();
                         

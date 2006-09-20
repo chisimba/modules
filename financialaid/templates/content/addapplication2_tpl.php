@@ -19,7 +19,10 @@ if (is_array($studentinfo)){
 
         $appid = "init" . "_" . rand(1000,9999) . "_" . time();
         $appidfield = new textinput("appid", $appid,  "hidden", NULL);
-        $year = new textinput("year", $startyear,  "hidden", NULL);
+        $year = new dropdown("year");
+        $year->addOption($startyear, $startyear.'&nbsp;&nbsp;&nbsp;');
+        $year->addOption($startyear + 1, ($startyear + 1).'&nbsp;&nbsp;&nbsp;');
+        
         $snum = new textinput("stdnum", $stdNum,  "hidden", NULL);
         $surname = new textinput("surname", $studentinfo[0]->SURNAM,  "hidden", NULL);
         $idnum = new textinput("idnumber", $studentinfo[0]->IDN,  "hidden", NULL);
@@ -50,10 +53,6 @@ if (is_array($studentinfo)){
         $table->endRow();
         
         $table->startRow();
-        $table->addCell($year->show());
-        $table->endRow();
-
-        $table->startRow();
         $table->addCell($snum->show());
         $table->endRow();
 
@@ -67,7 +66,7 @@ if (is_array($studentinfo)){
 
         $table->startRow();
         $table->addCell($objLanguage->languagetext('word_year'));
-        $table->addCell($startyear);
+        $table->addCell($year->show());
         $table->endRow();
 
         $table->startRow();

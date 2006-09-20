@@ -1,5 +1,5 @@
 <?php
-$style = '<link rel="stylesheet" type="text/css" href="modules/financialaid/resources/finaid.css" />';
+$this->appendArrayVar('headerParams','<link rel="stylesheet" type="text/css" href="modules/financialaid/resources/finaid.css" />');
 
 
 
@@ -152,12 +152,12 @@ if (isset($stdinfo)){
 	$table->cellspacing = 2;
 
 	$table->startHeaderRow();
+	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid'),null,'top','left','header');
+	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_surname','financialaid'),null,'top','left','header');
+	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_firstname','financialaid'),null,'top','left','header');
+	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_idnum','financialaid'),null,'top','left','header');
 	$table->addHeaderCell($objLanguage->languagetext('word_year'),null,'top','left','header');
 	$table->addHeaderCell($objLanguage->languagetext('word_semester'),null,'top','left','header');
-	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid'),null,'top','left','header');
-	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_firstname','financialaid'),null,'top','left','header');
-	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_surname','financialaid'),null,'top','left','header');
-	$table->addHeaderCell($objLanguage->languagetext('mod_financialaid_idnum','financialaid'),null,'top','left','header');
 	$table->endHeaderRow();
 
 	if(is_array($stdinfo)){
@@ -175,17 +175,17 @@ if (isset($stdinfo)){
                // $viewdetails->cssClass = 'tablelink';
                 $table->css_class = 'highlightrows';
     			$table->startRow();
-    			$viewdetails->link = $stdinfo[$i]->year;
-    			$table->addCell("<span class='tablelink'>".$viewdetails->show()."</span>", null, 'top', null, 'widelink');
-    			$viewdetails->link = $stdinfo[$i]->semester;
-    			$table->addCell("<span class='tablelink'>".$viewdetails->show()."</span>", null, 'top', null, 'widelink');
     			$viewdetails->link = $stdinfo[$i]->studentNumber;
-    			$table->addCell("<span class='tablelink'>".$viewdetails->show()."</span>", null, 'top', null, 'widelink');
-    			$viewdetails->link = $studentinfo[0]->FSTNAM;
     			$table->addCell("<span class='tablelink'>".$viewdetails->show()."</span>", null, 'top', null, 'widelink');
     			$viewdetails->link = $studentinfo[0]->SURNAM;
     			$table->addCell("<span class='tablelink'>".$viewdetails->show()."</span>", null, 'top', null, 'widelink');
+    			$viewdetails->link = $studentinfo[0]->FSTNAM;
+    			$table->addCell("<span class='tablelink'>".$viewdetails->show()."</span>", null, 'top', null, 'widelink');
     			$viewdetails->link = $studentinfo[0]->IDN;
+    			$table->addCell("<span class='tablelink'>".$viewdetails->show()."</span>", null, 'top', null, 'widelink');
+    			$viewdetails->link = $stdinfo[$i]->year;
+    			$table->addCell("<span class='tablelink'>".$viewdetails->show()."</span>", null, 'top', null, 'widelink');
+    			$viewdetails->link = $semester[$stdinfo[$i]->semester];
     			$table->addCell("<span class='tablelink'>".$viewdetails->show()."</span>", null, 'top', null, 'widelink');
     			$table->endRow();
 
@@ -206,7 +206,7 @@ if ($foundStudents == FALSE) {
     $records = '';
 }
 
-$content = $style.$details.$pagelinks.$content;
+$content = $details.$pagelinks.$content;
 
 echo $content;
 ?>

@@ -16,9 +16,9 @@ class applicationblocksearchbox extends object
     /**
     * var object Property to hold language object
     */
-    var $objLanguage;
+    public $objLanguage;
     
-	function show(){
+	public function show(){
         // Get an Instance of the language object
         $this->objLanguage = &$this->getObject('language', 'language');
 

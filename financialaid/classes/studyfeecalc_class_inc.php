@@ -13,15 +13,15 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 class studyfeecalc extends object
 {
-    var $objFinancialAidCustomWS;
+    public $objFinancialAidCustomWS;
 
-	function init(){
+	public function init(){
 		parent::init();
         $this->objFinancialAidCustomWS =& $this->getObject('financialaidcustomws','financialaid');
 
 	}
 
-    function getFee($stdnum, $type){
+    public function getFee($stdnum, $type){
         $fee = 0;
         
         $studentAccount = $this->objFinancialAidCustomWS->getStudentAccount($stdnum, $type);
@@ -36,13 +36,13 @@ class studyfeecalc extends object
 
     /**
     *
-    * Function to retrieve registration fee for sudent
+    * public function to retrieve registration fee for sudent
     *
     * @param string $stdnum: The student number of student
     * @return int: Registration fee
     *
     */
-    function getRegistrationFee($stdnum){
+    public function getRegistrationFee($stdnum){
         $registrationfee = 0;
 
         $registrationfee += $this->getFee($stdnum, '2');
@@ -52,13 +52,13 @@ class studyfeecalc extends object
     }
     /**
     *
-    * Function to retrieve tuition fee for sudent
+    * public function to retrieve tuition fee for sudent
     *
     * @param string $stdnum: The student number of student
     * @return int: Tuition fee
     *
     */
-    function getTuitionFee($stdnum){
+    public function getTuitionFee($stdnum){
         $tuitionfee = 0;
 
         $tuitionfee += $this->getFee($stdnum, '11');
@@ -69,13 +69,13 @@ class studyfeecalc extends object
     }
     /**
     *
-    * Function to retrieve tuition fee for sudent
+    * public function to retrieve tuition fee for sudent
     *
     * @param string $stdnum: The student number of student
     * @return int: Hostel fee
     *
     */
-    function getHostelFee($stdnum){
+    public function getHostelFee($stdnum){
         $hostelfee = 0;
 
         $hostelfee += $this->getFee($stdnum, '53');

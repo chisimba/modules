@@ -53,67 +53,67 @@ $table->addCell($appidfield->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_idnumber','financialaid').'<span class="error">&nbsp;*</span>');
+$table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_idnumber','financialaid').'<span class="error">&nbsp;*</span>'."</b>");
 $table->addCell($idNum->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_surname','financialaid').'<span class="error">&nbsp;*</span>');
+$table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_surname','financialaid').'<span class="error">&nbsp;*</span>'."</b>");
 $table->addCell($surname->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_firstnames','financialaid').'<span class="error">&nbsp;*</span>');
+$table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_firstnames','financialaid').'<span class="error">&nbsp;*</span>'."</b>");
 $table->addCell($firstname->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_relationship','financialaid'));
+$table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_relationship','financialaid')."</b>");
 $table->addCell($relationship->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_homeaddress','financialaid'));
+$table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_homeaddress','financialaid')."</b>");
 $table->addCell($straddress->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_suburb','financialaid'));
+$table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_suburb','financialaid')."</b>");
 $table->addCell($suburb->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_city','financialaid'));
+$table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_city','financialaid')."</b>");
 $table->addCell($city->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_pcode','financialaid'));
+$table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_pcode','financialaid')."</b>");
 $table->addCell($postcode->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_mrtsts','financialaid'));
+$table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_mrtsts','financialaid')."</b>");
 $table->addCell($maritalSts->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_spouse','financialaid'));
+$table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_spouse','financialaid')."</b>");
 $table->addCell($spouse->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_occupation','financialaid'));
+$table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_occupation','financialaid')."</b>");
 $table->addCell($occupation->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_empdetails','financialaid'));
+$table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_empdetails','financialaid')."</b>");
 $table->addCell($employerDetails->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell($objLanguage->languagetext('mod_financialaid_emptelno','financialaid'));
+$table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_emptelno','financialaid')."</b>");
 $table->addCell($employerTelNo->show());
 $table->endRow();
 

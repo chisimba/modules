@@ -18,6 +18,7 @@ $appidfield = new textinput("appid", $appid,  "hidden", NULL);
 $jobTitle = new textinput('jobtitle');
 $employersDetails = new textinput('employersdetails');
 $employersTelNo = new textinput('employerstelno');
+$salary = new textinput('salary');
 
 $addbut= new button('add');
 $addbut->setToSubmit();
@@ -44,6 +45,11 @@ $table->endRow();
 $table->startRow();
 $table->addCell($objLanguage->languagetext('mod_financialaid_emptelno','financialaid'));
 $table->addCell($employersTelNo->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objLanguage->languagetext('word_salary'));
+$table->addCell($salary->show());
 $table->endRow();
 
 $table->startRow();

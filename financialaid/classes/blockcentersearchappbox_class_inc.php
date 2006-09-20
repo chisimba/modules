@@ -13,7 +13,7 @@ class blockcentersearchappbox extends object
     /**
     * var object Property to hold language object
     */
-    var $objLanguage;
+    public $objLanguage;
     
 	function show(){
         // Get an Instance of the language object

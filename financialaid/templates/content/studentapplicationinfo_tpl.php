@@ -44,7 +44,7 @@ $details = "<center><h2>".$objLanguage->code2Txt('mod_financialaid_apptitle','fi
 if(count($stdinfo) > 0){
     $table =& $this->newObject('htmltable','htmlelements');
     $table->startRow();
-    $table->addCell($objLanguage->languagetext('word_year'));
+    $table->addCell($objLanguage->languagetext('word_year'), '20%');
     $table->addCell($stdinfo[0]->year);
     $table->endRow();
 

@@ -7,7 +7,7 @@ $years = new dropdown('resultyear', null, null, 6);
 $date = date("Y");
 $start = date("Y");
 for($i = 0; $i < 16; $i ++){
-	$years->addOption($start,$start);
+	$years->addOption($start,$start.'&nbsp;&nbsp;&nbsp;');
 	$start--;
 }
 
@@ -22,7 +22,7 @@ $lowerMark->addOption('60','60');
 $lowerMark->addOption('70','70');
 $lowerMark->addOption('80','80');
 $lowerMark->addOption('90','90');
-$lowerMark->addOption('100','100');
+$lowerMark->addOption('100','100'.'&nbsp;&nbsp;&nbsp;');
 $upperMark = new dropdown('uppermark',null,null,5);
 $upperMark->addOption('0','0');
 $upperMark->addOption('10','10');
@@ -34,12 +34,12 @@ $upperMark->addOption('60','60');
 $upperMark->addOption('70','70');
 $upperMark->addOption('80','80');
 $upperMark->addOption('90','90');
-$upperMark->addOption('100','100');
+$upperMark->addOption('100','100'.'&nbsp;&nbsp;&nbsp;');
 
 $table->startRow();
 $table->addCell('Marks Between');
 $table->addCell($lowerMark->show());
-$table->addCell('and');
+$table->addCell('and&nbsp;');
 $table->addCell($upperMark->show());
 $table->endRow();
 
