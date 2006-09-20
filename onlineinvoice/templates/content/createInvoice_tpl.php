@@ -25,7 +25,8 @@ $displayhelp  = $this->objHelp->show('mod_onlineinvoice_helpinstruction');
  *determine if the session contianing inv dates is empty or not
  *if empty then user cannot move to next pg or cat before submitting inv dates
  */  
-$invoicedata = $this->getSession('invoicedata');
+//$invoicedata = array(); 
+$invoicedata  = $this->getSession('invoicedata');
 if(!empty($invoicedata)){
   $hasSubmitted = 'yes';
 } else {
@@ -42,6 +43,7 @@ $travelExpenses = $objLanguage->languageText('mod_onlineinvoice_travelexpensesup
 $btnSubmit  = $this->objLanguage->languageText('word_submit');
 $str1 = ucfirst($btnSubmit);
 $btnEdit  = $this->objLanguage->languageText('word_edit');
+$str2 = ucfirst($btnEdit);
 $createTEV  = $this->objLanguage->languageText('phrase_yescreatenewtev');
 $nextCategory  = $this->objLanguage->languageText('phrase_nomovetonextcategory');
 $error_message = $this->objLanguage->languageText('phrase_dateerror');
@@ -140,8 +142,8 @@ $this->objenddate->setDateFormat($format);
  */
  
 /*button -submit*/
-$this->objButtonSubmit  = $this->newobject('button','htmlelements');
-$this->objButtonSubmit->setValue($str1);
+$this->loadclass('button','htmlelements');
+$this->objButtonSubmit  = new button('submit', $str1);
 $this->objButtonSubmit->setToSubmit();
 
 /**
@@ -173,10 +175,12 @@ $this->objButtonSubmit->setToSubmit();
 						acceptance = true;
 						return false;
 					 }else{
-           alert(\''.$sucessfull.'\')
+       //    alert(\''.$sucessfull.'\')
            }';
 	$this->objButtonSubmit->extra = sprintf(' onClick ="javascript: %s"', $onClick );
  
+$this->objButtonEdit  = new button('edit', $str2);
+$this->objButtonEdit->setToSubmit();
 /*********************************************************************************************************************************************************/ 
 
 /*create table to place form elements in  --  date values*/
@@ -218,6 +222,9 @@ $this->objButtonSubmit->setToSubmit();
 
         $myTable->startRow();
         $myTable->addCell($this->objButtonSubmit->show());
+        if(!empty($invoicedata)){
+          $myTable->addCell($this->objButtonEdit->show());
+        }
         $myTable->endRow();
 
 /*********************************************************************************************************************************************************/        
@@ -253,6 +260,33 @@ $objcreateinvtab->addBoxContent('<br />'  . $this->objDateRange->show() . '<br /
 /**
  *determines if the session if the session variable containing the invoice dates is empty or not
  */  
+ //$invdates  = $this->getSession('invoicedata');
+ if(!empty($invoicedata)){
+//Create table to display dates in session and the rates for breakfast, lunch and dinner and the total rate 
+  $objDateTable =& $this->newObject('htmltable', 'htmlelements');
+  $objDateTable->cellspacing = '2';
+  $objDateTable->cellpadding = '2';
+  $objDateTable->border='1';
+  $objDateTable->width = '100%';
+  
+  $objDateTable->startHeaderRow();
+  $objDateTable->addHeaderCell('Begin Date ');
+  $objDateTable->addHeaderCell('End Date ');
+  $objDateTable->endHeaderRow();
+  
+  
+  $rowcount = '0';
+  
+  foreach($invoicedata as $sesDat){
+     
+     $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+     
+     $objDateTable->startRow();
+     $objDateTable->addCell($sesDat['begindate'], '', '', '', $oddOrEven);
+     $objDateTable->addCell($sesDat['enddate'], '', '', '', $oddOrEven);
+     $objDateTable->endRow();
+  }
+}
 
 /***************************************************************************************************************************************************************/
 
@@ -263,7 +297,7 @@ echo  "<div align=\"center\">" . $this->objMainheading->show() . "</div>";
 /** 
  *Create timeout message to inform user that they need to submit inv dates
  */ 
-$submitdatesmsg = '';
+//$submitdatesmsg = '';
 if($submitdatesmsg == 'yes'){
   $tomsg =& $this->newObject('timeoutmessage', 'htmlelements');
   $tomsg->setMessage($alertmsg);
@@ -274,7 +308,10 @@ if($submitdatesmsg == 'yes'){
 echo  '<br />';
 echo  '<br />';
 echo  '<br />'  . $objcreateinvtab->show();
-
+if(!empty($invoicedata)){
+//var_dump($invoicedata);
+  echo "<div align=\"left\">" . $objDateTable->show() . "</div>";
+}
 ?>
 
 
