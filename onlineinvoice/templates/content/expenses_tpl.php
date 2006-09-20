@@ -383,6 +383,7 @@ if(!empty($sessionDates)){
 echo  "<div align=\"center\">" . $this->objMainheading->show() . "</div>";
 echo  "<div align=\"center\">" . $myTablabel->show() . "</div>";
 echo '<br />'.  "<div align=\"left\">"  . $objForm->show() . "</div>";
+
 if(!empty($sessionDates)){
   echo "<div align=\"left\">" . $objExpByDateTable->show() . "</div>";
 }

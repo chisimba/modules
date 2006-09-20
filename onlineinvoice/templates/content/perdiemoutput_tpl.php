@@ -63,14 +63,14 @@
   $objExpByDateTable->endRow();
   
   $objExpByDateTable->startRow();
-  $objExpByDateTable->addCell(' ');
-  $objExpByDateTable->addCell(' ');
-  $objExpByDateTable->addCell(' ');
-  $objExpByDateTable->addCell(' ');
-  $objExpByDateTable->addCell(' ');
-  $objExpByDateTable->addCell(' ');
-  $objExpByDateTable->addCell(' ');
-  $objExpByDateTable->addCell(' ');
+  $objExpByDateTable->addCell($sesDat['date'], '', '', '', $oddOrEven);
+  $objExpByDateTable->addCell($sesDat['blocation'], '', '', '', $oddOrEven);
+  $objExpByDateTable->addCell($sesDat['btrate'], '', '', '', $oddOrEven);
+  $objExpByDateTable->addCell($sesDat['llocation'], '', '', '', $oddOrEven);
+  $objExpByDateTable->addCell($sesDat['lRate'], '', '', '', $oddOrEven);
+  $objExpByDateTable->addCell($sesDat['dlocation'], '', '', '', $oddOrEven);
+  $objExpByDateTable->addCell($sesDat['drrate'], '', '', '', $oddOrEven);
+  $objExpByDateTable->addCell($sesDat['total'], '', '', '', $oddOrEven);
   $objExpByDateTable->addCell('Total: ' .$sesDat['finaltotal'], '', '', '', $oddOrEven);
   $objExpByDateTable->endRow();
   }

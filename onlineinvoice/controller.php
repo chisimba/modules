@@ -124,11 +124,20 @@ class onlineinvoice extends controller
               /** call the function that stores date values entered by user into a session variable -- therefore setting the session
                 *  return to the invoice template            
                 */
-                  $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
-                  $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
-                  $this->getInvoicedates();
-                  $this->setLayoutTemplate('invoice_layout_tpl.php');
-                  return 'createInvoice_tpl.php';
+                $submit = $this->getParam('submit');
+                $edit = $this->getParam('edit');
+                if(isset($submit)){
+                    $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
+                    $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
+                    $this->getInvoicedates();
+                    $this->setLayoutTemplate('invoice_layout_tpl.php');
+                    return 'createInvoice_tpl.php';
+                }else{
+                     $this->unsetSession('invoicedata'); 
+                     $this->setLayoutTemplate('invoice_layout_tpl.php');
+                     return 'createInvoice_tpl.php';
+                }
+                
             break;
           
           case 'createtev':                   /*  display the tev voucher   */
