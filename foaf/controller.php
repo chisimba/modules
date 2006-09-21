@@ -11,6 +11,7 @@ class foaf extends controller
 	public $objLanguage;
 	public $objFoaf;
 	public $objFoafParser;
+	public $objUser;
 
 	/**
      * Constructor method to instantiate objects and get variables
@@ -22,6 +23,8 @@ class foaf extends controller
 			$this->objLanguage = $this->getObject('language', 'language');
 			$this->objFoaf = $this->getObject('foafcreator');
 			$this->objFoafParser = $this->getObject('foafparser');
+			//LOAD UP THE USER OBJECT
+			$this->objUser = $this->getObject('user', 'security');
 			//Get the activity logger class
 			$this->objLog = $this->newObject('logactivity', 'logger');
 			//Log this module call
@@ -44,14 +47,19 @@ class foaf extends controller
 		switch ($action) {
 			default:
 			case 'createfoaf':
+				$userid = $this->objUser->userId();
+				$fullname = $this->objUser->fullname();
+				$email = $this->objUser->email();
+				$depiction = $this->objUser->getUserImageNoTags();
+
 				//var_dump($this->objFoaf);
 				$this->objFoaf->newAgent('person');
-				$this->objFoaf->setName('Paul Scott');
+				$this->objFoaf->setName($fullname);
 				$this->objFoaf->setTitle('Mr');
 				$this->objFoaf->setFirstName('Paul');
 				$this->objFoaf->setSurname('Scott');
 				$this->objFoaf->setGeekcode('GCS/S d-- s++:+ a- C+++$ UBL+$ P+ L+++$ E- !W+++$ N+ !o !K-- !w-- O M V PS+++ PE++ Y+ PGP+ t+ 5 X R tv-- b+++ DI-- D++ G e++ h---- r+++ y++++');
-				$this->objFoaf->addMbox('mailto:pscott@uwc.ac.za',TRUE); // see also: XML_FOAF::setMboxSha1Sum();
+				$this->objFoaf->addMbox('mailto:'.$email,TRUE); // see also: XML_FOAF::setMboxSha1Sum();
 				$this->objFoaf->addHomepage('http://fsiu.uwc.ac.za');
 				$this->objFoaf->addWeblog('http://fsiu.uwc.ac.za/index.php?module=blog');
 				$this->objFoaf->addImg('http://fsiu.uwc.ac.za/usr_images/pscott.jpg');
@@ -69,7 +77,7 @@ class foaf extends controller
 				$this->objFoaf->addFundedBy('http://www.idrc.ca');
 				$this->objFoaf->addLogo('http://www.php.net/image.jpg');
 				$this->objFoaf->setBasedNear(32.565475,-25.162895);
-				$this->objFoaf->addDepiction('http://example.org/depiction/');
+				$this->objFoaf->addDepiction($depiction);
 				$this->objFoaf->addDepiction('http://example.org/depiction/2');
 
 				//var_dump($this->objFoaf->foaftree);
