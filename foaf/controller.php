@@ -101,14 +101,14 @@ class foaf extends controller
     	//echo "<hr />";
     	//echo $this->objConfig->getSiteRootPath();
     	header('Content-Type: text/xml');
-    	$this->objFoaf->toFile('/var/www/tests', 'paulfoaf.rdf', $this->objFoaf->get());
+    	$this->objFoaf->toFile('/var/www/5ive/app/usrfiles/', 'paulfoaf.rdf', $this->objFoaf->get());
     	//$foaf->dump();
     	$this->objFoaf->dump();
 				break;
 
 			case 'parsefoaf':
 				$this->objFoafParser->setup();
-				$fp = $this->objFoafParser->parseFromFile('/var/www/tests/paulfoaf.rdf');
+				$fp = $this->objFoafParser->parseFromUri('/var/www/tests/paulfoaf.rdf');
 				//var_dump($this->objFoafParser->rdf_parser);
 				//print_r($this->objFoafParser->foaf_data);
 				var_dump($this->objFoafParser->toObject($this->objFoafParser->foaf_data));
