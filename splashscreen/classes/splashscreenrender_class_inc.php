@@ -32,6 +32,10 @@ class splashscreenrender extends object
         	$this->objModule=& $this->getObject('modules','modulecatalogue');
         	// Create an instance of the help object
         	$this->objHelp =& $this->getObject('help', 'help');
+        	
+        	$this->loadClass('form', 'htmlelements');
+        	$this->loadClass('dropdown', 'htmlelements');
+        	$this->loadClass('button', 'htmlelements');
         }
         catch (customException $e)
         {
@@ -157,10 +161,31 @@ class splashscreenrender extends object
 
     /**
     *  Method to get the dropdown that contains all the public courses
-    * @author Wesley Nitsckie
+    * @author Tohir Solomons
     */
-    function getContextDropDown(){
-        return ' ';
+    function getContextDropDown()
+    {
+        $objContext =& $this->getObject('dbcontext', 'context');
+        $courses = $objContext->getListOfPublicContext();
+
+        if (count($courses) == 0) {
+            return '';
+            
+        } else {
+            $form = new form('joincontext', $this->uri(array('action'=>'joincontext'), 'context'));
+            $dropdown = new dropdown ('contextCode');
+            foreach ($courses AS $course)
+            {
+                $dropdown->addOption($course['contextcode'], $course['menutext']);
+            }
+            $dropdown->setSelected($objContext->getContextCode());
+            $button = new button ('submitform', ucwords($this->objLanguage->code2Txt('mod_context_joincontext', 'context')));
+            $button->setToSubmit();
+            
+            $form->addToForm($dropdown->show().'<br />'.$button->show());
+            
+            return $form->show();
+        }
     }
 
 
