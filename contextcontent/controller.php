@@ -19,6 +19,15 @@ class contextcontent extends controller
         $this->objUser =& $this->getObject('user', 'security');
     }
     
+    function requiresLogin($action)
+    {
+        if ($action=='' || $action == 'viewpage') {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
+    
     public function dispatch($action)
     {
         if ($this->contextCode == '' && $action != 'notincontext') {
