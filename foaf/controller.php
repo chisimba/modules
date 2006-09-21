@@ -108,7 +108,7 @@ class foaf extends controller
 
 			case 'parsefoaf':
 				$this->objFoafParser->setup();
-				$fp = $this->objFoafParser->parseFromUri('/var/www/tests/paulfoaf.rdf');
+				$fp = $this->objFoafParser->parseFromUri('/var/www/5ive/app/usrfiles/paulfoaf.rdf');
 				//var_dump($this->objFoafParser->rdf_parser);
 				//print_r($this->objFoafParser->foaf_data);
 				var_dump($this->objFoafParser->toObject($this->objFoafParser->foaf_data));
