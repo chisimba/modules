@@ -10,6 +10,7 @@ class foaf extends controller
 	public $objConfig;
 	public $objLanguage;
 	public $objFoaf;
+	public $objFoafParser;
 
 	/**
      * Constructor method to instantiate objects and get variables
@@ -20,6 +21,7 @@ class foaf extends controller
 			$this->objConfig = $this->getObject('altconfig', 'config');
 			$this->objLanguage = $this->getObject('language', 'language');
 			$this->objFoaf = $this->getObject('foafcreator');
+			$this->objFoafParser = $this->getObject('foafparser');
 			//Get the activity logger class
 			$this->objLog = $this->newObject('logactivity', 'logger');
 			//Log this module call
@@ -41,6 +43,7 @@ class foaf extends controller
 
 		switch ($action) {
 			default:
+			case 'createfoaf':
 				//var_dump($this->objFoaf);
 				$this->objFoaf->newAgent('person');
 				$this->objFoaf->setName('Paul Scott');
@@ -62,9 +65,9 @@ class foaf extends controller
 				$this->objFoaf->addWorkplaceHomepage('http://fsiu.uwc.ac.za');
 				$this->objFoaf->addSchoolHomepage('http://www.uwc.ac.za/');
 				$this->objFoaf->addInterest('http://xmlns.com/foaf/0.1/');
-				$this->objFoaf->addFundedBy('http://synapticmedia.net');
-				$this->objFoaf->addLogo('http://paws.davey.is-a-geek.com/images/paws.jpg');
-				$this->objFoaf->setBasedNear(52.565475,-1.162895);
+				$this->objFoaf->addFundedBy('http://www.idrc.ca');
+				$this->objFoaf->addLogo('http://www.php.net/image.jpg');
+				$this->objFoaf->setBasedNear(32.565475,-25.162895);
 				$this->objFoaf->addDepiction('http://example.org/depiction/');
 				$this->objFoaf->addDepiction('http://example.org/depiction/2');
 
@@ -101,15 +104,14 @@ class foaf extends controller
     	//$foaf->dump();
     	$this->objFoaf->dump();
 				break;
+
+			case 'parsefoaf':
+				$this->objFoafParser->setup();
+				$fp = $this->objFoafParser->parseFromFile('/var/www/tests/paulfoaf.rdf');
+				//var_dump($this->objFoafParser->rdf_parser);
+				//print_r($this->objFoafParser->foaf_data);
+				var_dump($this->objFoafParser->toObject($this->objFoafParser->foaf_data));
 		}
 	}
-/*
-	public function addKnows(&$foaf_agent)
-    {
-        //var_dump($foaf_agent);
-    	$this->knows =& $this->objFoaf->foaftree->addChild('foaf:knows');
-        $this->knows->addChild($foaf_agent->foaftree);
-        return true;
-    }*/
 }
 ?>
