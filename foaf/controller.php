@@ -50,6 +50,7 @@ class foaf extends controller
 				$this->objFoaf->setTitle('Mr');
 				$this->objFoaf->setFirstName('Paul');
 				$this->objFoaf->setSurname('Scott');
+				$this->objFoaf->setGeekcode('GCS/S d-- s++:+ a- C+++$ UBL+$ P+ L+++$ E- !W+++$ N+ !o !K-- !w-- O M V PS+++ PE++ Y+ PGP+ t+ 5 X R tv-- b+++ DI-- D++ G e++ h---- r+++ y++++');
 				$this->objFoaf->addMbox('mailto:pscott@uwc.ac.za',TRUE); // see also: XML_FOAF::setMboxSha1Sum();
 				$this->objFoaf->addHomepage('http://fsiu.uwc.ac.za');
 				$this->objFoaf->addWeblog('http://fsiu.uwc.ac.za/index.php?module=blog');
