@@ -17,41 +17,41 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 * @example :
 */
 
-class cmsutils extends object 
+class cmsutils extends object
 {
-	
+
 	/**
-     * The sections  object 
+     * The sections  object
      *
      * @access private
      * @var object
     */
     protected $_objSections;
-    
+
     /**
-     * The categories  object 
+     * The categories  object
      *
      * @access public
      * @var object
     */
     protected $_objCategories;
-    
+
      /**
-     * The Content object 
+     * The Content object
      *
      * @access private
      * @var object
     */
     protected $_objContent;
-    
+
      /**
-     * The Content Front Page object 
+     * The Content Front Page object
      *
      * @access private
      * @var object
     */
     protected $_objFrontPage;
-    
+
      /**
      * The User object
      *
@@ -59,7 +59,7 @@ class cmsutils extends object
      * @var object
     */
     protected $_objUser;
-    
+
 	/**
 	 * Constructor
 	 */
@@ -71,34 +71,34 @@ class cmsutils extends object
 			$this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
 			$this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
 			$this->_objUser = & $this->newObject('user', 'security');
-			
-			
+
+
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
-		
+
 	}
-	
+
 	/**
 	 * Method to reoder records
 	 */
 	public function reOrder()
 	{
 		try {
-			
+
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
-		
-		
+
+
 	}
-	
-	
+
+
 	/**
-	 * Method to detemine the access 
-	 * @param int $access The access 
+	 * Method to detemine the access
+	 * @param int $access The access
 	 * @return string
 	 * @access public
 	 */
@@ -116,8 +116,8 @@ class cmsutils extends object
         	exit();
         }
 	}
-	
-	
+
+
 	/**
 	 * Method to get the images dropdown
 	 * @access public
@@ -130,26 +130,26 @@ class cmsutils extends object
 		try {
 			$objDropDown = & $this->newObject('dropdown', 'htmlelements');
 			$objConfig = & $this->newObject('altconfig' , 'config');
-			
+
 			$objMedia = & $this->newObject('mmutils', 'mediamanager');
 			$objMedia->getImages();
 			$objDropDown->name = $name;
 			//fill the drop down with the list of images
 			$path = $objConfig->getsiteRoot().'usrfiles/media';
-			
+
 			$objDropDown->addOption('0',' - Select Image - ');
 			$objDropDown->addFromDB($objMedia->getImages(),'title','folder',$selected);
 			$objDropDown->extra = 'onchange=" return changeImage(this, this.form) "';
-			return $objDropDown->show();		
+			return $objDropDown->show();
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
-	}	
-	
-	
-	
-	
+	}
+
+
+
+
 	/**
 	 * Method to get the image position dropdown
 	 * @access public
@@ -168,17 +168,17 @@ class cmsutils extends object
 			$objDropDown->addOption('2','Right');
 			$objDropDown->setSelected('1');
 			$objDropDown->extra = 'size="3"';
-			return $objDropDown->show();		
+			return $objDropDown->show();
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
 	}
-	
-	
+
+
 	/**
 	 * Method to get the Yes/No radio  box
-	 * 
+	 *
 	 * @param  string $name The name of the radio box
 	 * @access public
 	 * @return string
@@ -188,21 +188,21 @@ class cmsutils extends object
 		try {
 			$objRadio = & $this->newObject('radio', 'htmlelements');
 			$objRadio->name = $name;
-			$objRadio->addOption('0','No');		
-			$objRadio->addOption('1','Yes');		
+			$objRadio->addOption('0','No');
+			$objRadio->addOption('1','Yes');
 			$selected = ($selected == 'No') ? '0' : '1';
 			$objRadio->setSelected($selected);
-			
-			return $objRadio->show();		
+
+			return $objRadio->show();
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
 	}
-	
+
 	/**
 	 * Method to get the Access List dropdown
-	 * 
+	 *
 	 * @var string $name The name of the radio box
 	 * @access public
 	 * @param string $name The name of the field
@@ -224,39 +224,39 @@ class cmsutils extends object
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
-		
+
 	}
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 * Method to get the layout options for a section
 	 * At the moment there are 4 types of layouts
 	 * The layouts will be diplayed as images for selection
 	 * The layouts templates will be displayed as images
-	 * 
+	 *
 	 * @param string $name The of the of the field
-	 * @return string 
+	 * @return string
 	 * @access public
 	 */
 	public function getLayoutOptions($name, $id)
 	{
 		try {
 			$objLayouts = & $this->newObject('dblayouts', 'cmsadmin');
-			$arrLayouts = $objLayouts->getLayouts();				
-			
+			$arrLayouts = $objLayouts->getLayouts();
+
 			$arrSection = $this->_objSections->getSection($id);
 			$str ='<table><tr>';
 			$firstOneChecked = 'checked="checked"';
 			foreach ($arrLayouts as $layout)
 			{
-			
+
 				if($arrSection['layout'] == $layout['id'])
 				{
 					$checked = 'checked="checked"';
 				} else {
 					$checked = '';
-					
+
 				}
 				$checked = $firstOneChecked;
 				$firstOneChecked = '';
@@ -267,9 +267,9 @@ class cmsutils extends object
 				                    <img src ="'.$this->getResourceUri($layout['imagename'],'cmsadmin').'"/>
 				                </label>
 				         </td>';
-				
+
 			}
-			
+
 			$str .='</tr></table>';
 			return $str;
 		}catch (Exception $e){
@@ -277,15 +277,15 @@ class cmsutils extends object
         	exit();
         }
 	}
-	
-	
+
+
 	/**
-	 * Method to generate the Sections Menu 
+	 * Method to generate the Sections Menu
 	 * that will appear on the left side of the menu
-	 * 
+	 *
 	 * @access public
 	 * @return string
-	 * 
+	 *
 	 */
 	public  function getSectionMenu($modulename = null)
 	{
@@ -296,62 +296,62 @@ class cmsutils extends object
 			}
 			//initiate the objects
 			$objSideBar = $this->newObject('sidebar', 'navigation');
-			
+
 			//create the nodes array
 			$nodes = array();
-			
+
 			//get the section id
 			$section = $this->getParam('id');
-			
+
 			//create the home like first
 			//$nodes[] = array('text' => 'Home', 'uri' => $this->uri(null, 'cms'));
-						
+
 			//get the all the sections from the database
 			$arrSections = $this->_objSections->getSections(TRUE);
-			
-			
+
+
 			//start looping through the sections
 			foreach ($arrSections as $section)
 			{
-				
+
 				//add the sections
 		        if(($this->getParam('action') ==  'showsection') && ($this->getParam('id') == $section['id']) || $this->getParam('sectionid') == $section['id'])
 		        {
-		        	
+
 		        	$pagenodes = array();
 		        	$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$section['id'].'" AND published=1 and trash=0 ORDER BY ordering');
-		        	
+
 		        	foreach( $arrPages as $page)
 		        	{
 		        		$pagenodes[] = array('text' => $page['menutext'] , 'uri' =>$this->uri(array('action' => 'showfulltext', 'id' => $page['id'], 'sectionid' => $section['id']), $modulename));
-		        		
+
 		        	}
-		        	
+
 		        	$nodes[] = array('text' =>$section['menutext'], 'uri' => $this->uri(array('action' => 'showsection', 'id' => $section['id']), $modulename), 'sectionid' => $section['id'], 'haschildren' => $pagenodes);
 		        	$pagenodes = null;
-		        	
+
 		        } else {
-		        	$nodes[] = array('text' =>$section['menutext'], 'uri' => $this->uri(array('action' => 'showsection', 'id' => $section['id']), $modulename), 'sectionid' => $section['id']);	
+		        	$nodes[] = array('text' =>$section['menutext'], 'uri' => $this->uri(array('action' => 'showsection', 'id' => $section['id']), $modulename), 'sectionid' => $section['id']);
 		        }
-				
+
 			}
 			//add the admin link
-			$nodes[] = array('text' => 'Administration', 'uri' =>$this->uri(null, 'cmsadmin'));
-						
+			$nodes[] = array('text' => 'Administration', 'uri' =>$this->uri(null, 'splashscreen'));
+
 			return $objSideBar->show($nodes, $this->getParam('id'));
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Method to get the Front Page Content
-	 * in a ordered way. It should also conform to the 
+	 * in a ordered way. It should also conform to the
 	 * section template for the section that this page is in
-	 * 
+	 *
 	 * @return string
 	 * @access public
 	 */
@@ -364,73 +364,73 @@ class cmsutils extends object
 			$str = '';
 			//set a counter for the records .. display on the first 2  the rest will be dsiplayed as links
 			$cnt  = 0 ;
-			
-			foreach ($arrFrontPages as $frontPage) 
+
+			foreach ($arrFrontPages as $frontPage)
 			{
-				
+
 				//get the page
 				$page = $this->_objContent->getContentPage($frontPage['content_id'])	;
-			
+
 				$cnt++;
 				if($cnt < 5)
 				{
 					//display the intro text
 					$table = & $this->newObject('htmltable', 'htmlelements');
-					
+
 					//title
 					$table->startRow();
 					$table->addHeader(array($page['title']));
 					$table->endRow();
-					
+
 					//author
 					$table->startRow();
 					$table->addCell('Written by '.$objUser->fullname($page['created_by']));
 					$table->endRow();
-					
+
 					//date
 					$table->startRow();
 					$table->addCell($this->formatDate($page['created']));
 					$table->endRow();
-					
+
 					//intor text
 					$table->startRow();
 					$table->addCell('<p>'.$page['introtext']);
 					$table->endRow();
-					
+
 					if(!$page['body'] == '')
 					{
 						//read more link .. link to the full text
 						$link = & $this->newObject('link', 'htmlelements');
 						$link->link = 'Read more ..';
 						$link->href = $this->uri(array('action' => 'showfulltext', 'id' => $page['id']), 'cms');
-						
+
 						$table->startRow();
 						$table->addCell($link->show());
 						$table->endRow();
-						
+
 					}
-					
+
 					$str .= '';//$table->show();
 				} else {
 					//display as links
-					
+
 					$table = & $this->newObject('htmltable', 'htmlelements');
 					$link = & $this->newObject('link', 'htmlelements');
-					
+
 					$link->link = $page['title'];
 					$link->href = $this->uri(array('action' => 'showfulltext', 'id' => $page['id']), 'cms');
-						
+
 					//title
 					$table->startRow();
 					$table->addCell($link->show());
 					$table->endRow();
-					
+
 					//$str .= $table->show();
-					
+
 				}
-				
+
 				//make feature boxes of the front page post
-				
+
 				//$str .= '<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
 				//$str .= '<p>'.$page['introtext'].'<a href="devtodo" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
 				$moreLink = $this->uri(array('action' => 'showfulltext', 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
@@ -438,60 +438,60 @@ class cmsutils extends object
 				$str .= $objFeatureBox->show($page['title'], $content);
 			}
 			return $str;
-				
+
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Method to generate the content for a section
-	 * 
+	 *
 	 * @access public
 	 * @return string
 	 */
 	public function showSection($module = "cms")
 	{
 		try {
-			
+
 			$sectionId = $this->getParam('id');
-			
+
 			//get the section record
 			$arrSection = $this->_objSections->getSection($sectionId);
-			
+
 			//get the layout for this section
-		
+
 			$objLayouts = & $this->newObject('dblayouts', 'cmsadmin');
-		
-			$arrLayout = $objLayouts->getLayout($arrSection['layout']);	
+
+			$arrLayout = $objLayouts->getLayout($arrSection['layout']);
 			$arrLayout['name'] = ($arrLayout['name']=='') ? 'List' : $arrLayout['name'];
 			$functionVariable = '_layout'.trim($arrLayout['name']);
-		
+
 			//call the right function according to the layout of the section
 			return call_user_func(array('cmsutils',$functionVariable),$arrSection,$module);
-			
-			
+
+
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
 	}
-	
-	
+
+
 	/**
 	 * Method to generate the layout for a section
 	 * in 'Previous Layout'
-	 * 
+	 *
 	 * @param array $arrSection The Section record
 	 * @access private
 	 * @return string
 	 */
 	 function _layoutPrevious(&$arrSection, $module)
 	{
-		
+
 		try {
 		    if(!empty($arrSection['image']))
 		    {
@@ -499,45 +499,45 @@ class cmsutils extends object
 		    } else {
 		        $image = '';
 		    }
-		    
+
 			$heading = '<h3>'. $arrSection['title']. $image."</h3>";
-			
+
 			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
-			
+
 			$cnt = 0;
 			$strBody = '';
 			$str = '';
 			foreach ($arrPages as $page)
-			{			
+			{
 				$cnt++;
 				if($cnt > 1)
 				{
 					$link = & $this->newObject('link', 'htmlelements');
 					$link->link = $page['menutext'];
 					$link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id']), $module);
-					
+
 					$str .= '<li>'. $this->formatDate($page['created']).' - '.$link->show() .'</li> ';
 				} else {
 					$strBody = '<h3>'.$page['title'].'</h3>';
 					$strBody .= $page['body'].'<p/>';
 				}
 			}
-	
+
 			return $heading.$strBody.'<p/>'.$str;
-				
+
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
-		
+
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Method to generate the layout for a section
 	 * in 'Previous Layout'
-	 * 
+	 *
 	 * @param array $arrSection The Section record
 	 * @access private
 	 * @return string
@@ -551,51 +551,55 @@ class cmsutils extends object
 		    } else {
 		        $image = '';
 		    }
-			
+
 			$objUser = & $this->newObject('user', 'security');
 			$objConfig = & $this->newObject('altconfig', 'config');
-			
+
 			$str = '<h3>'.$image. $arrSection['title'].'</h3>';
-			
+
 			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 and trash=0  ORDER BY ordering');
 			foreach ($arrPages as $page)
 			{
-				
-				
+
+
 				//display the intro text
 				$table = & $this->newObject('htmltable', 'htmlelements');
-				
+
 				//title
 				$table->startRow();
 				$table->addHeader(array($page['title']));
 				$table->endRow();
-				
+
 				//author
 				$table->startRow();
+				if(!isset($page['creator_by']))
+				{
+					$page['creator_by'] = $objUser->fullname();
+				}
 				$table->addCell('Written by '.$objUser->fullname($page['creator_by']));
 				$table->endRow();
-				
+
 				//date
 				$table->startRow();
 				$table->addCell($this->formatDate($page['created']));
 				$table->endRow();
-				
+
 				//intor text
 				$table->startRow();
 				$table->addCell('<p>'.$page['introtext']);
 				$table->endRow();
-				
+
 				if(!$page['body'] == '')
 				{
 					//read more link .. link to the full text
 					$link = & $this->newObject('link', 'htmlelements');
 					$link->link = 'Read more ..<p/><p/>';
 					$link->href = $this->uri(array('action' => 'showfulltext', 'id' => $page['id']), $module);
-					
+
 					$table->startRow();
 					$table->addCell($link->show());
 					$table->endRow();
-					
+
 				}
 				//$str .= $table->show();
 				$str .= '<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
@@ -603,18 +607,18 @@ class cmsutils extends object
 				$str .= '<p>'.$page['introtext'].'<a href="'.$uri.'" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
 
 			}
-			
+
 			return $str;
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
 	}
-	
+
 	/**
 	 * Method to generate the layout for a section
 	 * in 'Previous Layout'
-	 * 
+	 *
 	 * @param array $arrSection The Section record
 	 * @access private
 	 * @return string
@@ -628,45 +632,45 @@ class cmsutils extends object
 		    } else {
 		        $image = '';
 		    }
-		    
+
 			$heading = '<h3>'. $arrSection['title'].$image."</h3>";
-			
+
 			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 and trash=0  ORDER BY ordering');
-			
+
 			$cnt = 0;
 			$strBody = '';
 			$str = '';
 			foreach ($arrPages as $page)
-			{			
+			{
 				$cnt++;
 				if($cnt > 1)
 				{
 					$link = & $this->newObject('link', 'htmlelements');
 					$link->link = $page['menutext'];
 					$link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id']), $module);
-					
+
 					$str .= $link->show() .' | ';
 				} else {
 					$strBody = '<h3>'.$page['title'].'</h3>';
 					$strBody .= $page['introtext'].'<p/>';
 					$strBody .= $page['body'].'<p/>';
 				}
-			} 
-			
-			
-			
+			}
+
+
+
 			return $heading.$strBody.'<p/>'.$str;
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
-		
+
 	}
-	
+
 	/**
 	 * Method to generate the layout for a section
 	 * in 'Previous Layout'
-	 * 
+	 *
 	 * @param array $arrSection The Section record
 	 * @access private
 	 * @return string
@@ -680,30 +684,30 @@ class cmsutils extends object
 		    } else {
 		        $image = '';
 		    }
-		    
+
 			$str = '<h3>'. $arrSection['title'].$image."</h3>";
-			
+
 			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 and trash=0 ORDER BY ordering');
 			foreach ($arrPages as $page)
 			{
 				$link = & $this->newObject('link', 'htmlelements');
 				$link->link = $page['title'];
 				$link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id']), $module);
-				
+
 				$str .= '<li>'.$this->formatDate($page['created']).' - '. $link->show() .'</li>';
 			}
-			
-			return $str;	
+
+			return $str;
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
 	}
-	
-	
+
+
 	/**
 	 * Method to show  the body of a pages
-	 * 
+	 *
 	 * @access public
 	 * @return string
 	 */
@@ -712,23 +716,23 @@ class cmsutils extends object
 		try {
 			$contentId = $this->getParam('id');
 			$page = $this->_objContent->getContentPage($contentId);
-			
+
 			$strBody = '<h3>'.$page['title'].'</h3><p/>';
 			$strBody .= '<span class="warning">'.$this->_objUser->fullname($page['created_by']).'</span><br />';
 			$strBody .= '<span class="warning">'.$page['created'].'</span><p/>';
-			$strBody .= $page['introtext'].'<p/>';			
+			$strBody .= $page['introtext'].'<p/>';
 			$strBody .= $page['body'].'<p/>';
-			
+
 			return $strBody;
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
 	}
-	
+
 	/**
 	 * Method to format the date
-	 * 
+	 *
 	 * @example Thursday, 12 November 2006
 	 * @param  date $date The unformatted date
 	 * @return formatted date string
@@ -754,13 +758,13 @@ class cmsutils extends object
        			echo 'Caught exception: ',  $e->getMessage();
         		exit();
         	}
-		
+
 	}
-	
-	
+
+
 	/**
 	 * Method to format the date
-	 * 
+	 *
 	 * @example 01/12/2006
 	 * @param  date $date The unformatted date
 	 * @return formatted date string
@@ -780,13 +784,13 @@ class cmsutils extends object
        			echo 'Caught exception: ',  $e->getMessage();
         		exit();
         	}
-		
+
 	}
-	
+
 	/**
 	 * Method resolve reordering of pages
-	 * 
-	 * @param  
+	 *
+	 * @param
 	 * @return
 	 * @access public
 	 * @version 0.1
@@ -797,18 +801,18 @@ class cmsutils extends object
 	public function _reOrder()
 	{
 		try {
-		
+
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
-		
-		
+
+
 	}
-	
+
 	/**
 	 * Method to the true/false tick
-	 * 
+	 *
 	 * @param  $isCheck Booleans value with either TRUE|FALSE
 	 * @return string icon
 	 * @access public
@@ -821,7 +825,7 @@ class cmsutils extends object
 	{
 		try {
 			$objIcon = & $this->newObject('geticon', 'htmlelements');
-			
+
 			if($isCheck)
 			{
 				$objIcon->setIcon('ok','png');
@@ -831,81 +835,81 @@ class cmsutils extends object
 					$objIcon->setIcon('failed', 'png');
 				}
 			}
-			
-			
+
+
 			return $objIcon->show();
-		
+
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
-		
-		
+
+
 	}
-	
-	
+
+
 	/**
 	 * Method to generate the navigation
-	 * 
+	 *
 	 * @access public
 	 * @return string
 	 */
 	public function getNav()
 	{
-		
+
 		$link = & $this->newObject('link', 'htmlelements');
 		$str = '';
-		
+
 		//content link
 		$link->link = 'Content';
 		$link->href = $this->uri(array('action' => 'content'));
 		$str.= '<p>'.$link->show();
 		//sections link
-		
+
 		$link->link = 'Sections';
 		$link->href = $this->uri(array('action' => 'sections'));
 		$str .= '<p>'.$link->show();
-		
+
 		//categories link
 		$link->link = 'Categories';
 		$link->href = $this->uri(array('action' => 'categories'));
 		$str .= '<p>'.$link->show();
-		
+
 		//media link
 		$link->link = 'Media';
 		$link->href = $this->uri(null, 'mediamanager');
 		$str .= '<p>'.$link->show();
-		
+
 		$nodes = array();
 		$nodes[] = array('text' => 'Content', 'uri' => $this->uri(array('action' => 'content')));
 		$nodes[] = array('text' => 'Sections', 'uri' => $this->uri(array('action' => 'sections')));
 		$nodes[] = array('text' => 'Categories', 'uri' => $this->uri(array('action' => 'categories')));
 		//$nodes[] = array('text' => 'Categories', 'uri' => $this->uri(array('action' => 'categories')));
 		$nodes[] = array('text' => 'Front Page', 'uri' => $this->uri(array('action' => 'frontpages')));
-		$nodes[] = array('text' => 'Media', 'uri' => $this->uri(null,'mediamanager'))	;	
-		
+		$nodes[] = array('text' => 'Media', 'uri' => $this->uri(null,'mediamanager'))	;
+
 		$objNav = $this->newObject('sidebar', 'navigation');
-		
+
 		return $objNav->show($nodes);
 
 	}
-	
+
 	/**
 	 * Method to show the full content of a page
-	 * 
-	 * @access public 
+	 *
+	 * @access public
 	 * @return string
 	 * @param $string contentId The id of the content
 	 * @param string sectionId The section Id
-	 * 
+	 *
 	 */
 	public function getFullContent($contentId, $sectionId)
 	{
-		
-		
-		
+
+
+
 	}
-	
+
 	/**
 	* Method to generate the bread crumbs
 	* @param void
@@ -916,37 +920,37 @@ class cmsutils extends object
 	{
 		if ($this->getParam('action') == '')
 		{
-			return '';	
+			return '';
 		}
-		
+
 		$link = &  $this->newObject('link', 'htmlelements');
 		$link->href = $this->uri(null , $module);
 		$link->link = 'Home';
 		$str = $link->show() .' / ';
-		
+
 		if ($this->getParam('action') == 'showsection')
 		{
-			
-			$str .= $this->_objSections->getMenuText($this->getParam('id'));	
+
+			$str .= $this->_objSections->getMenuText($this->getParam('id'));
 		}
-		
+
 		if($this->getParam('action') == 'showfulltext')
 		{
 			$link->href = $this->uri(array('action' => 'showsection', 'id' => $this->getParam('sectionid')) , $module);
-			$link->link = $this->_objSections->getMenuText($this->getParam('sectionid'));	
+			$link->link = $this->_objSections->getMenuText($this->getParam('sectionid'));
 			$str .= $link->show() .' / ';
 			$page = $this->_objContent->getContentPage($this->getParam('id'));
 			$str .= $page['menutext'];
-				
+
 		}
 		return '<div id="breadcrumb">'. $str .'</div>';
 	}
-	
-	
+
+
 	/**
-	 * Method to generate the img tag for the section 
+	 * Method to generate the img tag for the section
 	 * thumbnail
-	 * 
+	 *
 	 * @param string src The path the image
 	 * @return string
 	 * @access public
@@ -955,20 +959,20 @@ class cmsutils extends object
 	public function generateImageTag($src)
 	{
 	    $objSkin = $this->newObject('skin', 'skin');
-	   
+
 	    return '<span class="thumbnail"><center><img src="'.$objSkin->getSkinUrl().$src.'" /></center></span>';
 	}
 
 	/**
 	 * Method to generate the dropdown with tree indentations for selecting parent category
-	 * 
-	 * @return string Generated HTML for the dropdown 
+	 *
+	 * @return string Generated HTML for the dropdown
 	 * @access public
 	 * @author Warren Windvogel
 	 */
 	public function getTreeDropdown()
 	{
-	    //Create dropdown 
+	    //Create dropdown
       $treeDrop =& $this->newObject('dropdown', 'htmlelements');
 	    $treeDrop->name = 'parent';
 	    $treeDrop->addOption(NULL, ' - Select parent - ');
@@ -980,10 +984,10 @@ class cmsutils extends object
 	      //add nodes for each section
 	      foreach($availsections as $section){
 	         //initiate prefix for nodes
-	         $prefix = ''; 
+	         $prefix = '';
 	         //add root(secion) to dropdown
  	         $treeArray[] = array('title' => $section['menutext'], 'id' => 'section:'.$section['id']);
-	         //get number of node levels 
+	         //get number of node levels
            $numLevels = $this->getNumNodeLevels($section['id']);
            //check if section has categories
            if($numLevels > '0'){
@@ -1009,7 +1013,7 @@ class cmsutils extends object
                       $entNum = array_search($needle, $treeArray);
                       $newEnt = array('title' => $prefix.$cat['menutext'], 'id' => 'category:'.$cat['id']);
                       $treeArray = $this->addToTreeArray($treeArray, $entNum, $newEnt);
-                  }                
+                  }
                 }
              }
            }
@@ -1018,14 +1022,14 @@ class cmsutils extends object
          foreach($treeArray as $node){
             $treeDrop->addOption($node['id'], $node['title']);
          }
-      }   
+      }
       return $treeDrop->show();
 	}
 
 	/**
 	 * Method to return the number of node levels in a section
-	 * 
-	 * @param string $sectionid The id(pk) of the section 
+	 *
+	 * @param string $sectionid The id(pk) of the section
 	 * @return int $numLevels The number of node levels in the setion
 	 * @access public
 	 * @author Warren Windvogel
@@ -1040,17 +1044,17 @@ class cmsutils extends object
         foreach($categories as $cat){
            if($cat['count'] > $numLevels){
              $numLevels = $cat['count'];
-           }  
+           }
         }
       }
       return $numLevels;
-  } 
+  }
 	/**
 	 * Method to insert data into an array at a specific entry pushing entries below
 	 * this down
-	 * 
+	 *
 	 * @param array $dataArray The array to add the data to
-	 * @param int $entryNumber The place to add the data  
+	 * @param int $entryNumber The place to add the data
 	 * @param mixed $newEntry The new data to be added
 	 * @return array $newArray The array with the new entry
 	 * @access public
@@ -1067,16 +1071,16 @@ class cmsutils extends object
            $newArray[$counter] = $ar;
          } else if($counter == $entryNumber){
               $newArray[$counter] = $ar;
-              $num = $counter + '1';  
+              $num = $counter + '1';
               $newArray[$num] = $newEntry;
          } else {
-              $num = $counter + '1';  
+              $num = $counter + '1';
               $newArray[$num] = $ar;
          }
          $counter++;
       }
       return $newArray;
   }
-	
+
 }
 ?>
