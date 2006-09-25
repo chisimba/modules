@@ -18,78 +18,78 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 class cmsadmin extends controller
 {
-	
-	
+
+
 	/**
-     * The contextcore  object 
+     * The contextcore  object
      *
      * @access private
      * @var object
     */
     protected $_objContextCore;
-    
+
     /**
-     * The sections  object 
+     * The sections  object
      *
      * @access private
      * @var object
     */
     protected $_objSections;
-    
+
     /**
-     * The categories  object 
+     * The categories  object
      *
      * @access public
      * @var object
     */
     protected $_objCategories;
-    
-        
+
+
     /**
-     * The Content object 
+     * The Content object
      *
      * @access private
      * @var object
     */
     protected $_objContent;
-    
+
     /**
-     * The FrontPage object 
+     * The FrontPage object
      *
      * @access private
      * @var object
     */
     protected $_objFrontPage;
-    
-    
-    
+
+
+
      /**
-     * The CMS Utilities object 
+     * The CMS Utilities object
      *
      * @access private
      * @var object
     */
     protected $_objUtils;
-    
-    
+
+
      /**
-     * The user object 
+     * The user object
      *
      * @access private
      * @var object
     */
     protected $_objUser;
-    
-    
+
+
     /**
-     * The config object 
+     * The config object
      *
      * @access private
      * @var object
     */
     protected $_objConfig;
-    
-    
+
+
 	/**
 	* Constructor
 	*/
@@ -97,7 +97,7 @@ class cmsadmin extends controller
 	{
 		// instantiate object
         try{
-        	
+
 			$this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
 			$this->_objCategories = & $this->newObject('dbcategories', 'cmsadmin');
 			$this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
@@ -106,9 +106,9 @@ class cmsadmin extends controller
         	$this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
         	$this->_objConfig = & $this->newObject('altconfig', 'config');
         	$this->_objContext = & $this->newObject('dbcontext', 'context');
-        	
+
         	$objModule = & $this->newObject('modules', 'modulecatalogue');
-			
+
 			if($objModule->checkIfRegistered('context'))
 			{
 			     $this->inContextMode = $this->_objContext->getContextCode();
@@ -116,16 +116,16 @@ class cmsadmin extends controller
 			} else {
 			    $this->inContextMode = FALSE;
 			}
-        }	
+        }
         catch (customException $e)
         {
         	echo customException::cleanUp($e);
         	die();
         }
-	
+
 	}
-	
-	
+
+
 	/**
 	* The Dispatch  methed that the framework needs to evoke the controller
 	*/
@@ -136,57 +136,63 @@ class cmsadmin extends controller
     		$this->setLayoutTemplate('cms_layout_tpl.php');
     		//$this->setVar('bodyParams', ' id="type-b" ');
             switch ($action){
-                       	
+
             	case null:
-                	
-            	
-            	
+            		$myid = $this->_objUser->userId();
+            		if($this->_objUser->inAdminGroup($myid) != TRUE)
+            		{
+            			die("<div id=featurebox>You do not have sufficient permissions to perform this task!</div>");
+            		}
+
+
+
+
                 //content section
                 case 'content':
-                	return 'cms_content_list_tpl.php';            
-                	
-                case 'addcontent':                	
-                	return 'cms_content_add_tpl.php';			                	    			
-                	
+                	return 'cms_content_list_tpl.php';
+
+                case 'addcontent':
+                	return 'cms_content_add_tpl.php';
+
                 case 'createcontent':
     				$this->_objContent->add();
     				if($this->getParam('frontpage') == 'true')
                 	{
                 		return $this->nextAction(array('action' => 'frontpages'), 'cmsadmin');
                 	} else {
-    					return $this->nextAction('content');    					
-                	}    				
-    				
+    					return $this->nextAction('content');
+                	}
+
     			case 'editcontent':
-    				$this->_objContent->edit();    				
+    				$this->_objContent->edit();
     				if($this->getParam('frontpage') == 'true')
                 	{
                 		return $this->nextAction(array('action' => 'frontpages'), 'cmsadmin');
                 	} else {
     					return $this->nextAction('content');
                 	}
-                	
+
     			case 'contentpublish':
     			    $this->_objContent->togglePublish($this->getParam('id'));
     			    return $this->nextAction('content');
-    			
+
     			case 'trashcontent':
     				$this->_objContent->trashContent($this->getParam('id'));
     				return $this->nextAction('content');
-    				
+
     			case 'deletecontent':
     				$this->_objContent->deleteContent($this->getParam('id'));
     				return $this->nextAction('content',array('filter'=>'trash'));
-    				
-    				
-    			
+
+
+
     			//section section
-    			
+
     			case 'sections':
     				return 'cms_section_list_tpl.php';
     			case 'addsection':
     				return 'cms_section_add_tpl.php';
-    			case 'createsection':			
+    			case 'createsection':
     				$this->_objSections->add();
     				return $this->nextAction('sections');
     			case 'editsection';
@@ -198,8 +204,8 @@ class cmsadmin extends controller
     			case 'sectiondelete':
     				$this->_objSections->deleteSection($this->getParam('id'));
     				return $this->nextAction('sections');
-    				
-    			//categories section	
+
+    			//categories section
 
     			case 'categories':
     				return 'cms_category_list_tpl.php';
@@ -216,8 +222,8 @@ class cmsadmin extends controller
     				$this->_objCategories->deleteCat($id);
     				return $this->nextAction('categories');
 
-    			//front page section	
-    			
+    			//front page section
+
     		    case 'frontpages':
     		        $this->setVar('files', $this->_objFrontPage->getFrontPages());
     		        return 'cms_frontpage_manager_tpl.php';
@@ -230,10 +236,10 @@ class cmsadmin extends controller
         }
 	}
 
-	
+
 	/**
 	 * Method to get the menu for thecms admin
-	 * 
+	 *
 	 * @access public
 	 * @return string
 	 */
