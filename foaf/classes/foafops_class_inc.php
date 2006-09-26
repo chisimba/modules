@@ -309,7 +309,7 @@ class foafops extends object
 		}
 	}
 
-	private function _getInterests($userId)
+	private function _getInterests($userId, $friend = FALSE)
 	{
 		$iarr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_interests');
 		if(empty($iarr))
@@ -319,12 +319,18 @@ class foafops extends object
 		else {
 			foreach($iarr as $interests)
 			{
-				$this->objFoaf->addInterest($interests['interesturl']);
+				if($friend == FALSE)
+				{
+					$this->objFoaf->addInterest($interests['interesturl']);
+				}
+				else {
+					$this->friend->addInterest($interests['interesturl']);
+				}
 			}
 		}
 	}
 
-	private function _getFunders($userId)
+	private function _getFunders($userId, $friend = FALSE)
 	{
 		$funarr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_fundedby');
 		if(empty($funarr))
@@ -334,12 +340,18 @@ class foafops extends object
 		else {
 			foreach($funarr as $funds)
 			{
-				$this->objFoaf->addFundedBy($funds['funderurl']);
+				if($friend == FALSE)
+				{
+					$this->objFoaf->addFundedBy($funds['funderurl']);
+				}
+				else {
+					$this->friend->addFundedBy($funds['funderurl']);
+				}
 			}
 		}
 	}
 
-	private function _getDepictions($userId)
+	private function _getDepictions($userId, $friend = FALSE)
 	{
 		$darr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_depiction');
 		if(empty($darr))
@@ -349,12 +361,19 @@ class foafops extends object
 		else {
 			foreach($darr as $deps)
 			{
-				$this->objFoaf->addDepiction($deps['depictionurl']);
+				if($friend == FALSE)
+				{
+					$this->objFoaf->addDepiction($deps['depictionurl']);
+				}
+				else {
+					$this->friend->addDepiction($deps['depictionurl']);
+				}
+
 			}
 		}
 	}
 
-	private function _getOrganizations($userId)
+	private function _getOrganizations($userId, $friend = FALSE)
 	{
 		$oarr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_organization');
 		if(empty($oarr))
@@ -371,12 +390,18 @@ class foafops extends object
 				$org->newAgent('Organization');
     			$org->setName($name);
     			$org->addHomepage($homepage);
-				$this->objFoaf->addKnows($org);
+    			if($friend == FALSE)
+    			{
+					$this->objFoaf->addKnows($org);
+    			}
+    			else {
+    				$this->friend->addKnows($org);
+    			}
 			}
 		}
 	}
 
-	private function _getpages($userId)
+	private function _getpages($userId, $friend = FALSE)
 	{
 		$parr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_pages');
 		if(empty($parr))
@@ -389,7 +414,13 @@ class foafops extends object
 				$docuri = $pages['page'];
 				$title = $pages['title'];
 				$description = $pages['description'];
-				$this->objFoaf->addPage($docuri, $title, $description);
+				if($friend == FALSE)
+				{
+					$this->objFoaf->addPage($docuri, $title, $description);
+				}
+				else {
+					$this->friend->addPage($docuri, $title, $description);
+				}
 			}
 		}
 	}
@@ -397,7 +428,7 @@ class foafops extends object
 	private function _getFriends($userId)
 	{
 		$frarr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_friends');
-		print_r($frarr);
+		//print_r($frarr);
 		if(empty($frarr))
 		{
 			$frarr = array();
@@ -409,7 +440,27 @@ class foafops extends object
 
 				$fuserid = $friends['fuserid'];
 				//go and get all our friends details
-				$friend = $this->getfriends($fuserid);
+				$uarr = $this->dbFoaf->getRecordSet($fuserid, 'tbl_users');
+				$userdetails = $uarr[0];
+				//get some of the foaf info
+				//title
+				$title = $userdetails['title'];
+				//users first name
+				$firstname = $userdetails['firstname'];
+				//users surname
+				$surname = $userdetails['surname'];
+				//users email address
+				$email = $userdetails['emailaddress'];
+				$fullname = $firstname . " " . $surname;
+
+
+				$this->friend = $this->newObject('foafcreator');
+				$this->friend->setName($fullname);
+				$this->friend->setTitle($title);
+				$this->friend->setFirstName($firstname);
+				$this->friend->setSurname($surname);
+				$this->friend->addMbox('mailto:'.$email,TRUE);
+
 
 				$this->objFoaf->addKnows($friend);
 			}
