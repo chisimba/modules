@@ -14,10 +14,9 @@ $dispCount = $this->getParam('dispcount', 25);
 
 $sponsorCount = $this->objFinancialAidCustomWS->getsponsorCount();
 
+//Pagination
 $paging = '';
 $records = '';
-
-//Pagination
 if ($sponsorCount > 0){
 
     $pageCount = $sponsorCount/$dispCount;
@@ -31,7 +30,7 @@ if ($sponsorCount > 0){
         $endat = $sponsorCount;
     }
 
-    $dispcountfield = new textinput("dispcount", $dispCount,  "hidden", NULL);
+    $dispCountField = new textinput("dispcount", $dispCount,  "hidden", NULL);
 
    	$goButton = & $this->newObject('button','htmlelements');
    	$cancelButton = & $this->newObject('button','htmlelements');
@@ -50,9 +49,29 @@ if ($sponsorCount > 0){
         }
 	}
 
+    if ($page > 1){
+        $prevLink = new link();
+        $prevLink->href=$this->uri(array('action'=>'searchsponsors','page'=>($page-1), 'dispcount'=>$dispCount));
+        $prevLink->link = $objLanguage->languagetext('mod_financialaid_prev','financialaid');
+        $prev = $prevLink->show();
+    }else{
+        $prev = $objLanguage->languagetext('mod_financialaid_prev','financialaid');
+    }
+    
+    if ($page < $pageCount){
+        $nextLink = new link();
+        $nextLink->href=$this->uri(array('action'=>'searchsponsors','page'=>($page+1), 'dispcount'=>$dispCount));
+        $nextLink->link = $objLanguage->languagetext('mod_financialaid_next','financialaid');
+        $next = $nextLink->show();
+    }else{
+        $next = $objLanguage->languagetext('mod_financialaid_next','financialaid');
+    }
+
     $objPaging = new form('pagingform');
     $objPaging->setAction($this->uri(array('action'=>'searchsponsors')));
-	$objPaging->addToForm('<center>'.'Page '.$dropdown->show().' of '.'<b>'.$pageCount.'</b>'.' '.$goButton->show().'</center>');
+    $objPaging->addToForm($dispCountField->show());
+	$objPaging->addToForm('<center>'.'Page '.$dropdown->show().' of '.'<b>'.$pageCount.'</b>'.' '.$goButton->show()."&nbsp;&nbsp;&nbsp;&nbsp;"."<span class='menulink'>".$prev."&nbsp;&nbsp;".$next.'</span></center>');
+
     $paging = $objPaging->show();
     
     $rep = array(

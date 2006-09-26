@@ -20,7 +20,7 @@ $wherevalue = strtoupper($this->getParam('searchvalue', ''));
 
 $all = $this->getParam('all', '');
 
-$startat = $this->getParam('startat', 0);
+$page = $this->getParam('page', 1);
 $dispCount = $this->getParam('dispcount', 25);
 
 $semester = array(
@@ -44,6 +44,89 @@ if ($wherefield == ''){
     $appCount = $this->objDBFinancialAidWS->getAppCount($wherefield, $wherevalue);
 }
 
+//Pagination
+$paging = '';
+$records = '';
+if ($appCount > 0){
+
+    $pageCount = $appCount/$dispCount;
+    if ($pageCount != floor($pageCount)) {
+       $pageCount = strtok(($pageCount+1), ".");
+    }
+    $startat = ($page - 1) * $dispCount;
+    $endat = $startat + $dispCount;
+
+    if ($endat > $appCount){
+        $endat = $appCount;
+    }
+
+    $dispCountField = new textinput("dispcount", $dispCount,  "hidden", NULL);
+    $allField = new textinput("all", $all,  "hidden", NULL);
+    $wherefldField = new textinput("wherefield", $wherefield,  "hidden", NULL);
+    $whereValueField = new textinput("wherevalue", $wherevalue,  "hidden", NULL);
+
+   	$goButton = & $this->newObject('button','htmlelements');
+   	$cancelButton = & $this->newObject('button','htmlelements');
+
+   	$goButton = new button("submit",'Go');
+    $goButton->setToSubmit();
+	$cancelButton = new button("cancel", $objLanguage->languagetext('word_cancel'));
+	$cancelButton->setToSubmit();
+
+	$dropdown =& $this->newObject("dropdown", "htmlelements");
+	$dropdown->name = 'page';
+	for ($i = 1; $i <= $pageCount; $i++){
+	    $dropdown->addOption($i,$i."&nbsp;&nbsp;&nbsp;");
+        if ($i == $page){
+            $dropdown->setSelected($i);
+        }
+	}
+
+    if ($page > 1){
+        $prevLink = new link();
+
+        if (strlen($all) > 0){
+            $prevLink->href=$this->uri(array('action'=>'searchapplications','page'=>($page-1), 'all'=>$all, 'dispcount'=>$dispCount));
+        }else{
+            $prevLink->href=$this->uri(array('action'=>'searchapplications','page'=>($page-1), 'wherefield'=>$wherefield, 'wherevalue'=>$wherevalue, 'dispcount'=>$dispCount));
+        }
+
+        $prevLink->link = $objLanguage->languagetext('mod_financialaid_prev','financialaid');
+        $prev = $prevLink->show();
+    }else{
+        $prev = $objLanguage->languagetext('mod_financialaid_prev','financialaid');
+    }
+
+    if ($page < $pageCount){
+        $nextLink = new link();
+        if (strlen($all) > 0){
+            $nextLink->href=$this->uri(array('action'=>'searchapplications','page'=>($page+1), 'all'=>$all, 'dispcount'=>$dispCount));
+        }else{
+            $nextLink->href=$this->uri(array('action'=>'searchapplications','page'=>($page+1), 'wherefield'=>$wherefield, 'wherevalue'=>$wherevalue, 'dispcount'=>$dispCount));
+        }
+        $nextLink->link = $objLanguage->languagetext('mod_financialaid_next','financialaid');
+        $next = $nextLink->show();
+    }else{
+        $next = $objLanguage->languagetext('mod_financialaid_next','financialaid');
+    }
+
+    $objPaging = new form('pagingform');
+    $objPaging->setAction($this->uri(array('action'=>'searchapplications')));
+    $objPaging->addToForm($dispCountField->show());
+    $objPaging->addToForm($allField->show());
+    $objPaging->addToForm($wherefldField->show());
+    $objPaging->addToForm($whereValueField->show());
+	$objPaging->addToForm('<center>'.'Page '.$dropdown->show().' of '.'<b>'.$pageCount.'</b>'.' '.$goButton->show()."&nbsp;&nbsp;&nbsp;&nbsp;"."<span class='menulink'>".$prev."&nbsp;&nbsp;".$next.'</span></center>');
+
+    $paging = $objPaging->show();
+
+    $rep = array(
+      'RANGE' => ($startat+1).'-'.$endat,
+      'TOTAL' => $appCount);
+
+    $records = $objLanguage->code2Txt('mod_financialaid_resultsfound','financialaid',$rep);
+}
+/*
 if ($appCount > 0){
 
     //***start of pages***
@@ -134,6 +217,8 @@ if ($appCount > 0){
     $pagelinks = "";
 }
 
+*/
+
 if (strlen($all) > 0){
     $stdinfo = $this->objDBFinancialAidWS->getAllApplications($startat, $dispCount);
 }else{
@@ -206,7 +291,7 @@ if ($foundStudents == FALSE) {
     $records = '';
 }
 
-$content = $details.$pagelinks.$content;
+$content = $details.$records.$paging.$content;
 
 echo $content;
 ?>
