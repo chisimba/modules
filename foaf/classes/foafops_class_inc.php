@@ -295,7 +295,7 @@ class foafops extends object
 			//$this->_getpages($userId);
 
 			//get the people we know...
-			//$this->_getFriends($userId);
+			$this->_getFriends($userId);
 
 			//add the details to the foaf xml tree
 			$this->friend->addHomepage($homepage);
