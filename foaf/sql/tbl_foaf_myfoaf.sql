@@ -79,13 +79,16 @@ $fields = array(
 		'type' => 'integer',
 		'length' => 25,
 		),
+	'geekcode' => array(
+		'type' => 'clob'
+		),
 
 
 	);
 
 	//create other indexes here...
 
-$name = '';
+$name = 'userid';
 
 $indexes = array(
                 'fields' => array(
