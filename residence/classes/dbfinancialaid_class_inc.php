@@ -11,9 +11,9 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * Model class for the table  
 */
 
+//require_once('../../remotedatasource/classes/remotedb_class_inc.php');
 
-
-class dbresidence extends object
+class dbfinancialaid extends object
 {
 
 	var $remotedb;
@@ -29,192 +29,24 @@ class dbresidence extends object
         // Pull in the NuSOAP code
 		//require_once('lib/nusoap/nusoap.php');
 		// Create the client instance
-	/*	$client = new SoapClient("some.wsdl", array('proxy_host'    => "localhost",
+		/*$client = new SoapClient("some.wsdl", array('proxy_host'    => "localhost",
                                            'proxy_port'    => 8080,
                                            'proxy_login'    => "some_name",
                                            'proxy_password' => "some_password"));
 
+*/
 
-
-		
-*/	
-$this->objSoapClient = new SoapClient($name,array('proxy_host'    => "uwcinternet1.uwc.ac.za",
+		$this->objSoapClient = new SoapClient($name,array('proxy_host'    => "uwcinternet1.uwc.ac.za",
                                            'proxy_port'    => 8080,
                                            'proxy_login'    => "jadam",
                                            'proxy_password' => "adam1234"));
-
-	//parent::init();
+		//parent::init();
 		//$this->remotedb =& $this->newObject('remotedb','remotedatasource');
 		//$this->objUser =& $this->newObject('user','security');
 		//$this->student =& $this->newObject('student','studentmodule');
 		//$this->module = $this->getParam('module');
 	}
-
-
-
-
-function getlimitRSVEV($field,$value,$start,$end)
-{
-$this->NAMESPACE2 = 'http://172.16.65.134/webserviceDEV/studentinfo4.php?wsdl';
-$this->objSoapClient2 = new SoapClient($this->NAMESPACE2,array('proxy_host'    => "uwcinternet1.uwc.ac.za",
-'proxy_port'    => 8080,
-'proxy_login'    => "jadam",
-'proxy_password' => "adam1234"));
-$STAUX = $this->objSoapClient2->getlimitRSVEV("$field", "$value",$start,$end);
-return $STAUX;
-}
-
-
-function getlimitUNVAC($field,$value,$start,$end)
-{
-$this->NAMESPACE2 = 'http://172.16.65.134/webserviceDEV/studentinfo4.php?wsdl';
-$this->objSoapClient2 = new SoapClient($this->NAMESPACE2,array('proxy_host'    => "uwcinternet1.uwc.ac.za",
-'proxy_port'    => 8080,
-'proxy_login'    => "jadam",
-'proxy_password' => "adam1234"));
-$STAUX = $this->objSoapClient2->getlimitUNVAC("$field", "$value",$start,$end);
-return $STAUX;
-}
-
-function getlimitHSTWL($field,$value,$start,$end){
-	$this->NAMESPACE2 = 'http://172.16.65.134/webserviceDEV/studentinfo4.php?wsdl';
-        // Pull in the NuSOAP code
-		// Create the client instance
-		$this->objSoapClient2 = new SoapClient($this->NAMESPACE2,array('proxy_host'    => "uwcinternet1.uwc.ac.za",
-                                           'proxy_port'    => 8080,
-                                           'proxy_login'    => "jadam",
-                                           'proxy_password' => "adam1234"));
-         $STAUX = $this->objSoapClient2->getlimitHSTWL("$field", "$value",$start,$end);
-         return $STAUX;
-}
-
-
-
-function getlimitSTDNT($field,$value,$start,$end){
-	$this->NAMESPACE2 = 'http://172.16.65.134/webserviceDEV/studentinfo4.php?wsdl';
-        // Pull in the NuSOAP code
-		// Create the client instance
-		$this->objSoapClient2 = new SoapClient($this->NAMESPACE2,array('proxy_host'    => "uwcinternet1.uwc.ac.za",
-                                           'proxy_port'    => 8080,
-                                           'proxy_login'    => "jadam",
-                                           'proxy_password' => "adam1234"));
-         $STAUX = $this->objSoapClient2->getlimitSTDNT("$field", "$value",$start,$end);
-         return $STAUX;
-}
-
-
-
-
-function getlimitACCOM($field,$value,$start,$end){
-	$this->NAMESPACE2 = 'http://172.16.65.134/webserviceDEV/studentinfo4.php?wsdl';
-        // Pull in the NuSOAP code
-		// Create the client instance
-		$this->objSoapClient2 = new SoapClient($this->NAMESPACE2,array('proxy_host'    => "uwcinternet1.uwc.ac.za",
-                                           'proxy_port'    => 8080,
-                                           'proxy_login'    => "jadam",
-                                           'proxy_password' => "adam1234"));
-         $STAUX = $this->objSoapClient2->getlimitACCOM("$field", "$value",$start,$end);
-         return $STAUX;
-}
-
-
-
-function getlimitSTHSL($field,$value,$start,$end){
-	$this->NAMESPACE2 = 'http://172.16.65.134/webserviceDEV/studentinfo4.php?wsdl';
-        // Pull in the NuSOAP code
-		// Create the client instance
-		$this->objSoapClient2 = new SoapClient($this->NAMESPACE2,array('proxy_host'    => "uwcinternet1.uwc.ac.za",
-                                           'proxy_port'    => 8080,
-                                           'proxy_login'    => "jadam",
-                                           'proxy_password' => "adam1234"));
-         $STHSL = $this->objSoapClient2->getlimitSTHSL("$field", "$value",$start,$end);
-         return $STHSL;
-}
-
-
-function getallREGCL($field,$value){
-	$this->NAMESPACE2 = 'http://172.16.65.134/webserviceDEV/studentinfo2.php?wsdl';
-        // Pull in the NuSOAP code
-		// Create the client instance
-		$this->objSoapClient2 = new SoapClient($this->NAMESPACE2,array('proxy_host'    => "uwcinternet1.uwc.ac.za",
-                                           'proxy_port'    => 8080,
-                                           'proxy_login'    => "jadam",
-                                           'proxy_password' => "adam1234"));
-         $REGCL = $this->objSoapClient2->getallREGCL("$field", "$value");
-         return $REGCL;
-	}
-
-function getREGCL($field,$value,$start,$end){
-	$this->NAMESPACE2 = 'http://172.16.65.134/webserviceDEV/studentinfo4.php?wsdl';
-        // Pull in the NuSOAP code
-		// Create the client instance
-		$this->objSoapClient2 = new SoapClient($this->NAMESPACE2,array('proxy_host'    => "uwcinternet1.uwc.ac.za",
-                                           'proxy_port'    => 8080,
-                                           'proxy_login'    => "jadam",
-                                           'proxy_password' => "adam1234"));
-         $REGCL = $this->objSoapClient2->getlimitREGCL("$field", "$value", $start, $end);
-         return $REGCL;
-	}
-
-
-
-
-function getSubject($value){
-	$this->NAMESPACE2 = 'http://172.16.65.134/webserviceDEV/studentinfo4.php?wsdl';
-        // Pull in the NuSOAP code
-		// Create the client instance
-		$this->objSoapClient2 = new SoapClient($this->NAMESPACE2,array('proxy_host'    => "uwcinternet1.uwc.ac.za",
-                                           'proxy_port'    => 8080,
-                                           'proxy_login'    => "jadam",
-                                           'proxy_password' => "adam1234"));
-         $stsubj = $this->objSoapClient2->getlimitSBJCT('SBJCDE', "$value", 0, 0);
-         return $stsubj;
-	}
-
-function getCourseDesc($stcrs)
-    {
-		$this->NAMESPACE2 = 'http://172.16.65.134/webserviceDEV/studentinfo4.php?wsdl';
-        // Pull in the NuSOAP code
-		// Create the client instance
-		$this->objSoapClient2 = new SoapClient($this->NAMESPACE2,array('proxy_host'    => "uwcinternet1.uwc.ac.za",
-                                           'proxy_port'    => 8080,
-                                           'proxy_login'    => "jadam",
-                                           'proxy_password' => "adam1234"));
-       $crse = $this->objSoapClient2->getlimitCRSE('CRSCDE', "$stcrs",0,0);
-       return $crse;
-    }	
-
-function getCourseInfo4($id,$year = null){
-
-        $this->stdnum = $this->getParam('id');
-		$this->NAMESPACE2 = 'http://172.16.65.134/webserviceDEV/studentinfo4.php?wsdl';
-        // Pull in the NuSOAP code
-		// Create the client instance
-		$this->objSoapClient2 = new SoapClient($this->NAMESPACE2,array('proxy_host'    => "uwcinternet1.uwc.ac.za",
-                                           'proxy_port'    => 8080,
-                                           'proxy_login'    => "jadam",
-                                           'proxy_password' => "adam1234"));
-		
-        $stcrsinfo = $this->objSoapClient2->getlimitSTSBJ('STDNUM', "$id",0,0);
-        return $stcrsinfo;
-	}
-
-	function getSTHSL($field,$value,$start,$offset){
-		
-		$this->NAMESPACE2 = 'http://172.16.65.134/webserviceDEV/studentinfo4.php?wsdl';
-        // Pull in the NuSOAP code
-		// Create the client instance
-		$this->objSoapClient2 = new SoapClient($this->NAMESPACE2,array('proxy_host'    => "uwcinternet1.uwc.ac.za",
-                                           'proxy_port'    => 8080,
-                                           'proxy_login'    => "jadam",
-                                           'proxy_password' => "adam1234"));
-		
-        
-       return $this->objSoapClient2->getlimitSTHSL($field,$value,$start,$offset);
-	}
-
-
-
+	
 	function getMarks($field,$value)
 	{
 	$value = "'" . $value . "'";
@@ -227,21 +59,6 @@ function getCourseInfo4($id,$year = null){
 	$results = $this->objSoapClient->getallSTDET($field);
 	return $results;
 	}
-
-	function getStudentCourse($id)
-    {
-	$this->NAMESPACE2 = 'http://172.16.65.134/webserviceDEV/studentinfo4.php?wsdl';
-        // Pull in the NuSOAP code
-		// Create the client instance
-		$this->objSoapClient2 = new SoapClient($this->NAMESPACE2,array('proxy_host'    => "uwcinternet1.uwc.ac.za",
-                                           'proxy_port'    => 8080,
-                                           'proxy_login'    => "jadam",
-                                           'proxy_password' => "adam1234"));
-		
-		
-       $stcrs1 = $this->objSoapClient2->getlimitSTCRS('STDNUM', "$id",0,0);
-       return $stcrs1;
-    }
 
 	function getAllStudents($field,$value,$start,$offset){
 		$this->objUser = & $this->newObject("user", "security");
@@ -257,21 +74,6 @@ function getCourseInfo4($id,$year = null){
        return $this->objSoapClient2->getlimitSTDET($field,$value,$start,$offset);
 	}
 
-function enquire($personid){
-		//$this->objUser = & $this->newObject("user", "security");
-		$this->NAMESPACE2 = 'http://172.16.65.134/webserviceDEV/studentinfo4.php?wsdl';
-        // Pull in the NuSOAP code
-		// Create the client instance
-		$this->objSoapClient2 = new SoapClient($this->NAMESPACE2,array('proxy_host'    => "uwcinternet1.uwc.ac.za",
-                                           'proxy_port'    => 8080,
-                                           'proxy_login'    => "jadam",
-                                           'proxy_password' => "adam1234"));
-		
-        
-       return $this->objSoapClient2->getlimitSTDET('STDNUM',"$personid",0,0);
-       
-        
-    }
 
 	function getAdditionalInfo($field,$value)
 	{

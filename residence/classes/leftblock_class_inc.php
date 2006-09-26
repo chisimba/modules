@@ -23,8 +23,29 @@ class leftblock extends object
 		$linkintro->href=$this->uri(array('action'=>''));
 		$linkintro->link="Introduction";
 		
-		$list .=$linkintro->show();
+		$list .='<p>'.$linkintro->show().'</p>';
 		
+		$list .='<h3>'.'Residence Application'.'</h3>';
+		$linkapp = new link();
+		
+		$linkapp->href=$this->uri(array('action'=>'viewallres','id'=>$id));
+		$linkapp->link="View All Applicants";
+		
+		$list .='<p>'.$linkapp->show().'</p>';
+			
+		$linkres = new link();
+		
+		$linkres->href=$this->uri(array('action'=>'viewallres','id'=>$id));
+		$linkres->link="View All Residence";
+		
+		$list .='<p>'.$linkres->show().'</p>';
+			
+
+		$link_add = new link();
+		$link_add->href=$this->uri(array('action'=>'resapp','id'=>$id));
+		$link_add->link="Add Student";
+		$list .='<p>'.$link_add->show().'</p>';
+
 		return $list;
 	
 }else{
@@ -36,17 +57,7 @@ class leftblock extends object
 		$linkintro->href=$this->uri(array('action'=>''));
 		$linkintro->link="Introduction";
 
-		$linkres = new link();
-		print $link1;
-		$linkres->href=$this->uri(array('action'=>'resapp','id'=>$id));
-		$linkres->link="Add Student";
 		
-		$list .='<p>'.$linkintro->show().'</p>';
-			
-		$list .='<h3>'.'Residence Application'.'</h3>';
-			
-
-		$list .='<p>'.$linkres->show().'</p>';
 		
 		return $list;
 
