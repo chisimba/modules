@@ -15,7 +15,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * @version 1
 ********************************************************************************/
 
-class onlineinvoice extends controller
+class marketingrecruitmentforum extends controller
 {
     /** 
      *declare variable used 
