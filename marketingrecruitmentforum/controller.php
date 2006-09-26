@@ -25,6 +25,7 @@ class marketingrecruitmentforum extends controller
     function init()
     {
       //initialise all class objects
+      $this->objLanguage =& $this->getObject('language', 'language');
       $this->setLayoutTemplate('default_layout_tpl.php');
     }
     
@@ -41,12 +42,12 @@ class marketingrecruitmentforum extends controller
         switch($action){
             
             case 'activitylist':
-                  return 'sluactivities_tpl.php';
-            
+                 // $this->setLayoutTemplate('default_layout_tpl.php');
+                  return 'studentcards_tpl.php';
             break;
             
             default:
-            return $this->nextAction('activitylist', array(NULL));
+                return $this->nextAction('activitylist', array(NULL));
                 
        }
     }
