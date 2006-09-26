@@ -406,14 +406,16 @@ class foafops extends object
 	private function _getFriends($userId)
 	{
 		$frarr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_friends');
+		print_r($frarr);
 		if(empty($frarr))
 		{
 			$frarr = array();
 		}
+
 		else {
 			foreach($frarr as $friends)
 			{
-				print_r($friends);
+
 				$fuserid = $friends['fuserid'];
 				//go and get all our friends details
 				$friend = $this->getfriends($fuserid);
