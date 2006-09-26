@@ -9,87 +9,57 @@ $this->objDBFinancialAidWS = & $this->getObject('dbfinancialaidws');
 $content = "";
 $oddEven = 'odd';
 
-
-$startat = $this->getParam('startat', 0);
-$dispCount = 25;
-
+$page = $this->getParam('page', 1);
+$dispCount = $this->getParam('dispcount', 25);
 
 $sponsorCount = $this->objFinancialAidCustomWS->getsponsorCount();
 
+$paging = '';
+$records = '';
+
+//Pagination
 if ($sponsorCount > 0){
 
-    //***start of pages***
-    $links_code = "";
-
     $pageCount = $sponsorCount/$dispCount;
-
-    $showlinks =& $this->getObject('htmlHeading','htmlelements');
     if ($pageCount != floor($pageCount)) {
        $pageCount = strtok(($pageCount+1), ".");
     }
-
-    $viewpages = new link();
-    for ($n=0; $n < $pageCount; $n++) {
-        $sponsorCountR = ($n * $dispCount);
-        $num = $n + 1;
-        $viewpages->href=$this->uri(array('action'=>'searchsponsors','startat'=>$sponsorCountR,'pg'=>$num));
-        $viewpages->link = "$num";
-        $links_code .= $viewpages->show();
-        if ($num == $pageCount){
-            $links_code .= " ";
-        }else if($n < $pageCount){
-            $links_code .= " | ";
-        }
-    }
-    $endl = $startat + $dispCount;
-
-    $viewp ="";
-    $viewn ="";
-
-    if ($startat > 1){
-        $page = $this->getParam('pg');
-        $page -= 1;
-        $sponsorCountR = $startat - $dispCount;
-
-        $viewprev = new link();
-        $viewprev->href=$this->uri(array('action'=>'searchsponsors','startat'=>$sponsorCountR,'pg'=>$page));
-        $viewprev->link = $objLanguage->languagetext('mod_financialaid_prev','financialaid');
-        $viewp = $viewprev->show();
-    }
-    $vntest = $sponsorCount - $dispCount;
-    if ($startat <= $vntest){
-        $page = $this->getParam('pg');
-        $page += 1;
-        $sponsorCountR = $startat + $dispCount;
-
-        $viewnext = new link();
-        $viewnext->href=$this->uri(array('action'=>'searchsponsors','startat'=>$sponsorCountR,'pg'=>$page));
-        $viewnext->link = $objLanguage->languagetext('mod_financialaid_next','financialaid');
-        $viewn = $viewnext->show();
-    }
-
+    $startat = ($page - 1) * $dispCount;
     $endat = $startat + $dispCount;
+    
     if ($endat > $sponsorCount){
         $endat = $sponsorCount;
     }
 
+    $dispcountfield = new textinput("dispcount", $dispCount,  "hidden", NULL);
+
+   	$goButton = & $this->newObject('button','htmlelements');
+   	$cancelButton = & $this->newObject('button','htmlelements');
+
+   	$goButton = new button("submit",'Go');
+    $goButton->setToSubmit();
+	$cancelButton = new button("cancel", $objLanguage->languagetext('word_cancel'));
+	$cancelButton->setToSubmit();
+
+	$dropdown =& $this->newObject("dropdown", "htmlelements");
+	$dropdown->name = 'page';
+	for ($i = 1; $i <= $pageCount; $i++){
+	    $dropdown->addOption($i,$i."&nbsp;&nbsp;&nbsp;");
+        if ($i == $page){
+            $dropdown->setSelected($i);
+        }
+	}
+
+    $objPaging = new form('pagingform');
+    $objPaging->setAction($this->uri(array('action'=>'searchsponsors')));
+	$objPaging->addToForm('<center>'.'Page '.$dropdown->show().' of '.'<b>'.$pageCount.'</b>'.' '.$goButton->show().'</center>');
+    $paging = $objPaging->show();
+    
     $rep = array(
       'RANGE' => ($startat+1).'-'.$endat,
       'TOTAL' => $sponsorCount);
 
     $records = $objLanguage->code2Txt('mod_financialaid_resultsfound','financialaid',$rep);
-    $showlinks->str = "$viewp $links_code $viewn";
-    $showlinks->align="center";
-
-    if($sponsorCount <= $dispCount){
-        $pagelinks = "";
-    }else{
-        $pagelinks = $records.$showlinks->show();
-    }
-    //***end of pagination***
-}else{
-    $pagelinks = "";
-    $records = "";
 }
 
 $sponsors = $this->objFinancialAidCustomWS->getAllSponsors('BRSCDE', $startat, $dispCount);
@@ -132,7 +102,7 @@ if(is_array($sponsors)){
 }
 
 
-$content = "<center>".$pagelinks." ".$content. "</center>";
+$content = "<center>".$records.$paging." ".$content. "</center>";
 
 echo $content;
 ?>

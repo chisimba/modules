@@ -27,7 +27,7 @@ if (count($studentinfo) > 0){
     $href = new href("index.php?module=financialaid&amp;action=adddependant&amp;appid=$appid",$this->objLanguage->languagetext('mod_financialaid_adddependant','financialaid'));
     $content.=$href->show()."<br /><br /><br />";
     $content .= $objLanguage->languagetext('mod_financialaid_addmoreinfoalternative','financialaid')."&nbsp;";
-    $href = new href("index.php?module=financialaid&amp;action=applicationinfo",$this->objLanguage->languagetext('mod_financialaid_here','financialaid'));
+    $href = new href("index.php?module=financialaid&amp;action=applicationinfo&amp;appid=".$appid,$this->objLanguage->languagetext('mod_financialaid_here','financialaid'));
     $content.=$href->show()."<br /><br />";
 
     $content = "<center>".$details." ".$content. "</center>";

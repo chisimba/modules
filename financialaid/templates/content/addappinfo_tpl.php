@@ -7,6 +7,18 @@ $details = "<center><h2>".$objLanguage->languagetext('mod_financialaid_addappinf
 
 $stdNum = new textinput('stdnum');
 
+$startyear = date("Y");
+
+$year = new dropdown("year");
+$year->addOption($startyear, $startyear.'&nbsp;&nbsp;&nbsp;');
+$year->addOption($startyear + 1, ($startyear + 1).'&nbsp;&nbsp;&nbsp;');
+
+$semester = new radio('semester');
+$semester->addOption('1',$objLanguage->languagetext('word_first'));
+$semester->addOption('2',$objLanguage->languagetext('word_second'));
+$semester->setSelected('1');
+$semester->setBreakSpace('&nbsp;&nbsp;');
+
 $addbut= new button('add');
 $addbut->setToSubmit();
 $addbut->setValue($objLanguage->languagetext('word_next'));
@@ -19,6 +31,16 @@ $cancelbut->setValue($objLanguage->languagetext('word_cancel'));
 $table->startRow();
 $table->addCell($objLanguage->languagetext('mod_financialaid_stdnum2','financialaid'));
 $table->addCell($stdNum->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objLanguage->languagetext('word_year'));
+$table->addCell($year->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objLanguage->languagetext('word_semester'));
+$table->addCell($semester->show());
 $table->endRow();
 
 $table->startRow();

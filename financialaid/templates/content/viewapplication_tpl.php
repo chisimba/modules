@@ -30,6 +30,11 @@ $relationship = array('1'=>$objLanguage->languagetext('word_father'),
                   
                   
 $appInfo = $this->objDBFinancialAidWS->getApplication($appid);
+$totalIncome = 0;
+$dependantCount = 0;
+$dependanyStudyCount = 0;
+
+$tableIncome =& $this->newObject('htmltable','htmlelements');
 
 if (count($appInfo) > 0){
     $studentInfo = $this->objDbStudentInfo->getPersonInfo($appInfo[0]->studentNumber);
@@ -135,6 +140,8 @@ if (count($appInfo) > 0){
          		        $table->endRow();
                     }
                 }
+                $oddEven = 'odd';
+                $table->row_attributes = " class = \"$oddEven\"";
                 $table->startRow();
                 $table->addCell("&nbsp;");
                 $table->endRow();
@@ -287,13 +294,20 @@ if (count($appInfo) > 0){
                 $table->endRow();
 
                 $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('word_salary')."</b>");
+                $table->addCell("<b>".$objLanguage->languagetext('word_salary')."</b>", "40%");
                 $table->addCell($data->salary);
                 $table->endRow();
 
                 $table->startRow();
                 $table->addCell('&nbsp;');
-                $table->endRow();            }
+                $table->endRow();
+                
+                $tableIncome->startRow();
+                $tableIncome->addCell($objLanguage->languagetext('mod_financialaid_showappparttimejobdetails', 'financialaid'), "40%");
+                $tableIncome->addCell($data->salary);
+                $tableIncome->endRow();
+                $totalIncome += $data->salary;
+            }
             $tabContent = $table->show();
         }else{
             $tabContent = "<div class='noRecordsMessage'>".$objLanguage->languagetext('mod_financialaid_noparttimejob','financialaid')."</div>";
@@ -376,6 +390,8 @@ if (count($appInfo) > 0){
         //Create dependants details tab
         $dependants = $this->objDBFinancialAidWS->getDependants($appid);
         $dependantStudents = $this->objDBFinancialAidWS->getStudentsInFamily($appid);
+        $dependantCount = count($dependants);
+        $dependantStudyCount = count($dependantStudents);
 
         if(count($dependants) > 0){
             $dependantsTabBox = & $this->newObject('tabbox');
@@ -423,6 +439,14 @@ if (count($appInfo) > 0){
                 $table->addCell($dependants[$i]->incomeAmount);
                 $table->endRow();
 
+                if ($dependants[$i]->incomeAmount > 0){
+                    $tableIncome->startRow();
+                    $tableIncome->addCell($dependants[$i]->firstName."&nbsp;".$dependants[$i]->surname, "40%");
+                    $tableIncome->addCell($dependants[$i]->incomeAmount);
+                    $tableIncome->endRow();
+                    $totalIncome += $dependants[$i]->incomeAmount;
+                }
+
                 //If dependant is also a student show this info
                 for($j = 0; $j < count($dependantStudents); $j++){
                     if ($dependantStudents[$j]->firstName == $dependants[$i]->firstName){
@@ -466,46 +490,21 @@ if (count($appInfo) > 0){
         }
         $appTabBox->addTab('dependantsDetails', $objLanguage->languagetext('word_dependants'), $dependantsDisplay);
 
-        //Create dependant students tab
- /*
-        if(count($dependantStudents) > 0){
-            $dependantsStudyingTabBox = & $this->newObject('tabbox');
-            $dependantsStudyingTabBox->tabName = 'DependantsStudying';
+        $tableTotalIncome =& $this->newObject('htmltable','htmlelements');
 
-            for($i = 0; $i < count($dependantStudents); $i++){
-                $table =& $this->newObject('htmltable','htmlelements');
-                $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_firstname','financialaid')."</b>");
-                $table->addCell($dependantStudents[$i]->firstName);
-                $table->endRow();
+        $tableTotalIncome->startRow();
+        $tableTotalIncome->addCell($objLanguage->languagetext('mod_financialaid_totalfamilyincome','financialaid'), "40%");
+        $tableTotalIncome->addCell($totalIncome);
+        $tableTotalIncome->endRow();
 
-                $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_institution','financialaid')."</b>");
-                $table->addCell($dependantStudents[$i]->institution);
-                $table->endRow();
-
-                $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('word_course')."</b>");
-                $table->addCell($dependantStudents[$i]->course);
-                $table->endRow();
-
-                $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_yearofstudy','financialaid')."</b>");
-                $table->addCell($dependantStudents[$i]->yearOfStudy);
-                $table->endRow();
-
-                $table->startRow();
-                $table->addCell("<b>".$objLanguage->languagetext('mod_financialaid_stdnum2','financialaid')."</b>");
-                $table->addCell($dependantStudents[$i]->studentNumber);
-                $table->endRow();
-                $dependantsStudyingTabBox->addTab($dependantStudents[$i]->id, $dependantStudents[$i]->firstName, $table->show());
-            }
-            $dependantsStudyingDisplay = $dependantsStudyingTabBox->show(FALSE);
-        }else{
-            $dependantsStudyingDisplay = "<div class='noRecordsMessage'>".$objLanguage->languagetext('mod_financialaid_nostudentfamily','financialaid')."</div>";
+        $summaryDetails = $dependantCount."&nbsp;".$objLanguage->languagetext('mod_financialaid_dependantsinfamily','financialaid');
+        $summaryDetails .= "<br />".$dependantStudyCount."&nbsp;".$objLanguage->languagetext('mod_financialaid_dependantsstudyinginfamily','financialaid');
+        $summaryDetails .= "<br /><br />".$tableTotalIncome->show();
+        if($totalIncome > 0){
+            $summaryDetails .= "<b>".$objLanguage->languagetext('mod_financialaid_familyincome','financialaid')."</b>".$tableIncome->show();
         }
-   */
-  //    $appTabBox->addTab('dependantsStudyingDetails', $objLanguage->languagetext('mod_financialaid_showappstudentfamilydetails','financialaid'), $dependantsStudyingDisplay);
+        $summaryDetails .= "<br /><br /><br />";
+        $appTabBox->addTab('summary', $objLanguage->languagetext('word_summary'), $summaryDetails);
         $content .= $appTabBox->show();
     }
 }

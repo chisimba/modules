@@ -21,6 +21,15 @@ class studyfeecalc extends object
 
 	}
 
+    /**
+    *
+    * public function to retrieve fee of specified type for sudent
+    *
+    * @param string $stdnum: The student number of student
+    * @param string $type: The transaction type
+    * @return int: Fee
+    *
+    */
     public function getFee($stdnum, $type){
         $fee = 0;
         

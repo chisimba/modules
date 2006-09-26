@@ -92,7 +92,7 @@ class financialaidleftblock extends object
     	$link->link = $this->objLanguage->languagetext('mod_financialaid_listsponsors','financialaid');
 		$links.="<span class='menulink'>".$link->show()."</span><br />";
 
-        $buffer="<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />";
+  //      $buffer="<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />";
 		return $header.$links.$buffer;
 	}
 }

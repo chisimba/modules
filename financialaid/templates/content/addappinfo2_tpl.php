@@ -8,7 +8,11 @@ if (!isset($appid)){
 
 if (is_null($appid)){
     $studentNumber = $this->getParam('stdnum');
-    $appinfo = $this->objDBFinancialAidWS->getApplication($studentNumber, 'studentNumber');
+    $year = $this->getParam('year');
+    $semester = $this->getParam('semester');
+    
+    $where = "WHERE studentNumber = '".$studentNumber."' AND year = '".$year."' AND semester = '".$semester."'";
+    $appinfo = $this->objDBFinancialAidWS->getApplicationWhere($where);
     $studentinfo = $this->objDbStudentInfo->getPersonInfo($studentNumber);
     $appid = $appinfo[0]->id;
 }else{
@@ -19,7 +23,7 @@ if (is_null($appid)){
     }
 }
 
-if (count($studentinfo) > 0){
+if (count($appinfo) > 0){
     $rep = array(
           'FIRSTNAME' => $studentinfo[0]->FSTNAM,
           'LASTNAME' => $studentinfo[0]->SURNAM);
@@ -40,7 +44,7 @@ if (count($studentinfo) > 0){
     $content = "<center>".$details." ".$content. "</center>";
 }else{
     $details = "<h2>".$objLanguage->languagetext('mod_financialaid_addappinfo','financialaid')."</h2>";
-    $content = "<div class='error'>".$this->objLanguage->languagetext('mod_financialaid_studentnotexisting','financialaid')."</div>";
+    $content = "<div class='error'>".$this->objLanguage->languagetext('mod_financialaid_applicationnotexisting','financialaid')."</div>";
     $content .= $objLanguage->languagetext('mod_financialaid_addforanotherstudent','financialaid')."&nbsp;";
     $href = new href("index.php?module=financialaid&amp;action=addappinfo",$this->objLanguage->languagetext('mod_financialaid_here','financialaid'));
     $content.=$href->show();

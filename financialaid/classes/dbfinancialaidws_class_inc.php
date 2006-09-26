@@ -21,7 +21,7 @@ class dbfinancialaidws extends object
 	public function init(){
 		parent::init();
         try{
-            $this->objSoapClient = new SoapClient("http://172.16.65.128/webservices/testws12.php?wsdl");
+            $this->objSoapClient = new SoapClient("http://172.16.65.128/webservices/testws13.php?wsdl");
         }catch(Exception $e){
             die($e->getMessage());
         }
@@ -47,7 +47,25 @@ class dbfinancialaidws extends object
             return NULL;
         }
     }
-    
+
+    /**
+    *
+    * public function to retrieve application details from the database
+    *
+    * @param string $where: The value to search for in the database
+    * @return array: The array of matching records from the database
+    *
+    */
+    public function getApplicationWhere($where = ''){
+        try{
+            return $this->objSoapClient->getApplicationWhere($where);
+
+        }catch(Exception $e){
+          //  echo $e->getMessage();
+            return NULL;
+        }
+    }
+
     /**
     *
     * public function to retrieve application details from the database
