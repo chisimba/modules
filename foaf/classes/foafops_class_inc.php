@@ -413,6 +413,7 @@ class foafops extends object
 		else {
 			foreach($frarr as $friends)
 			{
+				print_r($friends);
 				$fuserid = $friends['fuserid'];
 				//go and get all our friends details
 				$friend = $this->getfriends($fuserid);
