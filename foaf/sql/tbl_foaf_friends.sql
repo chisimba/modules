@@ -19,21 +19,11 @@ $fields = array(
 		'type' => 'text',
 		'length' => 255,
 		),
-	'datecreated' => array(
-		'type' => 'timestamp',
-		),
-	'datemodified' => array(
-		'type' => 'timestamp',
-		),
-	'creatorid' => array(
-		'type' => 'text',
-		'length' => 255,
-		)
 	);
 
 	//create other indexes here...
 
-$name = '';
+$name = 'userid';
 
 $indexes = array(
                 'fields' => array(
