@@ -120,7 +120,7 @@ class onlineinvoice extends controller
               
              case 'createinvoice':
                 $this->setLayoutTemplate('postlogin_layout_tpl.php');
-              return 'postlogin_tpl.php';
+                return 'postlogin_tpl.php';
               //  return 'createInvoice_tpl.php';   /*  display initial invoice   */
              break;
             
