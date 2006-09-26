@@ -43,8 +43,15 @@ class marketingrecruitmentforum extends controller
             
             case 'activitylist':
                  // $this->setLayoutTemplate('default_layout_tpl.php');
-                  return 'studentcards_tpl.php';
+                  return 'sluactivities_tpl.php';
             break;
+            
+            case  'studentcard':
+                return 'studentcards_tpl.php';
+            break;
+            
+            case  'shoollist':
+              return 'schoollist_tpl.php';
             
             default:
                 return $this->nextAction('activitylist', array(NULL));
