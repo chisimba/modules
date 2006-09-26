@@ -218,13 +218,6 @@ class foafops extends object
 	public function getfriends($userId)
 	{
 		$this->friend = $this->newObject('foafcreator');
-
-		//set the path where we will save the users foaf rdf file for publishing
-		$this->savepath = $this->objConfig->getContentBasePath() . "users/" . $this->objUser->userId() . "/";
-		//get the users userId
-		$userid = $this->objUser->userId();
-		//get the users full name
-		$fullname = $this->objUser->fullname();
 		//retrieve what ever other info about the user we can get from tbl_users
 		$uarr = $this->dbFoaf->getRecordSet($userid, 'tbl_users');
 		//set the user details to an array that we can use
@@ -236,10 +229,9 @@ class foafops extends object
 		$firstname = $userdetails['firstname'];
 		//users surname
 		$surname = $userdetails['surname'];
+		$fullname = $firstname . " " . $surname;
 		//users email address
 		$email = $userdetails['emailaddress'];
-		//we need a usrimage as well for the foaf depiction
-		$image = $this->objUser->getUserImageNoTags();
 
 		$this->friend->newAgent('person');
 		$this->friend->setName($fullname);
@@ -247,7 +239,6 @@ class foafops extends object
 		$this->friend->setFirstName($firstname);
 		$this->friend->setSurname($surname);
 		$this->friend->addMbox('mailto:'.$email,TRUE);
-		$this->friend->addImg($image);
 
 		//switch tables to tbl_foaf_myfoaf
 		$farr = $this->dbFoaf->getRecordSet($userId, 'tbl_foaf_myfoaf');
