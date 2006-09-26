@@ -166,12 +166,6 @@ class foafops extends object
 			$workhomepage = $foafdetails['workhomepage'];
 			$schoolhomepage = $foafdetails['schoolhomepage'];
 
-			//interests from interests table
-			$this->_getInterests($userId);
-
-			//funded by from funded by table
-			$this->_getFunders($userId);
-
 			$logo = $foafdetails['logo'];
 			$basednear = $foafdetails['basednear'];
 			$basednear = explode(",",$basednear);
@@ -179,18 +173,6 @@ class foafops extends object
 			$basednearlong = $basednear[1];
 			$geekcode = $foafdetails['geekcode'];
 
-			//depictions from depictions table
-			$this->_getDepictions($userId);
-
-			//organizations from organisations table
-			$this->_getOrganizations($userId);
-
-			//Get all the pages that we are interested in...
-			//A page is a document about the thing
-			$this->_getpages($userId);
-
-			//get the people we know...
-			$this->_getFriends($userId);
 
 			//add the details to the foaf xml tree
 			$this->objFoaf->addHomepage($homepage);
@@ -211,103 +193,24 @@ class foafops extends object
 			$this->objFoaf->addLogo($logo);
 			$this->objFoaf->setBasedNear($basednearlat, $basednearlong);
 
-		}
-
-	}
-
-	public function getfriends($userId)
-	{
-		$this->friend = $this->newObject('foafcreator');
-		//retrieve what ever other info about the user we can get from tbl_users
-		$uarr = $this->dbFoaf->getRecordSet($userid, 'tbl_users');
-		//set the user details to an array that we can use
-		$userdetails = $uarr[0];
-		//get some of the foaf info
-		//title
-		$title = $userdetails['title'];
-		//users first name
-		$firstname = $userdetails['firstname'];
-		//users surname
-		$surname = $userdetails['surname'];
-		$fullname = $firstname . " " . $surname;
-		//users email address
-		$email = $userdetails['emailaddress'];
-
-		$this->friend->newAgent('person');
-		$this->friend->setName($fullname);
-		$this->friend->setTitle($title);
-		$this->friend->setFirstName($firstname);
-		$this->friend->setSurname($surname);
-		$this->friend->addMbox('mailto:'.$email,TRUE);
-
-		//switch tables to tbl_foaf_myfoaf
-		$farr = $this->dbFoaf->getRecordSet($userId, 'tbl_foaf_myfoaf');
-		//get the info from dbFmyfoaf and set up all the fields
-		//set the user details to an array that we can use
-		if(empty($farr))
-		{
-			$foafdetails = array();
-		}
-		else {
-			$foafdetails = $farr[0];
-			//hook up the details to variables and put them into the XML Tree
-			$homepage = $foafdetails['homepage'];
-			$weblog = $foafdetails['weblog'];
-			//page comes form a diff method
-			$phone = $foafdetails['phone'];
-			$jabberid = $foafdetails['jabberid'];
-			$theme = $foafdetails['theme'];
-			$onlineacc = $foafdetails['onlineacc'];
-			$onlinegamoingacc = $foafdetails['onlinegamingacc'];
-			$workhomepage = $foafdetails['workhomepage'];
-			$schoolhomepage = $foafdetails['schoolhomepage'];
-
-			//interests from interests table
-			//$this->_getInterests($userId);
-
 			//funded by from funded by table
-			//$this->_getFunders($userId);
-
-			$logo = $foafdetails['logo'];
-			$basednear = $foafdetails['basednear'];
-			$basednear = explode(",",$basednear);
-			$basednearlat = $basednear[0];
-			$basednearlong = $basednear[1];
-			$geekcode = $foafdetails['geekcode'];
-
+			$this->_getFunders($userId);
 			//depictions from depictions table
-			//$this->_getDepictions($userId);
-
+			$this->_getDepictions($userId);
 			//organizations from organisations table
-			//$this->_getOrganizations($userId);
-
+			$this->_getOrganizations($userId);
 			//Get all the pages that we are interested in...
 			//A page is a document about the thing
-			//$this->_getpages($userId);
-
+			$this->_getpages($userId);
+			//interests from interests table
+			$this->_getInterests($userId);
 			//get the people we know...
 			$this->_getFriends($userId);
-
-			//add the details to the foaf xml tree
-			$this->friend->addHomepage($homepage);
-			$this->friend->addWeblog($weblog);
-			$this->friend->addPhone($phone);
-			$this->friend->addJabberID($jabberid);
-			$this->friend->setGeekcode($geekcode);
-			$this->friend->addTheme($theme);
-
-			/**
-			 * @todo check out the accounts bit, they need a service homepage as well as a username
-			 */
-			$this->friend->addOnlineAccount('Paul','http://freenode.info','http://xmlns.com/foaf/0.1/OnlineChatAccount');
-			$this->friend->addOnlineGamingAccount('Paul_S','http://www.there.com');
-
-			$this->friend->addWorkplaceHomepage($workhomepage);
-			$this->friend->addSchoolHomepage($schoolhomepage);
-			$this->friend->addLogo($logo);
-			$this->friend->setBasedNear($basednearlat, $basednearlong);
 		}
+
+
 	}
+
 
 	private function _getInterests($userId, $friend = FALSE)
 	{
@@ -428,7 +331,7 @@ class foafops extends object
 	private function _getFriends($userId)
 	{
 		$frarr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_friends');
-		//print_r($frarr);
+		print_r($frarr);
 		if(empty($frarr))
 		{
 			$frarr = array();
