@@ -42,6 +42,8 @@
   $objExpByDateTable->addHeaderCell('Dinner Location');
   $objExpByDateTable->addHeaderCell('Dinner Rate');
   $objExpByDateTable->addHeaderCell('Total');
+//  $objExpByDateTable->addHeaderCell('');
+//  $objExpByDateTable->addHeaderCell('Per Diem Total');
   $objExpByDateTable->endHeaderRow();
 
   
@@ -60,19 +62,11 @@
   $objExpByDateTable->addCell($sesDat['dlocation'], '', '', '', $oddOrEven);
   $objExpByDateTable->addCell($sesDat['drrate'], '', '', '', $oddOrEven);
   $objExpByDateTable->addCell($sesDat['total'], '', '', '', $oddOrEven);
+//   $objExpByDateTable->addCell('', '', '', '', $oddOrEven);
+//  $objExpByDateTable->addCell('Total:$' .$sesDat['finaltotal'],'','',$oddOrEven);
   $objExpByDateTable->endRow();
   
-  $objExpByDateTable->startRow();
-  $objExpByDateTable->addCell($sesDat['date'], '', '', '', $oddOrEven);
-  $objExpByDateTable->addCell($sesDat['blocation'], '', '', '', $oddOrEven);
-  $objExpByDateTable->addCell($sesDat['btrate'], '', '', '', $oddOrEven);
-  $objExpByDateTable->addCell($sesDat['llocation'], '', '', '', $oddOrEven);
-  $objExpByDateTable->addCell($sesDat['lRate'], '', '', '', $oddOrEven);
-  $objExpByDateTable->addCell($sesDat['dlocation'], '', '', '', $oddOrEven);
-  $objExpByDateTable->addCell($sesDat['drrate'], '', '', '', $oddOrEven);
-  $objExpByDateTable->addCell($sesDat['total'], '', '', '', $oddOrEven);
-  $objExpByDateTable->addCell('Total: ' .$sesDat['finaltotal'], '', '', '', $oddOrEven);
-  $objExpByDateTable->endRow();
+  
   }
 }
 /**************************************************************************************************************************************************/

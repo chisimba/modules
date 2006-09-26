@@ -6,7 +6,7 @@
    /**
   *load all classes
   */
-  $this->unsetSession('invoicedata');
+//  $this->unsetSession('invoicedata');
   
   $this->loadClass('htmlheading','htmlelements');
   $this->loadClass('button','htmlelements');
@@ -47,34 +47,35 @@
    
         //$myTab = $this->newObject('htmltable','htmlelements');
      $myTab = new htmltable('myTab');   
-     $myTab->width='150%';
+     $myTab->width='100%';
      $myTab->border='0';
      $myTab->cellspacing='5';
      $myTab->cellpadding='5';
    
      $myTab->startRow();
-     $myTab->addCell(ucfirst($welcome . ' : '. strtoupper($this->objUser->fullname() )));
+     $myTab->addCell(ucfirst('<b>'. $welcome . ' : '));
+     $myTab->addCell("<div class=\"warning\">".ucfirst($this->objUser->fullname())."</div>" );
      $myTab->endRow();
      
      $myTab->startRow();
-     $myTab->addCell(ucfirst($lastacces .' : '. 'NEED TO BE FIXED AND KNW HOW'));//. ':' . ucfirst($this->objUser->getLastLoginDate($userId))));
+     $myTab->addCell('<b>'.ucfirst($lastacces .' : '));
+     $myTab->addCell("<div class=\"warning\">".ucfirst('TO BE FIXED')."</div>");//. ':' . ucfirst($this->objUser->getLastLoginDate($userId))));
      $myTab->endRow();
      
      $myTab->startRow();
-     $myTab->addCell(ucfirst($invoicesubmitted) . ' :');
+     $myTab->addCell(ucfirst('<b>'.$invoicesubmitted) . ' :');
+     $myTab->addCell('select date createdby from the invoice table');
      $myTab->endRow();
      
      $myTab->startRow();
-     $myTab->addCell(ucfirst($numlogin . ': '. $this->objUser->logins($userId)));
+     $myTab->addCell('<b>'.ucfirst($numlogin . ': '));
+     $myTab->addCell("<div class=\"warning\">" . $this->objUser->logins($userId) ."</div>");
      $myTab->endRow();
      
 /************************************************************************************************************************************************/
   /**
    *create a form to place all objects on
    */    
-  // $this->loadClass('budget','onlineinvoice'); 
-  //  $objBudget  = new budgetinfo('Mainheading');
-  //  $values = $objBudget->budget();
   
   $objpostloginForm = new form('postlogin',$this->uri(array('action'=>'NULL')));  
   $objpostloginForm->id = 'postlogin';

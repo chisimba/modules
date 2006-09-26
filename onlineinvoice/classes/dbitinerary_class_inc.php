@@ -31,11 +31,51 @@ class dbitinerary extends dbTable{
         return $results;
   }
 
-	function getitinerary()
+	function showtitinerary()
 	{
-      /**
-       *get all information from the itinerary form 
-      */
+               $sessionItinerary = $this->getSession('addmultiitinerary');
+ 
+               if(!empty($sessionItinerary)){
+//Create table to display dates in session and the rates for breakfast, lunch and dinner and the total rate 
+                        $objItineraryTable =& $this->newObject('htmltable', 'htmlelements');
+                        $objItineraryTable->cellspacing = '10';
+                        $objItineraryTable->cellpadding = '2';
+                        $objItineraryTable->border='0';
+                        $objItineraryTable->width = '100%';
+  
+                        $objItineraryTable->startHeaderRow();
+                        $objItineraryTable->addHeaderCell('Departure Date');
+                        $objItineraryTable->addHeaderCell('Departure Time' );
+                        $objItineraryTable->addHeaderCell('Departure City');
+                        $objItineraryTable->addHeaderCell('Arrival Date');
+                        $objItineraryTable->addHeaderCell('Arrival Time');
+                        $objItineraryTable->addHeaderCell('Arrival City');
+                        $objItineraryTable->endHeaderRow();
+
+  
+                        $rowcount = '0';
+  
+                              foreach($sessionItinerary as $sesItinerary){
+     
+                                        $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+     
+                                        $objItineraryTable->startRow();
+                                        $objItineraryTable->addCell($sesItinerary['departuredate'], '', '', '', $oddOrEven);
+                                        $objItineraryTable->addCell($sesItinerary['departuretime'], '', '', '', $oddOrEven);
+                                        $objItineraryTable->addCell($sesItinerary['departurecity'], '', '', '', $oddOrEven);
+                                        $objItineraryTable->addCell($sesItinerary['arrivaledate'], '', '', '', $oddOrEven);
+                                        $objItineraryTable->addCell($sesItinerary['arrivaltime'], '', '', '', $oddOrEven);
+                                        $objItineraryTable->addCell($sesItinerary['arrivalcity'], '', '', '', $oddOrEven);
+                                        $objItineraryTable->endRow();
+                              }
+                
+                return $objItineraryTable->show();
+                } 
+                
+                
+                
+                
+
   }
   
 

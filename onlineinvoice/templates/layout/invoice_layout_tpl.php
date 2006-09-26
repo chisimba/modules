@@ -24,51 +24,40 @@ $itinerary  = $this->objLanguage->languageText('mod_onlineinvoice_itinerary','on
 $perdiem  = $this->objLanguage->languageText('mod_onlineinvoice_perdiem','onlineinvoice');
 $lodge  = $this->objLanguage->languageText('mod_onlineinvoice_lodge','onlineinvoice');
 $incident = $this->objLanguage->languageText('mod_onlineinvoice_incident','onlineinvoice');
+$exit  = $this->objLanguage->languageText('phrase_exit');
+$save  = $this->objLanguage->languageText('word_save');
+$str2  =  ucfirst($save);  
+$str1  = ucfirst($exit);
 
-//$this->objlink  =& $this->newObject('link','htmlelements');
-//$this->objlink->link($this->uri(array('NULL')));
-//$this->objlink->link = $instructions;
-//$def = $this->objlink->show();
+
 $displayhelp  = $this->objHelp->show('mod_onlineinvoice_helpinstruction');  
 
-/*************************************************************
- * want to add links to help object 
- * each link has a popup window to show info
- * but gettin a problems adding links to popup
- * else?? 
- * how to add lots of content to popup
- * ************************************************************     
-
-
-$cssLayout->setNumColumns(3);
-$sideMenuBar=& $this->getObject('sidemenu','toolbar');
 
 /**
  *create a log out link and add to rightcolumn
  */
-//$logout    = ucfirst($this->objLanguage->languageText('word_logout'));
-//$logmessage = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_logoutsystem','onlineinvoice'));
 $help = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_helptext','onlineinvoice'));
- 
-//$urltext = $logout;
-//$content = $logmessage;
-//$caption = '';
-//$url = $this->uri(array('action'=>NULL));
-//$this->objlogoutlink  = & $this->newObject('mouseoverpopup','htmlelements');
-//$this->objlogoutlink->mouseoverpopup($urltext,$content,$caption,$url);
+$helpinstruction  = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_help','onlineinvoice'));
 
-//$rightcolumn = $this->objlogoutlink->show();  
+$this->loadClass('button','htmlelements'); 
+$this->objButtonExit  = new button('exitform', $str1);
+$this->objButtonExit->setToSubmit();	
 
-//var $val = 15;
-//public $var $val2 = 15;
+$this->objButtonSave  = new button('save', $str2);
+$this->objButtonSave->setToSubmit();
+
+
 $this->loadClass('featurebox','navigation');
-$objfeature = new featurebox($val,$val);
-$displaylink = $objfeature->show($showlinklogout);
-
-
-
 $objfeaturehelp = new featurebox($val,$val);
-$display = $objfeaturehelp->show($help  . " " .'<br />' . $displayhelp);
+$display = $objfeaturehelp->show($help  . " " .'<br />' . $helpinstruction . '<br />'.$displayhelp );
+
+$objfeature = new featurebox($val,$val);
+$displaybuttons = $objfeature->show("<div align=\"center\">" . $this->objButtonSave->show() . ' ' .$this->objButtonExit->show(). "</div>");
+
+$this->loadClass('form','htmlelements');
+$objForm = new form('invlayout',$this->uri(array('action'=>'saveexit')));
+$objForm->displayType = 3;
+$objForm->addToForm($display . '<br />'. $displaybuttons);
 
 $objuserdetails = new featurebox($val,$val);
 $displayleft = $objuserdetails->show($this->sideMenuBar->userDetails());
@@ -78,7 +67,7 @@ $displayleft = $objuserdetails->show($this->sideMenuBar->userDetails());
  * Set the Content of left side column and right side column and middle column
  */  
 $cssLayout->setLeftColumnContent($displayleft );
-$cssLayout->setRightColumnContent($displaylink . '<br />' .'<br />' . '<br />' . '<br />'. $display);
+$cssLayout->setRightColumnContent($objForm->show());
 $cssLayout->setMiddleColumnContent($this->getContent()); 
 
 /**

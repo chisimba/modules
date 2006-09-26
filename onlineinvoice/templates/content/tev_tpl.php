@@ -33,8 +33,14 @@
   /**
     *help information
     */   
+    
+    $tevinfo  = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_tevinfo','onlineinvoice'));
+    $example  = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_example','onlineinvoice'));
+    $travpurpose  = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_travpurpose','onlineinvoice'));
+    $helpstring = $tevinfo . '<br />' . $example . '<br />' . $travpurpose;
+    
     $this->objHelp=& $this->getObject('helplink','help');
-    $displayhelp  = $this->objHelp->show('mod_onlineinvoice_helpinstruction');
+    $displayhelp  = $this->objHelp->show($helpstring);
     
 
 /************************************************************************************************************************************************/
@@ -103,7 +109,7 @@
   $this->objpostalcode  = $this->newObject('label','htmlelements');
   $this->objpostalcode->label($postalcode,$lblPostalcode);
 
-  $lblCountry = '$lblCountry';
+  $lblCountry = 'lblCountry';
   $this->objCountry  = $this->newObject('label','htmlelements');
   $this->objCountry->label($country,$lblCountry);
 
@@ -117,34 +123,75 @@
    *create all text input boxes
    */
    
+   //$claimantinfo = array();
+   
+   $claimantinfo  = $this->getSession('claimantdata');
+        $claimantname = '';
+        $claimanttitle  = '';
+        $claimantaddress = '';
+        $claimantcity = '';
+        $claimantprovince = '';
+        $claimantpostalcode = '';
+        $country  = '';
+        $purposearea  = '';
+        
+        
+        if(!empty($claimantinfo)){         
+              while(list($subkey,$subval) = each($claimantinfo))
+              {
+                  if($subkey == 'name') {
+                 $claimantname = $subval;
+                  }
+                  if($subkey == 'title') {
+                  $claimanttitle = $subval;
+                  }
+                  if($subkey == 'address') {
+                  $claimantaddress = $subval;
+                  }
+                  if($subkey == 'city') {
+                  $claimantcity = $subval;
+                  }
+                  if($subkey == 'province') {
+                  $claimantprovince = $subval;
+                  }
+                  if($subkey == 'postalcode') {
+                  $claimantpostalcode = $subval;
+                  }
+                  if($subkey == 'country') {
+                  $country = $subval;
+                  }
+                  if($subkey == 'travelpurpose') {
+                  $purposearea = $subval;
+                  }
+              }
+          }
+ 
   $this->loadClass('textinput', 'htmlelements');
 
   $this->objtxtname = new textinput('txtClaimantName');
-  $this->objtxtname->id = 'txtClaimantName';
+  //$this->objtxtname->id = 'txtClaimantName';
+  $this->objtxtname->value = $claimantname ;
   
   $this->objtxttitle = new textinput('txtTitle');
-  $this->objtxttitle->value  = "";
-
-  $this->objtxtaddress = new textinput('txtAddress');
-  $this->objtxtaddress->value  = "";
+  $this->objtxttitle->value  = $claimanttitle ;
 
   $this->objtxtcity = new textinput('txtCity');
-  $this->objtxtcity->value  = "";
+  $this->objtxtcity->value  = $claimantcity;
 
   $this->objtxtprovince = new textinput('txtprovince');
-  $this->objtxtprovince->value  = "";
+  $this->objtxtprovince->value  = $claimantprovince;
 
   $this->objtxtpostalcode = new textinput('txtpostalcode');
-  $this->objtxtpostalcode->value  = "";
+  $this->objtxtpostalcode->value  = $claimantpostalcode;
 
-  $this->objtxtcountry = new textinput('txtcountry');
-  $this->objtxtcountry->value  = "";
+  //$this->objtxtcountry = new textinput('txtcountry');
+  //$this->objtxtcountry->value  = $country;
 
 /************************************************************************************************************************************************/
 /**
  *coutries
  */ 
-$countryvals  = 'coutryvals';           
+    $countryvals  = 'coutryvals';           
    $this->objcountrydropdown  = $this->newObject('dropdown','htmlelements');
    $this->objcountrydropdown->dropdown($countryvals);
    $this->objcountrydropdown->addOption('Afghanistan Afghani','Afghanistan Afghani') ;
@@ -163,29 +210,29 @@ $countryvals  = 'coutryvals';
    $this->objcountrydropdown->addOption('Azerbaijan New Manat','Azerbaijan New Manat') ;
    $this->objcountrydropdown->addOption('Bahamian Dollar','Bahamian Dollar') ;
    $this->objcountrydropdown->addOption('Bahraini Dinar','Bahraini Dinar') ;
-   $this->objcountrydropdown->addOption('Bangladeshi Taka . BDT','Bangladeshi Taka . BDT') ;
-   $this->objcountrydropdown->addOption('Barbados Dollar . BBD','Barbados Dollar . BBD') ;
-   $this->objcountrydropdown->addOption('Belarusian Ruble . BYR','Belarusian Ruble . BYR') ;
-   $this->objcountrydropdown->addOption('Belgian Franc . BEF','Belgian Franc . BEF') ;
-   $this->objcountrydropdown->addOption('Belize Dollar . BZD','Belize Dollar . BZD') ;
-   $this->objcountrydropdown->addOption('Bermudian Dollar . BMD','Bermudian Dollar . BMD') ;
-   $this->objcountrydropdown->addOption('Bhutan Ngultrum . BTN','Bhutan Ngultrum . BTN') ;
-   $this->objcountrydropdown->addOption('Bolivian Boliviano . BOB','Bolivian Boliviano . BOB') ;
-   $this->objcountrydropdown->addOption('Bosnian Mark . BAM','Bosnian Mark . BAM') ;
-   $this->objcountrydropdown->addOption('Botswana Pula . BWP','Botswana Pula . BWP') ;
-   $this->objcountrydropdown->addOption('Brazilian Real . BRL','Brazilian Real . BRL') ;
-   $this->objcountrydropdown->addOption('British Pound . GBP','British Pound . GBP') ;
-   $this->objcountrydropdown->addOption('Brunei Dollar . BND','Brunei Dollar . BND') ;
-   $this->objcountrydropdown->addOption('Bulgarian Lev . BGN','Bulgarian Lev . BGN') ;
-   $this->objcountrydropdown->addOption('Burundi Franc . BIF','Burundi Franc . BIF') ;
-   $this->objcountrydropdown->addOption('CFA Franc BCEAO . XOF','CFA Franc BCEAO . XOF') ;
-   $this->objcountrydropdown->addOption('CFA Franc BEAC . XAF','CFA Franc BEAC . XAF') ;
-   $this->objcountrydropdown->addOption('CFP Franc . XPF','CFP Franc . XPF') ;
-   $this->objcountrydropdown->addOption('Cambodian Riel . KHR','Cambodian Riel . KHR') ;
-   $this->objcountrydropdown->addOption('Canadian Dollar . CAD','Canadian Dollar . CAD') ;
-   $this->objcountrydropdown->addOption('Cape Verde Escudo . CVE','Cape Verde Escudo . CVE') ;
-   $this->objcountrydropdown->addOption('Cayman Islands Dollar . KYD','Cayman Islands Dollar . KYD') ;
-   $this->objcountrydropdown->addOption('Chilean Peso . CLP','Chilean Peso . CLP') ;
+   $this->objcountrydropdown->addOption('Bangladeshi Taka','Bangladeshi Taka') ;
+   $this->objcountrydropdown->addOption('Barbados Dollar','Barbados Dollar') ;
+   $this->objcountrydropdown->addOption('Belarusian Ruble','Belarusian Ruble') ;
+   $this->objcountrydropdown->addOption('Belgian Franc','Belgian Franc') ;
+   $this->objcountrydropdown->addOption('Belize Dollar','Belize Dollar') ;
+   $this->objcountrydropdown->addOption('Bermudian Dollar','Bermudian Dollar') ;
+   $this->objcountrydropdown->addOption('Bhutan Ngultrum','Bhutan Ngultrum') ;
+   $this->objcountrydropdown->addOption('Bolivian Boliviano','Bolivian Boliviano') ;
+   $this->objcountrydropdown->addOption('Bosnian Mark','Bosnian Mark') ;
+   $this->objcountrydropdown->addOption('Botswana Pula','Botswana Pula') ;
+   $this->objcountrydropdown->addOption('Brazilian Real','Brazilian Real') ;
+   $this->objcountrydropdown->addOption('British Pound','British Pound') ;
+   $this->objcountrydropdown->addOption('Brunei Dollar','Brunei Dollar') ;
+   $this->objcountrydropdown->addOption('Bulgarian Lev','Bulgarian Lev') ;
+   $this->objcountrydropdown->addOption('Burundi Franc','Burundi Franc') ;
+   $this->objcountrydropdown->addOption('CFA Franc BCEAO','CFA Franc BCEAO') ;
+   $this->objcountrydropdown->addOption('CFA Franc BEAC','CFA Franc BEAC') ;
+   $this->objcountrydropdown->addOption('CFP Franc','CFP Franc') ;
+   $this->objcountrydropdown->addOption('Cambodian Riel','Cambodian Riel') ;
+   $this->objcountrydropdown->addOption('Canadian Dollar','Canadian Dollar ') ;
+   $this->objcountrydropdown->addOption('Cape Verde Escudo ','Cape Verde Escudo') ;
+   $this->objcountrydropdown->addOption('Cayman Islands','Cayman Islands') ;
+   $this->objcountrydropdown->addOption('Chilean Peso','Chilean Peso') ;
    $this->objcountrydropdown->addOption('Chinese Yuan Renminbi . CNY','Chinese Yuan Renminbi . CNY') ;
    $this->objcountrydropdown->addOption('Colombian Peso . COP','Colombian Peso . COP') ;
    $this->objcountrydropdown->addOption('Comoros Franc . KMF','Comoros Franc . KMF') ;
@@ -355,14 +402,14 @@ $countryvals  = 'coutryvals';
   $this->objPurposeArea->setRows(1);
   $this->objPurposeArea->setColumns(16);
   $this->objPurposeArea->setName($textArea);
-  $this->objPurposeArea->setContent("");
+  $this->objPurposeArea->setContent($purposearea);
 
   $textAreaaddy = 'address';
   $this->objAdressArea = $this->newobject('textArea','htmlelements');
   $this->objAdressArea->setRows(1);
   $this->objAdressArea->setColumns(16);
   $this->objAdressArea->setName($textAreaaddy);
-  $this->objAdressArea->setContent("");
+  $this->objAdressArea->setContent($claimantaddress);
 
 /************************************************************************************************************************************************/
 
@@ -471,9 +518,16 @@ $countryvals  = 'coutryvals';
         
         $myTable->startRow();
         $myTable->endRow();
+        
+        $myTable->startRow();
+        $myTable->endRow();
+        
+        $myTable->startRow();
+        $myTable->endRow();
 
         $myTable->startRow();
-        $myTable->addCell("<div align=\"right\">".$this->objButtonNext->show()."</div>" );
+        $myTable->addCell(" " );
+        $myTable->addCell("<div align=\"left\">".$this->objButtonNext->show()."</div>" );
         $myTable->endRow();
         
 /************************************************************************************************************************************************/        
@@ -501,7 +555,6 @@ $objtraveler->addBoxContent('<br />' ."<div align=\"center\">".  "<div class=\"e
   $objtevForm->addRule('txtCity',$valcity,'required');
   $objtevForm->addRule('txtprovince',$valprovince,'required');
   $objtevForm->addRule('txtpostalcode',$valpostal,'required');
-  $objtevForm->addRule('txtcountry',$valcountry,'required');
   $objtevForm->addRule('travel',$travpurpose,'required');
   
   
@@ -517,4 +570,3 @@ $objtraveler->addBoxContent('<br />' ."<div align=\"center\">".  "<div class=\"e
   echo  $objtevForm->show();
 
 ?>
-

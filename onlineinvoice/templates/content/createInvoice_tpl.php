@@ -18,8 +18,18 @@ $this->objMainheading->str=$objLanguage->languageText('mod_onlineinvoice_webbase
 /**
   *help information
   */   
+$instruction    = strtoupper($this->objLanguage->languageText('mod_onlineinvoice_instruction','onlineinvoice'));
+//$dateselection  = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_selectdates','onlineinvoice'));
+$datesubmission = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_submitdates','onlineinvoice'));
+$editdates  = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_editdates','onlineinvoice'));    
+
+//$helpstring = $instruction .  $dateselection . '<br />' .$datesubmission . '<br />' .$editdates;
+$helpstring = $instruction .  '<br />' .$datesubmission . '<br />' .$editdates;
+
 $this->objHelp=& $this->getObject('helplink','help');
-$displayhelp  = $this->objHelp->show('mod_onlineinvoice_helpinstruction');
+$displayhelp  = $this->objHelp->show($helpstring);
+
+
 /**************************************************************************************************************************************************************/
 /**
  *determine if the session contianing inv dates is empty or not
@@ -36,10 +46,10 @@ if(!empty($invoicedata)){
 /**
  *create all language elements for labels
  */
-$dateRange = $objLanguage->languageText('mod_onlineinvoice_whatisthedaterangeofyourinvoice','onlineinvoice') ;
-$beginDate = $objLanguage->languageText('phrase_begindate');
-$endDate  = $objLanguage->languageText('phrase_enddate');
-$travelExpenses = $objLanguage->languageText('mod_onlineinvoice_travelexpensesupdate','onlineinvoice');
+$dateRange = $this->objLanguage->languageText('mod_onlineinvoice_whatisthedaterangeofyourinvoice','onlineinvoice') ;
+$beginDate = $this->objLanguage->languageText('phrase_begindate');
+$endDate  = $this->objLanguage->languageText('phrase_enddate');
+$travelExpenses = $this->objLanguage->languageText('mod_onlineinvoice_travelexpensesupdate','onlineinvoice');
 $btnSubmit  = $this->objLanguage->languageText('word_submit');
 $str1 = ucfirst($btnSubmit);
 $btnEdit  = $this->objLanguage->languageText('word_edit');
@@ -248,6 +258,7 @@ $this->loadClass('form','htmlelements');
 $objcreateInvoiceForm = new form('invoice',$this->uri(array('action'=>'submitinvoicedates')));
 $objcreateInvoiceForm->displayType = 3;
 $objcreateInvoiceForm->addToForm($myTable->show()  .  '<br />' . '<br />' . $this->objtravelExpenses->show()  . '<br />'  . $myTab->show());
+
 
 /*********************************************************************************************************************************************************/
 /*create tabbox for intial invoice*/

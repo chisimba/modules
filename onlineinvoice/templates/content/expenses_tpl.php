@@ -1,8 +1,25 @@
 <?php
 
-  /**
-   *create template for per diem expenses of the travel journey
-   */
+  /** create template for per diem expenses of the travel journey **/
+
+   $this->loadClass('windowpop','htmlelements');
+   $this->objPop=&new windowpop;
+   $this->objPop->set('window_name','Foreign Per Diem Rates');
+   $this->objPop->set('location','<a href=http://www.state.gov/m/a/als/prdm/>www.state.gov/m/a/als/prdm</a>');
+   $this->objPop->set('linktext','www.state.gov/m/a/als/prdm');
+   $this->objPop->set('width','600');
+   $this->objPop->set('height','300');
+   $this->objPop->set('left','300');
+   $this->objPop->set('top','400');
+   $this->objPop->set('menubar','yes');
+   $this->objPop->set('resizable','yes');
+   $this->objPop->set('scrollbars','yes');
+   $this->objPop->set('status','yes');
+   $this->objPop->set('toolbar','yes');
+   $this->objPop->putJs();
+   
+   $foreignRate = $this->objPop->show();
+
 
   /**
    *create all form headings
@@ -12,7 +29,7 @@
     $this->objMainheading->type = 1;
     $this->objMainheading->str=$objLanguage->languageText('mod_onlineinvoice_travelperdiemexpenses','onlineinvoice');
 
-    $foreignRate  = '<a href=http://www.state.gov/m/a/als/prdm/>www.state.gov/m/a/als/prdm</a>';
+    //$foreignRate  = '<a href=http://www.state.gov/m/a/als/prdm/>www.state.gov/m/a/als/prdm</a>';
     $this->objforeignheading = $this->newObject('htmlheading','htmlelements');
     $this->objforeignheading->type = 5;
     $this->objforeignheading->str=$objLanguage->languageText('mod_onlineinvoice_foreignrateperdiem','onlineinvoice')." " .$foreignRate;
@@ -25,9 +42,20 @@
     $exit  = $this->objLanguage->languageText('phrase_exit');
     $next = $this->objLanguage->languageText('phrase_next');
     $add  = $this->objLanguage->languageText('mod_onlineinvoice_addexpense','onlineinvoice');
+    $back = ucfirst($this->objLanguage->languageText('word_back'));
+    
+    $perdieminstruction = $this->objLanguage->languageText('mod_onlineinvoice_perdieminstruction','onlineinvoice');
+    $perdiemdate  = $this->objLanguage->languageText('mod_onlineinvoice_perdiemdate','onlineinvoice');
+    $fordomrate = $this->objLanguage->languageText('mod_onlineinvoice_fordomrate','onlineinvoice');
+    $rateexpl = $this->objLanguage->languageText('mod_onlineinvoice_rateexpl','onlininvoice');
+    $perdiemloc = $this->objLanguage->languageText('mod_onlineinvoice_perdiemloc','onlininvoice');
+    $perdiemadd = $this->objLanguage->languageText('mod_onlineinvoice_perdiemadd','onlininvoice');
+    $perdiemaction  = $this->objLanguage->languageText('mod_onlineinvoice_perdiemaction','onlininvoice');
+    
+    $helpstring = $perdieminstruction . '<br />'  . $perdiemdate  . '<br />'  . $fordomrate . '<br />'  . $rateexpl . '<br />'  . $perdiemloc . '<br />'  . $perdiemadd . '<br />'  . $perdiemaction; 
 
     $this->objHelp=& $this->getObject('helplink','help');
-    $displayhelp  = $this->objHelp->show('mod_onlineinvoice_helpinstruction');
+    $displayhelp  = $this->objHelp->show($helpstring);
     
 /**************************************************************************************************************/    
 /**
@@ -129,6 +157,9 @@ $strexit = ucfirst($exit);
 $this->objButtonExit  = new button('exitform', $strexit);
 $this->objButtonExit->setToSubmit();
 
+$this->objBack  = new button('back', $back);
+$this->objBack->setToSubmit();
+
 $btnadd  = $this->objLanguage->LanguageText('mod_onlineinvoice_addperdiem','onlineinvoice');
 $stradd = ucfirst($btnadd);
 $this->objAddperdiem  = new button('addperdiem', $stradd);
@@ -167,11 +198,11 @@ $checkdinner= $objD->show();
   //get the depature city form itinerary and use as default location for the 1st leg only
    
   
-  $valdeptlocation  = $this->getParam('txtdeptcity');
+  //$valdeptlocation  = $this->getParam('txtdeptcity');
              
 $this->objtxtbreakfastloc = $this->newObject('textinput','htmlelements');
 $this->objtxtbreakfastloc->name   = "txtbreakfastLocation";
-$this->objtxtbreakfastloc->value  = "$valdeptlocation";
+$this->objtxtbreakfastloc->value  = "";
 
 $this->objtxtbreakfastrate = $this->newObject('textinput','htmlelements');
 $this->objtxtbreakfastrate->name   = "txtbreakfastRate";
@@ -179,7 +210,7 @@ $this->objtxtbreakfastrate->value  = "0.00";
 
 $this->objtxtlunchloc = $this->newObject('textinput','htmlelements');
 $this->objtxtlunchloc->name   = "txtlunchLocation";
-$this->objtxtlunchloc->value  = "$valdeptlocation";
+$this->objtxtlunchloc->value  = "";
 
 $this->objtxtlunchrate = $this->newObject('textinput','htmlelements');
 $this->objtxtlunchrate->name   = "txtlunchRate";
@@ -187,7 +218,7 @@ $this->objtxtlunchrate->value  = "0.00";
 
 $this->objtxtdinnerloc = $this->newObject('textinput','htmlelements');
 $this->objtxtdinnerloc->name   = "txtdinnerLocation";
-$this->objtxtdinnerloc->value  = "$valdeptlocation";
+$this->objtxtdinnerloc->value  = "";
 
 $this->objtxtdinnerrate = $this->newObject('textinput','htmlelements');
 $this->objtxtdinnerrate->name   = "txtdinnerRate";
@@ -328,14 +359,20 @@ $this->objtxtdinnerrate->value  = "0.00";
 $this->loadClass('tabbedbox', 'htmlelements');
 $objtabbedbox = new tabbedbox();
 $objtabbedbox->addTabLabel('Per Diem Expenses');
-$objtabbedbox->addBoxContent($myTabExpenses->show(). "<div align=\"center\">".$this->objButtonExit->show()  . " " .$this->objButtonNext->show().'<br>'.'<br>' . "</div>") ;
+$objtabbedbox->addBoxContent($myTabExpenses->show(). "<div align=\"center\">".$this->objBack->show()  . " " .$this->objButtonNext->show().'<br>'.'<br>' . "</div>") ;
 
 /**************************************************************************************************************/
+
+$this->objButtonExit  = new button('exitform', $strexit);
+$this->objButtonExit->setToSubmit();
 
 $this->loadClass('form','htmlelements');
 $objForm = new form('expenses',$this->uri(array('action'=>'submitexpenses')));
 $objForm->displayType = 3;
 $objForm->addToForm($objtabbedbox->show());	
+$objForm->addRule('txtbreakfastRate','Rate must be numeric ','numeric');
+$objForm->addRule('txtlunchRate','Rate must be numeric ','numeric');
+$objForm->addRule('txtdinnerRate','Rate must be numeric ','numeric');
 
 
 /**************************************************************************************************************/        

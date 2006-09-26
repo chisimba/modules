@@ -62,14 +62,69 @@
        
        function calcutotal()
        {
-        $expenses = $this->getSession('perdiemdetails');
+        //$expenses = array();
+              
+            $expenses = $this->getSession('perdiemdetails');
+            $finaltotal =  '';
+          if(!empty($expenses))
+          {
+               foreach($expenses as $sesExp){
         
-         foreach($expenses as $sesExp){
-        
-           return $finaltotal = $sesExp['total'] + $sesExp['total'];       //need to fix up
-         } 
-        
-       }
+                  $finaltotal = $finaltotal + $sesExp['total'];       //need to fix up
+              } 
+            
+          }
+          return $finaltotal;
+      }
+  
+  
+  function showperdiem()
+  {
+  
+                if(!empty($sessionDates)){
+//Create table to display dates in session and the rates for breakfast, lunch and dinner and the total rate 
+                        $objExpByDateTable =& $this->newObject('htmltable', 'htmlelements');
+                        $objExpByDateTable->cellspacing = '2';
+                        $objExpByDateTable->cellpadding = '2';
+                        $objExpByDateTable->border='1';
+                        $objExpByDateTable->width = '100%';
+  
+                        $objExpByDateTable->startHeaderRow();
+                        $objExpByDateTable->addHeaderCell('Date ');
+                        $objExpByDateTable->addHeaderCell('Breakfast Location' );
+                        $objExpByDateTable->addHeaderCell('Breakfast Rate');
+                        $objExpByDateTable->addHeaderCell('Lunch Location');
+                        $objExpByDateTable->addHeaderCell('Lunch Rate');
+                        $objExpByDateTable->addHeaderCell('Dinner Location');
+                        $objExpByDateTable->addHeaderCell('Dinner Rate');
+                        $objExpByDateTable->addHeaderCell('Total');
+                        $objExpByDateTable->endHeaderRow();
+
+  
+                        $rowcount = '0';
+  
+                        foreach($sessionDates as $sesDat){
+     
+                             $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+     
+                             $objExpByDateTable->startRow();
+                             $objExpByDateTable->addCell($sesDat['date'], '', '', '', $oddOrEven);
+                             $objExpByDateTable->addCell($sesDat['blocation'], '', '', '', $oddOrEven);
+                             $objExpByDateTable->addCell($sesDat['btrate'], '', '', '', $oddOrEven);
+                             $objExpByDateTable->addCell($sesDat['llocation'], '', '', '', $oddOrEven);
+                             $objExpByDateTable->addCell($sesDat['lRate'], '', '', '', $oddOrEven);
+                             $objExpByDateTable->addCell($sesDat['dlocation'], '', '', '', $oddOrEven);
+                             $objExpByDateTable->addCell($sesDat['drrate'], '', '', '', $oddOrEven);
+                             $objExpByDateTable->addCell($sesDat['total'], '', '', '', $oddOrEven);
+                             $objExpByDateTable->endRow();
+                       }
+                 
+                      return $objExpByDateTable->show();
+                 }
+                 
+               
+
   }
+}
   
 ?>

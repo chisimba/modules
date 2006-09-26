@@ -51,6 +51,10 @@ class onlineinvoice extends controller
     */ 
     public $objdbperdiem = NULL;
     
+    public $submitdatesmsg = ' ';
+    
+    public  $submitmsg = 'no';
+    
     /**
       * $total is an variable to hold the total daily amount for all breakfast, lunch and dinner rates
       * @public 
@@ -130,9 +134,14 @@ class onlineinvoice extends controller
                     $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
                     $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
                     $this->getInvoicedates();
+                    $submitdates = $this->getSession('invoicedata');
+                    $this->objdbinvoice->addinvoice($submitdates);
+                    //$this->unsetSession('invoicedata'); 
                     $this->setLayoutTemplate('invoice_layout_tpl.php');
                     return 'createInvoice_tpl.php';
                 }else{
+                     $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
+                     $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
                      $this->unsetSession('invoicedata'); 
                      $this->setLayoutTemplate('invoice_layout_tpl.php');
                      return 'createInvoice_tpl.php';
@@ -163,12 +172,12 @@ class onlineinvoice extends controller
                 //submit claimant info to db and show next template, clear the session
                   $claimantdetails = $this->getSession('claimantdata');
                   $this->objdbtev->addclaimant($claimantdetails);
-                  $this->unsetSession('claimantdata');
+              //    $this->unsetSession('claimantdata');
                   $this->setLayoutTemplate('invoice_layout_tpl.php');
                   return 'itenirarymulti_tpl.php'; 
                 }else {
                   //bring claimant form again to edit
-                  $this->unsetSession('claimantdata');
+                  //$this->unsetSession('claimantdata');
                   $this->setLayoutTemplate('invoice_layout_tpl.php'); 
                   return 'tev_tpl.php';
                 }
@@ -249,6 +258,7 @@ class onlineinvoice extends controller
               $next = $this->getParam('saveperdiem');
               $addperdiem = $this->getParam('addperdiem');
               $exit = $this->getParam('exit');
+              $back = $this->getParam('back');
               if(isset($next)) {
                   $total  =  $this->objdbperdiem->calculate();
                   $finaltotal = $this->objdbperdiem->calcutotal();
@@ -265,7 +275,7 @@ class onlineinvoice extends controller
                 $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
                 $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
                 $this->setLayoutTemplate('invoice_layout_tpl.php');
-                return 'createInvoice_tpl.php';
+                return  'itineraryoutput_tpl.php';
               }  
           break;
           
@@ -273,25 +283,27 @@ class onlineinvoice extends controller
               $submit = $this->getParam('submit');
               $edit =   $this->getParam('edit');
                 
-                if(isset($submit)) {
-                //submit itinerary info to db and show next template
-                     $perdiemdetails = $this->getSession('perdiemdetails');
-                     
-                  foreach($perdiemdetails as $sesPerdiem){           // fix insert of date values!!!!
-                         $this->objdbperdiem->addperdiem($sesPerdiem);
+              if(isset($submit)){
+                  //submit itinerary info to db and show next template
+                  $perdiemdetails = $this->getSession('perdiemdetails');
+                    if(!empty($perdiemdetails)){   
+                        foreach($perdiemdetails as $sesPerdiem){           // fix insert of date values!!!!
+                           $this->objdbperdiem->addperdiem($sesPerdiem);
+                            //$this->unSetSession('perdiemdetails');
+                            //$this->unSetSession('addmultiitinerary');          // cannot kill session when saving to db as needed for per diem dates
+                            //$submitsmsg = $this->getParam('submitdatemsg', 'no');
+                        } 
+                    //$this->setVarByRef('submitmsg', $submitmsg);
+                    $this->setLayoutTemplate('invoice_layout_tpl.php');
+                    return  'lodging_tpl.php';
                   }
-                  
-                   $this->unSetSession('perdiemdetails');
-                   $this->unSetSession('addmultiitinerary');          // cannot kill session when saving to db as needed for per diem dates       
-                   $this->setLayoutTemplate('invoice_layout_tpl.php');
-                   return  'lodging_tpl.php';
-                } else {
+                }else{
                     //bring intinerary form again to edit
                     $this->unSetSession('perdiemdetails');
                     $this->setLayoutTemplate('invoice_layout_tpl.php'); 
                     return  'expenses_tpl.php';
-                  
-                }
+                  }     
+             
           break;
 /**************************************************************************************************************************************************/          
           case  'submitlodgeexpenses':
@@ -311,9 +323,8 @@ class onlineinvoice extends controller
                  *call the function that stores users values into a session variable
                  *display the next template -- lodgereceipt                                  
                  */
-                  
-                  //$ratetotal = $this->objdblodge->calculodgerate();                  
-                 $this->getLodgeexpenses(/*$ratetotal*/);
+                  $finaltotal  = $this->objdblodge->calculodgerate();
+                  $this->getLodgeexpenses($finaltotal);
                  $this->setLayoutTemplate('invoice_layout_tpl.php');
                  //return 'incidentinfo_tpl.php';
                  return 'lodgingoutput_tpl.ph.php';
@@ -321,7 +332,8 @@ class onlineinvoice extends controller
                 /**
                  *call function and return back to lodge template
                  */
-                 $this->getLodgeexpenses(/*$ratetotal*/);
+                 $finaltotal  = $this->objdblodge->calculodgerate();
+                 $this->getLodgeexpenses($finaltotal);
                  $this->setLayoutTemplate('invoice_layout_tpl.php');
                  return  'lodging_tpl.php';                              
              }
@@ -332,9 +344,9 @@ class onlineinvoice extends controller
                 /**
                  *exit the form without submitting the invoice
                  */
-                 $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
-                 $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
-                 $this->setLayoutTemplate('invoice_layout_tpl.php');
+                 //$submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
+                 //$this->setVarByRef('submitdatesmsg', $submitdatesmsg);
+                 //$this->setLayoutTemplate('invoice_layout_tpl.php');
                  return 'createInvoice_tpl.php';                                              
              }
           break;
@@ -351,12 +363,12 @@ class onlineinvoice extends controller
                 
                   $this->objdblodge->addlodge($sesLodge);
                 }   
-                $this->unSetSession('lodgedetails');
+                //$this->unsetSession('lodgedetails');
                 $this->setLayoutTemplate('invoice_layout_tpl.php');
                 return 'incidentinfo_tpl.php';
                 }else {
                 //bring intinerary form again to edit
-                $this->unSetSession('lodgedetails');
+                $this->unsetSession('lodgedetails');
                 $this->setLayoutTemplate('invoice_layout_tpl.php'); 
                 return  'lodging_tpl.php';
                   
@@ -374,7 +386,8 @@ class onlineinvoice extends controller
                 /**
                   *call the function that saves all lodge information
                   */                  
-                  $this->getIncidentinfo();
+                  $finaltotal  = $this->objincident->calcutotal();
+                  $this->getIncidentinfo($finaltotal);
                   $this->setLayoutTemplate('invoice_layout_tpl.php');
                   return 'incidentoutput_tpl.php';
                  //  return 'addtravel_tpl.php';
@@ -382,7 +395,8 @@ class onlineinvoice extends controller
                 /**
                   *call the function that saves all incident information and return the template
                   */                  
-                  $this->getIncidentinfo();
+                  $finaltotal  = $this->objincident->calcutotal();
+                  $this->getIncidentinfo($finaltotal);
                   $this->setLayoutTemplate('invoice_layout_tpl.php');
                    return 'incidentinfo_tpl.php';     
                }elseif(isset($exit)){
@@ -403,22 +417,22 @@ class onlineinvoice extends controller
                 
               if(isset($submit)) {
                 //submit itinerary info to db and show next template
-                $incidentdetails = $this->getSession('incidentdetails');
-               
-                foreach($incidentdetails as $sesIncident){           
-                
-                  $this->objincident->addincident($sesIncident);
-                }
-                $this->unSetSession('incidentdetails');   
-                $this->setLayoutTemplate('invoice_layout_tpl.php');
-                  return 'addtravel_tpl.php';
-                }else {
-                //bring intinerary form again to edit
-                $this->unSetSession('incidentdetails');
-                $this->setLayoutTemplate('invoice_layout_tpl.php'); 
-                return  'incidentinfo_tpl.php';
-                  
-                }   
+                 $incidentdetails = $this->getSession('incidentdetails');
+                    if(!empty($incidentdetails)){               
+                         foreach($incidentdetails as $sesIncident){           
+                            $this->objincident->addincident($sesIncident);
+                         }
+                  //      $this->unsetSession('incidentdetails');   
+                        $this->setLayoutTemplate('invoice_layout_tpl.php');
+                        return 'addtravel_tpl.php';
+                    }
+              } else {
+                        //bring intinerary form again to edit
+                        $this->unsetSession('incidentdetails');
+                        $this->setLayoutTemplate('invoice_layout_tpl.php'); 
+                        return  'incidentinfo_tpl.php';
+              }     
+                 
            break;
 /**************************************************************************************************************************************************/          
 
@@ -431,9 +445,51 @@ class onlineinvoice extends controller
           case  'addanothertev':
               $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
               $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
+              $this->unsetSession('invoicedata');
+              $this->unsetSession('perdiemdetails');
+              $this->unsetSession('lodgedetails');
+              $this->unsetSession('incidentdetails');
               $this->setLayoutTemplate('invoice_layout_tpl.php');
               return 'createInvoice_tpl.php';
-          break;                                     
+          break;
+          
+          case  'createitinerary':
+              $this->setLayoutTemplate('invoice_layout_tpl.php');
+              return 'itenirarymulti_tpl.php';
+          break;                    
+          
+          case  'createlodge':
+              $this->setLayoutTemplate('invoice_layout_tpl.php');
+              return 'lodging_tpl.php';
+          break;
+          
+          case  'showperdiem':
+            $this->setLayoutTemplate('invoice_layout_tpl.php');
+            return 'expenses_tpl.php';
+          break;            
+          
+          case  'showincident':
+            $this->setLayoutTemplate('invoice_layout_tpl.php');
+            return 'incidentinfo_tpl.php';
+          break; 
+          
+          case  'saveexit':
+          $save = $this->getParam('save');
+          $exit = $this->getParam('exitform');
+          if(isset($save)) {
+                $this->getSession('invoicedata');
+                $this->getSession('claimantdata');
+                $this->getSession('addmultiitinerary');
+                $this->getSession('perdiemdetails');
+                $this->getSession('lodgedetails');
+                $this->getSession('incidentdetails');
+                $this->setLayoutTemplate('postlogin_layout_tpl.php');
+                return 'postlogin_tpl.php';
+          }else{
+                $this->setLayoutTemplate('postlogin_layout_tpl.php');
+                return 'postlogin_tpl.php';
+          }
+          break;
 /**************************************************************************************************************************************************/          
           
           case 'createservice':
@@ -456,8 +512,9 @@ class onlineinvoice extends controller
               $this->objUser->logout();
           break;
           
-          case  'sendemail':
-            //need to code
+          case  'showinvpending':
+            $this->setLayoutTemplate('invoice_layout_tpl.php');          
+            return 'invpending_tpl.php';
           break;
                            
             
@@ -493,19 +550,19 @@ class onlineinvoice extends controller
        *create a session variable claimantdata to store the array data
        */
        
-       $claimantinfo = array ('createdby'      =>  $this->objUser->fullname(),
-                             'datecreated'    =>  date('Y-m-d'),
-                             'modifiedby'     =>  $this->objUser->fullname(),
-                             'datemodified'   =>  date('Y-m-d'),
-                             'updated'        =>  date('Y-m-d'),
+       $claimantinfo = array ('createdby'     =>    $this->objUser->fullname(),
+                             'datecreated'    =>    date('Y-m-d'),
+                             'modifiedby'     =>    $this->objUser->fullname(),
+                             'datemodified'   =>    date('Y-m-d'),
+                             'updated'        =>    date('Y-m-d'),
                              'name'           =>    $this->getParam('txtClaimantName'),
-                             'title'          => $this->getParam('txtTitle'),
-                             'address'    => $this->getParam('address'),
-                             'city'           => $this->getParam('txtCity'),
-                             'province'       => $this->getParam('txtprovince'),
-                             'postalcode'     => $this->getParam('txtpostalcode'),
-                             'country'        => $this->getParam('txtcountry'),
-                             'travelpurpose'  => $this->getParam('travel')
+                             'title'          =>    $this->getParam('txtTitle'),
+                             'address'        =>    $this->getParam('address'),
+                             'city'           =>    $this->getParam('txtCity'),
+                             'province'       =>    $this->getParam('txtprovince'),
+                             'postalcode'     =>    $this->getParam('txtpostalcode'),
+                             'country'        =>    $this->getParam('coutryvals'),
+                             'travelpurpose'  =>    $this->getParam('travel')
                         );
        $this->setSession('claimantdata',$claimantinfo);
                        
@@ -575,7 +632,7 @@ class onlineinvoice extends controller
      * @private     
      */
      
-    private function getLodgeexpenses(/*$ratetotal*/)
+    private function getLodgeexpenses($finaltotal)
     {
        $lodgedata  = array(
                   'createdby'         =>  $this->objUser->fullname(),
@@ -592,7 +649,8 @@ class onlineinvoice extends controller
                   'exchangefile'      =>  $this->objFile->getFileName($this->getParam('exchangeratefile')),
                   'receiptfilename'   =>  $this->objFile->getFileName($this->getParam('receiptfile')),
                   'affidavitfilename' =>  $this->objFile->getFileName($this->getParam('affidavitfile')),
-        //          'totroomrate'         =>  $ratetotal,
+                  'totroomrate'         =>  $finaltotal,
+        
      
                 );
       $lodgeinformation =  $this->getSession('lodgedetails');
@@ -600,7 +658,7 @@ class onlineinvoice extends controller
       $this->setSession('lodgedetails',$lodgeinformation);
     }
 /*******************************************************************************************************************************************************************/
-   private function getIncidentinfo()
+   private function getIncidentinfo($finaltotal)
    {
       $incidentdata = array(
                             'createdby'      =>  $this->objUser->fullname(),
@@ -617,7 +675,8 @@ class onlineinvoice extends controller
                             'quotesource'   =>  $this->getParam('txtquotesource'),
                             'incidentratefile'  => $this->objFile->getFileName($this->getParam('incidentratefile')),
                             'receiptfiles' =>  $this->objFile->getFileName($this->getParam('incidentreceipt')),
-                            'affidavitfiles'     =>  $this->objFile->getFileName($this->getParam('incidentaffidavit'))
+                            'affidavitfiles'     =>  $this->objFile->getFileName($this->getParam('incidentaffidavit')),
+                            'inidentexepense'    =>  $finaltotal,
                         );
                         
       $incidentinformation =  $this->getSession('incidentdetails');

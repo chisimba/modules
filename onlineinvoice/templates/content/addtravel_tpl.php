@@ -39,10 +39,22 @@
   $this->objlink  = & $this->newObject('mouseoverpopup','htmlelements');
   $this->objlink->mouseoverpopup($urltext,$content,$caption,$url);
      
+  
+   $myTab=$this->newObject('htmltable','htmlelements');
+   $myTab->width='100%';
+   $myTab->border='0';
+   $myTab->cellspacing='10';
+   $myTab->cellpadding='10';
+
+   $myTab->startRow();
+   $myTab->addCell($this->objcreatelink->show());
+   $myTab->addCell($this->objlink->show());
+   $myTab->endRow();
+
+
        
   $objtabbedinfo = new tabbedbox();
-  
-  $objtabbedinfo->addBoxContent('<br />'. $this->objcreatelink->show() .   $this->objlink->show() .'<br />');
+  $objtabbedinfo->addBoxContent("<div align=\"center\">" .'<br />'. $myTab->show() .'<br />'. "</div>");
   
   echo "<div align=\"center\">" . $objtravelsheet->show() . "</div>";
   echo $objtabbedinfo->show() ;

@@ -1,8 +1,24 @@
 <?php
 
-/**
-  *create a template for lodge expenses the file attachments
-  */
+/**create a template for lodge expenses the file attachments**/
+
+   $this->loadClass('windowpop','htmlelements');
+   $this->objPop=&new windowpop;
+   $this->objPop->set('window_name','Exchange Rate Information');
+   $this->objPop->set('location','<a href=http://www.oanda.com/convert/classic/>www.oanda.com</a>');
+   $this->objPop->set('linktext','www.oanda.com');
+   $this->objPop->set('width','600');
+   $this->objPop->set('height','300');
+   $this->objPop->set('left','300');
+   $this->objPop->set('top','400');
+   $this->objPop->set('menubar','yes');
+   $this->objPop->set('resizable','yes');
+   $this->objPop->set('scrollbars','yes');
+   $this->objPop->set('status','yes');
+   $this->objPop->set('toolbar','yes');
+   $this->objPop->putJs();
+
+$exchangeRate = $this->objPop->show();
        
 
 /*create template for lodging expenses*/
@@ -11,7 +27,7 @@ $this->objlodgeHeading->type = 1;
 $this->objlodgeHeading->str=$objLanguage->languageText('mod_onlineinvoice_travellodgingexpenses','onlineinvoice');
 /*********************************************************************************************************************************************************************/
 
-$exchangeRate  = '<a href=http://www.oanda.com/convert/classic/>www.oanda.com</a>';
+//$exchangeRate  = '<a href=http://www.oanda.com/convert/classic/>www.oanda.com</a>';
 //$lodgeHint  = $this->objLanguage->languageText('mod_onlineinvoice_pleasemouseover','onlineinvoice');
 $lodgeExchangeRate = $this->objLanguage->languageText('mod_onlineinvoice_anyexchangerate','onlineinvoice');
 $lodgeSuggestedExRate = $this->objLanguage->languageText('mod_onlineinvoice_suggestedexchangerate','onlineinvoice')  . ' ' . $exchangeRate;
@@ -23,7 +39,7 @@ $rate = $this->objLanguage->languageText('mod_onlineinvoice_exchangerate','onlin
 $next = ucfirst($this->objLanguage->languageText('phrase_next'));
 $exit = ucfirst($this->objLanguage->languageText('phrase_exit'));
 $back = ucfirst($this->objLanguage->languageText('word_back'));
-$ratevalue = $this->objLanguage->languageText('word_rate');
+$ratevalue = $this->objLanguage->languageText('phrase_roomrate');
 $lblchoice  = $this->objLanguage->languageText('mod_onlineinvoice_verifyexchangerate','onlineinvoice');
 $addreceipt = $this->objLanguage->languageText('mod_onlineinvoice_addreceipt','onlineinvoice');
 $quotesource  = $this->objLanguage->languageText('mod_onlineinvoice_quotesource','onlineinvoice');
@@ -41,16 +57,29 @@ $add  = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_addreceipt',
 /**--**/
 $link = '<a href=http://www.myAffidavit.com/>www.myAffidavit.com</a>';
 $createaffidavit = ucfirst($this->objLanguage->languageText('phrase_create'));
+/**
+ *help information
+ */
+$lodgeinstruc  = $this->objLanguage->languageText('mod_onlineinvoice_lodgeinstruc','onlineinvoice');  
+$lodgeinformation  = $this->objLanguage->languageText('mod_onlineinvoice_lodgeinformation','onlineinvoice');
+$lodge  = $this->objLanguage->languageText('mod_onlineinvoice_lodge','onlineinvoice');
+$lodgeexample  = $this->objLanguage->languageText('mod_onlineinvoice_lodgeexample','onlineinvoice');
+$verifyexchangerate  = $this->objLanguage->languageText('mod_onlineinvoice_verifyexchangerate','onlineinvoice');
+$exp  = $this->objLanguage->languageText('mod_onlineinvoice_exp','onlineinvoice');
+$options  = $this->objLanguage->languageText('mod_onlineinvoice_options','onlineinvoice');
+$lodgereceiptinfo  = $this->objLanguage->languageText('mod_onlineinvoice_lodgereceiptinfo','onlineinvoice');
+$receiptexplanation  = $this->objLanguage->languageText('mod_onlineinvoice_receiptexplanation','onlineinvoice');
+$receiptexp  = $this->objLanguage->languageText('mod_onlineinvoice_receiptexp','onlineinvoice');
+$affidavitinstruc  = $this->objLanguage->languageText('mod_onlineinvoice_affidavitinstruc','onlineinvoice');
+
+$helpstring = $lodgeinstruc . '<br />' .$lodgeinformation .'<br />' .$lodge . '<br />'  .$lodgeexample .'<br />'  . $verifyexchangerate . '<br />'  . $exp  . '<br />'  .$options.'<br />'.$lodgereceiptinfo.'<br />'.$receiptexplanation.'<br />'.$receiptexp.'<br />'.$receiptexp.'<br />'.$affidavitinstruc;
+
 $this->objHelp=& $this->getObject('helplink','help');
-$displayhelp  = $this->objHelp->show('mod_onlineinvoice_helpinstruction');
+$displayhelp  = $this->objHelp->show($helpstring);
 /**--**/
 
 $this->objInfoIcon = $this->newObject('geticon','htmlelements');
 $this->objInfoIcon->setModuleIcon('freemind');
-
-//$incidentratefile = $this->getParam('incidentratefile');
-//$qtesource  = $this->getParam('txtquotesource');
-    
 
 /*********************************************************************************************************************************************************************/
 
@@ -58,10 +87,20 @@ $lblDate = 'lbldate';
 $this->objdate  = $this->newObject('label','htmlelements');
 $this->objdate->label($expensesdate,$lblDate);
 
+$invbegindate  = $this->getSession('invoicedata');
+  if(!empty($invbegindate)){
+    //$dateitinerary = ''    
+    while(list($key,$val) = each($invbegindate)){
+        if($key == 'begindate')        {
+          $dateitinerary = $val;
+        }
+    }
+   } 
+    
 
 $this->objlodgedate = $this->newObject('datepicker','htmlelements');
 $name = 'txtlodgedate';
-$date = date('Y-m-d');
+$date = $dateitinerary;
 $format = 'YYYY-M-DD';
 $this->objlodgedate->setName($name);
 $this->objlodgedate->setDefaultDate($date);
@@ -321,13 +360,13 @@ $strerror = 'select file';
 					 
 					    var acceptance = true;
 					   //value of the begin date
-  					 var exchgfile = exratefile.text;
+  					 var exchgfile = exratefile.value;
 	   				 //value of the end date
 		  			 var exchgsource = exqtesource.value;
 					 
 					 
 					 //checks if dates are right
-					 if(exchgsource == " "){
+					 if((exchgsource == " ") && (exchgfile ==  " ")){
 					 	acceptance = false;
 						
 					 }
@@ -338,9 +377,7 @@ $strerror = 'select file';
 					 	alert(\''.$strerror .'\');
 						acceptance = true;
 						return false;
-					 }else{
-          // alert(\''.$sucessfull.'\')
-           }';
+					 }';
 	$this->objnext->extra = sprintf(' onClick ="javascript: %s"', $onClick );
 
 
@@ -478,7 +515,6 @@ $this->objaddlodge->setToSubmit();
         $myTabReceipt->addCell(' ');
         $myTabReceipt->addCell(' ');
         $myTabReceipt->addCell(' ');
-        //$myTabReceipt->addCell($displayhelp);
         $myTabReceipt->endRow();
         
         $myTabReceipt->startRow();
@@ -488,7 +524,6 @@ $this->objaddlodge->setToSubmit();
         
         $myTabReceipt->startRow();
         $myTabReceipt->addCell(' ');
-//        $myTabReceipt->addCell($this->objButtonUploadReceipt->show());
         $myTabReceipt->endRow();
         
         $myTabReceipt->startRow();
@@ -507,30 +542,28 @@ $objtabbedbox->addBoxContent($myTabLodge->show() . '<br />');
 /*create tabbox for attaching lodge echange rate file*/
 $this->loadClass('tabbedbox', 'htmlelements');
 $objtabexchange = new tabbedbox();
-$objtabexchange->addTabLabel('Verify Echange Rate');
-$objtabexchange->addBoxContent("<div align=\"center\">" ."<div class=\"error\">" .'<br />'.'Verify exchange rate by attaching a file or quote a reliable online source' ."</div>". '<br />'."</div>". $myTabExchange->show().'<br />');
+$objtabexchange->addTabLabel('Verify Exchange Rate');
+$objtabexchange->addBoxContent("<div align=\"center\">" ."<div class=\"error\">" .'<br />'.'Verify Exchange Rate By Attaching A File Or Quote A Reliable Online Source' ."</div>". '<br />'."</div>". $myTabExchange->show().'<br />');
 
-/*--*/
+
       /**
        *create a tabbed box to place table and elements in
        */
-      $this->loadClass('tabbedbox', 'htmlelements'); 
-      $objtabreceipt = new tabbedbox();
-      $objtabreceipt->addTabLabel('Receipt Information');
-      $objtabreceipt->addBoxContent("<div align=\"center\">" ."<div class=\"error\">" .'<br />' . '<b>' . $receipt .'<b/>' ."</div>".  '<br />' ."<div align=\"left\">"  .$myTabReceipt->show());
-/*--*/      
+ $this->loadClass('tabbedbox', 'htmlelements'); 
+ $objtabreceipt = new tabbedbox();
+ $objtabreceipt->addTabLabel('Receipt Information');
+ $objtabreceipt->addBoxContent("<div align=\"center\">" ."<div class=\"error\">" .'<br />' . '<b>' . $receipt .'<b/>' ."</div>".  '<br />' ."<div align=\"left\">"  .$myTabReceipt->show());
+      
       
 /*********************************************************************************************************************************************************************/
 
 $objLodgeForm = new form('lodging',$this->uri(array('action'=>'submitlodgeexpenses')));
 $objLodgeForm->displayType = 3;
-$objLodgeForm->addToForm($objtabbedbox->show()  . '<br />' . '<br />' .$objtabexchange->show() . '<br> />'.$objtabreceipt->show(). '<br />'."<div align=\"right\">".$this->objaddlodge->show() ."</div>".'<br />' . "<div align=\"center\">" . $this->objBack->show(). $this->objnext->show() . ' ' . $this->objexit->show()."</div");	
+$objLodgeForm->addToForm('<br /> '.$objtabbedbox->show()  . '<br />'  .$objtabexchange->show() . '<br />'.$objtabreceipt->show(). '<br />'."<div align=\"right\">".$this->objaddlodge->show() ."</div>".'<br />' . "<div align=\"center\">" . $this->objBack->show(). $this->objnext->show() . ' ' ."</div");	
 $objLodgeForm->addRule('txtvendor', 'Please enter vendor name','required');
 $objLodgeForm->addRule('txtcost', 'Please enter cost amount','required');
 $objLodgeForm->addRule('txtcost', 'Please enter a numerical value for cost amount','numeric');
 $objLodgeForm->addRule('txtexchange', 'Please enter exchange rate','required');
-$objLodgeForm->addRule('txtexchange', 'Please enter a numerical value for exchange rate','numeric');
-//$objLodgeForm->addRule('exchangeratefile', 'Please upload a file or quote source','required');
 
 /*********************************************************************************************************************************************************************/
 //if($uploadMsg == 'yes'){
@@ -538,6 +571,7 @@ $objLodgeForm->addRule('txtexchange', 'Please enter a numerical value for exchan
 //}
 
 //display screen content
+
 
 echo "<div align=\"center\">" . $this->objlodgeHeading->show()  . "</div>";
 echo "<div align=\"right\">" .'<br />'  . $myTabLodgeheading->show() . "</div>";

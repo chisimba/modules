@@ -75,6 +75,9 @@ $fields = array(
   'affidavitfiles'  =>  array(
       'type'        =>  'text'
       
+  ),
+  'inidentexepense' =>array(
+      'type'          =>  'float'
   )
   );
 ?>

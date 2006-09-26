@@ -5,16 +5,24 @@
    */
 /******************************************************************************************************************************/   
     /**
-      *load all classes
+      *load all classes / create objects of all classes
       */
-      
-/**      $this->loadClass('htmlheading', 'htmlelements');
-      $this->loadClass('label','htmlelements');
-      $this->loadClass('form','htmlelements');
-      $this->loadClass('htmltable','htmlelements');
-      $this->loadClass('tabbedbox', 'htmlelements');
-      $this->loadClass('button','htmlelements');
-      $this->loadClass('checkbox','htmlelements');
+     $claimantinfo  = & $this->getObject('dbtev','onlineinvoice');
+     $display = $claimantinfo->showclaimant();
+     
+     $itinerary = & $this->getObject('dbitinerary','onlineinvoice');
+     $results = $itinerary->showtitinerary();
+     
+     $perdiem = & $this->getObject('dbperdiem','onlineinvoice');
+     $showperdiem = $perdiem->showperdiem();
+     
+     $lodge = & $this->getObject('dblodging','onlineinvoice');
+     $showlodge = $lodge->showlodge();
+     
+     $incident  = & $this->getObject('dbincident','onlineinvoice');
+     $showincident  = $incident->showincident();
+     
+     $output = $display  . '<br />'  . $results . '<br />' . $showperdiem . '<br />' . $showlodge . '<br />' . $showincident;
 /*******************************************************************************************************************************/
 
       /**
@@ -40,63 +48,108 @@
 /********************************************************************************************************************************/  
 
 /**
- *claimant details
- */  
- 
-// $sessionClaimant []= $this->getSession('claimantdata');
- 
-// if(!empty($sessionClaimant)){
-//Create table to display dates in session and the rates for breakfast, lunch and dinner and the total rate 
-//  $objClaimantTable =& $this->newObject('htmltable', 'htmlelements');
-/*  $objClaimantTable->cellspacing = '1';
-  $objClaimantTable->cellpadding = '2';
-  $objClaimantTable->border='1';
-  $objClaimantTable->width = '100%';
-  $objClaimantTable->cssClass = 'webfx-tab-style-sheet';
-  $objClaimantTable->footing = 'Please submit or edit information';
-  
-  $objClaimantTable->startHeaderRow();
-  $objClaimantTable->addHeaderCell('Name');
-  $objClaimantTable->addHeaderCell('Title' );
-  $objClaimantTable->addHeaderCell('Address');
-  $objClaimantTable->addHeaderCell('City');
-  $objClaimantTable->addHeaderCell('Province');
-  $objClaimantTable->addHeaderCell('Postal Code');
-  $objClaimantTable->addHeaderCell('Country');
-  $objClaimantTable->addHeaderCell('Travel Purpose');
-  $objClaimantTable->endHeaderRow();
-
-  
-  $rowcount = '0';
-  
-  foreach($sessionClaimant as $sesClaim){
-     
-     $oddOrEven = ($rowcount == 0) ? "odd" : "even";
-     
-     $objClaimantTable->startRow();
-     $objClaimantTable->addCell($sesClaim['name'], '', '', '', $oddOrEven);
-     $objClaimantTable->addCell($sesClaim['title'], '', '', '', $oddOrEven);
-     $objClaimantTable->addCell($sesClaim['address'], '', '', '', $oddOrEven);
-     $objClaimantTable->addCell($sesClaim['city'], '', '', '', $oddOrEven);
-     $objClaimantTable->addCell($sesClaim['province'], '', '', '', $oddOrEven);
-     $objClaimantTable->addCell($sesClaim['postalcode'], '', '', '', $oddOrEven);
-     $objClaimantTable->addCell($sesClaim['country'], '', '', '', $oddOrEven);
-     $objClaimantTable->addCell($sesClaim['travelpurpose'], '', '', '', $oddOrEven);
-     $objClaimantTable->endRow();
-  }
-}
-
-/**
  *create a tabbed box
  */
  
-/*$this->loadClass('tabbedbox', 'htmlelements');
+$this->loadClass('tabbedbox', 'htmlelements');
 $objcreateinvtab = new tabbedbox();
-$objcreateinvtab->addTabLabel('Traveler Information');
-$objcreateinvtab->addBoxContent('<br />' .$objClaimantTable->show());// . '<br />' . "<div align=\"left\">" . $this->objSave->show() . ' ' . $this->objEdit->show()  ."</div>" . '<br />');
- 
+$objcreateinvtab->addTabLabel('Lodge Information');
+$objcreateinvtab->addBoxContent('<br />' .$showlodge);// . '<br />' . "<div align=\"left\">" . $this->objSave->show() . ' ' . $this->objEdit->show()  ."</div>" . '<br />');
 
-/***************************************************************************************************************************************************************/ 
+$objcreatetraveler = new tabbedbox();
+$objcreatetraveler->addTabLabel('Traveler Information');
+$objcreatetraveler->addBoxContent('<br />' .$display);// . '<br />' . "<div align=\"left\">" . $this->objSave->show() . ' ' . $this->objEdit->show()  ."</div>" . '<br />');
+
+$objcreateitinerary = new tabbedbox();
+$objcreateitinerary->addTabLabel('Itinerary Information');
+$objcreateitinerary->addBoxContent('<br />' .$results);// . '<br />' . "<div align=\"left\">" . $this->objSave->show() . ' ' . $this->objEdit->show()  ."</div>" . '<br />');
+
+$objcreateperdiem = new tabbedbox();
+$objcreateperdiem->addTabLabel('Per Diem Information');
+$objcreateperdiem->addBoxContent('<br />' .$showperdiem);// . '<br />' . "<div align=\"left\">" . $this->objSave->show() . ' ' . $this->objEdit->show()  ."</div>" . '<br />');
+
+$objcreateincident = new tabbedbox();
+$objcreateincident->addTabLabel('Incident Information');
+$objcreateincident->addBoxContent('<br />' .$showincident);// . '<br />' . "<div align=\"left\">" . $this->objSave->show() . ' ' . $this->objEdit->show()  ."</div>" . '<br />');
+
+     
+/***************************************************************************************************************************************************************/
+
+  /**
+       *create links to move to next section
+       */
+       
+    $urltext = 'travel expense voucher';
+    $content = 'complete a travel voucher for the traveler';
+    $caption = '';
+    $url = $this->uri(array('action'=>'createtev'));
+    $this->objinvdates  = & $this->newObject('mouseoverpopup','htmlelements');
+    $this->objinvdates->mouseoverpopup($urltext,$content,$caption,$url);                        
+    
+    $urltext = 'itinerary';
+    $content = 'complete an itinerary for the travel';
+    $caption = '';
+    $url = $this->uri(array('action'=>'createitinerary'));
+    $this->objinvitinerary  = & $this->newObject('mouseoverpopup','htmlelements');
+    $this->objinvitinerary->mouseoverpopup($urltext,$content,$caption,$url);
+    
+    $urltext = 'per diem expenses';
+    $content = 'complete all per diem expenses';
+    $caption = '';
+    $url = $this->uri(array('action'=>'showperdiem'));
+    $this->objinvperdiem  = & $this->newObject('mouseoverpopup','htmlelements');
+    $this->objinvperdiem->mouseoverpopup($urltext,$content,$caption,$url);
+    
+    $urltext = 'lodge expenses';
+    $content = 'complete all lodge expenses';
+    $caption = '';
+    $url = $this->uri(array('action'=>'createlodge'));
+    $this->objinvlodge  = & $this->newObject('mouseoverpopup','htmlelements');
+    $this->objinvlodge->mouseoverpopup($urltext,$content,$caption,$url);
+     
+    $urltext = 'incident expenses';
+    $content = 'complete all incident expenses';
+    $caption = '';
+    $url = $this->uri(array('action'=>'showincident'));
+    $this->objinvincidents  = & $this->newObject('mouseoverpopup','htmlelements');
+    $this->objinvincidents->mouseoverpopup($urltext,$content,$caption,$url);
+    
+    $myTab = $this->newObject('htmltable','htmlelements');
+    $myTab->width='100%';
+    $myTab->border='0';
+    $myTab->cellspacing='5';
+    $myTab->cellpadding='5';
+   
+    $myTab->startRow();
+    $myTab->addCell(ucfirst($this->objinvdates->show()));
+    $myTab->endRow();
+    
+    $myTab->startRow();
+    $myTab->addCell(ucfirst($this->objinvitinerary->show()));
+    $myTab->endRow();
+    
+    $myTab->startRow();
+    $myTab->addCell(ucfirst($this->objinvperdiem->show()));
+    $myTab->endRow();
+    
+    $myTab->startRow();
+    $myTab->addCell(ucfirst($this->objinvlodge->show()));
+    $myTab->endRow();
+    
+    $myTab->startRow();
+    $myTab->addCell(ucfirst($this->objinvincidents->show()));
+    $myTab->endRow();
+    
+    
+/**
+ *create a tabpane
+ */   
+$output = '<br />' . $objcreatetraveler->show() .  '<br />' . $objcreateitinerary->show() . '<br />' . $objcreateperdiem->show()  . '<br />' . $objcreateinvtab->show() . '<br />' . $objcreateincident->show();
+$objElement =& $this->newObject('tabpane', 'htmlelements');
+$objElement->addTab(array('name'=>'Travel Output','content' => $output),'luna-tab-style-sheet');
+$objElement->addTab(array('name'=>'Edit a Section','content' => $myTab->show()),'luna-tab-style-sheet');
+    
+     
 /**
  *create form to place form buttons in
  */
@@ -124,5 +177,12 @@ if(!empty($sessionClaimant)){
 /***************************************************************************************************************************************************************/
 
   echo  "<div align=\"center\">" .  $objtravelsheet->show() . "</div>";
-  echo '<br />' ."<div align=\"center\">" .'THIS PAGE IS UNDER CONSTRUCTION --- THANK YOU '. "</div>";          
+  //echo '<br />' ."<div align=\"center\">" .'THIS PAGE IS UNDER CONSTRUCTION --- THANK YOU '. "</div>";
+  //echo '<br />' . $objcreatetraveler->show();
+  //echo '<br />' . $objcreateitinerary->show();
+  //echo '<br />' . $objcreateperdiem->show();
+  //echo '<br />' . $objcreateinvtab->show();
+  //echo '<br />' . $objcreateincident->show();
+  //echo '<br />' . $output;
+  echo '<br />' . $objElement->show();          
 ?>

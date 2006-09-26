@@ -1,7 +1,8 @@
-$results<?php
-      /**
-       *create a layout for the postlogin form to display 3 columns
-       */
+<?php
+      
+  /**
+    *create a layout for the postlogin form to display 3 columns
+    */
        
        
     $cssLayout =& $this->newObject('csslayout', 'htmlelements');
@@ -12,11 +13,13 @@ $results<?php
 
     $cssLayout->setNumColumns(3);
     $sideMenuBar=& $this->getObject('sidemenu','toolbar');
+    
+    
 /************************************************************************************************************************************************/   
     /**
      *create all language elements
      */
-     
+    
      $todaydate = $this->objLanguage->languageText('mod_onlineinvoice_todaydate','onlineinvoice');
      $logout    = ucfirst($this->objLanguage->languageText('word_logout'));
      $createinvoice = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_createinvoice','onlineinvoice'));
@@ -45,6 +48,13 @@ $results<?php
     $url = $this->uri(array('action'=>NULL));
     $this->objcreatefinance  = & $this->newObject('mouseoverpopup','htmlelements');
     $this->objcreatefinance->mouseoverpopup($urltext,$content,$caption,$url);
+
+    $urltext = 'Complete pending invoice';
+    $content = 'click the link to return to complete invoice expenses';
+    $caption = '';
+    $url = $this->uri(array('action'=>'showinvpending'));
+    $this->objinvpending  = & $this->newObject('mouseoverpopup','htmlelements');
+    $this->objinvpending->mouseoverpopup($urltext,$content,$caption,$url);
 
     $urltext = $archives;
     $content = $archives;
@@ -100,7 +110,7 @@ $results<?php
      $myTab->endRow();
                 
      $myTab->startRow();
-     $myTab->addCell($showlinklogout);
+    // $myTab->addCell($showlinklogout);
      $myTab->endRow();
      
      
@@ -109,6 +119,8 @@ $results<?php
      $myTab->addCell($this->objcreateinvoice->show());
      $myTab->endRow();
      
+     $myTab->startRow();
+     $myTab->addCell($this->objinvpending->show());
      $myTab->startRow();
      $myTab->addCell($this->objcreatefinance->show());
      $myTab->endRow();
@@ -133,6 +145,8 @@ $results<?php
      $myTab->addCell($this->objfaq->show());
      $myTab->endRow();
 /***********************************************************************************************************************/
+    
+     
      $rightcolumn  = $myTab->show();
      
      $this->loadClass('featurebox','navigation');

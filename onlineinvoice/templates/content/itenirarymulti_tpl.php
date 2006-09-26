@@ -1,8 +1,6 @@
 <?php
                                            
-    /**
-     *create template for multiple / single itinerary details 
-     */
+    /**create template for multiple / single itinerary details**/
      
      
     /**
@@ -11,6 +9,20 @@
     $this->loadClass('textinput', 'htmlelements');
     $this->loadClass('button', 'htmlelements');
     
+    /**
+     *help information
+     */
+    $itinerarydetails = $this->objLanguage->languageText('mod_onlineinvoice_info','onlineinvoice');
+    $itinerarydates = $this->objLanguage->languageText('mod_onlineinvoice_itinerarydates','onlineinvoice');
+    $dateexplanation  = $this->objLanguage->languageText('mod_onlineinvoice_dateexplanation','onlineinvoice');
+    //$citylocation  = $this->objLanguage->languageText('mod_onlineinvoice_location','onlineinvoice');
+    //$addleg  = $this->objLanguage->languageText('mod_onlineinvoice_addleg','onlineinvoice');
+    //$movenext  = $this->objLanguage->languageText('mod_onlineinvoice_movenext','onlineinvoice'); 
+    $exampleinfo  = $this->objLanguage->languageText('mod_onlineinvoice_itineraryexample','onlineinvoice');
+        
+    $helpstring =  $itinerarydetails  . '<br />'  .  $itinerarydates  . '<br />'  . $dateexplanation  . '<br />'  /*. $citylocation . '<br />'  $addleg . '<br />'  ..  $movenext $exampleinfo*/;            
+    $this->objHelp=& $this->getObject('helplink','help');
+    $displayhelp  = $this->objHelp->show($helpstring);    
     
     /**
     *create all languge elements for all form labels
@@ -78,21 +90,29 @@
    /**
     *create all date elements
     */
-              
+    //get the date of the invoice begin date and set as default for departure date
+    $invbegindate = $this->getSession('invoicedata');
+    
+    while(list($key,$val) = each($invbegindate)){
+        if($key == 'begindate')        {
+          $dateitinerary = $val;
+        }
+    }         
+         
     $this->objdeptdate = $this->newObject('datepicker','htmlelements');
     $name = 'txtdeptddate';
-    $date = date('Y-m-d');
-    $format = 'YYYY-MM-DD';
+   // $date = $dateitinerary;
+    $format = 'Y-m-d';
     $this->objdeptdate->setName($name);
-    $this->objdeptdate->setDefaultDate($date);
+    $this->objdeptdate->setDefaultDate($dateitinerary);     
     $this->objdeptdate->setDateFormat($format);
 
     $this->objarrivaldateobj = $this->newObject('datepicker','htmlelements');
     $name = 'txtarraivaldate';
     $date = date('Y-m-d');
-    $format = 'YYYY-MM-DD';
+    $format = 'Y-m-d';
     $this->objarrivaldateobj->setName($name);
-    $this->objarrivaldateobj->setDefaultDate($date);
+    $this->objarrivaldateobj->setDefaultDate($dateitinerary);
     $this->objarrivaldateobj->setDateFormat($format);
     
 /************************************************************************************************************************************************/
@@ -309,6 +329,8 @@
         $myTabIten->startRow();
         $myTabIten->addCell($this->objdeparturedate->show());
         $myTabIten->addCell($this->objdeptdate->show());
+        $myTabIten->addCell('');
+        $myTabIten->addCell($displayhelp);
         $myTabIten->endRow();
 
         $myTabIten->startRow();
@@ -346,12 +368,37 @@
         $myTabIten->addCell($this->objAddItinerary->show());
         $myTabIten->endRow();
         
+        
+        $myTabIten->startRow();
+        $myTabIten->endRow();
+        
+        
+        $myTabIten->startRow();
+        $myTabIten->endRow();
+        
+        
+        $myTabIten->startRow();
+        $myTabIten->endRow();
+        
+        
+        $myTabIten->startRow();
+        $myTabIten->endRow();
+        
+        
+        $myTabIten->startRow();
+        $myTabIten->endRow();
+        
+        $myTabIten->startRow();
+        $myTabIten->addCell('');
+        $myTabIten->addCell($this->objBack->show() .' '. $this->objnext->show());
+        $myTabIten->endRow();
+        
 /************************************************************************************************************************************************/
         
 $this->loadClass('tabbedbox', 'htmlelements');
 $objmultiitinerary = new tabbedbox();
 $objmultiitinerary->addTabLabel('Travelers Itinerary');
-$objmultiitinerary->addBoxContent('<br />' . $myTabIten->show() . '<br />' . '<br />' ."<div align=\"center\">" .$this->objBack->show() .' '. $this->objnext->show() . ' ' . $this->objexit->show() ."</div>"  . '<br />' . '<br />');               
+$objmultiitinerary->addBoxContent('<br />' . $myTabIten->show() . '<br />' . '<br />');// ."<div align=\"center\">" .$this->objBack->show() .' '. $this->objnext->show() . ' ' /*. $this->objexit->show()*/."</div>"  . '<br />' . '<br />');               
 
         
 /************************************************************************************************************************************************/
@@ -365,6 +412,7 @@ $objmultiitinerary->addBoxContent('<br />' . $myTabIten->show() . '<br />' . '<b
       $objitenirarymultiForm->addToForm($objmultiitinerary->show());	
       $objitenirarymultiForm->addRule('txtdeptcity', 'Please enter departure city','required');
       $objitenirarymultiForm->addRule('txtarrivcity', 'Please enter arrival city','required'); 
+      
 /************************************************************************************************************************************************/
     
             
