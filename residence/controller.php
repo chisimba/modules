@@ -65,12 +65,16 @@ class residence extends controller
 		case 'searchres':
 		$year = $this->getParam('year',null);
 		echo '<pre>';
-		print_r($stdinfo = $this->financialaid->getREGCL('STDNUM',2219065,0,0));
+		print_r($stdinfo = $this->financialaid->getlimitACCOM('STDNUM','2219065',0,0));
 		die;
 		$this->setvarByRef('stdinfo',$stdinfo);
 		return 'reslist_tpl.php';
 	
 			
+		case 'viewallres': 
+			
+			return 'viewresidence_tpl.php';
+
 
 		case 'ok':
 				$id = $this->getParam('id',null);
@@ -86,17 +90,35 @@ class residence extends controller
 				return 'studentlist_tpl.php';
 				}
 		case 'nextlist':
-				$id   = $this->getParam('id',null);
-				$list   = $this->getParam('nextlist',null);
-				$field = 'SURNAM';
-				$value = $id ;
-				$start =  ($list *6)-6 ;
-				$offset = $list * 6;
-				$stdinfo = $this->financialaid->getAllStudents($field,$value,$start,$offset);
+				
+				$id   		= $this->getParam('id',null);
+				$list   	= $this->getParam('nextlist',null);
+				$field 		= 'SURNAM';
+				$value 		= $id ;
+				$start 		=  ($list *6)-6 ;
+				$offset 	= $list * 6;
+				$stdinfo 	= $this->financialaid->getAllStudents($field,$value,$start,$offset);
+				$this->setvarByRef('list',$list);
 				$this->setvarByRef('stdinfo',$stdinfo);
 				$this->setvarByRef('$id',$$id);
 				return 'studentlist_tpl.php';
 			break;
+
+		case 'nextreslist':
+				$id   = $this->getParam('id',null);
+				$list   = $this->getParam('nextreslist',null);
+				$field = 'YEAR';
+				$value = $id ;
+				$start =  ($list *6)-6 ;
+				$offset = $list * 6;
+				$end = $offset;
+				$stdinfo = $this->financialaid->getlimitACCOM($field,$value,$start,$offset);
+				$this->setvarByRef('start',$start);
+				$this->setvarByRef('end',$end);
+				$this->setvarByRef('$id',$$id);
+				return 'viewresidence_tpl.php';
+			break;
+
 		case 'info':
 				$value = $this->getParam('id',null);
 				$field ='STDNUM';
