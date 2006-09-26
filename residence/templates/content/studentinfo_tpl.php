@@ -404,7 +404,9 @@ if(is_array($results)){
 
 
 if(!$finapplication==null){
-	foreach($finapplication as $app){
+
+foreach($finapplication as $app){
+				
 				$tabletabbres->startRow($rowClass);
 				$tabletabbres->addCell("<p>".'Phone Code'."</p>");
 				$tabletabbres->addCell(' ');
@@ -451,9 +453,12 @@ if(!$finapplication==null){
 				$tabletabbres->addCell("<p>".$app->YEAR."</p>");
 				$tabletabbres->endRow($rowClass);
 		
-	
+//$appTabBoxyear = & $this->newObject('tabbox','financialaid');
+//$appTabBoxyear->tabName = ;
 		}
-$appTabBox->addTab('Residence Info', 'Residence Info', $Display=$tabletabbres->show());
+
+$appTabBox->addTab('Residence Info', 'Residence Info', $Display=);
+
 }else{}
 				
 $appTabBox->addTab('Student Info', 'Student Info', $Display=$tabletab->show());

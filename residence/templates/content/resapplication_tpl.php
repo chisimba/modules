@@ -118,7 +118,7 @@ else{
 		
 		$textarea = & $this->newObject('textinput','htmlelements');
         $textarea->size = '30';
-        $textarea->value = '';
+        $textarea->value = $id;
         $textarea->setId(null);
 
  		
@@ -132,15 +132,14 @@ else{
         $table1->width = '75%';
 		$table1->addRow(array($title->label,$title->show()),'even');
 
-	$button = new button("submit",
-	$objLanguage->code2Txt("word_save"));    //word_save
+	$button = new button("submit",'Add');    //word_save
 	$button->setToSubmit();
 	$row = array($button->show());
 	$table1->addRow($row);
 
 	$form->addToForm($table1->show());
 
-$heading = '<h3>'.'Add Student To Residece Application List'.'</h3>';
+$heading = '<h3>'.'Add Student To Residence Application List'.'</h3>';
 $cssLayout2->setMiddleColumnContent('<p>'.$heading.'</p>'.$form->show());
 }
 $cssLayout2->setLeftColumnContent($left);

@@ -1,23 +1,8 @@
 <?
-//print_r($stdinfo);
-//require_once('columns_tpl.php');
-
-$this->objUser =& $this->getObject('user','security');
-
-$tabpane =& $this->newObject('tabpane', 'htmlelements');
-// Create an instance of the css layout class
 $cssLayout2 = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
 $cssLayout2->setNumColumns(3);
 
-// Add Right Column
-//$rightSideColumn2= 'right';
-//$cssLayout2->setMiddleColumnContent($rightSideColumn2);
-
 $left =& $this->getObject('leftblock','residence');
-//$left = $left->show();
-
-//$left =& $this->getObject('blockleftcolumn');
-//$left = $left->show(); 
 
 $this->loadClass('form','htmlelements');
 $this->financialaid =& $this->getObject('dbresidence','residence');
@@ -112,25 +97,7 @@ if(isset($stdinfo)){
 		
 			$table->addCell($results->show());
 			$table->addCell($payment->show());
-			
-	
-	$addicon = $this->getObject('geticon','htmlelements');
-	$addicon->setIcon('add');
-		
-	$addicon->alt = 'Add To Residence';
-	$addicon->align=false;
-	// Delete an entry in the table.
-	$uriadd = $this->uri(
-		array(
-			'action' => 'resapp', 
-			'id' =>$key->STDNUM 
-		)
-	);
-
-	$addLink   = "<a href=\"{$uriadd}\">".'Add'."</a>";
-	//echo $BackLink;
-			
-			$table->addCell($addLink);
+			//$table->addCell($corre->show());
 			//$table->addCell($enquiry->show());
 			$table->endRow();
 			$oddEven = $oddEven == 'odd'?'even':'odd';
@@ -144,7 +111,20 @@ if(isset($stdinfo)){
 	
    	$surname = $this->getParam('surname');
    
-		 //---------------------------------Save button------------------------------
+	//$form->addToForm();
+	//echo ;
+	//echo $form->show();
+	
+	//drop down ----|
+	$dropdown =& $this->newObject("dropdown", "htmlelements");
+	$dropdown->name = 'nextlist';
+	for ($i = null; $i <= count($stdinfo); $i++){
+	$dropdown->addOption($i,$i);
+	}
+	$form->addToForm($dropdown->show());
+	
+	
+	 //---------------------------------Save button------------------------------
    	$this->loadClass('button','htmlelements');
    	$button = & $this->newObject('button','htmlelements');
    	$button1 = & $this->newObject('button','htmlelements');
@@ -156,28 +136,12 @@ if(isset($stdinfo)){
 	$objLanguage->code2Txt("word_cancel")); 
 	$button1->setToSubmit();
 	$row = array($button->show()."&nbsp;".$button1->show());
-	//$form->addToForm($button->show());
+	$form->addToForm($button->show());
 	//---------------------------------------------------------------------------------
-	
-	//drop down ----|
-	$dropdown =& $this->newObject("dropdown", "htmlelements");
-	$dropdown->name = 'nextlist';
-	if($list==null){
-	for ($i = 1; $i <= count($stdinfo); $i++){
-	$dropdown->addOption($i,$i);
-	}
-}else{
-	for ($i = 1; $i <= count($stdinfo); $i++){
-	$dropdown->addOption($i,$i);
-	$dropdown->setSelected($list);
-}
-}	
-	$form->addToForm('<center>'.'Page '.$dropdown->show().' of '.'<b>'.count($stdinfo).'</b>'.' '.$button->show().'</center>');
-
 	
 $tablelist =& $this->getObject('htmltable','htmlelements');
 
-	$searchresults =$form->show();
+	$searchresults ='<center>'.'Results '.$form->show().' of '.'<b>'.count($stdinfo).'</b></center>';
 
 $content = '<p>'.$pgTitle->show().'</p>'.$searchresults.'<p>'.$table->show().'&nbsp;&nbsp;'.'</p>';
 	
@@ -209,7 +173,7 @@ $right =& $this->getObject('blocksearchbox','studentenquiry');
 $right = $right->show();//$this->getParam('module'));
 
 $left =& $this->getObject('leftblock','residence');
-$left = $left->show($id=null);
+$left = $left->show();
 
 
 
@@ -260,7 +224,7 @@ $cssLayout2->setRightColumnContent($leftSideColumn2);
 // Add Left column
 
 $left =& $this->getObject('leftblock','residence');
-$cssLayout2->setLeftColumnContent($left->show($id=null));
+$cssLayout2->setLeftColumnContent($left->show());
 //Output the content to the page
 
 
