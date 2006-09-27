@@ -205,7 +205,7 @@ class foafops extends object
 			//interests from interests table
 			$this->_getInterests($userId);
 			//get the people we know...
-			//$this->_getFriends($userId);
+			$this->_getFriends($userId);
 		}
 
 
@@ -365,7 +365,7 @@ class foafops extends object
 				$this->friend->addMbox('mailto:'.$email,TRUE);
 
 
-				$this->objFoaf->addKnows($friend);
+				$this->objFoaf->addKnows($this->friend);
 			}
 		}
 	}
