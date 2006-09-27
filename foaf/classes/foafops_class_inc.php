@@ -357,15 +357,15 @@ class foafops extends object
 				$fullname = $firstname . " " . $surname;
 
 
-				$this->friend = $this->newObject('foafcreator');
-				$this->friend->setName($fullname);
-				$this->friend->setTitle($title);
-				$this->friend->setFirstName($firstname);
-				$this->friend->setSurname($surname);
-				$this->friend->addMbox('mailto:'.$email,TRUE);
+				//$this->friend = $this->newObject('foafcreator');
+				//$this->friend->setName($fullname);
+				//$this->friend->setTitle($title);
+				//$this->friend->setFirstName($firstname);
+				//$this->friend->setSurname($surname);
+				//$this->friend->addMbox('mailto:'.$email,TRUE);
 
 
-				$this->objFoaf->addKnows($this->friend);
+				//$this->objFoaf->addKnows($this->friend);
 			}
 		}
 	}
