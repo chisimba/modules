@@ -358,8 +358,8 @@ class foafops extends object
 				//echo "<h1>$fullname</h1><br><br>";
 
 
-				$this->friend = $this->newObject('foafcreator');
-				$this->friend->setName($fullname);
+				$bud = $this->newObject('foafcreator');
+				$bud->setName($fullname);
 				//$this->friend->setTitle($title);
 				//$this->friend->setFirstName($firstname);
 				//$this->friend->setSurname($surname);
