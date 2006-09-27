@@ -23,9 +23,15 @@
    $this->objEdit  = new button('edit', $stredit);
    $this->objEdit->setToSubmit();
    
-   //$strnext = ucfirst($next);
-   //$this->objNext  = new button('edit', $strnext);
-   //$this->objNext->setToSubmit();             
+   $formexplanation = $this->objLanguage->languageText('mod_onlineinvoice_formexplanation');
+   $submitaction  = $this->objLanguage->languageText('mod_onlineinvoice_submitaction');
+   $editaction  = $this->objLanguage->languageText('mod_onlineinvoice_editaction');
+   
+   $helpstring  = $formexplanation . '<br />' .$submitaction . '<br />'  . $editaction;
+   $this->objHelp=& $this->getObject('helplink','help');
+   $displayhelp  = $this->objHelp->show($helpstring);   
+   
+      
 
 
  
@@ -81,7 +87,7 @@
 $this->loadClass('tabbedbox', 'htmlelements');
 $objcreateinvtab = new tabbedbox();
 $objcreateinvtab->addTabLabel('Traveler Information');
-$objcreateinvtab->addBoxContent('<br />' .$objClaimantTable->show() . '<br />' . "<div align=\"left\">" . $this->objSave->show() . ' ' . $this->objEdit->show()  ."</div>" . '<br />');
+$objcreateinvtab->addBoxContent("<div align=\"right\">" . $displayhelp . "</div>".'<br />' .$objClaimantTable->show() . '<br />' . "<div align=\"left\">" . $this->objSave->show() . ' ' . $this->objEdit->show()  ."</div>" . '<br />');
  
 
 /***************************************************************************************************************************************************************/ 
