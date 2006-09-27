@@ -58,19 +58,19 @@ $objcreateinvtab->addBoxContent('<br />' .$showlodge);
 
 $objcreatetraveler = new tabbedbox();
 $objcreatetraveler->addTabLabel('Traveler Information');
-$objcreatetraveler->addBoxContent('<br />' .$display);// . '<br />' . "<div align=\"left\">" . $this->objSave->show() . ' ' . $this->objEdit->show()  ."</div>" . '<br />');
+$objcreatetraveler->addBoxContent('<br />' .$display);
 
 $objcreateitinerary = new tabbedbox();
 $objcreateitinerary->addTabLabel('Itinerary Information');
-$objcreateitinerary->addBoxContent('<br />' .$results);// . '<br />' . "<div align=\"left\">" . $this->objSave->show() . ' ' . $this->objEdit->show()  ."</div>" . '<br />');
+$objcreateitinerary->addBoxContent('<br />' .$results);
 
 $objcreateperdiem = new tabbedbox();
 $objcreateperdiem->addTabLabel('Per Diem Information');
-$objcreateperdiem->addBoxContent('<br />' .$showperdiem);// . '<br />' . "<div align=\"left\">" . $this->objSave->show() . ' ' . $this->objEdit->show()  ."</div>" . '<br />');
+$objcreateperdiem->addBoxContent('<br />' .$showperdiem);
 
 $objcreateincident = new tabbedbox();
 $objcreateincident->addTabLabel('Incident Information');
-$objcreateincident->addBoxContent('<br />' .$showincident);// . '<br />' . "<div align=\"left\">" . $this->objSave->show() . ' ' . $this->objEdit->show()  ."</div>" . '<br />');
+$objcreateincident->addBoxContent('<br />' .$showincident);
 
      
 /***************************************************************************************************************************************************************/
@@ -161,7 +161,7 @@ $objcreateincident->addBoxContent('<br />' .$showincident);// . '<br />' . "<div
                         
                     }
                 }
-                 
+     $grandtot  =   $tot +  $totlodge;         
     
     /**
      *display all total values
@@ -184,7 +184,7 @@ $objcreateincident->addBoxContent('<br />' .$showincident);// . '<br />' . "<div
     $myTabtot->addCell('$' . $tot);
     $myTabtot->addCell('$' .$totlodge);
     $myTabtot->addCell('$0.00');
-    $myTabtot->addCell('$0.00');
+    $myTabtot->addCell('$'. $grandtot);
     $myTabtot->endRow();
      
      
