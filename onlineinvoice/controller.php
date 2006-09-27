@@ -323,17 +323,17 @@ class onlineinvoice extends controller
                  *call the function that stores users values into a session variable
                  *display the next template -- lodgereceipt                                  
                  */
-                  $finaltotal  = $this->objdblodge->calculodgerate();
-                  $this->getLodgeexpenses($finaltotal);
-                 $this->setLayoutTemplate('invoice_layout_tpl.php');
+                  $finaltotlodge  = $this->objdblodge->calculodgerate();
+                  $this->getLodgeexpenses($finaltotlodge);
+                  $this->setLayoutTemplate('invoice_layout_tpl.php');
                  //return 'incidentinfo_tpl.php';
                  return 'lodgingoutput_tpl.ph.php';
              }elseif(isset($add)){
                 /**
                  *call function and return back to lodge template
                  */
-                 $finaltotal  = $this->objdblodge->calculodgerate();
-                 $this->getLodgeexpenses($finaltotal);
+                 $finaltotlodge  = $this->objdblodge->calculodgerate();
+                 $this->getLodgeexpenses($finaltotlodge);
                  $this->setLayoutTemplate('invoice_layout_tpl.php');
                  return  'lodging_tpl.php';                              
              }
@@ -346,7 +346,7 @@ class onlineinvoice extends controller
                  */
                  //$submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
                  //$this->setVarByRef('submitdatesmsg', $submitdatesmsg);
-                 //$this->setLayoutTemplate('invoice_layout_tpl.php');
+                 $this->setLayoutTemplate('invoice_layout_tpl.php');
                  return 'createInvoice_tpl.php';                                              
              }
           break;
@@ -632,7 +632,7 @@ class onlineinvoice extends controller
      * @private     
      */
      
-    private function getLodgeexpenses($finaltotal)
+    private function getLodgeexpenses($finaltotlodge)
     {
        $lodgedata  = array(
                   'createdby'         =>  $this->objUser->fullname(),
@@ -649,7 +649,7 @@ class onlineinvoice extends controller
                   'exchangefile'      =>  $this->objFile->getFileName($this->getParam('exchangeratefile')),
                   'receiptfilename'   =>  $this->objFile->getFileName($this->getParam('receiptfile')),
                   'affidavitfilename' =>  $this->objFile->getFileName($this->getParam('affidavitfile')),
-                  'totroomrate'         =>  $finaltotal,
+                  'totroomrate'       =>  $finaltotlodge,
         
      
                 );

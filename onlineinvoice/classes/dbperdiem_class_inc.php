@@ -80,7 +80,7 @@
   
   function showperdiem()
   {
-  
+                $sessionDates = $this->getSession('perdiemdetails');  
                 if(!empty($sessionDates)){
 //Create table to display dates in session and the rates for breakfast, lunch and dinner and the total rate 
                         $objExpByDateTable =& $this->newObject('htmltable', 'htmlelements');
@@ -125,6 +125,40 @@
                
 
   }
+  function perdiemtotal(){
+     
+     $perdiemtot  = $this->getSession('perdiemdetails');
+                if(!empty($perdiemtot)){
+                   $objExpByDateTable =& $this->newObject('htmltable', 'htmlelements');
+                   $objExpByDateTable->cellspacing = '2';
+                   $objExpByDateTable->cellpadding = '2';
+                   $objExpByDateTable->border='1';
+                   $objExpByDateTable->width = '25%';
+  
+                   $objExpByDateTable->startHeaderRow();
+                  // $objExpByDateTable->addHeaderCell('Date');
+                  // $objExpByDateTable->addHeaderCell('Total for per diem daily rates ');
+                   $objExpByDateTable->addHeaderCell('Per Diem Final Total' );
+                   
+                   $objExpByDateTable->endHeaderRow();
+
+  
+                        $rowcount = '0';
+  
+                        foreach($perdiemtot as $sesDat){
+     
+                             $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+     
+                             $objExpByDateTable->startRow();
+                     //        $objExpByDateTable->addCell($sesDat['date'], '', '', '', $oddOrEven);
+                    //         $objExpByDateTable->addCell($sesDat['total'], '', '', '', $oddOrEven);
+                             $objExpByDateTable->addCell($sesDat['finaltotal'], '', '', '', $oddOrEven);
+                             $objExpByDateTable->endRow();
+                        }
+                 
+                      return $objExpByDateTable->show();
+                 }
+ }
 }
   
 ?>

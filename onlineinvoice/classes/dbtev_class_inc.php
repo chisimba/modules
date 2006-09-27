@@ -44,9 +44,9 @@ class dbTev extends dbTable{
        if(!empty($sessionClaimant)){
 //Create table to display dates in session and the rates for breakfast, lunch and dinner and the total rate 
         $objClaimantTable =& $this->newObject('htmltable', 'htmlelements');
-        $objClaimantTable->cellspacing = '10';
+        $objClaimantTable->cellspacing = '2';
         $objClaimantTable->cellpadding = '2';
-        $objClaimantTable->border='0';
+        $objClaimantTable->border='1';
         $objClaimantTable->width = '100%';
         $objClaimantTable->cssClass = 'webfx-tab-style-sheet';
         $objClaimantTable->footing = 'Please submit or edit information';

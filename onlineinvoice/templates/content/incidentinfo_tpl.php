@@ -460,23 +460,23 @@ $objtabbedbox = new tabbedbox();
 $objtabbedbox->addTabLabel('Lodge Information');
 $objtabbedbox->addBoxContent($myTabIncident->show() . '<br />');
 
-/*create tabbox for attaching lodge echange rate file*/
+//*create tabbox for attaching lodge echange rate file*/
 $this->loadClass('tabbedbox', 'htmlelements');
 $objtabexchange = new tabbedbox();
-$objtabexchange->addTabLabel('Verify Echange Rate');
-$objtabexchange->addBoxContent("<div align=\"center\">" ."<div class=\"error\">" .'<br />'.'Verify exchange rate by attaching a file or quote a reliable online source' ."</div>". '<br />'."</div>". $myTabExchange->show().'<br />');
+$objtabexchange->addTabLabel('Verify Exchange Rate');
+$objtabexchange->addBoxContent("<div align=\"center\">" ."<div class=\"error\">" .'<br />'.'Verify Exchange Rate By Attaching A File Or Quote A Reliable Online Source' ."</div>". '<br />'."</div>". $myTabExchange->show().'<br />');
 /**
   *create a tabbed box to place table and elements in
   */
-      $this->loadClass('tabbedbox', 'htmlelements'); 
-      $objtabreceipt = new tabbedbox();
-      $objtabreceipt->addTabLabel('Receipt Information');
-      $objtabreceipt->addBoxContent("<div align=\"center\">" ."<div class=\"error\">" .'<br>'  . '<b />' .$receipt ."</div>".  '<br>' ."<div align=\"left\">"  .$myTabReceipt->show());
-/*********************************************************************************************************************************************************************/
+ $this->loadClass('tabbedbox', 'htmlelements'); 
+ $objtabreceipt = new tabbedbox();
+ $objtabreceipt->addTabLabel('Receipt Information');
+ $objtabreceipt->addBoxContent("<div align=\"center\">" ."<div class=\"error\">" .'<br />' . '<b>' . $receipt .'<b/>' ."</div>".  '<br />' ."<div align=\"left\">"  .$myTabReceipt->show());
+ /*******************************************************************************************************************************************************************/
 
 $objIncidentForm = new form('incidentinfo',$this->uri(array('action'=>'submitincidentinfo')));
 $objIncidentForm->displayType = 3;
-$objIncidentForm->addToForm($objtabbedbox->show()  . '<br />' . '<br />' .$objtabexchange->show() . '<br> />'.$objtabreceipt->show(). '<br />'."<div align=\"right\">" . $this->objAdd->show()."</div" .'<br />' . "<div align=\"center\">" . $this->objBack->show(). $this->objnext->show() . ' ' . $this->objexit->show()."</div");	
+$objIncidentForm->addToForm($objtabbedbox->show()  . '<br />'  .$objtabexchange->show() . '<br />'.$objtabreceipt->show(). '<br />'."<div align=\"right\">" . $this->objAdd->show()."</div" .'<br />' . "<div align=\"center\">" . $this->objBack->show(). $this->objnext->show() . ' ' . $this->objexit->show()."</div");	
 $objIncidentForm->addRule('txtvendor', 'Please enter vendor name','required');
 $objIncidentForm->addRule('txtcost', 'Please enter cost amount','required');
 $objIncidentForm->addRule('txtcost', 'Please enter a numerical value for cost amount','numeric');

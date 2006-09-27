@@ -38,9 +38,9 @@ class dbitinerary extends dbTable{
                if(!empty($sessionItinerary)){
 //Create table to display dates in session and the rates for breakfast, lunch and dinner and the total rate 
                         $objItineraryTable =& $this->newObject('htmltable', 'htmlelements');
-                        $objItineraryTable->cellspacing = '10';
+                        $objItineraryTable->cellspacing = '2';
                         $objItineraryTable->cellpadding = '2';
-                        $objItineraryTable->border='0';
+                        $objItineraryTable->border='1';
                         $objItineraryTable->width = '100%';
   
                         $objItineraryTable->startHeaderRow();

@@ -133,10 +133,10 @@ $objcreateincident->addBoxContent('<br />' .$showincident);
      
      
      
-     $objElement =& $this->newObject('tabpane', 'htmlelements');
+   $objElement =& $this->newObject('tabpane', 'htmlelements');
    $output = '<br />' . $objcreatetraveler->show() .  '<br />' . $objcreateitinerary->show() . '<br />' . $objcreateperdiem->show()  . '<br />' . $objcreateinvtab->show() . '<br />' . $objcreateincident->show();
-   $objElement->addTab(array('name'=>'TEV Output to date','content' => $output),'luna-tab-style-sheet');
-   $objElement->addTab(array('name'=>'choose a section','content' => $myTab->show()),'luna-tab-style-sheet');
+   $objElement->addTab(array('name'=>'TEV Output to date','content' => $output));
+   $objElement->addTab(array('name'=>'Choose a section to complete','content' => $myTab->show()));
      
 
     echo  $objElement->show();

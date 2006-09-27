@@ -54,7 +54,7 @@
 $this->loadClass('tabbedbox', 'htmlelements');
 $objcreateinvtab = new tabbedbox();
 $objcreateinvtab->addTabLabel('Lodge Information');
-$objcreateinvtab->addBoxContent('<br />' .$showlodge);// . '<br />' . "<div align=\"left\">" . $this->objSave->show() . ' ' . $this->objEdit->show()  ."</div>" . '<br />');
+$objcreateinvtab->addBoxContent('<br />' .$showlodge);
 
 $objcreatetraveler = new tabbedbox();
 $objcreatetraveler->addTabLabel('Traveler Information');
@@ -140,49 +140,67 @@ $objcreateincident->addBoxContent('<br />' .$showincident);// . '<br />' . "<div
     $myTab->addCell(ucfirst($this->objinvincidents->show()));
     $myTab->endRow();
     
+/****************************************************************************************************************************************************************/
+     /**
+      *get per diem final total value
+      */           
+     $perdiemtot  = $this->getSession('perdiemdetails');
+                if(!empty($perdiemtot)){
+                     foreach($perdiemtot as $sesDat){
+                        $tot =  $sesDat['finaltotal'];
+                    }
+                }
+     /**
+      *get Lodging final tot value
+      */
+     $lodgetot  = $this->getSession('lodgedetails');
+                if(!empty($lodgetot)){
+                     foreach($lodgetot as $sesLodge){
+                        $totlodge =  $sesLodge['totroomrate'];
+                        
+                        
+                    }
+                }
+                 
     
+    /**
+     *display all total values
+     */
+    
+    $myTabtot = $this->newObject('htmltable','htmlelements');
+    $myTabtot->width='100%';
+    $myTabtot->border='1';
+    $myTabtot->cellspacing='2';
+    $myTabtot->cellpadding='2';
+   
+    $myTabtot->startRow();
+    $myTabtot->addCell('<b>' . 'PER DIEM TOTAL');
+    $myTabtot->addCell('<b>' . 'LODGING TOTAL');
+    $myTabtot->addCell('<b>' . 'INCIDENTAL TOTAL');
+    $myTabtot->addCell('<b>' . 'GRAND TOTAL');
+    $myTabtot->endRow();
+    
+    $myTabtot->startRow();
+    $myTabtot->addCell('$' . $tot);
+    $myTabtot->addCell('$' .$totlodge);
+    $myTabtot->addCell('$0.00');
+    $myTabtot->addCell('$0.00');
+    $myTabtot->endRow();
+     
+     
+   
+/****************************************************************************************************************************************************************/
 /**
  *create a tabpane
  */   
-$output = '<br />' . $objcreatetraveler->show() .  '<br />' . $objcreateitinerary->show() . '<br />' . $objcreateperdiem->show()  . '<br />' . $objcreateinvtab->show() . '<br />' . $objcreateincident->show();
+$output = '<br />' . $objcreatetraveler->show() .  '<br />' . $objcreateitinerary->show() . '<br />' . $objcreateperdiem->show()  . '<br />' . $objcreateinvtab->show() . '<br />' . $objcreateincident->show() . $myTabtot->show();
 $objElement =& $this->newObject('tabpane', 'htmlelements');
-$objElement->addTab(array('name'=>'Travel Output','content' => $output),'luna-tab-style-sheet');
-$objElement->addTab(array('name'=>'Edit a Section','content' => $myTab->show()),'luna-tab-style-sheet');
+$objElement->addTab(array('name'=>'Travel Output','content' => $output));
+$objElement->addTab(array('name'=>'Edit a Section','content' => $myTab->show()));
     
      
-/**
- *create form to place form buttons in
- */
- 
-/*$this->loadClass('form','htmlelements');
-$objForm = new form('claiminfo',$this->uri(array('action'=>'claimantoutput')));
-$objForm->displayType = 3;
-$objForm->addToForm($objcreateinvtab->show());	
-
-$objElement = & $this->getObject('tabpane', 'htmlelements');
-// $objElement->addTab(array('name'=>'Invoice Information','','content' => $objtabbedinvoice->show()));
- $objElement->addTab(array('name'=>'Traveler Information','url'=>'http://localhost','content' => $objForm->show()));
- $objElement->addTab(array('name'=>'Intinerary Information','url'=>'http://localhost','content' => $objForm->show()));
- $objElement->addTab(array('name'=>'Per Diem Information','url'=>'http://localhost','content' => $objForm->show()));
- $objElement->addTab(array('name'=>'Lodge Expenses','url'=>'http://localhost','content' => $objForm->show()));
- $objElement->addTab(array('name'=>'Incident Expenses','url'=>'http://localhost','content' => $objForm->show()));
- 
-
-echo "<div align=\"center\">" . $objtravelsheet->show(). "</div>". '<br />' . '<br />';
-
-if(!empty($sessionClaimant)){
-  echo "<div align=\"left\">" . $objElement->show() . "</div>";
-}
-
 /***************************************************************************************************************************************************************/
 
   echo  "<div align=\"center\">" .  $objtravelsheet->show() . "</div>";
-  //echo '<br />' ."<div align=\"center\">" .'THIS PAGE IS UNDER CONSTRUCTION --- THANK YOU '. "</div>";
-  //echo '<br />' . $objcreatetraveler->show();
-  //echo '<br />' . $objcreateitinerary->show();
-  //echo '<br />' . $objcreateperdiem->show();
-  //echo '<br />' . $objcreateinvtab->show();
-  //echo '<br />' . $objcreateincident->show();
-  //echo '<br />' . $output;
   echo '<br />' . $objElement->show();          
 ?>

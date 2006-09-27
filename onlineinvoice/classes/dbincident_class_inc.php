@@ -51,9 +51,9 @@ class dbincident extends dbTable{
 //Create table to display itinerary details in session and the rates for breakfast, lunch and dinner and the total rate
  
   $objTable = & $this->newObject('htmltable', 'htmlelements');
-  $objTable->cellspacing = '10';
+  $objTable->cellspacing = '2';
   $objTable->cellpadding = '2';
-  $objTable->border='0';
+  $objTable->border='1';
   $objTable->width = '100%';
   
   $objTable->startHeaderRow();

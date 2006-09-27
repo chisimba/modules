@@ -3,7 +3,7 @@
 class dbLodging extends dbTable{
   
 
-  var $finaltotal  = 0.00;
+ var $finaltotal  = 0.0;
 
 	/**
 	* Constructor
@@ -26,13 +26,14 @@ class dbLodging extends dbTable{
 	{
 	
 	   $lodgerate = $this->getSession('lodgedetails');
-	  $finaltotal  = 0.00;
+	   $finaltotal  = '';
 	   
           if(!empty($lodgerate))
           {
                foreach($lodgerate as $sesLodge){
         
                   $finaltotal = $finaltotal + $sesLodge['cost'];       //need to fix up
+                  
               } 
             
           }
@@ -47,9 +48,9 @@ class dbLodging extends dbTable{
  if(!empty($sessionLodge)){
 //Create table to display itinerary details in session and the rates for breakfast, lunch and dinner and the total rate 
   $objLodgeTable =& $this->newObject('htmltable', 'htmlelements');
-  $objLodgeTable->cellspacing = '15';
+  $objLodgeTable->cellspacing = '2';
   $objLodgeTable->cellpadding = '2';
-  $objLodgeTable->border='0';
+  $objLodgeTable->border='1';
   $objLodgeTable->width = '100%';
   
   $objLodgeTable->startHeaderRow();
@@ -83,7 +84,7 @@ class dbLodging extends dbTable{
   $objLodgeTable->addCell($sesDat['exchangefile'], '', '', '', $oddOrEven);
   $objLodgeTable->addCell($sesDat['receiptfilename'], '', '', '', $oddOrEven);
   $objLodgeTable->addCell($sesDat['affidavitfilename'], '', '', '', $oddOrEven);
-  $objLodgeTable->addCell($sesDat['affidavitfilename'], '', '', '', $oddOrEven);
+  //$objLodgeTable->addCell($sesDat['affidavitfilename'], '', '', '', $oddOrEven);
 //  $objLodgeTable->addCell('');
 //  $objLodgeTable->addCell($sesDat['totroomrate'], '', '', '', $oddOrEven);            //need to fix up
   $objLodgeTable->endRow();
