@@ -23,6 +23,14 @@
    $stredit = ucfirst($edit);
    $this->objEdit  = new button('edit', $stredit);
    $this->objEdit->setToSubmit();
+   
+   $formexplanation = $this->objLanguage->languageText('mod_onlineinvoice_formexplanation');
+   $submitaction  = $this->objLanguage->languageText('mod_onlineinvoice_submitaction');
+   $editaction  = $this->objLanguage->languageText('mod_onlineinvoice_editaction');
+   
+   $helpstring  = $formexplanation . '<br />' .$submitaction . '<br />'  . $editaction;
+   $this->objHelp=& $this->getObject('helplink','help');
+   $displayhelp  = $this->objHelp->show($helpstring);
 /************************************************************************************************************************************************/  
  $sessionPerdiem = $this->getSession('perdiemdetails');
  if(!empty($sessionPerdiem)){
@@ -73,7 +81,7 @@
 $this->loadClass('tabbedbox', 'htmlelements');
 $objcreatetab = new tabbedbox();
 $objcreatetab->addTabLabel('Per Diem Expenses');
-$objcreatetab->addBoxContent('<br />'  . $objExpByDateTable->show() . '<br />'. '<br />'  . $this->objSave->show() . ' ' . $this->objEdit->show());
+$objcreatetab->addBoxContent("<div align=\"right\">" .$displayhelp. "</div>".'<br />'  . $objExpByDateTable->show() . '<br />'. '<br />'  . $this->objSave->show() . ' ' . $this->objEdit->show());
 
 
 /*************************************************************************************************************************************************/
