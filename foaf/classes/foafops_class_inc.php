@@ -355,11 +355,11 @@ class foafops extends object
 				//users email address
 				$email = $userdetails['emailaddress'];
 				$fullname = $firstname . " " . $surname;
-				echo "<h1>$fullname</h1><br><br>";
+				//echo "<h1>$fullname</h1><br><br>";
 
 
 				$this->friend = $this->newObject('foafcreator');
-				//$this->friend->setName($fullname);
+				$this->friend->setName($fullname);
 				//$this->friend->setTitle($title);
 				//$this->friend->setFirstName($firstname);
 				//$this->friend->setSurname($surname);
