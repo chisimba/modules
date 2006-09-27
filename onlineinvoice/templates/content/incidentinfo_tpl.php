@@ -38,8 +38,26 @@ $description  = $this->objLanguage->languageText('phrase_incidentdescription');
 $addincident  = $this->objLanguage->languageText('mod_onlineinvoice_addincident','onlineinvoice');
 
 /*********************************************************************************************************************************************************************/
+$lodgeinstruc  = $this->objLanguage->languageText('mod_onlineinvoice_incidentinstruc','onlineinvoice');  
+$lodgeinformation  = $this->objLanguage->languageText('mod_onlineinvoice_incidentinformation','onlineinvoice');
+$lodge  = $this->objLanguage->languageText('mod_onlineinvoice_incident','onlineinvoice');
+$lodgeexample  = $this->objLanguage->languageText('mod_onlineinvoice_lodgeexample','onlineinvoice');
+$verifyexchangerate  = $this->objLanguage->languageText('mod_onlineinvoice_verifyexchangerate','onlineinvoice');
+$exp  = $this->objLanguage->languageText('mod_onlineinvoice_exp','onlineinvoice');
+$options  = $this->objLanguage->languageText('mod_onlineinvoice_options','onlineinvoice');
+$lodgereceiptinfo  = $this->objLanguage->languageText('mod_onlineinvoice_lodgereceiptinfo','onlineinvoice');
+$receiptexplanation  = $this->objLanguage->languageText('mod_onlineinvoice_incidentreceiptexplanation','onlineinvoice');
+$receiptexp  = $this->objLanguage->languageText('mod_onlineinvoice_receiptexp','onlineinvoice');
+$affidavitinstruc  = $this->objLanguage->languageText('mod_onlineinvoice_affidavitinstruc','onlineinvoice');
+
+$helpstring = $lodgeinstruc . '<br />' .$lodgeinformation .'<br />' .$lodge . '<br />'  .$lodgeexample .'<br />'  . $verifyexchangerate . '<br />'  . $exp  . '<br />'  .$options.'<br />'.$lodgereceiptinfo.'<br />'.$receiptexplanation.'<br />'.$receiptexp.'<br />'.$affidavitinstruc;
+
 $this->objHelp=& $this->getObject('helplink','help');
-$displayhelp  = $this->objHelp->show('mod_onlineinvoice_helpinstruction');
+$displayhelp  = $this->objHelp->show($helpstring);
+
+
+//$this->objHelp=& $this->getObject('helplink','help');
+//$displayhelp  = $this->objHelp->show($displayhelp);
 
 $this->objInfoIcon = $this->newObject('geticon','htmlelements');
 $this->objInfoIcon->setModuleIcon('freemind');
@@ -457,7 +475,7 @@ $this->objAdd->setToSubmit();
 /*create tabbox for lodge information*/
 $this->loadClass('tabbedbox', 'htmlelements');
 $objtabbedbox = new tabbedbox();
-$objtabbedbox->addTabLabel('Lodge Information');
+$objtabbedbox->addTabLabel('Incident Information');
 $objtabbedbox->addBoxContent($myTabIncident->show() . '<br />');
 
 //*create tabbox for attaching lodge echange rate file*/
@@ -476,7 +494,7 @@ $objtabexchange->addBoxContent("<div align=\"center\">" ."<div class=\"error\">"
 
 $objIncidentForm = new form('incidentinfo',$this->uri(array('action'=>'submitincidentinfo')));
 $objIncidentForm->displayType = 3;
-$objIncidentForm->addToForm($objtabbedbox->show()  . '<br />'  .$objtabexchange->show() . '<br />'.$objtabreceipt->show(). '<br />'."<div align=\"right\">" . $this->objAdd->show()."</div" .'<br />' . "<div align=\"center\">" . $this->objBack->show(). $this->objnext->show() . ' ' . $this->objexit->show()."</div");	
+$objIncidentForm->addToForm($objtabbedbox->show()  . '<br />'  .$objtabexchange->show() . '<br />'.$objtabreceipt->show(). '<br />'."<div align=\"right\">" . $this->objAdd->show()."</div" .'<br />' . "<div align=\"center\">" . $this->objBack->show(). $this->objnext->show() ."</div");	
 $objIncidentForm->addRule('txtvendor', 'Please enter vendor name','required');
 $objIncidentForm->addRule('txtcost', 'Please enter cost amount','required');
 $objIncidentForm->addRule('txtcost', 'Please enter a numerical value for cost amount','numeric');
