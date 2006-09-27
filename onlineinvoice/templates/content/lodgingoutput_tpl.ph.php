@@ -23,6 +23,14 @@
    $stredit = ucfirst($edit);
    $this->objEdit  = new button('edit', $stredit);
    $this->objEdit->setToSubmit();
+   
+   $formexplanation = $this->objLanguage->languageText('mod_onlineinvoice_formexplanation');
+   $submitaction  = $this->objLanguage->languageText('mod_onlineinvoice_submitaction');
+   $editaction  = $this->objLanguage->languageText('mod_onlineinvoice_editaction');
+   
+   $helpstring  = $formexplanation . '<br />' .$submitaction . '<br />'  . $editaction;
+   $this->objHelp=& $this->getObject('helplink','help');
+   $displayhelp  = $this->objHelp->show($helpstring);
 /************************************************************************************************************************************************/  
   $sessionLodge = $this->getSession('lodgedetails');
  if(!empty($sessionLodge)){
@@ -43,8 +51,6 @@
   $objLodgeTable->addHeaderCell('Exchange Rate Document');
   $objLodgeTable->addHeaderCell('Receipt');
   $objLodgeTable->addHeaderCell('Affidavit');
-//  $objLodgeTable->addHeaderCell('Total Lodge Rate');
-  
   $objLodgeTable->endHeaderRow();
 
   
@@ -76,23 +82,28 @@
 
   }
 }
+
+$this->loadClass('tabbedbox', 'htmlelements');
+$objcreatetab = new tabbedbox();
+$objcreatetab->addTabLabel('Lodge Information');
+$objcreatetab->addBoxContent("<div align=\"right\">" .$displayhelp. "</div>".'<br />'  . $objLodgeTable->show() . '<br />'. '<br />'  . $this->objSave->show() . ' ' . $this->objEdit->show());
 /*************************************************************************************************************************************************/
 /**
  *create form to place save and edit button on
  */
 $this->loadClass('form','htmlelements');
-$objForm = new form('claiminfo',$this->uri(array('action'=>'lodgeoutput')));
+$objForm = new form('lodgeoutput',$this->uri(array('action'=>'lodgeoutput')));
 $objForm->displayType = 3;
-$objForm->addToForm($this->objSave->show() . ' ' . $this->objEdit->show());// . ' ' . $this->objNext->show());	
+$objForm->addToForm($objcreatetab->show());// . ' ' . $this->objNext->show());	
 
 
 /*************************************************************************************************************************************************/
 //display all headings
 echo "<div align=\"center\">" . $this->objMainheading->show(). "</div>". '<br />' . '<br />';
-if(!empty($sessionLodge)){
-  echo "<div align=\"left\">" . $objLodgeTable->show() . "</div>";
-} 
-echo '<br />' . '<br />'. '<br />'.'<br />';
+//if(!empty($sessionLodge)){
+//  echo "<div align=\"left\">" . $objLodgeTable->show() . "</div>";
+//} 
+//echo '<br />' . '<br />'. '<br />'.'<br />';
 echo "<div align=\"left\">" .$objForm->show(). "</div>"; 
 
 ?>

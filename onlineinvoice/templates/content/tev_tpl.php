@@ -36,8 +36,9 @@
     
     $tevinfo  = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_tevinfo','onlineinvoice'));
     $example  = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_example','onlineinvoice'));
+    $selectcountry  = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_country','onlineinvoice'));
     $travpurpose  = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_travpurpose','onlineinvoice'));
-    $helpstring = $tevinfo . '<br />' . $example . '<br />' . $travpurpose;
+    $helpstring = $tevinfo . '<br />' . $example . '<br />' . $travpurpose  . '<br />'  . $selectcountry;
     
     $this->objHelp=& $this->getObject('helplink','help');
     $displayhelp  = $this->objHelp->show($helpstring);
