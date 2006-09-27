@@ -205,7 +205,7 @@ class foafops extends object
 			//interests from interests table
 			$this->_getInterests($userId);
 			//get the people we know...
-			$this->_getFriends($userId);
+			//$this->_getFriends($userId);
 		}
 
 
