@@ -23,6 +23,13 @@
    $this->objEdit  = new button('edit', $stredit);
    $this->objEdit->setToSubmit();
    
+   $formexplanation = $this->objLanguage->languageText('mod_onlineinvoice_formexplanation');
+   $submitaction  = $this->objLanguage->languageText('mod_onlineinvoice_submitaction');
+   $editaction  = $this->objLanguage->languageText('mod_onlineinvoice_editaction');
+   
+   $helpstring  = $formexplanation . '<br />' .$submitaction . '<br />'  . $editaction;
+   $this->objHelp=& $this->getObject('helplink','help');
+   $displayhelp  = $this->objHelp->show($helpstring); 
    
 /******************************************************************************************************************************/ 
  
@@ -66,7 +73,7 @@
 $this->loadClass('tabbedbox', 'htmlelements');
 $objcreateinvtab = new tabbedbox();
 $objcreateinvtab->addTabLabel('Traveler Itinerary');
-$objcreateinvtab->addBoxContent('<br />'  . $objItineraryTable->show() . '<br />'. '<br />'  . $this->objSave->show() . ' ' . $this->objEdit->show());
+$objcreateinvtab->addBoxContent("<div align=\"right\">" .$displayhelp. "</div>".'<br />'  . $objItineraryTable->show() . '<br />'. '<br />'  . $this->objSave->show() . ' ' . $this->objEdit->show());
 /*************************************************************************************************************************************************/
 /**
  *create form to place save and edit button on
