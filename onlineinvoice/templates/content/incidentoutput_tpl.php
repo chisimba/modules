@@ -23,6 +23,14 @@
    $stredit = ucfirst($edit);
    $this->objEdit  = new button('edit', $stredit);
    $this->objEdit->setToSubmit();
+   
+   $formexplanation = $this->objLanguage->languageText('mod_onlineinvoice_formexplanation','onlineinvoice');
+   $submitaction  = $this->objLanguage->languageText('mod_onlineinvoice_submitaction','onlineinvoice');
+   $editaction  = $this->objLanguage->languageText('mod_onlineinvoice_editaction','onlineinvoice');
+   
+   $helpstring  = $formexplanation . '<br />' .$submitaction . '<br />'  . $editaction;
+   $this->objHelp=& $this->getObject('helplink','help');
+   $displayhelp  = $this->objHelp->show($helpstring);  
 /************************************************************************************************************************************************/  
   $sessionIncident  = $this->getSession('incidentdetails');
  if(!empty($sessionIncident)){
@@ -70,6 +78,13 @@
   $objTable->endRow();
   }
 }
+
+/**************************************************************************************************************************************************/
+$this->loadClass('tabbedbox', 'htmlelements');
+$objcreatetab = new tabbedbox();
+$objcreatetab->addTabLabel('Incident Information');
+$objcreatetab->addBoxContent("<div align=\"right\">" .$displayhelp. "</div>".'<br />'  . $objTable->show() . '<br />'. '<br />'  . $this->objSave->show() . ' ' . $this->objEdit->show());
+
 /*************************************************************************************************************************************************/
 /**
  *create form to place save and edit button on
@@ -77,17 +92,14 @@
 $this->loadClass('form','htmlelements');
 $objForm = new form('incidentinfo',$this->uri(array('action'=>'incidentoutput')));
 $objForm->displayType = 3;
-$objForm->addToForm($this->objSave->show() . ' ' . $this->objEdit->show());// . ' ' . $this->objNext->show());	
+$objForm->addToForm($objcreatetab->show());// . ' ' . $this->objNext->show());	
 
 
 /*************************************************************************************************************************************************/
 //display all headings
 echo "<div align=\"center\">" . $this->objMainheading->show(). "</div>". '<br />' . '<br />';
-if(!empty($sessionIncident)){
 
-  echo "<div align=\"left\">" . $objTable->show() . "</div>";
-} 
-echo '<br />' . '<br />'. '<br />'.'<br />';
+//echo '<br />' . '<br />'. '<br />'.'<br />';
 echo "<div align=\"left\">" .$objForm->show(). "</div>"; 
 
 ?>
