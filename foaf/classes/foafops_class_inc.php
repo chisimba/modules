@@ -359,6 +359,7 @@ class foafops extends object
 
 
 				$bud = $this->newObject('foafcreator');
+				$bud->newAgent("person");
 				$bud->setName($fullname);
 				//$this->friend->setTitle($title);
 				//$this->friend->setFirstName($firstname);
