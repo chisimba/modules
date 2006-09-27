@@ -331,7 +331,7 @@ class foafops extends object
 	private function _getFriends($userId)
 	{
 		$frarr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_friends');
-		print_r($frarr);
+		//print_r($frarr);
 		if(empty($frarr))
 		{
 			$frarr = array();
@@ -355,9 +355,10 @@ class foafops extends object
 				//users email address
 				$email = $userdetails['emailaddress'];
 				$fullname = $firstname . " " . $surname;
+				echo "<h1>$fullname</h1><br><br>";
 
 
-				//$this->friend = $this->newObject('foafcreator');
+				$this->friend = $this->newObject('foafcreator');
 				//$this->friend->setName($fullname);
 				//$this->friend->setTitle($title);
 				//$this->friend->setFirstName($firstname);
