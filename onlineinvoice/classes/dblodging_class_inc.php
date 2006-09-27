@@ -63,8 +63,6 @@ class dbLodging extends dbTable{
   $objLodgeTable->addHeaderCell('Exchange Rate File');
   $objLodgeTable->addHeaderCell('Receipt');
   $objLodgeTable->addHeaderCell('Affidavit');
-//  $objLodgeTable->addHeaderCell('Total Lodge Rate');
-  
   $objLodgeTable->endHeaderRow();
 
   
@@ -84,9 +82,6 @@ class dbLodging extends dbTable{
   $objLodgeTable->addCell($sesDat['exchangefile'], '', '', '', $oddOrEven);
   $objLodgeTable->addCell($sesDat['receiptfilename'], '', '', '', $oddOrEven);
   $objLodgeTable->addCell($sesDat['affidavitfilename'], '', '', '', $oddOrEven);
-  //$objLodgeTable->addCell($sesDat['affidavitfilename'], '', '', '', $oddOrEven);
-//  $objLodgeTable->addCell('');
-//  $objLodgeTable->addCell($sesDat['totroomrate'], '', '', '', $oddOrEven);            //need to fix up
   $objLodgeTable->endRow();
   
   /**$objLodgeTable->startRow();

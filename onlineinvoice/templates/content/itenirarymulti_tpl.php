@@ -15,12 +15,12 @@
     $itinerarydetails = $this->objLanguage->languageText('mod_onlineinvoice_info','onlineinvoice');
     $itinerarydates = $this->objLanguage->languageText('mod_onlineinvoice_itinerarydates','onlineinvoice');
     $dateexplanation  = $this->objLanguage->languageText('mod_onlineinvoice_dateexplanation','onlineinvoice');
-    //$citylocation  = $this->objLanguage->languageText('mod_onlineinvoice_location','onlineinvoice');
-    //$addleg  = $this->objLanguage->languageText('mod_onlineinvoice_addleg','onlineinvoice');
-    //$movenext  = $this->objLanguage->languageText('mod_onlineinvoice_movenext','onlineinvoice'); 
+    $citylocation  = $this->objLanguage->languageText('mod_onlineinvoice_location','onlineinvoice');
+    $addleg  = $this->objLanguage->languageText('mod_onlineinvoice_addleg','onlineinvoice');
+    $movenext  = $this->objLanguage->languageText('mod_onlineinvoice_movenext','onlineinvoice'); 
     $exampleinfo  = $this->objLanguage->languageText('mod_onlineinvoice_itineraryexample','onlineinvoice');
         
-    $helpstring =  $itinerarydetails  . '<br />'  .  $itinerarydates  . '<br />'  . $dateexplanation  . '<br />'  /*. $citylocation . '<br />'  $addleg . '<br />'  ..  $movenext $exampleinfo*/;            
+    $helpstring =  $itinerarydetails  . '<br />'  .  $itinerarydates  .' '. $dateexplanation  . '<br />'  . $citylocation . '<br />' . $addleg . '<br />'  .  $movenext . '<br />'.$exampleinfo;            
     $this->objHelp=& $this->getObject('helplink','help');
     $displayhelp  = $this->objHelp->show($helpstring);    
     

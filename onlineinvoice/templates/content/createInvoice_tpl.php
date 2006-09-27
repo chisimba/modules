@@ -19,13 +19,13 @@ $this->objMainheading->str=$objLanguage->languageText('mod_onlineinvoice_webbase
   *help information
   */   
 $instruction    = strtoupper($this->objLanguage->languageText('mod_onlineinvoice_instruction','onlineinvoice'));
-//$dateselection  = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_selectdates','onlineinvoice'));
+$dateselection  = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_selectdates','onlineinvoice'));
 $datesubmission = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_submitdates','onlineinvoice'));
-$editdates  = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_editdates','onlineinvoice'));    
+$editdates  = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_editdates','onlineinvoice')); 
+$explanationTEV  = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_tevexplanation','onlineinvoice'));
+$category = ucfirst($this->objLanguage->languageText('mod_onlineinvoice_catexplanation','onlineinvoice'));   
 
-//$helpstring = $instruction .  $dateselection . '<br />' .$datesubmission . '<br />' .$editdates;
-$helpstring = $instruction .  '<br />' .$datesubmission . '<br />' .$editdates;
-
+$helpstring = $instruction . '<br />' . $dateselection . '<br />' .$datesubmission . '<br />' .$editdates . '<br />'  . $explanationTEV . '<br />'  . $category;
 $this->objHelp=& $this->getObject('helplink','help');
 $displayhelp  = $this->objHelp->show($helpstring);
 
