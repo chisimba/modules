@@ -390,11 +390,11 @@ class onlineinvoice extends controller
                 /**
                   *call the function that saves all lodge information
                   */                  
-                  $finaltotal  = $this->objincident->calcutotal();
+                  $finaltotalincident  = $this->objincident->calcutotal();
                   //var_dump($finaltotal);
-                  $this->getIncidentinfo($finaltotal);
-                  //$val = $this->getSession('incidentdetails');
-                  //var_dump($val);
+                  $this->getIncidentinfo($finaltotalincident);
+                 // $val = $this->getSession('incidentdetails');
+                 // var_dump($val);
                   $this->setLayoutTemplate('invoice_layout_tpl.php');
                   return 'incidentoutput_tpl.php';
                  //  return 'addtravel_tpl.php';
@@ -402,8 +402,8 @@ class onlineinvoice extends controller
                 /**
                   *call the function that saves all incident information and return the template
                   */                  
-                  $finaltotal  = $this->objincident->calcutotal();
-                  $this->getIncidentinfo($finaltotal);
+                  $finaltotalincident  = $this->objincident->calcutotal();
+                  $this->getIncidentinfo($finaltotalincident);
                   $this->setLayoutTemplate('invoice_layout_tpl.php');
                    return 'incidentinfo_tpl.php';     
                }elseif(isset($exit)){
@@ -666,7 +666,7 @@ class onlineinvoice extends controller
       $this->setSession('lodgedetails',$lodgeinformation);
     }
 /*******************************************************************************************************************************************************************/
-   private function getIncidentinfo($finaltotal)
+   private function getIncidentinfo($finaltotalincident)
    {
       $incidentdata = array(
                             'createdby'     =>  $this->objUser->fullname(),
@@ -684,7 +684,7 @@ class onlineinvoice extends controller
                             'incidentratefile'  => $this->objFile->getFileName($this->getParam('incidentratefile')),
                             'receiptfiles' =>  $this->objFile->getFileName($this->getParam('incidentreceipt')),
                             'affidavitfiles'     =>  $this->objFile->getFileName($this->getParam('incidentaffidavit')),
-                            'inidentexepense'    =>  $finaltotal,
+                            'inidentexepense'    =>  $finaltotalincident,
                         );
                         
       $incidentinformation =  $this->getSession('incidentdetails');
