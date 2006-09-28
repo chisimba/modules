@@ -46,7 +46,7 @@
   $objTable->addHeaderCell('Date ');
   $objTable->addHeaderCell('Vendor' );
   $objTable->addHeaderCell('Description');
-  $objTable->addHeaderCell('Room Rate');
+  $objTable->addHeaderCell('Rate');
   $objTable->addHeaderCell('Currency');
   $objTable->addHeaderCell('Exchange Rate');
   $objTable->addHeaderCell('Exchange File');

@@ -24,15 +24,11 @@
      
      $incident  = & $this->getObject('dbincident','onlineinvoice');
      $showincident  = $incident->showincident();
-     
-     /**
-      *show outputs to date
-      */
-      //$limit = NULL;
-     // $claimantinfo [] = $this->getSession('claimantdata');
-      //$this->loadClass('htmltable','htmlelements');
-      //$mytable = new htmltable('claimant');
-      //$mytable->arrayToTable($claimantinfo,$limit);
+
+       $serviceinputs = $this->objLanguage->languageText('mod_onlinveinvoice_serviceinputs','onlineinvoice');
+       $strserviceinfo  = ucfirst($serviceinputs);
+       $nextCategory  = $this->objLanguage->languageText('phrase_nomovetonextcategory');
+       $nextcatcontent = $this->objLanguage->languageText('mod_onlineinvoice_nextcaption','onlineinvoice');     
 /*********************************************************************************************************************************************/      
       
       /**
@@ -100,7 +96,42 @@
     $myTab->addCell(ucfirst($this->objinvincidents->show()));
     $myTab->endRow();
 /*********************************************************************************************************************************/      
-//     $output = $display  . '<br />'  . $results . '<br />' . $displayperdiem . '<br />' . $showlodge . '<br />' . $showincident;
+    /**
+     *create all links
+     */
+    $this->objnextlink  = & $this->newObject('mouseoverpopup','htmlelements');               
+    $urltext = 'YES - Go to service';
+    $content = 'Complete any service expenses';
+    $caption = '';
+    $url = $this->uri(array('action'=>'displayserviceinfo'));
+    $this->objnextlink->mouseoverpopup($urltext,$content,$caption,$url);
+    
+        $urltext = $nextCategory;
+    $content = $nextcatcontent;
+    $caption = '';
+    $url = $this->uri(array('action'=>'null'));
+    $this->objnextcat  = & $this->newObject('mouseoverpopup','htmlelements');
+    $this->objnextcat->mouseoverpopup($urltext,$content,$caption,$url);
+    
+    /*create table to place form elements in */        
+
+        $myTabservice=$this->newObject('htmltable','htmlelements');
+        $myTabservice->width='60%';
+        $myTabservice->border='0';
+        $myTabservice->cellspacing='10';
+        $myTabservice->cellpadding='10';
+
+     $myTabservice->startRow();
+     $myTabservice->addCell($this->objnextlink->show());
+     $myTabservice->addCell($this->objnextcat->show());
+     $myTabservice->endRow();
+
+     $this->loadClass('tabbedbox', 'htmlelements');
+     $objnextinvtab = new tabbedbox();
+     $objnextinvtab->addTabLabel('Service Information');
+     $objnextinvtab->addBoxContent('<br>'  . '<b>'. $strserviceinfo . '<b />' .'<br />'.  '<br />' . $myTabservice->show(). '<br />');
+
+     
 /********************************************************************************************************************************/  
 
 /**
@@ -137,6 +168,7 @@ $objcreateincident->addBoxContent('<br />' .$showincident);
    $output = '<br />' . $objcreatetraveler->show() .  '<br />' . $objcreateitinerary->show() . '<br />' . $objcreateperdiem->show()  . '<br />' . $objcreateinvtab->show() . '<br />' . $objcreateincident->show();
    $objElement->addTab(array('name'=>'TEV Output to date','content' => $output));
    $objElement->addTab(array('name'=>'Choose a section to complete','content' => $myTab->show()));
+   $objElement->addTab(array('name'=>'Next Section','content' => $objnextinvtab->show()));
      
 
     echo  $objElement->show();

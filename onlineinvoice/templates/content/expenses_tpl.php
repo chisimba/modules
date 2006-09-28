@@ -47,10 +47,10 @@
     $perdieminstruction = $this->objLanguage->languageText('mod_onlineinvoice_perdieminstruction','onlineinvoice');
     $perdiemdate  = $this->objLanguage->languageText('mod_onlineinvoice_perdiemdate','onlineinvoice');
     $fordomrate = $this->objLanguage->languageText('mod_onlineinvoice_fordomrate','onlineinvoice');
-    $rateexpl = $this->objLanguage->languageText('mod_onlineinvoice_rateexpl','onlininvoice');
-    $perdiemloc = $this->objLanguage->languageText('mod_onlineinvoice_perdiemloc','onlininvoice');
-    $perdiemadd = $this->objLanguage->languageText('mod_onlineinvoice_perdiemadd','onlininvoice');
-    $perdiemaction  = $this->objLanguage->languageText('mod_onlineinvoice_perdiemaction','onlininvoice');
+    $rateexpl = $this->objLanguage->languageText('mod_onlineinvoice_rateexpl','onlineinvoice');
+    $perdiemloc = $this->objLanguage->languageText('mod_onlineinvoice_perdiemloc','onlineinvoice');
+    $perdiemadd = $this->objLanguage->languageText('mod_onlineinvoice_perdiemadd','onlineinvoice');
+    $perdiemaction  = $this->objLanguage->languageText('mod_onlineinvoice_perdiemaction','onlineinvoice');
     
     $helpstring = $perdieminstruction . '<br />'  . $perdiemdate  . '<br />'  . $fordomrate . '<br />'  . $rateexpl . '<br />'  . $perdiemloc . '<br />'  . $perdiemadd . '<br />'  . $perdiemaction; 
 

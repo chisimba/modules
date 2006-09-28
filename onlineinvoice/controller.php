@@ -324,7 +324,11 @@ class onlineinvoice extends controller
                  *display the next template -- lodgereceipt                                  
                  */
                   $finaltotlodge  = $this->objdblodge->calculodgerate();
+                  //var_dump($finaltotlodge);
+                  //die;
                   $this->getLodgeexpenses($finaltotlodge);
+                  $val  = $this->getSession('lodgedetails');
+                  var_dump($val);
                   $this->setLayoutTemplate('invoice_layout_tpl.php');
                  //return 'incidentinfo_tpl.php';
                  return 'lodgingoutput_tpl.ph.php';
@@ -387,7 +391,10 @@ class onlineinvoice extends controller
                   *call the function that saves all lodge information
                   */                  
                   $finaltotal  = $this->objincident->calcutotal();
+                  //var_dump($finaltotal);
                   $this->getIncidentinfo($finaltotal);
+                  //$val = $this->getSession('incidentdetails');
+                  //var_dump($val);
                   $this->setLayoutTemplate('invoice_layout_tpl.php');
                   return 'incidentoutput_tpl.php';
                  //  return 'addtravel_tpl.php';
@@ -454,21 +461,25 @@ class onlineinvoice extends controller
           break;
           
           case  'createitinerary':
+              $this->unsetSession('addmultiitinerary');  
               $this->setLayoutTemplate('invoice_layout_tpl.php');
               return 'itenirarymulti_tpl.php';
           break;                    
           
           case  'createlodge':
+              $this->unsetSession('lodgedetails');
               $this->setLayoutTemplate('invoice_layout_tpl.php');
               return 'lodging_tpl.php';
           break;
           
           case  'showperdiem':
+            $this->unsetSession('perdiemdetails');
             $this->setLayoutTemplate('invoice_layout_tpl.php');
             return 'expenses_tpl.php';
           break;            
           
           case  'showincident':
+            $this->unsetSession('incidentdetails');
             $this->setLayoutTemplate('invoice_layout_tpl.php');
             return 'incidentinfo_tpl.php';
           break; 
@@ -508,9 +519,6 @@ class onlineinvoice extends controller
               return 'createInvoice_tpl.php';
           break; 
           
-          case  'logoutsystem' :
-              $this->objUser->logout();
-          break;
           
           case  'showinvpending':
             $this->setLayoutTemplate('invoice_layout_tpl.php');          
@@ -661,14 +669,14 @@ class onlineinvoice extends controller
    private function getIncidentinfo($finaltotal)
    {
       $incidentdata = array(
-                            'createdby'      =>  $this->objUser->fullname(),
+                            'createdby'     =>  $this->objUser->fullname(),
                             'datecreated'   =>  date('Y-m-d'),
                             'modifiedby'    =>  $this->objUser->fullname(),
                             'datemodified'  =>  date('Y-m-d'),
                             'updated'       =>  date('Y-m-d'),
                             'date'          =>  $this->getParam('incidentdate'),
                             'vendor'        =>  $this->getParam('txtvendor'),
-                            'description'   =>  $this->getParam('txtdescription'),
+                            'description'   =>  $this->getParam('description'),
                             'cost'          =>  $this->getParam('txtcost'),
                             'currency'      =>  $this->getParam('currency'),
                             'exchangerate'  =>  $this->getParam('txtexchange'),

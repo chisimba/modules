@@ -64,7 +64,7 @@
      
      $myTab->startRow();
      $myTab->addCell(ucfirst('<b>'.$invoicesubmitted) . ' :');
-     $myTab->addCell('select date createdby from the invoice table');
+     $myTab->addCell('');
      $myTab->endRow();
      
      $myTab->startRow();

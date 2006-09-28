@@ -7,7 +7,7 @@
 */
 
 class dbincident extends dbTable{
-
+  var $finaltotal =  0;
 	/**
 	 *Constructor
  	*/
@@ -32,7 +32,7 @@ class dbincident extends dbTable{
         //$expenses = array();
               
         $incident = $this->getSession('incidentdetails');
-        $finaltotal =  0.00;
+        $finaltotal =  '';
           if(!empty($incident))
           {
                foreach($incident as $sesIncident){
@@ -42,7 +42,7 @@ class dbincident extends dbTable{
             
           }
           return $finaltotal;
-      }
+    }
       
     function  showincident()
     {

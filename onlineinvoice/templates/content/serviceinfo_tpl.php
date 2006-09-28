@@ -23,7 +23,7 @@
    $fte         = $this->objLanguage->languageText('mod_onlinveinvoice_fte','onlineinvoice');
    $formonth    = $this->objLanguage->languageText('mod_onlinveinvoice_formonth','onlineinvoice');
    $receiptdate  = $this->objLanguage->languageText('mod_onlinveinvoice_receiptdate','onlineinvoice');
-   $displayhelp = $this->objLanguage->languageText('mod_onlinveinvoice_formonth','onlineinvoice');
+   //$displayhelp = $this->objLanguage->languageText('mod_onlinveinvoice_formonth','onlineinvoice');
    $vendor = $this->objLanguage->languageText('word_vendor');
    $currency = $this->objLanguage->languageText('word_currency');
    $rate = $this->objLanguage->languageText('mod_onlineinvoice_exchangerate','onlineinvoice');
@@ -47,6 +47,7 @@
  $this->objempname->addOption('candice','candice') ;
  $this->objempname->addOption('mike','mike') ;
  $this->objempname->size  = 50;
+ 
  
 /**
  *create textboxes

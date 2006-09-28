@@ -116,6 +116,14 @@ $this->objtxtquotesource->id = 'txtquotesource';
 $this->objtxtdescription  = new textinput('txtdescription', ' ','text',30);
 $this->objtxtdescription->id = 'txtdescription';
 
+$textArea = 'description';
+$this->objtxtdescription =& $this->newobject('textArea','htmlelements');
+$this->objtxtdescription->setRows(1);
+$this->objtxtdescription->setColumns(25);
+$this->objtxtdescription->setName($textArea);
+$this->objtxtdescription->setContent('');
+
+
 
 /*********************************************************************************************************************************************************************/
 /**

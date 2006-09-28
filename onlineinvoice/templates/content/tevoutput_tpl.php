@@ -34,6 +34,7 @@
        $save  = $this->objLanguage->languageText('word_save');
        $edit  = $this->objLanguage->languageText('word_edit');
        
+       
 /*******************************************************************************************************************************/
       /**
        *create all form headings
@@ -157,11 +158,25 @@ $objcreateincident->addBoxContent('<br />' .$showincident);
                 if(!empty($lodgetot)){
                      foreach($lodgetot as $sesLodge){
                         $totlodge =  $sesLodge['totroomrate'];
-                        
+                        //var_dump($totlodge);                                
                         
                     }
                 }
-     $grandtot  =   $tot +  $totlodge;         
+                
+      /**
+       *get Incident final totals
+       */
+       $incidenttot  = $this->getSession('incidentdetails');
+                if(!empty($incidenttot)){
+                     foreach($incidenttot as $sesIncident){
+                        $totincident =  $sesIncident['inidentexepense'];
+                        //var_dump($totlodge);                                
+                        
+                    }
+                }
+     
+                    
+     $grandtot  =   $tot +  $totlodge + $totincident;         
     
     /**
      *display all total values
@@ -182,12 +197,11 @@ $objcreateincident->addBoxContent('<br />' .$showincident);
     
     $myTabtot->startRow();
     $myTabtot->addCell('$' . $tot);
-    $myTabtot->addCell('$' .$totlodge);
-    $myTabtot->addCell('$0.00');
+    $myTabtot->addCell('$' . $totlodge);
+    $myTabtot->addCell('$' . $totincident);
     $myTabtot->addCell('$'. $grandtot);
     $myTabtot->endRow();
-     
-     
+    
    
 /****************************************************************************************************************************************************************/
 /**
@@ -197,6 +211,7 @@ $output = '<br />' . $objcreatetraveler->show() .  '<br />' . $objcreateitinerar
 $objElement =& $this->newObject('tabpane', 'htmlelements');
 $objElement->addTab(array('name'=>'Travel Output','content' => $output));
 $objElement->addTab(array('name'=>'Edit a Section','content' => $myTab->show()));
+
     
      
 /***************************************************************************************************************************************************************/
