@@ -327,8 +327,8 @@ class onlineinvoice extends controller
                   //var_dump($finaltotlodge);
                   //die;
                   $this->getLodgeexpenses($finaltotlodge);
-                  $val  = $this->getSession('lodgedetails');
-                  var_dump($val);
+                 // $val  = $this->getSession('lodgedetails');
+                  //var_dump($val);
                   $this->setLayoutTemplate('invoice_layout_tpl.php');
                  //return 'incidentinfo_tpl.php';
                  return 'lodgingoutput_tpl.ph.php';
