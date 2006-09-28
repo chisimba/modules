@@ -390,5 +390,19 @@ class foafops extends object
 		return $this->objFoafParser->toHtml($this->objFoafParser->foaf_data);
 	}
 
+	public function foaf2array($userId)
+	{
+		$this->objFoafParser->setup();
+		$fp = $this->objFoafParser->parseFromUri($this->savepath . $userId . '.rdf');
+		return $this->objFoafParser->toArray();
+	}
+
+	public function foaf2Object($userId)
+	{
+		$this->objFoafParser->setup();
+		$fp = $this->objFoafParser->parseFromUri($this->savepath . $userId . '.rdf');
+		return $this->objFoafParser->toObject();
+	}
+
 }
 ?>

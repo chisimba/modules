@@ -149,7 +149,10 @@ class foaf extends controller
 
 
 				$this->objFoafOps->writeFoaf();
-				echo $this->objFoafOps->foaf2html($this->objUser->userId());
+				//$midcontent = $this->objFoafOps->foaf2html($this->objUser->userId());
+				//$midcontent = $this->objFoafOps->foaf2Array($this->objUser->userId());
+				$midcontent = $this->objFoafOps->foaf2Object($this->objUser->userId());
+				$this->setVarByRef('tcont', $midcontent);
 
 
 				/*
@@ -188,6 +191,7 @@ class foaf extends controller
     	//$foaf->dump();
     	$this->objFoaf->dump();
     	*/
+				return 'fdetails_tpl.php';
 				break;
 
 			case 'parsefoaf':

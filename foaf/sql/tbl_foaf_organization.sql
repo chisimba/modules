@@ -28,7 +28,7 @@ $fields = array(
 
 	//create other indexes here...
 
-$name = '';
+$name = 'userid';
 
 $indexes = array(
                 'fields' => array(

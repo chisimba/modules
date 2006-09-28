@@ -14,7 +14,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * @package foaf
  * @category foaf
  */
-class dbfoafusers extends dbtable
+class dbfoaf extends dbtable
 {
 	/**
 	 * The config Object
