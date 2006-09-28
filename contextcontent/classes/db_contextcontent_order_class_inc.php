@@ -1,7 +1,7 @@
 <?php
 
 /**
-*
+* Class to Arrange the order of pages
 *
 *
 */
@@ -93,6 +93,7 @@ class db_contextcontent_order extends dbtable
         $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.parentid, tbl_contextcontent_pages.menutitle FROM tbl_contextcontent_order 
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
         INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id) 
+        WHERE tbl_contextcontent_order.contextcode= \''.$context.'\'
         ORDER BY lft';
         
         $results = $this->getArray($sql);
@@ -317,6 +318,14 @@ class db_contextcontent_order extends dbtable
         }
     }
     
+    /**
+     * Method to get the Breadcrumbs to a page
+     *
+     * @param string $context Context page is in
+     * @param int $leftValue Left Value of Page
+     * @param int $rightValue Right Value of Page
+     * @return string completed Breadcrumbs
+     */
     public function getBreadcrumbs($context, $leftValue, $rightValue)
     {
         $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_pages.menutitle
@@ -355,6 +364,14 @@ class db_contextcontent_order extends dbtable
         }
     }
     
+    /**
+     * Method to Commence Rebuilding a Tree
+     * 
+     * This function is used to start the process of fixing up the left and right values
+     * in the modified preorder traversal approach
+     *
+     * @param string $context Context Code of Context to Fix
+     */
     public function rebuildContext($context)
     {
         $this->_rebuild_tree($context, '', 0, 1);
@@ -403,6 +420,12 @@ class db_contextcontent_order extends dbtable
        return $right+1;
     }
     
+    /**
+     * Method to delete a page
+     *
+     * @param string $id Record Id of the Page
+     * @return boolean Result of deletion
+     */
     function deletePage($id)
     {
         return $this->delete('id', $id);
