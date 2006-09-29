@@ -86,7 +86,6 @@ class dbincident extends dbTable{
   $objTable->addCell($sesIncident['exchangerate'], '', '', '', $oddOrEven);
   $objTable->addCell($sesIncident['incidentratefile'], '', '', '', $oddOrEven);
   $objTable->addCell($sesIncident['quotesource'], '', '', '', $oddOrEven);
-  //$objTable->addCell($sesIncident['incidentratefile'], '', '', '', $oddOrEven);
   $objTable->addCell($sesIncident['receiptfiles'], '', '', '', $oddOrEven);
   $objTable->addCell($sesIncident['affidavitfiles'], '', '', '', $oddOrEven);
   $objTable->endRow();

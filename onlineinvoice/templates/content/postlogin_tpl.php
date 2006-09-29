@@ -59,7 +59,7 @@
      
      $myTab->startRow();
      $myTab->addCell('<b>'.ucfirst($lastacces .' : '));
-     $myTab->addCell("<div class=\"warning\">".ucfirst('TO BE FIXED')."</div>");//. ':' . ucfirst($this->objUser->getLastLoginDate($userId))));
+     $myTab->addCell("<div class=\"warning\">". ucfirst($this->objUser->getLastLoginDate($userId)) ."</div>");
      $myTab->endRow();
      
      $myTab->startRow();

@@ -39,8 +39,8 @@ class dbTev extends dbTable{
 	 function showclaimant()
 	  { 
          
-       //  $sessionClaimant []= $this->getSession('claimantdata');
-        $sessionClaimant[] = $this->getSession('claimantdata');
+   
+       $sessionClaimant [] = $this->getSession('claimantdata');
        if(!empty($sessionClaimant)){
 //Create table to display dates in session and the rates for breakfast, lunch and dinner and the total rate 
         $objClaimantTable =& $this->newObject('htmltable', 'htmlelements');
