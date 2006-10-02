@@ -203,8 +203,7 @@ class dbuserparamsadmin extends object
 	        if ($mode=="add") {
 	        	
 	            $this->insert = array(
-	              $pname => $pname,
-	              $ptag => $ptag);
+	              $pname => $ptag);
 	              
 	              $this->writeConfig($this->insert);
 	             	
@@ -325,6 +324,7 @@ class dbuserparamsadmin extends object
     		if ($this->_root==false) {
     			$this->readConfig();
     		}
+    		
             $this->_root =& $this->objConf->parseConfig($values,'PHPArray');
 			if (($path !== false) && (file_exists($path.'userconfig_properties.ini'))) {
 			  	unlink($path.'userconfig_properties.ini');		
