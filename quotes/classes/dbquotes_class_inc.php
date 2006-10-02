@@ -36,8 +36,8 @@ class dbquotes extends dbTable
             $this->update("id", $id, array(
             'quote' => $quote,
             'whosaidit' => $whosaidit,
-            'dateModified' => date("Y/m/d H:i:s"),
-            'modifierId' => $this->objUser->userId()));
+            'datemodified' => date("Y/m/d H:i:s"),
+            'modifierid' => $this->objUser->userId()));
 
         }#if
         // if add use insert
@@ -45,8 +45,8 @@ class dbquotes extends dbTable
             $this->insert(array(
             'quote' => $quote,
             'whosaidit' => $whosaidit,
-            'dateCreated' => date("Y/m/d H:i:s"),
-            'creatorId' => $this->objUser->userId()));
+            'datecreated' => date("Y/m/d H:i:s"),
+            'creatorid' => $this->objUser->userId()));
 
         }#if
     }#function

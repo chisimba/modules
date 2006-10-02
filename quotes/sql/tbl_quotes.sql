@@ -19,17 +19,17 @@ $fields = array(
 		'type'=>'text',
 		'length'=> 150
 		),
-	'dateCreated' => array(
+	'datecreated' => array(
 		'type' => 'date'
 		),
-	'creatorId' => array(
+	'creatorid' => array(
 		'type' => 'text',
 		'length' => 32
 		),
-	'dateModified' => array(
+	'datemodified' => array(
 		'type'=> 'date'
 		),
-	'modifierId' => array(
+	'modifierid' => array(
 		'type' => 'text',
 		'length' => 32 	
 		),
