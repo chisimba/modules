@@ -40,10 +40,10 @@ if (isset($ar)) {
     $id = $ar['id'];
     $quote = $ar['quote'];
     $whosaidit = $ar['whosaidit'];
-    $dateCreated = $ar['dateCreated'];
-    $creatorId = $ar['creatorId'];
-    $dateModified = $ar['dateModified'];
-    $modifierId = $ar['modifierId'];
+    $dateCreated = $ar['datecreated'];
+    $creatorId = $ar['creatorid'];
+    $dateModified = $ar['datemodified'];
+    $modifierId = $ar['modifierid'];
 }
 
 

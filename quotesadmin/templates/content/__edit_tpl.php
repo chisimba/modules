@@ -36,12 +36,12 @@ $cssLayout->setLeftColumnContent($leftSideColumn);
 //Retrieve the data
 if (isset($ar)) {
     $id = $ar['id'];
-    $creatorId = $ar['creatorId'];
+    $creatorId = $ar['creatorid'];
     $quote = $ar['quote'];
     $whosaidit = $ar['whosaidit'];
-    $dateCreated = $ar['dateCreated'];
-    $modifierId = $ar['modifierId'];
-    $dateModified = $ar['dateModified'];
+    $dateCreated = $ar['datecreated'];
+    $modifierId = $ar['modifierid'];
+    $dateModified = $ar['datemodified'];
 }
 
 

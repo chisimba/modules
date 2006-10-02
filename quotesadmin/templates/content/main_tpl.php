@@ -5,6 +5,7 @@
 
 //Set up the button class to make the edit, add and delet icons
 $objButtons = & $this->getObject('navbuttons', 'navigation');
+$objDate =  & $this->getObject("datetime", "utilities");
 
 // Create an instance of the css layout class
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
@@ -61,11 +62,24 @@ if (isset($ar)) {
             $oddOrEven = ($rowcount == 0) ? "odd" : "even";
             $tableRow[]=$line['quote'];
             $tableRow[]=$line['whosaidit'];
-            $tableRow[]=$line['dateCreated'];
-            $tableRow[]=$this->objUser->fullname($line['creatorId']);
-            $tableRow[]=$line['dateModified'];
-            if(isset($line['modifierId'])){
-            $tableRow[]=$this->objUser->fullname($line['modifierId']);
+            if(!empty($line['datecreated'])){
+                $tableRow[]=$objDate->formatDate($line['datecreated']);
+            }else{
+                $tableRow[]= '';
+            }                      
+		    if(!empty($line['creatorid'])){
+            	$tableRow[]=$this->objUser->fullname($line['creatorid']);
+		    }else{
+                $tableRow[]= '';
+            }
+            if(!empty($line['datemodified'])){
+                $tableRow[]=$objDate->formatDate($line['datemodified']);
+            }else{
+                $tableRow[]= '';
+            }
+            
+            if(isset($line['modifierid'])){
+            $tableRow[]=$this->objUser->fullname($line['modifierid']);
             } else{
             $tableRow[]='';
             }

@@ -24,7 +24,7 @@ class quotesadmin extends controller
     /**
     * @var string $action The action parameter from the querystring 
     */
-    var $action;
+    public $action;
 
     /**
     * Standard constructor method 
