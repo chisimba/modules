@@ -925,9 +925,10 @@ class foafparser extends object
 
     public function toObject()
     {
-        $foaf_object = new stdClass();
+        $val = 'foaf';
+    	$foaf_object = new stdClass();
         foreach ($this->foaf_data as $key=>$value) {
-            $foaf_object->$key = $value;
+            $foaf_object->$val = $value;
         }
         return $foaf_object;
     }
