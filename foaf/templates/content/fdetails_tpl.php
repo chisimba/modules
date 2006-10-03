@@ -1,6 +1,6 @@
 <?php
 var_dump($tcont);
-die();
+//die();
 //var_dump($tcont->foaf['type']);
 $this->setLayoutTemplate('flayout_tpl.php');
 
