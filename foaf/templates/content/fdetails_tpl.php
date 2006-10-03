@@ -1,8 +1,5 @@
 <?php
-print_r($tcont->foaf['homepage'][0]);
-var_dump($tcont);
-//die();
-//var_dump($tcont->foaf['type']);
+//var_dump($tcont);
 $this->setLayoutTemplate('flayout_tpl.php');
 
 $this->loadClass('textinput', 'htmlelements');

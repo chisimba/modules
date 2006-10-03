@@ -171,9 +171,15 @@ class foafops extends object
 
 			$logo = $foafdetails['logo'];
 			$basednear = $foafdetails['basednear'];
-			$basednear = explode(",",$basednear);
-			$basednearlat = $basednear[0];
-			$basednearlong = $basednear[1];
+			if(isset($basednear))
+			{
+				$basednear = explode(",",$basednear);
+				$basednearlat = $basednear[0];
+				$basednearlong = $basednear[1];
+			}
+			else {
+				$basednear = NULL;
+			}
 			$geekcode = $foafdetails['geekcode'];
 
 
@@ -194,7 +200,10 @@ class foafops extends object
 			$this->objFoaf->addWorkplaceHomepage($workhomepage);
 			$this->objFoaf->addSchoolHomepage($schoolhomepage);
 			$this->objFoaf->addLogo($logo);
-			$this->objFoaf->setBasedNear($basednearlat, $basednearlong);
+			if(isset($basednearlat) && isset($basednearlong))
+			{
+				$this->objFoaf->setBasedNear($basednearlat, $basednearlong);
+			}
 
 			//funded by from funded by table
 			$this->_getFunders($userId);
