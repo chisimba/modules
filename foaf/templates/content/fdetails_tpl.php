@@ -206,10 +206,13 @@ $myFoafForm->addToForm($this->objButton1->show());
  * Start of tbl_foaf_friends section
  */
 //var_dump($tcont->foaf['knows']);
-foreach($tcont->foaf['knows'] as $pals)
+if(is_array($tcont->foaf['knows']))
 {
-	$objFeatureBox = $this->newObject('featurebox', 'navigation');
-	$myFbox = $objFeatureBox->show($pals['type'], $pals['title'] . " " . $pals['firstname'] . " " . $pals['surname']);
+	foreach($tcont->foaf['knows'] as $pals)
+	{
+		$objFeatureBox = $this->newObject('featurebox', 'navigation');
+		$myFbox = $objFeatureBox->show($pals['type'], $pals['title'] . " " . $pals['firstname'] . " " . $pals['surname']);
+	}
 }
 
 //Tab names
