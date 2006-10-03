@@ -856,7 +856,7 @@ class foafparser extends object
                 foreach ($this->agent_nodes as $node_uri => $node_data) {
                     if ($node_data == $triple->subj->uri) {
                         $property = strtolower(str_replace('_','',$property));
-                        $this->foaf_data[$node_uri][$property][] = $triple->obj->{$obj_value};
+                        @$this->foaf_data[$node_uri][$property][] = $triple->obj->{$obj_value};
                     }
                     break;
                 }

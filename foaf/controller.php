@@ -140,57 +140,13 @@ class foaf extends controller
 		switch ($action) {
 			default:
 			case 'createfoaf':
-
 				//create the basic foaf profile from tbl_users
 				$this->objFoafOps->newPerson($this->objUser->userId());
 				//add in other details if they exist
 				$this->objFoafOps->myFoaf($this->objUser->userId());
-
 				$this->objFoafOps->writeFoaf();
-				//$midcontent = $this->objFoafOps->foaf2html($this->objUser->userId());
-				//$midcontent = $this->objFoafOps->foaf2Array($this->objUser->userId());
 				$midcontent = $this->objFoafOps->foaf2Object($this->objUser->userId());
-				//var_dump($midcontent);
 				$this->setVarByRef('tcont', $midcontent);
-
-//var_dump($this->objFoaf->foaftree);
-				/*
-
-
-				//var_dump($this->objFoaf->foaftree);
-				//who do we know?
-				$mcd = $this->newObject('foafcreator');
-				$mcd->newAgent('Organization');
-    			$mcd->setName('McDonalds');
-    			$mcd->addHomepage('http://www.mcdonalds.com/');
-
-    			$matti = $this->newObject('foafcreator');
-				$matti->newAgent('Person');
-    			$matti->setName('Matthew Scott');
-    			$matti->addHomepage('http://www.flickr.com/photos/scott06/');
-
-    			$chicken = $this->newObject('foafcreator');
-				$chicken->newAgent('Person');
-    			$chicken->setName('Catherine Scott');
-    			$chicken->addMbox('clscott@telkomsa.net', FALSE);
-    			$chicken->addHomepage('http://www.flickr.com/photos/scott06/');
-
-
-    			//var_dump($mcd->foaftree);
-
-    			$this->objFoaf->addKnows($mcd);
-    			$this->objFoaf->addKnows($matti);
-    			$this->objFoaf->addKnows($chicken);
-    			*/
-
-				//echo "<pre>" .htmlentities($this->objFoaf->get()). "</pre>";
-
-				//echo "<hr />";
-    	//echo $this->objConfig->getSiteRootPath();
-    	//header('Content-Type: text/xml');
-    	//$this->objFoaf->toFile($this->savepath, $this->objUser->userId() . '.rdf', $this->objFoaf->get());
-    	//$foaf->dump();
-    	//$this->objFoaf->dump();
 
 				return 'fdetails_tpl.php';
 				break;
@@ -201,6 +157,7 @@ class foaf extends controller
 				$fp = $this->objFoafParser->parseFromUri($path);
 
 				echo $this->objFoafParser->toHtml($this->objFoafParser->foaf_data);
+				break;
 
 			case 'insertmydetails':
 				$homepage = $this->getParam('homepage');

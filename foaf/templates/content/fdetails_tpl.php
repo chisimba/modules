@@ -64,6 +64,7 @@ if(!isset($tcont->foaf['weblog'][0]))
 	$tcont->foaf['weblog'][0] = NULL;
 }
 $weblog->value= $tcont->foaf['weblog'][0];
+echo $tcont->foaf['weblog'][0];
 $table1->addCell($label2->show(), 150, NULL, 'right');
 $table1->addCell($weblog->show());
 $table1->endRow();

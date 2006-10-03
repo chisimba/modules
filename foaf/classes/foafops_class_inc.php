@@ -162,6 +162,7 @@ class foafops extends object
 			$weblog = $foafdetails['weblog'];
 			//page comes form a diff method
 			$phone = $foafdetails['phone'];
+
 			$jabberid = $foafdetails['jabberid'];
 			$theme = $foafdetails['theme'];
 			$onlineacc = $foafdetails['onlineacc'];
@@ -186,7 +187,10 @@ class foafops extends object
 			//add the details to the foaf xml tree
 			$this->objFoaf->addHomepage($homepage);
 			$this->objFoaf->addWeblog($weblog);
-			$this->objFoaf->addPhone($phone);
+			if(isset($phone))
+			{
+				$this->objFoaf->addPhone($phone);
+			}
 			$this->objFoaf->addJabberID($jabberid);
 			$this->objFoaf->setGeekcode($geekcode);
 			$this->objFoaf->addTheme($theme);
