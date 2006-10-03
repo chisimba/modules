@@ -129,6 +129,7 @@ class cms extends controller
 			
 			$action = $this->getParam('action');
 			$this->setLayoutTemplate('cms_layout_tpl.php');
+			$this->setPageTemplate('cms_page_tpl.php');
 	        switch ($action){
 	            case null:
 	            case 'home':
