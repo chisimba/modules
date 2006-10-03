@@ -76,6 +76,12 @@ class dbfoaf extends dbtable
     	return $this->getAll($sql);
     }
 
+    public function insertMyDetails($array)
+    {
+    	$this->_changeTable('tbl_foaf_myfoaf');
+    	return $this->insert($array);
+    }
+
     private function _changeTable($table)
     {
     	parent::init($table);

@@ -1,4 +1,5 @@
 <?php
+print_r($tcont->foaf['homepage'][0]);
 var_dump($tcont);
 //die();
 //var_dump($tcont->foaf['type']);
@@ -48,11 +49,11 @@ $table1->cellpadding = 5;
 $table1->startRow();
 $label1 = new label($objLanguage->languageText('mod_foaf_homepage', 'foaf').':', 'foaf_homepage');
 $homepage = new textinput('homepage');
-if(!isset($tcont->foaf['homepage']))
+if(!isset($tcont->foaf['homepage'][0]))
 {
-	$tcont->foaf['homepage'] = NULL;
+	$tcont->foaf['homepage'][0] = NULL;
 }
-$homepage->value= $tcont->foaf['homepage'];
+$homepage->value= $tcont->foaf['homepage'][0];
 $table1->addCell($label1->show(), 150, NULL, 'right');
 $table1->addCell($homepage->show());
 $table1->endRow();
@@ -61,11 +62,11 @@ $table1->endRow();
 $table1->startRow();
 $label2 = new label($objLanguage->languageText('mod_foaf_weblog', 'foaf').':', 'foaf_weblog');
 $weblog = new textinput('weblog');
-if(!isset($tcont->foaf['weblog']))
+if(!isset($tcont->foaf['weblog'][0]))
 {
-	$tcont->foaf['weblog'] = NULL;
+	$tcont->foaf['weblog'][0] = NULL;
 }
-$weblog->value= $tcont->foaf['weblog'];
+$weblog->value= $tcont->foaf['weblog'][0];
 $table1->addCell($label2->show(), 150, NULL, 'right');
 $table1->addCell($weblog->show());
 $table1->endRow();
@@ -74,11 +75,11 @@ $table1->endRow();
 $table1->startRow();
 $label3 = new label($objLanguage->languageText('mod_foaf_phone', 'foaf').':', 'foaf_phone');
 $phone = new textinput('phone');
-if(!isset($tcont->foaf['phone']))
+if(!isset($tcont->foaf['phone'][0]))
 {
-	$tcont->foaf['phone'] = NULL;
+	$tcont->foaf['phone'][0] = NULL;
 }
-$phone->value= $tcont->foaf['phone'];
+$phone->value= $tcont->foaf['phone'][0];
 $table1->addCell($label3->show(), 150, NULL, 'right');
 $table1->addCell($phone->show());
 $table1->endRow();
@@ -87,11 +88,11 @@ $table1->endRow();
 $table1->startRow();
 $label4 = new label($objLanguage->languageText('mod_foaf_jabberid', 'foaf').':', 'foaf_jabberid');
 $jabberid = new textinput('jabberid');
-if(!isset($tcont->foaf['jabberid']))
+if(!isset($tcont->foaf['jabberid'][0]))
 {
-	$tcont->foaf['jabberid'] = NULL;
+	$tcont->foaf['jabberid'][0] = NULL;
 }
-$jabberid->value= $tcont->foaf['jabberid'];
+$jabberid->value= $tcont->foaf['jabberid'][0];
 $table1->addCell($label4->show(), 150, NULL, 'right');
 $table1->addCell($jabberid->show());
 $table1->endRow();
@@ -100,11 +101,11 @@ $table1->endRow();
 $table1->startRow();
 $label5 = new label($objLanguage->languageText('mod_foaf_theme', 'foaf').':', 'foaf_theme');
 $theme = new textinput('theme');
-if(!isset($tcont->foaf['theme']))
+if(!isset($tcont->foaf['theme'][0]))
 {
-	$tcont->foaf['theme'] = NULL;
+	$tcont->foaf['theme'][0] = NULL;
 }
-$theme->value= $tcont->foaf['theme'];
+$theme->value= $tcont->foaf['theme'][0];
 $table1->addCell($label5->show(), 150, NULL, 'right');
 $table1->addCell($theme->show());
 $table1->endRow();
@@ -113,11 +114,11 @@ $table1->endRow();
 $table1->startRow();
 $label6 = new label($objLanguage->languageText('mod_foaf_workhomepage', 'foaf').':', 'foaf_workhomepage');
 $workhomepage = new textinput('workhomepage');
-if(!isset($tcont->foaf['workplacehomepage']))
+if(!isset($tcont->foaf['workplacehomepage'][0]))
 {
-	$tcont->foaf['workplacehomepage'] = NULL;
+	$tcont->foaf['workplacehomepage'][0] = NULL;
 }
-$workhomepage->value= $tcont->foaf['workplacehomepage'];
+$workhomepage->value= $tcont->foaf['workplacehomepage'][0];
 $table1->addCell($label6->show(), 150, NULL, 'right');
 $table1->addCell($workhomepage->show());
 $table1->endRow();
@@ -126,11 +127,11 @@ $table1->endRow();
 $table1->startRow();
 $label7 = new label($objLanguage->languageText('mod_foaf_schoolhomepage', 'foaf').':', 'foaf_schoolhomepage');
 $schoolhomepage = new textinput('schoolhomepage');
-if(!isset($tcont->foaf['schoolhomepage']))
+if(!isset($tcont->foaf['schoolhomepage'][0]))
 {
-	$tcont->foaf['schoolhomepage'] = NULL;
+	$tcont->foaf['schoolhomepage'][0] = NULL;
 }
-$schoolhomepage->value= $tcont->foaf['schoolhomepage'];
+$schoolhomepage->value= $tcont->foaf['schoolhomepage'][0];
 $table1->addCell($label7->show(), 150, NULL, 'right');
 $table1->addCell($schoolhomepage->show());
 $table1->endRow();
@@ -139,11 +140,11 @@ $table1->endRow();
 $table1->startRow();
 $label8 = new label($objLanguage->languageText('mod_foaf_logo', 'foaf').':', 'foaf_logo');
 $logo = new textinput('logo');
-if(!isset($tcont->foaf['logo']))
+if(!isset($tcont->foaf['logo'][0]))
 {
-	$tcont->foaf['logo'] = NULL;
+	$tcont->foaf['logo'][0] = NULL;
 }
-$logo->value= $tcont->foaf['logo'];
+$logo->value= $tcont->foaf['logo'][0];
 $table1->addCell($label8->show(), 150, NULL, 'right');
 $table1->addCell($logo->show());
 $table1->endRow();
@@ -152,11 +153,11 @@ $table1->endRow();
 $table1->startRow();
 $label9 = new label($objLanguage->languageText('mod_foaf_basednear', 'foaf').':', 'foaf_basednear');
 $basednear = new textinput('basednear');
-if(!isset($tcont->foaf['basednear']))
+if(!isset($tcont->foaf['basednear'][0]))
 {
-	$tcont->foaf['basednear'] = NULL;
+	$tcont->foaf['basednear'][0] = NULL;
 }
-$basednear->value= $tcont->foaf['basednear'];
+$basednear->value= $tcont->foaf['basednear'][0];
 $table1->addCell($label9->show(), 150, NULL, 'right');
 $table1->addCell($basednear->show());
 $table1->endRow();

@@ -140,6 +140,7 @@ class foafops extends object
 		$this->objFoaf->setSurname($surname);
 		$this->objFoaf->addMbox('mailto:'.$email,TRUE);
 		$this->objFoaf->addImg($image);
+
 	}
 
 	public function myFoaf($userId)
@@ -153,7 +154,9 @@ class foafops extends object
 			$foafdetails = array();
 		}
 		else {
+
 			$foafdetails = $farr[0];
+			//print_r($foafdetails);
 			//hook up the details to variables and put them into the XML Tree
 			$homepage = $foafdetails['homepage'];
 			$weblog = $foafdetails['weblog'];
@@ -206,6 +209,7 @@ class foafops extends object
 			$this->_getInterests($userId);
 			//get the people we know...
 			$this->_getFriends($userId);
+			//var_dump($this->objFoaf->foaftree);
 		}
 
 
@@ -377,10 +381,10 @@ class foafops extends object
 	public function writeFoaf()
 	{
 		//write the file so that we can edit it later
+		//var_dump($this->objFoaf->foaftree->get());
+		//var_dump($this->objFoaf->foaftree);
 		$this->objFoaf->toFile($this->savepath, $this->objUser->userId() . '.rdf', $this->objFoaf->get());
-		//header('Content-Type: text/xml');
-    	//$this->objFoaf->toFile($this->savepath, $this->objUser->userId() . '.rdf', $this->objFoaf->get());
-    	//$this->objFoaf->dump();
+		//die();
 	}
 
 	public function foaf2html($userId)

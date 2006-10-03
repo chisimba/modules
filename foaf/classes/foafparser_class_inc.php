@@ -179,7 +179,8 @@ class foafparser extends object
 
     private function _parse()
     {
-        $this->foaf =& $this->rdf_parser->generateModel($this->foaf_xml);
+        //var_dump($this->foaf_xml);
+    	$this->foaf =& $this->rdf_parser->generateModel($this->foaf_xml);
         $this->foaf_data = $this->_fetchAgent();
         $this->_fetchAimChatID();
         $this->_fetchCurrentProject();

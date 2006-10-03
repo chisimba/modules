@@ -146,15 +146,14 @@ class foaf extends controller
 				//add in other details if they exist
 				$this->objFoafOps->myFoaf($this->objUser->userId());
 
-
-
 				$this->objFoafOps->writeFoaf();
 				//$midcontent = $this->objFoafOps->foaf2html($this->objUser->userId());
 				//$midcontent = $this->objFoafOps->foaf2Array($this->objUser->userId());
 				$midcontent = $this->objFoafOps->foaf2Object($this->objUser->userId());
+				//var_dump($midcontent);
 				$this->setVarByRef('tcont', $midcontent);
 
-
+//var_dump($this->objFoaf->foaftree);
 				/*
 
 
@@ -182,24 +181,44 @@ class foaf extends controller
     			$this->objFoaf->addKnows($mcd);
     			$this->objFoaf->addKnows($matti);
     			$this->objFoaf->addKnows($chicken);
+    			*/
 
-			//	echo "<pre>" .htmlentities($this->objFoaf->get()). "</pre>";
-    	//echo "<hr />";
+				//echo "<pre>" .htmlentities($this->objFoaf->get()). "</pre>";
+
+				//echo "<hr />";
     	//echo $this->objConfig->getSiteRootPath();
-    	header('Content-Type: text/xml');
-    	$this->objFoaf->toFile($this->savepath, $this->objUser->userId() . '.rdf', $this->objFoaf->get());
+    	//header('Content-Type: text/xml');
+    	//$this->objFoaf->toFile($this->savepath, $this->objUser->userId() . '.rdf', $this->objFoaf->get());
     	//$foaf->dump();
-    	$this->objFoaf->dump();
-    	*/
+    	//$this->objFoaf->dump();
+
 				return 'fdetails_tpl.php';
 				break;
 
 			case 'parsefoaf':
 				$this->objFoafParser->setup();
-				$fp = $this->objFoafParser->parseFromUri('/var/www/5ive/app/usrfiles/paulfoaf.rdf');
-				//var_dump($this->objFoafParser->rdf_parser);
-				//print_r($this->objFoafParser->foaf_data);
+				$path = $this->objConfig->getContentBasePath() . "users/" . $this->objUser->userId() . "/" . $this->objUser->userId() . ".rdf";
+				$fp = $this->objFoafParser->parseFromUri($path);
+
 				echo $this->objFoafParser->toHtml($this->objFoafParser->foaf_data);
+
+			case 'insertmydetails':
+				$homepage = $this->getParam('homepage');
+				$weblog = $this->getParam('weblog');
+				$phone = $this->getParam('phone');
+				$jabberid = $this->getParam('jabberid');
+				$theme = $this->getParam('theme');
+				$workhomepage = $this->getParam('workhomepage');
+				$schoolhomepage = $this->getParam('schoolhomepage');
+				$logo = $this->getParam('logo');
+				$basednear = $this->getParam('basednear');
+				$geekcode = $this->getParam('geekcode');
+
+				$insarr =  array('userid' => 1, 'homepage' => $homepage, 'weblog' => $weblog, 'phone' => $phone, 'jabberid' => $jabberid, 'theme' => $theme, 'workhomepage' => $workhomepage, 'schoolhomepage' => $schoolhomepage, 'logo' => $logo, 'basednear' => $basednear, 'geekcode' => $geekcode);
+				$this->dbFoaf->insertMyDetails($insarr);
+
+				break;
+
 		}
 	}
 }
