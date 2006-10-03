@@ -160,16 +160,16 @@ class foaf extends controller
 				break;
 
 			case 'insertmydetails':
-				$homepage = $this->getParam('homepage');
-				$weblog = $this->getParam('weblog');
-				$phone = $this->getParam('phone');
-				$jabberid = $this->getParam('jabberid');
-				$theme = $this->getParam('theme');
-				$workhomepage = $this->getParam('workhomepage');
-				$schoolhomepage = $this->getParam('schoolhomepage');
-				$logo = $this->getParam('logo');
-				$basednear = $this->getParam('basednear');
-				$geekcode = $this->getParam('geekcode');
+				$homepage = htmlentities($this->getParam('homepage'));
+				$weblog = htmlentities($this->getParam('weblog'));
+				$phone = htmlentities($this->getParam('phone'));
+				$jabberid = htmlentities($this->getParam('jabberid'));
+				$theme = htmlentities($this->getParam('theme'));
+				$workhomepage = htmlentities($this->getParam('workhomepage'));
+				$schoolhomepage = htmlentities($this->getParam('schoolhomepage'));
+				$logo = htmlentities($this->getParam('logo'));
+				$basednear = htmlentities($this->getParam('basednear'));
+				$geekcode = htmlentities($this->getParam('geekcode'));
 
 				$insarr =  array('userid' => 1, 'homepage' => $homepage, 'weblog' => $weblog, 'phone' => $phone, 'jabberid' => $jabberid, 'theme' => $theme, 'workhomepage' => $workhomepage, 'schoolhomepage' => $schoolhomepage, 'logo' => $logo, 'basednear' => $basednear, 'geekcode' => $geekcode);
 				$this->dbFoaf->insertMyDetails($insarr);

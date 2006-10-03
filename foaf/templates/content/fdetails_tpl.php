@@ -50,7 +50,7 @@ if(!isset($tcont->foaf['homepage'][0]))
 {
 	$tcont->foaf['homepage'][0] = NULL;
 }
-$homepage->value= $tcont->foaf['homepage'][0];
+$homepage->value= htmlentities($tcont->foaf['homepage'][0]);
 $table1->addCell($label1->show(), 150, NULL, 'right');
 $table1->addCell($homepage->show());
 $table1->endRow();
@@ -63,8 +63,8 @@ if(!isset($tcont->foaf['weblog'][0]))
 {
 	$tcont->foaf['weblog'][0] = NULL;
 }
-$weblog->value= $tcont->foaf['weblog'][0];
-echo $tcont->foaf['weblog'][0];
+$weblog->value= htmlentities($tcont->foaf['weblog'][0]);
+//echo $tcont->foaf['weblog'][0];
 $table1->addCell($label2->show(), 150, NULL, 'right');
 $table1->addCell($weblog->show());
 $table1->endRow();
@@ -148,6 +148,7 @@ $table1->addCell($logo->show());
 $table1->endRow();
 
 //basednear field
+/*
 $table1->startRow();
 $label9 = new label($objLanguage->languageText('mod_foaf_basednear', 'foaf').':', 'foaf_basednear');
 $basednear = new textinput('basednear');
@@ -159,7 +160,7 @@ $basednear->value= $tcont->foaf['basednear'][0];
 $table1->addCell($label9->show(), 150, NULL, 'right');
 $table1->addCell($basednear->show());
 $table1->endRow();
-
+*/
 //geekcode field
 $table1->startRow();
 $label10 = new label($objLanguage->languageText('mod_foaf_geekcode', 'foaf').':', 'foaf_geekcode');
@@ -176,8 +177,8 @@ $table1->endRow();
 $fieldset1->addContent($table1->show());
 $myFoafForm->addToForm($fieldset1->show());
 
-$this->objButton1 = & new button($objLanguage->languageText('word_submit', 'system'));
-$this->objButton1->setValue($objLanguage->languageText('word_submit', 'system'));
+$this->objButton1 = & new button($objLanguage->languageText('word_update', 'foaf'));
+$this->objButton1->setValue($objLanguage->languageText('word_update', 'foaf'));
 $this->objButton1->setToSubmit();
 $myFoafForm->addToForm($this->objButton1->show());
 
