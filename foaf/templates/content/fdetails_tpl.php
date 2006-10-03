@@ -1,5 +1,6 @@
 <?php
 var_dump($tcont);
+die();
 //var_dump($tcont->foaf['type']);
 $this->setLayoutTemplate('flayout_tpl.php');
 
@@ -39,7 +40,7 @@ $middleColumn = $header->show();
 //create the form
 $myFoafForm = new form('myfoaf',$this->uri(array('action'=>'insertmydetails')));
 $fieldset1 = $this->getObject('fieldset', 'htmlelements');
-$fieldset1->setLegend($objLanguage->languageText('mod_foaf_detailsfor', 'foaf') . " <em>" .$tcont->foaf['title'] . " " . $tcont->foaf['name'] . "</em>" );
+$fieldset1->setLegend($objLanguage->languageText('mod_foaf_detailsfor', 'foaf') . " " . $tcont->foaf['type'] .  " <em>" .$tcont->foaf['title'] . " " . $tcont->foaf['name'] . "</em>" );
 $table1 = $this->getObject('htmltable', 'htmlelements');
 $table1->cellpadding = 5;
 
