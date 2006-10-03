@@ -188,11 +188,11 @@ class splashscreenrender extends object
             // Display the LDAP checkbox only if this site is using LDAP
                 $ts_content.='<TR><TD ALIGN="RIGHT">';
             if ($this->objConfig->getuseLDAP()){
-                   $ts_content.=$this->useLdapCheck;
+                   $ts_content.=$this->useLdapCheck.'<br />';
                 } else {
-                   $ts_content.=' ';
+                   $ts_content.='<br /> ';
                 }
-                $ts_content.='<br>'.$this->loginButton.'</br></TD></TR>';
+                $ts_content.=$this->loginButton.'<br /></TD></TR>';
             // Put the link to reset the user's password
                 $ts_content.='<TR><TD>'.$this->resetLink.'</TD></TR></TABLE></fieldset>';
             $ts_content.= $this->skin."</form>";
