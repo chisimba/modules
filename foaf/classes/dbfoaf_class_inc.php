@@ -76,10 +76,17 @@ class dbfoaf extends dbtable
     	return $this->getAll($sql);
     }
 
-    public function insertMyDetails($array)
+    public function insertMyDetails($userid, $array)
     {
     	$this->_changeTable('tbl_foaf_myfoaf');
-    	return $this->insert($array);
+    	$checker = $this->getRecordSet($userid, 'tbl_foaf_myfoaf');
+    	if(empty($checker))
+    	{
+    		return $this->insert($array);
+    	}
+    	else {
+    		return $this->update('id', $checker[0]['id'], $array, 'tbl_foaf_myfoaf');
+    	}
     }
 
     private function _changeTable($table)

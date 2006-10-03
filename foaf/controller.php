@@ -140,6 +140,7 @@ class foaf extends controller
 		switch ($action) {
 			default:
 			case 'createfoaf':
+				$message = $this->getParam('message');
 				//create the basic foaf profile from tbl_users
 				$this->objFoafOps->newPerson($this->objUser->userId());
 				//add in other details if they exist
@@ -147,6 +148,7 @@ class foaf extends controller
 				$this->objFoafOps->writeFoaf();
 				$midcontent = $this->objFoafOps->foaf2Object($this->objUser->userId());
 				$this->setVarByRef('tcont', $midcontent);
+				$this->setVarByRef('msg', $message);
 
 				return 'fdetails_tpl.php';
 				break;
@@ -171,8 +173,14 @@ class foaf extends controller
 				$basednear = htmlentities($this->getParam('basednear'));
 				$geekcode = htmlentities($this->getParam('geekcode'));
 
-				$insarr =  array('userid' => 1, 'homepage' => $homepage, 'weblog' => $weblog, 'phone' => $phone, 'jabberid' => $jabberid, 'theme' => $theme, 'workhomepage' => $workhomepage, 'schoolhomepage' => $schoolhomepage, 'logo' => $logo, 'basednear' => $basednear, 'geekcode' => $geekcode);
-				$this->dbFoaf->insertMyDetails($insarr);
+				$insarr =  array('userid' => $this->objUser->userId(), 'homepage' => $homepage, 'weblog' => $weblog, 'phone' => $phone, 'jabberid' => $jabberid, 'theme' => $theme, 'workhomepage' => $workhomepage, 'schoolhomepage' => $schoolhomepage, 'logo' => $logo, 'basednear' => $basednear, 'geekcode' => $geekcode);
+				$this->dbFoaf->insertMyDetails($this->objUser->userId(),$insarr);
+
+				//redirect to the main page again
+				//set a message that the rec was updated
+				$message = 'update';
+				$this->setVarByRef('message', $message);
+				$this->nextAction('createfoaf',array('message' => $message));
 
 				break;
 

@@ -1,7 +1,9 @@
 <?php
 //var_dump($tcont);
-$this->setLayoutTemplate('flayout_tpl.php');
 
+
+$this->setLayoutTemplate('flayout_tpl.php');
+$objmsg = &$this->getObject('timeoutmessage','htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
@@ -10,6 +12,7 @@ $pane = &$this->newObject('tabpane', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $userMenu  = &$this->newObject('usermenu','toolbar');
+
 
 // Create an instance of the css layout class
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
@@ -21,6 +24,15 @@ $leftSideColumn ='';
 $leftSideColumn = $userMenu->show();
 
 $middleColumn = NULL;
+//echo $msg;
+if($msg == 'update')
+{
+	$objmsg->message = $this->objLanguage->languageText('mod_foaf_recupdated', 'foaf');
+	echo $objmsg->show();
+}
+else {
+	$msg = NULL;
+}
 
 $rightSideColumn = NULL;
 
@@ -33,6 +45,10 @@ $rightSideColumn = $this->objLanguage->languageText('mod_foaf_instructions', 'fo
 $middleColumn = $header->show();
 
 //set the userparams string that we get from tbl_users and should not be changed here...
+
+/**
+ * Start of tbl_foaf_myfoaf section
+ */
 
 //lets start the forms now. First we do tbl_foaf_myfoaf
 //create the form
@@ -181,6 +197,14 @@ $this->objButton1 = & new button($objLanguage->languageText('word_update', 'foaf
 $this->objButton1->setValue($objLanguage->languageText('word_update', 'foaf'));
 $this->objButton1->setToSubmit();
 $myFoafForm->addToForm($this->objButton1->show());
+
+/**
+ * End tbl_foaf_myfoaf section
+ */
+
+/**
+ * Start of tbl_foaf_friends section
+ */
 
 
 //Tab names
