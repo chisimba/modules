@@ -214,6 +214,10 @@ if(is_array($tcont->foaf['knows']))
 		$myFbox = $objFeatureBox->show($pals['type'], $pals['title'] . " " . $pals['firstname'] . " " . $pals['surname']);
 	}
 }
+else {
+	$objFeatureBox = $this->newObject('featurebox', 'navigation');
+	$myFbox = $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_nofriends', 'foaf'), $this->objLanguage->languageText('mod_foaf_nofriendstxt', 'foaf'));
+}
 
 //Tab names
 $mydetails = $this->objLanguage->languageText('mod_foaf_mydetails', 'foaf');
