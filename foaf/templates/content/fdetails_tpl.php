@@ -205,7 +205,12 @@ $myFoafForm->addToForm($this->objButton1->show());
 /**
  * Start of tbl_foaf_friends section
  */
-
+//var_dump($tcont->foaf['knows']);
+foreach($tcont->foaf['knows'] as $pals)
+{
+	$objFeatureBox = $this->newObject('featurebox', 'navigation');
+	$myFbox = $objFeatureBox->show($pals['type'], $pals['title'] . " " . $pals['firstname'] . " " . $pals['surname']);
+}
 
 //Tab names
 $mydetails = $this->objLanguage->languageText('mod_foaf_mydetails', 'foaf');
@@ -225,7 +230,7 @@ $game = '<object width="550" height="400"><param name="movie" value="http://www.
 //start the tabbedpane
 //$pane =new tabpane(100,500);
 $pane->addTab(array('name'=>$mydetails,'content' => $myFoafForm->show()));
-$pane->addTab(array('name'=>$myfriends,'content' => 'tbl_foaf_friends'));
+$pane->addTab(array('name'=>$myfriends,'content' => $myFbox));
 $pane->addTab(array('name'=>$myorganizations,'content' => 'tbl_foaf_organizations'));
 $pane->addTab(array('name'=>$myfunders,'content' => 'tbl_foaf_funders'));
 $pane->addTab(array('name'=>$myinterests,'content' => 'tbl_foaf_interests'));
