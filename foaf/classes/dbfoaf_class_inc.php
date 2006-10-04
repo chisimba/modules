@@ -89,6 +89,11 @@ class dbfoaf extends dbtable
     	}
     }
 
+    public function getAllUsers()
+    {
+    	$this->_changeTable('tbl_users');
+    	return $this->getAll();
+    }
     private function _changeTable($table)
     {
     	parent::init($table);

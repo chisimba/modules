@@ -376,6 +376,7 @@ class foafops extends object
 			{
 
 				$fuserid = $friends['fuserid'];
+				$fimage = $this->objUser->getUserImageNoTags($fuserid);
 				$frfoaf = $this->_getFriendFoaf($fuserid);
 
 				//go and get all our friends details
@@ -451,6 +452,7 @@ class foafops extends object
 					}
 
 				}
+				$friend->addImg($fimage);
 				$this->objFoaf->addKnows($friend);
 			}
 		}

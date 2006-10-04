@@ -218,12 +218,21 @@ if(isset($tcont->foaf['knows']))
 			$pfbox = "<em>" . $pals['title'] . " " . $pals['firstname'] . " " . $pals['surname'] . "</em><br />";
 			//build a table of values etc...
 			//var_dump($pals);
+			if(isset($pals['img']))
+			{
+				if(is_array($pals['img']))
+				{
+					$pimg = $pals['img'][0];
+					$pimgv = new href($pimg,$pimg);
+					$pfbox .= '<img src="'.htmlentities($pimg).'" alt="user image" />' . "<br />";
+				}
+			}
 			if(isset($pals['homepage']))
 			{
 				if(is_array($pals['homepage']))
 				{
 					$phomepage = $pals['homepage'][0];
-					$plink = new href($phomepage,$phomepage);
+					$plink = new href(htmlentities($phomepage),htmlentities($phomepage));
 					$pfbox .= $this->objLanguage->languageText('mod_foaf_homepage', 'foaf') . ": " . $plink->show() . "<br />";
 				}
 			}
@@ -240,7 +249,7 @@ if(isset($tcont->foaf['knows']))
 				if(is_array($pals['logo']))
 				{
 					$plogo = $pals['logo'][0];
-					$plink2 = new href($plogo,$plogo);
+					$plink2 = new href(htmlentities($plogo),htmlentities($plogo));
 					$pfbox .= $this->objLanguage->languageText('mod_foaf_logo', 'foaf') . ": " . $plink2->show() . "<br />";
 				}
 			}
@@ -257,7 +266,7 @@ if(isset($tcont->foaf['knows']))
 				if(is_array($pals['schoolhomepage']))
 				{
 					$pschoolhomepage = $pals['schoolhomepage'][0];
-					$plink3 = new href($pschoolhomepage,$pschoolhomepage);
+					$plink3 = new href(htmlentities($pschoolhomepage),htmlentities($pschoolhomepage));
 					$pfbox .= $this->objLanguage->languageText('mod_foaf_schoolhomepage', 'foaf') . ": " . $plink3->show() . "<br />";
 				}
 			}
@@ -266,7 +275,7 @@ if(isset($tcont->foaf['knows']))
 				if(is_array($pals['theme']))
 				{
 					$ptheme = $pals['theme'][0];
-					$plink4 = new href($ptheme,$ptheme);
+					$plink4 = new href(htmlentities($ptheme),htmlentities($ptheme));
 					$pfbox .= $this->objLanguage->languageText('mod_foaf_theme', 'foaf') . ": " . $plink4->show() . "<br />";
 				}
 			}
@@ -275,7 +284,7 @@ if(isset($tcont->foaf['knows']))
 				if(is_array($pals['weblog']))
 				{
 					$pweblog = $pals['weblog'][0];
-					$plink5 = new href($pweblog,$pweblog);
+					$plink5 = new href(htmlentities($pweblog),htmlentities($pweblog));
 					$pfbox .= $this->objLanguage->languageText('mod_foaf_weblog', 'foaf') . ": " . $plink5->show() . "<br />";
 				}
 			}
@@ -284,9 +293,14 @@ if(isset($tcont->foaf['knows']))
 				if(is_array($pals['workplacehomepage']))
 				{
 					$pworkplacehomepage = $pals['workplacehomepage'][0];
-					$plink6 = new href($pworkplacehomepage,$pworkplacehomepage);
+					$plink6 = new href(htmlentities($pworkplacehomepage),htmlentities($pworkplacehomepage));
 					$pfbox .= $this->objLanguage->languageText('mod_foaf_workhomepage', 'foaf') . ": " . $plink6->show() . "<br />";
 				}
+			}
+			if(isset($pals['geekcode']))
+			{
+					$pgeekcode = htmlentities($pals['geekcode'][0]);
+					$pfbox .= $this->objLanguage->languageText('mod_foaf_geekcode', 'foaf') . ": " . $pgeekcode . "<br />";
 			}
 
 			//build the featurebox
@@ -295,9 +309,35 @@ if(isset($tcont->foaf['knows']))
 	}
 }
 else {
+	/*$objPalForm = $this->newObject('form','htmlelements');
+	$objPalForm->name = "form1";
+	$objPalForm->action = $this->uri ( array( 'action' => 'processform' ) );
+
+	// Create the selectbox object
+	$objSelectBox = $this->newObject('selectbox','htmlelements');
+	// Initialise the selectbox.
+	$objSelectBox->create( $objPalForm, 'leftList[]', $this->objLanguage->languageText('mod_foaf_availusers','foaf'), 'rightList[]', $this->objLanguage->languageText('mod_foaf_currfriends','foaf') );
+
+	// Populate the selectboxes
+	//$objData = &$this->getObject('data');
+	$objSelectBox->insertLeftOptions( $this->dbFoaf->getAllUsers(), 'userid', 'firstname' );
+	$objSelectBox->insertRightOptions( array() );
+
+	// Insert the selectbox into the form object.
+	$objPalForm->addToForm( $objSelectBox->show() );
+
+	// Get and insert the save and cancel form buttons
+	$arrFormButtons = $objSelectBox->getFormButtons();
+	$objPalForm->addToForm( implode( ' / ', $arrFormButtons ) );
+
+	// Show the form
+	$myFboxContent = $this->objLanguage->languageText('mod_foaf_nofriendstxt', 'foaf') . $objPalForm->show();
+*/
+
 	$objFeatureBox = $this->newObject('featurebox', 'navigation');
 	$myFbox = $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_nofriends', 'foaf'), $this->objLanguage->languageText('mod_foaf_nofriendstxt', 'foaf'));
 }
+
 
 //Tab names
 $mydetails = $this->objLanguage->languageText('mod_foaf_mydetails', 'foaf');
