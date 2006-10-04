@@ -60,7 +60,7 @@ $table1->cellpadding = 5;
 
 //homepage field
 $table1->startRow();
-$label1 = new label($objLanguage->languageText('mod_foaf_homepage', 'foaf').':', 'foaf_homepage');
+$label1 = new label($objLanguage->languageText('mod_foaf_homepage', 'foaf').':', 'input_homepage');
 $homepage = new textinput('homepage');
 if(!isset($tcont->foaf['homepage'][0]))
 {
@@ -73,7 +73,7 @@ $table1->endRow();
 
 //weblog field
 $table1->startRow();
-$label2 = new label($objLanguage->languageText('mod_foaf_weblog', 'foaf').':', 'foaf_weblog');
+$label2 = new label($objLanguage->languageText('mod_foaf_weblog', 'foaf').':', 'input_weblog');
 $weblog = new textinput('weblog');
 if(!isset($tcont->foaf['weblog'][0]))
 {
@@ -87,7 +87,7 @@ $table1->endRow();
 
 //phone field
 $table1->startRow();
-$label3 = new label($objLanguage->languageText('mod_foaf_phone', 'foaf').':', 'foaf_phone');
+$label3 = new label($objLanguage->languageText('mod_foaf_phone', 'foaf').':', 'input_phone');
 $phone = new textinput('phone');
 if(!isset($tcont->foaf['phone'][0]))
 {
@@ -100,7 +100,7 @@ $table1->endRow();
 
 //Jabber ID
 $table1->startRow();
-$label4 = new label($objLanguage->languageText('mod_foaf_jabberid', 'foaf').':', 'foaf_jabberid');
+$label4 = new label($objLanguage->languageText('mod_foaf_jabberid', 'foaf').':', 'input_jabberid');
 $jabberid = new textinput('jabberid');
 if(!isset($tcont->foaf['jabberid'][0]))
 {
@@ -113,7 +113,7 @@ $table1->endRow();
 
 //theme
 $table1->startRow();
-$label5 = new label($objLanguage->languageText('mod_foaf_theme', 'foaf').':', 'foaf_theme');
+$label5 = new label($objLanguage->languageText('mod_foaf_theme', 'foaf').':', 'input_theme');
 $theme = new textinput('theme');
 if(!isset($tcont->foaf['theme'][0]))
 {
@@ -126,7 +126,7 @@ $table1->endRow();
 
 //work homepage field
 $table1->startRow();
-$label6 = new label($objLanguage->languageText('mod_foaf_workhomepage', 'foaf').':', 'foaf_workhomepage');
+$label6 = new label($objLanguage->languageText('mod_foaf_workhomepage', 'foaf').':', 'input_workhomepage');
 $workhomepage = new textinput('workhomepage');
 if(!isset($tcont->foaf['workplacehomepage'][0]))
 {
@@ -139,7 +139,7 @@ $table1->endRow();
 
 //school homepage field
 $table1->startRow();
-$label7 = new label($objLanguage->languageText('mod_foaf_schoolhomepage', 'foaf').':', 'foaf_schoolhomepage');
+$label7 = new label($objLanguage->languageText('mod_foaf_schoolhomepage', 'foaf').':', 'input_schoolhomepage');
 $schoolhomepage = new textinput('schoolhomepage');
 if(!isset($tcont->foaf['schoolhomepage'][0]))
 {
@@ -152,7 +152,7 @@ $table1->endRow();
 
 //logo field
 $table1->startRow();
-$label8 = new label($objLanguage->languageText('mod_foaf_logo', 'foaf').':', 'foaf_logo');
+$label8 = new label($objLanguage->languageText('mod_foaf_logo', 'foaf').':', 'input_logo');
 $logo = new textinput('logo');
 if(!isset($tcont->foaf['logo'][0]))
 {
@@ -179,7 +179,7 @@ $table1->endRow();
 */
 //geekcode field
 $table1->startRow();
-$label10 = new label($objLanguage->languageText('mod_foaf_geekcode', 'foaf').':', 'foaf_geekcode');
+$label10 = new label($objLanguage->languageText('mod_foaf_geekcode', 'foaf').':', 'input_geekcode');
 $geekcode = new textarea('geekcode');
 if(!isset($tcont->foaf['geekcode']))
 {
@@ -232,7 +232,7 @@ $invite = $this->objLanguage->languageText('mod_foaf_invite', 'foaf');
 $query = $this->objLanguage->languageText('mod_foaf_query', 'foaf');
 $visualise = $this->objLanguage->languageText('mod_foaf_visualize', 'foaf');
 $surprise = $this->objLanguage->languageText('mod_foaf_surprise', 'foaf');
-$game = '<object width="550" height="400"><param name="movie" value="http://www.zipperfish.com/mediabase/cache/1456-184-blobs.swf" /><embed src="http://www.zipperfish.com/mediabase/cache/1456-184-blobs.swf" type="application/x-shockwave-flash" width="550" height="400"></embed></object>';
+$game = '';//"<object width='550' height='400'><param name='movie' value='http://www.zipperfish.com/mediabase/cache/1456-184-blobs.swf' /><embed src='http://www.zipperfish.com/mediabase/cache/1456-184-blobs.swf' type='application/x-shockwave-flash' width='550' height='400'></embed></object>";
 
 //start the tabbedpane
 //$pane =new tabpane(100,500);
