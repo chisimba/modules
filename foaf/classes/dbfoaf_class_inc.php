@@ -94,6 +94,18 @@ class dbfoaf extends dbtable
     	$this->_changeTable('tbl_users');
     	return $this->getAll();
     }
+
+    public function getFriends()
+    {
+
+    }
+
+    public function insertFriend($friend)
+    {
+    	$this->_changeTable('tbl_foaf_friends');
+    	return $this->insert($friend);
+    }
+
     private function _changeTable($table)
     {
     	parent::init($table);

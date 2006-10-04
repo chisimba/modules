@@ -1,7 +1,7 @@
 <?php
 //var_dump($tcont);
 
-
+$dbFoaf = $this->getObject('dbfoaf');
 $this->setLayoutTemplate('flayout_tpl.php');
 $objmsg = &$this->getObject('timeoutmessage','htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -224,7 +224,7 @@ if(isset($tcont->foaf['knows']))
 				{
 					$pimg = $pals['img'][0];
 					$pimgv = new href($pimg,$pimg);
-					$pfbox .= '<img src="'.htmlentities($pimg).'" alt="user image" />' . "<br />";
+					$pfimg = '<img src="'.htmlentities($pimg).'" alt="user image" />' . "<br />";
 				}
 			}
 			if(isset($pals['homepage']))
@@ -304,35 +304,144 @@ if(isset($tcont->foaf['knows']))
 			}
 
 			//build the featurebox
+			//take the pfimage and the pfbox
+			$table2 = $this->newObject('htmltable', 'htmlelements');
+			$table2->cellpadding = 5;
+			$table2->startRow();
+			$table2->addCell('<img src="'.htmlentities($pimg).'" alt="user image" />');
+			$table2->addCell($pfbox);
+			$table2->endRow();
+
+
+			$myFriendsForm = new form('myfriends',$this->uri(array('action'=>'updatefriends')));
+			$fieldset3 = $this->newObject('fieldset', 'htmlelements');
+			$fieldset3->setLegend($objLanguage->languageText('mod_foaf_addremfriends', 'foaf'));
+			$table3 = $this->newObject('htmltable', 'htmlelements');
+			$table3->cellpadding = 5;
+
+			//start the friends dropdowns
+			$addarr = $dbFoaf->getAllUsers();
+			foreach($addarr as $users)
+			{
+				$name = $users['firstname'] . " " . $users['surname'];
+				$id = $users['userid'];
+				$addusers[] = array('name' => $name, 'id' => $id);
+			}
+
+			//add in a dropdown to add/remove users as friends
+			$addDrop = new dropdown('add');
+			foreach($addusers as $newbies)
+			{
+				if($this->objUser->userId() != $newbies['id'])
+				{
+					$addDrop->addOption($newbies['id'], $newbies['name']);
+				}
+			}
+/*
+			//remove dropdown
+			$remarr = $dbFoaf->getFriends();
+			foreach($remarr as $usrs)
+			{
+				$name = $usrs['firstname'] . " " . $usrs['surname'];
+				$id = $usrs['userid'];
+				$remusrs[] = array('name' => $name, 'id' => $id);
+			}
+
+			//add in a dropdown to add/remove users as friends
+			$remDrop = new dropdown('remove');
+
+			foreach($remusrs as $removals)
+			{
+				$addDrop->addOption($removals['id'], $removals['name']);
+			}
+*/
+			//add
+			$table3->startRow();
+			$table3->addCell($objLanguage->languageText('mod_foaf_addfriends', 'foaf'), 150, NULL, 'right');
+			$table3->addCell($addDrop->show());
+			$table3->endRow();
+
+			//delete
+			$table3->startRow();
+			$table3->addCell($objLanguage->languageText('mod_foaf_remfriends', 'foaf'), 150, NULL, 'right');
+			//$table3->addCell($remDrop->show());
+			$table3->endRow();
+
+			$fieldset3->addContent($table3->show());
+			$myFriendsForm->addToForm($fieldset3->show());
+
+			$this->objButton3 = & new button($objLanguage->languageText('word_update', 'foaf'));
+			$this->objButton3->setValue($objLanguage->languageText('word_update', 'foaf'));
+			$this->objButton3->setToSubmit();
+			$myFriendsForm->addToForm($this->objButton3->show());
+
+			$pfbox = $table2->show();
 			$myFbox = $objFeatureBox->show($pals['type'], $pfbox);
 		}
 	}
 }
 else {
-	/*$objPalForm = $this->newObject('form','htmlelements');
-	$objPalForm->name = "form1";
-	$objPalForm->action = $this->uri ( array( 'action' => 'processform' ) );
+	$myFriendsForm = new form('myfriends',$this->uri(array('action'=>'updatefriends')));
+			$fieldset3 = $this->newObject('fieldset', 'htmlelements');
+			$fieldset3->setLegend($objLanguage->languageText('mod_foaf_addremfriends', 'foaf'));
+			$table3 = $this->newObject('htmltable', 'htmlelements');
+			$table3->cellpadding = 5;
 
-	// Create the selectbox object
-	$objSelectBox = $this->newObject('selectbox','htmlelements');
-	// Initialise the selectbox.
-	$objSelectBox->create( $objPalForm, 'leftList[]', $this->objLanguage->languageText('mod_foaf_availusers','foaf'), 'rightList[]', $this->objLanguage->languageText('mod_foaf_currfriends','foaf') );
+			//start the friends dropdowns
+			$addarr = $dbFoaf->getAllUsers();
+			foreach($addarr as $users)
+			{
+				$name = $users['firstname'] . " " . $users['surname'];
+				$id = $users['userid'];
+				$addusers[] = array('name' => $name, 'id' => $id);
+			}
 
-	// Populate the selectboxes
-	//$objData = &$this->getObject('data');
-	$objSelectBox->insertLeftOptions( $this->dbFoaf->getAllUsers(), 'userid', 'firstname' );
-	$objSelectBox->insertRightOptions( array() );
+			//add in a dropdown to add/remove users as friends
+			$addDrop = new dropdown('add');
+			foreach($addusers as $newbies)
+			{
+				if($this->objUser->userId() != $newbies['id'])
+				{
+					$addDrop->addOption($newbies['id'], $newbies['name']);
+				}
+			}
+/*
+			//remove dropdown
+			$remarr = $dbFoaf->getFriends();
+			foreach($remarr as $usrs)
+			{
+				$name = $usrs['firstname'] . " " . $usrs['surname'];
+				$id = $usrs['userid'];
+				$remusrs[] = array('name' => $name, 'id' => $id);
+			}
 
-	// Insert the selectbox into the form object.
-	$objPalForm->addToForm( $objSelectBox->show() );
+			//add in a dropdown to add/remove users as friends
+			$remDrop = new dropdown('remove');
 
-	// Get and insert the save and cancel form buttons
-	$arrFormButtons = $objSelectBox->getFormButtons();
-	$objPalForm->addToForm( implode( ' / ', $arrFormButtons ) );
-
-	// Show the form
-	$myFboxContent = $this->objLanguage->languageText('mod_foaf_nofriendstxt', 'foaf') . $objPalForm->show();
+			foreach($remusrs as $removals)
+			{
+				$addDrop->addOption($removals['id'], $removals['name']);
+			}
 */
+			//add
+			$table3->startRow();
+			$table3->addCell($objLanguage->languageText('mod_foaf_addfriends', 'foaf'), 150, NULL, 'right');
+			$table3->addCell($addDrop->show());
+			$table3->endRow();
+
+			//delete
+			$table3->startRow();
+			$table3->addCell($objLanguage->languageText('mod_foaf_remfriends', 'foaf'), 150, NULL, 'right');
+			//$table3->addCell($remDrop->show());
+			$table3->endRow();
+
+			$fieldset3->addContent($table3->show());
+			$myFriendsForm->addToForm($fieldset3->show());
+
+			$this->objButton3 = & new button($objLanguage->languageText('word_update', 'foaf'));
+			$this->objButton3->setValue($objLanguage->languageText('word_update', 'foaf'));
+			$this->objButton3->setToSubmit();
+			$myFriendsForm->addToForm($this->objButton3->show());
 
 	$objFeatureBox = $this->newObject('featurebox', 'navigation');
 	$myFbox = $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_nofriends', 'foaf'), $this->objLanguage->languageText('mod_foaf_nofriendstxt', 'foaf'));
@@ -357,7 +466,7 @@ $game = '';//"<object width='550' height='400'><param name='movie' value='http:/
 //start the tabbedpane
 //$pane =new tabpane(100,500);
 $pane->addTab(array('name'=>$mydetails,'content' => $myFoafForm->show()));
-$pane->addTab(array('name'=>$myfriends,'content' => $myFbox));
+$pane->addTab(array('name'=>$myfriends,'content' => $myFriendsForm->show() . $myFbox));
 $pane->addTab(array('name'=>$myorganizations,'content' => 'tbl_foaf_organizations'));
 $pane->addTab(array('name'=>$myfunders,'content' => 'tbl_foaf_funders'));
 $pane->addTab(array('name'=>$myinterests,'content' => 'tbl_foaf_interests'));

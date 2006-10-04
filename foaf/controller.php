@@ -184,6 +184,23 @@ class foaf extends controller
 
 				break;
 
+			case 'updatefriends':
+				$fid = $this->getParam('add');
+				$remid = $this->getParam('remove');
+
+				if(isset($fid))
+				{
+					//insert to my friends table
+					$myid = $this->objUser->userId();
+					$this->dbFoaf->insertFriend(array('userid' => $myid, 'fuserid' => $fid));
+				}
+				if(isset($remid))
+				{
+					echo "remid is set";
+				}
+				$message = 'update';
+				$this->nextAction('createfoaf',array('message' => $message));
+
 		}
 	}
 }
