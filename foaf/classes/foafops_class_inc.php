@@ -228,6 +228,22 @@ class foafops extends object
 
 	}
 
+	private function _getFriendFoaf($fuserid)
+	{
+		//switch tables to tbl_foaf_myfoaf
+		$farr = $this->dbFoaf->getRecordSet($fuserid, 'tbl_foaf_myfoaf');
+		//get the info from dbFmyfoaf and set up all the fields
+		//set the user details to an array that we can use
+		if(empty($farr))
+		{
+			$foafdetails = array();
+		}
+		else {
+
+			$foafdetails = $farr[0];
+		}
+		return $foafdetails;
+	}
 
 	private function _getInterests($userId, $friend = FALSE)
 	{
@@ -348,6 +364,7 @@ class foafops extends object
 	private function _getFriends($userId)
 	{
 		$frarr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_friends');
+
 		//print_r($frarr);
 		if(empty($frarr))
 		{
@@ -359,6 +376,8 @@ class foafops extends object
 			{
 
 				$fuserid = $friends['fuserid'];
+				$frfoaf = $this->_getFriendFoaf($fuserid);
+
 				//go and get all our friends details
 				$uarr = $this->dbFoaf->getRecordSet($fuserid, 'tbl_users');
 				$userdetails = $uarr[0];
@@ -382,8 +401,56 @@ class foafops extends object
 				$friend->setFirstName($firstname);
 				$friend->setSurname($surname);
 				$friend->addMbox('mailto:'.$email,TRUE);
+				if(!empty($frfoaf))
+				{
+					//add the details to the foaf xml tree
+					if(isset($frfoaf['homepage']))
+					{
+						$friend->addHomepage($frfoaf['homepage']);
+					}
+					if(isset($frfoaf['weblog']))
+					{
+						$friend->addWeblog($frfoaf['weblog']);
+					}
+					if(isset($frfoaf['phone']))
+					{
+						$friend->addPhone($frfoaf['phone']);
+					}
+					if(isset($frfoaf['jabberid']))
+					{
+						$friend->addJabberID($frfoaf['jabberid']);
+					}
+					if(isset($frfoaf['geekcode']))
+					{
+						$friend->setGeekcode($frfoaf['geekcode']);
+					}
+					if(isset($frfoaf['theme']))
+					{
+						$friend->addTheme($frfoaf['theme']);
+					}
 
+					/**
+			 		* @todo check out the accounts bit, they need a service homepage as well as a username
+			 		*/
 
+					if(isset($frfoaf['workhomepage']))
+					{
+						$friend->addWorkplaceHomepage($frfoaf['workhomepage']);
+					}
+					if(isset($frfoaf['schoolhomepage']))
+					{
+						$friend->addSchoolHomepage($frfoaf['schoolhomepage']);
+					}
+					if(isset($frfoaf['logo']))
+					{
+						$friend->addLogo($frfoaf['logo']);
+					}
+					if(isset($frfoaf['basednearlat']) && isset($frfoaf['basednearlong']))
+					{
+						$friend->setBasedNear($frfoaf['basednearlat'], $frfoaf['basednearlong']);
+					}
+
+				}
 				$this->objFoaf->addKnows($friend);
 			}
 		}

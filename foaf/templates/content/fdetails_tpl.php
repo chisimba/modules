@@ -8,6 +8,7 @@ $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
+$this->loadClass('href', 'htmlelements');
 $pane = &$this->newObject('tabpane', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('dropdown','htmlelements');
@@ -206,12 +207,91 @@ $myFoafForm->addToForm($this->objButton1->show());
  * Start of tbl_foaf_friends section
  */
 //var_dump($tcont->foaf['knows']);
-if(is_array($tcont->foaf['knows']))
+
+if(isset($tcont->foaf['knows']))
 {
-	foreach($tcont->foaf['knows'] as $pals)
+	if(is_array($tcont->foaf['knows']))
 	{
-		$objFeatureBox = $this->newObject('featurebox', 'navigation');
-		$myFbox = $objFeatureBox->show($pals['type'], $pals['title'] . " " . $pals['firstname'] . " " . $pals['surname']);
+		foreach($tcont->foaf['knows'] as $pals)
+		{
+			$objFeatureBox = $this->newObject('featurebox', 'navigation');
+			$pfbox = "<em>" . $pals['title'] . " " . $pals['firstname'] . " " . $pals['surname'] . "</em><br />";
+			//build a table of values etc...
+			//var_dump($pals);
+			if(isset($pals['homepage']))
+			{
+				if(is_array($pals['homepage']))
+				{
+					$phomepage = $pals['homepage'][0];
+					$plink = new href($phomepage,$phomepage);
+					$pfbox .= $this->objLanguage->languageText('mod_foaf_homepage', 'foaf') . ": " . $plink->show() . "<br />";
+				}
+			}
+			if(isset($pals['jabberid']))
+			{
+				if(is_array($pals['jabberid']))
+				{
+					$pjabberid = $pals['jabberid'][0];
+					$pfbox .= $this->objLanguage->languageText('mod_foaf_jabberid', 'foaf') . ": " . $pjabberid . "<br />";
+				}
+			}
+			if(isset($pals['logo']))
+			{
+				if(is_array($pals['logo']))
+				{
+					$plogo = $pals['logo'][0];
+					$plink2 = new href($plogo,$plogo);
+					$pfbox .= $this->objLanguage->languageText('mod_foaf_logo', 'foaf') . ": " . $plink2->show() . "<br />";
+				}
+			}
+			if(isset($pals['phone']))
+			{
+				if(is_array($pals['phone']))
+				{
+					$pphone = $pals['phone'][0];
+					$pfbox .= $this->objLanguage->languageText('mod_foaf_phone', 'foaf') . ": " . $pphone . "<br />";
+				}
+			}
+			if(isset($pals['schoolhomepage']))
+			{
+				if(is_array($pals['schoolhomepage']))
+				{
+					$pschoolhomepage = $pals['schoolhomepage'][0];
+					$plink3 = new href($pschoolhomepage,$pschoolhomepage);
+					$pfbox .= $this->objLanguage->languageText('mod_foaf_schoolhomepage', 'foaf') . ": " . $plink3->show() . "<br />";
+				}
+			}
+			if(isset($pals['theme']))
+			{
+				if(is_array($pals['theme']))
+				{
+					$ptheme = $pals['theme'][0];
+					$plink4 = new href($ptheme,$ptheme);
+					$pfbox .= $this->objLanguage->languageText('mod_foaf_theme', 'foaf') . ": " . $plink4->show() . "<br />";
+				}
+			}
+			if(isset($pals['weblog']))
+			{
+				if(is_array($pals['weblog']))
+				{
+					$pweblog = $pals['weblog'][0];
+					$plink5 = new href($pweblog,$pweblog);
+					$pfbox .= $this->objLanguage->languageText('mod_foaf_weblog', 'foaf') . ": " . $plink5->show() . "<br />";
+				}
+			}
+			if(isset($pals['workplacehomepage']))
+			{
+				if(is_array($pals['workplacehomepage']))
+				{
+					$pworkplacehomepage = $pals['workplacehomepage'][0];
+					$plink6 = new href($pworkplacehomepage,$pworkplacehomepage);
+					$pfbox .= $this->objLanguage->languageText('mod_foaf_workhomepage', 'foaf') . ": " . $plink6->show() . "<br />";
+				}
+			}
+
+			//build the featurebox
+			$myFbox = $objFeatureBox->show($pals['type'], $pfbox);
+		}
 	}
 }
 else {
@@ -247,7 +327,7 @@ $pane->addTab(array('name'=>$myaccounts,'content' => 'tbl_foaf_accounts'));
 $pane->addTab(array('name'=>$invite,'content' => 'Invittaion'));
 $pane->addTab(array('name'=>$query,'content' => 'Query the Network'));
 $pane->addTab(array('name'=>$visualise,'content' => 'Visulalise the Network'));
-$pane->addTab(array('name'=>$surprise,'content' => $game));
+//$pane->addTab(array('name'=>$surprise,'content' => $game));
 
 
 //$middleColumn .= $pane->show();
