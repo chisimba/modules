@@ -81,6 +81,7 @@ class foafops extends object
 			$this->objUser = $this->getObject('user', 'security');
 			//hook up the database models
 			$this->dbFoaf = $this->getObject('dbfoaf');
+			$this->loadClass('dropdown','htmlelements');
 
 			//Get the activity logger class
 			$this->objLog = $this->newObject('logactivity', 'logger');
@@ -324,15 +325,15 @@ class foafops extends object
 
 				$org = $this->newObject('foafcreator');
 				$org->newAgent('Organization');
-    			$org->setName($name);
-    			$org->addHomepage($homepage);
-    			if($friend == FALSE)
-    			{
+				$org->setName($name);
+				$org->addHomepage($homepage);
+				if($friend == FALSE)
+				{
 					$this->objFoaf->addKnows($org);
-    			}
-    			else {
-    				$this->friend->addKnows($org);
-    			}
+				}
+				else {
+					$this->friend->addKnows($org);
+				}
 			}
 		}
 	}
@@ -465,6 +466,7 @@ class foafops extends object
 		//write the file so that we can edit it later
 		//var_dump($this->objFoaf->foaftree->get());
 		//var_dump($this->objFoaf->foaftree);
+		@chmod($this->savepath, 0777);
 		$this->objFoaf->toFile($this->savepath, $this->objUser->userId() . '.rdf', $this->objFoaf->get());
 		//die();
 	}
@@ -488,6 +490,166 @@ class foafops extends object
 		$this->objFoafParser->setup();
 		$fp = $this->objFoafParser->parseFromUri($this->savepath . $userId . '.rdf');
 		return $this->objFoafParser->toObject();
+	}
+
+	public function addRemDD()
+	{
+		$myFriendsForm = new form('myfriends',$this->uri(array('action'=>'updatefriends')));
+		$fieldset3 = $this->newObject('fieldset', 'htmlelements');
+		$fieldset3->setLegend($this->objLanguage->languageText('mod_foaf_addremfriends', 'foaf'));
+		$table3 = $this->newObject('htmltable', 'htmlelements');
+		$table3->cellpadding = 5;
+
+		//start the friends dropdowns
+		$addarr = $this->dbFoaf->getAllUsers();
+		foreach($addarr as $users)
+		{
+			$name = $users['firstname'] . " " . $users['surname'];
+			$id = $users['userid'];
+			$addusers[] = array('name' => $name, 'id' => $id);
+		}
+		//add in a dropdown to add/remove users as friends
+		$addDrop = new dropdown('add');
+		foreach($addusers as $newbies)
+		{
+			if($this->objUser->userId() != $newbies['id'])
+			{
+				$addDrop->addOption($newbies['id'], $newbies['name']);
+			}
+		}
+		/*
+		//remove dropdown
+		$remarr = $dbFoaf->getFriends();
+		foreach($remarr as $usrs)
+		{
+		$name = $usrs['firstname'] . " " . $usrs['surname'];
+		$id = $usrs['userid'];
+		$remusrs[] = array('name' => $name, 'id' => $id);
+		}
+
+		//add in a dropdown to add/remove users as friends
+		$remDrop = new dropdown('remove');
+
+		foreach($remusrs as $removals)
+		{
+		$addDrop->addOption($removals['id'], $removals['name']);
+		}
+		*/
+		//add
+		$table3->startRow();
+		$table3->addCell($this->objLanguage->languageText('mod_foaf_addfriends', 'foaf'), 150, NULL, 'right');
+		$table3->addCell($addDrop->show());
+		$table3->endRow();
+
+		//delete
+		//$table3->startRow();
+		//$table3->addCell($this->objLanguage->languageText('mod_foaf_remfriends', 'foaf'), 150, NULL, 'right');
+		//$table3->addCell($remDrop->show());
+		//$table3->endRow();
+
+		$fieldset3->addContent($table3->show());
+		$myFriendsForm->addToForm($fieldset3->show());
+
+		$this->objButton3 = & new button($this->objLanguage->languageText('word_update', 'foaf'));
+		$this->objButton3->setValue($this->objLanguage->languageText('word_update', 'foaf'));
+		$this->objButton3->setToSubmit();
+		$myFriendsForm->addToForm($this->objButton3->show());
+
+		return $myFriendsForm;
+
+	}
+
+	function fFeatureBoxen($pals)
+	{
+		$pfbox = "<em>" . $pals['title'] . " " . $pals['firstname'] . " " . $pals['surname'] . "</em><br />";
+		//build a table of values etc...
+		//var_dump($pals);
+		if(isset($pals['img']))
+		{
+			if(is_array($pals['img']))
+			{
+				$pimg = $pals['img'][0];
+				$pimgv = new href($pimg,$pimg);
+				$pfimg = '<img src="'.htmlentities($pimg).'" alt="user image" />' . "<br />";
+			}
+		}
+		if(isset($pals['homepage']))
+		{
+			if(is_array($pals['homepage']))
+			{
+				$phomepage = $pals['homepage'][0];
+				$plink = new href(htmlentities($phomepage),htmlentities($phomepage));
+				$pfbox .= $this->objLanguage->languageText('mod_foaf_homepage', 'foaf') . ": " . $plink->show() . "<br />";
+			}
+		}
+		if(isset($pals['jabberid']))
+		{
+			if(is_array($pals['jabberid']))
+			{
+				$pjabberid = $pals['jabberid'][0];
+				$pfbox .= $this->objLanguage->languageText('mod_foaf_jabberid', 'foaf') . ": " . $pjabberid . "<br />";
+			}
+		}
+		if(isset($pals['logo']))
+		{
+			if(is_array($pals['logo']))
+			{
+				$plogo = $pals['logo'][0];
+				$plink2 = new href(htmlentities($plogo),htmlentities($plogo));
+				$pfbox .= $this->objLanguage->languageText('mod_foaf_logo', 'foaf') . ": " . $plink2->show() . "<br />";
+			}
+		}
+		if(isset($pals['phone']))
+		{
+			if(is_array($pals['phone']))
+			{
+				$pphone = $pals['phone'][0];
+				$pfbox .= $this->objLanguage->languageText('mod_foaf_phone', 'foaf') . ": " . $pphone . "<br />";
+			}
+		}
+		if(isset($pals['schoolhomepage']))
+		{
+			if(is_array($pals['schoolhomepage']))
+			{
+				$pschoolhomepage = $pals['schoolhomepage'][0];
+				$plink3 = new href(htmlentities($pschoolhomepage),htmlentities($pschoolhomepage));
+				$pfbox .= $this->objLanguage->languageText('mod_foaf_schoolhomepage', 'foaf') . ": " . $plink3->show() . "<br />";
+			}
+		}
+		if(isset($pals['theme']))
+		{
+			if(is_array($pals['theme']))
+			{
+				$ptheme = $pals['theme'][0];
+				$plink4 = new href(htmlentities($ptheme),htmlentities($ptheme));
+				$pfbox .= $this->objLanguage->languageText('mod_foaf_theme', 'foaf') . ": " . $plink4->show() . "<br />";
+			}
+		}
+		if(isset($pals['weblog']))
+		{
+			if(is_array($pals['weblog']))
+			{
+				$pweblog = $pals['weblog'][0];
+				$plink5 = new href(htmlentities($pweblog),htmlentities($pweblog));
+				$pfbox .= $this->objLanguage->languageText('mod_foaf_weblog', 'foaf') . ": " . $plink5->show() . "<br />";
+			}
+		}
+		if(isset($pals['workplacehomepage']))
+		{
+			if(is_array($pals['workplacehomepage']))
+			{
+				$pworkplacehomepage = $pals['workplacehomepage'][0];
+				$plink6 = new href(htmlentities($pworkplacehomepage),htmlentities($pworkplacehomepage));
+				$pfbox .= $this->objLanguage->languageText('mod_foaf_workhomepage', 'foaf') . ": " . $plink6->show() . "<br />";
+			}
+		}
+		if(isset($pals['geekcode']))
+		{
+			$pgeekcode = htmlentities($pals['geekcode'][0]);
+			$pfbox .= $this->objLanguage->languageText('mod_foaf_geekcode', 'foaf') . ": " . $pgeekcode . "<br />";
+		}
+
+		return array($pfimg, $pfbox);
 	}
 
 }
