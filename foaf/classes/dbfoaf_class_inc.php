@@ -97,13 +97,38 @@ class dbfoaf extends dbtable
 
     public function getFriends()
     {
+    	$this->_changeTable('tbl_foaf_friends');
+    	$userid = $this->objUser->userId();
+    	$frie = $this->getAll('WHERE userid = '. $userid);
+    	foreach($frie as $friends)
+    	{
+    		//echo $friends['fuserid'];
+    		//lookup the userid and get a name for display
+    		$this->_changeTable('tbl_users');
+    		$ret = $this->getAll('WHERE userid = ' . $friends['fuserid']);
+    		$fullname = $ret[0]['firstname'] . " " . $ret[0]['surname'];
+    		$pkid = $friends['id'];
+    		$fid = $friends['fuserid'];
 
+    		$det[] = array('id' => $pkid, 'name' => $fullname, 'fuserid' => $fid);
+    	}
+    	if(isset($det))
+    	{
+    		return $det;
+    	}
     }
 
     public function insertFriend($friend)
     {
     	$this->_changeTable('tbl_foaf_friends');
     	return $this->insert($friend);
+    }
+
+    public function removeFriend($friend)
+    {
+    	$this->_changeTable('tbl_foaf_friends');
+    	//print_r($friend);
+    	return $this->delete('id',$friend['fuserid']);
     }
 
     private function _changeTable($table)

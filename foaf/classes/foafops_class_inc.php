@@ -492,11 +492,11 @@ class foafops extends object
 		return $this->objFoafParser->toObject();
 	}
 
-	public function addRemDD()
+	public function addDD()
 	{
-		$myFriendsForm = new form('myfriends',$this->uri(array('action'=>'updatefriends')));
+		$myFriendsAddForm = new form('myfriends',$this->uri(array('action'=>'updatefriends')));
 		$fieldset3 = $this->newObject('fieldset', 'htmlelements');
-		$fieldset3->setLegend($this->objLanguage->languageText('mod_foaf_addremfriends', 'foaf'));
+		//$fieldset3->setLegend($this->objLanguage->languageText('mod_foaf_addfriends', 'foaf'));
 		$table3 = $this->newObject('htmltable', 'htmlelements');
 		$table3->cellpadding = 5;
 
@@ -517,45 +517,72 @@ class foafops extends object
 				$addDrop->addOption($newbies['id'], $newbies['name']);
 			}
 		}
-		/*
-		//remove dropdown
-		$remarr = $dbFoaf->getFriends();
-		foreach($remarr as $usrs)
-		{
-		$name = $usrs['firstname'] . " " . $usrs['surname'];
-		$id = $usrs['userid'];
-		$remusrs[] = array('name' => $name, 'id' => $id);
-		}
 
-		//add in a dropdown to add/remove users as friends
-		$remDrop = new dropdown('remove');
-
-		foreach($remusrs as $removals)
-		{
-		$addDrop->addOption($removals['id'], $removals['name']);
-		}
-		*/
 		//add
 		$table3->startRow();
-		$table3->addCell($this->objLanguage->languageText('mod_foaf_addfriends', 'foaf'), 150, NULL, 'right');
+		$table3->addCell($this->objLanguage->languageText('mod_foaf_addfriends', 'foaf'));
 		$table3->addCell($addDrop->show());
 		$table3->endRow();
 
-		//delete
-		//$table3->startRow();
-		//$table3->addCell($this->objLanguage->languageText('mod_foaf_remfriends', 'foaf'), 150, NULL, 'right');
-		//$table3->addCell($remDrop->show());
-		//$table3->endRow();
-
 		$fieldset3->addContent($table3->show());
-		$myFriendsForm->addToForm($fieldset3->show());
+		$myFriendsAddForm->addToForm($fieldset3->show());
 
-		$this->objButton3 = & new button($this->objLanguage->languageText('word_update', 'foaf'));
-		$this->objButton3->setValue($this->objLanguage->languageText('word_update', 'foaf'));
+		$this->objButton3 = & new button('update_friends'); //$this->objLanguage->languageText('mod_foaf_update_friends', 'foaf'));
+		$this->objButton3->setValue($this->objLanguage->languageText('mod_foaf_update_friends', 'foaf'));
 		$this->objButton3->setToSubmit();
-		$myFriendsForm->addToForm($this->objButton3->show());
+		$myFriendsAddForm->addToForm($this->objButton3->show());
 
-		return $myFriendsForm;
+		return $myFriendsAddForm;
+	}
+
+	public function remDD()
+	{
+		$myFriendsRemForm = new form('myfriendsrem',$this->uri(array('action'=>'updatefriends')));
+		$fieldset4 = $this->newObject('fieldset', 'htmlelements');
+		//$fieldset4->setLegend($this->objLanguage->languageText('mod_foaf_remfriends', 'foaf'));
+		$table4 = $this->newObject('htmltable', 'htmlelements');
+		$table4->cellpadding = 5;
+
+		//remove dropdown
+		$remarr = $this->dbFoaf->getFriends();
+		//print_r($remarr);
+		if(isset($remarr))
+		{
+			/*foreach($remarr as $usrs)
+			{
+				$name = $usrs['name'];
+				$id = $usrs['fuserid'];
+				$remusrs[] = array('name' => $name, 'id' => $id);
+			}
+			*/
+
+			//add in a dropdown to add/remove users as friends
+			$remDrop = new dropdown('remove');
+
+			foreach($remarr as $removals)
+			{
+				$remDrop->addOption($removals['id'], $removals['name']);
+			}
+		}
+
+		if(isset($remarr))
+		{
+			//delete
+			$table4->startRow();
+			$table4->addCell($this->objLanguage->languageText('mod_foaf_remfriends', 'foaf'));
+			$table4->addCell($remDrop->show());
+			$table4->endRow();
+		}
+
+		$fieldset4->addContent($table4->show());
+		$myFriendsRemForm->addToForm($fieldset4->show());
+
+		$this->objButton4 = & new button('update_friends'); //$this->objLanguage->languageText('mod_foaf_update_friends', 'foaf'));
+		$this->objButton4->setValue($this->objLanguage->languageText('mod_foaf_update_friends', 'foaf'));
+		$this->objButton4->setToSubmit();
+		$myFriendsRemForm->addToForm($this->objButton4->show());
+
+		return $myFriendsRemForm;
 
 	}
 

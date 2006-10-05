@@ -209,7 +209,8 @@ $myFoafForm->addToForm($this->objButton1->show());
  */
 //var_dump($tcont->foaf['knows']);
 //add/remove friends
-$myFriendsForm = $this->objFoafOps->addRemDD();
+$addFriendsForm = $this->objFoafOps->addDD();
+$remFriendsForm = $this->objFoafOps->remDD();
 
 //$info = array();
 if(isset($tcont->foaf['knows']))
@@ -247,7 +248,8 @@ if(isset($tcont->foaf['knows']))
 }
 
 else {
-	$myFriendsForm = $this->objFoafOps->addRemDD();
+	$myFriendsForm = $this->objFoafOps->addDD();
+	$myFriendsForm .= $this->objFoafOps->remDD();
 	$objFeatureBox = $this->newObject('featurebox', 'navigation');
 	$myFbox = $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_nofriends', 'foaf'), $this->objLanguage->languageText('mod_foaf_nofriendstxt', 'foaf'));
 }
@@ -271,7 +273,7 @@ $game = '';//"<object width='550' height='400'><param name='movie' value='http:/
 //start the tabbedpane
 //$pane =new tabpane(100,500);
 $pane->addTab(array('name'=>$mydetails,'content' => $myFoafForm->show()));
-$pane->addTab(array('name'=>$myfriends,'content' => $myFriendsForm->show() . $myFbox));
+$pane->addTab(array('name'=>$myfriends,'content' => $addFriendsForm->show().$remFriendsForm->show() . $myFbox));
 $pane->addTab(array('name'=>$myorganizations,'content' => 'tbl_foaf_organizations'));
 $pane->addTab(array('name'=>$myfunders,'content' => 'tbl_foaf_funders'));
 $pane->addTab(array('name'=>$myinterests,'content' => 'tbl_foaf_interests'));

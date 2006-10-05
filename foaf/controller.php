@@ -196,7 +196,8 @@ class foaf extends controller
 				}
 				if(isset($remid))
 				{
-					echo "remid is set";
+					$myid = $this->objUser->userId();
+					$this->dbFoaf->removeFriend(array('userid' => $myid, 'fuserid' => $remid));
 				}
 				$message = 'update';
 				$this->nextAction('createfoaf',array('message' => $message));
