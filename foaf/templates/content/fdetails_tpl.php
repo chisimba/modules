@@ -238,6 +238,7 @@ if(isset($tcont->foaf['knows']))
 		$table2->endRow();
 		$mypfbox .= $table2->show() . "<br />";
 		$myFbox .= $objFeatureBox->show($pals['type'], $mypfbox) . "<br />";
+		$mypfbox = NULL;
 
 	}
 
