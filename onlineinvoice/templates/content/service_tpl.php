@@ -30,7 +30,7 @@
     */
     
     $urltext = 'YES - Go to service';
-    $content = 'Complete any service expenses';
+    $content = 'Complete any supply expenses';
     $caption = '';
     $url = $this->uri(array('action'=>'displayserviceinfo'));
     $this->objnextlink->mouseoverpopup($urltext,$content,$caption,$url);
@@ -38,7 +38,7 @@
     $urltext = $nextCategory;
     $content = $nextcatcontent;
     $caption = '';
-    $url = $this->uri(array('action'=>'null'));
+    $url = $this->uri(array('action'=>'showsupplies'));
     $this->objnextcat  = & $this->newObject('mouseoverpopup','htmlelements');
     $this->objnextcat->mouseoverpopup($urltext,$content,$caption,$url);
     

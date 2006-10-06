@@ -44,11 +44,11 @@
   $objLodgeTable->startHeaderRow();
   $objLodgeTable->addHeaderCell('Date ');
   $objLodgeTable->addHeaderCell('Vendor' );
-  $objLodgeTable->addHeaderCell('Currency');
   $objLodgeTable->addHeaderCell('Room Rate');
+  $objLodgeTable->addHeaderCell('Currency');
   $objLodgeTable->addHeaderCell('Exchange Rate');
-  $objLodgeTable->addHeaderCell('Exchange Rate Online Source');
-  $objLodgeTable->addHeaderCell('Exchange Rate Document');
+  $objLodgeTable->addHeaderCell('Exchange Document');
+  $objLodgeTable->addHeaderCell('Exchange Online Source');
   $objLodgeTable->addHeaderCell('Receipt');
   $objLodgeTable->addHeaderCell('Affidavit');
   $objLodgeTable->endHeaderRow();
@@ -63,16 +63,14 @@
   $objLodgeTable->startRow();
   $objLodgeTable->addCell($sesDat['date'], '', '', '', $oddOrEven);
   $objLodgeTable->addCell($sesDat['vendor'], '', '', '', $oddOrEven);
-  $objLodgeTable->addCell($sesDat['currency'], '', '', '', $oddOrEven);
   $objLodgeTable->addCell($sesDat['cost'], '', '', '', $oddOrEven);
+  $objLodgeTable->addCell($sesDat['currency'], '', '', '', $oddOrEven);
   $objLodgeTable->addCell($sesDat['exchangerate'], '', '', '', $oddOrEven);
   $objLodgeTable->addCell($sesDat['quotesource'], '', '', '', $oddOrEven);
   $objLodgeTable->addCell($sesDat['exchangefile'], '', '', '', $oddOrEven);
   $objLodgeTable->addCell($sesDat['receiptfilename'], '', '', '', $oddOrEven);
   $objLodgeTable->addCell($sesDat['affidavitfilename'], '', '', '', $oddOrEven);
-  $objLodgeTable->addCell($sesDat['affidavitfilename'], '', '', '', $oddOrEven);
-//  $objLodgeTable->addCell('');
-//  $objLodgeTable->addCell($sesDat['totroomrate'], '', '', '', $oddOrEven);            //need to fix up
+  //$objLodgeTable->addCell($sesDat['totroomrate'], '', '', '', $oddOrEven);            need to fix up
   $objLodgeTable->endRow();
   
   /**$objLodgeTable->startRow();
