@@ -206,10 +206,16 @@ class foaf extends controller
 			case 'updateorgs':
 				$oname = $this->getParam('oname');
 				$ourl = $this->getParam('ohomepage');
+				$removeorg = $this->getParam('removeorg');
 
 				if(isset($oname) && isset($ourl))
 				{
 					$this->dbFoaf->insertOrg($oname, $ourl);
+				}
+
+				if(isset($removeorg))
+				{
+					$this->dbFoaf->removeOrg($removeorg);
 				}
 				$message = 'update';
 				$this->setVarByRef('message', $message);

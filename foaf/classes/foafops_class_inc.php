@@ -678,11 +678,11 @@ class foafops extends object
 		return array($pfimg, $pfbox, $pftype);
 	}
 
-	public function orgaForm()
+	public function orgaAddForm()
 	{
 		$myOrgForm = new form('myorgform',$this->uri(array('action'=>'updateorgs')));
 		$fieldseto = $this->newObject('fieldset', 'htmlelements');
-		$fieldseto->setLegend($this->objLanguage->languageText('mod_foaf_organizations', 'foaf'));
+		$fieldseto->setLegend($this->objLanguage->languageText('mod_foaf_addorg', 'foaf'));
 		$tableo = $this->newObject('htmltable', 'htmlelements');
 		$tableo->cellpadding = 5;
 
@@ -711,6 +711,44 @@ class foafops extends object
 		return $myOrgForm->show();
 
 	}
+
+	public function orgaRemForm()
+	{
+		$myOrgRemForm = new form('myorgsrem',$this->uri(array('action'=>'updateorgs')));
+		$fieldsetor = $this->newObject('fieldset', 'htmlelements');
+		$fieldsetor->setLegend($this->objLanguage->languageText('mod_foaf_remorgs', 'foaf'));
+		$tableor = $this->newObject('htmltable', 'htmlelements');
+		$tableor->cellpadding = 5;
+
+		//remove dropdown
+		$remarray = $this->dbFoaf->remOrg();
+		if(isset($remarray))
+		{
+			//add in a dropdown to add/remove users as friends
+			$remDrop = new dropdown('removeorg');
+			foreach($remarray as $removal)
+			{
+				$remDrop->addOption($removal['id'], $removal['name']);
+			}
+			//delete
+			$tableor->startRow();
+			//$table4->addCell($this->objLanguage->languageText('mod_foaf_remfriends', 'foaf'));
+			$tableor->addCell($remDrop->show());
+			$tableor->endRow();
+
+			$fieldsetor->addContent($tableor->show());
+			$myOrgRemForm->addToForm($fieldsetor->show());
+
+			$this->objButtonor = & new button('update_orgsrem'); //$this->objLanguage->languageText('mod_foaf_update_friends', 'foaf'));
+			$this->objButtonor->setValue($this->objLanguage->languageText('mod_foaf_butremorgs', 'foaf'));
+			$this->objButtonor->setToSubmit();
+			$myOrgRemForm->addToForm($this->objButtonor->show());
+
+			return $myOrgRemForm->show();
+		}
+	}
+
+
 
 }
 ?>

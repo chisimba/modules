@@ -266,7 +266,7 @@ $game = '';//"<object width='550' height='400'><param name='movie' value='http:/
 
 $pane->addTab(array('name'=>$mydetails,'content' => $myFoafForm->show()));
 $pane->addTab(array('name'=>$myfriends,'content' => $addFriendsForm->show().$remFriendsForm->show() . $myFbox));
-$pane->addTab(array('name'=>$myorganizations,'content' => $this->objFoafOps->orgaForm()));
+$pane->addTab(array('name'=>$myorganizations,'content' => $this->objFoafOps->orgaRemForm().$this->objFoafOps->orgaAddForm()));
 $pane->addTab(array('name'=>$myfunders,'content' => 'tbl_foaf_funders'));
 $pane->addTab(array('name'=>$myinterests,'content' => 'tbl_foaf_interests'));
 $pane->addTab(array('name'=>$mydepictions,'content' => 'tbl_foaf_depictions'));

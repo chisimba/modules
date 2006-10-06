@@ -139,6 +139,25 @@ class dbfoaf extends dbtable
     	return $this->insert($ins);
     }
 
+    public function remOrg()
+    {
+    	$userid = $this->objUser->userId();
+    	$this->_changeTable('tbl_foaf_organization');
+    	$ret = $this->getAll("WHERE userid = " . $userid);
+    	//print_r($ret);
+    	foreach ($ret as $returns)
+    	{
+    		$retarr[] = array('id' => $returns['id'], 'name' => $returns['name']);
+    	}
+    	return $retarr;
+    }
+
+    public function removeOrg($orgid)
+    {
+    	$this->_changeTable('tbl_foaf_organization');
+    	return $this->delete('id', $orgid);
+    }
+
     private function _changeTable($table)
     {
     	parent::init($table);
