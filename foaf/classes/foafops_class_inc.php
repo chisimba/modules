@@ -520,15 +520,15 @@ class foafops extends object
 
 		//add
 		$table3->startRow();
-		$table3->addCell($this->objLanguage->languageText('mod_foaf_addfriends', 'foaf'));
-		$table3->addCell($addDrop->show());
+		//$table3->addCell($this->objLanguage->languageText('mod_foaf_addfriends', 'foaf'));
+		$table3->addCell($addDrop->show(), 150, NULL, 'left');
 		$table3->endRow();
 
 		$fieldset3->addContent($table3->show());
 		$myFriendsAddForm->addToForm($fieldset3->show());
 
 		$this->objButton3 = & new button('update_friends'); //$this->objLanguage->languageText('mod_foaf_update_friends', 'foaf'));
-		$this->objButton3->setValue($this->objLanguage->languageText('mod_foaf_update_friends', 'foaf'));
+		$this->objButton3->setValue($this->objLanguage->languageText('mod_foaf_butaddfriends', 'foaf'));
 		$this->objButton3->setToSubmit();
 		$myFriendsAddForm->addToForm($this->objButton3->show());
 
@@ -548,14 +548,6 @@ class foafops extends object
 		//print_r($remarr);
 		if(isset($remarr))
 		{
-			/*foreach($remarr as $usrs)
-			{
-				$name = $usrs['name'];
-				$id = $usrs['fuserid'];
-				$remusrs[] = array('name' => $name, 'id' => $id);
-			}
-			*/
-
 			//add in a dropdown to add/remove users as friends
 			$remDrop = new dropdown('remove');
 
@@ -569,19 +561,18 @@ class foafops extends object
 		{
 			//delete
 			$table4->startRow();
-			$table4->addCell($this->objLanguage->languageText('mod_foaf_remfriends', 'foaf'));
+			//$table4->addCell($this->objLanguage->languageText('mod_foaf_remfriends', 'foaf'));
 			$table4->addCell($remDrop->show());
 			$table4->endRow();
+
+			$fieldset4->addContent($table4->show());
+			$myFriendsRemForm->addToForm($fieldset4->show());
+
+			$this->objButton4 = & new button('update_friends'); //$this->objLanguage->languageText('mod_foaf_update_friends', 'foaf'));
+			$this->objButton4->setValue($this->objLanguage->languageText('mod_foaf_butremfriends', 'foaf'));
+			$this->objButton4->setToSubmit();
+			$myFriendsRemForm->addToForm($this->objButton4->show());
 		}
-
-		$fieldset4->addContent($table4->show());
-		$myFriendsRemForm->addToForm($fieldset4->show());
-
-		$this->objButton4 = & new button('update_friends'); //$this->objLanguage->languageText('mod_foaf_update_friends', 'foaf'));
-		$this->objButton4->setValue($this->objLanguage->languageText('mod_foaf_update_friends', 'foaf'));
-		$this->objButton4->setToSubmit();
-		$myFriendsRemForm->addToForm($this->objButton4->show());
-
 		return $myFriendsRemForm;
 
 	}
