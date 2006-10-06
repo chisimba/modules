@@ -14,7 +14,6 @@ $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $userMenu  = &$this->newObject('usermenu','toolbar');
 
-
 // Create an instance of the css layout class
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 // Set columns to 2
@@ -207,12 +206,11 @@ $myFoafForm->addToForm($this->objButton1->show());
 /**
  * Start of tbl_foaf_friends section
  */
-//var_dump($tcont->foaf['knows']);
+
 //add/remove friends
 $addFriendsForm = $this->objFoafOps->addDD();
 $remFriendsForm = $this->objFoafOps->remDD();
 
-//$info = array();
 if(isset($tcont->foaf['knows']))
 {
 	if(is_array($tcont->foaf['knows']))
@@ -229,7 +227,6 @@ if(isset($tcont->foaf['knows']))
 	foreach($info as $okes)
 	{
 		$objFeatureBox = $this->newObject('featurebox', 'navigation');
-		//echo $okes[0], $okes[1];
 		//take the pfimage and the pfbox
 		$table2 = $this->newObject('htmltable', 'htmlelements');
 		$table2->cellpadding = 5;
@@ -240,20 +237,14 @@ if(isset($tcont->foaf['knows']))
 		$mypfbox .= $table2->show() . "<br />";
 		$myFbox .= $objFeatureBox->show($pals['type'], $mypfbox) . "<br />";
 		$mypfbox = NULL;
-
 	}
-
-
-
 }
-
 else {
 	$myFriendsForm = $this->objFoafOps->addDD();
 	$myFriendsForm .= $this->objFoafOps->remDD();
 	$objFeatureBox = $this->newObject('featurebox', 'navigation');
 	$myFbox = $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_nofriends', 'foaf'), $this->objLanguage->languageText('mod_foaf_nofriendstxt', 'foaf'));
 }
-
 
 //Tab names
 $mydetails = $this->objLanguage->languageText('mod_foaf_mydetails', 'foaf');
@@ -271,7 +262,7 @@ $surprise = $this->objLanguage->languageText('mod_foaf_surprise', 'foaf');
 $game = '';//"<object width='550' height='400'><param name='movie' value='http://www.zipperfish.com/mediabase/cache/1456-184-blobs.swf' /><embed src='http://www.zipperfish.com/mediabase/cache/1456-184-blobs.swf' type='application/x-shockwave-flash' width='550' height='400'></embed></object>";
 
 //start the tabbedpane
-//$pane =new tabpane(100,500);
+
 $pane->addTab(array('name'=>$mydetails,'content' => $myFoafForm->show()));
 $pane->addTab(array('name'=>$myfriends,'content' => $addFriendsForm->show().$remFriendsForm->show() . $myFbox));
 $pane->addTab(array('name'=>$myorganizations,'content' => 'tbl_foaf_organizations'));
@@ -285,15 +276,5 @@ $pane->addTab(array('name'=>$query,'content' => 'Query the Network'));
 $pane->addTab(array('name'=>$visualise,'content' => 'Visulalise the Network'));
 //$pane->addTab(array('name'=>$surprise,'content' => $game));
 
-
-//$middleColumn .= $pane->show();
 echo $pane->show();
-
-//add left column
-//$cssLayout->setLeftColumnContent($leftSideColumn);
-//add middle column
-//$cssLayout->setMiddleColumnContent($middleColumn);
-//add right column
-//$cssLayout->setRightColumnContent($rightSideColumn);
-
-//echo $cssLayout->show();
+?>
