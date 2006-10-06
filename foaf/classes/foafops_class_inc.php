@@ -577,6 +577,19 @@ class foafops extends object
 
 	}
 
+	function orgFbox($pals)
+	{
+		$pftype = $pals['type'];
+		$pfbox = "<em>" . $pals['name'] . "</em><br />";
+		if(isset($pals['homepage']))
+		{
+			$page = new href(htmlentities($pals['homepage'][0]),htmlentities($pals['homepage'][0]));
+			$link = $page->show();
+			return array($pfbox, $pftype, $link);
+		}
+
+
+	}
 	function fFeatureBoxen($pals)
 	{
 		$pftype = $pals['type'];

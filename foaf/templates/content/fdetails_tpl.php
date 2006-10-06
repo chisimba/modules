@@ -247,6 +247,44 @@ else {
 	$myFbox = $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_nofriends', 'foaf'), $this->objLanguage->languageText('mod_foaf_nofriendstxt', 'foaf'));
 }
 
+/**
+ * End the my_foaf section
+ */
+
+/**
+ * Start organization section
+ */
+$myorgs = $this->objFoafOps->orgaRemForm().$this->objFoafOps->orgaAddForm();
+//build the featureboxen for the orgs
+foreach($tcont->foaf['knows'] as $pal)
+{
+	$orginfo[] = $this->objFoafOps->orgFbox($pal);
+}
+//print_r($orginfo); die();
+$myorgFbox = NULL;
+$myorgbox = NULL;
+foreach($orginfo as $orgas)
+{
+
+	if($orgas[1] == 'Organization')
+	{
+		$objFeatureBox = $this->newObject('featurebox', 'navigation');
+		//take the pfimage and the pfbox
+		$tableoo = $this->newObject('htmltable', 'htmlelements');
+		$tableoo->cellpadding = 5;
+		$tableoo->startRow();
+		$tableoo->addCell($orgas[0]);
+		$tableoo->addCell($orgas[2]);
+		$tableoo->endRow();
+		$myorgbox .= $tableoo->show() . "<br />";
+		$myorgFbox .= $objFeatureBox->show($orgas[1], $myorgbox) . "<br />";
+
+		$myorgbox = NULL;
+	}
+}
+//add the featureboxen to the main output
+$myorgs .= $myorgFbox;
+
 //Tab names
 $mydetails = $this->objLanguage->languageText('mod_foaf_mydetails', 'foaf');
 $myfriends = $this->objLanguage->languageText('mod_foaf_myfriends', 'foaf');
@@ -266,7 +304,7 @@ $game = '';//"<object width='550' height='400'><param name='movie' value='http:/
 
 $pane->addTab(array('name'=>$mydetails,'content' => $myFoafForm->show()));
 $pane->addTab(array('name'=>$myfriends,'content' => $addFriendsForm->show().$remFriendsForm->show() . $myFbox));
-$pane->addTab(array('name'=>$myorganizations,'content' => $this->objFoafOps->orgaRemForm().$this->objFoafOps->orgaAddForm()));
+$pane->addTab(array('name'=>$myorganizations,'content' => $myorgs));
 $pane->addTab(array('name'=>$myfunders,'content' => 'tbl_foaf_funders'));
 $pane->addTab(array('name'=>$myinterests,'content' => 'tbl_foaf_interests'));
 $pane->addTab(array('name'=>$mydepictions,'content' => 'tbl_foaf_depictions'));
