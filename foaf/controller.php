@@ -201,6 +201,20 @@ class foaf extends controller
 				}
 				$message = 'update';
 				$this->nextAction('createfoaf',array('message' => $message));
+				break;
+
+			case 'updateorgs':
+				$oname = $this->getParam('oname');
+				$ourl = $this->getParam('ohomepage');
+
+				if(isset($oname) && isset($ourl))
+				{
+					$this->dbFoaf->insertOrg($oname, $ourl);
+				}
+				$message = 'update';
+				$this->setVarByRef('message', $message);
+
+				$this->nextAction('createfoaf',array('message' => $message));
 
 		}
 	}

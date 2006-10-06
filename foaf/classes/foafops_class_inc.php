@@ -579,7 +579,15 @@ class foafops extends object
 
 	function fFeatureBoxen($pals)
 	{
-		$pfbox = "<em>" . $pals['title'] . " " . $pals['firstname'] . " " . $pals['surname'] . "</em><br />";
+		$pftype = $pals['type'];
+		if(isset($pals['title']) && isset($pals['firstname']) && isset($pals['surname']))
+		{
+			$pfbox = "<em>" . $pals['title'] . " " . $pals['firstname'] . " " . $pals['surname'] . "</em><br />";
+		}
+		else {
+			$pfbox = "<em>" . $pals['name'] . "</em><br />";
+			$pfimg = NULL;
+		}
 		//build a table of values etc...
 		//var_dump($pals);
 		if(isset($pals['img']))
@@ -667,7 +675,41 @@ class foafops extends object
 			$pfbox .= $this->objLanguage->languageText('mod_foaf_geekcode', 'foaf') . ": " . $pgeekcode . "<br />";
 		}
 
-		return array($pfimg, $pfbox);
+		return array($pfimg, $pfbox, $pftype);
+	}
+
+	public function orgaForm()
+	{
+		$myOrgForm = new form('myorgform',$this->uri(array('action'=>'updateorgs')));
+		$fieldseto = $this->newObject('fieldset', 'htmlelements');
+		$fieldseto->setLegend($this->objLanguage->languageText('mod_foaf_organizations', 'foaf'));
+		$tableo = $this->newObject('htmltable', 'htmlelements');
+		$tableo->cellpadding = 5;
+
+		$tableo->startRow();
+		$labelo2 = new label($this->objLanguage->languageText('mod_foaf_oname', 'foaf').':', 'input_oname');
+		$oname = new textinput('oname');
+	    $tableo->addCell($labelo2->show(),150, NULL, 'right'); //label
+		$tableo->addCell($oname->show()); //input box
+		$tableo->endRow();
+
+		$tableo->startRow();
+		$labelo1 = new label($this->objLanguage->languageText('mod_foaf_ohomepage', 'foaf').':', 'input_ohomepage');
+		$ohomepage = new textinput('ohomepage');
+	    $tableo->addCell($labelo1->show(),150, NULL, 'right'); //label
+		$tableo->addCell($ohomepage->show()); //input box
+		$tableo->endRow();
+
+		$fieldseto->addContent($tableo->show());
+		$myOrgForm->addToForm($fieldseto->show());
+
+		$this->objButtono = & new button('addorg');
+		$this->objButtono->setValue($this->objLanguage->languageText('mod_foaf_addorg', 'foaf'));
+		$this->objButtono->setToSubmit();
+		$myOrgForm->addToForm($this->objButtono->show());
+
+		return $myOrgForm->show();
+
 	}
 
 }

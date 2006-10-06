@@ -131,6 +131,14 @@ class dbfoaf extends dbtable
     	return $this->delete('id',$friend['fuserid']);
     }
 
+    public function insertOrg($name, $url)
+    {
+    	$this->_changeTable('tbl_foaf_organization');
+    	$uid = $this->objUser->userId();
+    	$ins = array('userid' => $uid, 'homepage' => $url, 'name' => $name);
+    	return $this->insert($ins);
+    }
+
     private function _changeTable($table)
     {
     	parent::init($table);

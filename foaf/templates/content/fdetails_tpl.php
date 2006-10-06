@@ -235,7 +235,8 @@ if(isset($tcont->foaf['knows']))
 		$table2->addCell($okes[1]);
 		$table2->endRow();
 		$mypfbox .= $table2->show() . "<br />";
-		$myFbox .= $objFeatureBox->show($pals['type'], $mypfbox) . "<br />";
+		$myFbox .= $objFeatureBox->show($okes[2], $mypfbox) . "<br />";
+
 		$mypfbox = NULL;
 	}
 }
@@ -265,7 +266,7 @@ $game = '';//"<object width='550' height='400'><param name='movie' value='http:/
 
 $pane->addTab(array('name'=>$mydetails,'content' => $myFoafForm->show()));
 $pane->addTab(array('name'=>$myfriends,'content' => $addFriendsForm->show().$remFriendsForm->show() . $myFbox));
-$pane->addTab(array('name'=>$myorganizations,'content' => 'tbl_foaf_organizations'));
+$pane->addTab(array('name'=>$myorganizations,'content' => $this->objFoafOps->orgaForm()));
 $pane->addTab(array('name'=>$myfunders,'content' => 'tbl_foaf_funders'));
 $pane->addTab(array('name'=>$myinterests,'content' => 'tbl_foaf_interests'));
 $pane->addTab(array('name'=>$mydepictions,'content' => 'tbl_foaf_depictions'));
