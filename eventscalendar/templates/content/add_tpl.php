@@ -102,7 +102,8 @@ $str .= '</select>';
 //add them all to the form
 $objForm->addToForm($objTextField);
 //$objForm->addToForm($objCatDropdown);
-$objForm->addToForm('Category</td><td>'.$str.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Location '.$location->show());
+//$objForm->addToForm('Category</td><td>'.$str.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Location '.$location->show());
+$objForm->addToForm($location);
 $objForm->addToForm($objEditor);
 //$objForm->addToForm($objLocation);
 $objForm->addToForm($objDatePicker);

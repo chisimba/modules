@@ -37,7 +37,7 @@ class utils extends object
 	{
 	    $nodes = array();
 		$nodes[] = array('text' => 'Events', 'uri' => $this->uri(null,'eventscalendar'));
-		$nodes[] = array('text' => 'Event Categories', 'uri' => $this->uri(array('action' => 'categories'), 'eventscalendar'));
+	//	$nodes[] = array('text' => 'Event Categories', 'uri' => $this->uri(array('action' => 'categories'), 'eventscalendar'));
 		
 		
 		return  $nodes;

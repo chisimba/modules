@@ -18,6 +18,12 @@ if (!$GLOBALS['kewl_entry_point_run'])
 */
 class dbeventscalendar extends dbTable
 {
+	
+	/**
+	* object $_objDBLookup;
+	*/
+	protected $_objDBLookup;
+	
     
     /**
      * Constructor
@@ -27,6 +33,7 @@ class dbeventscalendar extends dbTable
     	
     	
         parent::init('tbl_eventscalendar');
+        $this->_objDBLookup = & $this->newObject('dbeventslookup', 'eventscalendar');
     }
     
     
@@ -73,7 +80,7 @@ class dbeventscalendar extends dbTable
      * @return boolean
      * @access string the new id
      */
-    public function addEvent($userId)
+    public function addEvent($type , $typeId)
     {
         try
         {            
@@ -91,13 +98,17 @@ class dbeventscalendar extends dbTable
                     'start_time' => $start_time,
                     'end_time' => $end_time,
                     'event_date' => $start_date,
-                    'catid' => $catid,
-                    'userid' => $userId,
+                   
                     'location' => $location
             
             );
-           
-            return $this->insert($fields);
+           	
+            
+            $id =  $this->insert($fields);
+            
+            $this->_objDBLookup->add($type, $typeId, $id);
+            
+            return $id;
         }
         catch (customException $e)
         {
@@ -130,7 +141,7 @@ class dbeventscalendar extends dbTable
                     'start_time' => $start_time,
                     'end_time' => $end_time,
                     'start_date' => $start_date,
-                    'catid' => $catid,
+                   
                     'location' => $location
             
             );
