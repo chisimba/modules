@@ -124,7 +124,7 @@ class calendarbiulder extends object
 		      
 			  $str2 .= '<a href="'. $this->uri(array("action" => "events", "month" => $prevMonth, "year" => $prevYear )) .'"> '.$objGetIcon->show().' </a>';
 			  $objGetIcon->setIcon('next');
-			  $str2 .= $this->curtxtMonth[$this->curMonth].' - '.$this->curYear;
+			  $str2 .= date("M", mktime(0,0,0,$this->curMonth+1,0,0)).' - '.$this->curYear;
 			 if($this->curMonth+1 == 13)
 			  {
 			  	$nextYear =$this->curYear + 1;
