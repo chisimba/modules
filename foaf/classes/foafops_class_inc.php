@@ -144,6 +144,12 @@ class foafops extends object
 
 	}
 
+	/**
+	 * Method to add the additional details to the FOAF of a particular user
+	 *
+	 * @param int $userId
+	 * @return void
+	 */
 	public function myFoaf($userId)
 	{
 		//switch tables to tbl_foaf_myfoaf
@@ -229,6 +235,12 @@ class foafops extends object
 
 	}
 
+	/**
+	 * Method to get the FOAF of a friend that you have added to your FOAF
+	 *
+	 * @param integer $fuserid
+	 * @return array
+	 */
 	private function _getFriendFoaf($fuserid)
 	{
 		//switch tables to tbl_foaf_myfoaf
@@ -246,6 +258,12 @@ class foafops extends object
 		return $foafdetails;
 	}
 
+	/**
+	 * Method to get your FOAF interests
+	 *
+	 * @param integer $userId
+	 * @param bool $friend
+	 */
 	private function _getInterests($userId, $friend = FALSE)
 	{
 		$iarr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_interests');
@@ -267,6 +285,12 @@ class foafops extends object
 		}
 	}
 
+	/**
+	 * Method to get the funders associated with your FOAF profile
+	 *
+	 * @param integer $userId
+	 * @param bool $friend
+	 */
 	private function _getFunders($userId, $friend = FALSE)
 	{
 		$funarr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_fundedby');
@@ -288,6 +312,12 @@ class foafops extends object
 		}
 	}
 
+	/**
+	 * Method to get depiction URL's of yourself or a friend
+	 *
+	 * @param integer $userId
+	 * @param bool $friend
+	 */
 	private function _getDepictions($userId, $friend = FALSE)
 	{
 		$darr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_depiction');
@@ -310,6 +340,12 @@ class foafops extends object
 		}
 	}
 
+	/**
+	 * Method to get the organizations associated with your profile
+	 *
+	 * @param integer $userId
+	 * @param bool $friend
+	 */
 	private function _getOrganizations($userId, $friend = FALSE)
 	{
 		$oarr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_organization');
@@ -338,6 +374,12 @@ class foafops extends object
 		}
 	}
 
+	/**
+	 * Method to get the FOAF:Pages associated with your or a friends profile
+	 *
+	 * @param integer $userId
+	 * @param bool $friend
+	 */
 	private function _getpages($userId, $friend = FALSE)
 	{
 		$parr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_pages');
@@ -362,6 +404,11 @@ class foafops extends object
 		}
 	}
 
+	/**
+	 * Method to get all your friends
+	 *
+	 * @param integer $userId
+	 */
 	private function _getFriends($userId)
 	{
 		$frarr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_friends');
@@ -461,6 +508,12 @@ class foafops extends object
 
 
 
+	/**
+	 * Method to write the foaf profile that is generated to a file
+	 *
+	 * @param void
+	 * @return void
+	 */
 	public function writeFoaf()
 	{
 		//write the file so that we can edit it later
@@ -471,6 +524,14 @@ class foafops extends object
 		//die();
 	}
 
+	/**
+	 * Method to parse a foaf profile and return it as HTML
+	 *
+	 * This should only really be used in debugging
+	 *
+	 * @param integer $userId
+	 * @return string
+	 */
 	public function foaf2html($userId)
 	{
 		$this->objFoafParser->setup();
@@ -478,6 +539,12 @@ class foafops extends object
 		return $this->objFoafParser->toHtml($this->objFoafParser->foaf_data);
 	}
 
+	/**
+	 * Method to parse the FOAF into an array that can be manipulated
+	 *
+	 * @param integer $userId
+	 * @return array
+	 */
 	public function foaf2array($userId)
 	{
 		$this->objFoafParser->setup();
@@ -485,6 +552,12 @@ class foafops extends object
 		return $this->objFoafParser->toArray();
 	}
 
+	/**
+	 * Method to create a stdClass Object from a FOAF profile
+	 *
+	 * @param integer $userId
+	 * @return object
+	 */
 	public function foaf2Object($userId)
 	{
 		$this->objFoafParser->setup();
@@ -492,6 +565,12 @@ class foafops extends object
 		return $this->objFoafParser->toObject();
 	}
 
+	/**
+	 * Method to create a the add a friend dropdown form
+	 *
+	 * @param void
+	 * @return string
+	 */
 	public function addDD()
 	{
 		$myFriendsAddForm = new form('myfriends',$this->uri(array('action'=>'updatefriends')));
@@ -535,6 +614,12 @@ class foafops extends object
 		return $myFriendsAddForm;
 	}
 
+	/**
+	 * Method to create the remove a friend dropdown
+	 *
+	 * @param void
+	 * @return string
+	 */
 	public function remDD()
 	{
 		$myFriendsRemForm = new form('myfriendsrem',$this->uri(array('action'=>'updatefriends')));
@@ -577,6 +662,12 @@ class foafops extends object
 
 	}
 
+	/**
+	 * Method to create the featurebox to hold the organizations
+	 *
+	 * @param object $pals
+	 * @return string
+	 */
 	function orgFbox($pals)
 	{
 		$pftype = $pals['type'];
@@ -590,6 +681,13 @@ class foafops extends object
 
 
 	}
+
+	/**
+	 * Method to create the friends featurebox
+	 *
+	 * @param object $pals
+	 * @return string
+	 */
 	function fFeatureBoxen($pals)
 	{
 		$pftype = $pals['type'];
@@ -691,6 +789,12 @@ class foafops extends object
 		return array($pfimg, $pfbox, $pftype);
 	}
 
+	/**
+	 * Method to add a form to add an organization
+	 *
+	 * @param void
+	 * @return string
+	 */
 	public function orgaAddForm()
 	{
 		$myOrgForm = new form('myorgform',$this->uri(array('action'=>'updateorgs')));
@@ -725,6 +829,12 @@ class foafops extends object
 
 	}
 
+	/**
+	 * Method to create the remove org form
+	 *
+	 * @param void
+	 * @return string
+	 */
 	public function orgaRemForm()
 	{
 		$myOrgRemForm = new form('myorgsrem',$this->uri(array('action'=>'updateorgs')));
@@ -760,8 +870,5 @@ class foafops extends object
 			return $myOrgRemForm->show();
 		}
 	}
-
-
-
 }
 ?>
