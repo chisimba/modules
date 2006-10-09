@@ -112,10 +112,28 @@ class calendarbiulder extends object
 						  <td class="monthYearText monthYearRow" colspan="7" >';
 		      $objGetIcon = & $this->newObject('geticon', 'htmlelements');
 		      $objGetIcon->setIcon('prev');
-			  $str2 .= '<a href="'. $this->uri(array("action" => "events", "month" => $this->curMonth-1, "year" => "2006" )) .'"> '.$objGetIcon->show().' </a>';
+		      
+		       if($this->curMonth-1 == 0)
+			  {
+			  	$prevYear =$this->curYear - 1;
+			  	$prevMonth = 12;
+			  } else {
+			  	$prevYear =$this->curYear;
+			  	$prevMonth = $this->curMonth-1;
+			  }
+		      
+			  $str2 .= '<a href="'. $this->uri(array("action" => "events", "month" => $prevMonth, "year" => $prevYear )) .'"> '.$objGetIcon->show().' </a>';
 			  $objGetIcon->setIcon('next');
 			  $str2 .= $this->curtxtMonth[$this->curMonth].' - '.$this->curYear;
-			  $str2 .= '<a href="'.$this->uri(array('action' => 'events', 'month' => $this->curMonth+1, 'year' => '2006' )).'"> '.$objGetIcon->show().'</a>
+			 if($this->curMonth+1 == 13)
+			  {
+			  	$nextYear =$this->curYear + 1;
+			  	$nextMonth = 1;
+			  } else {
+			  	$nextYear =$this->curYear;
+			  	$nextMonth = $this->curMonth+1;
+			  }
+			  $str2 .= '<a href="'.$this->uri(array('action' => 'events', 'month' => $nextMonth, 'year' => $nextYear )).'"> '.$objGetIcon->show().'</a>
 						  </td>
 						 </tr>';
 						      
@@ -240,10 +258,20 @@ class calendarbiulder extends object
 					  <td class="monthYearText monthYearRow" colspan="7" >';
 	      $objGetIcon = & $this->newObject('geticon', 'htmlelements');
 	      $objGetIcon->setIcon('prev');
-		  $str2 .= '<a href="'. $this->uri(array("action" => "events", "month" => $this->curMonth-1, "year" => "2006" )) .'"> '.$objGetIcon->show().' </a>';
+		  $str2 .= '<a href="'. $this->uri(array("action" => "events", "month" => $this->curMonth-1, "year" => $this->curYear )) .'"> '.$objGetIcon->show().' </a>';
 		  $objGetIcon->setIcon('next');
 		  $str2 .= $this->curtxtMonth[$this->curMonth].' - '.$this->curYear;
-		  $str2 .= '<a href="'.$this->uri(array('action' => 'events', 'month' => $this->curMonth+1, 'year' => '2006' )).'"> '.$objGetIcon->show().'</a>
+		  
+		  
+		  if($this->curMonth+1 == 13)
+		  {
+		  	$nextYear =$this->curYear + 1;
+		  	$nextMonth = 1;
+		  } else {
+		  	$nextYear =$this->curYear;
+		  	$nextMonth = $this->curMonth+1;
+		  }
+		  $str2 .= '<a href="'.$this->uri(array('action' => 'events', 'month' => $nextMonth, 'year' => $nextYear )).'"> '.$objGetIcon->show().'</a>
 					  </td>
 					 </tr>';
 					      
