@@ -76,6 +76,13 @@ class dbfoaf extends dbtable
     	return $this->getAll($sql);
     }
 
+    /**
+     * Method to insert the users filled in details to tbl_foaf_myfoaf
+     *
+     * @param integer $userid
+     * @param array $array
+     * @return bool
+     */
     public function insertMyDetails($userid, $array)
     {
     	$this->_changeTable('tbl_foaf_myfoaf');
@@ -89,12 +96,24 @@ class dbfoaf extends dbtable
     	}
     }
 
+    /**
+     * Method to get all known users from tbl_users
+     *
+     * @param void
+     * @return array
+     */
     public function getAllUsers()
     {
     	$this->_changeTable('tbl_users');
     	return $this->getAll();
     }
 
+    /**
+     * Method to get the friends of a partiucular userid
+     *
+     * @param void
+     * @return array
+     */
     public function getFriends()
     {
     	$this->_changeTable('tbl_foaf_friends');
@@ -118,12 +137,24 @@ class dbfoaf extends dbtable
     	}
     }
 
+    /**
+     * Method to insert a new friend into the friends table according to a userid
+     *
+     * @param array $friend
+     * @return bool
+     */
     public function insertFriend($friend)
     {
     	$this->_changeTable('tbl_foaf_friends');
     	return $this->insert($friend);
     }
 
+    /**
+     * Method to remove a friend associated with the current userid
+     *
+     * @param array $friend
+     * @return bool
+     */
     public function removeFriend($friend)
     {
     	$this->_changeTable('tbl_foaf_friends');
@@ -131,6 +162,13 @@ class dbfoaf extends dbtable
     	return $this->delete('id',$friend['fuserid']);
     }
 
+    /**
+     * Method to insert an organization according to the current userid
+     *
+     * @param string $name
+     * @param string $url
+     * @return bool
+     */
     public function insertOrg($name, $url)
     {
     	$this->_changeTable('tbl_foaf_organization');
@@ -139,6 +177,13 @@ class dbfoaf extends dbtable
     	return $this->insert($ins);
     }
 
+    /**
+     * Method to remove an associated organization from a userid
+     * This is step one of two to get the org details
+     *
+     * @param void
+     * @return array
+     */
     public function remOrg()
     {
     	$userid = $this->objUser->userId();
@@ -152,12 +197,24 @@ class dbfoaf extends dbtable
     	return $retarr;
     }
 
+    /**
+     * Part two of org removal
+     *
+     * @param string $orgid
+     * @return bool
+     */
     public function removeOrg($orgid)
     {
     	$this->_changeTable('tbl_foaf_organization');
     	return $this->delete('id', $orgid);
     }
 
+    /**
+     * Method to change database tables
+     *
+     * @param string $table
+     * @return void
+     */
     private function _changeTable($table)
     {
     	parent::init($table);
