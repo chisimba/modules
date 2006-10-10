@@ -13,7 +13,7 @@ $fields = array(
 	),
 	'context' => array(
 		'type' => 'text',
-		'length' => 50
+		'length' => 255
 	),
 	'username' => array(
 		'type' => 'text',
