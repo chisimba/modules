@@ -271,6 +271,10 @@ foreach($tcont->foaf['knows'] as $pal)
 //print_r($orginfo); die();
 $myorgFbox = NULL;
 $myorgbox = NULL;
+if(!isset($orginfo))
+{
+	$orginfo = array();
+}
 foreach($orginfo as $orgas)
 {
 
