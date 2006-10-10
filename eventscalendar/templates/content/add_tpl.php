@@ -10,7 +10,7 @@ $objTextField = & $this->newObject('textinput', 'htmlelements');
 //the categories dropdown
 $objCatDropdown = & $this->newObject('dropdown', 'htmlelements');
 //i need a date 
-$objDatePicker =  & $this->newObject('textinput', 'htmlelements');
+$objDatePicker =  & $this->newObject('datepicker', 'htmlelements');
 //a start time 
 $startTime =  & $this->newObject('textinput', 'htmlelements');
 // an end time
@@ -104,13 +104,14 @@ $objForm->addToForm($objTextField);
 //$objForm->addToForm($objCatDropdown);
 //$objForm->addToForm('Category</td><td>'.$str.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Location '.$location->show());
 $objForm->addToForm($location);
-$objForm->addToForm($objEditor);
+
 //$objForm->addToForm($objLocation);
 $objForm->addToForm($objDatePicker);
-$objForm->addToForm($startTime);
-$objForm->addToForm($endTime);
-$objForm->addToForm($this->_objUtils->getTimeDropDown());
-
+//$objForm->addToForm($startTime);
+//$objForm->addToForm($endTime);
+$objForm->addToForm('Start Time</td><td>'.$this->_objUtils->getTimeDropDown('startTime'));
+$objForm->addToForm('End Time</td><td>'.$this->_objUtils->getTimeDropDown('endTime'));
+$objForm->addToForm($objEditor);
 $objForm->addToForm($button);
 
 print "<h1> ".$heading."</h1>";

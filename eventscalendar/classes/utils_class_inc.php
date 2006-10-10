@@ -64,23 +64,29 @@ class utils extends object
    * @param $minute The selected minute
    * @param $hour The selected hour
    */
-   public function getTimeDropDown($hour = null , $minute = null)
+   public function getTimeDropDown($name, $hour = null , $minute = null)
    {
    		
    		
-   		$str = '<select name="hours" id="hours">';
+   		$str = '<select  name="'.$name.'_hours" id="hours">';
    		for($i = 0; $i < 24; $i++)
    		{
-			$str .= '<option value="'.$i.'">'.$i.'</option>';   				
+   			
+   			$zero = ($i<10) ? '0' : '';
+   			//$selected = ($i==9) ? 'selected="selected"' : '';
+			$str .= '<option value="'.$zero.($i).'" '.$selected.' >&nbsp;'.$zero.$i.'&nbsp;</option>';   				
    		}
    		$str .= '</select>h ';
    		
    		
    		
-   		$str .= '<select name="minutes" id="minutes">';
+   		$str .= '<select name="'.$name.'_minutes" id="minutes">';
    		for($i = 0; $i < 60; $i++)
    		{
-			$str .= '<option value="'.$i.'">'.$i.'</option>';   				
+   			
+   			$zero = ($i<10) ? '0' : '';
+   			
+			$str .= '<option value="'.$zero.$i.'"   >&nbsp;'.$zero.$i.'&nbsp;</option>';   				
    		}
    		$str .= '</select>';
    		return $str;

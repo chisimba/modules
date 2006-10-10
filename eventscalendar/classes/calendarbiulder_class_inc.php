@@ -41,7 +41,7 @@ class calendarbiulder extends object
   	    
   	    $this->_objDBEventsCalendar = & $this->newObject('dbeventscalendar', 'eventscalendar');
   	    $this->_objUser = & $this->newObject('user', 'security');
-  	    $this->eventsArr = & $this->_objDBEventsCalendar->getUserEvents($this->_objUser->userId(), $this->getParam('month'), $this->getParam('year'));
+  	    $this->eventsArr = & $this->_objDBEventsCalendar->getEventsByType('user', $this->_objUser->userId(), $this->getParam('month'), $this->getParam('year'));
   	    $this->domTT = & $this->newObject('domtt', 'htmlelements');
 	}
 
@@ -56,8 +56,10 @@ class calendarbiulder extends object
 	{
 		if($type != 'simple')
 		{
+			$this->calType = 'big';
 			return $this->bigCalendar($arrEvents);
 		} else {
+			$this->calType = 'simple';
 			return $this->simpleCalendar($arrEvents);
 		}
 		
@@ -137,16 +139,14 @@ class calendarbiulder extends object
 						  </td>
 						 </tr>';
 						      
-		      $str2 .='<tr class="dayNamesText">
-						  <td class="dayNamesRow" width="14%">S</td>
-						  <td class="dayNamesRow" width="14%">M</td>
-						  <td class="dayNamesRow" width="14%">T</td>
-						
-						  <td class="dayNamesRow" width="14%">W</td>
-						  <td class="dayNamesRow" width="14%">T</td>
-						  <td class="dayNamesRow" width="14%">F</td>
-						  <td class="dayNamesRow" width="14%">S</td>
-						 </tr>';
+		      $str2 .='<tr class="dayNamesText">';
+		      
+		      //get the day names
+		      for($i=1 ; $i < 8 ; $i++)
+	      	  {
+					$str2 .=' <td class="dayNamesRow" width="14%">'.date("D", mktime(0,0,0,10,$i,2006)).'</td>';
+	      	  } 
+			  $str2 .= '</tr>';
 		      
 		     
 			  
@@ -217,126 +217,142 @@ class calendarbiulder extends object
 	*/
 	public function bigCalendar($arrEvents = NULL)
 	{
-		// $this->curMonth = $this->curMonth - 1;
-			
-			
-		  //the days in the month
-		  $daysInMonth = date("t",mktime(23,59,59,$this->curMonth, $this->curDay, $this->curYear));
-		  
-		  //the week number at the end of the month
-		  $weekNo = date("W",mktime(23,59,59,$this->curMonth, $daysInMonth, $this->curYear));
-		  
-		  //the first day of the week Mon = 0 Tues=1 etc
-		  $firstDayOfTheMonth = date("w",mktime(23,59,59,$this->curMonth, 1, $this->curYear));
-		  
-		  //last day of the month
-		  $lastDayOfTheMonth = date("w",mktime(23,59,59,$this->curMonth, 1, $this->curYear));
-		  
-		  //week number at the beginning of the month
-		  $weekNoEndOfMonth = date("W",mktime(23,59,59,$this->curMonth, $this->curMonth, $this->curYear));
-		  
-		  //number of weeks for the month
-		  $weekNo = ($weekNo - $weekNoEndOfMonth  ) + 1;
-		//  print $weekNoEndOfMonth;
-		  
-			//the start flag
-		  $start = true;
-		  
-		  //the day counter
-		  $dayCounter = 1;
-		  
-		  //next months days counter
-		  $nextMonthsDays = 1;
-		  
-		  //previous months days 
-		  $previousMonthsDays = date("t",mktime(23,59,59,$this->curMonth-1, $this->curDay, $this->curYear)) - $firstDayOfTheMonth + 1;
-		  
-	
-	      $str2 = '<!-- START CALENDAR GENERATETOR --><table class="mainTable" cellspacing="1" cellpadding="0">
-					 <tr>
-					
-					  <td class="monthYearText monthYearRow" colspan="7" >';
-	      $objGetIcon = & $this->newObject('geticon', 'htmlelements');
-	      $objGetIcon->setIcon('prev');
-		  $str2 .= '<a href="'. $this->uri(array("action" => "events", "month" => $this->curMonth-1, "year" => $this->curYear )) .'"> '.$objGetIcon->show().' </a>';
-		  $objGetIcon->setIcon('next');
-		  $str2 .= $this->curtxtMonth[$this->curMonth].' - '.$this->curYear;
-		  
-		  
-		  if($this->curMonth+1 == 13)
-		  {
-		  	$nextYear =$this->curYear + 1;
-		  	$nextMonth = 1;
-		  } else {
-		  	$nextYear =$this->curYear;
-		  	$nextMonth = $this->curMonth+1;
-		  }
-		  $str2 .= '<a href="'.$this->uri(array('action' => 'events', 'month' => $nextMonth, 'year' => $nextYear )).'"> '.$objGetIcon->show().'</a>
-					  </td>
-					 </tr>';
-					      
-	      $str2 .='<tr class="dayNamesText">
-					  <td class="dayNamesRow" width="14%">S</td>
-					  <td class="dayNamesRow" width="14%">M</td>
-					  <td class="dayNamesRow" width="14%">T</td>
-					
-					  <td class="dayNamesRow" width="14%">W</td>
-					  <td class="dayNamesRow" width="14%">T</td>
-					  <td class="dayNamesRow" width="14%">F</td>
-					  <td class="dayNamesRow" width="14%">S</td>
-					 </tr>';
-	      
-	     
-		  
-	      
-		  
-		  	  //get the weeks in the month
-		  for($i = 0; $i <= $weekNo ; $i++)
-		  {
-		  	//loop the weeks for this month
-		  	$str2 .= '<tr  class="rows">';
-		  	
-		  	//loop the days for this week
-		  	//but first format the first days of the calendar month
-		  	if($start)
-		  	{
-		  		//add the previous months days
-			  	for($k = 0; $k < $firstDayOfTheMonth ; $k++)
+		try {
+				
+				
+			  //the days in the month
+			  $daysInMonth = date("t",mktime(23,59,59,$this->curMonth, $this->curDay, $this->curYear));
+			  
+			  //the week number at the end of the month
+			  $weekNo = date("W",mktime(23,59,59,$this->curMonth, $daysInMonth, $this->curYear));
+			  
+			  //the first day of the week Mon = 0 Tues=1 etc
+			  $firstDayOfTheMonth = date("w",mktime(23,59,59,$this->curMonth, 1, $this->curYear));
+			  
+			  //last day of the month
+			  $lastDayOfTheMonth = date("w",mktime(23,59,59,$this->curMonth, 1, $this->curYear));
+			  
+			  //week number at the beginning of the month
+			  $weekNoEndOfMonth = date("W",mktime(23,59,59,$this->curMonth, $this->curMonth, $this->curYear));
+			  
+			  //number of weeks for the month
+			  $weekNo = ($weekNo - $weekNoEndOfMonth  ) + 1;
+			//  print $weekNoEndOfMonth;
+			  
+				//the start flag
+			  $start = true;
+			  
+			  //the day counter
+			  $dayCounter = 1;
+			  
+			  //next months days counter
+			  $nextMonthsDays = 1;
+			  
+			  //previous months days 
+			  $previousMonthsDays = date("t",mktime(23,59,59,$this->curMonth-1, $this->curDay, $this->curYear)) - $firstDayOfTheMonth + 1;
+			  
+		
+		      $str2 = '<!-- START CALENDAR GENERATETOR --><table class="mainTableTOC" cellspacing="1" cellpadding="0">
+						 <tr>
+						
+						  <td class="monthYearText monthYearRow" colspan="7" >';
+		      $objGetIcon = & $this->newObject('geticon', 'htmlelements');
+		      $objGetIcon->setIcon('prev');
+		      
+		      //the previous month navigation
+		       if($this->curMonth-1 == 0)
+			  {
+			  	$prevYear =$this->curYear - 1;
+			  	$prevMonth = 12;
+			  } else {
+			  	$prevYear =$this->curYear;
+			  	$prevMonth = $this->curMonth-1;
+			  }
+		      
+			  //the previous link
+			  $str2 .= '<a href="'. $this->uri(array("action" => "events", "month" => $prevMonth, "year" => $prevYear )) .'"> '.$objGetIcon->show().' </a>';
+			  
+			  //set the next icon
+			  $objGetIcon->setIcon('next');
+			  
+			  //the month and year eg October - 2006
+			  $str2 .= date("F", mktime(0,0,0,$this->curMonth+1,0,0)).' - '.$this->curYear;
+			  
+			  //the next month
+			 if($this->curMonth+1 == 13)
+			  {
+			  	$nextYear =$this->curYear + 1;
+			  	$nextMonth = 1;
+			  } else {
+			  	$nextYear =$this->curYear;
+			  	$nextMonth = $this->curMonth+1;
+			  }
+			  $str2 .= '<a href="'.$this->uri(array('action' => 'events', 'month' => $nextMonth, 'year' => $nextYear )).'"> '.$objGetIcon->show().'</a>
+						  </td>
+						 </tr>';
+
+			  //get the day names  
+		      $str2 .='<tr class="dayNamesTextTOC">';
+	      	  for($i=1 ; $i < 8 ; $i++)
+	      	  {
+					$str2 .=' <td class="dayNamesRowTOC" width="14%">'.date("l", mktime(0,0,0,10,$i,2006)).'</td>';
+	      	  } 
+			  $str2 .= '</tr>';							      
+			  
+			  	  //get the weeks in the month
+			  for($i = 0; $i <= $weekNo ; $i++)
+			  {
+			  	//loop the weeks for this month
+			  	$str2 .= '<tr  class="rowsTOC">';
+			  
+			  	//loop the days for this week
+			  	//but first format the first days of the calendar month
+			  	if($start)
 			  	{
-			  		$str2 .= '<td class="sOther">'.$previousMonthsDays.'</td>';	
-			  		$previousMonthsDays++;
+			  		//add the previous months days
+				  	for($k = 0; $k < $firstDayOfTheMonth ; $k++)
+				  	{
+				  		$str2 .= '<td class="sOther">'.$previousMonthsDays.'</td>';	
+				  		$previousMonthsDays++;
+				  	}
+				  	$start = false;
 			  	}
-			  	$start = false;
-		  	}
-		  		
-		  	//add the current months days
-		  	for ($j = $firstDayOfTheMonth; $j<7 ; $j++)
-		  	{	
-		  		if($dayCounter <= $daysInMonth)
-		  		{
-		  			//get the event for this day
-		  			$str2 .= $this->getEventDay($this->curYear,$this->curMonth,$dayCounter);		 
-		  		} else {
-		  			//add the next  months days
-		  			$str2 .= '<td class="sOther">'.$nextMonthsDays.'</td>';
-		  			$nextMonthsDays++;
-		  		}
-		  		//increment the day counter
-		  		$dayCounter++; 		
-		  		
-		  		//set the first day flag to 0
-		  		$firstDayOfTheMonth = 0;
-		  	}	
-		  	
-		  	//close the row
-		  	$str2 .= '</tr>';
-		  }
-		  
-		  //close the table
-	      $str2 .= "</table>\r<!-- END START CALENDAR GENERATETOR -->";
-			
-	     
-	      return $str2;
+			  		
+			  	//add the current months days
+			  	for ($j = $firstDayOfTheMonth; $j<7 ; $j++)
+			  	{	
+			  		if($dayCounter <= $daysInMonth)
+			  		{
+			  			//get the event for this day
+			  			$str2 .= $this->getEventDay($this->curYear,$this->curMonth,$dayCounter);		 
+			  		} else {
+			  			//add the next  months days
+			  			$str2 .= '<td class="sOther">'.$nextMonthsDays.'</td>';
+			  			$nextMonthsDays++;
+			  		}
+			  		//increment the day counter
+			  		$dayCounter++; 		
+			  		
+			  		//set the first day flag to 0
+			  		$firstDayOfTheMonth = 0;
+			  	}	
+			  	
+			  	//close the row
+			  	$str2 .= '</tr>';
+			  }
+			  
+			  //close the table
+		      $str2 .= "</table>\r<!-- END START CALENDAR GENERATETOR -->";
+				
+		     
+		      return $str2;
+		      
+	      }
+        catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
+        }
 	}
 	
 	
@@ -382,9 +398,10 @@ class calendarbiulder extends object
    {
    		
    		$givenDate  = $day."-".$month."-".$year;
+   		$toc = ($this->calType=='big') ? 'TOC' : '';
    		
    		$eventsForToday = FALSE;
-   		$cssClass = "s2";
+   		$cssClass = "s2".$toc;
    		
    		//check for today
    		if($day == date("d") && $month == date("n") && $year == date("Y"))
@@ -400,7 +417,12 @@ class calendarbiulder extends object
     			
     			if($eventDate == $givenDate)
     			{
-    				
+    				if ($this->calType=='big')
+    				{
+						 $ev .= '<div class="titleTOC">';
+						 $ev .=$event['description'];
+						 $ev .='</div>';
+    				}
     				
     				$isEvents = TRUE;
     			}
@@ -409,15 +431,26 @@ class calendarbiulder extends object
     	
    		if($isEvents)
    		{
-   			$table = '<table><tr><td></td></tr></table>';
-   			$table ='&lt;table width=\'100%\' border=\'0\' cellpadding=\'2\' cellspacing=\'0\' class=&quot;popupDateTable&quot;&gt;  &lt;tr&gt;&lt;td class=&quot;popupDate&quot;&gt;October 1, 2006&lt;/td&gt;&lt;td class=&quot;popupClose&quot;&gt;&lt;a href=&quot;javascript:void(0);&quot; onmouseover=&quot;javascript:cClick();&quot;&gt;&lt;span class=&quot;popupClose&quot;&gt;&lt;/span&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;br /&gt;&lt;div class=&quot;popupEventTitle s22&quot;&gt;Floating event &lt;/div&gt;&lt;div class=&quot;popupEventTime&quot;&gt;8:00 AM&lt;/div&gt;&lt;div class=&quot;popupEventDescription&quot;&gt;Occurs on the first Sunday of each month and lasts for 3 days. &lt;/div&gt;&lt;div class=&quot;popupEventDate&quot;&gt;10-01 :: 10-03&lt;/div&gt;&lt;br /&gt;&lt;div align=&quot;center&quot;&gt;    &lt;span style=&quot;font-family: Geneva, Verdana, Arial, sans-serif; font-size: 10px; color: #CCCCCC;&quot;&gt;&amp;copy; 2006 EasyPHPCalendar&lt;/span&gt;  &lt;/div&gt;';
+   			
    			//$this->domTT->type = 'nested';
    			//$link = $this->domTT->show('title', $table , $day, $url = "#", $event['id']);
    			
-   			$eventsForToday = '<td style="background-color: #A4CAE6;">'. $day .'</td>';
+   			$eventsForToday = ($this->calType=='big') ? '<td class="s20TOC">' : '<td style="background-color: #A4CAE6;">';
+   			$eventsForToday .= ($this->calType=='big') ? '<div class="todayTOC">':'';
+   			$eventsForToday .= $day;
+   			$eventsForToday .= ($this->calType=='big') ? '</div>':'';
+   			$eventsForToday .= ($this->calType=='big') ? $ev : '';
+   			$eventsForToday .= '</td>';
    			return $eventsForToday;
    		} else {   			
-    		return 	'<td class="'.$cssClass.'">'. $day .'</td>';
+   			
+   			$eventsForToday = '<td class="s20'.$toc.'">';
+   			$eventsForToday .= ($this->calType=='big') ? '<div class="daynumTOC">':'';
+   			$eventsForToday .= $day;
+   			$eventsForToday .= ($this->calType=='big') ? '</div>':'';
+   			$eventsForToday .= '</td>';
+   			return $eventsForToday;
+    		//return 	'<td class="'.$cssClass.'">'.$day.'</td>';
    		}
    		
    		
