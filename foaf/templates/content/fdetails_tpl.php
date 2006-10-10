@@ -260,6 +260,10 @@ if(!is_array($tcont->foaf['knows']))
 {
 	$tcont->foaf['knows'] = array();
 }
+if(!isset($tcont->foaf['knows']))
+{
+	$tcont->foaf['knows'] = array();
+}
 foreach($tcont->foaf['knows'] as $pal)
 {
 	$orginfo[] = $this->objFoafOps->orgFbox($pal);
