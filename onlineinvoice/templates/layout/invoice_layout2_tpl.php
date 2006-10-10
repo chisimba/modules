@@ -95,7 +95,7 @@ $displayleft = $objuserdetails->show($this->sideMenuBar->userDetails());
  * Set the Content of left side column and right side column and middle column
  */  
 $cssLayout->setLeftColumnContent($displayleft );
-$cssLayout->setRightColumnContent($objForm->show());
+//$cssLayout->setRightColumnContent($objForm->show());
 $cssLayout->setMiddleColumnContent($this->getContent()); 
 
 /**
