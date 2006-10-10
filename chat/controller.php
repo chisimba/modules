@@ -30,7 +30,7 @@ class chat extends controller
     {
         $this->objUser =& $this->getObject('user', 'security');
         $this->objHelp =& $this->getObject('helplink','help');
-        $this->objHelp->rootModule="chat";
+        //$this->objHelp->rootModule="chat";
         $this->objConfig =& $this->getObject('config','config');
         $this->objLanguage =& $this->getObject('language','language');
         $this->objDbChat =& $this->getObject('dbchat');
