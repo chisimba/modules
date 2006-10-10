@@ -256,6 +256,10 @@ else {
  */
 $myorgs = $this->objFoafOps->orgaRemForm().$this->objFoafOps->orgaAddForm();
 //build the featureboxen for the orgs
+if(!is_array($tcont->foaf['knows']))
+{
+	$tcont->foaf['knows'] = array();
+}
 foreach($tcont->foaf['knows'] as $pal)
 {
 	$orginfo[] = $this->objFoafOps->orgFbox($pal);
