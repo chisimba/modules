@@ -519,7 +519,7 @@ class foafops extends object
 		//write the file so that we can edit it later
 		//var_dump($this->objFoaf->foaftree->get());
 		//var_dump($this->objFoaf->foaftree);
-		if(!is_dir($this->savepath)
+		if(!is_dir($this->savepath))
 		{
 			mkdir($this->savepath, 0777);
 		}
