@@ -299,8 +299,8 @@
    $this->objcountrydropdown->addOption('Luxembourg','Luxembourg') ;
    $this->objcountrydropdown->addOption('Macau','Macau') ;
    $this->objcountrydropdown->addOption('Macedonia','Macedonia') ;
-   $this->objcountrydropdown->addOption('Malagasy Ariary . MGA','Malagasy Ariary . MGA') ;http://mail.google.com/mail/
-   $this->objcountrydropdown->addOption('Malagasy Franc . MGF','Malagasy Franc . MGF') ;
+  // $this->objcountrydropdown->addOption('Malagasy Ariary . MGA','Malagasy Ariary . MGA') ;
+ //  $this->objcountrydropdown->addOption('Malagasy Franc . MGF','Malagasy Franc . MGF') ;
    $this->objcountrydropdown->addOption('Malawi','Malawi') ;
    $this->objcountrydropdown->addOption('Malaysia','Malaysia') ;
    $this->objcountrydropdown->addOption('Maldives','Maldives') ;
@@ -560,7 +560,7 @@ $objtraveler->addBoxContent('<br />' ."<div align=\"center\">".  "<div class=\"e
    */
               
   $this->loadClass('form','htmlelements');
-  $objtevForm = new form('tev',$this->uri(enistan') array('action'=>'submitclaimantinfo')));
+  $objtevForm = new form('tev',$this->uri(array('action'=>'submitclaimantinfo')));
   $objtevForm->id = 'tev';
   $objtevForm->displayType = 3;
   $objtevForm->addToForm($objtraveler->show()); //. '<br>'  . $objitinerary->show());
