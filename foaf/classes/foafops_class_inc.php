@@ -519,6 +519,10 @@ class foafops extends object
 		//write the file so that we can edit it later
 		//var_dump($this->objFoaf->foaftree->get());
 		//var_dump($this->objFoaf->foaftree);
+		if(!is_dir($this->savepath)
+		{
+			mkdir($this->savepath, 0777);
+		}
 		@chmod($this->savepath, 0777);
 		$this->objFoaf->toFile($this->savepath, $this->objUser->userId() . '.rdf', $this->objFoaf->get());
 		//die();
@@ -606,7 +610,7 @@ class foafops extends object
 		$fieldset3->addContent($table3->show());
 		$myFriendsAddForm->addToForm($fieldset3->show());
 
-		$this->objButton3 = & new button('update_friends'); //$this->objLanguage->languageText('mod_foaf_update_friends', 'foaf'));
+		$this->objButton3 = & new button('update_addfriends'); //$this->objLanguage->languageText('mod_foaf_update_friends', 'foaf'));
 		$this->objButton3->setValue($this->objLanguage->languageText('mod_foaf_butaddfriends', 'foaf'));
 		$this->objButton3->setToSubmit();
 		$myFriendsAddForm->addToForm($this->objButton3->show());
@@ -653,7 +657,7 @@ class foafops extends object
 			$fieldset4->addContent($table4->show());
 			$myFriendsRemForm->addToForm($fieldset4->show());
 
-			$this->objButton4 = & new button('update_friends'); //$this->objLanguage->languageText('mod_foaf_update_friends', 'foaf'));
+			$this->objButton4 = & new button('update_remfriends'); //$this->objLanguage->languageText('mod_foaf_update_friends', 'foaf'));
 			$this->objButton4->setValue($this->objLanguage->languageText('mod_foaf_butremfriends', 'foaf'));
 			$this->objButton4->setToSubmit();
 			$myFriendsRemForm->addToForm($this->objButton4->show());
