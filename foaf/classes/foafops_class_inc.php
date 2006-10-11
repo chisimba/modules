@@ -112,6 +112,10 @@ class foafops extends object
 	 */
 	public function newPerson($userId)
 	{
+		if(!isset($userId))
+		{
+			$userId = $this->objUser->userId();
+		}
 		//set the path where we will save the users foaf rdf file for publishing
 		$this->savepath = $this->objConfig->getContentBasePath() . "users/" . $this->objUser->userId() . "/";
 		//get the users userId
@@ -152,6 +156,10 @@ class foafops extends object
 	 */
 	public function myFoaf($userId)
 	{
+		if(!isset($userId))
+		{
+			$userId = $this->objUser->userId();
+		}
 		//switch tables to tbl_foaf_myfoaf
 		$farr = $this->dbFoaf->getRecordSet($userId, 'tbl_foaf_myfoaf');
 		//get the info from dbFmyfoaf and set up all the fields
@@ -266,6 +274,10 @@ class foafops extends object
 	 */
 	private function _getInterests($userId, $friend = FALSE)
 	{
+		if(!isset($userId))
+		{
+			$userId = $this->objUser->userId();
+		}
 		$iarr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_interests');
 		if(empty($iarr))
 		{
@@ -293,6 +305,10 @@ class foafops extends object
 	 */
 	private function _getFunders($userId, $friend = FALSE)
 	{
+		if(!isset($userId))
+		{
+			$userId = $this->objUser->userId();
+		}
 		$funarr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_fundedby');
 		if(empty($funarr))
 		{
@@ -320,6 +336,10 @@ class foafops extends object
 	 */
 	private function _getDepictions($userId, $friend = FALSE)
 	{
+		if(!isset($userId))
+		{
+			$userId = $this->objUser->userId();
+		}
 		$darr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_depiction');
 		if(empty($darr))
 		{
@@ -386,6 +406,10 @@ class foafops extends object
 	 */
 	private function _getpages($userId, $friend = FALSE)
 	{
+		if(!isset($userId))
+		{
+			$userId = $this->objUser->userId();
+		}
 		$parr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_pages');
 		if(empty($parr))
 		{
@@ -415,6 +439,10 @@ class foafops extends object
 	 */
 	private function _getFriends($userId)
 	{
+		if(!isset($userId))
+		{
+			$userId = $this->objUser->userId();
+		}
 		$frarr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_friends');
 
 		//print_r($frarr);
@@ -542,6 +570,10 @@ class foafops extends object
 	 */
 	public function foaf2html($userId)
 	{
+		if(!isset($userId))
+		{
+			$userId = $this->objUser->userId();
+		}
 		$this->objFoafParser->setup();
 		$fp = $this->objFoafParser->parseFromUri($this->savepath . $userId . '.rdf');
 		return $this->objFoafParser->toHtml($this->objFoafParser->foaf_data);
@@ -555,6 +587,10 @@ class foafops extends object
 	 */
 	public function foaf2array($userId)
 	{
+		if(!isset($userId))
+		{
+			$userId = $this->objUser->userId();
+		}
 		$this->objFoafParser->setup();
 		$fp = $this->objFoafParser->parseFromUri($this->savepath . $userId . '.rdf');
 		return $this->objFoafParser->toArray();
@@ -568,6 +604,10 @@ class foafops extends object
 	 */
 	public function foaf2Object($userId)
 	{
+		if(!isset($userId))
+		{
+			$userId = $this->objUser->userId();
+		}
 		$this->objFoafParser->setup();
 		$fp = $this->objFoafParser->parseFromUri($this->savepath . $userId . '.rdf');
 		return $this->objFoafParser->toObject();
