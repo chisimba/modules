@@ -17,6 +17,6 @@ foreach ($users as $user) {
 	$imPopup->setup($user['userId'], null, '');
 	echo preg_replace("/'/","\'",$imPopup->show()); 
 	*/
-	echo "<br>";
+	echo "<br />";
 }
 ?>

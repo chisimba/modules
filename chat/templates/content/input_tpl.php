@@ -58,7 +58,7 @@
 	$icon->alt = $objLanguage->languageText('word_submit');
 	echo "<tr>";
 	echo "<td>";
-    echo "<a href=\"#\" onclick=\"inputForm.submit();\">" . $icon->show() . "</a>";
+    echo "<a href=\"#\" onclick=\"document.forms['inputForm'].submit();\">" . $icon->show() . "</a>";
 	//echo "<a href=\"javascript:;\" onclick=\"inputForm.submit();\">" . $icon->show() . "</a>";
 	//echo "<a href=\"javascript:inputForm.submit();\">" . $icon->show() . "</a>";
 	echo "</td>";

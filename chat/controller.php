@@ -72,7 +72,7 @@ class chat extends controller
     */
     function dispatch($action=Null)
     {
-		$this->setVar('pageSuppressXML',true);
+		//$this->setVar('pageSuppressXML',true);
     	if ($this->getParam('passthroughlogin') == 'true')
     		return $this->nextAction(null);
         $temporary = true;
@@ -343,7 +343,7 @@ class chat extends controller
             $this->setVar('suppressFooter', TRUE);
 			$this->setVar('pageSuppressTrailingDiv', TRUE);
             $script = '
-			<SCRIPT TYPE="text/javascript" language="JavaScript">
+			<script type="text/javascript" language="JavaScript">
 			function submitenter(myfield,e)
 			{
 			var keycode;
@@ -359,7 +359,7 @@ class chat extends controller
 			else
 			   return true;
 			}
-			</SCRIPT>
+			</script>
             ';
             $this->appendArrayVar('headerParams', $script);
             //$bodyParams=' onLoad="document.getElementById(\'input_text\').focus()" ';
