@@ -6,9 +6,9 @@ $this->loadClass("button","htmlelements");
 foreach ($users as $user) {
 	echo "&nbsp;";
     $objUserPic =& $this->getObject('imageupload', 'useradmin');
-    echo "<image src=\"" . $objUserPic->smallUserPicture($user['userId']) . "\"/>";
+    echo "<image src=\"" . $objUserPic->smallUserPicture($user['userid']) . "\"/>";
 	echo "&nbsp;";
-	$fullName = $user["firstName"] . " " . $user["surname"];
+	$fullName = $user["firstname"] . " " . $user["surname"];
 	//$fullName = preg_replace("/'/","&#39;",$fullName);
 	echo $fullName;
 	echo "&nbsp;";

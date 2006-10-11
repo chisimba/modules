@@ -40,7 +40,7 @@
             background-color: #FFFFFF;
             height: 200px;
             overflow: auto;
-        '></div>";
+        '>Text</div>";
 ?>
     </div>
 <!--</div>-->
@@ -71,7 +71,7 @@
 <?php
     if ($mode != 'compact') {
 ?>
-    <br/>
+    <br />
     <div>
     <table>
     <tr>
@@ -151,7 +151,7 @@
     toggleCreate=0;
     </script>
     <td>
-    <a href="javascript:;" onClick="
+    <a href="javascript:;" onclick="
     if (toggleCreate==0) {
         document.getElementById('creatediv').style.visibility='visible';
         toggleCreate=1;
@@ -212,7 +212,7 @@
     toggleAddUser=0;
     </script>
     <td>
-    <a href="javascript:;" onClick="
+    <a href="javascript:;" onclick="
     if (toggleAddUser==0) {
         document.getElementById('adduserdiv').style.visibility='visible';
         toggleAddUser=1;

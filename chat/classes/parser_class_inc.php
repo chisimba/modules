@@ -36,7 +36,7 @@ class parser extends object {
                     foreach ($ar as $line) {
                         $url = $line['URL'];
                         $link = "<a href=\"" . $url . "\" target=\"_blank\">" . $line['title'] . "</a>";
-                        $result .= $link . "<br/>";
+                        $result .= $link . "<br />";
                     }
                 }
             } else {

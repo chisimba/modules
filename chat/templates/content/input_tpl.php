@@ -73,7 +73,7 @@
 	<script language="JavaScript">
 	toggleSmileys=0;
 	</script>
-	<a href="javascript:;" onClick="
+	<a href="javascript:;" onclick="
 	if (toggleSmileys==0) {
 		document.getElementById('smileysdiv').style.visibility='visible';
 		toggleSmileys=1;
@@ -99,7 +99,7 @@
 	<script language="JavaScript">
 	toggleFont=0;
 	</script>
-	<a href="javascript:;" onClick="
+	<a href="javascript:;" onclick="
 	if (toggleFont==0) {
 		document.getElementById('fontdiv').style.visibility='visible';
 		toggleFont=1;
@@ -141,7 +141,7 @@
 		$icon->setIcon("smileys/" . $filename);
 		$icon->align=false;
 		return "<a href=\"javascript:;\""
-		. " onClick=\"
+		. " onclick=\"
 		document.inputForm.text.value=document.inputForm.text.value+'[" . $filename . "]';
 		document.getElementById('smileysdiv').style.visibility='hidden';
 		toggleSmileys=0;
@@ -162,7 +162,7 @@
 	echo Smiley("smile10",$icon);
 	echo Smiley("smile11",$icon);
 	echo Smiley("smile13",$icon);
-	echo "<br/>";
+	echo "<br />";
 	echo Smiley("smile14",$icon);
 	echo Smiley("smile15",$icon);
 	echo Smiley("smile16",$icon);
@@ -173,7 +173,7 @@
 	echo Smiley("smile24",$icon);
 	echo Smiley("smile26",$icon);
 	echo Smiley("smile27",$icon);
-	echo "<br/>";
+	echo "<br />";
 	echo Smiley("smile28",$icon);
 	echo Smiley("smile29",$icon);
 	echo Smiley("smile30",$icon);
@@ -218,7 +218,7 @@ function UpdateStyle()
 	$dropdown->addOption("Wingdings", "Wingdings");
 	$dropdown->addOption("Zapf Dingbats", "Zapf Dingbats");
 	$dropdown->setSelected($this->getSession("family"));	
-	$dropdown->extra = " onChange=\"UpdateStyle();\"";
+	$dropdown->extra = " onchange=\"UpdateStyle();\"";
 	echo $dropdown->show();
 	// Size
 	$dropdown = new dropdown("size");
@@ -236,7 +236,7 @@ function UpdateStyle()
 	$dropdown->addOption("26","26");
 	$dropdown->addOption("28","28");
 	$dropdown->setSelected($this->getSession("size"));	
-	$dropdown->extra = " onChange=\"UpdateStyle();\"";
+	$dropdown->extra = " onchange=\"UpdateStyle();\"";
 	echo $dropdown->show();
 	// Color
 	$dropdown = new dropdown("color");
@@ -254,7 +254,7 @@ function UpdateStyle()
 	$dropdown->addOption("SkyBlue", "SkyBlue");
 	$dropdown->addOption("Yellow", "Yellow");
 	$dropdown->setSelected($this->getSession("color"));	
-	$dropdown->extra = " onChange=\"UpdateStyle();\"";
+	$dropdown->extra = " onchange=\"UpdateStyle();\"";
 	echo $dropdown->show();
 	echo "</div>";
 ?>

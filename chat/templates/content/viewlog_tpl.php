@@ -66,7 +66,7 @@
 		echo strftime("%c",$entry["timestamp"]) . " : ";
         // Is this a system post?
 		if ($entry["username"]=="") {
-			echo $entry["content"] . "<br/>";
+			echo $entry["content"] . "<br />";
 		}
         // Is this a public post?
 		else if ($entry["recipient"]=="All") {

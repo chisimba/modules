@@ -35,7 +35,7 @@ foreach ($content as $entry) {
     // Is this a system post?
 	if ($entry["username"]=="") {
 		echo "<span class=\"chat-meta\">"
-			. parseContent($entry["content"],$this) . "<br/>"
+			. parseContent($entry["content"],$this) . "<br />"
 			. "</span>";
 	}
     // Is this a public post?
@@ -43,7 +43,7 @@ foreach ($content as $entry) {
 		echo "<b>[" . parseUsername($entry["username"]) . "]</b>"
 			. "&nbsp;" . parseContent($entry["content"],$this) 
 			. "&nbsp;<span class=\"minute\"><i>" . strftime("(%a %H:%M)",$entry["stamp"]) . "</i></span>" 
-			."<br/>";
+			."<br />";
 	}
     // This is a private post
 	else {
@@ -55,7 +55,7 @@ foreach ($content as $entry) {
 			. "]</b>"
 			. "&nbsp;" . parseContent($entry["content"],$this) 
 			. "&nbsp;<span class=\"minute\"><i>" . strftime("(%a %H:%M)",$entry["stamp"]) . "</i></span>" 
-			. "<br/>"
+			. "<br />"
 			. "</span>";
 	}
 }

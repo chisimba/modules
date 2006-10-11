@@ -8,7 +8,7 @@
 		echo "<span class=\"error\">";
 		echo $error;
 		echo "</span>";
-	    echo "<br/>";
+	    echo "<br />";
 	}
     // Display available chat rooms.
 	echo "<h3>".$objLanguage->languageText('chat_available_rooms').":</h3>";

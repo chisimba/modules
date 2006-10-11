@@ -48,7 +48,7 @@ if (($contextType == 'private' && $contextUsername == $this->objUser->userName()
 	<table>
 	<tr>
 	<td>
-	<a href="javascript:;" onClick="ToggleBan();">
+	<a href="javascript:;" onclick="ToggleBan();">
 <?php
     // Display the ban user button.
 	$icon = $this->getObject('geticon','htmlelements');
@@ -71,7 +71,7 @@ if (($contextType == 'private' && $contextUsername == $this->objUser->userName()
     // Display a list of users to ban.
 	$dropdown = new dropdown("username");
 	foreach ($users as $user) {
-		$dropdown->addOption($user["username"],$user["firstName"] . " " . $user["surname"]);
+		$dropdown->addOption($user["username"],$user["firstname"] . " " . $user["surname"]);
 	}
 	$form->addToForm($dropdown);
 	$form->addToForm($objLanguage->languageText("word_for"));

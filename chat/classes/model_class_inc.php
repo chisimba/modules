@@ -158,7 +158,7 @@ class model extends object {
 	                . " "
 	                . "<span class=\"minute\"><i>"
 	                . strftime("(%a %H:%M)",$entry["stamp"])
-	                . "</i></span><br/>";
+	                . "</i></span><br />";
 	    		//}
 	            // This is a private post
 	            /*
@@ -175,7 +175,7 @@ class model extends object {
         $objDbChatUsers =& $this->getObject('dbchatusers');
         $list = $objDbChatUsers->listCount($contextId);
         $count = $list[0]["COUNT(*)"];
-        $str .= "<br/>".
+        $str .= "<br />".
             $this->objLanguage->code2Txt(
                 'mod_chat_usersonline',
                 array(
@@ -191,7 +191,7 @@ class model extends object {
         $icon->setIcon('modules/chat');
         $icon->alt = $this->objLanguage->languageText('mod_chat_join');
         $icon->align=false;
-		$str .= "<br/><a href=\"" . $this->uri(array(),'chat') . "\">".$icon->show()."</a>";
+		$str .= "<br /><a href=\"" . $this->uri(array(),'chat') . "\">".$icon->show()."</a>";
 		*/
         // Return block output string.
 		return $str;
@@ -228,7 +228,7 @@ class model extends object {
             $len = strlen($element);
             for ($i = 0; $i < $len; $i++) {
                 if ($i > 0 && ($i % 22) == 0) {
-                    $str .= "<br/>";
+                    $str .= "<br />";
                 }
                 $str .= $element[$i];
             }

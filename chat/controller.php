@@ -669,7 +669,7 @@ class chat extends controller
     function updateChatUsers()
     {
         $objResponse = new xajaxResponse();
-        $objResponse->addAppend('usersdiv', 'innerHTML', ','.date('Y-m-d').'<br>');
+        $objResponse->addAppend('usersdiv', 'innerHTML', ','.date('Y-m-d').'<br />');
         return $objResponse->getXML();    	
     }
     */
