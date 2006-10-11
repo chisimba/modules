@@ -348,6 +348,10 @@ class foafops extends object
 	 */
 	private function _getOrganizations($userId, $friend = FALSE)
 	{
+		if(!isset($userId))
+		{
+			$userId = $this->objUser->userId();
+		}
 		$oarr = $this->dbFoaf->getRecordSet($userId,'tbl_foaf_organization');
 		if(empty($oarr))
 		{
