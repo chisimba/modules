@@ -9,10 +9,7 @@ $this->setVar('pageTemplate', NULL);
 var contentpage = parent.document.getElementById('contentdiv');
 contentpage.innerHTML='<?php 
 
-//$content = preg_replace("/'/","\'",$content);
-
-$content = htmlentities('aazulfaa<b>tohir</b>sdas555d');
-$content = ($this->getContent());
+$content = $this->getContent();
 echo $content;
 ?>';
 //scrolltoend();

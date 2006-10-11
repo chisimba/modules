@@ -41,8 +41,8 @@ foreach ($content as $entry) {
     // Is this a public post?
 	else if ($entry["recipient"]=="All") {
 		echo "<b>[" . parseUsername($entry["username"]) . "]</b>"
-			. "&nbsp;" . parseContent($entry["content"],$this) 
-			. "&nbsp;<span class=\"minute\"><i>" . strftime("(%a %H:%M)",$entry["stamp"]) . "</i></span>" 
+			. " " . parseContent($entry["content"],$this) 
+			. " <span class=\"minute\"><i>" . strftime("(%a %H:%M)",$entry["stamp"]) . "</i></span>" 
 			."<br />";
 	}
     // This is a private post
@@ -53,8 +53,8 @@ foreach ($content as $entry) {
 			. ":" 
 			. parseUsername($entry["recipient"]) 
 			. "]</b>"
-			. "&nbsp;" . parseContent($entry["content"],$this) 
-			. "&nbsp;<span class=\"minute\"><i>" . strftime("(%a %H:%M)",$entry["stamp"]) . "</i></span>" 
+			. " " . parseContent($entry["content"],$this) 
+			. " <span class=\"minute\"><i>" . strftime("(%a %H:%M)",$entry["stamp"]) . "</i></span>" 
 			. "<br />"
 			. "</span>";
 	}
