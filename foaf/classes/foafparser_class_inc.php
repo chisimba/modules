@@ -47,16 +47,16 @@ class foafparser extends object
     /**
      * XML_FOAF_Parser Constructor
      */
-    public function init() 
+    public function init()
     {
     }
-    public function setup() 
+    public function setup()
     {
         require_once 'RDF.php';
         require_once 'RDF/Model/Memory.php';
         $this->rdf_parser = &new RDF_Parser;
     }
-    public function isAllowedForAgent($property) 
+    public function isAllowedForAgent($property)
     {
         $property = strtolower($property);
         $common = array(
@@ -123,7 +123,7 @@ class foafparser extends object
      * @access public
      * @return void
      */
-    public function parseFromURI($uri) 
+    public function parseFromURI($uri)
     {
         $this->parseFromFile($uri);
     }
@@ -135,7 +135,7 @@ class foafparser extends object
      * @access public
      * @return void
      */
-    public function parseFromFile($file, $use_include_path = false) 
+    public function parseFromFile($file, $use_include_path = false)
     {
         $this->foaf_xml = file_get_contents($file, $use_include_path);
         $this->_parse();
@@ -147,7 +147,7 @@ class foafparser extends object
      * @access public
      * @return void
      */
-    public function parseFromMem($mem) 
+    public function parseFromMem($mem)
     {
         $this->foaf_xml = $mem;
         $this->_parse();
@@ -155,7 +155,7 @@ class foafparser extends object
     /**
      * Calls all the seperate property parsers
      */
-    private function _parse() 
+    private function _parse()
     {
         //var_dump($this->foaf_xml);
         $this->foaf = &$this->rdf_parser->generateModel($this->foaf_xml);
@@ -213,7 +213,7 @@ class foafparser extends object
      * @access private
      * @return void
      */
-    private function _fetchAgent() 
+    private function _fetchAgent()
     {
         $person_resource = &RDF_Resource::factory(FOAF_NS.'Person');
         $persons = $this->foaf->find(null, null, $person_resource);
@@ -276,42 +276,42 @@ class foafparser extends object
      * If more than one foaf:name is found for a single foaf:Agent, the
      * last found will be the one shown in the result
      */
-    private function _getName() 
+    private function _getName()
     {
         $this->_getProperty(FOAF_NS, 'name', 'label');
     }
     /**
      * Finds all foaf:depiction's and inserts them into the result Array
      */
-    private function _fetchDepiction() 
+    private function _fetchDepiction()
     {
         $this->_fetchProperty(FOAF_NS, 'depiction', 'uri');
     }
     /**
      * Finds all foaf:fundedBy's and inserts them into the result Array
      */
-    private function _fetchFundedBy() 
+    private function _fetchFundedBy()
     {
         $this->_fetchProperty(FOAF_NS, 'fundedBy', 'uri');
     }
     /**
      * Finds all foaf:logo's and inserts them into the result Array
      */
-    private function _fetchLogo() 
+    private function _fetchLogo()
     {
         $this->_fetchProperty(FOAF_NS, 'logo', 'uri');
     }
     /**
      * Finds all foaf:page's and inserts them into the result Array
      */
-    private function _fetchPage() 
+    private function _fetchPage()
     {
         $this->_fetchProperty(FOAF_NS, 'page', 'uri');
     }
     /**
      * Finds all foaf:theme's and inserts them into the result Array
      */
-    private function _fetchTheme() 
+    private function _fetchTheme()
     {
         $this->_fetchProperty(FOAF_NS, 'theme', 'uri');
     }
@@ -321,14 +321,14 @@ class foafparser extends object
      * If more than one foaf:title is found for one foaf:Agent the
      * last one found is insert into the result
      */
-    private function _getTitle() 
+    private function _getTitle()
     {
         $this->_getProperty(FOAF_NS, 'title', 'label');
     }
     /**
      * Finds all foaf:nick's and inserts them into the result Array
      */
-    private function _fetchNick() 
+    private function _fetchNick()
     {
         $nick_resource = &RDF_Resource::factory(FOAF_NS.'nick');
         $nicks = $this->foaf->find(null, $nick_resource, null);
@@ -346,7 +346,7 @@ class foafparser extends object
                         foreach($agent['knows'] as $nick_key => $nick_array) {
                             if (isset($nick_array['node']) && ($nick_array['node'] == $nick->subj->uri)) {
                                 $this->foaf_data[$agent_key]['knows'][$nick_key]['nick'][] = $nick->obj->label;
-                                break2;
+                                break 2;
                             }
                         }
                     }
@@ -360,28 +360,28 @@ class foafparser extends object
      * If more than one foaf:givenName is found for a single foaf:Agent, the
      * last one found is inserted into the result array
      */
-    private function _getGivenName() 
+    private function _getGivenName()
     {
         $this->_getProperty(FOAF_NS, 'givenName', 'label');
     }
     /**
      * Finds all foaf:phone's and inserts them into the result Array
      */
-    private function _fetchPhone() 
+    private function _fetchPhone()
     {
         $this->_fetchProperty(FOAF_NS, 'phone', 'uri');
     }
     /**
      * Finds all foaf:mbox's and inserts them into the result Array
      */
-    private function _fetchMbox() 
+    private function _fetchMbox()
     {
         $this->_fetchProperty(FOAF_NS, 'mbox', 'uri');
     }
     /**
      * Finds all foaf:mbox_sha1sum's and inserts them into the result Array
      */
-    private function _fetchMboxSha1Sum() 
+    private function _fetchMboxSha1Sum()
     {
         $this->_fetchProperty(FOAF_NS, 'mbox_sha1sum', 'label');
     }
@@ -391,49 +391,49 @@ class foafparser extends object
      * If more than one foaf:gender is found for a single foaf:Agent, the
      * last found is inserted into the result Array.
      */
-    private function _getGender() 
+    private function _getGender()
     {
         $this->_getProperty(FOAF_NS, 'gender', 'label');
     }
     /**
      * Finds all foaf:jabberID's and inserts them into the result Array
      */
-    private function _fetchJabberID() 
+    private function _fetchJabberID()
     {
         $this->_fetchProperty(FOAF_NS, 'jabberID', 'label');
     }
     /**
      * Finds all foaf:aimChatID's and inserts them into the result Array
      */
-    private function _fetchAimChatID() 
+    private function _fetchAimChatID()
     {
         $this->_fetchProperty(FOAF_NS, 'aimChatID', 'label');
     }
     /**
      * Finds all foaf:icqChatID's and inserts them into the result Array
      */
-    private function _fetchIcqChatID() 
+    private function _fetchIcqChatID()
     {
         $this->_fetchProperty(FOAF_NS, 'icqChatID', 'label');
     }
     /**
      * Finds all foaf:yahooChatID's and inserts them into the result Array
      */
-    private function _fetchYahooChatID() 
+    private function _fetchYahooChatID()
     {
         $this->_fetchProperty(FOAF_NS, 'yahooChatID', 'label');
     }
     /**
      * Finds all foaf:msnChatID's and inserts them into the result Array
      */
-    private function _fetchMsnChatID() 
+    private function _fetchMsnChatID()
     {
         $this->_fetchProperty(FOAF_NS, 'msnChatID', 'label');
     }
     /**
      * Finds all foaf:onlineAccount's and inserts them into the result Array
      */
-    private function _fetchHoldsAccount() 
+    private function _fetchHoldsAccount()
     {
         $holds_account_resource = &RDF_Resource::factory(FOAF_NS.'holdsAccount');
         $holds_accounts = $this->foaf->find(null, $holds_account_resource, null);
@@ -506,7 +506,7 @@ class foafparser extends object
                         foreach($agent['knows'] as $holds_account_key => $holds_account_array) {
                             if (isset($holds_account_array['node']) && ($holds_account_array['node'] == $node)) {
                                 $this->foaf_data[$agent_key]['knows'][$holds_account_key]['holdsaccount'] = $agent_accounts[$node];
-                                break2;
+                                break 2;
                             }
                         }
                     }
@@ -517,21 +517,21 @@ class foafparser extends object
     /**
      * Finds all foaf:homepage's and inserts them into the result Array
      */
-    private function _fetchHomepage() 
+    private function _fetchHomepage()
     {
         $this->_fetchProperty(FOAF_NS, 'homepage', 'uri');
     }
     /**
      * Finds all foaf:weblog's and inserts them into the result Array
      */
-    private function _fetchWeblog() 
+    private function _fetchWeblog()
     {
         $this->_fetchProperty(FOAF_NS, 'weblog', 'uri');
     }
     /**
      * Finds all foaf:made's and inserts them into the result Array
      */
-    private function _fetchMade() 
+    private function _fetchMade()
     {
         $this->_fetchProperty(FOAF_NS, 'made', 'uri');
     }
@@ -542,7 +542,7 @@ class foafparser extends object
      * If more than one foaf:geekcode is found for a single foaf:Agent, the
      * last found will be inserted into the result Array
      */
-    private function _getGeekcode() 
+    private function _getGeekcode()
     {
         $this->_getProperty(FOAF_NS, 'geekcode', 'label');
     }
@@ -552,7 +552,7 @@ class foafparser extends object
      * If more than one foaf:firstName is found for a single foaf:Agent, the
      * last found will be inserted into the result Array
      */
-    private function _getFirstName() 
+    private function _getFirstName()
     {
         $this->_getProperty(FOAF_NS, 'firstName', 'label');
     }
@@ -562,7 +562,7 @@ class foafparser extends object
      * If more than one foaf:surname is found for a single foaf:Agent, the
      * last found will be inserted into the result Array
      */
-    private function _getSurname() 
+    private function _getSurname()
     {
         $this->_getProperty(FOAF_NS, 'surname', 'label');
     }
@@ -572,7 +572,7 @@ class foafparser extends object
      * If more than one foaf:familyName is found for a single foaf:Agent, the
      * last found will be inserted into the result Array
      */
-    private function _getFamilyName() 
+    private function _getFamilyName()
     {
         $this->_getProperty(FOAF_NS, 'familyName', 'label');
     }
@@ -582,77 +582,77 @@ class foafparser extends object
      * If more than one foaf:plan is found for a single foaf:Agent, the
      * last found will be inserted into the result Array
      */
-    private function _getPlan() 
+    private function _getPlan()
     {
         $this->_getProperty(FOAF_NS, 'plan', 'label');
     }
     /**
      * Finds all foaf:img's and inserts them into the result Array
      */
-    private function _fetchImg() 
+    private function _fetchImg()
     {
         $this->_fetchProperty(FOAF_NS, 'img', 'uri');
     }
     /**
      * Finds all foaf:myersBriggs's and inserts them into the result Array
      */
-    private function _fetchMyersBriggs() 
+    private function _fetchMyersBriggs()
     {
         $this->_fetchProperty(FOAF_NS, 'myersBriggs', 'label');
     }
     /**
      * Finds all foaf:workplaceHompage's and inserts them into the result Array
      */
-    private function _fetchWorkplaceHomepage() 
+    private function _fetchWorkplaceHomepage()
     {
         $this->_fetchProperty(FOAF_NS, 'workplaceHomepage', 'uri');
     }
     /**
      * Finds all foaf:workInfoHomepage's and inserts them into the result Array
      */
-    private function _fetchWorkInfoHomepage() 
+    private function _fetchWorkInfoHomepage()
     {
         $this->_fetchProperty(FOAF_NS, 'workInfoHomepage', 'uri');
     }
     /**
      * Finds all foaf:schoolHomepage's and inserts them into the result Array
      */
-    private function _fetchSchoolHomepage() 
+    private function _fetchSchoolHomepage()
     {
         $this->_fetchProperty(FOAF_NS, 'schoolHomepage', 'uri');
     }
     /**
      * Finds all foaf:publication's and inserts them into the result Array
      */
-    private function _fetchPublication() 
+    private function _fetchPublication()
     {
         $this->_fetchProperty(FOAF_NS, 'publication', 'uri');
     }
     /**
      * Finds all foaf:currentProject's and inserts them into the result Array
      */
-    private function _fetchCurrentProject() 
+    private function _fetchCurrentProject()
     {
         $this->_fetchProperty(FOAF_NS, 'currentProject', 'uri');
     }
     /**
      * Finds all foaf:pastProject's and inserts them into the result Array
      */
-    private function _fetchPastProject() 
+    private function _fetchPastProject()
     {
         $this->_fetchProperty(FOAF_NS, 'pastProject', 'uri');
     }
     /**
      * Finds all foaf:basedNear's and inserts them into the result Array
      */
-    private function _getBasedNear() 
+    private function _getBasedNear()
     {
     }
     /* foaf:Person && foaf:Group */
     /**
      * Finds all foaf:interest's and inserts them into the result Array
      */
-    private function _fetchInterest() 
+    private function _fetchInterest()
     {
         $this->_fetchProperty(FOAF_NS, 'interest', 'uri');
     }
@@ -662,7 +662,7 @@ class foafparser extends object
      *
      * @todo Need to figure out how to point to an agent in the foaf_data :)
      */
-    private function _fetchMember() 
+    private function _fetchMember()
     {
     }
     /**
@@ -674,14 +674,14 @@ class foafparser extends object
      * @todo Use http://xmlns.com/foaf/0.1/#term_Group for reference (second example)
      * @todo figure out how to point to an agent in the foaf_data
      */
-    private function _getMembershipClass() 
+    private function _getMembershipClass()
     {
     }
     /* end of Agent only methods */
     /**
      * Finds all rdf:seeAlso's and inserts them into the result Array
      */
-    private function _fetchSeeAlso() 
+    private function _fetchSeeAlso()
     {
         $this->_fetchProperty(FOAF_RDF_SCHEMA_NS, 'seeAlso', 'uri');
     }
@@ -692,7 +692,7 @@ class foafparser extends object
      * they are for. You will need to check this for titles and descriptions upon output
      * for any element you want them for.
      */
-    private function _fetchDcTitle() 
+    private function _fetchDcTitle()
     {
         $dc_title_resource = &RDF_Resource::factory(FOAF_DC_NS.'title');
         $dc_titles = $this->foaf->find(null, $dc_title_resource, null);
@@ -707,7 +707,7 @@ class foafparser extends object
      * they are for. You will need to check this for titles and descriptions upon output
      * for any element you want them for.
      */
-    private function _fetchDcDescription() 
+    private function _fetchDcDescription()
     {
         $dc_description_resource = &RDF_Resource::factory(FOAF_DC_NS.'description');
         $dc_descriptions = $this->foaf->find(null, $dc_description_resource, null);
@@ -725,7 +725,7 @@ class foafparser extends object
      * @access private
      * @return void
      */
-    private function _fetchProperty($xmlns, $property, $obj_value) 
+    private function _fetchProperty($xmlns, $property, $obj_value)
     {
         $obj_value = strtolower($obj_value);
         $property_resource = &RDF_Resource::factory($xmlns.$property);
@@ -746,7 +746,7 @@ class foafparser extends object
                             if (isset($node_data['node']) && ($node_data['node'] == $triple->subj->uri)) {
                                 $property = strtolower(str_replace('_', '', $property));
                                 $this->foaf_data[$agent_key]['knows'][$node_uri][$property][] = $triple->obj->{$obj_value};
-                                break2;
+                                break 2;
                             }
                         }
                     }
@@ -763,7 +763,7 @@ class foafparser extends object
      * @access private
      * @return void
      */
-    private function _getProperty($xmlns, $property, $obj_value) 
+    private function _getProperty($xmlns, $property, $obj_value)
     {
         $obj_value = strtolower($obj_value);
         $property_resource = &RDF_Resource::factory($xmlns.$property);
@@ -784,7 +784,7 @@ class foafparser extends object
                             if (isset($node_data['node']) && ($node_data['node'] == $triple->subj->uri)) {
                                 $property = strtolower(str_replace('_', '', $property));
                                 $this->foaf_data[$agent_key]['knows'][$node_uri][$property] = $triple->obj->{$obj_value};
-                                break2;
+                                break 2;
                             }
                         }
                     }
@@ -799,7 +799,7 @@ class foafparser extends object
      * @access public
      * @return object
      */
-    public function toObject() 
+    public function toObject()
     {
         $val = 'foaf';
         $foaf_object = new stdClass();
@@ -814,7 +814,7 @@ class foafparser extends object
      * @access public
      * @return array
      */
-    public function toArray() 
+    public function toArray()
     {
         return $this->foaf_data;
     }
@@ -825,7 +825,7 @@ class foafparser extends object
      * @access public
      * @return string
      */
-    public function toHTML(&$foaf_data) 
+    public function toHTML(&$foaf_data)
     {
         require_once 'Validate.php';
         $table = '<table>';
