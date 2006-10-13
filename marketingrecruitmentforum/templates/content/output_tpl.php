@@ -32,11 +32,24 @@
    *create all form buttons
    */
         
-  $this->objButtonSubmit  = new button('submit', $str1);
-  $this->objButtonSubmit->setToSubmit();
+  $this->objSubmitstudcard  = new button('submitstudcard', $str1);
+  $this->objSubmitstudcard->setToSubmit();
   
-  $this->objButtonEdit  = new button('edit', $str2);
-  $this->objButtonEdit->setToSubmit();
+  $this->objSubmitactivity  = new button('submitactivity', $str1);
+  $this->objSubmitactivity->setToSubmit();
+  
+  $this->objSubmitschools  = new button('submitschool', $str1);
+  $this->objSubmitschools->setToSubmit();
+  
+  
+  $this->objEditstudcard  = new button('editstudcard', $str2);
+  $this->objEditstudcard->setToSubmit();
+  
+  $this->objEditactivity  = new button('edit', $str2);
+  $this->objEditactivity->setToSubmit();
+  
+  $this->objEditschools  = new button('edit', $str2);
+  $this->objEditschools->setToSubmit();
   /*----------------------------------------------------------------------------------------*/
         
   /**
@@ -249,10 +262,13 @@
    *create a tabpane to place all form out elements in
    */     
    
-    $strelements  =   $objstudcardTable->show() . '<br />' . $this->objButtonSubmit->show(); 
-    $objElement->addTab(array('name'=>'Student Cards','content' => $strelements) );
-    $objElement->addTab(array('name'=>'SLU Activities','content' => $objactivityTable->show()));
-    $objElement->addTab(array('name'=>'School list','content' => $objschoolTable->show()));
+    $strelements  =   $objstudcardTable->show() . '<br />' . $this->objSubmitstudcard->show() . ' '.$this->objEditstudcard->show(); 
+    $strelements1 =   $objactivityTable->show() . '<br />' . $this->objSubmitactivity->show() . ' '.$this->objEditactivity->show();
+    $strelements2 =   $objactivityTable->show() . '<br />' . $this->objSubmitschools->show() . ' '.$this->objEditschools->show();
+    
+    $objElement->addTab(array('name'=>'Student Cards','content' => $strelements));
+    $objElement->addTab(array('name'=>'SLU Activities','content' => $strelements1));
+    $objElement->addTab(array('name'=>'School list','content' => $strelements2));
   
     echo  $this->objMainheading->show();
     echo  $objElement->show();
