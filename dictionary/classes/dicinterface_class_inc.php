@@ -87,6 +87,7 @@ class dicinterface extends object
     */
     function makeSearch()
     {
+        $button = $this->objLanguage->LanguageText('mod_dictionary_lookupword','dictionary');
         //Check if the format is vertical or horizontal
         if ($this->format=="vertical") {
             $br="<br />";
@@ -115,17 +116,17 @@ class dicinterface extends object
         // Create an instance of the button object
         $this->loadClass('button', 'htmlelements');
         // Create a submit button
-        $objElement2= new button('submit');
+        $objElement2= new button('submit', $button);
         // Set the button type to submit
         $objElement2->setToSubmit();	
         // Use the language object to add the word translate
-        $objElement2->setValue(' '. $this->objLanguage->languageText("mod_dictionary_lookupword").' ');
+     //   $objElement2->setValue(' '. $this->objLanguage->languageText("mod_dictionary_lookupword").' ');
         
         //get the dict.org image
         $image = $br . "<a href=\"http://www.dict.org/\" target=\"_blank\">"
           . "<img src=\"modules/dictionary/resources/img/dictorg.gif\" "
           . "alt=\"dict.org\" align=\"middle\"  title=\"dict.org\" "
-          . "border=0 /></a>" . $br;
+          . "border= '0' /></a>" . $br;
         
         //Return the formatted form
         $objForm->addToForm($image . $br 
