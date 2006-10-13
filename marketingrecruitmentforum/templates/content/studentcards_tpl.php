@@ -11,10 +11,10 @@
      
      $this->loadClass('textinput','htmlelements');
      $this->loadClass('dropdown','htmlelements');
-     $this->loadClass('radio','htmlelements'); 
+     $this->loadClass('radio','htmlelements');  
      $this->loadClass('datepicker','htmlelements');
      $this->loadClass('form','htmlelements');
-     //$this->objexpensesdate = $this->newObject('datepicker','htmlelements');
+     $this->loadClass('button','htmlelements');
      
     /**
       *create all language elements
@@ -32,7 +32,18 @@
       $course  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_courseinterest','marketingrecruitmentforum');
       $subject  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_relevantsubject','marketingrecruitmentforum');
       $sdcase = $this->objLanguage->languageText('mod_marketingrecruitmentforum_sdcase','marketingrecruitmentforum');
+      $btnNext  = $this->objLanguage->languageText('word_next');
+      $str1 = ucfirst($btnNext);
+
       
+      /**
+       *create form heading
+       */
+       $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
+       $this->objMainheading->type=1;
+       $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_studentcardinterface','marketingrecruitmentforum');
+
+                    
       /**
        *create all textinputs
        */  
@@ -53,9 +64,12 @@
        $this->objtxtpostalcode->name   = "txtpostalcode";
        $this->objtxtpostalcode->value  = "";
        
-       $this->objtxtpostaladdress = $this->newObject('textinput','htmlelements'); 
-       $this->objtxtpostaladdress->name   = "txtbreakfastLocation";
-       $this->objtxtpostaladdress->value  = "";
+       $textArea = 'postaladdress';
+       $this->objPostaladdress =& $this->newobject('textArea','htmlelements');
+       $this->objPostaladdress->setRows(1);
+       $this->objPostaladdress->setColumns(16);
+       $this->objPostaladdress->setName($textArea);
+       $this->objPostaladdress->setContent("");
        
        $this->objtxttelnumber = $this->newObject('textinput','htmlelements'); 
        $this->objtxttelnumber->name  = "txttelnumber";
@@ -89,15 +103,22 @@
         $objexemption->addOption('n','No');
         $objexemption->setSelected('y');
         
-        $objsubject = new radio('relevant_subject');
+        $objsubject = new radio('relevantsubject');
         $objsubject->addOption('y','Yes');
         $objsubject->addOption('n','No');
         $objsubject->setSelected('y');
         
-        $objsdcase = new radio('sd_case');
+        $objsdcase = new radio('sdcase');
         $objsdcase->addOption('y','Yes');
         $objsdcase->addOption('n','No');
         $objsdcase->setSelected('y');
+        
+        /**
+         *create a submit button
+         */
+         
+         $this->objButtonSubmit  = new button('submit', $str1);
+         $this->objButtonSubmit->setToSubmit();
         
         /**
          *create a table to place all elements in
@@ -131,7 +152,7 @@
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($postaladdress));
-         $myTable->addCell($this->objtxtpostaladdress->show());
+         $myTable->addCell($this->objPostaladdress->show());
          $myTable->endRow();
          
          $myTable->startRow();
@@ -169,27 +190,22 @@
          $myTable->addCell($objsdcase->show());
          $myTable->endRow();
          
+         $myTable->startRow();
+         $myTable->addCell($this->objButtonSubmit->show());
+         $myTable->endRow();
          /**
           *create a form to place all elements in
           */
           
-          
-          $objForm = new form('studentcard',$this->uri(array('action'=>'null')));
+          $objForm = new form('studentcard',$this->uri(array('action'=>'showsluactivities')));
           $objForm->displayType = 3;
-          $objForm->addToForm($myTable->show());
+          $objForm->addToForm($this->objMainheading->show() . '<br>' .$myTable->show());
           
           /**
            *display the student card interface
            */
                                 
           echo  $objForm->show();	  
-          //echo  'hello';                 
-         
+                         
                
-         
-         
-        
-        
-                                        
-                 
 ?>

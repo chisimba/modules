@@ -3,11 +3,13 @@
  *create a template for all school lists
  */ 
 
+
 /**
  *load all classes
  */
  $this->loadClass('textinput','htmlelements');
  $this->loadClass('textarea','htmlelements');
+ $this->loadclass('button','htmlelements');
  
  $schoolname = $this->objLanguage->languageText('phrase_schoolname');
  $schooladdress  = $this->objLanguage->languageText('phrase_schooladdress');
@@ -15,7 +17,16 @@
  $faxnumber = $this->objLanguage->languageText('phrase_faxnumber');
  $email = $this->objLanguage->languageText('word_email');
  $principal = $this->objLanguage->languageText('word_principal');
- $guidanceteacher = $this->objLanguage->languageText('mod_marketingrecruitmentforum_guidanceteacher','marketingrecruitmentforum'); 
+ $guidanceteacher = $this->objLanguage->languageText('mod_marketingrecruitmentforum_guidanceteacher','marketingrecruitmentforum');
+ $btnNext  = $this->objLanguage->languageText('word_next');
+ $str1 = ucfirst($btnNext); 
+ 
+  /**
+  *create form heading
+  */
+  $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
+  $this->objMainheading->type=1;
+  $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_schoollist','marketingrecruitmentforum');
  
  /**
    *create all textinputs
@@ -24,10 +35,13 @@
    $this->objtxtschoolname = $this->newObject('textinput','htmlelements');          
    $this->objtxtschoolname->name   = "txtschoolname";
    $this->objtxtschoolname->value  = "";
-   
-   $this->objtxtaddress = $this->newObject('textinput','htmlelements');          
-   $this->objtxtaddress->name   = "txtschoolname";
-   $this->objtxtaddress->value  = "";
+  
+   $textArea = 'schooladdress';
+   $this->objSchooladdress =& $this->newobject('textArea','htmlelements');
+   $this->objSchooladdress->setRows(1);
+   $this->objSchooladdress->setColumns(16);
+   $this->objSchooladdress->setName($textArea);
+   $this->objSchooladdress->setContent("");
    
    $this->objtxttelnumber = $this->newObject('textinput','htmlelements'); 
    $this->objtxttelnumber->name  = "txttelnumber";
@@ -42,12 +56,19 @@
    $this->objtxtemail->value  = "";
    
    $this->objtxtprincipal = $this->newObject('textinput','htmlelements'); 
-   $this->objtxtprincipal->name  = "txtemail";
+   $this->objtxtprincipal->name  = "txtprincipal";
    $this->objtxtprincipal->value  = "";
    
    $this->objtxtteacher = $this->newObject('textinput','htmlelements'); 
    $this->objtxtteacher->name  = "txtteacher";
    $this->objtxtteacher->value  = "";
+   
+   /**
+     *create a submit button
+     */
+    $this->objButtonSubmit  = new button('submit', $str1);
+    $this->objButtonSubmit->setToSubmit();
+
    
   /**
    *create a table to place all form elements in
@@ -66,7 +87,7 @@
     
     $myTable->startRow();
     $myTable->addCell(ucfirst($schooladdress));
-    $myTable->addCell($this->objtxtaddress->show());
+    $myTable->addCell($this->objSchooladdress->show());
     $myTable->endRow();  
     
     $myTable->startRow();
@@ -92,31 +113,24 @@
     $myTable->startRow();
     $myTable->addCell(ucfirst($guidanceteacher));
     $myTable->addCell($this->objtxtteacher->show());
+    $myTable->endRow();
+    
+    $myTable->startRow();
+    $myTable->addCell($this->objButtonSubmit->show());
     $myTable->endRow();    
     
   /**
    *create a form to place all elements in
    */
    
-   $objForm = new form('studentcard',$this->uri(array('action'=>'null')));
+   $objForm = new form('studentcard',$this->uri(array('action'=>'showoutput')));
    $objForm->displayType = 3;
-   $objForm->addToForm($myTable->show());
+   $objForm->addToForm($this->objMainheading->show() . '<br />' .$myTable->show());
           
    /**
      *display the schoolist interface
      */
                                 
    echo  $objForm->show();	          
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
- 
   
 ?>
