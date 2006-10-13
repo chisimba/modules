@@ -18,7 +18,7 @@ class statistics extends controller {
     * 
     * @param byref $ string $engine the engine object
     */
-    function init()
+    public function init()
     {
         $this->objFlesch = &$this->getObject('readingease');
     } 
@@ -27,7 +27,8 @@ class statistics extends controller {
     * return the name of a page body template which will render the module 
     * output (for more details see Modules and templating)
     */
-    function dispatch($action)
+    
+    public function dispatch($action)
     {
         
         $str1="\"There's Toad Hall,\" said the Rat; \"and that creek on the left, 
