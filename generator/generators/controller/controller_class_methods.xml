@@ -13,8 +13,16 @@
     public function init()
     {
         //Get an instance of the data access class for this module
-        $this->{DATABASECLASS} = $this->getObject('{DATABASECLASS}');
-{LOGGER}
+        //add in a try catch block for exception handling
+        try {
+        	$this->{DATABASECLASS} = $this->getObject('{DATABASECLASS}');
+			{LOGGER}
+		}
+		catch (customException $e)
+		{
+			customException::cleanUp();
+			exit;
+		}
     }
   </code>
 </item>
@@ -23,30 +31,38 @@
  <description>Coded to generate the dispatch method for the controller</description>
   <code>
     /**
-    * 
-    * The standard dispatch method for a Chisimba module. The dispatch() 
-    * method uses methods determined from the action parameter of the 
-    * querystring and executes the appropriate method, returning its 
+    *
+    * The standard dispatch method for a Chisimba module. The dispatch()
+    * method uses methods determined from the action parameter of the
+    * querystring and executes the appropriate method, returning its
     * body template. This body template which renders the module
     * output.
-    * 
+    *
     * @access public
-    * 
+    *
     */
     public function dispatch()
     {
         //Get action from query string and set default to view
         $action=$this->getParam('action', 'view');
         /*
-        * Convert the action into a method (alternative to 
+        * Convert the action into a method (alternative to
         * using case selections)
         */
-        $method = $this->_getMethod($action);
-        /*
-        * Return the template determined by the method resulting 
-        * from action
-        */
-        return $this->$method();
+        try {
+        	$method = $this->_getMethod($action);
+        }
+        catch (customException $e)
+		{
+			customException::cleanUp();
+			exit;
+
+        	/*
+        	 * Return the template determined by the method resulting
+        	 * from action
+        	 */
+        	return $this->$method();
+        }
     }
   </code>
 </item>
@@ -55,12 +71,12 @@
   <description>Coded to generate the view method for the controller</description>
   <code>
     /**
-    * 
+    *
     * Method corresponding to the view action. It fetches the data
     * into an array and passes it to a main_tpl content template.
     *
     * @access private
-    * 
+    *
     */
     private function _view()
     {
@@ -76,12 +92,12 @@
     <description>Coded to generate the edit method for the controller</description>
   <code>
     /**
-    * 
-    * Method corresponding to the edit action. It sets the mode to 
+    *
+    * Method corresponding to the edit action. It sets the mode to
     * edit and returns the edit template.
     *
     * @access private
-    * 
+    *
     */
     private function _edit()
     {
@@ -95,11 +111,11 @@
     <description>Coded to generate the add method for the controller</description>
   <code>
     /**
-    * 
-    * Method corresponding to the add action. It sets the mode to 
+    *
+    * Method corresponding to the add action. It sets the mode to
     * add and returns the edit content template.
     * @access private
-    * 
+    *
     */
     private function _add()
     {
@@ -113,13 +129,13 @@
   <description>Coded to generate the save method for the controller</description>
   <code>
     /**
-    * 
-    * Method corresponding to the save action. It gets the mode from 
-    * the querystring to and saves the data then sets nextAction to be 
-    * null, which returns the module in view mode. 
-    * 
+    *
+    * Method corresponding to the save action. It gets the mode from
+    * the querystring to and saves the data then sets nextAction to be
+    * null, which returns the module in view mode.
+    *
     * @access private
-    * 
+    *
     */
     private function _save()
     {
@@ -127,7 +143,7 @@
         $this->{DATABASECLASS}->saveItem($mode);
         return $this->nextAction(NULL);
     }
-    
+
   </code>
 </item>
 
@@ -135,14 +151,14 @@
   <description>Coded to generate the delete method for the controller</description>
   <code>
     /**
-    * 
-    * Method corresponding to the delete action. It requires a 
-    * confirmation, and then delets the item, and then sets 
+    *
+    * Method corresponding to the delete action. It requires a
+    * confirmation, and then delets the item, and then sets
     * nextAction to be null, which returns the module in
-    * view mode. 
-    * 
+    * view mode.
+    *
     * @access private
-    * 
+    *
     */
     private function _delete()
     {
@@ -157,18 +173,18 @@
 </item>
 
 <item name="actionerror" type="method">
-  <description>Coded to generate the actionerror method for the controller, 
-  which is the method called when the action does not correspond to 
+  <description>Coded to generate the actionerror method for the controller,
+  which is the method called when the action does not correspond to
   a method of the controller class.</description>
   <code>
     /**
-    * 
-    * Method to return an error when the action is not a valid 
+    *
+    * Method to return an error when the action is not a valid
     * action method
-    * 
+    *
     * @access private
     * @return string The dump template populated with the error message
-    * 
+    *
     */
     private function _actionError()
     {
@@ -181,21 +197,21 @@
 </item>
 
 <item name="validaction" type="method">
-  <description>Coded to generate the validaction method for the 
-  controller, which is a method to check if a given action is a 
+  <description>Coded to generate the validaction method for the
+  controller, which is a method to check if a given action is a
   valid method</description>
   <code>
     /**
-    * 
+    *
     * Method to check if a given action is a valid method
-    * of this class preceded by double underscore (_). If the action 
+    * of this class preceded by double underscore (_). If the action
     * is not a valid method it returns FALSE, if it is a valid method
     * of this class it returns TRUE.
-    * 
+    *
     * @access private
     * @param string $action The action parameter
     * @return boolean TRUE|FALSE
-    * 
+    *
     */
     private function _validAction($action)
     {
@@ -209,19 +225,19 @@
 </item>
 
 <item name="getmethod" type="method">
-  <description>Coded to generate the getmethod method for the 
-  controller, which is a method to convert the action parameter 
+  <description>Coded to generate the getmethod method for the
+  controller, which is a method to convert the action parameter
   into the name of a method of this clas</description>
   <code>
     /**
-    * 
-    * Method to convert the action parameter into the name of 
+    *
+    * Method to convert the action parameter into the name of
     * a method of this class.
-    * 
+    *
     * @access private
-    * @param string $action The action parameter 
+    * @param string $action The action parameter
     * @return stromg the name of the method
-    * 
+    *
     */
     private function _getMethod($action)
     {

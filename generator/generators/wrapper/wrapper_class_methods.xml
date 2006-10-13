@@ -6,16 +6,22 @@
   <description>Initializes the class ({WRAPCLASS}) being wrapped.</description>
   <code>
     /**
-    * Standard init method to initialize the class 
+    * Standard init method to initialize the class
     * ({WRAPCLASS}) being wrapped.
     *
     */
     public function init()
     {
-        //Include the class file to wrap 
-        require_once('{WRAPCLASSFULLPATH}');
-        //Instantiate the class
-        $this->$obj{WRAPCLASS} = new {WRAPCLASSINSTANCE}({WRAPCLASSPARAMS});
+        try {
+    		//Include the class file to wrap
+        	require_once('{WRAPCLASSFULLPATH}');
+        	//Instantiate the class
+        	$this->$obj{WRAPCLASS} = new {WRAPCLASSINSTANCE}({WRAPCLASSPARAMS});
+        }
+        catch(customException $e) {
+            echo customException::cleanUp();
+            die();
+        }
     }
   </code>
 </item>

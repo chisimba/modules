@@ -3,9 +3,9 @@
 <chisimba_dbtable_methods>
 
 <item name="init" type="method">
-<description>Standard init method. Constructor for the module 
-dbtable class for the class being generated. It sets the 
-database table via the parent dbtable class init method, 
+<description>Standard init method. Constructor for the module
+dbtable class for the class being generated. It sets the
+database table via the parent dbtable class init method,
 and instantiates required objects.</description>
   <code>
     /**
@@ -17,23 +17,29 @@ and instantiates required objects.</description>
     */
     public function init()
     {
-        parent::init('{DATABASETABLE}');
-        //Instantiate the user object
-        $this->objUser = $this->getObject('user', 'security');
+        try {
+    		parent::init('{DATABASETABLE}');
+        	//Instantiate the user object
+        	$this->objUser = $this->getObject('user', 'security');
+        }
+        catch(customException $e) {
+            echo customException::cleanUp();
+            die();
+        }
     }
   </code>
 </item>
 
 <item name="saveData" type="method">
 <description>Generates a save method for the class being generated</description>
-  <code> 
+  <code>
     /**
     *
     * Save method for {DATABASETABLE}
     * @param string $mode: edit if coming from edit, add if coming from add
     *
     */
-    public function saveData($mode) 
+    public function saveData($mode)
     {
 {SAVECODE}
     }
@@ -41,14 +47,14 @@ and instantiates required objects.</description>
 </item>
 
 <item name="getforedit" type="method">
-<description>Generates a method to retrieve the data for edit and 
+<description>Generates a method to retrieve the data for edit and
 prepare the vars for the edit template</description>
   <code>
     /**
     * Method to retrieve the data for edit and prepare the vars for
     * the edit template.
-    * 
-    * @param string $mode The mode should be edit or add 
+    *
+    * @param string $mode The mode should be edit or add
     */
     public function getForEdit()
     {
@@ -56,7 +62,7 @@ prepare the vars for the edit template</description>
         // retrieve the group ID from the querystring
         $keyvalue=$this->getParam("id", NULL);
         if (!$keyvalue) {
-          die($this->objLanguage->languageText("modules_badkey").": ".$keyvalue); 
+          die($this->objLanguage->languageText("modules_badkey").": ".$keyvalue);
         }
         // Get the data for edit
         $key="id";
@@ -66,7 +72,7 @@ prepare the vars for the edit template</description>
 </item>
 
 <item name="deleterecord" type="method">
-<description>Genearate a method to delete a record according to its key 
+<description>Genearate a method to delete a record according to its key
 and keyvalue</description>
   <code>
     /**
