@@ -12,20 +12,22 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 * @uses 
 * 
 * @author Derek Keats 
+* @porter Dean Van Niekerk
+* ported from php4 to php5
 */
 class text extends object {
 
-    var $evaluation_string;
+    public $evaluation_string;
     
-    var $words;
-    var $letters;
-    var $sentences;
-    var $length;
-    var $sentences_arr=array();
-    var $avg_sentence_words;
-    var $max_sentence_words;
-    var $min_sentence_words;
-    var $std_sentence_words;
+    public $words;
+    public $letters;
+    public $sentences;
+    public $length;
+    public $sentences_arr=array();
+    public $avg_sentence_words;
+    public $max_sentence_words;
+    public $min_sentence_words;
+    public $std_sentence_words;
 
   
     /**

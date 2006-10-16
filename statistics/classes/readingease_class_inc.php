@@ -36,6 +36,8 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 * 
 * 
 * @author Derek Keats 
+* @porter Dean Van Niekerk
+* ported from php4 to php5
 */
 class readingease extends object {
   

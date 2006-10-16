@@ -9,16 +9,18 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 * Class for calculating diversity stats. 
 * 
 * @author Derek Keats 
+* @porter Dean Van Niekerk
+* ported from php4 to php5
 */
 class diversity extends object {
     
 
-    var $S;
-    var $H1;
-    var $E;
-    var $D;
+    public $S;
+    public $H1;
+    public $E;
+    public $D;
     
-    var $_sum;
+    public $_sum;
     
     
     

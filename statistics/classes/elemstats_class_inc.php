@@ -10,16 +10,18 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 * in analysing text such as discussion forums
 * 
 * @author Derek Keats 
+* @porter Dean Van Niekerk
+* ported from php4 to php5
 */
 class elemstats extends controller {
     
-    var $mean;
-    var $n;
-    var $std;
-    var $stderr;
-    var $sum;
-    var $min;
-    var $max;
+     public $mean;
+     public $n;
+     public $std;
+     public $stderr;
+     public $sum;
+     public $min;
+     public $max;
     
     /**
     * Method to calculate basic stats on an array
