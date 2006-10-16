@@ -13,6 +13,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * testing purpose only. It does not provide a functional module.
 *
 * @author derek Keats
+* @ported by Jameel Sauls
 * $Id$
 *
 */

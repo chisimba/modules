@@ -12,7 +12,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * lookup of words.
 *
 * @author Derek Keats
-*
+* @porter Jameel Sauls
 * @version $Id$
 * @copyright 2005 GNU GPL
 *
@@ -25,35 +25,35 @@ class dicinterface extends object
     * @var array $languages The languages that babelfish supports
     * 
     */
-    var $languages;
+    $languages;
     
     /**
     * 
     * @var string $format The layour format, horizontal or vertical
     * 
     */
-    var $format;
+    $format;
     
     /**
     * 
     * @var string $err The error code
     * 
     */
-    var $err;
+    $err;
     
     /**
     * 
     * @var string $err The error message
     * 
     */
-    var $errMsg;
+    $errMsg;
 
     /**
     * 
     * Standard constructor which instantiates the language object
     * 
     */
-    function init()
+    public function init()
     {
         //Instantiate the language object
         $this->objLanguage = & $this->getObject("language", "language");
@@ -66,7 +66,7 @@ class dicinterface extends object
     * standard set function to set a parameter
     * 
     */
-    function set($param, $value)
+    public function set($param, $value)
     {
         $this->$param = $value;
     }
@@ -76,7 +76,7 @@ class dicinterface extends object
     * Standard get function to get a parameter
     * 
     */
-    function get($param)
+    public function get($param)
     {
         return $this->$param;
     }
@@ -85,7 +85,7 @@ class dicinterface extends object
     * Method to make as search form for the dictionary module
     * 
     */
-    function makeSearch()
+    public function makeSearch()
     {
         $button = $this->objLanguage->LanguageText('mod_dictionary_lookupword','dictionary');
         //Check if the format is vertical or horizontal
@@ -134,6 +134,6 @@ class dicinterface extends object
           . $objElement2->show());
         return $objForm->show();
     }
-} #class
+}
 
 ?>

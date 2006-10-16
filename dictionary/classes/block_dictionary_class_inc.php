@@ -1,4 +1,4 @@
-<?
+<?php
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
 {
@@ -10,7 +10,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * A block to return the last 10 podcasts entries
 *
 * @author Derek Keats
-
+* @porter Jameel Sauls
 * 
 * $Id$
 *
@@ -20,23 +20,23 @@ class block_dictionary extends object
     /**
     * @var string $title The title of the block
     */
-    var $title;
+    $title;
     
     /**
     * @var object $objDicIntf String to hold the dictionary interface object
     */
-    var $objDicIntf;
+    $objDicIntf;
 
     /**
     * @var object $objLanguage String to hold the language object
     */    
-    var $objLanguage;
+    $objLanguage;
     
     /**
     * Standard init function to instantiate language and user objects
     * and create title
     */
-    function init()
+    public function init()
     {
         //Create an instance of the language object
         $this->objLanguage = &$this->getObject("language", "language");
@@ -54,8 +54,9 @@ class block_dictionary extends object
     * Standard block show method. It builds the output based
     * on data obtained
     */ 
-    function show()
+    public function show()
 	{
         return  $this->objDicIntf->makeSearch();
     }
 }
+?>

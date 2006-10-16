@@ -11,7 +11,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * This is a class to look up definitions of words on dict.org
 *
 * @author Derek Keats
-*
+* @porter Jameel Sauls
 * @version $Id$
 * @copyright 2005 GNU GPL
 *
@@ -24,21 +24,21 @@ class diclookup extends object
     * @var array $languages The languages that babelfish supports
     * 
     */
-    var $languages;
+    $languages;
     
     /**
     * 
     * @var string $err The error code
     * 
     */
-    var $err;
+    $err;
     
     /**
     * 
     * @var string $err The error message
     * 
     */
-    var $errMsg;
+    $errMsg;
 
     /**
     * 
@@ -46,7 +46,7 @@ class diclookup extends object
     * information.
     * 
     */
-    function init()
+    public function init()
     {
         //Instantiate the language object
         $this->objLanguage = & $this->getObject("language", "language");
@@ -61,7 +61,7 @@ class diclookup extends object
     * @return The definition as string
     * 
     */
-    function lookup($word)
+    public function lookup($word)
     {
         if ($word == '') {
             $this->err=TRUE;
@@ -80,7 +80,7 @@ class diclookup extends object
     * 
     * 
     */
-    function getWithCurl(& $word)
+    public function getWithCurl(& $word)
     {
         // initialise the session
         $ch = curl_init();
@@ -95,6 +95,6 @@ class diclookup extends object
         return $definition;
     }
 
-} #class
+}
 
 ?>
