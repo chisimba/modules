@@ -79,13 +79,12 @@
         }
         
         
-        
+
         
         $tblclass->startRow();
         $oddOrEven = ($oddOrEven=="even")? "odd":"even";		    
         $tblclass->addCell("<b>" . $viewLinkItem . "</b>", "null", "top", "left", $oddOrEven, null);
         $tblclass->addCell("<b>" . $table['description'] . "</b>", "null", "top", "left", $oddOrEven, null);		
-        
         
         // Start of Rubric Options
         $options = NULL;
@@ -93,6 +92,7 @@
         if ($contextCode != "root") {
 			if ($this->isValid('assessments')) {
 	            // Assessments for table.
+               
                 
 	            $icon = $this->getObject('geticon','htmlelements');
                 $icon->setIcon('assessments');
@@ -227,22 +227,21 @@
         $tblclass->cellpadding='5';    
     
         $tblclass->startRow();
-    
+    	
+    	
+    	  $icon_cre = $this->getObject('geticon','htmlelements');
         if ($this->isValid('createtable')) {
             // Display create button.
             $icon = $this->getObject('geticon','htmlelements');
             $icon->setIcon('add');
             $icon->alt = "Create";
             $icon->align=false;	
+            $icon_cre = $icon;
+            
         }
-    
         $pageTitle->str .= "<a href=\"" . 
-        $this->uri(array(
-            'module'=>'rubric',
-            'action'=>'createtable',
-            'type'=>'predefined'
-        ))	
-        . "\">" . $icon->show() . "</a>";
+        $this->uri(array('module'=>'rubric','action'=>'createtable','type'=>'predefined'))	
+        . "\">" .$icon_cre->show() . "</a>";
     
         $tblclass->addCell($pageTitle->show(), "null", "top", "left", "",null);
         $tblclass->endRow();

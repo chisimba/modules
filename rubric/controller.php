@@ -9,24 +9,27 @@ if (!$GLOBALS['kewl_entry_point_run'])
 /**
 * Controller for Rubric module
 * @author Jeremy O'Connor
+* @porter Dean Van Niekerk
+* @  PORTED from php4 to php5
+* @email dvanniekerk@uwc.ac.za
 * @copyright 2004 University of the Western Cape
 * $Id$
 */
 class rubric extends controller
 {
-    var $objUser;
-	var $objLanguage;
-	var $contextCode;
-	var $objDbRubricTables;
-	var $objDbRubricPerformances;
-	var $objDbRubricObjectives;
-	var $objDbRubricCells;
-	var $objDbRubricAssessments;
+   public $objUser;
+	public $objLanguage;
+	public $contextCode;
+	public $objDbRubricTables;
+	public $objDbRubricPerformances;
+	public $objDbRubricObjectives;
+	public $objDbRubricCells;
+	public $objDbRubricAssessments;
 
     /**
     * The Init function
     */
-    function init()
+    public function init()
     {
         $this->objUser =& $this->getObject('user', 'security');
         $this->objLanguage =& $this->getObject('language','language');
@@ -46,7 +49,7 @@ class rubric extends controller
     * @param string $action The action
     * @return string The content template file
     */
-    function dispatch($action=Null)
+    public function dispatch($action=Null)
     {
         // Set the layout template.
         $this->setLayoutTemplate("layout_tpl.php");

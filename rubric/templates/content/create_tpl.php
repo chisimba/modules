@@ -2,10 +2,10 @@
     // Load classes
 	$this->loadClass("form","htmlelements");
 	$this->loadClass("textinput","htmlelements");
-  $this->loadClass('radio', 'htmlelements');
+   $this->loadClass('radio', 'htmlelements');
 	$this->loadClass("dropdown","htmlelements");
 	$this->loadClass("button","htmlelements");
-  $this->loadClass('label','htmlelements'); 
+   $this->loadClass('label','htmlelements'); 
 	    
     $pageTitle = $this->newObject('htmlheading','htmlelements');
     $pageTitle->type=1;

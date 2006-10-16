@@ -1,15 +1,14 @@
 <?php
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
-//if ($this->objUser->isContextLecturer()
-//|| $this->objUser->isContextStudent() ) {
-//	$userMenuBar=& $this->getObject('sidemenu','toolbar');
-//}
-//else if ($this->objUser->isLecturer()) {
-//	$userMenuBar=& $this->getObject('sidemenu','toolbar');
-//}
-//else {
-//	die('Access denied');
-//}
+if ($this->objUser->isContextLecturer()|| $this->objUser->isContextStudent() ) {
+	$userMenuBar=& $this->getObject('sidemenu','toolbar');
+}
+else if ($this->objUser->isLecturer()) {
+	$userMenuBar=& $this->getObject('sidemenu','toolbar');
+}
+else {
+	die('Access denied');
+}
 //$cssLayout->setLeftColumnContent($userMenuBar->show('context'));
 $this->sideMenuBar=& $this->getObject('sidemenu','toolbar');
 $sideMenuBar=& $this->getObject('sidemenu','toolbar');

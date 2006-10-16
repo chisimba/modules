@@ -16,7 +16,7 @@ class dbRubricAssessments extends dbTable
     /**
     * Constructor method to define the table
     */
-    function init() 
+    public function init() 
     {
         parent::init('tbl_rubric_assessments');
         //$this->USE_PREPARED_STATEMENTS=True;
@@ -27,7 +27,7 @@ class dbRubricAssessments extends dbTable
 	* @param string $tableId The table ID
 	* @return array The assessments for a table
     */
-	function listAll($tableId)
+	public function listAll($tableId)
 	{
 		$sql = "SELECT id, teacher, studentNo, student, scores, timestamp FROM tbl_rubric_assessments
 		WHERE tableId = '$tableId'
@@ -41,7 +41,7 @@ class dbRubricAssessments extends dbTable
 	* @param string $id The ID
 	* @return array An assessment
 	*/	
-	function listSingle($id)
+	public function listSingle($id)
 	{
 		$sql = "SELECT tableId, teacher, studentNo, student, scores, timestamp FROM tbl_rubric_assessments
 		WHERE id = '$id'";
@@ -58,7 +58,7 @@ class dbRubricAssessments extends dbTable
 	* @param string $scores The list of scores, comma separated
 	* @param string $timestamp The timestamp
 	*/
-	function insertSingle($tableId, $teacher, $studentNo, $student, $scores, $timestamp)
+	public function insertSingle($tableId, $teacher, $studentNo, $student, $scores, $timestamp)
 	{
 		$this->insert(array(
         	'tableId' => $tableId,
@@ -81,7 +81,7 @@ class dbRubricAssessments extends dbTable
 	* @param string $scores The list of scores, comma separated
 	* @param string $timestamp The timestamp
 	*/
-	function updateSingle($id, $tableId, $teacher, $studentNo, $student, $scores, $timestamp)
+	public function updateSingle($id, $tableId, $teacher, $studentNo, $student, $scores, $timestamp)
 	{
 		$this->update('id', $id, array(
         	'tableId' => $tableId,
@@ -98,7 +98,7 @@ class dbRubricAssessments extends dbTable
 	* Delete all records
 	* @param string $tableId The table ID
 	*/
-	function deleteAll($tableId)
+	public function deleteAll($tableId)
 	{
 		$this->delete("tableId", $tableId);
 	}
@@ -107,7 +107,7 @@ class dbRubricAssessments extends dbTable
 	* Delete a record
 	* @param string $id The ID
 	*/
-	function deleteSingle($id)
+	public function deleteSingle($id)
 	{
 		$this->delete("id", $id);
 	}
