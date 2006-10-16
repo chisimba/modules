@@ -142,7 +142,7 @@ class readingease extends object {
         }
         return ($syllables/count($words));
     } #function averageSyllablesWord
-
+	 
     /**
     * 
     * Method to count the number of syllables in a word

@@ -8,10 +8,13 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 * Module class to test stats
 * 
 * @author Derek Keats 
+* @porter Dean van Niekerk
+* @email dvanniekerk@uwc.ac.za
 */
+
 class statistics extends controller {
-    var $strout;
-    var $text;
+    public $strout;
+    public $text;
 
     /**
     * Intialiser for the adminGroups object
