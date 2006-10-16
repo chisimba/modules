@@ -30,7 +30,7 @@ class marketingrecruitmentforum extends controller
       $this->setLayoutTemplate('default_layout_tpl.php');
     }
     
-    
+/*------------------------------------------------------------------------------*/    
     /**
     	* Method to process actions to be taken
       * @param string $action String indicating action to be taken
@@ -59,31 +59,44 @@ class marketingrecruitmentforum extends controller
             break;
             
             case 'showsluactivities':
-                $this->getStudentDetails();
-                //$results  = $this->getSession('studentdata');
-                //var_dump($results);
+                  $this->getStudentDetails(); //set session
                 return 'sluactivities_tpl.php';
             break;
             
             case  'showschoolist':
                 $this->getSLUActivties();
-               // $results  = $this->getSession('studentdata');
-               // var_dump($results);
                 return 'schoollist_tpl.php';
             break;
             
             case  'showoutput':
-              $this->getschoolist();            
+              $this->getSchoolist();             
               return  'output_tpl.php';
             break;
             
+            case  'editstudcard':
+                //$this->unsetSession('studentdata');
+                return 'studentcards_tpl.php';
+            break;
+            
+            case  'editsluactivity':
+                 return 'sluactivities_tpl.php';
+            break;
+            
+            case  'editschool':
+                return 'schoollist_tpl.php';
+            break;
+            
+            case  'submitinfo':
+                  $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
+                  $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
+                  return  'output_tpl.php'; 
             
             default:
                 return $this->nextAction('introduction', array(NULL));
                 
        }
     }
-    
+/*------------------------------------------------------------------------------*/    
    private function getStudentDetails(){
       /**
        *create an array - $studentdata to store the information captured on student cards
@@ -104,6 +117,7 @@ class marketingrecruitmentforum extends controller
                              'telnumber'        =>  $this->getParam('txttelnumber'),
                              'telcode'          =>  $this->getParam('txttelcode'),
                              'exemption'        =>  $this->getParam('exemptionqualification'),
+                             'courseinterest'   =>  $this->getParam('txtcourse'),
                              'relevantsubject'  =>  $this->getParam('relevantsubject'),
                              'sdcase'           =>  $this->getParam('sdcase'),
                         );
@@ -111,7 +125,7 @@ class marketingrecruitmentforum extends controller
         $this->setSession('studentdata',$studentdata);
       
     }
-    
+/*------------------------------------------------------------------------------*/    
   private function getSLUActivties(){
      
      $username  = $this->objUser->fullname();
@@ -129,8 +143,9 @@ class marketingrecruitmentforum extends controller
         $this->setSession('sluactivitydata',$sluactivitiesdata);                                  
                                   
   }
+/*------------------------------------------------------------------------------*/  
+  private function getSchoolist(){
   
-  private function getschoolist(){
     $username  = $this->objUser->fullname();
     $schoolistdata  = array('createdby'        =>  $username,
                              'datecreated'      =>  date('Y-m-d'),
@@ -148,9 +163,9 @@ class marketingrecruitmentforum extends controller
    $this->setSession('schoolistdata',$schoolistdata);
   
   }
+/*------------------------------------------------------------------------------*/    
     
-    
-}               
+}//end of class               
            
     
 ?>
