@@ -2,7 +2,8 @@
 /**
  *create a tempate for the SLU activities interface
  */ 
- 
+
+/*------------------------------------------------------------------------------*/ 
 /**
   *load all classes
   */
@@ -11,7 +12,8 @@
   $this->loadClass('dropdown','htmlelements');
   $this->loadClass('textinput','htmlelements');
   $this->loadClass('button','htmlelements');
-  
+
+/*------------------------------------------------------------------------------*/  
   
 /**
   *create all language elements
@@ -24,21 +26,26 @@
   $province = $this->objLanguage->languageText('word_province');
   $btnNext  = $this->objLanguage->languageText('word_next');
   $str1 = ucfirst($btnNext);
-  
+/*------------------------------------------------------------------------------*/  
+
 /**
   *create form heading
   */
   $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
   $this->objMainheading->type=1;
   $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_sluactivities','marketingrecruitmentforum');
+
+/*------------------------------------------------------------------------------*/  
   
 /**
   *create all textinputs
   */
  
-  $this->objtxtschoolname = $this->newObject('textinput','htmlelements'); 
+  $this->objtxtschoolname = $this->newObject('textinput','htmlelements');  //change to dropdwonlist
   $this->objtxtschoolname->name   = "txtschoolname";
   $this->objtxtschoolname->value  = "";
+
+/*------------------------------------------------------------------------------*/  
  
 /**
   *create all date selection elements
@@ -51,7 +58,9 @@
   $this->objdate->setName($name);
   $this->objdate->setDefaultDate($datevalue);
   $this->objdate->setDateFormat($format); 
- 
+
+/*------------------------------------------------------------------------------*/ 
+
 /**
   *create all dropdown list
   */
@@ -83,12 +92,15 @@
    $this->objprovincedropdown->addOption('Limpopo Province','Limpopo Province') ;
    $this->objprovincedropdown->addOption('North-West Province','North-West Province') ;
    $this->objprovincedropdown->size = 50;
-   
+
+/*------------------------------------------------------------------------------*/   
    /**
-    *create a submit button
+    *create a next button
     */
-    $this->objButtonSubmit  = new button('submit', $str1);
-    $this->objButtonSubmit->setToSubmit();       
+    $this->objButtonNext  = new button('activitiesnext', $str1);
+    $this->objButtonNext->setToSubmit();       
+
+/*------------------------------------------------------------------------------*/    
    
   /**
     *create a table to place all elements in
@@ -126,8 +138,10 @@
   $myTable->endRow();       
   
   $myTable->startRow();
-  $myTable->addCell($this->objButtonSubmit->show());
+  $myTable->addCell($this->objButtonNext->show());
   $myTable->endRow();
+
+/*------------------------------------------------------------------------------*/  
   
   /**
     *create a form to place all elements in
@@ -136,6 +150,8 @@
   $objForm = new form('sluactivities',$this->uri(array('action'=>'showschoolist')));
   $objForm->displayType = 3;
   $objForm->addToForm($this->objMainheading->show() . '<br>' . $myTable->show());
+
+/*------------------------------------------------------------------------------*/  
           
   /**
     *display the slu activity interface all contents to screen

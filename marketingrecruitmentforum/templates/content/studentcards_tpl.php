@@ -4,7 +4,7 @@
    *create a template for capturing student card information
    */
       
-      
+/*------------------------------------------------------------------------------*/      
    /**
      *load all classes
      */
@@ -15,7 +15,7 @@
      $this->loadClass('datepicker','htmlelements');
      $this->loadClass('form','htmlelements');
      $this->loadClass('button','htmlelements');
-     
+/*------------------------------------------------------------------------------*/     
     /**
       *create all language elements
       */
@@ -35,6 +35,7 @@
       $btnNext  = $this->objLanguage->languageText('word_next');
       $str1 = ucfirst($btnNext);
 
+/*------------------------------------------------------------------------------*/      
       
       /**
        *create form heading
@@ -43,12 +44,13 @@
        $this->objMainheading->type=1;
        $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_studentcardinterface','marketingrecruitmentforum');
 
-                    
+/*------------------------------------------------------------------------------*/       
+
       /**
        *create all textinputs
        */  
         
-       $this->objtxtschoolname = $this->newObject('textinput','htmlelements');          
+       $this->objtxtschoolname = $this->newObject('textinput','htmlelements');    //change to dropdown populate with info in link          
        $this->objtxtschoolname->name   = "txtschoolname";
        $this->objtxtschoolname->value  = "";
 
@@ -67,7 +69,7 @@
        $textArea = 'postaladdress';
        $this->objPostaladdress =& $this->newobject('textArea','htmlelements');
        $this->objPostaladdress->setRows(1);
-       $this->objPostaladdress->setColumns(16);
+       $this->objPostaladdress->setColumns(15);
        $this->objPostaladdress->setName($textArea);
        $this->objPostaladdress->setContent("");
        
@@ -80,9 +82,9 @@
        $this->objtxttelcode->value  = "";
        
        $this->objtxtcourse = $this->newObject('textinput','htmlelements'); 
-       $this->objtxtcourse->name   = "txttelnumber";
+       $this->objtxtcourse->name   = "txtcourse";
        $this->objtxtcourse->value  = " ";
-       
+/*------------------------------------------------------------------------------*/       
        /**
         *create a date selection
         */
@@ -94,6 +96,8 @@
         $this->objdate->setName($name);
         $this->objdate->setDefaultDate($datevalue);
         $this->objdate->setDateFormat($format); 
+
+/*------------------------------------------------------------------------------*/
         
         /**
          *create all radio groups
@@ -112,14 +116,15 @@
         $objsdcase->addOption('y','Yes');
         $objsdcase->addOption('n','No');
         $objsdcase->setSelected('y');
-        
+
+/*------------------------------------------------------------------------------*/        
         /**
-         *create a submit button
+         *create a next button
          */
          
-         $this->objButtonSubmit  = new button('submit', $str1);
-         $this->objButtonSubmit->setToSubmit();
-        
+         $this->objButtonNext  = new button('next', $str1);
+         $this->objButtonNext->setToSubmit();
+/*------------------------------------------------------------------------------*/        
         /**
          *create a table to place all elements in
          */
@@ -191,8 +196,11 @@
          $myTable->endRow();
          
          $myTable->startRow();
-         $myTable->addCell($this->objButtonSubmit->show());
+         $myTable->addCell($this->objButtonNext->show());
          $myTable->endRow();
+
+/*------------------------------------------------------------------------------*/
+         
          /**
           *create a form to place all elements in
           */
@@ -200,6 +208,8 @@
           $objForm = new form('studentcard',$this->uri(array('action'=>'showsluactivities')));
           $objForm->displayType = 3;
           $objForm->addToForm($this->objMainheading->show() . '<br>' .$myTable->show());
+          
+/*------------------------------------------------------------------------------*/
           
           /**
            *display the student card interface

@@ -2,7 +2,7 @@
 /**
  *create a template for all school lists
  */ 
-
+/*------------------------------------------------------------------------------*/
 
 /**
  *load all classes
@@ -10,7 +10,13 @@
  $this->loadClass('textinput','htmlelements');
  $this->loadClass('textarea','htmlelements');
  $this->loadclass('button','htmlelements');
+
+/*------------------------------------------------------------------------------*/ 
  
+ /**
+  *all language items
+  */
+     
  $schoolname = $this->objLanguage->languageText('phrase_schoolname');
  $schooladdress  = $this->objLanguage->languageText('phrase_schooladdress');
  $telnumber  = $this->objLanguage->languageText('phrase_telnumber');
@@ -19,7 +25,9 @@
  $principal = $this->objLanguage->languageText('word_principal');
  $guidanceteacher = $this->objLanguage->languageText('mod_marketingrecruitmentforum_guidanceteacher','marketingrecruitmentforum');
  $btnNext  = $this->objLanguage->languageText('word_next');
- $str1 = ucfirst($btnNext); 
+ $str1 = ucfirst($btnNext);
+
+/*------------------------------------------------------------------------------*/  
  
   /**
   *create form heading
@@ -27,19 +35,21 @@
   $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
   $this->objMainheading->type=1;
   $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_schoollist','marketingrecruitmentforum');
+  
+/*------------------------------------------------------------------------------*/  
  
  /**
    *create all textinputs
    */  
         
-   $this->objtxtschoolname = $this->newObject('textinput','htmlelements');          
+   $this->objtxtschoolname = $this->newObject('textinput','htmlelements');      //change rem    
    $this->objtxtschoolname->name   = "txtschoolname";
    $this->objtxtschoolname->value  = "";
   
    $textArea = 'schooladdress';
    $this->objSchooladdress =& $this->newobject('textArea','htmlelements');
    $this->objSchooladdress->setRows(1);
-   $this->objSchooladdress->setColumns(16);
+   $this->objSchooladdress->setColumns(15);
    $this->objSchooladdress->setName($textArea);
    $this->objSchooladdress->setContent("");
    
@@ -62,14 +72,15 @@
    $this->objtxtteacher = $this->newObject('textinput','htmlelements'); 
    $this->objtxtteacher->name  = "txtteacher";
    $this->objtxtteacher->value  = "";
-   
-   /**
-     *create a submit button
-     */
-    $this->objButtonSubmit  = new button('submit', $str1);
-    $this->objButtonSubmit->setToSubmit();
 
-   
+/*------------------------------------------------------------------------------*/   
+   /**
+     *create a next button
+     */
+    $this->objButtonNext  = new button('schoolnext', $str1);
+    $this->objButtonNext->setToSubmit();
+
+/*------------------------------------------------------------------------------*/   
   /**
    *create a table to place all form elements in
    */
@@ -116,8 +127,10 @@
     $myTable->endRow();
     
     $myTable->startRow();
-    $myTable->addCell($this->objButtonSubmit->show());
+    $myTable->addCell($this->objButtonNext->show());
     $myTable->endRow();    
+
+/*------------------------------------------------------------------------------*/    
     
   /**
    *create a form to place all elements in
@@ -126,6 +139,8 @@
    $objForm = new form('studentcard',$this->uri(array('action'=>'showoutput')));
    $objForm->displayType = 3;
    $objForm->addToForm($this->objMainheading->show() . '<br />' .$myTable->show());
+
+/*------------------------------------------------------------------------------*/   
           
    /**
      *display the schoolist interface
