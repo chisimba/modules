@@ -24,21 +24,21 @@ class diclookup extends object
     * @var array $languages The languages that babelfish supports
     * 
     */
-    $languages;
+    public $languages;
     
     /**
     * 
     * @var string $err The error code
     * 
     */
-    $err;
+    public $err;
     
     /**
     * 
     * @var string $err The error message
     * 
     */
-    $errMsg;
+    public $errMsg;
 
     /**
     * 

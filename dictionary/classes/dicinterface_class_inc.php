@@ -25,28 +25,28 @@ class dicinterface extends object
     * @var array $languages The languages that babelfish supports
     * 
     */
-    $languages;
+    public $languages;
     
     /**
     * 
     * @var string $format The layour format, horizontal or vertical
     * 
     */
-    $format;
+    public $format;
     
     /**
     * 
     * @var string $err The error code
     * 
     */
-    $err;
+    public $err;
     
     /**
     * 
     * @var string $err The error message
     * 
     */
-    $errMsg;
+    public $errMsg;
 
     /**
     * 

@@ -20,17 +20,17 @@ class block_dictionary extends object
     /**
     * @var string $title The title of the block
     */
-    $title;
+    public $title;
     
     /**
     * @var object $objDicIntf String to hold the dictionary interface object
     */
-    $objDicIntf;
+    public $objDicIntf;
 
     /**
     * @var object $objLanguage String to hold the language object
     */    
-    $objLanguage;
+    public $objLanguage;
     
     /**
     * Standard init function to instantiate language and user objects
