@@ -15,23 +15,13 @@ class leftcontent{
 	
 	public function leftColumnContent(){
 	
-	 //$firstHeadingLinks = array();
-   /**     $firstHeadingLinks[] = array('params' => array("action" => "sumaction"), 'module' => 'modulelinkpointsto', 'linktext' => 'theTextToDisplay'); 
-   *     $secondHeadingLinks = array();
-   *     $secondHeadingLinks[] = array('params' => array("action" => "anotheraction"), 'module' => 'modulelinkpointsto', 'linktext' => 'theTextToDisplay'); 
-   *
-   *     $leftColumn = array();
-   *     $leftColumn[] = array('heading' => 'First Heading', 'links' => $firstHeadingLinks);
-   *     $leftColumn[] = array('heading' => 'Second Heading', 'links' => $secondHeadingLinks);
-   *
-   *     $this->objUtils =& $this->newObject('defaultpageutils', 'studentenquiry');
-   *     echo $this->objUtils->getDefaultLayout($leftColumn);*/
-  
-	
+	 
    $StudentCardLink = array();
-   $StudentCardLink[] = array('params' => array("action" => "studentcard"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Student Cards');
+   $StudentCardLink[] = array('params' => array("action" => "studentcard"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Capture Student Information');
+   
+   /*$StudentCardLink[] = array('params' => array("action" => "studentcard"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Student Cards');
    $StudentCardLink[] = array('params' => array("action" => "activitylist"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'SLU Activities'); 
-   $StudentCardLink[] = array('params' => array("action" => "shoollist"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'School List');
+   $StudentCardLink[] = array('params' => array("action" => "shoollist"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'School List');*/
    
    $StudCardSLU = array();
    $StudCardSLU[] = array('params' => array("action" => "NULL"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Student Card(SLU)');
@@ -57,7 +47,6 @@ class leftcontent{
    
     return $leftColumn;
  }
-   
    
 }  
 ?>
