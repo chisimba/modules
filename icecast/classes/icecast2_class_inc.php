@@ -9,7 +9,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 class parse_icecast_info{
 
 	// connect to icecast and get the xml info.
-	function iceinfo($ip,$port,$user,$pass) {
+	public function iceinfo($ip,$port,$user,$pass) {
 		$this->infila = array();
 		$this->temp=null;
 		$this->objcomp=null;
@@ -42,7 +42,7 @@ class parse_icecast_info{
 	}
 	
 	//functions to parse the icecast xml (inizio,componi,fine)
-	function inizio($parser,$name,$attr) {
+	public function inizio($parser,$name,$attr) {
 		if ($name == "SOURCE") {
 			// create nuovatemp empty
 			$this->temp->mount=$attr["MOUNT"];
@@ -50,7 +50,7 @@ class parse_icecast_info{
 		else  $this->objcomp = $name;
 	}
 	
-	function componi($parser,$dato) {
+	public function componi($parser,$dato) {
 		if (is_null($this->objcomp) || is_null($this->temp)) 
 			return;
 
@@ -70,7 +70,7 @@ class parse_icecast_info{
 			$this->temp->samplerate=$dato;
 	}
 	
-	function fine($parser,$name) {
+	public function fine($parser,$name) {
 		if ($name == "SOURCE") {
 			array_push($this->infila,$this->temp);
 			$this->temp=null;

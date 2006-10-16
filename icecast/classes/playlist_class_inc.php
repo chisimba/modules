@@ -9,13 +9,13 @@ class playlist extends object
 	/**
 	* @var array List of *.ogg files to play
 	*/
-	var $playlist;
-    function init()
+	 $playlist;
+   public function init()
 	{
         // Create an instance of the language object
         $this->objLanguage = &$this->getObject('language', 'language');
 	}
-	function get()
+	public function get()
 	{
         //Get the current context
         $objContext =& $this->getObject('dbcontext','context');

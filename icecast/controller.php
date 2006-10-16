@@ -8,7 +8,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 * Icecast wrapper.
-* @author Jeremy O'Connor
+* @author Jeremy O'Connor , Jameel Sauls
 * $Id$
 */
 class icecast extends controller
