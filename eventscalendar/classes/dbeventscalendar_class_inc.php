@@ -189,7 +189,8 @@ class dbeventscalendar extends dbTable
     */
     public function getEvents($year, $month, $day)
     {
-    	$lines = $this->getUserEvents($this->_objUser->userId());
+    	$line = $this->getEventsByType('user', $this->_objUser->userId());
+    	//$lines = $this->getUserEvents($this->_objUser->userId());
     	foreach ($lines as $line)
     	{
     			print $line['event_date'];;

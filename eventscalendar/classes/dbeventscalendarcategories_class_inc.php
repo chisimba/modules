@@ -35,10 +35,10 @@ class dbeventscalendarcategories extends dbTable
      * @access public
      * 
      */
-    public function getUserCategories($userid)
+    public function getCategories($type, $typeId)
     {
         
-        return $this->getAll('WHERE userid = "'.$userid.'"');
+        return $this->getAll('WHERE type = "'.$type.'"  and typeid="'.$typeId.'"');
     }
    
     
