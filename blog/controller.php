@@ -45,6 +45,7 @@ class blog extends controller
         switch ($action) {
             default:
                 try {
+                		return 'myblog_tpl.php';
                     }
                     catch(customException $e) {
                         customException::cleanUp();
