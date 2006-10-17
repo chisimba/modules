@@ -1,8 +1,8 @@
 <?php
 
-$tablename = 'tbl_eventscalendarcategories';
+$tablename = 'tbl_eventscalendar_lookup';
 
-$options = array('comment' => 'Events Calendar Categories', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'Events Calendar Lookup', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 $fields = array(
 	'id' => array(
@@ -22,11 +22,9 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32,
         'notnull' => TRUE
-		)
-    
+		)   
+     
     );
-
-$name = 'eventscat';
 
 $indexes = array(
                 'fields' => array(
