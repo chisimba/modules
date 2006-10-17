@@ -313,8 +313,8 @@
           
     echo  $this->objMainheading->show();
 
-$submitdatesmsg = 'yes';    
-if($submitdatesmsg == 'yes'){
+//$submitdatesmsg = '';    
+if($submitdatesmsg){// == 'yes'){
   $tomsg =& $this->newObject('timeoutmessage', 'htmlelements');
   $tomsg->setMessage('thank you information has been sucessfully submitted');
   
