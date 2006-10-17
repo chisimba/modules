@@ -5,7 +5,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	die("You cannot view this page directly");
 }
 
-/*******************************************************************************
+/*******************************************************************************/
 /**
 * Marketing Controller                                                                 
 * This class controls all functionality to run the marketingrecruitmentforum module.
@@ -21,6 +21,7 @@ class marketingrecruitmentforum extends controller
      *declare variable used 
      *@param public and private
      */
+     public $submitdatesmsg = '';
      
     function init()
     {
@@ -28,6 +29,9 @@ class marketingrecruitmentforum extends controller
       $this->objLanguage =& $this->getObject('language', 'language');
       $this->objUser =& $this->getObject('user', 'security');
       $this->setLayoutTemplate('default_layout_tpl.php');
+      
+       //$this->objdbperdiem = & $this->getObject('dbperdiem','onlineinvoice');
+      $this->objstudinfo  = & $this->getObject('dbmarketing','marketingrecruitmentforum');
     }
     
 /*------------------------------------------------------------------------------*/    
@@ -86,12 +90,38 @@ class marketingrecruitmentforum extends controller
                 return 'schoollist_tpl.php';
             break;
             
+            case  'showsearchslu':
+                return 'searchslu_tpl.php';
+            break;
+            
             case  'submitinfo':
                   $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
                   $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
-                  return  'output_tpl.php'; 
+                  return  'output_tpl.php';
+            break;
+            
+            case  'showsearchfac':
+                return  'searchstudcardfac_tpl.php';
+            break;
+            
+            case  'showsearchactiities':
+                return  'searchactivities_tpl.php';
+            break;
+            
+            case  'showsearchschool':
+                return 'searchschools_tpl.php';
+            break;
             
             default:
+               ///"CRSCDE","2",0,1
+               /*$field = "ARECDE";
+                $value  = "7785";
+                $start = 0;
+                $end  = 10;
+               // $vals = $this->objstudinfo->getlimitCRSRE($field,$value,$start,$end);
+                $vals = $this->objstudinfo->getlimitSTAUX($field,$value,$start,$end);
+                var_dump($vals);*/
+                
                 return $this->nextAction('introduction', array(NULL));
                 
        }
