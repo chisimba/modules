@@ -36,10 +36,10 @@ $fields = array(
 		'length' => 100,
 		),
 	'comment_date' => array(
-		'type' => 'datetime',
+		'type' => 'date',
 		),
 	'comment_date_gmt' => array(
-		'type' => 'datetime',
+		'type' => 'date',
 		),
 	'comment_content' => array(
 		'type' => 'clob',
