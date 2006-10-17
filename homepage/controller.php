@@ -57,8 +57,8 @@ class homepage extends controller
 					$this->objdBHomePagesLog->insertSingle($list['id'], date("w"), $_SERVER['REMOTE_ADDR'], mktime());
 				}
 	            // Parse the MathML
-	            //$objMathML =& $this->getObject('parse4mathml','filters');
-	            //$contents = $objMathML->parseAll($contents);
+	            $objMathML =& $this->getObject('parse4mathml','filters');
+	            $contents = $objMathML->parseAll($contents);
 	            // Parse the MMedia
 	            $objMMedia =& $this->getObject('parse4mmedia','filters');
 	            $contents = $objMMedia->parseAll($contents);
@@ -89,8 +89,8 @@ class homepage extends controller
                 $contents = stripslashes($contents);
                 $objMMedia =& $this->getObject('parse4mmedia','filters');
                 $contents = $objMMedia->parseAll($contents);
-                //$objMathML =& $this->getObject('parse4mathml','filters');
-                //$contents = $objMathML->parseAll($contents);
+                $objMathML =& $this->getObject('parse4mathml','filters');
+                $contents = $objMathML->parseAll($contents);
                 $contents = addslashes($contents);
 
 				if ($this->objdBHomePages->homepageExists($userId)) {
