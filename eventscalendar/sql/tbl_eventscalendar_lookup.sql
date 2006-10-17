@@ -25,6 +25,8 @@ $fields = array(
 		)   
      
     );
+    
+$name = 'eventslookup';
 
 $indexes = array(
                 'fields' => array(

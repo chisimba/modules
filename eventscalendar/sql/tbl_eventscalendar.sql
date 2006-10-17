@@ -37,7 +37,7 @@ $fields = array(
 
     );
 
-
+$name = 'events';
 
 $indexes = array(
                 'fields' => array(
