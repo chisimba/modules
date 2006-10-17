@@ -34,8 +34,6 @@ $fields = array(
     'end_time' => array(
         'type' => 'integer'
         )
-    
-        )
 
     );
 

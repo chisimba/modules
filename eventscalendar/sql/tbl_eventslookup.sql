@@ -19,19 +19,16 @@ $fields = array(
         'notnull' => TRUE
 		),   
     'typeid' => array(
-		'type' => 'text'
+		'type' => 'text',
 		'length' => 32,
         'notnull' => TRUE
-		)
-    
-    
-        )
-
+		)   
+     
     );
 
 $indexes = array(
                 'fields' => array(
-                	'eventsid' => array()
+                	'eventid' => array()
                 )
         );
 ?>
