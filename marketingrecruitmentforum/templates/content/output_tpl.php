@@ -12,15 +12,19 @@
     $addIcon = $this->getObject('geticon', 'htmlelements');
     $addIcon->setIcon('edit');
     $addIcon->title = $this->objLanguage->languageText('mod_marketingrecruitmentforum_editstud', 'marketingrecruitmentforum');
-
+    $editstud = $this->objLanguage->languageText('mod_marketingrecruitmentforum_editstud', 'marketingrecruitmentforum');
+    $editslu = $this->objLanguage->languageText('mod_marketingrecruitmentforum_editslu', 'marketingrecruitmentforum');
+    $editschool = $this->objLanguage->languageText('mod_marketingrecruitmentforum_editsschool', 'marketingrecruitmentforum');
+      
     $editStudLink = new link($this->uri(array('action' => 'editstudcard', 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit')));
-    $editStudLink->link = $addIcon->show();
+    //$editStudLink->link = $addIcon->show();
+    $editStudLink->link = $editstud;
     
     $editSLUlink = new link($this->uri(array('action' => 'editsluactivity', 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit')));
-    $editSLUlink->link = $addIcon->show();
+    $editSLUlink->link = $editslu;
     
     $editSchoollink = new link($this->uri(array('action' => 'editschool', 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit')));
-    $editSchoollink->link = $addIcon->show();
+    $editSchoollink->link = $editschool;
     
     
   /*----------------------------------------------------------------------------------------*/     

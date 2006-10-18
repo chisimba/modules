@@ -103,10 +103,12 @@
                   
               }
           }
-       
+        
+      
+               
         $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
         $values  = $this->objschoolname->readfiledata();
-       // echo $values; 
+       
        
        /*$this->objtxtschoolname = $this->newObject('textinput','htmlelements');    //change to dropdown populate with info in link          
        $this->objtxtschoolname->name   = "txtschoolname";

@@ -43,6 +43,7 @@ class schoolnames extends object{
       while(!feof($file_to_read)) {
         //get all contents of the file
         $file_contents = fgetcsv($file_to_read);
+       // sort($file_contents);
         $names[] = $file_contents[1];
        //store file contents in a dropdown list 
         foreach($names as $sessname){
