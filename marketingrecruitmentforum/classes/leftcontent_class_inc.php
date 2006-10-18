@@ -16,12 +16,13 @@ class leftcontent{
 	public function leftColumnContent(){
 	
 	 
-   $StudentCardLink = array();
-   $StudentCardLink[] = array('params' => array("action" => "studentcard"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Capture Student Information');
+ //  $StudentCardLink = array();
+ //  $StudentCardLink[] = array('params' => array("action" => "studentcard"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Capture Student Information');
    
-   /*$StudentCardLink[] = array('params' => array("action" => "studentcard"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Student Cards');
+   $StudentCardLink[] = array('params' => array("action" => "studentcard"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Student Cards');
    $StudentCardLink[] = array('params' => array("action" => "activitylist"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'SLU Activities'); 
-   $StudentCardLink[] = array('params' => array("action" => "shoollist"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'School List');*/
+   $StudentCardLink[] = array('params' => array("action" => "shoollist"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'School List');
+   $StudentCardLink[] = array('params' => array("action" => "showoutput"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'View Captured Data');
    
    $StudCardSLU = array();
    $StudCardSLU[] = array('params' => array("action" => "showsearchslu"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Student Card(SLU)');
