@@ -18,7 +18,7 @@
   */
      
  $schoolname = $this->objLanguage->languageText('phrase_schoolname');
- $schooladdress  = $this->objLanguage->languageText('phrase_schooladdress');
+ $schooladdy  = $this->objLanguage->languageText('phrase_schooladdress');
  $telnumber  = $this->objLanguage->languageText('phrase_telnumber');
  $faxnumber = $this->objLanguage->languageText('phrase_faxnumber');
  $email = $this->objLanguage->languageText('word_email');
@@ -40,38 +40,60 @@
  
  /**
    *create all textinputs
-   */  
+   */
+    $schooldata []= $this->getSession('schoolistdata');
+    $txtschoolname  = ' '; 
+    $schooladdress  = ' ';
+    $txttelnumber = ' ';
+    $txtfaxnumber = ' ';
+    $txtemail = ' ';
+    $txtprincipal = ' ';
+    $txtteacher = ' ';
+  
+  if(!empty($schooldata)){
+    foreach($schooldata as $sessschool){
+    
+        $txtschoolname  = $sessschool['schoolname']; 
+        $schooladdress  = $sessschool['schooladdress'];
+        $txttelnumber = $sessschool['telnumber'];
+        $txtfaxnumber = $sessschool['faxnumber'];
+        $txtemail = $sessschool['email'];
+        $txtprincipal = $sessschool['principal'];
+        $txtteacher = $sessschool['guidanceteacher'];
+    
+    }
+  }
         
    $this->objtxtschoolname = $this->newObject('textinput','htmlelements');      //change rem    
    $this->objtxtschoolname->name   = "txtschoolname";
-   $this->objtxtschoolname->value  = "";
+   $this->objtxtschoolname->value  = $txtschoolname;
   
    $textArea = 'schooladdress';
    $this->objSchooladdress =& $this->newobject('textArea','htmlelements');
    $this->objSchooladdress->setRows(1);
    $this->objSchooladdress->setColumns(15);
    $this->objSchooladdress->setName($textArea);
-   $this->objSchooladdress->setContent("");
+   $this->objSchooladdress->setContent($schooladdress);
    
    $this->objtxttelnumber = $this->newObject('textinput','htmlelements'); 
    $this->objtxttelnumber->name  = "txttelnumber";
-   $this->objtxttelnumber->value  = "";
+   $this->objtxttelnumber->value  = $txttelnumber;
    
    $this->objtxtfaxnumber = $this->newObject('textinput','htmlelements'); 
    $this->objtxtfaxnumber->name  = "txtfaxnumber";
-   $this->objtxtfaxnumber->value  = "";
+   $this->objtxtfaxnumber->value  = $txtfaxnumber;
    
    $this->objtxtemail = $this->newObject('textinput','htmlelements'); 
    $this->objtxtemail->name  = "txtemail";
-   $this->objtxtemail->value  = "";
+   $this->objtxtemail->value  = $txtemail;
    
    $this->objtxtprincipal = $this->newObject('textinput','htmlelements'); 
    $this->objtxtprincipal->name  = "txtprincipal";
-   $this->objtxtprincipal->value  = "";
+   $this->objtxtprincipal->value  = $txtprincipal;
    
    $this->objtxtteacher = $this->newObject('textinput','htmlelements'); 
    $this->objtxtteacher->name  = "txtteacher";
-   $this->objtxtteacher->value  = "";
+   $this->objtxtteacher->value  = $txtteacher;
 
 /*------------------------------------------------------------------------------*/   
    /**
@@ -97,7 +119,7 @@
     $myTable->endRow();   
     
     $myTable->startRow();
-    $myTable->addCell(ucfirst($schooladdress));
+    $myTable->addCell(ucfirst($schooladdy));
     $myTable->addCell($this->objSchooladdress->show());
     $myTable->endRow();  
     

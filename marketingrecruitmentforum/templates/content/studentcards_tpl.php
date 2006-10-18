@@ -49,41 +49,95 @@
       /**
        *create all textinputs
        */  
+       
+       //call session that contains the data for of student card information
+       $sessionstudcard = $this->getSession('studentdata');
+       
+        $studcarddate = '';
+        $studschoolname  = '';
+        $studsurname = '';
+        $studname = '';
+        $studpostaladdress = '';
+        $studpostalcode = '';
+        $studtelnumber = '';
+        $studtelcode = '';
+        //$studexemption  = '';
+        $studcourse  = '';
+        //$studsubject =  ''; 
+        //$studsdcase = '';
+        
+       if(!empty($sessionstudcard)){         
+              while(list($subkey,$subval) = each($sessionstudcard))
+              {
+                  
+                  if($subkey == 'studschoolname') {
+                  $studschoolname = $subval;
+                  }
+                  if($subkey == 'surname') {
+                  $studsurname = $subval;
+                  }
+                  if($subkey == 'name') {
+                  $studname = $subval;
+                  }
+                  if($subkey  ==  'postaddress'){
+                  $studpostaladdress  = $subval;
+                  }
+                  if($subkey == 'postcode') {
+                  $studpostalcode = $subval;
+                  }
+                  if($subkey  ==  'telnumber'){
+                  $studtelnumber = $subval;
+                  }
+                  if($subkey == 'telcode') {
+                  $studtelcode = $subval;
+                  }
+                  if($subkey  ==  'courseinterest') {
+                  $studcourse = $subval;
+                  }
+                  /*if($subkey  ==  'relevantsubject') {
+                  $studsubject = $subval;
+                  }
+                  ($subkey  ==  'sdcase') {
+                  $studsdcase = $subval;*/
+                //  }
+                  
+              }
+          }
         
        $this->objtxtschoolname = $this->newObject('textinput','htmlelements');    //change to dropdown populate with info in link          
        $this->objtxtschoolname->name   = "txtschoolname";
-       $this->objtxtschoolname->value  = "";
+       $this->objtxtschoolname->value  = $studschoolname;
 
        $this->objtxtsurname = $this->newObject('textinput','htmlelements'); 
        $this->objtxtsurname->name   = "txtsurname";
-       $this->objtxtsurname->value  = "";
+       $this->objtxtsurname->value  = $studsurname;
        
        $this->objtxtname = $this->newObject('textinput','htmlelements'); 
        $this->objtxtname->name   = "txtname";
-       $this->objtxtname->value  = "";
+       $this->objtxtname->value  = $studname;
        
        $this->objtxtpostalcode = $this->newObject('textinput','htmlelements'); 
        $this->objtxtpostalcode->name   = "txtpostalcode";
-       $this->objtxtpostalcode->value  = "";
+       $this->objtxtpostalcode->value  = $studpostalcode;
        
        $textArea = 'postaladdress';
        $this->objPostaladdress =& $this->newobject('textArea','htmlelements');
        $this->objPostaladdress->setRows(1);
        $this->objPostaladdress->setColumns(15);
        $this->objPostaladdress->setName($textArea);
-       $this->objPostaladdress->setContent("");
+       $this->objPostaladdress->setContent($studpostaladdress);
        
        $this->objtxttelnumber = $this->newObject('textinput','htmlelements'); 
-       $this->objtxttelnumber->name  = "txttelnumber";
-       $this->objtxttelnumber->value  = "";
+       $this->objtxttelnumber->name  = 'txttelnumber';
+       $this->objtxttelnumber->value  = $studtelnumber;
 
        $this->objtxttelcode = $this->newObject('textinput','htmlelements'); 
        $this->objtxttelcode->name   = "txttelcode";
-       $this->objtxttelcode->value  = "";
+       $this->objtxttelcode->value  = $studtelcode;
        
        $this->objtxtcourse = $this->newObject('textinput','htmlelements'); 
        $this->objtxtcourse->name   = "txtcourse";
-       $this->objtxtcourse->value  = " ";
+       $this->objtxtcourse->value  = $studcourse;
 /*------------------------------------------------------------------------------*/       
        /**
         *create a date selection
@@ -132,7 +186,7 @@
          $myTable=$this->newObject('htmltable','htmlelements');
          $myTable->width='80%';
          $myTable->border='0';
-         $myTable->cellspacing='2';
+         $myTable->cellspacing='5';
          $myTable->cellpadding='10';
            
          $myTable->startRow();

@@ -97,6 +97,9 @@ class marketingrecruitmentforum extends controller
             case  'submitinfo':
                   $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
                   $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
+                  $this->unsetSession('studentdata');
+                  $this->unsetSession('sluactivitydata');
+                  $this->unsetSession('schoolistdata');
                   return  'output_tpl.php';
             break;
             
@@ -138,8 +141,8 @@ class marketingrecruitmentforum extends controller
                              'modifiedby'       =>  $this->objUser->fullname(),
                              'datemodified'     =>  date('Y-m-d'),
                              'updated'          =>  date('Y-m-d'),
-                             'date'             =>  $this->getParam('txtdate'),
-                             'schoolname'       =>  $this->getParam('txtschoolname'),
+                             'studdate'             =>  $this->getParam('txtdate'),
+                             'studschoolname'       =>  $this->getParam('txtschoolname'),
                              'surname'          =>  $this->getParam('txtsurname'),
                              'name'             =>  $this->getParam('txtname'),
                              'postaddress'      =>  $this->getParam('postaladdress'),

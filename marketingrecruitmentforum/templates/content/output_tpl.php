@@ -22,11 +22,6 @@
     $editSchoollink = new link($this->uri(array('action' => 'editschool', 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit')));
     $editSchoollink->link = $addIcon->show();
     
-    //$StudCardSLU = array();
-    //$editStudLink = array('params' => array("action" => "edit"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit');
-    //$editStudLink = $addIcon->show();
-	 
-    //$objElement =& $this->newObject('tabpane', 'htmlelements'); 
     
   /*----------------------------------------------------------------------------------------*/     
   
@@ -55,78 +50,66 @@
   $this->objSubmitstudcard  = new button('submitstudcard', $str1);
   $this->objSubmitstudcard->setToSubmit();
   
-  $this->objSubmitactivity  = new button('submitactivity', $str1);
-  $this->objSubmitactivity->setToSubmit();
   
-  $this->objSubmitschools  = new button('submitschool', $str1);
-  $this->objSubmitschools->setToSubmit();
-  
-  
-  $this->objEditstudcard  = new button('editstudcard', $str2);
-  $this->objEditstudcard->setToSubmit();
-  
-  $this->objEditactivity  = new button('editactivity', $str2);
-  $this->objEditactivity->setToSubmit();
-  
-  $this->objEditschools  = new button('editschool', $str2);
-  $this->objEditschools->setToSubmit();
   /*----------------------------------------------------------------------------------------*/
         
   /**
    *display all student card info contained in the session variable
    */      
-  $sessionstudcard [] = $this->getSession('studentdata');
+  //$sessionstudcard = array(); 
+  $sessionstudcard[]= $this->getSession('studentdata');
       if(!empty($sessionstudcard)){
       //Create table to display student details in session  
             $objstudcardTable =& $this->newObject('htmltable', 'htmlelements');
             $objstudcardTable->cellspacing = '2';
             $objstudcardTable->cellpadding = '2';
+            $objstudcardTable->cellwidth = '10';
             $objstudcardTable->border='0';
-            $objstudcardTable->width = '60%';
+            $objstudcardTable->width = '100%';
   
             //$rowcount = '0';
   
             foreach($sessionstudcard as $sesStuddata){
      
-              //  $oddOrEven = ($rowcount == 11) ? "odd" : "even";
+  
   
                 $objstudcardTable->startRow();
                 $objstudcardTable->addCell('Date');
-                $objstudcardTable->addCell("<div align=\"right\">" .$editStudLink->show() . "</div>");
-                $objstudcardTable->addCell(strtoupper($sesStuddata['date']));//, '', '', '', $oddOrEven);
+                //$objstudcardTable->addCell("<div align=\"right\">" .$editStudLink->show() . "</div>");  //not showing
+                $objstudcardTable->addCell(strtoupper($sesStuddata['studdate']));
                 $objstudcardTable->endRow();
   
  
   
                 $objstudcardTable->startRow();
                 $objstudcardTable->addCell('Shool Name' );
-                $objstudcardTable->addCell(strtoupper($sesStuddata['schoolname']));//, '', '', '', $oddOrEven);
+                $objstudcardTable->addCell(strtoupper($sesStuddata['studschoolname']));   //not showing
                 $objstudcardTable->endRow();
   
   
                 $objstudcardTable->startRow();
                 $objstudcardTable->addCell('Surname');
-                $objstudcardTable->addCell(strtoupper($sesStuddata['surname']));//, '', '', '', $oddOrEven);
+                $objstudcardTable->addCell(strtoupper($sesStuddata['surname']));
                 $objstudcardTable->endRow();
   
                 $objstudcardTable->startRow();
                 $objstudcardTable->addCell('Name');
-                $objstudcardTable->addCell(strtoupper($sesStuddata['name']));//, '', '', '', $oddOrEven);
+                $objstudcardTable->addCell(strtoupper($sesStuddata['name']));
                 $objstudcardTable->endRow();
   
                 $objstudcardTable->startRow();
                 $objstudcardTable->addCell('Postal Address');
-                $objstudcardTable->addCell(strtoupper($sesStuddata['postaddress']));//, '', '', '', $oddOrEven);
+                $objstudcardTable->addCell(strtoupper($sesStuddata['postaddress']));
                 $objstudcardTable->endRow();
   
                 $objstudcardTable->startRow();
                 $objstudcardTable->addCell('Postal Code');
-                $objstudcardTable->addCell(strtoupper($sesStuddata['postcode']));//, '', '', '', $oddOrEven);
+                $objstudcardTable->addCell(strtoupper($sesStuddata['postcode']));
                  $objstudcardTable->endRow();
   
                 $objstudcardTable->startRow();
                 $objstudcardTable->addCell('Telephone Number');
-                $objstudcardTable->addCell(strtoupper($sesStuddata['telnumber']));//, '', '', '', $oddOrEven);
+                $objstudcardTable->addCell(strtoupper($sesStuddata['telnumber']));
                 $objstudcardTable->endRow();
   
                 $objstudcardTable->startRow();
@@ -166,19 +149,18 @@
               $objactivityTable->cellspacing = '2';
               $objactivityTable->cellpadding = '2';
               $objactivityTable->border='0';
-              $objactivityTable->width = '80%';
+              $objactivityTable->width = '89%';
             
             foreach($sessionsluactivity as $sesSLU){
             
-              $objactivityTable->startRow();
+              /*$objactivityTable->startRow();
               $objactivityTable->addCell("");
               $objactivityTable->addCell("<div align=\"right\">" .$editSLUlink->show() . "</div>");
-              $objactivityTable->endRow();
+              $objactivityTable->endRow();*/
             
               $objactivityTable->startRow();
               $objactivityTable->addCell('Date');
               $objactivityTable->addCell(strtoupper($sesSLU['date']));//, '', '', '', $oddOrEven);
-             // $objactivityTable->addCell("<div align=\"right\">" .$editStudLink->show() . "</div>");
               $objactivityTable->endRow();
   
               $objactivityTable->startRow();
@@ -214,18 +196,15 @@
             $objschoolTable->cellspacing = '2';
             $objschoolTable->cellpadding = '2';
             $objschoolTable->border='0';
-            $objschoolTable->width = '65%';
+            $objschoolTable->width = '60%';
           
           foreach($sessionsschoolist as $sesschool){
           
-            $objschoolTable->startRow();
-            //$objschoolTable->addCell("<div align=\"right\">" .$editSchoollink->show() . "</div>");
-            $objschoolTable->endRow();
-            
+                        
             $objschoolTable->startRow();
             $objschoolTable->addCell('School Name');
             $objschoolTable->addCell(strtoupper($sesschool['schoolname']));//, '', '', '', $oddOrEven);
-            $objschoolTable->addCell("<div align=\"right\">" .$editSchoollink->show() . "</div>");
+            //$objschoolTable->addCell("<div align=\"right\">" .$editSchoollink->show() . "</div>");
             $objschoolTable->endRow();
   
             $objschoolTable->startRow();
@@ -271,17 +250,17 @@
                   
     $objstudtab = new tabbedbox();
     $objstudtab->addTabLabel('Student Card Information');
-    $objstudtab->addBoxContent($strelements);
+    $objstudtab->addBoxContent("<div align=\"right\">" .$editStudLink->show() . "</div>".$strelements);
 
     
     $objslutab = new tabbedbox();
     $objslutab->addTabLabel('SLU Activities');
-    $objslutab->addBoxContent('<br />' . $strelements1);
+    $objslutab->addBoxContent("<div align=\"right\">" .$editSLUlink->show() . "</div>".'<br />' . $strelements1);
 
     
     $objschooltab = new tabbedbox();
     $objschooltab->addTabLabel('School list');
-    $objschooltab->addBoxContent('<br />' . $strelements2);
+    $objschooltab->addBoxContent("<div align=\"right\">" .$editSchoollink->show() . "</div>".'<br />' . $strelements2);
 
     $Studcardinfo = & $this->newObject('tabbox','marketingrecruitmentforum');
     $Studcardinfo->tabName = 'OutputInfo';
@@ -313,13 +292,28 @@
           
     echo  $this->objMainheading->show();
 
+/**************************************************************************************************/ /*PROBLEM*/                  
+if((!empty($sessionstudcard) )|| (!empty($sessionsluactivity)) || (!empty($sessionsschoolist))){
+          
+          $submitdatesmsg == 'yes';
+          $tomsg =& $this->newObject('timeoutmessage', 'htmlelements');
+          $tomsg->setMessage('thank you information has been sucessfully submitted');
+  
+          echo $tomsg->show();
+}else{
+          $submitdatesmsg = 'no';
+          $tomsg =& $this->newObject('timeoutmessage', 'htmlelements');
+          $tomsg->setMessage('There is no information to submit');
+          echo $tomsg->show();
+}
+/**************************************************************************************************/ /*PROBLEM*/
 //$submitdatesmsg = '';    
-if($submitdatesmsg){// == 'yes'){
+/*if($submitdatesmsg){// == 'yes'){
   $tomsg =& $this->newObject('timeoutmessage', 'htmlelements');
   $tomsg->setMessage('thank you information has been sucessfully submitted');
   
   echo $tomsg->show();
-}    
+} */   
     echo  $objForm->show();
   
   //if(!empty($sessionstudcard)){

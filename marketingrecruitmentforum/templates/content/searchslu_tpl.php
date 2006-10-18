@@ -11,7 +11,7 @@
        $searchlist  = new dropdown('searchlist');
 /*---------------------------------------------------------------------------------------------------*/       
                     
-      /**
+      /**y
         *create form heading
         */
         $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
