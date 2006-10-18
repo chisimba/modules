@@ -14,7 +14,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 * @version
 * @author Colleen Tinker
 */
-class searchinfo extends object{ 
+class schoolnames extends object{ 
 
   protected $_objUser;
  
@@ -31,11 +31,43 @@ class searchinfo extends object{
         	exit();
     }
 	}
-	
-	public function readfile(){
+/*------------------------------------------------------------------------------*/	
+	public function readfiledata(){
+    
+    $searchlist  = new dropdown('searchlist');
+    //$file_location  = "modules/marketingrecruitmentforum/resources/schoolnames.csv";
     
     //open file
-    //$file_to_read = @fopen("schoolnames.exl")
+    $file_to_read = @fopen("modules/marketingrecruitmentforum/resources/schoolnames.csv", "r") or die ("file does not exist or could not open file");
+      
+      while(!feof($file_to_read)) {
+        //get all contents of the file
+        $file_contents = fgetcsv($file_to_read);
+        $names[] = $file_contents[1];
+       //store file contents in a dropdown list 
+        foreach($names as $sessname){
+        
+           $searchlist->addOption($sessname,$sessname);
+           
+        }  
+      }
+        return $searchlist->show();
+  }
+    
+/*------------------------------------------------------------------------------*/    
+  public function readpostcodes(){
+  
+      $postcodelist = new dropdown('postcodelist');
+      
+      //open file 
+      $postfile_to_read = @fopen("modules/marketingrecruitmentforum/resources/postcodes.csv", "r") or die ("file does not exist or could not open file");
+    
+      //get all contents of the file
+      $post_contents  = fgetcsv($postfile_to_read);
+      //$codes
+      
+      echo '<prv />';
+      print_r($post_contents);  
   }
 
 }
