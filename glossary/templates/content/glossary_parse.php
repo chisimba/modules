@@ -24,15 +24,15 @@ echo $parseForm->show();
 ?>
 
 
-<br>
+<br />
 
 
 <?php
 
 echo ('<div style="border-style: dotted ">');
-echo ('<br>');
+echo ('<br />');
 echo ($outputText);
-echo ('<br>&nbsp;');
+echo ('<br />&nbsp;');
 
 echo ('</div>');
 
