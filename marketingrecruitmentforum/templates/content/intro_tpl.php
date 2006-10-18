@@ -43,6 +43,8 @@
  $reportstring  = '<br />'  . '<br />'. $reportheading .'<br />'. '*'. $reportinfo;
  $postingstring = '<br />'  . '<br />'. $postings .'<br />'. '*'. $postinginfo;
 
+ //  $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
+ //  $values  = $this->objschoolname->readpostcodes();
  
  
  echo $this->objMainheading->show();
