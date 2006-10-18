@@ -21,7 +21,7 @@ class dbmarketing extends object
     function init(){
 	 	   parent::init();
 		   $name = 'http://172.16.65.134/s3m5d3v/studentinfo4.php?wsdl';
-        $this->objSoapClient = new SoapClient($name);
+ //      $this->objSoapClient = new SoapClient($name);
 	 }
 	 
 	 //example of using we services
