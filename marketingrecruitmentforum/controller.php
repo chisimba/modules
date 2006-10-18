@@ -64,12 +64,14 @@ class marketingrecruitmentforum extends controller
             
             case 'showsluactivities':
                   $this->getStudentDetails(); //set session
-                return 'sluactivities_tpl.php';
+                  return  'output_tpl.php';
+                //return 'sluactivities_tpl.php';
             break;
             
             case  'showschoolist':
                 $this->getSLUActivties();
-                return 'schoollist_tpl.php';
+                return  'output_tpl.php';
+                //return 'schoollist_tpl.php';
             break;
             
             case  'showoutput':
@@ -141,8 +143,8 @@ class marketingrecruitmentforum extends controller
                              'modifiedby'       =>  $this->objUser->fullname(),
                              'datemodified'     =>  date('Y-m-d'),
                              'updated'          =>  date('Y-m-d'),
-                             'studdate'             =>  $this->getParam('txtdate'),
-                             'studschoolname'       =>  $this->getParam('txtschoolname'),
+                             'studdate'         =>  $this->getParam('txtdate'),
+                             'studschoolname'   =>  $this->getParam('searchlist'),
                              'surname'          =>  $this->getParam('txtsurname'),
                              'name'             =>  $this->getParam('txtname'),
                              'postaddress'      =>  $this->getParam('postaladdress'),
@@ -169,7 +171,7 @@ class marketingrecruitmentforum extends controller
                                   'updated'          =>  date('Y-m-d'),
                                   'date'             =>  $this->getParam('txtdate'), 
                                   'activity'         =>  $this->getParam('activityvalues'),
-                                  'schoolname'       =>  $this->getParam('txtschoolname'),
+                                  'schoolname'       =>  $this->getParam('searchlist'),
                                   'area'             =>  $this->getParam('area'),
                                   'province'         =>  $this->getParam('province'),
                            );
@@ -185,7 +187,7 @@ class marketingrecruitmentforum extends controller
                              'modifiedby'       =>  $this->objUser->fullname(),
                              'datemodified'     =>  date('Y-m-d'),
                              'updated'          =>  date('Y-m-d'),
-                             'schoolname'       =>  $this->getParam('txtschoolname'),
+                             'schoolname'       =>  $this->getParam('searchlist'),
                              'schooladdress'    =>  $this->getParam('schooladdress'),
                              'telnumber'        =>  $this->getParam('txttelnumber'),
                              'faxnumber'        =>  $this->getParam('txtfaxnumber'),
