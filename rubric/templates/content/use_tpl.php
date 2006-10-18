@@ -59,7 +59,8 @@
 	$students = $groups->getGroupUsers($gid, array('userId', 'username',"CONCAT(firstName, ' ', surname, ' (', username, ')') AS display", "CONCAT(firstName, ' ', surname) AS fullName"), "ORDER BY fullName");
 	$dropdown = new dropdown("studentNo");
 	$dropdown->addFromDB($students, 'display', /*'userId'*/'username', $studentNo);
-    
+	//$dropdown->addFromDB($students,'username', $studentNo);
+	 
     $labelStudentNo = new label(ucfirst($this->objLanguage->code2Txt("rubric_student","rubric")),"input_studentNo");
     $row = array("<b>".$labelStudentNo->show()."</b>", $dropdown->show());    
     
@@ -88,16 +89,24 @@
 		for ($j=0;$j<$cols;$j++) {
 			//$checked = '';
 			$checked = $mode == 'edit' ? ($scores[$i] == ($j+1) ? 'checked' : '') : '';
-			$cell = "<input type=\"radio\" name=\"row{$i}\" id=\"row{$i}col{$j}\" value=\"{$j}\" $checked>";
-			$cell .= "<label for=\"row{$i}col{$j}\">" . $cells[$i][$j] . "</label>";
-			$table->addCell($cell);
-		}
+         $cell = "<input type=\"radio\" name=\"row{$i}\" id=\"row{$i}col{$j}\" value=\"{$j}\"/>" .$checked."";
+         
+         $cell .= "<label for=\"row{$i}col{$j}\">" . $cells[$i][$j] . "</label>";
+         $table->addCell($cell);
+                }
+         
 		$table->endRow();
 		$class = $class == 'odd' ? 'even' : 'odd';
 	}
 	$form->addToForm($table->show());
 		$button = new button("submit", $objLanguage->languageText("word_save"));
 		$button->setToSubmit();
+		$returnUrl = $this->uri(array('module'=>'rubric','action'=>'assessments' ,'tableId'=>$tableId,));
+		
+		$buttonc = new button("submit", $objLanguage->languageText("word_cancel"));
+		$buttonc->setOnClick("window.location='$returnUrl'");
 	$form->addToForm($button);
+	$form->addToForm($buttonc);
+	
 	echo $form->show();
 ?>

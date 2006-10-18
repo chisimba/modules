@@ -18,8 +18,8 @@
         echo '<li>'.$objLanguage->languageText('mod_rubric_instructionpart2','rubric').'</li>';
         echo '<li>'.$objLanguage->languageText('mod_rubric_instructionpart3','rubric').'</li>';
         echo '<li>'.$objLanguage->languageText('mod_rubric_instructionpart4','rubric').'</li>';
-        echo '</ol></p>';
     }
+    echo '</ol></p>';
     
     // Load classes.
 	$this->loadClass("form","htmlelements");

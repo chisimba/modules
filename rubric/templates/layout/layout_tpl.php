@@ -9,11 +9,11 @@ else if ($this->objUser->isLecturer()) {
 else {
 	die('Access denied');
 }
-//$cssLayout->setLeftColumnContent($userMenuBar->show('context'));
-$this->sideMenuBar=& $this->getObject('sidemenu','toolbar');
-$sideMenuBar=& $this->getObject('sidemenu','toolbar');
+$cssLayout->setLeftColumnContent($userMenuBar->menuContext());
+//$this->sideMenuBar=& $this->getObject('sidemenu','toolbar');
+////$sideMenuBar=& $this->getObject('sidemenu','toolbar');
 
-$cssLayout->setLeftColumnContent($this->sideMenuBar->menuContext()); //change to what needs to be done
+//$cssLayout->setLeftColumnContent($this->sideMenuBar->menuContext()); //change to what needs to be done
 $cssLayout->setMiddleColumnContent($this->getContent());
 
 echo $cssLayout->show();

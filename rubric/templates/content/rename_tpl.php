@@ -47,7 +47,7 @@
     $button = new button("submit", $objLanguage->languageText("word_save"));
     $button->setToSubmit();    
     $form->addToForm($objTable->show());    
-    $form->addToForm("<br>");    
+    $form->addToForm("<br />");    
     $form->addToForm($button->show());
     
 	echo $form->show();

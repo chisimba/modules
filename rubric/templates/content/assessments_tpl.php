@@ -59,14 +59,16 @@
 	        $oddOrEven = ($oddOrEven=="even")? "odd":"even";
 	            
 			$option = "<a href=\"" . 
-				$this->uri(array(
-			    	'module'=>'rubric',
-					'action'=>'viewassessment',
-					'tableId'=>$tableId,
-					'id'=>$assessment['id']
-				))
-			. "\">" . $assessment['studentNo'] . "</a>";
-	           $tblclass->addCell($option, "null", "top", "left", $oddOrEven, null);
+			$this->uri(array(
+			 	'module'=>'rubric',
+				'action'=>'viewassessment',
+				'tableId'=>$tableId,
+				'id'=>$assessment['id']
+				))."\">".$assessment['studentno']."</a>";
+//				))."\">".$assessment['studentNo']."</a>";
+						
+         $tblclass->addCell($option, "null", "top", "left", $oddOrEven, null);
+	          // $tblclass->addCell("<b>" . $assessment['studentNo'] . "</b>", "null", "top", "left", $oddOrEven, null);
 	
 			if ($showStudentNames == "yes"){
 	            $tblclass->addCell("<b>" . $assessment['student'] . "</b>", "null", "top", "left", $oddOrEven, null);
@@ -120,7 +122,7 @@
 	}    
     echo $tblclass->show();
 
-	echo "<br>";
+	echo "<br />";
 	
 	if ($this->isValid('addassessment')) {
 	    // Add assessment.
@@ -159,7 +161,7 @@
 	}
     // Print the page.
 	if ($this->objUser->isContextLecturer()) {
-		echo "<a href=\"javascript:window.print();\">" . $objLanguage->languageText("word_print","rubric") . "</a>";
+		echo "<a href=\"javascript:window.print();\">" . $objLanguage->languageText("word_print") . "</a>";
 		echo "&nbsp;/&nbsp;";
 	}
 	// Back link
@@ -167,5 +169,5 @@
 		$this->uri(array(
 	    	'module'=>'rubric',
 		))	
-	. "\">" . $objLanguage->languageText("word_back","rubric") . "</a>"; //rubric_returntomainmenu
+	. "\">" . $objLanguage->languageText("word_back") . "</a>"; //rubric_returntomainmenu
 ?>

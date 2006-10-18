@@ -31,8 +31,9 @@ class rubric extends controller
     */
     public function init()
     {
-        $this->objUser =& $this->getObject('user', 'security');
-        $this->objLanguage =& $this->getObject('language','language');
+      
+      $this->objUser =& $this->getObject('user', 'security');
+      $this->objLanguage =& $this->getObject('language','language');
 		$this->objDbRubricTables =& $this->getObject('dbrubrictables'); 
 		$this->objDbRubricPerformances =& $this->getObject('dbrubricperformances'); 
 		$this->objDbRubricObjectives =& $this->getObject('dbrubricobjectives'); 
@@ -135,15 +136,15 @@ class rubric extends controller
 				);
 				break;
 			// Clone a rubric
-			case "clonetable": 
-				$tableId = $this->getParam("tableId", "");
+			case 'clonetable': 
+				$tableId = $this->getParam('tableId', "");
 				$tableInfo = $this->objDbRubricTables->listSingle($tableId);
-				$contextCode = $tableInfo[0]['contextCode'];
+				$contextCode = $tableInfo[0]['contextcode'];
 				$title = $tableInfo[0]['title'];
 				$description = $tableInfo[0]['description'];
 				$rows = $tableInfo[0]['rows'];
 				$cols = $tableInfo[0]['cols'];
-				$userId = $tableInfo[0]['userId'];
+				$userId = $tableInfo[0]['userid'];
                 // Insert a record into the database
 				$_tableId = $this->objDbRubricTables->insertSingle(
 					$contextCode,
@@ -636,17 +637,24 @@ class rubric extends controller
 				$this->setVarByRef("cells", $cells);
 				return "view_tpl.php";
 			// View assessments
-			case "assessments":
-				$tableId = $this->getParam("tableId", "");
-				$this->setVarByRef("tableId", $tableId);
+			case 'assessments':
+				$tableId = $this->getParam('tableId', '');
+				$this->setVarByRef('tableId', $tableId);
 				$tableInfo = $this->objDbRubricTables->listSingle($tableId);   
 				$title = $tableInfo[0]['title'];
+            //foreach($tableInfo1 as $tableInfo)
+            //{		
+				//$title = $tableInfo['title'];
 				$description = $tableInfo[0]['description'];
+				//$description = $tableInfo['description'];
 				$rows = $tableInfo[0]['rows'];
+				//$rows = $tableInfo['rows'];
 				$cols = $tableInfo[0]['cols'];
+				//$cols = $tableInfo['cols'];
+				//}
 				$this->setVarByRef("title", $title);
 				$this->setVarByRef("description", $description);
-				$this->setVar('maxtotal', $cols*$rows);
+				$this->setVar('maxtotal',100);// $cols*$rows);
 				$assessments = $this->objDbRubricAssessments->listAll($tableId);
 				$this->setVarByRef("assessments", $assessments);
 				// Do we want to show student names ?
@@ -654,8 +662,8 @@ class rubric extends controller
 				$this->setVarByRef("showStudentNames", $showStudentNames);
 				return "assessments_tpl.php";
 			// Add an assessment
-			case "addassessment": 
-				$tableId = $this->getParam("tableId", "");
+			case 'addassessment': 
+				$tableId = $this->getParam('tableId', "");
 				$this->setVarByRef("tableId", $tableId);
 				// Get table information
 				$tableInfo = $this->objDbRubricTables->listSingle($tableId);
@@ -701,7 +709,7 @@ class rubric extends controller
 				else {
 					$_userId = $this->objUser->getUserId($studentNo);
 					if ($_userId == FALSE) {
-					    $student = "";
+					    $student = "not found";
 					}
 					else {
 						$student = $this->objUser->fullname($_userId);
@@ -818,7 +826,7 @@ class rubric extends controller
 				$assessment = $this->objDbRubricAssessments->listSingle($id);
 				$teacher = $assessment[0]['teacher'];
 				$this->setVarByRef("teacher", $teacher);
-				$studentNo = $assessment[0]['studentNo'];
+				$studentNo = $assessment[0]['studentno'];
 				$this->setVarByRef("studentNo", $studentNo);
 				$student = $assessment[0]['student'];
 				$this->setVarByRef("student", $student);
@@ -871,6 +879,7 @@ class rubric extends controller
 				$teacher = $this->objUser->fullname();
 				$this->setVarByRef("teacher", $teacher);
 				$studentNo = $_POST['studentNo'];
+				
 				$this->setVarByRef("studentNo", $studentNo);
 				//$student = $_POST['student'];
 				if ($studentNo == "") {
@@ -952,7 +961,7 @@ class rubric extends controller
 			case "viewassessment":
 				$id = $this->getParam("id", "");
 				$assessment = $this->objDbRubricAssessments->listSingle($id);
-				$tableId = $assessment[0]['tableId'];
+				$tableId = $assessment[0]['tableid'];
 				$this->setVarByRef("tableId", $tableId);
 				// Get table information
 				$tableInfo = $this->objDbRubricTables->listSingle($tableId);
@@ -967,7 +976,7 @@ class rubric extends controller
 				// Get assessment information
 				$teacher = $assessment[0]['teacher'];
 				$this->setVarByRef("teacher", $teacher);
-				$studentNo = $assessment[0]['studentNo'];
+				$studentNo = $assessment[0]['studentno'];
 				$this->setVarByRef("studentNo", $studentNo);
 				// Check to see if user has tried to alter the URL manualy...
 				if (!(
