@@ -210,7 +210,7 @@
     if (empty($tables)) {        
 
         $tblclass->startRow();        
-        $tblclass->addCell("<div class=\"noRecordsMessage\">" . $objLanguage->languageText('phrase_norecordsfound') . "</div>", "null", "top", "left", "", 'colspan="3"');
+        $tblclass->addCell("<div class=\"noRecordsMessage\">" . $objLanguage->languageText('mod_rubric_norecords','rubric') . "</div>", "null", "top", "left", "", 'colspan="3"');
         $tblclass->endRow();
     }
     echo $tblclass->show();
@@ -368,7 +368,7 @@
     
     if (empty($pdtables)) {
         $tblclass->startRow();       
-        $tblclass->addCell("<div class=\"noRecordsMessage\">" . $objLanguage->languageText('phrase_norecordsfound') . "</div>", "null", "top", "left", "", 'colspan="3"');
+        $tblclass->addCell("<div class=\"noRecordsMessage\">" . $objLanguage->languageText('mod_rubric_norecords','rubric') . "</div>", "null", "top", "left", "", 'colspan="3"');
         $tblclass->endRow();
     }
     
