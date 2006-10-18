@@ -40,10 +40,12 @@
 /**
   *create all textinputs
   */
- 
-  $this->objtxtschoolname = $this->newObject('textinput','htmlelements');  //change to dropdwonlist
-  $this->objtxtschoolname->name   = "txtschoolname";
-  $this->objtxtschoolname->value  = "";
+   $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
+   $values  = $this->objschoolname->readfiledata();
+   
+  //$this->objtxtschoolname = $this->newObject('textinput','htmlelements');  //change to dropdwonlist
+  //$this->objtxtschoolname->name   = "txtschoolname";
+  //$this->objtxtschoolname->value  = "";
 
 /*------------------------------------------------------------------------------*/  
  
@@ -124,7 +126,7 @@
   
   $myTable->startRow();
   $myTable->addCell(ucfirst($school));
-  $myTable->addCell($this->objtxtschoolname->show());
+  $myTable->addCell($values);
   $myTable->endRow();
   
   $myTable->startRow();

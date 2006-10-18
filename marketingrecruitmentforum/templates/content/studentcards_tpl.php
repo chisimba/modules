@@ -103,10 +103,14 @@
                   
               }
           }
-        
-       $this->objtxtschoolname = $this->newObject('textinput','htmlelements');    //change to dropdown populate with info in link          
+       
+        $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
+        $values  = $this->objschoolname->readfiledata();
+       // echo $values; 
+       
+       /*$this->objtxtschoolname = $this->newObject('textinput','htmlelements');    //change to dropdown populate with info in link          
        $this->objtxtschoolname->name   = "txtschoolname";
-       $this->objtxtschoolname->value  = $studschoolname;
+       $this->objtxtschoolname->value  = $studschoolname;*/
 
        $this->objtxtsurname = $this->newObject('textinput','htmlelements'); 
        $this->objtxtsurname->name   = "txtsurname";
@@ -196,7 +200,7 @@
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($schoolname));
-         $myTable->addCell($this->objtxtsurname->show());
+         $myTable->addCell($values);
          $myTable->endRow();
          
          $myTable->startRow();

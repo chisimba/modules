@@ -63,10 +63,13 @@
     
     }
   }
+   
+   $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
+   $values  = $this->objschoolname->readfiledata();
         
-   $this->objtxtschoolname = $this->newObject('textinput','htmlelements');      //change rem    
+  /* $this->objtxtschoolname = $this->newObject('textinput','htmlelements');      //change rem    
    $this->objtxtschoolname->name   = "txtschoolname";
-   $this->objtxtschoolname->value  = $txtschoolname;
+   $this->objtxtschoolname->value  = $txtschoolname;*/
   
    $textArea = 'schooladdress';
    $this->objSchooladdress =& $this->newobject('textArea','htmlelements');
@@ -115,7 +118,7 @@
            
     $myTable->startRow();
     $myTable->addCell(ucfirst($schoolname));
-    $myTable->addCell($this->objtxtschoolname->show());
+    $myTable->addCell($values);
     $myTable->endRow();   
     
     $myTable->startRow();
