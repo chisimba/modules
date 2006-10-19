@@ -55,7 +55,7 @@ class dbGlossary extends dbTable
         $sql.= 'LEFT  JOIN tbl_glossary_images ON ( tbl_glossary.id = tbl_glossary_images.item_id ) ';
         
         if ($context != '') {
-            $sql.= 'WHERE context = "'.$context.'" ';
+            $sql.= 'WHERE tbl_glossary.context = "'.$context.'" ';
         }
         
         $sql.= 'GROUP BY tbl_glossary.id ';
