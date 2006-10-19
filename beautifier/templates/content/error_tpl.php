@@ -61,9 +61,9 @@ $this->objButton->setToSubmit();
 
 $objForm->addToFormEx($this->objButton->show());
 
+$objFeatureBox = $this->newObject('featurebox', 'navigation');
 
-
-$middleColumn .= $objForm->show(); //$instructions->show();
+$middleColumn .= $objFeatureBox->show($this->objLanguage->languageText("mod_beautifier_ddlabel", "beautifier"),$objForm->show()); //$instructions->show();
 //$middleColumn .= $dd->show();
 
 
