@@ -37,6 +37,7 @@ class dbquotes extends dbTable
             'quote' => $quote,
             'whosaidit' => $whosaidit,
             'datemodified' => date("Y/m/d H:i:s"),
+            'modified' => date("Y/m/d"),
             'modifierid' => $this->objUser->userId()));
 
         }#if
@@ -46,16 +47,23 @@ class dbquotes extends dbTable
             'quote' => $quote,
             'whosaidit' => $whosaidit,
             'datecreated' => date("Y/m/d H:i:s"),
-            'creatorid' => $this->objUser->userId()));
+            'creatorid' => $this->objUser->userId(),
+            'modified' => date("Y/m/d")));
 
         }#if
     }#function
 
     public function getRandom()
     {
-        $sql = "select * from tbl_quotes order by rand() limit 1";
-        return $this->getArray($sql);
-
+        $res = $this->getAll();
+        if(!empty($res))
+        {
+        	$rand_keys = array_rand($res,1);
+			return $res[$rand_keys];
+        }
+        else {
+        	return NULL;
+        }
     }
 
 

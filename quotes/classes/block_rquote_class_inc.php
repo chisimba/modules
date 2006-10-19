@@ -11,7 +11,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 *
 * @author Derek Keats
 
-* 
+*
 * $Id: block_rquote_class_inc.php,v 1.1 2006/09/14 08:19:14 Abdurahim Ported to PHP5
 *
 */
@@ -21,12 +21,12 @@ class block_rquote extends object
     * @var string $title The title of the block
     */
     public $title;
-    
+
     /**
     * @var object $objLanguage String to hold the language object
     */
     public $objLanguage;
-    
+
     /**
     * Standard init function to instantiate language object
     * and create title
@@ -38,7 +38,7 @@ class block_rquote extends object
         //Create an instance of the database class for this module
         $this->objDbquotes = & $this->getObject("dbquotes");
     }
-    
+
     /**
     * Standard block show method. It uses the renderform
     * class to render the guestbook interface
@@ -46,6 +46,6 @@ class block_rquote extends object
     public function show()
 	{
         $ar = $this->objDbquotes->getRandom();
-        return $ar[0]['quote'] . "<br />&nbsp;&nbsp;--" . $ar[0]['whosaidit'];
+        return $ar['quote'] . "<br />&nbsp;&nbsp;--" . $ar['whosaidit'];
     }
 }
