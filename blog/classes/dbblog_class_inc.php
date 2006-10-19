@@ -23,6 +23,18 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 class dbblog extends dbTable
 {
 
+	/**
+	 * Standard init function - Class Constructor
+	 *
+	 * @access public
+	 * @param void
+	 * @return void
+	 */
+	public function init()
+	{
+
+	}
+
 	//methods to manipulate the categories table.
 
 	/**
@@ -32,10 +44,52 @@ class dbblog extends dbTable
 	 * @return arrayunknown_type
 	 * @access public
 	 */
-	public function getCats($userid)
+	public function getAllCats($userid)
 	{
 		$this->_changeTable('tbl_blog_cats');
 		return $this->getAll("where userid = " . $userid);
+	}
+
+	/**
+	 * Method to grab the top level parent categories per user id
+	 *
+	 * @param integer $userid
+	 * @return array
+	 */
+	public function getParentCats($userid)
+	{
+		$this->_changeTable('tbl_blog_cats');
+		return $this->getAll("where userid = " . $userid . "AND cat_parent = 0");
+	}
+
+	/**
+	 * Grab the child categories as a userl, according to the parent category
+	 *
+	 * @param integer $userid
+	 * @param string $cat
+	 * @return unknown
+	 */
+	public function getChildCats($userid, $cat)
+	{
+		$this->_changeTable('tbl_blog_cats');
+		return $this->getAll("where userid = '$userid' AND cat_parent = '$cat'");
+	}
+
+	/**
+	 * Method to create a merged array of the parent and child categories per user id
+	 *
+	 * @param integer $userid
+	 * @return array
+	 */
+	public function getCatsTree($userid)
+	{
+		$parents = $this->getParentCats($userid);
+		foreach ($parents as $p)
+		{
+			$tree[] = $this->getChildCats($userid, $p['id']);
+		}
+		$tree = array_merge($parents, $tree);
+		return $tree;
 	}
 
 	/**
@@ -53,6 +107,8 @@ class dbblog extends dbTable
 			return $this->insert($cats, 'tbl_blog_cats');
 		}
 	}
+
+
 
 
 
