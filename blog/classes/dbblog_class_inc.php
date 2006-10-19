@@ -72,7 +72,8 @@ class dbblog extends dbTable
 	public function getChildCats($userid, $cat)
 	{
 		$this->_changeTable('tbl_blog_cats');
-		return $this->getAll("where userid = '$userid' AND cat_parent = '$cat'");
+		$child = $this->getAll("where userid = '$userid' AND cat_parent = '$cat'");
+		return array('child' => $child);
 	}
 
 	/**
@@ -84,19 +85,18 @@ class dbblog extends dbTable
 	public function getCatsTree($userid)
 	{
 		$parents = $this->getParentCats($userid);
+		$tree = new stdClass();
+		if(empty($parents))
+		{
+			$tree = NULL;
+		}
 		foreach ($parents as $p)
 		{
-			$tree[] = $this->getChildCats($userid, $p['id']);
+			$parent = $p;
+			$child = $this->getChildCats($userid, $p['id']);
+			$tree->$p['cat_name'] = array_merge($parent, $child);
 		}
-		if(is_array($parents) && is_array($tree))
-		{
-			$tree = array_merge($parents, $tree);
-			return $tree;
-		}
-		else {
-			return $parents;
-		}
-
+		return $tree;
 	}
 
 	/**
@@ -113,6 +113,22 @@ class dbblog extends dbTable
 			$this->_changeTable('tbl_blog_cats');
 			return $this->insert($cats, 'tbl_blog_cats');
 		}
+	}
+
+
+	//Methods to manipulate the link categories
+
+	/**
+	 * Method to get a list of the users link categories as defined by the user
+	 *
+	 * @param integer $userid
+	 * @return array
+	 * @access public
+	 */
+	public function getAllLinkCats($userid)
+	{
+		$this->_changeTable('tbl_blog_linkcats');
+		return $this->getAll("where userid = " . $userid);
 	}
 
 

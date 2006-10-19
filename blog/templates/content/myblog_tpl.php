@@ -9,6 +9,7 @@ $rightSideColumn = NULL; //$this->objLanguage->languageText('mod_blog_instructio
 $rightSideColumn .= "<em>" . $this->objLanguage->languageText("mod_blog_categories", "blog") . "</em>";
 $rightSideColumn .= "<br />";
 $rightSideColumn .= "<ul>";
+//print_r($cats); die();
 foreach($cats as $categories)
 {
 	if(isset($categories['cat_name']))
