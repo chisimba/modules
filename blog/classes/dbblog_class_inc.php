@@ -88,7 +88,10 @@ class dbblog extends dbTable
 		{
 			$tree[] = $this->getChildCats($userid, $p['id']);
 		}
-		$tree = array_merge($parents, $tree);
+		if(is_array($parents) && is_array($tree))
+		{
+			$tree = array_merge($parents, $tree);
+		}
 		return $tree;
 	}
 
