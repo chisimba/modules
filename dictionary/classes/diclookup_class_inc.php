@@ -7,7 +7,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 // end security check
 
 /**
-* 
+*
 * This is a class to look up definitions of words on dict.org
 *
 * @author Derek Keats
@@ -20,46 +20,46 @@ class diclookup extends object
 {
 
     /**
-    * 
+    *
     * @var array $languages The languages that babelfish supports
-    * 
+    *
     */
     public $languages;
-    
+
     /**
-    * 
+    *
     * @var string $err The error code
-    * 
+    *
     */
     public $err;
-    
+
     /**
-    * 
+    *
     * @var string $err The error message
-    * 
+    *
     */
     public $errMsg;
 
     /**
-    * 
+    *
     * Standard constructor which provides the default language and path
     * information.
-    * 
+    *
     */
     public function init()
     {
         //Instantiate the language object
         $this->objLanguage = & $this->getObject("language", "language");
     }
-    
+
     /**
-    * 
-    * Method to use CURL to connect to dict.org and do the 
+    *
+    * Method to use CURL to connect to dict.org and do the
     * actual definition lookup
-    * 
+    *
     * @param string $word The word to be looked up
     * @return The definition as string
-    * 
+    *
     */
     public function lookup($word)
     {
@@ -70,15 +70,15 @@ class diclookup extends object
             return $this->getWithCurl($word);
         }
     }
-    
+
     /**
-    * 
+    *
     * Use the cURL library to connect to dict.org and retrieve
     * the definition. If there is a firewall, the default dict
-    * port needs to be open. The default is port 2628 on server 
+    * port needs to be open. The default is port 2628 on server
     * dict.org
-    * 
-    * 
+    *
+    *
     */
     public function getWithCurl(& $word)
     {
@@ -92,7 +92,7 @@ class diclookup extends object
         $definition = curl_exec($ch);
         curl_close($ch);
         //return the definition
-        return $definition;
+        return htmlentities($definition);
     }
 
 }
