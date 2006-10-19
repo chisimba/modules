@@ -1,5 +1,5 @@
 <?php
-//class used to read all schoolnames form a file and then populate dropdown list
+//class used to read all schoolnames and postcodes from a file and then populate dropdown list
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
@@ -45,30 +45,33 @@ class schoolnames extends object{
         $file_contents = fgetcsv($file_to_read);
        // sort($file_contents);
         $names[] = $file_contents[1];
+        $this->setSession('schoolnames',$names);
        //store file contents in a dropdown list 
-        foreach($names as $sessname){
+//        foreach($names as $sessname){
         
-           $searchlist->addOption($sessname,$sessname);
+//           $searchlist->addOption($sessname,$sessname);
            
-        }  
+//        }  
       }
-        return $searchlist->show();
+      // return $searchlist->show();
   }
     
 /*------------------------------------------------------------------------------*/    
   public function readpostcodes(){
   
-      $postcodelist = new dropdown('postcodelist');
+      //$postcodelist = new dropdown('postcodelist');
       
       //open file 
-      $postfile_to_read = @fopen("modules/marketingrecruitmentforum/resources/postcodes.csv", "r") or die ("file does not exist or could not open file");
+      //$postfile_to_read = @fopen("modules/marketingrecruitmentforum/resources/postcodes.csv", "r") or die ("file does not exist or could not open file");
     
-      //get all contents of the file
-      $post_contents  = fgetcsv($postfile_to_read);
-      //$codes
-      
-      echo '<prv />';
-      print_r($post_contents);  
+     // while(!feof($postfile_to_read)){
+          //get all contents of the file
+     //     $post_contents  = fgetcsv($postfile_to_read);
+     //     $codes []= $postfile_to_read;
+     //     $this->setSession('postcodevals',$codes);
+          //echo '<prv />';
+          //print_r($post_contents);  
+     // }
   }
 
 }
