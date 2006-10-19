@@ -10,13 +10,16 @@ $rightSideColumn .= "<em>" . $this->objLanguage->languageText("mod_blog_categori
 $rightSideColumn .= "<br />";
 $rightSideColumn .= "<ul>";
 //print_r($cats); die();
-foreach($cats as $categories)
+if(!empty($cats))
 {
-	if(isset($categories['cat_name']))
+	foreach($cats as $categories)
 	{
-		$rightSideColumn .= "<li>" . $categories['cat_name'] . "</li>";
-	}
+		if(isset($categories['cat_name']))
+		{
+			$rightSideColumn .= "<li>" . $categories['cat_name'] . "</li>";
+		}
 
+	}
 }
 $rightSideColumn .= "</ul>";
 
