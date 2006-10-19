@@ -30,6 +30,8 @@ class marketingrecruitmentforum extends controller
       $this->objUser =& $this->getObject('user', 'security');
       $this->setLayoutTemplate('default_layout_tpl.php');
       
+      $this->objfaculty = & $this->getObject('faculty','marketingrecruitmentforum');
+      
        //$this->objdbperdiem = & $this->getObject('dbperdiem','onlineinvoice');
       $this->objstudinfo  = & $this->getObject('dbmarketing','marketingrecruitmentforum');
     }
@@ -63,9 +65,11 @@ class marketingrecruitmentforum extends controller
             break;
             
             case 'showsluactivities':
+            
                   $this->getStudentDetails(); //set session
                   return  'output_tpl.php';
                 //return 'sluactivities_tpl.php';
+            
             break;
             
             case  'showschoolist':

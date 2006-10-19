@@ -15,6 +15,12 @@
      $this->loadClass('datepicker','htmlelements');
      $this->loadClass('form','htmlelements');
      $this->loadClass('button','htmlelements');
+     
+     /**
+      *create object of all classes used
+      */
+      
+      $this->objfaculty = & $this->getObject('faculty','marketingrecruitmentforum');          
 /*------------------------------------------------------------------------------*/     
     /**
       *create all language elements
@@ -168,6 +174,8 @@
        $this->objtxttelcode->name   = "txttelcode";
        $this->objtxttelcode->value  = $studtelcode;
        
+       //$this->objfaculty->displaycourses();
+       
        $this->objtxtcourse = $this->newObject('textinput','htmlelements'); 
        $this->objtxtcourse->name   = "txtcourse";
        $this->objtxtcourse->value  = $studcourse;
@@ -211,21 +219,28 @@
          
          $this->objButtonNext  = new button('next', $str1);
          $this->objButtonNext->setToSubmit();
+         
+         $this->objButtonCourse  = new button('course', $str1);
+         $this->objButtonCourse->setToSubmit();
 /*------------------------------------------------------------------------------*/
         
         /**
          *create all dropdownlist
          */
-         $this->loadClass('dropdown','htmlelements');
-         $this->objfacultydropdown  = new dropdown('faculty');  //get info from abdul - box   --  check in link
-         $this->objfacultydropdown->addOption('Natural Science','Natural Science') ;
-         $this->objfacultydropdown->addOption('Arts','Arts') ;
-         $this->objfacultydropdown->addOption('Community & Health Sciences','Community & Health Sciences') ;
-         $this->objfacultydropdown->addOption('Economics & Mangement Sciences','Economics & Mangement Sciences') ;
-         $this->objfacultydropdown->addOption('Education','Education') ;
-         $this->objfacultydropdown->addOption('Dentistry','Dentistry') ;
-         $this->objfacultydropdown->addOption('Law','Law') ;
-         $this->objfacultydropdown->size = 50;                 
+         
+         $facultylist = new dropdown('searchlist');
+         $this->objfaculty->displayfaculty();         //call function in the faculty class -- sets the session
+         $facultyvals = $this->getSession('faculty'); //get info from session
+         //var_dump($facultyvals);
+         //die;
+         sort($facultyvals);                         //sort contents of the array
+         
+         foreach($facultyvals as $sessfac){
+         
+              $facultylist->addOption($sessfac,$sessfac); //populate the dropdwon list with array faculty contents
+         
+         
+         }              
 /*------------------------------------------------------------------------------*/
         
         /**
@@ -285,7 +300,8 @@
          
          $myTable->startRow();
          $myTable->addCell("Select a faculty");
-         $myTable->addCell($this->objfacultydropdown->show());
+         $myTable->addCell($facultylist->show());
+        // $myTable->addCell($this->objButtonCourse->show());
          $myTable->endRow();
          
          $myTable->startRow();
