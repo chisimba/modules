@@ -30,9 +30,11 @@ if(!empty($cats))
 			$childnodes = NULL;
 			$nodes = NULL;
 	}
+	$rightSideColumn .= $objSideBar->show($nodestoadd, NULL, NULL, 'blog');
 }
 
-$rightSideColumn .= $objSideBar->show($nodestoadd, NULL, NULL, 'blog');
+
+
 
 
 $cssLayout->setMiddleColumnContent($this->getContent());
