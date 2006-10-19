@@ -59,7 +59,7 @@ class dbblog extends dbTable
 	public function getParentCats($userid)
 	{
 		$this->_changeTable('tbl_blog_cats');
-		return $this->getAll("where userid = " . $userid . "AND cat_parent = 0");
+		return $this->getAll("where userid = " . $userid . " AND cat_parent = '0'");
 	}
 
 	/**
