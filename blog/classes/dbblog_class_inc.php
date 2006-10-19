@@ -91,8 +91,12 @@ class dbblog extends dbTable
 		if(is_array($parents) && is_array($tree))
 		{
 			$tree = array_merge($parents, $tree);
+			return $tree;
 		}
-		return $tree;
+		else {
+			return $parents;
+		}
+
 	}
 
 	/**
