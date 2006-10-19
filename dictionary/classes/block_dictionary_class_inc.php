@@ -44,7 +44,7 @@ class block_dictionary extends object
         $cFont = "</font>";
         //add the title
         $this->title = $font .
-          $this->objLanguage->languageText("mod_dictionary_title")
+          $this->objLanguage->languageText("mod_dictionary_title", "dictionary")
           . $cFont;
         //Create an instance of the database class for this module
         $this->objDicIntf = & $this->getObject('dicinterface');
