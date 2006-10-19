@@ -105,11 +105,38 @@
           }
         
       
-               
-        $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
-        $values  = $this->objschoolname->readfiledata();
+/*--------------------------------------------------------------------------------------------*/               
+       //create an object of the schoolnames class
+       //call the function that sets the session
+       //call the session
+       //populate list with values in the session array 
+       $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
+       $this->objschoolname->readfiledata();
+        
+       $searchlist  = new dropdown('searchlist');
+       $shoolvalues = $this->getSession('schoolnames');
+       sort($shoolvalues);
        
+       foreach($shoolvalues as $sessschool){
+          
+          $searchlist->addOption($sessschool,$sessschool);
+       }
        
+/*--------------------------------------------------------------------------------------------*/       
+      
+      
+      /*$postcodes  = new dropdown('postcodes');
+      $this->objschoolname->readpostcodes();
+      $postvalues = $this->getSession('postcodevals');
+      var_dump($postvalues);
+      die;
+      sort($postvalues);
+      
+      foreach($postvalues as $sesspost){
+          
+          $postcodes->addOption($sesspost,$sesspost);
+      }*/
+/*--------------------------------------------------------------------------------------------*/
        /*$this->objtxtschoolname = $this->newObject('textinput','htmlelements');    //change to dropdown populate with info in link          
        $this->objtxtschoolname->name   = "txtschoolname";
        $this->objtxtschoolname->value  = $studschoolname;*/
@@ -184,7 +211,23 @@
          
          $this->objButtonNext  = new button('next', $str1);
          $this->objButtonNext->setToSubmit();
-/*------------------------------------------------------------------------------*/        
+/*------------------------------------------------------------------------------*/
+        
+        /**
+         *create all dropdownlist
+         */
+         $this->loadClass('dropdown','htmlelements');
+         $this->objfacultydropdown  = new dropdown('faculty');  //get info from abdul - box   --  check in link
+         $this->objfacultydropdown->addOption('Natural Science','Natural Science') ;
+         $this->objfacultydropdown->addOption('Arts','Arts') ;
+         $this->objfacultydropdown->addOption('Community & Health Sciences','Community & Health Sciences') ;
+         $this->objfacultydropdown->addOption('Economics & Mangement Sciences','Economics & Mangement Sciences') ;
+         $this->objfacultydropdown->addOption('Education','Education') ;
+         $this->objfacultydropdown->addOption('Dentistry','Dentistry') ;
+         $this->objfacultydropdown->addOption('Law','Law') ;
+         $this->objfacultydropdown->size = 50;                 
+/*------------------------------------------------------------------------------*/
+        
         /**
          *create a table to place all elements in
          */
@@ -202,7 +245,7 @@
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($schoolname));
-         $myTable->addCell($values);
+         $myTable->addCell($searchlist->show());
          $myTable->endRow();
          
          $myTable->startRow();
@@ -222,7 +265,7 @@
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($postalcode));
-         $myTable->addCell($this->objtxtpostalcode->show());
+         $myTable->addCell($this->objtxtpostalcode->show())  ;
          $myTable->endRow();
          
          $myTable->startRow();
@@ -238,6 +281,11 @@
          $myTable->startRow();
          $myTable->addCell(ucfirst($exemption));
          $myTable->addCell($objexemption->show());
+         $myTable->endRow();
+         
+         $myTable->startRow();
+         $myTable->addCell("Select a faculty");
+         $myTable->addCell($this->objfacultydropdown->show());
          $myTable->endRow();
          
          $myTable->startRow();

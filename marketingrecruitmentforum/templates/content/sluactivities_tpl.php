@@ -40,14 +40,27 @@
 /**
   *create all textinputs
   */
-   $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
-   $values  = $this->objschoolname->readfiledata();
-   
-  //$this->objtxtschoolname = $this->newObject('textinput','htmlelements');  //change to dropdwonlist
-  //$this->objtxtschoolname->name   = "txtschoolname";
-  //$this->objtxtschoolname->value  = "";
-
-/*------------------------------------------------------------------------------*/  
+//   $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
+//   $values  = $this->objschoolname->readfiledata();
+     
+/*--------------------------------------------------------------------------------------------*/               
+       //create an object of the schoolnames class
+       //call the function that sets the session
+       //call the session
+       //populate list with values in the session array 
+       $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
+       $this->objschoolname->readfiledata();
+        
+       $searchlist  = new dropdown('searchlist');
+       $shoolvalues = $this->getSession('schoolnames');
+       sort($shoolvalues);
+       
+       foreach($shoolvalues as $sessschool){
+          
+          $searchlist->addOption($sessschool,$sessschool);
+       }
+       
+/*--------------------------------------------------------------------------------------------*/       
  
 /**
   *create all date selection elements
@@ -69,10 +82,12 @@
         
               
    $this->objactivitydropdown  = new dropdown('activityvalues');  //need exact info regarding activities
-   $this->objactivitydropdown->addOption('School Open Day','School Open Day') ;
+   $this->objactivitydropdown->addOption('School Visitation','School Visitation') ;
    $this->objactivitydropdown->addOption('University Open Day','University Open Day') ;
-   $this->objactivitydropdown->addOption('Learning Expo','Learning Expo') ;
-   $this->objactivitydropdown->addOption('Marketing Liason Visitor','Marketing Liason Visitor') ;
+   $this->objactivitydropdown->addOption('Matric Camps','Matric Camps') ;
+   $this->objactivitydropdown->addOption('Cape Careers Exhibitions','Cape Careers Exhibitions') ;
+   $this->objactivitydropdown->addOption('Individual visit to SLU office','Individual visit to SLU office') ;
+   $this->objactivitydropdown->addOption('Other','Other') ;
    $this->objactivitydropdown->size = 50;
    
    $this->objareadropdown  = new dropdown('area');  //get info from abdul - box   --  check in link
@@ -126,7 +141,7 @@
   
   $myTable->startRow();
   $myTable->addCell(ucfirst($school));
-  $myTable->addCell($values);
+  $myTable->addCell($searchlist->show());
   $myTable->endRow();
   
   $myTable->startRow();

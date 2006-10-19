@@ -64,8 +64,27 @@
     }
   }
    
-   $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
-   $values  = $this->objschoolname->readfiledata();
+//   $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
+//   $values  = $this->objschoolname->readfiledata();
+
+/*--------------------------------------------------------------------------------------------*/               
+       //create an object of the schoolnames class
+       //call the function that sets the session
+       //call the session
+       //populate list with values in the session array 
+       $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
+       $this->objschoolname->readfiledata();
+        
+       $searchlist  = new dropdown('searchlist');
+       $shoolvalues = $this->getSession('schoolnames');
+       sort($shoolvalues);
+       foreach($shoolvalues as $sessschool){
+          
+          $searchlist->addOption($sessschool,$sessschool);
+       }
+       
+/*--------------------------------------------------------------------------------------------*/       
+
         
   /* $this->objtxtschoolname = $this->newObject('textinput','htmlelements');      //change rem    
    $this->objtxtschoolname->name   = "txtschoolname";
@@ -118,7 +137,7 @@
            
     $myTable->startRow();
     $myTable->addCell(ucfirst($schoolname));
-    $myTable->addCell($values);
+    $myTable->addCell($searchlist->show());
     $myTable->endRow();   
     
     $myTable->startRow();
