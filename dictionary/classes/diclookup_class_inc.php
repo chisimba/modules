@@ -11,7 +11,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * This is a class to look up definitions of words on dict.org
 *
 * @author Derek Keats
-* @porter Jameel Sauls
+* @author Jameel Sauls
 * @version $Id$
 * @copyright 2005 GNU GPL
 *

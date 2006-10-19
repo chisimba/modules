@@ -13,7 +13,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * testing purpose only. It does not provide a functional module.
 *
 * @author derek Keats
-* @ported by Jameel Sauls
+* @author Jameel Sauls
 * $Id$
 *
 */
@@ -21,12 +21,12 @@ class dictionary extends controller
 {
 
     /**
-    * 
+    *
     * @var object $objLanguage String to hold the language object
-    * 
+    *
     */
     public $objLanguage;
-    
+
     /**
     *
     * @var object $objBab String to hold the dictionary lookup object
@@ -36,17 +36,17 @@ class dictionary extends controller
 
 
     /**
-    * 
-    * @var string $action The action parameter from the querystring 
-    * 
+    *
+    * @var string $action The action parameter from the querystring
+    *
     */
   //  pubic $action;
 
     /**
-    * 
+    *
     * Standard init class to instantiate the core objects and grab
     * the action parameter.
-    * 
+    *
     */
     public function init()
     {
@@ -57,11 +57,11 @@ class dictionary extends controller
         //Create an instance of the bablefish object
         $this->objDict = & $this->getObject('diclookup');
     }
-    
+
     /**
-    * 
+    *
     * Standard dispatch method of controller
-    * 
+    *
     */
     public function dispatch($action)
     {
@@ -90,5 +90,5 @@ class dictionary extends controller
         }
     }
 
-}    
+}
 ?>
