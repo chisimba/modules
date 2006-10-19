@@ -48,11 +48,11 @@ class dbGlossarySeeAlso extends dbTable
         $sql.= 'FROM bridge_glossary_seealso ';
         $sql.= 'INNER JOIN tbl_glossary AS tbl1 ON bridge_glossary_seealso.item_id = tbl1.id ';
         $sql.= 'INNER JOIN tbl_glossary AS tbl2 ON bridge_glossary_seealso.item_id2 = tbl2.id ';
-        $sql.= 'WHERE (bridge_glossary_seealso.item_id ="'.$item.'"';
-        $sql.= ' OR bridge_glossary_seealso.item_id2 = "'.$item.'") ' ;
+        $sql.= "WHERE (bridge_glossary_seealso.item_id ='".$item."'";
+        $sql.= " OR bridge_glossary_seealso.item_id2 = '".$item."') " ;
         
         if ($context) {
-            $sql.='AND tbl1.context="'.$context.'" AND tbl2.context="'.$context.'"';
+            $sql.="AND tbl1.context='".$context."' AND tbl2.context='".$context."'";
         }
         
         return $this->getArray($sql);
@@ -73,9 +73,9 @@ class dbGlossarySeeAlso extends dbTable
         $sql.= 'FROM (tbl_glossary LEFT JOIN bridge_glossary_seealso ON ';
         $sql.= '(tbl_glossary.id = bridge_glossary_seealso.item_id OR ';
         $sql.= 'tbl_glossary.id = bridge_glossary_seealso.item_id2) ';
-        $sql.= 'AND (bridge_glossary_seealso.item_id="'.$item.'"';
-        $sql.= ' OR bridge_glossary_seealso.item_id2="'.$item.'")) ';
-        $sql.= 'WHERE (bridge_glossary_seealso.id IS NULL AND tbl_glossary.id != "'.$item.'") ';
+        $sql.= "AND (bridge_glossary_seealso.item_id='".$item."'";
+        $sql.= " OR bridge_glossary_seealso.item_id2='".$item."')) ";
+        $sql.= "WHERE (bridge_glossary_seealso.id IS NULL AND tbl_glossary.id != '".$item."') ";
         
         $sql.= ' ORDER BY tbl_glossary.term';
         
@@ -95,9 +95,9 @@ class dbGlossarySeeAlso extends dbTable
         $sql.= 'FROM (tbl_glossary LEFT JOIN bridge_glossary_seealso ON ';
         $sql.= '(tbl_glossary.id = bridge_glossary_seealso.item_id OR ';
         $sql.= 'tbl_glossary.id = bridge_glossary_seealso.item_id2) ';
-        $sql.= 'AND (bridge_glossary_seealso.item_id="'.$item.'"';
-        $sql.= ' OR bridge_glossary_seealso.item_id2="'.$item.'")) ';
-        $sql.= 'WHERE (bridge_glossary_seealso.id IS NULL AND tbl_glossary.id != "'.$item.'")';
+        $sql.= "AND (bridge_glossary_seealso.item_id='".$item."'";
+        $sql.= " OR bridge_glossary_seealso.item_id2='".$item."')) ";
+        $sql.= "WHERE (bridge_glossary_seealso.id IS NULL AND tbl_glossary.id != '".$item."')";
         
         
         $rs = $this->query($sql);
@@ -114,7 +114,7 @@ class dbGlossarySeeAlso extends dbTable
     */
     public function getNumRecords($item)
     {
-        return $this->getRecordCount(' WHERE item_id="'.$item.'" or item_id2 = "'.$item.'"');
+        return $this->getRecordCount(" WHERE item_id='".$item."' or item_id2 = '".$item."'");
     }
 
     /**

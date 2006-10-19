@@ -35,7 +35,7 @@ class dbGlossaryUrls extends dbTable
     */
     public function fetchAllRecords($item)
     {
-        return $this->getAll(' WHERE item_id="'.$item.'"');
+        return $this->getAll(" WHERE item_id='".$item."'");
     }
 
     /**
@@ -46,7 +46,7 @@ class dbGlossaryUrls extends dbTable
     */
     public function getNumRecords($item)
     {
-        return $this->getRecordCount(' WHERE item_id="'.$item.'"');
+        return $this->getRecordCount(" WHERE item_id='".$item."'");
     }
 
     /**

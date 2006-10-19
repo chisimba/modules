@@ -55,7 +55,7 @@ class dbGlossary extends dbTable
         $sql.= 'LEFT  JOIN tbl_glossary_images ON ( tbl_glossary.id = tbl_glossary_images.item_id ) ';
         
         if ($context != '') {
-            $sql.= 'WHERE tbl_glossary.context = "'.$context.'" ';
+            $sql.= "WHERE tbl_glossary.context = '".$context."' ";
         }
         
         $sql.= 'GROUP BY tbl_glossary.id ';
@@ -90,10 +90,10 @@ class dbGlossary extends dbTable
         $sql.= 'tbl_glossary.id = bridge_glossary_seealso.item_id2) ';
         $sql.= 'LEFT JOIN tbl_glossary_urls ON (tbl_glossary.id = tbl_glossary_urls.item_id) ';
         $sql.= 'LEFT  JOIN tbl_glossary_images ON ( tbl_glossary.id = tbl_glossary_images.item_id ) ';
-        $sql.= 'WHERE tbl_glossary.term LIKE "'.$term.'" ';
+        $sql.= "WHERE tbl_glossary.term LIKE '".$term."' ";
         
         if ($context != '') {
-            $sql.= 'AND tbl_glossary.context="'.$context.'" ';
+            $sql.= "AND tbl_glossary.context='".$context."' ";
         }
         $sql.= 'GROUP BY tbl_glossary.id ';
         $sql.= 'ORDER BY tbl_glossary.term';
@@ -130,8 +130,8 @@ class dbGlossary extends dbTable
         $sql.= 'tbl_glossary.id = bridge_glossary_seealso.item_id2) ';
         $sql.= 'LEFT JOIN tbl_glossary_urls ON (tbl_glossary.id = tbl_glossary_urls.item_id) ';
         $sql.= 'LEFT  JOIN tbl_glossary_images ON ( tbl_glossary.id = tbl_glossary_images.item_id ) ';
-        $sql.= 'WHERE tbl_glossary.id = "'.$id.'" ';
-        $sql.= 'AND tbl_glossary.context="'.$context.'" ';
+        $sql.= "WHERE tbl_glossary.id = '".$id."' ";
+        $sql.= "AND tbl_glossary.context='".$context."' ";
         $sql.= 'GROUP BY tbl_glossary.id ';
         $sql.= 'ORDER BY tbl_glossary.term';
         
@@ -203,7 +203,7 @@ class dbGlossary extends dbTable
     */
     public function recordExists($id)
     {
-        return $this->getRecordCount(' WHERE id="'.$id.'"');
+        return $this->getRecordCount(" WHERE id='".$id."'");
     }
 
     /**
@@ -218,7 +218,7 @@ class dbGlossary extends dbTable
     public function getNumAllRecords($context=null)
     {
         if ($context != '') {
-            $sql = ' WHERE tbl_glossary.context="'.$context.'" ';
+            $sql = " WHERE tbl_glossary.context='".$context."' ";
         } else {
             $sql = '';
         }
