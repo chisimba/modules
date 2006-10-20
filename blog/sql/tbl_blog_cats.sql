@@ -15,10 +15,6 @@ $fields = array(
 		'type' => 'text',
 		'length' => 50,
 		),
-	'catid' => array(
-		'type' => 'text',
-		'length' => 50,
-		),
 	'cat_name' => array(
 		'type' => 'text',
 		'length' => 255,
