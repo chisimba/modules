@@ -47,7 +47,29 @@ class blog extends controller
     {
         switch ($action) {
             default:
+            	$this->requiresLogin(FALSE);
+            	$userid = $this->getParam('userid');
+            	if(!isset($userid))
+            	{
+            		$this->setVarByRef('message', $this->objLanguage->languageText("mod_blog_word_randomblog"));
+            		//get a random blog from the blog table
+            		$r = $this->objDbBlog->getRandBlog();
+            		$userid = $r['userid'];
+            	}
+            	//carry on...
+            	$catarr = $this->objDbBlog->getCatsTree($userid);
+            	$linkcats = $this->objDbBlog->getAllLinkCats($userid);
+            	$posts = $this->objDbBlog->getAllPosts($userid);
+            	$this->setVarByRef('posts', $posts);
+            	$this->setVarByRef('linkcats', $linkcats);
+            	$this->setVarByRef('cats', $catarr);
+                return 'randblog_tpl.php';
+
+            	break;
+
+            case 'viewblog':
                 try {
+
                 		$userid = $this->objUser->userId();
             			$catarr = $this->objDbBlog->getCatsTree($userid);
             			$linkcats = $this->objDbBlog->getAllLinkCats($userid);
@@ -61,6 +83,12 @@ class blog extends controller
                         customException::cleanUp();
                     }
                 break;
+
+            case 'blogadmin':
+            	$userid = $this->objUser->userId();
+            	$this->setVarByRef('userid', $userid);
+            	return 'blogadmin_tpl.php';
+            	break;
 
 
             case 'testcats':
@@ -80,6 +108,11 @@ class blog extends controller
                 }
         }
 
+    }
+
+    public function requiresLogin()
+    {
+    	return FALSE;
     }
 }
 ?>
