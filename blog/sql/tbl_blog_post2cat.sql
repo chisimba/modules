@@ -16,12 +16,12 @@ $fields = array(
 		'length' => 50,
 		),
 	'postid' => array(
-		'type' => 'integer',
-		'length' => 8,
+		'type' => 'text',
+		'length' => 32,
 		),
 	'categoryid' => array(
-		'type' => 'integer',
-		'length' => 8,
+		'type' => 'text',
+		'length' => 32,
 		),
 	);
 

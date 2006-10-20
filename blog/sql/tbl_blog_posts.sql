@@ -32,8 +32,8 @@ $fields = array(
 		'type' => 'clob',
 		),
 	'post_category' => array(
-		'type' => 'integer',
-		'length' => '10',
+		'type' => 'text',
+		'length' => 32,
 		),
 	'post_excerpt' => array(
 		'type' => 'clob',
