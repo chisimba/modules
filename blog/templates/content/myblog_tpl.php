@@ -85,6 +85,8 @@ if(!empty($posts))
 		$dt = strtotime($post['post_date']);
 		$dt = date('r', $dt);
 		$head = $post['post_title'] . "<br />" . $dt;
+		//dump in the post content and voila! you have it...
+		//build the post content plus comment count and stats???
 		$middleColumn .= $objFeatureBox->show($head, $post['post_content']);
 	}
 }
@@ -101,49 +103,49 @@ $leftCol .= "<em>" . $this->objLanguage->languageText("mod_blog_feedheader", "bl
 //RSS2.0
 $rss2 = $this->getObject('geticon', 'htmlelements');
 $rss2->setIcon('rss', 'gif', 'icons/filetypes');
-$link = new href($this->uri(array('action' => 'getrss2', 'userid' => $this->objUser->userid())),$this->objLanguage->languageText("mod_blog_word_rss2", "blog"));
+$link = new href($this->uri(array('action' => 'feed', 'format' => 'rss2', 'userid' => $this->objUser->userid())),$this->objLanguage->languageText("mod_blog_word_rss2", "blog"));
 $leftCol .= $rss2->show() . $link->show() . "<br />";
 
 //RSS0.91
 $rss091 = $this->getObject('geticon', 'htmlelements');
 $rss091->setIcon('rss', 'gif', 'icons/filetypes');
-$link = new href($this->uri(array('action' => 'getrss091', 'userid' => $this->objUser->userid())),$this->objLanguage->languageText("mod_blog_word_rss091", "blog"));
+$link = new href($this->uri(array('action' => 'feed', 'format' => 'rss091', 'userid' => $this->objUser->userid())),$this->objLanguage->languageText("mod_blog_word_rss091", "blog"));
 $leftCol .= $rss091->show() . $link->show() . "<br />";
 
 //RSS1.0
 $rss1 = $this->getObject('geticon', 'htmlelements');
 $rss1->setIcon('rss', 'gif', 'icons/filetypes');
-$link = new href($this->uri(array('action' => 'getrss1', 'userid' => $this->objUser->userid())),$this->objLanguage->languageText("mod_blog_word_rss1", "blog"));
+$link = new href($this->uri(array('action' => 'feed', 'format' => 'rss1', 'userid' => $this->objUser->userid())),$this->objLanguage->languageText("mod_blog_word_rss1", "blog"));
 $leftCol .= $rss1->show() . $link->show() . "<br />";
 
 //PIE
 $pie = $this->getObject('geticon', 'htmlelements');
 $pie->setIcon('rss', 'gif', 'icons/filetypes');
-$link = new href($this->uri(array('action' => 'getpie', 'userid' => $this->objUser->userid())),$this->objLanguage->languageText("mod_blog_word_pie", "blog"));
+$link = new href($this->uri(array('action' => 'feed', 'format' => 'pie', 'userid' => $this->objUser->userid())),$this->objLanguage->languageText("mod_blog_word_pie", "blog"));
 $leftCol .= $pie->show() . $link->show() . "<br />";
 
 //MBOX
 $mbox = $this->getObject('geticon', 'htmlelements');
 $mbox->setIcon('rss', 'gif', 'icons/filetypes');
-$link = new href($this->uri(array('action' => 'getmbox', 'userid' => $this->objUser->userid())),$this->objLanguage->languageText("mod_blog_word_mbox", "blog"));
+$link = new href($this->uri(array('action' => 'feed', 'format' => 'mbox', 'userid' => $this->objUser->userid())),$this->objLanguage->languageText("mod_blog_word_mbox", "blog"));
 $leftCol .= $mbox->show() . $link->show() . "<br />";
 
 //OPML
 $opml = $this->getObject('geticon', 'htmlelements');
 $opml->setIcon('rss', 'gif', 'icons/filetypes');
-$link = new href($this->uri(array('action' => 'getopml', 'userid' => $this->objUser->userid())),$this->objLanguage->languageText("mod_blog_word_opml", "blog"));
+$link = new href($this->uri(array('action' => 'feed', 'format' => 'opml', 'userid' => $this->objUser->userid())),$this->objLanguage->languageText("mod_blog_word_opml", "blog"));
 $leftCol .= $opml->show() . $link->show() . "<br />";
 
 //ATOM
 $atom = $this->getObject('geticon', 'htmlelements');
 $atom->setIcon('rss', 'gif', 'icons/filetypes');
-$link = new href($this->uri(array('action' => 'getatom', 'userid' => $this->objUser->userid())),$this->objLanguage->languageText("mod_blog_word_atom", "blog"));
+$link = new href($this->uri(array('action' => 'feed', 'format' => 'atom', 'userid' => $this->objUser->userid())),$this->objLanguage->languageText("mod_blog_word_atom", "blog"));
 $leftCol .= $atom->show() . $link->show() . "<br />";
 
 //Plain HTML
 $html = $this->getObject('geticon', 'htmlelements');
 $html->setIcon('rss', 'gif', 'icons/filetypes');
-$link = new href($this->uri(array('action' => 'gethtml', 'userid' => $this->objUser->userid())),$this->objLanguage->languageText("mod_blog_word_html", "blog"));
+$link = new href($this->uri(array('action' => 'feed', 'format' => 'html', 'userid' => $this->objUser->userid())),$this->objLanguage->languageText("mod_blog_word_html", "blog"));
 $leftCol .= $html->show() . $link->show() . "<br />";
 
 
