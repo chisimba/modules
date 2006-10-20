@@ -47,18 +47,6 @@ $fields = array(
 		'type' => 'text',
 		'length' => 10,
 		),
-	'textb4link' => array(
-		'type' => 'text',
-		'length' => 128,
-		),
-	'textafterlink' => array(
-		'type' => 'text',
-		'length' => 128,
-		),
-	'textafterall' => array(
-		'type' => 'text',
-		'length' => 128,
-		),
 	'list_limit' => array(
 		'type' => 'text',
 		'length' => 10,
