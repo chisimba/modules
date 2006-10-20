@@ -11,6 +11,7 @@ $fields = array(
     'type' => 'text',
     'length' => 32,
     'notnull'     => 1
+    
     ),
   'createdby'  => array(
      'type'  =>  'text',
@@ -35,8 +36,7 @@ $fields = array(
     'notnull'     => 1
     ),
    'date'         =>  array(
-    'type'        =>  'date',
-    'notnull'     => 1
+    'type'        =>  'date'
    ),
    'schoolname'       =>  array(
     'type'        =>  'text',
@@ -71,9 +71,12 @@ $fields = array(
       'type'        =>  'text',
       'length'      =>  32
   ),
-  'exemption'    =>  array(
-      'type'        =>  'boolean'
+  'exemption' =>  array(
+      'type' =>  'boolean'
   ),
+  'faculty'   => array(
+  'type'      =>  'text'
+  ),    
   'course'  =>  array(
       'type'        =>  'text'
       
