@@ -80,14 +80,14 @@
                 $objstudcardTable->startRow();
                 $objstudcardTable->addCell('Date');
                 //$objstudcardTable->addCell("<div align=\"right\">" .$editStudLink->show() . "</div>");  //not showing
-                $objstudcardTable->addCell(strtoupper($sesStuddata['studdate']));
+                $objstudcardTable->addCell(strtoupper($sesStuddata['date']));
                 $objstudcardTable->endRow();
   
  
   
                 $objstudcardTable->startRow();
                 $objstudcardTable->addCell('Shool Name' );
-                $objstudcardTable->addCell(strtoupper($sesStuddata['studschoolname']));   //not showing
+                $objstudcardTable->addCell(strtoupper($sesStuddata['schoolname']));   //not showing
                 $objstudcardTable->endRow();
   
   
@@ -127,8 +127,13 @@
                 $objstudcardTable->endRow();
                 
                 $objstudcardTable->startRow();
+                $objstudcardTable->addCell('Faculty Name');
+                $objstudcardTable->addCell(strtoupper($sesStuddata['faculty']));//, '', '', '', $oddOrEven);
+                $objstudcardTable->endRow();
+                
+                $objstudcardTable->startRow();
                 $objstudcardTable->addCell('Course Interested In');
-                $objstudcardTable->addCell(strtoupper($sesStuddata['courseinterest']));//, '', '', '', $oddOrEven);
+                $objstudcardTable->addCell(strtoupper($sesStuddata['course']));//, '', '', '', $oddOrEven);
                 $objstudcardTable->endRow();
   
                 $objstudcardTable->startRow();

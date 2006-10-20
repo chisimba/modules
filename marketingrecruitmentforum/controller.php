@@ -31,6 +31,8 @@ class marketingrecruitmentforum extends controller
       $this->setLayoutTemplate('default_layout_tpl.php');
       
       $this->objfaculty = & $this->getObject('faculty','marketingrecruitmentforum');
+      $this->dbstudentcard  = & $this->getObject('dbstudentcard','marketingrecruitmentforum');
+      $this->objsearchinfo = & $this->getObject('searchinfo','marketingrecruitmentforum');
       
        //$this->objdbperdiem = & $this->getObject('dbperdiem','onlineinvoice');
       $this->objstudinfo  = & $this->getObject('dbmarketing','marketingrecruitmentforum');
@@ -103,6 +105,10 @@ class marketingrecruitmentforum extends controller
             case  'submitinfo':
                   $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
                   $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
+                  ///////////////////////////////////////////////////////
+                  $studcarddata = $this->getSession('studentdata');
+                  $this->dbstudentcard->addstudcard($studcarddata);
+                  ////////////////////////////////////////////////////////  
                   $this->unsetSession('studentdata');
                   $this->unsetSession('sluactivitydata');
                   $this->unsetSession('schoolistdata');
@@ -120,7 +126,19 @@ class marketingrecruitmentforum extends controller
             case  'showsearchschool':
                 return 'searchschools_tpl.php';
             break;
-            
+/****************************************************************************************************************/            
+            case  'displaysearch': 
+                //determine which template to display depending on which value in dropdown list is selected
+                $selectedvalue  = $this->getParam('searchlist');
+                
+                if($selectedvalue == 'All matriculants that completed information cards'){
+                  echo 'hello';
+                  die;
+                }else{
+                    return 'searchslu_tpl.php';
+                }
+            break;
+/****************************************************************************************************************/            
             default:
                ///"CRSCDE","2",0,1
                /*$field = "ARECDE";
@@ -147,8 +165,8 @@ class marketingrecruitmentforum extends controller
                              'modifiedby'       =>  $this->objUser->fullname(),
                              'datemodified'     =>  date('Y-m-d'),
                              'updated'          =>  date('Y-m-d'),
-                             'studdate'         =>  $this->getParam('txtdate'),
-                             'studschoolname'   =>  $this->getParam('searchlist'),
+                             'date'         =>  $this->getParam('txtdate'),
+                             'schoolname'   =>  $this->getParam('$schoollist'),
                              'surname'          =>  $this->getParam('txtsurname'),
                              'name'             =>  $this->getParam('txtname'),
                              'postaddress'      =>  $this->getParam('postaladdress'),
@@ -156,7 +174,8 @@ class marketingrecruitmentforum extends controller
                              'telnumber'        =>  $this->getParam('txttelnumber'),
                              'telcode'          =>  $this->getParam('txttelcode'),
                              'exemption'        =>  $this->getParam('exemptionqualification'),
-                             'courseinterest'   =>  $this->getParam('txtcourse'),
+                             'faculty'          =>  $this->getParam('facultylist'),
+                             'course'   =>  $this->getParam('txtcourse'),
                              'relevantsubject'  =>  $this->getParam('relevantsubject'),
                              'sdcase'           =>  $this->getParam('sdcase'),
                         );

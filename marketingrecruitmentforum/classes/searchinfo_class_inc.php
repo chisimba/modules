@@ -50,11 +50,13 @@ class searchinfo extends object{
         $searchstudslu[7] = 'All prospective students by area';
         $searchstudslu[8] = 'All SD Cases';
         
-        foreach($searchstudslu as $sesstud){
-           $searchlist->addOption($sesstud,$sesstud);
+        $this->setSession('searchstuddata',$searchstudslu);
+        
+        //foreach($searchstudslu as $sesstud){
+        //   $searchlist->addOption($sesstud,$sesstud);
              
-        }
-        return $searchlist->show();
+        //}
+        //return $searchlist->show();
         
   }
 /*------------------------------------------------------------------------------*/

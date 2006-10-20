@@ -36,6 +36,14 @@ class dbstudentcard extends dbTable{
 	{
         $studinfo = $this->insert($studcarddata);
         return $studinfo;
-  }	 
+  }	
+/*------------------------------------------------------------------------------*/
+ //select all informatio from the stud card table
+ public function getallstudinfo()
+ {
+      $studresults  = $this->getAll();
+      return  $studresults;
+ } 
+   
 } 
 ?>

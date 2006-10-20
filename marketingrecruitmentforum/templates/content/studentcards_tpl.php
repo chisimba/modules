@@ -119,13 +119,13 @@
        $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
        $this->objschoolname->readfiledata();
         
-       $searchlist  = new dropdown('searchlist');
+       $schoollist  = new dropdown('$schoollist');
        $shoolvalues = $this->getSession('schoolnames');
        sort($shoolvalues);
        
        foreach($shoolvalues as $sessschool){
           
-          $searchlist->addOption($sessschool,$sessschool);
+          $schoollist->addOption($sessschool,$sessschool);
        }
        
 /*--------------------------------------------------------------------------------------------*/       
@@ -228,7 +228,7 @@
          *create all dropdownlist
          */
          
-         $facultylist = new dropdown('searchlist');
+         $facultylist = new dropdown('facultylist');
          $this->objfaculty->displayfaculty();         //call function in the faculty class -- sets the session
          $facultyvals = $this->getSession('faculty'); //get info from session
          //var_dump($facultyvals);
@@ -260,7 +260,7 @@
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($schoolname));
-         $myTable->addCell($searchlist->show());
+         $myTable->addCell($schoollist->show());
          $myTable->endRow();
          
          $myTable->startRow();
