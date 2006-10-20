@@ -50,6 +50,8 @@ class blog extends controller
                 try {
                 		$userid = $this->objUser->userId();
             			$catarr = $this->objDbBlog->getCatsTree($userid);
+            			$linkcats = $this->objDbBlog->getAllLinkCats($userid);
+            			$this->setVarByRef('linkcats', $linkcats);
             			$this->setVarByRef('cats', $catarr);
                 		return 'myblog_tpl.php';
                     }
@@ -58,23 +60,15 @@ class blog extends controller
                     }
                 break;
 
-            case 'buildcats':
-            	try {
-            		$userid = $this->objUser->userId();
-            		$catarr = $this->objDbBlog->getCatsTree($userid);
-            		$this->setVarByRef('cats', $catarr);
-            		break;
-            	}
-            	catch(customException $e) {
-                        customException::cleanUp();
-                }
 
             case 'testcats':
             	try {
             		$userid = $this->objUser->userId();
-            		$cat2add = array('userid' => $userid, 'catid' => 5, 'cat_name' => 'stuff kid', 'cat_nicename' => 'stuff kid', 'cat_desc' => 'stuff kid', 'cat_parent' => 'init_5607_1161173109', 'cat_count' => 2);
-            		//print_r($this->objDbBlog->setCats($userid, $cat2add));
-            		print_r($this->objDbBlog->getCatsTree($userid));
+            		$linkcat2add = array('userid' => $userid, 'catname' => 'work', 'autotoggle' => 'N', 'show_images' => 'Y', 'show_description' => 'N', 'show_rating' => 'Y', 'show_updated' => 'Y', 'sort_order' => 'rand', 'sort_desc' => 'N', 'list_limit' => '-1');
+            		$cat2add = array('userid' => $userid, 'cat_name' => 'Uncategorized', 'cat_nicename' => 'Uncategorized', 'cat_desc' => 'Uncategorized posts', 'cat_parent' => 0, 'cat_count' => 1);
+            		print_r($this->objDbBlog->setCats($userid, $cat2add));
+            		//print_r($this->objDbBlog->setLinkCats($userid, $linkcat2add));
+            		//print_r($this->objDbBlog->getAllLinkCats($userid));
             	}
             	catch(customException $e) {
                         customException::cleanUp();

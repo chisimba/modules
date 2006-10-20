@@ -15,10 +15,6 @@ $fields = array(
 		'type' => 'text',
 		'length' => 50,
 		),
-	'link_id' => array(
-		'type' => 'integer',
-		'length' => 20,
-		),
 	'link_url' => array(
 		'type' => 'text',
 		'length' => 255,
@@ -36,8 +32,8 @@ $fields = array(
 		'length' => 25,
 		),
 	'link_category' => array(
-		'type' => 'integer',
-		'length' => 20,
+		'type' => 'text',
+		'length' => 32,
 		),
 	'link_description' => array(
 		'type' => 'text',
