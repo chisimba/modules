@@ -131,6 +131,46 @@ class dbblog extends dbTable
 		return $this->getAll("where userid = " . $userid);
 	}
 
+	public function getLinksCats($userid, $cat)
+	{
+		$this->_changeTable('tbl_blog_links');
+		return $this->getAll("WHERE userid = '$userid' AND link_category = '$cat'");
+	}
+
+	public function setLinkCats($userid, $linkCats = array())
+	{
+		if(!empty($linkCats))
+		{
+			$this->_changeTable('tbl_blog_linkcats');
+			return $this->insert($linkCats, 'tbl_blog_linkcats');
+		}
+		else {
+			return FALSE;
+		}
+	}
+
+	public function setLink($userid, $linkarr)
+	{
+		$this->_changeTable('tbl_blog_links');
+		if(!empty($linkarr))
+		{
+			return $this->insert($linkarr, 'tbl_blog_links');
+		}
+		else {
+			return FALSE;
+		}
+	}
+
+	// posts section
+
+	public function getAllPosts($userid)
+	{
+		$this->_changeTable('tbl_blog_posts');
+		return $this->getAll("ORDER BY menu_order ASC");
+	}
+
+
+
 
 
 

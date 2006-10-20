@@ -51,6 +51,8 @@ class blog extends controller
                 		$userid = $this->objUser->userId();
             			$catarr = $this->objDbBlog->getCatsTree($userid);
             			$linkcats = $this->objDbBlog->getAllLinkCats($userid);
+            			$posts = $this->objDbBlog->getAllPosts($userid);
+            			$this->setVarByRef('posts', $posts);
             			$this->setVarByRef('linkcats', $linkcats);
             			$this->setVarByRef('cats', $catarr);
                 		return 'myblog_tpl.php';
@@ -64,9 +66,12 @@ class blog extends controller
             case 'testcats':
             	try {
             		$userid = $this->objUser->userId();
-            		$linkcat2add = array('userid' => $userid, 'catname' => 'work', 'autotoggle' => 'N', 'show_images' => 'Y', 'show_description' => 'N', 'show_rating' => 'Y', 'show_updated' => 'Y', 'sort_order' => 'rand', 'sort_desc' => 'N', 'list_limit' => '-1');
+            		$linkcat2add = array('userid' => $userid, 'catname' => 'Blogroll', 'autotoggle' => 'N', 'show_images' => 'Y', 'show_description' => 'N', 'show_rating' => 'Y', 'show_updated' => 'Y', 'sort_order' => 'rand', 'sort_desc' => 'N', 'list_limit' => '-1');
             		$cat2add = array('userid' => $userid, 'cat_name' => 'Uncategorized', 'cat_nicename' => 'Uncategorized', 'cat_desc' => 'Uncategorized posts', 'cat_parent' => 0, 'cat_count' => 1);
-            		print_r($this->objDbBlog->setCats($userid, $cat2add));
+            		$link2add = array('userid' => $userid, 'link_url' => 'http://fsiu.uwc.ac.za/kinky/index.php?module=blog&action=showblog&blogger=1339050927', 'link_name' => 'Pauls FSIU Blog', 'link_image' => '', 'link_target' => '', 'link_category' => 'init_5101_1161324562', 'link_description' => 'FSIU blog for Paul Scott', 'link_visible' => 'Y', 'link_owner' => $userid, 'link_rating' => '1', 'link_updated' => '', 'link_rel' => '', 'link_notes' => 'Paul Scott has a FSIU blog too', 'link_rss' => 'http://fsiu.uwc.ac.za/kinky/index.php?module=blog&action=genrss&blogger=1339050927');
+
+            		print_r($this->objDbBlog->setLink($userid, $link2add));
+            		//print_r($this->objDbBlog->setCats($userid, $cat2add));
             		//print_r($this->objDbBlog->setLinkCats($userid, $linkcat2add));
             		//print_r($this->objDbBlog->getAllLinkCats($userid));
             	}
