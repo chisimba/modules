@@ -33,6 +33,8 @@ class marketingrecruitmentforum extends controller
       $this->objfaculty = & $this->getObject('faculty','marketingrecruitmentforum');
       $this->dbstudentcard  = & $this->getObject('dbstudentcard','marketingrecruitmentforum');
       $this->objsearchinfo = & $this->getObject('searchinfo','marketingrecruitmentforum');
+      $this->dbsluactivities  = & $this->getObject('dbsluactivities','marketingrecruitmentforum');
+      $this->dbschoollist   = & $this->getObject('dbschoollist','marketingrecruitmentforum');
       
        //$this->objdbperdiem = & $this->getObject('dbperdiem','onlineinvoice');
       $this->objstudinfo  = & $this->getObject('dbmarketing','marketingrecruitmentforum');
@@ -106,9 +108,17 @@ class marketingrecruitmentforum extends controller
                   $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
                   $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
                   ///////////////////////////////////////////////////////
+                  //submit studcard info
                   $studcarddata = $this->getSession('studentdata');
                   $this->dbstudentcard->addstudcard($studcarddata);
-                  ////////////////////////////////////////////////////////  
+                  //submit slu activities
+                  $sluactivity = $this->getSession('sluactivitydata');
+                  $this->dbsluactivities->addsluactivity($sluactivity);
+                  //////////////////////////////////////////////////////// 
+                  //submit all school information
+                  $schoolinfodata = $this->getSession('sluactivitydata');
+                  $this->dbschoollist->addsschoollist($schoolinfodata);
+                   
                   $this->unsetSession('studentdata');
                   $this->unsetSession('sluactivitydata');
                   $this->unsetSession('schoolistdata');
@@ -132,8 +142,8 @@ class marketingrecruitmentforum extends controller
                 $selectedvalue  = $this->getParam('searchlist');
                 
                 if($selectedvalue == 'All matriculants that completed information cards'){
-                  echo 'hello';
-                  die;
+                  return 'studcardresults_tpl.php';
+                  
                 }else{
                     return 'searchslu_tpl.php';
                 }
@@ -194,7 +204,7 @@ class marketingrecruitmentforum extends controller
                                   'updated'          =>  date('Y-m-d'),
                                   'date'             =>  $this->getParam('txtdate'), 
                                   'activity'         =>  $this->getParam('activityvalues'),
-                                  'schoolname'       =>  $this->getParam('searchlist'),
+                                  'schoolname'       =>  $this->getParam('schoollistactivity'),
                                   'area'             =>  $this->getParam('area'),
                                   'province'         =>  $this->getParam('province'),
                            );
@@ -205,12 +215,12 @@ class marketingrecruitmentforum extends controller
   private function getSchoolist(){
   
     $username  = $this->objUser->fullname();
-    $schoolistdata  = array('createdby'        =>  $username,
+    $schoolistdata  = array( 'createdby'        =>  $username,
                              'datecreated'      =>  date('Y-m-d'),
                              'modifiedby'       =>  $this->objUser->fullname(),
                              'datemodified'     =>  date('Y-m-d'),
                              'updated'          =>  date('Y-m-d'),
-                             'schoolname'       =>  $this->getParam('searchlist'),
+                             'schoolname'       =>  $this->getParam('schoollistactivity'),
                              'schooladdress'    =>  $this->getParam('schooladdress'),
                              'telnumber'        =>  $this->getParam('txttelnumber'),
                              'faxnumber'        =>  $this->getParam('txtfaxnumber'),

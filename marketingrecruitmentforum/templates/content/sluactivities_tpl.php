@@ -51,7 +51,7 @@
        $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
        $this->objschoolname->readfiledata();
         
-       $searchlist  = new dropdown('searchlist');
+       $searchlist  = new dropdown('schoollistactivity');
        $shoolvalues = $this->getSession('schoolnames');
        sort($shoolvalues);
        

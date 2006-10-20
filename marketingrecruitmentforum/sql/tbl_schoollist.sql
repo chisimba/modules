@@ -57,7 +57,8 @@ $fields = array(
    'notnull'     => 1
   ),
   'principal'  =>  array(
-  'type'          =>  'text'
+  'type'        => 'text',
+  'length'     => 32
   ),
   'guidanceteacher'     =>  array(
   'type'        =>  'text',
