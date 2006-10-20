@@ -7,10 +7,11 @@ $objSideBar = $this->newObject('sidebar', 'navigation');
 $cssLayout->setNumColumns(3);
 $leftMenu = &$this->newObject('usermenu', 'toolbar');
 $rightSideColumn = NULL; //$this->objLanguage->languageText('mod_blog_instructions', 'blog');
-//$this->setLayoutTemplate('blayout_tpl.php');
-//print_r($cats); die();
 
-//print_r($cats);
+//set up a link to the other users blogs...
+$oblogs = new href($this->uri(array('action' => 'allblogs')),$this->objLanguage->languageText("mod_blog_viewallblogs", "blog"), NULL);
+$rightSideColumn .= $oblogs->show();
+
 $nodes = array();
 $childnodes = array();
 
@@ -66,7 +67,7 @@ $rightSideColumn .= "<br />";
 $rightSideColumn .= "<em>" . $this->objLanguage->languageText("mod_blog_admin", "blog") . "</em><br />";
 
 //blog admin page
-$admin = new href($this->uri(array('action' => 'blogadmin', 'userid' => $this->objUser->userid())), $this->objLanguage->languageText("mod_blog_blogadmin", "blog"));
+$admin = new href($this->uri(array('action' => 'blogadmin')), $this->objLanguage->languageText("mod_blog_blogadmin", "blog"));
 $rightSideColumn .= $admin->show();
 
 
@@ -75,7 +76,6 @@ $rightSideColumn .= $admin->show();
 //fake it
 $middleColumn = NULL;
 //print_r($posts); die();
-//$posts = array(array('tagline' => 'some shit', 'content' => 'some more content'),array('tagline' => 'some more shit', 'content' => 'some other content'));
 if(!empty($posts))
 {
 	foreach($posts as $post)
