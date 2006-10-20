@@ -60,6 +60,10 @@ class blog extends controller
             		//get a random blog from the blog table
             		$r = $this->objDbBlog->getRandBlog();
             		$userid = $r['userid'];
+            		$this->setVarByRef('userid', $userid);
+            	}
+            	else {
+            		$this->setVarByRef('userid', $userid);
             	}
             	//carry on...
             	$catarr = $this->objDbBlog->getCatsTree($userid);
