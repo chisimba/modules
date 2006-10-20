@@ -166,7 +166,27 @@ class dbblog extends dbTable
 	public function getAllPosts($userid)
 	{
 		$this->_changeTable('tbl_blog_posts');
-		return $this->getAll("ORDER BY menu_order ASC");
+		return $this->getAll("WHERE userid = '$userid' ORDER BY menu_order ASC");
+	}
+
+	public function getRandBlog()
+	{
+		$this->_changeTable('tbl_blog_posts');
+		$res = $this->getAll();
+		//print_r($res);
+		if(!empty($res))
+        {
+        	foreach($res as $blogs)
+        	{
+        		$blo[] = $blogs['userid'];
+        	}
+        	$rand_keys = array_rand($blo,1);
+			return $res[$rand_keys];
+        }
+        else {
+        	return NULL;
+        }
+
 	}
 
 
