@@ -1202,6 +1202,7 @@ class MBOXCreator extends FeedCreator {
 	 * @return    string    the feed's complete text
 	 */
 	function createFeed() {
+		$feed = NULL;
 		for ($i=0;$i<count($this->items);$i++) {
 			if ($this->items[$i]->author!="") {
 				$from = $this->items[$i]->author;
