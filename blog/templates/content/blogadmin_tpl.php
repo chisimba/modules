@@ -82,8 +82,15 @@ $dlabel = new label($objLanguage->languageText('mod_blog_catparent', 'blog') .':
 $pcats = $this->objDbBlog->getAllCats($userid);
 $addDrop = new dropdown('catparent');
 $addDrop->addOption(0, $this->objLanguage->languageText("mod_blog_defcat","blog"));
-foreach($pcats as $adds) {
-   $addDrop->addOption($adds['id'], $adds['cat_name']);
+
+//loop through the existing cats and make sure not to add a child to the dd
+foreach($pcats as $adds)
+{
+	$parent = $adds['cat_parent'];
+	if($adds['cat_parent'] == '0')
+	{
+		$addDrop->addOption($adds['id'], $adds['cat_name']);
+	}
 }
 $catadd->addCell($dlabel->show());
 $catadd->addCell($addDrop->show());
