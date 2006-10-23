@@ -11,7 +11,7 @@ $rightSideColumn = NULL; //$this->objLanguage->languageText('mod_blog_instructio
 $middleColumn = NULL;
 $leftCol = NULL;
 
-$middleColumn .= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_noposts", "blog") . "</center></em></h1>";
+$middleColumn .= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_noblogs", "blog") . "</center></em></h1>";
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());
