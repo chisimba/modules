@@ -1,5 +1,4 @@
 <?php
-$this->objblogOps = &$this->getObject('blogops');
 
 $cssLayout = &$this->newObject('csslayout', 'htmlelements');
 // Set columns to 3
