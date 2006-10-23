@@ -34,8 +34,8 @@ $fields = array(
     'type'        =>  'date',
     'notnull'     => 1
     ),
-   'date'         =>  array(
-    'type'        =>  'date',
+   'date'         =>  array(                                        
+   'type'        =>  'date',
     'notnull'     => 1
    ),
    'activity'       =>  array(
@@ -53,6 +53,10 @@ $fields = array(
    'province'         =>  array(
     'type'        =>  'text',
     'notnull'     => 1
-   )
+   ),
+   'fk_id_school' =>  array(
+   'type'         =>  'text',
+   'length'       =>  32
+   ),
    );
 ?>

@@ -3,7 +3,7 @@
 $tablename = 'tbl_schoollist';
 
 //Options line for comments, encoding and character set
-$options = array('comment' => 'The table studcard is managed by the marketingrecruitmentforum module', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'The table schoollist is managed by the marketingrecruitmentforum module', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 // Fields
 $fields = array(
@@ -50,19 +50,24 @@ $fields = array(
    ),
    'faxnumber'         =>  array(
     'type'        =>  'text',
-    'notnull'     => 1
    ),
    'email' =>  array(
    'type'      =>  'text',
-   'notnull'     => 1
-  ),
+   ),
   'principal'  =>  array(
   'type'        => 'text',
-  'length'     => 32
+  'length'     => 32,
+  'notnull'    => 1
   ),
   'guidanceteacher'     =>  array(
   'type'        =>  'text',
-  'length'      =>  255
+  'length'      =>  255,
+  'notnull'    => 1
+  ),
+  'fk_id_activity'  =>  array(
+  'type'            =>  'text',
+  'varchar'         =>  32,
+  'notnull'    => 1
   )
   );
 ?>
