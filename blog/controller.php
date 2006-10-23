@@ -70,7 +70,7 @@ class blog extends controller
 						$this->setVarByRef('userid', $userid);
 					}
 					else {
-						die("no blogs");
+						return 'noblogs_tpl.php';
 					}
 				}
 				else {
