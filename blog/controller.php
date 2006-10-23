@@ -64,8 +64,14 @@ class blog extends controller
 					$this->setVarByRef('message', $this->objLanguage->languageText("mod_blog_word_randomblog"));
 					//get a random blog from the blog table
 					$r = $this->objDbBlog->getRandBlog();
-					$userid = $r['userid'];
-					$this->setVarByRef('userid', $userid);
+					if(!empty($r))
+					{
+						$userid = $r['userid'];
+						$this->setVarByRef('userid', $userid);
+					}
+					else {
+						die("no blogs");
+					}
 				}
 				else {
 					$this->setVarByRef('userid', $userid);
