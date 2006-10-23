@@ -113,8 +113,7 @@ class dbcontent extends dbTable
 			$published = ($this->getParam('published') == 'on') ? '1':'0';
 			$creatorid = $this->_objUser->userId();
 			$access = $this->getParam('access');
-			$catid = $this->getParam('catid');
-			$introText = $this->getParam('intro');
+  		$introText = $this->getParam('intro');
 			$fullText = $this->getParam('body');
 		
 			$newArr = array(

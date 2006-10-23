@@ -502,11 +502,19 @@ class dbsections extends dbTable
    */
 	public function getOrdering($parentid = NULL)
 	{
+		try {	
+	   $ordering = "0";
      //get last order value 
      $lastOrder = $this->getAll('WHERE parentid = "'.$parentid.'" ORDER BY ordering DESC LIMIT 1');
      //add after this value
-     $ordering = $lastOrder['0']['ordering'] + 1;
+     if(!empty($lastOrder)){
+       $ordering = $lastOrder['0']['ordering'] + 1;
+     }  
      return $ordering;
+		}catch (Exception $e){
+       		echo 'Caught exception: ',  $e->getMessage();
+        	exit();
+    }
   }
 	/**
 	 * Method to return the links to be displayed in the order column on the table

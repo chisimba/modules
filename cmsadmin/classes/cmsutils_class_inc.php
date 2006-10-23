@@ -1100,6 +1100,9 @@ class cmsutils extends object
          }
        $htmlList = '<ul class="tree">';   
        $i = '1';      
+       foreach($treeArray as $entry){
+        
+       }
        $htmlList .= '</ul>';   
       }           
       return $htmlList;  
