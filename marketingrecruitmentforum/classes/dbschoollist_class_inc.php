@@ -1,5 +1,5 @@
 <?php
-//class use to perform all database manipulation of all School info captured
+//class use to perform all database manipulation of all school info captured
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
@@ -20,8 +20,6 @@ class dbschoollist extends dbTable{
  function init()
 	{
 	 try {
-     
-     
       parent::init('tbl_schoollist');
 		
 			
@@ -34,16 +32,40 @@ class dbschoollist extends dbTable{
   //insert all studcard information to database
   public function addsschoollist($schoolinfodata)
 	{
-        $schoolinfo = $this->insert($schoolinfodata);
-        return $schoolinfo;
+        $schooldata = $this->insert($schoolinfodata);
+        return $schooldata;
   }	
 /*------------------------------------------------------------------------------*/
- //select all informatio from the stud card table
- public function getallsluactivity()
+ //select all informatio from the schoollist table
+ public function getallsschools()
  {
-      $sluresults  = $this->getAll();
-      return  $sluresults;
+      $results  = $this->getAll();
+      return  $results;
  } 
-   
-} 
+/*------------------------------------------------------------------------------*/
+//display all schools with a certain name OR grouped OR order by name -- check
+  public function getschoolbyname()
+  {
+    //how to specify the following -- filter name
+    
+      $name  = $this->getAll();
+      return  $name;
+  }   
+/*------------------------------------------------------------------------------*/
+//display all schools by area
+  public function getschoolbyarea()
+  {   //use filter and specify area
+      $area  = $this->getAll();
+      return  $area;
+  }   
+/*------------------------------------------------------------------------------*/
+//display all by province
+  public function getschoolbyprovince()
+  {   //use filter and specify province
+      $province  = $this->getAll();
+      return  $province;
+  }   
+/*------------------------------------------------------------------------------*/
+  
+}//end of class 
 ?>

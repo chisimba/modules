@@ -32,18 +32,64 @@ class dbstudentcard extends dbTable{
 	}
 /*------------------------------------------------------------------------------*/
   //insert all studcard information to database
-  public function addstudcard($studcarddata)
+  function addstudcard($studcarddata)
 	{
         $studinfo = $this->insert($studcarddata);
         return $studinfo;
   }	
 /*------------------------------------------------------------------------------*/
+  //function addfaccourse($faccourse)
+  //{
+  //      $faccourseinfo  = $this->insert($faccourse);
+  //      return $faccourseinfo;
+  //}
+/*------------------------------------------------------------------------------*/  
  //select all informatio from the stud card table
  public function getallstudinfo()
  {
       $studresults  = $this->getAll();
       return  $studresults;
  } 
-   
-} 
+/*------------------------------------------------------------------------------*/
+  //get all students from a certain school
+ public function getstudschool($schoolname)
+ {    //FIX NB
+      $schoolname = $this->getParam('schoollistnames');
+      $studschool = $this->getAll($schoolname);
+      return  $studschool;
+ }
+/*------------------------------------------------------------------------------*/ 
+ public function allstudsexemption(){
+      //get all students that qualify for an exemption
+      //NEED TO FIX QUERY
+      $exemption = $this->getAll();
+      return  $exemption;
+ }  
+/*------------------------------------------------------------------------------*/
+ public function allrelsubject(){
+    //display all students where relevant subject is true ...FIX nb  
+    $relevansub = $this->getAll();
+    return  $relevansub;
+ }
+/*------------------------------------------------------------------------------*/
+ public function allbyfaculty(){
+    //order by faculty...check how
+    $faculty = $this->getAll();
+    return  $faculty;
+ }
+/*------------------------------------------------------------------------------*/ 
+ public function allbycourse(){
+    //display all students , order by course, faculty
+    $course = $this->getAll();
+    return  $course;
+ }
+/*------------------------------------------------------------------------------*/ 
+ public function allbyarea(){ //CHECK nb area within activities class
+    $area = $this->getAll();
+    return  $area;
+ }
+/*------------------------------------------------------------------------------*/ 
+
+ 
+}//end of class 
 ?>

@@ -44,6 +44,49 @@ class dbsluactivities extends dbTable{
       $sluresults  = $this->getAll();
       return  $sluresults;
  } 
-   
-} 
+/*------------------------------------------------------------------------------*/
+//display all activities between two dates
+  public function getactivitydate()
+  {
+    //how to specify the following
+    /* 2.	Select date, activity_type
+        	From activity
+          Where date between $this->getParam(date1) and $this->getParam(date2);
+    */
+      $activitydate  = $this->getAll();
+      return  $activitydate;
+  }   
+/*------------------------------------------------------------------------------*/
+//display all activities by type
+  public function getactivitytype()
+  {   //use filter and specify type
+      $type  = $this->getAll();
+      return  $type;
+  }   
+/*------------------------------------------------------------------------------*/
+//display all activities by province
+  public function getactivityprovince()
+  {   //use filter and specify province
+      $province  = $this->getAll();
+      return  $province;
+  }   
+/*------------------------------------------------------------------------------*/
+//display all activities by area
+  public function getactivityarea()
+  {   //use filter and specify area
+      $area  = $this->getAll();
+      return  $area;
+    
+  }   
+/*------------------------------------------------------------------------------*/
+//display all activities by school
+  public function getactivityschool()
+  {     //use filter and specify school
+      $school  = $this->getAll();
+      return  $school;
+    
+  }   
+/*------------------------------------------------------------------------------*/
+  
+}//end of class 
 ?>
