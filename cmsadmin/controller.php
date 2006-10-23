@@ -13,6 +13,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 * @license GNU GPL
 * @version
 * @author Wesley  Nitsckie
+* @author Warren Windvogel
 * @example :
 */
 
@@ -35,15 +36,6 @@ class cmsadmin extends controller
      * @var object
     */
     protected $_objSections;
-
-    /**
-     * The categories  object
-     *
-     * @access public
-     * @var object
-    */
-    protected $_objCategories;
-
 
     /**
      * The Content object
@@ -82,6 +74,15 @@ class cmsadmin extends controller
 
 
     /**
+     * The layout object
+     *
+     * @access private
+     * @var object
+    */
+    protected $_objLayout;
+
+
+    /**
      * The config object
      *
      * @access private
@@ -89,6 +90,12 @@ class cmsadmin extends controller
     */
     protected $_objConfig;
 
+   /**
+    * The language object
+    *
+    * @var object
+    */
+    var $objLanguage;
 
 	/**
 	* Constructor
@@ -99,15 +106,16 @@ class cmsadmin extends controller
         try{
 
 			$this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
-			$this->_objCategories = & $this->newObject('dbcategories', 'cmsadmin');
 			$this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
 			$this->_objUtils = & $this->newObject('cmsutils', 'cmsadmin');
+			$this->_objLayouts = & $this->newObject('dblayouts', 'cmsadmin');
 			$this->_objUser = & $this->newObject('user', 'security');
-        	$this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
-        	$this->_objConfig = & $this->newObject('altconfig', 'config');
-        	$this->_objContext = & $this->newObject('dbcontext', 'context');
+			$this->objLanguage =& $this->newObject('language', 'language');
+      $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
+      $this->_objConfig = & $this->newObject('altconfig', 'config');
+      $this->_objContext = & $this->newObject('dbcontext', 'context');
 
-        	$objModule = & $this->newObject('modules', 'modulecatalogue');
+     	$objModule = & $this->newObject('modules', 'modulecatalogue');
 
 			if($objModule->checkIfRegistered('context'))
 			{
@@ -135,7 +143,7 @@ class cmsadmin extends controller
     		$action = $this->getParam('action');
     		$this->setLayoutTemplate('cms_layout_tpl.php');
     		//$this->setVar('bodyParams', ' id="type-b" ');
-            switch ($action){
+           switch ($action){
 
             	case null:
             		$myid = $this->_objUser->userId();
@@ -144,89 +152,117 @@ class cmsadmin extends controller
             			die("<div id=featurebox>You do not have sufficient permissions to perform this task!</div>");
             		}
 
+//----------------------- front page section
 
+    		      case 'frontpages':
+    		        $this->setVar('files', $this->_objFrontPage->getFrontPages());
+    		        return 'cms_frontpage_manager_tpl.php';
+             
+              case 'removefromfrontpage':
+                $id = $this->getParam('id');
+    				    $this->_objFrontPage->remove($id);
+                return $this->nextAction('frontpages', array(NULL), 'cmsadmin');
 
-
-                //content section
-                case 'content':
-                	return 'cms_content_list_tpl.php';
+              case 'changefporder':
+                $id = $this->getParam('id');
+                $ordering = $this->getParam('ordering');
+                $this->_objFrontPage->changeOrder($id, $ordering);
+    		        $this->setVar('files', $this->_objFrontPage->getFrontPages());
+    		        return $this->nextAction('frontpages', array(NULL), 'cmsadmin');
+    			    
+//----------------------- content section
 
                 case 'addcontent':
                 	return 'cms_content_add_tpl.php';
 
                 case 'createcontent':
-    				$this->_objContent->add();
-    				if($this->getParam('frontpage') == 'true')
-                	{
-                		return $this->nextAction(array('action' => 'frontpages'), 'cmsadmin');
-                	} else {
-    					return $this->nextAction('content');
-                	}
+    				       $this->_objContent->add();
+                	 return $this->nextAction('frontpages', array(NULL), 'cmsadmin');
 
     			case 'editcontent':
     				$this->_objContent->edit();
-    				if($this->getParam('frontpage') == 'true')
-                	{
-                		return $this->nextAction(array('action' => 'frontpages'), 'cmsadmin');
-                	} else {
-    					return $this->nextAction('content');
-                	}
+         		return $this->nextAction('frontpages', array('action' => 'frontpages'), 'cmsadmin');
 
     			case 'contentpublish':
     			    $this->_objContent->togglePublish($this->getParam('id'));
-    			    return $this->nextAction('content');
+    			    return $this->nextAction('frontpages');
 
     			case 'trashcontent':
     				$this->_objContent->trashContent($this->getParam('id'));
-    				return $this->nextAction('content');
+    				return $this->nextAction('frontpages');
 
     			case 'deletecontent':
     				$this->_objContent->deleteContent($this->getParam('id'));
-    				return $this->nextAction('content',array('filter'=>'trash'));
+    				$sectionId = $this->getParam('sectionid', NULL);
+    				if(!empty($sectionId)){
+              return $this->nextAction('viewsection', array('id'=>$sectionId), 'cmsadmin');
+            } else {
+    				    return $this->nextAction('frontpages',array('filter'=>'trash'));
+    				}    
 
+          case 'changecontentorder':
+             $id = $this->getParam('id');
+             $ordering = $this->getParam('ordering');
+             $sectionId = $this->getParam('sectionid');
+             $this->_objContent->changeOrder($sectionId, $id, $ordering);
+             return $this->nextAction('viewsection', array('id'=>$sectionId), 'cmsadmin');
 
-
-    			//section section
+//----------------------- section section
 
     			case 'sections':
     				return 'cms_section_list_tpl.php';
+    				
+    			case 'viewsection':
+            $id = $this->getParam('id');
+            //Get section data
+            $section = $this->_objSections->getSection($id);	
+            $this->setVarByRef('section', $section);
+            //Get sub sections
+            $subSections = $this->_objSections->getSubSectionsInSection($id);
+            $this->setVarByRef('subSections', $subSections);
+            //Get content pages
+            $pages = $this->_objContent->getPagesInSection($id);
+            $this->setVarByRef('pages', $pages);
+            return 'cms_section_view_tpl.php';
+
+          case 'changesectionorder':
+             $id = $this->getParam('id');
+             $ordering = $this->getParam('ordering');
+             $sectionId = $this->getParam('parent');
+             $this->_objSections->changeOrder($id, $ordering, $sectionId);
+             if(!empty($sectionId)){
+               return $this->nextAction('viewsection', array('id'=>$sectionId), 'cmsadmin');
+             } else {
+                return $this->nextAction('sections', array(NULL), 'cmsadmin');
+             } 
+             
     			case 'addsection':
+    			  $parentid = $this->getParam('parentid');
+    			  $level = $this->_objSections->getLevel($parentid);
+    			  $this->setVarByRef('parentid', $parentid);
     				return 'cms_section_add_tpl.php';
+    				
     			case 'createsection':
     				$this->_objSections->add();
-    				return $this->nextAction('sections');
+    				$parent = $this->getParam('parentid');
+    				if(!empty($parent)){
+    				  return $this->nextAction('viewsection', array('id'=>$parent), 'cmsadmin');
+    				} else {
+                return $this->nextAction('sections');
+            }  
+    				
     			case 'editsection';
     				$this->_objSections->edit();
     				return $this->nextAction('sections');
+    				
     			case 'sectionpublish':
     			    $this->_objSections->togglePublish($this->getParam('id'));
     			    return $this->nextAction('sections');
+    			    
     			case 'sectiondelete':
     				$this->_objSections->deleteSection($this->getParam('id'));
     				return $this->nextAction('sections');
 
-    			//categories section
-
-    			case 'categories':
-    				return 'cms_category_list_tpl.php';
-    			case 'addcat':
-    				return 'cms_category_add_tpl.php';
-    			case 'createcategory';
-    				$this->_objCategories->add();
-    				return $this->nextAction('categories');
-    			case 'editcategory':
-    				$this->_objCategories->edit();
-    				return $this->nextAction('categories');
-    			case 'deletecategory';
-    			  $id = $this->getParam('id');
-    				$this->_objCategories->deleteCat($id);
-    				return $this->nextAction('categories');
-
-    			//front page section
-
-    		    case 'frontpages':
-    		        $this->setVar('files', $this->_objFrontPage->getFrontPages());
-    		        return 'cms_frontpage_manager_tpl.php';
             }
 	    }
         catch (customException $e)
@@ -238,7 +274,7 @@ class cmsadmin extends controller
 
 
 	/**
-	 * Method to get the menu for thecms admin
+	 * Method to get the menu for the cms admin
 	 *
 	 * @access public
 	 * @return string

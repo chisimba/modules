@@ -14,6 +14,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 * @license GNU GPL
 * @version
 * @author Wesley  Nitsckie
+* @author Warren Windvogel
 * @example :
 */
 
@@ -27,14 +28,6 @@ class cmsutils extends object
      * @var object
     */
     protected $_objSections;
-
-    /**
-     * The categories  object
-     *
-     * @access public
-     * @var object
-    */
-    protected $_objCategories;
 
      /**
      * The Content object
@@ -67,11 +60,10 @@ class cmsutils extends object
 	{
 		try {
 			$this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
-			$this->_objCategories = & $this->newObject('dbcategories', 'cmsadmin');
 			$this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
 			$this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
 			$this->_objUser = & $this->newObject('user', 'security');
-
+      $this->objLanguage =& $this->newObject('language', 'language');
 
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
@@ -91,10 +83,7 @@ class cmsutils extends object
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
-
-
 	}
-
 
 	/**
 	 * Method to detemine the access
@@ -116,7 +105,6 @@ class cmsutils extends object
         	exit();
         }
 	}
-
 
 	/**
 	 * Method to get the images dropdown
@@ -147,9 +135,6 @@ class cmsutils extends object
         }
 	}
 
-
-
-
 	/**
 	 * Method to get the image position dropdown
 	 * @access public
@@ -174,7 +159,6 @@ class cmsutils extends object
         	exit();
         }
 	}
-
 
 	/**
 	 * Method to get the Yes/No radio  box
@@ -227,7 +211,6 @@ class cmsutils extends object
 
 	}
 
-
 	/**
 	 *
 	 * Method to get the layout options for a section
@@ -277,7 +260,6 @@ class cmsutils extends object
         	exit();
         }
 	}
-
 
 	/**
 	 * Method to generate the Sections Menu
@@ -344,8 +326,6 @@ class cmsutils extends object
         	exit();
         }
 	}
-
-
 
 	/**
 	 * Method to get the Front Page Content
@@ -445,8 +425,6 @@ class cmsutils extends object
         }
 	}
 
-
-
 	/**
 	 * Method to generate the content for a section
 	 *
@@ -479,7 +457,6 @@ class cmsutils extends object
         	exit();
         }
 	}
-
 
 	/**
 	 * Method to generate the layout for a section
@@ -531,8 +508,6 @@ class cmsutils extends object
         }
 
 	}
-
-
 
 	/**
 	 * Method to generate the layout for a section
@@ -704,7 +679,6 @@ class cmsutils extends object
         }
 	}
 
-
 	/**
 	 * Method to show  the body of a pages
 	 *
@@ -758,9 +732,7 @@ class cmsutils extends object
        			echo 'Caught exception: ',  $e->getMessage();
         		exit();
         	}
-
 	}
-
 
 	/**
 	 * Method to format the date
@@ -806,8 +778,6 @@ class cmsutils extends object
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
-
-
 	}
 
 	/**
@@ -843,10 +813,7 @@ class cmsutils extends object
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
-
-
 	}
-
 
 	/**
 	 * Method to generate the navigation
@@ -861,36 +828,31 @@ class cmsutils extends object
 		$str = '';
 
 		//content link
-		$link->link = 'Content';
+		$link->link = $this->objLanguage->languageText('word_content');
 		$link->href = $this->uri(array('action' => 'content'));
 		$str.= '<p>'.$link->show();
 		//sections link
 
-		$link->link = 'Sections';
+		$link->link = $this->objLanguage->languageText('word_section');
 		$link->href = $this->uri(array('action' => 'sections'));
 		$str .= '<p>'.$link->show();
 
-		//categories link
-		$link->link = 'Categories';
-		$link->href = $this->uri(array('action' => 'categories'));
-		$str .= '<p>'.$link->show();
-
 		//media link
-		$link->link = 'Media';
+		$link->link = $this->objLanguage->languageText('word_media');
 		$link->href = $this->uri(null, 'mediamanager');
 		$str .= '<p>'.$link->show();
 
 		$nodes = array();
-		$nodes[] = array('text' => 'Content', 'uri' => $this->uri(array('action' => 'content')));
-		$nodes[] = array('text' => 'Sections', 'uri' => $this->uri(array('action' => 'sections')));
-		$nodes[] = array('text' => 'Categories', 'uri' => $this->uri(array('action' => 'categories')));
-		//$nodes[] = array('text' => 'Categories', 'uri' => $this->uri(array('action' => 'categories')));
-		$nodes[] = array('text' => 'Front Page', 'uri' => $this->uri(array('action' => 'frontpages')));
-		$nodes[] = array('text' => 'Media', 'uri' => $this->uri(null,'mediamanager'))	;
+		$nodes[] = array('text' => $this->objLanguage->languageText('phrase_frontpage'), 'uri' => $this->uri(array('action' => 'frontpages')));
+		$nodes[] = array('text' => $this->objLanguage->languageText('word_section'), 'uri' => $this->uri(array('action' => 'sections')));
+		$nodes[] = array('text' => $this->objLanguage->languageText('mod_cmsadmin_viewcms', 'cmsadmin'), 'uri' => $this->uri(array('action' => 'home'), 'cms'));
 
 		$objNav = $this->newObject('sidebar', 'navigation');
 
-		return $objNav->show($nodes);
+		$nav = $objNav->show($nodes);
+		//$nav .= $this->getHtmlListForTree('sections');
+		
+		return $nav;
 
 	}
 
@@ -970,48 +932,55 @@ class cmsutils extends object
 	 * @access public
 	 * @author Warren Windvogel
 	 */
-	public function getTreeDropdown()
+	public function getTreeDropdown($setSelected = NULL)
 	{
 	    //Create dropdown
       $treeDrop =& $this->newObject('dropdown', 'htmlelements');
 	    $treeDrop->name = 'parent';
-	    $treeDrop->addOption(NULL, ' - Select parent - ');
-	    //Get all available sections
-	    $availsections = $this->_objSections->getSections();
+	    $treeDrop->addOption(NULL, ' ... Root Level ... ');
+
+	    //Create instance of geticon object
+	    $objIcon =& $this->newObject('geticon', 'htmlelements');
+	    //Get all root sections
+	    $availsections = $this->_objSections->getRootNodes();
 	    if(!empty($availsections)){
 	      //initiate sequential tree structured array to be inserted into dropdown
 	      $treeArray = array();
+	      //Get icon for root nodes
+        $objIcon->setIcon('tree/treebase');	      
 	      //add nodes for each section
 	      foreach($availsections as $section){
 	         //initiate prefix for nodes
 	         $prefix = '';
 	         //add root(secion) to dropdown
- 	         $treeArray[] = array('title' => $section['menutext'], 'id' => 'section:'.$section['id']);
+ 	         $treeArray[] = array('title' => $objIcon->show().$section['menutext'], 'id' => $section['id']);
 	         //get number of node levels
            $numLevels = $this->getNumNodeLevels($section['id']);
-           //check if section has categories
+           //check if section has sub sections
            if($numLevels > '0'){
-             //loop through each level and add all cats in level
-             for($i = '1'; $i <= $numLevels; $i++){
+	           //Get icon for parent child nodes
+             $objIcon->setIcon('tree/treefolder_orange');	      
+             //loop through each level and add all sub sections in level
+             for($i = '2'; $i <= $numLevels; $i++){
                 $prefix .= '- ';
-                //get all cats in section on level
-                $cats = $this->_objCategories->getCategoryInSection($section['id'], $i);
-                foreach($cats as $cat){
+                //get all sub secs in section on level
+                $subSecs = $this->_objSections->getSubSectionsForLevel($section['id'], $i);
+                foreach($subSecs as $sec){
                   //if its the 1st node just add it under the section
-                  if($i == '1'){
-                    $treeArray[] = array('title' => $prefix.$cat['menutext'], 'id' => 'category:'.$cat['id']);
+                  if($i == '2'){
+                    $treeArray[] = array('title' => $prefix.$objIcon->show().$sec['menutext'], 'id' => $sec['id']);
                   //else find the parent node and include it after this node
                   } else {
-                      $parentId = $cat['parent_id'];
-                      $catTitle = $this->_objCategories->getMenuText($parentId);
-                      $count = $this->_objCategories->getCatLevel($parentId);
+                      $parentId = $sec['parentid'];
+                      $subSecTitle = $this->_objSections->getMenuText($parentId);
+                      $count = $this->_objSections->getLevel($parentId);
                       $searchPrefix = "";
-                      for($num = '1'; $num <= $count; $num++){
+                      for($num = '2'; $num <= $count; $num++){
                          $searchPrefix .= '- ';
                       }
-                      $needle = array('title' => $searchPrefix.$catTitle, 'id' => 'category:'.$parentId);
+                      $needle = array('title' => $searchPrefix.$objIcon->show().$subSecTitle, 'id' => $parentId);
                       $entNum = array_search($needle, $treeArray);
-                      $newEnt = array('title' => $prefix.$cat['menutext'], 'id' => 'category:'.$cat['id']);
+                      $newEnt = array('title' => $prefix.$objIcon->show().$sec['menutext'], 'id' => $sec['id']);
                       $treeArray = $this->addToTreeArray($treeArray, $entNum, $newEnt);
                   }
                 }
@@ -1022,28 +991,31 @@ class cmsutils extends object
          foreach($treeArray as $node){
             $treeDrop->addOption($node['id'], $node['title']);
          }
+         if(!empty($setSelected)){
+           $treeDrop->setSelected($setSelected);
+         }
       }
       return $treeDrop->show();
 	}
 
 	/**
-	 * Method to return the number of node levels in a section
+	 * Method to return the number of node levels attached to a root section
 	 *
-	 * @param string $sectionid The id(pk) of the section
-	 * @return int $numLevels The number of node levels in the setion
+	 * @param string $rootId The id(pk) of the section root
+	 * @return int $numLevels The number of node levels in the root section
 	 * @access public
 	 * @author Warren Windvogel
 	 */
-	public function getNumNodeLevels($sectionid)
+	public function getNumNodeLevels($rootId)
   {
-      //get all categories in section
-      $categories = $this->_objCategories->getCategoryInSection($sectionid);
+      //get all sub secs in section
+      $subSecs = $this->_objSections->getSubSectionsInRoot($rootId);
       //se number of levels
       $numLevels = '0';
-      if(!empty($categories)){
-        foreach($categories as $cat){
-           if($cat['count'] > $numLevels){
-             $numLevels = $cat['count'];
+      if(!empty($subSecs)){
+        foreach($subSecs as $sec){
+           if($sec['count'] > $numLevels){
+             $numLevels = $sec['count'];
            }
         }
       }
@@ -1081,6 +1053,56 @@ class cmsutils extends object
       }
       return $newArray;
   }
-
+	/**
+	 * Method to generate the html list used to build the tree menu
+	 *
+	 * @param string $menuType Types are "sections" or "complete" specifies whether to include the content
+	 * @return string $htmlList The html list used to build the tree menu
+	 * @access public
+	 * @author Warren Windvogel
+	 */
+	public function getHtmlListForTree($menuType = 'complete')
+  {
+	    //Get all root sections
+	    $availsections = $this->_objSections->getRootNodes();
+	    if(!empty($availsections)){
+	      //initiate sequential tree structured array to be inserted into dropdown
+	      $treeArray = array();
+	      //add nodes for each section
+	      foreach($availsections as $section){
+	         //add root(secion) to dropdown
+ 	         $treeArray[] = array('title' => $section['menutext'], 'id' => $section['id'], 'level' => $section['count']);
+	         //get number of node levels
+           $numLevels = $this->getNumNodeLevels($section['id']);
+           //check if section has sub sections
+           if($numLevels > '0'){
+             //loop through each level and add all sub sections in level
+             for($i = '2'; $i <= $numLevels; $i++){
+                //get all sub secs in section on level
+                $subSecs = $this->_objSections->getSubSectionsForLevel($section['id'], $i);
+                foreach($subSecs as $sec){
+                  //if its the 1st node just add it under the section
+                  if($i == '2'){
+                    $treeArray[] = array('title' => $sec['menutext'], 'id' => $sec['id'], 'level' => $sec['count']);
+                  //else find the parent node and include it after this node
+                  } else {
+                      $parentId = $sec['parentid'];
+                      $subSecTitle = $this->_objSections->getMenuText($parentId);
+                      $count = $this->_objSections->getLevel($parentId);
+                      $needle = array('title' => $subSecTitle, 'id' => $parentId, 'level' => $count);
+                      $entNum = array_search($needle, $treeArray);
+                      $newEnt = array('title' => $sec['menutext'], 'id' => $sec['id'], 'level' => $sec['count']);
+                      $treeArray = $this->addToTreeArray($treeArray, $entNum, $newEnt);
+                  }
+                }
+             }
+           }
+         }
+       $htmlList = '<ul class="tree">';   
+       $i = '1';      
+       $htmlList .= '</ul>';   
+      }           
+      return $htmlList;  
+  }
 }
 ?>

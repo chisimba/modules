@@ -100,9 +100,9 @@ $sections->name= 'section';
 $sections->addFromDB($this->_objSections->getSections(),'title','id',$arrContent['sectionid']);
 $sections->label='Sections';
 
-$category->name= 'catid';
-$category->addFromDB($this->_objCategories->getCategories(),'title','id',$arrContent['catid']);
-$category->label='Sections';
+//$category->name= 'catid';
+//$category->addFromDB($this->_objCategories->getCategories(),'title','id',$arrContent['catid']);
+//$category->label='Sections';
 
 $button->setToSubmit();
 $button->value = 'Save';

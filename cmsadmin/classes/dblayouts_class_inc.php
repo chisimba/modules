@@ -20,12 +20,6 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 class dblayouts extends dbTable
 {
 
-	/**
-	 * @var object $_objDBCatergory
-	 * @access protected
-	 */
-	protected $_objDBCategory;
-	
 	
 	/**
 	* Constructor
@@ -34,7 +28,6 @@ class dblayouts extends dbTable
 	{
 		try {
 			parent::init('tbl_cms_layouts');
-			$this->_objDBCategory = $this->getObject('dbcategories', 'cmsadmin');
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();

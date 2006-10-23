@@ -15,17 +15,7 @@ $h3->str = ' Section Manager  '.$objIcon->getAddIcon($this->uri(array('action' =
 //counter for records
 $cnt = 1;
 //get the pages
-$arrSections = $this->_objSections->getSections();
-
-if($this->inContextMode)
-{
-    $objContextContent = $this->newObject('dbcontextcmscontent', 'contextcmscontent');
-    $arrSections = $objContextContent->getSections($this->contextCode);
-} 
-else 
-{
-    $arrSections = $this->_objSections->getSections();
-}
+$arrSections = $this->_objSections->getRootNodes();
 
 //Get cms type
 $cmsType = 'treeMenu';
@@ -39,7 +29,7 @@ $table->addHeaderCell('Published');
 //$table->addHeaderCell('Order');
 $table->addHeaderCell('Access');
 $table->addHeaderCell('Section ID');
-//$table->addHeaderCell('#Categories');
+//$table->addHeaderCell('Order');
 $table->addHeaderCell('&nbsp;');
 
 $table->endHeaderRow();   
@@ -51,7 +41,7 @@ foreach($arrSections as $section)
 {
   $link->link = $section['title'];
   //edit link
-	$link->href = $this->uri(array('action' => 'addsection', 'mode' => 'edit', 'id' => $section['id']));
+	$link->href = $this->uri(array('action' => 'viewsection', 'id' => $section['id']));
 
 	$oddOrEven = ($rowcount == 0) ? "even" : "odd";
 	
@@ -68,6 +58,7 @@ foreach($arrSections as $section)
     //$table->addCell($section['ordering']);
 	$tableRow[]=$this->_objUtils->getAccess($section['access']);
 	$tableRow[]=$section['id'];
+	$tableRow[]=$this->_objSections->getOrderingLink($section['id']);
 	//$table->addCell($section['catid']);
 	//$tableRow[]=$this->_objCategories->getCatCount($section['id']);
 	//$table->addCell($section['created']);

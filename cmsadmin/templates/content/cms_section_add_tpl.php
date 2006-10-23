@@ -12,7 +12,7 @@ $menuTextInput = & $this->newObject('textinput', 'htmlelements');
 $bodyInput = & $this->newObject('htmlarea', 'htmlelements');
 $h3 = &$this->newObject('htmlheading', 'htmlelements');
 $sections = & $this->newObject('dropdown', 'htmlelements');
-$category = & $this->newObject('dropdown', 'htmlelements');
+$parent = & $this->newObject('dropdown', 'htmlelements');
 $button =  & $this->newObject('button', 'htmlelements');
 
 
@@ -33,17 +33,17 @@ $objForm = $this->newObject('form','htmlelements');
 //setup form
 $objForm->name='addsectionfrm';
 $objForm->id='addsectionfrm';
-$objForm->setAction($this->uri(array('action'=>$action, 'id' => $sectionId),'cmsadmin'));
+if(isset($parentid)){
+  $objForm->setAction($this->uri(array('action'=>$action, 'id' => $sectionId, 'parentid' => $parentid),'cmsadmin'));
+} else {
+    $objForm->setAction($this->uri(array('action'=>$action, 'id' => $sectionId),'cmsadmin'));
+}
 $objForm->setDisplayType(3);   
 
 
 $table->width='60%';
-$tablee->border='1';
-$table->cellspacing='1';
-$tablee->cellpadding='1';
-
-//create heading
-$h3->str = 'Section: New';
+$table->cellspacing='2';
+$table->cellpadding='2';
 
 //the title
 $titleInput->name = 'title';
@@ -84,13 +84,23 @@ if($editmode)
 	
 }
 
-//title
+//Add form elements to the table
 $table->startRow();
-$table->addCell('Title');
-$table->addCell($titleInput->show().'<p/>');
+$table->addCell($this->objLanguage->languageText('mod_cmsadmin_parentfolder', 'cmsadmin'));
+if(isset($parentid)){
+  $table->addCell($this->_objUtils->getTreeDropdown($parentid).'<p/>');
+} else {
+    $table->addCell($this->_objUtils->getTreeDropdown().'<p/>');
+}  
 $table->endRow();
 
 //title name
+$table->startRow();
+$table->addCell($this->objLanguage->languageText('word_title'));
+$table->addCell($titleInput->show().'<p/>');
+$table->endRow();
+
+//menu text name
 $table->startRow();
 $table->addCell('Menu Text');
 $table->addCell($menuTextInput->show().'<p/>');
@@ -115,18 +125,6 @@ $table->addCell('Layout');
 
 $table->addCell($this->_objUtils->getLayoutOptions('sectionlayout', $this->getParam('id')).'<p/>');
 $table->endRow();
-
-//Ordering
-$table->startRow();
-$table->addCell('Ordering');
-if($editmode)
-{	
-	$table->addCell($this->_objSections->getOrderList('ordering').'<p />');
-} else {
-	$table->addCell('New items default to the last place. Ordering can be changed after this item is saved.').'<p/>';
-}
-$table->endRow();
-
 
 //access level
 $table->startRow();
@@ -155,6 +153,13 @@ $table->endRow();
 
 $objForm->addToForm($table);
 
+//create heading
+if($editmode){
+  $h3->str = $this->objLanguage->languageText('mod_cmsadmin_editsection', 'cmsadmin');
+} else {
+    $h3->str = $this->objLanguage->languageText('mod_cmsadmin_addnewsection', 'cmsadmin').':'.'&nbsp;'.$arrSection['title'];
+}
+    
 print  $h3->show();
 
 print $objForm->show();

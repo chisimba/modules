@@ -46,10 +46,6 @@ $fields = array(
         'unsigned' => TRUE,
 
 		),
-    'catid' => array(
-		'type' => 'text',
-        'length' => 32
-		),
 	'created' => array(
 		'type' => 'date',
 
@@ -110,8 +106,8 @@ $fields = array(
 
 		),
     'parentid' => array(
-		'type' => 'integer',
-        'length' => 11,
+		'type' => 'text',
+        'length' => 32,
         'unsigned' => TRUE,
 
 		),

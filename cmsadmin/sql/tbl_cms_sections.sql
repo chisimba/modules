@@ -9,6 +9,14 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
+	'rootid' => array(
+		'type' => 'text',
+		'length' => 32
+		),
+	'parentid' => array(
+		'type' => 'text',
+		'length' => 32
+		),
 	'title' => array(
 		'type' => 'text',
 		'length' => 50
@@ -21,7 +29,7 @@ $fields = array(
 		'type' => 'text',
 		'length' => 100
 		),
-    'image_position' => array(
+   'image_position' => array(
 		'type' => 'text',
 		'length' => 10
 		),
@@ -34,7 +42,7 @@ $fields = array(
 		'length' => 255,
 
 		),
-    'checked_out' => array(
+   'checked_out' => array(
 		'type' => 'integer',
         'length' => 11,
         'unsigned' => TRUE,
