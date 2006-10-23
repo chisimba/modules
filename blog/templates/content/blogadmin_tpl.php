@@ -6,6 +6,7 @@ $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
 //$this->loadClass('heading', 'htmlelements');
 $this->loadClass('href', 'htmlelements');
+$this->loadClass('htmlarea', 'htmlelements');
 
 $tt = $this->newObject('domtt', 'htmlelements');
 $pane = &$this->newObject('tabpane', 'htmlelements');
@@ -63,20 +64,41 @@ $catform = new form('catadd', $this->uri(array(
 )));
 
 $cfieldset = $this->getObject('fieldset', 'htmlelements');
-$cfieldset->setLegend($objLanguage->languageText('mod_blog_catname', 'blog'));
-$catadd = $this->getObject('htmltable', 'htmlelements');
+$cfieldset->setLegend($objLanguage->languageText('mod_blog_catdetails', 'blog'));
+$catadd = $this->newObject('htmltable', 'htmlelements');
 $catadd->cellpadding = 5;
 //category name field
 $catadd->startRow();
 $clabel = new label($objLanguage->languageText('mod_blog_catname', 'blog') .':', 'input_catname');
 $catname = new textinput('catname');
-$catadd->addCell($clabel->show() , 150, NULL, 'right');
+$catadd->addCell($clabel->show());
 $catadd->addCell($catname->show());
 $catadd->endRow();
 
-
+$catadd->startRow();
+$dlabel = new label($objLanguage->languageText('mod_blog_catparent', 'blog') .':', 'input_catparent');
 //category parent field (dropdown)
+//get a list of the parent cats
+$pcats = $this->objDbBlog->getAllCats($userid);
+$addDrop = new dropdown('catparent');
+$addDrop->addOption(0, $this->objLanguage->languageText("mod_blog_defcat","blog"));
+foreach($pcats as $adds) {
+   $addDrop->addOption($adds['id'], $adds['cat_name']);
+}
+$catadd->addCell($dlabel->show());
+$catadd->addCell($addDrop->show());
+$catadd->endRow();
 
+//start a htmlarea for the category description (optional)
+//$catadd->startRow();
+$desclabel = new label($objLanguage->languageText('mod_blog_catdesc', 'blog') .':', 'input_catdesc');
+$cdesc = $this->newObject('htmlarea','htmlelements');
+$cdesc->setName('catdesc');
+//$cdesc->setBasicToolBar();
+$cdesc->showFCKEditor();
+$catadd->addCell($desclabel->show());
+$catadd->addCell($cdesc->show());
+$catadd->endRow();
 
 $cfieldset->addContent($catadd->show());
 $catform->addToForm($cfieldset->show());
@@ -86,19 +108,12 @@ $this->objCButton->setToSubmit();
 $catform->addToForm($this->objCButton->show());
 $catform = $catform->show();
 
-
-
-
-
 //Middle column - dashboard
 $pane->addTab(array(
     'name' => 'categories',
-    'content' => $catform
+    'content' => $ctable . "<br />" . $catform
 ));
-$pane->addTab(array(
-    'name' => 'links',
-    'content' => 'blogroll etc'
-));
+
 
 $middleColumn .= $pane->show();
 
