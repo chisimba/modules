@@ -27,7 +27,12 @@
      $instruction = $this->objLanguage->languageText('mod_marketingrecruitmentforum_instruction','marketingrecruitmentforum');
      $click = $this->objLanguage->languageText('mod_marketingrecruitmentforum_click','marketingrecruitmentforum');
      $go  = $this->objLanguage->languageText('word_go');
-/*------------------------------------------------------------------------------*/              
+/*------------------------------------------------------------------------------*/      
+    /**
+     *create a link to print the information selected by user
+     */
+     $PrintCardLink = array('params' => array("action" => "NULL"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Print');         
+/*------------------------------------------------------------------------------*/        
     /**
      *create dropdwonlist with all schoolnames
      */
@@ -67,8 +72,9 @@
      */         
     $Studcardinfo = & $this->newObject('tabbox','marketingrecruitmentforum');
     $Studcardinfo->tabName = 'OutputInfo';
- 
-    $Studcardinfo->addTab('studcard', 'All students completed information cards',$results);
+    
+    //. $PrintCardLink->show()
+    $Studcardinfo->addTab('studcard', 'All students completed information cards',"<div align=\"right\">" .'<br />' . "</div>" .$results);
     $Studcardinfo->addTab('studschool', 'Students from a certain school',$schoollist->show() . ' '.$this->objButtonGo->show().' <br />'. '<br />' . $schoolresults);
     $Studcardinfo->addTab('studexemption', 'Students that Qualify for exemption',$exemption);
     $Studcardinfo->addTab('relsub', 'Students with relevant subjects',$relsubject);
