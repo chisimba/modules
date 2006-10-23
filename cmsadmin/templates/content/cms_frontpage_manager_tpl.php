@@ -79,34 +79,6 @@ if(empty($files)){
   $middleColumnContent .= "<span class='noRecordsMessage' >".$this->objLanguage->languageText('mod_cmsadmin_nopagesonfrontpage', 'cmsadmin')."</span>";  
 }
 
-echo  '<ul class="tree">
-<li><a href="#">item 1</a>
-<ul>
-<li><a href="#">item 1.1</a></li>
-<li class="closed"><a href="#">item 1.2</a>
-<ul>
-<li><a href="#">item 1.2.1</a></li>
-<li class ="closed"><a href="#">item 1.2.2</a>
-<ul>
-<li><a href="#">item 1.2.1.1</a></li>
-<li><a href="#">item 1.2.1.1</a></li>
-</ul>
-</li>
-<li><a href="#">item 1.2.3</a></li>
-</ul>
-</li>
-<li><a href="#">item 1.3</a></li>
-</ul>
-</li>
-<li><a href="#">item 2</a>
-<ul>
-<li><a href="#">item 2.1</a></li>
-<li><a href="#">item 2.2</a></li>
-<li><a href="#">item 2.3</a></li>
-</ul>
-</li>
-</ul>';
-
 echo $middleColumnContent;
 
 ?>
