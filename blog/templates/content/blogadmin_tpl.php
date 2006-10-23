@@ -1,9 +1,12 @@
 <?php
 
 //initiate objects
-$heading = &$this->newObject('htmlheading', 'htmlelements');
-$objForm = $this->newObject('form','htmlelements');
+$this->loadClass('label', 'htmlelements');
+$this->loadClass('textinput', 'htmlelements');
+$this->loadClass('form', 'htmlelements');
+//$this->loadClass('heading', 'htmlelements');
 $this->loadClass('href', 'htmlelements');
+
 $tt = $this->newObject('domtt', 'htmlelements');
 $pane = &$this->newObject('tabpane', 'htmlelements');
 
@@ -54,6 +57,35 @@ else {
 	$ctable = $this->objLanguage->languageText("mod_blog_nocats", "blog");
 }
 
+//add a new category form:
+$catform = new form('catadd', $this->uri(array(
+    'action' => 'catadd'
+)));
+
+$cfieldset = $this->getObject('fieldset', 'htmlelements');
+$cfieldset->setLegend($objLanguage->languageText('mod_blog_catname', 'blog'));
+$catadd = $this->getObject('htmltable', 'htmlelements');
+$catadd->cellpadding = 5;
+//category name field
+$catadd->startRow();
+$clabel = new label($objLanguage->languageText('mod_blog_catname', 'blog') .':', 'input_catname');
+$catname = new textinput('catname');
+$catadd->addCell($clabel->show() , 150, NULL, 'right');
+$catadd->addCell($catname->show());
+$catadd->endRow();
+
+
+//category parent field (dropdown)
+
+
+$cfieldset->addContent($catadd->show());
+$catform->addToForm($cfieldset->show());
+$this->objCButton = &new button($objLanguage->languageText('word_update', 'blog'));
+$this->objCButton->setValue($objLanguage->languageText('word_update', 'blog'));
+$this->objCButton->setToSubmit();
+$catform->addToForm($this->objCButton->show());
+$catform = $catform->show();
+
 
 
 
@@ -61,7 +93,7 @@ else {
 //Middle column - dashboard
 $pane->addTab(array(
     'name' => 'categories',
-    'content' => $ctable
+    'content' => $catform
 ));
 $pane->addTab(array(
     'name' => 'links',
