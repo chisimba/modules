@@ -15,7 +15,7 @@ $middleColumn .= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog
 $middleColumn .= "<br />";
 
 $homelink = new href($this->uri(array('action' => '', 'module' => '_default')), $this->objLanguage->languageText("mod_blog_loginhere", "blog"));
-$middleColumn .= $homelink->show();
+$middleColumn .= "<center>" .$homelink->show() . "</center>";
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());
