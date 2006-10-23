@@ -17,6 +17,6 @@ $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());
 $cssLayout->setRightColumnContent($rightSideColumn);
 echo $cssLayout->show();
-sleep(3);
-$this->nextAction(array('module' => '_default'));
+//sleep(3);
+//$this->nextAction(array('module' => '_default'));
 ?>
