@@ -139,6 +139,10 @@ class marketingrecruitmentforum extends controller
             case  'showsearchschool':
                 return 'searchschools_tpl.php';
             break;
+            
+            case  'showreportinfo':
+                return  'reports_tpl.php';
+            break;
 /****************************************************************************************************************/            
             case  'showstudschool': 
                   $schooval = $this->getParam('schoollistnames');
