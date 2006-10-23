@@ -62,8 +62,8 @@ class quotes extends controller
                 $this->setVar('str', $this->objLanguage->languageText("phrase_actionunknown","quotes").": ".$action);
                 return 'dump_tpl.php';
 
-        }#switch
-    } # dispatch
+        }//switch
+    } // dispatch
     
     /**
     * Override the default requirement for login

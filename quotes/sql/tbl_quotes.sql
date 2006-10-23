@@ -13,30 +13,30 @@ $fields = array(
 		'notnull'=> 1
 		),
 	'quote' => array(
-		'type'=>'text'
+		'type'=>'clob'
 		),
 	'whosaidit' => array(
 		'type'=>'text',
 		'length'=> 150
 		),
 	'datecreated' => array(
-		'type' => 'date'
+		'type' => 'timestamp'
 		),
 	'creatorid' => array(
 		'type' => 'text',
 		'length' => 32
 		),
 	'datemodified' => array(
-		'type'=> 'date'
+		'type'=> 'timestamp'
 		),
 	'modifierid' => array(
 		'type' => 'text',
 		'length' => 32 	
 		),
 	'modified' => array(
-		'type' => 'text',
-		'length' => 14,
-		'notnull' => 1
+		'type' => 'timestamp',
+		//'length' => 14,
+		'notnull' => TRUE
 		)
 	);
 ?>

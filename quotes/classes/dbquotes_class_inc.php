@@ -9,6 +9,11 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 * Model class for the table tbl_quotes
+*
+* @author Derek Keats
+*
+* $Id: dbquote_class_inc.php,v 1.1 2006/09/14 08:19:14 Abdurahim Ported to PHP5
+*
 */
 class dbquotes extends dbTable
 {
@@ -23,49 +28,60 @@ class dbquotes extends dbTable
 
     /**
     * Save method for editing a record in this table
-    *@param string $mode: edit if coming from edit, add if coming from add
+    * @param string $mode: edit if coming from edit, add if coming from add
     */
     public function saveRecord($mode, $userId)
-    {
-        $id=$this->getParam('id', NULL);
-        $quote = $this->getParam('quote', NULL);
-        $whosaidit = $this->getParam('whosaidit', NULL);
+    {   try
+        {
+            $id=$this->getParam('id', NULL);
+            $quote = $this->getParam('quote', NULL);
+            $whosaidit = $this->getParam('whosaidit', NULL);
 
-        // if edit use update
-        if ($mode=="edit") {
-            $this->update("id", $id, array(
-            'quote' => $quote,
-            'whosaidit' => $whosaidit,
-            'datemodified' => date("Y/m/d H:i:s"),
-            'modified' => date("Y/m/d"),
-            'modifierid' => $this->objUser->userId()));
+            // if edit use update
+            if ($mode=="edit") {
+                $this->update("id", $id, array(
+                'quote' => $quote,
+                'whosaidit' => $whosaidit,
+                'datemodified' => date("r"),
+                'modified' => date("r"),
+                'modifierid' => $this->objUser->userId()));
 
-        }#if
-        // if add use insert
-        if ($mode=="add") {
-            $this->insert(array(
-            'quote' => $quote,
-            'whosaidit' => $whosaidit,
-            'datecreated' => date("Y/m/d H:i:s"),
-            'creatorid' => $this->objUser->userId(),
-            'modified' => date("Y/m/d")));
+            }//if
+            // if add use insert
+            if ($mode=="add") {
+                $this->insert(array(
+                'quote' => $quote,
+                'whosaidit' => $whosaidit,
+                'datecreated' => date("r"),
+                'creatorid' => $this->objUser->userId(),
+                'modified' => date("r")));
 
-        }#if
-    }#function
+            }//if
+        } catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
+        }
+    }//function
 
     public function getRandom()
-    {
-        $res = $this->getAll();
-        if(!empty($res))
+    {   try{
+            $res = $this->getAll();
+            if(!empty($res))
+            {
+        	   $rand_keys = array_rand($res,1);
+			 return $res[$rand_keys];
+            }
+            else {
+        	   return NULL;
+            }
+        }catch (customException $e)
         {
-        	$rand_keys = array_rand($res,1);
-			return $res[$rand_keys];
-        }
-        else {
-        	return NULL;
+        	echo customException::cleanUp($e);
+        	die();
         }
     }
 
 
-} #end of class
+} //end of class
 ?>

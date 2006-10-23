@@ -93,13 +93,12 @@ class quotesadmin extends controller
                 $this->setVar('str', $this->objLanguage->languageText("phrase_actionunknown").": ".$action);
                 return 'dump_tpl.php';
 
-        }#switch
-    } # dispatch
+        }//switch
+    } // dispatch
 
 
-    /**
-    
-*
+    /** 
+    *
     * Method to retrieve the data for edit and prepare 
     * the vars for the edit template.
     *    @param string $mode The edit or add mode @values edit | add
@@ -114,7 +113,7 @@ class quotesadmin extends controller
         }
         // Get the data for edit
         $this->setVar('ar', $this->objDbquotes->getRow('id', $keyvalue));
-    }#getForedit
+    }//getForedit
 
-} #end of class
+} //end of class
 ?>

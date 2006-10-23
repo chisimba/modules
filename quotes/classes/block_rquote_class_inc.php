@@ -7,10 +7,9 @@ if (!$GLOBALS['kewl_entry_point_run'])
 // end security check
 
 /**
-* A block to render a guestbook input form
+* A block to display a random quote
 *
 * @author Derek Keats
-
 *
 * $Id: block_rquote_class_inc.php,v 1.1 2006/09/14 08:19:14 Abdurahim Ported to PHP5
 *
@@ -44,8 +43,14 @@ class block_rquote extends object
     * class to render the guestbook interface
     */
     public function show()
-	{
-        $ar = $this->objDbquotes->getRandom();
-        return $ar['quote'] . "<br />&nbsp;&nbsp;--" . $ar['whosaidit'];
+	{  try{
+            $ar = $this->objDbquotes->getRandom();
+            return $ar['quote'] . "<br />&nbsp;&nbsp;--" . $ar['whosaidit'];
+        }
+       catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
+        }
     }
 }
