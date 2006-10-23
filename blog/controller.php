@@ -184,6 +184,19 @@ class blog extends controller
 				return 'blogadmin_tpl.php';
 				break;
 
+			case 'catadd':
+				$userid = $this->objUser->userId();
+				$catname = $this->getParam('catname');
+				$catparent = $this->getParam('catparent');
+				$catdesc = $this->getParam('catdesc');
+
+				$catarr = array('userid' => $userid, 'cat_name' => $catname, 'cat_nicename' => $catname, 'cat_desc' => $catdesc, 'cat_parent' => $catparent);
+				//insert the category into the db
+				$this->objDbBlog->setCats($userid, $catarr);
+
+				$this->nextAction('blogadmin');
+				break;
+
 
 			case 'testcats':
 				try {
