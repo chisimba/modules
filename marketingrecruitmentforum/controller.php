@@ -101,8 +101,9 @@ class marketingrecruitmentforum extends controller
             break;
             
             case  'showsearchslu':
-                return 'searchslu_tpl.php';
+                return 'studcardresults_tpl.php';
             break;
+            
             
             case  'submitinfo':
                   $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
@@ -110,10 +111,12 @@ class marketingrecruitmentforum extends controller
                   ///////////////////////////////////////////////////////
                   //submit studcard info
                   $studcarddata = $this->getSession('studentdata');
+                  //$faccoursedata  = $this->getSession('faccoursedata');
                   $this->dbstudentcard->addstudcard($studcarddata);
+                  //$this->dbstudentcard->addfaccourse($faccourse);
                   //submit slu activities
-                  $sluactivity = $this->getSession('sluactivitydata');
-                  $this->dbsluactivities->addsluactivity($sluactivity);
+                  //$sluactivity = $this->getSession('sluactivitydata');
+                  //$this->dbsluactivities->addsluactivity($sluactivity);
                   //////////////////////////////////////////////////////// 
                   //submit all school information
                   $schoolinfodata = $this->getSession('sluactivitydata');
@@ -137,16 +140,9 @@ class marketingrecruitmentforum extends controller
                 return 'searchschools_tpl.php';
             break;
 /****************************************************************************************************************/            
-            case  'displaysearch': 
-                //determine which template to display depending on which value in dropdown list is selected
-                $selectedvalue  = $this->getParam('searchlist');
-                
-                if($selectedvalue == 'All matriculants that completed information cards'){
-                  return 'studcardresults_tpl.php';
-                  
-                }else{
-                    return 'searchslu_tpl.php';
-                }
+            case  'showstudschool': 
+                  $schooval = $this->getParam('schoollistnames');
+                  $this->setVarByRef('schoollistnames', $schooval);
             break;
 /****************************************************************************************************************/            
             default:
@@ -176,9 +172,9 @@ class marketingrecruitmentforum extends controller
                              'datemodified'     =>  date('Y-m-d'),
                              'updated'          =>  date('Y-m-d'),
                              'date'         =>  $this->getParam('txtdate'),
-                             'schoolname'   =>  $this->getParam('$schoollist'),
                              'surname'          =>  $this->getParam('txtsurname'),
                              'name'             =>  $this->getParam('txtname'),
+                             'schoolname'   =>  $this->getParam('$schoollist'),
                              'postaddress'      =>  $this->getParam('postaladdress'),
                              'postcode'         =>  $this->getParam('txtpostalcode'),
                              'telnumber'        =>  $this->getParam('txttelnumber'),
@@ -190,9 +186,25 @@ class marketingrecruitmentforum extends controller
                              'sdcase'           =>  $this->getParam('sdcase'),
                         );
                         
-        $this->setSession('studentdata',$studentdata);
+     $this->setSession('studentdata',$studentdata);
+     }
+     
+/*------------------------------------------------------------------------------*/
+    /**
+     *create an array -- $facoursedata to store the info captured for student
+     *create a session variable to store the array info in
+     */
+  /*private function getfaccourse(){
+  
+     $faccoursedata = array( 'faculty'          =>  $this->getParam('facultylist'),
+                             'course'   =>  $this->getParam('txtcourse'),
+                             'relevantsubject'  =>  $this->getParam('relevantsubject'),
+                             'sdcase'           =>  $this->getParam('sdcase'),
+                      );
+                        
+     $this->setSession('faccoursedata',$faccoursedata);
+  } */  
       
-    }
 /*------------------------------------------------------------------------------*/    
   private function getSLUActivties(){
      
