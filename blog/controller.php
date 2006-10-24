@@ -171,6 +171,7 @@ class blog extends controller
 					$this->setVarByRef('posts', $posts);
 					$this->setVarByRef('linkcats', $linkcats);
 					$this->setVarByRef('cats', $catarr);
+					$this->setVarByRef('userid', $userid);
 					return 'myblog_tpl.php';
 				}
 				catch(customException $e) {
