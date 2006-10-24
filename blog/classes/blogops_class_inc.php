@@ -66,15 +66,22 @@ class blogops extends object
 
 	}
 
-	public function showBlogsLink()
+	public function showBlogsLink($featurebox = FALSE)
 	{
 		//set up a link to the other users blogs...
 		$oblogs = new href($this->uri(array('action' => 'allblogs')),$this->objLanguage->languageText("mod_blog_viewallblogs", "blog"), NULL);
-		$ret = $oblogs->show();
+		if($featurebox == FALSE)
+		{
+			$ret = $oblogs->show();
+		}
+		else {
+			$objFeatureBox = $this->getObject('featurebox', 'navigation');
+			$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_otherblogs","blog"), $oblogs->show());
+		}
 		return $ret;
 	}
 
-	public function showCatsMenu($cats)
+	public function showCatsMenu($cats, $featurebox = FALSE)
 	{
 		$objSideBar = $this->newObject('sidebar', 'navigation');
 		$nodes = array();
@@ -102,10 +109,18 @@ class blogops extends object
 			}
 			$ret .= $objSideBar->show($nodestoadd, NULL, NULL, 'blog');
 		}
-		return $ret;
+		if($featurebox == FALSE)
+		{
+			return $ret;
+		}
+		else {
+			$objFeatureBox = $this->getObject('featurebox', 'navigation');
+			$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_categories","blog"), $ret);
+			return $ret;
+		}
 	}
 
-	public function showLinkCats($linkcats)
+	public function showLinkCats($linkcats, $featurebox = FALSE)
 	{
 		$this->objUser = &$this->getObject('user', 'security');
 		//cycle through the link categories and display them
@@ -128,18 +143,39 @@ class blogops extends object
 				$ret .= "</ul>";
 			}
 		}
-		return $ret;
+		if($featurebox == FALSE)
+		{
+			return $ret;
+		}
+		else {
+			$objFeatureBox = $this->getObject('featurebox', 'navigation');
+			$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_linkcategories","blog"), $ret);
+			return $ret;
+		}
 	}
 
-	public function showAdminSection()
+	public function showAdminSection($featurebox = FALSE)
 	{
 		//admin section
-		$ret = "<em>" . $this->objLanguage->languageText("mod_blog_admin", "blog") . "</em><br />";
+		if($featurebox == FALSE)
+		{
+			$ret = "<em>" . $this->objLanguage->languageText("mod_blog_admin", "blog") . "</em><br />";
+		}
+		else {
+			$ret = NULL;
+		}
 		//blog admin page
 		$admin = new href($this->uri(array('action' => 'blogadmin')), $this->objLanguage->languageText("mod_blog_blogadmin", "blog"));
 		$ret .= $admin->show();
-
-		return $ret;
+		if($featurebox == FALSE)
+		{
+			return $ret;
+		}
+		else {
+			$objFeatureBox = $this->getObject('featurebox', 'navigation');
+			$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_admin","blog"), $ret);
+			return $ret;
+		}
 	}
 
 	public function showPosts($posts)
@@ -167,11 +203,13 @@ class blogops extends object
 		return $ret;
 	}
 
-	public function showFeeds()
+	public function showFeeds($featurebox = FALSE)
 	{
 		$leftCol = NULL;
-
-		$leftCol .= "<em>" . $this->objLanguage->languageText("mod_blog_feedheader", "blog") . "</em><br />";
+		if($featurebox == FALSE)
+		{
+			$leftCol .= "<em>" . $this->objLanguage->languageText("mod_blog_feedheader", "blog") . "</em><br />";
+		}
 		//RSS2.0
 		$rss2 = $this->getObject('geticon', 'htmlelements');
 		$rss2->setIcon('rss', 'gif', 'icons/filetypes');
@@ -220,7 +258,17 @@ class blogops extends object
 		$link = new href($this->uri(array('action' => 'feed', 'format' => 'html', 'userid' => $this->objUser->userid())),$this->objLanguage->languageText("mod_blog_word_html", "blog"));
 		$leftCol .= $html->show() . $link->show() . "<br />";
 
-		return $leftCol;
+		if($featurebox == FALSE)
+		{
+			return $leftCol;
+		}
+		else {
+			$objFeatureBox = $this->getObject('featurebox', 'navigation');
+			$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_feedheader","blog"), $leftCol);
+			return $ret;
+		}
+
+
 	}
 
 }

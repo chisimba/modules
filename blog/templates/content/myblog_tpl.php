@@ -8,21 +8,21 @@ $rightSideColumn = NULL; //$this->objLanguage->languageText('mod_blog_instructio
 $middleColumn = NULL;
 
 //show the link to all blogs
-$rightSideColumn .= $this->objblogOps->showBlogsLink();
+$rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
 
 //show the categories menu (if there are cats)
-$rightSideColumn .= $this->objblogOps->showCatsMenu($cats);
+$rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE);
 
-$rightSideColumn .= "<br />";
+//$rightSideColumn .= "<br />";
 
 //show the link categories (if any)
-$rightSideColumn .= $this->objblogOps->showLinkCats($linkcats);
+$rightSideColumn .= $this->objblogOps->showLinkCats($linkcats, TRUE);
 
 //add a break to the righsidecol and carry on with the meta data and admin sections
-$rightSideColumn .= "<br />";
+//$rightSideColumn .= "<br />";
 
 //show the admin section (if user is logged in)
-$rightSideColumn .= $this->objblogOps->showAdminSection();
+$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
 
 //show all the posts
 $middleColumn .= $this->objblogOps->showPosts($posts);
@@ -33,7 +33,7 @@ $leftCol = $leftMenu->show();
 $leftCol .= "<br />";
 
 //show the feeds section
-$leftCol .= $this->objblogOps->showFeeds();
+$leftCol .= $this->objblogOps->showFeeds(TRUE);
 
 //dump the cssLayout to screen
 $cssLayout->setMiddleColumnContent($middleColumn);
