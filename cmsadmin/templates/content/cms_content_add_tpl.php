@@ -25,8 +25,7 @@ $menuTextInput = & $this->newObject('textinput', 'htmlelements');
 $bodyInput = & $this->newObject('htmlarea', 'htmlelements');
 $introInput= & $this->newObject('htmlarea', 'htmlelements');
 $h3 = &$this->newObject('htmlheading', 'htmlelements');
-$sections = & $this->newObject('dropdown', 'htmlelements');
-$category = & $this->newObject('dropdown', 'htmlelements');
+$sections = & $this->_objUtils->getTreeDropdown();
 $button =  & $this->newObject('button', 'htmlelements');
 $table2 = & $this->newObject('htmltable', 'htmlelements');
 $frontPage = & $this->newObject('checkbox', 'htmlelements');
@@ -96,14 +95,6 @@ $bodyInput->name = 'body';
 $introInput->name = 'intro';
 $objForm->addRule('menutext', 'Please add a Menu Text', 'required');
 
-$sections->name= 'section';
-$sections->addFromDB($this->_objSections->getSections(),'title','id',$arrContent['sectionid']);
-$sections->label='Sections';
-
-//$category->name= 'catid';
-//$category->addFromDB($this->_objCategories->getCategories(),'title','id',$arrContent['catid']);
-//$category->label='Sections';
-
 $button->setToSubmit();
 $button->value = 'Save';
 
@@ -118,7 +109,7 @@ $table->startRow();
 $table->addCell('Title');
 $table->addCell($titleInput->show());
 $table->addCell('Section');
-$table->addCell($sections->show());
+$table->addCell($sections);
 
 $table->endRow();
 
