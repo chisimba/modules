@@ -22,6 +22,8 @@ ul.tree, ul.tree ul {
 
 ul.tree ul {
 	margin-left: 16px;
+	white-space: nowrap;
+	overflow: hidden;
 		
 }
 ul.tree li.closed ul {
@@ -30,11 +32,14 @@ ul.tree li.closed ul {
 
 
 ul.tree li {
+	white-space: nowrap;
+	overflow: hidden;
 	list-style: none;
 	background: url(i-repeater.gif) 0 0 repeat-y;
 	display: block;
 	width: auto;
-	/* background-color:#FFFFFF; */
+        padding-left : 0px; 
+
 }
 
 
@@ -42,6 +47,8 @@ ul.tree li {
 ul.tree li.last {
 	list-style: none;
 	background-image: none;
+
+
 }
 
 
@@ -91,9 +98,11 @@ ul.tree a  {
 }
 ul.tree span.a.children a {
 	background-image: url(page-openfoldericon.png);
+//	background-image: none;
 }
 ul.tree span.a.children.spanClosed a {
 	background-image: url(page-foldericon.png);
+//	background-image: none;
 }
 
 /* Unformatted tree */
