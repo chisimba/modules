@@ -66,6 +66,19 @@ class blogops extends object
 
 	}
 
+	public function loginBox($featurebox = FALSE)
+	{
+		$objLogin = & $this->getObject('logininterface', 'security');
+		if($featurebox == FALSE)
+		{
+			return $objLogin->renderLoginBox();
+		}
+		else {
+			$objFeatureBox = $this->getObject('featurebox', 'navigation');
+			return $objFeatureBox->show($this->objLanguage->languageText("word_login", "system"), $objLogin->renderLoginBox());
+		}
+	}
+
 	public function showBlogsLink($featurebox = FALSE)
 	{
 		//set up a link to the other users blogs...
