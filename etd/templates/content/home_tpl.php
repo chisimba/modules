@@ -1,0 +1,24 @@
+<?php
+/**
+* Template to display the prelogin page for the ETD repository
+* @access public
+*/
+
+$this->setLayoutTemplate('etd_layout_tpl.php');
+
+$objHead =& $this->newObject('htmlheading', 'htmlelements');
+
+$head = $objLanguage->languageText('mod_etd_welcometoetd', 'etd');
+
+$institution = $this->objConfig->getinstitutionName();
+$shortname = $this->objConfig->getinstitutionShortName();
+$txtIntro = $objLanguage->code2Txt('mod_etd_welcomeintro', 'etd', array('institution' => $institution, 'shortname' => $shortname));
+
+$objHead->str = $head;
+$objHead->type = 1;
+$str = $objHead->show();
+
+$str .= '<p>'.$txtIntro.'</p>';
+
+echo $str;
+?>
