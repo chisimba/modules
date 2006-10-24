@@ -295,5 +295,40 @@ class blogops extends object
 
 	}
 
+	public function quickCats($featurebox = FALSE)
+	{
+		$qcatform = new form('qcatadd', $this->uri(array('action' => 'catadd', 'mode' => 'quickadd')));
+		$qcatname = new textinput('catname');
+		$qcatname->size = 15;
+		$qcatform->addToForm($qcatname->show());
+		$this->objqCButton = &new button($this->objLanguage->languageText('word_update', 'blog'));
+		$this->objqCButton->setValue($this->objLanguage->languageText('word_update', 'blog'));
+		$this->objqCButton->setToSubmit();
+		$qcatform->addToForm($this->objqCButton->show());
+		$qcatform = $qcatform->show();
+		if($featurebox == FALSE)
+		{
+			return $qcatform;
+		}
+		else {
+			$objFeatureBox = $this->getObject('featurebox', 'navigation');
+			$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_qcatdetails","blog"),
+			$this->objLanguage->languageText("mod_blog_quickaddcat", "blog") . "<br />" . $qcatform);
+			return $ret;
+		}
+	}
+
+	public function quickCatAdd($list = NULL, $userid)
+	{
+		$list = explode(",", $list);
+		foreach($list as $items)
+		{
+			//echo $items;
+			$insarr = array('userid' => $userid, 'cat_name' => $items, 'cat_nicename' => $items, 'cat_desc' => '', 'cat_parent' => 0);
+			$this->objDbBlog->setCats($userid, $insarr);
+		}
+
+	}
+
 }
 ?>

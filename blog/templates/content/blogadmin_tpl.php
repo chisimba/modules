@@ -124,6 +124,9 @@ $pane->addTab(array(
 
 $middleColumn .= $pane->show();
 
+
+$rightSideColumn .= $this->objblogOps->quickCats(TRUE);
+
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());
 $cssLayout->setRightColumnContent($rightSideColumn);

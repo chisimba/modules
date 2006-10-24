@@ -186,10 +186,19 @@ class blog extends controller
 				break;
 
 			case 'catadd':
+				$mode = $this->getParam('mode');
+				$list = $this->getParam('catname');
 				$userid = $this->objUser->userId();
 				$catname = $this->getParam('catname');
 				$catparent = $this->getParam('catparent');
 				$catdesc = $this->getParam('catdesc');
+				//category quick add
+				if($mode == 'quickadd')
+				{
+					$this->objblogOps->quickCatAdd($list, $userid);
+					$this->nextAction('blogadmin');
+					break;
+				}
 
 				$catarr = array('userid' => $userid, 'cat_name' => $catname, 'cat_nicename' => $catname, 'cat_desc' => $catdesc, 'cat_parent' => $catparent);
 				//insert the category into the db
