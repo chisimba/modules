@@ -219,29 +219,7 @@ class cmstree extends object
 	 */
     public function getChildNodes($parentId)
     {
-        $user='root';
-        $password='';
-        $server='127.0.0.1';
-        $database='chisimba';
-
-        $sql = "SELECT * FROM tbl_cms_sections WHERE parentid='".$parentId."' ORDER BY title";
-
-        $conn = mysql_connect($server, $user, $password);
-        if (!$conn) {
-            die('Could not connect: ' . mysql_error());
-        }
-        mysql_select_db($database, $conn);
-        $returnresult = mysql_query($sql, $conn);
-        $result = array();
-        $i = 0;
-        while ($row = mysql_fetch_assoc($returnresult)){
-            $result[$i] = $row;
-            $i++;
-        }
-
-         mysql_close($conn);
-
-         return $result;
+        return $this->_objSections->getSubSectionsInSection($parentId);
     }
 
 	/**
@@ -252,29 +230,7 @@ class cmstree extends object
 	 */
     public function getNode($id)
     {
-        $user='root';
-        $password='';
-        $server='127.0.0.1';
-        $database='chisimba';
-
-        $sql = "SELECT * FROM tbl_cms_sections WHERE id='".$id."' ORDER BY title";
-
-        $conn = mysql_connect($server, $user, $password);
-        if (!$conn) {
-            die('Could not connect: ' . mysql_error());
-        }
-        mysql_select_db($database, $conn);
-        $returnresult = mysql_query($sql, $conn);
-        $result = array();
-        $i = 0;
-        while ($row = mysql_fetch_assoc($returnresult)){
-            $result[$i] = $row;
-            $i++;
-        }
-
-         mysql_close($conn);
-
-         return $result;
+         return $this->_objSections->getSection($id);
     }
 
 	/**
@@ -285,29 +241,7 @@ class cmstree extends object
 	 */
     public function getContent($sectionId)
     {
-        $user='root';
-        $password='';
-        $server='127.0.0.1';
-        $database='chisimba';
-
-        $sql = "SELECT * FROM tbl_cms_content WHERE sectionid='".$sectionId."' ORDER BY title";
-
-        $conn = mysql_connect($server, $user, $password);
-        if (!$conn) {
-            die('Could not connect: ' . mysql_error());
-        }
-        mysql_select_db($database, $conn);
-        $returnresult = mysql_query($sql, $conn);
-        $result = array();
-        $i = 0;
-        while ($row = mysql_fetch_assoc($returnresult)){
-            $result[$i] = $row;
-            $i++;
-        }
-
-         mysql_close($conn);
-
-         return $result;
+         return $this->_objContent->getPagesInSection($sectionId);
     }
 
 	/**
@@ -318,29 +252,7 @@ class cmstree extends object
 	 */
     public function getChildNodeCount($parentId)
     {
-        $user='root';
-        $password='';
-        $server='127.0.0.1';
-        $database='chisimba';
-
-        $sql = "SELECT COUNT(*) AS cnt FROM tbl_cms_sections WHERE parentid='".$parentId."'";
-
-        $conn = mysql_connect($server, $user, $password);
-        if (!$conn) {
-            die('Could not connect: ' . mysql_error());
-        }
-        mysql_select_db($database, $conn);
-        $returnresult = mysql_query($sql, $conn);
-        $result = array();
-        $i = 0;
-        while ($row = mysql_fetch_assoc($returnresult)){
-            $result[$i] = $row;
-            $i++;
-        }
-
-         mysql_close($conn);
-
-         return $result[0]['cnt'];
+         return $this->_objSections->getNumSubSections($parentId);
     }
 
 	/**
@@ -349,31 +261,9 @@ class cmstree extends object
 	 * @return int
 	 * @access public
 	 */
-    public function getNodeContentCount($id)
+    public function getNodeContentCount($sectionId)
     {
-        $user='root';
-        $password='';
-        $server='127.0.0.1';
-        $database='chisimba';
-
-        $sql = "SELECT COUNT(*) AS cnt FROM tbl_cms_content WHERE sectionid='".$id."'";
-
-        $conn = mysql_connect($server, $user, $password);
-        if (!$conn) {
-            die('Could not connect: ' . mysql_error());
-        }
-        mysql_select_db($database, $conn);
-        $returnresult = mysql_query($sql, $conn);
-        $result = array();
-        $i = 0;
-        while ($row = mysql_fetch_assoc($returnresult)){
-            $result[$i] = $row;
-            $i++;
-        }
-
-        mysql_close($conn);
-
-        return $result[0]['cnt'];
+        return $this->_objContent->getNumberOfPagesInSection($sectionId);
     }
 
 }
