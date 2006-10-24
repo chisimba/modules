@@ -29,7 +29,7 @@ $leftCol = NULL;
 $leftCol = $this->objblogOps->loginBox(TRUE);
 
 //show the feeds section
-$leftCol .= $this->objblogOps->showFeeds(TRUE);
+$leftCol .= $this->objblogOps->showFeeds(&$userid, TRUE);
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());
