@@ -109,11 +109,19 @@ class blogops extends object
 			}
 			$ret .= $objSideBar->show($nodestoadd, NULL, NULL, 'blog');
 		}
+		else {
+			//no cats defined
+			$ret = NULL;
+		}
 		if($featurebox == FALSE)
 		{
 			return $ret;
 		}
 		else {
+			if(is_null($ret))
+			{
+				return NULL;
+			}
 			$objFeatureBox = $this->getObject('featurebox', 'navigation');
 			$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_categories","blog"), $ret);
 			return $ret;
@@ -205,6 +213,7 @@ class blogops extends object
 
 	public function showFeeds($featurebox = FALSE)
 	{
+		$this->objUser = $this->getObject('user', 'security');
 		$leftCol = NULL;
 		if($featurebox == FALSE)
 		{
