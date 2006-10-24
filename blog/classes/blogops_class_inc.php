@@ -172,6 +172,10 @@ class blogops extends object
 		}
 		else {
 			$objFeatureBox = $this->getObject('featurebox', 'navigation');
+			if(!isset($ret))
+			{
+				$ret = NULL;
+			}
 			$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_linkcategories","blog"), $ret);
 			return $ret;
 		}
