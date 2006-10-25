@@ -115,6 +115,19 @@ class dbblog extends dbTable
 		}
 	}
 
+	/**
+	 * Method to map the child id of a category to a nice name
+	 *
+	 * @param mixed $childId
+	 * @return array
+	 */
+	public function mapKid2Parent($childId)
+	{
+		$this->_changeTable('tbl_blog_cats');
+		$ret = $this->getAll("WHERE id = '$childId'");
+		return $ret;
+	}
+
 
 	//Methods to manipulate the link categories
 
@@ -188,6 +201,8 @@ class dbblog extends dbTable
         }
 
 	}
+
+
 
 
 

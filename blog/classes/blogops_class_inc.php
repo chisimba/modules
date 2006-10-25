@@ -429,6 +429,15 @@ class blogops extends object
 			{
 				//start the cats rows
 				$cattable->startRow();
+				if($rows['cat_parent'] != '0')
+				{
+					$maparr = $this->objDbBlog->mapKid2Parent($rows['cat_parent']);
+					$rows['cat_parent'] = "<em>" . $maparr[0]['cat_name'] . "</em>";
+				}
+				if($rows['cat_parent'] == '0')
+				{
+					$rows['cat_parent'] = "<em>" . $this->objLanguage->languageText("mod_blog_word_default", "blog") . "</em>";
+				}
 				$cattable->addCell($rows['cat_parent']);
 				//$cattable->addCell($rows['cat_name']);
 				$cattable->addCell($rows['cat_nicename']);
