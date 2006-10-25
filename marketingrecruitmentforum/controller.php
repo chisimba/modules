@@ -155,12 +155,23 @@ class marketingrecruitmentforum extends controller
                 $this->setLayoutTemplate('reports_layout_tpl.php');
                 return  'entryqualify_tpl.php';
             break;
+            
+            case  'totalfaculty':
+                return  'facultyinterest_tpl.php';
+            break;
+            
+            case  'reportdropdown':
+                //determine which count to show
+            break;
 /****************************************************************************************************************/            
-            case  'showstudschool': 
-                  //$schooval = $this->getParam('schoollistnames');
-                  //$this->setVarByRef('schoollistnames', $schooval);
+            case  'showstudschool':
+                    
+                  $useToPopTbl  = $this->getParam('schoollistnames',NULL);    //get the value of school selected
+                  //call the object that gets schools with selected name            
+                  $school = $this->dbstudentcard->getstudschool($useToPopTbl);
+                  $this->setVarByRef('school', $school);
                   $this->setLayoutTemplate('search_layout_tpl.php'); 
-               return 'studcardresults_tpl.php';
+                  return 'studcardresults_tpl.php';
             break;
 /****************************************************************************************************************/            
             default:

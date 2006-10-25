@@ -39,7 +39,7 @@
         
         $this->objtotal =& $this->newObject('htmlheading','htmlelements');
         $this->objtotal->type=3;
-        $this->objtotal->str=$objLanguage->languageText('mod_marketingrecruitmentforum_entrytot','marketingrecruitmentforum') .$displaytot ;
+        $this->objtotal->str=$objLanguage->languageText('mod_marketingrecruitmentforum_entrytotal','marketingrecruitmentforum') .$displaytot ;
         
         $this->objdate =& $this->newObject('htmlheading','htmlelements');
         $this->objdate->type=3;

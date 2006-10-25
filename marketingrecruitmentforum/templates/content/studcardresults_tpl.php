@@ -6,7 +6,6 @@
      */
      $this->loadClass('textinput','htmlelements');
      $this->loadClass('textarea','htmlelements');
-     $this->loadclass('button','htmlelements');
      $this->loadClass('tabbedbox', 'htmlelements');
     
      $this->objstudresults  = & $this->newObject('searchstudcard','marketingrecruitmentforum');
@@ -26,8 +25,7 @@
      */
      $instruction = $this->objLanguage->languageText('mod_marketingrecruitmentforum_instruction','marketingrecruitmentforum');
      $click = $this->objLanguage->languageText('mod_marketingrecruitmentforum_click','marketingrecruitmentforum');
-     $go  = $this->objLanguage->languageText('word_go');
-     
+    
 /*------------------------------------------------------------------------------*/      
     /**
      *create a link to print the information selected by user
@@ -53,29 +51,10 @@
 //          $schoollist->extra = 'onchange=" return changeDetails() "';
 //          $schoollist->extra = sprintf(' onChange ="javascript: %s"', $onchange );
        }
-       
+       $schoollist->extra = ' onChange="document.searchslu.submit()"'; 
+
+      
 /*------------------------------------------------------------------------------*/    
-    /**
-      * create button go
-      */
-      $this->objButtonGo  = new button('go', $go);
-      $this->objButtonGo->setToSubmit();
-      
-      /*$onClick = ' var selectedvalue = document.searchslu.schoollistnames;
-		                 
-                     var val  =  selectedvalue;
-                  if(val  ==  " "){
-          
-                        alert("Please select a school");
-                        return false;
-                  }//else{
-      
-                   //     alert("school name " + document.searchslu.schoollistnames.options[val].text);
-                   //     return true;
-                   '; 
-                         
-      $this->objButtonGo->extra = sprintf(' onClick ="javascript: %s"', $onClick );*/
-/*------------------------------------------------------------------------------*/
     /**
      *call to all functions from class searchstudcard
      */         
@@ -86,6 +65,7 @@
       $faculty  = $this->objstudresults->studfaculty();
       $course = $this->objstudresults->studcourse();
       $area = $this->objstudresults->studarea();
+      $sdcase = $this->objstudresults->studsdcase();
 /*------------------------------------------------------------------------------*/
     /**
      *create tabpan and display search info
@@ -95,12 +75,13 @@
     
     //. $PrintCardLink->show()
     $Studcardinfo->addTab('studcard', 'All students completed information cards',"<div align=\"right\">" .'<br />' . "</div>" .$results);
-    $Studcardinfo->addTab('studschool', 'Students from a certain school',$schoollist->show() . ' '.$this->objButtonGo->show().' <br />'. '<br />' . $schoolresults);
+    $Studcardinfo->addTab('studschool', 'Students from a certain school','Please select a school to search by' . ' ' .$schoollist->show() . ' <br />'. '<br />' . $schoolresults);
     $Studcardinfo->addTab('studexemption', 'Students that Qualify for exemption',$exemption);
     $Studcardinfo->addTab('relsub', 'Students with relevant subjects',$relsubject);
     $Studcardinfo->addTab('studfac', 'Students by Faculty',$faculty);
     $Studcardinfo->addTab('studcourse', 'Students By Course',$course);
     $Studcardinfo->addTab('studarea', 'Students by Area',$area);
+    $Studcardinfo->addTab('studsdcase', 'All SD Cases',$sdcase);
     
 /*-------------------------------------------------------------------------------*/
     /**

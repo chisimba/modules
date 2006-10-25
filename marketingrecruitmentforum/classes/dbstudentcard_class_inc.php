@@ -53,10 +53,12 @@ class dbstudentcard extends dbTable{
  } 
 /*------------------------------------------------------------------------------*/
   //get all students from a certain school
- public function getstudschool($schoolname)
+ public function getstudschool($useToPopTbl)
  {    //FIX NB
-      $schoolname = $this->getParam('schoollistnames');
-      $studschool = $this->getAll($schoolname);
+      //$schoolname = $this->getParam('schoollistnames');
+      $stmt = "select surname,name,schoolname from tbl_studcard where schoolname = '$useToPopTbl'";
+      //$filter = 'where schoolname = ' . $useToPopTbl;
+      $studschool = $this->getArray($stmt);
       return  $studschool;
  }
 /*------------------------------------------------------------------------------*/ 
