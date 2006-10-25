@@ -18,6 +18,13 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 class blogops extends object
 {
 
+	/**
+	 * Standard init function called by the constructor call of Object
+	 *
+	 * @param void
+	 * @return void
+	 * @access public
+	 */
 	public function init()
 	{
 		try {
@@ -68,6 +75,12 @@ class blogops extends object
 
 	}
 
+	/**
+	 * Method to display the login box for prelogin blog operations
+	 *
+	 * @param bool $featurebox
+	 * @return string
+	 */
 	public function loginBox($featurebox = FALSE)
 	{
 		$objLogin = & $this->getObject('logininterface', 'security');
@@ -81,6 +94,13 @@ class blogops extends object
 		}
 	}
 
+	/**
+	 * Method to display a link to all the blogs on the system
+	 * Setting $featurebox = TRUE will display the link in a block style featurebox
+	 *
+	 * @param bool $featurebox
+	 * @return string
+	 */
 	public function showBlogsLink($featurebox = FALSE)
 	{
 		//set up a link to the other users blogs...
@@ -96,6 +116,14 @@ class blogops extends object
 		return $ret;
 	}
 
+	/**
+	 * Method to build and display the categories menu
+	 * Setting the optional featurebox parameter to true will display the categories in a featurebox block
+	 *
+	 * @param array $cats
+	 * @param bool $featurebox
+	 * @return string
+	 */
 	public function showCatsMenu($cats, $featurebox = FALSE)
 	{
 		$objSideBar = $this->newObject('sidebar', 'navigation');
@@ -143,6 +171,13 @@ class blogops extends object
 		}
 	}
 
+	/**
+	 * Method to display a link categories box
+	 *
+	 * @param array $linkcats
+	 * @param bool $featurebox
+	 * @return string
+	 */
 	public function showLinkCats($linkcats, $featurebox = FALSE)
 	{
 		$this->objUser = &$this->getObject('user', 'security');
@@ -181,6 +216,12 @@ class blogops extends object
 		}
 	}
 
+	/**
+	 * Method to display the link to blog admin on post login
+	 *
+	 * @param bool $featurebox
+	 * @return string
+	 */
 	public function showAdminSection($featurebox = FALSE)
 	{
 		//admin section
@@ -205,6 +246,12 @@ class blogops extends object
 		}
 	}
 
+	/**
+	 * Method to display the posts per user
+	 *
+	 * @param array $posts
+	 * @return string
+	 */
 	public function showPosts($posts)
 	{
 		$ret = NULL;
@@ -230,6 +277,13 @@ class blogops extends object
 		return $ret;
 	}
 
+	/**
+	 * Method to build and create the feeds options box
+	 *
+	 * @param integer $userid
+	 * @param bool $featurebox
+	 * @return string
+	 */
 	public function showFeeds($userid, $featurebox = FALSE)
 	{
 		$this->objUser = $this->getObject('user', 'security');
@@ -299,6 +353,13 @@ class blogops extends object
 
 	}
 
+	/**
+	 * Method to quickly add a category to the default category (parent = 0)
+	 * Can take a comma delimited list as an input arg
+	 *
+	 * @param bool $featurebox
+	 * @return string
+	 */
 	public function quickCats($featurebox = FALSE)
 	{
 		$qcatform = new form('qcatadd', $this->uri(array('action' => 'catadd', 'mode' => 'quickadd')));
@@ -322,6 +383,13 @@ class blogops extends object
 		}
 	}
 
+	/**
+	 * Method to insert the quick add categories to the db
+	 *
+	 * @param string $list
+	 * @param integer $userid
+	 * @return void
+	 */
 	public function quickCatAdd($list = NULL, $userid)
 	{
 		$list = explode(",", $list);
@@ -334,6 +402,12 @@ class blogops extends object
 
 	}
 
+	/**
+	 * Method to build and display the full scale category editor
+	 *
+	 * @param integer $userid
+	 * @return string
+	 */
 	public function categoryEditor($userid)
 	{
 		//get the categories layout sorted
@@ -427,6 +501,8 @@ class blogops extends object
 
 		return $ctable . "<br />" . $catform;
 	}
+
+
 
 }
 ?>
