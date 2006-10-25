@@ -16,6 +16,7 @@ class blog extends controller
 	public $objDbBlog;
 	public $objConfig;
 	public $objblogOps;
+	public $cleaner;
 
 	/**
      * Constructor method to instantiate objects and get variables
@@ -30,6 +31,7 @@ class blog extends controller
 			$this->objLanguage = $this->getObject('language', 'language');
 			$this->objDbBlog = $this->getObject('dbblog');
 			$this->objblogOps = &$this->getObject('blogops');
+			$this->cleaner = &$this->getObject('htmlcleaner', 'utilities');
 			//config object
 			$this->objConfig = $this->getObject('altconfig', 'config');
 			//Get the activity logger class
@@ -92,7 +94,7 @@ class blog extends controller
 				$userid = $this->getParam('userid');
 
 				//grab the feed items
-				$posts = $this->objDbBlog->getAllPosts($userid);
+				$posts = $this->objDbBlog->getAllPosts($userid, $catid = NULL);
 				foreach($posts as $feeditems)
 				{
 					$itemTitle = $feeditems['post_title'];
