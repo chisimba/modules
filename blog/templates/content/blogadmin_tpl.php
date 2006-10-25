@@ -24,12 +24,23 @@ $middleColumn = NULL;
 //left menu section
 $leftCol = $leftMenu->show();
 
+
+
+//posts section
+
+
+
+
 //get the category editor
 $catedit = $this->objblogOps->categoryEditor($userid);
 
 //Middle column - dashboard
 $pane->addTab(array(
-    'name' => 'categories',
+    'name' => $this->objLanguage->languageText("mod_blog_word_posts", "blog"),
+    'content' => 'Posts'
+));
+$pane->addTab(array(
+    'name' => $this->objLanguage->languageText("mod_blog_word_categories", "blog"),
     'content' => $catedit
 ));
 
@@ -38,7 +49,7 @@ $middleColumn .= $pane->show();
 
 
 $rightSideColumn .= $this->objblogOps->quickCats(TRUE);
-
+$rightSideColumn .= $this->objblogOps->quickPost($userid, TRUE);
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol);
 $cssLayout->setRightColumnContent($rightSideColumn);

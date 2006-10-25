@@ -195,6 +195,11 @@ class blog extends controller
 				//category quick add
 				if($mode == 'quickadd')
 				{
+					if(empty($list))
+					{
+						$this->nextAction('blogadmin');
+					    break;
+					}
 					$this->objblogOps->quickCatAdd($list, $userid);
 					$this->nextAction('blogadmin');
 					break;
@@ -205,6 +210,23 @@ class blog extends controller
 				$this->objDbBlog->setCats($userid, $catarr);
 
 				$this->nextAction('blogadmin');
+				break;
+
+			case 'postadd':
+				$mode = $this->getParam('mode');
+				$userid = $this->objUser->userId();
+				$posttitle = $this->getParam('posttitle');
+				$postcontent = $this->getParam('postcontent');
+				$cat = $this->getParam('cat');
+
+				//post quick add
+				if($mode == 'quickadd')
+				{
+					$this->objblogOps->quickPostAdd($userid, array('posttitle' => $posttitle, 'postcontent' => $postcontent, 'postcat' => $cat, 'postexcerpt' => '', 'poststatus' => 'Published', 'commentstatus' => 'Y', 'postmodified' => date('r'), 'commentcount' => 0));
+					$this->nextAction('viewblog');
+					break;
+				}
+
 				break;
 
 

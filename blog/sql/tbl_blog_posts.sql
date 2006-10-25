@@ -15,14 +15,7 @@ $fields = array(
 		'type' => 'text',
 		'length' => 50,
 		),
-	'post_author' => array(
-		'type' => 'text',
-		'length' => 50,
-		),
 	'post_date' => array(
-		'type' => 'timestamp',
-		),
-	'post_date_gmt' => array(
 		'type' => 'timestamp',
 		),
 	'post_content' => array(
@@ -69,9 +62,6 @@ $fields = array(
 	'post_modified' => array(
 		'type' => 'timestamp',
 		),
-	'post_modified_gmt' => array(
-		'type' => 'timestamp',
-		),
 	'post_content_filtered' => array(
 		'type' => 'clob',
 		),
@@ -82,10 +72,6 @@ $fields = array(
 	'guid' => array(
 		'type' => 'text',
 		'length' => 255
-		),
-	'menu_order' => array(
-		'type' => 'integer',
-		'length' => 20
 		),
 	'post_type' => array(
 		'type' => 'text',

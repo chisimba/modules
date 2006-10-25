@@ -25,7 +25,7 @@ $rightSideColumn .= $this->objblogOps->showLinkCats($linkcats, TRUE);
 $rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
 
 //show all the posts
-$middleColumn .= $this->objblogOps->showPosts($posts);
+$middleColumn .= nl2br($this->objblogOps->showPosts($posts));
 
 //left menu section
 //display the menu
@@ -34,7 +34,7 @@ $leftCol .= "<br />";
 
 //show the feeds section
 $leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
-
+$rightSideColumn .= $this->objblogOps->quickPost($userid, TRUE);
 //dump the cssLayout to screen
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol);

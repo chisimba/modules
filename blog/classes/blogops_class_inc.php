@@ -268,7 +268,7 @@ class blogops extends object
 				$head = $post['post_title'] . "<br />" . $dt;
 				//dump in the post content and voila! you have it...
 				//build the post content plus comment count and stats???
-				$ret .= $objFeatureBox->show($head, $post['post_content']);
+				$ret .= $objFeatureBox->show($head, htmlentities($post['post_content']));
 			}
 		}
 		else {
@@ -402,6 +402,15 @@ class blogops extends object
 
 	}
 
+	public function quickPostAdd($userid, $postarr)
+	{
+		if(!empty($postarr))
+		{
+			$this->objDbBlog->insertPost($userid, $postarr);
+		}
+
+	}
+
 	/**
 	 * Method to build and display the full scale category editor
 	 *
@@ -413,7 +422,7 @@ class blogops extends object
 		//get the categories layout sorted
 		$cats = $this->objDbBlog->getAllCats($userid);
 		//create a table to view the categories
-		$cattable = $this->getObject('htmltable', 'htmlelements');
+		$cattable = $this->newObject('htmltable', 'htmlelements');
 		$cattable->cellpadding = 3;
 		//set up the header row
 		$cattable->startHeaderRow();
@@ -495,9 +504,9 @@ class blogops extends object
 		$cdesc = $this->newObject('htmlarea','htmlelements');
 		$cdesc->setName('catdesc');
 		//$cdesc->setBasicToolBar();
-		$cdesc->showFCKEditor();
+
 		$catadd->addCell($desclabel->show());
-		$catadd->addCell($cdesc->show());
+		$catadd->addCell($cdesc->showFCKEditor());
 		$catadd->endRow();
 
 		$cfieldset->addContent($catadd->show());
@@ -509,6 +518,61 @@ class blogops extends object
 		$catform = $catform->show();
 
 		return $ctable . "<br />" . $catform;
+	}
+
+	/**
+	 * Method to add a quick post as a blocklet
+	 *
+	 * @param integer $userid
+	 * @param bool $featurebox
+	 * @return mixed
+	 */
+	public function quickPost($userid, $featurebox = FALSE)
+	{
+		//form for the quick poster blocklet
+		$this->loadClass('textarea', 'htmlelements');
+		$this->loadClass('textinput', 'htmlelements');
+		$qpform = new form('qpadd', $this->uri(array('action' => 'postadd', 'mode' => 'quickadd')));
+		$qptitle = new textinput('posttitle');
+		//post content textarea
+		$qpcontent = new textarea;
+		$qpcontent->setName('postcontent');
+		//$qpcontent->setBasicToolBar();
+		//dropdown of cats
+		$qpDrop = new dropdown('cat');
+		$qpDrop->addOption(0, $this->objLanguage->languageText("mod_blog_defcat","blog"));
+		//loop through the existing cats and make sure not to add a child to the dd
+		$pcats = $this->objDbBlog->getAllCats($userid);
+		foreach($pcats as $adds)
+		{
+			$qpDrop->addOption($adds['id'], $adds['cat_name']);
+		}
+
+		//set up the form elements so they fit nicely in a box
+		$qptitle->size = 15;
+		$qpcontent->cols = 15;
+		$qpcontent->rows = 5;
+
+		$qpform->addToForm($qptitle->show());
+		$qpform->addToForm($qpcontent->show());
+		$qpform->addToForm($qpDrop->show());
+
+		$this->objqpCButton = &new button($this->objLanguage->languageText('mod_blog_word_blogit', 'blog'));
+		$this->objqpCButton->setValue($this->objLanguage->languageText('mod_blog_word_blogit', 'blog'));
+		$this->objqpCButton->setToSubmit();
+		$qpform->addToForm($this->objqpCButton->show());
+		$qpform = $qpform->show();
+		if($featurebox == FALSE)
+		{
+			return $qpform;
+		}
+		else {
+			$objFeatureBox = $this->getObject('featurebox', 'navigation');
+			$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_qpdetails","blog"),
+			$this->objLanguage->languageText("mod_blog_quickaddpost", "blog") . "<br />" . $qpform);
+			return $ret;
+		}
+
 	}
 
 

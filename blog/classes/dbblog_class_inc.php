@@ -128,6 +128,12 @@ class dbblog extends dbTable
 		return $ret;
 	}
 
+	public function catCount($cat)
+	{
+		$this->_changeTable('tbl_blog_posts');
+		return $this->getRecordCount("WHERE post_category = '$cat'");
+	}
+
 
 	//Methods to manipulate the link categories
 
@@ -179,7 +185,7 @@ class dbblog extends dbTable
 	public function getAllPosts($userid)
 	{
 		$this->_changeTable('tbl_blog_posts');
-		return $this->getAll("WHERE userid = '$userid' ORDER BY menu_order ASC");
+		return $this->getAll("WHERE userid = '$userid' AND post_category = '0'");
 	}
 
 	public function getRandBlog()
@@ -202,6 +208,16 @@ class dbblog extends dbTable
 
 	}
 
+
+
+	//post methods
+	public function insertPost($userid, $postarr)
+	{
+		$this->_changeTable("tbl_blog_posts");
+		$insarr = array('userid' => $userid, 'post_date' => date('r'), 'post_content' => $postarr['postcontent'], 'post_title' => $postarr['posttitle'],
+						'post_category' => $postarr['postcat'], 'post_excerpt' => $postarr['postexcerpt'], 'post_status' => $postarr['poststatus'], 'comment_status' => $postarr['commentstatus'], 'post_modified' => $postarr['postmodified'], 'comment_count' => $postarr['commentcount']);
+		return $this->insert($insarr, 'tbl_blog_posts');
+	}
 
 
 
