@@ -249,7 +249,7 @@ class blogops extends object
 	 */
 	public function showPosts($posts)
 	{
-		$this->cleaner = &$this->getObject('htmlcleaner', 'utilities');
+		//$this->cleaner = &$this->getObject('htmlcleaner', 'utilities');
 		$ret = NULL;
 		//Middle column (posts)!
 		//break out the ol featurebox...
@@ -264,7 +264,8 @@ class blogops extends object
 				$head = $post['post_title'] . "<br />" . $dt;
 				//dump in the post content and voila! you have it...
 				//build the post content plus comment count and stats???
-				$ret .= $objFeatureBox->show($head, $post['post_content']);
+				$this->cleaner = $this->newObject('htmlcleaner', 'utilities');
+				$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content']));
 			}
 		}
 		else {

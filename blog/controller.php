@@ -81,7 +81,7 @@ class blog extends controller
 				//carry on...
 				$catarr = $this->objDbBlog->getCatsTree($userid);
 				$linkcats = $this->objDbBlog->getAllLinkCats($userid);
-				$posts = $this->objDbBlog->getAllPosts($userid);
+				$posts = $this->objDbBlog->getAllPosts($userid, $catid = NULL);
 				$this->setVarByRef('posts', $posts);
 				$this->setVarByRef('linkcats', $linkcats);
 				$this->setVarByRef('cats', $catarr);
