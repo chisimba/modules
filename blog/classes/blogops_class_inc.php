@@ -40,11 +40,6 @@ class blogops extends object
 
 	}
 
-	public function catAddForm()
-	{
-
-	}
-
 	public function catDelForm()
 	{
 
@@ -499,7 +494,7 @@ class blogops extends object
 		$catadd->endRow();
 
 		//start a htmlarea for the category description (optional)
-		//$catadd->startRow();
+		$catadd->startRow();
 		$desclabel = new label($this->objLanguage->languageText('mod_blog_catdesc', 'blog') .':', 'input_catdesc');
 		$cdesc = $this->newObject('htmlarea','htmlelements');
 		$cdesc->setName('catdesc');
@@ -518,6 +513,90 @@ class blogops extends object
 		$catform = $catform->show();
 
 		return $ctable . "<br />" . $catform;
+	}
+
+	public function postEditor($userid)
+	{
+		$postform = new form('postadd', $this->uri(array(
+		'action' => 'postadd'
+		)));
+
+		$pfieldset = $this->newObject('fieldset', 'htmlelements');
+		$pfieldset->setLegend($this->objLanguage->languageText('mod_blog_posthead', 'blog'));
+		$ptable = $this->newObject('htmltable', 'htmlelements');
+		$ptable->cellpadding = 5;
+
+		//post title field
+		$ptable->startRow();
+		$plabel = new label($this->objLanguage->languageText('mod_blog_posttitle', 'blog') .':', 'input_posttitle');
+		$title = new textinput('posttitle');
+		$ptable->addCell($plabel->show());
+		$ptable->addCell($title->show());
+		$ptable->endRow();
+
+		//post category field
+		//dropdown of cats
+		$ptable->startRow();
+		$pdlabel = new label($this->objLanguage->languageText('mod_blog_postcat', 'blog') .':', 'input_postcatfull');
+		$pDrop = new dropdown('cat');
+		$pDrop->addOption(0, $this->objLanguage->languageText("mod_blog_defcat","blog"));
+		$pcats = $this->objDbBlog->getAllCats($userid);
+		foreach($pcats as $adds)
+		{
+			$pDrop->addOption($adds['id'], $adds['cat_name']);
+		}
+		$ptable->addCell($pdlabel->show());
+		$ptable->addCell($pDrop->show());
+		$ptable->endRow();
+
+		//post status dropdown
+		$ptable->startRow();
+		$pslabel = new label($this->objLanguage->languageText('mod_blog_poststatus', 'blog') .':', 'input_poststatfull');
+		$psDrop = new dropdown('status');
+		$psDrop->addOption(0, $this->objLanguage->languageText("mod_blog_published","blog"));
+		$psDrop->addOption(1, $this->objLanguage->languageText("mod_blog_draft","blog"));
+		$psDrop->addOption(2, $this->objLanguage->languageText("mod_blog_hidden","blog"));
+		$ptable->addCell($pslabel->show());
+		$ptable->addCell($psDrop->show());
+		$ptable->endRow();
+
+		//allow comments?
+		$this->loadClass("checkbox", "htmlelements");
+		$commentsallowed = new checkbox('y',$this->objLanguage->languageText("mod_blog_word_yes", "blog"),true);
+		$ptable->startRow();
+		$pcomlabel = new label($this->objLanguage->languageText('mod_blog_commentsallowed', 'blog') .':', 'input_commentsallowedfull');
+		$ptable->addCell($pcomlabel->show());
+		$ptable->addCell($commentsallowed->show());
+		$ptable->endRow();
+
+		//post excerpt
+		$this->loadClass('textarea', 'htmlelements');
+		$pexcerpt = new textarea;
+		$pexcerpt->setName('postcontent');
+		$ptable->startRow();
+		$pexcerptlabel = new label($this->objLanguage->languageText('mod_blog_postexcerpt', 'blog') .':', 'input_postexcerpt');
+		$ptable->addCell($pexcerptlabel->show());
+		$ptable->addCell($pexcerpt->show());
+		$ptable->endRow();
+
+		//post content
+		$pclabel = new label($this->objLanguage->languageText('mod_blog_pcontent', 'blog') .':', 'input_pcont');
+		$pcon = $this->newObject('htmlarea','htmlelements');
+		$pcon->setName('postcontent');
+		$ptable->startRow();
+		$ptable->addCell($pclabel->show());
+		$ptable->addCell($pcon->showFCKEditor());
+		$ptable->endRow();
+
+		$pfieldset->addContent($ptable->show());
+		$postform->addToForm($pfieldset->show());
+		$this->objPButton = &new button($this->objLanguage->languageText('mod_blog_word_post', 'blog'));
+		$this->objPButton->setValue($this->objLanguage->languageText('mod_blog_word_post', 'blog'));
+		$this->objPButton->setToSubmit();
+		$postform->addToForm($this->objPButton->show());
+		$postform = $postform->show();
+
+		return $postform;
 	}
 
 	/**

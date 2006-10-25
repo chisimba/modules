@@ -37,7 +37,7 @@ $catedit = $this->objblogOps->categoryEditor($userid);
 //Middle column - dashboard
 $pane->addTab(array(
     'name' => $this->objLanguage->languageText("mod_blog_word_posts", "blog"),
-    'content' => 'Posts'
+    'content' => $this->objblogOps->postEditor($userid)
 ));
 $pane->addTab(array(
     'name' => $this->objLanguage->languageText("mod_blog_word_categories", "blog"),

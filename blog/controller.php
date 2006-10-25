@@ -222,7 +222,10 @@ class blog extends controller
 				//post quick add
 				if($mode == 'quickadd')
 				{
-					$this->objblogOps->quickPostAdd($userid, array('posttitle' => $posttitle, 'postcontent' => $postcontent, 'postcat' => $cat, 'postexcerpt' => '', 'poststatus' => 'Published', 'commentstatus' => 'Y', 'postmodified' => date('r'), 'commentcount' => 0));
+					$this->objblogOps->quickPostAdd($userid, array('posttitle' => $posttitle, 'postcontent' => $postcontent,
+												    'postcat' => $cat, 'postexcerpt' => '', 'poststatus' => 'Published',
+												    'commentstatus' => 'Y',
+												    'postmodified' => date('r'), 'commentcount' => 0));
 					$this->nextAction('viewblog');
 					break;
 				}
