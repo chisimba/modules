@@ -48,8 +48,6 @@
        sort($shoolvalues);
        foreach($shoolvalues as $sessschool){
           $schoollist->addOption($sessschool,$sessschool);
-//          $schoollist->extra = 'onchange=" return changeDetails() "';
-//          $schoollist->extra = sprintf(' onChange ="javascript: %s"', $onchange );
        }
        $schoollist->extra = ' onChange="document.searchslu.submit()"'; 
 
@@ -59,7 +57,8 @@
      *call to all functions from class searchstudcard
      */         
       $results =  $this->objstudresults->getAllstudents();   
-      $schoolresults  = $this->objstudresults->allstudschool();
+      $schoolresults  = $this->objstudresults->allstudschool($school);
+      //schoolresults = $objSumtin->allstudschool($school);
       $exemption  = $this->objstudresults->allwithexemption(); 
       $relsubject = $this->objstudresults->allwithrelsub();
       $faculty  = $this->objstudresults->studfaculty();

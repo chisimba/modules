@@ -109,8 +109,8 @@ class marketingrecruitmentforum extends controller
                   $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
                   ///////////////////////////////////////////////////////
                   //submit studcard info
-                //  $studcarddata = $this->getSession('studentdata');
-                //  $this->dbstudentcard->addstudcard($studcarddata);
+                  $studcarddata = $this->getSession('studentdata');
+                  $this->dbstudentcard->addstudcard($studcarddata);
                   //$faccoursedata  = $this->getSession('faccoursedata');
                   //$this->dbstudentcard->addfaccourse($faccourse);
                   //submit slu activities
@@ -120,8 +120,6 @@ class marketingrecruitmentforum extends controller
                   //submit all schoolist information
               //    $this->getSchoolist();
                   $schoolinfodata = $this->getSession('schoolvalues');
-                  //var_dump($schoolinfodata);
-                  //die;
                   $this->dbschoollist->addsschoollist($schoolinfodata);
                   
                    
@@ -161,7 +159,8 @@ class marketingrecruitmentforum extends controller
             break;
             
             case  'reportdropdown':
-                //determine which count to show
+                //determine which faculty count to show
+                
             break;
 /****************************************************************************************************************/            
             case  'showstudschool':

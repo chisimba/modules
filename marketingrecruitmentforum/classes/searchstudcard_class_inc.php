@@ -91,7 +91,7 @@ public  function  getAllstudents(){
   /**
    *all students from a certain school
    */
-public  function allstudschool(){
+public  function allstudschool($school = NULL){
         //$schoolname = $this->getParam('schoollistnames'); 
         //$results = $this->objstudcard->getstudschool($schoolname);
       if(isset($school)){
