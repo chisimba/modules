@@ -119,13 +119,14 @@
        $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
        $this->objschoolname->readfiledata();
         
-       $schoollist  = new dropdown('$schoollist');
+       $schoollist  = new dropdown('schoollist');
        $shoolvalues = $this->getSession('schoolnames');
        sort($shoolvalues);
        
        foreach($shoolvalues as $sessschool){
           
           $schoollist->addOption($sessschool,$sessschool);
+          
        }
        
 /*--------------------------------------------------------------------------------------------*/       
@@ -158,6 +159,7 @@
        $this->objtxtpostalcode = $this->newObject('textinput','htmlelements'); 
        $this->objtxtpostalcode->name   = "txtpostalcode";
        $this->objtxtpostalcode->value  = $studpostalcode;
+       $this->objtxtpostalcode->size  = 10;
        
        $textArea = 'postaladdress';
        $this->objPostaladdress =& $this->newobject('textArea','htmlelements');
@@ -173,6 +175,7 @@
        $this->objtxttelcode = $this->newObject('textinput','htmlelements'); 
        $this->objtxttelcode->name   = "txttelcode";
        $this->objtxttelcode->value  = $studtelcode;
+       $this->objtxttelcode->size = 10;
        
        //$this->objfaculty->displaycourses();
        
@@ -197,20 +200,22 @@
         /**
          *create all radio groups
          */
+        //$selected = ($selected == 'No') ? '0' : '1';
+			//$objRadio->setSelected($selected); 
         $objexemption = new radio('exemptionqualification');
-        $objexemption->addOption('y','Yes');
-        $objexemption->addOption('n','No');
-        $objexemption->setSelected('y');
+        $objexemption->addOption('1','Yes');
+        $objexemption->addOption('0','No');
+        $objexemption->setSelected('1');
         
         $objsubject = new radio('relevantsubject');
-        $objsubject->addOption('y','Yes');
-        $objsubject->addOption('n','No');
-        $objsubject->setSelected('y');
+        $objsubject->addOption('1','Yes');
+        $objsubject->addOption('0','No');
+        $objsubject->setSelected('1');
         
         $objsdcase = new radio('sdcase');
-        $objsdcase->addOption('y','Yes');
-        $objsdcase->addOption('n','No');
-        $objsdcase->setSelected('y');
+        $objsdcase->addOption('1','Yes');
+        $objsdcase->addOption('0','No');
+        $objsdcase->setSelected('1');
 
 /*------------------------------------------------------------------------------*/        
         /**

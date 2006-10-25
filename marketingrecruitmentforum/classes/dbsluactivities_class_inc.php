@@ -60,21 +60,24 @@ class dbsluactivities extends dbTable{
 //display all activities by type
   public function getactivitytype()
   {   //use filter and specify type
-      $type  = $this->getAll();
+      $filter = 'order by activity';
+      $type  = $this->getAll($filter);
       return  $type;
   }   
 /*------------------------------------------------------------------------------*/
 //display all activities by province
   public function getactivityprovince()
   {   //use filter and specify province
-      $province  = $this->getAll();
+      $filter = 'order by province';
+      $province  = $this->getAll($filter);
       return  $province;
   }   
 /*------------------------------------------------------------------------------*/
 //display all activities by area
   public function getactivityarea()
   {   //use filter and specify area
-      $area  = $this->getAll();
+      $filter = 'order by area';
+      $area  = $this->getAll($filter);
       return  $area;
     
   }   

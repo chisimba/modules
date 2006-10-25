@@ -198,7 +198,7 @@
   /**
    *display all school list info contained in session
    */     
-    $sessionsschoolist [] = $this->getSession('schoolistdata');
+    $sessionsschoolist [] = $this->getSession('schoolvalues');
         if(!empty($sessionsschoolist)){
         //Create table to display school list details in session  
             $objschoolTable =& $this->newObject('htmltable', 'htmlelements');

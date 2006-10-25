@@ -21,8 +21,12 @@
       /**
         *define all language items
         */
-        $searchmsg = $this->objLanguage->languageText('mod_marketingrecruitmentforum_searchinstruction','marketingrecruitmentforum');
+        $instruction = $this->objLanguage->languageText('mod_marketingrecruitmentforum_searchhhelp','marketingrecruitmentforum');
+        $click = $this->objLanguage->languageText('mod_marketingrecruitmentforum_click','marketingrecruitmentforum');
         $go = $this->objLanguage->languageText('word_go');
+        
+        $infomsg = $instruction . '<br />' . $click ;
+        
 /*------------------------------------------------------------------------------*/   
       /**
        *create form button -- go
@@ -83,11 +87,12 @@
     /**
      *create tabpan and display search info
      */         
+    $daterange  = $this->objdate->show() . ' ' . $this->objtodate->show(); 
     $Activityinfo = & $this->newObject('tabbox','marketingrecruitmentforum');
     $Activityinfo->tabName = 'ActivityInfo';
  
     $Activityinfo->addTab('activity', 'All activities',$results);
-    $Activityinfo->addTab('dates', 'Actiities between dates',$this->objdate->show() . $this->objtodate->show() .'<br />' .$activdates);
+    $Activityinfo->addTab('dates', 'Actiities between dates',$daterange .'<br />' .$activdates);
     $Activityinfo->addTab('type', 'All activities by type ',$activtype);
     $Activityinfo->addTab('province', 'Activities by province',$province);
     $Activityinfo->addTab('area', 'Activities by area',$area);
@@ -102,7 +107,7 @@
   // $val  = $this->objsearchinfo->activitysearch();
    $objForm = new form('searchactivity',$this->uri(array('action'=>'NULL')));
    $objForm->displayType = 3;
-   $objForm->addToForm($this->objMainheading->show() . '<br />' . '<br />'. $searchmsg . ' ' . '<br />' . '<br />' . $Activityinfo->show());
+   $objForm->addToForm($this->objMainheading->show() . '<br />' . '<br />'. $infomsg . ' ' . '<br />' . '<br />' . $Activityinfo->show() . '<br />');
     
    echo $objForm->show();
 /*------------------------------------------------------------------------------*/   

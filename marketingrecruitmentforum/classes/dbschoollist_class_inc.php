@@ -39,7 +39,8 @@ class dbschoollist extends dbTable{
  //select all informatio from the schoollist table
  public function getallsschools()
  {
-      $results  = $this->getAll();
+      $filter = 'order by schoolname';
+      $results  = $this->getAll($filter);
       return  $results;
  } 
 /*------------------------------------------------------------------------------*/
@@ -47,8 +48,8 @@ class dbschoollist extends dbTable{
   public function getschoolbyname()
   {
     //how to specify the following -- filter name
-    
-      $name  = $this->getAll();
+      $filter = 'order by schoolname';
+      $name  = $this->getAll($filter);
       return  $name;
   }   
 /*------------------------------------------------------------------------------*/

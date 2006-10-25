@@ -31,9 +31,10 @@ class leftcontent{
    $StudCardSLU[] = array('params' => array("action" => "showsearchschool"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'List of Schools');
    
    $EntryQualify = array();      
-   $EntryQualify[] = array('params' => array("action" => "NULL"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Qualify for entry');
+   $EntryQualify[] = array('params' => array("action" => "totalentry"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Qualify for entry');
+   $EntryQualify[] = array('params' => array("action" => "totalsd"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Total of all SD Cases');
    $EntryQualify[] = array('params' => array("action" => "NULL"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Total Students interested in a faculty');
-   $EntryQualify[] = array('params' => array("action" => "NULL"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Total of all SD Cases');
+   $EntryQualify[] = array('params' => array("action" => "showreportinfo"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'View Reports');
    
    $AddressGenLink = array();
    $AddressGenLink[] = array('params' => array("action" => "NULL"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Address Generator');

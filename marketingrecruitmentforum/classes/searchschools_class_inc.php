@@ -53,7 +53,7 @@ public  function  getAllschools(){
        $myTable->cellspacing = '1';
        $myTable->cellpadding = '2';
        $myTable->border='0';
-       $myTable->width = '80%';
+       $myTable->width = '40%';
        $myTable->css_class = 'highlightrows';
        $myTable->row_attributes = " class = \"$oddEven\"";
       
@@ -98,8 +98,12 @@ public  function schoolbyname(){
   
         $myTable->startHeaderRow();
         $myTable->addHeaderCell('School Name', null,'top','left','header');
-        $myTable->addHeaderCell('Area', null,'top','left','header');
-        $myTable->addHeaderCell('Province', null,'top','left','header');
+        $myTable->addHeaderCell('Address', null,'top','left','header');
+        $myTable->addHeaderCell('Telephone Number', null,'top','left','header');
+        $myTable->addHeaderCell('Fax Number', null,'top','left','header');
+        $myTable->addHeaderCell('Email Address', null,'top','left','header');
+        $myTable->addHeaderCell('Principal', null,'top','left','header');
+        $myTable->addHeaderCell('Guidance Teacher', null,'top','left','header');
         $myTable->endHeaderRow();
         
         
@@ -110,9 +114,13 @@ public  function schoolbyname(){
        $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        
        $myTable->startRow();
-       $myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
-       //$myTable->addCell($sessCard['province'], "15%", null, "left","widelink");
-       //$myTable->addCell($sessCard['area'], "15%", null, "left","widelink");          --  check link with slu activity
+       $myTable->addCell($sessCard['schoolname'],"20%", null, "left","widelink");
+       $myTable->addCell($sessCard['schooladdress'], "20%", null, "left","widelink");
+       $myTable->addCell($sessCard['telnumber'], "20%", null, "left","widelink");
+       $myTable->addCell($sessCard['faxnumber'], "20%", null, "left","widelink");      
+       $myTable->addCell($sessCard['email'], "20%", null, "left","widelink");      
+       $myTable->addCell($sessCard['principal'], "20%", null, "left","widelink");      
+       $myTable->addCell($sessCard['guidanceteacher'], "20%", null, "left","widelink");            
        $myTable->endRow();
         
    }  
@@ -154,8 +162,8 @@ public  function schoolbyarea(){
        $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        
        $myTable->startRow();
-       $myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
-       //$myTable->addCell($sessCard['area'],"15%", null, "left","widelink");  link with slu activity 
+       $myTable->addCell($sessCard['schoolname'],"50%", null, "left","widelink");
+      // $myTable->addCell($sessCard['area'],"15%", null, "left","widelink");  //link with slu activity 
        $myTable->endRow();
         
    }  
@@ -177,7 +185,7 @@ public function activitybyprov(){
          $myTable->cellspacing = '1';
          $myTable->cellpadding = '2';
          $myTable->border='0';
-         $myTable->width = '80%';
+         $myTable->width = '60%';
          $myTable->css_class = 'highlightrows';
          $myTable->row_attributes = " class = \"$oddEven\"";
       
@@ -195,7 +203,7 @@ public function activitybyprov(){
        $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        
        $myTable->startRow();
-       $myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
+       $myTable->addCell($sessCard['schoolname'],"50%", null, "left","widelink");
        //$myTable->addCell($sessCard['province'], "15%", null, "left","widelink");  -- slu table
        $myTable->endRow();
         

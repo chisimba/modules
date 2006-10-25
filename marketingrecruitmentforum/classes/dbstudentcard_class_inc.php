@@ -47,7 +47,8 @@ class dbstudentcard extends dbTable{
  //select all informatio from the stud card table
  public function getallstudinfo()
  {
-      $studresults  = $this->getAll();
+      $filter = 'order by schoolname,surname';
+      $studresults  = $this->getAll($filter);
       return  $studresults;
  } 
 /*------------------------------------------------------------------------------*/
@@ -61,26 +62,33 @@ class dbstudentcard extends dbTable{
 /*------------------------------------------------------------------------------*/ 
  public function allstudsexemption(){
       //get all students that qualify for an exemption
-      //NEED TO FIX QUERY
-      $exemption = $this->getAll();
+      // 1 = true 
+      $filter1 = 'order by schoolname,surname';
+      
+      $filter = "where exemption = 1";
+      $exemption = $this->getAll($filter1,$filter);
       return  $exemption;
  }  
 /*------------------------------------------------------------------------------*/
  public function allrelsubject(){
-    //display all students where relevant subject is true ...FIX nb  
-    $relevansub = $this->getAll();
+    //display all students with relevant subject 
+    // 1 = true 
+    $filter = 'where relevantsubject = 1'; 
+    $relevansub = $this->getAll($filter);
     return  $relevansub;
  }
 /*------------------------------------------------------------------------------*/
  public function allbyfaculty(){
     //order by faculty...check how
-    $faculty = $this->getAll();
+    $filter = 'order by faculty';
+    $faculty = $this->getAll($filter);
     return  $faculty;
  }
 /*------------------------------------------------------------------------------*/ 
  public function allbycourse(){
     //display all students , order by course, faculty
-    $course = $this->getAll();
+    $filter = 'order by course, faculty';
+    $course = $this->getAll($filter);
     return  $course;
  }
 /*------------------------------------------------------------------------------*/ 
@@ -88,8 +96,28 @@ class dbstudentcard extends dbTable{
     $area = $this->getAll();
     return  $area;
  }
+/*------------------------------------------------------------------------------*/
+  public function allsdcases(){
+    
+    $filter = 'where sdcase = 1';
+    $totalsd  = $this->getAll($filter);
+    return  $totalsd;
+}  
 /*------------------------------------------------------------------------------*/ 
-
+  public function facultyinterest(){
+      
+      $stmt = 'Select faculty, count(faculty) totalstudent from tbl_studcard groupedby faculty';
+      $faculty = $this->getAll($stmt);
+      return  $faculty;
+  }
+/*------------------------------------------------------------------------------*/
+  public function allstudq(){
+    
+    $stmt = 'Select count(*) entry from tbl_studcard where exemption = 1 AND relevantsubject = 1';
+    
+    $val = $this->getArray($stmt);
+    return $val;
+  }  
  
 }//end of class 
 ?>

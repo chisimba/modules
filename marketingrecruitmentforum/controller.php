@@ -21,7 +21,7 @@ class marketingrecruitmentforum extends controller
      *declare variable used 
      *@param public and private
      */
-     public $submitdatesmsg = '';
+    public $submitdatesmsg = '';
      
     function init()
     {
@@ -36,7 +36,7 @@ class marketingrecruitmentforum extends controller
       $this->dbsluactivities  = & $this->getObject('dbsluactivities','marketingrecruitmentforum');
       $this->dbschoollist   = & $this->getObject('dbschoollist','marketingrecruitmentforum');
       
-       //$this->objdbperdiem = & $this->getObject('dbperdiem','onlineinvoice');
+      //webservice class 
       $this->objstudinfo  = & $this->getObject('dbmarketing','marketingrecruitmentforum');
     }
     
@@ -57,96 +57,110 @@ class marketingrecruitmentforum extends controller
             break;
             
             case 'activitylist':
+                  $this->setLayoutTemplate('datacapture_layout_tpl.php');
                   return 'sluactivities_tpl.php';
             break;
             
             case 'studentcard':
+                  $this->setLayoutTemplate('datacapture_layout_tpl.php');
                   return 'studentcards_tpl.php';
             break;
             
             case 'shoollist':
+                  $this->setLayoutTemplate('datacapture_layout_tpl.php');
                   return 'schoollist_tpl.php';
             break;
             
             case 'showsluactivities':
-            
                   $this->getStudentDetails(); //set session
                   return  'output_tpl.php';
-                //return 'sluactivities_tpl.php';
-            
             break;
             
             case  'showschoolist':
                 $this->getSLUActivties();
                 return  'output_tpl.php';
-                //return 'schoollist_tpl.php';
             break;
             
             case  'showoutput':
-              $this->getSchoolist();             
+              $this->getSchoolist();
+              $this->setLayoutTemplate('datacapture_layout_tpl.php');             
               return  'output_tpl.php';
             break;
             
             case  'editstudcard':
-                //$this->unsetSession('studentdata');
-                return 'studentcards_tpl.php';
+               return 'studentcards_tpl.php';
             break;
             
             case  'editsluactivity':
-                 return 'sluactivities_tpl.php';
+               return 'sluactivities_tpl.php';
             break;
             
             case  'editschool':
-                return 'schoollist_tpl.php';
+               return 'schoollist_tpl.php';
             break;
             
             case  'showsearchslu':
-                return 'studcardresults_tpl.php';
+               $this->setLayoutTemplate('search_layout_tpl.php'); 
+               return 'studcardresults_tpl.php';
             break;
-            
             
             case  'submitinfo':
                   $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
                   $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
                   ///////////////////////////////////////////////////////
                   //submit studcard info
-                  $studcarddata = $this->getSession('studentdata');
+                //  $studcarddata = $this->getSession('studentdata');
+                //  $this->dbstudentcard->addstudcard($studcarddata);
                   //$faccoursedata  = $this->getSession('faccoursedata');
-                  $this->dbstudentcard->addstudcard($studcarddata);
                   //$this->dbstudentcard->addfaccourse($faccourse);
                   //submit slu activities
-                  //$sluactivity = $this->getSession('sluactivitydata');
-                  //$this->dbsluactivities->addsluactivity($sluactivity);
+                  $sluactivity = $this->getSession('sluactivitydata');
+                  $this->dbsluactivities->addsluactivity($sluactivity);
                   //////////////////////////////////////////////////////// 
-                  //submit all school information
-                  $schoolinfodata = $this->getSession('sluactivitydata');
+                  //submit all schoolist information
+              //    $this->getSchoolist();
+                  $schoolinfodata = $this->getSession('schoolvalues');
+                  //var_dump($schoolinfodata);
+                  //die;
                   $this->dbschoollist->addsschoollist($schoolinfodata);
+                  
                    
                   $this->unsetSession('studentdata');
                   $this->unsetSession('sluactivitydata');
-                  $this->unsetSession('schoolistdata');
+                  $this->unsetSession('schoolvalues');
                   return  'output_tpl.php';
             break;
             
             case  'showsearchfac':
+                $this->setLayoutTemplate('search_layout_tpl.php');
                 return  'searchstudcardfac_tpl.php';
             break;
             
             case  'showsearchactiities':
+                $this->setLayoutTemplate('search_layout_tpl.php');
                 return  'searchactivities_tpl.php';
             break;
             
             case  'showsearchschool':
+                $this->setLayoutTemplate('search_layout_tpl.php');
                 return 'searchschools_tpl.php';
             break;
             
-            case  'showreportinfo':
-                return  'reports_tpl.php';
+            case  'totalsd':
+                $this->setLayoutTemplate('reports_layout_tpl.php');
+                return 'reportsd_tpl.php';
+            break;
+            
+            case  'totalentry':
+                $this->setLayoutTemplate('reports_layout_tpl.php');
+                return  'entryqualify_tpl.php';
             break;
 /****************************************************************************************************************/            
             case  'showstudschool': 
-                  $schooval = $this->getParam('schoollistnames');
-                  $this->setVarByRef('schoollistnames', $schooval);
+                  //$schooval = $this->getParam('schoollistnames');
+                  //$this->setVarByRef('schoollistnames', $schooval);
+                  $this->setLayoutTemplate('search_layout_tpl.php'); 
+               return 'studcardresults_tpl.php';
             break;
 /****************************************************************************************************************/            
             default:
@@ -170,23 +184,36 @@ class marketingrecruitmentforum extends controller
        *create a session variable to store the array data in       
        */
        $username  = $this->objUser->fullname();
+       $exemp = $this->getParam('exemptionqualification');
+       $relsubject = $this->getParam('relevantsubject');
+       $result  = 0;  
+       $val = 0;
+       //case
+       if($relsubject){
+          $result = 1;
+       }
+       
+       if($exemp){
+         $val = 1;
+       }
+       
        $studentdata  = array('createdby'        =>  $username,
                              'datecreated'      =>  date('Y-m-d'),
                              'modifiedby'       =>  $this->objUser->fullname(),
                              'datemodified'     =>  date('Y-m-d'),
                              'updated'          =>  date('Y-m-d'),
-                             'date'         =>  $this->getParam('txtdate'),
+                             'date'             =>  $this->getParam('txtdate'),
                              'surname'          =>  $this->getParam('txtsurname'),
                              'name'             =>  $this->getParam('txtname'),
-                             'schoolname'   =>  $this->getParam('$schoollist'),
+                             'schoolname'       =>  $this->getParam('schoollist'),
                              'postaddress'      =>  $this->getParam('postaladdress'),
                              'postcode'         =>  $this->getParam('txtpostalcode'),
                              'telnumber'        =>  $this->getParam('txttelnumber'),
                              'telcode'          =>  $this->getParam('txttelcode'),
-                             'exemption'        =>  $this->getParam('exemptionqualification'),
+                             'exemption'        =>  $val,
                              'faculty'          =>  $this->getParam('facultylist'),
                              'course'   =>  $this->getParam('txtcourse'),
-                             'relevantsubject'  =>  $this->getParam('relevantsubject'),
+                             'relevantsubject'  =>  $result,
                              'sdcase'           =>  $this->getParam('sdcase'),
                         );
                         
@@ -244,7 +271,7 @@ class marketingrecruitmentforum extends controller
                              'principal'        =>  $this->getParam('txtprincipal'),
                              'guidanceteacher'  =>  $this->getParam('txtteacher'),
                         );
-   $this->setSession('schoolistdata',$schoolistdata);
+   $this->setSession('schoolvalues',$schoolistdata);
   
   }
 /*------------------------------------------------------------------------------*/    

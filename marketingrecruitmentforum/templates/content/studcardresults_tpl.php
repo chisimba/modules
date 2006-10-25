@@ -27,12 +27,14 @@
      $instruction = $this->objLanguage->languageText('mod_marketingrecruitmentforum_instruction','marketingrecruitmentforum');
      $click = $this->objLanguage->languageText('mod_marketingrecruitmentforum_click','marketingrecruitmentforum');
      $go  = $this->objLanguage->languageText('word_go');
+     
 /*------------------------------------------------------------------------------*/      
     /**
      *create a link to print the information selected by user
      */
      $PrintCardLink = array('params' => array("action" => "NULL"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Print');         
 /*------------------------------------------------------------------------------*/        
+    
     /**
      *create dropdwonlist with all schoolnames
      */
@@ -48,13 +50,31 @@
        sort($shoolvalues);
        foreach($shoolvalues as $sessschool){
           $schoollist->addOption($sessschool,$sessschool);
-       }  
+//          $schoollist->extra = 'onchange=" return changeDetails() "';
+//          $schoollist->extra = sprintf(' onChange ="javascript: %s"', $onchange );
+       }
+       
 /*------------------------------------------------------------------------------*/    
     /**
       * create button go
       */
       $this->objButtonGo  = new button('go', $go);
-      $this->objButtonGo->setToSubmit();                   
+      $this->objButtonGo->setToSubmit();
+      
+      /*$onClick = ' var selectedvalue = document.searchslu.schoollistnames;
+		                 
+                     var val  =  selectedvalue;
+                  if(val  ==  " "){
+          
+                        alert("Please select a school");
+                        return false;
+                  }//else{
+      
+                   //     alert("school name " + document.searchslu.schoollistnames.options[val].text);
+                   //     return true;
+                   '; 
+                         
+      $this->objButtonGo->extra = sprintf(' onClick ="javascript: %s"', $onClick );*/
 /*------------------------------------------------------------------------------*/
     /**
      *call to all functions from class searchstudcard
@@ -88,7 +108,7 @@
      */
    $objForm = new form('searchslu',$this->uri(array('action'=>'showstudschool')));
    $objForm->displayType = 3;
-   $objForm->addToForm($this->objMainheading->show() . '<br />' . '<br />'.$instruction . '<br />'. $click . '<br />'.'<br />'. $Studcardinfo->show());
+   $objForm->addToForm($this->objMainheading->show() . '<br />' . '<br />'.$instruction . '<br />'. $click . '<br />'.'<br />'. $Studcardinfo->show() . '<br />');
 /*-------------------------------------------------------------------------------*/         
     /**
      *display all info on screen
@@ -96,3 +116,5 @@
      //echo    $this->objMainheading->show(); 
      echo $objForm->show();                
 ?>
+	
+

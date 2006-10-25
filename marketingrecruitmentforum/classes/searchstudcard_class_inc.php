@@ -285,8 +285,9 @@ public   function studcourse(){
         //$myTable->addHeaderCell('School Name', null,'top','left','header');
         $myTable->addHeaderCell('Surname', null,'top','left','header');
         $myTable->addHeaderCell('Name', null,'top','left','header');
-        $myTable->addHeaderCell('Faculty', null,'top','left','header');
         $myTable->addHeaderCell('Course', null,'top','left','header');
+        $myTable->addHeaderCell('Faculty', null,'top','left','header');
+        
         
         $rowcount = '0';
   
@@ -298,8 +299,9 @@ public   function studcourse(){
        //$myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['surname'], "15%", null, "left","widelink");
        $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
-       $myTable->addCell($sessCard['faculty'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['course'],"15%", null, "left","widelink");
+       $myTable->addCell($sessCard['faculty'],"15%", null, "left","widelink");
+       
        $myTable->endRow();
         
    }  
