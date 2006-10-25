@@ -264,7 +264,7 @@ class blogops extends object
 				$head = $post['post_title'] . "<br />" . $dt;
 				//dump in the post content and voila! you have it...
 				//build the post content plus comment count and stats???
-				$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content']));
+				$ret .= $objFeatureBox->show($head, $post['post_content']);
 			}
 		}
 		else {
