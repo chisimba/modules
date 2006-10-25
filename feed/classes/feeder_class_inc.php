@@ -78,7 +78,7 @@ class feeder extends object
 		$item->date = time();
 		$item->source = $itemSource; //"http://www.dailyphp.net";
 		$item->author = $itemAuthor; //"John Doe";
-		return $this->rssItem = $item;
+		return $this->objFeeder->addItem($item);
 
 	}
 

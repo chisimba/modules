@@ -24,9 +24,9 @@ class blog extends controller
 	public function init()
 	{
 		try {
-			$this->objFeed = $this->getObject('feeds', 'feed');
+			$this->objFeed = &$this->getObject('feeds', 'feed');
 			$this->objUser = $this->getObject('user', 'security');
-			$this->objFeedCreator = $this->getObject('feeder', 'feed');
+			$this->objFeedCreator = &$this->getObject('feeder', 'feed');
 			$this->objClient = $this->getObject('client','httpclient');
 			$this->objLanguage = $this->getObject('language', 'language');
 			$this->objDbBlog = $this->getObject('dbblog');
@@ -95,6 +95,17 @@ class blog extends controller
 
 				//grab the feed items
 				$posts = $this->objDbBlog->getAllPosts($userid, $catid = NULL);
+
+				//set up the feed...
+				$fullname = htmlentities($this->objUser->fullname($userid));
+				$feedtitle = htmlentities($fullname);
+				$feedDescription = htmlentities($this->objLanguage->languageText("mod_blog_blogof", "blog")) . " " . $fullname;
+				$feedLink = $this->objConfig->getSiteRoot() . "index.php?module=blog&userid=" . $userid;
+				$feedLink = htmlentities($feedLink);
+				$feedURL = $this->objConfig->getSiteRoot() . "index.php?module=blog&userid=" . $userid . "action=feed&format=" . $format;
+				$feedURL = htmlentities($feedURL);
+				$this->objFeedCreator->setupFeed(TRUE,$feedtitle, $feedDescription, $feedLink, $feedURL);
+
 				foreach($posts as $feeditems)
 				{
 					$itemTitle = $feeditems['post_title'];
@@ -106,15 +117,9 @@ class blog extends controller
 					$this->objFeedCreator->addItem($itemTitle, $itemLink, $itemDescription, $itemSource, $itemAuthor);
 				}
 
-				//set up the feed...
-				$fullname = htmlentities($this->objUser->fullname($userid));
-				$feedtitle = htmlentities($fullname);
-				$feedDescription = htmlentities($this->objLanguage->languageText("mod_blog_blogof", "blog")) . " " . $fullname;
-				$feedLink = $this->objConfig->getSiteRoot() . "index.php?module=blog&userid=" . $userid;
-				$feedLink = htmlentities($feedLink);
-				$feedURL = $this->objConfig->getSiteRoot() . "index.php?module=blog&userid=" . $userid . "action=feed&format=" . $format;
-				$feedURL = htmlentities($feedURL);
-				$this->objFeedCreator->setupFeed(TRUE,$feedtitle, $feedDescription, $feedLink, $feedURL);
+
+
+				//$this->objFeedCreator->setupFeed(TRUE,$feedtitle, $feedDescription, $feedLink, $feedURL);
 
 				switch ($format) {
 					case 'rss2':
