@@ -52,7 +52,7 @@ class klorclient extends controller
 	$this->objFile=&$this->newObject('dbcoursewarefile', 'klorserver');
 	$this->objDC =& $this->newObject('dublincore','klorserver');
 	//$this->objUnserial =& $this->newObject('sql2xml2','webservices');
-	$this->objZip =& $this->newObject('zip','utilities');
+	$this->objZip =& $this->newObject('depzip','utilities');
 	$this->objHelp=& $this->getObject('help','help');
 	//wsdl function calls
 	$this->objWzip =  &  $this->getObject('wzip', 'utilities');
