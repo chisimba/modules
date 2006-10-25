@@ -208,8 +208,6 @@ class dbblog extends dbTable
 
 	}
 
-
-
 	//post methods
 	public function insertPost($userid, $postarr)
 	{
@@ -218,14 +216,6 @@ class dbblog extends dbTable
 						'post_category' => $postarr['postcat'], 'post_excerpt' => $postarr['postexcerpt'], 'post_status' => $postarr['poststatus'], 'comment_status' => $postarr['commentstatus'], 'post_modified' => $postarr['postmodified'], 'comment_count' => $postarr['commentcount']);
 		return $this->insert($insarr, 'tbl_blog_posts');
 	}
-
-
-
-
-
-
-
-
 
 
 	/**

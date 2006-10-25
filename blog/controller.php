@@ -218,6 +218,9 @@ class blog extends controller
 				$posttitle = $this->getParam('posttitle');
 				$postcontent = $this->getParam('postcontent');
 				$cat = $this->getParam('cat');
+				$status = $this->getParam('status');
+				$commentsallowed = $this->getParam('commentsallowed');
+				$excerpt = $this->getParam('postexcerpt');
 
 				//post quick add
 				if($mode == 'quickadd')
@@ -229,25 +232,17 @@ class blog extends controller
 					$this->nextAction('viewblog');
 					break;
 				}
+				else {
+					$this->objblogOps->quickPostAdd($userid, array('posttitle' => $posttitle, 'postcontent' => $postcontent,
+												    'postcat' => $cat, 'postexcerpt' => $excerpt, 'poststatus' => $status,
+												    'commentstatus' => $commentsallowed,
+												    'postmodified' => date('r'), 'commentcount' => 0));
+					$this->nextAction('viewblog');
+					break;
+				}
 
 				break;
 
-
-			case 'testcats':
-				try {
-					$userid = $this->objUser->userId();
-					$linkcat2add = array('userid' => $userid, 'catname' => 'Blogroll', 'autotoggle' => 'N', 'show_images' => 'Y', 'show_description' => 'N', 'show_rating' => 'Y', 'show_updated' => 'Y', 'sort_order' => 'rand', 'sort_desc' => 'N', 'list_limit' => '-1');
-					$cat2add = array('userid' => $userid, 'cat_name' => 'Uncategorized', 'cat_nicename' => 'Uncategorized', 'cat_desc' => 'Uncategorized posts', 'cat_parent' => 0, 'cat_count' => 1);
-					$link2add = array('userid' => $userid, 'link_url' => 'http://fsiu.uwc.ac.za/kinky/index.php?module=blog&action=showblog&blogger=1339050927', 'link_name' => 'Pauls FSIU Blog', 'link_image' => '', 'link_target' => '', 'link_category' => 'init_5101_1161324562', 'link_description' => 'FSIU blog for Paul Scott', 'link_visible' => 'Y', 'link_owner' => $userid, 'link_rating' => '1', 'link_updated' => '', 'link_rel' => '', 'link_notes' => 'Paul Scott has a FSIU blog too', 'link_rss' => 'http://fsiu.uwc.ac.za/kinky/index.php?module=blog&action=genrss&blogger=1339050927');
-
-					print_r($this->objDbBlog->setLink($userid, $link2add));
-					//print_r($this->objDbBlog->setCats($userid, $cat2add));
-					//print_r($this->objDbBlog->setLinkCats($userid, $linkcat2add));
-					//print_r($this->objDbBlog->getAllLinkCats($userid));
-				}
-				catch(customException $e) {
-					customException::cleanUp();
-				}
 		}
 
 	}
