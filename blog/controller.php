@@ -163,11 +163,13 @@ class blog extends controller
 
 			case 'viewblog':
 				try {
+					$catid = $this->getParam('catid');
 
 					$userid = $this->objUser->userId();
 					$catarr = $this->objDbBlog->getCatsTree($userid);
 					$linkcats = $this->objDbBlog->getAllLinkCats($userid);
-					$posts = $this->objDbBlog->getAllPosts($userid);
+					$posts = $this->objDbBlog->getAllPosts($userid, $catid);
+					$this->setVarByRef('catid', $catid);
 					$this->setVarByRef('posts', $posts);
 					$this->setVarByRef('linkcats', $linkcats);
 					$this->setVarByRef('cats', $catarr);

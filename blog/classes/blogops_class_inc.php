@@ -136,11 +136,11 @@ class blogops extends object
 				{
 					foreach($categories['child'] as $kid)
 					{
-						$childnodes[] = array('text' => $kid['cat_nicename'], 'uri' => $this->uri(array('action' => 'showsection', 'id' => $kid['id']), 'blog'));
+						$childnodes[] = array('text' => $kid['cat_nicename'], 'uri' => $this->uri(array('action' => 'viewblog', 'catid' => $kid['id']), 'blog'));
 					}
 				}
-				$nodestoadd[] = array('text'=> $categories['cat_nicename'], 'uri' => $this->uri(array('action' => 'showsection',
-				'id' => $categories['id']), 'blog'),
+				$nodestoadd[] = array('text'=> $categories['cat_nicename'], 'uri' => $this->uri(array('action' => 'viewblog',
+				'catid' => $categories['id']), 'blog'),
 				'haschildren' => $childnodes);
 				$childnodes = NULL;
 				$nodes = NULL;
@@ -562,7 +562,7 @@ class blogops extends object
 
 		//allow comments?
 		$this->loadClass("checkbox", "htmlelements");
-		$commentsallowed = new checkbox('y',$this->objLanguage->languageText("mod_blog_word_yes", "blog"),true);
+		$commentsallowed = new checkbox('commentsallowed',$this->objLanguage->languageText("mod_blog_word_yes", "blog"),true);
 		$ptable->startRow();
 		$pcomlabel = new label($this->objLanguage->languageText('mod_blog_commentsallowed', 'blog') .':', 'input_commentsallowedfull');
 		$ptable->addCell($pcomlabel->show());
@@ -572,7 +572,7 @@ class blogops extends object
 		//post excerpt
 		$this->loadClass('textarea', 'htmlelements');
 		$pexcerpt = new textarea;
-		$pexcerpt->setName('postcontent');
+		$pexcerpt->setName('postexcerpt');
 		$ptable->startRow();
 		$pexcerptlabel = new label($this->objLanguage->languageText('mod_blog_postexcerpt', 'blog') .':', 'input_postexcerpt');
 		$ptable->addCell($pexcerptlabel->show());

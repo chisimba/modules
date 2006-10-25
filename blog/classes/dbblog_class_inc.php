@@ -182,10 +182,20 @@ class dbblog extends dbTable
 
 	// posts section
 
-	public function getAllPosts($userid)
+	public function getAllPosts($userid, $catid)
+	{
+		if(!isset($catid))
+		{
+			$catid = 0;
+		}
+		$this->_changeTable('tbl_blog_posts');
+		return $this->getAll("WHERE userid = '$userid' AND post_category = '$catid'");
+	}
+
+	public function getPostsFromCat($userid, $catid)
 	{
 		$this->_changeTable('tbl_blog_posts');
-		return $this->getAll("WHERE userid = '$userid' AND post_category = '0'");
+		return $this->getAll("WHERE userid = '$userid' AND post_category = '$catid'");
 	}
 
 	public function getRandBlog()
