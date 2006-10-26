@@ -498,12 +498,13 @@ class blogops extends object
 		//start a htmlarea for the category description (optional)
 		$catadd->startRow();
 		$desclabel = new label($this->objLanguage->languageText('mod_blog_catdesc', 'blog') .':', 'input_catdesc');
-		$cdesc = $this->newObject('htmlarea','htmlelements');
+		$this->loadClass('textarea', 'htmlelements');
+		$cdesc = new textarea; //$this->newObject('textarea','htmlelements');
 		$cdesc->setName('catdesc');
 		//$cdesc->setBasicToolBar();
 
 		$catadd->addCell($desclabel->show());
-		$catadd->addCell($cdesc->showFCKEditor());
+		$catadd->addCell($cdesc->show()); //showFCKEditor());
 		$catadd->endRow();
 
 		$cfieldset->addContent($catadd->show());
@@ -656,7 +657,10 @@ class blogops extends object
 
 	}
 
+	public function editPost()
+	{
 
+	}
 
 }
 ?>
