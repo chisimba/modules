@@ -24,13 +24,6 @@ $middleColumn = NULL;
 //left menu section
 $leftCol = $leftMenu->show();
 
-
-
-//posts section
-
-
-
-
 //get the category editor
 $catedit = $this->objblogOps->categoryEditor($userid);
 
