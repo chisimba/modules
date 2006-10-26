@@ -22,7 +22,7 @@ $rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE);
 $leftCol = NULL;
 $middleColumn = NULL;
 
-$middleColumn .= $this->objblogOps->showPosts($posts);
+$middleColumn .= nl2br($this->objblogOps->showPosts($posts));
 
 //left menu section
 $leftCol = NULL;
