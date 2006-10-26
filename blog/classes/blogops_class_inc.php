@@ -635,12 +635,17 @@ class blogops extends object
 		$edtable->cellpadding = 5;
 
 		//grab the posts for this month
-		$posts = $this->objDbBlog->getPostsMonthly(mktime(0,0,0,date("m", time()), 1, date("y", time())), $userid);
+		$posts = $this->objDbBlog->getPostsMonthly(mktime(0,0,0,date("m", time()), 1, date("y", time())), $userid); //change this to get from the form input rather
+		//print_r($posts);
+		foreach($posts as $post)
+		{
+			$edtable->startRow();
+			$edtable->addCell($post['post_title']);
+			$edtable->addCell($post['post_date']);
+			$edtable->addCell($post['post_status']);
+			$edtable->endRow();
+		}
 
-		$edtable->startRow();
-		$edtable->addCell('test');
-		$edtable->addCell('test');
-		$edtable->endRow();
 
 		return $edtable->show();
 	}
