@@ -396,7 +396,7 @@ class calendarbiulder extends object
    */
    private function getEventDay($year, $month, $day)
    {
-   		
+   		$isEvents = false;
    		$givenDate  = $day."-".$month."-".$year;
    		$toc = ($this->calType=='big') ? 'TOC' : '';
    		
