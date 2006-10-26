@@ -29,12 +29,29 @@ class block_latest extends object
     public $objLastBlog;
 
     /**
+     * @var quickBlog
+     * Object to display the quick blog box
+     */
+    public $quickBlog;
+
+    /**
+     * Blog operations class
+     *
+     * @var object
+     */
+    public $blogOps;
+
+    /**
     * Standard init function to instantiate language and user objects
     * and create title
     */
     public function init()
     {
-        $this->objLastBlog = NULL; //& $this->getObject('getlastentry', 'blog');
+		$this->objUser = &$this->getObject('user', 'security');
+    	$userid = $this->objUser->userid();
+    	$this->blogOps = &$this->getObject('blogops', 'blog');
+    	$this->quickBlog = $this->blogOps->quickPost($userid, FALSE);
+    	$this->objLastBlog = NULL; //& $this->getObject('getlastentry', 'blog');
         $this->title=NULL; //$this->objLastBlog->showTitle();
     }
 
@@ -44,7 +61,7 @@ class block_latest extends object
     */
     public function show()
     {
-        return "Blog"; //$this->objLastBlog->show();
+        return $this->quickBlog;
     }
 
 }
