@@ -41,18 +41,21 @@ class block_latest extends object
      */
     public $blogOps;
 
+    public $objLanguage;
+
     /**
     * Standard init function to instantiate language and user objects
     * and create title
     */
     public function init()
     {
-		$this->objUser = &$this->getObject('user', 'security');
+		$this->objLanguage = &$this->getObject('language', 'language');
+    	$this->objUser = &$this->getObject('user', 'security');
     	$userid = $this->objUser->userid();
     	$this->blogOps = &$this->getObject('blogops', 'blog');
     	$this->quickBlog = $this->blogOps->quickPost($userid, FALSE);
     	$this->objLastBlog = NULL; //& $this->getObject('getlastentry', 'blog');
-        $this->title=NULL; //$this->objLastBlog->showTitle();
+        $this->title= $this->objLanguage->languageText("mod_blog_block_quickpost", "blog");
     }
 
     /**
