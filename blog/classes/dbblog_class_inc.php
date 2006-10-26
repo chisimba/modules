@@ -189,7 +189,7 @@ class dbblog extends dbTable
 			$catid = 0;
 		}
 		$this->_changeTable('tbl_blog_posts');
-		return $this->getAll("WHERE userid = '$userid' AND post_category = '$catid'");
+		return $this->getAll("WHERE userid = '$userid' AND post_category = '$catid' ORDER BY post_ts DESC");
 	}
 
 	public function getPostsMonthly($month, $userid)
