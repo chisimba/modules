@@ -5,6 +5,7 @@
        *load all classes
        */
        $this->objsearchinfo = & $this->getObject('searchinfo','marketingrecruitmentforum');
+       $this->objsearchfac  = & $this->newObject('searchfaculty','marketingrecruitmentforum');
        
 /*---------------------------------------------------------------------------------------------------*/       
                     
@@ -19,34 +20,63 @@
         *define all language items
         */
         $searchmsg = $this->objLanguage->languageText('mod_marketingrecruitmentforum_searchinstruction','marketingrecruitmentforum');
-        $go = $this->objLanguage->languageText('word_go');
+        
 
 /*---------------------------------------------------------------------------------------------------*/   
       /**
        *create form button -- go
        */
-      $this->objButtonGo  = new button('go', $go);
-      $this->objButtonGo->setToSubmit();
+      //$this->objButtonGo  = new button('go', $go);
+      //$this->objButtonGo->setToSubmit();
 /*---------------------------------------------------------------------------------------------------*/
+      /**
+       *create faculty list 
+       */
+       $this->objfaculty  = & $this->getObject('faculty','marketingrecruitmentforum');
+       $this->objfaculty->displayfaculty();
+       $faculty = new dropdown('facultynameval');
+       $facultynames  = $this->getSession('faculty');
+       foreach($facultynames as $sessfac){
+        
+            $faculty->addOption($sessfac,$sessfac);
+       }    
+       
+       $faculty->extra = ' onChange="document.searchsluresults.submit()"';         
+/*---------------------------------------------------------------------------------------------------*/
+     /**
+      *call all class objects to define layout
+      */
+      $facultyentered = $this->objsearchfac->studentsbyfaculty($facultyval);
+      $exemptionfaculty = $this->objsearchfac->exemptionbyfaculty($facultyexmp);
+      $facrelsubj = $this->objsearchfac->relsubjbyfaculty($facsubj);
+      $coursefaculty  = $this->objsearchfac->coursebyfaculty($faccourse);
+      $sdcasefac  = $this->objsearchfac->sdcasebyfaculty($facsdcase);
+      //$this->objsearchfac
+/*---------------------------------------------------------------------------------------------------*/      
+                 
+    /**
+     *create a tabpane to display data within
+     */           
+    
+    $facultyinfo = & $this->newObject('tabbox','marketingrecruitmentforum');
+    $facultyinfo->tabName = 'OutputInfo';
+    
+    $facultyinfo->addTab('faculty', 'All students entered for faculty',$facultyentered);
+    $facultyinfo->addTab('exemption', 'All students with exemption',$exemptionfaculty);
+    $facultyinfo->addTab('relsubjects', 'All with relevant subjects',$facrelsubj);
+    $facultyinfo->addTab('course', 'All students per faculty course',$coursefaculty);
+    $facultyinfo->addTab('sdcase', 'All SD Cases per faculty',$sdcasefac);
+/*---------------------------------------------------------------------------------------------------*/    
  
   /**
    *create a form to place all elements in
    */
-    $val  = $this->objsearchinfo->facultysearchlist();
-   $objForm = new form('searchslu',$this->uri(array('action'=>'NULL')));
+    
+   $objForm = new form('searchsluresults',$this->uri(array('action'=>'studcardfaculty')));
    $objForm->displayType = 3;
-   $objForm->addToForm($this->objMainheading->show() . '<br />' . '<br />'. $searchmsg . ' ' . $val . ' ' .$this->objButtonGo->show());
+   $objForm->addToForm($this->objMainheading->show() . '<br />' . '<br />'. $searchmsg . ' ' . $faculty->show() . '<br />' . '<br />' . $facultyinfo->show());// . ' ' .$this->objButtonGo->show());
 
 /*---------------------------------------------------------------------------------------------------*/ 
       
    echo $objForm->show();
-    
-       /**
-        *display all information to the screen
-        */                       
-/*        $val  = $this->objsearchinfo->facultysearchlist();
-        echo $this->objMainheading->show();
-        echo '<br />'  . '<br />';
-        echo '<b>' . $searchmsg . '</b>';
-        echo ' ' .   $val;*/
 ?>

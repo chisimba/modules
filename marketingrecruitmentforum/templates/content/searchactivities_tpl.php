@@ -23,7 +23,7 @@
         */
         $instruction = $this->objLanguage->languageText('mod_marketingrecruitmentforum_searchhhelp','marketingrecruitmentforum');
         $click = $this->objLanguage->languageText('mod_marketingrecruitmentforum_click','marketingrecruitmentforum');
-        $go = $this->objLanguage->languageText('word_go');
+        $displayactivities = $this->objLanguage->languageText('mod_marketingrecruitmentforum_display','marketingrecruitmentforum');
         
         $infomsg = $instruction . '<br />' . $click ;
         
@@ -32,7 +32,7 @@
        *create form button -- go
        */
                     
-      $this->objButtonGo  = new button('go', $go);
+      $this->objButtonGo  = new button('searchactiv', $displayactivities);
       $this->objButtonGo->setToSubmit();
 
 /*------------------------------------------------------------------------------*/              
@@ -52,6 +52,7 @@
        foreach($shoolvalues as $sessschool){
           $schoollist->addOption($sessschool,$sessschool);
        }  
+       $schoollist->extra = ' onChange="document.searchactivity.submit()"';
 /*------------------------------------------------------------------------------*/
     /**
      *create datepicker objects
@@ -77,26 +78,53 @@
      *call to all functions from class searchstudcard
      */         
       $results =  $this->objactivity->getAllactivities();   
-      $activdates  = $this->objactivity->getactivdate();
+      $activdates  = $this->objactivity->getactivdate($activitydate);
       $activtype  = $this->objactivity->activitytype(); 
       $province = $this->objactivity->activitybyprov();
       $area  = $this->objactivity->activitybyarea();
-      $school = $this->objactivity->activitybyschool();
+      $school = $this->objactivity->activitybyschool($activschool);
+      
+    /**
+     *create a table to place date elements in
+     */
+      $mydateTab =& $this->newObject('htmltable', 'htmlelements');
+      $mydateTab->cellspacing = '1';
+      $mydateTab->cellpadding = '2';
+      $mydateTab->border='0';
+      $mydateTab->width = '50%';
+      
+      $mydateTab->startRow();
+      $mydateTab->addCell('Start Date');
+      $mydateTab->addCell($this->objdate->show());
+      $mydateTab->endRow();  
+      
+      $mydateTab->startRow();
+      $mydateTab->addCell('End Date');
+      $mydateTab->addCell($this->objtodate->show());
+      $mydateTab->endRow();
+      
+      $mydateTab->startRow();
+      $mydateTab->addCell('');
+      $mydateTab->addCell($this->objButtonGo->show());
+      $mydateTab->endRow();
       
 /*------------------------------------------------------------------------------*/
     /**
      *create tabpan and display search info
      */         
-    $daterange  = $this->objdate->show() . ' ' . $this->objtodate->show(); 
+    //$daterange  = 'Start Date' . ' ' .$this->objdate->show() . ' ' . 'End Date'.$this->objtodate->show() . ' ' .$this->objButtonGo->show();
+    //$startdate  = 'Start Date' . ' ' .$this->objdate->show();
+    //$enddate  = 'End Date' . ' ' .$this->objdate->show();
+     
     $Activityinfo = & $this->newObject('tabbox','marketingrecruitmentforum');
     $Activityinfo->tabName = 'ActivityInfo';
  
-    $Activityinfo->addTab('activity', 'All activities',$results);
-    $Activityinfo->addTab('dates', 'Actiities between dates',$daterange .'<br />' .$activdates);
-    $Activityinfo->addTab('type', 'All activities by type ',$activtype);
-    $Activityinfo->addTab('province', 'Activities by province',$province);
-    $Activityinfo->addTab('area', 'Activities by area',$area);
-    $Activityinfo->addTab('school', 'Activities by school','Select a school to search by' . ' ' .$schoollist->show() . ' '.$this->objButtonGo->show().' <br />'. '<br />' . $school);
+    $Activityinfo->addTab('activity', 'All activities',$results.'<br />');
+    $Activityinfo->addTab('dates', 'Activities between dates',$mydateTab->show().' <br />'. '<br />' . $activdates.'<br />');
+    $Activityinfo->addTab('type', 'All activities by type ',$activtype.'<br />');
+    $Activityinfo->addTab('province', 'Activities by province',$province.'<br />');
+    $Activityinfo->addTab('area', 'Activities by area',$area.'<br />');
+    $Activityinfo->addTab('school', 'Activities by school','Select a school to search by' . ' ' .$schoollist->show().' <br />'. '<br />' . $school.'<br />');
     
     
 /*-------------------------------------------------------------------------------*/
@@ -105,9 +133,9 @@
    *create a form to place all elements in
    */
   // $val  = $this->objsearchinfo->activitysearch();
-   $objForm = new form('searchactivity',$this->uri(array('action'=>'NULL')));
+   $objForm = new form('searchactivity',$this->uri(array('action'=>'showstudschoolactivity')));
    $objForm->displayType = 3;
-   $objForm->addToForm($this->objMainheading->show() . '<br />' . '<br />'. $infomsg . ' ' . '<br />' . '<br />' . $Activityinfo->show() . '<br />');
+   $objForm->addToForm($this->objMainheading->show() . '<br />' . '<br />'. $infomsg . ' ' . '<br />' . '<br />' . $Activityinfo->show() );
     
    echo $objForm->show();
 /*------------------------------------------------------------------------------*/   

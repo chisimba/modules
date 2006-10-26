@@ -45,11 +45,10 @@ class dbschoollist extends dbTable{
  } 
 /*------------------------------------------------------------------------------*/
 //display all schools with a certain name OR grouped OR order by name -- check
-  public function getschoolbyname()
+  public function getschoolbyname($namevalue)
   {
-    //how to specify the following -- filter name
-      $filter = 'order by schoolname';
-      $name  = $this->getAll($filter);
+      $stmt = "select * from tbl_schoollist where schoolname = '$namevalue'";
+      $name = $this->getArray($stmt);
       return  $name;
   }   
 /*------------------------------------------------------------------------------*/

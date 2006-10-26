@@ -39,13 +39,14 @@
        $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
        $this->objschoolname->readfiledata();
         
-       $searchlist  = new dropdown('schoollistactivity');
+       $searchlist  = new dropdown('namevalues');
        $shoolvalues = $this->getSession('schoolnames');
        sort($shoolvalues);
        foreach($shoolvalues as $sessschool){
           
           $searchlist->addOption($sessschool,$sessschool);
        }
+       $searchlist->extra = ' onChange="document.searchsschool.submit()"';
        
 /*--------------------------------------------------------------------------------------------*/       
  
@@ -54,7 +55,7 @@
      *call to all functions from class searchstudcard
      */         
       $results =  $this->objschool->getAllschools();   
-      $schoolname  = $this->objschool->schoolbyname();
+      $schoolname  = $this->objschool->schoolbyname($schoolbyname);
       $area  = $this->objschool->schoolbyarea(); 
       $province = $this->objschool->activitybyprov();
       
@@ -80,7 +81,7 @@
    *create a form to place all elements in
    */
    // $val  = $this->objsearchinfo->schoolsearch();
-   $objForm = new form('searchsschool',$this->uri(array('action'=>'NULL')));
+   $objForm = new form('searchsschool',$this->uri(array('action'=>'showschoolbyname')));
    $objForm->displayType = 3;
    $objForm->addToForm($this->objMainheading->show() . '<br />' . '<br />'. $instruction .'<br />' . '<br />' . $schoolinfo->show() . '<br />' . '<br />');
     

@@ -49,7 +49,7 @@
        foreach($shoolvalues as $sessschool){
           $schoollist->addOption($sessschool,$sessschool);
        }
-       $schoollist->extra = ' onChange="document.searchslu.submit()"'; 
+       $schoollist->extra = ' onChange="document.searchresults.submit()"'; 
 
       
 /*------------------------------------------------------------------------------*/    
@@ -72,21 +72,21 @@
     $Studcardinfo = & $this->newObject('tabbox','marketingrecruitmentforum');
     $Studcardinfo->tabName = 'OutputInfo';
     
-    //. $PrintCardLink->show()
     $Studcardinfo->addTab('studcard', 'All students completed information cards',"<div align=\"right\">" .'<br />' . "</div>" .$results);
     $Studcardinfo->addTab('studschool', 'Students from a certain school','Please select a school to search by' . ' ' .$schoollist->show() . ' <br />'. '<br />' . $schoolresults);
     $Studcardinfo->addTab('studexemption', 'Students that Qualify for exemption',$exemption);
     $Studcardinfo->addTab('relsub', 'Students with relevant subjects',$relsubject);
     $Studcardinfo->addTab('studfac', 'Students by Faculty',$faculty);
     $Studcardinfo->addTab('studcourse', 'Students By Course',$course);
-    $Studcardinfo->addTab('studarea', 'Students by Area',$area);
     $Studcardinfo->addTab('studsdcase', 'All SD Cases',$sdcase);
+    $Studcardinfo->addTab('studarea', 'Students by Area',$area);
+    
     
 /*-------------------------------------------------------------------------------*/
     /**
      *create a form to place all elements on
      */
-   $objForm = new form('searchslu',$this->uri(array('action'=>'showstudschool')));
+   $objForm = new form('searchresults',$this->uri(array('action'=>'showstudschool')));
    $objForm->displayType = 3;
    $objForm->addToForm($this->objMainheading->show() . '<br />' . '<br />'.$instruction . '<br />'. $click . '<br />'.'<br />'. $Studcardinfo->show() . '<br />');
 /*-------------------------------------------------------------------------------*/         

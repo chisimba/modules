@@ -79,53 +79,53 @@ public  function  getAllschools(){
   /**
    *display certain school
    */
-public  function schoolbyname(){
+public  function schoolbyname($schoolbyname = NULL){
         
          
-        $results = $this->objschool->getschoolbyname();
-        
-         $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
-         $this->appendArrayVar('headerParams', $css1);
-         $oddEven = 'even';
-         $myTable =& $this->newObject('htmltable', 'htmlelements');
-         $myTable->cellspacing = '1';
-         $myTable->cellpadding = '2';
-         $myTable->border='0';
-         $myTable->width = '80%';
-         $myTable->css_class = 'highlightrows';
-         $myTable->row_attributes = " class = \"$oddEven\"";
-      
-  
-        $myTable->startHeaderRow();
-        $myTable->addHeaderCell('School Name', null,'top','left','header');
-        $myTable->addHeaderCell('Address', null,'top','left','header');
-        $myTable->addHeaderCell('Telephone Number', null,'top','left','header');
-        $myTable->addHeaderCell('Fax Number', null,'top','left','header');
-        $myTable->addHeaderCell('Email Address', null,'top','left','header');
-        $myTable->addHeaderCell('Principal', null,'top','left','header');
-        $myTable->addHeaderCell('Guidance Teacher', null,'top','left','header');
-        $myTable->endHeaderRow();
-        
-        
-        $rowcount = '0';
-  
-    foreach($results as $sessCard){
-     
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
-       
-       $myTable->startRow();
-       $myTable->addCell($sessCard['schoolname'],"20%", null, "left","widelink");
-       $myTable->addCell($sessCard['schooladdress'], "20%", null, "left","widelink");
-       $myTable->addCell($sessCard['telnumber'], "20%", null, "left","widelink");
-       $myTable->addCell($sessCard['faxnumber'], "20%", null, "left","widelink");      
-       $myTable->addCell($sessCard['email'], "20%", null, "left","widelink");      
-       $myTable->addCell($sessCard['principal'], "20%", null, "left","widelink");      
-       $myTable->addCell($sessCard['guidanceteacher'], "20%", null, "left","widelink");            
-       $myTable->endRow();
-        
-   }  
-   return $myTable->show();
-       
+        //$results = $this->objschool->getschoolbyname();
+         if(isset($schoolbyname)){
+                 $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
+                 $this->appendArrayVar('headerParams', $css1);
+                 $oddEven = 'even';
+                 $myTable =& $this->newObject('htmltable', 'htmlelements');
+                 $myTable->cellspacing = '1';
+                 $myTable->cellpadding = '2';
+                 $myTable->border='0';
+                 $myTable->width = '80%';
+                 $myTable->css_class = 'highlightrows';
+                 $myTable->row_attributes = " class = \"$oddEven\"";
+              
+          
+                $myTable->startHeaderRow();
+                $myTable->addHeaderCell('School Name', null,'top','left','header');
+                $myTable->addHeaderCell('Address', null,'top','left','header');
+                $myTable->addHeaderCell('Telephone Number', null,'top','left','header');
+                $myTable->addHeaderCell('Fax Number', null,'top','left','header');
+                $myTable->addHeaderCell('Email Address', null,'top','left','header');
+                $myTable->addHeaderCell('Principal', null,'top','left','header');
+                $myTable->addHeaderCell('Guidance Teacher', null,'top','left','header');
+                $myTable->endHeaderRow();
+                
+                
+                $rowcount = '0';
+          
+            foreach($schoolbyname as $sessCard){
+             
+               $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+               
+               $myTable->startRow();
+               $myTable->addCell($sessCard['schoolname'],"20%", null, "left","widelink");
+               $myTable->addCell($sessCard['schooladdress'], "20%", null, "left","widelink");
+               $myTable->addCell($sessCard['telnumber'], "20%", null, "left","widelink");
+               $myTable->addCell($sessCard['faxnumber'], "20%", null, "left","widelink");      
+               $myTable->addCell($sessCard['email'], "20%", null, "left","widelink");      
+               $myTable->addCell($sessCard['principal'], "20%", null, "left","widelink");      
+               $myTable->addCell($sessCard['guidanceteacher'], "20%", null, "left","widelink");            
+               $myTable->endRow();
+                
+           }  
+            return $myTable->show();
+          }
                  
   }      
 /*------------------------------------------------------------------------------*/

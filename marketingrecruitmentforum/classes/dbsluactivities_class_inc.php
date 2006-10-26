@@ -46,14 +46,16 @@ class dbsluactivities extends dbTable{
  } 
 /*------------------------------------------------------------------------------*/
 //display all activities between two dates
-  public function getactivitydate()
+  public function getactivitydate($begindate,$enddate)
   {
     //how to specify the following
     /* 2.	Select date, activity_type
         	From activity
           Where date between $this->getParam(date1) and $this->getParam(date2);
     */
-      $activitydate  = $this->getAll();
+      
+      $stmt = "select date,activity from tbl_sluactivities where date between '$begindate' and '$enddate'";
+      $activitydate  = $this->getArray($stmt);
       return  $activitydate;
   }   
 /*------------------------------------------------------------------------------*/
@@ -83,9 +85,11 @@ class dbsluactivities extends dbTable{
   }   
 /*------------------------------------------------------------------------------*/
 //display all activities by school
-  public function getactivityschool()
-  {     //use filter and specify school
-      $school  = $this->getAll();
+  public function getactivityschool($useToPopTbl)
+  {    
+       //use filter and specify school
+      $stmt = "select activity,schoolname from tbl_sluactivities where schoolname = '$useToPopTbl'";
+      $school  = $this->getArray($stmt);
       return  $school;
     
   }   

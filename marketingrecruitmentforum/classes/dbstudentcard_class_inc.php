@@ -54,10 +54,8 @@ class dbstudentcard extends dbTable{
 /*------------------------------------------------------------------------------*/
   //get all students from a certain school
  public function getstudschool($useToPopTbl)
- {    //FIX NB
-      //$schoolname = $this->getParam('schoollistnames');
+ {    
       $stmt = "select surname,name,schoolname from tbl_studcard where schoolname = '$useToPopTbl'";
-      //$filter = 'where schoolname = ' . $useToPopTbl;
       $studschool = $this->getArray($stmt);
       return  $studschool;
  }
@@ -116,10 +114,53 @@ class dbstudentcard extends dbTable{
   public function allstudq(){
     
     $stmt = 'Select count(*) entry from tbl_studcard where exemption = 1 AND relevantsubject = 1';
-    
     $val = $this->getArray($stmt);
     return $val;
   }  
- 
+/*------------------------------------------------------------------------------*/
+  public function allstudfaculty($facultynameval){
+  //get all students entered for a specific faculty
+      
+    $stmt = "select surname, name, schoolname, faculty from tbl_studcard where faculty = '$facultynameval'";
+    $facultyresult = $this->getArray($stmt);
+    return $facultyresult;  
+    
+  } 
+/*------------------------------------------------------------------------------*/ 
+  public function facultyexempted($facultynameval){
+  //get all students that entered for the faculty and has an exemption
+    $stmt = "Select surname, name,schoolname,exemption,faculty from tbl_studcard where exemption = 1 and faculty = '$facultynameval'";
+    $facexemption = $this->getArray($stmt);
+    return $facexemption;
+  }
+/*------------------------------------------------------------------------------*/
+  public function facsubject($facultynameval){
+  //get all students that entered for the faculty and have relevant subjects
+    $stmt = "Select surname, name, schoolname,faculty,relevantsubject from tbl_studcard where relevantsubject = 1 and faculty = '$facultynameval'";
+    $facexemption = $this->getArray($stmt);
+    return $facexemption;
+  }
+/*------------------------------------------------------------------------------*/
+  public function faccourse($facultynameval){
+    //get all students that entered for the faculty and related courses -- might be wrong could be students by course selected
+    $stmt = "Select surname, name, schoolname,faculty,course from tbl_studcard where faculty = '$facultynameval'";
+    $facultycourse = $this->getArray($stmt);
+    return $facultycourse;
+  }
+/*------------------------------------------------------------------------------*/
+  public function facultysdcase($facultynameval){
+    //get all sdcases that entered for the faculty 
+    $stmt = "Select surname, name, schoolname,faculty,sdcase from tbl_studcard where sdcase = 1 and faculty = '$facultynameval'";
+    $facultycourse = $this->getArray($stmt);
+    return $facultycourse;
+  }
+/*------------------------------------------------------------------------------*/
+  public function facultycount($facultyname){
+    //count the total no of students entered for speciic faculty
+    $stmt = "Select surname, name,postaddress, schoolname,faculty,count(id) totstud from tbl_studcard where faculty = '$facultyname' group by faculty";
+    $facultycount = $this->getArray($stmt);
+    return $facultycount;
+  }
+/*------------------------------------------------------------------------------*/
 }//end of class 
 ?>

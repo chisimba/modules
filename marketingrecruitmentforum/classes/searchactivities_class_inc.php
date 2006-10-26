@@ -87,11 +87,13 @@ public  function  getAllactivities(){
   /**
    *all students from a certain school
    */
-public  function getactivdate(){
+public  function getactivdate($activitydate = NULL){
         
          
-        $results = $this->objactivity->getactivitydate();
+        //$results = $this->objactivity->getactivitydate($begindate,$enddate);
         
+    if(isset($activitydate)){
+       
          $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
          $this->appendArrayVar('headerParams', $css1);
          $oddEven = 'even';
@@ -112,19 +114,18 @@ public  function getactivdate(){
         
         $rowcount = '0';
   
-    foreach($results as $sessCard){
-     
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
-       
-       $myTable->startRow();
-       $myTable->addCell($sessCard['date'],"15%", null, "left","widelink");
-       $myTable->addCell($sessCard['activity'], "15%", null, "left","widelink");
-       $myTable->endRow();
-        
-   }  
-   return $myTable->show();
-       
-                 
+          foreach($activitydate as $sessCard){
+           
+             $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+             
+             $myTable->startRow();
+             $myTable->addCell($sessCard['date'],"15%", null, "left","widelink");
+             $myTable->addCell($sessCard['activity'], "15%", null, "left","widelink");
+             $myTable->endRow();
+         }  
+      return $myTable->show();
+   }    
+                     
   }      
 /*------------------------------------------------------------------------------*/
   /**
@@ -253,10 +254,10 @@ public function activitybyprov(){
   /**
    *displa all students by course
    */
-public   function activitybyschool(){
+public   function activitybyschool($activschool = NULL){
       
-        $results = $this->objactivity->getactivityschool();
-        
+        //$results = $this->objactivity->getactivityschool();
+    if(isset($activschool)){
         $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
          $this->appendArrayVar('headerParams', $css1);
          $oddEven = 'even';
@@ -276,7 +277,7 @@ public   function activitybyschool(){
         
         $rowcount = '0';
   
-    foreach($results as $sessCard){
+    foreach($activschool as $sessCard){
      
        $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        
@@ -289,6 +290,7 @@ public   function activitybyschool(){
    }  
    return $myTable->show();
   }
+ }
      
 /*------------------------------------------------------------------------------*/
 }//end of class  

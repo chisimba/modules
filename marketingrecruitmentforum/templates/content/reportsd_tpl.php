@@ -13,7 +13,7 @@
        $this->objreport  = & $this->newObject('reportinfo','marketingrecruitmentforum');
        
        $total = $this->objstudcard->allsdcases();
-       $totcount  = '';
+       $totcount  = '0';
        //get  the total of all sd cases
        foreach($total as $sessCount){
           
