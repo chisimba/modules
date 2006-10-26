@@ -1,3 +1,6 @@
+<?php
+	//die("DIE");
+?>
 <script language="JavaScript">
 
 if(!document.getElementById && document.all)
@@ -298,7 +301,12 @@ $cancelButton = new button('cancel', $this->objLanguage->languageText('word_canc
 $returnUrl = $this->uri(array('month'=>$month, 'year'=>$year, 'events'=>$currentList));
 $cancelButton->setOnClick("window.location='$returnUrl'");
 
-$form->addToForm('<p>'.$submitButton->show().' / '.$cancelButton->show().'</p>');
+$form->addToForm(//'<p>'
+//.$submitButton->show()
+'<input value="Save Event" type="submit" name="submitform" id="input_submitform" class="button" />'
+.' / '.$cancelButton->show()
+//.'</p>'
+);
 
 // Temporary Id
 $temporaryId = new hiddeninput ('temporary_id', $temporaryId);
