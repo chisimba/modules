@@ -176,6 +176,9 @@ $middleColumnContent .= $objDetailsTable->show();
 $objH->str = $this->objLanguage->languageText('mod_cmsadmin_subsections', 'cmsadmin').'&nbsp;'.'('.$this->_objSections->getNumSubSections($sectionId).')'.'&nbsp;'.$addSubSecIcon;
 $middleColumnContent .= $objH->show();
 $middleColumnContent .= $objSubSecTable->show();
+if(empty($subSections)){
+  $middleColumnContent .= '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_cmsadmin_nosubsectionsfound', 'cmsadmin').'</div>';
+}
 //Pages table
 $objH->str = $this->objLanguage->languageText('word_pages').'&nbsp;'.'('.$this->_objContent->getNumberOfPagesInSection($sectionId).')'.'&nbsp;'.$addPageIcon;
 $middleColumnContent .= $objH->show();

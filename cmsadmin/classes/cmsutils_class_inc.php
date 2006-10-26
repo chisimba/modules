@@ -823,7 +823,7 @@ class cmsutils extends object
 	 */
 	public function getNav()
 	{
-
+    $objCmsTree =& $this->newObject('cmstree', 'cmsadmin');
 		$link = & $this->newObject('link', 'htmlelements');
 		$str = '';
 
@@ -845,12 +845,11 @@ class cmsutils extends object
 		$nodes = array();
 		$nodes[] = array('text' => $this->objLanguage->languageText('phrase_frontpage'), 'uri' => $this->uri(array('action' => 'frontpages')));
 		$nodes[] = array('text' => $this->objLanguage->languageText('word_section'), 'uri' => $this->uri(array('action' => 'sections')));
-		$nodes[] = array('text' => $this->objLanguage->languageText('mod_cmsadmin_viewcms', 'cmsadmin'), 'uri' => $this->uri(array('action' => 'home'), 'cms'));
-
+		
 		$objNav = $this->newObject('sidebar', 'navigation');
 
 		$nav = $objNav->show($nodes);
-		//$nav .= $this->getHtmlListForTree('sections');
+		$nav .= $objCmsTree->show(NULL, TRUE);
 		
 		return $nav;
 
@@ -937,7 +936,7 @@ class cmsutils extends object
 	    //Create dropdown
       $treeDrop =& $this->newObject('dropdown', 'htmlelements');
 	    $treeDrop->name = 'parent';
-	    $treeDrop->addOption(NULL, ' ... Root Level ... ');
+	    $treeDrop->addOption('0', ' ... Root Level ... ');
 
 	    //Create instance of geticon object
 	    $objIcon =& $this->newObject('geticon', 'htmlelements');

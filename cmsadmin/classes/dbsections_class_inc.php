@@ -337,7 +337,7 @@ class dbsections extends dbTable
    */
 	public function getLevel($id)
 	{
-	   $count = '0';
+	   $count = 0;
      //get entry 
      $section = $this->getRow('id', $id);
      if(!empty($section)){
@@ -503,7 +503,7 @@ class dbsections extends dbTable
 	public function getOrdering($parentid = NULL)
 	{
 		try {	
-	   $ordering = "0";
+	   $ordering = 1;
      //get last order value 
      $lastOrder = $this->getAll('WHERE parentid = "'.$parentid.'" ORDER BY ordering DESC LIMIT 1');
      //add after this value

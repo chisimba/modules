@@ -151,7 +151,6 @@ class cmsadmin extends controller
                 }
                 
                 //----------------------- front page section
-                
             case 'frontpages':
                 $this->setVar('files', $this->_objFrontPage->getFrontPages());
                 return 'cms_frontpage_manager_tpl.php';
@@ -175,7 +174,7 @@ class cmsadmin extends controller
                 
             case 'createcontent':
                 $this->_objContent->add();
-                $sectionId = $this->getParam('section', NULL);
+                $sectionId = $this->getParam('parent', NULL);
                 if (!empty($sectionId)) {
                     return $this->nextAction('viewsection', array('id'=>$sectionId), 'cmsadmin');
                 } else {

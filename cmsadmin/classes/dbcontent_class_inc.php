@@ -54,7 +54,7 @@ class dbcontent extends dbTable
 		try{
 			$title = $this->getParam('title');
 			$menuText = $this->getParam('menutext');
-			$sectionid = $this->getParam('section');			
+			$sectionid = $this->getParam('parent');			
 			$published = ($this->getParam('published') == 'on') ? 1 : 0;
 			$creatorid = $this->_objUser->userId();
 			$access = $this->getParam('access');
@@ -109,7 +109,7 @@ class dbcontent extends dbTable
 			$id = $this->getParam('id');
 			$title = $this->getParam('title');
 			$menuText = $this->getParam('menutext');
-			$sectionid = $this->getParam('section');
+			$sectionid = $this->getParam('parent');
 			$published = ($this->getParam('published') == 'on') ? '1':'0';
 			$creatorid = $this->_objUser->userId();
 			$access = $this->getParam('access');

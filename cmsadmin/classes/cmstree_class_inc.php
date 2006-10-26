@@ -133,9 +133,10 @@ class cmstree extends object
                         $htmlLevel = '';
                     }else{
                         if(in_array($node['id'], $openNodes)){
-                            $htmlLevel .= '<li><a href="#">'.$node['title'].'</a><ul>';
+                            $nodeUri = $this->uri(array('action'=>'viewsection', 'id'=>$node['id']));
+                            $htmlLevel .= '<li><a href="'.$nodeUri.'">'.$node['title'].'</a><ul>';
                         }else{
-                            $htmlLevel .= '<li class="closed"><a href="#">'.$node['title'].'</a><ul>';
+                            $htmlLevel .= '<li class="closed"><a href="'.$nodeUri.'">'.$node['title'].'</a><ul>';
                         }
                         $htmlLevel .= $htmlChildren;
                         $htmlLevel .= '</ul></li>';
@@ -143,14 +144,17 @@ class cmstree extends object
                 }else{
                     //if node has no child nodes, then just get content nodes
                     if($this->getNodeContentCount($node['id']) > 0){
-                        $htmlLevel .= '<li><a href="#">'.$node['title'].'</a><ul>';
+                        $nodeUri = $this->uri(array('action'=>'viewsection', 'id'=>$node['id']));
+                        $htmlLevel .= '<li><a href="'.$nodeUri.'">'.$node['title'].'</a><ul>';
                         $htmlLevel .= $this->addContent($node['id']);
                         $htmlLevel .= '</ul></li>';
                     }elseif($admin == TRUE){
                         if(in_array($node['id'], $openNodes)){
-                            $htmlLevel .= '<li><a href="#">'.$node['title'].'</a><ul><li></li>';
+                            $nodeUri = $this->uri(array('action'=>'viewsection', 'id'=>$node['id']));
+                            $htmlLevel .= '<li><a href="'.$nodeUri.'">'.$node['title'].'</a><ul><li></li>';
                         }else{
-                            $htmlLevel .= '<li class="closed"><a href="#">'.$node['title'].'</a><ul><li></li>';
+                            $nodeUri = $this->uri(array('action'=>'viewsection', 'id'=>$node['id']));
+                            $htmlLevel .= '<li class="closed"><a href="'.$nodeUri.'">'.$node['title'].'</a><ul><li></li>';
                         }
                         $htmlLevel .= '</ul></li>';
                     }
