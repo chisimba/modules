@@ -110,23 +110,45 @@ class marketingrecruitmentforum extends controller
                   ///////////////////////////////////////////////////////
                   //submit studcard info
                   $studcarddata = $this->getSession('studentdata');
-                  $this->dbstudentcard->addstudcard($studcarddata);
-                  //$faccoursedata  = $this->getSession('faccoursedata');
-                  //$this->dbstudentcard->addfaccourse($faccourse);
+                  if(!empty($studcarddata)){
+                      $this->dbstudentcard->addstudcard($studcarddata);
+                  }
                   //submit slu activities
                   $sluactivity = $this->getSession('sluactivitydata');
-                  $this->dbsluactivities->addsluactivity($sluactivity);
+                  if(!empty($sluactivity)){
+                      $this->dbsluactivities->addsluactivity($sluactivity);
+                  }
                   //////////////////////////////////////////////////////// 
                   //submit all schoolist information
-              //    $this->getSchoolist();
                   $schoolinfodata = $this->getSession('schoolvalues');
-                  $this->dbschoollist->addsschoollist($schoolinfodata);
-                  
+                  if(!empty($schoolinfodata)){
+                    $this->dbschoollist->addsschoollist($schoolinfodata);
+                  }
                    
                   $this->unsetSession('studentdata');
                   $this->unsetSession('sluactivitydata');
                   $this->unsetSession('schoolvalues');
                   return  'output_tpl.php';
+            break;
+            
+            case  'studcardfaculty':
+                //get faculty name selected
+                $facultynameval = $this->getParam('facultynameval');
+                //use name selected, pass to db function and extract data on that
+                $facultyval = $this->dbstudentcard->allstudfaculty($facultynameval);
+                $facultyexmp  = $this->dbstudentcard->facultyexempted($facultynameval);
+                $facsubj  = $this->dbstudentcard->facsubject($facultynameval);
+                $faccourse  =  $this->dbstudentcard->faccourse($facultynameval);
+                $facsdcase  = $this->dbstudentcard->facultysdcase($facultynameval);
+                //send all values to template / class searchfaculty
+                $this->setVarByRef('facultyval', $facultyval);
+                $this->setVarByRef('facultyexmp', $facultyexmp);
+                $this->setVarByRef('facsubj', $facsubj);
+                $this->setVarByRef('faccourse', $faccourse);
+                $this->setVarByRef('facsdcase', $facsdcase);
+                
+                $this->setLayoutTemplate('search_layout_tpl.php');
+                return 'searchstudcardfac_tpl.php';
             break;
             
             case  'showsearchfac':
@@ -144,6 +166,7 @@ class marketingrecruitmentforum extends controller
                 return 'searchschools_tpl.php';
             break;
             
+                       
             case  'totalsd':
                 $this->setLayoutTemplate('reports_layout_tpl.php');
                 return 'reportsd_tpl.php';
@@ -155,22 +178,60 @@ class marketingrecruitmentforum extends controller
             break;
             
             case  'totalfaculty':
+                $this->setLayoutTemplate('reports_layout_tpl.php');
                 return  'facultyinterest_tpl.php';
             break;
             
             case  'reportdropdown':
+              
                 //determine which faculty count to show
+                 $facultyname  = $this->getParam('names',NULL);  
+                 //use name selected to retrieve values in the db matching the faculty name
+                 //call the function in dbstudcard and pass the faculty name to it
+                 $faculty = $this->dbstudentcard->facultycount($facultyname);
+                 //send the array data retrieved from the db to template / searchstudclass
+                 $this->setVarByRef('faculty', $faculty);
+              //   $this->setVarByRef('faculty', $facultyname);
+                $this->setLayoutTemplate('reports_layout_tpl.php');
+                 return  'facultyinterest_tpl.php';
                 
             break;
 /****************************************************************************************************************/            
             case  'showstudschool':
-                    
-                  $useToPopTbl  = $this->getParam('schoollistnames',NULL);    //get the value of school selected
-                  //call the object that gets schools with selected name            
+                  $useToPopTbl  = $this->getParam('schoollistnames',NULL);  
                   $school = $this->dbstudentcard->getstudschool($useToPopTbl);
                   $this->setVarByRef('school', $school);
                   $this->setLayoutTemplate('search_layout_tpl.php'); 
                   return 'studcardresults_tpl.php';
+            break;
+            
+            case  'showschoolbyname':
+                  $namevalue  = $this->getParam('namevalues',NULL);
+                  $schoolbyname = $this->dbschoollist->getschoolbyname($namevalue);
+                  $this->setVarByRef('schoolbyname', $schoolbyname);
+                  $this->setLayoutTemplate('search_layout_tpl.php');
+                  return 'searchschools_tpl.php';
+            break;
+            
+            case  'showstudschoolactivity':
+                $schooldropdown = $this->getParam('schoollistnames');
+                $searchactivity = $this->getParam('searchactiv');
+                
+                if(isset($searchactivity)){
+                      $begindate  = $this->getParam('fromdate');
+                      $enddate  = $this->getParam('todate');
+                      $activitydate = $this->dbsluactivities->getactivitydate($begindate,$enddate);
+                      //var_dump($activitydate);
+                      $this->setVarByRef('activitydate',$activitydate); 
+                      $this->setLayoutTemplate('search_layout_tpl.php');  
+                      return 'searchactivities_tpl.php';
+                }else{
+                      $useToPopTbl  = $this->getParam('schoollistnames',NULL);    //get the value of school selected
+                      $activschool  = $this->dbsluactivities->getactivityschool($useToPopTbl);
+                      $this->setVarByRef('activschool',$activschool);
+                      $this->setLayoutTemplate('search_layout_tpl.php');
+                      return 'searchactivities_tpl.php';  
+                }
             break;
 /****************************************************************************************************************/            
             default:
