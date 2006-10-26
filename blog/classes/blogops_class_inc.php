@@ -259,8 +259,8 @@ class blogops extends object
 			{
 				$objFeatureBox = $this->getObject('featurebox', 'navigation');
 				//build the top level stuff
-				$dt = strtotime($post['post_date']);
-				$dt = date('r', $dt);
+				//$dt = strtotime($post['post_date']);
+				$dt = date('r', $post['post_ts']);
 				$head = $post['post_title'] . "<br />" . $dt;
 				//dump in the post content and voila! you have it...
 				//build the post content plus comment count and stats???
@@ -620,11 +620,32 @@ class blogops extends object
 		return $postform;
 	}
 
-	public function managePosts($userid, $cat)
+	public function managePosts($userid, $catid)
 	{
 		//create a table with the months posts, plus a dropdown of all months to edit
 		//put the edit icon at the end of each row, with text linked to the postEditor() method
 		//create an array with keys: cat, excerpt, title, content, catid for edit
+		//start the edit table
+		$editform = new form('postedit', $this->uri(array(
+		'action' => 'postedit'
+		)));
+
+		//$edfieldset = $this->newObject('fieldset', 'htmlelements');
+		//$edfieldset->setLegend($this->objLanguage->languageText('mod_blog_posthead', 'blog'));
+		$edtable = $this->newObject('htmltable', 'htmlelements');
+		$edtable->cellpadding = 5;
+
+		//grab the posts for this month
+		$posts = $this->objDbBlog->getPostsMonthly($userid, $catid);
+
+		$ptable->startRow();
+		$ptable->addCell();
+		$ptable->addCell();
+		$ptable->endRow();
+
+
+
+
 
 
 
