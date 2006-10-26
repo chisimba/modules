@@ -120,7 +120,7 @@ class marketingrecruitmentforum extends controller
                   }
                   //////////////////////////////////////////////////////// 
                   //submit all schoolist information
-                  $schoolinfodata = $this->getSession('schoolvalues');
+                 $schoolinfodata = $this->getSession('schoolvalues');
                   if(!empty($schoolinfodata)){
                     $this->dbschoollist->addsschoollist($schoolinfodata);
                   }

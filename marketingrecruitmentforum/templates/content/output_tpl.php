@@ -83,7 +83,10 @@
                 $objstudcardTable->addCell(strtoupper($sesStuddata['date']));
                 $objstudcardTable->endRow();
   
- 
+                $objstudcardTable->startRow();
+                $objstudcardTable->addCell('Date' );
+                $objstudcardTable->addCell(strtoupper($sesStuddata['date']));   //not showing
+                $objstudcardTable->endRow();
   
                 $objstudcardTable->startRow();
                 $objstudcardTable->addCell('Shool Name' );

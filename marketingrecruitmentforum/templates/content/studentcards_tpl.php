@@ -100,12 +100,7 @@
                   if($subkey  ==  'courseinterest') {
                   $studcourse = $subval;
                   }
-                  /*if($subkey  ==  'relevantsubject') {
-                  $studsubject = $subval;
-                  }
-                  ($subkey  ==  'sdcase') {
-                  $studsdcase = $subval;*/
-                //  }
+                  
                   
               }
           }

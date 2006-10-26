@@ -15,8 +15,6 @@
           $displayname  = $sessfacval['faculty'];
           $count  = $sessfacval['totstud'];
       }
-           
-       
 /*------------------------------------------------------------------------------*/       
        /**
         *create form heading
@@ -51,17 +49,10 @@
         $this->objheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_facultymsg','marketingrecruitmentforum') .' '. $names->show();
 /*------------------------------------------------------------------------------*/
       
-      
-      
       $this->objstudcard  = & $this->newObject('searchstudcard','marketingrecruitmentforum');
       $facultydetails = $this->objstudcard->countstudfaculty($faculty);
-      
-     // var_dump($facultydetails);
-     // die;
 /*------------------------------------------------------------------------------*/
-            
-             
-/*------------------------------------------------------------------------------*/
+
     /**
      *create a form to place all elements on
      */
