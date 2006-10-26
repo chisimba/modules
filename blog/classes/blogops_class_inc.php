@@ -518,8 +518,10 @@ class blogops extends object
 		return $ctable . "<br />" . $catform;
 	}
 
-	public function postEditor($userid)
+	public function postEditor($userid, $editparams = NULL)
 	{
+		//debug string
+		//$editparams = array('title' => 'crap', 'cat' => 'crapolla', 'catid' => 0, 'excerpt' => 'some crap', 'content' => 'expounding on the crap');
 		$postform = new form('postadd', $this->uri(array(
 		'action' => 'postadd'
 		)));
@@ -533,6 +535,10 @@ class blogops extends object
 		$ptable->startRow();
 		$plabel = new label($this->objLanguage->languageText('mod_blog_posttitle', 'blog') .':', 'input_posttitle');
 		$title = new textinput('posttitle');
+		if(isset($editparams['title']))
+		{
+			$title->setValue($editparams['title']);
+		}
 		$ptable->addCell($plabel->show());
 		$ptable->addCell($title->show());
 		$ptable->endRow();
@@ -542,6 +548,10 @@ class blogops extends object
 		$ptable->startRow();
 		$pdlabel = new label($this->objLanguage->languageText('mod_blog_postcat', 'blog') .':', 'input_postcatfull');
 		$pDrop = new dropdown('cat');
+		if(isset($editparams['cat']))
+		{
+			$pDrop->addOption($editparams['catid'], $editparams['cat']);
+		}
 		$pDrop->addOption(0, $this->objLanguage->languageText("mod_blog_defcat","blog"));
 		$pcats = $this->objDbBlog->getAllCats($userid);
 		foreach($pcats as $adds)
@@ -578,6 +588,10 @@ class blogops extends object
 		$pexcerpt->setName('postexcerpt');
 		$ptable->startRow();
 		$pexcerptlabel = new label($this->objLanguage->languageText('mod_blog_postexcerpt', 'blog') .':', 'input_postexcerpt');
+		if(isset($editparams['excerpt']))
+		{
+			$pexcerpt->setcontent($editparams['excerpt']);
+		}
 		$ptable->addCell($pexcerptlabel->show());
 		$ptable->addCell($pexcerpt->show());
 		$ptable->endRow();
@@ -586,6 +600,10 @@ class blogops extends object
 		$pclabel = new label($this->objLanguage->languageText('mod_blog_pcontent', 'blog') .':', 'input_pcont');
 		$pcon = $this->newObject('htmlarea','htmlelements');
 		$pcon->setName('postcontent');
+		if(isset($editparams['content']))
+		{
+			$pcon->setcontent($editparams['content']);
+		}
 		$ptable->startRow();
 		$ptable->addCell($pclabel->show());
 		$ptable->addCell($pcon->showFCKEditor());
@@ -602,6 +620,16 @@ class blogops extends object
 		return $postform;
 	}
 
+	public function managePosts($userid, $cat)
+	{
+		//create a table with the months posts, plus a dropdown of all months to edit
+		//put the edit icon at the end of each row, with text linked to the postEditor() method
+		//create an array with keys: cat, excerpt, title, content, catid for edit
+
+
+
+	}
+
 	/**
 	 * Method to add a quick post as a blocklet
 	 *
@@ -615,12 +643,15 @@ class blogops extends object
 		$this->loadClass('textarea', 'htmlelements');
 		$this->loadClass('textinput', 'htmlelements');
 		$qpform = new form('qpadd', $this->uri(array('action' => 'postadd', 'mode' => 'quickadd')));
+		$qptitletxt = $this->objLanguage->languageText("mod_blog_posttitle", "blog");
 		$qptitle = new textinput('posttitle');
 		//post content textarea
+		$qpcontenttxt = $this->objLanguage->languageText("mod_blog_pcontent", "blog");
 		$qpcontent = new textarea;
 		$qpcontent->setName('postcontent');
 		//$qpcontent->setBasicToolBar();
 		//dropdown of cats
+		$qpcattxt = $this->objLanguage->languageText("mod_blog_postcat", "blog");
 		$qpDrop = new dropdown('cat');
 		$qpDrop->addOption(0, $this->objLanguage->languageText("mod_blog_defcat","blog"));
 		//loop through the existing cats and make sure not to add a child to the dd
@@ -635,9 +666,9 @@ class blogops extends object
 		$qpcontent->cols = 15;
 		$qpcontent->rows = 5;
 
-		$qpform->addToForm($qptitle->show());
-		$qpform->addToForm($qpcontent->show());
-		$qpform->addToForm($qpDrop->show());
+		$qpform->addToForm($qptitletxt . $qptitle->show());
+		$qpform->addToForm($qpcontenttxt . $qpcontent->show());
+		$qpform->addToForm($qpcattxt . $qpDrop->show());
 
 		$this->objqpCButton = &new button($this->objLanguage->languageText('mod_blog_word_blogit', 'blog'));
 		$this->objqpCButton->setValue($this->objLanguage->languageText('mod_blog_word_blogit', 'blog'));
