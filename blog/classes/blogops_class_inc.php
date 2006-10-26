@@ -119,7 +119,7 @@ class blogops extends object
 	 * @param bool $featurebox
 	 * @return string
 	 */
-	public function showCatsMenu($cats, $featurebox = FALSE)
+	public function showCatsMenu($cats, $userid, $featurebox = FALSE)
 	{
 		$objSideBar = $this->newObject('sidebar', 'navigation');
 		$nodes = array();
@@ -136,11 +136,11 @@ class blogops extends object
 				{
 					foreach($categories['child'] as $kid)
 					{
-						$childnodes[] = array('text' => $kid['cat_nicename'], 'uri' => $this->uri(array('action' => 'viewblog', 'catid' => $kid['id']), 'blog'));
+						$childnodes[] = array('text' => $kid['cat_nicename'], 'uri' => $this->uri(array('action' => 'viewblog', 'catid' => $kid['id'], 'userid' => $userid), 'blog'));
 					}
 				}
 				$nodestoadd[] = array('text'=> $categories['cat_nicename'], 'uri' => $this->uri(array('action' => 'viewblog',
-				'catid' => $categories['id']), 'blog'),
+				'catid' => $categories['id'], 'userid' => $userid), 'blog'),
 				'haschildren' => $childnodes);
 				$childnodes = NULL;
 				$nodes = NULL;
