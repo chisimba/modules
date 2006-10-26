@@ -619,7 +619,7 @@ class blogops extends object
 		return $postform;
 	}
 
-	public function managePosts($userid, $catid)
+	public function managePosts($userid)
 	{
 		//create a table with the months posts, plus a dropdown of all months to edit
 		//put the edit icon at the end of each row, with text linked to the postEditor() method
@@ -635,19 +635,14 @@ class blogops extends object
 		$edtable->cellpadding = 5;
 
 		//grab the posts for this month
-		$posts = $this->objDbBlog->getPostsMonthly($userid, $catid);
+		$posts = $this->objDbBlog->getPostsMonthly(mktime(0,0,0,date("m", time()), 1, date("y", time())), $userid);
 
-		$ptable->startRow();
-		$ptable->addCell();
-		$ptable->addCell();
-		$ptable->endRow();
+		$edtable->startRow();
+		$edtable->addCell('test');
+		$edtable->addCell('test');
+		$edtable->endRow();
 
-
-
-
-
-
-
+		return $edtable->show();
 	}
 
 	/**
@@ -711,6 +706,24 @@ class blogops extends object
 	public function editPost()
 	{
 
+	}
+
+	public function retDates($sel_date = NULL)
+	{
+		if($sel_date == NULL)
+		{
+			$sel_date = mktime(0,0,0,date("m", time()), 1, date("y", time()));
+		}
+		$t = getdate($sel_date);
+		$start_date = mktime($t['hours'], $t['minutes'], $t['seconds'], $t['mon'], 1, $t['year']);
+		$start_date -= 86400 * date('w', $start_date);
+
+		$prev_year = mktime($t['hours'], $t['minutes'], $t['seconds'], $t['mon'], $t['mday'], $t['year'] - 1);
+		$prev_month = mktime($t['hours'], $t['minutes'], $t['seconds'], $t['mon'] - 1, $t['mday'], $t['year']);
+		$next_year = mktime($t['hours'], $t['minutes'], $t['seconds'], $t['mon'], $t['mday'], $t['year'] + 1);
+		$next_month = mktime($t['hours'], $t['minutes'], $t['seconds'], $t['mon'] + 1, $t['mday'], $t['year']);
+
+		return array('mbegin' => $sel_date, 'prevyear' => $prev_year, 'prevmonth' => $prev_month, 'nextyear' => $next_year, 'nextmonth' => $next_month);
 	}
 
 }

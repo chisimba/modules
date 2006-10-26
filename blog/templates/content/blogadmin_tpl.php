@@ -27,6 +27,9 @@ $leftCol = $leftMenu->show();
 //get the category editor
 $catedit = $this->objblogOps->categoryEditor($userid);
 
+//get the posts editor
+$postedit = $this->objblogOps->managePosts($userid);
+
 //Middle column - dashboard
 $pane->addTab(array(
     'name' => $this->objLanguage->languageText("mod_blog_word_posts", "blog"),
@@ -35,6 +38,10 @@ $pane->addTab(array(
 $pane->addTab(array(
     'name' => $this->objLanguage->languageText("mod_blog_word_categories", "blog"),
     'content' => $catedit
+));
+$pane->addTab(array(
+    'name' => $this->objLanguage->languageText("mod_blog_word_editposts", "blog"),
+    'content' => $postedit
 ));
 
 

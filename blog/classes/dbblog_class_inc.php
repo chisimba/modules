@@ -192,10 +192,19 @@ class dbblog extends dbTable
 		return $this->getAll("WHERE userid = '$userid' AND post_category = '$catid' ORDER BY post_ts DESC");
 	}
 
-	public function getPostsMonthly($month, $userid)
+	public function getPostsMonthly($startdate, $userid)
 	{
-		//$startdate = mktime(0,0,0,);
-
+		$this->_changeTable('tbl_blog_posts');
+		$this->objblogOps = &$this->getObject('blogops');
+		$times = $this->objblogOps->retDates($startdate);
+		$now = date('r',mktime(0,0,0,date("m", time()), date("d", time()), date("y", time())));
+		$monthstart =  $times['mbegin'];
+		$prevmonth = $times['prevmonth'];
+		$nextmonth = $times['nextmonth'];
+		//get the entries from the db
+		$filter = "WHERE post_ts > '$monthstart' AND post_ts < '$nextmonth'";
+		$ret = $this->getAll($filter);
+		return $ret;
 	}
 
 	public function getPostsFromCat($userid, $catid)
