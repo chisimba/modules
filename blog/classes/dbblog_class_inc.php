@@ -192,6 +192,12 @@ class dbblog extends dbTable
 		return $this->getAll("WHERE userid = '$userid' AND post_category = '$catid'");
 	}
 
+	public function getPostsMonthly($month, $userid)
+	{
+		//$startdate = mktime(0,0,0,);
+
+	}
+
 	public function getPostsFromCat($userid, $catid)
 	{
 		$this->_changeTable('tbl_blog_posts');
@@ -223,7 +229,7 @@ class dbblog extends dbTable
 	{
 		$this->_changeTable("tbl_blog_posts");
 		$insarr = array('userid' => $userid, 'post_date' => date('r'), 'post_content' => $postarr['postcontent'], 'post_title' => $postarr['posttitle'],
-						'post_category' => $postarr['postcat'], 'post_excerpt' => $postarr['postexcerpt'], 'post_status' => $postarr['poststatus'], 'comment_status' => $postarr['commentstatus'], 'post_modified' => $postarr['postmodified'], 'comment_count' => $postarr['commentcount']);
+						'post_category' => $postarr['postcat'], 'post_excerpt' => $postarr['postexcerpt'], 'post_status' => $postarr['poststatus'], 'comment_status' => $postarr['commentstatus'], 'post_modified' => $postarr['postmodified'], 'comment_count' => $postarr['commentcount'], 'post_ts' => time());
 		return $this->insert($insarr, 'tbl_blog_posts');
 	}
 

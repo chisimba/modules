@@ -85,6 +85,10 @@ $fields = array(
 		'type' => 'integer',
 		'length' => 20
 		),
+	'post_ts' => array(
+		'type' => 'integer',
+		'length' => 50
+		),
 	);
 
 //create other indexes here...
