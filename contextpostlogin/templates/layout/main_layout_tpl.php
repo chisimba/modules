@@ -9,14 +9,11 @@ $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 
 // Set the Content of middle column
 
-//if(isset($txt))
 
-//{
+    $cssLayout->setLeftColumnContent($this->_objUtils->getLeftContent());
 
-    $cssLayout->setLeftColumnContent($this->getLeftContent());
 
-//}
-$cssLayout->setRightColumnContent($this->getRightContent());
+$cssLayout->setRightColumnContent($this->_objUtils->getRightContent());
 $cssLayout->setMiddleColumnContent($this->getContent());
 
 

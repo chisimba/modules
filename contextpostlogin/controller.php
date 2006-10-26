@@ -44,61 +44,15 @@ class contextpostlogin extends controller
 	          case '':
 	          case 'default':
 	            $this->setLayoutTemplate('main_layout_tpl.php');
-	            $this->setVar('courseList', $this->getContextList());
-	            $this->setVar('otherCourses', $this->getOtherContextList());
+	            $this->setVar('contextList', $this->_objUtils->getContextList());
+	            $this->setVar('otherCourses', $this->_objUtils->getOtherContextList());
 	            return 'main_tpl.php';
 	      }
 	  }
 	    
-	  /**
-	   * Method to get the left widgets
-	   * @return string
-	   * @access public
-	   */
-	  public function getLeftContent()
-	  {
-	      
-	  }
-	   
 	  
-	  /**
-	   * Method to get the right widgets
-	   * @return string
-	   * @access public
-	   */
-	  public function getRightContent()
-	  {
-	      
-	  } 
 	  
-	  /**
-	   * Method to get the users context that he
-	   * is registered to
-	   * @return array
-	   * @access public
-	   */
-	  public function getContextList()
-	  {
-	  	
-	  	$objGroups = & $this->newObject('managegroups', 'contextgroups');
-	  	$contextCodes = $objGroups->usercontextcodes($this->_objUser->userId());
-	  	print_r($contextCodes);
-	  	
-	  	return $contextCodes;
-	  }
 	  
-	  /**
-	   * Method to get the users context that he
-	   * is registered to
-	   * @return array
-	   * @access public
-	   */
-	  public function getOtherContextList()
-	  {
-	  	
-	  	$objGroups = & $this->newObject('managegroups', 'contextgroups');
-	  	return null;//$objGroups->usercontextcodes($this->_objUser->userId());
-	  }
 }
 
 ?>

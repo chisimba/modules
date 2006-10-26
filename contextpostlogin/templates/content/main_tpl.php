@@ -2,10 +2,11 @@
 
 $tabBox = & $this->newObject('tabpane', 'htmlelements');
 $featureBox = & $this->newObject('featurebox', 'navigation');
-
+$objLink =  & $this->newObject('link', 'htmlelements');
 
 $str = '';
 $other = '';
+$lects = '';
 
 //registered courses
 if (isset($contextList))
@@ -13,7 +14,28 @@ if (isset($contextList))
 	foreach ($contextList as $context)
 	{
 		
-		$str .= $featurebox->show($context['title'], $context['about'] );
+		$lecturers = $this->_objUtils->getContextLecturers($context['contextcode']);
+		
+		if(is_array($lecturers))
+		{
+			foreach($lecturers as $lecturer)
+			{
+				$lects .= $lecturer['fullname'].', ';
+			}
+		} else {
+			$lects = 'No Instructor for this course';
+		}
+		
+		$content = '<span class="caption">Instructors : '.$lects.'</span>';
+		$content .= '<p>'.$context['about'].'</p>';
+		$content .= '<p>'.$this->_objUtils->getPlugins($context['contextcode']).'</p>';
+		
+		
+		
+		$objLink->href = $this->uri(array('action' => 'joincontext'), 'context');
+		$objLink->link = '<span class="caption">Enter</span>';
+		
+		$str .= $featureBox->show($context['contextcode'] .' - '.$context['title'].'   '.$objLink->show(), $content );
 	}
 } else {
 	$str .= '<div align="center" style="font-size:large;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">No are associated with any courses</div>';

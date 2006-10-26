@@ -31,9 +31,10 @@ class block_calendar extends object
         $this->objLanguage =& $this->getObject('language','language');
         //Set the title
         $this->title='My Calendar';//$this->objLanguage->languageText("mod_postlogin_helptitle",'postlogin');
-        
+         $this->_objDBEventsCalendar = & $this->newObject('dbeventscalendar', 'eventscalendar');
         //get the calendar object
-        $this->objCalendar = & $this->newObject('calendarbiulder' , 'eventscalendar');
+        $this->objCalendarBiulder = & $this->newObject('calendarbiulder' , 'eventscalendar');
+        $this->_objUser = & $this->newObject('user', 'security');
     }
     
     /**
@@ -47,12 +48,15 @@ class block_calendar extends object
         $objHelp = & $this->getObject('helplink','help');
         //Add the help link to the output
         $ret .= "&nbsp;".$this->objHelp->show('mod_postlogin_helphowto','postlogin');
-        //return $ret;
-         //$this->objCalendar->getListing = FALSE;
-         //$objUser = & $this->newObject('user', 'security');
-         //$objDBCalendar = & $this->newObject('dbcalendar', 'eventscalendar');
-         //$events = $objDBCalendar->getUserEvents($objUser->userId());
-        //return '<center>'.$this->objCalendar->simpleCalendar($events).'</center>';
-        return 'simple calendar';
+        $mon =  $this->getParam('month');
+            	$year = $this->getParam('year');
+            
+            	//$arrEvents = $this->_objDBEventsCalendar->getUserEvents($this->_objUser->userId(), $mon , $year	);
+            	$arrEvents = $this->_objDBEventsCalendar->getEventsByType('user', $this->_objUser->userId(), $mon , $year);
+            	$this->setVar('events', $arrEvents);
+            	
+            	$this->objCalendarBiulder->assignDate($mon , $year);
+            	$ret =  $this->objCalendarBiulder->show('simple', $arrEvents);
+        return $ret;
     }
 }

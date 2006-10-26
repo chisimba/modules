@@ -52,7 +52,7 @@ class dbeventscalendar extends dbTable
     	
     	$events = array();
     	
-    	if(yr == 0 )
+    	if($yr == 0 )
     	{
     		$yr = date("Y");
     	}
