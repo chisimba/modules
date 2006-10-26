@@ -172,7 +172,7 @@ class blog extends controller
 				try {
 					$catid = $this->getParam('catid');
 					$userid = $this->getParam('userid');
-					if(!isset($userid))
+					if(empty($userid))
 					{
 						$userid = $this->objUser->userId();
 					}

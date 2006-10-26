@@ -17,7 +17,7 @@ $rightSideColumn = NULL;
 $rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
 
 //show the categories menu (if there are cats)
-//$rightSideColumn .= $this->objblogOps->showCatsMenu($cats, &$userid, TRUE);
+//$rightSideColumn .= $this->objblogOps->showCatsMenu($cats, $userid, TRUE);
 
 $leftCol = NULL;
 $middleColumn = NULL;
