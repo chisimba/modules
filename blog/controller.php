@@ -110,7 +110,7 @@ class blog extends controller
 				{
 					$itemTitle = $feeditems['post_title'];
 					$itemLink = ''; //todo - add this to the posts table!
-					$itemDescription = $feeditems['post_excerpt'];
+					$itemDescription = $feeditems['post_content'];
 					$itemSource = $this->objConfig->getSiteRoot() . "index.php?module=blog&userid=" . $userid;
 					$itemAuthor = htmlentities($this->objUser->fullname($userid));
 
