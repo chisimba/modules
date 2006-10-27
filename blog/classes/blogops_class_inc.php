@@ -658,7 +658,7 @@ class blogops extends object
 		{
 			$edtable->startRow();
 			$edtable->addCell($post['post_title']);
-			$edtable->addCell($post['post_date']);
+			$edtable->addCell(date('r',$post['post_ts']));
 			//do some voodoo on the post status, so that it looks better
 			switch ($post['post_status'])
 			{
@@ -690,7 +690,6 @@ class blogops extends object
 			$edtable->addCell($edIcon . $delIcon);
 			$edtable->endRow();
 		}
-
 
 		return $edtable->show();
 	}
