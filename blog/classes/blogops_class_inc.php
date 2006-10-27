@@ -263,6 +263,15 @@ class blogops extends object
 				$head = $post['post_title'] . "<br />" . $dt;
 				//dump in the post content and voila! you have it...
 				//build the post content plus comment count and stats???
+				//do the BBCode Parsing
+				try {
+					$this->bbcode = $this->getObject('bbcodeparser', 'utilities');
+				}
+				catch (customException $e)
+				{
+					customException::cleanUp();
+				}
+				$post['post_content'] = $this->bbcode->parse4bbcode($post['post_content']);
 				$this->cleaner = $this->newObject('htmlcleaner', 'utilities');
 				$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content']));
 			}
@@ -637,6 +646,8 @@ class blogops extends object
 		//grab the posts for this month
 		$posts = $this->objDbBlog->getPostsMonthly(mktime(0,0,0,date("m", time()), 1, date("y", time())), $userid); //change this to get from the form input rather
 		//print_r($posts);
+		//add in a table header...
+
 		foreach($posts as $post)
 		{
 			$edtable->startRow();
