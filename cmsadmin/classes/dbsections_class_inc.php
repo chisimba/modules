@@ -637,7 +637,7 @@ class dbsections extends dbTable
        }
      }
      //Get other entry to change
-     $entries = $this->getAll('WHERE ordering = "'.$toChange.'"');
+     $entries = $this->getAll('WHERE parentid = "'.$parentid.'" AND ordering = "'.$toChange.'"');
      foreach($entries as $entry){
         if($entry['id'] != $id){
           $upArr = array(
