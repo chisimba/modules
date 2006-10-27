@@ -366,19 +366,20 @@ class dbsections extends dbTable
 	 *
 	 * @param string $sectionId The id(pk) of the section
 	 * @param int $level The node level in question	 
+	 * @param string $order Either DESC or ASC
 	 * @param bool $isPublished TRUE | FALSE To get published sections
 	 * @return array $subsections An array of associative arrays for all categories in the section
 	 * @access public
    */
-	public function getSubSectionsInSection($sectionId, $isPublished = FALSE)
+	public function getSubSectionsInSection($sectionId, $order = 'ASC', $isPublished = FALSE)
 	{
 		try {
 			if($isPublished)
 			{
 	    //return all subsections
-      return $this->getAll('WHERE published = 1 AND parentid = "'.$sectionId.'" ORDER BY ordering');
+      return $this->getAll('WHERE published = 1 AND parentid = "'.$sectionId.'" ORDER BY ordering '.$order);
 			} else {
-				return $this->getAll('WHERE parentid = "'.$sectionId.'" ORDER BY ordering');
+				return $this->getAll('WHERE parentid = "'.$sectionId.'" ORDER BY ordering '.$order);
 			}
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
@@ -415,19 +416,20 @@ class dbsections extends dbTable
 	 *
 	 * @param string $rootId The id(pk) of the sections root node
 	 * @param int $level The node level in question	 
+	 * @param int $order Either DESC or ASC 
 	 * @param bool $isPublished TRUE | FALSE To get published sections
 	 * @return array $subsections An array of associative arrays for all sub sections in the section
 	 * @access public
    */
-	public function getSubSectionsForLevel($rootId, $level, $isPublished = FALSE)
+	public function getSubSectionsForLevel($rootId, $level, $order = 'ASC', $isPublished = FALSE)
 	{
 		try {
 			if($isPublished)
 			{
 	    //return all subsections
-      return $this->getAll('WHERE published = 1 AND count = "'.$level.'" AND rootid = "'.$rootId.'" ORDER BY ordering');
+      return $this->getAll('WHERE published = 1 AND count = "'.$level.'" AND rootid = "'.$rootId.'" ORDER BY ordering '.$order);
 			} else {
-				return $this->getAll('WHERE count = "'.$level.'" AND rootid = "'.$rootId.'" ORDER BY ordering');
+				return $this->getAll('WHERE count = "'.$level.'" AND rootid = "'.$rootId.'" ORDER BY ordering '.$order);
 			}
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
@@ -499,6 +501,7 @@ class dbsections extends dbTable
 	 * @param string $parentid The id(pk) of the parent. Uses root node order if NULL
 	 * @return int $ordering The value to insert into the ordering field
 	 * @access public
+	 * @author Warren Windvogel
    */
 	public function getOrdering($parentid = NULL)
 	{
@@ -523,6 +526,7 @@ class dbsections extends dbTable
 	 * @return string $links The html for the links
 	 * @access public
 	 * @return bool
+	 * @author Warren Windvogel
 	 */
 	public function getOrderingLink($id)
 	{
@@ -585,6 +589,7 @@ class dbsections extends dbTable
 	 * @param int $ordering How to update the order(up or down).
 	 * @access public
 	 * @return bool
+	 * @author Warren Windvogel
 	 */
 	public function changeOrder($id, $ordering, $parentid)
 	{

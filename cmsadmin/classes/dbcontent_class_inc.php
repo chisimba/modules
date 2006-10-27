@@ -382,6 +382,7 @@ class dbcontent extends dbTable
 	 * @param string $sectionId The id(pk) of the section the content is attached to
 	 * @return int $ordering The value to insert into the ordering field
 	 * @access public
+	 * @author Warren Windvogel
    */
 	public function getPageOrder($pageId)
 	{
@@ -404,6 +405,7 @@ class dbcontent extends dbTable
 	 * @param string $sectionId The id(pk) of the section the content is attached to
 	 * @return int $ordering The value to insert into the ordering field
 	 * @access public
+	 * @author Warren Windvogel
    */
 	public function getOrdering($sectionId)
 	{
@@ -428,6 +430,7 @@ class dbcontent extends dbTable
 	 * @return string $links The html for the links
 	 * @access public
 	 * @return bool
+	 * @author Warren Windvogel
 	 */
 	public function getOrderingLink($sectionid, $id)
 	{
@@ -492,6 +495,7 @@ class dbcontent extends dbTable
 	 * @param int $ordering How to update the order(up or down).
 	 * @access public
 	 * @return bool
+	 * @author Warren Windvogel
 	 */
 	public function changeOrder($sectionid, $id, $ordering)
 	{

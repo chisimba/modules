@@ -76,7 +76,7 @@ $middleColumnContent .= $h3->show();
 $middleColumnContent .= '<br/>';
 $middleColumnContent .= $table->show();
 if(empty($files)){
-  $middleColumnContent .= "<div class='noRecordsMessage' >".$this->objLanguage->languageText('mod_cmsadmin_nopagesonfrontpage', 'cmsadmin')."</div>";  
+  $middleColumnContent .= '<div class="noRecordsMessage" >'.$this->objLanguage->languageText('mod_cmsadmin_nopagesonfrontpage', 'cmsadmin').'</div>';  
 }
 
 echo $middleColumnContent;

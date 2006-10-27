@@ -318,7 +318,7 @@ class cmsutils extends object
 
 			}
 			//add the admin link
-			$nodes[] = array('text' => 'Administration', 'uri' =>$this->uri(null, 'splashscreen'));
+			$nodes[] = array('text' => 'Administration', 'uri' =>$this->uri(array(NULL), 'cmsadmin'));
 
 			return $objSideBar->show($nodes, $this->getParam('id'));
 		}catch (Exception $e){
@@ -837,6 +837,9 @@ class cmsutils extends object
 		$link->href = $this->uri(array('action' => 'sections'));
 		$str .= '<p>'.$link->show();
 
+		$button =& $this->newObject('navbuttons', 'navigation');
+		$viewCmsLink .= $button->pseudoButton($this->uri(array(NULL), 'cms'), $this->objLanguage->languageText('mod_cmsadmin_viewcms', 'cmsadmin'));
+
 		//media link
 		$link->link = $this->objLanguage->languageText('word_media');
 		$link->href = $this->uri(null, 'mediamanager');
@@ -849,7 +852,10 @@ class cmsutils extends object
 		$objNav = $this->newObject('sidebar', 'navigation');
 
 		$nav = $objNav->show($nodes);
-		$nav .= $objCmsTree->show(NULL, TRUE);
+		//$nav .= $objCmsTree->show(NULL, TRUE);
+		$nav .= $this->getSectionLinks();
+    $nav .= '<br/>';
+		$nav .= $viewCmsLink;
 		
 		return $nav;
 
@@ -963,7 +969,7 @@ class cmsutils extends object
              for($i = '2'; $i <= $numLevels; $i++){
                 $prefix .= '- ';
                 //get all sub secs in section on level
-                $subSecs = $this->_objSections->getSubSectionsForLevel($section['id'], $i);
+                $subSecs = $this->_objSections->getSubSectionsForLevel($section['id'], $i, 'DESC');
                 foreach($subSecs as $sec){
                   //if its the 1st node just add it under the section
                   if($i == '2'){
@@ -1053,15 +1059,17 @@ class cmsutils extends object
       return $newArray;
   }
 	/**
-	 * Method to generate the html list used to build the tree menu
+	 * Method to generate the indented section links for the side menu
 	 *
-	 * @param string $menuType Types are "sections" or "complete" specifies whether to include the content
-	 * @return string $htmlList The html list used to build the tree menu
+	 * @return string Generated section links
 	 * @access public
 	 * @author Warren Windvogel
 	 */
-	public function getHtmlListForTree($menuType = 'complete')
-  {
+	public function getSectionLinks()
+	{
+       
+	    //Create instance of geticon object
+	    $objIcon =& $this->newObject('geticon', 'htmlelements');
 	    //Get all root sections
 	    $availsections = $this->_objSections->getRootNodes();
 	    if(!empty($availsections)){
@@ -1069,42 +1077,68 @@ class cmsutils extends object
 	      $treeArray = array();
 	      //add nodes for each section
 	      foreach($availsections as $section){
+	         //Get icon for root nodes
+           $objIcon->setIcon('tree/treebase');	      
+	         //initiate prefix for nodes
+	         $prefix = '';
 	         //add root(secion) to dropdown
- 	         $treeArray[] = array('title' => $section['menutext'], 'id' => $section['id'], 'level' => $section['count']);
+ 	         $treeArray[] = array('title' => $objIcon->show().$section['menutext'], 'id' => $section['id']);
 	         //get number of node levels
            $numLevels = $this->getNumNodeLevels($section['id']);
            //check if section has sub sections
            if($numLevels > '0'){
              //loop through each level and add all sub sections in level
              for($i = '2'; $i <= $numLevels; $i++){
+                $prefix .= '- ';
                 //get all sub secs in section on level
-                $subSecs = $this->_objSections->getSubSectionsForLevel($section['id'], $i);
+                $subSecs = $this->_objSections->getSubSectionsForLevel($section['id'], $i, 'DESC');
                 foreach($subSecs as $sec){
+      	          //Get icon for parent child nodes
+                  $objIcon->setIcon('tree/treefolder_orange');	      
                   //if its the 1st node just add it under the section
                   if($i == '2'){
-                    $treeArray[] = array('title' => $sec['menutext'], 'id' => $sec['id'], 'level' => $sec['count']);
+                    $treeArray[] = array('title' => $prefix.$objIcon->show().$sec['menutext'], 'id' => $sec['id']);
                   //else find the parent node and include it after this node
                   } else {
                       $parentId = $sec['parentid'];
                       $subSecTitle = $this->_objSections->getMenuText($parentId);
                       $count = $this->_objSections->getLevel($parentId);
-                      $needle = array('title' => $subSecTitle, 'id' => $parentId, 'level' => $count);
+                      $searchPrefix = "";
+                      for($num = '2'; $num <= $count; $num++){
+                         $searchPrefix .= '- ';
+                      }
+                      $needle = array('title' => $searchPrefix.$objIcon->show().$subSecTitle, 'id' => $parentId);
                       $entNum = array_search($needle, $treeArray);
-                      $newEnt = array('title' => $sec['menutext'], 'id' => $sec['id'], 'level' => $sec['count']);
+                      $newEnt = array('title' => $prefix.$objIcon->show().$sec['menutext'], 'id' => $sec['id']);
                       $treeArray = $this->addToTreeArray($treeArray, $entNum, $newEnt);
                   }
                 }
              }
            }
          }
-       $htmlList = '<ul class="tree">';   
-       $i = '1';      
-       foreach($treeArray as $entry){
-        
-       }
-       $htmlList .= '</ul>';   
-      }           
-      return $htmlList;  
-  }
+         $links = "";
+         $objLink =& $this->newObject('link', 'htmlelements');
+         
+         //Add array to dropdown
+         foreach($treeArray as $node){
+            $matches = split('<', $node['title']);
+
+            $img = split('>', $matches[1]);
+            $image = '<'.$img[0].'>';
+            $linkText = $img[1];
+            $noSpaces = strlen($matches[0]);
+            for($i = 1; $i < $noSpaces; $i++){
+               $links .= '&nbsp;&nbsp;'; 
+            }
+            $links .= $image;
+            $objLink->link($this->uri(array('action'=>'viewsection', 'id'=>$node['id'])));
+            $objLink->link = $linkText;
+            $links .= $objLink->show();
+            $links .= '<br/>';
+         }
+      }
+      return $links;
+	}
+  
 }
 ?>

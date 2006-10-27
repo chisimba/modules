@@ -122,6 +122,7 @@ class dbcontentfrontpage extends dbTable
 	 * @param int $ordering How to update the order(up or down).
 	 * @access public
 	 * @return bool
+	 * @author Warren Windvogel
 	 */
 	public function changeOrder($id, $ordering)
 	{
@@ -166,6 +167,7 @@ class dbcontentfrontpage extends dbTable
 	 *
 	 * @return int $ordering The value to insert into the ordering field
 	 * @access public
+	 * @author Warren Windvogel
    */
 	public function getOrdering()
 	{
@@ -190,6 +192,7 @@ class dbcontentfrontpage extends dbTable
 	 * @return string $links The html for the links
 	 * @access public
 	 * @return bool
+	 * @author Warren Windvogel
 	 */
 	public function getOrderingLink($id)
 	{

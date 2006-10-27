@@ -28,7 +28,7 @@ if(isset($section)){
 }
 //Get layout icon
 $layoutData = $this->_objLayouts->getLayout($layout);
-$img = '<img src="modules/cmsadmin/resources/'.$layoutData['imagename'].'"/>';
+$img = '<img src="modules/cmsadmin/resources/'.$layoutData['imagename'].'" alt="'.$layoutData['imagename'].'"/>';
 $other = '<b>'.$this->objLanguage->languageText('mod_cmsadmin_treemenuname', 'cmsadmin').':'.'</b>'.'&nbsp;'.$menuText.'<br/>';
 $other .= '<b>'.$this->objLanguage->languageText('mod_cmsadmin_visibleontreemenu', 'cmsadmin').':'.'</b>';
 //Create table contain layout, visible, etc details
