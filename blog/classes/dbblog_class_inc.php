@@ -213,6 +213,12 @@ class dbblog extends dbTable
 		return $this->delete('id',$id, 'tbl_blog_posts');
 	}
 
+	public function getPostById($id)
+	{
+		$this->_changeTable('tbl_blog_posts');
+		return $this->getAll("WHERE id = '$id'");
+	}
+
 	public function getPostsFromCat($userid, $catid)
 	{
 		$this->_changeTable('tbl_blog_posts');
@@ -240,12 +246,47 @@ class dbblog extends dbTable
 	}
 
 	//post methods
-	public function insertPost($userid, $postarr)
+	public function insertPost($userid, $postarr, $mode = NULL)
 	{
+
 		$this->_changeTable("tbl_blog_posts");
-		$insarr = array('userid' => $userid, 'post_date' => date('r'), 'post_content' => $postarr['postcontent'], 'post_title' => $postarr['posttitle'],
-						'post_category' => $postarr['postcat'], 'post_excerpt' => $postarr['postexcerpt'], 'post_status' => $postarr['poststatus'], 'comment_status' => $postarr['commentstatus'], 'post_modified' => $postarr['postmodified'], 'comment_count' => $postarr['commentcount'], 'post_ts' => time());
-		return $this->insert($insarr, 'tbl_blog_posts');
+
+		if($mode == NULL)
+		{
+			$this->pcleaner = $this->newObject('htmlcleaner', 'utilities');
+			$this->ecleaner = $this->newObject('htmlcleaner', 'utilities');
+			$insarr = array('userid' => $userid,
+							'post_date' => date('r'),
+							'post_content' => $this->pcleaner->cleanHtml($postarr['postcontent']),
+							'post_title' => $postarr['posttitle'],
+							'post_category' => $postarr['postcat'],
+							'post_excerpt' => $this->ecleaner->cleanHtml($postarr['postexcerpt']),
+							'post_status' => $postarr['poststatus'],
+							'comment_status' => $postarr['commentstatus'],
+							'post_modified' => $postarr['postmodified'],
+							'comment_count' => $postarr['commentcount'],
+							'post_ts' => time());
+
+			return $this->insert($insarr, 'tbl_blog_posts');
+		}
+		else {
+			$this->epcleaner = $this->newObject('htmlcleaner', 'utilities');
+			$this->eecleaner = $this->newObject('htmlcleaner', 'utilities');
+
+			$inseditarr = array('userid' => $userid,
+							'post_date' => date('r'),
+							'post_content' => $this->epcleaner->cleanHtml($postarr['postcontent']),
+							'post_title' => $postarr['posttitle'],
+							'post_category' => $postarr['postcat'],
+							'post_excerpt' => $this->eecleaner->cleanHtml($postarr['postexcerpt']),
+							'post_status' => $postarr['poststatus'],
+							'comment_status' => $postarr['commentstatus'],
+							'post_modified' => $postarr['postmodified'],
+							'comment_count' => $postarr['commentcount'],
+							'post_ts' => time());
+
+			return $this->update('id',$postarr['id'], $inseditarr, 'tbl_blog_posts');
+		}
 	}
 
 

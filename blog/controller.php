@@ -230,6 +230,7 @@ class blog extends controller
 			case 'postadd':
 				$mode = $this->getParam('mode');
 				$userid = $this->objUser->userId();
+				$id = $this->getParam('id');
 				$posttitle = $this->getParam('posttitle');
 				$postcontent = $this->getParam('postcontent');
 				$cat = $this->getParam('cat');
@@ -247,8 +248,18 @@ class blog extends controller
 					$this->nextAction('viewblog');
 					break;
 				}
+				elseif($mode == 'editpost') {
+					$insarredit = array('id' => $id,'posttitle' => $posttitle, 'postcontent' => $postcontent,
+												    'postcat' => $cat, 'postexcerpt' => $excerpt, 'poststatus' => $status,
+												    'commentstatus' => 'Y',
+												    'postmodified' => date('r'), 'commentcount' => 0);
+
+					$this->objblogOps->quickPostAdd($userid, $insarredit, $mode);
+					$this->nextAction('viewblog');
+					break;
+				}
 				else {
-					$this->objblogOps->quickPostAdd($userid, array('posttitle' => $posttitle, 'postcontent' => $postcontent,
+					$this->objblogOps->quickPostAdd($userid, array('id' => $id, 'posttitle' => $posttitle, 'postcontent' => $postcontent,
 												    'postcat' => $cat, 'postexcerpt' => $excerpt, 'poststatus' => $status,
 												    'commentstatus' => $commentsallowed,
 												    'postmodified' => date('r'), 'commentcount' => 0));
@@ -263,6 +274,14 @@ class blog extends controller
 				$this->objDbBlog->deletePost($id);
 				$this->nextAction('blogadmin');
 
+				break;
+
+			case 'postedit':
+				$userid = $this->objUser->userId();
+				$id = $this->getParam('id');
+				$this->setVarByRef('editid', $id);
+				$this->setVarByRef('userid', $userid);
+				return 'postedit_tpl.php';
 				break;
 
 		}

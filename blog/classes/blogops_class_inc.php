@@ -407,11 +407,18 @@ class blogops extends object
 
 	}
 
-	public function quickPostAdd($userid, $postarr)
+	public function quickPostAdd($userid, $postarr, $mode = NULL)
 	{
 		if(!empty($postarr))
 		{
-			$this->objDbBlog->insertPost($userid, $postarr);
+			if($mode == NULL)
+			{
+				$this->objDbBlog->insertPost($userid, $postarr);
+
+			}
+			else {
+				$this->objDbBlog->insertPost($userid, $postarr, $mode);
+			}
 		}
 
 	}
@@ -526,12 +533,26 @@ class blogops extends object
 		return $ctable . "<br />" . $catform;
 	}
 
-	public function postEditor($userid, $editparams = NULL)
+	public function postEditor($userid, $editid = NULL)
 	{
-		//debug string
-		//$editparams = array('title' => 'crap', 'cat' => 'crapolla', 'catid' => 0, 'excerpt' => 'some crap', 'content' => 'expounding on the crap');
+		if(isset($editid))
+		{
+			$mode = 'editpost';
+			//get the relevant post from the editid
+			$editparams = $this->objDbBlog->getPostById($editid);
+			$editparams = $editparams[0];
+		}
+		if(!isset($mode))
+		{
+			$mode = NULL;
+		}
+		if(!isset($editparams))
+		{
+			$editparams = NULL;
+		}
+
 		$postform = new form('postadd', $this->uri(array(
-		'action' => 'postadd'
+		'action' => 'postadd', 'mode' => $mode, 'id' => $editparams['id'], 'postexcerpt' => $editparams['post_excerpt']
 		)));
 
 		$pfieldset = $this->newObject('fieldset', 'htmlelements');
@@ -543,9 +564,10 @@ class blogops extends object
 		$ptable->startRow();
 		$plabel = new label($this->objLanguage->languageText('mod_blog_posttitle', 'blog') .':', 'input_posttitle');
 		$title = new textinput('posttitle');
-		if(isset($editparams['title']))
+		if(isset($editparams['post_title']))
 		{
-			$title->setValue($editparams['title']);
+
+			$title->setValue($editparams['post_title']);
 		}
 		$ptable->addCell($plabel->show());
 		$ptable->addCell($title->show());
@@ -556,9 +578,9 @@ class blogops extends object
 		$ptable->startRow();
 		$pdlabel = new label($this->objLanguage->languageText('mod_blog_postcat', 'blog') .':', 'input_postcatfull');
 		$pDrop = new dropdown('cat');
-		if(isset($editparams['cat']))
+		if(isset($editparams['post_category']))
 		{
-			$pDrop->addOption($editparams['catid'], $editparams['cat']);
+			$pDrop->addOption($editparams['post_category'], $editparams['post_category']);
 		}
 		$pDrop->addOption(0, $this->objLanguage->languageText("mod_blog_defcat","blog"));
 		$pcats = $this->objDbBlog->getAllCats($userid);
@@ -596,9 +618,9 @@ class blogops extends object
 		$pexcerpt->setName('postexcerpt');
 		$ptable->startRow();
 		$pexcerptlabel = new label($this->objLanguage->languageText('mod_blog_postexcerpt', 'blog') .':', 'input_postexcerpt');
-		if(isset($editparams['excerpt']))
+		if(isset($editparams['post_excerpt']))
 		{
-			$pexcerpt->setcontent($editparams['excerpt']);
+			$pexcerpt->setcontent(nl2br($editparams['post_excerpt']));
 		}
 		$ptable->addCell($pexcerptlabel->show());
 		$ptable->addCell($pexcerpt->show());
@@ -608,9 +630,9 @@ class blogops extends object
 		$pclabel = new label($this->objLanguage->languageText('mod_blog_pcontent', 'blog') .':', 'input_pcont');
 		$pcon = $this->newObject('htmlarea','htmlelements');
 		$pcon->setName('postcontent');
-		if(isset($editparams['content']))
+		if(isset($editparams['post_content']))
 		{
-			$pcon->setcontent($editparams['content']);
+			$pcon->setcontent($editparams['post_content']);
 		}
 		$ptable->startRow();
 		$ptable->addCell($pclabel->show());
@@ -685,7 +707,7 @@ class blogops extends object
 			$edtable->addCell($post['post_category']);
 			//do the edit and delete icon
 			$this->objIcon = &$this->getObject('geticon', 'htmlelements');
-			$edIcon = $this->objIcon->getEditIcon('http://example.com');
+			$edIcon = $this->objIcon->getEditIcon($this->uri(array('action' => 'postedit', 'id' => $post['id'], 'module' => 'blog')));
 			$delIcon = $this->objIcon->getDeleteIconWithConfirm($post['id'], array('module' => 'blog', 'action' => 'deletepost', 'id' => $post['id']), 'blog');
 			$edtable->addCell($edIcon . $delIcon);
 			$edtable->endRow();
