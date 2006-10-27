@@ -651,6 +651,7 @@ class blogops extends object
         $edtable->addHeaderCell($this->objLanguage->languageText("mod_blog_posttitle", "blog"));
         $edtable->addHeaderCell($this->objLanguage->languageText("mod_blog_postdate", "blog"));
         $edtable->addHeaderCell($this->objLanguage->languageText("mod_blog_poststatus", "blog"));
+        $edtable->addHeaderCell($this->objLanguage->languageText("mod_blog_postcat", "blog"));
         $edtable->addHeaderCell($this->objLanguage->languageText("mod_blog_editdelete", "blog"));
         $edtable->endHeaderRow();
 		foreach($posts as $post)
@@ -672,6 +673,21 @@ class blogops extends object
 					break;
 			}
 			$edtable->addCell($post['post_status']);
+			//category voodoo
+			if($post['post_category'] == '0')
+			{
+				$post['post_category'] = $this->objLanguage->languageText("mod_blog_word_default", "blog");
+			}
+			else {
+				$mapcats = $this->objDbBlog->mapKid2Parent($post['post_category']);
+				$post['post_category'] = $mapcats[0]['cat_name'];
+			}
+			$edtable->addCell($post['post_category']);
+			//do the edit and delete icon
+			$this->objIcon = &$this->getObject('geticon', 'htmlelements');
+			$edIcon = $this->objIcon->getEditIcon('http://example.com');
+			$delIcon = $this->objIcon->getDeleteIconWithConfirm($post['id'], array('module' => 'blog', 'action' => 'deletepost', 'id' => $post['id']), 'blog');
+			$edtable->addCell($edIcon . $delIcon);
 			$edtable->endRow();
 		}
 

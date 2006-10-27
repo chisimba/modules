@@ -17,6 +17,7 @@ class blog extends controller
 	public $objConfig;
 	public $objblogOps;
 	public $cleaner;
+	public $objIcon;
 
 	/**
      * Constructor method to instantiate objects and get variables
@@ -32,6 +33,7 @@ class blog extends controller
 			$this->objDbBlog = $this->getObject('dbblog');
 			$this->objblogOps = &$this->getObject('blogops');
 			$this->cleaner = &$this->getObject('htmlcleaner', 'utilities');
+			$this->objIcon = &$this->getObject('geticon', 'htmlelements');
 			//config object
 			$this->objConfig = $this->getObject('altconfig', 'config');
 			//Get the activity logger class
@@ -253,6 +255,13 @@ class blog extends controller
 					$this->nextAction('viewblog');
 					break;
 				}
+
+				break;
+
+			case 'deletepost':
+				$id = $this->getParam('id');
+				$this->objDbBlog->deletePost($id);
+				$this->nextAction('blogadmin');
 
 				break;
 

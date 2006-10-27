@@ -189,7 +189,7 @@ class dbblog extends dbTable
 			$catid = 0;
 		}
 		$this->_changeTable('tbl_blog_posts');
-		return $this->getAll("WHERE userid = '$userid' AND post_category = '$catid' ORDER BY post_ts DESC");
+		return $this->getAll("WHERE userid = '$userid' AND post_category = '$catid' AND post_status = '0' ORDER BY post_ts DESC");
 	}
 
 	public function getPostsMonthly($startdate, $userid)
@@ -205,6 +205,12 @@ class dbblog extends dbTable
 		$filter = "WHERE post_ts > '$monthstart' AND post_ts < '$nextmonth' AND userid = '$userid'";
 		$ret = $this->getAll($filter);
 		return $ret;
+	}
+
+	public function deletePost($id)
+	{
+		$this->_changeTable('tbl_blog_posts');
+		return $this->delete('id',$id, 'tbl_blog_posts');
 	}
 
 	public function getPostsFromCat($userid, $catid)

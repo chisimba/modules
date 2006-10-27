@@ -31,18 +31,22 @@ $catedit = $this->objblogOps->categoryEditor($userid);
 $postedit = $this->objblogOps->managePosts($userid);
 
 //Middle column - dashboard
+//create posts tab
 $pane->addTab(array(
     'name' => $this->objLanguage->languageText("mod_blog_word_posts", "blog"),
     'content' => $this->objblogOps->postEditor($userid)
 ));
-$pane->addTab(array(
-    'name' => $this->objLanguage->languageText("mod_blog_word_categories", "blog"),
-    'content' => $catedit
-));
+//edit posts tab
 $pane->addTab(array(
     'name' => $this->objLanguage->languageText("mod_blog_word_editposts", "blog"),
     'content' => $postedit
 ));
+//edit categories tab
+$pane->addTab(array(
+    'name' => $this->objLanguage->languageText("mod_blog_word_categories", "blog"),
+    'content' => $catedit
+));
+
 
 
 $middleColumn .= $pane->show();
