@@ -576,7 +576,7 @@ class blogops extends object
 		$psDrop = new dropdown('status');
 		$psDrop->addOption(0, $this->objLanguage->languageText("mod_blog_published","blog"));
 		$psDrop->addOption(1, $this->objLanguage->languageText("mod_blog_draft","blog"));
-		$psDrop->addOption(2, $this->objLanguage->languageText("mod_blog_hidden","blog"));
+		//$psDrop->addOption(2, $this->objLanguage->languageText("mod_blog_hidden","blog"));
 		$ptable->addCell($pslabel->show());
 		$ptable->addCell($psDrop->show());
 		$ptable->endRow();
@@ -647,12 +647,30 @@ class blogops extends object
 		$posts = $this->objDbBlog->getPostsMonthly(mktime(0,0,0,date("m", time()), 1, date("y", time())), $userid); //change this to get from the form input rather
 		//print_r($posts);
 		//add in a table header...
-
+		$edtable->startHeaderRow();
+        $edtable->addHeaderCell($this->objLanguage->languageText("mod_blog_posttitle", "blog"));
+        $edtable->addHeaderCell($this->objLanguage->languageText("mod_blog_postdate", "blog"));
+        $edtable->addHeaderCell($this->objLanguage->languageText("mod_blog_poststatus", "blog"));
+        $edtable->addHeaderCell($this->objLanguage->languageText("mod_blog_editdelete", "blog"));
+        $edtable->endHeaderRow();
 		foreach($posts as $post)
 		{
 			$edtable->startRow();
 			$edtable->addCell($post['post_title']);
 			$edtable->addCell($post['post_date']);
+			//do some voodoo on the post status, so that it looks better
+			switch ($post['post_status'])
+			{
+				case '0':
+					$post['post_status'] = $this->objLanguage->languageText("mod_blog_published", "blog");
+					break;
+				case '1':
+					$post['post_status'] = $this->objLanguage->languageText("mod_blog_draft", "blog");
+					break;
+				case '2':
+					$post['post_status'] = $this->objLanguage->languageText("mod_blog_hidden", "blog");
+					break;
+			}
 			$edtable->addCell($post['post_status']);
 			$edtable->endRow();
 		}
