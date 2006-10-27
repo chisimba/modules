@@ -37,15 +37,6 @@ class cms extends controller
     protected $_objSections;
     
     /**
-     * The categories  object 
-     *
-     * @access public
-     * @var object
-    */
-    protected $_objCategories;
-    
-        
-    /**
      * The Content object 
      *
      * @access private
@@ -87,7 +78,6 @@ class cms extends controller
         try{
         	//$this->_objContextCore = & $this->newObject('dbcontextcore', 'contextcore');
 			$this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
-			$this->_objCategories = & $this->newObject('dbcategories', 'cmsadmin');
 			$this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
 			$this->_objUtils = & $this->newObject('cmsutils', 'cmsadmin');
 			$this->_objContext = & $this->newObject('dbcontext', 'context');
@@ -126,18 +116,25 @@ class cms extends controller
 	public function dispatch()
 	{
 		try{
-			
-			$action = $this->getParam('action');
+	  	$action = $this->getParam('action');
 			$this->setLayoutTemplate('cms_layout_tpl.php');
 			//$this->setPageTemplate('cms_page_tpl.php');
 	        switch ($action){
 	            case null:
 	            case 'home':
-	            	$this->setVar('content', $this->_objUtils->getFrontPageContent());	
-	            	return 'cms_main_tpl.php';
+	              $content = $this->_objUtils->getFrontPageContent();
+	              if(count($content) > '0'){
+	            	  $this->setVarByRef('content', $content);	
+	            	  return 'cms_main_tpl.php';
+	            	} else {
+	            	    $firstSectionId = $this->_objSections->getFirstSectionId();
+                    return $this->nextAction('showsection', array('id'=>$firstSectionId));
+                }  
+	            	
 	            case 'showsection':
 	            	$this->setVar('content', $this->_objUtils->showSection());
 	            	return 'cms_section_tpl.php';
+	            	
 	            case 'showcontent':
 	            case 'showfulltext':
 	            	$this->setVar('content', $this->_objUtils->showBody());
