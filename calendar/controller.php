@@ -157,7 +157,12 @@ class calendar extends controller
 			$defaultList = 'user';
 		}
 		
-		$eventsList = $this->getParam('events', $defaultList);
+		if ($this->getParam('action',NULL) == 'site') {
+		    $eventsList = 'site';
+		}
+		else {
+			$eventsList = $this->getParam('events', $defaultList);
+		}
 		$this->setVarByRef('currentList', $eventsList);
 		$this->objCalendar->setEventsTag($eventsList);
         
