@@ -791,7 +791,7 @@ class blogops extends object
 
 		$stable->startRow();
 		$stable->addCell($rec['img']);
-		$stable->addCell($rec['laston'] . "<br />" . "post excerpt from last post");
+		$stable->addCell($this->objLanguage->languageText("mod_blog_lastseen", "blog") . " : " . $rec['laston'] . "<br />" . "post excerpt from last post");
 		$stable->endRow();
 
 		$objFeatureBox = $this->newObject('featurebox', 'navigation');
