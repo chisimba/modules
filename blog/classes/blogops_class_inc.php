@@ -564,6 +564,7 @@ class blogops extends object
 		$ptable->startRow();
 		$plabel = new label($this->objLanguage->languageText('mod_blog_posttitle', 'blog') .':', 'input_posttitle');
 		$title = new textinput('posttitle');
+		$title->size = 150;
 		if(isset($editparams['post_title']))
 		{
 
