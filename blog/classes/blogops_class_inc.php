@@ -779,6 +779,27 @@ class blogops extends object
 
 	}
 
+	public function buildBloggertable($rec)
+	{
+		$stable = $this->newObject('htmltable', 'htmlelements');
+		$stable->cellpadding = 2;
+		//set up the header row
+		$stable->startHeaderRow();
+		$stable->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_blogger", "blog") . ":");
+		$stable->addHeaderCell(''); //"<em>" . $rec['name'] . "</em>");
+		$stable->endHeaderRow();
+
+		$stable->startRow();
+		$stable->addCell($rec['img']);
+		$stable->addCell($rec['laston'] . "<br />" . "post excerpt from last post");
+		$stable->endRow();
+
+		$objFeatureBox = $this->newObject('featurebox', 'navigation');
+		$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_blogger", "blog") . " : " . "<em>" . $rec['name'] . "</em>", $stable->show());
+
+		return $ret;
+	}
+
 	public function retDates($sel_date = NULL)
 	{
 		if($sel_date == NULL)
