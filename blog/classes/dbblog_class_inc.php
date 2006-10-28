@@ -225,6 +225,15 @@ class dbblog extends dbTable
 		return $this->getAll("WHERE userid = '$userid' AND post_category = '$catid'");
 	}
 
+	public function getLatestPost($userid)
+	{
+		$this->_changeTable('tbl_blog_posts');
+		$filter = "WHERE userid = '$userid' ORDER BY post_ts DESC";
+		$lastpost = $this->getAll($filter);
+		$lastpost = $lastpost[0];
+		return $lastpost;
+	}
+
 	public function getRandBlog()
 	{
 		$this->_changeTable('tbl_blog_posts');

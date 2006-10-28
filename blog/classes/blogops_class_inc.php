@@ -781,6 +781,23 @@ class blogops extends object
 
 	public function buildBloggertable($rec)
 	{
+		$lastentry = $this->objDbBlog->getLatestPost($rec['id']);
+		$link = new href($this->uri(array('action' => 'viewblog', 'userid' => $rec['id'])),$lastentry['post_title']);
+		$this->cleaner = $this->newObject('htmlcleaner', 'utilities');
+		$txt = $lastentry['post_excerpt'];
+		$txtlen = 100;
+		$str_to_count = $txt; // html_entity_decode($txt);
+  		if (strlen($str_to_count) <= $txtlen) {
+   			$txt = $this->cleaner->cleanHtml($txt);
+  		}
+  		else {
+  			$txt = substr($str_to_count, 0, $txtlen - 3);
+  			$txt .= $txt."...";
+  			$txt = $this->cleaner->cleanHtml($txt);
+  		}
+
+		$lastpost = $link->show() . "<br />" . $txt;
+
 		$stable = $this->newObject('htmltable', 'htmlelements');
 		$stable->cellpadding = 2;
 		//set up the header row
@@ -791,7 +808,7 @@ class blogops extends object
 
 		$stable->startRow();
 		$stable->addCell($rec['img']);
-		$stable->addCell($this->objLanguage->languageText("mod_blog_lastseen", "blog") . " : " . $rec['laston'] . "<br />" . "post excerpt from last post");
+		$stable->addCell($this->objLanguage->languageText("mod_blog_lastseen", "blog") . " : " . $rec['laston'] . "<br />" . $lastpost);
 		$stable->endRow();
 
 		$objFeatureBox = $this->newObject('featurebox', 'navigation');
