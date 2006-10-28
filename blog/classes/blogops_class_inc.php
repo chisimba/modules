@@ -783,7 +783,7 @@ class blogops extends object
 	public function buildBloggertable($rec)
 	{
 		$lastentry = $this->objDbBlog->getLatestPost($rec['id']);
-		$link = new href($this->uri(array('action' => 'viewblog', 'userid' => $rec['id'])),$lastentry['post_title']);
+		$link = new href($this->uri(array('action' => 'randblog', 'userid' => $rec['id'])),$lastentry['post_title']);
 		$this->cleaner = $this->newObject('htmlcleaner', 'utilities');
 		$txt = $lastentry['post_excerpt'];
 		$txtlen = 100;
