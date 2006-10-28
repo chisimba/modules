@@ -289,6 +289,12 @@ class dbblog extends dbTable
 		}
 	}
 
+	public function getUBlogs($column, $table)
+	{
+		$this->_changeTable('tbl_blog_posts');
+		return $this->getArray("SELECT DISTINCT $column from $table");
+	}
+
 
 	/**
 	 * Method to dynamically switch tables

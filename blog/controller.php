@@ -284,6 +284,12 @@ class blog extends controller
 				return 'postedit_tpl.php';
 				break;
 
+			case 'allblogs':
+				$ret = $this->objDbBlog->getUBlogs('userid', 'tbl_blog_posts');
+				print_r($ret);
+
+				break;
+
 		}
 
 	}
