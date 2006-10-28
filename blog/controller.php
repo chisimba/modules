@@ -286,8 +286,8 @@ class blog extends controller
 
 			case 'allblogs':
 				$ret = $this->objDbBlog->getUBlogs('userid', 'tbl_blog_posts');
-				print_r($ret);
-
+				$this->setVarByRef('ret',$ret);
+				return 'allblogs_tpl.php';
 				break;
 
 		}
