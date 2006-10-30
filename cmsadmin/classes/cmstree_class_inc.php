@@ -111,7 +111,6 @@ class cmstree extends object
     {
         //gets all the child nodes of id
         $nodes = $this->getChildNodes($parentId);
-
         //get the list of nodes that need to stay open for the currently selected node
         $openNodes = $this->getOpenNodes($currentNode);
 
@@ -133,10 +132,10 @@ class cmstree extends object
                         $htmlLevel = '';
                     }else{
                         if(in_array($node['id'], $openNodes)){
-                            $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id']), 'cms');
+                            $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id'], 'sectionid'=>$node['id']), 'cms');
                             $htmlLevel .= '<li><a href="'.$nodeUri.'">'.$node['title'].'</a><ul>';
                         }else{
-                            $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id']), 'cms');
+                            $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id'], 'sectionid'=>$node['id']), 'cms');
                             $htmlLevel .= '<li class="closed"><a href="'.$nodeUri.'">'.$node['title'].'</a><ul>';
                         }
                         $htmlLevel .= $htmlChildren;
@@ -145,16 +144,16 @@ class cmstree extends object
                 }else{
                     //if node has no child nodes, then just get content nodes
                     if($this->getNodeContentCount($node['id']) > 0){
-                        $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id']), 'cms');
+                        $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id'], 'sectionid'=>$node['id']), 'cms');
                         $htmlLevel .= '<li><a href="'.$nodeUri.'">'.$node['title'].'</a><ul>';
                         $htmlLevel .= $this->addContent($node['id']);
                         $htmlLevel .= '</ul></li>';
                     }elseif($admin == TRUE){
                         if(in_array($node['id'], $openNodes)){
-                            $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id']), 'cms');
+                            $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id'], 'sectionid'=>$node['id']), 'cms');
                             $htmlLevel .= '<li><a href="'.$nodeUri.'">'.$node['title'].'</a><ul><li></li>';
                         }else{
-                            $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id']), 'cms');
+                            $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id'], 'sectionid'=>$node['id']), 'cms');
                             $htmlLevel .= '<li class="closed"><a href="'.$nodeUri.'">'.$node['title'].'</a><ul><li></li>';
                         }
                         $htmlLevel .= '</ul></li>';
@@ -186,7 +185,7 @@ class cmstree extends object
         while($nodeId != '0'){
             $node = $this->getNode($nodeId);
             if (count($node)){
-                $nodeId = $node[0]['parentid'];
+                $nodeId = $node['parentid'];
                 $openNodes[$i] = $nodeId;
                 $i++;
             }else{
@@ -208,7 +207,7 @@ class cmstree extends object
         if (count($contentNodes)){
             $htmlContent = '';
             foreach($contentNodes as $contentNode){
-                $contentUri = $this->uri(array('action'=>'showcontent', 'id'=>$contentNode['id']), 'cms');
+                $contentUri = $this->uri(array('action'=>'showcontent', 'id'=>$contentNode['id'], 'sectionid'=>$contentNode['sectionid']), 'cms');
                 $htmlContent .= '<li><a href="'.$contentUri.'">'.$contentNode['title'].'</a></li>';
             }
             return $htmlContent;

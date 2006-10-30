@@ -55,18 +55,18 @@ foreach($files as $file)
     // $table->addCell($arrCategory['ordering']);
 	  $tableRow[]=$this->_objUtils->getAccess($arrFile['access']);
 	
-	$link->link = $this->_objSections->getMenuText($arrFile['sectionid']);
-	$link->href = $this->uri(array('action' => 'viewsection', 'id' => $arrFile['sectionid']));
+	  $link->link = $this->_objSections->getMenuText($arrFile['sectionid']);
+	  $link->href = $this->uri(array('action' => 'viewsection', 'id' => $arrFile['sectionid']));
 	
-	$tableRow[]=$link->show();
-	$tableRow[]=$this->_objFrontPage->getOrderingLink($file['id']);
-	$tableRow[]=$delIcon;
-	//$table->addCell($this->_objCategories->getCatCount($section['id']));
-	//$table->addCell($section['created']);
+	  $tableRow[]=$link->show();
+	  $tableRow[]=$this->_objFrontPage->getOrderingLink($file['id']);
+	  $tableRow[]=$delIcon;
+	  //$table->addCell($this->_objCategories->getCatCount($section['id']));
+	  //$table->addCell($section['created']);
 
   	
-	$table->addRow($tableRow, $oddOrEven);
-	 $rowcount = ($rowcount == 0) ? 1 : 0;
+	  $table->addRow($tableRow, $oddOrEven);
+	  $rowcount = ($rowcount == 0) ? 1 : 0;
 } 
 
 

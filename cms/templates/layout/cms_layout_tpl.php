@@ -49,7 +49,8 @@ $rightSideColumn .= $objBlocks->showBlock('dictionary', 'dictionary');
 
 /*****************LEFT SIDE ***************************************/
 //Navigation
-$leftSide = $objTreeMenu->buildTree();
+$currentNode = $this->getParam('sectionid', NULL);
+$leftSide = $objTreeMenu->buildTree($currentNode);
 
 
 

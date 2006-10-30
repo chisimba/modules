@@ -128,7 +128,7 @@ class dbsections extends dbTable
 	   //get parent type "subsection", "root" or "param is null"(new section will be root level) and its id
      $id = $parentSelected;
      $parentid = $id;
-     if($this->getLevel($parentid) == '1'){
+     if($this->getLevel($parentid) == '0'){
        $rootid = $parentid;
      } else {
          $rootid = $this->getRootNodeId($id);
