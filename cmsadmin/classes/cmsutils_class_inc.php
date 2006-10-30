@@ -838,7 +838,7 @@ class cmsutils extends object
 		$str .= '<p>'.$link->show();
 
 		$button =& $this->newObject('navbuttons', 'navigation');
-		$viewCmsLink .= $button->pseudoButton($this->uri(array(NULL), 'cms'), $this->objLanguage->languageText('mod_cmsadmin_viewcms', 'cmsadmin'));
+		$viewCmsLink = $button->pseudoButton($this->uri(array(NULL), 'cms'), $this->objLanguage->languageText('mod_cmsadmin_viewcms', 'cmsadmin'));
 
 		//media link
 		$link->link = $this->objLanguage->languageText('word_media');
