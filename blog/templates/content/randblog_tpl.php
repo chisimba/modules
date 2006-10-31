@@ -5,7 +5,7 @@
 $this->loadClass('href', 'htmlelements');
 $tt = $this->newObject('domtt', 'htmlelements');
 $cssLayout = &$this->newObject('csslayout', 'htmlelements');
-$objSideBar = $this->newObject('sidebar', 'navigation');
+$objSideBar = $this->newObject('usermenu', 'toolbar');
 // Set columns to 3
 $cssLayout->setNumColumns(3);
 $leftMenu = NULL;
