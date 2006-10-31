@@ -184,12 +184,9 @@ class dbsections extends dbTable
 			$published = $this->getParam('published');
 			$ordering = $this->getParam('ordering');
 			$layout = $this->getParam('sectionlayout');
-			if(isset($parentid)){
-			  $count = $this->getLevel($parentid) + '1';
-			} else {
-          $count = '1';
-      } 
+  	  $count = $this->getParam('count');
 			$arrFields = array(
+			        'rootid' => $rootid,
 			        'parentid' => $parentid,
 							'title' => $title,
 							'menutext' => $menuText,

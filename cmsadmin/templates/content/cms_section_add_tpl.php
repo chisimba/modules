@@ -14,7 +14,10 @@ $h3 = &$this->newObject('htmlheading', 'htmlelements');
 $sections = & $this->newObject('dropdown', 'htmlelements');
 $parent = & $this->newObject('dropdown', 'htmlelements');
 $button =  & $this->newObject('button', 'htmlelements');
-
+$objRootId = & $this->newObject('textinput', 'htmlelements');
+$objParentId = & $this->newObject('textinput', 'htmlelements');
+$objCount = & $this->newObject('textinput', 'htmlelements');
+$objOrdering = & $this->newObject('textinput', 'htmlelements');
 
 if($this->getParam('id') == '')
 {
@@ -71,7 +74,18 @@ if($editmode)
 	$selected = $arrSection['image'];
 	$imageSRC = $objSkin->getSkinUrl().$selected;//$this->_objConfig->getsiteRoot().'/usrfiles/media'.$selected;
 	$isPublished = ($arrSection['published'] == 1) ? 'Yes' : 'No';
-	
+	//Set rootid as hidden field
+	$objRootId->fldType = 'hidden';
+	$objRootId->value = $arrSection['rootid'];
+	//Set parentid as hidden field
+	$objParentId->fldType = 'hidden';
+	$objParentId->value = $arrSection['parentid'];
+	//Set parentid as hidden field
+	$objCount->fldType = 'hidden';
+	$objCount->value = $arrSection['count'];
+	//Set parentid as hidden field
+	$objOrdering->fldType = 'hidden';
+	$objOrdering->value = $arrSection['ordering'];
 	
 } else {
 	$titleInput->value = '';
@@ -85,15 +99,20 @@ if($editmode)
 }
 
 //Add form elements to the table
-$table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_cmsadmin_parentfolder', 'cmsadmin'));
-if(isset($parentid)){
-  $table->addCell($this->_objUtils->getTreeDropdown($parentid).'<p/>');
+if(!$editmode){
+  $table->startRow();
+  $table->addCell($this->objLanguage->languageText('mod_cmsadmin_parentfolder', 'cmsadmin'));
+  if(isset($parentid)){
+    $table->addCell($this->_objUtils->getTreeDropdown($parentid).'<p/>');
+  } else {
+      $table->addCell($this->_objUtils->getTreeDropdown().'<p/>');
+  }  
+  $table->endRow();
 } else {
-    $table->addCell($this->_objUtils->getTreeDropdown().'<p/>');
-}  
-$table->endRow();
-
+    $table->startRow();
+    $table->addCell($objParentId->show().$objRootId->show().$objCount->show().$objOrdering->show());
+    $table->endRow();
+}
 //title name
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('word_title'));

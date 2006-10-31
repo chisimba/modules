@@ -126,7 +126,7 @@ if(count($pages) > '0'){
       //Get page data
       $pageId = $page['id'];
       $pageMenuText = $page['menutext'];
-      $ordering = $page['odering'];
+      $ordering = $page['ordering'];
       $pageTitle = $page['title'];
       $articleDate = $page['publish_up'];
       $pagePublished = $page['published'];
