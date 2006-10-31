@@ -34,7 +34,7 @@ if($this->objUser->isLoggedIn())
 }
 else {
 	$leftCol = $this->objblogOps->loginBox(TRUE);
-	$rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
+	//$rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
 }
 //show the feeds section
 $leftCol .= $this->objblogOps->showFeeds(&$userid, TRUE);
