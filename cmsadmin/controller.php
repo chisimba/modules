@@ -170,6 +170,7 @@ class cmsadmin extends controller
                 //----------------------- content section
                 
             case 'addcontent':
+                $parentid = $this->getParam('parentid');
                 return 'cms_content_add_tpl.php';
                 
             case 'createcontent':
@@ -255,7 +256,8 @@ class cmsadmin extends controller
                 
             case 'editsection';
                 $this->_objSections->edit();
-                return $this->nextAction('sections');
+                $id = $this->getParam('id');
+                return $this->nextAction('viewsection', array('id'=>$id), 'cmsadmin');
                 
             case 'sectionpublish':
                 $this->_objSections->togglePublish($this->getParam('id'));

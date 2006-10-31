@@ -82,7 +82,7 @@ if(isset($subSections)){
       $deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelsection', 'cmsadmin');
       $delIcon = $objIcon->getDeleteIconWithConfirm($subSecId, $delArray, $deletephrase);
       //Create edit icon
-      $editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'editsection', 'id' => $subSecId)));
+      $editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addsection', 'id' => $subSecId)));
       //Make title link to view section
       $objLink->link = $subSecMenuText;
       $objLink->href = $this->uri(array('action' => 'viewsection', 'id' => $subSecId));
@@ -142,7 +142,7 @@ if(count($pages) > '0'){
       $deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelpage', 'cmsadmin');
       $delIcon = $objIcon->getDeleteIconWithConfirm($pageId, $delArray, 'cmsadmin', $deletephrase);
       //Create edit icon
-      $editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'editpage', 'id' => $pageId)));
+      $editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addcontent', 'id' => $pageId)));
       //Make title link to view section
       $objLink->link = $pageMenuText;
       $objLink->href = $this->uri(array('action' => 'viewpage', 'id' => $pageId));

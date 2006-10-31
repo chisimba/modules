@@ -75,15 +75,19 @@ if($editmode)
 	$imageSRC = $objSkin->getSkinUrl().$selected;//$this->_objConfig->getsiteRoot().'/usrfiles/media'.$selected;
 	$isPublished = ($arrSection['published'] == 1) ? 'Yes' : 'No';
 	//Set rootid as hidden field
+	$objRootId->name = 'rootid';
 	$objRootId->fldType = 'hidden';
 	$objRootId->value = $arrSection['rootid'];
 	//Set parentid as hidden field
+	$objParentId->name = 'parent';
 	$objParentId->fldType = 'hidden';
 	$objParentId->value = $arrSection['parentid'];
 	//Set parentid as hidden field
+	$objCount->name = 'count';
 	$objCount->fldType = 'hidden';
 	$objCount->value = $arrSection['count'];
 	//Set parentid as hidden field
+	$objOrdering->name = 'ordering';
 	$objOrdering->fldType = 'hidden';
 	$objOrdering->value = $arrSection['ordering'];
 	
@@ -176,7 +180,7 @@ $objForm->addToForm($table);
 if($editmode){
   $h3->str = $this->objLanguage->languageText('mod_cmsadmin_editsection', 'cmsadmin');
 } else {
-    $h3->str = $this->objLanguage->languageText('mod_cmsadmin_addnewsection', 'cmsadmin').':'.'&nbsp;'.$arrSection['title'];
+    $h3->str = $this->objLanguage->languageText('mod_cmsadmin_addnewsection', 'cmsadmin');
 }
     
 print  $h3->show();

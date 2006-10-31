@@ -173,7 +173,7 @@ class dbsections extends dbTable
 		try{
 			
 			$id = $this->getParam('id');
-			$parentid = $this->getParam('parentid');
+			$parentid = $this->getParam('parent');
 			$rootid = $this->getParam('rootid');
 			$title = $this->getParam('title');
 			$menuText = $this->getParam('menutext');

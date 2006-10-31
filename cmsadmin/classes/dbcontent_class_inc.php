@@ -115,6 +115,7 @@ class dbcontent extends dbTable
 			$access = $this->getParam('access');
   		$introText = $this->getParam('intro');
 			$fullText = $this->getParam('body');
+			$ordering = $this->getParam('ordering');
 		
 			$newArr = array(
 							'title' => $title ,
@@ -124,7 +125,7 @@ class dbcontent extends dbTable
 							'introtext' => $introText,
 							'body' => $fullText,		
 							'modified' => $this->now(),					
-							'ordering' => $this->getPageOrder($id),							
+							'ordering' => $ordering,							
 							'published' => $published,
 							'created_by' => $creatorid
 							);

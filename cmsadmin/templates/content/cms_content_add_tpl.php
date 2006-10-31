@@ -25,11 +25,11 @@ $menuTextInput = & $this->newObject('textinput', 'htmlelements');
 $bodyInput = & $this->newObject('htmlarea', 'htmlelements');
 $introInput= & $this->newObject('htmlarea', 'htmlelements');
 $h3 = &$this->newObject('htmlheading', 'htmlelements');
-$sections = & $this->_objUtils->getTreeDropdown();
 $button =  & $this->newObject('button', 'htmlelements');
 $table2 = & $this->newObject('htmltable', 'htmlelements');
 $frontPage = & $this->newObject('checkbox', 'htmlelements');
 $published = & $this->newObject('checkbox', 'htmlelements');
+$objOrdering = & $this->newObject('textinput', 'htmlelements');
 
 $objForm = $this->newObject('form','htmlelements');
 
@@ -66,11 +66,22 @@ if($this->getParam('id') == '')
 	$published->setChecked($arrContent['published']);
 }
 
-
+if($editmode){
+  $sections =& $this->newObject('textinput', 'htmlelements');
+	$sections->name = 'parent';
+	$sections->fldType = 'hidden';
+	$sections->value = $arrContent['sectionid'];
+	//Set ordering as hidden field
+	$objOrdering->name = 'ordering';
+	$objOrdering->fldType = 'hidden';
+	$objOrdering->value = $arrContent['ordering'];
+} else {
+    $sections = & $this->_objUtils->getTreeDropdown();
+}
 //setup form
 $objForm->name='addfrm';
 $objForm->setAction($this->uri(array('action'=> $action, 'id' => $contentId, 'frontpage' => $this->getParam('frontpage')),'cmsadmin'));
-$objForm->setDisplayType(1);
+$objForm->setDisplayType(3);
 
 
 
@@ -108,9 +119,12 @@ $frontPage->id = 'frontpage';
 $table->startRow();
 $table->addCell('Title');
 $table->addCell($titleInput->show());
-$table->addCell('Section');
-$table->addCell($sections);
-
+if(!$editmode){
+  $table->addCell('Section');
+  $table->addCell($sections);
+} else {
+    $table->addCell($sections->show());
+}    
 $table->endRow();
 
 $table->startRow();
