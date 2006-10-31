@@ -594,7 +594,7 @@ class blogops extends object
 		}
 
 		$postform = new form('postadd', $this->uri(array(
-		'action' => 'postadd', 'mode' => $mode, 'id' => $editparams['id'], 'postexcerpt' => $editparams['post_excerpt']
+		'action' => 'postadd', 'mode' => $mode, 'id' => $editparams['id'], 'postexcerpt' => $editparams['post_excerpt'], 'postdate' => $editparams['post_date']
 		)));
 
 		$pfieldset = $this->newObject('fieldset', 'htmlelements');

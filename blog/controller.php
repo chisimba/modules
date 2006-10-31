@@ -347,6 +347,7 @@ class blog extends controller
 				$id = $this->getParam('id');
 				$posttitle = $this->getParam('posttitle');
 				$postcontent = $this->getParam('postcontent');
+				$postdate = $this->getParam('postdate');
 				$cat = $this->getParam('cat');
 				$status = $this->getParam('status');
 				$commentsallowed = $this->getParam('commentsallowed');
@@ -358,7 +359,7 @@ class blog extends controller
 					$this->objblogOps->quickPostAdd($userid, array('posttitle' => $posttitle, 'postcontent' => $postcontent,
 												    'postcat' => $cat, 'postexcerpt' => '', 'poststatus' => '0',
 												    'commentstatus' => 'Y',
-												    'postmodified' => date('r'), 'commentcount' => 0));
+												    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate));
 					$this->nextAction('viewblog');
 					break;
 				}
@@ -366,7 +367,7 @@ class blog extends controller
 					$insarredit = array('id' => $id,'posttitle' => $posttitle, 'postcontent' => $postcontent,
 												    'postcat' => $cat, 'postexcerpt' => $excerpt, 'poststatus' => $status,
 												    'commentstatus' => 'Y',
-												    'postmodified' => date('r'), 'commentcount' => 0);
+												    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate);
 
 					$this->objblogOps->quickPostAdd($userid, $insarredit, $mode);
 					$this->nextAction('viewblog');
@@ -376,7 +377,7 @@ class blog extends controller
 					$this->objblogOps->quickPostAdd($userid, array('id' => $id, 'posttitle' => $posttitle, 'postcontent' => $postcontent,
 												    'postcat' => $cat, 'postexcerpt' => $excerpt, 'poststatus' => $status,
 												    'commentstatus' => $commentsallowed,
-												    'postmodified' => date('r'), 'commentcount' => 0));
+												    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate));
 					$this->nextAction('viewblog');
 					break;
 				}

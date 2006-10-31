@@ -364,7 +364,7 @@ class dbblog extends dbTable
 			$this->eecleaner = $this->newObject('htmlcleaner', 'utilities');
 
 			$inseditarr = array('userid' => $userid,
-							'post_date' => date('r'),
+							'post_date' => $postarr['postdate'],
 							'post_content' => $this->epcleaner->cleanHtml($postarr['postcontent']),
 							'post_title' => $postarr['posttitle'],
 							'post_category' => $postarr['postcat'],
@@ -373,7 +373,7 @@ class dbblog extends dbTable
 							'comment_status' => $postarr['commentstatus'],
 							'post_modified' => $postarr['postmodified'],
 							'comment_count' => $postarr['commentcount'],
-							'post_ts' => time());
+							'post_ts' => strtotime($postarr['postdate']));
 
 			return $this->update('id',$postarr['id'], $inseditarr, 'tbl_blog_posts');
 		}
