@@ -5,6 +5,15 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 }
 // end security check
 
+/**
+ * Controller class for the blog module that extends the base controller
+ *
+ * @author Paul Scott <pscott@uwc.ac.za>
+ * @copyright AVOIR
+ * @package blog
+ * @category chisimba
+ * @licence GPL
+ */
 class blog extends controller
 {
 	/**

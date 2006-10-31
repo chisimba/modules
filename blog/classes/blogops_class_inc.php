@@ -186,9 +186,9 @@ class blogops extends object
 				foreach($linkers as $lk)
 				{
 					$ret .= "<li>";
-					//$tips = $tt->show($lk['link_name'], $lk['link_description'], $lk['link_name'], $lk['link_url']);
+
 					$alt = htmlentities($lk['link_description']);
-					$link = new href(htmlentities($lk['link_url']), htmlentities($lk['link_name']), "alt='{$alt}'"); // . $tips;
+					$link = new href(htmlentities($lk['link_url']), htmlentities($lk['link_name']), "alt='{$alt}'");
 					$ret .= $link->show();
 					$ret .= "</li>";
 				}
@@ -226,9 +226,9 @@ class blogops extends object
 		else {
 			$ret = NULL;
 		}
+
 		//blog admin page
 		$admin = new href($this->uri(array('action' => 'blogadmin')), $this->objLanguage->languageText("mod_blog_blogadmin", "blog"));
-
 		//write new post link
 		$newpost = new href($this->uri(array('action' => 'blogadmin', 'mode' => 'writepost')), $this->objLanguage->languageText("mod_blog_writepost", "blog"));
 		//edit existing posts
@@ -277,7 +277,6 @@ class blogops extends object
 	 */
 	public function showPosts($posts)
 	{
-		//$this->cleaner = &$this->getObject('htmlcleaner', 'utilities');
 		$ret = NULL;
 		//Middle column (posts)!
 		//break out the ol featurebox...
@@ -436,6 +435,13 @@ class blogops extends object
 
 	}
 
+	/**
+	 * Method to quick add a post to the posts table
+	 *
+	 * @param integer $userid
+	 * @param array $postarr
+	 * @param string $mode
+	 */
 	public function quickPostAdd($userid, $postarr, $mode = NULL)
 	{
 		if(!empty($postarr))
@@ -562,6 +568,13 @@ class blogops extends object
 		return $ctable . "<br />" . $catform;
 	}
 
+	/**
+	 * Method to display the posts editor in its entirety
+	 *
+	 * @param integer $userid
+	 * @param integer $editid
+	 * @return boolean
+	 */
 	public function postEditor($userid, $editid = NULL)
 	{
 		if(isset($editid))
@@ -680,6 +693,12 @@ class blogops extends object
 		return $postform;
 	}
 
+	/**
+	 * Method to edit and manage posts
+	 *
+	 * @param integer $userid
+	 * @return string
+	 */
 	public function managePosts($userid)
 	{
 		//create a table with the months posts, plus a dropdown of all months to edit
@@ -809,6 +828,12 @@ class blogops extends object
 
 	}
 
+	/**
+	 * Methid to build a table of all available bloggers on the system
+	 *
+	 * @param array $rec
+	 * @return string
+	 */
 	public function buildBloggertable($rec)
 	{
 		$lastentry = $this->objDbBlog->getLatestPost($rec['id']);
@@ -847,6 +872,12 @@ class blogops extends object
 		return $ret;
 	}
 
+	/**
+	 * Date manipulation method for getting posts by month/date
+	 *
+	 * @param mixed selected date $sel_date
+	 * @return array
+	 */
 	public function retDates($sel_date = NULL)
 	{
 		if($sel_date == NULL)
