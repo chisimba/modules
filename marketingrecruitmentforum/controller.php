@@ -21,7 +21,9 @@ class marketingrecruitmentforum extends controller
      *declare variable used 
      *@param public and private
      */
-    public $submitdatesmsg = '';
+    //public $submitdatesmsg = '';
+    
+    //public $school = '';
      
     function init()
     {
@@ -198,6 +200,7 @@ class marketingrecruitmentforum extends controller
             break;
 /****************************************************************************************************************/            
             case  'showstudschool':
+                  
                   $useToPopTbl  = $this->getParam('schoollistnames',NULL);  
                   $school = $this->dbstudentcard->getstudschool($useToPopTbl);
                   $this->setVarByRef('school', $school);
@@ -232,6 +235,14 @@ class marketingrecruitmentforum extends controller
                       $this->setLayoutTemplate('search_layout_tpl.php');
                       return 'searchactivities_tpl.php';  
                 }
+            break;
+            
+            case  'showaddressgen':
+                  return 'addressgen_tpl.php';
+            break;
+            
+            case  'followupletter':
+                  return  'followupletter_tpl.php';
             break;
 /****************************************************************************************************************/            
             default:
@@ -273,7 +284,7 @@ class marketingrecruitmentforum extends controller
                              'modifiedby'       =>  $this->objUser->fullname(),
                              'datemodified'     =>  date('Y-m-d'),
                              'updated'          =>  date('Y-m-d'),
-                             'date'             =>  $this->getParam('txtdate'),
+                             'date'             =>  $this->getParam('datestud'),
                              'surname'          =>  $this->getParam('txtsurname'),
                              'name'             =>  $this->getParam('txtname'),
                              'schoolname'       =>  $this->getParam('schoollist'),

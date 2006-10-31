@@ -162,5 +162,28 @@ class dbstudentcard extends dbTable{
     return $facultycount;
   }
 /*------------------------------------------------------------------------------*/
+  public function getallstudaddy()
+  {
+    //get all student addresses from studcard table
+    $stmt = "select distinct(postaddress), surname, name from tbl_studcard";
+    $studaddress = $this->getArray($stmt);
+    return $studaddress;
+  }
+/*------------------------------------------------------------------------------*/
+  public  function  getstudInfo()  //example used for follow up letter
+  {
+    //text for letter follow up
+    $stmt = "select surname, name, postaddress from tbl_studcard where name = 'kader' and surname = 'jaffer'";
+    $studtest = $this->getArray($stmt);
+    return $studtest;
+  }
+/*------------------------------------------------------------------------------*/
+  public function getstudbyarea()
+  {
+    $stmt = "select stud.surname, stud.name, stud.postaddress, stud.schoolname studschoool, slu.schoolname sluschool, slu.area from tbl_studcard stud, tbl_sluactivities slu where stud.schoolname = slu.schoolname order by slu.area";
+    $studarea = $this->getArray($stmt);
+    return $studarea;
+  }
+/*------------------------------------------------------------------------------*/
 }//end of class 
 ?>

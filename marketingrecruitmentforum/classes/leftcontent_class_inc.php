@@ -37,8 +37,8 @@ class leftcontent{
    //$EntryQualify[] = array('params' => array("action" => "showreportinfo"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'View Reports');
    
    $AddressGenLink = array();
-   $AddressGenLink[] = array('params' => array("action" => "NULL"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Address Generator');
-   $AddressGenLink[] = array('params' => array("action" => "NULL"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Follow Up Communication');
+   $AddressGenLink[] = array('params' => array("action" => "showaddressgen"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Address Generator');
+   $AddressGenLink[] = array('params' => array("action" => "followupletter"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Follow Up Communication');
       
    $leftColumn = array();
    $leftColumn[] = array('heading' => 'Data Capture', 'links' => $StudentCardLink);
