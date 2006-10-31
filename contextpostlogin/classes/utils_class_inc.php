@@ -97,7 +97,7 @@ class utils extends object
 		$leftSideColumn = '';
 		//Add loginhistory block
 		$leftSideColumn .= $objBlocks->showBlock('calendar', 'eventscalendar');
-		$leftSideColumn .= $objBlocks->showBlock('loginstats', 'reports');
+		$leftSideColumn .= $objBlocks->showBlock('loginstats', 'context');
 		//Add guestbook block
 		$leftSideColumn .= $objBlocks->showBlock('guestinput', 'guestbook');
 		//Add latest search block
@@ -121,7 +121,7 @@ class utils extends object
 	     $rightSideColumn = "";
 	     $objBlocks = & $this->newObject('blocks', 'blocks');
 		//Add the getting help block
-		$rightSideColumn .= $objBlocks->showBlock('gettinghelp', 'help');
+		$rightSideColumn .= $objBlocks->showBlock('dictionary', 'dictionary');
 		//Add the latest in blog as a a block
 		$rightSideColumn .= $objBlocks->showBlock('latest', 'blog');
 		//Add the latest in blog as a a block

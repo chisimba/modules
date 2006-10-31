@@ -4,12 +4,15 @@ $tabBox = & $this->newObject('tabpane', 'htmlelements');
 $featureBox = & $this->newObject('featurebox', 'navigation');
 $objLink =  & $this->newObject('link', 'htmlelements');
 
+
 $str = '';
 $other = '';
 $lects = '';
 
 //registered courses
-if (isset($contextList))
+//var_dump($contextList);
+count($contextList);
+if (count($contextList) > 0)
 {	
 	foreach ($contextList as $context)
 	{
@@ -35,7 +38,7 @@ if (isset($contextList))
 		$objLink->href = $this->uri(array('action' => 'joincontext'), 'context');
 		$objLink->link = '<span class="caption">Enter</span>';
 		
-		$str .= $featureBox->show($context['contextcode'] .' - '.$context['title'].'   '.$objLink->show(), $content );
+		$str .= $featureBox->show($context['contextcode'] .' - '.$context['title'].'   '.$objLink->show(), $content ).'<hr />';
 	}
 } else {
 	$str .= '<div align="center" style="font-size:large;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">No are associated with any courses</div>';
@@ -43,7 +46,7 @@ if (isset($contextList))
 
 
 //public courses
-if(isset($otherCourses))
+if(count($otherCourses))
 {
 	foreach($otherCourses as $otherCourses)
 	{
@@ -58,4 +61,5 @@ if(isset($otherCourses))
 $tabBox->addTab(array('name'=>'My Courses','content' => $str));
 $tabBox->addTab(array('name'=>'Other Courses','content' => $other));
 echo $tabBox->show();
+
 ?>
