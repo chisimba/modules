@@ -7,22 +7,103 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 class blog extends controller
 {
+	/**
+	 * User object
+	 *
+	 * @var user
+	 */
 	public $objUser;
+
+	/**
+	 * Language Object
+	 *
+	 * @var object
+	 */
 	public $objLanguage;
+
+	/**
+	 * Logger object
+	 *
+	 * @var object
+	 */
 	public $objLog;
+
+	/**
+	 * Feed object
+	 *
+	 * @var object
+	 */
 	public $objFeed;
+
+	/**
+	 * Feed creator object
+	 *
+	 * @var object
+	 */
 	public $objFeedCreator;
+
+	/**
+	 * HTTP Client object
+	 *
+	 * @var object
+	 */
 	public $objClient;
+
+	/**
+	 * Database abstraction object
+	 *
+	 * @var object
+	 */
 	public $objDbBlog;
+
+	/**
+	 * Configuration object
+	 *
+	 * @var object
+	 */
 	public $objConfig;
+
+	/**
+	 * Operations baseclass
+	 *
+	 * @var object
+	 */
 	public $objblogOps;
+
+	/**
+	 * HTML Cleaner object
+	 *
+	 * @var object
+	 */
 	public $cleaner;
+
+	/**
+	 * Icon Object
+	 *
+	 * @var object
+	 */
 	public $objIcon;
+
+	/**
+	 * Lucene indexer object
+	 *
+	 * @var object
+	 */
 	public $luceneindexer;
+
+	/**
+	 * Lucene document Object
+	 *
+	 * @var object
+	 */
 	public $lucenedoc;
 
 	/**
      * Constructor method to instantiate objects and get variables
+     *
+     * @param void
+     * @return string
+     * @access public
      */
 	public function init()
 	{
@@ -55,6 +136,7 @@ class blog extends controller
      * Method to process actions to be taken
      *
      * @param string $action String indicating action to be taken
+     * @return string template
      */
 	public function dispatch($action = Null)
 	{
@@ -317,6 +399,13 @@ class blog extends controller
 
 	}
 
+	/**
+	 * Ovveride the login object in the parent class
+	 *
+	 * @param void
+	 * @return bool
+	 * @access public
+	 */
 	public function requiresLogin()
 	{
 		return FALSE;
