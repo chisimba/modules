@@ -62,8 +62,13 @@ class blog extends controller
 			default:
 				if($this->objUser->isLoggedIn() == TRUE)
 				{
-					$this->nextAction('viewblog');
-					exit;
+					$act = $this->getParam('action');
+					if($act != 'randblog')
+					{
+						$this->nextAction('viewblog');
+						exit;
+					}
+
 				}
 				$this->requiresLogin(FALSE);
 				$userid = $this->getParam('userid');
