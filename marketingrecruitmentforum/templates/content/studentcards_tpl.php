@@ -183,10 +183,10 @@
         */
         
         $this->objdate = $this->newObject('datepicker','htmlelements');
-        $datename = 'txtdate';
+        $datename = 'datestud';
         $datevalue= date('Y-m-d');
         $format = 'YYYY-MM-DD';
-        $this->objdate->setName($name);
+        $this->objdate->setName($datename);
         $this->objdate->setDefaultDate($datevalue);
         $this->objdate->setDateFormat($format); 
 

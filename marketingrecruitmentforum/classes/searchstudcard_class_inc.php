@@ -59,6 +59,7 @@ public  function  getAllstudents(){
       
   
         $myTable->startHeaderRow();
+        $myTable->addHeaderCell('Date', null,'top','left','header');
         $myTable->addHeaderCell('School Name', null,'top','left','header');
         $myTable->addHeaderCell('Surname', null,'top','left','header');
         $myTable->addHeaderCell('Name', null,'top','left','header');
@@ -75,6 +76,7 @@ public  function  getAllstudents(){
        $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        
        $myTable->startRow();
+       $myTable->addCell($sessCard['date'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['surname'], "15%", null, "left","widelink");
        $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
@@ -91,7 +93,7 @@ public  function  getAllstudents(){
   /**
    *all students from a certain school
    */
-public  function allstudschool($school = NULL){
+public  function allstudschool($school){
         //$schoolname = $this->getParam('schoollistnames'); 
         //$results = $this->objstudcard->getstudschool($schoolname);
       if(isset($school)){
@@ -170,6 +172,7 @@ public  function  allwithexemption(){
       
   
         $myTable->startHeaderRow();
+        $myTable->addHeaderCell('Date', null,'top','left','header');
         $myTable->addHeaderCell('School Name', null,'top','left','header');
         $myTable->addHeaderCell('Surname', null,'top','left','header');
         $myTable->addHeaderCell('Name', null,'top','left','header');
@@ -182,6 +185,7 @@ public  function  allwithexemption(){
        $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        
        $myTable->startRow();
+       $myTable->addCell($sessCard['date'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['surname'], "15%", null, "left","widelink");
        $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
@@ -256,7 +260,6 @@ public function allwithrelsub(){
       
   
         $myTable->startHeaderRow();
-        //$myTable->addHeaderCell('School Name', null,'top','left','header');
         $myTable->addHeaderCell('Surname', null,'top','left','header');
         $myTable->addHeaderCell('Name', null,'top','left','header');
         $myTable->addHeaderCell('Faculty', null,'top','left','header');
@@ -268,7 +271,6 @@ public function allwithrelsub(){
        $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        
        $myTable->startRow();
-       //$myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['surname'], "15%", null, "left","widelink");
        $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['faculty'],"15%", null, "left","widelink");
@@ -331,7 +333,8 @@ public   function studcourse(){
    */
 public function studarea(){
        
-       $results = $this->objstudcard->allbyarea();
+       $results = $this->objstudcard->getstudbyarea();
+       
         
         $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
          $this->appendArrayVar('headerParams', $css1);
@@ -346,11 +349,12 @@ public function studarea(){
       
   
         $myTable->startHeaderRow();
-        //$myTable->addHeaderCell('School Name', null,'top','left','header');
         $myTable->addHeaderCell('Surname', null,'top','left','header');
         $myTable->addHeaderCell('Name', null,'top','left','header');
         $myTable->addHeaderCell('Postal Address', null,'top','left','header');
+        $myTable->addHeaderCell('School Name', null,'top','left','header');
         $myTable->addHeaderCell('Area', null,'top','left','header');
+        
         
         $rowcount = '0';
   
@@ -359,11 +363,11 @@ public function studarea(){
        $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        
        $myTable->startRow();
-       //$myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['surname'], "15%", null, "left","widelink");
        $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['postaddress'],"15%", null, "left","widelink");
-       //$myTable->addCell($sessCard['course'],"15%", null, "left","widelink");  -- within the activities class
+       $myTable->addCell($sessCard['studschoool'],"15%", null, "left","widelink");
+       $myTable->addCell($sessCard['area'],"15%", null, "left","widelink");
        $myTable->endRow();
         
    }  

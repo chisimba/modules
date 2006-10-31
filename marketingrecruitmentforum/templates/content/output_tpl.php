@@ -79,13 +79,7 @@
   
                 $objstudcardTable->startRow();
                 $objstudcardTable->addCell('Date');
-                //$objstudcardTable->addCell("<div align=\"right\">" .$editStudLink->show() . "</div>");  //not showing
-                $objstudcardTable->addCell(strtoupper($sesStuddata['date']));
-                $objstudcardTable->endRow();
-  
-                $objstudcardTable->startRow();
-                $objstudcardTable->addCell('Date' );
-                $objstudcardTable->addCell(strtoupper($sesStuddata['date']));   //not showing
+                $objstudcardTable->addCell($sesStuddata['date']);
                 $objstudcardTable->endRow();
   
                 $objstudcardTable->startRow();

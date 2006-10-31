@@ -55,14 +55,16 @@ class dbschoollist extends dbTable{
 //display all schools by area
   public function getschoolbyarea()
   {   //use filter and specify area
-      $area  = $this->getAll();
+      $stmt = "select sch.schoolname,slu.area area from tbl_schoollist sch, tbl_sluactivities slu where sch.schoolname = slu.schoolname order by area";
+      $area  = $this->getArray($stmt);;
       return  $area;
   }   
 /*------------------------------------------------------------------------------*/
 //display all by province
   public function getschoolbyprovince()
   {   //use filter and specify province
-      $province  = $this->getAll();
+      $stmt = "select sch.schoolname,slu.province prov from tbl_schoollist sch, tbl_sluactivities slu where sch.schoolname = slu.schoolname order by slu.province";
+      $province  = $this->getArray($stmt);
       return  $province;
   }   
 /*------------------------------------------------------------------------------*/
