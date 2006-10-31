@@ -50,6 +50,12 @@ class dbblog extends dbTable
 		return $this->getAll("where userid = " . $userid);
 	}
 
+	public function deleteCat($catid)
+	{
+		$this->_changeTable('tbl_blog_cats');
+		return $this->delete('id',$catid, 'tbl_blog_cats');
+	}
+
 	/**
 	 * Method to grab the top level parent categories per user id
 	 *
@@ -74,6 +80,18 @@ class dbblog extends dbTable
 		$this->_changeTable('tbl_blog_cats');
 		$child = $this->getAll("where userid = '$userid' AND cat_parent = '$cat'");
 		return array('child' => $child);
+	}
+
+	/**
+	 * Method to get a single cat for edit
+	 *
+	 * @param
+	 */
+	public function getCatForEdit($userid, $id)
+	{
+		$this->_changeTable('tbl_blog_cats');
+		$ret = $this->getAll("WHERE userid = '$userid' AND id = '$id'");
+		return $ret[0];
 	}
 
 	/**
@@ -106,10 +124,15 @@ class dbblog extends dbTable
 	 * @param array $cats
 	 * @return boolean
 	 */
-	public function setCats($userid, $cats = array())
+	public function setCats($userid, $cats = array(), $mode = NULL)
 	{
 		if(!empty($cats))
 		{
+			if($mode == 'editcommit')
+			{
+				$this->_changeTable('tbl_blog_cats');
+				return $this->update('id', $cats['id'], $cats, 'tbl_blog_cats');
+			}
 			$this->_changeTable('tbl_blog_cats');
 			return $this->insert($cats, 'tbl_blog_cats');
 		}

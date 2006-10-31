@@ -468,6 +468,7 @@ class blogops extends object
 	{
 		//get the categories layout sorted
 		$cats = $this->objDbBlog->getAllCats($userid);
+		$headstr = $this->objLanguage->languageText("mod_blog_catedit_instructions", "blog");
 		//create a table to view the categories
 		$cattable = $this->newObject('htmltable', 'htmlelements');
 		$cattable->cellpadding = 3;
@@ -478,6 +479,7 @@ class blogops extends object
 		$cattable->addHeaderCell($this->objLanguage->languageText("mod_blog_cathead_nicename", "blog"));
 		$cattable->addHeaderCell($this->objLanguage->languageText("mod_blog_cathead_descrip", "blog"));
 		$cattable->addHeaderCell($this->objLanguage->languageText("mod_blog_cathead_count", "blog"));
+		$cattable->addHeaderCell($this->objLanguage->languageText("mod_blog_editdeletecat", "blog"));
 		$cattable->endHeaderRow();
 		if(!empty($cats))
 		{
@@ -499,9 +501,13 @@ class blogops extends object
 				$cattable->addCell($rows['cat_nicename']);
 				$cattable->addCell($rows['cat_desc']);
 				$cattable->addCell($this->objDbBlog->catCount($rows['id'])); //$rows['cat_count']);
+				$this->objIcon = &$this->getObject('geticon', 'htmlelements');
+				$edIcon = $this->objIcon->getEditIcon($this->uri(array('action' => 'catadd', 'mode' => 'edit', 'id' => $rows['id'], 'module' => 'blog')));
+				$delIcon = $this->objIcon->getDeleteIconWithConfirm($rows['id'], array('module' => 'blog', 'action' => 'deletecat', 'id' => $rows['id']), 'blog');
+				$cattable->addCell($edIcon . $delIcon);
 				$cattable->endRow();
 			}
-			$ctable = $cattable->show();
+			$ctable = $headstr . $cattable->show();
 		}
 		else {
 			$ctable = $this->objLanguage->languageText("mod_blog_nocats", "blog");
@@ -566,6 +572,71 @@ class blogops extends object
 		$catform = $catform->show();
 
 		return $ctable . "<br />" . $catform;
+	}
+
+	public function catedit($catarr, $userid, $catid)
+	{
+		//add a new category form:
+		$catform = new form('catadd', $this->uri(array(
+		'action' => 'catadd', 'mode' => 'editcommit', 'id' => $catid
+		)));
+
+		$cfieldset = $this->getObject('fieldset', 'htmlelements');
+		$cfieldset->setLegend($this->objLanguage->languageText('mod_blog_cateditor', 'blog'));
+		$catadd = $this->newObject('htmltable', 'htmlelements');
+		$catadd->cellpadding = 5;
+		//category name field
+		$catadd->startRow();
+		$clabel = new label($this->objLanguage->languageText('mod_blog_catname', 'blog') .':', 'input_catname');
+		$catname = new textinput('catname');
+		$catname->setValue($catarr['cat_name']);
+		$catadd->addCell($clabel->show());
+		$catadd->addCell($catname->show());
+		$catadd->endRow();
+
+		$catadd->startRow();
+		$dlabel = new label($this->objLanguage->languageText('mod_blog_catparent', 'blog') .':', 'input_catparent');
+		//category parent field (dropdown)
+		//get a list of the parent cats
+		$pcats = $this->objDbBlog->getAllCats($userid);
+		$addDrop = new dropdown('catparent');
+		$addDrop->addOption(0, $this->objLanguage->languageText("mod_blog_defcat","blog"));
+
+		//loop through the existing cats and make sure not to add a child to the dd
+		foreach($pcats as $adds)
+		{
+			$parent = $adds['cat_parent'];
+			if($adds['cat_parent'] == '0')
+			{
+				$addDrop->addOption($adds['id'], $adds['cat_name']);
+			}
+		}
+		$catadd->addCell($dlabel->show());
+		$catadd->addCell($addDrop->show());
+		$catadd->endRow();
+
+		//start a htmlarea for the category description (optional)
+		$catadd->startRow();
+		$desclabel = new label($this->objLanguage->languageText('mod_blog_catdesc', 'blog') .':', 'input_catdesc');
+		$this->loadClass('textarea', 'htmlelements');
+		$cdesc = new textarea; //$this->newObject('textarea','htmlelements');
+		$cdesc->setName('catdesc');
+		$cdesc->setContent($catarr['cat_desc']);
+		//$cdesc->setBasicToolBar();
+
+		$catadd->addCell($desclabel->show());
+		$catadd->addCell($cdesc->show()); //showFCKEditor());
+		$catadd->endRow();
+
+		$cfieldset->addContent($catadd->show());
+		$catform->addToForm($cfieldset->show());
+		$this->objCButton = &new button($this->objLanguage->languageText('word_update', 'blog'));
+		$this->objCButton->setValue($this->objLanguage->languageText('word_update', 'blog'));
+		$this->objCButton->setToSubmit();
+		$catform->addToForm($this->objCButton->show());
+		$catform = $catform->show();
+		return $catform;
+
 	}
 
 	/**

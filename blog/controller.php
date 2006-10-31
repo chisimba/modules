@@ -321,6 +321,7 @@ class blog extends controller
 				$catname = $this->getParam('catname');
 				$catparent = $this->getParam('catparent');
 				$catdesc = $this->getParam('catdesc');
+				$id = $this->getParam('id');
 				//category quick add
 				if($mode == 'quickadd')
 				{
@@ -333,13 +334,44 @@ class blog extends controller
 					$this->nextAction('blogadmin');
 					break;
 				}
+				if($mode == 'edit')
+				{
+					//update the records in the db
+					//build the array again
+					$entry = $this->objDbBlog->getCatForEdit($userid, $id);
+					$catarr = array('userid' => $userid,
+									'cat_name' => $entry['cat_name'],
+									'cat_nicename' => $entry['cat_nicename'],
+									'cat_desc' => $entry['cat_desc'],
+									'cat_parent' => $entry['cat_parent'],
+									'id' => $id);
 
-				$catarr = array('userid' => $userid, 'cat_name' => $catname, 'cat_nicename' => $catname, 'cat_desc' => $catdesc, 'cat_parent' => $catparent);
-				//insert the category into the db
-				$this->objDbBlog->setCats($userid, $catarr);
+					//display the cat editor with the values in the array, set that form to editcommit
+					$this->setVarByRef('catarr', $catarr);
+					$this->setVarByRef('userid', $userid);
+					$this->setVarByRef('catid', $id);
+					return 'cedit_tpl.php';
+					break;
+				}
+				if($mode == 'editcommit')
+				{
+					$catarr = array('userid' => $userid, 'cat_name' => $catname, 'cat_nicename' => $catname, 'cat_desc' => $catdesc, 'cat_parent' => $catparent, 'id' => $id);
+					$this->objDbBlog->setCats($userid, $catarr, $mode);
+					$this->nextAction('blogadmin', array('mode' => 'editcats'));
+				}
 
-				$this->nextAction('blogadmin');
+				if($mode == NULL)
+				{
+					$catarr = array('userid' => $userid, 'cat_name' => $catname, 'cat_nicename' => $catname, 'cat_desc' => $catdesc, 'cat_parent' => $catparent);
+					//insert the category into the db
+					$this->objDbBlog->setCats($userid, $catarr);
+
+					$this->nextAction('blogadmin');
+					break;
+				}
 				break;
+
+
 
 			case 'postadd':
 				$mode = $this->getParam('mode');
@@ -387,7 +419,7 @@ class blog extends controller
 			case 'deletepost':
 				$id = $this->getParam('id');
 				$this->objDbBlog->deletePost($id);
-				$this->nextAction('blogadmin');
+				$this->nextAction('blogadmin', array('mode' => 'editpost'));
 
 				break;
 
@@ -403,6 +435,31 @@ class blog extends controller
 				$ret = $this->objDbBlog->getUBlogs('userid', 'tbl_blog_posts');
 				$this->setVarByRef('ret',$ret);
 				return 'allblogs_tpl.php';
+				break;
+
+			case 'deletecat':
+				//grab the vars that we need
+				$id = $this->getParam('id');
+				$userid = $this->objUser->userId();
+				$mode = $this->getParam('mode');
+				//echo $id, $mode;
+				//search through the posts table to find all the posts linked to the cat
+				$posts = $this->objDbBlog->getPostsFromCat($userid, $id);
+				foreach($posts as $post)
+				{
+					//update the found posts and set their cat to '0'
+					$insarredit = array('id' => $post['id'],'posttitle' => $post['post_title'], 'postcontent' => $post['post_content'],
+												    'postcat' => 0, 'postexcerpt' => $post['post_excerpt'], 'poststatus' => $post['post_status'],
+												    'commentstatus' => $post['comment_status'],
+												    'postmodified' => $post['post_modified'], 'commentcount' => $post['comment_count'], 'postdate' => $post['post_date']);
+
+					$this->objblogOps->quickPostAdd($userid, $insarredit, 'editcommit');
+
+				}
+				//delete the cat from the table
+				$this->objDbBlog->deleteCat($id);
+				//nextaction back to the cats view thing
+				$this->nextAction('blogadmin', array('mode' => 'editcats'));
 				break;
 
 		}
