@@ -36,8 +36,8 @@ class blog extends controller
 			$this->objblogOps = &$this->getObject('blogops');
 			$this->cleaner = &$this->getObject('htmlcleaner', 'utilities');
 			$this->objIcon = &$this->getObject('geticon', 'htmlelements');
-			$this->lucenedoc = &$this->getObject('doc','lucene');
-			$this->luceneindexer = &$this->getObject('indexfactory', 'lucene');
+			//$this->lucenedoc = &$this->getObject('doc','lucene');
+			//$this->luceneindexer = &$this->getObject('indexfactory', 'lucene');
 			//config object
 			$this->objConfig = $this->getObject('altconfig', 'config');
 			//Get the activity logger class
