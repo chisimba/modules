@@ -1,4 +1,5 @@
 <?php
+//write post template
 
 //initiate objects
 $this->loadClass('label', 'htmlelements');
@@ -8,8 +9,6 @@ $this->loadClass('form', 'htmlelements');
 $this->loadClass('href', 'htmlelements');
 $this->loadClass('htmlarea', 'htmlelements');
 
-$tt = $this->newObject('domtt', 'htmlelements');
-$pane = &$this->newObject('tabpane', 'htmlelements');
 
 $cssLayout = &$this->newObject('csslayout', 'htmlelements');
 $objSideBar = $this->newObject('sidebar', 'navigation');
@@ -24,12 +23,11 @@ $middleColumn = NULL;
 //left menu section
 $leftCol = $leftMenu->show();
 
-$middleColumn .= $this->objblogOps->showAdminSection(TRUE, TRUE);
-
+//get the posts editor
+$middleColumn = $this->objblogOps->postEditor($userid, NULL);
 
 $rightSideColumn .= $this->objblogOps->quickCats(TRUE);
-$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
-$rightSideColumn .= $this->objblogOps->quickPost($userid, TRUE);
+$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);//quickPost($userid, TRUE);
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol);
 $cssLayout->setRightColumnContent($rightSideColumn);

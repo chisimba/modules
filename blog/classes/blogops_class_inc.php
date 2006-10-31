@@ -216,7 +216,7 @@ class blogops extends object
 	 * @param bool $featurebox
 	 * @return string
 	 */
-	public function showAdminSection($featurebox = FALSE)
+	public function showAdminSection($featurebox = FALSE, $blogadmin = FALSE)
 	{
 		//admin section
 		if($featurebox == FALSE)
@@ -228,7 +228,36 @@ class blogops extends object
 		}
 		//blog admin page
 		$admin = new href($this->uri(array('action' => 'blogadmin')), $this->objLanguage->languageText("mod_blog_blogadmin", "blog"));
-		$ret .= $admin->show();
+
+		//write new post link
+		$newpost = new href($this->uri(array('action' => 'blogadmin', 'mode' => 'writepost')), $this->objLanguage->languageText("mod_blog_writepost", "blog"));
+		//edit existing posts
+		$editpost = new href($this->uri(array('action' => 'blogadmin', 'mode' => 'editpost')), $this->objLanguage->languageText("mod_blog_word_editposts", "blog"));
+		//edit/create cats
+		$editcats = new href($this->uri(array('action' => 'blogadmin', 'mode' => 'editcats')), $this->objLanguage->languageText("mod_blog_word_categories", "blog"));
+		//view all other blogs
+		$viewblogs = new href($this->uri(array('action' => 'allblogs')), $this->objLanguage->languageText("mod_blog_viewallblogs", "blog"));
+		//go back to your blog
+		$viewmyblog = new href($this->uri(array('action' => 'viewblog')), $this->objLanguage->languageText("mod_blog_viewmyblog", "blog"));
+
+		if($blogadmin == TRUE)
+		{
+			//build up a bunch of featureboxen and send em out
+			//this will only happen with the front page (blogadmin template)
+			$linksarr = array($admin, $newpost, $editpost, $editcats, $viewblogs, $viewmyblog);
+			foreach($linksarr as $links)
+			{
+				$objFeatureBox = $this->newObject('featurebox', 'navigation');
+				$ret .= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_admin","blog"), $links->show());
+			}
+			return $ret;
+		}
+		else{
+		//build the links
+		$ret .= $admin->show() . "<br />" . $newpost->show()  . "<br />" . $editpost->show()  . "<br />" .
+				$editcats->show()  . "<br />" . $viewblogs->show() . "<br />" . $viewmyblog->show();
+		}
+
 		if($featurebox == FALSE)
 		{
 			return $ret;

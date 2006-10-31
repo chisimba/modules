@@ -18,6 +18,8 @@ class blog extends controller
 	public $objblogOps;
 	public $cleaner;
 	public $objIcon;
+	public $luceneindexer;
+	public $lucenedoc;
 
 	/**
      * Constructor method to instantiate objects and get variables
@@ -34,6 +36,8 @@ class blog extends controller
 			$this->objblogOps = &$this->getObject('blogops');
 			$this->cleaner = &$this->getObject('htmlcleaner', 'utilities');
 			$this->objIcon = &$this->getObject('geticon', 'htmlelements');
+			$this->lucenedoc = &$this->getObject('doc','lucene');
+			$this->luceneindexer = &$this->getObject('indexfactory', 'lucene');
 			//config object
 			$this->objConfig = $this->getObject('altconfig', 'config');
 			//Get the activity logger class
@@ -197,6 +201,20 @@ class blog extends controller
 			case 'blogadmin':
 				$userid = $this->objUser->userId();
 				$this->setVarByRef('userid', $userid);
+				$mode = $this->getParam('mode');
+				switch ($mode)
+				{
+					case 'writepost':
+						return 'writepost_tpl.php';
+						break;
+					case 'editpost':
+						return 'editpost_tpl.php';
+						break;
+					case 'editcats':
+						return 'editcats_tpl.php';
+						break;
+
+				}
 				return 'blogadmin_tpl.php';
 				break;
 
