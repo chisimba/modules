@@ -128,6 +128,12 @@ class dbblog extends dbTable
 		return $ret;
 	}
 
+	/**
+	 * Method to count the number of posts in a category
+	 *
+	 * @param string $cat
+	 * @return integer
+	 */
 	public function catCount($cat)
 	{
 		$this->_changeTable('tbl_blog_posts');
@@ -150,12 +156,26 @@ class dbblog extends dbTable
 		return $this->getAll("where userid = " . $userid);
 	}
 
+	/**
+	 * Get the links per category
+	 *
+	 * @param integer $userid
+	 * @param string $cat
+	 * @return mixed
+	 */
 	public function getLinksCats($userid, $cat)
 	{
 		$this->_changeTable('tbl_blog_links');
 		return $this->getAll("WHERE userid = '$userid' AND link_category = '$cat'");
 	}
 
+	/**
+	 * Add a category to the links section
+	 *
+	 * @param integer $userid
+	 * @param array $linkCats
+	 * @return boolean
+	 */
 	public function setLinkCats($userid, $linkCats = array())
 	{
 		if(!empty($linkCats))
@@ -168,6 +188,13 @@ class dbblog extends dbTable
 		}
 	}
 
+	/**
+	 * Method to add a link to a category
+	 *
+	 * @param integer $userid
+	 * @param array $linkarr
+	 * @return boolean
+	 */
 	public function setLink($userid, $linkarr)
 	{
 		$this->_changeTable('tbl_blog_links');
@@ -182,6 +209,13 @@ class dbblog extends dbTable
 
 	// posts section
 
+	/**
+	 * Method to get all the posts in a category (published posts)
+	 *
+	 * @param integer $userid
+	 * @param mixed $catid
+	 * @return array
+	 */
 	public function getAllPosts($userid, $catid)
 	{
 		if(!isset($catid))
@@ -192,6 +226,13 @@ class dbblog extends dbTable
 		return $this->getAll("WHERE userid = '$userid' AND post_category = '$catid' AND post_status = '0' ORDER BY post_ts DESC");
 	}
 
+	/**
+	 * Method to get all the posts made within a month
+	 *
+	 * @param mixed $startdate
+	 * @param string $userid
+	 * @return array
+	 */
 	public function getPostsMonthly($startdate, $userid)
 	{
 		$this->_changeTable('tbl_blog_posts');
@@ -207,24 +248,49 @@ class dbblog extends dbTable
 		return $ret;
 	}
 
+	/**
+	 * Method to delete a post
+	 *
+	 * @param mixed $id
+	 * @return boolean
+	 */
 	public function deletePost($id)
 	{
 		$this->_changeTable('tbl_blog_posts');
 		return $this->delete('id',$id, 'tbl_blog_posts');
 	}
 
+	/**
+	 * Method to get a post by its ID
+	 *
+	 * @param mixed $id
+	 * @return array
+	 */
 	public function getPostById($id)
 	{
 		$this->_changeTable('tbl_blog_posts');
 		return $this->getAll("WHERE id = '$id'");
 	}
 
+	/**
+	 * Method to get all the posts within a category
+	 *
+	 * @param integer $userid
+	 * @param mixed $catid
+	 * @return array
+	 */
 	public function getPostsFromCat($userid, $catid)
 	{
 		$this->_changeTable('tbl_blog_posts');
 		return $this->getAll("WHERE userid = '$userid' AND post_category = '$catid'");
 	}
 
+	/**
+	 * Method to get the latest post of a user
+	 *
+	 * @param integer $userid
+	 * @return array
+	 */
 	public function getLatestPost($userid)
 	{
 		$this->_changeTable('tbl_blog_posts');
@@ -234,11 +300,17 @@ class dbblog extends dbTable
 		return $lastpost;
 	}
 
+	/**
+	 * Method to return a random blog
+	 *
+	 * @param void
+	 * @return mixed
+	 */
 	public function getRandBlog()
 	{
 		$this->_changeTable('tbl_blog_posts');
 		$res = $this->getAll();
-		//print_r($res);
+
 		if(!empty($res))
         {
         	foreach($res as $blogs)
@@ -255,6 +327,15 @@ class dbblog extends dbTable
 	}
 
 	//post methods
+
+	/**
+	 * Method to insert a post to your posts table
+	 *
+	 * @param integer $userid
+	 * @param array $postarr
+	 * @param string $mode
+	 * @return array
+	 */
 	public function insertPost($userid, $postarr, $mode = NULL)
 	{
 
@@ -298,6 +379,13 @@ class dbblog extends dbTable
 		}
 	}
 
+	/**
+	 * Method to get the User blogs DISTINCT query
+	 *
+	 * @param mixed $column
+	 * @param mixed $table
+	 * @return array
+	 */
 	public function getUBlogs($column, $table)
 	{
 		$this->_changeTable('tbl_blog_posts');
