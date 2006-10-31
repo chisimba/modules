@@ -123,8 +123,8 @@ class comment extends controller
                 $this->setVar('suppressFooter', TRUE);
                 //Create an instance of the database class for this module
 
-              //  $this->objDbcomment = & $this->getObject('dbcomment','comment');
-              //  $this->objDbcomment->saveRecord('add', $this->objUser->userId());
+               $this->objDbcomment = & $this->getObject('dbcomment','comment');
+               $this->objDbcomment->saveRecord('add', $this->objUser->userId());
                 $this->setVar('comment', $this->getParam('comment', NULL));
                print_r($this->setVar('comment', $this->getParam('comment', NULL)));
 		return "saved_tpl.php";
