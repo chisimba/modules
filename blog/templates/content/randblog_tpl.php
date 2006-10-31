@@ -26,8 +26,16 @@ $middleColumn .= nl2br($this->objblogOps->showPosts($posts));
 
 //left menu section
 $leftCol = NULL;
-$leftCol = $this->objblogOps->loginBox(TRUE);
-
+//check if the user is logged in or not...
+if($this->objUser->isLoggedIn())
+{
+	$leftCol .= $objSideBar->show();
+	$rightSideColumn .=$this->objblogOps->quickPost($this->objUser->userId(), TRUE);
+}
+else {
+	$leftCol = $this->objblogOps->loginBox(TRUE);
+	$rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
+}
 //show the feeds section
 $leftCol .= $this->objblogOps->showFeeds(&$userid, TRUE);
 
