@@ -273,12 +273,13 @@ class dbblog extends dbTable
 		$this->_changeTable('tbl_blog_posts');
 		$this->objblogOps = &$this->getObject('blogops');
 		$times = $this->objblogOps->retDates($startdate);
+		//print_r($times);
 		$now = date('r',mktime(0,0,0,date("m", time()), date("d", time()), date("y", time())));
 		$monthstart =  $times['mbegin'];
 		$prevmonth = $times['prevmonth'];
 		$nextmonth = $times['nextmonth'];
 		//get the entries from the db
-		$filter = "WHERE post_ts > '$monthstart' AND post_ts < '$nextmonth' AND userid = '$userid'";
+		$filter = "WHERE post_ts > '$monthstart' AND post_ts < '$nextmonth' AND userid = '$userid' ORDER BY post_ts DESC";
 		$ret = $this->getAll($filter);
 		return $ret;
 	}

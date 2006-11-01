@@ -27,7 +27,8 @@ $leftCol = $leftMenu->show();
 $middleColumn = $this->objblogOps->managePosts($userid);
 
 
-$rightSideColumn .= $this->objblogOps->quickCats(TRUE);
+//$rightSideColumn .= $this->objblogOps->quickCats(TRUE);
+$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 $rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);//quickPost($userid, TRUE);
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol);

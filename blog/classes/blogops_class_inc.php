@@ -767,13 +767,70 @@ class blogops extends object
 		return $postform;
 	}
 
+	private function _archiveArr($userid)
+	{
+		//add in a foreach for each year
+		$allposts = $this->objDbBlog->getAbsAllPosts($userid);
+		$revposts = array_reverse($allposts);
+		$recs = count($revposts) - 1;
+
+		$lastrec = $revposts[$recs]['post_ts'];
+		$firstrec = $revposts[0]['post_ts'];
+
+		$startdate = date("m", $firstrec);
+		$enddate  = date("m", $lastrec);//. " " .date("Y", $lastrec);
+
+		//create a while loop to get all the posts between start and end dates
+		$postarr = array();
+		while ($startdate <= $enddate) {
+			$posts = $this->objDbBlog->getPostsMonthly(mktime(0,0,0,$startdate, 1, date("y", $firstrec)), $userid);
+			$postarr[$startdate] = $posts;
+			$startdate++;
+		}
+		return $postarr;
+
+	}
+	public function archiveBox($userid, $featurebox = FALSE)
+	{
+		//get the posts for each month
+		$posts = $this->_archiveArr($userid);
+		$months = array_keys($posts);
+		//print_r($posts);die();
+		$arks = NULL;
+		foreach ($months as $month)
+		{
+			$thedate = mktime(0,0,0,$month,1,date("Y", $posts[$month][0]['post_ts']));
+			$arks[] = array('formatted' => date("F", $thedate) . " " . date("Y", $thedate), 'raw' => $month, 'rfc' => $thedate);
+		}
+
+		//print_r($arks);die();
+
+		$thismonth = mktime(0,0,0,date("m", time()), 1, date("y", time()));
+		if($featurebox == FALSE)
+		{
+			return $thismonth;
+		}
+		else {
+			$objFeatureBox = $this->getObject('featurebox', 'navigation');
+			$lnks = NULL;
+			foreach ($arks as $ark)
+			{
+				$lnk = new href($this->uri(array('module' => 'blog', 'action' => 'showarchives', 'month' => $ark['raw'], 'year' => $ark['rfc'])), $ark['formatted']);
+				$lnks .= $lnk->show() . "<br />";
+			}
+
+			$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_archives","blog"),$lnks);
+			return $ret;
+		}
+	}
+
 	/**
 	 * Method to edit and manage posts
 	 *
 	 * @param integer $userid
 	 * @return string
 	 */
-	public function managePosts($userid)
+	public function managePosts($userid, $month = NULL, $year = NULL)
 	{
 		//create a table with the months posts, plus a dropdown of all months to edit
 		//put the edit icon at the end of each row, with text linked to the postEditor() method
@@ -790,7 +847,10 @@ class blogops extends object
 
 		//grab the posts for this month
 		//$posts = $this->objDbBlog->getPostsMonthly(mktime(0,0,0,date("m", time()), 1, date("y", time())), $userid); //change this to get from the form input rather
-		$posts = $this->objDbBlog->getAbsAllPosts($userid);
+		if($month == NULL && $year == NULL)
+		{
+			$posts = $this->objDbBlog->getAbsAllPosts($userid);
+		}
 		//print_r($posts);
 		//add in a table header...
 		$edtable->startHeaderRow();

@@ -314,6 +314,15 @@ class blog extends controller
 				return 'blogadmin_tpl.php';
 				break;
 
+			case 'showarchives':
+				$date = $this->getParam('year');
+				$userid = $this->objUser->userId();
+				$posts = $this->objDbBlog->getPostsMonthly($date, $userid);
+				$this->setVarByRef('userid', $userid);
+				$this->setVarByRef('posts', $posts);
+				return 'archive_tpl.php';
+				break;
+
 			case 'catadd':
 				$mode = $this->getParam('mode');
 				$list = $this->getParam('catname');
