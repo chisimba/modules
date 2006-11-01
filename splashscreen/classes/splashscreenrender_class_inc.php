@@ -218,13 +218,13 @@ class splashscreenrender extends object
         case 'Context':
             $ts_content ='<fieldset class="tabbox"><legend class="tabbox">'. $rec['name'].'</legend><TABLE><TR>';
                 // Course Chooser
-                $ts_content.='<TD>'.$this->getContextDropDown().'</TD></TR></TABLE></fieldset>';
+               // $ts_content.='<TD>''</TD></TR></TABLE></fieldset>';
             return $ts_content;
 
         case 'JoinContext':
             $ts_content ='<fieldset class="tabbox"><legend class="tabbox">'. ucfirst(strtolower(wordwrap($rec['name'],12, "<br />\n"))).'</legend><TABLE><TR>';
                 // Join Course Chooser
-                $ts_content.='<TD>'.$this->getJoinContextDropDown().'</TD></TR></TABLE></fieldset>';
+               // $ts_content.='<TD>'.$this->getJoinContextDropDown().'</TD></TR></TABLE></fieldset>';
             return $ts_content;
 
         case 'Skins':
@@ -300,7 +300,7 @@ class splashscreenrender extends object
     $temp[0] = strtoupper($temp[0]);
     $ts_content.='<fieldset class="tabbox"><legend class="tabbox">'.$temp.'</legend><TABLE><TR>';
         // Course Chooser
-        $ts_content.='<TD>'.$this->getContextDropDown().'</TD></TR></TABLE></fieldset>';
+       // $ts_content.='<TD>'.$this->getContextDropDown().'</TD></TR></TABLE></fieldset>';
 
     $ts_content.='</div>';
     //end of left nav panel
@@ -428,7 +428,7 @@ class splashscreenrender extends object
         $ts_content=str_replace("[-ENDFORM-]", $skin."</form>", $ts_content);
 
         // Course Chooser
-        $ts_content=str_replace("[-CONTEXTCHOOSER-]", $this->getContextDropDown(), $ts_content);
+        //$ts_content=str_replace("[-CONTEXTCHOOSER-]", $this->getContextDropDown(), $ts_content);
 		$ts_content=str_replace("[-CONTEXT-]", ucwords($this->objLanguage->code2Txt('mod_context_context','context')), $ts_content);
 
         //Resource Kit Link
