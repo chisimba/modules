@@ -25,12 +25,9 @@ $table->startHeaderRow();
 $table->addHeaderCell('#');
 $table->addHeaderCell('Section Name');
 $table->addHeaderCell('Published');
-//$table->addHeaderCell('Reorder');
-//$table->addHeaderCell('Order');
 $table->addHeaderCell('Access');
-$table->addHeaderCell('Section ID');
-//$table->addHeaderCell('Order');
-$table->addHeaderCell('&nbsp;');
+$table->addHeaderCell('Order');
+
 
 $table->endHeaderRow();   
 
@@ -45,30 +42,24 @@ foreach($arrSections as $section)
 
 	$oddOrEven = ($rowcount == 0) ? "even" : "odd";
 	
-    $tableRow = array();
-	  $tableRow[]=$cnt++;
-    $tableRow[]=$link->show();
+  $tableRow = array();
+	$tableRow[]=$cnt++;
+  $tableRow[]=$link->show();
     
-    //publish
-    $link->href = $this->uri(array('action' => 'sectionpublish', 'id' => $section['id']));
-    $link->link = $this->_objUtils->getCheckIcon($section['published']);
+  //publish
+  $link->href = $this->uri(array('action' => 'sectionpublish', 'id' => $section['id']));
+  $link->link = $this->_objUtils->getCheckIcon($section['published']);
     
-    $tableRow[]=$link->show();
-   // $table->addCell('up down');
-    //$table->addCell($section['ordering']);
-	$tableRow[]=$this->_objUtils->getAccess($section['access']);
-	$tableRow[]=$section['id'];
+  $tableRow[]=$link->show();
+  $tableRow[]=$this->_objUtils->getAccess($section['access']);
 	$tableRow[]=$this->_objSections->getOrderingLink($section['id']);
-	//$table->addCell($section['catid']);
-	//$tableRow[]=$this->_objCategories->getCatCount($section['id']);
-	//$table->addCell($section['created']);
 	
 	//delete link
 	$objIcon->setIcon('delete');
 	$link->href = $this->uri(array('action' => 'sectiondelete', 'id' => $section['id']));
-    $link->link = $objIcon->show();
+  $link->link = $objIcon->show();
 	$tableRow[] = $link->show();
-  	$table->addRow($tableRow, $oddOrEven);
+  $table->addRow($tableRow, $oddOrEven);
 	$rowcount = ($rowcount == 0) ? 1 : 0;
 	
 	
