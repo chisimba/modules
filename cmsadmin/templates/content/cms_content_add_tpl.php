@@ -76,7 +76,11 @@ if($editmode){
 	$objOrdering->fldType = 'hidden';
 	$objOrdering->value = $arrContent['ordering'];
 } else {
-    $sections = & $this->_objUtils->getTreeDropdown();
+    if(isset($section) && !empty($section)){
+      $sections = & $this->_objUtils->getTreeDropdown($section, TRUE);
+    } else {
+        $sections = & $this->_objUtils->getTreeDropdown(NULL, TRUE);
+    }    
 }
 //setup form
 $objForm->name='addfrm';

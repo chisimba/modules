@@ -937,13 +937,14 @@ class cmsutils extends object
 	 * @access public
 	 * @author Warren Windvogel
 	 */
-	public function getTreeDropdown($setSelected = NULL)
+	public function getTreeDropdown($setSelected = NULL, $noRoot = FALSE)
 	{
 	    //Create dropdown
       $treeDrop =& $this->newObject('dropdown', 'htmlelements');
 	    $treeDrop->name = 'parent';
-	    $treeDrop->addOption('0', ' ... Root Level ... ');
-
+	    if(!$noRoot){
+	      $treeDrop->addOption('0', ' ... Root Level ... ');
+      }
 	    //Create instance of geticon object
 	    $objIcon =& $this->newObject('geticon', 'htmlelements');
 	    //Get all root sections

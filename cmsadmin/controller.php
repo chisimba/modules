@@ -170,7 +170,8 @@ class cmsadmin extends controller
                 //----------------------- content section
                 
             case 'addcontent':
-                $parentid = $this->getParam('parentid');
+                $parentid = $this->getParam('parent', NULL);
+                $this->setVarByRef('section', $parentid);
                 return 'cms_content_add_tpl.php';
                 
             case 'createcontent':
