@@ -15,7 +15,7 @@ $rightSideColumn = NULL;
 //set up a link to the other users blogs...
 //show the link to all blogs
 $rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
-$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
+
 
 //show the categories menu (if there are cats)
 //$rightSideColumn .= $this->objblogOps->showCatsMenu($cats, $userid, TRUE);
@@ -32,6 +32,7 @@ if($this->objUser->isLoggedIn())
 {
 	$leftCol .= $objSideBar->show();
 	$rightSideColumn .=$this->objblogOps->quickPost($this->objUser->userId(), TRUE);
+	$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 }
 else {
 	$leftCol = $this->objblogOps->loginBox(TRUE);
