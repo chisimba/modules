@@ -490,7 +490,10 @@ class blogops extends object
 				if($rows['cat_parent'] != '0')
 				{
 					$maparr = $this->objDbBlog->mapKid2Parent($rows['cat_parent']);
-					$rows['cat_parent'] = "<em><b>" . $maparr[0]['cat_name'] . "</b></em>";
+					if(!empty($maparr))
+					{
+						$rows['cat_parent'] = "<em><b>" . $maparr[0]['cat_name'] . "</b></em>";
+					}
 				}
 				if($rows['cat_parent'] == '0')
 				{
