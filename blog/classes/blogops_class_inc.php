@@ -789,7 +789,8 @@ class blogops extends object
 		$edtable->cellpadding = 5;
 
 		//grab the posts for this month
-		$posts = $this->objDbBlog->getPostsMonthly(mktime(0,0,0,date("m", time()), 1, date("y", time())), $userid); //change this to get from the form input rather
+		//$posts = $this->objDbBlog->getPostsMonthly(mktime(0,0,0,date("m", time()), 1, date("y", time())), $userid); //change this to get from the form input rather
+		$posts = $this->objDbBlog->getAbsAllPosts($userid);
 		//print_r($posts);
 		//add in a table header...
 		$edtable->startHeaderRow();

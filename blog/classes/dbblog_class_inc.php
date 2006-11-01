@@ -231,6 +231,18 @@ class dbblog extends dbTable
 	}
 
 	// posts section
+	/**
+	 * Method to get all the posts in a category (published posts)
+	 *
+	 * @param integer $userid
+	 * @param mixed $catid
+	 * @return array
+	 */
+	public function getAbsAllPosts($userid)
+	{
+		$this->_changeTable('tbl_blog_posts');
+		return $this->getAll("WHERE userid = '$userid' ORDER BY post_ts DESC");
+	}
 
 	/**
 	 * Method to get all the posts in a category (published posts)
