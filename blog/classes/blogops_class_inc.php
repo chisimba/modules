@@ -780,21 +780,27 @@ class blogops extends object
 		{
 			$recs = $recs - 1;
 		}
+		if(!empty($revposts))
+		{
 
-		$lastrec = $revposts[$recs]['post_ts'];
-		$firstrec = $revposts[0]['post_ts'];
+			$lastrec = $revposts[$recs]['post_ts'];
+			$firstrec = $revposts[0]['post_ts'];
 
-		$startdate = date("m", $firstrec);
-		$enddate  = date("m", $lastrec);//. " " .date("Y", $lastrec);
+			$startdate = date("m", $firstrec);
+			$enddate  = date("m", $lastrec);//. " " .date("Y", $lastrec);
 
-		//create a while loop to get all the posts between start and end dates
-		$postarr = array();
-		while ($startdate <= $enddate) {
-			$posts = $this->objDbBlog->getPostsMonthly(mktime(0,0,0,$startdate, 1, date("y", $firstrec)), $userid);
-			$postarr[$startdate] = $posts;
-			$startdate++;
+			//create a while loop to get all the posts between start and end dates
+			$postarr = array();
+			while ($startdate <= $enddate) {
+				$posts = $this->objDbBlog->getPostsMonthly(mktime(0,0,0,$startdate, 1, date("y", $firstrec)), $userid);
+				$postarr[$startdate] = $posts;
+				$startdate++;
+			}
+			return $postarr;
 		}
-		return $postarr;
+		else {
+			return NULL;
+		}
 
 	}
 	public function archiveBox($userid, $featurebox = FALSE)
