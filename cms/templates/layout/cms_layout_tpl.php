@@ -7,6 +7,8 @@ $objLucene = & $this->newObject('results', 'lucene');
 $objModule = & $this->newObject('modules', 'modulecatalogue');
 $objLink = & $this->newObject('link', 'htmlelements');
 $objTreeMenu =& $this->newObject('cmstree', 'cmsadmin');
+$objUser =& $this->newObject('user', 'security');
+$objLanguage =& $this->newObject('language', 'language');
 
 //Insert script for generating tree menu
 $js = $this->getJavascriptFile('tree.js', 'cmsadmin');
@@ -50,8 +52,16 @@ $rightSideColumn .= $objBlocks->showBlock('dictionary', 'dictionary');
 /*****************LEFT SIDE ***************************************/
 //Navigation
 $currentNode = $this->getParam('sectionid', NULL);
-$leftSide = $objTreeMenu->buildTree($currentNode);
 
+$leftSide = $objTreeMenu->buildTree($currentNode);
+if($objUser->isAdmin()){
+  $objAdminLink =& $this->newObject('link', 'htmlelements');
+  $objAdminLink->link($this->uri(array(NULL), 'cmsadmin'));
+  $objAdminLink->link = $objLanguage->languageText('mod_cms_cmsadmin', 'cms');
+  
+  $leftSide .= '<br/>';
+  $leftSide .= $objAdminLink->show();
+}
 
 
 /***************** END OF LEFT SIDE *******************************/
