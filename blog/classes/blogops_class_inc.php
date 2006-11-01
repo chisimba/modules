@@ -808,33 +808,39 @@ class blogops extends object
 		//get the posts for each month
 		$posts = $this->_archiveArr($userid);
 		//print_r($posts);die();
-		$months = array_keys($posts);
-		//print_r($posts);die();
-		$arks = NULL;
-		foreach ($months as $month)
+		if(!empty($posts))
 		{
-			$thedate = mktime(0,0,0,$month,1,date("Y", $posts[$month][0]['post_ts']));
-			$arks[] = array('formatted' => date("F", $thedate) . " " . date("Y", $thedate), 'raw' => $month, 'rfc' => $thedate);
-		}
+			$months = array_keys($posts);
+			//print_r($posts);die();
+			$arks = NULL;
+			foreach ($months as $month)
+			{
+				$thedate = mktime(0,0,0,$month,1,date("Y", $posts[$month][0]['post_ts']));
+				$arks[] = array('formatted' => date("F", $thedate) . " " . date("Y", $thedate), 'raw' => $month, 'rfc' => $thedate);
+			}
 
 		//print_r($arks);die();
 
-		$thismonth = mktime(0,0,0,date("m", time()), 1, date("y", time()));
-		if($featurebox == FALSE)
-		{
-			return $thismonth;
+			$thismonth = mktime(0,0,0,date("m", time()), 1, date("y", time()));
+			if($featurebox == FALSE)
+			{
+				return $thismonth;
+			}
+			else {
+				$objFeatureBox = $this->getObject('featurebox', 'navigation');
+				$lnks = NULL;
+				foreach ($arks as $ark)
+				{
+					$lnk = new href($this->uri(array('module' => 'blog', 'action' => 'showarchives', 'month' => $ark['raw'], 'year' => $ark['rfc'], 'userid' => $posts[$month][0]['userid'])), $ark['formatted']);
+					$lnks .= $lnk->show() . "<br />";
+				}
+
+				$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_archives","blog"),$lnks);
+				return $ret;
+			}
 		}
 		else {
-			$objFeatureBox = $this->getObject('featurebox', 'navigation');
-			$lnks = NULL;
-			foreach ($arks as $ark)
-			{
-				$lnk = new href($this->uri(array('module' => 'blog', 'action' => 'showarchives', 'month' => $ark['raw'], 'year' => $ark['rfc'], 'userid' => $posts[$month][0]['userid'])), $ark['formatted']);
-				$lnks .= $lnk->show() . "<br />";
-			}
-
-			$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_archives","blog"),$lnks);
-			return $ret;
+			return NULL;
 		}
 	}
 
