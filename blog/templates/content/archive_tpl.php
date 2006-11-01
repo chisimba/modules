@@ -11,6 +11,7 @@ $middleColumn = NULL;
 
 //show the link to all blogs
 $rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
+$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 
 //show the categories menu (if there are cats)
 //$rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE);
