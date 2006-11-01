@@ -794,6 +794,7 @@ class blogops extends object
 	{
 		//get the posts for each month
 		$posts = $this->_archiveArr($userid);
+		//print_r($posts);die();
 		$months = array_keys($posts);
 		//print_r($posts);die();
 		$arks = NULL;
@@ -815,7 +816,7 @@ class blogops extends object
 			$lnks = NULL;
 			foreach ($arks as $ark)
 			{
-				$lnk = new href($this->uri(array('module' => 'blog', 'action' => 'showarchives', 'month' => $ark['raw'], 'year' => $ark['rfc'])), $ark['formatted']);
+				$lnk = new href($this->uri(array('module' => 'blog', 'action' => 'showarchives', 'month' => $ark['raw'], 'year' => $ark['rfc'], 'userid' => $posts[$month][0]['userid'])), $ark['formatted']);
 				$lnks .= $lnk->show() . "<br />";
 			}
 

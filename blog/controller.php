@@ -316,7 +316,7 @@ class blog extends controller
 
 			case 'showarchives':
 				$date = $this->getParam('year');
-				$userid = $this->objUser->userId();
+				$userid = $this->getParam('userid'); //$this->objUser->userId();
 				$posts = $this->objDbBlog->getPostsMonthly($date, $userid);
 				$this->setVarByRef('userid', $userid);
 				$this->setVarByRef('posts', $posts);
