@@ -198,7 +198,7 @@ class dbcontent extends dbTable
 		 //Re-order other pages in section accordingly
 	   $page = $this->getRow('id', $id);
 	   $pageOrderNo = $page['ordering'];
-	   $sectionId = $page['secionid'];
+	   $sectionId = $page['sectionid'];
 		 $allPagesInSection = $this->getPagesInSection($sectionId);
 		 foreach($allPagesInSection as $pg){
        if($pg['ordering'] > $pageOrderNo){
@@ -411,10 +411,13 @@ class dbcontent extends dbTable
 	public function getOrdering($sectionId)
 	{
 	  try{		
+	   $ordering = 1;
      //get last order value 
      $lastOrder = $this->getAll('WHERE sectionid = "'.$sectionId.'" ORDER BY ordering DESC LIMIT 1');
      //add after this value
-     $ordering = $lastOrder['0']['ordering'] + 1;
+     if(!empty($lastOrder)){
+       $ordering = $lastOrder['0']['ordering'] + 1;
+     }
      return $ordering;
 	   }  
 		 catch (customException $e)
