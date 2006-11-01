@@ -467,6 +467,9 @@ class blogops extends object
 	public function categoryEditor($userid)
 	{
 		//get the categories layout sorted
+		$this->loadClass('href', 'htmlelements');
+		$this->loadClass('label', 'htmlelements');
+		$this->loadClass('textinput', 'htmlelements');
 		$cats = $this->objDbBlog->getAllCats($userid);
 		$headstr = $this->objLanguage->languageText("mod_blog_catedit_instructions", "blog");
 		//create a table to view the categories

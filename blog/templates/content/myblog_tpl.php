@@ -18,9 +18,6 @@ $rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE);
 //show the link categories (if any)
 $rightSideColumn .= $this->objblogOps->showLinkCats($linkcats, TRUE);
 
-//add a break to the righsidecol and carry on with the meta data and admin sections
-//$rightSideColumn .= "<br />";
-
 //show the admin section (if user is logged in)
 $rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
 
