@@ -33,9 +33,9 @@ if (count($contextList) > 0)
 		$content .= '<p>'.$context['about'].'</p>';
 		$content .= '<p>'.$this->_objUtils->getPlugins($context['contextcode']).'</p>';
 		
+		$contextCode = $context['contextcode'];
 		
-		
-		$objLink->href = $this->uri(array('action' => 'joincontext'), 'context');
+		$objLink->href = $this->uri(array('action' => 'joincontext','contextCode'=>$contextCode), 'context');
 		$objLink->link = '<span class="caption">Enter</span>';
 		
 		$str .= $featureBox->show($context['contextcode'] .' - '.$context['title'].'   '.$objLink->show(), $content ).'<hr />';
