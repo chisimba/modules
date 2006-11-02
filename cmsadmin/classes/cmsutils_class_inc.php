@@ -342,7 +342,7 @@ class cmsutils extends object
 			$arrFrontPages = $this->_objFrontPage->getFrontPages();
 			
 			
-			$objFeatureBox = $this->newObject('featurebox', 'navigation');
+			//$objFeatureBox = $this->newObject('featurebox', 'navigation');
 			$str = '';
 			//set a counter for the records .. display on the first 2  the rest will be dsiplayed as links
 			$cnt  = 0 ;
@@ -418,8 +418,8 @@ class cmsutils extends object
 				//$str .= '<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
 				//$str .= '<p>'.$page['introtext'].'<a href="devtodo" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
 				$moreLink = $this->uri(array('action' => 'showfulltext', 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
-				$content = '<span class="date">'.$this->formatDate($page['created']).'</span> <p>'.$page['introtext'].'<a href="'.$moreLink.'" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
-				$str .= $objFeatureBox->show($page['title'], $content);
+				$content = '<span class="date">'.$this->formatDate($page['created']).'</span> <p>'.$page['introtext'].'<br /><a href="'.$moreLink.'" class="morelink" title="'.$page['title'].'">Read more...</a></p>';
+				$str .= '<h3>'.$page['title'].'</h3>'.$content;
 			}
 			}
 			return $str;
