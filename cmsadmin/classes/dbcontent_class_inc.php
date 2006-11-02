@@ -321,13 +321,12 @@ class dbcontent extends dbTable
 	public  function resetSection($sectionId)
 	{
 		try{	
-			$arrContent = $this->getAll('WHERE sectionid = "'.$id.'"');
+			$arrContent = $this->getAll('WHERE sectionid = "'.$sectionId.'"');
 			
-			foreach ($arrContent as $page)
+			foreach ($arrContent as $page)		
 			{
 				$this->delete('id', $page['id']);
 			}
-			return;
 		}
 		 catch (customException $e)
         {
