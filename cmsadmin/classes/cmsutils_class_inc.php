@@ -540,7 +540,6 @@ class cmsutils extends object
 			foreach ($arrPages as $page)
 			{
 
-
 				//display the intro text
 				$table = & $this->newObject('htmltable', 'htmlelements');
 
@@ -568,7 +567,8 @@ class cmsutils extends object
 				$table->addCell('<p>'.$page['introtext']);
 				$table->endRow();
 
-				if(!$page['body'] == '')
+/*
+				if($page['body'])
 				{
 					//read more link .. link to the full text
 					$link = & $this->newObject('link', 'htmlelements');
@@ -580,10 +580,11 @@ class cmsutils extends object
 					$table->endRow();
 
 				}
+				*/
 				//$str .= $table->show();
 				$str .= '<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
 				$uri = $this->uri(array('action' => 'showfulltext', 'sectionid' => $arrSection['id'], 'id' => $page['id']), $module);
-				$str .= '<p>'.$page['introtext'].'<a href="'.$uri.'" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
+				$str .= '<p>'.$page['introtext'].'<br /><a href="'.$uri.'" class="morelink" title="'.$page['title'].'">Read more...</a></p>';
 
 			}
 
@@ -625,7 +626,7 @@ class cmsutils extends object
 				{
 					$link = & $this->newObject('link', 'htmlelements');
 					$link->link = $page['menutext'];
-					$link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id']), $module);
+					$link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id'],'sectionid' => $page['sectionid']), $module);
 
 					$str .= $link->show() .' | ';
 				} else {
@@ -670,7 +671,7 @@ class cmsutils extends object
 			{
 				$link = & $this->newObject('link', 'htmlelements');
 				$link->link = $page['title'];
-				$link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id']), $module);
+				$link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id'],'sectionid' => $page['sectionid']), $module);
 
 				$str .= '<li>'.$this->formatDate($page['created']).' - '. $link->show() .'</li>';
 			}
