@@ -264,7 +264,7 @@ class cmsadmin extends controller
                 $this->_objSections->togglePublish($this->getParam('id'));
                 return $this->nextAction('sections');
                 
-            case 'sectiondelete':
+            case 'deletesection':
                 $this->_objSections->deleteSection($this->getParam('id'));
                 return $this->nextAction('sections');
                 
