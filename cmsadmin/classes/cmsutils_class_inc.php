@@ -482,7 +482,6 @@ class cmsutils extends object
 		        $image = '';
 		    }
 
-			$heading = '<h3>'. $arrSection['title']. $image."</h3>";
 
 			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
 
@@ -505,7 +504,7 @@ class cmsutils extends object
 				}
 			}
 
-			return $heading.$strBody.'<p/>'.$str;
+			return $strBody.'<p/>'.$str;
 
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
@@ -535,7 +534,7 @@ class cmsutils extends object
 			$objUser = & $this->newObject('user', 'security');
 			$objConfig = & $this->newObject('altconfig', 'config');
 
-			$str = '<h3>'.$image. $arrSection['title'].'</h3>';
+			$str = '';
 
 			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 and trash=0  ORDER BY ordering');
 			foreach ($arrPages as $page)
@@ -613,7 +612,6 @@ class cmsutils extends object
 		        $image = '';
 		    }
 
-			$heading = '<h3>'. $arrSection['title'].$image."</h3>";
 
 			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 and trash=0  ORDER BY ordering');
 
@@ -639,7 +637,7 @@ class cmsutils extends object
 
 
 
-			return $heading.$strBody.'<p/>'.$str;
+			return $strBody.'<p/>'.$str;
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
@@ -665,7 +663,7 @@ class cmsutils extends object
 		        $image = '';
 		    }
 
-			$str = '<h3>'. $arrSection['title'].$image."</h3>";
+			$str = '';
 
 			$arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 and trash=0 ORDER BY ordering');
 			foreach ($arrPages as $page)
