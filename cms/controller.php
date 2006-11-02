@@ -137,6 +137,10 @@ class cms extends controller
 	            	
 	            case 'showcontent':
 	            case 'showfulltext':
+	              $fromadmin = $this->getParam('fromadmin', FALSE);
+	              $sectionId = $this->getParam('sectionid', NULL);
+	              $this->setVarByRef('sectionId', $sectionId);
+	              $this->setVarByRef('fromadmin', $fromadmin);
 	            	$this->setVar('content', $this->_objUtils->showBody());
 	            	return 'cms_content_tpl.php';
 	            case 'ical':
