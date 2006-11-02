@@ -108,11 +108,13 @@ class dbblog extends dbTable
 		{
 			$tree = NULL;
 		}
-		foreach ($parents as $p)
-		{
-			$parent = $p;
-			$child = $this->getChildCats($userid, $p['id']);
-			$tree->$p['cat_name'] = array_merge($parent, $child);
+		else {
+			foreach ($parents as $p)
+			{
+				$parent = $p;
+				$child = $this->getChildCats($userid, $p['id']);
+				$tree->$p['cat_name'] = array_merge($parent, $child);
+			}
 		}
 		return $tree;
 	}
