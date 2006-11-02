@@ -25,7 +25,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $sorryLabel = $this -> objLanguage -> languageText('mod_sudoku_sorry', 'sudoku');
     $returnLabel = $this -> objLanguage -> languageText('mod_sudoku_return', 'sudoku');
     $retryLabel = $this -> objLanguage -> languageText('mod_sudoku_retry', 'sudoku');
-    
+
 // set up heading
     if($solved == '1'){
         $objHeader -> str = $congratsLabel;

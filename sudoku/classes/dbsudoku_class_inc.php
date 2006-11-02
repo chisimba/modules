@@ -44,16 +44,16 @@ class dbsudoku extends dbTable
     * @param string $id The id of the puzzle
     * @return array $data  Puzzle data
     */
-	public function getRecord($id)
-	{
+    public function getRecord($id)
+    {
         $sql = "SELECT * FROM " . $this -> table;
         $sql .= " WHERE id = '$id'";
-		$data = $this -> getArray($sql);
+        $data = $this -> getArray($sql);
         if(!empty($data)){
             return $data;
         }
         return FALSE;
-	}
+    }
 
     /**
     * Method for saving a puzzle
@@ -95,16 +95,16 @@ class dbsudoku extends dbTable
     *
     * @return array $data  All puzzle data
     */
-	public function listAllRecords($userId)
-	{
+    public function listAllRecords($userId)
+    {
         $sql = "SELECT * FROM " . $this -> table;
         $sql .= " WHERE creator_id = '$userId'";
         $sql .= " ORDER BY 'date_created' ";
-		$data = $this -> getArray($sql);
+        $data = $this -> getArray($sql);
         if(!empty($data)){
             return $data;
         }
         return FALSE;
-	}
+    }
 }
 ?>

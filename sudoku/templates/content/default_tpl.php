@@ -40,7 +40,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $openLabel = $this -> objLanguage -> languageText('mod_sudoku_open', 'sudoku');
     $loadLabel = $this -> objLanguage -> languageText('mod_sudoku_load', 'sudoku');
     $errMsg_1 = $this -> objLanguage -> languageText('mod_sudoku_err_required', 'sudoku');
-    
+
 // set up heading
     $heading = $this -> objLanguage -> code2Txt('mod_sudoku_heading', 'sudoku', array('user' => $this -> objUser -> fullName($this -> objUser -> userId())));
     $objHeader -> str = $heading;
@@ -67,16 +67,16 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $objTable = new htmltable();
     $objTable -> cellspacing='2';
     $objTable -> cellpadding='2';
-    
+
     $objTable -> startRow();
     $objTable -> addCell($levelHeading, '', '', '', '', '');
     $objTable -> endRow();
     $objTable -> startRow();
     $objTable -> addCell($levelDrop, '', '', '', '', '');
     $objTable -> endRow();
-    
+
     $levelTable = $objTable -> show();
-    
+
 // set up submit button
     $objButton = new button('go', $goLabel);
     $objButton -> setToSubmit();
@@ -143,7 +143,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
             $location = $this -> uri($deleteArray, 'sudoku');
             $this -> objUtil -> setConfirm($icon, $location, $deleteConfirm);
             $deleteIcon = $this -> objUtil -> show();
-            
+
             // set up table
             $objTable -> startRow();
             $objTable -> addCell("<hr />", '', '', '', '', '');
@@ -164,7 +164,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
     }
     $str = $objTable -> show();
     echo $str;
-    
+
 // set up exit link
     $objLink = new link($this -> uri(array(),'_default'));
     $objLink -> link = $exitLabel;

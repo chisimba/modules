@@ -61,7 +61,7 @@ class sudoku extends controller
                 $this -> setVarByRef('how', $how);
                 return 'puzzle_tpl.php';
                 break;
-                
+
             case 'submit': //submits the puzzle
                 $id = $this -> getParam('id');
                 $mode = $this -> getParam('mode');
@@ -85,7 +85,7 @@ class sudoku extends controller
                 return $this -> showAllItems();
         }
     }
-    
+
     /**
     * Method to list all suduko puzzles
     *
@@ -98,7 +98,7 @@ class sudoku extends controller
         $this -> setVarByRef('arrPuzzleList', $arrPuzzleList);
         return 'default_tpl.php';
     }
-    
+
     /**
     * Method to add puzzle
     * puzzle generated using the "Peraita method - Author unknown"
@@ -255,7 +255,7 @@ class sudoku extends controller
             $number_2 = (pow($size, 4) + 1) - $number_1;
             $data[$number_2] = '';
         }
-        
+
         $puzzle = implode(",", $data);
         $id = $this -> dbSudoku -> addRecord($difficulty, $solution, $puzzle, $this -> objUser -> userId());
         return $this -> nextAction('solve', array('id' => $id, 'how' => 'R'));
