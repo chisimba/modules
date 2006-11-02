@@ -301,7 +301,12 @@ class blogops extends object
 				}
 				$post['post_content'] = $this->bbcode->parse4bbcode($post['post_content']);
 				$this->cleaner = $this->newObject('htmlcleaner', 'utilities');
-				$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content']));
+				//edit icon in a table 1 row x however number of things to do
+
+				$this->objIcon = &$this->getObject('geticon', 'htmlelements');
+				$edIcon = $this->objIcon->getEditIcon($this->uri(array('action' => 'postedit', 'id' => $post['id'], 'module' => 'blog')));
+
+				$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content'] . $edIcon));
 			}
 		}
 		else {
