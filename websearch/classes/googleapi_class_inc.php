@@ -185,5 +185,6 @@ class googleApi extends object
         return $ar[0]['searchterm'];
     } 
 } #end of class
+ //test
 
 ?>

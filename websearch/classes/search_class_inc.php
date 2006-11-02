@@ -455,6 +455,7 @@ class search extends object {
     * Method to check for a google API key
     * 
     */
+    //test
     public function _check4Key()
     {
         $objUprm = & $this->getObject('dbuserparamsadmin', 'userparamsadmin');
