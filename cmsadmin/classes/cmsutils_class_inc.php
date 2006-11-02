@@ -340,11 +340,15 @@ class cmsutils extends object
 		try {
 			$objUser = & $this->newObject('user', 'security');
 			$arrFrontPages = $this->_objFrontPage->getFrontPages();
+			
+			
 			$objFeatureBox = $this->newObject('featurebox', 'navigation');
 			$str = '';
 			//set a counter for the records .. display on the first 2  the rest will be dsiplayed as links
 			$cnt  = 0 ;
 
+			if(count($arrFrontPages))
+			{
 			foreach ($arrFrontPages as $frontPage)
 			{
 
@@ -416,6 +420,7 @@ class cmsutils extends object
 				$moreLink = $this->uri(array('action' => 'showfulltext', 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
 				$content = '<span class="date">'.$this->formatDate($page['created']).'</span> <p>'.$page['introtext'].'<a href="'.$moreLink.'" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
 				$str .= $objFeatureBox->show($page['title'], $content);
+			}
 			}
 			return $str;
 

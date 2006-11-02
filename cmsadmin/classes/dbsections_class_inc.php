@@ -106,7 +106,7 @@ class dbsections extends dbTable
 	public function getFirstSectionId()
 	{
 		try {
-		  $firstSection = $this->getAll('WHERE count = 1 AND ordering = 1');
+		  $firstSection = $this->getAll('WHERE parentid=0 and ordering=1');
 		  $firstSectionId = $firstSection['0']['id'];
 		  return $firstSectionId;
     }catch (Exception $e){

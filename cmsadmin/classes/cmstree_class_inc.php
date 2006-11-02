@@ -118,12 +118,14 @@ class cmstree extends object
 
             $htmlLevel = '';
             foreach($nodes as $node){
-                if ($this->getChildNodeCount($node['id']) > 0){
+                if ($this->getChildNodeCount($node['id']) > 0)
+				{
                     //if node has further child nodes, recursively call buildLevel
                     $htmlChildren = $this->buildLevel($node['id'], $currentNode, $admin);
 
                     //get any content for a section
-                    if($this->getNodeContentCount($node['id']) > 0){
+                    if($this->getNodeContentCount($node['id']) > 0)
+					{
                         $htmlChildren .= $this->addContent($node['id']);
                     }
 
@@ -131,28 +133,49 @@ class cmstree extends object
                     if(($htmlChildren == '') && ($this->getNodeContentCount($node['id']) == 0) && ($admin == FALSE)){
                         $htmlLevel = '';
                     }else{
-                        if(in_array($node['id'], $openNodes)){
+
+                        if(in_array($node['id'], $openNodes))
+						{
+
                             $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id'], 'sectionid'=>$node['id']), 'cms');
                             $htmlLevel .= '<li><a href="'.$nodeUri.'">'.$node['title'].'</a><ul>';
-                        }else{
+                        }
+						else
+						{
                             $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id'], 'sectionid'=>$node['id']), 'cms');
                             $htmlLevel .= '<li class="closed"><a href="'.$nodeUri.'">'.$node['title'].'</a><ul>';
                         }
                         $htmlLevel .= $htmlChildren;
                         $htmlLevel .= '</ul></li>';
-                    }
-                }else{
+						}
+					}
+					else
+					{
                     //if node has no child nodes, then just get content nodes
-                    if($this->getNodeContentCount($node['id']) > 0){
+                    if($this->getNodeContentCount($node['id']) > 0)
+					{
+
                         $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id'], 'sectionid'=>$node['id']), 'cms');
-                        $htmlLevel .= '<li><a href="'.$nodeUri.'">'.$node['title'].'</a><ul>';
+                        if(in_array($node['id'], $openNodes))
+						{
+                            $htmlLevel .= '<li><a href="'.$nodeUri.'">'.$node['title'].'</a><ul>';
+						}
+						else
+						{
+                            $htmlLevel .= '<li class="closed"><a href="'.$nodeUri.'">'.$node['title'].'</a><ul>';
+						}
                         $htmlLevel .= $this->addContent($node['id']);
                         $htmlLevel .= '</ul></li>';
-                    }elseif($admin == TRUE){
-                        if(in_array($node['id'], $openNodes)){
+                    }
+					else
+					{
+                        
+						if(in_array($node['id'], $openNodes))
+						{
                             $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id'], 'sectionid'=>$node['id']), 'cms');
                             $htmlLevel .= '<li><a href="'.$nodeUri.'">'.$node['title'].'</a><ul><li></li>';
                         }else{
+
                             $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id'], 'sectionid'=>$node['id']), 'cms');
                             $htmlLevel .= '<li class="closed"><a href="'.$nodeUri.'">'.$node['title'].'</a><ul><li></li>';
                         }
