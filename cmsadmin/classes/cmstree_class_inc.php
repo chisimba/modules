@@ -120,14 +120,18 @@ class cmstree extends object
             foreach($nodes as $node){
                 if ($this->getChildNodeCount($node['id']) > 0)
 				{
-                    //if node has further child nodes, recursively call buildLevel
-                    $htmlChildren = $this->buildLevel($node['id'], $currentNode, $admin);
+					$htmlChildren ='';
 
                     //get any content for a section
                     if($this->getNodeContentCount($node['id']) > 0)
 					{
                         $htmlChildren .= $this->addContent($node['id']);
                     }
+
+                    //if node has further child nodes, recursively call buildLevel
+                    $htmlChildren .= $this->buildLevel($node['id'], $currentNode, $admin);
+
+
 
                     //if no content or child nodes with content, then suppress the node, else build it
                     if(($htmlChildren == '') && ($this->getNodeContentCount($node['id']) == 0) && ($admin == FALSE)){
