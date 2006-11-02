@@ -9,6 +9,7 @@ $objLink = & $this->newObject('link', 'htmlelements');
 $objTreeMenu =& $this->newObject('cmstree', 'cmsadmin');
 $objUser =& $this->newObject('user', 'security');
 $objLanguage =& $this->newObject('language', 'language');
+$objFeatureBox = $this->newObject('featurebox', 'navigation');
 
 //Insert script for generating tree menu
 $js = $this->getJavascriptFile('tree.js', 'cmsadmin');
@@ -77,7 +78,10 @@ if(!$this->getParam('query') == '')
        $cssLayout =& $this->newObject('csslayout', 'htmlelements');
        $cssLayout->setNumColumns(3);
        $cssLayout->setLeftColumnContent($leftSide);
-       $cssLayout->setMiddleColumnContent($this->getBreadCrumbs().$this->getContent().$searchResults.$this->footerStr);
+
+
+	   
+       $cssLayout->setMiddleColumnContent($this->getBreadCrumbs().$objFeatureBox->show('', $this->getContent()).$searchResults.$this->footerStr);
        $cssLayout->setRightColumnContent($rightSideColumn);
        echo $cssLayout->show(); 
 
