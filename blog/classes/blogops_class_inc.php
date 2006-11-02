@@ -324,7 +324,7 @@ class blogops extends object
 					$tbl->addCell('');
 					$tbl->endRow();
 
-					$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content'] . "<br />" . $tbl->show()));
+					$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content'] . "<hr />" . $tbl->show()));
 				}
 				else {
 					$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content']));
