@@ -123,12 +123,12 @@ class cms extends controller
 	            case null:
 	            case 'home':
 	              $content = $this->_objUtils->getFrontPageContent();
-	              if(count($content) > '0'){
+	              if($content!=''){
 	            	  $this->setVarByRef('content', $content);	
 	            	  return 'cms_main_tpl.php';
 	            	} else {
 	            	    $firstSectionId = $this->_objSections->getFirstSectionId();
-                    return $this->nextAction('showsection', array('id'=>$firstSectionId));
+                    return $this->nextAction('showsection', array('id'=>$firstSectionId,'sectionid'=>$firstSectionId));
                 }  
 	            	
 	            case 'showsection':
