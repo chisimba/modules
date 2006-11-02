@@ -309,7 +309,22 @@ class blogops extends object
 				{
 					$this->objIcon = &$this->getObject('geticon', 'htmlelements');
 					$edIcon = $this->objIcon->getEditIcon($this->uri(array('action' => 'postedit', 'id' => $post['id'], 'module' => 'blog')));
-					$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content'] . $edIcon));
+					//put the edit icon into a table for layout purposes...
+					$tbl = $this->newObject('htmltable', 'htmlelements');
+					$tbl->cellpadding = 3;
+					//set up the header row
+					$tbl->startHeaderRow();
+					$tbl->addHeaderCell(''); //edit
+					$tbl->addHeaderCell(''); //comments
+					$tbl->addHeaderCell(''); //permalink
+					$tbl->endHeaderRow();
+					$tbl->startRow();
+					$tbl->addCell($edIcon);
+					$tbl->addCell('');
+					$tbl->addCell('');
+					$tbl->endRow();
+
+					$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content'] . "<br />" . $tbl->show()));
 				}
 				else {
 					$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content']));
