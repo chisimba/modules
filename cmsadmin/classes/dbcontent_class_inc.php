@@ -322,11 +322,12 @@ class dbcontent extends dbTable
 	{
 		try{	
 			$arrContent = $this->getAll('WHERE sectionid = "'.$id.'"');
+			
 			foreach ($arrContent as $page)
 			{
-				$this->update('id', $page['id'], array('sectionid' => 'no-id'));
+				$this->delete('id', $page['id']);
 			}
-			return ;
+			return;
 		}
 		 catch (customException $e)
         {

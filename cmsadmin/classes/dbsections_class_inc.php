@@ -318,11 +318,13 @@ class dbsections extends dbTable
 	public function hasNodes($id)
 	{
      $nodes = $this->getAll('WHERE parentid = "'.$id.'"');
-     if(count($nodes) > '0'){
+     if(count($nodes) > 0){
        $hasNodes = True;
      } else {
          $hasNodes = False;
      }
+
+	 echo($hasNodes);
      return $hasNodes;
   }
 	/** 
@@ -463,9 +465,12 @@ class dbsections extends dbTable
 	public function deleteSection($id)
 	{
      //if cat has nodes delete nodes as well
-     if($this->hasNodes($id)){
+    if($this->hasNodes($id))
+	{
        //get cat details 
-       $category = $this->getSection($id);
+       $category = $this->getSections($id);
+
+	  
        //get number of levels in section
        $this->objCmsUtils =& $this->newObject('cmsutils', 'cmsadmin');
        $numLevels = $this->objCmsUtils->getNumNodeLevels($category['id']);
@@ -487,7 +492,9 @@ class dbsections extends dbTable
        //delete original category
        $this->_objDBContent->resetSection($id);
        $this->delete('id', $id);
-     } else {
+     } 
+	 else 
+	{
          $this->_objDBContent->resetSection($id);
          $this->delete('id', $id);
      }
