@@ -173,9 +173,9 @@ class dbcontentfrontpage extends dbTable
 	{
 		try {	
 	   $ordering = 1;
+     //get last order value 
+     $lastOrder = $this->getAll('ORDER BY ordering DESC LIMIT 1');
      if(!empty($lastOrder)){	   
-       //get last order value 
-       $lastOrder = $this->getAll('ORDER BY ordering DESC LIMIT 1');
        //add after this value
        $ordering = $lastOrder['0']['ordering'] + 1;
      }  
