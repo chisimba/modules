@@ -3,7 +3,7 @@
 $tabBox = & $this->newObject('tabpane', 'htmlelements');
 $featureBox = & $this->newObject('featurebox', 'navigation');
 $objLink =  & $this->newObject('link', 'htmlelements');
-
+$icon =  & $this->newObject('geticon', 'htmlelements');
 
 $str = '';
 $other = '';
@@ -36,7 +36,10 @@ if (count($contextList) > 0)
 		$contextCode = $context['contextcode'];
 		
 		$objLink->href = $this->uri(array('action' => 'joincontext','contextCode'=>$contextCode), 'context');
-		$objLink->link = '<span class="caption">Enter</span>';
+		$icon->setIcon('leavecourse');
+		$icon->alt = 'Enter Course';
+		$objLink->link = $icon->show();
+		
 		
 		$str .= $featureBox->show($context['contextcode'] .' - '.$context['title'].'   '.$objLink->show(), $content ).'<hr />';
 	}
@@ -69,7 +72,10 @@ if(count($otherCourses) > 0)
 		
 		
 		$objLink->href = $this->uri(array('action' => 'joincontext'), 'context');
-		$objLink->link = '<span class="caption">Enter</span>';
+		$icon->setIcon('leavecourse');
+		$icon->alt = 'Enter Course';
+		$objLink->link = $icon->show();
+		
 		
 		$other .= $featureBox->show($context['contextcode'] .' - '.$context['title'].'   '.$objLink->show(), $content ).'<hr />';
 	}
