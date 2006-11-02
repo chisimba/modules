@@ -26,7 +26,8 @@
     // Create a table object
     $table =& $this->newObject("htmltable","htmlelements");
     $table->border = 0;
-    $table->cellspacing='2';
+    $table->cellspacing='12';
+    $table->cellpadding='12';
     $table->width = "100%";
     // Add the table heading.
     $table->startRow();
