@@ -1,20 +1,21 @@
 <?php
-    // Show the add link
-    $iconAdd = $this->getObject('geticon','htmlelements');
-    $iconAdd->setIcon('add');
-    $iconAdd->alt = $objLanguage->languageText("mod_readinglist_add", 'readinglist');
-    $iconAdd->align=false;
-    $objLink =& $this->getObject('link','htmlelements');
-    $objLink->link($this->uri(array(
-                'module'=>'readinglist',
-            'action'=>'add',
-        )));
+	
+	$linkAdd = '';
+    if( $this->isValid( 'add' ) ){
+	    // Show the add link
+	    $iconAdd = $this->getObject('geticon','htmlelements');
+	    $iconAdd->setIcon('add');
+	    $iconAdd->alt = $objLanguage->languageText("mod_readinglist_add", 'readinglist');
+	    $iconAdd->align=false;
+	    $objLink =& $this->getObject('link','htmlelements');
+	    $objLink->link($this->uri(array(
+	                'module'=>'readinglist',
+	            'action'=>'add',
+	        )));
 
-        if( $this->isValid( 'add' ) )
          $objLink->link =  $iconAdd->show();
-		
-    //$objLink->link = $iconAdd->show();
-    $linkAdd = $objLink->show();
+	     $linkAdd = $objLink->show();
+	}
 
     // Show the heading
     $objHeading =& $this->getObject('htmlheading','htmlelements');
