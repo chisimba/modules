@@ -899,21 +899,12 @@ class cmsutils extends object
 		$link->link = 'Home';
 		$str = $link->show() .' / ';
 
-		if ($this->getParam('action') == 'showsection')
-		{
+		$link->href = $this->uri(array('action' => 'showsection', 'id' => $this->getParam('sectionid'),'sectionid' => $this->getParam('sectionid')) , $module);
+		$link->link = $this->_objSections->getMenuText($this->getParam('sectionid'));
+		$str .= $link->show() .' / ';
+		$page = $this->_objContent->getContentPage($this->getParam('id'));
+		$str .= $page['menutext'];
 
-			$str .= $this->_objSections->getMenuText($this->getParam('id'));
-		}
-
-		if($this->getParam('action') == 'showfulltext')
-		{
-			$link->href = $this->uri(array('action' => 'showsection', 'id' => $this->getParam('sectionid')) , $module);
-			$link->link = $this->_objSections->getMenuText($this->getParam('sectionid'));
-			$str .= $link->show() .' / ';
-			$page = $this->_objContent->getContentPage($this->getParam('id'));
-			$str .= $page['menutext'];
-
-		}
 		return '<div id="breadcrumb">'. $str .'</div>';
 	}
 
