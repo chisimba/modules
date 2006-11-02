@@ -288,6 +288,7 @@ class blogops extends object
 				//build the top level stuff
 				//$dt = strtotime($post['post_date']);
 				$dt = date('r', $post['post_ts']);
+				$this->objUser = $this->getObject('user', 'security');
 				$userid = $this->objUser->userId();
 
 				$head = $post['post_title'] . "<br />" . $dt;
