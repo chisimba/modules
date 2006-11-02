@@ -130,10 +130,6 @@ class cmstree extends object
 						
                         $htmlChildren .= $this->addContent($node['id']);	
                     }
-					else
-					{
-						echo('should not display');
-					}
 
                     //if node has further child nodes, recursively call buildLevel
                
