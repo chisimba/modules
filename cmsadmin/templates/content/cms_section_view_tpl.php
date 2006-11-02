@@ -145,7 +145,7 @@ if(count($pages) > '0'){
       $editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addcontent', 'id' => $pageId)));
       //Make title link to view section
       $objLink->link = $pageMenuText;
-      $objLink->href = $this->uri(array('action' => 'viewpage', 'id' => $pageId));
+      $objLink->href = $this->uri(array('action' => 'showcontent', 'id' => $pageId, 'fromadmin' => TRUE, 'sectionid'=>$sectionId), 'cms');
       $viewPageLink = $objLink->show();
       
       //Add sub sec data to table
