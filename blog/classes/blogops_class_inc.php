@@ -288,6 +288,8 @@ class blogops extends object
 				//build the top level stuff
 				//$dt = strtotime($post['post_date']);
 				$dt = date('r', $post['post_ts']);
+				$userid = $this->objUser->userId();
+
 				$head = $post['post_title'] . "<br />" . $dt;
 				//dump in the post content and voila! you have it...
 				//build the post content plus comment count and stats???
@@ -302,11 +304,17 @@ class blogops extends object
 				$post['post_content'] = $this->bbcode->parse4bbcode($post['post_content']);
 				$this->cleaner = $this->newObject('htmlcleaner', 'utilities');
 				//edit icon in a table 1 row x however number of things to do
+				if($post['userid'] == $userid)
+				{
+					$this->objIcon = &$this->getObject('geticon', 'htmlelements');
+					$edIcon = $this->objIcon->getEditIcon($this->uri(array('action' => 'postedit', 'id' => $post['id'], 'module' => 'blog')));
+					$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content'] . $edIcon));
+				}
+				else {
+					$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content']));
+				}
 
-				$this->objIcon = &$this->getObject('geticon', 'htmlelements');
-				$edIcon = $this->objIcon->getEditIcon($this->uri(array('action' => 'postedit', 'id' => $post['id'], 'module' => 'blog')));
 
-				$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content'] . $edIcon));
 			}
 		}
 		else {
