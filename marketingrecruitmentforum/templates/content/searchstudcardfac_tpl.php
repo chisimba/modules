@@ -61,11 +61,11 @@
     $facultyinfo = & $this->newObject('tabbox','marketingrecruitmentforum');
     $facultyinfo->tabName = 'OutputInfo';
     
-    $facultyinfo->addTab('faculty', 'All students entered for faculty',$facultyentered);
-    $facultyinfo->addTab('exemption', 'All students with exemption',$exemptionfaculty);
-    $facultyinfo->addTab('relsubjects', 'All with relevant subjects',$facrelsubj);
-    $facultyinfo->addTab('course', 'All students per faculty course',$coursefaculty);
-    $facultyinfo->addTab('sdcase', 'All SD Cases per faculty',$sdcasefac);
+    $facultyinfo->addTab('faculty', 'All students entered for faculty',$facultyentered . '<br />');
+    $facultyinfo->addTab('exemption', 'All students with exemption',$exemptionfaculty. '<br />');
+    $facultyinfo->addTab('relsubjects', 'All with relevant subjects',$facrelsubj. '<br />');
+    $facultyinfo->addTab('course', 'All students per faculty course',$coursefaculty. '<br />');
+    $facultyinfo->addTab('sdcase', 'All SD Cases per faculty',$sdcasefac. '<br />');
 /*---------------------------------------------------------------------------------------------------*/    
  
   /**
@@ -74,7 +74,7 @@
     
    $objForm = new form('searchsluresults',$this->uri(array('action'=>'studcardfaculty')));
    $objForm->displayType = 3;
-   $objForm->addToForm($this->objMainheading->show() . '<br />' . '<br />'. $searchmsg . ' ' . $faculty->show() . '<br />' . '<br />' . $facultyinfo->show());// . ' ' .$this->objButtonGo->show());
+   $objForm->addToForm("<center>".$this->objMainheading->show(). '<br />' . '<br />'. '<b>'.'<i>' .$searchmsg . ' ' .'</i>'.'</b>'. $faculty->show()."</center>" . '<br />' . '<br />' . $facultyinfo->show());
 
 /*---------------------------------------------------------------------------------------------------*/ 
       

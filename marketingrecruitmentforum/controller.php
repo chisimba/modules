@@ -21,9 +21,9 @@ class marketingrecruitmentforum extends controller
      *declare variable used 
      *@param public and private
      */
-    //public $submitdatesmsg = '';
+    public $school = ' ';
     
-    //public $school = '';
+    
      
     function init()
     {
@@ -247,13 +247,14 @@ class marketingrecruitmentforum extends controller
 /****************************************************************************************************************/            
             default:
                ///"CRSCDE","2",0,1
-               /*$field = "ARECDE";
-                $value  = "7785";
+              /* $field = "Medium Descrip";
+               // $value  = "7785";
                 $start = 0;
-                $end  = 10;
-               // $vals = $this->objstudinfo->getlimitCRSRE($field,$value,$start,$end);
-                $vals = $this->objstudinfo->getlimitSTAUX($field,$value,$start,$end);
-                var_dump($vals);*/
+                $end  = 10;//?*/
+              
+                //$vals = $this->objstudinfo->getlimitFCLTY($field,$start,$end);
+                //$vals = $this->objstudinfo->getlimitSTAUX($field,$value,$start,$end);
+                //var_dump($vals);//*/
                 
                 return $this->nextAction('introduction', array(NULL));
                 

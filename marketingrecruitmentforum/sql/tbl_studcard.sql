@@ -34,7 +34,8 @@ $fields = array(
     'notnull'     => 1
     ),
    'date'        =>  array(
-   'type'        =>  'date'
+   'type'        =>  'date',
+   'notnull'     =>   1
    ),
    'surname'    => array(
     'type'      => 'text',
@@ -70,7 +71,8 @@ $fields = array(
   'length'      =>  32
   ),
   'exemption' =>  array(
-  'type' =>  'boolean'
+  'type' =>  'text',
+  'length'          =>  1
   ),
   'faculty' =>  array(
   'type'        =>  'text',
@@ -83,15 +85,12 @@ $fields = array(
   'notnull'    => 1
   ),
   'relevantsubject' =>array(
-  'type'            => 'boolean'
+  'type'            => 'text',
+  'length'          =>  1
   ),
   'sdcase'      =>  array(
-  'type'        =>  'boolean'
+  'type'        =>  'text',
+  'length'          =>  1
   ),
-  'fk_id_school'  =>array(
-  'type'          => 'text',
-  'length'        =>  32,
-  //'notnull'     => 1
-  )
   );
 ?>

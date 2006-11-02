@@ -55,7 +55,7 @@ public  function  getAllactivities(){
        $myTable->border='0';
        $myTable->width = '80%';
        $myTable->css_class = 'highlightrows';
-       $myTable->row_attributes = " class = \"$oddEven\"";
+       
       
   
         $myTable->startHeaderRow();
@@ -69,15 +69,16 @@ public  function  getAllactivities(){
         $rowcount = '0';
   
     foreach($results as $sessCard){
-     
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       
        
        $myTable->startRow();
+       $myTable->row_attributes = " class = \"$oddEven\"";
        $myTable->addCell($sessCard['date'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['activity'], "15%", null, "left","widelink");
        $myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['area'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['province'],"15%", null, "left","widelink");
+       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        $myTable->endRow();
         
    }  
@@ -103,7 +104,7 @@ public  function getactivdate($activitydate = NULL){
          $myTable->border='0';
          $myTable->width = '80%';
          $myTable->css_class = 'highlightrows';
-         $myTable->row_attributes = " class = \"$oddEven\"";
+         
       
   
         $myTable->startHeaderRow();
@@ -115,12 +116,12 @@ public  function getactivdate($activitydate = NULL){
         $rowcount = '0';
   
           foreach($activitydate as $sessCard){
-           
-             $oddOrEven = ($rowcount == 0) ? "odd" : "even";
-             
+            
              $myTable->startRow();
+             $myTable->row_attributes = " class = \"$oddEven\"";
              $myTable->addCell($sessCard['date'],"15%", null, "left","widelink");
              $myTable->addCell($sessCard['activity'], "15%", null, "left","widelink");
+             $oddOrEven = ($rowcount == 0) ? "odd" : "even";
              $myTable->endRow();
          }  
       return $myTable->show();
@@ -147,20 +148,21 @@ public  function activitytype(){
          $myTable->border='0';
          $myTable->width = '30%';
          $myTable->css_class = 'highlightrows';
-         $myTable->row_attributes = " class = \"$oddEven\"";
+         
       
   
         $myTable->startHeaderRow();
         $myTable->addHeaderCell('Activity', null,'top','left','header');
         $myTable->endHeaderRow();
-        $rowcount = '0';
+       
+       $rowcount = '0';
   
     foreach($results as $sessCard){
-     
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        
        $myTable->startRow();
+       $myTable->row_attributes = " class = \"$oddEven\"";
        $myTable->addCell($sessCard['activity'],"15%", null, "left","widelink");
+       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        $myTable->endRow();
         
    }  
@@ -184,7 +186,7 @@ public function activitybyprov(){
          $myTable->border='0';
          $myTable->width = '80%';
          $myTable->css_class = 'highlightrows';
-         $myTable->row_attributes = " class = \"$oddEven\"";
+         
       
   
         $myTable->startHeaderRow();
@@ -196,12 +198,12 @@ public function activitybyprov(){
         $rowcount = '0';
   
     foreach($results as $sessCard){
-     
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        
        $myTable->startRow();
+       $myTable->row_attributes = " class = \"$oddEven\"";
        $myTable->addCell($sessCard['activity'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['province'], "15%", null, "left","widelink");
+       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        $myTable->endRow();
         
    }  
@@ -225,7 +227,7 @@ public function activitybyprov(){
          $myTable->border='0';
          $myTable->width = '80%';
          $myTable->css_class = 'highlightrows';
-         $myTable->row_attributes = " class = \"$oddEven\"";
+         
       
   
         $myTable->startHeaderRow();
@@ -238,12 +240,14 @@ public function activitybyprov(){
   
     foreach($results as $sessCard){
      
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+      
        
        $myTable->startRow();
+       $myTable->row_attributes = " class = \"$oddEven\"";
        //$myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['activity'], "15%", null, "left","widelink");
        $myTable->addCell($sessCard['area'],"15%", null, "left","widelink");
+       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        $myTable->endRow();
         
    }  
@@ -266,8 +270,7 @@ public   function activitybyschool($activschool = NULL){
          $myTable->cellpadding = '2';
          $myTable->border='0';
          $myTable->width = '80%';
-         $myTable->css_class = 'highlightrows';
-         $myTable->row_attributes = " class = \"$oddEven\"";
+         
       
   
         $myTable->startHeaderRow();
@@ -279,12 +282,14 @@ public   function activitybyschool($activschool = NULL){
   
     foreach($activschool as $sessCard){
      
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       
        
        $myTable->startRow();
-       
+       $myTable->row_attributes = " class = \"$oddEven\"";
        $myTable->addCell($sessCard['activity'], "15%", null, "left","widelink");
        $myTable->addCell($sessCard['schoolname'], "15%", null, "left","widelink");
+       $myTable->css_class = 'highlightrows';
+       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        $myTable->endRow();
         
    }  

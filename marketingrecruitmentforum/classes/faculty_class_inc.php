@@ -52,64 +52,6 @@ class faculty extends object{
     }
 /*------------------------------------------------------------------------------*/
 
-  public function displaycourses(){
-  
-      $facultydata  = $this->getSession('faculty');
-      
-      $course  = new dropdown('course');
-      
-      foreach($facultydata as $sessfacdata){
-        
-        $sessfacdata = 0;
-        switch($sessfacdata){
-        
-            case 1:
-                $course->addOption('B.Sc Computer Science','B.Sc Computer Science');
-                $course->addOption('B.Pharm','B.Pharm');
-            break;
-            
-            case 2:
-                $course->addOption('art','art');
-                $course->addOption('B.Pharm','B.Pharm');
-            break;
-            
-            case 3:
-                $course->addOption('community','community');
-                $course->addOption('B.Pharm','B.Pharm');
-            break;
-            
-            case 4:
-                $course->addOption('Education','Education');
-                $course->addOption('B.Pharm','B.Pharm');
-            break;
-            
-            case 5:
-                $course->addOption('dentistry','dentistry');
-                $course->addOption('B.Pharm','B.Pharm');
-            break;
-            
-            case 6:
-                $course->addOption('Law','Law');
-                $course->addOption('B.Pharm','B.Pharm');
-            break;
-            
-            case 7:
-                $course->addOption('Economics & Managemet of Sciences','Economics & Managemet of Sciences');
-                $course->addOption('B.Pharm','B.Pharm');
-            break;
-            
-            default:
-                $course->addOption('');
-              
-        }
-        
-      }
-      return $course->show();
-  
-  }
-/*------------------------------------------------------------------------------*/
-  public function facultycourselist(){
-  
-  }  
+ 
 }//end of class	
 ?>

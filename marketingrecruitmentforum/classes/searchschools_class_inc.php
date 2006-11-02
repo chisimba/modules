@@ -82,7 +82,7 @@ public  function  getAllschools(){
 public  function schoolbyname($schoolbyname = NULL){
         
          
-        //$results = $this->objschool->getschoolbyname();
+        
          if(isset($schoolbyname)){
                  $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
                  $this->appendArrayVar('headerParams', $css1);
@@ -134,8 +134,7 @@ public  function schoolbyname($schoolbyname = NULL){
    */     
 public  function schoolbyarea(){
       
-      //exp = '0';
-      //$filter = 'exemption';
+
            
       $results = $this->objschool->getschoolbyarea();
       

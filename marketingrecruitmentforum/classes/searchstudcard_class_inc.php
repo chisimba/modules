@@ -39,13 +39,11 @@ class searchstudcard extends object{
 public  function  getAllstudents(){
             
      /**
-     *create table to display studcard results
-     */
+       *create table to display studcard results
+       */
      
-     $results = $this->objstudcard->getallstudinfo();
+       $results = $this->objstudcard->getallstudinfo();
      
-     
-    
        $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
        $this->appendArrayVar('headerParams', $css1);
        $oddEven = 'even';
@@ -55,10 +53,8 @@ public  function  getAllstudents(){
        $myTable->border='0';
        $myTable->width = '100%';
        $myTable->css_class = 'highlightrows';
-       $myTable->row_attributes = " class = \"$oddEven\"";
-      
-  
-        $myTable->startHeaderRow();
+
+       $myTable->startHeaderRow();
         $myTable->addHeaderCell('Date', null,'top','left','header');
         $myTable->addHeaderCell('School Name', null,'top','left','header');
         $myTable->addHeaderCell('Surname', null,'top','left','header');
@@ -72,18 +68,18 @@ public  function  getAllstudents(){
         $rowcount = '0';
   
     foreach($results as $sessCard){
-     
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        
        $myTable->startRow();
-       $myTable->addCell($sessCard['date'],"15%", null, "left","widelink");
+       $myTable->row_attributes = " class = \"$oddEven\"";
+       $myTable->addCell($sessCard['date'],"6%", null, "left","widelink");
        $myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
-       $myTable->addCell($sessCard['surname'], "15%", null, "left","widelink");
-       $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
+       $myTable->addCell($sessCard['surname'], "10%", null, "left","widelink");
+       $myTable->addCell($sessCard['name'],"10%", null, "left","widelink");
        $myTable->addCell($sessCard['postaddress'],"15%", null, "left","widelink");
-       $myTable->addCell($sessCard['postcode'],"15%", null, "left","widelink");
-       $myTable->addCell($sessCard['telnumber'],"15%", null, "left","widelink");
-       $myTable->addCell($sessCard['telcode'],"15%", null, "left","widelink");
+       $myTable->addCell($sessCard['postcode'],"6%", null, "left","widelink");
+       $myTable->addCell($sessCard['telnumber'],"10%", null, "left","widelink");
+       $myTable->addCell($sessCard['telcode'],"6%", null, "left","widelink");
+       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        $myTable->endRow();
         
    }  
@@ -107,7 +103,7 @@ public  function allstudschool($school){
              $myTable->border='0';
              $myTable->width = '100%';
              $myTable->css_class = 'highlightrows';
-             $myTable->row_attributes = " class = \"$oddEven\"";
+             
           
       
             $myTable->startHeaderRow();
@@ -119,12 +115,14 @@ public  function allstudschool($school){
       
               foreach($school as $sessCard){
                
-                 $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+                // $oddOrEven = ($rowcount == 0) ? "odd" : "even";
                  
                  $myTable->startRow();
+                 $myTable->row_attributes = " class = \"$oddEven\"";
                  $myTable->addCell($sessCard['surname'],"15%", null, "left","widelink");
                  $myTable->addCell($sessCard['name'], "15%", null, "left","widelink");
                  $myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
+                 $oddOrEven = ($rowcount == 0) ? "odd" : "even";
                  $myTable->endRow();
              }
       }else{
@@ -168,10 +166,11 @@ public  function  allwithexemption(){
          $myTable->border='0';
          $myTable->width = '100%';
          $myTable->css_class = 'highlightrows';
-         $myTable->row_attributes = " class = \"$oddEven\"";
+         
       
   
         $myTable->startHeaderRow();
+        
         $myTable->addHeaderCell('Date', null,'top','left','header');
         $myTable->addHeaderCell('School Name', null,'top','left','header');
         $myTable->addHeaderCell('Surname', null,'top','left','header');
@@ -182,14 +181,16 @@ public  function  allwithexemption(){
   
     foreach($results as $sessCard){
      
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+      
        
        $myTable->startRow();
+       $myTable->row_attributes = " class = \"$oddEven\"";
        $myTable->addCell($sessCard['date'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['surname'], "15%", null, "left","widelink");
        $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['exemption'],"15%", null, "left","widelink");
+        $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        $myTable->endRow();
         
    }  
@@ -213,7 +214,7 @@ public function allwithrelsub(){
          $myTable->border='0';
          $myTable->width = '100%';
          $myTable->css_class = 'highlightrows';
-         $myTable->row_attributes = " class = \"$oddEven\"";
+         
       
   
         $myTable->startHeaderRow();
@@ -226,13 +227,15 @@ public function allwithrelsub(){
   
     foreach($results as $sessCard){
      
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       
        
        $myTable->startRow();
+       $myTable->row_attributes = " class = \"$oddEven\"";
        $myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['surname'], "15%", null, "left","widelink");
        $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['relevantsubject'],"15%", null, "left","widelink");
+       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        $myTable->endRow();
         
    }  
@@ -256,7 +259,7 @@ public function allwithrelsub(){
          $myTable->border='0';
          $myTable->width = '100%';
          $myTable->css_class = 'highlightrows';
-         $myTable->row_attributes = " class = \"$oddEven\"";
+         
       
   
         $myTable->startHeaderRow();
@@ -268,12 +271,14 @@ public function allwithrelsub(){
   
     foreach($results as $sessCard){
      
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       
        
        $myTable->startRow();
+       $myTable->row_attributes = " class = \"$oddEven\"";
        $myTable->addCell($sessCard['surname'], "15%", null, "left","widelink");
        $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['faculty'],"15%", null, "left","widelink");
+       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        $myTable->endRow();
         
    }  
@@ -297,7 +302,7 @@ public   function studcourse(){
          $myTable->border='0';
          $myTable->width = '100%';
          $myTable->css_class = 'highlightrows';
-         $myTable->row_attributes = " class = \"$oddEven\"";
+         
       
   
         $myTable->startHeaderRow();
@@ -312,15 +317,16 @@ public   function studcourse(){
   
     foreach($results as $sessCard){
      
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       
        
        $myTable->startRow();
+       $myTable->row_attributes = " class = \"$oddEven\"";
        //$myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['surname'], "15%", null, "left","widelink");
        $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['course'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['faculty'],"15%", null, "left","widelink");
-       
+       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        $myTable->endRow();
         
    }  
@@ -345,7 +351,7 @@ public function studarea(){
          $myTable->border='0';
          $myTable->width = '100%';
          $myTable->css_class = 'highlightrows';
-         $myTable->row_attributes = " class = \"$oddEven\"";
+         
       
   
         $myTable->startHeaderRow();
@@ -360,14 +366,16 @@ public function studarea(){
   
     foreach($results as $sessCard){
      
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       
        
        $myTable->startRow();
+       $myTable->row_attributes = " class = \"$oddEven\"";
        $myTable->addCell($sessCard['surname'], "15%", null, "left","widelink");
        $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['postaddress'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['studschoool'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['area'],"15%", null, "left","widelink");
+       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        $myTable->endRow();
         
    }  
@@ -390,7 +398,7 @@ public function studsdcase(){
          $myTable->border='0';
          $myTable->width = '100%';
          $myTable->css_class = 'highlightrows';
-         $myTable->row_attributes = " class = \"$oddEven\"";
+         
       
   
         $myTable->startHeaderRow();
@@ -404,14 +412,17 @@ public function studsdcase(){
   
     foreach($results as $sessSD){
      
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       
        
        $myTable->startRow();
+       $myTable->row_attributes = " class = \"$oddEven\"";
        //$myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell($sessSD['surname'], "15%", null, "left","widelink");
        $myTable->addCell($sessSD['name'],"15%", null, "left","widelink");
        $myTable->addCell($sessSD['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell($sessSD['sdcase'],"15%", null, "left","widelink"); 
+       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       
        $myTable->endRow();
         
    }  
@@ -434,7 +445,7 @@ public function countstudfaculty($faculty){
              $myTable->border='0';
              $myTable->width = '100%';
              $myTable->css_class = 'highlightrows';
-             $myTable->row_attributes = " class = \"$oddEven\"";
+             
           
       
             $myTable->startHeaderRow();
@@ -450,9 +461,10 @@ public function countstudfaculty($faculty){
   
             foreach($faculty as $sessSD){
              
-               $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+               
                
                $myTable->startRow();
+               $myTable->row_attributes = " class = \"$oddEven\"";
                //$myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
                $myTable->addCell($sessSD['surname'], "15%", null, "left","widelink");
                $myTable->addCell($sessSD['name'],"15%", null, "left","widelink");
@@ -460,6 +472,7 @@ public function countstudfaculty($faculty){
                $myTable->addCell($sessSD['schoolname'],"15%", null, "left","widelink");
                $myTable->addCell($sessSD['faculty'],"15%", null, "left","widelink");
                $myTable->addCell($sessSD['totstud'],"15%", null, "left","widelink"); 
+               $oddOrEven = ($rowcount == 0) ? "odd" : "even";
                $myTable->endRow();
                 
            }  

@@ -198,9 +198,9 @@
         //$selected = ($selected == 'No') ? '0' : '1';
 			//$objRadio->setSelected($selected); 
         $objexemption = new radio('exemptionqualification');
-        $objexemption->addOption('1','Yes');
-        $objexemption->addOption('0','No');
-        $objexemption->setSelected('1');
+        $objexemption->addOption('y','Yes');
+        $objexemption->addOption('n','No');
+        $objexemption->setSelected('y');
         
         $objsubject = new radio('relevantsubject');
         $objsubject->addOption('1','Yes');
