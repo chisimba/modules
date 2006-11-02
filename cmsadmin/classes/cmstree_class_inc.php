@@ -117,7 +117,8 @@ class cmstree extends object
         if (count($nodes)){
 
             $htmlLevel = '';
-            foreach($nodes as $node){
+            foreach($nodes as $node)
+			{
                 if ($this->getChildNodeCount($node['id']) > 0)
 				{
 					$htmlChildren ='';
@@ -125,18 +126,27 @@ class cmstree extends object
                     //get any content for a section
                     if($this->getNodeContentCount($node['id']) > 0)
 					{
-                        $htmlChildren .= $this->addContent($node['id']);
+
+						
+                        $htmlChildren .= $this->addContent($node['id']);	
                     }
+					else
+					{
+						echo('should not display');
+					}
 
                     //if node has further child nodes, recursively call buildLevel
-                    $htmlChildren .= $this->buildLevel($node['id'], $currentNode, $admin);
-
+               
+					$htmlChildren .= $this->buildLevel($node['id'], $currentNode, $admin);
 
 
                     //if no content or child nodes with content, then suppress the node, else build it
-                    if(($htmlChildren == '') && ($this->getNodeContentCount($node['id']) == 0) && ($admin == FALSE)){
+                    if(($htmlChildren == '') && ($admin == FALSE))
+					{
                         $htmlLevel = '';
-                    }else{
+                    }
+					else
+					{
 
                         if(in_array($node['id'], $openNodes))
 						{
@@ -171,7 +181,7 @@ class cmstree extends object
                         $htmlLevel .= $this->addContent($node['id']);
                         $htmlLevel .= '</ul></li>';
                     }
-					else
+					elseif($admin==TRUE)
 					{
                         
 						if(in_array($node['id'], $openNodes))
