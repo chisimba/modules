@@ -380,9 +380,9 @@ class commentinterface extends object
                     //Add the author and date
                     $outstr .= "<p class=\"minute\">"
                       .$this->objLanguage->languageText("phrase_postedby")
-                      . " <b>".$this->objUser->fullName($line['creatorId'])."</b> "
+                      . " <b>".$this->objUser->fullName($line['creatorid'])."</b> "
                       .$this->objLanguage->languageText("word_on")
-                      . " <b>" . $line['dateCreated'] . "</b>";
+                      . " <b>" . $line['datecreated'] . "</b>";
 
                     //---------------------
                     //Added 2006/07/20 Serge Meunier - Added icons to distinguish comment types on form
@@ -423,7 +423,7 @@ class commentinterface extends object
                     //-------------------
 
                     //If allowed, show edit and delete icons
-                    $difference = $this->objDateFunctions->dateDifference($line['dateCreated'], date("Y-m-d H:i:s"));
+                    $difference = $this->objDateFunctions->dateDifference($line['datecreated'], date("Y-m-d H:i:s"));
                     $timediff = ($difference['d'] * 1440) + ($difference['h'] * 60) + $difference['m'];
 
                     if ($this->objUser->isAdmin()  || (($this->objUser->userId() == $line['creatorId']) && ($timediff < 30))){
@@ -437,7 +437,7 @@ class commentinterface extends object
                           'mode'=>'edit',
                           'tableName'=>$tableName,
                           'moduleCode' => $moduleCode,
-                          'sourceId'=>$line['sourceId'],
+                          'sourceid'=>$line['sourceid'],
                           'id'=>$line['id'],
                           'userId'=>$userId), 'comment');
 
@@ -446,7 +446,7 @@ class commentinterface extends object
                           'id' => $line['id'],
                           'tableName'=>$tableName,
                           'moduleCode' => $moduleCode,
-                          'sourceId'=>$line['sourceId']);
+                          'sourceid'=>$line['sourceid']);
                         $outstr .= "&nbsp;" . $objDeleteIcon->getDeleteIconWithConfirm('', $deleteArray, 'comment');
                     }
 
