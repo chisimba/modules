@@ -278,7 +278,7 @@ class dbuserparamsadmin extends object
     public function getAll()
     {
     	
-	    	if ($this->_root==false) {
+	    	if ($this->_root==NULL) {
 	    		$this->readConfig();
 	    		return $this->_root->toArray;
 	    	}else{
@@ -352,7 +352,7 @@ class dbuserparamsadmin extends object
     {
     	try {
     			//Read conf
-    			if ($this->_root==false) {
+    			if ($this->_root==NULL) {
     				$read = $this->readConfig();
     			}
     			if ($read==FALSE) {
@@ -392,9 +392,11 @@ class dbuserparamsadmin extends object
     {
     	try {
     			//Read conf
-    			if ($this->_root==false) {
+    			
+    			if ($this->_root==NULL) {
     				$read = $this->readConfig();
-    			}
+    				}
+    			
     			
                //Lets get the parent node section first
 				
@@ -421,6 +423,60 @@ class dbuserparamsadmin extends object
     * @return void
     * @access public
     */
+    
+    
+    /** Added by jameel for the websearch module
+    * Method to check if a configuration parameter is set
+    * 
+    * @var string $module The module code of the module owning the config item
+    * @var string $name The name of the parameter being set
+    */
+    
+    public function checkIfSet($pname, $userId=NULL)
+    {
+        
+        if ($pname >= 1 && $userId >= 1 ) {
+            return true;
+        } else {
+            return false;
+       } #if
+    } #function checkIfSet
+    
+    
+    
+    /** 
+    * Added by jameel for the websearch module
+    * Method to read a user parameter. This is the preferred
+    * method for routine lookups.
+    * 
+    * @var string $pname the parameter name of the parameter to lookup
+    * @var string $userId The userId of the user being looked up
+    * @var string $defaultValue The default value for the parameter
+    * @return the value of the parameter, or $defaultValue if not found
+    * 
+    * @todo -cdbuserparams This is very inefficient as it needs to build 
+    *  all of the properties just to look up one.
+    * 
+    */
+    
+    public function getValue($pname, $userId=NULL, $defaultValue=NULL)
+    {
+        //IF there is no userId supplied, then it is for the current user
+		if (is_null($userId)) {
+		    $userId = $this->objUser->userId();
+		}
+        //If the properties are not set then set them
+        if (!isset($this->$pname)) {
+            $this->setProperties($userId);
+        } 
+        //If the value is set return it, else return the default
+        if (isset($this->$pname)) {
+            return $this->$pname;
+        } else {
+            return $defaultValue;
+        } 
+    } #function getValue
+
     public function errorCallback($exception)
     {
     	echo customException::cleanUp($exception);
