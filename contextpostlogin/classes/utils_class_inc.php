@@ -61,6 +61,7 @@ class utils extends object
 	  	
 	  	$objGroups = & $this->newObject('managegroups', 'contextgroups');
 	  	$contextCodes = $objGroups->usercontextcodes($this->_objUser->userId());
+	  	$objMM = & $this->newObject('mmutils', 'mediamanager');
 	  	
 	  	$arr = array();
 	  	foreach ($contextCodes as $code)
@@ -68,6 +69,9 @@ class utils extends object
 	  		$arr[] = $this->_objDBContext->getRow('contextcode',$code); 
 	  		
 	  	}
+	  	
+	  	
+	  	
 	  	//print_r($arr);
 	  	return $arr;
 	  }
@@ -78,11 +82,27 @@ class utils extends object
 	   * @return array
 	   * @access public
 	   */
-	  public function getOtherContextList()
+	  public function getOtherContextList($myCourses)
 	  {
 	  	
-	  	$objGroups = & $this->newObject('managegroups', 'contextgroups');
-	  	return null;//$objGroups->usercontextcodes($this->_objUser->userId());
+	  	//$objGroups = & $this->newObject('managegroups', 'contextgroups');
+	    $objMM = $this->newObject('mmutils', 'mediamanager');
+	  	$arr = array();
+	  	//get all public courses
+	  	$publicCourses = $this->_objDBContext->getAll( 'WHERE access = "Public" OR access = "" ');
+	  	//print_r($publicCourses);
+	  	
+	  	foreach($publicCourses as $pCourse)
+	  	{
+	  		if(!$objMM->deep_in_array($pCourse['contextcode'], $myCourses))
+	  		{
+	  			$arr[] = $this->_objDBContext->getRow('contextcode',$pCourse['contextcode']); 
+	  		}
+	  		
+	  	}
+	  
+	  	
+	  	return $arr;//$objGroups->usercontextcodes($this->_objUser->userId());
 	  }
 	  
 	  /**

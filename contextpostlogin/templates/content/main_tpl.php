@@ -11,14 +11,14 @@ $lects = '';
 
 //registered courses
 //var_dump($contextList);
-count($contextList);
+
 if (count($contextList) > 0)
 {	
 	foreach ($contextList as $context)
 	{
 		
 		$lecturers = $this->_objUtils->getContextLecturers($context['contextcode']);
-		
+		$lects = '';
 		if(is_array($lecturers))
 		{
 			foreach($lecturers as $lecturer)
@@ -46,11 +46,32 @@ if (count($contextList) > 0)
 
 
 //public courses
-if(count($otherCourses))
+if(count($otherCourses) > 0)
 {
-	foreach($otherCourses as $otherCourses)
+	foreach($otherCourses as $context)
 	{
-		$other .=  	$otherCourse['title'].'<br/>'.$otherCourse['about'];
+		$lecturers = $this->_objUtils->getContextLecturers($context['contextcode']);
+		$lects = '';
+		if(is_array($lecturers))
+		{
+			foreach($lecturers as $lecturer)
+			{
+				$lects .= $lecturer['fullname'].', ';
+			}
+		} else {
+			$lects = 'No Instructor for this course';
+		}
+		
+		$content = '<span class="caption">Instructors : '.$lects.'</span>';
+		$content .= '<p>'.$context['about'].'</p>';
+		$content .= '<p>'.$this->_objUtils->getPlugins($context['contextcode']).'</p>';
+		
+		
+		
+		$objLink->href = $this->uri(array('action' => 'joincontext'), 'context');
+		$objLink->link = '<span class="caption">Enter</span>';
+		
+		$other .= $featureBox->show($context['contextcode'] .' - '.$context['title'].'   '.$objLink->show(), $content ).'<hr />';
 	}
 	
 }else {

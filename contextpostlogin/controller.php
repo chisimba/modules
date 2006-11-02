@@ -45,7 +45,7 @@ class contextpostlogin extends controller
 	          case 'default':
 	            $this->setLayoutTemplate('main_layout_tpl.php');
 	            $this->setVar('contextList', $this->_objUtils->getContextList());
-	            $this->setVar('otherCourses', $this->_objUtils->getOtherContextList());
+	            $this->setVar('otherCourses', $this->_objUtils->getOtherContextList($this->_objUtils->getContextList()));
 	            return 'main_tpl.php';
 	      }
 	  }
