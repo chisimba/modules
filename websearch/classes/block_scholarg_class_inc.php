@@ -35,7 +35,7 @@ class block_scholarg extends object
     public function init()
     {
         $this->objLanguage=&$this->getObject('language', 'language');
-        $this->title=$this->objLanguage->languageText("mod_websearch_scholarg");
+        $this->title=$this->objLanguage->languageText("mod_websearch_scholarg", "websearch");
     }
     
     /**

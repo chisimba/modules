@@ -43,7 +43,7 @@
 	       $this->imgLocation = $objConfig->getsiteRoot()
 	          . "modules/websearch" . "/resources/images/";
 	        $this->objLanguage=&$this->getObject('language', 'language');
-	        $this->title=$this->objLanguage->languageText("mod_websearch_wpsearch");
+	        $this->title=$this->objLanguage->languageText("mod_websearch_wpsearch", "websearch");
 	    }
 	    
 	    /**

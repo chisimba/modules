@@ -40,7 +40,7 @@ class block_lastsearch extends object
     {
         $this->objLanguage=&$this->getObject('language', 'language');
         $this->objUser = $this->getObject('user', 'security');
-        $this->title=$this->objLanguage->languageText("mod_websearch_lastsearch");
+        $this->title=$this->objLanguage->languageText("mod_websearch_lastsearch", "websearch");
     }
     
     /**
@@ -75,7 +75,7 @@ class block_lastsearch extends object
                 $term="";
                 }
         $ret .= "<br /><b>" 
-          . $this->objLanguage->languageText("mod_websearch_scholarg")
+          . $this->objLanguage->languageText("mod_websearch_scholarg","websearch")
           . "</b>: " . $term;
         $goo = $objSh->getLastEntry(" WHERE searchengine='wikipedia' ", "dateCreated");
         if ( count($goo)>0 ) {

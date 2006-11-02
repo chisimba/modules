@@ -35,7 +35,7 @@ class block_google extends object
     public function init()
     {
         $this->objLanguage=&$this->getObject('language', 'language');
-        $this->title=$this->objLanguage->languageText("mod_websearch_gsearch");
+        $this->title=$this->objLanguage->languageText("mod_websearch_gsearch", "websearch");
     }
     
     
