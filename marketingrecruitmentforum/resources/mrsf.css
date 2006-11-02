@@ -3,7 +3,8 @@ td.widelink a {
 }
 
 th.header {
-	background-color: #CCCCCC;
+	background-color:
+#DCDCDC;
 }
 
 
@@ -16,7 +17,7 @@ table.highlightrows tr:hover {
 }
 
 .even{
-	background-color: #EEEEEE;
+	background-color: #FFE4E1;
 }
 
 
