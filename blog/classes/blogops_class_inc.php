@@ -288,9 +288,6 @@ class blogops extends object
 				//build the top level stuff
 				//$dt = strtotime($post['post_date']);
 				$dt = date('r', $post['post_ts']);
-				$this->objUser = $this->getObject('user', 'security');
-				$userid = $this->objUser->userId();
-
 				$head = $post['post_title'] . "<br />" . $dt;
 				//dump in the post content and voila! you have it...
 				//build the post content plus comment count and stats???
@@ -304,33 +301,7 @@ class blogops extends object
 				}
 				$post['post_content'] = $this->bbcode->parse4bbcode($post['post_content']);
 				$this->cleaner = $this->newObject('htmlcleaner', 'utilities');
-				//edit icon in a table 1 row x however number of things to do
-				if($post['userid'] == $userid)
-				{
-					$this->objIcon = &$this->getObject('geticon', 'htmlelements');
-					$edIcon = $this->objIcon->getEditIcon($this->uri(array('action' => 'postedit', 'id' => $post['id'], 'module' => 'blog')));
-					//put the edit icon into a table for layout purposes...
-					$tbl = $this->newObject('htmltable', 'htmlelements');
-					$tbl->cellpadding = 3;
-					//set up the header row
-					$tbl->startHeaderRow();
-					$tbl->addHeaderCell(''); //edit
-					$tbl->addHeaderCell(''); //comments
-					$tbl->addHeaderCell(''); //permalink
-					$tbl->endHeaderRow();
-					$tbl->startRow();
-					$tbl->addCell($edIcon);
-					$tbl->addCell('');
-					$tbl->addCell('');
-					$tbl->endRow();
-
-					$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content'] . "<hr />" . $tbl->show()));
-				}
-				else {
-					$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content']));
-				}
-
-
+				$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content']));
 			}
 		}
 		else {
@@ -425,6 +396,9 @@ class blogops extends object
 	public function quickCats($featurebox = FALSE)
 	{
 		$qcatform = new form('qcatadd', $this->uri(array('action' => 'catadd', 'mode' => 'quickadd')));
+
+		$qcatform->addRule('catname','please enter value','required');
+
 		$qcatname = new textinput('catname');
 		$qcatname->size = 15;
 		$qcatform->addToForm($qcatname->show());
@@ -496,9 +470,6 @@ class blogops extends object
 	public function categoryEditor($userid)
 	{
 		//get the categories layout sorted
-		$this->loadClass('href', 'htmlelements');
-		$this->loadClass('label', 'htmlelements');
-		$this->loadClass('textinput', 'htmlelements');
 		$cats = $this->objDbBlog->getAllCats($userid);
 		$headstr = $this->objLanguage->languageText("mod_blog_catedit_instructions", "blog");
 		//create a table to view the categories
@@ -552,6 +523,7 @@ class blogops extends object
 		$catform = new form('catadd', $this->uri(array(
 		'action' => 'catadd'
 		)));
+		$catform->addRule('catname','please enter value','required');
 
 		$cfieldset = $this->getObject('fieldset', 'htmlelements');
 		$cfieldset->setLegend($this->objLanguage->languageText('mod_blog_catdetails', 'blog'));
@@ -615,7 +587,7 @@ class blogops extends object
 		$catform = new form('catadd', $this->uri(array(
 		'action' => 'catadd', 'mode' => 'editcommit', 'id' => $catid
 		)));
-
+		$catform->addRule('catname','please enter value','required');
 		$cfieldset = $this->getObject('fieldset', 'htmlelements');
 		$cfieldset->setLegend($this->objLanguage->languageText('mod_blog_cateditor', 'blog'));
 		$catadd = $this->newObject('htmltable', 'htmlelements');
@@ -702,7 +674,7 @@ class blogops extends object
 		$postform = new form('postadd', $this->uri(array(
 		'action' => 'postadd', 'mode' => $mode, 'id' => $editparams['id'], 'postexcerpt' => $editparams['post_excerpt'], 'postdate' => $editparams['post_date']
 		)));
-
+		//$postform->addRule('postname','please enter value','required');
 		$pfieldset = $this->newObject('fieldset', 'htmlelements');
 		$pfieldset->setLegend($this->objLanguage->languageText('mod_blog_posthead', 'blog'));
 		$ptable = $this->newObject('htmltable', 'htmlelements');
@@ -794,83 +766,10 @@ class blogops extends object
 		$this->objPButton->setValue($this->objLanguage->languageText('mod_blog_word_post', 'blog'));
 		$this->objPButton->setToSubmit();
 		$postform->addToForm($this->objPButton->show());
+		
 		$postform = $postform->show();
 
 		return $postform;
-	}
-
-	private function _archiveArr($userid)
-	{
-		//add in a foreach for each year
-		$allposts = $this->objDbBlog->getAbsAllPosts($userid);
-		$revposts = array_reverse($allposts);
-		$recs = count($revposts);
-		if($recs > 0)
-		{
-			$recs = $recs - 1;
-		}
-		if(!empty($revposts))
-		{
-
-			$lastrec = $revposts[$recs]['post_ts'];
-			$firstrec = $revposts[0]['post_ts'];
-
-			$startdate = date("m", $firstrec);
-			$enddate  = date("m", $lastrec);//. " " .date("Y", $lastrec);
-
-			//create a while loop to get all the posts between start and end dates
-			$postarr = array();
-			while ($startdate <= $enddate) {
-				$posts = $this->objDbBlog->getPostsMonthly(mktime(0,0,0,$startdate, 1, date("y", $firstrec)), $userid);
-				$postarr[$startdate] = $posts;
-				$startdate++;
-			}
-			return $postarr;
-		}
-		else {
-			return NULL;
-		}
-
-	}
-	public function archiveBox($userid, $featurebox = FALSE)
-	{
-		//get the posts for each month
-		$posts = $this->_archiveArr($userid);
-		//print_r($posts);die();
-		if(!empty($posts))
-		{
-			$months = array_keys($posts);
-			//print_r($posts);die();
-			$arks = NULL;
-			foreach ($months as $month)
-			{
-				$thedate = mktime(0,0,0,$month,1,date("Y", $posts[$month][0]['post_ts']));
-				$arks[] = array('formatted' => date("F", $thedate) . " " . date("Y", $thedate), 'raw' => $month, 'rfc' => $thedate);
-			}
-
-		//print_r($arks);die();
-
-			$thismonth = mktime(0,0,0,date("m", time()), 1, date("y", time()));
-			if($featurebox == FALSE)
-			{
-				return $thismonth;
-			}
-			else {
-				$objFeatureBox = $this->getObject('featurebox', 'navigation');
-				$lnks = NULL;
-				foreach ($arks as $ark)
-				{
-					$lnk = new href($this->uri(array('module' => 'blog', 'action' => 'showarchives', 'month' => $ark['raw'], 'year' => $ark['rfc'], 'userid' => $posts[$month][0]['userid'])), $ark['formatted']);
-					$lnks .= $lnk->show() . "<br />";
-				}
-
-				$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_archives","blog"),$lnks);
-				return $ret;
-			}
-		}
-		else {
-			return NULL;
-		}
 	}
 
 	/**
@@ -879,7 +778,7 @@ class blogops extends object
 	 * @param integer $userid
 	 * @return string
 	 */
-	public function managePosts($userid, $month = NULL, $year = NULL)
+	public function managePosts($userid)
 	{
 		//create a table with the months posts, plus a dropdown of all months to edit
 		//put the edit icon at the end of each row, with text linked to the postEditor() method
@@ -888,7 +787,7 @@ class blogops extends object
 		$editform = new form('postedit', $this->uri(array(
 		'action' => 'postedit'
 		)));
-
+		//$editform->addRule('postedit','please enter value','required');
 		//$edfieldset = $this->newObject('fieldset', 'htmlelements');
 		//$edfieldset->setLegend($this->objLanguage->languageText('mod_blog_posthead', 'blog'));
 		$edtable = $this->newObject('htmltable', 'htmlelements');
@@ -896,10 +795,7 @@ class blogops extends object
 
 		//grab the posts for this month
 		//$posts = $this->objDbBlog->getPostsMonthly(mktime(0,0,0,date("m", time()), 1, date("y", time())), $userid); //change this to get from the form input rather
-		if($month == NULL && $year == NULL)
-		{
-			$posts = $this->objDbBlog->getAbsAllPosts($userid);
-		}
+		$posts = $this->objDbBlog->getAbsAllPosts($userid);
 		//print_r($posts);
 		//add in a table header...
 		$edtable->startHeaderRow();
@@ -962,6 +858,9 @@ class blogops extends object
 		$this->loadClass('textarea', 'htmlelements');
 		$this->loadClass('textinput', 'htmlelements');
 		$qpform = new form('qpadd', $this->uri(array('action' => 'postadd', 'mode' => 'quickadd')));
+
+		$qpform->addRule('postcontent','Please enter a valid content','required');
+
 		$qptitletxt = $this->objLanguage->languageText("mod_blog_posttitle", "blog");
 		$qptitle = new textinput('posttitle');
 		//post content textarea
@@ -990,7 +889,7 @@ class blogops extends object
 		$qpform->addToForm($qpcattxt . $qpDrop->show());
 
 		$this->objqpCButton = &new button($this->objLanguage->languageText('mod_blog_word_blogit', 'blog'));
-		$this->objqpCButton->setValue($this->objLanguage->languageText('mod_blog_word_blogit', 'blog'));
+		$this->objqpCButton->setValue($this->objLanguage->languageText('mod_blog_word_blogit', 'blog')); 
 		$this->objqpCButton->setToSubmit();
 		$qpform->addToForm($this->objqpCButton->show());
 		$qpform = $qpform->show();
