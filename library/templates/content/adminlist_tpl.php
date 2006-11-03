@@ -6,7 +6,7 @@ $objButtons = & $this->getObject('navbuttons', 'navigation');
 
 //Create the centered area for display
 $this->center = $this->objConfig = & $this->getObject('layer', 'htmlelements');
-$this->center->align="center";
+//$this->center->align="center";
 
 // Add the heading to the content
 $this->objH =& $this->getObject('htmlheading', 'htmlelements');
@@ -20,9 +20,9 @@ if ($this->isValid('add')) {
 	    $icon->alt = "Create";
 	    $icon->align=false;	
         
-        $this->objH->str .= "<a href=\"" .
+        $this->objH->str .= '<a href="'.
         $this->uri(array('action'=>'add'))
-    . "\">" . $icon->show() . "</a>";
+    .'">' . $icon->show() . '</a>';
 }
 
 $this->center->addToStr($this->objH->show());
@@ -32,7 +32,7 @@ $this->Table = $this->newObject('htmltable', 'htmlelements');
 $this->Table->cellspacing="7";
 $this->Table->cellpadding="7";
 $this->Table->width="90%";
-$this->Table->attributes="align=\"center\"";
+//$this->Table->attributes="align=\"center\"";
 //Create the array for the table header
 $tableRow=array();
 $tableHd[]=$objLanguage->languageText("word_title");
