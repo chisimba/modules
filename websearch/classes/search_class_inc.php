@@ -128,7 +128,7 @@ class search extends object {
                     $objCat = $this->newObject("dropdown", "htmlelements");
                     $objCat->name = 'search_selector';
                     $objCat->extra=" size=\"1\" class=\"coursechooser\" "
-                      . "label=\"". $this->objLanguage->languageText("mod_websearch_lestofprev")
+                      . "label=\"". $this->objLanguage->languageText("mod_websearch_lestofprev", "websearch")
                       . "\" onChange=\"Javascript:document."
                       . "websearch.searchterm.value=document.websearch.search_selector.value;\"";
                     $objCat->addOption(""," ");
@@ -308,7 +308,7 @@ class search extends object {
         if ( count($ar) > 0 ) {
             //Add the past searches label to the form
             $pastLabel = new label('<br />' 
-              . $this->objLanguage->languageText("mod_websearch_pastsearches") 
+              . $this->objLanguage->languageText("mod_websearch_pastsearches", "websearch") 
               . ':<br />', 'sc_selector');
             $objForm->addToForm($pastLabel->show()."\n");
             //Create a dropdown for the history search selector
