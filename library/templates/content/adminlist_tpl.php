@@ -126,7 +126,7 @@ $this->Table->cellpadding="7";
 $this->Table->width="90%";
 $this->Table->attributes="align=\"center\"";
 
-$options =  "<br> <a href=\"" . 
+$options =  "<br /> <a href=\"" . 
 $this->uri(array(
     'module'=>'library',
     'action'=>'view'

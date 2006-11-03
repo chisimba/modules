@@ -104,7 +104,7 @@ $objElement->setToSubmit();
 // Use the language object to add the word save
 $objElement->setValue(' '.$this->objLanguage->languageText("word_save").' ');
 // Add the button to the form
-$objForm->addToForm('<br/>'.$objElement->show());
+$objForm->addToForm('<br />'.$objElement->show());
 
 $objLayer->str = $objForm->show();
 $objLayer->padding = '5px;';
