@@ -31,7 +31,7 @@ $leftCol .= "<br />";
 
 //show the feeds section
 $leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
-$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
+//$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 //dump the cssLayout to screen
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol);
