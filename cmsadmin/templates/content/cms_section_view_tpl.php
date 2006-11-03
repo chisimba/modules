@@ -78,9 +78,9 @@ if(isset($subSections)){
       }  
       $visibleIcon = $objIcon->show();
       //Create delete icon 
-      $delArray = array('action' => 'deletesection', 'confirm'=>'yes', 'parent'=>$sectionId);
+      $delArray = array('action' => 'deletesection', 'confirm'=>'yes', 'id'=>$subSecId);
       $deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelsection', 'cmsadmin');
-      $delIcon = $objIcon->getDeleteIconWithConfirm($subSecId, $delArray, $deletephrase);
+      $delIcon = $objIcon->getDeleteIconWithConfirm($subSecId, $delArray,'cmsadmin',$deletephrase);
       //Create edit icon
       $editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addsection', 'id' => $subSecId)));
       //Make title link to view section
