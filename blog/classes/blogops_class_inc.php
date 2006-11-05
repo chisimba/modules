@@ -144,7 +144,7 @@ class blogops extends object
 				$childnodes = NULL;
 				$nodes = NULL;
 			}
-			$ret .= $objSideBar->show($nodestoadd, NULL, NULL, 'blog');
+			$ret .= $objSideBar->show($nodestoadd, NULL, NULL, 'blog', $this->objLanguage->languageText("mod_blog_word_default", "blog"));
 		}
 		else {
 			//no cats defined
@@ -472,6 +472,8 @@ class blogops extends object
 		//get the categories layout sorted
 		$cats = $this->objDbBlog->getAllCats($userid);
 		$headstr = $this->objLanguage->languageText("mod_blog_catedit_instructions", "blog");
+		$totcount = $this->objDbBlog->catCount(NULL);
+
 		//create a table to view the categories
 		$cattable = $this->newObject('htmltable', 'htmlelements');
 		$cattable->cellpadding = 3;
@@ -488,6 +490,7 @@ class blogops extends object
 		{
 			foreach($cats as $rows)
 			{
+				//print_r($rows);
 				//start the cats rows
 				$cattable->startRow();
 				if($rows['cat_parent'] != '0')
@@ -570,8 +573,12 @@ class blogops extends object
 		$catadd->addCell($cdesc->show()); //showFCKEditor());
 		$catadd->endRow();
 
+		$catform->addRule('catname', $this->objLanguage->languageText("mod_blog_phrase_titlereq", "blog"),'required');
+
+
 		$cfieldset->addContent($catadd->show());
 		$catform->addToForm($cfieldset->show());
+
 		$this->objCButton = &new button($this->objLanguage->languageText('word_update', 'blog'));
 		$this->objCButton->setValue($this->objLanguage->languageText('word_update', 'blog'));
 		$this->objCButton->setToSubmit();
@@ -685,6 +692,8 @@ class blogops extends object
 		$plabel = new label($this->objLanguage->languageText('mod_blog_posttitle', 'blog') .':', 'input_posttitle');
 		$title = new textinput('posttitle');
 		$title->size = 150;
+
+		$postform->addRule('posttitle', $this->objLanguage->languageText("mod_blog_phrase_ptitlereq", "blog"),'required');
 		if(isset($editparams['post_title']))
 		{
 
@@ -751,6 +760,7 @@ class blogops extends object
 		$pclabel = new label($this->objLanguage->languageText('mod_blog_pcontent', 'blog') .':', 'input_pcont');
 		$pcon = $this->newObject('htmlarea','htmlelements');
 		$pcon->setName('postcontent');
+
 		if(isset($editparams['post_content']))
 		{
 			$pcon->setcontent($editparams['post_content']);
@@ -759,6 +769,10 @@ class blogops extends object
 		$ptable->addCell($pclabel->show());
 		$ptable->addCell($pcon->showFCKEditor());
 		$ptable->endRow();
+
+		$postform->addRule('posttitle', $this->objLanguage->languageText("mod_blog_phrase_ptitlereq", "blog"),'required');
+		//$postform->addRule('postcontent', $this->objLanguage->languageText("mod_blog_phrase_pcontreq", "blog"),'required');
+
 
 		$pfieldset->addContent($ptable->show());
 		$postform->addToForm($pfieldset->show());

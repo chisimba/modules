@@ -108,6 +108,13 @@ class blog extends controller
 	public $lucenedoc;
 
 	/**
+	 * Blog import object
+	 *
+	 * @var object
+	 */
+	public $objBlogImport;
+
+	/**
      * Constructor method to instantiate objects and get variables
      *
      * @param void
@@ -117,6 +124,10 @@ class blog extends controller
 	public function init()
 	{
 		try {
+			//grab the blogimporter class, just in case we need it.
+			//I think that the import stuff should all be done in a seperate module...
+			$this->objBlogImport = &$this->getObject('blogimporter');
+
 			$this->objFeed = &$this->getObject('feeds', 'feed');
 			$this->objUser = $this->getObject('user', 'security');
 			$this->objFeedCreator = &$this->getObject('feeder', 'feed');
@@ -188,6 +199,21 @@ class blog extends controller
 				$this->setVarByRef('linkcats', $linkcats);
 				$this->setVarByRef('cats', $catarr);
 				return 'randblog_tpl.php';
+
+				break;
+
+			case 'importblog':
+				$username = $this->getParam('username');
+				$server = $this->getParam('server');
+				//set up to connect to the server
+				$this->objBlogImport->setup($server);
+				//connect to the remote db
+				$this->objBlogImport->_dbObject();
+				$blog = $this->objBlogImport->importBlog($username);
+				//dump it to screen as a debug
+				print_r($blog);
+				//sort through the returned array and see where to put the stuff
+				//use the insertPost methods to populate...
 
 				break;
 
@@ -281,7 +307,13 @@ class blog extends controller
 
 					$catarr = $this->objDbBlog->getCatsTree($userid);
 					$linkcats = $this->objDbBlog->getAllLinkCats($userid);
-					$posts = $this->objDbBlog->getAllPosts($userid, $catid);
+					if(isset($catid))
+					{
+						$posts = $this->objDbBlog->getAllPosts($userid, $catid);
+					}
+					else {
+						$posts = $this->objDbBlog->getAbsAllPostsNoDrafts($userid);
+					}
 					$this->setVarByRef('catid', $catid);
 					$this->setVarByRef('posts', $posts);
 					$this->setVarByRef('linkcats', $linkcats);

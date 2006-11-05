@@ -161,6 +161,11 @@ class dbblog extends dbTable
 	 */
 	public function catCount($cat)
 	{
+		if($cat = NULL)
+		{
+			$this->_changeTable('tbl_blog_posts');
+			return $this->getRecordCount();
+		}
 		$this->_changeTable('tbl_blog_posts');
 		return $this->getRecordCount("WHERE post_category = '$cat'");
 	}
@@ -247,7 +252,20 @@ class dbblog extends dbTable
 	}
 
 	/**
-	 * Method to get all the posts in a category (published posts)
+	 * Method to get all the posts in a category (published posts as well as drafts)
+	 *
+	 * @param integer $userid
+	 * @param mixed $catid
+	 * @return array
+	 */
+	public function getAbsAllPostsNoDrafts($userid)
+	{
+		$this->_changeTable('tbl_blog_posts');
+		return $this->getAll("WHERE userid = '$userid' AND post_status = '0' ORDER BY post_ts DESC");
+	}
+
+	/**
+	 * Method to get all the posts in a category (published posts ONLY)
 	 *
 	 * @param integer $userid
 	 * @param mixed $catid

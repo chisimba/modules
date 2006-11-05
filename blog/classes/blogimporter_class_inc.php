@@ -1,11 +1,30 @@
 <?php
+// security check - must be included in all scripts
+if (!$GLOBALS['kewl_entry_point_run']) {
+	die("You cannot view this page directly");
+}
+// end security check
 
-class blogimporter
+/**
+ * Class to facilitate import of existing blog content from a remote server
+ * This class should allow a connection to a remote database on a remote server to get all content items within
+ * that database table in order to process and import the content back into a Chisimba installation.
+ *
+ * Please note that due to the way that this class acts, it is only necessary to supply a username/userid to
+ * the function calls in order to get an Associative array of values back to be returned.
+ *
+ * @author Paul Scott
+ * @copyright AVOIR GNU/GPL
+ * @package blog
+ * @access public
+ */
+
+class blogimporter extends object
 {
 	/**
 	 * The DSN to the database to import FROM
 	 *
-	 * @var mixed
+	 * @var mixed Data Source Name of the data that you wish to import
 	 */
 	public $dsn;
 
@@ -21,20 +40,34 @@ class blogimporter
 	 *
 	 * @var object
 	 */
-	public $objDb;
+	protected $objDb;
 
 	/**
-	 * Pseudo constructor method.
+	 * Standard init function for the object and controller class
+	 *
+	 * @access public
+	 * @param void
+	 * @return void
+	 */
+	public function init()
+	{
+		//nothing to do here yet... :(
+	}
+
+	/**
+	 * Pseudo constructor method. We have not yet used the standard init() function here, or extended dbTable, as we are not really
+	 * interested in connecting to the local db with this object.
 	 *
 	 * @param The name of the server to connect to (predefined) $server
 	 * @return string, set DSN
+	 * @access public
 	 */
 	public function setup($server)
 	{
 		switch ($server)
 		{
 			case 'localhost':
-				$this->dsn = 'mysql://root:@localhost/nextgen';
+				$this->dsn = 'mysql://root:@localhost/nextgen4';
 				return $this->dsn;
 				break;
 			case 'fsiu':
@@ -51,9 +84,11 @@ class blogimporter
 	/**
 	 * Build and instantiate the database object for the remote
 	 *
+	 * @param void
 	 * @return object
+	 * @access private
 	 */
-	public function dbObject()
+	public function _dbObject()
 	{
 		require_once 'MDB2.php';
 		//MDB2 has a factory method, so lets use it now...
@@ -64,6 +99,7 @@ class blogimporter
 		}
 		//set the options
 		$this->objDb->setOption('portability', MDB2_PORTABILITY_FIX_CASE);
+		//load the date and iterator MDB2 Modules.
 		MDB2::loadFile('Date');
 		MDB2::loadFile('Iterator');
 		//Check for errors
@@ -77,13 +113,15 @@ class blogimporter
 	 * Method to query an arbitrarary remote table
 	 *
 	 * @param string $table
-	 * @param string $filter
+	 * @param string $filter can be full SQL Query
 	 * @return resultset
+	 * @access public
 	 */
 	public function queryTable($table, $filter)
 	{
 		$this->_tableName = $table;
 		$res = $this->objDb->query($filter);
+		//set the return mode to return an associative array
 		return $res->fetchAll(MDB2_FETCHMODE_ASSOC);
 	}
 
@@ -92,26 +130,34 @@ class blogimporter
 	 *
 	 * @param string $username
 	 * @return array
+	 * @access public
 	 */
 	public function importBlog($username)
 	{
+		//set the table
 		$this->_tableName = 'tbl_users';
+		//set up the query to check userid and username
 		$fil1 = "SELECT * FROM tbl_users WHERE username = '$username'";
 		$res1 = $this->objDb->query($fil1);
 		$ures = $res1->fetchAll(MDB2_FETCHMODE_ASSOC);
+
 		//now get the info we need
+		//set the userid as in the blog
 		$userid = $ures[0]['userid'];
 		//set the table to the blog table
 		$this->_tableName = 'tbl_blog';
+		//query the blog table
 		$fil2 = "SELECT * FROM tbl_blog WHERE userid = '$userid'";
 		$res2 = $this->objDb->query($fil2);
 		if(PEAR::isError($res2))
 		{
+			//uh oh.... blog not installed, or cannot be found on remote
 			die("no blog table");
 		}
+		//return the associative array of fetched values.
 		$bres = $res2->fetchAll(MDB2_FETCHMODE_ASSOC);
 		return $bres;
 	}
 
-}
+}//end class
 ?>
