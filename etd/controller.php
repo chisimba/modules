@@ -23,23 +23,34 @@ class etd extends controller
 {
     /**
     * var $accessLevel The allowed access for the user.
-    */
-    var $accessLevel = 0;
+    *
+    public $accessLevel = 0;
 
     /**
     * Method to construct the class.
     */
-    function init()
+    public function init()
     {
-        $this->etdTools =& $this->getObject('etdtools');
+        $this->etdTools =& $this->getObject('etdtools', 'etd');
+        $this->manage =& $this->getObject('management', 'etd');
+        $this->config =& $this->getObject('configure', 'etd');
+        $this->dbThesis =& $this->getObject('dbthesis');
+        $this->dbThesis->setSubmitType('etd');
+        
+        $this->etdSearch =& $this->getObject('search', 'etd');
+        $this->etdSearch->setMetaType('thesis', 'etd');
+        
+        $this->emailResults =& $this->getObject('emailresults');
+        $this->emailResults->setModuleName('etd');
         
         $this->objConfig =& $this->getObject('altconfig', 'config');
         $this->objLanguage =& $this->getObject('language', 'language');
         $this->setVarByRef('objLanguage', $this->objLanguage);
+        
+        $this->objBlocks = & $this->newObject('blocks', 'blocks');
+        $this->objFeeder = & $this->newObject('feeder', 'feed');
         /*
         $this->etdSubmit =& $this->getObject('submit');
-        $this->etdSearch =& $this->getObject('search');
-        $this->etdSearch->setMetaType('thesis', 'etd');
         $this->dbSubmit =& $this->getObject('dbsubmissions');
         $this->dbThesisMeta =& $this->getObject('dbthesis');
         $this->dbFiles =& $this->getObject('dbfiles');
@@ -51,8 +62,6 @@ class etd extends controller
         $this->dbEmbargo =& $this->getObject('dbembargo');
         $this->xmlMetaData =& $this->getObject('xmlmetadata');
         $this->objKeyword =& $this->getObject('keyword');
-        $this->emailResults =& $this->getObject('emailresults');
-        $this->emailResults->setModuleName('etd');
 
         $this->objDate =& $this->getObject('simplecal', 'datetime');
         $this->objGroup =& $this->getObject('groupadminmodel', 'groupadmin');
@@ -82,8 +91,12 @@ class etd extends controller
 
     /**
     * Standard dispatch function
+    *
+    * @access public
+    * @param string $action The action to be performed
+    * @return string Template to be displayed
     */
-    function dispatch($action)
+    public function dispatch($action)
     {
         /*
         // Access control for browse pages
@@ -99,6 +112,191 @@ class etd extends controller
 
         switch($action){
             
+            /* *** Functions for displaying the resources *** */
+            
+            case 'viewauthor':
+            case 'viewtitle':
+                $this->unsetSession('resource');
+                $metaId = $this->getParam('id');
+                $resource = $this->dbThesis->getMetadata($metaId);
+//                $files = $this->dbFiles->getFiles($etd['submitId']);
+                $this->setVarByRef('resource', $resource);
+//                $this->setVarByRef('files', $files);
+                $rightSide = $this->objBlocks->showBlock('resourcemenu', 'etd');
+                $this->etdTools->setRightSide($rightSide);
+                return 'showetd_tpl.php';
+
+            case 'printresource':
+                $search = $this->getSession('resource');
+                $this->setVarByRef('search', $search);
+                return 'print_tpl.php';
+
+            case 'emailresource':
+                $resource = $this->getSession('resource');
+                $head = $this->objLanguage->languageText('phrase_emailresource');
+                $message = $this->objLanguage->languageText('mod_etd_attachmentresource', 'etd');
+                $shortName = $this->objConfig->getinstitutionShortName().':';
+                $subject = $this->objLanguage->code2Txt('mod_etd_requestedresource', 'etd', array('shortname' => $shortName));
+                $this->emailResults->setHeading($head);
+                $this->emailResults->setSubject($subject, TRUE);
+                $this->emailResults->setMessage($message);
+                $this->emailResults->setEmailBody($resource);
+                $email = $this->emailResults->showEmail();
+                $this->setVarByRef('search', $email);
+                return 'search_tpl.php';
+
+            /* *** Functions for browsing the repository *** */
+
+//            case 'browsecollection':
+//                $objCollection = & $this->getObject( 'dbcollection', 'etd' );
+//                $this->setVar( 'browseType', $objCollection );
+//                $this->setVar( 'isManager', FALSE );
+//                return 'browse_tpl.php';
+
+            case 'browseauthor':
+                $this->unsetSession('resource');
+                // set a session to use when returning from a resource or from emailing a resource.
+                $session = array();
+                $session['searchForLetter'] = $this->getParam('searchForLetter');
+                $session['displayLimit'] = $this->getParam('displayLimit');
+                $session['displayStart'] = $this->getParam('displayStart');
+                $session['action'] = 'browseauthor';
+                $this->setSession('return', $session);
+                
+                $objAuthor = & $this->getObject('dbthesis', 'etd');
+                $objAuthor->setBrowseType('author');
+                $this->setVar('num', 3);
+                $this->setVarByRef('browseType', $objAuthor);
+                return 'browse_tpl.php';
+
+            case 'browsetitle':
+                $this->unsetSession('resource');
+                // set a session to use when returning from a resource or from emailing a resource.
+                $session = array();
+                $session['searchForLetter'] = $this->getParam('searchForLetter');
+                $session['displayLimit'] = $this->getParam('displayLimit');
+                $session['displayStart'] = $this->getParam('displayStart');
+                $session['action'] = 'browsetitle';
+                $this->setSession('return', $session);
+                
+                $objTitle = & $this->getObject('dbthesis', 'etd');
+                $objTitle->setBrowseType('title');
+                $this->setVar('num', 3);
+                $this->setVarByRef('browseType', $objTitle);
+                return 'browse_tpl.php';
+            
+            /* ** Functions for searching ** */
+            
+            case 'search':
+                $search = $this->etdSearch->showSearch();
+                $this->etdTools->setRightBlocks(FALSE, TRUE, FALSE);
+                $this->setVarByRef('search', $search);
+                return 'search_tpl.php';
+                
+            case 'advsearch':
+                $this->unsetSession('resource');
+                // set a session to use when returning from a resource or from emailing a resource.
+                $session['displayLimit'] = $this->getParam('displayLimit');
+                $session['displayStart'] = $this->getParam('displayStart');
+                $session['action'] = 'advsearch';
+                $this->setSession('return', $session);
+                
+                $pageTitle = $this->objLanguage->languageText('phrase_searchresults');
+                $objViewBrowse = & $this->getObject('viewbrowse', 'etd');
+                $objViewBrowse->create($this->etdSearch);
+                $objViewBrowse->setAccess( FALSE );
+                $objViewBrowse->showAlpha(FALSE);
+                $objViewBrowse->showPrint();
+//                $objViewBrowse->useSortTable();
+                $objViewBrowse->setNumCols(3);
+                $objViewBrowse->setPageTitle($pageTitle);
+                $this->objLink = new link($this->uri(array('action'=>'search')));
+                $this->objLink->link = $this->objLanguage->languageText('phrase_newsearch');
+                $criteria = $this->etdSearch->getSession('criteria');
+                $objViewBrowse->addExtra($criteria.'<p>'.$this->objLink->show().'</p>');
+                $search = $objViewBrowse->show();
+                $this->setVarByRef('search', $search);
+                $this->etdTools->setRightBlocks(FALSE, TRUE, FALSE);
+                return 'search_tpl.php';
+                
+            case 'printsearch':
+                $pageTitle = $this->objLanguage->languageText('phrase_searchresults');
+                $objViewBrowse = & $this->getObject('viewbrowse', 'etd');
+                $objViewBrowse->create($this->etdSearch);
+                $search = $objViewBrowse->getResults();
+                $this->setVarByRef('search', $search);
+                return 'print_tpl.php';
+
+            case 'emailsearch':
+                $pageTitle = $this->objLanguage->languageText('phrase_searchresults');
+                $shortName = $this->objConfig->getinstitutionShortName().':';
+                $subject = $this->objLanguage->code2Txt('mod_etd_requestedsearchresults', 'etd', array('shortname' => $shortName));
+                $message = $this->objLanguage->languageText('mod_etd_attachmentsearchresults', 'etd');
+                $objViewBrowse = & $this->getObject( 'viewbrowse', 'etd' );
+                $objViewBrowse->create($this->etdSearch);
+                $search = $objViewBrowse->getResults();
+                $this->emailResults->setEmailBody($search);
+                $this->emailResults->setSubject($subject, TRUE);
+                $this->emailResults->setMessage($message);
+                $email = $this->emailResults->showEmail();
+                $this->setVarByRef('search', $email);
+                return 'search_tpl.php';
+                
+            case 'sendemail':
+                $confirm = $this->objLanguage->languageText('mod_etd_confirmemailsent', 'etd');
+                $link = $this->objLanguage->languageText('mod_etd_returnsearch', 'etd');
+                $return = $this->getSession('return');
+                $pos = strpos($return['action'], 'browse');
+                if(!($pos === FALSE)){
+                    $link = $this->objLanguage->languageText('mod_etd_returnbrowse', 'etd');
+                }
+                $email = $this->emailResults->sendEmail();
+                $objLink =& $this->newObject('link', 'htmlelements');
+                $objLink = new link($this->uri($return));
+                $objLink->link = $link;
+                $search = '<p class="confirm">'.$confirm.'</p><p>'.$objLink->show().'</p>';
+                $this->setVarByRef('search', $search);
+                return 'search_tpl.php';
+                
+            /* ** Functions for managing the archive ** */
+            
+            case 'managesubmissions':
+                $mode = $this->getParam('mode');
+                $display = $this->manage->show($mode);
+                $this->etdTools->setRightBlocks(FALSE, TRUE, FALSE);
+                $this->setVarByRef('search', $display);
+                return 'search_tpl.php';
+                
+            case 'savesubmissions':
+                $save = $this->getParam('save');
+                $mode = $this->getParam('mode');
+                $nextmode = $this->getParam('nextmode');
+                if(!empty($save)){
+                    $this->manage->show($mode);
+                }
+                return $this->nextAction('managesubmissions', array('mode' => $nextmode));
+
+            /* *** Functions for configuring the archive *** */
+            
+            case 'showconfig':
+                $mode = $this->getParam('mode');
+                $display = $this->config->show($mode);
+                $this->etdTools->setRightBlocks(TRUE, TRUE, FALSE);
+                $this->setVarByRef('search', $display);
+                return 'search_tpl.php';
+                break;
+                
+            case 'saveconfig':
+                $save = $this->getParam('save');
+                $mode = $this->getParam('mode');
+                $nextmode = $this->getParam('nextmode');
+                if(!empty($save)){
+                    $this->config->show($mode);
+                }
+                return $this->nextAction('showconfig', array('mode' => $nextmode));
+                break;
+            
+
         /*
             case 'showinfo':
                 $heading = $this->objLanguage->languageText('mod_etd_name');
@@ -107,31 +305,11 @@ class etd extends controller
                 $this->setVarByRef('body', $body);
                 return 'etdinfo_tpl.php';
 
-            case 'printresource': // NEW
-                $search = $this->getSession('resource', '');
-                $this->unsetSession('resource');
-                $this->setVarByRef('search', $search);
-                return 'print_tpl.php';
-
             case 'viewembargo':
                 return $this->viewEmbargo();
 
             case 'viewetd':
                 $mode = TRUE;
-
-            case 'viewauthor':
-            case 'viewtitle':
-                $metaId = $this->getParam('id');
-                if(!isset($mode)){
-                    $mode = $this->getParam('allowManage', FALSE);
-                }
-                $etd = $this->dbThesisMeta->getMetadata($metaId);
-                $files = $this->dbFiles->getFiles($etd['submitId']);
-                $this->setVarByRef('mode', $mode);
-                $this->setVar('submitStatus', FALSE);
-                $this->setVarByRef('etd', $etd);
-                $this->setVarByRef('files', $files);
-                return 'showetd_tpl.php';
 
             case 'showetd': // xml based - pre archive
                 $submitId = $this->getParam('submitId');
@@ -317,78 +495,9 @@ class etd extends controller
 
             /* *** Search Repository *** *
 
-            case 'search':
-                $search = $this->etdSearch->showSearch();
-                $this->setVarByRef('search', $search);
-                return 'search_tpl.php';
 
-            case 'advsearch':
-                $pageTitle = $this->objLanguage->languageText('mod_etd_searchetdrepository');
-                $objViewBrowse = & $this->getObject( 'viewbrowse', 'etd' );
-                $objViewBrowse->create($this->etdSearch);
-                $objViewBrowse->setAccess( FALSE );
-                $objViewBrowse->showAlpha(FALSE);
-                $objViewBrowse->showPrint();
-                $objViewBrowse->useSortTable();
-                $objViewBrowse->setNumCols(3);
-                $objViewBrowse->setPageTitle($pageTitle);
-                $this->objLink = new link($this->uri(array('action'=>'search')));
-                $this->objLink->link = $this->objLanguage->languageText('mod_etd_advancedsearch');
-                $objViewBrowse->addExtra($this->objLink->show());
-                $search = $objViewBrowse->show();
-                $this->setVarByRef('search', $search);
-                return 'search_tpl.php';
 
-            case 'printsearch': // New
-                $pageTitle = $this->objLanguage->languageText('mod_etd_searchetdrepository');
-                $objViewBrowse = & $this->getObject( 'viewbrowse', 'etd' );
-                $objViewBrowse->create($this->etdSearch);
-                $search = $objViewBrowse->getResults();
-                $this->setVarByRef('search', $search);
-                return 'print_tpl.php';
 
-            case 'emailsearch': // New
-                $pageTitle = $this->objLanguage->languageText('mod_etd_searchetdrepository');
-                $objViewBrowse = & $this->getObject( 'viewbrowse', 'etd' );
-                $objViewBrowse->create($this->etdSearch);
-                $search = $objViewBrowse->getResults();
-                $this->emailResults->setEmailBody($search);
-                $email = $this->emailResults->showEmail();
-                $this->setVarByRef('search', $email);
-                return 'search_tpl.php';
-
-            case 'sendemail':
-                $email = $this->emailResults->sendEmail();
-                $objLink =& $this->newObject('link', 'htmlelements');
-                $objLink = new link('javascript:history.go(-2)');
-                $objLink->link = $this->objLanguage->languageText('mod_etd_returnsearch');
-                $search = $objLink->show();
-                $this->setVarByRef('search', $search);
-                return 'search_tpl.php';
-
-            /* *** Browse Repository *** *
-
-            case 'browse_collection':
-                $objCollection = & $this->getObject( 'dbcollection', 'etd' );
-                $this->setVar( 'browseType', $objCollection );
-                $this->setVar( 'isManager', FALSE );
-                return 'browse_tpl.php';
-
-            case 'browse_author':
-                $objAuthor = & $this->getObject( 'dbthesis', 'etd' );
-                $objAuthor->setBrowseType( 'author' );
-                $this->setVar( 'num', 3 );
-                $this->setVar( 'browseType', $objAuthor );
-                $this->setVar( 'isManager', $isManager );
-                return 'browse_tpl.php';
-
-            case 'browse_title':
-                $objTitle = & $this->getObject( 'dbthesis', 'etd' );
-                $objTitle->setBrowseType( 'title' );
-                $this->setVar( 'num', 3 );
-                $this->setVar( 'browseType', $objTitle );
-                $this->setVar( 'isManager', $isManager );
-                return 'browse_tpl.php';
 
             /* *** Manage Collections in Repository *** *
 
@@ -479,6 +588,32 @@ class etd extends controller
                 return $this->nextAction('editmetadata', array('page'=>$page, 'submitId'=>$submitId));
 
             */
+
+            /* *** Additional Functionality *** */
+            
+            case 'rss':
+                $institution = $this->objConfig->getinstitutionName();
+                $title = $this->objLanguage->code2Txt('mod_etd_etdrss', 'etd', array('institution' => $institution));
+                $description = $this->objLanguage->languageText('mod_etd_etdrssdescription', 'etd');
+                $link = $this->uri('');
+                $feedURL = $this->uri(array('action' => 'rss'));
+                $this->objFeeder->setupFeed(TRUE, $title, $description, $link, $feedURL);
+                
+                // Add items / content
+                $data = $this->dbThesis->getAllMeta();
+                if(!empty($data)){
+                    foreach($data as $item){
+                        $itemTitle = $item['dc_title'];
+                        $itemDescription = substr($item['dc_subject'], 100, 0);
+                        $itemAuthor = $item['dc_creator'];
+                        $itemLink = $this->uri(array('action' => 'viewtitle', 'id' => $item['metaid']));// todo: build up item link $item['dc_identifier'];
+               	        $this->objFeeder->addItem($itemTitle, $itemLink, $itemDescription, $link, $itemAuthor);
+                    }
+                }
+                
+                $feed = $this->objFeeder->output();
+                echo $feed;
+                break;
 
             default:
                 return $this->home();

@@ -33,7 +33,7 @@ class block_searchetd extends object
         $this->loadClass('button','htmlelements');
         $this->loadClass('form','htmlelements');
         $this->loadClass('link','htmlelements');
-        $this->objInput =& $this->loadClass('textinput','htmlelements');
+        $this->loadClass('textinput','htmlelements');
 
         $this->title = $this->objLanguage->languageText('word_search');
     }
@@ -50,25 +50,25 @@ class block_searchetd extends object
         $lbAuthors = $this->objLanguage->languageText('word_author');
 
         // search button and input
-        $this->objInput->textinput('searchField');
-        $this->objInput->size = 10;
-        $search = '<p>'.$lbKeywords.':<br />'.$this->objInput->show().'</p>';
+        $objInput = new textinput('searchField');
+        $objInput->size = 10;
+        $search = '<p>'.$lbKeywords.':<br />'.$objInput->show().'</p>';
 
-        $this->objInput->textinput('searchAuthors');
-        $this->objInput->size = 10;
-        $search .= '<p>'.$lbAuthors.':<br />'.$this->objInput->show().'</p>';
+        $objInput = new textinput('searchAuthors');
+        $objInput->size = 10;
+        $search .= '<p>'.$lbAuthors.':<br />'.$objInput->show().'</p>';
 
-        $this->objButton->button('search', $searchLabel);
-        $this->objButton->setToSubmit();
-        $search .= '<p>'.$this->objButton->show().'</p>';
+        $objButton = new button('search', $searchLabel);
+        $objButton->setToSubmit();
+        $search .= '<p>'.$objButton->show().'</p>';
 
-        $this->objForm->form('search', $this->uri(array('action' => 'advsearch', 'mode'=>'simple')));
-        $this->objForm->addToForm($search);
-        $str = $this->objForm->show();
+        $objForm = new form('search', $this->uri(array('action' => 'advsearch', 'mode'=>'simple')));
+        $objForm->addToForm($search);
+        $str = $objForm->show();
 
-        $this->objLink = new link($this->uri(array('action' => 'search')));
-        $this->objLink->link = $advSearchLabel;
-        $str .= '<p>'.$this->objLink->show().'</p>';
+        $objLink = new link($this->uri(array('action' => 'search')));
+        $objLink->link = $advSearchLabel;
+        $str .= '<p>'.$objLink->show().'</p>';
 
         return $str;
     }

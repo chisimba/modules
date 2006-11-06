@@ -26,12 +26,29 @@ class etdtools extends object
     private $rightContent = '';
     
     /**
+    * @var bool $hideMenu Boolean value determining whether to hide the menu block on the right side
+    */
+    private $hideMenu = FALSE;
+    
+    /**
+    * @var bool $hideSearch Boolean value determining whether to hide the search block on the right side
+    */
+    private $hideSearch = FALSE;
+        
+    /**
+    * @var bool $hideHelp Boolean value determining whether to hide the help block on the right side
+    */
+    private $hideHelp = FALSE;
+        
+    /**
     * Constructor method
     */
     public function init()
     {
         $this->objUser =& $this->getObject('user', 'security');
         $this->objLanguage =& $this->getObject('language', 'language');
+        $this->objCountry =& $this->getObject('languagecode', 'language');
+        $this->objConfig =& $this->getObject('dbsysconfig', 'sysconfig');
 
         $this->objTable =& $this->newObject('htmltable', 'htmlelements');
         $this->objHead =& $this->newObject('htmlheading', 'htmlelements');
@@ -44,6 +61,7 @@ class etdtools extends object
     /**
     * Method to get the contents for the right column
     *
+    * @access public
     * @return string html
     */
     public function getRightSide()
@@ -59,19 +77,33 @@ class etdtools extends object
     /**
     * Method to display the menu for browsing and searching the repository.
     *
+    * @access private
     * @return string html
     */
     private function getBrowseMenu()
     {
-        $str = $this->objBlocks->showBlock('rightmenu', 'etd');
-//        $str .= $this->objBlocks->showBlock('searchetd', 'etd');
-        $str .= $this->objBlocks->showBlock('etdhelp', 'etd');
+        $str = '';
+        if(!$this->hideMenu){
+            $str = $this->objBlocks->showBlock('rightmenu', 'etd');
+        }
+        //if($manager){
+            $str .= $this->objBlocks->showBlock('managemenu', 'etd');
+        //}
+        if(!$this->hideSearch){
+            $str .= $this->objBlocks->showBlock('searchetd', 'etd');
+        }
+        if(!$this->hideHelp){
+            $str .= $this->objBlocks->showBlock('etdhelp', 'etd');
+        }
         return $str;
     }
     
     /**
     * Method to set the content for the right side menu
     *
+    * @access public
+    * @param string $str The right side content
+    * @param bool $append Flag to determine whether the new side content is appended to the standand content
     * @return
     */
     public function setRightSide($str, $append = FALSE)
@@ -81,6 +113,59 @@ class etdtools extends object
         }
         $this->rightContent .= $str;
     }
+
+    /**
+    * Method to set the blocks on the right menu to hide or display
+    *
+    * @access public
+    * @param bool $menu Determines whether to display the browse menu block
+    * @param bool $search Determines whether to display the search block
+    * @param bool $help Determines whether to display the help block
+    * @return
+    */
+    public function setRightBlocks($menu = FALSE, $search = FALSE, $help = FALSE)
+    {
+        $this->hideMenu = $menu;
+        $this->hideSearch = $search;
+        $this->hideHelp = $help;
+    }
+    
+    /**
+    * Method to create the dropdown of countries with additional entries for areas covering several countries
+    *
+    * @access public
+    * @param string $selected The current selection
+    * @return string html
+    */
+    public function getCountriesDropdown($selected = 'South Africa')
+    {
+//        $objDrop = new dropdown('country');
+//        $objDrop->addFromDB($this->objCountries->getAll(' order by name'), 'printable_name', 'printable_name', $selected);
+        
+        return $this->objCountry->country();//$objDrop->show();
+    }
+
+    /**
+    * Method to create a dropdown list of years using the configurable variable for the start date
+    *
+    * @access public
+    * @param string $name The element name
+    * @param string $select The selected year
+    * @return string html
+    */
+    public function getYearSelect($name, $select = '')
+    {
+        $start = $this->objConfig->getValue('ARCHIVE_START_YEAR', 'etd');
+
+        $objDrop = new dropdown($name);
+
+        for($i=$start; $i <= date('Y'); $i++){
+            $objDrop->addOption($i, $i);
+        }
+        $objDrop->setSelected($select);
+        return $objDrop->show();
+    }
+
 
 
 /* ** Methods below from KINKY version - unused as of yet ** */

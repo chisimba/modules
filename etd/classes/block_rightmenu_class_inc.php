@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Block for the right menu 
 *
@@ -21,6 +21,8 @@ class block_rightmenu extends object
     public function init()
     {
         $this->objLanguage =& $this->getObject('language','language');
+        $this->objIcon =& $this->newObject('geticon', 'htmlelements');
+        $this->loadClass('link', 'htmlelements');
         
         //Set the title
         $this->title = $this->objLanguage->languageText('word_menu');
@@ -37,21 +39,27 @@ class block_rightmenu extends object
         $titles = $this->objLanguage->languageText('word_titles');
         
 	    // Browse menu items
-        $list = '<b>'.$browse.':</b><ul>';
+        $list = '<b>'.$browse.':</b><br /><ul>';
         
-        $objLink = new link($this->uri(array('action'=>'browse_collection')));
+        $objLink = new link($this->uri(array('action'=>'browsecollection')));
         $objLink->link = $collections;
         $list .= '<li style="padding-bottom: 5px;">'.$objLink->show().'</li>';
         
-        $objLink = new link($this->uri(array('action'=>'browse_author')));
+        $objLink = new link($this->uri(array('action'=>'browseauthor')));
         $objLink->link = $authors;
         $list .= '<li style="padding-bottom: 5px;">'.$objLink->show().'</li>';
         
-        $objLink = new link($this->uri(array('action'=>'browse_title')));
+        $objLink = new link($this->uri(array('action'=>'browsetitle')));
         $objLink->link = $titles;
-        $list .= '<li style="padding-bottom: 5px;">'.$objLink->show().'</li>';
+        $list .= '<li>'.$objLink->show().'</li>';
         
         $list .= '</ul>';
+        
+        // RSS link
+		$this->objIcon->setIcon('rss', 'gif', 'icons/filetypes');
+		$objLink = new link($this->uri(array('action' => 'rss')));
+		$objLink->link = $this->objLanguage->languageText('word_rss2');
+		$list .= $this->objIcon->show().' '.$objLink->show();
 
         return $list;
     }
