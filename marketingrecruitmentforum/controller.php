@@ -38,6 +38,10 @@ class marketingrecruitmentforum extends controller
       $this->dbsluactivities  = & $this->getObject('dbsluactivities','marketingrecruitmentforum');
       $this->dbschoollist   = & $this->getObject('dbschoollist','marketingrecruitmentforum');
       
+    //  $this->objFaculties =& $this->getObject('dbacademicprogrammefaculties','academicprogramme');
+    //  $this->objCourses =& $this->getObject('dbacademicprogrammecourses','academicprogramme');
+   //   $this->objLincClient =& $this->getObject('lincclient');
+      
       //webservice class 
       $this->objstudinfo  = & $this->getObject('dbmarketing','marketingrecruitmentforum');
     }
@@ -55,6 +59,7 @@ class marketingrecruitmentforum extends controller
         switch($action){
             
             case 'introduction' :
+                  // $this->setSession('studentdata',NULL);
                    return 'intro_tpl.php';
             break;
             
@@ -244,6 +249,27 @@ class marketingrecruitmentforum extends controller
             case  'followupletter':
                   return  'followupletter_tpl.php';
             break;
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+            case  'postletter':
+                $selected = $this->getParam('post');
+                if($selected){
+                  
+                  $val  = $this->getSession('results');
+                  foreach($val as $v){
+                    
+                    $surname  = $v['surname'];
+                    $name     = $v['name'];
+                    $addy     = $v['postaddress'];
+                  }
+                  $this->setVarByRef('surname',$surname);
+                  $this->setVarByRef('name',$name);
+                  $this->setVarByRef('addy',$addy);
+                }
+                //$this->setVarByRef('selected',$selected);
+                //var_dump($selected);
+                return  'followupletter_tpl.php';
+            break;
+     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////       
 /****************************************************************************************************************/            
             default:
                ///"CRSCDE","2",0,1
@@ -282,9 +308,6 @@ class marketingrecruitmentforum extends controller
        
        $studentdata  = array('createdby'        =>  $username,
                              'datecreated'      =>  date('Y-m-d'),
-                             'modifiedby'       =>  $this->objUser->fullname(),
-                             'datemodified'     =>  date('Y-m-d'),
-                             'updated'          =>  date('Y-m-d'),
                              'date'             =>  $this->getParam('datestud'),
                              'surname'          =>  $this->getParam('txtsurname'),
                              'name'             =>  $this->getParam('txtname'),
@@ -295,44 +318,26 @@ class marketingrecruitmentforum extends controller
                              'telcode'          =>  $this->getParam('txttelcode'),
                              'exemption'        =>  $val,
                              'faculty'          =>  $this->getParam('facultylist'),
-                             'course'   =>  $this->getParam('txtcourse'),
+                             'course'           =>  $this->getParam('txtcourse'),
                              'relevantsubject'  =>  $result,
                              'sdcase'           =>  $this->getParam('sdcase'),
                         );
                         
      $this->setSession('studentdata',$studentdata);
+    // $this->setSession('faculty',$this->getParam('faculty'));
      }
      
-/*------------------------------------------------------------------------------*/
-    /**
-     *create an array -- $facoursedata to store the info captured for student
-     *create a session variable to store the array info in
-     */
-  /*private function getfaccourse(){
-  
-     $faccoursedata = array( 'faculty'          =>  $this->getParam('facultylist'),
-                             'course'   =>  $this->getParam('txtcourse'),
-                             'relevantsubject'  =>  $this->getParam('relevantsubject'),
-                             'sdcase'           =>  $this->getParam('sdcase'),
-                      );
-                        
-     $this->setSession('faccoursedata',$faccoursedata);
-  } */  
-      
 /*------------------------------------------------------------------------------*/    
   private function getSLUActivties(){
      
      $username  = $this->objUser->fullname();
      $sluactivitiesdata  = array('createdby'        =>  $username,
                                  'datecreated'      =>  date('Y-m-d'),
-                                  'modifiedby'       =>  $this->objUser->fullname(),
-                                  'datemodified'     =>  date('Y-m-d'),
-                                  'updated'          =>  date('Y-m-d'),
-                                  'date'             =>  $this->getParam('txtdate'), 
-                                  'activity'         =>  $this->getParam('activityvalues'),
-                                  'schoolname'       =>  $this->getParam('schoollistactivity'),
-                                  'area'             =>  $this->getParam('area'),
-                                  'province'         =>  $this->getParam('province'),
+                                 'date'             =>  $this->getParam('txtdate'), 
+                                 'activity'         =>  $this->getParam('activityvalues'),
+                                 'schoolname'       =>  $this->getParam('schoollistactivity'),
+                                 'area'             =>  $this->getParam('area'),
+                                 'province'         =>  $this->getParam('province'),
                            );
         $this->setSession('sluactivitydata',$sluactivitiesdata);                                  
                                   
@@ -343,9 +348,6 @@ class marketingrecruitmentforum extends controller
     $username  = $this->objUser->fullname();
     $schoolistdata  = array( 'createdby'        =>  $username,
                              'datecreated'      =>  date('Y-m-d'),
-                             'modifiedby'       =>  $this->objUser->fullname(),
-                             'datemodified'     =>  date('Y-m-d'),
-                             'updated'          =>  date('Y-m-d'),
                              'schoolname'       =>  $this->getParam('schoollistactivity'),
                              'schooladdress'    =>  $this->getParam('schooladdress'),
                              'telnumber'        =>  $this->getParam('txttelnumber'),
