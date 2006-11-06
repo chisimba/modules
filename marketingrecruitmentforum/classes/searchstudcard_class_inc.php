@@ -382,7 +382,7 @@ public function studarea(){
    */
 public function studsdcase(){
        
-       $results = $this->objstudcard->allsdcases();
+       $results = $this->objstudcard->sdcases();
         
         $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
          $this->appendArrayVar('headerParams', $css1);
