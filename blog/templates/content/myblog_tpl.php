@@ -16,7 +16,7 @@ $rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE);
 //$rightSideColumn .= "<br />";
 
 //show the link categories (if any)
-$rightSideColumn .= $this->objblogOps->showLinkCats($linkcats, TRUE);
+//$rightSideColumn .= $this->objblogOps->showLinkCats($linkcats, TRUE);
 
 //show the admin section (if user is logged in)
 $rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
@@ -31,7 +31,7 @@ $leftCol .= "<br />";
 
 //show the feeds section
 $leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
-//$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
+$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 //dump the cssLayout to screen
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol);
