@@ -425,6 +425,8 @@ class blogops extends object
 	public function quickCats($featurebox = FALSE)
 	{
 		$qcatform = new form('qcatadd', $this->uri(array('action' => 'catadd', 'mode' => 'quickadd')));
+
+		$qcatform->addRule('catname','You have not entered a category!','required');
 		$qcatname = new textinput('catname');
 		$qcatname->size = 15;
 		$qcatform->addToForm($qcatname->show());
@@ -556,6 +558,7 @@ class blogops extends object
 		'action' => 'catadd'
 		)));
 
+		$catform->addRule('catname','You have not entered a category!','required');
 		$cfieldset = $this->getObject('fieldset', 'htmlelements');
 		$cfieldset->setLegend($this->objLanguage->languageText('mod_blog_catdetails', 'blog'));
 		$catadd = $this->newObject('htmltable', 'htmlelements');
@@ -976,6 +979,10 @@ class blogops extends object
 		$this->loadClass('textarea', 'htmlelements');
 		$this->loadClass('textinput', 'htmlelements');
 		$qpform = new form('qpadd', $this->uri(array('action' => 'postadd', 'mode' => 'quickadd')));
+
+
+		$qpform->addRule('postcontent','You have not entered any content!','required');
+
 		$qptitletxt = $this->objLanguage->languageText("mod_blog_posttitle", "blog");
 		$qptitle = new textinput('posttitle');
 		//post content textarea
