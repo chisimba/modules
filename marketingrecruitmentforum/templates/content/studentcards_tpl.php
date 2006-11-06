@@ -338,14 +338,14 @@
          $myTable->endRow();
 
 
-       /*  $myTable->startRow();
+         $myTable->startRow();
          $myTable->addCell(ucfirst($course));
-         $myTable->addCell("&nbsp"."&nbsp".$objDropdown->show());
-         $myTable->endRow();*/
+         $myTable->addCell(/*"&nbsp"."&nbsp".*/$this->objtxtcourse->show());
+         $myTable->endRow();
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($subject));
-         $myTable->addCell(/*"&nbsp"."&nbsp".*/$this->objtxtcourse->show());
+         $myTable->addCell(/*"&nbsp"."&nbsp".*/$objsubject->show());
          $myTable->endRow();
          
          $myTable->startRow();
