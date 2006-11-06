@@ -137,37 +137,37 @@
            
     $myTable->startRow();
     $myTable->addCell(ucfirst($schoolname));
-    $myTable->addCell("&nbsp"."&nbsp".$searchlist->show());
+    $myTable->addCell(/*"&nbsp"."&nbsp".*/$searchlist->show());
     $myTable->endRow();   
     
     $myTable->startRow();
     $myTable->addCell(ucfirst($schooladdy));
-    $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.$this->objSchooladdress->show());
+    $myTable->addCell(/*"<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.*/$this->objSchooladdress->show());
     $myTable->endRow();  
     
     $myTable->startRow();
     $myTable->addCell(ucfirst($telnumber));
-    $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.$this->objtxttelnumber->show());
+    $myTable->addCell(/*"<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.*/$this->objtxttelnumber->show());
     $myTable->endRow();  
     
     $myTable->startRow();
     $myTable->addCell(ucfirst($faxnumber));
-    $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.$this->objtxtfaxnumber->show());
+    $myTable->addCell(/*"<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.*/$this->objtxtfaxnumber->show());
     $myTable->endRow();  
     
     $myTable->startRow();
     $myTable->addCell(ucfirst($email));
-    $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '. $this->objtxtemail->show());
+    $myTable->addCell(/*"<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.*/$this->objtxtemail->show());
     $myTable->endRow();  
     
     $myTable->startRow();
     $myTable->addCell(ucfirst($principal));
-    $myTable->addCell("&nbsp"."&nbsp".$this->objtxtprincipal->show());
+    $myTable->addCell(/*"&nbsp"."&nbsp".*/$this->objtxtprincipal->show());
     $myTable->endRow();  
     
     $myTable->startRow();
     $myTable->addCell(ucfirst($guidanceteacher));
-    $myTable->addCell("&nbsp"."&nbsp".$this->objtxtteacher->show());
+    $myTable->addCell(/*"&nbsp"."&nbsp".*/$this->objtxtteacher->show());
     $myTable->endRow();
     
     $myTable->startRow();

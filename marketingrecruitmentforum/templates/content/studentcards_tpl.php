@@ -293,47 +293,47 @@
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($schoolname));
-         $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.$schoollist->show());
+         $myTable->addCell(/*"<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.*/$schoollist->show());
          $myTable->endRow();
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($surname));
-         $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.$this->objtxtsurname->show());
+         $myTable->addCell(/*"<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.*/$this->objtxtsurname->show());
          $myTable->endRow();
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($name));
-         $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.$this->objtxtname->show());
+         $myTable->addCell(/*"<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.*/$this->objtxtname->show());
          $myTable->endRow();
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($postaladdress));
-         $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.$this->objPostaladdress->show());
+         $myTable->addCell(/*"<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.*/$this->objPostaladdress->show());
          $myTable->endRow();
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($postalcode));
-         $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.$this->objtxtpostalcode->show())  ;
+         $myTable->addCell(/*"<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.*/$this->objtxtpostalcode->show())  ;
          $myTable->endRow();
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($telnumber));
-         $myTable->addCell("&nbsp"."&nbsp".$this->objtxttelnumber->show());
+         $myTable->addCell(/*"&nbsp"."&nbsp".*/$this->objtxttelnumber->show());
          $myTable->endRow();   
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($telcode));
-         $myTable->addCell("&nbsp"."&nbsp".$this->objtxttelcode->show());
+         $myTable->addCell(/*"&nbsp"."&nbsp".*/$this->objtxttelcode->show());
          $myTable->endRow();
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($exemption));
-         $myTable->addCell("&nbsp"."&nbsp".$objexemption->show());
+         $myTable->addCell(/*"&nbsp"."&nbsp".*/$objexemption->show());
          $myTable->endRow();
          
          $myTable->startRow();
          $myTable->addCell("Select a faculty");
-         $myTable->addCell("&nbsp"."&nbsp".$facultylist->show());
+         $myTable->addCell(/*"&nbsp"."&nbsp".*/$facultylist->show());
         // $myTable->addCell($this->objButtonCourse->show());
          $myTable->endRow();
 
@@ -345,12 +345,12 @@
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($subject));
-         $myTable->addCell("&nbsp"."&nbsp".$this->objtxtcourse->show());
+         $myTable->addCell(/*"&nbsp"."&nbsp".*/$this->objtxtcourse->show());
          $myTable->endRow();
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($sdcase));
-         $myTable->addCell("&nbsp"."&nbsp".$objsdcase->show());
+         $myTable->addCell(/*"&nbsp"."&nbsp".*/$objsdcase->show());
          $myTable->endRow();
          
          $myTable->startRow();
@@ -365,7 +365,7 @@
           
           $objForm = new form('studentcard',$this->uri(array('action'=>'showsluactivities')));
           $objForm->displayType = 3;
-          $objForm->addToForm($this->objMainheading->show() . '<br />'."<span class=error>".'<i>'.$this->objheading->show().'</i>'."</span>".'<br />' .$myTable->show());
+          $objForm->addToForm($this->objMainheading->show() . '<br />'./*"<span class=error>".'<i>'.$this->objheading->show().'</i>'."</span>".*/'<br />' .$myTable->show());
           $objForm->addRule('txtsurname','Please enter surname','required');
           $objForm->addRule('txtname','Please enter name','required');
           $objForm->addRule('postaladdress','Please enter address','required');
