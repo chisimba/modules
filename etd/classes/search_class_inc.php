@@ -86,7 +86,7 @@ class search extends object
     public function init()
     {
         $this->dbThesis =& $this->getObject('dbthesis', 'etd');
-        $this->dbQualified =& $this->getObject('dbqualified', 'etd');
+//        $this->dbQualified =& $this->getObject('dbqualified', 'etd');
         
         $this->objUser =& $this->getObject('user', 'security');
         $this->objLanguage =& $this->getObject('language', 'language');
@@ -141,11 +141,11 @@ class search extends object
     */
     public function setMetaType($meta, $type)
     {
-        if($meta == 'qualified'){
-            $this->dbMetaData = $this->dbQualified;
-        }else{
+//        if($meta == 'qualified'){
+//            $this->dbMetaData = $this->dbQualified;
+//        }else{
             $this->dbMetaData = $this->dbThesis;
-        }
+//        }
         $this->dbMetaData->setSubmitType($type);
     }
 
