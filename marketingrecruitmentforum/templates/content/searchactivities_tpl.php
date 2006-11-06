@@ -16,7 +16,7 @@
         */
         $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
         $this->objMainheading->type=1;
-        $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_activities','marketingrecruitmentforum');
+        $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_activities1','marketingrecruitmentforum');
 /*------------------------------------------------------------------------------*/  
       /**
         *define all language items
@@ -119,12 +119,12 @@
     $Activityinfo = & $this->newObject('tabbox','marketingrecruitmentforum');
     $Activityinfo->tabName = 'ActivityInfo';
  
-    $Activityinfo->addTab('activity', 'All activities',$results.'<br />');
-    $Activityinfo->addTab('dates', 'Activities between dates',$mydateTab->show().' <br />'. '<br />' . $activdates.'<br />');
-    $Activityinfo->addTab('type', 'All activities by type ',$activtype.'<br />');
-    $Activityinfo->addTab('province', 'Activities by province',$province.'<br />');
-    $Activityinfo->addTab('area', 'Activities by area',$area.'<br />');
-    $Activityinfo->addTab('school', 'Activities by school','Select a school to search by' . ' ' .$schoollist->show().' <br />'. '<br />' . $school.'<br />');
+    $Activityinfo->addTab('activity', 'All Activities',$results.'<br />');
+    $Activityinfo->addTab('dates', 'Activities Between Dates',$mydateTab->show().' <br />'. '<br />' . $activdates.'<br />');
+    $Activityinfo->addTab('type', 'All Activities By Type ',$activtype.'<br />');
+    $Activityinfo->addTab('province', 'Activities By Province',$province.'<br />');
+    $Activityinfo->addTab('area', 'Activities By Area',$area.'<br />');
+    $Activityinfo->addTab('school', 'Activities By School','<b>'.'Select a school to search by'.'</b>' . ' ' .$schoollist->show().' <br />'. '<br />' . $school.'<br />');
     
     
 /*-------------------------------------------------------------------------------*/
@@ -135,7 +135,7 @@
   // $val  = $this->objsearchinfo->activitysearch();
    $objForm = new form('searchactivity',$this->uri(array('action'=>'showstudschoolactivity')));
    $objForm->displayType = 3;
-   $objForm->addToForm($this->objMainheading->show() . '<br />' . '<br />'. $infomsg . ' ' . '<br />' . '<br />' . $Activityinfo->show() );
+   $objForm->addToForm("<center>".$this->objMainheading->show() . '<br />' . '<br />'.'<b>'.'<i>'. $infomsg .'</i>'.'</b>'."</center>". ' ' . '<br />' . '<br />' . $Activityinfo->show() );
     
    echo $objForm->show();
 /*------------------------------------------------------------------------------*/   

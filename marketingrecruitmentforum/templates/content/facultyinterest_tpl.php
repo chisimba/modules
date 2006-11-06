@@ -21,15 +21,15 @@
         */
         $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
         $this->objMainheading->type=1;
-        $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_reportfaculty','marketingrecruitmentforum');
+        $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_reportfaculty1','marketingrecruitmentforum');
         
         $this->objnamehead =& $this->newObject('htmlheading','htmlelements');
-        $this->objnamehead->type=5;
+        $this->objnamehead->type=3;
         $this->objnamehead->str=$objLanguage->languageText('mod_marketingrecruitmentforum_facultyname','marketingrecruitmentforum') .':' . ' '.$displayname;//
         
         $this->objtotstud =& $this->newObject('htmlheading','htmlelements');
-        $this->objtotstud->type=5;
-        $this->objtotstud->str=$objLanguage->languageText('mod_marketingrecruitmentforum_totstud','marketingrecruitmentforum')  . ':'. ' ' .$count;
+        $this->objtotstud->type=3;
+        $this->objtotstud->str=$objLanguage->languageText('mod_marketingrecruitmentforum_entrytotal1','marketingrecruitmentforum')  . ':'. ' ' .$count;
         
 /*------------------------------------------------------------------------------*/
       /**
@@ -45,7 +45,7 @@
        
        //dropdown heading
         $this->objheading =& $this->newObject('htmlheading','htmlelements');
-        $this->objheading->type=5;
+        $this->objheading->type=3;
         $this->objheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_facultymsg','marketingrecruitmentforum') .' '. $names->show();
 /*------------------------------------------------------------------------------*/
       

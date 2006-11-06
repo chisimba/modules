@@ -35,7 +35,6 @@ class schoolnames extends object{
 	public function readfiledata(){
     
     $searchlist  = new dropdown('searchlist');
-    //$file_location  = "modules/marketingrecruitmentforum/resources/schoolnames.csv";
     
     //open file
     $file_to_read = @fopen("modules/marketingrecruitmentforum/resources/schoolnames.csv", "r") or die ("file does not exist or could not open file");
@@ -45,34 +44,26 @@ class schoolnames extends object{
         $file_contents = fgetcsv($file_to_read);
        // sort($file_contents);
         $names[] = $file_contents[1];
-        $this->setSession('schoolnames',$names);
-       //store file contents in a dropdown list 
-//        foreach($names as $sessname){
         
-//           $searchlist->addOption($sessname,$sessname);
-           
-//        }  
       }
-      // return $searchlist->show();
+      $this->setSession('schoolnames',$names);
   }
     
 /*------------------------------------------------------------------------------*/    
-  public function readpostcodes(){
-  
-      //$postcodelist = new dropdown('postcodelist');
-      
-      //open file 
-      //$postfile_to_read = @fopen("modules/marketingrecruitmentforum/resources/postcodes.csv", "r") or die ("file does not exist or could not open file");
+  public function readareadata(){
     
-     // while(!feof($postfile_to_read)){
-          //get all contents of the file
-     //     $post_contents  = fgetcsv($postfile_to_read);
-     //     $codes []= $postfile_to_read;
-     //     $this->setSession('postcodevals',$codes);
-          //echo '<prv />';
-          //print_r($post_contents);  
-     // }
-  }
+    $file_to_read = @fopen("modules/marketingrecruitmentforum/resources/postcodes.csv", "r") or die ("file does not exist or could not open file");
+    
+          while(!feof($file_to_read)){
+          
+              //get all contents of the file
+              $file_contents = fgetcsv($file_to_read);
+             // sort($file_contents);
+             $area[] = $file_contents[3];
+              
+          }
+             $this->setSession('area',$area); 
+  }       
 
 }
 ?>

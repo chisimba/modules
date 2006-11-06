@@ -5,7 +5,7 @@
    $StudentCardLink[] = array('params' => array("action" => "studentcard"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Student Cards');
    $StudentCardLink[] = array('params' => array("action" => "activitylist"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'SLU Activities'); 
    $StudentCardLink[] = array('params' => array("action" => "shoollist"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'School List');
-   $StudentCardLink[] = array('params' => array("action" => "showoutput"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'View Captured Data');
+//   $StudentCardLink[] = array('params' => array("action" => "showoutput"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'View Captured Data');
    
    $leftColumn = array();
    $leftColumn[] = array('heading' => 'Data Capture', 'links' => $StudentCardLink);

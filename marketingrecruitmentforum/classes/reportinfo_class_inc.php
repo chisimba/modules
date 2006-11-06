@@ -39,7 +39,7 @@ function displaysdcases(){
      *create table to display all sd cases results
      */
      
-     $results = $this->objstudcard->allsdcases();
+     $results = $this->objstudcard->sdcases();
      
      
     
@@ -56,9 +56,9 @@ function displaysdcases(){
       
   
           $myTable->startHeaderRow();
-          $myTable->addHeaderCell('Name', null,'top','left','header');
           $myTable->addHeaderCell('Surname', null,'top','left','header');
-          $myTable->addHeaderCell('sd case', null,'top','left','header');
+          $myTable->addHeaderCell('Name', null,'top','left','header');
+          $myTable->addHeaderCell('SD Case', null,'top','left','header');
           $myTable->endHeaderRow();
      
         $rowcount = '0';
@@ -68,9 +68,10 @@ function displaysdcases(){
        $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        
          $myTable->startRow();
-         $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
          $myTable->addCell($sessCard['surname'], "15%", null, "left","widelink");
-         $myTable->addCell($sessCard['sdcase'], "15%", null, "left","widelink");
+         $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
+         $myTable->addCell('Yes', "15%", null, "left","widelink");
+//         $myTable->addCell($sessCard['sdcase'], "15%", null, "left","widelink");
          $myTable->endRow();
         
    }  
@@ -83,7 +84,7 @@ function entryQualification(){
      *create table to display all sd cases results
      */
      
-     $results = $this->objstudcard->getallstudinfo();
+     $results = $this->objstudcard->getstudqualify();
      
      
     
@@ -115,8 +116,8 @@ function entryQualification(){
          $myTable->startRow();
          $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
          $myTable->addCell($sessCard['surname'], "15%", null, "left","widelink");
-         $myTable->addCell($sessCard['exemption'], "15%", null, "left","widelink");
-         $myTable->addCell($sessCard['relevantsubject'], "15%", null, "left","widelink");
+         $myTable->addCell('Yes', "15%", null, "left","widelink");
+         $myTable->addCell('Yes', "15%", null, "left","widelink");
          $myTable->endRow();
         
    }  

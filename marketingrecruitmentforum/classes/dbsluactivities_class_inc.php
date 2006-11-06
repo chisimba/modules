@@ -41,7 +41,8 @@ class dbsluactivities extends dbTable{
  //select all informatio from the stud card table
  public function getallsluactivity()
  {
-      $sluresults  = $this->getAll();
+      $stmt = "select distinct(activity),date,schoolname,area,province from tbl_sluactivities order by date,activity";
+      $sluresults  = $this->getArray($stmt);
       return  $sluresults;
  } 
 /*------------------------------------------------------------------------------*/
@@ -54,7 +55,7 @@ class dbsluactivities extends dbTable{
           Where date between $this->getParam(date1) and $this->getParam(date2);
     */
       
-      $stmt = "select date,activity from tbl_sluactivities where date between '$begindate' and '$enddate'";
+      $stmt = "select distinct(activity),date from tbl_sluactivities where date between '$begindate' and '$enddate' order by date,activity";
       $activitydate  = $this->getArray($stmt);
       return  $activitydate;
   }   
@@ -62,24 +63,25 @@ class dbsluactivities extends dbTable{
 //display all activities by type
   public function getactivitytype()
   {   //use filter and specify type
-      $filter = 'order by activity';
-      $type  = $this->getAll($filter);
+  
+      $stmt = "select distinct(activity) from tbl_sluactivities order by activity";
+      $type  = $this->getArray($stmt);
       return  $type;
   }   
 /*------------------------------------------------------------------------------*/
 //display all activities by province
   public function getactivityprovince()
   {   //use filter and specify province
-      $filter = 'order by province';
-      $province  = $this->getAll($filter);
+      $stmt = "select distinct(activity),province from tbl_sluactivities order by province";
+      $province  = $this->getArray($stmt);
       return  $province;
   }   
 /*------------------------------------------------------------------------------*/
 //display all activities by area
   public function getactivityarea()
   {   //use filter and specify area
-      $filter = 'order by area';
-      $area  = $this->getAll($filter);
+      $stmt = "select distinct(activity),area from tbl_sluactivities order by area";
+      $area  = $this->getArray($stmt);
       return  $area;
     
   }   
@@ -88,7 +90,7 @@ class dbsluactivities extends dbTable{
   public function getactivityschool($useToPopTbl)
   {    
        //use filter and specify school
-      $stmt = "select activity,schoolname from tbl_sluactivities where schoolname = '$useToPopTbl'";
+      $stmt = "select distinct(activity),schoolname from tbl_sluactivities where schoolname = '$useToPopTbl' order by schoolname";
       $school  = $this->getArray($stmt);
       return  $school;
     

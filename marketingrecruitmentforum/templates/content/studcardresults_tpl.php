@@ -77,8 +77,8 @@
     $Studcardinfo->addTab('studschool', 'Students From a Certain School','<b>'.'Please select a school to search by'.'</b>' . ' ' .$schoollist->show() . ' <br />'. '<br />' . $schoolresults);
     $Studcardinfo->addTab('studexemption', 'Students who Qualify For an Exemption',$exemption);
     $Studcardinfo->addTab('relsub', 'Students with relevant subjects',$relsubject);
-    $Studcardinfo->addTab('studfac', 'Students By Faculty      ',$faculty);
-    $Studcardinfo->addTab('studcourse', 'Students By Course   ',$course);
+    $Studcardinfo->addTab('studfac', 'Students By Faculty',$faculty);
+    $Studcardinfo->addTab('studcourse', 'Students By Course' ,$course);
     $Studcardinfo->addTab('studsdcase', 'All SD Cases',$sdcase);
     $Studcardinfo->addTab('studarea', 'Students By Area',$area);
     

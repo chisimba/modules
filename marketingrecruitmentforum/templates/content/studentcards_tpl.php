@@ -49,7 +49,10 @@
        $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
        $this->objMainheading->type=1;
        $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_studentcardinterface','marketingrecruitmentforum');
-
+      
+       $this->objheading =& $this->newObject('htmlheading','htmlelements');
+       $this->objheading->type=5;
+       $this->objheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_warning','marketingrecruitmentforum');         
 /*------------------------------------------------------------------------------*/       
 
       /**
@@ -57,6 +60,7 @@
        */  
        
        //call session that contains the data for of student card information
+       //therefore displays data entered when user clicks edit before submitting
        $sessionstudcard = $this->getSession('studentdata');
        
         $studcarddate = '';
@@ -67,10 +71,8 @@
         $studpostalcode = '';
         $studtelnumber = '';
         $studtelcode = '';
-        //$studexemption  = '';
         $studcourse  = '';
-        //$studsubject =  ''; 
-        //$studsdcase = '';
+        
         
        if(!empty($sessionstudcard)){         
               while(list($subkey,$subval) = each($sessionstudcard))
@@ -125,19 +127,38 @@
        }
        
 /*--------------------------------------------------------------------------------------------*/       
-      
-      
-      /*$postcodes  = new dropdown('postcodes');
-      $this->objschoolname->readpostcodes();
-      $postvalues = $this->getSession('postcodevals');
-      var_dump($postvalues);
-      die;
-      sort($postvalues);
-      
-      foreach($postvalues as $sesspost){
-          
-          $postcodes->addOption($sesspost,$sesspost);
-      }*/
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+	//$objForm = new form('faculty_form',$this->uri(array('action'=>'selectfaculty')));      //creates a new form to place faculty vals on
+	
+//	$objDropdown = new dropdown('facultylist');    //create dropdown
+//	$objDropdown->extra = 'onchange="document.studentcard.submit();"';
+//	$objDropdown->addFromDB($this->objFaculties->getAll(), 'name', 'code', $faculty);      //call function in 'dbacademicprogrammefaculties','academicprogramme'
+//	if (!is_null($this->getSession('faculty',NULL))) {
+//		$objDropdown->setSelected($this->getSession('faculty',NULL));
+//	}
+//	$objButton = new button("submit_button", 'Go');
+//	$objButton->setToSubmit();
+//	$objForm->addToForm('<tr><td>Faculty</td><td>'.$objDropdown->show().'&nbsp;'.$objButton->show().'</td></tr>');
+//	echo $objForm->show();
+//}
+//
+/*if (!is_null($this->getSession('faculty',NULL))) {
+	$facultyCode = $this->getSession('faculty',NULL);
+	$objForm = new form('course_form',$this->uri(array('action'=>'selectcourse')));
+	$objDropdown = new dropdown('course');
+	$objDropdown->extra = 'onchange="document.forms[\'course_form\'].submit();"';
+	$objDropdown->addFromDB($this->objCourses->getAll("WHERE faculty_code='$facultyCode'"), 'name', 'code', $course);
+	if (!is_null($this->getSession('course',NULL))) {
+		$objDropdown->setSelected($this->getSession('course',NULL));
+	}
+	$objButton = new button("submit_button", 'Go');
+	$objButton->setToSubmit();
+	$objForm->addToForm('<tr><td>Course</td><td>'.$objDropdown->show().'&nbsp;'.$objButton->show().'</td></tr>');
+	echo $objForm->show();
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 /*--------------------------------------------------------------------------------------------*/
        /*$this->objtxtschoolname = $this->newObject('textinput','htmlelements');    //change to dropdown populate with info in link          
        $this->objtxtschoolname->name   = "txtschoolname";
@@ -195,12 +216,11 @@
         /**
          *create all radio groups
          */
-        //$selected = ($selected == 'No') ? '0' : '1';
-			//$objRadio->setSelected($selected); 
+         
         $objexemption = new radio('exemptionqualification');
-        $objexemption->addOption('y','Yes');
-        $objexemption->addOption('n','No');
-        $objexemption->setSelected('y');
+        $objexemption->addOption('1','Yes');
+        $objexemption->addOption('0','No');
+        $objexemption->setSelected('1');
         
         $objsubject = new radio('relevantsubject');
         $objsubject->addOption('1','Yes');
@@ -219,9 +239,22 @@
          
          $this->objButtonNext  = new button('next', $str1);
          $this->objButtonNext->setToSubmit();
-         
-         $this->objButtonCourse  = new button('course', $str1);
-         $this->objButtonCourse->setToSubmit();
+         $strerror = 'Please enter a address';
+         /**
+          *create validation for required fields
+          */
+          //echo $strerror;
+          /*$onClick = 'var lstschoolname  = document.studentcard.schoollist.value;
+                      var addressinfo     = document.studentcard.postaladdress.value;
+                      var postcode   = document.studentcard.txtpostalcode.value;
+                      var surname     = document.studentcard.txtsurname.value
+                      var name        = document.studentcard.txtname.value;
+                     
+                     if(empty(surname)){
+                          
+                          alert("please enter a name");
+                     }';     //dnt knw if work                    
+      $this->objButtonNext->extra = sprintf('onClick ="javascript: %s"', $onClick );*/  
 /*------------------------------------------------------------------------------*/
         
         /**
@@ -250,7 +283,7 @@
          $myTable=$this->newObject('htmltable','htmlelements');
          $myTable->width='80%';
          $myTable->border='0';
-         $myTable->cellspacing='5';
+         $myTable->cellspacing='6';
          $myTable->cellpadding='10';
            
          $myTable->startRow();
@@ -260,63 +293,64 @@
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($schoolname));
-         $myTable->addCell($schoollist->show());
+         $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.$schoollist->show());
          $myTable->endRow();
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($surname));
-         $myTable->addCell($this->objtxtsurname->show());
+         $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.$this->objtxtsurname->show());
          $myTable->endRow();
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($name));
-         $myTable->addCell($this->objtxtname->show());
+         $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.$this->objtxtname->show());
          $myTable->endRow();
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($postaladdress));
-         $myTable->addCell($this->objPostaladdress->show());
+         $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.$this->objPostaladdress->show());
          $myTable->endRow();
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($postalcode));
-         $myTable->addCell($this->objtxtpostalcode->show())  ;
+         $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.$this->objtxtpostalcode->show())  ;
          $myTable->endRow();
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($telnumber));
-         $myTable->addCell($this->objtxttelnumber->show());
+         $myTable->addCell("&nbsp"."&nbsp".$this->objtxttelnumber->show());
          $myTable->endRow();   
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($telcode));
-         $myTable->addCell($this->objtxttelcode->show());
+         $myTable->addCell("&nbsp"."&nbsp".$this->objtxttelcode->show());
          $myTable->endRow();
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($exemption));
-         $myTable->addCell($objexemption->show());
+         $myTable->addCell("&nbsp"."&nbsp".$objexemption->show());
          $myTable->endRow();
          
          $myTable->startRow();
          $myTable->addCell("Select a faculty");
-         $myTable->addCell($facultylist->show());
+         $myTable->addCell("&nbsp"."&nbsp".$facultylist->show());
         // $myTable->addCell($this->objButtonCourse->show());
          $myTable->endRow();
-         
-         $myTable->startRow();
+
+
+       /*  $myTable->startRow();
          $myTable->addCell(ucfirst($course));
-         $myTable->addCell($this->objtxtcourse->show());
-         $myTable->endRow();
+         $myTable->addCell("&nbsp"."&nbsp".$objDropdown->show());
+         $myTable->endRow();*/
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($subject));
-         $myTable->addCell($objsubject->show());
+         $myTable->addCell("&nbsp"."&nbsp".$this->objtxtcourse->show());
          $myTable->endRow();
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($sdcase));
-         $myTable->addCell($objsdcase->show());
+         $myTable->addCell("&nbsp"."&nbsp".$objsdcase->show());
          $myTable->endRow();
          
          $myTable->startRow();
@@ -331,7 +365,11 @@
           
           $objForm = new form('studentcard',$this->uri(array('action'=>'showsluactivities')));
           $objForm->displayType = 3;
-          $objForm->addToForm($this->objMainheading->show() . '<br>' .$myTable->show());
+          $objForm->addToForm($this->objMainheading->show() . '<br />'."<span class=error>".'<i>'.$this->objheading->show().'</i>'."</span>".'<br />' .$myTable->show());
+          $objForm->addRule('txtsurname','Please enter surname','required');
+          $objForm->addRule('txtname','Please enter name','required');
+          $objForm->addRule('postaladdress','Please enter address','required');
+          $objForm->addRule('txtpostalcode','Please enter postal code','required');
           
 /*------------------------------------------------------------------------------*/
           

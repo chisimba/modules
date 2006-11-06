@@ -68,7 +68,7 @@
     $schoolinfo->tabName = 'ActivityInfo';
  
     $schoolinfo->addTab('schoollist', 'All Schools',$results);
-    $schoolinfo->addTab('schoolname', 'School By Name','<br />' .'Select a school to search by'. ' '. $searchlist->show() . '<br />' . '<br />' .$schoolname);
+    $schoolinfo->addTab('schoolname', 'School By Name','<br />' .'<b>'.'Select a school to search by'.'</b>'. ' '. $searchlist->show() . '<br />' . '<br />' .$schoolname);
     $schoolinfo->addTab('areaschool', 'Schools By Area',$area);
     $schoolinfo->addTab('schoolprovince', 'Schools By Province',$province);
     //$Studcardinfo->addTab('area', 'Activities by area',$area);
@@ -83,7 +83,7 @@
    // $val  = $this->objsearchinfo->schoolsearch();
    $objForm = new form('searchsschool',$this->uri(array('action'=>'showschoolbyname')));
    $objForm->displayType = 3;
-   $objForm->addToForm($this->objMainheading->show() . '<br />' . '<br />'. $instruction .'<br />' . '<br />' . $schoolinfo->show() . '<br />' . '<br />');
+   $objForm->addToForm("<center>".$this->objMainheading->show() . '<br />' . '<br />'.'<b>'.'<i>'. $instruction.'</i>'.'</b>'."</center>" .'<br />' . '<br />' . $schoolinfo->show() . '<br />' . '<br />');
     
    echo $objForm->show();
 /*------------------------------------------------------------------------------*/   

@@ -39,15 +39,15 @@ class dbschoollist extends dbTable{
  //select all informatio from the schoollist table
  public function getallsschools()
  {
-      $filter = 'order by schoolname';
-      $results  = $this->getAll($filter);
+      $filter = 'select distinct(schoolname) from tbl_schoollist order by schoolname';
+      $results  = $this->getArray($filter);
       return  $results;
  } 
 /*------------------------------------------------------------------------------*/
 //display all schools with a certain name OR grouped OR order by name -- check
   public function getschoolbyname($namevalue)
   {
-      $stmt = "select * from tbl_schoollist where schoolname = '$namevalue'";
+      $stmt = "select distinct(schoolname),schooladdress,telnumber,faxnumber,email,principal,guidanceteacher from tbl_schoollist where schoolname = '$namevalue'";
       $name = $this->getArray($stmt);
       return  $name;
   }   
@@ -55,7 +55,7 @@ class dbschoollist extends dbTable{
 //display all schools by area
   public function getschoolbyarea()
   {   //use filter and specify area
-      $stmt = "select sch.schoolname,slu.area area from tbl_schoollist sch, tbl_sluactivities slu where sch.schoolname = slu.schoolname order by area";
+      $stmt = "select distinct(sch.schoolname),slu.area area from tbl_schoollist sch, tbl_sluactivities slu where sch.schoolname = slu.schoolname order by area";
       $area  = $this->getArray($stmt);;
       return  $area;
   }   
@@ -63,7 +63,7 @@ class dbschoollist extends dbTable{
 //display all by province
   public function getschoolbyprovince()
   {   //use filter and specify province
-      $stmt = "select sch.schoolname,slu.province prov from tbl_schoollist sch, tbl_sluactivities slu where sch.schoolname = slu.schoolname order by slu.province";
+      $stmt = "select distinct(sch.schoolname),slu.province prov from tbl_schoollist sch, tbl_sluactivities slu where sch.schoolname = slu.schoolname order by slu.province";
       $province  = $this->getArray($stmt);
       return  $province;
   }   

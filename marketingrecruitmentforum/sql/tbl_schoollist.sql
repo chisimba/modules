@@ -7,67 +7,49 @@ $options = array('comment' => 'The table schoollist is managed by the marketingr
 
 // Fields
 $fields = array(
-	'id' => array(
-    'type' => 'text',
-    'length' => 32,
+	'id'            => array(
+    'type'        => 'text',
+    'length'      => 32,
     'notnull'     => 1
     ),
-  'createdby'  => array(
-     'type'  =>  'text',
-     'length'=>  32,
-     'notnull'     => 1
+  'createdby'     => array(
+     'type'       =>  'text',
+     'length'     =>  32,
+     'notnull'    => 1
     ),
-  'datecreated' =>  array(
-      'type'  =>  'date',
-      'notnull'     => 1
+  'datecreated'   =>  array(
+      'type'      =>  'date',
+      'notnull'   => 1
     ),
-  'modifiedby'  =>  array(
-      'type'    =>  'text',
-      'length'  =>  32,
-      'notnull'     => 1
-    ),
-   'datemodified' =>  array(
-    'type'        =>  'date',
-    'notnull'     => 1
-    ),
-    'updated'     =>  array(
-    'type'        =>  'date',
-    'notnull'     => 1
-    ),
-    'schoolname'       =>  array(
-    'type'        =>  'text',
+   'schoolname'   =>  array(
+      'type'      =>  'text',
     'length'      =>  255,
     'notnull'     => 1
    ),
-   'schooladdress'   => array(
-    'type'         => 'text',
-    'length'       => 255,
+   'schooladdress'=> array(
+    'type'        => 'text',
+    'length'      => 255,
     'notnull'     => 1
    ),
-   'telnumber'      => array(
-    'type'         => 'text',
+   'telnumber'    => array(
+    'type'        => 'text',
     'notnull'     => 1
    ),
-   'faxnumber'         =>  array(
+   'faxnumber'    =>  array(
     'type'        =>  'text',
    ),
-   'email' =>  array(
-   'type'      =>  'text',
+   'email'        =>  array(
+   'type'         =>  'text',
    ),
-  'principal'  =>  array(
-  'type'        => 'text',
-  'length'     => 32,
-  'notnull'    => 1
+  'principal'     =>  array(
+  'type'          => 'text',
+  'length'        => 45,
+  'notnull'       => 1
   ),
   'guidanceteacher'     =>  array(
-  'type'        =>  'text',
-  'length'      =>  255,
-  'notnull'    => 1
+  'type'          =>  'text',
+  'length'        =>  45,
+  'notnull'       => 1
   ),
-  'fk_id_activity'  =>  array(
-  'type'            =>  'text',
-  'varchar'         =>  32,
-  'notnull'    => 1
-  )
   );
 ?>

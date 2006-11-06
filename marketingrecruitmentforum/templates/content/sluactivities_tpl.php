@@ -61,7 +61,23 @@
        }
        
 /*--------------------------------------------------------------------------------------------*/       
- 
+/**
+ *create a dropdown list with all area values
+ */
+    //$this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
+    $this->objschoolname->readareadata();
+       
+    $arealist = new dropdown('area');
+    $areavalues = $this->getSession('area');
+  // var_dump($areavalues);
+ //   die;
+    sort($areavalues);
+    
+    foreach($areavalues as $sessArea){
+        
+          $arealist->addOption($sessArea,$sessArea);
+    } 
+/*--------------------------------------------------------------------------------------------*/ 
 /**
   *create all date selection elements
   */
@@ -146,7 +162,7 @@
   
   $myTable->startRow();
   $myTable->addCell(ucfirst($area));
-  $myTable->addCell($this->objareadropdown->show());
+  $myTable->addCell($arealist->show());
   $myTable->endRow();
   
   $myTable->startRow();

@@ -20,36 +20,24 @@ $fields = array(
       'type'    =>  'date',
       'notnull' => 1
     ),
-  'modifiedby'  =>  array(
-  'type'        =>  'text',
-  'length'      =>  32,
-  'notnull'     => 1
-    ),
-   'datemodified' =>  array(
-    'type'        =>  'date',
-    'notnull'     => 1
-    ),
-    'updated'     =>  array(
-    'type'        =>  'date',
-    'notnull'     => 1
-    ),
    'date'        =>  array(
    'type'        =>  'date',
    'notnull'     =>   1
    ),
    'surname'    => array(
     'type'      => 'text',
-    'length'    => 255,
+    'length'    => 45,
     'notnull'   => 1
    ),
    'name'      => array(
     'type'     => 'text',
-    'length'   => 255,
+    'length'   => 45,
     'notnull'  => 1
    ),
    'schoolname' =>array(
    'type'       =>  'text',
-   'length'     =>  255
+   'length'     =>  255,
+   'notnull'   => 1
    ),
    'postaddress'  =>  array(
     'type'        =>  'text',
@@ -58,7 +46,7 @@ $fields = array(
    ),
    'postcode' =>  array(
       'type'      =>  'text',
-      'length'       => 255,
+      'length'       => 4,
       'notnull'     => 1
   ),
   'telnumber'  =>  array(
@@ -68,11 +56,10 @@ $fields = array(
   
   'telcode'     =>  array(
   'type'        =>  'text',
-  'length'      =>  32
+  'length'      =>  3
   ),
   'exemption' =>  array(
-  'type' =>  'text',
-  'length'          =>  1
+  'type'      =>  'boolean',
   ),
   'faculty' =>  array(
   'type'        =>  'text',
@@ -85,12 +72,10 @@ $fields = array(
   'notnull'    => 1
   ),
   'relevantsubject' =>array(
-  'type'            => 'text',
-  'length'          =>  1
+  'type'            => 'boolean',
   ),
   'sdcase'      =>  array(
-  'type'        =>  'text',
-  'length'          =>  1
+  'type'        =>  'boolean',
   ),
   );
 ?>

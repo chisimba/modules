@@ -19,7 +19,7 @@
       /**
         *define all language items
         */
-        $searchmsg = $this->objLanguage->languageText('mod_marketingrecruitmentforum_searchinstruction','marketingrecruitmentforum');
+        $searchmsg = $this->objLanguage->languageText('mod_marketingrecruitmentforum_searchinstruction1','marketingrecruitmentforum');
         
 
 /*---------------------------------------------------------------------------------------------------*/   
@@ -61,11 +61,12 @@
     $facultyinfo = & $this->newObject('tabbox','marketingrecruitmentforum');
     $facultyinfo->tabName = 'OutputInfo';
     
-    $facultyinfo->addTab('faculty', 'All students entered for faculty',$facultyentered . '<br />');
-    $facultyinfo->addTab('exemption', 'All students with exemption',$exemptionfaculty. '<br />');
-    $facultyinfo->addTab('relsubjects', 'All with relevant subjects',$facrelsubj. '<br />');
-    $facultyinfo->addTab('course', 'All students per faculty course',$coursefaculty. '<br />');
-    $facultyinfo->addTab('sdcase', 'All SD Cases per faculty',$sdcasefac. '<br />');
+    
+    $facultyinfo->addTab('faculty', 'All Students Entered For Faculty',$facultyentered . '<br />');
+    $facultyinfo->addTab('exemption', 'All Students With Exemption',$exemptionfaculty. '<br />');
+    $facultyinfo->addTab('relsubjects', 'All With Relevant Subjects',$facrelsubj. '<br />');
+    $facultyinfo->addTab('course', 'All Students Per Faculty Course',$coursefaculty. '<br />');
+    $facultyinfo->addTab('sdcase', 'All SD Cases Per Faculty',$sdcasefac. '<br />');
 /*---------------------------------------------------------------------------------------------------*/    
  
   /**
@@ -74,7 +75,7 @@
     
    $objForm = new form('searchsluresults',$this->uri(array('action'=>'studcardfaculty')));
    $objForm->displayType = 3;
-   $objForm->addToForm("<center>".$this->objMainheading->show(). '<br />' . '<br />'. '<b>'.'<i>' .$searchmsg . ' ' .'</i>'.'</b>'. $faculty->show()."</center>" . '<br />' . '<br />' . $facultyinfo->show());
+   $objForm->addToForm("<center>".$this->objMainheading->show(). '<br />' . '<br />'. '<b>' .$searchmsg . "&nbsp" .'</b>'. $faculty->show()."</center>" . '<br />' . '<br />' .$facultyinfo->show());
 
 /*---------------------------------------------------------------------------------------------------*/ 
       

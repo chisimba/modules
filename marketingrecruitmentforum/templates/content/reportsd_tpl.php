@@ -13,14 +13,14 @@
        $this->objreport  = & $this->newObject('reportinfo','marketingrecruitmentforum');
        
        $total = $this->objstudcard->allsdcases();
-       $totcount  = '0';
+       $totcount  = 0;
        //get  the total of all sd cases
        foreach($total as $sessCount){
           
-          $totcount[] = $totcount + $sessCount['sdcase'];
+          $totcount  = $sessCount['sdresult'];
+          
        }
-       $count = count($totcount);
-       $displaytot  = ':' . $count;
+       $displaytot  = ':' . $totcount;
 /*------------------------------------------------------------------------------*/       
       /**
         *create form heading
@@ -31,11 +31,11 @@
         
         $this->objTotheading =& $this->newObject('htmlheading','htmlelements');
         $this->objTotheading->type=3;
-        $this->objTotheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_totalsd','marketingrecruitmentforum') .$displaytot ;
+        $this->objTotheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_totalsd1','marketingrecruitmentforum') .$displaytot ;
         
         $this->objdate =& $this->newObject('htmlheading','htmlelements');
         $this->objdate->type=3;
-        $this->objdate->str=$objLanguage->languageText('word_date'). ':' .date('Y-m-d');
+        $this->objdate->str=$objLanguage->languageText('word_date1'). ':' .date('Y-m-d');
 /*------------------------------------------------------------------------------*/
        
       /**

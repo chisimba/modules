@@ -13,13 +13,11 @@
        $this->objreport  = & $this->newObject('reportinfo','marketingrecruitmentforum');
        
        $total = $this->objstudcard->allstudq();
-       //$fac = $this->objstudcard->facultyinterest();
        $totcount  = 0;
        //get  the total of all sd cases
        foreach($total as $sessCount){
           $tot  = $sessCount['entry'];
        }
-       //$count = count($totcount);
        $displaytot  = ':' . $tot;
        
        //foreach($fac as $sessfac){
@@ -31,7 +29,7 @@
         */
         $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
         $this->objMainheading->type=1;
-        $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_entryqualify','marketingrecruitmentforum');
+        $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_entryqualify1','marketingrecruitmentforum');
         
         $this->objheading =& $this->newObject('htmlheading','htmlelements');
         $this->objheading->type=3;
@@ -39,15 +37,15 @@
         
         $this->objtotal =& $this->newObject('htmlheading','htmlelements');
         $this->objtotal->type=3;
-        $this->objtotal->str=$objLanguage->languageText('mod_marketingrecruitmentforum_entrytotal','marketingrecruitmentforum') .$displaytot ;
+        $this->objtotal->str=$objLanguage->languageText('mod_marketingrecruitmentforum_entrytotal1','marketingrecruitmentforum') .$displaytot ;
         
         $this->objdate =& $this->newObject('htmlheading','htmlelements');
         $this->objdate->type=3;
-        $this->objdate->str=$objLanguage->languageText('word_date'). ':' .date('Y-m-d');
+        $this->objdate->str=$objLanguage->languageText('word_date1'). ':' .date('Y-m-d');
 /*------------------------------------------------------------------------------*/
  
       /**
-       *display all students that are sd cases
+       *display all students that have relevant subject and exemption cases
        */             
        $results  =  $this->objreport->entryQualification();
 /*------------------------------------------------------------------------------*/

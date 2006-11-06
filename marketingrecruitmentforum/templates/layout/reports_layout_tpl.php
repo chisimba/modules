@@ -2,7 +2,7 @@
 //template used to set the layout of all report info
 
    $EntryQualify = array();      
-   $EntryQualify[] = array('params' => array("action" => "totalentry"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Qualify for entry');
+   $EntryQualify[] = array('params' => array("action" => "totalentry"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Students Qualifyinf for entry');
    $EntryQualify[] = array('params' => array("action" => "totalsd"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Total of all SD Cases');
    $EntryQualify[] = array('params' => array("action" => "reportdropdown"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Total Students interested in a faculty');
    //$EntryQualify[] = array('params' => array("action" => "showreportinfo"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'View Reports');

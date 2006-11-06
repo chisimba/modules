@@ -21,19 +21,6 @@ $fields = array(
       'type'  =>  'date',
       'notnull'     => 1
     ),
-  'modifiedby'  =>  array(
-      'type'    =>  'text',
-      'length'  =>  32,
-      'notnull'     => 1
-    ),
-   'datemodified' =>  array(
-    'type'        =>  'date',
-    'notnull'     => 1
-    ),
-    'updated'     =>  array(
-    'type'        =>  'date',
-    'notnull'     => 1
-    ),
    'date'         =>  array(                                        
    'type'        =>  'date',
     'notnull'     => 1
@@ -44,19 +31,16 @@ $fields = array(
    ),
    'schoolname'   => array(
     'type'         => 'text',
-    'length'       => 255
+    'length'       => 255,
+    'notnull'     => 1
    ),
    'area'      => array(
     'type'         => 'text',
     'notnull'     => 1
    ),
-   'province'         =>  array(
+   'province'     =>  array(
     'type'        =>  'text',
     'notnull'     => 1
-   ),
-   'fk_id_school' =>  array(
-   'type'         =>  'text',
-   'length'       =>  32
    ),
    );
 ?>

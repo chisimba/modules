@@ -13,11 +13,19 @@
  $this->objheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_selectaddy','marketingrecruitmentforum');
  
 /*------------------------------------------------------------------------------*/
+  /**
+   *create a checkbox for selection when sending a letter
+   */
+   $this->loadClass('checkbox','htmlelements');
+   $objElement = new checkbox('post');  // this will checked
+   $objElement->extra = ' onClick="document.addressgen.submit()"';
+   $check = $objElement->show();     
+/*------------------------------------------------------------------------------*/
  /**
   * create table to display all addy's in
   */   
       $this->objstudcard = & $this->getObject('dbstudentcard','marketingrecruitmentforum');
-   $results = $this->objstudcard->getallstudaddy();
+      $results = $this->objstudcard->getallstudaddy();
      
      
     
@@ -37,6 +45,7 @@
         $myTable->addHeaderCell('Surname', null,'top','left','header');
         $myTable->addHeaderCell('Name', null,'top','left','header');
         $myTable->addHeaderCell('Address Details', null,'top','left','header');
+        $myTable->addHeaderCell('Post Letter', null,'top','left','header');
         $myTable->endHeaderRow();
      
         $rowcount = '0';
@@ -49,14 +58,23 @@
        $myTable->addCell($sessCard['surname'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['postaddress'],"15%", null, "left","widelink");
+       $myTable->addCell($check,"15%", null, "left","widelink");
        $myTable->endRow();
         
    }
+      $this->setSession('results',$results);
+   
+/*------------------------------------------------------------------------------*/
+   $objForm = new form('addressgen',$this->uri(array('action'=>'postletter')));
+   $objForm->displayType = 3;
+   $objForm->addToForm($myTable->show());
+    
+   
 /*------------------------------------------------------------------------------*/
   /**
    *display all info on screen
    */
    echo   $this->objMainheading->show(); 
    echo   '<br />'  . '<br />' .$this->objheading->show(); 
-   echo   '<br />'  . '<br />'  . $myTable->show();  
+   echo   '<br />'  . '<br />'  . $objForm->show();;  
 ?>

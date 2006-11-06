@@ -52,6 +52,14 @@ class dbstudentcard extends dbTable{
       return  $studresults;
  } 
 /*------------------------------------------------------------------------------*/
+
+public function getstudqualify()
+ {
+      $filter = 'where relevantsubject = 1 and exemption = 1';
+      $studresults  = $this->getAll($filter);
+      return  $studresults;
+ } 
+/*------------------------------------------------------------------------------*/
   //get all students from a certain school
  public function getstudschool($useToPopTbl)
  {    
@@ -63,17 +71,17 @@ class dbstudentcard extends dbTable{
  public function allstudsexemption(){
       //get all students that qualify for an exemption
       // 1 = true 
-      $filter1 = 'order by schoolname,surname';
+     // $filter1 = 'order by schoolname,surname';
       
-      $filter = "where exemption = 'y'";
-      $exemption = $this->getAll($filter1,$filter);
+      $filter = "where exemption = '1' order by schoolname,surname";
+      $exemption = $this->getAll($filter);
       return  $exemption;
  }  
 /*------------------------------------------------------------------------------*/
  public function allrelsubject(){
     //display all students with relevant subject 
     // 1 = true 
-    $filter = 'where relevantsubject = 1'; 
+    $filter = "where relevantsubject = 1"; 
     $relevansub = $this->getAll($filter);
     return  $relevansub;
  }
@@ -99,8 +107,15 @@ class dbstudentcard extends dbTable{
 /*------------------------------------------------------------------------------*/
   public function allsdcases(){
     
-    $filter = 'where sdcase = 1';
-    $totalsd  = $this->getAll($filter);
+    $stmt = "Select count(id) sdresult from tbl_studcard where sdcase = 1 and exemption = 0";
+    $totalsd  = $this->getArray($stmt);
+    return  $totalsd;
+}  
+/*------------------------------------------------------------------------------*/
+  public function sdcases(){
+    
+    $stmt = "Select surname,name,schoolname,sdcase from tbl_studcard where sdcase = 1 and exemption = 0 order by surname";
+    $totalsd  = $this->getArray($stmt);
     return  $totalsd;
 }  
 /*------------------------------------------------------------------------------*/ 
@@ -113,7 +128,7 @@ class dbstudentcard extends dbTable{
 /*------------------------------------------------------------------------------*/
   public function allstudq(){
     
-    $stmt = "Select count(*) entry from tbl_studcard where exemption = 'y' AND relevantsubject = 1";
+    $stmt = "Select count(id) entry from tbl_studcard where exemption = 1 AND relevantsubject = 1";
     $val = $this->getArray($stmt);
     return $val;
   }  
@@ -129,7 +144,7 @@ class dbstudentcard extends dbTable{
 /*------------------------------------------------------------------------------*/ 
   public function facultyexempted($facultynameval){
   //get all students that entered for the faculty and has an exemption
-    $stmt = "Select surname, name,schoolname,exemption,faculty from tbl_studcard where exemption = 'y' and faculty = '$facultynameval'";
+    $stmt = "Select surname, name,schoolname,exemption,faculty from tbl_studcard where exemption = 1 and faculty = '$facultynameval'";
     $facexemption = $this->getArray($stmt);
     return $facexemption;
   }

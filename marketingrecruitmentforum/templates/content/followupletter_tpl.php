@@ -17,12 +17,12 @@
      $this->objstudcard = & $this->getObject('dbstudentcard','marketingrecruitmentforum');
      $test  = $this->objstudcard->getstudInfo();
      
-     foreach($test as $sessTest)
+     /*foreach($test as $sessTest)
      {
         $name = $sessTest['name'];
         $surname  = $sessTest['surname'];
         $addy = $sessTest['postaddress'];
-     }         
+     }  */       
      $string  = $name . ' '. $surname;
 /*------------------------------------------------------------------------------------------------------------------------------*/
     /**
