@@ -426,7 +426,7 @@ class blogops extends object
 	{
 		$qcatform = new form('qcatadd', $this->uri(array('action' => 'catadd', 'mode' => 'quickadd')));
 
-		$qcatform->addRule('catname','You have not entered a category!','required');
+		$qcatform->addRule('catname',$this->objLanguage->languageText("mod_blog_phrase_titlereq", "blog"),'required');
 		$qcatname = new textinput('catname');
 		$qcatname->size = 15;
 		$qcatform->addToForm($qcatname->show());
@@ -558,7 +558,7 @@ class blogops extends object
 		'action' => 'catadd'
 		)));
 
-		$catform->addRule('catname','You have not entered a category!','required');
+		$catform->addRule('catname',$this->objLanguage->languageText("mod_blog_phrase_titlereq", "blog"),'required');
 		$cfieldset = $this->getObject('fieldset', 'htmlelements');
 		$cfieldset->setLegend($this->objLanguage->languageText('mod_blog_catdetails', 'blog'));
 		$catadd = $this->newObject('htmltable', 'htmlelements');
@@ -981,7 +981,7 @@ class blogops extends object
 		$qpform = new form('qpadd', $this->uri(array('action' => 'postadd', 'mode' => 'quickadd')));
 
 
-		$qpform->addRule('postcontent','You have not entered any content!','required');
+		$qpform->addRule('postcontent',$this->objLanguage->languageText("mod_blog_phrase_pcontreq", "blog"),'required');
 
 		$qptitletxt = $this->objLanguage->languageText("mod_blog_posttitle", "blog");
 		$qptitle = new textinput('posttitle');
