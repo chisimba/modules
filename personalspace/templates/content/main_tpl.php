@@ -185,7 +185,7 @@
     if ($homepage) {
         // Header
         $objHeading = $this->getObject('htmlheading', 'htmlelements');
-        $objHeading->str = $objLanguage->languageText('mod_homepage_name', 'personalspace');
+        $objHeading->str = $objLanguage->languageText('mod_personalspace_homepage', 'personalspace');
         echo $objHeading->show();
 
         $objHomepage =& $this->getObject('dbhomepages', 'homepage');
