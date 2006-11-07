@@ -37,6 +37,8 @@ class block_rightmenu extends object
         $collections = $this->objLanguage->languageText('word_collections');
         $authors = $this->objLanguage->languageText('word_authors');
         $titles = $this->objLanguage->languageText('word_titles');
+        $stats = $this->objLanguage->languageText('phrase_viewstatistics');
+        $rss = $this->objLanguage->languageText('word_rss2');
         
 	    // Browse menu items
         $list = '<b>'.$browse.':</b><br /><ul>';
@@ -55,11 +57,16 @@ class block_rightmenu extends object
         
         $list .= '</ul>';
         
+        // Statistics page link
+		$objLink = new link($this->uri(array('action' => 'viewstats')));
+		$objLink->link = $stats;
+		$list .= '<p>'.$objLink->show().'</p>';
+
         // RSS link
 		$this->objIcon->setIcon('rss', 'gif', 'icons/filetypes');
 		$objLink = new link($this->uri(array('action' => 'rss')));
-		$objLink->link = $this->objLanguage->languageText('word_rss2');
-		$list .= $this->objIcon->show().' '.$objLink->show();
+		$objLink->link = $rss;
+		$list .= '<p>'.$this->objIcon->show().' '.$objLink->show().'</p>';
 
         return $list;
     }

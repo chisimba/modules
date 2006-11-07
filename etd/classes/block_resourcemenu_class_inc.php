@@ -21,6 +21,7 @@ class block_resourcemenu extends object
     public function init()
     {
         $this->objLanguage =& $this->getObject('language','language');
+        $this->dbStats =& $this->getObject('dbstatistics','etd');
         
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
@@ -37,6 +38,8 @@ class block_resourcemenu extends object
     */
     public function show()
 	{
+	    $resourceId = $this->getSession('resourceId');
+	    
 	    $lbPrint = $this->objLanguage->languageText('phrase_printfriendly');
         $lbEmail = $this->objLanguage->languageText('phrase_emailresource');
         $lbBack = $this->objLanguage->languageText('word_back');
@@ -73,6 +76,8 @@ class block_resourcemenu extends object
         $objForm->addToForm($btnEmail);
             
         $str .= $objForm->show();
+        
+        $str .= $this->dbStats->showResourceStats($resourceId);
         
 	    return $str;
     }

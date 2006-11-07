@@ -587,9 +587,9 @@ class viewBrowse extends object
         if( $valueSearchForLetter && $valueSearchForLetter !='listall' )
             $topText = $this->objLanguage->code2Txt('mod_etd_hdrSearchByLetter', 'etd',
                 array('TYPE'=>$setType, 'LETTER'=>$valueSearchForLetter));
-        if( $valueSearchFor )
-            $topText = $this->objLanguage->code2Txt('mod_etd_hdrSearchByString', 'etd', 
-                array('TYPE'=>$setType, 'STRING'=>$valueSearchFor));
+//        if( $valueSearchFor )
+//            $topText = $this->objLanguage->code2Txt('mod_etd_hdrSearchByString', 'etd', 
+//                array('TYPE'=>$setType, 'STRING'=>$valueSearchFor));
         $topHeading = $this->objHeading;
         $topHeading->type = 4;
         $topHeading->str = $topText;

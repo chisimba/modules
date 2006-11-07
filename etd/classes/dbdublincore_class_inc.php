@@ -31,7 +31,7 @@ class dbDublinCore extends object
     {
         $this->dbDublinCore =& $this->getObject('dublincore', 'dublincoremetadata');
         $this->dbThesis =& $this->getObject('dbthesis', 'etd');
-        $this->dbQualified =& $this->getObject('dbqualified', 'etd');
+//        $this->dbQualified =& $this->getObject('dbqualified', 'etd');
         $this->dcTable = $this->dbDublinCore->table;
         $this->thesisTable = $this->dbThesis->table;
 
@@ -64,7 +64,7 @@ class dbDublinCore extends object
     * @param array $xml The xml file as an array
     * @param string $submitId The submission to link to in the database
     * @return array The id of the data in the dublincore and extended qualified tables
-    */
+    *
     public function moveQualifiedXmlToDb($xml, $submitId)
     {
         $dcData = $xml['metadata']['dublincore'];

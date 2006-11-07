@@ -34,6 +34,7 @@ class etd extends controller
         $this->etdTools =& $this->getObject('etdtools', 'etd');
         $this->manage =& $this->getObject('management', 'etd');
         $this->config =& $this->getObject('configure', 'etd');
+        $this->dbStats =& $this->getObject('dbstatistics', 'etd');
         $this->dbThesis =& $this->getObject('dbthesis');
         $this->dbThesis->setSubmitType('etd');
         
@@ -109,6 +110,7 @@ class etd extends controller
             $this->unsetSession('keyManage');
         }
         */
+        $this->unsetSession('resourceId');
 
         switch($action){
             
@@ -122,6 +124,8 @@ class etd extends controller
 //                $files = $this->dbFiles->getFiles($etd['submitId']);
                 $this->setVarByRef('resource', $resource);
 //                $this->setVarByRef('files', $files);
+                $this->dbStats->recordVisit($metaId);
+                $this->setSession('resourceId', $metaId);
                 $rightSide = $this->objBlocks->showBlock('resourcemenu', 'etd');
                 $this->etdTools->setRightSide($rightSide);
                 return 'showetd_tpl.php';
@@ -591,6 +595,11 @@ class etd extends controller
 
             /* *** Additional Functionality *** */
             
+            case 'viewstats':
+                $display = $this->dbStats->showAll();
+                $this->setVarByRef('search', $display);
+                return 'search_tpl.php';
+            
             case 'rss':
                 $institution = $this->objConfig->getinstitutionName();
                 $title = $this->objLanguage->code2Txt('mod_etd_etdrss', 'etd', array('institution' => $institution));
@@ -616,6 +625,7 @@ class etd extends controller
                 break;
 
             default:
+                $this->dbStats->recordHit();
                 return $this->home();
         }
     }

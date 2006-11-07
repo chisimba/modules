@@ -75,7 +75,7 @@ class emailResults extends object
     function init()
     {
         $this->objLanguage =& $this->getObject('language', 'language');
-        $this->objMailer =& $this->getObject('kngmail','utilities');
+        $this->objMailer =& $this->getObject('kngemail','utilities');
 
         $this->objUser =& $this->getObject('user', 'security');
         $this->email = $this->objUser->email();
@@ -214,7 +214,7 @@ class emailResults extends object
             $fromUser = $this->user;
         }
 
-//        $this->objMailer->setup($fromEmail, $fromUser);
+        $this->objMailer->setup($fromEmail, $fromUser);
         $this->objMailer->sendMail($name, $subject, $email, $body);
         return TRUE;
     }
