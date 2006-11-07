@@ -13,7 +13,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
 class dbsudoku extends dbTable
 {
-    function init()
+    public function init()
     {
         parent::init('tbl_sudoku');
         $this -> table = 'tbl_sudoku';

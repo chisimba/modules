@@ -20,7 +20,7 @@ if(!$GLOBALS['kewl_entry_point_run'])
 
 class sudoku extends controller
 {
-    function init()
+    public function init()
     {
         $this -> dbSudoku =& $this -> getObject('dbsudoku');
         $this -> objUser =& $this -> getObject('user', 'security');
@@ -40,7 +40,7 @@ class sudoku extends controller
     *
     * @param string $action
     **/
-    function dispatch($action)
+    public function dispatch($action)
     {
         // Now the main switch statement to pass values for $action
         switch($action){
@@ -90,7 +90,7 @@ class sudoku extends controller
     * Method to list all suduko puzzles
     *
     **/
-    function showAllItems()
+    private function showAllItems()
     {
         $id = $this -> getParam('id');
         $this -> setVarByRef('id', $id);
@@ -105,7 +105,7 @@ class sudoku extends controller
     * @param string $difficulty The difficulty raing of the puzzle (used to remove numbers)
     * $size the base size of the grid eg. 3 = 9x9 board, 5 = 25*25 board
     **/
-    function generate($difficulty)
+    private function generate($difficulty)
     {
         // set up board size
         if($difficulty != 4){
@@ -267,7 +267,7 @@ class sudoku extends controller
     * @param string $id The id of the puzzle
     * @param text $saved The saved puzzle
     **/
-    function saveItem($id, $puzzleData, $timer)
+    private function saveItem($id, $puzzleData, $timer)
     {
         foreach($puzzleData as $key => $number){
             $saved[$key] = $number;
@@ -283,7 +283,7 @@ class sudoku extends controller
     * @param string $id The id of the puzzle
     * @param text $puzzleData The submited data
     **/
-    function validate($id, $puzzleData, $timer)
+    private function validate($id, $puzzleData, $timer)
     {
         foreach($puzzleData as $key => $number){
             $validateData[$key] = $number;

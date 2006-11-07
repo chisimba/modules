@@ -13,12 +13,12 @@ if (!$GLOBALS['kewl_entry_point_run'])
 */
 class block_help extends object
 {
-    var $title;
+    public $title;
     
     /**
     * Constructor for the class
     */
-    function init()
+    public function init()
     {
         $this -> objLanguage =& $this -> getObject('language', 'language');
         $this -> objInput =& $this -> getObject('textinput', 'htmlelements');
@@ -29,7 +29,7 @@ class block_help extends object
     /**
     * Method to output a block with information on how help works
     */
-    function show()
+    public function show()
 	{
         //Add the text to the output
         $ret = $this -> objLanguage -> languageText('mod_sudoku_help', 'sudoku');
