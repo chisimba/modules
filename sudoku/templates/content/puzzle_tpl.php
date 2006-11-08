@@ -160,12 +160,12 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $deleteConfirm = $this -> objLanguage -> languageText('mod_sudoku_deleteconfirm', 'sudoku');
     $resetLabel = $this -> objLanguage -> languageText('mod_sudoku_reset', 'sudoku');
     $returnLabel = $this -> objLanguage -> languageText('mod_sudoku_return', 'sudoku');
-    $easyLabel = $this -> objLanguage -> languageText('word_easy', 'sudoku');
-    $hardLabel = $this -> objLanguage -> languageText('word_hard', 'sudoku');
-    $difficultLabel = $this -> objLanguage -> languageText('word_difficult', 'sudoku');
-    $giantLabel = $this -> objLanguage -> languageText('word_giant', 'sudoku');
-    $saveLabel = $this -> objLanguage -> languageText('word_save', 'sudoku');
-    $submitLabel = $this -> objLanguage -> languageText('word_submit', 'sudoku');
+    $easyLabel = $this -> objLanguage -> languageText('mod_sudoku_easy', 'sudoku');
+    $hardLabel = $this -> objLanguage -> languageText('mod_sudoku_hard', 'sudoku');
+    $difficultLabel = $this -> objLanguage -> languageText('mod_sudoku_difficult', 'sudoku');
+    $giantLabel = $this -> objLanguage -> languageText('mod_sudoku_giant', 'sudoku');
+    $saveLabel = $this -> objLanguage -> languageText('mod_sudoku_save', 'sudoku');
+    $submitLabel = $this -> objLanguage -> languageText('mod_sudoku_submit', 'sudoku');
 
     // set up label and board based on difficulty
     if($difficulty == 1){

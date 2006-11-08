@@ -32,11 +32,11 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $deleteConfirm = $this -> objLanguage -> languageText('mod_sudoku_deleteconfirm', 'sudoku');
     $exitLabel = $this -> objLanguage -> languageText('mod_sudoku_exit', 'sudoku');
     $levelLabel = $this -> objLanguage -> languageText('mod_sudoku_level', 'sudoku');
-    $easyLabel = $this -> objLanguage -> languageText('word_easy', 'sudoku');
-    $hardLabel = $this -> objLanguage -> languageText('word_hard', 'sudoku');
-    $difficultLabel = $this -> objLanguage -> languageText('word_difficult', 'sudoku');
-    $giantLabel = $this -> objLanguage -> languageText('word_giant', 'sudoku');
-    $goLabel = $this -> objLanguage -> languageText('word_go', 'sudoku');
+    $easyLabel = $this -> objLanguage -> languageText('mod_sudoku_easy', 'sudoku');
+    $hardLabel = $this -> objLanguage -> languageText('mod_sudoku_hard', 'sudoku');
+    $difficultLabel = $this -> objLanguage -> languageText('mod_sudoku_difficult', 'sudoku');
+    $giantLabel = $this -> objLanguage -> languageText('mod_sudoku_giant', 'sudoku');
+    $goLabel = $this -> objLanguage -> languageText('mod_sudoku_go', 'sudoku');
     $openLabel = $this -> objLanguage -> languageText('mod_sudoku_open', 'sudoku');
     $loadLabel = $this -> objLanguage -> languageText('mod_sudoku_load', 'sudoku');
     $errMsg_1 = $this -> objLanguage -> languageText('mod_sudoku_err_required', 'sudoku');
