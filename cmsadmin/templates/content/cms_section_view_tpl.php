@@ -158,7 +158,7 @@ if(count($pages) > '0'){
       
       //Add sub sec data to table
       $objPagesTable->startRow();
-      $objPagesTable->addCell($ordering + 1, '', '', '', $class);
+      $objPagesTable->addCell($i, '', '', '', $class);
       $objPagesTable->addCell($viewPageLink, '', '', '', $class);
       $objPagesTable->addCell($pageTitle, '', '', '', $class);
       $objPagesTable->addCell($articleDate, '', '', '', $class);
