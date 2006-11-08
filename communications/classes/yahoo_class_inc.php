@@ -38,7 +38,7 @@ class yahoo extends object
     {
         $this->objLanguage=&$this->getObject('language', 'language');
         $this->objIcon = &$this->getObject('geticon', 'htmlelements');
-        $this->objDbUserparams = & $this->getObject('dbuserparams', "userparams");
+        $this->objDbUserparams = & $this->getObject('dbuserparamsadmin', "userparamsadmin");
     }
 
     /**
