@@ -33,6 +33,7 @@ class etd extends controller
     {
         $this->etdTools =& $this->getObject('etdtools', 'etd');
         $this->manage =& $this->getObject('management', 'etd');
+        $this->submit =& $this->getObject('submit', 'etd');
         $this->config =& $this->getObject('configure', 'etd');
         $this->dbStats =& $this->getObject('dbstatistics', 'etd');
         $this->dbThesis =& $this->getObject('dbthesis');
@@ -285,7 +286,7 @@ class etd extends controller
             case 'showconfig':
                 $mode = $this->getParam('mode');
                 $display = $this->config->show($mode);
-                $this->etdTools->setRightBlocks(TRUE, TRUE, FALSE);
+                $this->etdTools->setRightBlocks(FALSE, TRUE, FALSE);
                 $this->setVarByRef('search', $display);
                 return 'search_tpl.php';
                 break;
@@ -300,6 +301,26 @@ class etd extends controller
                 return $this->nextAction('showconfig', array('mode' => $nextmode));
                 break;
             
+            /* *** Functions for students submissions *** */
+            
+            case 'submit':
+                $mode = $this->getParam('mode');
+                $display = $this->submit->show($mode);
+                $this->etdTools->setRightBlocks(FALSE, TRUE, FALSE);
+                $this->setVarByRef('search', $display);
+                return 'search_tpl.php';
+                break;
+                
+            case 'savesubmit':
+                $save = $this->getParam('save');
+                $mode = $this->getParam('mode');
+                $nextmode = $this->getParam('nextmode');
+                if(!empty($save)){
+                    $this->submit->show($mode);
+                }
+                return $this->nextAction('submit', array('mode' => $nextmode));
+                break;
+
 
         /*
             case 'showinfo':

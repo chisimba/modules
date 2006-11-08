@@ -162,7 +162,7 @@ class management extends object
         $objForm->addToForm('<p style="padding:5px;">'.$objTable->show().'</p>');
         
         $objTab = new tabbedbox();
-        $objTab->extra = 'style="background-color: #FCFAF2"';
+        $objTab->extra = 'style="background-color: #FFFDF5"';
         $objTab->addTabLabel($lbSearch);
         $objTab->addBoxContent($objForm->show());
         $str .= $objTab->show();
@@ -448,11 +448,13 @@ class management extends object
                      
         // Display the metadata in tabbed boxes            
         $objTab = new tabbedbox();
+        $objTab->extra = 'style="background-color: #FFFDF5"';
         $objTab->addTabLabel($lbMetaData);
         $objTab->addBoxContent('<div style="padding: 10px;">'.$objTable->show().'</div>');
         $formStr = $objTab->show();
             
         $objTab = new tabbedbox();
+        $objTab->extra = 'style="background-color: #FFFDF5"';
         $objTab->addTabLabel($lbSummary);
         $objTab->addBoxContent('<div style="padding: 10px;">'.$this->objEditor->showFCKEditor().'</dive>');
         $formStr .= $objTab->show();
@@ -782,13 +784,13 @@ class management extends object
         
         $str = $objForm->show();
         
-        if($accessLevel == 'protected'){
+//        if($accessLevel == 'protected'){
             $inputValue = 'public';
-        }else{
-            $btnSet = $btnUnSet;
-            $lbDocHidden = $lbDocAvail;
-            $inputValue = 'protected';
-        }
+//        }else{
+//            $btnSet = $btnUnSet;
+//            $lbDocHidden = $lbDocAvail;
+//            $inputValue = 'protected';
+//        }
         $objInput = new textinput('access', $inputValue, 'hidden');
         $hidden = $objInput->show();
         $objInput = new textinput('save', 'save', 'hidden');

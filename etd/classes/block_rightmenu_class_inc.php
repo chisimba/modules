@@ -38,6 +38,7 @@ class block_rightmenu extends object
         $authors = $this->objLanguage->languageText('word_authors');
         $titles = $this->objLanguage->languageText('word_titles');
         $stats = $this->objLanguage->languageText('phrase_viewstatistics');
+        $submit = $this->objLanguage->languageText('phrase_newsubmission');
         $rss = $this->objLanguage->languageText('word_rss2');
         
 	    // Browse menu items
@@ -67,7 +68,12 @@ class block_rightmenu extends object
 		$objLink = new link($this->uri(array('action' => 'rss')));
 		$objLink->link = $rss;
 		$list .= '<p>'.$this->objIcon->show().' '.$objLink->show().'</p>';
-
+		
+		// Submission link
+		$objLink = new link($this->uri(array('action' => 'submit', 'mode' => 'addsubmission')));
+		$objLink->link = $submit;
+		$list .= '<p>'.$objLink->show().'</p>';
+		
         return $list;
     }
 }

@@ -116,6 +116,7 @@ class configure extends object
         $str .= '<p><b>'.$lbCopyright.'</b><br />('.$lbAccept.')</p>';
         $editorStr = '<p>'.$lbCodes.'</p>';
         
+        $lang = '';
         $copy = $this->dbCopyright->getCopyright($lang);
         $copyright = '';
         if(isset($copy['copyright'])){
