@@ -51,7 +51,7 @@
     	<sectionid>init_1</sectionid>
     	<mask> </mask>
     	<created></created>
-    	<created_by> </created_by>
+    	<created_by>1</created_by>
     	<created_by_alias> </created_by_alias>
     	<modified></modified>
     	<modified_by> </modified_by> 

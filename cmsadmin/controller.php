@@ -185,7 +185,12 @@ class cmsadmin extends controller
                 
             case 'editcontent':
                 $this->_objContent->edit();
-                return $this->nextAction('frontpages', array('action' => 'frontpages'), 'cmsadmin');
+                $sectionId = $this->getParam('parent', NULL);
+                if (!empty($sectionId)) {
+                    return $this->nextAction('viewsection', array('id'=>$sectionId), 'cmsadmin');
+                } else {
+                    return $this->nextAction('frontpages', array('action' => 'frontpages'), 'cmsadmin');
+                }
                 
             case 'contentpublish':
                 $this->_objContent->togglePublish($this->getParam('id'));

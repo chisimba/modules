@@ -58,7 +58,14 @@ foreach($arrSections as $section)
 	$objIcon->setIcon('delete');
 	$link->href = $this->uri(array('action' => 'sectiondelete', 'id' => $section['id']));
   $link->link = $objIcon->show();
-	$tableRow[] = $link->show();
+  //Create delete icon 
+  $delArray = array('action' => 'deletesection', 'confirm'=>'yes', 'id'=>$section['id']);
+  $deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelsection', 'cmsadmin');
+  $delIcon = $objIcon->getDeleteIconWithConfirm($section['id'], $delArray,'cmsadmin',$deletephrase);
+
+  //edit icon
+  $editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addsection', 'id' => $section['id'])));
+	$tableRow[] = $editIcon.'&nbsp;'.$delIcon;
   $table->addRow($tableRow, $oddOrEven);
 	$rowcount = ($rowcount == 0) ? 1 : 0;
 	

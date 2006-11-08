@@ -30,7 +30,14 @@ if(isset($section)){
 $layoutData = $this->_objLayouts->getLayout($layout);
 $img = '<img src="modules/cmsadmin/resources/'.$layoutData['imagename'].'" alt="'.$layoutData['imagename'].'"/>';
 $other = '<b>'.$this->objLanguage->languageText('mod_cmsadmin_treemenuname', 'cmsadmin').':'.'</b>'.'&nbsp;'.$menuText.'<br/>';
-$other .= '<b>'.$this->objLanguage->languageText('mod_cmsadmin_visibleontreemenu', 'cmsadmin').':'.'</b>';
+$other .= '<b>'.$this->objLanguage->languageText('mod_cmsadmin_visibleontreemenu', 'cmsadmin').':'.'</b>'.'<br/>';
+$other .= '<br/>'.'&nbsp;'.'<br/>';
+if($this->_objUtils->sectionIsVisibleOnMenu($sectionId)){  
+  $other .= '<p><i>'.$this->objLanguage->languageText('mod_cmsadmin_sectionwillbevisible', 'cmsadmin').'</i></p>';
+} else {
+    $other .= '<p><i>'.$this->objLanguage->languageText('mod_cmsadmin_sectionwillnotbevisible', 'cmsadmin').'</i></p>';
+} 
+
 //Create table contain layout, visible, etc details
 $objDetailsTable =& $this->newObject('htmltable', 'htmlelements');
 $objDetailsTable->cellspacing = '2';
@@ -110,6 +117,7 @@ $objPagesTable->width = '99%';
 //Create table header row
 $objPagesTable->startHeaderRow();
 $objPagesTable->addHeaderCell($this->objLanguage->languageText('word_number'));
+$objPagesTable->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_menuname', 'cmsadmin'));
 $objPagesTable->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_pagetitle', 'cmsadmin'));
 $objPagesTable->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_articledate', 'cmsadmin'));
 $objPagesTable->addHeaderCell($this->objLanguage->languageText('word_visible'));
@@ -150,6 +158,7 @@ if(count($pages) > '0'){
       
       //Add sub sec data to table
       $objPagesTable->startRow();
+      $objPagesTable->addCell($ordering + 1, '', '', '', $class);
       $objPagesTable->addCell($viewPageLink, '', '', '', $class);
       $objPagesTable->addCell($pageTitle, '', '', '', $class);
       $objPagesTable->addCell($articleDate, '', '', '', $class);

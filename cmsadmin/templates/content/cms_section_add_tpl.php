@@ -19,8 +19,7 @@ $objParentId = & $this->newObject('textinput', 'htmlelements');
 $objCount = & $this->newObject('textinput', 'htmlelements');
 $objOrdering = & $this->newObject('textinput', 'htmlelements');
 
-if($this->getParam('id') == '')
-{
+if($this->getParam('id') == ''){
 	$action = 'createsection';
 	$editmode = FALSE;
 	$sectionId='';
@@ -182,7 +181,7 @@ if($editmode){
 } else {
     $h3->str = $this->objLanguage->languageText('mod_cmsadmin_addnewsection', 'cmsadmin');
 }
-    
+
 print  $h3->show();
 
 print $objForm->show();
