@@ -331,6 +331,13 @@ class dbStatistics extends dbTable
         $monthVisit = $this->getStatsByMonth('visit');
         $monthDownload = $this->getStatsByMonth('download');
         $monthUpload = $this->getStatsByMonth('upload');
+        
+        $aveResourceVisits = 0;
+        $aveResourceDownloads = 0;
+        if($resourceCount > 0){
+            $aveResourceVisits = round($resVisitsCount/$resourceCount,0);
+            $aveResourceDownloads = round($downloadsCount/$resourceCount,0);
+        }
                 
         $hdResource = $this->objLanguage->languageText('phrase_resourcestats');
         $lbTotalResource = $this->objLanguage->languageText('mod_etd_totalresourcesavailable', 'etd');
@@ -350,10 +357,10 @@ class dbStatistics extends dbTable
         
         $objTable->startRow();
         $objTable->addCell($lbTotalHits.': '.$resVisitsCount, '40%');
-        $objTable->addCell($lbAveRes.': '.round($resVisitsCount/$resourceCount,0));
+        $objTable->addCell($lbAveRes.': '.$aveResourceVisits);
         $objTable->endRow();
         
-        $objTable->addRow(array($lbTotalDownloads.': '.$downloadsCount, $lbAveDown.': '.round($downloadsCount/$resourceCount,0)));
+        $objTable->addRow(array($lbTotalDownloads.': '.$downloadsCount, $lbAveDown.': '.$aveResourceDownloads));
         
         $str = $objTable->show();
         $str .= '<br /><br />';
