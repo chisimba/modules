@@ -31,9 +31,9 @@ class etdtools extends object
     private $hideMenu = FALSE;
     
     /**
-    * @var bool $hideSearch Boolean value determining whether to hide the search block on the right side
+    * @var bool $hideLinks Boolean value determining whether to hide the links block on the right side
     */
-    private $hideSearch = FALSE;
+    private $hideLinks = FALSE;
         
     /**
     * @var bool $hideHelp Boolean value determining whether to hide the help block on the right side
@@ -86,12 +86,12 @@ class etdtools extends object
         if(!$this->hideMenu){
             $str = $this->objBlocks->showBlock('rightmenu', 'etd');
         }
+        if(!$this->hideLinks){
+            $str .= $this->objBlocks->showBlock('etdlinks', 'etd');
+        }
         //if($manager){
             $str .= $this->objBlocks->showBlock('managemenu', 'etd');
         //}
-        if(!$this->hideSearch){
-            $str .= $this->objBlocks->showBlock('searchetd', 'etd');
-        }
         if(!$this->hideHelp){
             $str .= $this->objBlocks->showBlock('etdhelp', 'etd');
         }
@@ -119,14 +119,14 @@ class etdtools extends object
     *
     * @access public
     * @param bool $menu Determines whether to display the browse menu block
-    * @param bool $search Determines whether to display the search block
+    * @param bool $links Determines whether to display the links block
     * @param bool $help Determines whether to display the help block
     * @return
     */
-    public function setRightBlocks($menu = FALSE, $search = FALSE, $help = FALSE)
+    public function setRightBlocks($menu = FALSE, $links = FALSE, $help = FALSE)
     {
         $this->hideMenu = $menu;
-        $this->hideSearch = $search;
+        $this->hideSearch = $links;
         $this->hideHelp = $help;
     }
     

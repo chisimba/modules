@@ -23,13 +23,56 @@ class block_rightmenu extends object
         $this->objLanguage =& $this->getObject('language','language');
         $this->objIcon =& $this->newObject('geticon', 'htmlelements');
         $this->loadClass('link', 'htmlelements');
+        $this->loadClass('button','htmlelements');
+        $this->loadClass('form','htmlelements');
+        $this->loadClass('textinput','htmlelements');
         
         //Set the title
         $this->title = $this->objLanguage->languageText('word_menu');
     }
     
     /**
+    * Method to display the search block with the link to the advanced searc
+    
+    * @access private
+    * @return string html
+    */
+    private function showSearch()
+    {
+        $searchLabel = $this->objLanguage->languageText('word_search');
+        $advSearchLabel = $this->objLanguage->languageText('phrase_advancedsearch');
+        $lbKeywords = $this->objLanguage->languageText('word_keywords');
+        $lbAuthors = $this->objLanguage->languageText('word_author');
+
+        // search button and input
+        $objInput = new textinput('searchField');
+        $objInput->size = 10;
+        $search = '<p>'.$lbKeywords.':<br />'.$objInput->show().'</p>';
+
+        $objInput = new textinput('searchAuthors');
+        $objInput->size = 10;
+        $search .= '<p>'.$lbAuthors.':<br />'.$objInput->show().'</p>';
+
+        $objButton = new button('search', $searchLabel);
+        $objButton->setToSubmit();
+        $search .= '<p>'.$objButton->show().'</p>';
+
+        $objForm = new form('search', $this->uri(array('action' => 'advsearch', 'mode'=>'simple')));
+        $objForm->addToForm($search);
+        $str = $objForm->show();
+
+        $objLink = new link($this->uri(array('action' => 'search')));
+        $objLink->link = $advSearchLabel;
+        $str .= '<p>'.$objLink->show().'</p>';
+
+        return $str;
+    }
+    
+    /**
     * The display method for the block
+    *
+    * @access public
+    * @return string html
     */
     public function show()
 	{
@@ -37,9 +80,6 @@ class block_rightmenu extends object
         $collections = $this->objLanguage->languageText('word_collections');
         $authors = $this->objLanguage->languageText('word_authors');
         $titles = $this->objLanguage->languageText('word_titles');
-        $stats = $this->objLanguage->languageText('phrase_viewstatistics');
-        $submit = $this->objLanguage->languageText('phrase_newsubmission');
-        $rss = $this->objLanguage->languageText('word_rss2');
         
 	    // Browse menu items
         $list = '<b>'.$browse.':</b><br /><ul>';
@@ -58,22 +98,8 @@ class block_rightmenu extends object
         
         $list .= '</ul>';
         
-        // Statistics page link
-		$objLink = new link($this->uri(array('action' => 'viewstats')));
-		$objLink->link = $stats;
-		$list .= '<p>'.$objLink->show().'</p>';
-
-        // RSS link
-		$this->objIcon->setIcon('rss', 'gif', 'icons/filetypes');
-		$objLink = new link($this->uri(array('action' => 'rss')));
-		$objLink->link = $rss;
-		$list .= '<p>'.$this->objIcon->show().' '.$objLink->show().'</p>';
-		
-		// Submission link
-		$objLink = new link($this->uri(array('action' => 'submit', 'mode' => 'addsubmission')));
-		$objLink->link = $submit;
-		$list .= '<p>'.$objLink->show().'</p>';
-		
+        $list .= $this->showSearch();
+        
         return $list;
     }
 }
