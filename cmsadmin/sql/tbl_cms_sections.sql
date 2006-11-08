@@ -75,6 +75,10 @@ $fields = array(
 	'layout' => array(
 		'type' => 'text',
         'length' => 32
+		),
+    'link' => array(
+             'type' => 'text',
+             'length' => 255
 		)
 	);
 ?>

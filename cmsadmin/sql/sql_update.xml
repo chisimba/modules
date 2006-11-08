@@ -1,0 +1,8 @@
+<DATA>
+	<UPDATE>
+		<MODULE>cmsadmin</MODULE>
+		<TABLE>tbl_cms_sections</TABLE>
+		<VERSION>the version</VERSION>
+		<SQL>ALTER TABLE `tbl_cms_sections` ADD `links` VARCHAR(255) NULL AFTER `menutext`;</SQL>
+	</UPDATE>
+</DATA>
