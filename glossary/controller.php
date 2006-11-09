@@ -372,11 +372,11 @@ class glossary extends controller
 		
 		);
 		
-        // Get the Last Inserty ID
+        // Get the Last Insert ID
 		$id = $this->objGlossary->getLastInsertId();
         
         // Insert the See Also Link
-        if ($seeAlso != ''){
+        
         	$this->objGlossarySeeAlso->insertSingle(
 					$seeAlso,
 					$id,
@@ -384,10 +384,11 @@ class glossary extends controller
 					mktime()
 				
 				);
-        }
         
         // Insert the URL
-        if ($url != '' && $url != 'http://'){
+        if ($url == 'http://'){
+            $url = null;            
+        }
 	        $this->objGlossaryUrls->insertSingle(
 				$url,
 				$id,
@@ -395,7 +396,17 @@ class glossary extends controller
 				mktime()
 			
 			);
-        }
+            
+         // Insert a default null image
+            $image = null;
+            $caption = null;
+            $this->objGlossaryImages->insertImage(
+                $id,
+                $image,
+                $caption,
+                $this->objUser->userId(), 
+                mktime()
+            );
         
         // Redirect to a page showing that the term has been successfully inserted into the database
         return $this->nextAction('listsingle', array('id'=>$id));
@@ -592,12 +603,13 @@ class glossary extends controller
     {
     	
     	// Deletes term from database
-    	
-		if ($_POST['delete'] == 'Yes')
+    	$canDelete=$this->getParam('delete');
+		if ($canDelete == 'Yes')
 		{
-			
+			$this->objGlossaryUrls->deleteSingle($this->getParam('id', null));
+            $this->objGlossarySeeAlso->deleteSingle($this->getParam('id', null));
+            $this->objGlossaryImages->deleteImage($this->getParam('id', null));
 			$this->objGlossary->deleteSingle($this->getParam('id', null));
-			
             return $this->nextAction('viewbyletter', array('letter'=>'listall'));
 			
 		} else {

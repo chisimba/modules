@@ -36,12 +36,10 @@ $fields = array(
 	'item_id' => array(
 		'type' => 'text',
 		'length' => 32,
-		'notnull' => 1
 		),
 	'url' => array(
 		'type' => 'text',
-		'length' => 100,
-		'notnull' => 1
+		'length' => 100
 		),		
 	'userid' => array(
 		'type' => 'text',

@@ -71,7 +71,6 @@ echo $this->title->show();
         
         }
 		
-		
 		if ($element['seealsos'] != ''){
 			
 			$termInfo.= '<br />';
@@ -87,31 +86,30 @@ echo $this->title->show();
 			{
 				
 				// This Counter adds a space and comma after the first See Also term
-                $termInfo.= $comma;
-				
-				if ($seeAlso['term1'] == $element['term']){
-					
-					$seeAlsoLink = new link($this->uri(array(
+                if (!empty($seeAlso['term1'])){
+                    $termInfo.= $comma;
+				    if ($seeAlso['term1'] == $element['term']){
+					   $seeAlsoLink = new link($this->uri(array(
 							'module'=>'glossary', 
 							'action'=>'search', 
 							'term'=>$seeAlso['term2']
 						)));
-					$seeAlsoLink->link = $seeAlso['term2'];
+					   $seeAlsoLink->link = $seeAlso['term2'];
 										
-					$termInfo.= $seeAlsoLink->show();
-				} else {
-					$seeAlsoLink = new link($this->uri(array(
+					   $termInfo.= $seeAlsoLink->show();
+				    } else {
+					   $seeAlsoLink = new link($this->uri(array(
 							'module'=>'glossary', 
 							'action'=>'search', 
 							'term'=>$seeAlso['term1']
 						)));
-					$seeAlsoLink->link = $seeAlso['term1'];
+					   $seeAlsoLink->link = $seeAlso['term1'];
 										
-					$termInfo.= $seeAlsoLink->show();
+					   $termInfo.= $seeAlsoLink->show();
+				    }
+				
+                    $comma = ', ';
 				}
-				
-                $comma = ', ';
-				
 			}
 			
 		}
@@ -126,16 +124,17 @@ echo $this->title->show();
             
             $comma = '';
 			
+   
 			foreach ($urls as $url)
 			{
-				$termInfo .= $comma;
-                
-                $urlLink = new link($url['url']);
-				$urlLink->link = $url['url'];
-				$urlLink->target = '_blank';
-				$termInfo.= $urlLink->show();
-                
-                $comma = ', ';
+                if(!empty($url['url'])){
+				    $termInfo .= $comma;
+                    $urlLink = new link($url['url']);
+				    $urlLink->link = $url['url'];
+				    $urlLink->target = '_blank';
+				    $termInfo.= $urlLink->show();
+                    $comma = ', ';
+                }
 			}
 			
 		}
@@ -152,22 +151,23 @@ echo $this->title->show();
 			
 			foreach ($images as $image)
 			{
-				$termInfo .= $comma;
+                if(!empty($image['image'])){
+				    $termInfo .= $comma;
                 
-                $link = $this->uri(array('action' => 'previewimage', 'id' => $image['image'], 'fname' => $image['filename']));
+                    $link = $this->uri(array('action' => 'previewimage', 'id' => $image['image'], 'fname' => $image['filename']));
     
     
-                $objPop->set('location',$link);
-                $objPop->set('window_name','previewImage');
-                $objPop->set('linktext',$image['caption']);
-                $objPop->set('width','10'); 
-                $objPop->set('height','10');
+                    $objPop->set('location',$link);
+                    $objPop->set('window_name','previewImage');
+                    $objPop->set('linktext',$image['caption']);
+                    $objPop->set('width','10'); 
+                    $objPop->set('height','10');
                 
-				$termInfo.= $objPop->show();
+				    $termInfo.= $objPop->show();
                 
-                $comma = ', ';
+                    $comma = ', ';
+			     }
 			}
-			
 		}
 		
 		

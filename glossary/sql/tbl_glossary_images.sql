@@ -36,18 +36,15 @@ $fields = array(
 		),
 	'item_id' => array(
 		'type' => 'text',
-		'length' => 32,
-		'notnull' => 1
+		'length' => 32
 		),
 	'image' => array(
 		'type' => 'text',
-		'length' => 32,
-		'notnull' => 1
+		'length' => 32
 		),		
 	'caption' => array(
 		'type' => 'text',
-		'length' => 50,
-		'notnull' => 1
+		'length' => 50
 		),
 	'userid' => array(
 		'type' => 'text',

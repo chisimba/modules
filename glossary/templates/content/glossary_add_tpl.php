@@ -8,7 +8,7 @@ $this->loadClass('textarea', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
-
+//$this->loadClass('fieldset', 'htmlelements');
 
 
 echo $header;
@@ -55,6 +55,8 @@ $addTable->addCell($urlInput->show(), null);
 
 $addTable->endRow();
 
+
+
 if ($numRecords > 0)
 {
 	$addTable->startRow();
@@ -85,11 +87,14 @@ $addTable->addCell(' ', null);
 $addTable->addCell($submitButton->show(), null);
 $addTable->endRow();
 
-
 $addForm->addRule('term',$this->objLanguage->languageText('mod_glossary_termRequired', 'glossary'),'required');
 $addForm->addRule('definition',$this->objLanguage->languageText('mod_glossary_defnRequired', 'glossary'),'required');
 
 $addForm->addToForm($addTable);
+
+
+
+//$addForm->addToForm($image);
 
 echo $addForm->show();
 

@@ -122,44 +122,44 @@ if ($seeAlsoNum == 0 && $numRecords > 1)
 $seeAlsoFieldset->addContent ('<ul>');	
 
 	foreach ($seeAlsoList as $element) {
+		if(!empty($element['term1'])){
+		  $seeAlsoFieldset->addContent ('<li><p>');
 		
-		$seeAlsoFieldset->addContent ('<li><p>');
-		
-		if ($element['item_id'] != $id) {
+		  if ($element['item_id'] != $id) {
 
-			$seeAlsoFieldset->addContent ($element['term1']);
+			 $seeAlsoFieldset->addContent ($element['term1']);
 			
-		} else {
+		  } else {
 			
-			$seeAlsoFieldset->addContent ($element['term2']);
+			 $seeAlsoFieldset->addContent ($element['term2']);
 			
-		}
+		  }
 		
 		
-		// Delete Link
-		$seeAlsoFieldset->addContent(' ');
+		  // Delete Link
+		  $seeAlsoFieldset->addContent(' ');
 		
-		// URL Delete Link
-		$deleteLinkIcon =& $this->getObject('geticon', 'htmlelements');
-		$deleteLinkIcon->setIcon('delete');
-		$deleteLinkIcon->alt=$objLanguage->languageText('mod_glossary_delete', 'glossary');
-		$deleteLinkIcon->title=$objLanguage->languageText('mod_glossary_delete', 'glossary');
+		  // URL Delete Link
+		  $deleteLinkIcon =& $this->getObject('geticon', 'htmlelements');
+		  $deleteLinkIcon->setIcon('delete');
+		  $deleteLinkIcon->alt=$objLanguage->languageText('mod_glossary_delete', 'glossary');
+		  $deleteLinkIcon->title=$objLanguage->languageText('mod_glossary_delete', 'glossary');
 		
-		$link = $this->uri(array(
-				'module'=>'glossary', 
+		  $link = $this->uri(array(
+			 	'module'=>'glossary', 
 				'action'=>'deleteseealso', 
 				'id'=>$record['item_id'] ,
 				'seealso'=>$element['id']
 			));
 			
-		$deleteLink = new link("javascript:confirmDelete('$link', '".$objLanguage->languageText('mod_glossary_pop_deleteseealso', 'glossary')."');");
-		$deleteLink->link = $deleteLinkIcon->show();
+		  $deleteLink = new link("javascript:confirmDelete('$link', '".$objLanguage->languageText('mod_glossary_pop_deleteseealso', 'glossary')."');");
+		  $deleteLink->link = $deleteLinkIcon->show();
 
 
-		$seeAlsoFieldset->addContent ($deleteLink->show());
+		  $seeAlsoFieldset->addContent ($deleteLink->show());
         
-        $seeAlsoFieldset->addContent ('</p></li>');
-
+            $seeAlsoFieldset->addContent ('</p></li>');
+        }
 	}
 	
 $seeAlsoFieldset->addContent('</ul>');
@@ -249,37 +249,37 @@ if ($urlNum == 0)
 	
 	
 	foreach ($urlList as $element) {
+        if(!empty($element['url'])){
+		  $urlFieldset->addContent ('<li><p>');
+		
+		  $itemLink = new link($element['url']);
+		  $itemLink->target = '_blank';
+		  $itemLink->link =$element['url'];
+		
+		  $urlFieldset->addContent( $itemLink->show());
+		
+		  $urlFieldset->addContent( ' - ' );
 
-		$urlFieldset->addContent ('<li><p>');
+		  // URL Delete Link
+		  $deleteLinkIcon =& $this->getObject('geticon', 'htmlelements');
+		  $deleteLinkIcon->setIcon('delete');
+		  $deleteLinkIcon->alt=$objLanguage->languageText('mod_glossary_delete', 'glossary');
+		  $deleteLinkIcon->title=$objLanguage->languageText('mod_glossary_delete', 'glossary');
 		
-		$itemLink = new link($element['url']);
-		$itemLink->target = '_blank';
-		$itemLink->link =$element['url'];
-		
-		$urlFieldset->addContent( $itemLink->show());
-		
-		$urlFieldset->addContent( ' - ' );
-
-		// URL Delete Link
-		$deleteLinkIcon =& $this->getObject('geticon', 'htmlelements');
-		$deleteLinkIcon->setIcon('delete');
-		$deleteLinkIcon->alt=$objLanguage->languageText('mod_glossary_delete', 'glossary');
-		$deleteLinkIcon->title=$objLanguage->languageText('mod_glossary_delete', 'glossary');
-		
-		$link = $this->uri(array(
+		  $link = $this->uri(array(
 				'module'=>'glossary', 
 				'action'=>'deleteurl', 
 				'id'=>$record['item_id'] ,
 				'link'=>$element['id']
 			));
 			
-		$deleteLink = new link("javascript:confirmDelete('$link', '".$objLanguage->languageText('mod_glossary_pop_deleteurl', 'glossary')."');");
-		$deleteLink->link = $deleteLinkIcon->show();
+		  $deleteLink = new link("javascript:confirmDelete('$link', '".$objLanguage->languageText('mod_glossary_pop_deleteurl', 'glossary')."');");
+		  $deleteLink->link = $deleteLinkIcon->show();
 
 
-		$urlFieldset->addContent ($deleteLink->show());
-		$urlFieldset->addContent ('</p></li>');
-		
+		  $urlFieldset->addContent ($deleteLink->show());
+		  $urlFieldset->addContent ('</p></li>');
+		}
 
 	}
 	
@@ -327,7 +327,8 @@ $urlFieldset->addContent ('<br />');
 
 echo $urlFieldset->show();
 ?>
-</td><td valign="top">
+</td>
+<td valign="top">
 <fieldset>
 <h3><?php echo $this->objLanguage->languageText('mod_glossary_imagesfor', 'glossary').' '.$record['term']; ?></h3>
 

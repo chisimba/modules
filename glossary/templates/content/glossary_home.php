@@ -4,7 +4,5 @@ echo $header;
 
 echo $footer;
 
-
-
 ?>
 

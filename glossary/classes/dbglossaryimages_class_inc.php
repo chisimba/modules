@@ -76,7 +76,7 @@ class dbglossaryimages extends dbTable
 	*/
     public function deleteImage ($imageId)
     {
-        return $this->delete('image', $imageId);
+        return $this->delete('item_id', $imageId);
     }
 
 

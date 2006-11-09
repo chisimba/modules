@@ -37,13 +37,11 @@ $fields = array(
 		),
 	'item_id' => array(
 		'type' => 'text',
-		'length' => 32,
-		'notnull' => 1
+		'length' => 32
 		),
 	'item_id2' => array(
 		'type' => 'text',
-		'length' => 32,
-		'notnull' => 1
+		'length' => 32
 		),
 	'userid' => array(
 		'type' => 'text',

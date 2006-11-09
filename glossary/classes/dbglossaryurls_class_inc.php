@@ -87,7 +87,7 @@ class dbGlossaryUrls extends dbTable
     */
     public function deleteSingle($id) {
     
-        $this->delete('id', $id);
+        $this->delete('item_id', $id);
     
     return;	
     }
