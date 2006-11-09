@@ -258,14 +258,48 @@ class kbookmark extends controller
             case 'viewxbel':
 				$xbelOutput=$this->xbel->xbel($this->objUser->userId());
                 $this->setVarByRef('xbelOutput',$xbelOutput);
-				return "view_xbel.php"; 
+				$this->setPageTemplate('no_page_tpl.php');
+
+				//return "view_xbel.php";
+/*
+		$filename = "/home/bookmarkExport.xml";
+		if (is_writable($filename)) {
+		   // In our example we're opening $filename in append mode.
+		   // The file pointer is at the bottom of the file hence
+		   // that's where $somecontent will go when we fwrite() it.
+		   if (!$handle = fopen($filename, 'w')) {
+		         echo "Cannot open file ($filename)";
+		         exit;
+		   }
+		   // Write $somecontent to our opened file.
+		   if (fwrite($handle, $somecontent) === FALSE) {
+		       echo "Cannot write to file ($filename)";
+		       exit;
+		   }
+  
+		   echo "Success, wrote ($somecontent) to file ($filename)";
+  
+		   fclose($handle);
+		} else {
+		   echo "The file $filename is not writable";
+			}	
+
+$data = "This is a new file entry!\n";  
+$file = "/home/newfile.txt";   
+if (!$file_handle = fopen($file,"w")) { echo "Cannot open file"; }  
+if (!fwrite($file_handle, $data)) { echo "Cannot write to file"; }  
+echo "You have successfully written data to $file";   
+fclose($file_handle);   			
+*/
+
+				return "no_page_tpl.php"; 
 				break;
 			
-			case 'allxbel':
-				$xbelOutput=$this->xbel->xbel();
-                $this->setVarByRef('xbelOutput',$xbelOutput);
-				return "view_xbel.php";
-				break;
+		case 'allxbel':
+			$xbelOutput=$this->xbel->xbel();
+                	$this->setVarByRef('xbelOutput',$xbelOutput);
+			return "view_xbel.php";
+			break;
 
            case Null:
                 $sortOrder=$this->getParam('folderOrder');
@@ -600,6 +634,7 @@ class kbookmark extends controller
         }
     }
 
-    
+
+
 }; //class
 ?>

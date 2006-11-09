@@ -85,7 +85,7 @@ if (isset($listFolders))
     foreach($listFolders as $line) {
         $folderCount=count($listFolders);
         if ($folderCount>0) {
-            if ($line['isDefault']=='1') {
+            if ($line['isdefault']=='1') {
                 $folderText=$line['title']."*";
             } else {
                 $folderText=$line['title'];
@@ -96,7 +96,7 @@ if (isset($listFolders))
             $objTableFolders->row_attributes=" onmouseover=\"this.className='tbl_ruler';\" onmouseout=\"this.className='".$objTableFolders->trClass."'; \"";
             $objTableFolders->startRow();
             $objTableFolders->addCell("<input type='checkbox' name='folders[]' value='".$line['id']."'></input>","20", NULL, NULL, NULL,"");
-            $objTableFolders->addCell($visitFolder,"",NULL,NULL,NULL,"");  
+            $objTableFolders->addCell($visitFolder,"",NULL,NULL,NULL,"");
             $objTableFolders->addCell($editLink,"",NULL,NULL,NULL,"");
             $objTableFolders->addCell($deleteLink,"",NULL,NULL,NULL,"");
             $objTableFolders->endRow();

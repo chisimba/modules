@@ -62,7 +62,7 @@ $fields = array(
 		'type' => 'integer',
 		'length' => 11,
 		'notnull' => TRUE,
-		'default' => '',
+		'default' => ''
 		),
 	'datemodified' => array(
 		'type' => 'timestamp',

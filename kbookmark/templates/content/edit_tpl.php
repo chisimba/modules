@@ -126,7 +126,7 @@ $this->header->str=$this->objLanguage->languageText('mod_bookmark_bookmarkfolder
          $description=htmlentities(stripslashes($line['description']));
          $isPrivate=$line['isprivate'];
      }
-     $titleLine=$this->objLanguage->LanguageText('phrase_edit_folder','Edit Folder');
+     $titleLine=$this->objLanguage->LanguageText('phrase_edit_folder');
      $myFormAction=$this->uri(array('action'=>'save_edit','id'=>$this->getParam('id'),'item'=>$this->getParam('item')));
      $this->bkContent= & $this->newObject('layer','htmlelements');
      $this->bkContent->id="Bookmark";

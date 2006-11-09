@@ -93,7 +93,7 @@ $bkSearchForm->addToForm($bkFolderId->show());
 $objButtonSearch = new button('search');
 $objButtonSearch->setToSubmit();
 $objButtonSearch->setValue('Search');
-$bkSearchForm->addToForm("<br />".$objButtonSearch->show());
+$bkSearchForm->addToForm("".$objButtonSearch->show());
 $searchForm=$bkSearchForm->show();
 
 $searchFieldset = $this->getObject('fieldset', 'htmlelements');
@@ -109,13 +109,13 @@ $xbelView=$this->objLanguage->languageText('mod_bookmark_xbelmanage','kbookmark'
 //Create the link Object
 $link = $this->newObject('link','htmlelements');
 $link->href = $this->uri(array('action'=>'xbelparse'));
-$link->link=$this->objLanguage->languageText("mod_bookmark_in_xbel",'kbookmark');
+$link->link=$this->objLanguage->languageText('mod_bookmark_in_xbel','kbookmark');
 
 $xbelFieldset = $this->getObject('fieldset', 'htmlelements');
 $xbelFieldset->setLegend($xbelView);
 $xbelFieldset->addContent($link->show());
 $xbelOutput= $xbelFieldset->show();
-               
+
 if (isset($listFolderContent)) {
 
     $bkForm=new form('bkForm');
@@ -124,15 +124,15 @@ if (isset($listFolderContent)) {
     $bkForm->setAction($myFormAction);
     
     $objIcons->setIcon('delete');
-    $objIcons->alt=$this->objLanguage->LanguageText('word_delete');
+    $objIcons->alt=$this->objLanguage->LanguageText('word_delete','Delete');
     $deleteIcon=$objIcons->show();
     
     $objIcons->setIcon('edit');
-    $objIcons->alt=$this->objLanguage->LanguageText('word_edit');
+    $objIcons->alt=$this->objLanguage->LanguageText('word_edit','Edit');
     $editIcon=$objIcons->show();
     
     $objIcons->setIcon('move');
-    $objIcons->alt=$this->objLanguage->LanguageText('word_move');
+    $objIcons->alt=$this->objLanguage->LanguageText('word_move','Move');
     $moveIcon=$objIcons->show();
 
     $objButtonDelete = new button('delete');
@@ -186,25 +186,25 @@ if (isset($listFolderContent)) {
     //Looping through all the folder's content
         foreach ($listFolderContent as $line)
         {
-             $newLink=new link(($this->uri(array( 'module'=> 'bookmarks', 'action' => 'openpage', 'id' => $line['id'],'folderId'=>$line['groupid']))));
+             $newLink=new link(($this->uri(array( 'module'=> 'bookmarks', 'action' => 'openpage', 'id' => $line['id'],'folderId'=>$line['groupId']))));
              $newLink->link=htmlentities(stripslashes($line['title']));
              $newLink->title=$line['url'];
              $newLink->target='_blank';
              $bkLink=$newLink->show().' - '.htmlentities(stripslashes($line['description']));
              $visitLink="<a href=\"".$this->uri(array('action'=>'visit','id'=>$line['id']))."\" class='".$objTableClass->trClass."'>";
              $editLink="<a href=\"".$this->uri(array('action'=>'edit','id'=>$line['id'],'item'=>'bookmark'))."\" class='".$objTableClass->trClass."'>".$editIcon."</a>";
-             $deleteLink="<a href=\"".$this->uri(array('action'=>'delete','id'=>$line['id'],'folderId'=>$line['groupid'],'item'=>'bookmark'))."\" class='".$objTableClass->trClass."'>".$deleteIcon."</a>";
+             $deleteLink="<a href=\"".$this->uri(array('action'=>'delete','id'=>$line['id'],'folderId'=>$line['groupId'],'item'=>'bookmark'))."\" class='".$objTableClass->trClass."'>".$deleteIcon."</a>";
              $objTableClass->row_attributes=" onmouseover=\"this.className='tbl_ruler';\" onmouseout=\"this.className='".$objTableClass->trClass."'; \"";
              $objTableClass->startRow();
              $objTableClass->addCell("<input type='checkbox' name='bookmark[]' value='".$line['id']."'></input>","20", NULL, NULL, NULL,"");
-             $objTableClass->addCell('&nbsp;'.$bkLink."</a>","50%", NULL, NULL, NULL,"");
+             $objTableClass->addCell('&nbsp;'.$bkLink."","50%", NULL, NULL, NULL,"");
              $objTableClass->addCell($line['visitcount'],"20", NULL, NULL, NULL,"");
 			 if (($line['datelastaccessed'])=='0000-00-00 00:00:00'){
 			    $dateAccessed=$this->objLanguage->LanguageText('mod_bookmarks_notaccessed','kbookmark');
 			 } else {
 			    $dateAccessed= $line['datelastaccessed'];
 			 }   
-             $objTableClass->addCell($dateAccessed,"150", NULL, NULL, NULL,"colspan='5'");
+             $objTableClass->addCell($dateAccessed,"150", NULL, NULL, NULL,"");
                          
              $objTableClass->addCell($editLink,"20", NULL, NULL, NULL,"");
              $objTableClass->addCell($deleteLink,"20", NULL, NULL, NULL,"");
@@ -216,9 +216,9 @@ if (isset($listFolderContent)) {
 	     $objTableClass->endRow();
     } else {
         $noBookmark ="<span class=\"noRecordsMessage\">". $this->objLanguage->LanguageText('mod_bookmarks_notfound','kbookmark') ."</span>";
-        //$noBookmark=$this->objLanguage->LanguageText('mod_bookmarks_notfound','kbookmark');
+        //$noBookmark=$this->objLanguage->LanguageText('mod_bookmarks_notfound');
         $objTableClass->startRow();
-        $objTableClass->addCell($noBookmark,"",NULL,NULL,NULL,"");
+        $objTableClass->addCell($noBookmark,"",NULL,NULL,NULL,"colspan='5'");
         $objTableClass->endRow();
     }
 
@@ -289,7 +289,7 @@ $form->method = 'GET';
 $form->addToForm($foldersDropdown);
 
 $form->addToForm("&nbsp;");
-$button = new button("submit", $objLanguage->languageText("word_go",'forum','Go'));
+$button = new button("submit", $objLanguage->languageText("word_go"));
 $button->setToSubmit();
 $form->addToForm($button);
 
@@ -353,13 +353,13 @@ if (isset($searchResults)){
     $objSearchTable->addCell($dateAccessedLink,"", Null, 'center', 'heading', "");
     $objSearchTable->addCell($ownerLink,"", Null, 'center', 'heading', "");
     $objSearchTable->endRow();
-    $word_delete=$this->objLanguage->LanguageText('word_delete');
+    $word_delete=$this->objLanguage->LanguageText('word_delete','Delete');
     $title=$this->objLanguage->languageText('mod_bookmark_searchresults','kbookmark');
     $numCount=count($searchResults);
     if ((count($searchResults))>0) {
         foreach ($searchResults as $line) {
             
-            $newLink=new link(($this->uri(array( 'module'=> 'bookmarks', 'action' => 'openpage', 'id' => $line['id'],'folderId'=>$line['groupid']))));
+            $newLink=new link(($this->uri(array( 'module'=> 'bookmarks', 'action' => 'openpage', 'id' => $line['id'],'folderId'=>$line['groupId']))));
             $newLink->link=htmlentities(stripslashes($line['title']));
             $newLink->title=$line['url'];
             $newLink->target='_blank';
@@ -368,11 +368,10 @@ if (isset($searchResults)){
             $visitLink="<a href=\"".$this->uri(array('action'=>'visit','id'=>$line['id']))."\" class='".$objTableClass->trClass."'>";
             $objSearchTable->row_attributes=" onmouseover=\"this.className='tbl_ruler';\" onmouseout=\"this.className='".$objTableClass->trClass."'; \"";
             $objSearchTable->startRow();
-            $objSearchTable->addCell('&nbsp;'.$bkLink."</a>","50%", NULL, NULL, NULL,"");
+            $objSearchTable->addCell('&nbsp;'.$bkLink."","50%", NULL, NULL, NULL,"");
             $objSearchTable->addCell($line['visitcount'],"20", NULL, NULL, NULL,"");
             $objSearchTable->addCell($line['datelastaccessed'],"150", NULL, NULL, NULL,"");
             $objSearchTable->addCell($owner,"150", NULL, NULL, NULL,"");
-
 
             $objSearchTable->endRow();
          }

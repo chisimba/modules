@@ -347,7 +347,7 @@ class xbookmark extends object
     */
     function xbel()
     {
-        $this->xbelOutput .="<?xml version=\"1.0\"?>\n";
+        $this->xbelOutput ="<?xml version=\"1.0\" ?>\n";
         $this->xbelOutput .="<!DOCTYPE xbel PUBLIC \"+//IDN python.org//DTD XML Bookmark Exchange Language 1.0//EN//XML\" \"http://www.python.org/topics/xml/dtds/xbel-1.0.dtd\">\n";
         $this->xbelOutput .="<xbel>\n";
         $this->xbelOutput .="\t<info>\n";
@@ -355,6 +355,7 @@ class xbookmark extends object
         $this->xbelOutput .="\t</info>\n";
         $userId=$this->objUser->userId();
         $filter="where creatorid='$userId'";
+
         $list=$this->objDbGroup->getAll($filter);
         foreach ($list as $line) {
             $id=$line['id'];
@@ -363,7 +364,12 @@ class xbookmark extends object
             $this->xbelOutput .=$this->folder2xbel($id,$title,$desc);
         }
         $this->xbelOutput .="</xbel>\n";
-        return $this->xbelOutput;
+//	echo "asdf";
+	
+$xbelOutput = trim($this->xbelOutput);
+//echo trim($xbelOutput," ");
+
+        return trim($this->xbelOutput," ");
     }
 
 
@@ -396,7 +402,7 @@ class xbookmark extends object
         $this->xbelOutput .="\t<folder>\n";
         $this->xbelOutput .="\t\t<title>".$title."</title>\n";
         $this->xbelOutput .="\t\t<desc>".$description."</desc>\n";
-        $filter="Where groupid='$id'";
+        $filter="Where groupId='$id'";
         $list=$this->objDbBookmark->getAll($filter);
         foreach ($list as $line) {
             $url=$line['url'];

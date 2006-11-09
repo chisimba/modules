@@ -50,14 +50,14 @@ if (isset($listUsersWithBookmarks)) {
 	    $folders="";
         foreach($listUsersWithBookmarks as $lineOfUsers) {
 		    $listFoldersWithBookmarks = $this->objDbGroup->getShared4User($lineOfUsers['creatorid']);
-			$owner= $this->objUser->fullname($lineOfUsers['creatorid']);
-			$objTableFolders=$this->newObject('htmltable','htmlelements');
+            $owner= $this->objUser->fullname($lineOfUsers['creatorid']);
+	    $objTableFolders=$this->newObject('htmltable','htmlelements');
             $objTableFolders->width='99%';
             $objTableFolders->attributes=" border='0'";
             $objTableFolders->cellspacing='2';
             $objTableFolders->cellpadding='2';
 			//$objTableFolders->addHeader($owner);
-			$objTableFolders->startHeaderRow();
+            $objTableFolders->startHeaderRow();
             $objTableFolders->addCell("<b>".$owner."</b>","",NULL,NULL,NULL,"colspan='2'");
             $objTableFolders->endHeaderRow();
             $objIcons=$this->newObject('geticon','htmlelements');
@@ -68,7 +68,7 @@ if (isset($listUsersWithBookmarks)) {
                 $folderCount=count($listFolders);
                 if ($folderCount>0) {
                     foreach($listFoldersWithBookmarks as $line) {
-			            $folderText=stripslashes($line['title']);
+			$folderText=stripslashes($line['title']);
                         $visitFolder="<a href=\"".$this->uri(array('action'=>'shared','folderId'=>$line['id']))."\" class='".$objTableFolders->trClass."'>".$folderIcon.$folderText."</a>";//."[".$this->objUser->fullname($line['creatorid'])."]";
                         $objTableFolders->row_attributes=" onmouseover=\"this.className='tbl_ruler';\" onmouseout=\"this.className='".$objTableFolders->trClass."'; \"";
                         $objTableFolders->startRow();
@@ -89,12 +89,10 @@ if (isset($listUsersWithBookmarks)) {
 
 $folderTitle=$this->objLanguage->languageText('mod_bookmark_sharedfolders','kbookmark');
 
-
 $folderFieldset = $this->getObject('fieldset', 'htmlelements');
 $folderFieldset->setLegend($folderTitle);
 $folderFieldset->addContent($folders);
 $folderOutput= $folderFieldset->show();
-               
 
 if (isset($listFolderContent)) {
 
@@ -115,7 +113,7 @@ if (isset($listFolderContent)) {
     $objTableClass->addCell($hitsLink,"", Null, 'center', 'heading', "");
     $objTableClass->addCell($dateAccessedLink,"", Null, 'center', 'heading', "");
     $objTableClass->endRow();
-    $word_delete=$this->objLanguage->LanguageText('word_delete','Delete');
+    $word_delete=$this->objLanguage->LanguageText('word_delete');
     
     $count=count($listFolderContent);
     if ($count>0) {
@@ -131,7 +129,7 @@ if (isset($listFolderContent)) {
              
              $objTableClass->row_attributes=" onmouseover=\"this.className='tbl_ruler';\" onmouseout=\"this.className='".$objTableClass->trClass."'; \"";
              $objTableClass->startRow();
-             $objTableClass->addCell('&nbsp;'.$bkLink."</a>","50%", NULL, NULL, NULL,"");
+             $objTableClass->addCell($bkLink."</a>","50%", NULL, NULL, NULL,"");
              $objTableClass->addCell($line['visitcount'],"20", NULL, NULL, NULL,"");
              if (($line['datelastaccessed'])=='0000-00-00 00:00:00'){
 			    $dateAccessed=$this->objLanguage->LanguageText('mod_bookmarks_notaccessed','kbookmark');
@@ -158,7 +156,7 @@ $objTableFrame->align='top';
 
 $objTableFrame->startRow();
 $objTableFrame->addCell($folderOutput,"20%","top",NULL,'',NULL);
-$objTableFrame->addCell($bookmarks."&nbsp",NULL,"top",NULL,'',NULL);
+$objTableFrame->addCell($bookmarks."",NULL,"top",NULL,'',NULL);
 $objTableFrame->endRow();
 
 //planning and formating for output
