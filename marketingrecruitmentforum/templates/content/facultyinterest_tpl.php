@@ -9,12 +9,16 @@
        $this->loadClass('datepicker','htmlelements');
        $this->loadClass('dropdown','htmlelements');   
        
+       $displayname = '';
+       $count = 0;
        //get faculty name
       foreach($faculty as $sessfacval){
       
           $displayname  = $sessfacval['faculty'];
-          $count  = $sessfacval['totstud'];
+          $count  = $count + $sessfacval['totstud'];
       }
+          $name = $displayname;
+          $val  = $count;
 /*------------------------------------------------------------------------------*/       
        /**
         *create form heading
@@ -25,11 +29,11 @@
         
         $this->objnamehead =& $this->newObject('htmlheading','htmlelements');
         $this->objnamehead->type=3;
-        $this->objnamehead->str=$objLanguage->languageText('mod_marketingrecruitmentforum_facultyname','marketingrecruitmentforum') .':' . ' '.$displayname;//
+        $this->objnamehead->str=$objLanguage->languageText('mod_marketingrecruitmentforum_facultyname','marketingrecruitmentforum') .':' . ' '.$name;//
         
         $this->objtotstud =& $this->newObject('htmlheading','htmlelements');
         $this->objtotstud->type=3;
-        $this->objtotstud->str=$objLanguage->languageText('mod_marketingrecruitmentforum_entrytotal1','marketingrecruitmentforum')  . ':'. ' ' .$count;
+        $this->objtotstud->str=$objLanguage->languageText('mod_marketingrecruitmentforum_entrytotal1','marketingrecruitmentforum')  . ':'. ' ' .$val;
         
 /*------------------------------------------------------------------------------*/
       /**

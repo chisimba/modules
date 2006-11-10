@@ -69,8 +69,9 @@ public  function  getAllstudents(){
   
     foreach($results as $sessCard){
        
-       $myTable->startRow();
        $myTable->row_attributes = " class = \"$oddEven\"";
+       $myTable->startRow();
+       
        $myTable->addCell($sessCard['date'],"6%", null, "left","widelink");
        $myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['surname'], "10%", null, "left","widelink");
@@ -79,8 +80,11 @@ public  function  getAllstudents(){
        $myTable->addCell($sessCard['postcode'],"6%", null, "left","widelink");
        $myTable->addCell($sessCard['telnumber'],"10%", null, "left","widelink");
        $myTable->addCell($sessCard['telcode'],"6%", null, "left","widelink");
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       
        $myTable->endRow();
+       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       
+       
         
    }  
    return $myTable->show();

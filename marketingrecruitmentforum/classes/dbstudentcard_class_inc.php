@@ -172,7 +172,7 @@ public function getstudqualify()
 /*------------------------------------------------------------------------------*/
   public function facultycount($facultyname){
     //count the total no of students entered for speciic faculty
-    $stmt = "Select surname, name,postaddress, schoolname,faculty,count(id) totstud from tbl_studcard where faculty = '$facultyname' group by faculty";
+    $stmt = "Select surname, name,postaddress, schoolname,faculty,count(id) totstud from tbl_studcard where faculty = '$facultyname' group by postaddress";
     $facultycount = $this->getArray($stmt);
     return $facultycount;
   }
