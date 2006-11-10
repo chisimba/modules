@@ -7,7 +7,7 @@
    *define the left column content
    *create an object of the leftcontent class that displays all links 
    */     
-  $leftLayout =& $this->newObject('leftcontent', 'marketingrecruitmentforum');
+  $leftLayout =& $this->getObject('leftcontent', 'marketingrecruitmentforum');
   $leftcolumn   =  $leftLayout->leftColumnContent();
  
   /**
@@ -19,8 +19,8 @@
    $this->objUtils  = & $this->getObject('defaultpageutils','semsutilities');
   //$rightcolumn = $this->objpageutils->getQuickSearchBox(); -- used within the defaultutils class therefore dont need to specify 
   
-   $displaycontent = $this->objUtils->getDefaultLayout($leftcolumn);  
+   $displaycontent = $this->objUtils->getDefaultLayout($leftcolumn,false);  
   
-  echo  $displaycontent
+  echo  $displaycontent;
     
 ?>

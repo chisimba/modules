@@ -16,9 +16,9 @@
    */
    
    $this->objUtils  = & $this->getObject('defaultpageutils','semsutilities');
-   $displaycontent = $this->objUtils->getDefaultLayout($leftColumn);  
+   $displaycontent = $this->objUtils->getDefaultLayout($leftColumn,false);  
   
-  echo  $displaycontent
+  echo  $displaycontent;
     
 
 ?>
