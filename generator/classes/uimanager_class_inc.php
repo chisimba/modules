@@ -49,6 +49,8 @@ class uimanager extends object
         $this->loadClass('textinput','htmlelements');
         //Load the radio class 
         $this->loadClass('radio','htmlelements');
+        // Create an instance of the button object
+        $this->loadClass('button', 'htmlelements');
     }
     
 
@@ -106,10 +108,13 @@ class uimanager extends object
         	$this->tmp = $formElement;
 	        //Create an element for the input of the item and add it to the table
 	        $myTable->startRow();
+            $myTable->addCell(" ");
+            $myTable->addCell($formElement->description);
+            $myTable->endRow();
+	        $myTable->startRow();
 	        $myTable->addCell($formElement->label);
 	        $method = trim($formElement->type);
 	        $myTable->addCell($this->$method($formElement->name));
-	        $myTable->addCell($formElement->description);
 	        $myTable->endRow();
         }
         //Add the table
@@ -129,10 +134,13 @@ class uimanager extends object
     public function getFormAction()
     {
 	    $action = $this->formXml->form[0]->action;
+	    $task = $this->formXml->form[0]->task;
 	    $page = $this->formXml->form[0]->page;
         //Set up the form action to generate the item
         $paramArray=array(
           'action'=>$action,
+          'task'=>$task,
+          'objecttype'=>$this->getParam('objecttype', NULL),
           'page'=>$page);
         return $this->uri($paramArray);
     }
@@ -178,6 +186,27 @@ class uimanager extends object
 	
 	/**
 	 * 
+	 * Method to allow plain text to appear on the interface
+	 * based on data in the XML form template
+	 * 
+	 * @param string $name The name for the plain text
+	 * @return string The HTML code for the plain text
+	 * 
+	 */
+	public function plaintext($name)
+	{
+    	//Check for serialized element
+    	$this->$name = $this->getSession($name, NULL);
+        if (isset($this->$name)) {
+            return $this->$name;
+        } else {
+            //Add the named element to the form
+            return $this->$name;
+        }
+	}
+	
+	/**
+	 * 
 	 * Method to create a radio button based on data in the 
 	 * XML form template
 	 * 
@@ -207,6 +236,30 @@ class uimanager extends object
         }
 	    return $objElement->show();
 	 }
+	 
+	 /**
+	 *
+	 * Method dot create a dropdown list of tables from the database
+	 *
+	 * @param string $name The name for the dropdown
+	 * @return string The HTML code for the dropdown
+	 *
+	 */
+	 public function dropdownfromtable($name)
+	 {
+	    //Check for serialized element
+    	$this->$name = $this->getSession($name, NULL);
+        //Get an instance of the schema generator
+		$objSchema = $this->getObject('getschema');
+		$ar = $objSchema->listDbTables();
+		$objDropDown = $this->getObject('dropdown', 'htmlelements');
+		$objDropDown->name='tablename';
+		$objDropDown->cssId = 'input_tablename';
+		foreach ($ar as $entry) {
+		    $objDropDown->addOption($entry, $entry);
+		}
+		return $objDropDown->show();
+	 }
 
     /**
     * 
@@ -218,8 +271,7 @@ class uimanager extends object
     */ 
     public function submitbutton($name)
     {
-        // Create an instance of the button object
-        $this->loadClass('button', 'htmlelements');
+
         // Create a submit button
         $objElement = new button('submit');	
         // Set the button type to submit
