@@ -371,6 +371,8 @@ abstract class abgenerator extends object
      */
      function validateParseCodes()
      {
+        //Initialize the ret array
+        $ret = array();
      	$arParseCodes = $this->getParseCodes();
      	$arMethods = get_class_methods($this);
      	foreach ($arParseCodes as $cd) {

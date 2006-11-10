@@ -40,7 +40,7 @@ class genregister extends abgenerator implements ifgenerator
 	/**
 	 * Method to generate the class for the controller
 	 */
-	function generate($className)
+	function generate($className=NULL)
 	{
 		//Load the skeleton file for the register.conf from the XML		
         $this->loadSkeleton('register', 'conf');

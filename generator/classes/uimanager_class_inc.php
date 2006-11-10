@@ -24,6 +24,8 @@ class uimanager extends object
    *
    * @var string $objFormTable The table used to hold the form elements
    *
+   * @access public 
+   *
    */
    public $objFormTable;
    
@@ -31,8 +33,20 @@ class uimanager extends object
    *
    * @var string $formXml The XML tree read from the XML template
    *
+   * @access public 
+   *
    */
    public $formXml;
+   
+   
+   /**
+   *
+   * @var string $name The name of the module being created
+   *
+   * @access public 
+   *
+   */
+   public $name;
    
     /**
     * 

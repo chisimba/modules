@@ -39,7 +39,7 @@ class gendbtable extends abgenerator implements ifgenerator
 	/**
 	 * Method to generate the class for the controller
 	 */
-	public function generate($className)
+	public function generate($className=NULL)
 	{
 		//Load the skeleton file for the class from the XML		
         $this->loadSkeleton('dbtable', 'class');
