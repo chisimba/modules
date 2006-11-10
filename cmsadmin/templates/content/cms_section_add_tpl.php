@@ -52,11 +52,11 @@ $titleInput->name = 'title';
 $titleInput->id = 'title';
 $titleInput->size = 50;
 
-$objForm->addRule('title','Please enter a title','required');
+$objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseentertitle', 'cmsadmin'),'required');
 
 $menuTextInput->name = 'menutext';
 $menuTextInput->size = 50;
-$objForm->addRule('menutext', 'Please add a Menu Text', 'required');
+$objForm->addRule('menutext', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddmenutext', 'cmsadmin'), 'required');
 
 $bodyInput->name = 'description';
 
@@ -124,13 +124,13 @@ $table->endRow();
 
 //menu text name
 $table->startRow();
-$table->addCell('Menu Text');
+$table->addCell($this->objLanguage->languageText('mod_cmsadmin_menuname', 'cmsadmin'));
 $table->addCell($menuTextInput->show().'<p/>');
 $table->endRow();
 
 //image
 $table->startRow();
-$table->addCell('Image');
+$table->addCell($this->objLanguage->languageText('word_image'));
 $table->addCell($this->_objUtils->getImageList('image',$objForm->name, $selected).'&nbsp;<span class="thumbnail"><img src="'.$imageSRC.'" 
 					 id="imagelib" name="imagelib" border="2" alt="Preview" /></span><p/>', 'top');
 
@@ -138,32 +138,31 @@ $table->endRow();
 
 //image postion
 $table->startRow();
-$table->addCell('Image Position');
+$table->addCell($this->objLanguage->languageText('mod_cmsadmin_imageposition', 'cmsadmin'));
 $table->addCell($this->_objUtils->getImagePostionList('imageposition').'<p/>');
 $table->endRow();
 
 $table->startRow();
-$table->addCell('Layout');
-
+$table->addCell($this->objLanguage->languageText('word_layout'));
 $table->addCell($this->_objUtils->getLayoutOptions('sectionlayout', $this->getParam('id')).'<p/>');
 $table->endRow();
 
 //access level
 $table->startRow();
-$table->addCell('Access Level');
+$table->addCell($this->objLanguage->languageText('phrase_accessevel'));
 $table->addCell($this->_objUtils->getAccessList('access').'<p/>');
 $table->endRow();
 
 
 //published
 $table->startRow();
-$table->addCell('Published');
+$table->addCell($this->objLanguage->languageText('word_published'));
 $table->addCell($this->_objUtils->getYesNoRadion('published', $isPublished));
 $table->endRow();
 
 //description
 $table->startRow();
-$table->addCell('Description');
+$table->addCell($this->objLanguage->languageText('word_description'));
 $table->addCell($bodyInput->show());
 $table->endRow();
 

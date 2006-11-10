@@ -11,7 +11,7 @@ $objIcon = & $this->newObject('geticon', 'htmlelements');
 
 
 //create a heading 
-$h3->str = ' Section Manager  '.$objIcon->getAddIcon($this->uri(array('action' => 'addsection')));
+$h3->str = $this->objLanguage->languageText('mod_cmsadmin_sectionmanager').'&nbsp;'.$objIcon->getAddIcon($this->uri(array('action' => 'addsection')));
 //counter for records
 $cnt = 1;
 //get the pages
@@ -22,11 +22,12 @@ $cmsType = 'treeMenu';
 
 //setup the table headings
 $table->startHeaderRow();
-$table->addHeaderCell('#');
-$table->addHeaderCell('Section Name');
-$table->addHeaderCell('Published');
-$table->addHeaderCell('Access');
-$table->addHeaderCell('Order');
+$table->addHeaderCell($this->objLanguage->languageText('word_number'));
+$table->addHeaderCell($this->objLanguage->languageText('word_title'));
+$table->addHeaderCell($this->objLanguage->languageText('word_published'));
+$table->addHeaderCell($this->objLanguage->languageText('word_access'));
+$table->addHeaderCell($this->objLanguage->languageText('word_order'));
+$table->addHeaderCell($this->objLanguage->languageText('word_options'));
 
 
 $table->endHeaderRow();   

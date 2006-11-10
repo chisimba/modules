@@ -13,7 +13,7 @@ $link = & $this->newObject('link', 'htmlelements');
 $objIcon = & $this->newObject('geticon', 'htmlelements');
 
 //create a heading 
-$h3->str = ' Front Page Manager  '.$objIcon->getAddIcon($this->uri(array('action' => 'addcontent' , 'frontpage' => 'true')));
+$h3->str = $this->objLanguage->languageText('mod_cmsadmin_frontpagemanager', 'cmsadmin').'&nbsp;'.$objIcon->getAddIcon($this->uri(array('action' => 'addcontent' , 'frontpage' => 'true')));
 //counter for records
 $cnt = 1;
 
@@ -21,13 +21,13 @@ $cnt = 1;
 
 //setup the table headings
 $table->startHeaderRow();
-$table->addHeaderCell('#');
-$table->addHeaderCell('Title');
-$table->addHeaderCell('Published');
-$table->addHeaderCell('Access');
-$table->addHeaderCell('Section');
-$table->addHeaderCell('Order');
-$table->addHeaderCell('Options');
+$table->addHeaderCell($this->objLanguage->languageText('word_number'));
+$table->addHeaderCell($this->objLanguage->languageText('word_title'));
+$table->addHeaderCell($this->objLanguage->languageText('word_published'));
+$table->addHeaderCell($this->objLanguage->languageText('word_access'));
+$table->addHeaderCell($this->objLanguage->languageText('word_section'));
+$table->addHeaderCell($this->objLanguage->languageText('word_order'));
+$table->addHeaderCell($this->objLanguage->languageText('word_options'));
 $table->endHeaderRow();   
 
 $rowcount = 0;

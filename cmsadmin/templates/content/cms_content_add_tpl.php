@@ -100,15 +100,15 @@ $table2->border = '0';
 //$table2->cellpadding='1';
 
 //create heading
-$h3->str = 'Content Item: New';
+$h3->str = $this->objLanguage->languageText('mod_cmsadmin_contentitem', 'cmsadmin').':'.'&nbsp;'.$this->objLanguage->languageText('word_new');
 
 
 $titleInput->name = 'title';
 $menuTextInput->name = 'menutext';
-$objForm->addRule('title', 'Please add a Title', 'required');
+$objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
 $bodyInput->name = 'body';
 $introInput->name = 'intro';
-$objForm->addRule('menutext', 'Please add a Menu Text', 'required');
+$objForm->addRule('menutext', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddmenutext', 'cmsadmin'), 'required');
 
 $button->setToSubmit();
 $button->value = 'Save';
@@ -121,10 +121,10 @@ $frontPage->id = 'frontpage';
 
 
 $table->startRow();
-$table->addCell('Title');
+$table->addCell($this->objLanguage->languageText('word_title'));
 $table->addCell($titleInput->show());
 if(!$editmode){
-  $table->addCell('Section');
+  $table->addCell($this->objLanguage->languageText('word_section'));
   $table->addCell($sections);
 } else {
     $table->addCell($sections->show());
@@ -132,16 +132,16 @@ if(!$editmode){
 $table->endRow();
 
 $table->startRow();
-$table->addCell('Menu Text');
+$table->addCell($this->objLanguage->languageText('mod_cmsadmin_menuname', 'cmsadmin'));
 $table->addCell($menuTextInput->show());
 //$table->addCell('Categories');
 //$table->addCell($category->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell('Show on Front Page');
+$table->addCell($this->objLanguage->languageText('mod_cmsadmin_showonfrontpage', 'cmsadmin'));
 $table->addCell($frontPage->show());
-$table->addCell('Published');
+$table->addCell($this->objLanguage->languageText('word_published'));
 $table->addCell($published->show());
 $table->endRow();
 
@@ -159,7 +159,7 @@ $table2->endRow();
 
 //body
 $table2->startRow();
-$table2->addCell('Main Text');
+$table2->addCell($this->objLanguage->languageText('mod_cmsadmin_maintext', 'cmsadmin'));
 $table2->endRow();
 $table2->startRow();
 $table2->addCell($bodyInput->show());

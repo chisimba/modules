@@ -1087,7 +1087,7 @@ class cmsutils extends object
              for($i = '2'; $i <= $numLevels; $i++){
                 $prefix .= '- ';
                 //get all sub secs in section on level
-                $subSecs = $this->_objSections->getSubSectionsForLevel($section['id'], $i, 'DESC');
+                $subSecs = $this->_objSections->getSubSectionsForLevel($section['id'], $i);
                 foreach($subSecs as $sec){
       	          //Get icon for parent child nodes
                   $objIcon->setIcon('tree/treefolder_orange');	      

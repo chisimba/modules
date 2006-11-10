@@ -136,7 +136,7 @@ if(count($pages) > '0'){
       $pageMenuText = $page['menutext'];
       $ordering = $page['ordering'];
       $pageTitle = $page['title'];
-      $articleDate = $page['publish_up'];
+      $articleDate = $this->_objUtils->formatDate($page['modified']);
       $pagePublished = $page['published'];
       if($pagePublished == '1'){
         $objIcon->setIcon('visible');
