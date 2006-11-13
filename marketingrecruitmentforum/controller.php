@@ -22,6 +22,12 @@ class marketingrecruitmentforum extends controller
      *@param public and private
      */
     public $school = ' ';
+    /**
+      * $submitmsg is a variable to display msg indicating information has been submited into db
+      * @public 
+      
+    */
+    public $submitmsg = ' ';
     
     
      
@@ -64,17 +70,17 @@ class marketingrecruitmentforum extends controller
             break;
             
             case 'activitylist':
-                  $this->setLayoutTemplate('datacapture_layout_tpl.php');
+                  //$this->setLayoutTemplate('datacapture_layout_tpl.php');
                   return 'sluactivities_tpl.php';
             break;
             
             case 'studentcard':
-                  $this->setLayoutTemplate('datacapture_layout_tpl.php');
+                  //$this->setLayoutTemplate('datacapture_layout_tpl.php');
                   return 'studentcards_tpl.php';
             break;
             
             case 'shoollist':
-                  $this->setLayoutTemplate('datacapture_layout_tpl.php');
+                  //$this->setLayoutTemplate('datacapture_layout_tpl.php');
                   return 'schoollist_tpl.php';
             break;
             
@@ -90,7 +96,7 @@ class marketingrecruitmentforum extends controller
             
             case  'showoutput':
               $this->getSchoolist();
-              $this->setLayoutTemplate('datacapture_layout_tpl.php');             
+              //$this->setLayoutTemplate('datacapture_layout_tpl.php');             
               return  'output_tpl.php';
             break;
             
@@ -107,13 +113,14 @@ class marketingrecruitmentforum extends controller
             break;
             
             case  'showsearchslu':
-               $this->setLayoutTemplate('search_layout_tpl.php'); 
+              // $this->setLayoutTemplate('search_layout_tpl.php'); 
                return 'studcardresults_tpl.php';
             break;
             
             case  'submitinfo':
-                  $submitdatesmsg = $this->getParam('submitdatesmsg', 'no');
-                  $this->setVarByRef('submitdatesmsg', $submitdatesmsg);
+                  
+                  $submitmsg = $this->getParam('submitmsg', 'no');
+                  $this->setVarByRef('submitmsg', $submitmsg);
                   ///////////////////////////////////////////////////////
                   //submit studcard info
                   $studcarddata = $this->getSession('studentdata');
@@ -154,38 +161,38 @@ class marketingrecruitmentforum extends controller
                 $this->setVarByRef('faccourse', $faccourse);
                 $this->setVarByRef('facsdcase', $facsdcase);
                 
-                $this->setLayoutTemplate('search_layout_tpl.php');
+              //  $this->setLayoutTemplate('search_layout_tpl.php');
                 return 'searchstudcardfac_tpl.php';
             break;
             
             case  'showsearchfac':
-                $this->setLayoutTemplate('search_layout_tpl.php');
+              //  $this->setLayoutTemplate('search_layout_tpl.php');
                 return  'searchstudcardfac_tpl.php';
             break;
             
             case  'showsearchactiities':
-                $this->setLayoutTemplate('search_layout_tpl.php');
+              //  $this->setLayoutTemplate('search_layout_tpl.php');
                 return  'searchactivities_tpl.php';
             break;
             
             case  'showsearchschool':
-                $this->setLayoutTemplate('search_layout_tpl.php');
+              //  $this->setLayoutTemplate('search_layout_tpl.php');
                 return 'searchschools_tpl.php';
             break;
             
                        
             case  'totalsd':
-                $this->setLayoutTemplate('reports_layout_tpl.php');
+              //  $this->setLayoutTemplate('reports_layout_tpl.php');
                 return 'reportsd_tpl.php';
             break;
             
             case  'totalentry':
-                $this->setLayoutTemplate('reports_layout_tpl.php');
+             //   $this->setLayoutTemplate('reports_layout_tpl.php');
                 return  'entryqualify_tpl.php';
             break;
             
             case  'totalfaculty':
-                $this->setLayoutTemplate('reports_layout_tpl.php');
+             //   $this->setLayoutTemplate('reports_layout_tpl.php');
                 return  'facultyinterest_tpl.php';
             break;
             
@@ -199,7 +206,7 @@ class marketingrecruitmentforum extends controller
                  //send the array data retrieved from the db to template / searchstudclass
                  $this->setVarByRef('faculty', $faculty);
               //   $this->setVarByRef('faculty', $facultyname);
-                $this->setLayoutTemplate('reports_layout_tpl.php');
+              //  $this->setLayoutTemplate('reports_layout_tpl.php');
                  return  'facultyinterest_tpl.php';
                 
             break;
@@ -207,9 +214,9 @@ class marketingrecruitmentforum extends controller
             case  'showstudschool':
                   
                   $useToPopTbl  = $this->getParam('schoollistnames',NULL);  
-                  $school = $this->dbstudentcard->getstudschool($useToPopTbl);
+                  $school  = $this->dbstudentcard->getstudschool($useToPopTbl);
                   $this->setVarByRef('school', $school);
-                  $this->setLayoutTemplate('search_layout_tpl.php'); 
+             //     $this->setLayoutTemplate('search_layout_tpl.php'); 
                   return 'studcardresults_tpl.php';
             break;
             
@@ -217,7 +224,7 @@ class marketingrecruitmentforum extends controller
                   $namevalue  = $this->getParam('namevalues',NULL);
                   $schoolbyname = $this->dbschoollist->getschoolbyname($namevalue);
                   $this->setVarByRef('schoolbyname', $schoolbyname);
-                  $this->setLayoutTemplate('search_layout_tpl.php');
+            //      $this->setLayoutTemplate('search_layout_tpl.php');
                   return 'searchschools_tpl.php';
             break;
             
@@ -231,13 +238,13 @@ class marketingrecruitmentforum extends controller
                       $activitydate = $this->dbsluactivities->getactivitydate($begindate,$enddate);
                       //var_dump($activitydate);
                       $this->setVarByRef('activitydate',$activitydate); 
-                      $this->setLayoutTemplate('search_layout_tpl.php');  
+              //        $this->setLayoutTemplate('search_layout_tpl.php');  
                       return 'searchactivities_tpl.php';
                 }else{
                       $useToPopTbl  = $this->getParam('schoollistnames',NULL);    //get the value of school selected
                       $activschool  = $this->dbsluactivities->getactivityschool($useToPopTbl);
                       $this->setVarByRef('activschool',$activschool);
-                      $this->setLayoutTemplate('search_layout_tpl.php');
+             //         $this->setLayoutTemplate('search_layout_tpl.php');
                       return 'searchactivities_tpl.php';  
                 }
             break;
@@ -249,27 +256,47 @@ class marketingrecruitmentforum extends controller
             case  'followupletter':
                   return  'followupletter_tpl.php';
             break;
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
             case  'postletter':
                 $selected = $this->getParam('post');
-                if($selected){
+                //var_dump($selected);
+                //if($selected){
                   
-                  $val  = $this->getSession('results');
+                  $val = $this->getSession('results');
+                  //$selected = $val[$check];
+                  //var_dump($val);
+                  //die;
+                  //if($selected){
                   foreach($val as $v){
+                  
+                  if($selected == true && $val[0]){
                     
                     $surname  = $v['surname'];
                     $name     = $v['name'];
                     $addy     = $v['postaddress'];
                   }
-                  $this->setVarByRef('surname',$surname);
+                  elseif($selected == true && $val[1]){
+                    
+                    $surname  = $v['surname'];
+                    $name     = $v['name'];
+                    $addy     = $v['postaddress'];
+                  }
+                  elseif($selected == true && $val[2]){
+                    
+                    $surname  = $v['surname'];
+                    $name     = $v['name'];
+                    $addy     = $v['postaddress'];
+                  }
+                  
+                }
+                $this->setVarByRef('surname',$surname);
                   $this->setVarByRef('name',$name);
                   $this->setVarByRef('addy',$addy);
-                }
                 //$this->setVarByRef('selected',$selected);
                 //var_dump($selected);
                 return  'followupletter_tpl.php';
             break;
-     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////       
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////       
 /****************************************************************************************************************/            
             default:
                ///"CRSCDE","2",0,1
@@ -297,6 +324,7 @@ class marketingrecruitmentforum extends controller
        $relsubject = $this->getParam('relevantsubject');
        $result  = 0;  
        $val = 0;
+       
        //case
        if($relsubject){
           $result = 1;

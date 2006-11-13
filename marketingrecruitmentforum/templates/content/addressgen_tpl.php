@@ -26,6 +26,7 @@
   */   
       $this->objstudcard = & $this->getObject('dbstudentcard','marketingrecruitmentforum');
       $results = $this->objstudcard->getallstudaddy();
+      //$results  = $results . $check; 
      
      
     

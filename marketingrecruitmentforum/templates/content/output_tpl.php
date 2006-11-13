@@ -9,15 +9,19 @@
     $this->loadClass('tabbedbox', 'htmlelements');
     $this->loadClass('link', 'htmlelements');
 
-    $addIcon = $this->getObject('geticon', 'htmlelements');
-    $addIcon->setIcon('edit');
-    $addIcon->title = $this->objLanguage->languageText('mod_marketingrecruitmentforum_editstud', 'marketingrecruitmentforum');
+  /*----------------------------------------------------------------------------------------*/     
+  
+  /**
+   *create all form language items
+   */           
+    $submit = $this->objLanguage->languageText('word_submit');
+    $str1 = ucfirst($submit);
+    
     $editstud = $this->objLanguage->languageText('mod_marketingrecruitmentforum_editstud', 'marketingrecruitmentforum');
     $editslu = $this->objLanguage->languageText('mod_marketingrecruitmentforum_editslu', 'marketingrecruitmentforum');
     $editschool = $this->objLanguage->languageText('mod_marketingrecruitmentforum_editsschool', 'marketingrecruitmentforum');
-      
+
     $editStudLink = new link($this->uri(array('action' => 'editstudcard', 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit')));
-    //$editStudLink->link = $addIcon->show();
     $editStudLink->link = $editstud;
     
     $editSLUlink = new link($this->uri(array('action' => 'editsluactivity', 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit')));
@@ -25,20 +29,8 @@
     
     $editSchoollink = new link($this->uri(array('action' => 'editschool', 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit')));
     $editSchoollink->link = $editschool;
-    
-    
-  /*----------------------------------------------------------------------------------------*/     
-  
-  /**
-   *create all form language items
-   */           
-    $submit = $this->objLanguage->languageText('word_submit');
-    $edit = $this->objLanguage->languageText('word_edit');
-    
-    $str1 = ucfirst($submit);
-    $str2 = ucfirst($edit);
-    
   /*----------------------------------------------------------------------------------------*/ 
+
  /**
   *create form heading
   */
@@ -53,15 +45,34 @@
         
   $this->objSubmitstudcard  = new button('submitstudcard', $str1);
   $this->objSubmitstudcard->setToSubmit();
-  
-  
   /*----------------------------------------------------------------------------------------*/
-        
+   
+   /**
+    *determine if session variables containing student card data, activities data and school data is empty or not 
+    *if !empty then user has not submited information as yet
+    *if empty, information submitted    
+    */           
+     
+    $sessionstudcard [] = $this->getSession('studentdata');
+    $sessionsluactivity [] = $this->getSession('sluactivitydata');
+    $sessionsschoolist [] = $this->getSession('schoolvalues');
+    
+   if((!empty($sessionstudcard) )|| (!empty($sessionsluactivity)) || (!empty($sessionsschoolist))){
+   
+          $hasSubmitted = 'no';
+   }else{
+          $hasSubmitted = 'yes';
+   }        
+  /*----------------------------------------------------------------------------------------*/        
   /**
    *display all student card info contained in the session variable
    */      
+   
+    /**
+   *display all student card info contained in the session variable
+   */      
   //$sessionstudcard = array(); 
-  $sessionstudcard[]= $this->getSession('studentdata');
+  //$sessionstudcard[]= $this->getSession('studentdata');
       if(!empty($sessionstudcard)){
       //Create table to display student details in session  
             $objstudcardTable =& $this->newObject('htmltable', 'htmlelements');
@@ -69,13 +80,28 @@
             $objstudcardTable->cellpadding = '2';
             $objstudcardTable->cellwidth = '10';
             $objstudcardTable->border='0';
-            $objstudcardTable->width = '100%';
+            $objstudcardTable->width = '80%';
   
-            //$rowcount = '0';
+            
   
             foreach($sessionstudcard as $sesStuddata){
      
-  
+                if($sesStuddata['exemption'] == 1){
+                    $exemptionval = 'yes';
+                }else{
+                      $exemptionval = 'no';
+                }
+                
+                if($sesStuddata['relevantsubject'] == 1){
+                    $relsubjval = 'yes';
+                }else{
+                    $relsubjval = 'no';
+                }
+                if($sesStuddata['sdcase'] == 1){
+                    $sdvalues = 'yes';
+                }else{
+                    $sdvalues = 'no';
+                }    
   
                 $objstudcardTable->startRow();
                 $objstudcardTable->addCell('Date');
@@ -120,7 +146,7 @@
   
                 $objstudcardTable->startRow();
                 $objstudcardTable->addCell('Qualify for Exemption');
-                $objstudcardTable->addCell(strtoupper($sesStuddata['exemption']));//, '', '', '', $oddOrEven);
+                $objstudcardTable->addCell(strtoupper($exemptionval));//, '', '', '', $oddOrEven);
                 $objstudcardTable->endRow();
                 
                 $objstudcardTable->startRow();
@@ -135,12 +161,12 @@
   
                 $objstudcardTable->startRow();
                 $objstudcardTable->addCell('Relevant Subject');
-                $objstudcardTable->addCell(strtoupper($sesStuddata['relevantsubject']));//, '', '', '', $oddOrEven);
+                $objstudcardTable->addCell(strtoupper($relsubjval));//, '', '', '', $oddOrEven);
                 $objstudcardTable->endRow();
   
                 $objstudcardTable->startRow();
                 $objstudcardTable->addCell('SD Case');
-                $objstudcardTable->addCell(strtoupper($sesStuddata['sdcase']));//, '', '', '', $oddOrEven);
+                $objstudcardTable->addCell(strtoupper($sdvalues));//, '', '', '', $oddOrEven);
                 $objstudcardTable->endRow();
             }
       }
@@ -148,21 +174,16 @@
   /**
    *display all sluactivity info contained session variable
    */     
-    $sessionsluactivity [] = $this->getSession('sluactivitydata');
+  //  $sessionsluactivity [] = $this->getSession('sluactivitydata');
         if(!empty($sessionsluactivity)){
         //Create table to display sluactivity details in session  
               $objactivityTable =& $this->newObject('htmltable', 'htmlelements');
               $objactivityTable->cellspacing = '2';
               $objactivityTable->cellpadding = '2';
               $objactivityTable->border='0';
-              $objactivityTable->width = '89%';
+              $objactivityTable->width = '105%';
             
             foreach($sessionsluactivity as $sesSLU){
-            
-              /*$objactivityTable->startRow();
-              $objactivityTable->addCell("");
-              $objactivityTable->addCell("<div align=\"right\">" .$editSLUlink->show() . "</div>");
-              $objactivityTable->endRow();*/
             
               $objactivityTable->startRow();
               $objactivityTable->addCell('Date');
@@ -195,14 +216,14 @@
   /**
    *display all school list info contained in session
    */     
-    $sessionsschoolist [] = $this->getSession('schoolvalues');
+   // $sessionsschoolist [] = $this->getSession('schoolvalues');
         if(!empty($sessionsschoolist)){
         //Create table to display school list details in session  
             $objschoolTable =& $this->newObject('htmltable', 'htmlelements');
             $objschoolTable->cellspacing = '2';
             $objschoolTable->cellpadding = '2';
             $objschoolTable->border='0';
-            $objschoolTable->width = '60%';
+            $objschoolTable->width = '70%';
           
           foreach($sessionsschoolist as $sesschool){
           
@@ -280,7 +301,7 @@
    $stringval = $objstudtab->show() . $objslutab->show() . $objschooltab->show();
     
     $Studcardinfo->addTab('studcard', 'View Output', $stringval);
-    $Studcardinfo->addTab('sluactivity', 'Submit Information', $this->objSubmitstudcard->show());;
+    $Studcardinfo->addTab('info', 'Submit Information', $this->objSubmitstudcard->show());;
     //$Studcardinfo->addTab('schoollist', 'School List', $objschooltab->show());
   
 
@@ -291,38 +312,35 @@
     /**
       *create a form to place all elements in
       */
-          
-      $objForm = new form('outputdata',$this->uri(array('action'=>'submitinfo')));
-      $objForm->displayType = 3;
-      $objForm->addToForm($Studcardinfo->show());
-          
-    echo  $this->objMainheading->show();
+      echo  $this->objMainheading->show();
+      
+      if($hasSubmitted == 'yes'){    
+          $objForm = new form('outputdata',$this->uri(array('action'=>'submitinfo')));
+          $objForm->displayType = 3;
+          $objForm->addToForm($Studcardinfo->show());
+              
+        
+      }else{
+         $objForm = new form('outputdata',$this->uri(array('action'=>'submitinfo','submitmsg' => 'yes')));
+          $objForm->displayType = 3;
+          $objForm->addToForm($Studcardinfo->show()); 
+      
+      }
 
 /**************************************************************************************************/ /*PROBLEM*/                  
-if((!empty($sessionstudcard) )|| (!empty($sessionsluactivity)) || (!empty($sessionsschoolist))){
-          
-          $submitdatesmsg == 'yes';
-          $tomsg =& $this->newObject('timeoutmessage', 'htmlelements');
-          $tomsg->setMessage('thank you information has been sucessfully submitted');
   
-          echo $tomsg->show();
-}else{
-          $submitdatesmsg = 'no';
-          $tomsg =& $this->newObject('timeoutmessage', 'htmlelements');
-          $tomsg->setMessage('There is no information to submit');
-          echo $tomsg->show();
-}
-/**************************************************************************************************/ /*PROBLEM*/
-//$submitdatesmsg = '';    
-/*if($submitdatesmsg){// == 'yes'){
-  $tomsg =& $this->newObject('timeoutmessage', 'htmlelements');
-  $tomsg->setMessage('thank you information has been sucessfully submitted');
+if($submitmsg == 'yes'){
+            $tomsg =& $this->newObject('timeoutmessage', 'htmlelements');
+            $tomsg->setMessage('thank you information has been sucessfully submitted');
+            echo $tomsg->show();
   
-  echo $tomsg->show();
-} */   
-    echo  $objForm->show();
-  
-  //if(!empty($sessionstudcard)){
-    //echo "<div align=\"left\">" . $objstudcardTable->show() . "</div>";
-  //} 
+}/*else{
+            $tomsg =& $this->newObject('timeoutmessage', 'htmlelements');
+            $tomsg->setMessage('there is no information to submit');
+            echo $tomsg->show();
+}*/
+
+/*----------------------------------------------------------------------------------------*/  
+echo  $objForm->show();
+ 
 ?>

@@ -47,7 +47,7 @@ class dbstudentcard extends dbTable{
  //select all informatio from the stud card table
  public function getallstudinfo()
  {
-      $filter = 'order by schoolname,surname';
+      $filter = 'order by date,schoolname,surname';
       $studresults  = $this->getAll($filter);
       return  $studresults;
  } 

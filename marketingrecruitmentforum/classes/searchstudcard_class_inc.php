@@ -120,9 +120,9 @@ public  function allstudschool($school){
                  
                  $myTable->startRow();
                  $myTable->row_attributes = " class = \"$oddEven\"";
-                 $myTable->addCell($sessCard['surname'],"15%", null, "left","widelink");
-                 $myTable->addCell($sessCard['name'], "15%", null, "left","widelink");
                  $myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
+                 $myTable->addCell($sessCard['name'], "15%", null, "left","widelink");
+                 $myTable->addCell($sessCard['surname'],"15%", null, "left","widelink");
                  $oddOrEven = ($rowcount == 0) ? "odd" : "even";
                  $myTable->endRow();
              }
