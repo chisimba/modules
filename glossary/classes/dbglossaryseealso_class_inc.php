@@ -26,6 +26,8 @@ class dbGlossarySeeAlso extends dbTable
     public function init()
     {
         parent::init('bridge_glossary_seealso');
+
+        $this->objGlossary = $this->getObject('dbglossary');
     }
 
     /**
@@ -67,24 +69,35 @@ class dbGlossarySeeAlso extends dbTable
     *
     * @return array Matching Terms, and their recordIds
     */
-    public function findNotLinkedTo($item)
+    public function findNotLinkedTo($item, $context=NULL)
     {  
-        $sql = 'SELECT distinct tbl_glossary.id, 
-                                tbl_glossary.term ';
+        $allTerms =  $this->objGlossary->fetchAllRecords();
 
-        $sql.= 'FROM `tbl_glossary`,
-                     `bridge_glossary_seealso` ';
+        $linkTerms = $this->fetchAllRecords($item, $context);
 
-        $sql.= "WHERE (tbl_glossary.id = bridge_glossary_seealso.item_id OR
-                       tbl_glossary.id = bridge_glossary_seealso.item_id2 ) AND 
-                      (bridge_glossary_seealso.item_id='{$item}' OR
-                       bridge_glossary_seealso.item_id2='{$item}') AND 
-                       bridge_glossary_seealso.id IS NULL AND 
-                       tbl_glossary.id != '{$item}'";
-
-        $sql.= ' ORDER BY tbl_glossary.term';
         
-        return $this->getArray($sql);
+
+        $linkTermsArray = array();
+        foreach ($linkTerms as $term)
+        {
+            if ($term['item1'] == $item) {
+            $linkTermsArray[] = $term['item2'];
+        } else {
+            $linkTermsArray[] = $term['item1'];
+        }
+        }
+        
+        $resultsArray = array();
+
+        foreach ($allTerms as $term)
+        {
+            if (!in_array($term['item_id'], $linkTermsArray) && $term['item_id'] != $item) {
+                $resultsArray[] = array('id'=>$term['item_id'], 'term'=>$term['term']);
+            }
+        }
+  
+return $resultsArray;
+       
     }
 
     /**
@@ -155,7 +168,11 @@ class dbGlossarySeeAlso extends dbTable
         return;	
     }
 
-
+    public function deleteSingleLink($id) 
+    {
+        $this->delete('id', $id);
+        return;	
+    }
 
 }  #end of class
 

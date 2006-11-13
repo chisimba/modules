@@ -65,18 +65,21 @@ echo $this->title->show();
             $termInfo.= ' '.$deleteLink->show();
         }
         
-        if ($element['seealsos'] != '' || $element['urls'] != '' || isset($element['images']) != '') {
+        //if ($element['seealsos'] != '' || $element['urls'] != '' || isset($element['images']) != '') {
         
-            $termInfo .= '<br />';
+            //$termInfo .= '<br />';
         
-        }
+        //}
 		
-		if ($element['seealsos'] != ''){
+		//if ($element['seealsos'] != ''){
 			
-			$termInfo.= '<br />';
+			
             
             $seeAlsos = $this->objGlossarySeeAlso->fetchAllRecords($element['item_id']);
-			
+
+            if(count($seeAlsos) > 0){
+
+			$termInfo.= '<br />';
 			$termInfo.= '<strong>'.$this->objLanguage->languageText('mod_glossary_seeAlso', 'glossary').':</strong> ';
 			
 			
@@ -114,12 +117,13 @@ echo $this->title->show();
 			
 		}
 		
-		if ($element['urls'] != ''){
+		//if ($element['urls'] != ''){
 			
-			$termInfo.= '<br />';
+			
             
             $urls = $this->objGlossaryUrls->fetchAllRecords($element['item_id']);
-			
+	      if (count($urls) > 0) {
+            $termInfo.= '<br />';
 			$termInfo.= '<strong>'.$this->objLanguage->languageText('mod_glossary_urls', 'glossary').':</strong> ';
             
             $comma = '';
@@ -139,12 +143,15 @@ echo $this->title->show();
 			
 		}
         
-        if (isset($element['images']) != ''){
+        //if (isset($element['images']) != ''){
 			
-			$termInfo.= '<br />';
+			
             
-            $images = $this->objGlossaryImages->getListImage($element['item_id']);
+        $images = $this->objGlossaryImages->getListImage($element['item_id']);
+
+        if (count($images) > 0) {
 			
+            $termInfo.= '<br />';
 			$termInfo.= '<strong>'.$objLanguage->languageText('word_images').' :</strong> ';
             
             $comma = '';
@@ -160,8 +167,9 @@ echo $this->title->show();
                     $objPop->set('location',$link);
                     $objPop->set('window_name','previewImage');
                     $objPop->set('linktext',$image['caption']);
-                    $objPop->set('width','10'); 
-                    $objPop->set('height','10');
+                    $objPop->set('width','200'); 
+                    $objPop->set('height','200');
+                    $objPop->set('resize','yes');
                 
 				    $termInfo.= $objPop->show();
                 

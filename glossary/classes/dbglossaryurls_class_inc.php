@@ -92,6 +92,13 @@ class dbGlossaryUrls extends dbTable
     return;	
     }
 
+    public function deleteSingleUrl($id) {
+    
+        $this->delete('id', $id);
+    
+    return;	
+    }
+
 }  #end of class
 
 ?>

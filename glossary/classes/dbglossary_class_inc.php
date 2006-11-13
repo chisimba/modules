@@ -140,19 +140,8 @@ class dbGlossary extends dbTable
     {
         $sql = 'SELECT distinct tbl_glossary.id AS item_id,
                                 tbl_glossary.term,
-                                tbl_glossary.definition, 
-                                tbl_glossary_urls.item_id AS urls, 
-                                bridge_glossary_seealso.item_id AS seealsos, 
-                                tbl_glossary_images.item_id AS images ';
-        $sql.= 'FROM `tbl_glossary`, 
-                     `bridge_glossary_seealso`, 
-                     `tbl_glossary_urls`, 
-                     `tbl_glossary_images` ';
-        $sql.= 'WHERE (tbl_glossary.id = bridge_glossary_seealso.item_id OR 
-                       tbl_glossary.id = bridge_glossary_seealso.item_id2) AND 
-                       tbl_glossary.id = tbl_glossary_urls.item_id AND 
-                       tbl_glossary.id = tbl_glossary_images.item_id ';
-        $sql.= "AND tbl_glossary.id = '".$id."' ";
+                                tbl_glossary.definition ';
+        $sql.= "FROM tbl_glossary WHERE  tbl_glossary.id = '".$id."' ";
         $sql.= "AND tbl_glossary.context='".$context."' ";
 
 

@@ -72,6 +72,8 @@ class glossary extends controller
         $this->objLog=$this->newObject('logactivity', 'logger');
         //Log this module call
         $this->objLog->log();
+
+$this->setVar('pageSuppressXML', TRUE);
     }
 	
 	/**
@@ -432,6 +434,7 @@ class glossary extends controller
         
         // Details of the Record
         $record = $this->objGlossary->showFullSingle($id, $this->contextCode);
+
         
         $term = $record[0]['term'];
         
@@ -456,7 +459,10 @@ class glossary extends controller
         
         // Determines whether this record is linked to all other terms
         // If not, don't show link to add one
-        $notLinkedToNum = $this->objGlossarySeeAlso->findNotLinkedToNum($id);
+        $notLinkedToNum = $this->objGlossary->getNumAllRecords($this->contextCode) - $seeAlsoNum;
+
+
+//$this->objGlossarySeeAlso->findNotLinkedToNum($id);
         $this->setVarByRef('notLinkedToNum', $notLinkedToNum);
         
         $others = $this->objGlossarySeeAlso->findNotLinkedTo($id);
@@ -565,15 +571,13 @@ class glossary extends controller
 		// Parameters for insert method:
 		// $url, $item_id, $userId, $dateLastUpdated
         
-        if ($url != 'http://' && $url != '') {
+
             $this->objGlossaryUrls->insertSingle(
                 $url,
                 $id,
                 $this->objUser->userId(),
                 mktime()
-            
             );
-        }
         
         // Redirect to edit page
         return $this->nextAction('edit', array('id'=>$this->getParam('id', null), 'message'=>'urladded'));
@@ -628,9 +632,10 @@ class glossary extends controller
 	private function deleteURL($urlid)
 	{
 		// Deletes a URL Link from Term
-		
-		$this->objGlossaryUrls->deleteSingle($urlid, null);
-		
+		if (!empty($urlid)){
+		  $this->objGlossaryUrls->deleteSingleUrl($urlid, null);
+		}
+
         return $this->nextAction('edit', array('id'=>$this->getParam('id', null), 'message'=>'urldeleted'));
 	}
 	
@@ -642,9 +647,9 @@ class glossary extends controller
 	private function deleteSeeAlso($seeAlsoId)
 	{
 		// Deletes a link between two terms
-		
-		$this->objGlossarySeeAlso->deleteSingle($seeAlsoId, null);
-		
+		if (!empty($seeAlsoId)){
+    		$this->objGlossarySeeAlso->deleteSingleLink($seeAlsoId, null);
+	       }	
 		return $this->nextAction('edit', array('id'=>$this->getParam('id'), 'message'=>'seealsodeleted'));
 	}
 	

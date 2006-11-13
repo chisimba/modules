@@ -115,9 +115,9 @@ if ($urlNum > 0)
             $objPop->set('location',$link);
             $objPop->set('window_name','previewImage');
             $objPop->set('linktext',$image['caption']);
-            $objPop->set('width','10'); 
-            $objPop->set('height','10');
-            
+            $objPop->set('width','20'); 
+            $objPop->set('height','20');
+            $objPop->set('resizable','yes');
             $imageDisplay.= $objPop->show();
             
             $comma = ', ';
