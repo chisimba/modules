@@ -37,7 +37,7 @@ class dbglossaryimages extends dbTable
 	*/
     public function getListImage($id)
     {
-        $sql = "SELECT *, tbl_glossary_images.id as imageid FROM `tbl_glossary_images` 
+        $sql = "SELECT *, tbl_glossary_images.id as imageid FROM tbl_glossary_images 
         INNER JOIN tbl_files ON ( tbl_glossary_images.image = tbl_files.id ) 
         WHERE item_id = '".$id."'";
         

@@ -53,10 +53,10 @@ class dbGlossary extends dbTable
                                 url.item_id AS urls, 
                                 bridge.item_id AS seealsos, 
                                 im.item_id AS images ';
-        $sql.= 'FROM `tbl_glossary` AS gloss, 
-                     `bridge_glossary_seealso` AS bridge, 
-                     `tbl_glossary_urls` AS url, 
-                     `tbl_glossary_images` AS im ';
+        $sql.= 'FROM tbl_glossary AS gloss, 
+                     bridge_glossary_seealso AS bridge, 
+                     tbl_glossary_urls AS url, 
+                     tbl_glossary_images AS im ';
         
         if ($context != '') {
             $sql.= "WHERE gloss.context = '".$context."' ";
@@ -97,10 +97,10 @@ class dbGlossary extends dbTable
                                 url.item_id AS urls, 
                                 bridge.item_id AS seealsos, 
                                 im.item_id AS images ';
-        $sql.= 'FROM `tbl_glossary` AS gloss, 
-                     `bridge_glossary_seealso` AS bridge, 
-                     `tbl_glossary_urls` AS url, 
-                     `tbl_glossary_images` AS im ';
+        $sql.= 'FROM tbl_glossary AS gloss, 
+                     bridge_glossary_seealso AS bridge, 
+                     tbl_glossary_urls AS url, 
+                     tbl_glossary_images AS im ';
         $sql.= "WHERE gloss.term LIKE '".$term."' ";
         // end of Changes
         
