@@ -1431,7 +1431,6 @@ class cmsutils extends object
             //initiate objects
             $table = & $this->newObject('htmltable', 'htmlelements');
             $titleInput = & $this->newObject('textinput', 'htmlelements');
-            $menuTextInput = & $this->newObject('textinput', 'htmlelements');
             $bodyInput =  $this->newObject('htmlarea', 'htmlelements');
             $introInput =  $this->newObject('htmlarea', 'htmlelements');
             $h3 = &$this->newObject('htmlheading', 'htmlelements');
@@ -1450,7 +1449,6 @@ class cmsutils extends object
                 $editmode = FALSE;
 
                 $titleInput->value = '';
-                $menuTextInput->value = '';
                 $introInput->value = '';
                 $published->setChecked(TRUE);
                 $contentId = '';
@@ -1466,7 +1464,6 @@ class cmsutils extends object
 
                 $arrContent = $this->_objContent->getContentPage($contentId);
                 $titleInput->value = $arrContent['title'];
-                $menuTextInput->value = $arrContent['menutext'];
                 $introInput->setContent($arrContent['introtext']);
                 $bodyInput->setContent($arrContent['body']);
 
@@ -1512,8 +1509,6 @@ class cmsutils extends object
             $titleInput->name = 'title';
             $titleInput->id = 'title';
 
-            $menuTextInput->name = 'menutext';
-            $menuTextInput->id = 'menutext';
 
             $objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
 
@@ -1546,24 +1541,25 @@ class cmsutils extends object
             $table->startRow();
             $table->addCell($this->objLanguage->languageText('word_title'));
             $table->addCell($titleInput->show());
-
+            $table->endRow();
+            
             if (!$editmode) {
-               $table->addCell($this->objLanguage->languageText('word_section'));
-               $table->addCell($sections);
+                $table->startRow();
+                $table->addCell($this->objLanguage->languageText('word_section'));
+                $table->addCell($sections);
+                $table->endRow();
             } else {
-                 $table->addCell($sections->show());
+                $table->startRow();
+                $table->addCell($sections->show());
+                $table->endRow();
             }
-
-            $table->endRow();
-
-            $table->startRow();
-            $table->addCell($this->objLanguage->languageText('mod_cmsadmin_menuname', 'cmsadmin'));
-            $table->addCell($menuTextInput->show());
-            $table->endRow();
 
             $table->startRow();
             $table->addCell($this->objLanguage->languageText('mod_cmsadmin_showonfrontpage', 'cmsadmin'));
             $table->addCell($frontPage->show());
+            $table->endRow();
+
+            $table->startRow();
             $table->addCell($this->objLanguage->languageText('word_published'));
             $table->addCell($published->show());
             $table->endRow();
