@@ -114,11 +114,42 @@ class dbHomePages extends dbTable
 			tbl_homepages.userid, 
 			tbl_users.firstname, 
 			tbl_users.surname 
-		FROM tbl_users, tbl_homepages 
+		  FROM tbl_users, tbl_homepages 
         WHERE tbl_homepages.userid = tbl_users.userid";            
         return $this->getArray($sql);			
     }
+
+	/**
+	* Method to get the list of home pages available for a specific letter 
+    * @param string $order Ordering pattern
+    * @param string $limit Amount of record to limit query
+    * @param string $match letter for surname search 
+    * @return array List of Home Pages with Hits
+    */
+    public function getHomePagesWithHitsSingle($match)
+    {
+        $sql = "SELECT 
+		   tbl_homepages.userid, 
+			count( homepageid ) AS visitors, 
+			firstname, 
+			surname, 
+			timestamp 
+        FROM 
+			tbl_homepages 
+   	  LEFT JOIN tbl_homepages_log ON ( homepageid = tbl_homepages.id )
+        INNER JOIN tbl_users ON ( tbl_homepages.userid = tbl_users.userid )
+  		  WHERE surname LIKE '$match%'
+	     GROUP BY tbl_homepages.id  ORDER BY firstname";
+        
+        if (!is_null($limit)) {
+            $sql .= ' LIMIT '.'NULL';
+		}
+        return $this->getArray($sql);
+        	//			  WHERE surname LIKE '%$match%'
+
+    }    
     
+   
     /**
     * Method to get the list of home pages available with amount of hits for each web page
     * @param string $order Ordering pattern
@@ -135,7 +166,7 @@ class dbHomePages extends dbTable
 			timestamp 
         FROM 
 			tbl_homepages 
-		LEFT JOIN tbl_homepages_log ON ( homepageid = tbl_homepages.id )
+		  LEFT JOIN tbl_homepages_log ON ( homepageid = tbl_homepages.id )
         INNER JOIN tbl_users ON ( tbl_homepages.userid = tbl_users.userid )
         GROUP BY tbl_homepages.id  ORDER BY '.$order;
         if (!is_null($limit)) {
@@ -175,13 +206,16 @@ class dbHomePages extends dbTable
             $homePageId = $this->getHomePageId($userId);
             $return .= '<ul>';
             // Total Number of Hits
-            $return .= '<li><p><strong>'.$this->objLanguage->languageText('mod_homepage_total_hits', 'homepage').'</strong>: '.$this->objHomePageLog->getHits($homePageId).'</p></li>';
+            $hits = $this->objHomePageLog->getHits($homePageId);
+            $return .= '<li><p><strong>'.$this->objLanguage->languageText('mod_homepage_total_hits', 'homepage').'</strong>: '.$hits.'</p></li>';
             // Total Number of Unique Visitors
-            $return .= '<li><p><strong>'.$this->objLanguage->languageText('mod_homepage_unique_visitors', 'homepage').'</strong>: '.$this->objHomePageLog->getUniqueVisitors($homePageId).'</p></li>';
+				$visitors = $this->objHomePageLog->getUniqueVisitors($homePageId);            
+            $return .= '<li><p><strong>'.$this->objLanguage->languageText('mod_homepage_unique_visitors', 'homepage').'</strong>: '.$visitors.'</p></li>';
             // Last Visitor - Under Construction
             //$return .= '<li><p><strong>Last Visitor</strong>: 8'.'</p></li>';
             // Origins of ther User
-            $return .= '<li><p><strong>'.$this->objLanguage->languageText('mod_homepage_visitor_origins', 'homepage').'</strong>: '.$this->objHomePageLog->getCountriesFlags($homePageId).'</p></li>';
+				$unique = $this->objHomePageLog->getCountriesFlags($homePageId);            
+            $return .= '<li><p><strong>'.$this->objLanguage->languageText('mod_homepage_visitor_origins', 'homepage').'</strong>: '.$unique.'</p></li>';
             $return .= '</ul>';
             if ($showLinks) {
                 // Link to Home Page

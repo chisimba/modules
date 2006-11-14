@@ -18,6 +18,14 @@ class homepage extends controller
     {
         $this->objUser =& $this->getObject('user', 'security');
         $this->objLanguage =& $this->getObject('language','language');
+		 
+		  /*
+		  * the objUserAdmin will be
+		  * used to initiate the search for user by surname        
+        * by getting the users details
+        */        
+        $this->objUserAdmin=&$this->getObject('useradmin_model','security');
+     
 
         $this->objdBHomePages =& $this->getObject('dbhomepages');
         $this->objdBHomePagesLog =& $this->getObject('dbhomepageslog');
@@ -37,7 +45,26 @@ class homepage extends controller
         $this->setVarByRef('objUser', $this->objUser);
 
         switch($action){
-			case "viewlist":
+				
+            case 'listusers':
+					   $how=$this->getParam('how');
+                  $match=stripslashes($this->getParam('searchField'));    
+                  $this->setVar('match',$match);
+                  if($match == 'listall')
+                  {
+                   $listHomePages = $this->objdBHomePages->getHomePagesWithHits();
+                   $this->setVarByRef("listHomePages", $listHomePages);
+                   return 'viewlist_tpl.php';
+		            }
+		            else
+		            {
+	                  $listHomePages = $this->objdBHomePages->getHomePagesWithHitsSingle($match);
+			   	      $this->setVarByRef("listHomePages", $listHomePages);
+              		   return 'viewlist_tpl.php';
+		            }       
+            
+            				
+				case "viewlist":
                 $listHomePages = $this->objdBHomePages->getHomePagesWithHits();
                 $this->setVarByRef("listHomePages", $listHomePages);
                 return 'viewlist_tpl.php';

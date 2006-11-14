@@ -2,12 +2,24 @@
 <?php	
 $this->loadClass('link', 'htmlelements');
 	
-    echo "<h1>" . $objLanguage->languageText('mod_homepage_heading', 'homepage')/* . " " . $this->objUser->fullName()*/ . "</h1>";
+    echo "<h1>" . $objLanguage->languageText('mod_homepage_heading', 'homepage') /* . " " . $this->objUser->fullName()*/ . "</h1>";
 	//echo "[".($exists?'true':'false')."]";
 
 	echo  '<p align="center"><img src="modules/homepage/resources/homepages.gif"></img></p>';
 
-    echo "<ul>";
+	//ADDING functionality for alphabetic search
+	$objAlphabet=& $this->getObject('alphabet','navigation');
+	$linkarray=array('action'=>'ListUsers','how'=>'surname','searchField'=>'LETTER');
+	$url=$this->uri($linkarray,'homepage');        
+	echo 
+		'<p>'
+		.$this->objLanguage->languageText('mod_homepage_browsebysurname','homepage')
+		.'<br /> '
+		.$objAlphabet->putAlpha($url,TRUE,$this->objLanguage->languageText('mod_homepage_listallusers','homepage')).'</p>';	
+
+
+
+   echo "<ul>";
 	// Edit homepage.
 	echo "<li><a href=\"" . 
 		$this->uri(array(
@@ -43,11 +55,10 @@ $this->loadClass('link', 'htmlelements');
         echo $this->objdBHomePages->show(NULL, FALSE);
     }
     
-?>
-</div>
-<div style=" width: 40%; float: left;">
+echo '</div>';
+echo '<div style=" width: 40%; float: left;">';
 
-<?
+
 	//Show countries visitors came from
 	$this->objH =& $this->getObject('htmlheading', 'htmlelements');
 	$this->objH->type=3; //Heading <h3>
@@ -67,6 +78,7 @@ $this->loadClass('link', 'htmlelements');
     
     $homePageListTable->endHeaderRow();
     
+    
     foreach ($listHomePages as $homePage)
     {
         $homePageListTable->startRow();
@@ -79,6 +91,8 @@ $this->loadClass('link', 'htmlelements');
         $homePageListTable->endRow();
     }
     
+    
+    
     echo $homePageListTable->show();
     
     if (count($listHomePages) > 10) {
@@ -86,9 +100,6 @@ $this->loadClass('link', 'htmlelements');
         $viewAllLink->link = $objLanguage->languageText('mod_homepage_viewlistofallhomepages', 'homepage');
         echo '<p align="center">'.$viewAllLink->show().'</p>';
     }
-    
-	
-	
+echo '</div>';
 
 ?>
-</div>
