@@ -298,8 +298,8 @@ class blog extends controller
 									$valid = "TRUE";
 									$userid = $user['userid'];
 
-								}*/
-							}
+								}
+							}*/
 						}
 echo "valid? ".$valid;
 						if($valid == "TRUE")
