@@ -306,7 +306,7 @@ print_r($valid);
 						{
 							$data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
 											'body' => $message, 'attachments' => $attachments);
-							print_r($data);
+							//print_r($data);
 						}
 
 						//delete the message as we don't need it anymore
