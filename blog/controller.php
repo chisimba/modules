@@ -277,7 +277,7 @@ class blog extends controller
 							$parts = explode(">", $parts[1]);
 							$addy = $parts[0];
 
-							echo $addy;
+							//echo $addy;
 
 							//check if the address we get from the msg is in the array of valid addresses
 							foreach ($valadds as $user)
@@ -288,7 +288,7 @@ class blog extends controller
 
 								}
 								else {
-									echo "userid match - Proceed!";
+									//echo "userid match - Proceed!";
 									$valid = TRUE;
 									$userid = $user['userid'];
 
@@ -300,6 +300,7 @@ class blog extends controller
 						{
 							$data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
 											'body' => $message, 'attachments' => $attachments);
+							print_r($data);
 						}
 
 						//delete the message as we don't need it anymore
