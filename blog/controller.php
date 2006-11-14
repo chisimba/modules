@@ -306,6 +306,10 @@ class blog extends controller
 					}
 
 					//print_r($data);
+					if(!isset($data))
+					{
+						$data = array();
+					}
 					foreach ($data as $datum)
 					{
 						//add the [img][/img] tags to the body so that the images show up
