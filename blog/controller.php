@@ -284,19 +284,19 @@ class blog extends controller
 							{
 								if($user['address'] != $addy)
 								{
-									$valid = FALSE;
+									$valid = "FALSE";
 
 								}
 								else {
 									//echo "userid match - Proceed!";
-									$valid = TRUE;
+									$valid = "TRUE";
 									$userid = $user['userid'];
 
 								}
 							}
 						}
-echo $valid;
-						if($valid == TRUE)
+echo "valid? ".$valid;
+						if($valid == "TRUE")
 						{
 							$data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
 											'body' => $message, 'attachments' => $attachments);
