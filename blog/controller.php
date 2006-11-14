@@ -294,16 +294,14 @@ class blog extends controller
 
 								}
 								else {
-									echo "userid match - Proceed!";
-									$validated = "TRUE";
+									$validated = TRUE;
 									$userid = $user['userid'];
 									break;
 
 								}
 							}
 						}
-print_r($validated);
-						if($validated == "TRUE")
+						if($validated == TRUE)
 						{
 							$data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
 											'body' => $message, 'attachments' => $attachments);
