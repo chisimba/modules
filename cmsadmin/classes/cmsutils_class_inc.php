@@ -249,26 +249,37 @@ class cmsutils extends object
 
                 $arrSection = $this->_objSections->getSection($id);
                 $str = '<table><tr>';
+                
                 $firstOneChecked = 'checked="checked"';
                 foreach ($arrLayouts as $layout) {
-
                     if ($arrSection['layout'] == $layout['id']) {
-                        $checked = 'checked="checked"';
-                    } else {
-                        $checked = '';
-
+                        $firstOneChecked = '';
+                        break;
                     }
-
-                    $checked = $firstOneChecked;
-                    $firstOneChecked = '';
+                }
+                $i = 0;
+                foreach ($arrLayouts as $layout) {
+                    if ($firstOneChecked != ''){
+                        if ($i == 0){
+                            $checked = $firstOneChecked;
+                        } else {
+                            $checked = '';
+                        }
+                    } else {
+                        if ($arrSection['layout'] == $layout['id']) {
+                            $checked = 'checked="checked"';
+                        } else {
+                            $checked = '';
+                        }
+                    }
                     $str .= '<td align="center">
-                             <input type="radio" name="'.$name.'" value="'.$layout['id'].'" class="transparentbgnb" id="input_layout0" '.$checked.' />
+                             <input type="radio" name="'.$name.'" value="'.$layout['id'].'" class="transparentbgnb" id="input_layout0" '.$checked.' />&nbsp;'.$layout['desciption'].'
                              <p/>
                              <label for ="input_layout0">
                              <img src ="'.$this->getResourceUri($layout['imagename'], 'cmsadmin').'"/>
                              </label>
                              </td>';
-
+                    $i++;
                 }
 
                 $str .= '</tr></table>';
@@ -492,6 +503,8 @@ class cmsutils extends object
         {
 
             try {
+                $pageId = $this->getParam('pageid', '');
+
                 if (!empty($arrSection['image'])) {
                     $image = $this->generateImageTag($arrSection['image']);
                 } else {
@@ -499,24 +512,32 @@ class cmsutils extends object
                 }
 
 
-                $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY created DESC');
 
                 $cnt = 0;
                 $strBody = '';
                 $str = '';
+                
+                if ($pageId == ''){
+                    $pageId = $arrPages[0]['id'];
+                }
+                
+                $foundPage = FALSE;
+                
                 foreach ($arrPages as $page) {
-                    $cnt++;
-
-                    if ($cnt > 1) {
+                    if ($foundPage == TRUE){
                         $link = & $this->newObject('link', 'htmlelements');
                         $link->link = $page['menutext'];
-                        $link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id']), $module);
+                        $link->href = $this->uri(array('action' => 'showsection', 'id' => $arrSection['id'], 'pageid' => $page['id'], 'sectionid' => $page['sectionid']), $module);
 
                         $str .= '<li>'. $this->formatDate($page['created']).' - '.$link->show() .'</li> ';
-                    } else {
+                    }
+                    if ($pageId == $page['id']){
                         $strBody = '<h3>'.$page['title'].'</h3>';
                         $strBody .= $page['body'].'<p/>';
+                        $foundPage = TRUE;
                     }
+
                 }
 
                 return $strBody.'<p/>'.$str;
@@ -620,6 +641,8 @@ class cmsutils extends object
         function _layoutPage(&$arrSection, $module)
         {
             try {
+                $pageId = $this->getParam('pageid', '');
+
                 if (!empty($arrSection['image'])) {
                     $image = $this->generateImageTag($arrSection['image']);
                 } else {
@@ -632,22 +655,27 @@ class cmsutils extends object
                 $cnt = 0;
                 $strBody = '';
                 $str = '';
-                foreach ($arrPages as $page) {
-                    $cnt++;
-
-                    if ($cnt > 1) {
-                        $link = & $this->newObject('link', 'htmlelements');
-                        $link->link = $page['menutext'];
-                        $link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id'], 'sectionid' => $page['sectionid']), $module);
-
-                        $str .= $link->show() .' | ';
-                    } else {
-                        $strBody = '<h3>'.$page['title'].'</h3>';
-                        $strBody .= $page['introtext'].'<p/>';
-                        $strBody .= $page['body'].'<p/>';
-                    }
+                if ($pageId == ''){
+                    $pageId = $arrPages[0]['id'];
                 }
 
+                foreach ($arrPages as $page) {
+                    if ($pageId == $page['id']){
+                        $strBody = '<h3>'.$page['title'].'</h3>';
+                        $strBody .= $page['body'].'<p/>';
+                        $str .= $page['menutext'].' | ';
+                    } else {
+
+                        $link = & $this->newObject('link', 'htmlelements');
+                        $link->link = $page['menutext'];
+                        $link->href = $this->uri(array('action' => 'showsection', 'pageid' => $page['id'], 'id' => $page['sectionid'], 'sectionid' => $page['sectionid']), $module);
+
+                        $str .= $link->show() .' | ';
+                    }
+                }
+                if (strlen($str) > 1){
+                    $str = substr($str, 0, strlen($str) - 3);
+                }
 
 
                 return $strBody.'<p/>'.$str;
@@ -708,7 +736,6 @@ class cmsutils extends object
                 $strBody = '<h3>'.$page['title'].'</h3><p/>';
                 $strBody .= '<span class="warning">'.$this->_objUser->fullname($page['created_by']).'</span><br />';
                 $strBody .= '<span class="warning">'.$page['created'].'</span><p/>';
-                $strBody .= $page['introtext'].'<p/>';
                 $strBody .= $page['body'].'<p/>';
 
                 return $strBody;
@@ -1405,8 +1432,8 @@ class cmsutils extends object
             $table = & $this->newObject('htmltable', 'htmlelements');
             $titleInput = & $this->newObject('textinput', 'htmlelements');
             $menuTextInput = & $this->newObject('textinput', 'htmlelements');
-            $bodyInput = & $this->newObject('htmlarea', 'htmlelements');
-            $introInput = & $this->newObject('htmlarea', 'htmlelements');
+            $bodyInput =  $this->newObject('htmlarea', 'htmlelements');
+            $introInput =  $this->newObject('htmlarea', 'htmlelements');
             $h3 = &$this->newObject('htmlheading', 'htmlelements');
             $button = & $this->newObject('button', 'htmlelements');
             $table2 = & $this->newObject('htmltable', 'htmlelements');
@@ -1492,10 +1519,15 @@ class cmsutils extends object
 
             $bodyInput->name = 'body';
             $bodyInput->id = 'body';
+            $bodyInput->height = '400';
+            $bodyInput->width = '100%';
 
             $introInput->name = 'intro';
             $introInput->id = 'intro';
-
+            $introInput->setBasicToolBar();
+            $introInput->height = '200';
+            $introInput->width = '100%';
+            
             $objForm->addRule('menutext', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddmenutext', 'cmsadmin'), 'required');
 
             $button->setToSubmit();
@@ -1540,20 +1572,21 @@ class cmsutils extends object
             $table2->addCell($table->show());
             $table2->endRow();
 
-            //inrto input
-            $table2->startRow();
-            $table2->addCell($this->objLanguage->languageText('mod_cmsadmin_introinput', 'cmsadmin'));
-            $table2->endRow();
-            $table2->startRow();
-            $table2->addCell($introInput->show());
-            $table2->endRow();
-
             //body
             $table2->startRow();
             $table2->addCell($this->objLanguage->languageText('mod_cmsadmin_maintext', 'cmsadmin'));
             $table2->endRow();
             $table2->startRow();
             $table2->addCell($bodyInput->show());
+            $table2->endRow();
+
+            //intro input
+            $table2->startRow();
+            $table2->addCell($this->objLanguage->languageText('mod_cmsadmin_summary', 'cmsadmin').'/'.
+                $this->objLanguage->languageText('mod_cmsadmin_introduction', 'cmsadmin').' ('.$this->objLanguage->languageText('word_required').')');
+            $table2->endRow();
+            $table2->startRow();
+            $table2->addCell($introInput->show());
             $table2->endRow();
 
             $table2->startRow();

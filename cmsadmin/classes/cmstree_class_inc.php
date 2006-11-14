@@ -131,7 +131,7 @@ class cmstree extends object
                         if ($this->getNodeContentCount($node['id']) > 0) {
 
 
-                            $htmlChildren .= $this->addContent($node['id']);
+                            $htmlChildren .= '<li></li>';
                         }
 
                         //if node has further child nodes, recursively call buildLevel
@@ -169,7 +169,6 @@ class cmstree extends object
                                 $htmlLevel .= '<li class="closed"><a href="'.$nodeUri.'">'.$node['title'].'</a><ul>';
                             }
 
-                            $htmlLevel .= $this->addContent($node['id']);
                             $htmlLevel .= '</ul></li>';
                         }
 
