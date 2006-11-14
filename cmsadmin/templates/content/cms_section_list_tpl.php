@@ -11,7 +11,7 @@ $objIcon = & $this->newObject('geticon', 'htmlelements');
 
 
 //create a heading 
-$h3->str = $this->objLanguage->languageText('mod_cmsadmin_sectionmanager').'&nbsp;'.$objIcon->getAddIcon($this->uri(array('action' => 'addsection')));
+$h3->str = $this->objLanguage->languageText('mod_cmsadmin_sectionmanager', 'cmsadmin').'&nbsp;'.$objIcon->getAddIcon($this->uri(array('action' => 'addsection')));
 //counter for records
 $cnt = 1;
 //get the pages
