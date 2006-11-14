@@ -70,5 +70,10 @@
     	<access></access>
     	<hits>1</hits>
    </tbl_cms_content>
+   <tbl_cms_content_frontpage>
+      <id>init_1</id>  	
+      <content_id>init_1</content_id>
+      <ordering>1</ordering>
+   </tbl_cms_content_frontpage>
   
 </defaultdata>
