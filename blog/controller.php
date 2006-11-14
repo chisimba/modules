@@ -281,32 +281,32 @@ class blog extends controller
 
 							//check if the address we get from the msg is in the array of valid addresses
 							//print_r($valadds);
-							if(in_array($addy,$valadds))
-							{
-								$valid = "TRUE";
-							}
-							/*foreach ($valadds as $user)
+							//if(in_array($addy,$valadds))
+							//{
+							//	$validated = "TRUE";
+							//}
+							foreach ($valadds as $user)
 							{
 								if($user['address'] != $addy)
 								{
 									echo $user['address'] . "  " . $addy;
-									$valid = "FALSE";
+									$validated = "FALSE";
 
 								}
 								else {
 									//echo "userid match - Proceed!";
-									$valid = "TRUE";
+									$validated = "TRUE";
 									$userid = $user['userid'];
 
 								}
-							}*/
+							}
 						}
-print_r($valid);
-						if($valid == "TRUE")
+print_r($validated);
+						if($validated == "TRUE")
 						{
 							$data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
 											'body' => $message, 'attachments' => $attachments);
-							//print_r($data);
+							print_r($data);
 						}
 
 						//delete the message as we don't need it anymore
