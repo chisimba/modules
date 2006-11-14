@@ -290,13 +290,14 @@ class blog extends controller
 								if($user['address'] != $addy)
 								{
 									//echo $user['address'] . "  " . $addy;
-									$validated = "FALSE";
+									$validated = NULL;
 
 								}
 								else {
 									echo "userid match - Proceed!";
 									$validated = "TRUE";
 									$userid = $user['userid'];
+									break;
 
 								}
 							}
