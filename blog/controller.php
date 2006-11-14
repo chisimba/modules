@@ -296,7 +296,7 @@ class blog extends controller
 							}
 						}
 
-						if($valid == TRUE)
+						if($valid != FALSE)
 						{
 							$data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
 											'body' => $message, 'attachments' => $attachments);
