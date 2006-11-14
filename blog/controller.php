@@ -305,7 +305,6 @@ class blog extends controller
 						{
 							$data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
 											'body' => $message, 'attachments' => $attachments);
-							print_r($data);
 						}
 
 						//delete the message as we don't need it anymore
@@ -314,8 +313,6 @@ class blog extends controller
 
 						$i++;
 					}
-
-					//print_r($data);
 					if(!isset($data))
 					{
 						$data = array();
@@ -326,7 +323,6 @@ class blog extends controller
 						//we discard any other mimetypes for now...
 						if(!empty($datum['attachments']))
 						{
-							//print_r($datum);
 							$filename = $datum['attachments'][0]['filename'];
 							$filedata = base64_decode($datum['attachments'][0]['filedata']);
 							$path = $this->objConfig->getContentBasePath() . 'blog/';
@@ -341,7 +337,6 @@ class blog extends controller
 
 							//add the img stuff to the body at the end of the "post"
 							$newbod = $datum['body'] . "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]";
-							//echo $newbod;
 						}
 						else {
 							$newbod = $datum['body'];
