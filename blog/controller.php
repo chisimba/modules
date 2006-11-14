@@ -288,6 +288,7 @@ class blog extends controller
 
 								}
 								else {
+									echo "userid match - Proceed!";
 									$valid = TRUE;
 									$userid = $user['userid'];
 
