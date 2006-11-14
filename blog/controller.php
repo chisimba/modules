@@ -280,7 +280,7 @@ class blog extends controller
 							//echo $addy;
 
 							//check if the address we get from the msg is in the array of valid addresses
-							print_r($valadds);
+							//print_r($valadds);
 							if(in_array($addy,$valadds))
 							{
 								$valid = "TRUE";
@@ -301,7 +301,7 @@ class blog extends controller
 								}
 							}*/
 						}
-echo "valid? ".$valid;
+print_r($valid);
 						if($valid == "TRUE")
 						{
 							$data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
