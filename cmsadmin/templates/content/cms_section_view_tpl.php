@@ -36,17 +36,20 @@ $img = '<img src="modules/cmsadmin/resources/'.$layoutData['imagename'].'" alt="
 
 $other = '<b>'.$this->objLanguage->languageText('mod_cmsadmin_treemenuname', 'cmsadmin').':'.'</b>'.'&nbsp;'.$menuText.'<br/>';
 
-$other .= '<b>'.$this->objLanguage->languageText('mod_cmsadmin_visibleontreemenu', 'cmsadmin').':'.'</b>'.'<br/>';
-
-$other .= '<br/>'.'&nbsp;'.'<br/>';
+$other .= '<b>'.$this->objLanguage->languageText('mod_cmsadmin_visibleontreemenu', 'cmsadmin').':'.'</b>&nbsp;';
 
 if ($this->_objUtils->sectionIsVisibleOnMenu($sectionId))
 {
-    $other .= '<p><i>'.$this->objLanguage->languageText('mod_cmsadmin_sectionwillbevisible', 'cmsadmin').'</i></p>';
+    $other .= $this->objLanguage->languageText('mod_cmsadmin_sectionwillbevisible', 'cmsadmin');
 } else
 {
-    $other .= '<p><i>'.$this->objLanguage->languageText('mod_cmsadmin_sectionwillnotbevisible', 'cmsadmin').'</i></p>';
+    $other .= $this->objLanguage->languageText('mod_cmsadmin_sectionwillnotbevisible', 'cmsadmin');
 }
+
+$other .= '<br/>';
+
+$other .= '<br/>'.'&nbsp;'.'<br/>';
+
 
 //Create table contain layout, visible, etc details
 $objDetailsTable = & $this->newObject('htmltable', 'htmlelements');
