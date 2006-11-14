@@ -280,7 +280,12 @@ class blog extends controller
 							//echo $addy;
 
 							//check if the address we get from the msg is in the array of valid addresses
-							foreach ($valadds as $user)
+							print_r($valadds);
+							if(in_array($addy,$valadds))
+							{
+								$valid = "TRUE";
+							}
+							/*foreach ($valadds as $user)
 							{
 								if($user['address'] != $addy)
 								{
@@ -293,7 +298,7 @@ class blog extends controller
 									$valid = "TRUE";
 									$userid = $user['userid'];
 
-								}
+								}*/
 							}
 						}
 echo "valid? ".$valid;
