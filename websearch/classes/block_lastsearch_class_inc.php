@@ -50,7 +50,7 @@ class block_lastsearch extends object
     public function show()
 	{
 	    $objSh = $this->getObject('dbsearch');
-        $goo = $objSh->getLastEntry(" WHERE searchengine='googleapi' ", "dateCreated");
+        $goo = $objSh->getLastEntry(" WHERE searchengine='googleapi' ", "datecreated");
         if ( count($goo)>0 ) {
           $objTermLink =& $this->getObject('link', 'htmlelements');
           $objTermLink->link($this->uri(array('action'=>'gapi',
@@ -63,7 +63,7 @@ class block_lastsearch extends object
         }
         $ret = "<font size=\"-2\">";
         $ret .= "<b>Google</b>: " . $term;
-        $goo = $objSh->getLastEntry(" WHERE searchengine='google_scholar' ", "dateCreated");
+        $goo = $objSh->getLastEntry(" WHERE searchengine='google_scholar' ", "datecreated");
         if ( count($goo)>0 ) {
           $objTermLink =& $this->getObject('link', 'htmlelements');
           $objTermLink->link($this->uri(array('action'=>'schgoogle',
@@ -77,7 +77,7 @@ class block_lastsearch extends object
         $ret .= "<br /><b>" 
           . $this->objLanguage->languageText("mod_websearch_scholarg","websearch")
           . "</b>: " . $term;
-        $goo = $objSh->getLastEntry(" WHERE searchengine='wikipedia' ", "dateCreated");
+        $goo = $objSh->getLastEntry(" WHERE searchengine='wikipedia' ", "datecreated");
         if ( count($goo)>0 ) {
         $objTermLink =& $this->getObject('link', 'htmlelements');
         $objTermLink->link($this->uri(array('action'=>'wikipedia',

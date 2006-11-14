@@ -411,11 +411,11 @@ class search extends object {
     public function _getLastSearch($searchengine, $context=NULL)
     {
         $objDb = & $this->getObject('dbsearch');
-        $filter = " WHERE userId='" 
+        $filter = " WHERE userid='" 
           . $this->objUser->userId() 
           ."' AND searchengine='" 
           . $searchengine . "' ";
-        $ar = $objDb->getLastEntry($filter, 'dateCreated');
+        $ar = $objDb->getLastEntry($filter, 'datecreated');
         if ( count($ar) > 0 ) {
             return $ar[0]['searchterm'];
         } else {

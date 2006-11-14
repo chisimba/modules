@@ -34,12 +34,12 @@ class dbsearch extends dbTable
         $callingModule = $this->getParam('callingModule', NULL);
 
         $this->insert(array(
-            'userId' => $userId,
+            'userid' => $userId,
             'searchTerm' => $searchTerm,
             'params' => $params,
             'module' => $callingModule,
             'searchengine' => $searchengine,
-            'dateCreated' => date("Y/m/d H:i:s")));
+            'datecreated' => date("Y/m/d H:i:s")));
     }
 
 

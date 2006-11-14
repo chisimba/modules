@@ -46,13 +46,13 @@ class dbsearch extends dbTable
             $context = "lobby";
         }
         $this->insert(array(
-            'userId' => $userId,
+            'userid' => $userId,
             'searchterm' => $searchTerm,       
             'module' => $callingModule,
             'context' => $context,
             'params' => $params,
             'searchengine' => $searchengine,
-            'dateCreated' => date("Y/m/d H:i:s")));
+            'datecreated' => date("Y/m/d H:i:s")));
     }
     
     /**
@@ -64,10 +64,10 @@ class dbsearch extends dbTable
     public function getSearchHistory($searchengine, $context=NULL)
     {
         $sql = "SELECT searchterm FROM tbl_websearch "
-          . "WHERE userId='" 
+          . "WHERE userid='" 
           . $this->objUser->userId() 
           ."' AND searchengine='" 
-          . $searchengine . "' ORDER BY dateCreated DESC";
+          . $searchengine . "' ORDER BY datecreated DESC";
         $ar = $this->getArray($sql);
         if ( count($ar) > 0 ) {
             return $ar;

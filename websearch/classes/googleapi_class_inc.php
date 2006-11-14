@@ -180,7 +180,7 @@ class googleApi extends object
     public function _getLastSearch($context = null)
     {
         $objDb = $this->getObject('dbsearch');
-        $filter = " WHERE userId='" . $this->objUser->userId() . "' ";
+        $filter = " WHERE userid='" . $this->objUser->userId() . "' ";
         $ar = $objDb->getLastEntry($filter);
         return $ar[0]['searchterm'];
     } 

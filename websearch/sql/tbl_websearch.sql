@@ -43,7 +43,7 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
-	'dateCreated' => array(
+	'datecreated' => array(
 		'type' => 'date',
 		
 		),
