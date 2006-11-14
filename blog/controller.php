@@ -115,6 +115,20 @@ class blog extends controller
 	public $objBlogImport;
 
 	/**
+	 * IMAP / POP3 / NNTP comms class
+	 *
+	 * @var object
+	 */
+	public $objImap;
+
+	/**
+	 * DSN (data source name) for connecting to mail servers
+	 *
+	 * @var unknown_type
+	 */
+	public $dsn;
+
+	/**
      * Constructor method to instantiate objects and get variables
      *
      * @param void
@@ -127,6 +141,10 @@ class blog extends controller
 			//grab the blogimporter class, just in case we need it.
 			//I think that the import stuff should all be done in a seperate module...
 			$this->objBlogImport = &$this->getObject('blogimporter');
+
+			//get the imap class to grab email to blog...
+			//maybe a config here to check if we wanna use this?
+			$this->objImap = $this->getObject('imap', 'webmail');
 
 			$this->objFeed = &$this->getObject('feeds', 'feed');
 			$this->objUser = $this->getObject('user', 'security');
@@ -201,6 +219,138 @@ class blog extends controller
 				return 'randblog_tpl.php';
 
 				break;
+
+			case 'mail2blog':
+				$this->dsn = "pop3://fsiu:fsiu@itsnw.uwc.ac.za:110/INBOX";
+				try {
+					//grab a list of all valid users to an array for verification later
+					$valid = $this->objDbBlog->checkValidUser();
+					$valadds = array();
+					foreach($valid as $addys)
+					{
+						$valadds[] = array('address' => $addys['emailaddress'], 'userid' => $addys['userid']);
+					}
+
+					//connect to the server
+					$this->conn = $this->objImap->factory($this->dsn);
+					@$this->objImap->getHeaders();
+					//check mail
+					$this->thebox = @$this->objImap->checkMbox();
+					//var_dump($thebox);
+					$this->folders = @$this->objImap->populateFolders($this->thebox);
+					$this->msgCount = @$this->objImap->numMails();
+					//$this->setVarByRef('folders', $folders);
+
+					//get the meassge headers
+					$i = 1;
+
+					while ($i <= @$this->msgCount)
+					{
+						//echo $i;
+						$headerinfo = @$this->objImap->getHeaderInfo($i);
+						//from
+						$address = @$headerinfo->fromaddress;
+						//subject
+						$subject = @$headerinfo->subject;
+						//date
+						$date = @$headerinfo->Date;
+						//message flag
+						$read = @$headerinfo->Unseen;
+						//message body
+						$bod = @$this->objImap->getMessage($i);
+						if(empty($bod[1]))
+						{
+							$attachments = NULL;
+						}
+						else {
+							$attachments = $bod[1];
+						}
+						$message = @htmlentities($bod[0]);
+
+						//check for a valid user
+						if(!empty($address))
+						{
+							//check the address against tbl_users to see if its valid.
+							//just get the email addy, we dont need the name as it can be faked
+							$fadd = $address;
+							$parts = explode("<", $fadd);
+							$parts = explode(">", $parts[1]);
+							$addy = $parts[0];
+
+							//check if the address we get from the msg is in the array of valid addresses
+							foreach ($valadds as $user)
+							{
+								if($user['address'] != $addy)
+								{
+									$valid = FALSE;
+
+								}
+								else {
+									$valid = TRUE;
+									$userid = $user['userid'];
+
+								}
+							}
+						}
+
+						if($valid == TRUE)
+						{
+							$data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
+											'body' => $message, 'attachments' => $attachments);
+						}
+
+						//delete the message as we don't need it anymore
+						$this->objImap->delMsg($i);
+
+						$i++;
+					}
+
+					//print_r($data);
+					foreach ($data as $datum)
+					{
+						//add the [img][/img] tags to the body so that the images show up
+						//we discard any other mimetypes for now...
+						if(!empty($datum['attachments']))
+						{
+							//print_r($datum);
+							$filename = $datum['attachments'][0]['filename'];
+							$filedata = base64_decode($datum['attachments'][0]['filedata']);
+							$path = $this->objConfig->getContentBasePath() . 'blog/';
+							if(!file_exists($path))
+							{
+								mkdir($path, 0777);
+							}
+							chdir($path);
+							$handle = fopen($filename, 'wb');
+							fwrite($handle, $filedata);
+							fclose($handle);
+
+							//add the img stuff to the body at the end of the "post"
+							$newbod = $datum['body'] . "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]";
+							//echo $newbod;
+						}
+						else {
+							$newbod = $datum['body'];
+						}
+
+						$this->objblogOps->quickPostAdd($datum['userid'], array('posttitle' => $datum['subject'], 'postcontent' => $newbod,
+												    'postcat' => 0, 'postexcerpt' => '', 'poststatus' => '0',
+												    'commentstatus' => 'Y',
+												    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $datum['date']));
+					}
+
+
+
+
+				}
+				catch(customException $e) {
+					customException::cleanUp();
+				}
+				break;
+
+
+
+
 
 			case 'importblog':
 				$username = $this->getParam('username');

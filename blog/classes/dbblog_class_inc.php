@@ -453,6 +453,14 @@ class dbblog extends dbTable
 		return $this->getArray("SELECT DISTINCT $column from $table");
 	}
 
+	public function checkValidUser()
+	{
+		$this->_changeTable('tbl_users');
+		$val = $this->getAll();
+		return $val;
+
+	}
+
 
 	/**
 	 * Method to dynamically switch tables

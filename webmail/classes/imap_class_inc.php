@@ -617,6 +617,19 @@ class imap //extends object
 */
 
 	/**
+	 * Method to completely delete and expunge a message from the mailbox
+	 *
+	 * @param integer $messageid
+	 */
+	public function delMsg($messageid)
+	{
+		//make sure that the messageid is a true integer
+		intval(trim($messageid));
+		@imap_delete($this->conn, $messageid);
+		@imap_expunge($this->conn);
+	}
+
+	/**
 	 * Method to close the connection and destruct the class
 	 *
 	 * @access public
