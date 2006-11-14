@@ -527,7 +527,7 @@ class cmsutils extends object
                 foreach ($arrPages as $page) {
                     if ($foundPage == TRUE){
                         $link = & $this->newObject('link', 'htmlelements');
-                        $link->link = $page['menutext'];
+                        $link->link = $page['title'];
                         $link->href = $this->uri(array('action' => 'showsection', 'id' => $arrSection['id'], 'pageid' => $page['id'], 'sectionid' => $page['sectionid']), $module);
 
                         $str .= '<li>'. $this->formatDate($page['created']).' - '.$link->show() .'</li> ';
@@ -663,11 +663,11 @@ class cmsutils extends object
                     if ($pageId == $page['id']){
                         $strBody = '<h3>'.$page['title'].'</h3>';
                         $strBody .= $page['body'].'<p/>';
-                        $str .= $page['menutext'].' | ';
+                        $str .= $page['title'].' | ';
                     } else {
 
                         $link = & $this->newObject('link', 'htmlelements');
-                        $link->link = $page['menutext'];
+                        $link->link = $page['title'];
                         $link->href = $this->uri(array('action' => 'showsection', 'pageid' => $page['id'], 'id' => $page['sectionid'], 'sectionid' => $page['sectionid']), $module);
 
                         $str .= $link->show() .' | ';
