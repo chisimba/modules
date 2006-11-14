@@ -14,6 +14,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 * @license GNU GPL
 * @version
 * @author Wesley  Nitsckie
+* @author Warren Windvogel
 * @example :
 */
 
@@ -25,6 +26,11 @@ class dbcontentfrontpage extends dbTable
 	 */
 	protected $_objUser;
 	
+	/**
+	 * @var object $_objLanguage
+	 * @access protected
+	 */
+	protected $_objLanguage;
 	
 	
 	/**
@@ -34,7 +40,7 @@ class dbcontentfrontpage extends dbTable
 	{
 		parent::init('tbl_cms_content_frontpage');
 		$this->_objUser = & $this->getObject('user', 'security');
-		
+		$this->_objLanguage =& $this->newObject('language', 'language');
 	}
 	
 	/**
@@ -45,7 +51,7 @@ class dbcontentfrontpage extends dbTable
 	 * @access public
 	 * @return bool
 	 */
-	public function add($contentId, $ordering = 0)
+	public function add($contentId, $ordering = 1)
 	{
 		try{		
 			
@@ -209,6 +215,7 @@ class dbcontentfrontpage extends dbTable
 	       //return down arrow link
 	       //icon
 	       $this->objIcon->setIcon('downend');
+	       $this->objIcon->title = $this->_objLanguage->languageText('mod_cmsadmin_changeorderdown', 'cmsadmin');
 	       //link
 	       $downLink =& $this->newObject('link', 'htmlelements');
 	       $downLink->href = $this->uri(array('action' => 'changefporder', 'id' => $id, 'ordering' => 'up'));
@@ -218,6 +225,7 @@ class dbcontentfrontpage extends dbTable
             //return up arrow
 	          //icon
 	          $this->objIcon->setIcon('upend');
+	          $this->objIcon->title = $this->_objLanguage->languageText('mod_cmsadmin_changeorderup', 'cmsadmin');
 	          //link
 	          $upLink =& $this->newObject('link', 'htmlelements');
 	          $upLink->href = $this->uri(array('action' => 'changefporder', 'id' => $id, 'ordering' => 'down'));
@@ -227,12 +235,14 @@ class dbcontentfrontpage extends dbTable
           //return both arrows
           //icon
 	        $this->objIcon->setIcon('down');
+	        $this->objIcon->title = $this->_objLanguage->languageText('mod_cmsadmin_changeorderdown', 'cmsadmin');
 	        //link
 	        $downLink =& $this->newObject('link', 'htmlelements');
 	        $downLink->href = $this->uri(array('action' => 'changefporder', 'id' => $id, 'ordering' => 'up'));
 	        $downLink->link = $this->objIcon->show();
 	        //icon
 	        $this->objIcon->setIcon('up');
+	        $this->objIcon->title = $this->_objLanguage->languageText('mod_cmsadmin_changeorderup', 'cmsadmin');
 	        //link
 	        $upLink =& $this->newObject('link', 'htmlelements');
 	        $upLink->href = $this->uri(array('action' => 'changefporder', 'id' => $id, 'ordering' => 'down'));
