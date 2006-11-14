@@ -162,8 +162,6 @@ $objPagesTable->startHeaderRow();
 
 $objPagesTable->addHeaderCell($this->objLanguage->languageText('word_number'));
 
-$objPagesTable->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_menuname', 'cmsadmin'));
-
 $objPagesTable->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_pagetitle', 'cmsadmin'));
 
 $objPagesTable->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_articledate', 'cmsadmin'));
@@ -186,7 +184,6 @@ if (count($pages) > '0')
 
         //Get page data
         $pageId = $page['id'];
-        $pageMenuText = $page['menutext'];
         $ordering = $page['ordering'];
         $pageTitle = $page['title'];
         $articleDate = $this->_objUtils->formatDate($page['modified']);
@@ -207,7 +204,7 @@ if (count($pages) > '0')
         //Create edit icon
         $editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addcontent', 'id' => $pageId)));
         //Make title link to view section
-        $objLink->link = $pageMenuText;
+        $objLink->link = $pageTitle;
         $objLink->href = $this->uri(array('action' => 'showcontent', 'id' => $pageId, 'fromadmin' => TRUE, 'sectionid' => $sectionId), 'cms');
         $viewPageLink = $objLink->show();
 
@@ -217,8 +214,6 @@ if (count($pages) > '0')
         $objPagesTable->addCell($i, '', '', '', $class);
 
         $objPagesTable->addCell($viewPageLink, '', '', '', $class);
-
-        $objPagesTable->addCell($pageTitle, '', '', '', $class);
 
         $objPagesTable->addCell($articleDate, '', '', '', $class);
 
