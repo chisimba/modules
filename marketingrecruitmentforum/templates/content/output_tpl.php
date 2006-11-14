@@ -300,8 +300,8 @@
   
    $stringval = $objstudtab->show() . $objslutab->show() . $objschooltab->show();
     
-    $Studcardinfo->addTab('studcard', 'View Output', $stringval);
-    $Studcardinfo->addTab('info', 'Submit Information', $this->objSubmitstudcard->show());;
+//    $Studcardinfo->addTab('studcard', 'View Output', $stringval);
+//    $Studcardinfo->addTab('info', 'Submit Information', $this->objSubmitstudcard->show());;
     //$Studcardinfo->addTab('schoollist', 'School List', $objschooltab->show());
   
 
@@ -317,13 +317,13 @@
       if($hasSubmitted == 'yes'){    
           $objForm = new form('outputdata',$this->uri(array('action'=>'submitinfo')));
           $objForm->displayType = 3;
-          $objForm->addToForm($Studcardinfo->show());
+          $objForm->addToForm($stringval . '<br />' . $this->objSubmitstudcard->show());
               
         
       }else{
          $objForm = new form('outputdata',$this->uri(array('action'=>'submitinfo','submitmsg' => 'yes')));
           $objForm->displayType = 3;
-          $objForm->addToForm($Studcardinfo->show()); 
+          $objForm->addToForm($stringval . '<br />' . "<div align=left>".$this->objSubmitstudcard->show()."</div>"); 
       
       }
 
