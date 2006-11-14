@@ -13,9 +13,9 @@
  
  $about = $this->objLanguage->languageText('mod_marketingrecruitmentforum_about','marketingrecruitmentforum');
  $datacapturing = $this->objLanguage->languageText('mod_marketingrecruitmentforum_datacapturing','marketingrecruitmentforum');
- $datainfo1 = $this->objLanguage->languageText('mod_marketingrecruitmentforum_datainfo1','marketingrecruitmentforum');
+ $datainfo1 = $this->objLanguage->languageText('mod_marketingrecruitmentforum_datainfo1','marketingrecruitmentforum') . '<br />';
  $datainfo2 = $this->objLanguage->languageText('mod_marketingrecruitmentforum_datainfo2','marketingrecruitmentforum');
- $datainfo3 = $this->objLanguage->languageText('mod_marketingrecruitmentforum_datainfo3','marketingrecruitmentforum');
+ $datainfo3 = $this->objLanguage->languageText('mod_marketingrecruitmentforum_datainfo3','marketingrecruitmentforum') . '<br />';
  
  $search  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_searchfacilities','marketingrecruitmentforum');
  $searchinfo  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_searchinfo','marketingrecruitmentforum');
@@ -27,32 +27,32 @@
  $search4 = $this->objLanguage->languageText('mod_marketingrecruitmentforum_search4','marketingrecruitmentforum');
  $search5 = $this->objLanguage->languageText('mod_marketingrecruitmentforum_search5','marketingrecruitmentforum');
  
- $reportheading = $this->objLanguage->languageText('mod_marketingrecruitmentforum_reports','marketingrecruitmentforum');
- $reportinfo  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_reportinfo','marketingrecruitmentforum');
+// $reportheading = $this->objLanguage->languageText('mod_marketingrecruitmentforum_reports','marketingrecruitmentforum');
+// $reportinfo  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_reportinfo','marketingrecruitmentforum');
  
- $postings  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_postings','marketingrecruitmentforum');
- $postinginfo = $this->objLanguage->languageText('mod_marketingrecruitmentforum_postinginfo','marketingrecruitmentforum');
- 
- 
+// $postings  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_postings','marketingrecruitmentforum');
+// $postinginfo = $this->objLanguage->languageText('mod_marketingrecruitmentforum_postinginfo','marketingrecruitmentforum');
  
  
- $string1  = $about . '<br />';
- $stringdata  =  '<br />'  .$datacapturing . '<br />' . '*'.$datainfo1 . '<br />' . '*'.$datainfo2 . '<br />' . '*'.$datainfo3;
- $searchstring = '<br />'. $searchinfo .'<br />'. '*'. $search1 .'<br />'.'*'. $search2 .'<br />'. '*'.$search3;
- $searchstring1 = '<br />'  . '<br />'. $searchinfo1 .'<br />'. '*'. $search4 .'<br />'.'*'. $search5;// .'<br />'. '*'.$search3;
- $reportstring  = '<br />'  . '<br />'. $reportheading .'<br />'. '*'. $reportinfo;
- $postingstring = '<br />'  . '<br />'. $postings .'<br />'. '*'. $postinginfo;
+ 
+ 
+ $string1  = $about;
+ $stringdata  =  '<br />'  .$datacapturing . '<br />' .$datainfo1 . '<br />' .$datainfo2 . '<br />' .$datainfo3;
+ $searchstring = '<br />'. $searchinfo .'<br />'. '<br />'.  $search1 .'<br />'. $search2 .'<br />'.'<br />'.$search3;
+ $searchstring1 = '<br />'. $searchinfo1 .'<br />'.'<br />'. $search4 .'<br />'. $search5;// .'<br />'. '*'.$search3;
+ //reportstring  = '<br />'  . '<br />';. $reportheading .'<br />'. '*'. $reportinfo;
+ //$postingstring = '<br />'  . '<br />'. $postings .'<br />'. '*'. $postinginfo;
 
  //  $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
  //  $values  = $this->objschoolname->readpostcodes();
  
  
- echo $this->objMainheading->show();
+ echo $this->objMainheading->show() . '<br />';
  echo $string1;
  echo $stringdata;
- echo '<br />' . '<br />' . $search;  //check why does not print
+ echo '<br />' . $search;  //check why does not print
  echo $searchstring . '<br />' . $searchstring1;
- echo $reportstring;
- echo $postingstring;
+ //echo $reportstring;
+ //echo $postingstring;
 
 ?>

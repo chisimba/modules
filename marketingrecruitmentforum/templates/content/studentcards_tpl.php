@@ -23,7 +23,7 @@
       $this->objfaculty = & $this->getObject('faculty','marketingrecruitmentforum'); 
       $this->objformval = & $this->getObject('form','htmlelements');
       
- //   $this->objFaculties =& $this->getObject('dbacademicprogrammefaculties','academicprogramme');
+//   $this->objFaculties =& $this->getObject('dbacademicprogrammefaculties','academicprogramme');
 //		$this->objCourses =& $this->getObject('dbacademicprogrammecourses','academicprogramme');         
 /*------------------------------------------------------------------------------*/     
     /**
@@ -133,7 +133,7 @@
 /*--------------------------------------------------------------------------------------------*/       
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 //	$faculty = $this->objFaculties->getRow('code',$course['faculty_code']);
-  $objForm = new form('faculty_form',$this->uri(array('action'=>'selectfaculty')));      //place on seperate form
+  $objForm1 = new form('faculty_form',$this->uri(array('action'=>'selectfaculty')));      //place on seperate form
 	$objDropdown = new dropdown('faculty');                                                //create dropdown list
 	$objDropdown->extra = 'onchange="document.forms[\'faculty_form\'].submit();"';         //set each value in list as onchange
 //	$objDropdown->addFromDB($this->objFaculties->getAll(), 'name', 'code', $faculty);    //get value from db....populate dropdown method of dropclass
@@ -142,7 +142,7 @@
 	}
 	//$objButton = new button("submit_button", 'Go');
 	//$objButton->setToSubmit();
-	$objForm->addToForm('<tr><td>Please Select a Faculty</td><td>'."&nbsp"."&nbsp".$objDropdown->show().'&nbsp;'/*.$objButton->show()*/.'</td></tr>');
+	$objForm1->addToForm('<tr><td>Please Select a Faculty</td><td>'."&nbsp"."&nbsp".$objDropdown->show().'&nbsp;'/*.$objButton->show()*/.'</td></tr>');
 //	echo $objForm->show();
 //}
 //
@@ -360,7 +360,7 @@ if (!is_null($this->getSession('faculty',NULL))) {
          $myTable->endRow();
          
          $myTable->startRow();
-         $myTable->addCell("&nbsp"."&nbsp". $objForm->show());
+         $myTable->addCell("&nbsp"."&nbsp". $objForm1->show());
          /*$myTable->addCell("&nbsp"."&nbsp".$facultylist->show());*/
         // $myTable->addCell($this->objButtonCourse->show());
          $myTable->endRow();
@@ -398,8 +398,11 @@ if (!is_null($this->getSession('faculty',NULL))) {
           $objForm->addRule('txtsurname','Please enter surname','required');
           $objForm->addRule('txtname','Please enter name','required');
           $objForm->addRule('postaladdress','Please enter address','required');
-          $objForm->addRule('txtpostalcode','Please enter a four digit postal code','required'); //fix up
-          
+          //$objForm->addRule('txtpostalcode','Please enter a four digit postal code','required'); //fix up
+          $objForm->addRule(array('name'=>'txtpostalcode','minnumber'=>4), 'Please enter a  4 digit postal code', 'minnumber');
+          $objForm->addRule(array('name'=>'txtpostalcode','length'=>4), 'Your postal code is too long', 'maxlength');
+          $objForm->addRule(array('name'=>'txttelcode','minnumber'=>3), 'Please enter a  3 digit telephone code', 'minnumber');
+          $objForm->addRule(array('name'=>'txttelcode','length'=>3), 'Your telephone code is too long', 'maxlength');
 /*------------------------------------------------------------------------------*/
           
           /**
