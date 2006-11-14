@@ -284,6 +284,7 @@ class blog extends controller
 							{
 								if($user['address'] != $addy)
 								{
+									echo $user['address'] . "  " . $addy;
 									$valid = "FALSE";
 
 								}
