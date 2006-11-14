@@ -235,10 +235,13 @@ $addSubSecIcon = $objIcon->getAddIcon($this->uri(array('action' => 'addsection',
 //Create add page icon
 $addPageIcon = $objIcon->getAddIcon($this->uri(array('action' => 'addcontent', 'parent' => $sectionId)));
 
+//Create edit section icon
+$editSectionIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addsection', 'id' => $sectionId)));
+
 //Add content to the output layer
 $middleColumnContent = "";
 
-$objH->str = $this->objLanguage->languageText('word_section').':'.'&nbsp;'.$title;
+$objH->str = $this->objLanguage->languageText('word_section').':'.'&nbsp;'.$title.'&nbsp;'.$editSectionIcon;
 
 $middleColumnContent .= $objH->show();
 
