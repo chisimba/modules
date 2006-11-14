@@ -277,6 +277,8 @@ class blog extends controller
 							$parts = explode(">", $parts[1]);
 							$addy = $parts[0];
 
+							echo $addy;
+
 							//check if the address we get from the msg is in the array of valid addresses
 							foreach ($valadds as $user)
 							{
