@@ -220,11 +220,14 @@ class blog extends controller
 
 				break;
 
-			case 'mail2blog':
-				$newsettings = array("BLOG_MAIL_SERVER" => 'itsnw.uwc.ac.za', "BLOG_MAIL_USER" => 'fsiu', "BLOG_MAIL_PASS" => 'fsiu');
-				$this->objblogOps->setupConfig($newsettings);//die();
+			case 'setupmail':
+				//create a form to catch the variables and write em to the config
+				$newsettings = array("BLOG_MAIL_DSN" => 'pop3://fsiu:fsiu@itsnw.uwc.ac.za:110/INBOX');
+				$this->objblogOps->setupConfig($newsettings);
+				break;
 
-				$this->dsn = "pop3://fsiu:fsiu@itsnw.uwc.ac.za:110/INBOX";
+			case 'mail2blog':
+				$this->dsn = $this->objConfig->getItem('BLOG_MAIL_DSN');
 				try {
 					//grab a list of all valid users to an array for verification later
 					$valid = $this->objDbBlog->checkValidUser();

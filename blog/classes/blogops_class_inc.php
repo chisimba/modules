@@ -1101,6 +1101,11 @@ class blogops extends object
 		return array('mbegin' => $sel_date, 'prevyear' => $prev_year, 'prevmonth' => $prev_month, 'nextyear' => $next_year, 'nextmonth' => $next_month);
 	}
 
+	/**
+	 * Method to append config settings to the config.xml file
+	 *
+	 * @param array $newsettings
+	 */
 	public function setupConfig($newsettings)
 	{
 		$this->objConfig = $this->getObject('altconfig', 'config');
