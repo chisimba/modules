@@ -968,7 +968,7 @@ class cmsutils extends object
             $treeDrop->name = 'parent';
 
             if(!$noRoot){
-                $treeDrop->addOption('0', $this->objLanguage->languageText('mod_cmsadmin_rootlevelmenu', 'cmsadmin'));
+                $treeDrop->addOption('0', '...'.$this->objLanguage->languageText('mod_cmsadmin_rootlevelmenu', 'cmsadmin').'...');
             }
 
             //Create instance of geticon object
