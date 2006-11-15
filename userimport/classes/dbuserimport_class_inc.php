@@ -88,18 +88,18 @@ class dbuserimport extends dbTable
         $groupId=NULL;
         foreach ($list as $line)
         {
-            if (!$this->objUser->inAdminGroup($line['userId'])){
+            if (!$this->objUser->inAdminGroup($line['userid'])){
                 $this->delete('id',$line['id']);
                 // Don't delete a user that wasn't added by the userimport method!
                 // Or if in more than one context!
                 $userPK=$this->objUser->PKId($line['userId']);
                 if ((trim($this->objUser->getItemFromPkId($userPK,'howCreated'))=='import')&&
-                    ( count($this->objContextGroups->userContexts($line['userId'],array('contextCode')))<2) ){
-                    $this->objUserAdmin->delete('userId',$line['userId']);
+                    ( count($this->objContextGroups->userContexts($line['userId'],array('contextcode')))<2) ){
+                    $this->objUserAdmin->delete('userId',$line['userid']);
                 } else {
                 // Here they didn't cascade-delete, so we have to remove them specifically.
                     if ($groupId==NULL){
-                        $groupId=$this->objAdminGroups->getLeafId( array( $line['contextCode'], 'Students' ));
+                        $groupId=$this->objAdminGroups->getLeafId( array( $line['contextcode'], 'Students' ));
                     }
                     $this->objAdminGroups->deleteGroupUser( $groupId, $userPK );
                 }
@@ -143,7 +143,7 @@ class dbuserimport extends dbTable
         foreach ($list as $line)
         {
             extract($line);
-            $data['users'][]=array($userId,$username,$firstname,$surname,$title,$sex,$emailAddress);
+            $data['users'][]=array($userid,$username,$firstname,$surname,$title,$sex,$emailaddress);
         }
         return $data;
     }

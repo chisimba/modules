@@ -34,6 +34,7 @@ class remoteimport extends object
         try {
         $this->soapClient = new SoapClient($soapserver);
         } catch (Exception $e){
+            //print "Problem creating SOAP object.<br />\n";
             $this->errorFlag=TRUE;
                     die($e->getMessage());
         }
@@ -72,10 +73,14 @@ class remoteimport extends object
             return FALSE;
         }
         // If there is an extra param we need to specify which webservice to use
-        if ($this->soapEntry==NULL){
-            $result = $this->soapClient->$function($value);
-        } else {
-            $result = $this->soapClient->soapEntry($function,$value);
+        try {
+            if ($this->soapEntry==NULL){
+                $result = $this->soapClient->$function($value);
+            } else {
+                $result = $this->soapClient->soapEntry($function,$value);
+            }
+        } catch (Exception $e) {
+            die($e->getMessage());
         }
         // Make sure result is an array
         if (is_array($result)){

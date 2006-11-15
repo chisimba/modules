@@ -15,7 +15,7 @@
         
         // Basic table setup
         $objTable=&$this->newObject('htmltable','htmlelements');
-        $objTable->attributes=" align='center' border=0";
+        $objTable->attributes=" align='center' border='0'";
         $objTable->width='50%';
         $objTable->cellspacing='2';
         $objTable->cellpadding='2';
@@ -46,7 +46,7 @@
     
         // Basic table setup
         $objTable=&$this->newObject('htmltable','htmlelements');
-        $objTable->attributes=" align='center' border=0";
+        $objTable->attributes=" align='center' border='0'";
         $objTable->width='50%';
         $objTable->cellspacing='2';
         $objTable->cellpadding='2';
@@ -59,11 +59,12 @@
         $objConfirm->setConfirm($objLanguage->languagetext('word_delete'),$deleteURI,$confirmText,"class='pseudobutton'");
         $deleteLink=$objConfirm->show();
 
-        $exportCSV="<a href='".$this->uri(array('action'=>'exportcsv','batchCode'=>$batchId))."' class='pseudobutton'>".$this->objLanguage->languageText("mod_userimport_exportcsv")."</a>";
-        $exportXML="<a href='".$this->uri(array('action'=>'exportxml','batchCode'=>$batchId))."' class='pseudobutton'>".$this->objLanguage->languageText("mod_userimport_exportxml")."</a>";
+        $exportCSV="<a href='".$this->uri(array('action'=>'exportcsv','batchCode'=>$batchId))."' class='pseudobutton'>".$this->objLanguage->languageText("mod_userimport_exportcsv",'userimport')."</a>";
+        $exportXML="<a href='".$this->uri(array('action'=>'exportxml','batchCode'=>$batchId))."' class='pseudobutton'>".$this->objLanguage->languageText("mod_userimport_exportxml",'userimport')."</a>";
         
         $objTable->addRow(array($deleteLink,$exportCSV,$exportXML));
         
         print $objTable->show();
     }
+    print "</div>\n";
 ?>

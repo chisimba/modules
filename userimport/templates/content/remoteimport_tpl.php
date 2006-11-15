@@ -92,6 +92,13 @@ if (isset($remoteCode)){
     
         $this->loadClass('htmltable','htmlelements');
         $objTable=new htmltable();
+        // Table heading 
+        $headers=array('word_userId','phrase_firstname','word_surname','word_sex','phrase_emailaddress','word_title','word_username');
+        $objTable->startHeaderRow(); 
+        foreach ($headers as $element) { 
+            $objTable->addHeaderCell($this->objLanguage->languageText($element)); 
+        } 
+        $objTable->endHeaderRow();
         $objTable->arrayToTable($classlist);
         if (isset($remoteDesc)){
             $objTable->caption="<b>".$this->objLanguage->LanguageText('mod_userimport_modselec','userimport')."&nbsp;$remoteDesc</b>";    
