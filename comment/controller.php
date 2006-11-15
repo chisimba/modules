@@ -27,21 +27,21 @@ class comment extends controller
     * @var string $action The action parameter from the querystring 
     * 
     */
-    var $action;
+    public $action;
     
     /**
     * 
     * @var object $objUser String to hold instance of the user object 
     * 
     */
-    var $objUser;
+    public $objUser;
     
     /**
     * 
     * @var $objLanguage $objUser String to hold instance of the language object 
     * 
     */
-    var $objLanguage;
+    public $objLanguage;
 
     /**
     * 
@@ -49,7 +49,7 @@ class comment extends controller
     * querystring, and instantiate the user and lanaguage objects
     * 
     */
-    function init()
+  public  function init()
     {
         //Retrieve the action parameter from the querystring
         $this->action = $this->getParam('action', Null);
@@ -65,7 +65,7 @@ class comment extends controller
     * of comments
     * 
     */
-    function dispatch()
+ public  function dispatch()
     {
         switch ($this->action) {
             case null:
@@ -98,10 +98,11 @@ class comment extends controller
                 $this->objDbcomment = & $this->getObject('dbcomment','comment');
                 $this->objDbcomment->saveRecord('edit', $this->objUser->userId());
                 $this->setVar('comment', $this->getParam('comment', NULL));
+		
                 return "saved_tpl.php";
                 break;
             case 'delete':
-                //Suppress all the banners and toolbar
+               // Suppress all the banners and toolbar
                 $this->setVar('pageSuppressToolbar', TRUE);
                 $this->setVar('pageSuppressBanner', TRUE);
                 $this->setVar('pageSuppressIM', TRUE);
@@ -112,7 +113,7 @@ class comment extends controller
                 $this->objDbcomment->deleteRecord($this->getParam('id', NULL));
                 $this->setVar('comment', $this->getParam('comment', NULL));
                 return "deleted_tpl.php";
-                break;
+		break;
             //-------------
             case 'save':
                 //Suppress all the banners and toolbar
