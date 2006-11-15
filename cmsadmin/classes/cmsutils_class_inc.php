@@ -1233,7 +1233,7 @@ class cmsutils extends object
             $table = & $this->newObject('htmltable', 'htmlelements');
             $titleInput = & $this->newObject('textinput', 'htmlelements');
             $menuTextInput = & $this->newObject('textinput', 'htmlelements');
-            $bodyInput = & $this->newObject('htmlarea', 'htmlelements');
+            $bodyInput = & $this->newObject('textarea', 'htmlelements');
             $h3 = &$this->newObject('htmlheading', 'htmlelements');
             $sections = & $this->newObject('dropdown', 'htmlelements');
             $parent = & $this->newObject('dropdown', 'htmlelements');
@@ -1292,7 +1292,7 @@ class cmsutils extends object
                 $arrSection = $this->_objSections->getSection($sectionId);
                 $titleInput->value = $arrSection['title'];
                 $menuTextInput->value = $arrSection['menutext'];
-                $bodyInput->value = $arrSection['description'];
+                $bodyInput->value = htmlentities($arrSection['description']);
                 $layout = $arrSection['layout'];
                 $selected = $arrSection['image'];
                 $imageSRC = $this->objSkin->getSkinUrl().$selected; //$this->_objConfig->getsiteRoot().'/usrfiles/media'.$selected;
