@@ -21,47 +21,47 @@ class commentinterface extends object
     /**
     * @var string $tableName The name of the table to add comments to
     */
-    var $tableName;
+    public $tableName;
 
     /**
     * @var string $sourceId The id (pk) field in the table to identify the row
     */
-    var $sourceId;
+    public $sourceId;
 
     /**
     * @var string $moduleCode The module that owns the table
     */
-    var $moduleCode;
+    public $moduleCode;
 
     /**
     * @var object $objLanguage String to hold the instance of the language object
     */
-    var $objLanguage;
+    public $objLanguage;
 
     /**
     * @var object $objUser String to hold instance of the user object
     */
-    var $objUser;
+    public $objUser;
 
     /**
     * @var object $objDb String to hold instance of the dbcomment database object
     */
-    var $objDb;
+    public $objDb;
     /**
     * @var boolean $suppressView True|False whether to suppress the view icon
     */
-    var $suppressView;
+    public $suppressView;
     
     //Added 2006/09/11 Serge Meunier - For approval of comments
-    var $useApproval;
+    public $useApproval;
     
 
-    var $objDT;
+    public $objDT;
 
     /**
     * Constructor method to define the table
     */
-    function init() {
+   public function init() {
         $this->objUser = & $this->getObject('user', 'security');
         $this->objLanguage = & $this->getObject('language', 'language');
         $this->objDb = & $this->getObject('dbcomment');
@@ -86,7 +86,7 @@ class commentinterface extends object
     * @return bool TRUE
     *
     */
-    function set($param, $value)
+    public function set($param, $value)
     {
         $this->$param = $value;
         return TRUE;
@@ -100,7 +100,7 @@ class commentinterface extends object
     * @return The value of the the parameter
     *
     */
-    function get($param)
+    public function get($param)
     {
        return $this->$param;
     }
@@ -111,7 +111,7 @@ class commentinterface extends object
     * @param bool approval: Boolean flag to determine if to use approval of comments or not
     *
     */
-    function useApproval($approval)
+    public function useApproval($approval)
     {
         $this->useApproval = $approval;
     }
@@ -121,7 +121,7 @@ class commentinterface extends object
     * @return string: String containing the generated code
     *
     */
-    function renderInput()
+    public function renderInput()
     {
         $tableName = $this->getParam('tableName', NULL);
         $sourceId = $this->getParam('sourceId', NULL);
@@ -222,10 +222,10 @@ class commentinterface extends object
     * Added 2006/07/21
     *
     */
-    function renderInputEdit()
+    public function renderInputEdit()
     {
         $tableName = $this->getParam('tableName', NULL);
-        $sourceId = $this->getParam('sourceId', NULL);
+        $sourceId = $this->getParam('sourceid', NULL);
         $moduleCode = $this->getParam('moduleCode', NULL);
         $id = $this->getParam('id', NULL);
         $userId = $this->getParam('userId', NULL);
@@ -323,7 +323,7 @@ class commentinterface extends object
     * @param string $moduleCode: The code of the module calling the function
     * @return string html
     */
-    function showForModerator($userId = null, $moduleCode = null)
+    public function showForModerator($userId = null, $moduleCode = null)
     {
         $tableName = $this->get('tableName');
 
@@ -341,7 +341,7 @@ class commentinterface extends object
     * @return array | NULL The array containing the comments, or else NULL on failure
     *
     */
-    function showAll($userId = null, $moduleCode = null)
+    public function showAll($userId = null, $moduleCode = null)
     {
         $tableName = $this->get('tableName');
         $sourceId = $this->get('sourceId');
@@ -361,7 +361,7 @@ class commentinterface extends object
     * @param string $moduleCode: The code of the module calling the function
     * @return array | NULL The array containing the comments, or else NULL on failure
     */    
-    function displayAllComments($tableName, $ar, $userId = null, $moduleCode = null)
+    public function displayAllComments($tableName, $ar, $userId = null, $moduleCode = null)
     {
         if (count($ar) > 0) {
             //Loop Through the comments & display them
@@ -480,7 +480,7 @@ class commentinterface extends object
     * Added 2006/07/18
     *
     */
-    function showMostRecentComment($userId = NULL, $moduleCode = null, $count = 10000000, $offset = 0)
+    public function showMostRecentComment($userId = NULL, $moduleCode = null, $count = 10000000, $offset = 0)
     {
         $tableName = $this->get('tableName');
         $sourceId = $this->get('sourceId');
@@ -605,7 +605,7 @@ class commentinterface extends object
     * Added 2006/07/18
     *
     */
-    function showCommentByType($userId = null, $moduleCode = null, $type, $count = 10000000, $offset = 0)
+     public function showCommentByType($userId = null, $moduleCode = null, $type, $count = 10000000, $offset = 0)
     {
         $tableName = $this->get('tableName');
         $sourceId = $this->get('sourceId');
@@ -722,7 +722,7 @@ class commentinterface extends object
     * @return string: Generated code for the comment link
     *
     */
-    function addCommentLink($type = NULL)
+    public function addCommentLink($type = NULL)
     {
         $tableName = $this->get('tableName');
         $sourceId = $this->get('sourceId');
@@ -779,7 +779,7 @@ class commentinterface extends object
     * @return string: Code for the fieldset;
     *
     */
-    function putInFieldset(& $str, $label)
+    public function putInFieldset(& $str, $label)
     {
         //Create an instance of the fieldset object
         $objFieldset = & $this->getObject('fieldset', 'htmlelements');
@@ -801,7 +801,7 @@ class commentinterface extends object
     * @return string: The code for a view link
     *
     */
-    function addViewLink($link, $linkStr, $suppressLink=FALSE)
+    public function addViewLink($link, $linkStr, $suppressLink=FALSE)
     {
         // Create an instance of icon object
         $objGetIcon = $this->newObject('geticon', 'htmlelements');
@@ -830,7 +830,7 @@ class commentinterface extends object
     * @return string: The code for a popup link
     *
     */
-    function addPopupLink($link, $linkStr, $suppressLink=FALSE)
+    public function addPopupLink($link, $linkStr, $suppressLink=FALSE)
     {
         //Instantiate the window popup object
         $objPop=& $this->getObject('windowpop','htmlelements');
@@ -867,7 +867,7 @@ class commentinterface extends object
     * Added 2006/07/21
     *
     */
-    function addCommentEditLink($link)
+    public function addCommentEditLink($link)
     {
         //Only put the link if they are logged in
         if ($this->objUser->isLoggedIn()) {
@@ -905,7 +905,7 @@ class commentinterface extends object
     * Added 2006/07/21
     *
     */
-    function addCommentApproveLink($link, $status = FALSE)
+    public function addCommentApproveLink($link, $status = FALSE)
     {
         //Only put the link if they are logged in
         if ($this->objUser->isLoggedIn()) {
@@ -944,7 +944,7 @@ class commentinterface extends object
     * @return int : The number of approved comments
     *
     */
-    function getVisibleCommentCount($tableName, $sourceId, $sourceModule)
+    public function getVisibleCommentCount($tableName, $sourceId, $sourceModule)
     {
         if ($this->objDT->isValid('approve')){
             $moderator = TRUE;

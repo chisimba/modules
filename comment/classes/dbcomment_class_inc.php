@@ -6,7 +6,6 @@ if (!$GLOBALS['kewl_entry_point_run'])
         die("You cannot view this page directly");
     }
 
-
 /**
 *
 * Model class for the table tbl_comment as used
@@ -23,12 +22,12 @@ class dbcomment extends dbTable
     * @var object $objUser String to hold instance of the user object
     *
     */
-    var $objUser;
+   public $objUser;
 
     /**
     * Constructor method to define the table
     */
-    function init() {
+   public function init() {
         parent::init('tbl_comment');
         $this->objUser = & $this->getObject("user", "security");
     }
@@ -40,7 +39,7 @@ class dbcomment extends dbTable
     * @param string $mode: edit if coming from edit, add if coming from add
     *
     */
-    function saveRecord($mode, $userId)
+    public function saveRecord($mode, $userId)
     {
         $tableName = $this->getParam('tableName', NULL);
         $sourceId = $this->getParam('sourceId', NULL);
@@ -89,7 +88,7 @@ class dbcomment extends dbTable
     * Added 2006/09/11
     *
     */
-    function setApproval($id, $approved)
+    public function setApproval($id, $approved)
     {
        $this->update("id", $id, array(
             'approved' => $approved));
@@ -102,7 +101,7 @@ class dbcomment extends dbTable
     * @param string $id: The id of the comment to delete
     *
     */
-    function deleteRecord($id)
+    public function deleteRecord($id)
     {
         $tableName = $this->getParam('tableName', NULL);
         $sourceId = $this->getParam('sourceId', NULL);
@@ -124,7 +123,7 @@ class dbcomment extends dbTable
     * @return array: The array containing the comments
     *
     */
-    function getComment($tableName, $sourceId)
+    public function getComment($tableName, $sourceId)
     {
         $where = " WHERE tablename='" . $tableName
         . "' AND sourceId='" . $sourceId . "'";
@@ -144,7 +143,7 @@ class dbcomment extends dbTable
     * Added 2006/07/18
     *
     */
-    function getMostRecentComment($tableName, $sourceId, $count = 10000000, $offset = 0)
+    public function getMostRecentComment($tableName, $sourceId, $count = 10000000, $offset = 0)
     {
         $where = " WHERE tablename='" . $tableName
         . "' AND sourceId='" . $sourceId . "' ORDER BY modified DESC LIMIT " . $offset . ", " . $count;
@@ -165,7 +164,7 @@ class dbcomment extends dbTable
     * Added 2006/07/18
     *
     */
-    function getCommentByType($tableName, $sourceId, $type, $count = 10000000, $offset = 0)
+    public function getCommentByType($tableName, $sourceId, $type, $count = 10000000, $offset = 0)
     {
         $where = " WHERE tablename='" . $tableName
         . "' AND sourceId='" . $sourceId . "' AND type = '" . $type . "' LIMIT " . $offset . ", " . $count;
@@ -179,7 +178,7 @@ class dbcomment extends dbTable
     * @param string $tableName The given table
     * @return array $data
     */
-    function getCommentsByTableName($tableName)
+    public function getCommentsByTableName($tableName)
     {
         $where = " WHERE tablename='" . $tableName."'";
         return $this->getAll($where);
@@ -197,7 +196,7 @@ class dbcomment extends dbTable
     * Added 2006/07/18
     *
     */
-    function getAllCommentsByType($type, $count = 10000000, $offset = 0)
+    public function getAllCommentsByType($type, $count = 10000000, $offset = 0)
     {
         $where = " WHERE type = '" . $type . "' LIMIT " . $offset . ", " . $count;
         return $this->getAll($where);
@@ -211,7 +210,7 @@ class dbcomment extends dbTable
     * @param string $sourceModule The module that is the owner of the table
     *
     */
-    function updateCounter($tableName, $sourceId, $sourceModule)
+    public function updateCounter($tableName, $sourceId, $sourceModule)
     {
         $dtClass = 'db' . substr($tableName, 4);
         $objDb2Update = & $this->getObject($dtClass, $sourceModule);
@@ -223,8 +222,8 @@ class dbcomment extends dbTable
         //Modified by Serge Meunier 19/07/2006 to correct a bug in the comment count
         //caused by commentCount being out of sync with the tbl_commment table
 
-        // $comments = $ar[0]['commentCount'];
-        // $comments++;
+         //$comments = $ar[0]['commentCount'];
+         //$comments++;
 
         $where = " WHERE tablename='" . $tableName  . "' AND sourceId='" . $sourceId . "'";
         $comments = $this->getRecordCount($where);
@@ -245,7 +244,7 @@ class dbcomment extends dbTable
     * @return int : The number of approved comments
     *
     */
-    function getApprovedCount($tableName, $sourceId, $sourceModule, $moderator)
+    public function getApprovedCount($tableName, $sourceId, $sourceModule, $moderator)
     {
         $where = " WHERE tablename='" . $tableName  . "' AND sourceId='" . $sourceId . "'";
         if ($moderator == FALSE){

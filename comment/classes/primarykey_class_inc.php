@@ -6,17 +6,17 @@
 */
 class primarykey extends object
 {
-    var $tables;
+    public $tables;
     
     /**
     * class constructor function
     */
-    function primarykey()
+    public function primarykey()
     {
         $this->init();
     }
 
-    function init()
+    public function init()
     {
         $this->tables=array();
     }
@@ -26,7 +26,7 @@ class primarykey extends object
     * @param string $table
     * @returns string $outstr
     */
-    function newkey($table='blank')
+    public function newkey($table='blank')
     {
         if (isset($this->tables[$table]))
         {
