@@ -166,7 +166,7 @@ class dbblog extends dbTable
 	 */
 	public function catCount($cat)
 	{
-		if($cat = NULL)
+		if($cat == NULL)
 		{
 			$this->_changeTable('tbl_blog_posts');
 			return $this->getRecordCount();
@@ -357,7 +357,13 @@ class dbblog extends dbTable
 		$this->_changeTable('tbl_blog_posts');
 		$filter = "WHERE userid = '$userid' ORDER BY post_ts DESC";
 		$lastpost = $this->getAll($filter);
-		$lastpost = $lastpost[0];
+		if(isset($lastpost[0]))
+		{
+			$lastpost = $lastpost[0];
+		}
+		else {
+			$lastpost = NULL;
+		}
 		return $lastpost;
 	}
 

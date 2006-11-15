@@ -323,6 +323,8 @@ class blog extends controller
 						//we discard any other mimetypes for now...
 						if(!empty($datum['attachments']))
 						{
+							//do check for multiple attachments
+
 							$filename = $datum['attachments'][0]['filename'];
 							$filedata = base64_decode($datum['attachments'][0]['filedata']);
 							$path = $this->objConfig->getContentBasePath() . 'blog/';
