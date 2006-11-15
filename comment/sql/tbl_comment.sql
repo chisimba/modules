@@ -13,11 +13,11 @@ $fields = array(
 		'notnull'=> 1,
 		),
 
-	'tablename' => array(
+	'tableName' => array(
 		'type' => 'text',
 		'length' => 250,
 		),
-	'sourceid' => array(
+	'sourceId' => array(
 		'type' => 'text',
 		'length' => 32,
 		),
@@ -33,18 +33,18 @@ $fields = array(
 		'type' => 'integer',
 		'length' => 3,
 		),
-	'datecreated' => array(
+	'dateCreated' => array(
 		'type' => 'date'
 		),
-	'creatorid' => array(
+	'creatorId' => array(
 		'type' => 'text',
 		'length' => 25,
 		),
-   	'datemodified' => array(
+   	'dateModified' => array(
 		'type'=> 'date'
 		),
 	
-	'modifierid' => array(
+	'modifierId' => array(
 		'type' => 'text',
 		'length' => 24,
 		),
