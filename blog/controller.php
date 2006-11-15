@@ -221,6 +221,9 @@ class blog extends controller
 				break;
 
 			case 'mail2blog':
+				$newsettings = array("BLOG_MAIL_SERVER" => 'itsnw.uwc.ac.za', "BLOG_MAIL_USER" => 'fsiu', "BLOG_MAIL_PASS" => 'fsiu');
+				$this->objblogOps->setupConfig($newsettings);//die();
+
 				$this->dsn = "pop3://fsiu:fsiu@itsnw.uwc.ac.za:110/INBOX";
 				try {
 					//grab a list of all valid users to an array for verification later
@@ -236,11 +239,8 @@ class blog extends controller
 					@$this->objImap->getHeaders();
 					//check mail
 					$this->thebox = @$this->objImap->checkMbox();
-					//var_dump($thebox);
 					$this->folders = @$this->objImap->populateFolders($this->thebox);
 					$this->msgCount = @$this->objImap->numMails();
-					//$this->setVarByRef('folders', $folders);
-
 					//get the meassge headers
 					$i = 1;
 
@@ -263,6 +263,7 @@ class blog extends controller
 							$attachments = NULL;
 						}
 						else {
+							//check multiple attachments
 							$attachments = $bod[1];
 						}
 						$message = @htmlentities($bod[0]);
@@ -276,15 +277,7 @@ class blog extends controller
 							$parts = explode("<", $fadd);
 							$parts = explode(">", $parts[1]);
 							$addy = $parts[0];
-
-							//echo $addy;
-
 							//check if the address we get from the msg is in the array of valid addresses
-							//print_r($valadds);
-							//if(in_array($addy,$valadds))
-							//{
-							//	$validated = "TRUE";
-							//}
 							foreach ($valadds as $user)
 							{
 								if($user['address'] != $addy)

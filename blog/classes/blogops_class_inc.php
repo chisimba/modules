@@ -1101,5 +1101,11 @@ class blogops extends object
 		return array('mbegin' => $sel_date, 'prevyear' => $prev_year, 'prevmonth' => $prev_month, 'nextyear' => $next_year, 'nextmonth' => $next_month);
 	}
 
+	public function setupConfig($newsettings)
+	{
+		$this->objConfig = $this->getObject('altconfig', 'config');
+		$this->objConfig->appendToConfig($newsettings);
+	}
+
 }
 ?>
