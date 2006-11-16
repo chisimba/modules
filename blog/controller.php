@@ -129,6 +129,13 @@ class blog extends controller
 	public $dsn;
 
 	/**
+	 * Timeout message object
+	 *
+	 * @var object
+	 */
+	public $objMsg;
+
+	/**
      * Constructor method to instantiate objects and get variables
      *
      * @param void
@@ -157,6 +164,8 @@ class blog extends controller
 			$this->objIcon = &$this->getObject('geticon', 'htmlelements');
 			//$this->lucenedoc = &$this->getObject('doc','lucene');
 			//$this->luceneindexer = &$this->getObject('indexfactory', 'lucene');
+			//timeoutmsg object
+			$this->objMsg = &$this->getObject('timeoutmessage', 'htmlelements');
 			//config object
 			$this->objConfig = $this->getObject('altconfig', 'config');
 			//Get the activity logger class
@@ -221,6 +230,11 @@ class blog extends controller
 				break;
 
 			case 'setupmail':
+				if($this->objUser->isLoggedIn() == FALSE)
+				{
+					$this->nextAction('');
+					exit;
+				}
 				//create a form to catch the variables and write em to the config
 				$newsettings = array("BLOG_MAIL_DSN" => 'pop3://fsiu:fsiu@itsnw.uwc.ac.za:110/INBOX');
 				$this->objblogOps->setupConfig($newsettings);
@@ -360,6 +374,11 @@ class blog extends controller
 
 
 			case 'importblog':
+				if($this->objUser->isLoggedIn() == FALSE)
+				{
+					$this->nextAction('');
+					exit;
+				}
 				$username = $this->getParam('username');
 				$server = $this->getParam('server');
 				//set up to connect to the server
@@ -484,6 +503,11 @@ class blog extends controller
 				break;
 
 			case 'blogadmin':
+				if($this->objUser->isLoggedIn() == FALSE)
+				{
+					$this->nextAction('');
+					exit;
+				}
 				$userid = $this->objUser->userId();
 				$this->setVarByRef('userid', $userid);
 				$mode = $this->getParam('mode');
@@ -513,6 +537,11 @@ class blog extends controller
 				break;
 
 			case 'catadd':
+				if($this->objUser->isLoggedIn() == FALSE)
+				{
+					$this->nextAction('');
+					exit;
+				}
 				$mode = $this->getParam('mode');
 				$list = $this->getParam('catname');
 				$userid = $this->objUser->userId();
@@ -572,6 +601,11 @@ class blog extends controller
 
 
 			case 'postadd':
+				if($this->objUser->isLoggedIn() == FALSE)
+				{
+					$this->nextAction('');
+					exit;
+				}
 				$mode = $this->getParam('mode');
 				$userid = $this->objUser->userId();
 				$id = $this->getParam('id');
@@ -615,6 +649,11 @@ class blog extends controller
 				break;
 
 			case 'deletepost':
+				if($this->objUser->isLoggedIn() == FALSE)
+				{
+					$this->nextAction('');
+					exit;
+				}
 				$id = $this->getParam('id');
 				$this->objDbBlog->deletePost($id);
 				$this->nextAction('blogadmin', array('mode' => 'editpost'));
@@ -622,6 +661,11 @@ class blog extends controller
 				break;
 
 			case 'postedit':
+				if($this->objUser->isLoggedIn() == FALSE)
+				{
+					$this->nextAction('');
+					exit;
+				}
 				$userid = $this->objUser->userId();
 				$id = $this->getParam('id');
 				$this->setVarByRef('editid', $id);
@@ -636,6 +680,11 @@ class blog extends controller
 				break;
 
 			case 'deletecat':
+				if($this->objUser->isLoggedIn() == FALSE)
+				{
+					$this->nextAction('');
+					exit;
+				}
 				//grab the vars that we need
 				$id = $this->getParam('id');
 				$userid = $this->objUser->userId();
