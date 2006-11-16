@@ -20,35 +20,6 @@ $this->appendArrayVar('headerParams', $css);
 //Set to automatically render htmllist into tree menu
 $this->appendArrayVar('bodyOnLoad', 'autoInit_trees()');
 
-/******************* BEGIN RIGHTSIDE BLOCKS ******************************/
-// Right Column initialize
-$rightSideColumn = "";
-//Add the getting help block
-$objLink->href = $this->uri(null, 'calendar');
-$objLink->link = $objBlocks->showBlock('calendar', 'calendar');
-$rightSideColumn .= $objBlocks->showBlock('gettinghelp', 'help');
-//simple calendar
-$rightSideColumn .= '<br />'. $objLink->show();
-//Add the latest in blog as a a block
-$rightSideColumn .= $objBlocks->showBlock('latest', 'blog');
-//Add the latest in blog as a a block
-$rightSideColumn .= $objBlocks->showBlock('latestpodcast', 'podcast');
-//Add a block for chat
-$rightSideColumn .= $objBlocks->showBlock('chat', 'chat');
-//Add a block for the google api search
-$rightSideColumn .= $objBlocks->showBlock('google', 'websearch');
-//Put the google scholar google search
-$rightSideColumn .= $objBlocks->showBlock('scholarg', 'websearch');
-//Put a wikipedia search
-$rightSideColumn .= $objBlocks->showBlock('wikipedia', 'websearch');
-//Put a dictionary lookup
-$rightSideColumn .= $objBlocks->showBlock('dictionary', 'dictionary');
-
-
-/******************* END  RIGHTSIDE BLOCKS ******************************/
-
-
-
 
 /*****************LEFT SIDE ***************************************/
 //Navigation
@@ -76,12 +47,11 @@ if(!$this->getParam('query') == '')
 }
 
        $cssLayout =& $this->newObject('csslayout', 'htmlelements');
-       $cssLayout->setNumColumns(3);
+       $cssLayout->setNumColumns(2);
        $cssLayout->setLeftColumnContent($leftSide);
 
 
 	   
        $cssLayout->setMiddleColumnContent($this->getBreadCrumbs().$objArticleBox->show( $this->getContent()).$searchResults.$this->footerStr);
-       $cssLayout->setRightColumnContent($rightSideColumn);
-       echo $cssLayout->show(); 
+       echo $cssLayout->show();
 
