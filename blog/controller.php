@@ -152,18 +152,29 @@ class blog extends controller
 			//get the imap class to grab email to blog...
 			//maybe a config here to check if we wanna use this?
 			$this->objImap = $this->getObject('imap', 'webmail');
-
+			//feeds classes
 			$this->objFeed = &$this->getObject('feeds', 'feed');
+			//user object
 			$this->objUser = $this->getObject('user', 'security');
+			//feed creator subsystem
 			$this->objFeedCreator = &$this->getObject('feeder', 'feed');
+			//httpclient to grab remote data
 			$this->objClient = $this->getObject('client','httpclient');
+			//language object
 			$this->objLanguage = $this->getObject('language', 'language');
+			//database abstraction object
 			$this->objDbBlog = $this->getObject('dbblog');
+			//blog operations object
 			$this->objblogOps = &$this->getObject('blogops');
+			//HTML cleaner
 			$this->cleaner = &$this->getObject('htmlcleaner', 'utilities');
+			//icon object
 			$this->objIcon = &$this->getObject('geticon', 'htmlelements');
+
+			//Lucene indexing and search system
 			//$this->lucenedoc = &$this->getObject('doc','lucene');
 			//$this->luceneindexer = &$this->getObject('indexfactory', 'lucene');
+
 			//timeoutmsg object
 			$this->objMsg = &$this->getObject('timeoutmessage', 'htmlelements');
 			//config object
@@ -174,13 +185,15 @@ class blog extends controller
 			$this->objLog->log();
 		}
 		catch(customException $e) {
+			//oops, something not there - bail out
 			echo customException::cleanUp();
+			//we don't want to even attempt anything else right now.
 			die();
 		}
 	}
 
 	/**
-     * Method to process actions to be taken
+     * Method to process actions to be taken from the querystring
      *
      * @param string $action String indicating action to be taken
      * @return string template
@@ -189,29 +202,38 @@ class blog extends controller
 	{
 		switch ($action) {
 			default:
+				//check if the user is logged in
 				if($this->objUser->isLoggedIn() == TRUE)
 				{
+					//get the action
 					$act = $this->getParam('action');
+					//is the user asking for a random blog?
 					if($act != 'randblog')
 					{
+						//no, so lets go to the viewblog page
 						$this->nextAction('viewblog');
 						exit;
 					}
 
 				}
+				//we don't require login - preloin action
 				$this->requiresLogin(FALSE);
+				//get the userid if set
 				$userid = $this->getParam('userid');
 				if(!isset($userid))
 				{
+					//no userid is set
 					$this->setVarByRef('message', $this->objLanguage->languageText("mod_blog_word_randomblog"));
 					//get a random blog from the blog table
 					$r = $this->objDbBlog->getRandBlog();
+					//a random blog is found!
 					if(!empty($r))
 					{
 						$userid = $r['userid'];
 						$this->setVarByRef('userid', $userid);
 					}
 					else {
+						//oh dear, no blogs on this instance of chisimba!
 						return 'noblogs_tpl.php';
 					}
 				}
@@ -219,51 +241,65 @@ class blog extends controller
 					$this->setVarByRef('userid', $userid);
 				}
 				//carry on...
+				//get the categories
 				$catarr = $this->objDbBlog->getCatsTree($userid);
+				//get the link categories
 				$linkcats = $this->objDbBlog->getAllLinkCats($userid);
+				//get all the posts by this user
 				$posts = $this->objDbBlog->getAllPosts($userid, $catid = NULL);
+				//send the info to the template
 				$this->setVarByRef('posts', $posts);
 				$this->setVarByRef('linkcats', $linkcats);
 				$this->setVarByRef('cats', $catarr);
+				//return the template!
 				return 'randblog_tpl.php';
-
 				break;
 
 			case 'setupmail':
-				if($this->objUser->isLoggedIn() == FALSE)
+				//check that the person trying to set this up is logged in and an admin
+				if($this->objUser->isLoggedIn() == FALSE && $this->objUser->isAdmin() == FALSE)
 				{
+					//user is not logged in, bust out of this case and go to the default
 					$this->nextAction('');
 					exit;
 				}
+
 				//create a form to catch the variables and write em to the config
+				//temporary settings for now until the form is done...
 				$newsettings = array("BLOG_MAIL_DSN" => 'pop3://fsiu:fsiu@itsnw.uwc.ac.za:110/INBOX');
+				//invoke the config object and append the settings to the config.xml
 				$this->objblogOps->setupConfig($newsettings);
 				break;
 
 			case 'mail2blog':
+				//grab the DSN from the config file
 				$this->dsn = $this->objConfig->getItem('BLOG_MAIL_DSN');
 				try {
 					//grab a list of all valid users to an array for verification later
 					$valid = $this->objDbBlog->checkValidUser();
 					$valadds = array();
+					//cycle through the valid email addresses and check that the mail is from a real user
 					foreach($valid as $addys)
 					{
 						$valadds[] = array('address' => $addys['emailaddress'], 'userid' => $addys['userid']);
 					}
 
-					//connect to the server
+					//connect to the IMAP/POP3 server
 					$this->conn = $this->objImap->factory($this->dsn);
+					//grab the mail headers
 					@$this->objImap->getHeaders();
 					//check mail
 					$this->thebox = @$this->objImap->checkMbox();
+					//get the mail folders
 					$this->folders = @$this->objImap->populateFolders($this->thebox);
+					//count the messages
 					$this->msgCount = @$this->objImap->numMails();
 					//get the meassge headers
 					$i = 1;
-
+					//parse the messages
 					while ($i <= @$this->msgCount)
 					{
-						//echo $i;
+						//get the header info
 						$headerinfo = @$this->objImap->getHeaderInfo($i);
 						//from
 						$address = @$headerinfo->fromaddress;
@@ -275,14 +311,18 @@ class blog extends controller
 						$read = @$headerinfo->Unseen;
 						//message body
 						$bod = @$this->objImap->getMessage($i);
+						//check if there is an attachment
 						if(empty($bod[1]))
 						{
+							//nope no attachments
 							$attachments = NULL;
 						}
 						else {
-							//check multiple attachments
+							//@TODO check multiple attachments
+							//set the attachment
 							$attachments = $bod[1];
 						}
+						//make sure the body doesn't have any nasty chars
 						$message = @htmlentities($bod[0]);
 
 						//check for a valid user
@@ -291,21 +331,27 @@ class blog extends controller
 							//check the address against tbl_users to see if its valid.
 							//just get the email addy, we dont need the name as it can be faked
 							$fadd = $address;
+							//get rid of the RFC formatted email bits
 							$parts = explode("<", $fadd);
 							$parts = explode(">", $parts[1]);
+							//raw address string that we can use to check against
 							$addy = $parts[0];
 							//check if the address we get from the msg is in the array of valid addresses
 							foreach ($valadds as $user)
 							{
+								//check if there is a match to the user list
 								if($user['address'] != $addy)
 								{
-									//echo $user['address'] . "  " . $addy;
+									//Nope, no match, not validated!
 									$validated = NULL;
 
 								}
 								else {
+									//match found, you are a valid user dude!
 									$validated = TRUE;
+									//set the userid
 									$userid = $user['userid'];
+									//all is cool, so lets break out of this loop and carry on
 									break;
 
 								}
@@ -313,6 +359,7 @@ class blog extends controller
 						}
 						if($validated == TRUE)
 						{
+							//insert the mail data into an array for manipulation
 							$data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
 											'body' => $message, 'attachments' => $attachments);
 						}
@@ -323,10 +370,12 @@ class blog extends controller
 
 						$i++;
 					}
+					//is the data var set?
 					if(!isset($data))
 					{
 						$data = array();
 					}
+					//lets look at the data now
 					foreach ($data as $datum)
 					{
 						//add the [img][/img] tags to the body so that the images show up
@@ -334,15 +383,21 @@ class blog extends controller
 						if(!empty($datum['attachments']))
 						{
 							//do check for multiple attachments
-
+							//set the filename of the attachment
 							$filename = $datum['attachments'][0]['filename'];
+							//decode the attachment data
 							$filedata = base64_decode($datum['attachments'][0]['filedata']);
+							//set the path to write down the file to
 							$path = $this->objConfig->getContentBasePath() . 'blog/';
+							//check that the data dir is there
 							if(!file_exists($path))
 							{
+								//dir doesn't exist so create it quickly
 								mkdir($path, 0777);
 							}
+							//change directory to the data dir
 							chdir($path);
+							//write the file
 							$handle = fopen($filename, 'wb');
 							fwrite($handle, $filedata);
 							fclose($handle);
@@ -351,9 +406,10 @@ class blog extends controller
 							$newbod = $datum['body'] . "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]";
 						}
 						else {
+							//no attachments to worry about
 							$newbod = $datum['body'];
 						}
-
+						//Write the new post to the database as a "Quick Post"
 						$this->objblogOps->quickPostAdd($datum['userid'], array('posttitle' => $datum['subject'], 'postcontent' => $newbod,
 												    'postcat' => 0, 'postexcerpt' => '', 'poststatus' => '0',
 												    'commentstatus' => 'Y',
@@ -364,21 +420,23 @@ class blog extends controller
 
 
 				}
+				//any issues?
 				catch(customException $e) {
+					//clean up and die!
 					customException::cleanUp();
 				}
 				break;
 
-
-
-
-
 			case 'importblog':
+				//check if the user is logged in
 				if($this->objUser->isLoggedIn() == FALSE)
 				{
+					//no, redirect to the main blog page
 					$this->nextAction('');
+					//get outta this action immediately
 					exit;
 				}
+				//get some info
 				$username = $this->getParam('username');
 				$server = $this->getParam('server');
 				//set up to connect to the server
@@ -394,37 +452,46 @@ class blog extends controller
 				break;
 
 			case 'feed':
+				//get the feed format parameter from the querystring
 				$format = $this->getParam('format');
+				//and the userid of the blog we are interested in
 				$userid = $this->getParam('userid');
 
 				//grab the feed items
 				$posts = $this->objDbBlog->getAllPosts($userid, $catid = NULL);
 
 				//set up the feed...
+				//who's blog is this?
 				$fullname = htmlentities($this->objUser->fullname($userid));
+				//title of the feed
 				$feedtitle = htmlentities($fullname);
+				//description
 				$feedDescription = htmlentities($this->objLanguage->languageText("mod_blog_blogof", "blog")) . " " . $fullname;
+				//link back to the blog
 				$feedLink = $this->objConfig->getSiteRoot() . "index.php?module=blog&userid=" . $userid;
+				//sanitize the link
 				$feedLink = htmlentities($feedLink);
+				//set up the url
 				$feedURL = $this->objConfig->getSiteRoot() . "index.php?module=blog&userid=" . $userid . "action=feed&format=" . $format;
 				$feedURL = htmlentities($feedURL);
+				//set up the feed
 				$this->objFeedCreator->setupFeed(TRUE,$feedtitle, $feedDescription, $feedLink, $feedURL);
-
+				//loop through the posts and create feed items from them
 				foreach($posts as $feeditems)
 				{
+					//use the post title as the feed item title
 					$itemTitle = $feeditems['post_title'];
 					$itemLink = ''; //todo - add this to the posts table!
+					//description
 					$itemDescription = $feeditems['post_content'];
+					//where are we getting this from
 					$itemSource = $this->objConfig->getSiteRoot() . "index.php?module=blog&userid=" . $userid;
+					//feed author
 					$itemAuthor = htmlentities($this->objUser->fullname($userid));
-
+					//add this item to the feed
 					$this->objFeedCreator->addItem($itemTitle, $itemLink, $itemDescription, $itemSource, $itemAuthor);
 				}
-
-
-
-				//$this->objFeedCreator->setupFeed(TRUE,$feedtitle, $feedDescription, $feedLink, $feedURL);
-
+				//check which format was chosen and output according to that
 				switch ($format) {
 					case 'rss2':
 						$feed = $this->objFeedCreator->output(); //defaults to RSS2.0
@@ -458,61 +525,68 @@ class blog extends controller
 						$feed = $this->objFeedCreator->output(); //defaults to RSS2.0
 						break;
 				}
-
 				//output the feed
 				echo htmlentities($feed);
-
 				break;
-
-			case 'showsection':
-				//sections should only return the bits in the section for the month...
-
-
-
-				break;
-
 
 			case 'viewblog':
 				try {
+					//get the category ID if any
 					$catid = $this->getParam('catid');
+					//grab the user id
 					$userid = $this->getParam('userid');
 					if(empty($userid))
 					{
+						//fix the user id just in case
 						$userid = $this->objUser->userId();
 					}
-
+					//get the category tree
 					$catarr = $this->objDbBlog->getCatsTree($userid);
+					//get the links categories
 					$linkcats = $this->objDbBlog->getAllLinkCats($userid);
+					//make sure the category id is there
 					if(isset($catid))
 					{
+						//grab all the posts in that category
 						$posts = $this->objDbBlog->getAllPosts($userid, $catid);
 					}
 					else {
+						//otherwise grab all the Published posts
 						$posts = $this->objDbBlog->getAbsAllPostsNoDrafts($userid);
 					}
+					//send all that to the template
 					$this->setVarByRef('catid', $catid);
 					$this->setVarByRef('posts', $posts);
 					$this->setVarByRef('linkcats', $linkcats);
 					$this->setVarByRef('cats', $catarr);
 					$this->setVarByRef('userid', $userid);
+					//return the template
 					return 'myblog_tpl.php';
 				}
+				//catch any exceptions
 				catch(customException $e) {
+					//bail
 					customException::cleanUp();
 				}
 				break;
 
 			case 'blogadmin':
+				//make sure the user is logged in
 				if($this->objUser->isLoggedIn() == FALSE)
 				{
+					//bail to the default page
 					$this->nextAction('');
+					//exit this action
 					exit;
 				}
+				//get the user id
 				$userid = $this->objUser->userId();
 				$this->setVarByRef('userid', $userid);
+				//check the mode
 				$mode = $this->getParam('mode');
 				switch ($mode)
 				{
+					//return a specific template for the chosen mode
 					case 'writepost':
 						return 'writepost_tpl.php';
 						break;
@@ -524,24 +598,33 @@ class blog extends controller
 						break;
 
 				}
+				//return the default template for no mode set
 				return 'blogadmin_tpl.php';
 				break;
 
 			case 'showarchives':
+				//get the date and user id
 				$date = $this->getParam('year');
-				$userid = $this->getParam('userid'); //$this->objUser->userId();
+				$userid = $this->getParam('userid');
+				//grab the posts by month
 				$posts = $this->objDbBlog->getPostsMonthly($date, $userid);
+				//send out to the template
 				$this->setVarByRef('userid', $userid);
 				$this->setVarByRef('posts', $posts);
+				//return a specific template and break the action
 				return 'archive_tpl.php';
 				break;
 
 			case 'catadd':
+				//add a category
+				//check for login
 				if($this->objUser->isLoggedIn() == FALSE)
 				{
+					//not logged in - send to default action
 					$this->nextAction('');
 					exit;
 				}
+				//check the mode and cat name as wel as user id
 				$mode = $this->getParam('mode');
 				$list = $this->getParam('catname');
 				$userid = $this->objUser->userId();
