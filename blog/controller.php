@@ -266,7 +266,7 @@ class blog extends controller
 
 				//create a form to catch the variables and write em to the config
 				//temporary settings for now until the form is done...
-				$newsettings = array("BLOG_MAIL_DSN" => 'pop3://fsiu:fsiu@itsnw.uwc.ac.za:110/INBOX');
+				$newsettings = array("BLOG_MAIL_DSN" => 'pop3://blog:blogger@itsnw.uwc.ac.za:110/INBOX');
 				//invoke the config object and append the settings to the config.xml
 				$this->objblogOps->setupConfig($newsettings);
 				break;
