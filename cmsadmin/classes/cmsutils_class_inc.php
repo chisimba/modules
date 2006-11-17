@@ -949,6 +949,7 @@ class cmsutils extends object
         */
         public function getBreadCrumbs($module = 'cms')
         {
+            $objTools = & $this->newObject('tools', 'toolbar');
             if ($this->getParam('action') == '') {
                 return '';
             }
@@ -981,9 +982,9 @@ class cmsutils extends object
             $home->href = $this->uri(null , $module);
             $home->link = 'Home';
             $str = $home->show() .' / ' . $str;
-            return '<div id="breadcrumb">'. $str .'</div>';
+            
+            $objTools->replaceBreadCrumbs(split(' / ', $str));
         }
-
         /**
          * Method to generate the img tag for the section
          * thumbnail
