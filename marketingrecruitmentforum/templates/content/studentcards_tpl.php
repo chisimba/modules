@@ -150,7 +150,7 @@
   //echo $objDropdown->show();
 //	if (!is_null($this->getSession('faculty',NULL))) {
 //	   	$objDropdown->setSelected($this->getSession('faculty',NULL));                        //set initial value ?? 
-	}
+//	}
 	
 //	$objForm1->addToForm('<tr><td>Please Select a Faculty</td><td>'."&nbsp"."&nbsp".$objDropdown->show().'&nbsp;'/*.$objButton->show()*/.'</td></tr>');
 
