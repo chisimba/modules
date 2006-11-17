@@ -245,10 +245,15 @@ class cmsadmin extends controller
                     case 'removefromfrontpage':
                     $id = $this->getParam('id');
 
-                    $this->_objFrontPage->remove
-                    ($id);
+                    $this->_objFrontPage->remove($id);
 
                     return $this->nextAction('frontpages', array(NULL), 'cmsadmin');
+
+                    case 'changefpstatus':
+                    $pageId = $this->getParam('pageid');
+                    $sectionId = $this->getParam('sectionid');
+                    $this->_objFrontPage->changeStatus($pageId);
+                    return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
 
                     case 'changefporder':
                     $id = $this->getParam('id');

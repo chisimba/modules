@@ -147,8 +147,6 @@ $objPagesTable->width = '99%';
 //Create table header row
 $objPagesTable->startHeaderRow();
 
-$objPagesTable->addHeaderCell($this->objLanguage->languageText('word_number'));
-
 $objPagesTable->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_pagetitle', 'cmsadmin'));
 
 $objPagesTable->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_articledate', 'cmsadmin'));
@@ -195,10 +193,18 @@ if (count($pages) > '0')
         $objLink->href = $this->uri(array('action' => 'showcontent', 'id' => $pageId, 'fromadmin' => TRUE, 'sectionid' => $sectionId), 'cms');
         $viewPageLink = $objLink->show();
 
+        //Icon for toggling front page status
+        $frontPageLink =& $this->newObject('link', 'htmlelements');
+        $frontPageLink->href = $this->uri(array('action' => 'changefpstatus', 'pageid' => $pageId, 'sectionid' => $sectionId), 'cmsadmin');
+        if($this->_objFrontPage->isFrontPage($pageId)){
+          $objIcon->setIcon('greentick');
+        } else {
+            $objIcon->setIcon('redcross');
+        }
+        $frontPageLink->link = $objIcon->show();
+        
         //Add sub sec data to table
         $objPagesTable->startRow();
-
-        $objPagesTable->addCell($i, '', '', '', $class);
 
         $objPagesTable->addCell($pageTitle, '', '', '', $class);
 
@@ -208,17 +214,18 @@ if (count($pages) > '0')
 
         $objPagesTable->addCell($this->_objContent->getOrderingLink($sectionId, $pageId), '', '', '', $class);
 
-        $objPagesTable->addCell($editIcon.'&nbsp;'.$delIcon, '', '', '', $class);
+        $objPagesTable->addCell($frontPageLink->show().'&nbsp;'.$editIcon.'&nbsp;'.$delIcon, '', '', '', $class);
         $objPagesTable->endRow();
 
     }
 }
 
 //Create add sub section icon
-$addSubSecIcon = $objIcon->getAddIcon($this->uri(array('action' => 'addsection', 'parentid' => $sectionId)));
+
+$addSubSecIcon = $objIcon->getLinkedIcon($this->uri(array('action' => 'addsection', 'parentid' => $sectionId)), 'create_folder');
 
 //Create add page icon
-$addPageIcon = $objIcon->getAddIcon($this->uri(array('action' => 'addcontent', 'parent' => $sectionId)));
+$addPageIcon = $objIcon->getLinkedIcon($this->uri(array('action' => 'addcontent', 'parent' => $sectionId)), 'create_page');
 
 //Create edit section icon
 $editSectionIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addsection', 'id' => $sectionId)));

@@ -121,6 +121,31 @@ class dbcontentfrontpage extends dbTable
 		
 		return $this->valueExists('content_id',$id);
 	}
+
+	/**
+	 * Method to check if a page is a front page
+	 * 
+	 * @param string $pageId The id to be checked
+	 * @access public
+	 * @return bool
+	 * 
+	 */
+	public function changeStatus($pageId)
+	{
+		try{			
+		  if($this->isFrontPage($pageId)){
+		    $entry = $this->getRow('content_id', $pageId);
+		    $id = $entry['id'];
+		    return $this->remove($id);
+		  } else {
+          return $this->add($pageId);
+      }
+		}catch (Exception $e){
+       		echo 'Caught exception: ',  $e->getMessage();
+        	exit();
+        }
+	}
+
 	/**
 	 * Method to update the order of the frontpage
 	 * 

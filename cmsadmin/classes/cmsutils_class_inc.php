@@ -1263,6 +1263,9 @@ class cmsutils extends object
                     $isVisible = false;
                 } else {
                     $section = $this->_objSections->getSection($sectionId);
+                    if ($section['published'] == 0){
+                      $isVisible = false;
+                    }
                     $sectionId = $section['parentid'];
                 }
             }
@@ -1301,7 +1304,7 @@ class cmsutils extends object
                                 </script>
                                 ";
             $this->appendArrayVar('headerParams',$initRadioDisplay);
-            $this->appendArrayVar('bodyOnLoad','initRadioDisplay()');
+            $this->appendArrayVar('bodyOnLoad','initRadioDisplay();');
 
             //initiate objects
             $table = & $this->newObject('htmltable', 'htmlelements');
@@ -1497,29 +1500,6 @@ class cmsutils extends object
             $table->addCell('&nbsp;');  
             $table->endRow();
 
-/*
-            //layout
-            $table->startRow();
-
-            $table->addCell($this->objLanguage->languageText('mod_cmsadmin_layoutofpages', 'cmsadmin'));
-
-            $table->addCell($this->getLayoutOptions('sectionlayout', $this->getParam('id')).'<p/>');
-
-            $table->endRow();
-
-
-                        //access level
-                        $table->startRow();
-                        $table->addCell($this->objLanguage->languageText('phrase_accesslevel'));
-                        $table->addCell($this->getAccessList('access').'<p/>');
-                        $table->endRow();
-             
-                        //description
-                        $table->startRow();
-                        $table->addCell($this->objLanguage->languageText('word_description'));
-                        $table->addCell($bodyInput->show());
-                        $table->endRow();
-            */
             //Show intro or not
             $label = new label ('Show Introduction', 'input_showintro');
             $showdate = new radio ('showintro');
@@ -1781,9 +1761,6 @@ class cmsutils extends object
             $table2->startRow();
             $table2->addCell($introInput->show());
             $table2->endRow();
-            
-
-            
             
             $table2->startRow();
             $table2->addCell($button->show());
