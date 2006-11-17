@@ -132,6 +132,9 @@ class cms extends controller
                 }  
 	            	
 	            case 'showsection':
+	              $section = $this->_objSections->getSection($this->getParam('id'));
+	              $siteTitle = '<title>'.$section['title'].'</title>';
+	              $this->setVarByRef('pageTitle', $siteTitle);
 	            	$this->setVar('content', $this->_objUtils->showSection());
 	            	return 'cms_section_tpl.php';
 	            	
@@ -141,6 +144,11 @@ class cms extends controller
 	              $sectionId = $this->getParam('sectionid', NULL);
 	              $this->setVarByRef('sectionId', $sectionId);
 	              $this->setVarByRef('fromadmin', $fromadmin);
+	              
+                $page = $this->_objContent->getContentPage($this->getParam('id'));
+	              $siteTitle = '<title>'.$page['title'].'</title>';
+	              $this->setVarByRef('pageTitle', $siteTitle);
+	              
 	            	$this->setVar('content', $this->_objUtils->showBody());
 	            	return 'cms_content_tpl.php';
 	            case 'ical':

@@ -1,4 +1,5 @@
 <?php
+
 echo $content;
 if($fromadmin){
   $objLanguage =& $this->newObject('language', 'language');
