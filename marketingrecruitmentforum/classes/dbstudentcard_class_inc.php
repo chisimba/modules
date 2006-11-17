@@ -217,14 +217,14 @@ public function getstudqualify()
 /*------------------------------------------------------------------------------*/
   public function addfaculties()
   {
-    $stmt = "LOAD DATA INFILE 'http:172.16.64.7/5ive/app/usrfiles/faculty_values.txt' INTO TABLE tbl_academicprogramme_faculties FIELDS TERMINATED BY ','";
+    $stmt = "LOAD DATA INFILE 'faculty_values.txt' INTO TABLE tbl_academicprogramme_faculties FIELDS TERMINATED BY ','";
     $faculties = $this->getArray($stmt);
     return $faculties;
   }
 /*------------------------------------------------------------------------------*/
   public function addcoursevalues()
   {
-    $stmt = "LOAD DATA INFILE 'http:172.16.64.7/5ive/app/usrfiles/course_values.txt' INTO TABLE tbl_academicprogramme_courses FIELDS TERMINATED BY ','";
+    $stmt = "LOAD DATA INFILE 'course_values.txt' INTO TABLE tbl_academicprogramme_courses FIELDS TERMINATED BY ','";
     $course = $this->getArray($stmt);
     return $course;
   }
