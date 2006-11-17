@@ -79,21 +79,13 @@ $objSubSecTable->width = '99%';
 
 //Create table header row
 $objSubSecTable->startHeaderRow();
-
 $objSubSecTable->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_menuname', 'cmsadmin'));
-
 $objSubSecTable->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_nameofsection', 'cmsadmin'));
-
 $objSubSecTable->addHeaderCell($this->objLanguage->languageText('word_pages'));
-
 $objSubSecTable->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_displaytype', 'cmsadmin'));
-
 $objSubSecTable->addHeaderCell($this->objLanguage->languageText('word_visible'));
-
 $objSubSecTable->addHeaderCell($this->objLanguage->languageText('word_order'));
-
 $objSubSecTable->addHeaderCell($this->objLanguage->languageText('word_options'));
-
 $objSubSecTable->endHeaderRow();
 
 if (isset($subSections))
@@ -132,20 +124,13 @@ if (isset($subSections))
 
         //Add sub sec data to table
         $objSubSecTable->startRow();
-
         $objSubSecTable->addCell($viewSubSecLink, '', '', '', $class);
-
         $objSubSecTable->addCell($subSecTitle, '', '', '', $class);
-
         $objSubSecTable->addCell($this->_objContent->getNumberOfPagesInSection($subSecId), '', '', '', $class);
-
-        $objSubSecTable->addCell($subSecLayoutName, '', '', '', $class);
-
+        $objSubSecTable->addCell($this->_objLayouts->getLayoutDescription($subSecLayoutName), '', '', '', $class);
         $objSubSecTable->addCell($visibleIcon, '', '', '', $class);
-
-        $objSubSecTable->addCell($this->_objSections->getOrderingLink($subSecId), '', '', '', $class);
-
-        $objSubSecTable->addCell($editIcon.'&nbsp;'.$delIcon, '', '', '', $class);
+        $objSubSecTable->addCell($this->_objSections->getPageOrderType($section['ordertype']), '', '', '', $class);
+        $objSubSecTable->addCell($editIcon.'&nbsp;'.$delIcon.'&nbsp;'.$this->_objSections->getOrderingLink($subSecId), '', '', '', $class);
         $objSubSecTable->endRow();
     }
 }
@@ -265,9 +250,8 @@ $middleColumnContent .= $objDetailsTable->show();
 
 //Sub sections table
 $objH->str = $this->objLanguage->languageText('mod_cmsadmin_subsections', 'cmsadmin').'&nbsp;'.'('.$this->_objSections->getNumSubSections($sectionId).')'.'&nbsp;'.$addSubSecIcon;
-
+$middleColumnContent .= '&nbsp;'.'<br/>';
 $middleColumnContent .= $objH->show();
-
 $middleColumnContent .= $objSubSecTable->show();
 
 if (empty($subSections))
@@ -277,16 +261,15 @@ if (empty($subSections))
 
 //Pages table
 $objH->str = $this->objLanguage->languageText('word_pages').'&nbsp;'.'('.$this->_objContent->getNumberOfPagesInSection($sectionId).')'.'&nbsp;'.$addPageIcon;
-
+$middleColumnContent .= '&nbsp;'.'<br/>';
 $middleColumnContent .= $objH->show();
-
 $middleColumnContent .= $objPagesTable->show();
 
 if (empty($pages))
 {
     $middleColumnContent .= '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_cmsadmin_nopagesfoundinthissection', 'cmsadmin').'</div>';
 }
-
+$middleColumnContent .= '&nbsp;'.'<br/>';
 $middleColumnContent .= $objNewSectionLink->show().'&nbsp;'.'/'.'&nbsp;'.$objNewPageLink->show();
 
 echo $middleColumnContent;
