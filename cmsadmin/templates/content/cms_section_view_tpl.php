@@ -200,7 +200,7 @@ if (count($pages) > '0')
 
         $objPagesTable->addCell($i, '', '', '', $class);
 
-        $objPagesTable->addCell($viewPageLink, '', '', '', $class);
+        $objPagesTable->addCell($pageTitle, '', '', '', $class);
 
         $objPagesTable->addCell($articleDate, '', '', '', $class);
 

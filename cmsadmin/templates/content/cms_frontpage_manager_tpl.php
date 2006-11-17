@@ -10,12 +10,13 @@
 
 //initiate objects
 $table = & $this->newObject('htmltable', 'htmlelements');
-$h3 = &$this->newObject('htmlheading', 'htmlelements');
+$objH = &$this->newObject('htmlheading', 'htmlelements');
 $link = & $this->newObject('link', 'htmlelements');
 $objIcon = & $this->newObject('geticon', 'htmlelements');
 
 //create a heading
-$h3->str = $this->objLanguage->languageText('mod_cmsadmin_frontpagemanager', 'cmsadmin');
+$objH->str = $this->objLanguage->languageText('mod_cmsadmin_frontpagemanager', 'cmsadmin');
+$objH->type = '1';
 //counter for records
 $cnt = 1;
 
@@ -66,7 +67,7 @@ foreach($files as $file)
 
 //print out the page
 $middleColumnContent = "";
-$middleColumnContent .= $h3->show();
+$middleColumnContent .= $objH->show();
 $middleColumnContent .= '<br/>';
 $middleColumnContent .= $table->show();
 
