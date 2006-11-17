@@ -54,18 +54,38 @@ class dblayouts extends dbTable
 	 * Method to get the layout record
 	 * 
 	 * @access public
-	 * @param string $id The id of the layout
+	 * @param string $name The name of the layout
 	 * @return array
 	 */
-	public function getLayout($id)
+	public function getLayout($name)
 	{
 		
 		try {
-			return $this->getRow('id', $id);
+			return $this->getRow('name', $name);
 		}catch (Exception $e){
        		echo 'Caught exception: ',  $e->getMessage();
         	exit();
         }
 	}
+	/**
+	 * Method to get the description of a layout by referencing its name
+	 * 
+	 * @access public
+	 * @param string $name The name of the layout
+	 * @return string $description The layout description
+	 */
+	public function getLayoutDescription($name)
+	{
+		
+		try {
+			$layout = $this->getRow('name', $name);
+			$description = $layout['description'];
+			return $description;
+		}catch (Exception $e){
+       		echo 'Caught exception: ',  $e->getMessage();
+        	exit();
+        }
+	}
+	
 	
 }

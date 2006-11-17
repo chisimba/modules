@@ -5,25 +5,25 @@
         <id>1</id>
         <name>previous</name>
         <imagename>section_previous.gif</imagename>
-        <desciption>Previous layout</desciption>
+        <description>Previous layout</description>
     </tbl_cms_layouts>
     <tbl_cms_layouts>
         <id>2</id>
         <name>page</name>
         <imagename>section_page.gif</imagename>
-        <desciption>Page Layout</desciption>
+        <description>Page Layout</description>
     </tbl_cms_layouts>
     <tbl_cms_layouts>
         <id>3</id>
         <name>summaries</name>
         <imagename>section_summaries.gif</imagename>
-        <desciption>Summaries Layout</desciption>
+        <description>Summaries Layout</description>
     </tbl_cms_layouts>
     <tbl_cms_layouts>
         <id>4</id>
         <name>list</name>
         <imagename>section_list.gif</imagename>
-        <desciption>List Layout</desciption>
+        <description>List Layout</description>
     </tbl_cms_layouts>    
     <tbl_cms_sections>
         <id>init_1</id>
@@ -31,9 +31,12 @@
         <parentid>0</parentid>
         <title>Welcome to Chisimba</title>
         <menutext>Welcome </menutext>
-        <image></image>
-        <layout>1</layout>
-        <image_position>1</image_position>
+        <layout>page</layout>
+        <showdate>1</showdate>
+        <showintroduction>1</showintroduction>
+        <numpagedisplay>0</numpagedisplay>
+        <ordertype>pageorder</ordertype>
+        <showintroduction>1</showintroduction>
         <description>&lt;p&gt;Chisimba is an advanced rapid application development platform and next generation framework with features similar to common proprietary systems. It is free software (open source) released under the GNU GPL, and available for download via cvs checkout from http://cvs2.uwc.ac.za/ .&lt;/p&gt;&lt;p&gt;Chisimba was developed based on several years of experience in software design and architecture at the University of the Western Cape and partner institutions using its predecessor KEWL.NextGen, and is under active development by a team of developers in 16 African higher education institutions.&lt;/p&gt;</description>
         <published>1</published>
     	  <count>1</count>

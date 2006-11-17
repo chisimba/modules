@@ -15,16 +15,14 @@ $link = & $this->newObject('link', 'htmlelements');
 $objIcon = & $this->newObject('geticon', 'htmlelements');
 
 //create a heading
-$h3->str = $this->objLanguage->languageText('mod_cmsadmin_frontpagemanager', 'cmsadmin').'&nbsp;'.$objIcon->getAddIcon($this->uri(array('action' => 'addcontent' , 'frontpage' => 'true')));
+$h3->str = $this->objLanguage->languageText('mod_cmsadmin_frontpagemanager', 'cmsadmin');
 //counter for records
 $cnt = 1;
 
 //setup the table headings
 $table->startHeaderRow();
-$table->addHeaderCell($this->objLanguage->languageText('word_number'));
 $table->addHeaderCell($this->objLanguage->languageText('word_title'));
-$table->addHeaderCell($this->objLanguage->languageText('word_published'));
-$table->addHeaderCell($this->objLanguage->languageText('word_access'));
+$table->addHeaderCell($this->objLanguage->languageText('word_visible'));
 $table->addHeaderCell($this->objLanguage->languageText('word_section'));
 $table->addHeaderCell($this->objLanguage->languageText('word_order'));
 $table->addHeaderCell($this->objLanguage->languageText('word_options'));
@@ -37,33 +35,29 @@ foreach($files as $file)
 {
     $arrFile = $this->_objContent->getContentPage($file['content_id']);
 
-    $link->link = $arrFile['title'];
-    $link->href = $this->uri(array('action' => 'addcontent', 'id' => $arrFile['id']));
-
     $oddOrEven = ($rowcount == 0) ? "even" : "odd";
 
-    //Create delete icon for removing content from front page
+    //Create delete & edit icon for removing content from front page
     $objIcon = & $this->newObject('geticon', 'htmlelements');
+    $objIcon->setIcon('edit');
+    $link->link = $objIcon->show();
+    $link->href = $this->uri(array('action' => 'addcontent', 'id' => $arrFile['id']));
+    $editPage = $link->show();
+
     $delArray = array('action' => 'removefromfrontpage', 'confirm' => 'yes', 'id' => $file['id']);
     $deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmremovefromfp', 'cmsadmin');
     $delIcon = $objIcon->getDeleteIconWithConfirm($file['id'], $delArray, 'cmsadmin', $deletephrase);
 
     $tableRow = array();
-    $tableRow[] = $cnt++;
-    $tableRow[] = $link->show();
+    $tableRow[] = $arrFile['title'];
     $tableRow[] = $this->_objUtils->getCheckIcon($arrFile['published'], TRUE);
-    // $table->addCell($arrCategory['ordering']);
-    $tableRow[] = $this->_objUtils->getAccess($arrFile['access']);
 
     $link->link = $this->_objSections->getMenuText($arrFile['sectionid']);
     $link->href = $this->uri(array('action' => 'viewsection', 'id' => $arrFile['sectionid']));
 
     $tableRow[] = $link->show();
     $tableRow[] = $this->_objFrontPage->getOrderingLink($file['id']);
-    $tableRow[] = $delIcon;
-    //$table->addCell($this->_objCategories->getCatCount($section['id']));
-    //$table->addCell($section['created']);
-
+    $tableRow[] = $editPage.'&nbsp;'.$delIcon;
 
     $table->addRow($tableRow, $oddOrEven);
     $rowcount = ($rowcount == 0) ? 1 : 0;

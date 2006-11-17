@@ -50,6 +50,8 @@ $other .= '<br/>';
 
 $other .= '<br/>'.'&nbsp;'.'<br/>';
 
+$other .= '<b>'.$this->objLanguage->languageText('mod_cmsadmin_pagesorderedby', 'cmsadmin').':'.'</b>&nbsp;'.$this->_objSections->getPageOrderType($section['ordertype']);
+
 
 //Create table contain layout, visible, etc details
 $objDetailsTable = & $this->newObject('htmltable', 'htmlelements');
@@ -236,10 +238,25 @@ $addPageIcon = $objIcon->getAddIcon($this->uri(array('action' => 'addcontent', '
 //Create edit section icon
 $editSectionIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addsection', 'id' => $sectionId)));
 
+//Create delete section icon
+$delArray = array('action' => 'deletesection', 'confirm' => 'yes', 'id' => $sectionId);
+$deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelsection', 'cmsadmin');
+$delIcon = $objIcon->getDeleteIconWithConfirm($sectionId, $delArray, 'cmsadmin', $deletephrase);
+
+//Create add section link
+$objNewSectionLink =& $this->newObject('link', 'htmlelements');
+$objNewSectionLink->link = $this->objLanguage->languageText('mod_cmsadmin_addnewsection', 'cmsadmin');
+$objNewSectionLink->href = $this->uri(array('action' => 'addsection', 'parentid' => $sectionId));
+
+//Create add page link
+$objNewPageLink =& $this->newObject('link', 'htmlelements');
+$objNewPageLink->link = $this->objLanguage->languageText('phrase_addanewpage');
+$objNewPageLink->href = $this->uri(array('action' => 'addcontent', 'parent' => $sectionId));
+
 //Add content to the output layer
 $middleColumnContent = "";
 
-$objH->str = $this->objLanguage->languageText('word_section').':'.'&nbsp;'.$title.'&nbsp;'.$editSectionIcon;
+$objH->str = $this->objLanguage->languageText('word_section').':'.'&nbsp;'.$title.'&nbsp;'.$editSectionIcon.'&nbsp;'.$delIcon;
 
 $middleColumnContent .= $objH->show();
 
@@ -269,6 +286,8 @@ if (empty($pages))
 {
     $middleColumnContent .= '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_cmsadmin_nopagesfoundinthissection', 'cmsadmin').'</div>';
 }
+
+$middleColumnContent .= $objNewSectionLink->show().'&nbsp;'.'/'.'&nbsp;'.$objNewPageLink->show();
 
 echo $middleColumnContent;
 

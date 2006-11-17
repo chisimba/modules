@@ -147,25 +147,33 @@ class dbsections extends dbTable
 
                 $title = $this->getParam('title');
                 $menuText = $this->getParam('menutext');
-                $image = $this->getParam('image');
-                $imagePostion = $this->getParam('imageposition');
                 $access = $this->getParam('access');
-                $desciption = $this->getParam('description');
+                $description = $this->getParam('introtext');
                 $published = $this->getParam('published');
-                $layout = $this->getParam('sectionlayout');
+                $layout = $this->getParam('display');
+                $showdate = $this->getParam('showdate');
+                $showintroduction = $this->getParam('showintro');
+                if($this->getParam('pagenum') == 'custom'){
+                  $numpagedisplay = $this->getParam('customnumber');
+                } else {
+                    $numpagedisplay = $this->getParam('pagenum');
+                }  
+                $ordertype = $this->getParam('pageorder');
                 $ordering = $this->getOrdering($parentid);
                 return $this->insert(array(
                                          'rootid' => $rootid,
                                          'parentid' => $parentid,
                                          'title' => $title,
                                          'menutext' => $menuText,
-                                         'image' => $image,
-                                         'image_position' => $imagePostion,
                                          'access' => $access,
                                          'layout' => $layout,
                                          'ordering' => $ordering,
-                                         'description' => $desciption,
+                                         'description' => $description,
                                          'published' => $published,
+                                         'showdate' => $showdate,
+                                         'showintroduction' => $showintroduction,
+                                         'numpagedisplay' => $numpagedisplay,
+                                         'ordertype' => $ordertype,
                                          'count' => $this->getLevel($parentid) + '1'
                                      ));
 
@@ -189,24 +197,32 @@ class dbsections extends dbTable
                 $rootid = $this->getParam('rootid');
                 $title = $this->getParam('title');
                 $menuText = $this->getParam('menutext');
-                $image = $this->getParam('image');
-                $imagePostion = $this->getParam('imageposition');
                 $access = $this->getParam('access');
                 $desciption = $this->getParam('description');
                 $published = $this->getParam('published');
+                $layout = $this->getParam('display');
+                $showdate = $this->getParam('showdate');
+                $showintroduction = $this->getParam('showintro');
+                if($this->getParam('pagenum') == 'custom'){
+                  $numpagedisplay = $this->getParam('customnumber');
+                } else {
+                    $numpagedisplay = $this->getParam('pagenum');
+                }  
+                $ordertype = $this->getParam('pageorder');
                 $ordering = $this->getParam('ordering');
-                $layout = $this->getParam('sectionlayout');
                 $count = $this->getParam('count');
                 $arrFields = array(
                                  'rootid' => $rootid,
                                  'parentid' => $parentid,
                                  'title' => $title,
                                  'menutext' => $menuText,
-                                 'image' => $image,
-                                 'image_position' => $imagePostion,
                                  'access' => $access,
                                  'layout' => $layout,
                                  'ordering' => $ordering,
+                                 'showdate' => $showdate,
+                                 'showintroduction' => $showintroduction,
+                                 'numpagedisplay' => $numpagedisplay,
+                                 'ordertype' => $ordertype,
                                  'description' => $desciption,
                                  'count' => $count,
                                  'published' => $published);
@@ -699,6 +715,26 @@ class dbsections extends dbTable
                 exit();
             }
         }
+    /**
+    * Method to get the type of section in a human readable format
+    * @param string $orderType Type of Order Code
+    * @return string containing the type of order in a human readable format.
+    */
+    function getPageOrderType($orderType)
+    {
+        switch ($orderType)
+        {
+            case 'pageorder': $order = 'Manual Arrangement'; break;
+            case 'pagedate_asc': $order = 'Date Ascending'; break;
+            case 'pagedate_desc': $order = 'Date Descending'; break;
+            case 'pagetitle_asc': $order = 'Alphabetical by Title'; break;
+            case 'pagetitle_desc': $order = 'Reverse Alphabetical by Title'; break;
+            default: $order = 'unknown'; break;
+        }
+
+        return $order;
+    }
+        
 }
 
 ?>

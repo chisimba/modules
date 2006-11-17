@@ -1,8 +1,17 @@
-<DATA>
-	<UPDATE>
-		<MODULE>cmsadmin</MODULE>
-		<TABLE>tbl_cms_sections</TABLE>
-		<VERSION>the version</VERSION>
-		<SQL>ALTER TABLE `tbl_cms_sections` ADD `links` VARCHAR(255) NULL AFTER `menutext`;</SQL>
-	</UPDATE>
-</DATA>
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<updates>
+    <update>
+        <table>tbl_cmsadmin_sections</table>
+        <version>1.20</version>
+        <description>changed description field in section tbl to text</description>
+        <data>
+         	<change>
+         	  </description> 
+			    		<definition>
+			    			<type>clob</type>
+              </definition> 
+		    		</description> 
+		     </change>
+	  	</data>
+   </update>
+</updates>    

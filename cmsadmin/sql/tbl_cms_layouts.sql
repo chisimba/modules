@@ -18,7 +18,7 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
-    'desciption' => array(
+    'description' => array(
 		'type' => 'text',
 		'length' => 255
 		)

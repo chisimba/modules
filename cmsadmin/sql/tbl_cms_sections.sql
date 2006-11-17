@@ -25,21 +25,27 @@ $fields = array(
 		'type' => 'text',
 		'length' => 255
 		),
-	'image' => array(
-		'type' => 'text',
-		'length' => 100
-		),
-   'image_position' => array(
-		'type' => 'text',
-		'length' => 10
-		),
 	'description' => array(
-		'type' => 'text',
-		'length' => 255
+		'type' => 'clob'
 		),
 	'published' => array(
 		'type' => 'integer',
 		'length' => 255,
+
+		),
+	'showdate' => array(
+		'type' => 'integer',
+		'length' => 3
+
+		),
+	'showintroduction' => array(
+		'type' => 'integer',
+		'length' => 3
+
+		),
+	'numpagedisplay' => array(
+		'type' => 'integer',
+		'length' => 11
 
 		),
    'checked_out' => array(
@@ -55,6 +61,11 @@ $fields = array(
     'ordering' => array(
 		'type' => 'integer',
         'length' => 11,
+
+		),
+    'ordertype' => array(
+		'type' => 'text',
+        'length' => 100,
 
 		),
     'access' => array(
