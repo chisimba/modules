@@ -50,6 +50,8 @@ class marketingrecruitmentforum extends controller
       
       //webservice class 
       $this->objstudinfo  = & $this->getObject('dbmarketing','marketingrecruitmentforum');
+      
+                  
     }
     
 /*------------------------------------------------------------------------------*/    
@@ -61,11 +63,14 @@ class marketingrecruitmentforum extends controller
     {
         
         $this->setVar('pageSuppressXML',true);
+        
+        
              
         switch($action){
             
             case 'introduction' :
-                  // $this->setSession('studentdata',NULL);
+              $this->dbstudentcard->addfaculties();
+              $this->dbstudentcard->addcoursevalues();
                    return 'intro_tpl.php';
             break;
             
@@ -76,17 +81,86 @@ class marketingrecruitmentforum extends controller
             
             case 'studentcard':
                   //$this->setLayoutTemplate('datacapture_layout_tpl.php');
-                  return 'studentcards_tpl.php';
+                  //return 'studentcards_tpl.php';
+                  return 'idnumber_tpl.php';
+            break;
+            
+            case  'searchidnumber':
+                 $submit  = $this->getParam('search');
+                 $continue  = $this->getParam('continue');
+               if(isset($submit) ){ 
+                     $idnumber  = $this->getParam('idnumber');
+                     $search  = $this->getParam('search'); 
+                     $this->setSession('idno',$idnumber);
+                     $idsearch  = $this->dbstudentcard->getstudbyid($idnumber);
+                    
+                     $this->setVarByRef('idsearch', $idsearch);
+                     $this->setVarByRef('search', $search);
+                     return 'idnumberform_tpl.php';
+                } else {
+                
+                    return 'studentcards_tpl.php';
+                
+                }
+            break;
+            
+            case 'selectfaculty':
+                $this->getStudentDetails();         
+                $faculty  = $this->getParam('faculty');
+				        $this->setSession('faculty',$faculty);
+				        $this->setSession('course',NULL);
+				        $this->setSession('type',NULL);
+				        return 'studentcards_tpl.php';
+				   break;
+			     
+           case 'selectcourse':
+              $course = $this->getParam('course');
+				      $this->setSession('course',$course);
+				      $this->setSession('type',NULL);
+				      return 'studentcards_tpl.php';
+				   break;
+            
+            case  'capturestudcard';
+                 return 'studentcards_tpl.php'; 
+            break;
+            
+                               
             break;
             
             case 'shoollist':
                   //$this->setLayoutTemplate('datacapture_layout_tpl.php');
+                  //return 'schoollist_tpl.php';
+                  return 'schoolsearch_tpl.php';
+            break;
+            
+            case  'searchschool':
+                  $namevalue  = $this->getParam('schoolname',NULL);
+                  $this->setSession('nameschool',$namevalue);
+                  $schoolbyname = $this->dbschoollist->getschoolbyname($namevalue);
+                  $this->setVarByRef('schoolbyname', $schoolbyname);
+                  
+                  return 'schoolform_tpl.php';
+            break;
+            
+            case  'captureschool':
                   return 'schoollist_tpl.php';
             break;
             
             case 'showsluactivities':
-                  $this->getStudentDetails(); //set session
-                  return  'output_tpl.php';
+                $next = $this->getParam('next');
+                if(isset($next)){
+                    //$details = $this->getSession('studentdata');
+                    //if(!empty($details)){
+                        $this->getStudentDetails(); //set session
+                        return  'output_tpl.php';
+                    //}else{
+                      //  $this->getStudentDetails();
+                      //  return 'editdbstudent_tpl.php';
+                    //}
+                } else {
+                
+                    return 'studentcards_tpl.php';
+                }
             break;
             
             case  'showschoolist':
@@ -98,6 +172,10 @@ class marketingrecruitmentforum extends controller
               $this->getSchoolist();
               //$this->setLayoutTemplate('datacapture_layout_tpl.php');             
               return  'output_tpl.php';
+            break;
+            
+            case  'showdboutput':
+              return  'editdbstudent_tpl.php';
             break;
             
             case  'editstudcard':
@@ -117,18 +195,46 @@ class marketingrecruitmentforum extends controller
                return 'studcardresults_tpl.php';
             break;
             
-            case  'submitinfo':
+            case  'editoutput':
+                  return  'editdbstudent_tpl.php';
+            break;
+            
+            case  'updateinfo':
+                $res  = $this->getSession('idsearch');
+                $date = " ";
+                $surname  = " "; 
+                $name = " ";
+                $schoolname = " ";
+                $postaddress  = " ";
+                $postcode = " ";  
+                $telnumber  = " ";
+                $telcode  = " ";
+                $faculty  = " ";
+                $course = " ";
+                
+                foreach($res as $resdata){
+                    
+                    $date = $resdata['date'];
+                    $surname  = $resdata['surname'];
+                    $name = $resdata['name'];
+                    $schoolname = $resdata['schoolname'];
+                    $postaddress  = $resdata['postaddress'];
+                    $postcode = $resdata['postcode']; 
+                    $telnumber  = $resdata['telnumber'];
+                    $telcode  = $resdata['telcode'];
+                    $faculty  = $resdata['faculty'];
+                    $course = $resdata['course'];
+                
+                
+                }
+                $id = $this->getSession('idno');
+                $this->dbstudentcard->updatestudinfo($id,$date,$surname,$name,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$faculty,$course);
+                echo 'update sucessfull';
+                die;
+                //var_dump($id);
+                //die;
+                $sluactivity = $this->getSession('sluactivitydata');
                   
-                  $submitmsg = $this->getParam('submitmsg', 'no');
-                  $this->setVarByRef('submitmsg', $submitmsg);
-                  ///////////////////////////////////////////////////////
-                  //submit studcard info
-                  $studcarddata = $this->getSession('studentdata');
-                  if(!empty($studcarddata)){
-                      $this->dbstudentcard->addstudcard($studcarddata);
-                  }
-                  //submit slu activities
-                  $sluactivity = $this->getSession('sluactivitydata');
                   if(!empty($sluactivity)){
                       $this->dbsluactivities->addsluactivity($sluactivity);
                   }
@@ -138,7 +244,92 @@ class marketingrecruitmentforum extends controller
                   if(!empty($schoolinfodata)){
                     $this->dbschoollist->addsschoollist($schoolinfodata);
                   }
-                   
+                  return  'editdbstudent_tpl.php';
+            break;
+            
+            case  'submitinfo':
+                  
+                  $submitmsg = $this->getParam('submitmsg', 'no');
+                  $this->setVarByRef('submitmsg', $submitmsg);
+       /*-------------------------------------------------------------------------------------------*/
+                  //submit studcard info
+                  $studcarddata  = $this->getSession('studentdata');
+                  $idsearch = $this->getSession('idno');
+                  $date = " ";
+                  $surname  = " "; 
+                  $name = " ";
+                  $schoolname = " ";
+                  $postaddress  = " ";
+                  $postcode = " ";  
+                  $telnumber  = " ";
+                  $telcode  = " ";
+                  $faculty  = " ";
+                  $course = " ";
+                
+                foreach($studcarddata as $resdata){
+                    
+                    $date = $resdata['date'];
+                    $surname  = $resdata['surname'];
+                    $name = $resdata['name'];
+                    $schoolname = $resdata['schoolname'];
+                    $postaddress  = $resdata['postaddress'];
+                    $postcode = $resdata['postcode']; 
+                    $telnumber  = $resdata['telnumber'];
+                    $telcode  = $resdata['telcode'];
+                    $faculty  = $resdata['faculty'];
+                    $course = $resdata['course'];
+                
+                
+                }
+                $idexist = $this->dbstudentcard->getstudbyid($idsearch);
+                if(!empty($idexist)){
+                      
+                      $this->dbstudentcard->updatestudinfo($idsearch,$date,$surname,$name,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$faculty,$course);
+                      //echo 'update sucessfull';
+                      
+                      
+                } else {
+                
+                      if(!empty($studcarddata)){
+                        $this->dbstudentcard->addstudcard($studcarddata);
+                      }
+               }
+      /*-------------------------------------------------------------------------------------------*/            
+                  //submit slu activities
+                  $sluactivity = $this->getSession('sluactivitydata');
+                  if(!empty($sluactivity)){
+                      $this->dbsluactivities->addsluactivity($sluactivity);
+                  }
+     /*-------------------------------------------------------------------------------------------*/ 
+                  //submit all schoolist information
+                $result = $this->getSession('nameschool');
+                //$schoolinfodata = array();
+                 $schoolinfodata  = $this->getSession('schoolvalues');
+                  if(!empty($schoolinfodata)){
+                  
+                      foreach($schoolinfodata as $data){  
+                          //      $schoolname       =  $data['schoolname'];
+                                $schooladdress    =  $data['schooladdress'];
+                                $telnumber        =  $data['telnumber'];
+                                $faxnumber        =  $data['faxnumber'];
+                                $email            =  $data['email'];
+                                $principal        =  $data['principal'];
+                                $guidanceteacher  =  $data['guidanceteacher'];    
+                      }
+                    $namefound  = $this->dbschoollist->getschoolbyname($result);
+                    if(!empty($namefound)){
+                       
+                      $this->dbschoollist->updateschoollist($result,$schooladdress,$telnumber,$faxnumber,$email,$principal,$guidanceteacher);
+                      
+                    }else{
+                        if(!empty($schoolinfodata)){
+                          $this->dbschoollist->addsschoollist($schoolinfodata);
+                        }
+                    }
+                    
+                  }
+     /*-------------------------------------------------------------------------------------------*/             
+                  $this->unsetSession('idno');
                   $this->unsetSession('studentdata');
                   $this->unsetSession('sluactivitydata');
                   $this->unsetSession('schoolvalues');
@@ -319,6 +510,7 @@ class marketingrecruitmentforum extends controller
        *create an array - $studentdata to store the information captured on student cards
        *create a session variable to store the array data in       
        */
+       $idnum = $this->getSession('idno');
        $username  = $this->objUser->fullname();
        $exemp = $this->getParam('exemptionqualification');
        $relsubject = $this->getParam('relevantsubject');
@@ -333,9 +525,12 @@ class marketingrecruitmentforum extends controller
        if($exemp){
          $val = 1;
        }
+      // $facname = $this->getSession('faculty');
+      // $coursename = $this->getSession('faculty');
        
        $studentdata  = array('createdby'        =>  $username,
                              'datecreated'      =>  date('Y-m-d'),
+                             'idnumber'         =>  $idnum,
                              'date'             =>  $this->getParam('datestud'),
                              'surname'          =>  $this->getParam('txtsurname'),
                              'name'             =>  $this->getParam('txtname'),
@@ -345,8 +540,8 @@ class marketingrecruitmentforum extends controller
                              'telnumber'        =>  $this->getParam('txttelnumber'),
                              'telcode'          =>  $this->getParam('txttelcode'),
                              'exemption'        =>  $val,
-                             'faculty'          =>  $this->getParam('facultylist'),
-                             'course'           =>  $this->getParam('txtcourse'),
+                             'faculty'          =>  $this->getParam('faculty'),
+                             'course'           =>  $this->getParam('course'),
                              'relevantsubject'  =>  $result,
                              'sdcase'           =>  $this->getParam('sdcase'),
                         );

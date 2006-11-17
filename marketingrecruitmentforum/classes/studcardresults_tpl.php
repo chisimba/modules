@@ -73,14 +73,14 @@
     $Studcardinfo = & $this->newObject('tabbox','marketingrecruitmentforum');
     $Studcardinfo->tabName = 'OutputInfo';
     
-    $Studcardinfo->addTab('studcard', 'Information Cards',$results);
-    $Studcardinfo->addTab('studschool', 'Student School','<b>'.'Please select a school to search by'.'</b>' . ' ' .$schoollist->show() . ' <br />'. '<br />' . $schoolresults);
-    $Studcardinfo->addTab('studexemption', 'Student Exemption',$exemption);
-    $Studcardinfo->addTab('relsub', 'Relevant subjects',$relsubject);
-    $Studcardinfo->addTab('studfac', 'Faculty',$faculty);
-    $Studcardinfo->addTab('studcourse', 'Course' ,$course);
-    $Studcardinfo->addTab('studsdcase', 'SD Cases',$sdcase);
-    $Studcardinfo->addTab('studarea', 'Area',$area);
+    $Studcardinfo->addTab('studcard', 'Students who Completed Information Cards',$results);
+    $Studcardinfo->addTab('studschool', 'Students From a Certain School','<b>'.'Please select a school to search by'.'</b>' . ' ' .$schoollist->show() . ' <br />'. '<br />' . $schoolresults);
+    $Studcardinfo->addTab('studexemption', 'Students who Qualify For an Exemption',$exemption);
+    $Studcardinfo->addTab('relsub', 'Students with relevant subjects',$relsubject);
+    $Studcardinfo->addTab('studfac', 'Students By Faculty',$faculty);
+    $Studcardinfo->addTab('studcourse', 'Students By Course' ,$course);
+    $Studcardinfo->addTab('studsdcase', 'All SD Cases',$sdcase);
+    $Studcardinfo->addTab('studarea', 'Students By Area',$area);
     
     
 /*-------------------------------------------------------------------------------*/
@@ -97,3 +97,5 @@
      //echo    $this->objMainheading->show(); 
      echo $objForm->show();                
 ?>
+	
+

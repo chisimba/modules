@@ -20,6 +20,12 @@ $fields = array(
       'type'    =>  'date',
       'notnull' => 1
     ),
+  'idnumber'    => array(
+      'type'    => 'text',
+      'length'     =>  13,
+      'notnull' => 0,
+      'default'  => 'no id number'
+  ),  
    'date'        =>  array(
    'type'        =>  'date',
    'notnull'     =>   1
@@ -64,12 +70,12 @@ $fields = array(
   'faculty' =>  array(
   'type'        =>  'text',
   'length'      =>  255,
-  'notnull'    => 1
+//  'notnull'    => 1
   ),
   'course'  =>  array(
   'type'        =>  'text',
   'length'      =>  255,
-  'notnull'    => 1
+//  'notnull'    => 1
   ),
   'relevantsubject' =>array(
   'type'            => 'boolean',

@@ -45,9 +45,7 @@
  /**
    *create all textinputs
    */
-    $schooldata []= $this->getSession('schoolvalues');
-    $result = $this->getSession('nameschool');
-    $schoolbyname = $this->dbschoollist->getschoolbyname($result);
+    $schooldata []= $this->getSession('schoolistvalues');
     $txtschoolname  = ' '; 
     $schooladdress  = ' ';
     $txttelnumber = ' ';
@@ -68,20 +66,6 @@
         $txtteacher = $sessschool['guidanceteacher'];
     
     }
-   } if(!empty($schoolbyname)){
-    foreach($schoolbyname as $sessschool){
-    
-        $txtschoolname  = $sessschool['schoolname']; 
-        $schooladdress  = $sessschool['schooladdress'];
-        $txttelnumber = $sessschool['telnumber'];
-        $txtfaxnumber = $sessschool['faxnumber'];
-        $txtemail = $sessschool['email'];
-        $txtprincipal = $sessschool['principal'];
-        $txtteacher = $sessschool['guidanceteacher'];
-    
-    }
-    
-    
   }
    
 //   $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');

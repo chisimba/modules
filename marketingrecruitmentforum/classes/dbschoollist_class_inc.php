@@ -68,6 +68,11 @@ class dbschoollist extends dbTable{
       return  $province;
   }   
 /*------------------------------------------------------------------------------*/
-  
+  public function updateschoollist($result,$schooladdress,$telnumber,$faxnumber,$email,$principal,$guidanceteacher){
+    
+    $stmt = "UPDATE tbl_schoollist SET schoolname = '$result', schooladdress = '$schooladdress', telnumber ='$telnumber', faxnumber = '$faxnumber', email ='$email', principal ='$principal', guidanceteacher='$guidanceteacher' where schoolname = '$result'";
+    $res  = $this->query($stmt);
+    return  $res;
+  }
 }//end of class 
 ?>

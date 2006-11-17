@@ -480,5 +480,171 @@ public function countstudfaculty($faculty){
      }
    }     
 /*------------------------------------------------------------------------------*/
+  /**
+   *all students from a certain school
+   */
+public  function searchID($idsearch){
+  
+  $this->loadClass('link', 'htmlelements');      
+  $StudentCardLink = new link($this->uri(array('action' => 'capturestudcard', 'module' => 'marketingrecruitmentforum', 'linktext' => 'Issue a student card')));
+  $StudentCardLink->link = 'Capture Student Card';
+  
+  $StudentLink = new link($this->uri(array('action' => 'editoutput', 'module' => 'marketingrecruitmentforum', 'linktext' => 'Issue a student card')));
+  $StudentLink->link = 'Edit Student Details';
+  
+  $objLanguage =& $this->getObject('language', 'language');
+  $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
+  $this->objMainheading->type=3;
+  $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_norecords','marketingrecruitmentforum');
+  
+  $this->objheading =& $this->newObject('htmlheading','htmlelements');
+  $this->objheading->type=3;
+  $this->objheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_existingrec','marketingrecruitmentforum');
+           
+      if(!empty($idsearch)){
+            //      $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
+                //  $this->appendArrayVar('headerParams', $css1);
+                //  $oddEven = 'even';
+                  $myTable =& $this->newObject('htmltable', 'htmlelements');
+                  $myTable->cellspacing = '1';
+                  $myTable->cellpadding = '2';
+                  $myTable->border='0';
+                  $myTable->width = '60%';
+              //    $myTable->css_class = 'highlightrows';
+            
+             
+              foreach($idsearch as $sessCard){
+              
+                $idno  = $this->getSession('idno');
+             
+                $myTable->startRow();
+                $myTable->addCell($this->objheading->show().'<b>'.$idno.'<b/>');
+                $myTable->endRow();
+                
+                $myTable->startRow();
+                $myTable->addCell("");
+                $myTable->endRow();
+                
+                $myTable->startRow();
+                $myTable->addCell("");
+                $myTable->endRow();
+                
+                $myTable->startRow();
+                $myTable->addCell("");
+                $myTable->endRow();
+             
+              
+                 $myTable->startRow();
+                 $myTable->addCell("ID Number","15%", null, "left","widelink");
+                 $myTable->addCell($sessCard['idnumber'],"15%", null, "left","widelink");
+              
+                 $myTable->startRow();
+                 $myTable->addCell("Date","15%", null, "left","widelink");
+                 $myTable->addCell($sessCard['date'],"15%", null, "left","widelink");
+                 $myTable->endRow();
+            
+                 $myTable->startRow();
+                 $myTable->addCell("Surname","15%", null, "left","widelink");
+                 $myTable->addCell($sessCard['surname'],"15%", null, "left","widelink");
+                 $myTable->endRow();
+              
+                  $myTable->startRow();
+                  $myTable->addCell("Name","15%", null, "left","widelink");
+                  $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
+                  $myTable->endRow(); 
+                  
+                  $myTable->startRow();
+                  $myTable->addCell("School Name","15%", null, "left","widelink");
+                  $myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
+                  $myTable->endRow();
+                  
+                  $myTable->startRow();
+                  $myTable->addCell("Postal Address","15%", null, "left","widelink");
+                  $myTable->addCell($sessCard['postaddress'],"15%", null, "left","widelink");
+                  $myTable->endRow();
+                  
+                  $myTable->startRow();
+                  $myTable->addCell("Postal Code","15%", null, "left","widelink");
+                  $myTable->addCell($sessCard['postcode'],"15%", null, "left","widelink");
+                  $myTable->endRow();
+                  
+                  $myTable->startRow();
+                  $myTable->addCell("Telephone Number","15%", null, "left","widelink");
+                  $myTable->addCell($sessCard['telnumber'],"15%", null, "left","widelink");
+                  $myTable->endRow();
+                  
+                  $myTable->startRow();
+                  $myTable->addCell("Telephone Code","15%", null, "left","widelink");
+                  $myTable->addCell($sessCard['telcode'],"15%", null, "left","widelink");
+                  $myTable->endRow();
+                  
+                  $myTable->startRow();
+                  $myTable->addCell("Exemption","15%", null, "left","widelink");
+                  $myTable->addCell($sessCard['exemption'],"15%", null, "left","widelink");
+                  $myTable->endRow();
+                  
+                  $myTable->startRow();
+                  $myTable->addCell("Faculty","15%", null, "left","widelink");
+                  $myTable->addCell($sessCard['faculty'],"15%", null, "left","widelink");
+                  $myTable->endRow();
+                  
+                  $myTable->startRow();
+                  $myTable->addCell("Course","15%", null, "left","widelink");
+                  $myTable->addCell($sessCard['course'],"15%", null, "left","widelink");
+                  $myTable->endRow();
+                  
+                  $myTable->startRow();
+                  $myTable->addCell($StudentLink->show());
+                  $myTable->endRow();
+          }
+      }else{
+
+              /*$css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
+             $this->appendArrayVar('headerParams', $css1);
+             $oddEven = 'even';*/
+             $myTable =& $this->newObject('htmltable', 'htmlelements');
+             $myTable->cellspacing = '1';
+             $myTable->cellpadding = '2';
+             $myTable->border='0';
+             $myTable->width = '30%';
+             
+             $idno  = $this->getSession('idno');
+             
+             $myTable->startRow();
+             $myTable->addCell($this->objMainheading->show().'<b>'.$idno.'<b/>');
+             $myTable->endRow();
+             
+             $myTable->startRow();
+             $myTable->endRow();
+             
+             $myTable->startRow();
+             $myTable->endRow();
+             
+             $myTable->startRow();
+             $myTable->endRow();
+             
+             $myTable->startRow();
+             $myTable->endRow();
+             
+             $myTable->startRow();
+             $myTable->endRow();
+             
+             $myTable->startRow();
+             $myTable->endRow();
+             
+             $myTable->startRow();
+             $myTable->endRow();
+             
+             $myTable->startRow();
+             $myTable->endRow();
+             
+             $myTable->startRow();
+             $myTable->addCell($StudentCardLink->show());
+             $myTable->endRow();
+          }    
+
+            return $myTable->show();     
+  }      
+/*-----------------------------------------------------------------------------------------------------*/            
 }//end of class  
 ?>

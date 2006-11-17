@@ -200,5 +200,54 @@ public function getstudqualify()
     return $studarea;
   }
 /*------------------------------------------------------------------------------*/
+  public function getstudbyid($idsearch)
+  {
+    $stmt = "select * from tbl_studcard where idnumber = '$idsearch'";
+    $studid = $this->getArray($stmt);
+    return $studid;
+  }
+/*------------------------------------------------------------------------------*/
+  public function updatestudinfo($idsearch,$date,$surname,$name,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$faculty,$course){
+  
+    //$res  = $this->update($id,$date,$surname,$name,$schoolname,$postaddress,$postcode,$telnumber,$telcode)
+    $stmt = "UPDATE tbl_studcard SET date = '$date', surname = '$surname', name ='$name', schoolname = '$schoolname', postaddress='$postaddress', postcode='$postcode', telnumber='$telnumber', telcode='$telcode' where idnumber = '$idsearch'";
+    $res  = $this->query($stmt);
+    return  $res;
+  }
+/*------------------------------------------------------------------------------*/
+  public function addfaculties()
+  {
+    $stmt = "LOAD DATA INFILE 'faculty_values.txt' INTO TABLE tbl_academicprogramme_faculties FIELDS TERMINATED BY ','";
+    $faculties = $this->getArray($stmt);
+    return $faculties;
+  }
+/*------------------------------------------------------------------------------*/
+  public function addcoursevalues()
+  {
+    $stmt = "LOAD DATA INFILE 'course_values.txt' INTO TABLE tbl_academicprogramme_courses FIELDS TERMINATED BY ','";
+    $course = $this->getArray($stmt);
+    return $course;
+  }
+/*------------------------------------------------------------------------------*/
+  public function getFaculties()
+  {
+    $stmt = "Select * from tbl_academicprogramme_faculties";
+    $name = $this->getArray($stmt);
+    return $name;
+  }
+/*------------------------------------------------------------------------------*/
+  public function getcourse()
+  {
+    $stmt = "Select * from tbl_academicprogramme_courses";
+    $course = $this->getArray($stmt);
+    return $course;
+  }
+/*------------------------------------------------------------------------------*/
+  /*public function getfaccode()
+  {
+      $filter = 'order by date,schoolname,surname';
+      $studresults  = $this->getRow($filter);
+      return  $studresults;
+  } */ 
 }//end of class 
 ?>
