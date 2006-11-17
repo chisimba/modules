@@ -52,6 +52,6 @@ if(!$this->getParam('query') == '')
 
 
 	   
-       $cssLayout->setMiddleColumnContent($this->getBreadCrumbs().$objArticleBox->show( $this->getContent()).$searchResults.$this->footerStr);
+       $cssLayout->setMiddleColumnContent($this->getBreadCrumbs().$this->getContent().$searchResults.$this->footerStr);
        echo $cssLayout->show();
 
