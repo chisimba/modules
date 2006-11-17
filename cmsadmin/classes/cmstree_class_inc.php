@@ -119,17 +119,17 @@ class cmstree extends object
 
                     //get any content for a section
                     if($this->getNodeContentCount($node['id']) == 0){
-                        return '';
+                        $htmlLevel .= '';
+                    } else {
+
+                        $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id'], 'sectionid'=>$node['id']), 'cms');
+                        $htmlLevel .= '<li><a href="'.$nodeUri.'">'.$node['menutext'].'</a><ul>';
+                        $htmlLevel .= $htmlChildren;
+                        $htmlLevel .= '</ul></li>';
                     }
-
-                    $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id'], 'sectionid'=>$node['id']), 'cms');
-                    $htmlLevel .= '<li><a href="'.$nodeUri.'">'.$node['menutext'].'</a><ul>';
-                    $htmlLevel .= $htmlChildren;
-                    $htmlLevel .= '</ul></li>';
-
                 } else {
                     if($this->getNodeContentCount($node['id']) == 0){
-                        return '';
+                        $htmlLevel .= '';
                     } else {
                         $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id'], 'sectionid'=>$node['id']), 'cms');
                         $htmlLevel .= '<li><a href="'.$nodeUri.'">'.$node['menutext'].'</a></li>';
