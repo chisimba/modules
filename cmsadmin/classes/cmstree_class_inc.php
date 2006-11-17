@@ -118,7 +118,7 @@ class cmstree extends object
                     $htmlChildren = $this->buildLevel($node['id'], $currentNode, $admin);
 
                     //get any content for a section
-                    if($this->getNodeContentCount($node['id']) == 0){
+                    if(($this->getNodeContentCount($node['id']) == 0) || ($node['published'] == 0)){
                         $htmlLevel .= '';
                     } else {
 
@@ -128,7 +128,7 @@ class cmstree extends object
                         $htmlLevel .= '</ul></li>';
                     }
                 } else {
-                    if($this->getNodeContentCount($node['id']) == 0){
+                    if(($this->getNodeContentCount($node['id']) == 0) || ($node['published'] == 0)){
                         $htmlLevel .= '';
                     } else {
                         $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id'], 'sectionid'=>$node['id']), 'cms');
