@@ -1,17 +1,70 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <updates>
-    <update>
-        <table>tbl_cmsadmin_sections</table>
-        <version>1.20</version>
-        <description>changed description field in section tbl to text</description>
-        <data>
-         	<change>
-         	  <description> 
-			    		<definition>
-			    			<type>clob</type>
-              </definition> 
-		    		</description> 
-		     </change>
-	  	</data>
-   </update>
-</updates>    
+  <update>
+    <table>
+      tbl_cmsadmin_sections
+    </table>
+    <version>
+      1.22
+    </version>
+    <description>
+      added extra fields to the table
+    </description>
+    <data>
+      <add>
+         <name>showdate</name>
+         <type>integer</type>
+         <length>3</length>
+      </add>
+    </data>
+    <data>
+      <add>
+         <name>showintroduction</name>
+         <type>integer</type>
+         <length>3</length>
+      </add>
+    </data>
+    <data>
+      <add>
+         <name>numpagedisplay</name>
+         <type>integer</type>
+         <length>11</length>
+      </add>
+    </data>
+    <data>
+      <add>
+         <name>ordertype</name>
+         <type>text</type>
+         <length>100</length>
+      </add>
+    </data>
+    <data>
+       <remove>image</remove>
+    </data>
+    <data>
+       <remove>image_position</remove>
+    </data>
+    </update>
+  <update>
+    <table>
+      tbl_cmsadmin_sections
+    </table>
+    <version>
+      1.20
+    </version>
+    <description>
+      changed description field in section tbl to text
+    </description>
+    <data>
+      <change>
+        <description>
+          <definition>
+            <type>
+              clob
+            </type>
+          </definition>
+        </description>
+      </change>
+    </data>
+  </update>
+</updates>

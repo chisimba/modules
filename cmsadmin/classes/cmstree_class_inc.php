@@ -123,7 +123,7 @@ class cmstree extends object
                     } else {
 
                         $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id'], 'sectionid'=>$node['id']), 'cms');
-                        $htmlLevel .= '<li><a href="'.$nodeUri.'">'.$node['menutext'].'</a><ul>';
+                        $htmlLevel .= '<li class="sectionfolder"><a href="'.$nodeUri.'">'.$node['menutext'].'</a><ul>';
                         $htmlLevel .= $htmlChildren;
                         $htmlLevel .= '</ul></li>';
                     }
@@ -132,7 +132,7 @@ class cmstree extends object
                         $htmlLevel .= '';
                     } else {
                         $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id'], 'sectionid'=>$node['id']), 'cms');
-                        $htmlLevel .= '<li><a href="'.$nodeUri.'">'.$node['menutext'].'</a></li>';
+                        $htmlLevel .= '<li class="sectionfolder"><a href="'.$nodeUri.'">'.$node['menutext'].'</a></li>';
                     }
                 }
             }
