@@ -198,7 +198,11 @@ if (count($pages) > '0')
         $frontPageLink->href = $this->uri(array('action' => 'changefpstatus', 'pageid' => $pageId, 'sectionid' => $sectionId), 'cmsadmin');
         if($this->_objFrontPage->isFrontPage($pageId)){
           $objIcon->setIcon('greentick');
+          $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_confirmremovefromfp', 'cmsadmin');
+          $frontPageLink->title = $this->objLanguage->languageText('mod_cmsadmin_confirmremovefromfp', 'cmsadmin');
         } else {
+            $frontPageLink->title = $this->objLanguage->languageText('mod_cmsadmin_addpagetofp', 'cmsadmin');
+            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addpagetofp', 'cmsadmin');
             $objIcon->setIcon('redcross');
         }
         $frontPageLink->link = $objIcon->show();
