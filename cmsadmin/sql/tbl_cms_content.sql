@@ -149,7 +149,6 @@ $indexes = array(
                 	'access' => array(),
                 	'checked_out' => array(),
                     'published' => array(),
-                	'catid' => array(),
                 	'mask' => array()
                 )
         );
