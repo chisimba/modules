@@ -101,6 +101,13 @@ class cmsadmin extends controller
         var $objLanguage;
 
         /**
+        * The blocks object
+        *
+        * @var object
+        */
+        var $objBlocks;
+
+        /**
         * Constructor
         */
         public function init()
@@ -111,6 +118,7 @@ class cmsadmin extends controller
 
                 $this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
                 $this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
+                $this->_objBlocks = & $this->newObject('dbblocks', 'cmsadmin');
                 $this->_objUtils = & $this->newObject('cmsutils', 'cmsadmin');
                 $this->_objLayouts = & $this->newObject('dblayouts', 'cmsadmin');
                 $this->_objUser = & $this->newObject('user', 'security');
@@ -305,6 +313,21 @@ class cmsadmin extends controller
                     $sectionId = $this->getParam('sectionid');
                     $this->_objContent->changeOrder($sectionId, $id, $ordering);
                     return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
+
+                    case 'addblock':
+                        $pageId = $this->getParam('pageid', NULL);
+                        $id = $this->getParam('id', NULL);
+                        $this->setVarByRef('pageId', $pageId);
+                        $this->setVarByRef('id', $id);
+                        return 'cms_block_add_tpl.php';
+                    case 'deleteblock':
+                        $this->_objBlocks->deleteBlock($this->getParam('id'));
+                        $pageId = $this->getParam('pageId', NULL);
+                        if (!empty($pageId)) {
+                            return $this->nextAction('addcontent', array('id' => $sectionId), 'cmsadmin');
+                        } else {
+                            return $this->nextAction('frontpages', array('filter' => 'trash'));
+                        }
                 }
             } catch (customException $e) {
                 echo customException::cleanUp($e);

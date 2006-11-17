@@ -953,15 +953,34 @@ class cmsutils extends object
                 return '';
             }
 
+            $home = & $this->newObject('link', 'htmlelements');
             $link = & $this->newObject('link', 'htmlelements');
-            $link->href = $this->uri(null , $module);
-            $link->link = 'Home';
-            $str = $link->show() .' / ';
-            $link->href = $this->uri(array('action' => 'showsection', 'id' => $this->getParam('sectionid'), 'sectionid' => $this->getParam('sectionid')) , $module);
-            $link->link = $this->_objSections->getMenuText($this->getParam('sectionid'));
-            $str .= $link->show() .' / ';
-            $page = $this->_objContent->getContentPage($this->getParam('id'));
-            $str .= $page['menutext'];
+
+            if (!is_null($this->getParam('sectionid', NULL))){
+
+                $section = $this->_objSections->getSection($this->getParam('sectionid'));
+                $link->href = $this->uri(array('action' => 'showsection', 'id' => $this->getParam('sectionid'), 'sectionid' => $this->getParam('sectionid')) , $module);
+                $link->link = $this->_objSections->getMenuText($this->getParam('sectionid'));
+                $str = $link->show() .' / ';
+
+                while (($section['parentid'] != '0') && (!is_null($section['parentid']))){
+                    $section = $this->_objSections->getSection($section['parentid']);
+                    if (is_null($section['parentid'])){
+                        break;
+                    }
+                    $link->href = $this->uri(array('action' => 'showsection', 'id' => $section['id'], 'sectionid' => $section['id']) , $module);
+                    $link->link = $this->_objSections->getMenuText($section['id']);
+                    $str = $link->show() .' / ' .$str;
+
+                }
+            }
+            if (!is_null($this->getParam('id', NULL))){
+                $page = $this->_objContent->getContentPage($this->getParam('id'));
+                $str .= $page['title'];
+            }
+            $home->href = $this->uri(null , $module);
+            $home->link = 'Home';
+            $str = $home->show() .' / ' . $str;
             return '<div id="breadcrumb">'. $str .'</div>';
         }
 
@@ -1762,6 +1781,10 @@ class cmsutils extends object
             $table2->startRow();
             $table2->addCell($introInput->show());
             $table2->endRow();
+            
+
+            
+            
             $table2->startRow();
             $table2->addCell($button->show());
             $table2->endRow();
@@ -1770,6 +1793,8 @@ class cmsutils extends object
             $middleColumnContent = "";
             $middleColumnContent .= $h3->show();
             $middleColumnContent .= $objForm->show();
+            
+
             return $middleColumnContent;
         }
 }

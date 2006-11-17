@@ -6,7 +6,7 @@
         <description>changed description field in section tbl to text</description>
         <data>
          	<change>
-         	  </description> 
+         	  <description> 
 			    		<definition>
 			    			<type>clob</type>
               </definition> 
