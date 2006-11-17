@@ -466,13 +466,30 @@ class cmsutils extends object
             try {
                 $pageId = $this->getParam('pageid', '');
 
-                if (!empty($arrSection['image'])) {
-                    $image = $this->generateImageTag($arrSection['image']);
-                } else {
-                    $image = '';
-                }
-
-                $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY created DESC');
+                $orderType = $arrSection['ordertype'];
+                $showIntro = $arrSection['showintroduction'];
+                $showDate = $arrSection['showdate'];
+                $description = $arrSection['description'];
+                
+                switch ($orderType) {
+                    case null:
+                    case 'pageorder':
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
+                        break;
+                    case 'pagedate_asc':
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY created');
+                        break;
+                    case 'pagedate_desc':
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY created DESC');
+                        break;
+                    case 'pagetitle_asc':
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY title');
+                        break;
+                    case 'pagetitle_desc':
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY title DESC');
+                        break;
+                }        
+ 
                 $cnt = 0;
                 $strBody = '';
                 $str = '';
@@ -488,7 +505,11 @@ class cmsutils extends object
                         $link = & $this->newObject('link', 'htmlelements');
                         $link->link = $page['title'];
                         $link->href = $this->uri(array('action' => 'showsection', 'id' => $arrSection['id'], 'pageid' => $page['id'], 'sectionid' => $page['sectionid']), $module);
-                        $str .= '<li>'. $this->formatDate($page['created']).' - '.$link->show() .'</li> ';
+                        if($showDate){
+                          $str .= '<li>'. $this->formatDate($page['created']).' - '.$link->show() .'</li> ';
+                        } else {
+                            $str .= '<li>'. $link->show() .'</li> ';
+                        }
                     }
 
                     if ($pageId == $page['id']) {
@@ -497,8 +518,11 @@ class cmsutils extends object
                         $foundPage = TRUE;
                     }
                 }
-
-                return $strBody.'<p/>'.$str;
+                if($showIntro){
+                  return '<p>'.$description.'</p>'.$strBody.'<p/>'.$str;
+                } else {
+                    return $strBody.'<p/>'.$str;
+                }
             } catch (Exception $e) {
                 echo 'Caught exception: ', $e->getMessage();
                 exit();
@@ -516,16 +540,35 @@ class cmsutils extends object
         function _layoutSummaries(&$arrSection, $module)
         {
             try {
-                if (!empty($arrSection['image'])) {
-                    $image = $this->generateImageTag($arrSection['image']);
-                } else {
-                    $image = '';
-                }
 
                 $objUser = & $this->newObject('user', 'security');
                 $objConfig = & $this->newObject('altconfig', 'config');
                 $str = '';
-                $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 and trash=0  ORDER BY ordering');
+                
+                $orderType = $arrSection['ordertype'];
+                $showIntro = $arrSection['showintroduction'];
+                $showDate = $arrSection['showdate'];
+                $description = $arrSection['description'];
+                
+                switch ($orderType) {
+                    case null:
+                    case 'pageorder':
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
+                        break;
+                    case 'pagedate_asc':
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY created');
+                        break;
+                    case 'pagedate_desc':
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY created DESC');
+                        break;
+                    case 'pagetitle_asc':
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY title');
+                        break;
+                    case 'pagetitle_desc':
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY title DESC');
+                        break;
+                }        
+
                 foreach ($arrPages as $page) {
                     //display the intro text
                     $table = & $this->newObject('htmltable', 'htmlelements');
@@ -543,9 +586,11 @@ class cmsutils extends object
                     $table->addCell('Written by '.$objUser->fullname($page['creator_by']));
                     $table->endRow();
                     //date
-                    $table->startRow();
-                    $table->addCell($this->formatDate($page['created']));
-                    $table->endRow();
+                    if($showDate){
+                      $table->startRow();
+                      $table->addCell($this->formatDate($page['created']));
+                      $table->endRow();
+                    }  
                     //intor text
                     $table->startRow();
                     $table->addCell('<p>'.$page['introtext']);
@@ -565,7 +610,14 @@ class cmsutils extends object
                         }
                         */
                     //$str .= $table->show();
-                    $str .= '<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
+                    if($showIntro){
+                      $str .= '<p>'.$description.'</p>';
+                    }
+                    if($showDate){
+                      $str .= '<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
+                    } else {
+                        $str .= '<h4>'.$page['title'].'</h4>';
+                    }
                     $uri = $this->uri(array('action' => 'showfulltext', 'sectionid' => $arrSection['id'], 'id' => $page['id']), $module);
                     $str .= '<p>'.$page['introtext'].'<br /><a href="'.$uri.'" class="morelink" title="'.$page['title'].'">Read more...</a></p>';
                 }
@@ -590,13 +642,28 @@ class cmsutils extends object
             try {
                 $pageId = $this->getParam('pageid', '');
 
-                if (!empty($arrSection['image'])) {
-                    $image = $this->generateImageTag($arrSection['image']);
-                } else {
-                    $image = '';
-                }
+                $orderType = $arrSection['ordertype'];
+                $showDate = $arrSection['showdate'];
+                
+                switch ($orderType) {
+                    case null:
+                    case 'pageorder':
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
+                        break;
+                    case 'pagedate_asc':
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY created');
+                        break;
+                    case 'pagedate_desc':
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY created DESC');
+                        break;
+                    case 'pagetitle_asc':
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY title');
+                        break;
+                    case 'pagetitle_desc':
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY title DESC');
+                        break;
+                }        
 
-                $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 and trash=0  ORDER BY ordering');
                 $cnt = 0;
                 $strBody = '';
                 $str = '';
@@ -640,22 +707,44 @@ class cmsutils extends object
         function _layoutList(&$arrSection, $module)
         {
             try {
-                if (!empty($arrSection['image'])) {
-                    $image = $this->generateImageTag($arrSection['image']);
-                } else {
-                    $image = '';
-                }
 
                 $str = '';
-                $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 and trash=0 ORDER BY ordering');
+                
+                $orderType = $arrSection['ordertype'];
+                $showIntro = $arrSection['showintroduction'];
+                $showDate = $arrSection['showdate'];
+                $description = $arrSection['description'];
+                
+                switch ($orderType) {
+                    case null:
+                    case 'pageorder':
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
+                        break;
+                    case 'pagedate_asc':
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY created');
+                        break;
+                    case 'pagedate_desc':
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY created DESC');
+                        break;
+                    case 'pagetitle_asc':
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY title');
+                        break;
+                    case 'pagetitle_desc':
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY title DESC');
+                        break;
+                }        
+
                 foreach ($arrPages as $page) {
                     $link = & $this->newObject('link', 'htmlelements');
                     $link->link = $page['title'];
                     $link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id'], 'sectionid' => $page['sectionid']), $module);
                     $str .= '<li>'.$this->formatDate($page['created']).' - '. $link->show() .'</li>';
                 }
-
-                return $str;
+                if($showIntro){
+                  return '<p>'.$description.'</p>'.$str;
+                } else {
+                    return $str;
+                }
             } catch (Exception $e) {
                 echo 'Caught exception: ', $e->getMessage();
                 exit();
@@ -673,9 +762,13 @@ class cmsutils extends object
             try {
                 $contentId = $this->getParam('id');
                 $page = $this->_objContent->getContentPage($contentId);
+                $sectionId = $page['sectionid'];
+                $section = $this->_objSections->getSection($sectionId);
                 $strBody = '<h3>'.$page['title'].'</h3><p/>';
                 $strBody .= '<span class="warning">'.$this->_objUser->fullname($page['created_by']).'</span><br />';
-                $strBody .= '<span class="warning">'.$page['created'].'</span><p/>';
+                if($section['showdate']){
+                  $strBody .= '<span class="warning">'.$page['created'].'</span><p/>';
+                }  
                 $strBody .= $page['body'].'<p/>';
                 return $strBody;
             } catch (Exception $e) {
@@ -1195,7 +1288,6 @@ class cmsutils extends object
             $table = & $this->newObject('htmltable', 'htmlelements');
             $titleInput = & $this->newObject('textinput', 'htmlelements');
             $menuTextInput = & $this->newObject('textinput', 'htmlelements');
-            $bodyInput = & $this->newObject('htmlarea', 'htmlelements');
             $h3 = &$this->newObject('htmlheading', 'htmlelements');
             $sections = & $this->newObject('dropdown', 'htmlelements');
             $parent = & $this->newObject('dropdown', 'htmlelements');
@@ -1256,10 +1348,6 @@ class cmsutils extends object
             $menuTextInput->name = 'menutext';
             $menuTextInput->size = 50;
             $objForm->addRule('menutext', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddmenutext', 'cmsadmin'), 'required');
-            $bodyInput->name = 'description';
-            $bodyInput->id = 'description';
-            $bodyInput->height = '400';
-            $bodyInput->width = '100%';
             //$button->setToSubmit();
             $button->name = 'submit';
             $button->id = 'submit';
@@ -1269,7 +1357,6 @@ class cmsutils extends object
             if ($editmode) {
                 $titleInput->value = $section['title'];
                 $menuTextInput->value = $section['menutext'];
-                $bodyInput->value = $section['description'];
                 $layout = $section['layout'];
                 $isPublished = $section['published'];
                 //Set rootid as hidden field

@@ -198,7 +198,7 @@ class dbsections extends dbTable
                 $title = $this->getParam('title');
                 $menuText = $this->getParam('menutext');
                 $access = $this->getParam('access');
-                $desciption = $this->getParam('description');
+                $description = $this->getParam('introtext');
                 $published = $this->getParam('published');
                 $layout = $this->getParam('display');
                 $showdate = $this->getParam('showdate');
@@ -223,7 +223,7 @@ class dbsections extends dbTable
                                  'showintroduction' => $showintroduction,
                                  'numpagedisplay' => $numpagedisplay,
                                  'ordertype' => $ordertype,
-                                 'description' => $desciption,
+                                 'description' => $description,
                                  'count' => $count,
                                  'published' => $published);
                 return $this->update('id', $id, $arrFields);
