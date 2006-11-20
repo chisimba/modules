@@ -4,24 +4,24 @@
         <id>1</id>
         <name>previous</name>
         <imagename>section_previous.gif</imagename>
-        <desciption>previous layout</desciption>
+        <description>previous layout</description>
     </tbl_cms_layouts>
     <tbl_cms_layouts>
         <id>2</id>
         <name>page</name>
         <imagename>section_page.gif</imagename>
-        <desciption>Page Layout</desciption>
+        <description>Page Layout</description>
     </tbl_cms_layouts>
     <tbl_cms_layouts>
         <id>3</id>
         <name>summaries</name>
         <imagename>section_summaries.gif</imagename>
-        <desciption>Summaries Layout</desciption>
+        <description>Summaries Layout</description>
     </tbl_cms_layouts>
     <tbl_cms_layouts>
         <id>4</id>
         <name>list</name>
         <imagename>section_list.gif</imagename>
-        <desciption>List Layout</desciption>
+        <description>List Layout</description>
     </tbl_cms_layouts>
 </defaultdata>
