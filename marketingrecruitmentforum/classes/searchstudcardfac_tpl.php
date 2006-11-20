@@ -1,90 +1,99 @@
 <?php
-//template used to display all search facilities for student cards relevant to faculty
-      
-      /**
-       *load all classes
-       */
-       $this->objsearchinfo = & $this->getObject('searchinfo','marketingrecruitmentforum');
-       $this->objsearchfac  = & $this->newObject('searchfaculty','marketingrecruitmentforum');
-       
-/*---------------------------------------------------------------------------------------------------*/       
-                    
-      /**
-        *create form heading
-        */
-        $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
-        $this->objMainheading->type=1;
-        $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_infocardfaculty','marketingrecruitmentforum');
-/*---------------------------------------------------------------------------------------------------*/  
-      /**
-        *define all language items
-        */
-        $searchmsg = $this->objLanguage->languageText('mod_marketingrecruitmentforum_searchinstruction1','marketingrecruitmentforum');
-        
+//template that displays all students that completed student information cards
 
-/*---------------------------------------------------------------------------------------------------*/   
-      /**
-       *create form button -- go
-       */
-      //$this->objButtonGo  = new button('go', $go);
-      //$this->objButtonGo->setToSubmit();
-/*---------------------------------------------------------------------------------------------------*/
-      /**
-       *create faculty list 
-       */
-      /* $this->objfaculty  = & $this->getObject('faculty','marketingrecruitmentforum');
-       $this->objfaculty->displayfaculty();
-       $faculty = new dropdown('facultynameval');
-       $facultynames  = $this->getSession('faculty');
-       foreach($facultynames as $sessfac){
-        
-            $faculty->addOption($sessfac,$sessfac);
-       }    
-       $course
-       $faculty->extra = ' onChange="document.searchsluresults.submit()"';*/
-       $course = " ";
-       $this->objFaculties =& $this->getObject('dbstudentcard','marketingrecruitmentforum');
-       $faculty = $this->objFaculties->getFaculties('code',$course['faculty_code']);
-    	 $objDropdown = new dropdown('facultynameval');                                                //create dropdown list
-       $objDropdown->addFromDB($this->objFaculties->getFaculties(), 'name', 'name', $faculty);    //get value from db....populate dropdown method of dropclass
-       $objDropdown->extra = ' onChange="document.searchsluresults.submit()"';         
-/*---------------------------------------------------------------------------------------------------*/
-     /**
-      *call all class objects to define layout
-      */
-      
-      $facultyentered = $this->objsearchfac->studentsbyfaculty($facultyval);
-      $exemptionfaculty = $this->objsearchfac->exemptionbyfaculty($facultyexmp);
-      $facrelsubj = $this->objsearchfac->relsubjbyfaculty($facsubj);
-      $coursefaculty  = $this->objsearchfac->coursebyfaculty($faccourse);
-      $sdcasefac  = $this->objsearchfac->sdcasebyfaculty($facsdcase);
-      //$this->objsearchfac
-/*---------------------------------------------------------------------------------------------------*/      
-                 
     /**
-     *create a tabpane to display data within
-     */           
+     *load all form classes
+     */
+     $this->loadClass('textinput','htmlelements');
+     $this->loadClass('textarea','htmlelements');
+     $this->loadClass('tabbedbox', 'htmlelements');
     
-    $facultyinfo = & $this->newObject('tabbox','marketingrecruitmentforum');
-    $facultyinfo->tabName = 'OutputInfo';
+     $this->objstudresults  = & $this->newObject('searchstudcard','marketingrecruitmentforum');
+     $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
+     
     
+/*------------------------------------------------------------------------------*/
+    /**
+     *create form heading
+     */
+     $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
+     $this->objMainheading->type=1;
+     $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_heading','marketingrecruitmentforum');
+/*------------------------------------------------------------------------------*/
+    /**
+     *create all language items
+     */
+     $instruction = $this->objLanguage->languageText('mod_marketingrecruitmentforum_instruction','marketingrecruitmentforum');
+     $click = $this->objLanguage->languageText('mod_marketingrecruitmentforum_click','marketingrecruitmentforum');
     
-    $facultyinfo->addTab('faculty', 'All Students Entered For Faculty',$facultyentered . '<br />');
-    $facultyinfo->addTab('exemption', 'All Students With Exemption',$exemptionfaculty. '<br />');
-    $facultyinfo->addTab('relsubjects', 'All With Relevant Subjects',$facrelsubj. '<br />');
-    $facultyinfo->addTab('course', 'All Students Per Faculty Course',$coursefaculty. '<br />');
-    $facultyinfo->addTab('sdcase', 'All SD Cases Per Faculty',$sdcasefac. '<br />');
-/*---------------------------------------------------------------------------------------------------*/    
- 
-  /**
-   *create a form to place all elements in
-   */
+/*------------------------------------------------------------------------------*/      
+    /**
+     *create a link to print the information selected by user
+     */
+     $PrintCardLink = array('params' => array("action" => "NULL"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Print');         
+/*------------------------------------------------------------------------------*/        
     
-   $objForm = new form('searchsluresults',$this->uri(array('action'=>'studcardfaculty')));
-   $objForm->displayType = 3;
-   $objForm->addToForm("<center>".$this->objMainheading->show(). '<br />' . '<br />'. '<b>' .$searchmsg . "&nbsp" .'</b>'. $objDropdown->show()."</center>" . '<br />' . '<br />' .$facultyinfo->show());
+    /**
+     *create dropdwonlist with all schoolnames
+     */
+       //create an object of the schoolnames class
+       //call the function that sets the session
+       //call the session
+       //populate list with values in the session array 
+       
+       $this->objschoolname->readfiledata();
+       
+       $schoollist  = new dropdown('schoollistnames');
+       $shoolvalues = $this->getSession('schoolnames');
+       sort($shoolvalues);
+       foreach($shoolvalues as $sessschool){
+          $schoollist->addOption($sessschool,$sessschool);
+       }
+       $schoollist->extra = ' onChange="document.searchresults.submit()"'; 
 
-/*---------------------------------------------------------------------------------------------------*/ 
       
-   echo $objForm->show();
+/*------------------------------------------------------------------------------*/    
+    /**
+     *call to all functions from class searchstudcard
+     */
+              
+      $results =  $this->objstudresults->getAllstudents();   
+      $schoolresults  = $this->objstudresults->allstudschool($school = NULL);
+      //schoolresults = $objSumtin->allstudschool($school);
+      $exemption  = $this->objstudresults->allwithexemption(); 
+      $relsubject = $this->objstudresults->allwithrelsub();
+      $faculty  = $this->objstudresults->studfaculty();
+      $course = $this->objstudresults->studcourse();
+      $area = $this->objstudresults->studarea();
+      $sdcase = $this->objstudresults->studsdcase();
+/*------------------------------------------------------------------------------*/
+    /**
+     *create tabpan and display search info
+     */         
+    $Studcardinfo = & $this->newObject('tabbox','marketingrecruitmentforum');
+    $Studcardinfo->tabName = 'OutputInfo';
+    
+    $Studcardinfo->addTab('studcard', 'Information Cards',$results);
+    $Studcardinfo->addTab('studschool', 'Student School','<b>'.'Please select a school to search by'.'</b>' . ' ' .$schoollist->show() . ' <br />'. '<br />' . $schoolresults);
+    $Studcardinfo->addTab('studexemption', 'Student Exemption',$exemption);
+    $Studcardinfo->addTab('relsub', 'Relevant subjects',$relsubject);
+    $Studcardinfo->addTab('studfac', 'Faculty',$faculty);
+    $Studcardinfo->addTab('studcourse', 'Course' ,$course);
+    $Studcardinfo->addTab('studsdcase', 'SD Cases',$sdcase);
+    $Studcardinfo->addTab('studarea', 'Area',$area);
+    
+    
+/*-------------------------------------------------------------------------------*/
+    /**
+     *create a form to place all elements on
+     */
+   $objForm = new form('searchresults',$this->uri(array('action'=>'showstudschool')));
+   $objForm->displayType = 3;
+   $objForm->addToForm("<center>".$this->objMainheading->show() . '<br />' . '<br />'.'<b>'.'<i>'.$instruction . '<br />'. $click.'</i>'.'</b>' ."</center>". '<br />'.'<br />'. $Studcardinfo->show() . '<br />' . '<br />');
+/*-------------------------------------------------------------------------------*/         
+    /**
+     *display all info on screen
+     */                            
+     //echo    $this->objMainheading->show(); 
+     echo $objForm->show();                
 ?>
