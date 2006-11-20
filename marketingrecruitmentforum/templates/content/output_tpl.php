@@ -66,7 +66,13 @@
           $hasSubmitted = 'yes';
    }        
   /*----------------------------------------------------------------------------------------*/        
+        
         $idnum = $this->getSession('idno');
+        if(!empty($idnum)){
+          $id = $idnum;
+        }else{
+          $id = "NO ID NUMBER";
+        }
         
         
         if(!empty($sessionstudcard)){
@@ -77,7 +83,7 @@
             $objstudcardTable->cellpadding = '2';
             $objstudcardTable->cellwidth = '10';
             $objstudcardTable->border='0';
-            $objstudcardTable->width = '80%';
+            $objstudcardTable->width = '91%';
   
             //var_dump($idsearch);
   
@@ -104,7 +110,7 @@
                 
                 $objstudcardTable->startRow();
                 $objstudcardTable->addCell('ID Number');
-                $objstudcardTable->addCell($idnum);
+                $objstudcardTable->addCell($id);
                 $objstudcardTable->endRow();
                 
                 $objstudcardTable->startRow();
@@ -334,7 +340,7 @@
             $objschoolTable->cellspacing = '2';
             $objschoolTable->cellpadding = '2';
             $objschoolTable->border='0';
-            $objschoolTable->width = '70%';
+            $objschoolTable->width = '60%';
           
           foreach($sessionsschoolist as $sesschool){
           
@@ -482,7 +488,7 @@
       }
 
 /**************************************************************************************************/ /*PROBLEM*/                  
-  
+  //$submitmsg = " ";
 if($submitmsg == 'yes'){
             $tomsg =& $this->newObject('timeoutmessage', 'htmlelements');
             $tomsg->setMessage('thank you information has been sucessfully submitted');

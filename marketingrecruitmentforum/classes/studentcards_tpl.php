@@ -23,13 +23,13 @@
       $this->objfaculty = & $this->getObject('faculty','marketingrecruitmentforum'); 
       $this->objformval = & $this->getObject('form','htmlelements');
       
-//   $this->objFaculties =& $this->getObject('dbacademicprogrammefaculties','academicprogramme');
-//		$this->objCourses =& $this->getObject('dbacademicprogrammecourses','academicprogramme');         
+      $this->objFaculties =& $this->getObject('dbstudentcard','marketingrecruitmentforum');
+		//$this->objCourses =& $this->getObject('dbstudentcard','marketingrecruitmentforum');         
 /*------------------------------------------------------------------------------*/     
     /**
       *create all language elements
       */
-      
+      $idnumber = $this->objLanguage->languageText('phrase_idnumber');
       $date = $this->objLanguage->languageText('word_date');
       $schoolname = $this->objLanguage->languageText('phrase_schoolname');
       $surname  =  $this->objLanguage->languageText('word_surname');
@@ -38,7 +38,7 @@
       $postalcode = $this->objLanguage->languageText('phrase_postalcode');
       $telnumber  = $this->objLanguage->languageText('phrase_telnumber');
       $telcode  = $this->objLanguage->languageText('phrase_telephonecode');
-      $exemption  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_exemption','marketingrecruitmentforum');
+      $exemption  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_exemption1','marketingrecruitmentforum');
       $course  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_courseinterest','marketingrecruitmentforum');
       $subject  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_relevantsubject','marketingrecruitmentforum');
       $sdcase = $this->objLanguage->languageText('mod_marketingrecruitmentforum_sdcase','marketingrecruitmentforum');
@@ -77,7 +77,8 @@
         $studtelcode = '';
         $studcourse  = '';
         
-        
+        $idnum = $this->getSession('idno');
+        $idsearch  = $this->dbstudentcard->getstudbyid($idnum);
        if(!empty($sessionstudcard)){         
               while(list($subkey,$subval) = each($sessionstudcard))
               {
@@ -106,8 +107,17 @@
                   if($subkey  ==  'courseinterest') {
                   $studcourse = $subval;
                   }
+              }
+              
+          }if(!empty($idsearch)){         
+              foreach($idsearch as $subkey){
                   
-                  
+                  $studsurname = $subkey['surname'];
+                  $studname = $subkey['name'];
+                  $studpostaladdress = $subkey['postaddress'];
+                  $studpostalcode = $subkey['postcode'];
+                  $studtelcode = $subkey['telcode'];
+                  $studtelnumber = $subkey['telnumber'];
               }
           }
         
@@ -132,34 +142,34 @@
        
 /*--------------------------------------------------------------------------------------------*/       
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-//	$faculty = $this->objFaculties->getRow('code',$course['faculty_code']);
-  $objForm1 = new form('faculty_form',$this->uri(array('action'=>'selectfaculty')));      //place on seperate form
+	$faculty = $this->objFaculties->getFaculties('code',$course['faculty_code']);
+//  $objForm1 = new form('faculty_form',$this->uri(array('action'=>'selectfaculty')));      //place on seperate form
 	$objDropdown = new dropdown('faculty');                                                //create dropdown list
-	$objDropdown->extra = 'onchange="document.forms[\'faculty_form\'].submit();"';         //set each value in list as onchange
-//	$objDropdown->addFromDB($this->objFaculties->getAll(), 'name', 'code', $faculty);    //get value from db....populate dropdown method of dropclass
-	if (!is_null($this->getSession('faculty',NULL))) {
-		$objDropdown->setSelected($this->getSession('faculty',NULL));                        //set initial value ?? 
-	}
-	//$objButton = new button("submit_button", 'Go');
-	//$objButton->setToSubmit();
-	$objForm1->addToForm('<tr><td>Please Select a Faculty</td><td>'."&nbsp"."&nbsp".$objDropdown->show().'&nbsp;'/*.$objButton->show()*/.'</td></tr>');
-//	echo $objForm->show();
-//}
-//
-if (!is_null($this->getSession('faculty',NULL))) {
+//	$objDropdown->extra = 'onchange="document.faculty_form.submit();"';         //set each value in list as onchange
+  $objDropdown->addFromDB($this->objFaculties->getFaculties(), 'name', 'name', $faculty);    //get value from db....populate dropdown method of dropclass
+  //echo $objDropdown->show();
+//	if (!is_null($this->getSession('faculty',NULL))) {
+//	   	$objDropdown->setSelected($this->getSession('faculty',NULL));                        //set initial value ?? 
+//	}
+	
+//	$objForm1->addToForm('<tr><td>Please Select a Faculty</td><td>'."&nbsp"."&nbsp".$objDropdown->show().'&nbsp;'/*.$objButton->show()*/.'</td></tr>');
+
+//$objForm2 = new form('course_form',$this->uri(array('action'=>'selectcourse')));
+//$objDropdown1 = new dropdown('course');
+//if (!is_null($this->getSession('faculty',NULL))) {
 	$facultyCode = $this->getSession('faculty',NULL);
-	$objForm = new form('course_form',$this->uri(array('action'=>'selectcourse')));
-	$objDropdown = new dropdown('course');
-	$objDropdown->extra = 'onchange="document.forms[\'course_form\'].submit();"';
-//	$objDropdown->addFromDB($this->objCourses->getAll("WHERE faculty_code='$facultyCode'"), 'name', 'code', $course);
+
+	$objDropdown1 = new dropdown('course');
+//	$objDropdown1->extra = 'onchange="document.studentcard].submit();"';
+  $objDropdown1->addFromDB($this->objFaculties->getcourse("WHERE faculty_code='$facultyCode'"), 'name', 'name', $course);
 	if (!is_null($this->getSession('course',NULL))) {
-		$objDropdown->setSelected($this->getSession('course',NULL));
+		$objDropdown1->setSelected($this->getSession('course',NULL));
 	}
 //	$objButton = new button("submit_button", 'Go');
 //	$objButton->setToSubmit();
-	$objForm->addToForm('<tr><td>Course</td><td>'."&nbsp"."&nbsp".$objDropdown->show().'&nbsp;'/*.$objButton->show()*/.'</td></tr>');
-//	echo $objForm->show();
-}
+//	$objForm2->addToForm('<tr><td>Course</td><td>'."&nbsp"."&nbsp".$objDropdown1->show().'&nbsp;'/*.$objButton->show()*/.'</td></tr>');
+	
+//}
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -181,12 +191,12 @@ if (!is_null($this->getSession('faculty',NULL))) {
        $this->objtxtpostalcode = $this->newObject('textinput','htmlelements'); 
        $this->objtxtpostalcode->name   = "txtpostalcode";
        $this->objtxtpostalcode->value  = $studpostalcode;
-       $this->objtxtpostalcode->size  = 10;
+       $this->objtxtpostalcode->size  = 6;
        
        $textArea = 'postaladdress';
        $this->objPostaladdress =& $this->newobject('textArea','htmlelements');
        $this->objPostaladdress->setRows(1);
-       $this->objPostaladdress->setColumns(15);
+       $this->objPostaladdress->setColumns(16);
        $this->objPostaladdress->setName($textArea);
        $this->objPostaladdress->setContent($studpostaladdress);
        
@@ -197,7 +207,7 @@ if (!is_null($this->getSession('faculty',NULL))) {
        $this->objtxttelcode = $this->newObject('textinput','htmlelements'); 
        $this->objtxttelcode->name   = "txttelcode";
        $this->objtxttelcode->value  = $studtelcode;
-       $this->objtxttelcode->size = 10;
+       $this->objtxttelcode->size = 3;
        
        //$this->objfaculty->displaycourses();
        
@@ -313,10 +323,23 @@ if (!is_null($this->getSession('faculty',NULL))) {
          $myTable->border='0';
          $myTable->cellspacing='6';
          $myTable->cellpadding='10';
+         $idnum = $this->getSession('idno');
+         if(!empty($idnum)){
+            $id = $idnum;
+         }else{
+            $id = "NO ID NUMBER";
+         }
            
+         
+         $myTable->startRow();
+         $myTable->addCell(ucfirst($idnumber));
+         $myTable->addCell("&nbsp"." ".$id);
+         $myTable->endRow();
+         
+         
          $myTable->startRow();
          $myTable->addCell(ucfirst($date));
-         $myTable->addCell($this->objdate->show());
+         $myTable->addCell(" "." "." ".$this->objdate->show());
          $myTable->endRow();
          
          $myTable->startRow();
@@ -359,18 +382,20 @@ if (!is_null($this->getSession('faculty',NULL))) {
          $myTable->addCell("&nbsp"."&nbsp".$objexemption->show());
          $myTable->endRow();
          
-          $myTable->startRow();
-        $myTable->addCell("Please Select a Faculty");
-         $myTable->addCell("&nbsp"."&nbsp".$facultylist->show());
-//         $myTable->addCell($this->objButtonCourse->show());
-         $myTable->endRow();
-
-
          $myTable->startRow();
+         $myTable->addCell("Please Select a Faculty");
          //$myTable->addCell($objForm1->show());
-         $myTable->addCell("Course");
-         $myTable->addCell("&nbsp"."&nbsp".$this->objtxtcourse->show());
+         $myTable->addCell("&nbsp"."&nbsp".$objDropdown->show());
+         //$myTable->addCell("&nbsp"."&nbsp".$this->objtxtcourse->show());
          $myTable->endRow();
+         
+         
+         $myTable->startRow();
+         $myTable->addCell("Please Select a Course");
+         $myTable->addCell("&nbsp"."&nbsp".$objDropdown1->show());
+         //$myTable->addCell($objForm2->show());
+        $myTable->endRow();
+
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($subject));
@@ -399,7 +424,7 @@ if (!is_null($this->getSession('faculty',NULL))) {
           $objForm->addRule('txtsurname','Please enter surname','required');
           $objForm->addRule('txtname','Please enter name','required');
           $objForm->addRule('postaladdress','Please enter address','required');
-          //$objForm->addRule('txtpostalcode','Please enter a four digit postal code','required'); //fix up
+         // $objForm->addRule('txtpostalcode','Please enter a four digit postal code','required'); //fix up
           $objForm->addRule(array('name'=>'txtpostalcode','minnumber'=>4), 'Please enter a  4 digit postal code', 'minnumber');
           $objForm->addRule(array('name'=>'txtpostalcode','length'=>4), 'Your postal code is too long', 'maxlength');
           $objForm->addRule(array('name'=>'txttelcode','minnumber'=>3), 'Please enter a  3 digit telephone code', 'minnumber');

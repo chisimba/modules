@@ -44,8 +44,8 @@ public  function  getAllstudents(){
      
        $results = $this->objstudcard->getallstudinfo();
      
-       $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
-       $this->appendArrayVar('headerParams', $css1);
+       //$css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
+       //$this->appendArrayVar('headerParams', $css1);
        $oddEven = 'even';
        $myTable =& $this->newObject('htmltable', 'htmlelements');
        $myTable->cellspacing = '1';
@@ -65,13 +65,13 @@ public  function  getAllstudents(){
         $myTable->addHeaderCell('Telephone Code', null,'top','left','header');
         $myTable->endHeaderRow();
      
-        $rowcount = '0';
+        $rowcount = 0;
   
     foreach($results as $sessCard){
        
        
        $myTable->startRow();
-       $myTable->row_attributes = " class = \"$oddEven\"";
+      (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
        $myTable->addCell($sessCard['date'],"6%", null, "left","widelink");
        $myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['surname'], "10%", null, "left","widelink");
@@ -80,8 +80,10 @@ public  function  getAllstudents(){
        $myTable->addCell($sessCard['postcode'],"6%", null, "left","widelink");
        $myTable->addCell($sessCard['telnumber'],"10%", null, "left","widelink");
        $myTable->addCell($sessCard['telcode'],"6%", null, "left","widelink");
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       $myTable->row_attributes = " class = \"$oddOrEven\"";
+       $rowcount++;
        $myTable->endRow();
+       
        
        
        
@@ -97,8 +99,8 @@ public  function allstudschool($school){
         
       if(isset($school)){
         
-             $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
-             $this->appendArrayVar('headerParams', $css1);
+             //$css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
+             //$this->appendArrayVar('headerParams', $css1);
              $oddEven = 'even';
              $myTable =& $this->newObject('htmltable', 'htmlelements');
              $myTable->cellspacing = '1';
@@ -114,22 +116,22 @@ public  function allstudschool($school){
             $myTable->addHeaderCell('Surname', null,'top','left','header');
             $myTable->addHeaderCell('Name', null,'top','left','header');
             
-            $rowcount = '0';
+            $rowcount = 0;
       
               foreach($school as $sessCard){
                  
                  $myTable->startRow();
-                 $myTable->row_attributes = " class = \"$oddEven\"";
+                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                  $myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
                  $myTable->addCell($sessCard['name'], "15%", null, "left","widelink");
                  $myTable->addCell($sessCard['surname'],"15%", null, "left","widelink");
-                 $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+                 
                  $myTable->endRow();
              }
       }else{
              //echo 'no records found';
-             $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
-             $this->appendArrayVar('headerParams', $css1);
+             //$css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
+             //$this->appendArrayVar('headerParams', $css1);
              $oddEven = 'even';
              $myTable =& $this->newObject('htmltable', 'htmlelements');
              $myTable->cellspacing = '1';
@@ -140,6 +142,7 @@ public  function allstudschool($school){
              $myTable->row_attributes = " class = \"$oddEven\"";
              
              $myTable->startRow();
+            // (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
              $myTable->addCell('NO RECORDS FOUND');
              $myTable->endRow();
              
@@ -157,8 +160,8 @@ public  function  allwithexemption(){
            
       $results = $this->objstudcard->allstudsexemption();
       
-      $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
-         $this->appendArrayVar('headerParams', $css1);
+      //$css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
+      //   $this->appendArrayVar('headerParams', $css1);
          $oddEven = 'even';
          $myTable =& $this->newObject('htmltable', 'htmlelements');
          $myTable->cellspacing = '1';
@@ -177,18 +180,19 @@ public  function  allwithexemption(){
         $myTable->addHeaderCell('Name', null,'top','left','header');
         $myTable->addHeaderCell('Qualify for exemption', null,'top','left','header');
         
-        $rowcount = '0';
+        $rowcount = 0;
   
     foreach($results as $sessCard){
      
        $myTable->startRow();
-       $myTable->row_attributes = " class = \"$oddEven\"";
+       (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
        $myTable->addCell($sessCard['date'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['surname'], "15%", null, "left","widelink");
        $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
        $myTable->addCell('Yes',"15%", null, "left","widelink");
-        $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       $myTable->row_attributes = " class = \"$oddOrEven\"";
+       $rowcount++;
        $myTable->endRow();
         
    }  
@@ -203,8 +207,8 @@ public  function  allwithexemption(){
 public function allwithrelsub(){
         $results = $this->objstudcard->allrelsubject();
       
-        $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
-         $this->appendArrayVar('headerParams', $css1);
+        //$css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
+         //$this->appendArrayVar('headerParams', $css1);
          $oddEven = 'even';
          $myTable =& $this->newObject('htmltable', 'htmlelements');
          $myTable->cellspacing = '1';
@@ -221,20 +225,20 @@ public function allwithrelsub(){
         $myTable->addHeaderCell('Name', null,'top','left','header');
         $myTable->addHeaderCell('Relevant Subject', null,'top','left','header');
         
-        $rowcount = '0';
+        $rowcount = 0;
   
     foreach($results as $sessCard){
      
        
        
        $myTable->startRow();
-       $myTable->row_attributes = " class = \"$oddEven\"";
+       (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
        $myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['surname'], "15%", null, "left","widelink");
        $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
        $myTable->addCell('Yes',"15%", null, "left","widelink");
-//       $myTable->addCell($sessCard['relevantsubject'],"15%", null, "left","widelink");
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       $myTable->row_attributes = " class = \"$oddOrEven\"";
+       $rowcount++;
        $myTable->endRow();
         
    }  
@@ -249,8 +253,8 @@ public function allwithrelsub(){
         
         $results = $this->objstudcard->allbyfaculty();
         
-        $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
-         $this->appendArrayVar('headerParams', $css1);
+      //  $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
+      //   $this->appendArrayVar('headerParams', $css1);
          $oddEven = 'even';
          $myTable =& $this->newObject('htmltable', 'htmlelements');
          $myTable->cellspacing = '1';
@@ -266,18 +270,19 @@ public function allwithrelsub(){
         $myTable->addHeaderCell('Name', null,'top','left','header');
         $myTable->addHeaderCell('Faculty', null,'top','left','header');
         
-        $rowcount = '0';
+        $rowcount = 0;
   
     foreach($results as $sessCard){
      
        
        
        $myTable->startRow();
-       $myTable->row_attributes = " class = \"$oddEven\"";
+       (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
        $myTable->addCell($sessCard['surname'], "10%", null, "left","widelink");
        $myTable->addCell($sessCard['name'],"10%", null, "left","widelink");
        $myTable->addCell($sessCard['faculty'],"10%", null, "left","widelink");
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       $myTable->row_attributes = " class = \"$oddOrEven\"";
+       $rowcount++;
        $myTable->endRow();
         
    }  
@@ -312,20 +317,21 @@ public   function studcourse(){
         $myTable->addHeaderCell('Faculty', null,'top','left','header');
         
         
-        $rowcount = '0';
+        $rowcount = 0;
   
     foreach($results as $sessCard){
      
        
        
        $myTable->startRow();
-       $myTable->row_attributes = " class = \"$oddEven\"";
+       (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
        //$myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['surname'], "15%", null, "left","widelink");
        $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['course'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['faculty'],"15%", null, "left","widelink");
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       $myTable->row_attributes = " class = \"$oddOrEven\"";
+       $rowcount++;
        $myTable->endRow();
         
    }  
@@ -341,8 +347,8 @@ public function studarea(){
        $results = $this->objstudcard->getstudbyarea();
        
         
-        $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
-         $this->appendArrayVar('headerParams', $css1);
+   //     $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
+   //      $this->appendArrayVar('headerParams', $css1);
          $oddEven = 'even';
          $myTable =& $this->newObject('htmltable', 'htmlelements');
          $myTable->cellspacing = '1';
@@ -361,20 +367,21 @@ public function studarea(){
         $myTable->addHeaderCell('Area', null,'top','left','header');
         
         
-        $rowcount = '0';
+        $rowcount = 0;
   
     foreach($results as $sessCard){
      
        
        
        $myTable->startRow();
-       $myTable->row_attributes = " class = \"$oddEven\"";
+       (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
        $myTable->addCell($sessCard['surname'], "15%", null, "left","widelink");
        $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['postaddress'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['studschoool'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['area'],"15%", null, "left","widelink");
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       $myTable->row_attributes = " class = \"$oddOrEven\"";
+       $rowcount++;
        $myTable->endRow();
         
    }  
@@ -388,8 +395,8 @@ public function studsdcase(){
        
        $results = $this->objstudcard->sdcases();
         
-        $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
-         $this->appendArrayVar('headerParams', $css1);
+   //     $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
+   //      $this->appendArrayVar('headerParams', $css1);
          $oddEven = 'even';
          $myTable =& $this->newObject('htmltable', 'htmlelements');
          $myTable->cellspacing = '1';
@@ -407,22 +414,23 @@ public function studsdcase(){
         $myTable->addHeaderCell('School Name', null,'top','left','header');
         $myTable->addHeaderCell('SD CASE', null,'top','left','header');
         
-        $rowcount = '0';
+        $rowcount = 0;
+        
   
     foreach($results as $sessSD){
      
        
        
        $myTable->startRow();
-       $myTable->row_attributes = " class = \"$oddEven\"";
+       (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
        //$myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell($sessSD['surname'], "15%", null, "left","widelink");
        $myTable->addCell($sessSD['name'],"15%", null, "left","widelink");
        $myTable->addCell($sessSD['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell('Yes',"15%", null, "left","widelink"); 
 //       $myTable->addCell($sessSD['sdcase'],"15%", null, "left","widelink"); 
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
-       
+       $myTable->row_attributes = " class = \"$oddOrEven\"";
+       $rowcount++;
        $myTable->endRow();
         
    }  
@@ -457,14 +465,14 @@ public function countstudfaculty($faculty){
             $myTable->addHeaderCell('Total Students', null,'top','left','header');
             
             
-            $rowcount = '0';
+            $rowcount = 0;
   
             foreach($faculty as $sessSD){
              
                
                
                $myTable->startRow();
-               $myTable->row_attributes = " class = \"$oddEven\"";
+               (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                //$myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
                $myTable->addCell($sessSD['surname'], "15%", null, "left","widelink");
                $myTable->addCell($sessSD['name'],"15%", null, "left","widelink");
@@ -472,7 +480,8 @@ public function countstudfaculty($faculty){
                $myTable->addCell($sessSD['schoolname'],"15%", null, "left","widelink");
                $myTable->addCell($sessSD['faculty'],"15%", null, "left","widelink");
                $myTable->addCell($sessSD['totstud'],"15%", null, "left","widelink"); 
-               $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+               $myTable->row_attributes = " class = \"$oddOrEven\"";
+               $rowcount++;
                $myTable->endRow();
                 
            }  

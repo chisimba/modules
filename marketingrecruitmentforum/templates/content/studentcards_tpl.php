@@ -38,7 +38,7 @@
       $postalcode = $this->objLanguage->languageText('phrase_postalcode');
       $telnumber  = $this->objLanguage->languageText('phrase_telnumber');
       $telcode  = $this->objLanguage->languageText('phrase_telephonecode');
-      $exemption  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_exemption','marketingrecruitmentforum');
+      $exemption  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_exemption1','marketingrecruitmentforum');
       $course  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_courseinterest','marketingrecruitmentforum');
       $subject  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_relevantsubject','marketingrecruitmentforum');
       $sdcase = $this->objLanguage->languageText('mod_marketingrecruitmentforum_sdcase','marketingrecruitmentforum');
@@ -142,11 +142,11 @@
        
 /*--------------------------------------------------------------------------------------------*/       
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-//	$faculty = $this->objFaculties->getRow('code',$course['faculty_code']);
+	$faculty = $this->objFaculties->getFaculties('code',$course['faculty_code']);
 //  $objForm1 = new form('faculty_form',$this->uri(array('action'=>'selectfaculty')));      //place on seperate form
 	$objDropdown = new dropdown('faculty');                                                //create dropdown list
 //	$objDropdown->extra = 'onchange="document.faculty_form.submit();"';         //set each value in list as onchange
-  $objDropdown->addFromDB($this->objFaculties->getFaculties(), 'name', 'code', $faculty);    //get value from db....populate dropdown method of dropclass
+  $objDropdown->addFromDB($this->objFaculties->getFaculties(), 'name', 'name', $faculty);    //get value from db....populate dropdown method of dropclass
   //echo $objDropdown->show();
 //	if (!is_null($this->getSession('faculty',NULL))) {
 //	   	$objDropdown->setSelected($this->getSession('faculty',NULL));                        //set initial value ?? 
@@ -161,7 +161,7 @@
 
 	$objDropdown1 = new dropdown('course');
 //	$objDropdown1->extra = 'onchange="document.studentcard].submit();"';
-  $objDropdown1->addFromDB($this->objFaculties->getcourse("WHERE faculty_code='$facultyCode'"), 'name', 'code', $course);
+  $objDropdown1->addFromDB($this->objFaculties->getcourse("WHERE faculty_code='$facultyCode'"), 'name', 'name', $course);
 	if (!is_null($this->getSession('course',NULL))) {
 		$objDropdown1->setSelected($this->getSession('course',NULL));
 	}
@@ -191,12 +191,12 @@
        $this->objtxtpostalcode = $this->newObject('textinput','htmlelements'); 
        $this->objtxtpostalcode->name   = "txtpostalcode";
        $this->objtxtpostalcode->value  = $studpostalcode;
-       $this->objtxtpostalcode->size  = 10;
+       $this->objtxtpostalcode->size  = 6;
        
        $textArea = 'postaladdress';
        $this->objPostaladdress =& $this->newobject('textArea','htmlelements');
        $this->objPostaladdress->setRows(1);
-       $this->objPostaladdress->setColumns(15);
+       $this->objPostaladdress->setColumns(16);
        $this->objPostaladdress->setName($textArea);
        $this->objPostaladdress->setContent($studpostaladdress);
        
@@ -207,7 +207,7 @@
        $this->objtxttelcode = $this->newObject('textinput','htmlelements'); 
        $this->objtxttelcode->name   = "txttelcode";
        $this->objtxttelcode->value  = $studtelcode;
-       $this->objtxttelcode->size = 5;
+       $this->objtxttelcode->size = 3;
        
        //$this->objfaculty->displaycourses();
        
@@ -323,18 +323,23 @@
          $myTable->border='0';
          $myTable->cellspacing='6';
          $myTable->cellpadding='10';
-         
-         $idnum = $this->getSession('idno');  
+         $idnum = $this->getSession('idno');
+         if(!empty($idnum)){
+            $id = $idnum;
+         }else{
+            $id = "NO ID NUMBER";
+         }
+           
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($idnumber));
-         $myTable->addCell($idnum);
+         $myTable->addCell("&nbsp"." ".$id);
          $myTable->endRow();
          
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($date));
-         $myTable->addCell($this->objdate->show());
+         $myTable->addCell(" "." "." ".$this->objdate->show());
          $myTable->endRow();
          
          $myTable->startRow();
@@ -378,16 +383,16 @@
          $myTable->endRow();
          
          $myTable->startRow();
-         $myTable->addCell("Please Select a faculty");
+         $myTable->addCell("Please Select a Faculty");
          //$myTable->addCell($objForm1->show());
-         $myTable->addCell($objDropdown->show());
+         $myTable->addCell("&nbsp"."&nbsp".$objDropdown->show());
          //$myTable->addCell("&nbsp"."&nbsp".$this->objtxtcourse->show());
          $myTable->endRow();
          
          
          $myTable->startRow();
-         $myTable->addCell("Please Select a course");
-         $myTable->addCell($objDropdown1->show());
+         $myTable->addCell("Please Select a Course");
+         $myTable->addCell("&nbsp"."&nbsp".$objDropdown1->show());
          //$myTable->addCell($objForm2->show());
         $myTable->endRow();
 

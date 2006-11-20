@@ -58,7 +58,7 @@
      */
               
       $results =  $this->objstudresults->getAllstudents();   
-      $schoolresults  = $this->objstudresults->allstudschool($school);
+      $schoolresults  = $this->objstudresults->allstudschool($school = NULL);
       //schoolresults = $objSumtin->allstudschool($school);
       $exemption  = $this->objstudresults->allwithexemption(); 
       $relsubject = $this->objstudresults->allwithrelsub();

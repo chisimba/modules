@@ -39,18 +39,23 @@
       /**
        *create dropdownlist with faculty values
        */
-       $names = new dropdown('names');
+/*       $names = new dropdown('names');
        $facultynames  = $this->getSession('faculty');
        foreach($facultynames as $sessfac){
             
             $names->addOption($sessfac,$sessfac);
        }
-       $names->extra = ' onChange="document.reportfaculty.submit()"';
+       $names->extra = ' onChange="document.reportfaculty.submit()"';*/
+       $this->objFaculties =& $this->getObject('dbstudentcard','marketingrecruitmentforum');
+   //    $faculty = $this->objFaculties->getFaculties('code',$course['faculty_code']);
+    	 $objDropdown = new dropdown('names');                                                //create dropdown list
+       $objDropdown->addFromDB($this->objFaculties->getFaculties(), 'name', 'name', $faculty);    //get value from db....populate dropdown method of dropclass
+       $objDropdown->extra = ' onChange="document.reportfaculty.submit()"';
        
        //dropdown heading
         $this->objheading =& $this->newObject('htmlheading','htmlelements');
         $this->objheading->type=3;
-        $this->objheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_facultymsg','marketingrecruitmentforum') .' '. $names->show();
+        $this->objheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_facultymsg','marketingrecruitmentforum') .' '. $objDropdown->show();
 /*------------------------------------------------------------------------------*/
       
       $this->objstudcard  = & $this->newObject('searchstudcard','marketingrecruitmentforum');

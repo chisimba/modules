@@ -217,16 +217,30 @@ public function getstudqualify()
 /*------------------------------------------------------------------------------*/
   public function addfaculties()
   {
+    $faculties = " ";
+    $stmt = "SELECT * from tbl_academicprogramme_faculties";
+    $facvals = $this->getArray($stmt);
+    
+    if(empty($facvals)){
+    
     $stmt = "LOAD DATA INFILE 'faculty_values.txt' INTO TABLE tbl_academicprogramme_faculties FIELDS TERMINATED BY ','";
     $faculties = $this->getArray($stmt);
+    }
     return $faculties;
   }
 /*------------------------------------------------------------------------------*/
   public function addcoursevalues()
   {
-    $stmt = "LOAD DATA INFILE 'course_values.txt' INTO TABLE tbl_academicprogramme_courses FIELDS TERMINATED BY ','";
-    $course = $this->getArray($stmt);
-    return $course;
+    $course = " ";
+    $stmt = "SELECT * from tbl_academicprogramme_courses";
+    $coursevals = $this->getArray($stmt);
+    
+    if(empty($coursevals)){
+    
+        $stmt = "LOAD DATA INFILE 'course_values.txt' INTO TABLE tbl_academicprogramme_courses FIELDS TERMINATED BY ','";
+        $course = $this->getArray($stmt);
+        return $course;
+    }
   }
 /*------------------------------------------------------------------------------*/
   public function getFaculties()
@@ -238,7 +252,8 @@ public function getstudqualify()
 /*------------------------------------------------------------------------------*/
   public function getcourse()
   {
-    $stmt = "Select * from tbl_academicprogramme_courses";
+    //$facselected  = $this->getSession('faculty');
+    $stmt = "Select * from tbl_academicprogramme_courses";// where faculty_code  =  '$facselected'";
     $course = $this->getArray($stmt);
     return $course;
   }

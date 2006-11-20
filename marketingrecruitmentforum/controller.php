@@ -69,6 +69,7 @@ class marketingrecruitmentforum extends controller
         switch($action){
             
             case 'introduction' :
+            
               $this->dbstudentcard->addfaculties();
               $this->dbstudentcard->addcoursevalues();
                    return 'intro_tpl.php';
@@ -105,11 +106,14 @@ class marketingrecruitmentforum extends controller
             break;
             
             case 'selectfaculty':
-                $this->getStudentDetails();         
+                $facname  = $this->getParam('faculty');
+                $this->setSession('faculty',$facname);
+                //$this->setVarByRef('search', $search);
+                /*$this->getStudentDetails();         
                 $faculty  = $this->getParam('faculty');
 				        $this->setSession('faculty',$faculty);
 				        $this->setSession('course',NULL);
-				        $this->setSession('type',NULL);
+				        $this->setSession('type',NULL);*/
 				        return 'studentcards_tpl.php';
 				   break;
 			     
@@ -253,7 +257,7 @@ class marketingrecruitmentforum extends controller
                   $this->setVarByRef('submitmsg', $submitmsg);
        /*-------------------------------------------------------------------------------------------*/
                   //submit studcard info
-                  $studcarddata  = $this->getSession('studentdata');
+                  $studcarddata    = $this->getSession('studentdata');
                   $idsearch = $this->getSession('idno');
                   $date = " ";
                   $surname  = " "; 
@@ -265,10 +269,11 @@ class marketingrecruitmentforum extends controller
                   $telcode  = " ";
                   $faculty  = " ";
                   $course = " ";
-                
-                foreach($studcarddata as $resdata){
+              if(!empty($studcarddata)){  
+              foreach($studcarddata as $resdata){
                     
                     $date = $resdata['date'];
+                    //echo $date;
                     $surname  = $resdata['surname'];
                     $name = $resdata['name'];
                     $schoolname = $resdata['schoolname'];
@@ -286,13 +291,15 @@ class marketingrecruitmentforum extends controller
                       
                       $this->dbstudentcard->updatestudinfo($idsearch,$date,$surname,$name,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$faculty,$course);
                       //echo 'update sucessfull';
+                      //$this->dbstudentcard->updatestudinfo($idsearch,$studcarddata);
                       
                       
                 } else {
                 
-                      if(!empty($studcarddata)){
+                      //if(!empty($studcarddata)){
                         $this->dbstudentcard->addstudcard($studcarddata);
-                      }
+                     // }
+               }
                }
       /*-------------------------------------------------------------------------------------------*/            
                   //submit slu activities
@@ -465,24 +472,28 @@ class marketingrecruitmentforum extends controller
                     $surname  = $v['surname'];
                     $name     = $v['name'];
                     $addy     = $v['postaddress'];
+                    //$postcode = $v['postcode'];
                   }
                   elseif($selected == true && $val[1]){
                     
                     $surname  = $v['surname'];
                     $name     = $v['name'];
                     $addy     = $v['postaddress'];
+                    //$postcode = $v['postcode'];
                   }
                   elseif($selected == true && $val[2]){
                     
                     $surname  = $v['surname'];
                     $name     = $v['name'];
                     $addy     = $v['postaddress'];
+                   // $postcode = $v['postcode'];
                   }
                   
                 }
                 $this->setVarByRef('surname',$surname);
                   $this->setVarByRef('name',$name);
                   $this->setVarByRef('addy',$addy);
+                  $this->setVarByRef('postcode',$postcode);
                 //$this->setVarByRef('selected',$selected);
                 //var_dump($selected);
                 return  'followupletter_tpl.php';
@@ -511,6 +522,12 @@ class marketingrecruitmentforum extends controller
        *create a session variable to store the array data in       
        */
        $idnum = $this->getSession('idno');
+       if(!empty($idnum)){
+          $id = $idnum;
+       }else{
+          $id = "No id number";
+       }
+       
        $username  = $this->objUser->fullname();
        $exemp = $this->getParam('exemptionqualification');
        $relsubject = $this->getParam('relevantsubject');
@@ -530,7 +547,7 @@ class marketingrecruitmentforum extends controller
        
        $studentdata  = array('createdby'        =>  $username,
                              'datecreated'      =>  date('Y-m-d'),
-                             'idnumber'         =>  $idnum,
+                             'idnumber'         =>  $id,
                              'date'             =>  $this->getParam('datestud'),
                              'surname'          =>  $this->getParam('txtsurname'),
                              'name'             =>  $this->getParam('txtname'),
