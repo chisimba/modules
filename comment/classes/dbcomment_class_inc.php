@@ -104,7 +104,7 @@ class dbcomment extends dbTable
     public function deleteRecord($id)
     {
         $tableName = $this->getParam('tableName', NULL);
-        $sourceId = $this->getParam('sourceId', NULL);
+        $sourceId = $this->getParam('sourceid', NULL);
         $moduleCode = $this->getParam('moduleCode', NULL);
 
         if ($id!=NULL) {
@@ -126,7 +126,7 @@ class dbcomment extends dbTable
     public function getComment($tableName, $sourceId)
     {
         $where = " WHERE tablename='" . $tableName
-        . "' AND sourceId='" . $sourceId . "'";
+        . "' AND sourceid='" . $sourceId . "'";
         return $this->getAll($where);
     }
 
@@ -146,7 +146,7 @@ class dbcomment extends dbTable
     public function getMostRecentComment($tableName, $sourceId, $count = 10000000, $offset = 0)
     {
         $where = " WHERE tablename='" . $tableName
-        . "' AND sourceId='" . $sourceId . "' ORDER BY modified DESC LIMIT " . $offset . ", " . $count;
+        . "' AND sourceid='" . $sourceId . "' ORDER BY modified DESC LIMIT " . $offset . ", " . $count;
         return $this->getAll($where);
     }
     
@@ -167,7 +167,7 @@ class dbcomment extends dbTable
     public function getCommentByType($tableName, $sourceId, $type, $count = 10000000, $offset = 0)
     {
         $where = " WHERE tablename='" . $tableName
-        . "' AND sourceId='" . $sourceId . "' AND type = '" . $type . "' LIMIT " . $offset . ", " . $count;
+        . "' AND sourceid='" . $sourceId . "' AND type = '" . $type . "' LIMIT " . $offset . ", " . $count;
         return $this->getAll($where);
     }
 
