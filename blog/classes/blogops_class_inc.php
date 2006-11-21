@@ -983,7 +983,7 @@ class blogops extends object
 
 		$qpform->addRule('postcontent',$this->objLanguage->languageText("mod_blog_phrase_pcontreq", "blog"),'required');
 
-		$qptitletxt = $this->objLanguage->languageText("mod_blog_posttitle", "blog");
+		$qptitletxt = $this->objLanguage->languageText("mod_blog_posttitle", "blog") . "<br />";
 		$qptitle = new textinput('posttitle');
 		//post content textarea
 		$qpcontenttxt = $this->objLanguage->languageText("mod_blog_pcontent", "blog");
@@ -1007,6 +1007,7 @@ class blogops extends object
 		$qpcontent->rows = 5;
 
 		$qpform->addToForm($qptitletxt . $qptitle->show());
+		$qpform->addToForm("<br />");
 		$qpform->addToForm($qpcontenttxt . $qpcontent->show());
 		$qpform->addToForm($qpcattxt . $qpDrop->show());
 
