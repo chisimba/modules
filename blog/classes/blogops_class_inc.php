@@ -1009,6 +1009,7 @@ class blogops extends object
 		$qpform->addToForm($qptitletxt . $qptitle->show());
 		$qpform->addToForm("<br />");
 		$qpform->addToForm($qpcontenttxt . $qpcontent->show());
+		$qpform->addToForm("<br />");
 		$qpform->addToForm($qpcattxt . $qpDrop->show());
 
 		$this->objqpCButton = &new button($this->objLanguage->languageText('mod_blog_word_blogit', 'blog'));
