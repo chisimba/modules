@@ -72,13 +72,14 @@ public  function  getAllactivities(){
        
        
        $myTable->startRow();
-       $myTable->row_attributes = " class = \"$oddEven\"";
+       (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
        $myTable->addCell($sessCard['date'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['activity'], "15%", null, "left","widelink");
        $myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['area'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['province'],"15%", null, "left","widelink");
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       $myTable->row_attributes = " class = \"$oddOrEven\"";
+       $rowcount++;
        $myTable->endRow();
         
    }  
@@ -118,10 +119,11 @@ public  function getactivdate($activitydate = NULL){
           foreach($activitydate as $sessCard){
             
              $myTable->startRow();
-             $myTable->row_attributes = " class = \"$oddEven\"";
+             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
              $myTable->addCell($sessCard['date'],"15%", null, "left","widelink");
              $myTable->addCell($sessCard['activity'], "15%", null, "left","widelink");
-             $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+             $myTable->row_attributes = " class = \"$oddOrEven\"";
+             $rowcount++;
              $myTable->endRow();
          }  
       return $myTable->show();
@@ -160,9 +162,10 @@ public  function activitytype(){
     foreach($results as $sessCard){
        
        $myTable->startRow();
-       $myTable->row_attributes = " class = \"$oddEven\"";
+       (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
        $myTable->addCell($sessCard['activity'],"15%", null, "left","widelink");
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       $myTable->row_attributes = " class = \"$oddOrEven\"";
+       $rowcount++;
        $myTable->endRow();
         
    }  
@@ -200,10 +203,11 @@ public function activitybyprov(){
     foreach($results as $sessCard){
        
        $myTable->startRow();
-       $myTable->row_attributes = " class = \"$oddEven\"";
+       (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
        $myTable->addCell($sessCard['activity'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['province'], "15%", null, "left","widelink");
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       $myTable->row_attributes = " class = \"$oddOrEven\"";
+       $rowcount++;
        $myTable->endRow();
         
    }  
@@ -218,8 +222,8 @@ public function activitybyprov(){
         
         $results = $this->objactivity->getactivityarea();
         
-        $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
-         $this->appendArrayVar('headerParams', $css1);
+        //$css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
+        // $this->appendArrayVar('headerParams', $css1);
          $oddEven = 'even';
          $myTable =& $this->newObject('htmltable', 'htmlelements');
          $myTable->cellspacing = '1';
@@ -243,11 +247,12 @@ public function activitybyprov(){
       
        
        $myTable->startRow();
-       $myTable->row_attributes = " class = \"$oddEven\"";
+       (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
        //$myTable->addCell($sessCard['schoolname'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['activity'], "15%", null, "left","widelink");
        $myTable->addCell($sessCard['area'],"15%", null, "left","widelink");
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       $myTable->row_attributes = " class = \"$oddOrEven\"";
+       $rowcount++;
        $myTable->endRow();
         
    }  
@@ -262,8 +267,8 @@ public   function activitybyschool($activschool = NULL){
       
         //$results = $this->objactivity->getactivityschool();
     if(isset($activschool)){
-        $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
-         $this->appendArrayVar('headerParams', $css1);
+        //$css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
+       //  $this->appendArrayVar('headerParams', $css1);
          $oddEven = 'even';
          $myTable =& $this->newObject('htmltable', 'htmlelements');
          $myTable->cellspacing = '1';
@@ -285,11 +290,12 @@ public   function activitybyschool($activschool = NULL){
        
        
        $myTable->startRow();
-       $myTable->row_attributes = " class = \"$oddEven\"";
+       (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
        $myTable->addCell($sessCard['activity'], "15%", null, "left","widelink");
        $myTable->addCell($sessCard['schoolname'], "15%", null, "left","widelink");
-       $myTable->css_class = 'highlightrows';
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+       //$myTable->css_class = 'highlightrows';
+       $myTable->row_attributes = " class = \"$oddOrEven\"";
+       $rowcount++;
        $myTable->endRow();
         
    }  

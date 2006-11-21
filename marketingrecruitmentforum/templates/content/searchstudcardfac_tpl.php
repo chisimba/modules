@@ -42,7 +42,7 @@
        }    
        $course
        $faculty->extra = ' onChange="document.searchsluresults.submit()"';*/
-       $course = " ";
+       //$course = " ";
        $this->objFaculties =& $this->getObject('dbstudentcard','marketingrecruitmentforum');
        $faculty = $this->objFaculties->getFaculties('code',$course['faculty_code']);
     	 $objDropdown = new dropdown('facultynameval');                                                //create dropdown list

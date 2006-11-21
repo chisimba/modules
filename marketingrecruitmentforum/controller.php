@@ -257,7 +257,8 @@ class marketingrecruitmentforum extends controller
                   $this->setVarByRef('submitmsg', $submitmsg);
        /*-------------------------------------------------------------------------------------------*/
                   //submit studcard info
-                  $studcarddata    = $this->getSession('studentdata');
+                  $studcarddata []   = $this->getSession('studentdata');
+                  
                   $idsearch = $this->getSession('idno');
                   $date = " ";
                   $surname  = " "; 
@@ -270,36 +271,64 @@ class marketingrecruitmentforum extends controller
                   $faculty  = " ";
                   $course = " ";
               if(!empty($studcarddata)){  
-              foreach($studcarddata as $resdata){
-                    
-                    $date = $resdata['date'];
-                    //echo $date;
-                    $surname  = $resdata['surname'];
-                    $name = $resdata['name'];
-                    $schoolname = $resdata['schoolname'];
-                    $postaddress  = $resdata['postaddress'];
-                    $postcode = $resdata['postcode']; 
-                    $telnumber  = $resdata['telnumber'];
-                    $telcode  = $resdata['telcode'];
-                    $faculty  = $resdata['faculty'];
-                    $course = $resdata['course'];
-                
-                
-                }
-                $idexist = $this->dbstudentcard->getstudbyid($idsearch);
-                if(!empty($idexist)){
-                      
-                      $this->dbstudentcard->updatestudinfo($idsearch,$date,$surname,$name,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$faculty,$course);
-                      //echo 'update sucessfull';
-                      //$this->dbstudentcard->updatestudinfo($idsearch,$studcarddata);
-                      
-                      
-                } else {
-                
-                      //if(!empty($studcarddata)){
-                        $this->dbstudentcard->addstudcard($studcarddata);
-                     // }
-               }
+                      foreach($studcarddata as $resdata){
+                            //echo '<pre>';
+                            //print_r($studcarddata);die;
+                            $date = $resdata['date'];
+                           // echo $date;
+                            $surname  = $resdata['surname'];
+                            $name = $resdata['name'];
+                            $schoolname = $resdata['schoolname'];
+                            $postaddress  = $resdata['postaddress'];
+                            $postcode = $resdata['postcode']; 
+                            $telnumber  = $resdata['telnumber'];
+                            $telcode  = $resdata['telcode'];
+                            $faculty  = $resdata['faculty'];
+                            $course = $resdata['course'];
+                            $exemption  = $resdata['exemption'];
+                            $relsubject = $resdata['relevantsubject'];
+                            $sdcase = $resdata['sdcase'];
+                        
+                        
+                        }
+                        $idexist = $this->dbstudentcard->getstudbyid($idsearch);
+                        if(!empty($idexist)){
+                              
+                              $this->dbstudentcard->updatestudinfo($idsearch,$date,$surname,$name,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$relsubject,$sdcase);
+                              //echo 'update sucessfull';
+                              //$this->dbstudentcard->updatestudinfo($idsearch,$studcarddata);
+                              
+                              
+                        } else {
+                        
+                        if(!empty($studcarddata)){
+                          foreach($studcarddata as $resdata){
+                            //echo '<pre>';
+                            //print_r($studcarddata);die;
+                            $createdby  = $resdata['createdby'];
+                            $datecreate = $resdata['datecreated'];
+                            $date = $resdata['date'];
+                           // echo $date;
+                           $id  = $resdata['idnumber'];
+                            $surname  = $resdata['surname'];
+                            $name = $resdata['name'];
+                            $schoolname = $resdata['schoolname'];
+                            $postaddress  = $resdata['postaddress'];
+                            $postcode = $resdata['postcode']; 
+                            $telnumber  = $resdata['telnumber'];
+                            $telcode  = $resdata['telcode'];
+                            $faculty  = $resdata['faculty'];
+                            $course = $resdata['course'];
+                            $exemption  = $resdata['exemption'];
+                            $relsubject = $resdata['relevantsubject'];
+                            $sdcase = $resdata['sdcase'];
+                        
+                        
+                        }                                            
+                         //       $this->dbstudentcard->addstudcard($studcarddata);
+                       }
+                                    $this->dbstudentcard->addstudcard($createdby,$datecreate,$id,$date,$surname,$name,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$relsubject,$sdcase);
+                       }
                }
       /*-------------------------------------------------------------------------------------------*/            
                   //submit slu activities
@@ -311,11 +340,10 @@ class marketingrecruitmentforum extends controller
                   //submit all schoolist information
                 $result = $this->getSession('nameschool');
                 //$schoolinfodata = array();
-                 $schoolinfodata  = $this->getSession('schoolvalues');
+                 $schoolinfodata [] = $this->getSession('schoolvalues');
                   if(!empty($schoolinfodata)){
                   
                       foreach($schoolinfodata as $data){  
-                          //      $schoolname       =  $data['schoolname'];
                                 $schooladdress    =  $data['schooladdress'];
                                 $telnumber        =  $data['telnumber'];
                                 $faxnumber        =  $data['faxnumber'];
@@ -330,7 +358,17 @@ class marketingrecruitmentforum extends controller
                       
                     }else{
                         if(!empty($schoolinfodata)){
-                          $this->dbschoollist->addsschoollist($schoolinfodata);
+                          foreach($schoolinfodata as $data){  
+                                $createdby  =   $data['createdby'];
+                                $datecreate =   $data['datecreated'];
+                                $schooladdress    =  $data['schooladdress'];
+                                $telnumber        =  $data['telnumber'];
+                                $faxnumber        =  $data['faxnumber'];
+                                $email            =  $data['email'];
+                                $principal        =  $data['principal'];
+                                $guidanceteacher  =  $data['guidanceteacher'];    
+                      }
+                          $this->dbschoollist->addsschoollist($createdby,$datecreate,$result,$schooladdress,$telnumber,$faxnumber,$email,$principal,$guidanceteacher);
                         }
                     }
                     

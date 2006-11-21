@@ -32,10 +32,13 @@ class dbstudentcard extends dbTable{
 	}
 /*------------------------------------------------------------------------------*/
   //insert all studcard information to database
-  function addstudcard($studcarddata)
+  function addstudcard($createdby,$datecreate,$id,$date,$surname,$name,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$relsubject,$sdcase)
 	{
-        $studinfo = $this->insert($studcarddata);
-        return $studinfo;
+        //$studinfo = $this->insert($createdby,$datecreate,$id,$date,$surname,$name,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$faculty,$course);
+        //return $studinfo;
+        $stmt = "INSERT INTO tbl_studcard(createdby,datecreated,id,date,surname,name,schoolname,postaddress,postcode,telnumber,telcode,exemption,faculty,course,relevantsubject,sdcase) values('$createdby','$datecreate','$id','$date','$surname','$name','$schoolname','$postaddress','$postcode','$telnumber','$telcode','$exemption','$faculty','$course','$relsubject','$sdcase')";
+        $name = $this->getArray($stmt);
+        return $name;
   }	
 /*------------------------------------------------------------------------------*/
   //function addfaccourse($faccourse)
@@ -207,12 +210,12 @@ public function getstudqualify()
     return $studid;
   }
 /*------------------------------------------------------------------------------*/
-  public function updatestudinfo($idsearch,$date,$surname,$name,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$faculty,$course){
+  public function updatestudinfo($idsearch,$date,$surname,$name,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$relsubject,$sdcase){
   
     //$res  = $this->update($id,$date,$surname,$name,$schoolname,$postaddress,$postcode,$telnumber,$telcode)
-    $stmt = "UPDATE tbl_studcard SET date = '$date', surname = '$surname', name ='$name', schoolname = '$schoolname', postaddress='$postaddress', postcode='$postcode', telnumber='$telnumber', telcode='$telcode' where idnumber = '$idsearch'";
+    $stmt = "UPDATE tbl_studcard SET date = '$date', surname = '$surname', name ='$name', schoolname = '$schoolname', postaddress='$postaddress', postcode='$postcode', telnumber='$telnumber', telcode='$telcode',exemption='$exemption',relevantsubject='$relsubject',sdcase='$sdcase' where idnumber = '$idsearch'";
     $res  = $this->query($stmt);
-    return  $res;
+    return  $stmt;
   }
 /*------------------------------------------------------------------------------*/
   public function addfaculties()

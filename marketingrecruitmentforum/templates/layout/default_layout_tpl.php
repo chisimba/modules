@@ -19,7 +19,7 @@
    $this->objUtils  = & $this->getObject('defaultpageutils','semsutilities');
   //$rightcolumn = $this->objpageutils->getQuickSearchBox(); -- used within the defaultutils class therefore dont need to specify 
   
-   $displaycontent = $this->objUtils->getDefaultLayout($leftcolumn,false);  
+   $displaycontent = $this->objUtils->getDefaultLayout($leftcolumn,true);  
    //$displaycontent->css_class = 'div#wrapper';  
   echo  $displaycontent;
     

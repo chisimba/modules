@@ -67,11 +67,12 @@ class searchfaculty extends object{
                
                
                $myTable->startRow();
-               $myTable->row_attributes = " class = \"$oddEven\"";
+               (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                $myTable->addCell($sessFac['surname'],"20%", null, "left","widelink");
                $myTable->addCell($sessFac['name'], "20%", null, "left","widelink");
                $myTable->addCell($sessFac['faculty'], "20%", null, "left","widelink");
-               $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+               $myTable->row_attributes = " class = \"$oddOrEven\"";
+               $rowcount++;
                $myTable->endRow();
                 
            }  
@@ -116,14 +117,15 @@ class searchfaculty extends object{
                
                
                $myTable->startRow();
-               $myTable->row_attributes = " class = \"$oddEven\"";
+               (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                $myTable->addCell($sessFac['surname'],"20%", null, "left","widelink");
                $myTable->addCell($sessFac['name'], "20%", null, "left","widelink");
                $myTable->addCell($sessFac['schoolname'], "20%", null, "left","widelink");
                $myTable->addCell('Yes', "20%", null, "left","widelink");
 //               $myTable->addCell($sessFac['exemption'], "20%", null, "left","widelink");
                $myTable->addCell($sessFac['faculty'], "20%", null, "left","widelink");
-               $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+               $myTable->row_attributes = " class = \"$oddOrEven\"";
+               $rowcount++;
                $myTable->endRow();
                 
            }  
@@ -169,14 +171,15 @@ class searchfaculty extends object{
                
                
                $myTable->startRow();
-               $myTable->row_attributes = " class = \"$oddEven\"";
+               (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                $myTable->addCell($sessFac['surname'],"20%", null, "left","widelink");
                $myTable->addCell($sessFac['name'], "20%", null, "left","widelink");
                $myTable->addCell($sessFac['schoolname'], "20%", null, "left","widelink");
                $myTable->addCell('Yes', "20%", null, "left","widelink");
                //$myTable->addCell($sessFac['relevantsubject'], "20%", null, "left","widelink");
                $myTable->addCell($sessFac['faculty'], "20%", null, "left","widelink");
-               $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+               $myTable->row_attributes = " class = \"$oddOrEven\"";
+               $rowcount++;
                $myTable->endRow();
                 
            }  
@@ -222,13 +225,14 @@ class searchfaculty extends object{
                
                
                $myTable->startRow();
-               $myTable->row_attributes = " class = \"$oddEven\"";
+               (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                $myTable->addCell($sessFac['surname'],"20%", null, "left","widelink");
                $myTable->addCell($sessFac['name'], "20%", null, "left","widelink");
                $myTable->addCell($sessFac['schoolname'], "20%", null, "left","widelink");
                $myTable->addCell($sessFac['course'], "20%", null, "left","widelink");
                $myTable->addCell($sessFac['faculty'], "20%", null, "left","widelink");
-               $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+               $myTable->row_attributes = " class = \"$oddOrEven\"";
+               $rowcount++;
                $myTable->endRow();
                 
            }  
@@ -274,14 +278,15 @@ class searchfaculty extends object{
                
                
                $myTable->startRow();
-               $myTable->row_attributes = " class = \"$oddEven\"";
+               (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                $myTable->addCell($sessFac['surname'],"20%", null, "left","widelink");
                $myTable->addCell($sessFac['name'], "20%", null, "left","widelink");
                $myTable->addCell($sessFac['schoolname'], "20%", null, "left","widelink");
                $myTable->addCell('Yes', "20%", null, "left","widelink");
                //$myTable->addCell($sessFac['sdcase'], "20%", null, "left","widelink");
                $myTable->addCell($sessFac['faculty'], "20%", null, "left","widelink");
-               $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+               $myTable->row_attributes = " class = \"$oddOrEven\"";
+               $rowcount++;
                $myTable->endRow();
                 
            }  

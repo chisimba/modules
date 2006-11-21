@@ -30,9 +30,12 @@ class dbschoollist extends dbTable{
 	}
 /*------------------------------------------------------------------------------*/
   //insert all studcard information to database
-  public function addsschoollist($schoolinfodata)
+  public function addsschoollist($createdby,$datecreate,$result,$schooladdress,$telnumber,$faxnumber,$email,$principal,$guidanceteacher)
 	{
-        $schooldata = $this->insert($schoolinfodata);
+       // $schooldata = $this->insert($result,$schooladdress,$telnumber,$faxnumber,$email,$principal,$guidanceteacher);
+       // return $schooldata;
+        $stmt = "INSERT INTO tbl_schoollist(createdby,datecreated,schoolname,schooladdress,telnumber,faxnumber,email,principal,guidanceteacher) values('$createdby','$datecreate','$result','$schooladdress','$telnumber','$faxnumber','$email','$principal','$guidanceteacher')";
+        $schooldata = $this->getArray($stmt);
         return $schooldata;
   }	
 /*------------------------------------------------------------------------------*/
