@@ -105,7 +105,7 @@ class cmsadmin extends controller
         *
         * @var object
         */
-        var $objBlocks;
+        var $_objBlocks;
 
         /**
         * Constructor
@@ -320,19 +320,48 @@ class cmsadmin extends controller
                     return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
 
                     case 'addblock':
-                        $pageId = $this->getParam('pageid', NULL);
-                        $id = $this->getParam('id', NULL);
-                        $this->setVarByRef('pageId', $pageId);
-                        $this->setVarByRef('id', $id);
-                        return 'cms_block_add_tpl.php';
-                    case 'deleteblock':
-                        $this->_objBlocks->deleteBlock($this->getParam('id'));
-                        $pageId = $this->getParam('pageId', NULL);
-                        if (!empty($pageId)) {
-                            return $this->nextAction('addcontent', array('id' => $sectionId), 'cmsadmin');
-                        } else {
-                            return $this->nextAction('frontpages', array('filter' => 'trash'));
-                        }
+                    $closePage = $this->getParam('closePage', FALSE);
+                    $this->setVarByRef('closePage', $closePage);
+                    $pageId = $this->getParam('pageid', NULL);
+                    $blockForm  = $this->_objBlocks->getAddRemoveBlockForm($pageId);
+                    $this->setVarByRef('blockForm', $blockForm);
+                    return 'cms_blocks_tpl.php';
+
+                    case 'saveblock':
+                    $pageId = $this->getParam('pageid', NULL);
+                    $blocks = $this->_objBlocks->getBlockEntries();
+                    $currentBlocks = $this->_objBlocks->getBlocksForPage($pageId);
+                    foreach($blocks as $block){
+                       $exists = FALSE;
+                       $blockName = $block['blockname'];
+                       $blockId = $block['id'];
+                       if(!empty($currentBlocks)){
+                         foreach($currentBlocks as $cb){
+                            if($cb['blockid'] == $blockId){
+                              $exists = TRUE;
+                            }
+                         }
+                       }
+                       if($this->getParam($blockId)){
+                         if(!$exists){
+                           $this->_objBlocks->add($pageId, $blockId);
+                         }  
+                       } else {
+                           if($exists){
+                             $this->_objBlocks->deleteBlock($pageId, $blockId);
+                           }  
+                       }
+                    }
+                    return $this->nextAction('addblock', array('pageid' => $pageId), 'cmsadmin');
+
+                    case 'changeblocksorder':
+                    $id = $this->getParam('id');
+                    $ordering = $this->getParam('ordering');
+                    $pageId = $this->getParam('pageid');
+                    $this->_objBlocks->changeOrder($id, $ordering, $pageId);
+
+                    return $this->nextAction('addblock', array('pageid' => $pageId), 'cmsadmin');
+                        
                 }
             } catch (customException $e) {
                 echo customException::cleanUp($e);

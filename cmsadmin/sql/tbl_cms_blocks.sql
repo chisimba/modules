@@ -14,13 +14,13 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
-        'blockid' => array(
+  'blockid' => array(
 		'type' => 'text',
 		'length' => 32
 		),
-        'ordering' => array(
+  'ordering' => array(
 		'type' => 'integer',
-                'length' => 11
+    'length' => 11
 		)
 );
 

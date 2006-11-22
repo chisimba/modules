@@ -65,6 +65,13 @@ class cmsutils extends object
         */
         protected $_objConfig;
         /**
+        * The blocks object
+        *
+        * @var object
+        */
+        var $_objBlocks;
+        
+        /**
          * Constructor
          */
         public function init()
@@ -73,6 +80,7 @@ class cmsutils extends object
                 $this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
                 $this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
                 $this->_objConfig = & $this->newObject('altconfig', 'config');
+                $this->_objBlocks = & $this->newObject('dbblocks', 'cmsadmin');
                 $this->objSkin = & $this->newObject('skin', 'skin');
                 $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
                 $this->_objUser = & $this->newObject('user', 'security');
@@ -1624,16 +1632,16 @@ class cmsutils extends object
             //initiate objects
             $table = & $this->newObject('htmltable', 'htmlelements');
             $titleInput = & $this->newObject('textinput', 'htmlelements');
-            $bodyInput =  $this->newObject('htmlarea', 'htmlelements');
-            $introInput =  $this->newObject('htmlarea', 'htmlelements');
-            $h3 = &$this->newObject('htmlheading', 'htmlelements');
+            $bodyInput = & $this->newObject('htmlarea', 'htmlelements');
+            $introInput = & $this->newObject('htmlarea', 'htmlelements');
+            $h3 = & $this->newObject('htmlheading', 'htmlelements');
             $button = & $this->newObject('button', 'htmlelements');
             $table2 = & $this->newObject('htmltable', 'htmlelements');
             $frontPage = & $this->newObject('checkbox', 'htmlelements');
             $published = & $this->newObject('checkbox', 'htmlelements');
             $objOrdering = & $this->newObject('textinput', 'htmlelements');
             $objForm =& $this->newObject('form', 'htmlelements');
-
+              
             if ($contentId == NULL) {
                 $action = 'createcontent';
                 $editmode = FALSE;
@@ -1772,9 +1780,9 @@ class cmsutils extends object
             $middleColumnContent .= $h3->show();
             $middleColumnContent .= $objForm->show();
             
-
             return $middleColumnContent;
         }
+
 }
 
 ?>

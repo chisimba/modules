@@ -88,8 +88,11 @@ foreach($arrSections as $section)
   $tableRow[] = $this->_objLayouts->getLayoutDescription($section['layout']);
   $tableRow[] = $this->_objSections->getPageOrderType($section['ordertype']);
   $tableRow[] = $visibleLink;
-	$tableRow[] = $editIcon.'&nbsp;'.$delIcon.'&nbsp;'.'&nbsp;'.'&nbsp;'.$this->_objSections->getOrderingLink($section['id']);
-
+  if($viewType == 'root'){
+	  $tableRow[] = $editIcon.'&nbsp;'.$delIcon.'&nbsp;'.'&nbsp;'.'&nbsp;'.$this->_objSections->getOrderingLink($section['id']);
+  } else {
+      $tableRow[] = $editIcon.'&nbsp;'.$delIcon;
+  }
   	
   $table->addRow($tableRow, $oddOrEven);
   

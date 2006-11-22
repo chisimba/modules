@@ -586,7 +586,6 @@ class dbcontent extends dbTable
                 die();
             }
         }
-
 }
 
 ?>

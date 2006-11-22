@@ -9,6 +9,9 @@
 //Set layout template
 $this->setLayoutTemplate('cms_layout_tpl.php');
 
+//Load the link class
+$this->loadClass('link', 'htmlelements');
+
 //Create htmlheading for page title
 $objH = & $this->newObject('htmlheading', 'htmlelements');
 $objH->type = '2';
@@ -207,18 +210,30 @@ if (count($pages) > '0')
         }
         $frontPageLink->link = $objIcon->show();
         
+        //Get blocks icon
+        $objIcon->setIcon('modules/blocks');
+        $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addremoveblocks', 'cmsadmin');
+        $blockIcon = $objIcon->show();
+        // set up link to view contact details in a popup window
+        $objBlocksLink = new link('javascript:void(0)');
+        $objBlocksLink -> link = $blockIcon;
+        $objBlocksLink -> extra = "onclick = \"javascript:window.open('" . $this->uri(array('action' => 'addblock', 'sectionId' => $sectionId, 'pageid' => $pageId)) . "', 'branch', 'width=500, height=350, top=50, left=50, scrollbars')\"";
+        //Check if blocks module is registered
+        $this->objModule = &$this->newObject('modules', 'modulecatalogue');
+        $isRegistered = $this->objModule->checkIfRegistered('blocks');
+        
+                        
         //Add sub sec data to table
         $objPagesTable->startRow();
-
         $objPagesTable->addCell($pageTitle, '', '', '', $class);
-
         $objPagesTable->addCell($articleDate, '', '', '', $class);
-
         $objPagesTable->addCell($visibleIcon, '', '', '', $class);
-
         $objPagesTable->addCell($this->_objContent->getOrderingLink($sectionId, $pageId), '', '', '', $class);
-
-        $objPagesTable->addCell($frontPageLink->show().'&nbsp;'.$editIcon.'&nbsp;'.$delIcon, '', '', '', $class);
+        if ($isRegistered) {
+          $objPagesTable->addCell($objBlocksLink->show().'&nbsp;'.$frontPageLink->show().'&nbsp;'.$editIcon.'&nbsp;'.$delIcon, '', '', '', $class);
+        } else {
+            $objPagesTable->addCell($frontPageLink->show().'&nbsp;'.$editIcon.'&nbsp;'.$delIcon, '', '', '', $class);
+        }
         $objPagesTable->endRow();
 
     }
