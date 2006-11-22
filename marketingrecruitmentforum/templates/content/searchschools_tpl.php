@@ -46,6 +46,7 @@
           $searchlist->addOption(NULL, ''.'[ Select A School from the list ]');
           $searchlist->addOption($sessschool,$sessschool);
        }
+       $searchlist->setSelected($this->getParam('namevalues'));
        $searchlist->extra = ' onChange="document.searchsschool.submit()"';
        
 /*--------------------------------------------------------------------------------------------*/       

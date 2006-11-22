@@ -51,7 +51,9 @@
     	 $objDropdown = new dropdown('names');                                                //create dropdown list
        $objDropdown->addFromDB($this->objFaculties->getFaculties(), 'name', 'name', $faculty);    //get value from db....populate dropdown method of dropclass
       // $searchlist->addOption(NULL, ''.'[ Select A School from the list ]');
+      
        $objDropdown->addOption(NULL, ''.'[ Select A School from the list ]');
+       $objDropdown->setSelected($this->getParam('names'));
        $objDropdown->extra = ' onChange="document.reportfaculty.submit()"';
        
        //dropdown heading
