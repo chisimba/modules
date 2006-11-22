@@ -17,14 +17,15 @@
        $this->objschoolname->readfiledata();
         
        $list  = new dropdown('schoolname');
+       
        $shoolvalues  = $this->getSession('schoolnames');
        sort($shoolvalues);
        foreach($shoolvalues as $sessschool){
-          
+          $list->addOption(NULL, ''.'[ Select A School from the list ]');
           $list->addOption($sessschool,$sessschool);
-          $list->extra = ' onChange="document.school.submit()"';
+          
        }
- 
+       $list->extra = ' onChange="document.school.submit()"';
 /*----------------------------------------------------------------------------*/
       /**
        *create a form to place all elements on

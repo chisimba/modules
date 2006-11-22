@@ -43,7 +43,7 @@
        $shoolvalues = $this->getSession('schoolnames');
        sort($shoolvalues);
        foreach($shoolvalues as $sessschool){
-          
+          $searchlist->addOption(NULL, ''.'[ Select A School from the list ]');
           $searchlist->addOption($sessschool,$sessschool);
        }
        $searchlist->extra = ' onChange="document.searchsschool.submit()"';

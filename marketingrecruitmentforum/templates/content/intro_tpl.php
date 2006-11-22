@@ -9,7 +9,7 @@
   */
  $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
  $this->objMainheading->type=1;
- $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_introduction','marketingrecruitmentforum');
+ $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_introduction1','marketingrecruitmentforum');
  
  $about = $this->objLanguage->languageText('mod_marketingrecruitmentforum_about','marketingrecruitmentforum');
  $datacapturing = $this->objLanguage->languageText('mod_marketingrecruitmentforum_datacapturing','marketingrecruitmentforum');
@@ -32,7 +32,6 @@
  
 // $postings  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_postings','marketingrecruitmentforum');
 // $postinginfo = $this->objLanguage->languageText('mod_marketingrecruitmentforum_postinginfo','marketingrecruitmentforum');
- 
  
  
  

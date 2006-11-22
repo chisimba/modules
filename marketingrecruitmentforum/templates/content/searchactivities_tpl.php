@@ -50,9 +50,12 @@
        $shoolvalues = $this->getSession('schoolnames');
        sort($shoolvalues);
        foreach($shoolvalues as $sessschool){
+       
+          $schoollist->addOption(NULL, ''.'[ Select A School from the list ]');
           $schoollist->addOption($sessschool,$sessschool);
+          $schoollist->extra = ' onChange="document.searchactivity.submit()"';
        }  
-       $schoollist->extra = ' onChange="document.searchactivity.submit()"';
+      
 /*------------------------------------------------------------------------------*/
     /**
      *create datepicker objects
@@ -120,7 +123,7 @@
     $Activityinfo->tabName = 'ActivityInfo';
  
     $Activityinfo->addTab('activity', 'All Activities',$results.'<br />');
-    $Activityinfo->addTab('dates', 'Activities Between Dates',$mydateTab->show().' <br />'. '<br />' . $activdates.'<br />');
+    $Activityinfo->addTab('dates', 'Activities By Dates',$mydateTab->show().' <br />'. '<br />' . $activdates.'<br />');
     $Activityinfo->addTab('type', 'All Activities By Type ',$activtype.'<br />');
     $Activityinfo->addTab('province', 'Activities By Province',$province.'<br />');
     $Activityinfo->addTab('area', 'Activities By Area',$area.'<br />');
@@ -137,6 +140,6 @@
    $objForm->displayType = 3;
    $objForm->addToForm("<center>".$this->objMainheading->show() . '<br />' . '<br />'.'<b>'.'<i>'. $infomsg .'</i>'.'</b>'."</center>". ' ' . '<br />' . '<br />' . $Activityinfo->show() );
     
-   echo $objForm->show();
+   echo $objForm->show()."<br />";
 /*------------------------------------------------------------------------------*/   
 ?>

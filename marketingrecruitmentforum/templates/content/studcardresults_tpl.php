@@ -32,8 +32,10 @@
      */
      $PrintCardLink = array('params' => array("action" => "NULL"), 'module' => 'marketingrecruitmentforum', 'linktext' => 'Print');         
 /*------------------------------------------------------------------------------*/        
+ 
+/**
     
-    /**
+  
      *create dropdwonlist with all schoolnames
      */
        //create an object of the schoolnames class
@@ -46,11 +48,14 @@
        $schoollist  = new dropdown('schoollistnames');
        $shoolvalues = $this->getSession('schoolnames');
        sort($shoolvalues);
+       
        foreach($shoolvalues as $sessschool){
-          $schoollist->addOption($sessschool,$sessschool);
+	        $schoollist->addOption(NULL, ''.'[ Select A School from the list ]');
+	       $schoollist->addOption($sessschool,$sessschool);
        }
+       $schoollist->setSelected($this->getParam('schoollistnames'));
        $schoollist->extra = ' onChange="document.searchresults.submit()"'; 
-
+     
       
 /*------------------------------------------------------------------------------*/    
     /**

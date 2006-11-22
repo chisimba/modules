@@ -47,6 +47,7 @@
        $faculty = $this->objFaculties->getFaculties('code',$course['faculty_code']);
     	 $objDropdown = new dropdown('facultynameval');                                                //create dropdown list
        $objDropdown->addFromDB($this->objFaculties->getFaculties(), 'name', 'name', $faculty);    //get value from db....populate dropdown method of dropclass
+       $objDropdown->addOption(NULL, '[ Select A Faculty from the list ]');
        $objDropdown->extra = ' onChange="document.searchsluresults.submit()"';         
 /*---------------------------------------------------------------------------------------------------*/
      /**
@@ -70,10 +71,10 @@
     
     
     $facultyinfo->addTab('faculty', 'All Students Entered For Faculty',$facultyentered . '<br />');
-    $facultyinfo->addTab('exemption', 'All Students With Exemption',$exemptionfaculty. '<br />');
-    $facultyinfo->addTab('relsubjects', 'All With Relevant Subjects',$facrelsubj. '<br />');
-    $facultyinfo->addTab('course', 'All Students Per Faculty Course',$coursefaculty. '<br />');
-    $facultyinfo->addTab('sdcase', 'All SD Cases Per Faculty',$sdcasefac. '<br />');
+    $facultyinfo->addTab('exemption', 'Students Exemption',$exemptionfaculty. '<br />');
+    $facultyinfo->addTab('relsubjects', 'Relevant Subjects',$facrelsubj. '<br />');
+    $facultyinfo->addTab('course', 'Faculty Course',$coursefaculty. '<br />');
+    $facultyinfo->addTab('sdcase', 'SD Cases',$sdcasefac. '<br />');
 /*---------------------------------------------------------------------------------------------------*/    
  
   /**
