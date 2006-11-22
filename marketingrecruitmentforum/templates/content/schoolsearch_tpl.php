@@ -21,7 +21,7 @@
        $shoolvalues  = $this->getSession('schoolnames');
        sort($shoolvalues);
        foreach($shoolvalues as $sessschool){
-          $list->addOption(NULL, ''.'[ Select A School from the list ]');
+          $list->addOption(NULL, ''.'Select a school from the list');
           $list->addOption($sessschool,$sessschool);
           
        }

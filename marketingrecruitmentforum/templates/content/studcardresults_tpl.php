@@ -50,7 +50,7 @@
        sort($shoolvalues);
        
        foreach($shoolvalues as $sessschool){
-	        $schoollist->addOption(NULL, ''.'[ Select A School from the list ]');
+	        $schoollist->addOption(NULL, ''.'Select a school from the list ]');
 	       $schoollist->addOption($sessschool,$sessschool);
        }
        $schoollist->setSelected($this->getParam('schoollistnames'));
