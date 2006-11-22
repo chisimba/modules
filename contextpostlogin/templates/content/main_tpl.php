@@ -51,6 +51,8 @@ if (count($contextList) > 0)
 //public courses
 if(count($otherCourses) > 0)
 {
+	$other = $featureBox->show('Browse Courses', $filter);
+	
 	foreach($otherCourses as $context)
 	{
 		$lecturers = $this->_objUtils->getContextLecturers($context['contextcode']);

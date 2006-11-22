@@ -58,22 +58,28 @@ class utils extends object
 	   */
 	  public function getContextList()
 	  {
-	  	
-	  	$objGroups = & $this->newObject('managegroups', 'contextgroups');
-	  	$contextCodes = $objGroups->usercontextcodes($this->_objUser->userId());
-	  	$objMM = & $this->newObject('mmutils', 'mediamanager');
-	  	
-	  	$arr = array();
-	  	foreach ($contextCodes as $code)
-	  	{
-	  		$arr[] = $this->_objDBContext->getRow('contextcode',$code); 
-	  		
-	  	}
-	  	
-	  	
-	  	
-	  	//print_r($arr);
-	  	return $arr;
+	  	 try
+	  	 {
+		  	$objGroups = & $this->newObject('managegroups', 'contextgroups');
+		  	$contextCodes = $objGroups->usercontextcodes($this->_objUser->userId());
+		  	$objMM = & $this->newObject('mmutils', 'mediamanager');
+		  	
+		  	$arr = array();
+		  	foreach ($contextCodes as $code)
+		  	{
+		  		$arr[] = $this->_objDBContext->getRow('contextcode',$code); 
+		  		
+		  	}
+		  	
+		  	
+		  	
+		  	//print_r($arr);
+		  	return $arr;
+	  	 }
+	  	catch (Exception $e) {
+    		echo customException::cleanUp('Caught exception: '.$e->getMessage());
+    		exit();
+    	}
 	  }
 	  
 	  /**
@@ -82,28 +88,68 @@ class utils extends object
 	   * @return array
 	   * @access public
 	   */
-	  public function getOtherContextList($myCourses)
+	  public function getOtherContextList($myCourses, $filter = NULL)
+	  {
+	  	try{
+		  	//$objGroups = & $this->newObject('managegroups', 'contextgroups');
+		    $objMM = $this->newObject('mmutils', 'mediamanager');
+		  	$arr = array();
+		  	if($filter)
+		  	{
+		  		if($filter == 'listall')
+		  		{
+		  			$filter = '';
+		  		} 
+		  		else 
+		  		{
+		  			$filter = '  AND title LIKE "'.$filter.'%" ';
+		  		}
+		  	}
+		  	//get all public courses
+		  	$publicCourses = $this->_objDBContext->getAll( 'WHERE access = "Public" OR access = "" '.$filter.'  ORDER BY title ');
+		  	//print_r($publicCourses);
+		  	
+		  	foreach($publicCourses as $pCourse)
+		  	{
+		  		if(!$objMM->deep_in_array($pCourse['contextcode'], $myCourses))
+		  		{
+		  			$arr[] = $this->_objDBContext->getRow('contextcode',$pCourse['contextcode']); 
+		  		}
+		  		
+		  	}
+		  
+		  	
+		  	return $arr;//$objGroups->usercontextcodes($this->_objUser->userId());
+	  	}
+	  	catch (Exception $e) {
+    		echo customException::cleanUp('Caught exception: '.$e->getMessage());
+    		exit();
+    	}
+	  }
+	  
+	  /**
+	   * Method to get a filter list to filter the courses
+	   * @param array $courseList the list of courses
+	   * @return string
+	   * @access public
+	   */
+	  public function getFilterList($courseList)
 	  {
 	  	
-	  	//$objGroups = & $this->newObject('managegroups', 'contextgroups');
-	    $objMM = $this->newObject('mmutils', 'mediamanager');
-	  	$arr = array();
-	  	//get all public courses
-	  	$publicCourses = $this->_objDBContext->getAll( 'WHERE access = "Public" OR access = "" ');
-	  	//print_r($publicCourses);
-	  	
-	  	foreach($publicCourses as $pCourse)
-	  	{
-	  		if(!$objMM->deep_in_array($pCourse['contextcode'], $myCourses))
-	  		{
-	  			$arr[] = $this->_objDBContext->getRow('contextcode',$pCourse['contextcode']); 
-	  		}
+	  	try {
+	  		$objAlphabet=& $this->getObject('alphabet','navigation');
+	  		$linkarray=array('filter'=>'LETTER');
+			$url=$this->uri($linkarray,'contextpostlogin');
+	  		$str = $objAlphabet->putAlpha($url);
+	  		return $str;
 	  		
 	  	}
-	  
-	  	
-	  	return $arr;//$objGroups->usercontextcodes($this->_objUser->userId());
+	  	catch (Exception $e) {
+    		echo customException::cleanUp('Caught exception: '.$e->getMessage());
+    		exit();
+    	}
 	  }
+	  
 	  
 	  /**
 	   * Method to get the left widgets
@@ -114,9 +160,21 @@ class utils extends object
 	  {
 	  	//Put a block to test the blocks module
 		$objBlocks = & $this->newObject('blocks', 'blocks');
-		$leftSideColumn = '';
+		//$userMenu  = &$this->newObject('postloginmenu','toolbar');
+		$leftSideColumn = $this->getUserPic();//$userMenu->show();;
 		//Add loginhistory block
-		$leftSideColumn .= $objBlocks->showBlock('calendar', 'eventscalendar');
+		//$leftSideColumn .= $objBlocks->showBlock('calendar', 'eventscalendar');
+		
+		
+		$leftSideColumn .= $objBlocks->showBlock('latest', 'blog');
+		
+		$leftSideColumn .= $objBlocks->showBlock('wikipedia', 'websearch');
+		
+		$leftSideColumn .= $objBlocks->showBlock('latestpodcast', 'podcast');
+		
+		
+		
+		/*
 		$leftSideColumn .= $objBlocks->showBlock('loginstats', 'context');
 		//Add guestbook block
 		$leftSideColumn .= $objBlocks->showBlock('guestinput', 'guestbook');
@@ -127,9 +185,21 @@ class utils extends object
 		//Add random quote block
 		$leftSideColumn .= $objBlocks->showBlock('rquote', 'quotes');
 		$leftSideColumn .= $objBlocks->showBlock('today_weather','weather');
+		*/
 	      return $leftSideColumn;
 	  }
 	   
+	  /**
+	   * Method to get the user images
+	   * 
+	   */
+	  public function getUserPic()
+	  {
+	  	$objUserPic =& $this->getObject('imageupload', 'useradmin');
+	  	$objBox = & $this->newObjecT('featurebox', 'navigation');
+	  	$str = '<p align="center"><img src="'.$objUserPic->userpicture($this->_objUser->userId() ).'" alt="User Image" /></p>';
+	  	return $objBox->show($this->_objUser->fullName(), $str);
+	  }
 	  
 	  /**
 	   * Method to get the right widgets
@@ -143,7 +213,7 @@ class utils extends object
 		//Add the getting help block
 		$rightSideColumn .= $objBlocks->showBlock('dictionary', 'dictionary');
 		//Add the latest in blog as a a block
-		$rightSideColumn .= $objBlocks->showBlock('latest', 'blog');
+		//$rightSideColumn .= $objBlocks->showBlock('latest', 'blog');
 		//Add the latest in blog as a a block
 		$rightSideColumn .= $objBlocks->showBlock('latestpodcast', 'podcast');
 		//Add a block for chat
