@@ -45,9 +45,11 @@
        //$course = " ";
        $this->objFaculties =& $this->getObject('dbstudentcard','marketingrecruitmentforum');
        $faculty = $this->objFaculties->getFaculties('code',$course['faculty_code']);
-    	 $objDropdown = new dropdown('facultynameval');                                                //create dropdown list
+    	 $objDropdown = new dropdown('facultynameval'); 
+       //$objDropdown->addOption(NULL, '[ Select A Faculty from the list ]');                                               //create dropdown list
        $objDropdown->addFromDB($this->objFaculties->getFaculties(), 'name', 'name', $faculty);    //get value from db....populate dropdown method of dropclass
-       $objDropdown->addOption(NULL, '[ Select A Faculty from the list ]');
+      
+       $objDropdown->setSelected($this->getParam('facultynameval',NULL));
        $objDropdown->extra = ' onChange="document.searchsluresults.submit()"';         
 /*---------------------------------------------------------------------------------------------------*/
      /**

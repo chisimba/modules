@@ -19,7 +19,7 @@
     
     $editstud = $this->objLanguage->languageText('mod_marketingrecruitmentforum_editstud', 'marketingrecruitmentforum');
     $editslu = $this->objLanguage->languageText('mod_marketingrecruitmentforum_editslu', 'marketingrecruitmentforum');
-    $editschool = $this->objLanguage->languageText('mod_marketingrecruitmentforum_editsschool', 'marketingrecruitmentforum');
+    $editschool = $this->objLanguage->languageText('mod_marketingrecruitmentforum_editsschool1', 'marketingrecruitmentforum');
 
     $editStudLink = new link($this->uri(array('action' => 'editstudcard', 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit')));
     $editStudLink->link = $editstud;
@@ -458,7 +458,7 @@
 
     
     $objschooltab = new tabbedbox();
-    $objschooltab->addTabLabel('School list');
+    $objschooltab->addTabLabel('School Details');
     $objschooltab->addBoxContent("<div align=\"right\">" .$editSchoollink->show() . "</div>".'<br />' . $strelements2);
 
     $Studcardinfo = & $this->newObject('tabbox','marketingrecruitmentforum');

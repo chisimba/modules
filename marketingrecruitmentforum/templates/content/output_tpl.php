@@ -446,7 +446,7 @@
 
     
     $objschooltab = new tabbedbox();
-    $objschooltab->addTabLabel('School list');
+    $objschooltab->addTabLabel('School Details');
     $objschooltab->addBoxContent("<div align=\"right\">" .$editSchoollink->show() . "</div>".'<br />' . $strelements2);
 
     $Studcardinfo = & $this->newObject('tabbox','marketingrecruitmentforum');

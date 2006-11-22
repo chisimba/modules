@@ -53,8 +53,9 @@
        
           $schoollist->addOption(NULL, ''.'[ Select A School from the list ]');
           $schoollist->addOption($sessschool,$sessschool);
+      }  
+          $schoollist->setSelected($this->getParam('schoollistnames'));
           $schoollist->extra = ' onChange="document.searchactivity.submit()"';
-       }  
       
 /*------------------------------------------------------------------------------*/
     /**
