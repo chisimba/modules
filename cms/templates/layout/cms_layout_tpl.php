@@ -1,7 +1,7 @@
 <?php
 
 
-$objFeatureBox = $this->newObject('featurebox', 'navigation');
+$objFeatureBox =& $this->newObject('featurebox', 'navigation');
 $objBlocks = & $this->newObject('blocks', 'blocks');
 $objLucene = & $this->newObject('results', 'lucene');
 $objModule = & $this->newObject('modules', 'modulecatalogue');
@@ -9,8 +9,8 @@ $objLink = & $this->newObject('link', 'htmlelements');
 $objTreeMenu =& $this->newObject('cmstree', 'cmsadmin');
 $objUser =& $this->newObject('user', 'security');
 $objLanguage =& $this->newObject('language', 'language');
-$objArticleBox = $this->newObject('articlebox', 'cmsadmin');
-
+$objArticleBox =& $this->newObject('articlebox', 'cmsadmin');
+$objDbBlocks =& $this->newObject('dbblocks', 'cmsadmin');
 //Insert script for generating tree menu
 $js = $this->getJavascriptFile('tree.js', 'cmsadmin');
 $this->appendArrayVar('headerParams', $js);
@@ -46,12 +46,35 @@ if(!$this->getParam('query') == '')
     $searchResults = '';
 }
 
-       $cssLayout =& $this->newObject('csslayout', 'htmlelements');
-       $cssLayout->setNumColumns(2);
-       $cssLayout->setLeftColumnContent($leftSide);
+/***************** Right Side Content *******************************/
 
+$hasBlocks = FALSE;
+$rightSide = "";
 
-	   
-       $cssLayout->setMiddleColumnContent($this->getBreadCrumbs().$this->getContent().$searchResults.$this->footerStr);
-       echo $cssLayout->show();
+if($objModule->checkIfRegistered('blocks')){
+  $pageId = $this->getParam('id');
+
+  $pageBlocks = $objDbBlocks->getBlocksForPage($pageId);
+  if(!empty($pageBlocks)){
+    $hasBlocks = TRUE;
+    foreach($pageBlocks as $pbks){
+        $blockId = $pbks['blockid'];
+        $blockToShow = $objDbBlocks->getBlock($blockId);
+        
+        $rightSide .= $objBlocks->showBlock($blockToShow['blockname'], $blockToShow['moduleid']);
+    }
+  }  
+}
+
+$cssLayout =& $this->newObject('csslayout', 'htmlelements');
+if($hasBlocks){
+  $cssLayout->setNumColumns(3);
+  $cssLayout->setRightColumnContent($rightSide);
+} else {
+    $cssLayout->setNumColumns(2);
+}  
+$cssLayout->setLeftColumnContent($leftSide);
+$cssLayout->setMiddleColumnContent($this->getBreadCrumbs().$this->getContent().$searchResults.$this->footerStr);
+
+echo $cssLayout->show();
 

@@ -133,7 +133,7 @@ class cms extends controller
 	            	
 	            case 'showsection':
 	              $section = $this->_objSections->getSection($this->getParam('id'));
-	              $siteTitle = '<title>'.$section['title'].'</title>';
+	              $siteTitle = $section['title'];
 	              $this->setVarByRef('pageTitle', $siteTitle);
 	            	$this->setVar('content', $this->_objUtils->showSection());
 	            	return 'cms_section_tpl.php';
@@ -146,7 +146,7 @@ class cms extends controller
 	              $this->setVarByRef('fromadmin', $fromadmin);
 	              
                 $page = $this->_objContent->getContentPage($this->getParam('id'));
-	              $siteTitle = '<title>'.$page['title'].'</title>';
+	              $siteTitle = $page['title'];
 	              $this->setVarByRef('pageTitle', $siteTitle);
 	              
 	            	$this->setVar('content', $this->_objUtils->showBody());
