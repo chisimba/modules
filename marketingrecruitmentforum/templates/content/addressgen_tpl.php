@@ -30,8 +30,8 @@
      
      
     
-       $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
-       $this->appendArrayVar('headerParams', $css1);
+      // $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
+      // $this->appendArrayVar('headerParams', $css1);
        $oddEven = 'even';
        $myTable =& $this->newObject('htmltable', 'htmlelements');
        $myTable->cellspacing = '1';
@@ -39,7 +39,7 @@
        $myTable->border='0';
        $myTable->width = '100%';
        $myTable->css_class = 'highlightrows';
-       $myTable->row_attributes = " class = \"$oddEven\"";
+    //   $myTable->row_attributes = " class = \"$oddEven\"";
       
   
         $myTable->startHeaderRow();
@@ -53,13 +53,16 @@
   
     foreach($results as $sessCard){
      
-       $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+    //   $oddOrEven = ($rowcount == 0) ? "odd" : "even";
        
        $myTable->startRow();
+       (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
        $myTable->addCell($sessCard['surname'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
        $myTable->addCell($sessCard['postaddress'],"15%", null, "left","widelink");
        $myTable->addCell($check,"15%", null, "left","widelink");
+       $myTable->row_attributes = " class = \"$oddOrEven\"";
+       $rowcount++;
        $myTable->endRow();
         
    }
