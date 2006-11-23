@@ -56,7 +56,8 @@ class dbcontent extends dbTable
         }
 
         /**
-         * MEthod to save a record to the database
+         * Method to save a record to the database
+         *
          * @access public
          * @return bool
          */
@@ -110,6 +111,7 @@ class dbcontent extends dbTable
 
         /**
          * Method to edit a record
+         *
          * @access public
          * @return bool
          */
@@ -166,11 +168,9 @@ class dbcontent extends dbTable
 
         }
 
-
-
-
         /**
          * Method move a record to trash
+         *
          * @param string $id The id of the record that needs to be deleted
          * @access public
          * @return bool
@@ -181,11 +181,9 @@ class dbcontent extends dbTable
             return $this->update('id', $id, array('trash' => 1));
         }
 
-
-
-
         /**
          * Method to undelete content
+         *
          * @param string $id The id of the record that needs to be deleted
          * @access public
          * @return bool
@@ -197,9 +195,9 @@ class dbcontent extends dbTable
         }
 
 
-
         /**
         * Method to delete a content page
+        *
         * @param string $id
         * @return boolean
         * @access public
@@ -250,6 +248,7 @@ class dbcontent extends dbTable
 
         /**
          * Method to get the content
+         *
          * @return  array
          * @access public
          * @param string filter The Filter 
@@ -274,6 +273,7 @@ class dbcontent extends dbTable
 
         /**
          * Method to get a page content record
+         *
          * @param string $id The id of the page content
          * @access public
          * @return array
@@ -286,6 +286,7 @@ class dbcontent extends dbTable
 
         /**
          * Method to the order number for the page
+         *
          * @param 
          * @access public
          * @return int
@@ -327,6 +328,7 @@ class dbcontent extends dbTable
         /**
         * Method to update all the content with the 
         * sections that will be deleted
+        *
         * @param string $sectionId The section Id
         * @return boolean
         * @access public
@@ -441,7 +443,6 @@ class dbcontent extends dbTable
          * @param string $id The id of the entry 
          * @return string $links The html for the links
          * @access public
-         * @return bool
          * @author Warren Windvogel
          */
         public function getOrderingLink($sectionid, $id)
@@ -578,7 +579,7 @@ class dbcontent extends dbTable
                                      'modified' => $this->now(),
                                      'created_by' => $entry['created_by']
                                  );
-                        $this->update('id', $entry['id'], $upArr);
+                        return $this->update('id', $entry['id'], $upArr);
                     }
                 }
             } catch (customException $e) {

@@ -64,6 +64,7 @@ class cmstree extends object
 
  	/**
 	 * Method to return back the tree code
+	 *
 	 * @param string $currentNode The currently selected node, which should remain open
      * @param bool $admin Select whether admin user or not
 	 * @return string
@@ -77,6 +78,7 @@ class cmstree extends object
 
 	/**
 	 * Method to build the tree
+	 *
 	 * @param string $currentNode The currently selected node, which should remain open
      * @param bool $admin Select whether admin user or not
 	 * @return string
@@ -98,6 +100,7 @@ class cmstree extends object
 
 	/**
 	 * Method to build the next level in tree
+	 *
      * @param string $parentid The node id whose child nodes need to be built
 	 * @param string $currentNode The currently selected node, which should remain open
      * @param bool $admin Select whether admin user or not
@@ -147,6 +150,7 @@ class cmstree extends object
 
 	/**
 	 * Method to get add all content for a particular section node
+	 *
 	 * @param string $id The id of the section node
 	 * @return string
 	 * @access public
@@ -168,6 +172,7 @@ class cmstree extends object
 
 	/**
 	 * Method to get all child nodes for a particular node
+	 *
 	 * @param string $parentId The parent node id
 	 * @return array
 	 * @access public
@@ -179,6 +184,7 @@ class cmstree extends object
 
 	/**
 	 * Method to get node for a particular id
+	 *
 	 * @param string $id The node id
 	 * @return array
 	 * @access public
@@ -190,6 +196,7 @@ class cmstree extends object
 
 	/**
 	 * Method to get all content nodes for a particular section node
+	 *
 	 * @param string $sectionId The section id
 	 * @return array
 	 * @access public
@@ -201,6 +208,7 @@ class cmstree extends object
 
 	/**
 	 * Method to get number of child nodes for a particular node
+	 *
 	 * @param string $parentId The parent node id
 	 * @return int
 	 * @access public
@@ -212,6 +220,7 @@ class cmstree extends object
 
 	/**
 	 * Method to get the number of content nodes for a section id
+	 *
 	 * @param string $id The section id
 	 * @return int
 	 * @access public

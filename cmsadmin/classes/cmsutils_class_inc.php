@@ -1,5 +1,5 @@
 <?php
-/* -------------------- dbTable class ----------------*/
+/* -------------------- cmsutils class ----------------*/
 // security check - must be included in all scripts
 
 if (!$GLOBALS['kewl_entry_point_run'])
@@ -10,6 +10,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 // end security check
 /**
 * This object hold all the utility method that the cms modules might need
+*
 * @package cms
 * @category cmsadmin
 * @copyright 2004, University of the Western Cape & AVOIR Project
@@ -23,11 +24,11 @@ if (!$GLOBALS['kewl_entry_point_run'])
 class cmsutils extends object
 {
         /**
-            * The sections  object
-            *
-            * @access private
-            * @var object
-           */
+         * The sections  object
+         *
+         * @access private
+         * @var object
+         */
         protected $_objSections;
         /**
         * The Content object
@@ -67,9 +68,10 @@ class cmsutils extends object
         /**
         * The blocks object
         *
+        * @access private
         * @var object
         */
-        var $_objBlocks;
+        protected $_objBlocks;
         
         /**
          * Constructor
@@ -92,21 +94,10 @@ class cmsutils extends object
         }
 
         /**
-         * Method to reoder records
-         */
-        public function reOrder()
-        {
-            try {}
-            catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
-        }
-
-        /**
          * Method to detemine the access
+         *
          * @param int $access The access
-         * @return string
+         * @return string Registered if 1 else Public
          * @access public
          */
         public function getAccess($access)
@@ -125,6 +116,7 @@ class cmsutils extends object
 
         /**
          * Method to get the images dropdown
+         *
          * @access public
          * @param   string $name The name of the field
          * @param  string $selected the selected value
@@ -152,6 +144,7 @@ class cmsutils extends object
 
         /**
          * Method to get the image position dropdown
+         *
          * @access public
          * @param   string $name The name of the field
          * @return string
@@ -162,7 +155,6 @@ class cmsutils extends object
                 $objDropDown = & $this->newObject('dropdown', 'htmlelements');
                 $objDropDown->name = $name;
                 //fill the drop down with the list of images
-                //TODO
                 $objDropDown->addOption('0', 'Centre');
                 $objDropDown->addOption('1', 'Left');
                 $objDropDown->addOption('2', 'Right');
@@ -179,8 +171,9 @@ class cmsutils extends object
          * Method to get the Yes/No radio  box
          *
          * @param  string $name The name of the radio box
+         * @param string $selected The option to set as selected
          * @access public
-         * @return string
+         * @return string Html for radio buttons
          */
         public function getYesNoRadion($name, $selected = '1')
         {
@@ -209,10 +202,9 @@ class cmsutils extends object
         /**
          * Method to get the Access List dropdown
          *
-         * @var string $name The name of the radio box
          * @access public
          * @param string $name The name of the field
-         * @return string
+         * @return string Html for access dropdown
          */
         public function getAccessList($name)
         {
@@ -233,7 +225,6 @@ class cmsutils extends object
         }
 
         /**
-         *
          * Method to get the layout options for a section
          * At the moment there are 4 types of layouts
          * The layouts will be diplayed as images for selection
@@ -355,7 +346,7 @@ class cmsutils extends object
          * in a ordered way. It should also conform to the
          * section template for the section that this page is in
          *
-         * @return string
+         * @return string The content to be displayed on the front page
          * @access public
          */
         public function getFrontPageContent()
@@ -440,7 +431,7 @@ class cmsutils extends object
          * Method to generate the content for a section
          *
          * @access public
-         * @return string
+         * @return string The content displayed when a section is selected
          */
         public function showSection($module = "cms")
         {
@@ -473,7 +464,6 @@ class cmsutils extends object
         {
             try {
                 $pageId = $this->getParam('pageid', '');
-
                 $orderType = $arrSection['ordertype'];
                 $showIntro = $arrSection['showintroduction'];
                 $showDate = $arrSection['showdate'];
@@ -763,7 +753,7 @@ class cmsutils extends object
          * Method to show  the body of a pages
          *
          * @access public
-         * @return string
+         * @return string The page content to be displayed
          */
         public function showBody()
         {
@@ -892,7 +882,7 @@ class cmsutils extends object
          * Method to generate the navigation
          *
          * @access public
-         * @return string
+         * @return string The html for the side bar link / navigation
          */
         public function getNav()
         {
@@ -951,6 +941,7 @@ class cmsutils extends object
 
         /**
         * Method to generate the bread crumbs
+        *
         * @param void
         * @return string
         * @access public
@@ -1233,14 +1224,16 @@ class cmsutils extends object
                     $image = '<'.$img[0].'>';
                     $linkText = $img[1];
                     $noSpaces = strlen($matches[0]);
-
+                    //Add space for indentation of node levels
                     for ($i = 1; $i < $noSpaces; $i++) {
                         $links .= '&nbsp;&nbsp;';
                     }
-
+                    //Add folder image
                     $links .= $image;
+                    //Create link to section
                     $objLink->link($this->uri(array('action' => 'viewsection', 'id' => $node['id'])));
                     $objLink->link = $linkText;
+                    //Add link to section
                     $links .= $objLink->show();
                     $links .= '<br/>';
                 }
@@ -1294,27 +1287,27 @@ class cmsutils extends object
         public function getAddEditSectionForm($sectionId = NULL, $parentid = NULL)
         {
 
-            $initRadioDisplay = "
-                                <script type='text/javascript' language='javascript'>
+            $initRadioDisplay = '
+                                <script type="text/javascript" language="javascript">
                                 <!--
                                 function initRadioDisplay()
                                 {
-                                var len;
-                                var index;
-                                len = document.addsection.display.length;
-                                for (index=0;index<len;index++) {
-                                if (document.addsection.display[index].checked) {
-                                xajax_processSection(document.addsection.display[index].value);
-                                break;
-                            }
-                            }
-                            }
+                                    var len;
+                                    var index;
+                                    len = document.addsection.display.length;
+                                    for(index=0;index<len;index++){
+                                       if(document.addsection.display[index].checked){
+                                          xajax_processSection(document.addsection.display[index].value);
+                                          break;
+                                       }
+                                    }
+                                }
                                 //-->
-                                </script>
-                                ";
+                                </script>';
+                                
             $this->appendArrayVar('headerParams',$initRadioDisplay);
             $this->appendArrayVar('bodyOnLoad','initRadioDisplay();');
-
+            
             //initiate objects
             $table = & $this->newObject('htmltable', 'htmlelements');
             $titleInput = & $this->newObject('textinput', 'htmlelements');
@@ -1345,6 +1338,7 @@ class cmsutils extends object
 
             //Layout radio
             $radio = new radio ('display');
+            $radio->id = 'display';
             $radio->addOption('page', $this->objLanguage->languageText('mod_cmsadmin_layout_pagebypage', 'cmsadmin').'<br /><img src="modules/cmsadmin/resources/section_page.gif" />');
             $radio->addOption('previous', $this->objLanguage->languageText('mod_cmsadmin_layout_previouspagebelow', 'cmsadmin').'<br /><img src="modules/cmsadmin/resources/section_previous.gif" />');
             $radio->addOption('list', $this->objLanguage->languageText('mod_cmsadmin_layout_listofpages', 'cmsadmin').'<br /><img src="modules/cmsadmin/resources/section_list.gif" />');
@@ -1612,9 +1606,7 @@ class cmsutils extends object
 
             //Add content to the output layer
             $middleColumnContent = "";
-
             $middleColumnContent .= $h3->show();
-
             $middleColumnContent .= $objForm->show();
 
             return $middleColumnContent;
@@ -1625,6 +1617,7 @@ class cmsutils extends object
          *
          * @param string $contentId The id of the content to be edited. Default NULL for adding new section
          * @access public
+         * @return string $middleColumnContent The form used to create and edit a page
          * @author Warren Windvogel
          */
         public function getAddEditContentForm($contentId = NULL, $section = NULL)

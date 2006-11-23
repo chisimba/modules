@@ -222,7 +222,6 @@ class dbcontentfrontpage extends dbTable
 	 * @param string $id The id of the entry 
 	 * @return string $links The html for the links
 	 * @access public
-	 * @return bool
 	 * @author Warren Windvogel
 	 */
 	public function getOrderingLink($id)

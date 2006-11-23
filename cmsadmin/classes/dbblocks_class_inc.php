@@ -11,8 +11,9 @@ if (!$GLOBALS['kewl_entry_point_run'])
 // end security check
 /**
 * Class to access the ContextCore Tables
-* @package cms
-* @category cmsadmin
+*
+* @package cmsadmin
+* @category cms
 * @copyright 2004, University of the Western Cape & AVOIR Project
 * @license GNU GPL
 * @version
@@ -25,13 +26,15 @@ class dbblocks extends dbTable
 {
 
         /**
-         * @var object $_objUser;
+         * @var object $_objUser
+         *
+         * @access protected
          */
         protected $_objUser;
 
 
         /**
-         * @var object $_objFrontPage t
+         * @var object $_objFrontPage 
          * 
          * @access protected
          */
@@ -44,9 +47,11 @@ class dbblocks extends dbTable
         protected $_objLanguage;
 
 
-        /**
-        * Constructor
-        */
+      /**
+       * Method to define the table
+       * 
+       * @access public
+       */
         public function init()
         {
             parent::init('tbl_cms_blocks');
@@ -54,15 +59,14 @@ class dbblocks extends dbTable
             $this->_objLanguage = & $this->newObject('language', 'language');
         }
 
-        /**
-         * MEthod to save a record to the database
-         *
-         * @param string $pageId The id of the page
-         * @param string $blockId The id of the block
-         * @access public
-         * @return bool
-         */
-
+       /**
+        * Method to save a record to the database
+        *
+        * @param string $pageId The id of the page
+        * @param string $blockId The id of the block
+        * @access public
+        * @return bool
+        */
         public function add($pageId, $blockId)
         {
             try {
@@ -86,6 +90,7 @@ class dbblocks extends dbTable
 
         /**
          * Method to edit a record
+         *
          * @access public
          * @return bool
          */
@@ -107,18 +112,15 @@ class dbblocks extends dbTable
 
                 return $this->update('id', $id, $newArr);
 
-                //print 'Saving new record';
             } catch (customException $e) {
                 echo customException::cleanUp($e);
                 die();
             }
-
-
         }
-
 
         /**
         * Method to delete a block
+        *
         * @param string $pageId The id of the page
         * @param string $blockId The id of the block
         * @return boolean
@@ -331,7 +333,6 @@ class dbblocks extends dbTable
             $objForm->name = 'addblockform';
             $objForm->id = 'addblockform';
             $objForm->setAction($this->uri(array('action' => 'saveblock', 'pageid' => $pageid), 'cmsadmin'));
-            //$objForm->setDisplayType();
 
             //Create table to store form elements
             $objTable =& $this->newObject('htmltable', 'htmlelements');

@@ -11,6 +11,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 // end security check
 /**
 * Class to access the ContextCore Tables
+*
 * @package cms
 * @category cmsadmin
 * @copyright 2004, University of the Western Cape & AVOIR Project
@@ -26,19 +27,23 @@ class dbsections extends dbTable
 
         /**
          * @var object $_objDBContent
+         *
          * @access protected
          */
         protected $_objDBContent;
 
         /**
          * @var object $_objLanguage
+         *
          * @access protected
          */
         protected $_objLanguage;
 
-        /**
-        * Constructor
-        */
+      /**
+       * Method to define the table
+       * 
+       * @access public
+       */
         public function init()
         {
             try {
@@ -53,9 +58,10 @@ class dbsections extends dbTable
 
         /**
          * Methode to get the list of sections
+         *
          * @access public
          * @param bool $isPublished TRUE | FALSE To get published sections
-         * @return array
+         * @return array An array of associative arrays of all sections
          */
         public function getSections($isPublished = FALSE)
         {
@@ -73,9 +79,10 @@ class dbsections extends dbTable
 
         /**
          * Methode to get the list of root nodes
+         *
          * @access public
          * @param bool $isPublished TRUE | FALSE To get published sections
-         * @return array
+         * @return array An array of associative arrays of all root nodes
          */
         public function getRootNodes($isPublished = FALSE)
         {
@@ -93,8 +100,9 @@ class dbsections extends dbTable
 
         /**
          * Method to get a Section
+         *
          * @param  string $id The section id
-         * @return array
+         * @return array An array of the sections details
          * @access public
          */
         public function getSection($id)
@@ -109,6 +117,7 @@ class dbsections extends dbTable
 
         /**
          * Method to the first sections id(pk)
+         *
          * @return string First sections id
          * @access public
          */
@@ -126,6 +135,7 @@ class dbsections extends dbTable
 
         /**
          * Method to add a section to the database
+         *
          * @access public
          * @return bool
          */
@@ -185,6 +195,7 @@ class dbsections extends dbTable
 
         /**
          * Method to edit a section in the database
+         *
          * @access public
          * @return bool
          */
@@ -273,6 +284,7 @@ class dbsections extends dbTable
 
         /**
          * Method to check if there is sections
+         *
          * @access public
          * @return boolean
          * 
@@ -291,6 +303,7 @@ class dbsections extends dbTable
 
         /**
          * Method to get the menutext for a section
+         *
          * @return string
          * @access public
          * @param string $id 
@@ -324,20 +337,6 @@ class dbsections extends dbTable
         }
 
         /**
-        * Method to delete a section 
-        * 
-        *
-        * 
-        * @param $string $id The section id
-        * @access public
-        * @return boolean
-        */ 
-        // public function deleteSection($id)
-        // {
-        //  $this->_objDBContent->resetSection($id);
-        //  return $this->delete('id', $id);
-        // }
-        /**
          * Method to check if a section has child/leaf node(s)
          *
          * @param string $id The id(pk) of the section
@@ -353,8 +352,6 @@ class dbsections extends dbTable
             } else {
                 $hasNodes = False;
             }
-
-            echo($hasNodes);
             return $hasNodes;
         }
 
@@ -491,17 +488,16 @@ class dbsections extends dbTable
          * Method to delete a section
          *
          * @param string $id The id(pk) of the section
-         * @return NULL
+         * @return bool
          * @access public
-          */
+         */
         public function deleteSection($id)
         {
-            //if cat has nodes delete nodes as well
-
-            if ($this->hasNodes($id)) {
+            try {
+             //if cat has nodes delete nodes as well
+             if ($this->hasNodes($id)) {
                 //get cat details
-                $category = $this->getSections($id);
-
+                $category = $this->getSection($id);
 
                 //get number of levels in section
                 $this->objCmsUtils = & $this->newObject('cmsutils', 'cmsadmin');
@@ -515,6 +511,7 @@ class dbsections extends dbTable
                     $nodes = $this->getAll('WHERE parentid = "'.$parentId.'" AND count = "'.$i.'"');
                     foreach($nodes as $node) {
                         $nodeIdArray[] = $node['id'];
+                        $parentId = $node['id'];
                     }
                 }
 
@@ -526,11 +523,15 @@ class dbsections extends dbTable
 
                 //delete original category
                 $this->_objDBContent->resetSection($id);
-
-                $this->delete('id', $id);
-            } else {
+                return $this->delete('id', $id);
+                
+             } else {
                 $this->_objDBContent->resetSection($id);
-                $this->delete('id', $id);
+                return $this->delete('id', $id);
+             }
+            } catch (Exception $e) {
+                echo 'Caught exception: ', $e->getMessage();
+                exit();
             }
         }
 
@@ -717,24 +718,47 @@ class dbsections extends dbTable
         }
     /**
     * Method to get the type of section in a human readable format
+    *
+    * @access public
     * @param string $orderType Type of Order Code
     * @return string containing the type of order in a human readable format.
     */
-    function getPageOrderType($orderType)
+    public function getPageOrderType($orderType)
     {
-        switch ($orderType)
-        {
-            case 'pageorder': $order = 'Manual Arrangement'; break;
-            case 'pagedate_asc': $order = 'Date Ascending'; break;
-            case 'pagedate_desc': $order = 'Date Descending'; break;
-            case 'pagetitle_asc': $order = 'Alphabetical by Title'; break;
-            case 'pagetitle_desc': $order = 'Reverse Alphabetical by Title'; break;
-            default: $order = 'unknown'; break;
-        }
+        try {
+         switch ($orderType)
+         {
+            case 'pageorder': 
+                $order = 'Manual Arrangement'; 
+                break;
+                
+            case 'pagedate_asc': 
+                $order = 'Date Ascending'; 
+                break;
+                
+            case 'pagedate_desc': 
+                $order = 'Date Descending'; 
+                break;
+                
+            case 'pagetitle_asc': 
+                $order = 'Alphabetical by Title'; 
+                break;
+                
+            case 'pagetitle_desc': 
+                $order = 'Reverse Alphabetical by Title'; 
+                break;
+                
+            default: 
+                $order = 'unknown'; 
+                break;
+         }
 
-        return $order;
-    }
+         return $order;
         
+           } catch (Exception $e) {
+               echo 'Caught exception: ', $e->getMessage();
+               exit();
+           }
+    }
 }
-
 ?>

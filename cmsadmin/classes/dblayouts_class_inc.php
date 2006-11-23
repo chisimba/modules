@@ -36,6 +36,7 @@ class dblayouts extends dbTable
 	
 	/**
 	 * Method to get the layouts
+	 *
 	 * @access public
 	 * @return array
 	 */
@@ -89,3 +90,4 @@ class dblayouts extends dbTable
 	
 	
 }
+?>
