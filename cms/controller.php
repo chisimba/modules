@@ -68,10 +68,11 @@ class cms extends controller
     */
     protected $inContextMode;
     
-    
-	/**
-	* Constructor
-	*/
+   /**
+    * Method to initialise the cms object
+    * 
+    * @access public 
+    */
 	public function init()
 	{
 		// instantiate object
@@ -91,8 +92,6 @@ class cms extends controller
 			} else {
 			    $this->inContextMode = FALSE;
 			}
-			
-			//$this->_objICal = & $this->newObject('icalendar', 'ical');
         
         }catch (Exception $e){
        	echo 'Caught exception: ',  $e->getMessage();
@@ -103,6 +102,9 @@ class cms extends controller
 	
 	/** 
 	* This is a method to determine if the user has to be logged in or not
+	*
+	* @access public
+	* @return bool FALSE
     */
      public function requiresLogin() // overides that in parent class
      {
@@ -110,11 +112,15 @@ class cms extends controller
 
      }
 	
-	/**
-	* The Dispatch  methed that the framework needs to evoke the controller
-	*/
-	public function dispatch()
-	{
+   /**
+    * Method to handle actions from templates
+    * 
+    * @access public
+    * @param string $action Action to be performed
+    * @return mixed Name of template to be viewed or function to call
+    */
+	 public function dispatch()
+	 {
 		try{
 	  	$action = $this->getParam('action');
 			$this->setLayoutTemplate('cms_layout_tpl.php');
@@ -122,35 +128,34 @@ class cms extends controller
 	        switch ($action){
 	            case null:
 	            case 'home':
-	              $content = $this->_objUtils->getFrontPageContent();
-	              if($content!=''){
+	               $content = $this->_objUtils->getFrontPageContent();
+	               if($content!=''){
 	            	  $this->setVarByRef('content', $content);	
 	            	  return 'cms_main_tpl.php';
-	            	} else {
-	            	    $firstSectionId = $this->_objSections->getFirstSectionId();
-                    return $this->nextAction('showsection', array('id'=>$firstSectionId,'sectionid'=>$firstSectionId));
-                }  
+	               } else {
+	            	  $firstSectionId = $this->_objSections->getFirstSectionId();
+                      return $this->nextAction('showsection', array('id'=>$firstSectionId,'sectionid'=>$firstSectionId));
+                   }  
 	            	
 	            case 'showsection':
-	              $section = $this->_objSections->getSection($this->getParam('id'));
-	              $siteTitle = $section['title'];
-	              $this->setVarByRef('pageTitle', $siteTitle);
-	            	$this->setVar('content', $this->_objUtils->showSection());
-	            	return 'cms_section_tpl.php';
+	               $section = $this->_objSections->getSection($this->getParam('id'));
+	               $siteTitle = $section['title'];
+	               $this->setVarByRef('pageTitle', $siteTitle);
+	               $this->setVar('content', $this->_objUtils->showSection());
+	               return 'cms_section_tpl.php';
 	            	
 	            case 'showcontent':
 	            case 'showfulltext':
-	              $fromadmin = $this->getParam('fromadmin', FALSE);
-	              $sectionId = $this->getParam('sectionid', NULL);
-	              $this->setVarByRef('sectionId', $sectionId);
-	              $this->setVarByRef('fromadmin', $fromadmin);
-	              
-                $page = $this->_objContent->getContentPage($this->getParam('id'));
-	              $siteTitle = $page['title'];
-	              $this->setVarByRef('pageTitle', $siteTitle);
-	              
-	            	$this->setVar('content', $this->_objUtils->showBody());
+	               $fromadmin = $this->getParam('fromadmin', FALSE);
+	               $sectionId = $this->getParam('sectionid', NULL);
+	               $this->setVarByRef('sectionId', $sectionId);
+	               $this->setVarByRef('fromadmin', $fromadmin);
+                   $page = $this->_objContent->getContentPage($this->getParam('id'));
+	               $siteTitle = $page['title'];
+	               $this->setVarByRef('pageTitle', $siteTitle);
+	               $this->setVar('content', $this->_objUtils->showBody());
 	            	return 'cms_content_tpl.php';
+	            	
 	            case 'ical':
 	               $objBlocks = & $this->newObject('blocks', 'blocks');
 	               //$objBlocks->showBlock('calendar', 'calendar')
@@ -158,8 +163,7 @@ class cms extends controller
 	            
 	               $this->setVar('content', $objCal->show(TRUE));
 	               $this->setVar('title', $objCal->title);
-	            	return 'cms_calendar_tpl.php';
-	            
+	               return 'cms_calendar_tpl.php';
 	
 	        }
          
@@ -169,7 +173,6 @@ class cms extends controller
         }
 	}
 	
-	
 	/**
 	 * Method to get the Sections on the left side of the menu
 	 * 
@@ -178,8 +181,7 @@ class cms extends controller
 	 */
 	public function getSectionMenu()
 	{
-	   $calArr =  array('text' => 'Calendar', 'uri' => $this->uri(array('action' => 'ical')));
-	   
+	    $calArr =  array('text' => 'Calendar', 'uri' => $this->uri(array('action' => 'ical')));
 		return $this->_objUtils->getSectionMenu();
 	}
 
