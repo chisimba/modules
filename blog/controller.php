@@ -136,6 +136,14 @@ class blog extends controller
 	public $objMsg;
 
 	/**
+	 * Comment interface object
+	 *
+	 * @var object
+	 * @var object
+	 */
+	public $objComments;
+
+	/**
      * Constructor method to instantiate objects and get variables
      *
      * @param void
@@ -170,6 +178,8 @@ class blog extends controller
 			$this->cleaner = &$this->getObject('htmlcleaner', 'utilities');
 			//icon object
 			$this->objIcon = &$this->getObject('geticon', 'htmlelements');
+			//comment interface class
+			$this->objComments = &$this->getObject('commentinterface', 'comment');
 
 			//Lucene indexing and search system
 			//$this->lucenedoc = &$this->getObject('doc','lucene');

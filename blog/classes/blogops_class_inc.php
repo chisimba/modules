@@ -277,6 +277,7 @@ class blogops extends object
 	 */
 	public function showPosts($posts)
 	{
+		$this->objComments = &$this->getObject('commentinterface', 'comment');
 		$ret = NULL;
 		//Middle column (posts)!
 		//break out the ol featurebox...
@@ -309,6 +310,7 @@ class blogops extends object
 				{
 					$this->objIcon = &$this->getObject('geticon', 'htmlelements');
 					$edIcon = $this->objIcon->getEditIcon($this->uri(array('action' => 'postedit', 'id' => $post['id'], 'module' => 'blog')));
+					$commentLink = $this->objComments->addCommentLink($type = NULL);
 					//put the edit icon into a table for layout purposes...
 					$tbl = $this->newObject('htmltable', 'htmlelements');
 					$tbl->cellpadding = 3;
@@ -320,7 +322,7 @@ class blogops extends object
 					$tbl->endHeaderRow();
 					$tbl->startRow();
 					$tbl->addCell($edIcon);
-					$tbl->addCell('');
+					$tbl->addCell($commentLink);
 					$tbl->addCell('');
 					$tbl->endRow();
 
@@ -487,6 +489,33 @@ class blogops extends object
 			}
 		}
 
+	}
+
+	/**
+	 * Method to scrub grubby html
+	 *
+	 * @param string $document
+	 * @return string
+	 */
+	function html2txt($document, $scrub = TRUE)
+	{
+		if($scrub == TRUE)
+		{
+			$search = array('@<script[^>]*?>.*?</script>@si',  // Strip out javascript
+            	   '@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
+               	   '@<style[^>]*?>.*?</style>@siU',    // Strip style tags properly
+               	   '@<![\s\S]*?--[ \t\n\r]*>@'        // Strip multi-line comments including CDATA
+				   );
+		}
+		else {
+			$search = array('@<script[^>]*?>.*?</script>@si',  // Strip out javascript
+            	   /*'@<[\/\!]*?[^<>]*?>@si',*/            // Strip out HTML tags
+               	   '@<style[^>]*?>.*?</style>@siU',    // Strip style tags properly
+               	   '@<![\s\S]*?--[ \t\n\r]*>@'        // Strip multi-line comments including CDATA
+				   );
+		}
+		$text = preg_replace($search, '', $document);
+		return $text;
 	}
 
 	/**

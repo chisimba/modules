@@ -407,6 +407,7 @@ class dbblog extends dbTable
 	{
 
 		$this->_changeTable("tbl_blog_posts");
+		$this->objblogOps = $this->getObject('blogops');
 
 		if($mode == NULL)
 		{
@@ -414,7 +415,7 @@ class dbblog extends dbTable
 			$this->ecleaner = $this->newObject('htmlcleaner', 'utilities');
 			$insarr = array('userid' => $userid,
 							'post_date' => date('r'),
-							'post_content' => $this->pcleaner->cleanHtml($postarr['postcontent']),
+							'post_content' => $this->pcleaner->cleanHtml($this->objblogOps->html2txt($postarr['postcontent'])),
 							'post_title' => $postarr['posttitle'],
 							'post_category' => $postarr['postcat'],
 							'post_excerpt' => $this->ecleaner->cleanHtml($postarr['postexcerpt']),
