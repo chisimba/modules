@@ -2,7 +2,21 @@
 <updates>
   <update>
     <table>
-      tbl_cmsadmin_sections
+      tbl_cms_content
+    </table>
+    <version>
+      1.24
+    </version>
+    <description>
+      removed menutext field
+    </description>
+    <data>
+        <remove>menutext</remove>
+    </data>
+  </update>  
+  <update>
+    <table>
+      tbl_cms_sections
     </table>
     <version>
       1.22
@@ -47,7 +61,7 @@
     </update>
   <update>
     <table>
-      tbl_cmsadmin_sections
+      tbl_cms_sections
     </table>
     <version>
       1.20

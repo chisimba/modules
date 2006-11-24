@@ -14,10 +14,6 @@ $fields = array(
 		'type' => 'text',
 		'length' => 100
 		),
-	'menutext' => array(
-		'type' => 'text',
-		'length' => 100
-		),
 	'introtext' => array(
 		'type' => 'clob',
 		),

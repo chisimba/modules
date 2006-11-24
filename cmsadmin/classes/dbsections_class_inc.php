@@ -657,16 +657,6 @@ class dbsections extends dbTable
                             $changeTo = $content['ordering'];
                             $toChange = $content['ordering'] + 1;
                             $updateArray = array(
-                                               'rootid' => $content['rootid'],
-                                               'parentid' => $content['parentid'],
-                                               'title' => $content['title'],
-                                               'menutext' => $content['menutext'],
-                                               'image' => $content['image'],
-                                               'image_position' => $content['image_position'],
-                                               'access' => $content['access'],
-                                               'layout' => $content['layout'],
-                                               'description' => $content['description'],
-                                               'published' => $content['published'],
                                                'ordering' => $toChange
                                            );
                             $this->update('id', $id, $updateArray);
@@ -674,16 +664,6 @@ class dbsections extends dbTable
                             $changeTo = $content['ordering'];
                             $toChange = $content['ordering'] - 1;
                             $updateArray = array(
-                                               'rootid' => $content['rootid'],
-                                               'parentid' => $content['parentid'],
-                                               'title' => $content['title'],
-                                               'menutext' => $content['menutext'],
-                                               'image' => $content['image'],
-                                               'image_position' => $content['image_position'],
-                                               'access' => $content['access'],
-                                               'layout' => $content['layout'],
-                                               'description' => $content['description'],
-                                               'published' => $content['published'],
                                                'ordering' => $toChange
                                            );
                             $this->update('id', $id, $updateArray);
@@ -696,16 +676,6 @@ class dbsections extends dbTable
                 foreach($entries as $entry) {
                     if ($entry['id'] != $id) {
                         $upArr = array(
-                                     'rootid' => $entry['rootid'],
-                                     'parentid' => $entry['parentid'],
-                                     'title' => $entry['title'],
-                                     'menutext' => $entry['menutext'],
-                                     'image' => $entry['image'],
-                                     'image_position' => $entry['image_position'],
-                                     'access' => $entry['access'],
-                                     'layout' => $entry['layout'],
-                                     'description' => $entry['description'],
-                                     'published' => $entry['published'],
                                      'ordering' => $changeTo
                                  );
                         $this->update('id', $entry['id'], $upArr);

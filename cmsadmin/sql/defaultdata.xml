@@ -46,7 +46,6 @@
    <tbl_cms_content>
         <id>init_1</id>  	
     	<title>Welcome to Chisimba </title>
-    	<menutext>Welcome</menutext>
     	<introtext>Chisimba is a next-generation using the Model-View-Controller (MVC) extensible framework architecture. Unlike other platforms, Chisimba moves beyond the sphere of merely being a 'web software'.</introtext>
     	<body>Chisimba is a next-generation using the Model-View-Controller (MVC) extensible framework architecture. Unlike other platforms, Chisimba moves beyond the sphere of merely being a 'web software'.</body>
     	<published>1</published>

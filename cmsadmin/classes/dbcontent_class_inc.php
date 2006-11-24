@@ -66,7 +66,6 @@ class dbcontent extends dbTable
         {
             try {
                 $title = $this->getParam('title');
-                $menuText = $this->getParam('menutext');
                 $sectionid = $this->getParam('parent');
                 $published = ($this->getParam('published') == 'on') ? 1 : 0;
                 $creatorid = $this->_objUser->userId();
@@ -76,7 +75,6 @@ class dbcontent extends dbTable
 
                 $newArr = array(
                               'title' => $title ,
-                              'menutext' => $menuText,
                               'sectionid' => $sectionid,
                               'introtext' => $introText,
                               'body' => $fullText,
@@ -121,7 +119,6 @@ class dbcontent extends dbTable
             try {
                 $id = $this->getParam('id');
                 $title = $this->getParam('title');
-                $menuText = $this->getParam('menutext');
                 $sectionid = $this->getParam('parent');
                 $published = ($this->getParam('published') == 'on') ? '1' : '0';
                 $creatorid = $this->_objUser->userId();
@@ -132,7 +129,6 @@ class dbcontent extends dbTable
 
                 $newArr = array(
                               'title' => $title ,
-                              'menutext' => $menuText,
                               'sectionid' => $sectionid,
                               'access' => $access,
                               'introtext' => $introText,
@@ -214,7 +210,6 @@ class dbcontent extends dbTable
                     if ($pg['ordering'] > $pageOrderNo) {
                         $newOrder = $pg['ordering'] - '1';
                         $this->update('id', $pg['id'], array('title' => $pg['title'],
-                                                             'menutext' => $pg['menutext'],
                                                              'sectionid' => $pg['sectionid'],
                                                              'introtext' => $pg['introtext'],
                                                              'body' => $pg['body'],
@@ -234,8 +229,7 @@ class dbcontent extends dbTable
                     $fpEntry = $this->_objFrontPage->getRow('content_id', $id);
                     $fpEntryId = $fpEntry['id'];
 
-                    $this->_objFrontPage->remove
-                    ($fpEntryId);
+                    $this->_objFrontPage->remove($fpEntryId);
                 }
 
                 //Delete page
@@ -528,34 +522,16 @@ class dbcontent extends dbTable
                             $changeTo = $content['ordering'];
                             $toChange = $content['ordering'] + 1;
                             $updateArray = array(
-                                               'title' => $content['title'] ,
-                                               'menutext' => $content['menutext'],
-                                               'sectionid' => $content['sectionid'],
-                                               'introtext' => $content['introtext'],
-                                               'body' => $content['body'],
-                                               'access' => $content['access'],
-                                               'ordering' => $toChange,
-                                               'published' => $content['published'],
-                                               'created' => $content['created'],
                                                'modified' => $this->now(),
-                                               'created_by' => $content['created_by']
+                                               'ordering' => $toChange
                                            );
                             $this->update('id', $id, $updateArray);
                         } else {
                             $changeTo = $content['ordering'];
                             $toChange = $content['ordering'] - 1;
                             $updateArray = array(
-                                               'title' => $content['title'] ,
-                                               'menutext' => $content['menutext'],
-                                               'sectionid' => $content['sectionid'],
-                                               'introtext' => $content['introtext'],
-                                               'body' => $content['body'],
-                                               'access' => $content['access'],
                                                'ordering' => $toChange,
-                                               'published' => $content['published'],
-                                               'created' => $content['created'],
-                                               'modified' => $this->now(),
-                                               'created_by' => $content['created_by']
+                                               'modified' => $this->now()
                                            );
                             $this->update('id', $id, $updateArray);
                         }
@@ -567,17 +543,8 @@ class dbcontent extends dbTable
                 foreach($entries as $entry) {
                     if ($entry['id'] != $id) {
                         $upArr = array(
-                                     'title' => $entry['title'] ,
-                                     'menutext' => $entry['menutext'],
-                                     'sectionid' => $entry['sectionid'],
-                                     'introtext' => $entry['introtext'],
-                                     'body' => $entry['body'],
-                                     'access' => $entry['access'],
                                      'ordering' => $changeTo,
-                                     'published' => $entry['published'],
-                                     'created' => $entry['created'],
-                                     'modified' => $this->now(),
-                                     'created_by' => $entry['created_by']
+                                     'modified' => $this->now()
                                  );
                         return $this->update('id', $entry['id'], $upArr);
                     }
