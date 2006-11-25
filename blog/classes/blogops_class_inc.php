@@ -322,24 +322,34 @@ class blogops extends object
 			$ret = NULL;
 		}
 
-		//blog admin page
-		$admin = new href($this->uri(array('action' => 'blogadmin')), $this->objLanguage->languageText("mod_blog_blogadmin", "blog"));
-		//write new post link
-		$newpost = new href($this->uri(array('action' => 'blogadmin', 'mode' => 'writepost')), $this->objLanguage->languageText("mod_blog_writepost", "blog"));
-		//edit existing posts
-		$editpost = new href($this->uri(array('action' => 'blogadmin', 'mode' => 'editpost')), $this->objLanguage->languageText("mod_blog_word_editposts", "blog"));
-		//edit/create cats
-		$editcats = new href($this->uri(array('action' => 'blogadmin', 'mode' => 'editcats')), $this->objLanguage->languageText("mod_blog_word_categories", "blog"));
-		//view all other blogs
-		$viewblogs = new href($this->uri(array('action' => 'allblogs')), $this->objLanguage->languageText("mod_blog_viewallblogs", "blog"));
-		//go back to your blog
-		$viewmyblog = new href($this->uri(array('action' => 'viewblog')), $this->objLanguage->languageText("mod_blog_viewmyblog", "blog"));
+
+			//blog admin page
+			$admin = new href($this->uri(array('action' => 'blogadmin')), $this->objLanguage->languageText("mod_blog_blogadmin", "blog"));
+			//mail setup
+			$mailsetup = new href($this->uri(array('action' => 'setupmail')), $this->objLanguage->languageText("mod_blog_setupmail", "blog"));
+			//write new post link
+			$newpost = new href($this->uri(array('action' => 'blogadmin', 'mode' => 'writepost')), $this->objLanguage->languageText("mod_blog_writepost", "blog"));
+			//edit existing posts
+			$editpost = new href($this->uri(array('action' => 'blogadmin', 'mode' => 'editpost')), $this->objLanguage->languageText("mod_blog_word_editposts", "blog"));
+			//edit/create cats
+			$editcats = new href($this->uri(array('action' => 'blogadmin', 'mode' => 'editcats')), $this->objLanguage->languageText("mod_blog_word_categories", "blog"));
+			//view all other blogs
+			$viewblogs = new href($this->uri(array('action' => 'allblogs')), $this->objLanguage->languageText("mod_blog_viewallblogs", "blog"));
+			//go back to your blog
+			$viewmyblog = new href($this->uri(array('action' => 'viewblog')), $this->objLanguage->languageText("mod_blog_viewmyblog", "blog"));
 
 		if($blogadmin == TRUE)
 		{
 			//build up a bunch of featureboxen and send em out
 			//this will only happen with the front page (blogadmin template)
-			$linksarr = array($admin, $newpost, $editpost, $editcats, $viewblogs, $viewmyblog);
+			$this->objUser = $this->getObject('user', 'security');
+			if($this->objUser->inAdminGroup($this->objUser->userId()))
+			{
+				$linksarr = array($admin, $mailsetup, $newpost, $editpost, $editcats, $viewblogs, $viewmyblog);
+			}
+			else {
+				$linksarr = array($admin, $newpost, $editpost, $editcats, $viewblogs, $viewmyblog);
+			}
 			foreach($linksarr as $links)
 			{
 				$objFeatureBox = $this->newObject('featurebox', 'navigation');
@@ -349,8 +359,17 @@ class blogops extends object
 		}
 		else{
 		//build the links
-		$ret .= $admin->show() . "<br />" . $newpost->show()  . "<br />" . $editpost->show()  . "<br />" .
+		$this->objUser = $this->getObject('user', 'security');
+		if($this->objUser->inAdminGroup($this->objUser->userId()))
+		{
+			$ret .= $admin->show() . "<br />" . $mailsetup->show() . "<br />" . $newpost->show()  . "<br />" . $editpost->show()  . "<br />" .
 				$editcats->show()  . "<br />" . $viewblogs->show() . "<br />" . $viewmyblog->show();
+		}
+		else {
+			$ret .= $admin->show() . "<br />" . $newpost->show()  . "<br />" . $editpost->show()  . "<br />" .
+				$editcats->show()  . "<br />" . $viewblogs->show() . "<br />" . $viewmyblog->show();
+		}
+
 		}
 
 		if($featurebox == FALSE)
