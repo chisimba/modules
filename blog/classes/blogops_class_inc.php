@@ -210,6 +210,101 @@ class blogops extends object
 		}
 	}
 
+	public function showMailSetup($featurebox = TRUE)
+	{
+		//start a form to go back to the setupmail action with the vars
+		//make sure that all form vars are required!
+		$mform = new form('setupmail', $this->uri(array('action' => 'setupmail')));
+
+		//add all the rules
+		$mform->addRule('mprot',$this->objLanguage->languageText("mod_blog_phrase_mprotreq", "blog"),'required');
+		$mform->addRule('mserver',$this->objLanguage->languageText("mod_blog_phrase_mserverreq", "blog"),'required');
+		$mform->addRule('muser',$this->objLanguage->languageText("mod_blog_phrase_muserreq", "blog"),'required');
+		$mform->addRule('mpass',$this->objLanguage->languageText("mod_blog_phrase_mpassreq", "blog"),'required');
+		$mform->addRule('mport',$this->objLanguage->languageText("mod_blog_phrase_mportreq", "blog"),'required');
+		$mform->addRule('mbox',$this->objLanguage->languageText("mod_blog_phrase_mboxreq", "blog"),'required');
+
+		$mfieldset = $this->getObject('fieldset', 'htmlelements');
+		$mfieldset->setLegend($this->objLanguage->languageText('mod_blog_setupmail', 'blog'));
+		$madd = $this->newObject('htmltable', 'htmlelements');
+		$madd->cellpadding = 5;
+
+		//mail protocol field
+		//dropdown for the POP/IMAP Chooser
+		$protdrop = new dropdown('mprot');
+		$protdrop->addOption("pop3", $this->objLanguage->languageText("mod_blog_pop3","blog"));
+		$protdrop->addOption("imap", $this->objLanguage->languageText("mod_blog_imap","blog"));
+		$madd->startRow();
+		$protlabel = new label($this->objLanguage->languageText('mod_blog_mailprot', 'blog') .':', 'input_mprot');
+		$madd->addCell($protlabel->show());
+		$madd->addCell($protdrop->show());
+		$madd->endRow();
+
+		//Mail server field
+		$madd->startRow();
+		$mslabel = new label($this->objLanguage->languageText('mod_blog_mailserver', 'blog') .':', 'input_mserver');
+		$mserver = new textinput('mserver');
+		$madd->addCell($mslabel->show());
+		$madd->addCell($mserver->show());
+		$madd->endRow();
+
+		//Mail user field
+		$madd->startRow();
+		$mulabel = new label($this->objLanguage->languageText('mod_blog_mailuser', 'blog') .':', 'input_muser');
+		$muser = new textinput('muser');
+		$madd->addCell($mulabel->show());
+		$madd->addCell($muser->show());
+		$madd->endRow();
+
+		//Mail password field
+		$madd->startRow();
+		$mplabel = new label($this->objLanguage->languageText('mod_blog_mailpass', 'blog') .':', 'input_mpass');
+		$mpass = new textinput('mpass');
+		$madd->addCell($mplabel->show());
+		$madd->addCell($mpass->show());
+		$madd->endRow();
+
+		//mail port field
+		//dropdown for the POP/IMAP port
+		$portdrop = new dropdown('mport');
+		$portdrop->addOption(110, $this->objLanguage->languageText("mod_blog_110","blog"));
+		$portdrop->addOption(447, $this->objLanguage->languageText("mod_blog_447","blog"));
+		$madd->startRow();
+		$portlabel = new label($this->objLanguage->languageText('mod_blog_mailport', 'blog') .':', 'input_mport');
+		$madd->addCell($portlabel->show());
+		$madd->addCell($portdrop->show());
+		$madd->endRow();
+
+		//Mailbox field
+		$madd->startRow();
+		$mblabel = new label($this->objLanguage->languageText('mod_blog_mailbox', 'blog') .':', 'input_mbox');
+		$mbox = new textinput('mbox');
+		$mbox->setValue("INBOX");
+		$madd->addCell($mblabel->show());
+		$madd->addCell($mbox->show());
+		$madd->endRow();
+
+		$this->objMButton = &new button($this->objLanguage->languageText('word_save', 'blog'));
+		$this->objMButton->setValue($this->objLanguage->languageText('word_save', 'blog'));
+		$this->objMButton->setToSubmit();
+
+		$mfieldset->addContent($madd->show());
+		$mform->addToForm($mfieldset->show());
+		$mform->addToForm($this->objMButton->show());
+
+		$mform = $mform->show();
+
+
+		if($featurebox == TRUE)
+		{
+			$objFeatureBox = $this->getObject('featurebox', 'navigation');
+			$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_setupmail","blog"), $mform);
+			return $ret;
+		}
+
+
+	}
+
 	/**
 	 * Method to display the link to blog admin on post login
 	 *

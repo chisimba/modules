@@ -267,19 +267,41 @@ class blog extends controller
 
 			case 'setupmail':
 				//check that the person trying to set this up is logged in and an admin
-				if($this->objUser->isLoggedIn() == FALSE && $this->objUser->isAdmin() == FALSE)
+				if($this->objUser->isLoggedIn() == FALSE || $this->objUser->isAdmin() == FALSE)
 				{
 					//user is not logged in, bust out of this case and go to the default
+					echo "You don't have permissions to do this dude!";
 					$this->nextAction('');
 					exit;
 				}
+				else {
+					//check that the variables are set, if not return the template, otherwise return a thank you and carry on
+					$sprot = $this->getParam("mprot");
+					$muser = $this->getParam("muser");
+					$mpass = $this->getParam("mpass");
+					$mserver = $this->getParam("mserver");
+					$mport = $this->getParam("mport");
+					$mbox = $this->getParam("mbox");
 
-				//create a form to catch the variables and write em to the config
+					//check that all the settings are there!
+					if(empty($sprot) || empty($muser) || empty($mpass) || empty($mserver) || empty($mport) || empty($mbox))
+					{
+						//echo $sprot, $muser, $mpass, $mserver, $mport, $mbox;
+						return 'mailsetup_tpl.php';
+					}
+
+					//create the DSN
+					$newsettings = array("BLOG_MAIL_DSN" => $sprot.'://'.$muser.':'.$mpass.'@'.$mserver.':'.$mport.'/'.$mbox);
+					$this->objblogOps->setupConfig($newsettings);
+					$this->nextAction('blogadmin');
+					break;
+
+				}
+
 				//temporary settings for now until the form is done...
-				$newsettings = array("BLOG_MAIL_DSN" => 'pop3://blog:blogger@itsnw.uwc.ac.za:110/INBOX');
+				//$newsettings = array("BLOG_MAIL_DSN" => 'pop3://blog:blogger@itsnw.uwc.ac.za:110/INBOX');
 				//invoke the config object and append the settings to the config.xml
-				$this->objblogOps->setupConfig($newsettings);
-				break;
+
 
 			case 'mail2blog':
 				//grab the DSN from the config file
