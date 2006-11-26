@@ -270,12 +270,14 @@ class blog extends controller
 				if($this->objUser->isLoggedIn() == FALSE || $this->objUser->inAdminGroup($this->objUser->userId()) == FALSE)
 				{
 					//user is not logged in, bust out of this case and go to the default
-					echo "You don't have permissions to do this dude!";
+					//echo "You don't have permissions to do this dude!";
 					$this->nextAction('');
 					exit;
 				}
 				else {
 					//check that the variables are set, if not return the template, otherwise return a thank you and carry on
+					$vals = $this->objConfig->getItem('BLOG_MAIL_DSN');
+					//echo $vals;die();
 
 					$sprot = $this->getParam("mprot");
 					$muser = $this->getParam("muser");
