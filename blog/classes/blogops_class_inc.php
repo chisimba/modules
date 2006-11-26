@@ -937,7 +937,7 @@ class blogops extends object
 
 		if(isset($editparams['post_content']))
 		{
-			$pcon->setcontent($editparams['post_content']);
+			$pcon->setcontent(nl2br($editparams['post_content']));
 		}
 		$ptable->startRow();
 		$ptable->addCell($pclabel->show());
@@ -1256,6 +1256,73 @@ class blogops extends object
 		$this->objConfig = $this->getObject('altconfig', 'config');
 		$this->objConfig->appendToConfig($newsettings);
 	}
+
+	/**
+	 * Method to parse the DSN
+	 *
+	 * @access public
+	 * @param string $dsn
+	 * @return void
+	 */
+	public function parseDSN($dsn)
+	{
+		$parsed = NULL; //$this->imapdsn;
+		$arr = NULL;
+		if (is_array($dsn)) {
+			$dsn = array_merge($parsed, $dsn);
+			return $dsn;
+		}
+		//find the protocol
+		if (($pos = strpos($dsn, '://')) !== false) {
+			$str = substr($dsn, 0, $pos);
+			$dsn = substr($dsn, $pos + 3);
+		} else {
+			$str = $dsn;
+			$dsn = null;
+		}
+		if (preg_match('|^(.+?)\((.*?)\)$|', $str, $arr)) {
+			$parsed['protocol']  = $arr[1];
+			$parsed['protocol'] = !$arr[2] ? $arr[1] : $arr[2];
+		} else {
+			$parsed['protocol']  = $str;
+			$parsed['protocol'] = $str;
+		}
+
+		if (!count($dsn)) {
+			return $parsed;
+		}
+		// Get (if found): username and password
+		if (($at = strrpos($dsn,'@')) !== false) {
+			$str = substr($dsn, 0, $at);
+			$dsn = substr($dsn, $at + 1);
+			if (($pos = strpos($str, ':')) !== false) {
+				$parsed['user'] = rawurldecode(substr($str, 0, $pos));
+				$parsed['pass'] = rawurldecode(substr($str, $pos + 1));
+			} else {
+				$parsed['user'] = rawurldecode($str);
+			}
+		}
+
+		//server
+		if (($col = strrpos($dsn,':')) !== false) {
+			$strcol = substr($dsn, 0, $col);
+			$dsn = substr($dsn, $col + 1);
+			if (($pos = strpos($strcol, '/')) !== false) {
+				$parsed['server'] = rawurldecode(substr($strcol, 0, $pos));
+			} else {
+				$parsed['server'] = rawurldecode($strcol);
+			}
+		}
+
+		//now we are left with the port and mailbox so we can just explode the string and clobber the arrays together
+		$pm = explode("/",$dsn);
+		$parsed['port'] = $pm[0];
+		$parsed['mailbox'] = $pm[1];
+		$dsn = NULL;
+
+		return $parsed;
+	}
+
 
 }
 ?>
