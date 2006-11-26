@@ -210,7 +210,7 @@ class blogops extends object
 		}
 	}
 
-	public function showMailSetup($featurebox = TRUE)
+	public function showMailSetup($featurebox = TRUE, $dsnarr = NULL)
 	{
 		//start a form to go back to the setupmail action with the vars
 		//make sure that all form vars are required!
@@ -244,6 +244,10 @@ class blogops extends object
 		$madd->startRow();
 		$mslabel = new label($this->objLanguage->languageText('mod_blog_mailserver', 'blog') .':', 'input_mserver');
 		$mserver = new textinput('mserver');
+		if(isset($dsnarr['server']))
+		{
+			$mserver->setValue($dsnarr['server']);
+		}
 		$madd->addCell($mslabel->show());
 		$madd->addCell($mserver->show());
 		$madd->endRow();
@@ -252,6 +256,10 @@ class blogops extends object
 		$madd->startRow();
 		$mulabel = new label($this->objLanguage->languageText('mod_blog_mailuser', 'blog') .':', 'input_muser');
 		$muser = new textinput('muser');
+		if(isset($dsnarr['user']))
+		{
+			$muser->setValue($dsnarr['user']);
+		}
 		$madd->addCell($mulabel->show());
 		$madd->addCell($muser->show());
 		$madd->endRow();
@@ -260,6 +268,10 @@ class blogops extends object
 		$madd->startRow();
 		$mplabel = new label($this->objLanguage->languageText('mod_blog_mailpass', 'blog') .':', 'input_mpass');
 		$mpass = new textinput('mpass');
+		if(isset($dsnarr['pass']))
+		{
+			$mpass->setValue($dsnarr['pass']);
+		}
 		$madd->addCell($mplabel->show());
 		$madd->addCell($mpass->show());
 		$madd->endRow();
@@ -279,6 +291,10 @@ class blogops extends object
 		$madd->startRow();
 		$mblabel = new label($this->objLanguage->languageText('mod_blog_mailbox', 'blog') .':', 'input_mbox');
 		$mbox = new textinput('mbox');
+		if(isset($dsnarr['mailbox']))
+		{
+			$mserver->setValue($dsnarr['mailbox']);
+		}
 		$mbox->setValue("INBOX");
 		$madd->addCell($mblabel->show());
 		$madd->addCell($mbox->show());
@@ -1321,6 +1337,22 @@ class blogops extends object
 		$dsn = NULL;
 
 		return $parsed;
+	}
+
+	public function getMailDSN()
+	{
+		//check that the variables are set, if not return the template, otherwise return a thank you and carry on
+		$this->objConfig = $this->getObject('altconfig', 'config');
+		$vals = $this->objConfig->getItem('BLOG_MAIL_DSN');
+		if($vals != FALSE)
+		{
+			$dsnparse = $this->parseDSN($vals);
+			return $dsnparse;
+
+		}
+		else {
+			return FALSE;
+		}
 	}
 
 

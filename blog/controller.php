@@ -283,12 +283,6 @@ class blog extends controller
 					$mport = $this->getParam("mport");
 					$mbox = $this->getParam("mbox");
 
-					//check that the variables are set, if not return the template, otherwise return a thank you and carry on
-					$vals = $this->objConfig->getItem('BLOG_MAIL_DSN');
-					//echo $vals;die();
-					$dsnparse = $this->objblogOps->parseDSN($vals);
-					//print_r($dsnparse);die();
-
 					//check that all the settings are there!
 					if(empty($sprot) || empty($muser) || empty($mpass) || empty($mserver) || empty($mport) || empty($mbox))
 					{

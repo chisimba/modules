@@ -24,7 +24,15 @@ $middleColumn = NULL;
 //left menu section
 $leftCol = $leftMenu->show();
 
-$middleColumn .= $this->objblogOps->showMailSetup(TRUE);
+//check if there are previous values
+$dsnparse = $this->objblogOps-> getMailDSN();
+if($dsnparse == FALSE)
+{
+	$middleColumn .= $this->objblogOps->showMailSetup(TRUE);
+}
+else {
+	$middleColumn .= $this->objblogOps->showMailSetup(TRUE, $dsnparse);
+}
 
 
 //$rightSideColumn .= $this->objblogOps->quickCats(TRUE);
