@@ -7,15 +7,12 @@ if (!$GLOBALS['kewl_entry_point_run'])
 // end security check
 
 /**
-* The class that demonstrates how to use blocks
+* The class that shows the latest podcast
 *
-* @author Derek Keats
-
-* 
-* $Id$
+* @author Tohir Solomons
 *
 */
-class block_gettinghelp extends object
+class block_latestpodcast extends object
 {
     var $title;
     
@@ -24,12 +21,14 @@ class block_gettinghelp extends object
     */
     function init()
     {
-        //Create an instance of the help object
-        $this->objHelp=& $this->getObject('helplink','help');
  		//Create an instance of the language object
         $this->objLanguage =& $this->getObject('language','language');
+        $this->objPodcast =& $this->getObject('dbpodcast','podcast');
+        $this->objUser =& $this->getObject('user','security');
+        $this->loadClass('link', 'htmlelements');
+        $this->loadClass('windowpop', 'htmlelements');
         //Set the title
-        $this->title=$this->objLanguage->languageText("mod_postlogin_helptitle",'postlogin');
+        $this->title='Latest Podcast';
     }
     
     /**
@@ -37,12 +36,29 @@ class block_gettinghelp extends object
     */
     function show()
 	{
-        //Add the text tot he output
-        $ret = $this->objLanguage->languageText("mod_postlogin_helphowto",'postlogin');
-        //Create an instance of the help object
-        $objHelp = & $this->getObject('helplink','help');
-        //Add the help link to the output
-        $ret .= "&nbsp;".$this->objHelp->show('mod_postlogin_helphowto','postlogin');
-        return $ret;
+        $podcast = $this->objPodcast->getLastPodcast();
+        
+        if ($podcast == FALSE) {
+            return $this->objLanguage->languageText('mod_podcast_nopodcastsavailable', 'podcast');
+        } else {
+	       //print_r($podcast);
+	       $str = '<strong>'.htmlentities($podcast['title']).'</strong>';
+	       $str .= '<br />by '.htmlentities($this->objUser->fullName($podcast['creatorid']));
+	       $str .= '<br />'.htmlentities($podcast['description']);
+	       
+	       $link = new link($this->uri(NULL, 'podcast'));
+	       $link->link = 'Podcast Home';
+	       
+	       $this->objPop=&new windowpop;
+            $this->objPop->set('location',$this->uri(array('action'=>'playpodcast', 'id'=>$podcast['id']), 'podcast'));
+            $this->objPop->set('linktext', $this->objLanguage->languageText('mod_podcast_listenonline', 'podcast'));
+            $this->objPop->set('width','280');
+            $this->objPop->set('height','120');
+            //leave the rest at default values
+            $this->objPop->putJs(); // you only need to do this once per page
+	       
+	       $str .= '<p>'.$this->objPop->show().' / '.$link->show().'</p>';
+	       return $str;
+        }
     }
 }
