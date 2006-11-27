@@ -50,6 +50,8 @@ class management extends object
         
         $this->etdTools =& $this->getObject('etdtools', 'etd');
         $this->dbDublinCore =& $this->getObject('dbdublincore', 'etd');
+        $this->files =& $this->getObject('etdfiles', 'etd');
+        $this->xmlMetadata =& $this->getObject('xmlmetadata', 'etd');
         
         $this->objLanguage =& $this->getObject('language', 'language');
         $this->objUser =& $this->getObject('user', 'security');
@@ -82,6 +84,10 @@ class management extends object
     private function showSubmissions($data)
     {
         $head = $this->objLanguage->languageText('phrase_newsubmissions');
+        $hdTitle = $this->objLanguage->languageText('word_title');
+        $hdAuthor = $this->objLanguage->languageText('word_author');
+        $hdStatus = $this->objLanguage->languageText('word_status');
+        $hdDate = $this->objLanguage->languageText('phrase_dateadded');
         $lnSubmit = $this->objLanguage->languageText('mod_etd_submitnewresource', 'etd');
         $lbNone = $this->objLanguage->languageText('mod_etd_nonewresources', 'etd');
         
@@ -95,11 +101,45 @@ class management extends object
         $objTable->cellspacing = '2';
         
         if(!empty($data)){
+            $hdArr = array();
+            $hdArr[] = $hdTitle;
+            $hdArr[] = $hdAuthor;
+            $hdArr[] = $hdStatus;
+            $hdArr[] = $hdDate;
+            $hdArr[] = ' ';
+            
+            $objTable->addHeader($hdArr);
+            
+            $class = 'odd';
+            foreach($data as $item){
+                $class = ($class == 'odd') ? 'even':'odd';
+
+                $author = $item['dc_creator'];
+                $title = $item['dc_title'];
+                
+                $objLink = new link($this->uri(array('action' => 'managesubmissions', 'mode' => 'shownewresource', 'submitId' => $item['id'])));
+                if(empty($title)){
+                    $objLink->link = $author;
+                    $author = $objLink->show();
+                }else{
+                    $objLink->link = $title;
+                    $title = $objLink->show();
+                }
+                
+                $arrRow = array();
+                $arrRow[] = $title;
+                $arrRow[] = $author;
+                $arrRow[] = $item['status'];
+                $arrRow[] = $item['datecreated'];
+                $arrRow[] = '';
+                
+                $objTable->addRow($arrRow, $class);
+            }
         }else{
             $objTable->addRow(array($lbNone), 'noRecordsMessage');
         }
         
-        $str .= $objTable->show();
+        $str .= '<p>'.$objTable->show().'</p>';
         
         // link to add a new submission
         $objLink = new link($this->uri(array('action' => 'managesubmissions', 'mode' => 'addsubmission')));
@@ -162,7 +202,8 @@ class management extends object
         $objForm->addToForm('<p style="padding:5px;">'.$objTable->show().'</p>');
         
         $objTab = new tabbedbox();
-        $objTab->extra = 'style="background-color: #FFFDF5"';
+//        $objTab->extra = 'style="background-color: #FFFDF5"';
+        $objTab->cssClass = 'wrapperLightBkg';
         $objTab->addTabLabel($lbSearch);
         $objTab->addBoxContent($objForm->show());
         $str .= $objTab->show();
@@ -277,7 +318,7 @@ class management extends object
     * @param array $data The resource data
     * @return string html
     */
-    private function editResource($data)
+    private function editResource($data, $mode = 'saveresource', $nextmode = 'showresource')
     {
         if(!empty($data)){
             $head = $this->objLanguage->languageText('phrase_editresource');
@@ -337,7 +378,6 @@ class management extends object
         }
         $objLabel = new label($lbDate.': ', 'input_date');
         $year = $this->etdTools->getYearSelect('date', $date);
-//        $objInput = new textinput('date', $date, '', 60);
             
         $objTable->addRow(array($objLabel->show(), $year));
            
@@ -448,15 +488,17 @@ class management extends object
                      
         // Display the metadata in tabbed boxes            
         $objTab = new tabbedbox();
-        $objTab->extra = 'style="background-color: #FFFDF5"';
+//        $objTab->extra = 'style="background-color: #FFFDF5"';
+        $objTab->cssClass = 'wrapperLightBkg';
         $objTab->addTabLabel($lbMetaData);
         $objTab->addBoxContent('<div style="padding: 10px;">'.$objTable->show().'</div>');
         $formStr = $objTab->show();
             
         $objTab = new tabbedbox();
-        $objTab->extra = 'style="background-color: #FFFDF5"';
+//        $objTab->extra = 'style="background-color: #FFFDF5"';
+        $objTab->cssClass = 'wrapperLightBkg';
         $objTab->addTabLabel($lbSummary);
-        $objTab->addBoxContent('<div style="padding: 10px;">'.$this->objEditor->showFCKEditor().'</dive>');
+        $objTab->addBoxContent('<div style="padding: 10px;">'.$this->objEditor->showFCKEditor().'</div>');
         $formStr .= $objTab->show();
             
         $objButton = new button('save', $btnSave);
@@ -479,7 +521,7 @@ class management extends object
         }
             
         // Add to a form
-        $objForm = new form('editresource', $this->uri(array('action' => 'savesubmissions', 'mode' => 'saveresource', 'nextmode' => 'showresource')));
+        $objForm = new form('editresource', $this->uri(array('action' => 'savesubmissions', 'mode' => $mode, 'nextmode' => $nextmode)));
         $objForm->addToForm($formStr);
         $objForm->addToForm($hidden);
         $str .= $objForm->show();
@@ -534,6 +576,55 @@ class management extends object
     }
 
     /**
+    * Method to save the new / updated metadata for a new submission not yet in the archive / database
+    *
+    * @access private
+    * @param string $submitId The submission id
+    * @return
+    */
+    private function saveNewResource($submitId = NULL)
+    {
+        // Update the submissions table to show who modified it and when
+        $submitId = $this->dbSubmissions->editSubmission($this->userId, $submitId);
+        
+        // Save the dublincore metadata
+        $dublin = array();
+        $dublin['dc_title'] = $this->getParam('title');
+        $dublin['dc_creator'] = $this->getParam('author');
+        $dublin['dc_date'] = $this->getParam('date');
+        $dublin['dc_type'] = $this->getParam('type');
+        $dublin['dc_coverage'] = $this->getParam('country');
+        $dublin['dc_source'] = $this->getParam('source');
+        $dublin['dc_contributor'] = $this->getParam('contributor');
+        $dublin['dc_publisher'] = $this->getParam('publisher');
+        $dublin['dc_format'] = $this->getParam('format');
+        $dublin['dc_relationship'] = $this->getParam('relationship');
+        $dublin['dc_language'] = $this->getParam('language');
+        $dublin['dc_audience'] = $this->getParam('audience');
+        $dublin['dc_rights'] = $this->getParam('rights');
+        $dublin['dc_subject'] = $this->getParam('keywords');
+        $dublin['dc_description'] = $this->getParam('abstract');
+        
+        // Save the extended thesis metadata
+        $thesis = array();
+        $thesis['thesis_degree_name'] = $this->getParam('thesis_degree_name');
+        $thesis['thesis_degree_level'] = $this->getParam('thesis_degree_level');
+        $thesis['thesis_degree_discipline'] = $this->getParam('thesis_degree_discipline');
+        $thesis['thesis_degree_grantor'] = $this->getParam('thesis_degree_grantor');
+        
+        $extra = array();
+        $extra['submitid'] = $submitId;
+        
+        $data['metadata']['dublincore'] = $dublin;
+        $data['metadata']['thesis'] = $thesis;
+        $data['metadata']['extra'] = $extra;
+        
+        $file = 'etd_'.$submitId;
+        $this->xmlMetadata->saveToXml($data, $file);
+        return $submitId;
+    }
+
+    /**
     * Method to delete a resource
     *
     * @access private
@@ -560,15 +651,44 @@ class management extends object
     }
 
     /**
+    * Method to delete a new resource that hasn't been archived yet
+    *
+    * @access private
+    * @param string $submitId The submissions table id
+    * @return
+    */
+    private function deleteNewResource($submitId)
+    {   
+        // delete document
+//        $this->dbFiles->deleteAllFiles($submitId);
+        
+        // delete metadata in xml file
+        $this->xmlMetadata->deleteXML('etd_'.$submitId);
+                
+        // delete submission
+        $this->dbSubmissions->deleteSubmission($submitId);
+        
+        return TRUE;
+    }
+
+    /**
     * Method to display a resource.
     *
     * @access private
     * @param array $data The resource data
     * @return string html
     */
-    private function showResource($data)
+    private function showResource($data, $editMode = 'editresource', $delMode = 'deleteresource', $nextMode = 'resources')
     {
         $submitId = $this->getSession('submitId');
+        $thesisId = '';
+        $dcId = '';
+        if(isset($data['metaid']) && !empty($data['metaid'])){
+            $thesisId = $data['metaid'];
+        }
+        if(isset($data['dcid']) && !empty($data['dcid'])){
+            $dcId = $data['dcid'];
+        }
         
         $head = $this->objLanguage->languageText('word_resource');
         $lbMetaData = $this->objLanguage->languageText('word_metadata');
@@ -593,8 +713,8 @@ class management extends object
         $confirmDel = $this->objLanguage->languageText('mod_etd_confirmdeleteresource', 'etd');
         
         $icons = '&nbsp;&nbsp;';
-        $icons .= $this->objIcon->getEditIcon($this->uri(array('action' => 'managesubmissions', 'mode' => 'editresource')));
-        $icons .= $this->objIcon->getDeleteIconWithConfirm('', array('action' => 'savesubmissions', 'mode' => 'deleteresource', 'nextmode' => 'resources', 'save' => 'true', 'dcMetaId' => $data['dcid'], 'thesisId' => $data['metaid']),  'etd', $confirmDel);
+        $icons .= $this->objIcon->getEditIcon($this->uri(array('action' => 'managesubmissions', 'mode' => $editMode)));
+        $icons .= $this->objIcon->getDeleteIconWithConfirm('', array('action' => 'savesubmissions', 'mode' => $delMode, 'nextmode' => $nextMode, 'save' => 'true', 'dcMetaId' => $dcId, 'thesisId' => $thesisId),  'etd', $confirmDel);
         
         $this->objHead->str = $head.$icons;
         $this->objHead->type = 1;
@@ -625,13 +745,15 @@ class management extends object
                           
             // Display the metadata in tabbed boxes            
             $objTab = new tabbedbox();
-            $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
+//            $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
+            $objTab->cssClass = 'wrapperLightBkg';
             $objTab->addTabLabel($lbMetaData);
             $objTab->addBoxContent($objTable->show());
             $str .= $objTab->show();
             
             $objTab = new tabbedbox();
-            $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
+//            $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
+            $objTab->cssClass = 'wrapperLightBkg';
             $objTab->addTabLabel($lbSummary);
             $objTab->addBoxContent($data['dc_description']);
             $str .= $objTab->show();                      
@@ -640,7 +762,8 @@ class management extends object
         // Display the attached document for download or replacement
         $docStr = $this->showDocument();        
         $objTab = new tabbedbox();
-        $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
+//        $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
+        $objTab->cssClass = 'wrapperLightBkg';
         $objTab->addTabLabel($lbDocument);
         $objTab->addBoxContent($docStr);
         $str .= $objTab->show();
@@ -768,8 +891,8 @@ class management extends object
         $hidden .= $objInput->show();
         
         // Section to upload a new / replace an existing document
-        $objLabel = new label($lbUpload.': ', 'input_document');
-        $objInput = new textinput('document', '', 'file', 60);
+        $objLabel = new label($lbUpload.': ', 'input_fileupload');
+        $objInput = new textinput('fileupload', '', 'file', 60);
         
         $objTable->addRow(array($objLabel->show(), $objInput->show()));
         
@@ -777,8 +900,8 @@ class management extends object
         $objButton->setToSubmit();
         $objTable->addRow(array('', $objButton->show()));
         
-        $objForm = new form('upload', $this->uri(array('action' => 'savemanage', 'mode' => 'uploaddoc', 'nextmode' => 'showresource')));
-        $objForm->extra = "ENCTYPE='multipart/form-data'";
+        $objForm = new form('upload', $this->uri(array('action' => 'managesubmissions', 'mode' => 'uploaddoc', 'nextmode' => 'showresource')));
+        $objForm->extra = 'enctype="multipart/form-data"';
         $objForm->addToForm($objTable->show());
         $objForm->addToForm($hidden);
         
@@ -791,20 +914,20 @@ class management extends object
 //            $lbDocHidden = $lbDocAvail;
 //            $inputValue = 'protected';
 //        }
-        $objInput = new textinput('access', $inputValue, 'hidden');
-        $hidden = $objInput->show();
-        $objInput = new textinput('save', 'save', 'hidden');
-        $hidden .= $objInput->show();
-
-        $objButton = new button('set', $btnSet);
-        $objButton->setToSubmit();
-        $formStr = $lbDocHidden.':&nbsp;&nbsp;'.$objButton->show();
-        
-        $objForm = new form('sethidden', $this->uri(array('action' => 'savemanage', 'mode' => 'setdoc', 'nextmode' => 'showresource')));
-        $objForm->addToForm($formStr);
-        $objForm->addToForm($hidden);
-        
-        $str .= '<p style="padding-top:5px;">'.$objForm->show().'</p>';
+//        $objInput = new textinput('access', $inputValue, 'hidden');
+//        $hidden = $objInput->show();
+//        $objInput = new textinput('save', 'save', 'hidden');
+//        $hidden .= $objInput->show();
+//
+//        $objButton = new button('set', $btnSet);
+//        $objButton->setToSubmit();
+//        $formStr = $lbDocHidden.':&nbsp;&nbsp;'.$objButton->show();
+//        
+//        $objForm = new form('sethidden', $this->uri(array('action' => 'savesubmissions', 'mode' => 'setdoc', 'nextmode' => 'showresource')));
+//        $objForm->addToForm($formStr);
+//        $objForm->addToForm($hidden);
+//        
+//        $str .= '<p style="padding-top:5px;">'.$objForm->show().'</p>';
         
         return $str;
     }
@@ -820,7 +943,8 @@ class management extends object
     {
         switch($mode){
             case 'addsubmission':
-                return $this->editResource('');
+                $this->unsetSession('submitId');
+                return $this->editResource('', 'savenewresource', 'shownewresource');
                 
             case 'editresource':
                 $submitId = $this->getSession('submitId');
@@ -828,14 +952,34 @@ class management extends object
                 return $this->editResource($data);
                 break;
                 
+            case 'editnewresource':
+                $submitId = $this->getSession('submitId');
+                $xml = $this->xmlMetadata->openXML('etd_'.$submitId);
+                $dublin = $xml['metadata']['dublincore'];
+                $data = array_merge($dublin, $xml['metadata']['thesis']);
+                return $this->editResource($data, 'savenewresource', 'shownewresource');
+                break;
+
             case 'deleteresource':
                 $submitId = $this->getSession('submitId');
                 return $this->deleteResource($submitId);
                 break;
                 
+            case 'deletenewresource':
+                $submitId = $this->getSession('submitId');
+                return $this->deleteNewResource($submitId);
+                break;
+
             case 'saveresource':
                 $submitId = $this->getSession('submitId');
                 $submitId = $this->saveResource($submitId);
+                $this->setSession('submitId', $submitId);
+                return $submitId;
+                break;
+
+            case 'savenewresource':
+                $submitId = $this->getSession('submitId');
+                $submitId = $this->saveNewResource($submitId);
                 $this->setSession('submitId', $submitId);
                 return $submitId;
                 break;
@@ -849,9 +993,26 @@ class management extends object
                 $data = $this->dbSubmissions->getSubmission($submitId);
                 return $this->showResource($data);
     
+            case 'shownewresource':
+                $submitId = $this->getSession('submitId');
+                if(!isset($submitId) || empty($submitId)){
+                    $submitId = $this->getParam('submitId');
+                    $this->setSession('submitId', $submitId);
+                }
+                $xml = $this->xmlMetadata->openXML('etd_'.$submitId);
+                $dublin = $xml['metadata']['dublincore'];
+                $data = array_merge($dublin, $xml['metadata']['thesis']);
+                return $this->showResource($data, 'editnewresource', 'deletenewresource', '');
+
             case 'resources':
                 $this->unsetSession('submitId');
                 return $this->showManage();
+                
+            case 'uploaddoc':
+                $submitId = $this->getSession('submitId');
+                return $this->files->uploadFile($submitId);
+                break;
+                
                 
             case 'search':
                 $this->unsetSession('submitId');
@@ -867,116 +1028,11 @@ class management extends object
             
             default:
                 $this->unsetSession('submitId');
-                $data = array(); // get the latest submissions requiring approval
+                $data = $this->dbSubmissions->getNewSubmissions();
                 return $this->showSubmissions($data);
         }
     }
-
-
-/* ** Methods below have not been ported and still belong to the cshe module ** */
-        
-    /**
-    * Method to display the references on the resource
-    *
-    * @access private
-    * @return string html
-    */
-    function showReferences()
-    {
-        return $this->dbRef->show('');
-    }
-    
-    /**
-    * Method to display the authors declaration
-    *
-    * @access private
-    * @return string html
-    */    
-    function showDeclaration()
-    {
-        $submitId = $this->getSession('submitId');
-        $data = $this->dbSign->getSignature($submitId);
-        
-        $lbSigned = $this->objLanguage->languageText('phrase_signedby');
-        $lbDate = $this->objLanguage->languageText('word_date');
-        
-        if(!empty($data)){
-            $name = $this->objUser->fullName($data['creatorId']);
-            $date = $this->objDate->formatDate($data['dateCreated']);
-            $str = '<p>'.$lbSigned.':&nbsp;'.$name;
-            $str .= '<br>'.$lbDate.':&nbsp;'.$date.'</p>';
-        }
-        return $str;
-    }
-            
-    /**
-    * Method to generate the link for adding pre-defined keywords.
-    *
-    * @access private
-    * @param string $form The name of the form containing the field.
-    * @param string $field The name of the field to add the keywords to.
-    */
-    function getKeywordLink($form, $field)
-    {
-        $lbAddKeywords = $this->objLanguage->languageText('mod_etd_addkeywords');
-        $array = array('action' => 'addkeywords', 'letter' => 'a', 'formname' => $form, 'fieldname' => $field);
-        $url = $this->uri($array, $this->module);
-        $objLink = new link('#');
-        $objLink->link = $lbAddKeywords;
-        $objLink->extra = "onclick=\"javascript:window.open('$url', 'keywords', 'height = 500, width = 650, left = 100, top = 100, scrollbars=1, toolbar=no, resizable=yes')\"";
-        return $objLink->show();
-    }
-        
-    /**
-    * Entry portal into class
-    *
-    * @access public
-    * @param string $mode The mode / action to perform within the class
-    * @return string html
-    *
-    function show($mode)
-    {
-        switch($mode){
-            case 'search':
-                $results = $this->getResults();
-                $str = $this->showManage();
-                if(!empty($results)){
-                    $str .= $this->showResults($results[0], $results[1]);
-                }else{
-                    $str .= $this->showResults();
-                }
-                return $str;
-                
-            case 'showresource':
-                $submitId = $this->getParam('submitId');
-                if(!isset($submitId) || empty($submitId)){
-                    $submitId = $this->getSession('submitId');
-                }
-                $this->setSession('submitId', $submitId);
-                $data = $this->dbSubmissions->getETD($submitId);
-                $collection = $this->etdBridge->getCollectionData($submitId);
-                $data['country'] = $collection['name'];
-                $this->setSession('country', $collection['name']);
-                $this->setSession('countryId', $collection['id']);
-                $this->setSession('accessLevel', $data['accessLevel']);
-                return $this->showResource($data);
-                break;
-                
-            case 'editresource':
-                $submitId = $this->getParam('submitId');
-                $data = $this->dbSubmissions->getETD($submitId);
-                $data['country'] = $this->getSession('country');
-                return $this->editResource($data);
-                break;                
-            
-            case 'saveresource':
-                return $this->saveResource();
-                break;
-                
-            case 'deleteresource':
-                return $this->deleteResource();
-                break;
-            
+/*
             case 'uploaddoc':
                 $id = $this->getParam('id');
                 $submitId = $this->getSession('submitId');
@@ -989,10 +1045,6 @@ class management extends object
                 return $this->dbSubmissions->changeAccess($submitId, $this->userId, $access);
                 break;
             
-            default:
-                $this->unsetSession('submitId');
-                return $this->showManage();
-        }
     }*/
 }
 ?>

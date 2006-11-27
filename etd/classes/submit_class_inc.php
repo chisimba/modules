@@ -39,6 +39,7 @@ class submit extends object
         $this->etdTools =& $this->getObject('etdtools', 'etd');
         $this->dbCopyright =& $this->getObject('dbcopyright', 'etd');
         $this->dbDublinCore =& $this->getObject('dbdublincore', 'etd');
+        $this->xmlMetadata =& $this->getObject('xmlmetadata', 'etd');
         
         $this->objLanguage =& $this->getObject('language', 'language');
         $this->objUser =& $this->getObject('user', 'security');
@@ -302,15 +303,17 @@ class submit extends object
                      
         // Display the metadata in tabbed boxes            
         $objTab = new tabbedbox();
-        $objTab->extra = 'style="background-color: #FFFDF5"';
+//        $objTab->extra = 'style="background-color: #FFFDF5"';
+        $objTab->cssClass = 'wrapperLightBkg';
         $objTab->addTabLabel($lbMetaData);
         $objTab->addBoxContent('<div style="padding: 10px;">'.$objTable->show().'</div>');
         $formStr = $objTab->show();
             
         $objTab = new tabbedbox();
-        $objTab->extra = 'style="background-color: #FFFDF5"';
+//        $objTab->extra = 'style="background-color: #FFFDF5"';
+        $objTab->cssClass = 'wrapperLightBkg';
         $objTab->addTabLabel($lbSummary);
-        $objTab->addBoxContent('<div style="padding: 10px;">'.$this->objEditor->showFCKEditor().'</dive>');
+        $objTab->addBoxContent('<div style="padding: 10px;">'.$this->objEditor->showFCKEditor().'</div>');
         $formStr .= $objTab->show();
             
         $objButton = new button('save', $btnSave);
@@ -354,36 +357,39 @@ class submit extends object
         $submitId = $this->dbSubmissions->editSubmission($this->userId, $submitId);
         
         // Save the dublincore metadata
-        $metaId = $this->getParam('dcMetaId');
-        $fields = array();
-        $fields['dc_title'] = $this->getParam('title');
-        $fields['dc_creator'] = $this->getParam('author');
-        $fields['dc_date'] = $this->getParam('date');
-        $fields['dc_type'] = $this->getParam('type');
-        $fields['dc_coverage'] = $this->getParam('country');
-        $fields['dc_source'] = $this->getParam('source');
-        $fields['dc_contributor'] = $this->getParam('contributor');
-        $fields['dc_publisher'] = $this->getParam('publisher');
-        $fields['dc_format'] = $this->getParam('format');
-        $fields['dc_relationship'] = $this->getParam('relationship');
-        $fields['dc_language'] = $this->getParam('language');
-        $fields['dc_audience'] = $this->getParam('audience');
-        $fields['dc_rights'] = $this->getParam('rights');
-        $fields['dc_subject'] = $this->getParam('keywords');
-        $fields['dc_description'] = $this->getParam('abstract');
-        $metaId = $this->dbDublinCore->updateElement($fields, $metaId);
+        $dublin = array();
+        $dublin['dc_title'] = $this->getParam('title');
+        $dublin['dc_creator'] = $this->getParam('author');
+        $dublin['dc_date'] = $this->getParam('date');
+        $dublin['dc_type'] = $this->getParam('type');
+        $dublin['dc_coverage'] = $this->getParam('country');
+        $dublin['dc_source'] = $this->getParam('source');
+        $dublin['dc_contributor'] = $this->getParam('contributor');
+        $dublin['dc_publisher'] = $this->getParam('publisher');
+        $dublin['dc_format'] = $this->getParam('format');
+        $dublin['dc_relationship'] = $this->getParam('relationship');
+        $dublin['dc_language'] = $this->getParam('language');
+        $dublin['dc_audience'] = $this->getParam('audience');
+        $dublin['dc_rights'] = $this->getParam('rights');
+        $dublin['dc_subject'] = $this->getParam('keywords');
+        $dublin['dc_description'] = $this->getParam('abstract');
 
         // Save the extended thesis metadata
-        $fields = array();
-        $thesisId = $this->getParam('thesisId');
-        $fields['submitid'] = $submitId;
-        $fields['dcmetaid'] = $metaId;
-        $fields['thesis_degree_name'] = $this->getParam('thesis_degree_name');
-        $fields['thesis_degree_level'] = $this->getParam('thesis_degree_level');
-        $fields['thesis_degree_discipline'] = $this->getParam('thesis_degree_discipline');
-        $fields['thesis_degree_grantor'] = $this->getParam('thesis_degree_grantor');
-        $this->dbThesis->insertMetadata($fields, $thesisId);
+        $thesis = array();
+        $thesis['thesis_degree_name'] = $this->getParam('degree');
+        $thesis['thesis_degree_level'] = $this->getParam('thesis_degree_level');
+        $thesis['thesis_degree_discipline'] = $this->getParam('department');
+        $thesis['thesis_degree_grantor'] = $this->getParam('thesis_degree_grantor');
         
+        $extra = array();
+        $extra['submitid'] = $submitId;
+        
+        $data['metadata']['dublincore'] = $dublin;
+        $data['metadata']['thesis'] = $thesis;
+        $data['metadata']['extra'] = $extra;
+        
+        $file = 'etd_'.$submitId;
+        $this->xmlMetadata->saveToXml($data, $file);
         return $submitId;
     }
 
@@ -396,6 +402,13 @@ class submit extends object
     */
     private function deleteResource($submitId)
     {   
+        // delete metadata in xml file
+        $this->xmlMetadata->deleteXML('etd_'.$submitId);
+                
+        // delete submission
+        $this->dbSubmissions->deleteSubmission($submitId);
+        
+        return TRUE;
     }
 
     /**
@@ -435,7 +448,7 @@ class submit extends object
         
         $icons = '&nbsp;&nbsp;';
         $icons .= $this->objIcon->getEditIcon($this->uri(array('action' => 'submit', 'mode' => 'editresource')));
-        $icons .= $this->objIcon->getDeleteIconWithConfirm('', array('action' => 'savesubmit', 'mode' => 'deleteresource', 'nextmode' => 'resources', 'save' => 'true', 'dcMetaId' => $data['dcid'], 'thesisId' => $data['metaid']),  'etd', $confirmDel);
+        $icons .= $this->objIcon->getDeleteIconWithConfirm('', array('action' => 'savesubmit', 'mode' => 'deleteresource', 'nextmode' => '', 'save' => 'true'),  'etd', $confirmDel);
         
         $this->objHead->str = $head.$icons;
         $this->objHead->type = 1;
@@ -466,13 +479,15 @@ class submit extends object
                           
             // Display the metadata in tabbed boxes            
             $objTab = new tabbedbox();
-            $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
+//            $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
+            $objTab->cssClass = 'wrapperLightBkg';
             $objTab->addTabLabel($lbMetaData);
             $objTab->addBoxContent($objTable->show());
             $str .= $objTab->show();
             
             $objTab = new tabbedbox();
-            $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
+//            $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
+            $objTab->cssClass = 'wrapperLightBkg';
             $objTab->addTabLabel($lbSummary);
             $objTab->addBoxContent($data['dc_description']);
             $str .= $objTab->show();                      
@@ -481,7 +496,8 @@ class submit extends object
         // Display the attached document for download or replacement
         $docStr = $this->showDocument();        
         $objTab = new tabbedbox();
-        $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
+//        $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
+        $objTab->cssClass = 'wrapperLightBkg';
         $objTab->addTabLabel($lbDocument);
         $objTab->addBoxContent($docStr);
         $str .= $objTab->show();
@@ -489,7 +505,8 @@ class submit extends object
         // Display the embargo request 
         $embargoStr = $this->showEmbargo();         
         $objTab = new tabbedbox();
-        $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
+//        $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
+        $objTab->cssClass = 'wrapperLightBkg';
         $objTab->addTabLabel($lbEmbargo);
         $objTab->addBoxContent($embargoStr);
         $str .= $objTab->show();
@@ -497,7 +514,8 @@ class submit extends object
         // Display the form for submitting to supervisor for approval 
         $submitStr = $this->showSubmit();         
         $objTab = new tabbedbox();
-        $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
+//        $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
+        $objTab->cssClass = 'wrapperLightBkg';
         $objTab->addTabLabel($lbSubmit);
         $objTab->addBoxContent($submitStr);
         $str .= $objTab->show();
@@ -741,11 +759,14 @@ class submit extends object
     {
         switch($mode){
             case 'addsubmission':
+                $this->unsetSession('submitId');
                 return $this->editResource('');
                 
             case 'editresource':
                 $submitId = $this->getSession('submitId');
-                $data = $this->dbSubmissions->getSubmission($submitId);
+                $xml = $this->xmlMetadata->openXML('etd_'.$submitId);
+                $dublin = $xml['metadata']['dublincore'];
+                $data = array_merge($dublin, $xml['metadata']['thesis']);
                 return $this->editResource($data);
                 break;
                 
@@ -767,9 +788,15 @@ class submit extends object
                     $submitId = $this->getParam('submitId');
                     $this->setSession('submitId', $submitId);
                 }
-                $data = $this->dbSubmissions->getSubmission($submitId);
+                $xml = $this->xmlMetadata->openXML('etd_'.$submitId);
+                $dublin = $xml['metadata']['dublincore'];
+                $data = array_merge($dublin, $xml['metadata']['thesis']);
                 return $this->showResource($data);
-                                    
+                
+            case 'uploaddoc':
+                
+                break;
+                
             case 'embargo':
                 break;
             

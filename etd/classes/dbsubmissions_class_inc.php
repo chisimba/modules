@@ -46,7 +46,7 @@ class dbsubmissions extends dbtable
         //$this->qualifiedTable = 'tbl_etd_metadata_qualified';
         $this->embargoTable = 'tbl_etd_embargos';
 
-        //$this->xmlMeta =& $this->getObject('xmlmetadata', 'etd');
+        $this->xmlMeta =& $this->getObject('xmlmetadata', 'etd');
         
     }
 
@@ -98,6 +98,26 @@ class dbsubmissions extends dbtable
         }
         return $id;
     }
+    
+    /**
+    * Method to check if the user is currently in the process of submitting a document, returns the submission id
+    *
+    * @access public
+    * @param string $userId The current user
+    * @return string $submitId The users submission
+    */
+    public function getUserSubmission($userId)
+    {
+        $sql = 'SELECT id FROM '.$this->table;
+        $sql .= " WHERE creatorid = '{$userId}' AND status = 'assembly'";
+        
+        $data = $this->getArray($sql);
+        
+        if(!empty($data)){
+            return $data[0]['id'];
+        }
+        return FALSE;
+    }
 
     /**
     * Method to get a resource from the submissions table with metadata.
@@ -108,14 +128,14 @@ class dbsubmissions extends dbtable
     */
     public function getSubmission($id)//, $archive = FALSE)
     {
-        $sql = "SELECT submit.id as submitid, submit.*, extra.id AS metaid, extra.*, dc.id as dcid, dc.* FROM `{$this->table}` AS submit, ";
+        $sql = "SELECT submit.id as submitid, submit.*, extra.id AS metaid, extra.*, dc.id as dcid, dc.* FROM {$this->table} AS submit, ";
         
         if($this->metaType == 'qualified'){
-            $sql .= "`{$this->qualifiedTable}` AS extra, ";
+            $sql .= "{$this->qualifiedTable} AS extra, ";
         }else{
-            $sql .= "`{$this->thesisTable}` AS extra, ";
+            $sql .= "{$this->thesisTable} AS extra, ";
         }        
-        $sql .= "`{$this->dcTable}` AS dc ";
+        $sql .= "{$this->dcTable} AS dc ";
         
         $sql .= "WHERE submit.id = extra.submitid AND dc.id = extra.dcmetaid ";
         $sql .= "AND submit.id = '{$id}'";
@@ -133,18 +153,18 @@ class dbsubmissions extends dbtable
         if(!$archive){
             $sqlSelect = ', extra.id AS metaId, extra.*, dc.id AS dcId, dc.* ';
             if($this->metaType == 'qualified'){
-                $sqlJoin = 'LEFT JOIN `'.$this->qualifiedTable.'` AS extra ON etd.id = extra.submitId ';
+                $sqlJoin = 'LEFT JOIN '.$this->qualifiedTable.' AS extra ON etd.id = extra.submitId ';
             }else{
-                $sqlJoin = 'LEFT JOIN `'.$this->thesisTable.'` AS extra ON etd.id = extra.submitId ';
+                $sqlJoin = 'LEFT JOIN '.$this->thesisTable.' AS extra ON etd.id = extra.submitId ';
             }
-            $sqlJoin .= 'LEFT JOIN `'.$this->dcTable.'` AS dc ON dc.id = extra.dcMetaId ';
+            $sqlJoin .= 'LEFT JOIN '.$this->dcTable.' AS dc ON dc.id = extra.dcMetaId ';
         }
 
-        $sql = 'SELECT etd.id as submitId, etd.*'.$sqlSelect.' FROM `'.$this->table.'` AS etd '.$sqlJoin;
+        $sql = 'SELECT etd.id as submitId, etd.*'.$sqlSelect.' FROM '.$this->table.' AS etd '.$sqlJoin;
         $sql .= "WHERE etd.id = '$id'";
         $data = $this->getArray($sql);
         
-        $sql = 'SELECT * FROM `'.$this->table.'` AS etd ';
+        $sql = 'SELECT * FROM '.$this->table.' AS etd ';
         $sql .= "WHERE etd.id = '$id'";
         $data = $this->getArray($sql);
         
@@ -164,18 +184,18 @@ class dbsubmissions extends dbtable
     */
     public function fetchResources($criteria = array(), $start = 0, $limit = NULL)
     {
-        $sqlNorm = "SELECT * FROM `{$this->table}` AS submit, ";
-        $sqlCount = "SELECT COUNT(*) AS count FROM `{$this->table}` AS submit, ";
+        $sqlNorm = "SELECT * FROM {$this->table} AS submit, ";
+        $sqlCount = "SELECT COUNT(*) AS count FROM {$this->table} AS submit, ";
         
         if($this->metaType == 'qualified'){
-            $sql = "`{$this->qualifiedTable}` AS extra, ";
+            $sql = "{$this->qualifiedTable} AS extra, ";
         }else{
-            $sql = "`{$this->thesisTable}` AS extra, ";
+            $sql = "{$this->thesisTable} AS extra, ";
         }        
-        $sql .= "`{$this->dcTable}` AS dc ";
+        $sql .= "{$this->dcTable} AS dc ";
         
         $sql .= "WHERE submit.id = extra.submitid AND dc.id = extra.dcmetaid ";
-        $sql .= "AND `submissiontype` = '{$this->subType}' AND `status` = 'archived' ";
+        $sql .= "AND submissiontype = '{$this->subType}' AND status = 'archived' ";
         
         if(!empty($criteria)){
             $critSql = '';
@@ -183,7 +203,7 @@ class dbsubmissions extends dbtable
                 if(!empty($critSql)){
                     $critSql .= ' OR ';
                 }
-                $critSql .= "`{$item['field']}` {$item['compare']} '{$item['value']}'";
+                $critSql .= "{$item['field']} {$item['compare']} '{$item['value']}'";
             }
             $sql .= " AND ($critSql) ";
         }
@@ -243,6 +263,50 @@ class dbsubmissions extends dbtable
 
         */
 
+    }
+
+    /**
+    * Method to get a list of non-archived submissions by status
+    *
+    * @access public
+    * @param
+    * @return array $data The submissions
+    */
+    public function getNewSubmissions()
+    {
+        $sql = 'SELECT * FROM '.$this->table;
+        $sql .= " WHERE status != 'archived' ";
+        $sql .= " AND submissiontype = '{$this->subType}' ";
+        
+        $data = $this->getArray($sql);
+        
+        // For each submission get the related xml file
+        if(!empty($data)){
+            foreach($data as $key => $item){
+                $xml = $this->getXmlMeta($item['id']);
+                $newdata = array_merge($data[$key], $xml);
+                $data[$key] = $newdata;
+            }
+        }
+        
+        return $data;
+    }
+
+    /**
+    * Method to get the xml files for a submission
+    *
+    * @access private
+    * @param string $submitId The submission id
+    * @return array The xml data
+    */
+    private function getXmlMeta($submitId)
+    {
+        $xmlData = array();
+        $xml = $this->xmlMeta->openXML($this->subType.'_'.$submitId);
+        if(!empty($xml)){
+            $xmlData = array_merge($xml['metadata']['dublincore'], $xml['metadata'][$this->metaType]);
+        }
+        return $xmlData;
     }
 
     /**
@@ -492,24 +556,6 @@ class dbsubmissions extends dbtable
         $count = $this->getArray($sqlCount.$sql);
 
         return array($data, $count[0]['count']);
-    }
-
-    /**
-    * Method to get the xml files for submitted etd's
-    */
-    function getXmlMeta($data)
-    {
-        if(!empty($data)){
-            foreach($data as $key=>$item){
-                $xml = $this->xmlMeta->openXML($this->subType.'_'.$item['submitId']);
-                if(!empty($xml)){
-                    $xmlData = array_merge($xml['metadata']['dublincore'], $xml['metadata']['thesis']);
-                    $xmlData = array_merge($xmlData, $xml['metadata']['qualified']);
-                    $data[$key] = array_merge($item, $xmlData);
-                }
-            }
-        }
-        return $data;
     }
 
     /**

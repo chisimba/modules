@@ -28,12 +28,26 @@ class block_etdlinks extends object
     */
     public function init()
     {
+        $this->dbSubmit =& $this->getObject('dbsubmissions', 'etd');
         $this->objLanguage =& $this->getObject('language', 'language');
+        $this->objUser =& $this->getObject('user', 'security');
+        
         $this->objIcon =& $this->newObject('geticon', 'htmlelements');
-
         $this->loadClass('link','htmlelements');
 
         $this->title = $this->objLanguage->languageText('word_links');
+        $this->userId = $this->objUser->userId();
+    }
+
+    /**
+    * Method to check if user has started submitting a document
+    *
+    * @access private
+    * @return bool
+    */
+    private function checkSubmissions()
+    {
+        return $this->dbSubmit->getUserSubmission($this->userId);
     }
 
     /**
@@ -46,6 +60,7 @@ class block_etdlinks extends object
     {   
         $stats = $this->objLanguage->languageText('phrase_viewstatistics');
         $submit = $this->objLanguage->languageText('phrase_newsubmission');
+        $submit2 = $this->objLanguage->languageText('phrase_continuesubmission');
         $rss = $this->objLanguage->languageText('word_rss2');
         
         // Statistics page link
@@ -53,10 +68,19 @@ class block_etdlinks extends object
 		$objLink->link = $stats;
 		$list = '<p>'.$objLink->show().'</p>';
 		
-		// Submission link
-		$objLink = new link($this->uri(array('action' => 'submit', 'mode' => 'addsubmission')));
-		$objLink->link = $submit;
-		$list .= '<p>'.$objLink->show().'</p>';
+		// Check for a current submission - only submit one document at a time.
+		$check = $this->checkSubmissions();
+		if(!($check === FALSE)){
+		    // Submission link
+    		$objLink = new link($this->uri(array('action' => 'submit', 'mode' => 'showresource', 'submitId' => $check)));
+    		$objLink->link = $submit2;
+    		$list .= '<p>'.$objLink->show().'</p>';
+		}else{
+    		// Submission link
+    		$objLink = new link($this->uri(array('action' => 'submit', 'mode' => 'addsubmission')));
+    		$objLink->link = $submit;
+    		$list .= '<p>'.$objLink->show().'</p>';
+		}
 		
         // RSS link
 		$this->objIcon->setIcon('rss', 'gif', 'icons/filetypes');
