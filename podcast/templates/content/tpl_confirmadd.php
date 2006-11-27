@@ -6,6 +6,7 @@ $this->loadClass('label', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
+$this->loadClass('windowpop', 'htmlelements');
 $this->loadClass('formatfilesize', 'files');
 
 
@@ -34,7 +35,7 @@ if ($mode == 'confirm' || $mode == 'editpodcast') {
     $table->cellpadding = 5;
     $table->startRow();
         $table->addCell($this->objLanguage->languageText('word_filename', 'system').':');
-        $table->addCell($podcast['filename']);
+        $table->addCell(htmlentities($podcast['filename']));
     $table->endRow();
     
     $table->startRow();
@@ -103,7 +104,15 @@ if ($mode == 'alreadyused') {
     $downloadLink = new link ($this->uri(array('action'=>'downloadfile', 'id'=>$podcast['id'])));
     $downloadLink->link = htmlentities($podcast['filename']);
     
-    $content .= '<br /><p><strong>'.$this->objLanguage->languageText('mod_podcast_downloadpodcast', 'podcast').':</strong> '.$downloadLink->show().'</p>';
+    $this->objPop=&new windowpop;
+    $this->objPop->set('location',$this->uri(array('action'=>'playpodcast', 'id'=>$podcast['id']), 'podcast'));
+    $this->objPop->set('linktext', $this->objLanguage->languageText('mod_podcast_listenonline', 'podcast'));
+    $this->objPop->set('width','280');
+    $this->objPop->set('height','120');
+    //leave the rest at default values
+    $this->objPop->putJs(); // you only need to do this once per page
+    
+    $content .= '<br /><p>'.$this->objPop->show().' / <strong>'.$this->objLanguage->languageText('mod_podcast_downloadpodcast', 'podcast').':</strong> '.$downloadLink->show().'</p>';
     
     if ($podcast['creatorid'] == $this->objUser->userId()) {
         $objIcon->setIcon('edit');

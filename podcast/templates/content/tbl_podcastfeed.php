@@ -1,4 +1,4 @@
 <?php
-header('content-type:text/xml');
+header('content-type:application/rss+xml');
 echo $feed;
 ?>

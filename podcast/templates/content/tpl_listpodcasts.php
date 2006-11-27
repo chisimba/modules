@@ -1,6 +1,7 @@
 <?php
 
 $this->loadClass('link', 'htmlelements');
+$this->loadClass('windowpop', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('formatfilesize', 'files');
 
@@ -37,7 +38,13 @@ if (count($podcasts) == 0) {
         
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->startRow();
-            $table->addCell('<strong>'.$this->objLanguage->languageText('word_by', 'system').':</strong> '.$this->objUser->fullname($podcast['creatorid']), '50%');
+            if (isset($id)) {  
+                $table->addCell('<strong>'.$this->objLanguage->languageText('word_by', 'system').':</strong> '.$this->objUser->fullname($podcast['creatorid']), '50%');
+            } else {
+                $authorLink = new link ($this->uri(array('action'=>'byuser', 'id'=>$podcast['creatorid'])));
+                $authorLink->link = $this->objUser->fullname($podcast['creatorid']);
+                $table->addCell('<strong>'.$this->objLanguage->languageText('word_by', 'system').':</strong> '.$authorLink->show(), '50%');
+            }
             $table->addCell('<strong>'.$this->objLanguage->languageText('word_date', 'system').':</strong> '.$this->objDateTime->formatDate($podcast['datecreated']), '50%');
         $table->endRow();
         $table->startRow();
@@ -52,7 +59,15 @@ if (count($podcasts) == 0) {
         $downloadLink = new link ($this->uri(array('action'=>'downloadfile', 'id'=>$podcast['id'])));
         $downloadLink->link = htmlentities($podcast['filename']);
         
-        $content .= '<br /><p><strong>'.$this->objLanguage->languageText('mod_podcast_downloadpodcast', 'podcast').':</strong> '.$downloadLink->show().'</p>';
+        $this->objPop=&new windowpop;
+        $this->objPop->set('location',$this->uri(array('action'=>'playpodcast', 'id'=>$podcast['id']), 'podcast'));
+        $this->objPop->set('linktext', $this->objLanguage->languageText('mod_podcast_listenonline', 'podcast'));
+        $this->objPop->set('width','280');
+        $this->objPop->set('height','120');
+        //leave the rest at default values
+        $this->objPop->putJs(); // you only need to do this once per page
+        
+        $content .= '<br /><p>'.$this->objPop->show().' / <strong>'.$this->objLanguage->languageText('mod_podcast_downloadpodcast', 'podcast').':</strong> '.$downloadLink->show().'</p>';
         
         if ($podcast['creatorid'] == $this->objUser->userId()) {
             $objIcon->setIcon('edit');
