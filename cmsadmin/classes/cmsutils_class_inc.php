@@ -667,7 +667,9 @@ class cmsutils extends object
                 $str = '';
 
                 if ($pageId == '') {
-                    $pageId = $arrPages[0]['id'];
+                    if (count($arrPages)) {
+                        $pageId = $arrPages[0]['id'];
+                    }
                 }
 
                 foreach ($arrPages as $page) {
