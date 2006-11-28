@@ -300,8 +300,8 @@ class blogops extends object
 		$madd->addCell($mbox->show());
 		$madd->endRow();
 
-		$this->objMButton = &new button($this->objLanguage->languageText('word_save', 'blog'));
-		$this->objMButton->setValue($this->objLanguage->languageText('word_save', 'blog'));
+		$this->objMButton = &new button($this->objLanguage->languageText('word_save', 'system'));
+		$this->objMButton->setValue($this->objLanguage->languageText('word_save', 'system'));
 		$this->objMButton->setToSubmit();
 
 		$mfieldset->addContent($madd->show());
@@ -562,8 +562,8 @@ class blogops extends object
 		$qcatname = new textinput('catname');
 		$qcatname->size = 15;
 		$qcatform->addToForm($qcatname->show());
-		$this->objqCButton = &new button($this->objLanguage->languageText('word_update', 'blog'));
-		$this->objqCButton->setValue($this->objLanguage->languageText('word_update', 'blog'));
+		$this->objqCButton = &new button($this->objLanguage->languageText('word_update', 'system'));
+		$this->objqCButton->setValue($this->objLanguage->languageText('word_update', 'system'));
 		$this->objqCButton->setToSubmit();
 		$qcatform->addToForm($this->objqCButton->show());
 		$qcatform = $qcatform->show();
@@ -769,8 +769,8 @@ class blogops extends object
 		$cfieldset->addContent($catadd->show());
 		$catform->addToForm($cfieldset->show());
 
-		$this->objCButton = &new button($this->objLanguage->languageText('word_update', 'blog'));
-		$this->objCButton->setValue($this->objLanguage->languageText('word_update', 'blog'));
+		$this->objCButton = &new button($this->objLanguage->languageText('word_update', 'system'));
+		$this->objCButton->setValue($this->objLanguage->languageText('word_update', 'system'));
 		$this->objCButton->setToSubmit();
 		$catform->addToForm($this->objCButton->show());
 		$catform = $catform->show();
@@ -834,8 +834,8 @@ class blogops extends object
 
 		$cfieldset->addContent($catadd->show());
 		$catform->addToForm($cfieldset->show());
-		$this->objCButton = &new button($this->objLanguage->languageText('word_update', 'blog'));
-		$this->objCButton->setValue($this->objLanguage->languageText('word_update', 'blog'));
+		$this->objCButton = &new button($this->objLanguage->languageText('word_update', 'system'));
+		$this->objCButton->setValue($this->objLanguage->languageText('word_update', 'system'));
 		$this->objCButton->setToSubmit();
 		$catform->addToForm($this->objCButton->show());
 		$catform = $catform->show();

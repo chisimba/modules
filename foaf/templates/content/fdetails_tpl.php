@@ -163,8 +163,8 @@ $table1->addCell($geekcode->show());
 $table1->endRow();
 $fieldset1->addContent($table1->show());
 $myFoafForm->addToForm($fieldset1->show());
-$this->objButton1 = &new button($objLanguage->languageText('word_update', 'foaf'));
-$this->objButton1->setValue($objLanguage->languageText('word_update', 'foaf'));
+$this->objButton1 = &new button($objLanguage->languageText('word_update', 'system'));
+$this->objButton1->setValue($objLanguage->languageText('word_update', 'system'));
 $this->objButton1->setToSubmit();
 $myFoafForm->addToForm($this->objButton1->show());
 /**
