@@ -27,13 +27,13 @@ class dbloginhistory extends dbTable
     function getLoginHistory()
     {
         $order= $this->getParam('order', 'surname');
-        $sql="SELECT count(tbl_userloginhistory.userId) 
-          AS logins, max(lastLoginDateTime) 
-          AS lastOn, tbl_users.title, tbl_users.firstName,
+        $sql="SELECT count(tbl_userloginhistory.userid) 
+          AS logins, max(lastlogindatetime) 
+          AS lastOn, tbl_users.title, tbl_users.firstname,
           tbl_users.surname, tbl_users.country, 
-          tbl_users.emailAddress FROM  tbl_userloginhistory
-          LEFT JOIN tbl_users  ON tbl_userloginhistory.userId = tbl_users.userId
-          GROUP BY tbl_userloginhistory.userId
+          tbl_users.emailaddress FROM  tbl_userloginhistory
+          LEFT JOIN tbl_users  ON tbl_userloginhistory.userid = tbl_users.userid
+          GROUP BY tbl_userloginhistory.userid
           ORDER BY " . $order;
         return $this->getArray($sql);
     }
@@ -46,7 +46,7 @@ class dbloginhistory extends dbTable
     */
     function getTotalLogins()
     {
-        $sql="SELECT COUNT(userId) AS TotalLogins 
+        $sql="SELECT COUNT(userid) AS TotalLogins 
           FROM tbl_userloginhistory";
         $ar = $this->getArray($sql);
         return $ar[0]['TotalLogins'];
@@ -54,7 +54,7 @@ class dbloginhistory extends dbTable
     
     function getUniqueLogins()
     {
-        $sql="SELECT COUNT(DISTINCT(userId)) 
+        $sql="SELECT COUNT(DISTINCT(userid)) 
           AS UniqueLogins FROM tbl_userloginhistory";
         $ar = $this->getArray($sql);
         return $ar[0]['UniqueLogins'];

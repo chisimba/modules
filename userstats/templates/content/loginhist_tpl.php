@@ -77,7 +77,7 @@ if (isset($ar)) {
     if ($this->getParam('order', 'surname') != 'emailAddress') {
         $emailLabel = $this->uri(array(
            'action' => 'viewloginhistory',
-           'order' => 'emailAddress'), 'userstats');
+           'order' => 'emailaddress'), 'userstats');
         //Make it a link
         $link->href = $emailLabel;
         $link->link = $this->objLanguage->languageText("phrase_emailAddress");
@@ -115,10 +115,10 @@ if (isset($ar)) {
     foreach ($ar as $line) {
         $oddOrEven = ($rowcount == 0) ? "odd" : "even";
         $tableRow[]=$line['title'];
-        $tableRow[]=$line['firstName'];
+        $tableRow[]=$line['firstname'];
         $tableRow[]=$line['surname'];
         $tableRow[]=$line['country'];
-        $tableRow[]=$line['emailAddress'];
+        $tableRow[]=$line['emailaddress'];
         $tableRow[]=$line['lastOn'];
         $tableRow[]=$line['logins'];
         //Add the row to the table for output
