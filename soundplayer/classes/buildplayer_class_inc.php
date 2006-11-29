@@ -133,13 +133,13 @@ class buildplayer extends object
     */
     function __startApplet()
     {
-        return "<applet CODE = \"javazoom.jlgui.player.amp.PlayerApplet\" 
+        return "<applet code = \"javazoom.jlgui.player.amp.PlayerApplet\" 
     	  codebase = \"modules/soundplayer/resources/lib/\" 
     	  archive = \"jlguiapplet2.3.2.jar,jlgui2.3.2-light.jar,
     	  tritonus_share.jar,basicplayer2.3.jar, mp3spi1.9.2.jar,
     	  jl1.0.jar, vorbisspi1.0.1.jar, jorbis-0.0.13.jar,
     	  jogg-0.0.7.jar, commons-logging-api.jar\" 
-    	  width = \"485\" height = \"348\" NAME = \"player\">";
+    	  width = \"485\" height = \"348\" name = \"player\">";
     }
     
     /**
