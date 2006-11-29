@@ -319,7 +319,7 @@ class cmsutils extends object
 
                     if (($this->getParam('action') == 'showsection') && ($this->getParam('id') == $section['id']) || $this->getParam('sectionid') == $section['id']) {
                         $pagenodes = array();
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$section['id'].'" AND published=1 and trash=0 ORDER BY ordering');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$section['id'].'\' AND published=1 and trash=0 ORDER BY ordering');
                         foreach( $arrPages as $page) {
                             $pagenodes[] = array('text' => $page['menutext'] , 'uri' => $this->uri(array('action' => 'showfulltext', 'id' => $page['id'], 'sectionid' => $section['id']), $modulename));
                         }
@@ -472,19 +472,19 @@ class cmsutils extends object
                 switch ($orderType) {
                     case null:
                     case 'pageorder':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY ordering');
                         break;
                     case 'pagedate_asc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY created');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created');
                         break;
                     case 'pagedate_desc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY created DESC');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
                         break;
                     case 'pagetitle_asc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY title');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title');
                         break;
                     case 'pagetitle_desc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY title DESC');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title DESC');
                         break;
                 }        
  
@@ -551,19 +551,19 @@ class cmsutils extends object
                 switch ($orderType) {
                     case null:
                     case 'pageorder':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY ordering');
                         break;
                     case 'pagedate_asc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY created');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created');
                         break;
                     case 'pagedate_desc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY created DESC');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
                         break;
                     case 'pagetitle_asc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY title');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title');
                         break;
                     case 'pagetitle_desc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY title DESC');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title DESC');
                         break;
                 }        
 
@@ -646,19 +646,19 @@ class cmsutils extends object
                 switch ($orderType) {
                     case null:
                     case 'pageorder':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY ordering');
                         break;
                     case 'pagedate_asc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY created');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created');
                         break;
                     case 'pagedate_desc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY created DESC');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
                         break;
                     case 'pagetitle_asc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY title');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title');
                         break;
                     case 'pagetitle_desc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY title DESC');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title DESC');
                         break;
                 }        
 
@@ -718,19 +718,19 @@ class cmsutils extends object
                 switch ($orderType) {
                     case null:
                     case 'pageorder':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY ordering');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY ordering');
                         break;
                     case 'pagedate_asc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY created');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created');
                         break;
                     case 'pagedate_desc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY created DESC');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "\''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
                         break;
                     case 'pagetitle_asc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY title');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title');
                         break;
                     case 'pagetitle_desc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "'.$arrSection['id'].'" AND published=1 ORDER BY title DESC');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title DESC');
                         break;
                 }        
 

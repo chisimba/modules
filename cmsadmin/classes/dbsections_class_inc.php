@@ -345,7 +345,7 @@ class dbsections extends dbTable
           */
         public function hasNodes($id)
         {
-            $nodes = $this->getAll('WHERE parentid = "'.$id.'"');
+            $nodes = $this->getAll('WHERE parentid = \''.$id.'\'');
 
             if (count($nodes) > 0) {
                 $hasNodes = True;
@@ -407,9 +407,9 @@ class dbsections extends dbTable
             try {
                 if ($isPublished) {
                     //return all subsections
-                    return $this->getAll('WHERE published = 1 AND parentid = "'.$sectionId.'" ORDER BY ordering '.$order);
+                    return $this->getAll('WHERE published = 1 AND parentid = \''.$sectionId.'\' ORDER BY ordering '.$order);
                 } else {
-                    return $this->getAll('WHERE parentid = "'.$sectionId.'" ORDER BY ordering '.$order);
+                    return $this->getAll('WHERE parentid = \''.$sectionId.'\' ORDER BY ordering '.$order);
                 }
             } catch (Exception $e) {
                 echo 'Caught exception: ', $e->getMessage();
@@ -430,9 +430,9 @@ class dbsections extends dbTable
             try {
                 if ($isPublished) {
                     //return all subsections
-                    return $this->getAll('WHERE published = 1 AND rootid = "'.$rootId.'" ORDER BY ordering');
+                    return $this->getAll('WHERE published = 1 AND rootid = \''.$rootId.'\' ORDER BY ordering');
                 } else {
-                    return $this->getAll('WHERE rootid = "'.$rootId.'" ORDER BY ordering');
+                    return $this->getAll('WHERE rootid = \''.$rootId.'\' ORDER BY ordering');
                 }
             } catch (Exception $e) {
                 echo 'Caught exception: ', $e->getMessage();
@@ -455,9 +455,9 @@ class dbsections extends dbTable
             try {
                 if ($isPublished) {
                     //return all subsections
-                    return $this->getAll('WHERE published = 1 AND count = "'.$level.'" AND rootid = "'.$rootId.'" ORDER BY ordering '.$order);
+                    return $this->getAll('WHERE published = 1 AND count = \''.$level.'\' AND rootid = \''.$rootId.'\' ORDER BY ordering '.$order);
                 } else {
-                    return $this->getAll('WHERE count = "'.$level.'" AND rootid = "'.$rootId.'" ORDER BY ordering '.$order);
+                    return $this->getAll('WHERE count = \''.$level.'\' AND rootid = \''.$rootId.'\' ORDER BY ordering '.$order);
                 }
             } catch (Exception $e) {
                 echo 'Caught exception: ', $e->getMessage();
@@ -475,7 +475,7 @@ class dbsections extends dbTable
         public function getNumSubSections($sectionId)
         {
             try {
-                $subSecs = $this->getAll('WHERE parentid = "'.$sectionId.'"');
+                $subSecs = $this->getAll('WHERE parentid = \''.$sectionId.'\'');
                 $noSubSecs = count($subSecs);
                 return $noSubSecs;
             } catch (Exception $e) {
@@ -508,7 +508,7 @@ class dbsections extends dbTable
                 //get an array of all the cats nodes
 
                 for ($i = $level; $i <= $numLevels; $i++) {
-                    $nodes = $this->getAll('WHERE parentid = "'.$parentId.'" AND count = "'.$i.'"');
+                    $nodes = $this->getAll('WHERE parentid = \''.$parentId.'\' AND count = \''.$i.'\'');
                     foreach($nodes as $node) {
                         $nodeIdArray[] = $node['id'];
                         $parentId = $node['id'];
@@ -548,7 +548,7 @@ class dbsections extends dbTable
             try {
                 $ordering = 1;
                 //get last order value
-                $lastOrder = $this->getAll('WHERE parentid = "'.$parentid.'" ORDER BY ordering DESC LIMIT 1');
+                $lastOrder = $this->getAll('WHERE parentid = \''.$parentid.'\' ORDER BY ordering DESC LIMIT 1');
                 //add after this value
 
                 if (!empty($lastOrder)) {
@@ -582,7 +582,7 @@ class dbsections extends dbTable
                 $lastOrd = $this->getAll('WHERE count = 1 ORDER BY ordering DESC LIMIT 1');
             } else {
                 //Get the number of sub sections in section
-                $lastOrd = $this->getAll('WHERE parentid = "'.$parentId.'" ORDER BY ordering DESC LIMIT 1');
+                $lastOrd = $this->getAll('WHERE parentid = \''.$parentId.'\' ORDER BY ordering DESC LIMIT 1');
             }
 
             $topOrder = $lastOrd['0']['ordering'];
@@ -649,7 +649,7 @@ class dbsections extends dbTable
         {
             try {
                 //Get array of all sections in level
-                $fpContent = $this->getAll('WHERE parentid = "'.$parentid.'" ORDER BY ordering ');
+                $fpContent = $this->getAll('WHERE parentid = \''.$parentid.'\' ORDER BY ordering ');
                 //Search for entry to be reordered and update order
                 foreach($fpContent as $content) {
                     if ($content['id'] == $id) {
@@ -672,7 +672,7 @@ class dbsections extends dbTable
                 }
 
                 //Get other entry to change
-                $entries = $this->getAll('WHERE parentid = "'.$parentid.'" AND ordering = "'.$toChange.'"');
+                $entries = $this->getAll('WHERE parentid = \''.$parentid.'\' AND ordering = \''.$toChange.'\'');
                 foreach($entries as $entry) {
                     if ($entry['id'] != $id) {
                         $upArr = array(

@@ -287,7 +287,7 @@ class dbcontent extends dbTable
          */
         public function getNewOrder()
         {
-            $arr = $this->getArray('Select max("ordering") as neworder from tbl_cms_content');
+            $arr = $this->getArray('Select max(\'ordering\') as neworder from tbl_cms_content');
 
             return 0;
         }
@@ -330,7 +330,7 @@ class dbcontent extends dbTable
         public function resetSection($sectionId)
         {
             try {
-                $arrContent = $this->getAll('WHERE sectionid = "'.$sectionId.'"');
+                $arrContent = $this->getAll('WHERE sectionid = \''.$sectionId.'\'');
 
                 foreach ($arrContent as $page) {
                     $this->delete('id', $page['id']);
@@ -352,7 +352,7 @@ class dbcontent extends dbTable
         public function getPagesInSection($sectionId)
         {
             try {
-                $pages = $this->getAll('WHERE sectionid = "'.$sectionId.'" ORDER BY ordering');
+                $pages = $this->getAll('WHERE sectionid = \''.$sectionId.'\' ORDER BY ordering');
                 return $pages;
             } catch (customException $e) {
                 echo customException::cleanUp($e);
@@ -373,7 +373,7 @@ class dbcontent extends dbTable
         {
             try {
                 $noPages = '0';
-                $pages = $this->getAll('WHERE sectionid = "'.$sectionId.'" ORDER BY ordering');
+                $pages = $this->getAll('WHERE sectionid = \''.$sectionId.'\' ORDER BY ordering');
                 $noPages = count($pages);
                 return $noPages;
             } catch (customException $e) {
@@ -417,7 +417,7 @@ class dbcontent extends dbTable
             try {
                 $ordering = 1;
                 //get last order value
-                $lastOrder = $this->getAll('WHERE sectionid = "'.$sectionId.'" ORDER BY ordering DESC LIMIT 1');
+                $lastOrder = $this->getAll('WHERE sectionid = \''.$sectionId.'\' ORDER BY ordering DESC LIMIT 1');
                 //add after this value
 
                 if (!empty($lastOrder)) {
@@ -443,7 +443,7 @@ class dbcontent extends dbTable
         {
             try {
                 //Get the number of pages in the section
-                $lastOrd = $this->getAll('WHERE sectionid = "'.$sectionid.'" ORDER BY ordering DESC LIMIT 1');
+                $lastOrd = $this->getAll('WHERE sectionid = \''.$sectionid.'\' ORDER BY ordering DESC LIMIT 1');
                 $topOrder = $lastOrd['0']['ordering'];
                 $links = " ";
 
@@ -514,7 +514,7 @@ class dbcontent extends dbTable
         {
             try {
                 //Get array of all page entries
-                $fpContent = $this->getAll('WHERE sectionid = "'.$sectionid.'" ORDER BY ordering');
+                $fpContent = $this->getAll('WHERE sectionid = \''.$sectionid.'\' ORDER BY ordering');
                 //Search for entry to be reordered and update order
                 foreach($fpContent as $content) {
                     if ($content['id'] == $id) {
@@ -539,7 +539,7 @@ class dbcontent extends dbTable
                 }
 
                 //Get other entry to change
-                $entries = $this->getAll('WHERE sectionid = "'.$sectionid.'" AND ordering = "'.$toChange.'"');
+                $entries = $this->getAll('WHERE sectionid = \''.$sectionid.'\' AND ordering = \''.$toChange.'\'');
                 foreach($entries as $entry) {
                     if ($entry['id'] != $id) {
                         $upArr = array(

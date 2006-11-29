@@ -53,7 +53,7 @@ class dbcategories extends dbTable
 		}
 		else 
 		{
-			return $this->getRecordCount('WHERE sectionid = "'. $sectionId.'"');
+			return $this->getRecordCount('WHERE sectionid = \''. $sectionId.'\'');
 		}
 		
 	}
@@ -190,9 +190,9 @@ class dbcategories extends dbTable
 	public function getCategoryInSection($sectionId, $level = NULL)
 	{
 	   if(isset($level)){
-       return $this->getAll('WHERE sectionid = "'.$sectionId.'" AND count = "'.$level.'"');
+       return $this->getAll('WHERE sectionid = \''.$sectionId.'\' AND count = \''.$level.'\'');
      } else {
-         return $this->getAll('WHERE sectionid = "'.$sectionId.'"');
+         return $this->getAll('WHERE sectionid = \''.$sectionId.'\'');
      }    
   }
 	/** 
@@ -245,7 +245,7 @@ class dbcategories extends dbTable
        $level = $category['count'] + '1';
        //get an array of all the cats nodes
        for($i = $level; $i <= $numLevels; $i++){
-          $nodes = $this->getAll('WHERE parent_id = "'.$parentId.'" AND count = "'.$i.'"');
+          $nodes = $this->getAll('WHERE parent_id = \''.$parentId.'" AND count = \''.$i.'"');
           foreach($nodes as $node){
              $nodeIdArray[] = $node['id'];
           }
@@ -269,7 +269,7 @@ class dbcategories extends dbTable
    */
 	public function hasNodes($id)
 	{
-     $nodes = $this->getAll('WHERE parent_id = "'.$id.'"');
+     $nodes = $this->getAll('WHERE parent_id = \''.$id.'\'');
      if(count($nodes) > '0'){
        $hasNodes = True;
      } else {
