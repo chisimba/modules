@@ -51,8 +51,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $pageData=$objHeader->show();
 
     $objTable=new htmltable();
-    $objTable->cellspacing='2';
-    $objTable->cellpadding='2';
+//    $objTable->cellspacing='2';
+    $objTable->cellpadding='4';
     $objTable->startRow();
     $objTable->addCell($booksLabel,'','','','heading','');
     $objTable->addCell($entriesLabel,'20%','','','heading','');
@@ -64,7 +64,6 @@ if(!$GLOBALS['kewl_entry_point_run']){
         $objTable->addCell($noBooksLabel,'','','','noRecordsMessage','colspan="3"');
         $objTable->endRow();
     }else{
-        $objTable->row_attributes='onmouseover="this.className=\'tbl_ruler\';" onmouseout="this.className=\'none\'; "';
         if(!empty($arrContextList)){
             foreach($arrContextList as $context){
 

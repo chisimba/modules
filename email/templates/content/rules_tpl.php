@@ -179,9 +179,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $destLayer=$objLayer->show();
 
     $objTable=new htmltable();
-    $objTable->cellspacing='2';
-    $objTable->cellpadding='2';
-    $objTable->row_attributes='onmouseover="this.className=\'tbl_ruler\';" onmouseout="this.className=\'none\'; "';
+//    $objTable->cellspacing='2';
+    $objTable->cellpadding='4';
 
     $objTable->startRow();
     $objTable->addCell("<b>".$emailLabel."</b>",'','','','','');

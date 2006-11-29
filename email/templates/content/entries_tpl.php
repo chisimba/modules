@@ -218,7 +218,6 @@ if(!$GLOBALS['kewl_entry_point_run']){
             $objTable->addCell($noEntriesLabel,'','','','noRecordsMessage','colspan="5"');
             $objTable->endRow();
         }else{
-//            $objTable->row_attributes='onmouseover="this.className=\'tbl_ruler\';" onmouseout="this.className=\'none\'; "';
             foreach($arrContextUserList as $user){
                 // set up checkbox
                 $objCheck=new checkbox('userId[]');

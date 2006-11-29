@@ -125,8 +125,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $buttonLayer=$objLayer->show();
 
     $objTable=new htmltable();
-    $objTable->cellspacing='2';
-    $objTable->cellpadding='2';
+//    $objTable->cellspacing='2';
+    $objTable->cellpadding='4';
 
     if($section=='user'){
         $objTable->startRow();
@@ -167,8 +167,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $buttonLayer=$objLayer->show();
 
     $objTable=new htmltable();
-    $objTable->cellspacing='2';
-    $objTable->cellpadding='2';
+//    $objTable->cellspacing='2';
+    $objTable->cellpadding='4';
 
     if($section=='signature'){
         $objTable->startRow();
@@ -205,8 +205,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $buttonLayer=$objLayer->show();
 
     $objTable=new htmltable();
-    $objTable->cellspacing='2';
-    $objTable->cellpadding='2';
+//    $objTable->cellspacing='2';
+    $objTable->cellpadding='4';
 
     if($section=='folder'){
         $objTable->startRow();
@@ -242,8 +242,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $buttonLayer=$objLayer->show();
 
     $objTable=new htmltable();
-    $objTable->cellspacing='2';
-    $objTable->cellpadding='2';
+//    $objTable->cellspacing='2';
+    $objTable->cellpadding='4';
 
     if($section=='delete'){
         $objTable->startRow();
@@ -285,8 +285,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $addRuleHeading=$objHeader->show();
 
     $objTable=new htmltable();
-    $objTable->cellspacing='2';
-    $objTable->cellpadding='2';
+//    $objTable->cellspacing='2';
+    $objTable->cellpadding='4';
 
     $objTable->startRow();
     $objTable->addCell($rulesTextLabel,'','','','warning','');
@@ -299,8 +299,9 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $objTable=new htmltable();
     $objTable->id="rulesTable";
     $objTable->css_class="sorttable";
-    $objTable->cellspacing='2';
-    $objTable->cellpadding='2';
+//    $objTable->cellspacing='2';
+    $objTable->cellpadding='4';
+    $objTable->row_attributes='name="row_'.$objTable->id.'"';
 
     $objTable->startRow();
     $objTable->addCell($emailLabel,'','','','heading','');
@@ -317,7 +318,6 @@ if(!$GLOBALS['kewl_entry_point_run']){
         $objTable->addCell($norulesLabel,'','','','noRecordsMessage','colspan="8"');
         $objTable->endRow();
     }else{
-        $objTable->row_attributes='onmouseover="this.className=\'tbl_ruler\';" onmouseout="this.className=\'none\'; "';
         foreach($arrRulesList as $rule){
             if($rule['mail_action']=='1'){
                 $mailAction=$incomingLabel;

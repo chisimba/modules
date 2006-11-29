@@ -103,8 +103,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
 // set up search fieldset
     $objTable=new htmltable();
-    $objTable->cellspacing='2';
-    $objTable->cellpadding='2';
+//    $objTable->cellspacing='2';
+    $objTable->cellpadding='4';
 
     $objTable->startRow();
     $objTable->addCell($textLabel,'','','','warning','colspan="2"');
@@ -123,8 +123,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
 // set up search fieldset
     $objTable=new htmltable();
-    $objTable->cellspacing='2';
-    $objTable->cellpadding='2';
+//    $objTable->cellspacing='2';
+    $objTable->cellpadding='4';
 
     $objTable->startRow();
     $objTable->addCell($textLabel,'','','','warning','colspan="2"');
@@ -143,8 +143,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
 // set up tables and tabbedboxes
     $objTable=new htmltable();
-    $objTable->cellspacing='2';
-    $objTable->cellpadding='2';
+//    $objTable->cellspacing='2';
+    $objTable->cellpadding='4';
 
     $objTable->startRow();
     $objTable->addCell($searchFieldset,'','','','','');
@@ -173,8 +173,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $emailTab=$objTabbedbox->show();
 
     $objTable=new htmltable();
-    $objTable->cellspacing='2';
-    $objTable->cellpadding='2';
+//    $objTable->cellspacing='2';
+    $objTable->cellpadding='4';
 
     $objTable->startRow();
     $objTable->addCell($emailTab,'','','','','');
@@ -193,8 +193,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $uploadButton=$objButton->show();
 
     $objTable=new htmltable();
-    $objTable->cellspacing='2';
-    $objTable->cellpadding='2';
+//    $objTable->cellspacing='2';
+    $objTable->cellpadding='4';
 
     if($error==1){
         $objTable->startRow();
@@ -259,8 +259,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $attachmentsTab=$objTabbedbox->show();
 
     $objTable=new htmltable();
-    $objTable->cellspacing='2';
-    $objTable->cellpadding='2';
+//    $objTable->cellspacing='2';
+    $objTable->cellpadding='4';
 
     $objTable->startRow();
     $objTable->addCell($attachmentsTab,'','','','','');
