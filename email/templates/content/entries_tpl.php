@@ -16,6 +16,10 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
     $headerParams=$this->getJavascriptFile('selectall.js','htmlelements');
     $this->appendArrayVar('headerParams',$headerParams);
+    $headerParams=$this->getJavascriptFile('new_sorttable.js','htmlelements');
+    $this->appendArrayVar('headerParams',$headerParams);
+//    $body = ' onload="var SORT_COLUMN_INDEX; sortables_init();"';
+//    $this -> setVarByRef('bodyParams', $body);
 //    $this->setLayoutTemplate('layout_tpl.php');
 
 // set up html elements
@@ -78,8 +82,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
         $usernameInput=$objInput->show();
 
         $objTable=new htmltable();
-        $objTable->cellspacing='2';
-        $objTable->cellpadding='2';
+//        $objTable->cellspacing='2';
+        $objTable->cellpadding='4';
 
         $objTable->startRow();
         $objTable->addCell($usernameInput,'50%','','','','');
@@ -97,8 +101,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
         $firstnameInput=$objInput->show();
 
         $objTable=new htmltable();
-        $objTable->cellspacing='2';
-        $objTable->cellpadding='2';
+//        $objTable->cellspacing='2';
+        $objTable->cellpadding='4';
 
         $objTable->startRow();
         $objTable->addCell($firstnameInput,'50%','','','','');
@@ -116,8 +120,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
         $surnameInput=$objInput->show();
 
         $objTable=new htmltable();
-        $objTable->cellspacing='2';
-        $objTable->cellpadding='2';
+//        $objTable->cellspacing='2';
+        $objTable->cellpadding='4';
 
         $objTable->startRow();
         $objTable->addCell($surnameInput,'50%','','','','');
@@ -131,8 +135,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
         $surnameFieldset=$objFieldset->show();
 
         $objTable=new htmltable();
-        $objTable->cellspacing='2';
-        $objTable->cellpadding='2';
+//        $objTable->cellspacing='2';
+        $objTable->cellpadding='4';
 
         $objTable->startRow();
         $objTable->addCell($usernameFieldset,'','','','','');
@@ -192,13 +196,14 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $buttons=$selectAllButton."&nbsp;".$selectNoneButton."&nbsp;".$sendButton;
 
     $objTable=new htmltable();
-    $objTable->cellspacing='2';
-    $objTable->cellpadding='2';
+//    $objTable->cellspacing='2';
+    $objTable->cellpadding='4';
     $objTable->id="userListTable";
     $objTable->css_class="sorttable";
+    $objTable->row_attributes=' name="row_'.$objTable->id.'"';
 
     $objTable->startRow();
-    $objTable->addCell('fhzf','5%','','','heading','');
+    $objTable->addCell('','5%','','','heading','');
     $objTable->addCell($usernameLabel,'30%','','','heading','');
     $objTable->addCell($nameLabel,'30%','','','heading','');
     $objTable->addCell($surnameLabel,'','','','heading','');
@@ -234,8 +239,9 @@ if(!$GLOBALS['kewl_entry_point_run']){
             $objTable->addCell($noEntriesLabel,'','','','noRecordsMessage','colspan="5"');
             $objTable->endRow();
         }else{
-//            $objTable->row_attributes='onmouseover="this.className=\'tbl_ruler\';" onmouseout="this.className=\'none\'; "';
+            $i = 1;
             foreach($arrBookEntryList as $entry){
+
                 // set up delete icon
                 $deleteArray=array('action'=>'deleteentry','bookId'=>$bookId,'entryId'=>$entry['id']);
                 $deleteIcon=$objIcon->getDeleteIconWithConfirm('',$deleteArray,'email',$confirmLabel);
@@ -283,7 +289,4 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $objLayer->addToStr($pageData);
     $pageLayer=$objLayer->show();
     echo $pageLayer;
-
-    $headerParams=$this->getJavascriptFile('new_sorttable.js','htmlelements');
-    $this->appendArrayVar('headerParams',$headerParams);
 ?>

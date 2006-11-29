@@ -266,17 +266,6 @@ class email extends controller
                 break;
 
             case 'gotofolder':
-/*
-                $this->loadClass('xajax','ajaxwrapper');
-                //Register another function in this controller
-                $xajaxDefault= new xajax($this->uri(array('action'=>'gotofolder')));
-                $xajaxDefault->registerFunction(array($this,"checkAll"));
-                //XAJAX method to be called
-                $xajaxDefault->processRequests();
-                //Send JS to header
-                $this->appendArrayVar('headerParams', $xajaxDefault->getJavascript());
-*/
-
                 $folderId=$this->getParam('folderId');
                 $filter=$this->getParam('filter');
                 $mode=$this->getParam('mode');
@@ -572,7 +561,6 @@ class email extends controller
                     $configs['surname_first']=isset($configs['surname_first'])?$configs['surname_first']:0;
                     $configs['hide_username']=isset($configs['hide_username'])?$configs['hide_username']:0;
                     $configs['default_folder_id']=isset($configs['default_folder_id'])?$configs['default_folder_id']:'init_1';
-                    $this->setSession('configs',$configs);
                     $autoDelete=isset($configs['auto_delete'])?$configs['auto_delete']:0;
                     if($autoDelete==1){
                         $arrEmailList=$this->dbRouting->getAllMail('init_4',array(0=>'messageListTable',1=>1,2=>'DESC'),NULL);
@@ -582,12 +570,17 @@ class email extends controller
                             }
                         }
                     }
+                }else{
+                    $configs['surname_first']=isset($configs['surname_first'])?$configs['surname_first']:0;
+                    $configs['hide_username']=isset($configs['hide_username'])?$configs['hide_username']:0;
+                    $configs['default_folder_id']=isset($configs['default_folder_id'])?$configs['default_folder_id']:'init_1';
+                    $autoDelete=isset($configs['auto_delete'])?$configs['auto_delete']:0;
                 }
-                $defaultFolderId=$configs['default_folder_id'];
+                $this->setSession('configs',$configs);
                 $this->clearAttachments();
                 $arrFolderList=$this->dbFolders->listFolders();
                 $this->setVarByRef('arrFolderList',$arrFolderList);
-                $this->setVar('folderId',$defaultFolderId);
+                $this->setVar('folderId',$configs['default_folder_id']);
                 $this->setVar('routingId',NULL);
                 $this->setVar('filter',NULL);
                 $this->setVar('sortOrder',array(0=>'messageListTable',1=>3,2=>'DESC'));
@@ -614,9 +607,7 @@ class email extends controller
                 $objDrop->addOption(NULL,"- ".$selectLabel." -");
                 foreach($arrUserList as $user){
                     $value=$this->getName($user['userid']);
-                    if($user['userid']!=$this->userId){
-                        $objDrop->addOption($user['userid'],$value);
-                    }
+                    $objDrop->addOption($user['userid'],$value);
                 }
                 $userDrop=$objDrop->show();
                 $response="<span>".$userDrop."</span>";
@@ -641,9 +632,7 @@ class email extends controller
                 $objDrop->addOption(NULL,"- ".$selectLabel." -");
                 foreach($arrUserList as $user){
                     $value=$this->getName($user['userid']);
-                    if($user['userid']!=$this->userId){
-                        $objDrop->addOption($user['userid'],$value);
-                    }
+                    $objDrop->addOption($user['userid'],$value);
                 }
                 $userDrop=$objDrop->show();
                 $response="<span>".$userDrop."</span>";
@@ -668,9 +657,7 @@ class email extends controller
                 $objDrop->addOption(NULL,"- ".$selectLabel." -");
                 foreach($arrUserList as $user){
                     $value=$this->getName($user['userid']);
-                    if($user['userid']!=$this->userId){
-                        $objDrop->addOption($user['userid'],$value);
-                    }
+                    $objDrop->addOption($user['userid'],$value);
                 }
                 $userDrop=$objDrop->show();
                 $response="<span>".$userDrop."</span>";
@@ -808,8 +795,6 @@ class email extends controller
         $skin.=$this->objConfig->getItem('KEWL_DEFAULTICONFOLDER');
         $title=$this->objLanguage->languageText('word_delete');
         $confirm=$this->objLanguage->languageText('mod_email_delrecipient','email');
-
-//        $delIcon='<a href=\'#\'><img src=\''.$skin.'cancel.gif\' class=\'absmiddle\' alt=\''.$title.'\' title=\''.$title.'\' border=\'0\' height=\'17\' width=\'17\' onclick="javascript:if(confirm(\''.$confirm.'\')){xajax_deleteRecipient(\''.$userId.'\',document.getElementById(\'input_recipient\').value);}" /></a>';
 
         $delIcon='<a href=\'#\'><img src=\''.$skin.'cancel.gif\' class=\'absmiddle\' alt=\''.$title.'\' title=\''.$title.'\' border=\'0\' height=\'17\' width=\'17\' onclick="javascript:if(confirm(\''.$confirm.'\')){xajax_deleteRecipient(\''.$userId.'\',document.getElementById(\'input_recipient\').value);}" /></a>';
 
@@ -1111,31 +1096,5 @@ class email extends controller
         $objResponse->addAssign('destLayer','innerHTML',$folderDrop);
         return $objResponse->getXML();
     }
-
-
-    /**
-    * Method to check all checkboxes using xajax
-    *
-    * @param string $check The value of the main checkbox
-    * @return NULL
-    */
-/*
-    function checkAll($check)
-    {
-        $selectLabel=$this->objLanguage->languageText('word_select');
-        $notApplicableLabel=$this->objLanguage->languageText('phrase_notapplicable');
-
-        $this->loadClass('xajaxresponse','ajaxwrapper');
-        if($check==TRUE){
-            $alert='The value is true';
-        }else{
-            $alert='The value is false';
-        }
-        $objResponse=new xajaxResponse();
-        $objResponse->addAlert($alert);
-        $objResponse->addAssign('input_msgId[]','checked','checked');
-        return $objResponse->getXML();
-    }
-*/
 }
 ?>

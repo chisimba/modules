@@ -100,9 +100,9 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $objTable=new htmltable();
     $objTable->id="folderList";
     $objTable->css_class="sorttable";
-    $objTable->cellspacing='2';
-    $objTable->cellpadding='2';
-    $objTable->row_attributes='onmouseover="this.className=\'tbl_ruler\';" onmouseout="this.className=\'none\'; "';
+//    $objTable->cellspacing='2';
+    $objTable->cellpadding='4';
+    $objTable->row_attributes=' name="row_'.$objTable->id.'"';
 
     $objTable->startRow();
     $objTable->addCell("<b>".$folderLabel."</b>",'50%','','','wrapperLightBkg','');
@@ -143,8 +143,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $arrEmailListData=$this->dbRouting->getAllMail($folderId,$sortOrder,$filter);
 
     $objTable=new htmltable();
-    $objTable->cellspacing='2';
-    $objTable->cellpadding='2';
+//    $objTable->cellspacing='2';
+    $objTable->cellpadding='4';
 
     if(!empty($arrEmailListData)){
         // move message
@@ -268,8 +268,9 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $objTable=new htmltable();
     $objTable->id="messageListTable";
     $objTable->css_class="sorttable";
-    $objTable->cellspacing='2';
-    $objTable->cellpadding='2';
+//    $objTable->cellspacing='2';
+    $objTable->cellpadding='4';
+    $objTable->row_attributes=' name="row_'.$objTable->id.'"';
 
     $objTable->startRow();
     $objTable->addCell('','10%','','','wrapperLightBkg','');
@@ -283,7 +284,6 @@ if(!$GLOBALS['kewl_entry_point_run']){
         $objTable->addCell($noMessagesLabel,'','','center','noRecordsMessage','colspan="5"');
         $objTable->endRow();
     }else{
-        $objTable->row_attributes='onmouseover="this.className=\'tbl_ruler\';" onmouseout="this.className=\'none\'; "';
         $i=0;
         foreach($arrEmailListData as $email){
 
@@ -400,8 +400,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $hiddenForm=$objForm->show();
 
     $objTable=new htmltable();
-    $objTable->cellspacing='2';
-    $objTable->cellpadding='2';
+//    $objTable->cellspacing='2';
+    $objTable->cellpadding='4';
 
     if(empty($messageData)){
         $objTable->startRow();
@@ -527,9 +527,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
             $arrAttachments=$this->dbAttachments->getAttachments($emailData['id']);
 
             $objTable=new htmltable();
-            $objTable->cellspacing='2';
-            $objTable->cellpadding='2';
-            $objTable->row_attributes='onmouseover="this.className=\'tbl_ruler\';" onmouseout="this.className=\'none\'; "';
+//            $objTable->cellspacing='2';
+            $objTable->cellpadding='4';
 
             $i=1;
             foreach($arrAttachments as $attachment){
@@ -581,8 +580,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
 // set up main table
     $objTable=new htmltable();
-    $objTable->cellspacing='2';
-    $objTable->cellpadding='2';
+//    $objTable->cellspacing='2';
+    $objTable->cellpadding='4';
 
     $objTable->startRow();
     $objTable->addCell($manageIcon."&nbsp;".$booksIcon."&nbsp;".$configIcon,'25%','','','heading','');
