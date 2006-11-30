@@ -118,7 +118,7 @@ class dbrouting extends dbTable
     */
     function getAllMail($folderId,$sortOrder,$filter)
     {
-        $sql="SELECT *, routing.id AS routing_id, CONCAT(firstName,' ',surname) AS fullName, email.id AS emailid ";
+        $sql="SELECT *, routing.id AS routing_id, email.id AS emailid ";
         $sql.=" FROM ".$this->table." AS routing,";
         $sql.=$this->tblEmail." AS email, ";
         $sql.=$this->tblUsers." AS users";
@@ -146,6 +146,9 @@ class dbrouting extends dbTable
         }
         $data=$this->getArray($sql);
         if(!empty($data)){
+            foreach($data as $key=>$line){
+                $data[$key]['fullName']=$line['firstname'].' '.$line['surname'];
+            }
             return $data;
         }
         return FALSE;
