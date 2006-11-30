@@ -74,7 +74,7 @@ $fields = array(
         'unsigned' => TRUE,
 
 		),
-    'count' => array(
+    'nodelevel' => array(
 		'type' => 'integer',
         'length' => 11,
 

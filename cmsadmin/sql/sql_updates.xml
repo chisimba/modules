@@ -2,6 +2,24 @@
 <updates>
   <update>
     <table>
+      tbl_cms_sections
+    </table>
+    <version>
+      1.28
+    </version>
+    <description>
+      changed count field to nodelevel
+    </description>
+    <data>
+       <rename>
+          <count>
+              <name>nodelevel</name>
+          </count> 
+       </rename>
+    </data>
+  </update>  
+  <update>
+    <table>
       tbl_cms_content
     </table>
     <version>

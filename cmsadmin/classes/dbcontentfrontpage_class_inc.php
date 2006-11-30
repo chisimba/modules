@@ -182,7 +182,7 @@ class dbcontentfrontpage extends dbTable
        }
      }
      //Get other entry to change
-     $entries = $this->getAll('WHERE ordering = "'.$toChange.'"');
+     $entries = $this->getAll("WHERE ordering = '$toChange'");
      foreach($entries as $entry){
         if($entry['id'] != $id){
           $upArr = array(

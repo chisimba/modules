@@ -88,9 +88,9 @@ class dbsections extends dbTable
         {
             try {
                 if ($isPublished) {
-                    return $this->getAll('WHERE published = 1 AND count = 1 ORDER BY ordering');
+                    return $this->getAll('WHERE published = 1 AND nodelevel = 1 ORDER BY ordering');
                 } else {
-                    return $this->getAll('WHERE count = 1 ORDER BY ordering');
+                    return $this->getAll('WHERE nodelevel = 1 ORDER BY ordering');
                 }
             } catch (Exception $e) {
                 echo 'Caught exception: ', $e->getMessage();
@@ -184,7 +184,7 @@ class dbsections extends dbTable
                                          'showintroduction' => $showintroduction,
                                          'numpagedisplay' => $numpagedisplay,
                                          'ordertype' => $ordertype,
-                                         'count' => $this->getLevel($parentid) + '1'
+                                         'nodelevel' => $this->getLevel($parentid) + '1'
                                      ));
 
             } catch (Exception $e) {
@@ -235,7 +235,7 @@ class dbsections extends dbTable
                                  'numpagedisplay' => $numpagedisplay,
                                  'ordertype' => $ordertype,
                                  'description' => $description,
-                                 'count' => $count,
+                                 'nodelevel' => $count,
                                  'published' => $published);
                 return $this->update('id', $id, $arrFields);
 
@@ -370,7 +370,7 @@ class dbsections extends dbTable
 
             if (!empty($section)) {
                 //get and return value of count field
-                $count = $section['count'];
+                $count = $section['nodelevel'];
             }
 
             return $count;
@@ -455,9 +455,9 @@ class dbsections extends dbTable
             try {
                 if ($isPublished) {
                     //return all subsections
-                    return $this->getAll('WHERE published = 1 AND count = \''.$level.'\' AND rootid = \''.$rootId.'\' ORDER BY ordering '.$order);
+                    return $this->getAll('WHERE published = 1 AND nodelevel = \''.$level.'\' AND rootid = \''.$rootId.'\' ORDER BY ordering '.$order);
                 } else {
-                    return $this->getAll('WHERE count = \''.$level.'\' AND rootid = \''.$rootId.'\' ORDER BY ordering '.$order);
+                    return $this->getAll('WHERE nodelevel = \''.$level.'\' AND rootid = \''.$rootId.'\' ORDER BY ordering '.$order);
                 }
             } catch (Exception $e) {
                 echo 'Caught exception: ', $e->getMessage();
@@ -504,11 +504,11 @@ class dbsections extends dbTable
                 $numLevels = $this->objCmsUtils->getNumNodeLevels($category['id']);
                 $parentId = $id;
                 $nodeIdArray = array();
-                $level = $category['count'] + '1';
+                $level = $category['nodelevel'] + '1';
                 //get an array of all the cats nodes
 
                 for ($i = $level; $i <= $numLevels; $i++) {
-                    $nodes = $this->getAll('WHERE parentid = \''.$parentId.'\' AND count = \''.$i.'\'');
+                    $nodes = $this->getAll('WHERE parentid = \''.$parentId.'\' AND nodelevel = \''.$i.'\'');
                     foreach($nodes as $node) {
                         $nodeIdArray[] = $node['id'];
                         $parentId = $node['id'];
@@ -579,7 +579,7 @@ class dbsections extends dbTable
 
             if (empty($parentId)) {
                 //Get the number of root sections
-                $lastOrd = $this->getAll('WHERE count = 1 ORDER BY ordering DESC LIMIT 1');
+                $lastOrd = $this->getAll('WHERE nodelevel = 1 ORDER BY ordering DESC LIMIT 1');
             } else {
                 //Get the number of sub sections in section
                 $lastOrd = $this->getAll('WHERE parentid = \''.$parentId.'\' ORDER BY ordering DESC LIMIT 1');

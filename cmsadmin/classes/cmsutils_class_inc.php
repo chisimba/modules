@@ -1106,8 +1106,8 @@ class cmsutils extends object
 
             if (!empty($subSecs)) {
                 foreach($subSecs as $sec) {
-                    if ($sec['count'] > $numLevels) {
-                        $numLevels = $sec['count'];
+                    if ($sec['nodelevel'] > $numLevels) {
+                        $numLevels = $sec['nodelevel'];
                     }
                 }
             }
@@ -1399,7 +1399,7 @@ class cmsutils extends object
                 //Set parentid as hidden field
                 $objCount->name = 'count';
                 $objCount->fldType = 'hidden';
-                $objCount->value = $section['count'];
+                $objCount->value = $section['nodelevel'];
                 //Set parentid as hidden field
                 $objOrdering->name = 'ordering';
                 $objOrdering->fldType = 'hidden';
