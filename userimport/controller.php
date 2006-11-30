@@ -111,6 +111,9 @@ class userimport extends controller
                 $this->result=$this->objUserBatch->showBatch($batchCode);
             }
             return 'view_tpl.php';
+        // Display all batches this user should "see"
+        case 'list':
+            return 'importlist_tpl.php';
         // Exporting a batch of users in CSV format
         case 'exportcsv':
             $batchCode=$this->getParam('batchCode');
