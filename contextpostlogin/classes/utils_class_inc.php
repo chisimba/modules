@@ -172,7 +172,7 @@ class utils extends object
 		
 		$leftSideColumn .= $objBlocks->showBlock('latestpodcast', 'podcast');
 		
-		
+		$leftSideColumn .= $objBlocks->showBlock('loginstats', 'context');
 		
 		/*
 		$leftSideColumn .= $objBlocks->showBlock('loginstats', 'context');
@@ -259,6 +259,7 @@ class utils extends object
 	  	$str = '';
 	  	$arr = $this->_objContextModules->getContextModules($contextCode);
 	  	$objIcon = & $this->newObject('geticon', 'htmlelements');
+	  	$objLink = & $this->newObject('link', 'htmlelements');
 	  	$objModule = & $this->newObject('modules', 'modulecatalogue');
 	  	if(is_array($arr))
 	  	{
@@ -268,8 +269,11 @@ class utils extends object
 	  			$modInfo =$objModule->getModuleInfo($plugin['moduleid']);
 	  			
 	  			$objIcon->setModuleIcon($plugin['moduleid']);
-	  			$objIcon->alt = $modInfo['name'];
-	  			$str .= $objIcon->show().'   ';
+	  			$objIcon->alt = $this->_objDBContext->getTitle($contextCode). ' : '.$modInfo['name'];
+	  			
+	  			$objLink->href = $this->uri(array ('action' => 'gotomodule', 'moduleid' => $plugin['moduleid'], 'contextcode' => $contextCode));
+	  			$objLink->link = $objIcon->show();
+	  			$str .= $objLink->show().'   ';
 	  		}
 	  		
 	  		return $str;
