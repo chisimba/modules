@@ -53,7 +53,7 @@ class dbemail extends dbTable
         foreach($arrRecipientList as $recipient){
             if($recipient!=''){
                 $this->dbRouting->sendMail($emailId,$this->userId,$recipient,'init_1',0,0);
-                $this->instantMessage($recipient);
+//                $this->instantMessage($recipient);
             }
         }
         return $emailId;
@@ -106,12 +106,10 @@ class dbemail extends dbTable
         if($this->objModules->checkIfRegistered('instantmessaging')){
             $objIMDbOptions = $this->getObject('dboptions','instantmessaging');
             // Fail if table does not exist
-            if ($objIMDbOptions->tableExists('tbl_im_options')){
-                if ($objIMDbOptions->get('notifyReceive',$recipient)) {
-                    $objIM =& $this->getObject('dbentries','instantmessaging');
-                    //System notification
-                    $objIM->sendInstantMessage($recipient,null,$message);
-                }
+            if ($objIMDbOptions->get('notifyreceive',$recipient)) {
+                $objIM =& $this->getObject('dbentries','instantmessaging');
+                //System notification
+                $objIM->sendInstantMessage($recipient,null,$message);
             }
         }
     }
