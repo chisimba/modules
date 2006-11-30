@@ -29,6 +29,7 @@ $fields = array(
 		'length' => 120,
 		'notnull' => TRUE,
 		'default' => '',
+		),
 	'size' => array(
 		'type' => 'integer',
 		'length' => 11,
