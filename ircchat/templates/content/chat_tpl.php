@@ -11,6 +11,17 @@ if ($objUser->isLoggedIn()) {
 } else {
     $userName = "Guest";
 }
+// Get the context
+$objDbContext = &$this->getObject('dbcontext','context');
+$contextCode = $objDbContext->getContextCode();
+// Are we in a context ?
+if ($contextCode == NULL) {
+    $context = "Lobby";
+}
+else {
+	$context = $objDbContext->getTitle();
+}
+// Applet
 $applet = '
 <applet 
 codebase="modules/ircchat/resources"
@@ -34,7 +45,7 @@ value="
 <param name="name" value="Java User"/>
 <param name="host" value="irc.uwc.ac.za"/>
 <param name="gui" value="pixx"/>
-<param name="command1" value="join #t"/>
+<param name="command1" value="join #'.$context.'"/>
 </applet>
 ';
 $content = $applet;
