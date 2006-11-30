@@ -3,12 +3,12 @@
 	echo '<h1>'.$objLanguage->languageText('mod_personalspace_heading', 'personalspace').'</h1>';
     // Display - secondary heading (User Details)
 	echo("<h3>".$objLanguage->languageText("mod_personalspace_userdetails", 'personalspace')."</h3>");
-    
+
     echo '<div class="wrapperLightBkg" style="border: 5px outset #c0c0c0;">';
-    
+
 	$table =& $this->newObject("htmltable","htmlelements");
 	$table->border = 0;
-	$table->width = Null;	
+	$table->width = Null;
     $table->cellpadding = 2;
 	$table->startRow();
 	// Display - full name
@@ -40,35 +40,35 @@
 		$table->addCell($contextTitle);
 	}
 	$table->endRow();
-	
+
 	echo $table->show();
-	
+
 	// Display - update user
-	echo '<p align="center"><a href="' . 
+	echo '<p align="center"><a href="' .
 		$this->uri(array(
 			'action'=>'mydetails'
 			//'action'=>'Edit',
 			//'userId'=>$objUser->userId()
-		), 'useradmin')	
+		), 'useradmin')
 		. "\">". $objLanguage->languageText("phrase_updatedetails") ."</a>";
-	
+
 	// Display - change password.
 	//$objSqlUsers =& $this->getObject('sqlusers','security');     #############
 	//if (!$objSqlUsers->isLDAPUser($this->objUser->userId())) {   #############
-		echo " / <a href=\"" . 
+		echo " / <a href=\"" .
 			$this->uri(array(
 				'action'=>'changepassword'
 				//'action'=>'Edit',
 				//'userId'=>$objUser->userId()
 			), 'useradmin'
-			)	
-		. "\">"."Change Password"."</a>"."</p>";	
+			)
+		. "\">"."Change Password"."</a>"."</p>";
 	//}
-	   
-   
+
+
 	// End Wrapper
-	echo '</div>';   
-    
+	echo '</div>';
+
 ?>
 
 <?php
@@ -80,7 +80,7 @@
     	$unread = 0;
     	foreach ($emails as $email) {
     		$count++;
-    		if ($email['folder']=='new') {
+    		if ($email['read_email']!='1') {
     			$unread++;
     		}
     	}
@@ -93,7 +93,7 @@
     	}
     	// Display emails.
         if ($count > 0) {
-        	echo 
+        	echo
                 "1 "
                 .$objLanguage->languageText('word_to')
                 ." "
@@ -113,8 +113,8 @@
         $table =& $this->newObject("htmltable","htmlelements");
         $table->border = 0;
         $table->cellspacing = 1;
-        $table->cellpadding = 5;	
-        $table->width = "100%";	
+        $table->cellpadding = 5;
+        $table->width = "100%";
         $table->startHeaderRow();
         $table->addHeaderCell("<b>".$objLanguage->languageText('mod_personalspace_subject', 'personalspace')."</b>","40%","top");
         $table->addHeaderCell("<b>".$objLanguage->languageText('mod_personalspace_sender', 'personalspace')."</b>","40%","top");
@@ -123,8 +123,9 @@
     	if ($count > 0) {
     		$index = 0;
     		foreach ($emails as $email) {
+                $name = $this -> objDbEmail -> getName($email['sender_id']);
     			if ($index < 5) {
-    				if ($email['folder']=='new') {
+    				if ($email['read_email']!='1') {
     				    $tdClass = 'emailNew';
     				}
     				else {
@@ -136,12 +137,12 @@
     						//'module'=>'email',
     						'action'=>'read',
     						'emailId'=>$email['email_id']
-    					), 'email')	
+    					), 'email')
     				."\">" . $email['subject'] . "</a>";
     				$table->addCell($cell, null, "top", null, $tdClass);
-    				$table->addCell($email['fullname'], null, "top", null, $tdClass);
-    				$table->addCell($email['date'], null, "top", null, $tdClass);
-    				$table->endRow();		    
+    				$table->addCell($name, null, "top", null, $tdClass);
+    				$table->addCell($email['date_sent'], null, "top", null, $tdClass);
+    				$table->endRow();
     			}
     			$index++;
     		}
@@ -150,15 +151,15 @@
     		$table->startRow();
             //<span class="noRecordsMessage"> ... </span>
     		$table->addCell("<span class=\"noRecordsMessage\">".$objLanguage->languageText('mod_personalspace_noemails', 'personalspace')."</span>", null, "center", "center", null, "colspan='3'");
-    		$table->endRow();		    
+    		$table->endRow();
     	}
     	echo $table->show();
     	// Show Inbox.
-    	echo "<p align=\"center\"><a href=\"" . 
+    	echo "<p align=\"center\"><a href=\"" .
     		$this->uri(array(
     		),
     		'email'
-    		)	
+    		)
     	. "\">";
     	$icon = $this->getObject('geticon','htmlelements');
     	$icon->setIcon('inbox');
@@ -167,21 +168,21 @@
     	echo $icon->show();
     	echo "&nbsp;".$objLanguage->languageText('mod_personalspace_inbox', 'personalspace')."</a>" . "&nbsp;/&nbsp;";
     	// Show Compose Message.
-    	echo "<a href=\"" . 
+    	echo "<a href=\"" .
     		$this->uri(array(
-    			'action'=>'new'
+    			'action'=>'compose'
     		),
     		'email'
-    		)	
+    		)
     	. "\">";
     	$icon = $this->getObject('geticon','htmlelements');
     	$icon->setIcon('notes');
     	$icon->alt = $objLanguage->languageText('mod_personalspace_compose', 'personalspace');
     	//$icon->align=false;
     	echo $icon->show();
-    	echo "&nbsp;".$objLanguage->languageText('mod_personalspace_compose', 'personalspace')."</a>" . "</p>";	
+    	echo "&nbsp;".$objLanguage->languageText('mod_personalspace_compose', 'personalspace')."</a>" . "</p>";
     }
-    
+
     if ($homepage) {
         // Header
         $objHeading = $this->getObject('htmlheading', 'htmlelements');

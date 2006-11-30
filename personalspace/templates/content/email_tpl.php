@@ -1,9 +1,10 @@
 <?php
-	echo("<h3>EMail</h3>");
 	//print_r($emails);
 	$count = 0;
 	$unread = 0;
 	foreach ($emails as $email) {
+        $name = $objDbEmail -> getName('sender_id');
+
 		$count++;
 		if ($email['folder']=='new') {
 			$unread++;
@@ -24,8 +25,8 @@
 	$table =& $this->getObject("htmltable","htmlelements");
 	$table->border = 0;
 	$table->cellspacing = 1;
-	$table->cellpadding = 5;	
-	$table->width = Null;	
+	$table->cellpadding = 5;
+	$table->width = Null;
 	$table->startRow();
 	$table->addCell("<b>Subject</b>",null,"top",null,'emailHeading');
 	$table->addCell("<b>Sender</b>",null,"top",null,'emailHeading');
@@ -42,36 +43,36 @@
 			}
 			$table->startRow();
 			$table->addCell($email['subject'], null, "top", null, $tdClass);
-			$table->addCell($email['fullname'], null, "top", null, $tdClass);
-			$table->addCell($email['date'], null, "top", null, $tdClass);
-			$table->endRow();		    
+			$table->addCell($name, null, "top", null, $tdClass);
+			$table->addCell($email['date_sent'], null, "top", null, $tdClass);
+			$table->endRow();
 		}
 		$count++;
 	}
 	echo $table->show();
-	echo "<a href=\"" . 
+	echo "<a href=\"" .
 		$this->uri(array(
 		),
 		'email'
-		)	
+		)
 	. "\">";
 	$icon = $this->getObject('geticon','htmlelements');
 	$icon->setIcon('inbox');
 	$icon->alt = "Inbox";
 	$icon->align=false;
 	echo $icon->show();
-	echo "&nbsp;Inbox</a>" . "&nbsp;";	
-	echo "<a href=\"" . 
+	echo "&nbsp;Inbox</a>" . "&nbsp;";
+	echo "<a href=\"" .
 		$this->uri(array(
-			'action'=>'new'
+			'action'=>'compose'
 		),
 		'email'
-		)	
+		)
 	. "\">";
 	$icon = $this->getObject('geticon','htmlelements');
 	$icon->setIcon('notes');
 	$icon->alt = "Compose";
 	$icon->align=false;
 	echo $icon->show();
-	echo "&nbsp;Compose</a>" . "&nbsp;";	
+	echo "&nbsp;Compose</a>" . "&nbsp;";
 ?>

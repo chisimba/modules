@@ -35,7 +35,7 @@ class personalspace extends controller
         //Log this module call
         $this->objLog->log();
     }
-    
+
     /**
     * The dispatch funtion
     * @param string $action The action
@@ -52,7 +52,7 @@ class personalspace extends controller
 	        // 2. load the data object (calls the magical getObject which finds the
 	        //    appropriate file, includes it, and either instantiates the object,
 	        //    or returns the existing instance if there is one. In this case we
-	        //    are not actually getting a data object, just a helper to the 
+	        //    are not actually getting a data object, just a helper to the
 	        //    controller.
 	        // 3. Pass variables to the template
 	        $this->setVarByRef('objUser', $this->objUser);
@@ -66,7 +66,7 @@ class personalspace extends controller
 	            $this->setVarByRef('element',$element);
 	        }
 			*/
-			
+
 			// Get # of unread emails
 	        $objModules =& $this->newObject('modules','modulecatalogue');
 			$email = $objModules->checkIfRegistered('email');
@@ -77,13 +77,14 @@ class personalspace extends controller
 	        //$this->setLayoutTemplate("user_layout_tpl.php");
 	        //$this->setPageTemplate("user_page_tpl.php");
 	        //switch($action){
-				
+
 				// Get list of buddies
 				//default:
 			//} // switch
-			
+
 			// Get Emails
 	        if ($email) {
+/*
 	    		$objDbEmail =& $this->getObject('dbemail');
 	    		$new = $objDbEmail->listAll($this->objUser->userId());
 	    		$unread = $new[0]['count(sender_id)'];
@@ -91,9 +92,13 @@ class personalspace extends controller
 	    		$kngmail =& $this->getObject('kngmail', 'email');
 	    		$emails = $kngmail->listMail($this->objUser->userId(), 'mail');
 	    		$emails = array_reverse($emails);
-	    		$this->setVarByRef('emails', $emails);
+
+*/
+                $this -> objDbEmail = & $this->getObject('dbrouting','email');
+                $emails=$this -> objDbEmail->getAllMail('init_1',array(1=>3,2=>'DESC'),NULL);
+                $this->setVarByRef('emails', $emails);
 	        }
-	        
+
 	        $objModules =& $this->newObject('modules','modulecatalogue');
 	        if($objModules->checkIfRegistered('homepage')){
 	            $homepage = true;
@@ -101,14 +106,14 @@ class personalspace extends controller
 	            $homepage = false;
 	        }
 			$this->setVarByRef("homepage", $homepage);
-	
+
 			return "main_tpl.php";
     	}//end try
-    	
+
     	catch (Exception $e){
     		echo customException::cleanUp('Caught Exception: '.$e->getMessage());
     		exit();
     	}
     }
-}    
+}
 ?>
