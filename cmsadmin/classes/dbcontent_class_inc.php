@@ -64,7 +64,6 @@ class dbcontent extends dbTable
 
         public function add()
         {
-            try {
                 $title = $this->getParam('title');
                 $sectionid = $this->getParam('parent');
                 $published = ($this->getParam('published') == 'on') ? 1 : 0;
@@ -98,13 +97,6 @@ class dbcontent extends dbTable
                 }
 
                 return $newId;
-
-            } catch (customException $e) {
-                echo customException::cleanUp($e);
-                die();
-            }
-
-
         }
 
         /**
@@ -115,8 +107,6 @@ class dbcontent extends dbTable
          */
         public function edit()
         {
-
-            try {
                 $id = $this->getParam('id');
                 $title = $this->getParam('title');
                 $sectionid = $this->getParam('parent');
@@ -154,14 +144,6 @@ class dbcontent extends dbTable
 
 
                 return $this->update('id', $id, $newArr);
-
-                //print 'Saving new record';
-            } catch (customException $e) {
-                echo customException::cleanUp($e);
-                die();
-            }
-
-
         }
 
         /**
@@ -173,7 +155,6 @@ class dbcontent extends dbTable
          */
         public function trashContent($id)
         {
-
             return $this->update('id', $id, array('trash' => 1));
         }
 
@@ -186,7 +167,6 @@ class dbcontent extends dbTable
          */
         public function undelete($id)
         {
-
             return $this->update('id', $id, array('trash' => 0));
         }
 
@@ -200,7 +180,6 @@ class dbcontent extends dbTable
         */
         public function deleteContent($id)
         {
-            try {
                 //Re-order other pages in section accordingly
                 $page = $this->getRow('id', $id);
                 $pageOrderNo = $page['ordering'];
@@ -222,9 +201,7 @@ class dbcontent extends dbTable
                                                             ));
                     }
                 }
-
                 //First remove from front page
-
                 if ($this->_objFrontPage->isFrontPage($id)) {
                     $fpEntry = $this->_objFrontPage->getRow('content_id', $id);
                     $fpEntryId = $fpEntry['id'];
@@ -234,10 +211,6 @@ class dbcontent extends dbTable
 
                 //Delete page
                 return $this->delete('id', $id);
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -249,7 +222,6 @@ class dbcontent extends dbTable
          */
         public function getContentPages($filter = '')
         {
-            try {
                 if ($filter == 'trash') {
                     $filter = ' WHERE trash=1 ';
                 } else {
@@ -257,11 +229,6 @@ class dbcontent extends dbTable
                 }
 
                 return $this->getAll($filter.' ORDER BY ordering');
-            } catch (customException $e) {
-                echo customException::cleanUp($e);
-                die();
-            }
-
         }
 
 
@@ -279,20 +246,6 @@ class dbcontent extends dbTable
         }
 
         /**
-         * Method to the order number for the page
-         *
-         * @param 
-         * @access public
-         * @return int
-         */
-        public function getNewOrder()
-        {
-            $arr = $this->getArray('Select max(\'ordering\') as neworder from tbl_cms_content');
-
-            return 0;
-        }
-
-        /**
          * Method to toggle the publish field 
          * 
          * @param string id The id if the content
@@ -302,7 +255,6 @@ class dbcontent extends dbTable
          */
         public function togglePublish($id)
         {
-            try {
                 $row = $this->getContentPage($id);
 
                 if ($row['published'] == 1) {
@@ -310,14 +262,7 @@ class dbcontent extends dbTable
                 } else {
                     return $this->update('id', $id , array('published' => 1) );
                 }
-            } catch (customException $e) {
-                echo customException::cleanUp($e);
-                die();
-            }
-
         }
-
-
 
         /**
         * Method to update all the content with the 
@@ -329,16 +274,11 @@ class dbcontent extends dbTable
         */
         public function resetSection($sectionId)
         {
-            try {
                 $arrContent = $this->getAll('WHERE sectionid = \''.$sectionId.'\'');
 
                 foreach ($arrContent as $page) {
                     $this->delete('id', $page['id']);
                 }
-            } catch (customException $e) {
-                echo customException::cleanUp($e);
-                die();
-            }
         }
 
         /**
@@ -351,14 +291,8 @@ class dbcontent extends dbTable
          */
         public function getPagesInSection($sectionId)
         {
-            try {
                 $pages = $this->getAll('WHERE sectionid = \''.$sectionId.'\' ORDER BY ordering');
                 return $pages;
-            } catch (customException $e) {
-                echo customException::cleanUp($e);
-                die();
-            }
-
         }
 
         /**
@@ -371,15 +305,10 @@ class dbcontent extends dbTable
          */
         public function getNumberOfPagesInSection($sectionId)
         {
-            try {
                 $noPages = '0';
                 $pages = $this->getAll('WHERE sectionid = \''.$sectionId.'\' ORDER BY ordering');
                 $noPages = count($pages);
                 return $noPages;
-            } catch (customException $e) {
-                echo customException::cleanUp($e);
-                die();
-            }
         }
 
         /**
@@ -392,16 +321,11 @@ class dbcontent extends dbTable
           */
         public function getPageOrder($pageId)
         {
-            try {
                 //get last order value
                 $lastOrder = $this->getRow('id', $pageId);
                 //add after this value
                 $ordering = $lastOrder['ordering'];
                 return $ordering;
-            } catch (customException $e) {
-                echo customException::cleanUp($e);
-                die();
-            }
         }
 
         /**
@@ -414,7 +338,6 @@ class dbcontent extends dbTable
           */
         public function getOrdering($sectionId)
         {
-            try {
                 $ordering = 1;
                 //get last order value
                 $lastOrder = $this->getAll('WHERE sectionid = \''.$sectionId.'\' ORDER BY ordering DESC LIMIT 1');
@@ -425,10 +348,6 @@ class dbcontent extends dbTable
                 }
 
                 return $ordering;
-            } catch (customException $e) {
-                echo customException::cleanUp($e);
-                die();
-            }
         }
 
         /**
@@ -441,7 +360,6 @@ class dbcontent extends dbTable
          */
         public function getOrderingLink($sectionid, $id)
         {
-            try {
                 //Get the number of pages in the section
                 $lastOrd = $this->getAll('WHERE sectionid = \''.$sectionid.'\' ORDER BY ordering DESC LIMIT 1');
                 $topOrder = $lastOrd['0']['ordering'];
@@ -494,10 +412,6 @@ class dbcontent extends dbTable
                 }
 
                 return $links;
-            } catch (customException $e) {
-                echo customException::cleanUp($e);
-                die();
-            }
         }
 
         /**
@@ -512,7 +426,6 @@ class dbcontent extends dbTable
          */
         public function changeOrder($sectionid, $id, $ordering)
         {
-            try {
                 //Get array of all page entries
                 $fpContent = $this->getAll('WHERE sectionid = \''.$sectionid.'\' ORDER BY ordering');
                 //Search for entry to be reordered and update order
@@ -549,10 +462,6 @@ class dbcontent extends dbTable
                         return $this->update('id', $entry['id'], $upArr);
                     }
                 }
-            } catch (customException $e) {
-                echo customException::cleanUp($e);
-                die();
-            }
         }
 }
 

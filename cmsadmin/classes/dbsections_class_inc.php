@@ -46,14 +46,9 @@ class dbsections extends dbTable
        */
         public function init()
         {
-            try {
                 parent::init('tbl_cms_sections');
                 $this->_objDBContent = $this->getObject('dbcontent', 'cmsadmin');
                 $this->_objLanguage = & $this->newObject('language', 'language');
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -65,16 +60,11 @@ class dbsections extends dbTable
          */
         public function getSections($isPublished = FALSE)
         {
-            try {
                 if ($isPublished) {
                     return $this->getAll('WHERE published = 1 ORDER BY ordering');
                 } else {
                     return $this->getAll('ORDER BY ordering');
                 }
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -86,16 +76,11 @@ class dbsections extends dbTable
          */
         public function getRootNodes($isPublished = FALSE)
         {
-            try {
                 if ($isPublished) {
                     return $this->getAll('WHERE published = 1 AND nodelevel = 1 ORDER BY ordering');
                 } else {
                     return $this->getAll('WHERE nodelevel = 1 ORDER BY ordering');
                 }
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -107,12 +92,7 @@ class dbsections extends dbTable
          */
         public function getSection($id)
         {
-            try {
                 return $this->getRow('id', $id);
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -123,14 +103,9 @@ class dbsections extends dbTable
          */
         public function getFirstSectionId()
         {
-            try {
                 $firstSection = $this->getAll('WHERE parentid=0 and ordering=1');
                 $firstSectionId = $firstSection['0']['id'];
                 return $firstSectionId;
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -139,10 +114,8 @@ class dbsections extends dbTable
          * @access public
          * @return bool
          */
-
         public function add()
         {
-            try {
                 //get param from dropdown
                 $parentSelected = $this->getParam('parent');
                 //get parent type "subsection", "root" or "param is null"(new section will be root level) and its id
@@ -186,11 +159,6 @@ class dbsections extends dbTable
                                          'ordertype' => $ordertype,
                                          'nodelevel' => $this->getLevel($parentid) + '1'
                                      ));
-
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -201,7 +169,6 @@ class dbsections extends dbTable
          */
         public function edit()
         {
-            try {
 
                 $id = $this->getParam('id');
                 $parentid = $this->getParam('parent');
@@ -238,11 +205,6 @@ class dbsections extends dbTable
                                  'nodelevel' => $count,
                                  'published' => $published);
                 return $this->update('id', $id, $arrFields);
-
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -254,7 +216,6 @@ class dbsections extends dbTable
          */
         public function getOrderList($name)
         {
-            try {
                 $objDropDown = & $this->newObject('dropdown', 'htmlelements');
                 $objDropDown->name = $name;
                 //fill the drop down with the list of images
@@ -275,11 +236,6 @@ class dbsections extends dbTable
 
 
                 return $objDropDown->show();
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
-
         }
 
         /**
@@ -404,17 +360,12 @@ class dbsections extends dbTable
           */
         public function getSubSectionsInSection($sectionId, $order = 'ASC', $isPublished = FALSE)
         {
-            try {
                 if ($isPublished) {
                     //return all subsections
                     return $this->getAll('WHERE published = 1 AND parentid = \''.$sectionId.'\' ORDER BY ordering '.$order);
                 } else {
                     return $this->getAll('WHERE parentid = \''.$sectionId.'\' ORDER BY ordering '.$order);
                 }
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -427,17 +378,12 @@ class dbsections extends dbTable
           */
         public function getSubSectionsInRoot($rootId, $isPublished = FALSE)
         {
-            try {
                 if ($isPublished) {
                     //return all subsections
                     return $this->getAll('WHERE published = 1 AND rootid = \''.$rootId.'\' ORDER BY ordering');
                 } else {
                     return $this->getAll('WHERE rootid = \''.$rootId.'\' ORDER BY ordering');
                 }
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -452,17 +398,12 @@ class dbsections extends dbTable
           */
         public function getSubSectionsForLevel($rootId, $level, $order = 'ASC', $isPublished = FALSE)
         {
-            try {
                 if ($isPublished) {
                     //return all subsections
                     return $this->getAll('WHERE published = 1 AND nodelevel = \''.$level.'\' AND rootid = \''.$rootId.'\' ORDER BY ordering '.$order);
                 } else {
                     return $this->getAll('WHERE nodelevel = \''.$level.'\' AND rootid = \''.$rootId.'\' ORDER BY ordering '.$order);
                 }
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -474,14 +415,9 @@ class dbsections extends dbTable
           */
         public function getNumSubSections($sectionId)
         {
-            try {
                 $subSecs = $this->getAll('WHERE parentid = \''.$sectionId.'\'');
                 $noSubSecs = count($subSecs);
                 return $noSubSecs;
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -493,7 +429,6 @@ class dbsections extends dbTable
          */
         public function deleteSection($id)
         {
-            try {
              //if cat has nodes delete nodes as well
              if ($this->hasNodes($id)) {
                 //get cat details
@@ -529,10 +464,6 @@ class dbsections extends dbTable
                 $this->_objDBContent->resetSection($id);
                 return $this->delete('id', $id);
              }
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -545,7 +476,6 @@ class dbsections extends dbTable
           */
         public function getOrdering($parentid = NULL)
         {
-            try {
                 $ordering = 1;
                 //get last order value
                 $lastOrder = $this->getAll('WHERE parentid = \''.$parentid.'\' ORDER BY ordering DESC LIMIT 1');
@@ -556,10 +486,6 @@ class dbsections extends dbTable
                 }
 
                 return $ordering;
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -647,7 +573,6 @@ class dbsections extends dbTable
          */
         public function changeOrder($id, $ordering, $parentid)
         {
-            try {
                 //Get array of all sections in level
                 $fpContent = $this->getAll('WHERE parentid = \''.$parentid.'\' ORDER BY ordering ');
                 //Search for entry to be reordered and update order
@@ -681,10 +606,6 @@ class dbsections extends dbTable
                         $this->update('id', $entry['id'], $upArr);
                     }
                 }
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
     /**
     * Method to get the type of section in a human readable format
@@ -695,7 +616,6 @@ class dbsections extends dbTable
     */
     public function getPageOrderType($orderType)
     {
-        try {
          switch ($orderType)
          {
             case 'pageorder': 
@@ -724,11 +644,6 @@ class dbsections extends dbTable
          }
 
          return $order;
-        
-           } catch (Exception $e) {
-               echo 'Caught exception: ', $e->getMessage();
-               exit();
-           }
     }
 }
 ?>

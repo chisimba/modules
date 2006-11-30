@@ -78,7 +78,6 @@ class cmsutils extends object
          */
         public function init()
         {
-            try {
                 $this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
                 $this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
                 $this->_objConfig = & $this->newObject('altconfig', 'config');
@@ -87,10 +86,6 @@ class cmsutils extends object
                 $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
                 $this->_objUser = & $this->newObject('user', 'security');
                 $this->objLanguage = & $this->newObject('language', 'language');
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -102,16 +97,11 @@ class cmsutils extends object
          */
         public function getAccess($access)
         {
-            try {
                 if ($access == 1) {
                     return 'Registered';
                 } else {
                     return 'Public';
                 }
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -124,7 +114,6 @@ class cmsutils extends object
          */
         public function getImageList($name, $formName, $selected = null)
         {
-            try {
                 $objDropDown = & $this->newObject('dropdown', 'htmlelements');
                 $objConfig = & $this->newObject('altconfig' , 'config');
                 $objMedia = & $this->newObject('mmutils', 'mediamanager');
@@ -136,10 +125,6 @@ class cmsutils extends object
                 $objDropDown->addFromDB($objMedia->getImages(), 'title', 'folder', $selected);
                 $objDropDown->extra = 'onchange=" return changeImage(this, this.form) "';
                 return $objDropDown->show();
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -151,7 +136,6 @@ class cmsutils extends object
          */
         public function getImagePostionList($name)
         {
-            try {
                 $objDropDown = & $this->newObject('dropdown', 'htmlelements');
                 $objDropDown->name = $name;
                 //fill the drop down with the list of images
@@ -161,10 +145,6 @@ class cmsutils extends object
                 $objDropDown->setSelected('1');
                 $objDropDown->extra = 'size="3"';
                 return $objDropDown->show();
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -177,7 +157,6 @@ class cmsutils extends object
          */
         public function getYesNoRadion($name, $selected = '1')
         {
-            try {
                 //Get visible not visible icons
                 $objIcon =& $this->newObject('geticon', 'htmlelements');
                 //Not visible
@@ -193,10 +172,6 @@ class cmsutils extends object
                 $objRadio->addOption('1', $visibleIcon.$this->objLanguage->languageText('word_yes'));
                 $objRadio->setSelected($selected);
                 return $objRadio->show();
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -208,7 +183,6 @@ class cmsutils extends object
          */
         public function getAccessList($name)
         {
-            try {
                 $objDropDown = & $this->newObject('dropdown', 'htmlelements');
                 $objDropDown->name = $name;
                 //fill the drop down with the list of images
@@ -218,10 +192,6 @@ class cmsutils extends object
                 $objDropDown->setSelected('0');
                 $objDropDown->extra = 'size="2"';
                 return $objDropDown->show();
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -236,7 +206,6 @@ class cmsutils extends object
          */
         public function getLayoutOptions($name, $id)
         {
-            try {
                 $objLayouts = & $this->newObject('dblayouts', 'cmsadmin');
                 $arrLayouts = $objLayouts->getLayouts();
                 $arrSection = $this->_objSections->getSection($id);
@@ -278,10 +247,6 @@ class cmsutils extends object
 
                 $str .= '</tr></table>';
                 return $str;
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -294,7 +259,6 @@ class cmsutils extends object
          */
         public function getSectionMenu($modulename = null)
         {
-            try {
                 if (empty($modulename)) {
                     $modulename = 'cms';
                 }
@@ -335,10 +299,6 @@ class cmsutils extends object
                 $nodes[] = array('text' => 'Administration', 'uri' => $this->uri(array(NULL), 'cmsadmin'));
 
                 return $objSideBar->show($nodes, $this->getParam('id'));
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -351,7 +311,6 @@ class cmsutils extends object
          */
         public function getFrontPageContent()
         {
-            try {
                 $objUser = & $this->newObject('user', 'security');
                 $arrFrontPages = $this->_objFrontPage->getFrontPages();
                 //$objFeatureBox = $this->newObject('featurebox', 'navigation');
@@ -421,10 +380,6 @@ class cmsutils extends object
                 }
 
                 return $str;
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -435,7 +390,6 @@ class cmsutils extends object
          */
         public function showSection($module = "cms")
         {
-            try {
                 $sectionId = $this->getParam('id');
                 //get the section record
                 $arrSection = $this->_objSections->getSection($sectionId);
@@ -446,10 +400,6 @@ class cmsutils extends object
                 $functionVariable = '_layout'.trim($arrLayout['name']);
                 //call the right function according to the layout of the section
                 return call_user_func(array('cmsutils', $functionVariable), $arrSection, $module);
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -462,7 +412,6 @@ class cmsutils extends object
          */
         function _layoutPrevious(&$arrSection, $module)
         {
-            try {
                 $pageId = $this->getParam('pageid', '');
                 $orderType = $arrSection['ordertype'];
                 $showIntro = $arrSection['showintroduction'];
@@ -521,10 +470,6 @@ class cmsutils extends object
                 } else {
                     return $strBody.'<p/>'.$str;
                 }
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -537,8 +482,6 @@ class cmsutils extends object
          */
         function _layoutSummaries(&$arrSection, $module)
         {
-            try {
-
                 $objUser = & $this->newObject('user', 'security');
                 $objConfig = & $this->newObject('altconfig', 'config');
                 $str = '';
@@ -593,21 +536,7 @@ class cmsutils extends object
                     $table->startRow();
                     $table->addCell('<p>'.$page['introtext']);
                     $table->endRow();
-                    /*
-                        if($page['body'])
-                        {
-                         //read more link .. link to the full text
-                         $link = & $this->newObject('link', 'htmlelements');
-                         $link->link = 'Read more ..<p/><p/>';
-                         $link->href = $this->uri(array('action' => 'showfulltext', 'id' => $page['id']), $module);
-                     
-                         $table->startRow();
-                         $table->addCell($link->show());
-                         $table->endRow();
-                     
-                        }
-                        */
-                    //$str .= $table->show();
+
                     if($showIntro){
                       $str .= '<p>'.$description.'</p>';
                     }
@@ -621,10 +550,6 @@ class cmsutils extends object
                 }
 
                 return $str;
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -637,7 +562,6 @@ class cmsutils extends object
          */
         function _layoutPage(&$arrSection, $module)
         {
-            try {
                 $pageId = $this->getParam('pageid', '');
 
                 $orderType = $arrSection['ordertype'];
@@ -690,10 +614,6 @@ class cmsutils extends object
                 }
 
                 return $strBody.'<p/>'.$str;
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -706,8 +626,6 @@ class cmsutils extends object
          */
         function _layoutList(&$arrSection, $module)
         {
-            try {
-
                 $str = '';
                 
                 $orderType = $arrSection['ordertype'];
@@ -745,10 +663,6 @@ class cmsutils extends object
                 } else {
                     return $str;
                 }
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -759,7 +673,6 @@ class cmsutils extends object
          */
         public function showBody()
         {
-            try {
                 $contentId = $this->getParam('id');
                 $page = $this->_objContent->getContentPage($contentId);
                 $sectionId = $page['sectionid'];
@@ -771,10 +684,6 @@ class cmsutils extends object
                 }  
                 $strBody .= $page['body'].'<p/>';
                 return $strBody;
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -791,19 +700,13 @@ class cmsutils extends object
          */
         public function formatDate($date)
         {
-            try {
-                /*if(!checkdate($date))
-                {
+             /*if(!checkdate($date)) {
                   $gm =  gmmktime($date);
-                return  date("l, d F o",$gm);
-                } else {
-                */
-                return $date;
-                //       }
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
+                  return  date("l, d F o",$gm);
+               } else {
+             */
+              return $date;
+             //       }
         }
 
         /**
@@ -820,33 +723,8 @@ class cmsutils extends object
          */
         public function formatShortDate($date)
         {
-            try {
                 return $date;
                 //return  date("m/d/o",gmmktime($date) );
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
-        }
-
-        /**
-         * Method resolve reordering of pages
-         *
-         * @param
-         * @return
-         * @access public
-         * @version 0.1
-         * @author Wesley Nitsckie
-         * @copyright 2004, University of the Western Cape & AVOIR Project
-         * @license GNU GPL
-         */
-        public function _reOrder()
-        {
-            try {}
-            catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -862,7 +740,6 @@ class cmsutils extends object
          */
         public function getCheckIcon($isCheck, $returnFalse = TRUE)
         {
-            try {
                 $objIcon = & $this->newObject('geticon', 'htmlelements');
 
                 if ($isCheck) {
@@ -874,10 +751,6 @@ class cmsutils extends object
                 }
 
                 return $objIcon->show();
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -928,18 +801,6 @@ class cmsutils extends object
             $nav .= $viewCmsLink;
             return $nav;
         }
-
-        /**
-         * Method to show the full content of a page
-         *
-         * @access public
-         * @return string
-         * @param $string contentId The id of the content
-         * @param string sectionId The section Id
-         *
-         */
-        public function getFullContent($contentId, $sectionId)
-        {}
 
         /**
         * Method to generate the bread crumbs

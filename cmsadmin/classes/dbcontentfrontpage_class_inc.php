@@ -53,21 +53,16 @@ class dbcontentfrontpage extends dbTable
 	 */
 	public function add($contentId, $ordering = 1)
 	{
-		try{		
-			
 			if(!$this->valueExists('content_id',$contentId)){
-				
 				return $this->insert(array(
 							'content_id' => $contentId,
 							'ordering' => $this->getOrdering()			
 							));
-			}
-		}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
-        }
+			} else {
+			    $bln = FALSE;
+                return $bln;
+            }
 	}
-	
 	
 	/**
 	 * Method to remove a record
@@ -78,7 +73,6 @@ class dbcontentfrontpage extends dbTable
 	 */
 	public function remove($id)
 	{
-		try{			
 	   $page = $this->getRow('id', $id);
 	   $pageOrderNo = $page['ordering'];
 		 $allPages = $this->getFrontPages();
@@ -89,10 +83,6 @@ class dbcontentfrontpage extends dbTable
        }
      }
      return $this->delete('id', $id);
-		}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
-        }
 	}
 	
 	/**
@@ -132,18 +122,13 @@ class dbcontentfrontpage extends dbTable
 	 */
 	public function changeStatus($pageId)
 	{
-		try{			
 		  if($this->isFrontPage($pageId)){
-		    $entry = $this->getRow('content_id', $pageId);
-		    $id = $entry['id'];
-		    return $this->remove($id);
+		     $entry = $this->getRow('content_id', $pageId);
+		     $id = $entry['id'];
+		     return $this->remove($id);
 		  } else {
-          return $this->add($pageId);
-      }
-		}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
-        }
+             return $this->add($pageId);
+          }
 	}
 
 	/**
@@ -202,20 +187,15 @@ class dbcontentfrontpage extends dbTable
    */
 	public function getOrdering()
 	{
-		try {	
 	   $ordering = 1;
-     //get last order value 
-     $lastOrder = $this->getAll('ORDER BY ordering DESC LIMIT 1');
-     if(!empty($lastOrder)){	   
-       //add after this value
-       $ordering = $lastOrder['0']['ordering'] + 1;
-     }  
-     return $ordering;
-		}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
+       //get last order value 
+       $lastOrder = $this->getAll('ORDER BY ordering DESC LIMIT 1');
+       if(!empty($lastOrder)){	   
+         //add after this value
+         $ordering = $lastOrder['0']['ordering'] + 1;
+       }  
+       return $ordering;
     }
-  }
 	/**
 	 * Method to return the links to be displayed in the order column on the table
 	 * 

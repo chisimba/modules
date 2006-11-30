@@ -20,18 +20,12 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 class dblayouts extends dbTable
 {
 
-	
 	/**
 	* Constructor
 	*/
 	public function init()
 	{
-		try {
 			parent::init('tbl_cms_layouts');
-		}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
-        }
 	}
 	
 	/**
@@ -42,13 +36,7 @@ class dblayouts extends dbTable
 	 */
 	public function getLayouts()
 	{
-		try {
-		
 			return $this->getAll();
-		}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
-        }
 	}
 	
 	/**
@@ -60,13 +48,7 @@ class dblayouts extends dbTable
 	 */
 	public function getLayout($name)
 	{
-		
-		try {
 			return $this->getRow('name', $name);
-		}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
-        }
 	}
 	/**
 	 * Method to get the description of a layout by referencing its name
@@ -77,17 +59,9 @@ class dblayouts extends dbTable
 	 */
 	public function getLayoutDescription($name)
 	{
-		
-		try {
 			$layout = $this->getRow('name', $name);
 			$description = $layout['description'];
 			return $description;
-		}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
-        }
 	}
-	
-	
 }
 ?>

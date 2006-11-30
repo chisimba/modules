@@ -49,17 +49,10 @@ class cmstree extends object
 	 */
 	public function init()
 	{
-		try {
 			$this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
 			$this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
 			$this->_objUser = & $this->newObject('user', 'security');
             $this->objLanguage =& $this->newObject('language', 'language');
-
-		}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
-        }
-
 	}
 
  	/**

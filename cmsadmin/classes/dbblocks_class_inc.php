@@ -69,7 +69,6 @@ class dbblocks extends dbTable
         */
         public function add($pageId, $blockId)
         {
-            try {
                 $ordering = $this->getOrdering($pageId);
 
                 $newArr = array(
@@ -81,11 +80,6 @@ class dbblocks extends dbTable
                 $newId = $this->insert($newArr);
 
                 return $newId;
-
-            } catch (customException $e) {
-                echo customException::cleanUp($e);
-                die();
-            }
         }
 
         /**
@@ -96,8 +90,6 @@ class dbblocks extends dbTable
          */
         public function edit()
         {
-
-            try {
                 $id = $this->getParam('id');
                 $pageId = $this->getParam('pageid');
                 $blockId = $this->getParam('blockid');
@@ -111,11 +103,6 @@ class dbblocks extends dbTable
 
 
                 return $this->update('id', $id, $newArr);
-
-            } catch (customException $e) {
-                echo customException::cleanUp($e);
-                die();
-            }
         }
 
         /**
@@ -128,8 +115,7 @@ class dbblocks extends dbTable
         */
         public function deleteBlock($pageId, $blockId)
         {
-           try {
-	          $block = $this->getAll("WHERE pageid = '$pageId' AND blockid = '$blockId'");
+	          $block = $this->getAll('WHERE pageid = \''.$pageId.'\' AND blockid = \''.$blockId.'\'');
 	          if(!empty($block)){
               $id = $block['0']['id'];
               $blockOrderNo = $block['0']['ordering'];
@@ -144,11 +130,6 @@ class dbblocks extends dbTable
               } 
               return $this->delete('id', $id);
              }
-             
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
 
         /**
@@ -160,7 +141,7 @@ class dbblocks extends dbTable
         public function getBlocksForPage($pageId)
         {
 
-            return $this->getAll("WHERE pageid = '$pageId' ORDER BY ordering");
+            return $this->getAll('WHERE pageid = \''.$pageId.'\' ORDER BY ordering');
         }
 
         /**
@@ -173,10 +154,9 @@ class dbblocks extends dbTable
           */
         public function getOrdering($pageid)
         {
-            try {
                 $ordering = 1;
                 //get last order value
-                $lastOrder = $this->getAll("WHERE pageid = '$pageid' ORDER BY ordering DESC LIMIT 1");
+                $lastOrder = $this->getAll('WHERE pageid = \''.$pageid.'\' ORDER BY ordering DESC LIMIT 1');
                
                 //add after this value
                 if (!empty($lastOrder)) {
@@ -184,10 +164,6 @@ class dbblocks extends dbTable
                 }
 
                 return $ordering;
-            } catch (customException $e) {
-                echo customException::cleanUp($e);
-                die();
-            }
         }
 
         /**
@@ -206,7 +182,7 @@ class dbblocks extends dbTable
             $pageId = $entry['pageid'];
             
             //Get the number of sub sections in section
-            $lastOrd = $this->getAll("WHERE pageid = '$pageId' ORDER BY ordering DESC LIMIT 1");
+            $lastOrd = $this->getAll('WHERE pageid = \''.$pageId.'\' ORDER BY ordering DESC LIMIT 1');
 
             $topOrder = $lastOrd['0']['ordering'];
             $links = " ";
@@ -270,9 +246,8 @@ class dbblocks extends dbTable
          */
         public function changeOrder($id, $ordering, $pageId)
         {
-            try {
                 //Get array of all blocks in level
-                $fpContent = $this->getAll("WHERE pageid = '$pageId' ORDER BY ordering");
+                $fpContent = $this->getAll('WHERE pageid = \''.$pageId.'\' ORDER BY ordering');
                 //Search for entry to be reordered and update order
                 foreach($fpContent as $content) {
                     if ($content['id'] == $id) {
@@ -295,7 +270,7 @@ class dbblocks extends dbTable
                 }
 
                 //Get other entry to change
-                $entries = $this->getAll("WHERE pageid = '$pageId' AND ordering = '$toChange'");
+                $entries = $this->getAll('WHERE pageid = \''.$pageId.'\' AND ordering = \''.$toChange.'\'');
                 foreach($entries as $entry) {
                     if ($entry['id'] != $id) {
                         $upArr = array(
@@ -304,10 +279,6 @@ class dbblocks extends dbTable
                         $this->update('id', $entry['id'], $upArr);
                     }
                 }
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
         
         /**
@@ -411,15 +382,10 @@ class dbblocks extends dbTable
         */
         public function getBlockEntries()
         {
-            try {
-              $sql = "SELECT * FROM tbl_module_blocks";
+              $sql = 'SELECT * FROM tbl_module_blocks';
               $entries = $this->getArray($sql); 
               
               return $entries;
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
        /**
         * Method to return an entries in blocks table
@@ -429,18 +395,11 @@ class dbblocks extends dbTable
         */
         public function getBlock($blockId)
         {
-            try {
-              $sql = "SELECT * FROM tbl_module_blocks WHERE id = '$blockId'";
-              $entry = $this->getArray($sql); 
+              $entry = $this->getArray('SELECT * FROM tbl_module_blocks WHERE id = \''.$blockId.'\''); 
               $entry = $entry['0'];
               
               return $entry;
-            } catch (Exception $e) {
-                echo 'Caught exception: ', $e->getMessage();
-                exit();
-            }
         }
-        
 }
 
 ?>
