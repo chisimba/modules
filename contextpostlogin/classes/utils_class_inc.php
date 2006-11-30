@@ -106,7 +106,7 @@ class utils extends object
 		  		}
 		  	}
 		  	//get all public courses
-		  	$publicCourses = $this->_objDBContext->getAll( 'WHERE access = "Public" OR access = "" '.$filter.'  ORDER BY title ');
+		  	$publicCourses = $this->_objDBContext->getAll( 'WHERE status = "Published" OR status = "" '.$filter.'  ORDER BY title ');
 		  	//print_r($publicCourses);
 		  	
 		  	foreach($publicCourses as $pCourse)

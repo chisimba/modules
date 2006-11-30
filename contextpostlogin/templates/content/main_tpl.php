@@ -4,6 +4,9 @@ $tabBox = & $this->newObject('tabpane', 'htmlelements');
 $featureBox = & $this->newObject('featurebox', 'navigation');
 $objLink =  & $this->newObject('link', 'htmlelements');
 $icon =  & $this->newObject('geticon', 'htmlelements');
+$table = & $this->newObject('htmltable', 'htmlelements');
+$domtt = & $this->newObject('domtt', 'htmlelements');
+
 
 $str = '';
 $other = '';
@@ -49,12 +52,25 @@ if (count($contextList) > 0)
 
 
 //public courses
+$other = $featureBox->show('Browse Courses', $filter);
+
 if(count($otherCourses) > 0)
 {
-	$other = $featureBox->show('Browse Courses', $filter);
+	
+	$table->width = '60%';
+	$table->startHeaderRow();
+	$table->addHeaderCell('Code');
+	$table->addHeaderCell('Title');
+	$table->addHeaderCell('Details');
+	$table->addHeaderCell('&nbsp;');
+	$table->endHeaderRow();
+	
+	$rowcount = 0;
 	
 	foreach($otherCourses as $context)
 	{
+		
+		$oddOrEven = ($rowcount == 0) ? "even" : "odd";
 		$lecturers = $this->_objUtils->getContextLecturers($context['contextcode']);
 		$lects = '';
 		if(is_array($lecturers))
@@ -73,18 +89,46 @@ if(count($otherCourses) > 0)
 		
 		
 		
-		$objLink->href = $this->uri(array('action' => 'joincontext'), 'context');
+		$objLink->href = $this->uri(array('action' => 'joincontext','contextCode'=>$context['contextcode']), 'context');
 		$icon->setIcon('leavecourse');
-		$icon->alt = 'Enter Course';
+		$icon->alt = 'Enter Course '.$context['title'];
 		$objLink->link = $icon->show();
 		
+		if($this->_objDBContextUtils->canJoin($context['contextcode']))
+		{
+			$config = $objLink->show();
+		} else {
+			$icon->setIcon('failed','png');
+			$config = $icon->show();
+		}
 		
-		$other .= $featureBox->show($context['contextcode'] .' - '.$context['title'].'   '.$objLink->show(), $content ).'<hr />';
+		$icon->setIcon('info');
+		$icon->alt = '';
+		$mes = '';
+		$mes .= ($context['access'] != '') ?  'Access : <span class="highlight">'.$context['access'].'</span>' : '' ; 
+		$mes .= ($context['startdate'] != '') ? '<br/>Start Date : <span class="highlight">'.$context['startdate'].'</span>'  : '';
+		$mes .= ($context['finishdate'] != '') ? '<br/>Finish Date : <span class="highlight">'.$context['finishdate'].'</span>'  : '';
+		$mes .= ($lects != '') ? '<br/>Lecturers : <span class="highlight">'.$lects.'</span>'  : '';
+		$noStuds = 0;
+		$mes .= '<br />No. Registered Students : <span class="highlight">'.$noStuds.'</span>';
+		
+		$info = $domtt->show(htmlentities($context['title']),$mes,$icon->show());
+		$tableRow = array();
+		
+		$tableRow[] = $context['contextcode'];
+		$tableRow[] = $context['title'];
+		$tableRow[] = $info;
+		$tableRow[] = $config;
+		
+		$table->addRow($tableRow, $oddOrEven);
+		 $rowcount = ($rowcount == 0) ? 1 : 0;
+		//$other .= $featureBox->show($context['contextcode'] .' - '.$context['title'].'   '.$objLink->show(), $content ).'<hr />';
 	}
 	
+	$other .='<hr />'.$featureBox->show('Courses', $table->show() );
 }else {
 	
-	$other = '<div align="center" style="font-size:large;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">No Public Courses found</div>';
+	$other .= '<div align="center" style="font-size:large;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">No Public or Open Courses is available</div>';
 }
 
 $tabBox->addTab(array('name'=>'My Courses','content' => $str));
