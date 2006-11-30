@@ -129,7 +129,7 @@ class email extends controller
                     $toList='';
                     foreach($arrUserId as $key=>$userId){
                         $icon=$this->deleteIcon($userId);
-                        $name=$this->getName($userId);
+                        $name=$this->dbRouting->getName($userId);
                         $toList.="<span id='".$userId."'>".$name.$icon."&nbsp;&nbsp;&nbsp;</span>";
                     }
                     $recipientList=implode('|',$arrUserId);
@@ -606,7 +606,7 @@ class email extends controller
                 $objDrop=new dropdown('userId_username');
                 $objDrop->addOption(NULL,"- ".$selectLabel." -");
                 foreach($arrUserList as $user){
-                    $value=$this->getName($user['userid']);
+                    $value=$this->dbRouting->getName($user['userid']);
                     $objDrop->addOption($user['userid'],$value);
                 }
                 $userDrop=$objDrop->show();
@@ -631,7 +631,7 @@ class email extends controller
                 $objDrop=new dropdown('userId_firstname');
                 $objDrop->addOption(NULL,"- ".$selectLabel." -");
                 foreach($arrUserList as $user){
-                    $value=$this->getName($user['userid']);
+                    $value=$this->dbRouting->getName($user['userid']);
                     $objDrop->addOption($user['userid'],$value);
                 }
                 $userDrop=$objDrop->show();
@@ -656,7 +656,7 @@ class email extends controller
                 $objDrop=new dropdown('userId_surname');
                 $objDrop->addOption(NULL,"- ".$selectLabel." -");
                 foreach($arrUserList as $user){
-                    $value=$this->getName($user['userid']);
+                    $value=$this->dbRouting->getName($user['userid']);
                     $objDrop->addOption($user['userid'],$value);
                 }
                 $userDrop=$objDrop->show();
@@ -707,7 +707,7 @@ class email extends controller
             $objDrop->addOption(NULL,"- ".$selectLabel." -");
             foreach($arrUserList as $user){
                 $value=$user['userid'];
-                $label=$this->getName($value);
+                $label=$this->dbRouting->getName($value);
                 $objDrop->addOption($value,$label);
             }
             $objDrop->extra=' onchange="javascript:xajax_addRecipient(this.value, document.getElementById(\'input_recipient\').value)"';
@@ -759,7 +759,7 @@ class email extends controller
         $icon=$this->deleteIcon($userId);
         $this->loadClass('xajaxresponse','ajaxwrapper');
         if($userId!=''){
-            $name=$this->getName($userId);
+            $name=$this->dbRouting->getName($userId);
             if($recipientList!=''){
                 $toList="<span id='".$userId."'>".$name.$icon."&#160;&#160;&#160;</span>";
                 $recipientList='|'.$userId;
@@ -906,30 +906,6 @@ class email extends controller
             $objResponse->addAssign('signature_button','innerHTML',$response);
             return $objResponse->getXML();
         }
-    }
-
-    /**
-    * Method to return the user's name as specified in the config settings
-    *
-    * @param string $userId The userId of the user
-    * @return string $name The formated name
-    */
-    function getName($userId)
-    {
-        $configs=$this->getSession('configs');
-        $firstname=strtoupper($this->objUser->getFirstname($userId));
-        $surname=strtoupper($this->objUser->getSurname($userId));
-        $username=$this->objUser->userName($userId);
-        if($configs['surname_first']==1){
-            $name=$surname.", ".$firstname;
-        }else{
-            $name=$firstname." ".$surname;
-        }
-        if($configs['hide_username']!=1){
-            $name.=" [".$username."]";
-        }
-
-        return $name;
     }
 
     /**

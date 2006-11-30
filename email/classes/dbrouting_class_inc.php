@@ -241,5 +241,29 @@ class dbrouting extends dbTable
             $this->update('id',$routingId,$fields);
         }
     }
+
+    /**
+    * Method to return the user's name as specified in the config settings
+    *
+    * @param string $userId The userId of the user
+    * @return string $name The formated name
+    */
+    function getName($userId)
+    {
+        $configs=$this->getSession('configs');
+        $firstname=strtoupper($this->objUser->getFirstname($userId));
+        $surname=strtoupper($this->objUser->getSurname($userId));
+        $username=$this->objUser->userName($userId);
+        if($configs['surname_first']==1){
+            $name=$surname.", ".$firstname;
+        }else{
+            $name=$firstname." ".$surname;
+        }
+        if($configs['hide_username']!=1){
+            $name.=" [".$username."]";
+        }
+
+        return $name;
+    }
 }
 ?>

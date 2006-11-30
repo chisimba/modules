@@ -348,7 +348,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
             }
             // get message data
             $arrMessageData=$this->dbEmail->getMail($email['email_id']);
-            $from=$this->getName($email['sender_id']);
+            $from=$this->dbRouting->getName($email['sender_id']);
             // set up attachment icon
             if($email['attachments']>=1){
                 $objIcon->title=$attachmentLabel;
@@ -412,13 +412,13 @@ if(!$GLOBALS['kewl_entry_point_run']){
         $icons='';
     }else{
         $emailData=$this->dbEmail->getMail($messageData['email_id']);
-        $from=$this->getName($messageData['sender_id']);
+        $from=$this->dbRouting->getName($messageData['sender_id']);
 
         $recipientList=$emailData['recipient_list'];
         $arrRecipients=explode("|",$recipientList);
         $to='';
         foreach($arrRecipients as $key=>$recipient){
-            $to=$this->getName($recipient);
+            $to=$this->dbRouting->getName($recipient);
             if($key!=count($arrRecipients)-1){
                 $to.="; ";
             }

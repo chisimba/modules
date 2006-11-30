@@ -88,7 +88,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $signature=isset($configs['signature'])?$configs['signature']:'';
     $updated=isset($configs['updated'])?$configs['updated']:date('Y-m-d H:i:s');
 
-    $name=$this->getName($this->userId);
+    $name=$this->dbRouting->getName($this->userId);
 
 // set up code to text
     $date=$this->objDate->formatDate($updated);
