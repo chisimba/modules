@@ -36,17 +36,17 @@ class dbfiles extends dbtable
     * @param string $fileName The name of the file.
     * @param string $fileId The id of the file in the database.
     */
-    public function addFile($submitId, $userId, $description, $fileName=NULL, $fileId=NULL)
+    public function addFile($submitId, $userId, $description, $fileId=NULL)
     {
         $fields = array();
-        $fields['submissionId'] = $submitId;
+        $fields['submissionid'] = $submitId;
         $fields['description'] = $description;
-        $fields['creatorId'] = $userId;
-        $fields['dateCreated'] = date('Y-m-d H:i:s');
+        $fields['creatorid'] = $userId;
+        $fields['datecreated'] = date('Y-m-d H:i:s');
+        $fields['updated'] = date('Y-m-d H:i:s');
 
-        if(isset($fileName) && !empty($fileName)){
-            $fields['fileName'] = $fileName;
-            $fields['fileId'] = $fileId;
+        if(isset($fileId) && !empty($fileId)){
+            $fields['fileid'] = $fileId;
         }
 
         $id = $this->insert($fields);
@@ -65,11 +65,10 @@ class dbfiles extends dbtable
     {
         $fields = array();
         $fields['description'] = $description;
-        $fields['modifierId'] = $userId;
-        $fields['dateModified'] = date('Y-m-d H:i:s');
+        $fields['modifierid'] = $userId;
+        $fields['updated'] = date('Y-m-d H:i:s');
 
-        if(isset($fileName) && !empty($fileName)){
-            $fields['fileName'] = $fileName;
+        if(isset($fileId) && !empty($fileId)){
             $fields['fileId'] = $fileId;
         }
 
@@ -91,8 +90,8 @@ class dbfiles extends dbtable
         $description = $this->getParam('description');
         $submitId = $this->getParam('submitId');
         $fileName = $_FILES[$file]['name'];
-        
-        if(!empty($id)){       
+
+        if(!empty($id)){
             $fileId = $this->objFile->uploadFile($_FILES[$file], $submitId, $fileId);
             $this->editFile($id, $userId, $description, $fileName, $fileId);
         }else{
@@ -127,7 +126,7 @@ class dbfiles extends dbtable
     {
         $this->delete('id', $id);
     }
-    
+
     /**
     * Method to delete all files attached to a submission.
     *
@@ -141,7 +140,7 @@ class dbfiles extends dbtable
         $data = $this->getFiles($submitId);
         if(!empty($data)){
             foreach($data as $item){
-                $this->objFile->eraseFile($item['fileId']);                
+                $this->objFile->eraseFile($item['fileId']);
                 $this->delete('id', $item['id']);
             }
         }

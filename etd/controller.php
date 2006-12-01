@@ -38,17 +38,17 @@ class etd extends controller
         $this->dbStats =& $this->getObject('dbstatistics', 'etd');
         $this->dbThesis =& $this->getObject('dbthesis');
         $this->dbThesis->setSubmitType('etd');
-        
+
         $this->etdSearch =& $this->getObject('search', 'etd');
         $this->etdSearch->setMetaType('thesis', 'etd');
-        
+
         $this->emailResults =& $this->getObject('emailresults');
         $this->emailResults->setModuleName('etd');
-        
+
         $this->objConfig =& $this->getObject('altconfig', 'config');
         $this->objLanguage =& $this->getObject('language', 'language');
         $this->setVarByRef('objLanguage', $this->objLanguage);
-        
+
         $this->objBlocks = & $this->newObject('blocks', 'blocks');
         $this->objFeeder = & $this->newObject('feeder', 'feed');
         /*
@@ -114,9 +114,9 @@ class etd extends controller
         $this->unsetSession('resourceId');
 
         switch($action){
-            
+
             /* *** Functions for displaying the resources *** */
-            
+
             case 'viewauthor':
             case 'viewtitle':
                 $this->unsetSession('resource');
@@ -167,7 +167,7 @@ class etd extends controller
                 $session['displayStart'] = $this->getParam('displayStart');
                 $session['action'] = 'browseauthor';
                 $this->setSession('return', $session);
-                
+
                 $objAuthor = & $this->getObject('dbthesis', 'etd');
                 $objAuthor->setBrowseType('author');
                 $this->setVar('num', 3);
@@ -183,21 +183,21 @@ class etd extends controller
                 $session['displayStart'] = $this->getParam('displayStart');
                 $session['action'] = 'browsetitle';
                 $this->setSession('return', $session);
-                
+
                 $objTitle = & $this->getObject('dbthesis', 'etd');
                 $objTitle->setBrowseType('title');
                 $this->setVar('num', 3);
                 $this->setVarByRef('browseType', $objTitle);
                 return 'browse_tpl.php';
-            
+
             /* ** Functions for searching ** */
-            
+
             case 'search':
                 $search = $this->etdSearch->showSearch();
                 $this->etdTools->setRightBlocks(FALSE, TRUE, FALSE);
                 $this->setVarByRef('search', $search);
                 return 'search_tpl.php';
-                
+
             case 'advsearch':
                 $this->unsetSession('resource');
                 // set a session to use when returning from a resource or from emailing a resource.
@@ -205,7 +205,7 @@ class etd extends controller
                 $session['displayStart'] = $this->getParam('displayStart');
                 $session['action'] = 'advsearch';
                 $this->setSession('return', $session);
-                
+
                 $pageTitle = $this->objLanguage->languageText('phrase_searchresults');
                 $objViewBrowse = & $this->getObject('viewbrowse', 'etd');
                 $objViewBrowse->create($this->etdSearch);
@@ -223,7 +223,7 @@ class etd extends controller
                 $this->setVarByRef('search', $search);
                 $this->etdTools->setRightBlocks(FALSE, TRUE, FALSE);
                 return 'search_tpl.php';
-                
+
             case 'printsearch':
                 $pageTitle = $this->objLanguage->languageText('phrase_searchresults');
                 $objViewBrowse = & $this->getObject('viewbrowse', 'etd');
@@ -246,7 +246,7 @@ class etd extends controller
                 $email = $this->emailResults->showEmail();
                 $this->setVarByRef('search', $email);
                 return 'search_tpl.php';
-                
+
             case 'sendemail':
                 $confirm = $this->objLanguage->languageText('mod_etd_confirmemailsent', 'etd');
                 $link = $this->objLanguage->languageText('mod_etd_returnsearch', 'etd');
@@ -262,16 +262,16 @@ class etd extends controller
                 $search = '<p class="confirm">'.$confirm.'</p><p>'.$objLink->show().'</p>';
                 $this->setVarByRef('search', $search);
                 return 'search_tpl.php';
-                
+
             /* ** Functions for managing the archive ** */
-            
+
             case 'managesubmissions':
                 $mode = $this->getParam('mode');
                 $display = $this->manage->show($mode);
                 $this->etdTools->setRightBlocks(FALSE, TRUE, FALSE);
                 $this->setVarByRef('search', $display);
                 return 'search_tpl.php';
-                
+
             case 'savesubmissions':
                 $save = $this->getParam('save');
                 $mode = $this->getParam('mode');
@@ -282,7 +282,7 @@ class etd extends controller
                 return $this->nextAction('managesubmissions', array('mode' => $nextmode));
 
             /* *** Functions for configuring the archive *** */
-            
+
             case 'showconfig':
                 $mode = $this->getParam('mode');
                 $display = $this->config->show($mode);
@@ -290,7 +290,7 @@ class etd extends controller
                 $this->setVarByRef('search', $display);
                 return 'search_tpl.php';
                 break;
-                
+
             case 'saveconfig':
                 $save = $this->getParam('save');
                 $mode = $this->getParam('mode');
@@ -300,9 +300,9 @@ class etd extends controller
                 }
                 return $this->nextAction('showconfig', array('mode' => $nextmode));
                 break;
-            
+
             /* *** Functions for students submissions *** */
-            
+
             case 'submit':
                 $mode = $this->getParam('mode');
                 $display = $this->submit->show($mode);
@@ -310,7 +310,7 @@ class etd extends controller
                 $this->setVarByRef('search', $display);
                 return 'search_tpl.php';
                 break;
-                
+
             case 'savesubmit':
                 $save = $this->getParam('save');
                 $mode = $this->getParam('mode');
@@ -615,12 +615,12 @@ class etd extends controller
             */
 
             /* *** Additional Functionality *** */
-            
+
             case 'viewstats':
                 $display = $this->dbStats->showAll();
                 $this->setVarByRef('search', $display);
                 return 'search_tpl.php';
-            
+
             case 'rss':
                 $institution = $this->objConfig->getinstitutionName();
                 $title = $this->objLanguage->code2Txt('mod_etd_etdrss', 'etd', array('institution' => $institution));
@@ -628,7 +628,7 @@ class etd extends controller
                 $link = $this->uri('');
                 $feedURL = $this->uri(array('action' => 'rss'));
                 $this->objFeeder->setupFeed(TRUE, $title, $description, $link, $feedURL);
-                
+
                 // Add items / content
                 $data = $this->dbThesis->getAllMeta();
                 if(!empty($data)){
@@ -640,7 +640,7 @@ class etd extends controller
                	        $this->objFeeder->addItem($itemTitle, $itemLink, $itemDescription, $link, $itemAuthor);
                     }
                 }
-                
+
                 $feed = $this->objFeeder->output();
                 echo $feed;
                 break;
@@ -896,7 +896,7 @@ class etd extends controller
         }/*
         $this->accessLevel = 4;*/
     }
-    
+
     /**
     * Method to set login requirement to False
     * Required to be false. - will be extended to set the ction items where login is required

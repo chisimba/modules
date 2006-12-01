@@ -24,7 +24,7 @@ class etdfiles extends dbtable
     * @access private
     */
     private $modulePath;
-    
+
     /**
     * @var string $filePath The path for etd file content on the file system
     * @access private
@@ -42,17 +42,17 @@ class etdfiles extends dbtable
     */
     function init()
     {
-        $this->objUpload =& $this->getObject('upload', 'files');
+        $this->objUpload =& $this->getObject('upload', 'filemanager');
         $this->objMkdir =& $this->getObject('mkdir', 'files');
         $this->objConfig =& $this->getObject('altconfig', 'config');
         $contentPath = $this->objConfig->getcontentBasePath();
-        
+
         $this->modulePath = $contentPath.'modules/';
         $this->etdPath = $contentPath.'modules/etd/';
         $this->filePath = $contentPath.'modules/etd/docs/';
         $this->xmlPath = $contentPath.'modules/etd/xml/';
     }
-    
+
     /**
     * Method to upload a new document to the filemanager
     *
@@ -68,7 +68,7 @@ class etdfiles extends dbtable
         $this->objUpload->overWrite = TRUE;
         $this->objUpload->doUpload();
     }
-    
+
     /**
     * Method to create and save a file to the filesystem
     *
@@ -81,7 +81,7 @@ class etdfiles extends dbtable
     public function createFile($contents, $file, $ext = '.xml')
     {
         $this->checkDir($this->xmlPath);
-        
+
         $fp = fopen($this->xmlPath.$file.$ext, 'wb');
         if(!$fp){
             return FALSE;
@@ -92,7 +92,7 @@ class etdfiles extends dbtable
         }
         fclose($fp);
     }
-    
+
     /**
     * Method to return the path to a file on the filesystem for reading
     *
@@ -101,10 +101,10 @@ class etdfiles extends dbtable
     */
     public function getPath()
     {
-        $this->checkDir($this->xmlPath);        
+        $this->checkDir($this->xmlPath);
         return $this->xmlPath;
     }
-    
+
     /**
     * Method to delete the file
     *
@@ -121,7 +121,7 @@ class etdfiles extends dbtable
         }
         return TRUE;
     }
-    
+
     /**
     * Method to check a file exists
     *
@@ -137,7 +137,7 @@ class etdfiles extends dbtable
         }
         return FALSE;
     }
-    
+
     /**
     * Method to check the directory path and create the directories if required
     *
@@ -159,6 +159,19 @@ class etdfiles extends dbtable
             $this->objMkdir->fullFilePath = $dir;
             $this->objMkdir->makedir();
         }
+    }
+
+    /**
+    * Method to upload a file using the filemanager
+    *
+    * @access public
+    * @param NULL
+    * @return array $results The results of the file upload
+    */
+    public function doUpload()
+    {
+        $results = $this->objUpload->uploadFiles();
+        return $results;
     }
 }
 ?>

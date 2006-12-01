@@ -15,7 +15,7 @@ $sqldata[] = "CREATE TABLE tbl_etd_submission_files(
     PRIMARY KEY (id),
     KEY submissionId (submissionId),
     CONSTRAINT etd_files_submitId FOREIGN KEY (submissionId) REFERENCES tbl_etd_submissions (id)
-    ON DELETE CASCADE ON UPDATE CASCADE    
+    ON DELETE CASCADE ON UPDATE CASCADE
     ) type=InnoDB COMMENT='Table containing a list of uploaded files and their descriptions'";
 */
 
@@ -38,10 +38,6 @@ $fields = array(
 		'type' => 'text',
 		'length' => 255
 		),
-	'filename' => array(
-		'type' => 'text',
-		'length' => 120
-		),
 	'fileid' => array(
 		'type' => 'text',
 		'length' => 100
@@ -55,9 +51,6 @@ $fields = array(
 		'length' => 32
 		),
 	'datecreated' => array(
-		'type' => 'timestamp'
-		),
-	'datemodified' => array(
 		'type' => 'timestamp'
 		),
 	'updated' => array(
