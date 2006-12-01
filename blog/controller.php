@@ -857,6 +857,16 @@ class blog extends controller
 				$this->nextAction('blogadmin', array('mode' => 'editcats'));
 				break;
 
+			case 'tagcloud':
+				$this->objTC = $this->getObject('tagcloud', 'utilities');
+				$tagarray = array(array('name' => 'PHP','url' => 'http://www.php.net', 'weight' => 20, 'time' => strtotime('-1 day')),
+								  array('name' => 'Google SA','url' => 'http://www.google.co.za', 'weight' => 15, 'time' => strtotime('-3 days')),
+								  array('name' => 'AVOIR','url' => 'http://avoir.uwc.ac.za', 'weight' => 35, 'time' => time()),
+								  array('name' => 'FSIU','url' => 'http://fsiu.uwc.ac.za', 'weight' => 30, 'time' => time()));
+
+				print $this->objTC->buildCloud($tagarray);
+				break;
+
 		}
 
 	}
