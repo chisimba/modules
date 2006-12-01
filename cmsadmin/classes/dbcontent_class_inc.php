@@ -69,41 +69,42 @@ class dbcontent extends dbTable
          * @return bool
          */
 
-        public function add()
+        public function add
+            ()
         {
-                $title = $this->getParam('title');
-                $sectionid = $this->getParam('parent');
-                $published = ($this->getParam('published') == 'on') ? 1 : 0;
-                $creatorid = $this->_objUser->userId();
-                $access = $this->getParam('access');
-                $introText = $this->getParam('intro');
-                $fullText = $this->getParam('body');
+            $title = $this->getParam('title');
+            $sectionid = $this->getParam('parent');
+            $published = ($this->getParam('published') == 'on') ? 1 : 0;
+            $creatorid = $this->_objUser->userId();
+            $access = $this->getParam('access');
+            $introText = $this->getParam('intro');
+            $fullText = $this->getParam('body');
 
-                $newArr = array(
-                              'title' => $title ,
-                              'sectionid' => $sectionid,
-                              'introtext' => $introText,
-                              'body' => $fullText,
-                              'access' => $access,
-                              'ordering' => $this->getOrdering($sectionid),
-                              'published' => $published,
-                              'created' => $this->now(),
-                              'modified' => $this->now(),
-                              'created_by' => $creatorid
-                          );
+            $newArr = array(
+                          'title' => $title ,
+                          'sectionid' => $sectionid,
+                          'introtext' => $introText,
+                          'body' => $fullText,
+                          'access' => $access,
+                          'ordering' => $this->getOrdering($sectionid),
+                          'published' => $published,
+                          'created' => $this->now(),
+                          'modified' => $this->now(),
+                          'created_by' => $creatorid
+                      );
 
-                $newId = $this->insert($newArr);
+            $newId = $this->insert($newArr);
 
-                //process the forntpage
-                $isFrontPage = $this->getParam('frontpage');
+            //process the forntpage
+            $isFrontPage = $this->getParam('frontpage');
 
-                if ($isFrontPage == 'on') {
+            if ($isFrontPage == 'on') {
 
-                    $this->_objFrontPage->add
-                    ($newId);
-                }
+                $this->_objFrontPage->add
+                ($newId);
+            }
 
-                return $newId;
+            return $newId;
         }
 
         /**
@@ -114,43 +115,43 @@ class dbcontent extends dbTable
          */
         public function edit()
         {
-                $id = $this->getParam('id');
-                $title = $this->getParam('title');
-                $sectionid = $this->getParam('parent');
-                $published = ($this->getParam('published') == 'on') ? '1' : '0';
-                $creatorid = $this->_objUser->userId();
-                $access = $this->getParam('access');
-                $introText = $this->getParam('intro');
-                $fullText = $this->getParam('body');
-                $ordering = $this->getParam('ordering');
+            $id = $this->getParam('id');
+            $title = $this->getParam('title');
+            $sectionid = $this->getParam('parent');
+            $published = ($this->getParam('published') == 'on') ? '1' : '0';
+            $creatorid = $this->_objUser->userId();
+            $access = $this->getParam('access');
+            $introText = $this->getParam('intro');
+            $fullText = $this->getParam('body');
+            $ordering = $this->getParam('ordering');
 
-                $newArr = array(
-                              'title' => $title ,
-                              'sectionid' => $sectionid,
-                              'access' => $access,
-                              'introtext' => $introText,
-                              'body' => $fullText,
-                              'modified' => $this->now(),
-                              'ordering' => $ordering,
-                              'published' => $published,
-                              'created_by' => $creatorid
-                          );
+            $newArr = array(
+                          'title' => $title ,
+                          'sectionid' => $sectionid,
+                          'access' => $access,
+                          'introtext' => $introText,
+                          'body' => $fullText,
+                          'modified' => $this->now(),
+                          'ordering' => $ordering,
+                          'published' => $published,
+                          'created_by' => $creatorid
+                      );
 
-                //process the forntpage
-                $isFrontPage = $this->getParam('frontpage');
+            //process the forntpage
+            $isFrontPage = $this->getParam('frontpage');
 
-                if ($isFrontPage == 'on') {
+            if ($isFrontPage == 'on') {
 
-                    $this->_objFrontPage->add
-                    ($id);
-                } else {
+                $this->_objFrontPage->add
+                ($id);
+            } else {
 
-                    $this->_objFrontPage->remove
-                    ($id);
-                }
+                $this->_objFrontPage->remove
+                ($id);
+            }
 
 
-                return $this->update('id', $id, $newArr);
+            return $this->update('id', $id, $newArr);
         }
 
         /**
@@ -187,43 +188,44 @@ class dbcontent extends dbTable
         */
         public function deleteContent($id)
         {
-                //Re-order other pages in section accordingly
-                $page = $this->getRow('id', $id);
-                $pageOrderNo = $page['ordering'];
-                $sectionId = $page['sectionid'];
-                $allPagesInSection = $this->getPagesInSection($sectionId);
-                foreach($allPagesInSection as $pg) {
-                    if ($pg['ordering'] > $pageOrderNo) {
-                        $newOrder = $pg['ordering'] - '1';
-                        $this->update('id', $pg['id'], array('title' => $pg['title'],
-                                                             'sectionid' => $pg['sectionid'],
-                                                             'introtext' => $pg['introtext'],
-                                                             'body' => $pg['body'],
-                                                             'access' => $pg['access'],
-                                                             'ordering' => $newOrder,
-                                                             'published' => $pg['published'],
-                                                             'created' => $pg['created'],
-                                                             'modified' => $this->now(),
-                                                             'created_by' => $pg['created_by']
-                                                            ));
-                    }
+            //Re-order other pages in section accordingly
+            $page = $this->getRow('id', $id);
+            $pageOrderNo = $page['ordering'];
+            $sectionId = $page['sectionid'];
+            $allPagesInSection = $this->getPagesInSection($sectionId);
+            foreach($allPagesInSection as $pg) {
+                if ($pg['ordering'] > $pageOrderNo) {
+                    $newOrder = $pg['ordering'] - '1';
+                    $this->update('id', $pg['id'], array('title' => $pg['title'],
+                                                         'sectionid' => $pg['sectionid'],
+                                                         'introtext' => $pg['introtext'],
+                                                         'body' => $pg['body'],
+                                                         'access' => $pg['access'],
+                                                         'ordering' => $newOrder,
+                                                         'published' => $pg['published'],
+                                                         'created' => $pg['created'],
+                                                         'modified' => $this->now(),
+                                                         'created_by' => $pg['created_by']
+                                                        ));
                 }
-                //First remove from front page
-                if ($this->_objFrontPage->isFrontPage($id)) {
-                    $fpEntry = $this->_objFrontPage->getRow('content_id', $id);
-                    $fpEntryId = $fpEntry['id'];
+            }
+            //First remove from front page
+            if ($this->_objFrontPage->isFrontPage($id)) {
+                $fpEntry = $this->_objFrontPage->getRow('content_id', $id);
+                $fpEntryId = $fpEntry['id'];
 
-                    $this->_objFrontPage->remove($fpEntryId);
+                $this->_objFrontPage->remove
+                ($fpEntryId);
+            }
+            //Remove blocks for the page
+            $pageBlocks = $this->_objBlocks->getBlocksForPage($id);
+            if(!empty($pageBlocks)) {
+                foreach($pageBlocks as $pb) {
+                    $this->_objBlocks->deleteBlock($pb['pageid'], $pb['blockid']);
                 }
-                //Remove blocks for the page
-                $pageBlocks = $this->_objBlocks->getBlocksForPage($id);
-                if(!empty($pageBlocks)){
-                   foreach($pageBlocks as $pb){
-                      $this->_objBlocks->deleteBlock($pb['pageid'], $pb['blockid']);
-                   }
-                }
-                //Delete page
-                return $this->delete('id', $id);
+            }
+            //Delete page
+            return $this->delete('id', $id);
         }
 
         /**
@@ -235,13 +237,13 @@ class dbcontent extends dbTable
          */
         public function getContentPages($filter = '')
         {
-                if ($filter == 'trash') {
-                    $filter = ' WHERE trash=1 ';
-                } else {
-                    $filter = ' WHERE trash=0 ';
-                }
+            if ($filter == 'trash') {
+                $filter = ' WHERE trash=1 ';
+            } else {
+                $filter = ' WHERE trash=0 ';
+            }
 
-                return $this->getAll($filter.' ORDER BY ordering');
+            return $this->getAll($filter.' ORDER BY ordering');
         }
 
 
@@ -268,13 +270,13 @@ class dbcontent extends dbTable
          */
         public function togglePublish($id)
         {
-                $row = $this->getContentPage($id);
+            $row = $this->getContentPage($id);
 
-                if ($row['published'] == 1) {
-                    return $this->update('id', $id , array('published' => 0) );
-                } else {
-                    return $this->update('id', $id , array('published' => 1) );
-                }
+            if ($row['published'] == 1) {
+                return $this->update('id', $id , array('published' => 0) );
+            } else {
+                return $this->update('id', $id , array('published' => 1) );
+            }
         }
 
         /**
@@ -287,12 +289,12 @@ class dbcontent extends dbTable
         */
         public function resetSection($sectionId)
         {
-                $arrContent = $this->getAll('WHERE sectionid = \''.$sectionId.'\'');
-                $bln = TRUE;
-                foreach ($arrContent as $page) {
-                    $this->delete('id', $page['id']);
-                }
-                return $bln;
+            $arrContent = $this->getAll('WHERE sectionid = \''.$sectionId.'\'');
+            $bln = TRUE;
+            foreach ($arrContent as $page) {
+                $this->delete('id', $page['id']);
+            }
+            return $bln;
         }
 
         /**
@@ -305,8 +307,8 @@ class dbcontent extends dbTable
          */
         public function getPagesInSection($sectionId)
         {
-                $pages = $this->getAll('WHERE sectionid = \''.$sectionId.'\' ORDER BY ordering');
-                return $pages;
+            $pages = $this->getAll('WHERE sectionid = \''.$sectionId.'\' ORDER BY ordering');
+            return $pages;
         }
 
         /**
@@ -319,10 +321,10 @@ class dbcontent extends dbTable
          */
         public function getNumberOfPagesInSection($sectionId)
         {
-                $noPages = '0';
-                $pages = $this->getAll('WHERE sectionid = \''.$sectionId.'\' ORDER BY ordering');
-                $noPages = count($pages);
-                return $noPages;
+            $noPages = '0';
+            $pages = $this->getAll('WHERE sectionid = \''.$sectionId.'\' ORDER BY ordering');
+            $noPages = count($pages);
+            return $noPages;
         }
 
         /**
@@ -335,11 +337,11 @@ class dbcontent extends dbTable
           */
         public function getPageOrder($pageId)
         {
-                //get last order value
-                $lastOrder = $this->getRow('id', $pageId);
-                //add after this value
-                $ordering = $lastOrder['ordering'];
-                return $ordering;
+            //get last order value
+            $lastOrder = $this->getRow('id', $pageId);
+            //add after this value
+            $ordering = $lastOrder['ordering'];
+            return $ordering;
         }
 
         /**
@@ -352,16 +354,16 @@ class dbcontent extends dbTable
           */
         public function getOrdering($sectionId)
         {
-                $ordering = 1;
-                //get last order value
-                $lastOrder = $this->getAll('WHERE sectionid = \''.$sectionId.'\' ORDER BY ordering DESC LIMIT 1');
-                //add after this value
+            $ordering = 1;
+            //get last order value
+            $lastOrder = $this->getAll('WHERE sectionid = \''.$sectionId.'\' ORDER BY ordering DESC LIMIT 1');
+            //add after this value
 
-                if (!empty($lastOrder)) {
-                    $ordering = $lastOrder['0']['ordering'] + 1;
-                }
+            if (!empty($lastOrder)) {
+                $ordering = $lastOrder['0']['ordering'] + 1;
+            }
 
-                return $ordering;
+            return $ordering;
         }
 
         /**
@@ -374,58 +376,58 @@ class dbcontent extends dbTable
          */
         public function getOrderingLink($sectionid, $id)
         {
-                //Get the number of pages in the section
-                $lastOrd = $this->getAll('WHERE sectionid = \''.$sectionid.'\' ORDER BY ordering DESC LIMIT 1');
-                $topOrder = $lastOrd['0']['ordering'];
-                $links = " ";
+            //Get the number of pages in the section
+            $lastOrd = $this->getAll('WHERE sectionid = \''.$sectionid.'\' ORDER BY ordering DESC LIMIT 1');
+            $topOrder = $lastOrd['0']['ordering'];
+            $links = " ";
 
-                if ($topOrder > '1') {
-                    //Get the order position
-                    $entry = $this->getRow('id', $id);
-                    //Create geticon obj
-                    $this->objIcon = & $this->newObject('geticon', 'htmlelements');
+            if ($topOrder > '1') {
+                //Get the order position
+                $entry = $this->getRow('id', $id);
+                //Create geticon obj
+                $this->objIcon = & $this->newObject('geticon', 'htmlelements');
 
-                    if ($entry['ordering'] == '1') {
-                        //return down arrow link
-                        //icon
-                        $this->objIcon->setIcon('downend');
-                        $this->objIcon->title = $this->_objLanguage->languageText('mod_cmsadmin_changeorderdown', 'cmsadmin');
-                        //link
-                        $downLink = & $this->newObject('link', 'htmlelements');
-                        $downLink->href = $this->uri(array('action' => 'changecontentorder', 'id' => $id, 'ordering' => 'up', 'sectionid' => $sectionid));
-                        $downLink->link = $this->objIcon->show();
-                        $links .= $downLink->show();
-                    } else if ($entry['ordering'] == $topOrder) {
-                        //return up arrow
-                        //icon
-                        $this->objIcon->setIcon('upend');
-                        $this->objIcon->title = $this->_objLanguage->languageText('mod_cmsadmin_changeorderup', 'cmsadmin');
-                        //link
-                        $upLink = & $this->newObject('link', 'htmlelements');
-                        $upLink->href = $this->uri(array('action' => 'changecontentorder', 'id' => $id, 'ordering' => 'down', 'sectionid' => $sectionid));
-                        $upLink->link = $this->objIcon->show();
-                        $links .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $upLink->show();
-                    } else {
-                        //return both arrows
-                        //icon
-                        $this->objIcon->setIcon('down');
-                        $this->objIcon->title = $this->_objLanguage->languageText('mod_cmsadmin_changeorderdown', 'cmsadmin');
-                        //link
-                        $downLink = & $this->newObject('link', 'htmlelements');
-                        $downLink->href = $this->uri(array('action' => 'changecontentorder', 'id' => $id, 'ordering' => 'up', 'sectionid' => $sectionid));
-                        $downLink->link = $this->objIcon->show();
-                        //icon
-                        $this->objIcon->setIcon('up');
-                        $this->objIcon->title = $this->_objLanguage->languageText('mod_cmsadmin_changeorderup', 'cmsadmin');
-                        //link
-                        $upLink = & $this->newObject('link', 'htmlelements');
-                        $upLink->href = $this->uri(array('action' => 'changecontentorder', 'id' => $id, 'ordering' => 'down', 'sectionid' => $sectionid));
-                        $upLink->link = $this->objIcon->show();
-                        $links .= $downLink->show() . '&nbsp;' . $upLink->show();
-                    }
+                if ($entry['ordering'] == '1') {
+                    //return down arrow link
+                    //icon
+                    $this->objIcon->setIcon('downend');
+                    $this->objIcon->title = $this->_objLanguage->languageText('mod_cmsadmin_changeorderdown', 'cmsadmin');
+                    //link
+                    $downLink = & $this->newObject('link', 'htmlelements');
+                    $downLink->href = $this->uri(array('action' => 'changecontentorder', 'id' => $id, 'ordering' => 'up', 'sectionid' => $sectionid));
+                    $downLink->link = $this->objIcon->show();
+                    $links .= $downLink->show();
+                } else if ($entry['ordering'] == $topOrder) {
+                    //return up arrow
+                    //icon
+                    $this->objIcon->setIcon('upend');
+                    $this->objIcon->title = $this->_objLanguage->languageText('mod_cmsadmin_changeorderup', 'cmsadmin');
+                    //link
+                    $upLink = & $this->newObject('link', 'htmlelements');
+                    $upLink->href = $this->uri(array('action' => 'changecontentorder', 'id' => $id, 'ordering' => 'down', 'sectionid' => $sectionid));
+                    $upLink->link = $this->objIcon->show();
+                    $links .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $upLink->show();
+                } else {
+                    //return both arrows
+                    //icon
+                    $this->objIcon->setIcon('down');
+                    $this->objIcon->title = $this->_objLanguage->languageText('mod_cmsadmin_changeorderdown', 'cmsadmin');
+                    //link
+                    $downLink = & $this->newObject('link', 'htmlelements');
+                    $downLink->href = $this->uri(array('action' => 'changecontentorder', 'id' => $id, 'ordering' => 'up', 'sectionid' => $sectionid));
+                    $downLink->link = $this->objIcon->show();
+                    //icon
+                    $this->objIcon->setIcon('up');
+                    $this->objIcon->title = $this->_objLanguage->languageText('mod_cmsadmin_changeorderup', 'cmsadmin');
+                    //link
+                    $upLink = & $this->newObject('link', 'htmlelements');
+                    $upLink->href = $this->uri(array('action' => 'changecontentorder', 'id' => $id, 'ordering' => 'down', 'sectionid' => $sectionid));
+                    $upLink->link = $this->objIcon->show();
+                    $links .= $downLink->show() . '&nbsp;' . $upLink->show();
                 }
+            }
 
-                return $links;
+            return $links;
         }
 
         /**
@@ -440,42 +442,42 @@ class dbcontent extends dbTable
          */
         public function changeOrder($sectionid, $id, $ordering)
         {
-                //Get array of all page entries
-                $fpContent = $this->getAll('WHERE sectionid = \''.$sectionid.'\' ORDER BY ordering');
-                //Search for entry to be reordered and update order
-                foreach($fpContent as $content) {
-                    if ($content['id'] == $id) {
-                        if ($ordering == 'up') {
-                            $changeTo = $content['ordering'];
-                            $toChange = $content['ordering'] + 1;
-                            $updateArray = array(
-                                               'modified' => $this->now(),
-                                               'ordering' => $toChange
-                                           );
-                            $this->update('id', $id, $updateArray);
-                        } else {
-                            $changeTo = $content['ordering'];
-                            $toChange = $content['ordering'] - 1;
-                            $updateArray = array(
-                                               'ordering' => $toChange,
-                                               'modified' => $this->now()
-                                           );
-                            $this->update('id', $id, $updateArray);
-                        }
+            //Get array of all page entries
+            $fpContent = $this->getAll('WHERE sectionid = \''.$sectionid.'\' ORDER BY ordering');
+            //Search for entry to be reordered and update order
+            foreach($fpContent as $content) {
+                if ($content['id'] == $id) {
+                    if ($ordering == 'up') {
+                        $changeTo = $content['ordering'];
+                        $toChange = $content['ordering'] + 1;
+                        $updateArray = array(
+                                           'modified' => $this->now(),
+                                           'ordering' => $toChange
+                                       );
+                        $this->update('id', $id, $updateArray);
+                    } else {
+                        $changeTo = $content['ordering'];
+                        $toChange = $content['ordering'] - 1;
+                        $updateArray = array(
+                                           'ordering' => $toChange,
+                                           'modified' => $this->now()
+                                       );
+                        $this->update('id', $id, $updateArray);
                     }
                 }
+            }
 
-                //Get other entry to change
-                $entries = $this->getAll('WHERE sectionid = \''.$sectionid.'\' AND ordering = \''.$toChange.'\'');
-                foreach($entries as $entry) {
-                    if ($entry['id'] != $id) {
-                        $upArr = array(
-                                     'ordering' => $changeTo,
-                                     'modified' => $this->now()
-                                 );
-                        return $this->update('id', $entry['id'], $upArr);
-                    }
+            //Get other entry to change
+            $entries = $this->getAll('WHERE sectionid = \''.$sectionid.'\' AND ordering = \''.$toChange.'\'');
+            foreach($entries as $entry) {
+                if ($entry['id'] != $id) {
+                    $upArr = array(
+                                 'ordering' => $changeTo,
+                                 'modified' => $this->now()
+                             );
+                    return $this->update('id', $entry['id'], $upArr);
                 }
+            }
         }
 }
 

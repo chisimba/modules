@@ -17,6 +17,6 @@ $cssLayout->setLeftColumnContent($this->getCMSMenu());
 $cssLayout->setMiddleColumnContent($this->getContent());
 
 // Display the Layout
-echo $cssLayout->show(); 
+echo $cssLayout->show();
 
 ?>

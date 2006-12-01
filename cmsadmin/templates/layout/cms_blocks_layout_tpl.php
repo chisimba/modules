@@ -1,5 +1,5 @@
 <?php
 
-echo $this->getContent();  
+echo $this->getContent();
 
 ?>

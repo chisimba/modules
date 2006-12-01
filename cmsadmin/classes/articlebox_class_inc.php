@@ -2,7 +2,8 @@
 
 
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run']){
+if (!$GLOBALS['kewl_entry_point_run'])
+{
     die("You cannot view this page directly");
 }
 
@@ -19,29 +20,28 @@ if (!$GLOBALS['kewl_entry_point_run']){
 
 class articlebox extends object
 {
-    /**
-    * Method to construct the class.
-    **/
-    public function init()
-    {
-    
-    }
-    
-    /**
-     * Method to show the article
-     * 
-     * @param null
-     * @access publc
-     * @return string
-     */
-    public function show($content = null)
-    {
-    	
-  		$article = '<div class="featurebox">';
-		$article .= '<small>'.$content.'</small>';		
-		$article .= '</div>';
-  		return $article;
-  		  	
-    }
+        /**
+        * Method to construct the class.
+        **/
+        public function init()
+        {
+        }
+
+        /**
+         * Method to show the article
+         * 
+         * @param null
+         * @access publc
+         * @return string
+         */
+        public function show($content = null)
+        {
+
+            $article = '<div class="featurebox">';
+            $article .= '<small>'.$content.'</small>';
+            $article .= '</div>';
+            return $article;
+
+        }
 }
 ?>

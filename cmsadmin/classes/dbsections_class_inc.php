@@ -39,16 +39,16 @@ class dbsections extends dbTable
          */
         protected $_objLanguage;
 
-      /**
-       * Method to define the table
-       * 
-       * @access public
-       */
+        /**
+         * Method to define the table
+         * 
+         * @access public
+         */
         public function init()
         {
-                parent::init('tbl_cms_sections');
-                $this->_objDBContent = $this->getObject('dbcontent', 'cmsadmin');
-                $this->_objLanguage = & $this->newObject('language', 'language');
+            parent::init('tbl_cms_sections');
+            $this->_objDBContent = $this->getObject('dbcontent', 'cmsadmin');
+            $this->_objLanguage = & $this->newObject('language', 'language');
         }
 
         /**
@@ -60,11 +60,11 @@ class dbsections extends dbTable
          */
         public function getSections($isPublished = FALSE)
         {
-                if ($isPublished) {
-                    return $this->getAll('WHERE published = 1 ORDER BY ordering');
-                } else {
-                    return $this->getAll('ORDER BY ordering');
-                }
+            if ($isPublished) {
+                return $this->getAll('WHERE published = 1 ORDER BY ordering');
+            } else {
+                return $this->getAll('ORDER BY ordering');
+            }
         }
 
         /**
@@ -76,11 +76,11 @@ class dbsections extends dbTable
          */
         public function getRootNodes($isPublished = FALSE)
         {
-                if ($isPublished) {
-                    return $this->getAll('WHERE published = 1 AND nodelevel = 1 ORDER BY ordering');
-                } else {
-                    return $this->getAll('WHERE nodelevel = 1 ORDER BY ordering');
-                }
+            if ($isPublished) {
+                return $this->getAll('WHERE published = 1 AND nodelevel = 1 ORDER BY ordering');
+            } else {
+                return $this->getAll('WHERE nodelevel = 1 ORDER BY ordering');
+            }
         }
 
         /**
@@ -92,7 +92,7 @@ class dbsections extends dbTable
          */
         public function getSection($id)
         {
-                return $this->getRow('id', $id);
+            return $this->getRow('id', $id);
         }
 
         /**
@@ -104,21 +104,21 @@ class dbsections extends dbTable
          */
         public function getFirstSectionId($isPublished = FALSE)
         {
-                $firstSectionId = '';
-                $firstSection = $this->getAll('WHERE parentid=0 ORDER BY ordering');
-                if(!empty($firstSection)){
-                  if($isPublished){
-                     foreach($firstSection as $section){
-                       if($section['published'] == 1){
-                         $firstSectionId = $section['id'];
-                         break;
-                       }
+            $firstSectionId = '';
+            $firstSection = $this->getAll('WHERE parentid=0 ORDER BY ordering');
+            if(!empty($firstSection)) {
+                if($isPublished) {
+                    foreach($firstSection as $section) {
+                        if($section['published'] == 1) {
+                            $firstSectionId = $section['id'];
+                            break;
+                        }
                     }
-                  } else {
-                      $firstSectionId = $firstSection['0']['id'];
-                  }
-                }      
-                return $firstSectionId;
+                } else {
+                    $firstSectionId = $firstSection['0']['id'];
+                }
+            }
+            return $firstSectionId;
         }
 
         /**
@@ -127,51 +127,52 @@ class dbsections extends dbTable
          * @access public
          * @return bool
          */
-        public function add()
+        public function add
+            ()
         {
-                //get param from dropdown
-                $parentSelected = $this->getParam('parent');
-                //get parent type "subsection", "root" or "param is null"(new section will be root level) and its id
-                $id = $parentSelected;
-                $parentid = $id;
+            //get param from dropdown
+            $parentSelected = $this->getParam('parent');
+            //get parent type "subsection", "root" or "param is null"(new section will be root level) and its id
+            $id = $parentSelected;
+            $parentid = $id;
 
-                if ($this->getLevel($parentid) == '1' || $this->getLevel($parentid) == '0') {
-                    $rootid = $parentid;
-                } else {
-                    $rootid = $this->getRootNodeId($id);
-                }
+            if ($this->getLevel($parentid) == '1' || $this->getLevel($parentid) == '0') {
+                $rootid = $parentid;
+            } else {
+                $rootid = $this->getRootNodeId($id);
+            }
 
-                $title = $this->getParam('title');
-                $menuText = $this->getParam('menutext');
-                $access = $this->getParam('access');
-                $description = $this->getParam('introtext');
-                $published = $this->getParam('published');
-                $layout = $this->getParam('display');
-                $showdate = $this->getParam('showdate');
-                $showintroduction = $this->getParam('showintro');
-                if($this->getParam('pagenum') == 'custom'){
-                  $numpagedisplay = $this->getParam('customnumber');
-                } else {
-                    $numpagedisplay = $this->getParam('pagenum');
-                }  
-                $ordertype = $this->getParam('pageorder');
-                $ordering = $this->getOrdering($parentid);
-                return $this->insert(array(
-                                         'rootid' => $rootid,
-                                         'parentid' => $parentid,
-                                         'title' => $title,
-                                         'menutext' => $menuText,
-                                         'access' => $access,
-                                         'layout' => $layout,
-                                         'ordering' => $ordering,
-                                         'description' => $description,
-                                         'published' => $published,
-                                         'showdate' => $showdate,
-                                         'showintroduction' => $showintroduction,
-                                         'numpagedisplay' => $numpagedisplay,
-                                         'ordertype' => $ordertype,
-                                         'nodelevel' => $this->getLevel($parentid) + '1'
-                                     ));
+            $title = $this->getParam('title');
+            $menuText = $this->getParam('menutext');
+            $access = $this->getParam('access');
+            $description = $this->getParam('introtext');
+            $published = $this->getParam('published');
+            $layout = $this->getParam('display');
+            $showdate = $this->getParam('showdate');
+            $showintroduction = $this->getParam('showintro');
+            if($this->getParam('pagenum') == 'custom') {
+                $numpagedisplay = $this->getParam('customnumber');
+            } else {
+                $numpagedisplay = $this->getParam('pagenum');
+            }
+            $ordertype = $this->getParam('pageorder');
+            $ordering = $this->getOrdering($parentid);
+            return $this->insert(array(
+                                     'rootid' => $rootid,
+                                     'parentid' => $parentid,
+                                     'title' => $title,
+                                     'menutext' => $menuText,
+                                     'access' => $access,
+                                     'layout' => $layout,
+                                     'ordering' => $ordering,
+                                     'description' => $description,
+                                     'published' => $published,
+                                     'showdate' => $showdate,
+                                     'showintroduction' => $showintroduction,
+                                     'numpagedisplay' => $numpagedisplay,
+                                     'ordertype' => $ordertype,
+                                     'nodelevel' => $this->getLevel($parentid) + '1'
+                                 ));
         }
 
         /**
@@ -183,41 +184,41 @@ class dbsections extends dbTable
         public function edit()
         {
 
-                $id = $this->getParam('id');
-                $parentid = $this->getParam('parent');
-                $rootid = $this->getParam('rootid');
-                $title = $this->getParam('title');
-                $menuText = $this->getParam('menutext');
-                $access = $this->getParam('access');
-                $description = $this->getParam('introtext');
-                $published = $this->getParam('published');
-                $layout = $this->getParam('display');
-                $showdate = $this->getParam('showdate');
-                $showintroduction = $this->getParam('showintro');
-                if($this->getParam('pagenum') == 'custom'){
-                  $numpagedisplay = $this->getParam('customnumber');
-                } else {
-                    $numpagedisplay = $this->getParam('pagenum');
-                }  
-                $ordertype = $this->getParam('pageorder');
-                $ordering = $this->getParam('ordering');
-                $count = $this->getParam('count');
-                $arrFields = array(
-                                 'rootid' => $rootid,
-                                 'parentid' => $parentid,
-                                 'title' => $title,
-                                 'menutext' => $menuText,
-                                 'access' => $access,
-                                 'layout' => $layout,
-                                 'ordering' => $ordering,
-                                 'showdate' => $showdate,
-                                 'showintroduction' => $showintroduction,
-                                 'numpagedisplay' => $numpagedisplay,
-                                 'ordertype' => $ordertype,
-                                 'description' => $description,
-                                 'nodelevel' => $count,
-                                 'published' => $published);
-                return $this->update('id', $id, $arrFields);
+            $id = $this->getParam('id');
+            $parentid = $this->getParam('parent');
+            $rootid = $this->getParam('rootid');
+            $title = $this->getParam('title');
+            $menuText = $this->getParam('menutext');
+            $access = $this->getParam('access');
+            $description = $this->getParam('introtext');
+            $published = $this->getParam('published');
+            $layout = $this->getParam('display');
+            $showdate = $this->getParam('showdate');
+            $showintroduction = $this->getParam('showintro');
+            if($this->getParam('pagenum') == 'custom') {
+                $numpagedisplay = $this->getParam('customnumber');
+            } else {
+                $numpagedisplay = $this->getParam('pagenum');
+            }
+            $ordertype = $this->getParam('pageorder');
+            $ordering = $this->getParam('ordering');
+            $count = $this->getParam('count');
+            $arrFields = array(
+                             'rootid' => $rootid,
+                             'parentid' => $parentid,
+                             'title' => $title,
+                             'menutext' => $menuText,
+                             'access' => $access,
+                             'layout' => $layout,
+                             'ordering' => $ordering,
+                             'showdate' => $showdate,
+                             'showintroduction' => $showintroduction,
+                             'numpagedisplay' => $numpagedisplay,
+                             'ordertype' => $ordertype,
+                             'description' => $description,
+                             'nodelevel' => $count,
+                             'published' => $published);
+            return $this->update('id', $id, $arrFields);
         }
 
         /**
@@ -229,26 +230,26 @@ class dbsections extends dbTable
          */
         public function getOrderList($name)
         {
-                $objDropDown = & $this->newObject('dropdown', 'htmlelements');
-                $objDropDown->name = $name;
-                //fill the drop down with the list of images
-                $arrSections = $this->getAll('ORDER BY ordering');
+            $objDropDown = & $this->newObject('dropdown', 'htmlelements');
+            $objDropDown->name = $name;
+            //fill the drop down with the list of images
+            $arrSections = $this->getAll('ORDER BY ordering');
 
-                $cnt = 1;
-                $objDropDown->addOption('0', ' 0 first');
-                foreach ($arrSections as $section) {
-                    $objDropDown->addOption($cnt++, ' '.$cnt.'  '.$section['menutext']);
+            $cnt = 1;
+            $objDropDown->addOption('0', ' 0 first');
+            foreach ($arrSections as $section) {
+                $objDropDown->addOption($cnt++, ' '.$cnt.'  '.$section['menutext']);
 
-                    if ($section['ordering'] == $cnt) {
-                        $objDropDown->setSelected($cnt);
-                    }
-
+                if ($section['ordering'] == $cnt) {
+                    $objDropDown->setSelected($cnt);
                 }
 
-                $objDropDown->addOption($cnt++ , ' '.$cnt. ' last');
+            }
+
+            $objDropDown->addOption($cnt++ , ' '.$cnt. ' last');
 
 
-                return $objDropDown->show();
+            return $objDropDown->show();
         }
 
         /**
@@ -373,12 +374,12 @@ class dbsections extends dbTable
           */
         public function getSubSectionsInSection($sectionId, $order = 'ASC', $isPublished = FALSE)
         {
-                if ($isPublished) {
-                    //return all subsections
-                    return $this->getAll('WHERE published = 1 AND parentid = \''.$sectionId.'\' ORDER BY ordering '.$order);
-                } else {
-                    return $this->getAll('WHERE parentid = \''.$sectionId.'\' ORDER BY ordering '.$order);
-                }
+            if ($isPublished) {
+                //return all subsections
+                return $this->getAll('WHERE published = 1 AND parentid = \''.$sectionId.'\' ORDER BY ordering '.$order);
+            } else {
+                return $this->getAll('WHERE parentid = \''.$sectionId.'\' ORDER BY ordering '.$order);
+            }
         }
 
         /**
@@ -391,12 +392,12 @@ class dbsections extends dbTable
           */
         public function getSubSectionsInRoot($rootId, $isPublished = FALSE)
         {
-                if ($isPublished) {
-                    //return all subsections
-                    return $this->getAll('WHERE published = 1 AND rootid = \''.$rootId.'\' ORDER BY ordering');
-                } else {
-                    return $this->getAll('WHERE rootid = \''.$rootId.'\' ORDER BY ordering');
-                }
+            if ($isPublished) {
+                //return all subsections
+                return $this->getAll('WHERE published = 1 AND rootid = \''.$rootId.'\' ORDER BY ordering');
+            } else {
+                return $this->getAll('WHERE rootid = \''.$rootId.'\' ORDER BY ordering');
+            }
         }
 
         /**
@@ -411,12 +412,12 @@ class dbsections extends dbTable
           */
         public function getSubSectionsForLevel($rootId, $level, $order = 'ASC', $isPublished = FALSE)
         {
-                if ($isPublished) {
-                    //return all subsections
-                    return $this->getAll('WHERE published = 1 AND nodelevel = \''.$level.'\' AND rootid = \''.$rootId.'\' ORDER BY ordering '.$order);
-                } else {
-                    return $this->getAll('WHERE nodelevel = \''.$level.'\' AND rootid = \''.$rootId.'\' ORDER BY ordering '.$order);
-                }
+            if ($isPublished) {
+                //return all subsections
+                return $this->getAll('WHERE published = 1 AND nodelevel = \''.$level.'\' AND rootid = \''.$rootId.'\' ORDER BY ordering '.$order);
+            } else {
+                return $this->getAll('WHERE nodelevel = \''.$level.'\' AND rootid = \''.$rootId.'\' ORDER BY ordering '.$order);
+            }
         }
 
         /**
@@ -428,9 +429,9 @@ class dbsections extends dbTable
           */
         public function getNumSubSections($sectionId)
         {
-                $subSecs = $this->getAll('WHERE parentid = \''.$sectionId.'\'');
-                $noSubSecs = count($subSecs);
-                return $noSubSecs;
+            $subSecs = $this->getAll('WHERE parentid = \''.$sectionId.'\'');
+            $noSubSecs = count($subSecs);
+            return $noSubSecs;
         }
 
         /**
@@ -442,8 +443,8 @@ class dbsections extends dbTable
          */
         public function deleteSection($id)
         {
-             //if cat has nodes delete nodes as well
-             if ($this->hasNodes($id)) {
+            //if cat has nodes delete nodes as well
+            if ($this->hasNodes($id)) {
                 //get cat details
                 $category = $this->getSection($id);
 
@@ -472,11 +473,11 @@ class dbsections extends dbTable
                 //delete original category
                 $this->_objDBContent->resetSection($id);
                 return $this->delete('id', $id);
-                
-             } else {
+
+            } else {
                 $this->_objDBContent->resetSection($id);
                 return $this->delete('id', $id);
-             }
+            }
         }
 
         /**
@@ -489,16 +490,16 @@ class dbsections extends dbTable
           */
         public function getOrdering($parentid = NULL)
         {
-                $ordering = 1;
-                //get last order value
-                $lastOrder = $this->getAll('WHERE parentid = \''.$parentid.'\' ORDER BY ordering DESC LIMIT 1');
-                //add after this value
+            $ordering = 1;
+            //get last order value
+            $lastOrder = $this->getAll('WHERE parentid = \''.$parentid.'\' ORDER BY ordering DESC LIMIT 1');
+            //add after this value
 
-                if (!empty($lastOrder)) {
-                    $ordering = $lastOrder['0']['ordering'] + 1;
-                }
+            if (!empty($lastOrder)) {
+                $ordering = $lastOrder['0']['ordering'] + 1;
+            }
 
-                return $ordering;
+            return $ordering;
         }
 
         /**
@@ -586,77 +587,76 @@ class dbsections extends dbTable
          */
         public function changeOrder($id, $ordering, $parentid)
         {
-                //Get array of all sections in level
-                $fpContent = $this->getAll('WHERE parentid = \''.$parentid.'\' ORDER BY ordering ');
-                //Search for entry to be reordered and update order
-                foreach($fpContent as $content) {
-                    if ($content['id'] == $id) {
-                        if ($ordering == 'up') {
-                            $changeTo = $content['ordering'];
-                            $toChange = $content['ordering'] + 1;
-                            $updateArray = array(
-                                               'ordering' => $toChange
-                                           );
-                            $this->update('id', $id, $updateArray);
-                        } else {
-                            $changeTo = $content['ordering'];
-                            $toChange = $content['ordering'] - 1;
-                            $updateArray = array(
-                                               'ordering' => $toChange
-                                           );
-                            $this->update('id', $id, $updateArray);
-                        }
+            //Get array of all sections in level
+            $fpContent = $this->getAll('WHERE parentid = \''.$parentid.'\' ORDER BY ordering ');
+            //Search for entry to be reordered and update order
+            foreach($fpContent as $content) {
+                if ($content['id'] == $id) {
+                    if ($ordering == 'up') {
+                        $changeTo = $content['ordering'];
+                        $toChange = $content['ordering'] + 1;
+                        $updateArray = array(
+                                           'ordering' => $toChange
+                                       );
+                        $this->update('id', $id, $updateArray);
+                    } else {
+                        $changeTo = $content['ordering'];
+                        $toChange = $content['ordering'] - 1;
+                        $updateArray = array(
+                                           'ordering' => $toChange
+                                       );
+                        $this->update('id', $id, $updateArray);
                     }
                 }
+            }
 
-                //Get other entry to change
-                $entries = $this->getAll('WHERE parentid = \''.$parentid.'\' AND ordering = \''.$toChange.'\'');
-                foreach($entries as $entry) {
-                    if ($entry['id'] != $id) {
-                        $upArr = array(
-                                     'ordering' => $changeTo
-                                 );
-                        $this->update('id', $entry['id'], $upArr);
-                    }
+            //Get other entry to change
+            $entries = $this->getAll('WHERE parentid = \''.$parentid.'\' AND ordering = \''.$toChange.'\'');
+            foreach($entries as $entry) {
+                if ($entry['id'] != $id) {
+                    $upArr = array(
+                                 'ordering' => $changeTo
+                             );
+                    $this->update('id', $entry['id'], $upArr);
                 }
+            }
         }
-    /**
-    * Method to get the type of section in a human readable format
-    *
-    * @access public
-    * @param string $orderType Type of Order Code
-    * @return string containing the type of order in a human readable format.
-    */
-    public function getPageOrderType($orderType)
-    {
-         switch ($orderType)
-         {
-            case 'pageorder': 
-                $order = 'Manual Arrangement'; 
+        /**
+        * Method to get the type of section in a human readable format
+        *
+        * @access public
+        * @param string $orderType Type of Order Code
+        * @return string containing the type of order in a human readable format.
+        */
+        public function getPageOrderType($orderType)
+        {
+            switch ($orderType) {
+            case 'pageorder':
+                    $order = 'Manual Arrangement';
                 break;
-                
-            case 'pagedate_asc': 
-                $order = 'Date Ascending'; 
-                break;
-                
-            case 'pagedate_desc': 
-                $order = 'Date Descending'; 
-                break;
-                
-            case 'pagetitle_asc': 
-                $order = 'Alphabetical by Title'; 
-                break;
-                
-            case 'pagetitle_desc': 
-                $order = 'Reverse Alphabetical by Title'; 
-                break;
-                
-            default: 
-                $order = 'unknown'; 
-                break;
-         }
 
-         return $order;
-    }
+            case 'pagedate_asc':
+                $order = 'Date Ascending';
+                break;
+
+            case 'pagedate_desc':
+                $order = 'Date Descending';
+                break;
+
+            case 'pagetitle_asc':
+                $order = 'Alphabetical by Title';
+                break;
+
+            case 'pagetitle_desc':
+                $order = 'Reverse Alphabetical by Title';
+                break;
+
+            default:
+                $order = 'unknown';
+                break;
+            }
+
+            return $order;
+        }
 }
 ?>

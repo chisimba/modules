@@ -47,11 +47,11 @@ class dbblocks extends dbTable
         protected $_objLanguage;
 
 
-      /**
-       * Method to define the table
-       * 
-       * @access public
-       */
+        /**
+         * Method to define the table
+         * 
+         * @access public
+         */
         public function init()
         {
             parent::init('tbl_cms_blocks');
@@ -59,27 +59,28 @@ class dbblocks extends dbTable
             $this->_objLanguage = & $this->newObject('language', 'language');
         }
 
-       /**
-        * Method to save a record to the database
-        *
-        * @param string $pageId The id of the page
-        * @param string $blockId The id of the block
-        * @access public
-        * @return bool
-        */
-        public function add($pageId, $blockId)
+        /**
+         * Method to save a record to the database
+         *
+         * @param string $pageId The id of the page
+         * @param string $blockId The id of the block
+         * @access public
+         * @return bool
+         */
+        public function add
+            ($pageId, $blockId)
         {
-                $ordering = $this->getOrdering($pageId);
+            $ordering = $this->getOrdering($pageId);
 
-                $newArr = array(
-                              'pageid' => $pageId ,
-                              'blockid' => $blockId,
-                              'ordering' => $ordering
-                          );
+            $newArr = array(
+                          'pageid' => $pageId ,
+                          'blockid' => $blockId,
+                          'ordering' => $ordering
+                      );
 
-                $newId = $this->insert($newArr);
+            $newId = $this->insert($newArr);
 
-                return $newId;
+            return $newId;
         }
 
         /**
@@ -90,19 +91,19 @@ class dbblocks extends dbTable
          */
         public function edit()
         {
-                $id = $this->getParam('id');
-                $pageId = $this->getParam('pageid');
-                $blockId = $this->getParam('blockid');
-                $ordering = $this->getParam('ordering', 1);
+            $id = $this->getParam('id');
+            $pageId = $this->getParam('pageid');
+            $blockId = $this->getParam('blockid');
+            $ordering = $this->getParam('ordering', 1);
 
-                $newArr = array(
-                              'pageid' => $pageId ,
-                              'blockid' => $blockId,
-                              'ordering' => $ordering
-                          );
+            $newArr = array(
+                          'pageid' => $pageId ,
+                          'blockid' => $blockId,
+                          'ordering' => $ordering
+                      );
 
 
-                return $this->update('id', $id, $newArr);
+            return $this->update('id', $id, $newArr);
         }
 
         /**
@@ -115,21 +116,21 @@ class dbblocks extends dbTable
         */
         public function deleteBlock($pageId, $blockId)
         {
-	          $block = $this->getAll('WHERE pageid = \''.$pageId.'\' AND blockid = \''.$blockId.'\'');
-	          if(!empty($block)){
-              $id = $block['0']['id'];
-              $blockOrderNo = $block['0']['ordering'];
-		          $pageBlocks = $this->getBlocksForPage($pageId);
-		          if(count($pageBlocks) > 1){
-		           foreach($pageBlocks as $pb){
-                 if($pb['ordering'] > $blockOrderNo){
-                   $newOrder = $pb['ordering'] - '1';
-                   $this->update('id', $pb['id'], array('pageid' => $pb['pageid'], 'blockid' => $pb['blockid'], 'ordering' => $newOrder));
-                 }
-               }
-              } 
-              return $this->delete('id', $id);
-             }
+            $block = $this->getAll('WHERE pageid = \''.$pageId.'\' AND blockid = \''.$blockId.'\'');
+            if(!empty($block)) {
+                $id = $block['0']['id'];
+                $blockOrderNo = $block['0']['ordering'];
+                $pageBlocks = $this->getBlocksForPage($pageId);
+                if(count($pageBlocks) > 1) {
+                    foreach($pageBlocks as $pb) {
+                        if($pb['ordering'] > $blockOrderNo) {
+                            $newOrder = $pb['ordering'] - '1';
+                            $this->update('id', $pb['id'], array('pageid' => $pb['pageid'], 'blockid' => $pb['blockid'], 'ordering' => $newOrder));
+                        }
+                    }
+                }
+                return $this->delete('id', $id);
+            }
         }
 
         /**
@@ -154,16 +155,16 @@ class dbblocks extends dbTable
           */
         public function getOrdering($pageid)
         {
-                $ordering = 1;
-                //get last order value
-                $lastOrder = $this->getAll('WHERE pageid = \''.$pageid.'\' ORDER BY ordering DESC LIMIT 1');
-               
-                //add after this value
-                if (!empty($lastOrder)) {
-                    $ordering = $lastOrder['0']['ordering'] + 1;
-                }
+            $ordering = 1;
+            //get last order value
+            $lastOrder = $this->getAll('WHERE pageid = \''.$pageid.'\' ORDER BY ordering DESC LIMIT 1');
 
-                return $ordering;
+            //add after this value
+            if (!empty($lastOrder)) {
+                $ordering = $lastOrder['0']['ordering'] + 1;
+            }
+
+            return $ordering;
         }
 
         /**
@@ -180,7 +181,7 @@ class dbblocks extends dbTable
             //Get the parent id
             $entry = $this->getRow('id', $id);
             $pageId = $entry['pageid'];
-            
+
             //Get the number of sub sections in section
             $lastOrd = $this->getAll('WHERE pageid = \''.$pageId.'\' ORDER BY ordering DESC LIMIT 1');
 
@@ -246,41 +247,41 @@ class dbblocks extends dbTable
          */
         public function changeOrder($id, $ordering, $pageId)
         {
-                //Get array of all blocks in level
-                $fpContent = $this->getAll('WHERE pageid = \''.$pageId.'\' ORDER BY ordering');
-                //Search for entry to be reordered and update order
-                foreach($fpContent as $content) {
-                    if ($content['id'] == $id) {
-                        if ($ordering == 'up') {
-                            $changeTo = $content['ordering'];
-                            $toChange = $content['ordering'] + 1;
-                            $updateArray = array(
-                                               'ordering' => $toChange
-                                           );
-                            $this->update('id', $id, $updateArray);
-                        } else {
-                            $changeTo = $content['ordering'];
-                            $toChange = $content['ordering'] - 1;
-                            $updateArray = array(
-                                               'ordering' => $toChange
-                                           );
-                            $this->update('id', $id, $updateArray);
-                        }
+            //Get array of all blocks in level
+            $fpContent = $this->getAll('WHERE pageid = \''.$pageId.'\' ORDER BY ordering');
+            //Search for entry to be reordered and update order
+            foreach($fpContent as $content) {
+                if ($content['id'] == $id) {
+                    if ($ordering == 'up') {
+                        $changeTo = $content['ordering'];
+                        $toChange = $content['ordering'] + 1;
+                        $updateArray = array(
+                                           'ordering' => $toChange
+                                       );
+                        $this->update('id', $id, $updateArray);
+                    } else {
+                        $changeTo = $content['ordering'];
+                        $toChange = $content['ordering'] - 1;
+                        $updateArray = array(
+                                           'ordering' => $toChange
+                                       );
+                        $this->update('id', $id, $updateArray);
                     }
                 }
+            }
 
-                //Get other entry to change
-                $entries = $this->getAll('WHERE pageid = \''.$pageId.'\' AND ordering = \''.$toChange.'\'');
-                foreach($entries as $entry) {
-                    if ($entry['id'] != $id) {
-                        $upArr = array(
-                                     'ordering' => $changeTo
-                                 );
-                        $this->update('id', $entry['id'], $upArr);
-                    }
+            //Get other entry to change
+            $entries = $this->getAll('WHERE pageid = \''.$pageId.'\' AND ordering = \''.$toChange.'\'');
+            foreach($entries as $entry) {
+                if ($entry['id'] != $id) {
+                    $upArr = array(
+                                 'ordering' => $changeTo
+                             );
+                    $this->update('id', $entry['id'], $upArr);
                 }
+            }
         }
-        
+
         /**
          * Method to return the ordering value of new blocks (gets added last)
          *
@@ -293,12 +294,12 @@ class dbblocks extends dbTable
         {
             //Load the checkbox class
             $this->loadClass('checkbox', 'htmlelements');
-            
+
             //Create heading
             $objH =& $this->newObject('htmlheading', 'htmlelements');
             $objH->type = '3';
             $objH->str = $this->_objLanguage->languageText('mod_cmsadmin_blocksforcontent', 'cmsadmin');
-            
+
             //Create the form
             $objForm =& $this->newObject('form', 'htmlelements');
             $objForm->name = 'addblockform';
@@ -316,52 +317,52 @@ class dbblocks extends dbTable
             $objTable->addHeaderCell($this->_objLanguage->languageText('phrase_blockname'));
             $objTable->addHeaderCell($this->_objLanguage->languageText('word_order'));
             $objTable->endHeaderRow();
-            
+
             //Get current blocks on page
             $currentBlocks = $this->getBlocksForPage($pageid);
 
-            if(!empty($currentBlocks)){
-              foreach($currentBlocks as $tbk){
-                  $tb = $this->getBlock($tbk['blockid']);
-                  //Add entry to table for changing order
-                  $objTable->startRow();
-                  $objTable->addCell($tb['blockname']);
-                  $objTable->addCell($this->getOrderingLink($tbk['id']));
-                  $objTable->endRow();
-               }
-            }     
-            
+            if(!empty($currentBlocks)) {
+                foreach($currentBlocks as $tbk) {
+                    $tb = $this->getBlock($tbk['blockid']);
+                    //Add entry to table for changing order
+                    $objTable->startRow();
+                    $objTable->addCell($tb['blockname']);
+                    $objTable->addCell($this->getOrderingLink($tbk['id']));
+                    $objTable->endRow();
+                }
+            }
+
             $boxes = "";
-            
+
             //Get all entries in blocks table
             $blocks = $this->getBlockEntries();
-            foreach($blocks as $block){
-               $blockName = $block['blockname'];
-               $blockId = $block['id'];
-               
-               $checked = FALSE;
-               if(!empty($currentBlocks)){
-                 foreach($currentBlocks as $blk){
-                    if($blk['blockid'] == $blockId){
-                      $checked = TRUE;
+            foreach($blocks as $block) {
+                $blockName = $block['blockname'];
+                $blockId = $block['id'];
+
+                $checked = FALSE;
+                if(!empty($currentBlocks)) {
+                    foreach($currentBlocks as $blk) {
+                        if($blk['blockid'] == $blockId) {
+                            $checked = TRUE;
+                        }
                     }
-                 }
-               }     
-               $checkbox = new checkbox($blockId, $blockName, $checked);
-              
-               $boxes .= $blockName.'&nbsp;'.$checkbox->show().'&nbsp;'.'&nbsp;';
+                }
+                $checkbox = new checkbox($blockId, $blockName, $checked);
+
+                $boxes .= $blockName.'&nbsp;'.$checkbox->show().'&nbsp;'.'&nbsp;';
             }
-            
+
             //Create submit button
             $objButton =& $this->newObject('button', 'htmlelements');
             $objButton->setToSubmit();
             $objButton->value = $this->_objLanguage->languageText('word_save');
             $objButton->id = 'submit';
             $objButton->name = 'submit';
-            
+
             $objForm->addToForm($boxes);
             $objForm->addToForm('<br/>'.'&nbsp;'.'<br/>'.$objButton->show());
-           
+
             $middleColumnContent = "";
             $middleColumnContent .= $objH->show();
             $middleColumnContent .= $objTable->show();
@@ -369,51 +370,51 @@ class dbblocks extends dbTable
             $objH->str = $this->_objLanguage->languageText('mod_cmsadmin_addremoveblocks', 'cmsadmin');
             $middleColumnContent .= $objH->show();
             $middleColumnContent .= $objForm->show();
-            
+
             return $middleColumnContent;
         }
 
-/************************ tbl_module_block methods *************************/
+        /************************ tbl_module_block methods *************************/
 
-       /**
-        * Method to return all entries in blocks table
-        * @return array
-        * @access public
-        */
+        /**
+         * Method to return all entries in blocks table
+         * @return array
+         * @access public
+         */
         public function getBlockEntries()
         {
-              $sql = 'SELECT * FROM tbl_module_blocks';
-              $entries = $this->getArray($sql); 
-              
-              return $entries;
+            $sql = 'SELECT * FROM tbl_module_blocks';
+            $entries = $this->getArray($sql);
+
+            return $entries;
         }
-       /**
-        * Method to return an entries in blocks table
-        * @param string $blockId The id of the block
-        * @return array
-        * @access public
-        */
+        /**
+         * Method to return an entries in blocks table
+         * @param string $blockId The id of the block
+         * @return array
+         * @access public
+         */
         public function getBlock($blockId)
         {
-              $entry = $this->getArray('SELECT * FROM tbl_module_blocks WHERE id = \''.$blockId.'\''); 
-              $entry = $entry['0'];
-              
-              return $entry;
+            $entry = $this->getArray('SELECT * FROM tbl_module_blocks WHERE id = \''.$blockId.'\'');
+            $entry = $entry['0'];
+
+            return $entry;
         }
-       /**
-        * Method to return an entries in blocks table
-        * @param string $blockName The name of the block
-        * @return array
-        * @access public
-        */
+        /**
+         * Method to return an entries in blocks table
+         * @param string $blockName The name of the block
+         * @return array
+         * @access public
+         */
         public function getBlockByName($blockName)
         {
-              $entry = $this->getArray('SELECT * FROM tbl_module_blocks WHERE blockname = \''.$blockName.'\''); 
-              $entry = $entry['0'];
-              
-              return $entry;
+            $entry = $this->getArray('SELECT * FROM tbl_module_blocks WHERE blockname = \''.$blockName.'\'');
+            $entry = $entry['0'];
+
+            return $entry;
         }
-        
+
 }
 
 ?>

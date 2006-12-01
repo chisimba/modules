@@ -15,26 +15,26 @@ $h3 = &$this->newObject('htmlheading', 'htmlelements');
 $button =  & $this->newObject('button', 'htmlelements');
 //$objDropDown =& $this->newObject('dropdown', 'htmlelements');
 
-if($task != 'selectsection'){
-if($this->getParam('id') == '')
+if($task != 'selectsection')
 {
-	$action = 'createcategory';
-	$editmode = FALSE;
-	//create heading
-    $h3->str = 'Category: New';
-} else {
-	$action = 'editcategory';
-	$catId = $this->getParam('id');
-	$editmode = TRUE;
-	//create heading
-    $h3->str = 'Category: Edit';
-}
+    if($this->getParam('id') == '') {
+        $action = 'createcategory';
+        $editmode = FALSE;
+        //create heading
+        $h3->str = 'Category: New';
+    } else {
+        $action = 'editcategory';
+        $catId = $this->getParam('id');
+        $editmode = TRUE;
+        //create heading
+        $h3->str = 'Category: Edit';
+    }
 }
 //setup form
 $objForm = &$this->newObject('form','htmlelements');
 $objForm->name='addsectionfrm';
 $objForm->setAction($this->uri(array('action'=>$action, 'id' => $catId),'cmsadmin'));
-$objForm->setDisplayType(3);   
+$objForm->setDisplayType(3);
 /*
 //setup form for selectng section to populate category dropdown
 $objSectionForm = &$this->newObject('form','htmlelements');    
@@ -59,24 +59,25 @@ $bodyInput->name = 'description';
 $button->setToSubmit();
 $button->value = 'Save';
 
-if($task != 'selectsection'){
-  if($editmode)
-  {
-	  $arrCat = $this->_objCategories->getCategory($catId);
-	  $titleInput->value = $arrCat['title'];
-	  $menuTextInput->value = $arrCat['menutext'];
-	  $bodyInput->value = $arrCat['description'];
-	
-  } else {
-	    $titleInput->value = '';
-	    $menuTextInput->value = '';
-	    $bodyInput->value = '';
-	
-  }
-} else {
-   $titleInput->value = $title;
- 	 $menuTextInput->value = $menuText;
-	 $bodyInput->value = $description;
+if($task != 'selectsection')
+{
+    if($editmode) {
+        $arrCat = $this->_objCategories->getCategory($catId);
+        $titleInput->value = $arrCat['title'];
+        $menuTextInput->value = $arrCat['menutext'];
+        $bodyInput->value = $arrCat['description'];
+
+    } else {
+        $titleInput->value = '';
+        $menuTextInput->value = '';
+        $bodyInput->value = '';
+
+    }
+} else
+{
+    $titleInput->value = $title;
+    $menuTextInput->value = $menuText;
+    $bodyInput->value = $description;
 }
 //title
 $table->startRow();
@@ -108,15 +109,15 @@ if($task != 'selectsection'){
 }     
 //Set dropdown to submit so that category dropdown can be populated accordingly
 $objDropDown->extra = 'onchange="document.selectsectionfromdrop.submit()"'; 
-
+ 
 //Add elements to form
 $titleInput->fldType = 'hidden';
 $menuTextInput->fldType = 'hidden';
-
+ 
 $objSectionForm->addToForm($titleInput->show());
 $objSectionForm->addToForm($menuTextInput->show());
 $objSectionForm->addToForm($objDropDown->show());
-
+ 
 $table->addCell($objSectionForm->show());
 $table->endRow();
 */
@@ -143,10 +144,12 @@ $table->endRow();
 //Ordering
 $table->startRow();
 $table->addCell('Ordering');
-if(editmode){	
-	$table->addCell($this->_objSections->getOrderList('Ordering'));
-} else {
-	$table->addCell('New items default to the last place. Ordering can be changed after this item is saved.');
+if(editmode)
+{
+    $table->addCell($this->_objSections->getOrderList('Ordering'));
+} else
+{
+    $table->addCell('New items default to the last place. Ordering can be changed after this item is saved.');
 }
 $table->endRow();
 

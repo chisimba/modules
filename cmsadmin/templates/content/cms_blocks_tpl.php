@@ -21,9 +21,11 @@ $objButton = new button('close', $this->objLanguage->languageText('word_close'))
 $objButton -> setOnClick( "javascript:window.close()");
 $closeButton = $objButton -> show();
 
-if($closePage){
-  echo $closeButton;
-} else {
+if($closePage)
+{
+    echo $closeButton;
+} else
+{
     echo $blockForm;
     echo $closeButton;
 }

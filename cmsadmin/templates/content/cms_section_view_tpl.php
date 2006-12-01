@@ -199,17 +199,17 @@ if (count($pages) > '0')
         //Icon for toggling front page status
         $frontPageLink =& $this->newObject('link', 'htmlelements');
         $frontPageLink->href = $this->uri(array('action' => 'changefpstatus', 'pageid' => $pageId, 'sectionid' => $sectionId), 'cmsadmin');
-        if($this->_objFrontPage->isFrontPage($pageId)){
-          $objIcon->setIcon('greentick');
-          $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_confirmremovefromfp', 'cmsadmin');
-          $frontPageLink->title = $this->objLanguage->languageText('mod_cmsadmin_confirmremovefromfp', 'cmsadmin');
+        if($this->_objFrontPage->isFrontPage($pageId)) {
+            $objIcon->setIcon('greentick');
+            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_confirmremovefromfp', 'cmsadmin');
+            $frontPageLink->title = $this->objLanguage->languageText('mod_cmsadmin_confirmremovefromfp', 'cmsadmin');
         } else {
             $frontPageLink->title = $this->objLanguage->languageText('mod_cmsadmin_addpagetofp', 'cmsadmin');
             $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addpagetofp', 'cmsadmin');
             $objIcon->setIcon('redcross');
         }
         $frontPageLink->link = $objIcon->show();
-        
+
         //Get blocks icon
         $objIcon->setIcon('modules/blocks');
         $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addremoveblocks', 'cmsadmin');
@@ -221,8 +221,8 @@ if (count($pages) > '0')
         //Check if blocks module is registered
         $this->objModule = &$this->newObject('modules', 'modulecatalogue');
         $isRegistered = $this->objModule->checkIfRegistered('blocks');
-        
-                        
+
+
         //Add sub sec data to table
         $objPagesTable->startRow();
         $objPagesTable->addCell($pageTitle, '', '', '', $class);
@@ -230,7 +230,7 @@ if (count($pages) > '0')
         $objPagesTable->addCell($visibleIcon, '', '', '', $class);
         $objPagesTable->addCell($this->_objContent->getOrderingLink($sectionId, $pageId), '', '', '', $class);
         if ($isRegistered) {
-          $objPagesTable->addCell($objBlocksLink->show().'&nbsp;'.$frontPageLink->show().'&nbsp;'.$editIcon.'&nbsp;'.$delIcon, '', '', '', $class);
+            $objPagesTable->addCell($objBlocksLink->show().'&nbsp;'.$frontPageLink->show().'&nbsp;'.$editIcon.'&nbsp;'.$delIcon, '', '', '', $class);
         } else {
             $objPagesTable->addCell($frontPageLink->show().'&nbsp;'.$editIcon.'&nbsp;'.$delIcon, '', '', '', $class);
         }

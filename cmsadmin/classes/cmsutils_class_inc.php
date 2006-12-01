@@ -72,20 +72,20 @@ class cmsutils extends object
         * @var object
         */
         protected $_objBlocks;
-        
+
         /**
          * Constructor
          */
         public function init()
         {
-                $this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
-                $this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
-                $this->_objConfig = & $this->newObject('altconfig', 'config');
-                $this->_objBlocks = & $this->newObject('dbblocks', 'cmsadmin');
-                $this->objSkin = & $this->newObject('skin', 'skin');
-                $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
-                $this->_objUser = & $this->newObject('user', 'security');
-                $this->objLanguage = & $this->newObject('language', 'language');
+            $this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
+            $this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
+            $this->_objConfig = & $this->newObject('altconfig', 'config');
+            $this->_objBlocks = & $this->newObject('dbblocks', 'cmsadmin');
+            $this->objSkin = & $this->newObject('skin', 'skin');
+            $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
+            $this->_objUser = & $this->newObject('user', 'security');
+            $this->objLanguage = & $this->newObject('language', 'language');
         }
 
         /**
@@ -97,11 +97,11 @@ class cmsutils extends object
          */
         public function getAccess($access)
         {
-                if ($access == 1) {
-                    return 'Registered';
-                } else {
-                    return 'Public';
-                }
+            if ($access == 1) {
+                return 'Registered';
+            } else {
+                return 'Public';
+            }
         }
 
         /**
@@ -114,17 +114,17 @@ class cmsutils extends object
          */
         public function getImageList($name, $formName, $selected = null)
         {
-                $objDropDown = & $this->newObject('dropdown', 'htmlelements');
-                $objConfig = & $this->newObject('altconfig' , 'config');
-                $objMedia = & $this->newObject('mmutils', 'mediamanager');
-                $objMedia->getImages();
-                $objDropDown->name = $name;
-                //fill the drop down with the list of images
-                $path = $objConfig->getsiteRoot().'usrfiles/media';
-                $objDropDown->addOption('0', ' - Select Image - ');
-                $objDropDown->addFromDB($objMedia->getImages(), 'title', 'folder', $selected);
-                $objDropDown->extra = 'onchange=" return changeImage(this, this.form) "';
-                return $objDropDown->show();
+            $objDropDown = & $this->newObject('dropdown', 'htmlelements');
+            $objConfig = & $this->newObject('altconfig' , 'config');
+            $objMedia = & $this->newObject('mmutils', 'mediamanager');
+            $objMedia->getImages();
+            $objDropDown->name = $name;
+            //fill the drop down with the list of images
+            $path = $objConfig->getsiteRoot().'usrfiles/media';
+            $objDropDown->addOption('0', ' - Select Image - ');
+            $objDropDown->addFromDB($objMedia->getImages(), 'title', 'folder', $selected);
+            $objDropDown->extra = 'onchange=" return changeImage(this, this.form) "';
+            return $objDropDown->show();
         }
 
         /**
@@ -136,15 +136,15 @@ class cmsutils extends object
          */
         public function getImagePostionList($name)
         {
-                $objDropDown = & $this->newObject('dropdown', 'htmlelements');
-                $objDropDown->name = $name;
-                //fill the drop down with the list of images
-                $objDropDown->addOption('0', 'Centre');
-                $objDropDown->addOption('1', 'Left');
-                $objDropDown->addOption('2', 'Right');
-                $objDropDown->setSelected('1');
-                $objDropDown->extra = 'size="3"';
-                return $objDropDown->show();
+            $objDropDown = & $this->newObject('dropdown', 'htmlelements');
+            $objDropDown->name = $name;
+            //fill the drop down with the list of images
+            $objDropDown->addOption('0', 'Centre');
+            $objDropDown->addOption('1', 'Left');
+            $objDropDown->addOption('2', 'Right');
+            $objDropDown->setSelected('1');
+            $objDropDown->extra = 'size="3"';
+            return $objDropDown->show();
         }
 
         /**
@@ -157,21 +157,21 @@ class cmsutils extends object
          */
         public function getYesNoRadion($name, $selected = '1')
         {
-                //Get visible not visible icons
-                $objIcon =& $this->newObject('geticon', 'htmlelements');
-                //Not visible
-                $objIcon->setIcon('not_visible');
-                $notVisibleIcon = $objIcon->show();
-                //Visible
-                $objIcon->setIcon('visible');
-                $visibleIcon = $objIcon->show();
+            //Get visible not visible icons
+            $objIcon =& $this->newObject('geticon', 'htmlelements');
+            //Not visible
+            $objIcon->setIcon('not_visible');
+            $notVisibleIcon = $objIcon->show();
+            //Visible
+            $objIcon->setIcon('visible');
+            $visibleIcon = $objIcon->show();
 
-                $objRadio = & $this->newObject('radio', 'htmlelements');
-                $objRadio->name = $name;
-                $objRadio->addOption('0', $notVisibleIcon.$this->objLanguage->languageText('word_no').'&nbsp;'.'&nbsp;');
-                $objRadio->addOption('1', $visibleIcon.$this->objLanguage->languageText('word_yes'));
-                $objRadio->setSelected($selected);
-                return $objRadio->show();
+            $objRadio = & $this->newObject('radio', 'htmlelements');
+            $objRadio->name = $name;
+            $objRadio->addOption('0', $notVisibleIcon.$this->objLanguage->languageText('word_no').'&nbsp;'.'&nbsp;');
+            $objRadio->addOption('1', $visibleIcon.$this->objLanguage->languageText('word_yes'));
+            $objRadio->setSelected($selected);
+            return $objRadio->show();
         }
 
         /**
@@ -183,15 +183,15 @@ class cmsutils extends object
          */
         public function getAccessList($name)
         {
-                $objDropDown = & $this->newObject('dropdown', 'htmlelements');
-                $objDropDown->name = $name;
-                //fill the drop down with the list of images
-                //TODO
-                $objDropDown->addOption('0', 'Public');
-                $objDropDown->addOption('1', 'Registered');
-                $objDropDown->setSelected('0');
-                $objDropDown->extra = 'size="2"';
-                return $objDropDown->show();
+            $objDropDown = & $this->newObject('dropdown', 'htmlelements');
+            $objDropDown->name = $name;
+            //fill the drop down with the list of images
+            //TODO
+            $objDropDown->addOption('0', 'Public');
+            $objDropDown->addOption('1', 'Registered');
+            $objDropDown->setSelected('0');
+            $objDropDown->extra = 'size="2"';
+            return $objDropDown->show();
         }
 
         /**
@@ -206,47 +206,47 @@ class cmsutils extends object
          */
         public function getLayoutOptions($name, $id)
         {
-                $objLayouts = & $this->newObject('dblayouts', 'cmsadmin');
-                $arrLayouts = $objLayouts->getLayouts();
-                $arrSection = $this->_objSections->getSection($id);
-                $str = '<table><tr>';
+            $objLayouts = & $this->newObject('dblayouts', 'cmsadmin');
+            $arrLayouts = $objLayouts->getLayouts();
+            $arrSection = $this->_objSections->getSection($id);
+            $str = '<table><tr>';
 
-                $firstOneChecked = 'checked="checked"';
-                foreach ($arrLayouts as $layout) {
-                    if ($arrSection['layout'] == $layout['id']) {
-                        $firstOneChecked = '';
-                        break;
-                    }
+            $firstOneChecked = 'checked="checked"';
+            foreach ($arrLayouts as $layout) {
+                if ($arrSection['layout'] == $layout['id']) {
+                    $firstOneChecked = '';
+                    break;
                 }
+            }
 
-                $i = 0;
-                foreach ($arrLayouts as $layout) {
-                    if ($firstOneChecked != '') {
-                        if ($i == 0) {
-                            $checked = $firstOneChecked;
-                        } else {
-                            $checked = '';
-                        }
+            $i = 0;
+            foreach ($arrLayouts as $layout) {
+                if ($firstOneChecked != '') {
+                    if ($i == 0) {
+                        $checked = $firstOneChecked;
                     } else {
-                        if ($arrSection['layout'] == $layout['id']) {
-                            $checked = 'checked="checked"';
-                        } else {
-                            $checked = '';
-                        }
+                        $checked = '';
                     }
-
-                    $str .= '<td align="center">
-                            <input type="radio" name="'.$name.'" value="'.$layout['id'].'" class="transparentbgnb" id="input_layout0" '.$checked.' />&nbsp;'.$layout['description'].'
-                            <p/>
-                            <label for ="input_layout0">
-                            <img src ="'.$this->getResourceUri($layout['imagename'], 'cmsadmin').'"/>
-                            </label>
-                            </td>';
-                    $i++;
+                } else {
+                    if ($arrSection['layout'] == $layout['id']) {
+                        $checked = 'checked="checked"';
+                    } else {
+                        $checked = '';
+                    }
                 }
 
-                $str .= '</tr></table>';
-                return $str;
+                $str .= '<td align="center">
+                        <input type="radio" name="'.$name.'" value="'.$layout['id'].'" class="transparentbgnb" id="input_layout0" '.$checked.' />&nbsp;'.$layout['description'].'
+                        <p/>
+                        <label for ="input_layout0">
+                        <img src ="'.$this->getResourceUri($layout['imagename'], 'cmsadmin').'"/>
+                        </label>
+                        </td>';
+                $i++;
+            }
+
+            $str .= '</tr></table>';
+            return $str;
         }
 
         /**
@@ -259,46 +259,46 @@ class cmsutils extends object
          */
         public function getSectionMenu($modulename = null)
         {
-                if (empty($modulename)) {
-                    $modulename = 'cms';
-                }
+            if (empty($modulename)) {
+                $modulename = 'cms';
+            }
 
-                //initiate the objects
-                $objSideBar = $this->newObject('sidebar', 'navigation');
+            //initiate the objects
+            $objSideBar = $this->newObject('sidebar', 'navigation');
 
-                //create the nodes array
-                $nodes = array();
+            //create the nodes array
+            $nodes = array();
 
-                //get the section id
-                $section = $this->getParam('id');
+            //get the section id
+            $section = $this->getParam('id');
 
-                //create the home like first
-                //$nodes[] = array('text' => 'Home', 'uri' => $this->uri(null, 'cms'));
-                //get the all the sections from the database
-                $arrSections = $this->_objSections->getSections(TRUE);
+            //create the home like first
+            //$nodes[] = array('text' => 'Home', 'uri' => $this->uri(null, 'cms'));
+            //get the all the sections from the database
+            $arrSections = $this->_objSections->getSections(TRUE);
 
-                //start looping through the sections
-                foreach ($arrSections as $section) {
-                    //add the sections
+            //start looping through the sections
+            foreach ($arrSections as $section) {
+                //add the sections
 
-                    if (($this->getParam('action') == 'showsection') && ($this->getParam('id') == $section['id']) || $this->getParam('sectionid') == $section['id']) {
-                        $pagenodes = array();
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$section['id'].'\' AND published=1 and trash=0 ORDER BY ordering');
-                        foreach( $arrPages as $page) {
-                            $pagenodes[] = array('text' => $page['menutext'] , 'uri' => $this->uri(array('action' => 'showfulltext', 'id' => $page['id'], 'sectionid' => $section['id']), $modulename));
-                        }
-
-                        $nodes[] = array('text' => $section['menutext'], 'uri' => $this->uri(array('action' => 'showsection', 'id' => $section['id']), $modulename), 'sectionid' => $section['id'], 'haschildren' => $pagenodes);
-                        $pagenodes = null;
-                    } else {
-                        $nodes[] = array('text' => $section['menutext'], 'uri' => $this->uri(array('action' => 'showsection', 'id' => $section['id']), $modulename), 'sectionid' => $section['id']);
+                if (($this->getParam('action') == 'showsection') && ($this->getParam('id') == $section['id']) || $this->getParam('sectionid') == $section['id']) {
+                    $pagenodes = array();
+                    $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$section['id'].'\' AND published=1 and trash=0 ORDER BY ordering');
+                    foreach( $arrPages as $page) {
+                        $pagenodes[] = array('text' => $page['menutext'] , 'uri' => $this->uri(array('action' => 'showfulltext', 'id' => $page['id'], 'sectionid' => $section['id']), $modulename));
                     }
+
+                    $nodes[] = array('text' => $section['menutext'], 'uri' => $this->uri(array('action' => 'showsection', 'id' => $section['id']), $modulename), 'sectionid' => $section['id'], 'haschildren' => $pagenodes);
+                    $pagenodes = null;
+                } else {
+                    $nodes[] = array('text' => $section['menutext'], 'uri' => $this->uri(array('action' => 'showsection', 'id' => $section['id']), $modulename), 'sectionid' => $section['id']);
                 }
+            }
 
-                //add the admin link
-                $nodes[] = array('text' => 'Administration', 'uri' => $this->uri(array(NULL), 'cmsadmin'));
+            //add the admin link
+            $nodes[] = array('text' => 'Administration', 'uri' => $this->uri(array(NULL), 'cmsadmin'));
 
-                return $objSideBar->show($nodes, $this->getParam('id'));
+            return $objSideBar->show($nodes, $this->getParam('id'));
         }
 
         /**
@@ -311,75 +311,75 @@ class cmsutils extends object
          */
         public function getFrontPageContent()
         {
-                $objUser = & $this->newObject('user', 'security');
-                $arrFrontPages = $this->_objFrontPage->getFrontPages();
-                //$objFeatureBox = $this->newObject('featurebox', 'navigation');
-                $str = '';
-                //set a counter for the records .. display on the first 2  the rest will be dsiplayed as links
-                $cnt = 0 ;
+            $objUser = & $this->newObject('user', 'security');
+            $arrFrontPages = $this->_objFrontPage->getFrontPages();
+            //$objFeatureBox = $this->newObject('featurebox', 'navigation');
+            $str = '';
+            //set a counter for the records .. display on the first 2  the rest will be dsiplayed as links
+            $cnt = 0 ;
 
-                if (count($arrFrontPages)) {
-                    foreach ($arrFrontPages as $frontPage) {
-                        //get the page
-                        $page = $this->_objContent->getContentPage($frontPage['content_id']) ;
-                        $cnt++;
+            if (count($arrFrontPages)) {
+                foreach ($arrFrontPages as $frontPage) {
+                    //get the page
+                    $page = $this->_objContent->getContentPage($frontPage['content_id']) ;
+                    $cnt++;
 
-                        if ($cnt < 5) {
-                            //display the intro text
-                            $table = & $this->newObject('htmltable', 'htmlelements');
-                            //title
-                            $table->startRow();
-                            $table->addHeader(array($page['title']));
-                            $table->endRow();
-                            //author
-                            $table->startRow();
-                            $table->addCell('Written by '.$objUser->fullname($page['created_by']));
-                            $table->endRow();
-                            //date
-                            $table->startRow();
-                            $table->addCell($this->formatDate($page['created']));
-                            $table->endRow();
-                            //intor text
-                            $table->startRow();
-                            $table->addCell('<p>'.$page['introtext']);
-                            $table->endRow();
+                    if ($cnt < 5) {
+                        //display the intro text
+                        $table = & $this->newObject('htmltable', 'htmlelements');
+                        //title
+                        $table->startRow();
+                        $table->addHeader(array($page['title']));
+                        $table->endRow();
+                        //author
+                        $table->startRow();
+                        $table->addCell('Written by '.$objUser->fullname($page['created_by']));
+                        $table->endRow();
+                        //date
+                        $table->startRow();
+                        $table->addCell($this->formatDate($page['created']));
+                        $table->endRow();
+                        //intor text
+                        $table->startRow();
+                        $table->addCell('<p>'.$page['introtext']);
+                        $table->endRow();
 
-                            if (!$page['body'] == '') {
-                                //read more link .. link to the full text
-                                $link = & $this->newObject('link', 'htmlelements');
-                                $link->link = 'Read more ..';
-                                $link->href = $this->uri(array('action' => 'showfulltext', 'id' => $page['id']), 'cms');
-                                $table->startRow();
-                                $table->addCell($link->show());
-                                $table->endRow();
-                            }
-
-                            $str .= ''; //$table->show();
-                        } else {
-                            //display as links
-                            $table = & $this->newObject('htmltable', 'htmlelements');
+                        if (!$page['body'] == '') {
+                            //read more link .. link to the full text
                             $link = & $this->newObject('link', 'htmlelements');
-                            $link->link = $page['title'];
+                            $link->link = 'Read more ..';
                             $link->href = $this->uri(array('action' => 'showfulltext', 'id' => $page['id']), 'cms');
-                            //title
                             $table->startRow();
                             $table->addCell($link->show());
                             $table->endRow();
-                            //$str .= $table->show();
                         }
 
-                        //make feature boxes of the front page post
-                        //$str .= '<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
-                        //$str .= '<p>'.$page['introtext'].'<a href="devtodo" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
-                        $moreLink = $this->uri(array('action' => 'showfulltext', 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
-
-                        $content = '<span class="date">'.$this->formatDate($page['created']).'</span> <p>'.$page['introtext'].'<br /><a href="'.$moreLink.'" class="morelink" title="'.$page['title'].'">Read more...</a></p>';
-
-                        $str .= '<h3>'.$page['title'].'</h3>'.$content;
+                        $str .= ''; //$table->show();
+                    } else {
+                        //display as links
+                        $table = & $this->newObject('htmltable', 'htmlelements');
+                        $link = & $this->newObject('link', 'htmlelements');
+                        $link->link = $page['title'];
+                        $link->href = $this->uri(array('action' => 'showfulltext', 'id' => $page['id']), 'cms');
+                        //title
+                        $table->startRow();
+                        $table->addCell($link->show());
+                        $table->endRow();
+                        //$str .= $table->show();
                     }
-                }
 
-                return $str;
+                    //make feature boxes of the front page post
+                    //$str .= '<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
+                    //$str .= '<p>'.$page['introtext'].'<a href="devtodo" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
+                    $moreLink = $this->uri(array('action' => 'showfulltext', 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
+
+                    $content = '<span class="date">'.$this->formatDate($page['created']).'</span> <p>'.$page['introtext'].'<br /><a href="'.$moreLink.'" class="morelink" title="'.$page['title'].'">Read more...</a></p>';
+
+                    $str .= '<h3>'.$page['title'].'</h3>'.$content;
+                }
+            }
+
+            return $str;
         }
 
         /**
@@ -390,16 +390,16 @@ class cmsutils extends object
          */
         public function showSection($module = "cms")
         {
-                $sectionId = $this->getParam('id');
-                //get the section record
-                $arrSection = $this->_objSections->getSection($sectionId);
-                //get the layout for this section
-                $objLayouts = & $this->newObject('dblayouts', 'cmsadmin');
-                $arrLayout = $objLayouts->getLayout($arrSection['layout']);
-                $arrLayout['name'] = ($arrLayout['name'] == '') ? 'List' : $arrLayout['name'];
-                $functionVariable = '_layout'.trim($arrLayout['name']);
-                //call the right function according to the layout of the section
-                return call_user_func(array('cmsutils', $functionVariable), $arrSection, $module);
+            $sectionId = $this->getParam('id');
+            //get the section record
+            $arrSection = $this->_objSections->getSection($sectionId);
+            //get the layout for this section
+            $objLayouts = & $this->newObject('dblayouts', 'cmsadmin');
+            $arrLayout = $objLayouts->getLayout($arrSection['layout']);
+            $arrLayout['name'] = ($arrLayout['name'] == '') ? 'List' : $arrLayout['name'];
+            $functionVariable = '_layout'.trim($arrLayout['name']);
+            //call the right function according to the layout of the section
+            return call_user_func(array('cmsutils', $functionVariable), $arrSection, $module);
         }
 
         /**
@@ -412,64 +412,64 @@ class cmsutils extends object
          */
         function _layoutPrevious(&$arrSection, $module)
         {
-                $pageId = $this->getParam('pageid', '');
-                $orderType = $arrSection['ordertype'];
-                $showIntro = $arrSection['showintroduction'];
-                $showDate = $arrSection['showdate'];
-                $description = $arrSection['description'];
-                
-                switch ($orderType) {
-                    case null:
-                    case 'pageorder':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY ordering');
-                        break;
-                    case 'pagedate_asc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created');
-                        break;
-                    case 'pagedate_desc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
-                        break;
-                    case 'pagetitle_asc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title');
-                        break;
-                    case 'pagetitle_desc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title DESC');
-                        break;
-                }        
- 
-                $cnt = 0;
-                $strBody = '';
-                $str = '';
+            $pageId = $this->getParam('pageid', '');
+            $orderType = $arrSection['ordertype'];
+            $showIntro = $arrSection['showintroduction'];
+            $showDate = $arrSection['showdate'];
+            $description = $arrSection['description'];
 
-                if ($pageId == '') {
-                    $pageId = $arrPages[0]['id'];
-                }
+            switch ($orderType) {
+            case null:
+            case 'pageorder':
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY ordering');
+                break;
+            case 'pagedate_asc':
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created');
+                break;
+            case 'pagedate_desc':
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
+                break;
+            case 'pagetitle_asc':
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title');
+                break;
+            case 'pagetitle_desc':
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title DESC');
+                break;
+            }
 
-                $foundPage = FALSE;
+            $cnt = 0;
+            $strBody = '';
+            $str = '';
 
-                foreach ($arrPages as $page) {
-                    if ($foundPage == TRUE) {
-                        $link = & $this->newObject('link', 'htmlelements');
-                        $link->link = $page['title'];
-                        $link->href = $this->uri(array('action' => 'showsection', 'id' => $arrSection['id'], 'pageid' => $page['id'], 'sectionid' => $page['sectionid']), $module);
-                        if($showDate){
-                          $str .= '<li>'. $this->formatDate($page['created']).' - '.$link->show() .'</li> ';
-                        } else {
-                            $str .= '<li>'. $link->show() .'</li> ';
-                        }
-                    }
+            if ($pageId == '') {
+                $pageId = $arrPages[0]['id'];
+            }
 
-                    if ($pageId == $page['id']) {
-                        $strBody = '<h3>'.$page['title'].'</h3>';
-                        $strBody .= $page['body'].'<p/>';
-                        $foundPage = TRUE;
+            $foundPage = FALSE;
+
+            foreach ($arrPages as $page) {
+                if ($foundPage == TRUE) {
+                    $link = & $this->newObject('link', 'htmlelements');
+                    $link->link = $page['title'];
+                    $link->href = $this->uri(array('action' => 'showsection', 'id' => $arrSection['id'], 'pageid' => $page['id'], 'sectionid' => $page['sectionid']), $module);
+                    if($showDate) {
+                        $str .= '<li>'. $this->formatDate($page['created']).' - '.$link->show() .'</li> ';
+                    } else {
+                        $str .= '<li>'. $link->show() .'</li> ';
                     }
                 }
-                if($showIntro){
-                  return '<p>'.$description.'</p>'.$strBody.'<p/>'.$str;
-                } else {
-                    return $strBody.'<p/>'.$str;
+
+                if ($pageId == $page['id']) {
+                    $strBody = '<h3>'.$page['title'].'</h3>';
+                    $strBody .= $page['body'].'<p/>';
+                    $foundPage = TRUE;
                 }
+            }
+            if($showIntro) {
+                return '<p>'.$description.'</p>'.$strBody.'<p/>'.$str;
+            } else {
+                return $strBody.'<p/>'.$str;
+            }
         }
 
         /**
@@ -482,74 +482,74 @@ class cmsutils extends object
          */
         function _layoutSummaries(&$arrSection, $module)
         {
-                $objUser = & $this->newObject('user', 'security');
-                $objConfig = & $this->newObject('altconfig', 'config');
-                $str = '';
-                
-                $orderType = $arrSection['ordertype'];
-                $showIntro = $arrSection['showintroduction'];
-                $showDate = $arrSection['showdate'];
-                $description = $arrSection['description'];
-                
-                switch ($orderType) {
-                    case null:
-                    case 'pageorder':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY ordering');
-                        break;
-                    case 'pagedate_asc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created');
-                        break;
-                    case 'pagedate_desc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
-                        break;
-                    case 'pagetitle_asc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title');
-                        break;
-                    case 'pagetitle_desc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title DESC');
-                        break;
-                }        
+            $objUser = & $this->newObject('user', 'security');
+            $objConfig = & $this->newObject('altconfig', 'config');
+            $str = '';
 
-                foreach ($arrPages as $page) {
-                    //display the intro text
-                    $table = & $this->newObject('htmltable', 'htmlelements');
-                    //title
-                    $table->startRow();
-                    $table->addHeader(array($page['title']));
-                    $table->endRow();
-                    //author
-                    $table->startRow();
+            $orderType = $arrSection['ordertype'];
+            $showIntro = $arrSection['showintroduction'];
+            $showDate = $arrSection['showdate'];
+            $description = $arrSection['description'];
 
-                    if (!isset($page['creator_by'])) {
-                        $page['creator_by'] = $objUser->fullname();
-                    }
+            switch ($orderType) {
+            case null:
+            case 'pageorder':
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY ordering');
+                break;
+            case 'pagedate_asc':
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created');
+                break;
+            case 'pagedate_desc':
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
+                break;
+            case 'pagetitle_asc':
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title');
+                break;
+            case 'pagetitle_desc':
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title DESC');
+                break;
+            }
 
-                    $table->addCell('Written by '.$objUser->fullname($page['creator_by']));
-                    $table->endRow();
-                    //date
-                    if($showDate){
-                      $table->startRow();
-                      $table->addCell($this->formatDate($page['created']));
-                      $table->endRow();
-                    }  
-                    //intor text
-                    $table->startRow();
-                    $table->addCell('<p>'.$page['introtext']);
-                    $table->endRow();
+            foreach ($arrPages as $page) {
+                //display the intro text
+                $table = & $this->newObject('htmltable', 'htmlelements');
+                //title
+                $table->startRow();
+                $table->addHeader(array($page['title']));
+                $table->endRow();
+                //author
+                $table->startRow();
 
-                    if($showIntro){
-                      $str .= '<p>'.$description.'</p>';
-                    }
-                    if($showDate){
-                      $str .= '<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
-                    } else {
-                        $str .= '<h4>'.$page['title'].'</h4>';
-                    }
-                    $uri = $this->uri(array('action' => 'showfulltext', 'sectionid' => $arrSection['id'], 'id' => $page['id']), $module);
-                    $str .= '<p>'.$page['introtext'].'<br /><a href="'.$uri.'" class="morelink" title="'.$page['title'].'">Read more...</a></p>';
+                if (!isset($page['creator_by'])) {
+                    $page['creator_by'] = $objUser->fullname();
                 }
 
-                return $str;
+                $table->addCell('Written by '.$objUser->fullname($page['creator_by']));
+                $table->endRow();
+                //date
+                if($showDate) {
+                    $table->startRow();
+                    $table->addCell($this->formatDate($page['created']));
+                    $table->endRow();
+                }
+                //intor text
+                $table->startRow();
+                $table->addCell('<p>'.$page['introtext']);
+                $table->endRow();
+
+                if($showIntro) {
+                    $str .= '<p>'.$description.'</p>';
+                }
+                if($showDate) {
+                    $str .= '<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
+                } else {
+                    $str .= '<h4>'.$page['title'].'</h4>';
+                }
+                $uri = $this->uri(array('action' => 'showfulltext', 'sectionid' => $arrSection['id'], 'id' => $page['id']), $module);
+                $str .= '<p>'.$page['introtext'].'<br /><a href="'.$uri.'" class="morelink" title="'.$page['title'].'">Read more...</a></p>';
+            }
+
+            return $str;
         }
 
         /**
@@ -562,58 +562,58 @@ class cmsutils extends object
          */
         function _layoutPage(&$arrSection, $module)
         {
-                $pageId = $this->getParam('pageid', '');
+            $pageId = $this->getParam('pageid', '');
 
-                $orderType = $arrSection['ordertype'];
-                $showDate = $arrSection['showdate'];
-                
-                switch ($orderType) {
-                    case null:
-                    case 'pageorder':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY ordering');
-                        break;
-                    case 'pagedate_asc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created');
-                        break;
-                    case 'pagedate_desc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
-                        break;
-                    case 'pagetitle_asc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title');
-                        break;
-                    case 'pagetitle_desc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title DESC');
-                        break;
-                }        
+            $orderType = $arrSection['ordertype'];
+            $showDate = $arrSection['showdate'];
 
-                $cnt = 0;
-                $strBody = '';
-                $str = '';
+            switch ($orderType) {
+            case null:
+            case 'pageorder':
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY ordering');
+                break;
+            case 'pagedate_asc':
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created');
+                break;
+            case 'pagedate_desc':
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
+                break;
+            case 'pagetitle_asc':
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title');
+                break;
+            case 'pagetitle_desc':
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title DESC');
+                break;
+            }
 
-                if ($pageId == '') {
-                    if (count($arrPages)) {
-                        $pageId = $arrPages[0]['id'];
-                    }
+            $cnt = 0;
+            $strBody = '';
+            $str = '';
+
+            if ($pageId == '') {
+                if (count($arrPages)) {
+                    $pageId = $arrPages[0]['id'];
                 }
+            }
 
-                foreach ($arrPages as $page) {
-                    if ($pageId == $page['id']) {
-                        $strBody = '<h3>'.$page['title'].'</h3>';
-                        $strBody .= $page['body'].'<p/>';
-                        $str .= $page['title'].' | ';
-                    } else {
-                        $link = & $this->newObject('link', 'htmlelements');
-                        $link->link = $page['title'];
-                        $link->href = $this->uri(array('action' => 'showsection', 'pageid' => $page['id'], 'id' => $page['sectionid'], 'sectionid' => $page['sectionid']), $module);
-                        $str .= $link->show() .' | ';
-                    }
+            foreach ($arrPages as $page) {
+                if ($pageId == $page['id']) {
+                    $strBody = '<h3>'.$page['title'].'</h3>';
+                    $strBody .= $page['body'].'<p/>';
+                    $str .= $page['title'].' | ';
+                } else {
+                    $link = & $this->newObject('link', 'htmlelements');
+                    $link->link = $page['title'];
+                    $link->href = $this->uri(array('action' => 'showsection', 'pageid' => $page['id'], 'id' => $page['sectionid'], 'sectionid' => $page['sectionid']), $module);
+                    $str .= $link->show() .' | ';
                 }
+            }
 
-                if (strlen($str) > 1) {
-                    $str = substr($str, 0, strlen($str) - 3);
-                }
+            if (strlen($str) > 1) {
+                $str = substr($str, 0, strlen($str) - 3);
+            }
 
-                return $strBody.'<p/>'.$str;
+            return $strBody.'<p/>'.$str;
         }
 
         /**
@@ -626,43 +626,43 @@ class cmsutils extends object
          */
         function _layoutList(&$arrSection, $module)
         {
-                $str = '';
-                
-                $orderType = $arrSection['ordertype'];
-                $showIntro = $arrSection['showintroduction'];
-                $showDate = $arrSection['showdate'];
-                $description = $arrSection['description'];
-                
-                switch ($orderType) {
-                    case null:
-                    case 'pageorder':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY ordering');
-                        break;
-                    case 'pagedate_asc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created');
-                        break;
-                    case 'pagedate_desc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
-                        break;
-                    case 'pagetitle_asc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title');
-                        break;
-                    case 'pagetitle_desc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title DESC');
-                        break;
-                }        
+            $str = '';
 
-                foreach ($arrPages as $page) {
-                    $link = & $this->newObject('link', 'htmlelements');
-                    $link->link = $page['title'];
-                    $link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id'], 'sectionid' => $page['sectionid']), $module);
-                    $str .= '<li>'.$this->formatDate($page['created']).' - '. $link->show() .'</li>';
-                }
-                if($showIntro){
-                  return '<p>'.$description.'</p>'.$str;
-                } else {
-                    return $str;
-                }
+            $orderType = $arrSection['ordertype'];
+            $showIntro = $arrSection['showintroduction'];
+            $showDate = $arrSection['showdate'];
+            $description = $arrSection['description'];
+
+            switch ($orderType) {
+            case null:
+            case 'pageorder':
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY ordering');
+                break;
+            case 'pagedate_asc':
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created');
+                break;
+            case 'pagedate_desc':
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
+                break;
+            case 'pagetitle_asc':
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title');
+                break;
+            case 'pagetitle_desc':
+                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title DESC');
+                break;
+            }
+
+            foreach ($arrPages as $page) {
+                $link = & $this->newObject('link', 'htmlelements');
+                $link->link = $page['title'];
+                $link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id'], 'sectionid' => $page['sectionid']), $module);
+                $str .= '<li>'.$this->formatDate($page['created']).' - '. $link->show() .'</li>';
+            }
+            if($showIntro) {
+                return '<p>'.$description.'</p>'.$str;
+            } else {
+                return $str;
+            }
         }
 
         /**
@@ -673,17 +673,17 @@ class cmsutils extends object
          */
         public function showBody()
         {
-                $contentId = $this->getParam('id');
-                $page = $this->_objContent->getContentPage($contentId);
-                $sectionId = $page['sectionid'];
-                $section = $this->_objSections->getSection($sectionId);
-                $strBody = '<h3>'.$page['title'].'</h3><p/>';
-                $strBody .= '<span class="warning">'.$this->_objUser->fullname($page['created_by']).'</span><br />';
-                if($section['showdate']){
-                  $strBody .= '<span class="warning">'.$page['created'].'</span><p/>';
-                }  
-                $strBody .= $page['body'].'<p/>';
-                return $strBody;
+            $contentId = $this->getParam('id');
+            $page = $this->_objContent->getContentPage($contentId);
+            $sectionId = $page['sectionid'];
+            $section = $this->_objSections->getSection($sectionId);
+            $strBody = '<h3>'.$page['title'].'</h3><p/>';
+            $strBody .= '<span class="warning">'.$this->_objUser->fullname($page['created_by']).'</span><br />';
+            if($section['showdate']) {
+                $strBody .= '<span class="warning">'.$page['created'].'</span><p/>';
+            }
+            $strBody .= $page['body'].'<p/>';
+            return $strBody;
         }
 
         /**
@@ -700,13 +700,13 @@ class cmsutils extends object
          */
         public function formatDate($date)
         {
-             /*if(!checkdate($date)) {
-                  $gm =  gmmktime($date);
-                  return  date("l, d F o",$gm);
-               } else {
-             */
-              return $date;
-             //       }
+            /*if(!checkdate($date)) {
+                 $gm =  gmmktime($date);
+                 return  date("l, d F o",$gm);
+              } else {
+            */
+            return $date;
+            //       }
         }
 
         /**
@@ -723,8 +723,8 @@ class cmsutils extends object
          */
         public function formatShortDate($date)
         {
-                return $date;
-                //return  date("m/d/o",gmmktime($date) );
+            return $date;
+            //return  date("m/d/o",gmmktime($date) );
         }
 
         /**
@@ -740,17 +740,17 @@ class cmsutils extends object
          */
         public function getCheckIcon($isCheck, $returnFalse = TRUE)
         {
-                $objIcon = & $this->newObject('geticon', 'htmlelements');
+            $objIcon = & $this->newObject('geticon', 'htmlelements');
 
-                if ($isCheck) {
-                    $objIcon->setIcon('visible', 'gif');
-                } else {
-                    if ($returnFalse) {
-                        $objIcon->setIcon('not_visible', 'gif');
-                    }
+            if ($isCheck) {
+                $objIcon->setIcon('visible', 'gif');
+            } else {
+                if ($returnFalse) {
+                    $objIcon->setIcon('not_visible', 'gif');
                 }
+            }
 
-                return $objIcon->show();
+            return $objIcon->show();
         }
 
         /**
@@ -820,16 +820,16 @@ class cmsutils extends object
             $home = & $this->newObject('link', 'htmlelements');
             $link = & $this->newObject('link', 'htmlelements');
 
-            if (!is_null($this->getParam('sectionid', NULL))){
+            if (!is_null($this->getParam('sectionid', NULL))) {
 
                 $section = $this->_objSections->getSection($this->getParam('sectionid'));
                 $link->href = $this->uri(array('action' => 'showsection', 'id' => $this->getParam('sectionid'), 'sectionid' => $this->getParam('sectionid')) , $module);
                 $link->link = $this->_objSections->getMenuText($this->getParam('sectionid'));
                 $str = $link->show() .' / ';
 
-                while (($section['parentid'] != '0') && (!is_null($section['parentid']))){
+                while (($section['parentid'] != '0') && (!is_null($section['parentid']))) {
                     $section = $this->_objSections->getSection($section['parentid']);
-                    if (is_null($section['parentid'])){
+                    if (is_null($section['parentid'])) {
                         break;
                     }
                     $link->href = $this->uri(array('action' => 'showsection', 'id' => $section['id'], 'sectionid' => $section['id']) , $module);
@@ -838,14 +838,14 @@ class cmsutils extends object
 
                 }
             }
-            if (!is_null($this->getParam('id', NULL))){
+            if (!is_null($this->getParam('id', NULL))) {
                 $page = $this->_objContent->getContentPage($this->getParam('id'));
                 $str .= $page['title'];
             }
             $home->href = $this->uri(null , $module);
             $home->link = 'Home';
             $str = $home->show() .' / ' . $str;
-            
+
             $objTools->replaceBreadCrumbs(split(' / ', $str));
         }
         /**
@@ -1076,35 +1076,35 @@ class cmsutils extends object
                         }
                     }
                 }
-                if($forTable){
-                  return $treeArray;
+                if($forTable) {
+                    return $treeArray;
                 } else {
-                $links = "";
-                $objLink = & $this->newObject('link', 'htmlelements');
-                //Add array to dropdown
-                foreach($treeArray as $node) {
-                    $matches = split('<', $node['title']);
-                    $img = split('>', $matches[1]);
-                    $image = '<'.$img[0].'>';
-                    $linkText = $img[1];
-                    $noSpaces = strlen($matches[0]);
-                    //Add space for indentation of node levels
-                    for ($i = 1; $i < $noSpaces; $i++) {
-                        $links .= '&nbsp;&nbsp;';
+                    $links = "";
+                    $objLink = & $this->newObject('link', 'htmlelements');
+                    //Add array to dropdown
+                    foreach($treeArray as $node) {
+                        $matches = split('<', $node['title']);
+                        $img = split('>', $matches[1]);
+                        $image = '<'.$img[0].'>';
+                        $linkText = $img[1];
+                        $noSpaces = strlen($matches[0]);
+                        //Add space for indentation of node levels
+                        for ($i = 1; $i < $noSpaces; $i++) {
+                            $links .= '&nbsp;&nbsp;';
+                        }
+                        //Add folder image
+                        $links .= $image;
+                        //Create link to section
+                        $objLink->link($this->uri(array('action' => 'viewsection', 'id' => $node['id'])));
+                        $objLink->link = $linkText;
+                        //Add link to section
+                        $links .= $objLink->show();
+                        $links .= '<br/>';
                     }
-                    //Add folder image
-                    $links .= $image;
-                    //Create link to section
-                    $objLink->link($this->uri(array('action' => 'viewsection', 'id' => $node['id'])));
-                    $objLink->link = $linkText;
-                    //Add link to section
-                    $links .= $objLink->show();
-                    $links .= '<br/>';
+
+                    return $links;
                 }
-           
-             return $links;
-            } 
-          } 
+            }
         }
 
         /**
@@ -1129,8 +1129,8 @@ class cmsutils extends object
                     $isVisible = false;
                 } else {
                     $section = $this->_objSections->getSection($sectionId);
-                    if ($section['published'] == 0){
-                      $isVisible = false;
+                    if ($section['published'] == 0) {
+                        $isVisible = false;
                     }
                     $sectionId = $section['parentid'];
                 }
@@ -1156,22 +1156,22 @@ class cmsutils extends object
                                 <!--
                                 function initRadioDisplay()
                                 {
-                                    var len;
-                                    var index;
-                                    len = document.addsection.display.length;
-                                    for(index=0;index<len;index++){
-                                       if(document.addsection.display[index].checked){
-                                          xajax_processSection(document.addsection.display[index].value);
-                                          break;
-                                       }
-                                    }
-                                }
+                                var len;
+                                var index;
+                                len = document.addsection.display.length;
+                                for(index=0;index<len;index++){
+                                if(document.addsection.display[index].checked){
+                                xajax_processSection(document.addsection.display[index].value);
+                                break;
+                            }
+                            }
+                            }
                                 //-->
                                 </script>';
-                                
+
             $this->appendArrayVar('headerParams',$initRadioDisplay);
             $this->appendArrayVar('bodyOnLoad','initRadioDisplay();');
-            
+
             //initiate objects
             $table = & $this->newObject('htmltable', 'htmlelements');
             $titleInput = & $this->newObject('textinput', 'htmlelements');
@@ -1228,7 +1228,7 @@ class cmsutils extends object
                 $objForm->setAction($this->uri(array('action' => $action, 'id' => $sectionId), 'cmsadmin'));
             }
 
-           // $objForm->setDisplayType(3);
+            // $objForm->setDisplayType(3);
             $table->cellpadding = 5;            //the title
             $titleInput->name = 'title';
             $titleInput->id = 'title';
@@ -1295,7 +1295,7 @@ class cmsutils extends object
 
             $table->startRow();
             $table->addCell('&nbsp;');
-            $table->addCell('&nbsp;');  
+            $table->addCell('&nbsp;');
             $table->endRow();
 
             //title name
@@ -1306,7 +1306,7 @@ class cmsutils extends object
 
             $table->startRow();
             $table->addCell('&nbsp;');
-            $table->addCell('&nbsp;');  
+            $table->addCell('&nbsp;');
             $table->endRow();
 
             //menu text name
@@ -1317,7 +1317,7 @@ class cmsutils extends object
 
             $table->startRow();
             $table->addCell('&nbsp;');
-            $table->addCell('&nbsp;');  
+            $table->addCell('&nbsp;');
             $table->endRow();
 
             //published
@@ -1328,9 +1328,9 @@ class cmsutils extends object
 
             $table->startRow();
             $table->addCell('&nbsp;');
-            $table->addCell('&nbsp;');  
+            $table->addCell('&nbsp;');
             $table->endRow();
-            
+
             //layout
             $table->startRow();
             $table->addCell($this->objLanguage->languageText('mod_cmsadmin_layoutofpages', 'cmsadmin'));
@@ -1339,7 +1339,7 @@ class cmsutils extends object
 
             $table->startRow();
             $table->addCell('&nbsp;');
-            $table->addCell('&nbsp;');  
+            $table->addCell('&nbsp;');
             $table->endRow();
 
             //Order type
@@ -1351,12 +1351,12 @@ class cmsutils extends object
             $pageOrder->addOption('pagetitle_asc', $this->objLanguage->languageText('mod_cmsadmin_order_pagetitle_asc', 'cmsadmin'));
             $pageOrder->addOption('pagetitle_desc', $this->objLanguage->languageText('mod_cmsadmin_order_pagetitle_desc', 'cmsadmin'));
             if ($editmode) {
-              $pageOrder->setSelected($section['ordertype']);
+                $pageOrder->setSelected($section['ordertype']);
             } else {
                 $pageOrder->setSelected('pageorder');
             }
             $pageOrder->setBreakSpace(' &nbsp; ');
-            
+
             $table->startRow();
             $table->addCell($label->show());
             $table->addCell($pageOrder->show());
@@ -1364,7 +1364,7 @@ class cmsutils extends object
 
             $table->startRow();
             $table->addCell('&nbsp;');
-            $table->addCell('&nbsp;');  
+            $table->addCell('&nbsp;');
             $table->endRow();
 
             //Show intro or not
@@ -1378,7 +1378,7 @@ class cmsutils extends object
                 $showdate->setSelected('1');
             }
             $showdate->setBreakSpace(' &nbsp; ');
-            
+
             //Intro text
             $introText =& $this->newObject('htmlarea', 'htmlelements');
             $introText->name = 'introtext';
@@ -1386,7 +1386,7 @@ class cmsutils extends object
             if ($editmode) {
                 $introText->value = $section['description'];
             }
-            
+
             $table->startRow();
             $table->addCell('<div id="showintrolabel">'.$label->show().'</div>');
             $table->addCell('<div id="showintrocol">'.'Should the Section Introduction text display above the list of pages'.' '.$showdate->show().'<br /><br />'.$introText->show().'</div>');
@@ -1394,9 +1394,9 @@ class cmsutils extends object
 
             $table->startRow();
             $table->addCell('&nbsp;');
-            $table->addCell('&nbsp;');  
+            $table->addCell('&nbsp;');
             $table->endRow();
-            
+
             //No. pages to display
             $label = new label ($this->objLanguage->languageText('phrase_numberofpages'), 'input_pagenum');
             $pagenum = new radio ('pagenum');
@@ -1426,7 +1426,7 @@ class cmsutils extends object
                 $pagenum->setSelected('0');
             }
             $pagenum->setBreakSpace(' &nbsp; ');
-            
+
             $table->startRow();
             $table->addCell('<div id="pagenumlabel">'.$label->show().'</div>');
             $table->addCell('<div id="pagenumcol">'.$this->objLanguage->languageText('mod_cmsadmin_numpagesdisplaypersection', 'cmsadmin').'<p>'.$pagenum->show().'</p><p class="warning">* '.$this->objLanguage->languageText('mod_cmsadmin_numpagesonlyrequiredwhen', 'cmsadmin').'</p>'.'</div>');
@@ -1434,7 +1434,7 @@ class cmsutils extends object
 
             $table->startRow();
             $table->addCell('&nbsp;');
-            $table->addCell('&nbsp;');  
+            $table->addCell('&nbsp;');
             $table->endRow();
 
             //Show date or not
@@ -1450,7 +1450,7 @@ class cmsutils extends object
             $showdate->setBreakSpace(' &nbsp; ');
 
             $table->startRow();
-            $table->addCell('<div id="dateshowlabel">'.$label->show().'</div>');            
+            $table->addCell('<div id="dateshowlabel">'.$label->show().'</div>');
             $table->addCell('<div id="dateshowcol">'.$this->objLanguage->languageText('mod_cmsadmin_shoulddatebedisplayed', 'cmsadmin').' '.$showdate->show().'</div>');
             $table->endRow();
 
@@ -1498,7 +1498,7 @@ class cmsutils extends object
             $published = & $this->newObject('checkbox', 'htmlelements');
             $objOrdering = & $this->newObject('textinput', 'htmlelements');
             $objForm =& $this->newObject('form', 'htmlelements');
-              
+
             if ($contentId == NULL) {
                 $action = 'createcontent';
                 $editmode = FALSE;
@@ -1627,7 +1627,7 @@ class cmsutils extends object
             $table2->startRow();
             $table2->addCell($introInput->show());
             $table2->endRow();
-            
+
             $table2->startRow();
             $table2->addCell($button->show());
             $table2->endRow();
@@ -1636,7 +1636,7 @@ class cmsutils extends object
             $middleColumnContent = "";
             $middleColumnContent .= $h3->show();
             $middleColumnContent .= $objForm->show();
-            
+
             return $middleColumnContent;
         }
 

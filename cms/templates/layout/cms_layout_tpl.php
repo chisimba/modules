@@ -26,13 +26,14 @@ $this->appendArrayVar('bodyOnLoad', 'autoInit_trees()');
 $currentNode = $this->getParam('sectionid', NULL);
 
 $leftSide = $objTreeMenu->buildTree($currentNode);
-if($objUser->isAdmin()){
-  $objAdminLink =& $this->newObject('link', 'htmlelements');
-  $objAdminLink->link($this->uri(array(NULL), 'cmsadmin'));
-  $objAdminLink->link = $objLanguage->languageText('mod_cms_cmsadmin', 'cms');
-  
-  $leftSide .= '<br/>';
-  $leftSide .= $objAdminLink->show();
+if($objUser->isAdmin())
+{
+    $objAdminLink =& $this->newObject('link', 'htmlelements');
+    $objAdminLink->link($this->uri(array(NULL), 'cmsadmin'));
+    $objAdminLink->link = $objLanguage->languageText('mod_cms_cmsadmin', 'cms');
+
+    $leftSide .= '<br/>';
+    $leftSide .= $objAdminLink->show();
 }
 
 
@@ -40,9 +41,10 @@ if($objUser->isAdmin()){
 
 if(!$this->getParam('query') == '')
 {
-	
-	$searchResults = $objLucene->show($this->getParam('query'));
-} else {
+
+    $searchResults = $objLucene->show($this->getParam('query'));
+} else
+{
     $searchResults = '';
 }
 
@@ -53,35 +55,39 @@ $rightSide = "";
 
 $isLoggedIn = $objUser->isLoggedIn();
 
-if(!$isLoggedIn){
-   $hasBlocks = TRUE;
-   $loginBlock = $objDbBlocks->getBlockByName('login');
-   $registerBlock = $objDbBlocks->getBlockByName('register');
-   
-   $rightSide .= $objBlocks->showBlock($loginBlock['blockname'], $loginBlock['moduleid']);
-   $rightSide .= $objBlocks->showBlock($registerBlock['blockname'], $registerBlock['moduleid']);
-} else {
-   $pageId = $this->getParam('id');
+if(!$isLoggedIn)
+{
+    $hasBlocks = TRUE;
+    $loginBlock = $objDbBlocks->getBlockByName('login');
+    $registerBlock = $objDbBlocks->getBlockByName('register');
 
-   $pageBlocks = $objDbBlocks->getBlocksForPage($pageId);
-   if(!empty($pageBlocks)){
-     $hasBlocks = TRUE;
-     foreach($pageBlocks as $pbks){
-        $blockId = $pbks['blockid'];
-        $blockToShow = $objDbBlocks->getBlock($blockId);
-        
-        $rightSide .= $objBlocks->showBlock($blockToShow['blockname'], $blockToShow['moduleid']);
-     }
-   }  
+    $rightSide .= $objBlocks->showBlock($loginBlock['blockname'], $loginBlock['moduleid']);
+    $rightSide .= $objBlocks->showBlock($registerBlock['blockname'], $registerBlock['moduleid']);
+} else
+{
+    $pageId = $this->getParam('id');
+
+    $pageBlocks = $objDbBlocks->getBlocksForPage($pageId);
+    if(!empty($pageBlocks)) {
+        $hasBlocks = TRUE;
+        foreach($pageBlocks as $pbks) {
+            $blockId = $pbks['blockid'];
+            $blockToShow = $objDbBlocks->getBlock($blockId);
+
+            $rightSide .= $objBlocks->showBlock($blockToShow['blockname'], $blockToShow['moduleid']);
+        }
+    }
 }
 
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
-if($hasBlocks){
-  $cssLayout->setNumColumns(3);
-  $cssLayout->setRightColumnContent($rightSide);
-} else {
+if($hasBlocks)
+{
+    $cssLayout->setNumColumns(3);
+    $cssLayout->setRightColumnContent($rightSide);
+} else
+{
     $cssLayout->setNumColumns(2);
-}  
+}
 $cssLayout->setLeftColumnContent($leftSide);
 $cssLayout->setMiddleColumnContent($this->getBreadCrumbs().$this->getContent().$searchResults.$this->footerStr);
 
