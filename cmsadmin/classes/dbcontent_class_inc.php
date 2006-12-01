@@ -43,6 +43,12 @@ class dbcontent extends dbTable
          */
         protected $_objLanguage;
 
+        /**
+         * @var object $_objFrontPage t
+         * 
+         * @access protected
+         */
+        protected $_objBlocks;
 
         /**
         * Constructor
@@ -53,6 +59,7 @@ class dbcontent extends dbTable
             $this->_objUser = & $this->getObject('user', 'security');
             $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
             $this->_objLanguage = & $this->newObject('language', 'language');
+            $this->_objBlocks = & $this->newObject('dbblocks', 'cmsadmin');
         }
 
         /**
@@ -174,7 +181,7 @@ class dbcontent extends dbTable
         /**
         * Method to delete a content page
         *
-        * @param string $id
+        * @param string $id The id of the entry
         * @return boolean
         * @access public
         */
@@ -208,7 +215,13 @@ class dbcontent extends dbTable
 
                     $this->_objFrontPage->remove($fpEntryId);
                 }
-
+                //Remove blocks for the page
+                $pageBlocks = $this->_objBlocks->getBlocksForPage($id);
+                if(!empty($pageBlocks)){
+                   foreach($pageBlocks as $pb){
+                      $this->_objBlocks->deleteBlock($pb['pageid'], $pb['blockid']);
+                   }
+                }
                 //Delete page
                 return $this->delete('id', $id);
         }
@@ -275,10 +288,11 @@ class dbcontent extends dbTable
         public function resetSection($sectionId)
         {
                 $arrContent = $this->getAll('WHERE sectionid = \''.$sectionId.'\'');
-
+                $bln = TRUE;
                 foreach ($arrContent as $page) {
                     $this->delete('id', $page['id']);
                 }
+                return $bln;
         }
 
         /**

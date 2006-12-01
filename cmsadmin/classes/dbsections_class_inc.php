@@ -98,13 +98,26 @@ class dbsections extends dbTable
         /**
          * Method to the first sections id(pk)
          *
+         * @param bool $isPublished TRUE | FALSE To get published sections
          * @return string First sections id
          * @access public
          */
-        public function getFirstSectionId()
+        public function getFirstSectionId($isPublished = FALSE)
         {
-                $firstSection = $this->getAll('WHERE parentid=0 and ordering=1');
-                $firstSectionId = $firstSection['0']['id'];
+                $firstSectionId = '';
+                $firstSection = $this->getAll('WHERE parentid=0 ORDER BY ordering');
+                if(!empty($firstSection)){
+                  if($isPublished){
+                     foreach($firstSection as $section){
+                       if($section['published'] == 1){
+                         $firstSectionId = $section['id'];
+                         break;
+                       }
+                    }
+                  } else {
+                      $firstSectionId = $firstSection['0']['id'];
+                  }
+                }      
                 return $firstSectionId;
         }
 

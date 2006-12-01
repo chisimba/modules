@@ -400,6 +400,20 @@ class dbblocks extends dbTable
               
               return $entry;
         }
+       /**
+        * Method to return an entries in blocks table
+        * @param string $blockName The name of the block
+        * @return array
+        * @access public
+        */
+        public function getBlockByName($blockName)
+        {
+              $entry = $this->getArray('SELECT * FROM tbl_module_blocks WHERE blockname = \''.$blockName.'\''); 
+              $entry = $entry['0'];
+              
+              return $entry;
+        }
+        
 }
 
 ?>

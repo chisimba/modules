@@ -642,7 +642,7 @@ class cmsutils extends object
                         $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created');
                         break;
                     case 'pagedate_desc':
-                        $arrPages = $this->_objContent->getAll('WHERE sectionid = "\''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
+                        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
                         break;
                     case 'pagetitle_asc':
                         $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title');
@@ -811,6 +811,7 @@ class cmsutils extends object
         */
         public function getBreadCrumbs($module = 'cms')
         {
+            $str = '';
             $objTools = & $this->newObject('tools', 'toolbar');
             if ($this->getParam('action') == '') {
                 return '';
