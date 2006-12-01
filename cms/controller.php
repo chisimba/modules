@@ -67,6 +67,14 @@ class cms extends controller
      * @var object
     */
     protected $inContextMode;
+
+     /**
+     * The user object
+     *
+     * @access private
+     * @var object
+    */
+    protected $_objUser;
     
    /**
     * Method to initialise the cms object
@@ -76,12 +84,12 @@ class cms extends controller
 	public function init()
 	{
 		// instantiate object
-        try{
-        	//$this->_objContextCore = & $this->newObject('dbcontextcore', 'contextcore');
 			$this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
 			$this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
 			$this->_objUtils = & $this->newObject('cmsutils', 'cmsadmin');
 			$this->_objContext = & $this->newObject('dbcontext', 'context');
+			$this->_objUser = & $this->newObject('user', 'security');
+			$this->objLanguage = & $this->newObject('language', 'language');
 			
 			$objModule = & $this->newObject('modules', 'modulecatalogue');
 			
@@ -92,12 +100,6 @@ class cms extends controller
 			} else {
 			    $this->inContextMode = FALSE;
 			}
-        
-        }catch (Exception $e){
-       	echo 'Caught exception: ',  $e->getMessage();
-        	exit();
-        }
-	
 	}
 	
 	/** 
@@ -121,10 +123,10 @@ class cms extends controller
     */
 	 public function dispatch()
 	 {
-		try{
-	  	$action = $this->getParam('action');
+	        $isLoggedIn = $this->_objUser->isLoggedIn();
+	  	    $action = $this->getParam('action');
 			$this->setLayoutTemplate('cms_layout_tpl.php');
-			//$this->setPageTemplate('cms_page_tpl.php');
+
 	        switch ($action){
 	            case null:
 	            case 'home':
@@ -133,15 +135,24 @@ class cms extends controller
 	            	  $this->setVarByRef('content', $content);	
 	            	  return 'cms_main_tpl.php';
 	               } else {
-	            	  $firstSectionId = $this->_objSections->getFirstSectionId();
+	            	  $firstSectionId = $this->_objSections->getFirstSectionId(TRUE);
                       return $this->nextAction('showsection', array('id'=>$firstSectionId,'sectionid'=>$firstSectionId));
                    }  
 	            	
 	            case 'showsection':
-	               $section = $this->_objSections->getSection($this->getParam('id'));
-	               $siteTitle = $section['title'];
+	               $sectionId = $this->getParam('id');
+	               if($sectionId != ''){
+	                  $section = $this->_objSections->getSection($sectionId);
+	                  $siteTitle = $section['title'];
+	               } else {
+                      $siteTitle = '';
+                   }
 	               $this->setVarByRef('pageTitle', $siteTitle);
-	               $this->setVar('content', $this->_objUtils->showSection());
+	               if($sectionId != ''){
+	                  $this->setVar('content', $this->_objUtils->showSection());
+	               } else {
+                       $this->setVar('content', '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_cms_novisiblesections', 'cms').'</div>');
+                   }   
 	               return 'cms_section_tpl.php';
 	            	
 	            case 'showcontent':
@@ -166,11 +177,6 @@ class cms extends controller
 	               return 'cms_calendar_tpl.php';
 	
 	        }
-         
-        }catch (Exception $e){
-       	echo 'Caught exception: ',  $e->getMessage();
-        	exit();
-        }
 	}
 	
 	/**

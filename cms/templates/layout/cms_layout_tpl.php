@@ -51,19 +51,28 @@ if(!$this->getParam('query') == '')
 $hasBlocks = FALSE;
 $rightSide = "";
 
-if($objModule->checkIfRegistered('blocks')){
-  $pageId = $this->getParam('id');
+$isLoggedIn = $objUser->isLoggedIn();
 
-  $pageBlocks = $objDbBlocks->getBlocksForPage($pageId);
-  if(!empty($pageBlocks)){
-    $hasBlocks = TRUE;
-    foreach($pageBlocks as $pbks){
+if(!$isLoggedIn){
+   $hasBlocks = TRUE;
+   $loginBlock = $objDbBlocks->getBlockByName('login');
+   $registerBlock = $objDbBlocks->getBlockByName('register');
+   
+   $rightSide .= $objBlocks->showBlock($loginBlock['blockname'], $loginBlock['moduleid']);
+   $rightSide .= $objBlocks->showBlock($registerBlock['blockname'], $registerBlock['moduleid']);
+} else {
+   $pageId = $this->getParam('id');
+
+   $pageBlocks = $objDbBlocks->getBlocksForPage($pageId);
+   if(!empty($pageBlocks)){
+     $hasBlocks = TRUE;
+     foreach($pageBlocks as $pbks){
         $blockId = $pbks['blockid'];
         $blockToShow = $objDbBlocks->getBlock($blockId);
         
         $rightSide .= $objBlocks->showBlock($blockToShow['blockname'], $blockToShow['moduleid']);
-    }
-  }  
+     }
+   }  
 }
 
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
