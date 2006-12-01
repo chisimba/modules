@@ -134,6 +134,7 @@ class blogimporter extends object
 	 */
 	public function importBlog($username)
 	{
+		$this->objUser = $this->getObject('user', 'security');
 		//set the table
 		$this->_tableName = 'tbl_users';
 		//set up the query to check userid and username
@@ -141,22 +142,41 @@ class blogimporter extends object
 		$res1 = $this->objDb->query($fil1);
 		$ures = $res1->fetchAll(MDB2_FETCHMODE_ASSOC);
 
-		//now get the info we need
-		//set the userid as in the blog
-		$userid = $ures[0]['userid'];
-		//set the table to the blog table
-		$this->_tableName = 'tbl_blog';
-		//query the blog table
-		$fil2 = "SELECT * FROM tbl_blog WHERE userid = '$userid'";
-		$res2 = $this->objDb->query($fil2);
-		if(PEAR::isError($res2))
+		$fname = $ures[0]['firstname'] . " " . $ures[0]['surname'];
+
+		//lets check that the users name is the same, or else drop his ass
+		$locname = trim($this->objUser->fullname());
+		$fname = trim($fname);
+
+		if($fname == $locname)
 		{
-			//uh oh.... blog not installed, or cannot be found on remote
-			die("no blog table");
+			//now get the info we need
+			//set the userid as in the blog
+			$userid = $ures[0]['userid'];
+
+			//set the table to the blog table
+			$this->_tableName = 'tbl_blog';
+			//query the blog table
+			$fil2 = "SELECT * FROM tbl_blog WHERE userid = '$userid'";
+			$res2 = $this->objDb->query($fil2);
+			if(PEAR::isError($res2))
+			{
+				//uh oh.... blog not installed, or cannot be found on remote
+				die("no blog table");
+			}
+			//return the associative array of fetched values.
+			$bres = $res2->fetchAll(MDB2_FETCHMODE_ASSOC);
+			if(empty($bres))
+			{
+				return 56;
+			}
+			else {
+				return $bres;
+			}
 		}
-		//return the associative array of fetched values.
-		$bres = $res2->fetchAll(MDB2_FETCHMODE_ASSOC);
-		return $bres;
+		else {
+			return NULL;
+		}
 	}
 
 }//end class

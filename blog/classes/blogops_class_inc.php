@@ -210,6 +210,77 @@ class blogops extends object
 		}
 	}
 
+	/**
+	 * Method to create a form to import the blog data from a remote
+	 *
+	 * @param bool $featurebox
+	 * @return string
+	 */
+	public function showImportForm($featurebox = TRUE)
+	{
+		$this->objUser = $this->getObject('user', 'security');
+		$imform = new form('importblog', $this->uri(array('action' => 'importblog')));
+		//add rules
+		$imform->addRule('server',$this->objLanguage->languageText("mod_blog_phrase_imserverreq", "blog"),'required');
+		$imform->addRule('username',$this->objLanguage->languageText("mod_blog_phrase_imuserreq", "blog"),'required');
+		//start a fieldset
+		$imfieldset = $this->getObject('fieldset', 'htmlelements');
+		//$imfieldset->setLegend($this->objLanguage->languageText('mod_blog_importblog', 'blog'));
+		$imadd = $this->newObject('htmltable', 'htmlelements');
+		$imadd->cellpadding = 5;
+
+		//server dropdown
+		$servdrop = new dropdown('server');
+		$servdrop->addOption("fsiu", $this->objLanguage->languageText("mod_blog_fsiu","blog"));
+		$servdrop->addOption("elearn", $this->objLanguage->languageText("mod_blog_elearn","blog"));
+		$imadd->startRow();
+		$servlabel = new label($this->objLanguage->languageText('mod_blog_impserv', 'blog') .':', 'input_importfrom');
+		$imadd->addCell($servlabel->show());
+		$imadd->addCell($servdrop->show());
+		$imadd->endRow();
+
+		//username textfield
+		$imadd->startRow();
+		$imulabel = new label($this->objLanguage->languageText('mod_blog_impuser', 'blog') .':', 'input_impuser');
+		$imuser = new textinput('username');
+		$usernameval = $this->objUser->username();
+		if(isset($usernameval))
+		{
+			$imuser->setValue($this->objUser->username());
+		}
+		$imadd->addCell($imulabel->show());
+		$imadd->addCell($imuser->show());
+		$imadd->endRow();
+
+		//end off the form and add the buttons
+		$this->objIMButton = &new button($this->objLanguage->languageText('word_import', 'system'));
+		$this->objIMButton->setValue($this->objLanguage->languageText('word_import', 'system'));
+		$this->objIMButton->setToSubmit();
+
+		$imfieldset->addContent($imadd->show());
+		$imform->addToForm($imfieldset->show());
+		$imform->addToForm($this->objIMButton->show());
+
+		$imform = $imform->show();
+
+		if($featurebox == TRUE)
+		{
+			$objFeatureBox = $this->getObject('featurebox', 'navigation');
+			$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_importblog","blog"), $imform);
+			return $ret;
+		}
+		else {
+			return $imform;
+		}
+	}
+
+	/**
+	 * Method to show a mail setup form to set the DSN for mail2blog
+	 *
+	 * @param bool $featurebox
+	 * @param array $dsnarr
+	 * @return string
+	 */
 	public function showMailSetup($featurebox = TRUE, $dsnarr = NULL)
 	{
 		//start a form to go back to the setupmail action with the vars
@@ -341,6 +412,8 @@ class blogops extends object
 
 			//blog admin page
 			$admin = new href($this->uri(array('action' => 'blogadmin')), $this->objLanguage->languageText("mod_blog_blogadmin", "blog"));
+			//blog importer
+			$import = new href($this->uri(array('action' => 'importblog')), $this->objLanguage->languageText("mod_blog_blogimport", "blog"));
 			//mail setup
 			$mailsetup = new href($this->uri(array('action' => 'setupmail')), $this->objLanguage->languageText("mod_blog_setupmail", "blog"));
 			//write new post link
@@ -361,10 +434,10 @@ class blogops extends object
 			$this->objUser = $this->getObject('user', 'security');
 			if($this->objUser->inAdminGroup($this->objUser->userId()))
 			{
-				$linksarr = array($admin, $mailsetup, $newpost, $editpost, $editcats, $viewblogs, $viewmyblog);
+				$linksarr = array($admin, $import, $mailsetup, $newpost, $editpost, $editcats, $viewblogs, $viewmyblog);
 			}
 			else {
-				$linksarr = array($admin, $newpost, $editpost, $editcats, $viewblogs, $viewmyblog);
+				$linksarr = array($admin, $import, $newpost, $editpost, $editcats, $viewblogs, $viewmyblog);
 			}
 			foreach($linksarr as $links)
 			{
@@ -378,11 +451,11 @@ class blogops extends object
 		$this->objUser = $this->getObject('user', 'security');
 		if($this->objUser->inAdminGroup($this->objUser->userId()))
 		{
-			$ret .= $admin->show() . "<br />" . $mailsetup->show() . "<br />" . $newpost->show()  . "<br />" . $editpost->show()  . "<br />" .
+			$ret .= $admin->show() . "<br />" . $import->show() . "<br />" . $mailsetup->show() . "<br />" . $newpost->show()  . "<br />" . $editpost->show()  . "<br />" .
 				$editcats->show()  . "<br />" . $viewblogs->show() . "<br />" . $viewmyblog->show();
 		}
 		else {
-			$ret .= $admin->show() . "<br />" . $newpost->show()  . "<br />" . $editpost->show()  . "<br />" .
+			$ret .= $admin->show() . "<br />" . $import->show() . "<br />" . $newpost->show()  . "<br />" . $editpost->show()  . "<br />" .
 				$editcats->show()  . "<br />" . $viewblogs->show() . "<br />" . $viewmyblog->show();
 		}
 

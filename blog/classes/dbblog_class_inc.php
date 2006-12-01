@@ -427,6 +427,25 @@ class dbblog extends dbTable
 
 			return $this->insert($insarr, 'tbl_blog_posts');
 		}
+		if($mode == 'import')
+		{
+			$this->ipcleaner = $this->newObject('htmlcleaner', 'utilities');
+			$this->iecleaner = $this->newObject('htmlcleaner', 'utilities');
+
+			$imparr = array('userid' => $userid,
+							'post_date' => $postarr['postdate'],
+							'post_content' => $this->ipcleaner->cleanHtml($postarr['postcontent']),
+							'post_title' => $postarr['posttitle'],
+							'post_category' => $postarr['postcat'],
+							'post_excerpt' => $this->iecleaner->cleanHtml($postarr['postexcerpt']),
+							'post_status' => $postarr['poststatus'],
+							'comment_status' => $postarr['commentstatus'],
+							'post_modified' => $postarr['postmodified'],
+							'comment_count' => $postarr['commentcount'],
+							'post_ts' => strtotime($postarr['postdate']));
+
+			return $this->insert($imparr, 'tbl_blog_posts');
+		}
 		else {
 			$this->epcleaner = $this->newObject('htmlcleaner', 'utilities');
 			$this->eecleaner = $this->newObject('htmlcleaner', 'utilities');
