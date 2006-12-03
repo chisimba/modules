@@ -12,6 +12,7 @@ $rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
 
 //show the categories menu (if there are cats)
 $rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE);
+$rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
 
 //$rightSideColumn .= "<br />";
 

@@ -859,6 +859,16 @@ class blog extends controller
 
 			case 'tagcloud':
 				$this->objTC = $this->getObject('tagcloud', 'utilities');
+
+				//for the blog cloud, we want to get all the categories as tags
+				//then the count of posts for each cat as the weight
+				//the url to the cat as a link
+				//last post time as the time
+				//build the array
+				//dump it into a featurebox
+				//echo the cloud out
+				//this action is a test action, this functionality will be moved to blogops soon.
+
 				$tagarray = array(array('name' => 'PHP','url' => 'http://www.php.net', 'weight' => 20, 'time' => strtotime('-1 day')),
 								  array('name' => 'Google SA','url' => 'http://www.google.co.za', 'weight' => 15, 'time' => strtotime('-3 days')),
 								  array('name' => 'AVOIR','url' => 'http://avoir.uwc.ac.za', 'weight' => 35, 'time' => time()),
