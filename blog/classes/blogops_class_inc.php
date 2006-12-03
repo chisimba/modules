@@ -1433,6 +1433,10 @@ class blogops extends object
 		$this->objTC = $this->getObject('tagcloud', 'utilities');
 		//get all the categories to convert to tags
 		$catarr = $this->objDbBlog->getAllCats($userid);
+		if(empty($catarr))
+		{
+			return NULL;
+		}
 		//print_r($catarr); die();
 		foreach ($catarr as $cat)
 		{
