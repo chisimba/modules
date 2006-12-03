@@ -1443,7 +1443,7 @@ class blogops extends object
 			//get the last post from the cat and do a count on the posts table
 			$post = $this->objDbBlog->getLatestPost($userid);
 			//print_r($post);
-			$url = $this->uri(array('action' => 'viewblog', 'catid' => $cat['id']));
+			$url = $this->uri(array('action' => 'viewblog', 'catid' => $cat['id'], 'userid' => $userid));
 			//weight is the count of posts in the cat
 			//echo $post['id'];
 			$count = $this->objDbBlog->catCount($cat['id']);
