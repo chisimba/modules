@@ -474,18 +474,15 @@ class blog extends controller
 					return "importform_tpl.php";
 				}
 				else {
-					//set up to connect to the server
-					$this->objBlogImport->setup($server);
-					//connect to the remote db
-					$this->objBlogImport->_dbObject();
 					try {
+						//set up to connect to the server
+						$this->objBlogImport->setup($server);
+						//connect to the remote db
+						$this->objBlogImport->_dbObject();
+
 						$blog = $this->objBlogImport->importBlog($username);
-					}
-					catch (customException $e)
-					{
-						customException::cleanUp();
-						exit;
-					}
+
+					/*
 					//dump it to screen as a debug
 					if(is_null($blog))
 					{
@@ -495,30 +492,37 @@ class blog extends controller
 					{
 						die("blog table from remote is empty");
 					}
-					else {
-						$userid = $this->objUser->userId();
-						foreach($blog as $blogs)
-						{
-							//create the post array in a format the this blog can understand...
-							$postarr = array('userid' => $userid,
-										 'postdate' => strtotime($blogs['dateadded']),
-										 'postcontent' => $this->objblogOps->html2txt(htmlentities($blogs['content']), TRUE),
-										 'posttitle' => $this->objblogOps->html2txt(htmlentities($blogs['title']), TRUE),
-										 'postcat' => 0,
-										 'postexcerpt' => $this->objblogOps->html2txt(htmlentities($blogs['headline']), TRUE),
-										 'poststatus' => 0,
-										 'commentstatus' => 'Y',
-										 'postmodified' => $blogs['dateadded'],
-										 'commentcount' => 0,
-										 'postdate' => $blogs['dateadded']
-										 );
-							//use the insertPost methods to populate...
-							$this->objblogOps->quickPostAdd($userid, $postarr, 'import');
-							//clear $postarr
-							$postarr = NULL;
-						}
-						$this->nextAction('viewblog');
+					*/
+					//else {
+					$userid = $this->objUser->userId();
+					foreach($blog as $blogs)
+					{
+						//create the post array in a format the this blog can understand...
+						$postarr = array('userid' => $userid,
+						'postdate' => strtotime($blogs['dateadded']),
+						'postcontent' => $this->objblogOps->html2txt(htmlentities($blogs['content']), TRUE),
+						'posttitle' => $this->objblogOps->html2txt(htmlentities($blogs['title']), TRUE),
+						'postcat' => 0,
+						'postexcerpt' => $this->objblogOps->html2txt(htmlentities($blogs['headline']), TRUE),
+						'poststatus' => 0,
+						'commentstatus' => 'Y',
+						'postmodified' => $blogs['dateadded'],
+						'commentcount' => 0,
+						'postdate' => $blogs['dateadded']
+						);
+						//use the insertPost methods to populate...
+						$this->objblogOps->quickPostAdd($userid, $postarr, 'import');
+						//clear $postarr
+						$postarr = NULL;
 					}
+					$this->nextAction('viewblog');
+					}
+					catch (customException $e)
+					{
+						customException::cleanUp();
+						exit;
+					}
+					//}
 				}
 
 				break;

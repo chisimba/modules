@@ -43,6 +43,13 @@ class blogimporter extends object
 	protected $objDb;
 
 	/**
+	 * Language Object
+	 *
+	 * @var object
+	 */
+	public $objLanguage;
+
+	/**
 	 * Standard init function for the object and controller class
 	 *
 	 * @access public
@@ -51,7 +58,8 @@ class blogimporter extends object
 	 */
 	public function init()
 	{
-		//nothing to do here yet... :(
+		//language object
+		$this->objLanguage = $this->getObject('language', 'language');
 	}
 
 	/**
@@ -95,7 +103,7 @@ class blogimporter extends object
 		$this->objDb = &MDB2::factory($this->dsn);
 		//Check for errors on the factory method
 		if (PEAR::isError($this->objDb)) {
-			return FALSE;
+			throw new customException($this->objLanguage->languageText("mod_blog_import_noconn", "blog"));
 		}
 		//set the options
 		$this->objDb->setOption('portability', MDB2_PORTABILITY_FIX_CASE);
@@ -104,7 +112,7 @@ class blogimporter extends object
 		MDB2::loadFile('Iterator');
 		//Check for errors
 		if (PEAR::isError($this->objDb)) {
-			return FALSE;
+			throw new customException($this->objLanguage->languageText("mod_blog_import_noconn", "blog"));
 		}
 		return $this->objDb;
 	}
@@ -143,7 +151,7 @@ class blogimporter extends object
 		if(PEAR::isError($res1))
 		{
 			throw new customException($res1->getMessage());
-			die();
+			exit;
 		}
 		$ures = $res1->fetchAll(MDB2_FETCHMODE_ASSOC);
 
@@ -167,20 +175,20 @@ class blogimporter extends object
 			if(PEAR::isError($res2))
 			{
 				//uh oh.... blog not installed, or cannot be found on remote
-				die("no blog table");
+				throw new customException($this->objLanguage->languageText("mod_blog_import_noblog", "blog"));
 			}
 			//return the associative array of fetched values.
 			$bres = $res2->fetchAll(MDB2_FETCHMODE_ASSOC);
 			if(empty($bres))
 			{
-				return 56;
+				throw new customException($this->objLanguage->languageText("mod_blog_import_unoblog", "blog")); //56
 			}
 			else {
 				return $bres;
 			}
 		}
 		else {
-			return NULL;
+			throw new customException($this->objLanguage->languageText("mod_blog_import_unomatch", "blog"));
 		}
 	}
 
