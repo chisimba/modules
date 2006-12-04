@@ -1399,7 +1399,7 @@ class cmsutils extends object
             //No. pages to display
             $label = new label ($this->objLanguage->languageText('phrase_numberofpages'), 'input_pagenum');
             $pagenum = new radio ('pagenum');
-            $pagenum->addOption('0', $tghis->objLanguage->languageText('phrase_showall'));
+            $pagenum->addOption('0', $this->objLanguage->languageText('phrase_showall'));
             $pagenum->addOption('3', '3');
             $pagenum->addOption('5', '5');
             $pagenum->addOption('10', '10');
