@@ -478,7 +478,14 @@ class blog extends controller
 					$this->objBlogImport->setup($server);
 					//connect to the remote db
 					$this->objBlogImport->_dbObject();
-					$blog = $this->objBlogImport->importBlog($username);
+					try {
+						$blog = $this->objBlogImport->importBlog($username);
+					}
+					catch (customException $e)
+					{
+						customException::cleanUp();
+						exit;
+					}
 					//dump it to screen as a debug
 					if(is_null($blog))
 					{
