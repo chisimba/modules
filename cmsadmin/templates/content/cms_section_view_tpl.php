@@ -22,8 +22,7 @@ $objLink = & $this->newObject('link', 'htmlelements');
 
 //Get section data
 
-if (isset($section))
-{
+if (isset($section)) {
     $sectionId = $section['id'];
     $title = $section['title'];
     $menuText = $section['menutext'];
@@ -41,11 +40,9 @@ $other = '<b>'.$this->objLanguage->languageText('mod_cmsadmin_treemenuname', 'cm
 
 $other .= '<b>'.$this->objLanguage->languageText('mod_cmsadmin_visibleontreemenu', 'cmsadmin').':'.'</b>&nbsp;';
 
-if ($this->_objUtils->sectionIsVisibleOnMenu($sectionId))
-{
+if ($this->_objUtils->sectionIsVisibleOnMenu($sectionId)) {
     $other .= $this->objLanguage->languageText('mod_cmsadmin_sectionwillbevisible', 'cmsadmin');
-} else
-{
+} else {
     $other .= $this->objLanguage->languageText('mod_cmsadmin_sectionwillnotbevisible', 'cmsadmin');
 }
 
@@ -91,8 +88,7 @@ $objSubSecTable->addHeaderCell($this->objLanguage->languageText('word_order'));
 $objSubSecTable->addHeaderCell($this->objLanguage->languageText('word_options'));
 $objSubSecTable->endHeaderRow();
 
-if (isset($subSections))
-{
+if (isset($subSections)) {
     $i = 0;
     foreach($subSections as $subsec) {
         //Set odd even row count variable
@@ -162,8 +158,7 @@ $objPagesTable->addHeaderCell($this->objLanguage->languageText('word_options'));
 
 $objPagesTable->endHeaderRow();
 
-if (count($pages) > '0')
-{
+if (count($pages) > '0') {
     $i = 0;
     foreach($pages as $page) {
         //Set odd even row count variable
@@ -280,8 +275,7 @@ $middleColumnContent .= '&nbsp;'.'<br/>';
 $middleColumnContent .= $objH->show();
 $middleColumnContent .= $objSubSecTable->show();
 
-if (empty($subSections))
-{
+if (empty($subSections)) {
     $middleColumnContent .= '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_cmsadmin_nosubsectionsfound', 'cmsadmin').'</div>';
 }
 
@@ -291,8 +285,7 @@ $middleColumnContent .= '&nbsp;'.'<br/>';
 $middleColumnContent .= $objH->show();
 $middleColumnContent .= $objPagesTable->show();
 
-if (empty($pages))
-{
+if (empty($pages)) {
     $middleColumnContent .= '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_cmsadmin_nopagesfoundinthissection', 'cmsadmin').'</div>';
 }
 $middleColumnContent .= '&nbsp;'.'<br/>';

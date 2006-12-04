@@ -158,7 +158,7 @@ class cmsadmin extends controller
                         $myid = $this->_objUser->userId();
 
                     if ($this->_objUser->inAdminGroup($myid) != TRUE) {
-                        die("<div id=featurebox>You do not have sufficient permissions to perform this task!</div>");
+                        die('<div id=featurebox>'.$this->objLanguage->languageText('mod_cmsadmin_nopermissionmsg', 'cmsadmin').'</div>');
                     }
 
                     //----------------------- section section

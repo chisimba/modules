@@ -632,27 +632,27 @@ class dbsections extends dbTable
         {
             switch ($orderType) {
             case 'pageorder':
-                    $order = 'Manual Arrangement';
+                    $order = $this->objLanguage->languageText('mod_cmsadmin_order_pageorder', 'cmsadmin');
                 break;
 
             case 'pagedate_asc':
-                $order = 'Date Ascending';
+                $order = $this->objLanguage->languageText('mod_cmsadmin_order_pagedate_asc', 'cmsadmin');
                 break;
 
             case 'pagedate_desc':
-                $order = 'Date Descending';
+                $order = $this->objLanguage->languageText('mod_cmsadmin_order_pagedate_desc', 'cmsadmin');
                 break;
 
             case 'pagetitle_asc':
-                $order = 'Alphabetical by Title';
+                $order = $this->objLanguage->languageText('mod_cmsadmin_order_pagetitle_asc', 'cmsadmin');
                 break;
 
             case 'pagetitle_desc':
-                $order = 'Reverse Alphabetical by Title';
+                $order = $this->objLanguage->languageText('mod_cmsadmin_order_pagetitle_desc', 'cmsadmin');
                 break;
 
             default:
-                $order = 'unknown';
+                $order = $this->objLanguage->languageText('word_unknown');
                 break;
             }
 

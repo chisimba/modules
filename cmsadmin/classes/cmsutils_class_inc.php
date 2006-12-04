@@ -98,9 +98,9 @@ class cmsutils extends object
         public function getAccess($access)
         {
             if ($access == 1) {
-                return 'Registered';
+                return $this->objLanguage->languageText('word_registered');
             } else {
-                return 'Public';
+                return $this->objLanguage->languageText('word_public');
             }
         }
 
@@ -121,7 +121,7 @@ class cmsutils extends object
             $objDropDown->name = $name;
             //fill the drop down with the list of images
             $path = $objConfig->getsiteRoot().'usrfiles/media';
-            $objDropDown->addOption('0', ' - Select Image - ');
+            $objDropDown->addOption('0', ' - '.$this->objLanguage->languageText('mod_cmsadmin_selectimage', 'cmsadmin').' - ');
             $objDropDown->addFromDB($objMedia->getImages(), 'title', 'folder', $selected);
             $objDropDown->extra = 'onchange=" return changeImage(this, this.form) "';
             return $objDropDown->show();
@@ -139,9 +139,9 @@ class cmsutils extends object
             $objDropDown = & $this->newObject('dropdown', 'htmlelements');
             $objDropDown->name = $name;
             //fill the drop down with the list of images
-            $objDropDown->addOption('0', 'Centre');
-            $objDropDown->addOption('1', 'Left');
-            $objDropDown->addOption('2', 'Right');
+            $objDropDown->addOption('0', $this->objLanguage->languageText('word_center'));
+            $objDropDown->addOption('1', $this->objLanguage->languageText('word_left'));
+            $objDropDown->addOption('2', $this->objLanguage->languageText('word_right'));
             $objDropDown->setSelected('1');
             $objDropDown->extra = 'size="3"';
             return $objDropDown->show();
@@ -187,8 +187,8 @@ class cmsutils extends object
             $objDropDown->name = $name;
             //fill the drop down with the list of images
             //TODO
-            $objDropDown->addOption('0', 'Public');
-            $objDropDown->addOption('1', 'Registered');
+            $objDropDown->addOption('0', $this->objLanguage->languageText('word_public'));
+            $objDropDown->addOption('1', $this->objLanguage->languageText('word_registered'));
             $objDropDown->setSelected('0');
             $objDropDown->extra = 'size="2"';
             return $objDropDown->show();
@@ -333,7 +333,7 @@ class cmsutils extends object
                         $table->endRow();
                         //author
                         $table->startRow();
-                        $table->addCell('Written by '.$objUser->fullname($page['created_by']));
+                        $table->addCell($this->objLanguage->languageText('phrase_writtenby').'&nbsp;'.$objUser->fullname($page['created_by']));
                         $table->endRow();
                         //date
                         $table->startRow();
@@ -347,7 +347,7 @@ class cmsutils extends object
                         if (!$page['body'] == '') {
                             //read more link .. link to the full text
                             $link = & $this->newObject('link', 'htmlelements');
-                            $link->link = 'Read more ..';
+                            $link->link = $this->objLanguage->languageText('phrase_readmore').' ..';
                             $link->href = $this->uri(array('action' => 'showfulltext', 'id' => $page['id']), 'cms');
                             $table->startRow();
                             $table->addCell($link->show());
@@ -365,7 +365,6 @@ class cmsutils extends object
                         $table->startRow();
                         $table->addCell($link->show());
                         $table->endRow();
-                        //$str .= $table->show();
                     }
 
                     //make feature boxes of the front page post
@@ -373,7 +372,7 @@ class cmsutils extends object
                     //$str .= '<p>'.$page['introtext'].'<a href="devtodo" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
                     $moreLink = $this->uri(array('action' => 'showfulltext', 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
 
-                    $content = '<span class="date">'.$this->formatDate($page['created']).'</span> <p>'.$page['introtext'].'<br /><a href="'.$moreLink.'" class="morelink" title="'.$page['title'].'">Read more...</a></p>';
+                    $content = '<span class="date">'.$this->formatDate($page['created']).'</span> <p>'.$page['introtext'].'<br /><a href="'.$moreLink.'" class="morelink" title="'.$page['title'].'">'.$this->objLanguage->languageText('phrase_readmore').'...</a></p>';
 
                     $str .= '<h3>'.$page['title'].'</h3>'.$content;
                 }
@@ -524,7 +523,7 @@ class cmsutils extends object
                     $page['creator_by'] = $objUser->fullname();
                 }
 
-                $table->addCell('Written by '.$objUser->fullname($page['creator_by']));
+                $table->addCell($this->objLanguage->languageText('phrase_writtenby').'&nbsp;'.$objUser->fullname($page['creator_by']));
                 $table->endRow();
                 //date
                 if($showDate) {
@@ -546,7 +545,7 @@ class cmsutils extends object
                     $str .= '<h4>'.$page['title'].'</h4>';
                 }
                 $uri = $this->uri(array('action' => 'showfulltext', 'sectionid' => $arrSection['id'], 'id' => $page['id']), $module);
-                $str .= '<p>'.$page['introtext'].'<br /><a href="'.$uri.'" class="morelink" title="'.$page['title'].'">Read more...</a></p>';
+                $str .= '<p>'.$page['introtext'].'<br /><a href="'.$uri.'" class="morelink" title="'.$page['title'].'">'.$this->objLanguage->languageText('phrase_readmore').'...</a></p>';
             }
 
             return $str;
@@ -843,7 +842,7 @@ class cmsutils extends object
                 $str .= $page['title'];
             }
             $home->href = $this->uri(null , $module);
-            $home->link = 'Home';
+            $home->link = $this->objLanguage->languageText('word_home');
             $str = $home->show() .' / ' . $str;
 
             $objTools->replaceBreadCrumbs(split(' / ', $str));
@@ -1368,7 +1367,7 @@ class cmsutils extends object
             $table->endRow();
 
             //Show intro or not
-            $label = new label ('Show Introduction', 'input_showintro');
+            $label = new label ($this->objLanguage->languageText('mod_cmsadmin_showintro', 'cmsadmin'), 'input_showintro');
             $showdate = new radio ('showintro');
             $showdate->addOption('1', $this->objLanguage->languageText('word_yes'));
             $showdate->addOption('0', $this->objLanguage->languageText('word_no'));
@@ -1389,7 +1388,7 @@ class cmsutils extends object
 
             $table->startRow();
             $table->addCell('<div id="showintrolabel">'.$label->show().'</div>');
-            $table->addCell('<div id="showintrocol">'.'Should the Section Introduction text display above the list of pages'.' '.$showdate->show().'<br /><br />'.$introText->show().'</div>');
+            $table->addCell('<div id="showintrocol">'.$this->objLanguage->languageText('mod_cmsadmin_showintrotext', 'cmsadmin').' '.$showdate->show().'<br /><br />'.$introText->show().'</div>');
             $table->endRow();
 
             $table->startRow();
@@ -1400,7 +1399,7 @@ class cmsutils extends object
             //No. pages to display
             $label = new label ($this->objLanguage->languageText('phrase_numberofpages'), 'input_pagenum');
             $pagenum = new radio ('pagenum');
-            $pagenum->addOption('0', 'Show All');
+            $pagenum->addOption('0', $tghis->objLanguage->languageText('phrase_showall'));
             $pagenum->addOption('3', '3');
             $pagenum->addOption('5', '5');
             $pagenum->addOption('10', '10');
