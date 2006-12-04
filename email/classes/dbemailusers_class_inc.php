@@ -1,25 +1,27 @@
-<?
+<?php
 /* ----------- data class extends dbTable for tbl_users ----------*/
-
 // security check - must be included in all scripts
-if(!$GLOBALS['kewl_entry_point_run']){
+if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
-
 /**
 * Model class for the table tbl_email_folders
 * @author Kevin Cyster
 */
-
 class dbemailusers extends dbTable
 {
-    function init()
+    /**
+    * Method to construct the class.
+    *
+    * @access public
+    * @return
+    */
+    public function init()
     {
         parent::init('tbl_users');
-        $this->table='tbl_users';
-
-        $this->objUser=&$this->getObject('user','security');
-        $this->userId=$this->objUser->userId();
+        $this->table = 'tbl_users';
+        $this->objUser = &$this->getObject('user', 'security');
+        $this->userId = $this->objUser->userId();
     }
 
     /**
@@ -30,15 +32,15 @@ class dbemailusers extends dbTable
     * @param string $search The search criteria
     * @return array $data The array of user data
     */
-    function getUsers($field,$search=NULL)
+    public function getUsers($field, $search = NULL)
     {
-        $sql=" SELECT * FROM ".$this->table;
-        if($search!=NULL){
-            $sql.=" WHERE ".$field." LIKE '".$search."%'";
+        $sql = " SELECT * FROM ".$this->table;
+        if ($search != NULL) {
+            $sql.= " WHERE ".$field." LIKE '".$search."%'";
         }
-        $sql.=" ORDER BY ".$field;
-        $data=$this->getArray($sql);
-        if(!empty($data)){
+        $sql.= " ORDER BY ".$field;
+        $data = $this->getArray($sql);
+        if (!empty($data)) {
             return $data;
         }
         return FALSE;
