@@ -10,8 +10,8 @@ $objIcon = & $this->newObject('geticon', 'htmlelements');
 $link = & $this->newObject('link', 'htmlelements');
 
 //create a heading
-$h3->str = ' Content Items Manager '.$objIcon->getAddIcon($this->uri(array('action' => 'addcontent')));
-;
+$h3->str = $this->objLanguage->languageText('mod_cmsadmin_contentitemsmanager', 'cmsadmin').'&nbsp;'.$objIcon->getAddIcon($this->uri(array('action' => 'addcontent')));
+
 //counter for records
 $cnt = 1;
 
@@ -19,18 +19,15 @@ $cnt = 1;
 $mode = '';
 
 //check for filter
-if($this->getParam('filter') == 'trash')
-{
+if($this->getParam('filter') == 'trash') {
     $mode = 'trash';
 }
 
 //get the pages
-if($this->inContextMode)
-{
+if($this->inContextMode) {
     $objContextContent = $this->newObject('dbcontextcmscontent', 'contextcmscontent');
     $arrPages = $objContextContent->getContextPages($this->contextCode);
-} else
-{
+} else {
     $arrPages = $this->_objContent->getContentPages($this->getParam('filter'));
 }
 //

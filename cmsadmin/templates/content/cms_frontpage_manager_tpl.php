@@ -32,8 +32,7 @@ $table->endHeaderRow();
 $rowcount = 0;
 //var_dump($files);
 //setup the tables rows  and loop though the records
-foreach($files as $file)
-{
+foreach($files as $file) {
     $arrFile = $this->_objContent->getContentPage($file['content_id']);
 
     $oddOrEven = ($rowcount == 0) ? "even" : "odd";
@@ -71,8 +70,7 @@ $middleColumnContent .= $objH->show();
 $middleColumnContent .= '<br/>';
 $middleColumnContent .= $table->show();
 
-if (empty($files))
-{
+if (empty($files)) {
     $middleColumnContent .= '<div class="noRecordsMessage" >'.$this->objLanguage->languageText('mod_cmsadmin_nopagesonfrontpage', 'cmsadmin').'</div>';
 }
 

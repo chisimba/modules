@@ -17,11 +17,9 @@ $objH->str = $this->objLanguage->languageText('mod_cmsadmin_sectionmanager', 'cm
 $cnt = 1;
 
 //get the sections
-if($viewType == 'root')
-{
+if($viewType == 'root') {
     $arrSections = $this->_objSections->getRootNodes();
-} else
-{
+} else {
     $arrSections = $this->_objUtils->getSectionLinks(TRUE);
 }
 
@@ -42,8 +40,7 @@ $table->endHeaderRow();
 $rowcount = 0;
 
 //setup the tables rows  and loop though the records
-foreach($arrSections as $section)
-{
+foreach($arrSections as $section) {
     //Set odd even row colour
     $oddOrEven = ($rowcount == 0) ? "even" : "odd";
     if($viewType == 'all') {
@@ -104,12 +101,10 @@ foreach($arrSections as $section)
 
 //Link to switch between root nodes and all nodes
 $objViewAllLink =& $this->newObject('link', 'htmlelements');
-if($viewType == 'root')
-{
+if($viewType == 'root') {
     $objViewAllLink->link = $this->objLanguage->languageText('mod_cmsadmin_viewsummaryallsections', 'cmsadmin');
     $objViewAllLink->href = $this->uri(array('action' => 'sections', 'viewType' => 'all'), 'cmsadmin');
-} else
-{
+} else {
     $objViewAllLink->link = $this->objLanguage->languageText('mod_cmsadmin_viewrootsectionsonly', 'cmsadmin');
     $objViewAllLink->href = $this->uri(array('action' => 'sections', 'viewType' => 'root'), 'cmsadmin');
 }

@@ -1620,8 +1620,7 @@ class cmsutils extends object
             $table2->endRow();
             //intro input
             $table2->startRow();
-            $table2->addCell($this->objLanguage->languageText('mod_cmsadmin_summary', 'cmsadmin').'/'.
-                             $this->objLanguage->languageText('mod_cmsadmin_introduction', 'cmsadmin').' ('.$this->objLanguage->languageText('word_required').')');
+            $table2->addCell($this->objLanguage->languageText('mod_cmsadmin_summary', 'cmsadmin').'/'.$this->objLanguage->languageText('mod_cmsadmin_introduction', 'cmsadmin').' ('.$this->objLanguage->languageText('word_required').')');
             $table2->endRow();
             $table2->startRow();
             $table2->addCell($introInput->show());
@@ -1630,7 +1629,8 @@ class cmsutils extends object
             $table2->startRow();
             $table2->addCell($button->show());
             $table2->endRow();
-            $objForm->addToForm($table2);
+            //Add table to the form
+            $objForm->addToForm($table2->show());
             //Add content to the output layer
             $middleColumnContent = "";
             $middleColumnContent .= $h3->show();
