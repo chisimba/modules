@@ -78,37 +78,39 @@
     	// Calculate # of emails and # of unread emails.
     	$count = 0;
     	$unread = 0;
-    	foreach ($emails as $email) {
-    		$count++;
-    		if ($email['read_email']!='1') {
-    			$unread++;
-    		}
-    	}
-    	// Calculate upper bound.
-    	if ($count < 5) {
-    		$to = $count;
-    	}
-    	else {
-    	    $to = 5;
-    	}
-    	// Display emails.
-        if ($count > 0) {
-        	echo
-                "1 "
-                .$objLanguage->languageText('word_to')
-                ." "
-                .$to
-                ." "
-                .$objLanguage->languageText('word_of')
-                ." "
-                .$count
-                ." "
-                .$objLanguage->languageText('word_messages')
-                ." ("
-                .$unread
-                ." "
-                .$objLanguage->languageText('word_unread')
-                .")";
+        if($emails != FALSE){
+            foreach ($emails as $email) {
+                $count++;
+                if ($email['read_email']!='1') {
+                    $unread++;
+                }
+            }
+            // Calculate upper bound.
+            if ($count < 5) {
+                $to = $count;
+            }
+            else {
+                $to = 5;
+            }
+            // Display emails.
+            if ($count > 0) {
+                echo
+                    "1 "
+                    .$objLanguage->languageText('word_to')
+                    ." "
+                    .$to
+                    ." "
+                    .$objLanguage->languageText('word_of')
+                    ." "
+                    .$count
+                    ." "
+                    .$objLanguage->languageText('word_messages')
+                    ." ("
+                    .$unread
+                    ." "
+                    .$objLanguage->languageText('word_unread')
+                    .")";
+            }
         }
         $table =& $this->newObject("htmltable","htmlelements");
         $table->border = 0;
