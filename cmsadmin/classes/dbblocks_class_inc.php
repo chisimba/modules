@@ -350,7 +350,7 @@ class dbblocks extends dbTable
                 }
                 $checkbox = new checkbox($blockId, $blockName, $checked);
 
-                $boxes .= $blockName.'&nbsp;'.$checkbox->show().'&nbsp;'.'&nbsp;';
+                $boxes .= $checkbox->show().'&nbsp;'.$blockName.'&nbsp;'.'&nbsp;';
             }
 
             //Create submit button
