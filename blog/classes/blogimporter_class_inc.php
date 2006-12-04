@@ -140,6 +140,11 @@ class blogimporter extends object
 		//set up the query to check userid and username
 		$fil1 = "SELECT * FROM tbl_users WHERE username = '$username'";
 		$res1 = $this->objDb->query($fil1);
+		if(PEAR::isError($res1))
+		{
+			throw new customException($res1->getMessage());
+			die();
+		}
 		$ures = $res1->fetchAll(MDB2_FETCHMODE_ASSOC);
 
 		$fname = $ures[0]['firstname'] . " " . $ures[0]['surname'];
