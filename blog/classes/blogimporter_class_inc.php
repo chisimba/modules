@@ -75,7 +75,7 @@ class blogimporter extends object
 				return $this->dsn;
 				break;
 			case 'elearn':
-				$this->dsn = NULL;
+				$this->dsn = 'mysql://reader:reader@172.16.203.210/nextgen';
 				return $this->dsn;
 				break;
 		}
