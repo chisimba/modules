@@ -526,10 +526,14 @@ class blog extends controller
 				}
 
 				break;
-
+		
 			case 'feed':
+				//print_r($this->getParam('mydropdown'));
 				//get the feed format parameter from the querystring
-				$format = $this->getParam('format');
+				
+				$format = $this->getParam('mydropdown');
+				//$format = $this->getParam('mydropdown');
+				
 				//and the userid of the blog we are interested in
 				$userid = $this->getParam('userid');
 
@@ -549,6 +553,7 @@ class blog extends controller
 				$feedLink = htmlentities($feedLink);
 				//set up the url
 				$feedURL = $this->objConfig->getSiteRoot() . "index.php?module=blog&userid=" . $userid . "action=feed&format=" . $format;
+				//print_r($feedURL);
 				$feedURL = htmlentities($feedURL);
 				//set up the feed
 				$this->objFeedCreator->setupFeed(TRUE,$feedtitle, $feedDescription, $feedLink, $feedURL);
@@ -570,7 +575,8 @@ class blog extends controller
 				//check which format was chosen and output according to that
 				switch ($format) {
 					case 'rss2':
-						$feed = $this->objFeedCreator->output(); //defaults to RSS2.0
+						
+						$feed = $this->objFeedCreator->output('RSS 2.0'); //defaults to RSS2.0
 						break;
 					case 'rss091':
 						$feed = $this->objFeedCreator->output('RSS0.91');
@@ -757,7 +763,13 @@ class blog extends controller
 				}
 				break;
 
-
+			 case "add":
+         		     	$this->objIcon = &$this->getObject('geticon', 'htmlelements');
+				$edIcon = $this->objIcon->getEditIcon($this->uri(array('action' => 'postedit', 'id' => $post['id'], 'module' => 'blog')));
+				$commentLink = $this->objComments->addCommentLink($type = NULL);
+                		return "input_tpl.php";
+               			 break;
+			
 
 			case 'postadd':
 				if($this->objUser->isLoggedIn() == FALSE)
