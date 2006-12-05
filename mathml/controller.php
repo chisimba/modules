@@ -39,7 +39,7 @@ class mathml extends controller
         //Create an instance of the language object
         $this->objLanguage = &$this->getObject("language", "language");
         //get the mathml parser class
-        $this->objMaths = $this->getObject("mathmlparser");
+        $this->objMaths = $this->getObject("mathmlparser","mathml");
         
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');

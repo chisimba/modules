@@ -38,393 +38,20 @@
  *
 ****/
 
-class XMLNode
-{
-	// Private variables
-	var $_id;
-	var $_name;
-	var $_content;
-	var $_mt_elem_flg;
-	var $_attr_arr;
-	var $_child_arr;
-	var $_nmspc;
-	var $_nmspc_alias;
-	var $_parent_id;
-	var $_parent_node;
-	
-	function & XMLNode($id = NULL)
-	{
-		$this->_id = isset($id) ? $id : md5(uniqid(rand(),1));
-		$this->_name = '';
-		$this->_content = '';
-		$this->_mt_elem_flg = FALSE;
-		$this->_attr_arr = array();
-		$this->_child_arr = array();
-		$this->_nmspc = '';
-		$this->_nmspc_alias = '';
-		$this->_parent_id = FALSE;
-		$this->_parent_node = NULL;
-	}
-	
-	function addChild(&$node)
-	{
-		$this->_child_arr[$node->getId()] =& $node;
-		$node->setParentId($this->_id);
-		$node->setParentNode($this);
-	}
-	
-	function addChildArr(&$node_arr)
-	{
-		$key_arr = array_keys($node_arr);
-		$num_key = count($key_arr);
-		
-		for ($i = 0; $i < $num_key; $i++) {
-			$node =& $node_arr[$key_arr[$i]];
-			$this->addChild($node);
-		}
-	}
-	
-	function insertChildBefore($idx,&$node)
-	{
-		$key_arr = array_keys($this->_child_arr);
-		$num_key = count($key_arr);
-		$tmp_arr = arry();
-		
-		for ($i = 0;$i < $num_key;$i++) {
-			if ($i == $idx) {
-				$tmp_arr[$node->getId()] =& $node;
-			}
-			$tmp_arr[$key_arr[$i]] =& $this->_child_arr[$key_arr[$i]];
-		}
-		$this->_child_arr =& $tmp_arr;
-	}
-	
-	function insertChildAfter($idx,&$node)
-	{
-		$key_arr = array_keys($this->_child_arr);
-		$num_key = count($key_arr);
-		$tmp_arr = arry();
-		
-		for ($i = 0;$i < $num_key;$i++) {
-			$tmp_arr[$key_arr[$i]] =& $this->_child_arr[$key_arr[$i]];
-			if ($i == $idx) {
-				$tmp_arr[$node->getId()] =& $node;
-			}
-		}
-		$this->_child_arr =& $tmp_arr;
-	}
-	
-	function setId($id)
-	{
-		$this->_id = $id;
-	}
-	
-	function setName($name)
-	{
-		$this->_name = $name;
-	}
-	
-	function setNamepace($nmspc)
-	{
-		$this->_nmspc = $nmspc;
-	}
-	
-	function setNamespaceAlias($nmspc_alias)
-	{
-		$this->_nmspc_alias = $nmspc_alias;
-	}
-	
-	function setContent($content)
-	{
-		$this->_content = $content;
-	}
-	
-	function setEmptyElem($mt_elem_flg)
-	{
-		$this->_mt_elem_flg = $mt_elem_flg;
-	}
-	
-	function setAttr($attr_nm,$attr_val)
-	{
-		$this->_attr_arr[$attr_nm] = $attr_val;
-	}
-	
-	function setAttrArr($attr_arr)
-	{
-		$this->_attr_arr = $attr_arr;
-	}
-	
-	function setParentId($id)
-	{
-		$this->_parent_id = $id;
-	}
-	
-	function setParentNode(&$node)
-	{
-		$this->_parent_node =& $node;
-	}
-	
-	function getId()
-	{
-		return($this->_id);
-	}
-	
-	function getName()
-	{
-		return($this->_name);
-	}
-	
-	function getNamespace()
-	{
-		return($this->_nmspc);
-	}
-	
-	function getNamespaceAlias()
-	{
-		return($this->_nmspc_alias);
-	}
-	
-	function getContent()
-	{
-		return($this->_content);
-	}
-	
-	function getAttr($attr_nm)
-	{
-		if (isset($this->_attr_arr[$attr_nm])) {
-			return($this->_attr_arr[$attr_nm]);
-		} else {
-			return(NULL);
-		}
-	}
-	
-	function getAttrArr()
-	{
-		return($this->_attr_arr);
-	}
-	
-	function getParentId()
-	{
-		return($this->parent_id);
-	}
-	
-	function & getParentNode()
-	{
-		return($this->_parent_node);
-	}
-	
-	function & getChild($id)
-	{
-		if (isset($this->_child_arr[$id])) {
-			return($this->_child_arr[$id]);
-		} else {
-			return(FALSE);
-		}
-	}
-	
-	function & getFirstChild()
-	{
-		$id_arr = array_keys($this->_child_arr);
-		$num_child = count($id_arr);
-		
-		if ($num_child > 0) {
-			return($this->_child_arr[$id_arr[0]]);
-		} else {
-			return(FALSE);
-		}
-	}
-	
-	function & getLastChild()
-	{
-		$id_arr = array_keys($this->_child_arr);
-		$num_child = count($id_arr);
-		
-		if ($num_child > 0) {
-			return($this->_child_arr[$id_arr[$num_child - 1]]);
-		} else {
-			return(FALSE);
-		}
-	}
-	
-	function & getChildByIdx($idx)
-	{
-		$id_arr = array_keys($this->_child_arr);
-		
-		if (isset($this->_child_arr[$id_arr[$idx]])) {
-			return($this->_child_arr[$id_arr[$idx]]);
-		} else {
-			return(FALSE);
-		}
-	}
-	
-	function getNumChild()
-	{
-		return(count($this->_child_arr));
-	}
-	
-	function removeChild($id)
-	{
-		unset($this->_child_arr[$id]);
-	}
-	
-	function removeChildByIdx($idx)
-	{
-		$key_arr = array_keys($this->_child_arr);
-		unset($this->_child_arr[$key_arr[$idx]]);
-	}
-	
-	function removeFirstChild()
-	{
-		$key_arr = array_keys($this->_child_arr);
-		unset($this->_child_arr[$key_arr[0]]);
-	}
-	
-	function removeLastChild()
-	{
-		$key_arr = array_keys($this->_child_arr);
-		unset($this->_child_arr[$key_arr[count($key_arr)-1]]);
-	}
-	
-	function dumpXML($indent_str = "\t")
-	{
-		$attr_txt = $this->_dumpAttr();
-		$name = $this->_dumpName();
-		$xmlns = $this->_dumpXmlns();
-		$lvl = $this->_getCurrentLevel();
-		$indent = str_pad('',$lvl,$indent_str);
-		
-		if ($this->_mt_elem_flg) {
-			$tag = "$indent<$name$xmlns$attr_txt />";
-			return($tag);
-		} else {
-			$key_arr = array_keys($this->_child_arr);
-			$num_child = count($key_arr);
-			
-			$tag = "$indent<$name$xmlns$attr_txt>$this->_content";
-			
-			for ($i = 0;$i < $num_child;$i++) {
-				$node =& $this->_child_arr[$key_arr[$i]];
-				
-				$child_txt = $node->dumpXML($indent_str);
-				$tag .= "\n$child_txt";
-			}
-			
-			$tag .= ($num_child > 0 ? "\n$indent</$name>" : "</$name>");
-			return($tag);
-		}
-	}
-	
-	function _dumpAttr()
-	{
-		$id_arr = array_keys($this->_attr_arr);
-		$id_arr_cnt = count($id_arr);
-		$attr_txt = '';
-		
-		for($i = 0;$i < $id_arr_cnt;$i++) {
-			$key = $id_arr[$i];
-			$attr_txt .= " $key=\"{$this->_attr_arr[$key]}\"";
-		}
-		
-		return($attr_txt);
-	}
-	
-	function _dumpName()
-	{
-		$alias = $this->getNamespaceAlias();
-		if ($alias == '') {
-			return($this->getName());
-		} else {
-			return("$alias:" . $this->getName());
-		}
-	}
-	
-	function _dumpXmlns()
-	{
-		$nmspc = $this->getNamespace();
-		$alias = $this->getNamespaceAlias();
-		
-		if ($nmspc != '') {
-			if ($alias == '') {
-				return(" xmlns=\"" . $nmspc . "\"");
-			} else {
-				return(" xmlns:$alias=\"" . $nmspc . "\"");
-			}
-		} else {
-			return('');
-		}
-	}
-	
-	function _getCurrentLevel()
-	{
-		if ($this->_parent_id === FALSE) {
-			return(0);
-		} else {
-			$node =& $this->getParentNode();
-			$lvl = $node->_getCurrentLevel();
-			$lvl++;
-			return($lvl);
-		}
-	}
-}
-
-class MathMLNode extends XMLNode
-{
-	function & MathMLNode($id = NULL)
-	{
-		parent::XMLNode($id);
-	}
-	
-	function removeBrackets()
-	{
-		if ($this->_name == 'mrow') {
-			if ($c_node_0 =& $this->getFirstChild()) {
-				$c_node_0->isLeftBracket() ? $this->removeFirstChild() : 0;
-			}
-			
-			if ($c_node_0 =& $this->getLastChild()) {
-				$c_node_0->isRightBracket() ? $this->removeLastChild() : 0;
-			}
-		}
-	}
-	
-	function isLeftBracket()
-	{
-		switch ($this->_content) {
-			case '{':
-			case '[':
-			case '(':
-				return(TRUE);
-				break;
-		}
-		return(FALSE);
-	}
-	
-	function isRightBracket()
-	{
-		switch ($this->_content) {
-			case '}':
-			case ']':
-			case ')':
-				return(TRUE);
-				break;
-		}
-		return(FALSE);
-	}
-}
 
 class asciimathphp
 {
-	var $_expr;
-	var $_curr_expr;
-	var $_prev_expr;
-	var $_symbol_arr;
-	var $_node_arr;
-	var $_node_cntr;
+	public $_expr;
+	public $_curr_expr;
+	public $_prev_expr;
+	public $_symbol_arr;
+	public $_node_arr;
+	public $_node_cntr;
 	
-	function init()
+	public function init()
 	{
 	}
-	function asciimathphp($symbol_arr,$expr = NULL)
+	public function asciimathphp($symbol_arr,$expr = NULL)
 	{
 		$this->_symbol_arr = $symbol_arr;
 		if (isset($expr)) {
@@ -432,12 +59,12 @@ class asciimathphp
 		}
 	}
 	
-	function pushExpr($prefix) // 2005-06-11 wes
+	public function pushExpr($prefix) // 2005-06-11 wes
 	{
 		$this->_curr_expr = $prefix . $this->_curr_expr;
 	}
 
-	function setExpr($expr)
+	public function setExpr($expr)
 	{
 		$this->_expr = $expr;
 		$this->_curr_expr = $expr;
@@ -447,25 +74,26 @@ class asciimathphp
 		$this->_node_cntr = 0;
 	}
 	
-	function genMathML($attr_arr = NULL)
+	public function genMathML($attr_arr = NULL)
 	{
 		// <math> node
 		$node_0 =& $this->createNode();
+
 		$node_0->setName('math');
 		$node_0->setNamepace('http://www.w3.org/1998/Math/MathML');
-		
+	
 		// <mstyle> node
 		if (isset($attr_arr)) {
-			$node_1 =& $this->createNode();
+			$node_1 = $this->createNode();
 			$node_1->setName('mstyle');
 			$node_1->setAttrArr($attr_arr);
 			
-			$node_arr =& $this->parseExpr();
+			$node_arr = $this->parseExpr();
 			
 			$node_1->addChildArr($node_arr);
 			$node_0->addChild($node_1);
 		} else {
-			$node_arr =& $this->parseExpr();
+			$node_arr = $this->parseExpr();
 			$node_0->addChildArr($node_arr);
 		}
 		
@@ -495,7 +123,7 @@ class asciimathphp
 	}
 	*/
 	
-	function & parseExpr()
+	public function parseExpr()
 	{
 		// Child/Fragment array
 		$node_arr = array();
@@ -503,13 +131,13 @@ class asciimathphp
 		// Deal whole expressions like 'ax + by + c = 0' etc.
 		do {
 			$sym_0 = $this->getSymbol();
-			$node_0 =& $this->parseSmplExpr();
+			$node_0 = $this->parseSmplExpr();
 			$sym = $this->getSymbol();
 			// var_dump($sym);
 			
 			if (isset($sym['infix'])) {
 				$this->chopExpr($sym['symlen']);
-				$node_1 =& $this->parseSmplExpr();
+				$node_1 = $this->parseSmplExpr();
 
 				if ($node_1 === FALSE) {
 					continue;
@@ -529,22 +157,22 @@ class asciimathphp
 					// If 'sup' -- superscript
 					if ($sym_1['input'] == '^') { 
 						$this->chopExpr($sym_1['symlen']);
-						$node_2 =& $this->parseSmplExpr();
+						$node_2 = $this->parseSmplExpr();
 						$node_2->removeBrackets();
 						
-						$node_3 =& $this->createNode();
+						$node_3 = $this->createNode();
 						$node_3->setName(isset($sym_0['underover']) ? 'munderover' : 'msubsup');
 						$node_3->addChild($node_0);
 						$node_3->addChild($node_1);
 						$node_3->addChild($node_2);
 						
-						$node_4 =& $this->createNode();
+						$node_4 = $this->createNode();
 						$node_4->setName('mrow');
 						$node_4->addChild($node_3);
 						
-						$node_arr[$node_4->getId()] =& $node_4;
+						$node_arr[$node_4->getId()] = $node_4;
 					} else {
-						$node_2 =& $this->createNode();
+						$node_2 = $this->createNode();
 						$node_2->setName(isset($sym_0['underover']) ? 'munder' : 'msub');
 						$node_2->addChild($node_0);
 						$node_2->addChild($node_1);
@@ -552,7 +180,7 @@ class asciimathphp
 						$node_arr[$node_2->getId()] =& $node_2;
 					}
 				} else {
-					$node_2 =& $this->createNode();
+					$node_2 = $this->createNode();
 					$node_2->setName($sym['tag']);
 					$node_2->addChild($node_0);
 					$node_2->addChild($node_1);
@@ -561,7 +189,7 @@ class asciimathphp
 				}
 				
 			} elseif ($node_0 !== FALSE) {
-				$node_arr[$node_0->getId()] =& $node_0;
+				$node_arr[$node_0->getId()] = $node_0;
 			}
 		} while (!isset($sym['right_bracket']) && $sym !== FALSE && $sym['output'] != '');
 		
@@ -572,8 +200,8 @@ class asciimathphp
 			$key_node_arr = array_keys($node_arr);
 			
 			if ($node_cnt > 1) {
-				$node_5 =& $node_arr[$key_node_arr[$node_cnt-1]];
-				$node_6 =& $node_arr[$key_node_arr[$node_cnt-2]];
+				$node_5 = $node_arr[$key_node_arr[$node_cnt-1]];
+				$node_6 = $node_arr[$key_node_arr[$node_cnt-2]];
 			} else {
 				$node_5 = FALSE;
 				$node_6 = FALSE;
@@ -587,7 +215,7 @@ class asciimathphp
 				$node_6->getContent() == ',') {
 				
 				// Checking if Node 5 has a LastChild
-				if ($node_7 =& $node_5->getLastChild()) {
+				if ($node_7 = $node_5->getLastChild()) {
 					$node_7_cntnt = $node_7->getContent();
 				} else {
 					$node_7_cntnt = FALSE;
@@ -597,7 +225,7 @@ class asciimathphp
 				if ($node_7 !== FALSE && ($node_7_cntnt == ']' || $node_7_cntnt == ')')) {
 					
 					// Checking if Node 5 has a firstChild
-					if ($node_8 =& $node_5->getFirstChild()) {
+					if ($node_8 = $node_5->getFirstChild()) {
 						$node_8_cntnt = $node_8->getContent();
 					} else {
 						$node_8_cntnt = FALSE;
@@ -614,22 +242,22 @@ class asciimathphp
 						$i = 0;
 						
 						while ($i < $node_cnt && $is_mtrx_flg) {
-							$tmp_node =& $node_arr[$key_node_arr[$i]];
+							$tmp_node = $node_arr[$key_node_arr[$i]];
 							
-							if($tmp_node_first =& $tmp_node->getFirstChild()) {
+							if($tmp_node_first = $tmp_node->getFirstChild()) {
 								$tnfc = $tmp_node_first->getContent();
 							} else {
 								$tnfc = FALSE;
 							}
 							
-							if($tmp_node_last =& $tmp_node->getLastChild()) {
+							if($tmp_node_last = $tmp_node->getLastChild()) {
 								$tnlc = $tmp_node_last->getContent();
 							} else {
 								$tnlc = FALSE;
 							}
 							
 							if (isset($key_node_arr[$i+1])) {
-								$next_tmp_node =& $node_arr[$key_node_arr[$i+1]];
+								$next_tmp_node = $node_arr[$key_node_arr[$i+1]];
 								$ntnn = $next_tmp_node->getName();
 								$ntnc = $next_tmp_node->getContent();
 							} else {
@@ -646,7 +274,7 @@ class asciimathphp
 
 							if ($is_mtrx_flg) {
 								for ($j = 0;$j < $tmp_node->getNumChild();$j++) {
-									$tmp_c_node =& $tmp_node->getChildByIdx($j);
+									$tmp_c_node = $tmp_node->getChildByIdx($j);
 									
 									if ($tmp_c_node->getContent() == ',') {
 										$comma_pos_arr[$i][] = $j;
@@ -687,28 +315,28 @@ class asciimathphp
 										
 										$tmp_node->removeFirstChild();
 										
-										$tmp_c_node =& $this->createNode();
+										$tmp_c_node = $this->createNode();
 										$tmp_c_node->setName('mtd');
 										$tmp_c_node->addChildArr($row_frag_node_arr);
 										$row_frag_node_arr = array();
 										
-										$row_node_arr[$tmp_c_node->getId()] =& $tmp_c_node;
+										$row_node_arr[$tmp_c_node->getId()] = $tmp_c_node;
 										
 										$k++;
 									} else {
 										
-										if ($tmp_c_node =& $tmp_node->getFirstChild()) {
-											$row_frag_node_arr[$tmp_c_node->getId()] =& $tmp_c_node;
+										if ($tmp_c_node = $tmp_node->getFirstChild()) {
+											$row_frag_node_arr[$tmp_c_node->getId()] = $tmp_c_node;
 											$tmp_node->removeFirstChild();
 										}
 									}
 								}
 								
-								$tmp_c_node =& $this->createNode();
+								$tmp_c_node = $this->createNode();
 								$tmp_c_node->setName('mtd');
 								$tmp_c_node->addChildArr($row_frag_node_arr);
 								
-								$row_node_arr[$tmp_c_node->getId()] =& $tmp_c_node;
+								$row_node_arr[$tmp_c_node->getId()] = $tmp_c_node;
 								
 								if (count($node_arr) > 2) {
 									$tmp_key_node_arr = array_keys($node_arr);
@@ -716,14 +344,14 @@ class asciimathphp
 									unset($node_arr[$tmp_key_node_arr[1]]);
 								}
 								
-								$tmp_c_node =& $this->createNode();
+								$tmp_c_node = $this->createNode();
 								$tmp_c_node->setName('mtr');
 								$tmp_c_node->addChildArr($row_node_arr);
 								
-								$tab_node_arr[$tmp_c_node->getId()] =& $tmp_c_node;
+								$tab_node_arr[$tmp_c_node->getId()] = $tmp_c_node;
 							}
 							
-							$tmp_c_node =& $this->createNode();
+							$tmp_c_node = $this->createNode();
 							$tmp_c_node->setName('mtable');
 							$tmp_c_node->addChildArr($tab_node_arr);
 							
@@ -745,14 +373,14 @@ class asciimathphp
 				$node_7 =& $this->createNode();
 				$node_7->setName('mo');
 				$node_7->setContent($sym['output']);
-				$node_arr[$node_7->getId()] =& $node_7;
+				$node_arr[$node_7->getId()] = $node_7;
 			}
 		}
 		
 		return($node_arr);
 	}
 	
-	function & parseSmplExpr()
+	public function parseSmplExpr()
 	{
 		$sym = $this->getSymbol();
 		
@@ -773,17 +401,17 @@ class asciimathphp
 			$node_arr =& $this->parseExpr();
 			
 			if (isset($sym['invisible'])) {
-				$node_0 =& $this->createNode();
+				$node_0 = $this->createNode();
 				$node_0->setName('mrow');
 				$node_0->addChildArr($node_arr);
 				
 				return($node_0);
 			} else {
-				$node_0 =& $this->createNode();
+				$node_0 = $this->createNode();
 				$node_0->setName('mo');
 				$node_0->setContent($sym['output']);
 				
-				$node_1 =& $this->createNode();
+				$node_1 = $this->createNode();
 				$node_1->setName('mrow');
 				$node_1->addChild($node_0);
 				$node_1->addChildArr($node_arr);
@@ -793,10 +421,10 @@ class asciimathphp
 		} elseif (isset($sym['unary'])) {
 			
 			if ($sym['input'] == 'sqrt') {
-				$node_0 =& $this->parseSmplExpr();
+				$node_0 = $this->parseSmplExpr();
 				$node_0->removeBrackets();
 				
-				$node_1 =& $this->createNode();
+				$node_1 = $this->createNode();
 				$node_1->setName($sym['tag']);
 				$node_1->addChild($node_0);
 				
@@ -822,26 +450,26 @@ class asciimathphp
 				$txt = substr($expr,1,strpos($expr,$end_brckt)-1);
 				$len = strlen($txt);
 				
-				$node_0 =& $this->createNode();
+				$node_0 = $this->createNode();
 				$node_0->setName('mrow');
 				
 				if ($len > 0) {
 					if ($txt{0} == " ") {
-						$node_1 =& $this->createNode();
+						$node_1 = $this->createNode();
 						$node_1->setName('mspace');
 						$node_1->setAttr('width','1ex');
 						
 						$node_0->addChild($node_1);
 					}
 					
-					$node_3 =& $this->createNode();
+					$node_3 = $this->createNode();
 					$node_3->setName($sym['tag']);
 					$node_3->setContent(trim($txt));
 					
 					$node_0->addChild($node_3);
 					
 					if ($len > 1 && $txt{$len-1} == " ") {
-						$node_2 =& $this->createNode();
+						$node_2 = $this->createNode();
 						$node_2->setName('mspace');
 						$node_2->setAttr('width','1ex');
 						
@@ -853,14 +481,14 @@ class asciimathphp
 				return($node_0);
 				
 			} elseif (isset($sym['acc'])) {
-				$node_0 =& $this->parseSmplExpr();
+				$node_0 = $this->parseSmplExpr();
 				$node_0->removeBrackets();
 				
-				$node_1 =& $this->createNode();
+				$node_1 = $this->createNode();
 				$node_1->setName($sym['tag']);
 				$node_1->addChild($node_0);
 				
-				$node_2 =& $this->createNode();
+				$node_2 = $this->createNode();
 				$node_2->setName('mo');
 				$node_2->setContent($sym['output']);
 				
@@ -872,45 +500,45 @@ class asciimathphp
 		} elseif (isset($sym['binary'])) {
 			$node_arr = array();
 			
-			$node_0 =& $this->parseSmplExpr();
+			$node_0 = $this->parseSmplExpr();
 			$node_0->removeBrackets();
 			
-			$node_1 =& $this->parseSmplExpr();
+			$node_1 = $this->parseSmplExpr();
 			$node_1->removeBrackets();
 			
                         /* 2005-06-05 wes: added stackrel */
 			if ($sym['input'] == 'root' || $sym['input'] == 'stackrel') {
-				$node_arr[$node_1->getId()] =& $node_1;
-				$node_arr[$node_0->getId()] =& $node_0;
+				$node_arr[$node_1->getId()] = $node_1;
+				$node_arr[$node_0->getId()] = $node_0;
 			} elseif ($sym['input'] == 'frac') {
-				$node_arr[$node_0->getId()] =& $node_0;
-				$node_arr[$node_1->getId()] =& $node_1;
+				$node_arr[$node_0->getId()] = $node_0;
+				$node_arr[$node_1->getId()] = $node_1;
 			}
 			
-			$node_2 =& $this->createNode();
+			$node_2 = $this->createNode();
 			$node_2->setName($sym['tag']);
 			$node_2->addChildArr($node_arr);
 			
 			return($node_2);
 		} elseif (isset($sym['infix'])) {
-			$node_0 =& $this->createNode();
+			$node_0 = $this->createNode();
 			$node_0->setName('mo');
 			$node_0->setContent($sym['output']);
 			
 			return($node_0);
 		} elseif (isset($sym['space'])) {
-			$node_0 =& $this->createNode();
+			$node_0 = $this->createNode();
 			$node_0->setName('mrow');
 			
-			$node_1 =& $this->createNode();
+			$node_1 = $this->createNode();
 			$node_1->setName('mspace');
 			$node_1->setAttr('width',$sym['space']);
 			
-			$node_2 =& $this->createNode();
+			$node_2 = $this->createNode();
 			$node_2->setName($sym['tag']);
 			$node_2->setContent($sym['output']);
 			
-			$node_3 =& $this->createNode();
+			$node_3 = $this->createNode();
 			$node_3->setName('mspace');
 			$node_3->setAttr('width',$sym['space']);
 			
@@ -922,7 +550,7 @@ class asciimathphp
 		} else {
 			
 			// A constant
-			$node_0 =& $this->createNode();
+			$node_0 = $this->createNode();
 			$node_0->setName($sym['tag']);
 			$node_0->setContent($sym['output']);
 			return($node_0);
@@ -931,39 +559,39 @@ class asciimathphp
 		return(FALSE);
 	}
 	
-	function getMathML()
+	public function getMathML()
 	{
-		$root = & $this->_node_arr[0];
+		$root = $this->_node_arr[0];
 		//print_r($root);
 
 		return($root->dumpXML());
 	}
 	
-	function getCurrExpr()
+	public function getCurrExpr()
 	{
 		return($this->_curr_expr);
 	}
 	
-	function getExpr()
+	public function getExpr()
 	{
 		return($this->_expr);
 	}
 	
-	function getPrevExpr()
+	public function getPrevExpr()
 	{
 		return($this->_prev_expr);
 	}
 	
-	function & createNode()
+	public function createNode()
 	{
-		$node =& new MathMLNode($this->_node_cntr);
+		$node = new MathMLNode($this->_node_cntr);
 		// $node->setNamespaceAlias('m');
 		$this->_node_arr[$this->_node_cntr] =& $node;
 		$this->_node_cntr++;
 		return($node);
 	}
 	
-	function getSymbol($chop_flg = FALSE)
+	public function getSymbol($chop_flg = FALSE)
 	{
 		$chr_cnt = strlen($this->_curr_expr);
 		
@@ -1017,7 +645,7 @@ class asciimathphp
 		}
 	}
 	
-	function chopExpr($strlen)
+	public function chopExpr($strlen)
 	{
 		$this->_prev_expr = $this->_curr_expr;
 		

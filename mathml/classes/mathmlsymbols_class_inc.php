@@ -20,7 +20,7 @@ class mathmlsymbols /*extends object */
 
 {
 
-	function init()
+	public function init()
 
 	{
 
@@ -36,7 +36,7 @@ class mathmlsymbols /*extends object */
 
  	 */
 
-	function symbols()
+	public function symbols()
 
 	{
 

@@ -8,14 +8,14 @@ include('asciimathphp_class_inc.php');
  */
 class mathml //extends object
 {
-	function init()
+	public function init()
 	{
 		$this->sym = new mathmlsymbols();
 		$this->ascii_math =& new asciimathphp($this->sym->symbols()); 
 		
 	}
 	
-	function mathmlreturn($expr)
+	public function mathmlreturn($expr)
 	{
 		$this->ascii_math->setExpr($expr); 
 		$this->ascii_math->genMathML();

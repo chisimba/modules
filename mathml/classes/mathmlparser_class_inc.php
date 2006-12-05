@@ -1,6 +1,8 @@
 <?php
 include("mathmlsymbols_class_inc.php");
 include('asciimathphp_class_inc.php');
+include("MathMLNode_class_inc.php");
+
 
 /**
  * Wrapper class for mathml
@@ -9,16 +11,16 @@ include('asciimathphp_class_inc.php');
  */
 class mathmlparser //extends object
 {
-	var $sym;
-	var $ascii_math;
+	public  $sym;
+	public $ascii_math;
 	
 	/**
 	 * Standard init function
 	 */
-	function init()
+	public function init()
 	{
 		$this->sym = new mathmlsymbols();
-		$this->ascii_math =& new asciimathphp($this->sym->symbols()); 
+		$this->ascii_math = new asciimathphp($this->sym->symbols()); 
 		
 	}
 	
@@ -27,10 +29,10 @@ class mathmlparser //extends object
 	 * @param string $expr
 	 * @return string markup
 	 */
-	function mathmlreturn($expr)
+	public function mathmlreturn($expr)
 	{
 		$sym = new mathmlsymbols();
-		$ascii_math =& new asciimathphp($sym->symbols());
+		$ascii_math = new asciimathphp($sym->symbols());
 		$ascii_math->setExpr($expr); 
 		$ascii_math->genMathML();
 		return $ascii_math->getMathML();
