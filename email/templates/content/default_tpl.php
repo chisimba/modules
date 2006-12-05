@@ -23,7 +23,6 @@ $objLink = &$this->newObject('link', 'htmlelements');
 $objFieldset = &$this->newObject('fieldset', 'htmlelements');
 $objLayer = &$this->newObject('layer', 'htmlelements');
 $objInput = &$this->newObject('textinput', 'htmlelements');
-$objIcon = &$this->newObject('geticon', 'htmlelements');
 $objCheck = &$this->newObject('checkbox', 'htmlelements');
 
 // set up language items
