@@ -1,8 +1,6 @@
 <?php
-
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run'])
-{
+if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
@@ -18,7 +16,6 @@ if (!$GLOBALS['kewl_entry_point_run'])
 */
 class popupcalendar extends controller
 {
-
     /**
     * Constructor
     *
@@ -27,8 +24,8 @@ class popupcalendar extends controller
     */
     public function init()
     {
-        $this->datePickajax =& $this->getObject('datepickajax');
-        $this->objLanguage =& $this->getObject('language', 'language');
+        $this->datePickajax = &$this->getObject('datepickajax');
+        $this->objLanguage = &$this->getObject('language', 'language');
     }
 
     /**
@@ -39,17 +36,15 @@ class popupcalendar extends controller
     */
     public function dispatch($action)
     {
-        switch ($action)
-        {
+        switch ($action) {
             default:
-
                 $field = $this->getParam('field', NULL);
                 $date = $this->getParam('date', NULL);
                 $time = $this->getParam('time', NULL);
-                if($date != NULL){
+                if ($date != NULL) {
                     $defaultDate = $date;
-                    if($time != NULL){
-                        $defaultDate .= ' '.$time;
+                    if ($time != NULL) {
+                        $defaultDate.= ' '.$time;
                     }
                     $this->datePickajax->session($field.'_defaultDate', $defaultDate);
                 }
@@ -81,9 +76,8 @@ class popupcalendar extends controller
     */
     public function requiresLogin()
     {
-        $action=$this->getParam('action','NULL');
-        switch ($action)
-        {
+        $action = $this->getParam('action', 'NULL');
+        switch ($action) {
             default:
                 return FALSE;
         }
