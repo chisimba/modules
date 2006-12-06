@@ -463,7 +463,7 @@ class datepickajax extends object
             $min = '00';
             $value = $year.'-'.$mnth.'-'.$day.' '.$hour.':'.$min;
         } else {
-            $value = $this->session($field.'_defaultDate');
+            $value = date("Y-m-d H:i:s", strtotime($this->session($field.'_defaultDate')));
         }
         $this->formStr = $this->getForm($value);
         return $value;
