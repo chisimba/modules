@@ -144,6 +144,13 @@ class blog extends controller
 	public $objComments;
 
 	/**
+	 * Trackback object
+	 *
+	 * @var object
+	 */
+	public $objTB;
+
+	/**
      * Constructor method to instantiate objects and get variables
      *
      * @param void
@@ -526,14 +533,11 @@ class blog extends controller
 				}
 
 				break;
-		
+
 			case 'feed':
-				//print_r($this->getParam('mydropdown'));
 				//get the feed format parameter from the querystring
-				
-				$format = $this->getParam('mydropdown');
-				//$format = $this->getParam('mydropdown');
-				
+				$format = $this->getParam('feedselector');
+
 				//and the userid of the blog we are interested in
 				$userid = $this->getParam('userid');
 
@@ -575,8 +579,7 @@ class blog extends controller
 				//check which format was chosen and output according to that
 				switch ($format) {
 					case 'rss2':
-						
-						$feed = $this->objFeedCreator->output('RSS 2.0'); //defaults to RSS2.0
+						$feed = $this->objFeedCreator->output('RSS2.0'); //defaults to RSS2.0
 						break;
 					case 'rss091':
 						$feed = $this->objFeedCreator->output('RSS0.91');
@@ -769,7 +772,7 @@ class blog extends controller
 				$commentLink = $this->objComments->addCommentLink($type = NULL);
                 		return "input_tpl.php";
                			 break;
-			
+
 
 			case 'postadd':
 				if($this->objUser->isLoggedIn() == FALSE)
@@ -900,7 +903,20 @@ class blog extends controller
 				print $this->objTC->buildCloud($tagarray);
 				break;
 
-		}
+			case 'trackback':
+				$this->objTB = $this->getObject("trackback");
+				$blog_name = $this->objUser->fullname($this->objUser->userId()) . " Chisimba blog";
+				$author = $this->objUser->fullname($this->objUser->userId());
+				$this->objTB->setup($blog_name, $author,"UTF-8");
+				$res = $this->objTB->ping('http://fsiu.uwc.ac.za/kinky/index.php?module=blog&action=viewcomments&blogger=1339050927&blogId=fsiu_server_50', 'http://5ive.uwc.ac.za/index.php?module=blog&action=randblog&userid=5729061010', $title = "some stuff", $excerpt = "testing from chisimba");
+
+				echo $this->objTB->fetch(TRUE, $res);
+      		//var_dump($this->objTB);
+
+
+      		break;
+
+		}//action
 
 	}
 

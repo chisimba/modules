@@ -40,16 +40,6 @@ class blogops extends object
 
 	}
 
-	public function catDelForm()
-	{
-
-	}
-
-	public function postDelForm()
-	{
-
-	}
-
 	public function commentAddForm()
 	{
 
@@ -513,18 +503,18 @@ class blogops extends object
 				{
 					$this->objIcon = &$this->getObject('geticon', 'htmlelements');
 					$edIcon = $this->objIcon->getEditIcon($this->uri(array('action' => 'postedit', 'id' => $post['id'], 'module' => 'blog')));
-					
-                			
+
+
 					$commentLink = $this->objComments->addCommentLink($type = NULL);
-					
-					               		
-                			
+
+
+
             				//Set the table name
-            					
-            		
+
+
 					$tbl = $this->newObject('htmltable', 'htmlelements');
 					$tbl->cellpadding = 3;
-					
+
 					//set up the header row
 					$tbl->startHeaderRow();
 					$tbl->addHeaderCell(''); //edit
@@ -562,69 +552,65 @@ class blogops extends object
 	 */
 	public function showFeeds($userid, $featurebox = FALSE)
 	{
-
-	  $this->loadClass('dropdown','htmlelements');
- 	  $dropdown =& new dropdown('mydropdown');
-		
-       		
+		$this->loadClass('dropdown','htmlelements');
+		$dropdown =& new dropdown('feedselector');
 
 		$rss2 = $this->objLanguage->languageText("mod_blog_word_rss2", "blog");
 		$dropdown->addOption('rss2',$rss2);
+
 		$rss091 = $this->objLanguage->languageText("mod_blog_word_rss091", "blog");
- 	 	$dropdown->addOption('rss091',$rss091);
+		$dropdown->addOption('rss091',$rss091);
+
 		$rss1 = $this->objLanguage->languageText("mod_blog_word_rss1", "blog");
-	 	$dropdown->addOption('rss1',$rss1);
+		$dropdown->addOption('rss1',$rss1);
+
 		$pie = $this->objLanguage->languageText("mod_blog_word_pie", "blog");
 		$dropdown->addOption('pie',$pie);
+
 		$mbox = $this->objLanguage->languageText("mod_blog_word_mbox", "blog");
- 	        $dropdown->addOption('mbox',$mbox);
+		$dropdown->addOption('mbox',$mbox);
+
 		$opml = $this->objLanguage->languageText("mod_blog_word_opml", "blog");
 		$dropdown->addOption('opml',$opml);
+
 		$atom = $this->objLanguage->languageText("mod_blog_word_atom", "blog");
 		$dropdown->addOption('atom',$atom);
+
 		$html = $this->objLanguage->languageText("mod_blog_word_html", "blog");
 		$dropdown->addOption('html',$html);
 
 		$this->loadClass('button','htmlelements');
 
-		
-		 $this->objButton = &new button($this->objLanguage->languageText('word_show', 'blog'));
-	        $this->objButton->setValue($this->objLanguage->languageText('word_show', 'blog'));
+		$this->objButton = &new button($this->objLanguage->languageText('word_show', 'blog'));
+		$this->objButton->setValue($this->objLanguage->languageText('word_show', 'blog'));
 		$this->objButton->setToSubmit();
-		
-	  
+
 		$this->objUser = $this->getObject('user', 'security');
 		$leftCol = NULL;
 		if($featurebox == FALSE)
 		{
 			$leftCol .= "<em>" . $this->objLanguage->languageText("mod_blog_feedheader", "blog") . "</em><br />";
 		}
-		
-	$leftCol .= $dropdown->show() . "<br />";
-	$leftCol .= $this->objButton->show() . "<br />";
-		
-		
+
+		$leftCol .= $dropdown->show() . "<br />";
+		$leftCol .= $this->objButton->show() . "<br />";
+
 		if($featurebox == FALSE)
 		{
 			return $leftCol;
 		}
 		else {
-			
+
 			$objFeatureBox = $this->getObject('featurebox', 'navigation');
-			
+
 			$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_feedheader",'blog' ), $leftCol);
-			//print_r($_POST); 
-			//creating form 
-			$form = new form('formname', $this->uri(array('action' => 'feed' , 'format'=>$this->getParam('mydropdown') , 'userid'=>$userid)));
+			//creating form
+			$form = new form('formname', $this->uri(array('action' => 'feed', 'userid'=>$userid)));
 			$form->addToForm($ret);
 
 			return $form->show();
 		}
-
-
 	}
-		
-	
 
 	/**
 	 * Method to quickly add a category to the default category (parent = 0)
