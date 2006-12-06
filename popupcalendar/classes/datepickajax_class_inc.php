@@ -83,6 +83,7 @@ class datepickajax extends object
         $this->objForm =& $this->getObject('form', 'htmlelements');
         $this->objInput =& $this->getObject('textinput', 'htmlelements');
         $this->objDrop =& $this->getObject('dropdown', 'htmlelements');
+        $this->objButton =& $this->getObject('button', 'htmlelements');
     }
 
     /**
@@ -205,13 +206,18 @@ class datepickajax extends object
     * @param bool $showTime Determines whether to display the time.
     * @return The form
     */
-    private function getForm($field, $date, $showTime = TRUE)
+    private function getForm($date)
     {
         $save = $this->objLanguage->languageText('word_save');
 
+        $field = $this->session('field');
         $arrDate = explode(' ', $date);
 
         $this->objForm = new form('select', $this->uri(array('action'=>'')));
+
+        $this->objInput = new textinput('field', $field);
+        $this->objInput->fldType = 'hidden';
+        $this->objForm->addToForm($this->objInput->show());
 
         $this->objInput = new textinput('date', $arrDate[0]);
         $this->objInput->fldType = 'hidden';
@@ -219,6 +225,7 @@ class datepickajax extends object
 
         $timeValue = '';
 
+        $showTime = $this->session($field.'_showTime');
         if($showTime){
             $this->objInput = new textinput('time', $arrDate[1]);
             $this->objInput->fldType = 'hidden';
@@ -227,12 +234,17 @@ class datepickajax extends object
             $timeValue = "+' '+document.getElementById('input_time').value";
         }
 
-        $onclick = "javascript:window.opener.document.getElementById('input_".$field."').value = document.getElementById('input_date').value".$timeValue."; window.close()";
-
+        $onclick = "javascript:window.opener.document.getElementById('input_".$field."').value = document.getElementById('input_date').value".$timeValue."; document.getElementById('form_select').submit(); window.close();";
+/*
         $this->objLink = new link('#');
         $this->objLink->extra = "onclick=\"$onclick\"";
         $this->objLink->link = $save;
         $this->objForm->addToForm($this->objLink->show());
+*/
+        $this->objButton = new button('save', $save);
+        $this->objButton->extra = " onclick=\"$onclick\"";
+        $saveButton = $this->objButton->show();
+        $this->objForm->addToForm($saveButton);
 
         return $this->objForm->show();
     }
@@ -328,7 +340,9 @@ class datepickajax extends object
         $prev = $this->getPrevious($day, $mnth, $year);
         $smallMonths = $this->getAllMonths($day, $mnth, $year);
 
-        if($this->showMonths){
+        $field = $this->session('field');
+        $showMonths = $this->session($field.'_showMonths');
+        if($showMonths){
             $this->objTable->startRow();
             $this->objTable->addCell($smallMonths, '', '', 'center', 'even', ' colspan="3"');
             $this->objTable->endRow();
@@ -422,6 +436,14 @@ class datepickajax extends object
     {
         $objResponse = new xajaxResponse();
 
+        $field = $this->session('field');
+        $defaultDate = $this->session($field.'_defaultDate');
+        if($defaultDate != NULL){
+            $date = strtotime($defaultDate);
+            $hour = date('H', $date);
+            $min = date('i', $date);
+        }
+
         $time = $this->objLanguage->languageText('mod_popupcalendar_time','popupcalendar');
         $timeStr = '<b>'.$time.':</b>&#160;&#160;';
 
@@ -472,31 +494,36 @@ class datepickajax extends object
         $showtime = $this->getParam('showtime', FALSE);
         $showmonths = $this->getParam('showmonths', FALSE);
 
+        $this->session('field', $field);
+
         if(strtolower($showtime) == 'yes' || strtolower($showtime) == 'true'){
             $showtime = TRUE;
         }else{
             $showtime = FALSE;
         }
-        $this->showTime = $showtime;
+        $this->session($field.'_showTime', $showtime);
 
         if(strtolower($showmonths) == 'yes' || strtolower($showmonths) == 'true'){
             $showmonths = TRUE;
         }else{
             $showmonths = FALSE;
         }
-        $this->showMonths = $showmonths;
+        $this->session($field.'_showMonths', $showmonths);
 
         // initialise starting date
-        if(is_null($value) || $value == 0){
+        $defaultDate = $this->session($field.'_defaultDate');
+        if((is_null($value) || $value == 0) && $defaultDate == NULL){
             $day = date('d');
             $mnth = date('m');
             $year = date('Y');
             $hour = 12;
             $min = '00';
             $value = $year.'-'.$mnth.'-'.$day.' '.$hour.':'.$min;
+        }else{
+            $value = $this->session($field.'_defaultDate');
         }
 
-        $this->formStr = $this->getForm($field, $value, $showtime);
+        $this->formStr = $this->getForm($value);
 
         return $value;
     }
@@ -509,13 +536,15 @@ class datepickajax extends object
     */
     public function showCal()
     {
-        $xajax = new xajax($this->uri(array('action'=>'ajaxcal')));
+        $xajax = new xajax($this->uri(array()));
 
         // Register functions
         $xajax->registerFunction(array($this,"buildCal"));
         $xajax->registerFunction(array($this,"insertDate"));
 
-        if($this->showTime){
+        $field = $this->session('field');
+        $showTime = $this->session($field.'_showTime');
+        if($showTime){
             $xajax->registerFunction(array($this,"buildTime"));
             $xajax->registerFunction(array($this,"insertTime"));
         }
@@ -538,7 +567,9 @@ class datepickajax extends object
 
         $this->buildCal($arrDate[2], $arrDate[1], $arrDate[0]);
 
-        if($this->showTime){
+        $field = $this->session('field');
+        $showTime = $this->session($field.'_showTime');
+        if($showTime){
             $this->buildTime($arrTime[0], $arrTime[1]);
         }
 
@@ -567,24 +598,25 @@ class datepickajax extends object
 
         //set the height of the popup window
         if(strtolower($showTime) == 'no' || strtolower($showTime) == 'false'){
+            $length = 7;
             if(strtolower($showMonths) == 'no' || strtolower($showMonths) == 'false'){
-                $height = 'height=413';
+                $height = 'height=363';
             }else{
-                $height = 'height=433';
+                $height = 'height=383';
             }
         }else{
+            $length = 12;
             if(strtolower($showMonths) == 'no' || strtolower($showMonths) == 'false'){
-                $height = 'height=456';
+                $height = 'height=406';
            }else{
-                $height = 'height=476';
+                $height = 'height=426';
            }
         }
 
-        $this->objInput = new textinput($field,'','','12');
+        $this->objInput = new textinput($field,'','',$length);
         $this->objInput->extra=' readonly="readonly"';
         $dateText=$this->objInput->show();
         $url=$this->uri(array(
-            'action' => 'ajaxcal',
             'field' => $field,
             'fieldvalue' => $defaultDate,
             'showtime' => $showTime,
@@ -598,9 +630,28 @@ class datepickajax extends object
         $this->objLink->extra="onclick=\"$onclick\"";
         $this->objLink->link=$this->objIcon->show();
         $dateLink=$this->objLink->show();
+        $this->objLink->extra = ''; //clear the 'extra' just in case
 
         $str = $dateText.'&#160;'.$dateLink;
         return $str;
+    }
+
+    /**
+    * Method to get and set sessions
+    *
+    * @access public
+    * @param string $session The name of the session
+    * @param value $value The value to set, if no $array given the current session value is returned
+    * @return array $value The value stored in session
+    */
+    public function session($session, $value = NULL)
+    {
+        if($value != NULL){
+            $this->setSession($session, $value);
+        }else{
+            $value = $this->getSession($session);
+            return $value;
+        }
     }
 }
 ?>

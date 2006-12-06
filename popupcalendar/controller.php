@@ -41,8 +41,18 @@ class popupcalendar extends controller
     {
         switch ($action)
         {
-            case 'ajaxcal':
             default:
+
+                $field = $this->getParam('field', NULL);
+                $date = $this->getParam('date', NULL);
+                $time = $this->getParam('time', NULL);
+                if($date != NULL){
+                    $defaultDate = $date;
+                    if($time != NULL){
+                        $defaultDate .= ' '.$time;
+                    }
+                    $this->datePickajax->session($field.'_defaultDate', $defaultDate);
+                }
                 return $this->showAjaxCal();
         }
     }
@@ -74,7 +84,6 @@ class popupcalendar extends controller
         $action=$this->getParam('action','NULL');
         switch ($action)
         {
-            case 'ajaxcal':
             default:
                 return FALSE;
         }

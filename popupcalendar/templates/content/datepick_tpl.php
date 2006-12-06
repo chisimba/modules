@@ -50,6 +50,7 @@ $objLayer->id = 'formDiv';
 $objLayer->align = 'center';
 echo $objLayer->show();
 
+/*
 // Close button
 $objIcon->setIcon('close');
 $objIcon->extra=" onclick='javascript:window.close()'";
@@ -62,5 +63,6 @@ $objLayer->align = 'center';
 $objLayer->padding = '5px';
 $objLayer->width = '280px';
 echo $objLayer->show();
+*/
 ?>
 </div>
