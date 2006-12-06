@@ -904,14 +904,56 @@ class blog extends controller
 				break;
 
 			case 'trackback':
-				$this->objTB = $this->getObject("trackback");
+				$id = 'init_56';
+				$title = "test post";
+				$excerpt = "";
 				$blog_name = $this->objUser->fullname($this->objUser->userId()) . " Chisimba blog";
-				$author = $this->objUser->fullname($this->objUser->userId());
-				$this->objTB->setup($blog_name, $author,"UTF-8");
-				$res = $this->objTB->ping('http://fsiu.uwc.ac.za/kinky/index.php?module=blog&action=viewcomments&blogger=1339050927&blogId=fsiu_server_50', 'http://5ive.uwc.ac.za/index.php?module=blog&action=randblog&userid=5729061010', $title = "some stuff", $excerpt = "testing from chisimba");
+				$url = "http://127.0.0.1/cpgsql/5ive/app/index.php?module=blog";
+				$trackback_url = "http://127.0.0.1/cpgsql/5ive/app/index.php?module=blog&action=tbrecieve";
+				$extra = NULL;
 
-				echo $this->objTB->fetch(TRUE, $res);
-      		//var_dump($this->objTB);
+				$data = array('id' => $id, 'title' => $title, 'excerpt' => $excerpt, 'blog_name' => $blog_name, 'url' => $url, 'trackback_url' => $trackback_url, 'extra' => $extra);
+
+				$options = array(
+			        // Options for Services_Trackback directly
+        			'strictness'        => 1,
+        			'timeout'           => 30,          // seconds
+        			'fetchlines'        => 30,
+        			'fetchextra'        => true,
+        			// Options for HTTP_Request class
+        			'httprequest'       => array(
+            			'allowRedirects'    => true,
+            			'maxRedirects'      => 2,
+            			'method'            => 'GET',
+            			'useragent'         => 'Chisimba',
+            			'proxy_host'        => '192.102.9.33',
+            			'proxy_port'        => '8080',
+            			'proxy_user'        => 'pscott',
+            			'poxy_pass'         => 'monkeys123',
+        			),
+    			);
+
+
+				//$options = array('useragent' => 'Chisimba');
+
+				$this->objTB = $this->getObject("trackback");
+
+				//use the factory
+				$this->objTB->setup($data, $options);
+
+				//var_dump($this->objTB->autodiscCode());
+
+				//set the url to look at
+				//$this->objTB->setVal('url', 'http://schlitt.info/applications/blog/');
+				//var_dump($this->objTB->autoDisc());
+
+				$sendtb = array('title' => 'Chisimba based Trackbacks', 'url' => 'http://127.0.0.1/cpgsql/5ive/app/index.php?module=blog', 'excerpt' => 'some excerpt', 'blog_name' => $blog_name, 'trackback_url' => 'http://haloscan.com/tb/fzelders/1280');
+//'itemId' => 'fsiu_server_49','itemName' => 'fsiu_server_49','trackId' => 'fsiu_server_49',
+				var_dump($this->objTB->sendTB($sendtb));
+
+				//$author = $this->objUser->fullname($this->objUser->userId());
+
+
 
 
       		break;
