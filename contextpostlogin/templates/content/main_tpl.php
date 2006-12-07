@@ -6,7 +6,7 @@ $objLink =  & $this->newObject('link', 'htmlelements');
 $icon =  & $this->newObject('geticon', 'htmlelements');
 $table = & $this->newObject('htmltable', 'htmlelements');
 $domtt = & $this->newObject('domtt', 'htmlelements');
-
+$objContextGroups = & $this->newObject('onlinecount', 'contextgroups');
 
 $str = '';
 $other = '';
@@ -56,7 +56,7 @@ $other = $featureBox->show('Browse Courses', $filter);
 
 if(count($otherCourses) > 0)
 {
-	
+	//set the headings
 	$table->width = '60%';
 	$table->startHeaderRow();
 	$table->addHeaderCell('Code');
@@ -67,14 +67,22 @@ if(count($otherCourses) > 0)
 	
 	$rowcount = 0;
 	
+    //loop through the context
 	foreach($otherCourses as $context)
 	{
-		
+		//set the odd and even rows
 		$oddOrEven = ($rowcount == 0) ? "even" : "odd";
+        
+        //get the lecturers 
 		$lecturers = $this->_objUtils->getContextLecturers($context['contextcode']);
-		$lects = '';
+		
+        //reset the $lects
+        $lects = '';
+        
+        //check if there are lecturers
 		if(is_array($lecturers))
 		{
+            //get their names
 			foreach($lecturers as $lecturer)
 			{
 				$lects .= $lecturer['fullname'].', ';
@@ -88,12 +96,14 @@ if(count($otherCourses) > 0)
 		$content .= '<p>'.$this->_objUtils->getPlugins($context['contextcode']).'</p>';
 		
 		
-		
+		//link to join the context
 		$objLink->href = $this->uri(array('action' => 'joincontext','contextCode'=>$context['contextcode']), 'context');
 		$icon->setIcon('leavecourse');
 		$icon->alt = 'Enter Course '.$context['title'];
 		$objLink->link = $icon->show();
 		
+
+        //check if this user can join this context before showing the link
 		if($this->_objDBContextUtils->canJoin($context['contextcode']))
 		{
 			$config = $objLink->show();
@@ -102,16 +112,20 @@ if(count($otherCourses) > 0)
 			$config = $icon->show();
 		}
 		
+        //setup the information icon
 		$icon->setIcon('info');
 		$icon->alt = '';
+    
+        //formulate the message for the mouseover
 		$mes = '';
 		$mes .= ($context['access'] != '') ?  'Access : <span class="highlight">'.$context['access'].'</span>' : '' ; 
 		$mes .= ($context['startdate'] != '') ? '<br/>Start Date : <span class="highlight">'.$context['startdate'].'</span>'  : '';
 		$mes .= ($context['finishdate'] != '') ? '<br/>Finish Date : <span class="highlight">'.$context['finishdate'].'</span>'  : '';
 		$mes .= ($lects != '') ? '<br/>Lecturers : <span class="highlight">'.$lects.'</span>'  : '';
-		$noStuds = 0;
-		$mes .= '<br />No. Registered Students : <span class="highlight">'.$noStuds.'</span>';
-		
+		$scnt = $objContextGroups->getUserCount($context['contextcode']);
+		$mes .= ($scnt > 0) ? '<br />No. Registered Students : <span class="highlight">'.$scnt.'</span>' : '';
+		$mes = htmlentities($mes);
+
 		$info = $domtt->show(htmlentities($context['title']),$mes,$icon->show());
 		$tableRow = array();
 		
@@ -132,6 +146,7 @@ if(count($otherCourses) > 0)
 }
 
 $tabBox->addTab(array('name'=>'My Courses','content' => $str));
+
 $tabBox->addTab(array('name'=>'Other Courses','content' => $other));
 echo $tabBox->show();
 
