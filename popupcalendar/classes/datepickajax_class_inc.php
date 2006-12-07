@@ -464,9 +464,9 @@ class datepickajax extends object
             $value = $year.'-'.$mnth.'-'.$day.' '.$hour.':'.$min;
         } else {
             if($value != NULL){
-                $value = date("Y-m-d H:i:s", strtotime($value));
+                $value = date("Y-m-d H:i", strtotime($value));
             }else{
-                $value = date("Y-m-d H:i:s", strtotime($this->session($field.'_defaultDate')));
+                $value = date("Y-m-d H:i", strtotime($this->session($field.'_defaultDate')));
             }
         }
         $this->formStr = $this->getForm($value);
@@ -545,8 +545,12 @@ class datepickajax extends object
     public function show($field, $showTime = 'no', $showMonths = 'no', $defaultDate = NULL)
     {
         $selectLabel = $this->objLanguage->languageText('phrase_selectdate');
+
         //set the height of the popup window
         if (strtolower($showTime) == 'no' || strtolower($showTime) == 'false') {
+            if($defaultDate != NULL){
+                $defaultDate = date("Y-m-d", strtotime($defaultDate));
+            }
             $length = 7;
             if (strtolower($showMonths) == 'no' || strtolower($showMonths) == 'false') {
                 $height = 'height=363';
@@ -554,6 +558,9 @@ class datepickajax extends object
                 $height = 'height=383';
             }
         } else {
+            if($defaultDate != NULL){
+                $defaultDate = date("Y-m-d H:i", strtotime($defaultDate));
+            }
             $length = 12;
             if (strtolower($showMonths) == 'no' || strtolower($showMonths) == 'false') {
                 $height = 'height=406';
