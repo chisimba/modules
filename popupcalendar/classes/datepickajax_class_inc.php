@@ -561,7 +561,7 @@ class datepickajax extends object
                 $height = 'height=426';
             }
         }
-        $this->objInput = new textinput($field, '', '', $length);
+        $this->objInput = new textinput($field, $defaultDate, '', $length);
         $this->objInput->extra = ' readonly="readonly"';
         $dateText = $this->objInput->show();
         $url = $this->uri(array(
