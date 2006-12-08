@@ -89,8 +89,8 @@ class personalspace extends controller
 	    		$new = $objDbEmail->listAll($this->objUser->userId());
 	    		$unread = $new[0]['count(sender_id)'];
 	    		$this->setVarByRef("unread", $unread);
-	    		$kngmail =& $this->getObject('kngmail', 'email');
-	    		$emails = $kngmail->listMail($this->objUser->userId(), 'mail');
+	    		$kngmail =& $this->getObject('email', 'mail');
+	    		$emails = $kngmail->send();
 	    		$emails = array_reverse($emails);
 
 */
