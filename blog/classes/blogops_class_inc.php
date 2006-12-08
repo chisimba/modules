@@ -480,7 +480,6 @@ class blogops extends object
 			{
 				$objFeatureBox = $this->getObject('featurebox', 'navigation');
 				//build the top level stuff
-				//$dt = strtotime($post['post_date']);
 				$dt = date('r', $post['post_ts']);
 				$this->objUser = $this->getObject('user', 'security');
 				$userid = $this->objUser->userId();
@@ -504,31 +503,32 @@ class blogops extends object
 					$this->objIcon = &$this->getObject('geticon', 'htmlelements');
 					$edIcon = $this->objIcon->getEditIcon($this->uri(array('action' => 'postedit', 'id' => $post['id'], 'module' => 'blog')));
 
-
 					$commentLink = $this->objComments->addCommentLink($type = NULL);
 
+					//trackback URL (link)
+					$link = "Trackback URL";
+					$tburl = new href($link, $link, NULL);
+					$tburl = $tburl->show();
 
-
-            				//Set the table name
-
-
+					//Set the table name
 					$tbl = $this->newObject('htmltable', 'htmlelements');
 					$tbl->cellpadding = 3;
+					$tbl->width = "50%";
 
 					//set up the header row
 					$tbl->startHeaderRow();
-					$tbl->addHeaderCell(''); //edit
-					$tbl->addHeaderCell(''); //comments
-					$tbl->addHeaderCell(''); //permalink
+					$tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_editpost", "blog")); //edit
+					$tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_leavecomment", "blog")); //comments
+					$tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_trackbackurl", "blog")); //trackback
 					$tbl->endHeaderRow();
 					$tbl->startRow();
-					$tbl->addCell($edIcon);
-					$tbl->addCell($commentLink);
-					//$tbl->addCell($objGetIcon);
+					$tbl->addCell($edIcon); //edit icon
+					$tbl->addCell($commentLink); //comment link(s)
+					$tbl->addCell($tburl); //trackback URL
 					$tbl->addCell('');
 					$tbl->endRow();
 
-					$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content'] . "<hr />" . $tbl->show()));
+					$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content'] . "<hr />" . "<center>" . $tbl->show() . "</center>"));
 				}
 				else {
 					$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content']));
