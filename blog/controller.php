@@ -904,6 +904,7 @@ class blog extends controller
 				break;
 
 			case 'tbreceive':
+				$this->requiresLogin(FALSE);
 				$id = $this->getParam('postid');
 				$data = array('id' => $id); //, 'host' => $host, 'title' => $title, 'excerpt' => $excerpt, 'blog_name' => $blog_name, 'url' => $url, 'extra' => $extra);
 

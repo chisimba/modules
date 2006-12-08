@@ -63,10 +63,10 @@ class trackback extends object
 		if(PEAR::isError($this->objTrackBack->receive($data)))
 		{
 			//var_dump($this->objTrackBack->receive($data));
-			return false;
+			return $this->objTrackBack->getResponseError("Invalid option", 1);
 		}
 		else {
-			return true;
+			return $this->objTrackBack->getResponseSuccess();
 		}
 	}
 }
