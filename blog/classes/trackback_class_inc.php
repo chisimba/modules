@@ -27,6 +27,7 @@ class trackback extends object
 	public function setup($data, $options)
 	{
 		$this->objTrackBack = Services_Trackback::create($data, $options);
+		return $this->objTrackBack;
 
 	}
 
@@ -54,6 +55,18 @@ class trackback extends object
 		}
 		else {
 			return $tracker;
+		}
+	}
+
+	public function recTB($data)
+	{
+		if(PEAR::isError($this->objTrackBack->receive($data)))
+		{
+			//var_dump($this->objTrackBack->receive($data));
+			return false;
+		}
+		else {
+			return true;
 		}
 	}
 }

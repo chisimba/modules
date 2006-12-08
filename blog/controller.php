@@ -903,18 +903,22 @@ class blog extends controller
 				print $this->objTC->buildCloud($tagarray);
 				break;
 
-			case 'trackback':
-				$id = 'init_56';
-				$title = "test post";
-				$excerpt = "";
-				$blog_name = $this->objUser->fullname($this->objUser->userId()) . " Chisimba blog";
-				$url = "http://127.0.0.1/cpgsql/5ive/app/index.php?module=blog";
-				$trackback_url = "http://127.0.0.1/cpgsql/5ive/app/index.php?module=blog&action=tbrecieve";
-				$extra = NULL;
+			case 'tbreceive':
+				//required: 'title', 'excerpt', 'url', 'blog_name', 'host'
+				$id = $this->getParam('postid');
+				//var_dump($_POST); die();
+				//$host = $_SERVER['REMOTE_ADDR'];
+				//$title = "test post";
+				//$excerpt = 'excerpt';
+				//$blog_name = $this->objUser->fullname($this->objUser->userId()) . " Chisimba blog";
+				//$url = "http://127.0.0.1/cpgsql/5ive/app/index.php?module=blog";
+				//$trackback_url = "http://127.0.0.1/cpgsql/5ive/app/index.php?module=blog&action=tbrecieve";
+				//$extra = NULL; //$_REQUEST['extra'];
 
-				$data = array('id' => $id, 'title' => $title, 'excerpt' => $excerpt, 'blog_name' => $blog_name, 'url' => $url, 'trackback_url' => $trackback_url, 'extra' => $extra);
+				$data = array('id' => $id); //, 'host' => $host, 'title' => $title, 'excerpt' => $excerpt, 'blog_name' => $blog_name, 'url' => $url, 'extra' => $extra);
 
-				$options = array(
+				$options = array();
+				/*
 			        // Options for Services_Trackback directly
         			'strictness'        => 1,
         			'timeout'           => 30,          // seconds
@@ -926,10 +930,51 @@ class blog extends controller
             			'maxRedirects'      => 2,
             			'method'            => 'GET',
             			'useragent'         => 'Chisimba',
-            			'proxy_host'        => '192.102.9.33',
-            			'proxy_port'        => '8080',
-            			'proxy_user'        => 'pscott',
-            			'poxy_pass'         => 'monkeys123',
+        			),
+    			); */
+
+    			$this->objTB = $this->getObject("trackback");
+
+				//use the factory
+				$this->objTB->setup($data, $options);
+
+				if($this->objTB->recTB($data) == true)
+				{
+					echo "Trackback received";
+				}
+				else {
+					echo "Inavlid trackback response";
+				}
+				break;
+
+			case 'trackback':
+				$id = 'init_56';
+				$title = "test post";
+				$excerpt = "blah";
+				$blog_name = $this->objUser->fullname($this->objUser->userId()) . " Chisimba blog";
+				$url = "http://127.0.0.1/cpgsql/5ive/app/index.php?module=blog";
+				$trackback_url = "http://127.0.0.1/cpgsql/5ive/app/index.php?action=tbreceive&userid=1&module=blog&postid=init_2120_1165131820";
+				$extra = NULL;
+
+				$data = array('id' => $id, 'title' => $title, 'excerpt' => $excerpt, 'blog_name' => $blog_name,
+							  'url' => $url, 'trackback_url' => $trackback_url, 'extra' => $extra);
+
+				$options = array(
+			        // Options for Services_Trackback directly
+        			'strictness'        => 1,
+        			'timeout'           => 30,          // seconds
+        			'fetchlines'        => 30,
+        			'fetchextra'        => true,
+        			// Options for HTTP_Request class
+        			'httprequest'       => array(
+            			'allowRedirects'    => true,
+            			'maxRedirects'      => 2,
+            			'method'            => 'POST',
+            			'useragent'         => 'Chisimba',
+            			//'proxy_host'        => '192.102.9.33',
+            			//'proxy_port'        => '8080',
+            			//'proxy_user'        => 'pscott',
+            			//'poxy_pass'         => 'monkeys123',
         			),
     			);
 
@@ -947,15 +992,15 @@ class blog extends controller
 				//$this->objTB->setVal('url', 'http://schlitt.info/applications/blog/');
 				//var_dump($this->objTB->autoDisc());
 
-				$sendtb = array('title' => 'Chisimba based Trackbacks', 'url' => 'http://127.0.0.1/cpgsql/5ive/app/index.php?module=blog', 'excerpt' => 'some excerpt', 'blog_name' => $blog_name, 'trackback_url' => 'http://haloscan.com/tb/fzelders/1280');
-//'itemId' => 'fsiu_server_49','itemName' => 'fsiu_server_49','trackId' => 'fsiu_server_49',
+				$sendtb = array('title' => 'Chisimba based Trackbacks',
+							    'url' => 'http://www.example.com',
+							    'excerpt' => 'some excerpt',
+							    'blog_name' => $blog_name,
+							    'trackback_url' => 'http://127.0.0.1/cpgsql/5ive/app/index.php?action=tbrecieve&userid=1&module=blog&postid=init_2120_1165131820');
+
+							  //'itemId' => 'fsiu_server_49','itemName' => 'fsiu_server_49','trackId' => 'fsiu_server_49',
+
 				var_dump($this->objTB->sendTB($sendtb));
-
-				//$author = $this->objUser->fullname($this->objUser->userId());
-
-
-
-
       		break;
 
 		}//action
