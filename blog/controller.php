@@ -904,40 +904,19 @@ class blog extends controller
 				break;
 
 			case 'tbreceive':
-				//required: 'title', 'excerpt', 'url', 'blog_name', 'host'
 				$id = $this->getParam('postid');
-				//var_dump($_POST); die();
-				//$host = $_SERVER['REMOTE_ADDR'];
-				//$title = "test post";
-				//$excerpt = 'excerpt';
-				//$blog_name = $this->objUser->fullname($this->objUser->userId()) . " Chisimba blog";
-				//$url = "http://127.0.0.1/cpgsql/5ive/app/index.php?module=blog";
-				//$trackback_url = "http://127.0.0.1/cpgsql/5ive/app/index.php?module=blog&action=tbrecieve";
-				//$extra = NULL; //$_REQUEST['extra'];
-
 				$data = array('id' => $id); //, 'host' => $host, 'title' => $title, 'excerpt' => $excerpt, 'blog_name' => $blog_name, 'url' => $url, 'extra' => $extra);
 
-				$options = array();
-				/*
-			        // Options for Services_Trackback directly
+				$options = array(
+				    // Options for Services_Trackback directly
         			'strictness'        => 1,
         			'timeout'           => 30,          // seconds
         			'fetchlines'        => 30,
         			'fetchextra'        => true,
-        			// Options for HTTP_Request class
-        			'httprequest'       => array(
-            			'allowRedirects'    => true,
-            			'maxRedirects'      => 2,
-            			'method'            => 'GET',
-            			'useragent'         => 'Chisimba',
-        			),
-    			); */
-
+        		);
     			$this->objTB = $this->getObject("trackback");
-
 				//use the factory
 				$this->objTB->setup($data, $options);
-
 				if($this->objTB->recTB($data) == true)
 				{
 					echo "Trackback received";
