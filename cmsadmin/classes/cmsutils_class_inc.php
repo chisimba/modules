@@ -419,6 +419,16 @@ class cmsutils extends object
             $showIntro = $arrSection['showintroduction'];
             $showDate = $arrSection['showdate'];
             $description = $arrSection['description'];
+            $sectionTitle = $arrSection['title'];
+            
+            //Add section title
+            $objH->type = '3';
+            $objH->str = $sectionTitle;
+            $str .= $objH->show().'<br />';
+            //Check if section intro should be displayed and act accordingly
+            if($showIntro) {
+              $str .= '<p>'.$description.'</p>';
+            }
 
             switch ($orderType) {
             case null:
@@ -470,9 +480,6 @@ class cmsutils extends object
                 $table->addCell('<p>'.$page['introtext']);
                 $table->endRow();
 
-                if($showIntro) {
-                    $str .= '<p>'.$description.'</p>';
-                }
                 if($showDate) {
                     $objH->type = '4';
                     $objH->str = '<span class="date">'.$page['created'].'</span> '.$page['title'];
