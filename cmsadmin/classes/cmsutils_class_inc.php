@@ -1,35 +1,32 @@
 <?php
-/* -------------------- cmsutils class ----------------*/
 // security check - must be included in all scripts
-
-if (!$GLOBALS['kewl_entry_point_run'])
-{
+if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
-
 // end security check
+
 /**
 * This object hold all the utility method that the cms modules might need
 *
-* @package cms
-* @category cmsadmin
-* @copyright 2004, University of the Western Cape & AVOIR Project
+* @package cmsadmin
+* @category chisimba
+* @copyright AVOIR
 * @license GNU GPL
-* @version
 * @author Wesley  Nitsckie
 * @author Warren Windvogel
-* @example :
 */
 
 class cmsutils extends object
 {
+
         /**
-         * The sections  object
-         *
-         * @access private
-         * @var object
-         */
+        * The sections  object
+        *
+        * @access private
+        * @var object
+        */
         protected $_objSections;
+        
         /**
         * The Content object
         *
@@ -37,6 +34,7 @@ class cmsutils extends object
         * @var object
         */
         protected $_objContent;
+        
         /**
         * The Skin object
         *
@@ -44,6 +42,7 @@ class cmsutils extends object
         * @var object
         */
         protected $objSkin;
+        
         /**
         * The Content Front Page object
         *
@@ -51,6 +50,7 @@ class cmsutils extends object
         * @var object
         */
         protected $_objFrontPage;
+        
         /**
         * The User object
         *
@@ -58,6 +58,7 @@ class cmsutils extends object
         * @var object
         */
         protected $_objUser;
+        
         /**
         * The config object
         *
@@ -65,6 +66,7 @@ class cmsutils extends object
         * @var object
         */
         protected $_objConfig;
+        
         /**
         * The blocks object
         *
@@ -73,19 +75,27 @@ class cmsutils extends object
         */
         protected $_objBlocks;
 
-        /**
-         * Constructor
-         */
+	   /**
+	    * Class Constructor
+	    *
+	    * @access public
+	    * @return void
+	    */
         public function init()
         {
-            $this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
-            $this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
-            $this->_objConfig = & $this->newObject('altconfig', 'config');
-            $this->_objBlocks = & $this->newObject('dbblocks', 'cmsadmin');
-            $this->objSkin = & $this->newObject('skin', 'skin');
-            $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
-            $this->_objUser = & $this->newObject('user', 'security');
-            $this->objLanguage = & $this->newObject('language', 'language');
+        	try {             
+                $this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
+                $this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
+                $this->_objConfig = & $this->newObject('altconfig', 'config');
+                $this->_objBlocks = & $this->newObject('dbblocks', 'cmsadmin');
+                $this->objSkin = & $this->newObject('skin', 'skin');
+                $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
+                $this->_objUser = & $this->newObject('user', 'security');
+                $this->objLanguage = & $this->newObject('language', 'language');
+		   } catch (Exception $e){
+       		    echo 'Caught exception: ',  $e->getMessage();
+        	    exit();
+     	   }
         }
 
         /**
@@ -102,49 +112,6 @@ class cmsutils extends object
             } else {
                 return $this->objLanguage->languageText('word_public');
             }
-        }
-
-        /**
-         * Method to get the images dropdown
-         *
-         * @access public
-         * @param   string $name The name of the field
-         * @param  string $selected the selected value
-         * @return string
-         */
-        public function getImageList($name, $formName, $selected = null)
-        {
-            $objDropDown = & $this->newObject('dropdown', 'htmlelements');
-            $objConfig = & $this->newObject('altconfig' , 'config');
-            $objMedia = & $this->newObject('mmutils', 'mediamanager');
-            $objMedia->getImages();
-            $objDropDown->name = $name;
-            //fill the drop down with the list of images
-            $path = $objConfig->getsiteRoot().'usrfiles/media';
-            $objDropDown->addOption('0', ' - '.$this->objLanguage->languageText('mod_cmsadmin_selectimage', 'cmsadmin').' - ');
-            $objDropDown->addFromDB($objMedia->getImages(), 'title', 'folder', $selected);
-            $objDropDown->extra = 'onchange=" return changeImage(this, this.form) "';
-            return $objDropDown->show();
-        }
-
-        /**
-         * Method to get the image position dropdown
-         *
-         * @access public
-         * @param   string $name The name of the field
-         * @return string
-         */
-        public function getImagePostionList($name)
-        {
-            $objDropDown = & $this->newObject('dropdown', 'htmlelements');
-            $objDropDown->name = $name;
-            //fill the drop down with the list of images
-            $objDropDown->addOption('0', $this->objLanguage->languageText('word_center'));
-            $objDropDown->addOption('1', $this->objLanguage->languageText('word_left'));
-            $objDropDown->addOption('2', $this->objLanguage->languageText('word_right'));
-            $objDropDown->setSelected('1');
-            $objDropDown->extra = 'size="3"';
-            return $objDropDown->show();
         }
 
         /**
@@ -201,7 +168,7 @@ class cmsutils extends object
          * The layouts templates will be displayed as images
          *
          * @param string $name The of the of the field
-         * @return string
+         * @return string Html for selecting layout type
          * @access public
          */
         public function getLayoutOptions($name, $id)
@@ -250,58 +217,6 @@ class cmsutils extends object
         }
 
         /**
-         * Method to generate the Sections Menu
-         * that will appear on the left side of the menu
-         *
-         * @access public
-         * @return string
-         *
-         */
-        public function getSectionMenu($modulename = null)
-        {
-            if (empty($modulename)) {
-                $modulename = 'cms';
-            }
-
-            //initiate the objects
-            $objSideBar = $this->newObject('sidebar', 'navigation');
-
-            //create the nodes array
-            $nodes = array();
-
-            //get the section id
-            $section = $this->getParam('id');
-
-            //create the home like first
-            //$nodes[] = array('text' => 'Home', 'uri' => $this->uri(null, 'cms'));
-            //get the all the sections from the database
-            $arrSections = $this->_objSections->getSections(TRUE);
-
-            //start looping through the sections
-            foreach ($arrSections as $section) {
-                //add the sections
-
-                if (($this->getParam('action') == 'showsection') && ($this->getParam('id') == $section['id']) || $this->getParam('sectionid') == $section['id']) {
-                    $pagenodes = array();
-                    $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$section['id'].'\' AND published=1 and trash=0 ORDER BY ordering');
-                    foreach( $arrPages as $page) {
-                        $pagenodes[] = array('text' => $page['menutext'] , 'uri' => $this->uri(array('action' => 'showfulltext', 'id' => $page['id'], 'sectionid' => $section['id']), $modulename));
-                    }
-
-                    $nodes[] = array('text' => $section['menutext'], 'uri' => $this->uri(array('action' => 'showsection', 'id' => $section['id']), $modulename), 'sectionid' => $section['id'], 'haschildren' => $pagenodes);
-                    $pagenodes = null;
-                } else {
-                    $nodes[] = array('text' => $section['menutext'], 'uri' => $this->uri(array('action' => 'showsection', 'id' => $section['id']), $modulename), 'sectionid' => $section['id']);
-                }
-            }
-
-            //add the admin link
-            $nodes[] = array('text' => 'Administration', 'uri' => $this->uri(array(NULL), 'cmsadmin'));
-
-            return $objSideBar->show($nodes, $this->getParam('id'));
-        }
-
-        /**
          * Method to get the Front Page Content
          * in a ordered way. It should also conform to the
          * section template for the section that this page is in
@@ -313,7 +228,7 @@ class cmsutils extends object
         {
             $objUser = & $this->newObject('user', 'security');
             $arrFrontPages = $this->_objFrontPage->getFrontPages();
-            //$objFeatureBox = $this->newObject('featurebox', 'navigation');
+
             $str = '';
             //set a counter for the records .. display on the first 2  the rest will be dsiplayed as links
             $cnt = 0 ;
@@ -337,7 +252,7 @@ class cmsutils extends object
                         $table->endRow();
                         //date
                         $table->startRow();
-                        $table->addCell($this->formatDate($page['created']));
+                        $table->addCell($page['created']);
                         $table->endRow();
                         //intor text
                         $table->startRow();
@@ -354,7 +269,7 @@ class cmsutils extends object
                             $table->endRow();
                         }
 
-                        $str .= ''; //$table->show();
+                        $str .= ''; 
                     } else {
                         //display as links
                         $table = & $this->newObject('htmltable', 'htmlelements');
@@ -366,15 +281,23 @@ class cmsutils extends object
                         $table->addCell($link->show());
                         $table->endRow();
                     }
-
-                    //make feature boxes of the front page post
-                    //$str .= '<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
-                    //$str .= '<p>'.$page['introtext'].'<a href="devtodo" class="morelink" title="'.$page['title'].'">More <span>about: '.$page['title'].'</span></a></p>';
+                    //Read more link
                     $moreLink = $this->uri(array('action' => 'showfulltext', 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
-
-                    $content = '<span class="date">'.$this->formatDate($page['created']).'</span> <p>'.$page['introtext'].'<br /><a href="'.$moreLink.'" class="morelink" title="'.$page['title'].'">'.$this->objLanguage->languageText('phrase_readmore').'...</a></p>';
-
-                    $str .= '<h3>'.$page['title'].'</h3>'.$content;
+                    $readMoreLink = & $this->newObject('link', 'htmlelements');
+                    $readMoreLink->href = $moreLink;
+                    $readMoreLink->link = $this->objLanguage->languageText('phrase_readmore').'...';
+                    $readMoreLink->title = $page['title'];
+                    $readMoreLink->cssClass = 'morelink';
+                    //Page content
+                    $content = '<span class="date">'.$page['created'].'</span>';
+                    $content .= '<p>'.$page['introtext'].'<br />'.$readMoreLink->show().'</p>';
+                    //Page heading
+                    $objH =& $this->newObject('htmlheading', 'htmlelements');
+                    $objH->type = '3';
+                    $objH->str = $page['title'];
+                    
+                    $str .= $objH->show();
+                    $str .= $content;
                 }
             }
 
@@ -418,19 +341,24 @@ class cmsutils extends object
             $description = $arrSection['description'];
 
             switch ($orderType) {
+
             case null:
             case 'pageorder':
                 $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY ordering');
                 break;
+
             case 'pagedate_asc':
                 $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created');
                 break;
+
             case 'pagedate_desc':
                 $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
                 break;
+
             case 'pagetitle_asc':
                 $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title');
                 break;
+
             case 'pagetitle_desc':
                 $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title DESC');
                 break;
@@ -477,12 +405,14 @@ class cmsutils extends object
          *
          * @param array $arrSection The Section record
          * @access private
-         * @return string
+         * @return string Content to be displayed
          */
         function _layoutSummaries(&$arrSection, $module)
         {
             $objUser = & $this->newObject('user', 'security');
             $objConfig = & $this->newObject('altconfig', 'config');
+            $objH = & $this->newObject('htmlheading', 'htmlelements');
+            
             $str = '';
 
             $orderType = $arrSection['ordertype'];
@@ -495,15 +425,19 @@ class cmsutils extends object
             case 'pageorder':
                 $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY ordering');
                 break;
+
             case 'pagedate_asc':
                 $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created');
                 break;
+
             case 'pagedate_desc':
                 $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
                 break;
+
             case 'pagetitle_asc':
                 $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title');
                 break;
+
             case 'pagetitle_desc':
                 $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title DESC');
                 break;
@@ -528,7 +462,7 @@ class cmsutils extends object
                 //date
                 if($showDate) {
                     $table->startRow();
-                    $table->addCell($this->formatDate($page['created']));
+                    $table->addCell($page['created']);
                     $table->endRow();
                 }
                 //intor text
@@ -540,12 +474,24 @@ class cmsutils extends object
                     $str .= '<p>'.$description.'</p>';
                 }
                 if($showDate) {
-                    $str .= '<h4><span class="date">'.$this->formatDate($page['created']).'</span> '.$page['title'].'</h4>';
+                    $objH->type = '4';
+                    $objH->str = '<span class="date">'.$page['created'].'</span> '.$page['title'];
+                    $str .= $objH->show();
                 } else {
-                    $str .= '<h4>'.$page['title'].'</h4>';
+                    $objH->type = '4';
+                    $objH->str = $page['title'];
+                    $str .= $objH->show();
                 }
                 $uri = $this->uri(array('action' => 'showfulltext', 'sectionid' => $arrSection['id'], 'id' => $page['id']), $module);
-                $str .= '<p>'.$page['introtext'].'<br /><a href="'.$uri.'" class="morelink" title="'.$page['title'].'">'.$this->objLanguage->languageText('phrase_readmore').'...</a></p>';
+                //Read more link
+                $readMoreLink = & $this->newObject('link', 'htmlelements');
+                $readMoreLink->href = $uri;
+                $readMoreLink->link = $this->objLanguage->languageText('phrase_readmore').'...';
+                $readMoreLink->title = $page['title'];
+                $readMoreLink->cssClass = 'morelink';
+
+                $str .= '<p>'.$page['introtext'].'<br />';
+                $str .= $readMoreLink->show().'</p>';
             }
 
             return $str;
@@ -557,7 +503,7 @@ class cmsutils extends object
          *
          * @param array $arrSection The Section record
          * @access private
-         * @return string
+         * @return string Content to be displayed
          */
         function _layoutPage(&$arrSection, $module)
         {
@@ -567,22 +513,27 @@ class cmsutils extends object
             $showDate = $arrSection['showdate'];
 
             switch ($orderType) {
-            case null:
-            case 'pageorder':
-                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY ordering');
-                break;
-            case 'pagedate_asc':
-                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created');
-                break;
-            case 'pagedate_desc':
-                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
-                break;
-            case 'pagetitle_asc':
-                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title');
-                break;
-            case 'pagetitle_desc':
-                $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title DESC');
-                break;
+                case null:
+           
+                case 'pageorder':
+                    $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY ordering');
+                    break;
+               
+                case 'pagedate_asc':
+                    $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created');
+                    break;
+           
+                case 'pagedate_desc':
+                    $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
+                    break;
+      
+                case 'pagetitle_asc':
+                    $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title');
+                    break;
+     
+                case 'pagetitle_desc':
+                    $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title DESC');
+                    break;
             }
 
             $cnt = 0;
@@ -597,7 +548,10 @@ class cmsutils extends object
 
             foreach ($arrPages as $page) {
                 if ($pageId == $page['id']) {
-                    $strBody = '<h3>'.$page['title'].'</h3>';
+                    $objH =& $this->newObject('htmlheading', 'htmlelements');
+                    $objH->type = '3';
+                    $objH->str = $page['title'];
+                    $strBody = $objH->show();
                     $strBody .= $page['body'].'<p/>';
                     $str .= $page['title'].' | ';
                 } else {
@@ -634,18 +588,23 @@ class cmsutils extends object
 
             switch ($orderType) {
             case null:
+            
             case 'pageorder':
                 $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY ordering');
                 break;
+            
             case 'pagedate_asc':
                 $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created');
                 break;
+            
             case 'pagedate_desc':
                 $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
                 break;
+            
             case 'pagetitle_asc':
                 $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title');
                 break;
+            
             case 'pagetitle_desc':
                 $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title DESC');
                 break;
@@ -676,7 +635,11 @@ class cmsutils extends object
             $page = $this->_objContent->getContentPage($contentId);
             $sectionId = $page['sectionid'];
             $section = $this->_objSections->getSection($sectionId);
-            $strBody = '<h3>'.$page['title'].'</h3><p/>';
+            //Create heading
+            $objH =& $this->newObject('htmlheading', 'htmlelements');
+            $objH->type = '3';
+            $objH->str = $page['title'];
+            $strBody = $objH->show().'<p/>';
             $strBody .= '<span class="warning">'.$this->_objUser->fullname($page['created_by']).'</span><br />';
             if($section['showdate']) {
                 $strBody .= '<span class="warning">'.$page['created'].'</span><p/>';
@@ -686,56 +649,11 @@ class cmsutils extends object
         }
 
         /**
-         * Method to format the date
-         *
-         * @example Thursday, 12 November 2006
-         * @param  date $date The unformatted date
-         * @return formatted date string
-         * @access public
-         * @version 0.1
-         * @author Wesley Nitsckie
-         * @copyright 2004, University of the Western Cape & AVOIR Project
-         * @license GNU GPL
-         */
-        public function formatDate($date)
-        {
-            /*if(!checkdate($date)) {
-                 $gm =  gmmktime($date);
-                 return  date("l, d F o",$gm);
-              } else {
-            */
-            return $date;
-            //       }
-        }
-
-        /**
-         * Method to format the date
-         *
-         * @example 01/12/2006
-         * @param  date $date The unformatted date
-         * @return formatted date string
-         * @access public
-         * @version 0.1
-         * @author Wesley Nitsckie
-         * @copyright 2004, University of the Western Cape & AVOIR Project
-         * @license GNU GPL
-         */
-        public function formatShortDate($date)
-        {
-            return $date;
-            //return  date("m/d/o",gmmktime($date) );
-        }
-
-        /**
          * Method to the true/false tick
          *
          * @param  $isCheck Booleans value with either TRUE|FALSE
          * @return string icon
          * @access public
-         * @version 0.1
-         * @author Wesley Nitsckie
-         * @copyright 2004, University of the Western Cape & AVOIR Project
-         * @license GNU GPL
          */
         public function getCheckIcon($isCheck, $returnFalse = TRUE)
         {
@@ -805,7 +723,7 @@ class cmsutils extends object
         * Method to generate the bread crumbs
         *
         * @param void
-        * @return string
+        * @return string Html for breadcrumbs
         * @access public
         */
         public function getBreadCrumbs($module = 'cms')
@@ -846,20 +764,6 @@ class cmsutils extends object
             $str = $home->show() .' / ' . $str;
 
             $objTools->replaceBreadCrumbs(split(' / ', $str));
-        }
-        /**
-         * Method to generate the img tag for the section
-         * thumbnail
-         *
-         * @param string src The path the image
-         * @return string
-         * @access public
-         * @author Wesley Nitsckie
-         */
-        public function generateImageTag($src)
-        {
-            $objSkin = $this->newObject('skin', 'skin');
-            return '<span class="thumbnail"><center><img src="'.$objSkin->getSkinUrl().$src.'" /></center></span>';
         }
 
         /**

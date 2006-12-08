@@ -1,32 +1,29 @@
 <?php
-
-/* -------------------- cmstree class ----------------*/
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run'])
-{
+if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
+
 /**
 * This object is a wrapper class for building a tree using the cms sections
-* @package cms
-* @category cmsadmin
-* @copyright 2004, University of the Western Cape & AVOIR Project
+*
+* @package cmsadmin
+* @category chisimba
+* @copyright AVOIR 
 * @license GNU GPL
-* @version
 * @author Serge Meunier
-* @example :
 */
 
 class cmstree extends object
 {
 
         /**
-            * The sections  object
-            *
-            * @access private
-            * @var object
-           */
+        * The sections  object
+        *
+        * @access private
+        * @var object
+        */
         protected $_objSections;
 
         /**
@@ -45,22 +42,30 @@ class cmstree extends object
         */
         protected $_objUser;
 
-        /**
-         * Constructor
-         */
+	   /**
+	    * Class Constructor
+	    *
+	    * @access public
+	    * @return void
+	    */
         public function init()
         {
-            $this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
-            $this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
-            $this->_objUser = & $this->newObject('user', 'security');
-            $this->objLanguage =& $this->newObject('language', 'language');
+        	try {
+                $this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
+                $this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
+                $this->_objUser = & $this->newObject('user', 'security');
+                $this->objLanguage =& $this->newObject('language', 'language');
+           } catch (Exception $e){
+       		    echo 'Caught exception: ',  $e->getMessage();
+        	    exit();
+     	   }
         }
 
         /**
         * Method to return back the tree code
         *
         * @param string $currentNode The currently selected node, which should remain open
-           * @param bool $admin Select whether admin user or not
+        * @param bool $admin Select whether admin user or not
         * @return string
         * @access public
         */
@@ -74,7 +79,7 @@ class cmstree extends object
          * Method to build the tree
          *
          * @param string $currentNode The currently selected node, which should remain open
-            * @param bool $admin Select whether admin user or not
+         * @param bool $admin Select whether admin user or not
          * @return string
          * @access public
          */
@@ -95,9 +100,9 @@ class cmstree extends object
         /**
          * Method to build the next level in tree
          *
-            * @param string $parentid The node id whose child nodes need to be built
+         * @param string $parentid The node id whose child nodes need to be built
          * @param string $currentNode The currently selected node, which should remain open
-            * @param bool $admin Select whether admin user or not
+         * @param bool $admin Select whether admin user or not
          * @return string
          * @access public
          */
@@ -139,8 +144,6 @@ class cmstree extends object
                 return '';
             }
         }
-
-
 
         /**
          * Method to get add all content for a particular section node

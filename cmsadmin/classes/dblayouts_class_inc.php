@@ -1,43 +1,50 @@
 <?php
-
-/* -------------------- dbTable class ----------------*/
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run'])
-{
+if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
+
 /**
-* Class to access the ContextCore Tables
-* @package cms
-* @category cmsadmin
-* @copyright 2004, University of the Western Cape & AVOIR Project
+* Data access class for the cmsadmin module. Used to access data in the layouts table. 
+*
+* @package cmsadmin
+* @category chisimba
+* @copyright AVOIR 
 * @license GNU GPL
-* @version
-* @author Wesley  Nitsckie
-* @example :
+* @author Wesley Nitsckie
+* @author Warren Windvogel
 */
 
 class dblayouts extends dbTable
 {
 
-        /**
-        * Constructor
-        */
+	   /**
+	    * Class Constructor
+	    *
+	    * @access public
+	    * @return void
+	    */
         public function init()
         {
-            parent::init('tbl_cms_layouts');
+        	try {                 
+                parent::init('tbl_cms_layouts');
+           } catch (Exception $e){
+       		    echo 'Caught exception: ',  $e->getMessage();
+        	    exit();
+     	   }
         }
 
         /**
          * Method to get the layouts
          *
          * @access public
-         * @return array
+         * @return array $layouts An array associative arrays of all layouts
          */
         public function getLayouts()
         {
-            return $this->getAll();
+            $layouts = $this->getAll();
+            return $layouts;
         }
 
         /**
@@ -45,11 +52,12 @@ class dblayouts extends dbTable
          * 
          * @access public
          * @param string $name The name of the layout
-         * @return array
+         * @return array $layout An associative array containing the layout details
          */
         public function getLayout($name)
         {
-            return $this->getRow('name', $name);
+            $layout = $this->getRow('name', $name);
+            return $layout;
         }
         /**
          * Method to get the description of a layout by referencing its name

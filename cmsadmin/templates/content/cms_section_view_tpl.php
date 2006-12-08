@@ -169,7 +169,7 @@ if (count($pages) > '0') {
         $pageId = $page['id'];
         $ordering = $page['ordering'];
         $pageTitle = $page['title'];
-        $articleDate = $this->_objUtils->formatDate($page['modified']);
+        $articleDate = $page['modified'];
         $pagePublished = $page['published'];
 
         if ($pagePublished == '1') {

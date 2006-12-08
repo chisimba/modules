@@ -1,62 +1,65 @@
 <?php
-
-/* -------------------- dbTable class ----------------*/
 // security check - must be included in all scripts
-
-if (!$GLOBALS['kewl_entry_point_run'])
-{
+if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
-
 // end security check
+
 /**
-* Class to access the ContextCore Tables
+* Data access class for the cmsadmin module. Used to access data in the blocks table. 
 *
 * @package cmsadmin
-* @category cms
-* @copyright 2004, University of the Western Cape & AVOIR Project
+* @category chisimba
+* @copyright AVOIR 
 * @license GNU GPL
-* @version
-* @author Wesley  Nitsckie
+* @author Wesley Nitsckie
 * @author Warren Windvogel
-* @example :
 */
 
 class dbblocks extends dbTable
 {
 
         /**
-         * @var object $_objUser
-         *
-         * @access protected
-         */
+        * The user  object
+        *
+        * @access private
+        * @var object
+        */
         protected $_objUser;
 
 
         /**
-         * @var object $_objFrontPage 
-         * 
-         * @access protected
-         */
+        * The frontpage  object
+        *
+        * @access private
+        * @var object
+        */
         protected $_objFrontPage;
 
         /**
-         * @var object $_objLanguage
-         * @access protected
-         */
+        * The language  object
+        *
+        * @access private
+        * @var object
+        */
         protected $_objLanguage;
 
-
-        /**
-         * Method to define the table
-         * 
-         * @access public
-         */
+	   /**
+	    * Class Constructor
+	    *
+	    * @access public
+	    * @return void
+	    */
         public function init()
         {
-            parent::init('tbl_cms_blocks');
-            $this->_objUser = & $this->getObject('user', 'security');
-            $this->_objLanguage = & $this->newObject('language', 'language');
+        	try {         
+                parent::init('tbl_cms_blocks');
+                $this->_objUser = & $this->getObject('user', 'security');
+                $this->_objLanguage = & $this->newObject('language', 'language');
+           } catch (Exception $e){
+       		    echo 'Caught exception: ',  $e->getMessage();
+        	    exit();
+     	   }
         }
 
         /**
@@ -67,17 +70,14 @@ class dbblocks extends dbTable
          * @access public
          * @return bool
          */
-        public function add
-            ($pageId, $blockId)
+        public function add($pageId, $blockId)
         {
             $ordering = $this->getOrdering($pageId);
-
             $newArr = array(
                           'pageid' => $pageId ,
                           'blockid' => $blockId,
                           'ordering' => $ordering
                       );
-
             $newId = $this->insert($newArr);
 
             return $newId;
@@ -91,6 +91,7 @@ class dbblocks extends dbTable
          */
         public function edit()
         {
+            //Get entry details
             $id = $this->getParam('id');
             $pageId = $this->getParam('pageid');
             $blockId = $this->getParam('blockid');
@@ -101,8 +102,7 @@ class dbblocks extends dbTable
                           'blockid' => $blockId,
                           'ordering' => $ordering
                       );
-
-
+            //Update entry
             return $this->update('id', $id, $newArr);
         }
 
@@ -135,14 +135,15 @@ class dbblocks extends dbTable
 
         /**
          * Method to get a page content record
+         *
          * @param string $pageId The id of the page content
          * @access public
-         * @return array
+         * @return array $pageBlocks An array of associative arrays of all blocks on the page
          */
         public function getBlocksForPage($pageId)
         {
-
-            return $this->getAll('WHERE pageid = \''.$pageId.'\' ORDER BY ordering');
+            $pageBlocks = $this->getAll('WHERE pageid = \''.$pageId.'\' ORDER BY ordering');
+            return $pageBlocks;
         }
 
         /**
@@ -173,7 +174,7 @@ class dbblocks extends dbTable
          * @param string $id The id of the entry 
          * @return string $links The html for the links
          * @access public
-         * @return bool
+         * @return string The html for the links
          * @author Warren Windvogel
          */
         public function getOrderingLink($id)
@@ -378,7 +379,8 @@ class dbblocks extends dbTable
 
         /**
          * Method to return all entries in blocks table
-         * @return array
+         *
+         * @return array $entries An array of all entries in the module_blocks table
          * @access public
          */
         public function getBlockEntries()
@@ -388,10 +390,12 @@ class dbblocks extends dbTable
 
             return $entries;
         }
+        
         /**
          * Method to return an entries in blocks table
+         *
          * @param string $blockId The id of the block
-         * @return array
+         * @return array $entry An associative array of the blocks details
          * @access public
          */
         public function getBlock($blockId)
@@ -401,10 +405,12 @@ class dbblocks extends dbTable
 
             return $entry;
         }
+        
         /**
          * Method to return an entries in blocks table
+         *
          * @param string $blockName The name of the block
-         * @return array
+         * @return array $entry An associative array of the blocks details
          * @access public
          */
         public function getBlockByName($blockName)
@@ -414,7 +420,6 @@ class dbblocks extends dbTable
 
             return $entry;
         }
-
 }
 
 ?>

@@ -1,61 +1,72 @@
 <?php
-
-/* -------------------- dbTable class ----------------*/
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
 {
     die("You cannot view this page directly");
 }
 // end security check
+
 /**
-* Class to access the ContextCore Tables
-* @package cms
-* @category cmsadmin
-* @copyright 2004, University of the Western Cape & AVOIR Project
+* Data access class for the cmsadmin module. Used to access data in the content front page table. 
+*
+* @package cmsadmin
+* @category chisimba
+* @copyright AVOIR 
 * @license GNU GPL
-* @version
 * @author Wesley  Nitsckie
 * @author Warren Windvogel
-* @example :
 */
 
 class dbcontentfrontpage extends dbTable
 {
 
         /**
-         * @var object $_objUser;
-         */
+        * The user  object
+        *
+        * @access private
+        * @var object
+        */
         protected $_objUser;
 
         /**
-         * @var object $_objLanguage
-         * @access protected
-         */
+        * The language  object
+        *
+        * @access private
+        * @var object
+        */
         protected $_objLanguage;
 
-
-        /**
-        * Constructor
-        */
+	   /**
+	    * Class Constructor
+	    *
+	    * @access public
+	    * @return void
+	    */
         public function init()
         {
-            parent::init('tbl_cms_content_frontpage');
-            $this->_objUser = & $this->getObject('user', 'security');
-            $this->_objLanguage =& $this->newObject('language', 'language');
+        	try {         
+                parent::init('tbl_cms_content_frontpage');
+                $this->_objUser = & $this->getObject('user', 'security');
+                $this->_objLanguage =& $this->newObject('language', 'language');
+           } catch (Exception $e){
+       		    echo 'Caught exception: ',  $e->getMessage();
+        	    exit();
+     	   }
         }
 
         /**
-         * MEthod to save a record to the database
+         * Method to save a record to the database
          * 
          * @param string $contentId The neContent Id
-         * @param int $ordering
+         * @param int $ordering The number of the page as it appears in the front page order
          * @access public
-         * @return bool
+         * @return string New entry id if inserted else False
          */
-        public function add
-            ($contentId, $ordering = 1)
+        public function add($contentId, $ordering = 1)
         {
+            //Check for duplicate
             if(!$this->valueExists('content_id',$contentId)) {
+                //Insert entry
                 return $this->insert(array(
                                          'content_id' => $contentId,
                                          'ordering' => $this->getOrdering()
@@ -73,8 +84,7 @@ class dbcontentfrontpage extends dbTable
          * @access public
          * @return bool
          */
-        public function remove
-            ($id)
+        public function remove($id)
         {
             $page = $this->getRow('id', $id);
             $pageOrderNo = $page['ordering'];
@@ -91,13 +101,13 @@ class dbcontentfrontpage extends dbTable
         /**
          * Method to get all the front page id's
          * 
-         * @return array
+         * @return array $allFrontPages An array of oll entries in the content front page table
          * @access public
          */
         public function getFrontPages()
         {
-
-            return $this->getAll('ORDER BY ordering');
+            $allFrontPages = $this->getAll('ORDER BY ordering');
+            return $allFrontPages;
         }
 
 
@@ -107,32 +117,30 @@ class dbcontentfrontpage extends dbTable
          * @param string $id The id to be checked
          * @access public
          * @return bool
-         * 
          */
         public function isFrontPage($id)
         {
-
-            return $this->valueExists('content_id',$id);
+            $isFrontPage = $this->valueExists('content_id',$id);
+            return $isFrontPage;
         }
 
         /**
-         * Method to check if a page is a front page
+         * Method to change the status of a page
          * 
-         * @param string $pageId The id to be checked
+         * @param string $pageId The id of the page to be changed
          * @access public
          * @return bool
-         * 
          */
         public function changeStatus($pageId)
         {
+            //If it is on the front page then remove it
             if($this->isFrontPage($pageId)) {
                 $entry = $this->getRow('content_id', $pageId);
                 $id = $entry['id'];
-                return $this->remove
-                       ($id);
+                return $this->remove($id);
+            //If it is not on the front page then add it    
             } else {
-                return $this->add
-                       ($pageId);
+                return $this->add($pageId);
             }
         }
 

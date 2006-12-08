@@ -10,49 +10,55 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 // end security check
 /**
-* Class to access the ContextCore Tables
+* Data access class for the cmsadmin module. Used to access data in the sections table. 
 *
-* @package cms
-* @category cmsadmin
-* @copyright 2004, University of the Western Cape & AVOIR Project
+* @package cmsadmin
+* @category chisimba
+* @copyright AVOIR 
 * @license GNU GPL
-* @version
-* @author Wesley  Nitsckie
+* @author Wesley Nitsckie
 * @author Warren Windvogel
-* @example :
 */
 
 class dbsections extends dbTable
 {
 
         /**
-         * @var object $_objDBContent
-         *
-         * @access protected
-         */
+        * The dbcontent object
+        *
+        * @access private
+        * @var object
+        */
         protected $_objDBContent;
 
         /**
-         * @var object $_objLanguage
-         *
-         * @access protected
-         */
+        * The language object
+        *
+        * @access private
+        * @var object
+        */
         protected $_objLanguage;
 
-        /**
-         * Method to define the table
-         * 
-         * @access public
-         */
+	   /**
+	    * Class Constructor
+	    *
+	    * @access public
+	    * @return void
+	    */
         public function init()
         {
-            parent::init('tbl_cms_sections');
-            $this->_objDBContent = $this->getObject('dbcontent', 'cmsadmin');
-            $this->_objLanguage = & $this->newObject('language', 'language');
+        	try {        
+                parent::init('tbl_cms_sections');
+                $this->_objDBContent = & $this->newObject('dbcontent', 'cmsadmin');
+                $this->_objLanguage = & $this->newObject('language', 'language');
+           } catch (Exception $e){
+       		    echo 'Caught exception: ',  $e->getMessage();
+        	    exit();
+     	   }
         }
 
         /**
-         * Methode to get the list of sections
+         * Method to get the list of sections
          *
          * @access public
          * @param bool $isPublished TRUE | FALSE To get published sections
@@ -68,7 +74,7 @@ class dbsections extends dbTable
         }
 
         /**
-         * Methode to get the list of root nodes
+         * Method to get the list of root nodes
          *
          * @access public
          * @param bool $isPublished TRUE | FALSE To get published sections
@@ -96,7 +102,7 @@ class dbsections extends dbTable
         }
 
         /**
-         * Method to the first sections id(pk)
+         * Method to get the first sections id(pk)
          *
          * @param bool $isPublished TRUE | FALSE To get published sections
          * @return string First sections id
@@ -127,8 +133,7 @@ class dbsections extends dbTable
          * @access public
          * @return bool
          */
-        public function add
-            ()
+        public function add()
         {
             //get param from dropdown
             $parentSelected = $this->getParam('parent');
@@ -141,7 +146,7 @@ class dbsections extends dbTable
             } else {
                 $rootid = $this->getRootNodeId($id);
             }
-
+            //Get section details
             $title = $this->getParam('title');
             $menuText = $this->getParam('menutext');
             $access = $this->getParam('access');
@@ -157,6 +162,58 @@ class dbsections extends dbTable
             }
             $ordertype = $this->getParam('pageorder');
             $ordering = $this->getOrdering($parentid);
+            //Add section
+            return $this->insert(array(
+                                     'rootid' => $rootid,
+                                     'parentid' => $parentid,
+                                     'title' => $title,
+                                     'menutext' => $menuText,
+                                     'access' => $access,
+                                     'layout' => $layout,
+                                     'ordering' => $ordering,
+                                     'description' => $description,
+                                     'published' => $published,
+                                     'showdate' => $showdate,
+                                     'showintroduction' => $showintroduction,
+                                     'numpagedisplay' => $numpagedisplay,
+                                     'ordertype' => $ordertype,
+                                     'nodelevel' => $this->getLevel($parentid) + '1'
+                                 ));
+        }
+
+        /**
+         * Method to add a section to the database
+         *
+         * @param string $parent The id of the parent node. '0' for root nodes
+         * @param string $title The title of the new section
+         * @param string $menuText The text that will appear in the tree menu
+         * @param bool $published Whether page will be visible or not
+         * @param bool $access True if "registered" page False if "public" page
+         * @param string $description The introduction text 
+         * @param string $layout The layout type of the section
+         * @param bool $showdate Whether date will be visible or not
+         * @param bool $showintroduction Whether introduction will be visible or not
+         * @param int $numpagedisplay Number of pages to display 
+         * @param string $ordertype How the page should be ordered
+         * @access public
+         * @return bool
+         */
+        public function addNewSection($parent, $title, $menuText, $access, $description, $published, $layout, $showdate, $showintroduction, $numpagedisplay, $ordertype)
+        {
+            //get param from dropdown
+            $parentSelected = $parent;
+            //get parent type "subsection", "root" or "param is null"(new section will be root level) and its id
+            $id = $parentSelected;
+            $parentid = $id;
+
+            if ($this->getLevel($parentid) == '1' || $this->getLevel($parentid) == '0') {
+                $rootid = $parentid;
+            } else {
+                $rootid = $this->getRootNodeId($id);
+            }
+            //Set ordering
+            $ordering = $this->getOrdering($parentid);
+            //Add section
             return $this->insert(array(
                                      'rootid' => $rootid,
                                      'parentid' => $parentid,
@@ -183,7 +240,7 @@ class dbsections extends dbTable
          */
         public function edit()
         {
-
+            //Get section details
             $id = $this->getParam('id');
             $parentid = $this->getParam('parent');
             $rootid = $this->getParam('rootid');
@@ -222,42 +279,10 @@ class dbsections extends dbTable
         }
 
         /**
-         * Method to get the Order List List dropdown
-         * 
-         * @param  string $name The name of the radio box
-         * @access public
-         * @return string
-         */
-        public function getOrderList($name)
-        {
-            $objDropDown = & $this->newObject('dropdown', 'htmlelements');
-            $objDropDown->name = $name;
-            //fill the drop down with the list of images
-            $arrSections = $this->getAll('ORDER BY ordering');
-
-            $cnt = 1;
-            $objDropDown->addOption('0', ' 0 first');
-            foreach ($arrSections as $section) {
-                $objDropDown->addOption($cnt++, ' '.$cnt.'  '.$section['menutext']);
-
-                if ($section['ordering'] == $cnt) {
-                    $objDropDown->setSelected($cnt);
-                }
-
-            }
-
-            $objDropDown->addOption($cnt++ , ' '.$cnt. ' last');
-
-
-            return $objDropDown->show();
-        }
-
-        /**
          * Method to check if there is sections
          *
          * @access public
          * @return boolean
-         * 
          */
         public function isSections()
         {
@@ -270,21 +295,20 @@ class dbsections extends dbTable
             }
         }
 
-
         /**
          * Method to get the menutext for a section
          *
-         * @return string
+         * @return string $menutext The title that will appear on the tree menu
          * @access public
-         * @param string $id 
+         * @param string $id The id of the section
          */
         public function getMenuText($id)
         {
             $line = $this->getSection($id);
-
-            return $line['menutext'];
+            
+            $menutext = $line['menutext'];
+            return $menutext;
         }
-
 
         /**
          * Method to toggle the publish field 
@@ -303,7 +327,6 @@ class dbsections extends dbTable
             } else {
                 return $this->update('id', $id , array('published' => 1) );
             }
-
         }
 
         /**
@@ -312,7 +335,7 @@ class dbsections extends dbTable
          * @param string $id The id(pk) of the section
          * @return bool True if has nodes else False
          * @access public
-          */
+         */
         public function hasNodes($id)
         {
             $nodes = $this->getAll('WHERE parentid = \''.$id.'\'');
@@ -331,7 +354,7 @@ class dbsections extends dbTable
          * @param string $id The id(pk) of the section
          * @return int $count The value of the count field
          * @access public
-          */
+         */
         public function getLevel($id)
         {
             $count = 0;
@@ -352,7 +375,7 @@ class dbsections extends dbTable
          * @param string $id The id(pk) of the section
          * @return string $rootId The id(pk) of the sections root node
          * @access public
-          */
+         */
         public function getRootNodeId($id)
         {
             //get entry
@@ -371,7 +394,7 @@ class dbsections extends dbTable
          * @param bool $isPublished TRUE | FALSE To get published sections
          * @return array $subsections An array of associative arrays for all categories in the section
          * @access public
-          */
+         */
         public function getSubSectionsInSection($sectionId, $order = 'ASC', $isPublished = FALSE)
         {
             if ($isPublished) {
@@ -389,7 +412,7 @@ class dbsections extends dbTable
          * @param bool $isPublished TRUE | FALSE To get published sections
          * @return array $subsections An array of associative arrays for all categories in the section
          * @access public
-          */
+         */
         public function getSubSectionsInRoot($rootId, $isPublished = FALSE)
         {
             if ($isPublished) {
@@ -409,7 +432,7 @@ class dbsections extends dbTable
          * @param bool $isPublished TRUE | FALSE To get published sections
          * @return array $subsections An array of associative arrays for all sub sections in the section
          * @access public
-          */
+         */
         public function getSubSectionsForLevel($rootId, $level, $order = 'ASC', $isPublished = FALSE)
         {
             if ($isPublished) {
@@ -426,7 +449,7 @@ class dbsections extends dbTable
          * @param string $sectionId The id(pk) of the section
          * @return int $noSubSecs The number of subsections in the section
          * @access public
-          */
+         */
         public function getNumSubSections($sectionId)
         {
             $subSecs = $this->getAll('WHERE parentid = \''.$sectionId.'\'');
@@ -469,11 +492,9 @@ class dbsections extends dbTable
                     $this->_objDBContent->resetSection($data);
                     $this->delete('id', $data);
                 }
-
                 //delete original category
                 $this->_objDBContent->resetSection($id);
                 return $this->delete('id', $id);
-
             } else {
                 $this->_objDBContent->resetSection($id);
                 return $this->delete('id', $id);
@@ -487,7 +508,7 @@ class dbsections extends dbTable
          * @return int $ordering The value to insert into the ordering field
          * @access public
          * @author Warren Windvogel
-          */
+         */
         public function getOrdering($parentid = NULL)
         {
             $ordering = 1;

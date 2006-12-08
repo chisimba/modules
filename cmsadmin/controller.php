@@ -1,29 +1,24 @@
 <?php
-/* -------------------- dbTable class ----------------*/
 // security check - must be included in all scripts
-
 if (!$GLOBALS['kewl_entry_point_run'])
 {
     die("You cannot view this page directly");
 }
-
 // end security check
+
 /**
-* The controller for the cmsadmin
-* @package dbcategories
-* @category dbcategories
-* @copyright 2004, University of the Western Cape & AVOIR Project
-* @license GNU GPL
-* @version
-* @author Wesley  Nitsckie
-* @author Warren Windvogel
-* @example :
-*/
+ * The controller for the cmsadmin module that extends the base controller
+ *
+ * @package cmsadmin
+ * @category chisimba
+ * @copyright AVOIR
+ * @license GNU GPL
+ * @author Wesley  Nitsckie
+ * @author Warren Windvogel
+ */
 
 class cmsadmin extends controller
 {
-
-
         /**
         * The contextcore  object
         *
@@ -56,8 +51,6 @@ class cmsadmin extends controller
         */
         protected $_objFrontPage;
 
-
-
         /**
         * The CMS Utilities object
         *
@@ -65,7 +58,6 @@ class cmsadmin extends controller
         * @var object
         */
         protected $_objUtils;
-
 
         /**
         * The user object
@@ -75,7 +67,6 @@ class cmsadmin extends controller
         */
         protected $_objUser;
 
-
         /**
         * The layout object
         *
@@ -83,7 +74,6 @@ class cmsadmin extends controller
         * @var object
         */
         protected $_objLayout;
-
 
         /**
         * The config object
@@ -96,6 +86,7 @@ class cmsadmin extends controller
         /**
         * The language object
         *
+        * @access private
         * @var object
         */
         var $objLanguage;
@@ -103,18 +94,21 @@ class cmsadmin extends controller
         /**
         * The blocks object
         *
+        * @access private
         * @var object
         */
         var $_objBlocks;
 
-        /**
-         * Method to initialise the cmsadmin object
-         * 
-         * @access public 
-         */
+	   /**
+	    * Class Constructor
+	    *
+	    * @access public
+	    * @return void
+	    */
         public function init()
         {
-            // instantiate object
+        	try {       
+                // instantiate object
                 $this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
                 $this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
                 $this->_objBlocks = & $this->newObject('dbblocks', 'cmsadmin');
@@ -127,7 +121,8 @@ class cmsadmin extends controller
                 $this->_objContext = & $this->newObject('dbcontext', 'context');
 
                 $objModule = & $this->newObject('modules', 'modulecatalogue');
-
+                
+                //Load the ajax classes
                 $this->loadClass('xajax', 'ajaxwrapper');
                 $this->loadClass('xajaxresponse', 'ajaxwrapper');
 
@@ -137,6 +132,10 @@ class cmsadmin extends controller
                 } else {
                     $this->inContextMode = FALSE;
                 }
+		   } catch (Exception $e){
+       		    echo 'Caught exception: ',  $e->getMessage();
+        	    exit();
+           }	    
         }
 
         /**
@@ -150,7 +149,6 @@ class cmsadmin extends controller
         {
                 $action = $this->getParam('action');
                 $this->setLayoutTemplate('cms_layout_tpl.php');
-                //$this->setVar('bodyParams', ' id="type-b" ');
 
                 switch ($action) {
 
@@ -161,9 +159,9 @@ class cmsadmin extends controller
                         die('<div id=featurebox>'.$this->objLanguage->languageText('mod_cmsadmin_nopermissionmsg', 'cmsadmin').'</div>');
                     }
 
-                    //----------------------- section section
-
+                //----------------------- section section
                 case 'sections':
+                    //Check whether to display all nodes or root nodes only
                     $viewType = $this->getParam('viewType', 'root');
                     $this->setVarByRef('viewType', $viewType);
                     return 'cms_section_list_tpl.php';
@@ -182,9 +180,11 @@ class cmsadmin extends controller
                     return 'cms_section_view_tpl.php';
 
                 case 'changesectionorder':
+                    //Get the sections details
                     $id = $this->getParam('id');
                     $ordering = $this->getParam('ordering');
                     $sectionId = $this->getParam('parent');
+                    //Change the ordering
                     $this->_objSections->changeOrder($id, $ordering, $sectionId);
 
                     if (!empty($sectionId)) {
@@ -208,8 +208,8 @@ class cmsadmin extends controller
                     return 'cms_section_add_tpl.php';
 
                 case 'createsection':
-                    $this->_objSections->add
-                    ();
+                    //Save the section
+                    $this->_objSections->add();
                     $parent = $this->getParam('parentid');
                     if (!empty($parent)) {
                         return $this->nextAction('viewsection', array('id' => $parent), 'cmsadmin');
@@ -230,16 +230,14 @@ class cmsadmin extends controller
                     $this->_objSections->deleteSection($this->getParam('id'));
                     return $this->nextAction('sections', array(NULL), 'cmsadmin');
 
-                    //----------------------- front page section
-
+                //----------------------- front page section
                 case 'frontpages':
                     $this->setVar('files', $this->_objFrontPage->getFrontPages());
                     return 'cms_frontpage_manager_tpl.php';
 
                 case 'removefromfrontpage':
                     $id = $this->getParam('id');
-                    $this->_objFrontPage->remove
-                    ($id);
+                    $this->_objFrontPage->remove($id);
                     return $this->nextAction('frontpages', array(NULL), 'cmsadmin');
 
                 case 'changefpstatus':
@@ -249,8 +247,10 @@ class cmsadmin extends controller
                     return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
 
                 case 'changefporder':
+                    //Get front page details
                     $id = $this->getParam('id');
                     $ordering = $this->getParam('ordering');
+                    //Change the ordering on the front page
                     $this->_objFrontPage->changeOrder($id, $ordering);
                     $this->setVar('files', $this->_objFrontPage->getFrontPages());
                     return $this->nextAction('frontpages', array(NULL), 'cmsadmin');
@@ -265,8 +265,8 @@ class cmsadmin extends controller
                     return 'cms_content_add_tpl.php';
 
                 case 'createcontent':
-                    $this->_objContent->add
-                    ();
+                    //Save the content page
+                    $this->_objContent->add();
                     $sectionId = $this->getParam('parent', NULL);
                     if(!empty($sectionId)) {
                         return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
@@ -285,6 +285,7 @@ class cmsadmin extends controller
                     }
 
                 case 'contentpublish':
+                    //Change state between published and not published
                     $this->_objContent->togglePublish($this->getParam('id'));
                     return $this->nextAction('frontpages');
 
@@ -303,9 +304,11 @@ class cmsadmin extends controller
                     }
 
                 case 'changecontentorder':
+                    //Get content details
                     $id = $this->getParam('id');
                     $ordering = $this->getParam('ordering');
                     $sectionId = $this->getParam('sectionid');
+                    //Change content order
                     $this->_objContent->changeOrder($sectionId, $id, $ordering);
                     return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
 
@@ -318,8 +321,11 @@ class cmsadmin extends controller
                     return 'cms_blocks_tpl.php';
 
                 case 'saveblock':
+                    //Get the page id of the page to add the block to
                     $pageId = $this->getParam('pageid', NULL);
+                    //Get all available blocks
                     $blocks = $this->_objBlocks->getBlockEntries();
+                    //Get all blocks already on the page
                     $currentBlocks = $this->_objBlocks->getBlocksForPage($pageId);
                     foreach($blocks as $block) {
                         $exists = FALSE;
@@ -332,11 +338,13 @@ class cmsadmin extends controller
                                 }
                             }
                         }
+                        //Get all blocks to be added
                         if($this->getParam($blockId)) {
+                            //Check if it already exists before adding it
                             if(!$exists) {
-                                $this->_objBlocks->add
-                                ($pageId, $blockId);
+                                $this->_objBlocks->add($pageId, $blockId);
                             }
+                        //If block isn't in list to be added check if it exists and delete it    
                         } else {
                             if($exists) {
                                 $this->_objBlocks->deleteBlock($pageId, $blockId);
@@ -346,21 +354,22 @@ class cmsadmin extends controller
                     return $this->nextAction('addblock', array('pageid' => $pageId), 'cmsadmin');
 
                 case 'changeblocksorder':
+                    //Get block entry details
                     $id = $this->getParam('id');
                     $ordering = $this->getParam('ordering');
                     $pageId = $this->getParam('pageid');
+                    //Change order of blocks on page
                     $this->_objBlocks->changeOrder($id, $ordering, $pageId);
                     return $this->nextAction('addblock', array('pageid' => $pageId), 'cmsadmin');
 
                 }
         }
 
-
         /**
         * Method to get the menu for the cms admin
         *
         * @access public
-        * @return string 
+        * @return string The html to produce the navigation
         */
         public function getCMSMenu()
         {
@@ -383,13 +392,11 @@ class cmsadmin extends controller
                 $objResponse->addAssign('pagenumcol','style.display', 'none');
                 $objResponse->addAssign('dateshowlabel','style.display', 'none');
                 $objResponse->addAssign('dateshowcol','style.display', 'none');
-
             } else {
                 $objResponse->addAssign('pagenumlabel','style.display', 'block');
                 $objResponse->addAssign('pagenumcol','style.display', 'block');
                 $objResponse->addAssign('dateshowlabel','style.display', 'block');
                 $objResponse->addAssign('dateshowcol','style.display', 'block');
-
             }
 
             if ($sectionType == 'summaries' || $sectionType == 'list') {

@@ -1,65 +1,76 @@
 <?php
-
-/* -------------------- dbTable class ----------------*/
 // security check - must be included in all scripts
-
 if (!$GLOBALS['kewl_entry_point_run'])
 {
     die("You cannot view this page directly");
 }
-
 // end security check
+
 /**
-* Class to access the ContextCore Tables
-* @package cms
-* @category cmsadmin
-* @copyright 2004, University of the Western Cape & AVOIR Project
+* Data access class for the cmsadmin module. Used to access data in the content table. 
+*
+* @package cmsadmin
+* @category chisimba
+* @copyright AVOIR 
 * @license GNU GPL
-* @version
-* @author Wesley  Nitsckie
+* @author Wesley Nitsckie
 * @author Warren Windvogel
-* @example :
 */
 
 class dbcontent extends dbTable
 {
 
         /**
-         * @var object $_objUser;
-         */
+        * The user object
+        *
+        * @access private
+        * @var object
+        */
         protected $_objUser;
 
 
         /**
-         * @var object $_objFrontPage t
-         * 
-         * @access protected
-         */
+        * The dbfrontpage object
+        *
+        * @access private
+        * @var object
+        */
         protected $_objFrontPage;
 
         /**
-         * @var object $_objLanguage
-         * @access protected
-         */
+        * The language object
+        *
+        * @access private
+        * @var object
+        */
         protected $_objLanguage;
 
         /**
-         * @var object $_objFrontPage t
-         * 
-         * @access protected
-         */
+        * The blocks object
+        *
+        * @access private
+        * @var object
+        */
         protected $_objBlocks;
 
-        /**
-        * Constructor
-        */
+	   /**
+	    * Class Constructor
+	    *
+	    * @access public
+	    * @return void
+	    */
         public function init()
         {
-            parent::init('tbl_cms_content');
-            $this->_objUser = & $this->getObject('user', 'security');
-            $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
-            $this->_objLanguage = & $this->newObject('language', 'language');
-            $this->_objBlocks = & $this->newObject('dbblocks', 'cmsadmin');
+        	try {  
+                parent::init('tbl_cms_content');
+                $this->_objUser = & $this->getObject('user', 'security');
+                $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
+                $this->_objLanguage = & $this->newObject('language', 'language');
+                $this->_objBlocks = & $this->newObject('dbblocks', 'cmsadmin');
+           } catch (Exception $e){
+       		    echo 'Caught exception: ',  $e->getMessage();
+        	    exit();
+     	   }
         }
 
         /**
@@ -68,10 +79,9 @@ class dbcontent extends dbTable
          * @access public
          * @return bool
          */
-
-        public function add
-            ()
+        public function add()
         {
+            //Get details of the new entry
             $title = $this->getParam('title');
             $sectionid = $this->getParam('parent');
             $published = ($this->getParam('published') == 'on') ? 1 : 0;
@@ -99,9 +109,46 @@ class dbcontent extends dbTable
             $isFrontPage = $this->getParam('frontpage');
 
             if ($isFrontPage == 'on') {
+                $this->_objFrontPage->add($newId);
+            }
 
-                $this->_objFrontPage->add
-                ($newId);
+            return $newId;
+        }
+
+        /**
+         * Method to save a record to the database specifying all params
+         *
+         * @param string $title The title of the page
+         * @param string $sectionid The id of the section in which the content will appear
+         * @param bool $published Whether page will be visible or not
+         * @param bool $access True if "registered" page False if "public" page
+         * @param string $introText The introduction content
+         * @param string $fullText The main content of the page
+         * @param bool $isFrontPage Whether page will appear on the front page or not
+         * @access public
+         * @return bool
+         */
+        public function addNewPage($title, $sectionid, $published, $access, $introText, $fullText, $isFrontPage)
+        {
+            $creatorid = $this->_objUser->userId();
+
+            $newArr = array(
+                          'title' => $title ,
+                          'sectionid' => $sectionid,
+                          'introtext' => $introText,
+                          'body' => $fullText,
+                          'access' => $access,
+                          'ordering' => $this->getOrdering($sectionid),
+                          'published' => $published,
+                          'created' => $this->now(),
+                          'modified' => $this->now(),
+                          'created_by' => $creatorid
+                      );
+
+            $newId = $this->insert($newArr);
+
+            if ($isFrontPage == 'on') {
+                $this->_objFrontPage->add($newId);
             }
 
             return $newId;
@@ -141,15 +188,10 @@ class dbcontent extends dbTable
             $isFrontPage = $this->getParam('frontpage');
 
             if ($isFrontPage == 'on') {
-
-                $this->_objFrontPage->add
-                ($id);
+                $this->_objFrontPage->add($id);
             } else {
-
-                $this->_objFrontPage->remove
-                ($id);
+                $this->_objFrontPage->remove($id);
             }
-
 
             return $this->update('id', $id, $newArr);
         }
@@ -177,7 +219,6 @@ class dbcontent extends dbTable
         {
             return $this->update('id', $id, array('trash' => 0));
         }
-
 
         /**
         * Method to delete a content page
@@ -214,8 +255,7 @@ class dbcontent extends dbTable
                 $fpEntry = $this->_objFrontPage->getRow('content_id', $id);
                 $fpEntryId = $fpEntry['id'];
 
-                $this->_objFrontPage->remove
-                ($fpEntryId);
+                $this->_objFrontPage->remove($fpEntryId);
             }
             //Remove blocks for the page
             $pageBlocks = $this->_objBlocks->getBlocksForPage($id);
@@ -231,9 +271,9 @@ class dbcontent extends dbTable
         /**
          * Method to get the content
          *
-         * @return  array
+         * @param string $filter The Filter
+         * @return  array An array of associative arrays of all content pages in relationto filter specified
          * @access public
-         * @param string filter The Filter 
          */
         public function getContentPages($filter = '')
         {
@@ -246,18 +286,17 @@ class dbcontent extends dbTable
             return $this->getAll($filter.' ORDER BY ordering');
         }
 
-
         /**
          * Method to get a page content record
          *
          * @param string $id The id of the page content
          * @access public
-         * @return array
+         * @return array $content An associative array of content page details
          */
         public function getContentPage($id)
         {
-
-            return $this->getRow('id', $id );
+            $content = $this->getRow('id', $id );
+            return $content;
         }
 
         /**
@@ -358,7 +397,6 @@ class dbcontent extends dbTable
             //get last order value
             $lastOrder = $this->getAll('WHERE sectionid = \''.$sectionId.'\' ORDER BY ordering DESC LIMIT 1');
             //add after this value
-
             if (!empty($lastOrder)) {
                 $ordering = $lastOrder['0']['ordering'] + 1;
             }
