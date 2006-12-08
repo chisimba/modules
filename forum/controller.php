@@ -20,13 +20,13 @@ if (!$GLOBALS['kewl_entry_point_run'])
 class forum extends controller
 {
 
-    private $forumtype; // A variable to determine whether the forum is for context or workgroup
+    protected $forumtype; // A variable to determine whether the forum is for context or workgroup
     
-    private $contextCode; // ContextCode
+    protected $contextCode; // ContextCode
     
-    private $workgroupId; // Workgroup
+    protected $workgroupId; // Workgroup
     
-    private $workgroupDescription; // Workgroup Title
+    protected $workgroupDescription; // Workgroup Title
     
     /**
     * Constructor method to instantiate objects and get variables
