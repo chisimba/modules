@@ -908,10 +908,10 @@ class blog extends controller
 				$id = $this->getParam('postid');
 				$pd = $_POST;
 				$pd['host'] = $_SERVER['REMOTE_ADDR'];
-				$pd['id'] =  $id; //array('id' => $id); //, 'host' => $host, 'title' => $title, 'excerpt' => $excerpt, 'blog_name' => $blog_name, 'url' => $url, 'extra' => $extra);
+				$pd['id'] =  $id;
 				$data = $pd;
 				$options = array(
-				    // Options for Services_Trackback directly
+				    // Options for trackback directly
         			'strictness'        => 1,
         			'timeout'           => 30,          // seconds
         			'fetchlines'        => 30,
