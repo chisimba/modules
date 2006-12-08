@@ -8,40 +8,42 @@ if (!$GLOBALS['kewl_entry_point_run'])
 }
 
 /**
-* Class for building a article box for KEWL.nextgen.
+* Class for building a article box for Chisimba.
 *
 * The class builds a css style feature box 
 *
-* @author Wesley Nitsckie
-* @copyright (c)2004 UWC
-* @package featurebox
-* @version 0.1
+* @package cmsadmin
+* @category chisimba
+* @copyright AVOIR
+* @license GNU GPL
+* @author Wesley  Nitsckie
 */
 
 class articlebox extends object
 {
         /**
-        * Method to construct the class.
-        **/
+         * Method to initialise the articlebox object
+         * 
+         * @access public 
+         */
         public function init()
         {
+        
         }
 
         /**
          * Method to show the article
          * 
-         * @param null
+         * @param string $content The content to appear in the article box
          * @access publc
-         * @return string
+         * @return string Html for the article box
          */
         public function show($content = null)
         {
-
             $article = '<div class="featurebox">';
             $article .= '<small>'.$content.'</small>';
             $article .= '</div>';
             return $article;
-
         }
 }
 ?>

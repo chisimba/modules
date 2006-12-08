@@ -1,20 +1,19 @@
 <?php
-/* -------------------- dbTable class ----------------*/
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run'])
-{
+if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
+
 /**
-* The controller for the content management
+* The controller for the cms module that extends the base controller
+*
 * @package cms
-* @category dbcategories
-* @copyright 2004, University of the Western Cape & AVOIR Project
+* @category chisimba
+* @copyright AVOIR
 * @license GNU GPL
-* @version
 * @author Wesley  Nitsckie
-* @example :
+* @author Warren Windvogel
 */
 
 class cms extends controller
@@ -22,11 +21,11 @@ class cms extends controller
 
 
         /**
-            * The contextcore  object 
-            *
-            * @access private
-            * @var object
-           */
+         * The contextcore  object 
+         *
+         * @access private
+         * @var object
+         */
         protected $_objContextCore;
 
         /**
@@ -34,7 +33,7 @@ class cms extends controller
          *
          * @access private
          * @var object
-        */
+         */
         protected $_objSections;
 
         /**
@@ -42,23 +41,23 @@ class cms extends controller
          *
          * @access private
          * @var object
-        */
+         */
         protected $_objContent;
 
         /**
-        * The CMS Utilities object 
-        *
-        * @access private
-        * @var object
-        */
+         * The CMS Utilities object 
+         *
+         * @access private
+         * @var object
+         */
         protected $_objUtils;
 
         /**
-        * The contextCode
-        *
-        * @access private
-        * @var object
-        */
+         * The contextCode
+         *
+         * @access private
+         * @var object
+         */
         protected $contextCode;
 
         /**
@@ -107,7 +106,7 @@ class cms extends controller
         *
         * @access public
         * @return bool FALSE
-           */
+        */
         public function requiresLogin() // overides that in parent class
         {
             return FALSE;
@@ -196,7 +195,7 @@ class cms extends controller
          * Method to get the Bread Crumbs
          * 
          * @access public
-         * @return string
+         * @return string Html for the breadcrumbs
          */
         public function getBreadCrumbs()
         {
