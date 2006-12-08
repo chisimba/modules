@@ -1,4 +1,4 @@
-<?
+<?php
     /**
     * View template file for the userimport module
     * Displays data and links

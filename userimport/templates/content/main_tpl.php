@@ -1,4 +1,4 @@
-<?
+<?php
     /**
     * Main template file for the userimport module
     * Displays data and forms

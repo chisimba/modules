@@ -1,4 +1,4 @@
-<?
+<?php
     /**
     * Import table template for the userimport module
     * Displays list of imports

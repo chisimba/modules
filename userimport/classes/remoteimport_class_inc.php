@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Class remoteimport
 * PHP class library for getting user lists from a remote webservice

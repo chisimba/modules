@@ -1,4 +1,4 @@
-<?
+<?php
 /* -------------------- userimport class extends controller ----------------*/
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])

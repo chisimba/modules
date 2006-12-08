@@ -1,4 +1,4 @@
-<?
+<?php
 $name=$this->objUserBatch->exportName;
 $size=strlen($this->objUserBatch->export);
 $type='ASCII';

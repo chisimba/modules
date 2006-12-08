@@ -1,4 +1,4 @@
-<?
+<?php
 $this->loadClass('form','htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $this->loadClass('button','htmlelements');
