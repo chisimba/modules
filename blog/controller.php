@@ -943,7 +943,7 @@ class blog extends controller
 					echo "Trackback received";
 				}
 				else {
-					echo "Inavlid trackback response";
+					echo "Invalid trackback response";
 				}
 				break;
 
