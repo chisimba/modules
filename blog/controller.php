@@ -929,7 +929,7 @@ class blog extends controller
 				$title = "test post";
 				$excerpt = "blah";
 				$blog_name = $this->objUser->fullname($this->objUser->userId()) . " Chisimba blog";
-				$url = "http://127.0.0.1/cpgsql/5ive/app/index.php?module=blog";
+				$url = "http://127.0.0.1/cpgsql/5ive/app/index.php?module=blog&action=randblog&userid=1";
 				$trackback_url = "http://127.0.0.1/cpgsql/5ive/app/index.php?action=tbreceive&userid=1&module=blog&postid=init_2120_1165131820";
 				$extra = NULL;
 
@@ -967,7 +967,7 @@ class blog extends controller
 
 				//set the url to look at
 				//$this->objTB->setVal('url', 'http://schlitt.info/applications/blog/');
-				//var_dump($this->objTB->autoDisc());
+				var_dump($this->objTB->autoDisc());
 
 				$sendtb = array('title' => 'Chisimba based Trackbacks',
 							    'url' => 'http://www.example.com',
@@ -977,7 +977,7 @@ class blog extends controller
 
 							  //'itemId' => 'fsiu_server_49','itemName' => 'fsiu_server_49','trackId' => 'fsiu_server_49',
 
-				var_dump($this->objTB->sendTB($sendtb));
+				//var_dump($this->objTB->sendTB($sendtb));
       		break;
 
 		}//action
