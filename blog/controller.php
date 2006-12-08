@@ -973,7 +973,7 @@ class blog extends controller
 							    'url' => 'http://www.example.com',
 							    'excerpt' => 'some excerpt',
 							    'blog_name' => $blog_name,
-							    'trackback_url' => 'http://127.0.0.1/cpgsql/5ive/app/index.php?action=tbrecieve&userid=1&module=blog&postid=init_2120_1165131820');
+							    'trackback_url' => 'http://127.0.0.1/cpgsql/5ive/app/index.php?action=tbreceive&userid=1&module=blog&postid=init_2120_1165131820');
 
 							  //'itemId' => 'fsiu_server_49','itemName' => 'fsiu_server_49','trackId' => 'fsiu_server_49',
 
