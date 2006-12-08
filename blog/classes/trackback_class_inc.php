@@ -1,5 +1,4 @@
 <?php
-
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
 	die("You cannot view this page directly");
@@ -17,13 +16,32 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 class trackback extends object
 {
+	/**
+	 * The trackback object Instance
+	 *
+	 * @var object
+	 */
 	public $objTrackBack;
 
+	/**
+	 * Standard init function
+	 *
+	 * @access public
+	 * @param void
+	 * @return void
+	 */
 	public function init()
 	{
 		require_once('modules/blog/resources/Trackback.php');
 	}
 
+	/**
+	 * Setup function encapsulating the factory method (create)
+	 *
+	 * @param array $data
+	 * @param array $options
+	 * @return object instance
+	 */
 	public function setup($data, $options)
 	{
 		$this->objTrackBack = Services_Trackback::create($data, $options);
@@ -31,21 +49,58 @@ class trackback extends object
 
 	}
 
+	/**
+	 * Method to create RDF Autodiscovery code for trackback agents
+	 *
+	 * @access public
+	 * @param void
+	 * @return string
+	 */
 	public function autodiscCode()
 	{
 		return $this->objTrackBack->getAutodiscoveryCode();
 	}
 
+	/**
+	 * Method to set values in the object context
+	 *
+	 * @access public
+	 * @param string $key
+	 * @param string $value
+	 * @return void
+	 */
 	public function setVal($key, $value)
 	{
 		$this->objTrackBack->set($key, $value);
 	}
 
+	/**
+	 * Public method to try and get autodiscovery trackback URLS from a data array
+	 *
+	 * @access public
+	 * @param void (inherited from $data array
+	 * @see setup
+	 * @return bool true on success|error on failure
+	 */
 	public function autoDisc()
 	{
-		return $this->objTrackBack->autodiscover();
+		$res = $this->objTrackBack->autodiscover();
+		if(PEAR::isError($res))
+		{
+			return $res->getMessage();
+		}
+		else {
+			return $res;
+		}
 	}
 
+	/**
+	 * Public method to send a trackback to a URL
+	 *
+	 * @access public
+	 * @param array $sendData
+	 * @return message on failure|returned bool on success
+	 */
 	public function sendTB($sendData)
 	{
 		$tracker = $this->objTrackBack->send($sendData);
@@ -58,16 +113,22 @@ class trackback extends object
 		}
 	}
 
+	/**
+	 * Method to receive a trackback from a remote blog
+	 *
+	 * @param array $data
+	 * @return bool true on success, message on failure
+	 */
 	public function recTB($data)
 	{
 		$res = $this->objTrackBack->receive($data);
 		if(PEAR::isError($res))
 		{
-			//var_dump($this->objTrackBack->receive($data));
 			return $this->objTrackBack->getResponseError($res->getMessage(), 1);
 		}
 		else {
-			return $this->objTrackBack->getResponseSuccess(); // . $this->objTrackBack->_data;
+			return $this->objTrackBack->getResponseSuccess();
 		}
 	}
 }
+?>
