@@ -425,7 +425,6 @@ class Services_Trackback {
         if ($req->getResponseCode() != 200) {
             return PEAR::raiseError('Host returned Error '.$req->getResponseCode().'.');
         }
-
         return $this->_interpretTrackbackResponse($req->getResponseBody());
     }
 

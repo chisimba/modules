@@ -918,7 +918,7 @@ class blog extends controller
     			$this->objTB = $this->getObject("trackback");
 				//use the factory
 				$this->objTB->setup($data, $options);
-				var_dump($this->objTB->recTB($data));
+				echo $this->objTB->recTB($data);
 
 				break;
 
