@@ -524,7 +524,7 @@ class blogops extends object
 				{
 					$blog_name = $this->objUser->fullname($userid);
 					$url = $this->uri(array('action' => 'randblog', 'userid' => $userid, 'module' => 'blog'));
-					$trackback_url = $this->uri(array('action' => 'tbrecieve', 'userid' => $userid, 'module' => 'blog', 'postid' => $post['id']));
+					$trackback_url = $this->uri(array('action' => 'tbreceive', 'userid' => $userid, 'module' => 'blog', 'postid' => $post['id']));
 					$extra = NULL;
 					$this->objIcon = &$this->getObject('geticon', 'htmlelements');
 					$edIcon = $this->objIcon->getEditIcon($this->uri(array('action' => 'postedit', 'id' => $post['id'], 'module' => 'blog')));

@@ -918,13 +918,8 @@ class blog extends controller
     			$this->objTB = $this->getObject("trackback");
 				//use the factory
 				$this->objTB->setup($data, $options);
-				if($this->objTB->recTB($data) == true)
-				{
-					echo "Trackback received";
-				}
-				else {
-					echo "Invalid trackback response";
-				}
+				echo $this->objTB->recTB($data);
+
 				break;
 
 			case 'trackback':
