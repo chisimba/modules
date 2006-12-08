@@ -471,6 +471,28 @@ class blogops extends object
 	public function showPosts($posts)
 	{
 		$this->objComments = &$this->getObject('commentinterface', 'comment');
+		$this->objTB = $this->getObject("trackback");
+		//set the trackback options
+		$tboptions = array(
+			        // Options for trackback class
+        			'strictness'        => 1,
+        			'timeout'           => 30,          // seconds
+        			'fetchlines'        => 30,
+        			'fetchextra'        => true,
+        			// Options for HTTP_Request class
+        			'httprequest'       => array(
+            			'allowRedirects'    => true,
+            			'maxRedirects'      => 2,
+            			'method'            => 'GET',
+            			'useragent'         => 'Chisimba',
+            			//'proxy_host'        => '192.102.9.33',
+            			//'proxy_port'        => '8080',
+            			//'proxy_user'        => 'pscott',
+            			//'poxy_pass'         => 'monkeys123',
+        			),
+    			);
+
+
 		$ret = NULL;
 		//Middle column (posts)!
 		//break out the ol featurebox...
@@ -500,20 +522,30 @@ class blogops extends object
 				//edit icon in a table 1 row x however number of things to do
 				if($post['userid'] == $userid)
 				{
+					$blog_name = $this->objUser->fullname($userid);
+					$url = $this->uri(array('action' => 'randblog', 'userid' => $userid, 'module' => 'blog'));
+					$trackback_url = $this->uri(array('action' => 'tbrecieve', 'userid' => $userid, 'module' => 'blog', 'postid' => $post['id']));
+					$extra = NULL;
 					$this->objIcon = &$this->getObject('geticon', 'htmlelements');
 					$edIcon = $this->objIcon->getEditIcon($this->uri(array('action' => 'postedit', 'id' => $post['id'], 'module' => 'blog')));
 
 					$commentLink = $this->objComments->addCommentLink($type = NULL);
 
 					//trackback URL (link)
-					$link = "Trackback URL";
-					$tburl = new href($link, $link, NULL);
+					//setup the tb
+					//trackback data
+					$tbdata = $data = array('id' => $post['id'], 'title' => $post['post_title'], 'excerpt' => $post['post_excerpt'], 'blog_name' => $blog_name, 'url' => $url, 'trackback_url' => $trackback_url, 'extra' => $extra);
+					$this->objTB->setup($tbdata, $tboptions);
+
+					$linktxt = $this->objLanguage->languageText("mod_blog_word_trackback", "blog");
+					$tburl = new href($trackback_url, $linktxt, NULL);
 					$tburl = $tburl->show();
 
 					//Set the table name
 					$tbl = $this->newObject('htmltable', 'htmlelements');
 					$tbl->cellpadding = 3;
 					$tbl->width = "50%";
+					$tbl->align = "center";
 
 					//set up the header row
 					$tbl->startHeaderRow();
@@ -527,6 +559,7 @@ class blogops extends object
 					$tbl->addCell($tburl); //trackback URL
 					$tbl->addCell('');
 					$tbl->endRow();
+					echo $this->objTB->autodiscCode();
 
 					$ret .= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content'] . "<hr />" . "<center>" . $tbl->show() . "</center>"));
 				}
