@@ -41,7 +41,7 @@ foreach($files as $file) {
     $objIcon = & $this->newObject('geticon', 'htmlelements');
     $objIcon->setIcon('edit');
     $link->link = $objIcon->show();
-    $link->href = $this->uri(array('action' => 'addcontent', 'id' => $arrFile['id']));
+    $link->href = $this->uri(array('action' => 'addcontent', 'id' => $arrFile['id'], 'parent' => $arrFile['sectionid']));
     $editPage = $link->show();
 
     $delArray = array('action' => 'removefromfrontpage', 'confirm' => 'yes', 'id' => $file['id']);
