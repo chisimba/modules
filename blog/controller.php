@@ -906,8 +906,9 @@ class blog extends controller
 			case 'tbreceive':
 				$this->requiresLogin(FALSE);
 				$id = $this->getParam('postid');
+				$pd = $_POST;
 				$data = array('id' => $id); //, 'host' => $host, 'title' => $title, 'excerpt' => $excerpt, 'blog_name' => $blog_name, 'url' => $url, 'extra' => $extra);
-
+				$data = array_merge($pd, $data);
 				$options = array(
 				    // Options for Services_Trackback directly
         			'strictness'        => 1,
