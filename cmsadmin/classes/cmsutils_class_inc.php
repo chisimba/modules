@@ -1531,7 +1531,7 @@ class cmsutils extends object
             $table2->endRow();
             //intro input
             $table2->startRow();
-            $table2->addCell($this->objLanguage->languageText('mod_cmsadmin_summary', 'cmsadmin').'/'.$this->objLanguage->languageText('mod_cmsadmin_introduction', 'cmsadmin').' ('.$this->objLanguage->languageText('word_required').')');
+            $table2->addCell($this->objLanguage->languageText('mod_cmsadmin_summary', 'cmsadmin').'/'.$this->objLanguage->languageText('word_introduction').' ('.$this->objLanguage->languageText('word_required').')');
             $table2->endRow();
             $table2->startRow();
             $table2->addCell($introInput->show());
