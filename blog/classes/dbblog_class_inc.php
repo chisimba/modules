@@ -449,7 +449,6 @@ class dbblog extends dbTable
 			return $this->insert($imparr, 'tbl_blog_posts');
 		}
 		else {
-			print_r($postarr['cclic']);
 			$this->epcleaner = $this->newObject('htmlcleaner', 'utilities');
 			$this->eecleaner = $this->newObject('htmlcleaner', 'utilities');
 
