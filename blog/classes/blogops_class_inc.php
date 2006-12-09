@@ -529,7 +529,27 @@ class blogops extends object
 				$tburl = $tburl->show();
 
 				//do the cc licence part
-				$cclic = "BY-SA";
+				$cclic = $post['post_lic'];
+				$this->objCC = $this->getObject('dbcreativecommons', 'creativecommons');
+				$lics = $this->objCC->getAll();
+				//print_r($lics); die();
+				//get the lic that matches from the db
+				foreach($lics as $lic)
+				{
+					if($cclic === $lic['code'])
+					{
+						$icons = explode(',', $lic['images']);
+						break;
+					}
+				}
+				//grab the icon obj
+				$objIcon = $this->newObject('geticon', 'htmlelements');
+				$iconList = '';
+    			foreach ($icons as $icon)
+    			{
+					$objIcon->setIcon ($icon, NULL, 'icons/creativecommons');
+        			$iconList .= $objIcon->show();
+    			}
 
 				//edit icon in a table 1 row x however number of things to do
 				if($post['userid'] == $userid)
@@ -557,7 +577,7 @@ class blogops extends object
 					$tbl->addCell($edIcon); //edit icon
 					$tbl->addCell($commentLink); //comment link(s)
 					$tbl->addCell($tburl); //trackback URL
-					$tbl->addCell($cclic); //cc licence
+					$tbl->addCell($iconList); //cc licence
 					$tbl->addCell('');
 					$tbl->endRow();
 					echo $this->objTB->autodiscCode();
