@@ -559,12 +559,6 @@ class blogops extends object
 						//continue;
 					}
 				}
-				//grab the icon obj
-
-
-
-
-    			//}
 
 				//edit icon in a table 1 row x however number of things to do
 				if($post['userid'] == $userid)
