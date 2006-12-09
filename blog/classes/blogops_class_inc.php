@@ -533,23 +533,38 @@ class blogops extends object
 				$this->objCC = $this->getObject('dbcreativecommons', 'creativecommons');
 				$lics = $this->objCC->getAll();
 				//print_r($lics); die();
-				//get the lic that matches from the db
+				//get the lic that matches from the db<br />
+				$objIcon = $this->newObject('geticon', 'htmlelements');
+				$iconList = '';
 				foreach($lics as $lic)
 				{
-					if($cclic === $lic['code'])
+					if($cclic == $lic['code'])
 					{
 						$icons = explode(',', $lic['images']);
-						break;
+						foreach ($icons as $icon)
+		    			{
+							$objIcon->setIcon ($icon, NULL, 'icons/creativecommons');
+							$iconList .= $objIcon->show();
+		    			}
+						//continue;
+					}
+					elseif($cclic == '') {
+						$cclic = 'copyright';
+						$icons = explode(',', $lic['images']);
+						foreach ($icons as $icon)
+		    			{
+							$objIcon->setIcon ($icon, NULL, 'icons/creativecommons');
+							$iconList .= $objIcon->show();
+		    			}
+						//continue;
 					}
 				}
 				//grab the icon obj
-				$objIcon = $this->newObject('geticon', 'htmlelements');
-				$iconList = '';
-    			foreach ($icons as $icon)
-    			{
-					$objIcon->setIcon ($icon, NULL, 'icons/creativecommons');
-        			$iconList .= $objIcon->show();
-    			}
+
+
+
+
+    			//}
 
 				//edit icon in a table 1 row x however number of things to do
 				if($post['userid'] == $userid)
