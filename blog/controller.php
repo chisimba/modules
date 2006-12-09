@@ -803,6 +803,7 @@ class blog extends controller
 					break;
 				}
 				elseif($mode == 'editpost') {
+					echo "editing, changing to $cclic";
 					$insarredit = array('id' => $id,'posttitle' => $posttitle, 'postcontent' => $postcontent,
 												    'postcat' => $cat, 'postexcerpt' => $excerpt, 'poststatus' => $status,
 												    'commentstatus' => 'Y',
