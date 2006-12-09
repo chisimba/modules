@@ -608,7 +608,7 @@ class blogops extends object
 					$tblnl->endHeaderRow();
 					$tblnl->startRow();
 					$tblnl->addCell($tburl); //trackback URL
-					$tblnl->addCell($cclic); //cc licence
+					$tblnl->addCell($iconList); //cc licence
 					$tblnl->endRow();
 					echo $this->objTB->autodiscCode();
 
