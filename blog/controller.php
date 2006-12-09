@@ -785,6 +785,7 @@ class blog extends controller
 				$id = $this->getParam('id');
 				$posttitle = $this->getParam('posttitle');
 				$postcontent = $this->getParam('postcontent');
+				$cclic = $this->getParam('creativecommons');
 				$postdate = $this->getParam('postdate');
 				$cat = $this->getParam('cat');
 				$status = $this->getParam('status');
@@ -805,7 +806,7 @@ class blog extends controller
 					$insarredit = array('id' => $id,'posttitle' => $posttitle, 'postcontent' => $postcontent,
 												    'postcat' => $cat, 'postexcerpt' => $excerpt, 'poststatus' => $status,
 												    'commentstatus' => 'Y',
-												    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate);
+												    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate, 'cclic' => $cclic);
 
 					$this->objblogOps->quickPostAdd($userid, $insarredit, $mode);
 					$this->nextAction('viewblog');
@@ -815,7 +816,7 @@ class blog extends controller
 					$this->objblogOps->quickPostAdd($userid, array('id' => $id, 'posttitle' => $posttitle, 'postcontent' => $postcontent,
 												    'postcat' => $cat, 'postexcerpt' => $excerpt, 'poststatus' => $status,
 												    'commentstatus' => $commentsallowed,
-												    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate));
+												    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate, 'cclic' => $cclic));
 					$this->nextAction('viewblog');
 					break;
 				}
@@ -910,6 +911,9 @@ class blog extends controller
 				$pd['host'] = $_SERVER['REMOTE_ADDR'];
 				$pd['id'] =  $id;
 				$data = $pd;
+
+				//add the $data array to a db table
+
 				$options = array(
 				    // Options for trackback directly
         			'strictness'        => 1,

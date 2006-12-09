@@ -528,6 +528,9 @@ class blogops extends object
 				$tburl = new href($trackback_url, $linktxt, NULL);
 				$tburl = $tburl->show();
 
+				//do the cc licence part
+				$cclic = "BY-SA";
+
 				//edit icon in a table 1 row x however number of things to do
 				if($post['userid'] == $userid)
 				{
@@ -548,11 +551,13 @@ class blogops extends object
 					$tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_editpost", "blog")); //edit
 					$tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_leavecomment", "blog")); //comments
 					$tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_trackbackurl", "blog")); //trackback
+					$tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_cclic", "blog")); //Licence
 					$tbl->endHeaderRow();
 					$tbl->startRow();
 					$tbl->addCell($edIcon); //edit icon
 					$tbl->addCell($commentLink); //comment link(s)
 					$tbl->addCell($tburl); //trackback URL
+					$tbl->addCell($cclic); //cc licence
 					$tbl->addCell('');
 					$tbl->endRow();
 					echo $this->objTB->autodiscCode();
@@ -570,9 +575,11 @@ class blogops extends object
 					//set up the header row
 					$tblnl->startHeaderRow();
 					$tblnl->addHeaderCell($this->objLanguage->languageText("mod_blog_trackbackurl", "blog")); //trackback
+					$tblnl->addHeaderCell($this->objLanguage->languageText("mod_blog_cclic", "blog")); //Licence
 					$tblnl->endHeaderRow();
 					$tblnl->startRow();
 					$tblnl->addCell($tburl); //trackback URL
+					$tblnl->addCell($cclic); //cc licence
 					$tblnl->endRow();
 					echo $this->objTB->autodiscCode();
 
@@ -1068,6 +1075,14 @@ class blogops extends object
 		$ptable->startRow();
 		$ptable->addCell($pclabel->show());
 		$ptable->addCell($pcon->showFCKEditor());
+		$ptable->endRow();
+
+		//CC licence
+		$lic = $this->getObject('licensechooser', 'creativecommons');
+		$ptable->startRow();
+		$pcclabel = new label($this->objLanguage->languageText('mod_blog_cclic', 'blog') .':', 'input_cclic');
+		$ptable->addCell($pcclabel->show());
+		$ptable->addCell($lic->show());
 		$ptable->endRow();
 
 		$postform->addRule('posttitle', $this->objLanguage->languageText("mod_blog_phrase_ptitlereq", "blog"),'required');

@@ -89,6 +89,10 @@ $fields = array(
 		'type' => 'integer',
 		'length' => 50
 		),
+	'post_lic' => array(
+		'type' => 'text',
+		'length' => 60,
+		),
 	);
 
 //create other indexes here...

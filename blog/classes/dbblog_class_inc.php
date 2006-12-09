@@ -423,7 +423,8 @@ class dbblog extends dbTable
 							'comment_status' => $postarr['commentstatus'],
 							'post_modified' => $postarr['postmodified'],
 							'comment_count' => $postarr['commentcount'],
-							'post_ts' => time());
+							'post_ts' => time(),
+							'post_lic' => $postarr['cclic']);
 
 			return $this->insert($insarr, 'tbl_blog_posts');
 		}
@@ -442,7 +443,8 @@ class dbblog extends dbTable
 							'comment_status' => $postarr['commentstatus'],
 							'post_modified' => $postarr['postmodified'],
 							'comment_count' => $postarr['commentcount'],
-							'post_ts' => strtotime($postarr['postdate']));
+							'post_ts' => strtotime($postarr['postdate']),
+							'post_lic' => $postarr['cclic']);
 
 			return $this->insert($imparr, 'tbl_blog_posts');
 		}
@@ -460,7 +462,8 @@ class dbblog extends dbTable
 							'comment_status' => $postarr['commentstatus'],
 							'post_modified' => $postarr['postmodified'],
 							'comment_count' => $postarr['commentcount'],
-							'post_ts' => strtotime($postarr['postdate']));
+							'post_ts' => strtotime($postarr['postdate']),
+							'post_lic' => $postarr['cclic']);
 
 			return $this->update('id',$postarr['id'], $inseditarr, 'tbl_blog_posts');
 		}
