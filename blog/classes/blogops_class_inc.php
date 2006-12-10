@@ -791,6 +791,7 @@ class blogops extends object
 				   );
 		}
 		$text = preg_replace($search, '', $document);
+		$text = str_replace("<br /><br />","",$text);
 		return $text;
 	}
 
