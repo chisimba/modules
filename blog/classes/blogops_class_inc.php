@@ -778,15 +778,15 @@ class blogops extends object
 		if($scrub == TRUE)
 		{
 			$search = array('@<script[^>]*?>.*?</script>@si',  // Strip out javascript
-            	   '@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
-               	   '@<style[^>]*?>.*?</style>@siU',    // Strip style tags properly
+            	   /*'@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
+               	   '@<style[^>]*?>.*?</style>@siU',*/    // Strip style tags properly
                	   '@<![\s\S]*?--[ \t\n\r]*>@'        // Strip multi-line comments including CDATA
 				   );
 		}
 		else {
 			$search = array('@<script[^>]*?>.*?</script>@si',  // Strip out javascript
-            	   /*'@<[\/\!]*?[^<>]*?>@si',*/            // Strip out HTML tags
-               	   '@<style[^>]*?>.*?</style>@siU',    // Strip style tags properly
+            	   /*'@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
+               	   '@<style[^>]*?>.*?</style>@siU',*/    // Strip style tags properly
                	   '@<![\s\S]*?--[ \t\n\r]*>@'        // Strip multi-line comments including CDATA
 				   );
 		}
