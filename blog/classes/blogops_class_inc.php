@@ -1114,6 +1114,10 @@ class blogops extends object
 		$ptable->startRow();
 		$pcclabel = new label($this->objLanguage->languageText('mod_blog_cclic', 'blog') .':', 'input_cclic');
 		$ptable->addCell($pcclabel->show());
+		if(isset($editparams['post_lic']))
+		{
+			$lic->defaultValue = $editparams['post_lic'];
+		}
 		$ptable->addCell($lic->show());
 		$ptable->endRow();
 
