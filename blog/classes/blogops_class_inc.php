@@ -568,6 +568,10 @@ class blogops extends object
 					$edIcon = $this->objIcon->getEditIcon($this->uri(array('action' => 'postedit', 'id' => $post['id'], 'module' => 'blog')));
 
 					$commentLink = $this->objComments->addCommentLink($type = NULL);
+					$bmurl = $this->uri(array('action' => 'randblog', 'userid' => $userid, 'module' => 'blog', 'postid' => $post['id']));
+					$bmlink = "http://www.addthis.com/bookmark.php?pub=&amp;url=".$bmurl."&amp;title=".$post['post_title'];
+					$bmtext = '<img src="http://www.addme.com/images/button1-bm.gif" width="125" height="16" border="0" />'; //$this->objLanguage->languageText("mod_blog_bookmarkpost", "blog");
+					$bookmark = new href($bmlink,$bmtext, NULL); //'<img src="http://www.addme.com/images/button1-bm.gif" width="125" height="16" border="0" />');
 
 					//Set the table name
 					$tbl = $this->newObject('htmltable', 'htmlelements');
@@ -578,12 +582,14 @@ class blogops extends object
 					//set up the header row
 					$tbl->startHeaderRow();
 					$tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_editpost", "blog")); //edit
+					$tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_bookmarkpost", "blog")); //bookmark
 					$tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_leavecomment", "blog")); //comments
 					$tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_trackbackurl", "blog")); //trackback
 					$tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_cclic", "blog")); //Licence
 					$tbl->endHeaderRow();
 					$tbl->startRow();
 					$tbl->addCell($edIcon); //edit icon
+					$tbl->addCell($bookmark->show()); //comment link(s)
 					$tbl->addCell($commentLink); //comment link(s)
 					$tbl->addCell($tburl); //trackback URL
 					$tbl->addCell($iconList); //cc licence
