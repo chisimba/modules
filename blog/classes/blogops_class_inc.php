@@ -587,7 +587,7 @@ class blogops extends object
 					//Set the table name
 					$tbl = $this->newObject('htmltable', 'htmlelements');
 					$tbl->cellpadding = 3;
-					$tbl->width = "80%";
+					$tbl->width = "100%";
 					$tbl->align = "center";
 
 					//set up the header row
