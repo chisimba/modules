@@ -1469,7 +1469,7 @@ class cmsutils extends object
             $titleInput->name = 'title';
             $titleInput->id = 'title';
 
-            $objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
+            //$objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
 
             $bodyInput->name = 'body';
             $bodyInput->id = 'body';
@@ -1482,7 +1482,7 @@ class cmsutils extends object
             $introInput->height = '200';
             $introInput->width = '100%';
 
-            $objForm->addRule('menutext', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddmenutext', 'cmsadmin'), 'required');
+            //$objForm->addRule('menutext', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddmenutext', 'cmsadmin'), 'required');
 
             $button->setToSubmit();
             $button->value = $this->objLanguage->languageText('word_save');
