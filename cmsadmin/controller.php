@@ -406,6 +406,8 @@ class cmsadmin extends controller
                 $objResponse->addAssign('showintrolabel','style.display', 'none');
                 $objResponse->addAssign('showintrocol','style.display', 'none');
             }
+            
+            $objResponse->addScript('adjustLayout();');
 
             return $objResponse->getXML();
         }
