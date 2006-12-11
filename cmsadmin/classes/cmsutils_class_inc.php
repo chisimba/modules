@@ -1427,7 +1427,7 @@ class cmsutils extends object
                 $arrContent = $this->_objContent->getContentPage($contentId);
                 $titleInput->value = $arrContent['title'];
                 $introInput->setContent($arrContent['introtext']);
-                $bodyInput->setContent(addslashes($arrContent['body']));
+                $bodyInput->setContent($arrContent['body']);
                 $frontPage->setChecked($this->_objFrontPage->isFrontPage($arrContent['id']));
                 $published->setChecked($arrContent['published']);
             }
