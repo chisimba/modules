@@ -518,6 +518,27 @@ class dbblog extends dbTable
 
 	}
 
+	/**
+	 * Method to insert trackback from remote to table
+	 *
+	 * @param array $data
+	 * @return bool
+	 */
+	public function setTrackback($data)
+	{
+		$this->_changeTable('tbl_blog_trackbacks');
+		$userid = $data['userid'];
+		$postid = $data['id'];
+		$remhost = $data['host'];
+		$title = $data['title'];
+		$excerpt = $data['excerpt'];
+		$tburl = $data['url'];
+		$blog_name = $data['blog_name'];
+
+		$insarr = array('userid' => $userid, 'postid' => $postid, 'remhost' => $remhost, 'title' => $title, 'excerpt' => $excerpt, 'tburl' => $tburl, 'blog_name' => $blog_name);
+		return $this->insert($insarr, 'tbl_blog_trackbacks');
+	}
+
 
 	/**
 	 * Method to dynamically switch tables

@@ -927,9 +927,11 @@ class blog extends controller
 				$this->requiresLogin(FALSE);
 				$req = $_REQUEST;
 				$id = $this->getParam('postid');
+				$userid = $this->getParam('userid');
 				$pd = $_POST;
 				$pd['host'] = $_SERVER['REMOTE_ADDR'];
 				$pd['id'] =  $id;
+				$pd['userid'] = $userid;
 				$data = $pd;
 
 				//do a check to see if it is valid
@@ -942,6 +944,7 @@ class blog extends controller
 				}
 
 				//add the $data array to a db table
+				$this->objDbBlog->setTrackback($data);
 
 				$options = array(
 				    // Options for trackback directly
