@@ -651,7 +651,7 @@ class cmsutils extends object
             if($section['showdate']) {
                 $strBody .= '<span class="warning">'.$page['created'].'</span><p/>';
             }
-            $strBody .= $page['body'].'<p/>';
+            $strBody .= stripslashes($page['body']).'<p/>';
             return $strBody;
         }
 
