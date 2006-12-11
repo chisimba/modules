@@ -7,11 +7,11 @@ if (!$GLOBALS['kewl_entry_point_run'])
 // end security check
 
 /**
-* Data access class for the cmsadmin module. Used to access data in the content table. 
+* Data access class for the cmsadmin module. Used to access data in the content table.
 *
 * @package cmsadmin
 * @category chisimba
-* @copyright AVOIR 
+* @copyright AVOIR
 * @license GNU GPL
 * @author Wesley Nitsckie
 * @author Warren Windvogel
@@ -61,7 +61,7 @@ class dbcontent extends dbTable
 	    */
         public function init()
         {
-        	try {  
+        	try {
                 parent::init('tbl_cms_content');
                 $this->_objUser = & $this->getObject('user', 'security');
                 $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
@@ -94,7 +94,7 @@ class dbcontent extends dbTable
                           'title' => $title ,
                           'sectionid' => $sectionid,
                           'introtext' => $introText,
-                          'body' => $fullText,
+                          'body' => addslashes(htmlentities($fullText)),
                           'access' => $access,
                           'ordering' => $this->getOrdering($sectionid),
                           'published' => $published,
@@ -136,7 +136,7 @@ class dbcontent extends dbTable
                           'title' => $title ,
                           'sectionid' => $sectionid,
                           'introtext' => $introText,
-                          'body' => $fullText,
+                          'body' => addslashes(htmlentities($fullText)),
                           'access' => $access,
                           'ordering' => $this->getOrdering($sectionid),
                           'published' => $published,
@@ -177,7 +177,7 @@ class dbcontent extends dbTable
                           'sectionid' => $sectionid,
                           'access' => $access,
                           'introtext' => $introText,
-                          'body' => $fullText,
+                          'body' => addslashes(htmlentities($fullText)),
                           'modified' => $this->now(),
                           'ordering' => $ordering,
                           'published' => $published,
@@ -300,8 +300,8 @@ class dbcontent extends dbTable
         }
 
         /**
-         * Method to toggle the publish field 
-         * 
+         * Method to toggle the publish field
+         *
          * @param string id The id if the content
          * @access public
          * @return boolean
@@ -319,7 +319,7 @@ class dbcontent extends dbTable
         }
 
         /**
-        * Method to update all the content with the 
+        * Method to update all the content with the
         * sections that will be deleted
         *
         * @param string $sectionId The section Id
@@ -338,8 +338,8 @@ class dbcontent extends dbTable
 
         /**
          * Method to get all pages in a specific section
-         * 
-         * @param string $sectionId The id of the section 
+         *
+         * @param string $sectionId The id of the section
          * @return array $pages An array of all pages in the section
          * @access public
          * @author Warren Windvogel
@@ -352,8 +352,8 @@ class dbcontent extends dbTable
 
         /**
          * Method to get the number of pages in a specific section
-         * 
-         * @param string $sectionId The id of the section 
+         *
+         * @param string $sectionId The id of the section
          * @return int $noPages The number of pages in the section
          * @access public
          * @author Warren Windvogel
@@ -406,8 +406,8 @@ class dbcontent extends dbTable
 
         /**
          * Method to return the links to be displayed in the order column on the table
-         * 
-         * @param string $id The id of the entry 
+         *
+         * @param string $id The id of the entry
          * @return string $links The html for the links
          * @access public
          * @author Warren Windvogel
@@ -470,8 +470,8 @@ class dbcontent extends dbTable
 
         /**
          * Method to update the order of the frontpage
-         * 
-         * @param string $id The id of the entry   
+         *
+         * @param string $id The id of the entry
          * @param string $id The id of the entry to move
          * @param int $ordering How to update the order(up or down).
          * @access public

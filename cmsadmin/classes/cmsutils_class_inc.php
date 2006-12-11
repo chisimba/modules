@@ -26,7 +26,7 @@ class cmsutils extends object
         * @var object
         */
         protected $_objSections;
-        
+
         /**
         * The Content object
         *
@@ -34,7 +34,7 @@ class cmsutils extends object
         * @var object
         */
         protected $_objContent;
-        
+
         /**
         * The Skin object
         *
@@ -42,7 +42,7 @@ class cmsutils extends object
         * @var object
         */
         protected $objSkin;
-        
+
         /**
         * The Content Front Page object
         *
@@ -50,7 +50,7 @@ class cmsutils extends object
         * @var object
         */
         protected $_objFrontPage;
-        
+
         /**
         * The User object
         *
@@ -58,7 +58,7 @@ class cmsutils extends object
         * @var object
         */
         protected $_objUser;
-        
+
         /**
         * The config object
         *
@@ -66,7 +66,7 @@ class cmsutils extends object
         * @var object
         */
         protected $_objConfig;
-        
+
         /**
         * The blocks object
         *
@@ -83,7 +83,7 @@ class cmsutils extends object
 	    */
         public function init()
         {
-        	try {             
+        	try {
                 $this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
                 $this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
                 $this->_objConfig = & $this->newObject('altconfig', 'config');
@@ -269,7 +269,7 @@ class cmsutils extends object
                             $table->endRow();
                         }
 
-                        $str .= ''; 
+                        $str .= '';
                     } else {
                         //display as links
                         $table = & $this->newObject('htmltable', 'htmlelements');
@@ -295,7 +295,7 @@ class cmsutils extends object
                     $objH =& $this->newObject('htmlheading', 'htmlelements');
                     $objH->type = '3';
                     $objH->str = $page['title'];
-                    
+
                     $str .= $objH->show();
                     $str .= $content;
                 }
@@ -412,7 +412,7 @@ class cmsutils extends object
             $objUser = & $this->newObject('user', 'security');
             $objConfig = & $this->newObject('altconfig', 'config');
             $objH = & $this->newObject('htmlheading', 'htmlelements');
-            
+
             $str = '';
 
             $orderType = $arrSection['ordertype'];
@@ -420,7 +420,7 @@ class cmsutils extends object
             $showDate = $arrSection['showdate'];
             $description = $arrSection['description'];
             $sectionTitle = $arrSection['title'];
-            
+
             //Add section title
             $objH->type = '3';
             $objH->str = $sectionTitle;
@@ -521,23 +521,23 @@ class cmsutils extends object
 
             switch ($orderType) {
                 case null:
-           
+
                 case 'pageorder':
                     $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY ordering');
                     break;
-               
+
                 case 'pagedate_asc':
                     $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created');
                     break;
-           
+
                 case 'pagedate_desc':
                     $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
                     break;
-      
+
                 case 'pagetitle_asc':
                     $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title');
                     break;
-     
+
                 case 'pagetitle_desc':
                     $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title DESC');
                     break;
@@ -595,23 +595,23 @@ class cmsutils extends object
 
             switch ($orderType) {
             case null:
-            
+
             case 'pageorder':
                 $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY ordering');
                 break;
-            
+
             case 'pagedate_asc':
                 $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created');
                 break;
-            
+
             case 'pagedate_desc':
                 $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY created DESC');
                 break;
-            
+
             case 'pagetitle_asc':
                 $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title');
                 break;
-            
+
             case 'pagetitle_desc':
                 $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 ORDER BY title DESC');
                 break;
@@ -925,7 +925,7 @@ class cmsutils extends object
         /**
          * Method to generate the indented section links for the side menu
          *
-         * @param bool $forTable If false returns links for side menu if true returns array of text with indentation         
+         * @param bool $forTable If false returns links for side menu if true returns array of text with indentation
          * @return string Generated section links or array $treeArray section names indented and ids
          * @access public
          * @author Warren Windvogel
@@ -1050,10 +1050,10 @@ class cmsutils extends object
         }
 
         /**
-         * Method to return the add edit section form 
+         * Method to return the add edit section form
          *
          * @param string $sectionId The id of the section to be edited. Default NULL for adding new section
-         * @param string $parentid The id of the section it is found in. Default NULL for adding root node         
+         * @param string $parentid The id of the section it is found in. Default NULL for adding root node
          * @return string $middleColumnContent The form used to create and edit a section
          * @access public
          * @author Warren Windvogel
@@ -1387,7 +1387,7 @@ class cmsutils extends object
         }
 
         /**
-         * Method to return the add edit content form 
+         * Method to return the add edit content form
          *
          * @param string $contentId The id of the content to be edited. Default NULL for adding new section
          * @access public
@@ -1427,7 +1427,7 @@ class cmsutils extends object
                 $arrContent = $this->_objContent->getContentPage($contentId);
                 $titleInput->value = $arrContent['title'];
                 $introInput->setContent($arrContent['introtext']);
-                $bodyInput->setContent($arrContent['body']);
+                $bodyInput->setContent(htmlentities($arrContent['body']));
                 $frontPage->setChecked($this->_objFrontPage->isFrontPage($arrContent['id']));
                 $published->setChecked($arrContent['published']);
             }

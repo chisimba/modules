@@ -7,11 +7,11 @@ if (!$GLOBALS['kewl_entry_point_run'])
 // end security check
 
 /**
-* Data access class for the cmsadmin module. Used to access data in the content front page table. 
+* Data access class for the cmsadmin module. Used to access data in the content front page table.
 *
 * @package cmsadmin
 * @category chisimba
-* @copyright AVOIR 
+* @copyright AVOIR
 * @license GNU GPL
 * @author Wesley  Nitsckie
 * @author Warren Windvogel
@@ -44,7 +44,7 @@ class dbcontentfrontpage extends dbTable
 	    */
         public function init()
         {
-        	try {         
+        	try {
                 parent::init('tbl_cms_content_frontpage');
                 $this->_objUser = & $this->getObject('user', 'security');
                 $this->_objLanguage =& $this->newObject('language', 'language');
@@ -56,7 +56,7 @@ class dbcontentfrontpage extends dbTable
 
         /**
          * Method to save a record to the database
-         * 
+         *
          * @param string $contentId The neContent Id
          * @param int $ordering The number of the page as it appears in the front page order
          * @access public
@@ -79,7 +79,7 @@ class dbcontentfrontpage extends dbTable
 
         /**
          * Method to remove a record
-         * 
+         *
          * @param string $id The content Id that must be removed
          * @access public
          * @return bool
@@ -100,7 +100,7 @@ class dbcontentfrontpage extends dbTable
 
         /**
          * Method to get all the front page id's
-         * 
+         *
          * @return array $allFrontPages An array of oll entries in the content front page table
          * @access public
          */
@@ -113,7 +113,7 @@ class dbcontentfrontpage extends dbTable
 
         /**
          * Method to check if a page is a front page
-         * 
+         *
          * @param string $id The id to be checked
          * @access public
          * @return bool
@@ -126,7 +126,7 @@ class dbcontentfrontpage extends dbTable
 
         /**
          * Method to change the status of a page
-         * 
+         *
          * @param string $pageId The id of the page to be changed
          * @access public
          * @return bool
@@ -138,7 +138,7 @@ class dbcontentfrontpage extends dbTable
                 $entry = $this->getRow('content_id', $pageId);
                 $id = $entry['id'];
                 return $this->remove($id);
-            //If it is not on the front page then add it    
+            //If it is not on the front page then add it
             } else {
                 return $this->add($pageId);
             }
@@ -146,7 +146,7 @@ class dbcontentfrontpage extends dbTable
 
         /**
          * Method to update the order of the frontpage
-         * 
+         *
          * @param string $id The id of the entry to move
          * @param int $ordering How to update the order(up or down).
          * @access public
@@ -211,8 +211,8 @@ class dbcontentfrontpage extends dbTable
         }
         /**
          * Method to return the links to be displayed in the order column on the table
-         * 
-         * @param string $id The id of the entry 
+         *
+         * @param string $id The id of the entry
          * @return string $links The html for the links
          * @access public
          * @author Warren Windvogel
