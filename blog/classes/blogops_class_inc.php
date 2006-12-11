@@ -531,7 +531,7 @@ class blogops extends object
 				$bmurl = $this->uri(array('action' => 'viewsingle', 'userid' => $post['userid'], 'module' => 'blog', 'postid' => $post['id']));
 				$bmurl = urlencode($bmurl);
 				$bmlink = "http://www.addthis.com/bookmark.php?pub=&amp;url=".$bmurl."&amp;title=".$post['post_title'];
-				$bmtext = '<img src="http://www.addme.com/images/button1-bm.gif" width="125" height="16" border="0" />'; //$this->objLanguage->languageText("mod_blog_bookmarkpost", "blog");
+				$bmtext = '<img src="http://www.addme.com/images/button1-bm.gif" width="125" height="16" border="0" alt= "Bookmark this post"/>'; //$this->objLanguage->languageText("mod_blog_bookmarkpost", "blog");
 				$bookmark = new href($bmlink,$bmtext, NULL); //'<img src="http://www.addme.com/images/button1-bm.gif" width="125" height="16" border="0" />');
 
 				//do the cc licence part
