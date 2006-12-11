@@ -610,6 +610,7 @@ class blogops extends object
 
 					//set up the header row
 					$tblnl->startHeaderRow();
+					$tblnl->addHeaderCell($this->objLanguage->languageText("mod_blog_bookmarkpost", "blog")); //bookmark
 					$tblnl->addHeaderCell($this->objLanguage->languageText("mod_blog_trackbackurl", "blog")); //trackback
 					$tblnl->addHeaderCell($this->objLanguage->languageText("mod_blog_cclic", "blog")); //Licence
 					$tblnl->endHeaderRow();
