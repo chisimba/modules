@@ -530,7 +530,7 @@ class blogops extends object
 
 				$bmurl = $this->uri(array('action' => 'viewsingle', 'userid' => $post['userid'], 'module' => 'blog', 'postid' => $post['id']));
 				$bmurl = urlencode($bmurl);
-				$bmlink = "http://www.addthis.com/bookmark.php?pub=&amp;url=".$bmurl."&amp;title=".htmlentities($post['post_title']);
+				$bmlink = "http://www.addthis.com/bookmark.php?pub=&amp;url=".$bmurl."&amp;title=".urlencode(addslashes(htmlentities($post['post_title'])));
 				$bmtext = '<img src="http://www.addme.com/images/button1-bm.gif" width="125" height="16" border="0" alt="'.$this->objLanguage->languageText("mod_blog_bookmarkpost", "blog").'"/>'; //$this->objLanguage->languageText("mod_blog_bookmarkpost", "blog");
 				$bookmark = new href($bmlink,$bmtext, NULL); //'<img src="http://www.addme.com/images/button1-bm.gif" width="125" height="16" border="0" />');
 
