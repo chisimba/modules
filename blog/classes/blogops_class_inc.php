@@ -589,7 +589,7 @@ class blogops extends object
 					$tbl->endHeaderRow();
 					$tbl->startRow();
 					$tbl->addCell($edIcon); //edit icon
-					$tbl->addCell($bookmark->show()); //comment link(s)
+					$tbl->addCell($bookmark->show()); //bookmark link(s)
 					$tbl->addCell($commentLink); //comment link(s)
 					$tbl->addCell($tburl); //trackback URL
 					$tbl->addCell($iconList); //cc licence
@@ -613,6 +613,7 @@ class blogops extends object
 					$tblnl->addHeaderCell($this->objLanguage->languageText("mod_blog_cclic", "blog")); //Licence
 					$tblnl->endHeaderRow();
 					$tblnl->startRow();
+					$tblnl->addCell($bookmark->show()); //bookmark link(s)
 					$tblnl->addCell($tburl); //trackback URL
 					$tblnl->addCell($iconList); //cc licence
 					$tblnl->endRow();
