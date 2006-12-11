@@ -519,16 +519,16 @@ class blogops extends object
 				//set up the trackback link
 				$blog_name = $this->objUser->fullname($userid);
 				$url = $this->uri(array('action' => 'randblog', 'userid' => $userid, 'module' => 'blog'));
-				$trackback_url = $this->uri(array('action' => 'tbreceive', 'userid' => $userid, 'module' => 'blog', 'postid' => $post['id']));
+				$trackback_url = $this->uri(array('action' => 'tbreceive', 'userid' => $post['userid'], 'module' => 'blog', 'postid' => $post['id']));
 				$extra = NULL;
 
-				$tbdata = $data = array('id' => $post['id'], 'title' => $post['post_title'], 'excerpt' => $post['post_excerpt'], 'blog_name' => $blog_name, 'url' => $url, 'trackback_url' => $trackback_url, 'extra' => $extra);
+				$tbdata = array('id' => $post['id'], 'title' => $post['post_title'], 'excerpt' => $post['post_excerpt'], 'blog_name' => $blog_name, 'url' => $url, 'trackback_url' => $trackback_url, 'extra' => $extra);
 				$this->objTB->setup($tbdata, $tboptions);
 				$linktxt = $this->objLanguage->languageText("mod_blog_word_trackback", "blog");
 				$tburl = new href($trackback_url, $linktxt, NULL);
 				$tburl = $tburl->show();
 
-				$bmurl = $this->uri(array('action' => 'randblog', 'userid' => $userid, 'module' => 'blog', 'postid' => $post['id']));
+				$bmurl = $this->uri(array('action' => 'randblog', 'userid' => $post['userid'], 'module' => 'blog', 'postid' => $post['id']));
 				$bmlink = "http://www.addthis.com/bookmark.php?pub=&amp;url=".$bmurl."&amp;title=".$post['post_title'];
 				$bmtext = '<img src="http://www.addme.com/images/button1-bm.gif" width="125" height="16" border="0" />'; //$this->objLanguage->languageText("mod_blog_bookmarkpost", "blog");
 				$bookmark = new href($bmlink,$bmtext, NULL); //'<img src="http://www.addme.com/images/button1-bm.gif" width="125" height="16" border="0" />');

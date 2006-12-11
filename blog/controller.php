@@ -272,6 +272,14 @@ class blog extends controller
 				return 'randblog_tpl.php';
 				break;
 
+			case 'viewsingle':
+				//single post view for the bookmarks/comments etc
+				$postid = $this->getParam('postid');
+
+
+
+
+				break;
 			case 'setupmail':
 				//check that the person trying to set this up is logged in and an admin
 				if($this->objUser->isLoggedIn() == FALSE || $this->objUser->inAdminGroup($this->objUser->userId()) == FALSE)
@@ -623,7 +631,13 @@ class blog extends controller
 					if(empty($userid))
 					{
 						//fix the user id just in case
-						$userid = $this->objUser->userId();
+						if($this->objUser->isLoggedIn() == TRUE)
+						{
+							$userid = $this->objUser->userId();
+						}
+						else {
+							$this->nextAction('');
+						}
 					}
 					//get the category tree
 					$catarr = $this->objDbBlog->getCatsTree($userid);
