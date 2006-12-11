@@ -1143,10 +1143,10 @@ class cmsutils extends object
             $titleInput->name = 'title';
             $titleInput->id = 'title';
             $titleInput->size = 50;
-            $objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
+            //$objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
             $menuTextInput->name = 'menutext';
             $menuTextInput->size = 50;
-            $objForm->addRule('menutext', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddmenutext', 'cmsadmin'), 'required');
+            //$objForm->addRule('menutext', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddmenutext', 'cmsadmin'), 'required');
             //$button->setToSubmit();
             $button->name = 'submit';
             $button->id = 'submit';
