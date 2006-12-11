@@ -539,6 +539,13 @@ class dbblog extends dbTable
 		return $this->insert($insarr, 'tbl_blog_trackbacks');
 	}
 
+	public function getTrackbacksPerPost($pid)
+	{
+		$this->_changeTable('tbl_blog_trackbacks');
+		$filter = "WHERE postid = '$pid'";
+		return $this->getRecordCount($filter);
+	}
+
 
 	/**
 	 * Method to dynamically switch tables

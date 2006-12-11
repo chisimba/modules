@@ -533,7 +533,16 @@ class blogops extends object
 				$bmurl = urlencode($bmurl);
 				$bmlink = "http://www.addthis.com/bookmark.php?pub=&amp;url=".$bmurl."&amp;title=".urlencode(addslashes(htmlentities($post['post_title'])));
 				$bmtext = '<img src="http://www.addme.com/images/button1-bm.gif" width="125" height="16" border="0" alt="'.$this->objLanguage->languageText("mod_blog_bookmarkpost", "blog").'"/>'; //$this->objLanguage->languageText("mod_blog_bookmarkpost", "blog");
-				$bookmark = new href($bmlink,$bmtext, NULL); //'<img src="http://www.addme.com/images/button1-bm.gif" width="125" height="16" border="0" />');
+				$bookmark = new href($bmlink,$bmtext, NULL);
+
+				//grab the number of trackbacks per post
+				$pid = $post['id'];
+				$numtb = $this->objDbBlog->getTrackbacksPerPost($pid);
+				if($numtb != 0)
+				{
+					$numtblnk = new href($this->uri(array()), $numtb, NULL);
+					$numtb = $numtblnk->show();
+				}
 
 				//do the cc licence part
 				$cclic = $post['post_lic'];
@@ -578,7 +587,7 @@ class blogops extends object
 					//Set the table name
 					$tbl = $this->newObject('htmltable', 'htmlelements');
 					$tbl->cellpadding = 3;
-					$tbl->width = "50%";
+					$tbl->width = "80%";
 					$tbl->align = "center";
 
 					//set up the header row
@@ -593,7 +602,7 @@ class blogops extends object
 					$tbl->addCell($edIcon); //edit icon
 					$tbl->addCell($bookmark->show()); //bookmark link(s)
 					$tbl->addCell($commentLink); //comment link(s)
-					$tbl->addCell($tburl); //trackback URL
+					$tbl->addCell($tburl . " (" . $numtb . ")"); //trackback URL
 					$tbl->addCell($iconList); //cc licence
 					$tbl->addCell('');
 					$tbl->endRow();
@@ -617,7 +626,7 @@ class blogops extends object
 					$tblnl->endHeaderRow();
 					$tblnl->startRow();
 					$tblnl->addCell($bookmark->show()); //bookmark link(s)
-					$tblnl->addCell($tburl); //trackback URL
+					$tblnl->addCell($tburl . " (" . $numtb . ")"); //trackback URL
 					$tblnl->addCell($iconList); //cc licence
 					$tblnl->endRow();
 					echo $this->objTB->autodiscCode();
