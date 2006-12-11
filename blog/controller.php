@@ -275,11 +275,16 @@ class blog extends controller
 			case 'viewsingle':
 				//single post view for the bookmarks/comments etc
 				$postid = $this->getParam('postid');
-
-
-
-
+				$userid = $this->getParam('userid');
+				$catarr = $this->objDbBlog->getCatsTree($userid);
+				$this->setVarByRef('cats', $catarr);
+				$posts = $this->objDbBlog->getPostByPostID($postid);
+				//get the post with comments and trackbacks and display it.
+				$this->setVarByRef('posts', $posts);
+				$this->setVarByRef('userid', $userid);
+				return 'viewsingle_tpl.php';
 				break;
+
 			case 'setupmail':
 				//check that the person trying to set this up is logged in and an admin
 				if($this->objUser->isLoggedIn() == FALSE || $this->objUser->inAdminGroup($this->objUser->userId()) == FALSE)

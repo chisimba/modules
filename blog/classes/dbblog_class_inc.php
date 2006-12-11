@@ -309,6 +309,13 @@ class dbblog extends dbTable
 		return $ret;
 	}
 
+	public function getPostByPostID($postid)
+	{
+		$this->_changeTable('tbl_blog_posts');
+		$filter = "WHERE id = '$postid'";
+		return $this->getAll($filter);
+	}
+
 	/**
 	 * Method to delete a post
 	 *

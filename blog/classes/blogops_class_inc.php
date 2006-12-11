@@ -528,7 +528,7 @@ class blogops extends object
 				$tburl = new href($trackback_url, $linktxt, NULL);
 				$tburl = $tburl->show();
 
-				$bmurl = $this->uri(array('action' => 'randblog', 'userid' => $post['userid'], 'module' => 'blog', 'postid' => $post['id']));
+				$bmurl = $this->uri(array('action' => 'viewsingle', 'userid' => $post['userid'], 'module' => 'blog', 'postid' => $post['id']));
 				$bmlink = "http://www.addthis.com/bookmark.php?pub=&amp;url=".$bmurl."&amp;title=".$post['post_title'];
 				$bmtext = '<img src="http://www.addme.com/images/button1-bm.gif" width="125" height="16" border="0" />'; //$this->objLanguage->languageText("mod_blog_bookmarkpost", "blog");
 				$bookmark = new href($bmlink,$bmtext, NULL); //'<img src="http://www.addme.com/images/button1-bm.gif" width="125" height="16" border="0" />');
