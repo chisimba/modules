@@ -25,7 +25,7 @@ class dompdfwrapper extends object
 	*
 	* @access public
 	* @param string $html HTML content 
-	* @return string PDF rendering 
+	* @return void 
 	*/
 	public function generatePDF($html)
 	{
