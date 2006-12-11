@@ -524,6 +524,7 @@ class blogops extends object
 
 				$tbdata = array('id' => $post['id'], 'title' => $post['post_title'], 'excerpt' => $post['post_excerpt'], 'blog_name' => $blog_name, 'url' => $url, 'trackback_url' => $trackback_url, 'extra' => $extra);
 				$this->objTB->setup($tbdata, $tboptions);
+
 				$linktxt = $this->objLanguage->languageText("mod_blog_word_trackback", "blog");
 				$tburl = new href($trackback_url, $linktxt, NULL);
 				$tburl = $tburl->show();
@@ -538,8 +539,7 @@ class blogops extends object
 				$cclic = $post['post_lic'];
 				$this->objCC = $this->getObject('dbcreativecommons', 'creativecommons');
 				$lics = $this->objCC->getAll();
-				//print_r($lics); die();
-				//get the lic that matches from the db<br />
+				//get the lic that matches from the db
 				$objIcon = $this->newObject('geticon', 'htmlelements');
 				$iconList = '';
 				foreach($lics as $lic)

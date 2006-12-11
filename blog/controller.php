@@ -925,11 +925,21 @@ class blog extends controller
 
 			case 'tbreceive':
 				$this->requiresLogin(FALSE);
+				$req = $_REQUEST;
 				$id = $this->getParam('postid');
 				$pd = $_POST;
 				$pd['host'] = $_SERVER['REMOTE_ADDR'];
 				$pd['id'] =  $id;
 				$data = $pd;
+
+				//do a check to see if it is valid
+				if(!isset($data['title']))
+				{
+					$theurl = $this->uri(array('action' => $req['action'], 'module' => $req['module'], 'userid' => $req['userid'], 'postid' => $req['postid']));
+
+					$this->setVarByRef('theurl', $theurl);
+					return 'tburl_tpl.php';
+				}
 
 				//add the $data array to a db table
 
