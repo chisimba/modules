@@ -933,7 +933,7 @@ class blog extends controller
 				$data = $pd;
 
 				//do a check to see if it is valid
-				if(!isset($data['title']))
+				if(!isset($data['title']) || !isset($data['excerpt']) || !isset($data['url']) || !isset($data['blog_name']))
 				{
 					$theurl = $this->uri(array('action' => $req['action'], 'module' => $req['module'], 'userid' => $req['userid'], 'postid' => $req['postid']));
 
