@@ -33,23 +33,26 @@ class dbeventscalendar extends dbTable
     	
     	
         parent::init('tbl_eventscalendar');
-        $this->_objDBLookup = & $this->newObject('dbeventslookup', 'eventscalendar');
+       // $this->_objDBLookup = & $this->newObject('dbeventslookup', 'eventscalendar');
     }
     
     
     /**
      * Method to get the events for a givent user
-     * @param userId $the User Id
+     * @param string $catId $the User Id
      * @return array
      * @access public
      * 
      */
-    public function getEventsByType($type, $typeId, $month = 0 , $yr = 0)
+    public function getEventsByType($catId, $month = 0 , $yr = 0)
     {
     	
     	//get the events for the type
-    	$arrTypeEvents = $this->_objDBLookup->getEventsByType($type, $typeId);
-    	
+    	//$arrTypeEvents = $this->_objDBLookup->getEventsByType($type, $typeId);
+       print 'THE STUPID FUNCTION';
+          
+    	$arrTypeEvents = $this->getAll('WHERE catid="'.$catId.'"');
+//var_dump($arrTypeEvents); //die;
     	$events = array();
     	
     	if($yr == 0 )
@@ -82,24 +85,88 @@ class dbeventscalendar extends dbTable
     			$events[] = $tempRow;
     		}
     	}
+        
+        
     	if($events)
     	{
     		return $this->sortmddata($events , 'event_date', 'ASC', 'num');
     	} else {
     		return $events;
     	}
-    	//$sql = 'WHERE event_date BETWEEN  '.$startOfMonth.' AND  '.$endOfMonth;
+    	$sql = 'WHERE event_date BETWEEN  '.$startOfMonth.' AND  '.$endOfMonth;
   
-       // return $this->getAll($sql);
+        return $this->getAll($sql);
+    }
+
+    /**
+    * Method to get list of events by Category
+    * @param string $catId
+    * @return array
+    * @access public
+    */
+    public function getEventsByCategory($catId, $month = 0 , $yr = 0)
+    {
+        try{
+           
+            //print $catId;
+            $arrTypeEvents = $this->getAll('WHERE catid="'.$catId.'"');
+
+            $events = array();
+            
+            if($yr == 0 )
+            {
+                $yr = date("Y");
+            }
+            
+            if($month == 0 )
+            {
+                $month = date("m");
+            }
+            
+        
+            //get the start of the month
+            $startOfMonth = mktime(0,0,0,$month,1,$yr);
+        
+            $lastDayOfTheMonth = date("t",mktime(23,59,59,$month, 0, $yr));
+            
+            //get the end of the month
+            $endOfMonth = mktime(23,59,59, $month , $lastDayOfTheMonth , $yr);
+            
+            
+            //get the events for the user for the given month and year
+          //  var_dump($arrTypeEvents);
+            foreach($arrTypeEvents as $arrTypeEvent)
+            {
+                $tempRow = $this->getRow('id', $arrTypeEvent['id']);   
+                if($tempRow['event_date'] > $startOfMonth && $tempRow['event_date'] < $endOfMonth)
+                {
+                    $events[] = $tempRow;
+                }
+            }
+            //var_dump($events);
+            
+            if($events)
+            {
+                return $this->sortmddata($events , 'event_date', 'ASC', 'num');
+            } else {
+                return $events;
+            }
+           
+        } 
+        catch (customException $e)
+        {
+            echo customException::cleanUp($e);
+            die();
+        }
     }
     
     /**
      * Method to insert an event
-     * @param userId The userId
+     * @param catId The category
      * @return boolean
      * @access string the new id
      */
-    public function addEvent($type , $typeId)
+    public function addEvent($catId)
     {
         try
         {            
@@ -107,7 +174,7 @@ class dbeventscalendar extends dbTable
             $description = $this->getParam('description');
             $start_time = $this->getParam('start_time');
             $end_time = $this->getParam('end_time');
-            $catid = $this->getParam('catid');
+           // $catid = $this->getParam('catid');
             $start_date = $this->getParam('start_date');
             $location = $this->getParam('location');
             
@@ -121,7 +188,7 @@ class dbeventscalendar extends dbTable
                     'start_time' => $start_time,
                     'end_time' => $end_time,
                     'event_date' => $start_date,
-                   
+                    'catid' => $catId,
                     'location' => $location
             
             );
@@ -129,7 +196,7 @@ class dbeventscalendar extends dbTable
             
             $id =  $this->insert($fields);
             
-            $this->_objDBLookup->add($type, $typeId, $id);
+           // $this->_objDBLookup->add($type, $typeId, $id);
             
             return $id;
         }
@@ -189,13 +256,14 @@ class dbeventscalendar extends dbTable
     */
     public function getEvents($year, $month, $day)
     {
-    	$line = $this->getEventsByType('user', $this->_objUser->userId());
+    	//$line = $this->getEventsByType('user', $this->_objUser->userId());
     	//$lines = $this->getUserEvents($this->_objUser->userId());
-    	foreach ($lines as $line)
+    	/*foreach ($lines as $line)
     	{
     			print $line['event_date'];;
     			
     	}
+*/
     	//mktime(0,0,0,$month, $day, $year);	
     }
     

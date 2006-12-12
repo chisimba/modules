@@ -24,13 +24,14 @@ class dbeventscalendarcategories extends dbTable
      */
     public function init()
     {
-        parent::init('tbl_eventscalendar_categories');
+        parent::init('tbl_eventscalendarcategories');
     }
     
     
     /**
      * Method to get all the categories for a user
-     * @param string userid The user id
+     * @param string type 
+     * @param string typeId 
      * @return array
      * @access public
      * 
@@ -40,6 +41,22 @@ class dbeventscalendarcategories extends dbTable
         
         return $this->getAll('WHERE type = "'.$type.'"  and typeid="'.$typeId.'"');
     }
+
+    /**
+     * Method to get all the categories for a user
+     * @param string type 
+     * @param string typeId 
+     * @return array
+     * @access public
+     * 
+     */
+   public function getCatId($type, $typeId)
+   {
+        $line = $this->getCategories($type, $typeId);
+        return  $line[0]['id'];
+
+
+	}
    
     
     /**
@@ -58,9 +75,9 @@ class dbeventscalendarcategories extends dbTable
             $fields = array (
                     'title' => $title,
                     'colour' => $colour,
-                    'userid' => $userId                
+                    'userid' => $userId 
             );
-            
+            die($colour);
             return $this->insert($fields);
         }
         catch (customException $e)
@@ -70,6 +87,28 @@ class dbeventscalendarcategories extends dbTable
         }
     }
     
+
+    /**
+     * Method to insert an event category
+     * @param string $type 
+     * @param string $typeId
+     * @return boolean
+     * @access string the new id
+     */
+    public function addCat($type, $typeId)
+    {
+        try
+        {  
+		$fields = array('type' => $type, 'typeid' => $typeId);
+		return $this->insert($fields);
+	}	
+        catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
+        }
+    }
+
     /**
      * Method to edit an event category
      * @param catId The event Id
@@ -128,4 +167,33 @@ class dbeventscalendarcategories extends dbTable
         }
         
     }
+
+    /**
+    * Method to check if a type exist
+    * @param string $type The type
+    * @param string $value The value
+    * @return bool
+    * @access public
+    */
+    public function typeExist($type, $value)
+    {
+        try 
+        {
+
+            $line = $this->getAll('WHERE type="'.$type.'" AND typeid="'.$value.'" ');
+            if(is_array($line[0]))
+            {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        }
+        catch (customException $e)
+        {
+            echo customException::cleanUp($e);
+            die();
+        }
+    }
+
+
 }

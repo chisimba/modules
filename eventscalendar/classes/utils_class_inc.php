@@ -37,7 +37,7 @@ class utils extends object
 	{
 	    $nodes = array();
 		$nodes[] = array('text' => 'Events', 'uri' => $this->uri(null,'eventscalendar'));
-		$nodes[] = array('text' => 'Event Categories', 'uri' => $this->uri(array('action' => 'categories'), 'eventscalendar'));
+		//$nodes[] = array('text' => 'Event Categories', 'uri' => $this->uri(array('action' => 'categories'), 'eventscalendar'));
 		
 		
 		return  $nodes;
@@ -68,7 +68,7 @@ class utils extends object
    {
    		
    		
-   		$str = '<select  name="'.$name.'_hours" id="hours">';
+   		$str = '<p><select  name="'.$name.'_hours" id="hours">';
    		for($i = 0; $i < 24; $i++)
    		{
    			
@@ -88,7 +88,7 @@ class utils extends object
    			
 			$str .= '<option value="'.$zero.$i.'"   >&nbsp;'.$zero.$i.'&nbsp;</option>';   				
    		}
-   		$str .= '</select>';
+   		$str .= '</select></p>';
    		return $str;
    }
 }

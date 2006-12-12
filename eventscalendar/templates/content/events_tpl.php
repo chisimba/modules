@@ -54,7 +54,7 @@ if($events)
 	color: #383838;
 	text-align: left;
 	vertical-align: middle;
-	font-weight: normal;">'.$event['description'].'</span></td>
+	font-weight: normal;">'.stripslashes($event['description']).'</span></td>
 			  </tr>
 			</table>';
     }
@@ -182,12 +182,47 @@ $style = '
 }
 -->
 </style>';
-  //$this->appendArrayVar('headerParams',$style);
-print "<h1>Events </h1>";
 
-print '<span class="icon">'.$objIcon->getAddIcon($this->uri(array('action' => 'addevent'))).'</span>';
+
+  //$this->appendArrayVar('headerParams',$style);
+$objH = $this->newObject('htmlheading', 'htmlelements');
+
+if($calType == 'context')
+{
+    $objH->str = $this->_objDBContext->getMenuText().' Calendar';
+    
+    $link->link = 'View My Calendar';
+    $link->href = $this->uri(array('type' => 'user', 'typeid' => $this->_objUser->userId()));
+    $toggleLink = $link->show();
+    
+   
+   
+
+} else {
+    $objH->str = 'My Events';
+    if($this->_objDBContext->isInContext())
+    {
+        $link->link = 'View '.$this->_objDBContext->getMenuText().' Calendar';
+        $link->href = $this->uri(array('type' => 'context' , 'typeid' => $this->_objDBContext->getContextCode()));
+        $toggleLink = $link->show();
+    }
+}
+
+
+$toggles = '<table width="100%"  border="0" cellpadding="1" cellspacing="0"  style = "width: 680px;border: 1px solid #006699;margin: 0px;padding: 0px;"><tr><td align="center">'.$toggleLink.'</td></tr></table><br/>';
+
+echo $objH->show();
+
+
 print '<center>'.$calendar.'</center><p></p>';
+print '<center>'.$toggles.'</center>';
 print '<center>'.$str.'</center>';
 
+ $objIcon->setIcon('add');
+    $link->href = $this->uri(array('action' => 'addevent', 'catid' => $catId ,'type' => $calType));
+    $link->link = 'Add an Event '.$objIcon->show();
+    
+
+echo '<span class="icon">'.$link->show().'</span>';
 ?>
 

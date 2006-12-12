@@ -41,7 +41,7 @@ class calendarbiulder extends object
   	    
   	    $this->_objDBEventsCalendar = & $this->newObject('dbeventscalendar', 'eventscalendar');
   	    $this->_objUser = & $this->newObject('user', 'security');
-  	    $this->eventsArr = & $this->_objDBEventsCalendar->getEventsByType('user', $this->_objUser->userId(), $this->getParam('month'), $this->getParam('year'));
+  	    $this->eventsArr = array();//& $this->_objDBEventsCalendar->getEventsByType('user', $this->_objUser->userId(), $this->getParam('month'), $this->getParam('year'));
   	    $this->domTT = & $this->newObject('domtt', 'htmlelements');
 	}
 
@@ -53,7 +53,8 @@ class calendarbiulder extends object
 	* @param array $arrEvents The events array
 	*/
 	public function show($type = 'simple', $arrEvents = NULL)
-	{
+	{   
+        $this->eventsArr = $arrEvents;
 		if($type != 'simple')
 		{
 			$this->calType = 'big';
@@ -89,7 +90,7 @@ class calendarbiulder extends object
 			  $lastDayOfTheMonth = date("w",mktime(23,59,59,$this->curMonth, 1, $this->curYear));
 			  
 			  //week number at the beginning of the month
-			  $weekNoEndOfMonth = date("W",mktime(23,59,59,$this->curMonth, $this->curMonth, $this->curYear));
+			  $weekNoEndOfMonth = date("W",mktime(23,59,59,$this->curMonth, $this->curDay, $this->curYear));
 			  
 			  //number of weeks for the month
 			  $weekNo = ($weekNo - $weekNoEndOfMonth  ) + 1;
@@ -152,46 +153,46 @@ class calendarbiulder extends object
 			  
 		      
 			  
-			  	  //get the weeks in the month
+			  //get the weeks in the month
 			  for($i = 0; $i <= $weekNo ; $i++)
 			  {
-			  	//loop the weeks for this month
-			  	$str2 .= '<tr  class="rows">';
-			  	
-			  	//loop the days for this week
-			  	//but first format the first days of the calendar month
-			  	if($start)
-			  	{
-			  		//add the previous months days
-				  	for($k = 0; $k < $firstDayOfTheMonth ; $k++)
-				  	{
-				  		$str2 .= '<td class="sOther">'.$previousMonthsDays.'</td>';	
-				  		$previousMonthsDays++;
-				  	}
-				  	$start = false;
-			  	}
-			  		
-			  	//add the current months days
-			  	for ($j = $firstDayOfTheMonth; $j<7 ; $j++)
-			  	{	
-			  		if($dayCounter <= $daysInMonth)
-			  		{
-			  			//get the event for this day
-			  			$str2 .= $this->getEventDay($this->curYear,$this->curMonth,$dayCounter);		 
-			  		} else {
-			  			//add the next  months days
-			  			$str2 .= '<td class="sOther">'.$nextMonthsDays.'</td>';
-			  			$nextMonthsDays++;
-			  		}
-			  		//increment the day counter
-			  		$dayCounter++; 		
-			  		
-			  		//set the first day flag to 0
-			  		$firstDayOfTheMonth = 0;
-			  	}	
-			  	
-			  	//close the row
-			  	$str2 .= '</tr>';
+			        //loop the weeks for this month
+			        $str2 .= '<tr  class="rows">';
+			        
+			        //loop the days for this week
+			        //but first format the first days of the calendar month
+			        if($start)
+			        {
+			            //add the previous months days
+				        for($k = 0; $k < $firstDayOfTheMonth ; $k++)
+				        {
+				            $str2 .= '<td class="sOther">'.$previousMonthsDays.'</td>';	
+				            $previousMonthsDays++;
+				        }
+				        $start = false;
+			        }
+			            
+			        //add the current months days
+			        for ($j = $firstDayOfTheMonth; $j<7 ; $j++)
+			        {	
+			            if($dayCounter <= $daysInMonth)
+			            {
+			                //get the event for this day
+			                $str2 .= $this->getEventDay($this->curYear,$this->curMonth,$dayCounter);		 
+			            } else {
+			                //add the next  months days
+			                $str2 .= '<td class="sOther">'.$nextMonthsDays.'</td>';
+			                $nextMonthsDays++;
+			            }
+			            //increment the day counter
+			            $dayCounter++; 		
+			            
+			            //set the first day flag to 0
+			            $firstDayOfTheMonth = 0;
+			        }	
+			        
+			        //close the row
+			        $str2 .= '</tr>';
 			  }
 			  
 			  //close the table
@@ -233,11 +234,11 @@ class calendarbiulder extends object
 			  $lastDayOfTheMonth = date("w",mktime(23,59,59,$this->curMonth, 1, $this->curYear));
 			  
 			  //week number at the beginning of the month
-			  $weekNoEndOfMonth = date("W",mktime(23,59,59,$this->curMonth, $this->curMonth, $this->curYear));
-			  
+			  $weekNoEndOfMonth = date("W",mktime(23,59,59,$this->curMonth, $this->curDay, $this->curYear));
+			//  $weekNoEndOfMonth = 52;
 			  //number of weeks for the month
 			  $weekNo = ($weekNo - $weekNoEndOfMonth  ) + 1;
-			//  print $weekNoEndOfMonth;
+			  
 			  
 				//the start flag
 			  $start = true;
@@ -343,7 +344,7 @@ class calendarbiulder extends object
 			  
 			  //close the table
 		      $str2 .= "</table>\r<!-- END START CALENDAR GENERATETOR -->";
-				
+			
 		     
 		      return $str2;
 		      
@@ -420,7 +421,7 @@ class calendarbiulder extends object
     				if ($this->calType=='big')
     				{
 						 $ev .= '<div class="titleTOC">';
-						 $ev .=$event['description'];
+						 $ev .= stripslashes($event['description']);
 						 $ev .='</div>';
     				}
     				

@@ -19,6 +19,11 @@ $endTime =  & $this->newObject('textinput', 'htmlelements');
 $location =  & $this->newObject('textinput', 'htmlelements');
 //a button
 $button =  & $this->newObject('button', 'htmlelements');
+//$objFeatureBox
+$objFeatureBox = & $this->newObject('featurebox', 'navigation');
+//dropdown
+$objDropDown = & $this->newObject('dropdown', 'htmlelements');
+
 
 $mode = $this->getParam('mode');
 //check the mode
@@ -34,7 +39,12 @@ if($mode == 'edit')
     $heading = 'Edit Event';
     
 } else {
-    $heading = 'Add Event';
+    if($this->getParam('type') == 'context')
+    {
+        $heading = 'Add Event to '.$this->_objDBContext->getMenuText();
+    } else {
+        $heading = ' Add Event to My Calendar';
+    }
     $objTextField->value = '';
     $objEditor->value = '';
     $objDatePicker->value = mktime ();
@@ -42,10 +52,11 @@ if($mode == 'edit')
     $endTime->value = mktime();
     $location->value = '';
 }
+
 $objForm->name = "addevent";
-$objForm->extra = ' class = "f-wrap-1" ';
+//$objForm->extra = ' class = "f-wrap-1" ';
 $objForm->displayType = 2 ;
-$objForm->action = $this->uri(array('action' => 'saveevent'));
+$objForm->action = $this->uri(array('action' => 'saveevent', 'catid' => $this->getParam('catid')));
 
 //the title field
 $objTextField->name = 'title';
@@ -88,7 +99,41 @@ $button->label = "&nbsp;";
 $button->setCSS("f-submit");
 
 
+//check if the user is in a context and if he is a
+// lecturer in that context to add events to it.
+//add a drop dowon for the user to select the type of event this is
+if($this->_objDBContext->isInContext())
+{   $objContextGroups = & $this->newObject('managegroups', 'contextgroups');
+    $contextCode =  $this->_objDBContext->getContextCode();
+    //get a list of lecturers for this context
+    $arrLecturers = $objContextGroups->contextUsers('Lecturers', $contextCode);
+    //check if this user is a lecturer
+    
+    if($this->_objUser->isAdmin() || in_array($this->_objUser->userId(), $arrLecturers) )
+    {
+        $objDropDown->name = 'eventtype';
+        $objDropDown->label = 'Event Type';
+        $objDropDown->extra = ' style="width:200px" ';
+        $objDropDown->addOption($contextCode,'Context: '.$this->_objDBContext->getMenuText());
+        $objDropDown->addOption($this->_objUser->userId(),'Personal');
+        if($this->_objUser->isAdmin())
+        {
+            $objDropDown->addOption('site1','Site');
+        }
+        $objForm->addToForm($objDropDown);
+    }
+} else {
+	    $catId = $this->_objDBCategories->getCatId('user',$this->_objUser->userId());
 
+}
+
+
+$objForm->name = "addevent";
+//$objForm->extra = ' class = "f-wrap-1" ';
+$objForm->displayType = 2 ;
+$objForm->action = $this->uri(array('action' => 'saveevent', 'catid' => $catId));
+
+/*
 $str = '<select name="catid">';
 foreach ($categories as $cat)
 {
@@ -96,6 +141,7 @@ foreach ($categories as $cat)
   
 }
 $str .= '</select>';
+*/
 //$objCatDropdown->addFromDB($categories, 'title','title','Categories');
 
 
@@ -109,12 +155,12 @@ $objForm->addToForm($location);
 $objForm->addToForm($objDatePicker);
 //$objForm->addToForm($startTime);
 //$objForm->addToForm($endTime);
-$objForm->addToForm('Start Time</td><td>'.$this->_objUtils->getTimeDropDown('startTime'));
-$objForm->addToForm('End Time</td><td>'.$this->_objUtils->getTimeDropDown('endTime'));
+//$objForm->addToForm('Start Time</td><td>'.$this->_objUtils->getTimeDropDown('startTime'));
+//$objForm->addToForm('End Time</td><td>'.$this->_objUtils->getTimeDropDown('endTime'));
 $objForm->addToForm($objEditor);
 $objForm->addToForm($button);
 
-print "<h1> ".$heading."</h1>";
-print $objForm->show();
+//print "<h1> ".$heading."</h1>";
+print $objFeatureBox->show($heading, $objForm->show());
 
 ?>

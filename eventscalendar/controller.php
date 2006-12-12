@@ -24,9 +24,23 @@ class eventscalendar extends controller
         $this->_objDBEventsCalendar = & $this->newObject('dbeventscalendar', 'eventscalendar');
         $this->_objCalendarBiulder = & $this->newObject('calendarbiulder', 'eventscalendar');
         $this->_objDBCategories = & $this->newObject('dbeventscalendarcategories', 'eventscalendar');
+        $this->_objDBContext = & $this->newObject('dbcontext', 'context');
         $this->_objUser = & $this->newObject('user', 'security');
         $this->_objUtils = & $this->newObject('utils');
         $this->objLanguage = & $this->getObject('language','language');
+        
+        //create an entry for this context that your are in if it doesnt exists
+        if($this->_objDBContext->isInContext() && !$this->_objDBCategories->typeExist('context', $this->_objDBContext->getContextCode()))
+        {
+            $this->_objDBCategories->addCat('context', $this->_objDBContext->getContextCode());           
+        }
+
+	    //check if this user has entry
+	    if(!$this->_objDBCategories->typeExist('user', $this->_objUser->userId()))
+	    {
+		    //create the entry
+		    $this->_objDBCategories->addCat('user', $this->_objUser->userId());
+	    }
     }
     
     
@@ -35,16 +49,26 @@ class eventscalendar extends controller
      */
     public function dispatch()
     {
-       $this->setVar('pageSuppressXML',true);
+        $this->setVar('pageSuppressXML',true);
         $action = $this->getParam("action");
-          $this->setLayoutTemplate('layout_tpl.php');
-          $type = $this->getParam("type");
-          $typeId = $this->getParam("typeid");
-          if($type == null)
-          {
-          	$type = 'user';
+        $this->setLayoutTemplate('layout_tpl.php');
+          
+        $type = $this->getParam("type");
+        $typeId = $this->getParam("typeid");
+    
+        if($type=='' && $this->_objDBContext->isInContext())
+        {
+            $type = 'context';
+            $typeId = $this->_objDBContext->getContextCode();
+        }
+
+        if($type == null)
+        {
+        	$type = 'user';
             $typeId = $this->_objUser->userId();
-          }
+        }
+
+        
         switch ($action)
         {
         	
@@ -55,21 +79,19 @@ class eventscalendar extends controller
             	$year = $this->getParam('year');
             
             	//$arrEvents = $this->_objDBEventsCalendar->getUserEvents($this->_objUser->userId(), $mon , $year	);
-            	$arrEvents = $this->_objDBEventsCalendar->getEventsByType('user', $this->_objUser->userId(), $mon , $year);
-            	$this->setVar('events', $arrEvents);
-            	
+                
+                $catId = $this->_objDBCategories->getCatId($type, $typeId);
+
+            	$arrEvents = $this->_objDBEventsCalendar->getEventsByCategory($catId, $mon , $year);
+               	$this->setVar('events', $arrEvents);
+            	$this->setVar('calType', $type);
+                $this->setVar('catId', $catId);
             	$this->_objCalendarBiulder->assignDate($mon , $year);
-            	$this->setVar('calendar', $this->_objCalendarBiulder->show('simple', $arrEvents));
+            	$this->setVar('calendar', $this->_objCalendarBiulder->show('big', $arrEvents));
                 
                 return 'events_tpl.php';
             case 'addevent':
-            	
-            	//if there is no categories then go add some before events
-            	if(!$this->_objDBCategories->isCategories())
-            	{
-            		return $this->nextAction('addcat');
-            	}
-            	               // $this->setVar('categories', $this->_objDBCategories->getUserCategories($this->_objUser->userId()));
+            
                 return 'add_tpl.php';
             case 'saveevent':
             	//  die($this->getParam('start_date'));
@@ -77,8 +99,8 @@ class eventscalendar extends controller
                 {
                    
                     $this->_objDBEventsCalendar->editEvent($typeId);
-                } else {
-                     $this->_objDBEventsCalendar->addEvent($type, $typeId);
+                } else {die($this->getParam('catid'));
+                     $this->_objDBEventsCalendar->addEvent($this->getParam('catid'));
                 }
                 
                 return $this->nextAction(null);
@@ -96,6 +118,7 @@ class eventscalendar extends controller
                 {
                     $this->_objDBCategories->editCategory($catId);
                 } else {
+
                     $this->_objDBCategories->addCategory($this->_objUser->userId());
                 }
                 return $this->nextAction('categories');
