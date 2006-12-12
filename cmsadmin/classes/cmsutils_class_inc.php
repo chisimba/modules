@@ -92,6 +92,20 @@ class cmsutils extends object
                 $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
                 $this->_objUser = & $this->newObject('user', 'security');
                 $this->objLanguage = & $this->newObject('language', 'language');
+                
+                $this->objDateTime =& $this->getObject('datetime', 'utilities');
+                
+                $this->loadClass('textinput', 'htmlelements');
+                $this->loadClass('checkbox', 'htmlelements');
+                $this->loadClass('radio', 'htmlelements');
+                $this->loadClass('dropdown', 'htmlelements');
+                $this->loadClass('form', 'htmlelements');
+                $this->loadClass('button', 'htmlelements');
+                $this->loadClass('link', 'htmlelements');
+                $this->loadClass('label', 'htmlelements');
+                $this->loadClass('hiddeninput', 'htmlelements');
+                
+                
 		   } catch (Exception $e){
        		    echo 'Caught exception: ',  $e->getMessage();
         	    exit();
@@ -133,8 +147,7 @@ class cmsutils extends object
             $objIcon->setIcon('visible');
             $visibleIcon = $objIcon->show();
 
-            $objRadio = & $this->newObject('radio', 'htmlelements');
-            $objRadio->name = $name;
+            $objRadio = new radio ($name);
             $objRadio->addOption('0', $notVisibleIcon.$this->objLanguage->languageText('word_no').'&nbsp;'.'&nbsp;');
             $objRadio->addOption('1', $visibleIcon.$this->objLanguage->languageText('word_yes'));
             $objRadio->setSelected($selected);
@@ -150,8 +163,7 @@ class cmsutils extends object
          */
         public function getAccessList($name)
         {
-            $objDropDown = & $this->newObject('dropdown', 'htmlelements');
-            $objDropDown->name = $name;
+            $objDropDown = new dropdown($name);
             //fill the drop down with the list of images
             //TODO
             $objDropDown->addOption('0', $this->objLanguage->languageText('word_public'));
@@ -261,9 +273,8 @@ class cmsutils extends object
 
                         if (!$page['body'] == '') {
                             //read more link .. link to the full text
-                            $link = & $this->newObject('link', 'htmlelements');
+                            $link = new link($this->uri(array('action' => 'showfulltext', 'id' => $page['id']), 'cms'));
                             $link->link = $this->objLanguage->languageText('phrase_readmore').' ..';
-                            $link->href = $this->uri(array('action' => 'showfulltext', 'id' => $page['id']), 'cms');
                             $table->startRow();
                             $table->addCell($link->show());
                             $table->endRow();
@@ -273,9 +284,8 @@ class cmsutils extends object
                     } else {
                         //display as links
                         $table = & $this->newObject('htmltable', 'htmlelements');
-                        $link = & $this->newObject('link', 'htmlelements');
+                        $link = new link($this->uri(array('action' => 'showfulltext', 'id' => $page['id']), 'cms'));
                         $link->link = $page['title'];
-                        $link->href = $this->uri(array('action' => 'showfulltext', 'id' => $page['id']), 'cms');
                         //title
                         $table->startRow();
                         $table->addCell($link->show());
@@ -283,8 +293,7 @@ class cmsutils extends object
                     }
                     //Read more link
                     $moreLink = $this->uri(array('action' => 'showfulltext', 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
-                    $readMoreLink = & $this->newObject('link', 'htmlelements');
-                    $readMoreLink->href = $moreLink;
+                    $readMoreLink = new link($moreLink);
                     $readMoreLink->link = $this->objLanguage->languageText('phrase_readmore').'...';
                     $readMoreLink->title = $page['title'];
                     $readMoreLink->cssClass = 'morelink';
@@ -376,11 +385,10 @@ class cmsutils extends object
 
             foreach ($arrPages as $page) {
                 if ($foundPage == TRUE) {
-                    $link = & $this->newObject('link', 'htmlelements');
+                    $link = new link($this->uri(array('action' => 'showsection', 'id' => $arrSection['id'], 'pageid' => $page['id'], 'sectionid' => $page['sectionid']), $module));
                     $link->link = $page['title'];
-                    $link->href = $this->uri(array('action' => 'showsection', 'id' => $arrSection['id'], 'pageid' => $page['id'], 'sectionid' => $page['sectionid']), $module);
                     if($showDate) {
-                        $str .= '<li>'. $this->formatDate($page['created']).' - '.$link->show() .'</li> ';
+                        $str .= '<li>'. $this->objDateTime->formatDate($page['created']).' - '.$link->show() .'</li> ';
                     } else {
                         $str .= '<li>'. $link->show() .'</li> ';
                     }
@@ -491,8 +499,7 @@ class cmsutils extends object
                 }
                 $uri = $this->uri(array('action' => 'showfulltext', 'sectionid' => $arrSection['id'], 'id' => $page['id']), $module);
                 //Read more link
-                $readMoreLink = & $this->newObject('link', 'htmlelements');
-                $readMoreLink->href = $uri;
+                $readMoreLink = new link ($uri);
                 $readMoreLink->link = $this->objLanguage->languageText('phrase_readmore').'...';
                 $readMoreLink->title = $page['title'];
                 $readMoreLink->cssClass = 'morelink';
@@ -562,9 +569,8 @@ class cmsutils extends object
                     $strBody .= stripslashes($page['body']).'<p/>';
                     $str .= $page['title'].' | ';
                 } else {
-                    $link = & $this->newObject('link', 'htmlelements');
+                    $link = new link($this->uri(array('action' => 'showsection', 'pageid' => $page['id'], 'id' => $page['sectionid'], 'sectionid' => $page['sectionid']), $module));
                     $link->link = $page['title'];
-                    $link->href = $this->uri(array('action' => 'showsection', 'pageid' => $page['id'], 'id' => $page['sectionid'], 'sectionid' => $page['sectionid']), $module);
                     $str .= $link->show() .' | ';
                 }
             }
@@ -618,10 +624,9 @@ class cmsutils extends object
             }
 
             foreach ($arrPages as $page) {
-                $link = & $this->newObject('link', 'htmlelements');
+                $link = new link ($this->uri(array('action' => 'showcontent', 'id' => $page['id'], 'sectionid' => $page['sectionid']), $module));
                 $link->link = $page['title'];
-                $link->href = $this->uri(array('action' => 'showcontent', 'id' => $page['id'], 'sectionid' => $page['sectionid']), $module);
-                $str .= '<li>'.$this->formatDate($page['created']).' - '. $link->show() .'</li>';
+                $str .= '<li>'.$this->objDateTime->formatDate($page['created']).' - '. $link->show() .'</li>';
             }
             if($showIntro) {
                 return '<p>'.$description.'</p>'.$str;
@@ -1063,6 +1068,7 @@ class cmsutils extends object
 
             //initiate objects
             $table = & $this->newObject('htmltable', 'htmlelements');
+            
             $titleInput = & $this->newObject('textinput', 'htmlelements');
             $menuTextInput = & $this->newObject('textinput', 'htmlelements');
             $h3 = &$this->newObject('htmlheading', 'htmlelements');
@@ -1073,10 +1079,9 @@ class cmsutils extends object
             $objParentId = & $this->newObject('textinput', 'htmlelements');
             $objCount = & $this->newObject('textinput', 'htmlelements');
             $objOrdering = & $this->newObject('textinput', 'htmlelements');
-            //Load radio class
-            $this->loadClass('radio', 'htmlelements');
-            $this->loadClass('label', 'htmlelements');
-            $this->loadClass('textinput', 'htmlelements');
+            
+            
+            
 
             if ($sectionId == NULL) {
                 $action = 'createsection';
@@ -1379,16 +1384,39 @@ class cmsutils extends object
         {
             //initiate objects
             $table = & $this->newObject('htmltable', 'htmlelements');
-            $titleInput = & $this->newObject('textinput', 'htmlelements');
-            $bodyInput = & $this->newObject('htmlarea', 'htmlelements');
-            $introInput = & $this->newObject('htmlarea', 'htmlelements');
             $h3 = & $this->newObject('htmlheading', 'htmlelements');
-            $button = & $this->newObject('button', 'htmlelements');
-            $table2 = & $this->newObject('htmltable', 'htmlelements');
-            $frontPage = & $this->newObject('checkbox', 'htmlelements');
-            $published = & $this->newObject('checkbox', 'htmlelements');
+            
+            
+            // Title Input
+            $titleInput = new textinput ('title');
+            $titleInput->extra = ' style="width: 100%"';
+            
+            // Content Area
+            $bodyInput = $this->newObject('htmlarea', 'htmlelements');
+            $bodyInput->name = 'body';
+            $bodyInput->height = '400px';
+            $bodyInput->width = '100%';
+            
+            // Introduction Area
+            $introInput = $this->newObject('htmlarea', 'htmlelements');
+            $introInput->name = 'intro';
+            $introInput->setBasicToolBar();
+            $introInput->height = '200px';
+            $introInput->width = '100%';
+            
+            // Submit Button
+            $button = new button('submitform', $this->objLanguage->languageText('word_save'));
+            $button->setToSubmit();
+            
+            
+            $table2 =  $this->newObject('htmltable', 'htmlelements');
+            
+            $published = new checkbox('published');
+            $frontPage = new checkbox('frontpage');
+            
             $objOrdering = & $this->newObject('textinput', 'htmlelements');
-            $objForm =& $this->newObject('form', 'htmlelements');
+            
+            
             $objCCLicence = $this->newObject('licensechooser', 'creativecommons');
             
             if ($contentId == NULL) {
@@ -1408,26 +1436,26 @@ class cmsutils extends object
                 $editmode = TRUE;
                 $arrContent = $this->_objContent->getContentPage($contentId);
                 $titleInput->value = $arrContent['title'];
+                
                 $introInput->setContent(stripslashes($arrContent['introtext']));
                 $bodyInput->setContent(stripslashes($arrContent['body']));
+                
                 $frontPage->setChecked($this->_objFrontPage->isFrontPage($arrContent['id']));
                 $published->setChecked($arrContent['published']);
                 if(isset($arrContent['post_lic'])){
                     $objCCLicence->defaultValue = $arrContent['post_lic'];
                 }    
             }
+            
+            //setup form
+            $objForm = new form('addfrm', $this->uri(array('action' => $action, 'id' => $contentId, 'frontpage' => $this->getParam('frontpage')), 'cmsadmin'));
+            $objForm->setDisplayType(3);
 
             if ($editmode) {
-                $sections = & $this->newObject('textinput', 'htmlelements');
-                $sections->name = 'parent';
-                $sections->id = 'parent';
-                $sections->fldType = 'hidden';
-                $sections->value = $arrContent['sectionid'];
                 //Set ordering as hidden field
-                $objOrdering->name = 'ordering';
-                $objOrdering->id = 'ordering';
-                $objOrdering->fldType = 'hidden';
-                $objOrdering->value = $arrContent['ordering'];
+                $sections = new hiddeninput('parent', $arrContent['sectionid']);
+                $objOrdering = new hiddeninput('ordering', $arrContent['ordering']);
+                
             } else {
                 if (isset($section) && !empty($section)) {
                     $sections = $this->getTreeDropdown($section, TRUE);
@@ -1436,11 +1464,7 @@ class cmsutils extends object
                 }
             }
 
-            //setup form
-            $objForm->name = 'addfrm';
-            $objForm->id = 'addfrm';
-            $objForm->setAction($this->uri(array('action' => $action, 'id' => $contentId, 'frontpage' => $this->getParam('frontpage')), 'cmsadmin'));
-            $objForm->setDisplayType(3);
+            
 
             $table->width = '80%';
             $table->border = '0';
@@ -1451,34 +1475,18 @@ class cmsutils extends object
             //create heading
             $h3->str = $this->objLanguage->languageText('mod_cmsadmin_contentitem', 'cmsadmin').':'.'&nbsp;'.$this->objLanguage->languageText('word_new');
 
-            $titleInput->name = 'title';
-            $titleInput->id = 'title';
 
-            //$objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
+            $objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
 
-            $bodyInput->name = 'body';
-            $bodyInput->id = 'body';
-            $bodyInput->height = '400';
-            $bodyInput->width = '100%';
+            
 
-            $introInput->name = 'intro';
-            $introInput->id = 'intro';
-            $introInput->setBasicToolBar();
-            $introInput->height = '200';
-            $introInput->width = '100%';
+            
 
             //$objForm->addRule('menutext', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddmenutext', 'cmsadmin'), 'required');
 
-            $button->setToSubmit();
-            $button->value = $this->objLanguage->languageText('word_save');
-            $button->id = 'submit';
-            $button->name = 'submit';
+            
 
-            $published->name = 'published';
-            $published->id = 'published';
-
-            $frontPage->name = 'frontpage';
-            $frontPage->id = 'frontpage';
+            
 
             $table->startRow();
             $table->addCell($this->objLanguage->languageText('word_title'));
@@ -1504,9 +1512,9 @@ class cmsutils extends object
             $table->addCell($this->objLanguage->languageText('word_published'));
             $table->addCell($published->show());
             $table->endRow();
-            $table2->startRow();
-            $table2->addCell($table->show());
-            $table2->endRow();
+            
+            $objForm->addToForm($table->show());
+            
             //body
             $table2->startRow();
             $table2->addCell($this->objLanguage->languageText('mod_cmsadmin_maintext', 'cmsadmin'));
@@ -1535,12 +1543,9 @@ class cmsutils extends object
             $table2->endRow();
             //Add table to the form
             $objForm->addToForm($table2->show());
-            //Add content to the output layer
-            $middleColumnContent = "";
-            $middleColumnContent .= $h3->show();
-            $middleColumnContent .= $objForm->show();
-
-            return $middleColumnContent;
+            
+            
+            return $h3->show().$objForm->show();
         }
 
 }
