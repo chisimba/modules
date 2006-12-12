@@ -37,6 +37,11 @@ $fields = array(
 		'length' => 32,
 
 		),
+	'post_lic' => array(
+		'type' => 'text',
+		'length' => 60,
+
+		),
     'mask' => array(
 		'type' => 'integer',
         'unsigned' => TRUE,

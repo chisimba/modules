@@ -81,25 +81,31 @@ class dbcontent extends dbTable
          */
         public function add()
         {
+            //Create htmlcleaner object
+            $objHtmlCleaner =& $this->newObject('htmlcleaner', 'utilities');
             //Get details of the new entry
             $title = $this->getParam('title');
             $sectionid = $this->getParam('parent');
             $published = ($this->getParam('published') == 'on') ? 1 : 0;
             $creatorid = $this->_objUser->userId();
             $access = $this->getParam('access');
-            $introText = $this->getParam('intro');
-            $fullText = $this->getParam('body');
-
+            $introText = htmlentities($this->getParam('intro')); 
+            $fullText = htmlentities($this->getParam('body')); 
+            $introText = $objHtmlCleaner->cleanHtml($introText);
+            $fullText = $objHtmlCleaner->cleanHtml($fullText);
+            $ccLicence = $this->getParam('creativecommons');
+            
             $newArr = array(
                           'title' => $title ,
                           'sectionid' => $sectionid,
-                          'introtext' => $introText,
-                          'body' => $fullText,
+                          'introtext' => addslashes($introText),
+                          'body' => addslashes($fullText),
                           'access' => $access,
                           'ordering' => $this->getOrdering($sectionid),
                           'published' => $published,
                           'created' => $this->now(),
                           'modified' => $this->now(),
+                          'post_lic' => $ccLicence,
                           'created_by' => $creatorid
                       );
 
@@ -124,24 +130,33 @@ class dbcontent extends dbTable
          * @param bool $access True if "registered" page False if "public" page
          * @param string $introText The introduction content
          * @param string $fullText The main content of the page
+         * @param string $ccLicence The cc licence of the content
          * @param bool $isFrontPage Whether page will appear on the front page or not
          * @access public
          * @return bool
          */
-        public function addNewPage($title, $sectionid, $published, $access, $introText, $fullText, $isFrontPage)
+        public function addNewPage($title, $sectionid, $published, $access, $introText, $fullText, $isFrontPage, $ccLicence)
         {
+            //Create htmlcleaner object
+            $objHtmlCleaner =& $this->newObject('htmlcleaner', 'utilities');
+            $introText = htmlentities($introText); 
+            $fullText = htmlentities($introText); 
+            $introText = $objHtmlCleaner->cleanHtml($introText);
+            $fullText = $objHtmlCleaner->cleanHtml($fullText);
+
             $creatorid = $this->_objUser->userId();
 
             $newArr = array(
                           'title' => $title ,
                           'sectionid' => $sectionid,
-                          'introtext' => $introText,
-                          'body' => $fullText,
+                          'introtext' => addslashes($introText),
+                          'body' => addslashes($fullText),
                           'access' => $access,
                           'ordering' => $this->getOrdering($sectionid),
                           'published' => $published,
                           'created' => $this->now(),
                           'modified' => $this->now(),
+                          'post_lic' => $ccLicence,
                           'created_by' => $creatorid
                       );
 
@@ -168,19 +183,23 @@ class dbcontent extends dbTable
             $published = ($this->getParam('published') == 'on') ? '1' : '0';
             $creatorid = $this->_objUser->userId();
             $access = $this->getParam('access');
-            $introText = $this->getParam('intro');
-            $fullText = $this->getParam('body');
+            $introText = htmlentities($this->getParam('intro')); 
+            $fullText = htmlentities($this->getParam('body')); 
+            $introText = $objHtmlCleaner->cleanHtml($introText);
+            $fullText = $objHtmlCleaner->cleanHtml($fullText);
             $ordering = $this->getParam('ordering');
-
+            $ccLicence = $this->getParam('creativecommons');
+            
             $newArr = array(
                           'title' => $title ,
                           'sectionid' => $sectionid,
                           'access' => $access,
-                          'introtext' => $introText,
-                          'body' => $fullText,
+                          'introtext' => addslashes($introText),
+                          'body' => addslashes($fullText),
                           'modified' => $this->now(),
                           'ordering' => $ordering,
                           'published' => $published,
+                          'post_lic' => $ccLicence,
                           'created_by' => $creatorid
                       );
 

@@ -256,7 +256,7 @@ class cmsutils extends object
                         $table->endRow();
                         //intor text
                         $table->startRow();
-                        $table->addCell('<p>'.$page['introtext']);
+                        $table->addCell('<p>'.stripslashes($page['introtext']));
                         $table->endRow();
 
                         if (!$page['body'] == '') {
@@ -290,7 +290,7 @@ class cmsutils extends object
                     $readMoreLink->cssClass = 'morelink';
                     //Page content
                     $content = '<span class="date">'.$page['created'].'</span>';
-                    $content .= '<p>'.$page['introtext'].'<br />'.$readMoreLink->show().'</p>';
+                    $content .= '<p>'.stripslashes($page['introtext']).'<br />'.$readMoreLink->show().'</p>';
                     //Page heading
                     $objH =& $this->newObject('htmlheading', 'htmlelements');
                     $objH->type = '3';
@@ -388,7 +388,7 @@ class cmsutils extends object
 
                 if ($pageId == $page['id']) {
                     $strBody = '<h3>'.$page['title'].'</h3>';
-                    $strBody .= $page['body'].'<p/>';
+                    $strBody .= stripslashes($page['body']).'<p/>';
                     $foundPage = TRUE;
                 }
             }
@@ -477,7 +477,7 @@ class cmsutils extends object
                 }
                 //intor text
                 $table->startRow();
-                $table->addCell('<p>'.$page['introtext']);
+                $table->addCell('<p>'.stripslashes($page['introtext']));
                 $table->endRow();
 
                 if($showDate) {
@@ -497,7 +497,7 @@ class cmsutils extends object
                 $readMoreLink->title = $page['title'];
                 $readMoreLink->cssClass = 'morelink';
 
-                $str .= '<p>'.$page['introtext'].'<br />';
+                $str .= '<p>'.stripslashes($page['introtext']).'<br />';
                 $str .= $readMoreLink->show().'</p>';
             }
 
@@ -559,7 +559,7 @@ class cmsutils extends object
                     $objH->type = '3';
                     $objH->str = $page['title'];
                     $strBody = $objH->show();
-                    $strBody .= $page['body'].'<p/>';
+                    $strBody .= stripslashes($page['body']).'<p/>';
                     $str .= $page['title'].' | ';
                 } else {
                     $link = & $this->newObject('link', 'htmlelements');
@@ -1389,7 +1389,8 @@ class cmsutils extends object
             $published = & $this->newObject('checkbox', 'htmlelements');
             $objOrdering = & $this->newObject('textinput', 'htmlelements');
             $objForm =& $this->newObject('form', 'htmlelements');
-
+            $objCCLicence = $this->newObject('licensechooser', 'creativecommons');
+            
             if ($contentId == NULL) {
                 $action = 'createcontent';
                 $editmode = FALSE;
@@ -1407,10 +1408,13 @@ class cmsutils extends object
                 $editmode = TRUE;
                 $arrContent = $this->_objContent->getContentPage($contentId);
                 $titleInput->value = $arrContent['title'];
-                $introInput->setContent($arrContent['introtext']);
-                $bodyInput->setContent($arrContent['body']);
+                $introInput->setContent(stripslashes($arrContent['introtext']));
+                $bodyInput->setContent(stripslashes($arrContent['body']));
                 $frontPage->setChecked($this->_objFrontPage->isFrontPage($arrContent['id']));
                 $published->setChecked($arrContent['published']);
+                if(isset($arrContent['post_lic'])){
+                    $objCCLicence->defaultValue = $arrContent['post_lic'];
+                }    
             }
 
             if ($editmode) {
@@ -1516,6 +1520,14 @@ class cmsutils extends object
             $table2->endRow();
             $table2->startRow();
             $table2->addCell($introInput->show());
+            $table2->endRow();
+
+            //cc licence input
+            $table2->startRow();
+            $table2->addCell($this->objLanguage->languageText('word_licence'));
+            $table2->endRow();
+            $table2->startRow();
+            $table2->addCell($objCCLicence->show());
             $table2->endRow();
 
             $table2->startRow();

@@ -1,6 +1,18 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <updates>
   <update>
+    <table>tbl_cms_content</table>
+    <version>1.30</version>
+    <description>Added a Creative Commons Licence Field</description>
+    <data>
+       	<add>
+   			<name>post_lic</name>
+	    	<type>text</type>
+   			<length>60</length>
+		</add>
+	</data>
+  </update>
+  <update>
     <table>
       tbl_cms_sections
     </table>
