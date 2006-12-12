@@ -720,19 +720,30 @@ class cmsutils extends object
             $link->link = $this->objLanguage->languageText('mod_cmsadmin_frontpagemanager', 'cmsadmin');
             $link->href = $this->uri(array('action' => 'frontpages'), 'cmsadmin');
             $frontpageManagerLink = $link->show();
-
+			
+			$objCMSTree = $this->getObject('cmstree');
+			
             //Add links to the output layer
             $nav = $objH->show();
             $nav .= '<br/>';
             $nav .= $cmsAdminLink;
             $nav .= '<br/>'.'&nbsp;'.'<br/>';
-            $nav .= $this->getSectionLinks();
-            $nav .= '<br/>'.'&nbsp;'.'<br/>';
-            $nav .= $createSectionLink;
-            $nav .= '<br/>'.'&nbsp;'.'<br/>';
+            $nav .= $objCMSTree->getCMSAdminTree();
+            //$nav .= '<br/>';
+			// $nav .= $createSectionLink;
+            // $nav .= '<br/>'.'&nbsp;'.'<br/>';
             $nav .= $frontpageManagerLink;
-            $nav .= '<br/>'.'&nbsp;'.'<br/>';
-            $nav .= $viewCmsLink;
+            $nav .= '<br/>'.'&nbsp;'.'<br />';
+            $nav .= $viewCmsLink.'<br /><br />';
+			$nav .= '<strong>Folder Colour Legend</strong>
+<ul>
+<li class="sectionfolder">Section will be visible in the CMS.</li>
+<li class="orangefolder">Section is set as not visible, and will not be displayed in the CMS.</li>
+<li class="whitefolder">Section has no content pages, and will not be displayed in the CMS.</li>
+<li class="greenfolder">This section will not be displayed, because a parent section is not visible.</li>
+</ul>';
+			
+            
             return $nav;
         }
 
@@ -794,91 +805,20 @@ class cmsutils extends object
          */
         public function getTreeDropdown($setSelected = NULL, $noRoot = FALSE)
         {
-            //Create dropdown
-            $treeDrop = & $this->newObject('dropdown', 'htmlelements');
-            $treeDrop->name = 'parent';
-
-            if(!$noRoot) {
-                $treeDrop->addOption('0', '...'.$this->objLanguage->languageText('mod_cmsadmin_rootlevelmenu', 'cmsadmin').'...');
-            }
-
-            //Create instance of geticon object
-            $objIcon = & $this->newObject('geticon', 'htmlelements');
-
-            //Get all root sections
-            $availsections = $this->_objSections->getRootNodes();
-
-            if (!empty($availsections)) {
-                //initiate sequential tree structured array to be inserted into dropdown
-                $treeArray = array();
-                //Get icon for root nodes
-                $objIcon->setIcon('tree/treebase');
-                //add nodes for each section
-                foreach($availsections as $section) {
-                    //initiate prefix for nodes
-                    $prefix = '';
-                    //add root(secion) to dropdown
-                    $treeArray[] = array('title' => $objIcon->show().$section['menutext'], 'id' => $section['id']);
-                    //get number of node levels
-                    $numLevels = $this->getNumNodeLevels($section['id']);
-                    //check if section has sub sections
-
-                    if ($numLevels > '0') {
-                        //Get icon for parent child nodes
-                        $objIcon->setIcon('tree/treefolder_orange');
-                        //loop through each level and add all sub sections in level
-
-                        for ($i = '2'; $i <= $numLevels; $i++) {
-                            $prefix .= '- ';
-                            //get all sub secs in section on level
-                            $subSecs = $this->_objSections->getSubSectionsForLevel($section['id'], $i, 'DESC');
-                            foreach($subSecs as $sec) {
-                                //if its the 1st node just add it under the section
-
-                                if ($i == '2') {
-                                    $treeArray[] = array('title' => $prefix.$objIcon->show().$sec['menutext'], 'id' => $sec['id']);
-                                    //else find the parent node and include it after this node
-                                } else {
-                                    $parentId = $sec['parentid'];
-                                    $subSecTitle = $this->_objSections->getMenuText($parentId);
-                                    $count = $this->_objSections->getLevel($parentId);
-                                    $searchPrefix = "";
-
-                                    for ($num = '2'; $num <= $count; $num++) {
-                                        $searchPrefix .= '- ';
-                                    }
-
-                                    $needle = array('title' => $searchPrefix.$objIcon->show().$subSecTitle, 'id' => $parentId);
-                                    $entNum = array_search($needle, $treeArray);
-                                    $newEnt = array('title' => $prefix.$objIcon->show().$sec['menutext'], 'id' => $sec['id']);
-                                    $treeArray = $this->addToTreeArray($treeArray, $entNum, $newEnt);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                //Add array to dropdown
-                foreach($treeArray as $node) {
-                    $treeDrop->addOption($node['id'], $node['title']);
-                }
-
-                if(isset($setSelected)) {
-                    $treeDrop->setSelected($setSelected);
-                }
-            }
-
-            return $treeDrop->show();
+            $objCMSTree = $this->getObject('cmstree');
+			
+			return $objCMSTree->getCMSAdminDropdownTree($setSelected);
+			
         }
 
-        /**
-         * Method to return the number of node levels attached to a root section
-         *
-         * @param string $rootId The id(pk) of the section root
-         * @return int $numLevels The number of node levels in the root section
-         * @access public
-         * @author Warren Windvogel
-         */
+		/**
+		* Method to return the number of node levels attached to a root section
+		*
+		* @param string $rootId The id(pk) of the section root
+		* @return int $numLevels The number of node levels in the root section
+		* @access public
+		* @author Warren Windvogel
+		*/
         public function getNumNodeLevels($rootId)
         {
             //get all sub secs in section

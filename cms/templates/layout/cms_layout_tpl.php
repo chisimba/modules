@@ -25,7 +25,7 @@ $this->appendArrayVar('bodyOnLoad', 'autoInit_trees()');
 //Navigation
 $currentNode = $this->getParam('sectionid', NULL);
 
-$leftSide = $objTreeMenu->buildTree($currentNode);
+$leftSide = $objTreeMenu->getCMSTree($currentNode);
 if($objUser->isAdmin())
 {
     $objAdminLink =& $this->newObject('link', 'htmlelements');
