@@ -135,10 +135,7 @@ $fields = array(
 		'type' => 'integer',
         'length' => 11,
         'unsigned' => TRUE,
-		),
-	'post_lic' => array(
-		'type' => 'text',
-		'length' => 60
+
 		),
 	);
 
