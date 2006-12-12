@@ -10,6 +10,13 @@
 class wwPage extends object
 {
 
+	// Personal debugger - TODO: REMOVE BEFORE COMMITTING FOR PRODUCTION!
+	public function dbg($sErr){
+		$handle = fopen('error_log/my_debug.log', 'a');
+		fwrite($handle, "[" . strftime("%b %d %Y %H:%M:%S") ."]/classes/wwPage :: " . $sErr . "\n");
+		fclose($handle);
+	}
+
 	/**
     * @var DomElement $elmContent DomElement of the Wiki content 
     */
@@ -25,7 +32,6 @@ class wwPage extends object
  	 */ 
 	public function init()
 	{
-		//$this->stylesheets = new array();
 	}
 
 	/**
@@ -36,6 +42,7 @@ class wwPage extends object
 	 */
 	public function setContent($elm)
 	{
+		$this->dbg('Setting content, check for children = ' . $elm->hasChildNodes());
 		$this->elmContent = $elm;
 	}
 
@@ -46,6 +53,7 @@ class wwPage extends object
 	 */
 	public function getContent()
 	{
+		$this->dbg('getting content, check for children = ' . $this->elmContent->hasChildNodes());
 		return $this->elmContent;
 	}
 
@@ -57,7 +65,9 @@ class wwPage extends object
 	 */
 	public function addStyleSheet($link)
 	{
-		array_push($link, $this->stylesheets);
+		
+		$this->dbg(' link class = ' . get_class($link) . ", and " . $link->getAttribute('rel'));
+		array_push($this->stylesheets, $link);
 	}
 
 	/**

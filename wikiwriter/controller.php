@@ -15,7 +15,13 @@ if(!$GLOBALS['kewl_entry_point_run'])
 */
 class wikiwriter extends controller 
 {
-	//TODO: Make objDomPDFWrapper a declared var
+
+	// Personal debugger - TODO: REMOVE BEFORE COMMITTING FOR PRODUCTION!
+	public function dbg($sErr){
+		$handle = fopen('error_log/my_debug.log', 'a');
+		fwrite($handle, "[" . strftime("%b %d %Y %H:%M:%S") ."]/controller.php :: " . $sErr . "\n");
+		fclose($handle);
+	}
 
     /**
      * Method to initialise the wiki object
@@ -28,6 +34,7 @@ class wikiwriter extends controller
 			$this->loadClass('dompdfwrapper', 'wikiwriter');
 			$this->loadClass('wwPage', 'wikiwriter');
 			$this->loadClass('wwDocument', 'wikiwriter');
+			
 		}
 		catch(customException $e) {
 			//oops, something not there - bail out
@@ -54,6 +61,7 @@ class wikiwriter extends controller
 					break;
 				case "publish":
 					$urls = $this->getParam('URLList');
+					$this->dbg('URLLIST = ' . $urls);
 					$format = 'pdf'; // Hard coding for now, eventually will be taken from a getParam
 					return $this->publish($urls, $format);
 				break;
@@ -85,7 +93,6 @@ class wikiwriter extends controller
 			$arrPages = array();
 			foreach($urls as $k => $v)
 				$arrPages[$k] = file_get_contents($v);
-			throw(new Exception($arrPages.toString));
 			// Build HTML pages for rendering 
 			$page = $this->buildPage($arrPages);
 
@@ -124,11 +131,11 @@ class wikiwriter extends controller
 			{
 				//Identify for which wiki
 				$pType = $this->getWikiType($sPage);
-
+				$this->dbg('Page Type ' . $k . " is " . $pType);
 				// Now grab the Page Object for the given wiki page and store back in the array
 				switch($pType){
 					case "chisimba":
-						$aPages[$k] = parseWiki_Chisimba($sPage);
+						$aPages[$k] = $this->parseWiki_Chisimba($sPage);
 					break;
 				}
 
@@ -169,13 +176,9 @@ class wikiwriter extends controller
 			$oDOM = new DomDocument();
 			$oDOM->loadHTML($sHTML);
 
-			//TODO: Replace with RegEx if determined to be faster!
 			// First we try for Chisimba
-			$oNode = $oDOM->getElementById('breadcrumbs');
-			$sTmp = $oNode->textContent;
-			if(strpos($sTmp, 'module=wiki') && strpos($sTMP, '>> wikilink')){
+			if(preg_match('/<div id="leftcontent">\s+<h1>Wiki/', $sHTML))
 				return 'chisimba';
-			}
 			
 			return 'unsupported';
 		}
@@ -218,7 +221,7 @@ class wikiwriter extends controller
 		}
 
 		// Take out just the wiki content and store in the Page Object
-		$oPage->setContent($oDOM->getElementsById('contentcontent'));
+		$oPage->setContent($oDOM->getElementById('contentcontent'));
 
 		return $oPage;
 	}

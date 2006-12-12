@@ -18,7 +18,7 @@ $objForm = new form('publisher', $this->uri(array()));
 
 	// Add hidden fields (action, urllist)
 	$objForm->addToForm(new textinput('action', 'publish', 'hidden'));
-	//$objForm->addToForm(new textinput('URLList', '', 'hidden'));
+	$objForm->addToForm(new textinput('URLList', '', 'hidden'));
 	
 	// Create a Table for form layout
 	$objFormTable = new htmltable();
