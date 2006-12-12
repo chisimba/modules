@@ -148,9 +148,14 @@ class cmsutils extends object
             $visibleIcon = $objIcon->show();
 
             $objRadio = new radio ($name);
-            $objRadio->addOption('0', $notVisibleIcon.$this->objLanguage->languageText('word_no').'&nbsp;'.'&nbsp;');
+            
             $objRadio->addOption('1', $visibleIcon.$this->objLanguage->languageText('word_yes'));
+            $objRadio->addOption('0', $notVisibleIcon.$this->objLanguage->languageText('word_no').'&nbsp;'.'&nbsp;');
+            
             $objRadio->setSelected($selected);
+            
+            $objRadio->setBreakSpace(' &nbsp; ');
+            
             return $objRadio->show();
         }
 
@@ -1382,6 +1387,23 @@ class cmsutils extends object
          */
         public function getAddEditContentForm($contentId = NULL, $section = NULL)
         {
+            // Determine whether to show the toggle or not
+            if ($section == NULL) {
+                $toggleShowHideIntro = TRUE;  
+            } else {
+                $sectionInfo = $this->_objSections->getSection($section);
+                
+                if ($sectionInfo == FALSE) {
+                    $toggleShowHideIntro = TRUE;
+                } else {
+                    if ($sectionInfo['layout'] == 'summaries') {
+                        $toggleShowHideIntro = FALSE;
+                    } else {
+                        $toggleShowHideIntro = TRUE;
+                    }
+                }
+            }
+            
             //initiate objects
             $table = & $this->newObject('htmltable', 'htmlelements');
             $h3 = & $this->newObject('htmlheading', 'htmlelements');
@@ -1409,10 +1431,49 @@ class cmsutils extends object
             $button->setToSubmit();
             
             
-            $table2 =  $this->newObject('htmltable', 'htmlelements');
-            
+          
             $published = new checkbox('published');
             $frontPage = new checkbox('frontpage');
+            
+            
+            
+            
+            
+            if ($toggleShowHideIntro) {
+                $this->appendArrayVar('headerParams', '
+<style type="text/css">
+div#introdiv {display: none; }
+span#introrequiredtext {display: none; }
+</style>
+                ');
+            
+                $this->appendArrayVar('headerParams', '
+<script type="text/javascript">
+function toggleIntroRequired()
+{
+	if (document.forms[\'addfrm\'].frontpage.checked == true) 
+	{
+		document.getElementById(\'introdiv\').style.display =\'block\';
+		document.getElementById(\'introrequiredtext\').style.display =\'inline\';
+		adjustLayout();
+	} else {
+	    document.getElementById(\'introdiv\').style.display =\'none\';
+	    document.getElementById(\'introrequiredtext\').style.display =\'none\';
+	    adjustLayout();
+	}
+
+}
+</script>');
+                $frontPage->extra = 'onchange="toggleIntroRequired();"';
+            } else {
+                $this->appendArrayVar('headerParams', '
+<style type="text/css">
+span#introrequiredtext {display: none; }
+</style>');
+            }
+            
+            
+            
             
             $objOrdering = & $this->newObject('textinput', 'htmlelements');
             
@@ -1425,6 +1486,7 @@ class cmsutils extends object
                 $titleInput->value = '';
                 $introInput->value = '';
                 $published->setChecked(TRUE);
+                $visible = TRUE;
                 $contentId = '';
                 $arrContent = null;
 
@@ -1442,6 +1504,7 @@ class cmsutils extends object
                 
                 $frontPage->setChecked($this->_objFrontPage->isFrontPage($arrContent['id']));
                 $published->setChecked($arrContent['published']);
+                $visible = $arrContent['published']; 
                 if(isset($arrContent['post_lic'])){
                     $objCCLicence->defaultValue = $arrContent['post_lic'];
                 }    
@@ -1464,39 +1527,20 @@ class cmsutils extends object
                 }
             }
 
-            
-
-            $table->width = '80%';
-            $table->border = '0';
-
-            $table2->width = '80%';
-            $table2->border = '0';
 
             //create heading
             $h3->str = $this->objLanguage->languageText('mod_cmsadmin_contentitem', 'cmsadmin').':'.'&nbsp;'.$this->objLanguage->languageText('word_new');
-
-
-            $objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
-
-            
-
-            
-
-            //$objForm->addRule('menutext', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddmenutext', 'cmsadmin'), 'required');
-
-            
-
-            
+             
 
             $table->startRow();
-            $table->addCell($this->objLanguage->languageText('word_title'));
-            $table->addCell($titleInput->show());
+            $table->addCell($this->objLanguage->languageText('word_title'), 150);
+            $table->addCell($titleInput->show(), NULL, NULL, NULL, NULL, ' colspan="3"');
             $table->endRow();
 
             if (!$editmode) {
                 $table->startRow();
                 $table->addCell($this->objLanguage->languageText('word_section'));
-                $table->addCell($sections);
+                $table->addCell($sections, NULL, NULL, NULL, NULL, ' colspan="3"');
                 $table->endRow();
             } else {
                 $table->startRow();
@@ -1506,43 +1550,41 @@ class cmsutils extends object
 
             $table->startRow();
             $table->addCell($this->objLanguage->languageText('mod_cmsadmin_showonfrontpage', 'cmsadmin'));
-            $table->addCell($frontPage->show());
+            $table->addCell($frontPage->show().'<span id="introrequiredtext" class="warning">Please enter the Introduction Text - Required</span>', '40%');
+
+            $table->addCell($this->objLanguage->languageText('word_visible').': &nbsp; ', 120, NULL, 'right');
+            $table->addCell($this->getYesNoRadion('published', $visible));
+            //$table->addCell($published->show());
             $table->endRow();
-            $table->startRow();
-            $table->addCell($this->objLanguage->languageText('word_published'));
-            $table->addCell($published->show());
-            $table->endRow();
-            
+
             $objForm->addToForm($table->show());
+            $objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
+            
+            
+            
+
+            //intro input
+            $objForm->addToForm('<div id="introdiv">');
+            $objForm->addToForm('<br /><h3>'.$this->objLanguage->languageText('word_introduction').' ('.$this->objLanguage->languageText('word_required').')'.'</h3>');
+            $objForm->addToForm($introInput->show());
+            $objForm->addToForm('</div>');
             
             //body
-            $table2->startRow();
-            $table2->addCell($this->objLanguage->languageText('mod_cmsadmin_maintext', 'cmsadmin'));
-            $table2->endRow();
-            $table2->startRow();
-            $table2->addCell($bodyInput->show());
-            $table2->endRow();
-            //intro input
-            $table2->startRow();
-            $table2->addCell($this->objLanguage->languageText('mod_cmsadmin_summary', 'cmsadmin').'/'.$this->objLanguage->languageText('word_introduction').' ('.$this->objLanguage->languageText('word_required').')');
-            $table2->endRow();
-            $table2->startRow();
-            $table2->addCell($introInput->show());
-            $table2->endRow();
+            $objForm->addToForm('<br /><h3>'.$this->objLanguage->languageText('mod_cmsadmin_maintext', 'cmsadmin').'</h3>');
+            $objForm->addToForm($bodyInput->show());
+
+            $objModulesInfo =& $this->getObject('modules', 'modulecatalogue');
+
 
             //cc licence input
-            $table2->startRow();
-            $table2->addCell($this->objLanguage->languageText('word_licence'));
-            $table2->endRow();
-            $table2->startRow();
-            $table2->addCell($objCCLicence->show());
-            $table2->endRow();
-
-            $table2->startRow();
-            $table2->addCell($button->show());
-            $table2->endRow();
-            //Add table to the form
-            $objForm->addToForm($table2->show());
+            if ($objModulesInfo->checkIfRegistered('creativecommons')) {
+                $objForm->addToForm('<br /><h3>'.$this->objLanguage->languageText('word_licence').'</h3>');
+                $objForm->addToForm($objCCLicence->show());
+            } else {
+                $creativecommons = new hiddeninput('creativecommons', '');
+                $objForm->addToForm($creativecommons->show());
+            }
+            $objForm->addToForm('<p><br />'.$button->show().'</p>');
             
             
             return $h3->show().$objForm->show();
