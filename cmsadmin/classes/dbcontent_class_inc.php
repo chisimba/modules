@@ -89,10 +89,14 @@ class dbcontent extends dbTable
             $published = ($this->getParam('published') == 'on') ? 1 : 0;
             $creatorid = $this->_objUser->userId();
             $access = $this->getParam('access');
-            $introText = $this->getParam('intro'); 
-            $fullText = $this->getParam('body'); 
-            $introText = $objHtmlCleaner->cleanHtml($introText);
-            $fullText = $objHtmlCleaner->cleanHtml($fullText);
+//            $introText = $this->getParam('intro'); 
+//            $fullText = $this->getParam('body'); 
+//            $introText = $objHtmlCleaner->cleanHtml($introText);
+//            $fullText = $objHtmlCleaner->cleanHtml($fullText);
+            
+            $introText = stripslashes($this->getParam('intro')); 
+            $fullText = stripslashes($this->getParam('body')); 
+            
             $ccLicence = $this->getParam('creativecommons');
             
             $newArr = array(
@@ -141,8 +145,8 @@ class dbcontent extends dbTable
             $objHtmlCleaner =& $this->newObject('htmlcleaner', 'utilities');
             $introText = $introText; 
             $fullText = $introText; 
-            $introText = $objHtmlCleaner->cleanHtml($introText);
-            $fullText = $objHtmlCleaner->cleanHtml($fullText);
+//            $introText = $objHtmlCleaner->cleanHtml($introText);
+//            $fullText = $objHtmlCleaner->cleanHtml($fullText);
 
             $creatorid = $this->_objUser->userId();
 
@@ -178,17 +182,17 @@ class dbcontent extends dbTable
         public function edit()
         {
             //Create htmlcleaner object
-            $objHtmlCleaner =& $this->newObject('htmlcleaner', 'utilities');
+            $objHtmlCleaner = $this->newObject('htmlcleaner', 'utilities');
             $id = $this->getParam('id');
             $title = $this->getParam('title');
             $sectionid = $this->getParam('parent');
             $published = ($this->getParam('published') == 'on') ? '1' : '0';
             $creatorid = $this->_objUser->userId();
             $access = $this->getParam('access');
-            $introText = $this->getParam('intro'); 
-            $fullText = $this->getParam('body'); 
-            $introText = $objHtmlCleaner->cleanHtml($introText);
-            $fullText = $objHtmlCleaner->cleanHtml($fullText);
+            $introText = stripslashes($this->getParam('intro')); 
+            $fullText = stripslashes($this->getParam('body')); 
+//            $introText = $objHtmlCleaner->cleanHtml($introText);
+//            $fullText = $objHtmlCleaner->cleanHtml($fullText);
             $ordering = $this->getParam('ordering');
             $ccLicence = $this->getParam('creativecommons');
             
