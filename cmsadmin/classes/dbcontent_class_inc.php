@@ -177,6 +177,8 @@ class dbcontent extends dbTable
          */
         public function edit()
         {
+            //Create htmlcleaner object
+            $objHtmlCleaner =& $this->newObject('htmlcleaner', 'utilities');
             $id = $this->getParam('id');
             $title = $this->getParam('title');
             $sectionid = $this->getParam('parent');
