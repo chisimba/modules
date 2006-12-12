@@ -1464,6 +1464,7 @@ function toggleIntroRequired()
 
 }
 </script>');
+				$this->appendArrayVar('bodyOnLoad', 'toggleIntroRequired();');
                 $frontPage->extra = 'onchange="toggleIntroRequired();"';
             } else {
                 $this->appendArrayVar('headerParams', '
