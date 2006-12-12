@@ -34,14 +34,30 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
-	'description' => array(
-		'type' => 'text',
-		'length' => 255
-		),
-	'fileid' => array(
-		'type' => 'text',
-		'length' => 100
-		),
+    'filename' => array(
+        'type' => 'text',
+        'length' => 255,
+        ),
+    'mimetype' => array(
+        'type' => 'text',
+        'length' =>255,
+        ),
+    'filesize' => array(
+        'type' => 'integer',
+        'length' => 5,
+        ),
+    'path' => array(
+        'type' => 'text',
+        'length' => 255,
+        ),
+    'absolutepath' => array(
+        'type' => 'text',
+        'length' => 255,
+        ),
+    'description' => array(
+        'type' => 'text',
+        'length' => 255
+        ),
 	'creatorid' => array(
 		'type' => 'text',
 		'length' => 32

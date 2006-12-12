@@ -35,20 +35,23 @@ class dbfiles extends dbtable
     * @param string $description A brief description of the file.
     * @param string $fileName The name of the file.
     * @param string $fileId The id of the file in the database.
+    * @param array $fileData The array containg the file data
     */
-    public function addFile($submitId, $userId, $description, $fileId=NULL)
+    public function addFile($fileData)
     {
         $fields = array();
-        $fields['submissionid'] = $submitId;
-        $fields['description'] = $description;
-        $fields['creatorid'] = $userId;
+        $fields['submissionid'] = $fileData['submitId'];
+        $fields['filename'] = $fileData['filename'];
+        $fields['mimetype'] = $fileData['mime'];
+        $fields['filesize'] = $fileData['size'];
+        $fields['path'] = $fileData['path'];
+        $fields['absolutepath'] = $fileData['absolutepath'];
+        if(isset($fileData['description'])){
+            $fields['description'] = $description;
+        }
+        $fields['creatorid'] = $fileData['userId'];
         $fields['datecreated'] = date('Y-m-d H:i:s');
         $fields['updated'] = date('Y-m-d H:i:s');
-
-        if(isset($fileId) && !empty($fileId)){
-            $fields['fileid'] = $fileId;
-        }
-
         $id = $this->insert($fields);
         return $id;
     }
@@ -61,17 +64,17 @@ class dbfiles extends dbtable
     * @param string $fileName The name of the file.
     * @param string $fileId The id of the file in the database.
     */
-    public function editFile($id, $userId, $description, $fileName=NULL, $fileId=NULL)
+    public function editFile($id, $userId, $description, $fileName=NULL)
     {
         $fields = array();
         $fields['description'] = $description;
         $fields['modifierid'] = $userId;
         $fields['updated'] = date('Y-m-d H:i:s');
-
+/*
         if(isset($fileId) && !empty($fileId)){
             $fields['fileId'] = $fileId;
         }
-
+*/
         $this->update('id', $id, $fields);
         return $id;
     }
