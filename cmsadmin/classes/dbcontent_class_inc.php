@@ -89,8 +89,8 @@ class dbcontent extends dbTable
             $published = ($this->getParam('published') == 'on') ? 1 : 0;
             $creatorid = $this->_objUser->userId();
             $access = $this->getParam('access');
-            $introText = htmlentities($this->getParam('intro')); 
-            $fullText = htmlentities($this->getParam('body')); 
+            $introText = $this->getParam('intro'); 
+            $fullText = $this->getParam('body'); 
             $introText = $objHtmlCleaner->cleanHtml($introText);
             $fullText = $objHtmlCleaner->cleanHtml($fullText);
             $ccLicence = $this->getParam('creativecommons');
@@ -139,8 +139,8 @@ class dbcontent extends dbTable
         {
             //Create htmlcleaner object
             $objHtmlCleaner =& $this->newObject('htmlcleaner', 'utilities');
-            $introText = htmlentities($introText); 
-            $fullText = htmlentities($introText); 
+            $introText = $introText; 
+            $fullText = $introText; 
             $introText = $objHtmlCleaner->cleanHtml($introText);
             $fullText = $objHtmlCleaner->cleanHtml($fullText);
 
@@ -185,8 +185,8 @@ class dbcontent extends dbTable
             $published = ($this->getParam('published') == 'on') ? '1' : '0';
             $creatorid = $this->_objUser->userId();
             $access = $this->getParam('access');
-            $introText = htmlentities($this->getParam('intro')); 
-            $fullText = htmlentities($this->getParam('body')); 
+            $introText = $this->getParam('intro'); 
+            $fullText = $this->getParam('body'); 
             $introText = $objHtmlCleaner->cleanHtml($introText);
             $fullText = $objHtmlCleaner->cleanHtml($fullText);
             $ordering = $this->getParam('ordering');
