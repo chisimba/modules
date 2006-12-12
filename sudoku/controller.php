@@ -49,7 +49,7 @@ class sudoku extends controller
                 if($difficulty != ''){
                 return $this -> generate($difficulty);
                 }else{
-                    return $this -> nextAction();
+                    return $this -> nextAction('');
                 }
                 break;
 
