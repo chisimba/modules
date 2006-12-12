@@ -86,7 +86,7 @@ class dbcontent extends dbTable
             //Get details of the new entry
             $title = $this->getParam('title');
             $sectionid = $this->getParam('parent');
-            $published = ($this->getParam('published') == 'on') ? 1 : 0;
+            $published = ($this->getParam('published') == '1') ? 1 : 0;
             $creatorid = $this->_objUser->userId();
             $access = $this->getParam('access');
 //            $introText = $this->getParam('intro'); 
@@ -186,7 +186,7 @@ class dbcontent extends dbTable
             $id = $this->getParam('id');
             $title = $this->getParam('title');
             $sectionid = $this->getParam('parent');
-            $published = ($this->getParam('published') == 'on') ? '1' : '0';
+            $published = ($this->getParam('published') == '1') ? '1' : '0';
             $creatorid = $this->_objUser->userId();
             $access = $this->getParam('access');
             $introText = stripslashes($this->getParam('intro')); 
