@@ -1061,27 +1061,6 @@ class cmsutils extends object
         public function getAddEditSectionForm($sectionId = NULL, $parentid = NULL)
         {
 
-            $initRadioDisplay = '
-                                <script type="text/javascript" language="javascript">
-                                <!--
-                                function initRadioDisplay()
-                                {
-                                var len;
-                                var index;
-                                len = document.addsection.display.length;
-                                for(index=0;index<len;index++){
-                                if(document.addsection.display[index].checked){
-                                xajax_processSection(document.addsection.display[index].value);
-                                break;
-                            }
-                            }
-                            }
-                                //-->
-                                </script>';
-
-            $this->appendArrayVar('headerParams',$initRadioDisplay);
-            $this->appendArrayVar('bodyOnLoad','initRadioDisplay();');
-
             //initiate objects
             $table = & $this->newObject('htmltable', 'htmlelements');
             $titleInput = & $this->newObject('textinput', 'htmlelements');
@@ -1122,8 +1101,10 @@ class cmsutils extends object
             $radio->tableColumns = 4;
             if ($editmode) {
                 $radio->setSelected($section['layout']);
+                $this->appendArrayVar('bodyOnLoad', 'xajax_processSection(\''.$section['layout'].'\')');
             } else {
                 $radio->setSelected('page');
+                $this->appendArrayVar('bodyOnLoad', 'xajax_processSection(\'page\')');
             }
 
 
