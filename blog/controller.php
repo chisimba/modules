@@ -638,7 +638,7 @@ class blog extends controller
 					$catid = $this->getParam('catid');
 					//grab the user id
 					$userid = $this->getParam('userid');
-					if(empty($userid))
+					if(!isset($userid))
 					{
 						//fix the user id just in case
 						if($this->objUser->isLoggedIn() == TRUE)

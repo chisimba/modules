@@ -502,7 +502,7 @@ class blogops extends object
 				$this->objUser = $this->getObject('user', 'security');
 				$userid = $this->objUser->userId();
 
-				$head = $post['post_title'] . "<br />" . $dt;
+				$head = stripslashes($post['post_title']) . "<br />" . $dt;
 				//dump in the post content and voila! you have it...
 				//build the post content plus comment count and stats???
 				//do the BBCode Parsing
@@ -513,7 +513,7 @@ class blogops extends object
 				{
 					customException::cleanUp();
 				}
-				$post['post_content'] = $this->bbcode->parse4bbcode($post['post_content']);
+				$post['post_content'] = stripslashes($this->bbcode->parse4bbcode($post['post_content']));
 				$this->cleaner = $this->newObject('htmlcleaner', 'utilities');
 
 				//set up the trackback link
@@ -1059,7 +1059,7 @@ class blogops extends object
 		if(isset($editparams['post_title']))
 		{
 
-			$title->setValue($editparams['post_title']);
+			$title->setValue(stripslashes($editparams['post_title']));
 		}
 		$ptable->addCell($plabel->show());
 		$ptable->addCell($title->show());
@@ -1078,7 +1078,7 @@ class blogops extends object
 		$pcats = $this->objDbBlog->getAllCats($userid);
 		foreach($pcats as $adds)
 		{
-			$pDrop->addOption($adds['id'], $adds['cat_name']);
+			$pDrop->addOption($adds['id'], stripslashes($adds['cat_name']));
 		}
 		$ptable->addCell($pdlabel->show());
 		$ptable->addCell($pDrop->show());
@@ -1112,7 +1112,7 @@ class blogops extends object
 		$pexcerptlabel = new label($this->objLanguage->languageText('mod_blog_postexcerpt', 'blog') .':', 'input_postexcerpt');
 		if(isset($editparams['post_excerpt']))
 		{
-			$pexcerpt->setcontent(nl2br($editparams['post_excerpt']));
+			$pexcerpt->setcontent(nl2br(stripslashes($editparams['post_excerpt'])));
 		}
 		$ptable->addCell($pexcerptlabel->show());
 		$ptable->addCell($pexcerpt->show());
@@ -1125,7 +1125,7 @@ class blogops extends object
 
 		if(isset($editparams['post_content']))
 		{
-			$pcon->setcontent(nl2br($editparams['post_content']));
+			$pcon->setcontent(nl2br(stripslashes($editparams['post_content'])));
 		}
 		$ptable->startRow();
 		$ptable->addCell($pclabel->show());
@@ -1633,6 +1633,11 @@ class blogops extends object
 		$this->bbcode = $this->getObject('bbcodeparser', 'utilities');
 		$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_trackback4post", "blog"), $tbtext);
 		return $ret;
+	}
+
+	public function sendTrackbackForm()
+	{
+		//start a form object
 	}
 
 
