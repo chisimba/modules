@@ -1565,6 +1565,12 @@ class blogops extends object
 		return $this->objTC->buildCloud($ret);
 	}
 
+	/**
+	 * Method to show the trackbacks in the trackback table to the user on a singleview post display
+	 *
+	 * @param string $pid
+	 * @return string
+	 */
 	public function showTrackbacks($pid)
 	{
 		$objFeatureBox = $this->newObject('featurebox', 'navigation');
@@ -1627,8 +1633,6 @@ class blogops extends object
 		$this->bbcode = $this->getObject('bbcodeparser', 'utilities');
 		$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_trackback4post", "blog"), $tbtext);
 		return $ret;
-
-
 	}
 
 
