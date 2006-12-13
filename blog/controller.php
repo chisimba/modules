@@ -283,6 +283,8 @@ class blog extends controller
 				}
 				$posts = $this->objDbBlog->getPostByPostID($postid);
 				//get the post with comments and trackbacks and display it.
+
+				$this->setVarByRef('postid', $postid);
 				$this->setVarByRef('posts', $posts);
 				$this->setVarByRef('userid', $userid);
 				return 'viewsingle_tpl.php';

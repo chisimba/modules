@@ -24,16 +24,23 @@ $rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 //add a break to the righsidecol and carry on with the meta data and admin sections
 //$rightSideColumn .= "<br />";
 
-//show the admin section (if user is logged in)
-$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
+
 
 //show all the posts
 $middleColumn .= nl2br($this->objblogOps->showPosts($posts));
 
 //left menu section
 //display the menu
-$leftCol = $leftMenu->show();
-$leftCol .= "<br />";
+if(!$this->objUser->isLoggedIn())
+{
+	$leftCol = $this->objblogOps->loginBox(TRUE);
+}
+else {
+	$leftCol = $leftMenu->show();
+	$leftCol .= "<br />";
+	//show the admin section (if user is logged in)
+	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
+}
 
 //show the feeds section
 $leftCol .= $this->objblogOps->showFeeds($userid, TRUE);

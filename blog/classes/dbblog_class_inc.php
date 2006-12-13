@@ -540,11 +540,30 @@ class dbblog extends dbTable
 		return $this->insert($insarr, 'tbl_blog_trackbacks');
 	}
 
+	/**
+	 * Method to get the count of trackbacks associated with a particular post
+	 *
+	 * @param post id string $pid
+	 * @return integer
+	 */
 	public function getTrackbacksPerPost($pid)
 	{
 		$this->_changeTable('tbl_blog_trackbacks');
 		$filter = "WHERE postid = '$pid'";
 		return $this->getRecordCount($filter);
+	}
+
+	/**
+	 * Method to get the actual trackback text per post
+	 *
+	 * @param postid string $pid
+	 * @return array
+	 */
+	public function grabTrackbacks($pid)
+	{
+		$this->_changeTable('tbl_blog_trackbacks');
+		$filter = "WHERE postid = '$pid'";
+		return $this->getAll($filter);
 	}
 
 

@@ -1561,6 +1561,70 @@ class blogops extends object
 		return $this->objTC->buildCloud($ret);
 	}
 
+	public function showTrackbacks($pid)
+	{
+		$objFeatureBox = $this->newObject('featurebox', 'navigation');
+		$tbs = $this->objDbBlog->grabTrackbacks($pid);
+		//loop through the trackbacks and build a featurebox to show em
+		if(empty($tbs))
+		{
+			//shouldn't happen except on permalinks....?
+			return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_trackback4post", "blog"), "<em>".$this->objLanguage->languageText("mod_blog_trackbacknotrackback", "blog")."</em>");
+		}
+
+		$tbtext = NULL;
+		foreach($tbs as $tracks)
+		{
+			//build up the display
+			$tbtable = $this->newObject('htmltable', 'htmlelements');
+			$tbtable->cellpadding = 2;
+			//$tbtable->width = '80%';
+			//set up the header row
+			$tbtable->startHeaderRow();
+			$tbtable->addHeaderCell('');
+			$tbtable->addHeaderCell('');
+			$tbtable->endHeaderRow();
+
+			//where did it come from?
+			$whofromhost = $tracks['remhost'];
+			$blogname = $tracks['blog_name'];
+			//title and excerpt
+			$title = $tracks['title'];
+			$excerpt = $tracks['excerpt'];
+
+			$tbtable->startRow();
+			$tbtable->addCell($this->objLanguage->languageText("mod_blog_tbremhost", "blog"));
+			$tbtable->addCell($whofromhost);
+			$tbtable->endRow();
+
+			$tbtable->startRow();
+			$tbtable->addCell($this->objLanguage->languageText("mod_blog_tbblogname", "blog"));
+			$tbtable->addCell($blogname);
+			$tbtable->endRow();
+
+			$tbtable->startRow();
+			$tbtable->addCell($this->objLanguage->languageText("mod_blog_tbblogtitle", "blog"));
+			$tbtable->addCell($title);
+			$tbtable->endRow();
+
+			$tbtable->startRow();
+			$tbtable->addCell($this->objLanguage->languageText("mod_blog_tbblogexcerpt", "blog"));
+			$tbtable->addCell($excerpt);
+			$tbtable->endRow();
+
+			$tbtext .= $tbtable->show();
+			$tbtable = NULL;
+
+		}
+
+
+
+		$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_trackback4post", "blog"), $tbtext);
+		return $ret;
+
+
+	}
+
 
 }
 ?>
