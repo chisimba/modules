@@ -3,6 +3,8 @@ $this->loadClass('href', 'htmlelements');
 $tt = $this->newObject('domtt', 'htmlelements');
 $cssLayout = &$this->newObject('csslayout', 'htmlelements');
 $objSideBar = $this->newObject('usermenu', 'toolbar');
+$objFeatureBox = $this->newObject('featurebox', 'navigation');
+
 // Set columns to 3
 $cssLayout->setNumColumns(3);
 $leftMenu = NULL;
@@ -12,7 +14,7 @@ $rightSideColumn = NULL;
 $leftCol = NULL;
 $middleColumn = NULL;
 
-$rightSideColumn .= $this->objLanguage->languageText("mod_blog_intro", "blog");
+$rightSideColumn .= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_bloglist", "blog"), $this->objLanguage->languageText("mod_blog_intro", "blog"));
 
 if(empty($ret))
 {
