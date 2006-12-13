@@ -29,6 +29,7 @@ class submit extends object
     */
     public function init()
     {
+        $this->files =& $this->getObject('etdfiles', 'etd');
         $this->dbSubmissions =& $this->getObject('dbsubmissions', 'etd');
         $this->dbSubmissions->setDocType('thesis');
         $this->dbSubmissions->setSubmitType('etd');
@@ -621,7 +622,7 @@ class submit extends object
 
         // Section to upload a new / replace an existing document
         $objLabel = new label($lbUpload.': ', 'input_document');
-        $objInput = new textinput('document', '', 'file', 60);
+        $objInput = new textinput('fileupload', '', 'file', 60);
 
         $objTable->addRow(array($objLabel->show(), $objInput->show()));
 
@@ -630,7 +631,7 @@ class submit extends object
         $objTable->addRow(array('', $objButton->show()));
 
         $objForm = new form('upload', $this->uri(array('action' => 'savesubmit', 'mode' => 'uploaddoc', 'nextmode' => 'showresource')));
-        $objForm->extra = "ENCTYPE='multipart/form-data'";
+        $objForm->extra = "enctype='multipart/form-data'";
         $objForm->addToForm($objTable->show());
         $objForm->addToForm($hidden);
 

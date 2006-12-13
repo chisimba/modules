@@ -68,9 +68,10 @@ class etdfiles extends dbtable
         $this->objUpload->setUploadFolder($this->filePath);
         $this->objUpload->setAllowedTypes($this->fileExts);
         $this->objUpload->overWrite = TRUE;
-        $result = $this->objUpload->doUpload(TRUE, $fileName);
+        $results = $this->objUpload->doUpload(TRUE, $fileName);
         if($results['success']){
             $fileId = $this->dbFiles->addFile($submitId, $results);
+            return $fileId;
         }else{
             return $results['message'];
         }
