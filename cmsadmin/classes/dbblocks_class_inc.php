@@ -70,14 +70,40 @@ class dbblocks extends dbTable
          * @access public
          * @return bool
          */
-        public function add($pageId, $blockId)
+        public function add($pageId, $sectionId, $blockId, $blockCat)
         {
-            $ordering = $this->getOrdering($pageId);
-            $newArr = array(
-                          'pageid' => $pageId ,
-                          'blockid' => $blockId,
-                          'ordering' => $ordering
-                      );
+            if ($blockCat == 'frontpage') {
+                //Get ordering
+                $ordering = $this->getOrdering(NULL, NULL, 'frontpage');
+                $newArr = array(
+                              'pageid' => $pageId ,
+                              'blockid' => $blockId,
+                              'sectionid' => $sectionId,
+                              'frontpage_block' => 1,
+                              'ordering' => $ordering
+                          );
+            } else if ($blockCat == 'content') {
+                //Get ordering
+                $ordering = $this->getOrdering($pageId, NULL, 'content');
+                $newArr = array(
+                              'pageid' => $pageId ,
+                              'blockid' => $blockId,
+                              'sectionid' => NULL,
+                              'frontpage_block' => 0,
+                              'ordering' => $ordering
+                          );
+            } else {
+                //Get ordering
+                $ordering = $this->getOrdering(NULL, $sectionId, 'section');
+                $newArr = array(
+                              'pageid' => NULL,
+                              'blockid' => $blockId,
+                              'sectionid' => $sectionId,
+                              'frontpage_block' => 0,
+                              'ordering' => $ordering
+                          );
+            }
+
             $newId = $this->insert($newArr);
 
             return $newId;
@@ -93,7 +119,7 @@ class dbblocks extends dbTable
         {
             //Get entry details
             $id = $this->getParam('id');
-            $pageId = $this->getParam('pageid');
+            $pageId = $this->getParam('pageid', NULL);
             $blockId = $this->getParam('blockid');
             $ordering = $this->getParam('ordering', 1);
 
@@ -114,18 +140,39 @@ class dbblocks extends dbTable
         * @return boolean
         * @access public
         */
-        public function deleteBlock($pageId, $blockId)
+        public function deleteBlock($pageId, $sectionId, $blockId, $blockCat)
         {
-            $block = $this->getAll('WHERE pageid = \''.$pageId.'\' AND blockid = \''.$blockId.'\'');
+            if ($blockCat == 'frontpage') {
+                //Get last in order
+                $frontPage = 1;
+                $block = $this->getAll('WHERE frontpage_block = \''.$frontPage.'\' AND blockid = \''.$blockId.'\'');
+            } else if ($blockCat == 'content') {
+                //Get last in order
+                $block = $this->getAll('WHERE pageid = \''.$pageId.'\' AND blockid = \''.$blockId.'\'');
+            } else {
+                //Get last in order
+                $block = $this->getAll('WHERE sectionid = \''.$sectionId.'\' AND blockid = \''.$blockId.'\'');
+            }
+            
             if(!empty($block)) {
                 $id = $block['0']['id'];
                 $blockOrderNo = $block['0']['ordering'];
+                if ($blockCat == 'frontpage') {
+                    //Get front page blocks
+                    $pageBlocks = $this->getBlocksForFrontPage($pageId);
+                } else if ($blockCat == 'content') {
+                    //Get page blocks
+                    $pageBlocks = $this->getBlocksForPage($pageId);
+                } else {
+                    //Get section blocks
+                    $pageBlocks = $this->getBlocksForSection($sectionId);
+                }
                 $pageBlocks = $this->getBlocksForPage($pageId);
                 if(count($pageBlocks) > 1) {
                     foreach($pageBlocks as $pb) {
                         if($pb['ordering'] > $blockOrderNo) {
                             $newOrder = $pb['ordering'] - '1';
-                            $this->update('id', $pb['id'], array('pageid' => $pb['pageid'], 'blockid' => $pb['blockid'], 'ordering' => $newOrder));
+                            $this->update('id', $pb['id'], array('ordering' => $newOrder));
                         }
                     }
                 }
@@ -134,7 +181,7 @@ class dbblocks extends dbTable
         }
 
         /**
-         * Method to get a page content record
+         * Method to get all blocks attached to a page
          *
          * @param string $pageId The id of the page content
          * @access public
@@ -147,6 +194,32 @@ class dbblocks extends dbTable
         }
 
         /**
+         * Method to get all blocks attached to a section
+         *
+         * @param string $sectionId The id of the section
+         * @access public
+         * @return array $pageBlocks An array of associative arrays of all blocks in the section
+         */
+        public function getBlocksForSection($sectionId)
+        {
+            $pageBlocks = $this->getAll('WHERE sectionid = \''.$sectionId.'\' ORDER BY ordering');
+            return $pageBlocks;
+        }
+
+        /**
+         * Method to get all blocks attached to the front page
+         *
+         * @access public
+         * @return array $pageBlocks An array of associative arrays of all blocks on the front page
+         */
+        public function getBlocksForFrontPage()
+        {
+            $frontPage = 1;
+            $pageBlocks = $this->getAll('WHERE frontpage_block = \''.$frontPage.'\' ORDER BY ordering');
+            return $pageBlocks;
+        }
+ 
+        /**
          * Method to return the ordering value of new blocks (gets added last)
          *
          * @param string $pageid The id(pk) of the page the block is attached to
@@ -154,12 +227,20 @@ class dbblocks extends dbTable
          * @access public
          * @author Warren Windvogel
           */
-        public function getOrdering($pageid)
+        public function getOrdering($pageid, $sectionid, $blockCat)
         {
             $ordering = 1;
-            //get last order value
-            $lastOrder = $this->getAll('WHERE pageid = \''.$pageid.'\' ORDER BY ordering DESC LIMIT 1');
-
+            if ($blockCat == 'frontpage') {
+                //Get last in order
+                $frontPage = 1;
+                $lastOrder = $this->getAll('WHERE frontpage_block = \''.$frontPage.'\' ORDER BY ordering DESC LIMIT 1');
+            } else if ($blockCat == 'content') {
+                //Get last in order
+                $lastOrder = $this->getAll('WHERE pageid = \''.$pageid.'\' ORDER BY ordering DESC LIMIT 1');
+            } else {
+                //Get last in order
+                $lastOrder = $this->getAll('WHERE sectionid = \''.$sectionid.'\' ORDER BY ordering DESC LIMIT 1');
+            }
             //add after this value
             if (!empty($lastOrder)) {
                 $ordering = $lastOrder['0']['ordering'] + 1;
@@ -177,16 +258,29 @@ class dbblocks extends dbTable
          * @return string The html for the links
          * @author Warren Windvogel
          */
-        public function getOrderingLink($id)
+        public function getOrderingLink($id, $blockCat)
         {
             //Get the parent id
             $entry = $this->getRow('id', $id);
             $pageId = $entry['pageid'];
-
+            $sectionId = $entry['sectionid'];
+        
             //Get the number of sub sections in section
-            $lastOrd = $this->getAll('WHERE pageid = \''.$pageId.'\' ORDER BY ordering DESC LIMIT 1');
-
-            $topOrder = $lastOrd['0']['ordering'];
+            $topOrder = 1;
+            if ($blockCat == 'frontpage') {
+                //Get last in order
+                $frontPage = 1;
+                $lastOrder = $this->getAll('WHERE frontpage_block = \''.$frontPage.'\' ORDER BY ordering DESC LIMIT 1');
+            } else if ($blockCat == 'content') {
+                //Get last in order
+                $lastOrder = $this->getAll('WHERE pageid = \''.$pageId.'\' ORDER BY ordering DESC LIMIT 1');
+            } else {
+                //Get last in order
+                $lastOrder = $this->getAll('WHERE sectionid = \''.$sectionId.'\' ORDER BY ordering DESC LIMIT 1');
+            }
+            if(!empty($lastOrd)){
+                $topOrder = $lastOrd['0']['ordering'];
+            }
             $links = " ";
 
             if ($topOrder > '1') {
@@ -200,7 +294,7 @@ class dbblocks extends dbTable
                     $this->objIcon->title = $this->_objLanguage->languageText('mod_cmsadmin_changeorderdown', 'cmsadmin');
                     //link
                     $downLink = & $this->newObject('link', 'htmlelements');
-                    $downLink->href = $this->uri(array('action' => 'changeblocksorder', 'id' => $id, 'ordering' => 'up', 'pageid' => $pageId));
+                    $downLink->href = $this->uri(array('action' => 'changeblocksorder', 'id' => $id, 'ordering' => 'up', 'pageid' => $pageId, 'sectionid' => $sectionId));
                     $downLink->link = $this->objIcon->show();
                     $links .= $downLink->show();
                 } else if ($entry['ordering'] == $topOrder) {
@@ -210,7 +304,7 @@ class dbblocks extends dbTable
                     $this->objIcon->title = $this->_objLanguage->languageText('mod_cmsadmin_changeorderup', 'cmsadmin');
                     //link
                     $upLink = & $this->newObject('link', 'htmlelements');
-                    $upLink->href = $this->uri(array('action' => 'changeblocksorder', 'id' => $id, 'ordering' => 'down', 'pageid' => $pageId));
+                    $upLink->href = $this->uri(array('action' => 'changeblocksorder', 'id' => $id, 'ordering' => 'down', 'pageid' => $pageId, 'sectionid' => $sectionId));
                     $upLink->link = $this->objIcon->show();
 
                     $links .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $upLink->show();
@@ -221,14 +315,14 @@ class dbblocks extends dbTable
                     $this->objIcon->title = $this->_objLanguage->languageText('mod_cmsadmin_changeorderdown', 'cmsadmin');
                     //link
                     $downLink = & $this->newObject('link', 'htmlelements');
-                    $downLink->href = $this->uri(array('action' => 'changeblocksorder', 'id' => $id, 'ordering' => 'up', 'pageid' => $pageId));
+                    $downLink->href = $this->uri(array('action' => 'changeblocksorder', 'id' => $id, 'ordering' => 'up', 'pageid' => $pageId, 'sectionid' => $sectionId));
                     $downLink->link = $this->objIcon->show();
                     //icon
                     $this->objIcon->setIcon('up');
                     $this->objIcon->title = $this->_objLanguage->languageText('mod_cmsadmin_changeorderup', 'cmsadmin');
                     //link
                     $upLink = & $this->newObject('link', 'htmlelements');
-                    $upLink->href = $this->uri(array('action' => 'changeblocksorder', 'id' => $id, 'ordering' => 'down', 'pageid' => $pageId));
+                    $upLink->href = $this->uri(array('action' => 'changeblocksorder', 'id' => $id, 'ordering' => 'down', 'pageid' => $pageId, 'sectionid' => $sectionId));
                     $upLink->link = $this->objIcon->show();
                     $links .= $downLink->show() . '&nbsp;' . $upLink->show();
                 }
@@ -246,10 +340,21 @@ class dbblocks extends dbTable
          * @return bool
          * @author Warren Windvogel
          */
-        public function changeOrder($id, $ordering, $pageId)
+        public function changeOrder($id, $ordering, $pageId, $sectionId)
         {
             //Get array of all blocks in level
-            $fpContent = $this->getAll('WHERE pageid = \''.$pageId.'\' ORDER BY ordering');
+            if ($blockCat == 'frontpage') {
+                //Get last in order
+                $frontPage = 1;
+                $fpContent = $this->getAll('WHERE frontpage_block = \''.$frontPage.'\' ORDER BY ordering');
+            } else if ($blockCat == 'content') {
+                //Get last in order
+                $fpContent = $this->getAll('WHERE pageid = \''.$pageId.'\' ORDER BY ordering');
+            } else {
+                //Get last in order
+                $fpContent = $this->getAll('WHERE sectionid = \''.$sectionId.'\' ORDER BY ordering');
+            }
+            
             //Search for entry to be reordered and update order
             foreach($fpContent as $content) {
                 if ($content['id'] == $id) {
@@ -287,11 +392,13 @@ class dbblocks extends dbTable
          * Method to return the ordering value of new blocks (gets added last)
          *
          * @param string $pageid The id(pk) of the page the block is attached to
+         * @param string $sectionid The id(pk) of the section the block is attached to
+         * @param string $blockCat Whether to add the block to a 'section', 'content' page or the 'frontpage'
          * @return string $middleColumnContent The form to add remove blocks from a page
          * @access public
          * @author Warren Windvogel
           */
-        public function getAddRemoveBlockForm($pageid)
+        public function getAddRemoveBlockForm($pageid, $sectionid, $blockCat)
         {
             //Load the checkbox class
             $this->loadClass('checkbox', 'htmlelements');
@@ -299,13 +406,34 @@ class dbblocks extends dbTable
             //Create heading
             $objH =& $this->newObject('htmlheading', 'htmlelements');
             $objH->type = '3';
-            $objH->str = $this->_objLanguage->languageText('mod_cmsadmin_blocksforcontent', 'cmsadmin');
 
             //Create the form
             $objForm =& $this->newObject('form', 'htmlelements');
             $objForm->name = 'addblockform';
             $objForm->id = 'addblockform';
-            $objForm->setAction($this->uri(array('action' => 'saveblock', 'pageid' => $pageid), 'cmsadmin'));
+
+            if ($blockCat == 'frontpage') {
+                //Set heading
+                $objH->str = $this->_objLanguage->languageText('mod_cmsadmin_blocksforfrontpage', 'cmsadmin');
+                //Set form action
+                $objForm->setAction($this->uri(array('action' => 'saveblock', 'blockcat' => $blockCat), 'cmsadmin'));
+                //Get blocks currently attached to item
+                $currentBlocks = $this->getBlocksForFrontPage();
+            } else if ($blockCat == 'content') {
+                //Set heading
+                $objH->str = $this->_objLanguage->languageText('mod_cmsadmin_blocksforcontent', 'cmsadmin');
+                //Set form action
+                $objForm->setAction($this->uri(array('action' => 'saveblock', 'pageid' => $pageid, 'blockcat' => $blockCat), 'cmsadmin'));
+                //Get blocks currently attached to item
+                $currentBlocks = $this->getBlocksForPage($pageid);
+            } else {
+                //Set heading
+                $objH->str = $this->_objLanguage->languageText('mod_cmsadmin_blocksforsection', 'cmsadmin');
+                //Set form action
+                $objForm->setAction($this->uri(array('action' => 'saveblock', 'sectionid' => $sectionid, 'blockcat' => $blockCat), 'cmsadmin'));
+                //Get blocks currently attached to item
+                $currentBlocks = $this->getBlocksForSection($sectionid);
+            }
 
             //Create table to store form elements
             $objTable =& $this->newObject('htmltable', 'htmlelements');
@@ -320,7 +448,7 @@ class dbblocks extends dbTable
             $objTable->endHeaderRow();
 
             //Get current blocks on page
-            $currentBlocks = $this->getBlocksForPage($pageid);
+            
 
             if(!empty($currentBlocks)) {
                 foreach($currentBlocks as $tbk) {
@@ -328,7 +456,7 @@ class dbblocks extends dbTable
                     //Add entry to table for changing order
                     $objTable->startRow();
                     $objTable->addCell($tb['blockname']);
-                    $objTable->addCell($this->getOrderingLink($tbk['id']));
+                    $objTable->addCell($this->getOrderingLink($tbk['id'], $blockCat));
                     $objTable->endRow();
                 }
             }

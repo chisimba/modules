@@ -1,6 +1,30 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <updates>
   <update>
+    <table>tbl_cms_blocks</table>
+    <version>1.31</version>
+    <description>Added sectionid to allow adding blocks to section with certain layouts</description>
+    <data>
+       	<add>
+   			<name>sectionid</name>
+	    	<type>text</type>
+   			<length>32</length>
+		</add>
+	</data>
+  </update>
+  <update>
+    <table>tbl_cms_blocks</table>
+    <version>1.31</version>
+    <description>Added frontpage_blocks for adding blocks to frontpage</description>
+    <data>
+       	<add>
+   			<name>frontpage_block</name>
+	    	<type>integer</type>
+   			<length>3</length>
+		</add>
+	</data>
+  </update>
+  <update>
     <table>tbl_cms_content</table>
     <version>1.30</version>
     <description>Added a Creative Commons Licence Field</description>

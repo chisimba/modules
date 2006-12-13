@@ -14,8 +14,27 @@ $objH = &$this->newObject('htmlheading', 'htmlelements');
 $link = & $this->newObject('link', 'htmlelements');
 $objIcon = & $this->newObject('geticon', 'htmlelements');
 
+//create link to add blocks to the front page
+//Get blocks icon
+$objIcon->setIcon('modules/blocks');
+$objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addremoveblocks', 'cmsadmin');
+$blockIcon = $objIcon->show();
+
+//Check if blocks module is registered
+$this->objModule = &$this->newObject('modules', 'modulecatalogue');
+$isRegistered = $this->objModule->checkIfRegistered('blocks');
+
+//Create link
+$objBlocksLink = new link('javascript:void(0)');
+$objBlocksLink -> link = $blockIcon;
+$objBlocksLink -> extra = "onclick = \"javascript:window.open('" . $this->uri(array('action' => 'addblock', 'blockcat' => 'frontpage')) . "', 'branch', 'width=500, height=350, top=50, left=50, scrollbars')\"";
+
 //create a heading
-$objH->str = $this->objLanguage->languageText('mod_cmsadmin_frontpagemanager', 'cmsadmin');
+if($isRegistered){
+    $objH->str = $this->objLanguage->languageText('mod_cmsadmin_frontpagemanager', 'cmsadmin').'&nbsp;'.$objBlocksLink->show();
+} else {
+    $objH->str = $this->objLanguage->languageText('mod_cmsadmin_frontpagemanager', 'cmsadmin');
+}
 $objH->type = '1';
 //counter for records
 $cnt = 1;

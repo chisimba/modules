@@ -20,6 +20,15 @@ $objIcon = & $this->newObject('geticon', 'htmlelements');
 //Create instance of link object
 $objLink = & $this->newObject('link', 'htmlelements');
 
+//Get blocks icon
+$objIcon->setIcon('modules/blocks');
+$objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addremoveblocks', 'cmsadmin');
+$blockIcon = $objIcon->show();
+
+//Check if blocks module is registered
+$this->objModule = &$this->newObject('modules', 'modulecatalogue');
+$isRegistered = $this->objModule->checkIfRegistered('blocks');
+
 //Get section data
 
 if (isset($section)) {
@@ -205,18 +214,10 @@ if (count($pages) > '0') {
         }
         $frontPageLink->link = $objIcon->show();
 
-        //Get blocks icon
-        $objIcon->setIcon('modules/blocks');
-        $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addremoveblocks', 'cmsadmin');
-        $blockIcon = $objIcon->show();
         // set up link to view contact details in a popup window
         $objBlocksLink = new link('javascript:void(0)');
         $objBlocksLink -> link = $blockIcon;
-        $objBlocksLink -> extra = "onclick = \"javascript:window.open('" . $this->uri(array('action' => 'addblock', 'sectionId' => $sectionId, 'pageid' => $pageId)) . "', 'branch', 'width=500, height=350, top=50, left=50, scrollbars')\"";
-        //Check if blocks module is registered
-        $this->objModule = &$this->newObject('modules', 'modulecatalogue');
-        $isRegistered = $this->objModule->checkIfRegistered('blocks');
-
+        $objBlocksLink -> extra = "onclick = \"javascript:window.open('" . $this->uri(array('action' => 'addblock', 'sectionId' => $sectionId, 'pageid' => $pageId, 'blockcat' => 'content')) . "', 'branch', 'width=500, height=350, top=50, left=50, scrollbars')\"";
 
         //Add sub sec data to table
         $objPagesTable->startRow();
@@ -235,7 +236,6 @@ if (count($pages) > '0') {
 }
 
 //Create add sub section icon
-
 $addSubSecIcon = $objIcon->getLinkedIcon($this->uri(array('action' => 'addsection', 'parentid' => $sectionId)), 'create_folder');
 
 //Create add page icon
@@ -261,9 +261,21 @@ $objNewPageLink->href = $this->uri(array('action' => 'addcontent', 'parent' => $
 
 //Add content to the output layer
 $middleColumnContent = "";
-
-$objH->str = $this->objLanguage->languageText('word_section').':'.'&nbsp;'.$title.'&nbsp;'.$editSectionIcon.'&nbsp;'.$delIcon;
-
+if($isRegistered){
+    if($layoutData['name'] == 'summaries' || $layoutData['name'] == 'list'){
+        //Create add block link
+        $objAddSectionBlockLink = new link('javascript:void(0)');
+        $objAddSectionBlockLink->link = $blockIcon;
+        $objAddSectionBlockLink->extra = "onclick = \"javascript:window.open('" . $this->uri(array('action' => 'addblock', 'sectionid' => $sectionId, 'blockcat' => 'section')) . "', 'branch', 'width=500, height=350, top=50, left=50, scrollbars')\"";
+        //Set heading
+        $objH->str = $this->objLanguage->languageText('word_section').':'.'&nbsp;'.$title.'&nbsp;'.$objAddSectionBlockLink->show().'&nbsp;'.$editSectionIcon.'&nbsp;'.$delIcon;
+    } else {
+        $objH->str = $this->objLanguage->languageText('word_section').':'.'&nbsp;'.$title.'&nbsp;'.$editSectionIcon.'&nbsp;'.$delIcon;
+    }
+} else {
+    //Set heading
+    $objH->str = $this->objLanguage->languageText('word_section').':'.'&nbsp;'.$title.'&nbsp;'.$editSectionIcon.'&nbsp;'.$delIcon;
+}
 $middleColumnContent .= $objH->show();
 
 //Display layout info

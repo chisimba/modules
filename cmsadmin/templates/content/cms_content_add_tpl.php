@@ -10,7 +10,7 @@
  */
 
 //first check if there is sections
-if (!$this->_objSections->isSections()) {
+/*if (!$this->_objSections->isSections()) {
     $str = '<script language="javascript" type="text/JavaScript">
            <![CDATA[
            alert(\''.$this->objLanguage->languageText('mod_cmsadmin_addsectionfirst', 'cmsadmin').'\');
@@ -18,7 +18,7 @@ if (!$this->_objSections->isSections()) {
            </script>';
     print $str;
 } else {
-    print $addEditForm;
-}
+*/    print $addEditForm;
+//}
 
 ?>

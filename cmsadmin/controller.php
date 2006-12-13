@@ -313,20 +313,50 @@ class cmsadmin extends controller
                     return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
 
                 case 'addblock':
-                    $closePage = $this->getParam('closePage', FALSE);
-                    $this->setVarByRef('closePage', $closePage);
+                    $blockCat = $this->getParam('blockcat', FALSE);
+                    $sectionId = $this->getParam('sectionid', NULL);
                     $pageId = $this->getParam('pageid', NULL);
-                    $blockForm  = $this->_objBlocks->getAddRemoveBlockForm($pageId);
+                    $closePage = $this->getParam('closePage', FALSE);
+                    switch ($blockCat) {
+                    
+                    case 'frontpage':
+                        $blockForm  = $this->_objBlocks->getAddRemoveBlockForm(NULL, NULL, 'frontpage');
+                        break;
+                    
+                    case 'section':
+                        $blockForm  = $this->_objBlocks->getAddRemoveBlockForm(NULL, $sectionId, 'section');
+                        break;    
+
+                    case 'content':
+                        $blockForm  = $this->_objBlocks->getAddRemoveBlockForm($pageId, NULL, 'content');
+                        break;
+                            
+                    }
+                    $this->setVarByRef('closePage', $closePage);
                     $this->setVarByRef('blockForm', $blockForm);
                     return 'cms_blocks_tpl.php';
 
                 case 'saveblock':
+                    $blockCat = $this->getParam('blockcat', NULL);
                     //Get the page id of the page to add the block to
                     $pageId = $this->getParam('pageid', NULL);
+                    //Get the section id of the page to add the block to
+                    $sectionId = $this->getParam('sectionid', NULL);
+                    
+                    if ($blockCat == 'frontpage') {
+                        //Get blocks on the frontpage
+                        $currentBlocks = $this->_objBlocks->getBlocksForFrontPage();
+                    } else if ($blockCat == 'content') {
+                        //Get all blocks already on the page
+                        $currentBlocks = $this->_objBlocks->getBlocksForPage($pageId);
+                    } else {
+                        //Get all blocks already on the section
+                        $currentBlocks = $this->_objBlocks->getBlocksForSection($sectionId);
+                    }
+                    
                     //Get all available blocks
                     $blocks = $this->_objBlocks->getBlockEntries();
-                    //Get all blocks already on the page
-                    $currentBlocks = $this->_objBlocks->getBlocksForPage($pageId);
+                    
                     foreach($blocks as $block) {
                         $exists = FALSE;
                         $blockName = $block['blockname'];
@@ -342,26 +372,43 @@ class cmsadmin extends controller
                         if($this->getParam($blockId)) {
                             //Check if it already exists before adding it
                             if(!$exists) {
-                                $this->_objBlocks->add($pageId, $blockId);
+                                $this->_objBlocks->add($pageId, $sectionId, $blockId, $blockCat);
                             }
                         //If block isn't in list to be added check if it exists and delete it    
                         } else {
                             if($exists) {
-                                $this->_objBlocks->deleteBlock($pageId, $blockId);
+                                $this->_objBlocks->deleteBlock($pageId, $sectionId, $blockId, $blockCat);
                             }
                         }
                     }
-                    return $this->nextAction('addblock', array('pageid' => $pageId), 'cmsadmin');
+                    if ($blockCat == 'frontpage') {
+                        return $this->nextAction('addblock', array('blockcat' => 'frontpage'), 'cmsadmin');
+                    } else if ($blockCat == 'content') {
+                        //Get all blocks already on the page
+                        return $this->nextAction('addblock', array('blockcat' => 'content', 'pageid' => $pageId), 'cmsadmin');
+                    } else {
+                        //Get all blocks already on the section
+                        return $this->nextAction('addblock', array('blockcat' => 'section', 'sectionid' => $sectionId), 'cmsadmin');
+                    }
+
 
                 case 'changeblocksorder':
                     //Get block entry details
                     $id = $this->getParam('id');
                     $ordering = $this->getParam('ordering');
-                    $pageId = $this->getParam('pageid');
+                    $pageId = $this->getParam('pageid', NULL);
+                    $sectionId = $this->getParam('sectionid', NULL);
                     //Change order of blocks on page
-                    $this->_objBlocks->changeOrder($id, $ordering, $pageId);
-                    return $this->nextAction('addblock', array('pageid' => $pageId), 'cmsadmin');
-
+                    $this->_objBlocks->changeOrder($id, $ordering, $pageId, $sectionId);
+                    if ($blockCat == 'frontpage') {
+                        return $this->nextAction('addblock', array('blockcat' => 'frontpage'), 'cmsadmin');
+                    } else if ($blockCat == 'content') {
+                        //Get all blocks already on the page
+                        return $this->nextAction('addblock', array('blockcat' => 'content', 'pageid' => $pageId), 'cmsadmin');
+                    } else {
+                        //Get all blocks already on the section
+                        return $this->nextAction('addblock', array('blockcat' => 'section', 'sectionid' => $sectionId), 'cmsadmin');
+                    }
                 }
         }
 
