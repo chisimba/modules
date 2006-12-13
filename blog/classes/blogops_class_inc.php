@@ -630,7 +630,7 @@ class blogops extends object
 					$tblnl->endHeaderRow();
 					$tblnl->startRow();
 					$tblnl->addCell($bookmark->show()); //bookmark link(s)
-					$tblnl->addCell($tburl . " (" . $numtb . ")"); //trackback URL
+					$tblnl->addCell($tburl ."&nbsp;" .$numtb); //trackback URL
 					$tblnl->addCell($iconList); //cc licence
 					$tblnl->endRow();
 					echo $this->objTB->autodiscCode();
