@@ -22,10 +22,10 @@ class sudoku extends controller
 {
     public function init()
     {
-        $this -> dbSudoku =& $this -> getObject('dbsudoku');
-        $this -> objUser =& $this -> getObject('user', 'security');
-        $this -> objLanguage =& $this -> getObject('language', 'language');
-        $this -> objUtil =& $this -> getObject('confirm', 'utilities');
+        $this -> dbSudoku =& $this -> newObject('dbsudoku');
+        $this -> objUser =& $this -> newObject('user', 'security');
+        $this -> objLanguage =& $this -> newObject('language', 'language');
+        $this -> objUtil =& $this -> newObject('confirm', 'utilities');
 
         //Get the activity logger class
         $this -> objLog = $this -> newObject('logactivity', 'logger');

@@ -19,20 +19,20 @@ if(!$GLOBALS['kewl_entry_point_run']){
         JavaScript Timer
         Written by Jerry Aman, Optima System, June 1, 1996.
     	Part of the PageSpinner distribution.
- 
+
     	Portions based upon the JavaScript setTimeout example at:
 	    http://home.netscape.com/eng/mozilla/Gold/handbook/javascript/
-  
-    	We will not be held responsible for any unwanted 
-	    effects due to the usage of this script or any derivative.  
-    	No warrantees for usability for any specific application are 
+
+    	We will not be held responsible for any unwanted
+	    effects due to the usage of this script or any derivative.
+    	No warrantees for usability for any specific application are
 	    given or implied.
 
     	You are free to use and modify this script,
 	    if the credits above are given in the source code
-	    
+
 	    Modified for chisimba by Kevin Cyster
-        */        
+        */
         var	timerID = null;
         var	timerRunning = false;
         var	startDate;
@@ -60,16 +60,16 @@ if(!$GLOBALS['kewl_entry_point_run']){
             }
             startDate = new Date();
         	startSecs = (startDate.getHours()*60*60) + (startDate.getMinutes()*60) + startDate.getSeconds();
-        	
+
         	stopclock();
         	showtime();
         }
 
         /*	-------------------------------------------------
         	showtime()
-        	Puts the amount of time that has passed since 
-        	loading the page into the field named timerField in 
-        	the form named timeForm 
+        	Puts the amount of time that has passed since
+        	loading the page into the field named timerField in
+        	the form named timeForm
         	-------------------------------------------------	*/
 
         function showtime()
@@ -96,14 +96,14 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
         	var timeValue = "" + hours;
         	if(minutes &lt; 10){
-                timeValue  += ":0" + minutes;   
-            }else{              
-                timeValue  += ":" + minutes;   
+                timeValue  += ":0" + minutes;
+            }else{
+                timeValue  += ":" + minutes;
             }
         	if(seconds &lt; 10){
-                timeValue  += ":0" + seconds;   
-            }else{              
-                timeValue  += ":" + seconds;   
+                timeValue  += ":0" + seconds;
+            }else{
+                timeValue  += ":" + seconds;
             }
 
     		// Update display
@@ -112,7 +112,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
         	timerRunning = true;
         }
         </script>';
-        
+
     // set up data
     $id = $arrPuzzleData[0]['id'];
     $difficulty = $arrPuzzleData[0]['difficulty'];
@@ -126,10 +126,10 @@ if(!$GLOBALS['kewl_entry_point_run']){
         $clock = '0:00:00';
     }else{
         if($timer != NULL){
-            $clock = $timer;          
+            $clock = $timer;
         }else{
             $clock = $time;
-        }      
+        }
     }
     if($how == 'R'){
         $solved = '';
@@ -137,22 +137,22 @@ if(!$GLOBALS['kewl_entry_point_run']){
     }elseif($how == 'S'){
         $solved = '';
     }
-    
-    
+
+
     $this -> appendArrayVar('headerParams',$script);
     $body = ' onload="startclock(\'' . $clock . '\');"';
-    $this -> setVarByRef('bodyParams', $body);        
+    $this -> setVarByRef('bodyParams', $body);
 
 // set up html elements
-    $objHeader =& $this -> newObject('htmlheading', 'htmlelements');
-    $objTable =& $this -> newObject('htmltable', 'htmlelements');
     $objIcon =& $this -> newObject('geticon', 'htmlelements');
-    $objLink =& $this -> newObject('link', 'htmlelements');
-    $objDrop =& $this -> newObject('dropdown', 'htmlelements');
-    $objText =& $this -> newObject('textinput', 'htmlelements');
-    $objButton =& $this -> newObject('button', 'htmlelements');
-    $objForm =& $this -> newObject('form', 'htmlelements');
-    $objFieldset =& $this -> newObject('fieldset', 'htmlelements');
+    $this -> loadclass('htmlheading', 'htmlelements');
+    $this -> loadclass('htmltable', 'htmlelements');
+    $this -> loadclass('link', 'htmlelements');
+    $this -> loadclass('dropdown', 'htmlelements');
+    $this -> loadclass('textinput', 'htmlelements');
+    $this -> loadclass('button', 'htmlelements');
+    $this -> loadclass('form', 'htmlelements');
+    $this -> loadclass('fieldset', 'htmlelements');
 
 // set up language items
     $deleteLabel = $this -> objLanguage -> languageText('mod_sudoku_delete', 'sudoku');
@@ -181,7 +181,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
         $level = $giantLabel;
         $size = 5;
     }
-    
+
     // Suppress normal page elements and layout based on difficulty
     if($difficulty != 4){
         $this -> setLayoutTemplate('layout_tpl.php');
@@ -237,16 +237,17 @@ if(!$GLOBALS['kewl_entry_point_run']){
         $puzzleLabel = $this -> objLanguage -> code2Txt('mod_sudoku_puzzle', 'sudoku', $array);
         $data = explode(",", $arrPuzzleData[0]['puzzle']);
     }
+    $objHeader = &new htmlHeading();
     $objHeader -> str = $puzzleLabel;
     $objHeader -> type = 1;
     $str = $objHeader -> show();
     echo $str;
-    
+
     echo $icons;
 
     // set up form elements
     // set up table
-    $objTable = new htmltable();
+    $objTable = &new htmltable();
     $objTable -> cellspacing='2';
     $objTable -> cellpadding='2';
     $x = 0;
@@ -262,7 +263,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                 for($iiii = 1; $iiii <= $size; $iiii++){ //loop for cells
                     $cellClass = '<font>';
                     if($data[$x] != ''){
-                        $objText = new textinput($x, $data[$x]);
+                        $objText = &new textinput($x, $data[$x]);
                         $objText -> fldType = 'hidden';
                         $numberText = $objText -> show();
                         $number = $data[$x] . $numberText;
@@ -270,7 +271,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                         $number = $selected[$x];
                         $cellClass = '<font class="error">';
                     }else{
-                        $objDrop = new dropdown($x);
+                        $objDrop = &new dropdown($x);
                         $objDrop -> addOption(NULL, '&nbsp;&nbsp;' . '-' . '&nbsp;&nbsp;');
                         $objDrop -> extra = 'width="100px;"';
                         for($xx = 1; $xx <= pow($size, 2); $xx++){
@@ -281,7 +282,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                         }else{
                             $objDrop -> setSelected(NULL);
                         }
-                        
+
                         $number = $objDrop -> show();
                     }
                     $numStr = $cellClass . "<b>" . $number . "</b>" . "</font>";
@@ -296,26 +297,26 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
     if($solved != '1'){
         // set up timer
-        $objText = new textinput('timer', $clock, 'text', 5);
+        $objText = &new textinput('timer', $clock, 'text', 5);
         $timerText = $objText -> show();
-    
+
         // set up hidden field
-        $objText = new textinput('mode');
+        $objText = &new textinput('mode');
         $objText -> fldType = 'hidden';
         $hiddenText = $objText -> show();
 
         // set up save button
-        $objButton = new button('save', $saveLabel, 'document.getElementById(\'input_mode\').value = \'save\';');
+        $objButton = &new button('save', $saveLabel, 'document.getElementById(\'input_mode\').value = \'save\';');
         $objButton -> setToSubmit();
         $saveButton = $objButton -> show();
 
         // set up submit button
-        $objButton = new button('submit', $submitLabel);
+        $objButton = &new button('submit', $submitLabel);
         $objButton -> setToSubmit();
         $submitButton = $objButton -> show();
 
         // Set up form
-        $objForm = new form('saveForm', $this -> uri(array('action' => 'submit', 'id' => $id)));
+        $objForm = &new form('saveForm', $this -> uri(array('action' => 'submit', 'id' => $id)));
         $objForm -> addToForm("<br />".$timerText);
         $objForm -> addToForm($hiddenText . $puzzleTable . "<p>" . $saveButton . " " . $submitButton . "</p>");
         $str = $objForm -> show();
@@ -326,7 +327,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
     }
 
 // set up exit link
-    $objLink = new link($this -> uri(array(),'sudoku'));
+    $objLink = &new link($this -> uri(array(),'sudoku'));
     $objLink -> link = $returnLabel;
     $returnLink = $objLink -> show();
     echo "<br />" . $returnLink;

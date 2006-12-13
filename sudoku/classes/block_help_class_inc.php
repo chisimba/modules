@@ -20,8 +20,7 @@ class block_help extends object
     */
     public function init()
     {
-        $this -> objLanguage =& $this -> getObject('language', 'language');
-        $this -> objInput =& $this -> getObject('textinput', 'htmlelements');
+        $this -> objLanguage =& $this -> newObject('language', 'language');
         //Set the title
         $this -> title = $this -> objLanguage -> languageText('mod_sudoku_instructions', 'sudoku');
     }

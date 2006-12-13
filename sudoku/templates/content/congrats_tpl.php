@@ -17,8 +17,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $this -> setLayoutTemplate('layout_tpl.php');
 
 // set up html elements
-    $objHeader =& $this -> newObject('htmlheading', 'htmlelements');
-    $objForm =& $this -> newObject('link', 'htmlelements');
+    $this -> loadclass('htmlheading', 'htmlelements');
+    $this -> loadclass('link', 'htmlelements');
 
 // set up language items
     $congratsLabel = $this -> objLanguage -> languageText('mod_sudoku_congrats', 'sudoku');
@@ -27,6 +27,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $retryLabel = $this -> objLanguage -> languageText('mod_sudoku_retry', 'sudoku');
 
 // set up heading
+    $objHeader = &new htmlHeading();
     if($solved == '1'){
         $objHeader -> str = $congratsLabel;
     }else{
@@ -37,12 +38,12 @@ if(!$GLOBALS['kewl_entry_point_run']){
     echo $str;
 
 // set up retry and return links
-    $objLink = new link($this -> uri(array('action' => ''),'sudoku'));
+    $objLink = &new link($this -> uri(array('action' => ''),'sudoku'));
     $objLink -> link = $returnLabel;
     $returnLink = $objLink -> show();
 
     if($solved != '1'){
-        $objLink = new link($this -> uri(array('action' => 'solve', 'id' => $id, 'how' => 'S', 'data' => $data, 'timer' => $timer),'sudoku'));
+        $objLink = &new link($this -> uri(array('action' => 'solve', 'id' => $id, 'how' => 'S', 'data' => $data, 'timer' => $timer),'sudoku'));
         $objLink -> link = $retryLabel;
         $retryLink = $objLink -> show();
         echo "<br />" . $retryLink . " / " . $returnLink;
