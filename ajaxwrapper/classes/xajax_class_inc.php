@@ -69,7 +69,7 @@ class xajax {
         $aUri = array();
 
         if (!empty($_SERVER['REQUEST_URI'])) {
-            $aUri = parse_url($_SERVER['QUERY_STRING']);
+            $aUri = parse_url($_SERVER['REQUEST_URI']);
         }
 
         if (empty($aUri['scheme'])) {
