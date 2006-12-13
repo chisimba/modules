@@ -239,7 +239,11 @@ class blog extends controller
 				$userid = $this->getParam('userid');
 				if(!isset($userid))
 				{
-					//no userid is set
+
+					$this->nextAction('allblogs');
+					exit;
+
+					/*//no userid is set
 					$this->setVarByRef('message', $this->objLanguage->languageText("mod_blog_word_randomblog"));
 					//get a random blog from the blog table
 					$r = $this->objDbBlog->getRandBlog();
@@ -252,7 +256,7 @@ class blog extends controller
 					else {
 						//oh dear, no blogs on this instance of chisimba!
 						return 'noblogs_tpl.php';
-					}
+					}*/
 				}
 				else {
 					$this->setVarByRef('userid', $userid);
