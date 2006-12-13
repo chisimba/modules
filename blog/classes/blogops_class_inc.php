@@ -1587,6 +1587,8 @@ class blogops extends object
 
 			//where did it come from?
 			$whofromhost = $tracks['tburl'];
+			$link = new href($whofromhost, $whofromhost, NULL);
+			$whofromhost = $link->show();
 			$blogname = $tracks['blog_name'];
 			//title and excerpt
 			$title = $tracks['title'];
@@ -1594,7 +1596,7 @@ class blogops extends object
 
 			$tbtable->startRow();
 			$tbtable->addCell($this->objLanguage->languageText("mod_blog_tbremhost", "blog"));
-			$tbtable->addCell(htmlentities($whofromhost));
+			$tbtable->addCell($whofromhost);
 			$tbtable->endRow();
 
 			$tbtable->startRow();
@@ -1617,9 +1619,9 @@ class blogops extends object
 
 		}
 
-
+		$tbtext = $this->bbcode->parse4bbcode($tbtext);
 		$this->bbcode = $this->getObject('bbcodeparser', 'utilities');
-		$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_trackback4post", "blog"), $this->bbcode->parse4bbcode($tbtext));
+		$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_trackback4post", "blog"), $tbtext);
 		return $ret;
 
 
