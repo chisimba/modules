@@ -276,8 +276,11 @@ class blog extends controller
 				//single post view for the bookmarks/comments etc
 				$postid = $this->getParam('postid');
 				$userid = $this->getParam('userid');
-				$catarr = $this->objDbBlog->getCatsTree($userid);
-				$this->setVarByRef('cats', $catarr);
+				if(isset($userid))
+				{
+					$catarr = $this->objDbBlog->getCatsTree($userid);
+					$this->setVarByRef('cats', $catarr);
+				}
 				$posts = $this->objDbBlog->getPostByPostID($postid);
 				//get the post with comments and trackbacks and display it.
 				$this->setVarByRef('posts', $posts);
