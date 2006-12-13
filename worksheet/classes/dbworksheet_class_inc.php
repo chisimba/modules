@@ -37,11 +37,19 @@ class dbworksheet extends dbTable
     */
     public function getWorksheetsInContext($context)
     {
-        $sql = 'SELECT tbl_worksheet.*, count(tbl_worksheet_questions.worksheet_id) AS questions ';
-        $sql .= 'FROM `tbl_worksheet` ';
-        $sql .= 'LEFT JOIN tbl_worksheet_questions ON (tbl_worksheet_questions.worksheet_id = tbl_worksheet.id) ';
-        $sql .= 'WHERE tbl_worksheet.context="'.$context.'" GROUP BY tbl_worksheet.id ORDER BY chapter';
-
+    	
+        $sql = 'SELECT ws.*, count(quest.worksheet_id) AS questions ';
+        $sql .= 'FROM tbl_worksheet AS ws ';
+        $sql .= 'LEFT JOIN tbl_worksheet_questions AS quest ON (quest.worksheet_id = ws.id) ';
+        $sql .= 'WHERE ws.context="'.$context.'" GROUP BY ws.id ORDER BY chapter';
+		
+		/*Removing left joins
+		  $sql = 'SELECT ws.*, count(quest.worksheet_id) AS questions ';
+        $sql .= 'FROM tbl_worksheet AS ws, tbl_worksheet_questions AS quest ';
+        $sql .= "WHERE ws.context='{$context}' AND quest.worksheet_id = ws.id";
+        $sql .=" GROUP BY ws.id ORDER BY chapter";
+		 //end of modification 
+		 */
         $result = $this->getArray($sql);
         return $result;
     }

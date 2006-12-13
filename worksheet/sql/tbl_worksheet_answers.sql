@@ -31,12 +31,10 @@ $fields = array(
 		),
 	'mark' => array(
 		'type' => 'integer',
-		'length' => 11,
-		'notnull' => 1
+		'length' => 11
 		),
 	'comments' => array(
-		'type' => 'clob',
-		'notnull' => 1
+		'type' => 'clob'
 		), 
 	'lecturer_id' => array(
 		'type' => 'text',
@@ -44,13 +42,11 @@ $fields = array(
 		'notnull' => 1,
 		),
 	'datemarked' => array(
-		'type' => 'timestamp',
-		'notnull' => 1
+		'type' => 'timestamp'
 		),
 	'updated' => array(
 		'type' => 'timestamp',
-		'length' => 14,
-		'notnull' => 1
+		'length' => 14
 		)
 	);
 ?>

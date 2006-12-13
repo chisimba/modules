@@ -43,8 +43,8 @@ $descriptionLabel = $objLanguage->languageText('mod_worksheet_description','work
 $saveDescript = $objLanguage->languageText('mod_worksheet_editagain','worksheet');
 $submitDescript = $objLanguage->languageText('mod_worksheet_noeditagain','worksheet');
 
-$lnPlain = $this->objLanguage->languageText('mod_testadmin_plaintexteditor','worksheet');
-$lnWysiwyg = $this->objLanguage->languageText('mod_testadmin_wysiwygeditor','worksheet');
+$lnPlain = $this->objLanguage->languageText('mod_testadmin_plaintexteditor');
+$lnWysiwyg = $this->objLanguage->languageText('mod_testadmin_wysiwygeditor');
 
 $noSubmit=TRUE;
 $dif=$count-$question[0]['question_order'];

@@ -50,8 +50,7 @@ $fields = array(
 		'notnull' => 1
 		),
 	'description' => array(
-		'type' => 'text',
-		'notnull' => 1
+		'type' => 'text'
 		),
 	'userid' => array(
 		'type' => 'text',
