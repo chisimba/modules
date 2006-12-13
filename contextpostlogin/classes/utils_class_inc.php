@@ -163,13 +163,15 @@ class utils extends object
 		//$userMenu  = &$this->newObject('postloginmenu','toolbar');
 		$leftSideColumn = $this->getUserPic();//$userMenu->show();;
 		//Add loginhistory block
-		//$leftSideColumn .= $objBlocks->showBlock('calendar', 'eventscalendar');
+		
 		
 		
 		$leftSideColumn .= $objBlocks->showBlock('latest', 'blog');
 		
 		$leftSideColumn .= $objBlocks->showBlock('loginstats', 'context');
 		
+        $leftSideColumn .= $objBlocks->showBlock('calendar', 'eventscalendar');
+
 		$leftSideColumn .= $objBlocks->showBlock('latestpodcast', 'podcast');
 
 		$leftSideColumn .= $objBlocks->showBlock('chat', 'chat');

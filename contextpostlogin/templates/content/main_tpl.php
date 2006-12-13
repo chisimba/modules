@@ -39,12 +39,13 @@ if (count($contextList) > 0)
 		$contextCode = $context['contextcode'];
 		
 		$objLink->href = $this->uri(array('action' => 'joincontext','contextCode'=>$contextCode), 'context');
-		$icon->setIcon('leavecourse');
+		$icon->setIcon('entercourse');
 		$icon->alt = 'Enter Course';
-		$objLink->link = $icon->show();
+		$objLink->link = $context['contextcode'] .' - '.$context['title'].'   '.$icon->show();
 		
-		
-		$str .= $featureBox->show($context['contextcode'] .' - '.$context['title'].'   '.$objLink->show(), $content ).'<hr />';
+		$title = $objLink->show();
+
+		$str .= $featureBox->show($title, $content ).'<hr />';
 	}
 } else {
 	$str .= '<div align="center" style="font-size:large;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">You are associated with any courses</div>';
