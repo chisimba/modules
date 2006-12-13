@@ -1194,7 +1194,6 @@ class blogops extends object
 	}
 	public function archiveBox($userid, $featurebox = FALSE)
 	{
-		echo $userid;
 		//get the posts for each month
 		$posts = $this->_archiveArr($userid);
 		//print_r($posts);die();
@@ -1209,8 +1208,6 @@ class blogops extends object
 				$arks[] = array('formatted' => date("F", $thedate) . " " . date("Y", $thedate), 'raw' => $month, 'rfc' => $thedate);
 			}
 
-		//print_r($arks);die();
-
 			$thismonth = mktime(0,0,0,date("m", time()), 1, date("y", time()));
 			if($featurebox == FALSE)
 			{
@@ -1221,7 +1218,7 @@ class blogops extends object
 				$lnks = NULL;
 				foreach ($arks as $ark)
 				{
-					$lnk = new href($this->uri(array('module' => 'blog', 'action' => 'showarchives', 'month' => $ark['raw'], 'year' => $ark['rfc'], 'userid' => $posts[$month][0]['userid'])), $ark['formatted']);
+					$lnk = new href($this->uri(array('module' => 'blog', 'action' => 'showarchives', 'month' => $ark['raw'], 'year' => $ark['rfc'], 'userid' => $userid)), $ark['formatted']);
 					$lnks .= $lnk->show() . "<br />";
 				}
 
