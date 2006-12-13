@@ -87,6 +87,7 @@
 
 
         print $objTable->show();
+        print "</div>\n";
     } else {
         print "No Data";
     }
