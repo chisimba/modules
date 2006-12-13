@@ -1587,7 +1587,7 @@ class blogops extends object
 
 			//where did it come from?
 			$whofromhost = $tracks['tburl'];
-			$link = new href(htmlentities($whofromhost), $whofromhost, NULL);
+			$link = new href(htmlentities($whofromhost), htmlentities($whofromhost), NULL);
 			$whofromhost = $link->show();
 			$blogname = $tracks['blog_name'];
 			//title and excerpt
