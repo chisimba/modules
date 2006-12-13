@@ -646,7 +646,9 @@ class blog extends controller
 						$userid = $this->objUser->userId();
 					}
 					else {
+
 						$this->nextAction('');
+						exit;
 					}
 				}
 				//get the category tree
