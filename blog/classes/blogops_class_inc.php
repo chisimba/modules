@@ -1594,7 +1594,7 @@ class blogops extends object
 
 			$tbtable->startRow();
 			$tbtable->addCell($this->objLanguage->languageText("mod_blog_tbremhost", "blog"));
-			$tbtable->addCell(urlencode($whofromhost));
+			$tbtable->addCell(htmlentities($whofromhost));
 			$tbtable->endRow();
 
 			$tbtable->startRow();
