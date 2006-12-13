@@ -27,7 +27,8 @@ class eventscalendar extends controller
         $this->_objDBContext = & $this->newObject('dbcontext', 'context');
         $this->_objUser = & $this->newObject('user', 'security');
         $this->_objUtils = & $this->newObject('utils');
-        $this->objLanguage = & $this->getObject('language','language');
+        $this->objLanguage = & $this->newObject('language','language');
+        $this->_objContextModules = & $this->newObject('dbcontextmodules', 'context');
         
         //create an entry for this context that your are in if it doesnt exists
         if($this->_objDBContext->isInContext() && !$this->_objDBCategories->typeExist('context', $this->_objDBContext->getContextCode()))
@@ -52,16 +53,28 @@ class eventscalendar extends controller
         $this->setVar('pageSuppressXML',true);
         $action = $this->getParam("action");
         $this->setLayoutTemplate('layout_tpl.php');
-          
+        
+        //before showing the calendar check if the context has the calendar
+        //is registered as a plugin with this context
+        if($this->_objContextModules->isContextPlugin($this->_objDBContext->getContextCode(), 'eventscalendar'))
+        {
+            $this->isContextPlugin = TRUE;
+        } else {
+            $this->isContextPlugin = FALSE;
+        }
+
+        //get the calendar type    
         $type = $this->getParam("type");
         $typeId = $this->getParam("typeid");
     
-        if($type=='' && $this->_objDBContext->isInContext())
+        //set the default calendar to the  context if the user is in a context
+        if($type=='' && $this->_objDBContext->isInContext() && $this->isContextPlugin)
         {
             $type = 'context';
             $typeId = $this->_objDBContext->getContextCode();
         }
-
+        
+        //if the user is not in a context then show the user's calendar
         if($type == null)
         {
         	$type = 'user';
@@ -99,7 +112,7 @@ class eventscalendar extends controller
                 {
                    
                     $this->_objDBEventsCalendar->editEvent($typeId);
-                } else {die($this->getParam('catid'));
+                } else {//die($this->getParam('catid'));
                      $this->_objDBEventsCalendar->addEvent($this->getParam('catid'));
                 }
                 

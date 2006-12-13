@@ -208,14 +208,16 @@ if($calType == 'context')
     }
 }
 
-
 $toggles = '<table width="100%"  border="0" cellpadding="1" cellspacing="0"  style = "width: 680px;border: 1px solid #006699;margin: 0px;padding: 0px;"><tr><td align="center">'.$toggleLink.'</td></tr></table><br/>';
 
 echo $objH->show();
 
 
 print '<center>'.$calendar.'</center><p></p>';
-print '<center>'.$toggles.'</center>';
+if($this->isContextPlugin)
+{
+    print '<center>'.$toggles.'</center>';
+}
 print '<center>'.$str.'</center>';
 
  $objIcon->setIcon('add');

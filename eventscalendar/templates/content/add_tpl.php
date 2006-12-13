@@ -53,10 +53,10 @@ if($mode == 'edit')
     $location->value = '';
 }
 
-$objForm->name = "addevent";
+//$objForm->name = "addevent";
 //$objForm->extra = ' class = "f-wrap-1" ';
-$objForm->displayType = 2 ;
-$objForm->action = $this->uri(array('action' => 'saveevent', 'catid' => $this->getParam('catid')));
+//$objForm->displayType = 2 ;
+//$objForm->action = $this->uri(array('action' => 'saveevent', 'catid' => $this->getParam('catid')));
 
 //the title field
 $objTextField->name = 'title';
@@ -131,7 +131,7 @@ if($this->_objDBContext->isInContext())
 $objForm->name = "addevent";
 //$objForm->extra = ' class = "f-wrap-1" ';
 $objForm->displayType = 2 ;
-$objForm->action = $this->uri(array('action' => 'saveevent', 'catid' => $catId));
+$objForm->action = $this->uri(array('action' => 'saveevent', 'catid' => $this->getParam('catid')));
 
 /*
 $str = '<select name="catid">';
@@ -149,7 +149,7 @@ $str .= '</select>';
 $objForm->addToForm($objTextField);
 //$objForm->addToForm($objCatDropdown);
 //$objForm->addToForm('Category</td><td>'.$str.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Location '.$location->show());
-$objForm->addToForm($location);
+//$objForm->addToForm($location);
 
 //$objForm->addToForm($objLocation);
 $objForm->addToForm($objDatePicker);

@@ -178,7 +178,7 @@ class calendarbiulder extends object
 			            if($dayCounter <= $daysInMonth)
 			            {
 			                //get the event for this day
-			                $str2 .= $this->getEventDay($this->curYear,$this->curMonth,$dayCounter);		 
+			                $str2 .= $this->getEventDay($this->curYear,$this->curMonth,$dayCounter);
 			            } else {
 			                //add the next  months days
 			                $str2 .= '<td class="sOther">'.$nextMonthsDays.'</td>';
@@ -413,7 +413,7 @@ class calendarbiulder extends object
    		//setup the event info
     	foreach ($this->eventsArr as $event)
     	{
-    			
+    			//print_r($event);
     			$eventDate = date("j-m-Y", trim($event['event_date']));
     			
     			if($eventDate == $givenDate)
@@ -423,7 +423,9 @@ class calendarbiulder extends object
 						 $ev .= '<div class="titleTOC">';
 						 $ev .= stripslashes($event['description']);
 						 $ev .='</div>';
-    				}
+    				} else {
+                        $smallevents .= htmlentities('<span class=\"subheading\">'.$event['title'].'</span><br><span class=\"highlight\">'.stripslashes($event['description']).'</span>');
+                    }
     				
     				$isEvents = TRUE;
     			}
@@ -435,13 +437,21 @@ class calendarbiulder extends object
    			
    			//$this->domTT->type = 'nested';
    			//$link = $this->domTT->show('title', $table , $day, $url = "#", $event['id']);
+   			if($this->calType=='big')
+            {
+                $eventsForToday =  '<td class="s20TOC">';
+                $eventsForToday .= '<div class="todayTOC">';
+                $eventsForToday .= $day;
+                $eventsForToday .= '</div>';
+                $eventsForToday .= $ev;
+                $eventsForToday .= '</td>';
+            } else {
+                $eventsForToday = '<td style="background-color: #A4CAE6;">';
+                $eventsForToday .=  $this->domTT->show($eventDate,$smallevents,$day);//$day.$smallevents;
+                $eventsForToday .= '</td>';
+            }
    			
-   			$eventsForToday = ($this->calType=='big') ? '<td class="s20TOC">' : '<td style="background-color: #A4CAE6;">';
-   			$eventsForToday .= ($this->calType=='big') ? '<div class="todayTOC">':'';
-   			$eventsForToday .= $day;
-   			$eventsForToday .= ($this->calType=='big') ? '</div>':'';
-   			$eventsForToday .= ($this->calType=='big') ? $ev : '';
-   			$eventsForToday .= '</td>';
+   			
    			return $eventsForToday;
    		} else {   			
    			
