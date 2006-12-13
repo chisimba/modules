@@ -24,8 +24,8 @@ class popupcalendar extends controller
     */
     public function init()
     {
-        $this->datePickajax = &$this->getObject('datepickajax');
-        $this->objLanguage = &$this->getObject('language', 'language');
+        $this->datePickajax = &$this->newObject('datepickajax');
+        $this->objLanguage = &$this->newObject('language', 'language');
     }
 
     /**

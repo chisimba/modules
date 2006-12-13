@@ -12,18 +12,20 @@ $this->setVar('pageSuppressIM', TRUE);
 $this->setVar('suppressFooter', TRUE);
 
 // Set up html elements
-$objLayer = &$this->newObject('layer', 'htmlelements');
-$objButton = &$this->newObject('button', 'htmlelements');
 $objIcon = &$this->newObject('geticon', 'htmlelements');
-$objHead = &$this->newObject('htmlheading', 'htmlelements');
+$this->loadClass('layer', 'htmlelements');
+$this->loadClass('button', 'htmlelements');
+$this->loadClass('htmlheading', 'htmlelements');
 
 // Set up heading
 $heading = $this->objLanguage->languageText('phrase_selectdate');
+$objHead = &new htmlHeading();
 $objHead->str = $heading;
 $objHead->type = 1;
 echo $objHead->show();
 
 // Calendar
+$objLayer = &new layer();
 $objLayer->str = $str;
 $objLayer->id = 'calDiv';
 $objLayer->align = 'center';
@@ -32,6 +34,7 @@ $objLayer->width = '280px';
 echo $objLayer->show();
 
 // Clock
+$objLayer = &new layer();
 $objLayer->str = $timeStr;
 $objLayer->id = 'timeDiv';
 $objLayer->align = 'center';
@@ -40,6 +43,7 @@ $objLayer->width = '280px';
 echo $objLayer->show();
 
 // Hidden form elements
+$objLayer = &new layer();
 $objLayer->str = $formStr;
 $objLayer->id = 'formDiv';
 $objLayer->align = 'center';
