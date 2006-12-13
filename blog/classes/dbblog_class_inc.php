@@ -280,7 +280,8 @@ class dbblog extends dbTable
 	{
 		if(!isset($catid))
 		{
-			$catid = 0;
+			$this->_changeTable('tbl_blog_posts');
+			return $this->getAll("WHERE userid = '$userid' AND post_status = '0' ORDER BY post_ts DESC");
 		}
 		$this->_changeTable('tbl_blog_posts');
 		return $this->getAll("WHERE userid = '$userid' AND post_category = '$catid' AND post_status = '0' ORDER BY post_ts DESC");
