@@ -1594,7 +1594,7 @@ class blogops extends object
 
 			$tbtable->startRow();
 			$tbtable->addCell($this->objLanguage->languageText("mod_blog_tbremhost", "blog"));
-			$tbtable->addCell($whofromhost);
+			$tbtable->addCell(urlencode($whofromhost));
 			$tbtable->endRow();
 
 			$tbtable->startRow();
@@ -1619,7 +1619,7 @@ class blogops extends object
 
 
 		$this->bbcode = $this->getObject('bbcodeparser', 'utilities');
-		$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_trackback4post", "blog"), $this->bbcode->parse4bbcode(htmlentities($tbtext)));
+		$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_trackback4post", "blog"), $this->bbcode->parse4bbcode($tbtext));
 		return $ret;
 
 
