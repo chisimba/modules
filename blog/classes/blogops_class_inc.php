@@ -1618,8 +1618,8 @@ class blogops extends object
 		}
 
 
-
-		$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_trackback4post", "blog"), $tbtext);
+		$this->bbcode = $this->getObject('bbcodeparser', 'utilities');
+		$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_trackback4post", "blog"), $this->bbcode->parse4bbcode($tbtext));
 		return $ret;
 
 
