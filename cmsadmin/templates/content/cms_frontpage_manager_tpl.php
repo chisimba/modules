@@ -44,7 +44,7 @@ foreach($files as $file) {
     $link->href = $this->uri(array('action' => 'addcontent', 'id' => $arrFile['id'], 'parent' => $arrFile['sectionid']));
     $editPage = $link->show();
 
-    $delArray = array('action' => 'removefromfrontpage', 'confirm' => 'yes', 'id' => $file['id']);
+    $delArray = array('action' => 'removefromfrontpage', 'confirm' => 'yes', 'id' => $file['content_id']);
     $deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmremovefromfp', 'cmsadmin');
     $delIcon = $objIcon->getDeleteIconWithConfirm($file['id'], $delArray, 'cmsadmin', $deletephrase);
 
