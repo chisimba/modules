@@ -110,7 +110,8 @@ class worksheetadmin extends controller
             // Save the new worksheet
             case 'addworksheet':
                 $postSubmit = $this->getParam('save', '');
-                if($postSubmit==$this->objLanguage->languageText('word_cancel','worksheetadmin')){
+					 $postCancel = $this->getParam('cancel', '');
+                if(isset($postCancel) && !empty($postCancel)){
                     return $this->nextAction('');
                 }
                 return $this->saveNewWorksheet();
@@ -126,8 +127,8 @@ class worksheetadmin extends controller
 
             // Save the edited worksheet
             case 'updateworksheet':
-                $postSubmit = $this->getParam('save', '');
-                if($postSubmit==$this->objLanguage->languageText('word_cancel')){
+					 $postCancel = $this->getParam('cancel', '');
+                if(isset($postCancel) && !empty($postCancel)){
                     return $this->nextAction('');
                 }
                 return $this->updateWorksheet();
@@ -144,8 +145,9 @@ class worksheetadmin extends controller
             // Save a new question
             case 'savequestion':
                 $postSubmit = $this->getParam('save', '');
+                $postCancel = $this->getParam('cancel','');
                 $wid = $this->getParam('worksheet_id');
-                if($postSubmit==$this->objLanguage->languageText('word_cancel')){
+                if(isset($postCancel) && !empty($postCancel)){
                     return $this->nextAction('view',array('id'=>$wid));
                 }
                 $array = $this->saveQuestion();
@@ -158,7 +160,8 @@ class worksheetadmin extends controller
             // Save an editted question
             case 'updatequestion':
                 $postSubmit = $this->getParam('save', '');
-                if($postSubmit==$this->objLanguage->languageText('word_cancel','worksheetadmin')){
+                $postCancel = $this->getParam('cancel','');
+                if(isset($postCancel) && !empty($postCancel)){
                     return $this->nextAction('view',array('id'=>$this->getParam('worksheet_id')));
                 }
                 $wid = $this->updateQuestion();
@@ -221,8 +224,18 @@ class worksheetadmin extends controller
 
             // Save the mark and exit or move to the next selected question
             case 'savemark':
-                $postSave = $this->getParam('save', NULL);
-                if(!$postSave){
+                $postSave = $this->getParam('save');
+                $postSubmit = $this->getParam('submitmark');
+                $postExit = $this->getParam('exit');
+                                    
+                if(isset($postSubmit) && !empty($postSubmit)){
+                    $this->saveMark();
+                    $this->submitMark();
+                }else  if(isset($postSave) && !empty($postSave)){
+                    $this->saveMark();
+                }else if(isset($postExit) && !empty($postExit)){
+                		  return $this->nextAction('listworksheet',array('id'=>$this->getParam('worksheet')));
+                }else{
                     $this->saveMark();
                     $postNextAction = $this->getParam('nextaction', 'next');
                     switch($postNextAction){
@@ -238,13 +251,7 @@ class worksheetadmin extends controller
                             return $this->getLast();
                     }
                 }
-                if($postSave==$this->objLanguage->languageText('word_submit','worksheetadmin')){
-                    $this->saveMark();
-                    $this->submitMark();
-                }
-                if($postSave==$this->objLanguage->languageText('word_save','worksheetadmin')){
-                    $this->saveMark();
-                }
+                
                 return $this->nextAction('listworksheet',array('id'=>$this->getParam('worksheet')));
 
             default:
@@ -426,11 +433,15 @@ class worksheetadmin extends controller
     */
     public function deleteWorksheet($id)
     {
-        $this->objWorksheet->delete('id',$id);
+    		$data =$this->objWorksheetQuestions->getAll(' WHERE worksheet_id="'.$id.'" ORDER BY question_order');
+        	$this->objWorksheet->delete('id',$id);
 
         // Delete questions associated with worksheet.
         $this->objWorksheetQuestions->delete('worksheet_id',$id);
-
+        foreach ($data as $line ){
+        				$this->objWorksheetAnswers->delete('question_id',$line['id']);
+        }
+			
         $back = $this->getParam('back');
 
         if($back){
@@ -717,13 +728,11 @@ class worksheetadmin extends controller
     public function saveMark()
     {
         $id=$this->getParam('answer_id', '');
-
         $fields=array();
         $fields['mark']=$this->getParam('mark', 0);
         $fields['comments']=$this->getParam('comment', '');
         $fields['dateMarked']=date('Y-m-d H:i:s');
         $fields['lecturer_id']=$this->userId;
-
         $this->objWorksheetAnswers->insertMark($fields,$id);
     }
 
@@ -734,8 +743,9 @@ class worksheetadmin extends controller
     public function submitMark()
     {
         $worksheet_id=$this->getParam('worksheet');
+        //var_dump($worksheet_id);
         $student_id=$this->getParam('student');
-
+			//var_dump($student_id);
         $mark=$this->objWorksheetAnswers->addMarks($worksheet_id,$student_id);
         $total=$this->objWorksheet->getWorksheet($worksheet_id,'total_mark');
 

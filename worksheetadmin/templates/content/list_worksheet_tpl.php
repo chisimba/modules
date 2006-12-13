@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Template to display a list of student submissions for a worksheet.
 * @package worksheetadmin
@@ -59,8 +59,8 @@ if(!empty($results)){
 
         if($status == 'open'){
             $arrCon = array('studentname' => $fullName);
-            $conReopen = $objLanguage->code2Txt('mod_worksheetadmin_confirmreopenworksheet', $arrCon);
-            $arrReopen = array('action' => 'reopenworksheet', 'id' => $line['worksheet_id'], 'userId' => $line['userId']);
+            $conReopen = $objLanguage->code2Txt('mod_worksheetadmin_confirmreopenworksheet','worksheetadmin',$arrCon);
+            $arrReopen = array('action' => 'reopenworksheet', 'id' => $line['worksheet_id'], 'userid' => $line['userid']);
             $objConfirm->setConfirm($reopenLabel, $this->uri($arrReopen), $conReopen);
             $openLink = $objConfirm->show();
         }else{

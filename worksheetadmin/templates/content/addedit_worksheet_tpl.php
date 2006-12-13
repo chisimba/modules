@@ -25,7 +25,11 @@ $this->loadClass('label', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
-$this->wsDate = $this->newObject('datepicker','htmlelements');
+$this->popUp =&$this->getObject('datepickajax','popupcalendar');
+
+
+
+
 // set up language items
 $worksheet = $objLanguage->languageText('mod_worksheetadmin_worksheet','worksheetadmin');
 $editHead=$objLanguage->languageText('word_edit').' '.$worksheet;
@@ -92,6 +96,8 @@ if($mode == 'edit'){
     $wsDescription = '';
 }
 
+    //var_dump($wsDate);
+
 $objTable->cellpadding='5';
 $objTable->cellspacing='2';
 $objTable->width='100%';
@@ -139,7 +145,8 @@ if ($mode == 'edit') {
     $objElement->setBreakSpace('<br />');
     $active = $objElement->show();
 } else {
-    $active = $notActLabel;
+		//$objElement->setSelected('inactive');
+    	$active = $notActLabel;
 }
 $objTable->addCell($active);
 $objTable->endRow();
@@ -178,15 +185,16 @@ $objTable->addCell($label->show());
 //$selectDateLink->extra = "onclick=\"$onclick\"";
 //$selectDateLink->link = $objIcon->show().' '.$selectLabel;
 
-$name = 'closing_date';
-$date = date('Y-m-d');
-$format = 'YY-MM-DD';
-$this->wsDate->setName($name);
-$this->wsDate->setDefaultDate($date);
-$this->wsDate->setDateFormat($format);
+//$name = 'closing_date';
+//$date = date('Y-m-d');
+//$format = 'YY-MM-DD';
+//$this->wsDate->setName($name);
+//$this->wsDate->setDefaultDate($date);
+//$this->wsDate->setDateFormat($format);
 
-$objTable->addCell($this->wsDate->show());
-
+//$objTable->addCell($this->wsDate->show());
+$dateField = $this->popUp->show('closing_date', 'yes', 'no', $wsDate);
+$objTable->addCell($dateField);
 //$objTable->addCell($objElement->show().'&nbsp;&nbsp;&nbsp;'.$this->wsDate->show());
 
 $objTable->endRow();
@@ -206,11 +214,13 @@ $objTable->startRow();
 
 $submitButton = new button('save', $saveLabel);
 $submitButton->setToSubmit();
-$exitBtn = new button('save', $exitLabel);
+$btnSave = $submitButton->show();
+$exitBtn = new button('cancel', $exitLabel);
 $exitBtn->setOnClick('javascript:submitExitForm()');
+$btnCancel = $exitBtn->show();
 
-$objTable->addCell($submitButton->show(),'','','right');
-$objTable->addCell('&nbsp;&nbsp;&nbsp;&nbsp;'.$exitBtn->show(),'','','left');
+$objTable->addCell($btnSave,'','','right');
+$objTable->addCell('&nbsp;&nbsp;&nbsp;&nbsp;'.$btnCancel,'','','left');
 
 $objTable->endRow();
 
@@ -242,7 +252,7 @@ echo $objLayer->show();
 $objForm = new form('exit', $formAction);
 $objForm->addToForm($hidden);
 
-$objInput = new textinput('save', $exitLabel);
+$objInput = new textinput('cancel', $exitLabel);
 $objInput->fldType = 'hidden';
 
 $objForm->addToForm($objInput->show());

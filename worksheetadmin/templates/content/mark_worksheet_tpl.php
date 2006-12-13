@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Template to display a list of student submissions for a worksheet.
 * @package worksheetadmin
@@ -130,12 +130,12 @@ $objTable->addCell($hidden);
 $objTable->endRow();
 
 // Navigation & submission using javascript
-$javascript="<SCRIPT language=\"javascript\" type=\"text/javascript\">
+$javascript="<script language=\"javascript\" type=\"text/javascript\">
     function submitform(val){
         document.markWS.nextaction.value=val;
         document.markWS.submit();
     }
-</SCRIPT>";
+</script>";
 
 echo $javascript;
 
@@ -153,7 +153,7 @@ if($data['question_order']<=1){
 
 if($data['question_order']>=$data['count']){
     $links2=$nextLabel.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$lastmarkedLabel;
-    $objButton->button('save',$submitLabel);
+    $objButton->button('submitmark',$submitLabel);
     $objButton->setToSubmit();
     $submitBtn = '&nbsp;&nbsp;&nbsp;'.$objButton->show();
 }else{
@@ -178,7 +178,7 @@ $objTable->endRow();
 $objButton->button('save',$saveLabel);
 $objButton->setToSubmit();
 $btns = $objButton->show().$submitBtn;
-$objButton->button('save',$exitLabel);
+$objButton->button('exit',$exitLabel);
 $objButton->setToSubmit();
 $btns .= '&nbsp;&nbsp;&nbsp;'.$objButton->show();
 
