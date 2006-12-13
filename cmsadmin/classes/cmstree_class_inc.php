@@ -256,11 +256,12 @@ class cmstree extends object
 		/**
 		* Method to get the tree drop down when creating a section
 		* @param string $defaultSelected The Item to be default selccted on the drop down
+		* @param boolean $includeRoot Flag on whether to include root or not
 		* @return string
 		*/
-		public function getCMSAdminDropdownTree($defaultSelected=NULL)
+		public function getCMSAdminDropdownTree($defaultSelected=NULL, $includeRoot=TRUE)
 		{
-			$menu = $this->getTree('cmsadmin', TRUE, FALSE);
+			$menu = $this->getTree('cmsadmin', $includeRoot, FALSE);
 			
 			$this->loadClass('htmldropdown', 'tree');
 			

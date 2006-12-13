@@ -803,11 +803,11 @@ class cmsutils extends object
          * @access public
          * @author Warren Windvogel
          */
-        public function getTreeDropdown($setSelected = NULL, $noRoot = FALSE)
+        public function getTreeDropdown($setSelected = NULL, $noRoot = TRUE)
         {
             $objCMSTree = $this->getObject('cmstree');
 			
-			return $objCMSTree->getCMSAdminDropdownTree($setSelected);
+			return $objCMSTree->getCMSAdminDropdownTree($setSelected, $noRoot);
 			
         }
 
@@ -1462,9 +1462,9 @@ span#introrequiredtext {display: none; }
                 
             } else {
                 if (isset($section) && !empty($section)) {
-                    $sections = $this->getTreeDropdown($section, TRUE);
+                    $sections = $this->getTreeDropdown($section, FALSE);
                 } else {
-                    $sections = $this->getTreeDropdown(NULL, TRUE);
+                    $sections = $this->getTreeDropdown(NULL, FALSE);
                 }
             }
 
