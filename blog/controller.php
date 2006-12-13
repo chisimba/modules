@@ -633,50 +633,44 @@ class blog extends controller
 				break;
 
 			case 'viewblog':
-				try {
-					//get the category ID if any
-					$catid = $this->getParam('catid');
-					//grab the user id
-					$userid = $this->getParam('userid');
-					if(!isset($userid))
+
+				//get the category ID if any
+				$catid = $this->getParam('catid');
+				//grab the user id
+				$userid = $this->getParam('userid');
+				if(!isset($userid))
+				{
+					//fix the user id just in case
+					if($this->objUser->isLoggedIn() == TRUE)
 					{
-						//fix the user id just in case
-						if($this->objUser->isLoggedIn() == TRUE)
-						{
-							$userid = $this->objUser->userId();
-						}
-						else {
-							$this->nextAction('');
-						}
-					}
-					//get the category tree
-					$catarr = $this->objDbBlog->getCatsTree($userid);
-					//get the links categories
-					$linkcats = $this->objDbBlog->getAllLinkCats($userid);
-					//make sure the category id is there
-					if(isset($catid))
-					{
-						//grab all the posts in that category
-						$posts = $this->objDbBlog->getAllPosts($userid, $catid);
+						$userid = $this->objUser->userId();
 					}
 					else {
-						//otherwise grab all the Published posts
-						$posts = $this->objDbBlog->getAbsAllPostsNoDrafts($userid);
+						$this->nextAction('');
 					}
-					//send all that to the template
-					$this->setVarByRef('catid', $catid);
-					$this->setVarByRef('posts', $posts);
-					$this->setVarByRef('linkcats', $linkcats);
-					$this->setVarByRef('cats', $catarr);
-					$this->setVarByRef('userid', $userid);
-					//return the template
-					return 'myblog_tpl.php';
 				}
-				//catch any exceptions
-				catch(customException $e) {
-					//bail
-					customException::cleanUp();
+				//get the category tree
+				$catarr = $this->objDbBlog->getCatsTree($userid);
+				//get the links categories
+				$linkcats = $this->objDbBlog->getAllLinkCats($userid);
+				//make sure the category id is there
+				if(isset($catid))
+				{
+					//grab all the posts in that category
+					$posts = $this->objDbBlog->getAllPosts($userid, $catid);
 				}
+				else {
+					//otherwise grab all the Published posts
+					$posts = $this->objDbBlog->getAbsAllPostsNoDrafts($userid);
+				}
+				//send all that to the template
+				$this->setVarByRef('catid', $catid);
+				$this->setVarByRef('posts', $posts);
+				$this->setVarByRef('linkcats', $linkcats);
+				$this->setVarByRef('cats', $catarr);
+				$this->setVarByRef('userid', $userid);
+				//return the template
+				return 'myblog_tpl.php';
 				break;
 
 			case 'blogadmin':
