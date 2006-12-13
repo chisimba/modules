@@ -42,9 +42,10 @@ class etdfiles extends dbtable
     */
     function init()
     {
-        $this->objUpload =& $this->getObject('upload', 'filemanager');
+        $this->objUpload =& $this->getObject('upload', 'files');
         $this->objMkdir =& $this->getObject('mkdir', 'files');
         $this->objConfig =& $this->getObject('altconfig', 'config');
+        $this->dbFiles =& $this->newObject('dbfiles');
         $contentPath = $this->objConfig->getcontentBasePath();
 
         $this->modulePath = $contentPath.'modules/';
@@ -62,11 +63,17 @@ class etdfiles extends dbtable
     */
     public function uploadFile($submitId)
     {
+        $fileName = 'etd_'.$submitId;
         $this->checkDir($this->filePath);
         $this->objUpload->setUploadFolder($this->filePath);
         $this->objUpload->setAllowedTypes($this->fileExts);
         $this->objUpload->overWrite = TRUE;
-        $this->objUpload->doUpload();
+        $result = $this->objUpload->doUpload(TRUE, $fileName);
+        if($results['success']){
+            $fileId = $this->dbFiles->addFile($submitId, $results);
+        }else{
+            return $results['message'];
+        }
     }
 
     /**
@@ -159,19 +166,6 @@ class etdfiles extends dbtable
             $this->objMkdir->fullFilePath = $dir;
             $this->objMkdir->makedir();
         }
-    }
-
-    /**
-    * Method to upload a file using the filemanager
-    *
-    * @access public
-    * @param NULL
-    * @return array $results The results of the file upload
-    */
-    public function doUpload()
-    {
-        $results = $this->objUpload->uploadFiles();
-        return $results;
     }
 }
 ?>

@@ -40,8 +40,6 @@ class submit extends object
         $this->dbCopyright =& $this->getObject('dbcopyright', 'etd');
         $this->dbDublinCore =& $this->getObject('dbdublincore', 'etd');
         $this->xmlMetadata =& $this->getObject('xmlmetadata', 'etd');
-        $this->etdFiles =& $this->getObject('etdfiles', 'etd');
-        $this->dbFiles =& $this->getObject('dbfiles', 'etd');
 
         $this->objLanguage =& $this->getObject('language', 'language');
         $this->objUser =& $this->getObject('user', 'security');
@@ -632,7 +630,7 @@ class submit extends object
         $objTable->addRow(array('', $objButton->show()));
 
         $objForm = new form('upload', $this->uri(array('action' => 'savesubmit', 'mode' => 'uploaddoc', 'nextmode' => 'showresource')));
-        $objForm->extra = "enctype='multipart/form-data'";
+        $objForm->extra = "ENCTYPE='multipart/form-data'";
         $objForm->addToForm($objTable->show());
         $objForm->addToForm($hidden);
 
@@ -796,13 +794,8 @@ class submit extends object
                 return $this->showResource($data);
 
             case 'uploaddoc':
-                $results = $this->etdFiles->doUpload();
-                foreach($results as $result){
-                    if($result['success']){
-                        $submitId = $this->getSession('submitId');
-                        $this-> dbFiles->addFile($submitId, $this->userId, '', $result['fileid']);
-                    }
-                }
+                $submitId = $this->getSession('submitId');
+                return $this->files->uploadFile($submitId);
                 break;
 
             case 'embargo':

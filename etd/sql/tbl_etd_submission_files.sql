@@ -26,53 +26,49 @@ $tablename = 'tbl_etd_submission_files';
 $options = array('comment' => 'Table containing a list of uploaded files and their descriptions', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 $fields = array(
-	'id' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'submissionid' => array(
-		'type' => 'text',
-		'length' => 32
-		),
+    'id' => array(
+        'type' => 'text',
+        'length' => 32,
+        ),
+    'submissionid' => array(
+        'type' => 'text',
+        'length' => 32,
+        ),
+    'description' => array(
+        'type' => 'text',
+        'length' => 255,
+        ),
     'filename' => array(
+        'type' => 'text',
+        'length' => 255,
+        ),
+    'storedname' => array(
         'type' => 'text',
         'length' => 255,
         ),
     'mimetype' => array(
         'type' => 'text',
-        'length' =>255,
+        'length' => 100,
         ),
     'filesize' => array(
         'type' => 'integer',
         'length' => 5,
         ),
-    'path' => array(
+    'creatorid' => array(
         'type' => 'text',
-        'length' => 255,
+        'length' => 32,
         ),
-    'absolutepath' => array(
+    'modifierid' => array(
         'type' => 'text',
-        'length' => 255,
+        'length' => 32,
         ),
-    'description' => array(
-        'type' => 'text',
-        'length' => 255
+    'datecreated' => array(
+        'type' => 'timestamp'
         ),
-	'creatorid' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'modifierid' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'datecreated' => array(
-		'type' => 'timestamp'
-		),
-	'updated' => array(
-		'type' => 'timestamp'
-		),
-	);
+    'updated' => array(
+        'type' => 'timestamp'
+        ),
+    );
 
 // create other indexes here...
 
@@ -80,8 +76,7 @@ $name = 'etd_files_id';
 
 $indexes = array(
                 'fields' => array(
-                	'submissionid' => array(),
-                	'fileid' => array()
+                    'submissionid' => array(),
                 )
         );
 ?>

@@ -20,39 +20,47 @@ if (!$GLOBALS['kewl_entry_point_run']){
 class dbfiles extends dbtable
 {
     /**
+    * @var string $userId The userId of the currently logged in user
+    */
+    var $userId;
+
+    /**
     * Constructor
     */
     public function init()
     {
         parent::init('tbl_etd_submission_files');
         $this->table = 'tbl_etd_submission_files';
+
+        $this->objUser = &$this->newObject('user', 'security');
+        $this->userId = $this->objUser->userId();
     }
 
     /**
     * Method to insert file data into the table.
     * @param string $submitId The id of the submission containing the file.
-    * @param string $userId The user Id of the user creating the file.
-    * @param string $description A brief description of the file.
-    * @param string $fileName The name of the file.
-    * @param string $fileId The id of the file in the database.
-    * @param array $fileData The array containg the file data
+    * @param array $fileData The filedata to be stored
+    * @return string $id The id of the file record
     */
-    public function addFile($fileData)
+    public function addFile($submitId, $fileData, $id = NULL)
     {
         $fields = array();
-        $fields['submissionid'] = $fileData['submitId'];
+        $fields['submissionid'] = $submitId;
         $fields['filename'] = $fileData['filename'];
-        $fields['mimetype'] = $fileData['mime'];
-        $fields['filesize'] = $fileData['size'];
-        $fields['path'] = $fileData['path'];
-        $fields['absolutepath'] = $fileData['absolutepath'];
-        if(isset($fileData['description'])){
-            $fields['description'] = $description;
-        }
-        $fields['creatorid'] = $fileData['userId'];
-        $fields['datecreated'] = date('Y-m-d H:i:s');
+        $fields['storedname'] = $fileData['storedname'];
+        $fields['mimetype'] = $fileData['mimetype'];
+        $fields['filesize'] = $fileData['filesize'];
         $fields['updated'] = date('Y-m-d H:i:s');
-        $id = $this->insert($fields);
+
+        if(isset($id) && !empty($id)){
+            $fields['modifierid'] = $this->userId;
+            $this->update('id', $id, $fields);
+
+        }else{
+            $fields['creatorid'] = $this->userId;
+            $fields['datecreated'] = date('Y-m-d H:i:s');
+            $id = $this->insert($fields);
+        }
         return $id;
     }
 
@@ -63,21 +71,24 @@ class dbfiles extends dbtable
     * @param string $description A brief description of the file.
     * @param string $fileName The name of the file.
     * @param string $fileId The id of the file in the database.
-    */
-    public function editFile($id, $userId, $description, $fileName=NULL)
+    * @deprecated
+    public function editFile($id, $userId, $description, $fileName=NULL, $fileId=NULL)
     {
         $fields = array();
         $fields['description'] = $description;
-        $fields['modifierid'] = $userId;
-        $fields['updated'] = date('Y-m-d H:i:s');
-/*
-        if(isset($fileId) && !empty($fileId)){
+        $fields['modifierId'] = $this->userId;
+        $fields['dateModified'] = date('Y-m-d H:i:s');
+
+        if(isset($fileName) && !empty($fileName)){
+            $fields['fileName'] = $fileName;
             $fields['fileId'] = $fileId;
         }
-*/
+
         $this->update('id', $id, $fields);
         return $id;
     }
+
+    function getFile($submitId)
 
     /**
     * Method to upload a new / replace an existing file
