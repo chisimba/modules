@@ -1586,7 +1586,7 @@ class blogops extends object
 			$tbtable->endHeaderRow();
 
 			//where did it come from?
-			$whofromhost = $tracks['remhost'];
+			$whofromhost = $tracks['tburl'];
 			$blogname = $tracks['blog_name'];
 			//title and excerpt
 			$title = $tracks['title'];
