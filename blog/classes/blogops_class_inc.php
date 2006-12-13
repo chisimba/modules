@@ -525,7 +525,7 @@ class blogops extends object
 				$tbdata = array('id' => $post['id'], 'title' => $post['post_title'], 'excerpt' => $post['post_excerpt'], 'blog_name' => $blog_name, 'url' => $url, 'trackback_url' => $trackback_url, 'extra' => $extra);
 				$this->objTB->setup($tbdata, $tboptions);
 
-				$linktxt = $this->objLanguage->languageText("mod_blog_word_trackback", "blog");
+				$linktxt = $this->objLanguage->languageText("mod_blog_trackbackurl", "blog");
 				$tburl = new href($trackback_url, $linktxt, NULL);
 				$tburl = $tburl->show();
 
@@ -540,8 +540,11 @@ class blogops extends object
 				$numtb = $this->objDbBlog->getTrackbacksPerPost($pid);
 				if($numtb != 0)
 				{
-					$numtblnk = new href($this->uri(array('module' => 'blog', 'action' => 'viewsingle', 'mode' => 'viewtb', 'postid' => $pid, 'userid' => $post['userid'])), $numtb, NULL);
+					$numtblnk = new href($this->uri(array('module' => 'blog', 'action' => 'viewsingle', 'mode' => 'viewtb', 'postid' => $pid, 'userid' => $post['userid'])), $this->objLanguage->languageText("mod_blog_vtb","blog"), NULL); //$numtb, NULL);
 					$numtb = $numtblnk->show();
+				}
+				else {
+					$numtb = $this->objLanguage->languageText("mod_blog_trackbacknotrackback", "blog");
 				}
 
 				//do the cc licence part
@@ -579,6 +582,7 @@ class blogops extends object
 				if($post['userid'] == $userid)
 				{
 
+					$tburl = $tburl . "&nbsp;" . $numtb;
 					$this->objIcon = &$this->getObject('geticon', 'htmlelements');
 					$edIcon = $this->objIcon->getEditIcon($this->uri(array('action' => 'postedit', 'id' => $post['id'], 'module' => 'blog')));
 
@@ -602,7 +606,7 @@ class blogops extends object
 					$tbl->addCell($edIcon); //edit icon
 					$tbl->addCell($bookmark->show()); //bookmark link(s)
 					$tbl->addCell($commentLink); //comment link(s)
-					$tbl->addCell($tburl . " (" . $numtb . ")"); //trackback URL
+					$tbl->addCell($tburl); //trackback URL
 					$tbl->addCell($iconList); //cc licence
 					$tbl->addCell('');
 					$tbl->endRow();
