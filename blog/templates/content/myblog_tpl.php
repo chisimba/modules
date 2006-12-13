@@ -20,15 +20,23 @@ $rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
 //$rightSideColumn .= $this->objblogOps->showLinkCats($linkcats, TRUE);
 
 //show the admin section (if user is logged in)
-$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
+if(!$this->objUser->isLoggedIn())
+{
+	$leftCol = $this->objblogOps->loginBox(TRUE);
+}
+else {
+	//left menu section
+	//display the menu
+	$leftCol = $leftMenu->show();
+	$leftCol .= "<br />";
+	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
+}
+
 
 //show all the posts
 $middleColumn .= nl2br($this->objblogOps->showPosts($posts));
 
-//left menu section
-//display the menu
-$leftCol = $leftMenu->show();
-$leftCol .= "<br />";
+
 
 //show the feeds section
 $leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
