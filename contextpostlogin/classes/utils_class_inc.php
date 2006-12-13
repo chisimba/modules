@@ -168,10 +168,6 @@ class utils extends object
 		
 		$leftSideColumn .= $objBlocks->showBlock('latest', 'blog');
 		
-		$leftSideColumn .= $objBlocks->showBlock('wikipedia', 'websearch');
-		
-		$leftSideColumn .= $objBlocks->showBlock('latestpodcast', 'podcast');
-		
 		$leftSideColumn .= $objBlocks->showBlock('loginstats', 'context');
 		
 		$leftSideColumn .= $objBlocks->showBlock('latestpodcast', 'podcast');
@@ -274,7 +270,7 @@ class utils extends object
 	  			$objIcon->setModuleIcon($plugin['moduleid']);
 	  			$objIcon->alt = $this->_objDBContext->getTitle($contextCode). ' : '.$modInfo['name'];
 	  			
-	  			$objLink->href = $this->uri(array ('action' => 'gotomodule', 'moduleid' => $plugin['moduleid'], 'contextcode' => $contextCode));
+	  			$objLink->href = $this->uri(array ('action' => 'gotomodule', 'moduleid' => $plugin['moduleid'], 'contextcode' => $contextCode), 'context');
 	  			$objLink->link = $objIcon->show();
 	  			$str .= $objLink->show().'   ';
 	  		}
