@@ -540,7 +540,7 @@ class blogops extends object
 				$numtb = $this->objDbBlog->getTrackbacksPerPost($pid);
 				if($numtb != 0)
 				{
-					$numtblnk = new href($this->uri(array()), $numtb, NULL);
+					$numtblnk = new href($this->uri(array('module' => 'blog', 'action' => 'viewsingle', 'mode' => 'viewtb')), $numtb, NULL);
 					$numtb = $numtblnk->show();
 				}
 
