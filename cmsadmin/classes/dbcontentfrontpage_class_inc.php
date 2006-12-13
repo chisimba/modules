@@ -86,7 +86,7 @@ class dbcontentfrontpage extends dbTable
          */
         public function remove($id)
         {
-            $page = $this->getRow('id', $id);
+            $page = $this->getRow('content_id', $id);
             $pageOrderNo = $page['ordering'];
             $allPages = $this->getFrontPages();
             foreach($allPages as $pg) {
@@ -95,7 +95,7 @@ class dbcontentfrontpage extends dbTable
                     $this->update('id', $pg['id'], array('content_id' => $pg['content_id'], 'ordering' => $newOrder));
                 }
             }
-            return $this->delete('id', $id);
+            return $this->delete('content_id', $id);
         }
 
         /**
@@ -135,9 +135,7 @@ class dbcontentfrontpage extends dbTable
         {
             //If it is on the front page then remove it
             if($this->isFrontPage($pageId)) {
-                $entry = $this->getRow('content_id', $pageId);
-                $id = $entry['id'];
-                return $this->remove($id);
+                return $this->remove($pageId);
             //If it is not on the front page then add it
             } else {
                 return $this->add($pageId);
@@ -269,5 +267,18 @@ class dbcontentfrontpage extends dbTable
             }
             return $links;
         }
+		
+		public function hasFrontPageContent()
+		{
+			$sql = 'SELECT DISTINCT tbl_cms_content.sectionid FROM tbl_cms_content_frontpage, tbl_cms_content, tbl_cms_sections WHERE (tbl_cms_content_frontpage.content_id = tbl_cms_content.id) AND (tbl_cms_content.sectionid = tbl_cms_sections.id) AND (tbl_cms_content.published = 1) AND (tbl_cms_sections.published = 1)';
+			
+			$result = $this->getArray($sql);
+			
+			if (count($result) > 0) {
+				return TRUE;
+			} else {
+				return FALSE;
+			}
+		}
 }
 ?>

@@ -118,7 +118,7 @@ class dbcontent extends dbTable
             //process the forntpage
             $isFrontPage = $this->getParam('frontpage');
 
-            if ($isFrontPage == 'on') {
+            if ($isFrontPage == 1) {
                 $this->_objFrontPage->add($newId);
             }
 
@@ -186,7 +186,7 @@ class dbcontent extends dbTable
             $id = $this->getParam('id');
             $title = $this->getParam('title');
             $sectionid = $this->getParam('parent');
-            $published = ($this->getParam('published') == '1') ? '1' : '0';
+            $published = ($this->getParam('published') == '1') ? 1 : 0;
             $creatorid = $this->_objUser->userId();
             $access = $this->getParam('access');
             $introText = stripslashes($this->getParam('intro')); 
@@ -212,7 +212,7 @@ class dbcontent extends dbTable
             //process the forntpage
             $isFrontPage = $this->getParam('frontpage');
 
-            if ($isFrontPage == 'on') {
+            if ($isFrontPage == '1') {
                 $this->_objFrontPage->add($id);
             } else {
                 $this->_objFrontPage->remove($id);

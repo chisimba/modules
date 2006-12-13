@@ -1374,6 +1374,7 @@ class cmsutils extends object
           
             $published = new checkbox('published');
             $frontPage = new checkbox('frontpage');
+			$frontPage->value = 1;
             
             
             

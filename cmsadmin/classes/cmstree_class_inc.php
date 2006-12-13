@@ -53,6 +53,7 @@ class cmstree extends object
         	try {
                 $this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
                 $this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
+                $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
                 $this->_objUser = & $this->newObject('user', 'security');
                 $this->objLanguage =& $this->newObject('language', 'language');
            } catch (Exception $e){
@@ -234,7 +235,8 @@ class cmstree extends object
 		*/
 		public function getCMSTree()
 		{
-			$menu = $this->getTree('cms', TRUE);
+			$includeFrontPage = $this->_objFrontPage->hasFrontPageContent();
+			$menu = $this->getTree('cms', $includeFrontPage);
 			
 			$list = new htmllist($menu, array('topMostListClass'=>'treefolder'));
             return $list->getMenu();
