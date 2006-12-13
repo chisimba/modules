@@ -10,8 +10,7 @@ $middleColumn = NULL;
 //show the link to all blogs
 $rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
 
-//show the categories menu (if there are cats)
-$rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE);
+
 $rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
 
 //$rightSideColumn .= "<br />";
@@ -25,6 +24,8 @@ if(!$this->objUser->isLoggedIn())
 	$leftCol = $this->objblogOps->loginBox(TRUE);
 }
 else {
+	//show the categories menu (if there are cats)
+	$rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE);
 	//left menu section
 	//display the menu
 	$leftCol = $leftMenu->show();
