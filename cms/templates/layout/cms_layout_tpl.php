@@ -26,8 +26,7 @@ $this->appendArrayVar('bodyOnLoad', 'autoInit_trees()');
 $currentNode = $this->getParam('sectionid', NULL);
 
 $leftSide = $objTreeMenu->getCMSTree($currentNode);
-if($objUser->isAdmin())
-{
+if($objUser->isAdmin()){
     $objAdminLink =& $this->newObject('link', 'htmlelements');
     $objAdminLink->link($this->uri(array(NULL), 'cmsadmin'));
     $objAdminLink->link = $objLanguage->languageText('mod_cms_cmsadmin', 'cms');
@@ -39,12 +38,10 @@ if($objUser->isAdmin())
 
 /***************** END OF LEFT SIDE *******************************/
 
-if(!$this->getParam('query') == '')
-{
+if(!$this->getParam('query') == ''){
 
     $searchResults = $objLucene->show($this->getParam('query'));
-} else
-{
+} else {
     $searchResults = '';
 }
 
@@ -55,19 +52,25 @@ $rightSide = "";
 
 $isLoggedIn = $objUser->isLoggedIn();
 
-if(!$isLoggedIn)
-{
+if(!$isLoggedIn){
     $hasBlocks = TRUE;
     $loginBlock = $objDbBlocks->getBlockByName('login');
     $registerBlock = $objDbBlocks->getBlockByName('register');
 
     $rightSide .= $objBlocks->showBlock($loginBlock['blockname'], $loginBlock['moduleid']);
     $rightSide .= $objBlocks->showBlock($registerBlock['blockname'], $registerBlock['moduleid']);
-} else
-{
-    $pageId = $this->getParam('id');
-
-    $pageBlocks = $objDbBlocks->getBlocksForPage($pageId);
+} else {
+    $currentAction = $this->getParam('action', NULL);
+    if($currentAction == 'showsection'){
+        $sectionId = $this->getParam('id');
+        $pageBlocks = $objDbBlocks->getBlocksForSection($sectionId);    
+    } else if($currentAction == 'showcontent' || $currentAction == 'showfulltext' ){
+        $pageId = $this->getParam('id');
+        $pageBlocks = $objDbBlocks->getBlocksForPage($pageId);    
+    } else if($currentAction == 'home' || $currentAction == NULL){
+        $pageBlocks = $objDbBlocks->getBlocksForFrontPage();  
+    }
+    
     if(!empty($pageBlocks)) {
         $hasBlocks = TRUE;
         foreach($pageBlocks as $pbks) {
@@ -80,12 +83,10 @@ if(!$isLoggedIn)
 }
 
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
-if($hasBlocks)
-{
+if($hasBlocks){
     $cssLayout->setNumColumns(3);
     $cssLayout->setRightColumnContent($rightSide);
-} else
-{
+} else {
     $cssLayout->setNumColumns(2);
 }
 $cssLayout->setLeftColumnContent($leftSide);
