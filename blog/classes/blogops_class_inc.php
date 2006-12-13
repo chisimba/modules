@@ -1194,6 +1194,7 @@ class blogops extends object
 	}
 	public function archiveBox($userid, $featurebox = FALSE)
 	{
+		echo $userid;
 		//get the posts for each month
 		$posts = $this->_archiveArr($userid);
 		//print_r($posts);die();
