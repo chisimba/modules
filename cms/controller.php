@@ -132,7 +132,7 @@ class cms extends controller
                 $content = $this->_objUtils->getFrontPageContent();
                 if($content!='') {
                 	$this->bbcode = $this->getObject('bbcodeparser', 'utilities');
-                	$content = $this->bbcode->parse4bbcode($content);
+                	$content = $this->bbcode->parse4bbcode($this->html2txt($content));
                     $this->setVarByRef('content', $content);
                     return 'cms_main_tpl.php';
                 } else {
@@ -152,7 +152,7 @@ class cms extends controller
                 if($sectionId != '') {
                 	$this->bbcode = $this->getObject('bbcodeparser', 'utilities');
                 	$content = $this->_objUtils->showSection();
-                	$content = $this->bbcode->parse4bbcode($content);
+                	$content = $this->bbcode->parse4bbcode($this->html2txt($content));
                     $this->setVar('content', $content);
                 } else {
                     $this->setVar('content', '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_cms_novisiblesections', 'cms').'</div>');
@@ -170,7 +170,7 @@ class cms extends controller
                 $this->setVarByRef('pageTitle', $siteTitle);
                 $this->bbcode = $this->getObject('bbcodeparser', 'utilities');
                 $content = $this->_objUtils->showBody();
-                $content = $this->bbcode->parse4bbcode($content);
+                $content = $this->bbcode->parse4bbcode($this->html2txt($content));
                 $this->setVar('content', $content);
                 return 'cms_content_tpl.php';
 
@@ -209,6 +209,36 @@ class cms extends controller
         {
             return $this->_objUtils->getBreadCrumbs();
         }
+
+        /**
+	 * Method to scrub grubby html
+	 *
+	 * @param string $document
+	 * @return string
+	 */
+	public function html2txt($document, $scrub = TRUE)
+	{
+		if($scrub == TRUE)
+		{
+			$search = array('@<script[^>]*?>.*?</script>@si',  // Strip out javascript
+            	   '@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
+               	   /*'@<style[^>]*?>.*?</style>@siU',*/    // Strip style tags properly
+               	   '@<![\s\S]*?--[ \t\n\r]*>@'        // Strip multi-line comments including CDATA
+				   );
+		}
+		else {
+			$search = array('@<script[^>]*?>.*?</script>@si',  // Strip out javascript
+            	   '@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
+               	   /*'@<style[^>]*?>.*?</style>@siU',*/    // Strip style tags properly
+               	   '@<![\s\S]*?--[ \t\n\r]*>@'        // Strip multi-line comments including CDATA
+				   );
+		}
+		$text = preg_replace($search, '', $document);
+		//$text = str_replace("<br /><br />","",$text);
+		$text = str_replace("<br />","\n",$text);
+		$text = str_replace("<br\">","\n",$text);
+		return $text;
+	}
 
 }
 
