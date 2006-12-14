@@ -21,7 +21,7 @@ class cms extends controller
 
 
         /**
-         * The contextcore  object 
+         * The contextcore  object
          *
          * @access private
          * @var object
@@ -29,7 +29,7 @@ class cms extends controller
         protected $_objContextCore;
 
         /**
-         * The sections  object 
+         * The sections  object
          *
          * @access private
          * @var object
@@ -37,7 +37,7 @@ class cms extends controller
         protected $_objSections;
 
         /**
-         * The Content object 
+         * The Content object
          *
          * @access private
          * @var object
@@ -45,7 +45,7 @@ class cms extends controller
         protected $_objContent;
 
         /**
-         * The CMS Utilities object 
+         * The CMS Utilities object
          *
          * @access private
          * @var object
@@ -78,8 +78,8 @@ class cms extends controller
 
         /**
          * Method to initialise the cms object
-         * 
-         * @access public 
+         *
+         * @access public
          */
         public function init()
         {
@@ -115,7 +115,7 @@ class cms extends controller
 
         /**
          * Method to handle actions from templates
-         * 
+         *
          * @access public
          * @param string $action Action to be performed
          * @return mixed Name of template to be viewed or function to call
@@ -131,6 +131,8 @@ class cms extends controller
                 case 'home':
                 $content = $this->_objUtils->getFrontPageContent();
                 if($content!='') {
+                	$this->bbcode = $this->getObject('bbcodeparser', 'utilities');
+                	$content = $this->bbcode->parse4bbcode($content);
                     $this->setVarByRef('content', $content);
                     return 'cms_main_tpl.php';
                 } else {
@@ -148,7 +150,10 @@ class cms extends controller
                 }
                 $this->setVarByRef('pageTitle', $siteTitle);
                 if($sectionId != '') {
-                    $this->setVar('content', $this->_objUtils->showSection());
+                	$this->bbcode = $this->getObject('bbcodeparser', 'utilities');
+                	$content = $this->_objUtils->showSection();
+                	$content = $this->bbcode->parse4bbcode($content);
+                    $this->setVar('content', $content);
                 } else {
                     $this->setVar('content', '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_cms_novisiblesections', 'cms').'</div>');
                 }
@@ -163,7 +168,10 @@ class cms extends controller
                 $page = $this->_objContent->getContentPage($this->getParam('id'));
                 $siteTitle = $page['title'];
                 $this->setVarByRef('pageTitle', $siteTitle);
-                $this->setVar('content', $this->_objUtils->showBody());
+                $this->bbcode = $this->getObject('bbcodeparser', 'utilities');
+                $content = $this->_objUtils->showBody();
+                $content = $this->bbcode->parse4bbcode($content);
+                $this->setVar('content', $content);
                 return 'cms_content_tpl.php';
 
             case 'ical':
@@ -180,7 +188,7 @@ class cms extends controller
 
         /**
          * Method to get the Sections on the left side of the menu
-         * 
+         *
          * @access public
          * @return string
          */
@@ -193,7 +201,7 @@ class cms extends controller
 
         /**
          * Method to get the Bread Crumbs
-         * 
+         *
          * @access public
          * @return string Html for the breadcrumbs
          */
