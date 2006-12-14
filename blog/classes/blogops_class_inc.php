@@ -529,6 +529,20 @@ class blogops extends object
 				$tburl = new href($trackback_url, $linktxt, NULL);
 				$tburl = $tburl->show();
 
+				//set up the link to SEND a trackback
+				$blog_name = $this->objUser->fullname($userid);
+				$sender = $this->uri(array('action' => 'tbsend',
+										   'userid' => $post['userid'],
+										   'module' => 'blog',
+										   'postid' => $post['id'],
+										   'blog_name' => $blog_name,
+										   'title' => $post['post_title'],
+										   'excerpt' => $post['post_excerpt'],
+										   'url' => urlencode($this->uri(array('action' => 'viewsingle', 'userid' => $post['userid'], 'module' => 'blog', 'postid' => $post['id']))),
+										    ));
+				$sendtblink = new href($sender, $this->objLanguage->languageText("mod_blog_sendtrackback", "blog"),NULL);
+				$sendtblink = $sendtblink->show();
+
 				$bmurl = $this->uri(array('action' => 'viewsingle', 'userid' => $post['userid'], 'module' => 'blog', 'postid' => $post['id']));
 				$bmurl = urlencode($bmurl);
 				$bmlink = "http://www.addthis.com/bookmark.php?pub=&amp;url=".$bmurl."&amp;title=".urlencode(addslashes(htmlentities($post['post_title'])));
@@ -582,7 +596,7 @@ class blogops extends object
 				if($post['userid'] == $userid)
 				{
 
-					$tburl = $tburl . "&nbsp;" . $numtb;
+					$tburl = $tburl . "<br />" . $numtb . "<br />" . $sendtblink;
 					$this->objIcon = &$this->getObject('geticon', 'htmlelements');
 					$edIcon = $this->objIcon->getEditIcon($this->uri(array('action' => 'postedit', 'id' => $post['id'], 'module' => 'blog')));
 
@@ -1592,10 +1606,10 @@ class blogops extends object
 			$whofromhost = $tracks['tburl'];
 			$link = new href(htmlentities($whofromhost), htmlentities($whofromhost), NULL);
 			$whofromhost = $link->show();
-			$blogname = $tracks['blog_name'];
+			$blogname = stripslashes($tracks['blog_name']);
 			//title and excerpt
-			$title = $tracks['title'];
-			$excerpt = $tracks['excerpt'];
+			$title = stripslashes($tracks['title']);
+			$excerpt = stripslashes($tracks['excerpt']);
 
 			$tbtable->startRow();
 			$tbtable->addCell($this->objLanguage->languageText("mod_blog_tbremhost", "blog"));
@@ -1634,7 +1648,7 @@ class blogops extends object
 	 * @param array $postinfo
 	 * @return string
 	 */
-	public function sendTrackbackForm()//$postinfo)
+	public function sendTrackbackForm($postinfo)
 	{
 		//start a form object
 		$this->loadClass('textarea', 'htmlelements');
@@ -1658,6 +1672,7 @@ class blogops extends object
 		$myurllabel = new label($this->objLanguage->languageText('mod_blog_posturl', 'blog') .':', 'input_tbmyurl');
 		$myurl = new textinput('url');
 		$myurl->size = 59;
+		$myurl->setValue($postinfo['url']);
 		$tbtable->addCell($myurllabel->show());
 		$tbtable->addCell($myurl->show());
 		$tbtable->endRow();
@@ -1667,6 +1682,7 @@ class blogops extends object
 		$pidlabel = new label($this->objLanguage->languageText('mod_blog_postid', 'blog') .':', 'input_postid');
 		$pid = new textinput('postid');
 		$pid->size = 59;
+		$pid->setValue($postinfo['postid']);
 		$tbtable->addCell($pidlabel->show());
 		$tbtable->addCell($pid->show());
 		$tbtable->endRow();
@@ -1676,6 +1692,7 @@ class blogops extends object
 		$bnlabel = new label($this->objLanguage->languageText('mod_blog_blogname', 'blog') .':', 'input_tbbname');
 		$bn = new textinput('blog_name');
 		$bn->size = 59;
+		$bn->setValue(stripslashes($postinfo['blog_name']));
 		$tbtable->addCell($bnlabel->show());
 		$tbtable->addCell($bn->show());
 		$tbtable->endRow();
@@ -1685,6 +1702,7 @@ class blogops extends object
 		$titlabel = new label($this->objLanguage->languageText('mod_blog_posttitle', 'blog') .':', 'input_tbtitle');
 		$tit = new textinput('title');
 		$tit->size = 59;
+		$tit->setValue(stripslashes($postinfo['title']));
 		$tbtable->addCell($titlabel->show());
 		$tbtable->addCell($tit->show());
 		$tbtable->endRow();
@@ -1694,6 +1712,7 @@ class blogops extends object
 		$exlabel = new label($this->objLanguage->languageText('mod_blog_postexcerpt', 'blog') .':', 'input_tbexcerpt');
 		$ex = new textarea('excerpt');
 		$ex->setColumns(50);
+		$ex->setValue(stripslashes($postinfo['excerpt']));
 		$tbtable->addCell($exlabel->show());
 		$tbtable->addCell($ex->show());
 		$tbtable->endRow();

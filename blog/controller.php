@@ -163,7 +163,8 @@ class blog extends controller
 			//grab the blogimporter class, just in case we need it.
 			//I think that the import stuff should all be done in a seperate module...
 			$this->objBlogImport = &$this->getObject('blogimporter');
-
+			//the bbcode parser object
+			$this->getObject('bbcodeparser', 'utilities');
 			//get the imap class to grab email to blog...
 			//maybe a config here to check if we wanna use this?
 			$this->objImap = $this->getObject('imap', 'webmail');
@@ -966,23 +967,26 @@ class blog extends controller
 				break;
 
 			case 'tbsend':
-				//echo $this->objblogOps->sendTrackbackForm(); die();
-				$id = $this->getParam('postid'); //'init_56';
-				$title = $this->getParam('titile'); //"test post";
-				$excerpt = $this->getParam('excerpt'); //"blah";
-				$blog_name = $this->objUser->fullname($this->objUser->userId()) . " Chisimba blog";
-				$url = $this->getParam('url'); //"http://127.0.0.1/cpgsql/5ive/app/index.php?module=blog&action=randblog&userid=1";
-				$trackback_url = $this->getParam('tburl'); //"http://127.0.0.1/cpgsql/5ive/app/index.php?action=tbreceive&userid=1&module=blog&postid=init_2120_1165131820";
-				$extra = $this->getParam('extra'); //NULL;
+				$postid = $this->getParam('postid');
+				$title = $this->getParam('title');
+				$excerpt = $this->getParam('excerpt');
+				$blog_name = $this->getParam('blog_name');
+				$url = $this->getParam('url');
+				$url = urldecode($url);
+				$trackback_url = $this->getParam('tburl');
+				$extra = $this->getParam('extra');
+
+				$tbarr = array('postid' => $postid, 'title' => $title, 'excerpt' => $excerpt, 'blog_name' => $blog_name, 'url' => $url, 'trackback_url' => $trackback_url);
+				$this->setVarByRef('tbarr',$tbarr);
 
 				//check that all necessary params arre there, otherwise return the template again...
-				if(!isset($id) || !isset($title) || !isset($excerpt) || !isset($blog_name) || !isset($url) || !isset($trackback_url))
+				if(!isset($postid) || !isset($title) || !isset($excerpt) || !isset($blog_name) || !isset($url) || !isset($trackback_url))
 				{
 					return 'tbsend_tpl.php';
 					break;
 				}
 				//otherwise simply send the trackback and return to the blog. :)
-				$data = array('id' => $id, 'title' => $title, 'excerpt' => $excerpt, 'blog_name' => $blog_name,
+				$data = array('id' => $postid, 'title' => $title, 'excerpt' => $excerpt, 'blog_name' => $blog_name,
 							  'url' => $url, 'trackback_url' => $trackback_url, 'extra' => $extra);
 
 				$options = array(
@@ -1002,19 +1006,8 @@ class blog extends controller
 				$this->objTB = $this->getObject("trackback");
 				//use the factory
 				$this->objTB->setup($data, $options);
-				//set the url to look at
-				//$this->objTB->setVal('url', 'http://schlitt.info/applications/blog/');
-//				var_dump($this->objTB->autoDisc());
-
-				$sendtb = array('title' => 'Chisimba based Trackbacks',
-							    'url' => 'http://www.example.com',
-							    'excerpt' => 'some excerpt',
-							    'blog_name' => $blog_name,
-							    'trackback_url' => 'http://127.0.0.1/cpgsql/5ive/app/index.php?action=tbreceive&userid=1&module=blog&postid=init_2120_1165131820');
-
-							  //'itemId' => 'fsiu_server_49','itemName' => 'fsiu_server_49','trackId' => 'fsiu_server_49',
-
-				//var_dump($this->objTB->sendTB($sendtb));
+				$this->objTB->sendTB($data);
+				$this->nextAction('');
       		break;
 
 		}//action

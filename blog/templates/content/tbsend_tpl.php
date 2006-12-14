@@ -13,7 +13,7 @@ $middleColumn = NULL;
 
 if($this->objUser->isLoggedIn())
 {
-	$form = $this->objblogOps->sendTrackbackForm();
+	$form = $this->objblogOps->sendTrackbackForm($tbarr);
 	$leftCol .= $objSideBar->show();
 	$middleColumn .= $form;
 
