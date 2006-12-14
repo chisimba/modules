@@ -825,7 +825,7 @@ class blogops extends object
 		if($scrub == TRUE)
 		{
 			$search = array('@<script[^>]*?>.*?</script>@si',  // Strip out javascript
-            	   '@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
+            	   /*'@<[\/\!]*?[^<>]*?>@si',*/            // Strip out HTML tags
                	   /*'@<style[^>]*?>.*?</style>@siU',*/    // Strip style tags properly
                	   '@<![\s\S]*?--[ \t\n\r]*>@'        // Strip multi-line comments including CDATA
 				   );
@@ -841,6 +841,8 @@ class blogops extends object
 		//$text = str_replace("<br /><br />","",$text);
 		$text = str_replace("<br />","\n",$text);
 		$text = str_replace("<br\">","\n",$text);
+		$text = str_replace("<", " <", $text);
+		$text = str_replace(">", "> ", $text);
 		return $text;
 	}
 
