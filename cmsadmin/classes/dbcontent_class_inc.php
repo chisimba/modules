@@ -89,16 +89,16 @@ class dbcontent extends dbTable
             $published = ($this->getParam('published') == '1') ? 1 : 0;
             $creatorid = $this->_objUser->userId();
             $access = $this->getParam('access');
-//            $introText = $this->getParam('intro'); 
-//            $fullText = $this->getParam('body'); 
+//            $introText = $this->getParam('intro');
+//            $fullText = $this->getParam('body');
 //            $introText = $objHtmlCleaner->cleanHtml($introText);
 //            $fullText = $objHtmlCleaner->cleanHtml($fullText);
-            
-            $introText = stripslashes($this->getParam('intro')); 
-            $fullText = stripslashes($this->getParam('body')); 
-            
+
+            $introText = stripslashes($this->getParam('intro'));
+            $fullText = $this->html2txt(stripslashes($this->getParam('body')));
+
             $ccLicence = $this->getParam('creativecommons');
-            
+
             $newArr = array(
                           'title' => $title ,
                           'sectionid' => $sectionid,
@@ -143,8 +143,8 @@ class dbcontent extends dbTable
         {
             //Create htmlcleaner object
             $objHtmlCleaner =& $this->newObject('htmlcleaner', 'utilities');
-            $introText = $introText; 
-            $fullText = $introText; 
+            $introText = $introText;
+            $fullText = $introText;
 //            $introText = $objHtmlCleaner->cleanHtml($introText);
 //            $fullText = $objHtmlCleaner->cleanHtml($fullText);
 
@@ -154,7 +154,7 @@ class dbcontent extends dbTable
                           'title' => $title ,
                           'sectionid' => $sectionid,
                           'introtext' => addslashes($introText),
-                          'body' => addslashes($fullText),
+                          'body' => $this->html2txt(addslashes($fullText)),
                           'access' => $access,
                           'ordering' => $this->getOrdering($sectionid),
                           'published' => $published,
@@ -189,13 +189,13 @@ class dbcontent extends dbTable
             $published = ($this->getParam('published') == '1') ? 1 : 0;
             $creatorid = $this->_objUser->userId();
             $access = $this->getParam('access');
-            $introText = stripslashes($this->getParam('intro')); 
-            $fullText = stripslashes($this->getParam('body')); 
+            $introText = stripslashes($this->getParam('intro'));
+            $fullText = stripslashes($this->getParam('body'));
 //            $introText = $objHtmlCleaner->cleanHtml($introText);
 //            $fullText = $objHtmlCleaner->cleanHtml($fullText);
             $ordering = $this->getParam('ordering');
             $ccLicence = $this->getParam('creativecommons');
-            
+
             $newArr = array(
                           'title' => $title ,
                           'sectionid' => $sectionid,
@@ -542,6 +542,36 @@ class dbcontent extends dbTable
                 }
             }
         }
+
+    /**
+	 * Method to scrub grubby html
+	 *
+	 * @param string $document
+	 * @return string
+	 */
+	public function html2txt($document, $scrub = TRUE)
+	{
+		if($scrub == TRUE)
+		{
+			$search = array('@<script[^>]*?>.*?</script>@si',  // Strip out javascript
+            	   '@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
+               	   /*'@<style[^>]*?>.*?</style>@siU',*/    // Strip style tags properly
+               	   '@<![\s\S]*?--[ \t\n\r]*>@'        // Strip multi-line comments including CDATA
+				   );
+		}
+		else {
+			$search = array('@<script[^>]*?>.*?</script>@si',  // Strip out javascript
+            	   '@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
+               	   /*'@<style[^>]*?>.*?</style>@siU',*/    // Strip style tags properly
+               	   '@<![\s\S]*?--[ \t\n\r]*>@'        // Strip multi-line comments including CDATA
+				   );
+		}
+		$text = preg_replace($search, '', $document);
+		//$text = str_replace("<br /><br />","",$text);
+		$text = str_replace("<br />","\n",$text);
+		$text = str_replace("<br\">","\n",$text);
+		return $text;
+	}
 }
 
 ?>
