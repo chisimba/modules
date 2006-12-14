@@ -144,7 +144,7 @@ class dbcontent extends dbTable
             //Create htmlcleaner object
             $objHtmlCleaner =& $this->newObject('htmlcleaner', 'utilities');
             $introText = $this->html2txt($introText);
-            $fullText = $this->html2txt($introText);
+            $fullText = $this->html2txt($fullText);
 //            $introText = $objHtmlCleaner->cleanHtml($introText);
 //            $fullText = $objHtmlCleaner->cleanHtml($fullText);
 
@@ -200,8 +200,8 @@ class dbcontent extends dbTable
                           'title' => $title ,
                           'sectionid' => $sectionid,
                           'access' => $access,
-                          'introtext' => nl2br(addslashes($introText)),
-                          'body' => nl2br(addslashes($fullText)),
+                          'introtext' => $this->html2txt(nl2br(addslashes($introText))),
+                          'body' => $this->html2txt(nl2br(addslashes($fullText))),
                           'modified' => $this->now(),
                           'ordering' => $ordering,
                           'published' => $published,
@@ -265,7 +265,7 @@ class dbcontent extends dbTable
                     $this->update('id', $pg['id'], array('title' => $pg['title'],
                                                          'sectionid' => $pg['sectionid'],
                                                          'introtext' => $pg['introtext'],
-                                                         'body' => $pg['body'],
+                                                         'body' => $this->html2txt($pg['body']),
                                                          'access' => $pg['access'],
                                                          'ordering' => $newOrder,
                                                          'published' => $pg['published'],

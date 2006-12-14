@@ -152,7 +152,7 @@ class cms extends controller
                 if($sectionId != '') {
                 	$this->bbcode = $this->getObject('bbcodeparser', 'utilities');
                 	$content = $this->_objUtils->showSection();
-                	$content = $this->bbcode->parse4bbcode($content);
+                	$content = nl2br($this->bbcode->parse4bbcode($content));
                     $this->setVar('content', $content);
                 } else {
                     $this->setVar('content', '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_cms_novisiblesections', 'cms').'</div>');
@@ -170,7 +170,7 @@ class cms extends controller
                 $this->setVarByRef('pageTitle', $siteTitle);
                 $this->bbcode = $this->getObject('bbcodeparser', 'utilities');
                 $content = $this->_objUtils->showBody();
-                $content = $this->bbcode->parse4bbcode($content);
+                $content = nl2br($this->bbcode->parse4bbcode($content));
                 $this->setVar('content', $content);
                 return 'cms_content_tpl.php';
 
