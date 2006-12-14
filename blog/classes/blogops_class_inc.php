@@ -1371,11 +1371,6 @@ class blogops extends object
 
 	}
 
-	public function editPost()
-	{
-
-	}
-
 	/**
 	 * Methid to build a table of all available bloggers on the system
 	 *
@@ -1633,9 +1628,106 @@ class blogops extends object
 		return $ret;
 	}
 
-	public function sendTrackbackForm()
+	/**
+	 * Method to build the form to send a trackback to another blog
+	 *
+	 * @param array $postinfo
+	 * @return string
+	 */
+	public function sendTrackbackForm()//$postinfo)
 	{
 		//start a form object
+		$this->loadClass('textarea', 'htmlelements');
+		$this->loadClass('textinput', 'htmlelements');
+		$this->loadClass('label', 'htmlelements');
+
+		$stbform = new form('tbsend', $this->uri(array('action' => 'tbsend')));
+
+		$tbfieldset = $this->newObject('fieldset', 'htmlelements');
+		$tbfieldset->setLegend($this->objLanguage->languageText('mod_blog_sendtb', 'blog'));
+		$tbtable = $this->newObject('htmltable', 'htmlelements');
+		$tbtable->cellpadding = 3;
+
+		$tbtable->startHeaderRow();
+		$tbtable->addHeaderCell('');
+		$tbtable->addHeaderCell('');
+		$tbtable->endHeaderRow();
+
+		//post url field
+		$tbtable->startRow();
+		$myurllabel = new label($this->objLanguage->languageText('mod_blog_posturl', 'blog') .':', 'input_tbmyurl');
+		$myurl = new textinput('url');
+		$myurl->size = 59;
+		$tbtable->addCell($myurllabel->show());
+		$tbtable->addCell($myurl->show());
+		$tbtable->endRow();
+
+		//post id field
+		$tbtable->startRow();
+		$pidlabel = new label($this->objLanguage->languageText('mod_blog_postid', 'blog') .':', 'input_postid');
+		$pid = new textinput('postid');
+		$pid->size = 59;
+		$tbtable->addCell($pidlabel->show());
+		$tbtable->addCell($pid->show());
+		$tbtable->endRow();
+
+		//blog_name field
+		$tbtable->startRow();
+		$bnlabel = new label($this->objLanguage->languageText('mod_blog_blogname', 'blog') .':', 'input_tbbname');
+		$bn = new textinput('blog_name');
+		$bn->size = 59;
+		$tbtable->addCell($bnlabel->show());
+		$tbtable->addCell($bn->show());
+		$tbtable->endRow();
+
+		//title field
+		$tbtable->startRow();
+		$titlabel = new label($this->objLanguage->languageText('mod_blog_posttitle', 'blog') .':', 'input_tbtitle');
+		$tit = new textinput('title');
+		$tit->size = 59;
+		$tbtable->addCell($titlabel->show());
+		$tbtable->addCell($tit->show());
+		$tbtable->endRow();
+
+		//post excerpt field
+		$tbtable->startRow();
+		$exlabel = new label($this->objLanguage->languageText('mod_blog_postexcerpt', 'blog') .':', 'input_tbexcerpt');
+		$ex = new textarea('excerpt');
+		$ex->setColumns(50);
+		$tbtable->addCell($exlabel->show());
+		$tbtable->addCell($ex->show());
+		$tbtable->endRow();
+
+		//trackback url field
+		$tbtable->startRow();
+		$tburllabel = new label($this->objLanguage->languageText('mod_blog_trackbackurl', 'blog') .':', 'input_tburl');
+		$tburl = new textinput('tburl');
+		$tburl->size = 59;
+		$tbtable->addCell($tburllabel->show());
+		$tbtable->addCell($tburl->show());
+		$tbtable->endRow();
+
+		//add some rules
+		$stbform->addRule('url',$this->objLanguage->languageText("mod_blog_phrase_tburlreq", "blog"),'required');
+		$stbform->addRule('postid',$this->objLanguage->languageText("mod_blog_phrase_tbidreq", "blog"),'required');
+		$stbform->addRule('blog_name',$this->objLanguage->languageText("mod_blog_phrase_tbbnreq", "blog"),'required');
+		$stbform->addRule('title',$this->objLanguage->languageText("mod_blog_phrase_tbtitreq", "blog"),'required');
+		$stbform->addRule('excerpt',$this->objLanguage->languageText("mod_blog_phrase_tbexreq", "blog"),'required');
+		$stbform->addRule('tburl',$this->objLanguage->languageText("mod_blog_phrase_tbtburlreq", "blog"),'required');
+
+		//put it all together and set up a submit button
+		$tbfieldset->addContent($tbtable->show());
+		$stbform->addToForm($tbfieldset->show());
+		$this->objTBButton = new button($this->objLanguage->languageText('mod_blog_word_sendtb', 'blog'));
+		$this->objTBButton->setValue($this->objLanguage->languageText('mod_blog_word_sendtb', 'blog'));
+		$this->objTBButton->setToSubmit();
+		$stbform->addToForm($this->objTBButton->show());
+		$stbform = $stbform->show();
+
+		//bust out a featurebox for consistency
+		$objFeatureBox = $this->newObject('featurebox', 'navigation');
+		$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_sendtb", "blog"), $stbform);
+		return $ret;
 	}
 
 

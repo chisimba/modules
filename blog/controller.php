@@ -965,15 +965,23 @@ class blog extends controller
 
 				break;
 
-			case 'trackback':
-				$id = 'init_56';
-				$title = "test post";
-				$excerpt = "blah";
+			case 'tbsend':
+				//echo $this->objblogOps->sendTrackbackForm(); die();
+				$id = $this->getParam('postid'); //'init_56';
+				$title = $this->getParam('titile'); //"test post";
+				$excerpt = $this->getParam('excerpt'); //"blah";
 				$blog_name = $this->objUser->fullname($this->objUser->userId()) . " Chisimba blog";
-				$url = "http://127.0.0.1/cpgsql/5ive/app/index.php?module=blog&action=randblog&userid=1";
-				$trackback_url = "http://127.0.0.1/cpgsql/5ive/app/index.php?action=tbreceive&userid=1&module=blog&postid=init_2120_1165131820";
-				$extra = NULL;
+				$url = $this->getParam('url'); //"http://127.0.0.1/cpgsql/5ive/app/index.php?module=blog&action=randblog&userid=1";
+				$trackback_url = $this->getParam('tburl'); //"http://127.0.0.1/cpgsql/5ive/app/index.php?action=tbreceive&userid=1&module=blog&postid=init_2120_1165131820";
+				$extra = $this->getParam('extra'); //NULL;
 
+				//check that all necessary params arre there, otherwise return the template again...
+				if(!isset($id) || !isset($title) || !isset($excerpt) || !isset($blog_name) || !isset($url) || !isset($trackback_url))
+				{
+					return 'tbsend_tpl.php';
+					break;
+				}
+				//otherwise simply send the trackback and return to the blog. :)
 				$data = array('id' => $id, 'title' => $title, 'excerpt' => $excerpt, 'blog_name' => $blog_name,
 							  'url' => $url, 'trackback_url' => $trackback_url, 'extra' => $extra);
 
@@ -989,26 +997,14 @@ class blog extends controller
             			'maxRedirects'      => 2,
             			'method'            => 'POST',
             			'useragent'         => 'Chisimba',
-            			//'proxy_host'        => '192.102.9.33',
-            			//'proxy_port'        => '8080',
-            			//'proxy_user'        => 'pscott',
-            			//'poxy_pass'         => 'monkeys123',
         			),
     			);
-
-
-				//$options = array('useragent' => 'Chisimba');
-
 				$this->objTB = $this->getObject("trackback");
-
 				//use the factory
 				$this->objTB->setup($data, $options);
-
-				//var_dump($this->objTB->autodiscCode());
-
 				//set the url to look at
 				//$this->objTB->setVal('url', 'http://schlitt.info/applications/blog/');
-				var_dump($this->objTB->autoDisc());
+//				var_dump($this->objTB->autoDisc());
 
 				$sendtb = array('title' => 'Chisimba based Trackbacks',
 							    'url' => 'http://www.example.com',
