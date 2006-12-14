@@ -94,7 +94,7 @@ class dbcontent extends dbTable
 //            $introText = $objHtmlCleaner->cleanHtml($introText);
 //            $fullText = $objHtmlCleaner->cleanHtml($fullText);
 
-            $introText = stripslashes($this->getParam('intro'));
+            $introText = $this->html2txt(stripslashes($this->getParam('intro')));
             $fullText = $this->html2txt(stripslashes($this->getParam('body')));
 
             $ccLicence = $this->getParam('creativecommons');
@@ -143,8 +143,8 @@ class dbcontent extends dbTable
         {
             //Create htmlcleaner object
             $objHtmlCleaner =& $this->newObject('htmlcleaner', 'utilities');
-            $introText = $introText;
-            $fullText = $introText;
+            $introText = $this->html2txt($introText);
+            $fullText = $this->html2txt($introText);
 //            $introText = $objHtmlCleaner->cleanHtml($introText);
 //            $fullText = $objHtmlCleaner->cleanHtml($fullText);
 
@@ -154,7 +154,7 @@ class dbcontent extends dbTable
                           'title' => $title ,
                           'sectionid' => $sectionid,
                           'introtext' => addslashes($introText),
-                          'body' => $this->html2txt(addslashes($fullText)),
+                          'body' => addslashes($fullText),
                           'access' => $access,
                           'ordering' => $this->getOrdering($sectionid),
                           'published' => $published,
@@ -200,8 +200,8 @@ class dbcontent extends dbTable
                           'title' => $title ,
                           'sectionid' => $sectionid,
                           'access' => $access,
-                          'introtext' => addslashes($introText),
-                          'body' => addslashes($fullText),
+                          'introtext' => nl2br(addslashes($introText)),
+                          'body' => nl2br(addslashes($fullText)),
                           'modified' => $this->now(),
                           'ordering' => $ordering,
                           'published' => $published,
