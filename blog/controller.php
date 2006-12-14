@@ -1003,10 +1003,16 @@ class blog extends controller
             			'useragent'         => 'Chisimba',
         			),
     			);
-				$this->objTB = $this->getObject("trackback");
-				//use the factory
-				$this->objTB->setup($data, $options);
-				$this->objTB->sendTB($data);
+    			try {
+					$this->objTB = $this->getObject("trackback");
+					//use the factory
+					$this->objTB->setup($data, $options);
+					$this->objTB->sendTB($data);
+    			}
+    			catch(customException $e)
+    			{
+    				customException::cleanUp();
+    			}
 				$this->nextAction('');
       		break;
 
