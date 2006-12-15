@@ -33,16 +33,21 @@ $fields = array(
         'type' => 'text',
         'length' => 255,
         ),
+    'stored_name' => array(
+        'type' => 'text',
+        'length' => 255,
+        ),
     'file_type' => array(
         'type' => 'text',
-        'length' => 50,
+        'length' => 100,
         ),
     'file_size' => array(
         'type' => 'integer',
         'length' => 11,
         ),
-    'file_data' => array(
-        'type' => 'blob',
+    'extension' => array(
+        'type' => 'text',
+        'length' => 5,
         ),
     'updated' => array(
         'type' => 'timestamp',

@@ -38,14 +38,16 @@ class email extends controller
         $this->objContext = &$this->getObject('dbcontext', 'context');
         $this->objDate = &$this->getObject('datetime', 'utilities');
         $this->objConfig = &$this->getObject('altconfig', 'config');
-        $this->objSysconfig = &$this->getObject('dbsysconfig', 'sysconfig');
         $this->noSubject = $this->objLanguage->languageText('phrase_nosubject');
         // set upload size
+        $this->objSysconfig =& $this->getObject('dbsysconfig', 'sysconfig');
         $this->uploadSize = $this->objSysconfig->getValue('ATTACHMENT_MAX_SIZE', 'email');
         $attachmentSize = substr($this->uploadSize, 0, -1);
         $maxPost = substr(ini_get('post_max_size') , 0, -1);
         $maxUpload = substr(ini_get('upload_max_filesize') , 0, -1);
         $this->maxSize = min($attachmentSize, $maxPost, $maxUpload);
+        $this->maxFileSize = $this->maxSize*1048576;
+
         $this->fileLocation = $this->objConfig->getcontentBasePath() .'attachments/';
         if (!is_dir($this->fileLocation)) {
             mkdir($this->fileLocation);
@@ -61,6 +63,7 @@ class email extends controller
         $this->dbAttachments = &$this->getObject('dbattachments');
         $this->dbConfiguration = &$this->getObject('dbconfiguration');
         $this->dbRules = &$this->getObject('dbrules');
+        $this->emailFiles = &$this->newObject('emailfiles');
         /*
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity','logger');
@@ -162,12 +165,14 @@ class email extends controller
                 $message = $this->getParam('message', NULL);
                 $error = $this->getParam('error');
                 $emailId = $this->getParam('emailId', NULL);
+                $attachments = $this->emailFiles->getAttachments();
                 $this->setVarByRef('toList', $toList);
                 $this->setVarByRef('recipientList', $recipientList);
                 $this->setVarByRef('subject', $subject);
                 $this->setVarByRef('message', $message);
                 $this->setVarByRef('error', $error);
                 $this->setVarByRef('emailId', $emailId);
+                $this->setVarByRef('attachments', $attachments);
                 return 'compose_tpl.php';
                 break;
 
@@ -282,20 +287,12 @@ class email extends controller
                 $cancelbutton = $this->getParam('cancelbutton');
                 $sendbutton = $this->getParam('sendbutton');
                 if ($cancelbutton == 'Cancel') {
-                    $this->clearAttachments();
+                    $this->emailFiles->clearAttachments();
                     return $this->nextAction('compose');
                 } elseif ($sendbutton == 'Send') {
-                    $files = $this->attachLocation.'*';
-                    if (glob($files) != FALSE) {
-                        $attachments = count(glob($files));
-                    } else {
-                        $attachments = 0;
-                    }
-                    $emailId = $this->dbEmail->sendMail($recipientList, $subject, $message, $attachments);
-                    if (glob($files) != FALSE) {
-                        $this->dbAttachments->addAttachments($emailId);
-                    }
-                    $this->clearAttachments();
+                    $emailId = $this->dbEmail->sendMail($recipientList, $subject, $message, 0);
+                    $attachments = $this->emailFiles->saveAttachments($emailId);
+                    $this->emailFiles->clearAttachments();
                 }
                 return $this->nextAction('');
                 break;
@@ -366,34 +363,12 @@ class email extends controller
                 $recipientList = $this->getParam('recipient');
                 $subject = $this->getParam('subject');
                 $message = $this->getParam('message');
-                if (!empty($_FILES)) {
-                    $file = $_FILES['attachment'];
-                    $fileName = $file['name'];
-                    $fileType = $file['type'];
-                    $fileSize = $file['size'];
-                    $tempName = $file['tmp_name'];
-                    if ($fileSize > ($this->maxSize*1048576)) {
-                        $error = 1;
-                    } elseif ($file['error'] == 0 && $fileSize == 0) {
-                        $error = 'blank';
-                    } else {
-                        $error = $file['error'];
-                    }
-                } else {
-                    $error = 1;
-                }
-                if ($error === 0) {
-                    $checkDirectory = file_exists($this->attachLocation);
-                    if ($checkDirectory === FALSE) {
-                        mkdir($this->attachLocation, 0777);
-                    }
-                    $temp = move_uploaded_file($tempName, $this->attachLocation.$fileName);
-                }
+                $results = $this->emailFiles->uploadFile();
                 return $this->nextAction('compose', array(
                     'userId' => $recipientList,
                     'subject' => $subject,
                     'message' => $message,
-                    'error' => $error
+                    'error' => $results['message'],
                 ));
                 break;
 
@@ -402,7 +377,7 @@ class email extends controller
                 $subject = $this->getParam('subject');
                 $message = $this->getParam('message');
                 $file = $this->getParam('file');
-                unlink($file);
+                $this->emailFiles->deleteAttachment($file);
                 return $this->nextAction('compose', array(
                     'userId' => $recipientList,
                     'subject' => $subject,
@@ -662,7 +637,7 @@ class email extends controller
                     $autoDelete = isset($configs['auto_delete']) ? $configs['auto_delete'] : 0;
                 }
                 $this->setSession('configs', $configs);
-                $this->clearAttachments();
+                $this->emailFiles->clearAttachments();
                 $arrFolderList = $this->dbFolders->listFolders();
                 $this->setVarByRef('arrFolderList', $arrFolderList);
                 $this->setVar('folderId', $configs['default_folder_id']);
@@ -821,26 +796,6 @@ class email extends controller
         }
         $xml = $objResponse->getXML();
         return $xml;
-    }
-
-    /**
-    * Method to delete unused attachment files from the file system
-    *
-    * @access private
-    * @return NULL
-    */
-    private function clearAttachments()
-    {
-        $files = $this->attachLocation.'*';
-        if (glob($files) != FALSE) {
-            foreach(glob($files) as $filename) {
-                unlink($filename);
-            }
-        }
-        $checkDirectory = file_exists($this->attachLocation);
-        if ($checkDirectory) {
-            rmdir($this->attachLocation);
-        }
     }
 
     /**

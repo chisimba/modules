@@ -22,9 +22,6 @@ class dbattachments extends dbTable
         $this->table = 'tbl_email_attachments';
         $this->objUser = &$this->getObject('user', 'security');
         $this->userId = $this->objUser->userId();
-        $this->objConfig = &$this->getObject('altconfig', 'config');
-        $this->fileLocation = $this->objConfig->getcontentBasePath() .'attachments/';
-        $this->attachLocation = $this->fileLocation.$this->userId."/";
     }
 
     /**
@@ -32,28 +29,40 @@ class dbattachments extends dbTable
     *
     * @access public
     * @param string $emailId The id of the email the attachments are for
-    * @return
+    * @param array $attachment The file data
+    * @return string $attachmentId The id of the attachment
     */
-    public function addAttachments($emailId)
+    public function addAttachments($emailId, $attachment)
     {
-        ini_set('memory_limit', -1);
-        $files = $this->attachLocation.'*';
-        if (glob($files) != FALSE) {
-            foreach(glob($files) as $filename) {
-                $fields = array();
-                $fields['email_id'] = $emailId;
-                $fields['file_name'] = basename($filename);
-                $fields['file_type'] = filetype($filename);
-                $fields['file_size'] = filesize($filename);
-                $handle = fopen($filename, "rb");
-                $contents = fread($handle, filesize($filename));
-                fclose($handle);
-                $fields['file_data'] = $contents;
-                $fields['updated'] = date("Y-m-d H:i:s");
-                $fileId = $this->insert($fields);
-            }
+        $fields = array();
+        $fields['email_id'] = $emailId;
+        $fields['file_name'] = $attachment['filename'];
+        $fields['file_type'] = $attachment['mimetype'];
+        $fields['file_size'] = $attachment['filesize'];
+        $fields['extension'] = $attachment['extension'];
+        $attachmentId = $this->insert($fields);
+
+        $updateArray['stored_name'] = $attachmentId;
+        $this->update('id', $attachmentId, $updateArray);
+        return $attachmentId;
+    }
+
+    /**
+    * Method to retrieve an attachment from the data base
+    *
+    * @access public
+    * @param string $attachmentId The id of the attachments
+    * @return array $data The attachment data
+    */
+    public function getAttachment($attachmentId)
+    {
+        $sql = "SELECT * FROM ".$this->table;
+        $sql.= " WHERE id='".$attachmentId."'";
+        $data = $this->getArray($sql);
+        if (!empty($data)) {
+            return $data;
         }
-        ini_restore('memory_limit');
+        return FALSE;
     }
 
     /**
@@ -73,29 +82,6 @@ class dbattachments extends dbTable
             return $data;
         }
         return FALSE;
-    }
-
-    /**
-    * Method to download the attachment
-    *
-    * @access private
-    * @param string $attachId The id of the file to download
-    * @return data $fileData The file data
-    */
-    public function outputFile($attachId)
-    {
-        $sql = "SELECT * FROM ".$this->table;
-        $sql.= " WHERE id = '".$attachId."'";
-        $data = $this->getArray($sql);
-        $name = $data[0]['file_name'];
-        $size = $data[0]['file_size'];
-        $type = $data[0]['file_type'];
-        $fileData = $data[0]['file_data'];
-        header("Content-type: $type");
-        header("Content-length: $size");
-        header("Content-Disposition: filename=$name");
-        header("Content-Description: PHP Generated Data");
-        echo $fileData;
     }
 
     /**

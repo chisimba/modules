@@ -172,17 +172,9 @@ $uploadButton = $objButton->show();
 $objTable = new htmltable();
 //    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
-if ($error == 1) {
+if ($error) {
     $objTable->startRow();
-    $objTable->addCell("<b>".$sizeErrorLabel."</b>", '', '', '', 'error', 'colspan="3"');
-    $objTable->endRow();
-} elseif ($error == 4) {
-    $objTable->startRow();
-    $objTable->addCell("<b>".$errorLabel."</b>", '', '', '', 'error', 'colspan="3"');
-    $objTable->endRow();
-} elseif ($error == 'blank') {
-    $objTable->startRow();
-    $objTable->addCell("<b>".$blankErrorLabel."</b>", '', '', '', 'error', 'colspan="3"');
+    $objTable->addCell("<b>".$error."</b>", '', '', '', 'error', 'colspan="3"');
     $objTable->endRow();
 }
 $objTable->startRow();
@@ -206,16 +198,16 @@ if ($emailId != NULL) {
         }
     }
 }
-if (glob($files) != FALSE) {
+
+if($attachments != NULL){
     $objTable->startRow();
     $objTable->addCell("<b>".$filesLabel."</b>", '', '', '', '', 'colspan="3"');
     $objTable->endRow();
     $i = 1;
-    foreach(glob($files) as $filename) {
-        // set up delete attachment icon
+    foreach($attachments as $attachment){
         $deleteArray = $this->uri(array(
             'action' => 'deleteattachment',
-            'file' => $filename
+            'file' => $attachment['filename'],
         ));
         $objIcon->title = $deleteLabel;
         $objIcon->setIcon('delete');
@@ -223,7 +215,7 @@ if (glob($files) != FALSE) {
         $deleteIcon = "<a href=\"#\">".$objIcon->show() ."</a>";
         $objTable->startRow();
         $objTable->addCell($i++.".", '3%', '', '', '', '');
-        $objTable->addCell(basename($filename) , '50%', '', '', '', '');
+        $objTable->addCell($attachment['filename'] , '50%', '', '', '', '');
         $objTable->addCell($deleteIcon, '', '', 'left', '', '');
         $objTable->endRow();
     }
