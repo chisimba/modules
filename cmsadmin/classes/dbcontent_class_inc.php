@@ -200,7 +200,7 @@ class dbcontent extends dbTable
                           'title' => $title ,
                           'sectionid' => $sectionid,
                           'access' => $access,
-                          'introtext' => $this->html2txt(nl2br(addslashes($introText))),
+                          'introtext' => $this->html2txt((addslashes($introText))),
                           'body' => $this->html2txt(addslashes($fullText)),
                           'modified' => $this->now(),
                           'ordering' => $ordering,
@@ -567,7 +567,7 @@ class dbcontent extends dbTable
 				   );
 		}
 		$text = preg_replace($search, '', $document);
-		//$text = str_replace("<br /><br />","",$text);
+		$text = str_replace("<br /><br />","\n",$text);
 		$text = str_replace("<br />","\n",$text);
 		$text = str_replace("<br\">","\n",$text);
 		$text = str_replace("<br />", " <br /> ", $text);
