@@ -832,17 +832,20 @@ class blogops extends object
 		}
 		else {
 			$search = array('@<script[^>]*?>.*?</script>@si',  // Strip out javascript
-            	  /* '@<[\/\!]*?[^<>]*?>@si', */            // Strip out HTML tags
+            	   '@<[\/\!]*?[^<>]*?>@si',             // Strip out HTML tags
                	   /*'@<style[^>]*?>.*?</style>@siU',*/    // Strip style tags properly
-               	   '@<![\s\S]*?--[ \t\n\r]*>@'        // Strip multi-line comments including CDATA
+               	   '@<![\s\S]*?--[ \t\n\r]*>@',        // Strip multi-line comments including CDATA
+               	   '!(\n*(.+)\n*!x',                      //Strip out newlines
 				   );
 		}
 		$text = preg_replace($search, '', $document);
-		//$text = str_replace("<br /><br />","",$text);
+		$text = str_replace("<br /><br />","",$text);
+		$text = str_replace("<br />  <br />", "<br />", $text);
 		$text = str_replace("<br />","\n",$text);
 		$text = str_replace("<br\">","\n",$text);
 		$text = str_replace("<", " <", $text);
 		$text = str_replace(">", "> ", $text);
+		$text = rtrim($text, "\n");
 		return $text;
 	}
 
@@ -1151,7 +1154,7 @@ class blogops extends object
 
 		if(isset($editparams['post_content']))
 		{
-			$pcon->setcontent(nl2br(stripslashes($editparams['post_content'])));
+			$pcon->setcontent((stripslashes($editparams['post_content'])));
 		}
 		$ptable->startRow();
 		$ptable->addCell($pclabel->show());
