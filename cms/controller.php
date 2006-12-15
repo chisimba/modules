@@ -170,7 +170,7 @@ class cms extends controller
                 $this->setVarByRef('pageTitle', $siteTitle);
                 $this->bbcode = $this->getObject('bbcodeparser', 'utilities');
                 $content = $this->_objUtils->showBody();
-                $content = nl2br($this->bbcode->parse4bbcode($content));
+                $content = ($this->bbcode->parse4bbcode($content));
                 $this->setVar('content', $content);
                 return 'cms_content_tpl.php';
 
