@@ -1442,7 +1442,7 @@ span#introrequiredtext {display: none; }
                 $titleInput->value = $arrContent['title'];
 
                 $introInput->setContent(stripslashes($arrContent['introtext']));
-                $bodyInput->setContent((stripslashes($arrContent['body'])));
+                $bodyInput->setContent(nl2br(stripslashes($arrContent['body'])));
 
                 $frontPage->setChecked($this->_objFrontPage->isFrontPage($arrContent['id']));
                 $published->setChecked($arrContent['published']);
