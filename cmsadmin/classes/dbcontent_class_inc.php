@@ -572,6 +572,7 @@ class dbcontent extends dbTable
 		$text = str_replace("<br /><br />", '' ,$text);
 		//$text = str_replace("<br />", '' ,$text);
 		//$text = str_replace( '\n\n\n' , '\n' ,$text);
+		$text = str_replace("<br />  <br />", "<br />");
 		$text = str_replace("<br\">","",$text);
 		$text = str_replace("<br />", " <br /> ", $text);
 		$text = str_replace("<", " <", $text);
