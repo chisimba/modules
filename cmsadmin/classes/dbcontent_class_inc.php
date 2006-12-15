@@ -201,7 +201,7 @@ class dbcontent extends dbTable
                           'sectionid' => $sectionid,
                           'access' => $access,
                           'introtext' => $this->html2txt(nl2br(addslashes($introText))),
-                          'body' => $this->html2txt(nl2br(addslashes($fullText))),
+                          'body' => $this->html2txt(addslashes($fullText)),
                           'modified' => $this->now(),
                           'ordering' => $ordering,
                           'published' => $published,
