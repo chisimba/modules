@@ -554,16 +554,18 @@ class dbcontent extends dbTable
 		if($scrub == TRUE)
 		{
 			$search = array('@<script[^>]*?>.*?</script>@si',  // Strip out javascript
-            	   '@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
+            	   /*'@<[\/\!]*?[^<>]*?>@si',*/            // Strip out HTML tags
                	   /*'@<style[^>]*?>.*?</style>@siU',*/    // Strip style tags properly
                	   '@<![\s\S]*?--[ \t\n\r]*>@'        // Strip multi-line comments including CDATA
 				   );
+
 		}
 		else {
 			$search = array('@<script[^>]*?>.*?</script>@si',  // Strip out javascript
             	   '@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
                	   /*'@<style[^>]*?>.*?</style>@siU',*/    // Strip style tags properly
-               	   '@<![\s\S]*?--[ \t\n\r]*>@'        // Strip multi-line comments including CDATA
+               	   '@<![\s\S]*?--[ \t\n\r]*>@',        // Strip multi-line comments including CDATA
+               	   '!(\n*(.+)\n*!x',                   //strip out newlines...
 				   );
 		}
 		$text = preg_replace($search, '', $document);
