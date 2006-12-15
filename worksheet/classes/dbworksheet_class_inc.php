@@ -38,10 +38,10 @@ class dbworksheet extends dbTable
     public function getWorksheetsInContext($context)
     {
     	
-        $sql = 'SELECT ws.*, count(quest.worksheet_id) AS questions ';
+        $sql = 'SELECT ws.name, ws.id ';
         $sql .= 'FROM tbl_worksheet AS ws ';
         $sql .= 'LEFT JOIN tbl_worksheet_questions AS quest ON (quest.worksheet_id = ws.id) ';
-        $sql .= 'WHERE ws.context="'.$context.'" GROUP BY ws.id ORDER BY chapter';
+        $sql .= "WHERE ws.context='{$context}' ";//GROUP BY ws.context, ws,name, ws.id ORDER BY ws.name";
 		
 		/*Removing left joins
 		  $sql = 'SELECT ws.*, count(quest.worksheet_id) AS questions ';
