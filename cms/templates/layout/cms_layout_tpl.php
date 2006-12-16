@@ -1,5 +1,5 @@
 <?php
-
+//Developer identify yourself and please commebt your code - inserted by Derek 2006 12 16
 
 $objFeatureBox =& $this->newObject('featurebox', 'navigation');
 $objBlocks = & $this->newObject('blocks', 'blocks');
@@ -35,6 +35,8 @@ if($objUser->isAdmin()){
     $leftSide .= $objAdminLink->show();
 }
 
+//Add anything you want to the left template here
+//$leftSide .=
 
 /***************** END OF LEFT SIDE *******************************/
 
