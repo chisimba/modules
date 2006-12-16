@@ -421,9 +421,11 @@ class dbblog extends dbTable
 		{
 			$this->pcleaner = $this->newObject('htmlcleaner', 'utilities');
 			$this->ecleaner = $this->newObject('htmlcleaner', 'utilities');
+			$postarr['postcontent'] = preg_replace("/(\r\n|\n|\r)/", "", $postarr['postcontent']);
+			$pc = preg_replace('=<br */?>=i', "\n", $postarr['postcontent']);
 			$insarr = array('userid' => $userid,
 							'post_date' => date('r'),
-							'post_content' => $this->pcleaner->cleanHtml($this->objblogOps->html2txt($postarr['postcontent'])),
+							'post_content' => addslashes($pc), //$this->pcleaner->cleanHtml($this->objblogOps->html2txt($postarr['postcontent'])),
 							'post_title' => $postarr['posttitle'],
 							'post_category' => $postarr['postcat'],
 							'post_excerpt' => $this->ecleaner->cleanHtml($postarr['postexcerpt']),
@@ -444,7 +446,7 @@ class dbblog extends dbTable
 			$pc = preg_replace('=<br */?>=i', "\n", $postarr['postcontent']);
 			$insarr = array('userid' => $userid,
 							'post_date' => date('r'),
-							'post_content' => $this->objblogOps->html2txt(addslashes($pc)),
+							'post_content' => addslashes($pc),
 							'post_title' => $postarr['posttitle'],
 							'post_category' => $postarr['postcat'],
 							'post_excerpt' => $this->ecleaner->cleanHtml($postarr['postexcerpt']),
@@ -464,7 +466,7 @@ class dbblog extends dbTable
 
 			$imparr = array('userid' => $userid,
 							'post_date' => $postarr['postdate'],
-							'post_content' => $this->ipcleaner->cleanHtml($this->objblogOps->html2txt($postarr['postcontent'])),
+							'post_content' => $this->ipcleaner->cleanHtml($postarr['postcontent']),
 							'post_title' => $postarr['posttitle'],
 							'post_category' => $postarr['postcat'],
 							'post_excerpt' => $this->iecleaner->cleanHtml($postarr['postexcerpt']),
@@ -483,7 +485,7 @@ class dbblog extends dbTable
 
 			$inseditarr = array('userid' => $userid,
 							'post_date' => $postarr['postdate'],
-							'post_content' => $this->objblogOps->html2txt($this->epcleaner->cleanHtml($postarr['postcontent'])),
+							'post_content' => $this->epcleaner->cleanHtml($postarr['postcontent']),
 							'post_title' => $postarr['posttitle'],
 							'post_category' => $postarr['postcat'],
 							'post_excerpt' => $this->eecleaner->cleanHtml($postarr['postexcerpt']),

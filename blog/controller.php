@@ -810,6 +810,7 @@ class blog extends controller
 				$id = $this->getParam('id');
 				$posttitle = $this->getParam('posttitle');
 				$postcontent = $this->getParam('postcontent');
+				$postcontent = $postcontent;
 				$cclic = $this->getParam('creativecommons');
 				$postdate = $this->getParam('postdate');
 				$cat = $this->getParam('cat');
@@ -1015,6 +1016,17 @@ class blog extends controller
     			}
 				$this->nextAction('');
       		break;
+
+      	case "addcomment":
+				$postid = $this->getParam('id');
+            	//$_SESSION['blogcomment'] = $_GET['id'];
+                $this->setVar('pageSuppressToolbar', TRUE);
+                $this->setVar('pageSuppressBanner', TRUE);
+                $this->setVar('pageSuppressIM',TRUE);
+                //Suppress footer in the page (keep it simple)
+                $this->setVar('suppressFooter', TRUE);
+                return "input_tpl.php";
+                break;
 
 		}//action
 
