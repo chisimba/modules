@@ -284,7 +284,7 @@ class cms extends controller
                 	$this->bbcode = $this->getObject('bbcodeparser', 'utilities');
                 	$content = $this->bbcode->parse4bbcode($content);
                     $this->setVarByRef('content', $content);
-                    return 'cms_main_tpl.php';
+                    return 'cms_section_tpl.php';
                 } else {
                     $firstSectionId = $this->_objSections->getFirstSectionId(TRUE);
                     return $this->nextAction('showsection', array('id'=>$firstSectionId,'sectionid'=>$firstSectionId));
