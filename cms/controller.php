@@ -106,19 +106,19 @@ class cms extends controller
         public function init()
         {
             // instantiate the database object for sections
-            $this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
+            $this->_objSections = $this->getObject('dbsections', 'cmsadmin');
             // instantiate the database object for content
-            $this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
+            $this->_objContent = $this->getObject('dbcontent', 'cmsadmin');
             // instantiate the object for CMS utilities
-            $this->_objUtils = & $this->newObject('cmsutils', 'cmsadmin');
+            $this->_objUtils = $this->getObject('cmsutils', 'cmsadmin');
             // instantiate the context object so we can get where the contex the user is in
-            $this->_objContext = & $this->newObject('dbcontext', 'context');
+            $this->_objContext = $this->getObject('dbcontext', 'context');
             // instantiate the user object so we can retrieve user information
-            $this->_objUser = & $this->newObject('user', 'security');
+            $this->_objUser = $this->getObject('user', 'security');
             //Create an instance of the language object for text rendering
-            $this->objLanguage = & $this->newObject('language', 'language');
+            $this->objLanguage = $this->getObject('language', 'language');
 			//Create an instance of the modules object from modulecatalogue
-            $objModule = & $this->newObject('modules', 'modulecatalogue');
+            $objModule = $this->getObject('modules', 'modulecatalogue');
 			//Use the modules object instantiated above to see if context is registered
             if($objModule->checkIfRegistered('context')) {
             	//If context is registered, assign the current context value to
