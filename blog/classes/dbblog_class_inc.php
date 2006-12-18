@@ -442,7 +442,7 @@ class dbblog extends dbTable
 		{
 			$this->pcleaner = $this->newObject('htmlcleaner', 'utilities');
 			$this->ecleaner = $this->newObject('htmlcleaner', 'utilities');
-			$postarr['postcontent'] = preg_replace("/(\r\n|\n|\r)/", "", $postarr['postcontent']);
+			$postarr['postcontent'] = preg_replace("/(\r\n|\n|\r)/", " ", $postarr['postcontent']);
 			$pc = $postarr['postcontent'];
 			$insarr = array('userid' => $userid,
 							'post_date' => date('r'),
