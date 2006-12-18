@@ -7,6 +7,7 @@ if(!$GLOBALS['kewl_entry_point_run'])
 } 
 // end security check
 
+
 /**
 * Class wikiwriter - the controller class for the wikiwriter module
 * 
@@ -15,6 +16,11 @@ if(!$GLOBALS['kewl_entry_point_run'])
 */
 class wikiwriter extends controller 
 {
+
+	/**
+	* Variable objConfig Object for accessing chisimba configuration
+	*/
+	public $objConfig = '';
 
 	// Personal debugger - TODO: REMOVE BEFORE COMMITTING FOR PRODUCTION!
 	public function dbg($sErr){
@@ -34,6 +40,7 @@ class wikiwriter extends controller
 			$this->loadClass('dompdfwrapper', 'wikiwriter');
 			$this->loadClass('wwPage', 'wikiwriter');
 			$this->loadClass('wwDocument', 'wikiwriter');
+			$this->loadClass('altconfig', 'config');
 			
 		}
 		catch(customException $e) {
@@ -61,8 +68,9 @@ class wikiwriter extends controller
 					break;
 				case "publish":
 					$urls = $this->getParam('URLList');
+					$this->dbg('######## Begin Publishing ############################');
 					$this->dbg('URLLIST = ' . $urls);
-					$format = 'pdf'; // Hard coding for now, eventually will be taken from a getParam
+					$format = 'odt'; // Hard coding for now, eventually will be taken from a getParam
 					return $this->publish($urls, $format);
 				break;
 
@@ -85,34 +93,38 @@ class wikiwriter extends controller
      **************************************************/
 	private function publish($urllist, $format)
 	{
-		try{
-			// First, grab all the URLs and parse into an array
-			$urls = explode(',', $urllist);
+		// First, grab all the URLs and parse into an array
+		$urls = explode(',', $urllist);
 
-			// Now grab every url and load into a new array
-			$arrPages = array();
-			foreach($urls as $k => $v)
-				$arrPages[$k] = file_get_contents($v);
-			// Build HTML pages for rendering 
-			$page = $this->buildPage($arrPages);
-
-			// Get PDF rendering of the content
-			//$sPDF = $this->objDomPDFWrapper->generatePDF(&$sHTML); 
-			$pdfwriter = new DomPDFWrapper();
-			$pdfwriter->generatePDF($page); 
-
-			// Prepare for returning the PDF
-			//$this->setVarByRef('content', $sPDF);
-			//$this->setPageTemplate('downloadwikibook_page_tpl.php');
-			//return "downloadwikibook_tpl.php";
-		}
-		catch(customException $e)
+		// Now grab every url and load into a new array
+		// TODO: Try/Catch for page retrieval
+		$arrPages = array();
+		foreach($urls as $k => $v)
 		{
-			//oops, something not there - bail out
-			echo customException::cleanUp();
-			//we don't want to even attempt anything else right now.
-			die();
+			$arrPages[$k] = $this->getPage($v);
 		}
+
+		// Build HTML page for rendering 
+		$page = $this->buildPage($arrPages);
+		$this->dbg('HTML Contents = ' . $page);
+
+		//Default format is pdf
+		switch($format){
+			case 'odt':
+				// A nice idea but this really doesn't work, just opens up OpenOffice Web Writer
+				// Still, worth some more investigation.
+				header("Content-type: application/vnd.oasis.opendocument.text");
+				header("Content-Disposition: attachment; filename='test.odt'");
+				header("Content-Description: PHP Generated Data");
+				echo $page;
+			break;
+			default:
+				// Get PDF rendering of the content
+				$pdfwriter = new DomPDFWrapper();
+				$pdfwriter->generatePDF($page); 
+			break;
+		}
+
 	}
 
 	/**
@@ -124,41 +136,40 @@ class wikiwriter extends controller
 	 **************************************************/
 	private function buildPage($aPages)
 	{
-		try{
-
-			// For each page: 
-			foreach($aPages as $k => $sPage)
-			{
-				//Identify for which wiki
-				$pType = $this->getWikiType($sPage);
-				$this->dbg('Page Type ' . $k . " is " . $pType);
-				// Now grab the Page Object for the given wiki page and store back in the array
-				switch($pType){
-					case "chisimba":
-						$aPages[$k] = $this->parseWiki_Chisimba($sPage);
-					break;
-				}
-
+		// For each page: 
+		foreach($aPages as $k => $sPage)
+		{
+			//Identify for which wiki
+			$pType = $this->getWikiType($sPage);
+			// Now grab the Page Object for the given wiki page and store back in the array
+			switch($pType){
+				case "chisimba":
+					$aPages[$k] = $this->parseWiki_Chisimba($sPage);
+				break;
+				case "mediawiki":
+					$aPages[$k] = $this->parseWiki_MediaWiki($sPage);
+				break;
+				// TODO: Throw an error that the wikitype cannot be identified...what do we do here?
 			}
 
-			// Create a new wwDocument
-			$doc = new wwDocument();
-
-			// import all pages 
-			foreach($aPages as $k)
-				$doc->importwwPage($k);
-
-			// Return page
-			return $doc->toHTML();
 		}
-		catch(customException $e)
+
+		// Create a new wwDocument
+		$doc = new wwDocument();
+
+		// import all pages 
+		foreach($aPages as $k)
 		{
-			//oops, something not there - bail out
-			echo customException::cleanUp();
-			//we don't want to even attempt anything else right now.
-			die();
+			$doc->importwwPage($k);
 		}
 
+		// Add the stylesheet definitions
+		// Pull the type 
+		$stylesheet = file_get_contents('modules/wikiwriter/resources/wikiwriter.css');
+		$doc->loadStyle($stylesheet);		
+
+		// Return page
+		return $doc->toHTML();
 	}
 
 	/*
@@ -170,27 +181,52 @@ class wikiwriter extends controller
 	 **************************************************/
 	private function getWikiType($sHTML)
 	{
-		try
+		if(preg_match('/<div id="leftcontent">\s+<h1>Wiki/', $sHTML))
 		{
-			// Scour file for identifier for each type
-			$oDOM = new DomDocument();
-			$oDOM->loadHTML($sHTML);
-
-			// First we try for Chisimba
-			if(preg_match('/<div id="leftcontent">\s+<h1>Wiki/', $sHTML))
-				return 'chisimba';
-			
-			return 'unsupported';
-		}
-		catch(customException $e)
+			$this->dbg('found chisimba!');
+			return 'chisimba';
+		} else if(preg_match('/MediaWiki/', $sHTML))
 		{
-			//oops, something not there - bail out
-			echo customException::cleanUp();
-			//we don't want to even attempt anything else right now.
-			die();
+			$this->dbg('found mediawiki!');
+			return 'mediawiki';	
+		}
+		return 'unsupported';
+	}
+
+	/* 
+	 * Retrieves the url requested and returns the html
+	 * @access private
+	 * @params string URL
+	 * @return string HTML content
+	 */
+	private function getPage($url)
+	{
+		$ch = curl_init($url);
+
+		// if objConfig hasn't been instantiated, do so
+		if($this->objConfig == ''){
+			$this->objConfig = new altconfig();
 		}
 
+		// set cURL options
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // So cURL returns a string
 
+		//if URL isn't localhost or 127.0.0.1, setup a proxy for retrieval if setting exists
+		if( !(preg_match('/http:\/\/localhost/', $url) || preg_match('/http:\/\/127.0.0.1/', $url)) 
+			&& $this->objConfig->getItem('KEWL_PROXY'))
+		{				
+			curl_setopt_array($ch, array(CURLOPT_PROXY => $this->objConfig->getItem('KEWL_PROXY'),
+								CURLOPT_PROXYUSERPWD => 'mwatson:schrodinger',
+								CURLOPT_PROXYPORT => 80	)	
+							); 
+		}
+
+		// Grab content and close resource
+		$content = curl_exec($ch);
+		//$this->dbg("################## HTML ######## \n" . $content);
+		curl_close($ch);
+
+		return $content;
 	}
 
 	/****** All Function underneath here are specific parsers per the Wiki page type *********/
@@ -203,28 +239,86 @@ class wikiwriter extends controller
 	 **************************************************/
 	private function parseWiki_Chisimba($sHTML)
 	{
-		// first create an object for storing the data
-		$oPage = new wwPage();
-
-		// Load contents into DOM Object
-		$oDOM = new DomDocument();
-		$oDOM->loadHTML($sHTML);
-
-		// Grab every stylesheet
-		//TODO: Grab and save styles set in the page
-		$aLinks = $oDOM->getElementsByTagName('link');
-		foreach($aLinks as $link)
+		try
 		{
-			//For each one, add to the Page Object
-			if($link->getAttribute('rel') == 'stylesheet')
-				$oPage->addStyleSheet($link);
+			// first create an object for storing the data
+			$objPage = new wwPage();
+
+			// Load contents into DOM Object
+			$objDOM = new DomDocument();
+			$objDOM->loadHTML($sHTML);
+
+			// Grab every stylesheet
+			$aLinks = $objDOM->getElementsByTagName('link');
+			foreach($aLinks as $link)
+			{
+				//For each one, add to the Page Object if its a stylesheet
+				if($link->getAttribute('rel') == 'stylesheet')
+				{
+					$objPage->addStyleSheet($link);
+				}
+			}
+
+			// Take out just the wiki content and store in the Page Object
+			$objPage->setContent($objDOM->getElementById('contentcontent'));
+			return $objPage;
+		}
+		catch(customException $e)
+		{
+			//oops, something not there - bail out
+			echo customException::cleanUp();
+			//we don't want to even attempt anything else right now.
+			die();
 		}
 
-		// Take out just the wiki content and store in the Page Object
-		$oPage->setContent($oDOM->getElementById('contentcontent'));
 
-		return $oPage;
 	}
+
+	/*
+	 * Breaks down a MediaWiki Wiki page into the necessary components
+  	 * 
+	 * @access private
+	 * @params string $sHTML Page Content
+ 	 * @return wwPage Returns a wwPage Object
+	 **************************************************/
+	private function parseWiki_MediaWiki($sHTML)
+	{
+		$this->dbg("HTML = \n " . $sHTML);
+		
+		// first create an object for storing the data
+		$objPage = new wwPage();
+
+		// Load contents into DOM Object
+		$objDOM = new DomDocument();
+		$objDOM->loadHTML($sHTML);
+
+		// Grab every stylesheet
+		$aLinks = $objDOM->getElementsByTagName('link');
+		foreach($aLinks as $link)
+		{
+			//For each one, add to the Page Object if its a stylesheet
+			if($link->getAttribute('rel') == 'stylesheet')
+			{
+				$objPage->addStyleSheet($link);
+			}
+		}
+
+		// First we grab the content
+		$tmpNode = $objDOM->getElementById('content');
+		// Check to see if siteNotice div is there, if so, remove
+		if($objDOM->getElementById('siteNotice'))
+		{
+			$tmpNode->removeChild($objDOM->getElementById('siteNotice'));
+		}
+
+		// now load into the page object 
+		$objPage->setContent($tmpNode);
+		$this->dbg('Object Type = ' . get_class($objPage));	
+
+		return $objPage;
+	}
+
+
 
 } 
 ?>

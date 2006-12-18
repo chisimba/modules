@@ -11,6 +11,14 @@
 require_once('modules/wikiwriter/resources/dompdf/dompdf_config.inc.php');
 class dompdfwrapper extends object
 {
+
+	// Personal debugger - TODO: REMOVE BEFORE COMMITTING FOR PRODUCTION!
+	public function dbg($sErr){
+		$handle = fopen('error_log/my_debug.log', 'a');
+		fwrite($handle, "[" . strftime("%b %d %Y %H:%M:%S") ."]/classes/wwDocument :: " . $sErr . "\n");
+		fclose($handle);
+	}
+	
     
     /**
     * Constructor
@@ -34,7 +42,7 @@ class dompdfwrapper extends object
 			$dompdf = new DOMPDF();
 			$dompdf->load_html($html);	
 			$dompdf->render();
-			//return $dompdf->output();
+			//$this->dbg('pdf output: ' . $dompdf->output());
 			$dompdf->stream();
 		}
 		catch(customException $e) {

@@ -42,7 +42,6 @@ class wwPage extends object
 	 */
 	public function setContent($elm)
 	{
-		$this->dbg('Setting content, check for children = ' . $elm->hasChildNodes());
 		$this->elmContent = $elm;
 	}
 
@@ -53,7 +52,6 @@ class wwPage extends object
 	 */
 	public function getContent()
 	{
-		$this->dbg('getting content, check for children = ' . $this->elmContent->hasChildNodes());
 		return $this->elmContent;
 	}
 
@@ -65,8 +63,6 @@ class wwPage extends object
 	 */
 	public function addStyleSheet($link)
 	{
-		
-		$this->dbg(' link class = ' . get_class($link) . ", and " . $link->getAttribute('rel'));
 		array_push($this->stylesheets, $link);
 	}
 
