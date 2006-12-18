@@ -443,7 +443,7 @@ class dbblog extends dbTable
 			$this->pcleaner = $this->newObject('htmlcleaner', 'utilities');
 			$this->ecleaner = $this->newObject('htmlcleaner', 'utilities');
 			$postarr['postcontent'] = preg_replace("/(\r\n|\n|\r)/", "", $postarr['postcontent']);
-			$pc = preg_replace('=<br */?>=i', "\n", $postarr['postcontent']);
+			$pc = $postarr['postcontent'];
 			$insarr = array('userid' => $userid,
 							'post_date' => date('r'),
 							'post_content' => addslashes($pc),
