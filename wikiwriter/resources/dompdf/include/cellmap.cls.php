@@ -221,7 +221,9 @@ class Cellmap {
     $key = $frame->get_id();
 
     if ( !isset($this->_frames[$key]) ) {
-      throw new DOMPDF_Internal_Exception("Frame not found in cellmap");
+		// Commented out, please read chisimba notes or ref: http://sourceforge.net/forum/message.php?msg_id=4039370
+      //throw new DOMPDF_Internal_Exception("Frame not found in cellmap");
+	  return false;
     }
       
     return $this->_frames[$key];
@@ -234,7 +236,9 @@ class Cellmap {
     $key = $frame->get_id();
 
     if ( !isset($this->_frames[$key]) ) {
-      throw new DOMPDF_Internal_Exception("Frame not found in cellmap");
+		// Commented out, please read chisimba notes or ref: http://sourceforge.net/forum/message.php?msg_id=4039370
+      //throw new DOMPDF_Internal_Exception("Frame not found in cellmap");
+	  return false;
     }
 
     $col = $this->_frames[$key]["columns"][0];
@@ -259,7 +263,9 @@ class Cellmap {
     $key = $frame->get_id();
 
     if ( !isset($this->_frames[$key]) ) {
-      throw new DOMPDF_Internal_Exception("Frame not found in cellmap");
+	  // Commented out, please read chisimba notes or ref: http://sourceforge.net/forum/message.php?msg_id=4039370
+      //throw new DOMPDF_Internal_Exception("Frame not found in cellmap");
+	  return false;
     }
 
     $cols = $this->_frames[$key]["columns"];
@@ -275,7 +281,9 @@ class Cellmap {
     $key = $frame->get_id();
 
     if ( !isset($this->_frames[$key]) ) 
-      throw new DOMPDF_Internal_Exception("Frame not found in cellmap");
+	  // Commented out, please read chisimba notes or ref: http://sourceforge.net/forum/message.php?msg_id=4039370
+      //throw new DOMPDF_Internal_Exception("Frame not found in cellmap");
+	  return false;
 
     $rows = $this->_frames[$key]["rows"];
     $h = 0;
@@ -556,9 +564,16 @@ class Cellmap {
     // Remove all frames from this row
     foreach ( $rows as $r ) {
       foreach ( $columns as $c ) {
+		$frame = @$this->_cells[$r][$c]; 
+		if( $frame ) { 
+			unset($this->_frames[ $frame->get_id() ]); 
+			unset($this->_cells[$r][$c]); 
+		} 
+		/**** Commented out, please read chisimba notes or ref: http://sourceforge.net/forum/message.php?msg_id=4040051
         $frame = $this->_cells[$r][$c];
         unset($this->_frames[ $frame->get_id() ]);
         unset($this->_cells[$r][$c]);
+		*/
       }
     }
 

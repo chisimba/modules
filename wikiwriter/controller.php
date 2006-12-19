@@ -70,7 +70,7 @@ class wikiwriter extends controller
 					$urls = $this->getParam('URLList');
 					$this->dbg('######## Begin Publishing ############################');
 					$this->dbg('URLLIST = ' . $urls);
-					$format = 'odt'; // Hard coding for now, eventually will be taken from a getParam
+					$format = 'pdf'; // Hard coding for now, eventually will be taken from a getParam
 					return $this->publish($urls, $format);
 				break;
 
@@ -119,9 +119,20 @@ class wikiwriter extends controller
 				echo $page;
 			break;
 			default:
+				// Old version uilizing dompdf library
 				// Get PDF rendering of the content
-				$pdfwriter = new DomPDFWrapper();
-				$pdfwriter->generatePDF($page); 
+				//$pdfwriter = new DomPDFWrapper();
+				//$pdfwriter->generatePDF($page); 
+				$handle = fopen('error_log/wikiwriter_tmp_src.html', 'w');
+				fwrite($handle, $page);
+				fclose($handle);
+
+				$output = shell_exec('/opt/local/bin/htmldoc --book -t pdf14 error_log/wikiwriter_tmp_src.html');
+
+				header("Content-type: application/pdf");
+				header("Content-Disposition: attachment; filename='testing.pdf'");
+				header("Content-Description: PHP Generated Data");
+				echo $output;
 			break;
 		}
 

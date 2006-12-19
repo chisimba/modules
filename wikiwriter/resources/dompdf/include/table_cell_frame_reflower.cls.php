@@ -69,7 +69,9 @@ class Table_Cell_Frame_Reflower extends Block_Frame_Reflower {
     $cells = $cellmap->get_spanned_cells($this->_frame);
 
     $w = 0;
-    foreach ( $cells["columns"] as $i ) {
+	// Commented out, please read chisimba notes or ref: http://sourceforge.net/forum/message.php?msg_id=4039370
+    //foreach ( $cells["columns"] as $i ) {
+	foreach ((array) $cells["columns"] as $i ) { 
       $col = $cellmap->get_column( $i );
       $w += $col["used-width"];
     }
@@ -125,9 +127,13 @@ class Table_Cell_Frame_Reflower extends Block_Frame_Reflower {
     $height = max($height, $this->_frame->get_content_height());
 
     // Let the cellmap know our height
-    $cell_height = $height / count($cells["rows"])  + $top_space + $bottom_space;
+	// Commented out, please read chisimba notes or ref: http://sourceforge.net/forum/message.php?msg_id=4039370
+    //$cell_height = $height / count($cells["rows"])  + $top_space + $bottom_space;
+	$cell_height = $height / (count($cells["rows"])?count($cells["rows"]):1) + $top_space + $bottom_space; 
 
-    foreach ($cells["rows"] as $i)
+	// Commented out, please read chisimba notes or ref: http://sourceforge.net/forum/message.php?msg_id=4039370
+    //foreach ($cells["rows"] as $i)
+	foreach ((array)$cells["rows"] as $i) 
       $cellmap->set_row_height($i, $cell_height);
 
     $style->height = $height;
