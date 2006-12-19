@@ -42,7 +42,7 @@ class dbblogcomments extends dbTable
 	 * @param array $commentarray
 	 * @return bool
 	 */
-	public function addComm2Db($commentarray)
+	public function addComm2Db($commentarray, $email = FALSE)
 	{
 		$userid = $commentarray['userid'];
 		$commentauthor = $commentarray['commentauthor'];
@@ -50,7 +50,7 @@ class dbblogcomments extends dbTable
 		$authurl = htmlentities($commentarray['aurl']);
 		$authip = $commentarray['ip'];
 		$date = time();
-		$cont = $commentarray['comment'];
+		$cont = htmlentities($commentarray['comment']);
 		$agent = $commentarray['useragent'];
 		$type = $commentarray['ctype'];
 		$pid = $commentarray['postid'];
@@ -58,10 +58,23 @@ class dbblogcomments extends dbTable
 		$ptable = $commentarray['table'];
 
 
-		return $this->insert(array('userid' => $userid, 'comment_author' => $commentauthor, 'comment_author_email' => $authemail,
-								   'comment_author_url' => $authurl, 'comment_author_ip' => $authip, 'comment_date' => $date,
-								   'comment_content' => $cont, 'comment_karma' => 0, 'comment_approved' => 1, 'comment_agent' => $agent,
-								   'comment_type' => $type, 'comment_parentid' => $pid, 'comment_parentmod' => $pmod, 'comment_parenttbl' => $ptable));
+		$this->insert(array('userid' => $userid, 'comment_author' => $commentauthor, 'comment_author_email' => $authemail,
+		  				    'comment_author_url' => $authurl, 'comment_author_ip' => $authip, 'comment_date' => $date,
+							'comment_content' => $cont, 'comment_karma' => 0, 'comment_approved' => 1, 'comment_agent' => $agent,
+							'comment_type' => $type, 'comment_parentid' => $pid, 'comment_parentmod' => $pmod, 'comment_parenttbl' => $ptable));
+		//email the owner
+		if($email == TRUE)
+		{
+			$this->objemail = $this->getObject('email', 'mail');
+			$this->objemail->setBaseMailerProperty('from', "Blog Comments");
+			$this->objemail->setBaseMailerProperty('fromName', "kng");
+			$this->objemail->setBaseMailerProperty('subject', "Blog Comments");
+			$this->objemail->setBaseMailerProperty('body', $cont);
+			$this->objemail->setBaseMailerProperty('mailer', "smtp");
+			$this->objemail->setBaseMailerProperty('to', "pscott@uwc.ac.za");
+			$this->objemail->send();
+		}
+
 	}
 
 	/**
