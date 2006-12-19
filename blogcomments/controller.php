@@ -105,6 +105,7 @@ class blogcomments extends controller
 
             case 'addtodb':
             	$addinfo = $this->objComm->addToDb(NULL);
+            	$addinfo['postuserid'] = $this->getParam('userid');
             	$addinfo['postid'] = $this->getParam('postid');
             	$addinfo['table'] = $this->getParam('table');
             	$addinfo['mod'] = $this->getParam('mod');

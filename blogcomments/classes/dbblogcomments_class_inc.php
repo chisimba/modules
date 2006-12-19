@@ -45,6 +45,7 @@ class dbblogcomments extends dbTable
 	 */
 	public function addComm2Db($commentarray, $email = TRUE)
 	{
+		$puserid = $commentarray['postuserid'];
 		$userid = $commentarray['userid'];
 		$commentauthor = $commentarray['commentauthor'];
 		$authemail = $commentarray['useremail'];
@@ -69,7 +70,7 @@ class dbblogcomments extends dbTable
 			$this->objUser = $this->getObject('user', 'security');
 			$bodyText = $cont;
 			//get the email address
-			$emailadd = $this->objUser->email($userid);
+			$emailadd = $this->objUser->email($puserid);
 
 			$objMailer = $this->getObject('email', 'mail');
 			$objMailer->setValue('to', array($emailadd));

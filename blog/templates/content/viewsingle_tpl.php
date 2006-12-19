@@ -14,7 +14,7 @@ $rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
 $middleColumn .= nl2br($this->objblogOps->showPosts($posts));
 if($this->objUser->isLoggedIn() == TRUE)
 {
-	$middleColumn .= $this->objblogOps->addCommentForm($postid);
+	$middleColumn .= $this->objblogOps->addCommentForm($postid, $userid);
 }
 
 $middleColumn .= $this->objComments->showComments($postid);

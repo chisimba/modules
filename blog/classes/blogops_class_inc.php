@@ -676,10 +676,10 @@ class blogops extends object
 		return $ret;
 	}
 
-	public function addCommentForm($postid)
+	public function addCommentForm($postid, $userid)
 	{
 		$this->objComApi = $this->getObject('commentapi', 'blogcomments');
-		return $this->objComApi->commentAddForm($postid, 'blog', 'tbl_blog_posts', TRUE, TRUE, FALSE);
+		return $this->objComApi->commentAddForm($postid, 'blog', 'tbl_blog_posts', $userid, TRUE, TRUE, FALSE);
 
 	}
 

@@ -64,7 +64,7 @@ class commentapi extends object
 	 * @param Do we want to show the types dropdown? $showtypes
 	 * @return string form
 	 */
-	public function commentAddForm($postid, $module, $table, $editor = TRUE, $featurebox = TRUE, $showtypes = TRUE)
+	public function commentAddForm($postid, $module, $table, $postuserid = NULL, $editor = TRUE, $featurebox = TRUE, $showtypes = TRUE)
 	{
 		try {
 			$this->loadClass('form', 'htmlelements');
@@ -81,7 +81,7 @@ class commentapi extends object
 			exit;
 		}
 
-		$cform = new form('commentadd', $this->uri(array('module' => 'blogcomments', 'action' => 'addtodb', 'table' => $table, 'mod' => $module, 'postid' => $postid)));
+		$cform = new form('commentadd', $this->uri(array('module' => 'blogcomments', 'action' => 'addtodb', 'table' => $table, 'mod' => $module, 'postid' => $postid, 'userid' => $userid)));
 		$cfieldset = $this->getObject('fieldset', 'htmlelements');
 		//$cfieldset->setLegend($this->objLanguage->languageText('mod_blogcomments_addcomment', 'blogcomments'));
 		$ctbl = $this->newObject('htmltable', 'htmlelements');
