@@ -33,6 +33,7 @@ class dbblogcomments extends dbTable
 	public function init()
 	{
 		parent::init('tbl_blogcomments');
+		$this->objLanguage = $this->getObject('language', 'language');
 	}
 
 	/**
@@ -42,15 +43,15 @@ class dbblogcomments extends dbTable
 	 * @param array $commentarray
 	 * @return bool
 	 */
-	public function addComm2Db($commentarray, $email = FALSE)
+	public function addComm2Db($commentarray, $email = TRUE)
 	{
 		$userid = $commentarray['userid'];
 		$commentauthor = $commentarray['commentauthor'];
 		$authemail = $commentarray['useremail'];
-		$authurl = htmlentities($commentarray['aurl']);
+		$authurl = $commentarray['aurl'];
 		$authip = $commentarray['ip'];
 		$date = time();
-		$cont = htmlentities($commentarray['comment']);
+		$cont = $commentarray['comment'];
 		$agent = $commentarray['useragent'];
 		$type = $commentarray['ctype'];
 		$pid = $commentarray['postid'];
@@ -65,15 +66,25 @@ class dbblogcomments extends dbTable
 		//email the owner
 		if($email == TRUE)
 		{
-			$this->objemail = $this->getObject('email', 'mail');
-			$this->objemail->setBaseMailerProperty('from', "Blog Comments");
-			$this->objemail->setBaseMailerProperty('fromName', "kng");
-			$this->objemail->setBaseMailerProperty('subject', "Blog Comments");
-			$this->objemail->setBaseMailerProperty('body', $cont);
-			$this->objemail->setBaseMailerProperty('mailer', "smtp");
-			$this->objemail->setBaseMailerProperty('to', "pscott@uwc.ac.za");
-			$this->objemail->send();
+			$this->objUser = $this->getObject('user', 'security');
+			$bodyText = $cont;
+			//get the email address
+			$emailadd = $this->objUser->email($userid);
+
+			$objMailer = $this->getObject('email', 'mail');
+			$objMailer->setValue('to', array($emailadd));
+			$objMailer->setValue('from', 'noreply@uwc.ac.za');
+			$objMailer->setValue('fromName', $this->objLanguage->languageText("mod_blog_emailfromname", "blogcomments"));
+			$objMailer->setValue('subject', $this->objLanguage->languageText("mod_blog_emailsub", "blogcomments"));
+			$objMailer->setValue('body', $bodyText);
+			if ($objMailer->send()) {
+		   		return TRUE;
+			} else {
+		   		return FALSE;
+			}
+
 		}
+		return TRUE;
 
 	}
 
