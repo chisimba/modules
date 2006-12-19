@@ -35,6 +35,13 @@ class dbblogcomments extends dbTable
 		parent::init('tbl_blogcomments');
 	}
 
+	/**
+	 * Method to add a comment to the comments table
+	 * The commentarray is an associative array of field keys and values that are required for the insert
+	 *
+	 * @param array $commentarray
+	 * @return bool
+	 */
 	public function addComm2Db($commentarray)
 	{
 		$userid = $commentarray['userid'];
@@ -55,16 +62,26 @@ class dbblogcomments extends dbTable
 								   'comment_author_url' => $authurl, 'comment_author_ip' => $authip, 'comment_date' => $date,
 								   'comment_content' => $cont, 'comment_karma' => 0, 'comment_approved' => 1, 'comment_agent' => $agent,
 								   'comment_type' => $type, 'comment_parentid' => $pid, 'comment_parentmod' => $pmod, 'comment_parenttbl' => $ptable));
-
-  		//comment_karma varchar(11),
-  		//comment_approved varchar(5),
-
 	}
 
+	/**
+	 * Method to return the comments for the post
+	 * You need to supply a post id to the method. This will get all the extra data
+	 * attached to that post from the blogcomments table.
+	 *
+	 * @param string $pid
+	 * @return array
+	 */
 	public function grabComments($pid)
 	{
 		$filter = "WHERE comment_parentid = '$pid' ORDER BY comment_date DESC";
 		return $this->getAll($filter);
+	}
+
+	public function commentCount($pid)
+	{
+		$filter = "WHERE comment_parentid = '$pid'";
+		return $this->getRecordCount($filter);
 	}
 
 }

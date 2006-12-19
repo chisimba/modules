@@ -224,5 +224,11 @@ class commentapi extends object
 		//print_r($cominfo);
 		return $cominfo;
 	}
+
+	public function getCount($pid)
+	{
+		$this->objDbComm = $this->getObject('dbblogcomments');
+		return $this->objDbComm->commentCount($pid);
+	}
 }//end class
 ?>

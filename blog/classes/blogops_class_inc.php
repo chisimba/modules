@@ -480,7 +480,7 @@ class blogops extends object
 	 */
 	public function showPosts($posts)
 	{
-		$this->objComments = &$this->getObject('commentinterface', 'comment');
+		$this->objComments = &$this->getObject('commentapi', 'blogcomments');
 		$this->objTB = $this->getObject("trackback");
 		//set the trackback options
 		$tboptions = array(
@@ -603,6 +603,7 @@ class blogops extends object
 				}
 
 				//$commentLink = $this->objComments->addCommentLink($type = NULL);
+				$commentCount = $this->objComments->getCount($post['id']);
 
 				//edit icon in a table 1 row x however number of things to do
 				if($post['userid'] == $userid)
@@ -631,7 +632,7 @@ class blogops extends object
 					$tbl->startRow();
 					$tbl->addCell($edIcon); //edit icon
 					$tbl->addCell($bookmark->show()); //bookmark link(s)
-					$tbl->addCell($this->setComments($post)); //$commentLink); //comment link(s)
+					$tbl->addCell($this->setComments($post) . " " . $commentCount); //$commentLink); //comment link(s)
 					$tbl->addCell($tburl); //trackback URL
 					$tbl->addCell($iconList); //cc licence
 					$tbl->addCell('');
@@ -659,7 +660,7 @@ class blogops extends object
 					$tblnl->startRow();
 					$tblnl->addCell($bookmark->show()); //bookmark link(s)
 					$tblnl->addCell($tburl ."&nbsp;" .$numtb); //trackback URL
-					$tblnl->addCell($this->setComments($post));
+					$tblnl->addCell($this->setComments($post) . " " . $commentCount);
 					$tblnl->addCell($iconList); //cc licence
 					$tblnl->endRow();
 					echo $this->objTB->autodiscCode();
