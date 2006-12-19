@@ -18,9 +18,27 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 class commentapi extends object
 {
+	/**
+	 * The user object inherited from the security class
+	 *
+	 * @var object
+	 */
 	protected $objUser;
+
+	/**
+	 * The language Object inherited from the language object
+	 *
+	 * @var object
+	 */
 	protected $objLanguage;
 
+	/**
+	 * Standard init function to __construct the class
+	 *
+	 * @param void
+	 * @return void
+	 * @access public
+	 */
 	public function init()
 	{
 		try {
@@ -35,6 +53,17 @@ class commentapi extends object
 
 	}
 
+	/**
+	 * Method to return a nicely formatted form to add a comment
+	 *
+	 * @param postid $postid
+	 * @param module $module
+	 * @param table $table
+	 * @param whether you want the htmleditor or not $editor
+	 * @param Should it be displayed in a featurebox? $featurebox
+	 * @param Do we want to show the types dropdown? $showtypes
+	 * @return string form
+	 */
 	public function commentAddForm($postid, $module, $table, $editor = TRUE, $featurebox = TRUE, $showtypes = TRUE)
 	{
 		try {
@@ -194,6 +223,12 @@ class commentapi extends object
 	}
 
 
+	/**
+	 * Adds a comment from user input to the database
+	 *
+	 * @param comment info array $cominfo
+	 * @return bool
+	 */
 	public function addToDb($cominfo)
 	{
 		if(!isset($cominfo['useragent']))
@@ -225,6 +260,12 @@ class commentapi extends object
 		return $cominfo;
 	}
 
+	/**
+	 * Method to return the comment count (record count) for a post
+	 *
+	 * @param item ID $pid
+	 * @return integer
+	 */
 	public function getCount($pid)
 	{
 		$this->objDbComm = $this->getObject('dbblogcomments');

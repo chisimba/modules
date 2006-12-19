@@ -632,7 +632,7 @@ class blogops extends object
 					$tbl->startRow();
 					$tbl->addCell($edIcon); //edit icon
 					$tbl->addCell($bookmark->show()); //bookmark link(s)
-					$tbl->addCell($this->setComments($post) . " " . $commentCount); //$commentLink); //comment link(s)
+					$tbl->addCell($this->setComments($post, FALSE) . " " . $commentCount); //$commentLink); //comment link(s)
 					$tbl->addCell($tburl); //trackback URL
 					$tbl->addCell($iconList); //cc licence
 					$tbl->addCell('');
@@ -660,7 +660,7 @@ class blogops extends object
 					$tblnl->startRow();
 					$tblnl->addCell($bookmark->show()); //bookmark link(s)
 					$tblnl->addCell($tburl ."&nbsp;" .$numtb); //trackback URL
-					$tblnl->addCell($this->setComments($post) . " " . $commentCount);
+					$tblnl->addCell($this->setComments($post, FALSE) . " " . $commentCount);
 					$tblnl->addCell($iconList); //cc licence
 					$tblnl->endRow();
 					echo $this->objTB->autodiscCode();
@@ -683,17 +683,24 @@ class blogops extends object
 
 	}
 
-	public function setComments($post)
+	public function setComments($post, $icon = TRUE)
 	{
 		//COMMENTS
-		$objLink = new link($this->uri(array('action'=>'viewsingle' , 'postid'=>$post['id'], 'userid' => $post['userid']),'blog'));
-		$comment_icon = $this->newObject('geticon','htmlelements');
-		$comment_icon->setIcon('comment');
-		$lblView = $this->objLanguage->languageText("mod_blog_addcomment", "blog");
-		$comment_icon->alt = $lblView;
-		$comment_icon->align = false;
-		$objLink->link = $comment_icon->show();
-		return $objLink->show();
+		if($icon == TRUE)
+		{
+			$objLink = new link($this->uri(array('action'=>'viewsingle' , 'postid'=>$post['id'], 'userid' => $post['userid']),'blog'));
+			$comment_icon = $this->newObject('geticon','htmlelements');
+			$comment_icon->setIcon('comment');
+			$lblView = $this->objLanguage->languageText("mod_blog_addcomment", "blog");
+			$comment_icon->alt = $lblView;
+			$comment_icon->align = false;
+			$objLink->link = $comment_icon->show();
+			return $objLink->show();
+		}
+		else {
+			$objLink = new href($this->uri(array('action'=>'viewsingle' , 'postid'=>$post['id'], 'userid' => $post['userid'])), $this->objLanguage->languageText("mod_blog_comments", "blog"), NULL);
+			return $objLink->show();
+		}
 	}
 
 	/**

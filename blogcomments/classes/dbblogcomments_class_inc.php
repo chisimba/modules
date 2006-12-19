@@ -78,6 +78,12 @@ class dbblogcomments extends dbTable
 		return $this->getAll($filter);
 	}
 
+	/**
+	 * Method to return the count of comments for a particular post id
+	 *
+	 * @param string post ID $pid
+	 * @return array
+	 */
 	public function commentCount($pid)
 	{
 		$filter = "WHERE comment_parentid = '$pid'";
