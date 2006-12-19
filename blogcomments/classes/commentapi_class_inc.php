@@ -1,0 +1,228 @@
+<?php
+/* ----------- blogcomments API class ------------*/
+// security check - must be included in all scripts
+if (!$GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
+}
+
+/**
+ * blogcomments public API class
+ *
+ * @author Paul Scott
+ * @copyright AVOIR GNU/GPL
+ * @access public
+ * @filesource
+ * @package blogcomments
+ * @category chisimba
+ */
+
+class commentapi extends object
+{
+	protected $objUser;
+	protected $objLanguage;
+
+	public function init()
+	{
+		try {
+			$this->objLanguage = $this->getObject('language', 'language');
+			$this->objUser =  $this->getObject("user", "security");
+		}
+		catch (customException $e)
+		{
+			customException::cleanUp();
+			exit;
+		}
+
+	}
+
+	public function commentAddForm($postid, $module, $table, $editor = TRUE, $featurebox = TRUE, $showtypes = TRUE)
+	{
+		try {
+			$this->loadClass('form', 'htmlelements');
+			$this->loadClass('textinput', 'htmlelements');
+			$this->loadClass('textarea', 'htmlelements');
+			$this->loadClass('button', 'htmlelements');
+			$this->loadClass('htmlarea', 'htmlelements');
+			$this->loadClass('dropdown', 'htmlelements');
+			$this->loadClass('label', 'htmlelements');
+		}
+		catch (customException $e)
+		{
+			customException::cleanUp();
+			exit;
+		}
+
+		$cform = new form('commentadd', $this->uri(array('module' => 'blogcomments', 'action' => 'addtodb', 'table' => $table, 'mod' => $module, 'postid' => $postid)));
+		$cfieldset = $this->getObject('fieldset', 'htmlelements');
+		//$cfieldset->setLegend($this->objLanguage->languageText('mod_blogcomments_addcomment', 'blogcomments'));
+		$ctbl = $this->newObject('htmltable', 'htmlelements');
+		$ctbl->cellpadding = 5;
+
+		//start the inputs
+		//textinput for author url
+		$url = new textinput('url');
+		$urllabel = new label($this->objLanguage->languageText("mod_blogcomments_url", "blogcomments") . ':', 'input_url');
+		$ctbl->startRow();
+		$ctbl->addCell($urllabel->show());
+		$ctbl->endRow();
+		$ctbl->startRow();
+		$ctbl->addCell($url->show());
+		$ctbl->endRow();
+
+		//textinput for author email
+		$email = new textinput('email');
+		if($this->objUser->isLoggedIn())
+		{
+			$email->setValue($this->objUser->email());
+		}
+		$emaillabel = new label($this->objLanguage->languageText("mod_blogcomments_email", "blogcomments") . ':', 'input_email');
+		$ctbl->startRow();
+		$ctbl->addCell($emaillabel->show());
+		$ctbl->endRow();
+		$ctbl->startRow();
+		$ctbl->addCell($email->show());
+		$ctbl->endRow();
+
+		//textarea for the comment
+		$commlabel = new label($this->objLanguage->languageText('mod_blogcomments_Comment', 'blogcomments') .':', 'input_comminput');
+		$ctbl->startRow();
+		$ctbl->addCell($commlabel->show());
+		$ctbl->endRow();
+		$ctbl->startRow();
+		if($editor == TRUE)
+		{
+			$comm = $this->newObject('htmlarea','htmlelements');
+			$comm->setName('comment');
+			$comm->setBasicToolBar();
+			$ctbl->addCell($comm->showFCKEditor());
+		}
+		else {
+			$comm = new textarea;
+			$comm->setName('comment');
+			$ctbl->addCell($comm->show());
+		}
+		$ctbl->endRow();
+
+		//comment type dropdown
+		if($showtypes == TRUE)
+		{
+			$objCat = $this->getObject('dbcommenttype', 'commenttypeadmin');
+        	$tar = $objCat->getAll();
+			$ddlabel = new label($this->objLanguage->languageText('mod_blogcomments_commenttype', 'blogcomments') .':', 'input_comtypeinput');
+        	$ctype = $this->newObject("dropdown", "htmlelements");
+        	$ctype->name = 'type';
+        	$ctype->SetId('input_type');
+        	$ctype->addOption("", $this->objLanguage->languageText("mod_blogcomments_selecttype",'blogcomments'));
+        	$ctype->addFromDB($tar, 'title', 'type');
+			$ctbl->startRow();
+			$ctbl->addCell($ddlabel->show());
+			$ctbl->endRow();
+			$ctbl->startRow();
+			$ctbl->addCell($ctype->show());
+			$ctbl->endRow();
+		}
+
+		//$cform->addRule('comment', $this->objLanguage->languageText("mod_blogcomments_commentval",'blogcomments'), 'required');
+		$cform->addRule('email', $this->objLanguage->languageText("mod_blogcomments_emailval",'blogcomments'), 'required');
+
+ 		//end off the form and add the buttons
+		$this->objCButton = &new button($this->objLanguage->languageText('word_save', 'system'));
+		$this->objCButton->setValue($this->objLanguage->languageText('word_save', 'system'));
+		$this->objCButton->setToSubmit();
+
+		$cfieldset->addContent($ctbl->show());
+		$cform->addToForm($cfieldset->show());
+		$cform->addToForm($this->objCButton->show());
+
+		if($featurebox == TRUE)
+		{
+			$objFeaturebox = $this->getObject('featurebox', 'navigation');
+			return $objFeaturebox->show($this->objLanguage->languageText("mod_blogcomments_formhead", "blogcomments"), $cform->show());
+		}
+		else {
+			return $cform->show();
+		}
+	}
+
+	/**
+	 * Method to show the comments in the comments table to the user on a singleview post display
+	 *
+	 * @param string $pid
+	 * @return string
+	 */
+	public function showComments($pid)
+	{
+		$this->objDbComm = $this->getObject('dbblogcomments');
+		$objFeatureBox = $this->newObject('featurebox', 'navigation');
+		$comms = $this->objDbComm->grabComments($pid);
+		//loop through the trackbacks and build a featurebox to show em
+		if(empty($comms))
+		{
+			//shouldn't happen except on permalinks....?
+			return $objFeatureBox->show($this->objLanguage->languageText("mod_blogcomments_comment4post", "blogcomments"), "<em>".$this->objLanguage->languageText("mod_blogcomments_nocomments", "blogcomments")."</em>");
+		}
+
+		$commtext = NULL;
+		foreach($comms as $comm)
+		{
+			//build up the display
+			$ctable = $this->newObject('htmltable', 'htmlelements');
+			$ctable->cellpadding = 2;
+			//$ctable->width = '80%';
+			//set up the header row
+			$ctable->startHeaderRow();
+			$ctable->addHeaderCell('');
+			$ctable->addHeaderCell('');
+			$ctable->endHeaderRow();
+
+			//build in author with url if available, with [email] as fbox head
+			//then content as the content
+			//where did it come from?
+			$auth = $comm['comment_author'];
+			$authurl = $comm['comment_author_url'];
+			$authemail = $comm['comment_author_email'];
+			$link = new href(htmlentities($authurl), $auth, NULL);
+			$authhead = $link->show();
+			$authemail = "[".$authemail."]";
+			$fboxhead = $authhead . " " . $authemail;
+
+			$fboxcontent = $comm['comment_content'];
+
+			$commtext .= $objFeatureBox->show($fboxhead, $fboxcontent);
+		}
+		return $commtext;
+	}
+
+
+	public function addToDb($cominfo)
+	{
+		if(!isset($cominfo['useragent']))
+		{
+			$cominfo['useragent'] = $_SERVER['HTTP_USER_AGENT'];
+		}
+		if(!isset($cominfo['useremail']))
+		{
+			$cominfo['useremail'] = $this->objUser->email();
+		}
+		if(!isset($cominfo['userid']))
+		{
+			$cominfo['userid'] = $this->objUser->userId();
+		}
+		if(!isset($cominfo['commentauthor']))
+		{
+			$cominfo['commentauthor'] = $this->objUser->fullname($cominfo['userid']);
+		}
+		if(!isset($cominfo['ip']))
+		{
+			$cominfo['ip'] = $_SERVER['REMOTE_ADDR'];
+		}
+		if(!isset($cominfo['date']))
+		{
+			$cominfo['date'] = time();
+		}
+
+		//print_r($cominfo);
+		return $cominfo;
+	}
+}//end class
+?>

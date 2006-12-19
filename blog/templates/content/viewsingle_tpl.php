@@ -7,11 +7,21 @@ $leftMenu = &$this->newObject('usermenu', 'toolbar');
 $rightSideColumn = NULL; //$this->objLanguage->languageText('mod_blog_instructions', 'blog');
 $middleColumn = NULL;
 
+$rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
 $rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
 
 //show all the posts
 $middleColumn .= nl2br($this->objblogOps->showPosts($posts));
+if($this->objUser->isLoggedIn() == TRUE)
+{
+	$middleColumn .= $this->objblogOps->addCommentForm($postid);
+}
+
+$middleColumn .= $this->objComments->showComments($postid);
 $middleColumn .= $tracks = $this->objblogOps->showTrackbacks($postid);
+
+//show the comments for this post
+
 
 $leftCol = NULL;
 

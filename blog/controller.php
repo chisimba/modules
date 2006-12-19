@@ -187,7 +187,7 @@ class blog extends controller
 			//icon object
 			$this->objIcon = &$this->getObject('geticon', 'htmlelements');
 			//comment interface class
-			$this->objComments = &$this->getObject('commentinterface', 'comment');
+			$this->objComments = &$this->getObject('commentapi', 'blogcomments');
 
 			//Lucene indexing and search system
 			//$this->lucenedoc = &$this->getObject('doc','lucene');
@@ -1025,7 +1025,7 @@ class blog extends controller
                 $this->setVar('pageSuppressIM',TRUE);
                 //Suppress footer in the page (keep it simple)
                 $this->setVar('suppressFooter', TRUE);
-                return "input_tpl.php";
+                return "commentinput_tpl.php";
                 break;
 
 		}//action
