@@ -81,7 +81,7 @@ class commentapi extends object
 			exit;
 		}
 
-		$cform = new form('commentadd', $this->uri(array('module' => 'blogcomments', 'action' => 'addtodb', 'table' => $table, 'mod' => $module, 'postid' => $postid, 'userid' => $userid)));
+		$cform = new form('commentadd', $this->uri(array('module' => 'blogcomments', 'action' => 'addtodb', 'table' => $table, 'mod' => $module, 'postid' => $postid, 'userid' => $postuserid)));
 		$cfieldset = $this->getObject('fieldset', 'htmlelements');
 		//$cfieldset->setLegend($this->objLanguage->languageText('mod_blogcomments_addcomment', 'blogcomments'));
 		$ctbl = $this->newObject('htmltable', 'htmlelements');
