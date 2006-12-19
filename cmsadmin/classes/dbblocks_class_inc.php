@@ -66,11 +66,13 @@ class dbblocks extends dbTable
          * Method to save a record to the database
          *
          * @param string $pageId The id of the page
+         * @param string $sectionId The id of the Section
          * @param string $blockId The id of the block
+         * @param string $blockCat Category of Block. Either 'frontpage', 'content' or 'section'
          * @access public
          * @return bool
          */
-        public function add($pageId, $sectionId, $blockId, $blockCat)
+        public function add($pageId=NULL, $sectionId=NULL, $blockId, $blockCat)
         {
             if ($blockCat == 'frontpage') {
                 //Get ordering
@@ -189,8 +191,9 @@ class dbblocks extends dbTable
          */
         public function getBlocksForPage($pageId)
         {
-            $pageBlocks = $this->getAll('WHERE pageid = \''.$pageId.'\' ORDER BY ordering');
-            return $pageBlocks;
+            $sql = 'SELECT tbl_cms_blocks.*, moduleid, blockname FROM tbl_cms_blocks, tbl_module_blocks WHERE (blockid = tbl_module_blocks.id) AND pageid = \''.$pageId.'\' AND frontpage_block=0 ORDER BY ordering';
+            
+            return $this->getArray($sql);
         }
 
         /**
