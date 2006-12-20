@@ -35,7 +35,22 @@ else {
 
 
 //show all the posts
-$middleColumn .= nl2br($this->objblogOps->showPosts($posts));
+if(isset($catid) && empty($posts))
+{
+	$middleColumn .= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_nopostsincat", "blog") . "</center></em></h1>";
+	if($this->objUser->userId() == $userid)
+	{
+		$linker = new href($this->uri(array('module' => 'blog', 'action' => 'blogadmin', 'mode' => 'writepost')), $this->objLanguage->languageText("mod_blog_writepost", "blog"), NULL); //$this->objblogOps->showAdminSection(TRUE);
+		$middleColumn .= "<center>" . $linker->show() . "</center>";
+	}
+}
+elseif(!isset($catid) && empty($posts))
+{
+	$middleColumn .= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_noposts", "blog") . "</center></em></h1>";
+}
+else {
+	$middleColumn .= nl2br($this->objblogOps->showPosts($posts));
+}
 
 
 

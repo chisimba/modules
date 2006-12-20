@@ -671,7 +671,7 @@ class blogops extends object
 			}
 		}
 		else {
-			$ret = "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_noposts", "blog") . "</center></em></h1>";
+			$ret = FALSE;//"<h1><em><center>" . $this->objLanguage->languageText("mod_blog_noposts", "blog") . "</center></em></h1>";
 		}
 		return $ret;
 	}
