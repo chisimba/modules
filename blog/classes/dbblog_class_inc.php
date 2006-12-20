@@ -444,7 +444,7 @@ class dbblog extends dbTable
 			$this->ecleaner = $this->newObject('htmlcleaner', 'utilities');
 			$postarr['postcontent'] = preg_replace("/(\r\n|\n|\r)/", " ", $postarr['postcontent']);
 			$pc = $postarr['postcontent'];
-			$insarr = array('userid' => $userid,
+			$edarr = array('userid' => $userid,
 							'post_date' => date('r'),
 							'post_content' => addslashes($pc),
 							'post_title' => $postarr['posttitle'],
@@ -457,7 +457,7 @@ class dbblog extends dbTable
 							'post_ts' => time(),
 							'post_lic' => $postarr['cclic']);
 
-			return $this->update('id',$postarr['id'], $insarr, 'tbl_blog_posts');
+			return $this->update('id',$postarr['id'], $edarr, 'tbl_blog_posts');
 		}
 		if($mode == 'import')
 		{
