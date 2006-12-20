@@ -428,7 +428,7 @@ class dbblog extends dbTable
 							'post_content' => addslashes($pc), //$this->pcleaner->cleanHtml($this->objblogOps->html2txt($postarr['postcontent'])),
 							'post_title' => $postarr['posttitle'],
 							'post_category' => $postarr['postcat'],
-							'post_excerpt' => $this->ecleaner->cleanHtml($postarr['postexcerpt']),
+							'post_excerpt' => $this->ecleaner->cleanHtml(addslashes($postarr['postexcerpt'])),
 							'post_status' => $postarr['poststatus'],
 							'comment_status' => $postarr['commentstatus'],
 							'post_modified' => $postarr['postmodified'],
