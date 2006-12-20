@@ -351,7 +351,7 @@ class blogops extends object
 		//dropdown for the POP/IMAP port
 		$portdrop = new dropdown('mport');
 		$portdrop->addOption(110, $this->objLanguage->languageText("mod_blog_110","blog"));
-		$portdrop->addOption(447, $this->objLanguage->languageText("mod_blog_447","blog"));
+		$portdrop->addOption(143, $this->objLanguage->languageText("mod_blog_143","blog"));
 		$madd->startRow();
 		$portlabel = new label($this->objLanguage->languageText('mod_blog_mailport', 'blog') .':', 'input_mport');
 		$madd->addCell($portlabel->show());
@@ -1190,7 +1190,7 @@ class blogops extends object
 		}
 		$ptable->startRow();
 		$ptable->addCell($pclabel->show());
-		$ptable->addCell($pcon->showFCKEditor());
+		$ptable->addCell($pcon->showTinyMCE());
 		$ptable->endRow();
 
 		//CC licence
