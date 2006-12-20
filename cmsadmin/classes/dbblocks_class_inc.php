@@ -217,9 +217,9 @@ class dbblocks extends dbTable
          */
         public function getBlocksForFrontPage()
         {
-            $frontPage = 1;
-            $pageBlocks = $this->getAll('WHERE frontpage_block = \''.$frontPage.'\' ORDER BY ordering');
-            return $pageBlocks;
+            $sql = 'SELECT tbl_cms_blocks.*, moduleid, blockname FROM tbl_cms_blocks, tbl_module_blocks WHERE (blockid = tbl_module_blocks.id) AND frontpage_block = \'1\' ORDER BY ordering';
+            
+            return $this->getArray($sql);
         }
  
         /**

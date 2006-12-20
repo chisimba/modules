@@ -413,41 +413,48 @@ class cmsadmin extends controller
                 case 'adddynamicpageblock':
                     $pageId = $this->getParam('pageid');
                     $blockId = $this->getParam('blockid');
-                    $sectionId = $this->getParam('sectionid');
-                    $this->_objBlocks->add($pageId, $sectionId, $blockId, 'content');
+                    $this->_objBlocks->add($pageId, NULL, $blockId, 'content');
                     
-                    $objModuleBlocks =& $this->getObject('dbmoduleblocks', 'modulecatalogue');
-                    $objBlocks =& $this->getObject('blocks', 'blocks');
-                    
-                    $blockRow = $objModuleBlocks->getRow('id', $blockId);
-                    
-                    $str = trim($objBlocks->showBlock($blockRow['blockname'], $blockRow['moduleid']));
-                    $str = preg_replace('/type\\s??=\\s??"submit"/', 'type="button"', $str);
-                    $str = preg_replace('/href=".+?"/', 'href="javascript:alert(\''.$this->objLanguage->languageText('mod_cmsadmin_linkdisabled', 'cmsadmin', 'Link is Disabled.').'\');"', $str);
-                    
-                    echo '<div class="usedblock" id="'.$blockRow['id'].'" style="border: 1px solid lightgray; padding: 5px; width:150px; float: left; z-index:20;">'.$str.'</div>';
+                    echo $this->createReturnBlock($blockId, 'usedblock');
 
                     break;
                 case 'removedynamicpageblock':
                     $pageId = $this->getParam('pageid');
                     $blockId = $this->getParam('blockid');
-                    $sectionId = $this->getParam('sectionid');
-                    $this->_objBlocks->deleteBlock($pageId, $sectionId, $blockId, 'content');
+                    $this->_objBlocks->deleteBlock($pageId, NULL, $blockId, 'content');
                     
-                    $objModuleBlocks =& $this->getObject('dbmoduleblocks', 'modulecatalogue');
-                    $objBlocks =& $this->getObject('blocks', 'blocks');
+                    echo $this->createReturnBlock($blockId, 'addblocks');
+                    break;
+                case 'adddynamicfrontpageblock':
+                    $blockId = $this->getParam('blockid');
+                    $this->_objBlocks->add(NULL, NULL, $blockId, 'frontpage');
                     
-                    $blockRow = $objModuleBlocks->getRow('id', $blockId);
+                    echo $this->createReturnBlock($blockId, 'usedblock');
+
+                    break;
+                case 'removedynamicfrontpageblock':
+                    $blockId = $this->getParam('blockid');
+                    $this->_objBlocks->deleteBlock(NULL, NULL, $blockId, 'frontpage');
                     
-                    $str = trim($objBlocks->showBlock($blockRow['blockname'], $blockRow['moduleid']));
-                    $str = preg_replace('/type\\s??=\\s??"submit"/', 'type="button"', $str);
-                    $str = preg_replace('/href=".+?"/', 'href="javascript:alert(\''.$this->objLanguage->languageText('mod_cmsadmin_linkdisabled', 'cmsadmin', 'Link is Disabled.').'\');"', $str);
-                    
-                    echo '<div class="addblocks" id="'.$blockRow['id'].'" style="border: 1px solid lightgray; padding: 5px; width:150px; float: left; z-index:20;">'.$str.'</div>';
+                    echo $this->createReturnBlock($blockId, 'addblocks');
                     break;
                 }
                 
                 
+        }
+        
+        private function createReturnBlock($blockId, $cssClass)
+        {
+            $objModuleBlocks =& $this->getObject('dbmoduleblocks', 'modulecatalogue');
+            $objBlocks =& $this->getObject('blocks', 'blocks');
+            
+            $blockRow = $objModuleBlocks->getRow('id', $blockId);
+            
+            $str = trim($objBlocks->showBlock($blockRow['blockname'], $blockRow['moduleid']));
+            $str = preg_replace('/type\\s??=\\s??"submit"/', 'type="button"', $str);
+            $str = preg_replace('/href=".+?"/', 'href="javascript:alert(\''.$this->objLanguage->languageText('mod_cmsadmin_linkdisabled', 'cmsadmin', 'Link is Disabled.').'\');"', $str);
+            
+            return '<div class="'.$cssClass.'" id="'.$blockRow['id'].'" style="border: 1px solid lightgray; padding: 5px; width:150px; float: left; z-index:20;">'.$str.'</div>';
         }
 
         /**
