@@ -10,6 +10,7 @@ if(!$GLOBALS['kewl_entry_point_run'])
 
 /**
 * Class wikiwriter - the controller class for the wikiwriter module
+* TODO: Flesh out description
 * 
 * @author Ryan Whitney, ryan@greenlikeme.org 
 * @package wikiwriter
@@ -18,9 +19,14 @@ class wikiwriter extends controller
 {
 
 	/**
-	* Variable objConfig Object for accessing chisimba configuration
+	* Variable objChisimbaCfg Object for accessing chisimba configuration
 	*/
-	public $objConfig = '';
+	public $objChisimbaCfg = '';
+
+	/**
+	* Variable objSysConfig Object for accessing wikiwriter module configuration 
+	*/
+	public $objSysConfig = '';
 
 	// Personal debugger - TODO: REMOVE BEFORE COMMITTING FOR PRODUCTION!
 	public function dbg($sErr){
@@ -37,11 +43,12 @@ class wikiwriter extends controller
     public function init()
     {
 		try{
-			$this->loadClass('dompdfwrapper', 'wikiwriter');
-			$this->loadClass('wwPage', 'wikiwriter');
+			// Load Objects
 			$this->loadClass('wwDocument', 'wikiwriter');
 			$this->loadClass('altconfig', 'config');
+			//$this->loadClass('dbsysconfig', 'sysconfig'); -- Module hasn't been ported to php5 yet
 			
+			$this->objSysConfig = & $this->getObject('dbsysconfig', 'sysconfig');
 		}
 		catch(customException $e) {
 			//oops, something not there - bail out
@@ -93,20 +100,20 @@ class wikiwriter extends controller
      **************************************************/
 	private function publish($urllist, $format)
 	{
-		// First, grab all the URLs and parse into an array
+		//create a wwDocument first
+		$wwDoc = new wwDocument();
+
+		// Grab all the URLs and parse into an array
 		$urls = explode(',', $urllist);
 
-		// Now grab every url and load into a new array
-		// TODO: Try/Catch for page retrieval
-		$arrPages = array();
-		foreach($urls as $k => $v)
+		// For each url load into the wwDocument
+		foreach($urls as $u)
 		{
-			$arrPages[$k] = $this->getPage($v);
+			$wwDoc->importPage($u);
 		}
 
-		// Build HTML page for rendering 
-		$page = $this->buildPage($arrPages);
-		$this->dbg('HTML Contents = ' . $page);
+		// Now build the page and get the file location
+		$location = $wwDoc->buildDocument();
 
 		//Default format is pdf
 		switch($format){
@@ -123,11 +130,7 @@ class wikiwriter extends controller
 				// Get PDF rendering of the content
 				//$pdfwriter = new DomPDFWrapper();
 				//$pdfwriter->generatePDF($page); 
-				$handle = fopen('error_log/wikiwriter_tmp_src.html', 'w');
-				fwrite($handle, $page);
-				fclose($handle);
-
-				$output = shell_exec('/opt/local/bin/htmldoc --book -t pdf14 error_log/wikiwriter_tmp_src.html');
+				$output = shell_exec($this->objSysConfig->getValue('HTMLDOC_PATH', 'wikiwriter') . 'htmldoc --book -t pdf14 ' . $location);
 
 				header("Content-type: application/pdf");
 				header("Content-Disposition: attachment; filename='testing.pdf'");
@@ -214,9 +217,9 @@ class wikiwriter extends controller
 	{
 		$ch = curl_init($url);
 
-		// if objConfig hasn't been instantiated, do so
-		if($this->objConfig == ''){
-			$this->objConfig = new altconfig();
+		// if objChisimbaCfg hasn't been instantiated, do so
+		if($this->objChisimbaCfg == ''){
+			$this->objChisimbaCfg = new altconfig();
 		}
 
 		// set cURL options
@@ -224,9 +227,9 @@ class wikiwriter extends controller
 
 		//if URL isn't localhost or 127.0.0.1, setup a proxy for retrieval if setting exists
 		if( !(preg_match('/http:\/\/localhost/', $url) || preg_match('/http:\/\/127.0.0.1/', $url)) 
-			&& $this->objConfig->getItem('KEWL_PROXY'))
+			&& $this->objChisimbaCfg->getItem('KEWL_PROXY'))
 		{				
-			curl_setopt_array($ch, array(CURLOPT_PROXY => $this->objConfig->getItem('KEWL_PROXY'),
+			curl_setopt_array($ch, array(CURLOPT_PROXY => $this->objChisimbaCfg->getItem('KEWL_PROXY'),
 								CURLOPT_PROXYUSERPWD => 'mwatson:schrodinger',
 								CURLOPT_PROXYPORT => 80	)	
 							); 
