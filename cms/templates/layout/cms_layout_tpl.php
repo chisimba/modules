@@ -12,13 +12,13 @@ $objLanguage =& $this->newObject('language', 'language');
 $objArticleBox =& $this->newObject('articlebox', 'cmsadmin');
 $objDbBlocks =& $this->newObject('dbblocks', 'cmsadmin');
 //Insert script for generating tree menu
-$js = $this->getJavascriptFile('tree.js', 'cmsadmin');
-$this->appendArrayVar('headerParams', $js);
+//$js = $this->getJavascriptFile('tree.js', 'cmsadmin');
+//$this->appendArrayVar('headerParams', $js);
 //Include tree menu css script
-$css = '<link rel="stylesheet" type="text/css" media="all" href="modules/cmsadmin/resources/tree.css" />';
-$this->appendArrayVar('headerParams', $css);
+//$css = '<link rel="stylesheet" type="text/css" media="all" href="modules/cmsadmin/resources/tree.css" />';
+//$this->appendArrayVar('headerParams', $css);
 //Set to automatically render htmllist into tree menu
-$this->appendArrayVar('bodyOnLoad', 'autoInit_trees()');
+//$this->appendArrayVar('bodyOnLoad', 'autoInit_trees()');
 
 
 /*****************LEFT SIDE ***************************************/
@@ -31,7 +31,7 @@ if($objUser->isAdmin()){
     $objAdminLink->link($this->uri(array(NULL), 'cmsadmin'));
     $objAdminLink->link = $objLanguage->languageText('mod_cms_cmsadmin', 'cms');
 
-    $leftSide .= '<br/>';
+    $leftSide .= '<br />';
     $leftSide .= $objAdminLink->show();
 }
 
@@ -52,16 +52,16 @@ if(!$this->getParam('query') == ''){
 $hasBlocks = FALSE;
 $rightSide = "";
 
-$isLoggedIn = $objUser->isLoggedIn();
+//$isLoggedIn = $objUser->isLoggedIn();
 
-if(!$isLoggedIn){
-    $hasBlocks = TRUE;
-    $loginBlock = $objDbBlocks->getBlockByName('login');
-    $registerBlock = $objDbBlocks->getBlockByName('register');
+// if(!$isLoggedIn){
+    // $hasBlocks = TRUE;
+    // $loginBlock = $objDbBlocks->getBlockByName('login');
+    // $registerBlock = $objDbBlocks->getBlockByName('register');
 
-    $rightSide .= $objBlocks->showBlock($loginBlock['blockname'], $loginBlock['moduleid']);
-    $rightSide .= $objBlocks->showBlock($registerBlock['blockname'], $registerBlock['moduleid']);
-} else {
+    // $rightSide .= $objBlocks->showBlock($loginBlock['blockname'], $loginBlock['moduleid']);
+    // $rightSide .= $objBlocks->showBlock($registerBlock['blockname'], $registerBlock['moduleid']);
+// } else {
     $currentAction = $this->getParam('action', NULL);
     if($currentAction == 'showsection'){
         $sectionId = $this->getParam('id');
@@ -82,7 +82,7 @@ if(!$isLoggedIn){
             $rightSide .= $objBlocks->showBlock($blockToShow['blockname'], $blockToShow['moduleid']);
         }
     }
-}
+//}
 
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 if($hasBlocks){
@@ -92,7 +92,8 @@ if($hasBlocks){
     $cssLayout->setNumColumns(2);
 }
 $cssLayout->setLeftColumnContent($leftSide);
-$cssLayout->setMiddleColumnContent($this->getBreadCrumbs().$this->getContent().$searchResults.$this->footerStr);
+$cssLayout->setMiddleColumnContent($this->getBreadCrumbs().$this->getContent().$searchResults);
 
 echo $cssLayout->show();
 
+$this->setVar('footerStr', $this->footerStr);
