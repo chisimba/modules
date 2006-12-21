@@ -250,7 +250,7 @@ class cmsutils extends object
             //set a counter for the records .. display on the first 2  the rest will be dsiplayed as links
             $cnt = 0 ;
 
-            if (count($arrFrontPages)) {
+            if (count($arrFrontPages) > 0) {
                 foreach ($arrFrontPages as $frontPage) {
                     //get the page
                     $page = $this->_objContent->getContentPage($frontPage['content_id']) ;
