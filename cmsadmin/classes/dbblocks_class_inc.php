@@ -547,9 +547,12 @@ class dbblocks extends dbTable
         public function getBlockByName($blockName)
         {
             $entry = $this->getArray('SELECT * FROM tbl_module_blocks WHERE blockname = \''.$blockName.'\'');
-            $entry = $entry['0'];
-
-            return $entry;
+            
+            if (count($entry) == 0) {
+                return FALSE;
+            } else {
+                return $entry['0'];
+            }
         }
 }
 
