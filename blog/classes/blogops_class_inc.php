@@ -111,7 +111,7 @@ class blogops extends object
         else {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
             $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_otherblogs","blog"), $oblogs->show());
-            
+
             $ret .= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewsiteblogs","blog"), $ositeblogs->show());
         }
         return $ret;
@@ -1198,7 +1198,7 @@ class blogops extends object
         }
         $ptable->startRow();
         $ptable->addCell($pclabel->show());
-        $ptable->addCell($pcon->showTinyMCE());
+        $ptable->addCell($pcon->showFCKEditor());
         $ptable->endRow();
 
         //CC licence
@@ -1230,7 +1230,7 @@ class blogops extends object
         $siteblogcheckbox = new checkbox('checkbox');//,'unassign',false);
         $siteblogcheckbox =$siteblogcheckbox->show();
 
-        //IS Admin 
+        //IS Admin
         $this->objUser = $this->getObject('user', 'security');
 
             if($this->objUser->inAdminGroup($userid,'Site Admin')){
@@ -1245,7 +1245,7 @@ class blogops extends object
         $postform->addToForm($postbutton_text);
         $postform = $postform->show();
 
-        return $postform; 
+        return $postform;
 
     }
 
