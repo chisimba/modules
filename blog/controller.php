@@ -858,8 +858,8 @@ class blog extends controller
                     exit;
                 }
                 $mode = $this->getParam('mode');
-               
-                if(!$_POST['checkbox']==null){
+              
+                if(!$this->getParam('checkbox')==null){
                 $userid = 1 ;
                 }else{
                 $userid = $this->objUser->userId();
