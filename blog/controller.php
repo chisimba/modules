@@ -402,6 +402,7 @@ class blog extends controller
 							//check if the address we get from the msg is in the array of valid addresses
 							foreach ($valadds as $user)
 							{
+								//print_r($user);
 								//check if there is a match to the user list
 								if($user['address'] != $addy)
 								{
@@ -414,12 +415,14 @@ class blog extends controller
 									$validated = TRUE;
 									//set the userid
 									$userid = $user['userid'];
+									//echo $userid;
 									//all is cool, so lets break out of this loop and carry on
 									break;
 
 								}
 							}
 						}
+						//var_dump($validated);
 						if($validated == TRUE)
 						{
 							//insert the mail data into an array for manipulation
@@ -429,7 +432,7 @@ class blog extends controller
 
 						//delete the message as we don't need it anymore
 						echo "sorting " . $this->msgCount . "messages";
-						$this->objImap->delMsg($i);
+						//$this->objImap->delMsg($i);
 
 						$i++;
 					}
@@ -471,6 +474,7 @@ class blog extends controller
 						else {
 							//no attachments to worry about
 							$newbod = $datum['body'];
+							//echo $newbod;
 						}
 						//Write the new post to the database as a "Quick Post"
 						$this->objblogOps->quickPostAdd($datum['userid'], array('posttitle' => $datum['subject'], 'postcontent' => $newbod,
@@ -478,9 +482,6 @@ class blog extends controller
 												    'commentstatus' => 'Y',
 												    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $datum['date']), 'mail');
 					}
-
-
-
 
 				}
 				//any issues?
