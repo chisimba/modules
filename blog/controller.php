@@ -347,7 +347,7 @@ class blog extends controller
 					//connect to the IMAP/POP3 server
 					$this->conn = $this->objImap->factory($this->dsn);
 					//grab the mail headers
-					//var_dump($this->objImap->getHeaders());
+					$this->objImap->getHeaders();
 					//check mail
 					$this->thebox = $this->objImap->checkMbox();
 					//get the mail folders
