@@ -348,6 +348,7 @@ class blog extends controller
 					$this->conn = $this->objImap->factory($this->dsn);
 					//grab the mail headers
 					$this->objImap->getHeaders();
+					var_dump($this->objImap->getHeaders());
 					//check mail
 					$this->thebox = $this->objImap->checkMbox();
 					//get the mail folders
