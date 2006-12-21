@@ -461,6 +461,7 @@ class imap //extends object
 
 					// Attachment
 					if (strtoupper($parts[$i]->disposition) == "ATTACHMENT") {
+						//var_dump($parts);
 						$filename = $parts[$i]->parameters[0]->value;
 						$filedata = imap_fetchbody($this->conn, $messageNum, $partstring);
 						$attachment[] = array("filename" => $filename,
