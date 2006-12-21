@@ -420,7 +420,6 @@ class imap //extends object
 			$parts = NULL;
 		}
 		$i = 0;
-
 		if (!$parts) {
 			// Simple message, only 1 piece
 			$attachment = array();
@@ -459,7 +458,8 @@ class imap //extends object
 					}
 					// Attachment
 					if (strtoupper($parts[$i]->disposition) == "ATTACHMENT") {
-						//var_dump($parts[$i]->parameters);
+						//var_dump($parts[$i]->dparameters[0]->value);
+
 						$at = $parts[$i]->parameters;
 						//var_dump($at);
 						//echo "<hr><br />";
@@ -470,7 +470,14 @@ class imap //extends object
 								$filename = $at[0]->value;
 								//echo "<h1>" . $filename . "</h1><br>";
 							}
+
 						}
+						if(isset($parts[$i]->dparameters[0]))
+						{
+							$filename = $parts[$i]->dparameters[0]->value;
+							//echo "<h1>" . $filename . "</h1>";
+						}
+
 						else {
 
 							if(!empty($parts[$i]->parameters->value))

@@ -444,6 +444,7 @@ class blog extends controller
 					//lets look at the data now
 					foreach ($data as $datum)
 					{
+						//print_r($datum);
 						//add the [img][/img] tags to the body so that the images show up
 						//we discard any other mimetypes for now...
 						if(!empty($datum['attachments']))
