@@ -373,7 +373,7 @@ class blog extends controller
 						$read = $headerinfo->Unseen;
 						//message body
 						$bod = $this->objImap->getMessage($i);
-						//var_dump($bod);
+						//var_dump($bod); echo "<hr><br />";
 						//check if there is an attachment
 						if(empty($bod[1]))
 						{

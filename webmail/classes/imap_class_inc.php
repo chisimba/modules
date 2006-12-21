@@ -453,16 +453,35 @@ class imap //extends object
 						$partstring .= ($s["i"]+1) . ".";
 					}
 					$partstring .= ($i+1);
-
 					if(!isset($parts[$i]->disposition))
 					{
 						$parts[$i]->disposition = NULL;
 					}
-
 					// Attachment
 					if (strtoupper($parts[$i]->disposition) == "ATTACHMENT") {
-						//var_dump($parts);
-						$filename = $parts[$i]->parameters[0]->value;
+						//var_dump($parts[$i]->parameters);
+						$at = $parts[$i]->parameters;
+						//var_dump($at);
+						//echo "<hr><br />";
+						if(is_array($at))
+						{
+							if(is_object($at[0]))
+							{
+								$filename = $at[0]->value;
+								//echo "<h1>" . $filename . "</h1><br>";
+							}
+						}
+						else {
+
+							if(!empty($parts[$i]->parameters->value))
+							{
+								$filename = $parts[$i]->parameters->value;
+							}
+							else {
+								$filename = NULL;
+								break;
+							}
+						}
 						$filedata = imap_fetchbody($this->conn, $messageNum, $partstring);
 						$attachment[] = array("filename" => $filename,
 						"filedata" => $filedata);
