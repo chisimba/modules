@@ -347,7 +347,7 @@ class blog extends controller
 					//connect to the IMAP/POP3 server
 					$this->conn = $this->objImap->factory($this->dsn);
 					//grab the mail headers
-					var_dump($this->objImap->getHeaders());
+					//var_dump($this->objImap->getHeaders());
 					//check mail
 					$this->thebox = $this->objImap->checkMbox();
 					//get the mail folders
@@ -360,17 +360,18 @@ class blog extends controller
 					while ($i <= $this->msgCount)
 					{
 						//get the header info
-						$headerinfo = @$this->objImap->getHeaderInfo($i);
+						$headerinfo = $this->objImap->getHeaderInfo($i);
 						//from
-						$address = @$headerinfo->fromaddress;
+						$address = $headerinfo->fromaddress;
 						//subject
-						$subject = @$headerinfo->subject;
+						$subject = $headerinfo->subject;
 						//date
-						$date = @$headerinfo->Date;
+						$date = $headerinfo->Date;
 						//message flag
-						$read = @$headerinfo->Unseen;
+						$read = $headerinfo->Unseen;
 						//message body
-						$bod = @$this->objImap->getMessage($i);
+						$bod = $this->objImap->getMessage($i);
+						var_dump($bod);
 						//check if there is an attachment
 						if(empty($bod[1]))
 						{
