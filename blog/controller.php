@@ -348,7 +348,7 @@ class blog extends controller
 					$this->conn = $this->objImap->factory($this->dsn);
 					//grab the mail headers
 					$this->objImap->getHeaders();
-					var_dump($this->objImap->getHeaders());
+					//var_dump($this->objImap->getHeaders());
 					//check mail
 					$this->thebox = $this->objImap->checkMbox();
 					//get the mail folders
@@ -373,7 +373,7 @@ class blog extends controller
 						$read = $headerinfo->Unseen;
 						//message body
 						$bod = $this->objImap->getMessage($i);
-						var_dump($bod);
+						//var_dump($bod);
 						//check if there is an attachment
 						if(empty($bod[1]))
 						{
@@ -429,7 +429,7 @@ class blog extends controller
 
 						//delete the message as we don't need it anymore
 						echo "sorting " . $this->msgCount . "messages";
-						$this->objImap->delMsg($i);
+						//$this->objImap->delMsg($i);
 
 						$i++;
 					}

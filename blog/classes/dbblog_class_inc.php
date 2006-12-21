@@ -463,7 +463,7 @@ class dbblog extends dbTable
 		{
 			$this->ipcleaner = $this->newObject('htmlcleaner', 'utilities');
 			$this->iecleaner = $this->newObject('htmlcleaner', 'utilities');
-
+			$postarr['cclic'] = NULL;
 			$imparr = array('userid' => $userid,
 							'post_date' => $postarr['postdate'],
 							'post_content' => $this->ipcleaner->cleanHtml($postarr['postcontent']),
@@ -483,7 +483,7 @@ class dbblog extends dbTable
 		{
 			$this->ipcleaner = $this->newObject('htmlcleaner', 'utilities');
 			$this->iecleaner = $this->newObject('htmlcleaner', 'utilities');
-
+			$postarr['cclic'] = NULL;
 			$mparr = array('userid' => $userid,
 							'post_date' => $postarr['postdate'],
 							'post_content' => $this->ipcleaner->cleanHtml($postarr['postcontent']),
