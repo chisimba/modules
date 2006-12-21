@@ -92,8 +92,14 @@ class blogops extends object
             $ret = $oblogs->show();
         } else {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
+
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_otherblogs","blog"), $oblogs->show());
+
+            $ret .= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewsiteblogs","blog"), $ositeblogs->show());
+
             $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_otherblogs", "blog") , $oblogs->show());
             $ret.= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewsiteblogs", "blog") , $ositeblogs->show());
+
         }
         return $ret;
     }
@@ -1120,7 +1126,7 @@ class blogops extends object
         }
         $ptable->startRow();
         $ptable->addCell($pclabel->show());
-        $ptable->addCell($pcon->showFCKEditor());
+        $ptable->addCell($pcon->showTinyMCE());
         $ptable->endRow();
         //CC licence
         $lic = $this->getObject('licensechooser', 'creativecommons');
@@ -1144,9 +1150,16 @@ class blogops extends object
         //return $postform;
         //check box Added By Irshaad Hoosain
         $this->loadClass('checkbox', 'htmlelements');
+
+        $siteblogcheckbox = new checkbox('checkbox');//,'unassign',false);
+        $siteblogcheckbox =$siteblogcheckbox->show();
+
+        //IS Admin 
+
         $siteblogcheckbox = new checkbox('checkbox'); //,'unassign',false);
         $siteblogcheckbox = $siteblogcheckbox->show();
         //IS Admin
+
         $this->objUser = $this->getObject('user', 'security');
         if ($this->objUser->inAdminGroup($userid, 'Site Admin')) {
             $postform->addToForm('Site Blog'.' '.$siteblogcheckbox);
@@ -1156,7 +1169,13 @@ class blogops extends object
         $postbutton_text = $this->objPButton->show();
         $postform->addToForm($postbutton_text);
         $postform = $postform->show();
+
+
+  
+
+
         return $postform;
+
     }
     private function _archiveArr($userid) 
     {
