@@ -473,7 +473,7 @@ class blog extends controller
 						$this->objblogOps->quickPostAdd($datum['userid'], array('posttitle' => $datum['subject'], 'postcontent' => $newbod,
 												    'postcat' => 0, 'postexcerpt' => '', 'poststatus' => '0',
 												    'commentstatus' => 'Y',
-												    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $datum['date']));
+												    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $datum['date']), 'mail');
 					}
 
 
