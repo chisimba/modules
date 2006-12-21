@@ -19,7 +19,7 @@ if ($id != '') {
     $blocks = $objModuleBlocks->getBlocks('normal');
     $thisPageBlocks = $objCMSBlocks->getBlocksForPage($id);
     
-    echo '<div id="dropzone" style="border: 1px dashed black; background-color: lightyellow; z-index:1; position: relative"><h3>'.$this->objLanguage->languageText('mod_cmsadmin_pageblocks', 'cmsadmin', 'Page Blocks').'</h3><p>'.$this->objLanguage->languageText('mod_cmsadmin_dragaddblocks', 'cmsadmin', 'Drag and drop the blocks you want to add here.').'</p>';
+    echo '<div id="dropzone" style="border: 1px dashed black; background-color: lightyellow; position: relative"><h3>'.$this->objLanguage->languageText('mod_cmsadmin_pageblocks', 'cmsadmin', 'Page Blocks').'</h3><p>'.$this->objLanguage->languageText('mod_cmsadmin_dragaddblocks', 'cmsadmin', 'Drag and drop the blocks you want to add here.').'</p>';
     
     $usedBlocks = array();
     
@@ -31,7 +31,7 @@ if ($id != '') {
         
         $usedBlocks[] = $block['blockid'];
         
-        echo '<div class="usedblock" id="'.$block['blockid'].'" style="border: 1px solid lightgray; padding: 5px; width:150px; float: left; z-index:20;">'.$str.'</div>';
+        echo '<div class="usedblock" id="'.$block['blockid'].'" style="border: 1px solid lightgray; padding: 5px; width:150px; float: left; z-index:1000;">'.$str.'</div>';
     }
     echo '</div>';
 
@@ -39,7 +39,7 @@ if ($id != '') {
     
     echo '<div id="loading" style="visibility:visible; float: right;">'.$objIcon->show().'</div>';
     
-    echo '<div id="deletezone" style="border: 1px dashed black; background-color: lightyellow; z-index:2; position: relative"><h3>'.$this->objLanguage->languageText('mod_cmsadmin_availableblocks', 'cmsadmin', 'Available Blocks').'</h3><p>'.$this->objLanguage->languageText('mod_cmsadmin_dragremoveblocks', 'cmsadmin', 'Drag and drop the blocks you want to remove here.').'</p>';
+    echo '<div id="deletezone" style="border: 1px dashed black; background-color: lightyellow; position: relative"><h3>'.$this->objLanguage->languageText('mod_cmsadmin_availableblocks', 'cmsadmin', 'Available Blocks').'</h3><p>'.$this->objLanguage->languageText('mod_cmsadmin_dragremoveblocks', 'cmsadmin', 'Drag and drop the blocks you want to remove here.').'</p>';
     foreach ($blocks as $block)
     {
         if (!in_array($block['id'], $usedBlocks)) {
@@ -47,7 +47,7 @@ if ($id != '') {
             $str = preg_replace('/type\\s??=\\s??"submit"/', 'type="button"', $str);
             $str = preg_replace('/href=".+?"/', 'href="javascript:alert(\''.$this->objLanguage->languageText('mod_cmsadmin_linkdisabled', 'cmsadmin', 'Link is Disabled.').'\');"', $str);
             
-            echo '<div class="addblocks" id="'.$block['id'].'" style="border: 1px solid lightgray; padding: 5px; width:150px; float: left; z-index:20;">'.$str.'</div>';
+            echo '<div class="addblocks" id="'.$block['id'].'" style="border: 1px solid lightgray; padding: 5px; width:150px; float: left; z-index:1000;">'.$str.'</div>';
         }
     }
     echo '</div>';
