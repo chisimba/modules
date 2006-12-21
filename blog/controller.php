@@ -354,6 +354,7 @@ class blog extends controller
 					$this->folders = $this->objImap->populateFolders($this->thebox);
 					//count the messages
 					$this->msgCount = $this->objImap->numMails();
+					echo $this->msgCount;
 					//get the meassge headers
 					$i = 1;
 					//parse the messages
