@@ -123,7 +123,7 @@ class essayadmin extends controller
 		$essayadmindir=0;
 		$essayadminpath=0;
 		$essayadmindir="usrfiles/essayadmin/";
-		$essayadminpath=KEWL_SITEROOT_PATH."usrfiles/essayadmin/";
+	//	$essayadminpath=KEWL_SITEROOT_PATH."usrfiles/essayadmin/";
 		//array may be comprised of the following: array('action' => 'editHeader')
 		$parametersArray=array('action' => $this->getParam("action", NULL), 'id' => $this->getParam("id", NULL));
 		//the download link, e.g. http://nextgen.mak.ac.ug/
