@@ -425,7 +425,7 @@ class blog extends controller
 						}
 
 						//delete the message as we don't need it anymore
-						echo "sorting " . $this->msgCount . "messages";
+						//echo "sorting " . $this->msgCount . "messages";
 						$this->objImap->delMsg($i);
 
 						$i++;
