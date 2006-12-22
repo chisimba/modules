@@ -28,6 +28,7 @@ $leftCol = NULL;
 if(!$this->objUser->isLoggedIn())
 {
 	$leftCol = $this->objblogOps->loginBox(TRUE);
+	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
 }
 //show the feeds section
 $leftCol .= $this->objblogOps->showFeeds($userid, TRUE);

@@ -22,6 +22,7 @@ $rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
 if(!$this->objUser->isLoggedIn())
 {
     $leftCol = $this->objblogOps->loginBox(TRUE);
+    $rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
 }
 else {
     //show the categories menu (if there are cats)
