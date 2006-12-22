@@ -23,7 +23,7 @@ $rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
 $leftCol = NULL;
 $middleColumn = NULL;
 
-$middleColumn .= nl2br($this->objblogOps->showPosts($posts));
+$middleColumn .= ($this->objblogOps->showPosts($posts));
 
 //left menu section
 $leftCol = NULL;

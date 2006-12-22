@@ -49,7 +49,7 @@ elseif(!isset($catid) && empty($posts))
 	$middleColumn .= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_noposts", "blog") . "</center></em></h1>";
 }
 else {
-	$middleColumn .= nl2br($this->objblogOps->showPosts($posts));
+	$middleColumn .= ($this->objblogOps->showPosts($posts));
 }
 
 

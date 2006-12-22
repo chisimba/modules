@@ -1126,7 +1126,7 @@ class blogops extends object
         $pcon = $this->newObject('htmlarea', 'htmlelements');
         $pcon->setName('postcontent');
         if (isset($editparams['post_content'])) {
-            $pcon->setcontent((stripslashes(nl2br($editparams['post_content']))));
+            $pcon->setcontent((stripslashes(($editparams['post_content']))));
         }
         $ptable->startRow();
         $ptable->addCell($pclabel->show());
