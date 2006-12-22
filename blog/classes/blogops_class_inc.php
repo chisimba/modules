@@ -23,7 +23,7 @@ class blogops extends object
      * @return void
      * @access public
      */
-    public function init() 
+    public function init()
     {
         try {
             $this->objLanguage = $this->getObject('language', 'language');
@@ -43,16 +43,16 @@ class blogops extends object
             throw new customException($this->objLanguage->languageText("mod_blog_sanity_bbcodeparser", "blog"));
         }
     }
-    public function commentAddForm() 
+    public function commentAddForm()
     {
     }
-    public function commentDelForm() 
+    public function commentDelForm()
     {
     }
-    public function passProtectPost() 
+    public function passProtectPost()
     {
     }
-    public function liveSearchForm() 
+    public function liveSearchForm()
     {
     }
     /**
@@ -61,7 +61,7 @@ class blogops extends object
      * @param bool $featurebox
      * @return string
      */
-    public function loginBox($featurebox = FALSE) 
+    public function loginBox($featurebox = FALSE)
     {
         $objLogin = &$this->getObject('logininterface', 'security');
         if ($featurebox == FALSE) {
@@ -78,7 +78,7 @@ class blogops extends object
      * @param bool $featurebox
      * @return string
      */
-    public function showBlogsLink($featurebox = FALSE) 
+    public function showBlogsLink($featurebox = FALSE)
     {
         //set up a link to the other users blogs...
         $oblogs = new href($this->uri(array(
@@ -111,7 +111,7 @@ class blogops extends object
      * @param bool $featurebox
      * @return string
      */
-    public function showCatsMenu($cats, $featurebox = FALSE) 
+    public function showCatsMenu($cats, $featurebox = FALSE)
     {
         $objSideBar = $this->newObject('sidebar', 'navigation');
         $nodes = array();
@@ -166,7 +166,7 @@ class blogops extends object
      * @param bool $featurebox
      * @return string
      */
-    public function showLinkCats($linkcats, $featurebox = FALSE) 
+    public function showLinkCats($linkcats, $featurebox = FALSE)
     {
         $this->objUser = &$this->getObject('user', 'security');
         //cycle through the link categories and display them
@@ -202,7 +202,7 @@ class blogops extends object
      * @param bool $featurebox
      * @return string
      */
-    public function showImportForm($featurebox = TRUE) 
+    public function showImportForm($featurebox = TRUE)
     {
         $this->objUser = $this->getObject('user', 'security');
         $imform = new form('importblog', $this->uri(array(
@@ -259,7 +259,7 @@ class blogops extends object
      * @param array $dsnarr
      * @return string
      */
-    public function showMailSetup($featurebox = TRUE, $dsnarr = NULL) 
+    public function showMailSetup($featurebox = TRUE, $dsnarr = NULL)
     {
         //start a form to go back to the setupmail action with the vars
         //make sure that all form vars are required!
@@ -357,7 +357,7 @@ class blogops extends object
      * @param bool $featurebox
      * @return string
      */
-    public function showAdminSection($featurebox = FALSE, $blogadmin = FALSE) 
+    public function showAdminSection($featurebox = FALSE, $blogadmin = FALSE)
     {
         //admin section
         if ($featurebox == FALSE) {
@@ -458,7 +458,7 @@ class blogops extends object
      * @param array $posts
      * @return string
      */
-    public function showPosts($posts) 
+    public function showPosts($posts)
     {
         $this->objComments = &$this->getObject('commentapi', 'blogcomments');
         $this->objTB = $this->getObject("trackback");
@@ -585,7 +585,7 @@ class blogops extends object
                             $iconList.= $objIcon->show();
                         }
                         //continue;
-                        
+
                     } elseif ($cclic == '') {
                         $cclic = 'copyright';
                         $icons = explode(',', $lic['images']);
@@ -594,7 +594,7 @@ class blogops extends object
                             $iconList.= $objIcon->show();
                         }
                         //continue;
-                        
+
                     }
                 }
                 //$commentLink = $this->objComments->addCommentLink($type = NULL);
@@ -657,16 +657,16 @@ class blogops extends object
             }
         } else {
             $ret = FALSE; //"<h1><em><center>" . $this->objLanguage->languageText("mod_blog_noposts", "blog") . "</center></em></h1>";
-            
+
         }
         return $ret;
     }
-    public function addCommentForm($postid, $userid) 
+    public function addCommentForm($postid, $userid)
     {
         $this->objComApi = $this->getObject('commentapi', 'blogcomments');
         return $this->objComApi->commentAddForm($postid, 'blog', 'tbl_blog_posts', $userid, TRUE, TRUE, FALSE);
     }
-    public function setComments($post, $icon = TRUE) 
+    public function setComments($post, $icon = TRUE)
     {
         //COMMENTS
         if ($icon == TRUE) {
@@ -698,7 +698,7 @@ class blogops extends object
      * @param bool $featurebox
      * @return string
      */
-    public function showFeeds($userid, $featurebox = FALSE) 
+    public function showFeeds($userid, $featurebox = FALSE)
     {
         $this->loadClass('dropdown', 'htmlelements');
         $dropdown = &new dropdown('feedselector');
@@ -750,7 +750,7 @@ class blogops extends object
      * @param bool $featurebox
      * @return string
      */
-    public function quickCats($featurebox = FALSE) 
+    public function quickCats($featurebox = FALSE)
     {
         $qcatform = new form('qcatadd', $this->uri(array(
             'action' => 'catadd',
@@ -780,7 +780,7 @@ class blogops extends object
      * @param integer $userid
      * @return void
      */
-    public function quickCatAdd($list = NULL, $userid) 
+    public function quickCatAdd($list = NULL, $userid)
     {
         $list = explode(",", $list);
         foreach($list as $items) {
@@ -802,7 +802,7 @@ class blogops extends object
      * @param array $postarr
      * @param string $mode
      */
-    public function quickPostAdd($userid, $postarr, $mode = NULL) 
+    public function quickPostAdd($userid, $postarr, $mode = NULL)
     {
         if (!empty($postarr)) {
             if ($mode == NULL) {
@@ -818,7 +818,7 @@ class blogops extends object
      * @param string $document
      * @return string
      */
-    function html2txt($document, $scrub = TRUE) 
+    function html2txt($document, $scrub = TRUE)
     {
         if ($scrub == TRUE) {
             $search = array(
@@ -829,7 +829,7 @@ class blogops extends object
                 // Strip style tags properly
                 '@<![\s\S]*?--[ \t\n\r]*>@'
                 // Strip multi-line comments including CDATA
-                
+
             );
         } else {
             $search = array(
@@ -839,7 +839,7 @@ class blogops extends object
                 // Strip style tags properly
                 '@<![\s\S]*?--[ \t\n\r]*>@', // Strip multi-line comments including CDATA
                 '!(\n*(.+)\n*!x', //Strip out newlines
-                
+
             );
         }
         $text = preg_replace($search, '', $document);
@@ -858,7 +858,7 @@ class blogops extends object
      * @param integer $userid
      * @return string
      */
-    public function categoryEditor($userid) 
+    public function categoryEditor($userid)
     {
         //get the categories layout sorted
         $this->loadClass('href', 'htmlelements');
@@ -970,7 +970,7 @@ class blogops extends object
         $catform = $catform->show();
         return $ctable."<br />".$catform;
     }
-    public function catedit($catarr, $userid, $catid) 
+    public function catedit($catarr, $userid, $catid)
     {
         //add a new category form:
         $catform = new form('catadd', $this->uri(array(
@@ -1034,13 +1034,17 @@ class blogops extends object
      * @param integer $editid
      * @return boolean
      */
-    public function postEditor($userid, $editid = NULL) 
+    public function postEditor($userid, $editid = NULL)
     {
         if (isset($editid)) {
             $mode = 'editpost';
             //get the relevant post from the editid
             $editparams = $this->objDbBlog->getPostById($editid);
-            $editparams = $editparams[0];
+            if(!empty($editparams))
+            {
+ //           	print_r($editparams);
+            	$editparams = $editparams[0];
+            }
         }
         if (!isset($mode)) {
             $mode = NULL;
@@ -1112,7 +1116,7 @@ class blogops extends object
         $ptable->startRow();
         $pexcerptlabel = new label($this->objLanguage->languageText('mod_blog_postexcerpt', 'blog') .':', 'input_postexcerpt');
         if (isset($editparams['post_excerpt'])) {
-            $pexcerpt->setcontent(nl2br(stripslashes($editparams['post_excerpt'])));
+            $pexcerpt->setcontent(stripslashes(htmlentities($editparams['post_excerpt']))); //nl2br - htmmlentittes +
         }
         $ptable->addCell($pexcerptlabel->show());
         $ptable->addCell($pexcerpt->show());
@@ -1177,7 +1181,7 @@ class blogops extends object
         return $postform;
 
     }
-    private function _archiveArr($userid) 
+    private function _archiveArr($userid)
     {
         //add in a foreach for each year
         $allposts = $this->objDbBlog->getAbsAllPosts($userid);
@@ -1203,7 +1207,7 @@ class blogops extends object
             return NULL;
         }
     }
-    public function archiveBox($userid, $featurebox = FALSE) 
+    public function archiveBox($userid, $featurebox = FALSE)
     {
         //get the posts for each month
         $posts = $this->_archiveArr($userid);
@@ -1249,7 +1253,7 @@ class blogops extends object
      * @param integer $userid
      * @return string
      */
-    public function managePosts($userid, $month = NULL, $year = NULL) 
+    public function managePosts($userid, $month = NULL, $year = NULL)
     {
         //create a table with the months posts, plus a dropdown of all months to edit
         //put the edit icon at the end of each row, with text linked to the postEditor() method
@@ -1327,7 +1331,7 @@ class blogops extends object
      * @param bool $featurebox
      * @return mixed
      */
-    public function quickPost($userid, $featurebox = FALSE) 
+    public function quickPost($userid, $featurebox = FALSE)
     {
         //form for the quick poster blocklet
         $this->loadClass('textarea', 'htmlelements');
@@ -1381,7 +1385,7 @@ class blogops extends object
      * @param array $rec
      * @return string
      */
-    public function buildBloggertable($rec) 
+    public function buildBloggertable($rec)
     {
         $lastentry = $this->objDbBlog->getLatestPost($rec['id']);
         $link = new href($this->uri(array(
@@ -1421,7 +1425,7 @@ class blogops extends object
      * @param mixed selected date $sel_date
      * @return array
      */
-    public function retDates($sel_date = NULL) 
+    public function retDates($sel_date = NULL)
     {
         if ($sel_date == NULL) {
             $sel_date = mktime(0, 0, 0, date("m", time()) , 1, date("y", time()));
@@ -1446,7 +1450,7 @@ class blogops extends object
      *
      * @param array $newsettings
      */
-    public function setupConfig($newsettings) 
+    public function setupConfig($newsettings)
     {
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objConfig->appendToConfig($newsettings);
@@ -1458,7 +1462,7 @@ class blogops extends object
      * @param string $dsn
      * @return void
      */
-    public function parseDSN($dsn) 
+    public function parseDSN($dsn)
     {
         $parsed = NULL; //$this->imapdsn;
         $arr = NULL;
@@ -1512,7 +1516,7 @@ class blogops extends object
         $dsn = NULL;
         return $parsed;
     }
-    public function getMailDSN() 
+    public function getMailDSN()
     {
         //check that the variables are set, if not return the template, otherwise return a thank you and carry on
         $this->objConfig = $this->getObject('altconfig', 'config');
@@ -1524,7 +1528,7 @@ class blogops extends object
             return FALSE;
         }
     }
-    public function blogTagCloud($userid) 
+    public function blogTagCloud($userid)
     {
         $this->objTC = $this->getObject('tagcloud', 'utilities');
         //get all the categories to convert to tags
@@ -1562,7 +1566,7 @@ class blogops extends object
      * @param string $pid
      * @return string
      */
-    public function showTrackbacks($pid) 
+    public function showTrackbacks($pid)
     {
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
         $tbs = $this->objDbBlog->grabTrackbacks($pid);
@@ -1620,7 +1624,7 @@ class blogops extends object
      * @param array $postinfo
      * @return string
      */
-    public function sendTrackbackForm($postinfo) 
+    public function sendTrackbackForm($postinfo)
     {
         //start a form object
         $this->loadClass('textarea', 'htmlelements');

@@ -419,16 +419,16 @@ class dbblog extends dbTable
 
 		if($mode == NULL)
 		{
-			$this->pcleaner = $this->newObject('htmlcleaner', 'utilities');
-			$this->ecleaner = $this->newObject('htmlcleaner', 'utilities');
-			$postarr['postcontent'] = preg_replace("/(\r\n|\n|\r)/", "", $postarr['postcontent']);
+			//$this->pcleaner = $this->newObject('htmlcleaner', 'utilities');
+			//$this->ecleaner = $this->newObject('htmlcleaner', 'utilities');
+			//$postarr['postcontent'] = preg_replace("/(\r\n|\n|\r)/", "", $postarr['postcontent']);
 			$pc = preg_replace('=<br */?>=i', "\n", $postarr['postcontent']);
 			$insarr = array('userid' => $userid,
 							'post_date' => date('r'),
-							'post_content' => addslashes($pc), //$this->pcleaner->cleanHtml($this->objblogOps->html2txt($postarr['postcontent'])),
-							'post_title' => $postarr['posttitle'],
+							'post_content' => addslashes($postarr['postcontent']), //$pc), //$this->pcleaner->cleanHtml($this->objblogOps->html2txt($postarr['postcontent'])),
+							'post_title' => htmlentities($postarr['posttitle']),
 							'post_category' => $postarr['postcat'],
-							'post_excerpt' => $this->ecleaner->cleanHtml(addslashes($postarr['postexcerpt'])),
+							'post_excerpt' => addslashes(htmlentities($postarr['postexcerpt'])), //$this->ecleaner->cleanHtml(addslashes($postarr['postexcerpt'])),
 							'post_status' => $postarr['poststatus'],
 							'comment_status' => $postarr['commentstatus'],
 							'post_modified' => $postarr['postmodified'],
@@ -440,16 +440,16 @@ class dbblog extends dbTable
 		}
 		if($mode == 'editpost')
 		{
-			$this->pcleaner = $this->newObject('htmlcleaner', 'utilities');
-			$this->ecleaner = $this->newObject('htmlcleaner', 'utilities');
-			$postarr['postcontent'] = preg_replace("/(\r\n|\n|\r)/", " ", $postarr['postcontent']);
+			//$this->pcleaner = $this->newObject('htmlcleaner', 'utilities');
+			//$this->ecleaner = $this->newObject('htmlcleaner', 'utilities');
+			//$postarr['postcontent'] = preg_replace("/(\r\n|\n|\r)/", " ", $postarr['postcontent']);
 			$pc = $postarr['postcontent'];
 			$edarr = array('userid' => $userid,
 							'post_date' => date('r'),
 							'post_content' => addslashes($pc),
-							'post_title' => $postarr['posttitle'],
+							'post_title' => htmlentities($postarr['posttitle']),
 							'post_category' => $postarr['postcat'],
-							'post_excerpt' => $this->ecleaner->cleanHtml($postarr['postexcerpt']),
+							'post_excerpt' => addslashes(htmlentities($postarr['postexcerpt'])), //$this->ecleaner->cleanHtml($postarr['postexcerpt']),
 							'post_status' => $postarr['poststatus'],
 							'comment_status' => $postarr['commentstatus'],
 							'post_modified' => $postarr['postmodified'],
@@ -461,15 +461,15 @@ class dbblog extends dbTable
 		}
 		if($mode == 'import')
 		{
-			$this->ipcleaner = $this->newObject('htmlcleaner', 'utilities');
-			$this->iecleaner = $this->newObject('htmlcleaner', 'utilities');
+			//$this->ipcleaner = $this->newObject('htmlcleaner', 'utilities');
+			//$this->iecleaner = $this->newObject('htmlcleaner', 'utilities');
 			$postarr['cclic'] = NULL;
 			$imparr = array('userid' => $userid,
 							'post_date' => $postarr['postdate'],
-							'post_content' => $this->ipcleaner->cleanHtml($postarr['postcontent']),
+							'post_content' => addslashes($postarr['postcontent']), //$this->ipcleaner->cleanHtml($postarr['postcontent']),
 							'post_title' => $postarr['posttitle'],
 							'post_category' => $postarr['postcat'],
-							'post_excerpt' => $this->iecleaner->cleanHtml($postarr['postexcerpt']),
+							'post_excerpt' => addslashes($postarr['postexcerpt']), //$this->iecleaner->cleanHtml($postarr['postexcerpt']),
 							'post_status' => $postarr['poststatus'],
 							'comment_status' => $postarr['commentstatus'],
 							'post_modified' => $postarr['postmodified'],
@@ -500,15 +500,15 @@ class dbblog extends dbTable
 			return $this->insert($mparr, 'tbl_blog_posts');
 		}
 		else {
-			$this->epcleaner = $this->newObject('htmlcleaner', 'utilities');
-			$this->eecleaner = $this->newObject('htmlcleaner', 'utilities');
+			//$this->epcleaner = $this->newObject('htmlcleaner', 'utilities');
+			//$this->eecleaner = $this->newObject('htmlcleaner', 'utilities');
 
 			$inseditarr = array('userid' => $userid,
 							'post_date' => $postarr['postdate'],
-							'post_content' => $this->epcleaner->cleanHtml($postarr['postcontent']),
-							'post_title' => $postarr['posttitle'],
+							'post_content' => addslashes($postarr['postcontent']), //$this->epcleaner->cleanHtml($postarr['postcontent']),
+							'post_title' => htmlentities($postarr['posttitle']),
 							'post_category' => $postarr['postcat'],
-							'post_excerpt' => $this->eecleaner->cleanHtml($postarr['postexcerpt']),
+							'post_excerpt' => addslashes(htmlentities($postarr['postexcerpt'])), //$this->eecleaner->cleanHtml($postarr['postexcerpt']),
 							'post_status' => $postarr['poststatus'],
 							'comment_status' => $postarr['commentstatus'],
 							'post_modified' => $postarr['postmodified'],
