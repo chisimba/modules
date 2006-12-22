@@ -15,6 +15,7 @@ $leftCol = NULL;
 $middleColumn = NULL;
 
 $rightSideColumn .= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_bloglist", "blog"), $this->objLanguage->languageText("mod_blog_intro", "blog"));
+$rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
 $rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
 
 if(empty($ret))
@@ -47,7 +48,7 @@ $leftCol = NULL;
 if($this->objUser->isLoggedIn())
 {
 	$leftCol .= $objSideBar->show();
-	$rightSideColumn .=$this->objblogOps->quickPost($this->objUser->userId(), TRUE);
+	//$rightSideColumn .=$this->objblogOps->quickPost($this->objUser->userId(), TRUE);
 }
 else {
 	$leftCol = $this->objblogOps->loginBox(TRUE);
