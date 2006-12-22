@@ -1130,7 +1130,7 @@ class blogops extends object
         }
         $ptable->startRow();
         $ptable->addCell($pclabel->show());
-        $ptable->addCell($pcon->showTinyMCE());
+        $ptable->addCell($pcon->showFCKEditor());
         $ptable->endRow();
         //CC licence
         $lic = $this->getObject('licensechooser', 'creativecommons');
@@ -1158,7 +1158,7 @@ class blogops extends object
         $siteblogcheckbox = new checkbox('checkbox');//,'unassign',false);
         $siteblogcheckbox =$siteblogcheckbox->show();
 
-        //IS Admin 
+        //IS Admin
 
         $siteblogcheckbox = new checkbox('checkbox'); //,'unassign',false);
         $siteblogcheckbox = $siteblogcheckbox->show();
@@ -1175,7 +1175,7 @@ class blogops extends object
         $postform = $postform->show();
 
 
-  
+
 
 
         return $postform;
