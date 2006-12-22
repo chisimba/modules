@@ -423,6 +423,7 @@ class dbblog extends dbTable
 			//$this->ecleaner = $this->newObject('htmlcleaner', 'utilities');
 			//$postarr['postcontent'] = preg_replace("/(\r\n|\n|\r)/", "", $postarr['postcontent']);
 			$pc = preg_replace('=<br */?>=i', "\n", $postarr['postcontent']);
+			$postarr['postcontent'] = str_ireplace("<br />", " <br /> ", $postarr['postcontent']);
 			$insarr = array('userid' => $userid,
 							'post_date' => date('r'),
 							'post_content' => addslashes($postarr['postcontent']), //$pc), //$this->pcleaner->cleanHtml($this->objblogOps->html2txt($postarr['postcontent'])),
@@ -443,6 +444,7 @@ class dbblog extends dbTable
 			//$this->pcleaner = $this->newObject('htmlcleaner', 'utilities');
 			//$this->ecleaner = $this->newObject('htmlcleaner', 'utilities');
 			//$postarr['postcontent'] = preg_replace("/(\r\n|\n|\r)/", " ", $postarr['postcontent']);
+			$postarr['postcontent'] = str_ireplace("<br />", " <br /> ", $postarr['postcontent']);
 			$pc = $postarr['postcontent'];
 			$edarr = array('userid' => $userid,
 							'post_date' => date('r'),
@@ -464,6 +466,7 @@ class dbblog extends dbTable
 			//$this->ipcleaner = $this->newObject('htmlcleaner', 'utilities');
 			//$this->iecleaner = $this->newObject('htmlcleaner', 'utilities');
 			$postarr['cclic'] = NULL;
+			$postarr['postcontent'] = str_ireplace("<br />", " <br /> ", $postarr['postcontent']);
 			$imparr = array('userid' => $userid,
 							'post_date' => $postarr['postdate'],
 							'post_content' => addslashes($postarr['postcontent']), //$this->ipcleaner->cleanHtml($postarr['postcontent']),
@@ -483,6 +486,7 @@ class dbblog extends dbTable
 		{
 			$this->ipcleaner = $this->newObject('htmlcleaner', 'utilities');
 			$this->iecleaner = $this->newObject('htmlcleaner', 'utilities');
+			$postarr['postcontent'] = str_ireplace("<br />", " <br /> ", $postarr['postcontent']);
 			$postarr['cclic'] = NULL;
 			$mparr = array('userid' => $userid,
 							'post_date' => $postarr['postdate'],
@@ -502,7 +506,7 @@ class dbblog extends dbTable
 		else {
 			//$this->epcleaner = $this->newObject('htmlcleaner', 'utilities');
 			//$this->eecleaner = $this->newObject('htmlcleaner', 'utilities');
-
+			$postarr['postcontent'] = str_ireplace("<br />", " <br /> ", $postarr['postcontent']);
 			$inseditarr = array('userid' => $userid,
 							'post_date' => $postarr['postdate'],
 							'post_content' => addslashes($postarr['postcontent']), //$this->epcleaner->cleanHtml($postarr['postcontent']),
