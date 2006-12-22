@@ -15,6 +15,7 @@ $leftCol = NULL;
 $middleColumn = NULL;
 
 $rightSideColumn .= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_bloglist", "blog"), $this->objLanguage->languageText("mod_blog_intro", "blog"));
+$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
 
 if(empty($ret))
 {

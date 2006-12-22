@@ -7,8 +7,7 @@ $leftMenu = &$this->newObject('usermenu', 'toolbar');
 $rightSideColumn = NULL; //$this->objLanguage->languageText('mod_blog_instructions', 'blog');
 $middleColumn = NULL;
 
-//show the link to all blogs
-//$rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
+$rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
 
 
 $rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
