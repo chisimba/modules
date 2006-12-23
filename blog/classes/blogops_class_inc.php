@@ -598,7 +598,7 @@ class blogops extends object
                     }
                 }
                 //$commentLink = $this->objComments->addCommentLink($type = NULL);
-                if($post['comment_status'] == 'Y')
+                if($post['comment_status'] == 'Y' || $post['comment_status'] == 'on')
                 {
                 	$commentCount = $this->objComments->getCount($post['id']);
                 }
@@ -620,7 +620,7 @@ class blogops extends object
                     $tbl->startHeaderRow();
                     $tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_editpost", "blog")); //edit
                     $tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_bookmarkpost", "blog")); //bookmark
-                    if($post['comment_status'] == 'Y')
+                    if($post['comment_status'] == 'Y' || $post['comment_status'] == 'on')
                 	{
                     	$tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_leavecomment", "blog")); //comments
                 	}
@@ -630,7 +630,7 @@ class blogops extends object
                     $tbl->startRow();
                     $tbl->addCell($edIcon); //edit icon
                     $tbl->addCell($bookmark->show()); //bookmark link(s)
-                    if($post['comment_status'] == 'Y')
+                    if($post['comment_status'] == 'Y' || $post['comment_status'] == 'on')
                 	{
                     	$tbl->addCell($this->setComments($post, FALSE) ." ".$commentCount); //$commentLink); //comment link(s)
                 	}
@@ -651,7 +651,7 @@ class blogops extends object
                     $tblnl->startHeaderRow();
                     $tblnl->addHeaderCell($this->objLanguage->languageText("mod_blog_bookmarkpost", "blog")); //bookmark
                     $tblnl->addHeaderCell($this->objLanguage->languageText("mod_blog_trackbackurl", "blog")); //trackback
-                    if($post['comment_status'] == 'Y')
+                    if($post['comment_status'] == 'Y' || $post['comment_status'] == 'on')
                 	{
                     	$tblnl->addHeaderCell($this->objLanguage->languageText("mod_blog_leavecomment", "blog"));
                 	}
@@ -660,7 +660,7 @@ class blogops extends object
                     $tblnl->startRow();
                     $tblnl->addCell($bookmark->show()); //bookmark link(s)
                     $tblnl->addCell($tburl."&nbsp;".$numtb); //trackback URL
-                    if($post['comment_status'] == 'Y')
+                    if($post['comment_status'] == 'Y' || $post['comment_status'] == 'on')
                 	{
                     	$tblnl->addCell($this->setComments($post, FALSE) ." ".$commentCount);
                 	}

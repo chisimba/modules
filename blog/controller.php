@@ -260,7 +260,7 @@ class blog extends controller
                         return 'noblogs_tpl.php';
                     }*/
                 }
- 
+
                     // $this->requiresLogin(FALSE);
                     $this->setVarByRef('userid', $userid);
 
@@ -278,10 +278,10 @@ class blog extends controller
                 //return the template!
                 return 'randblog_tpl.php';
                 break;
-                
+
                 //The siteblog function added by Irshaad Hoosain
                 case 'siteblog':
-               
+
                  //get the category ID if any
                 $catid = $this->getParam('catid');
                 //grab the user id
@@ -300,18 +300,18 @@ class blog extends controller
                     }
                 }
 
-               
+
                 if(isset($catid))
                 {
                     //grab all the posts in that category
                     $posts = $this->objDbBlog->getAllPosts($userid, $catid);
                 }
                 else {
-                    
+
                 }
 
                $posts = $this->objDbBlog->getAllPosts($userid, $catid);
-               
+
                 //send all that to the template
                 $this->setVarByRef('catid', $catid);
                 $this->setVarByRef('posts', $posts);
@@ -851,20 +851,21 @@ class blog extends controller
             case 'postadd':
             //Added by Ishaad Hoosain for siteblog
             //if user clicked checkbox he is admin
-           
+
                 if($this->objUser->isLoggedIn() == FALSE)
                 {
                     $this->nextAction('');
                     exit;
                 }
+
                 $mode = $this->getParam('mode');
-              
+
                 if(!$this->getParam('checkbox')==null){
-                $userid = 1 ;
-                }else{
-                $userid = $this->objUser->userId();
-             
+                	$userid = 1 ;
+                } else {
+                	$userid = $this->objUser->userId();
                 }
+
                 $id = $this->getParam('id');
                 $posttitle = $this->getParam('posttitle');
                 $postcontent = $this->getParam('postcontent');
@@ -889,7 +890,7 @@ class blog extends controller
                 elseif($mode == 'editpost') {
                     $insarredit = array('id' => $id,'posttitle' => $posttitle, 'postcontent' => $postcontent,
                                                     'postcat' => $cat, 'postexcerpt' => $excerpt, 'poststatus' => $status,
-                                                    'commentstatus' => 'Y',
+                                                    'commentstatus' => $commentsallowed,
                                                     'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate, 'cclic' => $cclic);
 
                     $this->objblogOps->quickPostAdd($userid, $insarredit, $mode);
