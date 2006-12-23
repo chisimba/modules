@@ -598,8 +598,11 @@ class blogops extends object
                     }
                 }
                 //$commentLink = $this->objComments->addCommentLink($type = NULL);
-                $commentCount = $this->objComments->getCount($post['id']);
-                //edit icon in a table 1 row x however number of things to do
+                if($post['comment_status'] == 'Y')
+                {
+                	$commentCount = $this->objComments->getCount($post['id']);
+                }
+                	//edit icon in a table 1 row x however number of things to do
                 if ($post['userid'] == $userid) {
                     $tburl = $tburl."<br />".$numtb."<br />".$sendtblink;
                     $this->objIcon = &$this->getObject('geticon', 'htmlelements');
@@ -617,14 +620,20 @@ class blogops extends object
                     $tbl->startHeaderRow();
                     $tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_editpost", "blog")); //edit
                     $tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_bookmarkpost", "blog")); //bookmark
-                    $tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_leavecomment", "blog")); //comments
+                    if($post['comment_status'] == 'Y')
+                	{
+                    	$tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_leavecomment", "blog")); //comments
+                	}
                     $tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_trackbackurl", "blog")); //trackback
                     $tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_cclic", "blog")); //Licence
                     $tbl->endHeaderRow();
                     $tbl->startRow();
                     $tbl->addCell($edIcon); //edit icon
                     $tbl->addCell($bookmark->show()); //bookmark link(s)
-                    $tbl->addCell($this->setComments($post, FALSE) ." ".$commentCount); //$commentLink); //comment link(s)
+                    if($post['comment_status'] == 'Y')
+                	{
+                    	$tbl->addCell($this->setComments($post, FALSE) ." ".$commentCount); //$commentLink); //comment link(s)
+                	}
                     $tbl->addCell($tburl); //trackback URL
                     $tbl->addCell($iconList); //cc licence
                     $tbl->addCell('');
@@ -642,13 +651,19 @@ class blogops extends object
                     $tblnl->startHeaderRow();
                     $tblnl->addHeaderCell($this->objLanguage->languageText("mod_blog_bookmarkpost", "blog")); //bookmark
                     $tblnl->addHeaderCell($this->objLanguage->languageText("mod_blog_trackbackurl", "blog")); //trackback
-                    $tblnl->addHeaderCell($this->objLanguage->languageText("mod_blog_leavecomment", "blog"));
+                    if($post['comment_status'] == 'Y')
+                	{
+                    	$tblnl->addHeaderCell($this->objLanguage->languageText("mod_blog_leavecomment", "blog"));
+                	}
                     $tblnl->addHeaderCell($this->objLanguage->languageText("mod_blog_cclic", "blog")); //Licence
                     $tblnl->endHeaderRow();
                     $tblnl->startRow();
                     $tblnl->addCell($bookmark->show()); //bookmark link(s)
                     $tblnl->addCell($tburl."&nbsp;".$numtb); //trackback URL
-                    $tblnl->addCell($this->setComments($post, FALSE) ." ".$commentCount);
+                    if($post['comment_status'] == 'Y')
+                	{
+                    	$tblnl->addCell($this->setComments($post, FALSE) ." ".$commentCount);
+                	}
                     $tblnl->addCell($iconList); //cc licence
                     $tblnl->endRow();
                     echo $this->objTB->autodiscCode();
