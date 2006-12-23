@@ -40,6 +40,7 @@ class mathml extends controller
         $this->objLanguage = &$this->getObject("language", "language");
         //get the mathml parser class
         $this->objMaths = $this->getObject("mathmlparser","mathml");
+        $this->objMathImg = $this->getObject("mathimg","mathml");
         
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
@@ -58,13 +59,18 @@ class mathml extends controller
                 $expression = $this->getParam('expression');
                 If(!isset($expression))
                 {
-            		$expression = "int_-1^1 sqrt(1-x^2)dx = pi/2";
+            		$expression = " 5 < a S(f)(t)=a_{0}+sum{n=1}{+infty}{a_{n} cos(n omega t)+b_{n} sin(n omega t)}";
+            		//$expression = "x+y=z";
+            		//$expression = "int_-1^1 sqrt(1-x^2) = pi/2";
                 }
 				
                 $ar = $this->objMaths->mathmlreturn($expression);
                 // Parse the MathML
                 
+                $image = $this->objMathImg->render($expression);
+                
 				$this->setVarByRef('ar', $ar);
+				$this->setVarByRef('image', $image);
                 return "main_tpl.php";
                 break;
 			case 'render':

@@ -20,6 +20,24 @@
   
   print $ar."<br />".$this->objFont->show()."<br />".$this->objHelp->show();
   
+  echo '<br /><br /><p>'.$image.'</p>';
+  
+  $this->objHelp=new windowpop;
+  $this->objHelp->set('location','modules/mathml/resources/phpmathpublisher/doc/help.html');
+  $this->objHelp->set('linktext','Click here to learn more about rendering MathML as an image');
+  $this->objHelp->set('width','800');
+  $this->objHelp->set('height','600');
+  $this->objHelp->set('left','300');
+  $this->objHelp->set('top','400');
+  $this->objHelp->set('scrollbars', TRUE);
+  $this->objHelp->set('resizable', TRUE);
+  $this->objHelp->set('window_name', 'phpmathml');
+  $this->objHelp->putJs();
+  
+  echo $this->objHelp->show();
+  
+  
+  
   //http://www.w3.org/TR/MathML2/, http://en.wikipedia.org/wiki/MathML,
 //http://www.mathmlcentral.com/format.html
 ?>
