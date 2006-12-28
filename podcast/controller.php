@@ -60,6 +60,22 @@ class podcast extends controller
     }
     
     /**
+    * Method to turn off User Login Requirement for certain actions
+    * @param string $action Action to be performed
+    * @return boolean
+    */
+    public function requiresLogin($action)
+    {
+        $allowedPreloginActions = array ('playpodcast');
+        
+        if (in_array($action, $allowedPreloginActions)) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
+    
+    /**
      * Method to show the podcast home page
      *
      * @return string Template
