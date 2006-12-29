@@ -1,17 +1,12 @@
 <?php
 /**
-* @package mcqtests
-*/
-
-/**
-* Template to display the test to the student for answering.
-* @param array $test The test to be answered.
-* @param array $data The questions and answers in the test.
-*/
-
-
-if(isset($closeWin) && $closeWin){
-echo "<script language=\"javascript\" type=\"text/javascript\">
+ * Template to display the test to the student for answering.
+ * @package mcqtests
+ * @param array $test The test to be answered.
+ * @param array $data The questions and answers in the test.
+ */
+if (isset($closeWin) && $closeWin) {
+    echo "<script language=\"javascript\" type=\"text/javascript\">
     //<![CDATA[
     function reloadPage()
     {
@@ -22,27 +17,25 @@ echo "<script language=\"javascript\" type=\"text/javascript\">
 </script>";
     $this->setVar('bodyParams', "onload='javascript:reloadPage();'");
 }
-
 $mode = $this->getParam('mode', 'mode');
-
-if($mode == 'notoolbar'){
+if ($mode == 'notoolbar') {
     $this->setVar('pageSuppressBanner', TRUE);
     $this->setVar('pageSuppressToolbar', TRUE);
     $this->setVar('pageSuppressIM', TRUE);
-}else{
+} else {
     $this->setLayoutTemplate('mcqtests_layout_tpl.php');
 }
 
 // set up html elements
-$objTable =& $this->newObject('htmltable', 'htmlelements');
-$objRadio =& $this->newObject('radio', 'htmlelements');
-$objButton =& $this->newObject('button', 'htmlelements');
-$objInput =& $this->newObject('textinput', 'htmlelements');
-$objForm =& $this->newObject('form', 'htmlelements');
-$objImage =& $this->newObject('image', 'htmlelements');
-$objLabel =& $this->newObject('label', 'htmlelements');
-
-$objHighlightLabels = $this->getObject('highlightlabels', 'htmlelements');
+$objTable = &$this->loadClass('htmltable', 'htmlelements');
+$objRadio = &$this->loadClass('radio', 'htmlelements');
+$objButton = &$this->loadClass('button', 'htmlelements');
+$objInput = &$this->loadClass('textinput', 'htmlelements');
+$objForm = &$this->loadClass('form', 'htmlelements');
+$objImage = &$this->loadClass('image', 'htmlelements');
+$objLabel = &$this->loadClass('label', 'htmlelements');
+$objLayer = &$this->loadClass('layer', 'htmlelements');
+$objHighlightLabels = $this->newObject('highlightlabels', 'htmlelements');
 echo $objHighlightLabels->show();
 
 // set up language items
@@ -58,21 +51,39 @@ $submitLabel = $this->objLanguage->languageText('word_submit');
 $continueLabel = $this->objLanguage->languageText('mod_mcqtests_continue', 'mcqtests');
 $durationLabel = $this->objLanguage->languageText('mod_mcqtests_timeleft', 'mcqtests');
 $gotoLabel = $this->objLanguage->languageText('mod_mcqtests_gotoquestions', 'mcqtests');
-
 $this->setVarByRef('heading', $heading);
-
-$alpha = array('','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t');
-
+$alpha = array(
+    '',
+    'a',
+    'b',
+    'c',
+    'd',
+    'e',
+    'f',
+    'g',
+    'h',
+    'i',
+    'j',
+    'k',
+    'l',
+    'm',
+    'n',
+    'o',
+    'p',
+    'q',
+    'r',
+    's',
+    't'
+);
 // Get duration of test in minutes, convert to milliseconds, set timeout
-if($test['timed']){
-    if(isset($testDuration) && !empty($testDuration)){
+if ($test['timed']) {
+    if (isset($testDuration) && !empty($testDuration)) {
         $duration = $testDuration*60*1000;
         $time = $testDuration;
-    }else{
+    } else {
         $duration = $test['duration']*60*1000;
         $time = $test['duration'];
     }
-
     $javascript = "<script language=\"javascript\" type=\"text/javascript\">
         //<![CDATA[
         var count = ".$time.";
@@ -142,7 +153,6 @@ if($test['timed']){
 
     //]]>
     </script>";
-
     echo $javascript;
     $body = 'onload="timeOut(); window.opener.location.reload();"
     onkeypress="javascript:return disableCtrlKeyCombination(event);"
@@ -150,8 +160,8 @@ if($test['timed']){
     onsave="javascript:alert(\'All editing functionality has been disabled\');return false;"
     onselectstart="javascript:alert(\'All editing functionality has been disabled\');return false;"
     onunload="opener.location.reload();"';
-    $this->setVarByRef('bodyParams',$body);
-}else{
+    $this->setVarByRef('bodyParams', $body);
+} else {
     $javascript = "<script language=\"javascript\" type=\"text/javascript\">
         //<![CDATA[
         function disableCtrlKeyCombination(e)
@@ -194,7 +204,6 @@ if($test['timed']){
 
     //]]>
     </script>";
-
     echo $javascript;
     $body = 'onload="javascript:window.opener.location.reload();"
     onkeypress="javascript:return disableCtrlKeyCombination(event);"
@@ -202,192 +211,170 @@ if($test['timed']){
     onsave="javascript:alert(\'All editing functionality has been disabled\');return false;"
     onselectstart="javascript:alert(\'All editing functionality has been disabled\');return false;"
     onunload="opener.location.reload();"';
-    $this->setVarByRef('bodyParams',$body);
+    $this->setVarByRef('bodyParams', $body);
 }
-
 // Display the test details
 $str = '<font size="3"><b>'.$testLabel.':</b>&nbsp;&nbsp;'.$test['name'];
-$str .= '<br /><b>'.$totalLabel.':</b>&nbsp;&nbsp;'.$test['totalmark'];
-$str .= '<p><b>'.$descriptonLabel.':</b><br />'.$test['description'].'</p></font>';
-
+$str.= '<br /><b>'.$totalLabel.':</b>&nbsp;&nbsp;'.$test['totalmark'];
+$str.= '<p><b>'.$descriptonLabel.':</b><br />'.$test['description'].'</p></font>';
 $counter = '';
-
 // Display the time left to the student
-if($test['timed']){
+if ($test['timed']) {
     $durHour = floor($time/60);
     $durMin = $time%60;
-
-    if(strlen($durMin) == 1){
-        $durMin = (0).$durMin;
+    if (strlen($durMin) == 1) {
+        $durMin = (0) .$durMin;
     }
-
-    $counter .= '<font size="2"><b>'.$durationLabel.':</b>&nbsp;&nbsp;';
+    $counter.= '<font size="2"><b>'.$durationLabel.':</b>&nbsp;&nbsp;';
 
     $objInput = new textinput('countdown', $durHour.':'.$durMin);
     $objInput->extra = 'readonly="readonly"';
     $objInput->size = 8;
-    $counter .= $objInput->show();
-    $counter .= '</font><br />';
+    $counter.= $objInput->show();
+    $counter.= '</font><br />';
 
     $objInput = new textinput('testduration', $time);
     $objInput->fldType = 'hidden';
-    $counter .= $objInput->show();
+    $counter.= $objInput->show();
 }
-
+$objTable = new htmltable();
 $objTable->cellpadding = 5;
 $objTable->width = '99%';
 $objTable->startRow();
-$objTable->addCell('','10%');
+$objTable->addCell('', '10%');
 $objTable->endRow();
-
 $objTable->startRow();
-$objTable->addCell($counter,'','','','','colspan="2"');
+$objTable->addCell($counter, '', '', '', '', 'colspan="2"');
 $objTable->endRow();
-
-$hidden1=''; $count=0;
-
+$hidden1 = '';
+$count = 0;
 // Parse the MathML
-$objMathML =& $this->getObject('parse4mathml','filters');
-
+$objMathML = &$this->newObject('parse4mathml', 'filters');
 // Display questions
-if(!empty($data)){
+if (!empty($data)) {
     $i = $data[0]['questionorder'];
-    $count = count($data) + $i - 1;
+    $count = count($data) +$i-1;
     $qnum = $i;
-    foreach($data as $line){
+    foreach($data as $line) {
         $row = array();
         $row[] = '<nobr><b>'.$questionLabel.' '.$line['questionorder'].':</b></nobr>';
-
         $parsed = stripslashes($line['question']);
         $parsed = $objMathML->parseAll($parsed);
-
         $row[] = '<b>'.$parsed.'</b>';
-
         $objTable->addRow($row, 'odd" valign="top');
-
-//         if(!empty($line['imageName'])){
-//             $row = array();
-//             $row[] = '';
-//
-//             $objImage = new image();
-//             $objImage->src = $this->uri(array('action'=>'viewimage', 'fileid'=>$line['imageId']));
-//
-//             $row[] = $objImage->show();
-//
-//             $objTable->addRow($row, 'odd');
-//         }
-
+        //         if(!empty($line['imageName'])){
+        //             $row = array();
+        //             $row[] = '';
+        //
+        //             $objImage = new image();
+        //             $objImage->src = $this->uri(array('action'=>'viewimage', 'fileid'=>$line['imageId']));
+        //
+        //             $row[] = $objImage->show();
+        //
+        //             $objTable->addRow($row, 'odd');
+        //         }
         $row = array();
         $row[] = '<b>'.$markLabel.':</b>';
         $row[] = '<b>'.$line['mark'].'</b>';
-
         $objTable->addRow($row, 'odd');
-
-        if(!empty($line['hint'])){
+        if (!empty($line['hint'])) {
             $row = array();
             $row[] = '<b>'.$hintLabel.':</b>';
             $row[] = '<b>'.$line['hint'].'</b>';
-
             $objTable->addRow($row, 'odd');
         }
         // hidden elements for the question
-        $objInput->textinput('questionId'.$line['questionorder'], $line['id']);
-        $objInput->fldType='hidden';
+        $objInput = new textinput('questionId'.$line['questionorder'], $line['id']);
+        $objInput->fldType = 'hidden';
         $hidden = $objInput->show();
 
         $objRadio = new radio('ans'.$line['questionorder']);
         $objRadio->setBreakSpace('<br />');
-
         // Display answers
-        if(!empty($line['answers'])){
-            foreach($line['answers'] as $key=>$val){
-                $ansNum = '<b>&nbsp;'.$alpha[($key+1)].')</b>&nbsp;&nbsp;';
+        if (!empty($line['answers'])) {
+            foreach($line['answers'] as $key => $val) {
+                $ansNum = '<b>&nbsp;'.$alpha[($key+1) ].')</b>&nbsp;&nbsp;';
                 $objRadio->addOption($val['id'], $ansNum.$val['answer']);
-
-                if(isset($val['selected']) && !empty($val['selected'])){
+                if (isset($val['selected']) && !empty($val['selected'])) {
                     $objRadio->setSelected($val['id']);
                     $objInput->textinput('selected'.$line['questionorder'], $val['selected']);
-                    $objInput->fldType='hidden';
-                    $hidden .= $objInput->show();
+                    $objInput->fldType = 'hidden';
+                    $hidden.= $objInput->show();
                 }
             }
         }
         $row = array();
         $row[] = $hidden;
         $row[] = $objRadio->show();
-
         $objTable->addRow($row, 'even');
         $qnum = $line['questionorder'];
     }
     // hidden element for the first question displayed
-    $objInput->textinput('first', $i);
-    $objInput->fldType='hidden';
+    $objInput = new textinput('first', $i);
+    $objInput->fldType = 'hidden';
     $hidden1 = $objInput->show();
 
-    $objInput->textinput('qnum', $qnum);
-    $objInput->fldType='hidden';
-    $hidden1 .= $objInput->show();
+    $objInput = new textinput('qnum', $qnum);
+    $objInput->fldType = 'hidden';
+    $hidden1.= $objInput->show();
 }
 // hidden element for the test id
-$objInput->textinput('id', $test['id']);
-$objInput->fldType='hidden';
-$hidden = $objInput->show().$hidden1;
+$objInput = new textinput('id', $test['id']);
+$objInput->fldType = 'hidden';
+$hidden = $objInput->show() .$hidden1;
 
-$objInput->textinput('count', $count);
-$objInput->fldType='hidden';
-$hidden .= $objInput->show();
+$objInput = new textinput('count', $count);
+$objInput->fldType = 'hidden';
+$hidden.= $objInput->show();
 
-$objInput->textinput('mode', $mode);
-$objInput->fldType='hidden';
-$hidden .= $objInput->show();
+$objInput = new textinput('mode', $mode);
+$objInput->fldType = 'hidden';
+$hidden.= $objInput->show();
 
-$objInput->textinput('resultId', $resultId);
-$objInput->fldType='hidden';
-$hidden .= $objInput->show();
-
+$objInput = new textinput('resultId', $resultId);
+$objInput->fldType = 'hidden';
+$hidden.= $objInput->show();
 // Submit buttons
-if($data[0]['count'] > $qnum){
-    $objButton->button('savebutton', $continueLabel);
-    $objButton->extra=' ondblclick="javascript:return false" onclick="document.getElementById(\'input_savebutton\').disabled=true;document.getElementById(\'form_submittest\').submit();"';
-//    $objButton->setToSubmit();
+if ($data[0]['count'] > $qnum) {
+    $objButton = new button('savebutton', $continueLabel);
+    $objButton->extra = ' ondblclick="javascript:return false" onclick="document.getElementById(\'input_savebutton\').disabled=true;document.getElementById(\'form_submittest\').submit();"';
+    //    $objButton->setToSubmit();
     $action = 'continuetest';
-}else{
-    $objButton->button('savebutton', $submitLabel);
-    $objButton->extra=' ondblclick="javascript:return false" onclick="document.getElementById(\'input_savebutton\').disabled=true;document.getElementById(\'form_submittest\').submit();"';
-//    $objButton->setToSubmit();
+} else {
+    $objButton = new button('savebutton', $submitLabel);
+    $objButton->extra = ' ondblclick="javascript:return false" onclick="document.getElementById(\'input_savebutton\').disabled=true;document.getElementById(\'form_submittest\').submit();"';
+    //    $objButton->setToSubmit();
     $action = 'marktest';
 }
-$objInput->textinput('action', $action);
-$objInput->fldType='hidden';
-$hidden .= $objInput->show();
+$objInput = new textinput('action', $action);
+$objInput->fldType = 'hidden';
+$hidden.= $objInput->show();
+if ($action == 'continuetest') {
+    $objTable->startRow();
+    $objTable->addCell($hidden.$objButton->show() , '', '', 'left', '', '');
+    $objTable->endRow();
+    //    $row = array();
+    //    $row[] = $hidden;
+    //    $row[] = $objButton->show();
+    //    $objTable->addRow($row);
 
-if($action=='continuetest'){
+} else {
     $objTable->startRow();
-    $objTable->addCell($hidden.$objButton->show(),'','','left','','');
+    $objTable->addCell($hidden, '', '', 'right', '', '');
+    $objTable->addCell($objButton->show() , '', '', 'right', '', '');
     $objTable->endRow();
-//    $row = array();
-//    $row[] = $hidden;
-//    $row[] = $objButton->show();
-//    $objTable->addRow($row);
-}else{
-    $objTable->startRow();
-    $objTable->addCell($hidden,'','','right','','');
-    $objTable->addCell($objButton->show(),'','','right','','');
-    $objTable->endRow();
-//    $row = array();
-//    $row[] = $hidden;
-//    $row[] = $objButton->show();
-//    $objTable->addRow($row);
+    //    $row = array();
+    //    $row[] = $hidden;
+    //    $row[] = $objButton->show();
+    //    $objTable->addRow($row);
+
 }
-
 // form to submit the test
-$objForm->form('submittest', $this->uri(''));
+$objForm = new form('submittest', $this->uri(''));
 $objForm->addToForm($objTable->show());
-
-$str .= $objForm->show();
-
+$str.= $objForm->show();
 // navigation & submission
-$javascript="<script language=\"javascript\" type=\"text/javascript\">
+$javascript = "<script language=\"javascript\" type=\"text/javascript\">
     //<![CDATA[
     function submitform(val){
         document.getElementById('input_qnum').value=val;
@@ -398,10 +385,12 @@ $javascript="<script language=\"javascript\" type=\"text/javascript\">
     //]]>
     </script>";
 echo $javascript;
-
 $nav = '<p align="center"><b>'.$gotoLabel.'</b></p><p align="center">';
-$nav .= $this->generateLinks($data[0]['questionorder'], $data[0]['count'], 10).'</p>';
-$str .= $nav;
-
-echo $str;
+$nav.= $this->generateLinks($data[0]['questionorder'], $data[0]['count'], 10) .'</p>';
+$str.= $nav;
+$objLayer = new layer();
+$objLayer->padding = '10px';
+$objLayer->str = $str;
+$pageLayer = $objLayer->show();
+echo $pageLayer;
 ?>
