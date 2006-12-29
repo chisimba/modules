@@ -6,20 +6,25 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 /**
-* @package email
-* Default template for the new email module
-* Author Kevin Cyster
-*/
+ * @package email
+ * Default template for the new email module
+ * Author Kevin Cyster
+ */
+
+// set up javascript headers
+$headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
+$this->appendArrayVar('headerParams', $headerParams);
+
 // set up html elements
-$objHeader = &$this->newObject('htmlheading', 'htmlelements');
-$objTable = &$this->newObject('htmltable', 'htmlelements');
 $objIcon = &$this->newObject('geticon', 'htmlelements');
-$objLink = &$this->newObject('link', 'htmlelements');
-$objInput = &$this->newObject('textinput', 'htmlelements');
-$objEditor = &$this->newObject('htmlarea', 'htmlelements');
-$objTabbedbox = &$this->newObject('tabbedbox', 'htmlelements');
-$objFieldset = &$this->newObject('fieldset', 'htmlelements');
-$objLayer = &$this->newObject('layer', 'htmlelements');
+$objHeader = &$this->loadClass('htmlheading', 'htmlelements');
+$objTable = &$this->loadClass('htmltable', 'htmlelements');
+$objLink = &$this->loadClass('link', 'htmlelements');
+$objInput = &$this->loadClass('textinput', 'htmlelements');
+$objEditor = &$this->loadClass('htmlarea', 'htmlelements');
+$objTabbedbox = &$this->loadClass('tabbedbox', 'htmlelements');
+$objFieldset = &$this->loadClass('fieldset', 'htmlelements');
+$objLayer = &$this->loadClass('layer', 'htmlelements');
 
 // set up language items
 $heading = $this->objLanguage->languageText('mod_email_manageaddressbooks', 'email');
@@ -43,16 +48,20 @@ $addIcon = $objIcon->getLinkedIcon($this->uri(array(
 )) , 'add');
 
 // set up heading
+$objHeader = new htmlHeading();
 $objHeader->str = $heading."&nbsp;".$addIcon;
 $objHeader->type = 1;
 $pageData = $objHeader->show();
-$objTable = new htmltable();
 
+$objTable = new htmltable();
+$objTable->id = "bookList";
+$objTable->css_class = "sorttable";
 //    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
+$objTable->row_attributes = ' name="row_'.$objTable->id.'"';
 $objTable->startRow();
 $objTable->addCell($booksLabel, '', '', '', 'heading', '');
-$objTable->addCell($entriesLabel, '20%', '', '', 'heading', '');
+$objTable->addCell($entriesLabel, '20%', '', 'center', 'heading', '');
 $objTable->addCell('', '10%', '', '', 'heading', '');
 $objTable->endRow();
 if ($arrBookList == FALSE && empty($arrContextList)) {
@@ -64,7 +73,7 @@ if ($arrBookList == FALSE && empty($arrContextList)) {
         foreach($arrContextList as $context) {
             // get number of entries
             $groupId = $this->objGroupAdmin->getLeafId(array(
-                $context['contextCode']
+                $context['contextcode']
             ));
             $arrContextUserList = $this->objGroupAdmin->getSubGroupUsers($groupId, array(
                 'userId',
@@ -73,17 +82,19 @@ if ($arrBookList == FALSE && empty($arrContextList)) {
                 'username'
             ));
             $entries = count($arrContextUserList);
+
             // set up link
             $objLink = new link($this->uri(array(
                 'action' => 'addressbook',
-                'contextCode' => $context['contextCode'],
+                'contextcode' => $context['contextcode'],
                 'menutext' => $context['menutext']
             )) , 'email');
             $objLink->link = $context['menutext'];
             $contextLink = $objLink->show();
+
             $objTable->startRow();
             $objTable->addCell($contextLink, '', '', '', '', '');
-            $objTable->addCell($entries, '', '', 'right', '', '');
+            $objTable->addCell($entries, '', '', 'center', '', '');
             $objTable->addCell('', '', '', '', '', '');
             $objTable->endRow();
         }
@@ -93,6 +104,7 @@ if ($arrBookList == FALSE && empty($arrContextList)) {
             // get number of entries
             $arrBookEntriesList = $this->dbBookEntries->listBookEntries($book['id']);
             $entries = $arrBookEntriesList != FALSE ? count($arrBookEntriesList) : 0;
+
             // set up edit icon
             $objIcon->title = $editBooksLabel;
             $editIcon = $objIcon->getEditIcon($this->uri(array(
@@ -123,9 +135,10 @@ if ($arrBookList == FALSE && empty($arrContextList)) {
                 'bookId' => $book['id']
             );
             $deleteIcon = $objIcon->getDeleteIconWithConfirm('', $deleteArray, 'email', $confirmLabel);
+
             $objTable->startRow();
             $objTable->addCell($bookName, '', '', '', '', '');
-            $objTable->addCell($entries, '', '', 'right', '', '');
+            $objTable->addCell($entries, '', '', 'center', '', '');
             $objTable->addCell($editIcon."&nbsp;".$deleteIcon, '', '', '', '', '');
             $objTable->endRow();
         }
@@ -135,6 +148,7 @@ if ($mode == 'add') {
     $objInput = new textinput('bookName', '', '', '60');
     $objInput->extra = ' MAXLENGTH="50"';
     $bookInput = $objInput->show();
+
     $objTable->startRow();
     $objTable->addCell($bookInput, '', '', '', 'odd', '');
     $objTable->addCell('', '', '', '', 'odd', '');
@@ -142,15 +156,16 @@ if ($mode == 'add') {
     $objTable->endRow();
 }
 $bookTable = $objTable->show();
+
 $objFieldset = new fieldset();
 $objFieldset->contents = $bookTable;
 $bookFieldset = $objFieldset->show();
-
 // set up buttons
 if ($mode == 'add') {
     $objButton = new button('addbutton', $submitLabel);
     $objButton->setToSubmit();
     $buttons = "<br />".$objButton->show();
+
     $objButton = new button('cancelbutton', $cancelLabel);
     $objButton->extra = ' onclick="javascript:document.getElementById(\'input_cancelbutton\').value=\'Cancel\';document.getElementById(\'form_hiddenform\').submit();"';
     $buttons.= "&nbsp;".$objButton->show();
@@ -158,13 +173,13 @@ if ($mode == 'add') {
     $objButton = new button('editbutton', $submitLabel);
     $objButton->setToSubmit();
     $buttons = "<br />".$objButton->show();
+
     $objButton = new button('cancelbutton', $cancelLabel);
     $objButton->extra = ' onclick="javascript:document.getElementById(\'input_cancelbutton\').value=\'Cancel\';document.getElementById(\'form_hiddenform\').submit();"';
     $buttons.= "&nbsp;".$objButton->show();
 } else {
     $buttons = '';
 }
-
 // set up form
 $objForm = new form('bookform', $this->uri(array(
     'action' => 'manageaddressbooks'
@@ -179,6 +194,7 @@ $folderForm = $objForm->show();
 // hidden element
 $objInput = new textinput('cancelbutton', '', 'hidden', '');
 $hiddenInput = $objInput->show();
+
 $objForm = new form('hiddenform', $this->uri(array(
     'action' => 'manageaddressbooks'
 )));
@@ -192,6 +208,8 @@ $objLink = new link($this->uri(array(
 ) , 'email'));
 $objLink->link = $backLabel;
 $pageData.= "<br />".$objLink->show();
+
+$objLayer = new layer();
 $objLayer->padding = '10px';
 $objLayer->addToStr($pageData);
 $pageLayer = $objLayer->show();

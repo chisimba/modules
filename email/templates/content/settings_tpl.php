@@ -6,27 +6,28 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 /**
-* @package email
-* Default template for the new email module
-* Author Kevin Cyster
-*
-*/
+ * @package email
+ * Default template for the new email module
+ * Author Kevin Cyster
+ *
+ */
+// set up javascript headers
 $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
 $this->appendArrayVar('headerParams', $headerParams);
 
 // set up html elements
-$objHeader = &$this->newObject('htmlheading', 'htmlelements');
-$objTable = &$this->newObject('htmltable', 'htmlelements');
 $objIcon = &$this->newObject('geticon', 'htmlelements');
-$objInput = &$this->newObject('textinput', 'htmlelements');
-$objText = &$this->newObject('textarea', 'htmlelements');
-$objCheck = &$this->newObject('checkbox', 'htmlelements');
-$objDrop = &$this->newObject('dropdown', 'htmlelements');
-$objButton = &$this->newObject('button', 'htmlelements');
-$objForm = &$this->newObject('form', 'htmlelements');
-$objLink = &$this->newObject('link', 'htmlelements');
-$objLayer = &$this->newObject('layer', 'htmlelements');
-$objTabbedbox = &$this->newObject('tabbedbox', 'htmlelements');
+$objHeader = &$this->loadClass('htmlheading', 'htmlelements');
+$objTable = &$this->loadClass('htmltable', 'htmlelements');
+$objInput = &$this->loadClass('textinput', 'htmlelements');
+$objText = &$this->loadClass('textarea', 'htmlelements');
+$objCheck = &$this->loadClass('checkbox', 'htmlelements');
+$objDrop = &$this->loadClass('dropdown', 'htmlelements');
+$objButton = &$this->loadClass('button', 'htmlelements');
+$objForm = &$this->loadClass('form', 'htmlelements');
+$objLink = &$this->loadClass('link', 'htmlelements');
+$objLayer = &$this->loadClass('layer', 'htmlelements');
+$objTabbedbox = &$this->loadClass('tabbedbox', 'htmlelements');
 
 // set up language items
 $heading = $this->objLanguage->languageText('mod_email_managesettings', 'email');
@@ -84,7 +85,6 @@ $autoDelete = isset($configs['auto_delete']) ? $configs['auto_delete'] : 0;
 $signature = isset($configs['signature']) ? $configs['signature'] : '';
 $updated = isset($configs['updated']) ? $configs['updated'] : date('Y-m-d H:i:s');
 $name = $this->dbRouting->getName($this->userId);
-
 // set up code to text
 $date = $this->objDate->formatDate($updated);
 $array = array(
@@ -93,6 +93,7 @@ $array = array(
 $confimUpdateLabel = $this->objLanguage->code2Txt('mod_email_update', 'email', $array);
 
 // set up heading
+$objHeader = new htmlHeading();
 $objHeader->str = $heading;
 $objHeader->type = 1;
 $pageData = $objHeader->show();
@@ -104,19 +105,23 @@ $objDrop->addOption(1, $yesLabel."&nbsp;");
 $objDrop->setSelected($surnameFirst);
 $objDrop->extra = ' onchange="javascript:xajax_buttonDisplay(\'user\');xajax_userDisplay(\'name\',this.value,document.getElementById(\'input_username\').value)"';
 $surnameDrop = $objDrop->show();
+
 $objDrop = new dropdown('username');
 $objDrop->addOption(1, $noLabel);
 $objDrop->addOption(0, $yesLabel."&nbsp;");
 $objDrop->setSelected($hideUsername);
 $objDrop->extra = ' onchange="javascript:xajax_buttonDisplay(\'user\');xajax_userDisplay(\'username\',this.value,document.getElementById(\'input_name\').value)"';
 $usernameDrop = $objDrop->show();
+
 $objLayer = new layer();
 $objLayer->id = 'userdisplay';
 $objLayer->str = $name;
 $userLayer = $objLayer->show();
+
 $objLayer = new layer();
 $objLayer->id = 'user_button';
 $buttonLayer = $objLayer->show();
+
 $objTable = new htmltable();
 //    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
@@ -143,7 +148,9 @@ $objTable->startRow();
 $objTable->addCell($buttonLayer, '', '', '', '', '');
 $objTable->endRow();
 $userTable = $objTable->show();
+
 $objTabbedbox = new tabbedbox();
+$objTabbedbox->extra = 'style="padding: 10px;"';
 $objTabbedbox->addTabLabel("<b>".$userDisplayLabel."</b>");
 $objTabbedbox->addBoxContent($userTable);
 $userTabbedbox = $objTabbedbox->show();
@@ -152,9 +159,11 @@ $userTabbedbox = $objTabbedbox->show();
 $objText = new textarea('signature', $signature, '5', '40');
 $objText->extra = ' onkeypress="javascript:xajax_buttonDisplay(\'signature\');"';
 $signatureText = $objText->show();
+
 $objLayer = new layer();
 $objLayer->id = 'signature_button';
 $buttonLayer = $objLayer->show();
+
 $objTable = new htmltable();
 //    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
@@ -173,7 +182,9 @@ $objTable->startRow();
 $objTable->addCell($buttonLayer, '', '', '', '', '');
 $objTable->endRow();
 $signatureTable = $objTable->show();
+
 $objTabbedbox = new tabbedbox();
+$objTabbedbox->extra = 'style="padding: 10px;"';
 $objTabbedbox->addTabLabel("<b>".$signatureLabel."</b>");
 $objTabbedbox->addBoxContent($signatureTable);
 $signatureTabbedbox = $objTabbedbox->show();
@@ -186,9 +197,11 @@ foreach($arrFolderList as $folder) {
 $objDrop->setSelected($defaultFolderId);
 $objDrop->extra = ' onchange="javascript:xajax_buttonDisplay(\'folder\');"';
 $folderDrop = $objDrop->show();
+
 $objLayer = new layer();
 $objLayer->id = 'folder_button';
 $buttonLayer = $objLayer->show();
+
 $objTable = new htmltable();
 //    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
@@ -207,7 +220,9 @@ $objTable->startRow();
 $objTable->addCell($buttonLayer, '', '', '', '', '');
 $objTable->endRow();
 $folderTable = $objTable->show();
+
 $objTabbedbox = new tabbedbox();
+$objTabbedbox->extra = 'style="padding: 10px;"';
 $objTabbedbox->addTabLabel("<b>".$defaultFolderLabel."</b>");
 $objTabbedbox->addBoxContent($folderTable);
 $folderTabbedbox = $objTabbedbox->show();
@@ -219,9 +234,11 @@ $objDrop->addOption(1, $yesLabel."&nbsp;");
 $objDrop->setSelected($autoDelete);
 $objDrop->extra = ' onchange="javascript:xajax_buttonDisplay(\'delete\');"';
 $autoDrop = $objDrop->show();
+
 $objLayer = new layer();
 $objLayer->id = 'delete_button';
 $buttonLayer = $objLayer->show();
+
 $objTable = new htmltable();
 //    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
@@ -240,7 +257,9 @@ $objTable->startRow();
 $objTable->addCell($buttonLayer, '', '', '', '', '');
 $objTable->endRow();
 $autoTable = $objTable->show();
+
 $objTabbedbox = new tabbedbox();
+$objTabbedbox->extra = 'style="padding: 10px;"';
 $objTabbedbox->addTabLabel("<b>".$autoLabel."</b>");
 $objTabbedbox->addBoxContent($autoTable);
 $autoTabbedbox = $objTabbedbox->show();
@@ -264,6 +283,7 @@ $addIcon = $objIcon->getLinkedIcon($this->uri(array(
 $objHeader->str = $addRuleLabel.$addIcon;
 $objHeader->type = 3;
 $addRuleHeading = $objHeader->show();
+
 $objTable = new htmltable();
 //    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
@@ -274,6 +294,7 @@ $objTable->startRow();
 $objTable->addCell($addRuleHeading, '', '', '', '', '');
 $objTable->endRow();
 $ruleTextTable = $objTable->show();
+
 $objTable = new htmltable();
 $objTable->id = "rulesTable";
 $objTable->css_class = "sorttable";
@@ -357,7 +378,9 @@ if (empty($arrRulesList)) {
     }
 }
 $rulesTable = $objTable->show();
+
 $objTabbedbox = new tabbedbox();
+$objTabbedbox->extra = 'style="padding: 10px;"';
 $objTabbedbox->addTabLabel("<b>".$emailRulesLabel."</b>");
 $objTabbedbox->addBoxContent($ruleTextTable.$rulesTable);
 $ruleTabbedbox = $objTabbedbox->show();
@@ -367,6 +390,7 @@ $pageData.= $configForm.$ruleTabbedbox;
 $objLink = new link($this->uri('') , 'email');
 $objLink->link = $backLabel;
 $pageData.= "<br />".$objLink->show();
+
 $objLayer = new layer();
 $objLayer->padding = '10px';
 $objLayer->addToStr($pageData);

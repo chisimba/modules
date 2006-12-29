@@ -5,33 +5,39 @@ if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 /**
-* Model class for the table tbl_email_new
-* @author Kevin Cyster
-*/
+ * Model class for the table tbl_email_new
+ * @author Kevin Cyster
+ */
 class dbrules extends dbTable
 {
     /**
-    * Method to construct the class.
-    *
-    * @access public
-    * @return
-    */
+     * @var string $userId The userId of the current user
+     * @access private
+     */
+    private $userId;
+
+    /**
+     * Method to construct the class.
+     *
+     * @access public
+     * @return
+     */
     public function init()
     {
         parent::init('tbl_email_rules');
         $this->table = 'tbl_email_rules';
-        $this->objUser = &$this->getObject('user', 'security');
+        $this->objUser = &$this->newObject('user', 'security');
         $this->userId = $this->objUser->userId();
-        $this->dbEmail = $this->getObject('dbemail');
-        $this->dbRouting = $this->getObject('dbrouting');
+        $this->dbEmail = $this->newObject('dbemail');
+        $this->dbRouting = $this->newObject('dbrouting');
     }
 
     /**
-    * Method to retrieve rules from the data base
-    *
-    * @access public
-    * @return array $data The rule data or false on failure
-    */
+     * Method to retrieve rules from the data base
+     *
+     * @access public
+     * @return array $data The rule data or false on failure
+     */
     public function getRules()
     {
         $sql = "SELECT * FROM ".$this->table;
@@ -44,12 +50,12 @@ class dbrules extends dbTable
     }
 
     /**
-    * Method to retrieve a rule from the data base
-    *
-    * @access public
-    * @param string $ruleId The id of the rule to retrieve
-    * @return array $data The rule data or false on failure
-    */
+     * Method to retrieve a rule from the data base
+     *
+     * @access public
+     * @param string $ruleId The id of the rule to retrieve
+     * @return array $data The rule data or false on failure
+     */
     public function getRule($ruleId)
     {
         $sql = "SELECT * FROM ".$this->table;
@@ -63,16 +69,16 @@ class dbrules extends dbTable
     }
 
     /**
-    * Method to add rules to the data base
-    *
-    * @access public
-    * @param string $mailAction The mail (1-incoming|2-outgoing)
-    * @param string $mailField The field to search (1-to|2-from|3-subject|4-message)
-    * @param string $criteria The value to search for
-    * @param string $ruleAction The action to perform (1-move|2-copy|3-read)
-    * @param string $destFolderId The folder emails must be moved/copied to
-    * @return string $ruleId The id of the new rule that was added
-    */
+     * Method to add rules to the data base
+     *
+     * @access public
+     * @param string $mailAction The mail (1-incoming|2-outgoing)
+     * @param string $mailField The field to search (1-to|2-from|3-subject|4-message)
+     * @param string $criteria The value to search for
+     * @param string $ruleAction The action to perform (1-move|2-copy|3-read)
+     * @param string $destFolderId The folder emails must be moved/copied to
+     * @return string $ruleId The id of the new rule that was added
+     */
     public function addRule($mailAction, $mailField, $criteria, $ruleAction, $destFolderId)
     {
         $fields = array();
@@ -87,17 +93,17 @@ class dbrules extends dbTable
     }
 
     /**
-    * Method to edit rules to the data base
-    *
-    * @access public
-    * @param string $ruleId The id of the rule
-    * @param string $mailAction The mail (1-incoming|2-outgoing)
-    * @param string $mailField The field to search (1-to|2-from|3-subject|4-message)
-    * @param string $criteria The value to search for
-    * @param string $ruleAction The action to perform (1-move|2-copy|3-read)
-    * @param string $destFolderId The folder emails must be moved/copied to
-    * @return
-    */
+     * Method to edit rules to the data base
+     *
+     * @access public
+     * @param string $ruleId The id of the rule
+     * @param string $mailAction The mail (1-incoming|2-outgoing)
+     * @param string $mailField The field to search (1-to|2-from|3-subject|4-message)
+     * @param string $criteria The value to search for
+     * @param string $ruleAction The action to perform (1-move|2-copy|3-read)
+     * @param string $destFolderId The folder emails must be moved/copied to
+     * @return
+     */
     public function editRule($ruleId, $mailAction, $mailField, $criteria, $ruleAction, $destFolderId)
     {
         $fields = array();
@@ -112,24 +118,24 @@ class dbrules extends dbTable
     }
 
     /**
-    * Method to delete rules from the data base
-    *
-    * @access public
-    * @param string $ruleId The id of the rule to delete
-    * @return
-    */
+     * Method to delete rules from the data base
+     *
+     * @access public
+     * @param string $ruleId The id of the rule to delete
+     * @return
+     */
     public function deleteRule($ruleId)
     {
         $this->delete('id', $ruleId);
     }
 
     /**
-    * Method to apply email rules
-    *
-    * @access public
-    * @param string $folderId The folder the email rules are being applied to
-    * @return
-    */
+     * Method to apply email rules
+     *
+     * @access public
+     * @param string $folderId The folder the email rules are being applied to
+     * @return
+     */
     public function applyRules($folderId)
     {
         // only works on new or sent email

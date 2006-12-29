@@ -6,20 +6,25 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 /**
-* @package email
-* Default template for the new email module
-* Author Kevin Cyster
-*/
+ * @package email
+ * Default template for the new email module
+ * Author Kevin Cyster
+ */
+
+// set up javascript headers
+$headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
+$this->appendArrayVar('headerParams', $headerParams);
+
 // set up html elements
-$objHeader = &$this->newObject('htmlheading', 'htmlelements');
-$objTable = &$this->newObject('htmltable', 'htmlelements');
 $objIcon = &$this->newObject('geticon', 'htmlelements');
-$objInput = &$this->newObject('textinput', 'htmlelements');
-$objButton = &$this->newObject('button', 'htmlelements');
-$objForm = &$this->newObject('form', 'htmlelements');
-$objLink = &$this->newObject('link', 'htmlelements');
-$objLayer = &$this->newObject('layer', 'htmlelements');
-$objFieldset = &$this->newObject('fieldset', 'htmlelements');
+$objHeader = &$this->loadClass('htmlheading', 'htmlelements');
+$objTable = &$this->loadClass('htmltable', 'htmlelements');
+$objInput = &$this->loadClass('textinput', 'htmlelements');
+$objButton = &$this->loadClass('button', 'htmlelements');
+$objForm = &$this->loadClass('form', 'htmlelements');
+$objLink = &$this->loadClass('link', 'htmlelements');
+$objLayer = &$this->loadClass('layer', 'htmlelements');
+$objFieldset = &$this->loadClass('fieldset', 'htmlelements');
 
 // set up language items
 $heading = $this->objLanguage->languageText('mod_email_managefolders', 'email');
@@ -46,6 +51,7 @@ $addIcon = $objIcon->getLinkedIcon($this->uri(array(
 )) , 'add');
 
 // set up heading
+$objHeader = new htmlHeading();
 $objHeader->str = $heading."&nbsp;".$addIcon;
 $objHeader->type = 1;
 $pageData = $objHeader->show();
@@ -57,12 +63,15 @@ $folderNameInput = $objInput->show();
 
 // set up folders table
 $objTable = new htmltable();
+$objTable->id = "folderList";
+$objTable->css_class = "sorttable";
 //    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
+$objTable->row_attributes = ' name="row_'.$objTable->id.'"';
 $objTable->startRow();
 $objTable->addCell("<b>".$folderLabel."</b>", '50%', '', '', 'heading', '');
-$objTable->addCell("<b>".$unreadLabel."</b>", '20%', '', '', 'heading', '');
-$objTable->addCell("<b>".$totalLabel."</b>", '20%', '', '', 'heading', '');
+$objTable->addCell("<b>".$unreadLabel."</b>", '20%', '', 'center', 'heading', '');
+$objTable->addCell("<b>".$totalLabel."</b>", '20%', '', 'center', 'heading', '');
 $objTable->addCell('', '10%', '', '', 'heading', '');
 $objTable->endRow();
 foreach($arrFolderList as $folder) {
@@ -82,6 +91,7 @@ foreach($arrFolderList as $folder) {
     if ($mode == 'edit' && $folder['id'] == $folderId) {
         $objInput = new textinput('folderId', $folderId, 'hidden', '');
         $folderName = $objInput->show();
+
         $objInput = new textinput('folderName', $folder['folder_name'], '', '60');
         $objInput->extra = 'MAXLENGHTH="50"';
         $folderName.= $objInput->show();
@@ -107,8 +117,8 @@ foreach($arrFolderList as $folder) {
     }
     $objTable->startRow();
     $objTable->addCell($folderName, '', '', '', '', '');
-    $objTable->addCell($unreadMail, '', '', 'right', '', '');
-    $objTable->addCell($folder['allmail'], '', '', 'right', '', '');
+    $objTable->addCell($unreadMail, '', '', 'center', '', '');
+    $objTable->addCell($folder['allmail'], '', '', 'center', '', '');
     $objTable->addCell($editIcon."&nbsp;".$deleteIcon, '', '', 'center', '', '');
     $objTable->endRow();
 }
@@ -121,6 +131,7 @@ if ($mode == 'add') {
     $objTable->endRow();
 }
 $folderTable = $objTable->show();
+
 $objFieldset = new fieldset();
 $objFieldset->contents = $folderTable;
 $folderFieldset = $objFieldset->show();
@@ -130,6 +141,7 @@ if ($mode == 'add') {
     $objButton = new button('addbutton', $submitLabel);
     $objButton->setToSubmit();
     $buttons = "<br />".$objButton->show();
+
     $objButton = new button('cancelbutton', $cancelLabel);
     $objButton->extra = ' onclick="javascript:document.getElementById(\'input_cancelbutton\').value=\'Cancel\';document.getElementById(\'form_hiddenform\').submit();"';
     $buttons.= "&nbsp;".$objButton->show();
@@ -137,6 +149,7 @@ if ($mode == 'add') {
     $objButton = new button('editbutton', $submitLabel);
     $objButton->setToSubmit();
     $buttons = "<br />".$objButton->show();
+
     $objButton = new button('cancelbutton', $cancelLabel);
     $objButton->extra = ' onclick="javascript:document.getElementById(\'input_cancelbutton\').value=\'Cancel\';document.getElementById(\'form_hiddenform\').submit();"';
     $buttons.= "&nbsp;".$objButton->show();
@@ -159,6 +172,7 @@ $folderForm = $objForm->show();
 // hidden element
 $objInput = new textinput('cancelbutton', '', 'hidden', '');
 $hiddenInput = $objInput->show();
+
 $objForm = new form('hiddenform', $this->uri(array(
     'action' => 'managefolders',
     'currentFolderId' => $currentFolderId
@@ -174,6 +188,8 @@ $objLink = new link($this->uri(array(
 )) , 'email');
 $objLink->link = $backLabel;
 $pageData.= "<br />".$objLink->show();
+
+$objLayer = new layer();
 $objLayer->padding = '10px';
 $objLayer->addToStr($pageData);
 $pageLayer = $objLayer->show();

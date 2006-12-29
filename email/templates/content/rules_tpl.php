@@ -6,21 +6,22 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 /**
-* @package email
-* Default template for the new email module
-* Author Kevin Cyster
-*/
+ * @package email
+ * Default template for the new email module
+ * Author Kevin Cyster
+ */
+
 // set up html elements
-$objHeader = &$this->newObject('htmlheading', 'htmlelements');
-$objTable = &$this->newObject('htmltable', 'htmlelements');
 $objIcon = &$this->newObject('geticon', 'htmlelements');
-$objInput = &$this->newObject('textinput', 'htmlelements');
-$objDrop = &$this->newObject('dropdown', 'htmlelements');
-$objButton = &$this->newObject('button', 'htmlelements');
-$objForm = &$this->newObject('form', 'htmlelements');
-$objLink = &$this->newObject('link', 'htmlelements');
-$objLayer = &$this->newObject('layer', 'htmlelements');
-$objFieldset = &$this->newObject('fieldset', 'htmlelements');
+$objHeader = &$this->loadClass('htmlheading', 'htmlelements');
+$objTable = &$this->loadClass('htmltable', 'htmlelements');
+$objInput = &$this->loadClass('textinput', 'htmlelements');
+$objDrop = &$this->loadClass('dropdown', 'htmlelements');
+$objButton = &$this->loadClass('button', 'htmlelements');
+$objForm = &$this->loadClass('form', 'htmlelements');
+$objLink = &$this->loadClass('link', 'htmlelements');
+$objLayer = &$this->loadClass('layer', 'htmlelements');
+$objFieldset = &$this->loadClass('fieldset', 'htmlelements');
 
 // set up language items
 $backLabel = $this->objLanguage->languageText('word_back');
@@ -50,6 +51,7 @@ $readLabel = $this->objLanguage->languageText('phrase_markasread');
 $attachmentsLabel = $this->objLanguage->languageText('word_attachments');
 
 // set up heading
+$objHeader = new htmlHeading();
 if ($mode == 'addrule') {
     $objHeader->str = $addRuleLabel;
 } else {
@@ -57,7 +59,6 @@ if ($mode == 'addrule') {
 }
 $objHeader->type = 1;
 $pageData = $objHeader->show();
-
 // get data
 $rule = $this->dbRules->getRule($ruleId);
 if ($mode == 'addrule') {
@@ -80,6 +81,7 @@ $objDrop->addOption(2, $outgoingLabel);
 $objDrop->setSelected($mailAction);
 $objDrop->extra = ' onchange="javascript:xajax_actionDisplay(this.value);"';
 $mailDrop = $objDrop->show();
+
 $objDrop = new dropdown('messageField');
 $objDrop->addOption(NULL, '- '.$selectLabel.' -');
 $objDrop->addOption(1, $allMessagesLabel);
@@ -87,6 +89,7 @@ $objDrop->addOption(2, $filteredMessagesLabel);
 $objDrop->setSelected($messageField);
 $objDrop->extra = ' onchange="javascript:xajax_filterDisplay(this.value);"';
 $messageDrop = $objDrop->show();
+
 if ($mode == 'editrule') {
     if ($rule['mail_field'] != NULL) {
         $objDrop = new dropdown('mailField');
@@ -105,10 +108,12 @@ if ($mode == 'editrule') {
 } else {
     $fieldDrop = '';
 }
+
 $objLayer = new layer();
 $objLayer->id = 'fieldLayer';
 $objLayer->str = $fieldDrop;
 $fieldLayer = $objLayer->show();
+
 if ($mode == 'editrule') {
     if ($rule['mail_field'] != NULL && $rule['mail_field'] != 5) {
         $objInput = new textinput('criteria', $rule['criteria']);
@@ -119,10 +124,12 @@ if ($mode == 'editrule') {
 } else {
     $criteriaInput = '';
 }
+
 $objLayer = new layer();
 $objLayer->id = 'criteriaLayer';
 $objLayer->str = $criteriaInput;
 $criteriaLayer = $objLayer->show();
+
 if ($mode == 'editrule') {
     $objDrop = new dropdown('ruleAction');
     $objDrop->addOption(NULL, '- '.$selectLabel.' -');
@@ -134,10 +141,12 @@ if ($mode == 'editrule') {
 } else {
     $actionDrop = '';
 }
+
 $objLayer = new layer();
 $objLayer->id = 'actionLayer';
 $objLayer->str = $actionDrop;
 $actionLayer = $objLayer->show();
+
 if ($mode == 'editrule') {
     if ($rule['rule_action'] != 2) {
         $arrFolderList = $this->dbFolders->listFolders();
@@ -159,10 +168,12 @@ if ($mode == 'editrule') {
 } else {
     $folderDrop = '';
 }
+
 $objLayer = new layer();
 $objLayer->id = 'destLayer';
 $objLayer->str = $folderDrop;
 $destLayer = $objLayer->show();
+
 $objTable = new htmltable();
 //    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
@@ -191,17 +202,23 @@ $objTable->addCell("<b>".$destinationLabel."</b>", '', '', '', '', '');
 $objTable->addCell($destLayer, '', '', '', '', '');
 $objTable->endRow();
 $rulesTable = $objTable->show();
+
 $objFieldset = new fieldset();
+$objFieldset->extra = ' style="border: 1px solid #808080; margin: 3px; padding: 10px;"';
 $objFieldset->contents = $rulesTable;
 $ruleFieldset = $objFieldset->show();
+
 $objButton = new button('submitbutton', $submitLabel);
 $objButton->setToSubmit();
 $buttons = "<br/>".$objButton->show();
+
 $objButton = new button('cancelbutton', $cancelLabel);
 $objButton->extra = ' onclick="javascript:document.getElementById(\'form_hiddenform\').submit();"';
 $buttons.= "&nbsp;".$objButton->show();
+
 $objInput = new textinput('ruleId', $ruleId, 'hidden', '');
 $hiidenInput = $objInput->show();
+
 $objForm = new form('rulesform', $this->uri(array(
     'action' => 'saverule',
     'mode' => $mode
@@ -210,18 +227,20 @@ $objForm->addToForm($ruleFieldset);
 $objForm->addToForm($buttons);
 $objForm->addToForm($hiidenInput);
 $forms = $objForm->show();
+
 $objForm = new form('hiddenform', $this->uri(array(
     'action' => 'managesettings'
 )));
 $forms.= $objForm->show();
 $pageData.= $forms;
-
 // set up exit link
+
 $objLink = new link($this->uri(array(
     'action' => 'managesettings'
 )) , 'email');
 $objLink->link = $backLabel;
 $pageData.= "<br />".$objLink->show();
+
 $objLayer = new layer();
 $objLayer->padding = '10px';
 $objLayer->addToStr($pageData);

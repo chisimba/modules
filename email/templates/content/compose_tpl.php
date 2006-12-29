@@ -6,20 +6,21 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 /**
-* @package email
-* Default template for the new email module
-* Author Kevin Cyster
-*/
+ * @package email
+ * Default template for the new email module
+ * Author Kevin Cyster
+ */
+
 // set up html elements
-$objHeader = &$this->newObject('htmlheading', 'htmlelements');
-$objTable = &$this->newObject('htmltable', 'htmlelements');
 $objIcon = &$this->newObject('geticon', 'htmlelements');
-$objLink = &$this->newObject('link', 'htmlelements');
-$objInput = &$this->newObject('textinput', 'htmlelements');
-$objText = &$this->newObject('textarea', 'htmlelements');
-$objTabbedbox = &$this->newObject('tabbedbox', 'htmlelements');
-$objFieldset = &$this->newObject('fieldset', 'htmlelements');
-$objLayer = &$this->newObject('layer', 'htmlelements');
+$objHeader = &$this->loadClass('htmlheading', 'htmlelements');
+$objTable = &$this->loadClass('htmltable', 'htmlelements');
+$objLink = &$this->loadClass('link', 'htmlelements');
+$objInput = &$this->loadClass('textinput', 'htmlelements');
+$objText = &$this->loadClass('textarea', 'htmlelements');
+$objTabbedbox = &$this->loadClass('tabbedbox', 'htmlelements');
+$objFieldset = &$this->loadClass('fieldset', 'htmlelements');
+$objLayer = &$this->loadClass('layer', 'htmlelements');
 
 // set up language items
 $heading = $this->objLanguage->languageText('mod_email_compose', 'email');
@@ -60,6 +61,7 @@ if ($text != $signature) {
 }
 
 // set up heading
+$objHeader = new htmlHeading();
 $objHeader->str = $heading;
 $objHeader->type = 1;
 $pageData = $objHeader->show();
@@ -68,22 +70,28 @@ $pageData = $objHeader->show();
 $objInput = new textinput('firstname', '', '', '30');
 $objInput->extra = ' onkeyup="javascript:xajax_composeList(\'firstName\',this.value,document.getElementById(\'input_recipient\').value);"';
 $firstnameInput = $objInput->show();
+
 $objInput = new textinput('surname', '', '', '30');
 $objInput->extra = ' onkeyup="javascript:xajax_composeList(\'surname\',this.value,document.getElementById(\'input_recipient\').value);"';
 $surnameInput = $objInput->show();
+
 $objLayer = new layer();
 $objLayer->id = 'toList';
 $objLayer->str = $toList;
 $toLayer = $objLayer->show();
+
 $objFieldset = new fieldset();
-$objFieldset->extra = ' style="width:620px; height:100px;"';
+$objFieldset->extra = ' style="height: 100px; border: 1px solid #808080; margin: 3px; padding: 10px;"';
 $objFieldset->contents = $toLayer;
 $toFieldset = $objFieldset->show();
+
 $objInput = new textinput('recipient', $recipientList, 'hidden', '');
 $recipientInput = $objInput->show();
-$objInput = new textinput('subject', $subject, '', '103');
+
+$objInput = new textinput('subject', $subject, '', '115');
 $subjectInput = $objInput->show();
-$objText = new textarea('message', $message, 12, '100');
+
+$objText = new textarea('message', $message, 12, '132');
 $messageText = $objText->show();
 
 // set up address book icon
@@ -104,7 +112,9 @@ $objTable->addCell($firstnameInput, '50%', '', '', '', '');
 $objTable->addCell("<div id =\"firstnameDiv\"></div>", '', '', '', '', '');
 $objTable->endRow();
 $searchTable = $objTable->show();
+
 $objFieldset = new fieldset();
+$objFieldset->extra = ' style="border: 1px solid #808080; margin: 3px; padding: 10px;"';
 $objFieldset->legend = "<b>".$searchFirstnameLabel."</b>";
 $objFieldset->contents = $searchTable;
 $searchFieldset = $objFieldset->show();
@@ -121,7 +131,9 @@ $objTable->addCell($surnameInput, '50%', '', '', '', '');
 $objTable->addCell("<div id =\"surnameDiv\"></div>", '', '', '', '', '');
 $objTable->endRow();
 $searchTable = $objTable->show();
+
 $objFieldset = new fieldset();
+$objFieldset->extra = ' style="border: 1px solid #808080; margin: 3px; padding: 10px;"';
 $objFieldset->legend = "<b>".$searchSurnameLabel."</b>";
 $objFieldset->contents = $searchTable;
 $searchFieldset.= $objFieldset->show();
@@ -146,10 +158,13 @@ $objTable->startRow();
 $objTable->addCell("<b>".$messageLabel.":</b><br />".$messageText, '', '', '', '', '');
 $objTable->endRow();
 $emailTable = $objTable->show();
+
 $objTabbedbox = new tabbedbox();
+$objTabbedbox->extra = 'style="padding: 10px;"';
 $objTabbedbox->addTabLabel($emailLabel."&nbsp;&#160;".$addressIcon);
 $objTabbedbox->addBoxContent($emailTable);
 $emailTab = $objTabbedbox->show();
+
 $objTable = new htmltable();
 //    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
@@ -165,10 +180,12 @@ $attachInput = $objInput->show();
 $action = $this->uri(array(
     'action' => 'upload'
 ));
+
 $objButton = new button('upload', $uploadLabel);
 //    $objButton->setToSubmit();
 $objButton->extra = ' onclick="javascript:document.getElementById(\'form_composeform\').action=\''.$action.'\';document.getElementById(\'form_composeform\').submit();"';
 $uploadButton = $objButton->show();
+
 $objTable = new htmltable();
 //    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
@@ -183,28 +200,16 @@ $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell("<b>".$maxUploadLabel."</b>", '', '', '', 'warning', 'colspan="3"');
 $objTable->endRow();
-$files = $this->attachLocation.'*';
 if ($emailId != NULL) {
-    $arrAttachments = $this->dbAttachments->getAttachments($emailId);
-    if ($arrAttachments) {
-        $checkDirectory = file_exists($this->attachLocation);
-        if ($checkDirectory === FALSE) {
-            mkdir($this->attachLocation, 0777);
-        }
-        foreach($arrAttachments as $attachment) {
-            $handle = fopen($this->attachLocation.$attachment['file_name'], "wb");
-            $contents = fwrite($handle, $attachment['file_data']);
-            fclose($handle);
-        }
-    }
+    $this->emailFiles->createAttachments($emailId);
 }
-
-if($attachments != NULL){
+$attachments = $this->emailFiles->getAttachments();
+if ($attachments != NULL) {
     $objTable->startRow();
     $objTable->addCell("<b>".$filesLabel."</b>", '', '', '', '', 'colspan="3"');
     $objTable->endRow();
     $i = 1;
-    foreach($attachments as $attachment){
+    foreach($attachments as $attachment) {
         $deleteArray = $this->uri(array(
             'action' => 'deleteattachment',
             'file' => $attachment['filename'],
@@ -215,16 +220,19 @@ if($attachments != NULL){
         $deleteIcon = "<a href=\"#\">".$objIcon->show() ."</a>";
         $objTable->startRow();
         $objTable->addCell($i++.".", '3%', '', '', '', '');
-        $objTable->addCell($attachment['filename'] , '50%', '', '', '', '');
+        $objTable->addCell($attachment['filename'], '50%', '', '', '', '');
         $objTable->addCell($deleteIcon, '', '', 'left', '', '');
         $objTable->endRow();
     }
 }
 $fileTable = $objTable->show();
+
 $objTabbedbox = new tabbedbox();
+$objTabbedbox->extra = 'style="padding: 10px;"';
 $objTabbedbox->addTabLabel($attachmentsLabel);
 $objTabbedbox->addBoxContent($fileTable);
 $attachmentsTab = $objTabbedbox->show();
+
 $objTable = new htmltable();
 //    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
@@ -237,6 +245,7 @@ $attachmentsTable = $objTable->show();
 $objButton = new button('submitbutton', $sendLabel);
 $objButton->extra = ' onclick="javascript:if(document.getElementById(\'input_recipient\').value!=\'\'){document.getElementById(\'form_composeform\').sendbutton.value=\'Send\';document.getElementById(\'form_composeform\').submit();}else{alert(\''.$requiredLabel.'\');document.getElementById(\'form_composeform\').surname.focus();}"';
 $buttons = "<br />".$objButton->show();
+
 $objButton = new button('cancelbutton', $cancelLabel);
 $objButton->extra = ' onclick="javascript:document.getElementById(\'form_hiddenform\').cancelbutton.value=\'Cancel\';document.getElementById(\'form_hiddenform\').submit();"';
 $buttons.= "&#160;".$objButton->show();
@@ -244,6 +253,7 @@ $buttons.= "&#160;".$objButton->show();
 // set up form
 $objInput = new textinput('sendbutton', '', 'hidden', '');
 $hiddenInput = $objInput->show();
+
 $objForm = new form('composeform', $this->uri(array(
     'action' => 'sendemail'
 )));
@@ -257,6 +267,7 @@ $composeForm = $objForm->show();
 // set up hidden form
 $objInput = new textinput('cancelbutton', '', 'hidden', '');
 $hiddenInput = $objInput->show();
+
 $objForm = new form('hiddenform', $this->uri(array(
     'action' => 'sendemail'
 )));
@@ -270,6 +281,7 @@ $objLink = new link($this->uri(array(
 ) , 'email'));
 $objLink->link = $backLabel;
 $pageData.= "<br />".$objLink->show();
+
 $objLayer = new layer();
 $objLayer->padding = '10px';
 $objLayer->str = $pageData;

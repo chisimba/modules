@@ -5,34 +5,40 @@ if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 /**
-* Model class for the table tbl_email_folders
-* @author Kevin Cyster
-*/
+ * Model class for the table tbl_email_folders
+ * @author Kevin Cyster
+ */
 class dbfolders extends dbTable
 {
     /**
-    * Method to construct the class.
-    *
-    * @access public
-    * @return
-    */
+     * @var string $userId The userId of the current user
+     * @access private
+     */
+    private $userId;
+
+    /**
+     * Method to construct the class.
+     *
+     * @access public
+     * @return
+     */
     public function init()
     {
         parent::init('tbl_email_folders');
         $this->table = 'tbl_email_folders';
-        $this->dbRules = &$this->getObject('dbrules');
-        $this->dbRouting = &$this->getObject('dbRouting');
-        $this->objUser = &$this->getObject('user', 'security');
+        $this->dbRules = &$this->newObject('dbrules');
+        $this->dbRouting = &$this->newObject('dbRouting');
+        $this->objUser = &$this->newObject('user', 'security');
         $this->userId = $this->objUser->userId();
     }
 
     /**
-    * Method for adding a row to the database.
-    *
-    * @access public
-    * @param string $folderName The name of the folder
-    * @return string $folderId The id of the folder
-    */
+     * Method for adding a row to the database.
+     *
+     * @access public
+     * @param string $folderName The name of the folder
+     * @return string $folderId The id of the folder
+     */
     public function addFolder($folderName)
     {
         $fields = array();
@@ -43,13 +49,13 @@ class dbfolders extends dbTable
     }
 
     /**
-    * Method for editing a row on the database.
-    *
-    * @access public
-    * @param string $folderId The id of the folder to edit
-    * @param string $folderName The name of the folder
-    * @return
-    */
+     * Method for editing a row on the database.
+     *
+     * @access public
+     * @param string $folderId The id of the folder to edit
+     * @param string $folderName The name of the folder
+     * @return
+     */
     public function editFolder($folderId, $folderName)
     {
         $fields = array();
@@ -59,23 +65,23 @@ class dbfolders extends dbTable
     }
 
     /**
-    * Method for deleting a row from the database.
-    *
-    * @access public
-    * @param string $folderId The id of the folder to delete
-    * @return
-    */
+     * Method for deleting a row from the database.
+     *
+     * @access public
+     * @param string $folderId The id of the folder to delete
+     * @return
+     */
     public function deleteFolder($folderId)
     {
         $this->delete('id', $folderId);
     }
 
     /**
-    * Method for listing all rows for the current user
-    *
-    * @access public
-    * @return array $data  All row information.
-    */
+     * Method for listing all rows for the current user
+     *
+     * @access public
+     * @return array $data  All row information.
+     */
     public function listFolders()
     {
         $sql = "SELECT * FROM ".$this->table;
@@ -98,12 +104,12 @@ class dbfolders extends dbTable
     }
 
     /**
-    * Method for getting a folder for the current user
-    *
-    * @access public
-    * @param string $folderId The id of the folder to retrieve
-    * @return array $data  All row information.
-    */
+     * Method for getting a folder for the current user
+     *
+     * @access public
+     * @param string $folderId The id of the folder to retrieve
+     * @return array $data  All row information.
+     */
     public function getFolder($folderId)
     {
         $sql = "SELECT * FROM ".$this->table;

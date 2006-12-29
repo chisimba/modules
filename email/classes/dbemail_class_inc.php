@@ -5,39 +5,46 @@ if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 /**
-* Model class for the table tbl_email_new
-* @author Kevin Cyster
-*/
+ * Model class for the table tbl_email_new
+ * @author Kevin Cyster
+ */
 class dbemail extends dbTable
 {
     /**
-    * Method to construct the class.
-    *
-    * @access public
-    * @return
-    */
+     * @var string $userId The userId of the current user
+     * @access private
+     */
+    private $userId;
+
+    /**
+     * Method to construct the class.
+     *
+     * @access public
+     * @return
+     */
     public function init()
     {
         parent::init('tbl_email');
         $this->table = 'tbl_email';
-        $this->objUser = &$this->getObject('user', 'security');
+        $this->objUser = &$this->newObject('user', 'security');
         $this->userId = $this->objUser->userId();
-        $this->objModules = &$this->getObject('modules', 'modulecatalogue');
-        $this->objLanguage = &$this->getObject('language', 'language');
-        $this->dbRouting = &$this->getObject('dbrouting');
-        $this->dbAttachments = &$this->getObject('dbattachments');
+        $this->objModules = &$this->newObject('modules', 'modulecatalogue');
+        $this->objLanguage = &$this->newObject('language', 'language');
+        $this->dbRouting = &$this->newObject('dbrouting');
+        $this->dbAttachments = &$this->newObject('dbattachments');
+        $this->emailFiles = &$this->newObject('emailfiles');
     }
 
     /**
-    * Method for adding a row to the database.
-    *
-    * @access public
-    * @param string $recipientList The list of recipientIds
-    * @param string $subject The email subject
-    * @param string $message The email message
-    * @param string $attachments An indicator if the email has attachments 1=YES 0=NO
-    * @return string $emailId The id of the email
-    */
+     * Method for adding a row to the database.
+     *
+     * @access public
+     * @param string $recipientList The list of recipientIds
+     * @param string $subject The email subject
+     * @param string $message The email message
+     * @param string $attachments An indicator if the email has attachments 1=YES 0=NO
+     * @return string $emailId The id of the email
+     */
     public function sendMail($recipientList, $subject, $message, $attachment)
     {
         $fields = array();
@@ -58,16 +65,18 @@ class dbemail extends dbTable
 
             }
         }
+        $attachCount = $this->emailFiles->saveAttachments($emailId);
+        $this->update('id', $emailId, $attachCount);
         return $emailId;
     }
 
     /**
-    * Method for getting a row from the database.
-    *
-    * @access public
-    * @param string $emailId The id of the email to retrieve
-    * @return array $data The email data
-    */
+     * Method for getting a row from the database.
+     *
+     * @access public
+     * @param string $emailId The id of the email to retrieve
+     * @return array $data The email data
+     */
     public function getMail($emailId)
     {
         $sql = "SELECT * FROM ".$this->table;
@@ -81,12 +90,12 @@ class dbemail extends dbTable
     }
 
     /**
-    * Method to resend and email
-    *
-    * @access public
-    * @param string $emailId The id of the email to resend
-    * @return NULL
-    */
+     * Method to resend and email
+     *
+     * @access public
+     * @param string $emailId The id of the email to resend
+     * @return string $newEmailId The id of the 'copied' email
+     */
     public function resendEmail($emailId)
     {
         $emailData = $this->getMail($emailId);
@@ -94,27 +103,26 @@ class dbemail extends dbTable
         $subject = $emailData['subject'];
         $message = $emailData['message'];
         $attachment = $emailData['attachments'];
+        $this->emailFiles->createAttachments($emailId);
         $newEmailId = $this->sendMail($recipientList, $subject, $message, $attachment);
-        if ($attachment >= 1) {
-            $this->dbAttachments->resendAttachments($emailId, $newEmailId);
-        }
+        return $newEmailId;
     }
 
     /**
-    * Method to notify an internal email recipient via instant messaging
-    *
-    * @access public
-    * @param string $recipient - the userId of the recipient
-    * @return
-    */
+     * Method to notify an internal email recipient via instant messaging
+     *
+     * @access public
+     * @param string $recipient - the userId of the recipient
+     * @return
+     */
     public function instantMessage($recipient)
     {
         $message = $this->objLanguage->languageText('mod_email_email');
         if ($this->objModules->checkIfRegistered('instantmessaging')) {
-            $objIMDbOptions = $this->getObject('dboptions', 'instantmessaging');
+            $objIMDbOptions = $this->newObject('dboptions', 'instantmessaging');
             // Fail if table does not exist
             if ($objIMDbOptions->get('notifyreceive', $recipient)) {
-                $objIM = &$this->getObject('dbentries', 'instantmessaging');
+                $objIM = &$this->newObject('dbentries', 'instantmessaging');
                 //System notification
                 $objIM->sendInstantMessage($recipient, null, $message);
             }

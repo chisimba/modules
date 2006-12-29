@@ -5,33 +5,39 @@ if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 /**
-* Model class for the table tbl_email_folders
-* @author Kevin Cyster
-*/
+ * Model class for the table tbl_email_folders
+ * @author Kevin Cyster
+ */
 class dbbookentries extends dbTable
 {
     /**
-    * Method to construct the class.
-    *
-    * @access public
-    * @return
-    */
+     * @var string $userId The userId of the current user
+     * @access private
+     */
+    private $userId;
+
+    /**
+     * Method to construct the class.
+     *
+     * @access public
+     * @return
+     */
     public function init()
     {
         parent::init('tbl_email_addressbook_entries');
         $this->table = 'tbl_email_addressbook_entries';
-        $this->objUser = &$this->getObject('user', 'security');
+        $this->objUser = &$this->newObject('user', 'security');
         $this->userId = $this->objUser->userId();
     }
 
     /**
-    * Method for adding a row to the database.
-    *
-    * @access public
-    * @param string $bookId The id of the address book the entry is being added to
-    * @param string $recipientId The id of the recipient to be added
-    * @return string $entryId The id of the address book entry
-    */
+     * Method for adding a row to the database.
+     *
+     * @access public
+     * @param string $bookId The id of the address book the entry is being added to
+     * @param string $recipientId The id of the recipient to be added
+     * @return string $entryId The id of the address book entry
+     */
     public function addBookEntry($bookId, $recipientId)
     {
         $fields = array();
@@ -49,36 +55,36 @@ class dbbookentries extends dbTable
     }
 
     /**
-    * Method for deleting a row from the database.
-    *
-    * @access public
-    * @param string $entryId The id of the entry to delete
-    * @return
-    */
+     * Method for deleting a row from the database.
+     *
+     * @access public
+     * @param string $entryId The id of the entry to delete
+     * @return
+     */
     public function deleteBookEntry($entryId)
     {
         $this->delete('id', $entryId);
     }
 
     /**
-    * Method for deleting a rows from the database.
-    *
-    * @access public
-    * @param string $bookId The id of the address book entries to delete
-    * @return
-    */
+     * Method for deleting a rows from the database.
+     *
+     * @access public
+     * @param string $bookId The id of the address book entries to delete
+     * @return
+     */
     public function deleteBook($bookId)
     {
         $this->delete('addressbook_id', $bookId);
     }
 
     /**
-    * Method for listing all rows for the current address book
-    *
-    * @access public
-    * @param string $bookId The id of the address book to list
-    * @return array $data  All row information.
-    */
+     * Method for listing all rows for the current address book
+     *
+     * @access public
+     * @param string $bookId The id of the address book to list
+     * @return array $data  All row information.
+     */
     public function listBookEntries($bookId)
     {
         $sql = "SELECT * FROM ".$this->table;

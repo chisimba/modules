@@ -5,31 +5,37 @@ if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 /**
-* Model class for the table tbl_email_new
-* @author Kevin Cyster
-*/
+ * Model class for the table tbl_email_new
+ * @author Kevin Cyster
+ */
 class dbconfiguration extends dbTable
 {
     /**
-    * Method to construct the class.
-    *
-    * @access public
-    * @return
-    */
+     * @var string $userId The userId of the current user
+     * @access private
+     */
+    private $userId;
+
+    /**
+     * Method to construct the class.
+     *
+     * @access public
+     * @return
+     */
     public function init()
     {
         parent::init('tbl_email_config');
         $this->table = 'tbl_email_config';
-        $this->objUser = &$this->getObject('user', 'security');
+        $this->objUser = &$this->newObject('user', 'security');
         $this->userId = $this->objUser->userId();
     }
 
     /**
-    * Method to retrieve configs from the data base
-    *
-    * @access public
-    * @return array $data The config data
-    */
+     * Method to retrieve configs from the data base
+     *
+     * @access public
+     * @return array $data The config data
+     */
     public function getConfigs()
     {
         $sql = "SELECT * FROM ".$this->table;
@@ -43,13 +49,13 @@ class dbconfiguration extends dbTable
     }
 
     /**
-    * Method to set configs on the data base
-    *
-    * @access public
-    * @param string $field The config value to change
-    * @param string $value The config value
-    * @return
-    */
+     * Method to set configs on the data base
+     *
+     * @access public
+     * @param string $field The config value to change
+     * @param string $value The config value
+     * @return
+     */
     public function setConfig($field, $value)
     {
         $fields = array();

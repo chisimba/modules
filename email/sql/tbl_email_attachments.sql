@@ -45,10 +45,6 @@ $fields = array(
         'type' => 'integer',
         'length' => 11,
         ),
-    'extension' => array(
-        'type' => 'text',
-        'length' => 5,
-        ),
     'updated' => array(
         'type' => 'timestamp',
         ),

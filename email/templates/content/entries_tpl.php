@@ -6,26 +6,27 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 /**
-* @package email
-* Default template for the new email module
-* Author Kevin Cyster
-*/
+ * @package email
+ * Default template for the new email module
+ * Author Kevin Cyster
+ */
+// set up javascript headers
 $headerParams = $this->getJavascriptFile('selectall.js', 'htmlelements');
 $this->appendArrayVar('headerParams', $headerParams);
 $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
 $this->appendArrayVar('headerParams', $headerParams);
 
 // set up html elements
-$objHeader = &$this->newObject('htmlheading', 'htmlelements');
-$objTable = &$this->newObject('htmltable', 'htmlelements');
 $objIcon = &$this->newObject('geticon', 'htmlelements');
-$objLink = &$this->newObject('link', 'htmlelements');
-$objInput = &$this->newObject('textinput', 'htmlelements');
-$objEditor = &$this->newObject('htmlarea', 'htmlelements');
-$objTabbedbox = &$this->newObject('tabbedbox', 'htmlelements');
-$objRadio = &$this->newObject('radio', 'htmlelements');
-$objFieldset = &$this->newObject('fieldset', 'htmlelements');
-$objLayer = &$this->newObject('layer', 'htmlelements');
+$objHeader = &$this->loadClass('htmlheading', 'htmlelements');
+$objTable = &$this->loadClass('htmltable', 'htmlelements');
+$objLink = &$this->loadClass('link', 'htmlelements');
+$objInput = &$this->loadClass('textinput', 'htmlelements');
+$objEditor = &$this->loadClass('htmlarea', 'htmlelements');
+$objTabbedbox = &$this->loadClass('tabbedbox', 'htmlelements');
+$objRadio = &$this->loadClass('radio', 'htmlelements');
+$objFieldset = &$this->loadClass('fieldset', 'htmlelements');
+$objLayer = &$this->loadClass('layer', 'htmlelements');
 
 // set up language items
 $heading = $this->objLanguage->languageText('mod_email_addressbookentries', 'email');
@@ -63,9 +64,12 @@ if ($bookId != NULL) {
 }
 
 // set up heading
+$objHeader = new htmlHeading();
 $objHeader->str = $heading;
 $objHeader->type = 1;
 $pageData = $objHeader->show();
+
+$objHeader = new htmlHeading();
 $objHeader->str = $subHeading."&nbsp;".$addIcon;
 $objHeader->type = 3;
 $pageData.= $objHeader->show();
@@ -76,6 +80,7 @@ if ($mode == 'add') {
     $objInput = new textinput('username', '', '', '30');
     $objInput->extra = ' onkeyup="xajax_searchList(this.value,\'username\');"';
     $usernameInput = $objInput->show();
+
     $objTable = new htmltable();
     //        $objTable->cellspacing='2';
     $objTable->cellpadding = '4';
@@ -84,14 +89,18 @@ if ($mode == 'add') {
     $objTable->addCell("<div id =\"usernameDiv\"></div>", '', '', '', '', '');
     $objTable->endRow();
     $usernameTable = $objTable->show();
+
     $objFieldset = new fieldset();
+    $objFieldset->extra = ' style="border: 1px solid #808080; margin: 3px; padding: 10px;"';
     $objFieldset->legend = "<b>".$searchUsernameLabel."</b>";
     $objFieldset->contents = $usernameTable;
     $usernameFieldset = $objFieldset->show();
+
     // set up firstname input
     $objInput = new textinput('firstname', '', '', '30');
     $objInput->extra = ' onkeyup="javascript:xajax_searchList(this.value,\'firstname\');"';
     $firstnameInput = $objInput->show();
+
     $objTable = new htmltable();
     //        $objTable->cellspacing='2';
     $objTable->cellpadding = '4';
@@ -100,14 +109,18 @@ if ($mode == 'add') {
     $objTable->addCell("<div id =\"firstnameDiv\"></div>", '', '', '', '', '');
     $objTable->endRow();
     $firstnameTable = $objTable->show();
+
     $objFieldset = new fieldset();
+    $objFieldset->extra = ' style="border: 1px solid #808080; margin: 3px; padding: 10px;"';
     $objFieldset->legend = "<b>".$searchNameLabel."</b>";
     $objFieldset->contents = $firstnameTable;
     $nameFieldset = $objFieldset->show();
+
     // set up surname input
     $objInput = new textinput('surname', '', '', '30');
     $objInput->extra = ' onkeyup="javascript:xajax_searchList(this.value,\'surname\');"';
     $surnameInput = $objInput->show();
+
     $objTable = new htmltable();
     //        $objTable->cellspacing='2';
     $objTable->cellpadding = '4';
@@ -116,10 +129,13 @@ if ($mode == 'add') {
     $objTable->addCell("<div id =\"surnameDiv\"></div>", '', '', '', '', '');
     $objTable->endRow();
     $surnameTable = $objTable->show();
+
     $objFieldset = new fieldset();
+    $objFieldset->extra = ' style="border: 1px solid #808080; margin: 3px; padding: 10px;"';
     $objFieldset->legend = "<b>".$searchSurnameLabel."</b>";
     $objFieldset->contents = $surnameTable;
     $surnameFieldset = $objFieldset->show();
+
     // set up table
     $objTable = new htmltable();
     //        $objTable->cellspacing='2';
@@ -134,12 +150,15 @@ if ($mode == 'add') {
     $objTable->addCell($surnameFieldset, '', '', '', '', '');
     $objTable->endRow();
     $entryTable = $objTable->show();
+
     $objButton = new button('addbutton', $submitLabel);
     $objButton->setToSubmit();
     $buttons = "<br />".$objButton->show();
+
     $objButton = new button('cancelbutton', $cancelLabel);
     $objButton->extra = ' onclick="javascript:document.getElementById(\'input_cancelbutton\').value=\'Cancel\';document.getElementById(\'form_hiddenform\').submit();"';
     $buttons.= "&nbsp;".$objButton->show();
+
     // set up form
     $objForm = new form('entryform', $this->uri(array(
         'action' => 'submitentry',
@@ -148,16 +167,20 @@ if ($mode == 'add') {
     $objForm->addToForm($entryTable);
     $objForm->addToForm($buttons);
     $entryForm = $objForm->show();
+
     // hidden element
     $objInput = new textinput('cancelbutton', '', 'hidden', '');
     $hiddenInput = $objInput->show();
+
     $objForm = new form('hiddenform', $this->uri(array(
         'action' => 'addressbook',
         'bookId' => $bookId
     )));
     $objForm->addToForm($hiddenInput);
     $hiddenForm = $objForm->show();
+
     $objTabbedbox = new tabbedbox();
+    $objTabbedbox->extra = 'style="padding: 10px;"';
     $objTabbedbox->addTabLabel($addEntryLabel);
     $objTabbedbox->addBoxContent($entryForm.$hiddenForm);
     $entryTab = $objTabbedbox->show();
@@ -205,12 +228,12 @@ if (!empty($contextCode)) {
         foreach($arrContextUserList as $user) {
             // set up checkbox
             $objCheck = new checkbox('userId[]');
-            $objCheck->value = $user['userId'];
+            $objCheck->value = $user['userid'];
             $userCheck = $objCheck->show();
             $objTable->startRow();
             $objTable->addCell($userCheck, '', '', 'center', '', '');
             $objTable->addCell($user['username'], '', '', '', '', '');
-            $objTable->addCell(strtoupper($user['firstName']) , '', '', '', '', '');
+            $objTable->addCell(strtoupper($user['firstname']) , '', '', '', '', '');
             $objTable->addCell(strtoupper($user['surname']) , '', '', '', '', '');
             $objTable->endRow();
         }
@@ -230,6 +253,7 @@ if (!empty($contextCode)) {
                 'entryId' => $entry['id']
             );
             $deleteIcon = $objIcon->getDeleteIconWithConfirm('', $deleteArray, 'email', $confirmLabel);
+
             // set up checkbox
             $objCheck = new checkbox('userId[]');
             $objCheck->value = $entry['recipient_id'];
@@ -258,6 +282,7 @@ if (!empty($arrContextUserList) || !empty($arrBookEntryList)) {
     $objForm->addToForm($buttons);
 }
 $sendForm = $objForm->show();
+
 $objFieldset = new fieldset();
 $objFieldset->contents = $sendForm;
 $sendFieldset = $objFieldset->show();
@@ -269,6 +294,8 @@ $objLink = new link($this->uri(array(
 ) , 'email'));
 $objLink->link = $backLabel;
 $pageData.= "<b />".$objLink->show();
+
+$objLayer = new layer();
 $objLayer->padding = '10px';
 $objLayer->addToStr($pageData);
 $pageLayer = $objLayer->show();

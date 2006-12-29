@@ -18,29 +18,55 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 class email extends controller
 {
     /**
-    * Method to construct the class.
-    *
-    * @access public
-    * @return
-    */
+     * @var string $userId The userId of the current user
+     * @access private
+     */
+    protected $userId;
+
+    /**
+     * @var string $name The full name of the current user
+     * @access private
+     */
+    private $name;
+
+    /**
+     * @var string $email The email address of the current user
+     * @access private
+     */
+    private $email;
+
+    /**
+     * @var string $maxSize The maximum size for email attachments e.g. 2M (2 Megabytes)
+     * @access private
+     */
+    protected $maxSize;
+
+    /**
+     * Method to construct the class.
+     *
+     * @access public
+     * @return
+     */
     public function init()
     {
         // user objects
-        $this->sqlUsers = &$this->getObject('sqlusers', 'security');
-        $this->objUser = &$this->getObject('user', 'security');
+        $this->sqlUsers = &$this->newObject('sqlusers', 'security');
+        $this->objUser = &$this->newObject('user', 'security');
         $this->userId = $this->objUser->userId();
         $this->name = $this->objUser->fullname($this->userId);
         $this->email = $this->objUser->email($this->userId);
+
         // system objects
-        $this->objLanguage = &$this->getObject('language', 'language');
-        $this->objContextAdmin = &$this->getObject('contextadminutils', 'contextadmin');
-        $this->objGroupAdmin = &$this->getObject('groupadminmodel', 'groupadmin');
-        $this->objContext = &$this->getObject('dbcontext', 'context');
-        $this->objDate = &$this->getObject('datetime', 'utilities');
-        $this->objConfig = &$this->getObject('altconfig', 'config');
+        $this->objLanguage = &$this->newObject('language', 'language');
+        $this->objContextAdmin = &$this->newObject('contextadminutils', 'contextadmin');
+        $this->objGroupAdmin = &$this->newObject('groupadminmodel', 'groupadmin');
+        $this->objContext = &$this->newObject('dbcontext', 'context');
+        $this->objDate = &$this->newObject('datetime', 'utilities');
+        $this->objConfig = &$this->newObject('altconfig', 'config');
         $this->noSubject = $this->objLanguage->languageText('phrase_nosubject');
+
         // set upload size
-        $this->objSysconfig =& $this->getObject('dbsysconfig', 'sysconfig');
+        $this->objSysconfig = &$this->newObject('dbsysconfig', 'sysconfig');
         $this->uploadSize = $this->objSysconfig->getValue('ATTACHMENT_MAX_SIZE', 'email');
         $attachmentSize = substr($this->uploadSize, 0, -1);
         $maxPost = substr(ini_get('post_max_size') , 0, -1);
@@ -48,21 +74,16 @@ class email extends controller
         $this->maxSize = min($attachmentSize, $maxPost, $maxUpload);
         $this->maxFileSize = $this->maxSize*1048576;
 
-        $this->fileLocation = $this->objConfig->getcontentBasePath() .'attachments/';
-        if (!is_dir($this->fileLocation)) {
-            mkdir($this->fileLocation);
-        }
-        $this->attachLocation = $this->fileLocation.$this->userId."/";
         //db objects
-        $this->dbFolders = &$this->getObject('dbfolders');
-        $this->dbBooks = &$this->getObject('dbaddressbooks');
-        $this->dbBookEntries = &$this->getObject('dbbookentries');
-        $this->dbEmailUsers = &$this->getObject('dbemailusers');
-        $this->dbEmail = &$this->getObject('dbemail');
-        $this->dbRouting = &$this->getObject('dbrouting');
-        $this->dbAttachments = &$this->getObject('dbattachments');
-        $this->dbConfiguration = &$this->getObject('dbconfiguration');
-        $this->dbRules = &$this->getObject('dbrules');
+        $this->dbFolders = &$this->newObject('dbfolders');
+        $this->dbBooks = &$this->newObject('dbaddressbooks');
+        $this->dbBookEntries = &$this->newObject('dbbookentries');
+        $this->dbEmailUsers = &$this->newObject('dbemailusers');
+        $this->dbEmail = &$this->newObject('dbemail');
+        $this->dbRouting = &$this->newObject('dbrouting');
+        $this->dbAttachments = &$this->newObject('dbattachments');
+        $this->dbConfiguration = &$this->newObject('dbconfiguration');
+        $this->dbRules = &$this->newObject('dbrules');
         $this->emailFiles = &$this->newObject('emailfiles');
         /*
         //Get the activity logger class
@@ -74,13 +95,13 @@ class email extends controller
     }
 
     /**
-    * This is the main method of the class
-    * It calls other functions depending on the value of $action
-    *
-    * @access public
-    * @param string $action The action the module is to perform
-    * @return various Returns other actions or templates
-    */
+     * This is the main method of the class
+     * It calls other functions depending on the value of $action
+     *
+     * @access public
+     * @param string $action The action the module is to perform
+     * @return various Returns other actions or templates
+     */
     public function dispatch($action)
     {
         // Now the main switch statement to pass values for $action
@@ -124,7 +145,7 @@ class email extends controller
 
             case 'compose':
                 $this->loadClass('xajax', 'ajaxwrapper');
-                $objIcon = &$this->getObject('geticon', 'htmlelements');
+                $objIcon = &$this->newObject('geticon', 'htmlelements');
                 //Register another function in this controller
                 $xajaxCompose = new xajax($this->uri(array(
                     'action' => 'compose'
@@ -165,14 +186,12 @@ class email extends controller
                 $message = $this->getParam('message', NULL);
                 $error = $this->getParam('error');
                 $emailId = $this->getParam('emailId', NULL);
-                $attachments = $this->emailFiles->getAttachments();
                 $this->setVarByRef('toList', $toList);
                 $this->setVarByRef('recipientList', $recipientList);
                 $this->setVarByRef('subject', $subject);
                 $this->setVarByRef('message', $message);
                 $this->setVarByRef('error', $error);
                 $this->setVarByRef('emailId', $emailId);
-                $this->setVarByRef('attachments', $attachments);
                 return 'compose_tpl.php';
                 break;
 
@@ -197,10 +216,9 @@ class email extends controller
                 } elseif ($cancelbutton == 'Cancel') {
                     return $this->nextAction('manageaddressbooks');
                 }
-                //                $arrContextList=$this->objContextAdmin->getUserContext('mycontext');
+                $arrContextList = $this->objContextAdmin->getUserContext('mycontext');
+                $this->setVarByRef('arrContextList', $arrContextList);
                 $arrBookList = $this->dbBooks->listBooks();
-                //                $this->setVarByRef('arrContextList',$arrContextList);
-                $this->setVar('arrContextList', '');
                 $this->setVarByRef('arrBookList', $arrBookList);
                 $this->setVarByRef('mode', $mode);
                 $this->setVarByRef('bookId', $bookId);
@@ -208,7 +226,7 @@ class email extends controller
                 break;
 
             case 'addressbook':
-                $contextCode = $this->getParam('contextCode', NULL);
+                $contextCode = $this->getParam('contextcode', NULL);
                 $groupId = $this->objGroupAdmin->getLeafId(array(
                     $contextCode
                 ));
@@ -291,8 +309,6 @@ class email extends controller
                     return $this->nextAction('compose');
                 } elseif ($sendbutton == 'Send') {
                     $emailId = $this->dbEmail->sendMail($recipientList, $subject, $message, 0);
-                    $attachments = $this->emailFiles->saveAttachments($emailId);
-                    $this->emailFiles->clearAttachments();
                 }
                 return $this->nextAction('');
                 break;
@@ -306,7 +322,7 @@ class email extends controller
                     $this->dbRouting->restoreEmail($routingId);
                 } elseif ($mode == 'resend') {
                     $emailId = $this->getParam('emailId');
-                    $this->dbEmail->resendEmail($emailId);
+                    $newEmailId = $this->dbEmail->resendEmail($emailId);
                 }
                 $arrFolderList = $this->dbFolders->listFolders();
                 $this->setVarByRef('arrFolderList', $arrFolderList);
@@ -322,6 +338,7 @@ class email extends controller
                 break;
 
             case 'gotomessage':
+                $this->emailFiles->clearAttachments();
                 $folderId = $this->getParam('folderId');
                 $routingId = $this->getParam('routingId');
                 $filter = $this->getParam('filter', NULL);
@@ -654,14 +671,14 @@ class email extends controller
     }
 
     /**
-    * This method is called by Ajax for the User list
-    * Puts a response with the user list.
-    *
-    * @access public
-    * @param string $search The text to search for
-    * @param string $field The field to search in
-    * @return xml $xml The xajax response xml
-    */
+     * This method is called by Ajax for the User list
+     * Puts a response with the user list.
+     *
+     * @access public
+     * @param string $search The text to search for
+     * @param string $field The field to search in
+     * @return xml $xml The xajax response xml
+     */
     public function searchList($search, $field)
     {
         $selectLabel = $this->objLanguage->languageText('word_select');
@@ -672,9 +689,11 @@ class email extends controller
                 $arrUserList = $this->dbEmailUsers->getUsers('username', $search);
                 $objDrop = new dropdown('userId_username');
                 $objDrop->addOption(NULL, "- ".$selectLabel." -");
-                foreach($arrUserList as $user) {
-                    $value = $this->dbRouting->getName($user['userid']);
-                    $objDrop->addOption($user['userid'], $value);
+                if ($arrUserList != FALSE) {
+                    foreach($arrUserList as $user) {
+                        $value = $this->dbRouting->getName($user['userid']);
+                        $objDrop->addOption($user['userid'], $value);
+                    }
                 }
                 $userDrop = $objDrop->show();
                 $response = "<span>".$userDrop."</span>";
@@ -697,9 +716,11 @@ class email extends controller
                 $arrUserList = $this->dbEmailUsers->getUsers('firstName', $search);
                 $objDrop = new dropdown('userId_firstname');
                 $objDrop->addOption(NULL, "- ".$selectLabel." -");
-                foreach($arrUserList as $user) {
-                    $value = $this->dbRouting->getName($user['userid']);
-                    $objDrop->addOption($user['userid'], $value);
+                if ($arrUserList != FALSE) {
+                    foreach($arrUserList as $user) {
+                        $value = $this->dbRouting->getName($user['userid']);
+                        $objDrop->addOption($user['userid'], $value);
+                    }
                 }
                 $userDrop = $objDrop->show();
                 $response = "<span>".$userDrop."</span>";
@@ -722,9 +743,11 @@ class email extends controller
                 $arrUserList = $this->dbEmailUsers->getUsers('surname', $search);
                 $objDrop = new dropdown('userId_surname');
                 $objDrop->addOption(NULL, "- ".$selectLabel." -");
-                foreach($arrUserList as $user) {
-                    $value = $this->dbRouting->getName($user['userid']);
-                    $objDrop->addOption($user['userid'], $value);
+                if ($arrUserList != FALSE) {
+                    foreach($arrUserList as $user) {
+                        $value = $this->dbRouting->getName($user['userid']);
+                        $objDrop->addOption($user['userid'], $value);
+                    }
                 }
                 $userDrop = $objDrop->show();
                 $response = "<span>".$userDrop."</span>";
@@ -747,16 +770,16 @@ class email extends controller
     }
 
     /**
-    * This method is called by Ajax for the User list
-    * Puts a response with the user list.
-    *
-    * @access public
-    * @param string $field The field to search
-    * @param string $value The value to search for
-    * @param string $recipientList The list of current recipients
-    * @return xml $xml The xajax response xml
-    */
-    function composeList($field, $value, $recipientList)
+     * This method is called by Ajax for the User list
+     * Puts a response with the user list.
+     *
+     * @access public
+     * @param string $field The field to search
+     * @param string $value The value to search for
+     * @param string $recipientList The list of current recipients
+     * @return xml $xml The xajax response xml
+     */
+    public function composeList($field, $value, $recipientList)
     {
         $selectLabel = $this->objLanguage->languageText('word_select');
         $this->loadClass('xajaxresponse', 'ajaxwrapper');
@@ -767,18 +790,22 @@ class email extends controller
             $arrUserList = $this->dbEmailUsers->getUsers($field, $value);
             if ($recipientList != '') {
                 $arrRecipients = explode('|', $recipientList);
-                foreach($arrUserList as $key => $user) {
-                    if (in_array($user['userid'], $arrRecipients)) {
-                        unset($arrUserList[$key]);
+                if ($arrUserList != FALSE) {
+                    foreach($arrUserList as $key => $user) {
+                        if (in_array($user['userid'], $arrRecipients)) {
+                            unset($arrUserList[$key]);
+                        }
                     }
                 }
             }
             $objDrop = new dropdown('user');
             $objDrop->addOption(NULL, "- ".$selectLabel." -");
-            foreach($arrUserList as $user) {
-                $value = $user['userid'];
-                $label = $this->dbRouting->getName($value);
-                $objDrop->addOption($value, $label);
+            if ($arrUserList != FALSE) {
+                foreach($arrUserList as $user) {
+                    $value = $user['userid'];
+                    $label = $this->dbRouting->getName($value);
+                    $objDrop->addOption($value, $label);
+                }
             }
             $objDrop->extra = ' onchange="javascript:xajax_addRecipient(this.value, document.getElementById(\'input_recipient\').value)"';
             $userDrop = $objDrop->show();
@@ -799,13 +826,13 @@ class email extends controller
     }
 
     /**
-    * Method to add a recipient using AJAX
-    *
-    * @access public
-    * @param string $userId The id of the recipient to add
-    * @param string $recipientList The list of recipientId's
-    * @return xml $xml The xajax response xml
-    */
+     * Method to add a recipient using AJAX
+     *
+     * @access public
+     * @param string $userId The id of the recipient to add
+     * @param string $recipientList The list of recipientId's
+     * @return xml $xml The xajax response xml
+     */
     public function addRecipient($userId, $recipientList)
     {
         $configs = $this->getSession('configs');
@@ -832,17 +859,16 @@ class email extends controller
         $objResponse->addAssign('input_firstname', 'value', NULL);
         $objResponse->addAssign('input_surname', 'value', NULL);
         $xml = $objResponse->getXML();
-
         return $xml;
     }
 
     /**
-    * Method to return the HTML string for the delete icon to be used by AJAX
-    *
-    * @access private
-    * @param string $userId The userId of the user associated with the icon
-    * @return string $delIcon The HTML string for the delete icon
-    */
+     * Method to return the HTML string for the delete icon to be used by AJAX
+     *
+     * @access private
+     * @param string $userId The userId of the user associated with the icon
+     * @return string $delIcon The HTML string for the delete icon
+     */
     private function deleteIcon($userId)
     {
         $skin = $this->objConfig->getskinRoot();
@@ -855,13 +881,13 @@ class email extends controller
     }
 
     /**
-    * Method to delete a recipient using AJAX
-    *
-    * @access public
-    * @param string $userId The id of the recipient to delete
-    * @param string $recipientList The list of recipientId's
-    * @return xml $xml The xajax response xml
-    */
+     * Method to delete a recipient using AJAX
+     *
+     * @access public
+     * @param string $userId The id of the recipient to delete
+     * @param string $recipientList The list of recipientId's
+     * @return xml $xml The xajax response xml
+     */
     public function deleteRecipient($userId, $recipientList)
     {
         $this->loadClass('xajaxresponse', 'ajaxwrapper');
@@ -877,14 +903,14 @@ class email extends controller
     }
 
     /**
-    * Method to output an exapmle of the user display using AJAX
-    *
-    * @access public
-    * @param string $field The field being modified
-    * @param string $value The value of the field
-    * @param string $other The value of the other fields
-    * @return xml $xml The xajax response xml
-    */
+     * Method to output an exapmle of the user display using AJAX
+     *
+     * @access public
+     * @param string $field The field being modified
+     * @param string $value The value of the field
+     * @param string $other The value of the other fields
+     * @return xml $xml The xajax response xml
+     */
     public function userDisplay($field, $value, $other)
     {
         $this->loadClass('xajaxresponse', 'ajaxwrapper');
@@ -919,12 +945,12 @@ class email extends controller
     }
 
     /**
-    * Method to output a button to the settings template depending on the section using AJAX
-    *
-    * @access public
-    * @param string $section The section being modified
-    * @return xml $xml The xajax response xml
-    */
+     * Method to output a button to the settings template depending on the section using AJAX
+     *
+     * @access public
+     * @param string $section The section being modified
+     * @return xml $xml The xajax response xml
+     */
     public function buttonDisplay($section)
     {
         $updateLabel = $this->objLanguage->languageText('word_update');
@@ -957,12 +983,12 @@ class email extends controller
     }
 
     /**
-    * Method to display the filter fields depending on the filter action
-    *
-    * @access public
-    * @param string $messageField The value of the message field
-    * @return xml $xml The xajax response xml
-    */
+     * Method to display the filter fields depending on the filter action
+     *
+     * @access public
+     * @param string $messageField The value of the message field
+     * @return xml $xml The xajax response xml
+     */
     public function filterDisplay($messageField)
     {
         $toLabel = $this->objLanguage->languageText('word_to');
@@ -1000,12 +1026,12 @@ class email extends controller
     }
 
     /**
-    * Method to display the criteria fields depending on the filter
-    *
-    * @access public
-    * @param string $mailField The value of the mail filter field
-    * @return xml $xml The xajax response xml
-    */
+     * Method to display the criteria fields depending on the filter
+     *
+     * @access public
+     * @param string $mailField The value of the mail filter field
+     * @return xml $xml The xajax response xml
+     */
     public function criteriaDisplay($mailField)
     {
         $notApplicableLabel = $this->objLanguage->languageText('phrase_notapplicable');
@@ -1026,12 +1052,12 @@ class email extends controller
     }
 
     /**
-    * Method to display the action list depending on the mail action
-    *
-    * @access public
-    * @param string $mailAction The value of the mailAction field
-    * @return xml $xml The xajax response xml
-    */
+     * Method to display the action list depending on the mail action
+     *
+     * @access public
+     * @param string $mailAction The value of the mailAction field
+     * @return xml $xml The xajax response xml
+     */
     public function actionDisplay($mailAction)
     {
         $moveLabel = $this->objLanguage->languageText('word_move');
@@ -1083,14 +1109,14 @@ class email extends controller
     }
 
     /**
-    * Method to display the action list depending on the mail action
-    *
-    * @access public
-    * @param string $ruleAction The value of the ruleAction field
-    * @param string $mailAction The value of the mailAction field
-    * @return xml $xml The xajax response xml
-    */
-    function destDisplay($ruleAction, $mailAction)
+     * Method to display the action list depending on the mail action
+     *
+     * @access public
+     * @param string $ruleAction The value of the ruleAction field
+     * @param string $mailAction The value of the mailAction field
+     * @return xml $xml The xajax response xml
+     */
+    public function destDisplay($ruleAction, $mailAction)
     {
         $selectLabel = $this->objLanguage->languageText('word_select');
         $notApplicableLabel = $this->objLanguage->languageText('phrase_notapplicable');

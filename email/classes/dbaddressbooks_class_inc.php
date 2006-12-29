@@ -5,32 +5,38 @@ if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 /**
-* Model class for the table tbl_email_folders
-* @author Kevin Cyster
-*/
+ * Model class for the table tbl_email_folders
+ * @author Kevin Cyster
+ */
 class dbaddressbooks extends dbTable
 {
     /**
-    * Method to construct the class.
-    *
-    * @access public
-    * @return
-    */
+     * @var string $userId The userId of the current user
+     * @access private
+     */
+    private $userId;
+
+    /**
+     * Method to construct the class.
+     *
+     * @access public
+     * @return
+     */
     public function init()
     {
         parent::init('tbl_email_addressbooks');
         $this->table = 'tbl_email_addressbooks';
-        $this->objUser = &$this->getObject('user', 'security');
+        $this->objUser = &$this->newObject('user', 'security');
         $this->userId = $this->objUser->userId();
     }
 
     /**
-    * Method for adding a row to the database.
-    *
-    * @access public
-    * @param string $bookName The name of the addressbook
-    * @return string $bookId The id of the addressbook
-    */
+     * Method for adding a row to the database.
+     *
+     * @access public
+     * @param string $bookName The name of the addressbook
+     * @return string $bookId The id of the addressbook
+     */
     public function addBook($bookName)
     {
         $fields = array();
@@ -41,13 +47,13 @@ class dbaddressbooks extends dbTable
     }
 
     /**
-    * Method for editing a row on the database.
-    *
-    * @access public
-    * @param string $bookId The id of the addressbook to edit
-    * @param string $bookName The name of the $bookId
-    * @return
-    */
+     * Method for editing a row on the database.
+     *
+     * @access public
+     * @param string $bookId The id of the addressbook to edit
+     * @param string $bookName The name of the $bookId
+     * @return
+     */
     public function editBook($bookId, $bookName)
     {
         $fields = array();
@@ -57,23 +63,23 @@ class dbaddressbooks extends dbTable
     }
 
     /**
-    * Method for deleting a row from the database.
-    *
-    * @access public
-    * @param string $bookId The id of the addressbook to delete
-    * @return
-    */
+     * Method for deleting a row from the database.
+     *
+     * @access public
+     * @param string $bookId The id of the addressbook to delete
+     * @return
+     */
     public function deleteBook($bookId)
     {
         $this->delete('id', $bookId);
     }
 
     /**
-    * Method for listing all rows for the current user
-    *
-    * @access public
-    * @return array $data  All row information.
-    */
+     * Method for listing all rows for the current user
+     *
+     * @access public
+     * @return array $data  All row information.
+     */
     public function listBooks()
     {
         $sql = "SELECT * FROM ".$this->table;
@@ -86,12 +92,12 @@ class dbaddressbooks extends dbTable
     }
 
     /**
-    * Method for retieving a row for the current user
-    *
-    * @access public
-    * @param string $bookId The id of the addressbook to retrieve
-    * @return array $data  All row information.
-    */
+     * Method for retieving a row for the current user
+     *
+     * @access public
+     * @param string $bookId The id of the addressbook to retrieve
+     * @return array $data  All row information.
+     */
     public function getBook($bookId)
     {
         $sql = "SELECT * FROM ".$this->table;
