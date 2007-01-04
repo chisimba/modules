@@ -44,7 +44,12 @@ class dbpodcast extends dbTable
         $podcastInfo['creatorid'] = $this->objUser->userId();
         $podcastInfo['datecreated'] = strftime('%Y-%m-%d %H:%M:%S', mktime());
         
-        return $this->insert($podcastInfo);
+        $podcastId = $this->insert($podcastInfo);
+        
+        $objFileRegister =& $this->getObject('registerfileusage', 'filemanager');
+        $objFileRegister->registerUse($fileId, 'podcast', 'tbl_podcast', $podcastId, 'fileid');
+        
+        return $podcastId;
     }
     
     /**
