@@ -379,6 +379,7 @@ $this->setVar('pageSuppressXML', TRUE);
         
         // Insert the See Also Link
         
+        if ($seeAlso != '') {
         	$this->objGlossarySeeAlso->insertSingle(
 					$seeAlso,
 					$id,
@@ -386,11 +387,14 @@ $this->setVar('pageSuppressXML', TRUE);
 					mktime()
 				
 				);
+        }
         
         // Insert the URL
         if ($url == 'http://'){
-            $url = null;            
+            $url = '';            
         }
+        
+        if ($url != '') {
 	        $this->objGlossaryUrls->insertSingle(
 				$url,
 				$id,
@@ -398,7 +402,9 @@ $this->setVar('pageSuppressXML', TRUE);
 				mktime()
 			
 			);
+        }
             
+        /*
          // Insert a default null image
             $image = null;
             $caption = null;
@@ -408,7 +414,7 @@ $this->setVar('pageSuppressXML', TRUE);
                 $caption,
                 $this->objUser->userId(), 
                 mktime()
-            );
+            );*/
         
         // Redirect to a page showing that the term has been successfully inserted into the database
         return $this->nextAction('listsingle', array('id'=>$id));
