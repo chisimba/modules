@@ -495,7 +495,7 @@ class blog extends controller
                         {
                             //do check for multiple attachments
                             //set the filename of the attachment
-                            $filename = $datum['attachments'][0]['filename'];
+                            $filename = $datum['attachments'][0]['filename'] . "_" . time();
                             //decode the attachment data
                             $filedata = base64_decode($datum['attachments'][0]['filedata']);
                             //set the path to write down the file to
