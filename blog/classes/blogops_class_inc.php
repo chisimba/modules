@@ -584,7 +584,7 @@ class blogops extends object
                         $icons = explode(',', $lic['images']);
                         foreach($icons as $icon) {
                             $objIcon->setIcon($icon, NULL, 'icons/creativecommons');
-                            $licon = new href($lic['url'], $objIcon->show(), 'target=blank');//$objIcon->show();
+                            $licon = new href($lic['url'], $objIcon->show(),NULL);//$objIcon->show();
                             $iconList.= $licon->show();
                         }
                         //continue;
