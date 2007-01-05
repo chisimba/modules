@@ -270,7 +270,7 @@ class blog extends controller
                 //get the link categories
                 $linkcats = $this->objDbBlog->getAllLinkCats($userid);
                 //get all the posts by this user
-                $posts = $this->objDbBlog->getAllPosts($userid, $catid = NULL);
+                $posts = $this->objDbBlog->getAllPosts($userid, 0); //$catid = NULL);
                 //send the info to the template
                 $this->setVarByRef('posts', $posts);
                 $this->setVarByRef('linkcats', $linkcats);
@@ -536,7 +536,7 @@ class blog extends controller
                             		}
                             		else {
                             			//add the img stuff to the body at the end of the "post"
-        	                    		$newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/url]" . "<br />";
+        	                    		$newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . urlencode($filename) . "[/url]" . "<br />";
                             		}
                         		}
                         	}
@@ -770,7 +770,7 @@ class blog extends controller
                 }
                 else {
                     //otherwise grab all the Published posts
-                    $posts = $this->objDbBlog->getAbsAllPostsNoDrafts($userid);
+                    $posts = $this->objDbBlog->getAllPosts($userid, 0);//getAbsAllPostsNoDrafts($userid);
                 }
                 //send all that to the template
                 $this->setVarByRef('catid', $catid);
