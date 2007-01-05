@@ -577,12 +577,15 @@ class blogops extends object
                 //get the lic that matches from the db
                 $objIcon = $this->newObject('geticon', 'htmlelements');
                 $iconList = '';
+                $licon = '';
+
                 foreach($lics as $lic) {
                     if ($cclic == $lic['code']) {
                         $icons = explode(',', $lic['images']);
                         foreach($icons as $icon) {
                             $objIcon->setIcon($icon, NULL, 'icons/creativecommons');
-                            $iconList.= $objIcon->show();
+                            $licon = new href($lic['url'], $objIcon->show(), 'target=_blank');//$objIcon->show();
+                            $iconList.= $licon->show();
                         }
                         //continue;
 
@@ -591,7 +594,8 @@ class blogops extends object
                         $icons = explode(',', $lic['images']);
                         foreach($icons as $icon) {
                             $objIcon->setIcon($icon, NULL, 'icons/creativecommons');
-                            $iconList.= $objIcon->show();
+                            $licon = new href($lic['url'], $objIcon->show(), 'target=_blank');//$objIcon->show();
+                            $iconList.= $licon->show();
                         }
                         //continue;
 
