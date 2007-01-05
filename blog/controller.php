@@ -479,7 +479,7 @@ class blog extends controller
 
                         //delete the message as we don't need it anymore
                         echo "sorting " . $this->msgCount . "messages";
-                        $this->objImap->delMsg($i);
+                       // $this->objImap->delMsg($i);
 
                         $i++;
                     }
@@ -501,10 +501,12 @@ class blog extends controller
                         	{
                         		foreach($datum['attachments'] as $files)
                         		{
+                					//var_dump($files);
                             		//do check for multiple attachments
                             		//set the filename of the attachment
                             		$fname = $files['filename'];
                             		$filenamearr = explode(".", $fname);
+
                             		$filename = $filenamearr[0] . "_" . time() . "." . $filenamearr[1];
                             		//decode the attachment data
                             		$filedata = base64_decode($files['filedata']);
@@ -523,8 +525,19 @@ class blog extends controller
                             		fwrite($handle, $filedata);
                             		fclose($handle);
 
-    	                        	//add the img stuff to the body at the end of the "post"
-        	                    	$newbod .= "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]" . "<br />";
+                            		$type = mime_content_type($filename);
+                            		//echo "<h1>" . $type . "</h1>";
+                            		$tparts = explode("/", $type);
+
+                            		if($tparts[0] == "image")
+                            		{
+                            			//add the img stuff to the body at the end of the "post"
+        	                    		$newbod .= "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]" . "<br />";
+                            		}
+                            		else {
+                            			//add the img stuff to the body at the end of the "post"
+        	                    		$newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/url]" . "<br />";
+                            		}
                         		}
                         	}
                         	else {
