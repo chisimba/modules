@@ -518,6 +518,8 @@ class blog extends controller
                                 		//dir doesn't exist so create it quickly
                                 		mkdir($path, 0777);
                             		}
+                            		//fix up the filename a little
+                            		$filename = str_replace(" ","_", $filename);
                             		//change directory to the data dir
                             		chdir($path);
                             		//write the file
