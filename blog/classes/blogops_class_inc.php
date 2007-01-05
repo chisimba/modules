@@ -1566,6 +1566,7 @@ class blogops extends object
             //weight is the count of posts in the cat
             //echo $post['id'];
             $count = $this->objDbBlog->catCount($cat['id']);
+            $count = $count * 1000;
             $tag = array(
                 'name' => $cat['cat_nicename'],
                 'url' => $url,
