@@ -490,7 +490,7 @@ class dbblog extends dbTable
 			$postarr['cclic'] = NULL;
 			$mparr = array('userid' => $userid,
 							'post_date' => $postarr['postdate'],
-							'post_content' => $this->ipcleaner->cleanHtml($postarr['postcontent']),
+							'post_content' => $this->ipcleaner->cleanHtml(nl2br($postarr['postcontent'])),
 							'post_title' => $postarr['posttitle'],
 							'post_category' => $postarr['postcat'],
 							'post_excerpt' => $this->iecleaner->cleanHtml($postarr['postexcerpt']),

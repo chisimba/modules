@@ -429,6 +429,8 @@ class blog extends controller
                             //@TODO check multiple attachments
                             //set the attachment
                             $attachments = $bod[1];
+                            //loop through the attachments and write them down
+
                         }
                         //make sure the body doesn't have any nasty chars
                         $message = @htmlentities($bod[0]);
@@ -486,41 +488,79 @@ class blog extends controller
                     {
                         $data = array();
                     }
+                    //var_dump($data); die();
                     //lets look at the data now
                     foreach ($data as $datum)
                     {
+                    	$newbod = $datum['body'];
                         //add the [img][/img] tags to the body so that the images show up
                         //we discard any other mimetypes for now...
                         if(!empty($datum['attachments']))
                         {
-                            //do check for multiple attachments
-                            //set the filename of the attachment
-                            $filename = $datum['attachments'][0]['filename'] . "_" . time();
-                            //decode the attachment data
-                            $filedata = base64_decode($datum['attachments'][0]['filedata']);
-                            //set the path to write down the file to
-                            $path = $this->objConfig->getContentBasePath() . 'blog/';
-                            //check that the data dir is there
-                            if(!file_exists($path))
-                            {
-                                //dir doesn't exist so create it quickly
-                                mkdir($path, 0777);
-                            }
-                            //change directory to the data dir
-                            chdir($path);
-                            //write the file
-                            $handle = fopen($filename, 'wb');
-                            fwrite($handle, $filedata);
-                            fclose($handle);
+                        	if(is_array($datum['attachments']))
+                        	{
+                        		foreach($datum['attachments'] as $files)
+                        		{
+                            		//do check for multiple attachments
+                            		//set the filename of the attachment
+                            		$fname = $files['filename'];
+                            		$filenamearr = explode(".", $fname);
+                            		$filename = $filenamearr[0] . "_" . time() . "." . $filenamearr[1];
+                            		//decode the attachment data
+                            		$filedata = base64_decode($files['filedata']);
+                            		//set the path to write down the file to
+                            		$path = $this->objConfig->getContentBasePath() . 'blog/';
+                            		//check that the data dir is there
+                            		if(!file_exists($path))
+                            		{
+                                		//dir doesn't exist so create it quickly
+                                		mkdir($path, 0777);
+                            		}
+                            		//change directory to the data dir
+                            		chdir($path);
+                            		//write the file
+                            		$handle = fopen($filename, 'wb');
+                            		fwrite($handle, $filedata);
+                            		fclose($handle);
 
-                            //add the img stuff to the body at the end of the "post"
-                            $newbod = $datum['body'] . "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]";
+    	                        	//add the img stuff to the body at the end of the "post"
+        	                    	$newbod .= "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]" . "<br />";
+                        		}
+                        	}
+                        	else {
+                        		//do check for multiple attachments
+                            	//set the filename of the attachment
+                            	$fname = $datum['attachments'][0]['filename'];
+                            	$filenamearr = explode(".", $fname);
+                            	$filename = $filenamearr[0] . "_" . time() . "." . $filenamearr[1];
+                            	//decode the attachment data
+                            	$filedata = base64_decode($datum['attachments'][0]['filedata']);
+                            	//set the path to write down the file to
+                            	$path = $this->objConfig->getContentBasePath() . 'blog/';
+                            	//check that the data dir is there
+                            	if(!file_exists($path))
+                            	{
+                                	//dir doesn't exist so create it quickly
+                                	mkdir($path, 0777);
+                            	}
+                            	//change directory to the data dir
+                            	chdir($path);
+                            	//write the file
+                            	$handle = fopen($filename, 'wb');
+                            	fwrite($handle, $filedata);
+                            	fclose($handle);
+
+    	                        //add the img stuff to the body at the end of the "post"
+        	                    $newbod = "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]";
+
+                        	}
                         }
                         else {
                             //no attachments to worry about
                             $newbod = $datum['body'];
                             //echo $newbod;
                         }
+                        //echo $newbod;
                         //Write the new post to the database as a "Quick Post"
                         $this->objblogOps->quickPostAdd($datum['userid'], array('posttitle' => $datum['subject'], 'postcontent' => $newbod,
                                                     'postcat' => 0, 'postexcerpt' => '', 'poststatus' => '0',
