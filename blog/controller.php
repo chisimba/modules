@@ -506,8 +506,9 @@ class blog extends controller
                             		//set the filename of the attachment
                             		$fname = $files['filename'];
                             		$filenamearr = explode(".", $fname);
+									$ext = pathinfo($fname);
 
-                            		$filename = $filenamearr[0] . "_" . time() . "." . $filenamearr[1];
+                            		$filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];//$filenamearr[1];
                             		//decode the attachment data
                             		$filedata = base64_decode($files['filedata']);
                             		//set the path to write down the file to
@@ -547,12 +548,15 @@ class blog extends controller
                             	//set the filename of the attachment
                             	$fname = $datum['attachments'][0]['filename'];
                             	$filenamearr = explode(".", $fname);
-                            	$filename = $filenamearr[0] . "_" . time() . "." . $filenamearr[1];
+                            	$ext = pathinfo($fname);
+                            	$filename = $filenamearr[0] . "_" . time() . "." . $ext['extension']; //$filenamearr[1];
                             	//decode the attachment data
                             	$filedata = base64_decode($datum['attachments'][0]['filedata']);
                             	//set the path to write down the file to
                             	$path = $this->objConfig->getContentBasePath() . 'blog/';
                             	//check that the data dir is there
+                            	//fix up the filename a little
+                            	$filename = str_replace(" ","_", $filename);
                             	if(!file_exists($path))
                             	{
                                 	//dir doesn't exist so create it quickly
