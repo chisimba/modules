@@ -883,7 +883,7 @@ class blog extends controller
                     $this->objblogOps->quickPostAdd($userid, array('posttitle' => $posttitle, 'postcontent' => $postcontent,
                                                     'postcat' => $cat, 'postexcerpt' => '', 'poststatus' => '0',
                                                     'commentstatus' => 'Y',
-                                                    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate));
+                                                    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate, 'cclic' => $cclic));
                     $this->nextAction('viewblog');
                     break;
                 }

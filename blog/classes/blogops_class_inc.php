@@ -1362,8 +1362,8 @@ class blogops extends object
         $qptitle = new textinput('posttitle');
         //post content textarea
         $qpcontenttxt = $this->objLanguage->languageText("mod_blog_pcontent", "blog");
-        $qpcontent = new textarea;
-        $qpcontent->setName('postcontent');
+        $qpcontent = new textarea('postcontent');
+        //$qpcontent->setName('postcontent');
         //$qpcontent->setBasicToolBar();
         //dropdown of cats
         $qpcattxt = $this->objLanguage->languageText("mod_blog_postcat", "blog");
@@ -1383,7 +1383,7 @@ class blogops extends object
         $qpform->addToForm($qpcontenttxt.$qpcontent->show());
         $qpform->addToForm("<br />");
         $qpform->addToForm($qpcattxt.$qpDrop->show());
-        $this->objqpCButton = &new button($this->objLanguage->languageText('mod_blog_word_blogit', 'blog'));
+        $this->objqpCButton = &new button('blogit');
         $this->objqpCButton->setValue($this->objLanguage->languageText('mod_blog_word_blogit', 'blog'));
         $this->objqpCButton->setToSubmit();
         $qpform->addToForm($this->objqpCButton->show());
