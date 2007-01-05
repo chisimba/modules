@@ -65,10 +65,10 @@ class blogops extends object
     {
         $objLogin = &$this->getObject('logininterface', 'security');
         if ($featurebox == FALSE) {
-            return $objLogin->renderLoginBox();
+            return $objLogin->renderLoginBox('blog');
         } else {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            return $objFeatureBox->show($this->objLanguage->languageText("word_login", "system") , $objLogin->renderLoginBox());
+            return $objFeatureBox->show($this->objLanguage->languageText("word_login", "system") , $objLogin->renderLoginBox('blog'));
         }
     }
     /**
