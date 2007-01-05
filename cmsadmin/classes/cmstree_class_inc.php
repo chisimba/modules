@@ -315,7 +315,7 @@ GROUP BY tbl_cms_sections.id ORDER BY nodelevel, ordering';
 				if ($module == 'cmsadmin') {
 					$rootNode =& new treenode (array('text'=>'[- Root -]', 'link'=>0));
 				} else {
-					$rootNode =& new treenode (array('text'=>'Front Page', 'link'=>$this->uri(NULL, 'cms'), 'liClass'=>'sectionfolder'));
+					$rootNode =& new treenode (array('text'=>$this->objLanguage->languageText('word_home'), 'link'=>$this->uri(NULL, 'cms'), 'liClass'=>'sectionfolder'));
 				}
                 $menu->addItem($rootNode);
             }
