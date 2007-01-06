@@ -676,7 +676,7 @@ class blogops extends object
                 	}
                     $tblnl->addCell($iconList); //cc licence
                     $tblnl->endRow();
-                    echo $this->objTB->autodiscCode();
+                    //echo $this->objTB->autodiscCode();
                     $ret.= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content']) ."<center>".$tblnl->show() ."</center>");
                 }
             }

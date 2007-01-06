@@ -23,7 +23,13 @@ $rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
 $leftCol = NULL;
 $middleColumn = NULL;
 
-$middleColumn .= $this->objblogOps->showPosts($latestpost);
+$this->loadClass('htmlheading', 'htmlelements');
+	$header = new htmlheading();
+	$header->type = 3;
+	$header->str = $this->objLanguage->languageText("mod_blog_latestpost", "blog");
+	$middleColumn .= $header->show();
+	$middleColumn .= $this->objblogOps->showPosts($latestpost);
+	$middleColumn .= "<hr />";
 $middleColumn .= ($this->objblogOps->showPosts($posts));
 
 //left menu section

@@ -35,7 +35,7 @@ else {
 
 
 //show all the posts
-if(isset($catid) && empty($posts))
+if(isset($catid) && empty($posts) && empty($latestpost))
 {
 	$middleColumn .= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_nopostsincat", "blog") . "</center></em></h1>";
 	if($this->objUser->userId() == $userid)
@@ -44,12 +44,18 @@ if(isset($catid) && empty($posts))
 		$middleColumn .= "<center>" . $linker->show() . "</center>";
 	}
 }
-elseif(!isset($catid) && empty($posts))
+elseif(!isset($catid) && empty($posts) && empty($latestpost))
 {
 	$middleColumn .= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_noposts", "blog") . "</center></em></h1>";
 }
 else {
+	$this->loadClass('htmlheading', 'htmlelements');
+	$header = new htmlheading();
+	$header->type = 3;
+	$header->str = $this->objLanguage->languageText("mod_blog_latestpost", "blog");
+	$middleColumn .= $header->show();
 	$middleColumn .= $this->objblogOps->showPosts($latestpost);
+	$middleColumn .= "<hr />";
 	$middleColumn .= ($this->objblogOps->showPosts($posts));
 }
 
