@@ -976,6 +976,8 @@ class blog extends controller
             	$gurl = "http://blogsearch.google.com/ping?name=" . urlencode($name) . "&url=" . urlencode($blogURL) . "&changesURL=" . urlencode($changesURL);
 				//do the http request
 				//echo $gurl;
+				$gurl = str_replace('%26amp%3B', "&", $gurl);
+				//echo $gurl; die();
 				require_once "HTTP/Request.php";
 				$req =& new HTTP_Request($gurl);
 				$req->sendRequest();
