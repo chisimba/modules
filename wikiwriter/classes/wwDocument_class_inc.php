@@ -1,4 +1,11 @@
 <?php
+// security check - must be included in all scripts
+if(!$GLOBALS['kewl_entry_point_run'])
+{
+    die("You cannot view this page directly");
+} 
+// end security check
+
 /**
 * WikiWriterDocument Object 
 *
@@ -22,22 +29,27 @@ class wwDocument extends object
 	/**
 	 * @var array $stylesheets Reference to stylesheets stored on the system
 	 */
-	 private $stylesheets;
+	private $stylesheets = array();
 
 	/**
 	 * @var array $images Reference to images stored on the system
 	 */
-	 private $images;
+	private $images = array();
 
 	/**
 	 * @var array $pages Parsed wiki pages containing only the content
 	 */
-	 private $pages;
+	private $pages = array();
 
 	/**
 	* Variable objChisimbaCfg Object for accessing chisimba configuration
 	*/
 	public $objChisimbaCfg = '';
+
+	/**
+	 * Variable string dirPath Directory where all the files will be stored
+	 */
+	public $dirPath;
 
 	/**
 	 * Constructor
@@ -49,15 +61,19 @@ class wwDocument extends object
 		{
 			//Load classes
 			$this->loadClass('altconfig', 'config');
+			$this->loadClass('wikiParser', 'wikiwriter');
 
 			//Instantiate needed objects
 			$this->objChisimbaCfg = new altconfig();
+
+			// create a directory for the relative document files 
+			$this->dirPath = 'usrfiles/wikiwriter/' . time() . rand(1,999) . '/'; 
+			if(!mkdir($this->dirPath))
+				throw new customException('Unable to create directory (' . $this->dirPath . ').  Please contact admin to check file permissions');
 		}
 		catch(customException $e)
 		{
-			//oops, something not there - bail out
 			echo customException::cleanUp();
-			//we don't want to even attempt anything else right now.
 			die();
 		}
 	}
@@ -71,34 +87,95 @@ class wwDocument extends object
 	 */
 	public function importPage($url)
 	{
+		$this->dbg('page url = ' . $url);
+
 		// Fetch html content and load into a DOM object for processing
 		$objDOM = new DOMDocument();
 		$objDOM->loadHTML($this->getFile($url));
 
-		//For every img url that doesn't already exist in $images, load 
-		foreach($objDOM->getElementsByTagName('img') as $imgNode)
+		// Parse the wiki content 
+		$objWP = new wikiParser();
+		$objWikiPage = $objWP->parse($objDOM);
+
+		//Find every image in the wiki content and add any new ones into the images array
+		foreach($objWikiPage->getElementsByTagName('img') as $imgNode)
 		{
 			$imgURL = $this->getFullURL($imgNode->getAttribute('src'), $url);
-			//TODO: Do we determine if image exists here or in the loadImage function?
-			$this->loadImage($imgURL);
+			$this->dbg('img URL = ' . $imgURL . ' , from = ' . $imgNode->getAttribute('src'));
+
+			// If img doesn't already exist, then we load it, set the new relative url and add to the images array 
+			if(!array_search($imgURL, $this->images))
+			{
+				$imgNode->setAttribute('src', $this->getImage($imgURL));
+				array_push($this->images, $imgURL);
+			}
 		}
 
-		// Load all the stylesheets
-		// Parse the wiki content and save	
-		
+		//push the wiki content onto the pages array now that we've replaced the img urls
+		array_push($this->pages, $objWikiPage);	
+
+		// Load all the stylesheets, here we reference from the actual full document as opposed to wiki content
+		foreach($objDOM->getElementsByTagName('link') as $linkNode)
+		{
+			//first determine that its a stylesheet
+			if($linkNode->getAttribute('rel') == 'stylesheet')
+			{
+				$ssURL = $this->getFullURL($linkNode->getAttribute('href'), $url);
+				$this->dbg('ss URL = ' . $ssURL . ' , from = ' . $linkNode->getAttribute('href'));
+
+				//If the link doesn't already exist, then we load it and save to the stylesheets array
+				if(!array_search($ssURL, $this->stylesheets)){
+					$this->getStyleSheet($ssURL);
+					array_push($this->stylesheets, $ssURL);
+				}
+			}
+		}
 	}
 
 	/**
-	 * Builds the final page and returns a final html document
-	 * with references to files on the local Chisimba system 
+	 * Builds the final page, saves it, and returns the path to the 
+	 * final html page
 	 * 
 	 * @access public
-	 * @returns $string HTML content 
+	 * @returns $string filesystem path to html page 
 	 */
-	public function toHTML()
+	public function buildDocument()
 	{
-		//$this->dbg('HTML output = ' . $this->dom->saveHTML());
-		return $this->dom->saveHTML();
+		//Create DomDocument 
+		$dom = new DomDocument();
+
+		$root = $dom->createElement('html');
+		$root = $dom->appendChild($root);
+
+		$head = $dom->createElement('head');
+		$head = $root->appendChild($head);
+
+		$body = $dom->createElement('body');
+		$body = $root->appendChild($body);
+
+		// add each stylesheet
+		foreach($this->stylesheets as $css){
+			$link = $dom->createElement('link');
+			$link->setAttribute('rel', 'stylesheet');
+			$link->setAttribute('type', 'text/css');
+			$link->setAttribute('href', $css);
+			$head->appendChild($link);
+		}
+
+		//add each page of content
+		foreach($this->pages as $page){
+			$content = $dom->importNode($page, true);
+			$body->appendChild($content);
+		}
+
+		//write file
+		// save to the file system
+		$fHandle = fopen($this->dirPath . 'index.html', 'w');
+		fwrite($fHandle, $dom->saveHTML());
+		fclose($fHandle);
+		
+		// Return the html content
+		return $this->dirPath . 'index.html';
 
 	}	
 
@@ -123,13 +200,16 @@ class wwDocument extends object
 			//TODO: Waiting on change to installer BUT in the meantime need to find alternative option
 			// Either parsing the proxy line given for an username/password and proxy port or have
 			// settings built into config
+			/*
 			curl_setopt_array($ch, array(CURLOPT_PROXY => $this->objChisimbaCfg->getItem('KEWL_PROXY'),
 								CURLOPT_PROXYUSERPWD => 'mwatson:schrodinger',
 								CURLOPT_PROXYPORT => 80	)	
 							); 
+			*/
 		}
 
 		// Grab content and close resource
+		// TODO: Throw an error if unable to retrieve the file
 		$content = curl_exec($ch);
 		curl_close($ch);
 
@@ -137,11 +217,82 @@ class wwDocument extends object
 	}
 
 	/**
-	 * Finds all of the images referenced in the file and downloads them
+	 * Downloads and saves the file from the url given 
 	 *
 	 * @access private
-	 * @params string $html HTML content to parse for the img
+	 * @params string $url URL of the image to retrieve 
+	 * @returns string Relative url for the image
 	 */
+	private function getImage($url)
+	{
+		try{	
+			// Figure out the relative url for the image and filename
+			preg_match('/[a-zA-Z0-9_.-]+\//', $url, $matches);
+			$path = $matches[0];
+			preg_match('/\w+\.(jpg|jpeg|gif|bmp|png)/', $url, $matches);
+			$filename = $matches[0];
+
+			// make the directory
+			// But first we must change all periods to underscores, so htmldoc doesn't think directories are urls
+			$path = str_replace('.', '_', $path);
+			if(!$this->makeFullPath($this->dirPath . $path))
+				throw new customException('Unable to create directory (' . $this->dirPath . $path . ').  Please contact admin to check file permissions');
+		
+			// get the image
+			$img = $this->getFile($url);
+
+			// save to the file system
+			$fHandle = fopen($this->dirPath . $path . $filename, 'wb');
+			fwrite($fHandle, $img);
+			fclose($fHandle);
+
+			// return the relative url
+			return $path . $filename;
+	 	}
+		catch(customException $e)
+		{
+			echo customException::cleanUp();
+			die();
+		}
+
+	 }
+
+	/**
+	 * Downloads and saves the stylesheet from the url given 
+	 *
+	 * @access private
+	 * @params string $url URL of the stylesheet to download 
+	 */
+	private function getStyleSheet($url)
+	{
+		try
+		{	
+			// Figure out the relative url for the stylesheet and filename
+			preg_match('/[a-zA-Z0-9_.-]+\//', $url, $matches);
+			$path = $matches[0];
+			preg_match('/\w+\.css/', $url, $matches);
+			$filename = $matches[0];
+
+			// make the directory
+			// But first we must change all periods to underscores, so htmldoc doesn't think directories are urls
+			$path = str_replace('.', '_', $path);
+			if(!$this->makeFullPath($this->dirPath . $path))
+				throw new customException('Unable to create directory (' . $this->dirPath . $path . ').  Please contact admin to check file permissions');
+		
+			// get the stylesheet 
+			$css = $this->getFile($url);
+
+			// save to the file system
+			$fHandle = fopen($this->dirPath . $path . $filename, 'w');
+			fwrite($fHandle, $css);
+			fclose($fHandle);
+	 	}
+		catch(customException $e)
+		{
+			echo customException::cleanUp();
+			die();
+		}
+	}
 
 	/**
 	 * Because some urls referenced in html documents aren't full urls,
@@ -156,15 +307,57 @@ class wwDocument extends object
 	private function getFullURL($url, $srcURL)
 	{
 		// if the url starts with http://, then return it, its already fully valid
-		if($preg_match('/http:\/\//', $url))
+		if(preg_match('/http:\/\//', $url))
 		{
 			return $url;
-		} else {
+		} 
+		// If $url starts with a / then we just need to get the domain name and not the subdirectories
+		else if(stripos($url, '/') == 0)
+		{
+			preg_match('/http:\/{2}([a-zA-Z0-9_.-])+/', $srcURL, $matches);
+			foreach($matches as $m){
+				$this->dbg('matches = ' . $m);
+			}
+			return $matches[0] . $url;
+		} else{
+			//TODO: Strip any leading slash marks if they exist, so we don't get doubles or triple slashes
 			// else grab the base url from $srcURL and prepend it to the $url and return
 			//TODO: Consider wrapping this in a try/catch or some other way to confirm that the matches returns correctly
-			$preg_match('/(http:)?[a-zA-Z0-9_.-]*\/+/', $url, $matches);
+			preg_match('/http:\/{2}([a-zA-Z0-9_.-]+\/)+/', $srcURL, $matches);
+			foreach($matches as $m){
+				$this->dbg('matches = ' . $m);
+			}
 			return $matches[0] . $url;
 		}
+	}
+	
+	/**
+	 * Takes the directory path given and creates all the necessary directories
+	 * @access private
+	 * @params string $path path to create
+	 * @returns boolean 1 for success, 0 otherwise
+	 */
+
+	private function makeFullPath($path)
+	{
+		//Break the path apart
+		$dirs = explode('/', $path);
+
+		//Slowly rebuild while creating directories that don't exist
+		$slowPath = ""; 
+		foreach($dirs as $dir)
+		{
+			$slowPath .= $dir;
+			if(!file_exists($slowPath))
+			{
+				if(!mkdir($slowPath))
+					return 0;
+			}
+			$slowPath .= "/";
+		}
+
+		//Success
+		return 1;
 	}
 }
 ?>
