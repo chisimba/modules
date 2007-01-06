@@ -23,6 +23,7 @@ $rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
 $leftCol = NULL;
 $middleColumn = NULL;
 
+$middleColumn .= $this->objblogOps->showPosts($latestpost);
 $middleColumn .= ($this->objblogOps->showPosts($posts));
 
 //left menu section

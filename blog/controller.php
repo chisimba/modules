@@ -271,7 +271,10 @@ class blog extends controller
                 $linkcats = $this->objDbBlog->getAllLinkCats($userid);
                 //get all the posts by this user
                 $posts = $this->objDbBlog->getAllPosts($userid, 0); //$catid = NULL);
+                $latestpost[0] = $this->objDbBlog->getLatestPost($userid);
+
                 //send the info to the template
+                $this->setVarByRef('latestpost', $latestpost);
                 $this->setVarByRef('posts', $posts);
                 $this->setVarByRef('linkcats', $linkcats);
                 $this->setVarByRef('cats', $catarr);
@@ -810,6 +813,8 @@ class blog extends controller
                     //otherwise grab all the Published posts
                     $posts = $this->objDbBlog->getAllPosts($userid, 0);//getAbsAllPostsNoDrafts($userid);
                 }
+                $latestpost[0] = $this->objDbBlog->getLatestPost($userid);
+                $this->setVarByRef('latestpost', $latestpost);
                 //send all that to the template
                 $this->setVarByRef('catid', $catid);
                 $this->setVarByRef('posts', $posts);
