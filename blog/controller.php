@@ -981,8 +981,6 @@ class blog extends controller
 				$req->sendRequest();
 			    $code = $req->getResponseCode();
 
-			    //var_dump($req);
-				//die();
     			switch ($code) {
     				case 200:
     					log_debug("Blog ping to Google Blogs API successful!");
