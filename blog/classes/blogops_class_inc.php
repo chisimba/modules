@@ -90,7 +90,7 @@ class blogops extends object
             'action' => 'siteblog'
         )) , $this->objLanguage->languageText("mod_blog_viewsiteblogs", "blog") , NULL);
 
-        $defmodLink = new href($this->uri(array('module' => "_default")), $this->objLanguage->languageText("mod_blog_returntosite", "blog"), NULL);
+        $defmodLink = new href($this->uri(array('module' => '_default')), $this->objLanguage->languageText("mod_blog_returntosite", "blog"), NULL);
 
         if ($featurebox == FALSE) {
             $ret = $oblogs->show() . "<br />" . $defmodLink->show();
@@ -158,8 +158,10 @@ class blogops extends object
             if (is_null($ret)) {
                 return NULL;
             }
+            //build a show ALL posts link
+            $plink = new href($this->uri(array('action' => 'showallposts')), $this->objLanguage->LanguageText("mod_blog_word_showallposts", "blog"), NULL);
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_categories", "blog") , $ret);
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_categories", "blog") , $plink->show() . "<br />" . $ret);
             return $ret;
         }
     }
