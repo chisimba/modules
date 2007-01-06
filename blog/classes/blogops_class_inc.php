@@ -84,21 +84,25 @@ class blogops extends object
         $oblogs = new href($this->uri(array(
             'action' => 'allblogs'
         )) , $this->objLanguage->languageText("mod_blog_viewallblogs", "blog") , NULL);
+
         //Link for siteblogs Added by Irshaad Hoodain
         $ositeblogs = new href($this->uri(array(
             'action' => 'siteblog'
         )) , $this->objLanguage->languageText("mod_blog_viewsiteblogs", "blog") , NULL);
+
+        $defmodLink = new href($this->uri(array('module' => "_default")), $this->objLanguage->languageText("mod_blog_returntosite", "blog"), NULL);
+
         if ($featurebox == FALSE) {
-            $ret = $oblogs->show();
+            $ret = $oblogs->show() . "<br />" . $defmodLink->show();
         } else {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
 
-            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_otherblogs","blog"), $oblogs->show());
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_otherblogs","blog"), $oblogs->show() . "<br />" . $ositeblogs->show() . "<br />" . $defmodLink->show());
 
-            $ret .= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewsiteblogs","blog"), $ositeblogs->show());
+            //$ret .= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewsiteblogs","blog"), $ositeblogs->show());
 
-            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_otherblogs", "blog") , $oblogs->show());
-            $ret.= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewsiteblogs", "blog") , $ositeblogs->show());
+            //$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_otherblogs", "blog") , $oblogs->show());
+            //$ret.= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewsiteblogs", "blog") , $ositeblogs->show());
 
         }
         return $ret;
