@@ -940,9 +940,9 @@ class blog extends controller
 
 
             case 'postadd':
-            //Added by Ishaad Hoosain for siteblog
-            //if user clicked checkbox he is admin
 
+           		 //Added by Ishaad Hoosain for siteblog
+            	//if user clicked checkbox he is admin
                 if($this->objUser->isLoggedIn() == FALSE)
                 {
                     $this->nextAction('');
@@ -968,7 +968,31 @@ class blog extends controller
                 $commentsallowed = $this->getParam('commentsallowed');
                 $excerpt = $this->getParam('postexcerpt');
 
-                //post quick add
+                //set up for Google Blog API
+            	$changesURL = $this->uri(array('module' => 'blog', 'action' => 'feed', 'userid' => $userid, 'format' => 'rss2'));
+            	$name = $this->objUser->fullname($userid) . " Chisimba blog";
+            	$blogURL = $this->uri(array('module' => 'blog', 'action' => 'randblog', 'userid' => $userid));
+            	//OK lets put it together...
+            	$gurl = "http://blogsearch.google.com/ping?name=" . urlencode($name) . "&url=" . urlencode($blogURL) . "&changesURL=" . urlencode($changesURL);
+				//do the http request
+				//echo $gurl;
+				require_once "HTTP/Request.php";
+				$req =& new HTTP_Request($gurl);
+				$req->sendRequest();
+			    $code = $req->getResponseCode();
+
+			    //var_dump($req);
+				//die();
+    			switch ($code) {
+    				case 200:
+    					log_debug("Blog ping to Google Blogs API successful!");
+    					break;
+    				default:
+    					log_debug("Google Blogs API Ping Failure");
+    					break;
+    			}
+
+            	//post quick add
                 if($mode == 'quickadd')
                 {
                     $this->objblogOps->quickPostAdd($userid, array('posttitle' => $posttitle, 'postcontent' => $postcontent,
