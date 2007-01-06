@@ -985,10 +985,10 @@ class blog extends controller
 
     			switch ($code) {
     				case 200:
-    					log_debug("Blog ping to Google Blogs API successful!");
+    					log_debug("Google blogs API Success Code: " . $code);
     					break;
     				default:
-    					log_debug("Google Blogs API Ping Failure");
+    					log_debug("Google blogs API Failure Code: " . $code);
     					break;
     			}
 
