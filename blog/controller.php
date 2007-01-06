@@ -418,7 +418,7 @@ class blog extends controller
                         $read = $headerinfo->Unseen;
                         //message body
                         $bod = $this->objImap->getMessage($i);
-                        //var_dump($bod);
+
                         //check if there is an attachment
                         if(empty($bod[1]))
                         {
@@ -426,7 +426,6 @@ class blog extends controller
                             $attachments = NULL;
                         }
                         else {
-                            //@TODO check multiple attachments
                             //set the attachment
                             $attachments = $bod[1];
                             //loop through the attachments and write them down
@@ -449,27 +448,23 @@ class blog extends controller
                             //check if the address we get from the msg is in the array of valid addresses
                             foreach ($valadds as $user)
                             {
-                                //print_r($user);
                                 //check if there is a match to the user list
                                 if($user['address'] != $addy)
                                 {
                                     //Nope, no match, not validated!
                                     $validated = NULL;
-
                                 }
                                 else {
                                     //match found, you are a valid user dude!
                                     $validated = TRUE;
                                     //set the userid
                                     $userid = $user['userid'];
-                                    //echo $userid;
                                     //all is cool, so lets break out of this loop and carry on
                                     break;
 
                                 }
                             }
                         }
-                        //var_dump($validated);
                         if($validated == TRUE)
                         {
                             //insert the mail data into an array for manipulation
@@ -480,7 +475,6 @@ class blog extends controller
                         //delete the message as we don't need it anymore
                         echo "sorting " . $this->msgCount . "messages";
                         $this->objImap->delMsg($i);
-
                         $i++;
                     }
                     //is the data var set?
@@ -488,7 +482,6 @@ class blog extends controller
                     {
                         $data = array();
                     }
-                    //var_dump($data); die();
                     //lets look at the data now
                     foreach ($data as $datum)
                     {
@@ -501,14 +494,12 @@ class blog extends controller
                         	{
                         		foreach($datum['attachments'] as $files)
                         		{
-                					//var_dump($files);
                             		//do check for multiple attachments
                             		//set the filename of the attachment
                             		$fname = $files['filename'];
                             		$filenamearr = explode(".", $fname);
 									$ext = pathinfo($fname);
-
-                            		$filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];//$filenamearr[1];
+                            		$filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];
                             		//decode the attachment data
                             		$filedata = base64_decode($files['filedata']);
                             		//set the path to write down the file to
@@ -527,11 +518,8 @@ class blog extends controller
                             		$handle = fopen($filename, 'wb');
                             		fwrite($handle, $filedata);
                             		fclose($handle);
-
                             		$type = mime_content_type($filename);
-                            		//echo "<h1>" . $type . "</h1>";
                             		$tparts = explode("/", $type);
-
                             		if($tparts[0] == "image")
                             		{
                             			//add the img stuff to the body at the end of the "post"
@@ -544,12 +532,11 @@ class blog extends controller
                         		}
                         	}
                         	else {
-                        		//do check for multiple attachments
                             	//set the filename of the attachment
                             	$fname = $datum['attachments'][0]['filename'];
                             	$filenamearr = explode(".", $fname);
                             	$ext = pathinfo($fname);
-                            	$filename = $filenamearr[0] . "_" . time() . "." . $ext['extension']; //$filenamearr[1];
+                            	$filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];
                             	//decode the attachment data
                             	$filedata = base64_decode($datum['attachments'][0]['filedata']);
                             	//set the path to write down the file to
@@ -568,18 +555,23 @@ class blog extends controller
                             	$handle = fopen($filename, 'wb');
                             	fwrite($handle, $filedata);
                             	fclose($handle);
-
-    	                        //add the img stuff to the body at the end of the "post"
-        	                    $newbod = "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]";
-
+                            	$type = mime_content_type($filename);
+                            	$tparts = explode("/", $type);
+                            	if($tparts[0] == "image")
+                            	{
+                            		//add the img stuff to the body at the end of the "post"
+        	                    	$newbod .= "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]" . "<br />";
+                            	}
+                            	else {
+                            		//add the img stuff to the body at the end of the "post"
+        	                    	$newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . urlencode($filename) . "[/url]" . "<br />";
+                            	}
                         	}
                         }
                         else {
                             //no attachments to worry about
                             $newbod = $datum['body'];
-                            //echo $newbod;
                         }
-                        //echo $newbod;
                         //Write the new post to the database as a "Quick Post"
                         $this->objblogOps->quickPostAdd($datum['userid'], array('posttitle' => $datum['subject'], 'postcontent' => $newbod,
                                                     'postcat' => 0, 'postexcerpt' => '', 'poststatus' => '0',
@@ -743,6 +735,46 @@ class blog extends controller
                 }
                 //output the feed
                 echo htmlentities($feed);
+                break;
+
+            case 'showallposts':
+            	$catid = NULL;
+            	$userid = $this->getParam('userid');
+                if(!isset($userid))
+                {
+                    //fix the user id just in case
+                    if($this->objUser->isLoggedIn() == TRUE)
+                    {
+                        $userid = $this->objUser->userId();
+                    }
+                    else {
+
+                        $this->nextAction('');
+                        exit;
+                    }
+                }
+                //get the category tree
+                $catarr = $this->objDbBlog->getCatsTree($userid);
+                //get the links categories
+                $linkcats = $this->objDbBlog->getAllLinkCats($userid);
+                //make sure the category id is there
+                if(isset($catid))
+                {
+                    //grab all the posts in that category
+                    $posts = $this->objDbBlog->getAbsAllPostsNoDrafts($userid);
+                }
+                else {
+                    //otherwise grab all the Published posts
+                    $posts = $this->objDbBlog->getAbsAllPostsNoDrafts($userid);
+                }
+                //send all that to the template
+                $this->setVarByRef('catid', $catid);
+                $this->setVarByRef('posts', $posts);
+                $this->setVarByRef('linkcats', $linkcats);
+                $this->setVarByRef('cats', $catarr);
+                $this->setVarByRef('userid', $userid);
+                //return the template
+                return 'myblog_tpl.php';
                 break;
 
             case 'viewblog':
