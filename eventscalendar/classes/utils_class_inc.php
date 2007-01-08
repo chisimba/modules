@@ -91,5 +91,19 @@ class utils extends object
    		$str .= '</select></p>';
    		return $str;
    }
+   
+   /**
+    * Method that the context designer will use to get the list of available links
+    * 
+    * @return array
+    * @access public
+    * 
+    */
+   public function getLinks($contextCode)
+   {
+       
+       $arr = $this->getAll('WHERE contextcode = "'.$contextCode.'" ');
+       return $arr;
+   }
 }
 ?>
