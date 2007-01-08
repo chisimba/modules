@@ -1,0 +1,314 @@
+<?php
+/**
+* Assignment class extends controller
+* @author Megan Watson
+* @copyright (c) 2004 UWC
+* @package assignment
+* @version 1
+* @filesource
+*/
+
+// security check - must be included in all scripts
+if (!$GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
+} // end security check
+
+ /**
+ * Module class to handle the management of assignments.
+ * Forms part of formative assessment
+ * @author Megan Watson
+ * @copyright (c) 2004 UWC
+ * @package assignment
+ * @version 1
+ */
+
+class assignment extends controller
+{
+    public $contextcode;
+
+    /**
+    * Initialise objects used in the module.
+    */
+    public function init()
+    {
+        // Check if the module is registered and redirect if not.
+        // Check if the assignment module is registered and can be linked to.
+        /*$this->objModules =& $this->newObject('modules','modulecatalogue');
+        if(!$this->objModules->checkIfRegistered('Assignments', 'assignment')){
+            return $this->nextAction('notregistered',array('modname'=>'assignment'), 'redirect');
+        }*/
+	
+        $this->test = FALSE;
+	/*if($this->objModules->checkIfRegistered('Online Tests','test')){
+            $this->test = TRUE;
+        }
+	*/
+        $this->essay = FALSE;
+        /*if($this->objModules->checkIfRegistered('Essay Management','essay')){
+            $this->essay = TRUE;
+        }
+	*/
+        $this->ws = FALSE;
+        /*if($this->objModules->checkIfRegistered('Worksheets','worksheet')){
+            $this->ws = TRUE;
+        }
+	*/
+        $this->rubric = FALSE;
+        /*if($this->objModules->checkIfRegistered('Rubrics','rubric')){
+            $this->rubric = TRUE;
+        }
+	*/
+        $this->dbAssignment =& $this->getObject('dbassignment','assignment');
+        $this->dbSubmit =& $this->getObject('dbassignmentsubmit','assignment');
+
+        /*if($this->essay){
+            $this->dbEssayTopics =& $this->newObject('dbessay_topics','essay');
+            $this->dbEssays =& $this->newObject('dbessays','essay');
+            $this->dbEssayBook =& $this->newObject('dbessay_book','essay');
+        }
+	*/
+        if($this->ws){
+            $this->dbWorksheet =& $this->newObject('dbworksheet','worksheet');
+            $this->dbWorksheetResults =& $this->newObject('dbworksheetresults','worksheet');
+        }
+        /*if($this->test){
+            $this->dbTestAdmin =& $this->newObject('dbtestadmin','testadmin');
+            $this->dbTestResults =& $this->newObject('dbresults','testadmin');
+        }
+	*/
+        $this->objDate =& $this->newObject('datetime','utilities');
+        $this->objLanguage =& $this->newObject('language','language');
+        $this->objUser =& $this->newObject('user','security');
+        //$this->objGroups =& $this->newObject('groupAdminModel','groupadmin');
+        $this->objContext =& $this->newObject('dbcontext','context');
+
+        // Get an instance of the filestore object and change the tables to essay specific tables
+       //$this->objFile=& $this->getObject('fileupload','filestore');
+       // $this->objFile->changeTables('tbl_assignment_filestore','tbl_assignment_blob');
+
+        $this->userId = $this->objUser->userId();
+
+        if($this->objContext->isInContext()){
+            $this->contextCode=$this->objContext->getContextCode();
+            $this->context=$this->objContext->getTitle();
+        }
+
+        // Log this call if registered
+        /*if(!$this->objModules->checkIfRegistered('logger', 'logger')){
+            //Get the activity logger class
+            $this->objLog=$this->newObject('logactivity', 'logger');
+            //Log this module call
+            $this->objLog->log();
+        }*/
+    }
+
+    /**
+    * The standard dispatch method for the module.
+    * The dispatch() method must return the name of a page body template which will
+    * render the module output (for more details see Modules and templating)
+    * @return The template to display
+    */
+    public function dispatch($action)
+    {
+        switch($action){
+            // view the assignment
+            case 'view':
+                $var = $this->getParam('var', FALSE);
+                return $this->viewAssign($var);
+
+            // insert the submitted assignment in the database
+            case 'submit':
+                $postSave = $this->getParam('save', '');
+                if($postSave == $this->objLanguage->languageText('word_exit')){
+                    return $this->nextAction('');
+                }
+                return $this->submitAssign();
+
+            // change the editor for the assignment
+            case 'changeeditor':
+                $id = $this->getParam('id', '');
+                $editor = $this->getParam('editor');
+                $this->saveAssign();
+                return $this->nextAction('view', array('id'=>$id, 'editor'=>$editor, 'var'=>TRUE));
+
+            // download an assignment
+            case 'download':
+                $this->setPageTemplate('download_page_tpl.php');
+                return 'download_tpl.php';
+
+            case 'showcomment':
+                return $this->showComment();
+
+            default:
+                return $this->studentHome();
+        }
+    }
+
+    /**
+    * Method to display the Students home page.
+    * @return The template for the students home page.
+    */
+    public function studentHome()
+    {
+        // Get students assignments: worksheets, booked essays
+        $wsData = array(); $essay = array(); $topic = array(); $essayData = array();
+        $assignData = array(); $testData = array();
+
+        if($this->ws){
+            $wsData = $this->dbWorksheet->getWorksheetsInContext($this->contextCode);
+            if(!empty($wsData)){
+                foreach($wsData as $key=>$line){
+                    $result = $this->dbWorksheetResults->getResults(NULL, "worksheet_id='"
+                            .$line['id']."' AND userId='".$this->userId."'");
+                    $wsData[$key]['mark'] = $result[0]['mark'];
+                    $wsData[$key]['completed'] = $result[0]['completed'];
+                }
+            }
+        }
+        if($this->essay){
+            // get topic list for the context
+            $topicFilter = "context='".$this->contextCode."'";
+            $topicFields = 'id, name, closing_date, userId';
+            $topics = $this->dbEssayTopics->getTopic(NULL, $topicFields, $topicFilter);
+
+            // check booked topics and get booked essays
+            if(!empty($topics)){
+                $i = 0;
+                foreach($topics as $item){
+                    $bookFilter = "where studentid='".$this->userId."' and topicid='".$item['id']."'";
+                    $booking = $this->dbEssayBook->getBooking($bookFilter);
+                    if(!empty($booking)){
+                        $essay = $this->dbEssays->getEssay($booking[0]['essayid'], 'topic');
+                        $booking[0]['essayName'] = $essay[0]['topic'];
+                        $booking[0]['topicName'] = $item['name'];
+                        $booking[0]['closing_date'] = $item['closing_date'];
+                        $booking[0]['lecturer'] = $item['userId'];
+                        $essayData[] = $booking[0];
+                    }else{
+                        $i++;
+                    }
+                }
+                if($i > 0){
+                    $essayData[]['unassigned'] = $i;
+                }
+            }
+        }
+        if($this->test){
+            $filter =
+            $testData = $this->dbTestAdmin->getTests($this->contextCode);
+            if(!empty($testData)){
+                foreach($testData as $key=>$line){
+                    $result = $this->dbTestResults->getResult($this->userId, $line['id']);
+                    if(!empty($result)){
+                        $testData[$key]['mark'] = $result[0]['mark'];
+                    }else{
+                        $testData[$key]['mark'] = 'none';
+                    }
+                }
+            }
+        }
+        $assignData = $this->dbAssignment->getAssignment($this->contextcode);
+        if(!empty($assignData)){
+            foreach($assignData as $key=>$val){
+                $submitData = $this->dbSubmit->getSubmit("assignmentId='".$val['id']."' AND
+                userId='".$this->objUser->userId()."'", 'id AS submitId, mark AS studentMark, dateSubmitted, fileId');
+                $assignData[$key] = array_merge($val, $submitData[0]);
+            }
+        }
+        $msg = $this->getParam('confirm');
+        if(!empty($msg)){
+            $this->setVarByRef('msg',$msg);
+        }
+
+        $this->setVarByRef('essayData', $essayData);
+        $this->setVarByRef('wsData', $wsData);
+        $this->setVarByRef('testData', $testData);
+        $this->setVarByRef('assignData', $assignData);
+        return 'assignment_student_tpl.php';
+    }
+
+    /**
+    * Method to display the assignment.
+    * @param bool $var Allows the assignment to be resubmitted.
+    * @return The template for displaying the assignment.
+    */
+    public function viewAssign($var = FALSE)
+    {
+        $id = $this->getParam('id');
+        $data = $this->dbAssignment->getAssignment($this->contextCode, "id='$id'");
+
+        if($data[0]['resubmit'] || $var){
+            $submit = $this->dbSubmit->getSubmit("assignmentId='$id' AND userId='"
+            .$this->objUser->userId()."'", 'id, online, fileId');
+            if(!empty($submit)){
+                $data[0]['online'] = $submit[0]['online'];
+                $data[0]['fileId'] = $submit[0]['fileId'];
+                $data[0]['submitId'] = $submit[0]['id'];
+            }
+        }
+
+        $this->setVarByRef('data', $data);
+        return 'assignment_view_tpl.php';
+    }
+
+    /**
+    * Method to display a lecturers comment in a pop-up window
+    */
+    public function showComment()
+    {
+        $id = $this->getParam('id');
+        $name = $this->getParam('name');
+        $comment = $this->dbSubmit->getSubmit("id='$id'",'comment');
+        $comment[0]['name'] = $name;
+        $this->setVarByRef('data',$comment);
+        return 'assignment_comment_tpl.php';
+    }
+
+    /**
+    * Method to save a students submitted assignment in the database
+    */
+    public function saveAssign()
+    {
+        $fields = array();
+        $fields['assignmentId'] = $this->getParam('id', '');
+        $fields['userId'] = $this->userId;
+        $fields['dateSubmitted'] = date('Y-m-d H:i', time());
+
+        $postFormat = $this->getParam('format');
+        if($postFormat){
+            $fileId = $this->getParam('fileId', NULL);
+            $fileId = $this->objFile->uploadFile($_FILES['file'],'file',$fileId);
+            $fields['fileId'] = $fileId;
+        }else{
+            $fields['online'] = $this->getParam('text', '');
+        }
+
+        $postSubmitId = $this->getParam('submitId', NULL);
+        $id = $this->dbSubmit->addSubmit($fields, $postSubmitId);
+        return $id;
+    }
+
+    /**
+    * Method to save a students submitted assignment in the database
+    */
+    public function submitAssign()
+    {
+        $id = $this->saveAssign();
+        if(!($id === FALSE)){
+            $msg = $this->objLanguage->languageText('mod_assignment_confirmsubmit');
+        }
+        return $this->nextAction('',array('confirm'=>$msg));
+    }
+
+    /**
+    * Method to take a datetime string and reformat it as text.
+    * @param string $date The date in datetime format.
+    * @return string $ret The formatted date.
+    */
+    public function formatDate($date)
+    {
+        $ret = $this->objDate->formatDate($date);
+        return $ret;
+	}
+}// end class assignment
+?>
