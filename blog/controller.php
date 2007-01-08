@@ -1001,6 +1001,7 @@ class blog extends controller
 				//define the request options
 				$reqopts = array(
                     // Options for request directly
+                    'useragent'         => 'Chisimba',
                     'strictness'        => 1,
                     'timeout'           => 30,          // seconds
                     'fetchlines'        => 30,
@@ -1022,7 +1023,7 @@ class blog extends controller
 				$req->addQueryString('changesURL', $changesURL);
 
 				$request = $req->sendRequest(true);
-				//var_dump($request);
+				//var_dump(urldecode($req->getUrl($req))); die();
 				if(PEAR::isError($req))
 				{
 					var_dump($req);
@@ -1211,6 +1212,9 @@ class blog extends controller
                 $data = array('id' => $postid, 'title' => $title, 'excerpt' => $excerpt, 'blog_name' => $blog_name,
                               'url' => $url, 'trackback_url' => $trackback_url, 'extra' => $extra);
 
+                //get the proxy info if set
+				$proxyArr = $this->objProxy->getProxy();
+
                 $options = array(
                     // Options for Services_Trackback directly
                     'strictness'        => 1,
@@ -1223,6 +1227,10 @@ class blog extends controller
                         'maxRedirects'      => 2,
                         'method'            => 'POST',
                         'useragent'         => 'Chisimba',
+                        'proxy_host'        => $proxyArr['proxy_host'],
+                    	'proxy_port'        => $proxyArr['proxy_port'],
+                    	'proxy_user'        => $proxyArr['proxy_user'],
+                    	'proxy_pass'        => $proxyArr['proxy_pass']
                     ),
                 );
                 try {
