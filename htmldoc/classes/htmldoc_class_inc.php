@@ -18,14 +18,6 @@ if(!$GLOBALS['kewl_entry_point_run'])
 class htmldoc extends object 
 {
 
-	// Personal debugger - TODO: REMOVE BEFORE COMMITTING FOR PRODUCTION!
-	public function dbg($sErr){
-		$handle = fopen('error_log/my_debug.log', 'a');
-		fwrite($handle, "[" . strftime("%b %d %Y %H:%M:%S") ."]/classes/htmldoc:: " . $sErr . "\n");
-		fclose($handle);
-	}
-
-
 	/**
 	 * Variable htmldocPath String identifying the path to the htmldoc binary 
 	 */
@@ -74,7 +66,6 @@ class htmldoc extends object
 	public function render( $path)
 	{
 		//TODO: High risk for failure, should wrap in try/catch
-		$this->dbg(' path for running htmldoc = ' .  $this->htmldocPath . 'htmldoc --book -t pdf14 ' . $path);
 		return shell_exec($this->htmldocPath . 'htmldoc --book -t pdf14 ' . $path);
 
 	}
