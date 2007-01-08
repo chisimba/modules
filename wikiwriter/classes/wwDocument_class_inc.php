@@ -60,11 +60,10 @@ class wwDocument extends object
 		try
 		{
 			//Load classes
-			$this->loadClass('altconfig', 'config');
 			$this->loadClass('wikiParser', 'wikiwriter');
 
 			//Instantiate needed objects
-			$this->objChisimbaCfg = new altconfig();
+			$this->objChisimbaCfg = $this->newObject('altconfig', 'config'); 
 
 			// create a directory for the relative document files 
 			$this->dirPath = 'usrfiles/wikiwriter/' . time() . rand(1,999) . '/'; 
@@ -200,12 +199,10 @@ class wwDocument extends object
 			//TODO: Waiting on change to installer BUT in the meantime need to find alternative option
 			// Either parsing the proxy line given for an username/password and proxy port or have
 			// settings built into config
-			/*
 			curl_setopt_array($ch, array(CURLOPT_PROXY => $this->objChisimbaCfg->getItem('KEWL_PROXY'),
 								CURLOPT_PROXYUSERPWD => 'mwatson:schrodinger',
 								CURLOPT_PROXYPORT => 80	)	
 							); 
-			*/
 		}
 
 		// Grab content and close resource

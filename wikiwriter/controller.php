@@ -135,14 +135,12 @@ class wikiwriter extends controller
 				// Get PDF rendering of the content
 				//$pdfwriter = new DomPDFWrapper();
 				//$pdfwriter->generatePDF($page); 
-				/*
 				$this->dbg('creating htmldoc object');
 				$hd = $this->newObject('htmldoc', 'htmldoc');
 				$this->dbg(' now rendering');
 				$output = $hd->render($location);
 				$this->dbg('rendered = ' . $output);
-				*/
-				$output = shell_exec($this->objSysConfig->getValue('HTMLDOC_PATH', 'wikiwriter') . 'htmldoc --book -t pdf14 ' . $location);
+				//$output = shell_exec($this->objSysConfig->getValue('HTMLDOC_PATH', 'wikiwriter') . 'htmldoc --book -t pdf14 ' . $location);
 
 				header("Content-type: application/pdf");
 				header("Content-Disposition: attachment; filename=testing.pdf");
