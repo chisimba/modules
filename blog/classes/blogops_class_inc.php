@@ -90,7 +90,7 @@ class blogops extends object
             'action' => 'siteblog'
         )) , $this->objLanguage->languageText("mod_blog_viewsiteblogs", "blog") , NULL);
 
-        $defmodLink = new href($this->uri(array('module' => '_default')), $this->objLanguage->languageText("mod_blog_returntosite", "blog"), NULL);
+        $defmodLink = new href($this->uri(array(), '_default'), $this->objLanguage->languageText("mod_blog_returntosite", "blog"), NULL);
 
         if ($featurebox == FALSE) {
             $ret = $oblogs->show() . "<br />" . $defmodLink->show();
