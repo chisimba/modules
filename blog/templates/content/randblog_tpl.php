@@ -28,6 +28,10 @@ $this->loadClass('htmlheading', 'htmlelements');
 	$header->type = 3;
 	$header->str = $this->objLanguage->languageText("mod_blog_latestpost", "blog") . ": " . $this->objDbBlog->getCatById($latestpost[0]['post_category']);
 	$middleColumn .= $header->show();
+	if($posts[0]['id'] == $latestpost[0]['id'])
+	{
+		unset($posts[0]);
+	}
 	$middleColumn .= $this->objblogOps->showPosts($latestpost);
 	$middleColumn .= "<hr />";
 
