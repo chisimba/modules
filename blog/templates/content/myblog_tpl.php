@@ -25,7 +25,7 @@ if(!$this->objUser->isLoggedIn())
 }
 else {
 	//show the categories menu (if there are cats)
-	$rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE);
+	//$rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE);
 	//left menu section
 	//display the menu
 	$leftCol = $leftMenu->show();
