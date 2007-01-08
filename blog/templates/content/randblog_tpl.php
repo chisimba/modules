@@ -22,11 +22,11 @@ $rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE, $userid);
 
 $leftCol = NULL;
 $middleColumn = NULL;
-
+//var_dump($latestpost);
 $this->loadClass('htmlheading', 'htmlelements');
 	$header = new htmlheading();
 	$header->type = 3;
-	$header->str = $this->objLanguage->languageText("mod_blog_latestpost", "blog");
+	$header->str = $this->objLanguage->languageText("mod_blog_latestpost", "blog") . ": " . $this->objDbBlog->getCatById($latestpost[0]['post_category']);
 	$middleColumn .= $header->show();
 	$middleColumn .= $this->objblogOps->showPosts($latestpost);
 	$middleColumn .= "<hr />";

@@ -177,7 +177,7 @@ class blogops extends object
                 $childnodes = NULL;
                 $nodes = NULL;
             }
-            $ret.= $objSideBar->show($nodestoadd, NULL, array('action' => 'viewblog', 'userid' => $userid), 'blog', $this->objLanguage->languageText("mod_blog_word_default", "blog"));
+            $ret.= $objSideBar->show($nodestoadd, NULL, array('action' => 'randblog', 'userid' => $userid), 'blog', $this->objLanguage->languageText("mod_blog_word_default", "blog"));
         } else {
             //no cats defined
             $ret = NULL;

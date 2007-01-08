@@ -48,14 +48,22 @@ elseif(!isset($catid) && empty($posts) && empty($latestpost))
 {
 	$middleColumn .= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_noposts", "blog") . "</center></em></h1>";
 }
+elseif(isset($catid) && !empty($posts))
+{
+	$middleColumn .= ($this->objblogOps->showPosts($posts));
+}
 else {
-	//$this->loadClass('htmlheading', 'htmlelements');
-	//$header = new htmlheading();
-	//$header->type = 3;
-	//$header->str = $this->objLanguage->languageText("mod_blog_latestpost", "blog");
-	//$middleColumn .= $header->show();
-	//$middleColumn .= $this->objblogOps->showPosts($latestpost);
-	//$middleColumn .= "<hr />";
+	$header = new htmlheading();
+	$header->type = 3;
+	$header->str = $this->objLanguage->languageText("mod_blog_latestpost", "blog") . ": " . $this->objDbBlog->getCatById($latestpost[0]['post_category']);
+	$middleColumn .= $header->show();
+	$middleColumn .= $this->objblogOps->showPosts($latestpost);
+	$middleColumn .= "<hr />";
+
+	$headerprev = new htmlheading();
+	$headerprev->type = 3;
+	$headerprev->str = $this->objLanguage->languageText("mod_blog_previousposts", "blog");
+	$middleColumn .= $headerprev->show();
 	$middleColumn .= ($this->objblogOps->showPosts($posts));
 }
 

@@ -32,6 +32,7 @@ class dbblog extends dbTable
 	 */
 	public function init()
 	{
+		$this->objLanguage = $this->getObject("language", "language");
 
 	}
 
@@ -239,6 +240,25 @@ class dbblog extends dbTable
 		}
 		else {
 			return FALSE;
+		}
+	}
+
+	/**
+	 * Method to grab a cat name by the id
+	 *
+	 * @param string $catid
+	 * @return string
+	 */
+	public function getCatById($catid)
+	{
+		if($catid == '0')
+		{
+			return $this->objLanguage->languageText("mod_blog_defcat", "blog");
+		}
+		else {
+			$this->_changeTable('tbl_blog_cats');
+			$catname = $this->getAll("WHERE id = '$catid'");
+			return $catname[0]['cat_name'];
 		}
 	}
 
