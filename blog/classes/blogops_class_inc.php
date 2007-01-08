@@ -115,8 +115,9 @@ class blogops extends object
      * @param bool $featurebox
      * @return string
      */
-    public function showCatsMenu($cats, $featurebox = FALSE)
+    public function showCatsMenu($cats, $featurebox = FALSE, $userid = NULL)
     {
+    	$this->objUser = $this->getObject('user', 'security');
         $objSideBar = $this->newObject('sidebar', 'navigation');
         $nodes = array();
         $childnodes = array();
@@ -127,27 +128,56 @@ class blogops extends object
                 //build the sub list as well
                 if (isset($categories['child'])) {
                     foreach($categories['child'] as $kid) {
-                        $childnodes[] = array(
-                            'text' => $kid['cat_nicename'],
-                            'uri' => $this->uri(array(
-                                'action' => 'viewblog',
-                                'catid' => $kid['id']
-                            ) , 'blog')
-                        );
+                    	if($this->objUser->isLoggedIn())
+                    	{
+                        	$childnodes[] = array(
+                            	'text' => $kid['cat_nicename'],
+                            	'uri' => $this->uri(array(
+                                	'action' => 'viewblog',
+                                	'catid' => $kid['id'],
+                                	'userid' => $userid
+                            	) , 'blog')
+                        	);
+                    	}
+                    	else {
+                    		$childnodes[] = array(
+                            	'text' => $kid['cat_nicename'],
+                            	'uri' => $this->uri(array(
+                                	'action' => 'viewblog',
+                                	'catid' => $kid['id'],
+                                	'userid' => $userid
+                            	) , 'blog')
+                        	);
+                    	}
                     }
                 }
-                $nodestoadd[] = array(
-                    'text' => $categories['cat_nicename'],
-                    'uri' => $this->uri(array(
-                        'action' => 'viewblog',
-                        'catid' => $categories['id']
-                    ) , 'blog') ,
-                    'haschildren' => $childnodes
-                );
+                if($this->objUser->isLoggedIn())
+                {
+                	$nodestoadd[] = array(
+                    	'text' => $categories['cat_nicename'],
+                    	'uri' => $this->uri(array(
+                        	'action' => 'viewblog',
+                        	'catid' => $categories['id'],
+                        	'userid' => $userid
+                    	) , 'blog') ,
+                    	'haschildren' => $childnodes
+                	);
+                }
+                else {
+                	$nodestoadd[] = array(
+                    	'text' => $categories['cat_nicename'],
+                    	'uri' => $this->uri(array(
+                        	'action' => 'viewblog',
+                        	'catid' => $categories['id'],
+                        	'userid' => $userid
+                    	) , 'blog') ,
+                    	'haschildren' => $childnodes
+                	);
+                }
                 $childnodes = NULL;
                 $nodes = NULL;
             }
-            $ret.= $objSideBar->show($nodestoadd, NULL, NULL, 'blog', $this->objLanguage->languageText("mod_blog_word_default", "blog"));
+            $ret.= $objSideBar->show($nodestoadd, NULL, array('action' => 'viewblog', 'userid' => $userid), 'blog', $this->objLanguage->languageText("mod_blog_word_default", "blog"));
         } else {
             //no cats defined
             $ret = NULL;
@@ -159,7 +189,7 @@ class blogops extends object
                 return NULL;
             }
             //build a show ALL posts link
-            $plink = new href($this->uri(array('action' => 'showallposts')), $this->objLanguage->LanguageText("mod_blog_word_showallposts", "blog"), NULL);
+            $plink = new href($this->uri(array('action' => 'showallposts', 'userid' => $userid)), $this->objLanguage->LanguageText("mod_blog_word_showallposts", "blog"), NULL);
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
             $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_categories", "blog") , $plink->show() . "<br />" . $ret);
             return $ret;

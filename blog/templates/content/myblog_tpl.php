@@ -15,8 +15,8 @@ $rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
 
 //$rightSideColumn .= "<br />";
 
-//show the link categories (if any)
-//$rightSideColumn .= $this->objblogOps->showLinkCats($linkcats, TRUE);
+//show the categories menu (if there are cats)
+$rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE, $userid);
 
 //show the admin section (if user is logged in)
 if(!$this->objUser->isLoggedIn())

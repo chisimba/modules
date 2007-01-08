@@ -18,7 +18,7 @@ $rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
 $rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
 
 //show the categories menu (if there are cats)
-//$rightSideColumn .= $this->objblogOps->showCatsMenu($cats, $userid, TRUE);
+$rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE, $userid);
 
 $leftCol = NULL;
 $middleColumn = NULL;
@@ -30,6 +30,11 @@ $this->loadClass('htmlheading', 'htmlelements');
 	$middleColumn .= $header->show();
 	$middleColumn .= $this->objblogOps->showPosts($latestpost);
 	$middleColumn .= "<hr />";
+
+$headerprev = new htmlheading();
+	$headerprev->type = 3;
+	$headerprev->str = $this->objLanguage->languageText("mod_blog_previousposts", "blog");
+	$middleColumn .= $headerprev->show();
 $middleColumn .= ($this->objblogOps->showPosts($posts));
 
 //left menu section
