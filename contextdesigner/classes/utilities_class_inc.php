@@ -24,7 +24,7 @@ class utilities extends object
     public function init()
     {
 //        $this->_objLanguage=& $this->newObject('language', 'language');
-//        $this->_objDBContext=& $this->newObject('dbcontext','context');
+        $this->_objDBContext=& $this->newObject('dbcontext','context');
 //        $this->_objUser= & $this->newObject('user','security');
 //        $this->_objDBContextModules=&$this->newObject('dbcontextmodules','context');
 //        $this->_objUtils =  & $this->newObject('utilities', 'context');
@@ -44,7 +44,9 @@ class utilities extends object
      */
     public function getModuleLinks($moduleId)
     {
-        return array();
+        $objModuleLink = $this->newObject('modulelinks_'.$moduleId, $moduleId);
+        return $objModuleLink->getContextLinks( $this->_objDBContext->getContextCode());
+       
         
     }
 }

@@ -22,7 +22,7 @@ $objButton->setToSubmit();
 $objButton2->value = $this->_objLanguage->languageText('word_cancel');
 $objButton2->setOnClick('javascript:document.location = \''.$this->uri(null).'\'');
 
-$objDropDown->id = 'modules';
+$objDropDown->name = 'moduleid';
 foreach ($modules as $module)
 {
     $modInfo = $this->_objModule->getModuleInfo($module['moduleid']);

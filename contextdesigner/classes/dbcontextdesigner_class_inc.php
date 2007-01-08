@@ -38,26 +38,37 @@ class dbcontextdesigner extends dbTable
      * @abstract 
      * @access public
      */
-    public function addLink($contextCode)
+    public function addLinks($contextCode)
     {
         try 
         {
-        
-            $moduleId = $this->getParam('moduleid');
-            $menutext = $this->getParam('menutext');
-            $linkid = $this->getParam('linkid');
             
-            $fields = array(
-                'contextcode' => $contextCode,
-                'moduleid' => $moduleId,
-                'menutext' => $menutext,
-                'linkid' => $linkid,
-                'linkorder' => $this->getLastOrderPosition(),
-                'access' => 'Pubblished'
-            );
+            foreach($this->getParam('selecteditems') as $row)
+            {
+                $selectedItemsArr = split('===',$row);    
+               
+           
+                
+                $moduleId = $this->getParam('moduleid');
+                $menutext = $selectedItemsArr[1];
+                $linkid = $selectedItemsArr[0];
+                //print  $selectedItemsArr[1];
+                
+                $fields = array(
+                    'contextcode' => $contextCode,
+                    'moduleid' => $moduleId,
+                    'menutext' => $menutext,
+                    'linkid' => $linkid,
+                    'linkorder' => $this->getLastOrderPosition($contextCode),
+                    'access' => 'Published'
+                );
+                
+                if(!$this->checkExist($contextCode, $linkid, $moduleId))
+                {
+                    $this->insert($fields);
+                }
             
-            return $this->insert($fields);
-            
+            }
         }                        
         catch (customException $e)
         {
@@ -99,4 +110,31 @@ class dbcontextdesigner extends dbTable
         
     }
     
+    /**
+     * Method to get the last order position
+     */
+    public function getLastOrderPosition($contextCode)
+    {
+        $rows = $this->getAll('WHERE contextcode = "'.$contextCode.'"');
+        return count($rows) + 1;
+    }
+    
+    
+    /**
+     * Method to check if a record exists
+     * 
+     * 
+     */
+    public function checkExist($contextCode, $linkid, $moduleid)
+    {
+        
+        $record = $this->getAll('WHERE contextcode="'.$contextCode.'" AND linkid="'.$linkid.'" AND moduleid="'.$moduleid.'"');
+        if(count($record) > 0 )
+        {
+            return TRUE;
+        } else {
+            return FALSE;
+            
+        }
+    }
 }
