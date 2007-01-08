@@ -780,6 +780,8 @@ class blog extends controller
                     //otherwise grab all the Published posts
                     $posts = $this->objDbBlog->getAbsAllPostsNoDrafts($userid);
                 }
+                $latestpost[0] = $this->objDbBlog->getLatestPost($userid);
+                $this->setVarByRef('latestpost', $latestpost);
                 //send all that to the template
                 $this->setVarByRef('catid', $catid);
                 $this->setVarByRef('posts', $posts);
