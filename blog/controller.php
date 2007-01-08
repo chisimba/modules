@@ -151,6 +151,13 @@ class blog extends controller
     public $objTB;
 
     /**
+     * Proxyinfo object
+     *
+     * @var object
+     */
+    public $objProxy;
+
+    /**
      * Constructor method to instantiate objects and get variables
      *
      * @param void
@@ -197,6 +204,9 @@ class blog extends controller
             $this->objMsg = &$this->getObject('timeoutmessage', 'htmlelements');
             //config object
             $this->objConfig = $this->getObject('altconfig', 'config');
+            //proxy object
+            $this->objProxy = $this->getObject('proxyparser', 'utilities');
+
             //Get the activity logger class
             $this->objLog = $this->newObject('logactivity', 'logger');
             //Log this module call
@@ -974,26 +984,58 @@ class blog extends controller
                 $excerpt = $this->getParam('postexcerpt');
 
                 //set up for Google Blog API
-            	$changesURL = $this->uri(array('module' => 'blog', 'action' => 'feed', 'userid' => $userid, 'format' => 'rss2'));
+            	$changesURL = $this->uri(array('module' => 'blog', 'action' => 'feed', 'userid' => $userid));
             	$name = $this->objUser->fullname($userid) . " Chisimba blog";
             	$blogURL = $this->uri(array('module' => 'blog', 'action' => 'randblog', 'userid' => $userid));
             	//OK lets put it together...
-            	$gurl = "http://blogsearch.google.com/ping?name=" . urlencode($name) . "&url=" . urlencode($blogURL) . "&changesURL=" . urlencode($changesURL);
+            	$gurl = "http://blogsearch.google.com/ping";
 				//do the http request
 				//echo $gurl;
 				$gurl = str_replace('%26amp%3B', "&", $gurl);
-				//echo $gurl; die();
+
+				//get the proxy info if set
+				$proxyArr = $this->objProxy->getProxy();
+				//var_dump($proxyArr); die();
+
 				require_once "HTTP/Request.php";
-				$req =& new HTTP_Request($gurl);
-				$req->sendRequest();
-			    $code = $req->getResponseCode();
+				//define the request options
+				$reqopts = array(
+                    // Options for request directly
+                    'strictness'        => 1,
+                    'timeout'           => 30,          // seconds
+                    'fetchlines'        => 30,
+                    'fetchextra'        => true,
+                    'http'              => "1.0",
+                    'method'            => "GET",
+                    'saveBody'          => true,
+                    'proxy_host'        => $proxyArr['proxy_host'],
+                    'proxy_port'        => $proxyArr['proxy_port'],
+                    'proxy_user'        => $proxyArr['proxy_user'],
+                    'proxy_pass'        => $proxyArr['proxy_pass']
+
+                );
+				$req =& new HTTP_Request($gurl, $reqopts);
+
+				$req->setMethod(HTTP_REQUEST_METHOD_GET);
+				$req->addQueryString('name', $name);
+				$req->addQueryString('url', $blogURL);
+				$req->addQueryString('changesURL', $changesURL);
+
+				$request = $req->sendRequest(true);
+				//var_dump($request);
+				if(PEAR::isError($req))
+				{
+					var_dump($req);
+					echo $req->getMessage(); die();
+				}
+			    $code = $req->getResponseBody(); //$req->getResponseCode();
 
     			switch ($code) {
-    				case 200:
-    					log_debug("Google blogs API Success Code: " . $code);
+    				case "Thanks for the ping.":
+    					log_debug("Google blogs API Success! Google said: " . $code);
     					break;
     				default:
-    					log_debug("Google blogs API Failure Code: " . $code);
+    					log_debug("Google blogs API Failure! Google said: " . $code);
     					break;
     			}
 
