@@ -46,21 +46,12 @@ echo $javascript;
 // Set up data, passed as a variable from controller
 if(!empty($data)){
 // put date in correct format
-    $delims='- ';
-    $word=strtok($data[0]['closing_date'],$delims);
-    $i=0;
-    while(is_string($word)){
-        $date[$i]=$word;
-        $i++;
-        $word=strtok($delims);
-    }
-    $newdate=$date[0].'-'.$date[1].'-'.$date[2];
-
+    
     $did=$data[0]['id'];
     $dTopic=$data[0]['name'];
     $dDescription=$data[0]['description'];
     $dInstructions=$data[0]['instructions'];
-    $dDate=$newdate;
+    $dDate=$this->objDateFormat->formatDate($data[0]['closing_date']);
     $dBypass=$data[0]['bypass'];
     $dForce=$data[0]['forceone'];
     $dPercent=$data[0]['percentage'];
@@ -157,7 +148,7 @@ $this->objIcon->setIcon('select_date');
 $this->objIcon->alt=$this->objLanguage->languageText('mod_essayadmin_datepick','essayadmin');*/
 
 $this->objpopcal =&$this->getObject('datepickajax','popupcalendar');
-$this->objpopcal->show('closing_date','yes','no',$date); 
+$this->objpopcal->show('closing_date','yes','no',$dDate); 
 
 // $this->objessaydate = $this->newObject('datepicker','htmlelements');
 //$name = 'closing_date';
@@ -185,7 +176,7 @@ $fcheck=$this->objCheck->show();
 $objTable->row_attributes=' height="25"';
 $objTable->startRow();
 $objTable->addCell('&nbsp;&nbsp;&nbsp;<b>'.$closeDate.'</b>','25%','center');
-$objTable->addCell($this->objpopcal->show('closing_date','yes','no',$date));
+$objTable->addCell($this->objpopcal->show('closing_date','yes','no',$dDate));
 $objTable->addCell('','3%');
 $objTable->addCell('&nbsp;&nbsp;<b>'.$force.'</b>','35%','center');
 $objTable->addCell($fcheck,'12%','center','left');
