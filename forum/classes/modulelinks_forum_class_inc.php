@@ -74,26 +74,52 @@ class modulelinks_forum extends object
      * @access public
      */
     public function getContextLinks($contextCode)
-    { 
-//       
-//          $catId = $this->_objDBCategories->getCatId('context', $contextCode);
-//         
-//          $events =  $this->_objDBEventsCalendar->getAll('WHERE catid="'.$catId.'" ORDER BY event_date' );
-//          
-//          $bigArr = array();
-//         
-//          foreach ($events as $event)
-//          {
-//              $newArr = array();    
-//              $newArr['menutext'] = $event['title'];
-//              $newArr['description'] = $event['description'];
-//              $newArr['itemid'] = $event['id'];
-//              $newArr['moduleid'] = 'eventscalendar';
-//              $newArr['params'] = array('month' => date('m',$event['event_date']),'action' => 'events');
-//              $bigArr[] = $newArr;
-//          }
-//          
-//          return $bigArr;
+    {          
+        $bigArr = array();
+
+        $forums = $this->objForum->getContextForums($contextCode);
+        
+        foreach ($forums as $forum)
+        {
+            
+            $forumArray = array();    
+            $forumArray['menutext'] = $forum['forum_name'];
+            $forumArray['description'] = $forum['forum_name'];
+            $forumArray['itemid'] = $forum['id'];
+            $forumArray['moduleid'] = 'forum';
+            $forumArray['params'] = array('action' => 'forum');
+            $bigArr[] = $forumArray;
+            
+            $topics = $this->objTopics->showTopicsInForum($forum['id'], '1');
+            
+            foreach ($topics as $topic)
+            {
+                $topicArray = array();    
+                $topicArray['menutext'] = 'Topic - '.$topic['post_title'];
+                $topicArray['description'] = 'topic description';
+                $topicArray['itemid'] = $topic['topic_id'];
+                $topicArray['moduleid'] = 'forum';
+                $topicArray['params'] = array('action' => 'viewtopic');
+                $bigArr[] = $topicArray;
+                
+                $posts = $this->objPost->getThread($topic['topic_id']);
+                
+                foreach ($posts as $post)
+                {
+                    if ($post['post_parent'] != '0') {
+                
+                        $postArray = array();    
+                        $postArray['menutext'] = 'Post - '.$post['post'];
+                        $postArray['description'] = 'Post description';
+                        $postArray['itemid'] = $post['topic_id'];
+                        $postArray['moduleid'] = 'forum';
+                        $postArray['params'] = array('action' => 'viewtopic', 'post'=>$post['post_id']);
+                        $bigArr[] = $postArray;
+                    }
+                }
+            }
+
+        }
     }
 }
 ?>
