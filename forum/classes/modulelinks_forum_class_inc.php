@@ -65,5 +65,35 @@ class modulelinks_forum extends object
         
         return $rootNode;
     }
+    
+    /**
+     * 
+     *Method to get a set of links for a context
+     *@param string $contextCode
+     *@return array
+     * @access public
+     */
+    public function getContextLinks($contextCode)
+    { 
+//       
+//          $catId = $this->_objDBCategories->getCatId('context', $contextCode);
+//         
+//          $events =  $this->_objDBEventsCalendar->getAll('WHERE catid="'.$catId.'" ORDER BY event_date' );
+//          
+//          $bigArr = array();
+//         
+//          foreach ($events as $event)
+//          {
+//              $newArr = array();    
+//              $newArr['menutext'] = $event['title'];
+//              $newArr['description'] = $event['description'];
+//              $newArr['itemid'] = $event['id'];
+//              $newArr['moduleid'] = 'eventscalendar';
+//              $newArr['params'] = array('month' => date('m',$event['event_date']),'action' => 'events');
+//              $bigArr[] = $newArr;
+//          }
+//          
+//          return $bigArr;
+    }
 }
 ?>
