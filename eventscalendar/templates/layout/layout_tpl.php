@@ -10,7 +10,7 @@ $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 
 // Set the Content of middle column
 
-//if(isset($txt))
+//create the context menu if you are in a context
 if($this->_objDBContext->isInContext())
 {
     $objContextUtils = & $this->getObject('utilities','context');
@@ -18,11 +18,10 @@ if($this->_objDBContext->isInContext())
 } else {
     $cm = '';
 }
-//{
 
-    $cssLayout->setLeftColumnContent($this->getMenu().$cm);
 
-//}
+$cssLayout->setLeftColumnContent($this->getMenu().$cm);
+
 
 $cssLayout->setMiddleColumnContent($this->getContent());
 
