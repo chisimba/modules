@@ -997,7 +997,7 @@ class blog extends controller
 
 				//get the proxy info if set
 				$proxyArr = $this->objProxy->getProxy();
-				//var_dump($proxyArr); die();
+				//print_r($proxyArr); die();
 
 				require_once "HTTP/Request.php";
 				//define the request options
@@ -1011,12 +1011,18 @@ class blog extends controller
                     'http'              => "1.0",
                     'method'            => "GET",
                     'saveBody'          => true,
-                    'proxy_host'        => $proxyArr['proxy_host'],
+                );
+                if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
+                {
+                	$parr = array(
+                	'proxy_host'        => $proxyArr['proxy_host'],
                     'proxy_port'        => $proxyArr['proxy_port'],
                     'proxy_user'        => $proxyArr['proxy_user'],
                     'proxy_pass'        => $proxyArr['proxy_pass']
+                    );
 
-                );
+                    $proxyArr = array_merge($reqopts, $parr);
+                }
 				$req =& new HTTP_Request($gurl, $reqopts);
 
 				$req->setMethod(HTTP_REQUEST_METHOD_GET);
