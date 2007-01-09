@@ -24,11 +24,22 @@ class utilities extends object
     public function init()
     {
 //        $this->_objLanguage=& $this->newObject('language', 'language');
-        $this->_objDBContext=& $this->newObject('dbcontext','context');
+          $this->_objDBContext=& $this->getObject('dbcontext','context');
+          $this->_objIcon=& $this->getObject('geticon','htmlelements');
+          $this->objLink = & $this->newObject('link', 'htmlelements');
 //        $this->_objUser= & $this->newObject('user','security');
 //        $this->_objDBContextModules=&$this->newObject('dbcontextmodules','context');
 //        $this->_objUtils =  & $this->newObject('utilities', 'context');
 //        $this->_objModule = & $this->newObject('modules', 'modulecatalogue');
+
+         $this->_objIcon->setIcon('down');
+         $this->downArrow = $this->_objIcon->show();
+         $this->_objIcon->setIcon('up');
+         $this->upArrow =  $this->_objIcon->show();
+               
+         $this->_objDBContextDesigner = & $this->getObject('dbcontextdesigner','contextdesigner');
+         $this->maxOrder = $this->_objDBContextDesigner->getLastOrderPosition( $this->_objDBContext->getContextCode()) - 1;
+       //  print  $this->maxOrder;
     }
     
     
@@ -47,6 +58,54 @@ class utilities extends object
         $objModuleLink = $this->newObject('modulelinks_'.$moduleId, $moduleId);
         return $objModuleLink->getContextLinks( $this->_objDBContext->getContextCode());
        
+        
+    }
+    
+    /**
+     * Method to returnn the up and down arrow icons for a link record
+     * so that the order can be changed appropriately
+     * 
+     * @param integer $order The position of the current record
+     * @return string
+     * @access public
+     */
+    public function getOrderIcons($id, $order)
+    {
+      
+       
+        //first record only shows down arrow
+        
+        if($order > 1 && $order < $this->maxOrder)
+        {
+            
+            $this->objLink->href = $this->uri(array('action' => 'moveup', 'id' => $id));
+            $this->objLink->link = $this->upArrow;
+            $str = $this->objLink->show();
+            
+            $this->objLink->href = $this->uri(array('action' => 'movedown', 'id' => $id));
+            $this->objLink->link = $this->downArrow;
+            $str .= $this->objLink->show();
+            
+            return $str;
+        } 
+        elseif ($order == 1)
+        {
+            
+            $this->objLink->href = $this->uri(array('action' => 'movedown', 'id' => $id));
+            $this->objLink->link = $this->downArrow;
+            
+           
+            $str = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;          '.$this->objLink->show();
+            
+            return $str;
+        }
+        elseif ($order == $this->maxOrder)
+        {
+            $this->objLink->href = $this->uri(array('action' => 'moveup', 'id' => $id));
+            $this->objLink->link = $this->upArrow;
+            $str = $this->objLink->show();
+            return $str;
+        }
         
     }
 }

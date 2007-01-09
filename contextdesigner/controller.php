@@ -23,14 +23,14 @@ class contextdesigner extends controller
      */
     public function init()
     {
-        $this->_objLanguage= & $this->newObject('language', 'language');
-        $this->_objDBContext= & $this->newObject('dbcontext','context');
-        $this->_objContextAdminUtils = & $this->newObject('utils','contextadmin');
-        $this->_objDBContextDesigner = & $this->newObject('dbcontextdesigner','contextdesigner');
+        $this->_objLanguage= & $this->getObject('language', 'language');
+        $this->_objDBContext= & $this->getObject('dbcontext','context');
+        $this->_objContextAdminUtils = & $this->getObject('utils','contextadmin');
+        $this->_objDBContextDesigner = & $this->getObject('dbcontextdesigner','contextdesigner');
 //        $this->_objUser= & $this->newObject('user','security');
-        $this->_objDBContextModules = &$this->newObject('dbcontextmodules','context');
-        $this->_objUtils =  & $this->newObject('utilities', 'contextdesigner');
-        $this->_objModule = & $this->newObject('modules', 'modulecatalogue');
+        $this->_objDBContextModules = &$this->getObject('dbcontextmodules','context');
+        $this->_objUtils =  & $this->getObject('utilities', 'contextdesigner');
+        $this->_objModule = & $this->getObject('modules', 'modulecatalogue');
     }
     
     /**
@@ -38,7 +38,7 @@ class contextdesigner extends controller
      */
     public function dispatch()
     {
-        
+       
         $action = $this->getParam('action');
         $this->setLayoutTemplate('main_layout_tpl.php');
         switch ($action)
@@ -63,9 +63,22 @@ class contextdesigner extends controller
                 $this->_objDBContextDesigner->addLinks($this->_objDBContext->getContextCode());
                 return $this->nextAction(null);
                 
-            
+            case 'changeaccess':
+                $this->_objDBContextDesigner->updateAccess($this->getParam('id'), ucwords(($this->getParam('value'))));
+                return $this->nextAction('main');
+            case 'deletelink':
+                $this->_objDBContextDesigner->deleteLink($this->getParam('id'));
+                return $this->nextAction('main');
+            case 'moveup':
+                $this->_objDBContextDesigner->moveUp($this->getParam('id'));
+                 return $this->nextAction('main');
+            case 'movedown':
+                $this->_objDBContextDesigner->moveDown($this->getParam('id'));
+                return $this->nextAction('main');
+            case 'reorder':
+                $this->_objDBContextDesigner->reOrder();
+                return $this->nextAction('main');
         }
     }
 }
 
-?>

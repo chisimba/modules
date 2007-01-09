@@ -38,13 +38,23 @@ if (count($contextList) > 0)
 		
 		$contextCode = $context['contextcode'];
 		
-		$objLink->href = $this->uri(array('action' => 'joincontext','contextCode'=>$contextCode), 'context');
-		$icon->setIcon('entercourse');
-		$icon->alt = 'Enter Course';
-		$objLink->link = $context['contextcode'] .' - '.$context['title'].'   '.$icon->show();
 		
+		if($this->_objDBContext->getContextCode() == $context['contextcode'])
+		{
+		    $objLink->href = $this->uri(array('action' => 'leavecontext','contextCode'=>$contextCode), 'context');
+		    $icon->setIcon('leavecourse');
+		    $icon->alt = 'Leave Course';
+    		$objLink->link = $icon->show();
+		} else {
+		    $objLink->href = $this->uri(array('action' => 'joincontext','contextCode'=>$contextCode), 'context');
+    		$icon->setIcon('entercourse');
+    		$icon->alt = 'Enter Course';
+    		$objLink->link =$icon->show();
+		}
 		$title = $objLink->show();
-
+		$objLink->href = $this->uri(array('action' => 'joincontext','contextCode'=>$contextCode), 'context');
+        $objLink->link = $context['contextcode'] .' - '.$context['title'].'   ';
+        $title = $objLink->show().$title;
 		$str .= $featureBox->show($title, $content ).'<hr />';
 	}
 } else {

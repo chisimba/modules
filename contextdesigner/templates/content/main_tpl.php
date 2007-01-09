@@ -7,6 +7,7 @@ $objTable = & $this->newObject('htmltable', 'htmlelements');
 $objIcon = & $this->newObject('geticon', 'htmlelements');
 $objLink = & $this->newObject('link', 'htmlelements');
 $objForm = & $this->newObject('form', 'htmlelements');
+$objInput = & $this->newObject('textinput', 'htmlelements');
 $objFeatureBox = & $this->newObject('featurebox', 'navigation');
 
 //the heading
@@ -17,8 +18,79 @@ echo $objH->show();//'the generated list of links will show here';
 
 if(is_array($linkList) && $linkList > 0)
 {
+    $objForm->action = $this->uri(array('action' => 'reorder'));
+    $objForm->name = 'listform';
+   // $objForm->id = 'listform';
+    $objIcon->setIcon('save_submit');
+    $objLink->href = 'javascript: document.forms[\'listform\'].submit()';
+   // $objLink->extra = ' onclick="javascript:document.listform.submit();"' ;
+    $objLink->link = $objIcon->show();
     
-    $str = 'list of links';
+    $objTable->width = '60%';
+    
+    $objTable->startHeaderRow();
+    $headerRow = array('Menu Text', 'Description');
+    //$objTable->addHeaderCell('Select');
+    $objTable->addHeaderCell('Menu Text');
+    $objTable->addHeaderCell('Type');
+    $objTable->addHeaderCell('Published');
+    
+    $objTable->addHeaderCell('Reoder');
+    $objTable->addHeaderCell('Order'.$objLink->show());
+    $objTable->addHeaderCell('&nbsp;');
+    
+    
+    $objTable->endHeaderRow();
+    $rowcount = 0;
+    foreach ($linkList as $link)
+    {
+        $oddOrEven = ($rowcount == 0) ? "even" : "odd";
+        
+        //published
+        if($link['access'] == 'Published')
+        {
+            $objIcon->setIcon('ok','png');
+            $objLink->href = $this->uri(array('action' => 'changeaccess' , 'value' => 'Unpublish', 'id' => $link['id']));
+            $objLink->link = $objIcon->show();
+        } else {
+            $objIcon->setIcon('failed','png');
+            $objLink->href = $this->uri(array('action' => 'changeaccess' , 'value' => 'Published', 'id' => $link['id']));
+            $objLink->link = $objIcon->show();
+        }
+        $published =  $objLink->show();
+        
+        //order        
+        $order = $this->_objUtils->getOrderIcons($link['id'], $link['linkorder']);
+        
+        //reorder
+        $objInput->name = 'reorder[]';
+        $objInput->value = $link['linkorder'];
+        $objInput->size = 4;
+        $objInput->extra = ' style="text-align: center; border : 1px solid #ccc;
+                                z-index: -3;
+                                font-size: 11px;" ';
+        $reorder = $objInput->show();
+        
+        //admin
+        $objIcon->setIcon('delete');
+        $objLink->href = $this->uri(array('action' => 'deletelink', 'id' => $link['id']));
+        $objLink->link = $objIcon->show();
+        
+        $admin = $objLink->show();
+        
+		$objIcon->setModuleIcon($link['moduleid']);        
+        $tableRow = array(' '.$objIcon->show().' '. $link['menutext'], 
+                            $this->_objDBContextModules->getModuleName($link['moduleid']),
+                            $published, 
+                            $order, 
+                            $reorder, 
+                            $admin);
+        $objTable->addRow($tableRow, $oddOrEven);
+        $rowcount = ($rowcount == 0) ? 1 : 0;
+    }
+    
+    $objForm->addToForm($objTable);
+    $str =$objForm->show();
 } else {
     
     $str = '<div align="center" style="font-size:large;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">No items are available</div>';

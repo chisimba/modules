@@ -100,13 +100,49 @@ class dbcontextdesigner extends dbTable
     }
     
     /**
+     * Method to get a the links for a current context
+     * 
+     * @param string $contextCode The ContextCode
+     * @return array|boolean
+     * @access public
+     */
+    public function getPublishedContextLinks($contextCode = null)
+    {
+        
+         $contextCode = (is_null($contextCode)) ? $this->_contextCode : $contextCode;
+        
+        $linksArr = $this->getAll('WHERE contextcode = "'.$contextCode.'" AND access="Published" ORDER BY linkorder');
+        if(count($linksArr) > 0)
+        { 
+            return $linksArr;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
      * Method to reorder the links
      * 
      * @return boolean
      * @access public
      */
-    public function reoder()
+    public function reOrder()
     {
+        $recordsArr = $this->getParam('reorder');
+        //print_r($recordsArr);die;
+        $all = $this->getAllLinks();
+        //print_r ($recordsArr);
+        //print_r($all);
+        $i=0;
+        foreach ($all as $record)
+        {
+            
+           // print_r($line);
+            $this->update('id',$record['id'],array('linkorder' => $recordsArr[$i]));
+            $i++;
+        }
+        
+        $this->ReOrderLinks();
         
     }
     
@@ -136,5 +172,125 @@ class dbcontextdesigner extends dbTable
             return FALSE;
             
         }
+    }
+    
+    /**
+     * Method to update the access field of a link
+     * @param string $id The Id
+     * @param string $value
+     * @return boolean
+     * @access public
+     */
+    public function updateAccess($id, $value)
+    {
+        
+        return $this->update('id', $id, array('access' => $value));
+    }
+    
+    /**
+     * Method to delete a link
+     * and reorder the links
+     * @param string $id
+     * @access public
+     * @return boolean
+     */
+    public function deleteLink($id)
+    {
+        
+        $this->delete('id', $id);
+        $this->ReOrderLinks();
+        
+        return TRUE;    
+    }
+    
+    
+    /**
+     * Method to reorder the links
+     * 
+     * @param 
+     * @return boolean
+     * @access public
+     * 
+     */
+    public function ReOrderLinks()
+    {
+        $records = $this->getAllLinks();
+       
+        $i = 1;
+        foreach($records as $record)
+        {
+            $this->update('id',$record['id'],array('linkorder' => $i, 'updated' => microtime()));
+            $i++;
+           
+        }
+        
+        return TRUE;
+    }
+    
+    /**
+     * Methods to get all the current context links
+     * @return array
+     * @access public
+     * 
+     */
+    public function getAllLinks()
+    {
+        
+        return $this->getAll('WHERE contextcode = "'.$this->_contextCode.'" ORDER BY linkorder, updated');
+    }
+    
+    /**
+     * Method to move a record one position up
+     * 
+     * @param string $id
+     * @return boolean
+     * @access public
+     */
+    public function moveUp($id)
+    {
+        //get the two records involved with the move
+        $lowerRecord = $this->getRow('id', $id);
+     
+        $position = intval($lowerRecord['linkorder']) - 1;
+        $upperRecord = $this->getAll('WHERE contextcode="'.$this->_contextCode.'" AND linkorder= '. $position );
+        
+        if(count($upperRecord[0]) > 0)
+        {
+           
+            //do the swop
+            $this->update('id',$upperRecord[0]['id'],array('linkorder' => $lowerRecord['linkorder']));
+            $this->update('id',$lowerRecord['id'],array('linkorder' => $upperRecord[0]['linkorder']));
+        }
+        
+        return true;
+       
+    }
+    
+    /**
+     * Method to move a record one position up
+     * 
+     * @param string $id
+     * @return boolean
+     * @access public
+     */
+    public function moveDown($id)
+    {
+        //get the two records involved with the move
+        $upperRecord = $this->getRow('id', $id);
+     
+        $position = intval($upperRecord['linkorder']) + 1;
+        $lowerRecord = $this->getAll('WHERE contextcode="'.$this->_contextCode.'" AND linkorder= '. $position );
+        
+        if(count($lowerRecord[0]) > 0)
+        {
+           
+            //do the swop
+            $this->update('id',$upperRecord['id'],array('linkorder' => $lowerRecord[0]['linkorder']));
+            $this->update('id',$lowerRecord[0]['id'],array('linkorder' => $upperRecord['linkorder']));
+            
+        }
+        
+        return true;
+     
     }
 }
