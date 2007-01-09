@@ -107,6 +107,9 @@ class wwDocument extends object
 			{
 				$imgNode->setAttribute('src', $this->getImage($imgURL));
 				array_push($this->images, $imgURL);
+			} else {
+			// Since it already exists, we just replace the url with the relative one
+				$imgNode->setAttribute('src', $this->getImageRelURL($imgURL));
 			}
 		}
 
@@ -157,7 +160,7 @@ class wwDocument extends object
 			$link = $dom->createElement('link');
 			$link->setAttribute('rel', 'stylesheet');
 			$link->setAttribute('type', 'text/css');
-			$link->setAttribute('href', $css);
+			$link->setAttribute('href', $this->getStyleSheetRelURL($css));
 			$head->appendChild($link);
 		}
 
@@ -196,13 +199,28 @@ class wwDocument extends object
 		if( !(preg_match('/http:\/\/localhost/', $url) || preg_match('/http:\/\/127.0.0.1/', $url)) 
 			&& $this->objChisimbaCfg->getItem('KEWL_PROXY'))
 		{				
-			//TODO: Waiting on change to installer BUT in the meantime need to find alternative option
-			// Either parsing the proxy line given for an username/password and proxy port or have
-			// settings built into config
+			// Load the proxy settings from the proxy parser
+			$pp = $this->newObject('proxyparser', 'utilities');
+			$proxy = $pp->getProxy();
+
+			if($proxy['proxy_protocol'])
+				curl_setopt($ch, CURLOPT_PROXYTYPE, $proxy['proxy_protocol']);
+
+			if($proxy['proxy_user'] && $proxy['proxy_pass'])
+				curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxy['proxy_user'] . ":" . $proxy['proxy_pass']);
+
+			if($proxy['proxy_port'])
+				curl_setopt($ch, CURLOPT_PROXYPORT, $proxy['proxy_port']);
+
+			if($proxy['proxy_host'])
+				curl_setopt($ch, CURLOPT_PROXY, $proxy['proxy_host']);
+					
+			/*
 			curl_setopt_array($ch, array(CURLOPT_PROXY => $this->objChisimbaCfg->getItem('KEWL_PROXY'),
 								CURLOPT_PROXYUSERPWD => 'mwatson:schrodinger',
 								CURLOPT_PROXYPORT => 80	)	
 							); 
+			*/
 		}
 
 		// Grab content and close resource
@@ -224,9 +242,10 @@ class wwDocument extends object
 	{
 		try{	
 			// Figure out the relative url for the image and filename
-			preg_match('/[a-zA-Z0-9_.-]+\//', $url, $matches);
+			preg_match('/([a-zA-Z0-9_.-]+\/)+/', $url, $matches);
 			$path = $matches[0];
-			preg_match('/\w+\.(jpg|jpeg|gif|bmp|png)/', $url, $matches);
+			$this->dbg('print path matches for images = ' . var_export($matches, 1));
+			preg_match('/([a-zA-Z0-9_-]+\.)+(jpg|jpeg|gif|bmp|png)/', $url, $matches);
 			$filename = $matches[0];
 
 			// make the directory
@@ -264,8 +283,9 @@ class wwDocument extends object
 	{
 		try
 		{	
+			// TODO: user getStyleSheetRelURL, just drop the filename on the end
 			// Figure out the relative url for the stylesheet and filename
-			preg_match('/[a-zA-Z0-9_.-]+\//', $url, $matches);
+			preg_match('/([a-zA-Z0-9_.-]+\/)+/', $url, $matches);
 			$path = $matches[0];
 			preg_match('/\w+\.css/', $url, $matches);
 			$filename = $matches[0];
@@ -289,6 +309,44 @@ class wwDocument extends object
 			echo customException::cleanUp();
 			die();
 		}
+	}
+
+	/**
+	 * Takes in an URL for an image and returns the relative path we use for generating the page
+	 * 
+	 * @access private
+	 * @params string $url URL of the image  
+	 * @returns string relative path for the file
+	 */
+	private function getImageRelURL($url)
+	{
+		// Figure out the relative url for the image and filename
+		preg_match('/([a-zA-Z0-9_.-]+\/)+/', $url, $matches);
+		$path = $matches[0];
+		$path = str_replace('.', '_', $path);  // Set all periods to underscores
+		preg_match('/([a-zA-Z0-9_-]+\.)+(jpg|jpeg|gif|bmp|png)/', $url, $matches);
+		$filename = $matches[0];
+
+		return $path . $filename;
+	}
+
+	/**
+	 * Takes in an URL for a stylesheet and returns the relative path we use for generating the page
+	 * 
+	 * @access private
+	 * @params string $url URL of the stylesheet
+	 * @returns string relative path for the file
+	 */
+	private function getStyleSheetRelURL($url)
+	{
+		// Figure out the relative url for the stylesheet and filename
+		preg_match('/([a-zA-Z0-9_.-]+\/)+/', $url, $matches);
+		$path = $matches[0];
+		$path = str_replace('.', '_', $path); // Set all periods to underscores
+		preg_match('/\w+\.css/', $url, $matches);
+		$filename = $matches[0];
+
+		return $path . $filename;
 	}
 
 	/**
@@ -337,6 +395,7 @@ class wwDocument extends object
 
 	private function makeFullPath($path)
 	{
+		$this->dbg('path = ' . $path);
 		//Break the path apart
 		$dirs = explode('/', $path);
 
@@ -351,6 +410,7 @@ class wwDocument extends object
 					return 0;
 			}
 			$slowPath .= "/";
+			$this->dbg('slowpath = ' . $slowPath);
 		}
 
 		//Success
