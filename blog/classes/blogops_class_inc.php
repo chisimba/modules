@@ -1202,7 +1202,7 @@ class blogops extends object
         	$tagstr = NULL;
             foreach($editparams['tags'] as $taglets)
             {
-            	$tagstr .= $taglets . ",";
+            	$tagstr .= $taglets['meta_value'] . ",";
             }
         	$tags->setValue(stripslashes($tagstr));
         }

@@ -624,7 +624,19 @@ class dbblog extends dbTable
 		return $this->getAll("WHERE post_id = '$postid'");
 	}
 
+	public function insertTags($tagarray, $userid, $postid)
+	{
+		$this->_changeTable("tbl_blog_postmeta");
+		//lets first get all of the tags for the post so that we don't duplicate things
+		$posttags = $this->getAll("WHERE post_id = '$postid");
 
+		foreach($tagarray as $tins)
+		{
+			$tins = trim($tins);
+			$this->insert(array('userid' => $userid, 'post_id' => $postid, 'meta_key' => 'tag', 'meta_value' => $tins));
+		}
+
+	}
 	/**
 	 * Method to dynamically switch tables
 	 *
