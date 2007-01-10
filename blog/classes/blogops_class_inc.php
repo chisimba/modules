@@ -1100,7 +1100,7 @@ class blogops extends object
             {
  //           	print_r($editparams);
             	$editparams = $editparams[0];
-            	$editparams['tags'] = $this->objDbBlog->getPostTags($editid);
+            	//$editparams['tags'] = $this->objDbBlog->getPostTags($editid);
             }
         }
         if (!isset($mode)) {

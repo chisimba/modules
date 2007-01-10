@@ -14,11 +14,12 @@
 	</update>
 	<update>
         <table>tbl_blog_postmeta</table>
-        <version>0.97</version>
+        <version>0.98</version>
         <description>Modified post metadata table to handle text elements for tagging</description>
         <data>
         	<change>
         		<post_id>
+        		<type>text</type>
         			<definition>
 		    			<type>text</type>
     					<length>32</length>
