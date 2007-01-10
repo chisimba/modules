@@ -65,6 +65,7 @@ class dictionary extends controller
     */
     public function dispatch($action)
     {
+        $this->setLayoutTemplate('layout_tpl.php');
         switch ($this->action) {
             //Default to view and display view template
             case null:
