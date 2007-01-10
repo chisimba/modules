@@ -428,7 +428,7 @@ class splashscreenrender extends object
         $ts_content=str_replace("[-ENDFORM-]", $skin."</form>", $ts_content);
 
         // Course Chooser
-        //$ts_content=str_replace("[-CONTEXTCHOOSER-]", $this->getContextDropDown(), $ts_content);
+        $ts_content=str_replace("[-CONTEXTCHOOSER-]", $this->getContextDropDown(), $ts_content);
 		$ts_content=str_replace("[-CONTEXT-]", ucwords($this->objLanguage->code2Txt('mod_context_context','context')), $ts_content);
 
         //Resource Kit Link
@@ -468,11 +468,12 @@ class splashscreenrender extends object
     */
     function getContextDropDown()
     {
+        try {
         $objContext =& $this->getObject('dbcontext', 'context');
         $courses = $objContext->getListOfPublicContext();
-
-        if (count($courses) == 0) {
-            return '';
+        if (count($courses)==0) {
+            $msg = $this->objLanguage->code2Txt('mod_context_nocontexts','context');
+            return "<span class='noRecordsMessage'>$msg</span>";
             
         } else {
             $form = new form('joincontext', $this->uri(array('action'=>'joincontext'), 'context'));
@@ -489,8 +490,12 @@ class splashscreenrender extends object
             
             return $form->show();
         }
+
+    	} catch (customException $e) {
+    		customException::cleanUp();
+    	}
     }
 
 
-}  #end of class
+}  //end of class
 ?>
