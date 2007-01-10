@@ -52,7 +52,7 @@ elseif(isset($catid) && !empty($posts))
 {
 	$middleColumn .= ($this->objblogOps->showPosts($posts));
 }
-elseif(isset($catid) && empty($posts))
+elseif(isset($catid) && empty($posts) && empty($latestpost))
 {
 	$middleColumn .= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_nopostsincat", "blog") . "</center></em></h1>";
 	if($this->objUser->userId() == $userid)

@@ -258,7 +258,13 @@ class dbblog extends dbTable
 		else {
 			$this->_changeTable('tbl_blog_cats');
 			$catname = $this->getAll("WHERE id = '$catid'");
-			return $catname[0]['cat_name'];
+			if(!empty($catname))
+			{
+				return $catname[0]['cat_name'];
+			}
+			else {
+				return NULL;
+			}
 		}
 	}
 
