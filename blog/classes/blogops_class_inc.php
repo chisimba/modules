@@ -1100,7 +1100,7 @@ class blogops extends object
             {
  //           	print_r($editparams);
             	$editparams = $editparams[0];
-            	//$editparams['tags'] = $this->objDbBlog->getPostTags($editid);
+            	$editparams['tags'] = $this->objDbBlog->getPostTags($editid);
             }
         }
         if (!isset($mode)) {
@@ -1199,7 +1199,12 @@ class blogops extends object
         $tags->size = 97;
         if (isset($editparams['tags'])) {
         	//this thing should be an array, so we need to loop thru and create the comma sep list again
-            $tags->setValue(stripslashes($editparams['tags']));
+        	$tagstr = NULL;
+            foreach($editparams['tags'] as $taglets)
+            {
+            	$tagstr .= $taglets . ",";
+            }
+        	$tags->setValue(stripslashes($tagstr));
         }
         $ptable->addCell($tlabel->show());
         $ptable->addCell($tags->show());
