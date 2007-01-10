@@ -1071,6 +1071,21 @@ class blog extends controller
 
                     if(!empty($tagarray) && $tagarray[0] != "")
                     {
+                    	//clean out the duplicate tags
+                    	$etags = $this->objDbBlog->getPostTags($id);
+                    	$tagarray = array_diff($tagarray, $etags);
+                    	if(!empty($etags))
+                    	{
+                    		foreach($etags as $t)
+                    		{
+                    			$things[] = $t['meta_value'];
+                    		}
+                    	}
+                    	else {
+                    		$things[] = NULL;
+                    	}
+
+                    	$tagarray = array_diff($tagarray, $things);
                     	$this->objDbBlog->insertTags($tagarray, $userid, $id);
                     }
                     $this->nextAction('viewblog');
@@ -1082,7 +1097,6 @@ class blog extends controller
                                                     'commentstatus' => $commentsallowed,
                                                     'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate, 'cclic' => $cclic));
                     //dump in the tags
-
                     if(!empty($tagarray) && $tagarray[0] != "")
                     {
                     	$posid = $this->objDbBlog->getLatestPost($userid);
