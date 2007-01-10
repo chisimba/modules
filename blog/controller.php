@@ -984,6 +984,8 @@ class blog extends controller
                 $status = $this->getParam('status');
                 $commentsallowed = $this->getParam('commentsallowed');
                 $excerpt = $this->getParam('postexcerpt');
+                $tags = $this->getParam('tags');
+                $tagarray = explode(",", $tags);
 
                 //set up for Google Blog API
             	$changesURL = $this->uri(array('module' => 'blog', 'action' => 'feed', 'userid' => $userid));
@@ -1034,8 +1036,8 @@ class blog extends controller
 				//var_dump(urldecode($req->getUrl($req))); die();
 				if(PEAR::isError($req))
 				{
-					var_dump($req);
-					echo $req->getMessage(); die();
+					//var_dump($req);
+					log_debug($req->getMessage());
 				}
 			    $code = $req->getResponseBody(); //$req->getResponseCode();
 
@@ -1055,6 +1057,7 @@ class blog extends controller
                                                     'postcat' => $cat, 'postexcerpt' => '', 'poststatus' => '0',
                                                     'commentstatus' => 'Y',
                                                     'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate, 'cclic' => $cclic));
+
                     $this->nextAction('viewblog');
                     break;
                 }
@@ -1065,6 +1068,11 @@ class blog extends controller
                                                     'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate, 'cclic' => $cclic);
 
                     $this->objblogOps->quickPostAdd($userid, $insarredit, $mode);
+
+                    if(!empty($tagarray) && $tagarray[0] != "")
+                    {
+                    	$this->objDbBlog->insertTags($tagarray, $userid, $id);
+                    }
                     $this->nextAction('viewblog');
                     break;
                 }
@@ -1073,6 +1081,14 @@ class blog extends controller
                                                     'postcat' => $cat, 'postexcerpt' => $excerpt, 'poststatus' => $status,
                                                     'commentstatus' => $commentsallowed,
                                                     'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate, 'cclic' => $cclic));
+                    //dump in the tags
+
+                    if(!empty($tagarray) && $tagarray[0] != "")
+                    {
+                    	$posid = $this->objDbBlog->getLatestPost($userid);
+                    	$posid = $posid['id'];
+                    	$this->objDbBlog->insertTags($tagarray, $userid, $posid);
+                    }
                     $this->nextAction('viewblog');
                     break;
                 }
