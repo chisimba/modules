@@ -1265,6 +1265,43 @@ class blog extends controller
                 return "commentinput_tpl.php";
                 break;
 
+        case "addmetadata":
+        	//metadata can be a tag, a keyword or whatever else you want about a post
+        	$userid = $this->getParam('userid');
+        	$postid = $this->getParam('postid');
+        	$metakey = $this->getParam('metakey');
+        	$metavalue = $this->getParam('metavalue');
+
+			//ok so lets sanitize the inputs and dump them to a db
+			if(!isset($userid))
+			{
+				if($this->objUser->isLoggedIn() == TRUE)
+				{
+					$userid = $this->objUser->userId();
+				}
+				else {
+					//who knows who this is????
+					$this->nextAction('');
+					exit;
+				}
+			}
+			//lets strip out all the tags from the meta values as they should be plain text
+			$metakey = strip_tags($metakey);
+			$metavalue = strip_tags($metavalue);
+
+			//is the post id sane?
+			if(!isset($postid) || !isset($metakey) || !isset($metavalue))
+			{
+				return 'meta_tpl.php';
+				exit;
+			}
+
+			//all set to go, lets insert it to the db...
+			$insarr = array('userid' => $userid, 'post_id' => $postid, 'meta_key' => $metakey, 'meta_value' => $metavalue);
+			$ret = $this->objDbBlog->insertMeta($insarr);
+			$this->nextAction('postedit', array('id' => $postid));
+        	break;
+
         }//action
 
     }

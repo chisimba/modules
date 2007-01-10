@@ -12,4 +12,20 @@
 			</add>
 		</data>
 	</update>
+	<update>
+        <table>tbl_blog_postmeta</table>
+        <version>0.97</version>
+        <description>Modified post metadata table to handle text elements for tagging</description>
+        <data>
+        	<change>
+        		<post_id>
+        			<definition>
+		    			<type>text</type>
+    					<length>32</length>
+    				</definition>
+    			</post_id>
+			</change>
+		</data>
+	</update>
+
 </updates>

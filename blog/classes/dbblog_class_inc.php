@@ -618,6 +618,12 @@ class dbblog extends dbTable
 		return $this->getAll($filter);
 	}
 
+	public function getPostTags($postid)
+	{
+		$this->_changeTable("tbl_blog_postmeta");
+		return $this->getAll("WHERE post_id = '$postid'");
+	}
+
 
 	/**
 	 * Method to dynamically switch tables

@@ -16,8 +16,8 @@ $fields = array(
 		'length' => 50,
 		),
 	'post_id' => array(
-		'type' => 'integer',
-		'length' => 8,
+		'type' => 'text',
+		'length' => 32,
 		),
 	'meta_key' => array(
 		'type' => 'text',

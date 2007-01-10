@@ -1095,10 +1095,12 @@ class blogops extends object
             $mode = 'editpost';
             //get the relevant post from the editid
             $editparams = $this->objDbBlog->getPostById($editid);
+
             if(!empty($editparams))
             {
  //           	print_r($editparams);
             	$editparams = $editparams[0];
+            	$editparams['tags'] = $this->objDbBlog->getPostTags($editid);
             }
         }
         if (!isset($mode)) {
@@ -1189,6 +1191,20 @@ class blogops extends object
         $ptable->addCell($pclabel->show());
         $ptable->addCell($pcon->showFCKEditor());
         $ptable->endRow();
+
+        //tags input box
+        $ptable->startRow();
+        $tlabel = new label($this->objLanguage->languageText('mod_blog_tags', 'blog') .':', 'input_tags');
+        $tags = new textinput('tags');
+        $tags->size = 97;
+        if (isset($editparams['tags'])) {
+        	//this thing should be an array, so we need to loop thru and create the comma sep list again
+            $tags->setValue(stripslashes($editparams['tags']));
+        }
+        $ptable->addCell($tlabel->show());
+        $ptable->addCell($tags->show());
+        $ptable->endRow();
+
         //CC licence
         $lic = $this->getObject('licensechooser', 'creativecommons');
         $ptable->startRow();
