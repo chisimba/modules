@@ -164,7 +164,14 @@ class utils extends object
 		$leftSideColumn = $this->getUserPic();//$userMenu->show();;
 		//Add loginhistory block
 		
-		
+        		if($this->_objDBContext->isInContext())
+        {
+            $objContextUtils = & $this->getObject('utilities','context');
+            $cm = $objContextUtils->getHiddenContextMenu('home','show');
+        } else {
+            $cm = '';
+        }
+		$leftSideColumn .= $cm;
 		
 		$leftSideColumn .= $objBlocks->showBlock('latest', 'blog');
 		

@@ -1,4 +1,13 @@
 <?php
+$objDBContext = & $this->getObject('dbcontext','context');
+if($objDBContext->isInContext())
+{
+    $objContextUtils = & $this->getObject('utilities','context');
+    $cm = $objContextUtils->getHiddenContextMenu('rubric','show');
+} else {
+    $cm = $this->getMenu();
+}
+
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 if ($this->objUser->isContextLecturer()|| $this->objUser->isContextStudent() ) {
 	$userMenuBar=& $this->getObject('sidemenu','toolbar');
@@ -9,7 +18,7 @@ else if ($this->objUser->isLecturer()) {
 else {
 	die('Access denied');
 }
-$cssLayout->setLeftColumnContent($userMenuBar->menuContext());
+$cssLayout->setLeftColumnContent($userMenuBar->menuContext().$cm);
 //$this->sideMenuBar=& $this->getObject('sidemenu','toolbar');
 ////$sideMenuBar=& $this->getObject('sidemenu','toolbar');
 

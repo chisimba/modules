@@ -14,13 +14,13 @@ $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 if($this->_objDBContext->isInContext())
 {
     $objContextUtils = & $this->getObject('utilities','context');
-    $cm = $objContextUtils->getHiddenContextMenu();
+    $cm = $objContextUtils->getHiddenContextMenu('eventscalendar','show');
 } else {
-    $cm = '';
+    $cm = $this->getMenu();
 }
 
 
-$cssLayout->setLeftColumnContent($this->getMenu().$cm);
+$cssLayout->setLeftColumnContent($cm);
 
 
 $cssLayout->setMiddleColumnContent($this->getContent());

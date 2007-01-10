@@ -31,6 +31,7 @@ if(is_array($linkList) && $linkList > 0)
     $objTable->startHeaderRow();
     $headerRow = array('Menu Text', 'Description');
     //$objTable->addHeaderCell('Select');
+    $objTable->addHeaderCell('#');
     $objTable->addHeaderCell('Menu Text');
     $objTable->addHeaderCell('Type');
     $objTable->addHeaderCell('Published');
@@ -42,6 +43,7 @@ if(is_array($linkList) && $linkList > 0)
     
     $objTable->endHeaderRow();
     $rowcount = 0;
+    $i=1;
     foreach ($linkList as $link)
     {
         $oddOrEven = ($rowcount == 0) ? "even" : "odd";
@@ -79,7 +81,8 @@ if(is_array($linkList) && $linkList > 0)
         $admin = $objLink->show();
         
 		$objIcon->setModuleIcon($link['moduleid']);        
-        $tableRow = array(' '.$objIcon->show().' '. $link['menutext'], 
+        $tableRow = array($i,
+                            ' '.$objIcon->show().' '. $link['menutext'], 
                             $this->_objDBContextModules->getModuleName($link['moduleid']),
                             $published, 
                             $order, 
@@ -87,6 +90,7 @@ if(is_array($linkList) && $linkList > 0)
                             $admin);
         $objTable->addRow($tableRow, $oddOrEven);
         $rowcount = ($rowcount == 0) ? 1 : 0;
+        $i++;
     }
     
     $objForm->addToForm($objTable);

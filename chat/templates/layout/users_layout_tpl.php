@@ -1,6 +1,8 @@
 <script language="JavaScript">
 parent.document.getElementById('usersdiv').innerHTML=
 '<?php
+
+
 $content = $this->getContent();
 //$content = preg_replace("/'/","\'",$content);
 echo $content;

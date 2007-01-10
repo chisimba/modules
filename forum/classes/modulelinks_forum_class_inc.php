@@ -87,7 +87,7 @@ class modulelinks_forum extends object
             $forumArray['description'] = $forum['forum_name'];
             $forumArray['itemid'] = $forum['id'];
             $forumArray['moduleid'] = 'forum';
-            $forumArray['params'] = array('action' => 'forum');
+            $forumArray['params'] = array('action' => 'forum','id' => $forum['id']);
             $bigArr[] = $forumArray;
             
             $topics = $this->objTopics->showTopicsInForum($forum['id'], '1');
@@ -99,7 +99,7 @@ class modulelinks_forum extends object
                 $topicArray['description'] = 'topic description';
                 $topicArray['itemid'] = $topic['topic_id'];
                 $topicArray['moduleid'] = 'forum';
-                $topicArray['params'] = array('action' => 'viewtopic');
+                $topicArray['params'] = array('action' => 'viewtopic', 'id' => $topic['topic_id']);
                 $bigArr[] = $topicArray;
                 
                 $posts = $this->objPost->getThread($topic['topic_id']);
@@ -120,6 +120,8 @@ class modulelinks_forum extends object
             }
 
         }
+        
+        return $bigArr;
     }
 }
 ?>

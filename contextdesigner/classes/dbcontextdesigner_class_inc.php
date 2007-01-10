@@ -51,24 +51,29 @@ class dbcontextdesigner extends dbTable
                 
                 $moduleId = $this->getParam('moduleid');
                 $menutext = $selectedItemsArr[1];
+                $description = $selectedItemsArr[2];
                 $linkid = $selectedItemsArr[0];
-                //print  $selectedItemsArr[1];
-                
+                $params = $this->getParam($linkid);//print  $selectedItemsArr[1];
+//                print_r($selectedItemsArr);
+//                print($params);
                 $fields = array(
                     'contextcode' => $contextCode,
                     'moduleid' => $moduleId,
+                    'title' => $description,
                     'menutext' => $menutext,
                     'linkid' => $linkid,
                     'linkorder' => $this->getLastOrderPosition($contextCode),
-                    'access' => 'Published'
+                    'access' => 'Published',
+                    'params' => $params
                 );
                 
-                if(!$this->checkExist($contextCode, $linkid, $moduleId))
+                if(!$this->checkExist($contextCode, $params, $moduleId))
                 {
                     $this->insert($fields);
                 }
             
             }
+            
         }                        
         catch (customException $e)
         {
@@ -161,10 +166,10 @@ class dbcontextdesigner extends dbTable
      * 
      * 
      */
-    public function checkExist($contextCode, $linkid, $moduleid)
+    public function checkExist($contextCode, $params, $moduleid)
     {
         
-        $record = $this->getAll('WHERE contextcode="'.$contextCode.'" AND linkid="'.$linkid.'" AND moduleid="'.$moduleid.'"');
+        $record = $this->getAll('WHERE contextcode="'.$contextCode.'" AND params="'.$params.'" AND moduleid="'.$moduleid.'"');
         if(count($record) > 0 )
         {
             return TRUE;

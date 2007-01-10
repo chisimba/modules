@@ -55,10 +55,21 @@ class utilities extends object
      */
     public function getModuleLinks($moduleId)
     {
-        $objModuleLink = $this->newObject('modulelinks_'.$moduleId, $moduleId);
-        return $objModuleLink->getContextLinks( $this->_objDBContext->getContextCode());
-       
-        
+        try{
+           if(file_exists('modules/'.$moduleId.'/classes/modulelinks_'.$moduleId.'_class_inc.php'))
+           {
+                $objModuleLink = $this->newObject('modulelinks_'.$moduleId, $moduleId);
+                if(method_exists($objModuleLink,'getContextLinks'))
+                {
+                    return $objModuleLink->getContextLinks( $this->_objDBContext->getContextCode());
+                }
+           } 
+        }                        
+        catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
+        }
     }
     
     /**

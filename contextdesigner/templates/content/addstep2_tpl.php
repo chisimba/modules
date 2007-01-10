@@ -7,6 +7,7 @@ $objIcon = & $this->newObject('geticon', 'htmlelements');
 $objLink = & $this->newObject('link', 'htmlelements');
 $objForm = & $this->newObject('form', 'htmlelements');
 $objCheckBox = & $this->newObject('checkbox', 'htmlelements');
+
 $objDropDown = & $this->newObject('dropdown', 'htmlelements');
 $objFeatureBox = & $this->newObject('featurebox', 'navigation');
 $objTable = & $this->newObject('htmltable', 'htmlelements');
@@ -14,20 +15,24 @@ $objTable = & $this->newObject('htmltable', 'htmlelements');
 
 $objButton2->value = $this->_objLanguage->languageText('word_cancel');
 $objButton2->setOnClick('javascript:document.location = \''.$this->uri(null).'\'');
-$str = 'I NEED THE LINKS FROM THE MODULE NOW!!!!<br/>';
+
 
 if(count($links) > 0 )
 {
     $objTable->width = '60%';
+    //$objTable->cellspacing='1';
+    $objTable->cellpadding='10';
     
     $objTable->startHeaderRow();
     $headerRow = array('Menu Text', 'Description');
+    $objTable->addHeaderCell('#');
     $objTable->addHeaderCell('Select');
     $objTable->addHeaderCell('Menu Text');
     $objTable->addHeaderCell('Type');
     
     $objTable->endHeaderRow();
     $rowcount = 0;
+    $i=1;
     foreach ($links as $link)
     {
         $oddOrEven = ($rowcount == 0) ? "even" : "odd";
@@ -37,10 +42,25 @@ if(count($links) > 0 )
         $objCheckBox->cssId = 'mod_'.$link['moduleid'];
         $objCheckBox->name = 'selecteditems[]';
         $objCheckBox->cssClass = 'f-checkbox';
+        
+        $objInput = & $this->newObject('textinput', 'htmlelements');
+        $objInput->name = $link['itemid'];
+        $objInput->value = '';
+        $objInput->fldType = 'hidden';
+        
+       
+        foreach($link['params'] as $key => $value)
+        {
+            $objInput->value .= $key.'=>'.$value.','; 
+            
+        }
+      
 		        
-        $tableRow = array($objCheckBox->show(), $link['menutext'], $link['description']);
+        $tableRow = array($i,$objCheckBox->show(), $link['menutext'], $link['description']. $objInput->show());
         $objTable->addRow($tableRow, $oddOrEven);
         $rowcount = ($rowcount == 0) ? 1 : 0;
+        $i++;
+        $objInput = null;
     }
     
     

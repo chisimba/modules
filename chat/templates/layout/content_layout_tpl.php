@@ -4,6 +4,7 @@
 
 $this->setVar('pageTemplate', NULL);
 ?>
+
 <script type="text/javascript">
 //alert(parent.location.href);
 var contentpage = parent.document.getElementById('contentdiv');
