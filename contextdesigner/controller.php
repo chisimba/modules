@@ -23,14 +23,16 @@ class contextdesigner extends controller
      */
     public function init()
     {
+       // $this->_objContextUtils =  $this->newObject('utilities','context');
         $this->_objLanguage= & $this->getObject('language', 'language');
         $this->_objDBContext= & $this->getObject('dbcontext','context');
         $this->_objContextAdminUtils = & $this->getObject('utils','contextadmin');
         $this->_objDBContextDesigner = & $this->getObject('dbcontextdesigner','contextdesigner');
 //        $this->_objUser= & $this->newObject('user','security');
         $this->_objDBContextModules = &$this->getObject('dbcontextmodules','context');
-        $this->_objUtils =  & $this->getObject('utilities', 'contextdesigner');
+        $this->_objUtils = &  $this->newObject('utilities', 'contextdesigner');
         $this->_objModule = & $this->getObject('modules', 'modulecatalogue');
+        
     }
     
     /**

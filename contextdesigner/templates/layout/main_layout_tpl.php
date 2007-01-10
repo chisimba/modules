@@ -1,5 +1,12 @@
 <?php
 
+if($this->_objDBContext->isInContext())
+{
+   
+    $cm = '';//$this->_objContextUtils->getHiddenContextMenu('contextdesigner','none');
+} else {
+    $cm = $this->getMenu();
+}
 
 // Create an Instance of the CSS Layout
 
