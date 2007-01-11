@@ -30,7 +30,7 @@ $fields = array(
 		'type' => 'clob',
 		),
 	'rsstime' => array(
-		'type' => 'text'
+		'type' => 'text',
 		'length' => 255,
 		),
 	);
