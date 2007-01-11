@@ -1393,6 +1393,17 @@ class blog extends controller
 			$this->nextAction('postedit', array('id' => $postid));
         	break;
 
+        case 'addrss':
+
+
+        	break;
+
+        case 'rssedit':
+        	$userid = $this->objUser->userid();
+        	$this->setVarByRef('userid', $userid);
+        	return 'rssedit_tpl.php';
+        	break;
+
         }//action
 
     }

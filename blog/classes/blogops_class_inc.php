@@ -72,9 +72,16 @@ class blogops extends object
         }
     }
 
+    /**
+     * Method to output a rss feeds box
+     *
+     * @param string $url
+     * @param string $name
+     * @return string
+     */
     public function rssBox($url, $name)
     {
-        $objFeatureBox = $this->getObject('featurebox', 'navigation');
+    	$objFeatureBox = $this->getObject('featurebox', 'navigation');
         $objRss = $this->getObject('rssreader', 'feed');
         $objRss->parseRss($url);
         $head = $this->objLanguage->languageText("mod_blog_word_headlinesfrom", "blog");
@@ -86,6 +93,66 @@ class blogops extends object
 		}
 		$content .=  "</ul>\n";
 		return $objFeatureBox->show($head, $content);
+    }
+
+    public function rssEditor($featurebox = FALSE)
+    {
+    	$this->loadClass('href', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('textarea', 'htmlelements');
+
+    	$this->objUser = $this->getObject('user', 'security');
+        $rssform = new form('addrss', $this->uri(array(
+            'action' => 'addrss'
+        )));
+        //add rules
+        $rssform->addRule('url', $this->objLanguage->languageText("mod_blog_phrase_rssurlreq", "blog") , 'required');
+        $rssform->addRule('name', $this->objLanguage->languageText("mod_blog_phrase_rssnamereq", "blog") , 'required');
+        //start a fieldset
+        $rssfieldset = $this->getObject('fieldset', 'htmlelements');
+        $rssadd = $this->newObject('htmltable', 'htmlelements');
+        $rssadd->cellpadding = 3;
+        //url textfield
+        $rssadd->startRow();
+        $rssurllabel = new label($this->objLanguage->languageText('mod_blog_rssurl', 'blog') .':', 'input_rssuser');
+        $rssurl = new textinput('url');
+        $rssadd->addCell($rssurllabel->show());
+        $rssadd->addCell($rssurl->show());
+        $rssadd->endRow();
+
+        //name
+        $rssadd->startRow();
+        $rssnamelabel = new label($this->objLanguage->languageText('mod_blog_rssname', 'blog') .':', 'input_rssname');
+        $rssname = new textinput('name');
+        $rssadd->addCell($rssnamelabel->show());
+        $rssadd->addCell($rssname->show());
+        $rssadd->endRow();
+
+        //description
+        $rssadd->startRow();
+        $rssdesclabel = new label($this->objLanguage->languageText('mod_blog_rssdesc', 'blog') .':', 'input_rssname');
+        $rssdesc = new textarea('description');
+        $rssadd->addCell($rssdesclabel->show());
+        $rssadd->addCell($rssdesc->show());
+        $rssadd->endRow();
+
+        //end off the form and add the buttons
+        $this->objRssButton = &new button($this->objLanguage->languageText('word_save', 'system'));
+        $this->objRssButton->setValue($this->objLanguage->languageText('word_save', 'system'));
+        $this->objRssButton->setToSubmit();
+        $rssfieldset->addContent($rssadd->show());
+        $rssform->addToForm($rssfieldset->show());
+        $rssform->addToForm($this->objRssButton->show());
+        $rssform = $rssform->show();
+        if ($featurebox == TRUE) {
+            $objFeatureBox = $this->getObject('featurebox', 'navigation');
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_importblog", "blog") , $imform);
+            return $ret;
+        } else {
+            return $rssform;
+        }
+
     }
 
     /**
@@ -445,6 +512,9 @@ class blogops extends object
             'action' => 'blogadmin',
             'mode' => 'editcats'
         )) , $this->objLanguage->languageText("mod_blog_word_categories", "blog"));
+        //add/delete RSS feeds
+        $rssedits = new href($this->uri(array(
+        	'action' => 'rssedit')) , $this->objLanguage->languageText("mod_blog_rssaddedit", "blog"));
         //view all other blogs
         $viewblogs = new href($this->uri(array(
             'action' => 'allblogs'
@@ -469,6 +539,7 @@ class blogops extends object
                     $newpost,
                     $editpost,
                     $editcats,
+                    $rssedits,
                     $viewblogs,
                     $viewmyblog
                 );
@@ -479,6 +550,7 @@ class blogops extends object
                     $newpost,
                     $editpost,
                     $editcats,
+                    $rssedits,
                     $viewblogs,
                     $viewmyblog
                 );
@@ -492,9 +564,9 @@ class blogops extends object
             //build the links
             $this->objUser = $this->getObject('user', 'security');
             if ($this->objUser->inAdminGroup($this->objUser->userId())) {
-                $ret.= $admin->show() ."<br />".$import->show() ."<br />".$mailsetup->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
+                $ret.= $admin->show() ."<br />".$import->show() ."<br />".$mailsetup->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
             } else {
-                $ret.= $admin->show() ."<br />".$import->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
+                $ret.= $admin->show() ."<br />".$import->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$rssedits->show() ."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
             }
         }
         if ($featurebox == FALSE) {
