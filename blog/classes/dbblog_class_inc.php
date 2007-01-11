@@ -482,7 +482,7 @@ class dbblog extends dbTable
 							'comment_status' => $postarr['commentstatus'],
 							'post_modified' => $postarr['postmodified'],
 							'comment_count' => $postarr['commentcount'],
-							'post_ts' => time(),
+							'post_ts' => $postarr['postts'], //time(),
 							'post_lic' => $postarr['cclic']);
 
 			return $this->update('id',$postarr['id'], $edarr, 'tbl_blog_posts');

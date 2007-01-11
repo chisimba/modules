@@ -1029,6 +1029,7 @@ class blog extends controller
                 $status = $this->getParam('status');
                 $commentsallowed = $this->getParam('commentsallowed');
                 $excerpt = $this->getParam('postexcerpt');
+                $postts = $this->getParam('post_ts');
                 $tags = $this->getParam('tags');
                 $tagarray = explode(",", $tags);
 
@@ -1110,7 +1111,7 @@ class blog extends controller
                     $insarredit = array('id' => $id,'posttitle' => $posttitle, 'postcontent' => $postcontent,
                                                     'postcat' => $cat, 'postexcerpt' => $excerpt, 'poststatus' => $status,
                                                     'commentstatus' => $commentsallowed,
-                                                    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate, 'cclic' => $cclic);
+                                                    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate, 'postts' => $postts, 'cclic' => $cclic);
 
                     $this->objblogOps->quickPostAdd($userid, $insarredit, $mode);
 

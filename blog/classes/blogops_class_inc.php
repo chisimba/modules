@@ -1238,10 +1238,19 @@ class blogops extends object
         }
         $ptable->addCell($lic->show());
         $ptable->endRow();
+
+        $ts = new textinput('post_ts', NULL, 'hidden', NULL);
+        //$ts->extra = "hidden";
+        if (isset($editparams['post_ts'])) {
+            $ts->setValue($editparams['post_ts']);
+        }
+
+
+
         $postform->addRule('posttitle', $this->objLanguage->languageText("mod_blog_phrase_ptitlereq", "blog") , 'required');
         //$postform->addRule('postcontent', $this->objLanguage->languageText("mod_blog_phrase_pcontreq", "blog"),'required');
         $pfieldset->addContent($ptable->show());
-        $postform->addToForm($pfieldset->show());
+        $postform->addToForm($pfieldset->show(). $ts->show());
         $this->objPButton = &new button($this->objLanguage->languageText('mod_blog_word_post', 'blog'));
         $this->objPButton->setValue($this->objLanguage->languageText('mod_blog_word_post', 'blog'));
         $this->objPButton->setToSubmit();
