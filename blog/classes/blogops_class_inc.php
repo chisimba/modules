@@ -679,7 +679,21 @@ class blogops extends object
                     $tbl->addCell('');
                     $tbl->endRow();
                     echo $this->objTB->autodiscCode();
-                    $ret.= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content']."<hr />"."<center>".$tbl->show() ."</center>"));
+                    //tack the tags onto the end of the post content...
+                    $thetags = $this->objDbBlog->getPostTags($post['id']);
+                    $linkstr = NULL;
+                    foreach($thetags as $tags)
+                    {
+                    	$link = new href($this->uri(array('action' => 'viewblogbytag', 'userid' => $userid, 'tag' => $tags['meta_value'])),$tags['meta_value']);
+                    	$linkstr .= $link->show();
+                    	$link = NULL;
+                    }
+                    $fboxcontent = $this->cleaner->cleanHtml($post['post_content'] .
+                    			   "<br /><hr />" . "<center><em><b>" . $this->objLanguage->languageText("mod_blog_word_tags4thispost", "blog") . "</b><br />" . $linkstr .
+                    			   "</em><hr />".
+                    			   "<center>".$tbl->show() ."</center>");
+
+                    $ret.= $objFeatureBox->show($head, $fboxcontent);
                 } else {
                     //table of non logged in options
                     //Set the table name
