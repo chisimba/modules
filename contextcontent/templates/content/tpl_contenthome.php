@@ -2,17 +2,20 @@
 
 $this->loadClass('link', 'htmlelements');
 
-echo '<h1>Content Pages for '.$this->objContext->getTitle().'</h1>';
+
+//mod_contextcontent_contextpagesfor
+echo '<h1>'.$this->objLanguage->languageText("mod_contextcontent_contextpagesfor",'contextcontent')." ".$this->objContext->getTitle().'</h1>';
 
 if ($this->isValid('addpage')) {
 
-    echo '<div class="noRecordsMessage">No Content Pages Found for this Course. Please add a page</div>';
+	
+    echo"<div class= 'noRecordsMessage' >".$this->objLanguage->languageText('mod_contextcontent_nocontextpages','contextcontent').'</div>';
 
     $addLink = new link($this->uri(array('action'=>'addpage', 'context'=>$this->contextCode)));
-    $addLink->link = 'Add a New Page';
+    $addLink->link = $this->objLanguage->languageText('mod_contextcontent_addnewcontextpages','contextcontent');
 
     echo '<p>'.$addLink->show().'</p>';
 } else {
-    echo '<div class="noRecordsMessage">No Content Pages Found for this Course.</div>';
+    echo '<div class="noRecordsMessage" >'.$this->objLanguage->languageText('mod_contextcontent_nocontextpage','contextcontent').'</div>';
 }
 ?>
