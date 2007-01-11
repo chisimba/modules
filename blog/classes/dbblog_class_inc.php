@@ -618,12 +618,25 @@ class dbblog extends dbTable
 		return $this->getAll($filter);
 	}
 
+	/**
+	 * Method to get all of the tags associated with a particular post
+	 *
+	 * @param string $postid
+	 * @return array
+	 */
 	public function getPostTags($postid)
 	{
 		$this->_changeTable("tbl_blog_postmeta");
 		return $this->getAll("WHERE post_id = '$postid'");
 	}
 
+	/**
+	 * Insert a set of tags into the database associated with the post
+	 *
+	 * @param array $tagarray
+	 * @param string $userid
+	 * @param String $postid
+	 */
 	public function insertTags($tagarray, $userid, $postid)
 	{
 		$this->_changeTable("tbl_blog_postmeta");
@@ -638,11 +651,18 @@ class dbblog extends dbTable
 
 	}
 
+	/**
+	 * Method to remove all the tags associated with a post
+	 *
+	 * @param string $postid
+	 * @return void
+	 */
 	public function removeAllTags($postid)
 	{
 		$this->_changeTable("tbl_blog_postmeta");
 		return $this->delete('id', $postid, 'tbl_blog_postmeta');
 	}
+
 	/**
 	 * Method to dynamically switch tables
 	 *
