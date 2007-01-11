@@ -29,6 +29,10 @@ $fields = array(
 	'rsscache' => array(
 		'type' => 'clob',
 		),
+	'rsstime' => array(
+		'type' => 'text'
+		'length' => 255,
+		),
 	);
 
 //create other indexes here...
