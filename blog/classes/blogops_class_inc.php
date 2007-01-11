@@ -1594,6 +1594,13 @@ class blogops extends object
         $dsn = NULL;
         return $parsed;
     }
+
+    /**
+     * Method to retrieve the mail dsn from the config.xml file
+     *
+     * @param void
+     * @return string
+     */
     public function getMailDSN()
     {
         //check that the variables are set, if not return the template, otherwise return a thank you and carry on
