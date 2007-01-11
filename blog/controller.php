@@ -1394,13 +1394,59 @@ class blog extends controller
         	break;
 
         case 'addrss':
-        	$name = $this->getParam('name');
-        	$url = $this->getParam('url');
-        	$desc = $this->getParam('description');
+        	$rssname = $this->getParam('name');
+        	$rssurl = $this->getParam('rssurl');
+        	$rssdesc = $this->getParam('description');
         	$userid = $this->objUser->userId();
-        	//echo $name, $url, $desc; die();
+
+        	//get the cache
+        	//get the proxy info if set
+			$proxyArr = $this->objProxy->getProxy();
+
+			$ch = curl_init();
+   			curl_setopt($ch, CURLOPT_URL, $rssurl);
+   			//curl_setopt($ch, CURLOPT_HEADER, 1);
+   			curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+   			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+   			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   			if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
+            {
+            	curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_host'].":".$proxyArr['proxy_port']);
+            	curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxy_user'].":".$proxyArr['proxy_pass']);
+            }
+   			$rsscache = curl_exec($ch);
+   			curl_close($ch);
+//var_dump($rsscache);
+   			//put in a timestamp
+        	$addtime = time();
+        	$addarr = array('userid' => $userid, 'url' => $rssurl, 'name' => $rssname, 'description' => $rssdesc, 'rsscache' => htmlentities($rsscache), 'rsstime' => $addtime);
+
+        	//write the file down for caching
+        	$path = $this->objConfig->getContentBasePath() . "/blog/rsscache/";
+        	$rsstime = time();
+        	if(!file_exists($path))
+        	{
+
+        		mkdir($path);
+        		chmod($path, 0777);
+        		$filename = $path . $this->objUser->userId() . "_" . $rsstime . ".xml";
+        		if(!file_exists($filename))
+        		{
+        			touch($filename);
+
+        		}
+        		$handle = fopen($filename, 'wb');
+        		fwrite($handle, $rsscache);
+        	}
+        	else {
+        		$filename = $path . $this->objUser->userId() . "_" . $rsstime . ".xml";
+        		$handle = fopen($filename, 'wb');
+        		fwrite($handle, $rsscache);
+        	}
+        	//echo $path;
         	//add into the db
-        	$this->objDbBlog->addRss($userid, $name, $desc, $url);
+        	$addarr = array('userid' => $userid, 'url' => $rssurl, 'name' => $rssname, 'description' => $rssdesc, 'rsscache' => $filename, 'rsstime' => $rsstime);
+        	$this->objDbBlog->addRss($addarr);
         	$this->nextAction('viewblog');
         	break;
 

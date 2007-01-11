@@ -107,7 +107,7 @@ class blogops extends object
             'action' => 'addrss'
         )));
         //add rules
-        $rssform->addRule('url', $this->objLanguage->languageText("mod_blog_phrase_rssurlreq", "blog") , 'required');
+        $rssform->addRule('rssurl', $this->objLanguage->languageText("mod_blog_phrase_rssurlreq", "blog") , 'required');
         $rssform->addRule('name', $this->objLanguage->languageText("mod_blog_phrase_rssnamereq", "blog") , 'required');
         //start a fieldset
         $rssfieldset = $this->getObject('fieldset', 'htmlelements');
@@ -117,7 +117,7 @@ class blogops extends object
         //url textfield
         $rssadd->startRow();
         $rssurllabel = new label($this->objLanguage->languageText('mod_blog_rssurl', 'blog') .':', 'input_rssuser');
-        $rssurl = new textinput('url');
+        $rssurl = new textinput('rssurl');
         $rssadd->addCell($rssurllabel->show());
         $rssadd->addCell($rssurl->show());
         $rssadd->endRow();

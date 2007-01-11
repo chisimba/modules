@@ -717,10 +717,21 @@ class dbblog extends dbTable
 		return $posts;
 	}
 
-	public function addRss($userid, $name, $desc, $url)
+	/**
+	 * Method to add a RSS feed to the database
+	 *
+	 * @param string $userid
+	 * @param string $name
+	 * @param string $desc
+	 * @param string $url
+	 * @return bool
+	 */
+	public function addRss($rssarr)
 	{
 		$this->_changeTable("tbl_blog_userrss");
-		return $this->insert(array('userid' => $userid, 'name' => $name, 'url' => $url, 'description' => $desc));
+		//print_r($rssarr);
+		$ret = $this->insert($rssarr);
+		//var_dump($ret);
 	}
 
 	/**
