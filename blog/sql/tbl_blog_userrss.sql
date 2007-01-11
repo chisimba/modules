@@ -26,6 +26,9 @@ $fields = array(
 	'description' => array(
 		'type' => 'clob',
 		),
+	'rsscache' => array(
+		'type' => 'clob',
+		),
 	);
 
 //create other indexes here...
