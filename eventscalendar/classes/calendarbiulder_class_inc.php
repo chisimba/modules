@@ -447,7 +447,7 @@ class calendarbiulder extends object
                 $eventsForToday .= '</td>';
             } else {
                 $eventsForToday = '<td style="background-color: #A4CAE6;">';
-                $eventsForToday .=  $this->domTT->show($eventDate,$smallevents,$day);//$day.$smallevents;
+                $eventsForToday .=  $this->domTT->show($eventDate,$smallevents,$day, $this->uri(array('action' => 'events','month' =>$month ),'eventscalendar'));//$day.$smallevents;
                 $eventsForToday .= '</td>';
             }
    			
