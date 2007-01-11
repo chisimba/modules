@@ -688,6 +688,10 @@ class blogops extends object
                     	$linkstr .= $link->show();
                     	$link = NULL;
                     }
+                    if(empty($linkstr))
+                    {
+                    	$linkstr = $this->objLanguage->languageText("mod_blog_word_notags", "blog");
+                    }
                     $fboxcontent = $this->cleaner->cleanHtml($post['post_content'] .
                     			   "<br /><hr />" . "<center><em><b>" . $this->objLanguage->languageText("mod_blog_word_tags4thispost", "blog") . "</b><br />" . $linkstr .
                     			   "</em><hr />".
