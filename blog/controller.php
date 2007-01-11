@@ -1394,8 +1394,14 @@ class blog extends controller
         	break;
 
         case 'addrss':
-
-
+        	$name = $this->getParam('name');
+        	$url = $this->getParam('url');
+        	$desc = $this->getParam('description');
+        	$userid = $this->objUser->userId();
+        	//echo $name, $url, $desc; die();
+        	//add into the db
+        	$this->objDbBlog->addRss($userid, $name, $desc, $url);
+        	$this->nextAction('viewblog');
         	break;
 
         case 'rssedit':

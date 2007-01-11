@@ -717,6 +717,12 @@ class dbblog extends dbTable
 		return $posts;
 	}
 
+	public function addRss($userid, $name, $desc, $url)
+	{
+		$this->_changeTable("tbl_blog_userrss");
+		return $this->insert(array('userid' => $userid, 'name' => $name, 'url' => $url, 'description' => $desc));
+	}
+
 	/**
 	 * Method to dynamically switch tables
 	 *

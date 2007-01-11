@@ -113,6 +113,7 @@ class blogops extends object
         $rssfieldset = $this->getObject('fieldset', 'htmlelements');
         $rssadd = $this->newObject('htmltable', 'htmlelements');
         $rssadd->cellpadding = 3;
+
         //url textfield
         $rssadd->startRow();
         $rssurllabel = new label($this->objLanguage->languageText('mod_blog_rssurl', 'blog') .':', 'input_rssuser');
