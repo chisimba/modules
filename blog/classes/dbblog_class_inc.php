@@ -664,6 +664,32 @@ class dbblog extends dbTable
 	}
 
 	/**
+	 * Method to retrieve the tags associated with a userid
+	 *
+	 * @param string $userid
+	 * @return array
+	 */
+	public function getTagsByUser($userid)
+	{
+		$this->_changeTable("tbl_blog_postmeta");
+		return $this->getAll("WHERE userid = '$userid' and meta_key = 'tag'");
+	}
+
+	/**
+	 * Method to get a tag weight by counting the tags
+	 *
+	 * @param string $tag
+	 * @param string $userid
+	 * @return integer
+	 */
+	public function getTagWeight($tag, $userid)
+	{
+		$this->_changeTable("tbl_blog_postmeta");
+		$count = $this->getRecordCount("WHERE meta_value = '$tag' AND userid = '$userid'");
+		return $count;
+	}
+
+	/**
 	 * Method to dynamically switch tables
 	 *
 	 * @param string $table

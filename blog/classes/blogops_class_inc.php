@@ -1606,37 +1606,43 @@ class blogops extends object
             return FALSE;
         }
     }
+
+    /**
+     * Method to build a tag cloud from blog entry tags
+     *
+     * @param string $userid
+     * @return array
+     */
     public function blogTagCloud($userid)
     {
         $this->objTC = $this->getObject('tagcloud', 'utilities');
-        //get all the categories to convert to tags
-        $catarr = $this->objDbBlog->getAllCats($userid);
-        if (empty($catarr)) {
-            return NULL;
+        //get all the tags
+        $tagarr = $this->objDbBlog->getTagsByUser($userid);
+        if(empty($tagarr))
+        {
+        	return NULL;
         }
-        //print_r($catarr); die();
-        foreach($catarr as $cat) {
-            //get the last post from the cat and do a count on the posts table
-            $post = $this->objDbBlog->getLatestPost($userid);
-            //print_r($post);
-            $url = $this->uri(array(
-                'action' => 'viewblog',
-                'catid' => $cat['id'],
-                'userid' => $userid
-            ));
-            //weight is the count of posts in the cat
-            //echo $post['id'];
-            $count = $this->objDbBlog->catCount($cat['id']);
-            $count = $count * 1000;
-            $tag = array(
-                'name' => $cat['cat_nicename'],
+        foreach($tagarr as $uni)
+        {
+        	$t[] = $uni['meta_value'];
+        }
+        $utags = array_unique($t);
+        foreach($utags as $tag)
+        {
+        	//create the url
+        	$url = $this->uri(array('action' => 'viewblogbytag', 'tag' => $tag, 'userid' => $userid));
+        	//get the count of the tag (weight)
+        	$weight = $this->objDbBlog->getTagWeight($tag, $userid);
+        	$weight = $weight*1000;
+        	$tag4cloud = array(
+                'name' => $tag,
                 'url' => $url,
-                'weight' => $count,
-                'time' => $post['post_ts']
+                'weight' => $weight,
+                'time' => time()
             );
-            $ret[] = $tag;
+            $ret[] = $tag4cloud;
         }
-        //print_r($ret); die();
+
         return $this->objTC->buildCloud($ret);
     }
     /**
