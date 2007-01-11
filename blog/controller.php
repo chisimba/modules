@@ -1081,6 +1081,8 @@ class blog extends controller
                     			//print_r($rmtags);
                     			$this->objDbBlog->removeAllTags($rmtags['id']);
                     		}
+                    		//echo "inserting ";
+                    		//print_r($tagarray);
                     		$this->objDbBlog->insertTags($tagarray, $userid, $id);
                     	}
                     	//clean out the duplicate tags
