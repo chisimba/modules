@@ -55,7 +55,7 @@ $virtualLabel = $this->objLanguage->languageText('word_virtual');
 
 $saveLabel = $this->objLanguage->languageText('word_save');
 $exitLabel = $this->objLanguage->languageText('word_cancel');
-$editStudentsLabel = $this->objLanguage->languageText('mod_pbladmin_saveandeditstudents', 'pbladmin');
+$editStudentsLabel = $this->objLanguage->code2Txt('mod_pbladmin_saveandeditstudents', 'pbladmin');
 
 if(!isset($mode)){
     $mode = 'add';
@@ -119,7 +119,7 @@ $objDrop = new dropdown('facilitator');
 $objDrop->addOption('virtual', $virtualLabel);
 if(!empty($lecturers)){
     foreach($lecturers as $line){
-        $objDrop->addOption($line['id'], $line['name']);
+        $objDrop->addOption($line['id'], $line['firstName'].' '.$line['surname']);
     }
     $objDrop->setSelected($facilitator);
 }
@@ -164,7 +164,7 @@ $objRadio->addOption('c','<b>'.$closedLabel.'</b>');
 $objRadio->setSelected($status);
 
 $objTable->startRow();
-$objTable->addCell($objRadio->show(),'','','center','','colspan=2');
+$objTable->addCell($objRadio->show(),'','','center','','colspan="2"');
 $objTable->endRow();
 
 // Start Date
@@ -205,11 +205,11 @@ $objButton = new button('save', $saveLabel);
 $objButton->setToSubmit();
 $btns = $objButton->show();
 
-$objButton = new button('save', $exitLabel);
+$objButton = new button('exit', $exitLabel);
 $objButton->setToSubmit();
 $btns .= '&nbsp;&nbsp;'.$objButton->show();
 
-$objButton = new button('save', $editStudentsLabel);
+$objButton = new button('edit', $editStudentsLabel);
 $objButton->setToSubmit();
 $btns .= '&nbsp;&nbsp;'.$objButton->show();
 

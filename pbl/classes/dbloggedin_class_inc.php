@@ -224,17 +224,17 @@ class dbLoggedIn extends dbTable
      */
     public function getClassId($stid = 'student')
     {
-        $clid = array();
-        $clids = array();
+        $data = array();
+        $classes = array();
         $sql = "select DISTINCT classroomid from " . $this->table . " where studentid='$stid'";
-        $clid = $this->getArray($sql);
-        if (!$clid){
-            return FALSE;
+        $data = $this->getArray($sql);
+        
+        if(!empty($data)){
+            foreach($data as $val) {
+                $classes[] = $val['classroomid'];
+            }
         }
-        foreach($clid as $val) {
-            $clids[] = $val['classroomid'];
-        }
-        return $clids;
+        return $classes;
     }
 
     /**

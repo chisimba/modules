@@ -158,7 +158,7 @@ class pblMain extends object
     *
     * @return string $objForm The form containing the exit button and help icon.
     */
-    public function &getMenuBar2()
+    public function getMenuBar2()
     {
         $helpShow = $this->objHelp->show('classroom', 'pbl');
         $objForm = new form('menuf', $this->uri(array('action' => 'exit')));
@@ -166,7 +166,7 @@ class pblMain extends object
         $objButton->setToSubmit();
         $exit = $objButton->show();
         $menu = $exit;
-        $menu .= "<input type='hidden' name='option' value='Board'>";
+        $menu .= "<input type='hidden' name='option' value='Board' />";
 
         $objForm->addToForm($menu.'&nbsp;&nbsp;&nbsp;'.$helpShow);
         return $objForm->show();

@@ -49,11 +49,12 @@ $objTable->addCell('<br />'.$text,'','center','','','colspan="2"');
 $objTable->endRow();
 
 // create, upload & exit buttons
-$objButton = new button('load',$this->objLanguage->languageText('word_upload'));
+$objButton = new button('save',$this->objLanguage->languageText('word_upload'));
 $objButton->setToSubmit();
 $loadBtn = $objButton->show();
 
-$objButton = new button('load',$this->objLanguage->languageText('word_back'));
+$objButton = new button('back',$this->objLanguage->languageText('word_back'));
+$objButton->setToSubmit();
 $loadBtn1 = $objButton->show();
 
 $objTable->row_attributes='';
@@ -65,7 +66,7 @@ $objTable->endRow();
 
 // set up form
 $objForm = new form('InstallCase', $this->uri(array('action'=>'upload')));
-$objForm->extra=" ENCTYPE='multipart/form-data'";
+$objForm->extra=" enctype='multipart/form-data'";
 $objForm->addToForm($objTable->show());
 
 $objLayer->cssClass='even';

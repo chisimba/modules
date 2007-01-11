@@ -24,8 +24,8 @@ $str=$this->classroom->writeBoard();
 // Update 'tasks' iframe whenever 'board' is updated/refreshed
 $href = $this->uri(array('action'=>'showtasks'));
 // Replace the &amp; to & in the url
-$href = preg_replace('/&amp;/', '&', $href);
-echo "<script language='JavaScript'>parent.tasks.location.href='$href'; </script>";
+//$href = preg_replace('/&amp;/', '&', $href);
+echo "<script language='text/javascript'>parent.tasks.location.href='$href'; </script>";
 
 // Display case information
 echo "<font color='#333333' size='3'>";

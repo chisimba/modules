@@ -33,7 +33,7 @@ class instruction extends object
     /**
      * Constructor method to initialise objects
      */
-    public function init()
+    public function instruction()
     {
     }
 

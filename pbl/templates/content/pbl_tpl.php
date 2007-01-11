@@ -13,7 +13,7 @@
     $bodyParams='onload="javascript:document.chat.chatline.select();document.chat.chatline.focus();"';
     $this->setVarByRef('bodyParams',$bodyParams);
 
-    $this->setVarByRef('pageSuppressToolbar', TRUE);
+    $this->setVar('pageSuppressToolbar', TRUE);
     $this->setVar('pageSuppressBanner', TRUE);
 
     // set up html objects
@@ -60,7 +60,7 @@ echo '<style>
     $lbTasks = $this->objLanguage->languageText('word_tasks');
     $lbNotes = $this->objLanguage->languageText('word_notes');
     $lbNoteBook = $this->objLanguage->languageText('word_notebook');
-    $lbRestoreChat = $this->objLanguage->languageText('mod_pbl_restorechat');
+    $lbRestoreChat = $this->objLanguage->languageText('mod_pbl_restorechat', 'pbl');
     $viewLog = $this->objLanguage->languageText('phrase_viewpbllog');
     $lbLogIn = $this->objLanguage->languageText('mod_pbl_loggedin','pbl');
     $lbHelp = $this->objLanguage->languageText('mod_pbl_typehelp', 'pbl');
@@ -75,7 +75,7 @@ echo '<style>
 // header: display menu and header
     $objTable->trClass='header';
     $objTable->row_attributes="width='100%' height='20' ";
-   // $objTable->startRow();
+    $objTable->startRow();
     $objTable->addCell($objHead->show(),'88%','bottom','left','','colspan="3"');
     $objTable->addCell($menu2,'12%','center','center','',' colspan="1"');
     $objTable->endRow();
@@ -181,7 +181,7 @@ $objBox->addTab($tab3);
 
     $objIcon->setIcon('chat/viewlog');
     $objIcon->title=$viewLog;
-    $objIcon->extra="onclick=\"javascript:window.open('" .$this->uri(array('action'=>'viewlog'))
+    $objIcon->extra=" onclick=\"javascript:window.open('" .$this->uri(array('action'=>'viewlog'))
     ."', 'pbllog', 'width=600, height=500, scrollbars=1')\" ";
     $objLink = new link('#');
     $objLink->link = $objIcon->show();
@@ -224,7 +224,7 @@ $objBox->addTab($tab3);
     $objText->extra=' readonly="readonly"';
 
     // display list of logged in users/students in specific classroom
-    $showstudents = '<p><font size=3><b>' .$lbLogIn .'</b></font></p>'.$objText->show();
+    $showstudents = '<p><font size="3"><b>' .$lbLogIn .'</b></font></p>'.$objText->show();
     $objTable->addCell($showstudents,'','center','center','scene',"height='7' rowspan='2'");
     $objTable->endRow();
 
@@ -237,7 +237,7 @@ $objBox->addTab($tab3);
     $objForm->method='get';
     
     $objText = new textarea('chatline',NULL,'1','70');
-    $objText->extra=" wrap='hard' onclick='clearfocus()'; onkeypress='if(event.keyCode==13)document.forms.chat.submit();'";
+    $objText->extra=" wrap='hard' onclick='clearfocus()' onkeypress='if(event.keyCode==13)document.forms.chat.submit();'";
     $objText->setContent($lbHelp);
     $objForm->addToForm($objText->show());
         

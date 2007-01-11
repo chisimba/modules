@@ -29,7 +29,7 @@ $editLabel = $this->objLanguage->languageText('word_edit');
 $classLabel = $this->objLanguage->languageText('word_class');
 $studentLabel = $this->objLanguage->code2Txt('word_student');
 $allHead = $this->objLanguage->code2Txt('mod_pbladmin_allstudentsincourse', 'pbladmin', array('readonlys'=>'students'));
-$inClassHead = $this->objLanguage->code2Txt('mod_pbladmin_studentsinclass', 'pbladmin', array('readonlys'=>'students'));
+$inClassHead = ucwords($this->objLanguage->code2Txt('mod_pbladmin_studentsinclass', 'pbladmin', array('readonlys'=>'students')));
 $backLabel = $this->objLanguage->languageText('word_back');
 $saveLabel = $this->objLanguage->languageText('word_save');
 $saveEditLabel = $this->objLanguage->languageText('mod_pbladmin_saveandeditclass', 'pbladmin');
@@ -70,7 +70,7 @@ $objTable->endRow();
 
 // Students in course
 $objDrop = new dropdown('list1[]');
-$objDrop->extra = ' style="width:100pt" MULTIPLE SIZE=10 onDblClick="moveSelectedOptions(this.form[\'list1[]\'],this.form[\'list2[]\'],true)"';
+$objDrop->extra = ' style="width:100pt" multiple="multiple" size="10" ondblclick="moveSelectedOptions(this.form[\'list1[]\'],this.form[\'list2[]\'],true)"';
 if(!empty($users)){
     foreach($users as $line){
         $objDrop->addOption($line['id'], $line['name']);
@@ -80,7 +80,7 @@ $course = $objDrop->show();
         
 // Students in class
 $objDrop = new dropdown('list2[]');
-$objDrop->extra = ' style="width:100pt" MULTIPLE SIZE=10 onDblClick="moveSelectedOptions(this.form[\'list2[]\'],this.form[\'list1[]\'],true)"';
+$objDrop->extra = ' style="width:100pt" multiple="multiple" size="10" ondblclick="moveSelectedOptions(this.form[\'list2[]\'],this.form[\'list1[]\'],true)"';
 if(!empty($students)){
     foreach($students as $line){
         $objDrop->addOption($line['id'], $line['name']);
@@ -96,15 +96,15 @@ $addLinks .= $objLink->show();
 
 $objLink = new link("javascript: moveAllOptions( document.frmManage['list1[]'], document.frmManage['list2[]'], true);");
 $objLink->link = htmlspecialchars('All >>');
-$addLinks .= '<br>'.$objLink->show();
+$addLinks .= '<br />'.$objLink->show();
 
 $objLink = new link("javascript: moveSelectedOptions( document.frmManage['list2[]'], document.frmManage['list1[]'], true);");
 $objLink->link = htmlspecialchars('<<');
-$addLinks .= '<br>'.$objLink->show();
+$addLinks .= '<br />'.$objLink->show();
 
 $objLink = new link("javascript: moveAllOptions( document.frmManage['list2[]'], document.frmManage['list1[]'], true);");
 $objLink->link = htmlspecialchars('All <<');
-$addLinks .= '<br>'.$objLink->show();
+$addLinks .= '<br />'.$objLink->show();
 
 $objTable->startRow();
 $objTable->addCell($course, '45%','','center');
@@ -122,7 +122,7 @@ $objLink->link  = $backLabel;
 $links .= '&nbsp;|&nbsp;'.$objLink->show();
 
 $objTable->startRow();
-$objTable->addCell($links,'','','center','','colspan=3');
+$objTable->addCell($links,'','','center','','colspan="3"');
 $objTable->endRow();
 
 // Hidden Elements

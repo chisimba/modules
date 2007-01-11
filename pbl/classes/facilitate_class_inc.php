@@ -82,7 +82,7 @@ class facilitate extends object
         $sesPblUserId = $this->getSession('pbl_user_id');
         $sesChoice = $this->getSession('choicestr');
 
-        $facilitator = $this->objLanguange->languageText('word_facilitator', 'facilitator') . ': ';
+        $facilitator = $this->objLanguange->languageText('word_facilitator') . ': ';
         $lbHelp = $this->objLanguange->languageText('mod_pbl_help', 'pbl');
         $lbMore = $this->objLanguange->languageText('mod_pbl_moreinfo', 'pbl');
         $lbChairOnly = $this->objLanguange->languageText('mod_pbl_chaironly', 'pbl');

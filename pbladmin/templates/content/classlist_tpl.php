@@ -47,10 +47,14 @@ $heading = $heading.'&nbsp;&nbsp;&nbsp;'.$addicon;
 
 $this->setVarByRef('heading', $heading);
 
-$objLink->link($this->uri(array('action'=>'showcase')));
+$objLink = new link($this->uri(array('action'=>'showcase')));
 $objLink->link = $viewLabel;
 
 echo '<p>'.$objLink->show().'</p>';
+
+$objTable = new htmltable();
+$objTable->cellspacing = '2';
+$objTable->cellpadding = '5';
 
 $tableHd = array();
 $tableHd[] = '';
@@ -62,11 +66,7 @@ $tableHd[] = $chairHead;
 $tableHd[] = $dateHead;
 $tableHd[] = '';
 
-$objTable->addHeader($tableHd, 'heading');
-
-$objTable = new htmltable();
-$objTable->cellpadding = "3";
-$objTable->cellspacing = "2";
+$objTable->addHeader($tableHd);
 
 if(!empty($data)){
     $i = 0;
@@ -109,7 +109,7 @@ if(!empty($data)){
         $row[] = $this->objUser->fullname($line['owner']);
         $row[] = $facilitator;
         $row[] = $chair;
-        $row[] = $this->formatDate($line['opentime']);
+        $row[] = $this->objDate->formatDate($line['opentime']);
         $row[] = $icons;
         
         $objTable->addRow($row, $class);
@@ -117,7 +117,7 @@ if(!empty($data)){
 }
 
 // Form to change the date and / case for a group of classes
-$str = '';
+$str = '<p>';
 
 // Change the date
 $objLabel = new label($changeLabel.':', 'input_date');
@@ -141,7 +141,7 @@ $str .= $objButton->show();
 
 // Change the case
 $objLabel = new label($moveLabel.':', 'input_case');
-$str .= $objLabel->show();
+$str .= '<br />'.$objLabel->show();
 
 $objDrop = new dropdown('case');
 if(!empty($cases)){
@@ -158,7 +158,7 @@ $objButton = new button('save', $goLabel);
 $objButton->setToSubmit();
 $str .= $objButton->show();
 
-$objLayer->str = '<p>&nbsp;'.$str.'</p>';
+$objLayer->str = '&nbsp;'.$str.'</p>';
 
 // set up form
 $objForm = new form('moveclass', $this->uri(array('action'=>'moveclass')));

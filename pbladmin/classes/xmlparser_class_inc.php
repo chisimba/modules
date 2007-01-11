@@ -32,7 +32,8 @@ class xmlParser extends object
      */
     public function init()
     {
-        $this->instruction = &$this->getObject('instruction');
+//        $this->instruction = &$this->getObject('instruction');
+        $this->loadClass('instruction');
     }
 
     /**
@@ -113,7 +114,7 @@ class xmlParser extends object
      */
     public function startElement($parser, $name, $attrs)
     {
-        $this->instrs[$this->ni] = $this->instruction;
+        $this->instrs[$this->ni] = new instruction(); //$this->instruction;
         $this->instrs[$this->ni]->makeInstruction(strtolower($name), $attrs);
         if ($this->ni > 0) {
             $this->insertInstruction($this->ni);

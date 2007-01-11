@@ -12,7 +12,7 @@ $objHead =& $this->newObject('htmlheading','htmlelements');
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(3);
 
-$heading=$objLanguage->languageText('mod_pbl_name');
+$heading=$objLanguage->languageText('mod_pbl_pbl', 'pbl');
 
 $objHead->str=$heading;
 $objHead->type=1;

@@ -77,11 +77,17 @@ class pblParser extends object
                 $this->dbClassroom->updateClass($fields, $item['id']);
             }
         }
+        // delete associations between scenes in the case
+        $this->dbAssocs->deleteAssocs(NULL, "cid = '{$id}'");
+        
+        // delete scenes in the case
+        $this->dbScenes->deleteScene(NULL, $id);
+        
+        // delete the case
         $this->dbCase->deleteCase($id);
 
-        if ($this->getSession('caseid',NULL)) {
-            $this->unsetSession('caseid');
-        }
+        $this->unsetSession('caseid');
+        
         return TRUE;
     }
 
@@ -92,13 +98,14 @@ class pblParser extends object
     private function saveCaseAttrs()
     {
         $casename = $this->instrs[0]->getAttrVal("name");
-        $startsceneid = '';
-        $owner = $this->objUser->userName();
+        $startsceneid = '0';
+        $owner = $this->objUser->userId();
         if ($this->objContext->isInContext()){
             $context = $this->objContext->getContextCode();
         }else{
-            $context = '';
+            $context = 'lobby';
         }
+        
         $this->caseid = $this->dbCase->addCase($casename, $startsceneid, $owner, $context);
     }
 

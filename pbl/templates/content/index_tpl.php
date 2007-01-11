@@ -31,7 +31,7 @@ $lbLobby = $this->objLanguage->languageText('word_lobby');
         $contextcode = $this->objContext->getContextCode();
         $contexttitle = $this->objContext->getTitle();
     } else {
-        $contextcode = 'root';
+        $contextcode = 'lobby';
         $contexttitle = $lbLobby;
     }
 
@@ -74,7 +74,7 @@ $lbLobby = $this->objLanguage->languageText('word_lobby');
     $open = $this->objLanguage->languageText('mod_pbl_openclassrooms', 'pbl');
     $title = $this->objLanguage->languageText('mod_pbl_enterclassroom', 'pbl');
     $lbPblAdmin = $this->objLanguage->languageText('mod_pbladmin_pbladmin', 'pbladmin');
-    $lbHere = $this->objLanguage->languageText('mod_pbl_here');
+    $lbHere = $this->objLanguage->languageText('word_here');
     
     $tableHd = array();
     $tableHd[] = $caseLabel;
@@ -195,7 +195,7 @@ $lbLobby = $this->objLanguage->languageText('word_lobby');
     $objLink->extra = "onclick=\"javascript:window.open('" .$this->uri(array('action'=>'showinfo'))."', 'pblinfo', 'width=550, height=400, scrollbars=1')\"";
     $objLink->link = $lbHere;
      
-    $moreinfo = '<br />&nbsp;<br />'.$this->objLanguage->code2Txt('mod_pbl_formoreinfo', 'pbl', array('here' => $objLink->show());
+    $moreinfo = '<br />&nbsp;<br />'.$this->objLanguage->code2Txt('mod_pbl_formoreinfo', 'pbl', array('here' => $objLink->show()));
     
     $objLink->extra = '';
     $objHead->type = 4;

@@ -29,6 +29,7 @@ $objLayer =& $this->newObject('layer','htmlelements');
 $uploadLabel = $this->objLanguage->languageText('mod_pbladmin_uploadpblfile', 'pbladmin');
 $createLabel = $this->objLanguage->languageText('mod_pbladmin_createcase', 'pbladmin');
 $addLabel = $this->objLanguage->languageText('mod_pbladmin_addnewcase', 'pbladmin');
+$lbNoCases = $this->objLanguage->languageText('mod_pbladmin_nocasesinstalled', 'pbladmin');
 $objIcon->title=$this->objLanguage->languageText('word_delete');
 $lbBack = $this->objLanguage->languageText('word_back');
 
@@ -49,7 +50,7 @@ $objLink = new link($this->uri(array('action'=>'createcase')));
 $objLink->link = $createLabel;
 $link2 = $objLink->show();
 
-$objLayer->str = $link1.'<p>'.$link2;
+$objLayer->str = '<p>'.$link1.'<br />'.$link2.'</p>';
 echo $objLayer->show().'<br />';
 
 if(!empty($msg)){
@@ -58,27 +59,29 @@ if(!empty($msg)){
 }
 
 // click on classroom to edit it
-$objButton = new button('open','GO');
-$objButton->setToSubmit();
+//$objButton = new button('open', $lbGo);
+//$objButton->setToSubmit();
 
 $i=1;
-$tableHd = array();
-$tableHd[] = '';
-$tableHd[] = $casehead;
-$tableHd[] = $classhead;
-$tableHd[] = $installed;
-
 $objTable = new htmltable();
-$objTable->addHeader($tableHd, 'heading');
 $objTable->row_attributes=" height='30' ";
 $objTable->cellpadding = '5';
 $objTable->cellspacing = '2';
 
 if(!empty($files)){
+    
+    $tableHd = array();
+    $tableHd[] = '';
+    $tableHd[] = $casehead;
+    //$tableHd[] = $classhead;
+    $tableHd[] = $installed;
+    
+    $objTable->addHeader($tableHd);
+    
     foreach($files as $key=>$file){
         $class = (($i++ %2)==0) ? 'even':'odd';
 
-        // check owner
+        /* check owner
         $owner = $file['owner'];
 
         // get a drop down list of classrooms and add a delete icon
@@ -109,16 +112,20 @@ if(!empty($files)){
         } else {
             $classForm='';
         }
+        */
+        
         // Delete icon
         $delete = $objIcon->getDeleteIconWithConfirm($file['id'], array('action' =>'delete', 'cid'=> $file['id'], 'cname'=>$file['name']), 'pbladmin');
 
         $objTable->startRow();
         $objTable->addCell($i-1, '5%','center','',$class);
         $objTable->addCell($file['name'], '45%','center','',$class);
-        $objTable->addCell($classForm,'42%','','',$class);
+        //$objTable->addCell($classForm,'42%','','',$class);
         $objTable->addCell($delete,'8%','','',$class);
         $objTable->endRow();
     }
+}else{
+    $objTable->addRow(array($lbNoCases), 'noRecordsMessage');
 }
 
 // display
@@ -127,7 +134,7 @@ echo $objTable->show();
 $objLink = new link($this->uri(''));
 $objLink->link = $lbBack;
 
-$objLayer->str = '<p>'.$objLink->show().'</p>';
+$objLayer->str = '<p style="padding-top:10px;">'.$objLink->show().'</p>';
 $objLayer->align = 'center';
 
 echo $objLayer->show();

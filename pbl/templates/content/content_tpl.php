@@ -53,5 +53,5 @@ $tab2['name']=$hypLabel;
 $tab2['content']=$hypothesis;
 $objBox->addTab($tab2);
 
-echo '<br style="line-height:1px;">'.$objBox->show();
+echo '<br style="line-height:1px;" />'.$objBox->show();
 ?>

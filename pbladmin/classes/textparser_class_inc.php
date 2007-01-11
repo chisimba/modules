@@ -134,13 +134,13 @@ class textParser extends object
     * @param array $sceneData The information about the scene. Default=NULL
     * @return string $sceneid The id of the first scene in the case.
     */
-    private function createCase($owner, $context, $casename=NULL, $sceneData=NULL)
+    public function createCase($owner, $context, $casename=NULL, $sceneData=NULL)
     {
         if(!$casename){
-            $casename = $_POST['casename'];
+            $casename = $this->getParam('casename');
         }
         // Save case and get id
-        $caseid = $this->dbCase->addCase($casename, '', $owner, $context);
+        $caseid = $this->dbCase->addCase($casename, '0', $owner, $context);
 
         // Save first scene and get id
         if(!$sceneData){
@@ -164,7 +164,7 @@ class textParser extends object
     * @param array $sceneData The information about the scene. Default=NULL
     * @return string $sceneid The id of the current scene in the case.
     */
-    private function setSceneAssocs($caseid, $sceneData = NULL)
+    public function setSceneAssocs($caseid, $sceneData = NULL)
     {
         if(!$sceneData){
             $sceneData = $_POST;

@@ -105,7 +105,8 @@ class pbladmin extends controller
         switch ($action) {
             // upload an xml (.pbl) file
             case 'upload':
-                if (isset($_POST['load']) && ($_POST['load'] == $this->objLanguage->languageText('word_back'))){
+                $back = $this->getParam('back');
+                if (isset($back) && !empty($back)){
                      return $this->nextAction('showcase');
                  }
                 return $this->upload();
@@ -134,29 +135,32 @@ class pbladmin extends controller
 
             // add the new case to the database
             case 'create':
-                if ($_POST['save'] == $this->objLanguage->languageText('word_cancel')){
+                $exit = $this->getParam('cancel');
+                
+                if (isset($exit) && !empty($exit)){
                     return $this->nextAction('showcase');
                 }
                 return $this->create();
 
             // delete a case
             case 'delete':
-                $this->msg = '';
+                $msg = '';
                 $cname = $this->getParam('cname');
                 $cid = $this->getParam('cid');
 
-                if ($cid) {
+                if (!empty($cid)) {
                     if ($this->parser->unInstallCase($cname, $cid) === FALSE) {
-                        $this->msg = '<p><b>' . $this->objLanguage->code2Txt('mod_pbladmin_casenotfound', 'pbladmin', array('casename' => $cname)).'</b></p>';
+                        $msg = '<p><b>' . $this->objLanguage->code2Txt('mod_pbladmin_casenotfound', 'pbladmin', array('casename' => $cname)).'</b></p>';
                         break;
                     }
-                    $this->msg = '<p><b>' .$this->objLanguage->code2Txt('mod_pbladmin_casedeleted', 'pbladmin', array('casename' => $cname)). '</b></p>';
+                    $msg = '<p><b>' .$this->objLanguage->code2Txt('mod_pbladmin_casedeleted', 'pbladmin', array('casename' => $cname)). '</b></p>';
                 }
-                return 'admin_tpl.php';
+                return $this->nextAction('showcase', array('msg' => $msg));
 
             // save a classroom in a case
             case 'saveclass':
-                if($_POST['save']==$this->objLanguage->languagetext('word_cancel')){
+                $exit = $this->getParam('exit');
+                if(isset($exit) && !empty($exit)){
                     return $this->nextAction('');
                 }
                 return $this->saveClass();
@@ -211,7 +215,12 @@ class pbladmin extends controller
     */
     public function home()
     {
-        $data = $this->dbClassroom->getClasses($this->contextcode);
+        $code = $this->contextcode;
+        if(empty($code)){
+            $code = 'lobby';
+        }
+        
+        $data = $this->dbClassroom->getClasses($code);
         if(!empty($data)){
             foreach($data as $key=>$line){
                 $name = $this->dbCases->getEntry($line['caseid'], "ORDER BY caseid, name");
@@ -365,7 +374,14 @@ class pbladmin extends controller
     */
     public function upload()
     {
-         if (isset($_POST['load']) && ($_POST['load'] == $this->objLanguage->languageText('word_upload'))){
+        $back = $this->getParam('back');
+        $save = $this->getParam('save');
+        
+        if(isset($back) && !empty($back)){
+            return $this->nextAction('showcase');
+        }
+        
+         if (isset($save) && !empty($save)){
              $tempfile = $_FILES['upload']['tmp_name'];
 
              if(!(strstr($_FILES['upload']['type'], 'text')===FALSE)){
@@ -388,21 +404,32 @@ class pbladmin extends controller
     */
     public function create()
     {
+        $continue = $this->getParam('continue');
+        $finish = $this->getParam('finish');
+        $minfo = $this->getParam('minfo');
+        
+        $code = $this->contextcode;
+        if(empty($code)){
+            $code = 'lobby';
+        }
+        
         $data=array();
-        if(empty($_POST['minfo'])){
-            $result = $this->textParser->createCase($this->username, $this->contextcode);
+        if(empty($minfo)){
+            $result = $this->textParser->createCase($this->userId, $code);
             $data['minfo'] = $result['sceneid'];
             $data['casename'] = $result['casename'];
             $data['caseid'] = $result['caseid'];
         }else{
-            $data['caseid'] = $_POST['caseid'];
-            $data['casename'] = $_POST['casename'];
+            $data['caseid'] = $this->getParam('caseid');
+            $data['casename'] = $this->getParam('casename');
             $data['minfo'] = $this->textParser->setSceneAssocs($data['caseid']);
         }
-        if ($_POST['save'] == $this->objLanguage->languageText('word_finish')){
+        
+        if (isset($finish) && !empty($finish)){
             $msg = $this->objLanguage->languageText('mod_pbladmin_casecreatedsuccess', 'pbladmin');
             return $this->nextAction('showcase',array('msg'=>$msg));
         }
+        
         $data['num'] = ++$_POST['num'];
         $this->setVarByRef('data',$data);
         return 'create_tpl.php';
@@ -447,14 +474,17 @@ class pbladmin extends controller
     */
     public function addClass()
     {
+        $code = $this->contextcode;
+        if(empty($code)){
+            $code = 'lobby';
+        }
+        
          // Get Lecturers
          $groupid = $this->objGroups->getLeafId(array($this->contextcode, 'Lecturers'));
-         $fields['id']='user_id as id';
-         $fields['name']="CONCAT( firstName, ' ', surname ) as name";
-         $lecturers = $this->objGroups->getGroupUsers($groupid, $fields);
+         $lecturers = $this->objGroups->getGroupUsers($groupid, array('user_id as id', 'firstName', 'surname'));
 
          // Get Cases
-         $cases = $this->dbCases->getCases("context='".$this->contextcode."'");
+         $cases = $this->dbCases->getCases("context='{$code}'");
 
          $this->setVarByRef('lecturers', $lecturers);
          $this->setVarByRef('cases', $cases);
@@ -469,23 +499,28 @@ class pbladmin extends controller
     {
         $mode = $this->getParam('mode');
 
+        $code = $this->contextcode;
+        if(empty($code)){
+            $code = 'lobby';
+        }
+
         // Save class
         $fields = array();
-        $caseid = $_POST['case'];
+        $caseid = $this->getParam('case');
 
-        $fields['name'] = $_POST['class'];
+        $fields['name'] = $this->getParam('class');
         $fields['owner'] = $this->userId;
         $fields['caseid'] = $caseid;
-        $fields['context'] = $this->contextcode;
-        $fields['facilitator'] = $_POST['facilitator'];
-        $fields['chair'] = $_POST['chair'];
-        $fields['scribe'] = $_POST['scribe'];
-        $fields['status'] = $_POST['status'];
-        $fields['opentime'] = $_POST['timestamp'];
+        $fields['context'] = $code;
+        $fields['facilitator'] = $this->getParam('facilitator');
+        $fields['chair'] = $this->getParam('chair');
+        $fields['scribe'] = $this->getParam('scribe');
+        $fields['status'] = $this->getParam('status');
+        $fields['opentime'] = $this->getParam('timestamp');
 
         // if in edit mode, add class id as a filter
         if ($mode == 'edit') {
-            $id = $_POST['id'];
+            $id = $this->getParam('id');
             $filter = "id='" . $id . "'";
             $this->dbClassroom->saveClass($fields, $filter);
         } else {
@@ -501,19 +536,19 @@ class pbladmin extends controller
             // update associated classroom id for students
         //    $this->dbLoggedin->changeClassId($id);
         // update position of chair in group
-        if($_POST['scribe']) {
-            $this->dbLoggedin->setPosition($id, $_POST['scribe'], 's');
+        if($this->getParam('scribe')) {
+            $this->dbLoggedin->setPosition($id, $this->getParam('scribe'), 's');
         }
-        if($_POST['chair']){
-            $this->dbLoggedin->setPosition($id, $_POST['chair'], 'c');
+        if($this->getParam('chair')){
+            $this->dbLoggedin->setPosition($id, $this->getParam('chair'), 'c');
         }
 
         // assign the facilitator to the classroom if not already there and not virtual
-        if($_POST['facilitator'] != $this->objLanguage->languageText('word_virtual')){
-            if(!$this->dbLoggedin->getPosition($id, $_POST['facilitator'])){
-                $this->dbLoggedin->addToClass($id, $_POST['facilitator']);
+        if($this->getParam('facilitator') != $this->objLanguage->languageText('word_virtual')){
+            if(!$this->dbLoggedin->getPosition($id, $this->getParam('facilitator'))){
+                $this->dbLoggedin->addToClass($id, $this->getParam('facilitator'));
             }
-            $this->dbLoggedin->setPosition($id, $_POST['facilitator'], 'f');
+            $this->dbLoggedin->setPosition($id, $this->getParam('facilitator'), 'f');
         }
 
         if($_POST['save'] == $this->objLanguage->languageText('word_save')){
@@ -579,8 +614,13 @@ class pbladmin extends controller
      */
     public function getInstalledCases()
     {
+        $code = $this->contextcode;
+        if(empty($code)){
+            $code = 'lobby';
+        }
+        
         $cases = array();
-        $cases = $this->dbCases->getCases("context='" . $this->contextcode . "'");
+        $cases = $this->dbCases->getCases("context='{$code}'");
         return $cases;
     }
 
@@ -701,7 +741,7 @@ class pbladmin extends controller
     * Method to take a datetime string and reformat it as text.
     * @param string $date The date in datetime format.
     * @return string $ret The formatted date.
-    */
+    *
     public function formatDate($date)
     {
         $ret = substr($date,8,2);
@@ -713,7 +753,7 @@ class pbladmin extends controller
             $ret .= ' '.$time;
         }
         return $ret;
-    }
+    }*/
 }
 
 ?>

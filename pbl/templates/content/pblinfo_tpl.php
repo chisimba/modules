@@ -23,7 +23,7 @@ $objLayer =& $this->newObject('layer','htmlelements');
 $objIcon =& $this->newObject('geticon','htmlelements');
 $this->loadClass('link', 'htmlelements');
 
-$heading = $this->objLanguage->languageText('mod_pbl_name');
+$heading = $this->objLanguage->languageText('mod_pbl_pbl', 'pbl');
 $objHead->type = 1;
 $objHead->str = $heading;
 $heading = $objHead->show();
@@ -53,6 +53,7 @@ $introBody = '<p>'.$this->objLanguage->code2Txt('mod_pbl_paraIntro', 'pbl', arra
     $objIcon->setIcon('close');
     $objIcon->extra=" onclick='javascript:window.close()'";
     
+    $objLayer->padding = '10px';
     $objLayer->align='center';
     $objLayer->str=$objIcon->show();
     

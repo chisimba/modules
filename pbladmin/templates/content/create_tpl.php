@@ -38,18 +38,20 @@ echo '<p>&nbsp;</p>';
 
 // Form elements
 $objLabel = new label('<b>'.$caseLabel.':</b>','input_casename');
-$caseInput = $objLabel->show();
+$caseInput = '<p>'.$objLabel->show();
 
 if(empty($data['minfo'])){
     $objInput = new textinput('casename');
-    $caseInput .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$objInput->show();
-}else $caseInput .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$data['casename'];
+    $caseInput .= '&nbsp;&nbsp;&nbsp;'.$objInput->show().'</p>';
+}else{ 
+    $caseInput .= '&nbsp;&nbsp;&nbsp;'.$data['casename'].'</p>';
+}
 
 $objLabel = new label('<b>'.$nameLabel.':</b>','input_scenename');
-$sceneidInput = $objLabel->show();
+$sceneidInput = '<p>'.$objLabel->show();
 
 $objInput = new textinput('scenename');
-$sceneidInput .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$objInput->show();
+$sceneidInput .= '&nbsp;&nbsp;&nbsp;'.$objInput->show().'</p>';
 
 $num=$data['num'];
 
@@ -93,15 +95,15 @@ if(!empty($data['minfo'])){
 }
 
 // Buttons
-$objButton = new button('save', $continueLabel);
+$objButton = new button('continue', $continueLabel);
 $objButton->setToSubmit();
 $btns = $objButton->show();
 
-$objButton = new button('save', $finishLabel);
+$objButton = new button('finish', $finishLabel);
 $objButton->setToSubmit();
 $btns .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$objButton->show();
 
-$objButton = new button('save', $exitLabel);
+$objButton = new button('cancel', $exitLabel);
 $objButton->setToSubmit();
 $btns .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$objButton->show();
 

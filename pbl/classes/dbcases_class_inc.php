@@ -51,13 +51,14 @@ class dbCases extends dbTable
      * @param string $context The context in which the case is used
      * @return string $id The id of the new case.
      */
-    public function addCase($name, $entry, $owner = 'admin', $context = NULL)
+    public function addCase($name, $entry, $owner = '1', $context = 'lobby')
     {
         $fields = array();
         $fields['name'] = $name;
         $fields['entry_point'] = $entry;
         $fields['context'] = $context;
         $fields['owner'] = $owner;
+        $fields['updated'] = date('Y-m-d H:i');
         if($this->insert($fields)){
             $id = $this->getLastInsertId();
             return $id;
@@ -108,23 +109,13 @@ class dbCases extends dbTable
     public function getCases($filter = NULL)
     {
         $case = array();
-        $i = 0;
         $sql = 'select id,name,context,owner from tbl_pbl_cases';
-        if ($filter){
+        if (!empty($filter)){
             $sql .= ' where ' . $filter;
         }
-        $rows = $this->getArray($sql);
-        if (!$rows){
-            return FALSE;
-        }
-        foreach($rows as $row) {
-            $case[$i]['context'] = $row['context'];
-            $case[$i]['id'] = $row['id'];
-            $case[$i]['name'] = $row['name'];
-            $case[$i]['owner'] = $row['owner'];
-            $i++;
-        }
-        return $case;
+        
+        $data = $this->getArray($sql);
+        return $data;
     }
 
     /**
