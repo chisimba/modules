@@ -71,6 +71,23 @@ class blogops extends object
             return $objFeatureBox->show($this->objLanguage->languageText("word_login", "system") , $objLogin->renderLoginBox('blog'));
         }
     }
+
+    public function rssBox($url, $name)
+    {
+        $objFeatureBox = $this->getObject('featurebox', 'navigation');
+        $objRss = $this->getObject('rssreader', 'feed');
+        $objRss->parseRss($url);
+        $head = $this->objLanguage->languageText("mod_blog_word_headlinesfrom", "blog");
+        $head .= " " . $name;
+        $content = "<ul>\n";
+        foreach ($objRss->getRssItems() as $item)
+        {
+    		$content .= "<li><a href=\"" . $item['link'] . "\">" . $item['title'] . "</a></li>\n";
+		}
+		$content .=  "</ul>\n";
+		return $objFeatureBox->show($head, $content);
+    }
+
     /**
      * Method to display a link to all the blogs on the system
      * Setting $featurebox = TRUE will display the link in a block style featurebox

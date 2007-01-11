@@ -56,7 +56,7 @@ class feed extends controller
             case 'importfeed':
             	$url = $this->getParam('url');
                 try {
-                	$feed1 = $this->objClient->getUrl('http://avoir.uwc.ac.za/avoir/index.php?module=cms&action=rssfeed&id=gen12Srv48Nme23_8');
+                	$feed1 = $this->objClient->getUrl('http://api.flickr.com/services/feeds/photos_public.gne?id=46242866@N00&format=rss_200');
 					//$feed = $this->objFeed->importFile($feed1);
 					$feed = $this->objFeed->importString($feed1);
 

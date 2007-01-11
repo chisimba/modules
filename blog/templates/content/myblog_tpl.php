@@ -117,6 +117,8 @@ else {
 
 //show the feeds section
 $leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
+$leftCol .= $this->objblogOps->rssBox('http://slashdot.org/slashdot.rdf', 'Slashdot');
+
 $rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 //dump the cssLayout to screen
 $cssLayout->setMiddleColumnContent($middleColumn);

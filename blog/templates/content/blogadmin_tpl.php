@@ -23,6 +23,8 @@ $middleColumn = NULL;
 
 //left menu section
 $leftCol = $leftMenu->show();
+$leftCol .= $this->objblogOps->rssBox('http://slashdot.org/slashdot.rdf', 'Slashdot');
+
 
 $middleColumn .= $this->objblogOps->showAdminSection(TRUE, TRUE);
 
