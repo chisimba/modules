@@ -690,6 +690,34 @@ class dbblog extends dbTable
 	}
 
 	/**
+	 * Method to return an array of posts associated with a tag
+	 *
+	 * @param string $userid
+	 * @param string $tag
+	 * @return array
+	 */
+	public function getAllPostsByTag($userid, $tag)
+	{
+		//first do a lookup and see what the post(s) id is/are
+		$this->_changeTable("tbl_blog_postmeta");
+		$poststoget = $this->getAll("WHERE meta_value = '$tag' AND userid = '$userid'");
+		//print_r($poststoget);
+		foreach($poststoget as $gettables)
+		{
+			$ptg[] = $gettables['post_id'];
+		}
+		//print_r($ptg); die();
+		//now get the posts and return them
+		$this->_changeTable("tbl_blog_posts");
+		foreach($ptg as $pos)
+		{
+			$posts[] = $this->getAll("WHERE id = '$pos'");
+		}
+		//print_r($posts); die();
+		return $posts;
+	}
+
+	/**
 	 * Method to dynamically switch tables
 	 *
 	 * @param string $table

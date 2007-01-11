@@ -837,6 +837,51 @@ class blog extends controller
                 return 'myblog_tpl.php';
                 break;
 
+            case 'viewblogbytag':
+
+                //get the tag
+                $tag = $this->getParam('tag');
+                //grab the user id
+                $userid = $this->getParam('userid');
+                if(!isset($userid))
+                {
+                    //fix the user id just in case
+                    if($this->objUser->isLoggedIn() == TRUE)
+                    {
+                        $userid = $this->objUser->userId();
+                    }
+                    else {
+
+                        $this->nextAction('');
+                        exit;
+                    }
+                }
+                //get the category tree
+                $catarr = $this->objDbBlog->getCatsTree($userid);
+                //get the links categories
+                $linkcats = $this->objDbBlog->getAllLinkCats($userid);
+                //make sure the category id is there
+                if(isset($tag))
+                {
+                    //grab all the posts with that tag
+                    $posts = $this->objDbBlog->getAllPostsByTag($userid, $tag);
+                }
+                else {
+                    //otherwise grab all the Published posts
+                    $posts = $this->objDbBlog->getAllPosts($userid, 0);//getAbsAllPostsNoDrafts($userid);
+                }
+                $latestpost[0] = $this->objDbBlog->getLatestPost($userid);
+                $this->setVarByRef('latestpost', $latestpost);
+                //send all that to the template
+                $this->setVarByRef('catid', $catid);
+                $this->setVarByRef('posts', $posts);
+                $this->setVarByRef('linkcats', $linkcats);
+                $this->setVarByRef('cats', $catarr);
+                $this->setVarByRef('userid', $userid);
+                //return the template
+                return 'mytagsblog_tpl.php';
+                break;
+
             case 'blogadmin':
                 //make sure the user is logged in
                 if($this->objUser->isLoggedIn() == FALSE)
