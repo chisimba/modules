@@ -1071,8 +1071,21 @@ class blog extends controller
 
                     if(!empty($tagarray) && $tagarray[0] != "")
                     {
-                    	//clean out the duplicate tags
                     	$etags = $this->objDbBlog->getPostTags($id);
+
+                    	if(count($tagarray) < count($etags))
+                    	{
+                    		//remove all the tags for the post so that we can populate with the new ones
+                    		foreach($etags as $rmtags)
+                    		{
+                    			//print_r($rmtags);
+                    			$this->objDbBlog->removeAllTags($rmtags['id']);
+                    		}
+                    		$this->objDbBlog->insertTags($tagarray, $userid, $id);
+                    	}
+                    	//clean out the duplicate tags
+
+                    	//adding the extra tags
                     	$tagarray = array_diff($tagarray, $etags);
                     	if(!empty($etags))
                     	{

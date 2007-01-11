@@ -637,6 +637,12 @@ class dbblog extends dbTable
 		}
 
 	}
+
+	public function removeAllTags($postid)
+	{
+		$this->_changeTable("tbl_blog_postmeta");
+		return $this->delete('id', $postid, 'tbl_blog_postmeta');
+	}
 	/**
 	 * Method to dynamically switch tables
 	 *
