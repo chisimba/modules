@@ -81,6 +81,7 @@ if(!empty($rss))
 			$url = $feeds['rsscache'];
 		}
 		$leftCol .= $this->objblogOps->rssBox($url, $feeds['name']);
+	}
 }
 
 $cssLayout->setMiddleColumnContent($middleColumn);
