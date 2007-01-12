@@ -688,7 +688,7 @@ class blog extends controller
                 //description
                 $feedDescription = htmlentities($this->objLanguage->languageText("mod_blog_blogof", "blog")) . " " . $fullname;
                 //link back to the blog
-                $feedLink = $this->objConfig->getSiteRoot() . "index.php?module=blog&userid=" . $userid;
+                $feedLink = $this->objConfig->getSiteRoot() . "index.php?module=blog&action=randblog&userid=" . $userid;
                 //sanitize the link
                 $feedLink = htmlentities($feedLink);
                 //set up the url
@@ -702,7 +702,7 @@ class blog extends controller
                 {
                     //use the post title as the feed item title
                     $itemTitle = $feeditems['post_title'];
-                    $itemLink = ''; //todo - add this to the posts table!
+                    $itemLink = $this->uri(array('action' => 'viewsingle', 'postid' => $feeditems['id'], 'userid' => $userid)); //todo - add this to the posts table!
                     //description
                     $itemDescription = $feeditems['post_content'];
                     //where are we getting this from
