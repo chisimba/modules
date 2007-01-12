@@ -93,7 +93,7 @@ class blogops extends object
         	{
         		$item['link'] = NULL;
         	}
-    		@$content .= "<li><a href=\"" . $item['link'] . "\">" . $item['title'] . "</a></li>\n";
+    		$content .= "<li><a href=\"" . $item['link'] . "\">" . $item['title'] . "</a></li>\n";
 		}
 		$content .=  "</ul>\n";
 		return $objFeatureBox->show($head, $content);
