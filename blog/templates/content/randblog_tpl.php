@@ -75,9 +75,11 @@ if(!empty($rss))
 		$timenow = time();
 		if($timenow - $feeds['rsstime'] > 43200)
 		{
+			echo "Getting from the net";
 			$url = $feeds['url'];
 		}
 		else {
+			echo "getting local";
 			$url = $feeds['rsscache'];
 		}
 		$leftCol .= $this->objblogOps->rssBox($url, $feeds['name']);
