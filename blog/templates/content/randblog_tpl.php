@@ -80,7 +80,7 @@ if(!empty($rss))
 		else {
 			$url = $feeds['rsscache'];
 		}
-		echo file_get_contents($url);
+
 		$leftCol .= $this->objblogOps->rssBox($url, $feeds['name']);
 	}
 }
