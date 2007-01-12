@@ -122,7 +122,7 @@ $lbLobby = $this->objLanguage->languageText('word_lobby');
                 $tbRow[] = $str;
                 //$str.='<br />&nbsp;&nbsp;&nbsp;&nbsp;'.$this->formatDate($class[0]['opentime']);
                 //$closedStr.='<p>'.$str;
-                $tbRow[] = $this->formatDate($class[0]['opentime']);
+                $tbRow[] = $this->objDate->formatDate($class[0]['opentime']);
                 $tbRow[] = $count;
             }
             $objTable->addRow($tbRow,$rowClass);
@@ -164,7 +164,7 @@ $lbLobby = $this->objLanguage->languageText('word_lobby');
                 $tbRow[] = $str;
                 //$str.='<br />&nbsp;&nbsp;&nbsp;&nbsp;'.$class[0]['opentime'];
                 //$openStr.='<p>'.$str;
-                $tbRow[] = $this->formatDate($class[0]['opentime']);
+                $tbRow[] = $this->objDate->formatDate($class[0]['opentime']);
                 $tbRow[] = $count;
             }
             $objTable1->addRow($tbRow,$rowClass);

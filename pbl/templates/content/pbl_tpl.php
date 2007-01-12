@@ -201,15 +201,18 @@ $objBox->addTab($tab3);
     
     // get user ids of users loggedin in to the classroom - get users fullname from users table
     $users=array();
+    
         if($userid){
             $i=0;
             foreach($userid as $val){
-                $user=$this->objGroupUser->getUsers(NULL," where id='".$val['studentid']."' ");
-                $listId = $user[0]['fullname'];
-                if($val['position'] == 'c' || $val['position'] == 's' || $val['position'] == 'f')
-                    $listId .= ' ('.$val['position'].')';
-                $users[$i] = $listId;
-                $i++;
+                if(!empty($val['studentid'])){
+                    $user=$this->objGroupUser->getUsers(NULL," where id='".$val['studentid']."' ");
+                    $listId = $user[0]['fullName'];
+                    if($val['position'] == 'c' || $val['position'] == 's' || $val['position'] == 'f')
+                        $listId .= ' ('.$val['position'].')';
+                    $users[$i] = $listId;
+                    $i++;
+                }
             }
         }
         

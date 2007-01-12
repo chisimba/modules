@@ -247,10 +247,10 @@ class pblClassroom extends object
         $objForm->addToForm($objInput->show());
         
         if ($true) {
-            $objButton = new button('submit', $this->objLanguage->languageText('word_save'));
+            $objButton = new button('save', $this->objLanguage->languageText('word_save'));
             $objButton->setToSubmit();
             $save = '<br />'.$objButton->show().'&nbsp;&nbsp;';
-            $objButton = new button('submit', $this->objLanguage->languageText('word_erase'));
+            $objButton = new button('erase', $this->objLanguage->languageText('word_erase'));
             $objButton->setToSubmit();
             $save .= $objButton->show().'<br />';
             $objForm->addToForm($save);

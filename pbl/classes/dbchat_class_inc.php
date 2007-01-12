@@ -72,12 +72,12 @@ class dbChat extends dbTable
 
         // Insert chat string into database with the users name ahead
         $userstr = $sesPblUser . ": " . $str;
-        $time = date("ymdHis", time());
         $fields = array();
         $fields['classroomid'] = $sesClass;
         $fields['studentid'] = $sesPblUserId;
         $fields['msg'] = $userstr;
-        $fields['entrydate'] = $time;
+        $fields['entrydate'] = date('Y-m-d H:i');
+        $fields['updated'] = date('Y-m-d H:i');
         $this->insert($fields);
         // if addressing the virtual facilitator: parse string and insert facilitator response
         if ($npos == TRUE) {
@@ -87,7 +87,8 @@ class dbChat extends dbTable
                 $fields['classroomid'] = $sesClass;
                 $fields['studentid'] = "1";
                 $fields['msg'] = $feedback;
-                $fields['entrydate'] = $time;
+                $fields['entrydate'] = date('Y-m-d H:i');
+                $fields['updated'] = date('Y-m-d H:i');
                 $this->insert($fields);
             }
         }
@@ -110,6 +111,7 @@ class dbChat extends dbTable
         $fields['studentid'] = "1";
         $fields['msg'] = $userstr;
         $fields['entrydate'] = $time;
+        $fields['updated'] = date('Y-m-d H:i');
         $this->insert($fields);
     }
 

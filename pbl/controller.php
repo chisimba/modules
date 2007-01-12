@@ -89,16 +89,22 @@ class pbl extends controller
             case "editcontent":
                 // Save or Erase LI's and Hypothesis
                 $msgli=''; $msghyp='';
-                if ($_POST['submit'] == $this->objLanguage->languageText('word_erase')) {
-                    $this->dbcontent->eraseNotes(strtolower($_POST['option']));
+                $erase = $this->getParam('erase');
+                $save = $this->getParam('save');
+                $option = $this->getParam('option');
+                
+                if (isset($erase) && !empty($erase)) {
+                    $this->dbcontent->eraseNotes(strtolower($option));
                     $msg = $this->objLanguage->languageText('word_erased');
-                } else {
-                    if (!empty($_POST['content'])) {
-                        $this->dbcontent->saveNotes($_POST['content'], strtolower($_POST['option']));
+                } else if(isset($save) && !empty($save)){
+                    $content = $this->getParam('content');
+                    
+                    if (!empty($content)) {
+                        $this->dbcontent->saveNotes($content, strtolower($option));
                         $msg = $this->objLanguage->languageText('word_saved');
                     }
                 }
-                if(strtolower($_POST['option']) == 'li'){
+                if(strtolower($option) == 'li'){
                     $msgli = $msg;
                 }else{
                     $msghyp = $msg;
@@ -112,12 +118,17 @@ class pbl extends controller
             case "editnotes":
                 // Save or erase notes in notebook
                 $msg='';
-                if ($_POST['submit'] == $this->objLanguage->languageText('word_erase')) {
+                $erase = $this->getParam('erase');
+                $save = $this->getParam('save');
+                $option = $this->getParam('option');
+                
+                if (isset($erase) && !empty($erase)) {
                     $this->dbloggedin->eraseNotes();
                     $msg = $this->objLanguage->languageText('mod_pbl_noteserased', 'pbl');
-                } else {
-                    if (!empty($_POST['content'])) {
-                        $this->dbloggedin->saveNotes($_POST['content']);
+                } else if(isset($save) && !empty($save)){
+                    $content = $this->getParam('content');
+                    if (!empty($content)) {
+                        $this->dbloggedin->saveNotes($content);
                         $msg = $this->objLanguage->languageText('mod_pbl_notessaved', 'pbl');
                     }
                 }
@@ -175,8 +186,9 @@ class pbl extends controller
                     $this->setSession('scribe', FALSE);
                 }
 
+                $line = $this->getParam('chatline');
                 // Send the input chat line to the chat display
-                $this->dbchat->say($_GET['chatline']);
+                $this->dbchat->say($line);
                 $this->nextAction('classroom');
                 break;
 
@@ -275,7 +287,7 @@ class pbl extends controller
     * Method to take a datetime string and reformat it as text.
     * @param string $date The date in datetime format.
     * @return string $ret The formatted date.
-    */
+    *
     public function formatDate($date)
     {
         $ret = substr($date,8,2);
@@ -287,7 +299,7 @@ class pbl extends controller
             $ret .= ' '.$time;
 
         return $ret;
-    }
+    }*/
 } // end of pbl class
 
 ?>
