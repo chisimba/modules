@@ -89,6 +89,10 @@ class blogops extends object
         $content = "<ul>\n";
         foreach ($objRss->getRssItems() as $item)
         {
+        	if(!isset($item['link']))
+        	{
+        		$item['link'] = NULL;
+        	}
     		$content .= "<li><a href=\"" . $item['link'] . "\">" . $item['title'] . "</a></li>\n";
 		}
 		$content .=  "</ul>\n";

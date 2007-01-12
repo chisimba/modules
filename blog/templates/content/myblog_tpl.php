@@ -117,7 +117,7 @@ else {
 
 //show the feeds section
 $leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
-//$leftCol .= $this->objblogOps->rssBox('http://slashdot.org/slashdot.rdf', 'Slashdot');
+//$leftCol .= $this->objblogOps->rssBox('http://127.0.0.1/cpgsql/5ive/app/index.php?module=blog&action=feed&userid=1', 'Digital Freedom');
 
 $rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 //dump the cssLayout to screen
