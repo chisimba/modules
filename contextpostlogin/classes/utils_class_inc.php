@@ -167,7 +167,7 @@ class utils extends object
         		if($this->_objDBContext->isInContext())
         {
             $objContextUtils = & $this->getObject('utilities','context');
-            $cm = $objContextUtils->getHiddenContextMenu('home','show');
+            $cm = $objContextUtils->getHiddenContextMenu('home','none');
         } else {
             $cm = '';
         }
