@@ -362,7 +362,11 @@ class worksheet extends controller
         $sql .= "id = '$worksheet_id'";
         $nodes = $this->objContentNodes->getArray($sql);
 
-        $worksheet[0]['node'] = $nodes[0]['title'];
+			if(isset($nodes[0]['title'])){
+        		$worksheet[0]['node'] = $nodes[0]['title'];
+        }else{
+        		$worksheet[0]['node'] = '';
+        }
 
         $count = $this->objWorksheetQuestions->getNumQuestions($worksheet_id);
         $worksheet[0]['count']=$count;

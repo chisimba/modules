@@ -29,7 +29,7 @@ $answerLabel = $objLanguage->languageText('mod_worksheet_answer','worksheet');
 $commentLabel = $objLanguage->languageText('mod_worksheet_comment','worksheet');
 $gottoLabel = $objLanguage->languageText('mod_worksheet_goto','worksheet');
 $outofLabel = $objLanguage->languageText('mod_worksheet_outof','worksheet');
-$exitLabel = $objLanguage->languageText('word_exit','worksheet');
+$exitLabel = $objLanguage->languageText('word_exit');
 $noWorksheet = $objLanguage->languageText('mod_worksheet_noworksheetsubmitted','worksheet');
 
 $heading = $viewLabel.' '.$worksheetLabel.' '.$worksheet['name'];
@@ -38,7 +38,7 @@ $this->setVarByRef('heading',$heading);
 // Page Head
 $objTable->width='99%';
 $objTable->cellpadding='2';
-$objTable->row_attributes='height=20';
+$objTable->row_attributes='height="20"';
 $objTable->startRow();
 $objTable->addCell('<b>'.$chapterLabel.':</b> '.$worksheet['node'],'35%');
 $objTable->addCell('<b>'.$totalLabel.':</b> '.$worksheet['total_mark'],'30%');
@@ -50,7 +50,7 @@ $total=$data[0]['totalmark'];
 $mark=round($total/$worksheet['total_mark']*100);
 
 $objTable->startRow();
-$objTable->addCell("<b>$markLabel:</b> $total &nbsp;($mark%)",'','','','','colspan=3');
+$objTable->addCell("<b>$markLabel:</b> $total &nbsp;($mark%)",'','','','','colspan="3"');
 $objTable->endRow();
 
 $objTable->startRow();
@@ -61,7 +61,7 @@ $objTable->endRow();
 if(!empty($data)){
     foreach($data as $line){
         $objTable->startRow();
-        $objTable->addCell('<b>'.$questionLabel.' '.$line['question_order'].':</b> '.$line['question'],'','','','odd','colspan=3');
+        $objTable->addCell('<b>'.$questionLabel.' '.$line['question_order'].':</b> '.$line['question'],'','','','odd','colspan="3"');
         $objTable->endRow();
 
         // Display image if set
@@ -70,20 +70,20 @@ if(!empty($data)){
             $objImage->src = $this->uri(array('action'=>'viewimage', 'fileid'=>$line['imageId']));
 
             $objTable->startRow();
-            $objTable->addCell($objImage->show(),'','','','odd','colspan=3');
+            $objTable->addCell($objImage->show(),'','','','odd','colspan="3"');
             $objTable->endRow();
         }
 
         $objTable->startRow();
-        $objTable->addCell('<b>'.$answerLabel.':</b> '.$line['answer'],'','','','even','colspan=3');
+        $objTable->addCell('<b>'.$answerLabel.':</b> '.$line['answer'],'','','','even','colspan="3"');
         $objTable->endRow();
 
         $objTable->startRow();
-        $objTable->addCell('<b>'.$markLabel.':</b> '.$line['mark'].' <b>/</b> '.$line['question_worth'],'','','','odd','colspan=3');
+        $objTable->addCell('<b>'.$markLabel.':</b> '.$line['mark'].' <b>/</b> '.$line['question_worth'],'','','','odd','colspan="3"');
         $objTable->endRow();
 
         $objTable->startRow();
-        $objTable->addCell('<b>'.$commentLabel.':</b> '.$line['comments'],'','','','even','colspan=3');
+        $objTable->addCell('<b>'.$commentLabel.':</b> '.$line['comments'],'','','','even','colspan="3"');
         $objTable->endRow();
 
         $objTable->startRow();
@@ -92,7 +92,7 @@ if(!empty($data)){
     }
 }else{
     $objTable->startRow();
-    $objTable->addCell($noWorksheet,'','','','odd','colspan=3');
+    $objTable->addCell($noWorksheet,'','','','odd','colspan="3"');
     $objTable->endRow();
 
     $objTable->startRow();
@@ -100,19 +100,19 @@ if(!empty($data)){
     $objTable->endRow();
 }
 
-$javascript="<SCRIPT language=\"javascript\" type=\"text/javascript\">
+$javascript="<script language=\"javascript\" type=\"text/javascript\">
         function submitform(val){
-        document.navWS.num.value=val;
-        document.navWS.submit();
+        document.getElementById('input_num').value=val;
+        document.getElementById('form_navWS').submit();
     }
-    </SCRIPT>";
+    </script>";
 
 $objInput->textinput('num','');
 $objInput->fldType='hidden';
 $nav = $objInput->show();
 
 if(!empty($data)){
-    $nav .= '<b>'.$gottoLabel.' '.$questionLabel.':</b><p>';
+    $nav .= '<b>'.$gottoLabel.' '.$questionLabel.':</b><br /><br />';
     $nav .= $this->generateLinks($data[0]['question_order'], $worksheet['count'], 5);
     $nav .= '&nbsp;&nbsp;|&nbsp;&nbsp;';
 }
