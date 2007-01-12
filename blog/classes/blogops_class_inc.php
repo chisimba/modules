@@ -884,7 +884,24 @@ class blogops extends object
                     $tblnl->addCell($iconList); //cc licence
                     $tblnl->endRow();
                     //echo $this->objTB->autodiscCode();
-                    $ret.= $objFeatureBox->show($head, $this->cleaner->cleanHtml($post['post_content']) ."<center>".$tblnl->show() ."</center>");
+                    //tack the tags onto the end of the post content...
+                    $thetags = $this->objDbBlog->getPostTags($post['id']);
+                    $linkstr = NULL;
+                    foreach($thetags as $tags)
+                    {
+                    	$link = new href($this->uri(array('action' => 'viewblogbytag', 'userid' => $userid, 'tag' => $tags['meta_value'])),$tags['meta_value']);
+                    	$linkstr .= $link->show();
+                    	$link = NULL;
+                    }
+                    if(empty($linkstr))
+                    {
+                    	$linkstr = $this->objLanguage->languageText("mod_blog_word_notags", "blog");
+                    }
+                    $fboxcontent = $this->cleaner->cleanHtml($post['post_content'] .
+                    			   "<br /><hr />" . "<center><em><b>" . $this->objLanguage->languageText("mod_blog_word_tags4thispost", "blog") . "</b><br />" . $linkstr .
+                    			   "</em><hr />".
+                    			   "<center>".$tblnl->show() ."</center>");
+                    $ret.= $objFeatureBox->show($head, $fboxcontent);
                 }
             }
         } else {
