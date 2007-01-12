@@ -93,23 +93,33 @@ class blogops extends object
         	{
         		$item['link'] = NULL;
         	}
-    		$content .= "<li><a href=\"" . $item['link'] . "\">" . $item['title'] . "</a></li>\n";
+    		@$content .= "<li><a href=\"" . $item['link'] . "\">" . $item['title'] . "</a></li>\n";
 		}
 		$content .=  "</ul>\n";
 		return $objFeatureBox->show($head, $content);
     }
 
-    public function rssEditor($featurebox = FALSE)
+    public function rssEditor($featurebox = FALSE, $rdata = NULL)
     {
+    	//print_r($rdata);
     	$this->loadClass('href', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('textarea', 'htmlelements');
 
     	$this->objUser = $this->getObject('user', 'security');
-        $rssform = new form('addrss', $this->uri(array(
-            'action' => 'addrss'
-        )));
+    	if($rdata == NULL)
+    	{
+        	$rssform = new form('addrss', $this->uri(array(
+            	'action' => 'addrss'
+        	)));
+    	}
+    	else {
+    		$rdata = $rdata[0];
+    		$rssform = new form('addrss', $this->uri(array(
+            	'action' => 'rssedit', 'mode' => 'edit', 'id' => $rdata['id']
+        	)));
+    	}
         //add rules
         $rssform->addRule('rssurl', $this->objLanguage->languageText("mod_blog_phrase_rssurlreq", "blog") , 'required');
         $rssform->addRule('name', $this->objLanguage->languageText("mod_blog_phrase_rssnamereq", "blog") , 'required');
@@ -122,6 +132,10 @@ class blogops extends object
         $rssadd->startRow();
         $rssurllabel = new label($this->objLanguage->languageText('mod_blog_rssurl', 'blog') .':', 'input_rssuser');
         $rssurl = new textinput('rssurl');
+        if(isset($rdata['url']))
+        {
+        	$rssurl->setValue(htmlentities($rdata['url']));
+        }
         $rssadd->addCell($rssurllabel->show());
         $rssadd->addCell($rssurl->show());
         $rssadd->endRow();
@@ -130,6 +144,10 @@ class blogops extends object
         $rssadd->startRow();
         $rssnamelabel = new label($this->objLanguage->languageText('mod_blog_rssname', 'blog') .':', 'input_rssname');
         $rssname = new textinput('name');
+        if(isset($rdata['name']))
+        {
+        	$rssname->setValue(htmlentities($rdata['name']));
+        }
         $rssadd->addCell($rssnamelabel->show());
         $rssadd->addCell($rssname->show());
         $rssadd->endRow();
@@ -138,6 +156,10 @@ class blogops extends object
         $rssadd->startRow();
         $rssdesclabel = new label($this->objLanguage->languageText('mod_blog_rssdesc', 'blog') .':', 'input_rssname');
         $rssdesc = new textarea('description');
+        if(isset($rdata['description']))
+        {
+        	$rssdesc->setValue(htmlentities($rdata['description']));
+        }
         $rssadd->addCell($rssdesclabel->show());
         $rssadd->addCell($rssdesc->show());
         $rssadd->endRow();
@@ -150,12 +172,55 @@ class blogops extends object
         $rssform->addToForm($rssfieldset->show());
         $rssform->addToForm($this->objRssButton->show());
         $rssform = $rssform->show();
+
+        //ok now the table with the edit/delete for each rss feed
+        $efeeds = $this->objDbBlog->getUserRss($this->objUser->userId());
+        $ftable = $this->newObject('htmltable', 'htmlelements');
+        $ftable->cellpadding = 3;
+        //$ftable->border = 1;
+        //set up the header row
+        $ftable->startHeaderRow();
+        $ftable->addHeaderCell($this->objLanguage->languageText("mod_blog_fhead_name", "blog"));
+        $ftable->addHeaderCell($this->objLanguage->languageText("mod_blog_fhead_description", "blog"));
+        $ftable->addHeaderCell('');
+        $ftable->endHeaderRow();
+
+        //set up the rows and display
+        if (!empty($efeeds)) {
+            foreach($efeeds as $rows) {
+                $ftable->startRow();
+                $feedlink = new href(htmlentities($rows['url']), $rows['name']);
+                $ftable->addCell($feedlink->show());
+                //$ftable->addCell(htmlentities($rows['name']));
+                $ftable->addCell(htmlentities($rows['description']));
+                $this->objIcon = &$this->getObject('geticon', 'htmlelements');
+                $edIcon = $this->objIcon->getEditIcon($this->uri(array(
+                    'action' => 'addrss',
+                    'mode' => 'edit',
+                    'id' => $rows['id'],
+                    //'url' => $rows['url'],
+                    //'description' => $rows['description'],
+                    'module' => 'blog'
+                )));
+                $delIcon = $this->objIcon->getDeleteIconWithConfirm($rows['id'], array(
+                    'module' => 'blog',
+                    'action' => 'deleterss',
+                    'id' => $rows['id']
+                ) , 'blog');
+                $ftable->addCell($edIcon.$delIcon);
+                $ftable->endRow();
+            }
+            $ftable = $ftable->show();
+        }
+
+
+
         if ($featurebox == TRUE) {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_importblog", "blog") , $imform);
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_importblog", "blog") , $imform . $ftable);
             return $ret;
         } else {
-            return $rssform;
+            return $rssform . $ftable;
         }
 
     }

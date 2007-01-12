@@ -20,7 +20,13 @@ else {
 	$leftCol = $leftMenu->show();
 	$leftCol .= "<br />";
 	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
-	$middleColumn .= $this->objblogOps->rssEditor($featurebox = FALSE);
+	if(!empty($rdata))
+	{
+		$middleColumn .= $this->objblogOps->rssEditor(FALSE, $rdata);
+	}
+	else {
+		$middleColumn .= $this->objblogOps->rssEditor(FALSE);
+	}
 }
 if(!empty($rss))
 {

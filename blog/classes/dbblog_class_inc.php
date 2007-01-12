@@ -726,18 +726,37 @@ class dbblog extends dbTable
 	 * @param string $url
 	 * @return bool
 	 */
-	public function addRss($rssarr)
+	public function addRss($rssarr, $mode = NULL)
 	{
 		$this->_changeTable("tbl_blog_userrss");
-		//print_r($rssarr);
-		$ret = $this->insert($rssarr);
-		//var_dump($ret);
+		if($mode == NULL)
+		{
+			return $this->insert($rssarr);
+		}
+		elseif($mode == 'edit') {
+			return $this->update('id', $rssarr['id'], $rssarr, "tbl_blog_userrss");
+		}
+		else {
+			return FALSE;
+		}
 	}
 
 	public function getUserRss($userid)
 	{
 		$this->_changeTable("tbl_blog_userrss");
 		return $this->getAll("WHERE userid = '$userid'");
+	}
+
+	public function getRssById($id)
+	{
+		$this->_changeTable("tbl_blog_userrss");
+		return $this->getAll("WHERE id = '$id'");
+	}
+
+	public function delRss($id)
+	{
+		$this->_changeTable("tbl_blog_userrss");
+		return $this->delete('id', $id, "tbl_blog_userrss");
 	}
 
 	/**

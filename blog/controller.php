@@ -1404,6 +1404,14 @@ class blog extends controller
         	$rssurl = $this->getParam('rssurl');
         	$rssdesc = $this->getParam('description');
         	$userid = $this->objUser->userId();
+        	$mode = $this->getParam('mode');
+        	if($mode == 'edit')
+        	{
+        		$id = $this->getParam('id');
+        		$rdata = $this->objDbBlog->getRssById($id);
+        		$this->setVarByRef('rdata', $rdata);
+        		return 'rssedit_tpl.php';
+        	}
 
         	//get the cache
         	//get the proxy info if set
@@ -1457,9 +1465,28 @@ class blog extends controller
         	break;
 
         case 'rssedit':
+        	$mode = $this->getParam('mode');
+        	$rssname = $this->getParam('name');
+        	$rssurl = $this->getParam('rssurl');
+        	$rssdesc = $this->getParam('description');
+        	$userid = $this->objUser->userId();
+        	$id = $this->getParam('id');
+
+        	if($mode == 'edit')
+        	{
+        		$addarr = array('id' => $id, 'userid' => $userid, 'url' => $rssurl, 'name' => $rssname, 'description' => $rssdesc);
+        		$this->objDbBlog->addRss($addarr, 'edit');
+        	}
         	$userid = $this->objUser->userid();
         	$this->setVarByRef('userid', $userid);
         	return 'rssedit_tpl.php';
+        	break;
+
+        case 'deleterss':
+        	$id = $this->getParam('id');
+        	//echo $id; die();
+        	$this->objDbBlog->delRSS($id);
+        	$this->nextAction('rssedit');
         	break;
 
         }//action
