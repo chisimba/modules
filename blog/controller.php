@@ -1489,6 +1489,15 @@ class blog extends controller
         	$this->nextAction('rssedit');
         	break;
 
+        case 'setprofile':
+        	//profile stuff
+        	$mode = $this->getParam('mode');
+        	$userid = $this->objUser->userId();
+        	//set up the template
+        	$this->setVarByRef('userid', $userid);
+        	return 'profile_tpl.php';
+        	break;
+
         }//action
 
     }
