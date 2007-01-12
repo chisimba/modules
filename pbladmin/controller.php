@@ -280,15 +280,16 @@ class pbladmin extends controller
         // get the list of users in the student group for the context
         $groupid=$this->objGroups->getLeafId(array($this->contextcode,'Students'));
 
-        $fields['id'] = 'user_id as id';
-        $fields['name'] = "CONCAT( firstName, ' ', surname ) as name";
+//        $fields['id'] = 'user_id as id';
+//        $fields['name'] = "CONCAT( firstName, ' ', surname ) as name";
+        $fields = array('user_id as id', 'firstname', 'surname');
         $filter = " LEFT JOIN tbl_pbl_loggedin AS log";
         $filter .= " ON (tbl_users.id=log.studentid) AND (log.classroomid='$id')";
         $filter .= " WHERE (log.studentid IS NULL)";
         $users = $this->objGroups->getGroupUsers($groupid, $fields, $filter);
 
         // Get the list of students in a class
-        $filter = "position!='f' && classroomid='$id'";
+        $filter = "position!='f' AND classroomid='$id'";
         $userIds = $this->dbLoggedin->findUserIds($filter);
 
         // find user name from table users
@@ -334,7 +335,7 @@ class pbladmin extends controller
 
             if(!empty($list)){
                 // Get the original member ids
-                $filter = "position!='f' && classroomid='$id'";
+                $filter = "position!='f' AND classroomid='$id'";
                 $list2 = $this->dbLoggedin->findUserIds($filter);
 
                 if(!empty($list2)){
@@ -448,7 +449,7 @@ class pbladmin extends controller
         $class = $this->dbClassroom->getClass($id);
 
         // Get students in class
-        $filter = "position!='f' && classroomid='$id'";
+        $filter = "position!='f' AND classroomid='$id'";
         $userids = $this->dbLoggedin->findUserIds($filter);
         $users = array();
         if(!empty($userids)){
@@ -457,7 +458,7 @@ class pbladmin extends controller
                 $user = $this->objGroupUser->getUsers(NULL," where id='".$val['studentid']."' ");
                 if(isset($user) && !empty($user)){
                     $users[$i]['id'] = $val['studentid'];
-                    $users[$i]['name'] = $user[0]['fullname'];
+                    $users[$i]['name'] = $user[0]['fullName'];
                 }
                 $i++;
             }
@@ -551,7 +552,8 @@ class pbladmin extends controller
             $this->dbLoggedin->setPosition($id, $this->getParam('facilitator'), 'f');
         }
 
-        if($_POST['save'] == $this->objLanguage->languageText('word_save')){
+        $save = $this->getParam('save');
+        if(isset($save) && !empty($save)){
             return $this->nextAction('');
         }
 

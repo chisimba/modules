@@ -235,7 +235,7 @@ $objHead->str = $studentLabel;
 $str = '';
 if(!empty($students)){
     foreach($students as $line){
-        $str .= $line['name'].'<br>';
+        $str .= $line['name'].'<br />';
     }
 }else{
     $str .= '<p>&nbsp;</p>';
