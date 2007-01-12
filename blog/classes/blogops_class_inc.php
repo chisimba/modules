@@ -851,10 +851,10 @@ class blogops extends object
                     {
                     	$linkstr = $this->objLanguage->languageText("mod_blog_word_notags", "blog");
                     }
-                    $fboxcontent = /*$this->cleaner->cleanHtml(*/$post['post_content'] .
+                    $fboxcontent = $post['post_content'] .$this->cleaner->cleanHtml(
                     			   "<br /><hr />" . "<center><em><b>" . $this->objLanguage->languageText("mod_blog_word_tags4thispost", "blog") . "</b><br />" . $linkstr .
                     			   "</em><hr />".
-                    			   "<center>".$tbl->show() ."</center>"/*)*/;
+                    			   "<center>".$tbl->show() ."</center>");
 
                     $ret.= $objFeatureBox->show($head, $fboxcontent);
                 } else {
