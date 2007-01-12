@@ -22,9 +22,12 @@ else {
 	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
 	$middleColumn .= $this->objblogOps->rssEditor($featurebox = FALSE);
 }
-foreach($rss as $feeds)
+if(!empty($rss))
 {
-	$leftCol .= $this->objblogOps->rssBox($feeds['url'], $feeds['name']);
+	foreach($rss as $feeds)
+	{
+		$leftCol .= $this->objblogOps->rssBox($feeds['url'], $feeds['name']);
+	}
 }
 
 //dump the cssLayout to screen
