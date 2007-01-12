@@ -559,6 +559,10 @@ class blogops extends object
         $admin = new href($this->uri(array(
             'action' => 'blogadmin'
         )) , $this->objLanguage->languageText("mod_blog_blogadmin", "blog"));
+        //profile
+        $profile = new href($this->uri(array(
+            'action' => 'setprofile'
+        )) , $this->objLanguage->languageText("mod_blog_setprofile", "blog"));
         //blog importer
         $import = new href($this->uri(array(
             'action' => 'importblog'
@@ -604,6 +608,7 @@ class blogops extends object
             if ($this->objUser->inAdminGroup($this->objUser->userId())) {
                 $linksarr = array(
                     $admin,
+                    $profile,
                     $import,
                     $mailsetup,
                     $newpost,
@@ -616,6 +621,7 @@ class blogops extends object
             } else {
                 $linksarr = array(
                     $admin,
+                    $profile,
                     $import,
                     $newpost,
                     $editpost,
@@ -634,9 +640,9 @@ class blogops extends object
             //build the links
             $this->objUser = $this->getObject('user', 'security');
             if ($this->objUser->inAdminGroup($this->objUser->userId())) {
-                $ret.= $admin->show() ."<br />".$import->show() ."<br />".$mailsetup->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
+                $ret.= $admin->show() ."<br />". $profile->show() . "<br />" . $import->show() ."<br />".$mailsetup->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
             } else {
-                $ret.= $admin->show() ."<br />".$import->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$rssedits->show() ."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
+                $ret.= $admin->show() ."<br />". $profile->show() . "<br />" .$import->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$rssedits->show() ."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
             }
         }
         if ($featurebox == FALSE) {
@@ -2004,6 +2010,71 @@ class blogops extends object
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
         $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_sendtb", "blog") , $stbform);
         return $ret;
+    }
+
+    public function profileEditor($userid)
+    {
+    	//profile editor and creator
+    	//start a form object
+        $this->loadClass('textarea', 'htmlelements');
+        $this->loadClass('htmlarea', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $pform = new form('setprofile', $this->uri(array(
+            'action' => 'setprofile'
+        )));
+        $pfieldset = $this->newObject('fieldset', 'htmlelements');
+        $pfieldset->setLegend($this->objLanguage->languageText('mod_blog_setprofile', 'blog'));
+        $ptable = $this->newObject('htmltable', 'htmlelements');
+        $ptable->cellpadding = 3;
+        $ptable->startHeaderRow();
+        $ptable->addHeaderCell('');
+        $ptable->addHeaderCell('');
+        $ptable->endHeaderRow();
+
+        //blog name field
+        $ptable->startRow();
+        $bnamelabel = new label($this->objLanguage->languageText('mod_blog_blogname', 'blog') .':', 'input_bname');
+        $bname = new textinput('blogname');
+        $bname->size = 59;
+        //$bname->setValue();
+        $ptable->addCell($bnamelabel->show());
+        $ptable->addCell($bname->show());
+        $ptable->endRow();
+
+        //blog description field
+        $ptable->startRow();
+        $bdeclabel = new label($this->objLanguage->languageText('mod_blog_blogdesc', 'blog') .':', 'input_bdesc');
+        $bdec = new textarea('blogdesc');
+        $ptable->addCell($bdeclabel->show());
+        $ptable->addCell($bdec->show());
+        $ptable->endRow();
+
+        //blogger profile field
+        $ptable->startRow();
+        $bprflabel = new label($this->objLanguage->languageText('mod_blog_blogdesc', 'blog') .':', 'input_bdesc');
+        $bprf = $this->newObject('htmlarea', 'htmlelements');
+        $bprf->setName('blogprofile');
+        $ptable->addCell($bprflabel->show());
+        $ptable->addCell($bprf->showFCKEditor());
+        $ptable->endRow();
+
+        //put it all together and set up a submit button
+        $pfieldset->addContent($ptable->show());
+        $pform->addToForm($pfieldset->show());
+        $this->objPButton = new button($this->objLanguage->languageText('word_save', 'system'));
+        $this->objPButton->setValue($this->objLanguage->languageText('word_save', 'system'));
+        $this->objPButton->setToSubmit();
+        $pform->addToForm($this->objPButton->show());
+        $pform = $pform->show();
+
+        //bust out a featurebox for consistency
+        $objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_setprofile", "blog") , $pform);
+        return $ret;
+
+
+
     }
 }
 ?>

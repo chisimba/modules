@@ -19,6 +19,7 @@ else {
 	$leftCol = $leftMenu->show();
 	$leftCol .= "<br />";
 	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
+	$middleColumn .= $this->objblogOps->profileEditor($userid);
 
 }
 
