@@ -117,7 +117,11 @@ else {
 
 //show the feeds section
 $leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
-//$leftCol .= $this->objblogOps->rssBox('http://127.0.0.1/cpgsql/5ive/app/index.php?module=blog&action=feed&userid=1', 'Digital Freedom');
+foreach($rss as $feeds)
+{
+	$leftCol .= $this->objblogOps->rssBox($feeds['url'], $feeds['name']);
+}
+//$leftCol .= $this->objblogOps->rssBox('http://5ive.uwc.ac.za/index.php?module=blog&action=feed&userid=5729061010', 'Paul on 5ive');
 
 $rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 //dump the cssLayout to screen

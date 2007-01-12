@@ -282,8 +282,9 @@ class blog extends controller
                 //get all the posts by this user
                 $posts = $this->objDbBlog->getAllPosts($userid, 0); //$catid = NULL);
                 $latestpost[0] = $this->objDbBlog->getLatestPost($userid);
-
-                //send the info to the template
+                $rss = $this->objDbBlog->getUserRss($userid);
+                //send all that to the template
+                $this->setVarByRef('rss', $rss);
                 $this->setVarByRef('latestpost', $latestpost);
                 $this->setVarByRef('posts', $posts);
                 $this->setVarByRef('linkcats', $linkcats);
@@ -782,7 +783,10 @@ class blog extends controller
                 }
                 $latestpost[0] = $this->objDbBlog->getLatestPost($userid);
                 $this->setVarByRef('latestpost', $latestpost);
+                //grab the user defined rss feeds if any
+                $rss = $this->objDbBlog->getUserRss($userid);
                 //send all that to the template
+                $this->setVarByRef('rss', $rss);
                 $this->setVarByRef('catid', $catid);
                 $this->setVarByRef('posts', $posts);
                 $this->setVarByRef('linkcats', $linkcats);
@@ -827,7 +831,9 @@ class blog extends controller
                 }
                 $latestpost[0] = $this->objDbBlog->getLatestPost($userid);
                 $this->setVarByRef('latestpost', $latestpost);
+                $rss = $this->objDbBlog->getUserRss($userid);
                 //send all that to the template
+                $this->setVarByRef('rss', $rss);
                 $this->setVarByRef('catid', $catid);
                 $this->setVarByRef('posts', $posts);
                 $this->setVarByRef('linkcats', $linkcats);

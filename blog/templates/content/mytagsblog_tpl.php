@@ -119,7 +119,10 @@ else {
 
 //show the feeds section
 $leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
-//$leftCol .= $this->objblogOps->rssBox('http://slashdot.org/slashdot.rdf', 'Slashdot');
+/*foreach($rss as $feeds)
+{
+	$leftCol .= $this->objblogOps->rssBox($feeds['url'], $feeds['name']);
+}*/
 
 $rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 //dump the cssLayout to screen

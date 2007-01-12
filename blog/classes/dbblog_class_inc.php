@@ -734,6 +734,12 @@ class dbblog extends dbTable
 		//var_dump($ret);
 	}
 
+	public function getUserRss($userid)
+	{
+		$this->_changeTable("tbl_blog_userrss");
+		return $this->getAll("WHERE userid = '$userid'");
+	}
+
 	/**
 	 * Method to dynamically switch tables
 	 *

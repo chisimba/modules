@@ -20,9 +20,13 @@ else {
 	$leftCol = $leftMenu->show();
 	$leftCol .= "<br />";
 	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
+	$middleColumn .= $this->objblogOps->rssEditor($featurebox = FALSE);
+}
+foreach($rss as $feeds)
+{
+	$leftCol .= $this->objblogOps->rssBox($feeds['url'], $feeds['name']);
 }
 
-$middleColumn .= $this->objblogOps->rssEditor($featurebox = FALSE);
 //dump the cssLayout to screen
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol);
