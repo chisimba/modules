@@ -68,9 +68,19 @@ else {
 }
 //show the feeds section
 $leftCol .= $this->objblogOps->showFeeds(&$userid, TRUE);
-foreach($rss as $feeds)
+if(!empty($rss))
 {
-	$leftCol .= $this->objblogOps->rssBox($feeds['url'], $feeds['name']);
+	foreach($rss as $feeds)
+	{
+		$timenow = time();
+		if($timenow - $feeds['rsstime'] > 43200)
+		{
+			$url = $feeds['url'];
+		}
+		else {
+			$url = $feeds['rsscache'];
+		}
+		$leftCol .= $this->objblogOps->rssBox($url, $feeds['name']);
 }
 
 $cssLayout->setMiddleColumnContent($middleColumn);

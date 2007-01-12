@@ -117,10 +117,22 @@ else {
 
 //show the feeds section
 $leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
-foreach($rss as $feeds)
+if(!empty($rss))
 {
-	$leftCol .= $this->objblogOps->rssBox($feeds['url'], $feeds['name']);
+	foreach($rss as $feeds)
+	{
+		$timenow = time();
+		if($timenow - $feeds['rsstime'] > 43200)
+		{
+			$url = $feeds['url'];
+		}
+		else {
+			$url = $feeds['rsscache'];
+		}
+		$leftCol .= $this->objblogOps->rssBox($url, $feeds['name']);
 }
+
+
 //$leftCol .= $this->objblogOps->rssBox('http://5ive.uwc.ac.za/index.php?module=blog&action=feed&userid=5729061010', 'Paul on 5ive');
 
 $rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);

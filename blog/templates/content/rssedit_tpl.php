@@ -26,8 +26,15 @@ if(!empty($rss))
 {
 	foreach($rss as $feeds)
 	{
-		$leftCol .= $this->objblogOps->rssBox($feeds['url'], $feeds['name']);
-	}
+		$timenow = time();
+		if($timenow - $feeds['rsstime'] > 43200)
+		{
+			$url = $feeds['url'];
+		}
+		else {
+			$url = $feeds['rsscache'];
+		}
+		$leftCol .= $this->objblogOps->rssBox($url, $feeds['name']);
 }
 
 //dump the cssLayout to screen
