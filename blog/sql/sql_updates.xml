@@ -28,5 +28,21 @@
 			</change>
 		</data>
 	</update>
+	<update>
+        <table>tbl_blog_userrss</table>
+        <version>1.3</version>
+        <description>Modified user rss table</description>
+        <data>
+        	<add>
+    			<name>rsscache</name>
+		    	<type>clob</type>
+			</add>
+			<add>
+    			<name>rsstime</name>
+		    	<type>text</type>
+		    	<length>255</length>
+			</add>
+		</data>
+	</update>
 
 </updates>
