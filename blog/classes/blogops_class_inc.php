@@ -2024,7 +2024,7 @@ class blogops extends object
             'action' => 'setprofile'
         )));
         $pfieldset = $this->newObject('fieldset', 'htmlelements');
-        $pfieldset->setLegend($this->objLanguage->languageText('mod_blog_setprofile', 'blog'));
+        //$pfieldset->setLegend($this->objLanguage->languageText('mod_blog_setprofile', 'blog'));
         $ptable = $this->newObject('htmltable', 'htmlelements');
         $ptable->cellpadding = 3;
         $ptable->startHeaderRow();
@@ -2052,7 +2052,7 @@ class blogops extends object
 
         //blogger profile field
         $ptable->startRow();
-        $bprflabel = new label($this->objLanguage->languageText('mod_blog_blogdesc', 'blog') .':', 'input_bdesc');
+        $bprflabel = new label($this->objLanguage->languageText('mod_blog_bloggerprofile', 'blog') .':', 'input_bprf');
         $bprf = $this->newObject('htmlarea', 'htmlelements');
         $bprf->setName('blogprofile');
         $ptable->addCell($bprflabel->show());
