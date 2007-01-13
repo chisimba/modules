@@ -2179,7 +2179,7 @@ class blogops extends object
     	$check = $this->objDbBlog->checkProfile($userid);
         if($check != FALSE)
         {
-        	$link = new href($this->uri(array('module' => 'blog', 'action' => 'viewprofile', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewprofileof", "blog") . $this->objUser->userName());
+        	$link = new href($this->uri(array('module' => 'blog', 'action' => 'viewprofile', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewprofileof", "blog") . " " . $this->objUser->userName($userid));
         	$foaffile = $this->objConfig->getsiteRoot() . "/usrfiles/users/" . $userid . "/". $userid . ".rdf";
         	if(file_exists($foaffile))
         	{
