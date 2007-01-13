@@ -23,7 +23,13 @@ else {
 	$leftCol = $leftMenu->show();
 	$leftCol .= "<br />";
 	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
-	$middleColumn .= $this->objblogOps->profileEditor($userid);
+	if(isset($profile))
+	{
+		$middleColumn .= $this->objblogOps->profileEditor($userid, $profile);
+	}
+	else {
+		$middleColumn .= $this->objblogOps->profileEditor($userid);
+	}
 
 }
 

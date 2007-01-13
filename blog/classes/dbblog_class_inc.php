@@ -765,6 +765,32 @@ class dbblog extends dbTable
 		return $this->update('id', $id,$rssarr);
 	}
 
+	public function saveProfile($profile)
+	{
+		$this->_changeTable("tbl_blog_profile");
+		return $this->insert($profile);
+	}
+
+	public function checkProfile($userid)
+	{
+		$this->_changeTable("tbl_blog_profile");
+		$ret = $this->getAll("WHERE userid = '$userid'");
+		if(empty($ret))
+		{
+			//this user has no profile yet
+			return FALSE;
+		}
+		else {
+			return $ret[0];
+		}
+	}
+
+	public function updateProfile($profile)
+	{
+		$this->_changeTable("tbl_blog_profile");
+		return $this->update('id', $profile['id'], $profile);
+	}
+
 	/**
 	 * Method to dynamically switch tables
 	 *

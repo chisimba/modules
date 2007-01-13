@@ -1493,10 +1493,48 @@ class blog extends controller
         	//profile stuff
         	$mode = $this->getParam('mode');
         	$userid = $this->objUser->userId();
+        	//ok lets check if this user already has a profile or not...
+        	$check = $this->objDbBlog->checkProfile($userid);
+        	if($check != FALSE)
+        	{
+        		$this->setVarByRef('userid', $userid);
+        		$this->setVarByRef('profile', $check);
+        		//return the template for editing the profile
+        		return 'profile_tpl.php';
+        	}
+        	if($mode == 'saveprofile')
+        	{
+        		$blogname = $this->getParam('blogname');
+        		$blogdesc = $this->getParam('blogdesc');
+        		$blogprofile = $this->getParam('blogprofile');
+
+        		//save the profile to the table
+        		$prfarr = array('userid' => $userid, 'blog_name' => $blogname, 'blog_descrip' => $blogdesc, 'blogger_profile' => $blogprofile);
+        		$this->objDbBlog->saveProfile($prfarr);
+        		$this->nextAction('viewblog');
+        		break;
+        	}
         	//set up the template
         	$this->setVarByRef('userid', $userid);
         	return 'profile_tpl.php';
         	break;
+
+        case 'editprofile':
+        	$mode = $this->getParam('mode');
+        	$userid = $this->objUser->userId();
+        	$id = $this->getParam('id');
+        	if($mode == 'editprofile')
+        	{
+        		$blogname = $this->getParam('blogname');
+        		$blogdesc = $this->getParam('blogdesc');
+        		$blogprofile = $this->getParam('blogprofile');
+
+        		//save the profile to the table
+        		$prfarr = array('id' => $id, 'userid' => $userid, 'blog_name' => $blogname, 'blog_descrip' => $blogdesc, 'blogger_profile' => $blogprofile);
+        		$this->objDbBlog->updateProfile($prfarr);
+        		$this->nextAction('viewblog');
+        		break;
+        	}
 
         }//action
 

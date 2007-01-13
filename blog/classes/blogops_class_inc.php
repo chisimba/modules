@@ -2086,17 +2086,26 @@ class blogops extends object
         return $ret;
     }
 
-    public function profileEditor($userid)
+    public function profileEditor($userid, $profile = NULL)
     {
+    	//print_r($profile);
     	//profile editor and creator
     	//start a form object
         $this->loadClass('textarea', 'htmlelements');
         $this->loadClass('htmlarea', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
-        $pform = new form('setprofile', $this->uri(array(
-            'action' => 'setprofile'
-        )));
+        if($profile != NULL)
+        {
+        	$pform = new form('setprofile', $this->uri(array(
+            'action' => 'editprofile', 'mode' => 'editprofile', 'id' => $profile['id']
+        	)));
+        }
+        else {
+        	$pform = new form('setprofile', $this->uri(array(
+            	'action' => 'setprofile', 'mode' => 'saveprofile',
+        	)));
+        }
         $pfieldset = $this->newObject('fieldset', 'htmlelements');
         //$pfieldset->setLegend($this->objLanguage->languageText('mod_blog_setprofile', 'blog'));
         $ptable = $this->newObject('htmltable', 'htmlelements');
@@ -2110,6 +2119,10 @@ class blogops extends object
         $ptable->startRow();
         $bnamelabel = new label($this->objLanguage->languageText('mod_blog_blogname', 'blog') .':', 'input_bname');
         $bname = new textinput('blogname');
+        if(isset($profile['blog_name']))
+        {
+        	$bname->setValue($profile['blog_name']);
+        }
         $bname->size = 59;
         //$bname->setValue();
         $ptable->addCell($bnamelabel->show());
@@ -2120,6 +2133,10 @@ class blogops extends object
         $ptable->startRow();
         $bdeclabel = new label($this->objLanguage->languageText('mod_blog_blogdesc', 'blog') .':', 'input_bdesc');
         $bdec = new textarea('blogdesc');
+        if(isset($profile['blog_descrip']))
+        {
+        	$bdec->setValue($profile['blog_descrip']);
+        }
         $ptable->addCell($bdeclabel->show());
         $ptable->addCell($bdec->show());
         $ptable->endRow();
@@ -2128,6 +2145,10 @@ class blogops extends object
         $ptable->startRow();
         $bprflabel = new label($this->objLanguage->languageText('mod_blog_bloggerprofile', 'blog') .':', 'input_bprf');
         $bprf = $this->newObject('htmlarea', 'htmlelements');
+        if(isset($profile['blogger_profile']))
+        {
+        	$bprf->setcontent($profile['blogger_profile']);
+        }
         $bprf->setName('blogprofile');
         $ptable->addCell($bprflabel->show());
         $ptable->addCell($bprf->showFCKEditor());
