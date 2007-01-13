@@ -759,6 +759,12 @@ class dbblog extends dbTable
 		return $this->delete('id', $id, "tbl_blog_userrss");
 	}
 
+	public function updateRss($rssarr, $id)
+	{
+		$this->_changeTable("tbl_blog_userrss");
+		return $this->update('id', $id,$rssarr);
+	}
+
 	/**
 	 * Method to dynamically switch tables
 	 *

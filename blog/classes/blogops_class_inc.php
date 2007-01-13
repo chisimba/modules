@@ -16,6 +16,8 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  */
 class blogops extends object
 {
+	public $objConfig;
+
     /**
      * Standard init function called by the constructor call of Object
      *
@@ -97,6 +99,78 @@ class blogops extends object
 		}
 		$content .=  "</ul>\n";
 		return $objFeatureBox->show($head, $content);
+    }
+
+    public function rssRefresh($rssurl, $name, $feedid)
+    {
+    	$objFeatureBox = $this->getObject('featurebox', 'navigation');
+        $objRss = $this->getObject('rssreader', 'feed');
+        $this->objConfig = $this->getObject('altconfig', 'config');
+
+        //get the proxy info if set
+        $objProxy = $this->getObject('proxyparser', 'utilities');
+			$proxyArr = $objProxy->getProxy();
+
+			$ch = curl_init();
+   			curl_setopt($ch, CURLOPT_URL, $rssurl);
+   			//curl_setopt($ch, CURLOPT_HEADER, 1);
+   			curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+   			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+   			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   			if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
+            {
+            	curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_host'].":".$proxyArr['proxy_port']);
+            	curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxy_user'].":".$proxyArr['proxy_pass']);
+            }
+   			$rsscache = curl_exec($ch);
+   			curl_close($ch);
+//var_dump($rsscache);
+   			//put in a timestamp
+        	$addtime = time();
+        	$addarr = array('url' => $rssurl, 'rsstime' => $addtime);
+
+        	//write the file down for caching
+        	$path = $this->objConfig->getContentBasePath() . "/blog/rsscache/";
+        	$rsstime = time();
+        	if(!file_exists($path))
+        	{
+
+        		mkdir($path);
+        		chmod($path, 0777);
+        		$filename = $path . $this->objUser->userId() . "_" . $rsstime . ".xml";
+        		if(!file_exists($filename))
+        		{
+        			touch($filename);
+
+        		}
+        		$handle = fopen($filename, 'wb');
+        		fwrite($handle, $rsscache);
+        	}
+        	else {
+        		$filename = $path . $this->objUser->userId() . "_" . $rsstime . ".xml";
+        		$handle = fopen($filename, 'wb');
+        		fwrite($handle, $rsscache);
+        	}
+        	//update the db
+        	$addarr = array('url' => htmlentities($rssurl), 'rsscache' => $filename, 'rsstime' => $addtime);
+        	//print_r($addarr);
+        	$this->objDbBlog->updateRss($addarr, $feedid);
+
+        $objRss->parseRss($rssurl);
+        $head = $this->objLanguage->languageText("mod_blog_word_headlinesfrom", "blog");
+        $head .= " " . $name;
+        $content = "<ul>\n";
+        foreach ($objRss->getRssItems() as $item)
+        {
+        	if(!isset($item['link']))
+        	{
+        		$item['link'] = NULL;
+        	}
+    		@$content .= "<li><a href=\"" . htmlentities($item['link']) . "\">" . htmlentities($item['title']) . "</a></li>\n";
+		}
+		$content .=  "</ul>\n";
+		return $objFeatureBox->show($head, $content);
+
     }
 
     public function rssEditor($featurebox = FALSE, $rdata = NULL)
