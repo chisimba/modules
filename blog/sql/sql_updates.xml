@@ -28,6 +28,21 @@
 			</change>
 		</data>
 	</update>
+	<update>
+        <table>tbl_blog_profile</table>
+        <version>1.6</version>
+        <description>Set up profile table</description>
+        <data>
+        	<change>
+        	<blog_descrip>
+		    	<type>clob</type>
+		    		<definition>
+		    			<type>clob</type>
+    				</definition>
+    		</blog_descrip>
+			</change>
+		</data>
+	</update>
 	<!--
 	<update>
         <table>tbl_blog_userrss</table>

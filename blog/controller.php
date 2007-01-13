@@ -1535,6 +1535,14 @@ class blog extends controller
         		$this->nextAction('viewblog');
         		break;
         	}
+        	else {
+        		$this->nextAction('viewblog');
+        	}
+        	break;
+        case 'viewprofile':
+        	$userid = $this->getParam('userid');
+
+        	break;
 
         }//action
 

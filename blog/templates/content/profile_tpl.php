@@ -21,6 +21,7 @@ if(!$this->objUser->isLoggedIn())
 else {
 	//display the menu
 	$leftCol = $leftMenu->show();
+	$leftCol .= $this->objblogOps->showProfile($userid);
 	$leftCol .= "<br />";
 	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
 	if(isset($profile))
