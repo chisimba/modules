@@ -13,6 +13,10 @@ $rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
 if(!$this->objUser->isLoggedIn())
 {
 	$leftCol = $this->objblogOps->loginBox(TRUE);
+	$header = new htmlheading();
+	$header->type = 3;
+	$header->str = $this->objLanguage->languageText("mod_blog_loginexpired", "blog");
+	$middleColumn .= $header->show();
 }
 else {
 	//display the menu

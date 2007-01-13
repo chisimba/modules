@@ -95,6 +95,7 @@ else {
 		}
 	}
 
+
 	/*
 	$header = new htmlheading();
 	$header->type = 3;
@@ -127,15 +128,16 @@ if(!empty($rss))
 		if($timenow - $feeds['rsstime'] > 43200)
 		{
 			$url = $feeds['url'];
+			$id = $feeds['id'];
+			$leftCol .= $this->objblogOps->rssRefresh($url, $feeds['name'], $id);
 		}
 		else {
 			$url = $feeds['rsscache'];
+			$leftCol .= $this->objblogOps->rssBox($url, $feeds['name']);
 		}
-		$leftCol .= $this->objblogOps->rssBox($url, $feeds['name']);
+
 	}
 }
-
-
 
 $rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 //dump the cssLayout to screen

@@ -46,6 +46,26 @@ else {
 	$leftCol .= "<br />";
 	//show the admin section (if user is logged in)
 	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
+	//show the feeds section
+$leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
+if(!empty($rss))
+{
+	foreach($rss as $feeds)
+	{
+		$timenow = time();
+		if($timenow - $feeds['rsstime'] > 43200)
+		{
+			$url = $feeds['url'];
+			$id = $feeds['id'];
+			$leftCol .= $this->objblogOps->rssRefresh($url, $feeds['name'], $id);
+		}
+		else {
+			$url = $feeds['rsscache'];
+			$leftCol .= $this->objblogOps->rssBox($url, $feeds['name']);
+		}
+
+	}
+}
 }
 
 //show the feeds section
