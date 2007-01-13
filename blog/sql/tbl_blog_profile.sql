@@ -20,8 +20,7 @@ $fields = array(
 		'length' => 255,
 		),
 	'blog_descrip' => array(
-		'type' => 'text',
-		'length' => 255,
+		'type' => 'clob',
 		),
 	'blogger_profile' => array(
 		'type' => 'clob',
