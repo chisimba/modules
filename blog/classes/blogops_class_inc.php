@@ -2187,7 +2187,7 @@ class blogops extends object
         		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile"), $link->show() . "<br />" . $flink->show());
         	}
         	else {
-        		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile"), $link->show());
+        		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $link->show());
         	}
 
         }
