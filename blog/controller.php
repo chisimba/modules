@@ -1539,9 +1539,13 @@ class blog extends controller
         		$this->nextAction('viewblog');
         	}
         	break;
+
         case 'viewprofile':
         	$userid = $this->getParam('userid');
-
+        	$vprofile = $this->objDbBlog->checkProfile($userid);
+        	$this->setVarByRef('vprofile', $vprofile);
+        	$this->setVarByRef('userid', $userid);
+        	return 'viewprofile_tpl.php';
         	break;
 
         }//action

@@ -2172,6 +2172,7 @@ class blogops extends object
     public function showProfile($userid)
     {
     	$objFeatureBox = $this->getObject("featurebox", "navigation");
+    	$this->loadClass('label', 'htmlelements');
     	$this->loadClass('href', 'htmlelements');
     	$this->objUser = $this->getObject('user', 'security');
     	$this->objConfig = $this->getObject('altconfig', 'config');
@@ -2195,6 +2196,47 @@ class blogops extends object
         else {
         	return NULL;
         }
+    }
+
+    public function displayProfile($userid, $profile)
+    {
+    	$objFeatureBox = $this->getObject("featurebox", "navigation");
+    	$this->bbcode = $this->getObject('bbcodeparser', 'utilities');
+    	$prtable = $this->newObject('htmltable', 'htmlelements');
+    	$this->loadClass('label', 'htmlelements');
+        $prtable->cellpadding = 3;
+        $prtable->startHeaderRow();
+        $prtable->addHeaderCell('');
+        $prtable->addHeaderCell('');
+        $prtable->endHeaderRow();
+
+        //blog name field
+        $prtable->startRow();
+        $bnamelabel = $this->objLanguage->languageText('mod_blog_blogname', 'blog');
+        $bname = $profile['blog_name'];
+        $prtable->addCell($bnamelabel);
+        $prtable->addCell($bname);
+        $prtable->endRow();
+
+        $prtable->startRow();
+        $bdeclabel = $this->objLanguage->languageText('mod_blog_blogdescription', 'blog');
+        $bdec = stripslashes($this->bbcode->parse4bbcode($profile['blog_descrip']));
+        $prtable->addCell($bdeclabel);
+        $prtable->addCell($bdec);
+        $prtable->endRow();
+
+        //blogger profile field
+        $prtable->startRow();
+        $bprflabel = $this->objLanguage->languageText('mod_blog_bloggerprf', 'blog');
+        $bprf = stripslashes($this->bbcode->parse4bbcode($profile['blogger_profile']));
+        $prtable->addCell($bprflabel);
+        $prtable->addCell($bprf);
+        $prtable->endRow();
+
+        $content = $prtable->show();
+
+        return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_profileof", "blog") . " " . $this->objUser->fullName($userid), $content);
+
     }
 }
 ?>
