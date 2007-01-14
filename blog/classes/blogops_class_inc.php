@@ -2201,6 +2201,8 @@ class blogops extends object
     public function displayProfile($userid, $profile)
     {
     	$objFeatureBox = $this->getObject("featurebox", "navigation");
+    	$this->objUser = $this->getObject('user', 'security');
+    	$this->objConfig = $this->getObject('altconfig', 'config');
     	$this->bbcode = $this->getObject('bbcodeparser', 'utilities');
     	$prtable = $this->newObject('htmltable', 'htmlelements');
     	$this->loadClass('label', 'htmlelements');

@@ -13,6 +13,13 @@ $rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
 if(!$this->objUser->isLoggedIn())
 {
 	$leftCol = $this->objblogOps->loginBox(TRUE);
+	if(isset($vprofile))
+	{
+		$middleColumn .= $this->objblogOps->displayProfile($userid, $vprofile);
+	}
+	else {
+		$middleColumn .= $this->objLanguage->languageText("mod_blog_noprofile", "blog");
+	}
 }
 else {
 	//display the menu

@@ -40,10 +40,12 @@ else {
 if(!$this->objUser->isLoggedIn())
 {
 	$leftCol = $this->objblogOps->loginBox(TRUE);
+	$leftCol .= $this->objblogOps->showProfile($userid);
 }
 else {
 	$leftCol = $leftMenu->show();
 	$leftCol .= "<br />";
+	$leftCol .= $this->objblogOps->showProfile($userid);
 	//show the admin section (if user is logged in)
 	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
 	//show the feeds section

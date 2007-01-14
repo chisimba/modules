@@ -17,6 +17,7 @@ $rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE, $userid);
 if(!$this->objUser->isLoggedIn())
 {
 	$leftCol = $this->objblogOps->loginBox(TRUE);
+	$leftCol .= $this->objblogOps->showProfile($userid);
 }
 else {
 	//show the categories menu (if there are cats)
@@ -25,6 +26,7 @@ else {
 	//display the menu
 	$leftCol = $leftMenu->show();
 	$leftCol .= "<br />";
+	$leftCol .= $this->objblogOps->showProfile($userid);
 	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
 }
 
