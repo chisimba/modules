@@ -2180,11 +2180,12 @@ class blogops extends object
         if($check != FALSE)
         {
         	$link = new href($this->uri(array('module' => 'blog', 'action' => 'viewprofile', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewprofileof", "blog") . " " . $this->objUser->userName($userid));
-        	$foaffile = $this->objConfig->getsiteRoot() . "/usrfiles/users/" . $userid . "/". $userid . ".rdf";
-        	if(file_exists($foaffile))
+        	$foaffile = $this->objConfig->getsiteRoot() . "usrfiles/users/" . $userid . "/". $userid . ".rdf";
+        	@$rdfcont = file($foaffile);
+        	if(!empty($rdfcont))
         	{
         		$flink = new href($this->objConfig->getsiteRoot() . "/usrfiles/users/" . $userid . "/". $userid . ".rdf", $this->objLanguage->languageText("mod_blog_foaflink", "blog"));
-        		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile"), $link->show() . "<br />" . $flink->show());
+        		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $link->show() . "<br />" . $flink->show());
         	}
         	else {
         		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $link->show());
