@@ -1504,9 +1504,9 @@ class blog extends controller
         	}
         	if($mode == 'saveprofile')
         	{
-        		$blogname = $this->getParam('blogname');
-        		$blogdesc = $this->getParam('blogdesc');
-        		$blogprofile = $this->getParam('blogprofile');
+        		$blogname = addslashes($this->getParam('blogname'));
+        		$blogdesc = addslashes($this->getParam('blogdesc'));
+        		$blogprofile = addslashes($this->getParam('blogprofile'));
 
         		//save the profile to the table
         		$prfarr = array('userid' => $userid, 'blog_name' => $blogname, 'blog_descrip' => $blogdesc, 'blogger_profile' => $blogprofile);
@@ -1525,9 +1525,9 @@ class blog extends controller
         	$id = $this->getParam('id');
         	if($mode == 'editprofile')
         	{
-        		$blogname = $this->getParam('blogname');
-        		$blogdesc = $this->getParam('blogdesc');
-        		$blogprofile = $this->getParam('blogprofile');
+        		$blogname = addslashes($this->getParam('blogname'));
+        		$blogdesc = addslashes($this->getParam('blogdesc'));
+        		$blogprofile = addslashes($this->getParam('blogprofile'));
 
         		//save the profile to the table
         		$prfarr = array('id' => $id, 'userid' => $userid, 'blog_name' => $blogname, 'blog_descrip' => $blogdesc, 'blogger_profile' => $blogprofile);
