@@ -28,7 +28,7 @@
 			</change>
 		</data>
 	</update>
-	<update>
+	<!--<update>
         <table>tbl_blog_profile</table>
         <version>1.6</version>
         <description>Set up profile table</description>
@@ -42,7 +42,7 @@
     		</blog_descrip>
 			</change>
 		</data>
-	</update>
+	</update>  -->
 	<!--
 	<update>
         <table>tbl_blog_userrss</table>
