@@ -66,7 +66,7 @@ class flowplayer extends controller
      */
     public function dispatch()
     {
-        $this->objBuildPlayer = $this->getObject('buildflowplayer', 'buildflowplayer');
+        $this->objBuildPlayer = $this->getObject('buildflowplayer', 'flowplayer');
         $str = $this->objBuildPlayer->show();
         $this->setVarByRef('str', $str);
         /*
