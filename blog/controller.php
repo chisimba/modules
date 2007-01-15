@@ -672,6 +672,7 @@ class blog extends controller
                 break;
 
             case 'feed':
+            	$bloggerprofile = $this->objDbBlog->checkProfile($this->objUser->userId());
                 //get the feed format parameter from the querystring
                 $format = $this->getParam('feedselector');
 
@@ -683,14 +684,21 @@ class blog extends controller
 
                 //set up the feed...
                 //who's blog is this?
-                $fullname = htmlentities($this->objUser->fullname($userid));
+                if(isset($bloggerprofile['blog_name']))
+                {
+                	$fullname = htmlentities($bloggerprofile['blog_name']); //$this->getParam('blog_name');
+                }
+                else {
+                	$fullname = htmlentities($this->objUser->fullname($userid));
+                }
+
                 //title of the feed
                 $feedtitle = htmlentities($fullname);
                 //description
-                $bloggerprofile = $this->objDbBlog->checkProfile($this->objUser->userId());
-                if(isset($bloggerprofile['blog_name']))
+
+                if(isset($bloggerprofile['blog_descrip']))
                 {
-                	$feedDescription = $bloggerprofile['blog_name']; //$this->getParam('blog_name');
+                	$feedDescription = htmlentities($bloggerprofile['blog_descrip']); //$this->getParam('blog_name');
                 }
                 else {
                 	$feedDescription = htmlentities($this->objLanguage->languageText("mod_blog_blogof", "blog")) . " " . $fullname;
