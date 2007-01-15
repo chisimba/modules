@@ -672,13 +672,13 @@ class blog extends controller
                 break;
 
             case 'feed':
-            	$bloggerprofile = $this->objDbBlog->checkProfile($this->objUser->userId());
+
                 //get the feed format parameter from the querystring
                 $format = $this->getParam('feedselector');
 
                 //and the userid of the blog we are interested in
                 $userid = $this->getParam('userid');
-
+				$bloggerprofile = $this->objDbBlog->checkProfile($userid);
                 //grab the feed items
                 $posts = $this->objDbBlog->getAllPosts($userid, $catid = NULL);
 
