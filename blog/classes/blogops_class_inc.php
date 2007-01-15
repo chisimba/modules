@@ -775,7 +775,15 @@ class blogops extends object
                 $post['post_content'] = stripslashes($this->bbcode->parse4bbcode($post['post_content']));
                 $this->cleaner = $this->newObject('htmlcleaner', 'utilities');
                 //set up the trackback link
-                $blog_name = $this->objUser->fullname($userid);
+                $bloggerprofile = $this->objDbBlog->checkProfile($this->objUser->userId());
+                if(isset($bloggerprofile['blog_name']))
+                {
+                	$blog_name = $bloggerprofile['blog_name']; //$this->getParam('blog_name');
+                }
+                else {
+                	$blog_name = $this->objUser->fullname($userid);
+                }
+                //$blog_name = $this->objUser->fullname($userid);
                 $url = $this->uri(array(
                     'action' => 'randblog',
                     'userid' => $userid,
@@ -802,7 +810,14 @@ class blogops extends object
                 $tburl = new href($trackback_url, $linktxt, NULL);
                 $tburl = $tburl->show();
                 //set up the link to SEND a trackback
-                $blog_name = $this->objUser->fullname($userid);
+                if(isset($bloggerprofile['blog_name']))
+                {
+                	$blog_name = $bloggerprofile['blog_name']; //$this->getParam('blog_name');
+                }
+                else {
+                	$blog_name = $this->objUser->fullname($userid);
+                }
+                //$blog_name = $this->objUser->fullname($userid);
                 $sender = $this->uri(array(
                     'action' => 'tbsend',
                     'userid' => $post['userid'],
@@ -2185,8 +2200,14 @@ class blogops extends object
         	@$rdfcont = file($foaffile);
         	if(!empty($rdfcont))
         	{
-        		$flink = new href($this->objConfig->getsiteRoot() . "/usrfiles/users/" . $userid . "/". $userid . ".rdf", $this->objLanguage->languageText("mod_blog_foaflink", "blog"));
-        		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $link->show() . "<br />" . $flink->show());
+        		$objFIcon = $this->newObject('geticon', 'htmlelements');
+        		$objFIcon->setIcon('foaftiny', 'gif', 'icons');
+                $lficon = new href($this->objConfig->getsiteRoot() . "/usrfiles/users/" . $userid . "/". $userid . ".rdf",
+                				   $objFIcon->show(),NULL);
+
+                $ficon = $lficon->show();
+        		//new href($this->objConfig->getsiteRoot() . "/usrfiles/users/" . $userid . "/". $userid . ".rdf", $this->objLanguage->languageText("mod_blog_foaflink", "blog"));
+        		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $link->show() . "<br />" . $ficon);
         	}
         	else {
         		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $link->show());
