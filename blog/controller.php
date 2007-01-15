@@ -1326,25 +1326,43 @@ class blog extends controller
 
                 //get the proxy info if set
 				$proxyArr = $this->objProxy->getProxy();
-
-                $options = array(
-                    // Options for Services_Trackback directly
-                    'strictness'        => 1,
-                    'timeout'           => 30,          // seconds
-                    'fetchlines'        => 30,
-                    'fetchextra'        => true,
-                    // Options for HTTP_Request class
-                    'httprequest'       => array(
-                        'allowRedirects'    => true,
-                        'maxRedirects'      => 2,
-                        'method'            => 'POST',
-                        'useragent'         => 'Chisimba',
-                        'proxy_host'        => $proxyArr['proxy_host'],
-                    	'proxy_port'        => $proxyArr['proxy_port'],
-                    	'proxy_user'        => $proxyArr['proxy_user'],
-                    	'proxy_pass'        => $proxyArr['proxy_pass']
-                    ),
-                );
+				if(isset($proxyArr['proxy_host']))
+				{
+                	$options = array(
+                    	// Options for Services_Trackback directly
+                    	'strictness'        => 1,
+                    	'timeout'           => 30,          // seconds
+                    	'fetchlines'        => 30,
+                    	'fetchextra'        => true,
+                    	// Options for HTTP_Request class
+                    	'httprequest'       => array(
+                        	'allowRedirects'    => true,
+                        	'maxRedirects'      => 2,
+                        	'method'            => 'POST',
+                        	'useragent'         => 'Chisimba',
+                        	'proxy_host'        => $proxyArr['proxy_host'],
+                    		'proxy_port'        => $proxyArr['proxy_port'],
+                    		'proxy_user'        => $proxyArr['proxy_user'],
+                    		'proxy_pass'        => $proxyArr['proxy_pass']
+                    	),
+                	);
+				}
+				else {
+					$options = array(
+                    	// Options for Services_Trackback directly
+                    	'strictness'        => 1,
+                    	'timeout'           => 30,          // seconds
+                    	'fetchlines'        => 30,
+                    	'fetchextra'        => true,
+                    	// Options for HTTP_Request class
+                    	'httprequest'       => array(
+                        	'allowRedirects'    => true,
+                        	'maxRedirects'      => 2,
+                        	'method'            => 'POST',
+                        	'useragent'         => 'Chisimba',
+                    	),
+                	);
+				}
                 try {
                     $this->objTB = $this->getObject("trackback");
                     //use the factory
