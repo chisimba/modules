@@ -687,7 +687,15 @@ class blog extends controller
                 //title of the feed
                 $feedtitle = htmlentities($fullname);
                 //description
-                $feedDescription = htmlentities($this->objLanguage->languageText("mod_blog_blogof", "blog")) . " " . $fullname;
+                $bloggerprofile = $this->objDbBlog->checkProfile($this->objUser->userId());
+                if(isset($bloggerprofile['blog_name']))
+                {
+                	$feedDescription = $bloggerprofile['blog_name']; //$this->getParam('blog_name');
+                }
+                else {
+                	$feedDescription = htmlentities($this->objLanguage->languageText("mod_blog_blogof", "blog")) . " " . $fullname;
+                }
+
                 //link back to the blog
                 $feedLink = $this->objConfig->getSiteRoot() . "index.php?module=blog&action=randblog&userid=" . $userid;
                 //sanitize the link
