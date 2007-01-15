@@ -66,14 +66,21 @@ class flowplayer extends controller
      */
     public function dispatch()
     {
-        $this->objBuildPlayer = $this->getObject('buildflowplayer', 'flowplayer');
-        $str = $this->objBuildPlayer->show();
-        $this->setVarByRef('str', $str);
-        /*
-        * Return the template determined by the method resulting
-        * from action
-        */
-        return "dump_tpl.php";
+    	$action = $this->gerParam('action', NULL);
+    	switch($action) {
+		    case "demo":
+		    	$str="Working here";
+		    	$this->setVarByRef('str', $str);
+		        return "dump_tpl.php";
+		        break;
+    		case NULL:
+    		default:
+        		$this->objBuildPlayer = $this->getObject('buildflowplayer', 'flowplayer');
+        		$str = $this->objBuildPlayer->show();
+        		$this->setVarByRef('str', $str);
+		        return "dump_tpl.php";
+		        break;
+		}
     }
 
 
