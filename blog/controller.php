@@ -1298,7 +1298,14 @@ class blog extends controller
                 $postid = $this->getParam('postid');
                 $title = $this->getParam('title');
                 $excerpt = $this->getParam('excerpt');
-                $blog_name = $this->getParam('blog_name');
+                $bloggerprofile = $this->objDbBlog->checkProfile($this->objUser->userId());
+                if(isset($bloggerprofile['blog_name']))
+                {
+                	$blog_name = $bloggerprofile['blog_name']; //$this->getParam('blog_name');
+                }
+                else {
+                	$blog_name = $this->getParam('blog_name');
+                }
                 $url = $this->getParam('url');
                 $url = urldecode($url);
                 $trackback_url = $this->getParam('tburl');
