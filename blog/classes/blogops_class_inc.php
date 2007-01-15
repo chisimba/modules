@@ -861,36 +861,16 @@ class blogops extends object
                     $numtb = $this->objLanguage->languageText("mod_blog_trackbacknotrackback", "blog");
                 }
                 //do the cc licence part
+                //do the cc licence part
                 $cclic = $post['post_lic'];
-                $this->objCC = $this->getObject('dbcreativecommons', 'creativecommons');
-                $lics = $this->objCC->getAll();
+
                 //get the lic that matches from the db
-                $objIcon = $this->newObject('geticon', 'htmlelements');
-                $iconList = '';
-                $licon = '';
-
-                foreach($lics as $lic) {
-                    if ($cclic == $lic['code']) {
-                        $icons = explode(',', $lic['images']);
-                        foreach($icons as $icon) {
-                            $objIcon->setIcon($icon, NULL, 'icons/creativecommons');
-                            $licon = new href($lic['url'], $objIcon->show(),NULL);//$objIcon->show();
-                            $iconList.= $licon->show();
-                        }
-                        //continue;
-
-                    } elseif ($cclic == '') {
-                        $cclic = 'copyright';
-                        $icons = explode(',', $lic['images']);
-                        foreach($icons as $icon) {
-                            $objIcon->setIcon($icon, NULL, 'icons/creativecommons');
-                            $licon = new href($lic['url'], $objIcon->show(), NULL);//$objIcon->show();
-                            $iconList.= $licon->show();
-                        }
-                        //continue;
-
-                    }
+                $this->objCC = $this->getObject('displaylicense', 'creativecommons');
+                if ($cclic == '') {
+                    $cclic = 'copyright';
                 }
+                $iconList = $this->objCC->show($cclic);
+
                 //$commentLink = $this->objComments->addCommentLink($type = NULL);
                 if($post['comment_status'] == 'Y' || $post['comment_status'] == 'on')
                 {
