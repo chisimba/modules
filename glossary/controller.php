@@ -814,16 +814,14 @@ $this->setVar('pageSuppressXML', TRUE);
         
         $item_id = $_POST['id'];
 
-        if (substr_count($_FILES['userFile']['type'], 'image')) {
-            
+        //if (substr_count($_FILES['userFile']['type'], 'image')) {
             $caption = $_POST['caption'];
-            $result = array();
-            $result = $this->objUploader->uploadFile('userFile');//$_FILES['userFile'],$this->contextCode);
+            //$result = array();
+            //$result = $this->objUploader->uploadFile('userFile');//$_FILES['userFile'],$this->contextCode);
             $userId  = $this->objUser->userId();
             $dateLastUpdated = mktime();
-            
-            $this->objGlossaryImages->insertImage($item_id, $result['fileid'], $caption, $userId, $dateLastUpdated);
-        }
+            $this->objGlossaryImages->insertImage($item_id, $_POST['userFile'], $caption, $userId, $dateLastUpdated);
+        //}
         
         return $this->nextAction('listimages', array('id' => $item_id));
     

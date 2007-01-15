@@ -4,6 +4,12 @@ $this->loadClass('form', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
+$objSelectFile = $this->newObject('selectimage', 'filemanager');
+
+// Filemanage test of image input
+
+//$objSelectFile->name = 'nameofforminput';
+//$editTermForm->addToForm($objSelectFile->show());
 
 $objIcon =& $this->getObject('geticon', 'htmlelements');
 $objIcon->alt = $this->objLanguage->languageText('mod_glossary_delete', 'glossary');
@@ -87,10 +93,11 @@ $table->startRow();
 $fileLabel = new label($this->objLanguage->languageText('mod_glossary_file', 'glossary'), 'input_userFile');
 $table->addCell($fileLabel->show());
 
-$fileInput = new textinput('userFile');
-$fileInput->fldType = 'file';
+$objSelectFile->name = 'userFile';
+//$fileInput = new textinput('userFile');
+//$fileInput->fldType = 'file';
 
-$table->addCell($fileInput->show());
+$table->addCell($objSelectFile->show());
 $table->endRow();
 
 $table->startRow();
@@ -99,7 +106,7 @@ $hiddenId->fldType = 'hidden';
 $hiddenId->value = $id;
 $table->addCell($hiddenId->show());
 
-$submitButton = new button('submit', $this->objLanguage->languageText('mod_glossary_uploadimage', 'glossary'));
+$submitButton = new button('submit', $this->objLanguage->languageText('mod_glossary_addimage', 'glossary'));
 $submitButton->setToSubmit();
 $table->addCell($submitButton->show());
 

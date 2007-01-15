@@ -1,4 +1,4 @@
-<?
+<?php
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
 {
@@ -69,37 +69,20 @@ class dbGlossarySeeAlso extends dbTable
     *
     * @return array Matching Terms, and their recordIds
     */
-    public function findNotLinkedTo($item, $context=NULL)
-    {  
-        $allTerms =  $this->objGlossary->fetchAllRecords();
-
-        $linkTerms = $this->fetchAllRecords($item, $context);
-
+    public function findNotLinkedTo($item)
+    {
+        $sql = 'SELECT distinct tbl_glossary.id, tbl_glossary.term ';
+        $sql.= 'FROM (tbl_glossary LEFT JOIN bridge_glossary_seealso ON ';
+        $sql.= '(tbl_glossary.id = bridge_glossary_seealso.item_id OR ';
+        $sql.= 'tbl_glossary.id = bridge_glossary_seealso.item_id2) ';
+        $sql.= "AND (bridge_glossary_seealso.item_id='".$item."'";
+        $sql.= " OR bridge_glossary_seealso.item_id2='".$item."')) ";
+        $sql.= "WHERE (bridge_glossary_seealso.id IS NULL AND tbl_glossary.id != '".$item."') ";
         
-
-        $linkTermsArray = array();
-        foreach ($linkTerms as $term)
-        {
-            if ($term['item1'] == $item) {
-            $linkTermsArray[] = $term['item2'];
-        } else {
-            $linkTermsArray[] = $term['item1'];
-        }
-        }
+        $sql.= ' ORDER BY tbl_glossary.term';
         
-        $resultsArray = array();
-
-        foreach ($allTerms as $term)
-        {
-            if (!in_array($term['item_id'], $linkTermsArray) && $term['item_id'] != $item) {
-                $resultsArray[] = array('id'=>$term['item_id'], 'term'=>$term['term']);
-            }
-        }
-  
-return $resultsArray;
-       
+        return $this->getArray($sql);
     }
-
     /**
     * This method determines the number of records the term is not linked to.
     * Used to indicate messages (e.g. Linked to all terms)
@@ -108,22 +91,20 @@ return $resultsArray;
     * @return int of number of terms not linked
     */
     public function findNotLinkedToNum($item)
-    {   
+    {
         $sql = 'SELECT COUNT(*) AS rc ';
-        $sql.= 'FROM tbl_glossary, 
-                     bridge_glossary_seealso ';
-        $sql.= "WHERE (tbl_glossary.id = bridge_glossary_seealso.item_id OR 
-                       tbl_glossary.id = bridge_glossary_seealso.item_id2) AND 
-                      (bridge_glossary_seealso.item_id='{$item}' OR 
-                       bridge_glossary_seealso.item_id2='{$item}') AND 
-                      bridge_glossary_seealso.id IS NULL AND 
-                      tbl_glossary.id != '{$item}'";
-
+        $sql.= 'FROM (tbl_glossary LEFT JOIN bridge_glossary_seealso ON ';
+        $sql.= '(tbl_glossary.id = bridge_glossary_seealso.item_id OR ';
+        $sql.= 'tbl_glossary.id = bridge_glossary_seealso.item_id2) ';
+        $sql.= "AND (bridge_glossary_seealso.item_id='".$item."'";
+        $sql.= " OR bridge_glossary_seealso.item_id2='".$item."')) ";
+        $sql.= "WHERE (bridge_glossary_seealso.id IS NULL AND tbl_glossary.id != '".$item."')";
+        
+        
         $rs = $this->query($sql);
         $line = $rs[0]['rc'];//$rs->fetchRow();
         return $line;//['rc'];
     }
-
     /**
     * This method determines the number of records the term IS linked to.
     * Used to indicate messages (e.g. Linked to all terms)

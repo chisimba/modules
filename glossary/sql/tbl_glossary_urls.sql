@@ -39,7 +39,8 @@ $fields = array(
 		),
 	'url' => array(
 		'type' => 'text',
-		'length' => 100
+		'length' => 100,
+		'notnull' => 1
 		),		
 	'userid' => array(
 		'type' => 'text',

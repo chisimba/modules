@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Class to provide SysConfig an input for the ALLOW_PARSE parameter of the Glossary Module
 * @author Tohir Solomons

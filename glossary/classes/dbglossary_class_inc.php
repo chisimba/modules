@@ -1,4 +1,4 @@
-<?
+<?php
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
 {
@@ -46,26 +46,20 @@ class dbGlossary extends dbTable
     */
     public function fetchAllRecords($context=null)
     {   
-        //Changes
-        $sql = 'SELECT distinct gloss.id AS item_id, 
-                                gloss.term, 
-                                gloss.definition, 
-                                url.item_id AS urls, 
-                                bridge.item_id AS seealsos, 
-                                im.item_id AS images ';
-        $sql.= 'FROM tbl_glossary AS gloss, 
-                     bridge_glossary_seealso AS bridge, 
-                     tbl_glossary_urls AS url, 
-                     tbl_glossary_images AS im ';
+    	 $sql = 'SELECT distinct tbl_glossary.id AS item_id, tbl_glossary.term, tbl_glossary.definition, '; 
+        $sql.= 'tbl_glossary_urls.item_id AS urls, bridge_glossary_seealso.item_id AS seealsos, tbl_glossary_images.item_id AS images ';
+        $sql.= 'FROM tbl_glossary LEFT JOIN bridge_glossary_seealso ON ';
+        $sql.= '(tbl_glossary.id = bridge_glossary_seealso.item_id OR ';
+        $sql.= 'tbl_glossary.id = bridge_glossary_seealso.item_id2) ';
+        $sql.= 'LEFT JOIN tbl_glossary_urls ON (tbl_glossary.id = tbl_glossary_urls.item_id) ';
+        $sql.= 'LEFT  JOIN tbl_glossary_images ON ( tbl_glossary.id = tbl_glossary_images.item_id ) ';
         
         if ($context != '') {
-            $sql.= "WHERE gloss.context = '".$context."' ";
+            $sql.= "WHERE tbl_glossary.context = '".$context."' ";
         }
-        // end of Changes
         
-        
-        $sql.= 'GROUP BY gloss.id ';
-        $sql.= 'ORDER BY gloss.term';
+       // $sql.= 'GROUP BY tbl_glossary.id ';
+        $sql.= 'ORDER BY tbl_glossary.term';
 
         $data = $this->getArray($sql);
         return $data;
@@ -90,28 +84,22 @@ class dbGlossary extends dbTable
     */
     public function searchGlossaryDB($term, $context=null)
     {
-        // Changes
-        $sql = 'SELECT distinct gloss.id AS item_id, 
-                                gloss.term, 
-                                gloss.definition, 
-                                url.item_id AS urls, 
-                                bridge.item_id AS seealsos, 
-                                im.item_id AS images ';
-        $sql.= 'FROM tbl_glossary AS gloss, 
-                     bridge_glossary_seealso AS bridge, 
-                     tbl_glossary_urls AS url, 
-                     tbl_glossary_images AS im ';
-        $sql.= "WHERE gloss.term LIKE '".$term."' ";
-        // end of Changes
+    
+     	$sql = 'SELECT distinct tbl_glossary.id AS item_id, tbl_glossary.term, tbl_glossary.definition, '; 
+        $sql.= 'tbl_glossary_urls.item_id AS urls, bridge_glossary_seealso.item_id AS seealsos, tbl_glossary_images.item_id AS images ';
+        $sql.= 'FROM tbl_glossary LEFT JOIN bridge_glossary_seealso ON ';
+        $sql.= '(tbl_glossary.id = bridge_glossary_seealso.item_id OR ';
+        $sql.= 'tbl_glossary.id = bridge_glossary_seealso.item_id2) ';
+        $sql.= 'LEFT JOIN tbl_glossary_urls ON (tbl_glossary.id = tbl_glossary_urls.item_id) ';
+        $sql.= 'LEFT  JOIN tbl_glossary_images ON ( tbl_glossary.id = tbl_glossary_images.item_id ) ';
+        $sql.= "WHERE tbl_glossary.term LIKE '".$term."' ";
         
-
         if ($context != '') {
-            $sql.= "AND gloss.context='".$context."' ";
+            $sql.= "AND tbl_glossary.context='".$context."' ";
         }
         
-
-        $sql.= 'GROUP BY gloss.id ';
-        $sql.= 'ORDER BY gloss.term';
+        //$sql.= 'GROUP BY tbl_glossary.id ';
+        $sql.= 'ORDER BY tbl_glossary.term';
         
         return $this->getArray($sql);
     }
@@ -137,17 +125,19 @@ class dbGlossary extends dbTable
     * @return array Term with indicators of whether the terms has urls, images or see alsos.
     */
     public function showFullSingle($id, $context)
-    {
-        $sql = 'SELECT distinct tbl_glossary.id AS item_id,
-                                tbl_glossary.term,
-                                tbl_glossary.definition ';
-        $sql.= "FROM tbl_glossary WHERE  tbl_glossary.id = '".$id."' ";
+    {       	
+        $sql = 'SELECT distinct tbl_glossary.id AS item_id, tbl_glossary.term, tbl_glossary.definition, '; 
+        $sql.= 'tbl_glossary_urls.item_id AS urls, bridge_glossary_seealso.item_id AS seealsos, tbl_glossary_images.item_id AS images ';
+        $sql.= 'FROM tbl_glossary LEFT JOIN bridge_glossary_seealso ON ';
+        $sql.= '(tbl_glossary.id = bridge_glossary_seealso.item_id OR ';
+        $sql.= 'tbl_glossary.id = bridge_glossary_seealso.item_id2) ';
+        $sql.= 'LEFT JOIN tbl_glossary_urls ON (tbl_glossary.id = tbl_glossary_urls.item_id) ';
+        $sql.= 'LEFT  JOIN tbl_glossary_images ON ( tbl_glossary.id = tbl_glossary_images.item_id ) ';
+        $sql.= "WHERE tbl_glossary.id = '".$id."' ";
         $sql.= "AND tbl_glossary.context='".$context."' ";
-
-
-        $sql.= 'GROUP BY tbl_glossary.id ';
+       // $sql.= 'GROUP BY tbl_glossary.id ';
         $sql.= 'ORDER BY tbl_glossary.term';
-        
+      
         return $this->getArray($sql);
     }
 
@@ -374,10 +364,12 @@ class dbGlossary extends dbTable
         // Separate Array for Letters
         $alphaArray = array();
         
-        // Get the First Letter of each word
-        foreach ($wordsList as $word)
-        {
-            $alphaArray[] = strtoupper(substr($word['term'], 0, 1));
+        if(!empty($wordsList)){
+        		// Get the First Letter of each word
+        		foreach ($wordsList as $word)
+        		{
+            		$alphaArray[] = strtoupper(substr($word['term'], 0, 1));
+        		}
         }
         
         // Make elements in array unique
