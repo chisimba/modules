@@ -1389,7 +1389,7 @@ class blogops extends object
         $ptable->startRow();
         $plabel = new label($this->objLanguage->languageText('mod_blog_posttitle', 'blog') .':', 'input_posttitle');
         $title = new textinput('posttitle');
-        $title->size = 150;
+        $title->size = 60;
         $postform->addRule('posttitle', $this->objLanguage->languageText("mod_blog_phrase_ptitlereq", "blog") , 'required');
         if (isset($editparams['post_title'])) {
             $title->setValue(stripslashes($editparams['post_title']));
@@ -1449,6 +1449,9 @@ class blogops extends object
         $pclabel = new label($this->objLanguage->languageText('mod_blog_pcontent', 'blog') .':', 'input_pcont');
         $pcon = $this->newObject('htmlarea', 'htmlelements');
         $pcon->setName('postcontent');
+	$pcon->height = 400;
+	$pcon->width = 420;
+	$pcon->setDefaultToolbarSet();
         if (isset($editparams['post_content'])) {
             $pcon->setcontent((stripslashes(($editparams['post_content']))));
         }
@@ -1461,7 +1464,7 @@ class blogops extends object
         $ptable->startRow();
         $tlabel = new label($this->objLanguage->languageText('mod_blog_tags', 'blog') .':', 'input_tags');
         $tags = new textinput('tags');
-        $tags->size = 97;
+        $tags->size = 65;
         if (isset($editparams['tags'])) {
         	//this thing should be an array, so we need to loop thru and create the comma sep list again
         	$tagstr = NULL;
