@@ -64,9 +64,13 @@ class podcast extends controller
     * @param string $action Action to be performed
     * @return boolean
     */
-    public function requiresLogin($action)
+    public function requiresLogin($action='home')
     {
-        $allowedPreloginActions = array ('playpodcast');
+        if ($action == '') {
+            $action = 'home';
+        }
+        
+        $allowedPreloginActions = array ('home', 'podcast', 'rssfeed', 'playpodcast', 'downloadfile', 'byuser');
         
         if (in_array($action, $allowedPreloginActions)) {
             return FALSE;
