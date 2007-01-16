@@ -176,9 +176,21 @@ class commenttypeadmin extends controller
     function uploadFile($type)
     {
         // upload a new file
-       $path = $this->objConfig->getskinRoot() . "/_common/icons/";
+       $path = $this->objConfig->getskinRoot() . "_common/icons/";
        $filename = "comment" . $type . ".gif";
-       $filename = $this->objFile->uploadFile('.gif');
+      // $filename = $this->objFile->uploadFile('.gif');
+
+	//print_r($_FILES['fileupload']['tmp_name']);
+	
+	$temppath = $_FILES['fileupload']['tmp_name'];
+	
+	//to remove old icons
+	
+
+	@chmod(move_uploaded_file($temppath,$path.$filename),0777);
+	@chmod($path.$filename,0777);
+	
+ 
 
         return $this->nextAction('view');
     }
