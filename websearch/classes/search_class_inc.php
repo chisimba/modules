@@ -37,11 +37,11 @@ class search extends object {
     public function init()
     {
         $this->loadClass('button', 'htmlelements');
-        $objConfig = $this->getObject('config', 'config');
+        $objConfig = $this->getObject('altconfig', 'config');
       
         $this->objUser = & $this->getObject('user', 'security');
-       /* $this->imgLocation = $objConfig->siteRoot()
-          . 'modules/websearch" . "/resources/images/';*/
+        $this->imgLocation = $objConfig->getSiteRoot()
+          . 'modules/websearch/resources/images/';
         $this->objUser = & $this->getObject('user', 'security');
         $this->objLanguage = & $this->getObject('language', 'language');
         //Set the default interfaceType to VERTICAL_FULL
