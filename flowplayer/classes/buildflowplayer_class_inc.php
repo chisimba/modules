@@ -100,7 +100,7 @@ class buildflowplayer extends object
     */
     function show()
     {
-        if (!$this->soundFile=="") {
+        if (!$this->movie=="") {
             return $this->__startApplet()
               . $this->__getParam("ALLOWSCRIPTACCESS")
               . $this->__getParam("MOVIE")
