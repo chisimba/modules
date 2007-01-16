@@ -553,7 +553,7 @@ class datepickajax extends object
             if($defaultDate != NULL){
                 $defaultDate = date("Y-m-d", strtotime($defaultDate));
             }
-            $length = 7;
+            $length = 10;
             if (strtolower($showMonths) == 'no' || strtolower($showMonths) == 'false') {
                 $height = 'height=363';
             } else {
@@ -563,7 +563,7 @@ class datepickajax extends object
             if($defaultDate != NULL){
                 $defaultDate = date("Y-m-d H:i", strtotime($defaultDate));
             }
-            $length = 12;
+            $length = 16;
             if (strtolower($showMonths) == 'no' || strtolower($showMonths) == 'false') {
                 $height = 'height=406';
             } else {
