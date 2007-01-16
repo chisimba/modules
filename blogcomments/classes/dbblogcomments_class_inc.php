@@ -34,6 +34,7 @@ class dbblogcomments extends dbTable
 	{
 		parent::init('tbl_blogcomments');
 		$this->objLanguage = $this->getObject('language', 'language');
+		$this->objConfig = $this->getObject('altconfig', 'config');
 	}
 
 	/**
@@ -67,8 +68,24 @@ class dbblogcomments extends dbTable
 		//email the owner
 		if($email == TRUE)
 		{
+			//var_dump($commentarray); die();
+			$postid = $commentarray['postid'];
+			$blogtitle = $commentarray['postid']; //id, not the title
+			//get the title from the id
+			$blogtitle = $this->getBlogPostNameFromId($blogtitle);
+			$blogtitle = $blogtitle[0]['post_title'];
+
+			$commentauthor = $commentarray['commentauthor'];
+			$commenttext = $commentarray['comment'];
+			$posturl = $this->objConfig->getSiteRoot() . "index.php?module=blog&action=viewsingle&postid=$postid"; //$this->uri(array('module' => 'blog', 'action' => 'viewsingle', 'postid' => $commentarray['postid']));
+
 			$this->objUser = $this->getObject('user', 'security');
-			$bodyText = $cont;
+			//$bodyText = $cont;
+			$bodyText = $this->objLanguage->languageText("mod_blog_inblogentitled", "blogcomments") . ' "' . $blogtitle . '" ' .
+						$commentauthor . " " .  $this->objLanguage->languageText("mod_blog_word_wrote", "blogcomments") . ": \r\n" .
+						$commenttext . "\r\n" .
+						$this->objLanguage->languageText("mod_blog_clickonurl", "blogcomments") . ": " . $posturl;
+			//echo $bodyText; die();
 			//get the email address
 			$emailadd = $this->objUser->email($puserid);
 
@@ -114,6 +131,33 @@ class dbblogcomments extends dbTable
 		$filter = "WHERE comment_parentid = '$pid'";
 		return $this->getRecordCount($filter);
 	}
+
+	public function getBlogPostNameFromId($id)
+	{
+		$this->_changeTable("tbl_blog_posts");
+		return $this->getAll("WHERE id = '$id'");
+	}
+
+		/**
+	 * Method to dynamically switch tables
+	 *
+	 * @param string $table
+	 * @return boolean
+	 * @access private
+	 */
+	private function _changeTable($table)
+	{
+		try {
+			parent::init($table);
+			return TRUE;
+		}
+		catch (customException $e)
+		{
+			customException::cleanUp();
+			return FALSE;
+		}
+	}
+
 
 }
 ?>
