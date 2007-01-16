@@ -85,6 +85,8 @@ class dbblogcomments extends dbTable
 						$commentauthor . " " .  $this->objLanguage->languageText("mod_blog_word_wrote", "blogcomments") . ": \r\n" .
 						$commenttext . "\r\n" .
 						$this->objLanguage->languageText("mod_blog_clickonurl", "blogcomments") . ": " . $posturl;
+			//convert the html breaks to newlines
+			$bodyText = str_replace("<br />", "\r\n", $bodyText);
 			//echo $bodyText; die();
 			//get the email address
 			$emailadd = $this->objUser->email($puserid);
