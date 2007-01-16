@@ -376,6 +376,22 @@ class dbcontent extends dbTable
         }
 
         /**
+         * Method to get the title and id of all pages in a specific section
+         *
+         * @param string $sectionId The id of the section
+         * @return array $titles An array of associative arrays containing the id and title of all pages in the section
+         * @access public
+         * @author Warren Windvogel
+         */
+        public function getTitles($sectionId)
+        {
+            $sql = "SELECT id, title FROM tbl_cms_content WHERE sectionid = '$sectionId' ORDER BY ordering";
+            
+            $titles = $this->getArray($sql);
+            return $titles;
+        }
+
+        /**
          * Method to get the number of pages in a specific section
          *
          * @param string $sectionId The id of the section
