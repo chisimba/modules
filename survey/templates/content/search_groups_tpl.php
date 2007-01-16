@@ -34,9 +34,9 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
 // set up language items
     $headerLabel=$this->objLanguage->languageText('mod_survey_searchgroups', 'survey');
-    $observersLabel=$this->objLanguage->languageText('mod_survey_observers', 'survey');
-    $collaboratorsLabel=$this->objLanguage->languageText('mod_survey_collaborators', 'survey');
-    $respondentsLabel=$this->objLanguage->languageText('mod_survey_respondents', 'survey');
+    $observersLabel=$this->objLanguage->languageText('mod_survey_wordobservers', 'survey');
+    $collaboratorsLabel=$this->objLanguage->languageText('mod_survey_wordcollaborators', 'survey');
+    $respondentsLabel=$this->objLanguage->languageText('mod_survey_wordrespondents', 'survey');
     $nameLabel=$this->objLanguage->languageText('mod_survey_groupname', 'survey');
     $descriptionLabel=$this->objLanguage->languageText('mod_survey_groupdescription', 'survey');
     $searchByLabel=$this->objLanguage->languageText('mod_survey_startswith', 'survey');

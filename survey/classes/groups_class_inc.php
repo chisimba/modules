@@ -217,6 +217,7 @@ class groups extends dbTable
             $sql.=" WHERE name LIKE '".$search."%'";
         }
         $data=$this->getArray($sql);
+var_dump($data);
         $ret=$this->removeSurveyGroups($data);
 
         if($number!='all'){
@@ -333,6 +334,7 @@ class groups extends dbTable
     {
         $rootId=$this->getRootId();
         $arrGroupIdList=$this->objGroupAdmin->getSubgroups($rootId);
+var_dump($arrGroupIdList);
         foreach($data as $key=>$group){
             $groupId=$group['id'];
             if(in_array($groupId,$arrGroupIdList)){

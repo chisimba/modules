@@ -39,9 +39,9 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $respondentSubjLabel=$this->objLanguage->languageText('mod_survey_respondentsubject', 'survey');
     $anonymousLabel=$this->objLanguage->languageText('mod_survey_anon', 'survey');
     $respondentLinkLabel=$this->objLanguage->languageText('mod_survey_take', 'survey');
-    $respondentsLabel=$this->objLanguage->languageText('mod_survey_respondents', 'survey');
-    $observersLabel=$this->objLanguage->languageText('mod_survey_observers', 'survey');
-    $collaboratorsLabel=$this->objLanguage->languageText('mod_survey_collaborators', 'survey');
+    $respondentsLabel=$this->objLanguage->languageText('mod_survey_wordrespondents', 'survey');
+    $observersLabel=$this->objLanguage->languageText('mod_survey_wordobservers', 'survey');
+    $collaboratorsLabel=$this->objLanguage->languageText('mod_survey_wordcollaborators', 'survey');
     $uriLinkLabel=$this->objLanguage->languageText('mod_survey_linklabel', 'survey');
     $observerSubjLabel=$this->objLanguage->languageText('mod_survey_observersubject', 'survey');
     $collaboratorSubjLabel=$this->objLanguage->languageText('mod_survey_collaboratorsubject', 'survey');
