@@ -128,7 +128,7 @@ $lbLobby = $this->objLanguage->languageText('word_lobby');
             $objTable->addRow($tbRow,$rowClass);
         }
         //$rightMenu.=$closedStr;
-        $rightMenu = $closedStr.$objTable->show();
+        $rightMenu = $closedStr.$objTable->show().'<br />';
     }
     
     if($openClass){

@@ -11,7 +11,9 @@
 
     // set body parameters to focus the chat area on loading the page
     $bodyParams='onload="javascript:document.chat.chatline.select();document.chat.chatline.focus();"';
-    $this->setVarByRef('bodyParams',$bodyParams);
+//    $this->setVarByRef('bodyParams',$bodyParams);
+    
+    $this->appendArrayVar('bodyOnLoad', $bodyParams);
 
     $this->setVar('pageSuppressToolbar', TRUE);
     $this->setVar('pageSuppressBanner', TRUE);
@@ -24,7 +26,8 @@
     $this->loadClass('button', 'htmlelements');
     $this->loadClass('textinput', 'htmlelements');
     $this->loadClass('textarea', 'htmlelements');
-    $this->loadClass('multitabbedbox', 'htmlelements');
+//    $this->loadClass('multitabbedbox', 'htmlelements');
+    $objTab =& $this->newObject('tabcontent', 'htmlelements');
     $objHead =& $this->newObject('htmlheading','htmlelements');
     $objIcon =& $this->newObject('getIcon','htmlelements');
     $objMessage =& $this->newObject('timeoutmessage','htmlelements');
@@ -137,7 +140,7 @@ if (preg_match("/MSIE/i", "$browser")){
     $boxWidth='60%';
 }
 
-// Build a multi tabbed box to hold case information, tasks and notepad
+/* Build a multi tabbed box to hold case information, tasks and notepad
 $objBox = new multitabbedBox('225px',$boxWidth);
 $tab1['name'] = $lbCaseInfo;
 $tab1['content'] = $board;
@@ -149,11 +152,19 @@ $objBox->addTab($tab2);
 $tab3['name'] = $lbNoteBook;
 $tab3['content'] = $notes;
 $objBox->addTab($tab3);
+*/
+
+$objTab->init();
+$objTab->addTab($lbCaseInfo, $board);
+$objTab->addTab($lbTasks, $tasks);
+$objTab->addTab($lbNoteBook, $notes);
+
 
     // display case content area: multitabbed box and content iframe
     $objTable->trClass='header';
     $objTable->startRow();
-    $objTable->addCell($objBox->show(),'','top','left','multiboxfix',' style="height: 260px;" colspan="2"');
+    $objTable->addCell($objTab->show(),'','top','left','multiboxfix',' style="height: 260px;" colspan="2"');
+//    $objTable->addCell($objBox->show(),'','top','left','multiboxfix',' style="height: 260px;" colspan="2"');
     //$objTable->addCell($showcaseinfo,'','top','left','',' style="height: 260px;" colspan=2');
     $objTable->addCell($showcontent,'','top','left','',' colspan="2"');
     $objTable->endRow();
@@ -207,7 +218,7 @@ $objBox->addTab($tab3);
             foreach($userid as $val){
                 if(!empty($val['studentid'])){
                     $user=$this->objGroupUser->getUsers(NULL," where id='".$val['studentid']."' ");
-                    $listId = $user[0]['fullName'];
+                    $listId = $user[0]['fullname'];
                     if($val['position'] == 'c' || $val['position'] == 's' || $val['position'] == 'f')
                         $listId .= ' ('.$val['position'].')';
                     $users[$i] = $listId;

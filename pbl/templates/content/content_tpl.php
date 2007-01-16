@@ -19,7 +19,8 @@ $bodyParams='class="container" ';
 $this->setVarByRef('bodyParams',$bodyParams);
 
 // set up html elements objects
-$this->loadClass('multitabbedbox', 'htmlelements');
+//$this->loadClass('multitabbedbox', 'htmlelements');
+$objTab =& $this->newObject('tabcontent', 'htmlelements');
 $objMessage =& $this->newObject('timeoutmessage','htmlelements');
 $objMessage->setTimeout(5000);
 
@@ -43,7 +44,7 @@ if(!empty($msghyp)){
 }
 $hypothesis .= $this->classroom->writeNotes('hypothesis');
 
-// Create a multitabbed box containing the content
+/* Create a multitabbed box containing the content
 $objBox = new multitabbedBox('224px', '97%');
 $tab1['name']=$liLabel;
 $tab1['content']=$li;
@@ -52,6 +53,11 @@ $objBox->addTab($tab1);
 $tab2['name']=$hypLabel;
 $tab2['content']=$hypothesis;
 $objBox->addTab($tab2);
+*/
 
-echo '<br style="line-height:1px;" />'.$objBox->show();
+$objTab->init();
+$objTab->addTab($liLabel, $li);
+$objTab->addTab($hypLabel, $hypothesis);
+
+echo '<br style="line-height:1px;" />'.$objTab->show();
 ?>
