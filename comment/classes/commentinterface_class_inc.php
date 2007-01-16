@@ -51,10 +51,10 @@ class commentinterface extends object
     * @var boolean $suppressView True|False whether to suppress the view icon
     */
     public $suppressView;
-    
+
     //Added 2006/09/11 Serge Meunier - For approval of comments
     public $useApproval;
-    
+
 
     public $objDT;
 
@@ -67,7 +67,7 @@ class commentinterface extends object
         $this->objDb = & $this->getObject('dbcomment');
         $this->objDateFunctions =& $this->getObject('datefunctions', 'calendarbase');
         $this->useApproval = FALSE;
-        
+
         // Get an instance of the decisiontable object.
         $this->objDT = &$this->getObject( 'decisiontable','decisiontable' );
         // Create the decision table for the current module
@@ -104,7 +104,7 @@ class commentinterface extends object
     {
        return $this->$param;
     }
-    
+
     /**
     *
     * Method to set whether or not to use approval of comment
@@ -169,8 +169,8 @@ class commentinterface extends object
         //Added 2006/09/11 Serge Meunier - To add approval status to comments
         $objApproved = new textinput("approved", '0',  "hidden", NULL);
         $objForm->addToform($objApproved->show());
-        
-        
+
+
         //------------
         //Modified 2006/07/18 Serge Meunier - Only displays dropdown if no type is specified
         if (!is_null($type)){
@@ -181,11 +181,11 @@ class commentinterface extends object
             //Get the types
             $objCat = & $this->getObject('dbcommenttype', 'commenttypeadmin');
             $tar = $objCat->getAll();
-        
+
             //Create a dropdown for the comment type selector
             $objCat = $this->newObject("dropdown", "htmlelements");
             $objCat->name = 'type';
-        
+
             //Added 2006/07/18 by Serge Meunier for client side validation
             $objCat->SetId('input_type');
 
@@ -197,7 +197,7 @@ class commentinterface extends object
             $objForm->addRule('type', $this->objLanguage->languageText("mod_comment_typeval",'comment'), 'required');
         }
         //-------------
-        
+
         $objForm->addRule('comment', $this->objLanguage->languageText("mod_comment_commentval",'comment'), 'required');
 
         // Create an instance of the button object
@@ -213,7 +213,7 @@ class commentinterface extends object
         return $this->putInFieldset($objForm->show(),
           $this->objLanguage->languageText("mod_comment_addlabel",'comment'));
     }
-    
+
     /**
     *
     * Method to render an input form for editing a comment
@@ -275,7 +275,7 @@ class commentinterface extends object
             $objElement->cols=57;
             $objElement->rows=12;
             $objElement->setContent($commentar['comment']);
-            
+
             //Add the $comment element to the form
             $objForm->addToForm("&nbsp;&nbsp;"
               . $objElement->show() . "<br /><br />\n");
@@ -313,7 +313,7 @@ class commentinterface extends object
               $this->objLanguage->languageText('mod_comment_addlabel','comment'));
         }
     }
-    
+
     /**
     * Method to render the output of all unapproved / approved comments for moderation
     * All comments are connected to a specific table and not a specific record
@@ -328,7 +328,7 @@ class commentinterface extends object
         $tableName = $this->get('tableName');
 
         $ar = $this->objDb->getCommentsByTableName($tableName);
-        
+
         return $this->displayAllComments($tableName, $ar, $userId, $moduleCode);
     }
 
@@ -347,10 +347,10 @@ class commentinterface extends object
         $sourceId = $this->get('sourceId');
 
         $ar = $this->objDb->getComment($tableName, $sourceId);
-        
+
         return $this->displayAllComments($tableName, $ar, $userId, $moduleCode);
     }
-        
+
     /**
     * Method to render the output of the comment data
     * @author Megan Watson modified 02/10/2006
@@ -360,7 +360,7 @@ class commentinterface extends object
     * @param string $userId: The user id of the currently logged in user
     * @param string $moduleCode: The code of the module calling the function
     * @return array | NULL The array containing the comments, or else NULL on failure
-    */    
+    */
     public function displayAllComments($tableName, $ar, $userId = null, $moduleCode = null)
     {
         if (count($ar) > 0) {
@@ -375,7 +375,7 @@ class commentinterface extends object
                     $this->blt = &$this->newObject('layer', 'htmlelements');
                     //Set the background colour to the odd or even colour
                     $this->blt->id = "blog-comment-".$oddOrEven;
-                    $outstr .= $line['comment'];
+                    $outstr .= $line['commenttext'];
                     $type = $line['type'];
                     //Add the author and date
                     $outstr .= "<p class=\"minute\">"
@@ -426,7 +426,7 @@ class commentinterface extends object
                     $difference = $this->objDateFunctions->dateDifference($line['datecreated'], date("Y-m-d H:i:s"));
                     $timediff = ($difference['d'] * 1440) + ($difference['h'] * 60) + $difference['m'];
 
-                    if ($this->objUser->isAdmin()  || (($this->objUser->userId() == $line['creatorId']) && ($timediff < 30))){
+                    if ($this->objUser->isAdmin()  || (($this->objUser->userId() == $line['creatorid']) && ($timediff < 30))){
                         $objEditIcon = $this->newObject('geticon', 'htmlelements');
                         $objDeleteIcon = $this->newObject('geticon', 'htmlelements');
 
@@ -466,7 +466,7 @@ class commentinterface extends object
             return NULL;
         }
     }
-    
+
     /**
     *
     * Method to render an output of most recent comments for a table/record
@@ -498,13 +498,13 @@ class commentinterface extends object
                     $this->blt = &$this->newObject('layer', 'htmlelements');
                     //Set the background colour to the odd or even colour
                     $this->blt->id = "blog-comment-".$oddOrEven;
-                    $outstr .= $line['comment'];
+                    $outstr .= $line['commenttext'];
                     $type = $line['type'];
 
                     //Add the author and date
                     $outstr .= "<p class=\"minute\">"
                       .$this->objLanguage->languageText("phrase_postedby")
-                      . " <b>".$this->objUser->fullName($line['creatorId'])."</b> "
+                      . " <b>".$this->objUser->fullName($line['creatorid'])."</b> "
                       .$this->objLanguage->languageText("word_on")
                       . " <b>" . $line['dateCreated'] . "</b>";
 
@@ -545,11 +545,11 @@ class commentinterface extends object
                         }
                     }
                     //-------------------
-               
+
                     //If allowed, show edit and delete icons
                     $difference = $this->objDateFunctions->dateDifference($line['dateCreated'], date("Y-m-d H:i:s"));
                     $timediff = ($difference['d'] * 1440) + ($difference['h'] * 60) + $difference['m'];
-                    if ($this->objUser->isAdmin()  || (($this->objUser->userId() == $line['creatorId']) && ($timediff < 30))){
+                    if ($this->objUser->isAdmin()  || (($this->objUser->userId() == $line['creatorid']) && ($timediff < 30))){
                         $objEditIcon = $this->newObject('geticon', 'htmlelements');
                         $objDeleteIcon = $this->newObject('geticon', 'htmlelements');
 
@@ -623,12 +623,12 @@ class commentinterface extends object
                     $this->blt = &$this->newObject('layer', 'htmlelements');
                     //Set the background colour to the odd or even colour
                     $this->blt->id = "blog-comment-".$oddOrEven;
-                    $outstr .= $line['comment'];
+                    $outstr .= $line['commenttext'];
                     $type = $line['type'];
                     //Add the author and date
                     $outstr .= "<p class=\"minute\">"
                       .$this->objLanguage->languageText("phrase_postedby")
-                      . " <b>".$this->objUser->fullName($line['creatorId'])."</b> "
+                      . " <b>".$this->objUser->fullName($line['creatorid'])."</b> "
                       .$this->objLanguage->languageText("word_on")
                       . " <b>" . $line['dateCreated'] . "</b>";
 
@@ -637,7 +637,7 @@ class commentinterface extends object
                     $objCat = & $this->getObject('dbcommenttype', 'commenttypeadmin');
                     $where = "WHERE type = '" . $type . "'";
                     $tar = $objCat->getAll($where);
-                
+
                     $iconname = "comment" . $type;
                     $iconext = "gif";
                     $objGetIcon = $this->newObject('geticon', 'htmlelements');
@@ -672,7 +672,7 @@ class commentinterface extends object
                     //If allowed, show edit and delete icons
                     $difference = $this->objDateFunctions->dateDifference($line['dateCreated'], date("Y-m-d H:i:s"));
                     $timediff = ($difference['d'] * 1440) + ($difference['h'] * 60) + $difference['m'];
-                    if ($this->objUser->isAdmin()  || (($this->objUser->userId() == $line['creatorId']) && ($timediff < 30))){
+                    if ($this->objUser->isAdmin()  || (($this->objUser->userId() == $line['creatorid']) && ($timediff < 30))){
                         $objEditIcon = $this->newObject('geticon', 'htmlelements');
                         $objDeleteIcon = $this->newObject('geticon', 'htmlelements');
 
@@ -714,7 +714,7 @@ class commentinterface extends object
             return NULL;
         }
     }
-    
+
     /**
     *
     * Method to add a comment link with an icon
@@ -738,7 +738,7 @@ class commentinterface extends object
             //Get the popup window HTML element
             $this->objPop = &$this->getObject('windowpop', 'htmlelements');
             //Set the location
-            
+
             //----------
             //modified 2006/07/20 Serge Meunier to add a specified type
             if (is_null($type)){
@@ -756,7 +756,7 @@ class commentinterface extends object
               'type'=>$type), 'comment');
             }
             //----------
-            
+
             $this->objPop->set('location', $location);
             $this->objPop->set('linktext', $objGetIcon->show());
             $this->objPop->set('width','400');
@@ -769,7 +769,7 @@ class commentinterface extends object
             return FALSE;
         }
     }
-    
+
      /**
     *
     * Method to put a string inside a fieldset
@@ -818,7 +818,7 @@ class commentinterface extends object
         }
         return $linkStr;
     }
-    
+
 
     /**
     *
@@ -834,7 +834,7 @@ class commentinterface extends object
     {
         //Instantiate the window popup object
         $objPop=& $this->getObject('windowpop','htmlelements');
-       
+
         // Create an instance of icon object
         $objGetIcon = $this->newObject('geticon', 'htmlelements');
         // The add comment icon with link
@@ -893,7 +893,7 @@ class commentinterface extends object
             return FALSE;
         }
     }
-    
+
     /**
     *
     * Method to add a popup window link as a standard HTML link to approve a comment
