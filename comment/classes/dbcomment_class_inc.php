@@ -54,11 +54,11 @@ class dbcomment extends dbTable
         // if edit use update
         if ($mode=="edit") {
             $this->update("id", $id, array(
-            'tableName' => $tableName,
-            'sourceId' => $sourceId,
+            'tablename' => $tableName,
+            'sourceid' => $sourceId,
             'type' => $type,
-            'comment' => $comment,
-            'dateModified' => date("Y/m/d H:i:s"),
+            'commenttext' => $comment,
+            'datemodified' => date("Y/m/d H:i:s"),
             'modifierId' => $userId,
             'approved' => $approved));
 
@@ -67,12 +67,12 @@ class dbcomment extends dbTable
         // if add use insert
         if ($mode=="add" && $comment!=NULL) {
             $this->insert(array(
-            'tableName' => $tableName,
-            'sourceId' => $sourceId,
+            'tablename' => $tableName,
+            'sourceid' => $sourceId,
             'type' => $type,
-            'comment' => $comment,
-            'dateCreated' => date("Y/m/d H:i:s"),
-            'creatorId' => $userId,
+            'commenttext' => $comment,
+            'datecreated' => date("Y/m/d H:i:s"),
+            'creatorid' => $userId,
             'approved' => $approved));
 
             $this->updateCounter($tableName, $sourceId, $moduleCode);
@@ -149,7 +149,7 @@ class dbcomment extends dbTable
         . "' AND sourceid='" . $sourceId . "' ORDER BY modified DESC LIMIT " . $offset . ", " . $count;
         return $this->getAll($where);
     }
-    
+
     /**
     *
     * Method to get records for a table/id/type combination
@@ -214,10 +214,10 @@ class dbcomment extends dbTable
     {
         $dtClass = 'db' . substr($tableName, 4);
         $objDb2Update = & $this->getObject($dtClass, $sourceModule);
-        $cSql = "SELECT id, commentCount FROM " . $tableName
+        $cSql = "SELECT id, commentcount FROM " . $tableName
           . " WHERE id = '" . $sourceId . "'";
         $ar = $objDb2Update->getArray($cSql);
-        
+
         //----------
         //Modified by Serge Meunier 19/07/2006 to correct a bug in the comment count
         //caused by commentCount being out of sync with the tbl_commment table
@@ -225,12 +225,12 @@ class dbcomment extends dbTable
          //$comments = $ar[0]['commentCount'];
          //$comments++;
 
-        $where = " WHERE tablename='" . $tableName  . "' AND sourceId='" . $sourceId . "'";
+        $where = " WHERE tablename='" . $tableName  . "' AND sourceid='" . $sourceId . "'";
         $comments = $this->getRecordCount($where);
         //----------
-        
+
         $objDb2Update->update("id", $ar[0]['id'], array(
-          'commentCount' => $comments));
+          'commentcount' => $comments));
 
     }
     /**
@@ -246,7 +246,7 @@ class dbcomment extends dbTable
     */
     public function getApprovedCount($tableName, $sourceId, $sourceModule, $moderator)
     {
-        $where = " WHERE tablename='" . $tableName  . "' AND sourceId='" . $sourceId . "'";
+        $where = " WHERE tablename='" . $tableName  . "' AND sourceid='" . $sourceId . "'";
         if ($moderator == FALSE){
             $where .= " AND approved=1";
         }
