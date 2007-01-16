@@ -26,8 +26,7 @@ $fields = array(
 		'length' => 50,
 		),
     'commenttext' => array(
-		'type' => 'text',
-		'length' => 32,
+		'type' => 'clob',
 		),
 	'approved' => array(
 		'type' => 'integer',
