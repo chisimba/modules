@@ -9,7 +9,8 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 //do the check for the IMAP C extension
 if(!extension_loaded("imap"))
 {
-	die("This module requires the IMAP C Extension to be loaded, please consult your PHP manual or system administrator to enable it!");
+	//die("This module requires the IMAP C Extension to be loaded, please consult your PHP manual or system administrator to enable it!");
+	trigger_error("This module requires the IMAP C Extension to be loaded, please consult your PHP manual or system administrator to enable it!",NULL,"WARNING");
 }
 
 /**
