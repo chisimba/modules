@@ -66,7 +66,7 @@ class flowplayer extends controller
      */
     public function dispatch()
     {
-    	$action = $this->gerParam('action', NULL);
+    	$action = $this->getParam('action', NULL);
     	switch($action) {
 		    case "demo":
 		    	$str="Working here";

@@ -45,6 +45,13 @@ class buildflowplayer extends object
     public $height;
     /**
     *
+    * @var string $baseUrl The movie file baseUrl for the location of the file
+    * @access public
+    *
+    */
+    public $baseUrl;
+    /**
+    *
     * @var string $movie The movie file (in FLV format) to play
     * @access public
     *
@@ -103,6 +110,7 @@ class buildflowplayer extends object
         if (!$this->movie=="") {
             return $this->__startApplet()
               . $this->__getParam("ALLOWSCRIPTACCESS")
+              . $this->__getParam("BASEURL")
               . $this->__getParam("MOVIE")
               . $this->__getParam("QUALITY")
               . $this->__getParam("SCALE")
@@ -126,7 +134,7 @@ class buildflowplayer extends object
     function loadMovie()
     {
     	//Set a file to play if there is an error finding the file from the querystring
-        $errFile = $this->objConfig->getsiteRoot()."modules/flowplayer/resources/movies/error.flv";
+        $errFile = $this->objConfig->getsiteRoot()."modules/flowplayer/resources/movies/error.jpg";
         //Get the movie file from the query string, get error file if none
         $movieFile = $this->getParam('movie', $errFile);
         if ($this->__isValidFile($movieFile)) {
@@ -139,9 +147,9 @@ class buildflowplayer extends object
 
 
     /**
-    * Method to Set the Sound File
+    * Method to Set the movie File
     */
-    function setSoundFile($file)
+    function setMovieFile($file)
     {
         $errFile = $this->objConfig->getsiteRoot()."modules/flowplayer/resources/movies/error.flv";
         if ($this->__isValidFile($file)) {
@@ -163,11 +171,12 @@ class buildflowplayer extends object
     */
     function __startApplet()
     {
-        return '<object type="application/x-shockwave-flash" '
-          . 'data="modules/flowplayer/resources/FlowPlayer.swf" '
-          . 'width="' . $this->width . '" '
-          . 'height="' . $this->height . '" '
-          . 'id="FlowPlayer">\n';
+    	//die($this->objConfig->getValue('KEWL_SITE_ROOT'));
+        return "<object type=\"application/x-shockwave-flash\" "
+          . "data=\"" . $this->objConfig->getsiteRoot(). "modules/flowplayer/resources/FlowPlayer.swf\" "
+          . "width=\"" . $this->width . "\" "
+          . "height=\"" . $this->height . "\" "
+          . "id=\"FlowPlayer\">\n";
     }
 
     /**
@@ -189,16 +198,21 @@ class buildflowplayer extends object
                 return "    <param name = \"allowScriptAccess\" "
                   . "value = \"sameDomain\" />\n";
                 break;
+            //<param name="quality" value="high" />
+            case "BASEURL":
+                return "    <param name = \"baseUrl\" "
+                  //. "value = \"" . $this->baseUrl . "\" />\n";
+                  . "value = \"http://localhost/chisimba/modules/flowplayer/resources/\" />\n";
             //<param name="movie" value="modules/flowplayer/resources/FlowPlayerLP.swf" />
             case "MOVIE":
                 return "    <param name = \"movie\" "
-                  . "value = \"" . $this->movie . "\" />\n";
+                  . "value = \"FlowPlayerLP.swf\" />\n";
                 break;
             //<param name="quality" value="high" />
             case "QUALITY":
                 return "    <param name = \"quality\" "
                   . "value = \"" . $this->quality . "\" />\n";
-			//<param name="scale" value="noScale" />
+			//<param name="scale" value="noScale" />";
             case "SCALE":
                 return "    <param name = \"scale\" "
                   . "value = \"" . $this->scale . "\" />\n";
@@ -209,7 +223,7 @@ class buildflowplayer extends object
             //<param name="flashvars" value="config={ videoFile: 'river.flv' }" />
             case "FLASHVARS":
                 return "    <param name = \"flashvars\" "
-                  . "value = \"config={ videoFile: '" . $this->movie . "' }\" />\n";
+                  . "value = \"config={ videoFile: '" . $this->movie . "'}\" />\n";
              default:
                 return NULL;
                 break;
