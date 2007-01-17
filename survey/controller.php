@@ -63,8 +63,9 @@ class survey extends controller
         $this->objDate=&$this->newObject('datetime','utilities');
         $this->objComment=&$this->newObject('commentinterface','comment');
 
-//        $this->objMailer=&$this->getObject('kngemail','utilities');
-//        $this->objMailer->setup($this->email,$this->name);
+        $this->objMailer=$this->newObject('email', 'mail');
+        $this->objMailer->setValue('from', $this->email);
+        $this->objMailer->setValue('fromName', $this->name);
 
         //db objects
         $this->dbSurvey=&$this->newObject('dbsurvey');
@@ -305,7 +306,12 @@ class survey extends controller
                         foreach($arrRespondentList as $respondent){
                             $addressList[]=$respondent['emailaddress'];
                         }
-                        $this->objMailer->sendMail('',$subject,$addressList,$body);
+
+                        $this->objMailer->setValue('to',$addressList);
+                        $this->objMailer->setValue('subject',$subject);
+                        $this->objMailer->setValue('body', $body);
+                        $this->objMailer->send();
+
                         $this->dbSurvey->editSurveyField($surveyId,' email_sent',1);
                         return $this->nextAction('');
                     }elseif($mode=='Observers'){
@@ -320,7 +326,12 @@ class survey extends controller
                         foreach($arrObserverList as $observer){
                             $addressList[]=$observer['emailaddress'];
                         }
-                        $this->objMailer->sendMail('',$subject,$addressList,$body);
+
+                        $this->objMailer->setValue('to',$addressList);
+                        $this->objMailer->setValue('subject',$subject);
+                        $this->objMailer->setValue('body', $body);
+                        $this->objMailer->send();
+
                         return $this->nextAction('surveygroups',array('survey_id'=>$surveyId));
                     }else{
                         $linkText=$this->getParam('link');
@@ -334,7 +345,12 @@ class survey extends controller
                         foreach($arrCollaboratorList as $collaborator){
                             $addressList[]=$collaborator['emailaddress'];
                         }
-                        $this->objMailer->sendMail('',$subject,$addressList,$body);
+
+                        $this->objMailer->setValue('to',$addressList);
+                        $this->objMailer->setValue('subject',$subject);
+                        $this->objMailer->setValue('body', $body);
+                        $this->objMailer->send();
+
                         return $this->nextAction('surveygroups',array('survey_id'=>$surveyId));
                     }
                 }else{
