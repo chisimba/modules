@@ -378,14 +378,27 @@ class dbcontent extends dbTable
         /**
          * Method to get the title and id of all pages in a specific section
          *
-         * @param string $sectionId The id of the section
+         * @param string $sectionId The id of the section. Returns pages from all sections if NULL. Defaults to NULL
+         * @param int $limit The amount of records to return. Returns all pages if NULL. Defaults to NULL
          * @return array $titles An array of associative arrays containing the id and title of all pages in the section
          * @access public
          * @author Warren Windvogel
          */
-        public function getTitles($sectionId)
+        public function getTitles($sectionId = NULL, $limit = NULL)
         {
-            $sql = "SELECT id, title FROM tbl_cms_content WHERE sectionid = '$sectionId' ORDER BY ordering";
+            //If only the section id is set, return all records in the section
+            if($sectionId == NULL && $limit != NULL){
+                $sql = "SELECT id, title FROM tbl_cms_content ORDER BY created DESC LIMIT '$limit'";
+            //If only the limit is set, return set amount of pages from all sections
+            } else if($sectionId != NULL && $limit == NULL){
+                $sql = "SELECT id, title FROM tbl_cms_content WHERE sectionid = '$sectionId' ORDER BY created DESC";
+            //If both params are set, return set amount of pages from specified section
+            } else if($sectionId != NULL && $limit != NULL){
+                $sql = "SELECT id, title FROM tbl_cms_content WHERE sectionid = '$sectionId' ORDER BY created DESC LIMIT '$limit'";
+            //Else if neither param is set, return all records
+            } else {
+                $sql = "SELECT id, title FROM tbl_cms_content ORDER BY created DESC";
+            }
             $titles = $this->getArray($sql);
             return $titles;
         }
