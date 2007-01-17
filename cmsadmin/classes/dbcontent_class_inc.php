@@ -390,21 +390,6 @@ class dbcontent extends dbTable
             $titles = $this->getArray($sql);
             return $titles;
         }
-
-        /**
-         * Method to get the title and id of the last 5 pages added
-         *
-         * @return array $lastFiveTitles An array of associative arrays containing the id and title of the last 5 pages added
-         * @access public
-         * @author Warren Windvogel
-         */
-        public function getLastFiveTitles()
-        {
-            $sql = "SELECT id, title FROM tbl_cms_content ORDER BY created DESC LIMIT 5";
-            
-            $lastFiveTitles = $this->getArray($sql);
-            return $lastFiveTitles;
-        }
         
         /**
          * Method to get the title and id of the last 5 pages added
