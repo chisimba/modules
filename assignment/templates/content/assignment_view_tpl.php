@@ -23,21 +23,22 @@ $objButton =& $this->newObject('button','htmlelements');
 $objLink =& $this->newObject('link','htmlelements');
 
 // set up language items
-$assignmentLabel = $this->objLanguage->languageText('mod_assignment_assignment');
-$heading = $this->objLanguage->languageText('mod_assignment_view').' '.$assignmentLabel;
+$assignmentLabel = $this->objLanguage->languageText('mod_assignment_assignment','assignment');
+$heading = $this->objLanguage->languageText('mod_assignment_view','assignment').' '.$assignmentLabel;
 $nameLabel = $this->objLanguage->languageText('mod_assignment_wordname','assignment');
 $descriptionLabel = $this->objLanguage->languageText('mod_assignment_description','assignment');
 $lecturerLabel = ucwords($this->objLanguage->languageText('mod_context_author'));
-$resubmitLabel = $this->objLanguage->languageText('mod_assignment_allowresubmit');
-$markLabel = $this->objLanguage->languageText('mod_assignment_mark');
+$resubmitLabel = $this->objLanguage->languageText('mod_assignment_allowresubmit','assignment');
+$markLabel = $this->objLanguage->languageText('mod_assignment_mark','assignment');
 $dateLabel = $this->objLanguage->languageText('mod_assignment_closingdate','assignment','assignment');
 $noLabel = $this->objLanguage->languageText('word_no');
 $yesLabel = $this->objLanguage->languageText('word_yes');
 $submitLabel = $this->objLanguage->languageText('word_submit');
-$completeLabel = $this->objLanguage->languageText('mod_assignment_completeonline');
-$uploadLabel = $this->objLanguage->languageText('mod_assignment_upload').' '.$assignmentLabel;
+$completeLabel = $this->objLanguage->languageText('mod_assignment_completeonline','assignment');
+$uploadLabel = $this->objLanguage->languageText('mod_assignment_upload','assignment').' '.$assignmentLabel;
 $exitLabel = $this->objLanguage->languageText('word_exit');
-$percentLabel = $this->objLanguage->languageText('mod_assignment_percentyrmark');
+$percentLabel = $this->objLanguage->languageText('mod_assignment_percentyrmark','assignment');
+$objSelectFile = $this->newObject('selectfile', 'filemanager');
 
 $lnPlain = $this->objLanguage->languageText('mod_testadmin_plaintexteditor');
 $lnWysiwyg = $this->objLanguage->languageText('mod_testadmin_wysiwygeditor');
@@ -61,7 +62,7 @@ if(!empty($data)){
     // Display the assignment
     $objTable->startRow();
     $objTable->addCell('<b>'.$nameLabel.':</b>&nbsp;&nbsp;&nbsp;&nbsp;'.$data[0]['name'],'45%');
-    $objTable->addCell('<b>'.$lecturerLabel.':</b>&nbsp;&nbsp;&nbsp;&nbsp;'.$this->objUser->fullname($data[0]['userId']),'55%');
+    $objTable->addCell('<b>'.$lecturerLabel.':</b>&nbsp;&nbsp;&nbsp;&nbsp;'.$this->objUser->fullname($data[0]['userid']),'55%');
     $objTable->endRow();
 
     $objTable->startRow();
@@ -84,7 +85,7 @@ if(!empty($data)){
     $objTable->endRow();
 
     $objTable->startRow();
-    $objTable->addCell($data[0]['description'],'','','','','colspan=2');
+    $objTable->addCell($data[0]['description'],'','','','','colspan="2"');
     $objTable->endRow();
 
     $objLayer->cssClass = 'odd';
@@ -101,12 +102,16 @@ if(!empty($data)){
     if($data[0]['format']){
         // upload a file, add hidden fileId if multiple submissions
         $inputStr = '<b>'.$uploadLabel.':</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-        $objInput = new textinput('file');
-        $objInput->fldType = 'file';
-        $inputStr .= $objInput->show();
 
-        if(!empty($data[0]['fileId'])){
-            $objInput = new textinput('fileId', $data[0]['fileId']);
+	$objSelectFile->name = 'file';
+
+	//$form->addToForm($objSelectFile->show());
+        //$objInput = new textinput('file');
+        //$objInput->fldType = 'file';
+        //$inputStr .= $objSelectFile->show();
+
+        if(!empty($data[0]['fileid'])){
+            $objInput = new textinput('fileid', $data[0]['fileid']);
             $objInput->fldType = 'hidden';
             $inputStr .= $objInput->show();
         }
@@ -117,7 +122,7 @@ if(!empty($data)){
             $dOnline = $data[0]['online'];
         }
 
-        $inputStr = '<b>'.$completeLabel.':</b><p>';
+        $inputStr = '<b>'.$completeLabel.':</b>';
 
         $type = $this->getParam('editor', 'ww');
         if($type == 'plaintext'){
@@ -127,9 +132,9 @@ if(!empty($data)){
             $objText = new textarea('text', $dOnline, 15, 80);
             $inputStr .= $objText->show();
 
-            $objLink = new link("javascript:submitForm('changeeditor')");
+            $objLink = new link("javascript:submitform('changeeditor')");
             $objLink->link = $lnWysiwyg;
-            $inputStr .= '<br>'.$objLink->show().$objInput->show().'<br><br>';
+            $inputStr .= '<br/>'.$objLink->show().$objInput->show();
         }else{
             // Hidden element for the editor type
             $objInput = new textinput('editor', 'plaintext', 'hidden');
@@ -142,7 +147,7 @@ if(!empty($data)){
 
             $objLink = new link("javascript:submitForm('changeeditor')");
             $objLink->link = $lnPlain;
-            $inputStr .= '<br>'.$objLink->show().$objInput->show().'<br><br>';
+            $inputStr .= '<br />'.$objLink->show().$objInput->show();
         }
 
     }
@@ -156,13 +161,14 @@ if(!empty($data)){
     $objInput = new textinput('action', 'submit', 'hidden');
     $hidden .= $objInput->show();
 
-    if(!empty($data[0]['submitId'])){
-        $objInput = new textinput('submitId', $data[0]['submitId']);
+    if(!empty($data[0]['submitid'])){
+        $objInput = new textinput('submitid', $data[0]['submitid']);
         $objInput->fldType = 'hidden';
         $hidden .= $objInput->show();
     }
 
     // submit buttons and form
+   
     $objButton = new button('save', $submitLabel);
     $objButton->setToSubmit();
     $btns = $objButton->show().'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
@@ -170,12 +176,15 @@ if(!empty($data)){
     $objButton = new button('save', $exitLabel);
     $objButton->setToSubmit();
     $btns .= $objButton->show();
-
+	
     $objForm = new form('upload', $this->uri(''));
+	$objForm->addToForm($objSelectFile->show());
     $objForm->extra = " ENCTYPE='multipart/form-data'";
+
     $objForm->addToForm($inputStr);
+ 
     $objForm->addToForm($hidden);
-    $objForm->addToForm('<br><br>'.$btns);
+    $objForm->addToForm('<br />'.$btns);
 
     $layerStr = $objForm->show();
 

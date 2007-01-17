@@ -83,7 +83,7 @@ class assignment extends controller
         $this->objContext =& $this->newObject('dbcontext','context');
 
         // Get an instance of the filestore object and change the tables to essay specific tables
-       //$this->objFile=& $this->getObject('fileupload','filestore');
+       $this->objFile=& $this->getObject('upload','filemanager');
        // $this->objFile->changeTables('tbl_assignment_filestore','tbl_assignment_blob');
 
         $this->userId = $this->objUser->userId();
@@ -159,7 +159,7 @@ class assignment extends controller
             if(!empty($wsData)){
                 foreach($wsData as $key=>$line){
                     $result = $this->dbWorksheetResults->getResults(NULL, "worksheet_id='"
-                            .$line['id']."' AND userId='".$this->userId."'");
+                            .$line['id']."' AND userid='".$this->userId."'");
                     $wsData[$key]['mark'] = $result[0]['mark'];
                     $wsData[$key]['completed'] = $result[0]['completed'];
                 }
@@ -168,7 +168,7 @@ class assignment extends controller
         if($this->essay){
             // get topic list for the context
             $topicFilter = "context='".$this->contextCode."'";
-            $topicFields = 'id, name, closing_date, userId';
+            $topicFields = 'id, name, closing_date, userid';
             $topics = $this->dbEssayTopics->getTopic(NULL, $topicFields, $topicFilter);
 
             // check booked topics and get booked essays
@@ -182,7 +182,7 @@ class assignment extends controller
                         $booking[0]['essayName'] = $essay[0]['topic'];
                         $booking[0]['topicName'] = $item['name'];
                         $booking[0]['closing_date'] = $item['closing_date'];
-                        $booking[0]['lecturer'] = $item['userId'];
+                        $booking[0]['lecturer'] = $item['userid'];
                         $essayData[] = $booking[0];
                     }else{
                         $i++;
@@ -207,12 +207,17 @@ class assignment extends controller
                 }
             }
         }
-        $assignData = $this->dbAssignment->getAssignment($this->contextcode);
+        $assignData = $this->dbAssignment->getAssignment($this->contextCode);
+
+ 
         if(!empty($assignData)){
             foreach($assignData as $key=>$val){
-                $submitData = $this->dbSubmit->getSubmit("assignmentId='".$val['id']."' AND
-                userId='".$this->objUser->userId()."'", 'id AS submitId, mark AS studentMark, dateSubmitted, fileId');
-                $assignData[$key] = array_merge($val, $submitData[0]);
+                $submitData = $this->dbSubmit->getSubmit("assignmentid='".$val['id']."' AND
+                userid='".$this->objUser->userId()."'", 'id AS submitid, mark AS studentmark, datesubmitted, fileid');
+
+		if(!($submitData === FALSE)){
+                	$assignData[$key] = array_merge($val, $submitData[0]);
+		}
             }
         }
         $msg = $this->getParam('confirm');
@@ -238,12 +243,12 @@ class assignment extends controller
         $data = $this->dbAssignment->getAssignment($this->contextCode, "id='$id'");
 
         if($data[0]['resubmit'] || $var){
-            $submit = $this->dbSubmit->getSubmit("assignmentId='$id' AND userId='"
+            $submit = $this->dbSubmit->getSubmit("assignmentid='$id' AND userid='"
             .$this->objUser->userId()."'", 'id, online, fileId');
             if(!empty($submit)){
                 $data[0]['online'] = $submit[0]['online'];
-                $data[0]['fileId'] = $submit[0]['fileId'];
-                $data[0]['submitId'] = $submit[0]['id'];
+                $data[0]['fileid'] = $submit[0]['fileid'];
+                $data[0]['submitid'] = $submit[0]['id'];
             }
         }
 
@@ -270,20 +275,20 @@ class assignment extends controller
     public function saveAssign()
     {
         $fields = array();
-        $fields['assignmentId'] = $this->getParam('id', '');
-        $fields['userId'] = $this->userId;
-        $fields['dateSubmitted'] = date('Y-m-d H:i', time());
+        $fields['assignmentid'] = $this->getParam('id', '');
+        $fields['userid'] = $this->userId;
+        $fields['datesubmitted'] = date('Y-m-d H:i', time());
 
         $postFormat = $this->getParam('format');
-        if($postFormat){
-            $fileId = $this->getParam('fileId', NULL);
-            $fileId = $this->objFile->uploadFile($_FILES['file'],'file',$fileId);
-            $fields['fileId'] = $fileId;
+        if($postFormat && isset($_FILES['file'])){
+            $fileId = $this->getParam('fileid', NULL);
+	    $fileId = $this->objFile->uploadFile($_FILES['file'],'file',$fileId);
+            $fields['fileid'] = $fileId;
         }else{
             $fields['online'] = $this->getParam('text', '');
         }
 
-        $postSubmitId = $this->getParam('submitId', NULL);
+        $postSubmitId = $this->getParam('submitid', NULL);
         $id = $this->dbSubmit->addSubmit($fields, $postSubmitId);
         return $id;
     }

@@ -39,17 +39,17 @@ $essayLabel = $this->objLanguage->languageText('mod_essay_name');
 $essay = $this->objLanguage->languageText('mod_essay_essay');
 $topicLabel = $this->objLanguage->languageText('mod_essay_topic');
 $essayHead = $this->objLanguage->languageText('mod_essay_essays');
-$markLabel = $this->objLanguage->languageText('mod_assignment_mark');
-$openLabel = $this->objLanguage->languageText('mod_assignment_open');
+$markLabel = $this->objLanguage->languageText('mod_assignment_mark','assignment');
+$openLabel = $this->objLanguage->languageText('mod_assignment_open','assignment');
 $closedLabel = $this->objLanguage->languageText('mod_assignment_closed');
-$viewLabel = $this->objLanguage->languageText('mod_assignment_view');
+$viewLabel = $this->objLanguage->languageText('mod_assignment_view','assignment');
 $bookLabel = $this->objLanguage->languageText('mod_assignment_bookessay');
-$submittedLabel = $this->objLanguage->languageText('mod_assignment_submitted');
+$submittedLabel = $this->objLanguage->languageText('mod_assignment_submitted','assignment');
 $commentLabel = ucwords($this->objLanguage->code2Txt('mod_assignment_viewlecturerscomment',$repWords));
 $typeLabel = $this->objLanguage->languageText('mod_assignment_assignmenttype','assignment');
-$uploadLabel = $this->objLanguage->languageText('mod_assignment_upload');
+$uploadLabel = $this->objLanguage->languageText('mod_assignment_upload','assignment');
 $downloadLabel = $this->objLanguage->languageText('mod_assignment_downloadassignment');
-$onlineLabel = $this->objLanguage->languageText('mod_assignment_onlineanswer');
+$onlineLabel = $this->objLanguage->languageText('mod_assignment_online','assignment');
 $testLabel = $this->objLanguage->languageText('mod_test_name');
 $rubricLabel = $this->objLanguage->languageText('mod_rubric_name');
 $completedLabel = $this->objLanguage->languageText('word_completed');
@@ -63,7 +63,7 @@ if($this->essay){
     $objLink->link($this->uri(array(''),'essay'));
     $objLink->link = $objIcon->show();
     $objLink->title = $bookLabel;
-    $essayLink = '<br>'.$objLink->show();
+    $essayLink = '<br />'.$objLink->show();
     $objLink->link = $essayLabel;
     $essayLink .= '&nbsp;&nbsp;'.$objLink->show();
     $leftLinks .= $essayLink;
@@ -74,7 +74,7 @@ if($this->ws){
     $objLink->link($this->uri(array(''),'worksheet'));
     $objLink->link = $objIcon->show();
     $objLink->title = $openLabel.' '.$worksheetLabel;
-    $wsLink = '<P>'.$objLink->show();
+    $wsLink = '<p/>'.$objLink->show();
     $objLink->link = $worksheetLabel;
     $wsLink .= '&nbsp;&nbsp;'.$objLink->show();
     $leftLinks .= $wsLink;
@@ -85,7 +85,7 @@ if($this->test){
     $objLink->link($this->uri(array(''),'test'));
     $objLink->link = $objIcon->show();
     $objLink->title = $openLabel.' '.$testLabel;
-    $testLink = '<P>'.$objLink->show();
+    $testLink = '<p/>'.$objLink->show();
     $objLink->link = $testLabel;
     $testLink .= '&nbsp;&nbsp;'.$objLink->show();
     if(!$this->essay && !$this->ws){
@@ -104,9 +104,9 @@ if($this->rubric){
     $objLink->link = $rubricLabel;
     $rubricLink .= '&nbsp;&nbsp;'.$objLink->show();
     if(!$this->essay && !$this->ws){
-        $leftLinks .= '<P>'.$rubricLink.'</P>';
+        $leftLinks .= '<p>'.$rubricLink.'</p>';
     }else{
-        $rightLinks .= '<P>'.$rubricLink.'</P>';
+        $rightLinks .= '<p>'.$rubricLink.'</p>';
     }
 }
 
@@ -124,7 +124,7 @@ $objTable->init();
 
 if(isset($msg)){
     $objTimeOut->setMessage($msg);
-    echo '<p>'.$objTimeOut->show();
+    echo '<p/>'.$objTimeOut->show();
 }
 
 if($this->essay){
@@ -245,7 +245,7 @@ if($this->ws){
                 $objTable1->startRow();
                 $objTable1->addCell($line['name'],'20%','','',$class);
                 $objTable1->addCell($description,'','','',$class);
-                $objTable1->addCell($this->objUser->fullname($line['userId']),'15%','','',$class);
+                $objTable1->addCell($this->objUser->fullname($line['userid']),'15%','','',$class);
                 $objTable1->addCell($this->formatDate($line['closing_date']),'15%','','',$class);
                 $objTable1->addCell($status,'12%','','',$class);
                 $objTable1->endRow();
@@ -297,7 +297,7 @@ if($this->test){
 
                 $mark = '';
                 if($line['mark'] != 'none'){
-                    if($line['testType']=='Summative'){
+                    if($line['testType']=='summative'){
                         $mark = $completedLabel;
                     }else{
                         $mark = $markLabel.' = '.round(($line['mark'] / $line['totalMark'] *    100)).'%';
@@ -311,7 +311,7 @@ if($this->test){
                 $objTable3->startRow();
                 $objTable3->addCell($line['name'],'20%','','',$class);
                 $objTable3->addCell($description,'','','',$class);
-                $objTable3->addCell($this->objUser->fullname($line['userId']),'15%','','',$class);
+                $objTable3->addCell($this->objUser->fullname($line['userid']),'15%','','',$class);
                 $objTable3->addCell($this->formatDate($line['closing_date']),'15%','','',$class);
                 $objTable3->addCell($mark,'12%','','',$class);
                 $objTable3->endRow();
@@ -364,7 +364,7 @@ if(!empty($assignData)){
             $objIcon->setIcon('comment_view');
             $objIcon->title=$commentLabel;
             $objIcon->extra="onclick=\"javascript:window.open('" .$this->uri(array(
-            'action'=>'showcomment', 'id'=>$line['submitId'], 'name'=>$line['name']))
+            'action'=>'showcomment', 'id'=>$line['submitid'], 'name'=>$line['name']))
             ."', 'assignmentcomment', 'width=400, height=200, scrollbars=1')\" ";
             $objLink->link('#');
             $objLink->link = $objIcon->show();
@@ -375,14 +375,14 @@ if(!empty($assignData)){
                 $objIcon->setIcon('download');
                 $objIcon->title=$downloadLabel;
                 $objIcon->extra='';
-                $objLink->link($this->uri(array('action'=>'download','fileid'=>$line['fileId'])));
+                $objLink->link($this->uri(array('action'=>'download','fileid'=>$line['fileid'])));
                 $objLink->link = $objIcon->show();
                 $status .= '&nbsp;'.$objLink->show();
             }
         }else if($line['closing_date'] < date('Y-m-d H:i')){
             $status = $closedLabel;
             $noLink = TRUE;
-        }else if(!empty($line['dateSubmitted'])){
+        }else if(!empty($line['datesubmitted'])){
             // Status = submitted without resubmission
             $status = $submittedLabel;
             if($line['resubmit']){
@@ -422,8 +422,8 @@ if(!empty($assignData)){
         $objTable2->addCell($name,'20%','','',$class);
         $objTable2->addCell($format,'13%','','',$class);
         $objTable2->addCell($description,'','','',$class);
-        $objTable2->addCell($this->objUser->fullname($line['userId']),'15%','','',$class);
-        $objTable2->addCell($this->formatDate($line['closing_date']),'15%','','',$class);
+        $objTable2->addCell($this->objUser->fullname($line['userid']),'15%','','',$class);
+        $objTable2->addCell($this->objDate->formatDate($line['closing_date']),'15%','','',$class);
         $objTable2->addCell($status,'12%','','',$class);
         $objTable2->endRow();
     }

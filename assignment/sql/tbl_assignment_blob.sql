@@ -10,7 +10,7 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
-	'fileId' => array(
+	'fileid' => array(
 		'type' => 'text',
 		'length' => 100
 		),	

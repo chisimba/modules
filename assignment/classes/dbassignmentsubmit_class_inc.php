@@ -107,7 +107,7 @@ class dbassignmentsubmit extends dbtable
     */
     public function getContextSubmissions($context)
     {
-        $sql = 'SELECT assign.id, assign.name, assign.closing_date, submit.dateSubmitted, submit.mark ';
+        $sql = 'SELECT assign.id, assign.name, assign.closing_date, submit.datesubmitted, submit.mark ';
         $sql .= 'FROM '.$this->table.' AS submit ';
         $sql .= 'LEFT JOIN '.$this->assignTable.' as assign ON assign.id = submit.assignmentId ';
         $sql .= "WHERE context = '$context' ORDER BY assign.id";
@@ -135,7 +135,7 @@ class dbassignmentsubmit extends dbtable
     public function getFileName($userId, $fileId)
     {
         $sql = "SELECT filename FROM tbl_assignment_filestore ";
-        $sql .= "WHERE fileId='$fileId'";
+        $sql .= "WHERE fileid='$fileid'";
 
         $data = $this->getArray($sql);
         return $data[0]['filename'];
