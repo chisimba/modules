@@ -742,9 +742,9 @@ class mcqtests extends controller
         $arrComLabs = array();
         $contentRoot = $this->objConfig->getcontentBasePath();
         $fileLocation = $contentRoot.'/modules/mcqtests/';
+        $fileLocation = str_replace('//','/',$fileLocation);
         if (!is_dir($fileLocation)) {
-            $this->objMkdir->fullFilePath = $fileLocation;
-            $this->objMkdir->makedir();
+            $this->objMkdir->mkdirs($fileLocation);
         }
         $pattern = $fileLocation.'*.csv';
         foreach(glob($pattern) as $filename) {
