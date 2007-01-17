@@ -186,9 +186,9 @@ class commenttypeadmin extends controller
 	
 	//to remove old icons
 	
-
-	@chmod(move_uploaded_file($temppath,$path.$filename),0777);
-	@chmod($path.$filename,0777);
+         
+	//@chmod(move_uploaded_file($temppath,$path.$filename),0777);
+	//@chmod($path.$filename,0777);
 	
  
 
