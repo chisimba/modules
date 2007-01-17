@@ -35,7 +35,7 @@ $this->Table = $this->newObject('htmltable', 'htmlelements');
 $this->Table->cellspacing="2";
 $this->Table->cellpadding="2";
 $this->Table->width="98%";
-
+$this->Table->id="unpadded";
 //Create the array for the table header
 $tableRow=array();
 $tableHd[]=$objLanguage->languageText('mod_quotesadmin_quote','quotesadmin');
