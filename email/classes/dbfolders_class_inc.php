@@ -74,6 +74,7 @@ class dbfolders extends dbTable
     public function deleteFolder($folderId)
     {
         $this->delete('id', $folderId);
+        $this->dbRouting->delete('folder_id', $folderId);
     }
 
     /**

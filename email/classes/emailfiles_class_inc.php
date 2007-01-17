@@ -181,6 +181,8 @@ class emailfiles extends dbTable
                 rename($this->tempPath.$attachment['filename'], $this->filePath.$attachmentId);
             }
             $attachmentCount['attachments'] = count($attachments);
+        }else{
+            $attachmentCount = 0;
         }
         $this->clearAttachments();
         return $attachmentCount;
