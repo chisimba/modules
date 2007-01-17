@@ -18,6 +18,8 @@ class blogops extends object
 {
 	public $objConfig;
 
+	public $mail2blog = TRUE;
+
     /**
      * Standard init function called by the constructor call of Object
      *
@@ -37,6 +39,10 @@ class blogops extends object
             echo customException::cleanUp();
             die();
         }
+        if(!extension_loaded("imap"))
+		{
+			$this->mail2blog = FALSE;
+		}
         //some sanity checks first!
         if (!@include_once ('HTTP/Request.php')) {
             throw new customException($this->objLanguage->languageText("mod_blog_sanity_httpreq", "blog"));
@@ -525,6 +531,10 @@ class blogops extends object
      */
     public function showMailSetup($featurebox = TRUE, $dsnarr = NULL)
     {
+    	if($this->mail2blog == FALSE)
+    	{
+    		return NULL;
+    	}
         //start a form to go back to the setupmail action with the vars
         //make sure that all form vars are required!
         $mform = new form('setupmail', $this->uri(array(
@@ -642,9 +652,15 @@ class blogops extends object
             'action' => 'importblog'
         )) , $this->objLanguage->languageText("mod_blog_blogimport", "blog"));
         //mail setup
-        $mailsetup = new href($this->uri(array(
-            'action' => 'setupmail'
-        )) , $this->objLanguage->languageText("mod_blog_setupmail", "blog"));
+        if($this->mail2blog == FALSE)
+        {
+        	$mailsetup = NULL;
+        }
+        else {
+        	$mailsetup = new href($this->uri(array(
+            	'action' => 'setupmail'
+        	)) , $this->objLanguage->languageText("mod_blog_setupmail", "blog"));
+        }
         //write new post link
         $newpost = new href($this->uri(array(
             'action' => 'blogadmin',
@@ -714,7 +730,13 @@ class blogops extends object
             //build the links
             $this->objUser = $this->getObject('user', 'security');
             if ($this->objUser->inAdminGroup($this->objUser->userId())) {
-                $ret.= $admin->show() ."<br />". $profile->show() . "<br />" . $import->show() ."<br />".$mailsetup->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
+            	if($this->mail2blog == FALSE)
+            	{
+            		$ret.= $admin->show() ."<br />". $profile->show() . "<br />" . $import->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
+            	}
+            	else {
+                	$ret.= $admin->show() ."<br />". $profile->show() . "<br />" . $import->show() ."<br />".$mailsetup->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
+            	}
             } else {
                 $ret.= $admin->show() ."<br />". $profile->show() . "<br />" .$import->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$rssedits->show() ."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
             }
@@ -1400,7 +1422,7 @@ class blogops extends object
         //post category field
         //dropdown of cats
         $ptable->startRow();
-        $pdlabel = new label($this->objLanguage->languageText('mod_blog_postcat', 'blog') .':', 'input_postcatfull');
+        $pdlabel = new label($this->objLanguage->languageText('mod_blog_postcat', 'blog') .':', 'input_cat');
         $pDrop = new dropdown('cat');
         if (isset($editparams['post_category'])) {
             $pDrop->addOption($editparams['post_category'], $editparams['post_category']);
@@ -1417,7 +1439,7 @@ class blogops extends object
         $ptable->endRow();
         //post status dropdown
         $ptable->startRow();
-        $pslabel = new label($this->objLanguage->languageText('mod_blog_poststatus', 'blog') .':', 'input_poststatfull');
+        $pslabel = new label($this->objLanguage->languageText('mod_blog_poststatus', 'blog') .':', 'input_status');
         $psDrop = new dropdown('status');
         $psDrop->addOption(0, $this->objLanguage->languageText("mod_blog_published", "blog"));
         $psDrop->addOption(1, $this->objLanguage->languageText("mod_blog_draft", "blog"));
@@ -1429,16 +1451,17 @@ class blogops extends object
         $this->loadClass("checkbox", "htmlelements");
         $commentsallowed = new checkbox('commentsallowed', $this->objLanguage->languageText("mod_blog_word_yes", "blog") , true);
         $ptable->startRow();
-        $pcomlabel = new label($this->objLanguage->languageText('mod_blog_commentsallowed', 'blog') .':', 'input_commentsallowedfull');
+        $pcomlabel = new label($this->objLanguage->languageText('mod_blog_commentsallowed', 'blog') .':', 'input_commentsallowed');
         $ptable->addCell($pcomlabel->show());
         $ptable->addCell($commentsallowed->show());
         $ptable->endRow();
         //post excerpt
         $this->loadClass('textarea', 'htmlelements');
-        $pexcerpt = new textarea;
+        $pexcerptlabel = new label($this->objLanguage->languageText('mod_blog_postexcerpt', 'blog') .':', 'input_postexcerpt');
+        $pexcerpt = new textarea('postexcerpt');
         $pexcerpt->setName('postexcerpt');
         $ptable->startRow();
-        $pexcerptlabel = new label($this->objLanguage->languageText('mod_blog_postexcerpt', 'blog') .':', 'input_postexcerpt');
+
         if (isset($editparams['post_excerpt'])) {
             $pexcerpt->setcontent(stripslashes(htmlentities($editparams['post_excerpt']))); //nl2br - htmmlentittes +
         }
@@ -1446,12 +1469,12 @@ class blogops extends object
         $ptable->addCell($pexcerpt->show());
         $ptable->endRow();
         //post content
-        $pclabel = new label($this->objLanguage->languageText('mod_blog_pcontent', 'blog') .':', 'input_pcont');
+        $pclabel = new label($this->objLanguage->languageText('mod_blog_pcontent', 'blog') .':', 'input_postcontent');
         $pcon = $this->newObject('htmlarea', 'htmlelements');
         $pcon->setName('postcontent');
-	$pcon->height = 400;
-	$pcon->width = 420;
-	$pcon->setDefaultToolbarSet();
+		$pcon->height = 400;
+		$pcon->width = 420;
+		$pcon->setDefaultToolbarSet();
         if (isset($editparams['post_content'])) {
             $pcon->setcontent((stripslashes(($editparams['post_content']))));
         }
@@ -1528,14 +1551,16 @@ class blogops extends object
         $postbutton_text = $this->objPButton->show();
         $postform->addToForm($postbutton_text);
         $postform = $postform->show();
-
-
-
-
-
         return $postform;
-
     }
+
+    /**
+     * Method to get the archiveed posts array for manipulation
+     *
+     * @param string $userid
+     * @return array
+     * @access private
+     */
     private function _archiveArr($userid)
     {
         //add in a foreach for each year
@@ -1562,6 +1587,13 @@ class blogops extends object
             return NULL;
         }
     }
+    /**
+     * Method to produce the archived posts box
+     *
+     * @param string $userid
+     * @param objetc $featurebox
+     * @return string
+     */
     public function archiveBox($userid, $featurebox = FALSE)
     {
         //get the posts for each month
@@ -2115,7 +2147,7 @@ class blogops extends object
 
         //blog name field
         $ptable->startRow();
-        $bnamelabel = new label($this->objLanguage->languageText('mod_blog_blogname', 'blog') .':', 'input_bname');
+        $bnamelabel = new label($this->objLanguage->languageText('mod_blog_blogname', 'blog') .':', 'input_blogname');
         $bname = new textinput('blogname');
         if(isset($profile['blog_name']))
         {
@@ -2129,7 +2161,7 @@ class blogops extends object
 
         //blog description field
         $ptable->startRow();
-        $bdeclabel = new label($this->objLanguage->languageText('mod_blog_blogdesc', 'blog') .':', 'input_bdesc');
+        $bdeclabel = new label($this->objLanguage->languageText('mod_blog_blogdesc', 'blog') .':', 'input_blogdesc');
         $bdec = new textarea('blogdesc');
         if(isset($profile['blog_descrip']))
         {
@@ -2141,13 +2173,14 @@ class blogops extends object
 
         //blogger profile field
         $ptable->startRow();
-        $bprflabel = new label($this->objLanguage->languageText('mod_blog_bloggerprofile', 'blog') .':', 'input_bprf');
+        $bprflabel = new label($this->objLanguage->languageText('mod_blog_bloggerprofile', 'blog') .':', 'input_blogprofile');
         $bprf = $this->newObject('htmlarea', 'htmlelements');
+        $bprf->setName('blogprofile');
         if(isset($profile['blogger_profile']))
         {
         	$bprf->setcontent($profile['blogger_profile']);
         }
-        $bprf->setName('blogprofile');
+
         $ptable->addCell($bprflabel->show());
         $ptable->addCell($bprf->showFCKEditor());
         $ptable->endRow();
@@ -2162,9 +2195,10 @@ class blogops extends object
         $pform = $pform->show();
 
         //bust out a featurebox for consistency
-        $objFeatureBox = $this->newObject('featurebox', 'navigation');
-        $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_setprofile", "blog") , $pform);
-        return $ret;
+        //$objFeatureBox = $this->newObject('featurebox', 'navigation');
+        //$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_setprofile", "blog") , $pform);
+        return $pform;
+        //return $ret;
     }
 
     public function showProfile($userid)
