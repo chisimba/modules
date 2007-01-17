@@ -33,18 +33,18 @@ foreach ($allUsers as $user) {
     $class = ($rowcount % 2 == 0)?'odd':'even'; 
     // Get user pic
     $objUserPic = &$this->getObject('imageupload', 'useradmin');
-    $pic = "<image src=\"" . $objUserPic->smallUserPicture($user['userId']) . "\"/>"; 
+    $pic = "<image src=\"" . $objUserPic->smallUserPicture($user['userid']) . "\"/>"; 
     // Get user name
-    $username = $user["firstName"] . "&nbsp;" . $user["surname"]; 
+    $username = $user["firstname"] . "&nbsp;" . $user["surname"]; 
     // Get user email 
-    $email = "<a href=\"mailto:" . $user["emailAddress"] . "\">" . $user["emailAddress"] . "</a>"; 
+    $email = "<a href=\"mailto:" . $user["emailaddress"] . "\">" . $user["emailaddress"] . "</a>"; 
     // Create make buddy link or show is buddy icon
-    if ($user['userId'] == $objUser->userId()) {    	
+    if ($user['userid'] == $objUser->userId()) {    	
     }
     else if (!$isBuddy[$index]) {
         $makeBuddy = "<a href = \"" . $this->uri(array('module' => 'buddies',
                 'action' => 'AddBudy',
-                'buddyId' => $user["userId"],
+                'buddyId' => $user["userid"],
                 'how' => 'firstname',
                 'searchField' => $this->getParam('searchField')
                 ))

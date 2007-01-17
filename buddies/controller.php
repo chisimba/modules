@@ -75,7 +75,7 @@ class buddies extends controller
                 $isBuddy = array();
                 foreach ($allUsers as $user) {
             		$objDbBuddies =& $this->getObject('dbbuddies');
-            		$count = $objDbBuddies->countSingle($this->objUser->userId(), $user['userId']);
+            		$count = $objDbBuddies->countSingle($this->objUser->userId(), $user['userid']);
                     $isBuddy[] = $count[0]['count(*)'] > 0;
                 }
 		        $this->setVarByRef('isBuddy', $isBuddy);
@@ -106,7 +106,7 @@ class buddies extends controller
                 $isBuddy = array();
                 foreach ($allUsers as $user) {
             		$objDbBuddies =& $this->getObject('dbbuddies');
-            		$count = $objDbBuddies->countSingle($this->objUser->userId(), $user['userId']);
+            		$count = $objDbBuddies->countSingle($this->objUser->userId(), $user['userid']);
                     $isBuddy[] = $count[0]['count(*)'] > 0;
                 }
 		        $this->setVarByRef('isBuddy', $isBuddy);
@@ -134,15 +134,15 @@ class buddies extends controller
         $this->setVarByRef('Icq', $Icq);
         $this->setVarByRef('Yahoo', $Yahoo);
 		foreach ($buddies as $buddy) {
-			$list = $objDbLoggedInUsers->listSingle($buddy['buddyId']);
+			$list = $objDbLoggedInUsers->listSingle($buddy['buddyid']);
 			if (empty($list)) {
 			    $buddiesOnline[] = false;
 			}
 			else {
 			    $buddiesOnline[] = true;
 			}
-            $Icq[]=$this->objIcq->getStatusIcon($buddy['buddyId'], 'byuserid');
-            $Yahoo[]=$this->objYahoo->getStatusIcon($buddy['buddyId'], 'byuserid');
+           $Icq[]=$this->objIcq->getStatusIcon($buddy['buddyid'], 'byuserid');
+            $Yahoo[]=$this->objYahoo->getStatusIcon($buddy['buddyid'], 'byuserid');
 		}
 		return "main_tpl.php";
         //return "main_tpl.php";
