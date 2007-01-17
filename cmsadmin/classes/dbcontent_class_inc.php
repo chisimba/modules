@@ -405,6 +405,21 @@ class dbcontent extends dbTable
             $lastFiveTitles = $this->getArray($sql);
             return $lastFiveTitles;
         }
+        
+        /**
+         * Method to get the title and id of the last 5 pages added
+         *
+         * @return array $lastFiveTitles An array of associative arrays containing the id and title of 
+         * the last $n pages added
+         * @param int $n The number of pages whose titles we should get
+         * @access public
+         * @author Warren Windvogel / added by Derek Keats 2007 01 17
+         */
+        public function getLatestTitles($n=5)
+        {
+            $sql = "SELECT id, title FROM tbl_cms_content ORDER BY created DESC LIMIT $n";
+            return $this->getArray($sql);
+        }
 
         /**
          * Method to get the number of pages in a specific section
