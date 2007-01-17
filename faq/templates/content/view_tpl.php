@@ -83,7 +83,7 @@
 	$dropdown->setSelected($categoryId);
 	$form->addToForm($dropdown);
 	$form->addToForm("&nbsp;");
-	$button = new button("submit", $objLanguage->languageText("word_go","faq"));
+	$button = new button("submit", $objLanguage->languageText("word_go"));
 	$button->setToSubmit();
 	$form->addToForm($button);
 	echo $form->show();
@@ -155,7 +155,7 @@
             		'category'=>$categoryId,
             		'id'=>$element["id"]
             	)),
-                $objLanguage->languageText('faq_suredelete'));
+                $objLanguage->languageText('faq_suredelete','faq'));
             echo $objConfirm->show();
         }
 ?>

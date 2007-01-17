@@ -21,16 +21,16 @@
 	)));
 	$form->setDisplayType(1);
 
-   $label = new label (($objLanguage->languageText("word_index","faq")), 'input_index');
+   $label = new label (($objLanguage->languageText("word_index")), 'input_index');
 
 	$form->addToForm("<b>" . $label->show() . ":</b>");
 	$form->addToForm(new textinput("index", $this->objDbFaqEntries->getNextIndex($contextId, $categoryId)));
 
-    $label = new label ($objLanguage->languageText("word_question","faq"), 'input_question');
+    $label = new label ($objLanguage->languageText("word_question"), 'input_question');
 	$form->addToForm("<b>" . $label->show() . ":</b>");
 	$form->addToForm(new textarea("question", NULL, 5, 80));
 
-    $label = new label ($objLanguage->languageText("word_answer","faq"), 'input_answer');
+    $label = new label ($objLanguage->languageText("word_answer"), 'input_answer');
 	$form->addToForm("<b>" . $label->show() . ":</b>");
 	$form->addToForm(new textarea("answer", NULL, 5, 80));
 
@@ -51,7 +51,7 @@
 	$button = new button("submit", $objLanguage->languageText("word_add"));
 	$button->setToSubmit();
 
-    $cancelButton =new button("submit", $objLanguage->languageText("word_cancel","faq"));
+    $cancelButton =new button("submit", $objLanguage->languageText("word_cancel"));
     $cancelButton->setOnClick("window.location='".$this->uri(array('action'=>'view', 'category'=>$categoryId))."';");
 
 	$form->addToForm($button->show().' / '.$cancelButton->show());

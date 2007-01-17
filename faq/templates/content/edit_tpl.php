@@ -1,7 +1,7 @@
 <?php
 	$header = $this->getHTMLElement('htmlheading');
     $header->type = 1;
-    $header->str =$objLanguage->languageText("faq_sayitedit");
+    $header->str =$objLanguage->languageText("faq_sayitedit","faq");
 
     echo $header->show();
 
@@ -22,15 +22,15 @@
 	)));
 	$form->setDisplayType(1);
 
-    $label = new label ($objLanguage->languageText("word_index","faq"), 'input_index');
+    $label = new label ($objLanguage->languageText("word_index"), 'input_index');
 	$form->addToForm("<b>" . $label->show() . ":</b>");
 	$form->addToForm(new textinput("index", $list[0]['_index']));
 
-	$label = new label ($objLanguage->languageText("word_question","faq"), 'input_question');
+	$label = new label ($objLanguage->languageText("word_question"), 'input_question');
 	$form->addToForm("<b>" . $label->show() . ":</b>");
 	$form->addToForm(new textarea("question", $list[0]["question"], 5, 80));
 
-	$label = new label ($objLanguage->languageText("word_answer","faq"), 'input_answer');
+	$label = new label ($objLanguage->languageText("word_answer"), 'input_answer');
 	$form->addToForm("<b>" . $label->show() . ":</b>");
 	$form->addToForm(new textarea("answer", $list[0]["answer"], 5, 80));
 
