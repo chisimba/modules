@@ -89,6 +89,9 @@ if(!$GLOBALS['kewl_entry_point_run']){
     echo $objHeader->show();
 
     if(!empty($arrPageList)){
+        foreach($arrPageList as $page){
+            $arrPageQuestionList[$page['id']]='';
+        }
         // if page questions exist remove questions from unassigned list
         foreach($arrQuestionList as $key=>$question){
             $arrPageQuestionData=$this->dbPageQuestions->getQuestionRecord($question['id']);
@@ -106,6 +109,12 @@ if(!$GLOBALS['kewl_entry_point_run']){
         }
     }else{
         $arrPageQuestionList[]=$arrQuestionList;
+    }
+
+    foreach($arrPageQuestionList as $pageKey=>$pageQuestionList){
+        if(empty($pageQuestionList)){
+            unset($arrPageQuestionList[$pageKey]);
+        }
     }
 
     $str='';

@@ -91,7 +91,7 @@ $fields = array(
         'type' => 'integer',
         'length' => 1,
         ),
-    'comment_count' => array(
+    'commentcount' => array(
         'type' => 'integer',
         'length' => 7,
         ),

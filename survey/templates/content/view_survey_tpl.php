@@ -38,8 +38,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $singleLabel=$this->objLanguage->languageText('mod_survey_single','survey');
     $multipleLabel=$this->objLanguage->languageText('mod_survey_multiple','survey');
     $viewLabel=$this->objLanguage->languageText('mod_survey_viewresults','survey');
-    $noviewLabel=$this->objLanguage->languageText('mod_survey_noresults','survey';)
-    $backLabel=$this->objLanguage->languageText('mod_survey_back','survey');
+    $noviewLabel=$this->objLanguage->languageText('mod_survey_noresults','survey');
+    $backLabel=$this->objLanguage->languageText('word_back');
 
 // set up code to text elements
     $array=array('item'=>strtolower($surveyLabel));
@@ -122,6 +122,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $objTable->addCell('<b>'.$introductionLabel.'</b>','','','','even','');
     $objTable->addCell($introductionText,'','','','even','');
     $objTable->endRow();
+    $objTable->startRow();
     $objTable->addCell('<b>'.$thankyouLabel.'</b>','','','','odd','');
     $objTable->addCell($thankyouText,'','','','odd','');
     $objTable->endRow();

@@ -109,8 +109,11 @@ if(!$GLOBALS['kewl_entry_point_run']){
     }else{
         $objLayer->addToStr($objTabbedbox->show());
     }
-var_dump($arrPageList);
+
     if(!empty($arrPageList)){
+        foreach($arrPageList as $page){
+            $arrPageQuestionList[$page['id']]='';
+        }
         // if page questions exist remove questions from unassigned list
         foreach($arrQuestionList as $key=>$question){
             $arrPageQuestionData=$this->dbPageQuestions->getQuestionRecord($question['id']);
@@ -129,6 +132,13 @@ var_dump($arrPageList);
     }else{
         $arrPageQuestionList[]=$arrQuestionList;
     }
+
+    foreach($arrPageQuestionList as $pageKey=>$pageQuestionList){
+        if(empty($pageQuestionList)){
+            unset($arrPageQuestionList[$pageKey]);
+        }
+    }
+
     $str='';
     $ii=0;
     foreach($arrPageQuestionList as $pageKey=>$pageQuestionList){
@@ -618,12 +628,12 @@ var_dump($arrPageList);
             }
 
             if($commentRequested=='1'){
-                if(isset($arrAnswerData[$key]['comment'])){
-                    $comment=$arrAnswerData[$key]['comment'];
+                if(isset($arrAnswerData[$key]['question_comment'])){
+                    $comment=$arrAnswerData[$key]['question_comment'];
                 }else{
                     $comment='';
                 }
-                $temp=$answerField.'[comment]';
+                $temp=$answerField.'[question_comment]';
                 $objText=new textarea($temp,$comment,'3','85');
                 $objTable->startRow();
                 $objTable->addCell('<b>'.$commentText.'</b>','','','',$class,$colspan);
@@ -634,6 +644,7 @@ var_dump($arrPageList);
             }
             $tabContent.=$objTable->show();
         }
+
         if(!empty($pageQuestionList)){
             $tabContent=$pageText.$tabContent;
 

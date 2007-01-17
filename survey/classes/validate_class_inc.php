@@ -300,7 +300,7 @@ class validate extends object
             $arrQuestionList=$this->dbQuestion->listQuestions($surveyId);
             foreach($arrQuestionList as $key=>$question){
                 $arrPageQuestionData=$this->dbPageQuestions->getQuestionRecord($question['id']);
-                $arrPageQuestionList[$arrPageQuestionData['0']['page_id']][$arrPageQuestionData['0']['page_question_order']-1]=$question;
+                $arrPageQuestionList[$arrPageQuestionData['0']['page_id']][$arrPageQuestionData['0']['question_order']-1]=$question;
                 unset($arrQuestionList[$key]);
             }
 

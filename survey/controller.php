@@ -602,7 +602,7 @@ class survey extends controller
                 $userGroup=$this->groups->getUserGroup($this->userId,$surveyId);
                 if($userGroup=='None' || $userGroup=='Respondents'){
                     $arrSurveyData=$this->dbSurvey->getSurvey($surveyId);
-                    $singleResponses=$arrSurveyData['0']['singleResponses'];
+                    $singleResponses=$arrSurveyData['0']['single_responses'];
                     if($singleResponses=='1'){
                         $arrResponseList=$this->dbResponse->listResponses($surveyId);
                         if(!empty($arrResponseList)){
@@ -662,8 +662,10 @@ class survey extends controller
                     }
                 }else{
                     $temp=$this->getSession('answer');
-                    foreach($arrAnswerData as $key=>$answer){
-                        $temp[$key]=$answer;
+                    if(!empty($arrAnswerData)){
+                        foreach($arrAnswerData as $key=>$answer){
+                            $temp[$key]=$answer;
+                        }
                     }
                     $this->session->addAnswerData($temp);
                     if(($pageNo==0 && $newPageNo==1) || ($newPageNo<$pageNo)){
@@ -733,7 +735,7 @@ class survey extends controller
                 $userGroup=$this->groups->getUserGroup($this->userId,$surveyId);
                 if($userGroup!='None' && $userGroup!='Respondents'){
                     $this->setVarByRef('surveyId',$surveyId);
-                    $respondentNumber=$this->getParam('respondentNumber',1);
+                    $respondentNumber=$this->getParam('respondent_number',1);
                     $this->setVar('respondentNumber',$respondentNumber);
                     return 'response_tpl.php';
                 }else{
@@ -1168,7 +1170,7 @@ class survey extends controller
         $canViewResults=FALSE;
         if(!empty($arrResponseList)){
             foreach($arrResponseList as $response){
-                if($response['userId']==$this->userId){
+                if($response['user_id']==$this->userId){
                     if($arrSurveyData[0]['view_results']==1){
                         $canViewResults=TRUE;
                     }

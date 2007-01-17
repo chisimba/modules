@@ -253,9 +253,10 @@ class dbquestion extends dbTable
         $arrQuestionData['updated']=date('Y-m-d H:i:s');
         unset($arrQuestionData['modifier_id']);
         unset($arrQuestionData['date_modified']);
+        unset($arrQuestionData['puid']);
         $newQuestionId=$this->insert($arrQuestionData);
-        $this->dbRows->copyRows($questionId,$newQuestionId);
-        $this->dbColumns->copyColumns($questionId,$newQuestionId);
+        $this->dbRows->copyRows($questionId,$newSurveyId,$newQuestionId);
+        $this->dbColumns->copyColumns($questionId,$newSurveyId,$newQuestionId);
         return $newQuestionId;
     }
 }

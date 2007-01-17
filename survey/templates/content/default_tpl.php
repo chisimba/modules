@@ -137,7 +137,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
             $creatorId=$survey['creator_id'];
             $dateCreated=$this->formatDate($survey['date_created']);
             $owner=$this->objUser->fullName($creatorId);
-            $commentCount=$survey['comment_count'];
+            $commentCount=$survey['commentcount'];
 
             $groupId=$this->objGroupAdmin->getLeafId(array('Surveys',$surveyId,'Respondents'));
             $arrRespondentList=$this->objGroupAdmin->getGroupUsers($groupId,array('userId'));
@@ -146,6 +146,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
             // set up name link
             $arrQuestionList=$this->dbQuestion->listQuestions($surveyId);
+
             if($userGroup=='None' || $userGroup=='Respondents'){
                 $nameLink=$surveyName;
             }else{

@@ -189,6 +189,7 @@ class dbpages extends dbTable
                 $page['updated']=date('Y-m-d H:i:s');
                 unset($page['modifier_id']);
                 unset($page['date_modified']);
+                unset($page['puid']);
                 $newPageId=$this->insert($page);
                 $this->dbPageQuestions->copyPagequestions($pageId,$newPageId,$newSurveyId);
             }

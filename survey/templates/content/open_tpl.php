@@ -26,7 +26,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
 // set up language items
     $questionLabel=$this->objLanguage->languageText('mod_survey_question','survey');
-    $openLabel=$this->objLanguage->languageText('mod_survey_openendedresults'v);
+    $openLabel=$this->objLanguage->languageText('mod_survey_openendedresults','survey');
     $resultsLabel=$this->objLanguage->languageText('mod_survey_results','survey');
     $respondentLabel=$this->objLanguage->languageText('mod_survey_respondent','survey');
     $abstainedLabel=$this->objLanguage->languageText('mod_survey_abstained','survey');

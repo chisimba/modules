@@ -526,12 +526,12 @@ if(!$GLOBALS['kewl_entry_point_run']){
             }
 
             if($commentRequested=='1'){
-                if(isset($arrAnswerData[$key]['comment'])){
-                    $comment=$arrAnswerData[$key]['comment'];
+                if(isset($arrAnswerData[$key]['question_comment'])){
+                    $comment=$arrAnswerData[$key]['question_comment'];
                 }else{
                     $comment='';
                 }
-                $temp=$answerField.'[comment]';
+                $temp=$answerField.'[question_comment]';
                 $objText=new textarea($temp,$comment,'3','85');
                 $objTable->startRow();
                 $objTable->addCell('<b>'.$commentText.'</b>','','','',$class,$colspan);

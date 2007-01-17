@@ -39,7 +39,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
 // set up code to text
     $array=array('item'=>strtolower($resultsLabel));
-    $viewResultsLabel=$this->objLanguage->code2Txt('mod_survey_view','survey'$array);
+    $viewResultsLabel=$this->objLanguage->code2Txt('mod_survey_view','survey',$array);
 
 // set up heading
     if($mode=='mail'){

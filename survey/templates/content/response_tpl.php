@@ -39,12 +39,12 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $trueLabel=$this->objLanguage->languageText('mod_survey_true','survey');
     $falseLabel=$this->objLanguage->languageText('mod_survey_false','survey');
     $dateLabel=$this->objLanguage->languageText('mod_survey_selectdate','survey');
-    $respondentLabel=$this->objLanguage->languageText('mod_survey_respondent','survey');
+    $respondentLabel=$this->objLanguage->languageText('mod_survey_wordrespondent','survey');
     $firstLabel=$this->objLanguage->languageText('mod_survey_first','survey');
     $lastLabel=$this->objLanguage->languageText('mod_survey_last','survey');
     $previousLabel=$this->objLanguage->languageText('mod_survey_previous','survey');
-    $nextLabel=$this->objLanguage->languageText('mod_survey_next','survey');
-    $goLabel=$this->objLanguage->languageText('mod_survey_go','survey');
+    $nextLabel=$this->objLanguage->languageText('word_next');
+    $goLabel=$this->objLanguage->languageText('word_go');
     $unassignedLabel=$this->objLanguage->languageText('mod_survey_unassignedquestions','survey');
     $pageLabel=$this->objLanguage->languageText('mod_survey_page','survey');
 
@@ -141,12 +141,15 @@ if(!$GLOBALS['kewl_entry_point_run']){
     if($recordedResponses!='1'){
         $objHeader->str=$respondentHeading;
     }else{
-         $objHeader->str=$this->objUser->fullName($arrResponseList[$respondentNumber-1]['userId']).'<br />'.$respondentHeading;
+         $objHeader->str=$this->objUser->fullName($arrResponseList[$respondentNumber-1]['user_id']).'<br />'.$respondentHeading;
     }
     $objHeader->type=3;
     echo $objHeader->show();
 
     if(!empty($arrPageList)){
+        foreach($arrPageList as $page){
+            $arrPageQuestionList[$page['id']]='';
+        }
         // if page questions exist remove questions from unassigned list
         foreach($arrQuestionList as $key=>$question){
             $arrPageQuestionData=$this->dbPageQuestions->getQuestionRecord($question['id']);
@@ -164,6 +167,12 @@ if(!$GLOBALS['kewl_entry_point_run']){
         }
     }else{
         $arrPageQuestionList[]=$arrQuestionList;
+    }
+
+    foreach($arrPageQuestionList as $pageKey=>$pageQuestionList){
+        if(empty($pageQuestionList)){
+            unset($arrPageQuestionList[$pageKey]);
+        }
     }
 
     $str='';
@@ -581,7 +590,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
             if($commentRequested=='1'){
                 $arrComment=$this->dbComment->getComment($responseId,$questionId);
-                $comment=$arrComment['0']['comments'];
+                $comment=$arrComment['0']['question_comment'];
                 if(!empty($comment)){
                     $objTable->startRow();
                     $objTable->addCell('<b>'.$commentText.'</b>','','','',$class,$colspan);

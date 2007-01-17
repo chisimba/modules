@@ -176,7 +176,7 @@ class groups extends dbTable
                 if($i==$page+1){
                     $output.= $divider.'<em>'.$this->objLanguage->languageText('mod_survey_page', 'survey').' '.$i.'</em>';
                 }else{
-                    $link=new link($this->uri(array('action'=>'search','search'=>$search,'field'=>$field,'order'=>$order,'number'=>$number,'page'=>($i-1),'surveyId'=>$surveyId)));
+                    $link=new link($this->uri(array('action'=>'search','search'=>$search,'field'=>$field,'order'=>$order,'number'=>$number,'page'=>($i-1),'survey_id'=>$surveyId)));
                     $link->link = $this->objLanguage->languageText('mod_survey_page', 'survey').' '.$i;
 
                     $output.=$divider.$link->show();
@@ -191,7 +191,7 @@ class groups extends dbTable
                 if($count==$page+1){
                     $output .= $divider.'<em>'.$this->objLanguage->languageText('mod_survey_page', 'survey').' '.$count.'</em>';
                 }else{
-                    $link=new link($this->uri(array('action'=>'search','search'=>$search,'field'=>$field,'order'=>$order,'number'=>$number,'page'=>($count-1),'surveyId'=>$surveyId)));
+                    $link=new link($this->uri(array('action'=>'search','search'=>$search,'field'=>$field,'order'=>$order,'number'=>$number,'page'=>($count-1),'survey_id'=>$surveyId)));
                     $link->link=$this->objLanguage->languageText('mod_survey_page', 'survey').' '.$count;
 
                     $output.=$divider.$link->show();
@@ -217,7 +217,7 @@ class groups extends dbTable
             $sql.=" WHERE name LIKE '".$search."%'";
         }
         $data=$this->getArray($sql);
-var_dump($data);
+
         $ret=$this->removeSurveyGroups($data);
 
         if($number!='all'){
@@ -281,7 +281,7 @@ var_dump($data);
                 if($i==$page+1){
                     $output.= $divider.'<em>'.$this->objLanguage->languageText('mod_survey_page', 'survey').' '.$i.'</em>';
                 }else{
-                    $link=new link($this->uri(array('action'=>'search','search'=>$search,'field'=>'groups','number'=>$number,'page'=>($i-1),'surveyId'=>$surveyId)));
+                    $link=new link($this->uri(array('action'=>'search','search'=>$search,'field'=>'groups','number'=>$number,'page'=>($i-1),'survey_id'=>$surveyId)));
                     $link->link = $this->objLanguage->languageText('mod_survey_page', 'survey').' '.$i;
 
                     $output.=$divider.$link->show();
@@ -296,7 +296,7 @@ var_dump($data);
                 if($count==$page+1){
                     $output .= $divider.'<em>'.$this->objLanguage->languageText('mod_survey_page', 'survey').' '.$count.'</em>';
                 }else{
-                    $link=new link($this->uri(array('action'=>'search','search'=>$search,'field'=>'groups','number'=>$number,'page'=>($count-1),'surveyId'=>$surveyId)));
+                    $link=new link($this->uri(array('action'=>'search','search'=>$search,'field'=>'groups','number'=>$number,'page'=>($count-1),'survey_id'=>$surveyId)));
                     $link->link=$this->objLanguage->languageText('mod_survey_page', 'survey').' '.$count;
 
                     $output.=$divider.$link->show();
@@ -334,7 +334,7 @@ var_dump($data);
     {
         $rootId=$this->getRootId();
         $arrGroupIdList=$this->objGroupAdmin->getSubgroups($rootId);
-var_dump($arrGroupIdList);
+
         foreach($data as $key=>$group){
             $groupId=$group['id'];
             if(in_array($groupId,$arrGroupIdList)){
@@ -401,6 +401,7 @@ var_dump($arrGroupIdList);
         if(!empty($arrGroupIdList)){
             foreach($arrGroupIdList as $groupId){
                 $this->objGroupUsers->delete('group_id',$groupId);
+                $this->objGroupAdmin->deleteGroup($groupId);
             }
         }
     }

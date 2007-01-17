@@ -21,9 +21,9 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $objLink=&$this->loadClass('link','htmlelements');
 
 // set up language items
-    $backLabel=$this->objLanguage->languageText('mod_survey_back','survey');
+    $backLabel=$this->objLanguage->languageText('word_back');
     $commentsLabel=$this->objLanguage->languageText('mod_survey_comments','survey');
-    $observerLabel=$this->objLanguage->languageText('mod_survey_observer','survey');
+    $observerLabel=$this->objLanguage->languageText('mod_survey_wordobserver','survey');
 
 // set up code to text elements
     $array=array('item'=>$observerLabel.' '.$commentsLabel);

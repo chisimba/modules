@@ -171,6 +171,7 @@ class dbquestioncol extends dbTable
                 $column['updated']=date('Y-m-d H:i:s');
                 unset($column['modifier_id']);
                 unset($column['date_modified']);
+                unset($column['puid']);
                 $this->insert($column);
             }
         }

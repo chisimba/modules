@@ -243,6 +243,7 @@ class dbpagequestions extends dbTable
                 $pageQuestion['updated']=date('Y-m-d H:i:s');
                 unset($pageQuestion['modifier_id']);
                 unset($pageQuestion['date_modified']);
+                unset($pageQuestion['puid']);
                 $this->insert($pageQuestion);
             }
         }

@@ -50,6 +50,30 @@ class dbsurvey extends dbTable
     private $dbPageQuestions;
 
     /**
+     * @var object $dbResponse The dbresponse class in the survey module
+     * @access private
+     */
+    private $dbResponse;
+
+    /**
+     * @var object $dbAnswer The dbanswer class in the survey module
+     * @access private
+     */
+    private $dbAnswer;
+
+    /**
+     * @var object $dbItem The dbitem class in the survey module
+     * @access private
+     */
+    private $dbItem;
+
+    /**
+     * @var object $dbComments The dbcomments class in the survey module
+     * @access private
+     */
+    private $dbComments;
+
+    /**
      * @var object $objLanguage The language class in the language module
      * @access private
      */
@@ -83,6 +107,10 @@ class dbsurvey extends dbTable
         $this->dbColumns=&$this->newObject('dbquestioncol');
         $this->dbPages=&$this->newObject('dbpages');
         $this->dbPageQuestions=&$this->newObject('dbpagequestions');
+        $this->dbResponse=&$this->newObject('dbresponse');
+        $this->dbAnswer=&$this->newObject('dbanswer');
+        $this->dbItem=&$this->newObject('dbitem');
+        $this->dbComments=&$this->newObject('dbcomments');
 
         $this->objLanguage=&$this->newObject('language','language');
         $this->objUser=&$this->newObject('user','security');
@@ -211,6 +239,10 @@ class dbsurvey extends dbTable
         $this->dbColumns->delete('survey_id',$surveyId);
         $this->dbPages->delete('survey_id',$surveyId);
         $this->dbPageQuestions->delete('survey_id',$surveyId);
+        $this->dbResponse->delete('survey_id',$surveyId);
+        $this->dbAnswer->delete('survey_id',$surveyId);
+        $this->dbItem->delete('survey_id',$surveyId);
+        $this->dbComments->delete('survey_id',$surveyId);
     }
 
     /**
@@ -222,12 +254,13 @@ class dbsurvey extends dbTable
     */
     public function copySurvey($surveyId)
     {
-        $copyLabel=$this->objLanguage->languageText('mod_survey_copyof');
+        $copyLabel=$this->objLanguage->languageText('mod_survey_copyof','survey');
         $arrSurveyData=$this->getSurvey($surveyId);
         $arrSurveyData=$arrSurveyData['0'];
         unset($arrSurveyData['id']);
         unset($arrSurveyData['modifier_id']);
         unset($arrSurveyData['date_modified']);
+        unset($arrSurveyData['puid']);
         $arrSurveyData['survey_name']=$copyLabel." - ".$arrSurveyData['survey_name'];
         $arrSurveyData['survey_active']='';
         $arrSurveyData['response_counter']='';
