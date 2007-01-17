@@ -158,7 +158,7 @@ $assignmentLink .= '&nbsp;&nbsp;'.$objLink->show();
 $assLinks = '<P>'.$assignmentLink.'</P>';
 $leftLinks = '';
 $rightLinks = '';
-/*
+
 // set up links to essay management, worksheets and test if registered
 if($this->essay){
     $objIcon->setModuleIcon('essayadmin');
@@ -243,7 +243,7 @@ if($this->rubric){
         $rightLinks .= '<P>'.$rubricLink.'</P>';
     }
 }
-*/
+
 $objTable2 = new htmltable();
 $objTable2->startRow();
 $objTable2->addCell($assLinks, '50%');

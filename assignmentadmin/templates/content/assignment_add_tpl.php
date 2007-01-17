@@ -158,7 +158,7 @@ $objIcon->setIcon('select_date');
 $objIcon->title = $selectLabel;
 
 $this->objPopupcal = &$this->getObject('datepickajax', 'popupcalendar');
-$dateField = $this->objPopupcal->show('date', 'yes', 'no', '');
+$dateField = $this->objPopupcal->show('date', 'yes', 'no', $date);
 /*$url = "javascript:show_calendar('document.add.date', document.add.date.value);";
 
 $url = $this->uri(array('action'=>'', 'field'=>'document.add.date', 'fieldvalue'=>$date), 'popupcalendar');

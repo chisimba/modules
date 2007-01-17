@@ -70,7 +70,7 @@ foreach($data as $item){
     if($assign['format']){
         // if upload
         $objIcon->setIcon('download');
-        $objLink->link($this->uri(array('action'=>'download', 'fileid'=>$item['fileId'])));
+        $objLink->link($this->uri(array('action'=>'download', 'fileid'=>$item['fileid'])));
         $objLink->link = $objIcon->show();
         $icons = $objLink->show();
 
