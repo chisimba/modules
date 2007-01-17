@@ -386,7 +386,6 @@ class dbcontent extends dbTable
         public function getTitles($sectionId)
         {
             $sql = "SELECT id, title FROM tbl_cms_content WHERE sectionid = '$sectionId' ORDER BY ordering";
-            
             $titles = $this->getArray($sql);
             return $titles;
         }
