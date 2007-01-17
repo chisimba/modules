@@ -42,8 +42,8 @@ class dbquotes extends dbTable
                 $this->update("id", $id, array(
                 'quote' => $quote,
                 'whosaidit' => $whosaidit,
-                'datemodified' => date("r"),
-                'modified' => date("r"),
+                'datemodified' => $this->now(),
+                'modified' => $this->now(),
                 'modifierid' => $this->objUser->userId()));
 
             }//if
@@ -52,9 +52,9 @@ class dbquotes extends dbTable
                 $this->insert(array(
                 'quote' => $quote,
                 'whosaidit' => $whosaidit,
-                'datecreated' => date("r"),
+                'datecreated' => $this->now(),
                 'creatorid' => $this->objUser->userId(),
-                'modified' => date("r")));
+                'modified' => $this->now()));
 
             }//if
         } catch (customException $e)
