@@ -130,14 +130,14 @@ class dbHomePagesLog extends dbTable
     {
         $sql = 'SELECT count(DISTINCT ip) as theCount FROM tbl_homepages_log WHERE  homepageid="'.$homePageId.'"';
         $results = $this->getArray($sql);
-        return $results[0]['theCount'];
+        return $results[0]['thecount'];
     }
     
     public function getHits($homePageId)
     {
         $sql = 'SELECT count(ip) as theCount FROM tbl_homepages_log WHERE  homepageid="'.$homePageId.'"';
         $results = $this->getArray($sql);
-        return $results[0]['theCount'];
+        return $results[0]['thecount'];
     }
     
     public function getCountries($homePageId)
