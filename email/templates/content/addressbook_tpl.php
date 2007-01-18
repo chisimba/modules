@@ -202,9 +202,7 @@ $hiddenForm = $objForm->show();
 $pageData.= $folderForm.$hiddenForm;
 
 // set up exit link
-$objLink = new link($this->uri(array(
-    ''
-) , 'email'));
+$objLink = new link('javascript:history.back()');
 $objLink->link = $backLabel;
 $pageData.= "<br />".$objLink->show();
 
