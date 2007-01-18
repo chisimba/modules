@@ -24,6 +24,7 @@ $objLink = &$this->loadClass('link', 'htmlelements');
 $objInput = &$this->loadClass('textinput', 'htmlelements');
 $objEditor = &$this->loadClass('htmlarea', 'htmlelements');
 $objTabbedbox = &$this->loadClass('tabbedbox', 'htmlelements');
+$objCheck = &$this->loadClass('checkbox', 'htmlelements');
 $objRadio = &$this->loadClass('radio', 'htmlelements');
 $objFieldset = &$this->loadClass('fieldset', 'htmlelements');
 $objLayer = &$this->loadClass('layer', 'htmlelements');

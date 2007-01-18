@@ -73,7 +73,7 @@ if ($arrBookList == FALSE && empty($arrContextList)) {
         foreach($arrContextList as $context) {
             // get number of entries
             $groupId = $this->objGroupAdmin->getLeafId(array(
-                $context['contextcode']
+                $context
             ));
             $arrContextUserList = $this->objGroupAdmin->getSubGroupUsers($groupId, array(
                 'userId',
@@ -86,10 +86,9 @@ if ($arrBookList == FALSE && empty($arrContextList)) {
             // set up link
             $objLink = new link($this->uri(array(
                 'action' => 'addressbook',
-                'contextcode' => $context['contextcode'],
-                'menutext' => $context['menutext']
+                'contextcode' => $context,
             )) , 'email');
-            $objLink->link = $context['menutext'];
+            $objLink->link = $context;
             $contextLink = $objLink->show();
 
             $objTable->startRow();

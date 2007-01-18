@@ -58,7 +58,7 @@ class email extends controller
 
         // system objects
         $this->objLanguage = &$this->newObject('language', 'language');
-        $this->objContextAdmin = &$this->newObject('contextadminutils', 'contextadmin');
+        $this->objGroups = & $this->newObject('managegroups', 'contextgroups');
         $this->objGroupAdmin = &$this->newObject('groupadminmodel', 'groupadmin');
         $this->objContext = &$this->newObject('dbcontext', 'context');
         $this->objDate = &$this->newObject('datetime', 'utilities');
@@ -216,7 +216,7 @@ class email extends controller
                 } elseif ($cancelbutton == 'Cancel') {
                     return $this->nextAction('manageaddressbooks');
                 }
-                $arrContextList = $this->objContextAdmin->getUserContext('mycontext');
+                $arrContextList = $this->objGroups->usercontextcodes($this->userId);
                 $this->setVarByRef('arrContextList', $arrContextList);
                 $arrBookList = $this->dbBooks->listBooks();
                 $this->setVarByRef('arrBookList', $arrBookList);
