@@ -166,7 +166,7 @@ class commentapi extends object
 		if($featurebox == TRUE)
 		{
 			$objFeaturebox = $this->getObject('featurebox', 'navigation');
-			return $objFeaturebox->show($this->objLanguage->languageText("mod_blogcomments_formhead", "blogcomments"), $cform->show());
+			return $objFeaturebox->showContent($this->objLanguage->languageText("mod_blogcomments_formhead", "blogcomments"), $cform->show());
 		}
 		else {
 			return $cform->show();
@@ -188,7 +188,7 @@ class commentapi extends object
 		if(empty($comms))
 		{
 			//shouldn't happen except on permalinks....?
-			return $objFeatureBox->show($this->objLanguage->languageText("mod_blogcomments_comment4post", "blogcomments"), "<em>".$this->objLanguage->languageText("mod_blogcomments_nocomments", "blogcomments")."</em>");
+			return $objFeatureBox->showContent($this->objLanguage->languageText("mod_blogcomments_comment4post", "blogcomments"), "<em>".$this->objLanguage->languageText("mod_blogcomments_nocomments", "blogcomments")."</em>");
 		}
 
 		$commtext = NULL;
@@ -217,7 +217,7 @@ class commentapi extends object
 
 			$fboxcontent = stripslashes($comm['comment_content']);
 
-			$commtext .= $objFeatureBox->show($fboxhead, $fboxcontent);
+			$commtext .= $objFeatureBox->showContent($fboxhead, $fboxcontent);
 		}
 		return $commtext;
 	}
