@@ -35,7 +35,7 @@ $answersLabel =& $this->objLanguage->languageText('word_answers');
 $correctLabel =& $this->objLanguage->languageText('mod_pbladmin_selectcorrect', 'pbladmin');
 $saveLabel =& $this->objLanguage->languageText('word_save');
 $exitLabel =& $this->objLanguage->languageText('word_close');
-$correctAnsLabel =& $this->objLanguage->languageText('phrase_correctans', 'pbladmin');
+$correctAnsLabel =& $this->objLanguage->languageText('phrase_correctanswer');
 
 if(isset($data) && !empty($data)){
     $questionData = $_POST['question'];
@@ -72,31 +72,33 @@ $javascript = "<script language=\"JavaScript\">
 
         answers = check();
 
-        taskStr = window.opener.document.create.task.value+' ';
-        taskStr += document.addtask.question.value+' ~mcq('+answers+')';
+        taskStr = window.opener.document.forms['create'].task.value+' ';
+        taskStr += document.forms['addtask'].question.value+' ~mcq('+answers+')';
 
-        window.opener.document.create.task.value=taskStr;
+        window.opener.document.forms['create'].task.value=taskStr;
     }
 
     function buildCAQ(){
         var answers;
         var taskStr;
 
-        answers = document.addtask.answer1.value+'->right;';
+        answers = document.forms['addtask'].answer1.value+'->right;';
         answers += 'else->wrong';
 
-        taskStr = window.opener.document.create.task.value+' ';
-        taskStr += document.addtask.question.value+' ~choice('+answers+')';
-        window.opener.document.create.task.value=taskStr;
+        taskStr = window.opener.document.forms['create'].task.value+' ';
+        taskStr += document.forms['addtask'].question.value+' ~choice('+answers+')';
+        window.opener.document.forms['create'].task.value=taskStr;
     }
-
+    
     function check(){
         var i;
-        var formElements = document.addtask.elements;
+        var formElements = document.forms['addtask'].elements;
         var answers = '';
         var correct = '';
-
-        for (i=1; i<formElements.length; i++) {
+        var length = document.forms['addtask'].elements.length;
+        
+        var i = 0;
+        while(i++ != length){
             if (formElements[i].type == \"text\") {
                 if (formElements[i].value != \"\") {
                     if(answers != ''){
@@ -117,6 +119,9 @@ $javascript = "<script language=\"JavaScript\">
     }
 </script>";
 
+/*
+   //for (var i=1; i < length; i++) {     
+        */
 echo $javascript;
 
 $objHead->str = $head;
@@ -160,7 +165,7 @@ if($task == 'mcq'){
 
 // Submit/exit buttons
 $objButton = new button('save', $saveLabel);
-$objButton->setOnClick("javascript:build".strtoupper($task)."()");
+$objButton->setOnClick("javascript:build".strtoupper($task)."();");// window.close();");
 $buttons = $objButton->show().'&nbsp;&nbsp;&nbsp;&nbsp;';
 
 $objButton = new button('save', $exitLabel);

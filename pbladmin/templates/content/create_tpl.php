@@ -64,12 +64,12 @@ $sceneInput .= '<p>'.$objText->show().'</p>';
 
 $objLink = new link('#');
 $objLink->link = $mcqLabel;
-$objLink->extra = "onclick=\"javascript:window.open('".$this->uri(array('action'=>'addmcq'),'','',TRUE)."','addmcq', 'width=300, height=350, scrollbars=1')\"";
+$objLink->extra = "onclick=\"javascript:window.open('".$this->uri(array('action'=>'addmcq'),'','',TRUE)."','addmcq', 'width=350, height=450, scrollbars=1, resizable=1')\"";
 $mcqBtn = $objLink->show();
 
 $objLink = new link('#');
 $objLink->link = $choiceLabel;
-$objLink->extra = "onclick=\"javascript:window.open('".$this->uri(array('action'=>'addcaq'),'','',TRUE)."','addcaq','width=300, height=200, scrollbars=1')\"";
+$objLink->extra = "onclick=\"javascript:window.open('".$this->uri(array('action'=>'addcaq'),'','',TRUE)."','addcaq','width=350, height=300, scrollbars=1, resizable=1')\"";
 $mcqBtn .= '&nbsp;&nbsp;|&nbsp;&nbsp;'.$objLink->show();
 
 // Text input for a task
