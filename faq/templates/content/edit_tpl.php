@@ -1,7 +1,7 @@
 <?php
 	$header = $this->getHTMLElement('htmlheading');
     $header->type = 1;
-    $header->str =$objLanguage->languageText("faq_sayitedit","faq");
+    $header->str =$objLanguage->languageText("faq_sayitedit");
 
     echo $header->show();
 
@@ -53,7 +53,7 @@
 	$button = new button("submit", $objLanguage->languageText("word_save"));
 	$button->setToSubmit();
 
-    $cancelButton =new button("submit", $objLanguage->languageText("word_cancel","faqadman"));
+    $cancelButton =new button("submit", $objLanguage->languageText("word_cancel","faq"));
     $cancelButton->setOnClick("window.location='".$this->uri(array('action'=>'view', 'category'=>$categoryId))."';");
 
 	$form->addToForm($button->show().' / '.$cancelButton->show());
