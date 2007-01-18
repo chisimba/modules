@@ -89,16 +89,16 @@ $javascript = "<script language=\"JavaScript\">
         taskStr += document.forms['addtask'].question.value+' ~choice('+answers+')';
         window.opener.document.forms['create'].task.value=taskStr;
     }
-    
+
     function check(){
         var i;
         var formElements = document.forms['addtask'].elements;
         var answers = '';
         var correct = '';
         var length = document.forms['addtask'].elements.length;
-        
+
         var i = 0;
-        while(i++ != length){
+        while(i++ != length-1){
             if (formElements[i].type == \"text\") {
                 if (formElements[i].value != \"\") {
                     if(answers != ''){
@@ -120,7 +120,7 @@ $javascript = "<script language=\"JavaScript\">
 </script>";
 
 /*
-   //for (var i=1; i < length; i++) {     
+   //for (var i=1; i < length; i++) {
         */
 echo $javascript;
 
