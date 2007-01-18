@@ -65,7 +65,7 @@ class dbemail extends dbTable
 
             }
         }
-        $attachCount[] = $this->emailFiles->saveAttachments($emailId);
+        $attachCount['attachments'] = $this->emailFiles->saveAttachments($emailId);
         $this->update('id', $emailId, $attachCount);
         return $emailId;
     }
