@@ -1,7 +1,7 @@
 <?php
 	
 	$linkAdd = '';
-    if( $this->isValid( 'add' ) ){
+    //if( $this->isValid( 'add' ) ){
 	    // Show the add link
 	    $iconAdd = $this->getObject('geticon','htmlelements');
 	    $iconAdd->setIcon('add');
@@ -15,7 +15,7 @@
 
          $objLink->link =  $iconAdd->show();
 	     $linkAdd = $objLink->show();
-	}
+	//}
 
     // Show the heading
     $objHeading =& $this->getObject('htmlheading','htmlelements');
@@ -34,10 +34,11 @@
     $table->startRow();
     $table->addHeaderCell("<b>".$objLanguage->languageText("mod_readinglist_author",'readinglist')."</b>");
     $table->addHeaderCell("<b>".$objLanguage->languageText("mod_readinglist_title",'readinglist')."</b>");
-    $table->addHeaderCell("<b>".$objLanguage->languageText("mod_readinglist_publisher",'readinglist')."</b>");
+    //$table->addHeaderCell("<b>".$objLanguage->languageText("mod_readinglist_publisher",'readinglist')."</b>");
     $table->addHeaderCell("<b>".$objLanguage->languageText("mod_readinglist_year",'readinglist')."</b>");
     $table->addHeaderCell("<b>".$objLanguage->languageText("mod_readinglist_link",'readinglist')."</b>");
-    $table->addHeaderCell("<b>".$objLanguage->languageText("mod_readinglist_publication",'readinglist')."</b>");
+    //$table->addHeaderCell("<b>".$objLanguage->languageText("mod_readinglist_publication",'readinglist')."</b>");
+    
     $table->addHeaderCell("<b>".$objLanguage->languageText("mod_readinglist_action",'readinglist')."</b>");
     $table->endRow();
     //echo $objUser->fullname ();
@@ -45,15 +46,37 @@
     $class = 'even';
     foreach ($list as $item) {
         $class = ($class == 'odd') ? 'even':'odd';
-    // Display each field for book.uthor
+    // Display each field for book.author
         $table->startRow();
         $table->addCell($item['author'], "", NULL, NULL, $class, '');
         $table->addCell($item['title'], "", NULL, NULL, $class, '');
-        $table->addCell($item['publisher'], "", NULL, NULL, $class, '');
+        //$table->addCell($item['publisher'], "", NULL, NULL, $class, '');
         $table->addCell($item['publishingyear'], "", NULL, NULL, $class, '');
-        $table->addCell($item['link'], "", NULL, NULL, $class, '');
-        $table->addCell($item['publication'], "", NULL, NULL, $class, '');
+        
+        //echo $item['link'];
+		$link2 = "<a href = '".$item['link']."'>".$item['link']."</a>";
 
+        //$table->addCell($item['link'], "", NULL, NULL, $class, '');
+        $table->addCell($link2, "", NULL, NULL, $class, '');
+        //$table->addCell($item['publication'], "", NULL, NULL, $class, '');
+
+	
+		
+		// Show the Additional link
+        $iconAdditional = $this->getObject('geticon','htmlelements');
+        $iconAdditional->setIcon('options');
+        $iconAdditional->alt = $objLanguage->languageText("mod_readinglist_additionals",'readinglist');
+        $iconAdditional->align=false;
+        $objLink =& $this->getObject("link","htmlelements");
+        $objLink->link($this->uri(array(
+                    'module'=>'readinglist',
+                'action'=>'additionals',
+                'id' => $item["id"]
+            )));
+            //if( $this->isValid( 'edit' ))
+              $objLink->link = $iconAdditional->show();
+        $linkAdd = $objLink->show();
+        
         // Show the edit link
         $iconEdit = $this->getObject('geticon','htmlelements');
         $iconEdit->setIcon('edit');
@@ -65,7 +88,7 @@
                 'action'=>'edit',
                 'id' => $item["id"]
             )));
-            if( $this->isValid( 'edit' ))
+            //if( $this->isValid( 'edit' ))
               $objLink->link = $iconEdit->show();
         $linkEdit = $objLink->show();
 
@@ -86,9 +109,9 @@
                     'id'=>$item["id"]
                 )),
             $objLanguage->languageText('mod_readinglist_suredelete','readinglist'));
-
+			
             //echo $objConfirm->show();
-        $table->addCell($linkEdit . $objConfirm->show(), "", NULL, NULL, $class, '');
+        $table->addCell($linkAdd.$linkEdit . $objConfirm->show(), "", NULL, NULL, $class, '');
         $table->endRow();
 
     }

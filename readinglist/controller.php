@@ -8,7 +8,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 * Controller class for readinglist module
-* @author John Abakpa
+* @author John Abakpa, Juliet Mulindwa
 * @copyright 2005 University of the Western Cape
 */
 
@@ -31,6 +31,8 @@ function init ()
 	$this->objLanguage =& $this->getObject('language','language');
 	// Get the DB object.
 	$this->objDbReadingList =& $this->getObject('dbreadinglist');
+	$this->objDbReadingList_links =& $this->getObject('dbreadinglist_links');
+	$this->objDbReadingList_comment =& $this->getObject('dbreadinglist_comment');
 	//Get the activity logger class
 	$this->objLog=$this->newObject('logactivity', 'logger');
 	//Log this module call
@@ -66,6 +68,7 @@ function dispatch($action=null)
         else {
             $this->contextId = $contextCode;
             $this->setVarByRef('contextId', $this->contextId);
+            
             $contextRecord = $objDbContext->getContextDetails($contextCode);
             $this->contextTitle = $contextRecord['title'];
             $this->setVarByRef('contextTitle', $this->contextTitle);
@@ -82,9 +85,52 @@ function dispatch($action=null)
 			$this->getParam('publisher', NULL),
 			$this->getParam('publishingYear', NULL),
 			$this->getParam('link', NULL),
-			$this->getParam('publication', NULL)
+			$this->getParam('publication', NULL),
+			$this->getParam('country', NULL),
+			$this->getParam('language', NULL)
+		));
+		
+		break;
+		
+	case "additionals":
+		
+		
+		$id = $this->getParam('id', null);
+		$this->setVarByRef('id',$id);
+		$list = $this->objDbReadingList->listSingle($id);
+		$author = $list[0]['author'];
+		$title = $list[0]['title'];
+		$publisher = $list[0]['publisher'];
+		$publishingYear = $list[0]['publishingyear'];
+		$link = $list[0]['link'];
+		$publication = $list[0]['publication'];
+		$country = $list[0]['country'];
+		$language = $list[0]['language'];
+		$this->setVarByRef('author',$author);
+		$this->setVarByRef('title',$title);
+		$this->setVarByRef('publisher',$publisher);
+		$this->setVarByRef('publishingYear',$publishingYear);
+		$this->setVarByRef('link',$link);
+		$this->setVarByref('publication',$publication);
+		$this->setVarByref('country',$country);
+		$this->setVarByref('language',$language);
+		return "additional_tpl.php";
+		
+	case "additionalconfirm":
+		$this->nextAction(
+		$this->objDbReadingList->insertSingle(
+			$this->contextId,
+			$this->getParam('author', NULL),
+			$this->getParam('title', NULL),
+			$this->getParam('publisher', NULL),
+			$this->getParam('publishingYear', NULL),
+			$this->getParam('link', NULL),
+			$this->getParam('publication', NULL),
+			$this->getParam('country', NULL),
+			$this->getParam('language',NULL)
 		));
 		break;
+		
 	case "edit":
 		$id = $this->getParam('id', null);
 		$this->setVarByRef('id',$id);
@@ -95,13 +141,18 @@ function dispatch($action=null)
 		$publishingYear = $list[0]['publishingyear'];
 		$link = $list[0]['link'];
 		$publication = $list[0]['publication'];
+		$country = $list[0]['country'];
+		$language = $list[0]['language'];
 		$this->setVarByRef('author',$author);
 		$this->setVarByRef('title',$title);
 		$this->setVarByRef('publisher',$publisher);
 		$this->setVarByRef('publishingYear',$publishingYear);
 		$this->setVarByRef('link',$link);
 		$this->setVarByref('publication',$publication);
+		$this->setVarByref('country',$country);
+		$this->setVarByref('language',$language);
 		return "edit_tpl.php";
+	
 	case "editconfirm":
 		$this->nextAction(
 		$id = $this->getParam('id', null),
@@ -112,9 +163,12 @@ function dispatch($action=null)
 			$this->getParam('publisher', NULL),
 			$this->getParam('publishingYear', NULL),
 			$this->getParam('link', NULL),
-			$this->getParam('publication', NULL)
+			$this->getParam('publication', NULL),
+			$this->getParam('country', NULL),
+			$this->getParam('language', NULL)
 		));
 		break;
+		
 	case "deleteconfirm":
 		$this->nextAction(
 		$id = $this->getParam('id', null),
@@ -122,6 +176,71 @@ function dispatch($action=null)
 			$id
 		));
 		break;
+		
+	case "urls":
+		$this->setLayoutTemplate(NULL);
+		$id = $this->getParam('id', null);
+		$this->setVarByRef('id',$id);
+		$list = $this->objDbReadingList->listSingle($id);
+		$link = $list[0]['link'];
+		$this->setVarByRef('link',$link);
+		
+		$urls = $this->objDbReadingList_links->getByItem($id);
+		$this->setVarByRef('urls', $urls);
+		return "urls_tpl.php";
+		
+	case "urlsconfirm":
+		
+		//$this->nextAction(
+		$id = $this->getParam('id', null);
+		$this->objDbReadingList_links->insertSingle(
+			$id,
+			$this->getParam('url', NULL)
+		);
+		return $this->nextAction('urls', array('id'=>$id));
+		
+	case "addurls":
+		$id = $this->getParam('id', null);
+		$this->setVarByRef('id',$id);
+		$list = $this->objDbReadingList->insertSingle($id);
+		$link = $list[0]['link'];
+		$this->setVarByRef('link',$link);
+		return "urls_tpl.php";
+		
+	case "addurlconfirm":
+		$this->nextAction(
+		$url = $this->getParam('url', null),
+		$this->objDbReadingList_links->insertSingle(
+			$url,
+			$this->getParam('link', NULL)
+		));
+		break;
+		
+	case "deleteurl":
+		$urlId = $this->getParam('urlId', null);
+		$id = $this->getParam('id', null);
+		$this->objDbReadingList_links->deleteSingle($urlId);
+		$this->nextAction('urls', array('id'=>$id));
+		break;
+		
+	case "comment":
+		$this->setLayoutTemplate(NULL);
+		$id = $this->getParam('id', null);
+		$this->setVarByRef('id',$id);
+		//$list = $this->objDbReadingList->listSingle($id);
+		//$this->setVarByRef('comment',$list);//if(!empty($list))
+		return "comment_tpl.php";
+		
+	case "commentconfirm":
+		$this->setLayoutTemplate(NULL);
+		$this->objDbReadingList_comment->insertIntoDB(
+			$this->getParam('id'),
+			$this->getParam('comment', NULL)
+		);
+		$this->setVar('showConfirm', TRUE);
+		return "comment_tpl.php";
+		break;
+		
 	default:
 	}
 	$list = $this->objDbReadingList->listAll($this->contextId);

@@ -8,8 +8,8 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 * Model class for the table tbl_readinglist
-* @author John Abakpa
-* @author Luis Domingos
+* @author John Abakpa, Juliet Mulindwa
+* @author Luis Domingos, Juliet Mulindwa
 * @copyright 2005 University of the Western Cape
 */
 class dbReadingList extends dbTable
@@ -20,6 +20,7 @@ class dbReadingList extends dbTable
     function init() 
     {
         parent::init('tbl_readinglist');
+        $this->dbLinks = $this->newObject('dbreadinglist_links');
         //$this->USE_PREPARED_STATEMENTS=True;
     }
 
@@ -59,7 +60,7 @@ class dbReadingList extends dbTable
 	* -- @param string $userId The user ID
 	* -- @param string $dateLastUpdated Date last updated
 	*/
-	function insertSingle($contextId, $author, $title, $publisher, $publishingYear, $link, $publication)
+	function insertSingle($contextId, $author, $title, $publisher, $publishingYear, $link, $publication,$country,$language)
 	{
 		$this->insert(array(
 			'contextcode'=>$contextId, 
@@ -68,7 +69,9 @@ class dbReadingList extends dbTable
 			'publisher' => $publisher,
 			'publishingyear' => $publishingYear,
 			'link' => $link,
-			'publication' => $publication
+			'publication' => $publication,
+			'country' => $country,
+			'language' => $language
 			//'userId' => $userId
 			//'dateLastUpdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
 		));
@@ -86,7 +89,7 @@ class dbReadingList extends dbTable
 	* -- @param string $userId The user ID
 	* -- @param string $dateLastUpdated Date last updated
 	*/
-	function updateSingle($id, $author, $title, $publisher, $year, $link, $publication)
+	function updateSingle($id, $author, $title, $publisher, $year, $link, $publication,$country,$language)
 	{
 		$this->update("id", $id, 
 			array(
@@ -95,7 +98,9 @@ class dbReadingList extends dbTable
 			'publisher' => $publisher,
 			'publishingYear' => $year,
 			'link' => $link,
-			'publication' => $publication
+			'publication' => $publication,
+			'country' => $country,
+			'language' => $language
 			//'userId' => $userId,
 			//'dateLastUpdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
 			)
@@ -109,6 +114,7 @@ class dbReadingList extends dbTable
 	function deleteSingle($id)
 	{
 		$this->delete("id", $id);
+		$this->dbLinks->delete('itemid', $id);
 	}
 }
 ?>

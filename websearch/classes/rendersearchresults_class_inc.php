@@ -198,7 +198,7 @@ class renderSearchResults extends object
                 $objTable->startRow();
                 $objTable->addCell($url . " - " . $line['cached-size'], NULL, "top", "left", $oddOrEven);
                 $objTable->endRow();
-                
+              
                 //-------- The bookmark link
                 $bookMark = $this->uri(array(
                   'action' => 'bookmark',

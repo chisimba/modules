@@ -55,6 +55,14 @@ $fields = array(
 	'publication' => array(
 		'type' => 'text'
 		),
+	'country' => array(
+		'type' => 'text',
+		'length' => 50
+		),
+	'language' => array(
+		'type' => 'text',
+		'length' => 50
+		),
 	);
 	
 

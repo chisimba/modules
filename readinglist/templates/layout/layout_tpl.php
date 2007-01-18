@@ -16,4 +16,3 @@ $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 
 	echo $cssLayout->show() ;
 ?>
-
