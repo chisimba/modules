@@ -161,8 +161,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
         $objButton->extra=' onclick="javascript:
             this.disabled=\'disabled\';
             document.getElementById(\'form_emailform\').submit();
-            opener.location.reload();
-            self.close();
+            //opener.location.reload();
+            //self.close();
         "';
         $sendButton=$objButton->show();
 

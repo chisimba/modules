@@ -315,11 +315,8 @@ class survey extends controller
                         $this->dbSurvey->editSurveyField($surveyId,' email_sent',1);
                         return $this->nextAction('');
                     }elseif($mode=='Observers'){
-                        $linkText=$this->getParam('link');
-                        $objLink=new link($this->uri(array('')),'survey');
-                        $objLink->link=$linkText;
-                        $takeLink=$objLink->show();
-                        $body.='<br />'.$takeLink;
+                        $body.='\n'.$this->getParam('link');
+                        $body.='\n'.$this->uri(array(''));
                         $groupId=$this->objGroupAdmin->getLeafId(array('Surveys',$surveyId,'Observers'));
                         $arrObserverList=$this->objGroupAdmin->getGroupUsers($groupId,array('emailaddress'));
                         $addressList=array();
