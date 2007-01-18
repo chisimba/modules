@@ -516,7 +516,7 @@ class blogops extends object
         $imform = $imform->show();
         if ($featurebox == TRUE) {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_importblog", "blog") , $imform);
+            $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_importblog", "blog") , $imform);
             return $ret;
         } else {
             return $imform;
@@ -621,7 +621,7 @@ class blogops extends object
         $mform = $mform->show();
         if ($featurebox == TRUE) {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_setupmail", "blog") , $mform);
+            $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_setupmail", "blog") , $mform);
             return $ret;
         }
     }
@@ -723,7 +723,7 @@ class blogops extends object
             }
             foreach($linksarr as $links) {
                 $objFeatureBox = $this->newObject('featurebox', 'navigation');
-                $ret.= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_admin", "blog") , $links->show());
+                $ret.= $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_admin", "blog") , $links->show());
             }
             return $ret;
         } else {
@@ -953,7 +953,7 @@ class blogops extends object
                     			   "</em><hr />".
                     			   "<center>".$tbl->show() ."</center>");
 
-                    $ret.= $objFeatureBox->show($head, $fboxcontent);
+                    $ret.= $objFeatureBox->showContent($head, $fboxcontent);
                 } else {
                     //table of non logged in options
                     //Set the table name
@@ -994,7 +994,7 @@ class blogops extends object
                     {
                     	$linkstr = $this->objLanguage->languageText("mod_blog_word_notags", "blog");
                     }
-                    $ret.= $objFeatureBox->show($head, /*$this->cleaner->cleanHtml(*/$post['post_content']) ."<center>".$tblnl->show() ."</center>"/*)*/;
+                    $ret.= $objFeatureBox->showContent($head, /*$this->cleaner->cleanHtml(*/$post['post_content']) ."<center>".$tblnl->show() ."</center>"/*)*/;
                 }
             }
         } else {
@@ -1803,7 +1803,7 @@ class blogops extends object
         $stable->addCell($this->objLanguage->languageText("mod_blog_lastseen", "blog") ." : ".$rec['laston']."<br />".$lastpost);
         $stable->endRow();
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
-        $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_blogger", "blog") ." : "."<em>".$rec['name']."</em>", $stable->show());
+        $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_blogger", "blog") ." : "."<em>".$rec['name']."</em>", $stable->show());
         return $ret;
     }
     /**
@@ -1974,7 +1974,7 @@ class blogops extends object
         //loop through the trackbacks and build a featurebox to show em
         if (empty($tbs)) {
             //shouldn't happen except on permalinks....?
-            return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_trackback4post", "blog") , "<em>".$this->objLanguage->languageText("mod_blog_trackbacknotrackback", "blog") ."</em>");
+            return $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_trackback4post", "blog") , "<em>".$this->objLanguage->languageText("mod_blog_trackbacknotrackback", "blog") ."</em>");
         }
         $tbtext = NULL;
         foreach($tbs as $tracks) {
@@ -2016,7 +2016,7 @@ class blogops extends object
         }
         $tbtext = $this->bbcode->parse4bbcode($tbtext);
         $this->bbcode = $this->getObject('bbcodeparser', 'utilities');
-        $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_trackback4post", "blog") , $tbtext);
+        $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_trackback4post", "blog") , $tbtext);
         return $ret;
     }
     /**
@@ -2112,7 +2112,7 @@ class blogops extends object
         $stbform = $stbform->show();
         //bust out a featurebox for consistency
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
-        $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_sendtb", "blog") , $stbform);
+        $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_sendtb", "blog") , $stbform);
         return $ret;
     }
 
@@ -2275,7 +2275,7 @@ class blogops extends object
 
         $content = $prtable->show();
 
-        return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_profileof", "blog") . " " . $this->objUser->fullName($userid), $content);
+        return $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_profileof", "blog") . " " . $this->objUser->fullName($userid), $content);
 
     }
 }
