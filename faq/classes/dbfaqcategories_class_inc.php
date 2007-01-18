@@ -93,6 +93,6 @@ class dbFaqCategories extends dbTable
 			
 		));
 		return;	
-	}
+	}//
 }
 ?>

@@ -7,7 +7,7 @@ if($this->_objDBContext->isInContext())
 } else {
     $cm ='';
 }
-
+//
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 $leftMenu =& $this->newObject('sidemenu','toolbar');
 $cssLayout->setLeftColumnContent($leftMenu->menuUser('context').$cm);

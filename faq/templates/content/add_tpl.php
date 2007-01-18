@@ -20,7 +20,7 @@
 			'category'=>$categoryId
 	)));
 	$form->setDisplayType(1);
-
+//
    $label = new label (($objLanguage->languageText("word_index")), 'input_index');
 
 	$form->addToForm("<b>" . $label->show() . ":</b>");

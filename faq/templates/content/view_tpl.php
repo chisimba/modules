@@ -10,7 +10,7 @@
 	$this->loadHTMLElement("link");
     $this->loadHTMLElement("hiddeninput");
     $this->loadHTMLElement("label");
-	//
+//
     //Use to check for admin user:
     $isAdmin = $this->objUser->isAdmin();
 
@@ -24,7 +24,7 @@
             $isLecturer = true;
         }
     }
-
+//
     // Display error string if neccessary.
 	if ($error != "") {
 		echo "<span class=\"error\">";

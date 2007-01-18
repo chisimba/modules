@@ -42,18 +42,18 @@
 		$dropdown->addOption($item["id"],$item["categoryid"]);
 	}
 
-	$dropdown->setSelected($list[0]["categoryId"]);
+	$dropdown->setSelected($list[0]["categoryid"]);
 
 	$form->addToForm($dropdown);
 
     $form->addToForm('&nbsp;');
     $form->addToForm('&nbsp;');
 
-
+//
 	$button = new button("submit", $objLanguage->languageText("word_save"));
 	$button->setToSubmit();
 
-    $cancelButton =new button("submit", $objLanguage->languageText("word_cancel","faq"));
+    $cancelButton =new button("submit", $objLanguage->languageText("word_cancel"));
     $cancelButton->setOnClick("window.location='".$this->uri(array('action'=>'view', 'category'=>$categoryId))."';");
 
 	$form->addToForm($button->show().' / '.$cancelButton->show());

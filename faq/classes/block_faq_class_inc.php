@@ -30,6 +30,7 @@ class block_faq extends object
 
         $this->contextCode = $this->objDbContext->getContextCode();
         // If we are not in a context...
+//
         if ($this->contextCode == null) {
             $this->contextCode = 'root';
         }

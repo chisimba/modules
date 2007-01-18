@@ -51,7 +51,7 @@ class modulelinks_faq extends object
           }
           
           return $bigArr;
-          */
+          *///
     }
     
 }

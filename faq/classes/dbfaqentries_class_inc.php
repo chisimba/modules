@@ -117,6 +117,6 @@ class dbFaqEntries extends dbTable
 	function deleteSingle($id)
 	{
 		$this->delete("id", $id);
-	}
+	}//
 }
 ?>
