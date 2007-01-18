@@ -1,17 +1,17 @@
 <?php
 
 $addLink = new link ($this->uri(array('action'=>'addpage', 'id'=>$page['id'], 'context'=>$this->contextCode)));
-$addLink->link = 'Add Page';
+$addLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextpages','contextcontent');
 
 $editLink = new link ($this->uri(array('action'=>'editpage', 'id'=>$page['id'], 'context'=>$this->contextCode)));
-$editLink->link = 'Edit Page';
+$editLink->link = $this->objLanguage->languageText('mod_contextcontent_editcontextpages','contextcontent');
 
 if (($page['rght'] - $page['lft'] - 1) == 0) {
     $deleteLink = new link ($this->uri(array('action'=>'deletepage', 'id'=>$page['id'], 'context'=>$this->contextCode)));
 } else {
     $deleteLink = new link ("javascript:alert('This Page cannot be deleted until the Sub Pages are Deleted.');");
 }
-$deleteLink->link = 'Delete Page';
+$deleteLink->link = $this->objLanguage->languageText('mod_contextcontent_delcontextpages','contextcontent');
 
 $list = array();
 

@@ -6,7 +6,7 @@ $this->loadClass('radio', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 
-$this->setVar('pageTitle', $this->objContext->getTitle().' - Delete Page: '.htmlentities($page['menutitle']));
+$this->setVar('pageTitle', $this->objContext->getTitle().$this->objLanguage->languageText('mod_contextcontent_delcontextpages','contextcontent').htmlentities($page['menutitle']));
 
 if (trim($page['headerscripts']) != '') {
 
@@ -20,22 +20,22 @@ if (trim($page['headerscripts']) != '') {
 
 }
 
-$title = 'Delete Page: '.htmlentities($page['menutitle']);
+$title = $this->objLanguage->languageText('mod_contextcontent_delcontextpages','contextcontent')." ".htmlentities($page['menutitle']);
 
 
 $form = new form('deletepage', $this->uri(array('action'=>'deletepageconfirm')));
 
-$form->addToForm('<p><strong>Are you SURE you want to delete this page?</strong></p>');
+$form->addToForm('<p><strong>'.$this->objLanguage->languageText('mod_contextcontent_delconf','contextcontent').'</strong></p>');
 
 $radio = new radio ('confirmation');
-$radio->addOption('N', ' No - Do not delete this page');
-$radio->addOption('Y', ' Yes - Delete this page');
+$radio->addOption('N',$this->objLanguage->languageText('mod_contextcontent_delconfno','contextcontent'));
+$radio->addOption('Y',$this->objLanguage->languageText('mod_contextcontent_delconfyes','contextcontent'));
 $radio->setSelected('N');
 $radio->setBreakSpace('</p><p>');
 
 $form->addToForm('<p>'.$radio->show().'</p>');
 
-$button = new button ('confirm', 'Confirm Delete');
+$button = new button ('confirm', $this->objLanguage->languageText('mod_contextcontent_confirmdelcontextpages','contextcontent'));
 $button->setToSubmit();
 
 $hiddeninput = new hiddeninput('id', $page['id']);

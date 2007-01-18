@@ -12,10 +12,10 @@ $this->loadClass('button', 'htmlelements');
 
 $header = new htmlheading();
 if ($mode=='edit') {
-    $header->str = 'Edit Page: '.htmlentities($page['menutitle']);
+    $header->str = $this->objLanguage->languageText('mod_contextcontent_editcontextpages','contextcontent')." ".htmlentities($page['menutitle']);
     $this->setVar('pageTitle', htmlentities($this->objContext->getTitle().' - Edit Page: '.$page['menutitle']));
 } else {
-    $header->str = 'Add New Page';
+    $header->str = $this->objLanguage->languageText('mod_contextcontent_addnewcontextpages','contextcontent');
     $this->setVar('pageTitle', htmlentities($this->objContext->getTitle().' - Add New Page'));
 }
 $header->type = 1;
@@ -49,7 +49,7 @@ $formTable->endRow();
 $htmlarea = $this->newObject('htmlarea', 'htmlelements');
 $htmlarea->setName('pagecontent');
 if ($mode == 'add') {
-    $htmlarea->setContent('<h1>Add Title Here</h1><p>Start of Content...</p>');
+    $htmlarea->setContent('<h1>'.$this->objLanguage->languageText('mod_contextcontent_addtitle','contextcontent').'</h1>'.'<p>'.$this->objLanguage->languageText('mod_contextcontent_startcontent','contextcontent').'</p>');
 } else {
     $htmlarea->setContent($page['pagecontent']);
 }
