@@ -38,7 +38,12 @@ $this->setVarByRef('bodyParams',$bodyParams);
 <body onLoad="window.setTimeout('RefreshChat();',30000);">
 <?
     // get chat and output to screen
-    $this->dbchat->broadCast();
+    $chatText = $this->dbchat->broadCast();
+    
+    $objLayer =& $this->newObject('layer', 'htmlelements');
+    $objLayer->str = $chatText;
+    $objLayer->align = 'left';
+    echo $objLayer->show();
 
     // set up chat area
 ?>

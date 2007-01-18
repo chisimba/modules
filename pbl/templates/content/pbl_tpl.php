@@ -274,4 +274,5 @@ $objTab->addTab($lbNoteBook, $notes);
 
     // display table
     echo $objTable->show();
+    
 ?>

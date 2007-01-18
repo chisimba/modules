@@ -53,7 +53,7 @@ $ok=array_fill(1, $sesNChoices, FALSE);
         if($nErr == 1){
             echo $this->objLanguage->languageText('mod_pbl_youhaderror', 'pbl').'<br />';
         }else{
-            echo $this->objLanguage->languageText('mod_pbl_youhaderrors', 'pbl', array('errors' => $nErr) .'<br />';
+            echo $this->objLanguage->code2Txt('mod_pbl_youhaderrors', 'pbl', array('errors' => $nErr)) .'<br />';
         }
     }else{
         echo $this->objLanguage->languageText('mod_pbl_correctanswer', 'pbl') .'<br />';

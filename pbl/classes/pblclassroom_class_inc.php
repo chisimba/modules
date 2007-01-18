@@ -82,7 +82,7 @@ class pblClassroom extends object
             }
             $length = $tagEnd - $tagStart + 1;
             $tag = substr($str, $tagStart + 5, $length-6);
-            $imgTag = "<img src='" . $tag . "'>";
+            $imgTag = "<img src='" . $tag . "' />";
             $str = substr_replace($str, $imgTag, $tagStart, $length);
         }
     }

@@ -122,13 +122,13 @@ class dbChat extends dbTable
     public function broadCast()
     {
         $rows=$this->getChat();
+        $chat = '';
         if($rows){
             foreach($rows as $row){
-                echo $row['msg'].'<br />';
+                $chat .= $row['msg'].'<br />';
             }
-        }else{
-            echo '';
         }
+        return $chat;
     }
 
     /**
