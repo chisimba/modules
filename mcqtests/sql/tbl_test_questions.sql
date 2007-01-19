@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 $sqldata[]="CREATE TABLE tbl_test_questions (
     id VARCHAR(32) PRIMARY KEY NOT NULL,

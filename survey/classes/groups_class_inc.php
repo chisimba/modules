@@ -1,4 +1,4 @@
-<?
+<?php
 /* ----------- data class extends dbTable ----------*/
 
 // security check - must be included in all scripts

@@ -1,4 +1,4 @@
-<?
+<?php
 /* -------------------- survey extends controller ----------------*/
 
 // security check-must be included in all scripts
@@ -271,6 +271,7 @@ class survey extends controller
                 $arrSurveyList=$this->dbSurvey->listSurveys();
                 $this->setVarByRef('arrSurveyList',$arrSurveyList);
                 return 'default_tpl.php';
+                break;
 
             case 'mailpopup':
                 // send email to all members of the groups and calls the mail confirm template
@@ -722,6 +723,7 @@ class survey extends controller
                 }
                 $this->setVar('mode',$mode);
                 return 'confirm_tpl.php';
+                break;
 
             case 'viewresults':
                 // calls the results template to view results

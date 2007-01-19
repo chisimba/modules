@@ -1,4 +1,4 @@
-<?
+<?php
 /* ----------- data class extends dbTable for tbl_survey_response ----------*/
 
 // security check - must be included in all scripts

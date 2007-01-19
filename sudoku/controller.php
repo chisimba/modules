@@ -1,4 +1,4 @@
-<?
+<?php
 /* -------------------- sudoku extends controller ----------------*/
 
 // security check - must be included in all scripts
