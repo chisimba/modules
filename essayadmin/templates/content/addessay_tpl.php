@@ -8,7 +8,8 @@
 $this->setLayoutTemplate('essayadmin_layout_tpl.php');
 
 // set up html elements
-$objTable=$this->objTable;
+//$objTable=$this->objTable;
+$this->loadClass('htmltable','htmlelements');
 $objLayer=$this->objLayer;
 
 // javascript
@@ -51,6 +52,7 @@ $errEssay = $this->objLanguage->languageText('mod_essayadmin_enteressay');
 $head.='&nbsp;&nbsp;&nbsp;&nbsp;'.$this->objHelp->show($help);
 $this->setVarByRef('heading',$head);
 
+$objTable = new htmltable();
 $objTable->row_attributes=' height="10"';
 $objTable->startRow();
 $objTable->addCell('');

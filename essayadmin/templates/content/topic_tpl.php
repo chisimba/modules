@@ -13,7 +13,8 @@
 $this->setLayoutTemplate('essayadmin_layout_tpl.php');
 
 // set up html elements
-$objTable=$this->objTable;
+//$objTable=$this->objTable;
+$this->loadClass('htmltable','htmlelements');
 $objLayer=$this->objLayer;
 $objDrop =& $this->newObject('dropdown', 'htmlelements');
 
@@ -31,7 +32,7 @@ $percentLbl=$this->objLanguage->languageText('mod_essayadmin_percentyrmark', 'es
 $errPercent=$this->objLanguage->languageText('mod_essayadmin_numericpercent');
 $help=$this->objLanguage->LanguageText('help_essayadmin_overview_addtopic', 'essayadmin');
 
-$errTopic = $this->objLanguage->languageText('mod_essayadmin_entertopic');
+$errTopic = $this->objLanguage->languageText('mod_essayadmin_entertopic','essayadmin');
 
 // javascript
 $javascript = "<script language=\"javascript\" type=\"text/javascript\">
@@ -51,7 +52,7 @@ if(!empty($data)){
     $dTopic=$data[0]['name'];
     $dDescription=$data[0]['description'];
     $dInstructions=$data[0]['instructions'];
-    $dDate=$this->objDateFormat->formatDate($data[0]['closing_date']);
+    $dDate=$this->objDateformat->formatDate($data[0]['closing_date']);
     $dBypass=$data[0]['bypass'];
     $dForce=$data[0]['forceone'];
     $dPercent=$data[0]['percentage'];
@@ -67,6 +68,7 @@ if(!empty($data)){
 }
 $head.='&nbsp;&nbsp;&nbsp;&nbsp;'.$this->objHelp->show($help);
 $this->setVarByRef('heading',$head);
+$objTable = new htmltable();
 
 $objTable->row_attributes=' height="10"';
 $objTable->startRow();
@@ -159,14 +161,14 @@ $this->objpopcal->show('closing_date','yes','no',$dDate);
 //$this->objessaydate->setDateFormat($format);
 
 
-// $url = "javascript:show_calendar('document.topic.timestamp', document.topic.timestamp.value);";
+ //$url = "javascript:show_calendar('document.topic.timestamp', document.topic.timestamp.value);";
 
 //$url = $this->uri(array('action'=>'', 'field'=>'document.topic.timestamp', 'fieldvalue'=>$dDate, 'showtime'=>'no'), 'popupcalendar');
 //$onclick = "javascript:window.open('" .$url."', 'popupcal', 'width="320", height="410", scrollbars="1", resize=yes')";
 
-$this->objLink = new link('#');
-$this->objLink->extra = "onclick=\"$onclick\"";
-$this->objLink->link = $this->objIcon->show();
+//$this->objLink = new link('#');
+//$this->objLink->extra = "onclick=\"$onclick\"";
+//$this->objLink->link = $this->objIcon->show();
 
 $this->objCheck = new checkbox('bypass','',$dBypass);
 $bycheck=$this->objCheck->show();

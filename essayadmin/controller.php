@@ -61,7 +61,8 @@ class essayadmin extends controller
         $this->loadclass('htmltable','htmlelements');    
         
         $this->objForm=& $this->getObject('form','htmlelements');
-        $this->objTable=& $this->getObject('htmltable','htmlelements');
+       // $this->objTable=& $this->getObject('htmltable','htmlelements');
+       $this->loadClass('htmltable','htmlelements');
         $this->objLayer=& $this->getObject('layer','htmlelements');
         $this->objLink=& $this->getObject('link','htmlelements');
         $this->objInput=& $this->getObject('textinput','htmlelements');
@@ -70,7 +71,8 @@ class essayadmin extends controller
         $this->objText=& $this->getObject('textarea','htmlelements');
         $this->objIcon=& $this->getObject('geticon','htmlelements');
         $this->objIframe=& $this->getObject('iframe','htmlelements');
-        
+		$this->objFile =& $this->newObject('upload','filemanager');
+		       
     //    $this->objpopcal =& $this->getObject('datepickajax','popupcalendar');
     //    $this->objDatepicker=& &this->getObject('datepicker', 'htmlelements');
         // Get an instance of the confirmation object
@@ -81,20 +83,14 @@ class essayadmin extends controller
         $this->objUser=& $this->getObject('user','security');
         // Get an instance of the context object
         $this->objContext=& $this->getObject('dbcontext','context');
-        // Get an instance of the filestore object and change the tables to essay specific tables
-        $this->objFile=& $this->getObject('upload','filemanager');
-  //      $this->objFile->changeTables('tbl_essay_filestore','tbl_essay_blob');
+
         $this->objHelp = $this->newObject('helplink','help');
-       $this->objDateformat = $this->newObject('datetime','utilities');
+       	$this->objDateformat = $this->newObject('datetime','utilities');
        
        
     
        $this->objDate = $this->newObject('datepicker','htmlelements');    
     
-	//	$this->objDateCompare = $this->newObject('timer','datetime');
-		//zip file class
-		$this->objDbZip =& $this->getObject('dbzip');
-		$this->objZip =& $this->getObject('zipfiles'); 
 
         // Log this call if registered
         if(!$this->objModules->checkIfRegistered('logger', 'logger')){
@@ -155,7 +151,7 @@ class essayadmin extends controller
 		$this->setVar('essayadminDownloadLink',$essayadminDownloadLink);
 		
 		//remove all zip files older than 24hrs, or 86,400 seconds
-		$this->objDbZip->deleteOldFiles();
+		//$this->objDbZip->deleteOldFiles();
 
         // default context = lobby
         $this->contextcode='root';
@@ -390,6 +386,7 @@ class essayadmin extends controller
 
         // upload an essay for marking or a marked essay & marks & comment
         case 'uploadsubmit':
+        	$book = $this->getParam('book');
             // get topic id
             $topic=$this->getParam('id');
 
@@ -400,14 +397,12 @@ class essayadmin extends controller
             }
 
             // if form action is save (only performed by lecturers or admin)
-            if($postSubmit==$this->objLanguage->languageText('word_save','Save')){
+            if($postSubmit==$this->objLanguage->languageText('word_save')){
                 // get booking id
-                $book=$this->getParam('book');
-
+                //$book=$this->getParam('book');
                 // get mark data
                 $mark=$this->getParam('mark', '');
                 $comment=$this->getParam('comment', '');
-
                 // insert / update database
                 $fields=array('mark'=>$mark,'comment'=>$comment);
                 $this->dbbook->bookEssay($fields,$book);
@@ -418,7 +413,7 @@ class essayadmin extends controller
             // upload essay and return to form
             if($postSubmit==$this->objLanguage->languageText('mod_essayadmin_upload','essayadmin')){
                 // get booking id
-                $book=$this->getParam('book');
+                //$book=$this->getParam('book');
 
                 // get data
                 $mark=$this->getParam('mark', '');
@@ -428,15 +423,18 @@ class essayadmin extends controller
                 $booking=$this->dbbook->getBooking("where id='$book'",'fileid');
 
                 // upload file to database, overwrite original file
-                $fileid=$this->objFile->uploadFile($_FILES['file'],'file',$booking[0]['fileid']);
+                $arrayfiledetails = $this->objFile->uploadFile('file');
 
-                $fields=array('mark'=>$mark,'comment'=>$comment);
-                $this->dbbook->bookEssay($fields,$book);
-
-                // display success message
-                $msg = $this->objLanguage->languageText('mod_essayadmin_uploadsuccess','essayadmin');
-                $this->setVarByRef('msg',$msg);
-            }
+				if ($arrayfiledetails['success']){	
+				
+					$fields=array('lecturerfileid'=>$arrayfiledetails['fileid'],'mark'=>$mark,'comment'=>$comment);
+                    $this->dbbook->bookEssay($fields,$book);
+                    
+                	// display success message
+                	$msg = $this->objLanguage->languageText('mod_essayadmin_uploadsuccess','essayadmin');
+                	$this->setVarByRef('msg',$msg);
+            	}
+			}                	
             return $this->nextAction('upload', array('book'=>$book,'msg'=>$msg,'id'=>$topic));
         break;
 
@@ -501,7 +499,7 @@ class essayadmin extends controller
     function getTopics($topics)
     {
         // set up html elements
-        $objTable=$this->objTable;
+        $objTable= new htmltable();
         $objLayer=$this->objLayer;
         $objLink=$this->objLink;
         $objIcon=$this->objIcon;
@@ -523,7 +521,7 @@ class essayadmin extends controller
         $submittedLabel=$this->objLanguage->languageText('mod_essayadmin_submitted','essayadmin');
         $markedlabel=$this->objLanguage->languageText('mod_essayadmin_marked','essayadmin').' / '.$submittedLabel;
         $viewSubmitted=$viewLabel.' '.$submittedLabel.' '.$essaysLabel;
-        $assignmentLabel = $this->objLanguage->languageText('mod_assignmentadmin_name');
+        $assignmentLabel = $this->objLanguage->languageText('mod_assignmentadmin_name','essayadmin');
         $percentLbl=$this->objLanguage->languageText('mod_essayadmin_percentyrmark', 'essayadmin');
         $noTopics = $this->objLanguage->code2Txt('mod_essayadmin_notopicsavailable', 'essayadmin');
 
@@ -660,8 +658,10 @@ class essayadmin extends controller
     function getEssays($essays,$topic)
     {
         // set up html elements
-        $objTable=$this->objTable;
-        $objTable2=$this->objTable;
+        $objTable = new htmltable();
+        $objTable2 = new htmltable();
+        //$objTable=$this->objTable;
+        //$objTable2=$this->objTable;
         $objLayer=$this->objLayer;
         $objLink=$this->objLink;
         $objHead=& $this->newObject('htmlheading','htmlelements');
@@ -680,7 +680,7 @@ class essayadmin extends controller
         $title3=$this->objLanguage->languageText('mod_essayadmin_newessay','essayadmin');
         $topiclist=$this->objLanguage->languageText('mod_essayadmin_name','essayadmin').' '.$this->objLanguage->languageText('word_home');
         $viewSubmitted=$this->objLanguage->languageText('mod_essayadmin_viewbookedsubmitted','essayadmin');
-        $assignLabel=$this->objLanguage->languageText('mod_assignment_name');
+        $assignLabel=$this->objLanguage->languageText('mod_assignment_name','essayadmin');
         $percentLbl=$this->objLanguage->languageText('mod_essayadmin_percentyrmark','essayadmin');
         $noEssays = $this->objLanguage->code2Txt('mod_essayadmin_noessaysintopic','essayadmin');
 
@@ -693,7 +693,7 @@ class essayadmin extends controller
         $topicEdit=$this->objIcon->getEditIcon($this->uri(array('action'=>'edittopic','id'=>$topic[0]['id'])));
         $this->objIcon->title=$title2;
         $this->objIcon->setIcon('delete');
-        $this->objConfirm->setConfirm($this->objIcon->show(),$this->uri(array('action'=>'deletetopic','id'=>$topic[0]['id'])),$this->objLanguage->languageText('mod_essayadmin_deleterequest','Are you sure you want to delete').' '.$topic[0]['name'].'?');
+        $this->objConfirm->setConfirm($this->objIcon->show(),$this->uri(array('action'=>'deletetopic','id'=>$topic[0]['id'])),$this->objLanguage->languageText('mod_essayadmin_deleterequest','essayadmin').' '.$topic[0]['name'].'?');
         $topicDelete=$this->objConfirm->show();
         $topicIcons=$topicEdit.'&nbsp;&nbsp;'.$topicDelete;
         $head.='&nbsp;&nbsp;&nbsp;&nbsp;'.$topicIcons;
@@ -769,7 +769,7 @@ class essayadmin extends controller
                 // delete essay display confirmation
                 $this->objIcon->title=$title2;
                 $this->objIcon->setIcon('delete');
-                $this->objConfirm->setConfirm($this->objIcon->show(),$this->uri(array('action'=>'deleteessay','essay'=>$val['id'],'id'=>$topic[0]['id'])),$this->objLanguage->languageText('mod_essayadmin_deleterequest','Are you sure you want to delete').' '.$val['topic'].'?');
+                $this->objConfirm->setConfirm($this->objIcon->show(),$this->uri(array('action'=>'deleteessay','essay'=>$val['id'],'id'=>$topic[0]['id'])),$this->objLanguage->languageText('mod_essayadmin_deleterequest','essayadmin').' '.$val['topic'].'?');
                 $delete=$this->objConfirm->show();
                 $icons=$edit.$delete;
 
@@ -841,7 +841,7 @@ class essayadmin extends controller
         if(!empty($topics)){
             foreach($topics as $key=>$item){
                 $filter="where topicid='".$item['id']."'";
-                $fields="COUNT(fileid) as submitted, COUNT(mark) as marked";
+                $fields="COUNT(studentfileid) as submitted, COUNT(mark) as marked";
                 $bookings=$this->dbbook->getBooking($filter,$fields);
                 $data[$key]['id']=$item['id'];
                 $data[$key]['name']=$item['name'];

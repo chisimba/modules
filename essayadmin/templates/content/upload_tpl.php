@@ -35,8 +35,8 @@ $this->appendArrayVar('headerParams', $str);
 $this->setLayoutTemplate('essayadmin_layout_tpl.php');
 
 // set up html elements
-$objTable=$this->objTable;
-$objSubTable=$this->objTable;
+$objTable = new htmltable();
+$objSubTable = new htmltable();
 $objSubTable->width="60%";
 $objLayer=$this->objLayer;
 $objConfirm =& $this->newObject('timeoutmessage','htmlelements');
@@ -44,19 +44,19 @@ $objDrop =& $this->newObject('dropdown','htmlelements');
 $objTextinput =& $this->newObject('textinput','htmlelements');
 
 // set up language items
-$essayhead=$this->objLanguage->languageText('mod_essayadmin_essay');
-$btnupload=$this->objLanguage->languageText('mod_essayadmin_upload');
+$essayhead=$this->objLanguage->languageText('mod_essayadmin_essay','essayadmin');
+$btnupload=$this->objLanguage->languageText('mod_essayadmin_upload','essayadmin');
 $uploadhead=$btnupload.' '.$essayhead;
 $head=$uploadhead;
-$markshead=' '.$this->objLanguage->languageText('mod_essayadmin_marks');
+$markshead=' '.$this->objLanguage->languageText('mod_essayadmin_marks','essayadmin');
 $btnsubmit=$this->objLanguage->languageText('word_save');
 $btnexit=$this->objLanguage->languageText('word_exit');
-$wordstudent=ucwords($this->objLanguage->languageText('mod_context_readonly'));
-$markhead=$this->objLanguage->languageText('mod_essayadmin_mark').' (%)';
-$commenthead=$this->objLanguage->languageText('mod_essayadmin_comment');
-$rubrichead=$this->objLanguage->languageText('mod_essayadmin_use').' '.$this->objLanguage->languageText('rubric_rubric');
+$wordstudent=ucwords($this->objLanguage->languageText('mod_context_readonly','essayadmin'));
+$markhead=$this->objLanguage->languageText('mod_essayadmin_mark','essayadmin').' (%)';
+$commenthead=$this->objLanguage->languageText('mod_essayadmin_comment','essayadmin');
+$rubrichead=$this->objLanguage->languageText('mod_essayadmin_use','essayadmin').' '.$this->objLanguage->languageText('rubric_rubric');
 
-$errMark = $this->objLanguage->languageText('mod_essayadmin_entermark');
+$errMark = $this->objLanguage->languageText('mod_essayadmin_entermark','essayadmin');
 
 $head.=$markshead;
 
@@ -65,19 +65,19 @@ $head.=$markshead;
 * @author: otim samuel, sotim@dicts.mak.ac.ug
 */
 $downloadEssay=0;
-$downloadEssay=$this->objLanguage->languageText('mod_essayadmin_downloadessay');
+$downloadEssay=$this->objLanguage->languageText('mod_essayadmin_downloadessay','essayadmin');
 $dateSubmitted=0;
-$dateSubmitted=$this->objLanguage->languageText('mod_essayadmin_submitted');
+$dateSubmitted=$this->objLanguage->languageText('mod_essayadmin_submitted','essayadmin');
 $dateSubmittedLate=0;
-$dateSubmittedLate=$this->objLanguage->languageText('mod_essayadmin_submittedlate');
+$dateSubmittedLate=$this->objLanguage->languageText('mod_essayadmin_submittedlate','essayadmin');
 
 // javascript
-$javascript = "<SCRIPT language=\"javascript\" type=\"text/javascript\">
+$javascript = "<script language=\"javascript\" type=\"text/javascript\">
     function submitExitForm(){
         document.exit.submit();
     }
 
-</SCRIPT>";
+</script>";
 
 echo $javascript;
 
@@ -108,7 +108,7 @@ $rubric=$this->getParam('rubric');
 $studentid=$data[0]['studentid'];
 $studentname=$this->objUser->fullname($studentid);
 //download link for the student's submitted essay
-$this->objLink=new link($this->uri(array('action'=>'download','fileid'=>$data[0]['fileid'])));
+$this->objLink=new link($this->uri(array('action'=>'download','fileid'=>$data[0]['studentfileid'])));
 $this->objLink->link=$downloadEssay;
 $downloadEssayLink=0;
 $downloadEssayLink=$this->objLink->show();
@@ -116,12 +116,12 @@ $downloadEssayLink=$this->objLink->show();
 $closingDate=0;
 $closingDate=$topicdata[0]['closing_date'];
 $isLate=0;
-$isLate=$this->objDateCompare->getDateDifference($closingDate,$dateSubmitted);
+$isLate = $this->objDateformat->getDateDifference($closingDate,$data[0]['submitdate']);
 
 // display student name and essay title
 $objTable->startRow();
 $objTable->addCell('','','','','even');
-$objTable->addCell('<b>'.$wordstudent.':<b>&nbsp;&nbsp;&nbsp;&nbsp;'.$studentname.'<br>'.($isLate?'<font color=\'red\'><strong>'.$dateSubmittedLate.':</strong>&nbsp;&nbsp;&nbsp;'.$this->formatDate($data[0]['submitdate']).'</font>':'<strong>'.$dateSubmitted.':</strong>&nbsp;&nbsp;&nbsp;'.$this->formatDate($data[0]['submitdate'])).'<br>'.$downloadEssayLink,'','','center','even');
+$objTable->addCell('<b>'.$wordstudent.':<b>&nbsp;&nbsp;&nbsp;&nbsp;'.$studentname.'<br>'.($isLate?'<font color=\'red\'><strong>'.$dateSubmittedLate.':</strong>&nbsp;&nbsp;&nbsp;'.$this->objDateformat->formatDate($data[0]['submitdate']).'</font>':'<strong>'.$dateSubmitted.':</strong>&nbsp;&nbsp;&nbsp;'.$this->objDateformat->formatDate($data[0]['submitdate'])).'<br>'.$downloadEssayLink,'','','center','even');
 $objTable->addCell('<b>'.$essayhead.':<b>&nbsp;&nbsp;&nbsp;&nbsp;'.$essaytitle,'','','center','even');
 $objTable->addCell('','','','','even');
 $objTable->endRow();

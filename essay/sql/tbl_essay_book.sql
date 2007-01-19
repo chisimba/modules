@@ -29,51 +29,44 @@ $options = array('comment' => 'Students booked essays', 'collate' => 'utf8_gener
 $fields = array(
     'id' => array(
     'type' => 'text',
-    'length' => 32,
-    'notnull' => 1  
+    'length' => 32
     ),
   'studentid'  => array(
      'type'  =>  'text',
-     'length'=>  32,
-     'notnull' => 1
+     'length'=>  32
     ),
   'essayid' =>  array(
       'type'  =>  'text',
-      'length' => 32,
-      'notnull' => 1
+      'length' => 32
     ),
   'topicid'  =>  array(
       'type'    =>  'text',
-      'length'  =>  32,
-      'notnull' => 1
+      'length'  =>  32
     ),
-    'fileid'  =>  array(
+    'studentfileid'  =>  array(
       'type'    =>  'text',
-      'length'  =>  100,
-      'notnull' => 1
+      'length'  =>  32
+    ),
+    'lecturerfileid'  =>  array(
+      'type'    =>  'text',
+      'length'  =>  32
     ),
     'context'  =>  array(
       'type'    =>  'text',
-      'length'  =>  255,
-     'notnull' => 1 
+      'length'  =>  255
     ),
     'submitdate'  =>  array(
-      'type'    =>  'date',
-     'notnull' => 1 
+      'type'    =>  'timestamp' 
     ),
     'mark'  =>  array(
       'type'    =>  'integer',
-      'length'  =>  4,
-      'notnull' => 1
+      'length'  =>  4
     ),
     'comment'  =>  array(
-      'type'    =>  'clob',
-     'notnull' => 1
+      'type'    =>  'clob'
     ),
     'updated'  =>  array(
-      'type'    =>  'timestamp',
-      'length' => 14,
-      'notnull' => 1
+      'type'    =>  'timestamp'
     )
 );
 ?>

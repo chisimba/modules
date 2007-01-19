@@ -21,29 +21,21 @@ $options = array('comment' => 'A list of essays within a topic', 'collate' => 'u
 $fields = array(
     'id' => array(
     'type' => 'text',
-    'length' => 32,
-    'notnull' => 1
+    'length' => 32
     ),
   'topicid'  => array(
      'type'  =>  'text',
-     'length'=>  32,
-     'notnull' => 1
+     'length'=>  32
     ),
   'topic' =>  array(
       'type'  =>  'text',
-      'length' => 255,
-      'notnull' => 1
+      'length' => 255
     ),
     'notes'  =>  array(
-      'type'    =>  'clob',
-      'notnull' => 1
+      'type'    =>  'clob'
     ),
     'updated'  =>  array(
-      'type'    =>  'timestamp',
-      'length'  =>  14
+      'type'    =>  'timestamp'
    )
 );
-
-
-
 ?>

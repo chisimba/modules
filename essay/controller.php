@@ -49,7 +49,7 @@ class essay extends controller
         // Get instances of the html elements:
         // form, table, link, textinput, button, icon, layer, checkbox, textarea, iframe
         $this->objForm=& $this->newObject('form','htmlelements');
-        $this->objTable=& $this->newObject('htmltable','htmlelements');
+        $this->loadclass('htmltable','htmlelements');
         $this->objLayer=& $this->newObject('layer','htmlelements');
         $this->objLink=& $this->newObject('link','htmlelements');
         $this->objInput=& $this->newObject('textinput','htmlelements');
@@ -67,14 +67,15 @@ class essay extends controller
         // Get an instance of the context object
         $this->objContext=& $this->getObject('dbcontext','context');
         // Get an instance of the filestore object and change the tables to essay specific tables
-        $this->objFile=& $this->getObject('dbfile','filemanager');
+        //$this->objFile=& $this->getObject('dbfile','filemanager');
 //        $this->objFile->changeTables('tbl_essay_filestore','tbl_essay_blob');
         $this->objHelp = $this->newObject('helplink','help');
      //   $this->objDate = $this->newObject('simplecal','datetime');
         $this->objDate = $this->newObject('datepicker','htmlelements');
         
         $this->objDateformat = $this->newObject('datetime','utilities');
-
+        
+		$this->objFile =& $this->newObject('upload','filemanager');
         // Log this call if registered
         if(!$this->objModules->checkIfRegistered('logger', 'logger')){
             //Get the activity logger class
@@ -232,19 +233,19 @@ class essay extends controller
                     // change the file name to fullname_studentId
                     $studentid = $this->userId;
                     $name = $this->user;
-                    $ext = explode('.', $_FILES['uploadessay']['name']);
-                    $_FILES['uploadessay']['name'] = $name.'_'.$studentid.'.'.$ext[1];
-
+                  
                     // upload file to database
-                    $fileid=$this->objFile->getFileName($_FILES['uploadessay']);
+					$arrayfiledetails = $this->objFile->uploadFile('file');
 
-                    // save file id and submit date to database
-                    $fields=array('fileid'=>$fileid,'submitdate'=>date('Y-m-d'));
-                    $this->dbbook->bookEssay($fields,$book);
-
-                    // display success message
-                    $msg = $this->objLanguage->languageText('mod_essay_uploadsuccess','essay');
-                    $this->setVarByRef('msg',$msg);
+					if ($arrayfiledetails['success']){				
+                    	// save file id and submit date to database
+                    	$fields=array('studentfileid'=>$arrayfiledetails['fileid'], 'submitdate'=>date('Y-m-d H:i:s'));
+                    	$this->dbbook->bookEssay($fields,$book);
+							
+                    	// display success message
+                    	$msg = $this->objLanguage->languageText('mod_essay_uploadsuccess','essay');
+                    	$this->setVarByRef('msg',$msg);
+                    }
                 }
                 return $this->nextAction('upload',array('book'=>$book,'msg'=>$msg,'id'=>$topic));
             break;
@@ -283,7 +284,7 @@ class essay extends controller
     public function getTopics($topics)
     {
         // set up html elements
-        $objTable=$this->objTable;
+        $objTable=new htmltable();
         $objLayer=$this->objLayer;
         $objLink=$this->objLink;
         $objIcon=$this->objIcon;
@@ -339,7 +340,7 @@ class essay extends controller
                 $percent = $val['percentage'];
 
                 // set up view essays in topic link
-                $this->objLink->link($this->uri(array('action'=>'view','id'=>$val['id'])));
+                $this->objLink = new link($this->uri(array('action'=>'view','id'=>$val['id'])));
                 $this->objLink->link=$val['name'];
                 $this->objLink->title=$title;
                 $view=$this->objLink->show();
@@ -365,12 +366,12 @@ class essay extends controller
         $objTable->addCell('','','','','',' colspan="4"');
         $objTable->endRow();
 
-        $objLink->link($this->uri(array('action'=>'viewessays')));
+        $objLink = new link($this->uri(array('action'=>'viewessays')));
         $objLink->link = $viewSubmitted;
         $back = $objLink->show();
 
         if($this->assignment){
-            $objLink->link($this->uri(array(''), 'assignment'));
+            $objLink = new link($this->uri(array(''), 'assignment'));
             $objLink->link = $assignmentLabel;
             $back .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$objLink->show();
         }
@@ -396,8 +397,8 @@ class essay extends controller
     public function getEssays($essays,$topic,$studentbook=NULL,$booked=NULL)
     {
         // set up html elements
-        $objTable=$this->objTable;
-        $objTable2=$this->objTable;
+        $objTable = new htmltable();
+        $objTable2 = new htmltable();
         $objLayer=$this->objLayer;
         $objLink=$this->objLink;
         $objHead=& $this->newObject('htmlheading','htmlelements');
@@ -407,7 +408,7 @@ class essay extends controller
         $head.=$this->objLanguage->languageText('mod_essay_topic', 'essay').':&nbsp;&nbsp;'.$topic[0]['name'];
         $subhead=$this->objLanguage->languageText('mod_essay_essays', 'essay');
         $descriptionLabel=$this->objLanguage->languageText('mod_essay_description', 'essay');
-        $instructionsLabel=ucwords($this->objLanguage->code2Txt('mod_essay_instructions',array('readonlys'=>'students')));
+        $instructionsLabel=ucwords($this->objLanguage->code2Txt('mod_essay_instructions','essay',array('readonlys'=>'students')));
         $duedate=$this->objLanguage->languageText('mod_essay_closedate', 'essay');
         $view=$this->objLanguage->languageText('word_view');
         $title=$view.' '.$this->objLanguage->languageText('mod_essay_notes');
@@ -521,7 +522,7 @@ class essay extends controller
                 $this->objIcon->title=$title;
                 $this->objIcon->alt=$title;
            //     $this->objIcon->extra="height="18" width="18" onclick=\"javascript:window.open('" .$this->uri(array('action'=>'shownotes','essay'=>$id))."', 'essaynotes', 'width="400", height="200", scrollbars="1"')\" ";
-                $this->objLink->link('#');
+                $this->objLink = new link('#');
                 $this->objLink->link=$this->objIcon->show();
                 $show=$this->objLink->show();
                 $msg='';$mark='';
@@ -529,19 +530,24 @@ class essay extends controller
                 // if student has booked an essay, unlink others, change action to unbook
                 if(!$book1){
                     if($book){
-                        $this->objLink->link($this->uri(array('action'=>'unbook','essay'=>$id,'id'=>$topic[0]['id'])));
+                    	//echo ('here');
+                        $this->objLink = new link($this->uri(array('action'=>'unbook','essay'=>$id,'id'=>$topic[0]['id'])));
                         $this->objLink->title=$title5;
                         $this->objIcon->title=$title5;
-                        $msg = ' ';
+                        $msg = ' <br />';
                         $msg.=$this->objLanguage->languageText('mod_essay_bookby','essay').' '.$this->user;
                     }else{
-                        $this->objLink->link($this->uri(array('action'=>'bookessay','essay'=>$id,'id'=>$topic[0]['id'])));
+                    	//echo ('else');
+                        $this->objLink = new link($this->uri(array('action'=>'bookessay','essay'=>$id,'id'=>$topic[0]['id'])));
                         $this->objLink->title=$title4;
                         $this->objIcon->title=$title4;
                     }
+                    
+                    //var_dump ($essaysubmit);
 
                     // if student has submitted, remove link to unbook
                     if($essaysubmit==NULL){
+      
                         $this->objLink->link=$val['topic'];
                         $view=$this->objLink->show();
 
@@ -595,11 +601,12 @@ class essay extends controller
 
     /******************** Form to return to topic list ************************/
 
-        $objLink->link($this->uri(array('')));
+        $objLink = new link($this->uri(array('')));
         $objLink->title='';
         $objLink->link=$topiclist;
         $back=$objLink->show().'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-        $objLink->link($this->uri(array('action'=>$formAction,'id'=>$topic[0]['id'])));
+    
+        $objLink = new link($this->uri(array('action'=>$formAction,'id'=>$topic[0]['id'])));
         $objLink->link=$viewSubmitted;
         $back.=$objLink->show();
 
@@ -644,7 +651,7 @@ class essay extends controller
                 }
 
                 // get booking info: check if submitted or marked
-                if(!empty($item['fileid'])){
+                if(!empty($item['studentfileid'])){
                     $data[$key]['mark']=$item['mark'];
                 }else{
                     $data[$key]['mark']='submit';
@@ -670,7 +677,7 @@ class essay extends controller
         if(!empty($topics)){
             foreach($topics as $key=>$item){
                 $filter="where topicid='".$item['id']."'";
-                $fields="COUNT(fileid) as submitted, COUNT(mark) as marked";
+                $fields="COUNT(studentfileid) as submitted, COUNT(mark) as marked";
                 $bookings=$this->dbbook->getBooking($filter,$fields);
                 $data[$key]['id']=$item['id'];
                 $data[$key]['name']=$item['name'];

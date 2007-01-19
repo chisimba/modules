@@ -16,7 +16,8 @@ $this->objDateformat = $this->newObject('datetime','utilities');
  $this->loadclass('htmltable','htmlelements'); 
 
 // set up html elements
-$objTable=$this->objTable;
+//$objTable=$this->objTable;
+$objTable = new htmltable();
 $objLayer=$this->objLayer;
 
 // set up language items
@@ -31,9 +32,9 @@ $markhead=$this->objLanguage->languageText('mod_essay_mark','essay');
 $submittitle=$this->objLanguage->languageText('mod_essay_upload','essay');
 $downloadhead=$this->objLanguage->languageText('mod_essay_download','essay');
 $loadhead=$submittitle.' / '.$downloadhead;
-$submittitle.=' '.$this->objLanguage->languageText('mod_essay_essay','Essay');
-$downloadhead.=' '.$this->objLanguage->languageText('mod_essay_marked','Marked').' '.$this->objLanguage->languageText('mod_essay_essay','Essay');
-$commenthead=$this->objLanguage->languageText('word_view','essay').' '.$this->objLanguage->languageText('mod_essay_comment','Comment');
+$submittitle.=' '.$this->objLanguage->languageText('mod_essay_essay','essay');
+$downloadhead.=' '.$this->objLanguage->languageText('mod_essay_marked','essay').' '.$this->objLanguage->languageText('mod_essay_essay','essay');
+$commenthead=$this->objLanguage->languageText('word_view').' '.$this->objLanguage->languageText('mod_essay_comment','essay');
 $topiclist=$this->objLanguage->languageText('word_back').' '.strtolower($this->objLanguage->languageText('word_to')).' '.$topichead;
 $topichome=$this->objLanguage->languageText('mod_essay_name','essay').' '.$this->objLanguage->languageText('word_home');
 $lbClosed = $this->objLanguage->languageText('mod_essay_closed', 'essay');
@@ -94,7 +95,7 @@ foreach($data as $item){
         }
     }else if($item['mark']){
         // if mark exists: display mark and download icon and view comments icon
-        $this->objLink->link($this->uri(array('action'=>'download','fileid'=>$item['fileid'])));
+        $this->objLink->link($this->uri(array('action'=>'download','fileid'=>$item['lecturerfileid'])));
         $this->objIcon->setIcon('download');
         $this->objIcon->extra='';
         $this->objIcon->title=$downloadhead;

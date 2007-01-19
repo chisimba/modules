@@ -9,69 +9,50 @@ $options = array('comment' => 'The table equipment is managed by the onlineinvoi
 $fields = array(
 	'id' => array(
     'type' => 'text',
-    'length' => 32,
-    'notnull'     => 1
+    'length' => 32
     ),
   'name'  => array(
      'type'  =>  'text',
-     'length'=>  255,
-   'notnull' => 1
+     'length'=>  255
     ),
     'context' =>  array(
-     'type'  =>  'text',
-    'notnull'     => 1,
-    'length' =>  255,
-    'notnull'=> 1
+     	'type'  =>  'text',
+    	'length' =>  255
     ),
   'description'  =>  array(
-      'type'    =>  'clob',
-    'notnull'     => 1
-
+      	'type'    =>  'clob'
     ),
    'instructions' =>  array(
-    'type'        =>  'clob',
-	'notnull'     => 1
+    	'type'        =>  'clob'
     ),
     'closing_date'     =>  array(
-    'type'        =>  'timestamp',
-    'length'=>  14,
-	'notnull'     => 1
+    	'type'        =>  'timestamp',
     ),
    'bypass'         =>  array(
-      'type'      =>  'integer',
-    'length'=>  4,
-    'notnull'   => 1
-      
+      	'type'      =>  'integer',
+    	'length'=>  4
    ),
    'forceone'  =>  array(
       'type'        =>  'integer',
-       'length'=>  4,   
-      'notnull'     => 1
+       'length'=>  4
    ),
    'rubric'  =>  array(
       'type'        =>  'text',
-      'length'      => 32,
-      'notnull'     => 1
+      'length'      => 32
    ),
    'percentage'  =>  array(
       'type'        =>  'integer',
-      'length'      => 11,
-      'notnull'     => 1
+      'length'      => 11
    ),
    'userid'  =>  array(
       'type'        =>  'text',
-    'length' =>   32,
-      'notnull'     => 1
+    'length' =>   32
    ),
     'last_modified' =>  array(
-    'type'        =>  'timestamp',
-    'length'      =>  32,
-    'notnull'     => 1
+    'type'        =>  'timestamp'
     ),
    'updated'  =>  array(
-      'type'        =>  'timestamp',
-      'length' =>   14,
-      'notnull'     => 1
+      'type'        =>  'timestamp'
       )
    );
 //create other indexes here...

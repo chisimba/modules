@@ -12,7 +12,7 @@
 $this->setLayoutTemplate('essay_layout_tpl.php');
 
 // set up html elements
-$objTable=$this->objTable;
+$this->loadclass('htmltable','htmlelements');
 $objLayer=$this->objLayer;
 $objConfirm =& $this->newObject('timeoutmessage','htmlelements');
 
@@ -37,6 +37,7 @@ $essay=$this->dbessays->getEssay($data[0]['essayid'],'topic');
 $essaytitle=$essay[0]['topic'];
 
 // display essay title
+$objTable = new htmltable();
 $objTable->startRow();
 $objTable->addCell('','','','','even');
 $objTable->addCell('<b>'.$essaytitle.'</b>','','','center','even',' colspan="2"');
@@ -72,23 +73,23 @@ $objTable->addCell('');
 $objTable->endRow();
 
 //new file upload functionality
-$this->loadclass('selectfile','filemanager');
+//$this->loadclass('selectfile','filemanager');
 
-$objSelectFile = $this->newObject('selectfile', 'filemanager');
-$objSelectFile->name = 'uploadessay';
-$objSelectFile->context = false;
-$objSelectFile->workgroup = false;
+//$objSelectFile = $this->newObject('selectfile', 'filemanager');
+//$objSelectFile->name = 'uploadessay';
+//$objSelectFile->context = false;
+//$objSelectFile->workgroup = false;
 
 
 
 // file input
-/* $this->objInput = new textinput('file');
+$this->objInput = new textinput('file');
 $this->objInput->fldType='file';
-$this->objInput->size=''; */
+$this->objInput->size=''; 
 
 $objTable->startRow();
 $objTable->addCell('');
-$objTable->addCell($objSelectFile->show(),'','','center','',' colspan="2"');
+$objTable->addCell($this->objInput->show(),'','','center','',' colspan="2"');
 $objTable->endRow();
 
 // submit and exit buttons

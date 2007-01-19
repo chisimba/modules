@@ -9,27 +9,24 @@
 * @author James Scoble
 */
 
-$fileId=$this->getParam('fileid');
-$data=$this->objFile->getArray("select * from tbl_essay_filestore where fileId='$fileId'");
-if (count($data)==0){ // if the file has been deleted
-    header("Status: 404 Not Found");
-} else {
-    $name=$data[0]['filename'];
-    $size=$data[0]['size'];
-    $type=$data[0]['filetype']; 
-    $fileId2=$data[0]['fileId']; 
-    $list=$this->objFile->getArray("select id from tbl_essay_blob where fileId='$fileId2' order by segment");
+		$this->objFiles =& $this->getObject('dbfile','filemanager');
+		$this->objConfig =& $this->getObject('altconfig', 'config');
+		$this->objCleanUrl =& $this->getObject('cleanurl','filemanager');
+		
+		$fileId=$this->getParam('fileid');
+        $file = $this->objFiles->getFileInfo($fileId);
+        if ($file == FALSE) {
+            die('No Record of Such a File Exists.');
+        }
 
-    header("Content-type: $type");
-    header("Content-length: $size");
-    header("Content-Disposition: attachment; filename=$name");
-    header("Content-Description: PHP Generated Data");
+        $filePath = $this->objConfig->getcontentPath().$file['path'];
 
-    foreach ($list as $line)
-    {
-        $id=$line['id'];
-        $filedata=$this->objFile->getArray("select * from tbl_essay_blob where id='$id'");
-        echo $filedata[0]['filedata'];
-    }
-}
+        $this->objCleanUrl->cleanUpUrl($filePath);
+
+        // To do: Build in Security on whether user can view file
+        if (file_exists($filePath)) {
+            header("Location:{$filePath}");
+        } else {
+            die ('File does not exist');
+        }
 ?>
