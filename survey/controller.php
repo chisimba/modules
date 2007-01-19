@@ -295,11 +295,8 @@ class survey extends controller
                     $subject=$this->getParam('subject');
                     $body=$this->getParam('body');
                     if($mode=='Respondents'){
-                        $linkText=$this->getParam('link');
-                        $objLink=new link($this->uri(array('action'=>'takesurvey','survey_id'=>$surveyId)),'survey');
-                        $objLink->link=$linkText;
-                        $takeLink=$objLink->show();
-                        $body.='<br />'.$takeLink;
+                        $body.="\n".$this->getParam('link');
+                        $body.="\n".$this->uri(array('action'=>'takesurvey','survey_id'=>$surveyId));
                         $groupId=$this->objGroupAdmin->getLeafId(array('Surveys',$surveyId,'Respondents'));
                         $arrRespondentList=$this->objGroupAdmin->getGroupUsers($groupId,array('emailaddress'));
                         $addressList=array();
@@ -315,8 +312,8 @@ class survey extends controller
                         $this->dbSurvey->editSurveyField($surveyId,' email_sent',1);
                         return $this->nextAction('');
                     }elseif($mode=='Observers'){
-                        $body.='\n'.$this->getParam('link');
-                        $body.='\n'.$this->uri(array(''));
+                        $body.="\n".$this->getParam('link');
+                        $body.="\n".$this->uri(array(''));
                         $groupId=$this->objGroupAdmin->getLeafId(array('Surveys',$surveyId,'Observers'));
                         $arrObserverList=$this->objGroupAdmin->getGroupUsers($groupId,array('emailaddress'));
                         $addressList=array();
@@ -331,11 +328,8 @@ class survey extends controller
 
                         return $this->nextAction('surveygroups',array('survey_id'=>$surveyId));
                     }else{
-                        $linkText=$this->getParam('link');
-                        $objLink=new link($this->uri(''),'survey');
-                        $objLink->link=$linkText;
-                        $takeLink=$objLink->show();
-                        $body.='<br />'.$takeLink;
+                        $body.="\n".$this->getParam('link');
+                        $body.="\n".$this->uri('');
                         $groupId=$this->objGroupAdmin->getLeafId(array('Surveys',$surveyId,'Collaborators'));
                         $arrCollaboratorList=$this->objGroupAdmin->getGroupUsers($groupId,array('emailaddress'));
                         $addressList=array();
