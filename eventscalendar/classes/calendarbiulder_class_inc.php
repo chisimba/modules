@@ -400,7 +400,7 @@ class calendarbiulder extends object
    		$isEvents = false;
    		$givenDate  = $day."-".$month."-".$year;
    		$toc = ($this->calType=='big') ? 'TOC' : '';
-   		
+   		$smallevents = '';
    		$eventsForToday = FALSE;
    		$cssClass = "s2".$toc;
    		
