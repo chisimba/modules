@@ -1,5 +1,5 @@
 <?php
-require_once('modules/mathml/resources/phpmathpublisher/mathpublisher.php');
+
 /**
 * Class to Render a MathML Expression as an image
 *
@@ -19,6 +19,7 @@ require_once('modules/mathml/resources/phpmathpublisher/mathpublisher.php');
 *
 * @author Tohir Solomons
 */
+require_once($this->getResourceUri('phpmathpublisher/mathpublisher.php', 'mathml'));
 class mathimg extends object
 {
     /**
@@ -28,7 +29,7 @@ class mathimg extends object
     * in usrfiles/mathml/ exists.
     */
     function init()
-    {
+    {   
         $objConfig = $this->getObject('altconfig', 'config');
         $GLOBALS['dirfonts'] = $objConfig->getsiteRootPath().'modules/mathml/resources/phpmathpublisher/fonts';
         $GLOBALS['dirimg'] = $objConfig->getcontentBasePath().'mathml';
