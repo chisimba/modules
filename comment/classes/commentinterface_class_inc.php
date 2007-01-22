@@ -734,7 +734,7 @@ class commentinterface extends object
             // The add comment icon with link
             $objGetIcon->setIcon("comment");
             $objGetIcon->alt=$this->objLanguage->languageText('mod_comment_add','comment');
-            $objGetIcon->align = "absmiddle";
+            $objGetIcon->align = "middle";
             //Get the popup window HTML element
             $this->objPop = &$this->getObject('windowpop', 'htmlelements');
             //Set the location
@@ -808,7 +808,7 @@ class commentinterface extends object
         // The add comment icon with link
         $objGetIcon->setIcon("comment_view");
         $objGetIcon->alt=$this->objLanguage->languageText('mod_comment_view','comment');
-        $objGetIcon->align = "absmiddle";
+        $objGetIcon->align = "middle";
         $linkStr = $linkStr ;
         if ($suppressLink == FALSE) {
             $this->viewLink = $this->newObject('link', 'htmlelements');
@@ -840,7 +840,7 @@ class commentinterface extends object
         // The add comment icon with link
         $objGetIcon->setIcon("comment_view");
         $objGetIcon->alt=$this->objLanguage->languageText('mod_comment_view','comment');
-        $objGetIcon->align = "absmiddle";
+        $objGetIcon->align = "middle";
         $linkStr = $linkStr ;
         if ($suppressLink == FALSE) {
             //Setup the popup window
@@ -876,7 +876,7 @@ class commentinterface extends object
             // The add comment icon with link
             $objGetIcon->setIcon("edit");
             $objGetIcon->alt=$this->objLanguage->languageText("word_edit");
-            $objGetIcon->align = "absmiddle";
+            $objGetIcon->align = "middle";
             //Get the popup window HTML element
             $this->objPop = &$this->getObject('windowpop', 'htmlelements');
             //Set the location
