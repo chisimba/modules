@@ -13,6 +13,16 @@ if(!$GLOBALS['kewl_entry_point_run'])
 * can utilize it.  From the website: HTMLDOC converts Hyper-Text Markup Language ("HTML") input files 
 * into indexed HTML, Adobe¨ PostScript¨, or Adobe Portable Document Format ("PDF") files.
 *
+* Notes for any author continuing development
+* 	Here are some features to add:
+* 	- verify executable exists, otherwise return an error
+* 	- verify that executable can actually be run
+*	- commands for setting parameters, see htmldoc documentation for details on params
+* 	- consider specific commands for the more common parameters
+*	- run command
+*	- specify output (file, stream, to web)
+*	- specify input (by string, file reference, url, etc)
+*
 * @author Ryan Whitney, ryan@greenlikeme.org 
 */
 class htmldoc extends object 
