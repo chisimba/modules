@@ -789,7 +789,7 @@ class blogops extends object
 					$str = $matches[1][0];
 					$str = str_replace('&amp;', '&', $str);
 					$objFlashFreemind = $this->newObject('flashfreemind', 'freemind');
-        			$objFlashFreemind->getMindmapScript();
+        			//$objFlashFreemind->getMindmapScript();
     				$objFlashFreemind->setMindMap($str);
         			$post['post_content'] = str_replace($matches[0], $objFlashFreemind->show(), $post['post_content']);
 				}
