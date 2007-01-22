@@ -918,7 +918,7 @@ class commentinterface extends object
                 $objGetIcon->setIcon("disapprove");
                 $objGetIcon->alt=$this->objLanguage->languageText("word_disapprove");
             }
-            $objGetIcon->align = "absmiddle";
+            $objGetIcon->align = "middle";
             //Get the popup window HTML element
             $this->objPop = &$this->getObject('windowpop', 'htmlelements');
             //Set the location
