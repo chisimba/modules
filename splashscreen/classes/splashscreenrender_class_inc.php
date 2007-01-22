@@ -52,7 +52,7 @@ class splashscreenrender extends object
         $this->registerLink="<a href='".$this->uri(array('action'=>'register'),$registerModule)."'>".
         $this->objLanguage->languageText('word_register')."</a>\n";
         // the link for resetting passwords
-        $this->resetLink="<a href='".$this->uri(array('action'=>'needpassword'),'useradmin')."'>".
+        $this->resetLink="<a href='".$this->uri(array('action'=>'needpassword'),'security')."'>".
         $this->objLanguage->languageText('mod_security_forgotpassword')."</a>\n";
         // the help link
         // Create help object
@@ -375,7 +375,7 @@ class splashscreenrender extends object
         $registerLink="<a href='".$this->uri(array('action'=>'register'),$registerModule)."'>".
         $this->objLanguage->languageText('word_register')."</a>\n";
         // the link for resetting passwords
-        $resetLink="<a href='".$this->uri(array('action'=>'needpassword'),'useradmin')."'>".
+        $resetLink="<a href='".$this->uri(array('action'=>'needpassword'),'security')."'>".
         $this->objLanguage->languageText('mod_security_forgotpassword')."</a>\n";
         // the help link
         $resetLink .= '<br /><br />'.$helpIcon;
