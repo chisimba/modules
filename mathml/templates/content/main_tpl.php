@@ -22,4 +22,5 @@
 
  	print $ar."<br />".$this->objFont->show()."<br />".$this->objHelp->show();
 
+    echo '<br />'.$image;
 ?>
