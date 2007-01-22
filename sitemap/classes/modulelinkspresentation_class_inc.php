@@ -7,7 +7,7 @@
 *
 * @author Tohir Solomons
 */
-require_once('modules/tree/classes/presentation_class_inc.php');
+$this->loadClass('presentation', 'tree');
 class modulelinkspresentation extends presentation
 {
 
