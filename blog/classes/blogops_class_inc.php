@@ -780,6 +780,19 @@ class blogops extends object
         //break out the ol featurebox...
         if (!empty($posts)) {
             foreach($posts as $post) {
+            	//search for the [embed] tags in the content
+    			$search = '/\[EMBED\](.*)\[\/EMBED\]/U';
+        		// Get All Matches
+				preg_match_all($search, $post['post_content'], $matches, PREG_PATTERN_ORDER);
+				if(!empty($matches[1]))
+				{
+					$str = $matches[1][0];
+					$str = str_replace('&amp;', '&', $str);
+					$objFlashFreemind = $this->newObject('flashfreemind', 'freemind');
+        			$objFlashFreemind->getMindmapScript();
+    				$objFlashFreemind->setMindMap($str);
+        			$post['post_content'] = str_replace($matches[0], $objFlashFreemind->show(), $post['post_content']);
+				}
                 $objFeatureBox = $this->getObject('featurebox', 'navigation');
                 //build the top level stuff
                 $dt = date('r', $post['post_ts']);
