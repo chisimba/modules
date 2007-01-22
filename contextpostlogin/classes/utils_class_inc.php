@@ -102,11 +102,11 @@ class utils extends object
 		  		} 
 		  		else 
 		  		{
-		  			$filter = '  AND title LIKE "'.$filter.'%" ';
+		  			$filter = "  AND title LIKE '".$filter."%' ";
 		  		}
 		  	}
 		  	//get all public courses
-		  	$publicCourses = $this->_objDBContext->getAll( 'WHERE status = "Published" OR status = "" '.$filter.'  ORDER BY title ');
+		  	$publicCourses = $this->_objDBContext->getAll( "WHERE status = 'Published' OR status = '' ".$filter."  ORDER BY title ");
 		  	//print_r($publicCourses);
 		  	
 		  	foreach($publicCourses as $pCourse)
