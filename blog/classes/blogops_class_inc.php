@@ -787,6 +787,9 @@ class blogops extends object
 				if(!empty($matches[1]))
 				{
 					$str = $matches[1][0];
+					//clean the url
+					$clurl = $this->getObject('cleanurl', 'filemanager');
+					$clurl->cleanUpUrl($str);
 					$str = str_replace('&amp;', '&', $str);
 					$objFlashFreemind = $this->newObject('flashfreemind', 'freemind');
         			//$objFlashFreemind->getMindmapScript();
