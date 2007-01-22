@@ -49,7 +49,7 @@ $this->objUser =  &$this->getObject("user", "security");
 
 if ($this->objUser->isAdmin() || $this->isValid('admin')){
 
-    $options =  "<br> <a href=\"" .
+    $options =  "<br /> <a href=\"" .
     $this->uri(array(
         'module'=>'library',
         'action'=>'admin'
