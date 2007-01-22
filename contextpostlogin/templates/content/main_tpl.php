@@ -11,7 +11,7 @@ $objContextGroups = & $this->newObject('onlinecount', 'contextgroups');
 $str = '';
 $other = '';
 $lects = '';
-
+$config = '';
 //registered courses
 //var_dump($contextList);
 
