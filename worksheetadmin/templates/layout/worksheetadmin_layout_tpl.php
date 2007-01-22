@@ -8,6 +8,16 @@ $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 $leftMenu=& $this->newObject('sidemenu','toolbar');
 $objHead=& $this->newObject('htmlheading','htmlelements');
 
+$objDBContext = & $this->getObject('dbcontext','context');
+if($objDBContext->isInContext())
+{
+    $objContextUtils = & $this->getObject('utilities','context');
+    $cm = $objContextUtils->getHiddenContextMenu('worksheet','show');
+} else {
+    $cm = '';
+}
+
+
 if(!isset($heading))
     $heading=$objLanguage->languageText('mod_worksheetadmin_name', 'worksheetadmin').' '.$objLanguage->languageText('mod_worksheetadmin_in', 'worksheetadmin')
 .' '.$contextTitle;
@@ -18,7 +28,7 @@ $main = $objHead->show();
 
 $main .= $this->getContent();
 
-$cssLayout->setLeftColumnContent($leftMenu->menuContext());
+$cssLayout->setLeftColumnContent($leftMenu->menuContext().$cm);
 $cssLayout->setMiddleColumnContent($main);
 
 echo $cssLayout->show();

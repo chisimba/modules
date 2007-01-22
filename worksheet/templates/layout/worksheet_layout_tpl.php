@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Template layout for worksheet module
 * @package worksheet
@@ -14,7 +14,7 @@ if($objDBContext->isInContext())
     $objContextUtils = & $this->getObject('utilities','context');
     $cm = $objContextUtils->getHiddenContextMenu('worksheet','show');
 } else {
-    $cm = $this->getMenu();
+    $cm = '';
 }
 
 if(!isset($heading))
