@@ -793,6 +793,7 @@ class blogops extends object
 					$objFlashFreemind = $this->newObject('flashfreemind', 'freemind');
         			//$objFlashFreemind->getMindmapScript();
     				$objFlashFreemind->setMindMap($str);
+    				echo $objFlashFreemind->show();
         			$post['post_content'] = str_replace($matches[0], $objFlashFreemind->show(), $post['post_content']);
 				}
                 $objFeatureBox = $this->getObject('featurebox', 'navigation');
