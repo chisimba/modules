@@ -757,6 +757,7 @@ class blogops extends object
      */
     public function showPosts($posts)
     {
+    	$mm = $this->getObject('parse4mindmap', 'filters');
         $this->objComments = &$this->getObject('commentapi', 'blogcomments');
         $this->objTB = $this->getObject("trackback");
         //set the trackback options
@@ -948,7 +949,7 @@ class blogops extends object
                     {
                     	$linkstr = $this->objLanguage->languageText("mod_blog_word_notags", "blog");
                     }
-                    $fboxcontent = $post['post_content'] .$this->cleaner->cleanHtml(
+                    $fboxcontent = $mm->parse($post['post_content']) .$this->cleaner->cleanHtml(
                     			   "<br /><hr />" . "<center><em><b>" . $this->objLanguage->languageText("mod_blog_word_tags4thispost", "blog") . "</b><br />" . $linkstr .
                     			   "</em><hr />".
                     			   "<center>".$tbl->show() ."</center>");
