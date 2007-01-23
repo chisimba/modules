@@ -53,7 +53,12 @@ class dbeventscalendarcategories extends dbTable
    public function getCatId($type, $typeId)
    {
         $line = $this->getCategories($type, $typeId);
-        return  $line[0]['id'];
+        if(array_key_exists(0,$line))
+        {
+            return  $line[0]['id'];
+        } else {
+            return FALSE;
+        }
 
 
 	}
