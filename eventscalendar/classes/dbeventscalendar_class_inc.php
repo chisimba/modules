@@ -51,7 +51,7 @@ class dbeventscalendar extends dbTable
     	//$arrTypeEvents = $this->_objDBLookup->getEventsByType($type, $typeId);
        print 'THE STUPID FUNCTION';
           
-    	$arrTypeEvents = $this->getAll('WHERE catid="'.$catId.'"');
+    	$arrTypeEvents = $this->getAll("WHERE catid='".$catId."'");
 //var_dump($arrTypeEvents); //die;
     	$events = array();
     	
@@ -93,7 +93,7 @@ class dbeventscalendar extends dbTable
     	} else {
     		return $events;
     	}
-    	$sql = 'WHERE event_date BETWEEN  '.$startOfMonth.' AND  '.$endOfMonth;
+    	$sql = "WHERE event_date BETWEEN  ".$startOfMonth." AND  ".$endOfMonth;
   
         return $this->getAll($sql);
     }
@@ -109,7 +109,7 @@ class dbeventscalendar extends dbTable
         try{
            
             //print $catId;
-            $arrTypeEvents = $this->getAll('WHERE catid="'.$catId.'"');
+            $arrTypeEvents = $this->getAll("WHERE catid='".$catId."'");
 
             $events = array();
             

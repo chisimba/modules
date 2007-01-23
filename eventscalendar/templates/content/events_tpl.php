@@ -186,7 +186,7 @@ $style = '
 
   //$this->appendArrayVar('headerParams',$style);
 $objH = $this->newObject('htmlheading', 'htmlelements');
-
+$toggleLink = '';
 if($calType == 'context')
 {
     $objH->str = $this->_objDBContext->getMenuText().' Calendar';

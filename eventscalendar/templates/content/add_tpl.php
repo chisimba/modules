@@ -79,7 +79,7 @@ $objEditor->label = 'Details';
 
 //the categories
 $objCatDropdown->label = 'Category';
-$objCatDropdown->addFromDB($categories,'title','id');
+//$objCatDropdown->addFromDB($categories,'title','id');
 
 //start time
 $startTime->name = 'start_time';
