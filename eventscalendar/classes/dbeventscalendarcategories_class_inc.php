@@ -186,12 +186,20 @@ class dbeventscalendarcategories extends dbTable
         {
 
             $line = $this->getAll("WHERE type='".$type."' AND typeid='".$value."' ");
-            if(is_array($line[0]))
+            if(array_key_exists(0,$line))
             {
-                return TRUE;
-            } else {
+                if(is_array($line[0]))
+                {
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+            }
+            else 
+            {
                 return FALSE;
             }
+            
         }
         catch (customException $e)
         {
