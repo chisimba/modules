@@ -17,7 +17,7 @@ $myTable->addHeaderCell(';');
 $myTable->endHeaderRow(); 
 */
 $str = '';
-
+$test = '';
 if($events)
 {
     foreach ($events as $event)
