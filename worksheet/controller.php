@@ -151,7 +151,9 @@ class worksheet extends controller
     public function worksheetHome()
     {
         $ar = $this->objWorksheet->getWorksheetsInContext($this->contextCode);
-
+		//echo '<pre />';		
+		//print_r($ar);
+		//die ();
         if(!empty($ar)){
             foreach($ar as $key=>$row){
                 $sql = "SELECT title FROM tbl_context_nodes WHERE ";

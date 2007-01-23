@@ -267,11 +267,15 @@ class worksheetadmin extends controller
     {
         $ar = $this->objWorksheet->getWorksheetsInContext($this->contextCode);
 
+//echo '<pre>'; print_r($ar); echo'</pre>';
+
         if(!empty($ar)){
             foreach($ar as $key=>$row){
-                $sql = "SELECT title FROM tbl_context_nodes WHERE ";
-                $sql .= "id = '".$row['chapter']."'";
-                $nodes = $this->objContentNodes->getArray($sql);
+            	if (isset($row['chapter'])){
+                	$sql = "SELECT title FROM tbl_context_nodes WHERE ";
+                	$sql .= "id = '".$row['chapter']."'";
+					$nodes = $this->objContentNodes->getArray($sql);                
+                }                
 
                 if(!empty($nodes)){
                     $ar[$key]['node'] = $nodes[0]['title'];
