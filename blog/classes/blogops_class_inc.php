@@ -214,8 +214,10 @@ class blogops extends object
         $rssurl = new textinput('rssurl');
         if(isset($rdata['url']))
         {
-        	$rssurl->setValue(htmlentities($rdata['url']));
-        }
+        $rssurl->setValue($rdata['url']);
+       // $rssurl->setValue('url');
+        
+		}
         $rssadd->addCell($rssurllabel->show());
         $rssadd->addCell($rssurl->show());
         $rssadd->endRow();
@@ -226,7 +228,7 @@ class blogops extends object
         $rssname = new textinput('name');
         if(isset($rdata['name']))
         {
-        	$rssname->setValue(htmlentities($rdata['name']));
+        	$rssname->setValue($rdata['name']);
         }
         $rssadd->addCell($rssnamelabel->show());
         $rssadd->addCell($rssname->show());
@@ -238,7 +240,8 @@ class blogops extends object
         $rssdesc = new textarea('description');
         if(isset($rdata['description']))
         {
-        	$rssdesc->setValue(htmlentities($rdata['description']));
+          	//var_dump($rdata['description']);
+        	$rssdesc->setValue($rdata['description']);
         }
         $rssadd->addCell($rssdesclabel->show());
         $rssadd->addCell($rssdesc->show());
@@ -269,10 +272,10 @@ class blogops extends object
         if (!empty($efeeds)) {
             foreach($efeeds as $rows) {
                 $ftable->startRow();
-                $feedlink = new href(htmlentities($rows['url']), $rows['name']);
+                $feedlink = new href($rows['url'], $rows['name']);
                 $ftable->addCell($feedlink->show());
                 //$ftable->addCell(htmlentities($rows['name']));
-                $ftable->addCell(htmlentities($rows['description']));
+                $ftable->addCell(($rows['description']));
                 $this->objIcon = &$this->getObject('geticon', 'htmlelements');
                 $edIcon = $this->objIcon->getEditIcon($this->uri(array(
                     'action' => 'addrss',
@@ -290,7 +293,7 @@ class blogops extends object
                 $ftable->addCell($edIcon.$delIcon);
                 $ftable->endRow();
             }
-            $ftable = $ftable->show();
+            //$ftable = $ftable->show();
         }
 
 
@@ -300,7 +303,7 @@ class blogops extends object
             $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_importblog", "blog") , $imform . $ftable);
             return $ret;
         } else {
-            return $rssform . $ftable;
+            return $rssform . $ftable->show();
         }
 
     }
