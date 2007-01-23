@@ -113,7 +113,7 @@ if(count($publicCourses) > 0)
 		$icon->alt = 'Enter Course '.$context['title'];
 		$objLink->link = $icon->show();
 		
-
+$config = '';
         //check if this user can join this context before showing the link
 		if($this->_objDBContextUtils->canJoin($context['contextcode']))
 		{
