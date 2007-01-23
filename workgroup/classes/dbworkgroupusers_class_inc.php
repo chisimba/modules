@@ -71,7 +71,7 @@ class dbWorkgroupUsers extends dbTable
     */
 	function listAll($workgroupId)
 	{
-		$sql = "SELECT {$this->_tableName}.userid, CONCAT(tbl_users.firstname, ' ', tbl_users.surname) AS fullname FROM $this->_tableName, tbl_users
+		$sql = "SELECT {$this->_tableName}.userid, 'tbl_users.firstName' || ' ' || 'tbl_users.surname' AS fullname FROM $this->_tableName, tbl_users
 		WHERE {$this->_tableName}.userid=tbl_users.userid
         AND {$this->_tableName}.workgroupid='" . $workgroupId . "'
 		ORDER BY fullname";
@@ -92,7 +92,7 @@ class dbWorkgroupUsers extends dbTable
     */
 	function listSingle($workgroupId, $userId)
 	{
-		$sql = "SELECT {$this->_tableName}.userid, CONCAT(tbl_users.firstname, ' ', tbl_users.surname) AS fullname FROM $this->_tableName, tbl_users
+		$sql = "SELECT {$this->_tableName}.userid,'tbl_users.firstName' || ' ' || 'tbl_users.surname' AS fullname FROM $this->_tableName, tbl_users
 		WHERE {$this->_tableName}.userid=tbl_users.userid
 		AND {$this->_tableName}.workgroupid='" . $workgroupId . "'
 		AND {$this->_tableName}.userid='" . $userId . "'

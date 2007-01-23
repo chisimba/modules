@@ -139,7 +139,7 @@ class workgroup extends controller
 			// Get a list of students who are not already in a workgroup.
 			$gid=$groups->getLeafId(array($contextCode,'Lecturers'));
 		}
-		$lecturers = $groups->getGroupUsers($gid, array('userId',"CONCAT(firstname, ' ', surname) AS fullname"), "ORDER BY fullname");
+		$lecturers = $groups->getGroupUsers($gid, array('userId',"'firstName' || ' ' || 'surname' AS fullname"), "ORDER BY fullname");
 		$this->setVar('lecturers',$lecturers);
 
         return "main_tpl.php";

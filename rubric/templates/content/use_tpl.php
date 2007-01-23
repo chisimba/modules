@@ -56,7 +56,7 @@
 	$groups =& $this->getObject("groupAdminModel", "groupadmin");
 	// Get a list of students.
 	$gid=$groups->getLeafId(array($contextCode,'Students'));
-	$students = $groups->getGroupUsers($gid, array('userId', 'username',"CONCAT(firstName, ' ', surname, ' (', username, ')') AS display", "CONCAT(firstName, ' ', surname) AS fullName"), "ORDER BY fullName");
+	$students = $groups->getGroupUsers($gid, array('userId', 'username',"CONCAT(firstName, ' ', surname, ' (', username, ')') AS display", "'firstName' || ' ' || 'surname' AS fullName"), "ORDER BY fullName");
 	$dropdown = new dropdown("studentNo");
 	$dropdown->addFromDB($students, 'display', /*'userId'*/'username', $studentNo);
 	//$dropdown->addFromDB($students,'username', $studentNo);
