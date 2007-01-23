@@ -1169,8 +1169,11 @@ class blog extends controller
                     	}
 
                     	$tagarray = array_diff($tagarray, $things);
+                    	
                     	$this->objDbBlog->insertTags($tagarray, $userid, $id);
                     }
+                    
+                   
                     $this->nextAction('viewblog');
                     break;
                 }
@@ -1500,8 +1503,17 @@ class blog extends controller
         	}
         	//echo $path;
         	//add into the db
+        	
+        	$rssurl = htmlentities($rssurl, ENT_QUOTES);
+        	$rssname = htmlentities($rssname, ENT_QUOTES);
+        	$rssdesc = htmlentities($rssdesc, ENT_QUOTES);
+        
+        	
         	$addarr = array('userid' => $userid, 'url' => $rssurl, 'name' => $rssname, 'description' => $rssdesc, 'rsscache' => $filename, 'rsstime' => $rsstime);
-        	$this->objDbBlog->addRss($addarr);
+        	
+        	
+			$this->objDbBlog->addRss($addarr);
+        	
         	$this->nextAction('viewblog');
         	break;
 
@@ -1525,7 +1537,7 @@ class blog extends controller
 
         case 'deleterss':
         	$id = $this->getParam('id');
-        	//echo $id; die();
+        
         	$this->objDbBlog->delRSS($id);
         	$this->nextAction('rssedit');
         	break;
