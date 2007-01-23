@@ -39,7 +39,7 @@ class dbeventscalendarcategories extends dbTable
     public function getCategories($type, $typeId)
     {
         
-        return $this->getAll('WHERE type = "'.$type.'"  and typeid="'.$typeId.'"');
+        return $this->getAll("WHERE type = '".$type."'  and typeid='".$typeId."'");
     }
 
     /**
@@ -180,7 +180,7 @@ class dbeventscalendarcategories extends dbTable
         try 
         {
 
-            $line = $this->getAll('WHERE type="'.$type.'" AND typeid="'.$value.'" ');
+            $line = $this->getAll("WHERE type='".$type."' AND typeid='".$value."' ");
             if(is_array($line[0]))
             {
                 return TRUE;
