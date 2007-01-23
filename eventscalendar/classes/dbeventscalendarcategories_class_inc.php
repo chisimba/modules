@@ -152,8 +152,9 @@ class dbeventscalendarcategories extends dbTable
     public function getCategoryColour($catId)
     {
         
-        $line = $this->getRow('id', $catId);
-        return $line['colour'];
+        //$line = $this->getRow('id', $catId);
+        //return $line['colour'];
+        return null;
     }
     
     /**

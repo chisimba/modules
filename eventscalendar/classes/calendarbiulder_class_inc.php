@@ -403,7 +403,7 @@ class calendarbiulder extends object
    		$smallevents = '';
    		$eventsForToday = FALSE;
    		$cssClass = "s2".$toc;
-   		
+   		$ev = '';
    		//check for today
    		if($day == date("d") && $month == date("n") && $year == date("Y"))
    		{
