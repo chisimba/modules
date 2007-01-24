@@ -332,14 +332,33 @@ class blogops extends object
         if ($featurebox == FALSE) {
             $ret = $oblogs->show() . "<br />" . $defmodLink->show();
         } else {
-            $objFeatureBox = $this->getObject('featurebox', 'navigation');
 
-            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_otherblogs","blog"), $oblogs->show() . "<br />" . $ositeblogs->show() . "<br />" . $defmodLink->show());
+			$boxContent = $oblogs->show()."<br />";
+	 		$boxContent .= $defmodLink->show()."<br />";
+		 
+		 
+		 // 
+		 
+            	//database abstraction object
+            	$this->objDbBlog = $this->getObject('dbblog');
+				$postresults = $this->objDbBlog->getAllPosts($userid=1,null);
+		
+			 if(!$postresults==null){
+			$boxContent .= $ositeblogs->show() . "<br />"; 
+			}
 
-            //$ret .= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewsiteblogs","blog"), $ositeblogs->show());
+		$objFeatureBox = $this->getObject('featurebox', 'navigation');
+        $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_otherblogs","blog"), $boxContent);
 
-            //$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_otherblogs", "blog") , $oblogs->show());
-            //$ret.= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewsiteblogs", "blog") , $ositeblogs->show());
+ 		
+	 
+	 	 	
+		 
+
+	
+           //$ret .= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewsiteblogs","blog"), $ositeblogs->show());
+           //$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_otherblogs", "blog") , $oblogs->show());
+           //$ret.= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewsiteblogs", "blog") , $ositeblogs->show());
 
         }
         return $ret;
