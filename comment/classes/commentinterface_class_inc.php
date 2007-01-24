@@ -274,7 +274,7 @@ class commentinterface extends object
             }
             $objElement->cols=57;
             $objElement->rows=12;
-            $objElement->setContent($commentar['comment']);
+           // $objElement->setContent($commentar['comment']);
 
             //Add the $comment element to the form
             $objForm->addToForm("&nbsp;&nbsp;"
