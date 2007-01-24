@@ -77,9 +77,11 @@ class buildflowplayer extends object
     *
     * Constructor method to set up the default parameters for
     * the FLV player applet.
+    * 
+    * @access public
     *
     */
-    function init()
+    public function init()
     {
 
         //Set up the path for the error file
@@ -105,21 +107,21 @@ class buildflowplayer extends object
     * @return string The player applet code
     *
     */
-    function show()
+    public function show()
     {
-        if (!$this->movie=="") {
-            return $this->__startApplet()
-              . $this->__getParam("ALLOWSCRIPTACCESS")
-              //. $this->__getParam("BASEURL")
-              . $this->__getParam("MOVIE")
-              . $this->__getParam("QUALITY")
-              . $this->__getParam("SCALE")
-              . $this->__getParam("WMODE")
-              . $this->__getParam("FLASHVARS")
-              . $this->__endApplet();
+        if ($this->movie=="") {
+        	
         } else {
-            return "err";
+            
         }
+        return $this->__startApplet()
+          . $this->__getParam("ALLOWSCRIPTACCESS")
+          . $this->__getParam("MOVIE")
+          . $this->__getParam("QUALITY")
+          . $this->__getParam("SCALE")
+          . $this->__getParam("WMODE")
+          . $this->__getParam("FLASHVARS")
+          . $this->__endApplet();
 
     }
 
@@ -131,27 +133,29 @@ class buildflowplayer extends object
     * @return True It always returns true
     *
     */
-    function loadMovie()
+    public function loadMovie()
     {
-    	//Set a file to play if there is an error finding the file from the querystring
-        $errFile = "http://" . $_SERVER['SERVER_NAME'] 
-          . $this->objConfig->getsiteRoot()
-          . "modules/flowplayer/resources/movies/error.jpg";
-        //Get the movie file from the query string, get error file if none
-        $this->movie = $this->getParam('movie', $errFile);
-       /* if ($this->__isValidFile($movieFile)) {
-            $this->movie = $movieFile;
+
+		//Get the movie file from the query string, set it to NULL if not found
+        $this->movie = $this->getParam('movie', NULL);
+        if ($this->movie==NULL) {
+            $this->movie = $this->__getErrFile();
+            return FALSE;
         } else {
-            $this->movie = $errFile;
-        }*/
-        return TRUE;
+	        if (!$this->__isValidFile($this->movie)) {
+	            $this->movie = $this->__getErrFile($efile="invalidurl.jpg");
+	            return FALSE;
+	        } else {
+	            return TRUE;
+	        }  
+        }
     }
 
 
     /**
     * Method to Set the movie File
     */
-    function setMovieFile($file)
+    public function setMovieFile($file)
     {
         $errFile = $this->objConfig->getsiteRoot()."modules/flowplayer/resources/movies/error.flv";
         if ($this->__isValidFile($file)) {
@@ -161,6 +165,22 @@ class buildflowplayer extends object
     }
 
 	/*-------------------- PRIVATE METHODS ----------------------------------*/
+	
+	/**
+	 * 
+	 * Method to return the URL for the file to play in the event of an error
+	 * 
+	 * @access private
+	 * @return string The formatted URL for the error movie
+	 * 
+	 */
+	private function __getErrFile($efile="error.jpg")
+	{
+	    //Set a file to play if there is an error finding the file from the querystring
+        return "http://" . $_SERVER['SERVER_NAME'] 
+          . $this->objConfig->getsiteRoot()
+          . "modules/flowplayer/resources/movies/" . $efile;
+	}
 
     /**
     *
@@ -171,7 +191,7 @@ class buildflowplayer extends object
     * @access Private
     *
     */
-    function __startApplet()
+    private function __startApplet()
     {
     	//die($this->objConfig->getValue('KEWL_SITE_ROOT'));
         return "<object type=\"application/x-shockwave-flash\" "
@@ -189,7 +209,7 @@ class buildflowplayer extends object
     * @access Private
     *
     */
-    function __getParam($paramName=NULL)
+    private function __getParam($paramName=NULL)
     {
         switch ($paramName) {
             case NULL:
@@ -205,6 +225,10 @@ class buildflowplayer extends object
                 return "    <param name = \"baseUrl\" "
                   //. "value = \"" . $this->baseUrl . "\" />\n";
                   . "value = \"http://localhost/chisimba/modules/flowplayer/resources/\" />\n";
+            case "NOVIDEOCLIP":
+                return "    <param name = \"noVideoClip\" "
+                  . "value = \"" . $this->__getErrFile() . "\" />\n";
+                break;
             //<param name="movie" value="modules/flowplayer/resources/FlowPlayerLP.swf" />
             case "MOVIE":
                 return "    <param name = \"movie\" "
@@ -240,7 +264,7 @@ class buildflowplayer extends object
     * @access Private
     *
     */
-    function __endApplet()
+    private function __endApplet()
     {
         return "</object>\n";
     }
@@ -256,14 +280,14 @@ class buildflowplayer extends object
     * @todo -c Implement .make it actually work. Currently it just returns true.
     *
     */
-    function __isValidFile($theFile)
+    private function __isValidFile($theFile)
     {
         //Reverse any conversion of htmlentities
         $theFile = $this->__unhtmlentities($theFile);
         if ($this->__isUrl($theFile)) {
             return TRUE;
         } else {
-            return TRUE;
+            return FALSE;
         }
 
     }
@@ -277,11 +301,12 @@ class buildflowplayer extends object
     * @access Private
     *
     */
-    function __isUrl($url) {
-        if (!preg_match('#^http\\:\\/\\/[a-z0-9\-]+\.([a-z0-9\-]+\.)?[a-z]+#i', $url)) {
-            return TRUE;
-        } else {
+    private function __isUrl($url) {
+    	$objUrl = $this->getObject('url', 'strings');
+        if (!$objUrl->isValidFormedUrl($url)) {
             return FALSE;
+        } else {
+            return TRUE;
         }
     }
 
