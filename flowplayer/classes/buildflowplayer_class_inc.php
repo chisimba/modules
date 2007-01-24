@@ -93,7 +93,7 @@ class buildflowplayer extends object
         $this->scale = $this->getParam('scale', 'noScale');
         //Set the window mode (wmode) parameter
         $this->wmode = $this->getParam('wmode', 'transparent');
-        //Load the sound file from the URL in the querystring
+        //Load the movie file from the URL in the querystring
         $this->loadMovie();
     }
 
@@ -110,7 +110,7 @@ class buildflowplayer extends object
         if (!$this->movie=="") {
             return $this->__startApplet()
               . $this->__getParam("ALLOWSCRIPTACCESS")
-              . $this->__getParam("BASEURL")
+              //. $this->__getParam("BASEURL")
               . $this->__getParam("MOVIE")
               . $this->__getParam("QUALITY")
               . $this->__getParam("SCALE")
@@ -134,14 +134,16 @@ class buildflowplayer extends object
     function loadMovie()
     {
     	//Set a file to play if there is an error finding the file from the querystring
-        $errFile = $this->objConfig->getsiteRoot()."modules/flowplayer/resources/movies/error.jpg";
+        $errFile = "http://" . $_SERVER['SERVER_NAME'] 
+          . $this->objConfig->getsiteRoot()
+          . "modules/flowplayer/resources/movies/error.jpg";
         //Get the movie file from the query string, get error file if none
-        $movieFile = $this->getParam('movie', $errFile);
-        if ($this->__isValidFile($movieFile)) {
+        $this->movie = $this->getParam('movie', $errFile);
+       /* if ($this->__isValidFile($movieFile)) {
             $this->movie = $movieFile;
         } else {
             $this->movie = $errFile;
-        }
+        }*/
         return TRUE;
     }
 
@@ -173,7 +175,7 @@ class buildflowplayer extends object
     {
     	//die($this->objConfig->getValue('KEWL_SITE_ROOT'));
         return "<object type=\"application/x-shockwave-flash\" "
-          . "data=\"" . $this->objConfig->getsiteRoot(). "modules/flowplayer/resources/FlowPlayer.swf\" "
+          . "data=\"" . $this->objConfig->getsiteRoot(). "modules/flowplayer/resources/FlowPlayerLP.swf\" "
           . "width=\"" . $this->width . "\" "
           . "height=\"" . $this->height . "\" "
           . "id=\"FlowPlayer\">\n";

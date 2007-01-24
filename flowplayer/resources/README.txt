@@ -11,7 +11,7 @@ FlowPlayer Version history
 
 0.9.3   Added new 'bufferLength' variable that can be used in the HTML page to
         specify the length of the buffer in seconds when streaming FLV. Fixed a
-        bug that prevented playback after an FLV was completely played.
+        bug that prevented playback after an FLV was completely played.</param>
 
 0.9.4   Added a 'baseURL' variable that can be used to specify the location of
         the video file to be loaded by Player.swf. See Player.html for an
