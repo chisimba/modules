@@ -20,7 +20,7 @@ $rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
 //show the admin section (if user is logged in)
 if(!$this->objUser->isLoggedIn())
 {
-    $leftCol = $this->objblogOps->loginBox(TRUE);
+    //$leftCol = $this->objblogOps->loginBox(TRUE);
 }
 else {
 	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
@@ -55,7 +55,7 @@ else {
 
 
 //show the feeds section
-$leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
+$leftCol = $this->objblogOps->showFeeds($userid, TRUE);
 $rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 //dump the cssLayout to screen
 $cssLayout->setMiddleColumnContent($middleColumn);
