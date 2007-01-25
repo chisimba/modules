@@ -76,7 +76,7 @@ class faq extends controller
         // If we are not in a context...
         if ($this->contextCode == null) {
             $this->contextId = "root";
-            $this->setVarByRef('contextid', $this->contextId);
+            $this->setVarByRef('contextId', $this->contextId);
             $this->contextTitle = "Lobby";
             $this->setVarByRef('contextTitle', $this->contextTitle);
         }
@@ -103,7 +103,7 @@ class faq extends controller
         }
         // Get category from URL
         $this->categoryId = $this->getParam('category', $notCategorizeId);
-        $this->setVarByRef('categoryid', $this->categoryId);
+        $this->setVarByRef('categoryId', $this->categoryId);
 
         // CategoryDetails
         $categoryDetails = $this->objDbFaqCategories->listSingle($this->contextId, $this->categoryId);
