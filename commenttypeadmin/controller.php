@@ -128,11 +128,16 @@ class commenttypeadmin extends controller
             //---------------
             //Added 2006/07/24 by Serge Meunier - Allowing uploading of icons
             case 'upload':
+            	 $typeId = $this->getParam('id');
+            	 $typeRow = $this->objDb->getRow('id',$typeId);
+            	 $type = $typeRow['type'];
+            	 $this->setVarByRef('commentType',$type);
                  return "upload_tpl.php";
                  break;
                  
             case 'doupload':
-                 return $this->uploadFile($this->getParam('type', NULL));
+				 $type = $this->getParam('type', NULL);
+				 return $this->uploadFile($type);
                  break;
             //---------------
 
@@ -181,16 +186,22 @@ class commenttypeadmin extends controller
       // $filename = $this->objFile->uploadFile('.gif');
 
 	//print_r($_FILES['fileupload']['tmp_name']);
-	
+	$fullPath = $path.$filename;
+	if (file_exists($fullPath)) {
+		unlink($path.$filename);
+	}
 	$temppath = $_FILES['fileupload']['tmp_name'];
 	
 	//to remove old icons
 	
          
-	//@chmod(move_uploaded_file($temppath,$path.$filename),0777);
-	//@chmod($path.$filename,0777);
+	chmod(move_uploaded_file($temppath,$path.$filename),0777);
+	chmod($path.$filename,0777);
 	
- 
+
+
+  
+
 
         return $this->nextAction('view');
     }
