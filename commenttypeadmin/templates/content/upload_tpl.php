@@ -1,6 +1,5 @@
 <?php
 
-$type = $this->getParam('type', Null);
 
 // Load the form class
 $this->loadClass('form', 'htmlelements');
@@ -43,9 +42,10 @@ $this->objH->str = $header ;
 // Create an element for the hidden text input
 $objType = new textinput("type");
 // Set the value to the primary keyid
-if (isset($type)) {
-    $objType->setValue($type);
-} 
+
+//if (isset($type)) {
+    $objType->setValue($commentType);
+//} 
 // Set the field type to hidden for the primary key
 $objType->fldType = "hidden";
 // Add the hidden type field to the form
