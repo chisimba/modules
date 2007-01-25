@@ -48,7 +48,7 @@ class splashscreenrender extends object
         * Create elements needed by subsequent methods
         **********************************************/
         //the link to registration
-        $registerModule=$this->objConfig->getValue('SELFREGISTER_MODULE') or $registerModule='useradmin';
+        $registerModule=$this->objConfig->getValue('SELFREGISTER_MODULE') or $registerModule='userregistration';
         $this->registerLink="<a href='".$this->uri(array('action'=>'register'),$registerModule)."'>".
         $this->objLanguage->languageText('word_register')."</a>\n";
         // the link for resetting passwords
@@ -113,7 +113,7 @@ class splashscreenrender extends object
         $menu[]='<a href="'.$this->uri(array('block'=>'languages'),$module).'">'.$this->objLanguage->languageText('word_languages').'</a>';
         $menu[]='<a href="'.$this->uri(array('block'=>'context'),$module).'">'.ucwords($this->objLanguage->code2Txt('mod_context_context','context')).'</a>';
         $menu[]='<a href="'.$this->uri(array('block'=>'skins'),$module).'">'.$this->objLanguage->languageText('word_skins').'</a>';
-        $menu[]='<a href="'.$this->uri(array('action'=>'register'),'useradmin').'">'.'Register'.'</a>';
+        $menu[]='<a href="'.$this->uri(array('action'=>'register'),'userregistration').'">'.'Register'.'</a>';
         // Encapsulate menu items with <li></li>
         for ($i=0;$i<count($menu);$i++) {
             $menu[$i] = '<li>'.$menu[$i].'</li>';
@@ -371,7 +371,7 @@ class splashscreenrender extends object
         }
         $startForm=$startForm.'">';
         //the link to registration
-        $registerModule='useradmin';
+        $registerModule='userregistration';
         $registerLink="<a href='".$this->uri(array('action'=>'register'),$registerModule)."'>".
         $this->objLanguage->languageText('word_register')."</a>\n";
         // the link for resetting passwords
