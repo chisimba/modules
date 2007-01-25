@@ -170,6 +170,10 @@ class pblClassroom extends object
     {
         // Get active scene from table classroom
         $id = $this->dbclassroom->getActiveSceneId();
+        if(empty($id)){
+            return '';
+        }
+        
         // if empty: get entry point into case
         if (empty($id)){
             $id = $this->dbclassroom->getEntryPoint();
