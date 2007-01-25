@@ -197,5 +197,5 @@
 		else {
         	echo '<p>'.$manageCategoriesLink->show().'</p>';
         }
-    }
+    } 
 ?>
