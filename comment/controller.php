@@ -112,7 +112,8 @@ class comment extends controller
                 $this->objDbcomment = & $this->getObject('dbcomment','comment');
                 $this->objDbcomment->deleteRecord($this->getParam('id', NULL));
                 $this->setVar('comment', $this->getParam('comment', NULL));
-                return "deleted_tpl.php";
+                              
+				 return 'deleted_tpl.php';
 		break;
             //-------------
             case 'save':
