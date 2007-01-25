@@ -91,7 +91,7 @@ class homepage extends controller
 	            $contents = $objMMedia->parseAll($contents);
 	            // Parse the Mindmap
 	            $objMindmap =& $this->getObject('parse4mindmap','filters');
-	            $contents = $objMindmap->parse($contents);
+	            //$contents = $objMindmap->parse($contents);
 		        $this->setVarByRef('contents', $contents);
 				return "viewhomepage_tpl.php";
             // Edit the homepage
