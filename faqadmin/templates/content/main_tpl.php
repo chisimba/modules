@@ -1,4 +1,4 @@
-<?php
+<?php  
 // Show the heading
 $objHeading =& $this->getObject('htmlheading','htmlelements');
 $objHeading->type=1;
@@ -72,18 +72,19 @@ foreach ($categories as $item) {
 	*/
     // Count no items in category
     $this->objFaqEntries =& $this->getObject('dbfaqentries', 'faq');
-    $list=$this->objFaqEntries->listAll($item['contextId'], $item['id']);
+    $list=$this->objFaqEntries->listAll($item['contextid'], $item['id']);
     $count=count($list);
     // Create link to category
     $categoryLink =& $this->getObject('link', 'htmlelements');
     $categoryLink->link($this->uri(array('action'=>'view','category'=>$item['id']), 'faq'));
-    $categoryLink->link = $item['categoryId'];
+    $categoryLink->link = $item['categoryid'];
     $categoryLink->title = $this->objLanguage->languageText('mod_faqadmin_viewcategory','faqadmin');
 	// Create the actions
     $ncaction = /*$objAddLink->show();*/"";
     $action = /*$objAddLink->show()."&nbsp;".*/$objEditLink->show()."&nbsp;".$objConfirm->show();
+    //echo $objEditLink->show();
     // This does a check so that the not categorised item can never be deleted.
-    if ($item['categoryId'] == 'Not Categorised' && $item['userId'] == 'admin') {
+    if ($item['categoryid'] == 'Not Categorised' && $item['userid'] == 'admin') {
      	$row = array($categoryLink->show().'&nbsp;'.'<b>'.'*'.'</b>', $count, $ncaction);
     } 
 	else { 
