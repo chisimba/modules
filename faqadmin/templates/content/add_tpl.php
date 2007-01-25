@@ -20,10 +20,11 @@ $form->addToForm("&nbsp;");
 $button = new button("submit", $objLanguage->languageText("word_save"));
 $button->setToSubmit();
 
-$cancelButton = new button("submit", $objLanguage->languageText('word_cancel'));
+$cancelButton = new button("submit", $objLanguage->languageText('word_cancel','faqadmin'));
 $cancelButton->setOnClick("window.location='".$this->uri(NULL)."';");
 
 $form->addToForm($button->show().' / '.$cancelButton->show());
 // Show the form.
 echo $form->show();
 ?>
+  
