@@ -14,9 +14,8 @@ class modulelinks_rubric extends object
 
     public function init()
     {
-        //$this->loadClass('treenode','tree');
-       $this->_objDBEventsCalendar = & $this->newObject('dbeventscalendar','eventscalendar');
-       $this->_objDBCategories = & $this->newObject('dbeventscalendarcategories','eventscalendar');
+       //the rubric
+       $this->objRubric =& $this->getObject('dbrubrictables', 'rubric');      
     }
     
     public function show()
@@ -32,26 +31,20 @@ class modulelinks_rubric extends object
      */
     public function getContextLinks($contextCode)
     { 
-       /*
-          $catId = $this->_objDBCategories->getCatId('context', $contextCode);
-         
-          $events =  $this->_objDBEventsCalendar->getAll('WHERE catid="'.$catId.'" ORDER BY event_date' );
-          
-          $bigArr = array();
-         
-          foreach ($events as $event)
-          {
-                $newArr = array();    
-              $newArr['menutext'] = $event['title'];
-              $newArr['description'] = $event['description'];
-              $newArr['itemid'] = $event['id'];
-              $newArr['moduleid'] = 'eventscalendar';
-              $newArr['params'] = array('month' => date('m',$event['event_date']),'action' => 'events');
+    		$bigArr = array();
+        
+         $rubrics = $this->objRubrict->listAll($contextCode);	
+			foreach ( $rubrics as $rubric)
+      	 {
+              $newArr = array();    
+              $newArr['menutext'] = $rubric['title'];
+              $newArr['description'] = '';
+              $newArr['itemid'] = $rubric['id'];
+              $newArr['moduleid'] = 'rubric';
+              $newArr['params'] = array('action' => 'viewtable','id'=>$worksheet['id']);
               $bigArr[] = $newArr;
-          }
-          
-          return $bigArr;
-          */
+        	}
+       	return $bigArr;
     }
     
 }

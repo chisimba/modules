@@ -34,8 +34,8 @@ class dbRubricTables extends dbTable
 		." ORDER BY title";
 		return $this->getArray($sql);
 		//return $this->getAll();
-	}
-
+	}   
+	
 	/**
 	* Return a single record
 	* @param string $id ID

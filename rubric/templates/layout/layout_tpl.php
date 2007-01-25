@@ -5,7 +5,7 @@ if($objDBContext->isInContext())
     $objContextUtils = & $this->getObject('utilities','context');
     $cm = $objContextUtils->getHiddenContextMenu('rubric','show');
 } else {
-    $cm = $this->getMenu();
+    $cm = '';//$this->getMenu();
 }
 
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
