@@ -165,7 +165,7 @@ if($task == 'mcq'){
 
 // Submit/exit buttons
 $objButton = new button('save', $saveLabel);
-$objButton->setOnClick("javascript:build".strtoupper($task)."();");// window.close();");
+$objButton->setOnClick("javascript:build".strtoupper($task)."(); window.close();");
 $buttons = $objButton->show().'&nbsp;&nbsp;&nbsp;&nbsp;';
 
 $objButton = new button('save', $exitLabel);

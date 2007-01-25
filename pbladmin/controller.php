@@ -7,7 +7,7 @@
 
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
-    die('You cannot view this page directly');
+       ('You cannot view this page directly');
 }
 // end security check
 
@@ -276,9 +276,10 @@ class pbladmin extends controller
         $students = array();
         $users = array();
         $userIds = array();
+        $newusers = array();
 
         // get the list of users in the student group for the context
-        $groupid=$this->objGroups->getLeafId(array($this->contextcode,'Students'));
+        $groupid = $this->objGroups->getLeafId(array($this->contextcode,'Students'));
 
 //        $fields['id'] = 'user_id as id';
 //        $fields['name'] = "CONCAT( firstName, ' ', surname ) as name";
@@ -289,9 +290,9 @@ class pbladmin extends controller
         $users = $this->objGroups->getGroupUsers($groupid, $fields, $filter);
 
         // Get the list of students in a class
-        $filter = "position!='f' AND classroomid='$id'";
+        $filter = "position!='f' AND classroomid='$id' AND studentid != 'student'";
         $userIds = $this->dbLoggedin->findUserIds($filter);
-
+        
         // find user name from table users
         if(!empty($userIds)){
             $i=0;
@@ -299,9 +300,28 @@ class pbladmin extends controller
                 $student = $this->objGroupUser->getUsers(NULL," where id='".$val['studentid']."' ");
                 if(!empty($student)){
                     $students[$i]['id'] = $val['studentid'];
-                    $students[$i]['name'] = $student[0]['fullname'];
+                    $students[$i]['name'] = $student[0]['firstname'].' '.$student[0]['surname'];
                     $i++;
                 }
+            }
+        }
+        
+        if(!empty($users)){
+            if(!empty($students)){
+                foreach($users as $item){
+                    $skip = false;
+                    foreach($students as $val){
+                        if($item['id'] == $val['id']){
+                            $skip = true;
+                            break;
+                        }
+                    }
+                    if(!$skip){
+                        $newusers[] = $item;
+                    }
+                }
+            }else{
+                $newusers = $users;
             }
         }
 
@@ -312,7 +332,7 @@ class pbladmin extends controller
         }
 
         $this->setVarByRef('id', $id);
-        $this->setVarByRef('users', $users);
+        $this->setVarByRef('users', $newusers);
         $this->setVarByRef('students', $students);
         return 'editstudents_tpl.php';
     }
@@ -323,7 +343,7 @@ class pbladmin extends controller
     */
     public function addStudent()
     {
-        $btnAction = $this->getParam('button');
+        $btnAction = $this->getParam('exit');
         $id = $this->getParam('id');
         $msg = 'false';
         if($btnAction == 'exit'){
@@ -333,29 +353,39 @@ class pbladmin extends controller
             // Get the revised member ids
             $list = $this->getParam( 'list2' ) ? $this->getParam( 'list2' ): array();
 
+            // Get the original member ids
+            $filter = "position!='f' AND classroomid='$id'";
+            $list2 = $this->dbLoggedin->findUserIds($filter);
+
+            // Get a single array of student ids
+            $oldList = array();
+            if(!empty($list2)){
+                $oldList = $this->objGroups->getField($list2, 'studentid');
+            }
+                    
             if(!empty($list)){
-                // Get the original member ids
-                $filter = "position!='f' AND classroomid='$id'";
-                $list2 = $this->dbLoggedin->findUserIds($filter);
-
-                if(!empty($list2)){
-                    // Get a single array of student ids
-                    $oldList = $this->objGroups->getField($list2, 'studentid');
-
+                if(!empty($oldList)){
                     // Get the added member ids
                     $addList = array_diff( $list, $oldList );
+                    
                     // Get the deleted member ids
                     $delList = array_diff( $oldList, $list );
 
                     // Add these members
-                    foreach($addList as $val) {
-                        $this->dbLoggedin->addToClass($id, $val);
+                    if(!empty($addList)){
+                        foreach($addList as $val) {
+                            $this->dbLoggedin->addToClass($id, $val);
+                         }
                     }
+                        
                     // Delete these members
-                    foreach($delList as $val){
-                        $this->dbLoggedin->removeFromClass(FALSE, $id, $val);
+                    if(!empty($delList)){
+                        foreach($delList as $val){
+                            $this->dbLoggedin->removeFromClass(FALSE, $id, $val);
+                        }
                     }
                     $msg = 'true';
+                    
                 }else{
                     // Add these members
                     foreach($list as $val) {
@@ -363,8 +393,16 @@ class pbladmin extends controller
                     }
                     $msg = 'true';
                 }
-                return $this->nextAction('editstudents', array('id'=>$id, 'msg'=>$msg));
+            }else{
+                if(!empty($oldList)){
+                    // Delete these members
+                    foreach($oldList as $val){
+                        $this->dbLoggedin->removeFromClass(FALSE, $id, $val);
+                    }
+                }
+                        
             }
+            return $this->nextAction('editstudents', array('id'=>$id, 'msg'=>$msg));
         }
     }
 
@@ -458,7 +496,7 @@ class pbladmin extends controller
                 $user = $this->objGroupUser->getUsers(NULL," where id='".$val['studentid']."' ");
                 if(isset($user) && !empty($user)){
                     $users[$i]['id'] = $val['studentid'];
-                    $users[$i]['name'] = $user[0]['fullName'];
+                    $users[$i]['name'] = $user[0]['firstname'].' '.$user[0]['surname'];
                 }
                 $i++;
             }

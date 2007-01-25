@@ -70,17 +70,17 @@ $objTable->endRow();
 
 // Students in course
 $objDrop = new dropdown('list1[]');
-$objDrop->extra = ' style="width:100pt" multiple="multiple" size="10" ondblclick="moveSelectedOptions(this.form[\'list1[]\'],this.form[\'list2[]\'],true)"';
+$objDrop->extra = " style=\"width:100pt\" multiple=\"multiple\" size=\"10\" ondblclick=\"moveSelectedOptions(document.forms['frmManage']['list1[]'],document.forms['frmManage']['list2[]'],true)\"";
 if(!empty($users)){
     foreach($users as $line){
-        $objDrop->addOption($line['id'], $line['name']);
+        $objDrop->addOption($line['id'], $line['firstname'].' '.$line['surname']);
     }
 }
 $course = $objDrop->show();
         
 // Students in class
 $objDrop = new dropdown('list2[]');
-$objDrop->extra = ' style="width:100pt" multiple="multiple" size="10" ondblclick="moveSelectedOptions(this.form[\'list2[]\'],this.form[\'list1[]\'],true)"';
+$objDrop->extra = " style=\"width:100pt\" multiple=\"multiple\" size=\"10\" ondblclick=\"moveSelectedOptions(document.forms['frmManage']['list2[]'],document.forms['frmManage']['list1[]'],true)\"";
 if(!empty($students)){
     foreach($students as $line){
         $objDrop->addOption($line['id'], $line['name']);
@@ -90,19 +90,19 @@ $class = $objDrop->show();
 
 // Add / Remove links
 $addLinks = '';
-$objLink = new link("javascript: moveSelectedOptions( document.frmManage['list1[]'], document.frmManage['list2[]'], true);");
+$objLink = new link("javascript: moveSelectedOptions( document.forms['frmManage']['list1[]'], document.forms['frmManage']['list2[]'], true);");
 $objLink->link = htmlspecialchars('>>');
 $addLinks .= $objLink->show();
 
-$objLink = new link("javascript: moveAllOptions( document.frmManage['list1[]'], document.frmManage['list2[]'], true);");
+$objLink = new link("javascript: moveAllOptions( document.forms['frmManage']['list1[]'], document.forms['frmManage']['list2[]'], true);");
 $objLink->link = htmlspecialchars('All >>');
 $addLinks .= '<br />'.$objLink->show();
 
-$objLink = new link("javascript: moveSelectedOptions( document.frmManage['list2[]'], document.frmManage['list1[]'], true);");
+$objLink = new link("javascript: moveSelectedOptions( document.forms['frmManage']['list2[]'], document.forms['frmManage']['list1[]'], true);");
 $objLink->link = htmlspecialchars('<<');
 $addLinks .= '<br />'.$objLink->show();
 
-$objLink = new link("javascript: moveAllOptions( document.frmManage['list2[]'], document.frmManage['list1[]'], true);");
+$objLink = new link("javascript: moveAllOptions( document.forms['frmManage']['list2[]'], document.forms['frmManage']['list1[]'], true);");
 $objLink->link = htmlspecialchars('All <<');
 $addLinks .= '<br />'.$objLink->show();
 
@@ -113,11 +113,11 @@ $objTable->addCell($class, '45%','','center');
 $objTable->endRow();
 
 // Submit Buttons
-$objLink = new link("javascript:selectAllOptions( document.frmManage['list2[]'] ); document.frmManage['button'].value='save'; document.frmManage.submit(); ");
+$objLink = new link("javascript:selectAllOptions( document.forms['frmManage']['list2[]'] ); document.forms['frmManage']['exit'].value='save'; document.forms['frmManage'].submit(); ");
 $objLink->link  = $saveLabel;
 $links = $objLink->show();
 
-$objLink = new link("javascript:document.frmManage['button'].value='exit'; document.frmManage.submit();");
+$objLink = new link("javascript:document.forms['frmManage'].exit.value='exit'; document.forms['frmManage'].submit();");
 $objLink->link  = $backLabel;
 $links .= '&nbsp;|&nbsp;'.$objLink->show();
 
@@ -126,7 +126,7 @@ $objTable->addCell($links,'','','center','','colspan="3"');
 $objTable->endRow();
 
 // Hidden Elements
-$objInput = new textinput('button','', 'hidden');
+$objInput = new textinput('exit','', 'hidden');
 $hidden = $objInput->show();
 
 $objInput = new textinput('id',$id, 'hidden');

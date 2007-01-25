@@ -119,7 +119,7 @@ $objDrop = new dropdown('facilitator');
 $objDrop->addOption('virtual', $virtualLabel);
 if(!empty($lecturers)){
     foreach($lecturers as $line){
-        $objDrop->addOption($line['id'], $line['firstName'].' '.$line['surname']);
+        $objDrop->addOption($line['id'], $line['firstname'].' '.$line['surname']);
     }
     $objDrop->setSelected($facilitator);
 }
