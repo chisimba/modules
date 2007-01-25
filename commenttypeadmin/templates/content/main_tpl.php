@@ -120,7 +120,7 @@ if (isset($ar)) {
 
                 $uploadLink = $this->uri(array('action' => 'upload',
                     'id' => $line['id']));
-                $objUploadIcon->alt = $this->objLanguage->languageText("word_upload");
+                $objUploadIcon->alt = $this->objLanguage->languageText("mod_commenttypeadmin_upload",'commenttypeadmin');
                 $upload = $objUploadIcon->getUploadIcon($uploadLink);
             }else{
                 $objExistIcon->setIcon("redcross");
@@ -129,7 +129,7 @@ if (isset($ar)) {
                 
                 $uploadLink = $this->uri(array('action' => 'upload', 'type' => $line['type'],
                     'id' => $line['id']));
-                $objUploadIcon->alt = $this->objLanguage->languageText("word_upload");
+                $objUploadIcon->alt = $this->objLanguage->languageText("mod_commenttypeadmin_upload",'commenttypeadmin');
                 $upload = $objUploadIcon->getUploadIcon($uploadLink);
             }
             $tableRow[] = $exist . "&nbsp;" . $upload;
