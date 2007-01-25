@@ -8,6 +8,13 @@ if (!$GLOBALS['kewl_entry_point_run'])
     die("You cannot view this page directly");
 }
 
+/**
+* Class to link the worksheet module to the context
+* @author Abdurahim Shariff
+* @copyright (c) 2007 UWC
+* @package essay
+* @version 0.1
+*/
 
 class modulelinks_worksheet extends object
 {
