@@ -14,13 +14,19 @@ class modulelinks_readinglist extends object
 
     public function init()
     {
-        //$this->loadClass('treenode','tree');
-       $this->_objDBEventsCalendar = & $this->newObject('dbeventscalendar','eventscalendar');
-       $this->_objDBCategories = & $this->newObject('dbeventscalendarcategories','eventscalendar');
+       $this->objLanguage = $this->getObject('language', 'language');
+        $this->objUser = $this->getObject('user', 'security');
+        $this->loadClass('treenode','tree');
+        
+        $this->userId = $this->objUser->userId();
     }
     
     public function show()
     {
+      $read = $this->objLanguage->languageText('mod_readinglist_readinglist', 'readinglist');
+        $rootNode = new treenode (array('link'=>$this->uri(NULL, 'readinglist'), 'text'=>$read, 'preview'=>''));
+        
+        return $rootNode;
         
     }
     
@@ -32,26 +38,21 @@ class modulelinks_readinglist extends object
      */
     public function getContextLinks($contextCode)
     { 
-       /*
-          $catId = $this->_objDBCategories->getCatId('context', $contextCode);
-         
-          $events =  $this->_objDBEventsCalendar->getAll('WHERE catid="'.$catId.'" ORDER BY event_date' );
+      
+      $read = $this->objLanguage->languageText('mod_readinglist_readinglist', 'readinglist');
+                
+        $adminArr = array();
+        $adminArr['menutext'] = $read;
+        $adminArr['description'] = $read;
+        $adminArr['itemid'] = '';
+        $adminArr['moduleid'] = 'pbl';
+        $adminArr['params'] = array();
+        
+        $returnArr = array();
+        $returnArr[] = $adminArr;
+        
+        return $returnArr;
           
-          $bigArr = array();
-         
-          foreach ($events as $event)
-          {
-                $newArr = array();    
-              $newArr['menutext'] = $event['title'];
-              $newArr['description'] = $event['description'];
-              $newArr['itemid'] = $event['id'];
-              $newArr['moduleid'] = 'eventscalendar';
-              $newArr['params'] = array('month' => date('m',$event['event_date']),'action' => 'events');
-              $bigArr[] = $newArr;
-          }
-          
-          return $bigArr;
-          */
     }
     
 }
