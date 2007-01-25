@@ -8,18 +8,25 @@ if (!$GLOBALS['kewl_entry_point_run'])
     die("You cannot view this page directly");
 }
 
+
 class modulelinks_library extends object
 {
 
     public function init()
     {
-        //$this->loadClass('treenode','tree');
-       $this->_objDBEventsCalendar = & $this->newObject('dbeventscalendar','eventscalendar');
-       $this->_objDBCategories = & $this->newObject('dbeventscalendarcategories','eventscalendar');
+       $this->objLanguage = $this->getObject('language', 'language');
+        $this->objUser = $this->getObject('user', 'security');
+        $this->loadClass('treenode','tree');
+        
+        $this->userId = $this->objUser->userId();
     }
     
     public function show()
     {
+      $library = $this->objLanguage->languageText('mod_library_library', 'library');
+        $rootNode = new treenode (array('link'=>$this->uri(NULL, 'library'), 'text'=>$read, 'preview'=>''));
+        
+        return $rootNode;
         
     }
     
@@ -31,26 +38,21 @@ class modulelinks_library extends object
      */
     public function getContextLinks($contextCode)
     { 
-       /*
-          $catId = $this->_objDBCategories->getCatId('context', $contextCode);
-         
-          $events =  $this->_objDBEventsCalendar->getAll('WHERE catid="'.$catId.'" ORDER BY event_date' );
+      
+      $library = $this->objLanguage->languageText('mod_library_library', 'llibrary');
+                
+        $adminArr = array();
+        $adminArr['menutext'] = $library;
+        $adminArr['description'] = $library;
+        $adminArr['itemid'] = '';
+        $adminArr['moduleid'] = 'pbl';
+        $adminArr['params'] = array();
+        
+        $returnArr = array();
+        $returnArr[] = $adminArr;
+        
+        return $returnArr;
           
-          $bigArr = array();
-         
-          foreach ($events as $event)
-          {
-                $newArr = array();    
-              $newArr['menutext'] = $event['title'];
-              $newArr['description'] = $event['description'];
-              $newArr['itemid'] = $event['id'];
-              $newArr['moduleid'] = 'eventscalendar';
-              $newArr['params'] = array('month' => date('m',$event['event_date']),'action' => 'events');
-              $bigArr[] = $newArr;
-          }
-          
-          return $bigArr;
-          */
     }
     
 }
