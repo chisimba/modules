@@ -14,9 +14,7 @@ class modulelinks_worksheet extends object
 
     public function init()
     {
-        //$this->loadClass('treenode','tree');
-       $this->_objDBEventsCalendar = & $this->newObject('dbeventscalendar','eventscalendar');
-       $this->_objDBCategories = & $this->newObject('dbeventscalendarcategories','eventscalendar');
+    	$this->objWorksheet =& $this->getObject('dbworksheet', 'worksheet');
     }
     
     public function show()
@@ -32,26 +30,24 @@ class modulelinks_worksheet extends object
      */
     public function getContextLinks($contextCode)
     { 
-       /*
-          $catId = $this->_objDBCategories->getCatId('context', $contextCode);
-         
-          $events =  $this->_objDBEventsCalendar->getAll('WHERE catid="'.$catId.'" ORDER BY event_date' );
           
-          $bigArr = array();
-         
-          foreach ($events as $event)
-          {
-                $newArr = array();    
-              $newArr['menutext'] = $event['title'];
-              $newArr['description'] = $event['description'];
-              $newArr['itemid'] = $event['id'];
-              $newArr['moduleid'] = 'eventscalendar';
-              $newArr['params'] = array('month' => date('m',$event['event_date']),'action' => 'events');
+		$bigArr = array();
+        
+        $worksheets = $this->objWorksheet->getWorksheetsInContext($contextCode);	
+		//print_r($worksheets);
+ 		foreach ($worksheets as $worksheet)
+       {
+              $newArr = array();    
+              $newArr['menutext'] = $worksheet['name'];
+              $newArr['description'] = '';
+              $newArr['itemid'] = $worksheet['id'];
+              $newArr['moduleid'] = 'worksheet';
+              $newArr['params'] = array('action' => 'selectforanswer','id'=>$worksheet['id']);
               $bigArr[] = $newArr;
-          }
+        }
           
-          return $bigArr;
-          */
+        return $bigArr;
+         
     }
     
 }
