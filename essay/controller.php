@@ -66,6 +66,8 @@ class essay extends controller
         $this->objUser=& $this->getObject('user','security');
         // Get an instance of the context object
         $this->objContext=& $this->getObject('dbcontext','context');
+        //Get an instance of registerfileusage in filemanager
+        $this->objFileRegister =& $this->getObject('registerfileusage', 'filemanager');
         // Get an instance of the filestore object and change the tables to essay specific tables
         //$this->objFile=& $this->getObject('dbfile','filemanager');
 //        $this->objFile->changeTables('tbl_essay_filestore','tbl_essay_blob');
@@ -236,12 +238,14 @@ class essay extends controller
                   
                     // upload file to database
 					$arrayfiledetails = $this->objFile->uploadFile('file');
-
+				//	echo '<pre>';
+				//	print_r($arrayfiledetails);
+				//	echo '</pre>';
 					if ($arrayfiledetails['success']){				
                     	// save file id and submit date to database
                     	$fields=array('studentfileid'=>$arrayfiledetails['fileid'], 'submitdate'=>date('Y-m-d H:i:s'));
                     	$this->dbbook->bookEssay($fields,$book);
-							
+						$this->objFileRegister->registerUse($arrayfiledetails['fileid'], 'essay', 'tbl_essay_book', $book, 'studentfileid', $this->contextcode, '', TRUE);	
                     	// display success message
                     	$msg = $this->objLanguage->languageText('mod_essay_uploadsuccess','essay');
                     	$this->setVarByRef('msg',$msg);
@@ -419,7 +423,7 @@ class essay extends controller
         $assignLabel=$this->objLanguage->languageText('mod_assignment_name');
         $percentLabel = $this->objLanguage->languageText('mod_essayadmin_percentyrmark', 'essayadmin');
         $explainBook = $this->objLanguage->languageText('mod_essay_explainbook', 'essay');
-        $marklabel = $this->objLanguage->languageText('mod_essay_mark');
+        $marklabel = $this->objLanguage->languageText('mod_essay_mark','essay');
         $noEssays = $this->objLanguage->languageText('mod_essay_noessaysintopic');
 
         $formAction='viewessays';

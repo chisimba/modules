@@ -22,7 +22,7 @@ $objLayer=$this->objLayer;
 
 // set up language items
 $list=$this->objLanguage->languageText('word_list');
-$head=$list.' '.$this->objLanguage->languageText('mod_essay_of','essay').' '.$this->objLanguage->languageText('mod_essay_essays','essay').' '.$this->objLanguage->languageText('word_for').' '.$this->user;
+$head=$list.' '.$this->objLanguage->languageText('mod_essay_of','essay').' '.$this->objLanguage->languageText('mod_essay_essay','essay').' '.$this->objLanguage->languageText('word_for').' '.$this->user;
 $topichead=$this->objLanguage->languageText('mod_essay_topic','essay');
 $essayhead=$this->objLanguage->languageText('mod_essay_essay','essay');
 $datehead=$this->objLanguage->languageText('mod_essay_closedate','essay');
