@@ -442,12 +442,13 @@ class commentinterface extends object
                           'userId'=>$userId), 'comment');
 
                         $outstr .= "&nbsp;" . $this->addCommentEditLink($editLink);
-                        $deleteArray = array('action'=>'delete',
+                        $deleteArray = $this->uri(array('action'=>'delete',
                           'id' => $line['id'],
                           'tableName'=>$tableName,
                           'moduleCode' => $moduleCode,
-                          'sourceid'=>$line['sourceid']);
-                        $outstr .= "&nbsp;" . $objDeleteIcon->getDeleteIconWithConfirm('', $deleteArray, 'comment');
+                          'sourceid'=>$line['sourceid']),'comment');
+                        $outstr .= "&nbsp;" . $this->addCommentDeleteLink($deleteArray);
+						//$objDeleteIcon->getDeleteIconWithConfirm('', $deleteArray, 'comment');
                     }
 
                     $outstr .= "</p>";
@@ -694,7 +695,8 @@ class commentinterface extends object
                           'tableName'=>$tableName,
                           'moduleCode' => $moduleCode,
                           'sourceId'=>$sourceId);
-                        $outstr .= "&nbsp;" . $objDeleteIcon->getDeleteIconWithConfirm('', $deleteArray, 'comment');
+                        $outstr .= "&nbsp;" . $this->addCommentDeleteLink($deleteArray);
+						//$objDeleteIcon->getDeleteIconWithConfirm('', $deleteArray, 'comment');
                     }
 
                     $outstr .= "</p>";
@@ -876,6 +878,43 @@ class commentinterface extends object
             // The add comment icon with link
             $objGetIcon->setIcon("edit");
             $objGetIcon->alt=$this->objLanguage->languageText("word_edit");
+            $objGetIcon->align = "middle";
+            //Get the popup window HTML element
+            $this->objPop = &$this->getObject('windowpop', 'htmlelements');
+            //Set the location
+
+            $this->objPop->set('location', $link);
+            $this->objPop->set('linktext', $objGetIcon->show());
+            $this->objPop->set('width','400');
+            $this->objPop->set('height','300');
+            $this->objPop->set('left','200');
+            $this->objPop->set('top','200');
+            $this->objPop->putJs();
+            return "&nbsp;&nbsp;" . $this->objPop->show();
+        } else {
+            return FALSE;
+        }
+    }
+
+/**
+    *
+    * Method to add a popup window link as a standard HTML link to edit a comment
+    *
+    * @param string $link The link that will open when clicked
+    * @return string: The code for a comment link for editing
+    * @author Serge Meunier
+    * Added 2006/07/21
+    *
+    */
+    public function addCommentDeleteLink($link)
+    {
+        //Only put the link if they are logged in
+        if ($this->objUser->isLoggedIn()) {
+            // Create an instance of icon object
+            $objGetIcon = $this->newObject('geticon', 'htmlelements');
+            // The add comment icon with link
+            $objGetIcon->setIcon("delete");
+            $objGetIcon->alt=$this->objLanguage->languageText("word_delete");
             $objGetIcon->align = "middle";
             //Get the popup window HTML element
             $this->objPop = &$this->getObject('windowpop', 'htmlelements');
