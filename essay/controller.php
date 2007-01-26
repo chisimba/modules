@@ -415,16 +415,16 @@ class essay extends controller
         $instructionsLabel=ucwords($this->objLanguage->code2Txt('mod_essay_instructions','essay',array('readonlys'=>'students')));
         $duedate=$this->objLanguage->languageText('mod_essay_closedate', 'essay');
         $view=$this->objLanguage->languageText('word_view');
-        $title=$view.' '.$this->objLanguage->languageText('mod_essay_notes');
+        $title=$view.' '.$this->objLanguage->languageText('mod_essay_notes', 'essay');
         $title4=$this->objLanguage->languageText('mod_essay_book', 'essay').' '.$this->objLanguage->languageText('mod_essay_essay','essay');
-        $title5=$this->objLanguage->languageText('mod_essay_unbookessay');
+        $title5=$this->objLanguage->languageText('mod_essay_unbookessay', 'essay');
         $topiclist=$this->objLanguage->languageText('mod_essay_name', 'essay').' '.$this->objLanguage->languageText('word_home');
         $viewSubmitted=$this->objLanguage->languageText('mod_essay_viewbookedsubmitted', 'essay');
-        $assignLabel=$this->objLanguage->languageText('mod_assignment_name');
+        $assignLabel=$this->objLanguage->languageText('mod_assignment_name', 'essay');
         $percentLabel = $this->objLanguage->languageText('mod_essayadmin_percentyrmark', 'essayadmin');
         $explainBook = $this->objLanguage->languageText('mod_essay_explainbook', 'essay');
         $marklabel = $this->objLanguage->languageText('mod_essay_mark','essay');
-        $noEssays = $this->objLanguage->languageText('mod_essay_noessaysintopic');
+        $noEssays = $this->objLanguage->languageText('mod_essay_noessaysintopic', 'essay');
 
         $formAction='viewessays';
 
