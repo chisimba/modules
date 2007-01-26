@@ -38,6 +38,7 @@ $objDatetime =& $this->getObject('datetime','utilities');
 //$objFormattedDate =& $this->getObject('simplecal','datetime');
 //number of students
 $numberStudents=0;
+$count=0;
 $numberStudents=$this->objGradebook->getNumberStudentsInContext();
 
 //create the general form class
