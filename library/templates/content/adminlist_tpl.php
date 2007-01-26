@@ -85,13 +85,13 @@ if (isset($ar)) {
             if ($this->isValid('delete')) {
                 $objDelIcon->setIcon("delete");
                 $rep = array('title' => addslashes($line['title']));
-                $objDelIcon->alt=$this->objLanguage->code2Txt("mod_library_confirmdel", $rep);
+                $objDelIcon->alt=$this->objLanguage->code2Txt("mod_library_confirmdel",'library', $rep);
                 $delLink = $this->uri(array(
                   'action' => 'delete',
                   'confirm' => 'yes',
                   'id' => $line['id']));
                 $objConfirm = & $this->newObject('confirm','utilities');
-                $objConfirm->setConfirm($objDelIcon->show(), $delLink, $this->objLanguage->code2Txt("mod_library_confirmdel", $rep));
+                $objConfirm->setConfirm($objDelIcon->show(), $delLink, $this->objLanguage->code2Txt("mod_library_confirmdel",'library', $rep));
                 $conf = $objConfirm->show();
             } else {
                 $conf = "&nbsp;";
