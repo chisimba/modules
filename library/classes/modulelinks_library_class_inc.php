@@ -39,7 +39,7 @@ class modulelinks_library extends object
     public function getContextLinks($contextCode)
     { 
       
-      $library = $this->objLanguage->languageText('mod_library_library', 'llibrary');
+      $library = $this->objLanguage->languageText('mod_library_library', 'library');
                 
         $adminArr = array();
         $adminArr['menutext'] = $library;
