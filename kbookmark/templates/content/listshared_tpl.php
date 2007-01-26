@@ -46,8 +46,9 @@ $status=$this->getParam('status');
 $statusMsg=$this->getParam('title');
 if (isset($listUsersWithBookmarks)) {
     $userCount=count($listUsersWithBookmarks);
+    $folders="";
     if ($userCount>0) {
-	    $folders="";
+	    
         foreach($listUsersWithBookmarks as $lineOfUsers) {
 		    $listFoldersWithBookmarks = $this->objDbGroup->getShared4User($lineOfUsers['creatorid']);
             $owner= $this->objUser->fullname($lineOfUsers['creatorid']);

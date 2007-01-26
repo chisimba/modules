@@ -186,14 +186,14 @@ if (isset($listFolderContent)) {
     //Looping through all the folder's content
         foreach ($listFolderContent as $line)
         {
-             $newLink=new link(($this->uri(array( 'module'=> 'bookmarks', 'action' => 'openpage', 'id' => $line['id'],'folderId'=>$line['groupId']))));
+             $newLink=new link(($this->uri(array( 'module'=> 'bookmarks', 'action' => 'openpage', 'id' => $line['id'],'folderId'=>$line['groupid']))));
              $newLink->link=htmlentities(stripslashes($line['title']));
              $newLink->title=$line['url'];
              $newLink->target='_blank';
              $bkLink=$newLink->show().' - '.htmlentities(stripslashes($line['description']));
              $visitLink="<a href=\"".$this->uri(array('action'=>'visit','id'=>$line['id']))."\" class='".$objTableClass->trClass."'>";
              $editLink="<a href=\"".$this->uri(array('action'=>'edit','id'=>$line['id'],'item'=>'bookmark'))."\" class='".$objTableClass->trClass."'>".$editIcon."</a>";
-             $deleteLink="<a href=\"".$this->uri(array('action'=>'delete','id'=>$line['id'],'folderId'=>$line['groupId'],'item'=>'bookmark'))."\" class='".$objTableClass->trClass."'>".$deleteIcon."</a>";
+             $deleteLink="<a href=\"".$this->uri(array('action'=>'delete','id'=>$line['id'],'folderId'=>$line['groupid'],'item'=>'bookmark'))."\" class='".$objTableClass->trClass."'>".$deleteIcon."</a>";
              $objTableClass->row_attributes=" onmouseover=\"this.className='tbl_ruler';\" onmouseout=\"this.className='".$objTableClass->trClass."'; \"";
              $objTableClass->startRow();
              $objTableClass->addCell("<input type='checkbox' name='bookmark[]' value='".$line['id']."'></input>","20", NULL, NULL, NULL,"");
@@ -359,7 +359,7 @@ if (isset($searchResults)){
     if ((count($searchResults))>0) {
         foreach ($searchResults as $line) {
             
-            $newLink=new link(($this->uri(array( 'module'=> 'bookmarks', 'action' => 'openpage', 'id' => $line['id'],'folderId'=>$line['groupId']))));
+            $newLink=new link(($this->uri(array( 'module'=> 'bookmarks', 'action' => 'openpage', 'id' => $line['id'],'folderId'=>$line['groupid']))));
             $newLink->link=htmlentities(stripslashes($line['title']));
             $newLink->title=$line['url'];
             $newLink->target='_blank';
