@@ -24,7 +24,7 @@ class modulelinks_library extends object
     public function show()
     {
       $library = $this->objLanguage->languageText('mod_library_library', 'library');
-        $rootNode = new treenode (array('link'=>$this->uri(NULL, 'library'), 'text'=>$read, 'preview'=>''));
+        $rootNode = new treenode (array('link'=>$this->uri(NULL, 'library'), 'text'=>$library, 'preview'=>''));
         
         return $rootNode;
         
@@ -38,14 +38,13 @@ class modulelinks_library extends object
      */
     public function getContextLinks($contextCode)
     { 
-      
       $library = $this->objLanguage->languageText('mod_library_library', 'library');
                 
         $adminArr = array();
         $adminArr['menutext'] = $library;
         $adminArr['description'] = $library;
         $adminArr['itemid'] = '';
-        $adminArr['moduleid'] = 'pbl';
+        $adminArr['moduleid'] = 'library';
         $adminArr['params'] = array();
         
         $returnArr = array();
