@@ -7,7 +7,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 // end security check
 
 //Load the library class
-require_once("modules/mail/lib/class.phpmailer.php");
+require_once($this->getResourceUri('class.phpmailer.php', 'mail'));
 //Get the abstract and interface classes
 require_once("absendmail_class_inc.php");
 require_once("ifsendmail_class_inc.php");
