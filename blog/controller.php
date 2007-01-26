@@ -1055,7 +1055,7 @@ class blog extends controller
                 $tags = $this->getParam('tags');
                 $tagarray = explode(",", $tags);
 
-                //set up for Google Blog API
+                /*//set up for Google Blog API
             	$changesURL = $this->uri(array('module' => 'blog', 'action' => 'feed', 'userid' => $userid));
             	$name = $this->objUser->fullname($userid) . " Chisimba blog";
             	$blogURL = $this->uri(array('module' => 'blog', 'action' => 'randblog', 'userid' => $userid));
@@ -1117,7 +1117,7 @@ class blog extends controller
     					log_debug("Google blogs API Failure! Google said: " . $code);
     					break;
     			}
-
+*/
             	//post quick add
                 if($mode == 'quickadd')
                 {
@@ -1169,11 +1169,11 @@ class blog extends controller
                     	}
 
                     	$tagarray = array_diff($tagarray, $things);
-                    	
+
                     	$this->objDbBlog->insertTags($tagarray, $userid, $id);
                     }
-                    
-                   
+
+
                     $this->nextAction('viewblog');
                     break;
                 }
@@ -1503,17 +1503,17 @@ class blog extends controller
         	}
         	//echo $path;
         	//add into the db
-        	
+
         	$rssurl = htmlentities($rssurl, ENT_QUOTES);
         	$rssname = htmlentities($rssname, ENT_QUOTES);
         	$rssdesc = htmlentities($rssdesc, ENT_QUOTES);
-        
-        	
+
+
         	$addarr = array('userid' => $userid, 'url' => $rssurl, 'name' => $rssname, 'description' => $rssdesc, 'rsscache' => $filename, 'rsstime' => $rsstime);
-        	
-        	
+
+
 			$this->objDbBlog->addRss($addarr);
-        	
+
         	$this->nextAction('viewblog');
         	break;
 
@@ -1537,7 +1537,7 @@ class blog extends controller
 
         case 'deleterss':
         	$id = $this->getParam('id');
-        
+
         	$this->objDbBlog->delRSS($id);
         	$this->nextAction('rssedit');
         	break;
