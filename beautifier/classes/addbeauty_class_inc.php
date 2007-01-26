@@ -13,7 +13,7 @@ class addbeauty extends object
 	public function beautify($module)
 	{
 		try {
-    	$path = $this->objConfig->getsiteRootPath() . '/modules/';
+    	$path = $this->objConfig->getModulePath();
         $oBeaut = new PHP_Beautifier();
         $oBatch = new PHP_Beautifier_Batch($oBeaut);
         $oBatch->setRecursive(TRUE);

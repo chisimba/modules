@@ -34,10 +34,10 @@ $objForm->addToFormEx($objLanguage->languageText('mod_beautifier_submitmod', 'be
 
 
 $modarr = array();
-
-if ($handle = opendir('modules/')) {
+$this->objConfig = $this->getObject('altconfig', 'config');
+if ($handle = opendir($this->objConfig->getModulePath())) {
    while (false !== ($file = readdir($handle))) {
-       if ($file != "." && $file != ".." && $file != "CVS") {
+       if ($file != "." && $file != ".." && $file != "CVS" && $file != "CVSROOT") {
            $modarr[] = $file;
        }
    }
