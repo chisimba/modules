@@ -45,11 +45,7 @@
 
 	// Display - update user
 	echo '<p align="center"><a href="' .
-		$this->uri(array(
-			'action'=>'mydetails'
-			//'action'=>'Edit',
-			//'userId'=>$objUser->userId()
-		), 'useradmin')
+		$this->uri(NULL, 'userdetails')
 		. "\">". $objLanguage->languageText("phrase_updatedetails") ."</a>";
 
 	// Display - change password.
@@ -60,7 +56,7 @@
 				'action'=>'changepassword'
 				//'action'=>'Edit',
 				//'userId'=>$objUser->userId()
-			), 'useradmin'
+			), 'userdetails'
 			)
 		. "\">"."Change Password"."</a>"."</p>";
 	//}
