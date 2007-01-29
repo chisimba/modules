@@ -94,7 +94,8 @@ class buildplayer extends object
     */
     function loadSound()
     {
-        $errFile = $this->objConfig->getsiteRoot()."modules/soundplayer/resources/sounds/error.ogg";
+        $errFile = $this->getResourceUri('sounds/error.ogg');
+        //$this->objConfig->getsiteRoot()."modules/soundplayer/resources/sounds/error.ogg";
         
         //Get the sound file from the query string, get error file if none
         $sndFile = $this->getParam('sndfile', $errFile);
@@ -134,7 +135,7 @@ class buildplayer extends object
     function __startApplet()
     {
         return "<applet code = \"javazoom.jlgui.player.amp.PlayerApplet\" 
-    	  codebase = \"modules/soundplayer/resources/lib/\" 
+    	  codebase = \"".$this->getResourceUri('lib/')."\" 
     	  archive = \"jlguiapplet2.3.2.jar,jlgui2.3.2-light.jar,
     	  tritonus_share.jar,basicplayer2.3.jar, mp3spi1.9.2.jar,
     	  jl1.0.jar, vorbisspi1.0.1.jar, jorbis-0.0.13.jar,
@@ -175,7 +176,7 @@ class buildplayer extends object
                 break;
             case "CODEBASE":
                 return "<param name = \"CODEBASE\" "
-                  . "value = \"modules/soundplayer/resources/lib/\" />\n";
+                  . "value = \"".$this->getResourceUri('lib/')."\" />\n";
                 break;
             case "ARCHIVE":
                 return "<param name = \"ARCHIVE\" "
@@ -195,7 +196,7 @@ class buildplayer extends object
                 return "<param name=\"scriptable\" value=\"true\" />";
                 break;
             case "SKIN":
-                $defaultSkin = $this->objConfig->getsiteRoot()."modules/soundplayer/resources/skins/blizzard2.wsz";
+                $defaultSkin = $this->getResourceUri('lib/skins/blizzard2.wsz');
                 $skin = $this->getParam('skin', $defaultSkin);
                 return "<param name = \"skin\" value =\"" . $skin . "\" />\n";
                 break;
