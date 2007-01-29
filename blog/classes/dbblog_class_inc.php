@@ -512,11 +512,12 @@ class dbblog extends dbTable
 		{
 			$this->ipcleaner = $this->newObject('htmlcleaner', 'utilities');
 			$this->iecleaner = $this->newObject('htmlcleaner', 'utilities');
+			$postarr['postcontent'] = $this->ipcleaner->cleanHtml(nl2br($postarr['postcontent']));
 			$postarr['postcontent'] = str_ireplace("<br />", " <br /> ", $postarr['postcontent']);
 			$postarr['cclic'] = NULL;
 			$mparr = array('userid' => $userid,
 							'post_date' => $postarr['postdate'],
-							'post_content' => $this->ipcleaner->cleanHtml(nl2br($postarr['postcontent'])),
+							'post_content' => $postarr['postcontent'],
 							'post_title' => $postarr['posttitle'],
 							'post_category' => $postarr['postcat'],
 							'post_excerpt' => $this->iecleaner->cleanHtml($postarr['postexcerpt']),
