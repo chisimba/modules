@@ -95,6 +95,7 @@ class dbPost extends dbTable
         
         $this->objMediaFilter = $this->getObject('parse4mmedia', 'filters');
         $this->objStringsFilter = $this->getObject('parse4display', 'strings');
+        $this->objMindMap = $this->getObject('parse4mindmap', 'filters');
         
         $this->objIcon = $this->newObject('geticon', 'htmlelements');
         
@@ -451,12 +452,13 @@ class dbPost extends dbTable
                     $return .= $this->objScriptClear->removeScript($tangentParent['post_text']);
                     $return .= '</div>';
                 }
-                $return .= '<div id="text_'.$post['post_id'].'">'.$this->objStringsFilter->prepare(// Apply String Filters
+                $return .= '<div id="text_'.$post['post_id'].'">'.$this->objMindMap->parse($this->objStringsFilter->prepare(// Apply String Filters
+                                
                                 $this->objMediaFilter->parseAll( // Apply Media Filters
                                     $this->objScriptClear->removeScript( // Apply Script Removal Filters
                                         stripslashes( // Remove Slashes
                                             $post['post_text']
-                            )))).'</div>';
+                            ))))).'</div>';
                 
                 // Check if the post has attachments
                 if ($post['attachment_id'] != NULL) {
