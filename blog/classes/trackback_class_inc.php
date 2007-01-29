@@ -32,7 +32,7 @@ class trackback extends object
 	 */
 	public function init()
 	{
-		require_once($this->getResourceUri('Trackback.php', 'blog'));
+		require_once($this->getResourcePath('Trackback.php', 'blog'));
 		//require_once('modules/blog/resources/Trackback.php');
 	}
 
