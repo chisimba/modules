@@ -170,6 +170,7 @@ class forum extends controller
     public function dispatch($action=Null)
     {
         $this->setLayoutTemplate('forum_layout.php');
+        //$this->setVar('pageSuppressXML', TRUE);
         
         switch ($action)
         {
@@ -723,7 +724,7 @@ class forum extends controller
             $xajaxTest = new xajax($this->uri(array('action'=>'translationajax')));
             $xajaxTest->registerFunction(array($this,"loadTranslation")); // Register another function in this controller
             $xajaxTest->processRequests(); // XAJAX method to be called
-            $this->appendArrayVar('headerParams', $xajaxTest->getJavascript()); // Send JS to header
+            $this->appendArrayVar('headerParams', $xajaxTest->getJavascript(NULL, $this->getResourceUri('xajax/0.2.4/xajax.js', 'ajaxwrapper'))); // Send JS to header
             
             // return the template
             return 'forum_topic_threadedview.php';
@@ -821,7 +822,7 @@ class forum extends controller
             $xajaxTest = new xajax($this->uri(array('action'=>'translationajax')));
             $xajaxTest->registerFunction(array($this,"loadTranslation")); // Register another function in this controller
             $xajaxTest->processRequests(); // XAJAX method to be called
-            $this->appendArrayVar('headerParams', $xajaxTest->getJavascript()); // Send JS to header
+            $this->appendArrayVar('headerParams', $xajaxTest->getJavascript(NULL, $this->getResourceUri('xajax/0.2.4/xajax.js', 'ajaxwrapper'))); // Send JS to header
 			
 			// Bread Crumbs
             $forumLink = new link ($this->uri(array('action'=>'forum', 'id'=>$post['forum_id'])));
@@ -837,7 +838,7 @@ class forum extends controller
         $xajax = new xajax($this->uri(array('action'=>'translationajax')));
         $xajax->registerFunction(array($this, 'loadTranslation'));// Register another function in this controller
         $xajax->processRequests(); // XAJAX method to be called
-        $this->appendArrayVar('headerParams', $xajax->getJavascript()); // Send JS to header
+        $this->appendArrayVar('headerParams', $xajax->getJavascript(NULL, $this->getResourceUri('xajax/0.2.4/xajax.js', 'ajaxwrapper'))); // Send JS to header
     }
     
     function loadTranslation($postId, $postTextId)
@@ -943,7 +944,7 @@ class forum extends controller
             $xajaxTest = new xajax($this->uri(array('action'=>'translationajax')));
             $xajaxTest->registerFunction(array($this,"loadTranslation")); // Register another function in this controller
             $xajaxTest->processRequests(); // XAJAX method to be called
-            $this->appendArrayVar('headerParams', $xajaxTest->getJavascript()); // Send JS to header
+            $this->appendArrayVar('headerParams', $xajaxTest->getJavascript(NULL, $this->getResourceUri('xajax/0.2.4/xajax.js', 'ajaxwrapper'))); // Send JS to header
             
             // return the template
             return 'forum_topic_flatview.php';
