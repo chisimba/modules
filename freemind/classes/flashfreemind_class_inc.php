@@ -17,53 +17,53 @@ class flashfreemind extends object
     /**
     * @var string $mindMap Path and Name of the Mind Map file
     */
-    var $mindMap = 'modules/freemind/resources/freeMindFlashBrowser.mm'; //example
+    private $mindMap = 'modules/freemind/resources/freeMindFlashBrowser.mm'; //example
     
     /**
     * @var string $mindMapId JavaScript Id of the Mindmap
     */
-    var $mindMapId = 'mindmap'; // Name of the Flash Object
+    public $mindMapId = 'mindmap'; // Name of the Flash Object
     
     /**
     * @var string $width Width of the Flash Object
     */
-    var $width = '100%';
+    public $width = '100%';
     
     /**
     * @var string $height Height of the Flash Object
     */
-    var $height = '500px';
+    public $height = '500px';
     
     /**
     * @var string $openUrl Target Window for opening links
     */
-    var $openUrl = '_self';
+    public $openUrl = '_self';
     
     /**
     * @var int $startCollapsedToLevel Level from which nodes should be collapsed. -1 for all nodes
     */
-    var $startCollapsedToLevel = 10;
+    public $startCollapsedToLevel = 10;
     
     /**
     * @var string $mainNodeShape Shape of Main Node, either elipse or rectangle
     */
-    var $mainNodeShape = 'elipse';
+    public $mainNodeShape = 'elipse';
     
     /**
     * @var int $defaultWordWrap Max width of text node, 600 is the plugin's default
     */
-    var $defaultWordWrap = 600;
+    public $defaultWordWrap = 600;
     
     /**
     * @var int $ShotsWidth Width of Snapshot, 200 is the plugin's default
     */
-    var $ShotsWidth = '200';
+    public $ShotsWidth = '200';
     
     
     /**
     * Constructor
     */
-    function init()
+    public function init()
     {
     
     }
@@ -72,24 +72,33 @@ class flashfreemind extends object
     * Method to set the path to the Mindmap file
     * @param string $url Url to the Mindmap File
     */
-    function setMindMap($url)
+    public function setMindMap($url)
     {
         $url = str_replace('&amp;', '&', $url);
-        $this->mindMap = $url;
+        $this->mindMap = urlencode($url);
     }
     
     /**
-    *
+    * Method to return the javascript for the freemind flash object
+    * Only necessary for javascript versions
     */
-    function getMindmapScript()
+    public function getMindmapScript()
     {
         return $this->getJavascriptFile('flashobject.js', 'freemind');
-    }   
+    }
     
     /**
-    * Method to show the Flash Freemind Object
+    * Method to Display the Mindmap
     */
-    function show()
+    public function show()
+    {
+        return $this->showHTML();
+    }
+    
+    /**
+    * Method to show the Flash Freemind Object JavaScript Version
+    */
+    private function showJS()
     {
         $this->appendArrayVar('headerParams', $this->getMindmapScript());
         
@@ -99,7 +108,7 @@ class flashfreemind extends object
 	</div>
     <script type="text/javascript">
     		// <![CDATA[
-    		var fo = new FlashObject("modules/freemind/resources/visorFreemind.swf", "'.$this->mindMapId.'", "'.$this->width.'", "'.$this->height.'", 6, "#ffffff");
+    		var fo = new FlashObject("'.$this->getResourceUri('visorFreemind.swf','freemind').'", "'.$this->mindMapId.'", "'.$this->width.'", "'.$this->height.'", 6, "#ffffff");
     		fo.addParam("quality", "high");
     		fo.addParam("bgcolor", "#ffffff");
     		fo.addParam("wmode", "transparent");
@@ -112,6 +121,21 @@ class flashfreemind extends object
     		fo.write("flashcontent_'.$this->mindMapId.'");
     		// ]]>
     	</script>';
+    }
+    
+    /**
+    * Method to show the Flash Freemind Object - HTML Version
+    */
+    private function showHTML()
+    {
+        return '
+<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="'.$this->width.'" height="600">
+  <param name="movie" value="'.$this->getResourceUri('visorFreemind.swf','freemind').'" />
+  <param name="quality" value="high" />
+  <param name="wmode" value="transparent" />
+  <param name="flashVars" value="openUrl='.$this->openUrl.'&amp;mainNodeShape='.$this->mainNodeShape.'&amp;startCollapsedToLevel='.$this->startCollapsedToLevel.'&amp;initLoadFile='.$this->mindMap.'&amp;defaultWordWrap='.$this->defaultWordWrap.'&amp;ShotsWidth='.$this->ShotsWidth.'" />
+  <embed src="'.$this->getResourceUri('visorFreemind.swf','freemind').'" flashVars="openUrl='.$this->openUrl.'&amp;mainNodeShape='.$this->mainNodeShape.'&amp;startCollapsedToLevel='.$this->startCollapsedToLevel.'&amp;initLoadFile='.$this->mindMap.'&amp;defaultWordWrap='.$this->defaultWordWrap.'&amp;ShotsWidth='.$this->ShotsWidth.'" width="'.$this->width.'" height="'.$this->height.'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" wmode="transparent"></embed>
+</object>';
     }
  
 } 
