@@ -19,7 +19,7 @@
 *
 * @author Tohir Solomons
 */
-require_once($this->getResourceUri('phpmathpublisher/mathpublisher.php', 'mathml'));
+require_once($this->getResourcePath('phpmathpublisher/mathpublisher.php', 'mathml'));
 class mathimg extends object
 {
     /**
@@ -31,7 +31,8 @@ class mathimg extends object
     function init()
     {   
         $objConfig = $this->getObject('altconfig', 'config');
-        $GLOBALS['dirfonts'] = $objConfig->getsiteRootPath().'modules/mathml/resources/phpmathpublisher/fonts';
+        $GLOBALS['dirfonts'] = $objConfig->getModulePath().'mathml/resources/phpmathpublisher/fonts';
+        //echo $GLOBALS['dirfonts'];
         $GLOBALS['dirimg'] = $objConfig->getcontentBasePath().'mathml';
         
         // Check that Previews Folder exists - if not, create it
