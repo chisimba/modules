@@ -16,7 +16,7 @@ if($objDBContext->isInContext())
     $objContextUtils = & $this->getObject('utilities','context');
     $cm = $objContextUtils->getHiddenContextMenu('dictionary','show');
 } else {
-    $cm = $this->getMenu();
+    $cm = "";//$this->getMenu();
 }
 
 
