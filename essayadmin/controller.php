@@ -389,10 +389,10 @@ class essayadmin extends controller
         	$book = $this->getParam('book');
             // get topic id
             $topic=$this->getParam('id');
-
             // exit upload form
             $postSubmit = $this->getParam('save');
-            if($postSubmit ==$this->objLanguage->languageText('word_exit','Exit')){
+            
+            if($postSubmit ==$this->objLanguage->languageText('word_exit')){
                 return $this->nextAction('marktopic',array('id'=>$topic));
             }
 
@@ -409,7 +409,7 @@ class essayadmin extends controller
                 $msg='';
                 return $this->nextAction('marktopic',array('id'=>$topic));
             }
-
+			
             // upload essay and return to form
             if($postSubmit==$this->objLanguage->languageText('mod_essayadmin_upload','essayadmin')){
                 // get booking id
@@ -424,7 +424,7 @@ class essayadmin extends controller
 
                 // upload file to database, overwrite original file
                 $arrayfiledetails = $this->objFile->uploadFile('file');
-
+				
 				if ($arrayfiledetails['success']){	
 				
 					$fields=array('lecturerfileid'=>$arrayfiledetails['fileid'],'mark'=>$mark,'comment'=>$comment);
