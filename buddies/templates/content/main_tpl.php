@@ -116,7 +116,7 @@ foreach ($buddies as $buddy) {
     $yahoo = $Yahoo[$index];
     $objTableClass->addCell($yahoo, '', 'top', 'center', $class); 
     // Show homepage icon
-    $modules = &$this->getObject('modules', 'modulelist');
+    $modules = &$this->getObject('modules', 'modulecatalogue');
     if ($modules->checkIfRegistered('homepage')) {
 	    $dbHomepages =& $this->getObject('dbhomepages', 'homepage');
 	    if ($dbHomepages->homepageExists($buddyId)){

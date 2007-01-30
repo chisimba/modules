@@ -72,7 +72,7 @@ class dbBuddies extends dbTable
 	public function listAll($userId)
 	{
 		$sql = "SELECT 
-            tbl_buddies.buddyId, 
+            tbl_buddies.buddyId AS buddyId, 
             tbl_buddies.isBuddy,
             tbl_buddies.isFan,
             tbl_users.firstName, 
