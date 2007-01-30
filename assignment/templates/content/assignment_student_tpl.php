@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Template for students Assignment Management Home page.
 * @package assignment
@@ -41,7 +41,7 @@ $topicLabel = $this->objLanguage->languageText('mod_essay_topic');
 $essayHead = $this->objLanguage->languageText('mod_essay_essays');
 $markLabel = $this->objLanguage->languageText('mod_assignment_mark','assignment');
 $openLabel = $this->objLanguage->languageText('mod_assignment_open','assignment');
-$closedLabel = $this->objLanguage->languageText('mod_assignment_closed');
+$closedLabel = $this->objLanguage->languageText('mod_assignment_closed','assignment');
 $viewLabel = $this->objLanguage->languageText('mod_assignment_view','assignment');
 $bookLabel = $this->objLanguage->languageText('mod_assignment_bookessay');
 $submittedLabel = $this->objLanguage->languageText('mod_assignment_submitted','assignment');
