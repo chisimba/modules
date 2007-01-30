@@ -115,7 +115,7 @@ if ($item=='bookmark') {
 
     $objElement1 = new button('cancel');
     $objElement1->setToSubmit();
-    $objElement1->setValue($this->objLanguage->languageText('word_cancel','faq'));
+    $objElement1->setValue($this->objLanguage->languageText('word_cancel'));
     $cancelButton=$objElement1->show();
 
    /** $cancelButton="<a href=\"". $this->uri(array(
@@ -123,7 +123,7 @@ if ($item=='bookmark') {
 	   		'action'=>'',
 			'folderId'=>$folderId
 		))
-		. "\" class=pseudobutton>" . $objLanguage->languageText("word_cancel","faq") . "</a>"; */
+		. "\" class=pseudobutton>" . $objLanguage->languageText("word_cancel") . "</a>"; */
 
      $tblclass->startRow();
      $tblclass->addCell($objElement->show()." &nbsp;&nbsp;&nbsp;&nbsp; ".$cancelButton, "", Null, 'center', '','colspan="2"');
@@ -202,9 +202,9 @@ if ($item=='bookmark') {
 	    	'module'=>'kbookmark',
 	   		'action'=>''
 		))
-		. "\" class=pseudobutton>" . $objLanguage->languageText("word_cancel","faq") . "</a>";
+		. "\" class=pseudobutton>" . $objLanguage->languageText("word_cancel") . "</a>";
      */
-     $objElement1 = new button('cancel',$this->objLanguage->languageText('word_cancel','faq'));
+     $objElement1 = new button('cancel',$this->objLanguage->languageText('word_cancel'));
      $returnUrl=$this->uri(array('action'=>'options'));
      $objElement1->setOnClick("window.location='$returnUrl'");
      $cancelButton=$objElement1->show();

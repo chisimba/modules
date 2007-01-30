@@ -35,7 +35,7 @@ if (isset($listContent)) {
 
     //name of bookmark
     $bkObject = new textinput('title');
-    //$bkObject->setValue("Name");
+    $bkObject->setValue($title);
     $bkObject->size=30;
     $bkObject->fldType="text";
     $bkObject->setValue($title);
@@ -101,7 +101,7 @@ if (isset($listContent)) {
 
     $objElement1 = new button('cancel');
     $objElement1->setToSubmit();
-    $objElement1->setValue($objLanguage->languageText('word_cancel','faq'));
+    $objElement1->setValue($objLanguage->languageText('word_cancel'));
 
      $tblclass->startRow();
      $tblclass->addCell($objElement->show(), "", Null, 'center');
@@ -188,7 +188,7 @@ $this->header->str=$this->objLanguage->languageText('mod_bookmark_bookmarkfolder
      
      $objElement1= new button('cancel');
      $objElement1->setToSubmit();
-     $objElement1->setValue($this->objLanguage->languageText('word_cancel','faq'));
+     $objElement1->setValue($this->objLanguage->languageText('word_cancel'));
 
      $tblclass->startRow();
      $tblclass->addCell($objElement->show()." &nbsp;&nbsp;&nbsp;&nbsp; ".$objElement1->show(), "", Null, 'center', NULL, 'colspan="2"');
@@ -212,9 +212,11 @@ $this->header->str=$this->objLanguage->languageText('mod_bookmark_bookmarkfolder
     $this->header->type=1;
     $this->header->str=$titleLine." > ".$title;
 
-
+    
      //hidden field to distinguish between a favourite and a folder
 }
+     $bkForm->addRule('title',$this->objLanguage->languageText('mod_bookmark_errtitle', 'kbookmark'),'required');
+     $bkForm->addRule('url',$this->objLanguage->languageText('mod_bookmark_errurl', 'kbookmark'),'required');
 echo $this->header->show();
 echo $bkForm->show();
 

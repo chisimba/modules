@@ -57,6 +57,7 @@ class kbookmark extends controller
     public $xbelOutput="";
    
 
+    public $urlVal;
     /**
     * Method to initialize the controller
     *
@@ -73,6 +74,7 @@ class kbookmark extends controller
         $this->objDbBookmark=& $this->newObject('dbbookmark','kbookmark');
         $this->objDbGroup=& $this->newObject('dbgroup','kbookmark');
         $this->xbel=& $this->newObject('xbookmark','kbookmark');
+	$this->urlVal=& $this->newObject('url','strings');
     }
     
     /**
@@ -133,7 +135,6 @@ class kbookmark extends controller
                          $folderId=$this->getParam('parent');
 			 //echo $item;
                          $this->parse4Update($item);
-			 
                          $title=$this->objLanguage->languageText('mod_bookmark_editsaved ','kbookmark');
                          return $this->nextAction('',array('folderId'=>$folderId,'title'=>$title,'status'=>'success'));
                      }
@@ -432,7 +433,14 @@ fclose($file_handle);
             $datemodified=strftime('%Y-%m-%d %H:%M:%S',mktime());
             $isprivate=$_POST['isprivate'];
             $this->objDbGroup->update('id',$id, array('title'=>$title,'description'=>$description, 'isprivate'=>$isprivate,'datemodified'=>$datemodified));
-        } else {		
+        } else {
+		$url = $this->getParam('url');
+		if (preg_match("/^(http(s?):\/\/|ftp:\/\/{1})((\w+\.){1,})\w{2,}$/i", $url)) {
+			
+		}
+		else {
+			
+		}
             return $this->objDbBookmark->updateBookmark();
         }
     }
@@ -619,8 +627,6 @@ fclose($file_handle);
             return False;
         }
     }
-
-
 
 }; //class
 ?>
