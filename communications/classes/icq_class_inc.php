@@ -54,7 +54,7 @@ class icq extends object
     public function getStatusIcon($icq, $mode='byicqnumber')
     {
         if ( $mode == 'byuserid' ) {
-            $icq = $this->objDbUserparams->getValue('ICQ', $icq);
+            //$icq = $this->objDbUserparams->getValue('ICQ', $icq);
             if (!$icq) {
                 $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_icqnoidreg",'communications');
                 $this->objIcon->setIcon("icq_noid");
