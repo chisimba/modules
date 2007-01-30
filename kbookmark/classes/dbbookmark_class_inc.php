@@ -18,7 +18,6 @@ class dbBookmark extends dbTable
     function init()
     {
         parent::init('tbl_bookmarks');
-        //$this->USE_PREPARED_STATEMENTS=True;
     }
     
     /**
