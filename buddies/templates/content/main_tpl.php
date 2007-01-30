@@ -53,10 +53,10 @@ $index = 0;
 $rowcount = 0;
 foreach ($buddies as $buddy) {
     $rowcount++;
-    $buddyId = $buddy['buddyId'];
-    $isFan = $buddy['isFan'];
-    $isBuddy = $buddy['isBuddy']; 
-    
+    $buddyId = $buddy['buddyid'];
+    $isFan = $buddy['isfan'];
+    $isBuddy = $buddy['isbuddy']; 
+   
     // Set odd even colour scheme
     $class = ($rowcount % 2 == 0)?'odd':'even';
     $objTableClass->startRow(); 
