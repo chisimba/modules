@@ -100,6 +100,9 @@ $objSelectFile->name = 'userFile';
 $table->addCell($objSelectFile->show());
 $table->endRow();
 
+$file = $this->getParam('userFile');
+
+
 $table->startRow();
 $hiddenId = new textinput('id');
 $hiddenId->fldType = 'hidden';
@@ -112,7 +115,8 @@ $table->addCell($submitButton->show());
 
 $table->endRow();
 
-$form->addToForm($table->show());    
+$form->addToForm($table->show());   
+$form->addRule('caption',$this->objLanguage->languageText('mod_glossary_caption_validation', 'glossary'),'required'); 
 
 /*
 $form->addRule(array('name'=>'caption','length'=>15), 'Your surname is too long', 'maxlength');
