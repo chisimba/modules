@@ -23,7 +23,7 @@ class block_assignmentadmin extends object
     public function init()
     {
         $this->objLanguage =& $this->getObject('language', 'language');
-        $this->title = $this->objLanguage->languageText('mod_assignmentadmin_name');
+        $this->title = $this->objLanguage->languageText('mod_assignmentadmin_name', 'assignmentadmin');
 
         $this->objSubmit =& $this->getObject('dbassignmentsubmit', 'assignment');
         $objDbContext = &$this->getObject('dbcontext', 'context');

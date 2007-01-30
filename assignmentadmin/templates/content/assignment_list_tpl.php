@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Template for listing submitted assignments to be marked.
 * @package assignmentadmin
@@ -23,15 +23,15 @@ $objPop =& $this->newObject('windowpop','htmlelements');
 // Set up language items
 $assignment = $this->objLanguage->languageText('mod_assignmentadmin_name','assignmentadmin');
 $assignmentLabel = $this->objLanguage->languageText('mod_assignmentadmin_assignmentadmin','assignmentadmin');
-$heading = $this->objLanguage->languageText('mod_assignmentadmin_submitted','assignmentadmin').' '.$this->objLanguage->languageText('mod_assignmentadmin_assignments');
+$heading = $this->objLanguage->languageText('mod_assignmentadmin_submitted','assignmentadmin').' '.$this->objLanguage->languageText('mod_assignmentadmin_assignments','assignmentadmin');
 $studentLabel = ucwords($this->objLanguage->languageText('mod_context_readonly'));
-$submitLabel = $this->objLanguage->languageText('mod_assignmentadmin_datesubmitted');
+$submitLabel = $this->objLanguage->languageText('mod_assignmentadmin_datesubmitted','assignmentadmin');
 $markLabel = $this->objLanguage->languageText('mod_assignmentadmin_mark','assignmentadmin').' (%)';
 $exitLabel = $this->objLanguage->languageText('word_exit');
 $downloadLabel = $this->objLanguage->languageText('mod_assignmentadmin_download').' '.$this->objLanguage->languageText('mod_assignmentadmin_assignment');
 $uploadLabel = $this->objLanguage->languageText('mod_assignmentadmin_upload','assignmentadmin').' '.$this->objLanguage->languageText('mod_assignmentadmin_marks','assignmentadmin').' '.$this->objLanguage->languageText('mod_assignmentadmin_and','assignmentadmin').' '.$this->objLanguage->languageText('mod_assignmentadmin_marked','assignmentadmin').' '.$this->objLanguage->languageText('mod_assignmentadmin_assignment','assignmentadmin');
 $commentLabel = $this->objLanguage->languageText('mod_assignmentadmin_view','assignmentadmin').' '.$this->objLanguage->languageText('mod_assignmentadmin_comment','assignmentadmin');
-$noassignments = $this->objLanguage->languageText('mod_assignmentadmin_nosubmittedassignments');
+$noassignments = $this->objLanguage->languageText('mod_assignmentadmin_nosubmittedassignments','assignmentadmin');
 $rubricLabel = $this->objLanguage->languageText('mod_rubric_name');
 
 /****************** set up table headers ************************/
@@ -50,7 +50,7 @@ $objTable->cellspacing = 2;
 $objTable->cellpadding = 5;
 $objTable->addHeader($tableHd,'heading');
 
-$objTable->row_attributes = 'height=5';
+$objTable->row_attributes = 'height="5"';
 $objTable->startRow();
 $objTable->addCell('');
 $objTable->endRow();
@@ -63,9 +63,9 @@ foreach($data as $item){
     $class = ($i++%2 == 0)?'odd':'even';
 
     $row = array();
-    $row[] = $this->objUser->fullname($item['userId']);
+    $row[] = $this->objUser->fullname($item['userid']);
     $row[] = $item['mark'];
-    $row[] = $this->formatDate($item['dateSubmitted']);
+    $row[] = $this->formatDate($item['datesubmitted']);
 
     if($assign['format']){
         // if upload
@@ -94,10 +94,10 @@ foreach($data as $item){
 }
 }else{
     $objTable->startRow();
-    $objTable->addCell($noassignments,'','','','odd',' colspan = 4');
+    $objTable->addCell($noassignments,'','','','odd',' colspan = "4"');
     $objTable->endRow();
 }
-$objTable->row_attributes = 'height = 10';
+$objTable->row_attributes = 'height = "10"';
 $objTable->startRow();
 $objTable->addCell('');
 $objTable->endRow();

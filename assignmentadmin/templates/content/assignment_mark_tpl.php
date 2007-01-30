@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 * Template for uploading assignments.
 * @package assignmentadmin
@@ -30,8 +30,8 @@ $head = $markhead.' '.$assignmenthead;
 $btnsubmit = $this->objLanguage->languageText('word_save','Save');
 $btnexit = $this->objLanguage->languageText('word_exit','Exit');
 $wordstudent = ucwords($this->objLanguage->languageText('mod_context_readonly'));
-$fileLabel = $this->objLanguage->languageText('mod_assignmentadmin_filename');
-$commenthead = $this->objLanguage->languageText('mod_assignmentadmin_comment');
+$fileLabel = $this->objLanguage->languageText('mod_assignmentadmin_filename','assignmentadmin');
+$commenthead = $this->objLanguage->languageText('mod_assignmentadmin_comment','assignmentadmin');
 $onlinehead = $wordstudent.' '.$assignmenthead;
 
 $errMark = $this->objLanguage->languageText('mod_assignmentadmin_entermark');
