@@ -53,7 +53,7 @@
 	$button = new button("submit", $objLanguage->languageText("word_save"));
 	$button->setToSubmit();
 
-    $cancelButton =new button("submit", $objLanguage->languageText("word_cancel","faqadmin"));
+    $cancelButton =new button("submit", $objLanguage->languageText("word_cancel","faq"));
     $cancelButton->setOnClick("window.location='".$this->uri(array('action'=>'view', 'category'=>$categoryId))."';");
 
 	$form->addToForm($button->show().' / '.$cancelButton->show());
