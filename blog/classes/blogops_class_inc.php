@@ -216,7 +216,7 @@ class blogops extends object
         {
         $rssurl->setValue($rdata['url']);
        // $rssurl->setValue('url');
-        
+
 		}
         $rssadd->addCell($rssurllabel->show());
         $rssadd->addCell($rssurl->show());
@@ -335,27 +335,27 @@ class blogops extends object
 
 			$boxContent = $oblogs->show()."<br />";
 	 		$boxContent .= $defmodLink->show()."<br />";
-		 
-		 
-		 // 
-		 
+
+
+		 //
+
             	//database abstraction object
             	$this->objDbBlog = $this->getObject('dbblog');
 				$postresults = $this->objDbBlog->getAllPosts($userid=1,null);
-		
+
 			 if(!$postresults==null){
-			$boxContent .= $ositeblogs->show() . "<br />"; 
+			$boxContent .= $ositeblogs->show() . "<br />";
 			}
 
 		$objFeatureBox = $this->getObject('featurebox', 'navigation');
         $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_otherblogs","blog"), $boxContent);
 
- 		
-	 
-	 	 	
-		 
 
-	
+
+
+
+
+
            //$ret .= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewsiteblogs","blog"), $ositeblogs->show());
            //$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_otherblogs", "blog") , $oblogs->show());
            //$ret.= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewsiteblogs", "blog") , $ositeblogs->show());
@@ -802,21 +802,14 @@ class blogops extends object
         //break out the ol featurebox...
         if (!empty($posts)) {
             foreach($posts as $post) {
-            	//search for the [embed] tags in the content
-    			$search = '/\[EMBED\](.*)\[\/EMBED\]/U';
-        		// Get All Matches
-				preg_match_all($search, $post['post_content'], $matches, PREG_PATTERN_ORDER);
-				if(!empty($matches[1]))
-				{
-					$str = $matches[1][0];
-					//clean the url
-					$clurl = $this->getObject('cleanurl', 'filemanager');
-					$clurl->cleanUpUrl($str);
-					$objFlashFreemind = $this->newObject('flashfreemind', 'freemind');
-        			//$objFlashFreemind->getMindmapScript();
-    				$objFlashFreemind->setMindMap($str);
-        			$post['post_content'] = str_replace($matches[0], $objFlashFreemind->show(), $post['post_content']);
-				}
+            	$objMindMap = $this->getObject('parse4mindmap', 'filters');
+				$post['post_content'] = $objMindMap->parse($post['post_content']);
+				//parse for mathml as well
+				$this->objMath = $this->getObject('parse4mathml', 'filters');
+				$post['post_content'] = $this->objMath->parseAll($post['post_content']);
+
+				//$post['post_content'] = htmlentities($post['post_content']);
+
                 $objFeatureBox = $this->getObject('featurebox', 'navigation');
                 //build the top level stuff
                 $dt = date('r', $post['post_ts']);

@@ -174,7 +174,7 @@ class blog extends controller
             $this->getObject('bbcodeparser', 'utilities');
             //get the imap class to grab email to blog...
             //maybe a config here to check if we wanna use this?
-            $this->objImap = $this->getObject('imap', 'webmail');
+
             //feeds classes
             $this->objFeed = &$this->getObject('feeds', 'feed');
             //user object
@@ -392,6 +392,7 @@ class blog extends controller
 
             case 'mail2blog':
                 //grab the DSN from the config file
+                $this->objImap = $this->getObject('imap', 'mail');
                 $this->dsn = $this->objConfig->getItem('BLOG_MAIL_DSN');
                 try {
                     //grab a list of all valid users to an array for verification later
