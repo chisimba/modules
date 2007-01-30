@@ -170,10 +170,10 @@ class dbBuddies extends dbTable
             'id',
             $list[0]['id'],
             array(
-                'isBuddy' => '0'
+                'isbuddy' => '0'
             )
         );
-        if ($list[0]['isFan']=='0') {
+        if ($list[0]['isfan']=='0') {
             $this->delete(
                 'id',
                 $list[0]['id']
@@ -187,7 +187,7 @@ class dbBuddies extends dbTable
                 'isFan' => '0'
             )
         );
-        if ($list[0]['isBuddy']=='0') {
+        if ($list[0]['isbuddy']=='0') {
             $this->delete(
                 'id',
                 $list[0]['id']
