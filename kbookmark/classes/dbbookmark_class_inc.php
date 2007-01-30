@@ -18,7 +18,7 @@ class dbBookmark extends dbTable
     function init()
     {
         parent::init('tbl_bookmarks');
-        $this->USE_PREPARED_STATEMENTS=True;
+        //$this->USE_PREPARED_STATEMENTS=True;
     }
     
     /**
@@ -55,6 +55,24 @@ class dbBookmark extends dbTable
              'visitcount'  =>$visitcount,
              'datemodified'=>$datemodified));
          return;
+    }
+    
+    /**
+    * Method to update a bookmark
+    *
+    * @access public
+    */
+    function updateBookmark()
+    {
+            $id=$this->getParam('id');
+	    $fields = array();
+	    $fields['groupid']=$this->getParam('parent');
+            $fields['title']=$this->getParam('title');
+            $fields['url']=$this->getParam('url');
+            $fields['description']=$this->getParam('description');
+            $fields['isprivate']= $this->getParam('private');
+            $fields['datemodified']=strftime('%Y-%m-%d %H:%M:%S',mktime());
+            $this->update('id', $id, $fields);
     }
     
     /**

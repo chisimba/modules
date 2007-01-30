@@ -101,7 +101,7 @@ if (isset($listContent)) {
 
     $objElement1 = new button('cancel');
     $objElement1->setToSubmit();
-    $objElement1->setValue($objLanguage->languageText('word_cancel'));
+    $objElement1->setValue($objLanguage->languageText('word_cancel','faq'));
 
      $tblclass->startRow();
      $tblclass->addCell($objElement->show(), "", Null, 'center');
@@ -188,7 +188,7 @@ $this->header->str=$this->objLanguage->languageText('mod_bookmark_bookmarkfolder
      
      $objElement1= new button('cancel');
      $objElement1->setToSubmit();
-     $objElement1->setValue($this->objLanguage->languageText('word_cancel'));
+     $objElement1->setValue($this->objLanguage->languageText('word_cancel','faq'));
 
      $tblclass->startRow();
      $tblclass->addCell($objElement->show()." &nbsp;&nbsp;&nbsp;&nbsp; ".$objElement1->show(), "", Null, 'center', NULL, 'colspan="2"');
