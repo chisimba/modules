@@ -208,7 +208,7 @@ class buildplayer extends object
                 return "<param name = \"song\" value =\"" . $this->soundFile . "\" />\n";
                 break;
             case "INIT":
-                $initFile = $this->objConfig->getsiteRoot()."modules/soundplayer/resources/jlgui.ini";
+                $initFile = $this->objConfig->getModulePath()."soundplayer/resources/jlgui.ini";
                 return "<param name = \"init\" value =\"" . $initFile . "\" />\n";
                 break;
             case "LOCATION":
