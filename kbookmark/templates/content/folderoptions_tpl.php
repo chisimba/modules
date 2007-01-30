@@ -45,7 +45,7 @@ $deleteIcon=$objIcons->show();
 
 $objIcons=$this->newObject('geticon','htmlelements');
 $objIcons->setIcon('create_folder');
-$objIcons->alt=$this->objLanguage->languageText('word_add','Add');
+$objIcons->alt=$this->objLanguage->languageText('word_add');
 $newIcon=$objIcons->show();
 
 $objButton= new button('delete');
