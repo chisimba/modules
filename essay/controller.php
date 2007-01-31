@@ -158,7 +158,7 @@ class essay extends controller
                 $data[0]['topic']=$essay;
                 $data[0]['notes']=$comment[0]['comment'];
                 // add head
-                $head=$this->objLanguage->languageText('mod_essay_comment','Comment');
+                $head=$this->objLanguage->languageText('mod_essay_comment','essay');
                 // remove left navigation
                 $left='';
                 $this->setVarByRef('head',$head);

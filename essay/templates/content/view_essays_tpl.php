@@ -14,6 +14,7 @@ $this->setLayoutTemplate('essay_layout_tpl.php');
 $this->objDateformat = $this->newObject('datetime','utilities');
 
  $this->loadclass('htmltable','htmlelements'); 
+  $objPopup=&$this->loadClass('windowpop','htmlelements');
 
 // set up html elements
 //$objTable=$this->objTable;
@@ -102,13 +103,27 @@ foreach($data as $item){
         $this->objLink->link=$this->objIcon->show();
         $downlink=$this->objLink->show();
 
-        $this->objLink->link('#');
-        $this->objIcon->setIcon('comment_view');
-    //    $this->objIcon->extra="onclick=\"javascript:window.open('" .$this->uri(array('action'=>'showcomment','book'=>$item['id'],'essay'=>$item['essay']))."', 'essaycomment', 'width="400", height="200", scrollbars="1"')\" ";
+        //$this->objLink->link('#');
+        //$this->objIcon->setIcon('comment_view');
+        
         $this->objIcon->title=$commenthead;
-        $this->objLink->link=$this->objIcon->show();
+    	$this->objIcon->setIcon('comment_view');
+   	 $commentIcon = $this->objIcon->show();
+        
+        $objPopup = new windowpop();
+    	$objPopup->set('location',$this->uri(array('action'=>'showcomment','book'=>$item['id'],'essay'=>$item['essay'])));
+    	$objPopup->set('linktext',$commentIcon);
+    	$objPopup->set('width','600');
+    	$objPopup->set('height','350');
+    	$objPopup->set('left','200');
+    	$objPopup->set('top','200');
+    	$objPopup->putJs(); // you only need to do this once per page
+    	//$observersEmailPopup=$objPopup->show();
+ //       $this->objIcon->extra="onclick=\"javascript:window.open('" .$this->uri(array('action'=>'showcomment','book'=>$item['id'],'essay'=>$item['essay']))."', "essaycomment", "width=400", "height=200", "scrollbars=1")\" ";
+        //$this->objIcon->title=$commenthead;
+        //$this->objLink->link=$this->objIcon->show();
 
-        $mark=$item['mark'].'&nbsp;&nbsp;&nbsp;'.$this->objLink->show();
+        $mark=$item['mark'].'&nbsp;&nbsp;&nbsp;'.$objPopup->show();
         $load=$downlink;
     }else{
         // if no mark

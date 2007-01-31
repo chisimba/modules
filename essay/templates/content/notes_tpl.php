@@ -22,10 +22,11 @@ $notes=$data[0]['notes'];
 
 // set up html elements
 $objHead=$this->newObject('htmlheading','htmlelements');
-$objLayer=$this->objLayer;
-$objLayer1=$this->objLayer;
-$objLayer2=$this->objLayer;
-$objLayer3=$this->objLayer;
+
+$objLayer = $this->newObject('layer','htmlelements');
+$objLayer1 = $this->newObject('layer','htmlelements');
+$objLayer2 = $this->newObject('layer','htmlelements');
+$objLayer3 = $this->newObject('layer','htmlelements');
 
 /**************** set up display page ********************/
 
@@ -52,7 +53,7 @@ $objLayer3->str=$this->objIcon->show();
 $objLayer->cssClass='content';
 $objLayer->border='1px solid';
 $objLayer->align='center';
-$objLayer->str=$objLayer1->show().$objLayer2->show().'<p>'.$objLayer3->show();
+$objLayer->str= $objLayer1->show().$objLayer2->show().'<p>'.$objLayer3->show();
 
 echo $objLayer->show();
 
