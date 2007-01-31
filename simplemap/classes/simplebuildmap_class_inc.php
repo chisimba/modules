@@ -8,16 +8,17 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 *
-* Put class details here
+* This is a simple class to build the basic Google Maps API
+* as required to do a simple map.
 *
-* @author Yourname
+* @author Derek Keats
 * @category Chisimba
-* @package mail
-* @copyright AVOIR
+* @package simplemap
+* @copyright AVOIR & UEC
 * @licence GNU/GPL
 *
 */
-class myclass 
+class simplebuildmap extends object 
 {
 
     /**
@@ -36,7 +37,7 @@ class myclass
     * PHP Documentor style
     *
     */
-    function myFunction()
+    function getApiKey()
     {
         //Put your code here
     }
