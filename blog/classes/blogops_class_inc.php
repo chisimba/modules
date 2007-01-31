@@ -945,14 +945,14 @@ class blogops extends object
                     $tbl->align = "center";
                     //set up the header row
                     $tbl->startHeaderRow();
-                    $tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_editpost", "blog")); //edit
-                    $tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_bookmarkpost", "blog")); //bookmark
+                    $tbl->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_editpost", "blog")); //edit
+                    $tbl->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_bookmarkpost", "blog")); //bookmark
                     if($post['comment_status'] == 'Y' || $post['comment_status'] == 'on')
                 	{
-                    	$tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_leavecomment", "blog")); //comments
+                    	$tbl->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_leavecomment", "blog")); //comments
                 	}
-                    $tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_trackbackurl", "blog")); //trackback
-                    $tbl->addHeaderCell($this->objLanguage->languageText("mod_blog_cclic", "blog")); //Licence
+                    $tbl->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_trackbackurl", "blog")); //trackback
+                    $tbl->addHeaderCell('');//$this->objLanguage->languageText("mod_blog_cclic", "blog")); //Licence
                     $tbl->endHeaderRow();
                     $tbl->startRow();
                     $tbl->addCell($edIcon); //edit icon
@@ -994,13 +994,13 @@ class blogops extends object
                     $tblnl->align = "center";
                     //set up the header row
                     $tblnl->startHeaderRow();
-                    $tblnl->addHeaderCell($this->objLanguage->languageText("mod_blog_bookmarkpost", "blog")); //bookmark
-                    $tblnl->addHeaderCell($this->objLanguage->languageText("mod_blog_trackbackurl", "blog")); //trackback
+                    $tblnl->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_bookmarkpost", "blog")); //bookmark
+                    $tblnl->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_trackbackurl", "blog")); //trackback
                     if($post['comment_status'] == 'Y' || $post['comment_status'] == 'on')
                 	{
-                    	$tblnl->addHeaderCell($this->objLanguage->languageText("mod_blog_leavecomment", "blog"));
+                    	$tblnl->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_leavecomment", "blog"));
                 	}
-                    $tblnl->addHeaderCell($this->objLanguage->languageText("mod_blog_cclic", "blog")); //Licence
+                    $tblnl->addHeaderCell('');//$this->objLanguage->languageText("mod_blog_cclic", "blog")); //Licence
                     $tblnl->endHeaderRow();
                     $tblnl->startRow();
                     $tblnl->addCell($bookmark->show()); //bookmark link(s)
