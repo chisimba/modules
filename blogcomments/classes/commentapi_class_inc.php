@@ -210,10 +210,12 @@ class commentapi extends object
 			$auth = $comm['comment_author'];
 			$authurl = $comm['comment_author_url'];
 			$authemail = $comm['comment_author_email'];
-			$link = new href(urlencode($authurl), $auth, NULL);
-			$authhead = $link->show();
+			//$link = new href(urlencode($authurl), $auth, NULL);
+			//$link->show();
+
 			$authemail = "[".$authemail."]";
-			$fboxhead = $authhead . " " . $authemail;
+			$authhead = $auth . " " . $authemail; // . " (".htmlentities($authurl).")";
+			$fboxhead = $authhead; // . " " . $authemail;
 
 			$fboxcontent = stripslashes($comm['comment_content']);
 
