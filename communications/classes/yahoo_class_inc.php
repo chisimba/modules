@@ -51,6 +51,7 @@ class yahoo extends object
     {
         if ( $mode == 'byuserid' ) {
             //$yahooId = $this->objDbUserparams->getValue('YAHOO', $yahooId);
+            $yahooId = '';
             if (!$yahooId) {
                 $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_yahoonoidreg",'communications');
                 $this->objIcon->setIcon("yahoo_noid");

@@ -55,6 +55,7 @@ class icq extends object
     {
         if ( $mode == 'byuserid' ) {
             //$icq = $this->objDbUserparams->getValue('ICQ', $icq);
+            $icq = '';
             if (!$icq) {
                 $this->objIcon->alt=$this->objLanguage->languageText("mod_communications_icqnoidreg",'communications');
                 $this->objIcon->setIcon("icq_noid");
