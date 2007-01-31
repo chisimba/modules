@@ -67,7 +67,11 @@ class consol_postlogin extends controller
         switch ($this->action) {
             //Default to view and display view template
             case null:
-            	die("this functionality will come soon");
+            	return "main_tpl.php";
+            	//die("this functionality will come soon");
+            break;
+            case 'notnull':
+            	die("this functionality was triggered by the notnull function");
             break;
             default:
             break;
