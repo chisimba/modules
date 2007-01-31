@@ -39,6 +39,7 @@ foreach ($allUsers as $user) {
     // Get user email 
     $email = "<a href=\"mailto:" . $user["emailaddress"] . "\">" . $user["emailaddress"] . "</a>"; 
     // Create make buddy link or show is buddy icon
+    $makeBuddy = '';
     if ($user['userid'] == $objUser->userId()) {    	
     }
     else if (!$isBuddy[$index]) {

@@ -54,7 +54,7 @@ class buddies extends controller
                 foreach ($allUsers as $user) {
             		$objDbBuddies =& $this->getObject('dbbuddies');
             		$count = $objDbBuddies->countSingle($this->objUser->userId(), $user['userId']);
-                    $isBuddy[] = $count[0]['count(*)'] > 0;
+                    $isBuddy[] = $count[0]['count'] > 0;
                 }
 		        $this->setVarByRef('isBuddy', $isBuddy);
 				return "users_tpl.php";
@@ -76,7 +76,7 @@ class buddies extends controller
                 foreach ($allUsers as $user) {
             		$objDbBuddies =& $this->getObject('dbbuddies');
             		$count = $objDbBuddies->countSingle($this->objUser->userId(), $user['userid']);
-                    $isBuddy[] = $count[0]['count(*)'] > 0;
+                    $isBuddy[] = $count[0]['count'] > 0;
                 }
 		        $this->setVarByRef('isBuddy', $isBuddy);
 				return "users_tpl.php";
@@ -107,7 +107,7 @@ class buddies extends controller
                 foreach ($allUsers as $user) {
             		$objDbBuddies =& $this->getObject('dbbuddies');
             		$count = $objDbBuddies->countSingle($this->objUser->userId(), $user['userid']);
-                    $isBuddy[] = $count[0]['count(*)'] > 0;
+                    $isBuddy[] = $count[0]['count'] > 0;
                 }
 		        $this->setVarByRef('isBuddy', $isBuddy);
 				return "users_tpl.php";
@@ -119,7 +119,6 @@ class buddies extends controller
 		        $this->setVarByRef('buddies', $buddies);
 				break;
         	default:
-        		;
         } // switch
 		// Get Buddies
 		$objDbBuddies =& $this->getObject('dbbuddies'); 
@@ -142,7 +141,7 @@ class buddies extends controller
 			    $buddiesOnline[] = true;
 			}
            $Icq[]=$this->objIcq->getStatusIcon($buddy['buddyid'], 'byuserid');
-            $Yahoo[]=$this->objYahoo->getStatusIcon($buddy['buddyid'], 'byuserid');
+           $Yahoo[]=$this->objYahoo->getStatusIcon($buddy['buddyid'], 'byuserid');
 		}
 		return "main_tpl.php";
         //return "main_tpl.php";

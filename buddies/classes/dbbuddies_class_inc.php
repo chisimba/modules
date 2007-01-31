@@ -105,7 +105,7 @@ class dbBuddies extends dbTable
     */
 	public function countSingle($userId, $buddyId)
 	{
-		$sql = "SELECT count(*) FROM tbl_buddies
+		$sql = "SELECT count(*) AS count FROM tbl_buddies
         WHERE (userId = '" . $userId . "')
         AND (buddyId = '" . $buddyId . "')
         AND (isBuddy = '1')";
