@@ -36,13 +36,19 @@ class scriptaculous extends object
 	* This function locates the Scriptaculous JS and adds it to the headerParams of a page template
 	* It also loads the Prototype JS, since it depends on it.
 	*/
-	function show()
+	public function show()
 	{
-		// Load Prototype
-		$this->loadPrototype();
-		// Add Scriptaculous
-		return $this->appendArrayVar('headerParams', $this->getJavascriptFile('scriptaculous/1.6.5/scriptaculous.js', 'ajaxwrapper'));
+		// Add Scriptaculous to Header
+		return $this->appendArrayVar('headerParams', $this->putScriptaculous());
 	}
+    
+    /**
+    * Method to return the JavaScript Libraries
+    */
+    public function putScriptaculous()
+    {
+        return $this->getJavascriptFile('prototype/1.5.0_rc1/prototype.js', 'ajaxwrapper').$this->getJavascriptFile('scriptaculous/1.6.5/scriptaculous.js', 'ajaxwrapper');
+    }
 }
 
 ?>
