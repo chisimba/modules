@@ -39,9 +39,15 @@
       var map = new GMap2(document.getElementById("map"));
       map.addControl(new GLargeMapControl());
       map.addControl(new GMapTypeControl());
-      map.setCenter(new GLatLng(-33.799669,18.364472),6);
+      //map.setCenter(new GLatLng(-33.799669,18.364472),6);
+      map.setCenter(new GLatLng(-24.7333333,31.0333333),6);
+      
     
       // Set up three markers with info windows 
+      
+      var point = new GLatLng(-26.0500,28.0500);
+      var marker = createMarker(point,'Rivonia, the suburb of Johannesburg where 19 ANC leaders were arrested at Liliesleaf Farm, privately owned by Arthur Goldreich, on 11th July 1963.')
+      map.addOverlay(marker);
     
       var point = new GLatLng(-33.799569,18.364472);
       var marker = createMarker(point,'Nelson Mandela spent 27 years in prison, <br />most of them on Robben Island, in Table Bay, <br />near Cape Town<br /> <img src="http://www.robben-island.org.za/images/front_ani.gif"><br /><a href="http://en.wikipedia.org/wiki/Robben_Island" target="_blank">Read about Robben Island</a><br /><a href="link="http://localhost/chisimba/index.php?module=timeline&intervalPixels=80&focusDate=1950&intervalUnit=YEAR&timeLine=http://localhost/chisimba/experiments/timeline/madiba.xml">See timeline</a>')
