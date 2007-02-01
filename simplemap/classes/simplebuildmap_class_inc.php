@@ -43,6 +43,16 @@ class simplebuildmap extends object
         $this->objConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->width = $this->getParam('width', '800');
         $this->height = $this->getParam('height', '600');
+        $this->gLat = $this->getParam('gLat', '-33.799669');
+        $this->gLong = $this->getParam('gLong', '18.364472');
+        $this->magnify = $this->getParam('magnify', '12');
+        //Get an instance of the language object
+        $this->objLanguage = $this->getObject('language', 'language');
+    }
+    
+    function show()
+    {
+        //to do
     }
 
     /**
@@ -67,5 +77,23 @@ class simplebuildmap extends object
           . "px; height: " . $this->height . "px\"></div>";
     }
     
+    function getDemoFile()
+    {
+    	// Create the configuration object
+        $objRsConfig = $this->getObject('altconfig', 'config');
+        //Set the file type and get the file into a string
+		$this->fileType = "smap";        
+        $filename =  "http://localhost/" . $objRsConfig->getItem('MODULE_URI') . "simplemap/resources/jsmaps/madiba.smap";
+        $handle = fopen($filename, "r");
+		$contents = stream_get_contents($handle);
+		fclose($handle);
+        return $contents;
+    }
+    
+    function getNoScript()
+    {
+    	return "<noscript>" . $this->objLanguage->languageText("mod_simplemap_noscript", "simplemap") .  "</noscript>";
+    
+    }
 }
 ?>

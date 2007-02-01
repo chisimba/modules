@@ -112,7 +112,11 @@ class simplemap extends controller
     {
     	$this->setVar('pageSuppressXML', TRUE);
     	$str = $this->objBuildMap->insertMapLayer();
+    	$myMap = $this->objBuildMap->getDemoFile();
+    	$noScript = $this->objBuildMap->getNoScript();
+    	$str .= $noScript;
     	$this->setVarByRef('str', $str);
+    	$this->setVarByRef('myMap', $myMap);
         return "demomap_tpl.php";
     }
   
@@ -186,9 +190,8 @@ class simplemap extends controller
     * @return boolean TRUE|FALSE
     *
     */
-    public function requiresLogin()
+    public function requiresLogin($action)
     {
-        $action=$this->getParam('action','NULL');
         switch ($action)
         {
             case 'showdemo':
