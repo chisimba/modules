@@ -107,7 +107,7 @@ class cmsadmin extends controller
 	    */
         public function init()
         {
-        	try {       
+        	try {
                 // instantiate object
                 $this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
                 $this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
@@ -121,7 +121,7 @@ class cmsadmin extends controller
                 $this->_objContext = & $this->newObject('dbcontext', 'context');
 
                 $objModule = & $this->newObject('modules', 'modulecatalogue');
-                
+
                 //Load the ajax classes
                 $this->loadClass('xajax', 'ajaxwrapper');
                 $this->loadClass('xajaxresponse', 'ajaxwrapper');
@@ -135,12 +135,12 @@ class cmsadmin extends controller
 		   } catch (Exception $e){
        		    echo 'Caught exception: ',  $e->getMessage();
         	    exit();
-           }	    
+           }
         }
 
         /**
          * Method to handle actions from templates
-         * 
+         *
          * @access public
          * @param string $action Action to be performed
          * @return mixed Name of template to be viewed or function to call
@@ -195,7 +195,9 @@ class cmsadmin extends controller
 
                 case 'addsection':
                     // Generation of Ajax Scripts
-                    $ajax = new xajax($this->uri(array('action'=>'addsection'), 'cmsadmin'));
+                    $ajax = $this->getObject('xajax', 'ajaxwrapper');
+                    $ajax->setRequestUri($this->uri(array('action'=>'addsection'), 'cmsadmin'));
+                    //$ajax = new xajax($this->uri(array('action'=>'addsection'), 'cmsadmin'));
                     $ajax->registerFunction(array($this, 'processSection')); // Register another function in this controller
                     $ajax->processRequests(); // XAJAX method to be called
                     $this->appendArrayVar('headerParams', $ajax->getJavascript(NULL, $this->getResourceUri('xajax/0.2.4/xajax.js', 'ajaxwrapper'))); // Send JS to header
@@ -319,19 +321,19 @@ class cmsadmin extends controller
                     $pageId = $this->getParam('pageid', NULL);
                     $closePage = $this->getParam('closePage', FALSE);
                     switch ($blockCat) {
-                    
+
                     case 'frontpage':
                         $blockForm  = $this->_objBlocks->getAddRemoveBlockForm(NULL, NULL, 'frontpage');
                         break;
-                    
+
                     case 'section':
                         $blockForm  = $this->_objBlocks->getAddRemoveBlockForm(NULL, $sectionId, 'section');
-                        break;    
+                        break;
 
                     case 'content':
                         $blockForm  = $this->_objBlocks->getAddRemoveBlockForm($pageId, NULL, 'content');
                         break;
-                            
+
                     }
                     $this->setVarByRef('closePage', $closePage);
                     $this->setVarByRef('blockForm', $blockForm);
@@ -343,7 +345,7 @@ class cmsadmin extends controller
                     $pageId = $this->getParam('pageid', NULL);
                     //Get the section id of the page to add the block to
                     $sectionId = $this->getParam('sectionid', NULL);
-                    
+
                     if ($blockCat == 'frontpage') {
                         //Get blocks on the frontpage
                         $currentBlocks = $this->_objBlocks->getBlocksForFrontPage();
@@ -354,10 +356,10 @@ class cmsadmin extends controller
                         //Get all blocks already on the section
                         $currentBlocks = $this->_objBlocks->getBlocksForSection($sectionId);
                     }
-                    
+
                     //Get all available blocks
                     $blocks = $this->_objBlocks->getBlockEntries();
-                    
+
                     foreach($blocks as $block) {
                         $exists = FALSE;
                         $blockName = $block['blockname'];
@@ -375,7 +377,7 @@ class cmsadmin extends controller
                             if(!$exists) {
                                 $this->_objBlocks->add($pageId, $sectionId, $blockId, $blockCat);
                             }
-                        //If block isn't in list to be added check if it exists and delete it    
+                        //If block isn't in list to be added check if it exists and delete it
                         } else {
                             if($exists) {
                                 $this->_objBlocks->deleteBlock($pageId, $sectionId, $blockId, $blockCat);
@@ -414,7 +416,7 @@ class cmsadmin extends controller
                     $pageId = $this->getParam('pageid');
                     $blockId = $this->getParam('blockid');
                     $this->_objBlocks->add($pageId, NULL, $blockId, 'content');
-                    
+
                     echo $this->createReturnBlock($blockId, 'usedblock');
 
                     break;
@@ -422,38 +424,38 @@ class cmsadmin extends controller
                     $pageId = $this->getParam('pageid');
                     $blockId = $this->getParam('blockid');
                     $this->_objBlocks->deleteBlock($pageId, NULL, $blockId, 'content');
-                    
+
                     echo $this->createReturnBlock($blockId, 'addblocks');
                     break;
                 case 'adddynamicfrontpageblock':
                     $blockId = $this->getParam('blockid');
                     $this->_objBlocks->add(NULL, NULL, $blockId, 'frontpage');
-                    
+
                     echo $this->createReturnBlock($blockId, 'usedblock');
 
                     break;
                 case 'removedynamicfrontpageblock':
                     $blockId = $this->getParam('blockid');
                     $this->_objBlocks->deleteBlock(NULL, NULL, $blockId, 'frontpage');
-                    
+
                     echo $this->createReturnBlock($blockId, 'addblocks');
                     break;
                 }
-                
-                
+
+
         }
-        
+
         private function createReturnBlock($blockId, $cssClass)
         {
             $objModuleBlocks =& $this->getObject('dbmoduleblocks', 'modulecatalogue');
             $objBlocks =& $this->getObject('blocks', 'blocks');
-            
+
             $blockRow = $objModuleBlocks->getRow('id', $blockId);
-            
+
             $str = trim($objBlocks->showBlock($blockRow['blockname'], $blockRow['moduleid']));
             $str = preg_replace('/type\\s??=\\s??"submit"/', 'type="button"', $str);
             $str = preg_replace('/href=".+?"/', 'href="javascript:alert(\''.$this->objLanguage->languageText('mod_cmsadmin_linkdisabled', 'cmsadmin', 'Link is Disabled.').'\');"', $str);
-            
+
             return '<div class="'.$cssClass.'" id="'.$blockRow['id'].'" style="border: 1px solid lightgray; padding: 5px; width:150px; float: left; z-index:20;">'.$str.'</div>';
         }
 
@@ -498,7 +500,7 @@ class cmsadmin extends controller
                 $objResponse->addAssign('showintrolabel','style.display', 'none');
                 $objResponse->addAssign('showintrocol','style.display', 'none');
             }
-            
+
             $objResponse->addScript('adjustLayout();');
 
             return $objResponse->getXML();
