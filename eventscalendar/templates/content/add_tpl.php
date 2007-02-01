@@ -19,6 +19,7 @@ $endTime =  & $this->newObject('textinput', 'htmlelements');
 $location =  & $this->newObject('textinput', 'htmlelements');
 //a button
 $button =  & $this->newObject('button', 'htmlelements');
+$button2 =  & $this->newObject('button', 'htmlelements');
 //$objFeatureBox
 $objFeatureBox = & $this->newObject('featurebox', 'navigation');
 //dropdown
@@ -99,6 +100,10 @@ $button->label = "&nbsp;";
 $button->setCSS("f-submit");
 
 
+$button2->value = "Back";
+$button2->label = "&nbsp;";
+$button2->setOnClick('javascript:history.back(-1)');
+
 //check if the user is in a context and if he is a
 // lecturer in that context to add events to it.
 //add a drop dowon for the user to select the type of event this is
@@ -158,7 +163,7 @@ $objForm->addToForm($objDatePicker);
 //$objForm->addToForm('Start Time</td><td>'.$this->_objUtils->getTimeDropDown('startTime'));
 //$objForm->addToForm('End Time</td><td>'.$this->_objUtils->getTimeDropDown('endTime'));
 $objForm->addToForm($objEditor);
-$objForm->addToForm($button);
+$objForm->addToForm($button->show().$button2->show());
 
 //print "<h1> ".$heading."</h1>";
 print $objFeatureBox->show($heading, $objForm->show());
