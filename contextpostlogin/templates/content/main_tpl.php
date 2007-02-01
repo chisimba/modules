@@ -33,7 +33,7 @@ if (count($contextList) > 0)
 		}
 		
 		$content = '<span class="caption">Instructors : '.$lects.'</span>';
-		$content .= '<p>'.$context['about'].'</p>';
+		$content .= '<p>'.stripslashes($context['about']).'</p>';
 		$content .= '<p>'.$this->_objUtils->getPlugins($context['contextcode']).'</p>';
 		
 		$contextCode = $context['contextcode'];
