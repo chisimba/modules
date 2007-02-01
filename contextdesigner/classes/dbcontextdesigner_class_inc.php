@@ -116,7 +116,7 @@ class dbcontextdesigner extends dbTable
         
          $contextCode = (is_null($contextCode)) ? $this->_contextCode : $contextCode;
         
-        $linksArr = $this->getAll("WHERE contextcode = '".$contextCode."' AND access='Published ORDER BY linkorder");
+        $linksArr = $this->getAll("WHERE contextcode = '{$contextCode}' AND access='Published' ORDER BY linkorder");
         if(count($linksArr) > 0)
         { 
             return $linksArr;
