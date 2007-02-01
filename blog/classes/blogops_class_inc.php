@@ -1960,7 +1960,7 @@ class blogops extends object
      * @param string $userid
      * @return array
      */
-    public function blogTagCloud($userid)
+    public function blogTagCloud($userid, $showOrHide = 'none')
     {
         $this->objTC = $this->getObject('tagcloud', 'utilities');
         //get all the tags
@@ -1990,7 +1990,25 @@ class blogops extends object
             $ret[] = $tag4cloud;
         }
 
-        return $this->objTC->buildCloud($ret);
+		$this->setVar('pageSuppressXML',true);
+        $icon = $this->getObject('geticon', 'htmlelements');
+        $icon->setIcon('up');
+        $scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
+                      <script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
+                      <script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
+        $this->appendArrayVar('headerParams',$scripts);
+        $str = "<a href=\"#\" onclick=\"Effect.SlideUp('contextmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
+        $icon->setIcon('down');
+        $str .="<a href=\"#\" onclick=\"Effect.SlideDown('contextmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
+
+        $str .='<div id="contextmenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
+        $str .= $this->objTC->buildCloud($ret);
+        $str .= '</div>';
+
+        $objFeatureBox = $this->getObject('featurebox', 'navigation');
+        return $objFeatureBox->show($this->objLanguage->languagetext("mod_blog_tagcloud", "blog"), $str);
+        //return $str;
+        //return $this->objTC->buildCloud($ret);
     }
     /**
      * Method to show the trackbacks in the trackback table to the user on a singleview post display
