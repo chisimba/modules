@@ -94,7 +94,7 @@ class dbcontextdesigner extends dbTable
     {
         $contextCode = (is_null($contextCode)) ? $this->_contextCode : $contextCode;
         
-        $linksArr = $this->getAll('WHERE contextcode = "'.$contextCode.'" ORDER BY linkorder');
+        $linksArr = $this->getAll("WHERE contextcode = '".$contextCode."' ORDER BY linkorder");
         if(count($linksArr) > 0)
         { 
             return $linksArr;
@@ -116,7 +116,7 @@ class dbcontextdesigner extends dbTable
         
          $contextCode = (is_null($contextCode)) ? $this->_contextCode : $contextCode;
         
-        $linksArr = $this->getAll('WHERE contextcode = "'.$contextCode.'" AND access="Published" ORDER BY linkorder');
+        $linksArr = $this->getAll("WHERE contextcode = '".$contextCode."' AND access='Published ORDER BY linkorder");
         if(count($linksArr) > 0)
         { 
             return $linksArr;
@@ -169,7 +169,7 @@ class dbcontextdesigner extends dbTable
     public function checkExist($contextCode, $params, $moduleid)
     {
         
-        $record = $this->getAll('WHERE contextcode="'.$contextCode.'" AND params="'.$params.'" AND moduleid="'.$moduleid.'"');
+        $record = $this->getAll("WHERE contextcode='".$contextCode."' AND params='".$params."' AND moduleid='".$moduleid."'");
         if(count($record) > 0 )
         {
             return TRUE;
@@ -241,7 +241,7 @@ class dbcontextdesigner extends dbTable
     public function getAllLinks()
     {
         
-        return $this->getAll('WHERE contextcode = "'.$this->_contextCode.'" ORDER BY linkorder, updated');
+        return $this->getAll("WHERE contextcode = '".$this->_contextCode."' ORDER BY linkorder, updated");
     }
     
     /**
@@ -257,7 +257,7 @@ class dbcontextdesigner extends dbTable
         $lowerRecord = $this->getRow('id', $id);
      
         $position = intval($lowerRecord['linkorder']) - 1;
-        $upperRecord = $this->getAll('WHERE contextcode="'.$this->_contextCode.'" AND linkorder= '. $position );
+        $upperRecord = $this->getAll("'WHERE contextcode='".$this->_contextCode."' AND linkorder= ". $position );
         
         if(count($upperRecord[0]) > 0)
         {
@@ -284,7 +284,7 @@ class dbcontextdesigner extends dbTable
         $upperRecord = $this->getRow('id', $id);
      
         $position = intval($upperRecord['linkorder']) + 1;
-        $lowerRecord = $this->getAll('WHERE contextcode="'.$this->_contextCode.'" AND linkorder= '. $position );
+        $lowerRecord = $this->getAll("WHERE contextcode='".$this->_contextCode."' AND linkorder= ". $position );
         
         if(count($lowerRecord[0]) > 0)
         {
