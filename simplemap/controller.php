@@ -32,6 +32,7 @@ class simplemap extends controller
     * logger object for logging user activity
     */
     public $objLog;
+    public $objBuldMap;
 
     /**
      * Intialiser for the stories controller
@@ -44,6 +45,8 @@ class simplemap extends controller
         $this->objLanguage = $this->getObject('language', 'language');
         // Create the configuration object
         $this->objConfig = $this->getObject('config', 'config');
+        //Instantiate the simplebuildmap class
+        $this->objBuildMap = $this->getObject('simplebuildmap', 'simplemap');
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
         //Log this module call
@@ -73,6 +76,7 @@ class simplemap extends controller
         $this->_addMapScriptToPage();
         //Add the onunload method to the body
         $this->_addOnUnloadToBody();
+        
         /*
         * Return the template determined by the method resulting 
         * from action
@@ -82,7 +86,10 @@ class simplemap extends controller
     
     function _addMapScriptToPage()
     {
-        $hScript = "<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAASzlWuBpqyHQoPD8OwyyFRhS9klZkf-a3YMqrNEgglGl8tlkEvBRUarouiwsLMxDlMc20SE2jC_GQmg\" type=\"text/javascript\"></script>";
+    	//Read the API key from sysconfig
+    	$apiKey = $this->objBuildMap->getApiKey();
+    	//ABQIAAAASzlWuBpqyHQoPD8OwyyFRhS9klZkf-a3YMqrNEgglGl8tlkEvBRUarouiwsLMxDlMc20SE2jC_GQmg
+        $hScript = "<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;key=" . $apiKey . "\" type=\"text/javascript\"></script>";
         //Add the local script to the page header
         $this->appendArrayVar('headerParams',$hScript);
     }

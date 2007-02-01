@@ -20,7 +20,16 @@ if (!$GLOBALS['kewl_entry_point_run'])
 */
 class simplebuildmap extends object 
 {
-
+    /**
+    * 
+    * @var $objConfig String object property for holding the 
+    * configuration object
+    * @access public
+    * 
+    */
+    public $objConfig;
+    
+    
     /**
     *
     * Standard init method
@@ -28,18 +37,24 @@ class simplebuildmap extends object
     */
     function init()
     {
-        //Put your code here
+        //Create the configuration object
+        $this->objConfig = $this->getObject('dbsysconfig', 'sysconfig');
     }
 
     /**
     *
-    * Your method description. Please follow correct
-    * PHP Documentor style
+    * Method to return the google maps API key for the current site.
+    * The API key is specific to site and directory, so if you change the 
+    * directory your Chisimba installation is working from, then you
+    * need to obtain a new key.
+    * 
+    * @access public
+    * @return String The google API key 
     *
     */
     function getApiKey()
     {
-        //Put your code here
+		return $this->objConfig->getValue('mod_simplemap_apikey', 'simplemap');
     }
 }
 ?>
