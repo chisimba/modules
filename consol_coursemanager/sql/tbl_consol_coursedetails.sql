@@ -1,5 +1,7 @@
+<?php
+
 //5ive definition for table tbl_consol_coursedetails
-$tablename = 'tbl_consol_coursederails.sql';
+$tablename = 'tbl_consol_coursederails';
 
 //Options line for comments, encoding and character set
 $options = array('comment' => 'Used to store course details', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
