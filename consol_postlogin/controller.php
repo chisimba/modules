@@ -70,8 +70,9 @@ class consol_postlogin extends controller
             	return "main_tpl.php";
             	//die("this functionality will come soon");
             break;
-            case 'notnull':
-            	die("this functionality was triggered by the notnull function");
+            case 'addcourse':
+               $this->nextAction('addcourse',array('action'=>'addcourse'),'consol_coursemanager');	
+		      	//die("this functionality was triggered by the notnull function");
             break;
             default:
             break;
