@@ -1016,6 +1016,7 @@ class blogops extends object
                     	$tblnl->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_leavecomment", "blog"));
                 	}
                     $tblnl->addHeaderCell('');//$this->objLanguage->languageText("mod_blog_cclic", "blog")); //Licence
+                    $tblnl->addHeaderCell('');
                     $tblnl->endHeaderRow();
                     $tblnl->startRow();
                     $tblnl->addCell($bookmark->show()); //bookmark link(s)
@@ -1025,6 +1026,7 @@ class blogops extends object
                     	$tblnl->addCell($this->setComments($post, FALSE) ." ".$commentCount);
                 	}
                     $tblnl->addCell($iconList); //cc licence
+                    $tblnl->addCell($pdflink->show()); //pdf icon
                     $tblnl->endRow();
                     //echo $this->objTB->autodiscCode();
                     //tack the tags onto the end of the post content...

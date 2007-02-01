@@ -1615,7 +1615,7 @@ class blog extends controller
         	//put it all together
         	//get the pdfmaker classes
         	$objPdf = $this->getObject('fpdfwrapper','pdfmaker');
-        	$text = $header . "  " . $postdate . "\r\n" . $body;
+        	$text = $header . "  " . $postdate . "\r\n" . strip_tags($body);
         	$objPdf->simplePdf($text);
         	//$this->nextAction('');
 
