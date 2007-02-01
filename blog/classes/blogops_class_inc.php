@@ -1026,6 +1026,15 @@ class blogops extends object
                     	$tblnl->addCell($this->setComments($post, FALSE) ." ".$commentCount);
                 	}
                     $tblnl->addCell($iconList); //cc licence
+                    $pdficon = $this->newObject('geticon', 'htmlelements');
+            		$pdficon->setIcon('filetypes/pdf');
+            		$lblView = $this->objLanguage->languageText("mod_blog_saveaspdf", "blog");
+            		$pdficon->alt = $lblView;
+            		$pdficon->align = false;
+            		$pdfimg = $pdficon->show();
+
+                    $pdflink = new href($pdfurl, $pdfimg, NULL);
+
                     $tblnl->addCell($pdflink->show()); //pdf icon
                     $tblnl->endRow();
                     //echo $this->objTB->autodiscCode();
