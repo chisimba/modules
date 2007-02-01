@@ -300,7 +300,7 @@ class assignment extends controller
     {
         $id = $this->saveAssign();
         if(!($id === FALSE)){
-            $msg = $this->objLanguage->languageText('mod_assignment_confirmsubmit');
+            $msg = $this->objLanguage->languageText('mod_assignment_confirmsubmit','assignment');
         }
         return $this->nextAction('',array('confirm'=>$msg));
     }
