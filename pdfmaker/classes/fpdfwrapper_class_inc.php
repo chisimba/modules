@@ -5,7 +5,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	die("You cannot view this page directly");
 }
 // end security check
-require_once($this->getResourcePath('fpdf.php', 'pdfgen'));
+require_once($this->getResourcePath('fpdf.php', 'pdfmaker'));
 class fpdfwrapper extends object
 {
 	public $pdf;
