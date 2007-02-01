@@ -28,6 +28,8 @@ class simplebuildmap extends object
     * 
     */
     public $objConfig;
+    public $width;
+	public $height;
     
     
     /**
@@ -39,6 +41,8 @@ class simplebuildmap extends object
     {
         //Create the configuration object
         $this->objConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->width = $this->getParam('width', '800');
+        $this->height = $this->getParam('height', '600');
     }
 
     /**
@@ -56,5 +60,12 @@ class simplebuildmap extends object
     {
 		return $this->objConfig->getValue('mod_simplemap_apikey', 'simplemap');
     }
+    
+    function insertMapLayer()
+    {
+        return "<div id=\"map\" style=\"width: " . $this->width 
+          . "px; height: " . $this->height . "px\"></div>";
+    }
+    
 }
 ?>

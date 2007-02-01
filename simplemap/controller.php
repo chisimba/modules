@@ -76,7 +76,6 @@ class simplemap extends controller
         $this->_addMapScriptToPage();
         //Add the onunload method to the body
         $this->_addOnUnloadToBody();
-        
         /*
         * Return the template determined by the method resulting 
         * from action
@@ -112,6 +111,8 @@ class simplemap extends controller
     private function __showdemo()
     {
     	$this->setVar('pageSuppressXML', TRUE);
+    	$str = $this->objBuildMap->insertMapLayer();
+    	$this->setVarByRef('str', $str);
         return "demomap_tpl.php";
     }
   

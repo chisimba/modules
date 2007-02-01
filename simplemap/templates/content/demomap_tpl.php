@@ -4,8 +4,10 @@
  * Created on Jan 29, 2007
  * 
  */
+ //Echo the map layer to the page
+ echo $str;
 ?>
-<div id="map" style="width: 800px; height: 600px"></div>
+<!--div id="map" style="width: 800px; height: 600px"></div-->
  
 
 
