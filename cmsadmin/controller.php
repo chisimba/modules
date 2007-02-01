@@ -200,7 +200,7 @@ class cmsadmin extends controller
                     //$ajax = new xajax($this->uri(array('action'=>'addsection'), 'cmsadmin'));
                     $ajax->registerFunction(array($this, 'processSection')); // Register another function in this controller
                     $ajax->processRequests(); // XAJAX method to be called
-                    $this->appendArrayVar('headerParams', $ajax->getJavascript(NULL, $this->getResourceUri('xajax/0.2.4/xajax.js', 'ajaxwrapper'))); // Send JS to header
+                    //$this->appendArrayVar('headerParams', $ajax->getJavascript(NULL, $this->getResourceUri('xajax/0.2.4/xajax.js', 'ajaxwrapper'))); // Send JS to header
                     //Get form
                     $addEditForm = $this->_objUtils->getAddEditSectionForm($this->getParam('id'), $this->getParam('parentid'));
                     $this->setVarByRef('addEditForm', $addEditForm);
