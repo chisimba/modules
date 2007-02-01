@@ -273,7 +273,7 @@ class podcast extends controller
         $rssFeed = $this->getObject('itunesrssgenerator');
         
         if ($id == '') {
-            $podcasts = $this->objPodcast->getLast10();
+            $podcasts = $this->objPodcast->getLast5();
             $rssFeed->title = $this->objLanguage->languageText('mod_podcast_latestpodcastson', 'podcast').' '.$this->objConfig->getinstitutionName();
             $rssFeed->rssfeedlink = $this->uri(array('action'=>'rssfeed'));
             $rssFeed->description = $this->objLanguage->languageText('mod_podcast_latestpodcastdescription', 'podcast').' '.$this->objConfig->getinstitutionName().' - '.$this->objConfig->getsiteRoot();

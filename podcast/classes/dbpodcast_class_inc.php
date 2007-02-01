@@ -78,7 +78,7 @@ class dbpodcast extends dbTable
      */
     public function getLast5()
     {
-        $sql = 'SELECT tbl_podcast.*, filename, playtime, filesize, license FROM tbl_podcast 
+        $sql = 'SELECT tbl_podcast.*, filename, playtime, filesize, license, path FROM tbl_podcast 
         LEFT JOIN tbl_files ON (tbl_podcast.fileid = tbl_files.id)
         LEFT JOIN tbl_files_metadata_media ON (tbl_podcast.fileid = tbl_files_metadata_media.fileid)
         ORDER BY tbl_podcast.datecreated DESC LIMIT 5';
@@ -116,7 +116,7 @@ class dbpodcast extends dbTable
     public function getUserPodcasts($userId)
     {
         //return $this->getAll('ORDER BY datecreated LIMIT 10');
-        $sql = 'SELECT tbl_podcast.*, filename, playtime, filesize, license FROM tbl_podcast 
+        $sql = 'SELECT tbl_podcast.*, filename, playtime, filesize, license, path FROM tbl_podcast 
         LEFT JOIN tbl_files ON (tbl_podcast.fileid = tbl_files.id)
         LEFT JOIN tbl_files_metadata_media ON (tbl_podcast.fileid = tbl_files_metadata_media.fileid)
         WHERE tbl_podcast.creatorid = \''.$userId.'\'
