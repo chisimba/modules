@@ -848,6 +848,12 @@ class blogops extends object
                     'module' => 'blog',
                     'postid' => $post['id']
                 ));
+                $pdfurl = $this->uri(array(
+                    'action' => 'makepdf',
+                    'userid' => $post['userid'],
+                    'module' => 'blog',
+                    'postid' => $post['id']
+                ));
                 $extra = NULL;
                 $tbdata = array(
                     'id' => $post['id'],
@@ -953,6 +959,7 @@ class blogops extends object
                 	}
                     $tbl->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_trackbackurl", "blog")); //trackback
                     $tbl->addHeaderCell('');//$this->objLanguage->languageText("mod_blog_cclic", "blog")); //Licence
+                    $tbl->addHeaderCell(''); //save as pdf
                     $tbl->endHeaderRow();
                     $tbl->startRow();
                     $tbl->addCell($edIcon); //edit icon
@@ -963,7 +970,15 @@ class blogops extends object
                 	}
                     $tbl->addCell($tburl); //trackback URL
                     $tbl->addCell($iconList); //cc licence
-                    $tbl->addCell('');
+                    $pdficon = $this->newObject('geticon', 'htmlelements');
+            		$pdficon->setIcon('filetypes/pdf');
+            		$lblView = $this->objLanguage->languageText("mod_blog_saveaspdf", "blog");
+            		$pdficon->alt = $lblView;
+            		$pdficon->align = false;
+            		$pdfimg = $pdficon->show();
+
+                    $pdflink = new href($pdfurl, $pdfimg, NULL);
+                    $tbl->addCell($pdflink->show());
                     $tbl->endRow();
                     echo $this->objTB->autodiscCode();
                     //tack the tags onto the end of the post content...

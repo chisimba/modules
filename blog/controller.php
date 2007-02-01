@@ -1602,6 +1602,23 @@ class blog extends controller
         	return 'viewprofile_tpl.php';
         	break;
 
+        case 'makepdf':
+        	$userid = $this->getParam('userid');
+        	$postid = $this->getParam('postid');
+        	//go and fetch the post in question from the db
+        	$data = $this->objDbBlog->getPostByPostID($postid);
+        	//create the pdf and send it out
+        	$header = $data[0]['post_title'];
+        	$body = $data[0]['post_content'];
+        	$postdate = $data[0]['post_date'];
+
+        	//put it all together
+        	//get the pdfmaker classes
+        	$objPdf = $this->getObject('fpdfwrapper','pdfmaker');
+        	$text = $header . "  " . $postdate . "\r\n" . $body;
+        	$objPdf->simplePdf($text);
+        	//$this->nextAction('');
+
         }//action
 
     }
