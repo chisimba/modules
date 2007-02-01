@@ -2,7 +2,7 @@
 /**
  * This template outputs the front page manager
  * for the cms module
- * 
+ *
  * @package cmsadmin
  * @author Warren Windvogel
  * @author Wesley Nitskie
@@ -106,27 +106,27 @@ echo '<h1>'.$this->objLanguage->languageText('mod_cmsadmin_frontpageblocks', 'cm
 
     $blocks = $objModuleBlocks->getBlocks('normal');
     $thisPageBlocks = $objCMSBlocks->getBlocksForFrontPage();
-    
-    echo '<div id="dropzone" style="border: 1px dashed black; background-color: lightyellow; z-index:1; position: relative"><h3>'.$this->objLanguage->languageText('mod_cmsadmin_addedblocks', 'cmsadmin', 'Added Blocks').'</h3><p>'.$this->objLanguage->languageText('mod_cmsadmin_dragaddblocks', 'cmsadmin', 'Drag and drop the blocks you want to add here.').'</p>';
-    
+
+    echo '<div id="dropzone" style="border: 1px dashed black; background-color: lightyellow; z-index:1; position: relative">'.$this->objLanguage->languageText('mod_cmsadmin_addedblocks', 'cmsadmin', 'Added Blocks').'</h3><p>'.$this->objLanguage->languageText('mod_cmsadmin_dragaddblocks', 'cmsadmin', 'Drag and drop the blocks you want to add here.').'</p>';
+
     $usedBlocks = array();
-    
+
     foreach ($thisPageBlocks as $block)
     {
         $str = trim($objBlocks->showBlock($block['blockname'], $block['moduleid']));
         $str = preg_replace('/type\\s??=\\s??"submit"/', 'type="button"', $str);
         $str = preg_replace('/href=".+?"/', 'href="javascript:alert(\''.$this->objLanguage->languageText('mod_cmsadmin_pageblocks', 'cmsadmin', 'Page Blocks').'</h3><p>'.$this->objLanguage->languageText('mod_cmsadmin_linkdisabled', 'cmsadmin', 'Link is Disabled.').'\');"', $str);
-        
+
         $usedBlocks[] = $block['blockid'];
-        
+
         echo '<div class="usedblock" id="'.$block['blockid'].'" style="border: 1px solid lightgray; padding: 5px; width:150px; float: left; z-index:1000;">'.$str.'</div>';
     }
     echo '</div>';
 
     echo '<br clear="left" /><br /><br />';
-    
+
     echo '<div id="loading" style="visibility:visible; float: right;">'.$objIcon->show().'</div>';
-    
+
     echo '<div id="deletezone" style="border: 1px dashed black; background-color: lightyellow; position: relative"><h3>'.$this->objLanguage->languageText('mod_cmsadmin_availableblocks', 'cmsadmin', 'Available Blocks').'</h3><p>'.$this->objLanguage->languageText('mod_cmsadmin_dragremoveblocks', 'cmsadmin', 'Drag and drop the blocks you want to remove here.').'</p>';
     foreach ($blocks as $block)
     {
@@ -134,7 +134,7 @@ echo '<h1>'.$this->objLanguage->languageText('mod_cmsadmin_frontpageblocks', 'cm
             $str = trim($objBlocks->showBlock($block['blockname'], $block['moduleid']));
             $str = preg_replace('/type\\s??=\\s??"submit"/', 'type="button"', $str);
             $str = preg_replace('/href=".+?"/', 'href="javascript:alert(\''.$this->objLanguage->languageText('mod_cmsadmin_linkdisabled', 'cmsadmin', 'Link is Disabled.').'\');"', $str);
-            
+
             echo '<div class="addblocks" id="'.$block['id'].'" style="border: 1px solid lightgray; padding: 5px; width:150px; float: left; z-index:1000;">'.$str.'</div>';
         }
     }
@@ -208,7 +208,7 @@ echo '<h1>'.$this->objLanguage->languageText('mod_cmsadmin_frontpageblocks', 'cm
     {
     	var addblocks = document.getElementsByClassName('addblocks');
     	for (var i = 0; i < addblocks.length; i++) {
-    		new Draggable(addblocks[i].id, {ghosting:false, revert:true, zIndex:100});	
+    		new Draggable(addblocks[i].id, {ghosting:false, revert:true, zIndex:100});
     	}
     	Droppables.add('dropzone', {onDrop:addBlock, accept:'addblocks'});
     }
@@ -216,10 +216,10 @@ echo '<h1>'.$this->objLanguage->languageText('mod_cmsadmin_frontpageblocks', 'cm
     Method to make the used blocks draggable. Also sets up drop zone
     */
     function setupDeleteBlocks()
-    {   
+    {
         var deleteblocks = document.getElementsByClassName('usedblock');
     	for (var i = 0; i < deleteblocks.length; i++) {
-    		new Draggable(deleteblocks[i].id, {ghosting:false, revert:true, zIndex:1000})	
+    		new Draggable(deleteblocks[i].id, {ghosting:false, revert:true, zIndex:1000})
     	}
     	Droppables.add('deletezone', {onDrop:removeBlock, accept:'usedblock'});
     }

@@ -1042,10 +1042,10 @@ class cmsutils extends object
             //Layout radio
             $radio = new radio ('display');
             $radio->id = 'display';
-            $radio->addOption('page', $this->objLanguage->languageText('mod_cmsadmin_layout_pagebypage', 'cmsadmin')."<br /><img src='$this->getResourceUri('section_page.gif', 'cmsadmin')' />");
-            $radio->addOption('previous', $this->objLanguage->languageText('mod_cmsadmin_layout_previouspagebelow', 'cmsadmin')."<br /><img src='$this->getResourceUri('section_previous.gif', 'cmsadmin')' />");
-            $radio->addOption('list', $this->objLanguage->languageText('mod_cmsadmin_layout_listofpages', 'cmsadmin')."<br /><img src='$this->getResourceUri('section_list.gif', 'cmsadmin')' />");
-            $radio->addOption('summaries', $this->objLanguage->languageText('mod_cmsadmin_layout_summaries', 'cmsadmin')."<br /><img src='$this->getResourceUri('section_summaries.gif', 'cmsadmin')' />"); // Deactivated so long - will activate once done
+            $radio->addOption('page', $this->objLanguage->languageText('mod_cmsadmin_layout_pagebypage', 'cmsadmin')."<br /><img src='{$this->getResourceUri('section_page.gif', 'cmsadmin')}' />");
+            $radio->addOption('previous', $this->objLanguage->languageText('mod_cmsadmin_layout_previouspagebelow', 'cmsadmin')."<br /><img src='{$this->getResourceUri('section_previous.gif', 'cmsadmin')}' />");
+            $radio->addOption('list', $this->objLanguage->languageText('mod_cmsadmin_layout_listofpages', 'cmsadmin')."<br /><img src='{$this->getResourceUri('section_list.gif', 'cmsadmin')}' />");
+            $radio->addOption('summaries', $this->objLanguage->languageText('mod_cmsadmin_layout_summaries', 'cmsadmin')."<br /><img src='{$this->getResourceUri('section_summaries.gif', 'cmsadmin')}' />"); // Deactivated so long - will activate once done
             $radio->extra = 'onchange="xajax_processSection(this.value);"';
             $radio->setBreakSpace('table');
             $radio->tableColumns = 4;
