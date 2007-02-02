@@ -46,6 +46,7 @@ class simplebuildmap extends object
         $this->gLat = $this->getParam('gLat', '-33.799669');
         $this->gLong = $this->getParam('gLong', '18.364472');
         $this->magnify = $this->getParam('magnify', '6');
+        $this->smap = $this->getParam('smap', $this->getDemoFile());
         //Get an instance of the language object
         $this->objLanguage = $this->getObject('language', 'language');
     }
@@ -54,7 +55,7 @@ class simplebuildmap extends object
     {
     	$str = $this->insertMapLayer();
     	$str .= $this->setupScript();
-    	$myMap = $this->getDemoFile();
+    	$myMap = $this->getMapContents();
     	
 		return str_replace ("[[SMAP_INSERT_HERE]]", $myMap, $str);
     }
@@ -87,7 +88,13 @@ class simplebuildmap extends object
         $objRsConfig = $this->getObject('altconfig', 'config');
         //Set the file type and get the file into a string
 		$this->fileType = "smap";        
-        $filename =  "http://localhost/" . $objRsConfig->getItem('MODULE_URI') . "simplemap/resources/jsmaps/madiba.smap";
+        $filename =  "http://" . $_SERVER['SERVER_NAME'] . $objRsConfig->getItem('MODULE_URI') . "simplemap/resources/jsmaps/madiba.smap";
+        return $filename;
+    }
+    
+    function getMapContents()
+    {
+    	$filename = $this->smap;
         $handle = fopen($filename, "r");
 		$contents = stream_get_contents($handle);
 		fclose($handle);
