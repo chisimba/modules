@@ -63,6 +63,8 @@ class blogops extends object
     public function liveSearchForm()
     {
     }
+
+
     /**
      * Method to display the login box for prelogin blog operations
      *

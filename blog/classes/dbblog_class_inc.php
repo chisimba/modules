@@ -463,7 +463,8 @@ class dbblog extends dbTable
 							'post_ts' => time(),
 							'post_lic' => $postarr['cclic']);
 
-			return $this->insert($insarr, 'tbl_blog_posts');
+			$insarr['id'] = $this->insert($insarr, 'tbl_blog_posts');
+			return $this->luceneIndex($insarr);
 		}
 		if($mode == 'editpost')
 		{
@@ -506,7 +507,9 @@ class dbblog extends dbTable
 							'post_ts' => strtotime($postarr['postdate']),
 							'post_lic' => $postarr['cclic']);
 
-			return $this->insert($imparr, 'tbl_blog_posts');
+			$imparr['id'] = $this->insert($imparr, 'tbl_blog_posts');
+			return $this->luceneIndex($imparr);
+
 		}
 		if($mode == 'mail')
 		{
@@ -528,7 +531,8 @@ class dbblog extends dbTable
 							'post_ts' => strtotime($postarr['postdate']),
 							'post_lic' => $postarr['cclic']);
 
-			return $this->insert($mparr, 'tbl_blog_posts');
+			$mparr['id'] = $this->insert($mparr, 'tbl_blog_posts');
+			return $this->luceneIndex($mparr);
 		}
 		else {
 			//$this->epcleaner = $this->newObject('htmlcleaner', 'utilities');
@@ -791,6 +795,54 @@ class dbblog extends dbTable
 		$this->_changeTable("tbl_blog_profile");
 		return $this->update('id', $profile['id'], $profile);
 	}
+
+	public function luceneIndex($data)
+    {
+    	//print_r($data); die();
+    	$this->objConfig = $this->getObject('altconfig', 'config');
+    	$this->objUser = $this->getObject('user', 'security');
+    	$indexPath = $this->objConfig->getcontentBasePath();
+    	if(file_exists($indexPath.'chisimbaIndex'))
+    	{
+    		chmod($indexPath.'chisimbaIndex', 0777);
+    		//we build onto the previous index
+    		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex');
+    	}
+    	else {
+    		//instantiate the lucene engine and create a new index
+    		mkdir($indexPath.'chisimbaIndex');
+    		chmod($indexPath.'chisimbaIndex', 0777);
+    		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex', true);
+    	}
+    	//hook up the document parser
+    	$document = new Zend_Search_Lucene_Document();
+    	//change directory to the index path
+    	chdir($indexPath);
+
+    	//set the properties that we want to use in our index
+    	//date
+    	$document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['post_date']));
+    	//url
+    	$document->addField(Zend_Search_Lucene_Field::UnIndexed('url', $this->uri(array('module' => 'blog', 'action' => 'viewsingle', 'postid' => $data['id'], 'userid'=> $data['userid']))));
+    	//createdBy
+    	$document->addField(Zend_Search_Lucene_Field::UnIndexed('createdBy', $this->objUser->fullName($data['userid'])));
+    	//document teaser
+    	$document->addField(Zend_Search_Lucene_Field::Text('teaser', $data['post_excerpt']));
+    	//doc title
+    	$document->addField(Zend_Search_Lucene_Field::Text('title', $data['post_title']));
+    	//doc author
+    	$document->addField(Zend_Search_Lucene_Field::Text('author', $this->objUser->fullName($data['userid'])));
+    	//document body
+    	//NOTE: this is not actually put into the index, so as to keep the index nice and small
+    	//      only a reference is inserted to the index.
+    	$document->addField(Zend_Search_Lucene_Field::Text('contents', $data['post_content']));
+    	//what else do we need here???
+    	//add the document to the index
+    	$index->addDocument($document);
+    	//commit the index to disc
+    	$index->commit();
+    }
+
 
 	/**
 	 * Method to dynamically switch tables
