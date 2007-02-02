@@ -76,6 +76,15 @@ class simplemap extends controller
         $this->_addMapScriptToPage();
         //Add the onunload method to the body
         $this->_addOnUnloadToBody();
+        //Check if runnin in plain mode and disable banners etc
+        $mode=$this->getParam('mode', NULL);
+        if ($mode == "plain") {
+            $this->setVar('pageSuppressContainer',TRUE);
+	        $this->setVar('suppressFooter', TRUE); # suppress default page footer
+	        $this->setVar('pageSuppressIM', TRUE);
+	        $this->setVar('pageSuppressToolbar', TRUE);
+	        $this->setVar('pageSuppressBanner', TRUE);
+        }
         /*
         * Return the template determined by the method resulting 
         * from action
