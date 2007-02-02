@@ -825,7 +825,7 @@ class dbblog extends dbTable
     	//url
     	$document->addField(Zend_Search_Lucene_Field::UnIndexed('url', $this->uri(array('module' => 'blog', 'action' => 'viewsingle', 'postid' => $data['id'], 'userid'=> $data['userid']))));
     	//createdBy
-    	$document->addField(Zend_Search_Lucene_Field::UnIndexed('createdBy', $this->objUser->fullName($data['userid'])));
+    	$document->addField(Zend_Search_Lucene_Field::Text('createdBy', $this->objUser->fullName($data['userid'])));
     	//document teaser
     	$document->addField(Zend_Search_Lucene_Field::Text('teaser', $data['post_excerpt']));
     	//doc title
@@ -835,7 +835,7 @@ class dbblog extends dbTable
     	//document body
     	//NOTE: this is not actually put into the index, so as to keep the index nice and small
     	//      only a reference is inserted to the index.
-    	$document->addField(Zend_Search_Lucene_Field::Text('contents', $data['post_content']));
+    	$document->addField(Zend_Search_Lucene_Field::Unstored('contents', $data['post_content']));
     	//what else do we need here???
     	//add the document to the index
     	$index->addDocument($document);
