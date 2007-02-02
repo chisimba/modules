@@ -6,8 +6,10 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 /**
 * 
-* Controller class for Chisimba for the module simple map. It uses the Google Maps API
-* to create one or more maps, including a demo map.
+* Controller class for Chisimba for the module simplemap. It uses the Google Maps API
+* to create one or more maps, including a demo map. The Google Maps JavaScript API lets 
+* you embed Google Maps in your own web pages. To use the API, you need to sign up for 
+* an API key and use System configuration to add it to the simplemap parameters.
 *
 * @author Derek Keats
 * @package simplemap
@@ -32,7 +34,11 @@ class simplemap extends controller
     * logger object for logging user activity
     */
     public $objLog;
-    public $objBuldMap;
+    /**
+    * @var $objBuildMap String object property for holding the 
+    * object that builds the maps (simplebuildmap class from classes)
+    */
+    public $objBuildMap;
 
     /**
      * Intialiser for the stories controller
@@ -92,16 +98,40 @@ class simplemap extends controller
         return $this->$method();
     }
     
+    /*
+    * 
+    * This method gets the script call, including the API key and adds it to
+    * the page header.
+    * 
+    * @return TRUE;
+    *  
+    */
     function _addMapScriptToPage()
     {
-    	//Read the API key from sysconfig
-    	$apiKey = $this->objBuildMap->getApiKey();
-    	//ABQIAAAASzlWuBpqyHQoPD8OwyyFRhS9klZkf-a3YMqrNEgglGl8tlkEvBRUarouiwsLMxDlMc20SE2jC_GQmg
-        $hScript = "<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;key=" . $apiKey . "\" type=\"text/javascript\"></script>";
-        //Add the local script to the page header
-        $this->appendArrayVar('headerParams',$hScript);
+    	try {
+	    	//Read the API key from sysconfig
+	    	$apiKey = $this->objBuildMap->getApiKey();
+	    	//ABQIAAAASzlWuBpqyHQoPD8OwyyFRhS9klZkf-a3YMqrNEgglGl8tlkEvBRUarouiwsLMxDlMc20SE2jC_GQmg
+	        $hScript = "<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;key=" . $apiKey . "\" type=\"text/javascript\"></script>";
+	        //Add the local script to the page header
+	        $this->appendArrayVar('headerParams',$hScript);
+	        return TRUE;
+        }
+        catch(customException $e) {
+            //something went wrong, print it out and log it
+            echo customException::cleanUp();
+            //kill everything because we are dead anyway
+            die();
+        }
     }
     
+    /*
+    * 
+    * Method to add the GUnload() Javascript call to the body tag. This is mainly
+    * a method to prevent memory leaks which are apparently quite common in  
+    * Internet Explorer.
+    *
+    */
     function _addOnUnloadToBody()
     {
         $bodyParams = "onunload=\"GUnload()\"";
@@ -112,8 +142,9 @@ class simplemap extends controller
 
     /**
     * 
-    * Method corresponding to the view action. It fetches the stories
-    * into an array and passes it to a main_tpl content template.
+    * Method corresponding to the showdemo action. It displays the 
+    * default demo map when no action or showdemo is called.
+    * 
     * @access private
     * 
     */

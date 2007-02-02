@@ -28,16 +28,70 @@ class simplebuildmap extends object
     * 
     */
     public $objConfig;
+    /**
+    * 
+    * @var $objLanguage String object property for holding the 
+    * language object
+    * @access public
+    * 
+    */
+    public $objLanguage;
+    /**
+    * 
+    * @var $width String property for holding the width of the map
+    * @access public
+    * 
+    */
     public $width;
+    /**
+    * 
+    * @var $height String property for holding the height of the map
+    * @access public
+    * 
+    */
 	public $height;
-    
+    /**
+    * 
+    * @var $gLat String property for holding the latitude X-coordinate of
+    * the centre of the map
+    * @access public
+    * 
+    */
+    public $gLat;
+    /**
+    * 
+    * @var $gLong String property for holding the latitude Y-coordinate of
+    * the centre of the map
+    * @access public
+    * 
+    */
+    public $gLong;
+    /**
+    * 
+    * @var $magnify String property for holding the magnification factor
+    * for the map
+    * @access public
+    * 
+    */
+    public $magnify;
+    /**
+    * 
+    * @var $smap String property to hold the fully qualified URL pointing
+    * to the map file
+    * @access public
+    * 
+    */
+    public $smap;
     
     /**
     *
-    * Standard init method
+    * Standard init method. This grabs the parameters from the querystring
+    * and assigns default values if they are absent.
+    * 
+    * @access public
     *
     */
-    function init()
+    public function init()
     {
         //Create the configuration object
         $this->objConfig = $this->getObject('dbsysconfig', 'sysconfig');
@@ -51,7 +105,14 @@ class simplebuildmap extends object
         $this->objLanguage = $this->getObject('language', 'language');
     }
     
-    function show()
+    /**
+     * 
+    * A method to return the map Javascript as a string
+    * @return string The map Javascript 
+    * @access public
+    * 
+    */
+    public function show()
     {
     	$str = $this->insertMapLayer();
     	$str .= $this->setupScript();
@@ -71,18 +132,37 @@ class simplebuildmap extends object
     * @return String The google API key 
     *
     */
-    function getApiKey()
+    public function getApiKey()
     {
 		return $this->objConfig->getValue('mod_simplemap_apikey', 'simplemap');
     }
     
-    function insertMapLayer()
+    /**
+    * 
+    * Method to return the map DIV tag that is the place in the page
+    * where the map apperas. It also set the height and width in pixels
+    * from the height and width retrieved from the query string or 
+    * set in calling the class.
+    * 
+    * @access public
+    * @return string The DIV for the map
+    *  
+    */
+    public function insertMapLayer()
     {
         return "<div id=\"map\" style=\"width: " . $this->width 
           . "px; height: " . $this->height . "px\"></div>";
     }
     
-    function getDemoFile()
+    /*
+    *
+    * Method to return the filename of the demo map
+    * 
+    * @access public
+    * @return string The filename of the demo file
+    *  
+    */
+    public function getDemoFile()
     {
     	// Create the configuration object
         $objRsConfig = $this->getObject('altconfig', 'config');
@@ -92,6 +172,14 @@ class simplebuildmap extends object
         return $filename;
     }
     
+    /*
+    * 
+    * Method to open the map file and read the contents into a string
+    * 
+    * @access public
+    * @return string The contents of the map file
+    *  
+    */
     function getMapContents()
     {
     	$filename = $this->smap;
@@ -101,20 +189,39 @@ class simplebuildmap extends object
         return $contents;
     }
     
+    /*
+    * 
+    * Method to return the NOSCRIPT tags for inlusion for display when the 
+    * browser has Javascript disabled
+    * 
+    * @access public
+    * @return string The NOSCRIPT content.
+    *  
+    */
     function getNoScript()
     {
-    	return "<noscript>" . $this->objLanguage->languageText("mod_simplemap_noscript", "simplemap") .  "</noscript>\n\n";
+    	return "<noscript>" 
+    	  . $this->objLanguage->languageText("mod_simplemap_noscript", "simplemap") 
+    	  .  "</noscript>\n\n";
     
     }
     
+    /*
+    * 
+    * Method to return the script for inclusion in the browser, including
+    * the scripts read fromt the SMAP file.
+    * 
+    * @access public
+    * @return srting The Javascript for generating the map 
+    * 
+    */
     function setupScript()
     {		
-    	
     	$ret = $this->getNoScript();
     	$lat = $this->gLat;
-    	        
     	$long = $this->gLong;
     	$mag = $this->magnify;
+    	$incompat = $this->objLanguage->languageText("mod_simplemap_incompatible", "simplemap");
     	$ret .="
             <script type=\"text/javascript\">
     		//<![CDATA[
@@ -142,7 +249,7 @@ class simplebuildmap extends object
     
 		    // display a warning if the browser was not compatible
 		    else {
-		      alert(\"Sorry, the Google Maps API is not compatible with this browser\");
+		      alert(\"$incompat\");
 		    }
 		    //]]>
 		    </script>";

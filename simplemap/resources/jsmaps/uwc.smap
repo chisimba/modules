@@ -1,5 +1,5 @@
 
-      // Set up three markers with info windows 
+      // This map shows places at the University of the Western Cape
       
       var point = new GLatLng(-33.932922,18.629057);
       var marker = createMarker(point,'Great Hall Lecture complex that is the main site of the Digital Freedom Exposition')

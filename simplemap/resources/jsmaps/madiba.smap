@@ -1,7 +1,7 @@
-      // Set up three markers with info windows 
+      // This map shows the location of key events associated with Nelson Mandela
       
       var point = new GLatLng(-26.0500,28.0500);
-      var marker = createMarker(point,'Rivonia, the suburb of Johannesburg where 19 ANC leaders were arrested at Liliesleaf Farm, privately owned by Arthur Goldreich, on 11th July 1963.')
+      var marker = createMarker(point,'Rivonia, the suburb of Johannesburg where<br />19 ANC leaders were arrested at Liliesleaf <br>Farm, privately owned by Arthur Goldreich, <br />on 11th July 1963.<br /><img src="http://www.joburg.org.za/april2002/rivoniaraid-star.gif"><br />Mandela himself was absent - he was serving<br />a five-year sentence on Robben Island for inciting<br />workers to strike and for leaving the country<br />without a passport.<br><a href="http://www.joburg.org.za/april2002/liliesleaf.stm">Read more about it</a>')
       map.addOverlay(marker);
     
       var point = new GLatLng(-33.799569,18.364472);
