@@ -111,12 +111,8 @@ class simplemap extends controller
     private function __showdemo()
     {
     	$this->setVar('pageSuppressXML', TRUE);
-    	$str = $this->objBuildMap->insertMapLayer();
-    	$myMap = $this->objBuildMap->getDemoFile();
-    	$noScript = $this->objBuildMap->getNoScript();
-    	$str .= $noScript;
+    	$str = $this->objBuildMap->show();
     	$this->setVarByRef('str', $str);
-    	$this->setVarByRef('myMap', $myMap);
         return "demomap_tpl.php";
     }
   
@@ -195,6 +191,7 @@ class simplemap extends controller
         switch ($action)
         {
             case 'showdemo':
+            case NULL:
                 return FALSE;
                 break;
             default:

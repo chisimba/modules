@@ -45,14 +45,18 @@ class simplebuildmap extends object
         $this->height = $this->getParam('height', '600');
         $this->gLat = $this->getParam('gLat', '-33.799669');
         $this->gLong = $this->getParam('gLong', '18.364472');
-        $this->magnify = $this->getParam('magnify', '12');
+        $this->magnify = $this->getParam('magnify', '6');
         //Get an instance of the language object
         $this->objLanguage = $this->getObject('language', 'language');
     }
     
     function show()
     {
-        //to do
+    	$str = $this->insertMapLayer();
+    	$str .= $this->setupScript();
+    	$myMap = $this->getDemoFile();
+    	
+		return str_replace ("[[SMAP_INSERT_HERE]]", $myMap, $str);
     }
 
     /**
@@ -92,8 +96,50 @@ class simplebuildmap extends object
     
     function getNoScript()
     {
-    	return "<noscript>" . $this->objLanguage->languageText("mod_simplemap_noscript", "simplemap") .  "</noscript>";
+    	return "<noscript>" . $this->objLanguage->languageText("mod_simplemap_noscript", "simplemap") .  "</noscript>\n\n";
     
+    }
+    
+    function setupScript()
+    {		
+    	
+    	$ret = $this->getNoScript();
+    	$lat = $this->gLat;
+    	$long = $this->gLong;
+    	$mag = $this->magnify;
+    	$ret .="
+            <script type=\"text/javascript\">
+    		//<![CDATA[
+		    if (GBrowserIsCompatible()) { 
+		      // A function to create the marker and set up the event window
+		      // Dont try to modify this function. It has to be here for the map to display
+		      // Each instance of the function preserves the contents of a different instance
+		      // of the \"marker\" and \"html\" variables which will be needed later when the event triggers.    
+		      function createMarker(point,html) {
+		        var marker = new GMarker(point);
+		        GEvent.addListener(marker, \"click\", function() {
+		          marker.openInfoWindowHtml(html);
+		        });
+		        return marker;
+		      }
+		      // Display the map, with some controls and set the initial location 
+		      var map = new GMap2(document.getElementById(\"map\"));
+		      map.addControl(new GLargeMapControl());
+		      map.addControl(new GMapTypeControl());
+		      //map.setCenter(new GLatLng(-33.799669,18.364472),6);
+		      map.setCenter(new GLatLng($lat,$long),$mag);
+      
+			  [[SMAP_INSERT_HERE]]
+   
+            }
+    
+		    // display a warning if the browser was not compatible
+		    else {
+		      alert(\"Sorry, the Google Maps API is not compatible with this browser\");
+		    }
+		    //]]>
+		    </script>";
+        return $ret;
     }
 }
 ?>
