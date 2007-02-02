@@ -105,6 +105,7 @@ class simplebuildmap extends object
     	
     	$ret = $this->getNoScript();
     	$lat = $this->gLat;
+    	        
     	$long = $this->gLong;
     	$mag = $this->magnify;
     	$ret .="
@@ -126,7 +127,6 @@ class simplebuildmap extends object
 		      var map = new GMap2(document.getElementById(\"map\"));
 		      map.addControl(new GLargeMapControl());
 		      map.addControl(new GMapTypeControl());
-		      //map.setCenter(new GLatLng(-33.799669,18.364472),6);
 		      map.setCenter(new GLatLng($lat,$long),$mag);
       
 			  [[SMAP_INSERT_HERE]]
