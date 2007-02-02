@@ -802,7 +802,7 @@ class dbblog extends dbTable
     	$this->objConfig = $this->getObject('altconfig', 'config');
     	$this->objUser = $this->getObject('user', 'security');
     	$indexPath = $this->objConfig->getcontentBasePath();
-    	if(file_exists($indexPath.'chisimbaIndex'))
+    	if(file_exists($indexPath.'chisimbaIndex/segments'))
     	{
     		chmod($indexPath.'chisimbaIndex', 0777);
     		//we build onto the previous index
