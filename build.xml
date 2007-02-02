@@ -41,7 +41,7 @@
     <mkdir dir="${build.dir}"/>
   </target>
   
-  <target name="build" description="Generates .tgz and .zip file containing framework" 
+  <target name="build" description="Generates .tgz and .zip file containing the modules" 
           depends="init, build-tgz, build-zip">
   </target>
   
