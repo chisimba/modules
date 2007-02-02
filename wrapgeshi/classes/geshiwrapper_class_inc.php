@@ -17,7 +17,7 @@
 * @copyright 2005 GNU GPL
 *
 **/
-require_once('modules/wrapgeshi/lib/geshi.php');
+require_once($this->getResourcePath('geshi.php', 'wrapgeshi'));
 
 class geshiwrapper extends object
 {
@@ -60,7 +60,7 @@ class geshiwrapper extends object
         // set the language
         $this->language = "php";
         //Set the path for the geshi files
-        $this->path = "modules/wrapgeshi/lib";
+        $this->path = $this->getResourcePath('');
     }
     
     
