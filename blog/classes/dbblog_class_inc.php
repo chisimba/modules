@@ -521,7 +521,8 @@ class dbblog extends dbTable
 							'post_ts' => $postarr['postts'], //time(),
 							'post_lic' => $postarr['cclic']);
 
-			return $this->update('id',$postarr['id'], $edarr, 'tbl_blog_posts');
+			$this->update('id',$postarr['id'], $edarr, 'tbl_blog_posts');
+			return $this->luceneReIndex($postarr);
 		}
 		if($mode == 'import')
 		{
@@ -586,7 +587,8 @@ class dbblog extends dbTable
 							'post_ts' => strtotime($postarr['postdate']),
 							'post_lic' => $postarr['cclic']);
 
-			return $this->update('id',$postarr['id'], $inseditarr, 'tbl_blog_posts');
+			$this->update('id',$postarr['id'], $inseditarr, 'tbl_blog_posts');
+			return $this->luceneReIndex($postarr);
 		}
 	}
 
@@ -855,6 +857,8 @@ class dbblog extends dbTable
     	chdir($indexPath);
 
     	//set the properties that we want to use in our index
+    	//id for the index and optimization
+		$document->addField(Zend_Search_Lucene_Field::UnIndexed('docid', $data['id']));
     	//date
     	$document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['post_date']));
     	//url
@@ -870,12 +874,74 @@ class dbblog extends dbTable
     	//document body
     	//NOTE: this is not actually put into the index, so as to keep the index nice and small
     	//      only a reference is inserted to the index.
-    	$document->addField(Zend_Search_Lucene_Field::Unstored('contents', $data['post_content']));
+    	$document->addField(Zend_Search_Lucene_Field::UnStored('contents', $data['post_content']));
     	//what else do we need here???
     	//add the document to the index
     	$index->addDocument($document);
     	//commit the index to disc
     	$index->commit();
+    	//optimize the thing
+    	//$index->optimize();
+    }
+
+    public function luceneReIndex($data)
+    {
+    	//var_dump($data);
+    	$this->objConfig = $this->getObject('altconfig', 'config');
+    	$this->objUser = $this->getObject('user', 'security');
+    	$indexPath = $this->objConfig->getcontentBasePath();
+    	if(file_exists($indexPath.'chisimbaIndex/segments'))
+    	{
+    		chmod($indexPath.'chisimbaIndex', 0777);
+    		//we build onto the previous index
+    		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex');
+    	}
+    	else {
+    		//instantiate the lucene engine and create a new index
+    		mkdir($indexPath.'chisimbaIndex');
+    		chmod($indexPath.'chisimbaIndex', 0777);
+    		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex', true);
+    	}
+    	$docid = $data['id'];
+    	$removePath = $docid;
+		$hits = $index->find('path:' . $removePath);
+		foreach ($hits as $hit) {
+    		$index->delete($hit->id);
+		}
+
+		//ok now re-add the doc to the index
+		//hook up the document parser
+    	$document = new Zend_Search_Lucene_Document();
+    	//change directory to the index path
+    	chdir($indexPath);
+
+    	//set the properties that we want to use in our index
+    	//id for the index and optimization
+		$document->addField(Zend_Search_Lucene_Field::UnIndexed('docid', $data['id']));
+    	//date
+    	$document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['postdate']));
+    	//url
+    	$document->addField(Zend_Search_Lucene_Field::UnIndexed('url', $this->uri(array('module' => 'blog', 'action' => 'viewsingle', 'postid' => $data['id'], 'userid'=> $this->objUser->userId()))));
+    	//createdBy
+    	$document->addField(Zend_Search_Lucene_Field::Text('createdBy', $this->objUser->fullName($this->objUser->userId())));
+    	//document teaser
+    	$document->addField(Zend_Search_Lucene_Field::Text('teaser', $data['postexcerpt']));
+    	//doc title
+    	$document->addField(Zend_Search_Lucene_Field::Text('title', $data['posttitle']));
+    	//doc author
+    	$document->addField(Zend_Search_Lucene_Field::Text('author', $this->objUser->fullName($this->objUser->userId())));
+    	//document body
+    	//NOTE: this is not actually put into the index, so as to keep the index nice and small
+    	//      only a reference is inserted to the index.
+    	$document->addField(Zend_Search_Lucene_Field::UnStored('contents', $data['postcontent']));
+    	//what else do we need here???
+    	//add the document to the index
+    	$index->addDocument($document);
+    	//commit the index to disc
+    	$index->commit();
+    	//optimize the thing
+    	//$index->optimize();
+
     }
 
 
