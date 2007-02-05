@@ -108,7 +108,7 @@ foreach($data as $item){
         
         $this->objIcon->title=$commenthead;
     	$this->objIcon->setIcon('comment_view');
-   	 $commentIcon = $this->objIcon->show();
+   	 	$commentIcon = $this->objIcon->show();
         
         $objPopup = new windowpop();
     	$objPopup->set('location',$this->uri(array('action'=>'showcomment','book'=>$item['id'],'essay'=>$item['essay'])));

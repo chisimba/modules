@@ -77,7 +77,7 @@ class essay extends controller
         
         $this->objDateformat = $this->newObject('datetime','utilities');
         
-		$this->objFile =& $this->newObject('upload','filemanager');
+		$this->objFile = $this->newObject('upload','filemanager');
         // Log this call if registered
         if(!$this->objModules->checkIfRegistered('logger', 'logger')){
             //Get the activity logger class
@@ -238,9 +238,7 @@ class essay extends controller
                   
                     // upload file to database
 					$arrayfiledetails = $this->objFile->uploadFile('file');
-				//	echo '<pre>';
-				//	print_r($arrayfiledetails);
-				//	echo '</pre>';
+					
 					if ($arrayfiledetails['success']){				
                     	// save file id and submit date to database
                     	$fields=array('studentfileid'=>$arrayfiledetails['fileid'], 'submitdate'=>date('Y-m-d H:i:s'));
@@ -410,7 +408,7 @@ class essay extends controller
         // set up language elements
         $head=$this->objLanguage->languageText('mod_essay_essay', 'essay').' ';
         $head.=$this->objLanguage->languageText('mod_essay_topic', 'essay').':&nbsp;&nbsp;'.$topic[0]['name'];
-        $subhead=$this->objLanguage->languageText('mod_essay_essays', 'essay');
+        $subhead=$this->objLanguage->languageText('mod_essay_essays','essay');
         $descriptionLabel=$this->objLanguage->languageText('mod_essay_description', 'essay');
         $instructionsLabel=ucwords($this->objLanguage->code2Txt('mod_essay_instructions','essay',array('readonlys'=>'students')));
         $duedate=$this->objLanguage->languageText('mod_essay_closedate', 'essay');
