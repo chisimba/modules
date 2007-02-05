@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Empty template for downloading files.
 * @package assignmentadmin

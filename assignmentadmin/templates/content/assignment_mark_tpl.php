@@ -24,11 +24,12 @@ $objTimeOut =& $this->newObject('timeoutMessage','htmlelements');
 
 // set up language items
 $assignmenthead = $this->objLanguage->languageText('mod_assignmentadmin_assignment','assignmentadmin');
-$btnupload = $this->objLanguage->languageText('mod_assignmentadmin_upload','Upload','assignmentadmin');
+$btnupload = $this->objLanguage->languageText('mod_assignmentadmin_upload','assignmentadmin');
+$btndownload = $this->objLanguage->languageText('mod_assignmentadmin_download','assignmentadmin');
 $markhead = $this->objLanguage->languageText('mod_assignmentadmin_mark','assignmentadmin');
 $head = $markhead.' '.$assignmenthead;
-$btnsubmit = $this->objLanguage->languageText('word_save','Save');
-$btnexit = $this->objLanguage->languageText('word_exit','Exit');
+$btnsubmit = $this->objLanguage->languageText('word_save');
+$btnexit = $this->objLanguage->languageText('word_exit');
 $wordstudent = ucwords($this->objLanguage->languageText('mod_context_readonly'));
 $fileLabel = $this->objLanguage->languageText('mod_assignmentadmin_filename','assignmentadmin');
 $commenthead = $this->objLanguage->languageText('mod_assignmentadmin_comment','assignmentadmin');
@@ -50,13 +51,12 @@ echo $javascript;
 // header
 $this->setVarByRef('heading',$head);
 $str = '';
-
 // Display name of student and name of file
 $objTable->width = '99%';
 $objTable->cellpadding = 4;
 $objTable->startRow();
 $objTable->addCell('<b>'.$wordstudent.':</b>&nbsp;&nbsp;&nbsp;&nbsp;'
-.$this->objUser->fullname($data[0]['userId']),'50%','','');
+.$this->objUser->fullname($data[0]['userid']),'50%','','');
 if(!$online){
     $objTable->addCell('<b>'.$fileLabel.':</b>&nbsp;&nbsp;&nbsp;&nbsp;'.$data[0]['fileName'],'50%','','');
 }
@@ -69,10 +69,19 @@ $objTable->addRow(array('&nbsp;'));
 $objLayer->str = $objTable->show();
 $str = $objLayer->show();
 
+//Download button 
+$this->objButton = new button('submit',$btndownload);
+$returnUrl = $this->uri(array('action' => 'download','fileid'=>$data[0]['studentfileid']));
+$this->objButton->setOnClick("window.location='$returnUrl'");
+$btn1=$this->objButton->show();
+
+
+$str .= $btn1.'<br /><br />';
+
 if(!$online){
     if(isset($msg)){
         $objTimeOut->setMessage($msg);
-        $str .= '<p>'.$objTimeOut->show().'<p>';
+        $str .= '<p>'.$objTimeOut->show().'</p>';
     }
 
     // Display file input
@@ -83,33 +92,33 @@ if(!$online){
 
     $objInput = new textinput('fileId',$data[0]['fileId']);
     $objInput->fldType = 'hidden';
-    $str .=  $objInput->show();
-
+    $str .=  $objInput->show();		
     $objButton = new button('save',$btnupload);
     $objButton->setToSubmit();
     $btn = $objButton->show();
-
     $str .=  $btn.'<p>&nbsp;</p>';
 }else{
     $objText = new textarea('online', $data[0]['online'],15,85);
-    $objText->extra = 'wrap = soft, readonly';
-    $str .=  '<b>'.$onlinehead.':<b>'.'<br />';
+    //$objText->extra = 'wrap = soft, readonly';
+    $str .=  '<b>'.$onlinehead.':</b>'.'<br />';
     $str .=  $objText->show().'<p>';
 }
-
 // Display mark & comment
-$str .=  '<b>'.$markhead.' (%):<b>'.'<br />';
+$str .=  '<b>'.$markhead.' (%):</b>'.'<br />';
 
 $objDrop = new dropdown('mark');
 for($i=0; $i<=100; $i++){
     $objDrop->addOption($i, $i);
 }
 $objDrop->setSelected($data[0]['mark']);
-$str .= $objDrop->show().'<p>';
-
-$objText = new textarea('comment',$data[0]['comment'],5,60);
-$objText->extra = 'wrap = soft';
-$str .=  '<b>'.$commenthead.':<b>'.'<br />';
+$str .= $objDrop->show().'</p>';
+/*echo '<pre>';
+	print_r($data);
+echo '</pre>';
+die();*/
+$objText = new textarea('comment',$data[0]['commentinfo'],5,60);
+//$objText->extra = 'wrap = soft';
+$str .=  '<b>'.$commenthead.':</b>'.'<br />';
 $str .=  $objText->show().'<p>';
 
 // Hidden elements
@@ -133,12 +142,12 @@ $objButton = new button('save', $btnexit);
 $objButton->setOnClick('javascript:submitExitForm()');
 $btns .=  $objButton->show();
 
-$str .=  $btns.'<p>';
+$str .=  $btns.'</p>';
 
 /************************* set up form ******************************/
 
 $objForm = new form('upload',$this->uri(array('action' =>'uploadsubmit')));
-$objForm->extra = " ENCTYPE = 'multipart/form-data'";
+$objForm->extra = " enctype = 'multipart/form-data'";
 $objForm->addToForm($str);
 $objForm->addRule('mark', $errMark, 'required');
 
@@ -158,4 +167,5 @@ $objInput = new textinput('id',$data[0]['assignmentId']);
 $objInput->fldType = 'hidden';
 $objForm->addToForm($objInput->show());
 echo $objForm->show();
+
 ?>

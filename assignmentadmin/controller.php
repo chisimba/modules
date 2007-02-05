@@ -250,10 +250,10 @@ class assignmentadmin extends controller
 
         if($data[0]['resubmit']){
             $submit = $this->dbSubmit->getSubmit("assignmentId='$id' AND userId='"
-            .$this->objUser->userId()."'", 'id, online, fileId');
+            .$this->objUser->userId()."'", 'id, online, studentfileId');
             if(!empty($submit)){
                 $data[0]['online'] = $submit[0]['online'];
-                $data[0]['fileId'] = $submit[0]['fileId'];
+                $data[0]['studentfileId'] = $submit[0]['studentfileId'];
                 $data[0]['submitId'] = $submit[0]['id'];
             }
         }
@@ -285,7 +285,7 @@ class assignmentadmin extends controller
     public function markAssign()
     {
         $data = $this->dbSubmit->getSubmit("id='".$this->getParam('submitId')."'");
-        $file = $this->dbSubmit->getFileName($data[0]['userId'],$data[0]['fileId']);
+        $file = $this->dbSubmit->getFileName($data[0]['userId'],$data[0]['studentfileId']);
         $data[0]['fileName'] = $file;
         $data[0]['assignmentId'] = $this->getParam('id');
         $data[0]['assignment'] = $this->getParam('assignment');
@@ -326,8 +326,8 @@ class assignmentadmin extends controller
 
         // save mark and comment
         $fields['mark'] = $this->getParam('mark', '');
-        $fields['comment'] = $this->getParam('comment', '');
-
+        $fields['commentinfo'] = $this->getParam('comment', '');
+        
         $this->dbSubmit->updateSubmit($this->getParam('submitId', ''), $fields);
         $action = 'mark';
         $params = array('id'=>$this->getParam('id'));
