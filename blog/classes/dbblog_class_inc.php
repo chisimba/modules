@@ -858,7 +858,7 @@ class dbblog extends dbTable
 
     	//set the properties that we want to use in our index
     	//id for the index and optimization
-		$document->addField(Zend_Search_Lucene_Field::UnIndexed('docid', $data['id']));
+		$document->addField(Zend_Search_Lucene_Field::UnStored('docid', $data['id']));
     	//date
     	$document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['post_date']));
     	//url
@@ -904,8 +904,9 @@ class dbblog extends dbTable
     	}
     	$docid = $data['id'];
     	$removePath = $docid;
-		$hits = $index->find('path:' . $removePath);
+		$hits = $index->find('docid:' . $removePath);
 		foreach ($hits as $hit) {
+			//var_dump($hit);
     		$index->delete($hit->id);
 		}
 
@@ -917,7 +918,7 @@ class dbblog extends dbTable
 
     	//set the properties that we want to use in our index
     	//id for the index and optimization
-		$document->addField(Zend_Search_Lucene_Field::UnIndexed('docid', $data['id']));
+		$document->addField(Zend_Search_Lucene_Field::UnStored('docid', $data['id']));
     	//date
     	$document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['postdate']));
     	//url
