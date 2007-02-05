@@ -22,28 +22,29 @@ class photogallery extends controller
     {
         
        
-        $this->_objDBContext = & $this->newObject('dbcontext', 'context');
-        $this->_objUser = & $this->newObject('user', 'security');
-        $this->_objUtils = & $this->newObject('utils');
-        $this->objLanguage = & $this->newObject('language','language');
-        $this->_objConfig = & $this->newObject('altconfig','config');
-        $this->_objContextModules = & $this->newObject('dbcontextmodules', 'context');
+        $this->_objDBContext = & $this->getObject('dbcontext', 'context');
+        $this->_objUser = & $this->getObject('user', 'security');
+        $this->_objUtils = & $this->getObject('utils');
+        $this->objLanguage = & $this->getObject('language','language');
+        $this->_objConfig = & $this->getObject('altconfig','config');
+        $this->_objContextModules = & $this->getObject('dbcontextmodules', 'context');
         
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('SpryData.js','photogallery'));
         
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('SpryEffects.js','photogallery'));
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('SpryXML.js','photogallery'));
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('xpath.js','photogallery'));
-        $str = '<link href="modules/photogallery/resources/css/screen.css" rel="stylesheet" type="text/css" />
+        $str = '<link href="skins/_common/gallery/screen.css" rel="stylesheet" type="text/css" />
                 <script type="text/javascript">
                 var dsGalleries = new Spry.Data.XMLDataSet("'.$this->_objConfig->getSiteRoot().'usrfiles/galleries/galleries.xml", "galleries/gallery");
                 var dsGallery = new Spry.Data.XMLDataSet("'.$this->_objConfig->getSiteRoot().'usrfiles/galleries/{dsGalleries::@base}{dsGalleries::@file}", "gallery");
                 var dsPhotos = new Spry.Data.XMLDataSet("'.$this->_objConfig->getSiteRoot().'usrfiles/galleries/{dsGalleries::@base}{dsGalleries::@file}", "gallery/photos/photo");
+                
                 </script>';
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('gallery.js','photogallery'));
         $this->appendArrayVar('headerParams', $str);
         $this->setVar('bodyParams', ' id="gallery" ');
-        $css = '<link rel="stylesheet" type="text/css" href="modules/photogallery/resources/drop_shadow.css" />';
+        $css = '<link rel="stylesheet" type="text/css" href="skins/_common/gallery/drop_shadow.css" />';
         
         $this->appendArrayVar('headerParams',$css);
     }
@@ -62,14 +63,21 @@ class photogallery extends controller
         switch ($action)
         {
         	
-          
+          //document.form1.galleryname.value = document.gallerySelect.option[document.gallerySelect.selectedIndex];
             case null:
+                //$this->appendArrayVar('bodyOnLoad', 'ind = document.forms[\'grid\'].gallerySelect.selectedIndex;  alert(document.forms[\'grid\'].gallerySelect.options[ind].value); ');
+                $this->setVar('admin', $this->_objUtils->getAdminSection());
                 return 'main_tpl.php';
             case 'galleries':
-                $this->setVar('galleries', $this->_objUtils->readGalleries());
+                $this->setVar('galleries', $this->_objUtils->readGalleries());               
                 return 'galleries_tpl.php';
-           
-            
+            case 'createfolder':
+           // $this->_objUtils->readPhotoXML('china');
+                $this->_objUtils->createGallery($this->getParam('newgallery'));
+                return $this->nextAction(null);
+            case 'upload':
+                $this->_objUtils->UploadImage($this->getParam('galleryname'));
+                return $this->nextAction(null);
                 
         }
     }
