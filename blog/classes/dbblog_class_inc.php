@@ -352,7 +352,42 @@ class dbblog extends dbTable
 	public function deletePost($id)
 	{
 		$this->_changeTable('tbl_blog_posts');
-		return $this->delete('id',$id, 'tbl_blog_posts');
+		//delete the post
+		$this->delete('id',$id, 'tbl_blog_posts');
+		//change tables to the postmeta table to delete the tags
+		$this->_changeTable('tbl_blog_postmeta');
+		//get all the entries where the post_id matches the deleted post id
+		$tagstodelete = $this->getAll("WHERE post_id = '$id'");
+		if(!empty($tagstodelete))
+		{
+			foreach($tagstodelete as $deltags)
+			{
+				//print_r($deltags);
+				$this->delete('id', $deltags['id'], 'tbl_blog_postmeta');
+			}
+		}
+		//change table and sort out the comments now
+		$this->_changeTable('tbl_blogcomments');
+		$commstodelete = $this->getAll("WHERE comment_parentid = '$id'");
+		if(!empty($commstodelete))
+		{
+			foreach($commstodelete as $ctd)
+			{
+				//print_r($ctd);
+				$this->delete('id', $ctd['id'], 'tbl_blogcomments');
+			}
+		}
+		//clean up the trackbacks now
+		$this->_changeTable("tbl_blog_trackbacks");
+		$tbtodel = $this->getAll("WHERE postid = '$id'");
+		if(!empty($tbtodel))
+		{
+			foreach ($tbtodel as $tbs)
+			{
+				//print_r($tbs);
+				$this->delete('id', $tbs['id'], 'tbl_blog_trackbacks');
+			}
+		}
 	}
 
 	/**
