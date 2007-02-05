@@ -11,9 +11,9 @@ $objMenu =& $this->newObject('sidemenu','toolbar');
 $cssLayout->setLeftColumnContent($objMenu->menuUser());
 $cssLayout->setMiddleColumnContent($this->getContent());
 $moduleCheck = $this->newObject('modules','modulecatalogue');
-if ($moduleCheck->checkIfRegistered('calendar')) {
+if ($moduleCheck->checkIfRegistered('eventscalendar')) {
     $cssLayout->setNumColumns(3);
-    $calendar =& $this->newObject('contextcalendar','calendar');
+    $calendar =& $this->newObject('block_calendar','eventscalendar');
     $cssLayout->setRightColumnContent($calendar->show());
     
 }
