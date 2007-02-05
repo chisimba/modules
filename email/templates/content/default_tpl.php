@@ -83,15 +83,9 @@ $selectMarkLabel = $this->objLanguage->languageText('mod_email_selectmark', 'ema
 $configs = $this->getSession('configs');
 $folderId = !empty($folderId) ? $folderId : $configs['default_folder_id'];
 
-// set up compose icon
-$objIcon->title = $composeLabel;
-$composeIcon = $objIcon->getLinkedIcon($this->uri(array(
-    'action' => 'compose'
-)) , 'notes');
-
 // set up heading
 $objHeader = new htmlHeading();
-$objHeader->str = $heading."&nbsp;&nbsp;".$composeIcon;
+$objHeader->str = $heading;
 $objHeader->type = 1;
 $pageData = $objHeader->show() ."<hr />";
 
@@ -592,6 +586,12 @@ if (!empty($messageData)) {
     $attachFieldset = '';
 }
 
+// set up compose icon
+$objIcon->title = $composeLabel;
+$composeIcon = $objIcon->getLinkedIcon($this->uri(array(
+    'action' => 'compose'
+)) , 'notes');
+
 // set up manage folder icon
 $objIcon->title = $manageFolderLabel;
 $objIcon->extra = '';
@@ -621,7 +621,7 @@ $objTable = new htmltable();
 //    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
 $objTable->startRow();
-$objTable->addCell($manageIcon."&nbsp;".$booksIcon."&nbsp;".$configIcon, '25%', '', '', 'heading', '');
+$objTable->addCell($composeIcon."&nbsp;".$manageIcon."&nbsp;".$booksIcon."&nbsp;".$configIcon, '25%', '', '', 'heading', '');
 $objTable->addCell($folderName, '75%', '', '', 'heading', 'colspan="4"');
 $objTable->endRow();
 $objTable->startRow();
