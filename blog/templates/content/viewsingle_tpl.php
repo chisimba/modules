@@ -28,10 +28,10 @@ $leftCol = NULL;
 if(!$this->objUser->isLoggedIn())
 {
 	$leftCol = $this->objblogOps->loginBox(TRUE);
-	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
 }
 //show the feeds section
 $leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
+$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
 $rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 
 //dump the cssLayout to screen
