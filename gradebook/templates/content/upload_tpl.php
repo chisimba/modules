@@ -44,6 +44,8 @@ $objWorksheet =& $this->getObject('dbworksheet','worksheet');
 $objWorksheetresults =& $this->getObject('dbworksheetresults','worksheet');
 //icons
 $objIcon =& $this->newObject('geticon','htmlelements');
+//Popup calendar 
+$this->objpopcal =&$this->getObject('datepickajax','popupcalendar');
 
 //create the general form class
 $objForm = new form('upload');
@@ -114,8 +116,11 @@ $objClosingDate->extra = " readonly = 'READONLY'";
 $objIcon->setIcon('select_date');
 $objIcon->title = $this->objLanguage->languageText('mod_gradebook_selectDate','gradebook');
 $url = 0;
-$url = $this->uri(array('action'=>'', 'field'=>'document.upload.closingDate', 'fieldvalue'=>date('Y-m-d H:m')), 'popupcalendar');
-$onclick = 0;
+
+$this->objpopcal->show('closingDate','yes','no',$objClosingDate);
+$this->TableOptions->endRow(); 
+//$url = $this->uri(array('action'=>'', 'field'=>'document.upload.closingDate', 'fieldvalue'=>date('Y-m-d H:m')), 'popupcalendar');
+/*$onclick = 0;
 $onclick = "javascript:window.open('" .$url."', 'popupcal', 'width=320, height=410, scrollbars=1, resize=yes')";
 $objDateLink = new link('#');
 $objDateLink->extra = "onclick=\"$onclick\"";
@@ -129,7 +134,7 @@ $this->TableOptions->addCell("<strong>".$objLanguage->languageText('mod_gradeboo
 $objDescription = new textarea('description');
 $this->TableOptions->addCell($objDescription->show());
 $this->TableOptions->endRow();
-
+*/
 //space
 $this->TableOptions->startRow();
 $this->TableOptions->addCell("&nbsp;");

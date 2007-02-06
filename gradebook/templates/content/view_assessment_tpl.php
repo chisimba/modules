@@ -32,13 +32,16 @@ $objTestadmin =& $this->getObject('dbtestadmin','mcqtests');
 $objTestresults =& $this->getObject('dbresults','mcqtests');
 //worksheet object
 $objWorksheet =& $this->getObject('dbworksheet','worksheet');
+
 $objWorksheetresults =& $this->getObject('dbworksheetresults','worksheet');
+
 //datetime object
 $objDatetime =& $this->getObject('datetime','utilities');
-//$objFormattedDate =& $this->getObject('simplecal','datetime');
+
 //number of students
 $numberStudents=0;
 $count=0;
+$total = 0;
 $numberStudents=$this->objGradebook->getNumberStudentsInContext();
 
 //create the general form class
@@ -278,7 +281,8 @@ if(!$numberStudents) {
 						}
 					}
 					$this->TableInstructions->addCell('&nbsp;&nbsp;'.($total?$total:""));
-					$this->TableInstructions->endRow();
+					//$this->TableInstructions->endRow();
+
 				break;
 				case 'MCQ Tests':
 					//retrieve grades from MCQ Tests
@@ -307,7 +311,7 @@ if(!$numberStudents) {
 						}
 					}
 					$this->TableInstructions->addCell('&nbsp;&nbsp;'.($total?$total:""));
-					$this->TableInstructions->endRow();
+					//$this->TableInstructions->endRow();
 				break;
 				case 'Online Worksheets':
 					//retrieve grades from Online Worksheets
@@ -337,7 +341,7 @@ if(!$numberStudents) {
 						}
 					}
 					$this->TableInstructions->addCell('&nbsp;&nbsp;'.($total?$total:""));
-					$this->TableInstructions->endRow();
+				//	$this->TableInstructions->endRow();
 				break;
 				case 'Assignments':
 					//retrieve grades from assignments
@@ -367,7 +371,7 @@ if(!$numberStudents) {
 						}
 					}
 					$this->TableInstructions->addCell('&nbsp;&nbsp;'.($total?$total:""));
-					$this->TableInstructions->endRow();
+			//		$this->TableInstructions->endRow();
 				break;
 				default:
 					//total grades
@@ -401,7 +405,8 @@ if(!$numberStudents) {
 							}
 						}
 					}
-		
+			$this->TableInstructions->endRow();
+die();		
 					//retrieve grades from MCQ Tests
 					$as=array();
 					$testsArray=array();
