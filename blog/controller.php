@@ -1216,6 +1216,18 @@ class blog extends controller
                 }
                 $userid = $this->objUser->userId();
                 $id = $this->getParam('id');
+                //check for the multidelete option
+                $delarr = $this->getArrayParam('arrayList');
+                if(!empty($delarr))
+                {
+                	//delete the posts and go back to the template...
+                	foreach($delarr as $deletes)
+                	{
+                		$this->objDbBlog->deletePost($deletes);
+                	}
+                	$this->nextAction('blogadmin', array('mode' => 'editpost'));
+                }
+                //print_r($delarr); die();
                 $this->setVarByRef('editid', $id);
                 $this->setVarByRef('userid', $userid);
                 return 'postedit_tpl.php';

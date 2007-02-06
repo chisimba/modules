@@ -906,7 +906,6 @@ class dbblog extends dbTable
     	$removePath = $docid;
 		$hits = $index->find('docid:' . $removePath);
 		foreach ($hits as $hit) {
-			//var_dump($hit);
     		$index->delete($hit->id);
 		}
 

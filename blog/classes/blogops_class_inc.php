@@ -1701,6 +1701,7 @@ class blogops extends object
      */
     public function managePosts($userid, $month = NULL, $year = NULL)
     {
+
         //create a table with the months posts, plus a dropdown of all months to edit
         //put the edit icon at the end of each row, with text linked to the postEditor() method
         //create an array with keys: cat, excerpt, title, content, catid for edit
@@ -1717,6 +1718,8 @@ class blogops extends object
         if ($month == NULL && $year == NULL) {
             $posts = $this->objDbBlog->getAbsAllPosts($userid);
         }
+		$count = count($posts);
+
         //print_r($posts);
         //add in a table header...
         $edtable->startHeaderRow();
@@ -1727,6 +1730,8 @@ class blogops extends object
         $edtable->addHeaderCell($this->objLanguage->languageText("mod_blog_editdelete", "blog"));
         $edtable->endHeaderRow();
         foreach($posts as $post) {
+        	(($count % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+        	$edtable->row_attributes=" onmouseover=\"this.className='tbl_ruler';\" onmouseout=\"this.className='".$oddOrEven."'; \"";
             $edtable->startRow();
             $edtable->addCell($post['post_title']);
             $edtable->addCell(date('r', $post['post_ts']));
@@ -1765,10 +1770,24 @@ class blogops extends object
                 'action' => 'deletepost',
                 'id' => $post['id']
             ) , 'blog');
-            $edtable->addCell($edIcon.$delIcon);
+
+            //do the checkboxen for the multi delete.
+            $this->loadClass('checkbox', 'htmlelements');
+            $cbox = new checkbox('arrayList[]');
+            $cbox->cssId = 'checkbox_'.$post['id'];
+        	$cbox->setValue($post['id']);
+
+            $edtable->addCell($edIcon.$delIcon.$cbox->show());
             $edtable->endRow();
         }
-        return $edtable->show();
+        //submit button for multidelete
+        $this->objdelButton = &new button('deleteposts');
+        $this->objdelButton->setValue($this->objLanguage->languageText('mod_blog_word_deleteselected', 'blog'));
+        $this->objdelButton->setToSubmit();
+        $editform->addToForm($edtable->show());
+        $editform->addToForm($this->objdelButton->show());
+        $editform = $editform->show();
+        return $editform;
     }
     /**
      * Method to add a quick post as a blocklet
