@@ -1047,7 +1047,7 @@ class blogops extends object
 
                     $pdflink = new href($pdfurl, $pdfimg, NULL);
 
-                    $tblnl->addCell($pdflink->show()); //pdf icon
+                    $tblnl->addCell($pdflink->show() . $mtflink->show()); //pdf icon
                     $tblnl->endRow();
                     //echo $this->objTB->autodiscCode();
                     //tack the tags onto the end of the post content...
