@@ -1637,6 +1637,11 @@ class blog extends controller
         	$postid = $this->getParam('postid');
         	$emailadd = $this->getParam('emailadd');
         	$emailadd = explode(",",$emailadd);
+        	foreach($emailadd as $emails)
+        	{
+        		$trimmed[] = trim($emails);
+        	}
+        	$emailadd = $trimmed;
         	$message = $this->getParam('msg');
 			$sendername = $this->getParam('sendername');
 
@@ -1663,7 +1668,7 @@ class blog extends controller
 					$bodyText .= $this->objLanguage->languageText("mod_blog_additionalcomments", "blog") . ": <br />";
 					$bodyText .= $message . "<br /><br />";
 				}
-				$bodyText .= $postcontent[0]['post_date'];
+				$bodyText .= stripslashes($postcontent[0]['post_date']);
 				$bodyText .= "<br /><br />";
 				$bodyText .= $postcontent[0]['post_content'];
 				$objMailer->setValue('IsHTML', TRUE);
