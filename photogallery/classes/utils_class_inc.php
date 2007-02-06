@@ -174,7 +174,7 @@ class utils extends object
            $newArr = array();
            foreach ($xml as $gal => $k)
            {
-               print($k->sitename);
+              
                $newArr[] = $k->sitename;
            }
            
@@ -415,6 +415,7 @@ class utils extends object
            FALSE;
        }
    }
+   
    
 }
 ?>

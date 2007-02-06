@@ -29,6 +29,8 @@ class photogallery extends controller
         $this->_objConfig = & $this->getObject('altconfig','config');
         $this->_objContextModules = & $this->getObject('dbcontextmodules', 'context');
         
+    
+        
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('SpryData.js','photogallery'));
         
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('SpryEffects.js','photogallery'));
@@ -36,9 +38,9 @@ class photogallery extends controller
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('xpath.js','photogallery'));
         $str = '<link href="'.$this->getResourceUri('screen.css','photogallery').'" rel="stylesheet" type="text/css" />
                 <script type="text/javascript">
-                var dsGalleries = new Spry.Data.XMLDataSet("'.$this->_objConfig->getSiteRoot().'usrfiles/galleries/galleries.xml", "galleries/gallery");
-                var dsGallery = new Spry.Data.XMLDataSet("'.$this->_objConfig->getSiteRoot().'usrfiles/galleries/{dsGalleries::@base}{dsGalleries::@file}", "gallery");
-                var dsPhotos = new Spry.Data.XMLDataSet("'.$this->_objConfig->getSiteRoot().'usrfiles/galleries/{dsGalleries::@base}{dsGalleries::@file}", "gallery/photos/photo");
+                var dsGalleries = new Spry.Data.XMLDataSet("'.$this->_objConfig->getSiteRoot().'usrfiles/galleries/galleries.xml", "galleries/gallery", { useCache:  false });
+                var dsGallery = new Spry.Data.XMLDataSet("'.$this->_objConfig->getSiteRoot().'usrfiles/galleries/{dsGalleries::@base}{dsGalleries::@file}", "gallery",{ useCache:  false });
+                var dsPhotos = new Spry.Data.XMLDataSet("'.$this->_objConfig->getSiteRoot().'usrfiles/galleries/{dsGalleries::@base}{dsGalleries::@file}", "gallery/photos/photo",{ useCache:  false });
                 
                 </script>';
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('gallery.js','photogallery'));
@@ -72,7 +74,7 @@ class photogallery extends controller
                 $this->setVar('galleries', $this->_objUtils->readGalleries());               
                 return 'galleries_tpl.php';
             case 'createfolder':
-            $this->_objUtils->readPhotoXML('china');
+           
                 $this->_objUtils->createGallery($this->getParam('newgallery'));
                 return $this->nextAction(null);
             case 'upload':

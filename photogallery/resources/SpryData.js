@@ -1952,7 +1952,7 @@ Spry.Data.XMLDataSet = function(dataSetURL, dataSetPath, dataSetOptions)
 	this.doc = null;
 	this.dataSetsForDataRefStrings = new Array;
 	this.hasDataRefStrings = false;
-	this.useCache = false;
+	this.useCache = true;
 
 	// Create a loadURL request object to store any load options
 	// the caller specified. We'll fill in the URL at the last minute
