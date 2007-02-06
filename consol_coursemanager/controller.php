@@ -63,11 +63,15 @@ class consol_coursemanager extends controller
     */
     public function dispatch($action)
     {
+    		$this->action = 'addcourse';
         //$this->setLayoutTemplate('layout_tpl.php');
         switch ($this->action) {
             //Default to view and display view template
             case null:
             	die("this functionality will come soon");
+            break;
+            case 'addcourse':
+              return 'addCourse_tpl.php';
             break;
             default:
             break;

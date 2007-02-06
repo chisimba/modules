@@ -1,23 +1,34 @@
 <?php
 
 //add step 1 template
-$objH = & $this->newObject('htmlheading','htmlelements');
+$pgTitle = &$this->getObject('htmlheading', 'htmlelements');
+$pgTitle->type = 3;
+$pgTitle->str = "&nbsp;"."Add Consol Category";
+
 $objForm = & $this->newObject('form','htmlelements');
 
 $inpContextCode =  & $this->newObject('textinput','htmlelements');
 $inpMenuText = & $this->newObject('textinput','htmlelements');
 $inpTitle = & $this->newObject('textinput','htmlelements');
 $inpButton =  $this->newObject('button','htmlelements');
+$inpCButton =  $this->newObject('button','htmlelements');
 $dropAccess = $this->newObject('dropdown','htmlelements');
 
-$objH->str = 'Add a Course :';
-$objH->type = 3;
+
+// Create a table
+$objTableClass = $this->newObject('htmltable', 'htmlelements');
+$objTableClass->cellspacing = "2";
+$objTableClass->cellpadding = "12";
+$objTableClass->width = "40%";
+$objTableClass->attributes = "border='0'";
+// Create the array for the table header
+$tableRow = array();
 
 //setup the form
 $objForm->name = 'addfrm';
 //remember to add a action
 $objForm->action = $this->uri(array('action' => ''));
-$objForm->extra = 'class="f-wrap-1"';
+//$objForm->extra = 'class="f-wrap-1"';
 $objForm->displayType = 3;
 
 $inpContextCode->name = 'contextcode';
@@ -37,32 +48,28 @@ $inpMenuText->cssClass = 'f-name';
 
 //status
 $dropAccess->name = 'status';
-			$dropAccess->addOption('Published',$this->_objLanguage->languageText("mod_context_published",'context'));
-			$dropAccess->addOption('Unpublished',$this->_objLanguage->languageText("mod_context_unpublished",'context'));
+			$dropAccess->addOption('Published','Published');
+			$dropAccess->addOption('Unpublished','Unpublished');
 
 $dropAccess->setSelected('Published');
 
 $drop = '<fieldset class="f-radio-wrap">
-		
-						<b>'.$this->_objLanguage->languageText("mod_context_access",'context').':</b>
-
-			
 				<fieldset>
 				
 				<label for="Public">
 				<input id="Public" type="radio" name="access" value="Public" class="f-radio" tabindex="8" />
 				
-							'.$this->_objLanguage->languageText("mod_context_public",'context').' <span class="caption">  -  '.$this->_objLanguage->code2Txt("mod_context_publichelp",'context',array('context'=>'Course')).'</span></label>
+							'.'Public'.' <span class="caption">  -  '.'PublicHelp'.'</span></label><br/>
 				
 				<label for="Open">
 				<input id="Open" type="radio" name="access" value="Open" class="f-radio" tabindex="9" />
-				'.$this->_objLanguage->languageText("mod_context_open",'context').' <span class="caption">  -  '.$this->_objLanguage->code2Txt("mod_context_openhelp",'context',array('context'=>'Course')).'</span></label>
+				'.'Open'.' <span class="caption">  - '. 'Open'.'</span></label><br/>
 
 				
 				<label for="Private">
 
 				<input id="Private" type="radio" name="access" value="Private" class="f-radio" tabindex="10" />
-				'.$this->_objLanguage->languageText("mod_context_private",'context').' <span class="caption">  -  '.$this->_objLanguage->code2Txt("mod_context_privatehelp",'context',array('context'=>'course')).'</span></label>
+				'.'Private'.' <span class="caption">  -  '.'Private'.'</span></label><br/>
 				
 	
 				</fieldset>
@@ -71,40 +78,60 @@ $drop = '<fieldset class="f-radio-wrap">
 
 $inpButton->setToSubmit();
 $inpButton->cssClass = 'f-submit';
-$inpButton->value = $this->_objLanguage->languageText("word_next");
+$inpButton->value = "add";
 
+$inpCButton->setToSubmit();
+$inpCButton->cssClass = 'f-submit';
+$inpCButton->value = "cancel";
 
 //validation
 $objForm->addRule('contextcode','[-context-] Code is a required field!', 'required');
 $objForm->addRule('menutext','Menu Text is a required field', 'required!');
 $objForm->addRule('title','Title is a required field', 'required!');
 
-$objForm->addToForm('<div class="req"><b>*</b> Indicates required field</div>');
+
+$objForm->addToForm($pgTitle->show());
+
+$objForm->addToForm('<div class="req">&nbsp;<b>*</b> Indicates required field</div>');
 $objForm->addToForm('<fieldset>');
-if($error)
-{
-    $objForm->addToForm('<p class="error">'.$error.'</p>');
-}
-$objForm->addToForm($objH->show());
 
-$objForm->addToForm('<label for="contextcode"><b><span class="req">*</span>'.$this->_objLanguage->code2Txt("mod_context_contextcode",'context',array('context'=>'Course')).':</b>');
-$objForm->addToForm($inpContextCode->show().'<br /></label>');
+$objTableClass->startRow();
 
-$objForm->addToForm('<label for="title"><b><span class="req">*</span>'.$this->_objLanguage->languageText("word_title").':</b>');
-$objForm->addToForm($inpTitle->show().'<br /></label>');
+$objTableClass->addCell("&nbsp;".'<label for="contextcode"><b><span class="req">*</span>'.'context'.':</b></label>', '', 'top');
+$objTableClass->addCell($inpContextCode->show(), '', 'top');
+$objTableClass->endRow();
 
-$objForm->addToForm('<label for="menutext"><b><span class="req">*</span>'.$this->_objLanguage->languageText("mod_context_menutext",'context').':</b>');
-$objForm->addToForm($inpMenuText->show().'<br /></label>');
+$objTableClass->startRow();
+$objTableClass->addCell("&nbsp;".'<label for="title"><b><span class="req">*</span>'."title".':</b></label>', '', 'top');
+$objTableClass->addCell($inpTitle->show(), '', 'top');
+$objTableClass->endRow();
 
-//$objForm->addToForm('&nbsp;<br/>');
+$objTableClass->startRow();
+$objTableClass->addCell("&nbsp;".'<label for="menutext"><b><span class="req">*</span>'.'menu text'.':</b></label>', '', 'top');
+$objTableClass->addCell($inpMenuText->show(), '', 'top');
+$objTableClass->endRow();
+
+$objTableClass->startRow();
+$objTableClass->addCell("&nbsp;".'<label for="access"><b><span class="req">*</span>'.'Access'.':</b></label>', '', 'top');
+$objTableClass->addCell($dropAccess->show(), '', 'top');
+$objTableClass->endRow();
+
+$objTableClass->startRow();
+$objTableClass->addCell("&nbsp;".'<label for="access"><b>'.'Access'.':</b></label>', '', 'top');
+$objTableClass->addCell($drop, '', 'top');
+$objTableClass->endRow();
+
+$objTableClass->startRow();
+$objTableClass->addCell('', '', 'top', 'center');
+$objTableClass->addCell($inpButton->show()."&nbsp;".$inpCButton->show(), '', 'top');
+$objTableClass->endRow();
+
+$objForm->addToForm($objTableClass);
 
 
-$objForm->addToForm('<label for="access"><b><span class="req">*</span>'.$this->_objLanguage->languageText("mod_context_status",'context').':</b>');
-$objForm->addToForm($dropAccess->show().'<br /></label>');
-
-$objForm->addToForm($drop);
-
-$objForm->addToForm('<br/><div class="f-submit-wrap">'.$inpButton->show().'</div></fieldset>');
+//$objForm->addToForm('<br/><br/><div class="f-submit-wrap">'.$inpButton->show().'</div></fieldset>');
+$objForm->addToForm('<br/><br/>'.'</fieldset>');
 print $objForm->show().'<br/>';
 
+//print '<br/><div class="f-submit-wrap">'.$inpButton->show().'</div></fieldset>';
 ?>
