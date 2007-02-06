@@ -1661,11 +1661,9 @@ class blog extends controller
         		unset($matches[0]);
         		//print_r($matches);
         		$mcount = 0;
-        		$serv = $this->uri('');
-        		$serv = str_replace('index.php?module=blog', '', $serv);
         		foreach($matches as $match)
         		{
-        			$postcontent[0]['post_content'] = preg_replace('/\[img\](.*)\[\/img\]/U', "<img src='".$serv.$match[$mcount]."'/>", $postcontent[0]['post_content']); //$postcontent[0]['post_content'], $results, PREG_PATTERN_ORDER);
+        			$postcontent[0]['post_content'] = preg_replace('/\[img\](.*)\[\/img\]/U', "<img src='".$match[$mcount]."'/>", $postcontent[0]['post_content']); //$postcontent[0]['post_content'], $results, PREG_PATTERN_ORDER);
         			$mcount++;
         		}
 				//thump together an email string (this must be html email as the post is html
@@ -1683,6 +1681,7 @@ class blog extends controller
 				$bodyText .= stripslashes($postcontent[0]['post_date']);
 				$bodyText .= "<br /><br />";
 				$bodyText .= stripslashes($postcontent[0]['post_content']);
+				echo $bodyText;
 				$objMailer->setValue('IsHTML', TRUE);
 				$objMailer->setValue('to', $emailadd);
 				$objMailer->setValue('from', 'noreply@uwc.ac.za');
