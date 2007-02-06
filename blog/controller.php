@@ -1620,8 +1620,8 @@ class blog extends controller
         	//go and fetch the post in question from the db
         	$data = $this->objDbBlog->getPostByPostID($postid);
         	//create the pdf and send it out
-        	$header = $data[0]['post_title'];
-        	$body = $data[0]['post_content'];
+        	$header = stripslashes($data[0]['post_title']);
+        	$body = stripslashes($data[0]['post_content']);
         	$postdate = $data[0]['post_date'];
 
         	//put it all together
