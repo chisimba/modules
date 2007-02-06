@@ -1681,7 +1681,6 @@ class blog extends controller
 				$bodyText .= stripslashes($postcontent[0]['post_date']);
 				$bodyText .= "<br /><br />";
 				$bodyText .= stripslashes($postcontent[0]['post_content']);
-				echo $bodyText;
 				$objMailer->setValue('IsHTML', TRUE);
 				$objMailer->setValue('to', $emailadd);
 				$objMailer->setValue('from', 'noreply@uwc.ac.za');
