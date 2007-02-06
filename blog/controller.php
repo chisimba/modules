@@ -1630,6 +1630,53 @@ class blog extends controller
         	$text = $header . "  " . $postdate . "\r\n" . strip_tags($body);
         	$objPdf->simplePdf($text);
         	//$this->nextAction('');
+        	break;
+
+        case 'mail2friend':
+        	$bloggerid = $this->getParam('bloggerid');
+        	$postid = $this->getParam('postid');
+        	$emailadd = $this->getParam('emailadd');
+        	$emailadd = explode(",",$emailadd);
+        	$message = $this->getParam('msg');
+			$sendername = $this->getParam('sendername');
+
+        	if(empty($emailadd[0]))
+        	{
+        		$m2fdata = array('bloggerid' => $bloggerid, 'postid' => $postid);
+        		$this->setVarByRef('m2fdata', $m2fdata);
+        		//show the form
+        		return 'mail2friend_tpl.php';
+
+        	}
+        	else {
+        		//get the post from the post id
+        		$postcontent = $this->objDbBlog->getPostById($postid);
+				//thump together an email string (this must be html email as the post is html
+				$objMailer = $this->getObject('email', 'mail');
+				//munge together the bodyText...
+				$bodyText = $this->objLanguage->languageText("mod_blog_yourfriend", "blog") . ", " . $sendername . ", " .
+							$this->objLanguage->languageText("mod_blog_interestedin","blog"). ": <br /> " .
+							"<a href='".$this->uri(array('action' => 'viewsingle', 'postid' => $postid), 'blog')."'>".$this->uri(array('action' => 'viewsingle', 'postid' => $postid), 'blog')."</a>";
+				$bodyText .= "<br /><br />";
+				if(!empty($message))
+				{
+					$bodyText .= $this->objLanguage->languageText("mod_blog_additionalcomments", "blog") . ": <br />";
+					$bodyText .= $message . "<br /><br />";
+				}
+				$bodyText .= $postcontent[0]['post_date'];
+				$bodyText .= "<br /><br />";
+				$bodyText .= $postcontent[0]['post_content'];
+				$objMailer->setValue('IsHTML', TRUE);
+				$objMailer->setValue('to', $emailadd);
+				$objMailer->setValue('from', 'noreply@uwc.ac.za');
+				$objMailer->setValue('fromName', $this->objLanguage->languageText("mod_blog_email2ffromname", "blog"));
+				$objMailer->setValue('subject', $this->objLanguage->languageText("mod_blog_email2fsub", "blog"));
+				$objMailer->setValue('body', $bodyText);
+				$objMailer->send();
+		   		$this->nextAction('');
+
+        	}
+        	break;
 
         }//action
 
