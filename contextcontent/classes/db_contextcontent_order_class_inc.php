@@ -44,7 +44,7 @@ class db_contextcontent_order extends dbtable
         FROM tbl_contextcontent_order 
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
         INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id AND original=\'Y\') 
-        WHERE contextcode=\''.$contextCode.'\' AND parentid = \'\'
+        WHERE contextcode=\''.$contextCode.'\' AND parentid = \'root\'
         ORDER BY lft, pageorder LIMIT 1';
         
         $results = $this->getArray($sql);
@@ -81,14 +81,7 @@ class db_contextcontent_order extends dbtable
         }
     }
     
-    /**
-    * Method to get a content page
-    * @param string $pageId Record Id of the Page
-    * @param string $contextCode Context the Page is In
-    * @return array Details of the Page, FALSE if does not exist
-    * @access public
-    */
-    public function getTree($context, $type='dropdown', $defaultSelected='')
+    public function getContextPages($context)
     {
         $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.parentid, tbl_contextcontent_pages.menutitle FROM tbl_contextcontent_order 
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
@@ -96,7 +89,19 @@ class db_contextcontent_order extends dbtable
         WHERE tbl_contextcontent_order.contextcode= \''.$context.'\'
         ORDER BY lft';
         
-        $results = $this->getArray($sql);
+        return $this->getArray($sql);
+    }
+    
+    /**
+    * Method to get a content page
+    * @param string $pageId Record Id of the Page
+    * @param string $contextCode Context the Page is In
+    * @return array Details of the Page, FALSE if does not exist
+    * @access public
+    */
+    public function getTree($context, $type='dropdown', $defaultSelected='', $module='contextcontent')
+    {
+        $results = $this->getContextPages($context);
         
         switch ($type)
         {
@@ -104,7 +109,7 @@ class db_contextcontent_order extends dbtable
                 return $this->generateDropdownTree($results, $defaultSelected);
                 break;
             default:
-                return $this->generateHtmllistTree($results, $defaultSelected);
+                return $this->generateHtmllistTree($results, $defaultSelected, $module);
                 break;
         }
         
@@ -118,7 +123,7 @@ class db_contextcontent_order extends dbtable
     * @return array Details of the Page, FALSE if does not exist
     * @access private
     */
-    private function generateHtmllistTree($results, $defaultSelected='')
+    private function generateHtmllistTree($results, $defaultSelected='', $module)
     {
         $treeMenu = new treemenu();
         
@@ -126,7 +131,7 @@ class db_contextcontent_order extends dbtable
         
         foreach ($results as $treeItem)
         {
-            $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']), 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id'])));
+            $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']), 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id']), $module));
             
             if ($treeItem['id'] == $defaultSelected) {
                 $nodeDetails['cssClass'] = 'confirm';
@@ -135,7 +140,7 @@ class db_contextcontent_order extends dbtable
             $node =& new treenode ($nodeDetails);
             $nodeArray[$treeItem['id']] =& $node;
             
-            if ($treeItem['parentid'] == '') {
+            if ($treeItem['parentid'] == 'root') {
                 $treeMenu->addItem($node);
             } else {
                 if (array_key_exists($treeItem['parentid'], $nodeArray)) {
@@ -169,7 +174,7 @@ class db_contextcontent_order extends dbtable
             $node =& new treenode (array('text'=>htmlentities($treeItem['menutitle']), 'link'=>$treeItem['id']));
             $nodeArray[$treeItem['id']] =& $node;
             
-            if ($treeItem['parentid'] == '') {
+            if ($treeItem['parentid'] == 'root') {
                 $rootnode->addItem($node);
             } else {
                 if (array_key_exists($treeItem['parentid'], $nodeArray)) {
@@ -231,7 +236,7 @@ class db_contextcontent_order extends dbtable
         
         // Extra Step to Prevent Null Values
         if ($parentId == '') {
-            $this->update('id', $lastId, array('parentid'=>''));
+            $this->update('id', $lastId, array('parentid'=>'root'));
         }
         
         return $lastId;
@@ -276,7 +281,7 @@ class db_contextcontent_order extends dbtable
     
     
     
-    public function getPreviousPage($context, $leftValue='')
+    public function getPreviousPage($context, $leftValue='', $module='contextcontent')
     {
         $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_pages.menutitle
         FROM tbl_contextcontent_order 
@@ -291,13 +296,13 @@ class db_contextcontent_order extends dbtable
             return '';
         } else {
             $page = $results[0];
-            $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id'])));
+            $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id']), $module));
             $link->link = 'Previous Page: '.htmlentities($page['menutitle']);
             return '&#171; '.$link->show();
         }
     }
     
-    public function getNextPage($context, $leftValue='')
+    public function getNextPage($context, $leftValue='', $module='contextcontent')
     {
         $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_pages.menutitle
         FROM tbl_contextcontent_order 
@@ -312,7 +317,7 @@ class db_contextcontent_order extends dbtable
             return '';
         } else {
             $page = $results[0];
-            $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id'])));
+            $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id']), $module));
             $link->link = 'Next Page: '.htmlentities($page['menutitle']);
             return $link->show().' &#187;';
         }
@@ -374,8 +379,8 @@ class db_contextcontent_order extends dbtable
      */
     public function rebuildContext($context)
     {
-        $this->_rebuild_tree($context, '', 0, 1);
         $this->orderArray = array();
+        $this->_rebuild_tree($context, 'root', 0, 1);
     }
     
     /**
@@ -394,12 +399,20 @@ class db_contextcontent_order extends dbtable
         // the right value of this node is the left value + 1
         $right = $left+1;
         
-        if ($parent == '') {
-            $name = 'root';
-        } else {
+        // if ($parent == 'root') {
+            // $name = 'root';
+        // } else {
             $name = $parent;
+        //}
+        
+        $thisRow = $this->getRow('id', $parent);
+        //echo $parent.'<br />';
+        if (!array_key_exists($thisRow['parentid'], $this->orderArray)) {
+            $this->orderArray[$thisRow['parentid']] = 1;
+        } else {
+            $this->orderArray[$thisRow['parentid']] = $this->orderArray[$thisRow['parentid']]+1;
         }
-        $this->orderArray[$name] = 1;
+        
        
         // get all children of this node
         $result = $this->getAll(' WHERE  contextcode =\''.$context.'\' AND parentid=\''.$parent.'\' ORDER BY pageorder');
@@ -407,12 +420,16 @@ class db_contextcontent_order extends dbtable
         foreach ($result as $row)
         {
             $right = $this->_rebuild_tree($context, $row['id'], $right, $level+1);
-            $this->orderArray[$name] = $this->orderArray[$name]+1;
+            
+        }
+
+        if ($thisRow != FALSE) {
+        
+            $this->update('id', $parent, array('lft'=>$left, 'rght'=>$right, 'pageorder'=>$this->orderArray[$thisRow['parentid']]));
         }
         
-        //echo 'Id - '.$parent.', left - '.$left.', right - '.$right.'<br />';
         
-        $this->update('id', $parent, array('lft'=>$left, 'rght'=>$right, 'pageorder'=>$this->orderArray[$name]));
+        //echo 'Id - '.$parent.', left - '.$left.', right - '.$right.', order - '.$this->orderArray[$name].'<br />';
         
         
         
@@ -429,6 +446,70 @@ class db_contextcontent_order extends dbtable
     function deletePage($id)
     {
         return $this->delete('id', $id);
+    }
+    
+    /**
+    * Method to move a page up
+    * @param string $id Record Id of the Page
+    * @return boolean Result of Page Move
+    */
+    function movePageUp($id)
+    {
+        $page = $this->getRow('id', $id);
+        
+        if ($page == FALSE) {
+            return FALSE;
+        }
+        
+        $nextPageSQL = ' WHERE parentid=\''.$page['parentid'].'\' AND contextcode   	 =\''.$page['contextcode'].'\' AND pageorder < '.$page['pageorder'].' ORDER BY pageorder DESC';
+        $nextPage = $this->getAll($nextPageSQL);
+        
+        if (count($nextPage) == 0) {
+            return FALSE;
+        } else {
+            $nextPage = $nextPage[0];
+            
+            $this->update('id', $page['id'], array('pageorder'=>$nextPage['pageorder']));
+            $this->update('id', $nextPage['id'], array('pageorder'=>$page['pageorder']));
+            
+            $this->rebuildContext($page['contextcode']);
+            
+            return TRUE;
+        }
+        
+        
+    }
+    
+    /**
+    * Method to move a page down
+    * @param string $id Record Id of the Page
+    * @return boolean Result of Page Move
+    */
+    function movePageDown($id)
+    {
+        $page = $this->getRow('id', $id);
+        
+        if ($page == FALSE) {
+            return FALSE;
+        }
+        
+        $nextPageSQL = ' WHERE parentid=\''.$page['parentid'].'\' AND contextcode   	 =\''.$page['contextcode'].'\' AND pageorder > '.$page['pageorder'].' ORDER BY pageorder ';
+        $nextPage = $this->getAll($nextPageSQL);
+        
+        if (count($nextPage) == 0) {
+            return FALSE;
+        } else {
+            $nextPage = $nextPage[0];
+            
+            $this->update('id', $page['id'], array('pageorder'=>$nextPage['pageorder']));
+            $this->update('id', $nextPage['id'], array('pageorder'=>$page['pageorder']));
+            
+            $this->rebuildContext($page['contextcode']);
+            
+            return TRUE;
+        }
+        
+        
     }
 
 
