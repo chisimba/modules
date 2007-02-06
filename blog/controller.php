@@ -1656,6 +1656,16 @@ class blog extends controller
         	else {
         		//get the post from the post id
         		$postcontent = $this->objDbBlog->getPostById($postid);
+        		//ok we have the content, lets parse for the [img] bbcode tags and replace them with real imgsrc
+        		preg_match_all('/\[img\](.*)\[\/img\]/U', $postcontent[0]['post_content'], $matches, PREG_PATTERN_ORDER);
+        		unset($matches[0]);
+        		//print_r($matches);
+        		$mcount = 0;
+        		foreach($matches as $match)
+        		{
+        			$postcontent[0]['post_content'] = preg_replace('/\[img\](.*)\[\/img\]/U', "<img src='".$match[$mcount]."'/>", $postcontent[0]['post_content']); //$postcontent[0]['post_content'], $results, PREG_PATTERN_ORDER);
+        			$mcount++;
+        		}
 				//thump together an email string (this must be html email as the post is html
 				$objMailer = $this->getObject('email', 'mail');
 				//munge together the bodyText...
