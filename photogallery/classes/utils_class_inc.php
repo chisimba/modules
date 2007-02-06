@@ -225,14 +225,16 @@ class utils extends object
        {
            foreach ($imagesArr as $image)
            {
-               $str .= '<photo
-                path = "'.$images['name'].'"
+               $str .= '
+               <photo
+                path = "'.$image['path'].'"
                 width = "'.$image['width'].'"
                 height = "'.$image['height'].'"
-                thumbpath = "'.$image['name'].'"
+                thumbpath = "'.$image['path'].'"
                 thumbwidth = "'.$image['thumbwidth'].'"
                 thumbheight = "'.$image['thumbheight'].'">
-                </photo><br>
+                </photo>
+                
                 ';
            }
        }
@@ -289,13 +291,26 @@ class utils extends object
               
               if( move_uploaded_file($_FILES['uploadedfile']['tmp_name'],$newImage))
               { 
+                   $filename = $_FILES['uploadedfile']['name'];
                    chmod($newImage, 0777);
                    //create a thumbnail of the image
-                   $this->createThumbnail($newImage,$this->_objConfig->getSiteRootPath().'usrfiles/galleries/'.$gallery.'/thumbnails/'.$_FILES['uploadedfile']['name']);
+                   $thumbImage = $this->_objConfig->getSiteRootPath().'usrfiles/galleries/'.$gallery.'/thumbnails/'.$_FILES['uploadedfile']['name'];
+                   $imgDetails = $this->createThumbnail($newImage,$thumbImage);
                    //add to the xml file
-                   $this->readPhotoXML($gallery);
+                   $arr = $this->readPhotoXML($gallery);
+                   $thumbInfo =  getimagesize($thumbImage);
+                   $imgDetails = getimagesize($newImage);
+                   //add the uploaded file to the xml entries
+                   $arr[] = array('path' => $filename, 'width' =>$imgDetails[0] , 'height' => $imgDetails[1], 'thumbheight' => $thumbInfo[0] , 'thumbwidth' => $thumbInfo[0]);
+                   //write the xml file
                    
-                    
+                  
+                   $newGalleryPath = $this->_objConfig->getSiteRootPath().'usrfiles/galleries/'.$gallery;
+                   chmod($newGalleryPath.'/photos.xml',0777);
+                   $file = fopen($newGalleryPath.'/photos.xml','wr');
+                   fwrite($file, $this->getPhotoXMLContent($gallery, $arr));
+                   fclose($file);
+                   
               }
            }
           
@@ -321,15 +336,19 @@ class utils extends object
    {
         //read the xml file
            $xml = simplexml_load_file($this->_objConfig->getSiteRootPath().'usrfiles/galleries/'.$gallery.'/photos.xml');
-          //var_dump($xml->photos);
+          //var_dump($xml->photos->photo[1]);
           
            $newArr = array();
-           foreach ($xml->photos as $gal => $k)
+           foreach ($xml->photos->photo as $gal => $k)
            {
-               var_dump($k->photo);
-               //$newArr[] = $k->sitename;
+              // print($k['path']);
+              // $path = $k['path'];
+              $newArr[] =array('path' => $k['path'], 'width' => $k['width'] , 'height' => $k['height'], 'thumbheight' => $k['thumbheight'] , 'thumbwidth' => $k['thumbnailwidth']);
            }
-           die;
+           
+           return $newArr;
+          // print_r($newArr);
+         //  die;
    }
    /**
     * Method to create a thumbnail
@@ -340,18 +359,38 @@ class utils extends object
    public function createThumbnail($image,$thumbpath)
    {
        try {
+           $arrDetails = array();
            $newheight = 75;
            $newwidth = 75;
            list($width, $height) = getimagesize($image);
             $thumb = imagecreatetruecolor($newwidth, $newheight);
-            $source = imagecreatefromjpeg($image);
+            $imgInfo = getimagesize($image);
+            $mime = image_type_to_mime_type($imgInfo[2]);
+            //die($mime);
+            switch ($mime)
+            {
+                case 'image/jpeg':
+                     $source = imagecreatefromjpeg($image);
+                     break;
+                case 'image/png':
+                     $source = imagecreatefrompng($image);
+                     break;
+                case 'image/gif':
+                     $source = imagecreatefromgif($image);
+                     break;
+                case 'image/bmp':
+                     $source = imagecreatefrombmp($image);
+                     break;
+            }
             
+            
+           
             // Resize
-             imagecopyresized($thumb, $source, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+            imagecopyresized($thumb, $source, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
              
-             imagejpeg($thumb,$thumbpath);
+            imagejpeg($thumb,$thumbpath);
              
-        
+            
         }
        catch (customException $e)
        {

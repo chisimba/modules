@@ -80,12 +80,12 @@ function xpathParse(expr) {
   xpathParseInit();
 
   var cached = xpathCacheLookup(expr);
-  if (cached) {
+  /*if (cached) {
     if (xpathdebug) {
       Log.write(' ... cached');
     }
     return cached;
-  }
+  }*/
 
   // Optimize for a few common cases: simple attribute node tests
   // (@id), simple element node tests (page), variable references

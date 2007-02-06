@@ -72,7 +72,7 @@ class photogallery extends controller
                 $this->setVar('galleries', $this->_objUtils->readGalleries());               
                 return 'galleries_tpl.php';
             case 'createfolder':
-           // $this->_objUtils->readPhotoXML('china');
+            $this->_objUtils->readPhotoXML('china');
                 $this->_objUtils->createGallery($this->getParam('newgallery'));
                 return $this->nextAction(null);
             case 'upload':
