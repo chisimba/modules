@@ -34,7 +34,7 @@ class photogallery extends controller
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('SpryEffects.js','photogallery'));
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('SpryXML.js','photogallery'));
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('xpath.js','photogallery'));
-        $str = '<link href="skins/_common/gallery/screen.css" rel="stylesheet" type="text/css" />
+        $str = '<link href="'.$this->getResourceUri('screen.css','photogallery').'" rel="stylesheet" type="text/css" />
                 <script type="text/javascript">
                 var dsGalleries = new Spry.Data.XMLDataSet("'.$this->_objConfig->getSiteRoot().'usrfiles/galleries/galleries.xml", "galleries/gallery");
                 var dsGallery = new Spry.Data.XMLDataSet("'.$this->_objConfig->getSiteRoot().'usrfiles/galleries/{dsGalleries::@base}{dsGalleries::@file}", "gallery");
@@ -44,7 +44,7 @@ class photogallery extends controller
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('gallery.js','photogallery'));
         $this->appendArrayVar('headerParams', $str);
         $this->setVar('bodyParams', ' id="gallery" ');
-        $css = '<link rel="stylesheet" type="text/css" href="skins/_common/gallery/drop_shadow.css" />';
+        $css = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('drop_shadow.css','photogallery').'" />';
         
         $this->appendArrayVar('headerParams',$css);
     }
