@@ -1665,7 +1665,7 @@ class blog extends controller
         		$serv = str_replace('index.php?module=blog', '', $serv);
         		foreach($matches as $match)
         		{
-        			$postcontent[0]['post_content'] = preg_replace('/\[img\](.*)\[\/img\]/U', "<img src='".$match[$mcount]."'/>", $postcontent[0]['post_content']); //$postcontent[0]['post_content'], $results, PREG_PATTERN_ORDER);
+        			$postcontent[0]['post_content'] = preg_replace('/\[img\](.*)\[\/img\]/U', "<img src='".$serv.$match[$mcount]."'/>", $postcontent[0]['post_content']); //$postcontent[0]['post_content'], $results, PREG_PATTERN_ORDER);
         			$mcount++;
         		}
 				//thump together an email string (this must be html email as the post is html
