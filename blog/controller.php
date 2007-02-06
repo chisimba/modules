@@ -1672,7 +1672,7 @@ class blog extends controller
 				$objMailer->setValue('fromName', $this->objLanguage->languageText("mod_blog_email2ffromname", "blog"));
 				$objMailer->setValue('subject', $this->objLanguage->languageText("mod_blog_email2fsub", "blog"));
 				$objMailer->setValue('body', $bodyText);
-				$objMailer->send();
+				$objMailer->send(TRUE);
 		   		$this->nextAction('');
 
         	}
