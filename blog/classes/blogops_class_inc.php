@@ -980,7 +980,17 @@ class blogops extends object
             		$pdfimg = $pdficon->show();
 
                     $pdflink = new href($pdfurl, $pdfimg, NULL);
-                    $tbl->addCell($pdflink->show());
+                    //and the mail to a friend icon
+                    $mtficon = $this->newObject('geticon', 'htmlelements');
+            		$mtficon->setIcon('filetypes/eml');
+            		$lblmtf = $this->objLanguage->languageText("mod_blog_mailtofriend", "blog");
+            		$mtficon->alt = $lblmtf;
+            		$mtficon->align = false;
+            		$mtfimg = $mtficon->show();
+
+                    $mtflink = new href($this->uri(array('action' => 'mail2friend', 'postid' => $post['id'], 'bloggerid' => $post['userid'])), $mtfimg, NULL);
+
+                    $tbl->addCell($pdflink->show() . $mtflink->show());
                     $tbl->endRow();
                     echo $this->objTB->autodiscCode();
                     //tack the tags onto the end of the post content...
@@ -2210,6 +2220,78 @@ class blogops extends object
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
         $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_sendtb", "blog") , $stbform);
         return $ret;
+    }
+
+    public function sendMail2FriendForm($m2fdata)
+    {
+    	$this->objUser = $this->getObject('user', 'security');
+    	if($this->objUser->isLoggedIn())
+		{
+			$theuser = $this->objUser->fullName($this->objUser->userid());
+		}
+		else {
+			$theuser = $this->objLanguage->languageText("mod_blog_word_anonymous", "blog");
+		}
+    	//start a form object
+        $this->loadClass('textarea', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $mform = new form('mail2friend', $this->uri(array(
+            'action' => 'mail2friend', 'postid' => $m2fdata['postid']
+        )));
+        $mfieldset = $this->newObject('fieldset', 'htmlelements');
+        //$mfieldset->setLegend($this->objLanguage->languageText('mod_blog_sendmail2friend', 'blog'));
+        $mtable = $this->newObject('htmltable', 'htmlelements');
+        $mtable->cellpadding = 3;
+        $mtable->startHeaderRow();
+        $mtable->addHeaderCell('');
+        $mtable->addHeaderCell('');
+        $mtable->endHeaderRow();
+        //your name
+        $mtable->startRow();
+        $mynamelabel = new label($this->objLanguage->languageText('mod_blog_myname', 'blog') .':', 'input_myname');
+        $myname = new textinput('sendername');
+        $myname->size = '80%';
+        $myname->setValue($theuser);
+        $mtable->addCell($mynamelabel->show());
+        $mtable->addCell($myname->show());
+        $mtable->endRow();
+
+        //Friend(s) email addresses
+        $mtable->startRow();
+        $femaillabel = new label($this->objLanguage->languageText('mod_blog_femailaddys', 'blog') .':', 'input_femail');
+        $emailadd = new textinput('emailadd');
+        $emailadd->size = '80%';
+        if(isset($m2fdata['user']))
+        {
+        	$emailadd->setValue($m2fdata['user']);
+        }
+        $mtable->addCell($femaillabel->show());
+        $mtable->addCell($emailadd->show());
+        $mtable->endRow();
+        //message for friends (optional)
+        $mtable->startRow();
+        $fmsglabel = new label($this->objLanguage->languageText('mod_blog_femailmsg', 'blog') .':', 'input_femailmsg');
+        $msg = new textarea('msg','',4,68);
+        $mtable->addCell($fmsglabel->show());
+        $mtable->addCell($msg->show());
+        $mtable->endRow();
+
+        //add a rule
+        $mform->addRule('emailadd', $this->objLanguage->languageText("mod_blog_phrase_femailreq", "blog") , 'required');
+        $mfieldset->addContent($mtable->show());
+        $mform->addToForm($mfieldset->show());
+        $this->objMButton = new button($this->objLanguage->languageText('mod_blog_word_sendmail', 'blog'));
+        $this->objMButton->setValue($this->objLanguage->languageText('mod_blog_word_sendmail', 'blog'));
+        $this->objMButton->setToSubmit();
+        $mform->addToForm($this->objMButton->show());
+        $mform = $mform->show();
+
+        //bust out a featurebox for consistency
+        $objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_sendmail2friend", "blog") , $mform);
+        return $ret;
+
     }
 
     public function profileEditor($userid, $profile = NULL)
