@@ -19,6 +19,18 @@ class fpdfwrapper extends object
 	public function simplePdf($text)
 	{
 		$this->pdf->AddPage();
+		/*//parse the text and look for images
+		preg_match_all('/\[img\](.*)\[\/img\]/U', $text, $matches, PREG_PATTERN_ORDER);
+        unset($matches[0]);
+        //print_r($matches);
+        $mcount = 0;
+        foreach($matches as $match)
+        {
+        	$text = preg_replace('/\[img\](.*)\[\/img\]/U', $this->pdf->image($match[$mcount], 0, 0, 0), $text);
+        	$mcount++;
+        }
+       // echo $text; die();
+*/
 		$this->pdf->SetFont('Times','',12);
 		$this->pdf->MultiCell(0,5,$text);
 		//Line break
