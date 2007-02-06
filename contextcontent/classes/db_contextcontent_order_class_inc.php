@@ -511,6 +511,43 @@ class db_contextcontent_order extends dbtable
         
         
     }
+    
+    /**
+    * Method to reorder items by passing a string with items
+    *
+    * This method is particularly designed to work with Scriptaculous's Sortables
+    * @param string $context Context we are working with
+    * @param string $string String containing data
+    * @param string $splitter Character or String which can be used to separate items
+    * @param string $obfuscator (Optional) Scriptaculous does not allow you to use underscore,
+    * Therefore developers will probably replace them with another character like
+    * an asterisk. The default is underscore for those who do not use this feature
+    */
+    function reOrderItems($context, $string, $splitter='&', $obfuscator='_')
+    {
+        // Explode Items
+        $items = explode($splitter, $string);
+        
+        // Only perform updates if there are more than one item
+        if (count($items) > 0) {
+            // Start Counter
+            $counter = 1;
+            // Loop through items
+            foreach ($items as $item)
+            {
+                // Replace Obfuscator with proper underscore
+                $item = str_replace($obfuscator, '_', $item);
+                // Do Update
+                $this->update('id', $item, array('pageorder'=>$counter));
+                // Increase Counter
+                $counter++;
+            }
+            // Rebuild Tree
+            $this->rebuildContext($context);
+        }
+        
+        return;
+    }
 
 
 }
