@@ -1661,6 +1661,8 @@ class blog extends controller
         		unset($matches[0]);
         		//print_r($matches);
         		$mcount = 0;
+        		$serv = $this->uri('');
+        		$serv = str_replace('index.php?module=blog', '', $serv);
         		foreach($matches as $match)
         		{
         			$postcontent[0]['post_content'] = preg_replace('/\[img\](.*)\[\/img\]/U', "<img src='".$match[$mcount]."'/>", $postcontent[0]['post_content']); //$postcontent[0]['post_content'], $results, PREG_PATTERN_ORDER);
