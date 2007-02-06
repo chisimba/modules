@@ -1047,6 +1047,16 @@ class blogops extends object
 
                     $pdflink = new href($pdfurl, $pdfimg, NULL);
 
+                    //and the mail to a friend icon
+                    $mtficon = $this->newObject('geticon', 'htmlelements');
+            		$mtficon->setIcon('filetypes/eml');
+            		$lblmtf = $this->objLanguage->languageText("mod_blog_mailtofriend", "blog");
+            		$mtficon->alt = $lblmtf;
+            		$mtficon->align = false;
+            		$mtfimg = $mtficon->show();
+
+                    $mtflink = new href($this->uri(array('action' => 'mail2friend', 'postid' => $post['id'], 'bloggerid' => $post['userid'])), $mtfimg, NULL);
+
                     $tblnl->addCell($pdflink->show() . $mtflink->show()); //pdf icon
                     $tblnl->endRow();
                     //echo $this->objTB->autodiscCode();
