@@ -47,6 +47,7 @@ class scriptaculous extends object
     */
     public function putScriptaculous()
     {
+        $this->setVar('pageSuppressXML', TRUE);
         return $this->getJavascriptFile('prototype/1.5.0_rc1/prototype.js', 'ajaxwrapper').$this->getJavascriptFile('scriptaculous/1.6.5/scriptaculous.js', 'ajaxwrapper');
     }
 }
