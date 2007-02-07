@@ -63,15 +63,38 @@ class consol_coursemanager extends controller
     */
     public function dispatch($action)
     {
-    		$this->action = 'addcourse';
+    		//$this->action = 'addcourse';
         //$this->setLayoutTemplate('layout_tpl.php');
         switch ($this->action) {
             //Default to view and display view template
             case null:
+               //getting the value to be used from insertert of category
+               $name = $this->getParam('catname', NULL);
+               $image = $this->getParam('image', NULL);
+               
+               $objDbCategories	=& $this->getObject('dbconsol_categories');
+               $categories = $objDbCategories->listAll();
+        			$this->setVarByRef('categories',  $categories);
+        			$num = count($categories);
+        			die("the number is ".$num);
+    				if(empty($categories)){
+			    	$order = 1;
+			    	}
+
+			    	
+               
+               
+               
+             	die("name = ".$name." image = ".$image."  this functionality will come soon");
+            break;
+            case 'add':
             	die("this functionality will come soon");
             break;
+            case 'addcatgery':
+              return 'addCourseCategory_tpl.php';
+            break;
             case 'addcourse':
-              return 'addCourse_tpl.php';
+              return 'addCategory_tpl.php';
             break;
             default:
             break;
