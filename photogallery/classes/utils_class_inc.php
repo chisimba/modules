@@ -150,9 +150,18 @@ class utils extends object
    {
        //check if the folder dont already exist
        $newGalleryPath = $this->_objConfig->getSiteRootPath().'usrfiles/galleries/'.$name;
+       if(!is_dir($this->_objConfig->getSiteRootPath().'usrfiles/galleries'))
+       {
+          mkdir($this->_objConfig->getSiteRootPath().'usrfiles/galleries');
+          $file = fopen($this->_objConfig->getSiteRootPath().'usrfiles/galleries/galleries.xml','wr');
+           fwrite($file, '<galleries></galleries>');
+           fclose($file);
+         
+       }
+       
        if(is_dir($newGalleryPath))
        {
-          // return FALSE;
+           return FALSE;
        } else {
            //create the folder
            mkdir($newGalleryPath);
@@ -169,6 +178,7 @@ class utils extends object
            fclose($file);
            
          //read the xml file
+           chmod($this->_objConfig->getSiteRootPath().'usrfiles/galleries/galleries.xml',0777);
            $xml = simplexml_load_file($this->_objConfig->getSiteRootPath().'usrfiles/galleries/galleries.xml');
           
            $newArr = array();
