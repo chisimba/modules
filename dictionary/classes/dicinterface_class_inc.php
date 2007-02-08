@@ -121,10 +121,10 @@ class dicinterface extends object
         $objElement2->setToSubmit();
         // Use the language object to add the word translate
      //   $objElement2->setValue(' '. $this->objLanguage->languageText("mod_dictionary_lookupword").' ');
-
+        $objConfig = $this->getObject('altconfig', 'config');
         //get the dict.org image
         $image = $br . "<a href=\"http://www.dict.org/\" target=\"_blank\">"
-          . "<img src=\"modules/dictionary/resources/img/dictorg.gif\" "
+          . "<img src=\"".$objConfig->getModuleURI()."/dictionary/resources/img/dictorg.gif\" "
           . "alt=\"dict.org\" align=\"middle\"  title=\"dict.org\" "
           . "border= '0' /></a>" . $br;
 
