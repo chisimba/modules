@@ -222,7 +222,8 @@ $this->objInput->fldType='reset';
 $this->objInput->setCss('button');
 $buttons.='&nbsp;&nbsp;&nbsp;'.$this->objInput->show();*/
 $this->objButton1 = new button('exit',$exit);
-$this->objButton1->setToSubmit();
+$returnUrl = $this->uri(array('action' => ''));
+$this->objButton1->setOnClick("window.location='$returnUrl'");
 $buttons.='&nbsp;&nbsp;&nbsp;'.$this->objButton1->show();
 
 $objTable->startRow();
