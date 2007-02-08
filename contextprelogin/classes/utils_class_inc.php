@@ -88,7 +88,7 @@ class utils extends object
 		  		}
 		  	}
 		  	//get all public courses
-		  	$publicCourses = $this->_objDBContext->getAll( 'WHERE status = "Published" AND access = "Public" '.$filter.'  ORDER BY title ');
+		  	$publicCourses = $this->_objDBContext->getAll( "WHERE status = 'Published' AND access = 'Public' ".$filter."  ORDER BY title ");
 		  	//return $publicCourses;
 		  	
 		  	foreach($publicCourses as $pCourse)
@@ -133,7 +133,7 @@ class utils extends object
 		  		}
 		  	}
 		  	//get all public courses
-		  	$publicCourses = $this->_objDBContext->getAll( 'WHERE status = "Published" OR status = "" '.$filter.'  ORDER BY title ');
+		  	$publicCourses = $this->_objDBContext->getAll( "WHERE status = 'Published' OR status = '' ".$filter."  ORDER BY title ");
 		  	//print_r($publicCourses);
 		  	
 		  	foreach($publicCourses as $pCourse)
@@ -198,7 +198,8 @@ class utils extends object
 		//$leftSideColumn .= $objBlocks->showBlock('loginstats', 'context');
 		
         //$leftSideColumn .= $objBlocks->showBlock('calendar', 'eventscalendar');
-
+        $leftSideColumn .= $objBlocks->showBlock('stories', 'stories');
+        
 		$leftSideColumn .= $objBlocks->showBlock('latestpodcast', 'podcast');
 
 		//$leftSideColumn .= $objBlocks->showBlock('chat', 'chat');
