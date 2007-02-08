@@ -37,11 +37,10 @@ class search extends object {
     public function init()
     {
         $this->loadClass('button', 'htmlelements');
-        $objConfig = $this->getObject('altconfig', 'config');
+        $this->objConfig = $this->getObject('altconfig', 'config');
       
         $this->objUser = & $this->getObject('user', 'security');
-        $this->imgLocation = $objConfig->getSiteRoot()
-          . 'modules/websearch/resources/images/';
+        $this->imgLocation = $this->objConfig->getModuleUri().'/websearch/resources/images/';
         $this->objUser = & $this->getObject('user', 'security');
         $this->objLanguage = & $this->getObject('language', 'language');
         //Set the default interfaceType to VERTICAL_FULL
@@ -85,7 +84,7 @@ class search extends object {
         
         //Define the google image
        $img = "<a href=\"http://scholar.google.com/\" target=\"_blank\">"
-             . "<img src=\"modules/websearch/resources/images/google_40wht.gif\" "
+             . "<img src=\"".$this->objConfig->getModuleUri()."/websearch/resources/images/google_40wht.gif\" "
              . "title=\"Google scholar\" align=\"absmiddle\" alt=\"Google scholar\" "
              . "border= '0' /></a>";
         
@@ -178,7 +177,7 @@ class search extends object {
           
         //Define the scholar google image
         $img = "<a href=\"http://scholar.google.com/\" target=\"_blank\">"
-             . "<img src=\"modules/websearch/resources/images/scholar_logo.gif\" "
+             . "<img src=\"".$this->objConfig->getModuleUri()."/websearch/resources/images/scholar_logo.gif\" "
              . "title=\"Google scholar\" align=\"absmiddle\" alt=\"Google scholar\" "
              . "border= '0' /></a>";
         

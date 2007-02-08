@@ -26,7 +26,7 @@ class scholarg extends object
     * and then hands it off for processing. Links are transformed to local
     * links before returning it.
     */
-    publicfunction doSearch()
+    public function doSearch()
     {
         $q=urlencode($this->getParam('q', NULL));
         $ie=$this->getParam('ie', NULL);
