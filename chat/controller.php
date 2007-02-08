@@ -72,7 +72,7 @@ class chat extends controller
     */
     function dispatch($action=Null)
     {
-		//$this->setVar('pageSuppressXML',true);
+		$this->setVar('pageSuppressXML',true);
     	if ($this->getParam('passthroughlogin') == 'true')
     		return $this->nextAction(null);
         $temporary = true;
