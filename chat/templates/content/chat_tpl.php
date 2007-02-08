@@ -36,7 +36,7 @@
     // Layer for displaying chat
     echo "<div id='contentdiv'
         style='
-			border: 5px outset #c0c0c0;
+			border: 1px solid #c0c0c0;
             background-color: #FFFFFF;
             height: 200px;
             overflow: auto;
@@ -346,7 +346,7 @@
     // Layer for displaying users
     echo "<div id='usersdiv'
         style='
-			border: 5px outset #c0c0c0;
+			border: 1px solid #c0c0c0;
             background-color: #FFFFFF;
             height: 200px;
             overflow: auto;
