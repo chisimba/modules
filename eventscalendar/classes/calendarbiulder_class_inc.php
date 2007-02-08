@@ -34,10 +34,12 @@ class calendarbiulder extends object
 	*/
 	public function init()
 	{
+	    $this->_objConfig = $this->getObject('altconfig', 'config');
+	   
 		$this->curtxtMonth=array("","January","February","March","April","May","June","July","August","September","October","November","December");       
   	    $this->curDay=1;	
   	    $this->assignDate(0,0);
-  	    $this->appendArrayVar('headerParams','<link href="modules/calendarbase/resources/calendarstyle.css" rel="stylesheet" type="text/css"/>');
+  	    $this->appendArrayVar('headerParams','<link href="'.$this->_objConfig->getModuleURI().'/calendarbase/resources/calendarstyle.css" rel="stylesheet" type="text/css"/>');
   	    
   	    $this->_objDBEventsCalendar = & $this->newObject('dbeventscalendar', 'eventscalendar');
   	    $this->_objUser = & $this->newObject('user', 'security');
