@@ -4,6 +4,8 @@
 if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
+
+
 //set the layout
 $this->setLayoutTemplate('gradebook_layout_tpl.php');
 
@@ -72,7 +74,8 @@ $this->TableOptions->addCell('&nbsp;&nbsp;'.$objLanguage->languageText('mod_grad
 //add the options to the drop down
 $objAssessments = 0;
 $objAssessments = new dropdown('dropdownAssessments');
-$objAssessments->extra = ' onChange="document.selectAssessment.submit();"';
+$objAssessments->extra = ' onchange=" document.getElementById(\'form_selectAssessment\').submit();"' ;
+//document.getElementById(\'form_selectAssessment\').submit();"
 if($dropdownAssessments) {
 	$objAssessments->addOption($dropdownAssessments,$dropdownAssessments);
 } else {

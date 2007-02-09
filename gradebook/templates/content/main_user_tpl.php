@@ -138,9 +138,9 @@ if(!$numberAssignments) {
 							$xstudentResult=array();
 							$xstudentResult=$objEssaybook->getGrades("studentid='$studentUserId' and topicid='".$iassignment["id"]."' and context='$contextCode'");
 							$classAvg=array();
-							$classAvg=$objEssaybook->getGrades("topicid='".$iassignment["id"]."' and context='$contextCode'","avg(mark) classAvg");
+							$classAvg=$objEssaybook->getGrades("topicid='".$iassignment["id"]."' and context='$contextCode'","avg(mark) classavg");
 							$ca=0;				
-							$ca=$classAvg[0]["classAvg"];
+							$ca=$classAvg[0]["classavg"];
 							$totalAvgMark+=$ca;
 							if(!empty($xstudentResult)) {
 								foreach($xstudentResult as $studentResult) {
@@ -180,7 +180,7 @@ if(!$numberAssignments) {
 						$xstudentResult=array();
 						$xstudentResult=$objEssaybook->getGrades("studentid='$studentUserId' and topicid='".$iassignment["id"]."' and context='$contextCode'");
 						$classAvg=array();
-						$classAvg=$objEssaybook->getGrades("topicid='".$iassignment["id"]."' and context='$contextCode'","avg(mark) classAvg");
+						$classAvg=$objEssaybook->getGrades("topicid='".$iassignment["id"]."' and context='$contextCode'","avg(mark) classavg");
 						$ca=0;				
 						$ca=$classAvg[0]["classavg"];
 						$totalAvgMark+=$ca;
@@ -460,7 +460,7 @@ if(!$numberAssignments) {
 							$classAvg=array();
 							$classAvg=$objAssignmentSubmit->getSubmittedAssignments("assignmentId='".$iassignment["id"]."'","avg(mark) classAvg");
 							$ca=0;				
-							$ca=$classAvg[0]["classAvg"];
+							$ca=$classAvg[0]["classavg"];
 							$totalAvgMark+=$ca;
 							if(!empty($xstudentResult)) {
 								foreach($xstudentResult as $studentResult) {

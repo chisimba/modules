@@ -52,7 +52,7 @@ class gradebook extends controller
 		$this->objHeading =& $this->getObject('htmlheading','htmlelements');
 		$this->objDiv =& $this->getObject('layer', 'htmlelements');
 		$this->objPerm =& $this->getObject('contextcondition', 'contextpermissions');
-		$this->objGradebook =& $this->getObject('gradebookfunctions');
+		$this->objGradebook =& $this->getObject('gradebookfunctions','gradebook');
 		//log activity from this class
 		$this->objLog=$this->newObject('logactivity', 'logger');
 		$this->objLog->log();
@@ -139,7 +139,7 @@ class gradebook extends controller
 							$fields = array();
 							$fields['name'] = $assessmentName;
 							$fields['percentage'] = $percentFinalMark;
-							$fields['userId'] = $this->objUser->userId();
+							$fields['userid'] = $this->objUser->userId();
 							$fields['context'] = $contextCode;
 							$fields['closing_date'] = $closingDate;
 							$fields['description'] = $description;
@@ -157,7 +157,7 @@ class gradebook extends controller
 							$fields = array();
 							$fields['name'] = $assessmentName;
 							$fields['percentage'] = $percentFinalMark;
-							$fields['userId'] = $this->objUser->userId();
+							$fields['userid'] = $this->objUser->userId();
 							$fields['context'] = $contextCode;
 							$fields['closing_date'] = $closingDate;
 							$fields['description'] = $description;
@@ -175,7 +175,7 @@ class gradebook extends controller
 							$fields = array();
 							$fields['name'] = $assessmentName;
 							$fields['percentage'] = $percentFinalMark;
-							$fields['userId'] = $this->objUser->userId();
+							$fields['userid'] = $this->objUser->userId();
 							$fields['context'] = $contextCode;
 							$fields['closing_date'] = $closingDate;
 							$fields['description'] = $description;
@@ -194,7 +194,7 @@ class gradebook extends controller
 							$fields = array();
 							$fields['name'] = $assessmentName;
 							$fields['percentage'] = $percentFinalMark;
-							$fields['userId'] = $this->objUser->userId();
+							$fields['userid'] = $this->objUser->userId();
 							$fields['context'] = $contextCode;
 							$fields['closing_date'] = $closingDate;
 							$fields['description'] = $description;
@@ -229,8 +229,8 @@ class gradebook extends controller
 						case 'MCQ Tests':
 							//insert into tbl_test_results
 							$fields = array();
-							$fields['testId'] = $id;
-							$fields['studentId'] = $userId;
+							$fields['testid'] = $id;
+							$fields['studentid'] = $userId;
 							$fields['mark'] = $studentMark;
 							$objTestresults->addResult($fields);
 						break;
@@ -238,7 +238,7 @@ class gradebook extends controller
 							//insert into tbl_worksheet_results
 							$fields = array();
 							$fields['worksheet_id'] = $id;
-							$fields['userId'] = $userId;
+							$fields['userid'] = $userId;
 							$fields['mark'] = $studentMark;
 							$objWorksheetresults->addResult($fields);
 						break;
@@ -246,8 +246,8 @@ class gradebook extends controller
 						default:
 							//insert into tbl_assignment_submit
 							$fields = array();
-							$fields['assignmentId'] = $id;
-							$fields['userId'] = $userId;
+							$fields['assignmentid'] = $id;
+							$fields['userid'] = $userId;
 							$fields['mark'] = $studentMark;
 							$objAssignmentSubmit->addSubmit($fields);
 						break;

@@ -4,12 +4,15 @@
 if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
+
+
 //set the layout
 $this->setLayoutTemplate('gradebook_layout_tpl.php');
 
 //has the nature of the assessment been determined?
 $dropdownAssessments = 0;
 $dropdownAssessments = $this->getParam('dropdownAssessments', NULL);
+//die($dropdownAssessments);
 //load required form elements
 $this->loadClass('form','htmlelements');
 $this->loadClass('dropdown','htmlelements');
@@ -68,7 +71,7 @@ echo $this->objH->show();
 $this->TableOptions = $this->newObject('htmltable', 'htmlelements');
 $this->TableOptions->cellspacing="2";
 $this->TableOptions->width=(!$dropdownAssessments || $dropdownAssessments=="View All"?"95%":"75%");
-//$this->TableOptions->attributes="align=\"center\"";
+$this->TableOptions->attributes="align=\"center\"";
 
 //view by student
 $objLink = new link($this->uri(array('dropdownAssessments'=>$dropdownAssessments)));
@@ -82,7 +85,7 @@ $this->TableOptions->addCell($objLanguage->languageText('mod_gradebook_viewasses
 //add the options to the drop down
 $objAssessments = 0;
 $objAssessments = new dropdown('dropdownAssessments');
-$objAssessments->extra = ' onChange="document.selectAssessment.submit();"';
+$objAssessments->extra = ' onchange="document.getElementById(\'form_selectAssessment\').submit();"';
 if($dropdownAssessments) {
 	$objAssessments->addOption($dropdownAssessments,$dropdownAssessments);
 }
@@ -103,7 +106,7 @@ $this->TableInstructions->cellspacing="2";
 $this->TableInstructions->width=($dropdownAssessments && $dropdownAssessments!="View All"?"80%":"100%");
 //$this->TableInstructions->attributes="align=\"center\"";
 
-$this->TableInstructions->startHeaderRow();
+$this->TableInstructions->startHeaderRow();//starthead1 
 $this->TableInstructions->addHeaderCell($objLanguage->languageText('mod_gradebook_studentNumber','gradebook'),"17%");
 $this->TableInstructions->addHeaderCell('&nbsp;&nbsp;'.$objLanguage->languageText('mod_gradebook_student','gradebook'),($dropdownAssessments&& $dropdownAssessments!="View All"?"70%":"33%"));
 //get the number of assessments
@@ -226,6 +229,8 @@ if(!$numberAssessments) {
 $this->TableInstructions->addHeaderCell($objLanguage->languageText('mod_gradebook_yearMark','gradebook'),"10%");
 $this->TableInstructions->endHeaderRow();
 
+
+//Ok code 
 //get the students in this course
 $userId=array();
 $firstName=array();
@@ -251,6 +256,7 @@ if(!$numberStudents) {
 		$objLink->link=$firstName[$i-1].' '.$surname[$i-1];
 		$this->TableInstructions->addCell('&nbsp;&nbsp;'.$objLink->show());
 		
+			
 		if($dropdownAssessments) {
 			//based on the assessment, query the relevant results/tables
 			switch($dropdownAssessments) {
@@ -281,7 +287,7 @@ if(!$numberStudents) {
 						}
 					}
 					$this->TableInstructions->addCell('&nbsp;&nbsp;'.($total?$total:""));
-					//$this->TableInstructions->endRow();
+					$this->TableInstructions->endRow();
 
 				break;
 				case 'MCQ Tests':
@@ -311,7 +317,7 @@ if(!$numberStudents) {
 						}
 					}
 					$this->TableInstructions->addCell('&nbsp;&nbsp;'.($total?$total:""));
-					//$this->TableInstructions->endRow();
+					$this->TableInstructions->endRow();
 				break;
 				case 'Online Worksheets':
 					//retrieve grades from Online Worksheets
@@ -341,7 +347,7 @@ if(!$numberStudents) {
 						}
 					}
 					$this->TableInstructions->addCell('&nbsp;&nbsp;'.($total?$total:""));
-				//	$this->TableInstructions->endRow();
+					$this->TableInstructions->endRow();
 				break;
 				case 'Assignments':
 					//retrieve grades from assignments
@@ -375,6 +381,7 @@ if(!$numberStudents) {
 				break;
 				default:
 					//total grades
+	
 					$total=0;
 					$totalAssignments=0;
 					$totalEssays=0;
@@ -405,8 +412,7 @@ if(!$numberStudents) {
 							}
 						}
 					}
-			$this->TableInstructions->endRow();
-die();		
+			$this->TableInstructions->endRow();		
 					//retrieve grades from MCQ Tests
 					$as=array();
 					$testsArray=array();
@@ -486,12 +492,13 @@ die();
 							}
 						}
 					}
-
+					
 					//display the total grade
 					$this->TableInstructions->addCell('&nbsp;&nbsp;'.($total?$total:""));
 					$this->TableInstructions->endRow();
 				break;
 			}
+			
 		} else {
 			//total grades
 			$total=0;
@@ -500,6 +507,7 @@ die();
 			$totalTests=0;
 			$totalWorksheets=0;
 			//retrieve grades from Essays
+						
 			$as=array();
 			$essaysArray=array();
 			$essaysArray=$objEssaytopics->getTopic(NULL,NULL,"context='$contextCode'");
@@ -524,7 +532,7 @@ die();
 					}
 				}
 			}
-
+		
 			//retrieve grades from MCQ Tests
 			$as=array();
 			$testsArray=array();
@@ -550,7 +558,7 @@ die();
 					}
 				}
 			}
-			
+
 			//retrieve grades from Online Worksheets
 			$as=array();
 			$worksheetsArray=array();
@@ -608,7 +616,9 @@ die();
 			//display the total grade
 			$this->TableInstructions->addCell('&nbsp;&nbsp;'.($total?$total:""));
 		}
+		
 		$this->TableInstructions->endRow();
+		
 	}
 }
 
@@ -802,7 +812,9 @@ switch($dropdownAssessments) {
 		}
 	break;
 }
+
 $this->TableInstructions->endRow();
+
 //lowest mark
 $this->TableInstructions->startRow();
 $this->TableInstructions->addCell("<strong>".$objLanguage->languageText('mod_gradebook_lowestMark','gradebook')."</strong>",NULL,NULL,NULL,NULL," colspan=\"2\"");
@@ -993,7 +1005,9 @@ switch($dropdownAssessments) {
 		}
 	break;
 }
+
 $this->TableInstructions->endRow();
+
 //average mark
 $this->TableInstructions->startRow();
 $this->TableInstructions->addCell("<strong>".$objLanguage->languageText('mod_gradebook_classAvg','gradebook')."</strong>",NULL,NULL,NULL,NULL," colspan=\"2\"");
@@ -1091,6 +1105,7 @@ switch($dropdownAssessments) {
 		}
 	break;
 	default:
+
 		//Essays
 		$as=array();
 		$essaysArray=array();
@@ -1184,6 +1199,7 @@ switch($dropdownAssessments) {
 		}
 	break;
 }
+
 $this->TableInstructions->endRow();
 
 $this->TableInstructions->startRow();
