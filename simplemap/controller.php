@@ -155,6 +155,27 @@ class simplemap extends controller
     	$this->setVarByRef('str', $str);
         return "demomap_tpl.php";
     }
+    
+    /**
+    * 
+    * Method corresponding to the testparser action. It catches the URL for the timeline
+    * module and hands it over to the template. This is a unit test of sorts, and it not
+    * really meant to have any end user functionality.
+    * 
+    * @access private
+    * 
+    */
+    private function __testparser()
+    {
+    	$this->setVar('pageSuppressXML', TRUE);
+    	$objParser = $this->getObject("smapparser", "simplemap");
+    	$map = $filename =  "http://" . $_SERVER['SERVER_NAME'] 
+    	   . $objRsConfig->getItem('MODULE_URI') . "simplemap/resources/jsmaps/madiba.smap";
+    	$objParser->setMapUri($map);
+    	$str = $objParser->show();
+    	$this->setVarByRef("str", $str);
+        return "testparser_tpl.php";
+    }
   
     /**
     * 
