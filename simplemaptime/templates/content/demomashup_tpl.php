@@ -15,12 +15,12 @@ $tlUrl = htmlentities("http://localhost/chisimba/index.php?module=timeline&mode=
 		<div id="content"> 
 			<div id="contentcontent">
 			<iframe id="mytimelines" name="mytimelines" 
-			  src="http://localhost/chisimba/index.php?module=timeline&amp;mode=plain" width="100%" 
+			  src="index.php?module=timeline&amp;mode=plain" width="100%" 
 			  height="350">
 			</iframe>
 			<br /><br />
 			<iframe  id="mymap" name="mymap" 
-			  src="http://localhost/chisimba/index.php?module=simplemap&amp;mode=plain&amp;width=1000" 
+			  src="index.php?module=simplemap&amp;mode=plain&amp;width=1000" 
 			  width="100%" height="620"></iframe>
 			</div>
 		</div>
