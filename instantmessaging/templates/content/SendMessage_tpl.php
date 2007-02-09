@@ -83,7 +83,7 @@
 
     // Display the send button.    
 	$this->loadClass("button","htmlelements");
-	$button = new button("send", $objLanguage->languageText("word_send",'instantmessaging'));
+	$button = new button("send", $objLanguage->languageText("word_send",'instantmessaging','instantmessaging'));
 	$button->setToSubmit();
 	$form->addToForm($button);
     
