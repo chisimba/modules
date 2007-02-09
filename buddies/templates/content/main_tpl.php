@@ -9,7 +9,7 @@ $objAddIcon->alt = $objLanguage->languageText('mod_buddies_addbuddy', 'buddies')
 $add = $objAddIcon->getAddIcon($objLink); 
 // Send an instant message to all buddies.
 $imPopup =& $this->getObject('popup','instantmessaging');
-$imPopup->setup(null, 'buddies', $objLanguage->languageText('phrase_sendinstantmessagetoall', 'buddies'));
+$imPopup->setup(null, 'buddies', $objLanguage->languageText('phrase_sendinstantmessagetoall'));
 $imAll = $imPopup->show(); 
 // Create header with add icon and instant message to all buddies icon
 $pgTitle = &$this->getObject('htmlheading', 'htmlelements');
