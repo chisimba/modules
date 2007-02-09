@@ -22,6 +22,8 @@ $tableRow = array();
 $tableHd[] = $objLanguage->languageText('mod_buddies_picture', 'buddies');
 $tableHd[] = $objLanguage->languageText('mod_buddies_name', 'buddies');
 $tableHd[] = $objLanguage->languageText('mod_buddies_email', 'buddies');
+$tableHd[] = $objLanguage->languageText('mod_buddies_action', 'buddies');
+
 // Create the table header for display
 $objTableClass->addHeader($tableHd, "heading");
 
