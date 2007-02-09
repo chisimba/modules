@@ -1,9 +1,5 @@
 <?php
-	//$this->setLayoutTemplate('popuplayout_tpl.php')
-	//$this->setVar('pageSuppressContainer',TRUE);
-	//$this->setVar('pageSuppressBanner',TRUE);
-	//$this->setVar('pageSuppressToolbar',TRUE);
-	//$this->setVar('suppressFooter',TRUE);
+	
     // Load classes.
 	$this->loadClass("form","htmlelements");
 	$this->loadClass("textinput","htmlelements");
@@ -11,17 +7,16 @@
 	$this->loadClass("link","htmlelements");
 	$this->loadClass("tabbedbox","htmlelements");
 	$objLabel =& $this->newObject('label', 'htmlelements');
-	$objHeading =& $this->getObject('htmlheading','htmlelements');
+//	$this->loadClass('htmlheading','htmlelements');
 	$objHeading1 =& $this->getObject('htmlheading','htmlelements');
 	
 	//Heading 1
-	$objHeading->type=1;
-	$objHeading->str =$objLanguage->languageText("mod_readinglist_additionals",'readinglist');
-	echo $objHeading->show();
+	$heading =$objLanguage->languageText("mod_readinglist_additionals",'readinglist');
+	//echo $objHeading->show();
 		
         	
 	$objTable =& $this->newObject('htmltable','htmlelements');
-        $objTable->width='20';
+        //$objTable->width='20';
         $objTable->cellspacing='12';
         $objTable->cellpadding='12';
         $row =
@@ -32,69 +27,80 @@
         array("<b>".ucwords($objLanguage->code2Txt("mod_context_context",'context')).":</b>",
         $contextTitle);
         $objTable->addRow($row, 'odd');
+        
+        
 		
 		//Heading 2
 		
-		
-		$objHeading1->type=2;
-		$objHeading1->str =$objLanguage->languageText("mod_readinglist_additionalcomment",'readinglist');
+		$heading1 =$objLanguage->languageText("mod_readinglist_additionalcomment",'readinglist');
 		
 		
 		
 		
 	//... Author text box
-	//$textinput = new textinput("author",$author);
-        //$textinput->size = 70;
         $row = array("<b>".$label=$objLanguage->languageText("mod_readinglist_author",'readinglist').":</b>",$author);
         //$textinput->show());
 		$objTable->addRow($row, 'even');
+
 		
     	//Title text box
-	//$textinput = new textinput("title",$title);
-        //$textinput->size = 70;
         $row = array("<b>".$objLanguage->languageText("mod_readinglist_title",'readinglist').":</b>",$title);
         //$textinput->show());
 		$objTable->addRow($row, 'even');
+
 		
     	//Publisher text box
-        //$textinput = new textinput("publisher",$publisher);
-        //$textinput->size = 70;
         $row = array("<b>".$objLanguage->languageText("mod_readinglist_publisher",'readinglist').":</b>",$publisher);
         //$textinput->show());
 		$objTable->addRow($row, 'even');				     
+
 	
     	//Publishing year text box
-        //$textinput = new textinput("publishingYear",$publishingYear);
-        //$textinput->size = 4;
-        $row = array("<b>".$objLanguage->languageText("mod_readinglist_year",'readinglist').":</b>",$publishingYear);
+            $row = array("<b>".$objLanguage->languageText("mod_readinglist_year",'readinglist').":</b>",$publishingYear);
         //$textinput->show());
-		$objTable->addRow($row, 'even');
-		  
-        //Link text box
-        //$textinput = new textinput("link",$link);
-        //$textinput->size = 70;
-        //$row = array("<b>".$label=$objLanguage->languageText("mod_readinglist_link",'readinglist').":</label></b>",
-        //$textinput->show());	
-		$row = array('<b>'.$objLanguage->languageText("mod_readinglist_link",'readinglist').':</b>',$link);
 		$objTable->addRow($row, 'even');
 		
+          
+        //Link text box
+        
+        $linkList = $this->objDbReadingList_links->getByItem($id);        
+        if($linkList){
+            foreach($linkList as $key=>$link){
+        		$link = "<a href = '".$link['link']."'>".$link['link']."</a>";
+                $objTable->startRow();
+        		if($key == 0){
+                    $objTable->addCell('<b>'.$objLanguage->languageText("mod_readinglist_link",'readinglist').':</b>');
+                    $objTable->addCell($link);
+                }else{
+                    $objTable->addCell('');
+                    $objTable->addCell($link);
+                }        		
+                $objTable->endRow();     
+            }
+        }else{
+            $objTable->startRow();
+            $objTable->addCell('<b>'.$objLanguage->languageText("mod_readinglist_link",'readinglist').':</b>');
+            $objTable->addCell('');
+            $objTable->endRow();     
+        }        	
+		
+		//$row = array('<b>'.$objLanguage->languageText(" ",'readinglist').':</b>');
+		//$objTable->addRow($row, 'even');
+		
+		
 	//Publication text box
-        //$textinput = new textinput("publication",$publication);
-        //$textinput->size = 70;
-        $row = array("<b>".$label=$objLanguage->languageText("mod_readinglist_publication",'readinglist').":</b>",$publication);
+            $row = array("<b>".$label=$objLanguage->languageText("mod_readinglist_publication",'readinglist').":</b>",$publication);
         //$textinput->show());
 		$objTable->addRow($row, 'even');
+
 	
 	//... Country text box
-	//$textinput = new textinput("country",$country);
-        //$textinput->size = 70;
-        $row = array("<b>".$label=$objLanguage->languageText("mod_readinglist_country",'readinglist').":</b>",$country);
+	        $row = array("<b>".$label=$objLanguage->languageText("mod_readinglist_country",'readinglist').":</b>",$country);
         //$textinput->show());
 		$objTable->addRow($row, 'even');
+
 	
 	//... Language text box
-	//$textinput = new textinput("language",$language);
-        //$textinput->size = 70;
         $row = array("<b>".$label=$objLanguage->languageText("mod_readinglist_language",'readinglist').":</b>",$language);
         //$textinput->show());
 		$objTable->addRow($row, 'even');
@@ -108,17 +114,16 @@
                 'id' => $id
             ));
 		$refLink->link = $objLanguage->languageText("phrase_addreference");
-		$refLink->extra = "onclick=\"javascript:window.open('{$url}', 'refs', 'width=500, height=240, left=100,top=100');\"";
+		$refLink->extra = "onclick=\"javascript:window.open('{$url}', 'refs', 'width=440, height=200, left=100,top=100,scrollbars = yes');\"";
 		$linkWindow = $refLink->show();
-		
-		
-    	//Close button
+	
+    	
+    	//Back button
 		$button = new button("Back",
 		$objLanguage->languageText("word_back"));    
 		$button->setToSubmit();
 		$str = $button->show();
 		
-	
 		
 		// The form
 		$form = new form("additionals", 
@@ -129,16 +134,33 @@
 		
 		//creating the tabbed box that contains the additional information table
 		$objTab = new tabbedbox();
+		$objTab->addTabLabel($heading);
 		$objTab->addBoxContent($objTable->show());
 		$display = '<p>'.$objTab->show().'</p>';
 		
 		//creating the tabbed table that will hold the comment to be viewed
-		$commentData = $this->uri(array(
-                  'action' => 'comment',
-                  'id' => $id));
-		if(empty($commentData)){
+		$commentData = $this->objDbReadingList_comment->getByItem($id);
+		if(!empty($commentData)){
 			$objTab2 = new tabbedbox();
-			$objTab2->addBoxContent($objHeading1->show());
+			$objTab2->addTabLabel($heading1);
+			$content = '';
+			foreach($commentData as $data){
+                $content .= '<br />' . $data['comment'];
+                if($data['userid'] == $this->userId){
+                  
+                    $objTable2 =& $this->newObject('htmltable','htmlelements');
+                    $objTable2->cellspacing='5';
+                    $objTable2->cellpadding='5';
+                    $objTable2->startRow();
+
+                    $objTable2->addCell($content."&nbsp;"."&nbsp;"."&nbsp;"."&nbsp;".$data['updated']);
+                    
+                    $objTable2->endRow();
+                    
+                }                
+            }
+            $objTab2->addBoxContent($objTable2->show());
+            //$objTab2->addBoxContent($objTable2);
 			$display .= '<p>'.$objTab2->show().'</p>';
 		}
 			

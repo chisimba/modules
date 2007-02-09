@@ -16,7 +16,8 @@
 	$form = new form("comment", 
 		$this->uri(array(
 	    	
-	   		'action'=>'commentconfirm'
+	   		'action'=>'commentconfirm',
+	   		'itemid' => $itemid,
 	)));
 	
 	if(isset($showConfirm) && $showConfirm){
@@ -33,37 +34,35 @@
 					
 		
 		//... Comment text Area
-		$textarea = new textarea("comment");
+		if(!empty($id)){
+    		$commentData = $this->objDbReadingList_comment->listSingle($id); 
+            $comment = $commentData[0]['comment'];	
+        }else{
+            $comment = '';
+        }
+		$textarea = new textarea("comment", $comment);
         $textarea->size = 100;
         $textarea->scrollbars = 'yes';
         $row = array("<b>".$label=$objLanguage->languageText("mod_readinglist_comment",'readinglist').":</b>".$textarea->show());
 		$objTable->addRow($row, 'even');
 		
-    
 		
-		$exitLabel = $this->objLanguage->languageText('word_cancel');
-    	//Save button
-		$button = new button("submit",$objLanguage->languageText("word_save"));    //word_save
-		$button->setToSubmit();
+    	//Save and Exit button
+		$objButton = new button("submit",$objLanguage->languageText("word_save"));
+		$objButton->setToSubmit();
+		$button = $objButton->show();
+		if(!empty($id)){
+            $button = '';
+        }
+		$button1 = new button("exit",$objLanguage->languageText("word_exit"));  //exit_save
+	
+        $button1->setOnClick("javascript:opener.location.reload();window.close()");
+        
+		$row = array($button."&nbsp;".$button1->show());
 		
-		$row = array($button->show());
 		$objTable->addRow($row, 'even');
 		
-		
-		//the exit button
-		/*$button1 = new button("submit");
-		$button1 = $objLanguage->languageText("word_exit");
-		$comm = $this->uri(array(
-                'action'=>''
-            ));
-		
-		$button1->extra = "onclick=\"javascript:window.close($comm);\"";
-		$button1->setToSubmit();*/
-		
-		//$row = array($button1->show());
-		//$objTable->addRow($row, 'even');
 		$form->addToForm($objTable->show());
-		
-		
+			
 		echo $form->show();
 ?>	

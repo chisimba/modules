@@ -45,6 +45,7 @@
     // Step through the list of books.
     $class = 'even';
     foreach ($list as $item) {
+        $linkList = $this->objDbReadingList_links->getByItem($item['id']);
         $class = ($class == 'odd') ? 'even':'odd';
     // Display each field for book.author
         $table->startRow();
@@ -54,7 +55,12 @@
         $table->addCell($item['publishingyear'], "", NULL, NULL, $class, '');
         
         //echo $item['link'];
-		$link2 = "<a href = '".$item['link']."'>".$item['link']."</a>";
+        if($linkList){
+    		$link2 = "<a href = '".$linkList[0]['link']."'>".$linkList[0]['link']."</a>";
+        }else{
+            $link2 = '';
+        }
+//		$link2 = "<a href = '".$item['link']."'>".$item['link']."</a>";
 
         //$table->addCell($item['link'], "", NULL, NULL, $class, '');
         $table->addCell($link2, "", NULL, NULL, $class, '');
@@ -64,7 +70,7 @@
 		
 		// Show the Additional link
         $iconAdditional = $this->getObject('geticon','htmlelements');
-        $iconAdditional->setIcon('options');
+        $iconAdditional->setIcon('view');
         $iconAdditional->alt = $objLanguage->languageText("mod_readinglist_additionals",'readinglist');
         $iconAdditional->align=false;
         $objLink =& $this->getObject("link","htmlelements");

@@ -60,7 +60,8 @@
         //Link text box
         $objTable->addRow($row, 'even');		
 		$iconWindow = $this->getObject('geticon','htmlelements');
-		$iconWindow->setIcon('addsibling'); 
+		$iconWindow->setIcon('addsibling');
+        $iconWindow->alt = $objLanguage->languageText("mod_readinglist_additionallinks",'readinglist'); 
 	    $addUrl = $this->newObject('windowpop','htmlelements');
 	    $windowPop = $this->uri(array(
                   'action' => 'urls',
@@ -68,12 +69,12 @@
                  
 		$addUrl->set('location', $windowPop); 
 		$addUrl->set('linktext',$iconWindow->show());   
-        $addUrl->set('width','600'); 
-        $addUrl->set('height','250');
+        $addUrl->set('width','450'); 
+        $addUrl->set('height','200');
         $addUrl->set('left','100');
         $addUrl->set('top','100');
         $addUrl->set('scrollbars','yes');
-        $addUrl->putJs();      
+        //$addUrl->putJs();      
 	    $linkWindow = $addUrl->show();    
 		
 		 
