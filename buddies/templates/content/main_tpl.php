@@ -9,7 +9,7 @@ $objAddIcon->alt = $objLanguage->languageText('mod_buddies_addbuddy', 'buddies')
 $add = $objAddIcon->getAddIcon($objLink); 
 // Send an instant message to all buddies.
 $imPopup =& $this->getObject('popup','instantmessaging');
-$imPopup->setup(null, 'buddies', $objLanguage->languageText('phrase_sendinstantmessagetoall'));
+$imPopup->setup(null, 'buddies', $objLanguage->languageText('phrase_sendinstantmessagetoall', 'buddies'));
 $imAll = $imPopup->show(); 
 // Create header with add icon and instant message to all buddies icon
 $pgTitle = &$this->getObject('htmlheading', 'htmlelements');
@@ -45,7 +45,7 @@ $tableHd[] = $objLanguage->languageText('mod_buddies_im', 'buddies');
 $tableHd[] = $objLanguage->languageText('mod_buddies_email', 'buddies');
 $tableHd[] = $objLanguage->languageText('mod_buddies_icq', 'buddies');
 $tableHd[] = $objLanguage->languageText('mod_buddies_yahoo', 'buddies');
-$tableHd[] = $objLanguage->languageText('mod_buddies_homepage', 'buddies');
+//$tableHd[] = $objLanguage->languageText('mod_buddies_homepage', 'buddies');
 $tableHd[] = $objLanguage->languageText('mod_buddies_action', 'buddies');
 // Create the table header for display
 $objTableClass->addHeader($tableHd, "heading");
@@ -130,10 +130,10 @@ foreach ($buddies as $buddy) {
 	        $hpIcon = $this->getObject('geticon', 'htmlelements');
 	        $hpIcon->alt = $objLanguage->languageText('phrase_viewhomepage');
 	        $hp = $hpIcon->getLinkedIcon($hpparam, 'homepage');
-	        $objTableClass->addCell($hp, '', 'top', 'center', $class);
+	        //$objTableClass->addCell($hp, '', 'top', 'center', $class);
 	    }
 	    else {
-	       	$objTableClass->addCell('', '', '', '', $class);
+	       	//$objTableClass->addCell('', '', '', '', $class);
 	    }
     } 
     // Create delete icon
