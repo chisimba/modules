@@ -80,6 +80,14 @@ echo '<hr />';
 
 echo $table->show();
 
+if ($this->isValid('movepageup')) {
+$link = new link($this->uri(array('action'=>'movepageup', 'id'=>$page['id'])));
+$link->link = 'Page Up';
 
+$link2 = new link($this->uri(array('action'=>'movepagedown', 'id'=>$page['id'])));
+$link2->link = 'Page Down';
+
+echo '<p>'.$link->show().' / '.$link2->show().'</p>';
+}
 
 ?>

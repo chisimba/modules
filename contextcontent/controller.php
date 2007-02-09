@@ -38,8 +38,7 @@ class contextcontent extends controller
         
         switch ($action)
         {
-            default:
-                return $this->showContextTOC();
+            
             case 'notincontext':
                 return 'tpl_notincontext.php';
             case 'switchcontext':
@@ -60,7 +59,23 @@ class contextcontent extends controller
                 return $this->deletePageConfirm();
             case 'fixleftright':
                 return $this->fixLeftRightValues();
+            case 'movepageup':
+                return $this->movePageUp($this->getParam('id'));
+            case 'movepagedown':
+                return $this->movePageDown($this->getParam('id'));
+            default:
+                //return $this->home_debug();
+                return $this->showContextTOC();
         }
+    }
+    
+    public function home_debug()
+    {
+        $numPages = $this->objContentOrder->getNumContextPages($this->contextCode);
+        echo $numPages.'<br /><br />';
+        
+        $firstPage = $this->objContentOrder->getFirstPage($this->contextCode);
+        print_r($firstPage);
     }
     
     public function showContextTOC()
@@ -69,7 +84,8 @@ class contextcontent extends controller
         
         if ($numPages > 0) {
             $firstPage = $this->objContentOrder->getFirstPage($this->contextCode);
-            return $this->viewPage($firstPage['id']);
+            //return $this->viewPage($firstPage['id']);
+            return $this->nextAction('viewpage', array('id'=>$firstPage['id']));
         } else {
             
             return 'tpl_contenthome.php';
@@ -120,7 +136,8 @@ class contextcontent extends controller
         $page = $this->objContentOrder->getPage($pageId, $this->contextCode);
         
         if ($page == FALSE) {
-            return $this->nextAction(NULL, array('error'=>'pagedoesnotexist'));
+            echo 'page does not exist';
+            //return $this->nextAction(NULL, array('error'=>'pagedoesnotexist'));
         }
         
         $this->setVarByRef('page', $page);
@@ -239,6 +256,20 @@ class contextcontent extends controller
         $this->objContentOrder->rebuildContext($this->contextCode);
         
         
+    }
+    
+    function movePageUp($id)
+    {
+        $result = $this->objContentOrder->movePageUp($id);
+        
+        return $this->nextAction('viewpage', array('id'=>$id, 'message'=>'movepageup', 'result'=>$result));
+    }
+    
+    function movePageDown($id)
+    {
+        $result = $this->objContentOrder->movePageDown($id);
+        
+        return $this->nextAction('viewpage', array('id'=>$id, 'message'=>'movepageup', 'result'=>$result));
     }
 
 }
