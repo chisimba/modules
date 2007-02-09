@@ -60,22 +60,22 @@ class dbReadingList extends dbTable
 	* -- @param string $userId The user ID
 	* -- @param string $dateLastUpdated Date last updated
 	*/
-	function insertSingle($contextId, $author, $title, $publisher, $publishingYear, $link, $publication,$country,$language)
+	function insertSingle($contextId, $author, $title, $publisher, $publishingYear, $publication,$country,$language)
 	{
-		$this->insert(array(
+		$id = $this->insert(array(
 			'contextcode'=>$contextId, 
         		'author' => $author,
         		'title' => $title,
 			'publisher' => $publisher,
 			'publishingyear' => $publishingYear,
-			'link' => $link,
+			//'link' => $link,
 			'publication' => $publication,
 			'country' => $country,
 			'language' => $language
 			//'userId' => $userId
 			//'dateLastUpdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
 		));
-		return;	
+		return $id;	
 	}
 
 	/**

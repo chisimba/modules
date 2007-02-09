@@ -25,9 +25,13 @@ class dbReadingList_links extends dbTable
 
 	function getByItem($itemId)
 	{
-	  $sql = "SELECT * FROM tbl_readinglist_links WHERE itemid = '" .$itemId . "'";
-	  return $this->getArray($sql);
-	  
+        $sql = "SELECT * FROM tbl_readinglist_links WHERE itemid = '" .$itemId . "'";
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data;
+        }else{
+            return FALSE;
+        }	  
 	}
 
 	

@@ -45,7 +45,7 @@ class modulelinks_readinglist extends object
         $adminArr['menutext'] = $read;
         $adminArr['description'] = $read;
         $adminArr['itemid'] = '';
-        $adminArr['moduleid'] = 'pbl';
+        $adminArr['moduleid'] = 'readinglist';
         $adminArr['params'] = array();
         
         $returnArr = array();

@@ -14,13 +14,19 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
-	'itemId' => array(
+	'itemid' => array(
 		'type' => 'text',
 		'length' => 32
 		),	
 	'comment' => array(
+		'type' => 'clob',
+		),
+	'userid' => array(
 		'type' => 'text',
-		'length' => 50
+		'length' => 32
+		),	
+	'updated' => array(
+		'type' => 'timestamp',
 		),
 	);
 ?>

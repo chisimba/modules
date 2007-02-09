@@ -20,12 +20,16 @@ class dbReadingList_comment extends dbTable
     function init() 
     {
         parent::init('tbl_readinglist_comment');
+        $this->table = ('tbl_readinglist_comment');
         //$this->USE_PREPARED_STATEMENTS=True;
+        $this->objUser=&$this->newObject('user','security');
+        $this->userId=$this->objUser->userId();
     }
 
 	function getByItem($itemId)
 	{
-	  $sql = "SELECT * FROM tbl_readinglist_comment WHERE itemid = '" .$itemId . "'";
+	  $sql = "SELECT * FROM ".$this->table;
+      $sql .= " WHERE itemid = '" .$itemId . "'";
 	  return $this->getArray($sql);
 	  
 	}
@@ -38,29 +42,33 @@ class dbReadingList_comment extends dbTable
 	*/	
 	function listSingle($id)
 	{
-		$sql = "SELECT * FROM tbl_readinglist WHERE id = '" . $id . "'";
+		$sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE id = '" . $id . "'";
 		return $this->getArray($sql);
 		//return $this->getRow("id", $id);
 	}
 
 	/**
 	* Insert a record
-	* @param string $Id The ID
+	* @param string $itemd The ID of the item being commented on
 	* @param string $comment The comment
 	*
 	*/
-	function insertIntoDB($id, $comment)
+	function insertIntoDB($itemid, $comment)
 	{
-		$this->insert(array( 
-        		'id' => $id,
-        		'comment' => $comment
+		$id = $this->insert(array( 
+        		'itemid' => $itemid,
+        		'comment' => $comment,
+        		'userid' => $this->userId,
+        		'updated' => date('Y-m-d H:i:s'),
+        		
 			//'description' => $description
 			
 			//'userId' => $userId
 			//'dateLastUpdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
 		));
-		return;	
+		return $id;	
 	}
-
+	
 }
 ?>

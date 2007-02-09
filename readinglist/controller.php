@@ -19,6 +19,10 @@ var $objLanguage;
 var $objDbReadingList;
 var $contextId;
 var $contextTitle;
+    /**
+    * @var string $userId The id on the current logged in user
+    */
+    protected $userId;
 
 /**
 * The Init function
@@ -37,6 +41,8 @@ function init ()
 	$this->objLog=$this->newObject('logactivity', 'logger');
 	//Log this module call
 	$this->objLog->log();
+    $this->objUser=&$this->newObject('user','security');
+    $this->userId=$this->objUser->userId();
 				
 }
 
@@ -77,32 +83,36 @@ function dispatch($action=null)
 	case "add":
 		return "add_tpl.php";
 	case "addconfirm":
-		$this->nextAction(
-		$this->objDbReadingList->insertSingle(
-			$this->contextId,
-			$this->getParam('author', NULL),
-			$this->getParam('title', NULL),
+        $link = $this->getParam('link', NULL);
+        $id = $this->objDbReadingList->insertSingle(
+            $this->contextId,
+            $this->getParam('author', NULL),
+            $this->getParam('title', NULL),
 			$this->getParam('publisher', NULL),
 			$this->getParam('publishingYear', NULL),
-			$this->getParam('link', NULL),
+			//$this->getParam('link', NULL),
 			$this->getParam('publication', NULL),
 			$this->getParam('country', NULL),
 			$this->getParam('language', NULL)
-		));
-		
+		);
+		if($link != NULL){
+            $this->objDbReadingList_links->insertSingle($id, $link);
+        }
+        return $this->nextAction('');
 		break;
 		
 	case "additionals":
 		
 		
 		$id = $this->getParam('id', null);
+		//die($id);
 		$this->setVarByRef('id',$id);
-		$list = $this->objDbReadingList->listSingle($id);
+		$list = $this->objDbReadingList->listSingle($id);		
 		$author = $list[0]['author'];
 		$title = $list[0]['title'];
 		$publisher = $list[0]['publisher'];
 		$publishingYear = $list[0]['publishingyear'];
-		$link = $list[0]['link'];
+//		$link = $list[0]['link'];
 		$publication = $list[0]['publication'];
 		$country = $list[0]['country'];
 		$language = $list[0]['language'];
@@ -110,7 +120,7 @@ function dispatch($action=null)
 		$this->setVarByRef('title',$title);
 		$this->setVarByRef('publisher',$publisher);
 		$this->setVarByRef('publishingYear',$publishingYear);
-		$this->setVarByRef('link',$link);
+//		$this->setVarByRef('link',$link);
 		$this->setVarByref('publication',$publication);
 		$this->setVarByref('country',$country);
 		$this->setVarByref('language',$language);
@@ -225,18 +235,19 @@ function dispatch($action=null)
 		
 	case "comment":
 		$this->setLayoutTemplate(NULL);
-		$id = $this->getParam('id', null);
-		$this->setVarByRef('id',$id);
+		$itemid = $this->getParam('id', null);
+		$this->setVarByRef('itemid',$itemid);
 		//$list = $this->objDbReadingList->listSingle($id);
 		//$this->setVarByRef('comment',$list);//if(!empty($list))
 		return "comment_tpl.php";
 		
 	case "commentconfirm":
 		$this->setLayoutTemplate(NULL);
-		$this->objDbReadingList_comment->insertIntoDB(
-			$this->getParam('id'),
-			$this->getParam('comment', NULL)
-		);
+		$itemid = $this->getParam('itemid');
+		$comment = $this->getParam('comment');
+		$id = $this->objDbReadingList_comment->insertIntoDB($itemid, $comment);
+		$this->setVarByRef('id', $id);
+		$this->setVarByRef('itemid', $itemid);
 		$this->setVar('showConfirm', TRUE);
 		return "comment_tpl.php";
 		break;
