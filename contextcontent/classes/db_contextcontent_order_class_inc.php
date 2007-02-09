@@ -83,7 +83,7 @@ class db_contextcontent_order extends dbtable
     
     public function getContextPages($context)
     {
-        $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.parentid, tbl_contextcontent_pages.menutitle FROM tbl_contextcontent_order 
+        $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.parentid, tbl_contextcontent_pages.menutitle, lft, rght FROM tbl_contextcontent_order 
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
         INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id) 
         WHERE tbl_contextcontent_order.contextcode= \''.$context.'\'
@@ -99,14 +99,29 @@ class db_contextcontent_order extends dbtable
     * @return array Details of the Page, FALSE if does not exist
     * @access public
     */
-    public function getTree($context, $type='dropdown', $defaultSelected='', $module='contextcontent')
+    public function getTree($context, $type='dropdown', $defaultSelected='', $module='contextcontent', $disableChildrenOfDefault=FALSE)
     {
         $results = $this->getContextPages($context);
+        
+        if ($defaultSelected != '') {
+            $this->defaultSelected = $this->getRow('id', $defaultSelected);
+            //$this->defaultSelected = $this->getPage($context, $defaultSelected);
+            
+            if ($this->defaultSelected == FALSE) {
+                $this->defaultSelected = '';
+            }
+        } else {
+            $this->defaultSelected = '';
+        } 
+        
+        if ($this->defaultSelected == '') {
+            $disableChildrenOfDefault = FALSE;
+        }
         
         switch ($type)
         {
             case 'dropdown': 
-                return $this->generateDropdownTree($results, $defaultSelected);
+                return $this->generateDropdownTree($results, $defaultSelected, $disableChildrenOfDefault);
                 break;
             default:
                 return $this->generateHtmllistTree($results, $defaultSelected, $module);
@@ -161,7 +176,7 @@ class db_contextcontent_order extends dbtable
     * @return array Details of the Page, FALSE if does not exist
     * @access private
     */
-    private function generateDropdownTree($results, $defaultSelected='')
+    private function generateDropdownTree($results, $defaultSelected='', $disableChildrenOfDefault=FALSE)
     {
         $treeMenu = new treemenu();
         
@@ -171,7 +186,13 @@ class db_contextcontent_order extends dbtable
         
         foreach ($results as $treeItem)
         {
-            $node =& new treenode (array('text'=>htmlentities($treeItem['menutitle']), 'link'=>$treeItem['id']));
+            $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']), 'link'=>$treeItem['id']);
+            
+            if ($disableChildrenOfDefault && $treeItem['lft'] > $this->defaultSelected['lft'] && $treeItem['rght'] < $this->defaultSelected['rght']) {
+                $nodeDetails['extra'] = 'disabled="disabled" title="This page is on a lower level than the current page you are editing"';
+            }
+            
+            $node =& new treenode ($nodeDetails);
             $nodeArray[$treeItem['id']] =& $node;
             
             if ($treeItem['parentid'] == 'root') {
@@ -547,6 +568,15 @@ class db_contextcontent_order extends dbtable
         }
         
         return;
+    }
+    
+    function changeParent($context, $node, $newParent)
+    {
+        if ($newParent =='') {
+            $newParent = 'root';
+        }
+        $this->update('id', $node, array('parentid'=>$newParent));
+        $this->rebuildContext($context);
     }
 
 

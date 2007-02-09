@@ -24,14 +24,14 @@ echo $header->show();
 $form = new form('addpage', $this->uri(array('action'=>$formaction)));
 $formTable = $this->newObject('htmltable', 'htmlelements');
 
-if ($mode=='add') {
+//if ($mode=='add') {
     $label = new label ('Parent', 'input_parentnode');
 
     $formTable->startRow();
     $formTable->addCell($label->show());
     $formTable->addCell($tree);
     $formTable->endRow();
-}
+//}
 $menuTitle = new textinput('menutitle');
 $menuTitle->size = '80%';
 

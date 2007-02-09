@@ -163,6 +163,9 @@ class contextcontent extends controller
         
         $this->setVarByRef('page', $page);
         
+        $tree = $this->objContentOrder->getTree($this->contextCode, 'dropdown', $page['parentid'], 'contextcontent', TRUE);
+        $this->setVarByRef('tree', $tree);
+        
         $this->setVar('mode', 'edit');
         $this->setVar('formaction', 'updatepage');
         
@@ -176,16 +179,25 @@ class contextcontent extends controller
         $menutitle = stripslashes($this->getParam('menutitle'));
         $headerScripts = stripslashes($this->getParam('headerscripts'));
         $pagecontent = stripslashes($this->getParam('pagecontent'));
+        $parentnode = stripslashes($this->getParam('parentnode'));
         
         if ($contextCode != '' && $contextCode != $this->contextCode) {
             return $this->nextAction('switchcontext');
         } else {
             $page = $this->objContentOrder->getPage($pageId, $this->contextCode);
+            $parentPage = $this->objContentOrder->getPage($parentnode, $this->contextCode);
             
             if ($page == FALSE) {
                 return $this->nextAction(NULL, array('error'=>'pagedoesnotexist'));
             } else {
                 $this->objContentPages->updatePage($page['pageid'], $menutitle, $pagecontent, $headerScripts);
+                
+                if ($parentnode != $page['parentid']) {
+                //if ($parentnode != $page['parentid'] && ($page['lft'] > $parentPage['lft']) && ($page['rght'] < $parentPage['rght'])) {
+                    
+                    
+                    $this->objContentOrder->changeParent($this->contextCode, $pageId, $parentnode);
+                }
                 
                 return $this->nextAction('viewpage', array('id'=>$pageId, 'message'=>'pageupdated'));
             }

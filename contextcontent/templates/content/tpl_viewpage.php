@@ -40,6 +40,16 @@ if (count($list) == 0) {
     }
 }
 
+if ($this->isValid('movepageup')) {
+$link = new link($this->uri(array('action'=>'movepageup', 'id'=>$page['id'])));
+$link->link = 'Move Page Up';
+
+$link2 = new link($this->uri(array('action'=>'movepagedown', 'id'=>$page['id'])));
+$link2->link = 'Move Page Down';
+
+$middle .= '<br />'.$link->show().' / '.$link2->show();
+}
+
 
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
@@ -80,14 +90,6 @@ echo '<hr />';
 
 echo $table->show();
 
-if ($this->isValid('movepageup')) {
-$link = new link($this->uri(array('action'=>'movepageup', 'id'=>$page['id'])));
-$link->link = 'Page Up';
 
-$link2 = new link($this->uri(array('action'=>'movepagedown', 'id'=>$page['id'])));
-$link2->link = 'Page Down';
-
-echo '<p>'.$link->show().' / '.$link2->show().'</p>';
-}
 
 ?>
