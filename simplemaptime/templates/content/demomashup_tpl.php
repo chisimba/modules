@@ -18,10 +18,17 @@ $tlUrl = htmlentities("http://localhost/chisimba/index.php?module=timeline&mode=
 			  src="index.php?module=timeline&amp;mode=plain" width="100%" 
 			  height="350">
 			</iframe>
-			<br /><br />
-			<iframe  id="mymap" name="mymap" 
-			  src="index.php?module=simplemap&amp;mode=plain&amp;width=1000" 
-			  width="100%" height="620"></iframe>
+			<?php 
+			$hideMap = $this->getParam("hideMap", FALSE);
+			if (!$hideMap == "TRUE") {
+				?>
+				<br /><br />
+				<iframe  id="mymap" name="mymap" 
+				  src="index.php?module=simplemap&amp;mode=plain&amp;width=1000" 
+				  width="100%" height="620"></iframe>
+		    	<?php
+			}
+			?>
 			</div>
 		</div>
 	</div>
@@ -47,11 +54,31 @@ $tlUrl = htmlentities("http://localhost/chisimba/index.php?module=timeline&mode=
 		<div id="rightcontent">
 			<h3>Key places</h3>
 			<ul>
-				<li><a href="<?php echo $mapBase; ?>&amp;gLat=-31.333576&amp;gLong=28.979391&amp;width=1000" target="mymap">Qunu, South Africa</a></li>
-				<li><a href="<?php echo $mapBase; ?>&amp;gLat=-25.732912&amp;gLong=28.187903&amp;width=1000" target="mymap">Pretoria, South Africa</a></li>
-				<li><a href="<?php echo $mapBase; ?>&amp;gLat=59.902214&amp;gLong=10.742189&amp;width=1000" target="mymap">Oslo, Norway</a></li>
-				<li><a href="<?php echo $mapBase; ?>&amp;gLat=43.641709&amp;gLong=-79.391686&amp;width=1000" target="mymap">Toronto, Canada</a></li>
+				<?php if (!$hideMap == "TRUE") { ?>
+					<li><a href="<?php echo $mapBase; ?>&amp;gLat=-31.333576&amp;gLong=28.979391&amp;width=1000" target="mymap">Qunu, South Africa</a></li>
+					<li><a href="<?php echo $mapBase; ?>&amp;gLat=-25.732912&amp;gLong=28.187903&amp;width=1000" target="mymap">Pretoria, South Africa</a></li>
+					<li><a href="<?php echo $mapBase; ?>&amp;gLat=59.902214&amp;gLong=10.742189&amp;width=1000" target="mymap">Oslo, Norway</a></li>
+					<li><a href="<?php echo $mapBase; ?>&amp;gLat=43.641709&amp;gLong=-79.391686&amp;width=1000" target="mymap">Toronto, Canada</a></li>
+				<?php
+				} else {
+				    echo "<li>Turn on map to see list of places</li>";
+				}
+				?>
 			</ul>
+			<br />
+			<br />
+			<h3>Control map</h3>
+			<ul>
+				<?php if ($hideMap == "TRUE") { ?>
+				    <li><a href="index.php?module=simplemaptime"><?php echo $this->objLanguage->languageText("mod_simplemaptime_showmap", "simplemaptime"); ?></a></li>
+					<?php 
+				} else {
+					?> 
+					<li><a href="index.php?module=simplemaptime&amp;hideMap=TRUE"><?php echo $this->objLanguage->languageText("mod_simplemaptime_hidemap", "simplemaptime"); ?></a></li>
+					<?php
+				} ?>
+			</ul>
+			
 		</div>
 	</div>
 </div>
