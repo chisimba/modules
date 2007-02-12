@@ -148,10 +148,50 @@ $deleteForm->addToForm($hiddeninput->show());
 $switchmenu->addBlock($optionsCount.') '.$this->objLanguage->languageText('mod_forum_deletethetopic', 'forum', 'Delete the Topic'), $deleteForm->show(), 'switchmenutext');
 
 
+/**************************************************************************************
+//////////////////// SECOND OPTION - MOVING TO ANOTHER FORUM  ////////////////////
+**************************************************************************************/
+
+
+// Only show this option if there are other topics.
+// You cant move a topic as a tangent to another topic if there aren't any other topics
+
+
+if (count($otherForums) > 0) {
+
+    // Increase Options Count for next item
+    $optionsCount++;
+    
+    $moveToForumForm = new form ('movetopictoforum', $this->uri(array('action'=>'moderate_movetoforum')));
+    
+    $dropdown = new dropdown ('forummove');
+
+    foreach ($otherForums as $forum)
+    {
+        $dropdown->addOption($forum['forum_id'], $forum['forum_name']);
+    }
+    $moveToForumForm->addToForm($this->objLanguage->languageText('mod_forum_movetopictofollowingforum', 'forum', 'Move the Topic to the following forum').': '.$dropdown->show());
+    
+    /// CONTINUE ADD BUTTON TO FORM
+    
+    $button = new button ('confirmmovetotangent');
+    $button->value = $this->objLanguage->languageText('mod_forum_confirmmovetopic', 'forum', 'Confirm Move Topic');
+    $button->setToSubmit();
+
+    $moveToForumForm->addToForm('<p>'.$button->show().'</p>');
+
+    //Add Hidden Id - Common to both
+    $moveToForumForm->addToForm($hiddeninput->show());
+   
+
+    $switchmenu->addBlock($optionsCount.') '.$this->objLanguage->languageText('mod_forum_movetopictoanotherforum', 'forum', 'Move the Topic to another Forum'), $moveToForumForm->show(), 'switchmenutext');
+
+}
+
 
 
 /**************************************************************************************
-//////////////////// SECOND OPTION - MOVING TO TOPIC TO A TANGENT  ////////////////////
+//////////////////// THIRD OPTION - MOVING TO TOPIC TO A TANGENT  ////////////////////
 **************************************************************************************/
 
 
@@ -200,7 +240,7 @@ if (count($otherTopicsInForum) > 0) {
 
 
 /**************************************************************************************
-//////////////////// THIRD OPTION - MOVING TANGENT TO A NEW TOPIC  ////////////////////
+//////////////////// FOURTH OPTION - MOVING TANGENT TO A NEW TOPIC  ////////////////////
 **************************************************************************************/
 
 if ($topic['topic_tangent_parent'] != '0') {
@@ -233,7 +273,7 @@ if ($topic['topic_tangent_parent'] != '0') {
 }
 
 /**************************************************************************************
-//////////////////// FOURTH OPTION - LOCKING / UNLOCKING TOPIC  ///////////////////////
+//////////////////// FIFTH OPTION - LOCKING / UNLOCKING TOPIC  ///////////////////////
 **************************************************************************************/
 
 
@@ -303,7 +343,7 @@ $topicStatusForm->addToForm($topicHiddenInput->show());
 $switchmenu->addBlock($optionsCount.') '.$this->objLanguage->languageText('mod_forum_lockingunlockingtopic', 'forum', 'Locking / Unlocking a Topic'), $topicStatusForm->show(), 'switchmenutext');
 
 /**************************************************************************************
-//////////////////// FIFTH OPTION - MAKING THE TOPIC STICKY  //////////////////////////
+//////////////////// SIXTH OPTION - MAKING THE TOPIC STICKY  //////////////////////////
 **************************************************************************************/
 
 

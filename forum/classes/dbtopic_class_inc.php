@@ -645,5 +645,10 @@ GROUP BY tbl_forum_topic.id                ';
         return $numPages;
     }
     
+    function switchTopicForum($id, $forum)
+    {
+        return $this->update('id', $id, array('forum_id' => $forum));
+    }
+    
  }
 ?>

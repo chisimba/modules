@@ -286,6 +286,9 @@ class forum extends controller
             case 'moderate_movetotangent':
                 return $this->moderateMoveTangent();
                 
+            case 'moderate_movetoforum':
+                return $this->moderateMoveNewForum();
+                
             case 'moderate_movetonewtopic':
                 return $this->moderateMoveNewTopic();
                 
@@ -1817,6 +1820,9 @@ class forum extends controller
         
         $this->setVarByRef('topic', $topic);
         
+        $otherForums = $this->objForum->otherForums($topic['forum_id'], $this->contextCode);
+        $this->setVarByRef('otherForums', $otherForums);
+        
         if ($topic['topic_tangent_parent'] == '0') {
             $tangents = $this->objTopic->getTangents($id);
             $topicParent = '';
@@ -1911,6 +1917,17 @@ class forum extends controller
         $this->objTopic->moveTangentsToAnotherTopic($id, $topicmove);
         
         return $this->nextAction('forum', array('id'=>$topicInfo['forum_id'], 'message'=>'topicmovetotangent', 'topic'=>$id));
+    }
+    
+    public function moderateMoveNewForum()
+    {
+        $topic = $this->getParam('id');
+        $forum = $this->getParam('forummove');
+        
+        if ($topic != '' && $forum != '') {
+             $this->objTopic->switchTopicForum($topic, $forum);
+        }
+        return $this->nextAction('forum', array('id'=>$forum, 'message'=>'topicmovedtonewforum', 'topic'=>$topic));
     }
     
     /**
