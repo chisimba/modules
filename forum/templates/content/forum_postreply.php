@@ -236,7 +236,7 @@ $addTable->startRow();
 
 $addTable->addCell(' ');
 
-$submitButton = new button('submit', $this->objLanguage->languageText('word_submit', 'system'));
+$submitButton = new button('submitbutton', $this->objLanguage->languageText('word_submit', 'system'));
 $submitButton->setToSubmit();
 
 $cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel', 'system'));

@@ -1099,7 +1099,7 @@ class dbPost extends dbTable
             
             $addTable->addCell(' ');
             
-            $submitButton = new button('submit', $this->objLanguage->languageText('word_submit'));
+            $submitButton = new button('submitbutton', $this->objLanguage->languageText('word_submit'));
             $submitButton->setToSubmit();
             
             
