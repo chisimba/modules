@@ -21,6 +21,12 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
+    'forum_type' => array(
+		'type' => 'text',
+		'length' => 255,
+        'notnull' => 1,
+        'default' => 'context'
+		),
     'forum_name' => array(
 		'type' => 'text',
 		'length' => 50,
