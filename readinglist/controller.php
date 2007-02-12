@@ -108,15 +108,17 @@ function dispatch($action=null)
 		//die($id);
 		$this->setVarByRef('id',$id);
 		$list = $this->objDbReadingList->listSingle($id);		
-		$author = $list[0]['author'];
-		$title = $list[0]['title'];
-		$publisher = $list[0]['publisher'];
-		$publishingYear = $list[0]['publishingyear'];
-//		$link = $list[0]['link'];
-		$publication = $list[0]['publication'];
-		$country = $list[0]['country'];
-		$language = $list[0]['language'];
-		$this->setVarByRef('author',$author);
+		if (isset($list[0])){
+            $author = $list[0]['author'];
+		    $title = $list[0]['title'];
+		    $publisher = $list[0]['publisher'];
+		    $publishingYear = $list[0]['publishingyear'];
+//		    $link = $list[0]['link'];
+		    $publication = $list[0]['publication'];
+		    $country = $list[0]['country'];
+		    $language = $list[0]['language'];
+		}
+        $this->setVarByRef('author',$author);
 		$this->setVarByRef('title',$title);
 		$this->setVarByRef('publisher',$publisher);
 		$this->setVarByRef('publishingYear',$publishingYear);
