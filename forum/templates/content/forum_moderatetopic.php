@@ -329,7 +329,7 @@ $topicStatusForm->addToForm( $editor);
 
 $topicStatusForm->addToForm('</div>');
 
-$submitButton = new button('submit', $this->objLanguage->languageText('mod_forum_updatetopicstatus', 'forum', 'Update Topic Status'));
+$submitButton = new button('submitform', $this->objLanguage->languageText('mod_forum_updatetopicstatus', 'forum', 'Update Topic Status'));
 $submitButton->setToSubmit();
 
 $topicStatusForm->addToForm('<p>'.$submitButton->show().'</p>');
@@ -364,7 +364,7 @@ if ($topic['topic_tangent_parent'] == '0') {
     $objElement->setBreakSpace('<br />');
     $stickyTopicForm->addToForm('<p>'.$objElement->show().'</p>');
 
-    $submitButton = new button('submit', $this->objLanguage->languageText('mod_forum_updatestickystatus', 'forum', 'Update Sticky Status'));
+    $submitButton = new button('submitform2', $this->objLanguage->languageText('mod_forum_updatestickystatus', 'forum', 'Update Sticky Status'));
     $submitButton->setToSubmit();
 
     $stickyTopicForm->addToForm('<p>'.$submitButton->show().'</p>');

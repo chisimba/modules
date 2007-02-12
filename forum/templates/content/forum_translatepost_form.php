@@ -83,7 +83,7 @@ $formTable->startRow();
 
 $formTable->addCell(' ');
 
-$submitButton = new button('submit', $this->objLanguage->languageText('word_submit'));
+$submitButton = new button('submitform', $this->objLanguage->languageText('word_submit'));
 $submitButton->setToSubmit();
 
 $cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel'));

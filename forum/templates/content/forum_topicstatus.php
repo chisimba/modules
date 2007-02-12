@@ -91,7 +91,7 @@ $topicStatusForm->addToForm( $editor);
 
 $topicStatusForm->addToForm('</div>');
 
-$submitButton = new button('submit', $this->objLanguage->languageText('mod_forum_savetopicstatus'));
+$submitButton = new button('submitform', $this->objLanguage->languageText('mod_forum_savetopicstatus'));
 $submitButton->setToSubmit();
 
 $topicStatusForm->addToForm('<p>'.$submitButton->show().'</p>');
