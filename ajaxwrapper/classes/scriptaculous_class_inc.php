@@ -12,9 +12,17 @@
 class scriptaculous extends object
 {
 	/**
+    * @var sVersion The version of scriptaculous to use (v1.7.0 = currrent)
+    */
+    public $sVersion;
+    
+    /**
 	* Constructor
 	*/
-	public function init() {}
+	public function init($version = NULL)
+    {
+        $this->sVersion=!isset($version)?'1.6.5':$version;
+    }
 	
 	/**
 	* Method to load the Prototype JavaScript
@@ -48,7 +56,7 @@ class scriptaculous extends object
     public function putScriptaculous()
     {
         $this->setVar('pageSuppressXML', TRUE);
-        return $this->getJavascriptFile('prototype/1.5.0_rc1/prototype.js', 'ajaxwrapper').$this->getJavascriptFile('scriptaculous/1.6.5/scriptaculous.js', 'ajaxwrapper');
+        return $this->getJavascriptFile('prototype/1.5.0_rc1/prototype.js', 'ajaxwrapper').$this->getJavascriptFile('scriptaculous/'.$this->sVersion.'/scriptaculous.js', 'ajaxwrapper');
     }
 }
 
