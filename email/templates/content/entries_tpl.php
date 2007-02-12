@@ -15,10 +15,42 @@ $headerParams = $this->getJavascriptFile('selectall.js', 'htmlelements');
 $this->appendArrayVar('headerParams', $headerParams);
 $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
 $this->appendArrayVar('headerParams', $headerParams);
+$this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
+$this->objScriptaculous->show();
+$this->setVar('pageSuppressXML', TRUE);
+
+// set up style for autocomplete
+$style = '<style type="text/css">
+    div.autocomplete {
+        position:absolute;
+        width:250px;
+        background-color:white;
+        border:1px solid #888;
+        margin:0px;
+        padding:0px;
+    }
+    div.autocomplete ul {
+        list-style-type:none;
+        margin:0px;
+        padding:0px;
+    }
+    div.autocomplete ul li.selected { 
+        background-color: #ffb;
+    }
+    div.autocomplete ul li {
+        list-style-type:none;
+        display:block;
+        margin:0;
+        padding:2px;
+        height:32px;
+        cursor:pointer;
+    }
+</style>';
+echo $style;
 
 // set up html elements
-$objIcon = &$this->newObject('geticon', 'htmlelements');
 $objHeader = &$this->loadClass('htmlheading', 'htmlelements');
+$objIcon = &$this->newObject('geticon', 'htmlelements');
 $objTable = &$this->loadClass('htmltable', 'htmlelements');
 $objLink = &$this->loadClass('link', 'htmlelements');
 $objInput = &$this->loadClass('textinput', 'htmlelements');
@@ -71,7 +103,7 @@ $objHeader->type = 1;
 $pageData = $objHeader->show();
 
 $objHeader = new htmlHeading();
-$objHeader->str = $subHeading."&nbsp;".$addIcon;
+$objHeader->str = $subHeading.'&nbsp;'.$addIcon;
 $objHeader->type = 3;
 $pageData.= $objHeader->show();
 
@@ -79,61 +111,55 @@ $pageData.= $objHeader->show();
 if ($mode == 'add') {
     // set up username input
     $objInput = new textinput('username', '', '', '30');
-    $objInput->extra = ' onkeyup="xajax_searchList(this.value,\'username\');"';
     $usernameInput = $objInput->show();
 
     $objTable = new htmltable();
     //        $objTable->cellspacing='2';
     $objTable->cellpadding = '4';
     $objTable->startRow();
-    $objTable->addCell($usernameInput, '50%', '', '', '', '');
-    $objTable->addCell("<div id =\"usernameDiv\"></div>", '', '', '', '', '');
+    $objTable->addCell($usernameInput.'<div id ="usernameDiv" class="autocomplete"></div>', '50%', '', '', '', '');
     $objTable->endRow();
     $usernameTable = $objTable->show();
 
     $objFieldset = new fieldset();
     $objFieldset->extra = ' style="border: 1px solid #808080; margin: 3px; padding: 10px;"';
-    $objFieldset->legend = "<b>".$searchUsernameLabel."</b>";
+    $objFieldset->legend = '<b>'.$searchUsernameLabel.'</b>';
     $objFieldset->contents = $usernameTable;
     $usernameFieldset = $objFieldset->show();
 
     // set up firstname input
     $objInput = new textinput('firstname', '', '', '30');
-    $objInput->extra = ' onkeyup="javascript:xajax_searchList(this.value,\'firstname\');"';
     $firstnameInput = $objInput->show();
 
     $objTable = new htmltable();
     //        $objTable->cellspacing='2';
     $objTable->cellpadding = '4';
     $objTable->startRow();
-    $objTable->addCell($firstnameInput, '50%', '', '', '', '');
-    $objTable->addCell("<div id =\"firstnameDiv\"></div>", '', '', '', '', '');
+    $objTable->addCell($firstnameInput.'<div id ="firstnameDiv" class="autocomplete"></div>', '50%', '', '', '', '');
     $objTable->endRow();
     $firstnameTable = $objTable->show();
 
     $objFieldset = new fieldset();
     $objFieldset->extra = ' style="border: 1px solid #808080; margin: 3px; padding: 10px;"';
-    $objFieldset->legend = "<b>".$searchNameLabel."</b>";
+    $objFieldset->legend = '<b>'.$searchNameLabel.'</b>';
     $objFieldset->contents = $firstnameTable;
     $nameFieldset = $objFieldset->show();
 
     // set up surname input
     $objInput = new textinput('surname', '', '', '30');
-    $objInput->extra = ' onkeyup="javascript:xajax_searchList(this.value,\'surname\');"';
     $surnameInput = $objInput->show();
 
     $objTable = new htmltable();
     //        $objTable->cellspacing='2';
     $objTable->cellpadding = '4';
     $objTable->startRow();
-    $objTable->addCell($surnameInput, '50%', '', '', '', '');
-    $objTable->addCell("<div id =\"surnameDiv\"></div>", '', '', '', '', '');
+    $objTable->addCell($surnameInput.'<div id ="surnameDiv" class="autocomplete"></div>', '50%', '', '', '', '');
     $objTable->endRow();
     $surnameTable = $objTable->show();
 
     $objFieldset = new fieldset();
     $objFieldset->extra = ' style="border: 1px solid #808080; margin: 3px; padding: 10px;"';
-    $objFieldset->legend = "<b>".$searchSurnameLabel."</b>";
+    $objFieldset->legend = '<b>'.$searchSurnameLabel.'</b>';
     $objFieldset->contents = $surnameTable;
     $surnameFieldset = $objFieldset->show();
 
@@ -154,7 +180,7 @@ if ($mode == 'add') {
 
     $objButton = new button('addbutton', $submitLabel);
     $objButton->setToSubmit();
-    $buttons = "<br />".$objButton->show();
+    $buttons = '<br />'.$objButton->show();
 
     $objButton = new button('cancelbutton', $cancelLabel);
     $objButton->extra = ' onclick="javascript:document.getElementById(\'input_cancelbutton\').value=\'Cancel\';document.getElementById(\'form_hiddenform\').submit();"';
@@ -190,26 +216,26 @@ if ($mode == 'add') {
 
 // set up check all button
 $objButton = new button('checkallbutton', $selectallLabel);
-$objButton->setOnClick("javascript:SetAllCheckBoxes('sendform','userId[]',true);");
+$objButton->setOnClick('javascript:SetAllCheckBoxes("sendform","userId[]",true);');
 $selectAllButton = $objButton->show();
 
 // set up uncheck all button
 $objButton = new button('uncheckallbutton', $deselectLabel);
-$objButton->setOnClick("javascript:SetAllCheckBoxes('sendform','userId[]',false);");
+$objButton->setOnClick('javascript:SetAllCheckBoxes("sendform","userId[]",false);');
 $selectNoneButton = $objButton->show();
 
 // set up send button
 $objButton = new button('sendmail', $sendMailLabel);
 $objButton->setToSubmit();
 $sendButton = $objButton->show();
-$buttons = $selectAllButton."&nbsp;".$selectNoneButton."&nbsp;".$sendButton;
+$buttons = $selectAllButton.'&nbsp;'.$selectNoneButton.'&nbsp;'.$sendButton;
 
 // set up user list tabel
 $objTable = new htmltable();
 //    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
-$objTable->id = "userListTable";
-$objTable->css_class = "sorttable";
+$objTable->id = 'userListTable';
+$objTable->css_class = 'sorttable';
 $objTable->row_attributes = ' name="row_'.$objTable->id.'"';
 $objTable->startRow();
 $objTable->addCell('', '5%', '', '', 'heading', '');
@@ -294,11 +320,27 @@ $objLink = new link($this->uri(array(
     'action' => 'manageaddressbooks'
 ) , 'email'));
 $objLink->link = $backLabel;
-$pageData.= "<b />".$objLink->show();
+$pageData.= '<b />'.$objLink->show();
 
 $objLayer = new layer();
 $objLayer->padding = '10px';
 $objLayer->addToStr($pageData);
 $pageLayer = $objLayer->show();
 echo $pageLayer;
+
+$script = '<script type="text/javaScript">
+    var pars   = "module=email&action=searchlist&field=username";
+    new Ajax.Autocompleter("input_username", "usernameDiv", "index.php", {parameters: pars});
+</script>';
+echo $script;
+$script = '<script type="text/javaScript">
+    var pars   = "module=email&action=searchlist&field=firstname";
+    new Ajax.Autocompleter("input_firstname", "firstnameDiv", "index.php", {parameters: pars});
+</script>';
+echo $script;
+$script = '<script type="text/javaScript">
+    var pars   = "module=email&action=searchlist&field=surname";
+    new Ajax.Autocompleter("input_surname", "surnameDiv", "index.php", {parameters: pars});
+</script>';
+echo $script;
 ?>

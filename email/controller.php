@@ -248,26 +248,23 @@ class email extends controller
 
             case 'addentry':
                 $bookId = $this->getParam('bookId');
-                $this->loadClass('xajax', 'ajaxwrapper');
-                //Register another function in this controller
-                $xajaxUsername = new xajax($this->uri(array(
-                    'action' => 'addentry',
-                    'bookId' => $bookId
-                )));
-                $xajaxUsername->registerFunction(array(
-                    $this,
-                    "searchList"
-                ));
-                //XAJAX method to be called
-                $xajaxUsername->processRequests();
-                //Send JS to header
-                $this->appendArrayVar('headerParams', $xajaxUsername->getJavascript());
                 $arrBookEntryList = $this->dbBookEntries->listBookEntries($bookId);
                 $this->setVarByRef('bookId', $bookId);
                 $this->setVarByRef('arrBookEntryList', $arrBookEntryList);
                 $this->setVar('mode', 'add');
-                return 'entries_tpl.php';
+                return 'entries_tpl_works.php';
                 break;
+                
+            case 'searchlist':
+                $field = $this->getParam('field');
+                if($field == 'username'){
+                    $search = $this->getParam('username');
+                }elseif($field == 'firstname'){
+                    $search = $this->getParam('firstname');
+                }else{
+                    $search = $this->getParam('surname');
+                }
+                return $this->searchList($search, $field);
 
             case 'submitentry':
                 $bookId = $this->getParam('bookId');
@@ -681,92 +678,17 @@ class email extends controller
      */
     public function searchList($search, $field)
     {
-        $selectLabel = $this->objLanguage->languageText('word_select');
-        $this->loadClass('xajaxresponse', 'ajaxwrapper');
-        $this->loadClass('dropdown', 'htmlelements');
-        if ($field == 'username') {
-            if ($search != NULL) {
-                $arrUserList = $this->dbEmailUsers->getUsers('username', $search);
-                $objDrop = new dropdown('userId_username');
-                $objDrop->addOption(NULL, "- ".$selectLabel." -");
-                if ($arrUserList != FALSE) {
-                    foreach($arrUserList as $user) {
-                        $value = $this->dbRouting->getName($user['userid']);
-                        $objDrop->addOption($user['userid'], $value);
-                    }
-                }
-                $userDrop = $objDrop->show();
-                $response = "<span>".$userDrop."</span>";
-                $objResponse = new xajaxResponse();
-                $objResponse->addAssign('usernameDiv', 'innerHTML', $response);
-                $objResponse->addAssign('firstnameDiv', 'innerHTML', NULL);
-                $objResponse->addAssign('surnameDiv', 'innerHTML', NULL);
-                $objResponse->addClear('input_firstname', 'value');
-                $objResponse->addClear('input_surname', 'value');
-                $xml = $objResponse->getXML();
-            } else {
-                $objResponse = new xajaxResponse();
-                $objResponse->addAssign('usernameDiv', 'innerHTML', NULL);
-                $objResponse->addAssign('firstnameDiv', 'innerHTML', NULL);
-                $objResponse->addAssign('surnameDiv', 'innerHTML', NULL);
-                $xml = $objResponse->getXML();
+        $arrUserList = $this->dbEmailUsers->getUsers($field, $search);
+        if ($arrUserList != FALSE) {
+            echo '<ul>';
+            foreach ($arrUserList as $user) {
+                echo '<li><span class="informal">'.$this->dbRouting->getName($user['userid']).'</span></li>';
             }
-        } elseif ($field == 'firstname') {
-            if ($search != NULL) {
-                $arrUserList = $this->dbEmailUsers->getUsers('firstName', $search);
-                $objDrop = new dropdown('userId_firstname');
-                $objDrop->addOption(NULL, "- ".$selectLabel." -");
-                if ($arrUserList != FALSE) {
-                    foreach($arrUserList as $user) {
-                        $value = $this->dbRouting->getName($user['userid']);
-                        $objDrop->addOption($user['userid'], $value);
-                    }
-                }
-                $userDrop = $objDrop->show();
-                $response = "<span>".$userDrop."</span>";
-                $objResponse = new xajaxResponse();
-                $objResponse->addAssign('usernameDiv', 'innerHTML', NULL);
-                $objResponse->addAssign('firstnameDiv', 'innerHTML', $response);
-                $objResponse->addAssign('surnameDiv', 'innerHTML', NULL);
-                $objResponse->addClear('input_username', 'value');
-                $objResponse->addClear('input_surname', 'value');
-                $xml = $objResponse->getXML();
-            } else {
-                $objResponse = new xajaxResponse();
-                $objResponse->addAssign('usernameDiv', 'innerHTML', NULL);
-                $objResponse->addAssign('firstnameDiv', 'innerHTML', NULL);
-                $objResponse->addAssign('surnameDiv', 'innerHTML', NULL);
-                $xml = $objResponse->getXML();
-            }
+            echo '</ul>';            
         } else {
-            if ($search != NULL) {
-                $arrUserList = $this->dbEmailUsers->getUsers('surname', $search);
-                $objDrop = new dropdown('userId_surname');
-                $objDrop->addOption(NULL, "- ".$selectLabel." -");
-                if ($arrUserList != FALSE) {
-                    foreach($arrUserList as $user) {
-                        $value = $this->dbRouting->getName($user['userid']);
-                        $objDrop->addOption($user['userid'], $value);
-                    }
-                }
-                $userDrop = $objDrop->show();
-                $response = "<span>".$userDrop."</span>";
-                $objResponse = new xajaxResponse();
-                $objResponse->addAssign('usernameDiv', 'innerHTML', NULL);
-                $objResponse->addAssign('firstnameDiv', 'innerHTML', NULL);
-                $objResponse->addAssign('surnameDiv', 'innerHTML', $response);
-                $objResponse->addClear('input_username', 'value');
-                $objResponse->addClear('input_firstname', 'value');
-                $xml = $objResponse->getXML();
-            } else {
-                $objResponse = new xajaxResponse();
-                $objResponse->addAssign('usernameDiv', 'innerHTML', NULL);
-                $objResponse->addAssign('firstnameDiv', 'innerHTML', NULL);
-                $objResponse->addAssign('surnameDiv', 'innerHTML', NULL);
-                $xml = $objResponse->getXML();
-            }
+            echo '';
         }
-        return $xml;
+        return '';
     }
 
     /**
