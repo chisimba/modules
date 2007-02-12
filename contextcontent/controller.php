@@ -163,7 +163,7 @@ class contextcontent extends controller
         
         $this->setVarByRef('page', $page);
         
-        $tree = $this->objContentOrder->getTree($this->contextCode, 'dropdown', $page['parentid'], 'contextcontent', TRUE);
+        $tree = $this->objContentOrder->getTree($this->contextCode, 'dropdown', $page['parentid'], 'contextcontent', $page['id']);
         $this->setVarByRef('tree', $tree);
         
         $this->setVar('mode', 'edit');

@@ -96,32 +96,43 @@ class db_contextcontent_order extends dbtable
     * Method to get a content page
     * @param string $pageId Record Id of the Page
     * @param string $contextCode Context the Page is In
+    * @param string $module Module to point URIs to
+    * @param string $disabledNode Record Id of Node to disable it, and its children when editing
     * @return array Details of the Page, FALSE if does not exist
     * @access public
     */
-    public function getTree($context, $type='dropdown', $defaultSelected='', $module='contextcontent', $disableChildrenOfDefault=FALSE)
+    public function getTree($context, $type='dropdown', $defaultSelected='', $module='contextcontent', $disabledNode='')
     {
         $results = $this->getContextPages($context);
         
         if ($defaultSelected != '') {
             $this->defaultSelected = $this->getRow('id', $defaultSelected);
-            //$this->defaultSelected = $this->getPage($context, $defaultSelected);
             
             if ($this->defaultSelected == FALSE) {
                 $this->defaultSelected = '';
             }
         } else {
             $this->defaultSelected = '';
-        } 
+        }
         
-        if ($this->defaultSelected == '') {
-            $disableChildrenOfDefault = FALSE;
+        if ($disabledNode != '') {
+            $this->disabledNode = $this->getRow('id', $disabledNode);
+            
+            if ($this->disabledNode == FALSE) {
+                $this->disabledNode = '';
+                $hasDisabledNode = FALSE;
+            } else {
+                $hasDisabledNode = TRUE;
+            }
+        } else {
+            $this->disabledNode = '';
+            $hasDisabledNode = FALSE;
         }
         
         switch ($type)
         {
             case 'dropdown': 
-                return $this->generateDropdownTree($results, $defaultSelected, $disableChildrenOfDefault);
+                return $this->generateDropdownTree($results, $defaultSelected, $hasDisabledNode);
                 break;
             default:
                 return $this->generateHtmllistTree($results, $defaultSelected, $module);
@@ -173,10 +184,11 @@ class db_contextcontent_order extends dbtable
     * Method to get a content page
     * @param string $pageId Record Id of the Page
     * @param string $contextCode Context the Page is In
+    * @param boolean $hasDisabledNodes Flag on whether some nodes are disabled
     * @return array Details of the Page, FALSE if does not exist
     * @access private
     */
-    private function generateDropdownTree($results, $defaultSelected='', $disableChildrenOfDefault=FALSE)
+    private function generateDropdownTree($results, $defaultSelected='', $hasDisabledNodes=FALSE)
     {
         $treeMenu = new treemenu();
         
@@ -188,7 +200,7 @@ class db_contextcontent_order extends dbtable
         {
             $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']), 'link'=>$treeItem['id']);
             
-            if ($disableChildrenOfDefault && $treeItem['lft'] > $this->defaultSelected['lft'] && $treeItem['rght'] < $this->defaultSelected['rght']) {
+            if ($hasDisabledNodes && $treeItem['lft'] >= $this->disabledNode['lft'] && $treeItem['rght'] <= $this->disabledNode['rght']) {
                 $nodeDetails['extra'] = 'disabled="disabled" title="This page is on a lower level than the current page you are editing"';
             }
             
