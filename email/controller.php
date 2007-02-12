@@ -252,7 +252,7 @@ class email extends controller
                 $this->setVarByRef('bookId', $bookId);
                 $this->setVarByRef('arrBookEntryList', $arrBookEntryList);
                 $this->setVar('mode', 'add');
-                return 'entries_tpl_works.php';
+                return 'entries_tpl.php';
                 break;
                 
             case 'searchlist':
