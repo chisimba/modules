@@ -464,6 +464,16 @@ class email extends controller
                 $this->setVarByRef('arrRulesList', $arrRulesList);
                 return 'settings_tpl.php';
                 break;
+                
+            case 'namedisplay':
+                $field = $this->getParam('field');
+                $value = $this->getParam('value');
+                $other = $this->getParam('other');
+                return $this->userDisplay($field, $value, $other);                
+
+            case 'buttondisplay':
+                $section = $this->getParam('section');
+                return $this->buttonDisplay($section);                
 
             case 'updateconfig':
                 $updateUser = $this->getParam('update_user', NULL);
@@ -651,7 +661,7 @@ class email extends controller
      * @access public
      * @param string $search The text to search for
      * @param string $field The field to search in
-     * @return xml $xml The xajax response xml
+     * @return
      */
     public function searchList($search, $field)
     {
@@ -812,7 +822,6 @@ class email extends controller
      */
     public function userDisplay($field, $value, $other)
     {
-        $this->loadClass('xajaxresponse', 'ajaxwrapper');
         $firstname = strtoupper($this->objUser->getFirstname($this->userId));
         $surname = strtoupper($this->objUser->getSurname($this->userId));
         $username = $this->objUser->userName($this->userId);
@@ -825,8 +834,6 @@ class email extends controller
             if ($other != 1) {
                 $response.= " [".$username."] ";
             }
-            $objResponse = new xajaxResponse();
-            $objResponse->addAssign('userdisplay', 'innerHTML', $response);
         } else {
             if ($other == 1) {
                 $response = $surname.", ".$firstname;
@@ -836,11 +843,8 @@ class email extends controller
             if ($value != 1) {
                 $response.= " [".$username."] ";
             }
-            $objResponse = new xajaxResponse();
-            $objResponse->addAssign('userdisplay', 'innerHTML', $response);
         }
-        $xml = $objResponse->getXML();
-        return $xml;
+        echo $response;
     }
 
     /**
@@ -854,31 +858,24 @@ class email extends controller
     {
         $updateLabel = $this->objLanguage->languageText('word_update');
         $this->loadClass('button', 'htmlelements');
-        $this->loadClass('xajaxresponse', 'ajaxwrapper');
-        $objResponse = new xajaxResponse();
-        if ($section == 'user') {
+        if ($section == 'user_button') {
             $objButton = new button('update_user', $updateLabel);
             $objButton->setToSubmit();
             $response = $objButton->show();
-            $objResponse->addAssign('user_button', 'innerHTML', $response);
-        } elseif ($section == 'folder') {
+        } elseif ($section == 'folder_button') {
             $objButton = new button('update_folder', $updateLabel);
             $objButton->setToSubmit();
             $response = $objButton->show();
-            $objResponse->addAssign('folder_button', 'innerHTML', $response);
-        } elseif ($section == 'delete') {
+        } elseif ($section == 'delete_button') {
             $objButton = new button('update_delete', $updateLabel);
             $objButton->setToSubmit();
             $response = $objButton->show();
-            $objResponse->addAssign('delete_button', 'innerHTML', $response);
         } else {
             $objButton = new button('update_signature', $updateLabel);
             $objButton->setToSubmit();
             $response = $objButton->show();
-            $objResponse->addAssign('signature_button', 'innerHTML', $response);
         }
-        $xml = $objResponse->getXML();
-        return $xml;
+        echo $response;
     }
 
     /**
