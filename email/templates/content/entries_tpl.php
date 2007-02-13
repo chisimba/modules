@@ -19,35 +19,6 @@ $this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
 $this->objScriptaculous->show();
 $this->setVar('pageSuppressXML', TRUE);
 
-// set up style for autocomplete
-$style = '<style type="text/css">
-    div.autocomplete {
-        position:absolute;
-        width:250px;
-        background-color:white;
-        border:1px solid #888;
-        margin:0px;
-        padding:0px;
-    }
-    div.autocomplete ul {
-        list-style-type:none;
-        margin:0px;
-        padding:0px;
-    }
-    div.autocomplete ul li.selected { 
-        background-color: #ffb;
-    }
-    div.autocomplete ul li {
-        list-style-type:none;
-        display:block;
-        margin:0;
-        padding:2px;
-        height:32px;
-        cursor:pointer;
-    }
-</style>';
-echo $style;
-
 // set up html elements
 $objHeader = &$this->loadClass('htmlheading', 'htmlelements');
 $objIcon = &$this->newObject('geticon', 'htmlelements');
@@ -110,7 +81,12 @@ $pageData.= $objHeader->show();
 // set up input table
 if ($mode == 'add') {
     // set up username input
-    $objInput = new textinput('username', '', '', '30');
+    $objInput = new textinput('username', '', '', '40');
+    $objInput->extra = 'onkeyup="javascript:
+        document.getElementById(\'input_firstname\').value=\'\';
+        document.getElementById(\'input_surname\').value=\'\';
+        document.getElementById(\'input_userid\').value=\'\';
+        "';
     $usernameInput = $objInput->show();
 
     $objTable = new htmltable();
@@ -128,7 +104,12 @@ if ($mode == 'add') {
     $usernameFieldset = $objFieldset->show();
 
     // set up firstname input
-    $objInput = new textinput('firstname', '', '', '30');
+    $objInput = new textinput('firstname', '', '', '40');
+    $objInput->extra = 'onkeyup="javascript:
+        document.getElementById(\'input_username\').value=\'\';
+        document.getElementById(\'input_surname\').value=\'\';
+        document.getElementById(\'input_userid\').value=\'\';
+        "';
     $firstnameInput = $objInput->show();
 
     $objTable = new htmltable();
@@ -146,7 +127,12 @@ if ($mode == 'add') {
     $nameFieldset = $objFieldset->show();
 
     // set up surname input
-    $objInput = new textinput('surname', '', '', '30');
+    $objInput = new textinput('surname', '', '', '40');
+    $objInput->extra = 'onkeyup="javascript:
+        document.getElementById(\'input_username\').value=\'\';
+        document.getElementById(\'input_firstname\').value=\'\';
+        document.getElementById(\'input_userid\').value=\'\';
+        "';
     $surnameInput = $objInput->show();
 
     $objTable = new htmltable();
@@ -178,6 +164,10 @@ if ($mode == 'add') {
     $objTable->endRow();
     $entryTable = $objTable->show();
 
+    // set up hidden userid input
+    $objInput = new textinput('userid', '', 'hidden', '');
+    $useridInput = $objInput->show();
+
     $objButton = new button('addbutton', $submitLabel);
     $objButton->setToSubmit();
     $buttons = '<br />'.$objButton->show();
@@ -192,6 +182,7 @@ if ($mode == 'add') {
         'bookId' => $bookId
     )));
     $objForm->addToForm($entryTable);
+    $objForm->addToForm($useridInput);
     $objForm->addToForm($buttons);
     $entryForm = $objForm->show();
 
@@ -216,12 +207,12 @@ if ($mode == 'add') {
 
 // set up check all button
 $objButton = new button('checkallbutton', $selectallLabel);
-$objButton->setOnClick('javascript:SetAllCheckBoxes("sendform","userId[]",true);');
+$objButton->setOnClick('javascript:SetAllCheckBoxes(\'sendform\',\'userId[]\',true);');
 $selectAllButton = $objButton->show();
 
 // set up uncheck all button
 $objButton = new button('uncheckallbutton', $deselectLabel);
-$objButton->setOnClick('javascript:SetAllCheckBoxes("sendform","userId[]",false);');
+$objButton->setOnClick('javascript:SetAllCheckBoxes(\'sendform\',\'userId[]\',false);');
 $selectNoneButton = $objButton->show();
 
 // set up send button
@@ -328,19 +319,47 @@ $objLayer->addToStr($pageData);
 $pageLayer = $objLayer->show();
 echo $pageLayer;
 
+// set up style for autocomplete
+$style = '<style type="text/css">
+    div.autocomplete {
+        position:absolute;
+        //width:250px;
+        background-color:white;
+        border:1px solid #888;
+        margin:0px;
+        padding:0px;
+    }    
+    div.autocomplete ul {
+      list-style-type:none;
+      margin:0px;
+      padding:0px;
+    }    
+    div.autocomplete ul li.selected {
+        background-color: #ffb;
+    }
+    div.autocomplete ul li {
+      list-style-type:none;
+      display:block;
+      margin:0;
+      //padding:2px;
+      //height:32px;
+      cursor:pointer;
+    }
+</style>';
+
 $script = '<script type="text/javaScript">
-    var pars   = "module=email&action=searchlist&field=username";
-    new Ajax.Autocompleter("input_username", "usernameDiv", "index.php", {parameters: pars});
+        var pars   = "module=email&action=searchlist&field=username";
+        new Ajax.Autocompleter("input_username", "usernameDiv", "index.php", {parameters: pars});
+
+        var pars   = "module=email&action=searchlist&field=firstname";
+        new Ajax.Autocompleter("input_firstname", "firstnameDiv", "index.php", {parameters: pars});
+
+        var pars   = "module=email&action=searchlist&field=surname";
+        new Ajax.Autocompleter("input_surname", "surnameDiv", "index.php", {parameters: pars});
 </script>';
-echo $script;
-$script = '<script type="text/javaScript">
-    var pars   = "module=email&action=searchlist&field=firstname";
-    new Ajax.Autocompleter("input_firstname", "firstnameDiv", "index.php", {parameters: pars});
-</script>';
-echo $script;
-$script = '<script type="text/javaScript">
-    var pars   = "module=email&action=searchlist&field=surname";
-    new Ajax.Autocompleter("input_surname", "surnameDiv", "index.php", {parameters: pars});
-</script>';
-echo $script;
+
+if($mode == 'add'){
+    echo $style;
+    echo $script;
+}
 ?>

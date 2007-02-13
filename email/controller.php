@@ -268,15 +268,9 @@ class email extends controller
 
             case 'submitentry':
                 $bookId = $this->getParam('bookId');
-                $userId_username = $this->getParam('userId_username', NULL);
-                $userId_firstname = $this->getParam('userId_firstname', NULL);
-                $userId_surname = $this->getParam('userId_surname', NULL);
-                if ($userId_username != NULL) {
-                    $this->dbBookEntries->addBookEntry($bookId, $userId_username);
-                } elseif ($userId_firstname != NULL) {
-                    $this->dbBookEntries->addBookEntry($bookId, $userId_firstname);
-                } elseif ($userId_surname != NULL) {
-                    $this->dbBookEntries->addBookEntry($bookId, $userId_surname);
+                $userId = $this->getParam('userid', NULL);
+                if ($userId != NULL) {
+                    $this->dbBookEntries->addBookEntry($bookId, $userId);
                 }
                 return $this->nextAction('addressbook', array(
                     'bookId' => $bookId
@@ -462,23 +456,6 @@ class email extends controller
                 break;
 
             case 'managesettings':
-                $this->loadClass('xajax', 'ajaxwrapper');
-                //Register another function in this controller
-                $xajaxSettings = new xajax($this->uri(array(
-                    'action' => 'managesettings'
-                )));
-                $xajaxSettings->registerFunction(array(
-                    $this,
-                    "userDisplay"
-                ));
-                $xajaxSettings->registerFunction(array(
-                    $this,
-                    "buttonDisplay"
-                ));
-                //XAJAX method to be called
-                $xajaxSettings->processRequests();
-                //Send JS to header
-                $this->appendArrayVar('headerParams', $xajaxSettings->getJavascript());
                 $section = $this->getParam('section', NULL);
                 $arrFolderList = $this->dbFolders->listFolders();
                 $arrRulesList = $this->dbRules->getRules();
@@ -682,7 +659,7 @@ class email extends controller
         if ($arrUserList != FALSE) {
             echo '<ul>';
             foreach ($arrUserList as $user) {
-                echo '<li><span class="informal">'.$this->dbRouting->getName($user['userid']).'</span></li>';
+                echo '<li onclick="javascript:document.getElementById(\'input_userid\').value=\''.$user['userid'].'\'"><strong>'.$this->dbRouting->getName($user['userid']).'</strong></li>';
             }
             echo '</ul>';            
         } else {
