@@ -154,7 +154,10 @@ $confimUpdateLabel = $this->objLanguage->code2Txt('mod_email_update', 'email', $
 
 $objTimeOut->init();
 $objTimeOut->setMessage($confimUpdateLabel);
+$objTimeOut->setTimeout(3000);
 $msg = '<b>'.$objTimeOut->show().'</b>';
+
+//$msg = $confimUpdateLabel;
 
 // set up heading
 $objHeader = new htmlHeading();

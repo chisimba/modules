@@ -852,7 +852,7 @@ class email extends controller
      *
      * @access public
      * @param string $section The section being modified
-     * @return xml $xml The xajax response xml
+     * @return 
      */
     public function buttonDisplay($section)
     {
@@ -883,7 +883,7 @@ class email extends controller
      *
      * @access public
      * @param string $messageField The value of the message field
-     * @return xml $xml The xajax response xml
+     * @return 
      */
     public function filterDisplay($messageField)
     {
