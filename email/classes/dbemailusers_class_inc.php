@@ -43,6 +43,7 @@ class dbemailusers extends dbTable
         $sql = " SELECT * FROM ".$this->table;
         if ($search != NULL) {
             $sql.= " WHERE ".$field." LIKE '".$search."%'";
+            $sql.= " LIMIT 0, 10";
         }
         $sql.= " ORDER BY ".$field;
         $data = $this->getArray($sql);
