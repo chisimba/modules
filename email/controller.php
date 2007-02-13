@@ -144,28 +144,6 @@ class email extends controller
                 break;
 
             case 'compose':
-                $this->loadClass('xajax', 'ajaxwrapper');
-                $objIcon = &$this->newObject('geticon', 'htmlelements');
-                //Register another function in this controller
-                $xajaxCompose = new xajax($this->uri(array(
-                    'action' => 'compose'
-                )));
-                $xajaxCompose->registerFunction(array(
-                    $this,
-                    "composeList"
-                ));
-                $xajaxCompose->registerFunction(array(
-                    $this,
-                    "addRecipient"
-                ));
-                $xajaxCompose->registerFunction(array(
-                    $this,
-                    "deleteRecipient"
-                ));
-                //XAJAX method to be called
-                $xajaxCompose->processRequests();
-                //Send JS to header
-                $this->appendArrayVar('headerParams', $xajaxCompose->getJavascript());
                 $arrUserId = $this->getParam('userId');
                 if (!empty($arrUserId)) {
                     if (!is_array($arrUserId)) {
@@ -194,6 +172,19 @@ class email extends controller
                 $this->setVarByRef('emailId', $emailId);
                 return 'compose_tpl.php';
                 break;
+
+            case 'composelist':
+                $field = $this->getParam('field');
+                if($field == 'firstname'){
+                    $search = $this->getParam('firstname');
+                }else{
+                    $search = $this->getParam('surname');
+                }
+                return $this->composeList($search, $field);
+
+            case 'addrecipient':
+                $recipientList = $this->getParam('recipientList');
+                return $this->addRecipient($recipientList);
 
             case 'manageaddressbooks':
                 $mode = $this->getParam('mode');
@@ -667,15 +658,17 @@ class email extends controller
     {
         $arrUserList = $this->dbEmailUsers->getUsers($field, $search);
         if ($arrUserList != FALSE) {
-            echo '<ul>';
+            $response = '<ul>';
             foreach ($arrUserList as $user) {
-                echo '<li onclick="javascript:document.getElementById(\'input_userid\').value=\''.$user['userid'].'\'"><strong>'.$this->dbRouting->getName($user['userid']).'</strong></li>';
+                $response .= '<li onclick="javascript:document.getElementById(\'input_userid\').value=\''.$user['userid'].'\'"><strong>';
+                $response .= $this->dbRouting->getName($user['userid']);
+                $response .= '</strong></li>';
             }
-            echo '</ul>';            
+            $response .= '</ul>';            
         } else {
-            echo '';
+            $response = '';
         }
-        return '';
+        echo $response;
     }
 
     /**
@@ -688,50 +681,21 @@ class email extends controller
      * @param string $recipientList The list of current recipients
      * @return xml $xml The xajax response xml
      */
-    public function composeList($field, $value, $recipientList)
+    public function composeList($search, $field)
     {
-        $selectLabel = $this->objLanguage->languageText('word_select');
-        $this->loadClass('xajaxresponse', 'ajaxwrapper');
-        $this->loadClass('dropdown', 'htmlelements');
-        if ($value == '') {
-            $response = NULL;
-        } else {
-            $arrUserList = $this->dbEmailUsers->getUsers($field, $value);
-            if ($recipientList != '') {
-                $arrRecipients = explode('|', $recipientList);
-                if ($arrUserList != FALSE) {
-                    foreach($arrUserList as $key => $user) {
-                        if (in_array($user['userid'], $arrRecipients)) {
-                            unset($arrUserList[$key]);
-                        }
-                    }
-                }
+        $arrUserList = $this->dbEmailUsers->getUsers($field, $search);
+        if ($arrUserList != FALSE) {
+            $response = '<ul>';
+            foreach ($arrUserList as $user) {
+                $response .= '<li onclick="addRecipient(\''.$user['userid'].'\')"><strong>';
+                $response .= $this->dbRouting->getName($user['userid']);
+                $response .= '</strong></li>';
             }
-            $objDrop = new dropdown('user');
-            $objDrop->addOption(NULL, "- ".$selectLabel." -");
-            if ($arrUserList != FALSE) {
-                foreach($arrUserList as $user) {
-                    $value = $user['userid'];
-                    $label = $this->dbRouting->getName($value);
-                    $objDrop->addOption($value, $label);
-                }
-            }
-            $objDrop->extra = ' onchange="javascript:xajax_addRecipient(this.value, document.getElementById(\'input_recipient\').value)"';
-            $userDrop = $objDrop->show();
-            $response = "<span>".$userDrop."</span>";
-        }
-        $objResponse = new xajaxResponse();
-        if ($field == 'firstName') {
-            $objResponse->addAssign('firstnameDiv', 'innerHTML', $response);
-            $objResponse->addAssign('surnameDiv', 'innerHTML', NULL);
-            $objResponse->addClear('input_surname', 'value');
+            $response .= '</ul>';            
         } else {
-            $objResponse->addAssign('firstnameDiv', 'innerHTML', NULL);
-            $objResponse->addAssign('surnameDiv', 'innerHTML', $response);
-            $objResponse->addClear('input_firstname', 'value');
+            $response = '';
         }
-        $xml = $objResponse->getXML();
-        return $xml;
+        echo $response;
     }
 
     /**
@@ -742,33 +706,17 @@ class email extends controller
      * @param string $recipientList The list of recipientId's
      * @return xml $xml The xajax response xml
      */
-    public function addRecipient($userId, $recipientList)
+    public function addRecipient($recipientList)
     {
         $configs = $this->getSession('configs');
-        $icon = $this->deleteIcon($userId);
-        $this->loadClass('xajaxresponse', 'ajaxwrapper');
-        if ($userId != '') {
+        $arrUserId = explode('|', $recipientList);
+        $response = '';
+        foreach($arrUserId as $userId){
             $name = $this->dbRouting->getName($userId);
-            if ($recipientList != '') {
-                $toList = "<span id='".$userId."'>".$name.$icon."&#160;&#160;&#160;</span>";
-                $recipientList = '|'.$userId;
-            } else {
-                $toList = "<span id='".$userId."'>".$name.$icon."&#160;&#160;&#160;</span>";
-                $recipientList = $userId;
-            }
-        } else {
-            $toList = NULL;
-            $recipientList = NULL;
+            $icon = $this->deleteIcon($userId);
+            $response .= '<span id="'.$userId.'">'.$name.$icon.'&#160;&#160;&#160;</span>';
         }
-        $objResponse = new xajaxResponse();
-        $objResponse->addAppend('toList', 'innerHTML', $toList);
-        $objResponse->addAppend('input_recipient', 'value', $recipientList);
-        $objResponse->addAssign('firstnameDiv', 'innerHTML', NULL);
-        $objResponse->addAssign('surnameDiv', 'innerHTML', NULL);
-        $objResponse->addAssign('input_firstname', 'value', NULL);
-        $objResponse->addAssign('input_surname', 'value', NULL);
-        $xml = $objResponse->getXML();
-        return $xml;
+        echo $response;
     }
 
     /**
@@ -785,7 +733,7 @@ class email extends controller
         $skin.= $this->objConfig->getItem('KEWL_DEFAULTICONFOLDER');
         $title = $this->objLanguage->languageText('word_delete');
         $confirm = $this->objLanguage->languageText('mod_email_delrecipient', 'email');
-        $delIcon = '<a href=\'#\'><img src=\''.$skin.'cancel.gif\' class=\'absmiddle\' alt=\''.$title.'\' title=\''.$title.'\' border=\'0\' height=\'17\' width=\'17\' onclick="javascript:if(confirm(\''.$confirm.'\')){xajax_deleteRecipient(\''.$userId.'\',document.getElementById(\'input_recipient\').value);}" /></a>';
+        $delIcon = '<a href="#"><img src="'.$skin.'cancel.gif" class="absmiddle" alt="'.$title.'" title="'.$title.'" border="0" height="17" width="17" onclick="javascript:if(confirm(\''.$confirm.'\')){deleteRecipient(\''.$userId.'\',document.getElementById(\'input_recipient\').value);}" /></a>';
         return $delIcon;
     }
 

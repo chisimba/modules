@@ -11,6 +11,82 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * Author Kevin Cyster
  */
 
+$this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
+$this->objScriptaculous->show();
+$this->setVar('pageSuppressXML', TRUE);
+
+// set up style for autocomplete
+$style = '<style type="text/css">
+    div.autocomplete {
+        position:absolute;
+        background-color:white;
+    }    
+    div.autocomplete ul {
+        list-style-type:none;
+        margin:0px;
+        padding:0px;
+    }    
+    div.autocomplete ul li.selected {
+        border:1px solid #888;
+        background-color: #ffb;
+    }
+    div.autocomplete ul li {
+        border:1px solid #888;
+        list-style-type:none;
+        display:block;
+        margin:0;
+        cursor:pointer;
+    }
+</style>';
+echo $style;
+
+$script = '<script type="text/javaScript">
+    Event.observe(window, "load", init, false);
+    
+    function init(){
+        Event.observe("input_firstname", "keyup", listfirstname, false);
+        Event.observe("input_surname", "keyup", listsurname, false);
+    }
+
+    function listfirstname(){        
+        document.getElementById("input_surname").value="";
+
+        var pars = "module=email&action=composelist&field=firstname";
+        new Ajax.Autocompleter("input_firstname", "firstnameDiv", "index.php", {parameters: pars});
+    }
+
+    function listsurname(){        
+        document.getElementById("input_firstname").value="";
+
+        var pars = "module=email&action=composelist&field=surname";
+        new Ajax.Autocompleter("input_surname", "surnameDiv", "index.php", {parameters: pars, });
+    }
+    
+    function addRecipient(userid)
+    {
+        var el = document.getElementById("input_recipient");
+        if(el.value == ""){
+            el.value = userid;
+        }else{
+            el.value = el.value+"|"+userid;
+        }
+        var elVal = document.getElementById("input_recipient").value;
+        var url = "index.php";
+        var pars = "module=email&action=addrecipient&recipientList="+elVal;
+        var target = "toList";
+        var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars, onLoading: addLoad, onComplete: addComplete});
+    }
+    
+    function addLoad(){
+    	$("add_load").style.visibility = "visible";
+    }
+
+    function addComplete(){
+    	$("add_load").style.visibility = "hidden";
+    }
+</script>';
+echo $script;
+
 // set up html elements
 $objIcon = &$this->newObject('geticon', 'htmlelements');
 $objHeader = &$this->loadClass('htmlheading', 'htmlelements');
@@ -21,6 +97,9 @@ $objText = &$this->loadClass('textarea', 'htmlelements');
 $objTabbedbox = &$this->loadClass('tabbedbox', 'htmlelements');
 $objFieldset = &$this->loadClass('fieldset', 'htmlelements');
 $objLayer = &$this->loadClass('layer', 'htmlelements');
+
+$objIcon = $this->newObject('geticon', 'htmlelements');
+$objIcon->setIcon('loading_circles_big');
 
 // set up language items
 $heading = $this->objLanguage->languageText('mod_email_compose', 'email');
@@ -67,18 +146,15 @@ $objHeader->type = 1;
 $pageData = $objHeader->show();
 
 // set up html elements
-$objInput = new textinput('firstname', '', '', '30');
-$objInput->extra = ' onkeyup="javascript:xajax_composeList(\'firstName\',this.value,document.getElementById(\'input_recipient\').value);"';
-$firstnameInput = $objInput->show();
+$objInput = new textinput('firstname', '', '', '50');
+$firstnameInput = $objInput->show().'<div id="name_load" style="visibility:hidden; float: left;">'.$objIcon->show().'</div>';
 
-$objInput = new textinput('surname', '', '', '30');
-$objInput->extra = ' onkeyup="javascript:xajax_composeList(\'surname\',this.value,document.getElementById(\'input_recipient\').value);"';
-$surnameInput = $objInput->show();
+$objInput = new textinput('surname', '', '', '50');
+$surnameInput = $objInput->show().'<div id="surname_load" style="visibility:hidden; float: left;">'.$objIcon->show().'</div>';
 
 $objLayer = new layer();
 $objLayer->id = 'toList';
-$objLayer->str = $toList;
-$toLayer = $objLayer->show();
+$toLayer = '<div id="add_load" style="visibility:hidden; float: left;">'.$objIcon->show().'</div>'.$objLayer->show();
 
 $objFieldset = new fieldset();
 $objFieldset->extra = ' style="height: 100px; border: 1px solid #808080; margin: 3px; padding: 10px;"';
@@ -108,14 +184,13 @@ $objTable->startRow();
 $objTable->addCell($textLabel, '', '', '', 'warning', 'colspan="2"');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($firstnameInput, '50%', '', '', '', '');
-$objTable->addCell("<div id =\"firstnameDiv\"></div>", '', '', '', '', '');
+$objTable->addCell($firstnameInput.'<div id ="firstnameDiv" class="autocomplete"></div>', '50%', '', '', '', '');
 $objTable->endRow();
 $searchTable = $objTable->show();
 
 $objFieldset = new fieldset();
 $objFieldset->extra = ' style="border: 1px solid #808080; margin: 3px; padding: 10px;"';
-$objFieldset->legend = "<b>".$searchFirstnameLabel."</b>";
+$objFieldset->legend = '<b>'.$searchFirstnameLabel.'</b>';
 $objFieldset->contents = $searchTable;
 $searchFieldset = $objFieldset->show();
 
@@ -127,14 +202,13 @@ $objTable->startRow();
 $objTable->addCell($textLabel, '', '', '', 'warning', 'colspan="2"');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($surnameInput, '50%', '', '', '', '');
-$objTable->addCell("<div id =\"surnameDiv\"></div>", '', '', '', '', '');
+$objTable->addCell($surnameInput.'<div id ="surnameDiv" class="autocomplete"></div>', '50%', '', '', '', '');
 $objTable->endRow();
 $searchTable = $objTable->show();
 
 $objFieldset = new fieldset();
 $objFieldset->extra = ' style="border: 1px solid #808080; margin: 3px; padding: 10px;"';
-$objFieldset->legend = "<b>".$searchSurnameLabel."</b>";
+$objFieldset->legend = '<b>'.$searchSurnameLabel.'</b>';
 $objFieldset->contents = $searchTable;
 $searchFieldset.= $objFieldset->show();
 
@@ -146,22 +220,22 @@ $objTable->startRow();
 $objTable->addCell($searchFieldset, '', '', '', '', '');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell("<b>".$toLabel.":</b><br />".$recipientInput, '', '', '', '', '');
+$objTable->addCell('<b>'.$toLabel.':</b><br />'.$recipientInput, '', '', '', '', '');
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($toFieldset, '', '', '', '', '');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell("<b>".$subjectLabel.":</b><br />".$subjectInput, '', '', '', '', '');
+$objTable->addCell('<b>'.$subjectLabel.':</b><br />'.$subjectInput, '', '', '', '', '');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell("<b>".$messageLabel.":</b><br />".$messageText, '', '', '', '', '');
+$objTable->addCell('<b>'.$messageLabel.':</b><br />'.$messageText, '', '', '', '', '');
 $objTable->endRow();
 $emailTable = $objTable->show();
 
 $objTabbedbox = new tabbedbox();
 $objTabbedbox->extra = 'style="padding: 10px;"';
-$objTabbedbox->addTabLabel($emailLabel."&nbsp;&#160;".$addressIcon);
+$objTabbedbox->addTabLabel($emailLabel.'&nbsp;&#160;'.$addressIcon);
 $objTabbedbox->addBoxContent($emailTable);
 $emailTab = $objTabbedbox->show();
 
@@ -191,14 +265,14 @@ $objTable = new htmltable();
 $objTable->cellpadding = '4';
 if ($error) {
     $objTable->startRow();
-    $objTable->addCell("<b>".$error."</b>", '', '', '', 'error', 'colspan="3"');
+    $objTable->addCell('<b>'.$error.'</b>', '', '', '', 'error', 'colspan="3"');
     $objTable->endRow();
 }
 $objTable->startRow();
-$objTable->addCell($attachInput."&#160;&#160;".$uploadButton, '', '', '', '', 'colspan="3"');
+$objTable->addCell($attachInput.'&#160;&#160;'.$uploadButton, '', '', '', '', 'colspan="3"');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell("<b>".$maxUploadLabel."</b>", '', '', '', 'warning', 'colspan="3"');
+$objTable->addCell('<b>'.$maxUploadLabel.'</b>', '', '', '', 'warning', 'colspan="3"');
 $objTable->endRow();
 if ($emailId != NULL) {
     $this->emailFiles->createAttachments($emailId);
@@ -206,7 +280,7 @@ if ($emailId != NULL) {
 $attachments = $this->emailFiles->getAttachments();
 if ($attachments != NULL) {
     $objTable->startRow();
-    $objTable->addCell("<b>".$filesLabel."</b>", '', '', '', '', 'colspan="3"');
+    $objTable->addCell('<b>'.$filesLabel.'</b>', '', '', '', '', 'colspan="3"');
     $objTable->endRow();
     $i = 1;
     foreach($attachments as $attachment) {
@@ -217,9 +291,9 @@ if ($attachments != NULL) {
         $objIcon->title = $deleteLabel;
         $objIcon->setIcon('delete');
         $objIcon->extra = ' onclick="javascript:if(confirm(\''.$confirmLabel.'\')){document.getElementById(\'form_composeform\').action=\''.$deleteArray.'\';document.getElementById(\'form_composeform\').submit();}"';
-        $deleteIcon = "<a href=\"#\">".$objIcon->show() ."</a>";
+        $deleteIcon = '<a href="#">'.$objIcon->show() .'</a>';
         $objTable->startRow();
-        $objTable->addCell($i++.".", '3%', '', '', '', '');
+        $objTable->addCell($i++.'.', '3%', '', '', '', '');
         $objTable->addCell($attachment['filename'], '50%', '', '', '', '');
         $objTable->addCell($deleteIcon, '', '', 'left', '', '');
         $objTable->endRow();
@@ -248,7 +322,7 @@ $buttons = "<br />".$objButton->show();
 
 $objButton = new button('cancelbutton', $cancelLabel);
 $objButton->extra = ' onclick="javascript:document.getElementById(\'form_hiddenform\').cancelbutton.value=\'Cancel\';document.getElementById(\'form_hiddenform\').submit();"';
-$buttons.= "&#160;".$objButton->show();
+$buttons.= '&#160;'.$objButton->show();
 
 // set up form
 $objInput = new textinput('sendbutton', '', 'hidden', '');
@@ -280,7 +354,7 @@ $objLink = new link($this->uri(array(
     ''
 ) , 'email'));
 $objLink->link = $backLabel;
-$pageData.= "<br />".$objLink->show();
+$pageData.= '<br />'.$objLink->show();
 
 $objLayer = new layer();
 $objLayer->padding = '10px';

@@ -23,11 +23,7 @@ $this->setVar('pageSuppressXML', TRUE);
 $style = '<style type="text/css">
     div.autocomplete {
         position:absolute;
-        //width:250px;
         background-color:white;
-        //border:1px solid #888;
-        //margin:0px;
-        //padding:0px;
     }    
     div.autocomplete ul {
         list-style-type:none;
@@ -43,8 +39,6 @@ $style = '<style type="text/css">
         list-style-type:none;
         display:block;
         margin:0;
-        //padding:2px;
-        //height:32px;
         cursor:pointer;
     }
 </style>';
@@ -160,7 +154,7 @@ $pageData.= $objHeader->show();
 // set up input table
 if ($mode == 'add') {
     // set up username input
-    $objInput = new textinput('username', '', '', '40');
+    $objInput = new textinput('username', '', '', '50');
     $usernameInput = $objInput->show();
 
     $objTable = new htmltable();
@@ -178,7 +172,7 @@ if ($mode == 'add') {
     $usernameFieldset = $objFieldset->show();
 
     // set up firstname input
-    $objInput = new textinput('firstname', '', '', '40');
+    $objInput = new textinput('firstname', '', '', '50');
     $firstnameInput = $objInput->show();
 
     $objTable = new htmltable();
@@ -196,7 +190,7 @@ if ($mode == 'add') {
     $nameFieldset = $objFieldset->show();
 
     // set up surname input
-    $objInput = new textinput('surname', '', '', '40');
+    $objInput = new textinput('surname', '', '', '50');
     $surnameInput = $objInput->show();
 
     $objTable = new htmltable();
