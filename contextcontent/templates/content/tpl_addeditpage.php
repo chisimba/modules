@@ -1,5 +1,5 @@
 <?php
-$this->setVar('pageSuppressXML',true);
+//$this->setVar('pageSuppressXML',true);
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
