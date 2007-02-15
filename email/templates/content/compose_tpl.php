@@ -59,7 +59,7 @@ $script = '<script type="text/javaScript">
         document.getElementById("input_firstname").value = "";
 
         var pars = "module=email&action=composelist&field=surname";
-        new Ajax.Autocompleter("input_surname", "surnameDiv", "index.php", {parameters: pars, });
+        new Ajax.Autocompleter("input_surname", "surnameDiv", "index.php", {parameters: pars});
     }
     
     function addRecipient(userid)
@@ -177,9 +177,11 @@ $pageData = $objHeader->show();
 
 // set up html elements
 $objInput = new textinput('firstname', '', '', '50');
+$objInput->extra = ' onfocus="this.value=\'\'"';
 $firstnameInput = $objInput->show().'<div id="name_load" style="visibility:hidden; float: left;">'.$objIcon->show().'</div>';
 
 $objInput = new textinput('surname', '', '', '50');
+$objInput->extra = ' onfocus="this.value=\'\'"';
 $surnameInput = $objInput->show().'<div id="surname_load" style="visibility:hidden; float: left;">'.$objIcon->show().'</div>';
 
 $objLayer = new layer();

@@ -147,13 +147,13 @@ class email extends controller
                 $arrUserId = $this->getParam('userId');
                 if (!empty($arrUserId)) {
                     if (!is_array($arrUserId)) {
-                        $arrUserId = explode("|", $arrUserId);
+                        $arrUserId = explode('|', $arrUserId);
                     }
                     $toList = '';
                     foreach($arrUserId as $key => $userId) {
                         $icon = $this->deleteIcon($userId);
                         $name = $this->dbRouting->getName($userId);
-                        $toList.= "<span id='".$userId."'>".$name.$icon."&nbsp;&nbsp;&nbsp;</span>";
+                        $toList.= '<span id="'.$userId.'">'.$name.$icon.'&nbsp;&nbsp;&nbsp;</span>';
                     }
                     $recipientList = implode('|', $arrUserId);
                 } else {
