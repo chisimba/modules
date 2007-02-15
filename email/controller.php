@@ -182,9 +182,9 @@ class email extends controller
                 }
                 return $this->composeList($search, $field);
 
-            case 'addrecipient':
+            case 'makelist':
                 $recipientList = $this->getParam('recipientList');
-                return $this->addRecipient($recipientList);
+                return $this->makeList($recipientList);
 
             case 'manageaddressbooks':
                 $mode = $this->getParam('mode');
@@ -706,15 +706,17 @@ class email extends controller
      * @param string $recipientList The list of recipientId's
      * @return xml $xml The xajax response xml
      */
-    public function addRecipient($recipientList)
+    public function makeList($recipientList)
     {
         $configs = $this->getSession('configs');
-        $arrUserId = explode('|', $recipientList);
         $response = '';
-        foreach($arrUserId as $userId){
-            $name = $this->dbRouting->getName($userId);
-            $icon = $this->deleteIcon($userId);
-            $response .= '<span id="'.$userId.'">'.$name.$icon.'&#160;&#160;&#160;</span>';
+        if($recipientList != ''){
+            $arrUserId = explode('|', $recipientList);
+            foreach($arrUserId as $userId){
+                $name = $this->dbRouting->getName($userId);
+                $icon = $this->deleteIcon($userId);
+                $response .= '<span id="'.$userId.'">'.$name.$icon.'&#160;&#160;&#160;</span>';
+           }
         }
         echo $response;
     }
@@ -728,12 +730,15 @@ class email extends controller
      */
     private function deleteIcon($userId)
     {
-        $skin = $this->objConfig->getskinRoot();
-        $skin.= '_common';
-        $skin.= $this->objConfig->getItem('KEWL_DEFAULTICONFOLDER');
-        $title = $this->objLanguage->languageText('word_delete');
         $confirm = $this->objLanguage->languageText('mod_email_delrecipient', 'email');
-        $delIcon = '<a href="#"><img src="'.$skin.'cancel.gif" class="absmiddle" alt="'.$title.'" title="'.$title.'" border="0" height="17" width="17" onclick="javascript:if(confirm(\''.$confirm.'\')){deleteRecipient(\''.$userId.'\',document.getElementById(\'input_recipient\').value);}" /></a>';
+        $title = $this->objLanguage->languageText('word_delete');
+        
+        $objIcon = &$this->newObject('geticon', 'htmlelements');
+        $objIcon->title = $title;
+        $objIcon->setIcon('cancel');
+        $objIcon->extra = ' height="17" width="17" onclick="javascript:if(confirm(\''.$confirm.'\')){deleteRecipient(\''.$userId.'\');}"';
+        $delIcon = '<a href="#">'.$objIcon->show().'</a>';
+
         return $delIcon;
     }
 

@@ -49,14 +49,14 @@ $script = '<script type="text/javaScript">
     }
 
     function listfirstname(){        
-        document.getElementById("input_surname").value="";
+        document.getElementById("input_surname").value = "";
 
         var pars = "module=email&action=composelist&field=firstname";
         new Ajax.Autocompleter("input_firstname", "firstnameDiv", "index.php", {parameters: pars});
     }
 
     function listsurname(){        
-        document.getElementById("input_firstname").value="";
+        document.getElementById("input_firstname").value = "";
 
         var pars = "module=email&action=composelist&field=surname";
         new Ajax.Autocompleter("input_surname", "surnameDiv", "index.php", {parameters: pars, });
@@ -65,14 +65,23 @@ $script = '<script type="text/javaScript">
     function addRecipient(userid)
     {
         var el = document.getElementById("input_recipient");
-        if(el.value == ""){
-            el.value = userid;
-        }else{
-            el.value = el.value+"|"+userid;
+        var elArr = el.value.split("|");
+        var len = elArr.length
+        var exist = false;
+        for(i=0; i<len; i++){
+            if(elArr[i] == userid){
+                exist = true;
+            }
         }
-        var elVal = document.getElementById("input_recipient").value;
+        if(exist == false){
+            if(el.value == ""){
+                el.value = userid;
+            }else{
+                el.value = el.value + "|" + userid;
+            }
+        }
         var url = "index.php";
-        var pars = "module=email&action=addrecipient&recipientList="+elVal;
+        var pars = "module=email&action=makelist&recipientList=" + el.value;
         var target = "toList";
         var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars, onLoading: addLoad, onComplete: addComplete});
     }
@@ -83,6 +92,27 @@ $script = '<script type="text/javaScript">
 
     function addComplete(){
     	$("add_load").style.visibility = "hidden";
+    }
+    
+    function deleteRecipient(userid)
+    {
+        var el = document.getElementById("input_recipient");
+        var elArr = el.value.split("|");
+        el.value = "";
+        var len = elArr.length;
+        for(i=0; i<len; i++){
+            if(elArr[i] != userid){
+                if(el.value == ""){
+                    el.value = elArr[i];
+                }else{
+                    el.value = el.value + "|" + elArr[i];
+                }
+            }
+        }
+        var url = "index.php";
+        var pars = "module=email&action=makelist&recipientList=" + el.value;
+        var target = "toList";
+        var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars, onLoading: addLoad, onComplete: addComplete});
     }
 </script>';
 echo $script;
@@ -161,7 +191,7 @@ $objFieldset->extra = ' style="height: 100px; border: 1px solid #808080; margin:
 $objFieldset->contents = $toLayer;
 $toFieldset = $objFieldset->show();
 
-$objInput = new textinput('recipient', $recipientList, 'hidden', '');
+$objInput = new textinput('recipient', $recipientList, 'hidden', '200');
 $recipientInput = $objInput->show();
 
 $objInput = new textinput('subject', $subject, '', '115');
