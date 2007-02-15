@@ -804,17 +804,17 @@ class blogops extends object
         //break out the ol featurebox...
         if (!empty($posts)) {
             foreach($posts as $post) {
-            	$objMindMap = $this->getObject('parse4mindmap', 'filters');
-				$post['post_content'] = $objMindMap->parse($post['post_content']);
+            	//$objMindMap = $this->getObject('parse4mindmap', 'filters');
+				//$post['post_content'] = $objMindMap->parse($post['post_content']);
 				//parse for mathml as well
-				$this->objMath = $this->getObject('parse4mathml', 'filters');
-				$post['post_content'] = $this->objMath->parseAll($post['post_content']);
+				//$this->objMath = $this->getObject('parse4mathml', 'filters');
+				//$post['post_content'] = $this->objMath->parseAll($post['post_content']);
 
 				//$post['post_content'] = htmlentities($post['post_content']);
 				
 				//get the washout class and parse for all the bits and pieces
-				//$washer = $this->getObject('washout', 'utilities');
-				//$post['post_content'] = $washer->parseText($post['post_content']);
+				$washer = $this->getObject('washout', 'utilities');
+				$post['post_content'] = $washer->parseText($post['post_content']);
 
                 $objFeatureBox = $this->getObject('featurebox', 'navigation');
                 //build the top level stuff
