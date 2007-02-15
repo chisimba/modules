@@ -204,11 +204,47 @@ class utils extends object
 	  public function getUserPic()
 	  {
 	  	$objUserPic =& $this->getObject('imageupload', 'useradmin');
+	  	$objGoups = $this->getObject('groupusersdb', 'groupadmin');
+	  	$groupsArr = $objGoups->getUserGroups($this->_objUser->userId());
+	  	//var_dump($groupsArr);
 	  	$objBox = & $this->newObjecT('featurebox', 'navigation');
-	  	$str = '<p align="center"><img src="'.$objUserPic->userpicture($this->_objUser->userId() ).'" alt="User Image" /></p>';
+	  	$str = '<p align="center"><img src="'.$objUserPic->userpicture($this->_objUser->userId() ).'" alt="'.$this->_objUser->fullName().'" /></p>';
+	  	$str .= $this->getUserRole();
+	  	
 	  	return $objBox->show($this->_objUser->fullName(), $str);
 	  }
 	  
+	  /**
+	   * Method get the User's Current Role
+	   * 
+	   * @return string
+	   * @access public
+	   */
+	  public function getUserRole()
+	  {
+	       
+	      
+	      $objGroup = & $this->getObject('groupusersdb', 'groupadmin');
+	      $objGroupName = & $this->getObject('groupadminmodel', 'groupadmin');
+	      $arr = $objGroup->getUserRoles($this->_objUser->PKId());
+	     // var_dump($arr);
+	     
+	      $str = '';
+	      
+	       foreach ($arr as $group)
+	      {
+	          if(strpos($objGroupName->getFullPath($group['group_id']),'/'))
+	          {
+	              $strArr = explode('/',$objGroupName->getFullPath($group['group_id'])) ;
+	              $heading = $this->_objDBContext->getMenuText($strArr[0]). ' - '. $strArr[1];
+	          } else {
+	              $heading = $objGroupName->getFullPath($group['group_id']);
+	          }
+	          $str .= '<br/>'. $heading ;
+	      }
+	    
+	      return 'You are part of <span class="highlight">'.$str.'</span>';
+	  }
 	  /**
 	   * Method to get the right widgets
 	   * @return string
