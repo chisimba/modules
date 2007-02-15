@@ -114,9 +114,6 @@ class forum extends controller
 		
         $this->loadClass('link', 'htmlelements');
         
-        //$this->loadClass('xajax', 'ajaxwrapper');
-        $this->loadClass('xajaxresponse', 'ajaxwrapper');
-        
         
         //Get the activity logger class
         //$this->objLog=$this->newObject('logactivity', 'logger');
@@ -155,6 +152,7 @@ class forum extends controller
             case 'generatetopicmindmap':
             case 'viewmindmap':
             case 'generatemindmap':
+            case 'loadtranslation':
                 return FALSE; 
                 break;
             default: 
@@ -321,6 +319,9 @@ class forum extends controller
                 
             case 'translationajax':
                 return $this->translationAjax();
+                
+            case 'loadtranslation':
+                return $this->loadTranslation($this->getParam('id'), $this->getParam('lang'));
              
             default:
                 return $this->forumHome();
@@ -723,13 +724,6 @@ class forum extends controller
             $forumLink->link = $forum['forum_name'];
             $this->objMenuTools->addToBreadCrumbs(array($forumLink->show(),$post['post_title']));
             
-            $xajaxTest = $this->newObject('xajax', 'ajaxwrapper');
-            $xajaxTest->setRequestURI($this->uri(array('action'=>'translationajax')));
-            //$xajaxTest = new xajax($this->uri(array('action'=>'translationajax')));
-            $xajaxTest->registerFunction(array($this,"loadTranslation")); // Register another function in this controller
-            $xajaxTest->processRequests(); // XAJAX method to be called
-            $this->appendArrayVar('headerParams', $xajaxTest->getJavascript(NULL, $this->getResourceUri('xajax/0.2.4/xajax.js', 'ajaxwrapper'))); // Send JS to header
-            
             // return the template
             return 'forum_topic_threadedview.php';
         }
@@ -823,13 +817,7 @@ class forum extends controller
                 $this->objTopicRead->markTopicRead ($topic_id, $this->userId);
             }
             
-            $xajaxTest = $this->newObject('xajax', 'ajaxwrapper');
-            $xajaxTest->setRequestURI($this->uri(array('action'=>'translationajax')));
-            //$xajaxTest = new xajax($this->uri(array('action'=>'translationajax')));
-            $xajaxTest->registerFunction(array($this,"loadTranslation")); // Register another function in this controller
-            $xajaxTest->processRequests(); // XAJAX method to be called
-            $this->appendArrayVar('headerParams', $xajaxTest->getJavascript(NULL, $this->getResourceUri('xajax/0.2.4/xajax.js', 'ajaxwrapper'))); // Send JS to header
-			
+	
 			// Bread Crumbs
             $forumLink = new link ($this->uri(array('action'=>'forum', 'id'=>$post['forum_id'])));
             $forumLink->link = $forum['forum_name'];
@@ -839,26 +827,27 @@ class forum extends controller
         }
     }
     
-    function translationAjax()
+    /**
+    * Ajax Method to Load the Translation
+    *
+    */
+    function loadTranslation($postId, $language)
     {
-        $xajax = $this->newObject('xajax', 'ajaxwrapper');
-        $xajax->setRequestURI($this->uri(array('action'=>'translationajax')));
-        //$xajax = new xajax($this->uri(array('action'=>'translationajax')));
-        $xajax->registerFunction(array($this, 'loadTranslation'));// Register another function in this controller
-        $xajax->processRequests(); // XAJAX method to be called
-        $this->appendArrayVar('headerParams', $xajax->getJavascript(NULL, $this->getResourceUri('xajax/0.2.4/xajax.js', 'ajaxwrapper'))); // Send JS to header
-    }
-    
-    function loadTranslation($postId, $postTextId)
-    {
-        $post = $this->objPost->getPostInLanguage($postTextId);
+        $post = $this->objPostText->getTranslatedPost($postId, $language);
+        $objLanguageCode =& $this->getObject('languagecode', 'language');
         
-        $text = $post['post_text'];
-        $text = str_replace('&', '&amp;');
-        
-        $objResponse = new xajaxResponse();
-        $objResponse->addAppend('text_'.$postId, 'innerHTML', $text);
-        return $objResponse->getXML();
+        if ($post != FALSE) {
+            if ($post['original_post'] == '1') {
+                $text = '<strong class="warning">Viewing Original Post Made in '.$objLanguageCode->getLanguage($language).'</strong><br />';
+            } else {
+                $text = '<strong class="warning">Viewing Translation of Post in <em>'.$objLanguageCode->getLanguage($language).'</em></strong><br />';
+            }
+            $text .= $post['post_text'];
+            
+            echo $text;
+        } else {
+            echo 'Could not find translation or post';
+        }
     }
     
     /**
@@ -948,13 +937,6 @@ class forum extends controller
             $forumLink = new link ($this->uri(array('action'=>'forum', 'id'=>$post['forum_id'])));
             $forumLink->link = $forum['forum_name'];
             $this->objMenuTools->addToBreadCrumbs(array($forumLink->show(),$post['post_title'])); 
-            
-            $xajaxTest = $this->newObject('xajax', 'ajaxwrapper');
-            $xajaxTest->setRequestURI($this->uri(array('action'=>'translationajax')));
-            //$xajaxTest = new xajax($this->uri(array('action'=>'translationajax')));
-            $xajaxTest->registerFunction(array($this,"loadTranslation")); // Register another function in this controller
-            $xajaxTest->processRequests(); // XAJAX method to be called
-            $this->appendArrayVar('headerParams', $xajaxTest->getJavascript(NULL, $this->getResourceUri('xajax/0.2.4/xajax.js', 'ajaxwrapper'))); // Send JS to header
             
             // return the template
             return 'forum_topic_flatview.php';

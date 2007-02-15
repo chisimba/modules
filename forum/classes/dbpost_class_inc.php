@@ -355,6 +355,8 @@ class dbPost extends dbTable
         LEFT JOIN tbl_forum_post_text AS languageCheck ON (tbl_forum_post.id = languageCheck.post_id AND tbl_forum_post_text.language != languageCheck.language)
         WHERE tbl_forum_post_text.id = "'.$postTextId.'" GROUP BY tbl_forum_post.id LIMIT 1';
         
+        
+        //return array('post_text'=>$sql);
         $results = $this->getArray($sql);
         
         if (count($results) == 0) {
@@ -452,6 +454,7 @@ class dbPost extends dbTable
                     $return .= $this->objScriptClear->removeScript($tangentParent['post_text']);
                     $return .= '</div>';
                 }
+                $return .= '<div id="loading_'.$post['post_id'].'"></div>';
                 $return .= '<div id="text_'.$post['post_id'].'">'.$this->objMindMap->parse($this->objStringsFilter->prepare(// Apply String Filters
                                 
                                 $this->objMediaFilter->parseAll( // Apply Media Filters
@@ -515,7 +518,7 @@ class dbPost extends dbTable
                 if ($this->repliesAllowed) {
                     $link = new link($this->uri(array('action'=>'postreply', 'id'=>$post['post_id'], 'type'=>$this->forumtype)));
                     $link->link = $this->objLanguage->languageText('mod_forum_postreply', 'forum');
-                    $return .= $link->show();
+                    $return .= '<br />'.$link->show();
                 }
                 
                 // Check if user can edit post
@@ -541,7 +544,7 @@ class dbPost extends dbTable
                 
                 // Check if other languages exist
                 if (isset($post['anotherlanguage']) && $post['anotherlanguage'] != '') {
-                    $link = new link ('javascript:xajax_loadTranslation(\''.$post['post_id'].'\', \''.$post['id'].'\');');
+                    $link = new link ('javascript:loadTranslation(\''.$post['post_id'].'\', \''.$post['language'].'\');');
                     $link-> link = $this->objLanguageCode->getLanguage($post['language']).' ('.strtoupper($post['language']).')';
                     
                     $return .= $this->objLanguage->languageText('mod_forum_postmadein', 'forum').' <strong>'.$link->show().'</strong>. ';
@@ -557,7 +560,7 @@ class dbPost extends dbTable
                     // Loop through the languages
                     foreach ($languages as $language)
                     {
-                        $link = new link('javascript:xajax_loadTranslation(\''.$post['post_id'].'\', \''.$language['id'].'\');');
+                        $link = new link('javascript:loadTranslation(\''.$post['post_id'].'\', \''.$language['language'].'\');');
                         //$link->href = $this->uri(array('action'=>'viewtranslation', 'id'=>$language['id'], 'type'=>$this->forumtype));
                         $link->link = $this->objLanguageCode->getLanguage($language['language']).' ('.strtoupper($language['language']).')';
                         
@@ -590,6 +593,13 @@ class dbPost extends dbTable
             $this->numOpenThreadDisplayDivs +=1;
         }
         //echo($this->forumRatingsArray);
+        
+        // Load Scriptaculous and Prototype to Header
+        $objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
+        $objScriptaculous->show();
+        
+        // Load JavaScript Function
+        $this->appendArrayVar('headerParams', $this->getTranslationAjaxScript());
         return $return;
     }
     
@@ -1465,8 +1475,34 @@ function clearForTangent()
     }
     
     
+    /**
+    * Method to return the javascript used for ajax translation of posts
+    * @return string
+    */
+    function getTranslationAjaxScript()
+    {
+        return '<script type="text/javascript">
+//<![CDATA[
+
+function loadTranslation(post, lang) {
+	var url = \'index.php\';
+	var pars = \'module=forum&action=loadtranslation&id=\'+post+\'&lang=\'+lang;
+	var myAjax = new Ajax.Request( url, {method: \'get\', parameters: pars, onLoading:function(response)
+	{
+        Effect.SlideUp($(\'text_\'+post));
+        $(\'loading_\'+post).innerHTML = \'<span class="dim"><img src="skins/_common/icons/loader.gif" /> Loading Translation</span><br /><br />\';
+        Effect.Appear($(\'loading_\'+post), {queue:\'end\'});
+	} , onComplete: function(response) {
+        Effect.Appear($(\'text_\'+post), {queue:\'end\'});
+        $(\'text_\'+post).innerHTML = response.responseText;
+        Effect.SlideUp($(\'loading_\'+post));
+	}} );
+}
+
+//]]>
+</script>';
     
-    
+    }
     
 	
 }

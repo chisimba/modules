@@ -132,6 +132,23 @@ class dbPostText extends dbTable
         return $postText;
     }
     
+    /**
+    * Function to get a post in a particular language
+    * @param string $postId Record Id of the Post
+    * @param string $language Two letter code of the language
+    * @return Array if translation found, else FALSE
+    */
+    function getTranslatedPost($postId, $language)
+    {
+        $result = $this->getAll(' WHERE post_id=\''.$postId.'\' AND language=\''.strtolower($language).'\'');
+        
+        if (count($result) == 0) {
+            return FALSE;
+        } else {
+            return $result[0];
+        }
+    }
+    
 	
 }
 

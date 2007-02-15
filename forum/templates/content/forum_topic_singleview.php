@@ -3,7 +3,6 @@
 * This template displays a topic in a single view format
 */
 
-$this->setVar('pageSuppressXML',true);
 
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
