@@ -811,6 +811,10 @@ class blogops extends object
 				$post['post_content'] = $this->objMath->parseAll($post['post_content']);
 
 				//$post['post_content'] = htmlentities($post['post_content']);
+				
+				//get the washout class and parse for all the bits and pieces
+				//$washer = $this->getObject('washout', 'utilities');
+				//$post['post_content'] = $washer->parseText($post['post_content']);
 
                 $objFeatureBox = $this->getObject('featurebox', 'navigation');
                 //build the top level stuff
