@@ -24,9 +24,14 @@ if (count($contextList) > 0)
 		$lects = '';
 		if(is_array($lecturers))
 		{
+			$c = 0;
 			foreach($lecturers as $lecturer)
 			{
-				$lects .= $lecturer['fullname'].', ';
+			    $c++;
+				$lects .= $this->_objUser->fullname($lecturer['userid']);
+				$lects .= ($c < count($lecturers)) ? ', ' : '';
+				
+				
 			}
 		} else {
 			$lects = 'No Instructor for this course';
@@ -94,9 +99,14 @@ if(count($otherCourses) > 0)
 		if(is_array($lecturers))
 		{
             //get their names
+			$c = 0;
 			foreach($lecturers as $lecturer)
 			{
-				$lects .= $lecturer['fullname'].', ';
+			    $c++;
+				$lects .= $this->_objUser->fullname($lecturer['userid']);
+				$lects .= ($c < count($lecturers)) ? ', ' : '';
+				
+				
 			}
 		} else {
 			$lects = 'No Instructor for this course';
