@@ -831,7 +831,7 @@ class blogops extends object
                 catch(customException $e) {
                     customException::cleanUp();
                 }
-                $post['post_content'] = stripslashes($this->bbcode->parse4bbcode($post['post_content']));
+                //$post['post_content'] = stripslashes($this->bbcode->parse4bbcode($post['post_content']));
                 $this->cleaner = $this->newObject('htmlcleaner', 'utilities');
                 //set up the trackback link
                 $bloggerprofile = $this->objDbBlog->checkProfile($this->objUser->userId());
