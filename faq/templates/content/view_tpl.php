@@ -34,8 +34,8 @@
 	}
 
     // Add an entry if not displaying "All Categories".
-	if ($categoryId != "All Categories") {
-        if ($isAdmin || $isLecturer) {
+//	if ($categoryId != "All Categories") {
+  //      if (sAdmin || $isLecturer) {
             // Add an entry.
     		$addLink = "<a href=\"" .
     	               $this->uri(array(
@@ -51,13 +51,14 @@
     		$addLink .= $icon->show();
     		//echo "&nbsp;".$objLanguage->languageText("faq_addnewentry");
     		$addLink .= "</a>";
+/*
         } else {
             $addLink = NULL;
         }
 	} else {
         $addLink = NULL;
     }
-
+*/
 	echo "<h1>" .
 		$objLanguage->languageText("phrase_faq") .
 		//" : " .
