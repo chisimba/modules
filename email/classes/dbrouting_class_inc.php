@@ -28,6 +28,7 @@ class dbrouting extends dbTable
         $this->table = 'tbl_email_routing';
         $this->tblEmail = 'tbl_email';
         $this->tblUsers = 'tbl_users';
+        $this->tblConfig = 'tbl_email_config';
         $this->objUser = &$this->newObject('user', 'security');
         $this->userId = $this->objUser->userId();
     }
@@ -130,6 +131,15 @@ class dbrouting extends dbTable
      */
     public function getAllMail($folderId, $sortOrder, $filter)
     {
+        $sql = "SELECT * FROM ".$this->tblConfig;
+        $sql .= " WHERE user_id ='".$this->userId."'";
+        $data = $this->getArray($sql);
+        if (!empty($data)) {
+            $surnameFirst = $data[0]['surname_first'];
+        } else {
+            $surnameFirst = 0;
+        }
+        
         $sql = "SELECT *, routing.id AS routing_id, email.id AS emailid ";
         $sql.= " FROM ".$this->table." AS routing,";
         $sql.= $this->tblEmail." AS email, ";
@@ -149,7 +159,11 @@ class dbrouting extends dbTable
         }
         if ($sortOrder != NULL) {
             if ($sortOrder[1] == 1) {
-                $sql.= " ORDER BY fullName ".$sortOrder[2];
+                if ($surnameFirst == 1) {
+                    $sql.= " ORDER BY surname, firstname ".$sortOrder[2];
+                } else {
+                    $sql.= " ORDER BY firstname, surname ".$sortOrder[2];
+                }
             } elseif ($sortOrder[1] == 2) {
                 $sql.= " ORDER BY subject ".$sortOrder[2];
             } else {
