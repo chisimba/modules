@@ -28,6 +28,7 @@ $objLayer = &$this->loadClass('layer', 'htmlelements');
 
 // set up language items
 $heading = $this->objLanguage->languageText('mod_email_manageaddressbooks', 'email');
+$showHeading = $this->objLanguage->languageText('mod_email_addressbooks', 'email');
 $backLabel = $this->objLanguage->languageText('word_back');
 $submitLabel = $this->objLanguage->languageText('word_submit');
 $cancelLabel = $this->objLanguage->languageText('word_cancel');
@@ -40,23 +41,29 @@ $requiredLabel = $this->objLanguage->languageText('mod_email_requiredbook', 'ema
 $entriesLabel = $this->objLanguage->languageText('word_entries');
 $booksLabel = $this->objLanguage->languageText('mod_email_addressbooks', 'email');
 
-// set up add icon
-$objIcon->title = $addBooksLabel;
-$addIcon = $objIcon->getLinkedIcon($this->uri(array(
-    'action' => 'manageaddressbooks',
-    'mode' => 'add'
-)) , 'add');
-
 // set up heading
-$objHeader = new htmlHeading();
-$objHeader->str = $heading."&nbsp;".$addIcon;
-$objHeader->type = 1;
+if($mode == 'show'){
+    $objHeader = new htmlHeading();
+    $objHeader->str = $showHeading;
+    $objHeader->type = 1;
+    $currentFolderId = '';
+}else{
+    $objIcon->title = $addBooksLabel;
+    $addIcon = $objIcon->getLinkedIcon($this->uri(array(
+        'action' => 'manageaddressbooks',
+        'mode' => 'add',
+        'currentFolderId' => $currentFolderId,
+    )) , 'add');
+
+    $objHeader = new htmlHeading();
+    $objHeader->str = $heading.'&nbsp;'.$addIcon;
+    $objHeader->type = 1;
+}
 $pageData = $objHeader->show();
 
 $objTable = new htmltable();
-$objTable->id = "bookList";
-$objTable->css_class = "sorttable";
-//    $objTable->cellspacing='2';
+$objTable->id = 'bookList';
+$objTable->css_class = 'sorttable';
 $objTable->cellpadding = '4';
 $objTable->row_attributes = ' name="row_'.$objTable->id.'"';
 $objTable->startRow();
@@ -84,10 +91,21 @@ if ($arrBookList == FALSE && empty($arrContextList)) {
             $entries = count($arrContextUserList);
 
             // set up link
-            $objLink = new link($this->uri(array(
-                'action' => 'addressbook',
-                'contextcode' => $context,
-            )) , 'email');
+            if($mode == 'show'){
+                $objLink = new link($this->uri(array(
+                    'action' => 'showentries',
+                    'contextcode' => $context,
+                    'recipientList' => $recipientList,
+                    'subject' => $subject,
+                    'message' => $message,
+                )) , 'email');
+            }else{
+                $objLink = new link($this->uri(array(
+                    'action' => 'addressbook',
+                    'contextcode' => $context,
+                    'currentFolderId' => $currentFolderId,
+                )) , 'email');
+            }
             $objLink->link = $context;
             $contextLink = $objLink->show();
 
@@ -109,6 +127,7 @@ if ($arrBookList == FALSE && empty($arrContextList)) {
             $editIcon = $objIcon->getEditIcon($this->uri(array(
                 'action' => 'manageaddressbooks',
                 'mode' => 'edit',
+                'currentFolderId' => $currentFolderId,
                 'bookId' => $book['id']
             )));
             if ($mode == 'edit' && $bookId == $book['id']) {
@@ -119,26 +138,47 @@ if ($arrBookList == FALSE && empty($arrContextList)) {
                 $bookName.= $objInput->show();
             } else {
                 // set up link
-                $objLink = new link($this->uri(array(
-                    'action' => 'addressbook',
-                    'bookId' => $book['id'],
-                    'activeBook' => $book['book_name']
-                )) , 'email');
+                if($mode == 'show'){                    
+                    $objLink = new link($this->uri(array(
+                        'action' => 'showentries',
+                        'bookId' => $book['id'],
+                        'recipientList' => $recipientList,
+                        'subject' => $subject,
+                        'message' => $message,
+                    )) , 'email');
+                }else{
+                    $objLink = new link($this->uri(array(
+                        'action' => 'addressbook',
+                        'bookId' => $book['id'],
+                        'currentFolderId' => $currentFolderId,
+                    )) , 'email');
+                }
                 $objLink->link = $book['book_name'];
-                $bookName = $objLink->show();
+                if($entries == 0 && $mode == 'show'){
+                    $bookName = $book['book_name'];                
+                }else{
+                    $bookName = $objLink->show();
+                }
             }
             // set up delete icon
             $deleteArray = array(
                 'action' => 'manageaddressbooks',
                 'mode' => 'delete',
+                'currentFolderId' => $currentFolderId,
                 'bookId' => $book['id']
             );
             $deleteIcon = $objIcon->getDeleteIconWithConfirm('', $deleteArray, 'email', $confirmLabel);
+            
+            if($mode == 'show'){
+                $icons ='';
+            }else{
+                $icons = $editIcon.'&nbsp;'.$deleteIcon;
+            }
 
             $objTable->startRow();
             $objTable->addCell($bookName, '', '', '', '', '');
             $objTable->addCell($entries, '', '', 'center', '', '');
-            $objTable->addCell($editIcon."&nbsp;".$deleteIcon, '', '', '', '', '');
+            $objTable->addCell($icons, '', '', '', '', '');
             $objTable->endRow();
         }
     }
@@ -163,25 +203,30 @@ $bookFieldset = $objFieldset->show();
 if ($mode == 'add') {
     $objButton = new button('addbutton', $submitLabel);
     $objButton->setToSubmit();
-    $buttons = "<br />".$objButton->show();
+    $buttons = '<br />'.$objButton->show();
 
     $objButton = new button('cancelbutton', $cancelLabel);
-    $objButton->extra = ' onclick="javascript:document.getElementById(\'input_cancelbutton\').value=\'Cancel\';document.getElementById(\'form_hiddenform\').submit();"';
-    $buttons.= "&nbsp;".$objButton->show();
+    $objButton->extra = ' onclick="javascript:
+        document.getElementById(\'input_cancelbutton\').value=\'Cancel\';
+        document.getElementById(\'form_hiddenform\').submit();"';
+    $buttons.= '&nbsp;'.$objButton->show();
 } elseif ($mode == 'edit') {
     $objButton = new button('editbutton', $submitLabel);
     $objButton->setToSubmit();
-    $buttons = "<br />".$objButton->show();
+    $buttons = '<br />'.$objButton->show();
 
     $objButton = new button('cancelbutton', $cancelLabel);
-    $objButton->extra = ' onclick="javascript:document.getElementById(\'input_cancelbutton\').value=\'Cancel\';document.getElementById(\'form_hiddenform\').submit();"';
-    $buttons.= "&nbsp;".$objButton->show();
+    $objButton->extra = ' onclick="javascript:
+        document.getElementById(\'input_cancelbutton\').value=\'Cancel\';
+        document.getElementById(\'form_hiddenform\').submit();"';
+    $buttons.= '&nbsp;'.$objButton->show();
 } else {
     $buttons = '';
 }
 // set up form
 $objForm = new form('bookform', $this->uri(array(
-    'action' => 'manageaddressbooks'
+    'action' => 'manageaddressbooks',
+    'currentFolderId' => $currentFolderId
 )));
 $objForm->addToForm($bookFieldset);
 $objForm->addToForm($buttons);
@@ -195,16 +240,29 @@ $objInput = new textinput('cancelbutton', '', 'hidden', '');
 $hiddenInput = $objInput->show();
 
 $objForm = new form('hiddenform', $this->uri(array(
-    'action' => 'manageaddressbooks'
+    'action' => 'manageaddressbooks',
+    'currentFolderId' => $currentFolderId
 )));
 $objForm->addToForm($hiddenInput);
 $hiddenForm = $objForm->show();
 $pageData.= $folderForm.$hiddenForm;
 
 // set up exit link
-$objLink = new link('javascript:history.back()');
+if($mode == 'show'){
+    $objLink = new link($this->uri(array(
+        'action' => 'compose',
+        'userId' => $recipientList,
+        'subject' => $subject,
+        'message' => $message,
+    )), 'email');    
+}else{
+    $objLink = new link($this->uri(array(
+        'action' => 'gotofolder',
+        'folderId' => $currentFolderId
+    )) , 'email');
+}
 $objLink->link = $backLabel;
-$pageData.= "<br />".$objLink->show();
+$pageData.= '<br />'.$objLink->show();
 
 $objLayer = new layer();
 $objLayer->padding = '10px';

@@ -11,6 +11,66 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * Author Kevin Cyster
  */
 
+// set up scriptaculous
+$this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
+$this->objScriptaculous->show();
+
+$script = '<script type="text/javaScript">
+    Event.observe(window, "load", init, false);
+    
+    function init(){
+        var mailAction = document.getElementById("input_mailAction");
+        var messageField = document.getElementById("input_messageField");
+
+        if(mailAction){
+            Event.observe("input_mailAction", "change", mailaction, false);
+        }
+        if(messageField){
+            Event.observe("input_messageField", "change", messagefield, false);
+        }
+    }
+
+    function mailaction(){
+        var el = document.getElementById("input_mailAction");        
+        var url = "index.php";
+        var target = "actionLayer";
+        var pars = "module=email&action=actiondisplay&mailAction=" + el.value + "&target=" + target;
+        var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars});
+        var target = "destLayer";
+        var pars = "module=email&action=actiondisplay&mailAction=" + el.value + "&target=" + target;
+        var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars});
+    }
+
+    function messagefield(){        
+        var el = document.getElementById("input_messageField");        
+        var url = "index.php";
+        var target = "fieldLayer";
+        var pars = "module=email&action=filterdisplay&messageField=" + el.value + "&target=" + target;
+        var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars});
+        var target = "criteriaLayer";
+        var pars = "module=email&action=filterdisplay&messageField=" + el.value + "&target=" + target;
+        var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars});
+    }
+
+    function mailfield(){        
+        var el = document.getElementById("input_mailField");        
+        var url = "index.php";
+        var target = "criteriaLayer";
+        var pars = "module=email&action=criteriadisplay&mailField=" + el.value;
+        var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars});
+    }
+
+    function ruleaction(){        
+        var el = document.getElementById("input_ruleAction");        
+        var el1 = document.getElementById("input_mailAction");        
+        var url = "index.php";
+        var target = "destLayer";
+        var pars = "module=email&action=destdisplay&ruleAction="+el.value+"&mailAction="+el1.value;
+        var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars});
+    }
+</script>';
+echo $script;
+
 // set up html elements
 $objIcon = &$this->newObject('geticon', 'htmlelements');
 $objHeader = &$this->loadClass('htmlheading', 'htmlelements');
@@ -79,7 +139,6 @@ $objDrop->addOption(NULL, '- '.$selectLabel.' -');
 $objDrop->addOption(1, $incomingLabel);
 $objDrop->addOption(2, $outgoingLabel);
 $objDrop->setSelected($mailAction);
-$objDrop->extra = ' onchange="javascript:xajax_actionDisplay(this.value);"';
 $mailDrop = $objDrop->show();
 
 $objDrop = new dropdown('messageField');
@@ -87,7 +146,6 @@ $objDrop->addOption(NULL, '- '.$selectLabel.' -');
 $objDrop->addOption(1, $allMessagesLabel);
 $objDrop->addOption(2, $filteredMessagesLabel);
 $objDrop->setSelected($messageField);
-$objDrop->extra = ' onchange="javascript:xajax_filterDisplay(this.value);"';
 $messageDrop = $objDrop->show();
 
 if ($mode == 'editrule') {
@@ -100,10 +158,11 @@ if ($mode == 'editrule') {
         $objDrop->addOption(4, $messageLabel);
         $objDrop->addOption(5, $attachmentsLabel);
         $objDrop->setSelected($rule['mail_field']);
-        $objDrop->extra = ' onchange="javascript:xajax_criteriaDisplay(this.value);"';
+        $objDrop->extra = ' onchange="javascript:
+            mailfield();"';
         $fieldDrop = $objDrop->show();
     } else {
-        $fieldDrop = "<b>".$notApplicableLabel."</b>";
+        $fieldDrop = '<b>'.$notApplicableLabel.'</b>';
     }
 } else {
     $fieldDrop = '';
@@ -119,7 +178,7 @@ if ($mode == 'editrule') {
         $objInput = new textinput('criteria', $rule['criteria']);
         $criteriaInput = $objInput->show();
     } else {
-        $criteriaInput = "<b>".$notApplicableLabel."</b>";
+        $criteriaInput = '<b>'.$notApplicableLabel.'</b>';
     }
 } else {
     $criteriaInput = '';
@@ -136,7 +195,8 @@ if ($mode == 'editrule') {
     $objDrop->addOption(1, $moveLabel);
     $objDrop->addOption(2, $readLabel);
     $objDrop->setSelected($rule['rule_action']);
-    $objDrop->extra = ' onchange="javascript:xajax_destDisplay(this.value,document.getElementById(\'input_mailAction\').value);"';
+    $objDrop->extra = ' onchange="javascript:
+        ruleaction();"';
     $actionDrop = $objDrop->show();
 } else {
     $actionDrop = '';
@@ -163,7 +223,7 @@ if ($mode == 'editrule') {
         $objDrop->setSelected($rule['dest_folder_id']);
         $folderDrop = $objDrop->show();
     } else {
-        $folderDrop = "<b>".$notApplicableLabel."</b>";
+        $folderDrop = '<b>'.$notApplicableLabel.'</b>';
     }
 } else {
     $folderDrop = '';
@@ -175,30 +235,29 @@ $objLayer->str = $folderDrop;
 $destLayer = $objLayer->show();
 
 $objTable = new htmltable();
-//    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
 $objTable->startRow();
-$objTable->addCell("<b>".$emailLabel."</b>", '', '', '', '', '');
+$objTable->addCell('<b>'.$emailLabel.'</b>', '', '', '', '', '');
 $objTable->addCell($mailDrop, '', '', '', '', '');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell("<b>".$messagesLabel."</b>", '', '', '', '', '');
+$objTable->addCell('<b>'.$messagesLabel.'</b>', '', '', '', '', '');
 $objTable->addCell($messageDrop, '', '', '', '', '');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell("<b>".$fieldLabel."</b>", '', '', '', '', '');
+$objTable->addCell('<b>'.$fieldLabel.'</b>', '', '', '', '', '');
 $objTable->addCell($fieldLayer, '', '', '', '', '');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell("<b>".$criteriaLabel."</b>", '', '', '', '', '');
+$objTable->addCell('<b>'.$criteriaLabel.'</b>', '', '', '', '', '');
 $objTable->addCell($criteriaLayer, '', '', '', '', '');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell("<b>".$actionLabel."</b>", '', '', '', '', '');
+$objTable->addCell('<b>'.$actionLabel.'</b>', '', '', '', '', '');
 $objTable->addCell($actionLayer, '', '', '', '', '');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell("<b>".$destinationLabel."</b>", '', '', '', '', '');
+$objTable->addCell('<b>'.$destinationLabel.'</b>', '', '', '', '', '');
 $objTable->addCell($destLayer, '', '', '', '', '');
 $objTable->endRow();
 $rulesTable = $objTable->show();
@@ -210,11 +269,12 @@ $ruleFieldset = $objFieldset->show();
 
 $objButton = new button('submitbutton', $submitLabel);
 $objButton->setToSubmit();
-$buttons = "<br/>".$objButton->show();
+$buttons = '<br/>'.$objButton->show();
 
 $objButton = new button('cancelbutton', $cancelLabel);
-$objButton->extra = ' onclick="javascript:document.getElementById(\'form_hiddenform\').submit();"';
-$buttons.= "&nbsp;".$objButton->show();
+$objButton->extra = ' onclick="javascript:
+    document.getElementById(\'form_hiddenform\').submit();"';
+$buttons.= '&nbsp;'.$objButton->show();
 
 $objInput = new textinput('ruleId', $ruleId, 'hidden', '');
 $hiidenInput = $objInput->show();
@@ -239,7 +299,7 @@ $objLink = new link($this->uri(array(
     'action' => 'managesettings'
 )) , 'email');
 $objLink->link = $backLabel;
-$pageData.= "<br />".$objLink->show();
+$pageData.= '<br />'.$objLink->show();
 
 $objLayer = new layer();
 $objLayer->padding = '10px';

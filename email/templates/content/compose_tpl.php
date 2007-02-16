@@ -11,9 +11,9 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * Author Kevin Cyster
  */
 
+// set up scriptaculous
 $this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
 $this->objScriptaculous->show();
-$this->setVar('pageSuppressXML', TRUE);
 
 // set up style for autocomplete
 $style = '<style type="text/css">
@@ -43,19 +43,22 @@ echo $style;
 $script = '<script type="text/javaScript">
     Event.observe(window, "load", init, false);
     
-    function init(){
+    function init()
+    {
         Event.observe("input_firstname", "keyup", listfirstname, false);
         Event.observe("input_surname", "keyup", listsurname, false);
     }
 
-    function listfirstname(){        
+    function listfirstname()
+    {        
         document.getElementById("input_surname").value = "";
 
         var pars = "module=email&action=composelist&field=firstname";
         new Ajax.Autocompleter("input_firstname", "firstnameDiv", "index.php", {parameters: pars});
     }
 
-    function listsurname(){        
+    function listsurname()
+    {        
         document.getElementById("input_firstname").value = "";
 
         var pars = "module=email&action=composelist&field=surname";
@@ -86,11 +89,13 @@ $script = '<script type="text/javaScript">
         var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars, onLoading: addLoad, onComplete: addComplete});
     }
     
-    function addLoad(){
+    function addLoad()
+    {
     	$("add_load").style.visibility = "visible";
     }
 
-    function addComplete(){
+    function addComplete()
+    {
     	$("add_load").style.visibility = "hidden";
     }
     
@@ -166,7 +171,7 @@ $configs = $this->getSession('configs');
 $signature = isset($configs['signature']) ? $configs['signature'] : NULL;
 $text = substr($message, (-1*(strlen($signature))));
 if ($text != $signature) {
-    $message = $message."--\n".$signature;
+    $message = $message."\n".'--'."\n".$signature;
 }
 
 // set up heading
@@ -177,23 +182,43 @@ $pageData = $objHeader->show();
 
 // set up html elements
 $objInput = new textinput('firstname', '', '', '50');
-$objInput->extra = ' onfocus="this.value=\'\'"';
-$firstnameInput = $objInput->show().'<div id="name_load" style="visibility:hidden; float: left;">'.$objIcon->show().'</div>';
+$objInput->extra = ' onfocus="javascript:
+    this.value=\'\'"';
+$firstnameInput = $objInput->show();
+
+$objLayer = new layer();
+$objLayer->id = 'firstnameDiv';
+$objLayer->cssClass = 'autocomplete';
+$nameLayer = $objLayer->show();
 
 $objInput = new textinput('surname', '', '', '50');
-$objInput->extra = ' onfocus="this.value=\'\'"';
-$surnameInput = $objInput->show().'<div id="surname_load" style="visibility:hidden; float: left;">'.$objIcon->show().'</div>';
+$objInput->extra = ' onfocus="javascript:
+    this.value=\'\'"';
+$surnameInput = $objInput->show();
+
+$objLayer = new layer();
+$objLayer->id = 'surnameDiv';
+$objLayer->cssClass = 'autocomplete';
+$surnameLayer = $objLayer->show();
+
+$objLayer = new layer();
+$objLayer->id = 'add_load';
+$objLayer->floating = 'left';
+$objLayer->visibility = 'hidden';
+$objLayer->str = $objIcon->show();
+$loadLayer = $objLayer->show();
 
 $objLayer = new layer();
 $objLayer->id = 'toList';
-$toLayer = '<div id="add_load" style="visibility:hidden; float: left;">'.$objIcon->show().'</div>'.$objLayer->show();
+$objLayer->str = $toList;
+$toLayer = $objLayer->show();
 
 $objFieldset = new fieldset();
 $objFieldset->extra = ' style="height: 100px; border: 1px solid #808080; margin: 3px; padding: 10px;"';
-$objFieldset->contents = $toLayer;
+$objFieldset->contents = $loadLayer.$toLayer;
 $toFieldset = $objFieldset->show();
 
-$objInput = new textinput('recipient', $recipientList, 'hidden', '200');
+$objInput = new textinput('recipient', $recipientList, 'hidden', '');
 $recipientInput = $objInput->show();
 
 $objInput = new textinput('subject', $subject, '', '115');
@@ -203,20 +228,24 @@ $objText = new textarea('message', $message, 12, '132');
 $messageText = $objText->show();
 
 // set up address book icon
+$action = $this->uri(array(
+    'action' => 'showbooks'    
+));
 $objIcon->title = $addressLabel;
-$addressIcon = $objIcon->getLinkedIcon($this->uri(array(
-    'action' => 'manageaddressbooks'
-)) , 'addressbook');
+$objIcon->setIcon('addressbook');
+$objIcon->extra=' onclick="javascript:
+    document.getElementById(\'form_composeform\').action=\''.$action.'\';
+    document.getElementById(\'form_composeform\').submit();"';
+$addressIcon='<a href="#">'.$objIcon->show().'</a>';
 
 // set up search fieldset
 $objTable = new htmltable();
-//    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
 $objTable->startRow();
 $objTable->addCell($textLabel, '', '', '', 'warning', 'colspan="2"');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($firstnameInput.'<div id ="firstnameDiv" class="autocomplete"></div>', '50%', '', '', '', '');
+$objTable->addCell($firstnameInput.$nameLayer, '50%', '', '', '', '');
 $objTable->endRow();
 $searchTable = $objTable->show();
 
@@ -228,13 +257,12 @@ $searchFieldset = $objFieldset->show();
 
 // set up search fieldset
 $objTable = new htmltable();
-//    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
 $objTable->startRow();
 $objTable->addCell($textLabel, '', '', '', 'warning', 'colspan="2"');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($surnameInput.'<div id ="surnameDiv" class="autocomplete"></div>', '50%', '', '', '', '');
+$objTable->addCell($surnameInput.$surnameLayer, '50%', '', '', '', '');
 $objTable->endRow();
 $searchTable = $objTable->show();
 
@@ -246,7 +274,6 @@ $searchFieldset.= $objFieldset->show();
 
 // set up tables and tabbedboxes
 $objTable = new htmltable();
-//    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
 $objTable->startRow();
 $objTable->addCell($searchFieldset, '', '', '', '', '');
@@ -272,7 +299,6 @@ $objTabbedbox->addBoxContent($emailTable);
 $emailTab = $objTabbedbox->show();
 
 $objTable = new htmltable();
-//    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
 $objTable->startRow();
 $objTable->addCell($emailTab, '', '', '', '', '');
@@ -288,12 +314,12 @@ $action = $this->uri(array(
 ));
 
 $objButton = new button('upload', $uploadLabel);
-//    $objButton->setToSubmit();
-$objButton->extra = ' onclick="javascript:document.getElementById(\'form_composeform\').action=\''.$action.'\';document.getElementById(\'form_composeform\').submit();"';
+$objButton->extra = ' onclick="javascript:
+    document.getElementById(\'form_composeform\').action=\''.$action.'\';
+    document.getElementById(\'form_composeform\').submit();"';
 $uploadButton = $objButton->show();
 
 $objTable = new htmltable();
-//    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
 if ($error) {
     $objTable->startRow();
@@ -322,7 +348,11 @@ if ($attachments != NULL) {
         ));
         $objIcon->title = $deleteLabel;
         $objIcon->setIcon('delete');
-        $objIcon->extra = ' onclick="javascript:if(confirm(\''.$confirmLabel.'\')){document.getElementById(\'form_composeform\').action=\''.$deleteArray.'\';document.getElementById(\'form_composeform\').submit();}"';
+        $objIcon->extra = ' onclick="javascript:
+            if(confirm(\''.$confirmLabel.'\')){
+                document.getElementById(\'form_composeform\').action=\''.$deleteArray.'\';
+                document.getElementById(\'form_composeform\').submit();
+            }"';
         $deleteIcon = '<a href="#">'.$objIcon->show() .'</a>';
         $objTable->startRow();
         $objTable->addCell($i++.'.', '3%', '', '', '', '');
@@ -349,11 +379,20 @@ $attachmentsTable = $objTable->show();
 
 // set up buttons
 $objButton = new button('submitbutton', $sendLabel);
-$objButton->extra = ' onclick="javascript:if(document.getElementById(\'input_recipient\').value!=\'\'){document.getElementById(\'form_composeform\').sendbutton.value=\'Send\';document.getElementById(\'form_composeform\').submit();}else{alert(\''.$requiredLabel.'\');document.getElementById(\'form_composeform\').surname.focus();}"';
-$buttons = "<br />".$objButton->show();
+$objButton->extra = ' onclick="javascript:
+    if(document.getElementById(\'input_recipient\').value!=\'\'){
+        document.getElementById(\'form_composeform\').sendbutton.value=\'Send\';
+        document.getElementById(\'form_composeform\').submit();
+    }else{
+        alert(\''.$requiredLabel.'\');
+        document.getElementById(\'form_composeform\').surname.focus();
+    }"';
+$buttons = '<br />'.$objButton->show();
 
 $objButton = new button('cancelbutton', $cancelLabel);
-$objButton->extra = ' onclick="javascript:document.getElementById(\'form_hiddenform\').cancelbutton.value=\'Cancel\';document.getElementById(\'form_hiddenform\').submit();"';
+$objButton->extra = ' onclick="javascript:
+    document.getElementById(\'form_hiddenform\').cancelbutton.value=\'Cancel\';
+    document.getElementById(\'form_hiddenform\').submit();"';
 $buttons.= '&#160;'.$objButton->show();
 
 // set up form

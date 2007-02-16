@@ -143,13 +143,18 @@ class email extends controller
                 return 'folders_tpl.php';
                 break;
 
-            case 'compose':
+            case 'compose':                
                 $arrUserId = $this->getParam('userId');
+                $recipientList = $this->getParam('recipientList', NULL);
                 if (!empty($arrUserId)) {
                     if (!is_array($arrUserId)) {
                         $arrUserId = explode('|', $arrUserId);
                     }
                     $toList = '';
+                    if($recipientList != NULL){
+                        $arrRecipients = explode('|', $recipientList);
+                        $arrUserId = array_merge($arrRecipients, $arrUserId);  
+                    }                 
                     foreach($arrUserId as $key => $userId) {
                         $icon = $this->deleteIcon($userId);
                         $name = $this->dbRouting->getName($userId);
@@ -181,42 +186,32 @@ class email extends controller
                     $search = $this->getParam('surname');
                 }
                 return $this->composeList($search, $field);
+                break;
 
             case 'makelist':
                 $recipientList = $this->getParam('recipientList');
                 return $this->makeList($recipientList);
-
-            case 'manageaddressbooks':
-                $mode = $this->getParam('mode');
-                $bookId = $this->getParam('bookId');
-                $addbutton = $this->getParam('addbutton', NULL);
-                $editbutton = $this->getParam('editbutton', NULL);
-                $cancelbutton = $this->getParam('cancelbutton', NULL);
-                if ($addbutton == 'Submit') {
-                    $bookName = $this->getParam('bookName');
-                    $this->dbBooks->addBook($bookName);
-                    return $this->nextAction('manageaddressbooks');
-                } elseif ($editbutton == 'Submit') {
-                    $bookName = $this->getParam('bookName');
-                    $this->dbBooks->editBook($bookId, $bookName);
-                    return $this->nextAction('manageaddressbooks');
-                } elseif ($mode == 'delete') {
-                    $this->dbBookEntries->deleteBook($bookId);
-                    $this->dbBooks->deleteBook($bookId);
-                    return $this->nextAction('manageaddressbooks');
-                } elseif ($cancelbutton == 'Cancel') {
-                    return $this->nextAction('manageaddressbooks');
-                }
-                $arrContextList = $this->objGroups->usercontextcodes($this->userId);
-                $this->setVarByRef('arrContextList', $arrContextList);
-                $arrBookList = $this->dbBooks->listBooks();
-                $this->setVarByRef('arrBookList', $arrBookList);
-                $this->setVarByRef('mode', $mode);
-                $this->setVarByRef('bookId', $bookId);
-                return 'addressbook_tpl.php';
                 break;
+                
+            case 'showbooks':
+                $recipientList = $this->getParam('recipient');
+                $subject = $this->getParam('subject');
+                $message = $this->getParam('message');
+                $arrContextList = $this->objGroups->usercontextcodes($this->userId);
+                $arrBookList = $this->dbBooks->listBooks();
+                $this->setVarByRef('recipientList', $recipientList);
+                $this->setVarByRef('subject', $subject);
+                $this->setVarByRef('message', $message);
+                $this->setVar('mode', 'show');
+                $this->setVarByRef('arrContextList', $arrContextList);
+                $this->setVarByRef('arrBookList', $arrBookList);
+                return 'addressbook_tpl.php';
+                break;                
 
-            case 'addressbook':
+            case 'showentries':
+                $recipientList = $this->getParam('recipientList');
+                $subject = $this->getParam('subject');
+                $message = $this->getParam('message');
                 $contextCode = $this->getParam('contextcode', NULL);
                 $groupId = $this->objGroupAdmin->getLeafId(array(
                     $contextCode
@@ -233,15 +228,83 @@ class email extends controller
                 $arrBookEntryList = $this->dbBookEntries->listBookEntries($bookId);
                 $this->setVarByRef('bookId', $bookId);
                 $this->setVarByRef('arrBookEntryList', $arrBookEntryList);
+                $this->setVarByRef('recipientList', $recipientList);
+                $this->setVarByRef('subject', $subject);
+                $this->setVarByRef('message', $message);
+                $this->setVar('mode', 'show');
+                return 'entries_tpl.php';
+                break;                
+
+            case 'manageaddressbooks':
+                $mode = $this->getParam('mode');
+                $currentFolderId = $this->getParam('currentFolderId');
+                $bookId = $this->getParam('bookId');
+                $addbutton = $this->getParam('addbutton', NULL);
+                $editbutton = $this->getParam('editbutton', NULL);
+                $cancelbutton = $this->getParam('cancelbutton', NULL);
+                if ($addbutton == 'Submit') {
+                    $bookName = $this->getParam('bookName');
+                    $this->dbBooks->addBook($bookName);
+                    return $this->nextAction('manageaddressbooks', array(
+                        'currentFolderId' => $currentFolderId
+                    ));
+                } elseif ($editbutton == 'Submit') {
+                    $bookName = $this->getParam('bookName');
+                    $this->dbBooks->editBook($bookId, $bookName);
+                    return $this->nextAction('manageaddressbooks', array(
+                        'currentFolderId' => $currentFolderId
+                    ));
+                } elseif ($mode == 'delete') {
+                    $this->dbBookEntries->deleteBook($bookId);
+                    $this->dbBooks->deleteBook($bookId);
+                    return $this->nextAction('manageaddressbooks', array(
+                        'currentFolderId' => $currentFolderId
+                    ));
+                } elseif ($cancelbutton == 'Cancel') {
+                    return $this->nextAction('manageaddressbooks', array(
+                        'currentFolderId' => $currentFolderId
+                    ));
+                }
+                $arrContextList = $this->objGroups->usercontextcodes($this->userId);
+                $this->setVarByRef('arrContextList', $arrContextList);
+                $arrBookList = $this->dbBooks->listBooks();
+                $this->setVarByRef('arrBookList', $arrBookList);
+                $this->setVarByRef('mode', $mode);
+                $this->setVarByRef('bookId', $bookId);
+                $this->setVarByRef('currentFolderId', $currentFolderId);
+                return 'addressbook_tpl.php';
+                break;
+
+            case 'addressbook':
+                $currentFolderId = $this->getParam('currentFolderId');
+                $contextCode = $this->getParam('contextcode', NULL);
+                $groupId = $this->objGroupAdmin->getLeafId(array(
+                    $contextCode
+                ));
+                $arrContextUserList = $this->objGroupAdmin->getSubGroupUsers($groupId, array(
+                    'userId',
+                    'firstName',
+                    'surname',
+                    'username'
+                ));
+                $this->setVarByRef('contextCode', $contextCode);
+                $this->setVarByRef('arrContextUserList', $arrContextUserList);
+                $bookId = $this->getParam('bookId', NULL);
+                $arrBookEntryList = $this->dbBookEntries->listBookEntries($bookId);
+                $this->setVarByRef('bookId', $bookId);
+                $this->setVarByRef('arrBookEntryList', $arrBookEntryList);
+                $this->setVarByRef('currentFolderId', $currentFolderId);
                 $this->setVar('mode', NULL);
                 return 'entries_tpl.php';
                 break;
 
             case 'addentry':
+                $currentFolderId = $this->getParam('currentFolderId');
                 $bookId = $this->getParam('bookId');
                 $arrBookEntryList = $this->dbBookEntries->listBookEntries($bookId);
                 $this->setVarByRef('bookId', $bookId);
                 $this->setVarByRef('arrBookEntryList', $arrBookEntryList);
+                $this->setVarByRef('currentFolderId', $currentFolderId);
                 $this->setVar('mode', 'add');
                 return 'entries_tpl.php';
                 break;
@@ -256,24 +319,29 @@ class email extends controller
                     $search = $this->getParam('surname');
                 }
                 return $this->searchList($search, $field);
+                break;
 
             case 'submitentry':
+                $currentFolderId = $this->getParam('currentFolderId');
                 $bookId = $this->getParam('bookId');
                 $userId = $this->getParam('userid', NULL);
                 if ($userId != NULL) {
                     $this->dbBookEntries->addBookEntry($bookId, $userId);
                 }
                 return $this->nextAction('addressbook', array(
-                    'bookId' => $bookId
-                ));
+                    'bookId' => $bookId,
+                    'currentFolderId' => $currentFolderId,
+               ));
                 break;
 
             case 'deleteentry':
+                $currentFolderId = $this->getParam('currentFolderId');
                 $bookId = $this->getParam('bookId');
                 $entryId = $this->getParam('entryId');
                 $this->dbBookEntries->deleteBookEntry($entryId);
                 return $this->nextAction('addressbook', array(
-                    'bookId' => $bookId
+                    'bookId' => $bookId,
+                    'currentFolderId' => $currentFolderId,
                 ));
                 break;
 
@@ -326,7 +394,7 @@ class email extends controller
                 $filter = $this->getParam('filter', NULL);
                 $mode = $this->getParam('mode');
                 $messageListTable = $this->getParam('messageListTable', 'messageListTable|3|DESC');
-                $sortOrder = explode("|", $messageListTable);
+                $sortOrder = explode('|', $messageListTable);
                 if ($mode == 'prev' || $mode == 'next') {
                     $arrMessageList = $this->dbRouting->getAllMail($folderId, $sortOrder, $filter);
                     $arrCnt = count($arrMessageList);
@@ -382,24 +450,6 @@ class email extends controller
                     'subject' => $subject,
                     'message' => $message
                 ));
-                break;
-
-            case 'deleterecipient':
-                $recipientId = $this->getParam('recipientId');
-                $this->loadClass('xajax', 'ajaxwrapper');
-                //Register another function in this controller
-                $xajaxUsername = new xajax($this->uri(array(
-                    'action' => 'deleterecipient',
-                    'recipientId' => $recipientId
-                )));
-                $xajaxUsername->registerFunction(array(
-                    $this,
-                    "deleteRecipient"
-                ));
-                //XAJAX method to be called
-                $xajaxUsername->processRequests();
-                //Send JS to header
-                $this->appendArrayVar('headerParams', $xajaxUsername->getJavascript());
                 break;
 
             case 'downloadfile':
@@ -460,11 +510,13 @@ class email extends controller
                 $field = $this->getParam('field');
                 $value = $this->getParam('value');
                 $other = $this->getParam('other');
-                return $this->userDisplay($field, $value, $other);                
+                return $this->userDisplay($field, $value, $other); 
+                break;               
 
             case 'buttondisplay':
                 $section = $this->getParam('section');
-                return $this->buttonDisplay($section);                
+                return $this->buttonDisplay($section);
+                break;                
 
             case 'updateconfig':
                 $updateUser = $this->getParam('update_user', NULL);
@@ -501,36 +553,34 @@ class email extends controller
                 break;
 
             case 'managerules':
-                $this->loadClass('xajax', 'ajaxwrapper');
-                //Register another function in this controller
-                $xajaxSettings = new xajax($this->uri(array(
-                    'action' => 'managerules'
-                )));
-                $xajaxSettings->registerFunction(array(
-                    $this,
-                    "filterDisplay"
-                ));
-                $xajaxSettings->registerFunction(array(
-                    $this,
-                    "criteriaDisplay"
-                ));
-                $xajaxSettings->registerFunction(array(
-                    $this,
-                    "actionDisplay"
-                ));
-                $xajaxSettings->registerFunction(array(
-                    $this,
-                    "destDisplay"
-                ));
-                //XAJAX method to be called
-                $xajaxSettings->processRequests();
-                //Send JS to header
-                $this->appendArrayVar('headerParams', $xajaxSettings->getJavascript());
                 $mode = $this->getParam('mode');
                 $ruleId = $this->getParam('ruleId');
                 $this->setVarByRef('mode', $mode);
                 $this->setVarByRef('ruleId', $ruleId);
                 return 'rules_tpl.php';
+                break;
+                
+            case 'actiondisplay':
+                $mailAction = $this->getParam('mailAction');
+                $target = $this->getParam('target');
+                return $this->actionDisplay($mailAction, $target);
+                break;
+
+            case 'filterdisplay':
+                $messageField = $this->getParam('messageField');
+                $target = $this->getParam('target');
+                return $this->filterDisplay($messageField, $target);
+                break;
+
+            case 'criteriadisplay':
+                $mailField = $this->getParam('mailField');
+                return $this->criteriaDisplay($mailField);
+                break;
+
+            case 'destdisplay':
+                $ruleAction = $this->getParam('ruleAction');
+                $mailAction = $this->getParam('mailAction');
+                return $this->destDisplay($ruleAction, $mailAction);
                 break;
 
             case 'saverule':
@@ -660,7 +710,8 @@ class email extends controller
         if ($arrUserList != FALSE) {
             $response = '<ul>';
             foreach ($arrUserList as $user) {
-                $response .= '<li onclick="javascript:document.getElementById(\'input_userid\').value=\''.$user['userid'].'\'"><strong>';
+                $response .= '<li onclick="javascript:
+                    document.getElementById(\'input_userid\').value=\''.$user['userid'].'\'"><strong>';
                 $response .= $this->dbRouting->getName($user['userid']);
                 $response .= '</strong></li>';
             }
@@ -678,8 +729,7 @@ class email extends controller
      * @access public
      * @param string $field The field to search
      * @param string $value The value to search for
-     * @param string $recipientList The list of current recipients
-     * @return xml $xml The xajax response xml
+     * @return
      */
     public function composeList($search, $field)
     {
@@ -699,12 +749,11 @@ class email extends controller
     }
 
     /**
-     * Method to add a recipient using AJAX
+     * Method to build the recipient list
      *
      * @access public
-     * @param string $userId The id of the recipient to add
      * @param string $recipientList The list of recipientId's
-     * @return xml $xml The xajax response xml
+     * @return
      */
     public function makeList($recipientList)
     {
@@ -743,35 +792,13 @@ class email extends controller
     }
 
     /**
-     * Method to delete a recipient using AJAX
-     *
-     * @access public
-     * @param string $userId The id of the recipient to delete
-     * @param string $recipientList The list of recipientId's
-     * @return xml $xml The xajax response xml
-     */
-    public function deleteRecipient($userId, $recipientList)
-    {
-        $this->loadClass('xajaxresponse', 'ajaxwrapper');
-        $arrUserId = explode('|', $recipientList);
-        $key = array_search($userId, $arrUserId);
-        unset($arrUserId[$key]);
-        $recipientList = implode('|', $arrUserId);
-        $objResponse = new xajaxResponse();
-        $objResponse->addRemove($userId);
-        $objResponse->addAssign('input_recipient', 'value', $recipientList);
-        $xml = $objResponse->getXML();
-        return $xml;
-    }
-
-    /**
      * Method to output an exapmle of the user display using AJAX
      *
      * @access public
      * @param string $field The field being modified
      * @param string $value The value of the field
      * @param string $other The value of the other fields
-     * @return xml $xml The xajax response xml
+     * @return
      */
     public function userDisplay($field, $value, $other)
     {
@@ -780,21 +807,21 @@ class email extends controller
         $username = $this->objUser->userName($this->userId);
         if ($field == 'name') {
             if ($value == 1) {
-                $response = $surname.", ".$firstname;
+                $response = $surname.', '.$firstname;
             } else {
-                $response = $firstname." ".$surname;
+                $response = $firstname.' '.$surname;
             }
             if ($other != 1) {
-                $response.= " [".$username."] ";
+                $response.= ' ['.$username.'] ';
             }
         } else {
             if ($other == 1) {
-                $response = $surname.", ".$firstname;
+                $response = $surname.', '.$firstname;
             } else {
-                $response = $firstname." ".$surname;
+                $response = $firstname.' '.$surname;
             }
             if ($value != 1) {
-                $response.= " [".$username."] ";
+                $response.= ' ['.$username.'] ';
             }
         }
         echo $response;
@@ -836,9 +863,10 @@ class email extends controller
      *
      * @access public
      * @param string $messageField The value of the message field
+     * @param string $target The id of the div the response id to placed in
      * @return 
      */
-    public function filterDisplay($messageField)
+    public function filterDisplay($messageField, $target)
     {
         $toLabel = $this->objLanguage->languageText('word_to');
         $fromLabel = $this->objLanguage->languageText('word_from');
@@ -847,31 +875,32 @@ class email extends controller
         $selectLabel = $this->objLanguage->languageText('word_select');
         $notApplicableLabel = $this->objLanguage->languageText('phrase_notapplicable');
         $attachmentsLabel = $this->objLanguage->languageText('word_attachments');
-        $this->loadClass('xajaxresponse', 'ajaxwrapper');
         $this->loadClass('dropdown', 'htmlelements');
         if ($messageField == '') {
-            $fieldDrop = NULL;
-            $criteriaInput = NULL;
+            $response = '';
         } elseif ($messageField == 1) {
-            $fieldDrop = '<b>'.$notApplicableLabel.'</b>';
-            $criteriaInput = '<b>'.$notApplicableLabel.'</b>';
+            if ($target == 'fieldLayer') {
+                $response = '<b>'.$notApplicableLabel.'</b>';
+            } else {
+                $response = '<b>'.$notApplicableLabel.'</b>';
+            }
         } elseif ($messageField == 2) {
-            $objDrop = new dropdown('mailField');
-            $objDrop->addOption(NULL, '- '.$selectLabel.' -');
-            $objDrop->addOption(1, $toLabel);
-            $objDrop->addOption(2, $fromLabel);
-            $objDrop->addOption(3, $subjectLabel);
-            $objDrop->addOption(4, $messageLabel);
-            $objDrop->addOption(5, $attachmentsLabel);
-            $objDrop->extra = ' onchange="javascript:xajax_criteriaDisplay(this.value);"';
-            $fieldDrop = $objDrop->show();
-            $criteriaInput = NULL;
+            if ($target == 'fieldLayer') {
+                $objDrop = new dropdown('mailField');
+                $objDrop->addOption(NULL, '- '.$selectLabel.' -');
+                $objDrop->addOption(1, $toLabel);
+                $objDrop->addOption(2, $fromLabel);
+                $objDrop->addOption(3, $subjectLabel);
+                $objDrop->addOption(4, $messageLabel);
+                $objDrop->addOption(5, $attachmentsLabel);
+                $objDrop->extra = ' onchange="javascript:
+                    mailfield();"';
+                $response = $objDrop->show();
+            } else {
+                $response = '';
+            }
         }
-        $objResponse = new xajaxResponse();
-        $objResponse->addAssign('fieldLayer', 'innerHTML', $fieldDrop);
-        $objResponse->addAssign('criteriaLayer', 'innerHTML', $criteriaInput);
-        $xml = $objResponse->getXML();
-        return $xml;
+        echo $response;
     }
 
     /**
@@ -879,25 +908,21 @@ class email extends controller
      *
      * @access public
      * @param string $mailField The value of the mail filter field
-     * @return xml $xml The xajax response xml
+     * @return
      */
     public function criteriaDisplay($mailField)
     {
         $notApplicableLabel = $this->objLanguage->languageText('phrase_notapplicable');
-        $this->loadClass('xajaxresponse', 'ajaxwrapper');
         $this->loadClass('textinput', 'htmlelements');
         if ($mailField == '') {
-            $criteriaInput = NULL;
+            $response = '';
         } elseif ($mailField == 5) {
-            $criteriaInput = '<b>'.$notApplicableLabel.'</b>';
+            $response = '<b>'.$notApplicableLabel.'</b>';
         } else {
-            $objInput = new textinput('criteria');
-            $criteriaInput = $objInput->show();
+            $objInput = new textinput('criteria', '', '', '50');
+            $response = $objInput->show();
         }
-        $objResponse = new xajaxResponse();
-        $objResponse->addAssign('criteriaLayer', 'innerHTML', $criteriaInput);
-        $xml = $objResponse->getXML();
-        return $xml;
+        echo $response;
     }
 
     /**
@@ -905,56 +930,58 @@ class email extends controller
      *
      * @access public
      * @param string $mailAction The value of the mailAction field
-     * @return xml $xml The xajax response xml
+     * @param string $target The id of the div the response id to placed in
+     * @return
      */
-    public function actionDisplay($mailAction)
+    public function actionDisplay($mailAction, $target)
     {
         $moveLabel = $this->objLanguage->languageText('word_move');
         $readLabel = $this->objLanguage->languageText('phrase_markasread');
         $selectLabel = $this->objLanguage->languageText('word_select');
-        $this->loadClass('xajaxresponse', 'ajaxwrapper');
-        $this->loadClass('dropdown', 'htmlelements');
         if ($mailAction == '') {
-            $actionDrop = NULL;
-            $folderDrop = NULL;
+            $response = '';
         } elseif ($mailAction == '1') {
-            $objDrop = new dropdown('ruleAction');
-            $objDrop->addOption(NULL, '- '.$selectLabel.' -');
-            $objDrop->addOption(1, $moveLabel);
-            $objDrop->addOption(2, $readLabel);
-            $objDrop->extra = ' onchange="javascript:xajax_destDisplay(this.value,document.getElementById(\'input_mailAction\').value);"';
-            $actionDrop = $objDrop->show();
-            $arrFolderList = $this->dbFolders->listFolders();
-            $objDrop = new dropdown('destFolderId');
-            $objDrop->addOption(NULL, '- '.$selectLabel.' -');
-            foreach($arrFolderList as $folder) {
-                if ($folder['id'] != 'init_1') {
-                    $objDrop->addOption($folder['id'], $folder['folder_name']);
+            if ($target == 'actionLayer') {
+                $objDrop = new dropdown('ruleAction');
+                $objDrop->addOption(NULL, '- '.$selectLabel.' -');
+                $objDrop->addOption(1, $moveLabel);
+                $objDrop->addOption(2, $readLabel);
+                $objDrop->extra = ' onchange="javascript:
+                    ruleaction();"';
+                $response = $objDrop->show();
+            } else {
+                $arrFolderList = $this->dbFolders->listFolders();
+                $objDrop = new dropdown('destFolderId');
+                $objDrop->addOption(NULL, '- '.$selectLabel.' -');
+                foreach($arrFolderList as $folder) {
+                    if ($folder['id'] != 'init_1') {
+                        $objDrop->addOption($folder['id'], $folder['folder_name']);
+                    }
                 }
+                $response = $objDrop->show();
             }
-            $folderDrop = $objDrop->show();
         } elseif ($mailAction == '2') {
-            $objDrop = new dropdown('ruleAction');
-            $objDrop->addOption(NULL, '- '.$selectLabel.' -');
-            $objDrop->addOption(1, $moveLabel);
-            $objDrop->addOption(2, $readLabel);
-            $objDrop->extra = ' onchange="javascript:xajax_destDisplay(this.value,document.getElementById(\'input_mailAction\').value);"';
-            $actionDrop = $objDrop->show();
-            $arrFolderList = $this->dbFolders->listFolders();
-            $objDrop = new dropdown('destFolderId');
-            $objDrop->addOption(NULL, '- '.$selectLabel.' -');
-            foreach($arrFolderList as $folder) {
-                if ($folder['id'] != 'init_3') {
-                    $objDrop->addOption($folder['id'], $folder['folder_name']);
+            if ($target == 'actionLayer') {
+                $objDrop = new dropdown('ruleAction');
+                $objDrop->addOption(NULL, '- '.$selectLabel.' -');
+                $objDrop->addOption(1, $moveLabel);
+                $objDrop->addOption(2, $readLabel);
+                $objDrop->extra = ' onchange="javascript:
+                    ruleaction();"';
+                $response = $objDrop->show();
+            } else {
+                $arrFolderList = $this->dbFolders->listFolders();
+                $objDrop = new dropdown('destFolderId');
+                $objDrop->addOption(NULL, '- '.$selectLabel.' -');
+                foreach($arrFolderList as $folder) {
+                    if ($folder['id'] != 'init_3') {
+                        $objDrop->addOption($folder['id'], $folder['folder_name']);
+                    }
                 }
+                $response = $objDrop->show();
             }
-            $folderDrop = $objDrop->show();
         }
-        $objResponse = new xajaxResponse();
-        $objResponse->addAssign('actionLayer', 'innerHTML', $actionDrop);
-        $objResponse->addAssign('destLayer', 'innerHTML', $folderDrop);
-        $xml = $objResponse->getXML();
-        return $xml;
+        echo $response;
     }
 
     /**
@@ -963,16 +990,15 @@ class email extends controller
      * @access public
      * @param string $ruleAction The value of the ruleAction field
      * @param string $mailAction The value of the mailAction field
-     * @return xml $xml The xajax response xml
+     * @return
      */
     public function destDisplay($ruleAction, $mailAction)
     {
         $selectLabel = $this->objLanguage->languageText('word_select');
         $notApplicableLabel = $this->objLanguage->languageText('phrase_notapplicable');
-        $this->loadClass('xajaxresponse', 'ajaxwrapper');
         $this->loadClass('dropdown', 'htmlelements');
         if ($ruleAction == '2' || $ruleAction == NUll) {
-            $folderDrop = '<b>'.$notApplicableLabel.'</b>';
+            $response = '<b>'.$notApplicableLabel.'</b>';
         } else {
             $arrFolderList = $this->dbFolders->listFolders();
             $objDrop = new dropdown('destFolderId');
@@ -985,12 +1011,9 @@ class email extends controller
                     $objDrop->addOption($folder['id'], $folder['folder_name']);
                 }
             }
-            $folderDrop = $objDrop->show();
+            $response = $objDrop->show();
         }
-        $objResponse = new xajaxResponse();
-        $objResponse->addAssign('destLayer', 'innerHTML', $folderDrop);
-        $xml = $objResponse->getXML();
-        return $xml;
+        echo $response;
     }
 }
 ?>

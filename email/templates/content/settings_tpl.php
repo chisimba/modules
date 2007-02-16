@@ -157,8 +157,6 @@ $objTimeOut->setMessage($confimUpdateLabel);
 $objTimeOut->setTimeout(3000);
 $msg = '<b>'.$objTimeOut->show().'</b>';
 
-//$msg = $confimUpdateLabel;
-
 // set up heading
 $objHeader = new htmlHeading();
 $objHeader->str = $heading;
@@ -222,7 +220,6 @@ $userTabbedbox = $objTabbedbox->show();
 
 // set up default folder
 $objText = new textarea('signature', $signature, '5', '40');
-//$objText->extra = ' onkeypress="javascript:xajax_buttonDisplay(\'signature\');"';
 $signatureText = $objText->show();
 
 $objLayer = new layer();
@@ -230,7 +227,6 @@ $objLayer->id = 'signature_button';
 $buttonLayer = $objLayer->show();
 
 $objTable = new htmltable();
-//    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
 if ($section == 'signature') {
     $objTable->startRow();
@@ -260,7 +256,6 @@ foreach($arrFolderList as $folder) {
     $objDrop->addOption($folder['id'], $folder['folder_name']);
 }
 $objDrop->setSelected($defaultFolderId);
-//$objDrop->extra = ' onchange="javascript:xajax_buttonDisplay(\'folder\');"';
 $folderDrop = $objDrop->show();
 
 $objLayer = new layer();
@@ -297,7 +292,6 @@ $objDrop = new dropdown('autodelete');
 $objDrop->addOption(0, $noLabel);
 $objDrop->addOption(1, $yesLabel.'&nbsp;');
 $objDrop->setSelected($autoDelete);
-//$objDrop->extra = ' onchange="javascript:xajax_buttonDisplay(\'delete\');"';
 $autoDrop = $objDrop->show();
 
 $objLayer = new layer();
@@ -305,7 +299,6 @@ $objLayer->id = 'delete_button';
 $buttonLayer = $objLayer->show();
 
 $objTable = new htmltable();
-//    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
 if ($section == 'delete') {
     $objTable->startRow();

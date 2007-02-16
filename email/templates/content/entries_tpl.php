@@ -17,7 +17,6 @@ $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
 $this->appendArrayVar('headerParams', $headerParams);
 $this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
 $this->objScriptaculous->show();
-$this->setVar('pageSuppressXML', TRUE);
 
 // set up style for autocomplete
 $style = '<style type="text/css">
@@ -126,18 +125,26 @@ $surnameLabel = $this->objLanguage->languageText('word_surname');
 $nameLabel = $this->objLanguage->languageText('phrase_firstname');
 
 // set up add icon
-if ($bookId != NULL) {
+if($mode == 'show'){
+    $addIcon = '';
+}else{
     $objIcon->title = $addEntryLabel;
     $addIcon = $objIcon->getLinkedIcon($this->uri(array(
         'action' => 'addentry',
-        'bookId' => $bookId
+        'bookId' => $bookId,
+        'currentFolderId' => $currentFolderId,
     )) , 'add');
+}
+if ($bookId != NULL) {
     $arrBookData = $this->dbBooks->getBook($bookId);
     $subHeading = $arrBookData['book_name'];
 } else {
     $addIcon = '';
     $arrContextData = $this->objContext->getContextDetails($contextCode);
     $subHeading = $arrContextData['menutext'];
+}
+if($mode == 'show'){
+    $currentFolderId = '';
 }
 
 // set up heading
@@ -156,12 +163,16 @@ if ($mode == 'add') {
     // set up username input
     $objInput = new textinput('username', '', '', '50');
     $usernameInput = $objInput->show();
+    
+    $objLayer = new layer();
+    $objLayer->id = 'usernameDiv';
+    $objLayer->cssClass = 'autocomplete';
+    $usernameLayer = $objLayer->show();
 
     $objTable = new htmltable();
-    //        $objTable->cellspacing='2';
     $objTable->cellpadding = '4';
     $objTable->startRow();
-    $objTable->addCell($usernameInput.'<div id ="usernameDiv" class="autocomplete"></div>', '50%', '', '', '', '');
+    $objTable->addCell($usernameInput.$usernameLayer, '50%', '', '', '', '');
     $objTable->endRow();
     $usernameTable = $objTable->show();
 
@@ -175,11 +186,15 @@ if ($mode == 'add') {
     $objInput = new textinput('firstname', '', '', '50');
     $firstnameInput = $objInput->show();
 
+    $objLayer = new layer();
+    $objLayer->id = 'firstnameDiv';
+    $objLayer->cssClass = 'autocomplete';
+    $firstnameLayer = $objLayer->show();
+
     $objTable = new htmltable();
-    //        $objTable->cellspacing='2';
     $objTable->cellpadding = '4';
     $objTable->startRow();
-    $objTable->addCell($firstnameInput.'<div id ="firstnameDiv" class="autocomplete"></div>', '50%', '', '', '', '');
+    $objTable->addCell($firstnameInput.$firstnameLayer, '50%', '', '', '', '');
     $objTable->endRow();
     $firstnameTable = $objTable->show();
 
@@ -193,11 +208,15 @@ if ($mode == 'add') {
     $objInput = new textinput('surname', '', '', '50');
     $surnameInput = $objInput->show();
 
+    $objLayer = new layer();
+    $objLayer->id = 'surnameDiv';
+    $objLayer->cssClass = 'autocomplete';
+    $surnameLayer = $objLayer->show();
+
     $objTable = new htmltable();
-    //        $objTable->cellspacing='2';
     $objTable->cellpadding = '4';
     $objTable->startRow();
-    $objTable->addCell($surnameInput.'<div id ="surnameDiv" class="autocomplete"></div>', '50%', '', '', '', '');
+    $objTable->addCell($surnameInput.$surnameLayer, '50%', '', '', '', '');
     $objTable->endRow();
     $surnameTable = $objTable->show();
 
@@ -209,7 +228,6 @@ if ($mode == 'add') {
 
     // set up table
     $objTable = new htmltable();
-    //        $objTable->cellspacing='2';
     $objTable->cellpadding = '4';
     $objTable->startRow();
     $objTable->addCell($usernameFieldset, '', '', '', '', '');
@@ -231,12 +249,15 @@ if ($mode == 'add') {
     $buttons = '<br />'.$objButton->show();
 
     $objButton = new button('cancelbutton', $cancelLabel);
-    $objButton->extra = ' onclick="javascript:document.getElementById(\'input_cancelbutton\').value=\'Cancel\';document.getElementById(\'form_hiddenform\').submit();"';
-    $buttons.= "&nbsp;".$objButton->show();
+    $objButton->extra = ' onclick="javascript:
+        document.getElementById(\'input_cancelbutton\').value=\'Cancel\';
+        document.getElementById(\'form_hiddenform\').submit();"';
+    $buttons.= '&nbsp;'.$objButton->show();
 
     // set up form
     $objForm = new form('entryform', $this->uri(array(
         'action' => 'submitentry',
+        'currentFolderId' => $currentFolderId,
         'bookId' => $bookId
     )));
     $objForm->addToForm($entryTable);
@@ -250,6 +271,7 @@ if ($mode == 'add') {
 
     $objForm = new form('hiddenform', $this->uri(array(
         'action' => 'addressbook',
+        'currentFolderId' => $currentFolderId,
         'bookId' => $bookId
     )));
     $objForm->addToForm($hiddenInput);
@@ -265,12 +287,14 @@ if ($mode == 'add') {
 
 // set up check all button
 $objButton = new button('checkallbutton', $selectallLabel);
-$objButton->setOnClick('javascript:SetAllCheckBoxes(\'sendform\',\'userId[]\',true);');
+$objButton->setOnClick('javascript:
+    SetAllCheckBoxes(\'sendform\',\'userId[]\',true);');
 $selectAllButton = $objButton->show();
 
 // set up uncheck all button
 $objButton = new button('uncheckallbutton', $deselectLabel);
-$objButton->setOnClick('javascript:SetAllCheckBoxes(\'sendform\',\'userId[]\',false);');
+$objButton->setOnClick('javascript:
+    SetAllCheckBoxes(\'sendform\',\'userId[]\',false);');
 $selectNoneButton = $objButton->show();
 
 // set up send button
@@ -281,7 +305,6 @@ $buttons = $selectAllButton.'&nbsp;'.$selectNoneButton.'&nbsp;'.$sendButton;
 
 // set up user list tabel
 $objTable = new htmltable();
-//    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
 $objTable->id = 'userListTable';
 $objTable->css_class = 'sorttable';
@@ -326,9 +349,13 @@ if (!empty($contextCode)) {
             $deleteArray = array(
                 'action' => 'deleteentry',
                 'bookId' => $bookId,
-                'entryId' => $entry['id']
+                'entryId' => $entry['id'],
+                'currentFolderId' => $currentFolderId,
             );
             $deleteIcon = $objIcon->getDeleteIconWithConfirm('', $deleteArray, 'email', $confirmLabel);
+            if($mode == 'show'){
+                $deleteIcon = '';
+            }
 
             // set up checkbox
             $objCheck = new checkbox('userId[]');
@@ -347,9 +374,18 @@ if (!empty($contextCode)) {
 $userTable = $objTable->show();
 
 // set up form
-$objForm = new form('sendform', $this->uri(array(
-    'action' => 'compose'
-)));
+if($mode == 'show'){
+    $objForm = new form('sendform', $this->uri(array(
+        'action' => 'compose',
+        'subject' => $subject,
+        'message' => $message,
+        'recipientList' => $recipientList,
+    )));
+}else{
+    $objForm = new form('sendform', $this->uri(array(
+        'action' => 'compose',
+    )));
+}
 if (!empty($arrContextUserList) || !empty($arrBookEntryList)) {
     $objForm->addToForm($buttons);
 }
@@ -365,9 +401,19 @@ $sendFieldset = $objFieldset->show();
 $pageData.= $sendFieldset;
 
 // set up exit link
-$objLink = new link($this->uri(array(
-    'action' => 'manageaddressbooks'
-) , 'email'));
+if($mode == 'show'){
+    $objLink = new link($this->uri(array(
+        'action' => 'compose',
+        'userId' => $recipientList,
+        'subject' => $subject,
+        'message' => $message,
+    ) , 'email'));    
+}else{
+    $objLink = new link($this->uri(array(
+        'action' => 'manageaddressbooks',
+        'currentFolderId' => $currentFolderId,
+    ) , 'email'));
+}
 $objLink->link = $backLabel;
 $pageData.= '<b />'.$objLink->show();
 

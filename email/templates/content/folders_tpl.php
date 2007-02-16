@@ -52,7 +52,7 @@ $addIcon = $objIcon->getLinkedIcon($this->uri(array(
 
 // set up heading
 $objHeader = new htmlHeading();
-$objHeader->str = $heading."&nbsp;".$addIcon;
+$objHeader->str = $heading.'&nbsp;'.$addIcon;
 $objHeader->type = 1;
 $pageData = $objHeader->show();
 
@@ -63,15 +63,14 @@ $folderNameInput = $objInput->show();
 
 // set up folders table
 $objTable = new htmltable();
-$objTable->id = "folderList";
-$objTable->css_class = "sorttable";
-//    $objTable->cellspacing='2';
+$objTable->id = 'folderList';
+$objTable->css_class = 'sorttable';
 $objTable->cellpadding = '4';
 $objTable->row_attributes = ' name="row_'.$objTable->id.'"';
 $objTable->startRow();
-$objTable->addCell("<b>".$folderLabel."</b>", '50%', '', '', 'heading', '');
-$objTable->addCell("<b>".$unreadLabel."</b>", '20%', '', 'center', 'heading', '');
-$objTable->addCell("<b>".$totalLabel."</b>", '20%', '', 'center', 'heading', '');
+$objTable->addCell('<b>'.$folderLabel.'</b>', '50%', '', '', 'heading', '');
+$objTable->addCell('<b>'.$unreadLabel.'</b>', '20%', '', 'center', 'heading', '');
+$objTable->addCell('<b>'.$totalLabel.'</b>', '20%', '', 'center', 'heading', '');
 $objTable->addCell('', '10%', '', '', 'heading', '');
 $objTable->endRow();
 foreach($arrFolderList as $folder) {
@@ -111,7 +110,7 @@ foreach($arrFolderList as $folder) {
         $deleteIcon = '';
     }
     if ($folder['unreadmail'] != 0) {
-        $unreadMail = "<font class='error'><b>".$folder['unreadmail']."</b></font>";
+        $unreadMail = '<font class="error"><b>'.$folder['unreadmail'].'</b></font>';
     } else {
         $unreadMail = $folder['unreadmail'];
     }
@@ -119,7 +118,7 @@ foreach($arrFolderList as $folder) {
     $objTable->addCell($folderName, '', '', '', '', '');
     $objTable->addCell($unreadMail, '', '', 'center', '', '');
     $objTable->addCell($folder['allmail'], '', '', 'center', '', '');
-    $objTable->addCell($editIcon."&nbsp;".$deleteIcon, '', '', 'center', '', '');
+    $objTable->addCell($editIcon.'&nbsp;'.$deleteIcon, '', '', 'center', '', '');
     $objTable->endRow();
 }
 if ($mode == 'add') {
@@ -140,19 +139,23 @@ $folderFieldset = $objFieldset->show();
 if ($mode == 'add') {
     $objButton = new button('addbutton', $submitLabel);
     $objButton->setToSubmit();
-    $buttons = "<br />".$objButton->show();
+    $buttons = '<br />'.$objButton->show();
 
     $objButton = new button('cancelbutton', $cancelLabel);
-    $objButton->extra = ' onclick="javascript:document.getElementById(\'input_cancelbutton\').value=\'Cancel\';document.getElementById(\'form_hiddenform\').submit();"';
-    $buttons.= "&nbsp;".$objButton->show();
+    $objButton->extra = ' onclick="javascript:
+        document.getElementById(\'input_cancelbutton\').value=\'Cancel\';
+        document.getElementById(\'form_hiddenform\').submit();"';
+    $buttons.= '&nbsp;'.$objButton->show();
 } elseif ($mode == 'edit') {
     $objButton = new button('editbutton', $submitLabel);
     $objButton->setToSubmit();
-    $buttons = "<br />".$objButton->show();
+    $buttons = '<br />'.$objButton->show();
 
     $objButton = new button('cancelbutton', $cancelLabel);
-    $objButton->extra = ' onclick="javascript:document.getElementById(\'input_cancelbutton\').value=\'Cancel\';document.getElementById(\'form_hiddenform\').submit();"';
-    $buttons.= "&nbsp;".$objButton->show();
+    $objButton->extra = ' onclick="javascript:
+        document.getElementById(\'input_cancelbutton\').value=\'Cancel\';
+        document.getElementById(\'form_hiddenform\').submit();"';
+    $buttons.= '&nbsp;'.$objButton->show();
 } else {
     $buttons = '';
 }
@@ -187,7 +190,7 @@ $objLink = new link($this->uri(array(
     'folderId' => $currentFolderId
 )) , 'email');
 $objLink->link = $backLabel;
-$pageData.= "<br />".$objLink->show();
+$pageData.= '<br />'.$objLink->show();
 
 $objLayer = new layer();
 $objLayer->padding = '10px';

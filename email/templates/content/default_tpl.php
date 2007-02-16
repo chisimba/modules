@@ -87,19 +87,18 @@ $folderId = !empty($folderId) ? $folderId : $configs['default_folder_id'];
 $objHeader = new htmlHeading();
 $objHeader->str = $heading;
 $objHeader->type = 1;
-$pageData = $objHeader->show() ."<hr />";
+$pageData = $objHeader->show() .'<hr />';
 
 // set up folders table
 $objTable = new htmltable();
-$objTable->id = "folderList";
-$objTable->css_class = "sorttable";
-//    $objTable->cellspacing='2';
+$objTable->id = 'folderList';
+$objTable->css_class = 'sorttable';
 $objTable->cellpadding = '4';
-$objTable->row_attributes = ' name="row_'.$objTable->id.'"';
+$objTable->row_attributes = 'name="row_'.$objTable->id.'"';
 $objTable->startRow();
-$objTable->addCell("<b>".$folderLabel."</b>", '50%', '', '', 'wrapperLightBkg', '');
-$objTable->addCell("<b>".$unreadLabel."</b>", '25%', '', '', 'wrapperLightBkg', '');
-$objTable->addCell("<b>".$totalLabel."</b>", '25%', '', '', 'wrapperLightBkg', '');
+$objTable->addCell('<b>'.$folderLabel.'</b>', '50%', '', '', 'wrapperLightBkg', '');
+$objTable->addCell('<b>'.$unreadLabel.'</b>', '25%', '', '', 'wrapperLightBkg', '');
+$objTable->addCell('<b>'.$totalLabel.'</b>', '25%', '', '', 'wrapperLightBkg', '');
 $objTable->endRow();
 $i = 0;
 foreach($arrFolderList as $folder) {
@@ -112,7 +111,7 @@ foreach($arrFolderList as $folder) {
     $nameLink = $objLink->show();
     // set up unread colour
     if ($folder['unreadmail'] != 0) {
-        $unreadMail = "<font class='error'><b>".$folder['unreadmail']."</b></font>";
+        $unreadMail = '<font class="error"><b>'.$folder['unreadmail'].'</b></font>';
     } else {
         $unreadMail = $folder['unreadmail'];
     }
@@ -136,7 +135,6 @@ $arrEmailListData = $this->dbRouting->getAllMail($folderId, $sortOrder, $filter)
 
 // set up message list table
 $objTable = new htmltable();
-//    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
 if (!empty($arrEmailListData)) {
     // move message
@@ -153,20 +151,33 @@ if (!empty($arrEmailListData)) {
     $markInput = $objInput->show();
 
     $objCheck = new checkbox('selectmsg');
-    $objCheck->extra = ' onmouseover="javascript:if(this.checked){this.title=\''.$deselectLabel.'\'}else{this.title=\''.$selectallLabel.'\'}" onclick="javascript:if(this.checked){SetAllCheckBoxes(\'msgform\',\'msgId[]\',true)}else{SetAllCheckBoxes(\'msgform\',\'msgId[]\',false)}"';
+    $objCheck->extra = ' onmouseover="javascript:
+        if(this.checked){
+            this.title=\''.$deselectLabel.'\';
+        }else{
+            this.title=\''.$selectallLabel.'\';
+        }"
+    onclick="javascript:
+        if(this.checked){
+            SetAllCheckBoxes(\'msgform\',\'msgId[]\',true);
+        }else{
+            SetAllCheckBoxes(\'msgform\',\'msgId[]\',false)
+        }"';
     $selectCheck = $objCheck->show();
 
     $objButton = new button('submitbutton_1', $moveLabel);
-    $objButton->extra = ' onclick="javascript:var elDrp=document.getElementById(\'input_newFolderId\'); var elChk=document.getElementsByName(\'msgId[]\');
+    $objButton->extra = ' onclick="javascript:
+        var elDrp=document.getElementById(\'input_newFolderId\');
+        var elChk=document.getElementsByName(\'msgId[]\');
         if(elDrp.value==\'\'){
             alert(\''.$noFolderLabel.'\');return false
-        };
+        }
         var elChkValue=false;
         for(var i=0;i &lt; elChk.length;i++){
             if(elChk[i].checked==true){
                 elChkValue=true;
             }
-        };
+        }
         if(elChkValue){
             document.getElementById(\'input_movemessage\').value=\'Move\';
             document.getElementById(\'form_msgform\').submit();
@@ -176,13 +187,14 @@ if (!empty($arrEmailListData)) {
     $moveButton = $objButton->show();
 
     $objButton = new button('submitbutton_2', $deleteLabel);
-    $objButton->extra = ' onclick="javascript:var elChk=document.getElementsByName(\'msgId[]\');
+    $objButton->extra = ' onclick="javascript:
+        var elChk=document.getElementsByName(\'msgId[]\');
         var elChkValue=false;
         for(var i=0;i &lt; elChk.length;i++){
             if(elChk[i].checked==true){
                 elChkValue=true;
             }
-        };
+        }
         if(elChkValue){
             if(document.getElementById(\'input_folderId\').value==\'init_4\'){
                 if(confirm(\''.$permanentLabel.'\')){
@@ -201,7 +213,8 @@ if (!empty($arrEmailListData)) {
     $deleteButton = $objButton->show();
 
     $objButton = new button('submitbutton_3', $markReadLabel);
-    $objButton->extra = ' onclick="javascript:var elChk=document.getElementsByName(\'msgId[]\');
+    $objButton->extra = ' onclick="javascript:
+        var elChk=document.getElementsByName(\'msgId[]\');
         var elChkValue=false;
         for(var i=0;i &lt; elChk.length;i++){
             if(elChk[i].checked==true){
@@ -231,10 +244,11 @@ if (!empty($arrEmailListData)) {
     $objDrop->addOption(2, $unreadLabel);
     $objDrop->addOption(3, $attachmentLabel);
     $objDrop->setSelected($filter);
-    $objDrop->extra = ' onchange="javascript:document.getElementById(\'form_msgform\').submit();"';
+    $objDrop->extra = ' onchange="javascript:
+        document.getElementById(\'form_msgform\').submit();"';
     $filterDrop = $objDrop->show();
     $objTable->startHeaderRow();
-    $objTable->addHeaderCell($moveInput.$deleteInput.$markInput.$folderIdInput.$selectCheck."&nbsp;".$folderDrop."&nbsp;".$moveButton."&nbsp;".$deleteButton."&nbsp;".$markButton, '', '', 'left', 'wrapperLightBkg', 'colspan="3"');
+    $objTable->addHeaderCell($moveInput.$deleteInput.$markInput.$folderIdInput.$selectCheck.'&nbsp;'.$folderDrop.'&nbsp;'.$moveButton.'&nbsp;'.$deleteButton.'&nbsp;'.$markButton, '', '', 'left', 'wrapperLightBkg', 'colspan="3"');
     $objTable->addHeaderCell($filterDrop, '', '', 'right', 'wrapperLightBkg', 'colspan="2"');
     $objTable->endHeaderRow();
 } else {
@@ -245,7 +259,8 @@ if (!empty($arrEmailListData)) {
         $objDrop->addOption(2, $unreadLabel);
         $objDrop->addOption(3, $attachmentLabel);
         $objDrop->setSelected($filter);
-        $objDrop->extra = ' onchange="javascript:document.getElementById(\'form_msgform\').submit();"';
+        $objDrop->extra = ' onchange="javascript:
+            document.getElementById(\'form_msgform\').submit();"';
         $filterDrop = $objDrop->show();
         $objTable->startHeaderRow();
         $objTable->addHeaderCell('', '', '', 'left', 'wrapperLightBkg', 'colspan="3"');
@@ -256,16 +271,15 @@ if (!empty($arrEmailListData)) {
 $headingTable = $objTable->show();
 
 $objTable = new htmltable();
-$objTable->id = "messageListTable";
-$objTable->css_class = "sorttable";
-//    $objTable->cellspacing='2';
+$objTable->id = 'messageListTable';
+$objTable->css_class = 'sorttable';
 $objTable->cellpadding = '4';
 $objTable->row_attributes = ' name="row_'.$objTable->id.'"';
 $objTable->startRow();
 $objTable->addCell('', '15%', '', '', 'wrapperLightBkg', '');
-$objTable->addCell("<b>".$fromLabel."</b>", '25%', '', '', 'wrapperLightBkg', '');
-$objTable->addCell("<b>".$subjectLabel."</b>", '45%', '', '', 'wrapperLightBkg', '');
-$objTable->addCell("<b>".$dateLabel."</b>", '15%', '', '', 'wrapperLightBkg', '');
+$objTable->addCell('<b>'.$fromLabel.'</b>', '25%', '', '', 'wrapperLightBkg', '');
+$objTable->addCell('<b>'.$subjectLabel.'</b>', '45%', '', '', 'wrapperLightBkg', '');
+$objTable->addCell('<b>'.$dateLabel.'</b>', '15%', '', '', 'wrapperLightBkg', '');
 $objTable->endRow();
 if (empty($arrEmailListData)) {
     $objTable->startRow();
@@ -276,7 +290,8 @@ if (empty($arrEmailListData)) {
     foreach($arrEmailListData as $email) {
         $objCheck = new checkbox('msgId[]');
         $objCheck->value = $email['routing_id'];
-        $objCheck->extra = ' onchange="javascript:var elChk=document.getElementsByName(\'msgId[]\');
+        $objCheck->extra = ' onclick="javascript:
+            var elChk=document.getElementsByName(\'msgId[]\');
             var elChkAllTrue=true;
             var elChkAllFalse=true;
             for(var i=0;i &lt; elChk.length;i++){
@@ -287,7 +302,7 @@ if (empty($arrEmailListData)) {
                 }
             };
             var elSelectAll=document.getElementById(\'input_selectmsg\');
-            if(elChkAllTrue || elChkAllFalse){
+            if(elChkAllTrue==true || elChkAllFalse==true){
                 if(elChkAllTrue){
                     if(elSelectAll.checked==false){
                         elSelectAll.checked=true;
@@ -299,7 +314,7 @@ if (empty($arrEmailListData)) {
                     }
                 }
             }
-            if(this.checked!=true){
+            if(this.checked == false){
                 if(elSelectAll.checked==true){
                     elSelectAll.checked=false;
                 }
@@ -317,14 +332,18 @@ if (empty($arrEmailListData)) {
             if ($email['sent_email'] != 1) {
                 $objIcon->title = $unreadEmailLabel;
                 $objIcon->setIcon('unreadletter');
-                $objIcon->extra = ' onclick=\'javascript:document.getElementById("form_hiddenform").action="'.$action.'"; document.getElementById("form_hiddenform").submit();\'';
-                $readIcon = "<a href=\"#\">".$objIcon->show() ."</a>";
+                $objIcon->extra = ' onclick="javascript:
+                    document.getElementById(\'form_hiddenform\').action=\''.$action.'\';
+                    document.getElementById(\'form_hiddenform\').submit();"';
+                $readIcon = '<a href="#">'.$objIcon->show().'</a>';
                 $class = 'warning';
             } else {
                 $objIcon->title = $sentLabel;
                 $objIcon->setIcon('sent');
-                $objIcon->extra = ' onclick=\'javascript:document.getElementById("form_hiddenform").action="'.$action.'"; document.getElementById("form_hiddenform").submit();\'';
-                $readIcon = "<a href=\"#\">".$objIcon->show() ."</a>";
+                $objIcon->extra = ' onclick="javascript:
+                    document.getElementById(\'form_hiddenform\').action=\''.$action.'\';
+                    document.getElementById(\'form_hiddenform\').submit();"';
+                $readIcon = '<a href="#">'.$objIcon->show().'</a>';
                 $class = 'warning';
             }
         } else {
@@ -334,8 +353,10 @@ if (empty($arrEmailListData)) {
             } else {
                 $objIcon->setIcon('readsent');
             }
-            $objIcon->extra = ' onclick=\'javascript:document.getElementById("form_hiddenform").action="'.$action.'"; document.getElementById("form_hiddenform").submit();\'';
-            $readIcon = "<a href=\"#\">".$objIcon->show() ."</a>";
+            $objIcon->extra = ' onclick="javascript:
+                document.getElementById(\'form_hiddenform\').action=\''.$action.'\';
+                document.getElementById(\'form_hiddenform\').submit();"';
+            $readIcon = '<a href="#">'.$objIcon->show().'</a>';
             $class = '';
         }
 
@@ -354,7 +375,9 @@ if (empty($arrEmailListData)) {
         // set up subject link
         $objLink = new link('#');
         $objLink->link = $arrMessageData['subject'];
-        $objLink->extra = ' onclick=\'javascript:document.getElementById("form_hiddenform").action="'.$action.'"; document.getElementById("form_hiddenform").submit();\'';
+        $objLink->extra = ' onclick="javascript:
+            document.getElementById(\'form_hiddenform\').action=\''.$action.'\';
+            document.getElementById(\'form_hiddenform\').submit();"';
         $subjectLink = $objLink->show();
         if ($email['routing_id'] == $routingId) {
             $class = 'confirm';
@@ -363,9 +386,9 @@ if (empty($arrEmailListData)) {
         }
         $objTable->startRow();
         $objTable->addCell($msgCheck.$readIcon.$attachIcon, '', '', '', $class, '');
-        $objTable->addCell("<nobr>".$from."</nobr>", '', '', '', $class, '');
+        $objTable->addCell('<nobr>'.$from.'</nobr>', '', '', '', $class, '');
         $objTable->addCell($subjectLink, '', '', '', $class, '');
-        $objTable->addCell("<nobr>".$arrMessageData['date_sent']."</nobr>", '', '', '', $class, '');
+        $objTable->addCell('<nobr>'.$arrMessageData['date_sent'].'</nobr>', '', '', '', $class, '');
         $objTable->endRow();
     }
 }
@@ -385,7 +408,7 @@ $messageData = $this->dbRouting->getMail($routingId);
 $objInput = new textinput('mode', '', 'hidden', '');
 $modeInput = $objInput->show();
 
-$objInput = new textinput('messageListTable', implode("|", $sortOrder) , 'hidden', '');
+$objInput = new textinput('messageListTable', implode('|', $sortOrder) , 'hidden', '');
 $hiddenInput = $objInput->show();
 
 // set up hidden form
@@ -399,7 +422,6 @@ $objForm->addToForm($hiddenInput.$modeInput);
 $hiddenForm = $objForm->show();
 
 $objTable = new htmltable();
-//    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
 if (empty($messageData)) {
     $objTable->startRow();
@@ -412,29 +434,33 @@ if (empty($messageData)) {
     $emailData = $this->dbEmail->getMail($messageData['email_id']);
     $from = $this->dbRouting->getName($messageData['sender_id']);
     $recipientList = $emailData['recipient_list'];
-    $arrRecipients = explode("|", $recipientList);
+    $arrRecipients = explode('|', $recipientList);
     $to = '';
     foreach($arrRecipients as $key => $recipient) {
         $to = $this->dbRouting->getName($recipient);
         if ($key != count($arrRecipients) -1) {
-            $to.= "; ";
+            $to.= '; ';
         }
         if ($key == 9) {
-            $to.= "........";
+            $to.= '........';
             break;
         }
     }
     // set up next and previous icons
     $objIcon->title = $previousLabel;
     $objIcon->setIcon('prev_new');
-    $objIcon->extra = ' onclick="javascript:document.getElementById(\'input_mode\').value=\'prev\';document.getElementById(\'form_hiddenform\').submit();"';
-    $prevIcon = "<a href=\"#\">".$objIcon->show() ."</a>";
+    $objIcon->extra = ' onclick="javascript:
+        document.getElementById(\'input_mode\').value=\'prev\';
+        document.getElementById(\'form_hiddenform\').submit();"';
+    $prevIcon = '<a href="#">'.$objIcon->show().'</a>';
 
     // set up next icon
     $objIcon->title = $nextLabel;
     $objIcon->setIcon('next_new');
-    $objIcon->extra = ' onclick="javascript:document.getElementById(\'input_mode\').value=\'next\';document.getElementById(\'form_hiddenform\').submit();"';
-    $nextIcon = "<a href=\"#\">".$objIcon->show() ."</a>";
+    $objIcon->extra = ' onclick="javascript:
+        document.getElementById(\'input_mode\').value=\'next\';
+        document.getElementById(\'form_hiddenform\').submit();"';
+    $nextIcon = '<a href="#">'.$objIcon->show().'</a>';
 
     // set up reply icon
     $array = array(
@@ -444,12 +470,12 @@ if (empty($messageData)) {
     $replyMessageLabel = $this->objLanguage->code2Txt('mod_email_replymessage', 'email', $array);
     $replyMessage = $replyMessageLabel."\n";
     $replyMessage.= $emailData['message']."\n";
-    $replyMessage.= "----------------------------------------\n";
+    $replyMessage.= '----------------------------------------'."\n";
     $objIcon->title = $replyLabel;
     $replyIcon = $objIcon->getLinkedIcon($this->uri(array(
         'action' => 'compose',
         'userId' => $emailData['sender_id'],
-        'subject' => "RE: ".$emailData['subject'],
+        'subject' => 'RE: '.$emailData['subject'],
         'message' => $replyMessage,
         'emailId' => $emailData['id']
     )) , 'reply');
@@ -465,26 +491,26 @@ if (empty($messageData)) {
     $replyallIcon = $objIcon->getLinkedIcon($this->uri(array(
         'action' => 'compose',
         'userId' => $strUserId,
-        'subject' => "RE: ".$emailData['subject'],
+        'subject' => 'RE: '.$emailData['subject'],
         'message' => $replyMessage,
         'emailId' => $emailData['id']
     )) , 'replyall');
     $icons.= $replyallIcon;
 
     // set up forward icon
-    $fwdMessage = "-----  ".$fwdMessageLabel."  -----\n";
-    $fwdMessage.= $fromLabel.": ".$from."\n";
-    $fwdMessage.= $toLabel.": ".$to."\n";
-    $fwdMessage.= $dateLabel.": ".$this->objDate->formatDate($emailData['date_sent']) ."\n";
-    $fwdMessage.= $subjectLabel.": ".$emailData['subject']."\n";
-    $fwdMessage.= $messageLabel.": \n";
+    $fwdMessage = '-----  '.$fwdMessageLabel.'  -----'."\n";
+    $fwdMessage.= $fromLabel.': '.$from."\n";
+    $fwdMessage.= $toLabel.': '.$to."\n";
+    $fwdMessage.= $dateLabel.': '.$this->objDate->formatDate($emailData['date_sent']) ."\n";
+    $fwdMessage.= $subjectLabel.': '.$emailData['subject']."\n";
+    $fwdMessage.= $messageLabel.': '."\n";
     $fwdMessage.= $emailData['message']."\n";
-    $fwdMessage.= "----------------------------------------\n";
+    $fwdMessage.= '----------------------------------------'."\n";
     $fwdMessage.= "\n";
     $objIcon->title = $forwardLabel;
     $forwardIcon = $objIcon->getLinkedIcon($this->uri(array(
         'action' => 'compose',
-        'subject' => "FWD: ".$emailData['subject'],
+        'subject' => 'FWD: '.$emailData['subject'],
         'message' => $fwdMessage,
         'emailId' => $emailData['id']
     )) , 'forward');
@@ -520,23 +546,23 @@ if (empty($messageData)) {
         $icons.= '';
     }
     $objTable->startRow();
-    $objTable->addCell("<b>".$fromLabel.":</b>", '20%', '', '', '', '');
+    $objTable->addCell('<b>'.$fromLabel.':</b>', '20%', '', '', '', '');
     $objTable->addCell($from, '', '', '', '', '');
     $objTable->endRow();
     $objTable->startRow();
-    $objTable->addCell("<b>".$toLabel.":</b>", '', '', '', '', '');
+    $objTable->addCell('<b>'.$toLabel.':</b>', '', '', '', '', '');
     $objTable->addCell($to, '', '', '', '', '');
     $objTable->endRow();
     $objTable->startRow();
-    $objTable->addCell("<b>".$dateLabel.":</b>", '', '', '', '', '');
+    $objTable->addCell('<b>'.$dateLabel.':</b>', '', '', '', '', '');
     $objTable->addCell($this->objDate->formatDate($emailData['date_sent']) , '', '', '', '', '');
     $objTable->endRow();
     $objTable->startRow();
-    $objTable->addCell("<b>".$subjectLabel.":</b>", '', '', '', '', '');
+    $objTable->addCell('<b>'.$subjectLabel.':</b>', '', '', '', '', '');
     $objTable->addCell($emailData['subject'], '', '', '', '', '');
     $objTable->endRow();
     $objTable->startRow();
-    $objTable->addCell("<b>".$messageLabel.":</b><br /><br />".nl2br($emailData['message']) , '', '', '', '', 'colspan="2"');
+    $objTable->addCell('<b>'.$messageLabel.':</b><br /><br />'.nl2br($emailData['message']) , '', '', '', '', 'colspan="2"');
     $objTable->endRow();
 }
 $messageTable = $objTable->show();
@@ -549,15 +575,14 @@ if (!empty($messageData)) {
     if ($emailData['attachments'] >= 1) {
         $arrAttachments = $this->dbAttachments->getAttachments($emailData['id']);
         $objTable = new htmltable();
-        //            $objTable->cellspacing='2';
         $objTable->cellpadding = '4';
         $i = 1;
         foreach($arrAttachments as $attachment) {
             $mbSize = round($attachment['file_size']/1048576, 2);
             if ($mbSize < 0.1) {
-                $size = round(($attachment['file_size']/1024) , 2) ."KB";
+                $size = round(($attachment['file_size']/1024) , 2) .'KB';
             } else {
-                $size = $mbSize."MB";
+                $size = $mbSize.'MB';
             }
 
             // set up attachment download link
@@ -568,15 +593,16 @@ if (!empty($messageData)) {
             $objLink->link = $attachment['file_name'];
             $attachmentLink = $objLink->show();
             $objTable->startRow();
-            $objTable->addCell($i++.".", '5%', '', '', '', '');
-            $objTable->addCell("<nobr>".$attachmentLink."</nobr>", '50%', '', '', '', '');
+            $objTable->addCell($i++.'.', '5%', '', '', '', '');
+            $objTable->addCell('<nobr>'.$attachmentLink.'</nobr>', '50%', '', '', '', '');
             $objTable->addCell($size, '', '', '', '', '');
             $objTable->endRow();
         }
         $attachmentTable = $objTable->show();
 
         $objFieldset = new fieldset();
-        $objFieldset->legend = "<b>".$attachmentLabel."</b>";
+        $objFieldset->legend = '<b>'.$attachmentLabel.'</b>';
+        $objFieldset->extra = ' style="border: 1px solid #808080; margin: 3px; padding: 10px;"';
         $objFieldset->contents = $attachmentTable;
         $attachFieldset = $objFieldset->show();
     } else {
@@ -605,7 +631,7 @@ $objIcon->title = $manageBooksLabel;
 $objIcon->extra = '';
 $booksIcon = $objIcon->getLinkedIcon($this->uri(array(
     'action' => 'manageaddressbooks',
-    'folderId' => $folderId
+    'currentFolderId' => $folderId
 )) , 'addressbook');
 
 // set up manage configs icon
@@ -621,7 +647,7 @@ $objTable = new htmltable();
 //    $objTable->cellspacing='2';
 $objTable->cellpadding = '4';
 $objTable->startRow();
-$objTable->addCell($composeIcon."&nbsp;".$manageIcon."&nbsp;".$booksIcon."&nbsp;".$configIcon, '25%', '', '', 'heading', '');
+$objTable->addCell($composeIcon.'&nbsp;'.$manageIcon.'&nbsp;'.$booksIcon.'&nbsp;'.$configIcon, '25%', '', '', 'heading', '');
 $objTable->addCell($folderName, '75%', '', '', 'heading', 'colspan="4"');
 $objTable->endRow();
 $objTable->startRow();
@@ -652,7 +678,7 @@ $objLink = new link($this->uri(array(
     ''
 ) , '_default'));
 $objLink->link = $exitLabel;
-$pageData.= "<br /><hr />".$objLink->show();
+$pageData.= '<br />'.$objLink->show();
 
 $objLayer = new layer();
 $objLayer->padding = '10px';

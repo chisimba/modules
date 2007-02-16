@@ -68,6 +68,7 @@ class emailfiles extends dbTable
         $maxUpload = substr(ini_get('upload_max_filesize') , 0, -1);
         $maxSize = min($attachmentSize, $maxPost, $maxUpload);
         $this->maxFileSize = $maxSize*1048576;
+		$this->objCleanUrl = &$this->newObject('cleanurl','filemanager');
     }
 
     /**
@@ -83,6 +84,7 @@ class emailfiles extends dbTable
         $this->objUpload->setUploadFolder($this->tempPath);
         $this->objUpload->overWrite = TRUE;
         $this->objUpload->maxSize = $this->maxFileSize;
+        $this->objUpload->setAllowedTypes('all');
         $this->objUpload->inputname = 'attachment';
         $results = $this->objUpload->doUpload(TRUE);
         if ($results['success']) {
@@ -159,7 +161,9 @@ class emailfiles extends dbTable
                 if ($attachment['filename'] == $filename) {
                     unset($attachments[$key]);
                     $this->setSession('attachments', $attachments);
-                    unlink($this->tempPath.$filename);
+                    if (file_exists($filename)) { 
+                        unlink($this->tempPath.$filename);
+                    }
                 }
             }
         }
@@ -180,7 +184,7 @@ class emailfiles extends dbTable
                 $attachmentId = $this->dbAttachments->addAttachments($emailId, $attachment);
                 rename($this->tempPath.$attachment['filename'], $this->filePath.$attachmentId);
             }
-            $attachmentCount['attachments'] = count($attachments);
+            $attachmentCount = count($attachments);
         }else{
             $attachmentCount = 0;
         }
@@ -218,6 +222,7 @@ class emailfiles extends dbTable
         $store = $fileData[0]['stored_name'];
         copy($this->filePath.$store, $this->tempPath.$name);
         $filePath = $this->downloadLocation.$name;
+        $this->objCleanUrl->cleanUpUrl($filePath);
         header("Location:{$filePath}");
     }
 
