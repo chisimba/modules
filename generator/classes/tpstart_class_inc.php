@@ -7,7 +7,8 @@ if (!$GLOBALS['kewl_entry_point_run'])
 // end security check
 
 ///Load the abstract common template class
-require_once('modules/generator/classes/abtpcommon_class_inc.php');
+$this->loadclass("abtpcommon", "generator");
+//require_once('modules/generator/classes/abtpcommon_class_inc.php');
 
 /**
 * 

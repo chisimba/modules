@@ -5,8 +5,10 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	die("You cannot view this page directly");
 }
 // end security check
-require_once('modules/generator/classes/abgenerator_class_inc.php');
-require_once('modules/generator/classes/ifgenerator_class_inc.php');
+$this->loadclass("abgenerator", "generator");
+$this->loadclass("ifgenerator", "generator");
+//require_once('modules/generator/classes/abgenerator_class_inc.php');
+//require_once('modules/generator/classes/ifgenerator_class_inc.php');
 
 /**
 * 
@@ -25,6 +27,12 @@ class genedit extends abgenerator implements ifgenerator
 {
     private $dataClass;
     private $xml;
+    
+    /**
+    * @var string $moduleUri The base Uri to the modules directory 
+    * @access Private
+    */
+    private $moduleUri;
    
     /**
      * 
@@ -35,8 +43,6 @@ class genedit extends abgenerator implements ifgenerator
     {
         //Run the parent init to create common objects
         parent::init();
-        
-
     }
    
 	/**
@@ -75,7 +81,7 @@ class genedit extends abgenerator implements ifgenerator
 	function loadFields()
 	{
         //Load the XML file of template fields
-        $xml = simplexml_load_file("modules/generator/generators/edit/edit_template_fields.xml");
+        $xml = simplexml_load_file($this->generatorBaseDir . "/edit/edit_template_fields.xml");
         //Extract the id field code using Xpath method
         $item = $xml->xpath("//item[@name = 'id']");
         $this->id = $item[0]->code;
@@ -167,7 +173,7 @@ class genedit extends abgenerator implements ifgenerator
     */
     function prepareTemplate()
     {
-        $xml = simplexml_load_file("modules/generator/resources/-----edit-template-items.xml");
+        $xml = simplexml_load_file($this->getResourcePath("") . "/-----edit-template-items.xml");
         //Initialize the template
         $ret = $xml->xpath("//item[@name = 'initializeTemplate']");
         $this->classCode = $ret[0]->code;

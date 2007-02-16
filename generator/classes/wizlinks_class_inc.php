@@ -32,6 +32,11 @@ class wizlinks extends object
     * 
     */
     private $page;
+    /**
+    * @var string $generatorBaseDir The base path to the generators directory 
+    * @access Private
+    */
+    private $generatorBaseDir;
     
     /**
     * 
@@ -46,6 +51,8 @@ class wizlinks extends object
 		$this->objLink = $this->getObject('link', 'htmlelements');
 		// Add the heading to the content
 		$this->objH =& $this->getObject('htmlheading', 'htmlelements');
+        //Get the base dir of the generators and set it here
+        $this->generatorBaseDir = $this->getResourcePath("generators") ."/";
     }
     
     /**
@@ -76,12 +83,8 @@ class wizlinks extends object
     */
     public function getListOfGenerators()
     {
-        //Get the config object and retrieve the path to the app
-        $objConfig = $this->getObject('altconfig', 'config');
-        $directory = $objConfig->getSiteRootPath(); 
-        $directory .=  "modules/generator/generators/";
         $ret=array();
-        $directories = scandir($directory);
+        $directories = scandir($this->generatorBaseDir);
         //set a counter
         $i=0;
         //is_dir($directory . $dir) && 
@@ -131,7 +134,7 @@ class wizlinks extends object
     public function getTitle($dir)
     {   
         //Load the XML class template
-        $xml = simplexml_load_file("modules/generator/generators/" 
+        $xml = simplexml_load_file($this->generatorBaseDir
           . $dir . "/" . $dir . "_ui_link.xml");
         $title = $xml->title[0];
         return $title;

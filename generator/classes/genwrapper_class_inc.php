@@ -5,8 +5,10 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	die("You cannot view this page directly");
 }
 // end security check
-require_once('modules/generator/classes/abgenerator_class_inc.php');
-require_once('modules/generator/classes/ifgenerator_class_inc.php');
+$this->loadclass("abgenerator", "generator");
+$this->loadclass("ifgenerator", "generator");
+//require_once('modules/generator/classes/abgenerator_class_inc.php');
+//require_once('modules/generator/classes/ifgenerator_class_inc.php');
 
 /**
 * 
@@ -52,6 +54,12 @@ class genwrapper extends abgenerator implements ifgenerator
     public $className;
     
     public $strClass;
+  
+    /**
+    * @var string $generatorBaseDir The base path to the generators directory 
+    * @access Private
+    */
+    private $generatorBaseDir;
    
     /**
     * 
@@ -113,7 +121,7 @@ class genwrapper extends abgenerator implements ifgenerator
     private function loadWrapClass()
     {
         //load the class
-        require_once("modules/" . $this->wrModule . "/lib/" . $this->classFile);
+        require_once($this->moduleUri . $this->wrModule . "/lib/" . $this->classFile);
     }
     
     /**
@@ -260,7 +268,7 @@ class genwrapper extends abgenerator implements ifgenerator
     */
     private function prepareWrapper()
     {
-        $xml = simplexml_load_file("modules/generator/resources/wrapper-items.xml");
+        $xml = simplexml_load_file($this->getResourcePath("") . "/wrapper-items.xml");
         //Initialize the class
         $ret = $xml->xpath("//item[@name = 'buildClass']");
         $this->classCode .= $ret[0]->code;

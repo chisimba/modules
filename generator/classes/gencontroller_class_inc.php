@@ -5,8 +5,8 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	die("You cannot view this page directly");
 }
 // end security check
-require_once('modules/generator/classes/abgenerator_class_inc.php');
-require_once('modules/generator/classes/ifgenerator_class_inc.php');
+$this->loadclass("abgenerator", "generator");
+$this->loadclass("ifgenerator", "generator");
 
 /**
 * 
@@ -78,7 +78,7 @@ class gencontroller extends abgenerator implements ifgenerator
         //Clean up unused template tags
         $this->cleanUp();
         $this->prepareForDump();
-	     return $this->classCode;
+	    return $this->classCode;
 	}
 	
 	/**

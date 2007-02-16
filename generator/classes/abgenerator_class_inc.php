@@ -42,6 +42,11 @@ abstract class abgenerator extends object
     * 
     */
     public $unDeclaredMethods;
+    /**
+    * @var string $generatorBaseDir The base path to the generators directory 
+    * @access Private
+    */
+    public $generatorBaseDir;
     
     /**
      * 
@@ -50,7 +55,10 @@ abstract class abgenerator extends object
      */
     public function init()
     {
+    	//Get an instance of the user object
         $this->objUser = $this->getObject('user', 'security');
+        //Get the base dir of the generators and set it here
+        $this->generatorBaseDir = $this->getResourcePath("generators") ."/";
     }
     
     /**
@@ -61,7 +69,7 @@ abstract class abgenerator extends object
     public function loadSkeleton($classItem, $objectType='class')
     {
         //Load the XML class template
-        $xml = simplexml_load_file("modules/generator/generators/" 
+        $xml = simplexml_load_file($this->generatorBaseDir 
           . $classItem . "/" . $classItem . "_" . $objectType 
           . "_skeleton.xml"); 
         //Loop through and include the code
@@ -99,7 +107,7 @@ abstract class abgenerator extends object
      public function insertItem($classItem, $objectType, $itemType)
      {
          //Load the XML class template
-         $fileName = "modules/generator/generators/" 
+         $fileName = $this->generatorBaseDir
           . $classItem . "/" . $classItem . "_" . $objectType  . "_" 
           . $itemType . ".xml";
 			$xml = simplexml_load_file($fileName);
@@ -287,7 +295,7 @@ abstract class abgenerator extends object
 	{
 		$this->classCode = htmlentities($this->classCode);
 	    $this->classCode = str_replace(' ', '&nbsp;', $this->classCode);
-	    $this->classCode = nl2br($this->classCode);
+//	    //$this->classCode = nl2br($this->classCode);
         return TRUE;
 	}
 	
@@ -302,7 +310,7 @@ abstract class abgenerator extends object
 	public function getMethod($classItem, $methodName)
 	{
 	    if ($this->methodXml == NULL || $this->methodXML="") {
-	    	$this->methodXml = simplexml_load_file("modules/generator/resources/" 
+	    	$this->methodXml = simplexml_load_file($this->generatorBaseDir
               . $classItem . "class_methods.xml");
 	    }
 	    $xPathParam = "//item[@name = '" . $methodName . "']";
@@ -323,7 +331,7 @@ abstract class abgenerator extends object
     	$chk = $this->getParam('bypasscleanup', FALSE);
     	if ($chk !== 'TRUE') {
 	        //Load the XML template tagnames for scrubbing
-	        $xml = simplexml_load_file("modules/generator/resources/template-tagnames.xml");
+	        $xml = simplexml_load_file($this->getResourcePath("") . "/template-tagnames.xml");
 	        //Loop through and clean up any unused tags in the code
 	        foreach($xml->tag as $tag) {
 	            $this->classCode = str_replace($tag->tagtext, NULL, $this->classCode);

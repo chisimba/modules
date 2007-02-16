@@ -49,6 +49,12 @@ class uimanager extends object
    public $name;
    
     /**
+    * @var string $generatorBaseDir The base path to the generators directory 
+    * @access Private
+    */
+    private $generatorBaseDir;
+   
+    /**
     * 
     * Constructor class to initialize language 
     * 
@@ -65,6 +71,8 @@ class uimanager extends object
         $this->loadClass('radio','htmlelements');
         // Create an instance of the button object
         $this->loadClass('button', 'htmlelements');
+        //Get the base dir of the generators and set it here
+        $this->generatorBaseDir = $this->getResourcePath("generators") ."/";
     }
     
 
@@ -83,7 +91,7 @@ class uimanager extends object
     public function readFormXml($objectType)
     {
         //Load the XML  
-        $this->formXml = simplexml_load_file("modules/generator/generators/" 
+        $this->formXml = simplexml_load_file($this->generatorBaseDir 
           . $objectType . "/" . $objectType . "_ui_form.xml"); 
     }
 
