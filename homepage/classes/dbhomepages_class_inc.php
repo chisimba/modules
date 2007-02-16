@@ -190,7 +190,7 @@ class dbHomePages extends dbTable
         $this->loadClass('link', 'htmlelements');
 		$return = "";
         // Start a Wrapper Block
-        $return .= '<div class="wrapperLightBkg" style="border: 5px outset #c0c0c0;">';
+        $return .= '<div class="wrapperLightBkg" style="border: 1px solid #c0c0c0;">';
         // Determine if Home Page Exists
         if (!$this->homepageExists($userId)) { // If not, show message that home page has not been created yet.
             $createLink = new link($this->uri(NULL, 'homepage'));

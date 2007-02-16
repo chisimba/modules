@@ -4,7 +4,7 @@
     // Display - secondary heading (User Details)
 	echo("<h3>".$objLanguage->languageText("mod_personalspace_userdetails", 'personalspace')."</h3>");
 
-    echo '<div class="wrapperLightBkg" style="border: 5px outset #c0c0c0;">';
+    echo '<div class="wrapperLightBkg" style="border: 1px solid #c0c0c0;">';
 
 	$table =& $this->newObject("htmltable","htmlelements");
 	$table->border = 0;
