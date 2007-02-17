@@ -41,6 +41,9 @@ class gendbtable extends abgenerator implements ifgenerator
 	 */
 	public function generate($className=NULL)
 	{
+		//Create an instance of the db schema object for getting list of fields
+		$objDbSchema = $this->getObject("getschema", "generator");
+		$this->arrayOfFields = $objDbSchema->getFieldNamesAsArray($this->getParam('tablename', NULL));
 		//Load the skeleton file for the class from the XML		
         $this->loadSkeleton('dbtable', 'class');
         //Insert the properties
@@ -68,6 +71,10 @@ class gendbtable extends abgenerator implements ifgenerator
         $this->databasetable();
         //Insert the database class info
         $this->dbtableclassname();
+        //Insert the table name into the init method
+        $this->addInitTable();
+        //Addt he author
+        $this->author();
         //Clean up unused template tags
         $this->cleanUp();
         $this->prepareForDump();
@@ -136,20 +143,18 @@ class gendbtable extends abgenerator implements ifgenerator
                   . "        \$" . $fieldName . " = \$this->getParam('" 
                   . $fieldName . "', NULL);\n";
                 break;
-                
+            //Things that are formatted depending on add or edit                
             case "updated":
             case "dateModified":
             case "datemodified":
-                 $ret = "        //Set the value of \$" . $fieldName . " to the current datetime.\n"
-                  . "        \$" . $fieldName . " = \$this->now();\n";
-                break;
-            //Things that are formatted depending on add or edit
+            case "modified":
             case "creatorId":
             case "creatorid":
             case "modifierId":
             case "modifierid":
             case "dateCreated":
             case "datecreated":
+            case "created":
                 $ret = NULL;
                 break;
             //The default method to return the getting of the value
@@ -230,19 +235,23 @@ class gendbtable extends abgenerator implements ifgenerator
             case "datecreated":
             case "creationdate":
             case "creationDate":
+            case "created":
                 $ret = NULL;
                 break;
             case "dateModified":
             case "datemodified":
+            case "modified":
                 $ret = "              '" . $fieldName 
-                  . "' => \$this->now();";
+                  . "' => \$this->now()"
+				  . $comma . "\n";
                 break;
             case "modifierId":
             case "modifierid":
             case "modifiedBy":
             case "modifiedby":
                 $ret = "              '" . $fieldName 
-                  . "' => \$this->objUser->fullName();\n";
+                  . "' => \$this->objUser->userId()" 
+                  . $comma . "\n";
                 break;
             //The default method to return the getting of the value
             default:
@@ -277,13 +286,26 @@ class gendbtable extends abgenerator implements ifgenerator
         switch ($fieldName) {
             //Id is generated
             case "id":
+            case "modifierId":
+            case "modifierid":
+            case "modified":
+            case "datemodified":
+            case "modificationdate":
                 $ret = NULL;
                 break;
             case "creatorId":
             case "creatorid":
                 $ret = "              '" . $fieldName 
-                  . "' => \$this->objUser->fullName()" . $comma;
+                  . "' => \$this->objUser->userId()" 
+                  . $comma . "\n";
                 break;
+            case "created":
+            case "datecreated":
+            case "creationdate":
+             	$ret = "              '" . $fieldName 
+                  . "' => \$this->now()" 
+				  . $comma . "\n";
+            	break;
             //The default method to return the getting of the value
             default:
                 $ret = "              '" . $fieldName 
@@ -292,5 +314,15 @@ class gendbtable extends abgenerator implements ifgenerator
         }
         return $ret;
     }
+    /**
+    * 
+    * Method to add the table name to the init method
+    * 
+    */
+    private function addInitTable()
+    {
+        $this->classCode = str_replace("{DATABASETABLE}", $this->getParam("tablename", NULL), $this->classCode);
+    }
+    
 }
 ?>

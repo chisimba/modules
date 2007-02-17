@@ -10,7 +10,8 @@ $this->loadclass("ifgenerator", "generator");
 
 /**
 * 
-* Class to generate a Chisimba edit template
+* Class to generate a Chisimba view template
+* Creates a simple view template for a single table
 * 
 * Usaeage: class gencontroller extends abgenerator implements ifgenerator
 *
@@ -21,7 +22,7 @@ $this->loadclass("ifgenerator", "generator");
 * @licence GNU/GPL
 *
 */
-class genedit extends abgenerator implements ifgenerator
+class genview extends abgenerator implements ifgenerator
 {
     private $dataClass;
     private $xml;
@@ -49,7 +50,7 @@ class genedit extends abgenerator implements ifgenerator
 	function generate($className=NULL)
 	{
 	    //Load the skeleton file for the class from the XML		
-        $this->loadSkeleton('edit', 'template');
+        $this->loadSkeleton('view', 'template');
         //Load the fields into properties
         $this->loadFields();
 	    /* NOTE: We cannot insert validateParseCodes() here because 
@@ -79,7 +80,7 @@ class genedit extends abgenerator implements ifgenerator
 	function loadFields()
 	{
         //Load the XML file of template fields
-        $xml = simplexml_load_file($this->generatorBaseDir . "/edit/edit_template_fields.xml");
+        $xml = simplexml_load_file($this->generatorBaseDir . "/view/view_template_fields.xml");
         //Extract the id field code using Xpath method
         $item = $xml->xpath("//item[@name = 'id']");
         $this->id = $item[0]->code;
