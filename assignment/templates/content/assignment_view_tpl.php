@@ -12,15 +12,16 @@
 $this->setLayoutTemplate('assignment_layout_tpl.php');
 
 // set up html elements
-$objTable =& $this->newObject('htmltable','htmlelements');
-$objHead =& $this->newObject('htmlheading','htmlelements');
-$objLayer =& $this->newObject('layer','htmlelements');
-$objLayer1 =& $this->newObject('layer','htmlelements');
-$objForm =& $this->newObject('form','htmlelements');
-$objInput =& $this->newObject('textinput','htmlelements');
-$objText =& $this->newObject('textarea','htmlelements');
-$objButton =& $this->newObject('button','htmlelements');
-$objLink =& $this->newObject('link','htmlelements');
+$objTable = $this->newObject('htmltable','htmlelements');
+$objTable2 = $this->newObject('htmltable','htmlelements');
+$objHead = $this->newObject('htmlheading','htmlelements');
+$objLayer = $this->newObject('layer','htmlelements');
+$objLayer1 = $this->newObject('layer','htmlelements');
+$objForm = $this->newObject('form','htmlelements');
+$objInput = $this->newObject('textinput','htmlelements'); 
+$objText = $this->newObject('textarea','htmlelements');
+$objButton = $this->newObject('button','htmlelements');
+$objLink = $this->newObject('link','htmlelements');
 
 // set up language items
 $assignmentLabel = $this->objLanguage->languageText('mod_assignment_assignment','assignment');
@@ -38,7 +39,8 @@ $completeLabel = $this->objLanguage->languageText('mod_assignment_completeonline
 $uploadLabel = $this->objLanguage->languageText('mod_assignment_upload','assignment').' '.$assignmentLabel;
 $exitLabel = $this->objLanguage->languageText('word_exit');
 $percentLabel = $this->objLanguage->languageText('mod_assignment_percentyrmark','assignment');
-$objSelectFile = $this->newObject('selectfile', 'filemanager');
+$btnupload=$this->objLanguage->languageText('mod_assignment_uploadfile' ,'assignment');
+//$objSelectFile = $this->newObject('selectfile', 'filemanager');
 
 $lnPlain = $this->objLanguage->languageText('mod_testadmin_plaintexteditor');
 $lnWysiwyg = $this->objLanguage->languageText('mod_testadmin_wysiwygeditor');
@@ -89,26 +91,40 @@ if(!empty($data)){
     $objTable->endRow();
 
     $objLayer->cssClass = 'odd';
+    
+    
+   /* $this->objFileInput = new textinput('file');
+	$this->objFileInput->fldType='file';
+	$this->objFileInput->size=''; 
+    
     $objLayer->str = $objTable->show();
-
+*/
     $str = $objLayer->show();
+    
+   
+    
+    
+    
 
     // Section for submitting the assignment by upload or online if user is a student
     $objHead->type = 4;
     $objHead->str = $submitLabel.' '.$assignmentLabel;
     $str .= $objHead->show();
-
+	//$str .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$this->objFileInput->show();
+	
+	$this->objButton = new button('submit',$btnupload);
+	$returnUrl = $this->uri(array('action' => 'upload','id'=>$data[0]['id']));
+	$this->objButton->setOnClick("window.location='$returnUrl'");
+	//$this->objButton->setToSubmit();
+	$btn1=$this->objButton->show();
+	
+	$str .= $btn1;
+	
     // Determine format of submission: upload or online
     if($data[0]['format']){
         // upload a file, add hidden fileId if multiple submissions
         $inputStr = '<b>'.$uploadLabel.':</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-
-	$objSelectFile->name = 'file';
-
-	//$form->addToForm($objSelectFile->show());
-        //$objInput = new textinput('file');
-        //$objInput->fldType = 'file';
-        //$inputStr .= $objSelectFile->show();
+	
 
         if(!empty($data[0]['fileid'])){
             $objInput = new textinput('fileid', $data[0]['fileid']);
@@ -177,14 +193,15 @@ if(!empty($data)){
     $objButton->setToSubmit();
     $btns .= $objButton->show();
 	
-    $objForm = new form('upload', $this->uri(''));
-	$objForm->addToForm($objSelectFile->show());
+    $objForm = new form('submit', $this->uri(array('action' => 'upload')));
     $objForm->extra = " ENCTYPE='multipart/form-data'";
 
     $objForm->addToForm($inputStr);
  
     $objForm->addToForm($hidden);
     $objForm->addToForm('<br />'.$btns);
+    //$objForm->addToForm($this->objFileInput->show());
+	//$objForm->addToForm("helllo");     
 
     $layerStr = $objForm->show();
 

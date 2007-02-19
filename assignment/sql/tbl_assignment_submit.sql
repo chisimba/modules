@@ -21,7 +21,11 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
-	'fileid' => array(
+	'studentfileid' => array(
+		'type' => 'text',
+		'length' => 32
+		),
+	'lecturerfileid' => array(
 		'type' => 'text',
 		'length' => 32
 		),

@@ -81,10 +81,11 @@ class assignment extends controller
         $this->objUser =& $this->newObject('user','security');
         //$this->objGroups =& $this->newObject('groupAdminModel','groupadmin');
         $this->objContext =& $this->newObject('dbcontext','context');
-
+		$this->dbassignmentsubmit = $this->getObject('dbassignmentsubmit');
         // Get an instance of the filestore object and change the tables to essay specific tables
-       $this->objFile=& $this->getObject('upload','filemanager');
+       $this->objFile= $this->newObject('upload','filemanager');
        // $this->objFile->changeTables('tbl_assignment_filestore','tbl_assignment_blob');
+		$this->objFileRegister =& $this->getObject('registerfileusage', 'filemanager');
 
         $this->userId = $this->objUser->userId();
 
@@ -138,6 +139,54 @@ class assignment extends controller
 
             case 'showcomment':
                 return $this->showComment();
+                
+         	case 'upload';
+         		$id = $this->getParam('id');
+         		$this->setVarByRef('id',$id);
+         		return 'upload_tpl.php';
+         	break;
+         	
+         	case 'uploadsubmit':
+                // get topic id
+                $id=$this->getParam('id');
+                // get booking id
+                //$book=$this->getParam('book');
+                $msg = '';
+                $postSubmit = $this->getParam('submit');
+				
+                // exit upload form
+                if($postSubmit==$this->objLanguage->languageText('word_exit')){
+                    return $this->nextAction('');
+                }
+
+                // upload essay and return to form
+                if($postSubmit==$this->objLanguage->languageText('mod_assignment_upload', 'assignment')){
+
+                    // change the file name to fullname_studentId
+                    $studentid = $this->userId;
+                    //$name = $this->user;
+    
+                    // upload file to database
+					$arrayfiledetails = $this->objFile->uploadFile('file');
+		
+					if ($arrayfiledetails['success']){				
+                    	// save file id and submit date to database
+                    	$fields=array(
+                    		'userid'=>$studentid,
+                    		'assignmentid'=>$id,
+                    		'updated'=>date('Y-m-d H:i:s'),
+                    		'studentfileid'=>$arrayfiledetails['fileid'],
+                    		'datesubmitted'=>date('Y-m-d H:i:s')
+                        );
+                    	$this->dbassignmentsubmit->addSubmit($fields);
+						$this->objFileRegister->registerUse($arrayfiledetails['fileid'], 'assignment', 'tbl_assignment_submit', $id, 'studentfileid', $this->contextcode, '', TRUE);	
+                    	// display success message
+                    	$msg = $this->objLanguage->languageText('mod_assignment_confirmupload','assignment');
+                    	$this->setVarByRef('msg',$msg);
+                    }
+                }
+                return $this->studentHome();
+            break;
 
             default:
                 return $this->studentHome();
@@ -213,7 +262,7 @@ class assignment extends controller
         if(!empty($assignData)){
             foreach($assignData as $key=>$val){
                 $submitData = $this->dbSubmit->getSubmit("assignmentid='".$val['id']."' AND
-                userid='".$this->objUser->userId()."'", 'id AS submitid, mark AS studentmark, datesubmitted, fileid');
+                userid='".$this->objUser->userId()."'", 'id AS submitid, mark AS studentmark, datesubmitted, studentfileid');
 
 		if(!($submitData === FALSE)){
                 	$assignData[$key] = array_merge($val, $submitData[0]);
@@ -282,7 +331,7 @@ class assignment extends controller
         $postFormat = $this->getParam('format');
         if($postFormat && isset($_FILES['file'])){
             $fileId = $this->getParam('fileid', NULL);
-	    $fileId = $this->objFile->uploadFile($_FILES['file'],'file',$fileId);
+	    	$fileId = $this->objFile->uploadFile($_FILES['file'],'file',$fileId);
             $fields['fileid'] = $fileId;
         }else{
             $fields['online'] = $this->getParam('text', '');
