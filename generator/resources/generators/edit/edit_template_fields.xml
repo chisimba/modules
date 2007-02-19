@@ -27,9 +27,10 @@ if (isset(${FIELDNAME})) {
     $objElement = new textinput("{FIELDNAME}");
     $objElement->setValue(${FIELDNAME});
     //Add the ${FIELDNAME} element to the form
-    $objForm->addToForm($this->objLanguage->languageText("mod_{MODULECODE}_{FIELDNAME}", 
-      {MODULECODE}) . "<br />" . $objElement->show() . "<br /><br />");
+    $objForm->addToForm($this->objLanguage->languageText("mod_{MODULECODE}_fieldname_{FIELDNAME}", 
+      "{MODULECODE}") . "&#60;br /&#62;" . $objElement->show() . "&#60;br /&#62;&#60;br /&#62;");
 }
+
 </code>
 </item>
 
@@ -42,8 +43,8 @@ if (isset(${FIELDNAME})) {
     $objElement = new textarea("{FIELDNAME}");
     $objElement->setContent(${FIELDNAME});
     //Add the ${FIELDNAME} element to the form
-    $objForm->addToForm($this->objLanguage->languageText("mod_{MODULECODE}_{FIELDNAME}", 
-      {MODULECODE}) . "<br />" . $objElement->show() . "<br /><br />");
+    $objForm->addToForm($this->objLanguage->languageText("mod_{MODULECODE}_fieldname_{FIELDNAME}", 
+      "{MODULECODE}") . "&#60;br /&#62;" . $objElement->show() . "&#60;br /&#62;&#60;br /&#62;");
 }
 </code>
 </item>

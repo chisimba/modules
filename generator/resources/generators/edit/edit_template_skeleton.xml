@@ -33,6 +33,7 @@ $leftSideColumn = "";
 $objH = $this->getObject('htmlheading', 'htmlelements');
 //Heading H3 tag
 $objH->type=3; 
+$mode = $this->getParam("mode", NULL);
 switch ($mode) {
 	case 'add':
 		$objH->str = $objLanguage->languageText("mod_{MODULECODE}_title_add", '{MODULECODE}');
@@ -51,14 +52,20 @@ $rightSideColumn = $objH->show();
 <item name = "savebutton">
 <purpose>Generate a save button</purpose>
 <code>
-//Create an instance of the button object
+//Load the form object
+$this->loadClass('form', 'htmlelements');
+//Load the button object
 $this->loadClass('button', 'htmlelements');
+//Load the textinput object
+$this->loadClass('textinput', 'htmlelements');
+//Create a form
+$objForm = new form('editform');
 //Create a submit button
 $objElement = new button('submit');
 // Set the button type to submit
 $objElement->setToSubmit();
 // Use the language object to add the word save
-$objElement->setValue(' '.$this->objLanguage->languageText(\"word_save\").' ');
+$objElement->setValue(' '.$this->objLanguage->languageText("word_save").' ');
 // Add the button to the form
 $objForm->addToForm('<br />'.$objElement->show());
 </code>
