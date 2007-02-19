@@ -20,6 +20,8 @@ class dbWorkgroup extends dbTable
     {
         parent::init('tbl_workgroup');
         //$this->USE_PREPARED_STATEMENTS=True;
+        $this->objUser = &$this->newObject('user', 'security');
+        $this->userId = $this->objUser->userId();
     }
 
     /**
@@ -161,7 +163,8 @@ class dbWorkgroup extends dbTable
 	{
 		return $this->insert(array(
 			'contextcode'=>$contextCode, 
-			'description'=>$description
+			'description'=>$description,
+			'creator_id'=>$this->userId,
 		));
 	}
 

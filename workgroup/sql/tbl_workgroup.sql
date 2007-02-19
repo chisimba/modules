@@ -19,6 +19,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 100
 		),
+	'creator_id' => array(
+		'type' => 'text',
+		'length' => 32
+		),
 	'updated' => array(
 		'type' => 'date',
 		'notnull' => 1,
