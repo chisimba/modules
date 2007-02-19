@@ -119,7 +119,11 @@ $addQ=$objIcon->getAddIcon($this->uri(array( 'module'=> 'worksheet', 'action' =>
 $objHeading =& $this->getObject('htmlheading', 'htmlelements');
 $objHeading->type=4;
 $objHeading->str=$questionsLabel.': '.$sheet['name'].' ('.$numQuestions.')
-&nbsp;&nbsp;&nbsp;'.$addQ;
+&nbsp;&nbsp;&nbsp;';
+if($sheet['activity_status']=='inactive')
+{
+	$objHeading->str .=$addQ;
+}
 $qHeading= $objHeading->show();
 
 // Create a New table for the questions
@@ -215,11 +219,17 @@ if(!empty($questions)){
     $qTable = '<p class="noRecordsMessage">'.$noRecords.'</p>';
 }
 
-$addQUrl = $this->uri(array( 'module'=> 'worksheet', 'action' => 'addquestion', 'id' => $sheet['id'], 'count' => count($questions)));
-$objLink = new link($addQUrl);
-$objLink->link = $addLabel;
-$homeLink = '<p>'.$objLink->show();
-
+if($sheet['activity_status']=='inactive')
+{
+	$addQUrl = $this->uri(array( 'module'=> 'worksheet', 'action' => 'addquestion', 'id' => $sheet['id'], 'count' => count($questions)));
+	$objLink = new link($addQUrl);
+	$objLink->link = $addLabel;
+	$homeLink = '<p>'.$objLink->show();
+}
+else
+{
+	$homeLink = '';
+}
 $backHomeLink = new link($this->uri(array('')));
 $backHomeLink->link = $backLabel;
 $homeLink .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$backHomeLink->show();
