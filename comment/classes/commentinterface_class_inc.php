@@ -310,7 +310,7 @@ class commentinterface extends object
             // Add the button to the form
             $objForm->addToForm('&nbsp;&nbsp;&nbsp;'.$objElement->show());
             return $this->putInFieldset($objForm->show(),
-              $this->objLanguage->languageText('mod_comment_addlabel','comment'));
+              $this->objLanguage->languageText('mod_comment_editlabel','comment'));
         }
     }
 
