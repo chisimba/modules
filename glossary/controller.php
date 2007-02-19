@@ -79,8 +79,36 @@ $this->setVar('pageSuppressXML', TRUE);
 	/**
 	* Method to turn off logging For certain actions
 	*/
-	public function requiresLogin()
+	public function requiresLogin($action)
 	{
+		switch($action){
+			case 'parse':
+				return FALSE;
+				
+			case 'listsingle':
+				return FALSE;
+				
+			case 'search':
+				return FALSE;
+				
+			case 'singlepopup':
+				return FALSE;
+				
+			case 'viewbyletter':
+				return FALSE;
+
+			case 'listimages':
+				return FALSE;
+
+			case 'previewimage':
+				return FALSE;
+
+			default:
+				return TRUE;
+				}
+				
+				return TRUE;
+				
 		if ($this->getParam('action') == 'singlepopup' || $this->getParam('action') == 'previewimage') {
 			return FALSE;
 		} else {
@@ -103,35 +131,35 @@ $this->setVar('pageSuppressXML', TRUE);
                 return $this->parse();
             
             case 'add':
-                return $this->addTerm();
-            
+                	return $this->addTerm();
+            	
             case 'addconfirm':
-                return $this->addConfirm();
-            
+                	return $this->addConfirm();
+                	
             case 'addseealsoconfirm':
-                return $this->addSeeAlsoConfirm();
-            
+                	return $this->addSeeAlsoConfirm();
+            	
             case 'addurlconfirm':
-                return $this->addUrlConfirm();
-            
+                	return $this->addUrlConfirm();
+            	
             case 'delete':
-                return $this->deleteGlossary($this->getParam('id'));
-            
+                	return $this->deleteGlossary($this->getParam('id'));
+            	
             case 'deleteconfirm':
-                return $this->deleteConfirm();
-            
+                	return $this->deleteConfirm();
+            	
             case 'edit':
-                return $this->editTerm($this->getParam('id'));
-            
+                	return $this->editTerm($this->getParam('id'));
+            	
             case 'editconfirm':
-                return $this->editConfirm();
+                	return $this->editConfirm();
             
             case 'deleteurl':
-                return $this->deleteUrl($this->getParam('link'));
-            
+                	return $this->deleteUrl($this->getParam('link'));
+            	
             case 'deleteseealso':
-            return $this->deleteSeeAlso($this->getParam('seealso'));
-            
+            		return $this->deleteSeeAlso($this->getParam('seealso'));
+            	
             case 'listsingle':
                 return $this->showsingle($this->getParam('id'));
             
@@ -149,15 +177,15 @@ $this->setVar('pageSuppressXML', TRUE);
                 return $this->showImages($this->getParam('id'));
             
             case 'uploadimage':
-                return $this->uploadImage();
-            
+                	return $this->uploadImage();
+            	
             case 'previewimage':
                 $this->setLayoutTemplate(null);
                 return $this->previewImage($this->getParam('id'), $this->getParam('fname'));
             
             case 'deleteimage':
-                return $this->deleteImage ($this->getParam('id'), $this->getParam('returnid'));
-            
+                	return $this->deleteImage ($this->getParam('id'), $this->getParam('returnid'));
+            	
             default:
                 //The default view is to return all terms in the glossary";
                 return $this->glossaryViewByLetter('listall');
@@ -879,8 +907,8 @@ $this->setVarByRef('bodyParams',$bodyParams);
         
         return $this->nextAction('listimages', array('id' => $returnId));
     }
-    
-    
 
+   
+    
 }    
 ?>

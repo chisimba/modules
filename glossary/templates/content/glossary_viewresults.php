@@ -7,7 +7,7 @@
 $this->objGlossaryUrls =& $this->getObject('dbglossaryurls','glossary');
 $this->objGlossarySeeAlsos =& $this->getObject('dbglossaryseealso','glossary');
 $this->objGlossaryImages =& $this->getObject('dbglossaryimages','glossary');
-
+$this->objUser = $this->getObject('user','security');
 
 $objPop= $this->newObject('windowpop', 'htmlelements');
 
@@ -45,7 +45,7 @@ if (!empty($list)) {
         $editIcon->setIcon('edit');
         $editLink = new link($this->uri(array('module'=>'glossary', 'action'=>'edit', 'id'=>$element['item_id'])));
         $editLink->link = $editIcon->show();
-
+		
         // Delete Link to Delete Glossary Word
         $deleteIcon =& $this->getObject('geticon', 'htmlelements');
         $deleteIcon->setIcon('delete');
@@ -53,7 +53,7 @@ if (!empty($list)) {
         $deleteIcon->title = $this->objLanguage->languageText('mod_glossary_delete', 'glossary');
         $deleteLink = new link($this->uri(array('module'=>'glossary', 'action'=>'delete', 'id'=>$element['item_id'])));
         $deleteLink->link = $deleteIcon->show();
-
+		
         $listTable->trClass = ($resultsCount % 2) ? 'even' : 'odd';
 
         $listTable->startRow();
@@ -62,14 +62,15 @@ if (!empty($list)) {
 
         $termInfo = $element['definition'];
 
-        if ($this->isValid('edit')) {
-            $termInfo.= ' - '.$editLink->show();
-        }
+		if($this->objUser->isLoggedIn()){
+        	if ($this->isValid('edit')) {
+            	$termInfo.= ' - '.$editLink->show();
+        	}
 
-        if ($this->isValid('delete')) {
-            $termInfo.= ' '.$deleteLink->show();
-        }
-
+        	if ($this->isValid('delete')) {
+            	$termInfo.= ' '.$deleteLink->show();
+        	}
+		}
         //if ($element['seealsos'] != '' || $element['urls'] != '' || isset($element['images']) != '') {
 
         //$termInfo .= '<br />';
