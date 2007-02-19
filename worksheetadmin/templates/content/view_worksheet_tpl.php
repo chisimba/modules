@@ -167,47 +167,50 @@ if(!empty($questions)){
         $table->addCell($question['question_worth'],'38%','','',$class);
 
         $actions = '';
-        if($questionCounter > 1){
-            $questionLink = new link($this->uri(array( 'module'=> 'worksheet', 'action' => 'questionup'
-            , 'id' => $question['id'], 'worksheet' => $sheet['id'])));
-            $questionIcon =& $this->newObject('geticon', 'htmlelements');
-            $questionIcon->setIcon('mvup');
-            $questionLink->link = $questionIcon->show();
-            $actions = $questionLink->show().'&nbsp;';
-        }else{
-            $actions = '&nbsp;&nbsp;&nbsp;&nbsp;';
-        }
+        if ($sheet['activity_status']=='inactive')
+        {
+        	if($questionCounter > 1){
+            	$questionLink = new link($this->uri(array( 'module'=> 'worksheet', 'action' => 'questionup'
+            	, 'id' => $question['id'], 'worksheet' => $sheet['id'])));
+            	$questionIcon =& $this->newObject('geticon', 'htmlelements');
+            	$questionIcon->setIcon('mvup');
+            	$questionLink->link = $questionIcon->show();
+            	$actions = $questionLink->show().'&nbsp;';
+        	}else{
+            	$actions = '&nbsp;&nbsp;&nbsp;&nbsp;';
+        	}
 
-        if($questionCounter < $numQuestions){
-            $questionLink = new link($this->uri(array( 'module'=> 'worksheet', 'action' => 'questiondown'
-            , 'id' => $question['id'], 'worksheet' => $sheet['id'])));
-            $questionIcon =& $this->newObject('geticon', 'htmlelements');
-            $questionIcon->setIcon('mvdown');
-            $questionLink->link = $questionIcon->show();
-            $actions .= $questionLink->show().'&nbsp;';
-        }else{
-            $actions .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-        }
+        	if($questionCounter < $numQuestions){
+            	$questionLink = new link($this->uri(array( 'module'=> 'worksheet', 'action' => 'questiondown'
+            	, 'id' => $question['id'], 'worksheet' => $sheet['id'])));
+            	$questionIcon =& $this->newObject('geticon', 'htmlelements');
+            	$questionIcon->setIcon('mvdown');
+            	$questionLink->link = $questionIcon->show();
+            	$actions .= $questionLink->show().'&nbsp;';
+        	}else{
+            	$actions .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+        	}
 
-        $questionLink = new link($this->uri(array( 'module'=> 'worksheet', 'action' => 'editquestion'
-        , 'id' => $question['id'], 'worksheet' => $sheet['id'])));
-        $questionIcon =& $this->newObject('geticon', 'htmlelements');
-        $questionIcon->setIcon('edit');
-        $questionLink->link = $questionIcon->show();
-        $actions .= $questionLink->show();
+        	$questionLink = new link($this->uri(array( 'module'=> 'worksheet', 'action' => 'editquestion'
+        	, 'id' => $question['id'], 'worksheet' => $sheet['id'])));
+        	$questionIcon =& $this->newObject('geticon', 'htmlelements');
+        	$questionIcon->setIcon('edit');
+        	$questionLink->link = $questionIcon->show();
+        	$actions .= $questionLink->show();
 
-        $questionIcon =& $this->newObject('geticon', 'htmlelements');
-        $questionIcon->setIcon('delete');
-        $objConfirm->setConfirm($questionIcon->show(),$this->uri(array( 'module'=> 'worksheet', 'action' => 'deletequestion'
-        , 'id' => $question['id'], 'worksheet' => $sheet['id'], 'mark' => $question['question_worth'])),
-        $confirmWithNo.': '.$questionCounter.'?');
-        $actions .= $objConfirm->show();
+        	$questionIcon =& $this->newObject('geticon', 'htmlelements');
+        	$questionIcon->setIcon('delete');
+        	$objConfirm->setConfirm($questionIcon->show(),$this->uri(array( 'module'=> 'worksheet', 'action' => 'deletequestion'
+        	, 'id' => $question['id'], 'worksheet' => $sheet['id'], 'mark' => $question['question_worth'])),
+        	$confirmWithNo.': '.$questionCounter.'?');
+        	$actions .= $objConfirm->show();
 
-        $table->addCell($actions,'12%','','',$class);
+	}
+        	$table->addCell($actions,'12%','','',$class);
 
-        $table->endRow();
-    }
-    $qTable = $table->show();
+        	$table->endRow();
+    	}
+    	$qTable = $table->show();
 }else{
     $qTable = '<p class="noRecordsMessage">'.$noRecords.'</p>';
 }
