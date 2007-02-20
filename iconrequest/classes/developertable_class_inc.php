@@ -30,7 +30,7 @@ class developerTable extends dbTable {
     * @return string |FALSE Generated PK ID on success, FALSE on failure
     */
      function insertRec($userId) {
-    	$newReq = array('developerId' => $userId);
+    	$newReq = array('id' => $userId);
 	   //$newReq = array('Id' => $userId);
 	   return $this->insert($newReq);
     }
@@ -46,7 +46,7 @@ class developerTable extends dbTable {
     * @return string|TRUE|FALSE Generated PKID on insert success, TRUE on update success, FALSE on failure
     */
      function updateRec($userId) {
-    	$newReq = array('developerId' => $userId);
+    	$newReq = array('id' => $userId);
       //$newReq = array('Id' => $userId);
     	$pkID = $this->getPK();
 	   return ($this->isEmpty())? $this->insert($newReq) : $this->update('id',$pkID,$newReq);
@@ -73,7 +73,7 @@ class developerTable extends dbTable {
     */
     function getId() {
     $ret = $this->getRow('id',$this->getPK());
-        return $ret['developerId'];
+        return $ret['id'];
     }
 
     /**

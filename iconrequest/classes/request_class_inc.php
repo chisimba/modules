@@ -86,12 +86,12 @@ class request
 
 	function request($reqId,$moduleName,$priority,$type,$Phpversion,$iconName,$description,$user,$url1,$url2)
 	{
-		$this->reqId = $reqId;
-		$this->modName = $moduleName;
+		$this->reqid = $reqId;
+		$this->modname = $moduleName;
 		$this->priority = $priority;
 		$this->type = $type;
 		$this->Phpversion = $Phpversion;
-		$this->iconName = $iconName;
+		$this->iconname = $iconName;
 		$this->description = $description;
 		$this->uri1 = $url1;
 		$this->uri2 = $url2;

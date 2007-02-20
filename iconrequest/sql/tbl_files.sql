@@ -3,7 +3,7 @@
 $tablename = 'tbl_files';
 
 //Options line for comments, encoding and character set
-$options = array('comment' => 'Bookmarks', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'IconRequest', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 $fields = array(
 	'id' => array(
@@ -12,7 +12,7 @@ $fields = array(
 		'notnull' => TRUE,
 		'default' => '',
 		),
-	'regid' => array(
+	'reqid' => array(
 		'type' => 'text',
 		'length' => 32,
 		'notnull' => TRUE,
@@ -34,12 +34,12 @@ $fields = array(
 		'type' => 'integer',
 		'length' => 11,
 		'notnull' => TRUE,
-		'default' => ''
+		'default' => '',
 		),
 	'updated' => array(
 		'type' => 'timestamp',
 		'notnull' => TRUE,
-		'default' => '0000-00-00 00:00:00',
+		'default' => '0000-00-00 00:00:00'
 		)
 	);
 ?>

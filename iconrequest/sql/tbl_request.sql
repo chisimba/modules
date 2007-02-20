@@ -3,7 +3,7 @@
 $tablename = 'tbl_request';
 
 //Options line for comments, encoding and character set
-$options = array('comment' => 'Bookmarks', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'IconRequest', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 $fields = array(
 	'id' => array(
@@ -12,69 +12,75 @@ $fields = array(
 		'notnull' => TRUE,
 		'default' => '',
 		),
-	'regid' => array(
+	'reqid' => array(
 		'type' => 'text',
 		'length' => 32,
-		'notnull' => TRUE,
+//		'notnull' => TRUE,
 		'default' => '',
 		),
 	'modname' => array(
 		'type' => 'text',
 		'length' => 25,
-		'notnull' => TRUE,
+//		'notnull' => TRUE,
 		'default' => '',
 		),
 	'priority' => array(
 		'type' => 'text',
 		'length' => 1,
-		'notnull' => TRUE,
+//		'notnull' => TRUE,
 		'default' => '',
 		),
 	'type' => array(
 		'type' => 'text',
 		'length' => 1,
-		'notnull' => TRUE,
+//		'notnull' => TRUE,
+		'default' => '',
+		),
+	'phptype'  => array(
+		'type' => 'text',
+		'length' => 1,
+//		'notnull' => TRUE,
 		'default' => '',
 		),
 	'iconname' => array(
 		'type' => 'text',
 		'length' => 25,
-		'notnull' => TRUE,
+//		'notnull' => TRUE,
 		'default' => '',
 		),
 	'description' => array(
 		'type' => 'text',
 		'length' => 255,
-		'notnull' => TRUE,
+//		'notnull' => TRUE,
 		'default' => '',
 		),
 	'uri1' => array(
 		'type' => 'text',
 		'length' => 32,
-		'notnull' => TRUE,
+//		'notnull' => TRUE,
 		'default' => '',
 		),
 	'uri2' => array(
 		'type' => 'text',
 		'length' => 32,
-		'notnull' => TRUE,
+//		'notnull' => TRUE,
 		'default' => '',
 		),
 	'complete' => array(
 		'type' => 'integer',
 		'length' => 11,
-		'notnull' => TRUE,
+//		'notnull' => TRUE,
 		'default' => '0',
 		),
 	'uploaded' => array(
 		'type' => 'text',
 		'length' => 32,
-		'notnull' => TRUE,
+//		'notnull' => TRUE,
 		'default' => '',
 		),
 	'time' => array(
 		'type' => 'timestamp',
-		'notnull' => TRUE,
+//		'notnull' => TRUE,
 		'default' => '0000-00-00 00:00:00'
 		)
 	);

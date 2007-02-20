@@ -27,17 +27,19 @@ class requestTable extends dbTable {
     * @return string|FALSE Generated PKID on success, FALSE on failure
     */
     function insertRec($request) {
-    	$newReq = array('reqId' => $request-> reqId, 'modName' => $request->modName,
-						'priority' => $request->priority,
-						'type' => $request->type,
-						'phptype' => $request->Phpversion,
-						'iconName' => $request->iconName,
-						'description' => $request->description,
-						'uri1' => $request->uri1,
-						'uri2' => $request->uri2,
-						'complete' => $request->complete,
-						'uploaded' => $request->uploaded,
-						'time' => Null);
+    	$newReq = array('reqid' => $request-> reqid,
+			'modname' => $request->modname,
+			'priority' => $request->priority,
+			'type' => $request->type,
+			'phptype' => $request->Phpversion,
+			'iconname' => $request->iconname,
+			'description' => $request->description,
+			'uri1' => $request->uri1,
+			'uri2' => $request->uri2,
+			'complete' => $request->complete,
+			'uploaded' => $request->uploaded,
+			'time' => Null);
+	//var_dump($newReq);
 	return $this->insert($newReq);
     }
     

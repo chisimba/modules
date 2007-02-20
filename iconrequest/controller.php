@@ -12,22 +12,22 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * @author Nic Appleby
 * $Id: controller.php,v 1.0 2005/12/13
 */
-
+//iii  
 class iconrequest extends controller
 {
    public $objH;			//Main page heading
-   public $objLanguage;			//Language object for language independant text
+   public $objLanguage;	//Language object for language independant text
    public $dbReq;			//Database containing request data
    public $dbDev;			//Database containing developer data
    public $dbFile;			//Database containing example files
    public $config;			//Config object for content base path
-   public $mailMsg;			//kngemail object to email request to developer
+   public $mailMsg;		//kngemail object to email request to developer
    public $objSys;
-
+   public $sortBy;	//Used to sort the displayed icons
    /**
    * Function to initialise objects
    */
-   function init()
+   public function init()
    {
 	$this->objLanguage = &$this->getObject("language", "language");
 	$this->objUser =& $this->getObject('user', 'security');
@@ -49,13 +49,31 @@ class iconrequest extends controller
    /**
    * Main function
    */
-   function dispatch()
+   public function dispatch()
    {
 	$this->action = $this->getParam("action", null);
         switch ($this->action) {
 
             	// Welcome screen displaying current requests
             	case null:
+			$sortBy = "n";
+			$this->setVar('sortBy',$sortBy);
+                    return "request_tpl.php";
+
+	//Made change to viewing of icons by category
+	//Author      	: Jarrett Jordaan
+	//Email 	: 2111279@gmail.com
+
+            	// Welcome screen displaying current requests sorted by priority
+            	case sortByPriority:
+			$sortBy = "p";
+			$this->setVar('sortBy',$sortBy);
+                    return "request_tpl.php";
+
+            	// Welcome screen displaying current requests sorted by description
+            	case sortByDescription:
+			$sortBy = "d";
+			$this->setVar('sortBy',$sortBy);
                     return "request_tpl.php";
 
                 case "test":
@@ -88,7 +106,7 @@ class iconrequest extends controller
 		case "submit":
 	   		//create new request to insert into db
 	   		$this->loadClass('request');
-	   		$icon = &new request($this->getParam('reqId'),
+	   		$icon = &new request($this->getParam('reqid'),
 				$this->getParam('module_name'),$this->getParam('priority'),
 	   		$this->getParam('icon_type'),$this->getParam('rdbtphptype'),
 				$this->getParam('icon_name'),$this->getParam('icon_description'),
@@ -96,66 +114,67 @@ class iconrequest extends controller
 				$this->getParam('idea_uri2'));
 
 			switch ($icon->priority) {
-				case 'y' : $iconPr = $this->objLanguage->languageText('word_yesterday');
+				case '1' : $iconPr = $this->objLanguage->languageText('word_yesterday','iconrequest');
 					break;
-				case 'h' : $iconPr = $this->objLanguage->languageText('word_high');
+				case '2' : $iconPr = $this->objLanguage->languageText('word_high','iconrequest');
 					break;
-				case 'n' : $iconPr = $this->objLanguage->languageText('word_normal');
+				case '3' : $iconPr = $this->objLanguage->languageText('word_normal','iconrequest');
 					break;
 
-			switch ($icon-phpvers){
+			switch ($icon->phpvers){
 			}		
-				case '4' : $iconPt = $this->objLanguage->languageText('word_php4');
+				case '4' : $iconPt = $this->objLanguage->languageText('word_php4','iconrequest');
 					break;
-				case '5' : $iconPt = $this->objLanguage->languageText('word_php5');
+				case '5' : $iconPt = $this->objLanguage->languageText('word_php5','iconrequest');
 					break;
-				case '1' : $iconPt = $this->objLanguage->languageText('word_phpunkn');
+				case '1' : $iconPt = $this->objLanguage->languageText('word_phpunkn','iconrequest');
 					break;
-				default  : $iconPt = $this->objLanguage->languageText('word_phpunkn');
+				default  : $iconPt = $this->objLanguage->languageText('word_phpunkn','iconrequest');
 					break;
 		
 			}
 			
-			$iconTy = ($icon->type == 'm') ? $this->objLanguage->languageText('word_module') : $this->objLanguage->languageText('word_common');
+			$iconTy = ($icon->type == 'm') ? $this->objLanguage->languageText('word_module','iconrequest') : $this->objLanguage->languageText('word_common','iconrequest');
 			//try insert the record and return appropriate message
 	   		if ($this->dbReq->insertRec($icon) == false) {
 	   			return $this->nextAction(null,array('message'=>'fail'));
 	   		} else {	//success, generate email and send
             $host = $this->objSys->getValue('KEWL_SERVERNAME');
-	   		$this->mailMsg->setup($this->objUser->email(), $this->objLanguage->languageText('mod_name') .' '. $this->objUser->fullName(),$host);
+	   		$this->mailMsg->setup($this->objUser->email(), $this->objLanguage->languageText('mod_name','iconrequest') .' '. $this->objUser->fullName(),$host);
             $email = $this->objUser->email($this->dbDev->getId());
-				$subject = $this->objLanguage->languageText('mod_email_subject');
+				$subject = $this->objLanguage->languageText('mod_email_subject','iconrequest');
 				$name = $this->objUser->fullname($this->dbDev->getId());
-				$body = $this->objLanguage->languageText('mod_email_body');
-				$body .= $this->objLanguage->languageText('form_label1').' '.$icon->modName.'<br>';
-				$body .= $this->objLanguage->languageText('form_label2').' '.$iconPr.'<br>';
-				$body .= $this->objLanguage->languageText('form_label3').' '.$iconTy.'<br>';
+				$body = $this->objLanguage->languageText('mod_email_body','iconrequest');
+				$body .= $this->objLanguage->languageText('form_label1','iconrequest').' '.$icon->modname.'<br>';
+				$body .= $this->objLanguage->languageText('form_label2','iconrequest').' '.$iconPr.'<br>';
+				$body .= $this->objLanguage->languageText('form_label3','iconrequest').' '.$iconTy.'<br>';
 				/*
 				*   Auhtor of changes Dean Van Niekerk
 				*   Email address : dvanniekerk@uwc.ac.za
 				*/
-				$body .= $this->objLanguage->languageText('form_label11').' '.$icon->Phpversion.'<br>';
-				$body .= $this->objLanguage->languageText('form_label4').' '.$icon->iconName.'<br>';
-				$body .= $this->objLanguage->languageText('form_label5').' '.$icon->description.'<br>';
-				$body .= $this->objLanguage->languageText('form_label8').' '.$icon->uri1.'<br>';
-				$body .= $this->objLanguage->languageText('form_label9').' '.$icon->uri2.'<br>';
-				$body .= $this->objLanguage->languageText('form_label10').' <a href="mailto:'.$this->objUser->email().'">'.$this->objUser->fullName($icon->uploaded).'</a><br>';
-				$pic = $this->dbFile->getRow('reqId',$icon->reqId);
+				$body .= $this->objLanguage->languageText('form_label11','iconrequest').' '.$icon->Phpversion.'<br>';
+				$body .= $this->objLanguage->languageText('form_label4','iconrequest').' '.$icon->iconname.'<br>';
+				$body .= $this->objLanguage->languageText('form_label5','iconrequest').' '.$icon->description.'<br>';
+				$body .= $this->objLanguage->languageText('form_label8','iconrequest').' '.$icon->uri1.'<br>';
+				$body .= $this->objLanguage->languageText('form_label9','iconrequest').' '.$icon->uri2.'<br>';
+				$body .= $this->objLanguage->languageText('form_label10','iconrequest').' <a href="mailto:'.$this->objUser->email().'">'.$this->objUser->fullName($icon->uploaded).'</a><br>';
+				$pic = $this->dbFile->getRow('reqid',$icon->reqid);
 				if ($pic !=Null) {	//attachment exists
 					$path = $this->config->contentBasePath().'assets/'.$pic['filename'];
 					$attach = file_get_contents($path);
 				} else {
 					$attach = Null;
 				}
-				$this->mailMsg->sendMail($name,$subject,$email,$body,true,$attach,$pic['filename']);
+				$this->mailMsg->sendMail($name,$subject,$email,$body,true,$attach,$pic['filename']);		
+
 	   			return $this->nextAction(null,array('message'=>'confirm'));
 	   		}
 
 	   	// Update the percentage complete of the request
 	   	case "update":
 			$pt = $this->getParam('percentage');
-			$icon = array('modName' =>$this->getParam('module_name'),'priority' =>$this->getParam('priority'),
-					'type' =>$this->getParam('icon_type'),'phptype'=>$this->getParam('rdbtphptype'), 'iconName'=>$this->getParam('icon_name'),
+			$icon = array('modname' =>$this->getParam('module_name'),'priority' =>$this->getParam('priority'),
+					'type' =>$this->getParam('icon_type'),'phptype'=>$this->getParam('rdbtphptype'), 'iconname'=>$this->getParam('icon_name'),
 					'description'=>$this->getParam('icon_description'),'uri1'=>$this->getParam('idea_uri1'),
 					'uri2'=>$this->getParam('idea_uri2'),'complete'=>$pt);
 	   		$pk = $this->getParam('pk');
@@ -169,37 +188,36 @@ class iconrequest extends controller
                 	  $this->mailMsg->setup($email,$developer,$host);
                 	  $d = $this->dbReq->getRow('id',$pk);
 					$email = $this->objUser->email($d['uploaded']);
-					$subject = $this->objLanguage->languageText('icondone_email_subject');
+					$subject = $this->objLanguage->languageText('icondone_email_subject','iconrequest');
 					$name = $this->objUser->fullName($d['uploaded']);
-					$body = $this->objLanguage->languageText('phrase_icon');
-					$body .= $d['iconName'].$this->objLanguage->languageText('phrase_icon2');
+					$body = $this->objLanguage->languageText('phrase_icon','iconrequest');
+					$body .= $d['iconname'].$this->objLanguage->languageText('phrase_icon2','iconrequest');
 					$body .= $email.'">'.$developer;
-					$body .= $this->objLanguage->languageText('phrase_icon3');
+					$body .= $this->objLanguage->languageText('phrase_icon3','iconrequest');
 					$this->mailMsg->sendMail($name,$subject,$email,$body,true,null,null);
-					return $this->nextAction('delete',array('reqId'=>$d['reqId'],'Id'=>$pk));
+					return $this->nextAction('delete',array('reqid'=>$d['reqid'],'Id'=>$pk));
                 }
 			} else {
 				$host = $this->objSys->getValue('KEWL_SERVERNAME');
-	   			$this->mailMsg->setup($this->objUser->email(), $this->objLanguage->languageText('mod_name') .' '. $this->objUser->fullName(),$host);
+	   			$this->mailMsg->setup($this->objUser->email(), $this->objLanguage->languageText('mod_name','iconrequest') .' '. $this->objUser->fullName(),$host);
                 $email = $this->objUser->email($this->dbDev->getId());
-				$subject = $this->objLanguage->languageText('mod_email_subject');
+				$subject = $this->objLanguage->languageText('mod_email_subject','iconrequest');
 				$name = $this->objUser->fullname($this->dbDev->getId());
-				$body = $this->objLanguage->languageText('mod_email_body');
-				$body .= $this->objLanguage->languageText('form_label1').' '.$icon->modName.'<br>';
-				$body .= $this->objLanguage->languageText('form_label2').' '.$icon->priority.'<br>';
-				$body .= $this->objLanguage->languageText('form_label3').' '.$icon->type.'<br>';
+				$body = $this->objLanguage->languageText('mod_email_body','iconrequest');
+				$body .= $this->objLanguage->languageText('form_label1','iconrequest').' '.$icon->modname.'<br>';
+				$body .= $this->objLanguage->languageText('form_label2','iconrequest').' '.$icon->priority.'<br>';
+				$body .= $this->objLanguage->languageText('form_label3','iconrequest').' '.$icon->type.'<br>';
 				/*
 				*   Auhtor of changes Dean Van Niekerk
 				*   Email address : dvanniekerk@uwc.ac.za
 				*/
-				$body .= $this->objLanguage->languageText('form_label11').' '.$icon->Phpversion.'<br>';				
-				
-				$body .= $this->objLanguage->languageText('form_label4').' '.$icon->iconName.'<br>';
-				$body .= $this->objLanguage->languageText('form_label5').' '.$icon->description.'<br>';
-				$body .= $this->objLanguage->languageText('form_label8').' '.$icon->uri1.'<br>';
-				$body .= $this->objLanguage->languageText('form_label9').' '.$icon->uri2.'<br>';
-				$body .= $this->objLanguage->languageText('form_label10').' <a href="mailto:'.$this->objUser->email().'">'.$this->objUser->fullName($icon->uploaded).'</a><br>';
-				$pic = $this->dbFile->getRow('reqId',$icon->reqId);
+				$body .= $this->objLanguage->languageText('form_label11','iconrequest').' '.$icon->Phpversion.'<br>';
+				$body .= $this->objLanguage->languageText('form_label4','iconrequest').' '.$icon->iconname.'<br>';
+				$body .= $this->objLanguage->languageText('form_label5','iconrequest').' '.$icon->description.'<br>';
+				$body .= $this->objLanguage->languageText('form_label8','iconrequest').' '.$icon->uri1.'<br>';
+				$body .= $this->objLanguage->languageText('form_label9','iconrequest').' '.$icon->uri2.'<br>';
+				$body .= $this->objLanguage->languageText('form_label10','iconrequest').' <a href="mailto:'.$this->objUser->email().'">'.$this->objUser->fullName($icon->uploaded).'</a><br>';
+				$pic = $this->dbFile->getRow('reqid',$icon->reqid);
 				if ($pic !=Null) {	//attachment exists
 					$path = $this->config->contentBasePath().'assets/'.$pic['filename'];
 					$attach = file_get_contents($path);
@@ -220,14 +238,14 @@ class iconrequest extends controller
 
 	   	// Delete a request from the DB
 		case "delete":
-			$reqId = $this->getParam('reqId');
-			$example = $this->dbFile->getRow('reqId',$reqId);
+			$reqId = $this->getParam('reqid');
+			$example = $this->dbFile->getRow('reqid',$reqId);
 			if ($example != Null) {	//if there is an assosciated entry in filestable delete this too
 				$this->dbFile->deleteFile($reqId);
 				$fName = $this->config->contentBasePath().'assets/'.$example['filename'];
 				unlink($fName);	//delete from the server directory
 			}
-			$this->dbReq->deleteRec($this->getParam("Id", null));
+			$this->dbReq->deleteRec($this->getParam("id", null));
 			return $this->nextAction(null);
 
 		// Delete the icon developer information from the DB (debugging purposes only)

@@ -30,7 +30,7 @@ class filesTable extends dbTable {
     * @return string|FALSE Generated PKID on success FALSE on failure
     */
     function insertFile($reqId,$fileName,$size,$user) {
-    	$newReq = array('reqId' => $reqId,'userId' => $user,'fileName' => $fileName,'size' => $size);
+    	$newReq = array('reqid' => $reqId,'userid' => $user,'fileName' => $fileName,'size' => $size);
 	return $this->insert($newReq);
     }
     
@@ -40,7 +40,7 @@ class filesTable extends dbTable {
     * @return TRUE|FALSE TRUE on success FALSE on failure
     */
     function deleteFile($id) {
-    	return $this->delete('reqId',$id);
+    	return $this->delete('reqid',$id);
     }
 
 }

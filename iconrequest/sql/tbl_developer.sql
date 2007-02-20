@@ -3,7 +3,7 @@
 $tablename = 'tbl_developer';
 
 //Options line for comments, encoding and character set
-$options = array('comment' => 'Bookmarks', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'IconRequest', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 $fields = array(
 	'id' => array(
