@@ -146,7 +146,8 @@ class blowcryptclient extends object
         if (is_array($data)) {
             $result = array();
             foreach ($data as $element) {
-                $result[] = $this->encryptArray($element, $key, $decrypt);
+                $result[key($data)] = $this->encryptArray($element, $key, $decrypt);
+                next($data);
             }
         } else {
             if ($decrypt) {
