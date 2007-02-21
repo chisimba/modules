@@ -21,6 +21,7 @@ class dbReadingList extends dbTable
     {
         parent::init('tbl_readinglist');
         $this->dbLinks = $this->newObject('dbreadinglist_links');
+        $this->objUser = & $this->getObject('user', 'security');
         //$this->USE_PREPARED_STATEMENTS=True;
     }
 
@@ -116,5 +117,38 @@ class dbReadingList extends dbTable
 		$this->delete("id", $id);
 		$this->dbLinks->delete('itemid', $id);
 	}
+	
+	
+	public function saveRecord()
+    {
+        $searchTerm = $this->getParam('searchterm', NULL);
+        if ($searchTerm == NULL) {
+            $searchTerm = $this->getParam('q', NULL);
+        }
+        if ($searchTerm == NULL) {
+            $searchTerm = $this->getParam('search', NULL);
+        }
+        $userId = $this->objUser->userId();
+        $params = urldecode($this->getParam('params', NULL));
+        $searchengine = $this->getParam('searchengine', NULL);
+        $callingModule = $this->getParam('callingModule', "_default");
+        // Get the context
+        $this->objDbContext = &$this->getObject('dbcontext','context');
+        $context = $this->objDbContext->getContextCode();
+        // Are we in a context ?
+        if ($context == NULL) {
+            $context = "lobby";
+        }
+        $this->insert(array(
+            'userid' => $userId,
+            'searchterm' => $searchTerm,       
+            'module' => $callingModule,
+            'context' => $context,
+            'params' => $params,
+            'searchengine' => $searchengine,
+            'datecreated' => date("Y/m/d H:i:s")));
+    }
+    
+	
 }
 ?>
