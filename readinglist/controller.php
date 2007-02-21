@@ -254,11 +254,54 @@ function dispatch($action=null)
 		return "comment_tpl.php";
 		break;
 		
+	//Work with the scholar google search
+    case "schgoogle":
+        $q=urlencode($this->getParam('q', NULL));
+        //---delete these when all working
+        $ie=$this->getParam('ie', NULL);
+        $oe=$this->getParam('oe', NULL);
+        $hl=$this->getParam('hl', NULL);
+        //Grab the data
+        $objGrab = & $this->getObject('dbreadinglist');
+        $objGrab->saveRecord();
+        header("Location: http://scholar.google.com/scholar?q=$q&ie=$ie&oe=$oe&hl=$hl&btnG=Search");
+                break;
+		
 	default:
 	}
 	$list = $this->objDbReadingList->listAll($this->contextId);
 	$this->setVarByRef('list', $list);
 	return "view_tpl.php";
 }
+
+/*
+* Function that checks if a user has been logged in or not 
+*/
+/*
+public function requiresLogin($action)
+{
+	switch($action){
+		case 'addtionals':
+			return FALSE;
+			
+		case 'urls':
+			return FALSE;
+				
+		case 'addurls':
+			return FALSE;
+				
+		case 'deleteurl':
+			return FALSE;
+				
+		case 'comment':
+			return FALSE;
+
+		default:
+			return TRUE;
+			}
+				
+		return TRUE;
+
+}*/
 }
 ?>
