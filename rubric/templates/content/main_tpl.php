@@ -270,7 +270,7 @@
                 // Rename table.
                 
                 $icon->setIcon('rename');
-                $icon->alt = $objLanguage->languageText("word_rename1");
+                $icon->alt = $objLanguage->languageText("word_rename1",'rubric');
                 
                 $options =  "<a href=\"" . 
                 $this->uri(array(
@@ -286,7 +286,7 @@
             // View table.            
                 $icon = $this->getObject('geticon','htmlelements');
                 $icon->setIcon('preview');
-                $icon->alt = $objLanguage->languageText("word_view");
+                $icon->alt = $objLanguage->languageText("word_view",'rubric');
                 $icon->align=false;            
                 $options .= "<a href=\"" . 
                     $this->uri(array(
@@ -302,7 +302,7 @@
             // Clone table.            
                 $icon = $this->getObject('geticon','htmlelements');
                 $icon->setIcon('copy');
-                $icon->alt = $objLanguage->languageText("word_copy");
+                $icon->alt = $objLanguage->languageText("word_copy",'rubric');
                 $icon->align=false;            
                 $options .= "<a href=\"" . 
                     $this->uri(array(
@@ -334,7 +334,7 @@
             // Edit table.            
                 $icon = $this->getObject('geticon','htmlelements');
                 $icon->setIcon('edit');
-                $icon->alt = $objLanguage->languageText("word_edit");
+                $icon->alt = $objLanguage->languageText("word_edit",'rubric');
                 $icon->align=false;            
                 $options .= "<a href=\"" . 
                     $this->uri(array(
@@ -351,7 +351,7 @@
                 $objConfirm=&$this->newObject('confirm','utilities');
                 $icon = $this->getObject('geticon','htmlelements');
                 $icon->setIcon('delete');
-                $icon->alt = $objLanguage->languageText("word_delete");
+                $icon->alt = $objLanguage->languageText("word_delete",'rubric');
                 $icon->align=false;
                 $objConfirm->setConfirm(
                     $icon->show(),
