@@ -64,7 +64,8 @@ $objTable =& $this->newObject('htmltable','htmlelements');
 			
 			$urlFieldset->addContent ('<ul>');	
 			
-			
+			if(!empty($urls))
+			{
 		    foreach ($urls as $element) {
 		        if(!empty($element['link'])){
 				  $urlFieldset->addContent ('<li><p>');
@@ -97,7 +98,11 @@ $objTable =& $this->newObject('htmltable','htmlelements');
 			}
 			
 			$urlFieldset->addContent ('</ul>');
-		
+		  }
+		  /*else
+		  {
+             return $urls;
+          }*/
 		}
         //start of Form
         
@@ -131,7 +136,7 @@ $objTable =& $this->newObject('htmltable','htmlelements');
 		$addUrlForm->displayType =3;
 
 		$urlFieldset->addContent( $addUrlForm->show());
-		//$urlFieldset->addContent ('<br />');
+
 
 		echo $urlFieldset->show();
 	

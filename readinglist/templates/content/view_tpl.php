@@ -97,6 +97,28 @@
             //if( $this->isValid( 'edit' ))
               $objLink->link = $iconEdit->show();
         $linkEdit = $objLink->show();
+        
+        
+        // Show the Google scholar link
+        $iconScholar = $this->getObject('geticon','htmlelements');
+        $iconScholar->setIcon('search');
+        $iconScholar->alt = $objLanguage->languageText("mod_readinglist_scholar",'readinglist');
+        //$iconScholar->align=false;
+        $objScholar =& $this->newObject('windowpop','htmlelements');
+        $windowScholar = $this->uri(array(
+                'action'=>'schgoogle'
+            ));
+            $objScholar->set('location', $windowScholar); 
+		    $objScholar->set('linktext',$iconScholar->show());   
+            $objScholar->set('width','500'); 
+            $objScholar->set('height','340');
+            $objScholar->set('left','100');
+            $objScholar->set('top','100');
+            $objScholar->set('scrollbars','yes');
+        
+            $objScholar->link = $iconScholar->show();
+        $linkScholar = $objScholar->show();
+        
 
         // Show the delete link
         $iconDelete = $this->getObject('geticon','htmlelements');
@@ -117,7 +139,7 @@
             $objLanguage->languageText('mod_readinglist_suredelete','readinglist'));
 			
             //echo $objConfirm->show();
-        $table->addCell($linkAdd.$linkEdit . $objConfirm->show(), "", NULL, NULL, $class, '');
+        $table->addCell($linkAdd.$linkEdit.$linkScholar. $objConfirm->show(), "", NULL, NULL, $class, '');
         $table->endRow();
 
     }
