@@ -95,8 +95,8 @@
                
                 
 	            $icon = $this->getObject('geticon','htmlelements');
-                $icon->setIcon('assessments');
-                $icon->alt = $objLanguage->languageText("word_assessments");
+               $icon->setIcon('assessments');
+               $icon->alt = $objLanguage->languageText("word_assessments","rubric");
             
 				$options .= "<a href=\"" . 
 					$this->uri(array(
@@ -113,7 +113,7 @@
 	        // Rename table.
             
             $icon->setIcon('rename');
-            $icon->alt = $objLanguage->languageText("word_rename1");
+            $icon->alt = $objLanguage->languageText("word_rename1","rubric");
                 
 			$options .= "<a href=\"" . 
 				$this->uri(array(
@@ -130,7 +130,7 @@
 	        // View table.            
             $icon = $this->getObject('geticon','htmlelements');
             $icon->setIcon('preview');
-            $icon->alt = $objLanguage->languageText("word_view");
+            $icon->alt = $objLanguage->languageText("word_view","rubric");
             $icon->align=false;            
             $options .= "<a href=\"" . 
                 $this->uri(array(
@@ -146,7 +146,7 @@
 	        // Clone table.            
             $icon = $this->getObject('geticon','htmlelements');
             $icon->setIcon('copy');
-            $icon->alt = $objLanguage->languageText("word_copy");
+            $icon->alt = $objLanguage->languageText("word_copy","rubric");
             $icon->align=false;            
             $options .= "<a href=\"" . 
                 $this->uri(array(
@@ -162,7 +162,7 @@
 	        // Edit table.    
             $icon = $this->getObject('geticon','htmlelements');
             $icon->setIcon('edit');
-            $icon->alt = $objLanguage->languageText("word_edit");
+            $icon->alt = $objLanguage->languageText("word_edit","rubric");
             $icon->align=false;            
             $options .= "<a href=\"" . 
 				$this->uri(array(
@@ -178,7 +178,7 @@
             $objConfirm=&$this->newObject('confirm','utilities');
             $icon = $this->getObject('geticon','htmlelements');
             $icon->setIcon('delete');
-            $icon->alt = $objLanguage->languageText("word_delete");
+            $icon->alt = $objLanguage->languageText("word_delete","rubric");
             $icon->align=false;
             $objConfirm->setConfirm(
                 $icon->show(),
@@ -216,7 +216,7 @@
     echo $tblclass->show();
 
     // If not root then show predefined tables.
-	if ($contextCode != "root" && $this->objUser->isContextLecturer()) {
+	//if ($contextCode != "root" && $this->objUser->isContextLecturer()) {
         
         $pageTitle->str=ucwords($objLanguage->code2Txt("rubric_predefined","rubric"));
     
@@ -373,5 +373,5 @@
     }
     
     echo $tblclass->show();
-}	
+//}	
 ?>

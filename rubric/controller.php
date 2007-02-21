@@ -45,6 +45,8 @@ class rubric extends controller
         $this->objLog->log();
     }
     
+    
+    
     /**
     * The dispatch funtion
     * @param string $action The action
