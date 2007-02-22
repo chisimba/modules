@@ -435,6 +435,22 @@ class dbblog extends dbTable
 		}
 		return $lastpost;
 	}
+	
+	/**
+	 * Method to get the latest posts
+	 *
+	 * @author Megan Watson
+	 * @param integer $userid
+	 * @return array
+	 */
+	public function getLastPosts($num = 10)
+	{
+		$this->_changeTable('tbl_blog_posts');
+		$filter = "ORDER BY post_ts DESC LIMIT {$num}";
+		$posts = $this->getAll($filter);
+		
+		return $posts;
+	}
 
 	/**
 	 * Method to return a random blog

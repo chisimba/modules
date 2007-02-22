@@ -1144,8 +1144,8 @@ class blogops extends object
         $html = $this->objLanguage->languageText("mod_blog_word_html", "blog");
         $dropdown->addOption('html', $html);
         $this->loadClass('button', 'htmlelements');
-        $this->objButton = &new button($this->objLanguage->languageText('word_show', 'blog'));
-        $this->objButton->setValue($this->objLanguage->languageText('word_show', 'blog'));
+        $this->objButton = &new button($this->objLanguage->languageText('word_show'));
+        $this->objButton->setValue($this->objLanguage->languageText('word_show'));
         $this->objButton->setToSubmit();
         $this->objUser = $this->getObject('user', 'security');
         $leftCol = NULL;
@@ -1868,6 +1868,43 @@ class blogops extends object
             return $ret;
         }
     }
+    
+    /**
+    * Method to display the last ten posts as a block
+    *
+    * @author Megan Watson
+    * @access public
+    * @param integer $num The number of posts to display. Default = 10
+    * @param bool $featurebox Return the posts as a string or formatted in a featurebox. Default = false, return as a string
+    * @return string html
+    */
+    public function showLastTenPosts($num = 10, $featurebox = FALSE)
+    {
+        $objUser = $this->getObject('user', 'security');
+        $this->loadClass('link', 'htmlelements');
+        $data = $this->objDbBlog->getLastPosts($num);
+        $str = '';
+
+        // Display the posts
+        if(!empty($data)){
+            foreach($data as $item){
+                $str .= '<p>';
+                $str .= '<b>'.$item['post_title'].'</b> - <font class="minute">'.$objUser->fullName($item['userid']).'</font>';
+                $str .= '<br />'.$item['post_excerpt'];
+                $str .= '<hr></p>';
+            }
+        }
+                
+        // Display either as a string for the block or in a featurebox
+        if ($featurebox == FALSE) {
+            return $str;
+        } else {
+            $objFeatureBox = $this->getObject('featurebox', 'navigation');
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_block_lasttenposts", "blog"), $str);
+            return $ret;
+        }
+    }
+    
     /**
      * Methid to build a table of all available bloggers on the system
      *
