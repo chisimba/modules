@@ -41,7 +41,6 @@ class realtime extends controller
     /**
     * Method to process actions to be taken
     *
-5A
     * @param string $action String indicating action to be taken
 	*/
     function dispatch($action=Null)
