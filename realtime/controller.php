@@ -56,10 +56,10 @@ class realtime extends controller
 	  case 'voice':
 	  default:
 	     $modUri =  $this->objConfig->getItem('MODULE_URI');
-	     $this->setVar('appUrl',
-			"http://". $_SERVER['HTTP_HOST'].":8080".
-			substr($modUri, strpos($modUri,"/")) 
-			. "realtime/voice");
+	     $this->setVar('voiceUrl',
+			"http://". $_SERVER['HTTP_HOST']."/".$modUri."realtime/voice");
+	     $this->setVar('realtimeUrl',
+			"http://". $_SERVER['HTTP_HOST']."/".$modUri."realtime");
 
 	     return "realtime-voice_tpl.php";
 	}
