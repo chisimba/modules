@@ -109,8 +109,13 @@ class blowcryptclient extends object
 	 */
     public function encrypt($data, $key)
     {
-        $encrypted_data = mcrypt_encrypt($this->encryptMethod, $key, $data, $this->encryptMode, $this->iv);
-        $encrypted_data = bin2hex($encrypted_data);
+        $encrypted_data = null;
+        if (!is_null($data)) {
+            if (strlen($data) > 0) {
+                $encrypted_data = mcrypt_encrypt($this->encryptMethod, $key, $data, $this->encryptMode, $this->iv);
+                $encrypted_data = bin2hex($encrypted_data);
+            }
+        }
         return $encrypted_data;
     }
 
@@ -125,9 +130,14 @@ class blowcryptclient extends object
 	 */
     public function decrypt($data, $key)
     {
-        $data = pack("H*", $data);
-        $decrypted_data = mcrypt_decrypt($this->encryptMethod, $key, $data, $this->encryptMode, $this->iv);
-        $decrypted_data = rtrim($decrypted_data, "\0");
+        $decrypted_data = null;
+        if (!is_null($data)) {
+            if (strlen($data) > 0) {
+                $data = pack("H*", $data);
+                $decrypted_data = mcrypt_decrypt($this->encryptMethod, $key, $data, $this->encryptMode, $this->iv);
+                $decrypted_data = rtrim($decrypted_data, "\0");
+            }
+        }
         return $decrypted_data;
     }
 
@@ -156,6 +166,37 @@ class blowcryptclient extends object
                 $result = $this->encrypt($data, $key);
             }
         }
+        return $result;
+    }
+
+ 	/**
+	 * Method to recursively encrypt or decrypt the specified stcClass array using the specified key
+     *
+	 * @param array $data - The array containing the data to encrypt
+     * @param string $key - The key to encrypt the data with
+     * @param boolean $decrypt - encrypt if TRUE, decrypt if FALSE
+	 * @return string - The encrypted/decrypted array
+	 * @access public
+     *
+	 */
+    public function encryptObject($object, $key, $decrypt = FALSE)
+    {
+        $data = $this->objectToArray($object);
+
+        if (is_array($data)) {
+            $result = array();
+            foreach ($data as $element) {
+                $result[key($data)] = $this->encryptArray($element, $key, $decrypt);
+                next($data);
+            }
+        } else {
+            if ($decrypt) {
+                $result = $this->decrypt($data, $key);
+            } else {
+                $result = $this->encrypt($data, $key);
+            }
+        }
+        $result = $this->arrayToObject($result);
         return $result;
     }
 
@@ -391,6 +432,46 @@ class blowcryptclient extends object
         }
         return $checkKey;
 
+    }
+
+
+    public function arrayToObject($array)
+    {
+        $objArray = null;
+        if (is_array($array)) {
+            foreach($array as $item) {
+                $objArray[] = (object)$item;
+            }
+        }
+        return $objArray;
+    }
+
+    public function objectToArray($object)
+    {
+        $array = null;
+        if (is_array($object)) {
+            foreach($object as $item) {
+                $array[] = get_object_vars($item);
+            }
+        }
+        return $array;
+
+    }
+
+    public function arrayToWSObject($array)
+    {
+        $objArray = null;
+        if (is_array($array)) {
+            foreach($array as $arrItem) {
+                foreach($arrItem as $item) {
+
+                    $temp[key($arrItem)] =  $item;
+                    next($arrItem);
+                }
+                $objArray[] = (object)$temp;
+            }
+        }
+        return $objArray;
     }
 }
 
