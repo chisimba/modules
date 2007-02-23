@@ -1122,6 +1122,7 @@ class blogops extends object
      * @param integer $userid
      * @param bool $featurebox
      * @return string
+     * @deprecated - old method
      */
     public function showFeeds($userid, $featurebox = FALSE)
     {
@@ -1168,6 +1169,79 @@ class blogops extends object
             return $form->show();
         }
     }
+    
+    
+    /**
+     * Method to build and create the feeds options box - NEW METHOD
+     *
+     * @param integer $userid
+     * @param bool $featurebox
+     * @return string
+     *
+    public function showFeeds($userid, $featurebox = FALSE)
+    {
+        $this->loadClass('dropdown', 'htmlelements');
+        $this->loadClass('button', 'htmlelements');
+
+        $url = $this->uri(array('action' => 'feedurl'));
+
+        $dropdown = new dropdown('feedselector');
+        $dropdown->addOption('', 'Select feed format');
+        $rss2 = $this->objLanguage->languageText("mod_blog_word_rss2", "blog"); 
+        $dropdown->addOption('rss2', $rss2);
+        $rss091 = $this->objLanguage->languageText("mod_blog_word_rss091", "blog");
+        $dropdown->addOption('rss091', $rss091);
+        $rss1 = $this->objLanguage->languageText("mod_blog_word_rss1", "blog"); 
+        $dropdown->addOption('rss1', $rss1);
+        $pie = $this->objLanguage->languageText("mod_blog_word_pie", "blog");
+        $dropdown->addOption('pie', $pie);
+        $mbox = $this->objLanguage->languageText("mod_blog_word_mbox", "blog"); 
+        $dropdown->addOption('mbox', $mbox);
+        $opml = $this->objLanguage->languageText("mod_blog_word_opml", "blog"); 
+        $dropdown->addOption('opml', $opml);
+        $atom = $this->objLanguage->languageText("mod_blog_word_atom", "blog"); 
+        $dropdown->addOption('atom', $atom);
+        $html = $this->objLanguage->languageText("mod_blog_word_html", "blog"); 
+        $dropdown->addOption('html', $html);
+        
+        $dropdown->extra = "onchange=\"javascript:
+            var url = '".$url."';
+            url = url + '&amp;feedselector=' + this.value; 
+            window.open(url, 'blog_rss', 'height=200, width=500, left=100, top=100, resizable=1, scrollbars=1, menubar=1, toolbar=1');\"";
+            
+        $dropdown->setSelected('');
+        $dropStr = $dropdown->show();
+
+        $this->objButton = new button($this->objLanguage->languageText('word_show'));
+
+ $this->objButton->setValue($this->objLanguage->languageText('word_show'));
+ $this->objButton->setToSubmit();
+        $btnStr = $this->objButton->show();
+
+        $this->objUser = $this->getObject('user', 'security');
+
+        $formStr = $dropStr."<br />";
+        $formStr .= $btnStr."<br />";
+
+              //creating form
+        $form = new form('formname', $this->uri(array(
+            'action' => 'feedurl',
+            'userid' => $userid
+        )));
+        $form->addToForm($formStr);
+
+        $leftCol = '';
+        if ($featurebox == FALSE) {
+            $leftCol ="<em>".$this->objLanguage->languageText("mod_blog_feedheader", "blog")."</em><br />";
+            $leftCol .= $form->show();
+            return $leftCol;
+       } else {
+            $objFeatureBox = $this->getObject('featurebox', 'navigation');
+            $ret =$objFeatureBox->show($this->objLanguage->languageText("mod_blog_feedheader",'blog') , $form->show());
+            return $ret;
+        }
+    }*/
+
     /**
      * Method to quickly add a category to the default category (parent = 0)
      * Can take a comma delimited list as an input arg

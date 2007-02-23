@@ -681,7 +681,7 @@ class blog extends controller
 
                 // Create the feed url
                 $url = $this->uri(array('action' => 'feed', 'feedselector' => $format, 'userid' => $userid));
-echo $url;
+
                 $this->setVarByRef('feed', $url);
                 return 'showfeed_tpl.php';
                 break;
