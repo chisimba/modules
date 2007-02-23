@@ -500,88 +500,88 @@ class blog extends controller
                     //lets look at the data now
                     foreach ($data as $datum)
                     {
-                    	$newbod = $datum['body'];
+                        $newbod = $datum['body'];
                         //add the [img][/img] tags to the body so that the images show up
                         //we discard any other mimetypes for now...
                         if(!empty($datum['attachments']))
                         {
-                        	if(is_array($datum['attachments']))
-                        	{
-                        		foreach($datum['attachments'] as $files)
-                        		{
-                            		//do check for multiple attachments
-                            		//set the filename of the attachment
-                            		$fname = $files['filename'];
-                            		$filenamearr = explode(".", $fname);
-									$ext = pathinfo($fname);
-                            		$filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];
-                            		//decode the attachment data
-                            		$filedata = base64_decode($files['filedata']);
-                            		//set the path to write down the file to
-                            		$path = $this->objConfig->getContentBasePath() . 'blog/';
-                            		//check that the data dir is there
-                            		if(!file_exists($path))
-                            		{
-                                		//dir doesn't exist so create it quickly
-                                		mkdir($path, 0777);
-                            		}
-                            		//fix up the filename a little
-                            		$filename = str_replace(" ","_", $filename);
-                            		//change directory to the data dir
-                            		chdir($path);
-                            		//write the file
-                            		$handle = fopen($filename, 'wb');
-                            		fwrite($handle, $filedata);
-                            		fclose($handle);
-                            		$type = mime_content_type($filename);
-                            		$tparts = explode("/", $type);
-                            		if($tparts[0] == "image")
-                            		{
-                            			//add the img stuff to the body at the end of the "post"
-        	                    		$newbod .= "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]" . "<br />";
-                            		}
-                            		else {
-                            			//add the img stuff to the body at the end of the "post"
-        	                    		$newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . urlencode($filename) . "[/url]" . "<br />";
-                            		}
-                        		}
-                        	}
-                        	else {
-                            	//set the filename of the attachment
-                            	$fname = $datum['attachments'][0]['filename'];
-                            	$filenamearr = explode(".", $fname);
-                            	$ext = pathinfo($fname);
-                            	$filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];
-                            	//decode the attachment data
-                            	$filedata = base64_decode($datum['attachments'][0]['filedata']);
-                            	//set the path to write down the file to
-                            	$path = $this->objConfig->getContentBasePath() . 'blog/';
-                            	//check that the data dir is there
-                            	//fix up the filename a little
-                            	$filename = str_replace(" ","_", $filename);
-                            	if(!file_exists($path))
-                            	{
-                                	//dir doesn't exist so create it quickly
-                                	mkdir($path, 0777);
-                            	}
-                            	//change directory to the data dir
-                            	chdir($path);
-                            	//write the file
-                            	$handle = fopen($filename, 'wb');
-                            	fwrite($handle, $filedata);
-                            	fclose($handle);
-                            	$type = mime_content_type($filename);
-                            	$tparts = explode("/", $type);
-                            	if($tparts[0] == "image")
-                            	{
-                            		//add the img stuff to the body at the end of the "post"
-        	                    	$newbod .= "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]" . "<br />";
-                            	}
-                            	else {
-                            		//add the img stuff to the body at the end of the "post"
-        	                    	$newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . urlencode($filename) . "[/url]" . "<br />";
-                            	}
-                        	}
+                            if(is_array($datum['attachments']))
+                            {
+                                foreach($datum['attachments'] as $files)
+                                {
+                                    //do check for multiple attachments
+                                    //set the filename of the attachment
+                                    $fname = $files['filename'];
+                                    $filenamearr = explode(".", $fname);
+                                    $ext = pathinfo($fname);
+                                    $filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];
+                                    //decode the attachment data
+                                    $filedata = base64_decode($files['filedata']);
+                                    //set the path to write down the file to
+                                    $path = $this->objConfig->getContentBasePath() . 'blog/';
+                                    //check that the data dir is there
+                                    if(!file_exists($path))
+                                    {
+                                        //dir doesn't exist so create it quickly
+                                        mkdir($path, 0777);
+                                    }
+                                    //fix up the filename a little
+                                    $filename = str_replace(" ","_", $filename);
+                                    //change directory to the data dir
+                                    chdir($path);
+                                    //write the file
+                                    $handle = fopen($filename, 'wb');
+                                    fwrite($handle, $filedata);
+                                    fclose($handle);
+                                    $type = mime_content_type($filename);
+                                    $tparts = explode("/", $type);
+                                    if($tparts[0] == "image")
+                                    {
+                                        //add the img stuff to the body at the end of the "post"
+                                        $newbod .= "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]" . "<br />";
+                                    }
+                                    else {
+                                        //add the img stuff to the body at the end of the "post"
+                                        $newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . urlencode($filename) . "[/url]" . "<br />";
+                                    }
+                                }
+                            }
+                            else {
+                                //set the filename of the attachment
+                                $fname = $datum['attachments'][0]['filename'];
+                                $filenamearr = explode(".", $fname);
+                                $ext = pathinfo($fname);
+                                $filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];
+                                //decode the attachment data
+                                $filedata = base64_decode($datum['attachments'][0]['filedata']);
+                                //set the path to write down the file to
+                                $path = $this->objConfig->getContentBasePath() . 'blog/';
+                                //check that the data dir is there
+                                //fix up the filename a little
+                                $filename = str_replace(" ","_", $filename);
+                                if(!file_exists($path))
+                                {
+                                    //dir doesn't exist so create it quickly
+                                    mkdir($path, 0777);
+                                }
+                                //change directory to the data dir
+                                chdir($path);
+                                //write the file
+                                $handle = fopen($filename, 'wb');
+                                fwrite($handle, $filedata);
+                                fclose($handle);
+                                $type = mime_content_type($filename);
+                                $tparts = explode("/", $type);
+                                if($tparts[0] == "image")
+                                {
+                                    //add the img stuff to the body at the end of the "post"
+                                    $newbod .= "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]" . "<br />";
+                                }
+                                else {
+                                    //add the img stuff to the body at the end of the "post"
+                                    $newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . urlencode($filename) . "[/url]" . "<br />";
+                                }
+                            }
                         }
                         else {
                             //no attachments to worry about
@@ -672,6 +672,20 @@ class blog extends controller
 
                 break;
 
+            case 'feedurl':
+                //get the feed format parameter from the querystring
+                $format = $this->getParam('feedselector');
+
+                //and the userid of the blog we are interested in
+                $userid = $this->getParam('userid');
+
+                // Create the feed url
+                $url = $this->uri(array('action' => 'feed', 'feedselector' => $format, 'userid' => $userid));
+echo $url;
+                $this->setVarByRef('feed', $url);
+                return 'showfeed_tpl.php';
+                break;
+
             case 'feed':
 
                 //get the feed format parameter from the querystring
@@ -679,7 +693,7 @@ class blog extends controller
 
                 //and the userid of the blog we are interested in
                 $userid = $this->getParam('userid');
-				$bloggerprofile = $this->objDbBlog->checkProfile($userid);
+                $bloggerprofile = $this->objDbBlog->checkProfile($userid);
                 //grab the feed items
                 $posts = $this->objDbBlog->getAllPosts($userid, $catid = NULL);
 
@@ -687,10 +701,10 @@ class blog extends controller
                 //who's blog is this?
                 if(isset($bloggerprofile['blog_name']))
                 {
-                	$fullname = htmlentities($bloggerprofile['blog_name']); //$this->getParam('blog_name');
+                    $fullname = htmlentities($bloggerprofile['blog_name']); //$this->getParam('blog_name');
                 }
                 else {
-                	$fullname = htmlentities($this->objUser->fullname($userid));
+                    $fullname = htmlentities($this->objUser->fullname($userid));
                 }
 
                 //title of the feed
@@ -699,10 +713,10 @@ class blog extends controller
 
                 if(isset($bloggerprofile['blog_descrip']))
                 {
-                	$feedDescription = htmlentities($bloggerprofile['blog_descrip']); //$this->getParam('blog_name');
+                    $feedDescription = htmlentities($bloggerprofile['blog_descrip']); //$this->getParam('blog_name');
                 }
                 else {
-                	$feedDescription = htmlentities($this->objLanguage->languageText("mod_blog_blogof", "blog")) . " " . $fullname;
+                    $feedDescription = htmlentities($this->objLanguage->languageText("mod_blog_blogof", "blog")) . " " . $fullname;
                 }
 
                 //link back to the blog
@@ -769,8 +783,8 @@ class blog extends controller
                 break;
 
             case 'showallposts':
-            	$catid = NULL;
-            	$userid = $this->getParam('userid');
+                $catid = NULL;
+                $userid = $this->getParam('userid');
                 if(!isset($userid))
                 {
                     //fix the user id just in case
@@ -1026,8 +1040,8 @@ class blog extends controller
 
             case 'postadd':
 
-           		 //Added by Ishaad Hoosain for siteblog
-            	//if user clicked checkbox he is admin
+                 //Added by Ishaad Hoosain for siteblog
+                //if user clicked checkbox he is admin
                 if($this->objUser->isLoggedIn() == FALSE)
                 {
                     $this->nextAction('');
@@ -1037,9 +1051,9 @@ class blog extends controller
                 $mode = $this->getParam('mode');
 
                 if(!$this->getParam('checkbox')==null){
-                	$userid = 1 ;
+                    $userid = 1 ;
                 } else {
-                	$userid = $this->objUser->userId();
+                    $userid = $this->objUser->userId();
                 }
 
                 $id = $this->getParam('id');
@@ -1057,22 +1071,22 @@ class blog extends controller
                 $tagarray = explode(",", $tags);
 
                 /*//set up for Google Blog API
-            	$changesURL = $this->uri(array('module' => 'blog', 'action' => 'feed', 'userid' => $userid));
-            	$name = $this->objUser->fullname($userid) . " Chisimba blog";
-            	$blogURL = $this->uri(array('module' => 'blog', 'action' => 'randblog', 'userid' => $userid));
-            	//OK lets put it together...
-            	$gurl = "http://blogsearch.google.com/ping";
-				//do the http request
-				//echo $gurl;
-				$gurl = str_replace('%26amp%3B', "&", $gurl);
+                $changesURL = $this->uri(array('module' => 'blog', 'action' => 'feed', 'userid' => $userid));
+                $name = $this->objUser->fullname($userid) . " Chisimba blog";
+                $blogURL = $this->uri(array('module' => 'blog', 'action' => 'randblog', 'userid' => $userid));
+                //OK lets put it together...
+                $gurl = "http://blogsearch.google.com/ping";
+                //do the http request
+                //echo $gurl;
+                $gurl = str_replace('%26amp%3B', "&", $gurl);
 
-				//get the proxy info if set
-				$proxyArr = $this->objProxy->getProxy();
-				//print_r($proxyArr); die();
+                //get the proxy info if set
+                $proxyArr = $this->objProxy->getProxy();
+                //print_r($proxyArr); die();
 
-				require_once "HTTP/Request.php";
-				//define the request options
-				$reqopts = array(
+                require_once "HTTP/Request.php";
+                //define the request options
+                $reqopts = array(
                     // Options for request directly
                     'useragent'         => 'Chisimba',
                     'strictness'        => 1,
@@ -1085,8 +1099,8 @@ class blog extends controller
                 );
                 if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
                 {
-                	$parr = array(
-                	'proxy_host'        => $proxyArr['proxy_host'],
+                    $parr = array(
+                    'proxy_host'        => $proxyArr['proxy_host'],
                     'proxy_port'        => $proxyArr['proxy_port'],
                     'proxy_user'        => $proxyArr['proxy_user'],
                     'proxy_pass'        => $proxyArr['proxy_pass']
@@ -1094,32 +1108,32 @@ class blog extends controller
 
                     $proxyArr = array_merge($reqopts, $parr);
                 }
-				$req =& new HTTP_Request($gurl, $reqopts);
+                $req =& new HTTP_Request($gurl, $reqopts);
 
-				$req->setMethod(HTTP_REQUEST_METHOD_GET);
-				$req->addQueryString('name', $name);
-				$req->addQueryString('url', $blogURL);
-				$req->addQueryString('changesURL', $changesURL);
+                $req->setMethod(HTTP_REQUEST_METHOD_GET);
+                $req->addQueryString('name', $name);
+                $req->addQueryString('url', $blogURL);
+                $req->addQueryString('changesURL', $changesURL);
 
-				$request = $req->sendRequest(true);
-				//var_dump(urldecode($req->getUrl($req))); die();
-				if(PEAR::isError($req))
-				{
-					//var_dump($req);
-					log_debug($req->getMessage());
-				}
-			    $code = $req->getResponseBody(); //$req->getResponseCode();
+                $request = $req->sendRequest(true);
+                //var_dump(urldecode($req->getUrl($req))); die();
+                if(PEAR::isError($req))
+                {
+                    //var_dump($req);
+                    log_debug($req->getMessage());
+                }
+                $code = $req->getResponseBody(); //$req->getResponseCode();
 
-    			switch ($code) {
-    				case "Thanks for the ping.":
-    					log_debug("Google blogs API Success! Google said: " . $code);
-    					break;
-    				default:
-    					log_debug("Google blogs API Failure! Google said: " . $code);
-    					break;
-    			}
+                switch ($code) {
+                    case "Thanks for the ping.":
+                        log_debug("Google blogs API Success! Google said: " . $code);
+                        break;
+                    default:
+                        log_debug("Google blogs API Failure! Google said: " . $code);
+                        break;
+                }
 */
-            	//post quick add
+                //post quick add
                 if($mode == 'quickadd')
                 {
                     $this->objblogOps->quickPostAdd($userid, array('posttitle' => $posttitle, 'postcontent' => $postcontent,
@@ -1140,38 +1154,38 @@ class blog extends controller
 
                     if(!empty($tagarray) && $tagarray[0] != "")
                     {
-                    	$etags = $this->objDbBlog->getPostTags($id);
+                        $etags = $this->objDbBlog->getPostTags($id);
 
-                    	if(count($tagarray) < count($etags))
-                    	{
-                    		//remove all the tags for the post so that we can populate with the new ones
-                    		foreach($etags as $rmtags)
-                    		{
-                    			//print_r($rmtags);
-                    			$this->objDbBlog->removeAllTags($rmtags['id']);
-                    		}
-                    		//echo "inserting ";
-                    		//print_r($tagarray);
-                    		$this->objDbBlog->insertTags($tagarray, $userid, $id);
-                    	}
-                    	//clean out the duplicate tags
+                        if(count($tagarray) < count($etags))
+                        {
+                            //remove all the tags for the post so that we can populate with the new ones
+                            foreach($etags as $rmtags)
+                            {
+                                //print_r($rmtags);
+                                $this->objDbBlog->removeAllTags($rmtags['id']);
+                            }
+                            //echo "inserting ";
+                            //print_r($tagarray);
+                            $this->objDbBlog->insertTags($tagarray, $userid, $id);
+                        }
+                        //clean out the duplicate tags
 
-                    	//adding the extra tags
-                    	$tagarray = array_diff($tagarray, $etags);
-                    	if(!empty($etags))
-                    	{
-                    		foreach($etags as $t)
-                    		{
-                    			$things[] = $t['meta_value'];
-                    		}
-                    	}
-                    	else {
-                    		$things[] = NULL;
-                    	}
+                        //adding the extra tags
+                        $tagarray = array_diff($tagarray, $etags);
+                        if(!empty($etags))
+                        {
+                            foreach($etags as $t)
+                            {
+                                $things[] = $t['meta_value'];
+                            }
+                        }
+                        else {
+                            $things[] = NULL;
+                        }
 
-                    	$tagarray = array_diff($tagarray, $things);
+                        $tagarray = array_diff($tagarray, $things);
 
-                    	$this->objDbBlog->insertTags($tagarray, $userid, $id);
+                        $this->objDbBlog->insertTags($tagarray, $userid, $id);
                     }
 
 
@@ -1186,9 +1200,9 @@ class blog extends controller
                     //dump in the tags
                     if(!empty($tagarray) && $tagarray[0] != "")
                     {
-                    	$posid = $this->objDbBlog->getLatestPost($userid);
-                    	$posid = $posid['id'];
-                    	$this->objDbBlog->insertTags($tagarray, $userid, $posid);
+                        $posid = $this->objDbBlog->getLatestPost($userid);
+                        $posid = $posid['id'];
+                        $this->objDbBlog->insertTags($tagarray, $userid, $posid);
                     }
                     $this->nextAction('viewblog');
                     break;
@@ -1220,12 +1234,12 @@ class blog extends controller
                 $delarr = $this->getArrayParam('arrayList');
                 if(!empty($delarr))
                 {
-                	//delete the posts and go back to the template...
-                	foreach($delarr as $deletes)
-                	{
-                		$this->objDbBlog->deletePost($deletes);
-                	}
-                	$this->nextAction('blogadmin', array('mode' => 'editpost'));
+                    //delete the posts and go back to the template...
+                    foreach($delarr as $deletes)
+                    {
+                        $this->objDbBlog->deletePost($deletes);
+                    }
+                    $this->nextAction('blogadmin', array('mode' => 'editpost'));
                 }
                 //print_r($delarr); die();
                 $this->setVarByRef('editid', $id);
@@ -1333,10 +1347,10 @@ class blog extends controller
                 $bloggerprofile = $this->objDbBlog->checkProfile($this->objUser->userId());
                 if(isset($bloggerprofile['blog_name']))
                 {
-                	$blog_name = $bloggerprofile['blog_name']; //$this->getParam('blog_name');
+                    $blog_name = $bloggerprofile['blog_name']; //$this->getParam('blog_name');
                 }
                 else {
-                	$blog_name = $this->getParam('blog_name');
+                    $blog_name = $this->getParam('blog_name');
                 }
                 $url = $this->getParam('url');
                 $url = urldecode($url);
@@ -1357,44 +1371,44 @@ class blog extends controller
                               'url' => $url, 'trackback_url' => $trackback_url, 'extra' => $extra);
 
                 //get the proxy info if set
-				$proxyArr = $this->objProxy->getProxy();
-				if(isset($proxyArr['proxy_host']))
-				{
-                	$options = array(
-                    	// Options for Services_Trackback directly
-                    	'strictness'        => 1,
-                    	'timeout'           => 30,          // seconds
-                    	'fetchlines'        => 30,
-                    	'fetchextra'        => true,
-                    	// Options for HTTP_Request class
-                    	'httprequest'       => array(
-                        	'allowRedirects'    => true,
-                        	'maxRedirects'      => 2,
-                        	'method'            => 'POST',
-                        	'useragent'         => 'Chisimba',
-                        	'proxy_host'        => $proxyArr['proxy_host'],
-                    		'proxy_port'        => $proxyArr['proxy_port'],
-                    		'proxy_user'        => $proxyArr['proxy_user'],
-                    		'proxy_pass'        => $proxyArr['proxy_pass']
-                    	),
-                	);
-				}
-				else {
-					$options = array(
-                    	// Options for Services_Trackback directly
-                    	'strictness'        => 1,
-                    	'timeout'           => 30,          // seconds
-                    	'fetchlines'        => 30,
-                    	'fetchextra'        => true,
-                    	// Options for HTTP_Request class
-                    	'httprequest'       => array(
-                        	'allowRedirects'    => true,
-                        	'maxRedirects'      => 2,
-                        	'method'            => 'POST',
-                        	'useragent'         => 'Chisimba',
-                    	),
-                	);
-				}
+                $proxyArr = $this->objProxy->getProxy();
+                if(isset($proxyArr['proxy_host']))
+                {
+                    $options = array(
+                        // Options for Services_Trackback directly
+                        'strictness'        => 1,
+                        'timeout'           => 30,          // seconds
+                        'fetchlines'        => 30,
+                        'fetchextra'        => true,
+                        // Options for HTTP_Request class
+                        'httprequest'       => array(
+                            'allowRedirects'    => true,
+                            'maxRedirects'      => 2,
+                            'method'            => 'POST',
+                            'useragent'         => 'Chisimba',
+                            'proxy_host'        => $proxyArr['proxy_host'],
+                            'proxy_port'        => $proxyArr['proxy_port'],
+                            'proxy_user'        => $proxyArr['proxy_user'],
+                            'proxy_pass'        => $proxyArr['proxy_pass']
+                        ),
+                    );
+                }
+                else {
+                    $options = array(
+                        // Options for Services_Trackback directly
+                        'strictness'        => 1,
+                        'timeout'           => 30,          // seconds
+                        'fetchlines'        => 30,
+                        'fetchextra'        => true,
+                        // Options for HTTP_Request class
+                        'httprequest'       => array(
+                            'allowRedirects'    => true,
+                            'maxRedirects'      => 2,
+                            'method'            => 'POST',
+                            'useragent'         => 'Chisimba',
+                        ),
+                    );
+                }
                 try {
                     $this->objTB = $this->getObject("trackback");
                     //use the factory
@@ -1420,278 +1434,278 @@ class blog extends controller
                 break;
 
         case "addmetadata":
-        	//metadata can be a tag, a keyword or whatever else you want about a post
-        	$userid = $this->getParam('userid');
-        	$postid = $this->getParam('postid');
-        	$metakey = $this->getParam('metakey');
-        	$metavalue = $this->getParam('metavalue');
+            //metadata can be a tag, a keyword or whatever else you want about a post
+            $userid = $this->getParam('userid');
+            $postid = $this->getParam('postid');
+            $metakey = $this->getParam('metakey');
+            $metavalue = $this->getParam('metavalue');
 
-			//ok so lets sanitize the inputs and dump them to a db
-			if(!isset($userid))
-			{
-				if($this->objUser->isLoggedIn() == TRUE)
-				{
-					$userid = $this->objUser->userId();
-				}
-				else {
-					//who knows who this is????
-					$this->nextAction('');
-					exit;
-				}
-			}
-			//lets strip out all the tags from the meta values as they should be plain text
-			$metakey = strip_tags($metakey);
-			$metavalue = strip_tags($metavalue);
+            //ok so lets sanitize the inputs and dump them to a db
+            if(!isset($userid))
+            {
+                if($this->objUser->isLoggedIn() == TRUE)
+                {
+                    $userid = $this->objUser->userId();
+                }
+                else {
+                    //who knows who this is????
+                    $this->nextAction('');
+                    exit;
+                }
+            }
+            //lets strip out all the tags from the meta values as they should be plain text
+            $metakey = strip_tags($metakey);
+            $metavalue = strip_tags($metavalue);
 
-			//is the post id sane?
-			if(!isset($postid) || !isset($metakey) || !isset($metavalue))
-			{
-				return 'meta_tpl.php';
-				exit;
-			}
+            //is the post id sane?
+            if(!isset($postid) || !isset($metakey) || !isset($metavalue))
+            {
+                return 'meta_tpl.php';
+                exit;
+            }
 
-			//all set to go, lets insert it to the db...
-			$insarr = array('userid' => $userid, 'post_id' => $postid, 'meta_key' => $metakey, 'meta_value' => $metavalue);
-			$ret = $this->objDbBlog->insertMeta($insarr);
-			$this->nextAction('postedit', array('id' => $postid));
-        	break;
+            //all set to go, lets insert it to the db...
+            $insarr = array('userid' => $userid, 'post_id' => $postid, 'meta_key' => $metakey, 'meta_value' => $metavalue);
+            $ret = $this->objDbBlog->insertMeta($insarr);
+            $this->nextAction('postedit', array('id' => $postid));
+            break;
 
         case 'addrss':
-        	$rssname = $this->getParam('name');
-        	$rssurl = $this->getParam('rssurl');
-        	$rssdesc = $this->getParam('description');
-        	$userid = $this->objUser->userId();
-        	$mode = $this->getParam('mode');
-        	if($mode == 'edit')
-        	{
-        		$id = $this->getParam('id');
-        		$rdata = $this->objDbBlog->getRssById($id);
-        		$this->setVarByRef('rdata', $rdata);
-        		return 'rssedit_tpl.php';
-        	}
-
-        	//get the cache
-        	//get the proxy info if set
-			$proxyArr = $this->objProxy->getProxy();
-
-			$ch = curl_init();
-   			curl_setopt($ch, CURLOPT_URL, $rssurl);
-   			//curl_setopt($ch, CURLOPT_HEADER, 1);
-   			curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-   			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-   			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-   			if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
+            $rssname = $this->getParam('name');
+            $rssurl = $this->getParam('rssurl');
+            $rssdesc = $this->getParam('description');
+            $userid = $this->objUser->userId();
+            $mode = $this->getParam('mode');
+            if($mode == 'edit')
             {
-            	curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_host'].":".$proxyArr['proxy_port']);
-            	curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxy_user'].":".$proxyArr['proxy_pass']);
+                $id = $this->getParam('id');
+                $rdata = $this->objDbBlog->getRssById($id);
+                $this->setVarByRef('rdata', $rdata);
+                return 'rssedit_tpl.php';
             }
-   			$rsscache = curl_exec($ch);
-   			curl_close($ch);
+
+            //get the cache
+            //get the proxy info if set
+            $proxyArr = $this->objProxy->getProxy();
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $rssurl);
+            //curl_setopt($ch, CURLOPT_HEADER, 1);
+            curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
+            {
+                curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_host'].":".$proxyArr['proxy_port']);
+                curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxy_user'].":".$proxyArr['proxy_pass']);
+            }
+            $rsscache = curl_exec($ch);
+            curl_close($ch);
 //var_dump($rsscache);
-   			//put in a timestamp
-        	$addtime = time();
-        	$addarr = array('userid' => $userid, 'url' => $rssurl, 'name' => $rssname, 'description' => $rssdesc, 'rsscache' => htmlentities($rsscache), 'rsstime' => $addtime);
+            //put in a timestamp
+            $addtime = time();
+            $addarr = array('userid' => $userid, 'url' => $rssurl, 'name' => $rssname, 'description' => $rssdesc, 'rsscache' => htmlentities($rsscache), 'rsstime' => $addtime);
 
-        	//write the file down for caching
-        	$path = $this->objConfig->getContentBasePath() . "/blog/rsscache/";
-        	$rsstime = time();
-        	if(!file_exists($path))
-        	{
+            //write the file down for caching
+            $path = $this->objConfig->getContentBasePath() . "/blog/rsscache/";
+            $rsstime = time();
+            if(!file_exists($path))
+            {
 
-        		mkdir($path);
-        		chmod($path, 0777);
-        		$filename = $path . $this->objUser->userId() . "_" . $rsstime . ".xml";
-        		if(!file_exists($filename))
-        		{
-        			touch($filename);
+                mkdir($path);
+                chmod($path, 0777);
+                $filename = $path . $this->objUser->userId() . "_" . $rsstime . ".xml";
+                if(!file_exists($filename))
+                {
+                    touch($filename);
 
-        		}
-        		$handle = fopen($filename, 'wb');
-        		fwrite($handle, $rsscache);
-        	}
-        	else {
-        		$filename = $path . $this->objUser->userId() . "_" . $rsstime . ".xml";
-        		$handle = fopen($filename, 'wb');
-        		fwrite($handle, $rsscache);
-        	}
-        	//echo $path;
-        	//add into the db
+                }
+                $handle = fopen($filename, 'wb');
+                fwrite($handle, $rsscache);
+            }
+            else {
+                $filename = $path . $this->objUser->userId() . "_" . $rsstime . ".xml";
+                $handle = fopen($filename, 'wb');
+                fwrite($handle, $rsscache);
+            }
+            //echo $path;
+            //add into the db
 
-        	$rssurl = htmlentities($rssurl, ENT_QUOTES);
-        	$rssname = htmlentities($rssname, ENT_QUOTES);
-        	$rssdesc = htmlentities($rssdesc, ENT_QUOTES);
-
-
-        	$addarr = array('userid' => $userid, 'url' => $rssurl, 'name' => $rssname, 'description' => $rssdesc, 'rsscache' => $filename, 'rsstime' => $rsstime);
+            $rssurl = htmlentities($rssurl, ENT_QUOTES);
+            $rssname = htmlentities($rssname, ENT_QUOTES);
+            $rssdesc = htmlentities($rssdesc, ENT_QUOTES);
 
 
-			$this->objDbBlog->addRss($addarr);
+            $addarr = array('userid' => $userid, 'url' => $rssurl, 'name' => $rssname, 'description' => $rssdesc, 'rsscache' => $filename, 'rsstime' => $rsstime);
 
-        	$this->nextAction('viewblog');
-        	break;
+
+            $this->objDbBlog->addRss($addarr);
+
+            $this->nextAction('viewblog');
+            break;
 
         case 'rssedit':
-        	$mode = $this->getParam('mode');
-        	$rssname = $this->getParam('name');
-        	$rssurl = $this->getParam('rssurl');
-        	$rssdesc = $this->getParam('description');
-        	$userid = $this->objUser->userId();
-        	$id = $this->getParam('id');
+            $mode = $this->getParam('mode');
+            $rssname = $this->getParam('name');
+            $rssurl = $this->getParam('rssurl');
+            $rssdesc = $this->getParam('description');
+            $userid = $this->objUser->userId();
+            $id = $this->getParam('id');
 
-        	if($mode == 'edit')
-        	{
-        		$addarr = array('id' => $id, 'userid' => $userid, 'url' => $rssurl, 'name' => $rssname, 'description' => $rssdesc);
-        		$this->objDbBlog->addRss($addarr, 'edit');
-        	}
-        	$userid = $this->objUser->userid();
-        	$this->setVarByRef('userid', $userid);
-        	return 'rssedit_tpl.php';
-        	break;
+            if($mode == 'edit')
+            {
+                $addarr = array('id' => $id, 'userid' => $userid, 'url' => $rssurl, 'name' => $rssname, 'description' => $rssdesc);
+                $this->objDbBlog->addRss($addarr, 'edit');
+            }
+            $userid = $this->objUser->userid();
+            $this->setVarByRef('userid', $userid);
+            return 'rssedit_tpl.php';
+            break;
 
         case 'deleterss':
-        	$id = $this->getParam('id');
+            $id = $this->getParam('id');
 
-        	$this->objDbBlog->delRSS($id);
-        	$this->nextAction('rssedit');
-        	break;
+            $this->objDbBlog->delRSS($id);
+            $this->nextAction('rssedit');
+            break;
 
         case 'setprofile':
-        	//profile stuff
-        	$mode = $this->getParam('mode');
-        	$userid = $this->objUser->userId();
-        	//ok lets check if this user already has a profile or not...
-        	$check = $this->objDbBlog->checkProfile($userid);
-        	if($check != FALSE)
-        	{
-        		$this->setVarByRef('userid', $userid);
-        		$this->setVarByRef('profile', $check);
-        		//return the template for editing the profile
-        		return 'profile_tpl.php';
-        	}
-        	if($mode == 'saveprofile')
-        	{
-        		$blogname = addslashes($this->getParam('blogname'));
-        		$blogdesc = addslashes($this->getParam('blogdesc'));
-        		$blogprofile = addslashes($this->getParam('blogprofile'));
+            //profile stuff
+            $mode = $this->getParam('mode');
+            $userid = $this->objUser->userId();
+            //ok lets check if this user already has a profile or not...
+            $check = $this->objDbBlog->checkProfile($userid);
+            if($check != FALSE)
+            {
+                $this->setVarByRef('userid', $userid);
+                $this->setVarByRef('profile', $check);
+                //return the template for editing the profile
+                return 'profile_tpl.php';
+            }
+            if($mode == 'saveprofile')
+            {
+                $blogname = addslashes($this->getParam('blogname'));
+                $blogdesc = addslashes($this->getParam('blogdesc'));
+                $blogprofile = addslashes($this->getParam('blogprofile'));
 
-        		//save the profile to the table
-        		$prfarr = array('userid' => $userid, 'blog_name' => $blogname, 'blog_descrip' => $blogdesc, 'blogger_profile' => $blogprofile);
-        		$this->objDbBlog->saveProfile($prfarr);
-        		$this->nextAction('viewblog');
-        		break;
-        	}
-        	//set up the template
-        	$this->setVarByRef('userid', $userid);
-        	return 'profile_tpl.php';
-        	break;
+                //save the profile to the table
+                $prfarr = array('userid' => $userid, 'blog_name' => $blogname, 'blog_descrip' => $blogdesc, 'blogger_profile' => $blogprofile);
+                $this->objDbBlog->saveProfile($prfarr);
+                $this->nextAction('viewblog');
+                break;
+            }
+            //set up the template
+            $this->setVarByRef('userid', $userid);
+            return 'profile_tpl.php';
+            break;
 
         case 'editprofile':
-        	$mode = $this->getParam('mode');
-        	$userid = $this->objUser->userId();
-        	$id = $this->getParam('id');
-        	if($mode == 'editprofile')
-        	{
-        		$blogname = addslashes($this->getParam('blogname'));
-        		$blogdesc = addslashes($this->getParam('blogdesc'));
-        		$blogprofile = addslashes($this->getParam('blogprofile'));
+            $mode = $this->getParam('mode');
+            $userid = $this->objUser->userId();
+            $id = $this->getParam('id');
+            if($mode == 'editprofile')
+            {
+                $blogname = addslashes($this->getParam('blogname'));
+                $blogdesc = addslashes($this->getParam('blogdesc'));
+                $blogprofile = addslashes($this->getParam('blogprofile'));
 
-        		//save the profile to the table
-        		$prfarr = array('id' => $id, 'userid' => $userid, 'blog_name' => $blogname, 'blog_descrip' => $blogdesc, 'blogger_profile' => $blogprofile);
-        		$this->objDbBlog->updateProfile($prfarr);
-        		$this->nextAction('viewblog');
-        		break;
-        	}
-        	else {
-        		$this->nextAction('viewblog');
-        	}
-        	break;
+                //save the profile to the table
+                $prfarr = array('id' => $id, 'userid' => $userid, 'blog_name' => $blogname, 'blog_descrip' => $blogdesc, 'blogger_profile' => $blogprofile);
+                $this->objDbBlog->updateProfile($prfarr);
+                $this->nextAction('viewblog');
+                break;
+            }
+            else {
+                $this->nextAction('viewblog');
+            }
+            break;
 
         case 'viewprofile':
-        	$userid = $this->getParam('userid');
-        	$vprofile = $this->objDbBlog->checkProfile($userid);
-        	$this->setVarByRef('vprofile', $vprofile);
-        	$this->setVarByRef('userid', $userid);
-        	return 'viewprofile_tpl.php';
-        	break;
+            $userid = $this->getParam('userid');
+            $vprofile = $this->objDbBlog->checkProfile($userid);
+            $this->setVarByRef('vprofile', $vprofile);
+            $this->setVarByRef('userid', $userid);
+            return 'viewprofile_tpl.php';
+            break;
 
         case 'makepdf':
-        	$userid = $this->getParam('userid');
-        	$postid = $this->getParam('postid');
-        	//go and fetch the post in question from the db
-        	$data = $this->objDbBlog->getPostByPostID($postid);
-        	//create the pdf and send it out
-        	$header = stripslashes($data[0]['post_title']);
-        	$body = stripslashes($data[0]['post_content']);
-        	$postdate = $data[0]['post_date'];
+            $userid = $this->getParam('userid');
+            $postid = $this->getParam('postid');
+            //go and fetch the post in question from the db
+            $data = $this->objDbBlog->getPostByPostID($postid);
+            //create the pdf and send it out
+            $header = stripslashes($data[0]['post_title']);
+            $body = stripslashes($data[0]['post_content']);
+            $postdate = $data[0]['post_date'];
 
-        	//put it all together
-        	//get the pdfmaker classes
-        	$objPdf = $this->getObject('fpdfwrapper','pdfmaker');
-        	$text = $header . "  " . $postdate . "\r\n" . strip_tags($body);
-        	$objPdf->simplePdf($text);
-        	//$this->nextAction('');
-        	break;
+            //put it all together
+            //get the pdfmaker classes
+            $objPdf = $this->getObject('fpdfwrapper','pdfmaker');
+            $text = $header . "  " . $postdate . "\r\n" . strip_tags($body);
+            $objPdf->simplePdf($text);
+            //$this->nextAction('');
+            break;
 
         case 'mail2friend':
-        	$bloggerid = $this->getParam('bloggerid');
-        	$postid = $this->getParam('postid');
-        	$emailadd = $this->getParam('emailadd');
-        	$emailadd = explode(",",$emailadd);
-        	foreach($emailadd as $emails)
-        	{
-        		$trimmed[] = trim($emails);
-        	}
-        	$emailadd = $trimmed;
-        	$message = $this->getParam('msg');
-			$sendername = $this->getParam('sendername');
+            $bloggerid = $this->getParam('bloggerid');
+            $postid = $this->getParam('postid');
+            $emailadd = $this->getParam('emailadd');
+            $emailadd = explode(",",$emailadd);
+            foreach($emailadd as $emails)
+            {
+                $trimmed[] = trim($emails);
+            }
+            $emailadd = $trimmed;
+            $message = $this->getParam('msg');
+            $sendername = $this->getParam('sendername');
 
-        	if(empty($emailadd[0]))
-        	{
-        		$m2fdata = array('bloggerid' => $bloggerid, 'postid' => $postid);
-        		$this->setVarByRef('m2fdata', $m2fdata);
-        		//show the form
-        		return 'mail2friend_tpl.php';
+            if(empty($emailadd[0]))
+            {
+                $m2fdata = array('bloggerid' => $bloggerid, 'postid' => $postid);
+                $this->setVarByRef('m2fdata', $m2fdata);
+                //show the form
+                return 'mail2friend_tpl.php';
 
-        	}
-        	else {
-        		//get the post from the post id
-        		$postcontent = $this->objDbBlog->getPostById($postid);
-        		//ok we have the content, lets parse for the [img] bbcode tags and replace them with real imgsrc
-        		preg_match_all('/\[img\](.*)\[\/img\]/U', $postcontent[0]['post_content'], $matches, PREG_PATTERN_ORDER);
-        		unset($matches[0]);
-        		//print_r($matches);
-        		$mcount = 0;
-        		foreach($matches as $match)
-        		{
-        			$postcontent[0]['post_content'] = preg_replace('/\[img\](.*)\[\/img\]/U', "<img src='".$match[$mcount]."'/>", $postcontent[0]['post_content']); //$postcontent[0]['post_content'], $results, PREG_PATTERN_ORDER);
-        			$mcount++;
-        		}
-				//thump together an email string (this must be html email as the post is html
-				$objMailer = $this->getObject('email', 'mail');
-				//munge together the bodyText...
-				$bodyText = $this->objLanguage->languageText("mod_blog_yourfriend", "blog") . ", " . $sendername . ", " .
-							$this->objLanguage->languageText("mod_blog_interestedin","blog"). ": <br /> " .
-							"<a href='".$this->uri(array('action' => 'viewsingle', 'postid' => $postid), 'blog')."'>".$this->uri(array('action' => 'viewsingle', 'postid' => $postid), 'blog')."</a>";
-				$bodyText .= "<br /><br />";
-				if(!empty($message))
-				{
-					$bodyText .= $this->objLanguage->languageText("mod_blog_additionalcomments", "blog") . ": <br />";
-					$bodyText .= $message . "<br /><br />";
-				}
-				$bodyText .= stripslashes($postcontent[0]['post_date']);
-				$bodyText .= "<br /><br />";
-				$bodyText .= stripslashes($postcontent[0]['post_content']);
-				$objMailer->setValue('IsHTML', TRUE);
-				$objMailer->setValue('to', $emailadd);
-				$objMailer->setValue('from', 'noreply@uwc.ac.za');
-				$objMailer->setValue('fromName', $this->objLanguage->languageText("mod_blog_email2ffromname", "blog"));
-				$objMailer->setValue('subject', $this->objLanguage->languageText("mod_blog_email2fsub", "blog"));
-				$objMailer->setValue('body', $bodyText);
-				$objMailer->send(TRUE);
-		   		$this->nextAction('');
+            }
+            else {
+                //get the post from the post id
+                $postcontent = $this->objDbBlog->getPostById($postid);
+                //ok we have the content, lets parse for the [img] bbcode tags and replace them with real imgsrc
+                preg_match_all('/\[img\](.*)\[\/img\]/U', $postcontent[0]['post_content'], $matches, PREG_PATTERN_ORDER);
+                unset($matches[0]);
+                //print_r($matches);
+                $mcount = 0;
+                foreach($matches as $match)
+                {
+                    $postcontent[0]['post_content'] = preg_replace('/\[img\](.*)\[\/img\]/U', "<img src='".$match[$mcount]."'/>", $postcontent[0]['post_content']); //$postcontent[0]['post_content'], $results, PREG_PATTERN_ORDER);
+                    $mcount++;
+                }
+                //thump together an email string (this must be html email as the post is html
+                $objMailer = $this->getObject('email', 'mail');
+                //munge together the bodyText...
+                $bodyText = $this->objLanguage->languageText("mod_blog_yourfriend", "blog") . ", " . $sendername . ", " .
+                            $this->objLanguage->languageText("mod_blog_interestedin","blog"). ": <br /> " .
+                            "<a href='".$this->uri(array('action' => 'viewsingle', 'postid' => $postid), 'blog')."'>".$this->uri(array('action' => 'viewsingle', 'postid' => $postid), 'blog')."</a>";
+                $bodyText .= "<br /><br />";
+                if(!empty($message))
+                {
+                    $bodyText .= $this->objLanguage->languageText("mod_blog_additionalcomments", "blog") . ": <br />";
+                    $bodyText .= $message . "<br /><br />";
+                }
+                $bodyText .= stripslashes($postcontent[0]['post_date']);
+                $bodyText .= "<br /><br />";
+                $bodyText .= stripslashes($postcontent[0]['post_content']);
+                $objMailer->setValue('IsHTML', TRUE);
+                $objMailer->setValue('to', $emailadd);
+                $objMailer->setValue('from', 'noreply@uwc.ac.za');
+                $objMailer->setValue('fromName', $this->objLanguage->languageText("mod_blog_email2ffromname", "blog"));
+                $objMailer->setValue('subject', $this->objLanguage->languageText("mod_blog_email2fsub", "blog"));
+                $objMailer->setValue('body', $bodyText);
+                $objMailer->send(TRUE);
+                $this->nextAction('');
 
-        	}
-        	break;
+            }
+            break;
 
         }//action
 
