@@ -32,6 +32,10 @@ pre {margin: 0px; font-family: monospace;}
 a:link {color: #000099; text-decoration: none; background-color: #ffffff;}
 a:hover {text-decoration: underline;}";
 $str = str_replace($css, "", $str);
+$css = "img {float: right; border: 0px;}";
+$cssRep = "img {float: left; border: 0px;}";
+$str = str_replace($css, $cssRep, $str);
+
 
 $cssLayout->setMiddleColumnContent($str);
 //Output the content to the page
