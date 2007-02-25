@@ -43,8 +43,10 @@ class phpmyadmin extends controller
     public function dispatch()
     {
     	$objConfig = $this->getObject('dbsysconfig', 'sysconfig');
-    	$url = $objConfig->getValue('mod_phpmyadmin_url', 'phpmyadmin');
-    	header ("Location: $url");
+    	$src = $objConfig->getValue('mod_phpmyadmin_url', 'phpmyadmin');
+    	//header ("Location: $url");
+    	$this->setVarByRef("src", $src);
+    	return "default_tpl.php";
     }
 }
 ?>
