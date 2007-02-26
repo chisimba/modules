@@ -1208,7 +1208,7 @@ class blogops extends object
         $dropdown->extra = "onchange=\"javascript:
             var url = '".$url."';
             url = url + '&amp;feedselector=' + this.value; 
-            window.open(url, 'blog_rss', 'height=200, width=500, left=100, top=100, resizable=1, scrollbars=1, menubar=1, toolbar=1');\"";
+            window.open(url, 'blog_rss', 'height=250, width=600, left=100, top=100, resizable=1, scrollbars=1, menubar=1, toolbar=1');\"";
             
         $dropdown->setSelected('');
         $dropStr = $dropdown->show();
