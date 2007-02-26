@@ -15,7 +15,7 @@ $middleContent = $pageText->show();
 $middleContent = '';
 
 // -------------------------------------------------------------------------
-
+/*
 // Join chat room.    
 $pageText->type=3;
 $pageText->str=$objLanguage->languageText('mod_workgroup_chatroom','workgroup');
@@ -29,7 +29,7 @@ $chatContent = $objChatContent->getLast10($contextCode, $this->workgroupId);
 if ($chatContent == $objLanguage->languageText('mod_chat_noposts')) {
     $chatContent = '<div class="noRecordsMessage">'.$chatContent.'</div>';
 }
-*/
+
 
 $middleContent .= '<div class="wrapperLightBkg" style="border: 5px outset #c0c0c0;">'.$chatContent.'</div>';
 
@@ -38,7 +38,7 @@ $chatLink = new link ($this->uri(array('action'=>'join','context'=>$contextCode.
 $chatLink->link = $objLanguage->languageText("mod_workgroup_enterchat",'workgroup');
 
 $middleContent .= '<h3 align="center">'.$chatLink->show().'</h3>';
-
+*/
 // -------------------------------------------------------------------------
 
 /*
@@ -66,7 +66,7 @@ $pageText->str=ucwords($objLanguage->code2Txt("mod_workgroup_fileshare",'workgro
 $middleContent .= $pageText->show();
 
 $objFileShareList =& $this->getObject('filesharelist', 'fileshare');
-$middleContent .= '<div class="wrapperLightBkg" style="border: 5px outset #c0c0c0;">'.$objFileShareList->getFormattedDisplay($this->workgroupId).'</div>';
+//$middleContent .= '<div class="wrapperLightBkg" style="border: 5px outset #c0c0c0;">'.$objFileShareList->getFormattedDisplay($this->workgroupId).'</div>';
 
 $fileshareLink = new link($this->uri(NULL, 'fileshare'));
 $fileshareLink->link = ucwords($objLanguage->code2Txt('mod_workgroup_enterfileshare','workgroup'));
