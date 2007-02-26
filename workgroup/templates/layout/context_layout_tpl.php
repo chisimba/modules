@@ -5,12 +5,12 @@ if($objDBContext->isInContext())
     $objContextUtils = & $this->getObject('utilities','context');
     $cm = $objContextUtils->getHiddenContextMenu('workgroup','show');
 } else {
-    $cm = $this->getMenu();
+    $cm = '';
 }
 
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
-//$userMenuBar=& $this->getObject('sidemenu','toolbar');
-$cssLayout->setLeftColumnContent($cm/*$userMenuBar->show('context')*/); /*menuUser*/
+$userMenuBar=& $this->getObject('sidemenu','toolbar');
+$cssLayout->setLeftColumnContent($userMenuBar->menuContext().$cm); /*menuUser*/
 $cssLayout->setMiddleColumnContent($this->getContent());
 echo $cssLayout->show();
 ?>
