@@ -45,10 +45,10 @@ class workgroupadmin extends controller
     */
     function dispatch($action=Null)
     {
-        $this->objConfig = &$this->getObject('altconfig','config');
-        $systemType = $this->objConfig->getValue("SYSTEM_TYPE", "contextabstract");
-        $isAlumni = true; //($systemType == "alumni");
-        $this->setVar('isAlumni',$isAlumni);
+        //$this->objConfig = &$this->getObject('altconfig','config');
+        //$systemType = $this->objConfig->getValue("SYSTEM_TYPE", "contextabstract");
+        //$isAlumni = true; //($systemType == "alumni");
+        //$this->setVar('isAlumni',$isAlumni);
         // Set the layout template.
         $this->setLayoutTemplate("layout_tpl.php");
         // 1. ignore action at moment as we only do one thing - say hello
@@ -64,18 +64,18 @@ class workgroupadmin extends controller
         // return the name of the template to use  because it is a page content template
         // the file must live in the templates/content subdir of the module directory
 		// Get context code.
-		//$objDbContext = &$this->getObject('dbcontext','context');
-		$contextCode = '0'; //$objDbContext->getContextCode();
+		$objDbContext = $this->getObject('dbcontext','context');
+		$contextCode = $objDbContext->getContextCode();
 		$this->setVarByRef('contextCode', $contextCode);
         // Check if we are not in a context...
 		if ($contextCode == null) {
-            if ($isAlumni) {
-    			$contextTitle = "Lobby";
-    			$this->setVarByRef('contextTitle', $contextTitle);
-            }
-            else {
+            //if ($isAlumni) {
+    		//	$contextTitle = "Lobby";
+    		//	$this->setVarByRef('contextTitle', $contextTitle);
+            //}
+            //else {
                 return "error_tpl.php";
-            }
+            //}
 		}
 		else {
             // ... else 
@@ -90,7 +90,7 @@ class workgroupadmin extends controller
                 // Create a new workgroup.
 				$id = $this->objDbWorkgroup->insertSingle(
 					$contextCode, 
-					$_POST['newworkgroup']
+					$this->getParam('newworkgroup')
 				);
                 //$id = $this->objDbWorkgroup->getLastInsertId();
                 return $this->nextAction('manage', array('workgroupId'=>$id));
@@ -106,7 +106,7 @@ class workgroupadmin extends controller
 				$id = $this->getParam('workgroupId',NULL);
 				$this->objDbWorkgroup->updateSingle(
 					$id, 
-					$_POST['newworkgroup']
+					$this->getParam('newworkgroup')
 				);
 				return $this->nextAction('confirm', null);
 			case "delete":
@@ -123,21 +123,22 @@ class workgroupadmin extends controller
 				$this->setVarByRef("workgroup", $workgroup);
 				$members = $this->objDbWorkgroupUsers->listAll($workgroup['id']);
 				$this->setVarByRef("members", $members);
-                if ($isAlumni) {
-                    $objUsers = $this->getObject('dbusers','workgroup');
-                    $users = $objUsers->listAll();
-    				$this->setVarByRef("users", $users);
-                } else {
+                //if ($isAlumni) {
+                //    $objUsers = $this->getObject('dbusers','workgroup');
+               //     $users = $objUsers->listAll();
+    		//		$this->setVarByRef("users", $users);
+               // } else {
                     // Get the members of all workgroups in the context.
     				//$membersOfAll = $this->objDbWorkgroupUsers->getAllInContext($contextCode);
     				$members = $this->objDbWorkgroupUsers->listAll($workgroup['id']);
     				
                     // Get the groupAdminModel object.
-    				$groups =& $this->getObject("groupAdminModel", "groupadmin");
+    				$groups = $this->getObject("groupAdminModel", "groupadmin");
                     
                     // Get list of lecturers
-    				$gid=$groups->getLeafId(array($contextCode,'Lecturers'));
+    				$gid = $groups->getLeafId(array($contextCode,'Lecturers'));
     				$lecturers = $groups->getGroupUsers($gid, array('userid',"CONCAT(firstname, ' ', surname) AS fullname"), "ORDER BY fullname");
+    				   				
 
                     // Get list of students
     				$gid=$groups->getLeafId(array($contextCode,'Students'));
@@ -160,7 +161,7 @@ class workgroupadmin extends controller
                     }
 
                     $this->setVarByRef("users", $users);    
-                }
+                //}
 				$this->setVar('pageSuppressXML',true);
 				return "managenew_tpl.php";
             case "processform":
@@ -175,7 +176,7 @@ class workgroupadmin extends controller
                 		    $this->objDbWorkgroupUsers->insertSingle($workgroupId,$userId);
                         }
                     }
-					$this->setVar('confirm',$this->objLanguage->languageText('mod_workgroupadmin_changessaved'));
+					$this->setVar('confirm',$this->objLanguage->languageText('mod_workgroupadmin_changessaved','workgroupadmin'));
                     return $this->nextaction('confirm',NULL);
                 } else if ( $this->getParam( 'button' ) == 'cancel' ) {
                     //.. do the cancel action ..
@@ -183,7 +184,7 @@ class workgroupadmin extends controller
                 }
             // Add selected users to workgroup.
 			case 'confirm':
-				$this->setVar('confirm',$this->objLanguage->languageText('mod_workgroupadmin_changessaved'));
+				$this->setVar('confirm',$this->objLanguage->languageText('mod_workgroupadmin_changessaved','workgroupadmin'));
 				break;
 			default:
 				;
