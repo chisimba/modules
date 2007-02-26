@@ -1215,14 +1215,14 @@ class blogops extends object
 
         $this->objButton = new button($this->objLanguage->languageText('word_show'));
 
- $this->objButton->setValue($this->objLanguage->languageText('word_show'));
- $this->objButton->setToSubmit();
-       // $btnStr = $this->objButton->show();
+        //$this->objButton->setValue($this->objLanguage->languageText('word_show'));
+        //$this->objButton->setToSubmit();
+        // $btnStr = $this->objButton->show();
 
         $this->objUser = $this->getObject('user', 'security');
 
         $formStr = $dropStr."<br />";
-        $formStr .= $btnStr."<br />";
+        //$formStr .= $btnStr."<br />";
 
               //creating form
         $form = new form('formname', $this->uri(array(
