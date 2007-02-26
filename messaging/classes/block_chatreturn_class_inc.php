@@ -44,7 +44,9 @@ class block_chatreturn extends object
         $returnLabel = $this->objLanguage->languageText('mod_messaginge_return', 'messaging');  
         $returnTitleLabel = $this->objLanguage->languageText('mod_messaginge_returntitle', 'messaging');  
                       
-        $objLink = new link($this->uri(array(), 'messaging'));
+        $objLink = new link($this->uri(array(
+            'action' => 'leaveroom',
+        ), 'messaging'));
         $objLink->link = $returnLabel;
         $objLink->title = $returnTitleLabel;
         $backLink = $objLink->show();

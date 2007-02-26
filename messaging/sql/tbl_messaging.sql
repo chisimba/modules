@@ -29,6 +29,10 @@ $fields = array(
         'type' => 'integer',
         'length' => 1,
         ),    
+    'message_counter' => array(
+        'type' => 'integer',
+        'length' => 7,
+        ),    
     'date_created' => array(
         'type' => 'timestamp',
         ),

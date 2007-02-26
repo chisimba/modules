@@ -244,8 +244,7 @@ class display extends object
                 }
                 $roomType = $room['room_type'];
                 $ownerId = $room['owner_id'];
-                $dateCreated = explode(' ', $room['date_created']);
-                $date = $this->objDatetime->formatDate($dateCreated[0]);
+                $date = $this->objDatetime->formatDateOnly($room['date_created']);
                 
                 if($roomType == 0){
                     $owner = $systemLabel;
@@ -514,6 +513,37 @@ class display extends object
     */
     public function chatRoom($roomData)
     {
+        $script = '<script type="text/javaScript">
+            Event.observe(window, "load", init_chat, false);
+    
+            function init_chat(){
+                Event.observe("input_send", "click", send_chat, false);
+                get_chat();
+            }
+            
+            function get_chat(){
+                var url = "index.php";
+                var target = "chatroom";
+                var pars = "module=messaging&action=getchat";
+                var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars, onComplete: chat_timer});
+            }
+
+            function chat_timer(){
+                setTimeout("get_chat()", 1000);
+            }
+            
+            function send_chat(){
+                var element = document.getElementById("input_message");
+                
+                var url = "index.php";
+                var target = "input_message";
+                var pars = "module=messaging&action=sendchat&chat=" + element.value;
+                var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars});
+                element.value = "";
+            }
+        </script>';
+        $str = $script;
+        
         $array = array(
             'room' => $roomData['room_name'],
         );
@@ -525,7 +555,7 @@ class display extends object
         $objHeader->str = ucfirst($heading);
         $objHeader->type = 1;
         $header = $objHeader->show();        
-        $str = $header;
+        $str .= $header;
         
         $objLayer = new layer();
         $objLayer->id = 'chatroom';
@@ -534,16 +564,15 @@ class display extends object
         $chatLayer = $objLayer->show();
         $str .= $chatLayer;
         
-        $objText = new textarea('chat');
+        $objText = new textarea('message');
         $chatText = $objText->show();
         
         $objButton = new button('send', $sendLabel);
-        $objButton->setToSubmit();
         $sendButton = $objButton->show();
         
         $objButton = new button('clear', $clearLabel);
         $objButton->extra = 'onclick="javascript: 
-            var element = document.getElementById(\'input_chat\');
+            var element = document.getElementById(\'input_message\');
             element.value = \'\';
             element.focus();
         "';
@@ -557,7 +586,14 @@ class display extends object
         $objTable->addCell($sendButton.'<br />'.$clearButton, '', 'center', '', '' ,'');
         $objTable->endRow();
         $chatTable = $objTable->show();
-        $str .= $chatTable;
+        $string = $chatTable;
+        
+        $objForm = new form('chat', $this->uri(array(
+            'action' => 'sendchat'
+        )));
+        $objForm->addToForm($string);
+        $chatForm = $objForm->show();
+        $str .= $chatForm;
         
         return $str;
     }
@@ -633,7 +669,7 @@ class display extends object
             
             function addSmiley()
             {
-                var element = opener.document.getElementById("input_chat");
+                var element = opener.document.getElementById("input_message");
                 for(i = 0; i <= namelist.length-1; i++){
                     if(namelist[i] == this.id){
                         if(element.value == ""){
@@ -738,5 +774,32 @@ class display extends object
         $str = $objLayer->show();
         return $str;        
     }
+    
+    /**
+    * Method to create the content for the chat message div
+    * 
+    * @access public
+    * @param array|boolean $messaged The array of chat messages FALSE if none
+    * @return string The template output string
+    */
+    public function showChat($messages)
+    {
+        $str = '';
+        if($messages != FALSE){
+            $str = '<ul>';
+            foreach($messages as $message){
+                $str .= '<li>';
+                $userId = $message['sender_id'];
+                $name = $this->objUser->fullname($userId);
+                $date = $this->objDatetime->formatDate($message['date_created']);
+                $str .= '<strong>['.$name.',&nbsp;';
+                $str .= $date.']:</strong>&nbsp;';
+                $str .= $message['message'];
+                $str .= '</li>';
+            }
+            $str .= '</ul>';
+        }
+        echo $str;
+    }    
 }
 ?>

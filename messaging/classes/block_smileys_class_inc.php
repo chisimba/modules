@@ -94,7 +94,7 @@ class block_smileys extends object
             
             function addSmiley()
             {
-                var element = document.getElementById("input_chat");
+                var element = document.getElementById("input_message");
                 for(i = 0; i <= namelist.length-1; i++){
                     if(namelist[i] == this.id){
                         if(element.value == ""){

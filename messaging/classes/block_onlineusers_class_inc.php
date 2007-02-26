@@ -51,10 +51,10 @@ class block_onlineusers extends object
                 var url = "index.php";
                 var target = "listDiv";
                 var pars = "module=messaging&action=getusers";
-                var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars, onComplete: timer});
+                var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars, onComplete: users_timer});
             }
 
-            function timer(){
+            function users_timer(){
                 setTimeout("init_users()", 5000);
             }
         </script>';
