@@ -1124,7 +1124,7 @@ class blogops extends object
      * @return string
      * @deprecated - old method
      */
-    public function showFeeds($userid, $featurebox = FALSE)
+   /* public function showFeeds($userid, $featurebox = FALSE)
     {
         $this->loadClass('dropdown', 'htmlelements');
         $dropdown = &new dropdown('feedselector');
@@ -1170,23 +1170,24 @@ class blogops extends object
         }
     }
     
-    
-    /**
+*/    
+  /**
      * Method to build and create the feeds options box - NEW METHOD
      *
      * @param integer $userid
      * @param bool $featurebox
      * @return string
-     *
+     */
     public function showFeeds($userid, $featurebox = FALSE)
     {
         $this->loadClass('dropdown', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
 
         $url = $this->uri(array('action' => 'feedurl'));
-
+		
         $dropdown = new dropdown('feedselector');
-        $dropdown->addOption('', 'Select feed format');
+        $SelectFeed = $this->objLanguage->languageText("mod_blog_SelectFeed", "blog"); 
+        $dropdown->addOption('SelectFeed', $SelectFeed);
         $rss2 = $this->objLanguage->languageText("mod_blog_word_rss2", "blog"); 
         $dropdown->addOption('rss2', $rss2);
         $rss091 = $this->objLanguage->languageText("mod_blog_word_rss091", "blog");
@@ -1216,7 +1217,7 @@ class blogops extends object
 
  $this->objButton->setValue($this->objLanguage->languageText('word_show'));
  $this->objButton->setToSubmit();
-        $btnStr = $this->objButton->show();
+       // $btnStr = $this->objButton->show();
 
         $this->objUser = $this->getObject('user', 'security');
 
@@ -1240,7 +1241,7 @@ class blogops extends object
             $ret =$objFeatureBox->show($this->objLanguage->languageText("mod_blog_feedheader",'blog') , $form->show());
             return $ret;
         }
-    }*/
+    }
 
     /**
      * Method to quickly add a category to the default category (parent = 0)
