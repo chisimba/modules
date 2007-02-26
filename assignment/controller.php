@@ -262,7 +262,7 @@ class assignment extends controller
         if(!empty($assignData)){
             foreach($assignData as $key=>$val){
                 $submitData = $this->dbSubmit->getSubmit("assignmentid='".$val['id']."' AND
-                userid='".$this->objUser->userId()."'", 'id AS submitid, mark AS studentmark, datesubmitted, studentfileid');
+                userid='".$this->objUser->userId()."'", 'id AS submitid, mark AS studentmark, datesubmitted, fileid');
 
 		if(!($submitData === FALSE)){
                 	$assignData[$key] = array_merge($val, $submitData[0]);
