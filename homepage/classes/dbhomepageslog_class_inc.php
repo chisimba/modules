@@ -156,7 +156,7 @@ class dbHomePagesLog extends dbTable
         {
             if ($country != 'unknown') {
                 $countryName = $this->objIPToCountry->getCountryName($country);
-                $image = '<img src="'.$this->objIPToCountry->getCountryFlag($country).'" alt="'.$countryName.'" title="'.$countryName.'">';
+                $image = '<img src="'.$this->objIPToCountry->getCountryFlag($country).'" alt="'.$countryName.'" title="'.$countryName.'" />';
                 $return .= $comma.$image.' '.$countryName.' ('.$value.') ';
                 $comma = ', ';
             }
