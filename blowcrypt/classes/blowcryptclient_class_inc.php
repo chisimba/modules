@@ -110,6 +110,10 @@ class blowcryptclient extends object
     public function encrypt($data, $key)
     {
         $encrypted_data = null;
+        if (is_null($key)) {
+            return $data;
+        }
+        $key = trim($key);
         if (!is_null($data)) {
             if (strlen($data) > 0) {
                 $encrypted_data = mcrypt_encrypt($this->encryptMethod, $key, $data, $this->encryptMode, $this->iv);
@@ -131,6 +135,10 @@ class blowcryptclient extends object
     public function decrypt($data, $key)
     {
         $decrypted_data = null;
+        if (is_null($key)) {
+            return $data;
+        }
+        $key = trim($key);
         if (!is_null($data)) {
             if (strlen($data) > 0) {
                 $data = pack("H*", $data);
