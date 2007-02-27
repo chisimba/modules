@@ -859,7 +859,7 @@ class dbPost extends dbTable
                 $objTable->startHeaderRow();
                 $objTable->addHeaderCell($this->objLanguage->languageText('mod_forum_topicconversation', 'forum'));
                 $objTable->addHeaderCell($this->objLanguage->languageText('word_message', 'forum'), '60%');
-                $objTable->addHeaderCell($this->objLanguage->languageText('word_author', 'forum'), 100);
+                $objTable->addHeaderCell($this->objLanguage->languageText('word_author'), 100);
                 $objTable->endHeaderRow();
                 
                 // Load Link class

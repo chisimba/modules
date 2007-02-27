@@ -110,7 +110,7 @@ $tblTopic->startHeaderRow();
         // --------------
 		
         
-		$tblTopic->addHeaderCell($this->objForum->forumSortLink ($forumid, 'author', $this->objLanguage->languageText('word_author', 'forum')), Null, 'center', 'center');
+		$tblTopic->addHeaderCell($this->objForum->forumSortLink ($forumid, 'author', $this->objLanguage->languageText('word_author')), Null, 'center', 'center');
         
         // --------------
 		

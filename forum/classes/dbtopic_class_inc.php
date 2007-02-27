@@ -261,7 +261,7 @@ GROUP BY tbl_forum_topic.id                ';
             $table->cellspacing = 1;
             $table->startHeaderRow();
             $table->addHeaderCell($this->objLanguage->languageText('mod_forum_topicconversation', 'forum'));
-            $table->addHeaderCell($this->objLanguage->languageText('word_author', 'forum'), NULL, NULL, 'center');
+            $table->addHeaderCell($this->objLanguage->languageText('word_author'), NULL, NULL, 'center');
             $table->addHeaderCell($this->objLanguage->languageText('word_replies', 'forum'), NULL, NULL, 'center');
             $table->addHeaderCell($this->objLanguage->languageText('word_views', 'forum'), NULL, NULL, 'center');
             $table->addHeaderCell($this->objLanguage->languageText('mod_forum_lastpost', 'forum'), NULL, NULL, 'center');
