@@ -1976,8 +1976,9 @@ class blogops extends object
         if(!empty($data)){
             foreach($data as $item){
                 $str .= '<p>';
-                $str .= '<b>'.$item['post_title'].'</b> - <font class="minute">'.$objUser->fullName($item['userid']).'</font>';
-                $str .= '<br />'.$item['post_excerpt'];
+                $str .= '<b>'.$item['post_title'].'</b><br />';
+                $str .= '<font class="minute">'.$objUser->fullName($item['userid']).'</font>';
+                //$str .= '<br />'.$item['post_excerpt'];
                 $str .= '<hr></p>';
             }
         }
