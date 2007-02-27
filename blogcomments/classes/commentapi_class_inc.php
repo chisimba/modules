@@ -71,7 +71,7 @@ class commentapi extends object
 			$this->loadClass('textinput', 'htmlelements');
 			$this->loadClass('textarea', 'htmlelements');
 			$this->loadClass('button', 'htmlelements');
-			$this->loadClass('htmlarea', 'htmlelements');
+			//$this->loadClass('htmlarea', 'htmlelements');
 			$this->loadClass('dropdown', 'htmlelements');
 			$this->loadClass('label', 'htmlelements');
 		}
@@ -90,7 +90,7 @@ class commentapi extends object
 		//start the inputs
 		//textinput for author url
 		$url = new textinput('url');
-		$urllabel = new label($this->objLanguage->languageText("mod_blogcomments_url", "blogcomments") . ':', 'input_url');
+		$urllabel = new label($this->objLanguage->languageText("mod_blogcomments_url", "blogcomments") . ':', 'comm_input_url');
 		$ctbl->startRow();
 		$ctbl->addCell($urllabel->show());
 		$ctbl->endRow();
@@ -120,8 +120,11 @@ class commentapi extends object
 		$ctbl->startRow();
 		if($editor == TRUE)
 		{
-			$comm = $this->newObject('htmlarea','htmlelements');
+			echo "start";
+			$comm = $this->getObject('htmlarea','htmlelements');
 			$comm->setName('comment');
+			$comm->height = 400;
+			$comm->width = 420;
 			$comm->setBasicToolBar();
 			$ctbl->addCell($comm->showFCKEditor());
 		}
@@ -131,7 +134,6 @@ class commentapi extends object
 			$ctbl->addCell($comm->show());
 		}
 		$ctbl->endRow();
-
 		//comment type dropdown
 		if($showtypes == TRUE)
 		{
