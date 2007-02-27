@@ -1187,11 +1187,11 @@ class blogops extends object
                       <script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
                       <script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
         $this->appendArrayVar('headerParams',$scripts);
-        $str = "<a href=\"#\" onclick=\"Effect.SlideUp('contextmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
+        $str = "<a href=\"#\" onclick=\"Effect.SlideUp('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
         $icon->setIcon('down');
-        $str .="<a href=\"#\" onclick=\"Effect.SlideDown('contextmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
+        $str .="<a href=\"#\" onclick=\"Effect.SlideDown('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
 
-        $str .='<div id="contextmenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
+        $str .='<div id="feedmenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
         $str .= $leftCol;
         $str .= '</div>';
 
