@@ -13,7 +13,7 @@ $cssLayout->setNumColumns(3);
 $leftColumn = $this->newObject('sidemenu','toolbar');
 $objBlocks = $this->newObject('blocks', 'blocks');
 $returnBlock = $objBlocks->showBlock('chatreturn', 'messaging');
-$usersBlock = $objBlocks->showBlock('onlineusers', 'messaging');
+$usersBlock = $objBlocks->showBlock('onlineusers', 'messaging', '', '', FALSE);
 $smileyBlock = $objBlocks->showBlock('smileys', 'messaging', '', '', FALSE);
 $formatBlock = $objBlocks->showBlock('formating', 'messaging', '', '', FALSE);
 

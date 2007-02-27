@@ -7,20 +7,20 @@ if (!$GLOBALS['kewl_entry_point_run'])
 // end security check
 
 /**
-* The class to display a help block for sudoku
+* The class to display an exit link in a block
 *
 * @author Kevin Cyster
 */
 class block_chatreturn extends object
 {
     /*
-    * @var object $objLanguage The language class in the language module
-    * @access private
+    * @var object $objLanguage: The language class in the language module
+    * @access public
     */
     public $objLanguage;
 
-   /*
-    * @var string $title The title of the block
+    /*
+    * @var object $title: The title of the block
     * @access public
     */
     public $title;
@@ -30,10 +30,12 @@ class block_chatreturn extends object
     */
     public function init()
     {
-        $this->objLanguage = $this->getObject('language', 'language');
-        
+        // load html element classes
         $this->loadClass('htmltable', 'htmlelements');
         $this->loadClass('link', 'htmlelements');
+        
+        // system classes
+        $this->objLanguage = $this->getObject('language', 'language');
     }
 
     /**

@@ -127,7 +127,7 @@ class messaging extends controller
         // system variables
         $this->userId = $this->objUser->userId();
         $this->name = $this->objUser->fullname($this->userId);
-        $this->isAdmin = $this->objUser->inAdminGroup($this->userId, 'Site Admin');
+        $this->isAdmin = $this->objUser->inAdminGroup($this->userId);
         $this->contextCode = $this->objContext->getContextCode();
         
         // messaging objects
@@ -152,9 +152,7 @@ class messaging extends controller
         // Now the main switch statement to pass values for $action
         switch($action){
             case 'roomlist':
-                $rooms = $this->dbRooms->listRooms($this->contextCode);
-                $userRooms = $this->dbUsers->listUserRooms($this->userId);
-                $templateContent = $this->objDisplay->roomList($rooms, $userRooms);
+                $templateContent = $this->objDisplay->roomList();
                 $this->setVarByRef('templateContent', $templateContent);
                 $this->setVar('mode', 'normal');
                 return 'template_tpl.php';
@@ -169,8 +167,7 @@ class messaging extends controller
                 
             case 'editroom':
                 $roomId = $this->getParam('roomId');
-                $roomData = $this->dbRooms->getRoom($roomId);
-                $templateContent = $this->objDisplay->addRoom('edit', $roomData);
+                $templateContent = $this->objDisplay->addRoom('edit', $roomId);
                 $this->setVarByRef('templateContent', $templateContent);
                 $this->setVar('mode', 'normal');
                 return 'template_tpl.php';
@@ -232,8 +229,7 @@ class messaging extends controller
                 
             case 'readmore':
                 $roomId = $this->getParam('room_id');
-                $roomData = $this->dbRooms->getRoom($roomId);
-                $templateContent = $this->objDisplay->readMore($roomData);
+                $templateContent = $this->objDisplay->readMore($roomId);
                 $this->setVarByRef('templateContent', $templateContent);
                 $this->setVar('mode', 'popup');
                 return 'template_tpl.php';
@@ -274,16 +270,37 @@ class messaging extends controller
                 break;
                 
             case 'getusers':
+                $isModerator = $this->getParam('moderator');
+                return $this->objDisplay->getUsers($isModerator);
+                break;
+                
+            case 'banuser':
                 $roomId = $this->getSession('chat_room_id');
-                $bannedUsers = $this->dbBanned->listUsers($roomId);
-                $users = $this->dbUserlog->listUsers($roomId);
-                return $this->objDisplay->getUsers($users, $bannedUsers);
+                $userId = $this->getParam('userId');
+                $banType = $this->getParam('type');
+                $banLength = $this->getParam('length');
+                $banData = array(
+                    'room_id' => $roomId,
+                    'user_id' => $userId,
+                    'ban_type' => $banType,
+                    'ban_length' => $banLength,
+                );
+                $this->dbBanned->addUser($banData);
+                return $this->nextAction('');
+                break;
+
+            case 'banpopup':
+                $userId = $this->getParam('userId');
+                $templateContent = $this->objDisplay->banPopup($userId);
+                $this->setVarByRef('templateContent', $templateContent);
+                $this->setVar('script', FALSE);
+                $this->setVar('mode', 'popup');
+                return 'template_tpl.php';
                 break;
                 
             case 'moresmileys':
-                $templateContent = $this->objDisplay->showSmileys();
+                $templateContent = $this->objDisplay->moreSmileys();
                 $this->setVarByRef('templateContent', $templateContent);
-                $this->setVar('script', TRUE);
                 $this->setVar('mode', 'popup');
                 return 'template_tpl.php';
                 break;
@@ -295,17 +312,7 @@ class messaging extends controller
                 break;
                 
             case 'getchat':
-                $roomId = $this->getSession('chat_room_id');
-                $counter = $this->getSession('message_counter');
-                $messages = $this->dbMessaging->getChatMessages($roomId, $counter);
-                if($messages){
-                    $count = count($messages);
-                    $counter = $counter + $count;
-                    $this->setSession('message_counter', $counter);
-                    return $this->objDisplay->showChat($messages);
-                }else{
-                    echo '';
-                }
+                return $this->objDisplay->getChat();
                 break;
                                                                 
             default:

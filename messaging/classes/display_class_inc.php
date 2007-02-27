@@ -14,11 +14,47 @@ if(!$GLOBALS['kewl_entry_point_run']){
 class display extends object
 {
     /**
+    * @var object $objIcon: The geticon class of the htmlelements module
+    * @access private
+    */
+    private $objIcon;
+     
+    /**
+    * @var object $objFeaturebox: The featurebox class in the navigation module
+    * @access private
+    */
+    private $objFeaturebox;
+
+    /**
+    * @var object $objLanguage: The language class of the language module
+    * @access private
+    */
+    private $objLanguage;
+     
+    /**
     * @var object $objUser: The user class of the security module
     * @access private
     */
     private $objUser;
      
+    /**
+    * @var object $objDatetime: The datetime class of the utilities module
+    * @access private
+    */
+    private $objDatetime;
+     
+    /**
+    * @var object $objContext: The dbcontexr class in the context module
+    * @access private
+    */
+    private $objContext;
+
+    /**
+    * @var object $objWorkgroup: The dbworkgroup class in the workgroup module
+    * @access public
+    */
+//    public $objWorkgroup;
+
     /**
     * @var string $userId: The user id of the current logged in user
     * @access private
@@ -32,46 +68,40 @@ class display extends object
     private $isLecturer;
 
     /**
-    * @var object $objLanguage: The language class of the language module
-    * @access private
-    */
-    private $objLanguage;
-     
-    /**
-    * @var object $objIcon: The geticon class of the htmlelements module
-    * @access private
-    */
-    public $objIcon;
-     
-    /**
-    * @var object $objDatetime: The datetime class of the utilities module
-    * @access private
-    */
-    public $objDatetime;
-     
-    /**
-    * @var object $objWorkgroup: The dbworkgroup class in the workgroup module
+    * @var string $contextCode: The context code if the user is in a context
     * @access public
     */
-//    public $objWorkgroup;
+    public $contextCode;
 
     /**
-    * @var object $objContext: The dbcontexr class in the context module
-    * @access public
+    * @var object $dbRooms: The dbrooms class in the messaging module
+    * @access private
     */
-    public $objContext;
+    private $dbRooms;
+
+    /**
+    * @var object $dbUsers: The dbusers class in the messaging module
+    * @access private
+    */
+    private $dbUsers;
 
     /**
     * @var object $dbUserlog: The dbuserlog class in the messaging module
-    * @access public
+    * @access private
     */
-    public $dbUserlog;
+    private $dbUserlog;
 
     /**
-    * @var object $objFeaturebox: The featurebox class in the navigation module
-    * @access public
+    * @var object $dbMessaging: The dbmessaging class in the messaging module
+    * @access private
     */
-    public $objFeaturebox;
+    private $dbMessaging;
+
+    /**
+    * @var object $dbBanned: The dbbannedusers class in the messaging module
+    * @access private
+    */
+    private $dbBanned;
 
     /**
     * Method to construct the class
@@ -81,39 +111,48 @@ class display extends object
     */
     public function init()
     {   
+        // load html element classes
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('htmltable', 'htmlelements');
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('textarea', 'htmlelements');
         $this->loadClass('radio', 'htmlelements');
+        $this->loadClass('dropdown', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('windowpop','htmlelements');
         $this->loadClass('layer','htmlelements');
         $this->loadClass('tabbedbox', 'htmlelements');
-
-        $this->objLanguage = $this->getObject('language','language');
-        $this->objUser = $this->getObject('user', 'security');
         $this->objIcon = $this->newObject('geticon', 'htmlelements');
-        $this->objDatetime = $this->getObject('datetime', 'utilities');
-        $this->objContext = $this->getObject('dbcontext', 'context');
-        $this->dbUserlog = $this->getObject('dbuserlog', 'messaging');
         $this->objFeaturebox = $this->getObject('featurebox', 'navigation');
 
+        // syatem classes
+        $this->objLanguage = $this->getObject('language','language');
+        $this->objUser = $this->getObject('user', 'security');
+        $this->objDatetime = $this->getObject('datetime', 'utilities');
+        $this->objContext = $this->getObject('dbcontext', 'context');
         $this->userId = $this->objUser->userId(); 
-        $this->isLecturer = $this->objUser->isContextLecturer();       
+        $this->isLecturer = $this->objUser->isContextLecturer();  
+        $this->contextCode = $this->objContext->getContextCode();
+        
+        // messaging classes     
+        $this->dbRooms = $this->getObject('dbrooms', 'messaging');
+        $this->dbUsers = $this->getObject('dbusers', 'messaging');
+        $this->dbUserlog = $this->getObject('dbuserlog', 'messaging');
+        $this->dbMessaging = $this->getObject('dbmessaging', 'messaging');
+        $this->dbBanned = $this->getObject('dbbannedusers', 'messaging');
     }
 
     /**
     * Method to create the chat room list template
     *
     * @access public
-    * @param array|boolean $rooms The data from the chat rooms database table or FALSE if no data
     * @return string $str The template output string
     **/
-    public function roomList($rooms, $userRooms)
+    public function roomList()
     {
+        // language elements
         $chatHeading = $this->objLanguage->languageText('mod_messaging_chatheading', 'messaging');
         $roomHeading  = $this->objLanguage->languageText('mod_messaging_chatrooms', 'messaging');
         $nameLabel = $this->objLanguage->languageText('mod_messaging_wordname', 'messaging');
@@ -136,6 +175,11 @@ class display extends object
         $confirmLabel = $this->objLanguage->languageText('mod_messaging_confirm', 'messaging');
         $disabledLabel = $this->objLanguage->languageText('mod_messaging_worddisabled', 'messaging');
         
+        // get data
+        $rooms = $this->dbRooms->listRooms($this->contextCode);
+        $userRooms = $this->dbUsers->listUserRooms($this->userId);
+                
+        // headings
         $objHeader = new htmlHeading();
         $objHeader->str = $chatHeading;
         $objHeader->type = 1;
@@ -228,14 +272,14 @@ class display extends object
                     $objPopup = new windowpop();
                     $objPopup->title = $moreTitleLabel;
                     $objPopup->set('location',$this->uri(array(
-                        'action'=>'readmore',
-                        'room_id'=>$room['id']
+                        'action' => 'readmore',
+                        'room_id' => $room['id']
                     )));
-                    $objPopup->set('linktext','[...'.$moreLabel.'...]');
-                    $objPopup->set('width','600');
-                    $objPopup->set('height','500');
-                    $objPopup->set('left','100');
-                    $objPopup->set('top','100');
+                    $objPopup->set('linktext', '[...'.$moreLabel.'...]');
+                    $objPopup->set('width', '600');
+                    $objPopup->set('height', '500');
+                    $objPopup->set('left', '100');
+                    $objPopup->set('top', '100');
                     $objPopup->set('scrollbars', 'yes');
                     $objPopup->putJs(); // you only need to do this once per page
                     $morePopup = $objPopup->show();
@@ -321,11 +365,12 @@ class display extends object
     *
     * @access public
     * @param string $mode The mode of the template 'add' or 'edit'
-    * @param array $roomData The array containing the chat room data
+    * @param array $roomId The id of the chat room to edit
     * @return string $str The template output string
     */
-    public function addRoom($mode = 'add', $roomData = NULL)
+    public function addRoom($mode = 'add', $roomId = NULL)
     {
+        // language items
         $addLabel = $this->objLanguage->languageText('mod_messaging_addroom', 'messaging');
         $editLabel = $this->objLanguage->languageText('mod_messaging_editroom', 'messaging');
         $nameLabel = $this->objLanguage->languageText('mod_messaging_wordname', 'messaging');
@@ -345,6 +390,7 @@ class display extends object
         $enabledLabel = $this->objLanguage->languageText('mod_messaging_wordenabled', 'messaging');
         $disabledLabel = $this->objLanguage->languageText('mod_messaging_worddisabled', 'messaging');
         
+        //heading
         $objHeader = new htmlHeading();
         if($mode == 'add'){
             $objHeader->str = $addLabel;
@@ -355,6 +401,7 @@ class display extends object
         $header = $objHeader->show();        
         $str = $header;
         
+        // get data 
         if($mode == 'add'){
             $roomId = '';
             $roomType = 1;
@@ -363,7 +410,7 @@ class display extends object
             $textOnly = 0;
             $disabled = 0;
         }else{
-            $roomId = $roomData['id'];
+            $roomData = $this->dbRooms->getRoom($roomId);
             $roomType = $roomData['room_type'];
             $roomName = $roomData['room_name'];
             $roomDesc = $roomData['room_desc'];
@@ -375,9 +422,9 @@ class display extends object
         $roomIdInput = $objInput->show();
         
         $objRadio = new radio('room_type');
-        $objRadio->addOption(1, $privateLabel);
+        $objRadio->addOption(1, '&nbsp;'.$privateLabel);
         if($this->isLecturer){
-            $objRadio->addOption(2, ucfirst($contextLabel));
+            $objRadio->addOption(2, '&nbsp;'.ucfirst($contextLabel));
         }
 //        $objRadio->addOption(3, ucfirst($workgroupLabel));
         $objRadio->setSelected($roomType);
@@ -391,15 +438,15 @@ class display extends object
         $descText = $objText->show();
 
         $objRadio = new radio('text_only');
-        $objRadio->addOption(0, $entitiesLabel);
-        $objRadio->addOption(1, $textLabel);
+        $objRadio->addOption(0, '&nbsp;'.$entitiesLabel);
+        $objRadio->addOption(1, '&nbsp;'.$textLabel);
         $objRadio->setSelected($textOnly);
         $objRadio->setBreakSpace('<br />');
         $displayRadio = $objRadio->show();
         
         $objRadio = new radio('disabled');
-        $objRadio->addOption(0, $enabledLabel);
-        $objRadio->addOption(1, $disabledLabel);
+        $objRadio->addOption(0, '&nbsp;'.$enabledLabel);
+        $objRadio->addOption(1, '&nbsp;'.$disabledLabel);
         $objRadio->setSelected($disabled);
         $objRadio->setBreakSpace('<br />');
         $statusRadio = $objRadio->show();
@@ -470,20 +517,25 @@ class display extends object
     * Method to create the read more template
     *
     * @access public
-    * @param array $roomData The array containing the chat room data
+    * @param array $roomId The id of the chat room to display
     * @return string $str The template output string
     */
-    public function readMore($roomData)
+    public function readMore($roomId)
     {
+        // language items
         $nameLabel = $this->objLanguage->languageText('mod_messaging_wordname', 'messaging');
         $descLabel = $this->objLanguage->languageText('mod_messaging_worddesscription', 'messaging');
         $closeLabel = $this->objLanguage->languageText('mod_messaging_wordclose', 'messaging');
         $closeTitleLabel = $this->objLanguage->languageText('mod_messaging_closetitle', 'messaging');
         
+        // get data
+        $roomData = $this->dbRooms->getRoom($roomId);
+        
         $string = $this->objFeaturebox->show($nameLabel, $roomData['room_name']);
         $string .= $this->objFeaturebox->show($descLabel, $roomData['room_desc']);
         
-        $objLink = new link('javascript:this.close();');
+        $objLink = new link('javascript:
+            this.close();');
         $objLink->link = $closeLabel;
         $objLink->title = $closeTitleLabel;
         $closeLink = $objLink->show();
@@ -513,6 +565,7 @@ class display extends object
     */
     public function chatRoom($roomData)
     {
+        // javascript
         $script = '<script type="text/javaScript">
             Event.observe(window, "load", init_chat, false);
     
@@ -533,17 +586,21 @@ class display extends object
             }
             
             function send_chat(){
-                var element = document.getElementById("input_message");
+                var msg = document.getElementById("input_message");
                 
-                var url = "index.php";
-                var target = "input_message";
-                var pars = "module=messaging&action=sendchat&chat=" + element.value;
-                var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars});
-                element.value = "";
+                if(msg.value != ""){
+                    var url = "index.php";
+                    var target = "input_message";
+                    var pars = "module=messaging&action=sendchat&chat=" + msg.value;
+                    var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars});                
+                    msg.value = "";
+                }                
+                msg.focus();
             }
         </script>';
         $str = $script;
         
+        // language items
         $array = array(
             'room' => $roomData['room_name'],
         );
@@ -551,6 +608,7 @@ class display extends object
         $sendLabel = $this->objLanguage->languageText('mod_messaging_wordsend', 'messaging');
         $clearLabel = $this->objLanguage->languageText('mod_messaging_wordclear', 'messaging');
         
+        // heading
         $objHeader = new htmlHeading();
         $objHeader->str = ucfirst($heading);
         $objHeader->type = 1;
@@ -561,6 +619,7 @@ class display extends object
         $objLayer->id = 'chatroom';
         $objLayer->height = '300px';
         $objLayer->border = '1px solid black';
+        $objLayer->overflow = 'auto';
         $chatLayer = $objLayer->show();
         $str .= $chatLayer;
         
@@ -602,12 +661,24 @@ class display extends object
     * Method to create the active users list
     * 
     * @access public
-    * @param array $users The list of users in the active chat room
-    * @param array $bannedUsers The list of users banned from the active chat room
+    * @param boolean $isModerator TRUE if the current user is a moderator FALSE if not
     * @return string $str The template output string
     */
-    public function getUsers($users, $bannedUsers)
+    public function getUsers($isModerator)
     {
+        // language items
+        $activeLabel = $this->objLanguage->languageText('mod_messaging_active', 'messaging');
+        $banLabel = $this->objLanguage->languageText('mod_messaging_ban', 'messaging');
+        $unbanLabel = $this->objLanguage->languageText('mod_messaging_unban', 'messaging');
+        $bannedLabel = $this->objLanguage->languageText('mod_messaging_banned', 'messaging');
+        $indefLabel = $this->objLanguage->languageText('mod_messaging_banindef', 'messaging');
+        
+        // get data
+        $roomId = $this->getSession('chat_room_id');
+        $roomData = $this->dbRooms->getRoom($roomId);
+        $users = $this->dbUserlog->listUsers($roomId);
+        $bannedUsers = $this->dbBanned->listUsers($roomId);
+
         $objTable = new htmltable();
         $objTable->cellspacing = '2';
         $objTable->cellpadding = '2';
@@ -628,16 +699,57 @@ class display extends object
             }
             if($isBanned){
                 if($tempBan){
+                    $date = $this->objDatetime->formatDate($bannedUser['ban_stop']);
+                    $array = array(
+                        'date' => $date,
+                    );
+                    $bannedLabel = $this->objLanguage->code2Txt(
+                    'mod_messaging_bantemp', 'messaging', $array);
+
                     $this->objIcon->setIcon('failed');
-                    $this->objIcon->title = 'User banned';
+                    $this->objIcon->title = $bannedLabel;
+                    $this->objIcon->extra = ' onclick="javascript:
+                        alert()"';
                     $icon = $this->objIcon->show();
                }else{
-                    $this->objIcon->title = 'Click to unban user';
-                    $icon = $this->objIcon->getLinkedIcon($this->uri(array('action' => 'unban')),'failed');
+                    if($isModerator == 1){
+                        $this->objIcon->title = $unbanLabel;
+                        $this->objIcon->extra = '';
+                        $icon = $this->objIcon->getLinkedIcon($this->uri(array('action' => 'unban')),'failed');
+                    }else{
+                        $this->objIcon->title = $indefLabel;
+                        $this->objIcon->setIcon('failed');
+                        $this->objIcon->extra = '';
+                        $icon = $this->objIcon->show();                        
+                    }
                 }
             }else{
-                $this->objIcon->title = 'Click to ban user';
-                $icon = $this->objIcon->getLinkedIcon($this->uri(array('action' => 'ban', 'roomId' => $user['room_id'])),'ok');
+                if($isModerator == 1 && $user['user_id'] != $this->userId){
+                    $this->objIcon->title = $banLabel;
+                    $this->objIcon->setIcon('ok');
+                    $this->objIcon->extra = '';
+                    $okIcon = $this->objIcon->show();
+
+                    $objPopup = new windowpop();
+                    $objPopup->title = $banLabel;
+                    $objPopup->set('location',$this->uri(array(
+                        'action' => 'banpopup',
+                        'userId' => $user['user_id'],
+                    )));
+                    $objPopup->set('linktext', $okIcon);
+                    $objPopup->set('width', '500');
+                    $objPopup->set('height', '350');
+                    $objPopup->set('left', '100');
+                    $objPopup->set('top', '100');
+                    $objPopup->set('scrollbars', 'no');
+                    $objPopup->putJs(); // you only need to do this once per page
+                    $icon = $objPopup->show();
+                }else{
+                    $this->objIcon->title = $activeLabel;
+                    $this->objIcon->setIcon('ok');
+                    $this->objIcon->extra = '';
+                    $icon = $this->objIcon->show();                    
+                }
             }
             $objTable->addCell($icon, '', '', '', '', '');
             $objTable->endRow();
@@ -652,33 +764,26 @@ class display extends object
     * @access public
     * @return string $str The template output string
     */
-    public function showSmileys()
+    public function moreSmileys()
     {
         $script = '<script type="text/javaScript">
             var namelist = new Array("alien", "angel", "angry", "anticipation", "approve", "big_grin", "big_smile", "blush", "boom", "clown", "confused", "cool", "crying", "dead", "evil", "evil_eye", "exclamation", "flower", "geek", "kiss", "martian", "moon", "ogle", "ouch", "peace", "question", "rainbow", "raise_eyebrows", "raspberry", "roll_eyes", "sad", "shy", "sleepy", "smile", "stern", "surprise", "thoughtful", "thumbs_down", "thumbs_up", "unsure", "up_yours", "very_angry", "wink", "worried");
             
-            var codelist = new Array("[A51]", "[0:-)]", "[>:-(]", "[8-)]", "[^-)]", "[:-D]", "[:-]]", "[:-I]", "[<@>]", "[:o)]", "[<:-/]", "[B-)]", "[!-(]", "[xx-P]", "[}:-)]", "[};-)]", "[!]", "[F]", "[G]", "[:-x]", "[M]", "[B]", "[8-P]", "[P-(]", "[V]", "[?]", "[((]", "[E-)]", "[:-P]", "[8-]]", "[:-(]", "[8-/]", "[zzz]", "[:-)]", "[>:-.]", "[8-o]", "[>8-/]", "[-]", "[+]", "[:-/]", "[@#$%]", "[>:-0]", "[;-)]", "[8-(]");
+            var codelist = new Array("[A51]", "[0:-)]", "[>:-(]", "[8-)]", "[^-)]", "[:-D]", "[:-]]", "[:-I]", "[boom]", "[:o)]", "[<:-/]", "[B-)]", "[!-(]", "[xx-P]", "[}:-)]", "[};-)]", "[!]", "[F]", "[G]", "[:-x]", "[M]", "[moon]", "[8-P]", "[P-(]", "[V]", "[?]", "[((]", "[E-)]", "[:-P]", "[8-]]", "[:-(]", "[8-/]", "[zzz]", "[:-)]", "[>:-.]", "[8-o]", "[>8-/]", "[-]", "[+]", "[:-/]", "[@#$%]", "[>:-0]", "[;-)]", "[8-(]");
             
-            Event.observe(window, "load", init_smiley, false);
-        
-            function init_smiley(){
-                for(var i = 0; i <= namelist.length-1; i++){
-                    Event.observe(namelist[i], "click", addSmiley, false);                    
-                }
-            }
-            
-            function addSmiley()
+            function addSmiley(elementId)
             {
-                var element = opener.document.getElementById("input_message");
+                var msg = opener.document.getElementById("input_message");
                 for(i = 0; i <= namelist.length-1; i++){
-                    if(namelist[i] == this.id){
-                        if(element.value == ""){
-                            element.value = codelist[i];
+                        if(namelist[i] == elementId){
+                        if(msg.value == ""){
+                            msg.value = codelist[i];
                         }else{
-                            element.value = element.value + " " + codelist[i];
+                            msg.value = msg.value + " " + codelist[i];
                         }
                     }
                 }
+                msg.focus();
             }
         </script>';
         $content = $script;
@@ -697,7 +802,7 @@ class display extends object
             'big_grin' => '[ :-D ]',
             'big_smile' => '[ :-] ]',
             'blush' => '[ :-I ]',
-            'boom' => '[ <@> ]',
+            'boom' => '[ boom ]',
             'clown' => '[ :o) ]',
             'confused' => '[ <:-/ ]',
             'cool' => '[ B-) ]',
@@ -710,13 +815,13 @@ class display extends object
             'geek' => '[ G ]',
             'kiss' => '[ :-x ]',
             'martian' => '[ M ]',
-            'moon' => '[ B ]',
+            'moon' => '[ moon ]',
             'ogle' => '[ 8-P ]',
             'ouch' => '[ P-( ]',
             'peace' => '[ V ]',
             'question' => '[ ? ]',
             'rainbow' => '[ (( ]',
-            'raise_eyebrows'=>'[ E-) ]',
+            'raise_eyebrows' =>'[ E-) ]',
             'raspberry' => '[ :-P ]',
             'roll_eyes' => '[ 8-] ]',
             'sad' => '[ :-( ]',
@@ -755,7 +860,7 @@ class display extends object
                 $this->objIcon->extra = '';
                 $icon = $this->objIcon->show();
                 
-                $objTable->addCell('<div id="'.$smiley.'" style="cursor: pointer;">'.$icon.'</div>', '12.5%', '', 'center', '', '');
+                $objTable->addCell('<div id="'.$smiley.'" style="cursor: pointer;" onclick="addSmiley(this.id)">'.$icon.'</div>', '12.5%', '', 'center', '', '');
                 $objTable->addCell('<nobr><font class="warning"><b>'.htmlentities($code).'</b></font></nobr>', '', '', '', '', '');
             }
             $objTable->endRow();
@@ -779,11 +884,14 @@ class display extends object
     * Method to create the content for the chat message div
     * 
     * @access public
-    * @param array|boolean $messaged The array of chat messages FALSE if none
     * @return string The template output string
     */
-    public function showChat($messages)
+    public function getChat()
     {
+        $roomId = $this->getSession('chat_room_id');
+        $counter = $this->getSession('message_counter');
+        $messages = $this->dbMessaging->getChatMessages($roomId, $counter);
+        
         $str = '';
         if($messages != FALSE){
             $str = '<ul>';
@@ -793,13 +901,105 @@ class display extends object
                 $name = $this->objUser->fullname($userId);
                 $date = $this->objDatetime->formatDate($message['date_created']);
                 $str .= '<strong>['.$name.',&nbsp;';
-                $str .= $date.']:</strong>&nbsp;';
-                $str .= $message['message'];
+                $str .= $date.']:</strong><br />';
+                $str .= nl2br($message['message']);
+//                $str .= $message['message'];
                 $str .= '</li>';
             }
             $str .= '</ul>';
         }
         echo $str;
+    }    
+
+    /**
+    * Method to create the content for the banned user opopup
+    * 
+    * @access public
+    * @param string $userId The userId of the user to be banned
+    * @return string The template output string
+    */
+    public function banPopup($userId)
+    {
+        $typeLabel = $this->objLanguage->languageText('mod_messaging_bantype', 'messaging');
+        $tempLabel = $this->objLanguage->languageText('mod_messaging_temp', 'messaging');
+        $indefLabel = $this->objLanguage->languageText('mod_messaging_indefinitely', 'messaging');
+        $lengthLabel = $this->objLanguage->languageText('mod_messaging_banlength', 'messaging');
+        $submitLabel = $this->objLanguage->languageText('mod_messaging_wordsubmit', 'messaging');
+        $cancelLabel = $this->objLanguage->languageText('mod_messaging_wordcancel', 'messaging');
+                
+        $roomId = $this->getSession('chat_room_id');
+        
+        $objRadio = new radio('type');
+        $objRadio->addOption(0, '&nbsp;'.$tempLabel);
+        $objRadio->addOption(1, '&nbsp;'.$indefLabel);
+        $objRadio->setSelected(0);
+        $objRadio->setBreakSpace('<br />');
+        $objRadio->extra = ' onclick="javascript:
+            var myDiv = document.getElementById(\'lengthDiv\');
+            if(this.value == 0){
+                myDiv.style.visibility = \'visible\'; 
+                myDiv.style.height = \'\';         
+            }else{
+                myDiv.style.visibility = \'hidden\';
+                myDiv.style.height = \'0px\';
+            }"';
+        $typeRadio = $objRadio->show();
+        
+        $typeFeature = $this->objFeaturebox->show($typeLabel, $typeRadio);
+        
+        $objRadio = new radio('type');
+        $objRadio->addOption(0, '&nbsp;'.$tempLabel);
+        $objRadio->addOption(1, '&nbsp;'.$indefLabel);
+        $objRadio->setSelected(1);
+        $objRadio->setBreakSpace('<br />');
+        $typeRadio = $objRadio->show();
+        
+        $objDrop = new dropdown('length');
+        $objDrop->addOption(5, '&nbsp;5 min');
+        $objDrop->addOption(10, '&nbsp;10 min');
+        $objDrop->addOption(15, '&nbsp;15 min');
+        $objDrop->addOption(30, '&nbsp;30 min');
+        $objDrop->addOption(45, '&nbsp;45 min');
+        $objDrop->addOption(60, '&nbsp;60 min');
+        $objDrop->extra = ' style="width: 60px;"';
+        $lengthDrop = $objDrop->show();
+        
+        $lengthFeature = $this->objFeaturebox->show($lengthLabel, $lengthDrop);
+
+        $objLayer = new layer();
+        $objLayer->id = 'lengthDiv';
+        $objLayer->addToStr($lengthFeature);
+        $lengthDiv = $objLayer->show();
+        
+        $objButton = new button('send', $submitLabel);
+        $objButton->extra = ' onclick="javascript:
+            var myForm = document.getElementById(\'form_ban\');
+            myForm.submit();
+            window.close();"';
+        $sendButton = $objButton->show();
+        
+        $objButton = new button('cancel', $cancelLabel);
+        $objButton->extra = ' onclick="javascript:window.close()"';
+        $cancelButton = $objButton->show();
+        
+        $objForm = new form('ban', $this->uri(array(
+            'action' => 'banuser',
+            'roomId' => $roomId,
+            'userId' => $userId,
+            )));
+        $objForm->addToForm($typeFeature);
+        $objForm->addToForm($lengthDiv);
+        $objForm->addToForm($sendButton.'&nbsp;'.$cancelButton);
+        $banForm = $objForm->show();
+        
+        $objLayer = new layer();
+        $objLayer->id = 'formDiv';
+        $objLayer->padding = '10px';
+        $objLayer->addToStr($banForm);
+        $formDiv = $objLayer->show();
+        $str = $formDiv;
+        
+        return $str;
     }    
 }
 ?>

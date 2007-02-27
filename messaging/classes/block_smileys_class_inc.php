@@ -7,23 +7,23 @@ if (!$GLOBALS['kewl_entry_point_run'])
 // end security check
 
 /**
-* The class to display a help block for sudoku
+* The class to display a block for smileys
 *
 * @author Kevin Cyster
 */
 class block_smileys extends object
 {
     /*
-    * @var object $objLanguage The language class in the language module
-    * @access private
-    */
-    private $objLanguage;
-
-    /*
     * @var object $objIcon The geticon class in the htmlelements module
     * @access private
     */
     private $objIcon;
+
+    /*
+    * @var object $objLanguage The language class in the language module
+    * @access private
+    */
+    private $objLanguage;
 
     /*
     * @var string $title The title of the block
@@ -42,9 +42,15 @@ class block_smileys extends object
     */
     public function init()
     {
-        $this->objLanguage = $this->getObject('language', 'language');
+        // load html element classes
+        $this->loadClass('htmltable', 'htmlelements');
+        $this->loadClass('link', 'htmlelements');
         $this->objIcon = $this->getObject('geticon', 'htmlelements');
         
+        // system classes
+        $this->objLanguage = $this->getObject('language', 'language');
+        
+        // language items
         $title = $this->objLanguage->languageText('mod_messaging_wordsmileys', 'messaging');
         $label = $this->objLanguage->languageText('mod_messaging_smileys', 'messaging');  
         $help = $this->objLanguage->languageText('mod_messaging_helpclick', 'messaging');
@@ -55,10 +61,7 @@ class block_smileys extends object
         $this->objIcon->extra = ' onclick="alert(\''.$label.'\')"';
         $helpIcon = '<a href="#">'.$this->objIcon->show().'</a>';
         
-        $this->title = $title.'&nbsp;'.$helpIcon;
-        
-        $this->loadClass('htmltable', 'htmlelements');
-        $this->loadClass('link', 'htmlelements');
+        $this->title = $title.'&nbsp;'.$helpIcon;        
 
         $this->shortList = array(
             'angry' => '[ >:-( ]',
@@ -84,26 +87,19 @@ class block_smileys extends object
             
             var codelist = new Array("[>:-(]", "[B-)]", "[}:-)]", "[!]", "[:-D]", "[?]", "[:-P]", "[:-(]", "[:-)]", "[;-)]");
             
-            Event.observe(window, "load", init_smiley, false);
-        
-            function init_smiley(){
-                for(var i = 0; i <= namelist.length-1; i++){
-                    Event.observe(namelist[i], "click", addSmiley, false);                    
-                }
-            }
-            
-            function addSmiley()
+            function addSmiley(elementId)
             {
-                var element = document.getElementById("input_message");
+                var msg = document.getElementById("input_message");
                 for(i = 0; i <= namelist.length-1; i++){
-                    if(namelist[i] == this.id){
-                        if(element.value == ""){
-                            element.value = codelist[i];
+                    if(namelist[i] == elementId){
+                        if(msg.value == ""){
+                            msg.value = codelist[i];
                         }else{
-                            element.value = element.value + " " + codelist[i];
+                            msg.value = msg.value + " " + codelist[i];
                         }
                     }
                 }
+                msg.focus();
             }
         </script>';
         echo $script;
@@ -137,7 +133,7 @@ class block_smileys extends object
                 $this->objIcon->extra = '';
                 $icon = $this->objIcon->show();
                 
-                $objTable->addCell('<div id="'.$smiley.'" style="cursor: pointer;">'.$icon.'</div>', '', '', '', '', '');
+                $objTable->addCell('<div id="'.$smiley.'" style="cursor: pointer;" onclick="addSmiley(this.id)">'.$icon.'</div>', '', '', '', '', '');
                 $objTable->addCell('<nobr><font class="warning"><b>'.$code.'</b></font></nobr>', '', '', '', '', '');
             }
             $objTable->endRow();

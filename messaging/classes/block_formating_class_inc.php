@@ -7,23 +7,23 @@ if (!$GLOBALS['kewl_entry_point_run'])
 // end security check
 
 /**
-* The class to display a help block for sudoku
+* The class to display a list of fomat codes
 *
 * @author Kevin Cyster
 */
 class block_formating extends object
 {
     /*
-    * @var object $objLanguage The language class in the language module
-    * @access private
-    */
-    private $objLanguage;
-
-    /*
     * @var object $objIcon The geticon class in the htmlelements module
     * @access private
     */
     private $objIcon;
+
+    /*
+    * @var object $objLanguage The language class in the language module
+    * @access private
+    */
+    private $objLanguage;
 
     /*
     * @var string $title The title of the block
@@ -37,20 +37,20 @@ class block_formating extends object
     */
     public $heading;
 
-    /*
-    * @var array $shortList An associated array containg the smileys name and code
-    * @access static
-    */
-    public $shortList;
-    
     /**
     * Constructor for the class
     */
     public function init()
     {
-        $this->objLanguage = $this->getObject('language', 'language');
+        // load html element classes
+        $this->loadClass('htmltable', 'htmlelements');
+        $this->loadClass('link', 'htmlelements');
         $this->objIcon = $this->getObject('geticon', 'htmlelements');
+        
+        // system classes
+        $this->objLanguage = $this->getObject('language', 'language');
 
+        // language items
         $this->heading = $this->objLanguage->languageText('mod_messaging_wordformating', 'messaging');
         $label = $this->objLanguage->languageText('mod_messaging_formating', 'messaging');  
         $help = $this->objLanguage->languageText('mod_messaging_helpclick', 'messaging');
@@ -63,8 +63,6 @@ class block_formating extends object
         
         $this->title = $this->heading.'&nbsp;'.$helpIcon;
         
-        $this->loadClass('htmltable', 'htmlelements');
-        $this->loadClass('link', 'htmlelements');
     }
 
     /**

@@ -50,17 +50,17 @@ class dbbannedusers extends dbTable
     * Method to add a user to the banned user list
     *
     * @access public
-    * @param array $userData An array containing the banned user data
+    * @param array $banData An array containing the banned user data
     * @return string $bannedId The id of the banned user record
     **/
-    public function addUser($userData)
+    public function addUser($banData)
     {
-        $fields['room_id'] = $userData['room_id'];
-        $fields['user_id'] = $userData['user_id'];        
-        $fields['ban_type'] = $userData['ban_type'];
+        $fields['room_id'] = $banData['room_id'];
+        $fields['user_id'] = $banData['user_id'];        
+        $fields['ban_type'] = $banData['ban_type'];
         if($userData['ban_type'] != 1){
             $fields['ban_start'] = date('Y-m-d H:i:s');        
-            $fields['ban_stop'] = date('Y-m-d H:i:s', strtotime('+ '.$userData['ban_length'].' min'));        
+            $fields['ban_stop'] = date('Y-m-d H:i:s', strtotime('+ '.$banData['ban_length'].' min'));        
         }        
         $fields['creator_id'] = $this->userId;
         $fields['updated'] = date('Y-m-d H:i:s');        
