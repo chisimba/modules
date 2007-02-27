@@ -136,6 +136,12 @@ class block_onlineusers extends object
             function users_timer(){
                 setTimeout("init_users()", 5000);
             }
+            
+            function unban_user(bannedId){
+                var url = "index.php";
+                var pars = "module=messaging&action=unbanuser&bannedId=" + bannedId;
+                var myAjax = new Ajax.Request(url, {method: "get", parameters: pars});
+            }
         </script>';
         $str = $script;
 

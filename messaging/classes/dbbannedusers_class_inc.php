@@ -58,7 +58,7 @@ class dbbannedusers extends dbTable
         $fields['room_id'] = $banData['room_id'];
         $fields['user_id'] = $banData['user_id'];        
         $fields['ban_type'] = $banData['ban_type'];
-        if($userData['ban_type'] != 1){
+        if($banData['ban_type'] != 1){
             $fields['ban_start'] = date('Y-m-d H:i:s');        
             $fields['ban_stop'] = date('Y-m-d H:i:s', strtotime('+ '.$banData['ban_length'].' min'));        
         }        
@@ -72,15 +72,13 @@ class dbbannedusers extends dbTable
     * Method to return a user
     *
     * @access public
-    * @param string $roomId The id of the chat room
-    * @param string $userId The id of the user
+    * @param string $bannedId  The id of the banned user record
     * @return array $data The user data
     **/
-    public function getUser($roomId, $userId)
+    public function getUser($bannedId)
     {
         $sql = "SELECT * FROM ".$this->table;
-        $sql .= " WHERE room_id = '".$roomId."'";
-        $sql .= " AND user_id = '".$userId."'";
+        $sql .= " WHERE id = '".$bannedId."'";
         $data = $this->getArray($sql);
         if(!empty($data)){
             return $data[0];

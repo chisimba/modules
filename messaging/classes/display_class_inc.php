@@ -683,14 +683,14 @@ class display extends object
         $objTable->cellspacing = '2';
         $objTable->cellpadding = '2';
         foreach($users as $user){
-            $objTable->startRow();
-            $objTable->addCell($this->objUser->fullname($user['user_id']), '', '', '', '', '');
+            $name = $this->objUser->fullname($user['user_id']);
             $isBanned = FALSE;
             $tempBan = FALSE;
             if($bannedUsers != FALSE){
                 foreach($bannedUsers as $bannedUser){
                     if($user['user_id'] == $bannedUser['user_id']){
                         $isBanned = TRUE;
+                        $bannedId = $bannedUser['id'];
                         if($bannedUser['ban_type'] != 1){
                             $tempBan = TRUE;
                         }   
@@ -699,6 +699,16 @@ class display extends object
             }
             if($isBanned){
                 if($tempBan){
+                    $dateNow = strtotime(date('Y-m-d H:i:s'));
+                    $banStop = strtotime($bannedUser['ban_stop']);
+                    if($dateNow >= $banStop){
+                        $this->dbBanned->deleteUser($bannedUser['id']);
+                        $array = array(
+                            'user' => $this->objUser->fullname($bannedUser['user_id'])
+                        );
+                        $message = $this->objLanguage->code2Txt('mod_messaging_unbantempmsg', 'messaging', $array);                    
+                        $this->dbMessaging->addChatMessage($message, TRUE);             
+                    }
                     $date = $this->objDatetime->formatDate($bannedUser['ban_stop']);
                     $array = array(
                         'date' => $date,
@@ -708,27 +718,37 @@ class display extends object
 
                     $this->objIcon->setIcon('failed');
                     $this->objIcon->title = $bannedLabel;
-                    $this->objIcon->extra = ' onclick="javascript:
-                        alert()"';
                     $icon = $this->objIcon->show();
+                    
+                    $nameLink = $name;                    
                }else{
                     if($isModerator == 1){
-                        $this->objIcon->title = $unbanLabel;
+                        $this->objIcon->title = $indefLabel;
                         $this->objIcon->extra = '';
-                        $icon = $this->objIcon->getLinkedIcon($this->uri(array('action' => 'unban')),'failed');
+                        $this->objIcon->setIcon('failed');
+                        $icon = $this->objIcon->show();
+                        
+                        $objLink = new link('#');
+                        $objLink->link = $name;
+                        $objLink->title = $unbanLabel;
+                        $objLink->extra = ' onclick="javascript:
+                            unban_user(\''.$bannedId.'\')"';
+                        $nameLink = $objLink->show();
                     }else{
                         $this->objIcon->title = $indefLabel;
                         $this->objIcon->setIcon('failed');
                         $this->objIcon->extra = '';
-                        $icon = $this->objIcon->show();                        
+                        $icon = $this->objIcon->show();
+                        
+                        $nameLink = $name;                        
                     }
                 }
             }else{
                 if($isModerator == 1 && $user['user_id'] != $this->userId){
-                    $this->objIcon->title = $banLabel;
+                    $this->objIcon->title = $activeLabel;
                     $this->objIcon->setIcon('ok');
                     $this->objIcon->extra = '';
-                    $okIcon = $this->objIcon->show();
+                    $icon = $this->objIcon->show();
 
                     $objPopup = new windowpop();
                     $objPopup->title = $banLabel;
@@ -736,21 +756,25 @@ class display extends object
                         'action' => 'banpopup',
                         'userId' => $user['user_id'],
                     )));
-                    $objPopup->set('linktext', $okIcon);
+                    $objPopup->set('linktext', $name);
                     $objPopup->set('width', '500');
                     $objPopup->set('height', '350');
                     $objPopup->set('left', '100');
                     $objPopup->set('top', '100');
                     $objPopup->set('scrollbars', 'no');
                     $objPopup->putJs(); // you only need to do this once per page
-                    $icon = $objPopup->show();
+                    $nameLink = $objPopup->show();
                 }else{
                     $this->objIcon->title = $activeLabel;
                     $this->objIcon->setIcon('ok');
                     $this->objIcon->extra = '';
-                    $icon = $this->objIcon->show();                    
+                    $icon = $this->objIcon->show();
+                    
+                    $nameLink = $name;                    
                 }
             }
+            $objTable->startRow();
+            $objTable->addCell($nameLink, '', '', '', '', '');
             $objTable->addCell($icon, '', '', '', '', '');
             $objTable->endRow();
         }
@@ -766,10 +790,11 @@ class display extends object
     */
     public function moreSmileys()
     {
+        $this->setVar('pageSuppressXML', TRUE);
         $script = '<script type="text/javaScript">
             var namelist = new Array("alien", "angel", "angry", "anticipation", "approve", "big_grin", "big_smile", "blush", "boom", "clown", "confused", "cool", "crying", "dead", "evil", "evil_eye", "exclamation", "flower", "geek", "kiss", "martian", "moon", "ogle", "ouch", "peace", "question", "rainbow", "raise_eyebrows", "raspberry", "roll_eyes", "sad", "shy", "sleepy", "smile", "stern", "surprise", "thoughtful", "thumbs_down", "thumbs_up", "unsure", "up_yours", "very_angry", "wink", "worried");
             
-            var codelist = new Array("[A51]", "[0:-)]", "[>:-(]", "[8-)]", "[^-)]", "[:-D]", "[:-]]", "[:-I]", "[boom]", "[:o)]", "[<:-/]", "[B-)]", "[!-(]", "[xx-P]", "[}:-)]", "[};-)]", "[!]", "[F]", "[G]", "[:-x]", "[M]", "[moon]", "[8-P]", "[P-(]", "[V]", "[?]", "[((]", "[E-)]", "[:-P]", "[8-]]", "[:-(]", "[8-/]", "[zzz]", "[:-)]", "[>:-.]", "[8-o]", "[>8-/]", "[-]", "[+]", "[:-/]", "[@#$%]", "[>:-0]", "[;-)]", "[8-(]");
+            var codelist = new Array("[A51]", "[0:-)]", "[>:-(]", "[8-)]", "[^-)]", "[:-D]", "[:-]]", "[:-I]", "[<@>]", "[:o)]", "[<:-/]", "[B-)]", "[!-(]", "[xx-P]", "[}:-)]", "[};-)]", "[!]", "[F]", "[G]", "[:-x]", "[M]", "[B]", "[8-P]", "[P-(]", "[V]", "[?]", "[((]", "[E-)]", "[:-P]", "[8-]]", "[:-(]", "[8-/]", "[zzz]", "[:-)]", "[>:-.]", "[8-o]", "[>8-/]", "[-]", "[+]", "[:-/]", "[@#$%]", "[>:-0]", "[;-)]", "[8-(]");
             
             function addSmiley(elementId)
             {
@@ -783,6 +808,7 @@ class display extends object
                         }
                     }
                 }
+                window.close();
                 msg.focus();
             }
         </script>';
@@ -840,7 +866,8 @@ class display extends object
             'worried' => '[ 8-( ]',
         );
         
-        $objLink = new link('javascript:this.close();');
+        $objLink = new link('javascript:
+            this.close();');
         $objLink->link = $closeLabel;
         $objLink->title = $closeTitleLabel;
         $closeLink = $objLink->show();
@@ -888,6 +915,10 @@ class display extends object
     */
     public function getChat()
     {
+        // language items
+        $systemLabel = $this->objLanguage->languageText('mod_messaging_wordsystem', 'messaging');
+        
+        // get data
         $roomId = $this->getSession('chat_room_id');
         $counter = $this->getSession('message_counter');
         $messages = $this->dbMessaging->getChatMessages($roomId, $counter);
@@ -898,12 +929,15 @@ class display extends object
             foreach($messages as $message){
                 $str .= '<li>';
                 $userId = $message['sender_id'];
-                $name = $this->objUser->fullname($userId);
+                if($userId == 'system'){
+                    $name = $systemLabel;   
+                }else{
+                    $name = $this->objUser->fullname($userId);
+                }
                 $date = $this->objDatetime->formatDate($message['date_created']);
-                $str .= '<strong>['.$name.',&nbsp;';
+                $str .= '<strong>['.$name.'&nbsp;-&nbsp;';
                 $str .= $date.']:</strong><br />';
                 $str .= nl2br($message['message']);
-//                $str .= $message['message'];
                 $str .= '</li>';
             }
             $str .= '</ul>';
@@ -920,6 +954,7 @@ class display extends object
     */
     public function banPopup($userId)
     {
+        // language items
         $typeLabel = $this->objLanguage->languageText('mod_messaging_bantype', 'messaging');
         $tempLabel = $this->objLanguage->languageText('mod_messaging_temp', 'messaging');
         $indefLabel = $this->objLanguage->languageText('mod_messaging_indefinitely', 'messaging');
@@ -927,6 +962,7 @@ class display extends object
         $submitLabel = $this->objLanguage->languageText('mod_messaging_wordsubmit', 'messaging');
         $cancelLabel = $this->objLanguage->languageText('mod_messaging_wordcancel', 'messaging');
                 
+        // get data
         $roomId = $this->getSession('chat_room_id');
         
         $objRadio = new radio('type');
@@ -938,7 +974,7 @@ class display extends object
             var myDiv = document.getElementById(\'lengthDiv\');
             if(this.value == 0){
                 myDiv.style.visibility = \'visible\'; 
-                myDiv.style.height = \'\';         
+                myDiv.removeAttribute(\'style\');         
             }else{
                 myDiv.style.visibility = \'hidden\';
                 myDiv.style.height = \'0px\';

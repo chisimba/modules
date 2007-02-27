@@ -53,11 +53,15 @@ class dbmessaging extends dbTable
     * @param string $message The chat message that is being sent
     * @return string $messageId The id of the chat mesasge that was added
     **/
-    public function addChatMessage($message)
+    public function addChatMessage($message, $system = FALSE)
     {   
         $roomId = $this->getSession('chat_room_id');
         $date = date('Y-m-d H:i:s');
-        $fields['sender_id'] = $this->userId;
+        if($system){
+            $fields['sender_id'] = 'system';
+        }else{
+            $fields['sender_id'] = $this->userId;            
+        }
         $fields['message'] = $message;
         $fields['recipient_id'] = $roomId;
         $count = $this->getMessageCount($roomId);

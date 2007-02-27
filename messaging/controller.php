@@ -246,7 +246,7 @@ class messaging extends controller
                     'name' => $this->name,
                 );
                 $message = $this->objLanguage->code2Txt('mod_messaging_userenter', 'messaging', $array);
-                $this->dbMessaging->addChatMessage($message);
+                $this->dbMessaging->addChatMessage($message, TRUE);
                 $templateContent = $this->objDisplay->chatRoom($roomData);
                 $this->setVarByRef('templateContent', $templateContent);
                 if($roomData['text_only'] != 1){
@@ -265,7 +265,7 @@ class messaging extends controller
                     'name' => $this->name,
                 );
                 $message = $this->objLanguage->code2Txt('mod_messaging_userexit', 'messaging', $array);
-                $this->dbMessaging->addChatMessage($message);
+                $this->dbMessaging->addChatMessage($message, TRUE);
                 return $this->nextAction('');
                 break;
                 
@@ -286,7 +286,33 @@ class messaging extends controller
                     'ban_length' => $banLength,
                 );
                 $this->dbBanned->addUser($banData);
-                return $this->nextAction('');
+                if($banType == 1){
+                    $array = array(
+                        'mod' => $this->name,
+                        'user' => $this->objUser->fullname($userId),                    
+                    );
+                    $message = $this->objLanguage->code2Txt('mod_messaging_banindefmsg', 'messaging', $array);
+                }else{
+                    $array = array(
+                        'mod' => $this->name,
+                        'user' => $this->objUser->fullname($userId),
+                        'time' => $banLength,                    
+                    );
+                    $message = $this->objLanguage->code2Txt('mod_messaging_bantempmsg', 'messaging', $array);                    
+                }
+                $this->dbMessaging->addChatMessage($message, TRUE);
+                break;
+
+            case 'unbanuser':
+                $bannedId = $this->getParam('bannedId');
+                $banData = $this->dbBanned->getUser($bannedId);
+                $this->dbBanned->deleteUser($bannedId);
+                $array = array(
+                    'mod' => $this->name,
+                    'user' => $this->objUser->fullname($banData['user_id']),
+                );
+                $message = $this->objLanguage->code2Txt('mod_messaging_unbanindefmsg', 'messaging', $array);
+                $this->dbMessaging->addChatMessage($message, TRUE);
                 break;
 
             case 'banpopup':
