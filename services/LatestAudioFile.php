@@ -47,7 +47,7 @@ function getLatest($uploadDir)
 }
 
 $uploadDir = getUploadDir();
-if (($newFile = getLatest($uploadDir)) != null)
+if (!is_null($newFile = getLatest($uploadDir)))
 {
    echo htmlspecialchars($newFile);
 }
