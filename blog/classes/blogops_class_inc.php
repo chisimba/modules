@@ -1221,7 +1221,7 @@ title=\"up\"></a>";
 
         $icon->setIcon('down');
         //$str .="<a href=\"#\" onclick=\"Effect.SlideDown('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
-		$str .= "<a href=\"javascript:;\" onclick=\"Effect.SlideDown('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});adjustLayout();\"><img src=\"skins/_common/icons/down.gif\" border=\"0\" align=\"middle\" alt=\"down\"
+		$str .= "<a href=\"javascript:;\" onclick=\"adjustLayout();Effect.SlideDown('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});adjustLayout();\"><img src=\"skins/_common/icons/down.gif\" border=\"0\" align=\"middle\" alt=\"down\"
 title=\"down\"></a>";
 		
         $str .='<div id="feedmenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
