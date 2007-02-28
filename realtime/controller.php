@@ -32,7 +32,7 @@ class realtime extends controller
 	$this->objUser = $this->newObject('user', 'security');
         $this->objConfig = $this->getObject('altconfig', 'config');
 
-	// The realtime classes
+	// The realtime class
 
 	// Get action from input parameter
 	$this->action = $this->getParam('action', NULL);
@@ -53,6 +53,7 @@ class realtime extends controller
 
 	switch($action)
 	{
+	  case 'white':
 	  case 'voice':
 	  default:
 	     $modUri =  $this->objConfig->getItem('MODULE_URI');
@@ -62,8 +63,11 @@ class realtime extends controller
 			"http://". $_SERVER['HTTP_HOST']."/".$modUri."realtime");
 
 	     return "realtime-voice_tpl.php";
+
+	  // Future
+	  //default:
+	  //   return "realtime_tpl.php";
 	}
 
-	return "realtime_tpl.php";
     }
 }
