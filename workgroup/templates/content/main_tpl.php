@@ -42,6 +42,12 @@ $middleContent .= '<h3 align="center">'.$chatLink->show().'</h3>';
 // -------------------------------------------------------------------------
 
 /*
+    Instantiate the 'selectfile' class from the file manager, and add it to the form.
+*/
+
+//$objSelectFile = $this->newObject('selectfile', 'filemanager');
+//$objSelectFile->name = 'nameofforminput';
+/*
 //Join Discussion Forum 
 $pageText->type=3;
 $pageText->str=$objLanguage->languageText('mod_workgroup_forum');
