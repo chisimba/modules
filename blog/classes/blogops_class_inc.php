@@ -851,7 +851,7 @@ class blogops extends object
                 $userid = $this->objUser->userId();
                 if($post['stickypost'] == 1)
                 {
-                	$objStickyIcon = $this->getObject('geticon', 'htmlelements');
+                	$objStickyIcon = $this->newObject('geticon', 'htmlelements');
 					$objStickyIcon->setIcon('sticky_yes');
 					$head = $objStickyIcon->show() . stripslashes($post['post_title']) ."<br />".$dt;
                 }
