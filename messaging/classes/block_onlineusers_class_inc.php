@@ -134,7 +134,31 @@ class block_onlineusers extends object
             }
 
             function users_timer(){
+                var bannedEl = document.getElementById("input_banned");
+                var formDiv = document.getElementById("formDiv");
+                var bannedDiv = document.getElementById("bannedDiv");
+                if(bannedEl.value == "Y"){
+                    var useridEl = document.getElementById("input_userId");
+                    
+                    var url = "index.php";
+                    var target = "bannedDiv";
+                    var pars = "module=messaging&action=getbanmsg&userId="+useridEl.value;
+                    var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars, onComplete: show_div});
+                    formDiv.style.visibility = "hidden";
+                    formDiv.style.display = "none";
+                }else{
+                    bannedDiv.style.visibility = "hidden";
+                    bannedDiv.style.display = "none";
+                    formDiv.style.visibility = "visible";
+                    formDiv.style.display = "block";
+                }                
                 setTimeout("init_users()", 5000);
+            }
+            
+            function show_div(){
+                var bannedDiv = document.getElementById("bannedDiv");
+                bannedDiv.style.visibility = "visible";
+                bannedDiv.style.display = "block";
             }
             
             function unban_user(bannedId){

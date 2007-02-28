@@ -565,43 +565,19 @@ class display extends object
     */
     public function chatRoom($roomData)
     {
-        // get data
-        $bannedData = $this->getSession('banned_user');
-        if($bannedData != NULL){
-            $banned = 'true';
-            if($bannedData['ban_type'] == 1){
-                $bannedLabel = $this->objLanguage->languageText('mod_messaging_isbannedindef', 'messaging');
-            }else{
-                $array = array(
-                    'date' => $this->objDatetime->formatDate($bannedData['ban_stop']),
-                );
-                $bannedLabel = $this->objLanguage->languageText('mod_messaging_isbannedtemp', 'messaging', $array);                
-            }
-        }else{
-            $banned = 'false';
-            $bannedLabel = '';
-        }
-
         // javascript
         $script = '<script type="text/javaScript">
-            var isBanned = "'.$banned.'";
-            Event.observe(window, "load", init_chat, false);
+            Event.observe(window, "load", get_chat, false);
     
-            function init_chat(){
-                Event.observe("input_send", "click", send_chat, false);
-                display_ban();
-                get_chat();
-            }
-            
             function get_chat(){
                 var url = "index.php";
-                var target = "chatroom";
+                var target = "chatDiv";
                 var pars = "module=messaging&action=getchat";
                 var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars, onComplete: chat_timer});
             }
 
             function chat_timer(){
-                var myDiv = document.getElementById("chatroom");
+                var myDiv = document.getElementById("chatDiv");
                 myDiv.scrollTop = myDiv.scrollHeight
                 setTimeout("get_chat()", 1000);
             }
@@ -618,14 +594,6 @@ class display extends object
                 }                
                 msg.focus();
             }
-            
-            function display_ban(){
-                if(isBanned == "false"){
-                    var myDiv = document.getElementById("banned");
-                    myDiv.style.visibility = "hidden";
-                    myDiv.style.display = "none";
-                }
-            }
         </script>';
         $str = $script;
         
@@ -638,10 +606,9 @@ class display extends object
         $clearLabel = $this->objLanguage->languageText('mod_messaging_wordclear', 'messaging');
                 
         $objLayer = new layer();
-        $objLayer->id = 'banned';
+        $objLayer->id = 'bannedDiv';
         $objLayer->padding = '10px';
-        $objLayer->border = '1px solid black';
-        $objLayer->addToStr('<font class="error"><b>'.$bannedLabel.'</b></font>');
+        $objLayer->border = '1px solid red';
         $bannedLayer = $objLayer->show();
         $str .= $bannedLayer;
         
@@ -653,7 +620,7 @@ class display extends object
         $str .= $header;
         
         $objLayer = new layer();
-        $objLayer->id = 'chatroom';
+        $objLayer->id = 'chatDiv';
         $objLayer->height = '300px';
         $objLayer->border = '1px solid black';
         $objLayer->overflow = 'auto';
@@ -691,7 +658,12 @@ class display extends object
         )));
         $objForm->addToForm($string);
         $chatForm = $objForm->show();
-        $str .= $chatForm;
+
+        $objLayer = new layer();
+        $objLayer->id = 'formDiv';
+        $objLayer->addToStr($chatForm);
+        $formLayer = $objLayer->show();
+        $str .= $formLayer;
         
         return $str;
     }
@@ -718,6 +690,9 @@ class display extends object
         $users = $this->dbUserlog->listUsers($roomId);
         $bannedUsers = $this->dbBanned->listUsers($roomId);
 
+        $banned = 'N';
+        $userId = '';
+        
         $objTable = new htmltable();
         $objTable->cellspacing = '2';
         $objTable->cellpadding = '2';
@@ -729,9 +704,8 @@ class display extends object
                 foreach($bannedUsers as $key=>$bannedUser){
                     if($user['user_id'] == $bannedUser['user_id']){
                         if($bannedUser['user_id'] == $this->userId){
-                            $this->setSession('banned_user', $bannedUsers[$key]);
-                        }else{
-                            $this->unsetSession('banned_user');
+                            $banned = 'Y';
+                            $userId = $this->userId;
                         }
                         $isBanned = TRUE;
                         $bannedId = $bannedUser['id'];
@@ -822,6 +796,16 @@ class display extends object
             $objTable->addCell($icon, '', '', '', '', '');
             $objTable->endRow();
         }
+        $objInput = new textinput('banned', $banned, 'hidden');
+        $bannedInput = $objInput->show();
+
+        $objInput = new textinput('userId', $userId, 'hidden');
+        $userIdInput = $objInput->show();
+
+        $objTable->startRow();
+        $objTable->addCell($bannedInput.$userIdInput, '', '', '', '', '');
+        $objTable->endRow();
+            
         $str = $objTable->show();
         echo $str;
     }
@@ -1055,8 +1039,7 @@ class display extends object
         $objButton = new button('send', $submitLabel);
         $objButton->extra = ' onclick="javascript:
             var myForm = document.getElementById(\'form_ban\');
-            myForm.submit();
-            window.close();"';
+            myForm.submit();"';
         $sendButton = $objButton->show();
         
         $objButton = new button('cancel', $cancelLabel);
@@ -1087,5 +1070,36 @@ class display extends object
         
         return $str;
     }    
+    
+    /**
+    * Method to show the banned message div
+    * 
+    * @access public
+    * @param string $userId: The id of the user to show the div to
+    * @return string $str: The output string
+    */
+    public function getBanMsg($userId)
+    {
+        // get data
+        $roomId = $this->getSession('chat_room_id');
+        $bannedData = $this->dbBanned->isBanned($userId, $roomId);
+        
+        // language items
+        if($bannedData != FALSE){
+            $banType = $bannedData['ban_type'];
+            if($banType == 1){
+                $bannedLabel = $this->objLanguage->languageText('mod_messaging_isbannedindef', 'messaging');
+            }else{
+                $array = array(
+                    'date' => $this->objDatetime->formatDate($bannedData['ban_stop']),
+                );
+                $bannedLabel = $this->objLanguage->code2Txt('mod_messaging_isbannedtemp', 'messaging', $array);
+            }        
+            $str = '<font class="error"><b>'.$bannedLabel.'</b></font>';       
+        }else{
+            $str = '';
+        }
+        echo $str;        
+    }
 }
 ?>
