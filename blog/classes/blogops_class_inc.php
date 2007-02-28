@@ -849,7 +849,15 @@ class blogops extends object
                 $dt = date('r', $post['post_ts']);
                 $this->objUser = $this->getObject('user', 'security');
                 $userid = $this->objUser->userId();
-                $head = stripslashes($post['post_title']) ."<br />".$dt;
+                if($post['stickypost'] == 1)
+                {
+                	$objStickyIcon = $this->getObject('geticon', 'htmlelements');
+					$objStickyIcon->setIcon('sticky_yes');
+					$head = $objStickyIcon->show() . stripslashes($post['post_title']) ."<br />".$dt;
+                }
+                else {
+                	$head = stripslashes($post['post_title']) ."<br />".$dt;
+                }
                 //dump in the post content and voila! you have it...
                 //build the post content plus comment count and stats???
                 //do the BBCode Parsing

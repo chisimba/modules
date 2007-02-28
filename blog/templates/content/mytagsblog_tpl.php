@@ -30,6 +30,11 @@ else {
 	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
 }
 
+//check for sticky posts
+if(!is_null($stickyposts))
+{
+	$middlecolumn .= $this->objblogOps->showPosts($stickyposts);
+}
 
 //show all the posts
 if(isset($catid) && empty($posts) && empty($latestpost))

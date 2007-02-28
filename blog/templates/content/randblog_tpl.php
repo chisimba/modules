@@ -23,6 +23,11 @@ $rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE, $userid);
 $leftCol = NULL;
 $middleColumn = NULL;
 //var_dump($latestpost);
+//check for sticky posts
+if(!is_null($stickypost))
+{
+	$middleColumn .= $this->objblogOps->showPosts($stickypost);
+}
 
 if(!empty($latestpost) && !empty($posts))
 {

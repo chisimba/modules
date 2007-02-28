@@ -437,6 +437,20 @@ class dbblog extends dbTable
 	}
 	
 	/**
+	 * Method to get the sticky posts of a user
+	 *
+	 * @param integer $userid
+	 * @return array
+	 */
+	public function getStickyPosts($userid)
+	{
+		$this->_changeTable('tbl_blog_posts');
+		$filter = "WHERE userid = '$userid' AND stickypost= '1' ORDER BY post_ts DESC";
+		$stickyposts = $this->getAll($filter);
+		return $stickyposts;
+	}
+	
+	/**
 	 * Method to get the latest posts
 	 *
 	 * @author Megan Watson

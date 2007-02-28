@@ -12,7 +12,6 @@ $rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
 
 
 $rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
-
 //$rightSideColumn .= "<br />";
 
 //show the categories menu (if there are cats)
@@ -35,7 +34,6 @@ else {
 	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
 }
 
-
 //show all the posts
 if(isset($catid) && empty($posts) && empty($latestpost))
 {
@@ -52,6 +50,11 @@ elseif(!isset($catid) && empty($posts) && empty($latestpost))
 }
 elseif(isset($catid) && !empty($posts))
 {
+	//check for sticky posts
+	if(!is_null($stickypost))
+	{
+		$middleColumn .= $this->objblogOps->showPosts($stickypost);
+	}
 	$middleColumn .= ($this->objblogOps->showPosts($posts));
 }
 elseif(isset($catid) && empty($posts) && empty($latestpost))
@@ -67,6 +70,11 @@ else {
 
 	if(!empty($latestpost) && !empty($posts))
 	{
+		//check for sticky posts
+		if(!is_null($stickypost))
+		{
+			$middleColumn .= $this->objblogOps->showPosts($stickypost);
+		}
 		$this->loadClass('htmlheading', 'htmlelements');
 		$header = new htmlheading();
 		$header->type = 3;

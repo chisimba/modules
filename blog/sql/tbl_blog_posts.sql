@@ -93,6 +93,11 @@ $fields = array(
 		'type' => 'text',
 		'length' => 60,
 		),
+	'stickypost' => array(
+		'type' => 'integer',
+		'length' => 20,
+		'default' => 0,
+		),
 	);
 
 //create other indexes here...

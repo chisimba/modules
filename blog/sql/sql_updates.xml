@@ -61,4 +61,17 @@
 		</data>
 	</update>
     -->
+    <update>
+        <table>tbl_blog_posts</table>
+        <version>1.17</version>
+        <description>Added Sticky posts field</description>
+        <data>
+        	<add>
+    			<name>stickypost</name>
+		    	<type>integer</type>
+    			<length>20</length>
+			</add>
+		</data>
+	</update>
+	
 </updates>
