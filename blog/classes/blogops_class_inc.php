@@ -1667,6 +1667,20 @@ title=\"up\"></a>";
         $ptable->addCell($pcomlabel->show());
         $ptable->addCell($commentsallowed->show());
         $ptable->endRow();
+        //Sticky post?
+        $this->loadClass("checkbox", "htmlelements");
+        if (isset($editparams['stickypost']) && $editparams['stickypost'] == 1) 
+        {
+        	$sticky = new checkbox('stickypost', 1 , TRUE);
+        }
+        else {
+        	$sticky = new checkbox('stickypost', 1 , FALSE);
+        }
+        $ptable->startRow();
+        $pstickylabel = new label($this->objLanguage->languageText('mod_blog_stickypost', 'blog') .':', 'input_stickypost');
+        $ptable->addCell($pstickylabel->show());
+        $ptable->addCell($sticky->show());
+        $ptable->endRow();
         //post excerpt
         $this->loadClass('textarea', 'htmlelements');
         $pexcerptlabel = new label($this->objLanguage->languageText('mod_blog_postexcerpt', 'blog') .':', 'input_postexcerpt');

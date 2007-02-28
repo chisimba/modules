@@ -1079,11 +1079,18 @@ class blog extends controller
                 $cat = $this->getParam('cat');
                 $status = $this->getParam('status');
                 $commentsallowed = $this->getParam('commentsallowed');
+                $stickypost = $this->getParam('stickypost');
                 $excerpt = $this->getParam('postexcerpt');
                 $postts = $this->getParam('post_ts');
                 $tags = $this->getParam('tags');
                 $tagarray = explode(",", $tags);
-
+                if($stickypost == "on")
+                {
+                	$stickypost = 1;
+                }
+                else {
+                	$stickypost = 0;
+                }
                 /*//set up for Google Blog API
                 $changesURL = $this->uri(array('module' => 'blog', 'action' => 'feed', 'userid' => $userid));
                 $name = $this->objUser->fullname($userid) . " Chisimba blog";
@@ -1162,7 +1169,7 @@ class blog extends controller
                     $insarredit = array('id' => $id,'posttitle' => $posttitle, 'postcontent' => $postcontent,
                                                     'postcat' => $cat, 'postexcerpt' => $excerpt, 'poststatus' => $status,
                                                     'commentstatus' => $commentsallowed,
-                                                    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate, 'postts' => $postts, 'cclic' => $cclic);
+                                                    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate, 'postts' => $postts, 'cclic' => $cclic, 'stickypost' => $stickypost);
 
                     $this->objblogOps->quickPostAdd($userid, $insarredit, $mode);
 
@@ -1210,7 +1217,7 @@ class blog extends controller
                     $this->objblogOps->quickPostAdd($userid, array('id' => $id, 'posttitle' => $posttitle, 'postcontent' => $postcontent,
                                                     'postcat' => $cat, 'postexcerpt' => $excerpt, 'poststatus' => $status,
                                                     'commentstatus' => $commentsallowed,
-                                                    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate, 'cclic' => $cclic));
+                                                    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate, 'cclic' => $cclic, 'stickypost' => $stickypost));
                     //dump in the tags
                     if(!empty($tagarray) && $tagarray[0] != "")
                     {
