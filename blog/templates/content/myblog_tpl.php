@@ -126,11 +126,13 @@ if(!empty($rss))
 		$timenow = time();
 		if($timenow - $feeds['rsstime'] > 43200)
 		{
-			$url = $feeds['url'];
+			$url = urldecode($feeds['url']);
 			$id = $feeds['id'];
-			$leftCol .= $this->objblogOps->rssBox($url, $feeds['name']); //Refresh($url, $feeds['name'], $id);
+			echo $url;
+			$leftCol .= $this->objblogOps->rssRefresh($url, $feeds['name'], $id);
 		}
 		else {
+		
 			$url = $feeds['rsscache'];
 			$leftCol .= $this->objblogOps->rssBox($url, $feeds['name']);
 		}

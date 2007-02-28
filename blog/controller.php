@@ -1507,6 +1507,12 @@ class blog extends controller
             $addarr = array('userid' => $userid, 'url' => $rssurl, 'name' => $rssname, 'description' => $rssdesc, 'rsscache' => htmlentities($rsscache), 'rsstime' => $addtime);
 
             //write the file down for caching
+            //check that the blog dir exists
+            if(!file_exists($this->objConfig->getContentBasePath() . "/blog"))
+            {
+            	mkdir($this->objConfig->getContentBasePath() . "/blog");
+            	chmod($this->objConfig->getContentBasePath() . "/blog", 0777);
+            }
             $path = $this->objConfig->getContentBasePath() . "/blog/rsscache/";
             $rsstime = time();
             if(!file_exists($path))
@@ -1531,7 +1537,7 @@ class blog extends controller
             //echo $path;
             //add into the db
 
-            $rssurl = htmlentities($rssurl, ENT_QUOTES);
+            $rssurl = urlencode($rssurl); //, ENT_QUOTES);
             $rssname = htmlentities($rssname, ENT_QUOTES);
             $rssdesc = htmlentities($rssdesc, ENT_QUOTES);
 
@@ -1558,6 +1564,9 @@ class blog extends controller
                 $this->objDbBlog->addRss($addarr, 'edit');
             }
             $userid = $this->objUser->userid();
+            $rss = $this->objDbBlog->getUserRss($userid);
+                //send all that to the template
+                $this->setVarByRef('rss', $rss);
             $this->setVarByRef('userid', $userid);
             return 'rssedit_tpl.php';
             break;

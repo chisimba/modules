@@ -33,12 +33,12 @@ if(!empty($rss))
 	foreach($rss as $feeds)
 	{
 		$timenow = time();
-		if($timenow - $feeds['rsstime'] > 43200)
+		if(($timenow - $feeds['rsstime']) > 43200)
 		{
 			$url = $feeds['url'];
 		}
 		else {
-			$url = $feeds['url']; //['rsscache'];
+			$url = $feeds['rsscache'];
 		}
 		$leftCol .= $this->objblogOps->rssBox($url, $feeds['name']);
 	}
