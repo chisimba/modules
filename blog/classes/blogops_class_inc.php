@@ -2035,7 +2035,7 @@ title=\"up\"></a>";
                 $str .= '<b>'.$item['post_title'].'</b><br />';
                 $str .= '<font class="minute">'.$objUser->fullName($item['userid']).'</font>';
                 //$str .= '<br />'.$item['post_excerpt'];
-                $str .= '<hr></p>';
+                $str .= '<hr /></p>';
             }
         }
                 
@@ -2044,7 +2044,7 @@ title=\"up\"></a>";
             return $str;
         } else {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_block_lasttenposts", "blog"), $str);
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_block_latestblogs", "blog"), $str);
             return $ret;
         }
     }
