@@ -128,7 +128,6 @@ if(!empty($rss))
 		{
 			$url = urldecode($feeds['url']);
 			$id = $feeds['id'];
-			echo $url;
 			$leftCol .= $this->objblogOps->rssRefresh($url, $feeds['name'], $id);
 		}
 		else {
