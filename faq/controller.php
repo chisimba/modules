@@ -51,19 +51,11 @@ class faq extends controller
     /**
     * The dispatch funtion
     * @param string $action The action
-    * @return string The content template file
     */
     public function dispatch($action=NULL)
     {
         // Set the layout template for faq - includes the context menu
         $this->setLayoutTemplate("context_layout_tpl.php");
-        // 1. ignore action at moment as we only do one thing - say hello
-        // 2. load the data object (calls the magical getObject which finds the
-        //    appropriate file, includes it, and either instantiates the object,
-        //    or returns the existing instance if there is one. In this case we
-        //    are not actually getting a data object, just a helper to the
-        //    controller.
-        // 3. Pass variables to the template
         $this->setVarByRef('objUser', $this->objUser);
         $this->setVarByRef('objHelp', $this->objHelp);
         $this->setVarByRef('objLanguage', $this->objLanguage);
@@ -115,37 +107,17 @@ class faq extends controller
         switch($action){
             // Change the category
             case 'changecategory':
-                //$this->categoryId = $this->getParam('newcategory', 'Not Categorised');
                 return $this->view();
-            // Create a new category
-            /*
-            case 'createcategory':
-                $_categoryId = $_POST["newcategory"];
-                $list = $this->objDbFaqCategories->listSingle($this->contextId, $_categoryId);
-                // Check if category already exists
-                if (!empty($list)) {
-                    $error = "Category '" . $_categoryId . "' already exists. Type another category.";
-                }
-                else {
-                    // Insert the category into the database
-                    $this->categoryId = $_categoryId;
-                    $this->objDbFaqCategories->insertSingle(
-                        $this->contextId,
-                        $this->categoryId,
-                        $this->objUser->userName(),
-                        mktime()
-                    );
-                }
-                return $this->view();
-            */
-            // Add an entry
+           // Add an entry
             case "add":
                 return $this->add();
+            //Add confirm
             case "addconfirm":
                 return $this->addConfirm();
             // Edit an entry
             case "edit":
                 return $this->edit();
+            //Edit confirm
             case "editconfirm":
                 return $this->editConfirm();
             // Delete an entry
@@ -192,7 +164,7 @@ class faq extends controller
     */
     public function addConfirm()
     {
-		$index = $_POST['index'];
+	     $index = $_POST['index'];
         $question = $_POST["question"];
         $answer = $_POST["answer"];
         $category = $_POST["category"];
@@ -239,7 +211,7 @@ class faq extends controller
         // Update the record in the database
         $this->objDbFaqEntries->updateSingle(
             $id,
-			$index,
+			   $index,
             $question,
             $answer,
             $category,

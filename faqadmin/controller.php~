@@ -14,18 +14,18 @@ if (!$GLOBALS['kewl_entry_point_run'])
 */
 class faqadmin extends controller
 {
-    var $objUser;
+    public $objUser;
     //var $objHelp;
-    var $objLanguage;
-    var $objDbFaqCategories;
-    var $contextId;
-    var $contextTitle;
-    var $categoryId;
+    public $objLanguage;
+    public $objDbFaqCategories;
+    public $contextId;
+    public $contextTitle;
+    public $categoryId;
 
     /**
     * The Init function
     */
-    function init()
+    public function init()
     {
         $this->objUser =& $this->getObject('user', 'security');
         //$this->objHelp =& $this->getObject('helplink','help');
@@ -44,7 +44,7 @@ class faqadmin extends controller
     * @param string $action The action
     * @return string The content template file
     */
-    function dispatch($action=NULL)
+    public function dispatch($action=NULL)
     {
         // Set the layout template for faq - includes the context menu
         $this->setLayoutTemplate("context_layout_tpl.php");
@@ -67,17 +67,17 @@ class faqadmin extends controller
         // If we are not in a context...
         if ($this->contextCode == null) {
             $this->contextId = "root";
-            $this->setVarByRef('contextId', $this->contextId);
+            $this->setVarByRef('contextid', $this->contextId);
             $this->contextTitle = "Lobby";
-            $this->setVarByRef('contextTitle', $this->contextTitle);
+            $this->setVarByRef('contexttitle', $this->contextTitle);
         }
         // ... we are in a context
         else {
             $this->contextId = $this->contextCode;
-            $this->setVarByRef('contextId', $this->contextId);
+            $this->setVarByRef('contextid', $this->contextId);
             $contextRecord = $this->objDbContext->getContextDetails($this->contextCode);
             $this->contextTitle = $contextRecord['title'];
-            $this->setVarByRef('contextTitle', $this->contextTitle);
+            $this->setVarByRef('contexttitle', $this->contextTitle);
         }
         //
         //Create root category if neccessary.
@@ -92,7 +92,7 @@ class faqadmin extends controller
         }
         // Get category from URL
         //$this->categoryId = $this->getParam('category', 'Not Categorised');
-        //$this->setVarByRef('categoryId', $this->categoryId);
+        //$this->setVarByRef('categoryId', $this->categoryid);
         // return the name of the template to use  because it is a page content template
         // the file must live in the templates/content subdir of the module directory
         switch($action){
@@ -126,14 +126,14 @@ class faqadmin extends controller
     /**
     * Add a FAQ entry.
     */
-    function add()
+    public function add()
     {
     }
 
     /**
     * Confirm add.
     */
-    function addConfirm()
+    public function addConfirm()
     {
         $this->categoryId = $_POST["category"];
         // Insert the category into the database
@@ -149,7 +149,7 @@ class faqadmin extends controller
     /**
     * Edit a FAQ entry.
     */
-    function edit()
+    public function edit()
     {
         $id = $this->getParam('id', null);
         $list = $this->objDbFaqCategories->listSingleId($id);
@@ -159,7 +159,7 @@ class faqadmin extends controller
     /**
     * Confirm edit.
     */
-    function editConfirm()
+    public function editConfirm()
     {
         $id = $this->getParam('id', null);
         $categoryId = $_POST["category"];
@@ -176,7 +176,7 @@ class faqadmin extends controller
     /**
     * Confirm delete.
     */
-    function deleteConfirm()
+    public function deleteConfirm()
     {
         $id = $this->getParam('id', null);
         // Delete the record from the database

@@ -42,25 +42,14 @@ class faqadmin extends controller
     /**
     * The dispatch funtion
     * @param string $action The action
-    * @return string The content template file
     */
     public function dispatch($action=NULL)
     {
         // Set the layout template for faq - includes the context menu
         $this->setLayoutTemplate("context_layout_tpl.php");
-        // 1. ignore action at moment as we only do one thing - say hello
-        // 2. load the data object (calls the magical getObject which finds the
-        //    appropriate file, includes it, and either instantiates the object,
-        //    or returns the existing instance if there is one. In this case we
-        //    are not actually getting a data object, just a helper to the 
-        //    controller.
-        // 3. Pass variables to the template
         $this->setVarByRef('objUser', $this->objUser);
         //$this->setVarByRef('objHelp', $this->objHelp);
         $this->setVarByRef('objLanguage', $this->objLanguage);
-        // Set the error string
-        //$error = "";
-        //$this->setVarByRef("error", $error);
         // Get the context
         $this->objDbContext = &$this->getObject('dbcontext','context');
         $this->contextCode = $this->objDbContext->getContextCode();
@@ -90,16 +79,13 @@ class faqadmin extends controller
                 mktime()
             );
         }
-        // Get category from URL
-        //$this->categoryId = $this->getParam('category', 'Not Categorised');
-        //$this->setVarByRef('categoryId', $this->categoryid);
-        // return the name of the template to use  because it is a page content template
-        // the file must live in the templates/content subdir of the module directory
-        switch($action){
+       //check for action
+       switch($action){
             // Add an entry
             case "add": 
                 $this->add();
                 return "add_tpl.php";
+            // Add Confirm
             case "addconfirm":
                 $this->addConfirm();
                 break;
@@ -107,6 +93,7 @@ class faqadmin extends controller
             case "edit":
                 $this->edit();
                 return "edit_tpl.php";
+            // Edit Confirm
             case "editconfirm":
                 $this->editConfirm();
                 break;
