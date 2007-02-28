@@ -79,7 +79,7 @@ if(!empty($rss))
 		{
 			$url = $feeds['url'];
 			$id = $feeds['id'];
-			$leftCol .= $this->objblogOps->rssRefresh($url, $feeds['name'], $id);
+			$leftCol .= $this->objblogOps->rssBox($url, $feeds['name']);//Refresh($url, $feeds['name'], $id);
 		}
 		else {
 			$url = $feeds['rsscache'];
