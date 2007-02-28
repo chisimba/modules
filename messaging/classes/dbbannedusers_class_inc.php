@@ -63,9 +63,13 @@ class dbbannedusers extends dbTable
             $fields['ban_stop'] = date('Y-m-d H:i:s', strtotime('+ '.$banData['ban_length'].' min'));        
         }        
         $fields['creator_id'] = $this->userId;
-        $fields['updated'] = date('Y-m-d H:i:s');        
-        $bannedId = $this->insert($fields);
-        return $bannedId;
+        $fields['updated'] = date('Y-m-d H:i:s');
+                
+        $isBanned = $this->isBanned($banData['user_id'], $banData['room_id']);
+        if($isBanned == FALSE){
+            $bannedId = $this->insert($fields);
+            return $bannedId;
+        }
     }
 
     /**
@@ -124,6 +128,26 @@ class dbbannedusers extends dbTable
         $data = $this->getArray($sql);
         if(!empty($data)){
             return $data;
+        }
+        return FALSE;
+    }
+
+    /** 
+    * Method to check if a user is banned form a chat room
+    *
+    * @access public
+    * @param array $userId The id of the user to check
+    * @param array $roomId The id of the chat room to check
+    * @return boolean TRUE if the user is banned from the chat room FALSE if not
+    */
+    public function isBanned($userId, $roomId)
+    {
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE user_id = '".$userId."'";
+        $sql .= " AND room_id = '".$roomId."'";
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data[0];
         }
         return FALSE;
     }

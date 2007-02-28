@@ -238,6 +238,10 @@ class messaging extends controller
             case 'enterroom':
                 $roomId = $this->getParam('roomId');
                 $this->setSession('chat_room_id', $roomId);
+                $bannedData = $this->dbBanned->isBanned($this->userId, $roomId);
+                if($bannedData != FALSE){
+                    $this->setSession('banned_user', $bannedData);
+                }
                 $this->dbUserlog->addUser($roomId, $this->userId);
                 $roomData = $this->dbRooms->getRoom($roomId);
                 $counter = $this->dbMessaging->getMessageCount($roomId);
@@ -266,6 +270,8 @@ class messaging extends controller
                 );
                 $message = $this->objLanguage->code2Txt('mod_messaging_userexit', 'messaging', $array);
                 $this->dbMessaging->addChatMessage($message, TRUE);
+                $this->unsetSession('chat_room_id');
+                $this->unsetSession('banned_user');
                 return $this->nextAction('');
                 break;
                 

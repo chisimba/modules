@@ -565,12 +565,31 @@ class display extends object
     */
     public function chatRoom($roomData)
     {
+        // get data
+        $bannedData = $this->getSession('banned_user');
+        if($bannedData != NULL){
+            $banned = 'true';
+            if($bannedData['ban_type'] == 1){
+                $bannedLabel = $this->objLanguage->languageText('mod_messaging_isbannedindef', 'messaging');
+            }else{
+                $array = array(
+                    'date' => $this->objDatetime->formatDate($bannedData['ban_stop']),
+                );
+                $bannedLabel = $this->objLanguage->languageText('mod_messaging_isbannedtemp', 'messaging', $array);                
+            }
+        }else{
+            $banned = 'false';
+            $bannedLabel = '';
+        }
+
         // javascript
         $script = '<script type="text/javaScript">
+            var isBanned = "'.$banned.'";
             Event.observe(window, "load", init_chat, false);
     
             function init_chat(){
                 Event.observe("input_send", "click", send_chat, false);
+                display_ban();
                 get_chat();
             }
             
@@ -582,6 +601,8 @@ class display extends object
             }
 
             function chat_timer(){
+                var myDiv = document.getElementById("chatroom");
+                myDiv.scrollTop = myDiv.scrollHeight
                 setTimeout("get_chat()", 1000);
             }
             
@@ -597,6 +618,14 @@ class display extends object
                 }                
                 msg.focus();
             }
+            
+            function display_ban(){
+                if(isBanned == "false"){
+                    var myDiv = document.getElementById("banned");
+                    myDiv.style.visibility = "hidden";
+                    myDiv.style.display = "none";
+                }
+            }
         </script>';
         $str = $script;
         
@@ -607,6 +636,14 @@ class display extends object
         $heading = $this->objLanguage->code2Txt('mod_messaging_room', 'messaging', $array);
         $sendLabel = $this->objLanguage->languageText('mod_messaging_wordsend', 'messaging');
         $clearLabel = $this->objLanguage->languageText('mod_messaging_wordclear', 'messaging');
+                
+        $objLayer = new layer();
+        $objLayer->id = 'banned';
+        $objLayer->padding = '10px';
+        $objLayer->border = '1px solid black';
+        $objLayer->addToStr('<font class="error"><b>'.$bannedLabel.'</b></font>');
+        $bannedLayer = $objLayer->show();
+        $str .= $bannedLayer;
         
         // heading
         $objHeader = new htmlHeading();
@@ -627,6 +664,8 @@ class display extends object
         $chatText = $objText->show();
         
         $objButton = new button('send', $sendLabel);
+        $objButton->extra = ' onclick="javascript:
+            send_chat();"';
         $sendButton = $objButton->show();
         
         $objButton = new button('clear', $clearLabel);
@@ -661,7 +700,7 @@ class display extends object
     * Method to create the active users list
     * 
     * @access public
-    * @param boolean $isModerator TRUE if the current user is a moderator FALSE if not
+    * @param boolean $isModerator 1 if the current user is a moderator 0 if not
     * @return string $str The template output string
     */
     public function getUsers($isModerator)
@@ -687,8 +726,13 @@ class display extends object
             $isBanned = FALSE;
             $tempBan = FALSE;
             if($bannedUsers != FALSE){
-                foreach($bannedUsers as $bannedUser){
+                foreach($bannedUsers as $key=>$bannedUser){
                     if($user['user_id'] == $bannedUser['user_id']){
+                        if($bannedUser['user_id'] == $this->userId){
+                            $this->setSession('banned_user', $bannedUsers[$key]);
+                        }else{
+                            $this->unsetSession('banned_user');
+                        }
                         $isBanned = TRUE;
                         $bannedId = $bannedUser['id'];
                         if($bannedUser['ban_type'] != 1){
@@ -790,6 +834,7 @@ class display extends object
     */
     public function moreSmileys()
     {
+        // javascript
         $this->setVar('pageSuppressXML', TRUE);
         $script = '<script type="text/javaScript">
             var namelist = new Array("alien", "angel", "angry", "anticipation", "approve", "big_grin", "big_smile", "blush", "boom", "clown", "confused", "cool", "crying", "dead", "evil", "evil_eye", "exclamation", "flower", "geek", "kiss", "martian", "moon", "ogle", "ouch", "peace", "question", "rainbow", "raise_eyebrows", "raspberry", "roll_eyes", "sad", "shy", "sleepy", "smile", "stern", "surprise", "thoughtful", "thumbs_down", "thumbs_up", "unsure", "up_yours", "very_angry", "wink", "worried");
@@ -814,6 +859,7 @@ class display extends object
         </script>';
         $content = $script;
 
+        // language items
         $title = $this->objLanguage->languageText('mod_message_wordsmileys', 'messaging');
         $smileyLabel = $this->objLanguage->languageText('mod_message_smileys', 'messaging');  
         $closeLabel = $this->objLanguage->languageText('mod_messaging_wordclose', 'messaging');
@@ -971,26 +1017,25 @@ class display extends object
         $objRadio->setSelected(0);
         $objRadio->setBreakSpace('<br />');
         $objRadio->extra = ' onclick="javascript:
-            var myDiv = document.getElementById(\'lengthDiv\');
+            var lDiv = document.getElementById(\'lengthDiv\');
             if(this.value == 0){
-                myDiv.style.visibility = \'visible\'; 
-                myDiv.removeAttribute(\'style\');         
+                lDiv.style.visibility = \'visible\';
+                lDiv.style.display = \'block\';
             }else{
-                myDiv.style.visibility = \'hidden\';
-                myDiv.style.height = \'0px\';
+                lDiv.style.visibility = \'hidden\';
+                lDiv.style.display = \'none\';
             }"';
         $typeRadio = $objRadio->show();
         
         $typeFeature = $this->objFeaturebox->show($typeLabel, $typeRadio);
         
-        $objRadio = new radio('type');
-        $objRadio->addOption(0, '&nbsp;'.$tempLabel);
-        $objRadio->addOption(1, '&nbsp;'.$indefLabel);
-        $objRadio->setSelected(1);
-        $objRadio->setBreakSpace('<br />');
-        $typeRadio = $objRadio->show();
+        $objLayer = new layer();
+        $objLayer->id = 'typeDiv';
+        $objLayer->addToStr($typeFeature);
+        $typeDiv = $objLayer->show();
         
         $objDrop = new dropdown('length');
+        $objDrop->addOption(1, '&nbsp;1 min');
         $objDrop->addOption(5, '&nbsp;5 min');
         $objDrop->addOption(10, '&nbsp;10 min');
         $objDrop->addOption(15, '&nbsp;15 min');
@@ -1018,14 +1063,19 @@ class display extends object
         $objButton->extra = ' onclick="javascript:window.close()"';
         $cancelButton = $objButton->show();
         
+        $objLayer = new layer();
+        $objLayer->id = 'buttonDiv';
+        $objLayer->addToStr($sendButton.'&nbsp;'.$cancelButton);
+        $buttonDiv = $objLayer->show();
+        
         $objForm = new form('ban', $this->uri(array(
             'action' => 'banuser',
             'roomId' => $roomId,
             'userId' => $userId,
             )));
-        $objForm->addToForm($typeFeature);
+        $objForm->addToForm($typeDiv);
         $objForm->addToForm($lengthDiv);
-        $objForm->addToForm($sendButton.'&nbsp;'.$cancelButton);
+        $objForm->addToForm($buttonDiv);
         $banForm = $objForm->show();
         
         $objLayer = new layer();
