@@ -111,6 +111,7 @@ class blogops extends object
 
     public function rssRefresh($rssurl, $name, $feedid)
     {
+    	//echo $rssurl; die();
     	$objFeatureBox = $this->getObject('featurebox', 'navigation');
     	$objRss = $this->getObject('rssreader', 'feed');
     	$this->objConfig = $this->getObject('altconfig', 'config');
@@ -160,23 +161,50 @@ class blogops extends object
     		fwrite($handle, $rsscache);
     	}
     	//update the db
-    	$addarr = array('url' => htmlentities($rssurl), 'rsscache' => $filename, 'rsstime' => $addtime);
+    	$addarr = array('url' => $rssurl, 'rsscache' => $filename, 'rsstime' => $addtime);
     	//print_r($addarr);
     	$this->objDbBlog->updateRss($addarr, $feedid);
-
+    	//echo $rsscache;
     	$objRss->parseRss($rsscache);
+    	/*
     	$head = $this->objLanguage->languageText("mod_blog_word_headlinesfrom", "blog");
     	$head .= " " . $name;
-    	$content = "<ul>\n";
-    	foreach ($objRss->getRssItems() as $item)
+    	$content = "<ul>\n"; */
+    	$rssbits = $objRss->getRssItems();
+    	if(empty($rssbits))
     	{
-    		if(!isset($item['link']))
-    		{
-    			$item['link'] = NULL;
-    		}
-    		@$content .= "<li><a href=\"" . htmlentities($item['link']) . "\">" . htmlentities($item['title']) . "</a></li>\n";
+    		$objRss2 = $this->newObject('rssreader', 'feed');
+    		//$rssurl = urldecode($rssurl);
+    		//echo $rssurl;
+    		//fallback to the known good url
+    		$objRss2->parseRss($rssurl);
+       		$head = $this->objLanguage->languageText("mod_blog_word_headlinesfrom", "blog");
+        	$head .= " " . $name;
+        	$content = "<ul>\n";
+        	//var_dump($objRss2->getRssItems());
+        	foreach ($objRss2->getRssItems() as $item)
+        	{
+        		
+        		if(!isset($item['link']))
+        		{
+        			$item['link'] = NULL;
+        		}
+    			@$content .= "<li><a href=\"" . htmlentities($item['link']) . "\">" . htmlentities($item['title']) . "</a></li>\n";
+			}
+			$content .=  "</ul>\n";
+			return $objFeatureBox->show($head, $content);
     	}
-    	$content .=  "</ul>\n";
+    	else {
+    		foreach ($objRss->getRssItems() as $item)
+    		{
+    			if(!isset($item['link']))
+    			{
+    				$item['link'] = NULL;
+    			}
+    			@$content .= "<li><a href=\"" . htmlentities($item['link']) . "\">" . htmlentities($item['title']) . "</a></li>\n";
+    		}
+    		$content .=  "</ul>\n";
+    	}
     	return $objFeatureBox->show($head, $content);
 
     }
@@ -1187,10 +1215,15 @@ class blogops extends object
                       <script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
                       <script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
         $this->appendArrayVar('headerParams',$scripts);
-        $str = "<a href=\"#\" onclick=\"Effect.SlideUp('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
-        $icon->setIcon('down');
-        $str .="<a href=\"#\" onclick=\"Effect.SlideDown('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
+        //$str = "<a href=\"#\" onclick=\"Effect.SlideUp('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
+        $str = "<a href=\"javascript:;\" onclick=\"Effect.SlideUp('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});adjustLayout();\"><img src=\"skins/_common/icons/up.gif\" border=\"0\" align=\"middle\" alt=\"up\"
+title=\"up\"></a>";
 
+        $icon->setIcon('down');
+        //$str .="<a href=\"#\" onclick=\"Effect.SlideDown('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
+		$str .= "<a href=\"javascript:;\" onclick=\"Effect.SlideDown('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});adjustLayout();\"><img src=\"skins/_common/icons/down.gif\" border=\"0\" align=\"middle\" alt=\"down\"
+title=\"down\"></a>";
+		
         $str .='<div id="feedmenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
         $str .= $leftCol;
         $str .= '</div>';
