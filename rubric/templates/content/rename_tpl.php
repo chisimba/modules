@@ -30,7 +30,7 @@
     $objTable->addRow($row, 'even');
  //   $row = array("<b>".ucfirst($objLanguage->code2Txt('rubric_course',array('context'=>'')))."</b>", $contextTitle);
 	 //made changes to fix the laguage item error	    
-    $row = array("<b>".ucfirst($objLanguage->code2Txt('rubric_course')."</b>", $contextTitle);
+    $row = array("<b>".ucfirst($objLanguage->code2Txt('rubric_course'))."</b>", $contextTitle);
     
     $objTable->addRow($row, 'even');
     $textinput = new textinput("title",$title);
