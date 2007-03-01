@@ -907,7 +907,7 @@ class dbblog extends dbTable
     	//document body
     	//NOTE: this is not actually put into the index, so as to keep the index nice and small
     	//      only a reference is inserted to the index.
-    	$document->addField(Zend_Search_Lucene_Field::UnStored('contents', $data['post_content']));
+    	$document->addField(Zend_Search_Lucene_Field::Text('contents', $data['post_content']));
     	//what else do we need here???
     	//add the document to the index
     	$index->addDocument($document);
@@ -966,7 +966,7 @@ class dbblog extends dbTable
     	//document body
     	//NOTE: this is not actually put into the index, so as to keep the index nice and small
     	//      only a reference is inserted to the index.
-    	$document->addField(Zend_Search_Lucene_Field::UnStored('contents', $data['postcontent']));
+    	$document->addField(Zend_Search_Lucene_Field::Text('contents', $data['postcontent']));
     	//what else do we need here???
     	//add the document to the index
     	$index->addDocument($document);
