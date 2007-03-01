@@ -26,7 +26,7 @@ $middleColumn = NULL;
 //check for sticky posts
 if(!is_null($stickypost))
 {
-	$middleColumn .= $this->objblogOps->showPosts($stickypost);
+	$middleColumn .= $this->objblogOps->showPosts($stickypost, TRUE);
 }
 
 if(!empty($latestpost) && !empty($posts))

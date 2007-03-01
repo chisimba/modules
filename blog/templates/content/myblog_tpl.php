@@ -53,7 +53,7 @@ elseif(isset($catid) && !empty($posts))
 	//check for sticky posts
 	if(!is_null($stickypost))
 	{
-		$middleColumn .= $this->objblogOps->showPosts($stickypost);
+		$middleColumn .= $this->objblogOps->showPosts($stickypost, TRUE);
 	}
 	$middleColumn .= ($this->objblogOps->showPosts($posts));
 }
@@ -73,7 +73,7 @@ else {
 		//check for sticky posts
 		if(!is_null($stickypost))
 		{
-			$middleColumn .= $this->objblogOps->showPosts($stickypost);
+			$middleColumn .= $this->objblogOps->showPosts($stickypost, TRUE);
 		}
 		$this->loadClass('htmlheading', 'htmlelements');
 		$header = new htmlheading();

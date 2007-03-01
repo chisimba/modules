@@ -33,7 +33,7 @@ else {
 //check for sticky posts
 if(!is_null($stickyposts))
 {
-	$middlecolumn .= $this->objblogOps->showPosts($stickyposts);
+	$middlecolumn .= $this->objblogOps->showPosts($stickyposts, TRUE);
 }
 
 //show all the posts
