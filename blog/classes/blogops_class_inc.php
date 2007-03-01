@@ -2032,8 +2032,10 @@ title=\"up\"></a>";
         // Display the posts
         if(!empty($data)){
             foreach($data as $item){
+            	$linkuri = $this->uri(array('action' => 'viewsingle', 'postid' => $item['id']));
+            	$link = new href($linkuri, $item['post_title']);
                 $str .= '<p>';
-                $str .= '<b>'.$item['post_title'].'</b><br />';
+                $str .= '<b>'.$link->show().'</b><br />';
                 $str .= '<font class="minute">'.$objUser->fullName($item['userid']).'</font>';
                 //$str .= '<br />'.$item['post_excerpt'];
                 $str .= '<hr /></p>';
