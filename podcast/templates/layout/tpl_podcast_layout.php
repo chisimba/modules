@@ -23,6 +23,7 @@ $menuItems[] = $addPodcast;
 $sidebar = $objSideBar->show($menuItems);
 
 $podcasters = $this->objPodcast->listPodcasters();
+$podcastCourses = $this->objPodcast->listPodcastCourses();
 
 if (count($podcasters) > 0) {
     $this->loadClass('form', 'htmlelements');
@@ -82,7 +83,7 @@ if (count($podcasters) > 0) {
         
         
     } else {
-        $numFeeds = $this->objPodcast->getNumFeeds();
+        $numFeeds = $this->objPodcast->getNumFeeds($this->getParam('id', $this->objUser->userId()));
         $content = $this->objLanguage->languageText('mod_podcast_latestpodcastfeeds', 'podcast');
         
         $link = new link($this->uri(array('action'=>'rssfeed')));
@@ -90,6 +91,55 @@ if (count($podcasters) > 0) {
         
         $content .= '<p align="center"><br />'.$link->show().'</p>';
     }
+
+if (count($podcastCourses) > 0) {
+    $this->loadClass('form', 'htmlelements');
+    $this->loadClass('button', 'htmlelements');
+    $this->loadClass('dropdown', 'htmlelements');
+    $this->loadClass('hiddeninput', 'htmlelements');
+    $this->loadClass('label', 'htmlelements');
+    
+    $form = new form ('viewbycourse', $this->uri(array('action' => 'bycourse')));
+    $form->method = 'get';
+    $module = new hiddeninput('module', 'podcast');
+    $form->addToForm($module->show());
+    
+    $action = new hiddeninput('action', 'bycourse');
+    $form->addToForm($action->show());
+    
+    $dropdown = new dropdown('contextcode');
+    
+    foreach ($podcastCourses as $pCourse)
+    {
+		$dropdown->addOption($pCourse['contextcode'], $pCourse['title']);
+		$dropdown->setSelected($this->getParam('contextcode'));
+    }
+        
+    $label = new label ("View by Course", 'input_id');
+    
+    $button = new button(NULL, $this->objLanguage->languageText('mod_podcast_viewpodcasts', 'podcast'));
+    $button->setToSubmit();
+    
+    $objFeatureBox = $this->newObject('featurebox', 'navigation');
+    
+    $form->addToForm($dropdown->show().'<br /><br />'.$button->show());
+    $sidebar .= '<br />'.$objFeatureBox->show($label->show(), $form->show());
+
+    $objIcon = $this->newObject('geticon', 'htmlelements');
+    $objIcon->setIcon('rss');
+    
+    
+    if ($this->getParam('action') == 'bycourse') {
+        $numFeeds = $this->objPodcast->getNumFeedsByCourse($this->getParam('contextcode'));
+
+        $content = $this->objLanguage->languageText('mod_podcast_rssfeedbycourse', 'podcast').': 
+        											'.$this->objPodcast->getCourseName($this->getParam('contextcode'));
+        $link = new link($this->uri(array('action'=>'rssfeedbycourse', 'contextcode'=>$this->getParam('contextcode'))));
+        $link->link = $objIcon->show();
+
+		$content .= '<p align="center"><br />'.$link->show().'</p>';
+	}
+}
     
     if ($numFeeds > 0) {
         $sidebar .= '<br />'.$objFeatureBox->show($this->objLanguage->languageText('mod_podcast_podcastrssfeed', 'podcast'), $content);

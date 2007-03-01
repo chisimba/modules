@@ -60,6 +60,49 @@ if ($mode == 'confirm' || $mode == 'editpodcast') {
         $table->addCell('&nbsp;');
         $table->addCell('&nbsp;');
     $table->endRow();
+
+	if(!isset($isUpdate)){
+		if($this->objUser->isLecturer()){
+			$arrCourses = $this->objUtils->getContextList();
+			foreach($arrCourses as $course)
+			{
+				$courseCheck = new checkbox('courses[]',null);
+				$courseCheck->setValue($course['contextcode']);
+				$label = new label($course['title'],null);
+				$table->startRow();
+				$table->addCell($label->show());
+				$table->addCell($courseCheck->show());
+				$table->endRow();
+			}
+		}
+	}else{
+		if($this->objUser->isLecturer()){
+			$courses = array();
+			$courses = $this->objUtils->getContextList();
+			$contextIn = array();
+			$coursesInPodcasts = $this->objPodcast->listOfContextCode($this->getParam('id'));
+			foreach($coursesInPodcasts as $k => $value)
+			{
+				$contextIn[$value['contextcode']] = $value['contextcode'];
+			}
+
+			foreach($courses as $course)
+			{
+				if($contextIn[$course['contextcode']]==$course['contextcode']){
+					$courseCheck = new checkbox('courses[]',null, true);
+				}else{	
+					$courseCheck = new checkbox('courses[]',null);
+				}
+				$courseCheck->setValue($course['contextcode']);
+				$label = new label($course['title'],null);
+				$table->startRow();
+				$table->addCell($label->show());
+				$table->addCell($courseCheck->show());
+				$table->endRow();
+				$i++;
+			}
+		}
+	}
     
     $table->startRow();
         $button = new button('submitform', $this->objLanguage->languageText('mod_podcast_updatepodcast', 'podcast'));
@@ -70,7 +113,12 @@ if ($mode == 'confirm' || $mode == 'editpodcast') {
     $table->endRow();
     
     $form->addToForm($table->show());
-    
+     
+	if(isset($isUpdate) && $isUpdate == "yes"){
+		$hiddenInput = new hiddeninput('isUpdate','yes');
+		$form->addToForm($hiddenInput->show());
+	}
+     
     $hiddenInput = new hiddeninput('id', $podcast['id']);
     $form->addToForm($hiddenInput->show());
     

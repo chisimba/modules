@@ -16,9 +16,10 @@ class podcast extends controller
         $this->objPodcast =& $this->getObject('dbpodcast');
         $this->objUser =& $this->getObject('user', 'security');
         $this->objDateTime =& $this->getObject('datetime', 'utilities');
-        
+        $this->objUtils = & $this->getObject('utils','contextadmin');
         $this->objLanguage =& $this->getObject('language', 'language');
         $this->objConfig =& $this->getObject('altconfig', 'config');
+		$this->dbContext =& $this->getObject('dbcontext','context');
     }
     
     /**
@@ -53,6 +54,10 @@ class podcast extends controller
                 return $this->showUserPodcasts($this->getParam('id'));
             case 'rssfeed':
                 return $this->showRssFeed($this->getParam('id'));
+			case 'bycourse':
+				return $this->showCoursePoadcasts($this->getParam('contextcode'));
+			case 'rssfeedbycourse':
+				return $this->showRssFeedByCourse($this->getParam('contextcode'));
             default:
                 return $this->podcastHome();
         }
@@ -70,7 +75,7 @@ class podcast extends controller
             $action = 'home';
         }
         
-        $allowedPreloginActions = array ('home', 'podcast', 'rssfeed', 'playpodcast', 'downloadfile', 'byuser');
+        $allowedPreloginActions = array ('home', 'podcast', 'rssfeed', 'playpodcast', 'downloadfile', 'byuser', 'bycourse', 'rssfeedbycourse');
         
         if (in_array($action, $allowedPreloginActions)) {
             return FALSE;
@@ -181,7 +186,9 @@ class podcast extends controller
         $title = $this->getParam('title');
         $description = $this->getParam('description');
         $process = $this->getParam('process');
-        
+        $courses = $this->getParam('courses');
+		$isUpdate = $this->getparam('isUpdate');
+
         if ($id == '') {
             return $this->nextAction(NULL);
         } else {
@@ -196,7 +203,14 @@ class podcast extends controller
             }
             
             $this->objPodcast->updatePodcast ($id, $title, $description);
-            
+             
+			if($isUpdate == "yes"){
+				$this->objPodcast->deletePodcastContext($id);
+				$this->objPodcast->addPodcastContext($courses, $id);
+			}else{
+				$this->objPodcast->addPodcastContext($courses, $id);
+			}
+             
             return $this->nextAction('byuser', array('message'=>$process, 'podcast'=>$id));
         }
     }
@@ -222,6 +236,7 @@ class podcast extends controller
             }
             
             $this->setVarByRef('podcast', $podcast);
+			$this->setVar('isUpdate','yes');
             $this->setVar('mode', 'editpodcast');
             return 'tpl_confirmadd.php';  
         }
@@ -328,6 +343,50 @@ class podcast extends controller
         $this->setLayoutTemplate(NULL);
         
         return 'tpl_listenonline.php';
+    }
+    
+    /**
+     * Method to show the podcasts of a particular course
+     * @author Mohamed Yusuf
+     * @param string $id course Id
+     * @return string Template
+     */
+    private function showCoursePoadcasts($contextCode)
+    {
+        
+        $podcasts = $this->objPodcast->getCoursePodcasts($contextCode);
+        $this->setVar('podcasts', $podcasts);
+        
+        return 'tpl_listpodcastbycourse.php';
+    }
+
+    /**
+     * Method to show the RSS Feed by course
+     * @author Mohamed Yusuf
+     * @param string $id Context Id of the Feed
+     */
+    private function showRssFeedByCourse($contextCode)
+    {
+        $rssFeed = $this->getObject('itunesrssgenerator');
+        
+        $podcasts = $this->objPodcast->getCoursePodcasts($contextCode);
+        $rssFeed->title = $this->objPodcast->getCourseName($contextCode);
+        $rssFeed->rssfeedlink = $this->uri(array('action'=>'rssfeedbycourse', 'contextcode'=>$contextCode));
+        $rssFeed->description = $this->objLanguage->languageText('mod_podcast_latestpodcastsforcourse', 'podcast').' '.$this->objPodcast->getCourseName($contextCode);
+        
+        
+        foreach ($podcasts as $podcast)
+        {
+            $link = $this->uri(array('action'=>'downloadfile', 'id'=>$podcast[0]['id']));
+            $rssFeed->addItem(htmlentities($podcast[0]['title']), $link, htmlentities($podcast[0]['description']), $podcast[0]['datecreated'], $this->objUser->fullname($podcast[0]['creatorid']), 'audio/mpeg', $podcast[0]['filesize'], $podcast[0]['playtime']);
+        }
+        
+        $this->setVarByRef('feed', $rssFeed->show());
+        
+        $this->setPageTemplate(NULL);
+        $this->setLayoutTemplate(NULL);
+        
+        return 'tbl_podcastfeed.php';
     }
 }
 ?>
