@@ -45,29 +45,37 @@ class realtime extends controller
 	*/
     function dispatch($action=Null)
     {
-        $this->objLog->log();
-	if ($this->objUser->isLoggedIn())
-	   $this->setVar('userName', $this->objUser->userName());
-	else
-	   $this->setVar('userName', "Guest");
+	    $this->objLog->log();
+		$modUri = $this->objConfig->getItem('MODULE_URI');
 
-	switch($action)
-	{
-	  case 'white':
-	  case 'voice':
-	  default:
-	     $modUri =  $this->objConfig->getItem('MODULE_URI');
-	     $this->setVar('voiceUrl',
-			"http://". $_SERVER['HTTP_HOST']."/".$modUri."realtime/voice");
-	     $this->setVar('realtimeUrl',
-			"http://". $_SERVER['HTTP_HOST']."/".$modUri."realtime");
+		if ($this->objUser->isLoggedIn())
+		{
+		   $this->setVar('userName', $this->objUser->userName());
+		   $this->setVar('userLevel', $this->objUser->userLevel());
+		} else {
+		   $this->setVar('userName', "Guest");
+		   $this->setVar('userLevel', "Guest");
+		}
+	
+		switch($action)
+		{
+		  case 'whiteboard':
 
-	     return "realtime-voice_tpl.php";
+		     $this->setVar('whiteboardUrl',
+				"http://". $_SERVER['HTTP_HOST']."/".$modUri."realtime/whiteboard");
+		     return "realtime-whiteboard_tpl.php";
 
-	  // Future
-	  //default:
-	  //   return "realtime_tpl.php";
-	}
-
+		  case 'voice':
+		     $this->setVar('voiceUrl',
+				"http://". $_SERVER['HTTP_HOST']."/".$modUri."realtime/voice");
+		     $this->setVar('realtimeUrl',
+				"http://". $_SERVER['HTTP_HOST']."/".$modUri."realtime");
+	
+		     return "realtime-voice_tpl.php";
+	
+		  default:
+		     return "realtime_tpl.php";
+		}
+	
     }
 }
