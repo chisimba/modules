@@ -338,11 +338,13 @@ class simplemap extends controller
     {
         switch ($action)
         {
-            case 'showdemo':
-            case NULL:
+            case 'viewdemo':
+            case 'viewmap':
+            
                 return FALSE;
                 break;
             default:
+            	case NULL:
                 return TRUE;
                 break;
         }
