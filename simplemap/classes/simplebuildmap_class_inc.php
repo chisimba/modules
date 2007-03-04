@@ -97,8 +97,8 @@ class simplebuildmap extends object
         $this->objConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->width = $this->getParam('width', '800');
         $this->height = $this->getParam('height', '600');
-        $this->gLat = $this->getParam('gLat', '-33.799669');
-        $this->gLong = $this->getParam('gLong', '18.364472');
+        $this->gLat = $this->getParam('glat', '-33.799669');
+        $this->gLong = $this->getParam('glong', '18.364472');
         $this->magnify = $this->getParam('magnify', '6');
         $this->smap = $this->getParam('smap', $this->getDemoFile());
         //Get an instance of the language object
@@ -222,6 +222,12 @@ class simplebuildmap extends object
     	$long = $this->gLong;
     	$mag = $this->magnify;
     	$incompat = $this->objLanguage->languageText("mod_simplemap_incompatible", "simplemap");
+		//Valid types are G_NORMAL_MAP, G_SATELLITE_MAP, G_HYBRID_MAP
+		$gMapType = $this->getParam("maptype", NULL);
+		if ($gMapType !== NULL) {
+			$gMapType = ",{mapTypes:[" . $gMapType . "]}";
+		}
+		
     	$ret .="
             <script type=\"text/javascript\">
     		//<![CDATA[
@@ -238,7 +244,7 @@ class simplebuildmap extends object
 		        return marker;
 		      }
 		      // Display the map, with some controls and set the initial location 
-		      var map = new GMap2(document.getElementById(\"map\"));
+		      var map = new GMap2(document.getElementById(\"map\")$gMapType);
 		      map.addControl(new GLargeMapControl());
 		      map.addControl(new GMapTypeControl());
 		      map.setCenter(new GLatLng($lat,$long),$mag);

@@ -72,7 +72,7 @@ class simplemap extends controller
     public function dispatch()
     {
         //Get action from query string and set default to view
-        $action=$this->getParam('action', 'showdemo');
+        $action=$this->getParam('action', 'viewall');
         /*
         * Convert the action into a method (alternative to 
         * using case selections)
@@ -112,7 +112,8 @@ class simplemap extends controller
 	    	//Read the API key from sysconfig
 	    	$apiKey = $this->objBuildMap->getApiKey();
 	    	//ABQIAAAASzlWuBpqyHQoPD8OwyyFRhS9klZkf-a3YMqrNEgglGl8tlkEvBRUarouiwsLMxDlMc20SE2jC_GQmg
-	        $hScript = "<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;key=" . $apiKey . "\" type=\"text/javascript\"></script>";
+	        $hScript = "<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;key=" 
+	           . $apiKey . "\" type=\"text/javascript\"></script>";
 	        //Add the local script to the page header
 	        $this->appendArrayVar('headerParams',$hScript);
 	        return TRUE;
@@ -148,12 +149,95 @@ class simplemap extends controller
     * @access private
     * 
     */
-    private function __showdemo()
+    private function __viewdemo()
     {
     	$this->setVar('pageSuppressXML', TRUE);
     	$str = $this->objBuildMap->show();
     	$this->setVarByRef('str', $str);
         return "demomap_tpl.php";
+    }
+    
+    /**
+     * 
+     * Method to view a list of all simplemaps stored
+     * @access private
+     * @return String Template for viewing list of timelines
+     */
+    private function __viewall()
+    {
+        $objShowData = $this->getObject("simplemapinterface", "simplemap");
+        $str = $objShowData->show();
+        $this->setVarByRef("str", $str);
+        return 'viewall_tpl.php';
+    }
+    
+    /**
+     * 
+     * Method corresponding to the editmap action parameter
+     * @access private
+     * @return Template for editing or adding a timeline structure
+     * 
+     */
+    private function __editmap()
+    {
+    	$id = $this->getParam("id", NULL);
+    	$objDb = $this->getObject("dbmaps", "simplemap");
+    	$ar = $objDb->getRow("id", $id);
+        $this->setVar("ar", $ar);
+        return "editadd_tpl.php";
+    }
+    
+    /**
+     * 
+     * Method to add a map
+     * @access private
+     * @return string The edit add template
+     * 
+     */
+    private function __addmap()
+    {
+        return "editadd_tpl.php";
+    }
+    
+    /**
+     * 
+     * Method to save the map
+     * @access private
+     * @return The viewall action as next action
+     * 
+     */
+    private function __save()
+    {
+    	$objDb = $this->getObject("dbmaps", "simplemap");
+    	$mode = $this->getParam("mode", NULL);
+    	$objDb->saveData($mode);
+        return $this->nextAction("viewall");
+    }
+    
+    private function __delete()
+    {
+        $id = $this->getParam('id', null);
+        $objDb = $this->getObject("dbmaps", "simplemap");
+        // Delete the record from the database
+        $objDb->deleteRecord("id", $id);
+        return $this->nextAction('viewall');
+    }
+    
+    /**
+    * 
+    * Method corresponding to the viewmap action. It hands everything over to the
+    * viewmap template.
+    * 
+    * @access private
+    * 
+    */
+    private function __viewmap()
+    {
+    	$this->setVar('pageSuppressXML', TRUE);
+    	$str = $this->objBuildMap->show();
+    	$this->setVarByRef('str', $str);
+        return "viewmap_tpl.php";
+        
     }
     
     /**
@@ -169,9 +253,13 @@ class simplemap extends controller
     {
     	$this->setVar('pageSuppressXML', TRUE);
     	$objParser = $this->getObject("smapparser", "simplemap");
+    	$objRsConfig =  $this->getObject('altconfig', 'config');
     	$map = $filename =  "http://" . $_SERVER['SERVER_NAME'] 
     	   . $objRsConfig->getItem('MODULE_URI') . "simplemap/resources/jsmaps/madiba.smap";
-    	$objParser->setMapUri($map);
+    	$loc = $this->getParam("method", NULL);
+        if ($loc !== "local") {
+            $objParser->setMapUri($map);
+        }
     	$str = $objParser->show();
     	$this->setVarByRef("str", $str);
         return "testparser_tpl.php";

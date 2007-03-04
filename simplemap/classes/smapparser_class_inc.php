@@ -29,10 +29,10 @@ class smapparser extends object
     
     /**
     * 
-    * @var string $uri Holds the value of the timeline to display
+    * @var string $url Holds the value of the timeline to display
     * 
     */
-    public $uri;
+    public $url;
 
 	/*
 	* @var string $timeLineModuleLink Holds the link for the timeline module
@@ -62,7 +62,7 @@ class smapparser extends object
      */
 	public function setMapUri($uri)
 	{
-	    $this->uri = $uri;
+	    $this->url = $uri;
 	    return TRUE;
 	}
 	
@@ -90,10 +90,62 @@ class smapparser extends object
     	$objIframe->width = "100%";
     	$objIframe->height="600";
         $ret = $this->sMapModuleLink;
-        $ret .= "&amp;mode=plain&amp;smap=" . urlencode($this->uri);
+        $ret .= "&amp;mode=plain&amp;smap=" . urlencode($this->url);
 		$objIframe->src=$ret;
-        //$ret = "<iframe height=\"600\" width=\"100%\" src=\"$ret\"></iframe>";
+		$objIframe->width="800";
+		$objIframe->height="600";
         return $objIframe->show();
     }
-	}
+    
+    public function getRemote($smapFile) {
+    	$this->setMapUri($smapFile);
+        return $this->show();
+    }
+    
+    public function getLocal($id){
+    	$objDb = $this->getObject("dbmaps", "simplemap");
+    	$ar = $objDb->getRow("id", $id);
+    	if (isset($ar)) {
+    	    $title = $ar['title'];
+	    	$description = $ar['description'];
+	    	$url = $ar['url'];
+	    	$glat = $ar['glat'];
+	    	$glong = $ar['glong'];
+	    	$magnify = $ar['magnify']; 
+    		$width = $ar['width'];
+    		$height = $ar['height'];
+	    	$maptype = $ar['maptype']; 
+			$frSrc = $this->uri(array(
+			  "mode" => "plain",
+	          "action" => "viewmap",
+	          "glat" => $glat,
+	          "glong" => $glong,
+	          "magnify" => $magnify,
+	          "height" => $height,
+	          "width" => $width,
+	          "maptype" => $maptype,
+			  "smap" => $url), "simplemap");
+	    	$objIframe = $this->getObject('iframe', 'htmlelements');
+	    	$objIframe->width = $width;
+	    	$objIframe->height=$height;
+	    	$objIframe->src = $frSrc;
+	    	//Add the title to the map
+			$objH = $this->getObject('htmlheading', 'htmlelements');
+			//Heading H3 tag
+			$objH->type=3;
+			$objH->str = $title;
+			$ret = $objH->show();
+			$ret .= $objIframe->show();
+			$ret .= "<br />" . $description;
+    	} else {
+		    //Give some results when the map is not found" .
+		    $objLanguage = $this->getObject('language', 'language');
+		    $ret = "<span class=\"error\"><h1>" 
+		      . $objLanguage->languageText("mod_simplemap_error_mapnotfound", "simplemap") 
+		      . ": " . $id ."</h1></span>";
+		}
+        return $ret;
+    }
+    
+}
 ?>
