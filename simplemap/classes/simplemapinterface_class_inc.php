@@ -296,7 +296,6 @@ class simplemapinterface extends object {
 		        'id' => $id);
 		    $ret .= $this->objGetIcon->getEditIcon($this->uri($editArray, "simplemap"));
 		    
-		    
 		    //Go for the delete icon
 		    $delLink = $this->uri($deleteArray, "simplemap");
 		    // The delete icon with link uses confirm delete utility

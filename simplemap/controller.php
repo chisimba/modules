@@ -237,7 +237,6 @@ class simplemap extends controller
     	$str = $this->objBuildMap->show();
     	$this->setVarByRef('str', $str);
         return "viewmap_tpl.php";
-        
     }
     
     /**

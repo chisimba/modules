@@ -83,25 +83,51 @@ class smapparser extends object
 	    }
 	}
 	
-
+	/**
+	 * 
+	 * Show method do display the map
+	 * @access public 
+	 * @return strng The map in an iframe
+	 * 
+	 */
     public function show()
     {
     	$objIframe = $this->getObject('iframe', 'htmlelements');
-    	$objIframe->width = "100%";
-    	$objIframe->height="600";
         $ret = $this->sMapModuleLink;
-        $ret .= "&amp;mode=plain&amp;smap=" . urlencode($this->url);
-		$objIframe->src=$ret;
+        $url = $this->uri(array(
+          "action" => "viewmap",
+          "mode" => "plain"), "simplemap");
+        //cant use the uri method because it urlencodes it and messes it up
+        $url .= "&smap=" . $this->url;
+		$objIframe->src=$url;
 		$objIframe->width="800";
 		$objIframe->height="600";
         return $objIframe->show();
     }
     
+    /**
+     * 
+     * Method ot use in a parser to return the map using 
+     * the show method
+     * @access public
+     * @return string The map formatted in an Iframe
+     * 
+     */
     public function getRemote($smapFile) {
     	$this->setMapUri($smapFile);
         return $this->show();
     }
     
+    /**
+     * 
+     * Method to use in a parser to return the map based on
+     * its id field in tbl_simplemap_maps table
+     * 
+     * @access public
+     * @aparam string $id The id of the map in the database
+     * @return string The map in an iframe or a text error message if the id is not found
+     * 
+     */
     public function getLocal($id){
     	$objDb = $this->getObject("dbmaps", "simplemap");
     	$ar = $objDb->getRow("id", $id);
@@ -129,6 +155,7 @@ class smapparser extends object
 	    	$objIframe->width = $width;
 	    	$objIframe->height=$height;
 	    	$objIframe->src = $frSrc;
+	    	$objIframe->scrolling = "no";
 	    	//Add the title to the map
 			$objH = $this->getObject('htmlheading', 'htmlelements');
 			//Heading H3 tag
