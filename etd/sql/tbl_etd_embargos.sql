@@ -35,8 +35,11 @@ $fields = array(
 		'length' => 32
 		),
 	'request' => array(
+		'type' => 'clob'
+		),
+	'period' => array(
 		'type' => 'text',
-		'length' => 255
+		'length' => 30
 		),
 	'periodstart' => array(
 		'type' => 'date'
@@ -46,13 +49,12 @@ $fields = array(
 		),
 	'granted' => array(
 		'type' => 'text',
-		'length' => 32,
+		'length' => 50,
 		'notnull' => 1,
 		'default' => 'pending'
 		),
 	'reason' => array(
-		'type' => 'text',
-		'length' => 255
+		'type' => 'clob',
 		),
 	'creatorid' => array(
 		'type' => 'text',

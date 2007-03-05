@@ -85,16 +85,18 @@ class search extends object
     */
     public function init()
     {
-        $this->dbThesis =& $this->getObject('dbthesis', 'etd');
-//        $this->dbQualified =& $this->getObject('dbqualified', 'etd');
+        $this->dbThesis = $this->getObject('dbthesis', 'etd');
+//        $this->dbQualified = $this->getObject('dbqualified', 'etd');
         
-        $this->objUser =& $this->getObject('user', 'security');
-        $this->objLanguage =& $this->getObject('language', 'language');
-        $this->objConfig =& $this->getObject('dbsysconfig', 'sysconfig');
+        $this->objUser = $this->getObject('user', 'security');
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objConfig = $this->getObject('dbsysconfig', 'sysconfig');
 
-        $this->objTable =& $this->newObject('htmltable', 'htmlelements');
-        $this->objHead =& $this->newObject('htmlheading', 'htmlelements');
-        $this->objLayer =& $this->newObject('layer', 'htmlelements');
+        $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $this->objRound = $this->newObject('roundcorners', 'htmlelements');
+        $this->objTable = $this->newObject('htmltable', 'htmlelements');
+        $this->objHead = $this->newObject('htmlheading', 'htmlelements');
+        $this->objLayer = $this->newObject('layer', 'htmlelements');
         $this->loadClass('tabbedbox', 'htmlelements');
 
         $this->loadClass('form', 'htmlelements');
@@ -201,12 +203,15 @@ class search extends object
 
         $url = $this->uri(array('action'=>'advsearch', 'mode'=>'general'), $module);
         $objForm = new form('search', $url);
-        $objForm->addToForm('<p style="padding: 10px;">'.$this->objTable->show().'</p>');
+        $objForm->addToForm('<p>'.$this->objTable->show().'</p>');
 
-        $objTab = new tabbedbox();
-        $objTab->addTabLabel($hdFind);
-        $objTab->addBoxContent($objForm->show());
-        return $objTab->show();
+//        $objTab = new tabbedbox();
+//        $objTab->addTabLabel($hdFind);
+//        $objTab->addBoxContent($objForm->show());
+//        return $objTab->show();
+        
+        return $this->objRound->show('<h3>'.$hdFind.'</h3>'.$objForm->show());
+//        return $this->objFeatureBox->show($hdFind, $objForm->show());
     }
 
     /**
@@ -258,12 +263,15 @@ class search extends object
 
         $url = $this->uri(array('action'=>'advsearch', 'mode'=>'specific'), $module);
         $objForm = new form('search', $url);
-        $objForm->addToForm('<p style="padding: 10px;">'.$this->objTable->show().'</p>');
+        $objForm->addToForm('<p>'.$this->objTable->show().'</p>');
 
-        $this->objTab = new tabbedbox();
-        $this->objTab->addTabLabel($hdSearch);
-        $this->objTab->addBoxContent($objForm->show());
-        return $this->objTab->show();
+//        $this->objTab = new tabbedbox();
+//        $this->objTab->addTabLabel();
+//        $this->objTab->addBoxContent();
+//        return $this->objTab->show();
+
+//        return $this->objFeatureBox->show($hdSearch, $objForm->show());
+        return $this->objRound->show('<h3>'.$hdSearch.'</h3>'.$objForm->show());
     }
 
     /**
@@ -432,6 +440,7 @@ class search extends object
         $result = array();
         $filter = '';
         $fullCriteria = $this->getSession('criteria', NULL);
+        $sessionCriteria = '';
 
         $sqlFilter = $this->getSession('sql', NULL);
         if(!empty($sqlFilter)){
@@ -518,7 +527,7 @@ class search extends object
                     }
                     $sessionCriteria .= $box3Criteria.': '.$box3.' ';
                 }
-                $fullCriteria = $this->objLanguage->code2Txt('mod_etd_searchedforspecific', array('criteria' => $sessionCriteria));
+                $fullCriteria = $this->objLanguage->code2Txt('mod_etd_searchedforspecific', 'etd', array('criteria' => $sessionCriteria));
             }
 
             if(!empty($filter)){
@@ -540,7 +549,7 @@ class search extends object
                     if(!empty($filter)){
                         $filter .= ' AND ';
                     }
-                    $filter .= "dc_creator LIKE '%$val%'";
+                    $filter .= "LOWER(dc_creator) LIKE '%".strtolower($val)."%'";
                 }
                 $filter = '('.$filter.')';
             }
@@ -677,7 +686,7 @@ class search extends object
                 if(!empty($filter)){
                     $filter .= ' AND ';
                 }
-                $filter .= "$criteria LIKE '%$val%'";
+                $filter .= "LOWER($criteria) LIKE '%".strtolower($val)."%'";
             }
             $filter = '('.$filter.') OR ';
         }else if($criteria == 'dc_subject'){
@@ -688,12 +697,12 @@ class search extends object
                 if(!empty($filter)){
                     $filter .= ' AND ';
                 }
-                $filter .= "$criteria LIKE '%$val%'";
+                $filter .= "LOWER($criteria) LIKE '%".strtolower($val)."%'";
             }
             $filter = '('.$filter.') OR ';
         }
 
-        $filter .= "$criteria LIKE '%$input%'";
+        $filter .= "LOWER($criteria) LIKE '%".strtolower($input)."%'";
 
         return " {$cross} ({$filter})";
     }
@@ -718,10 +727,10 @@ class search extends object
                 if(!empty($filter)){
                     $filter .= " $cross ";
                 }
-                $filter .= "$criteria LIKE '%$item%'";
+                $filter .= "LOWER($criteria) LIKE '%".strtolower($item)."%'";
             }
         }else{
-            $filter .= "$criteria LIKE '%$input%'";
+            $filter .= "LOWER($criteria) LIKE '%".strtolower($input)."%'";
         }
 
         return $filter;

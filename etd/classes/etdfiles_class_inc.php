@@ -42,26 +42,35 @@ class etdfiles extends dbtable
     */
     function init()
     {
-        $this->objUpload =& $this->getObject('upload', 'files');
-        $this->objMkdir =& $this->getObject('mkdir', 'files');
-        $this->objConfig =& $this->getObject('altconfig', 'config');
-        $this->dbFiles =& $this->newObject('dbfiles');
-        $contentPath = $this->objConfig->getcontentBasePath();
-
-        $this->modulePath = $contentPath.'modules/';
-        $this->etdPath = $contentPath.'modules/etd/';
-        $this->filePath = $contentPath.'modules/etd/docs/';
-        $this->xmlPath = $contentPath.'modules/etd/xml/';
+        try{
+            $this->objUpload =& $this->getObject('upload', 'files');
+            $this->objMkdir =& $this->getObject('mkdir', 'files');
+            $this->objConfig =& $this->getObject('altconfig', 'config');
+            $this->dbFiles =& $this->newObject('dbfiles');
+            
+            $contentPath = $this->objConfig->getcontentBasePath();
+            $path = $this->objConfig->getcontentPath();
+    
+            $this->modulePath = $contentPath.'modules/';
+            $this->etdPath = $contentPath.'modules/etd/';
+            $this->xmlPath = $contentPath.'modules/etd/xml/';
+            $this->filePath = $contentPath.'modules/etd/docs/';
+            $this->downloadPath = $path.'modules/etd/docs/';
+        }catch(Exception $e){
+            throw customException($e->message());
+            exit();
+        }
     }
 
     /**
     * Method to upload a new document to the filemanager
     *
     * @access public
-    * @param string $submitId
+    * @param string $submitId The submission id
+    * @param string $id The id of the current document
     * @return
     */
-    public function uploadFile($submitId)
+    public function uploadFile($submitId, $id = NULL)
     {
         $fileName = 'etd_'.$submitId;
         $this->checkDir($this->filePath);
@@ -70,11 +79,27 @@ class etdfiles extends dbtable
         $this->objUpload->overWrite = TRUE;
         $results = $this->objUpload->doUpload(TRUE, $fileName);
         if($results['success']){
-            $fileId = $this->dbFiles->addFile($submitId, $results);
-            return $fileId;
-        }else{
-            return $results['message'];
+            $fileId = $this->dbFiles->addFile($submitId, $results, $id);
         }
+        return $results['message'];
+    }
+
+    /**
+    * Method to get a document
+    *
+    * @access public
+    * @param string $submitId The submission id of the document
+    * @return
+    */
+    public function getFile($submitId)
+    {
+        $data = $this->dbFiles->getFile($submitId);
+        
+        if(isset($data) && !empty($data)){
+            $data[0]['filepath'] = $this->downloadPath;
+            return $data;
+        }
+        return array();
     }
 
     /**

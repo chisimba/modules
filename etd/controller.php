@@ -31,51 +31,69 @@ class etd extends controller
     */
     public function init()
     {
-        $this->etdTools =& $this->getObject('etdtools', 'etd');
-        $this->manage =& $this->getObject('management', 'etd');
-        $this->submit =& $this->getObject('submit', 'etd');
-        $this->config =& $this->getObject('configure', 'etd');
-        $this->dbStats =& $this->getObject('dbstatistics', 'etd');
-        $this->dbThesis =& $this->getObject('dbthesis');
-        $this->dbThesis->setSubmitType('etd');
-
-        $this->etdSearch =& $this->getObject('search', 'etd');
-        $this->etdSearch->setMetaType('thesis', 'etd');
-
-        $this->emailResults =& $this->getObject('emailresults');
-        $this->emailResults->setModuleName('etd');
-
-        $this->objConfig =& $this->getObject('altconfig', 'config');
-        $this->objLanguage =& $this->getObject('language', 'language');
-        $this->setVarByRef('objLanguage', $this->objLanguage);
-
-        $this->objBlocks = & $this->newObject('blocks', 'blocks');
-        $this->objFeeder = & $this->newObject('feeder', 'feed');
+        try{
+            $this->etdTools = $this->getObject('etdtools', 'etd');
+            $this->etdResource = $this->getObject('etdresource', 'etd');
+            $this->etdFiles = $this->getObject('etdfiles', 'etd');
+            $this->manage = $this->getObject('management', 'etd');
+            $this->submit = $this->getObject('submit', 'etd');
+            $this->config = $this->getObject('configure', 'etd');
+            $this->dbStats = $this->getObject('dbstatistics', 'etd');
+            $this->dbThesis = $this->getObject('dbthesis');
+            $this->dbThesis->setSubmitType('etd');
+    
+            $this->etdSearch = $this->getObject('search', 'etd');
+            $this->etdSearch->setMetaType('thesis', 'etd');
+    
+            $this->emailResults = $this->getObject('emailresults');
+            $this->emailResults->setModuleName('etd');
+    
+            $this->objConfig = $this->getObject('altconfig', 'config');
+            $this->objUser = $this->getObject('user', 'security');
+            $this->objLangCode = $this->getObject('languagecode', 'language');
+            $this->objLanguage = $this->getObject('language', 'language');
+            $this->setVarByRef('objLanguage', $this->objLanguage);
+    
+            $this->objBlocks = $this->newObject('blocks', 'blocks');
+            $this->objFeeder = $this->newObject('feeder', 'feed');
+            
+            $this->loadClass('link', 'htmlelements');
+            
+            $this->objGroup = $this->getObject('groupadminmodel', 'groupadmin');
+            $this->objUser = $this->getObject('user', 'security');
+            $this->userId = $this->objUser->userId();
+            $this->userPkId = $this->objUser->PKId();
+            $this->setGroupPermissions();
+        }catch(Exception $e){
+            throw customException($e->message());
+            exit();
+        }
+        
         /*
-        $this->etdSubmit =& $this->getObject('submit');
-        $this->dbSubmit =& $this->getObject('dbsubmissions');
-        $this->dbThesisMeta =& $this->getObject('dbthesis');
-        $this->dbFiles =& $this->getObject('dbfiles');
-        $this->dbCollection =& $this->getObject('dbcollection');
-        $this->dbCollectSubmit =& $this->getObject('dbcollectsubmit');
-        $this->etdConfig =& $this->getObject('configure');
-        $this->dbEtdConfig =& $this->getObject('dbetdconfig');
-        $this->dbInstitute =& $this->getObject('dbinstituteinfo');
-        $this->dbEmbargo =& $this->getObject('dbembargo');
-        $this->xmlMetaData =& $this->getObject('xmlmetadata');
-        $this->objKeyword =& $this->getObject('keyword');
+        $this->etdSubmit = $this->getObject('submit');
+        $this->dbSubmit = $this->getObject('dbsubmissions');
+        $this->dbThesisMeta = $this->getObject('dbthesis');
+        $this->dbFiles = $this->getObject('dbfiles');
+        $this->dbCollection = $this->getObject('dbcollection');
+        $this->dbCollectSubmit = $this->getObject('dbcollectsubmit');
+        $this->etdConfig = $this->getObject('configure');
+        $this->dbEtdConfig = $this->getObject('dbetdconfig');
+        $this->dbInstitute = $this->getObject('dbinstituteinfo');
+        $this->dbEmbargo = $this->getObject('dbembargo');
+        $this->xmlMetaData = $this->getObject('xmlmetadata');
+        $this->objKeyword = $this->getObject('keyword');
 
-        $this->objDate =& $this->getObject('simplecal', 'datetime');
-        $this->objGroup =& $this->getObject('groupadminmodel', 'groupadmin');
-        $this->objUser =& $this->getObject('user', 'security');
+        $this->objDate = $this->getObject('simplecal', 'datetime');
+        $this->objGroup = $this->getObject('groupadminmodel', 'groupadmin');
+        $this->objUser = $this->getObject('user', 'security');
         $this->userId = $this->objUser->userId();
         $this->userPkId = $this->objUser->PKId();
 
-        $this->objFile =& $this->getObject('fileupload', 'filestore');
+        $this->objFile = $this->getObject('fileupload', 'filestore');
         $this->objFile->changeTables('tbl_etd_filestore', 'tbl_etd_blob');
 
         // Log this call if registered
-        $this->objModules =& $this->newObject('modulesadmin','modulelist');
+        $this->objModules = $this->newObject('modulesadmin','modulelist');
         if(!$this->objModules->checkIfRegistered('logger', 'logger')){
             //Get the activity logger class
             $this->objLog=$this->newObject('logactivity', 'logger');
@@ -84,7 +102,7 @@ class etd extends controller
         }
 
         // Get audit trail class
-        $this->objAudit =& $this->getObject('audit_facet', 'audit');
+        $this->objAudit = $this->getObject('audit_facet', 'audit');
 
         // Determine the users access level
         $this->accessLevel();
@@ -127,8 +145,8 @@ class etd extends controller
 //                $this->setVarByRef('files', $files);
                 $this->dbStats->recordVisit($metaId);
                 $this->setSession('resourceId', $metaId);
-                $rightSide = $this->objBlocks->showBlock('resourcemenu', 'etd');
-                $this->etdTools->setRightSide($rightSide);
+                $leftSide = $this->objBlocks->showBlock('resourcemenu', 'etd');
+                $this->etdTools->setLeftSide($leftSide);
                 return 'showetd_tpl.php';
 
             case 'printresource':
@@ -152,11 +170,44 @@ class etd extends controller
 
             /* *** Functions for browsing the repository *** */
 
-//            case 'browsecollection':
-//                $objCollection = & $this->getObject( 'dbcollection', 'etd' );
-//                $this->setVar( 'browseType', $objCollection );
-//                $this->setVar( 'isManager', FALSE );
-//                return 'browse_tpl.php';
+            case 'viewfaculty':
+                $faculty = $this->getParam('id');
+                if(!empty($faculty)){
+                    $this->setSession('faculty', $faculty);
+                }
+            
+                $this->unsetSession('resource');
+                // set a session to use when returning from a resource or from emailing a resource.
+                $session = array();
+                $session['searchForLetter'] = $this->getParam('searchForLetter');
+                $session['displayLimit'] = $this->getParam('displayLimit');
+                $session['displayStart'] = $this->getParam('displayStart');
+                $session['action'] = 'viewfaculty';
+                $this->setSession('return', $session);
+
+                $objTitle = $this->getObject('viewfaculty', 'etd');
+                $objTitle->setBrowseType('title');
+                $this->setVar('num', 3);
+                $this->setVarByRef('browseType', $objTitle);
+                return 'browse_tpl.php';
+                
+
+            case 'browsefaculty':
+                $this->unsetSession('resource');
+                $this->unsetSession('faculty');
+                // set a session to use when returning from a resource or from emailing a resource.
+                $session = array();
+                $session['searchForLetter'] = $this->getParam('searchForLetter');
+                $session['displayLimit'] = $this->getParam('displayLimit');
+                $session['displayStart'] = $this->getParam('displayStart');
+                $session['action'] = 'browsefaculty';
+                $this->setSession('return', $session);
+
+                $objFaculty = $this->getObject('dbfaculty', 'etd');
+                $objFaculty->setBrowseType('faculty');
+                $this->setVar('num', 1);
+                $this->setVarByRef('browseType', $objFaculty);
+                return 'browse_tpl.php';
 
             case 'browseauthor':
                 $this->unsetSession('resource');
@@ -168,7 +219,7 @@ class etd extends controller
                 $session['action'] = 'browseauthor';
                 $this->setSession('return', $session);
 
-                $objAuthor = & $this->getObject('dbthesis', 'etd');
+                $objAuthor = $this->getObject('dbthesis', 'etd');
                 $objAuthor->setBrowseType('author');
                 $this->setVar('num', 3);
                 $this->setVarByRef('browseType', $objAuthor);
@@ -184,7 +235,7 @@ class etd extends controller
                 $session['action'] = 'browsetitle';
                 $this->setSession('return', $session);
 
-                $objTitle = & $this->getObject('dbthesis', 'etd');
+                $objTitle = $this->getObject('dbthesis', 'etd');
                 $objTitle->setBrowseType('title');
                 $this->setVar('num', 3);
                 $this->setVarByRef('browseType', $objTitle);
@@ -194,7 +245,7 @@ class etd extends controller
 
             case 'search':
                 $search = $this->etdSearch->showSearch();
-                $this->etdTools->setRightBlocks(FALSE, TRUE, FALSE);
+                $this->etdTools->setLeftBlocks(FALSE, TRUE, FALSE);
                 $this->setVarByRef('search', $search);
                 return 'search_tpl.php';
 
@@ -207,7 +258,7 @@ class etd extends controller
                 $this->setSession('return', $session);
 
                 $pageTitle = $this->objLanguage->languageText('phrase_searchresults');
-                $objViewBrowse = & $this->getObject('viewbrowse', 'etd');
+                $objViewBrowse = $this->getObject('viewbrowse', 'etd');
                 $objViewBrowse->create($this->etdSearch);
                 $objViewBrowse->setAccess( FALSE );
                 $objViewBrowse->showAlpha(FALSE);
@@ -215,18 +266,19 @@ class etd extends controller
 //                $objViewBrowse->useSortTable();
                 $objViewBrowse->setNumCols(3);
                 $objViewBrowse->setPageTitle($pageTitle);
+                
                 $this->objLink = new link($this->uri(array('action'=>'search')));
                 $this->objLink->link = $this->objLanguage->languageText('phrase_newsearch');
                 $criteria = $this->etdSearch->getSession('criteria');
                 $objViewBrowse->addExtra($criteria.'<p>'.$this->objLink->show().'</p>');
                 $search = $objViewBrowse->show();
                 $this->setVarByRef('search', $search);
-                $this->etdTools->setRightBlocks(FALSE, TRUE, FALSE);
+                $this->etdTools->setLeftBlocks(FALSE, TRUE, FALSE);
                 return 'search_tpl.php';
 
             case 'printsearch':
                 $pageTitle = $this->objLanguage->languageText('phrase_searchresults');
-                $objViewBrowse = & $this->getObject('viewbrowse', 'etd');
+                $objViewBrowse = $this->getObject('viewbrowse', 'etd');
                 $objViewBrowse->create($this->etdSearch);
                 $search = $objViewBrowse->getResults();
                 $this->setVarByRef('search', $search);
@@ -237,7 +289,7 @@ class etd extends controller
                 $shortName = $this->objConfig->getinstitutionShortName().':';
                 $subject = $this->objLanguage->code2Txt('mod_etd_requestedsearchresults', 'etd', array('shortname' => $shortName));
                 $message = $this->objLanguage->languageText('mod_etd_attachmentsearchresults', 'etd');
-                $objViewBrowse = & $this->getObject( 'viewbrowse', 'etd' );
+                $objViewBrowse = $this->getObject( 'viewbrowse', 'etd' );
                 $objViewBrowse->create($this->etdSearch);
                 $search = $objViewBrowse->getResults();
                 $this->emailResults->setEmailBody($search);
@@ -256,7 +308,7 @@ class etd extends controller
                     $link = $this->objLanguage->languageText('mod_etd_returnbrowse', 'etd');
                 }
                 $email = $this->emailResults->sendEmail();
-                $objLink =& $this->newObject('link', 'htmlelements');
+                
                 $objLink = new link($this->uri($return));
                 $objLink->link = $link;
                 $search = '<p class="confirm">'.$confirm.'</p><p>'.$objLink->show().'</p>';
@@ -268,7 +320,7 @@ class etd extends controller
             case 'managesubmissions':
                 $mode = $this->getParam('mode');
                 $display = $this->manage->show($mode);
-                $this->etdTools->setRightBlocks(FALSE, TRUE, FALSE);
+                $this->etdTools->setLeftBlocks(FALSE, TRUE, FALSE);
                 $this->setVarByRef('search', $display);
                 return 'search_tpl.php';
 
@@ -286,7 +338,7 @@ class etd extends controller
             case 'showconfig':
                 $mode = $this->getParam('mode');
                 $display = $this->config->show($mode);
-                $this->etdTools->setRightBlocks(FALSE, TRUE, FALSE);
+                $this->etdTools->setLeftBlocks(FALSE, TRUE, FALSE);
                 $this->setVarByRef('search', $display);
                 return 'search_tpl.php';
                 break;
@@ -306,7 +358,7 @@ class etd extends controller
             case 'submit':
                 $mode = $this->getParam('mode');
                 $display = $this->submit->show($mode);
-                $this->etdTools->setRightBlocks(FALSE, TRUE, FALSE);
+                $this->etdTools->setLeftBlocks(FALSE, TRUE, FALSE);
                 $this->setVarByRef('search', $display);
                 return 'search_tpl.php';
                 break;
@@ -318,7 +370,10 @@ class etd extends controller
                 if(!empty($save)){
                     $this->submit->show($mode);
                 }
-                return $this->nextAction('submit', array('mode' => $nextmode));
+                if(!empty($nextmode)){
+                    return $this->nextAction('submit', array('mode' => $nextmode));
+                }
+                return $this->nextAction('');
                 break;
 
 
@@ -527,7 +582,7 @@ class etd extends controller
             /* *** Manage Collections in Repository *** *
 
             case 'managecollections':
-                $objCollection = & $this->getObject( 'dbcollection', 'etd' );
+                $objCollection = $this->getObject( 'dbcollection', 'etd' );
                 $this->setVar( 'browseType', $objCollection );
                 $this->setVar( 'isManager', TRUE );
                 return 'browse_tpl.php';
@@ -539,7 +594,7 @@ class etd extends controller
                 }
                 $mode = $this->getParam('allowManage', FALSE);
                 $data = $this->dbCollection->getCollection($id);
-                $objTitle = & $this->getObject( 'dbthesis', 'etd' );
+                $objTitle = $this->getObject( 'dbthesis', 'etd' );
                 $objTitle->setBrowseType( 'title' );
 
                 $this->setVar( 'num', 3 );
@@ -803,7 +858,7 @@ class etd extends controller
         $header = array('col1'=>$lbTitle, 'col2'=>$lbAuthor, 'col3'=>$lbStudent, 'col4'=>$lbDepartment);
 
         $pageTitle = '';
-        $objViewBrowse = & $this->getObject( 'viewbrowse', 'etd' );
+        $objViewBrowse = $this->getObject( 'viewbrowse', 'etd' );
         $objViewBrowse->create(NULL, FALSE, $lbEtds, 'etd', $data[0]);
         $objViewBrowse->displayLimit = 10;
         $objViewBrowse->displayStart = $start;
@@ -896,14 +951,56 @@ class etd extends controller
         }/*
         $this->accessLevel = 4;*/
     }
+    
+    /**
+    * Temporary fix for context permissions
+    */
+    function setGroupPermissions()
+    {
+        if($this->objUser->isLoggedIn()){
+            $access = $this->getSession('accessLevel');
+            if(!(isset($access) && !empty($access))){
+                $accessLevel = 'user';
+                $groupId = $this->objGroup->getLeafId(array('ETD Managers'));
+                if($this->objGroup->isGroupMember($this->userPkId, $groupId)){
+                    $accessLevel = 'manager';
+                }else{
+                    $groupId = $this->objGroup->getLeafId(array('Students'));
+                    if($this->objGroup->isGroupMember($this->userPkId, $groupId)){
+                        $accessLevel = 'student';
+                    }
+                }
+                $this->setSession('accessLevel', $accessLevel);
+            }
+        }
+    }
 
     /**
     * Method to set login requirement to False
     * Required to be false. - will be extended to set the ction items where login is required
     */
-    function requiresLogin()
+    function requiresLogin($action)
     {
-        return FALSE;
+        switch($action){
+            case 'viewauthor':
+            case 'viewtitle':
+            case 'printresource':
+            case 'emailresource':
+            case 'viewfaculty':
+            case 'browsefaculty':
+            case 'browseauthor':
+            case 'browsetitle':
+            case 'search':
+            case 'advsearch':
+            case 'printsearch':
+            case 'emailsearch':
+            case 'sendemail':
+            case 'viewstats':
+            case 'rss':
+            case '';
+                return FALSE;
+        }
+        return TRUE;
     }
 } // end of controller class
 ?>

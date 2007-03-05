@@ -3,8 +3,11 @@
 * Template to display the prelogin page for the ETD repository
 * @access public
 */
-
-$this->setLayoutTemplate('etd_layout_tpl.php');
+if($this->objUser->isLoggedIn()){
+    $this->setLayoutTemplate('etd_layout_tpl.php');
+}else{
+    $this->setLayoutTemplate('etd3col_layout_tpl.php');
+}
 
 $objHead =& $this->newObject('htmlheading', 'htmlelements');
 
@@ -19,6 +22,8 @@ $objHead->type = 1;
 $str = $objHead->show();
 
 $str .= '<p>'.$txtIntro.'</p>';
+
+$str .= '<br /><p>'.$this->etdResource->getRecentResources().'</p>';
 
 echo $str;
 ?>

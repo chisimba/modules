@@ -24,6 +24,11 @@ class block_etdlinks extends object
     public $title;
 
     /**
+    * @var bool $hideHelp Boolean value determining whether to hide the help block on the right side
+    */
+    private $access = 'user';
+
+    /**
     * Constructor
     */
     public function init()
@@ -37,6 +42,8 @@ class block_etdlinks extends object
 
         $this->title = $this->objLanguage->languageText('word_links');
         $this->userId = $this->objUser->userId();
+        
+        $this->access = $this->getSession('accessLevel');
     }
 
     /**
@@ -69,17 +76,19 @@ class block_etdlinks extends object
 		$list = '<p>'.$objLink->show().'</p>';
 		
 		// Check for a current submission - only submit one document at a time.
-		$check = $this->checkSubmissions();
-		if(!($check === FALSE)){
-		    // Submission link
-    		$objLink = new link($this->uri(array('action' => 'submit', 'mode' => 'showresource', 'submitId' => $check)));
-    		$objLink->link = $submit2;
-    		$list .= '<p>'.$objLink->show().'</p>';
-		}else{
-    		// Submission link
-    		$objLink = new link($this->uri(array('action' => 'submit', 'mode' => 'addsubmission')));
-    		$objLink->link = $submit;
-    		$list .= '<p>'.$objLink->show().'</p>';
+		if($this->access == 'student'){
+    		$check = $this->checkSubmissions();
+    		if(!($check === FALSE)){
+    		    // Submission link
+        		$objLink = new link($this->uri(array('action' => 'submit', 'mode' => 'showresource', 'submitId' => $check)));
+        		$objLink->link = $submit2;
+        		$list .= '<p>'.$objLink->show().'</p>';
+    		}else{
+        		// Submission link
+        		$objLink = new link($this->uri(array('action' => 'submit', 'mode' => 'addsubmission')));
+        		$objLink->link = $submit;
+        		$list .= '<p>'.$objLink->show().'</p>';
+    		}
 		}
 		
         // RSS link

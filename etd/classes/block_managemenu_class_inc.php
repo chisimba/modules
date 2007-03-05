@@ -48,9 +48,9 @@ class block_managemenu extends object
         $objLink->link = $repository;
         $list .= '<p>'.$objLink->show().'</p>';
         
-        $objLink = new link($this->uri(array('action'=>'showconfig', 'mode' => 'permissions')));
-        $objLink->link = $users;
-        $list .= '<p>'.$objLink->show().'</p>';
+//        $objLink = new link($this->uri(array('action'=>'showconfig', 'mode' => 'permissions')));
+//        $objLink->link = $users;
+//        $list .= '<p>'.$objLink->show().'</p>';
         
         $objLink = new link($this->uri(array('action'=>'showconfig')));
         $objLink->link = $configure;

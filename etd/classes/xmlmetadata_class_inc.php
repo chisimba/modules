@@ -24,9 +24,9 @@ class xmlmetadata extends object
     */
     public function init()
     {
-        $this->etdFiles =& $this->getObject('etdfiles', 'etd');
-        $this->objXML =& $this->getObject('xmlserial', 'utilities');
-        $this->objUser =& $this->getObject('user', 'security');
+        $this->etdFiles = $this->getObject('etdfiles', 'etd');
+        $this->objXML = $this->getObject('xmlserial', 'utilities');
+        $this->objUser = $this->getObject('user', 'security');
     }
 
     /**

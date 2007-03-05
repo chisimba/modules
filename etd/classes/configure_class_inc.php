@@ -30,43 +30,49 @@ class configure extends object
     */
     public function init()
     {
-        $this->dbCopyright =& $this->getObject('dbcopyright', 'etd');
-        
-        $this->objUser =& $this->getObject('user', 'security');
-        $this->objLanguage =& $this->getObject('language', 'language');
-        $this->objConfig =& $this->getObject('altconfig', 'config');
-        $this->objDbConfig =& $this->getObject('dbsysconfig', 'sysconfig');
-        
-        $this->objHead =& $this->newObject('htmlheading', 'htmlelements');
-        $this->objEditor =& $this->newObject('htmlarea', 'htmlelements');
-        
-        $this->loadClass('htmltable', 'htmlelements');
-        $this->loadClass('tabbedbox', 'htmlelements');
-        $this->loadClass('form', 'htmlelements');
-        $this->loadClass('button', 'htmlelements');
-        $this->loadClass('textinput', 'htmlelements');
+        try{
+            $this->dbCopyright = $this->getObject('dbcopyright', 'etd');
+            
+            $this->objUser = $this->getObject('user', 'security');
+            $this->objLanguage = $this->getObject('language', 'language');
+            $this->objConfig = $this->getObject('altconfig', 'config');
+            $this->objDbConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            
+            $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
+            $this->objHead = $this->newObject('htmlheading', 'htmlelements');
+            $this->objEditor = $this->newObject('htmlarea', 'htmlelements');
+            
+            $this->loadClass('htmltable', 'htmlelements');
+            $this->loadClass('tabbedbox', 'htmlelements');
+            $this->loadClass('form', 'htmlelements');
+            $this->loadClass('button', 'htmlelements');
+            $this->loadClass('textinput', 'htmlelements');
+        }catch(Exception $e){
+            throw customException($e->message());
+            exit();
+        }
         
         /*
-        $this->dbEtdConfig =& $this->getObject('dbetdconfig', 'etd');
-        $this->dbInstitute =& $this->getObject('dbinstituteinfo', 'etd');
+        $this->dbEtdConfig = $this->getObject('dbetdconfig', 'etd');
+        $this->dbInstitute = $this->getObject('dbinstituteinfo', 'etd');
 
-        $this->objConfig =& $this->getObject('dbsysconfig', 'sysconfig');
-        $this->objLangCode =& $this->getObject('languagecode', 'language');
-        $this->objUsersDb =& $this->getObject('usersdb', 'groupadmin');
-        $this->objGroups =& $this->getObject('groupadminmodel', 'groupadmin');
+        $this->objConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->objLangCode = $this->getObject('languagecode', 'language');
+        $this->objUsersDb = $this->getObject('usersdb', 'groupadmin');
+        $this->objGroups = $this->getObject('groupadminmodel', 'groupadmin');
 
-        $this->objLink =& $this->newObject('link', 'htmlelements');
-        $this->objLayer =& $this->newObject('layer', 'htmlelements');
+        $this->objLink = $this->newObject('link', 'htmlelements');
+        $this->objLayer = $this->newObject('layer', 'htmlelements');
 
-        $this->objForm =& $this->newObject('form', 'htmlelements');
-        $this->objLabel =& $this->newObject('label', 'htmlelements');
-        $this->objInput =& $this->newObject('textinput', 'htmlelements');
-        $this->objText =& $this->newObject('textarea', 'htmlelements');
-        $this->objDrop =& $this->newObject('dropdown', 'htmlelements');
-        $this->objIcon =& $this->newObject('geticon', 'htmlelements');
-        $this->objRadio =& $this->newObject('radio', 'htmlelements');
-        $this->objButton =& $this->newObject('button', 'htmlelements');
-        $this->objSelect =& $this->newObject('selectbox','htmlelements');
+        $this->objForm = $this->newObject('form', 'htmlelements');
+        $this->objLabel = $this->newObject('label', 'htmlelements');
+        $this->objInput = $this->newObject('textinput', 'htmlelements');
+        $this->objText = $this->newObject('textarea', 'htmlelements');
+        $this->objDrop = $this->newObject('dropdown', 'htmlelements');
+        $this->objIcon = $this->newObject('geticon', 'htmlelements');
+        $this->objRadio = $this->newObject('radio', 'htmlelements');
+        $this->objButton = $this->newObject('button', 'htmlelements');
+        $this->objSelect = $this->newObject('selectbox','htmlelements');
 
         $this->btSave = $this->objLanguage->languageText('mod_etd_savecontinue');
         $this->btSave2 = $this->objLanguage->languageText('word_save');
@@ -180,11 +186,12 @@ class configure extends object
         $this->objHead->type = 1;
         $str = $this->objHead->show();
         
-        $objTab = new tabbedbox();
-        $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
-        $objTab->addTabLabel($lbInstitution);
-        $objTab->addBoxContent($this->getInstitute());
-        $str .= $objTab->show();
+//        $objTab = new tabbedbox();
+//        $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
+//        $objTab->addTabLabel($lbInstitution);
+//        $objTab->addBoxContent();
+//        $objTab->show();
+        $str .= $this->objFeatureBox->show($lbInstitution, $this->getInstitute());
         
         return $str;
     }

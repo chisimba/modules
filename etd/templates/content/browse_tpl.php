@@ -16,13 +16,13 @@ if(!isset($num)){
 }
 
 // View classes
-$objViewBrowse = & $this->getObject( 'viewbrowse', 'etd' );
+$objViewBrowse = $this->getObject( 'viewbrowse', 'etd' );
 $objViewBrowse->create($browseType);
 $objViewBrowse->setNumCols($num);
 $objViewBrowse->setAccess(FALSE);
 
 // Show
-$objLayer =& $this->newObject('layer', 'htmlelements');
+$objLayer = $this->newObject('layer', 'htmlelements');
 $objLayer->str = $objViewBrowse->show();
 $objLayer->padding = '5px';
 echo $objLayer->show();

@@ -86,7 +86,7 @@ class dbStatistics extends dbTable
     */
     private function getStatistic($type = 'hit', $submitId = NULL)
     {
-        $sql = "SELECT COUNT(*) AS count FROM `{$this->table}`";
+        $sql = "SELECT COUNT(*) AS count FROM {$this->table}";
         $sql .= " WHERE hittype = '$type'";
         if(isset($submitId) && !empty($submitId)){
             $sql .= " AND submitid = '$submitId'";
@@ -110,7 +110,7 @@ class dbStatistics extends dbTable
     private function getStatsByMonth($type)
     {
         $year = date('Y');
-        $sql = "SELECT count(*) as cnt, MONTH(datecreated) as month FROM `{$this->table}`";
+        $sql = "SELECT count(*) as cnt, MONTH(datecreated) as month FROM {$this->table}";
         $sql .= " WHERE YEAR(datecreated) = '$year' AND hittype = '$type' GROUP BY MONTH(datecreated)";
         
         $data = $this->getArray($sql);

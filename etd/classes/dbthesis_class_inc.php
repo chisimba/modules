@@ -26,32 +26,32 @@ class dbThesis extends dbtable
     /**
     * @var string Property to store the first column field used by the browse object
     */
-    private $col1Field = '';
+    protected $col1Field = '';
 
     /**
     * @var string Property to store the second column field used by the browse object
     */
-    private $col2Field = '';
+    protected $col2Field = '';
 
     /**
     * @var string Property to store the third column field used by the browse object
     */
-    private $col3Field = '';
+    protected $col3Field = '';
 
     /**
     * @var string Property to store the first column table heading used by the browse object
     */
-    private $col1Header = '';
+    protected $col1Header = '';
 
     /**
     * @var string Property to store the second column table heading used by the browse object
     */
-    private $col2Header = '';
+    protected $col2Header = '';
 
     /**
     * @var string Property to store the third column table heading used by the browse object
     */
-    private $col3Header = '';
+    protected $col3Header = '';
 
     /**
     * @var string Property to store the search title used by the browse object
@@ -66,7 +66,7 @@ class dbThesis extends dbtable
     /**
     * @var string Property to set the submission type - distinguish between etd's and other documents.
     */
-    private $subType = 'etd';
+    protected $subType = 'etd';
     
     /**
     * @var string Property to show the number of records returned in a result set
@@ -117,10 +117,12 @@ class dbThesis extends dbtable
         if($id){
             $fields['modifierid'] = $this->objUser->userId();
             $fields['datemodified'] = date('Y-m-d H:i');
+            $fields['updated'] = date('Y-m-d H:i:s');
             $this->update('id', $id, $fields);
         }else{
             $fields['creatorid'] = $this->objUser->userId();
             $fields['datecreated'] = date('Y-m-d H:i');
+            $fields['updated'] = date('Y-m-d H:i:s');
             $id = $this->insert($fields);
         }
         return $id;
@@ -148,7 +150,7 @@ class dbThesis extends dbtable
     public function getMetadata($id)
     {
         $sql = "SELECT dc.id AS dcId, thesis.id AS thesisId, thesis.*, dc.* ";
-        $sql .= "FROM `{$this->table}` AS thesis, `{$this->dcTable}` AS dc ";
+        $sql .= "FROM {$this->table} AS thesis, {$this->dcTable} AS dc ";
         $sql .= "WHERE dc.id = thesis.dcMetaId AND thesis.id = '$id'";
         
         $data = $this->getArray($sql);
@@ -168,7 +170,7 @@ class dbThesis extends dbtable
         $sqlNorm = "SELECT dc.{$this->col1Field} as col1, dc.{$this->col2Field} as col2, dc.{$this->col3Field} as col3, thesis.id as id ";
         $sqlFound = "SELECT COUNT(*) AS count ";
         
-        $sql = "FROM `{$this->table}` AS thesis, `{$this->submitTable}` AS submit, `{$this->dcTable}` AS dc ";
+        $sql = "FROM {$this->table} AS thesis, {$this->submitTable} AS submit, {$this->dcTable} AS dc ";
         
         $sql .= "WHERE submit.id = thesis.submitid AND dc.id = thesis.dcmetaid ";
         $sql .= "AND submit.submissiontype = '{$this->subType}' AND submit.status = 'archived' ";
@@ -229,18 +231,18 @@ class dbThesis extends dbtable
     */
     public function getByLetter($letter = 'a', $limit = 10, $start = NULL, $joinId = NULL)
     {
-        
+        $letter = strtolower($letter);
         $sqlNorm = "SELECT dc.{$this->col1Field} as col1, dc.{$this->col2Field} as col2, dc.{$this->col3Field} as col3, thesis.id as id ";
         $sqlFound = "SELECT COUNT(*) AS count ";
         
-        $sql = "FROM `{$this->table}` AS thesis, `{$this->submitTable}` AS submit, `{$this->dcTable}` AS dc ";
+        $sql = "FROM {$this->table} AS thesis, {$this->submitTable} AS submit, {$this->dcTable} AS dc ";
         
         $sql .= "WHERE submit.id = thesis.submitid AND dc.id = thesis.dcmetaid ";
         $sql .= "AND submit.submissiontype = '{$this->subType}' AND submit.status = 'archived' ";
         $sql .= "AND ( LOWER({$this->col1Field}) LIKE '$letter%' ";
         
         if(strtolower($letter) == 'a'){
-            $sql .= "AND NOT ( LOWER({$this->col1Field}) LIKE 'a %' OR {$this->col1Field} LIKE 'an %') ";
+            $sql .= "AND NOT ( LOWER({$this->col1Field}) LIKE 'a %' OR LOWER({$this->col1Field}) LIKE 'an %') ";
         }
         if(strtolower($letter) == 't'){
             $sql .= "AND NOT ( LOWER({$this->col1Field}) LIKE 'the %') ";
@@ -248,18 +250,17 @@ class dbThesis extends dbtable
         
         $sql .= " OR LOWER({$this->col1Field}) LIKE 'the $letter%' ";
         $sql .= " OR LOWER({$this->col1Field}) LIKE 'a $letter%' ";
-        $sql .= " OR LOWER({$this->col1Field}) LIKE 'an $letter%' ) ";
+        $sql .= " OR LOWER({$this->col1Field}) LIKE 'an $letter%' ";
+        $sql .= " OR LOWER({$this->col1Field}) LIKE '`n $letter%' ) ";
         
         $sqlLimit = "ORDER BY LOWER({$this->col1Field}) ";
         
         $sqlLimit .= $limit ? "LIMIT $limit " : NULL;
         $sqlLimit .= $start ? "OFFSET $start " : NULL;
-        
+                
         // Get result set
         $data = $this->getArray($sqlNorm.$sql.$sqlLimit);
-        
-//        echo '<pre>'.$sqlNorm.$sql.$sqlLimit; print_r($data); echo '</pre>';
-        
+                
         // Get number of results
         $data2 = $this->getArray($sqlFound.$sql);
         if(!empty($data2)){
@@ -335,6 +336,15 @@ class dbThesis extends dbtable
                 $this->col3Header = $this->objLanguage->languageText('word_year');
                 $this->type = $this->objLanguage->languageText('word_titles');
                 break;
+            case 'faculty':
+                $this->col1Field = 'thesis_degree_discipline';
+                $this->col2Field = 'dc_creator';
+                $this->col3Field = 'dc_date';
+                $this->col1Header = $this->objLanguage->languageText('word_faculty');
+                $this->col2Header = $this->objLanguage->languageText('word_author');
+                $this->col3Header = $this->objLanguage->languageText('word_year');
+                $this->type = $this->objLanguage->languageText('word_titles');
+                break;
             default :
                 $type = 'author';
                 $this->col1Field = 'dc_creator';
@@ -372,7 +382,7 @@ class dbThesis extends dbtable
         $sqlNorm = 'SELECT thesis.id AS id, dc.dc_creator AS col2, dc.dc_title AS col1, dc.dc_date AS col3 ';
         $sqlCount = 'SELECT COUNT(*) AS count ';
         
-        $sql = "FROM `{$this->table}` AS thesis, `{$this->dcTable}` AS dc, `{$this->submitTable}` AS submit ";
+        $sql = "FROM {$this->table} AS thesis, {$this->dcTable} AS dc, {$this->submitTable} AS submit ";
         $sql .= "WHERE thesis.dcmetaid = dc.id AND thesis.submitid = submit.id ";
         $sql .= "AND submit.submissiontype = '{$this->subType}' AND ({$filter}) ";
         
@@ -415,7 +425,7 @@ class dbThesis extends dbtable
     public function getAllMeta()
     {
         $sql = 'SELECT dc_title, dc_creator, dc_subject, dc_identifier, thesis.id AS metaid ';
-        $sql .= "FROM `{$this->table}` AS thesis, `{$this->dcTable}` AS dc ";
+        $sql .= "FROM {$this->table} AS thesis, {$this->dcTable} AS dc ";
         $sql .= "WHERE dc.id = thesis.dcmetaid ";
         $sql .= "ORDER BY dc_date";
         $data = $this->getArray($sql);

@@ -26,6 +26,11 @@ class etdtools extends object
     private $rightContent = '';
     
     /**
+    * @var string $leftContent String containing the content for the left side menu.
+    */
+    private $leftContent = '';
+    
+    /**
     * @var bool $hideMenu Boolean value determining whether to hide the menu block on the right side
     */
     private $hideMenu = FALSE;
@@ -41,23 +46,46 @@ class etdtools extends object
     private $hideHelp = FALSE;
         
     /**
+    * @var bool $hideHelp Boolean value determining whether to hide the help block on the right side
+    */
+    private $access = 'user';
+
+    /**
     * Constructor method
     */
     public function init()
     {
-        $this->objUser =& $this->getObject('user', 'security');
-        $this->objLanguage =& $this->getObject('language', 'language');
-        $this->objCountry =& $this->getObject('languagecode', 'language');
-        $this->objConfig =& $this->getObject('dbsysconfig', 'sysconfig');
+        $this->objUser = $this->getObject('user', 'security');
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objCountry = $this->getObject('languagecode', 'language');
+        $this->objConfig = $this->getObject('dbsysconfig', 'sysconfig');
 
-        $this->objTable =& $this->newObject('htmltable', 'htmlelements');
-        $this->objHead =& $this->newObject('htmlheading', 'htmlelements');
-        $this->objLayer =& $this->newObject('layer', 'htmlelements');
+        $this->objTable = $this->newObject('htmltable', 'htmlelements');
+        $this->objHead = $this->newObject('htmlheading', 'htmlelements');
+        $this->objLayer = $this->newObject('layer', 'htmlelements');
         $this->loadClass('link', 'htmlelements');
 
         $this->objBlocks = & $this->newObject('blocks', 'blocks');
+        
+        $this->access = $this->getSession('accessLevel');
     }
 
+    /**
+    * Method to get the contents for the left column
+    *
+    * @access public
+    * @return string html
+    */
+    public function getLeftSide()
+    {
+        if(isset($this->leftContent) && !empty($this->leftContent)){
+            return $this->leftContent;
+        }
+        
+        $str = $this->getBrowseMenu();
+        return $str;
+    }
+    
     /**
     * Method to get the contents for the right column
     *
@@ -70,7 +98,7 @@ class etdtools extends object
             return $this->rightContent;
         }
         
-        $str = $this->getBrowseMenu();
+        $str = $this->getLogin();
         return $str;
     }
     
@@ -89,12 +117,24 @@ class etdtools extends object
         if(!$this->hideLinks){
             $str .= $this->objBlocks->showBlock('etdlinks', 'etd');
         }
-        //if($manager){
+        if($this->access == 'manager'){
             $str .= $this->objBlocks->showBlock('managemenu', 'etd');
-        //}
-        if(!$this->hideHelp){
-            $str .= $this->objBlocks->showBlock('etdhelp', 'etd');
         }
+        if(!$this->hideHelp){
+            //$str .= $this->objBlocks->showBlock('etdhelp', 'etd');
+        }
+        return $str;
+    }
+    
+    /**
+    * Method to get the login block for display on the home page
+    *
+    * @access private
+    * @return string html
+    */
+    private function getLogin()
+    {
+        $str = $this->objBlocks->showBlock('login', 'security');
         return $str;
     }
     
@@ -109,13 +149,29 @@ class etdtools extends object
     public function setRightSide($str, $append = FALSE)
     {
         if($append){
-            $this->rightContent = $this->getBrowseMenu();
+            $this->rightContent = $this->getLogin();
         }
         $this->rightContent .= $str;
     }
 
     /**
-    * Method to set the blocks on the right menu to hide or display
+    * Method to set the content for the left side menu
+    *
+    * @access public
+    * @param string $str The left side content
+    * @param bool $append Flag to determine whether the new side content is appended to the standand content
+    * @return
+    */
+    public function setLeftSide($str, $append = FALSE)
+    {
+        if($append){
+            $this->leftContent = $this->getBrowseMenu();
+        }
+        $this->leftContent .= $str;
+    }
+    
+    /**
+    * Method to set the blocks on the left menu to hide or display
     *
     * @access public
     * @param bool $menu Determines whether to display the browse menu block
@@ -123,7 +179,7 @@ class etdtools extends object
     * @param bool $help Determines whether to display the help block
     * @return
     */
-    public function setRightBlocks($menu = FALSE, $links = FALSE, $help = FALSE)
+    public function setLeftBlocks($menu = FALSE, $links = FALSE, $help = FALSE)
     {
         $this->hideMenu = $menu;
         $this->hideSearch = $links;
@@ -143,6 +199,25 @@ class etdtools extends object
 //        $objDrop->addFromDB($this->objCountries->getAll(' order by name'), 'printable_name', 'printable_name', $selected);
         
         return $this->objCountry->country();//$objDrop->show();
+    }
+
+    /**
+    * Method to create a dropdown list of degree levels - masters, phd
+    *
+    * @access public
+    * @return string html
+    */
+    public function getDegreeLevels($select)
+    {
+        $lbMasters = $this->objLanguage->languageText('word_masters');
+        $lbPhd = $this->objLanguage->languageText('word_phd');
+        
+        $objDrop = new dropdown('level');
+        $objDrop->addOption($lbMasters, $lbMasters);
+        $objDrop->addOption($lbPhd, $lbPhd);
+        $objDrop->setSelected($select);
+        
+        return $objDrop->show();
     }
 
     /**

@@ -12,9 +12,10 @@
 $this->setLayoutTemplate('etd_layout_tpl.php');
 
 // set up html elements
-$objHead =& $this->newObject('htmlheading', 'htmlelements');
-$objLayer =& $this->newObject('layer', 'htmlelements');
-$objIcon =& $this->newObject('geticon', 'htmlelements');
+$objFeatureBox = $this->newObject('featurebox', 'navigation');
+$objHead = $this->newObject('htmlheading', 'htmlelements');
+$objLayer = $this->newObject('layer', 'htmlelements');
+$objIcon = $this->newObject('geticon', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmltable', 'htmlelements');
 $this->loadClass('tabbedbox', 'htmlelements');
@@ -24,8 +25,10 @@ $lbAbstract = $this->objLanguage->languageText('word_abstract');
 $lbAudience = $this->objLanguage->languageText('word_audience');
 $lbContributor = $this->objLanguage->languageText('word_contributor');
 $lbCountry = $this->objLanguage->languageText('word_country');
+$lbFaculty = $this->objLanguage->languageText('word_faculty');
 $lbDegree = $this->objLanguage->languageText('phrase_degreeobtained');
 $lbLevel = $this->objLanguage->languageText('phrase_degreelevel');
+$lbGrantor = $this->objLanguage->languageText('word_grantor');
 $lbDepartment = $this->objLanguage->languageText('word_department');
 $lbFormat = $this->objLanguage->languageText('word_format');
 $lbGrantor = $this->objLanguage->languageText('word_grantor');
@@ -35,8 +38,9 @@ $lbPublisher = $this->objLanguage->languageText('word_publisher');
 $lbRelationship = $this->objLanguage->languageText('word_relationship');
 $lbRights = $this->objLanguage->languageText('word_rights');
 $lbSource = $this->objLanguage->languageText('word_source');
-$lbType = $this->objLanguage->languageText('word_type');
+$lbDocType = $this->objLanguage->languageText('phrase_documenttype');
 $lbYear = $this->objLanguage->languageText('word_year');
+$lbFulltext = $this->objLanguage->languageText('mod_etd_downloadfulltext', 'etd');
 
 /*
 $lbNoTitle = $this->objLanguage->languageText('mod_etd_notitle');
@@ -70,33 +74,40 @@ $lbViewAdd = $this->objLanguage->languageText('mod_etd_viewaddinfo');
 
 //echo '<pre>'; print_r($resource); echo '</pre>';
 
-$str = '';
+$resourceStr = '';
 if(!empty($resource)){
     
+    // Create the heading using the title and author
     $objHead->str = $resource['dc_title'];
     $objHead->type = 2;
-    $head = $objHead->show();
+    $headStr = $objHead->show();
     
-    $head .= '<p><u>'.$resource['dc_creator'].'</u></p>';
+    $headStr .= '<p><u>'.$resource['dc_creator'].'</u></p>';
     
-    $objLayer->str = $head;
-    $objLayer->align = 'center';
-    $resourceStr = $objLayer->show();
-    
+    // Display abstract
     $resourceStr .= '<p><b>'.$lbAbstract.':</b></p>';
     $resourceStr .= '<p style="padding-left: 10px;">'.$resource['dc_description'].'</p>';
-
+    $resourceStr .= '<hr />';
+    
+    // Download the full text
+    $fileData = $this->etdFiles->getFile($resource['submitid']);
+    $url = $fileData[0]['filepath'].$fileData[0]['storedname'];
+    $objIcon->setIcon('fulltext');
+    $objIcon->title = $lbFulltext;
+    $objLink = new link($url);
+    $objLink->link = $objIcon->show();
+    
+    $resourceStr .= '<p><b>'.$lbFulltext.':</b> &nbsp; '.$objLink->show().'</p>';
+    $resourceStr .= '<hr />';
+        
     $objTable = new htmltable();
     $objTable->cellpadding = '5';
 
-    // Year/date
-    if(!empty($resource['dc_date'])){
-        $objTable->startRow();
-        $objTable->addCell('<b>'.$lbYear.':</b>', '20%');
-        $objTable->addCell($resource['dc_date']);
-        $objTable->endRow();
+    // faculty
+    if(!empty($resource['thesis_degree_discipline'])){
+        $objTable->addRow(array('<b>'.$lbFaculty.':</b>', $resource['thesis_degree_discipline']));
     }
-    
+
     // Degree name
     if(!empty($resource['thesis_degree_name'])){
         $objTable->addRow(array('<b>'.$lbDegree.':</b>', $resource['thesis_degree_name']));
@@ -106,20 +117,35 @@ if(!empty($resource)){
     if(!empty($resource['thesis_degree_level'])){
         $objTable->addRow(array('<b>'.$lbLevel.':</b>', $resource['thesis_degree_level']));
     }
-    
-    // discipline
-    if(!empty($resource['thesis_degree_discipline'])){
-        $objTable->addRow(array('<b>'.$lbDepartment.':</b>', $resource['thesis_degree_discipline']));
-    }
-    
+       
     // grantor
     if(!empty($resource['thesis_degree_grantor'])){
         $objTable->addRow(array('<b>'.$lbGrantor.':</b>', $resource['thesis_degree_grantor']));
     }
+    
+    // Year/date
+    if(!empty($resource['dc_date'])){
+        $objTable->startRow();
+        $objTable->addCell('<b>'.$lbYear.':</b>', '20%');
+        $objTable->addCell($resource['dc_date']);
+        $objTable->endRow();
+    }
+    
+    $objTable->addRow(array('<hr />', '<hr />'));
        
+    // Type
+    if(!empty($resource['dc_type'])){
+        $objTable->addRow(array('<b>'.$lbDocType.':</b>', $resource['dc_type']));
+    }
+
+    // Format
+    if(!empty($resource['dc_format'])){
+        $objTable->addRow(array('<b>'.$lbFormat.':</b>', $resource['dc_format']));
+    }
+
     // Country
     if(!empty($resource['dc_coverage'])){
-        $objTable->addRow(array('<b>'.$lbCountry.':</b>', $resource['dc_coverage']));
+        $objTable->addRow(array('<b>'.$lbCountry.':</b>', $this->objLangCode->getName($resource['dc_coverage'])));
     }
     
     // Keywords
@@ -127,23 +153,31 @@ if(!empty($resource)){
         $objTable->addRow(array('<b>'.$lbKeywords.':</b>', $resource['dc_subject']));
     }
     
+    $objTable->addRow(array('<hr />', '<hr />'));
+    
     // Contributor
     if(!empty($resource['dc_contributor'])){
         $objTable->addRow(array('<b>'.$lbContributor.':</b>', $resource['dc_contributor']));
     }
-           
-    // File size
+    
+    // Relationship
+    if(!empty($resource['dc_relationship'])){
+        $objTable->addRow(array('<b>'.$lbRelationship.':</b>', $resource['dc_relationship']));
+    }
     
     // Rights
     if(!empty($resource['dc_rights'])){
         $objTable->addRow(array('<b>'.$lbRights.':</b>', $resource['dc_rights']));
     }
     
-    /* ??? *
-    
     // Publisher
     if(!empty($resource['dc_publisher'])){
         $objTable->addRow(array('<b>'.$lbPublisher.':</b>', $resource['dc_publisher']));
+    }
+       
+    // Source
+    if(!empty($resource['dc_source'])){
+        $objTable->addRow(array('<b>'.$lbSource.':</b>', $resource['dc_source']));
     }
 
     // Language
@@ -156,29 +190,9 @@ if(!empty($resource)){
         $objTable->addRow(array('<b>'.$lbAudience.':</b>', $resource['dc_audience']));
     }
     
-    // Format
-    if(!empty($resource['dc_format'])){
-        $objTable->addRow(array('<b>'.$lbFormat.':</b>', $resource['dc_format']));
-    }
-    
-    // Relationship
-    if(!empty($resource['dc_relationship'])){
-        $objTable->addRow(array('<b>'.$lbRelationship.':</b>', $resource['dc_relationship']));
-    }
-    
-    // Source
-    if(!empty($resource['dc_source'])){
-        $objTable->addRow(array('<b>'.$lbSource.':</b>', $resource['dc_source']));
-    }
-    
-    // Type
-    if(!empty($resource['dc_type'])){
-        $objTable->addRow(array('<b>'.$lbType.':</b>', $resource['dc_type']));
-    }
-    */
-    
+    $objTable->addRow(array('<hr />', '<hr />'));
+
     $resourceStr .= $objTable->show();
-    $str .= $resourceStr;
 
     
     /* *** Files attached to the resource *** *
@@ -291,6 +305,8 @@ if(!empty($resource)){
 
 // Set session for printing / emailing resource
 $this->setSession('resource', $resourceStr);
+
+$str = $objFeatureBox->showContent('<center>'.$headStr.'</center>', $resourceStr);
 
 echo $str.'<br />';
 ?>

@@ -128,17 +128,47 @@ class viewBrowse extends object
     private $popUpWin = FALSE;
 
     /**
+    * @var string Property to set the options for the dropdown for number of results
+    */
+    private $options = array();
+    
+    /**
+    * @var string Property to store the letter to browse
+    */
+    private $findLetter = '';
+
+    /**
+    * @var string Property to store the letter to browse
+    */
+    private $displayLimit = '';
+
+    /**
+    * @var string Property to store the letter to browse
+    */
+    private $displayStart = '';
+
+    /**
+    * @var string Property to store the browse type
+    */
+    private $type = '';
+
+    /**
+    * @var string Property to store the browse type
+    */
+    private $displayMax = '';
+
+    /**
     * Constructor method
     */
     public function init()
     {
-        $this->objUser =& $this->getObject('user', 'security');
-        $this->objLanguage =& $this->getObject('language', 'language');
-        $this->objHeading =& $this->getObject('htmlheading', 'htmlelements');
-        $this->objAlphabet =& $this->getObject( 'alphabet', 'navigation' );
-        $this->objIcon = & $this->getObject( 'getIcon', 'htmlelements' );
+        $this->objUser = $this->getObject('user', 'security');
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objHeading = $this->getObject('htmlheading', 'htmlelements');
+        $this->objAlphabet = $this->getObject( 'alphabet', 'navigation' );
+        $this->objIcon = $this->getObject( 'getIcon', 'htmlelements' );
         $this->loadClass( 'htmltable', 'htmlelements' );
-        $this->objSortTable = & $this->getObject( 'sorttable', 'htmlelements' );
+        $this->objSortTable = $this->getObject( 'sorttable', 'htmlelements' );
 
         $this->loadClass('link', 'htmlelements');
         $this->loadClass( 'button', 'htmlelements' );
@@ -160,14 +190,17 @@ class viewBrowse extends object
         $browsetype = NULL,
         $data = array(),
         $header = array(),
-        $options = array( '10', '20', '30', '40', '50', '60', '70', '80', '90', '100' ) )
+        $options = array() )
     {
-
         // Access control section
         $this->setAccess( $allow );
 
         // Setup the display limit
-        $this->options = $options ;
+        if(empty($options)){
+            $this->options = array( '10', '20', '30', '40', '50', '60', '70', '80', '90', '100' );
+        }else{
+            $this->options = $options ;
+        }
 
         // Get the objects data.
         if( !is_null( $object ) ) {
@@ -176,7 +209,7 @@ class viewBrowse extends object
             $this->setHeader( $object->getHeading() );
 
             // What are we looking for?
-//            $this->findString = $this->getParam( 'searchForString', FALSE );
+            $this->findString = $this->getParam( 'searchForString', FALSE );
             $this->findLetter = $this->getParam( 'searchForLetter', NULL );
             $this->displayLimit = $this->getParam( 'displayLimit', 10 );
             $this->displayStart = $this->getParam( 'displayStart', 0 );
@@ -189,16 +222,15 @@ class viewBrowse extends object
 //
 //            } else 
 
-            if ( $this->findLetter && $this->findLetter!='listall' ) {
+            if ( $this->findLetter && $this->findLetter != 'listall' ) {
                 $this->setData( $object->getByLetter( $this->findLetter, $this->displayLimit, $this->displayStart, $this->join, $this->extraFilter ) );
                 $this->displayMax = $object->recordsFound;
-
             } else {
                 $this->setData($object->getData($this->displayLimit, $this->displayStart, $this->join, $this->extraFilter));
                 $this->displayMax = $object->recordsFound;
 
             }
-        } else {
+        }else {
             // Get object properties
             $this->type = $type;
             $this->_browseType=$browsetype;
@@ -417,7 +449,7 @@ class viewBrowse extends object
         $addIcon = $this->objIcon->getAddIcon( $this->uri(array('action'=>'add'.$this->_browseType, 'joinId'=>$this->join), $this->module) );
 
         // Show Page Title
-        $pgTitle = &$this->objHeading;
+        $pgTitle = $this->objHeading;
         $pgTitle->type = 1;
         $pgTitle->str = $pageTitle.'&nbsp;';
         $pgTitle->str.= $this->allowManage ? $addIcon : NULL;
@@ -425,7 +457,7 @@ class viewBrowse extends object
         // Put searches
         $showAlpha = ''; $showSearch = '';
         if($this->showAlpha){
-            $showAlpha = $this->getAlphabet($action, $valueSearchForLetter);
+            $showAlpha = '<br />'.$this->getAlphabet($action, $valueSearchForLetter);
         }
 //        if($this->showSearch){
 //            $showSearch = $this->getSearch($action, $valueSearchFor, $valueDisplaySelected, $valueSearchForLetter);
@@ -433,10 +465,10 @@ class viewBrowse extends object
 
         // Layout
         $str = $pgTitle->show();
-        $str .= '<P>'.$showAlpha.'</P>';
-//        $str .= '<P>'.$showSearch.'</P>';
+        $str .= '<p>'.$showAlpha.'</p>';
+//        $str .= '<p>'.$showSearch.'</p>';
         if(!empty($this->extra)){
-            $str .= '<P>'.$this->extra.'</P>';
+            $str .= '<p>'.$this->extra.'</p>';
         }
 
         // Tabulate the results
@@ -632,7 +664,12 @@ class viewBrowse extends object
         $str .= $topStr;
         $str .= $this->getResults();
         $str .= $bottomStr;
-        return $str;
+
+        $objRound = $this->newObject('roundcorners', 'htmlelements');
+        //return $objRound->show($str);
+        //return $str;
+        $objFeatureBox = $this->newObject('featurebox', 'navigation');
+        return $objFeatureBox->showContent('', $str);
     }
 
     /**
@@ -645,7 +682,7 @@ class viewBrowse extends object
         $tblResults->cellpadding = 5;
         $tblResults->cellspacing = 2;
 
-        $oddEven = 'odd';
+        $oddEven = 'even';
         if(empty($this->data)) {
             $tblResults->addRow(array($this->objLanguage->code2Txt('mod_etd_foundNoRecords', 'etd')), 'noRecordsMessage');
         } else {
@@ -667,7 +704,10 @@ class viewBrowse extends object
             foreach( $this->data as $row ) {
                 $tblResults->row_attributes = "class =\"$oddEven\"";
                 $tblResults->startRow();
-                    $id = $row['id'];
+                    $id = '';
+                    if(isset($row['id'])){
+                        $id = $row['id'];
+                    }
 
                     // View item
                     if($showLinks){
@@ -741,7 +781,12 @@ class viewBrowse extends object
         
         // Show Alphabetical Search
         $link = $this->uri(array('action'=>$action, 'searchForLetter'=>'LETTER', 'joinId'=>$this->join, 'extraFilter'=>$this->extraFilter), $this->module );
-        $showAlpha = $this->objAlphabet->putAlpha($link, TRUE, $listall);
+        if(empty($valueSearchForLetter) || $valueSearchForLetter == 'listall'){
+            $showAlpha = $this->objAlphabet->putAlpha($link, TRUE, $listall);
+        }else{
+            $letter = substr($valueSearchForLetter, 0, 1);
+            $showAlpha = $this->objAlphabet->putDoubleAlpha($link, $letter, $listall);
+        }
         
         // Hidden field - contains letter
         $hdnSearchLetter = new textinput( 'searchForLetter', $valueSearchForLetter, 'hidden' );
@@ -775,7 +820,7 @@ class viewBrowse extends object
         $displayLabel = new label( $lblDisplayLimit, 'input_displayLimit' );
 
         // Dropdown: list preselected limits.
-        $displayLimit = &$this->objDropDown;
+        $displayLimit =$this->objDropDown;
         $displayLimit->dropdown( 'displayLimit' );
         foreach( $this->options as $option )
             $displayLimit->addOption( $option, $option );

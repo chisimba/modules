@@ -20,8 +20,8 @@ class block_rightmenu extends object
     */
     public function init()
     {
-        $this->objLanguage =& $this->getObject('language','language');
-        $this->objIcon =& $this->newObject('geticon', 'htmlelements');
+        $this->objLanguage = $this->getObject('language','language');
+        $this->objIcon = $this->newObject('geticon', 'htmlelements');
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('button','htmlelements');
         $this->loadClass('form','htmlelements');
@@ -76,16 +76,23 @@ class block_rightmenu extends object
     */
     public function show()
 	{
+        $home = $this->objLanguage->languageText('word_home');
         $browse = $this->objLanguage->languageText('word_browse');
-        $collections = $this->objLanguage->languageText('word_collections');
+        $faculties = $this->objLanguage->languageText('word_faculties');
         $authors = $this->objLanguage->languageText('word_authors');
         $titles = $this->objLanguage->languageText('word_titles');
+        $list = '';
+        
+        // Home page
+        $objLink = new link($this->uri(''));
+        $objLink->link = $home;
+        $list .= $objLink->show().'<br />';
         
 	    // Browse menu items
-        $list = '<b>'.$browse.':</b><br /><ul>';
+        $list .= '<b>'.$browse.':</b><br /><ul>';
         
-        $objLink = new link($this->uri(array('action'=>'browsecollection')));
-        $objLink->link = $collections;
+        $objLink = new link($this->uri(array('action'=>'browsefaculty')));
+        $objLink->link = $faculties;
         $list .= '<li style="padding-bottom: 5px;">'.$objLink->show().'</li>';
         
         $objLink = new link($this->uri(array('action'=>'browseauthor')));

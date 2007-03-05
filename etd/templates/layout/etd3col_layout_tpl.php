@@ -6,11 +6,11 @@
 */
 
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
-$cssLayout->setNumColumns(2);
+$cssLayout->setNumColumns(3);
 
 $cssLayout->setLeftColumnContent($this->etdTools->getLeftSide());
 $cssLayout->setMiddleColumnContent($this->getContent());
-//$cssLayout->setRightColumnContent();
+$cssLayout->setRightColumnContent($this->etdTools->getRightSide());
 
 echo $cssLayout->show();
 ?>

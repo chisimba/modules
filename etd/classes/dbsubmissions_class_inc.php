@@ -46,7 +46,7 @@ class dbsubmissions extends dbtable
         //$this->qualifiedTable = 'tbl_etd_metadata_qualified';
         $this->embargoTable = 'tbl_etd_embargos';
 
-        $this->xmlMeta =& $this->getObject('xmlmetadata', 'etd');
+        $this->xmlMeta = $this->getObject('xmlmetadata', 'etd');
         
     }
 
@@ -82,18 +82,21 @@ class dbsubmissions extends dbtable
     * @param string $userId The user Id for the modifier.
     * @return string $id
     */
-    public function editSubmission($userId, $id = NULL)
+    public function editSubmission($userId, $id = NULL, $status = 'assembly')
     {
         $fields = array();
+        $fields['status'] = $status;
 
-        if($id){
+        if(!empty($id)){
             $fields['modifierid'] = $userId;
             $fields['datemodified'] = date('Y-m-d H:i:s');
+            $fields['updated'] = date('Y-m-d H:i:s');
             $this->update('id', $id, $fields);
         }else{
             $fields['creatorid'] = $userId;
             $fields['datecreated'] = date('Y-m-d H:i:s');
             $fields['submissiontype'] = $this->subType;
+            $fields['updated'] = date('Y-m-d H:i:s');
             $id = $this->insert($fields);
         }
         return $id;
@@ -181,6 +184,12 @@ class dbsubmissions extends dbtable
     /**
     * Method to fetch a set of resources based on given information.
     * The method can either match the info, or match similar information.
+    *
+    * @access public
+    * @param array $criteria The filter on the resources - array('field' => 'title', 'compare' = 'LIKE', 'value' => 'something')
+    * @param integer $start The resource to start from - for displaying 10 at a time
+    * @param integer $limit The number of resources to fetch
+    * @return array The resource data and the number of total resources based on the filter
     */
     public function fetchResources($criteria = array(), $start = 0, $limit = NULL)
     {
@@ -264,6 +273,33 @@ class dbsubmissions extends dbtable
         */
 
     }
+    
+    /**
+    * Method to fetch the most recent submitted resources
+    *
+    * @access public
+    * @return array The resource data
+    */
+    public function getLatest()
+    {
+        $sqlNorm = "SELECT *, extra.id as thesis_id FROM {$this->table} AS submit, ";
+        
+        if($this->metaType == 'qualified'){
+            $sql = "{$this->qualifiedTable} AS extra, ";
+        }else{
+            $sql = "{$this->thesisTable} AS extra, ";
+        }        
+        $sql .= "{$this->dcTable} AS dc ";
+        
+        $sql .= "WHERE submit.id = extra.submitid AND dc.id = extra.dcmetaid ";
+        $sql .= "AND submissiontype = '{$this->subType}' AND status = 'archived' ";
+        
+        $sql .= "ORDER BY dc.enterdate DESC LIMIT 10";
+        
+        $data = $this->getArray($sqlNorm.$sql);
+        
+        return $data;
+    }
 
     /**
     * Method to get a list of non-archived submissions by status
@@ -275,7 +311,7 @@ class dbsubmissions extends dbtable
     public function getNewSubmissions()
     {
         $sql = 'SELECT * FROM '.$this->table;
-        $sql .= " WHERE status != 'archived' ";
+        $sql .= " WHERE status = 'metadata' ";
         $sql .= " AND submissiontype = '{$this->subType}' ";
         
         $data = $this->getArray($sql);
@@ -307,6 +343,28 @@ class dbsubmissions extends dbtable
             $xmlData = array_merge($xml['metadata']['dublincore'], $xml['metadata'][$this->metaType]);
         }
         return $xmlData;
+    }
+
+    /**
+    * Method to set the level of approval on an ETD.
+    *
+    * @access public
+    * @param string $id The Id of the ETD.
+    * @param string $userId The user Id for the modifier.
+    * @param string $level The level of approval.
+    * @param string $access The level of access - private = user only; public = available; protected = metadata is available, file is hidden
+    * @return string $id
+    */
+    public function changeApproval($id, $userId, $level, $status, $access = 'private')
+    {
+        $fields['approvalLevel'] = $level;
+        $fields['status'] = $status;
+        $fields['accessLevel'] = $access;
+        $fields['modifierId'] = $userId;
+        $fields['dateModified'] = date('Y-m-d H:i:s');
+        $fields['updated'] = date('Y-m-d H:i:s');
+        $this->update('id', $id, $fields);
+        return $id;
     }
 
     /**
@@ -411,25 +469,6 @@ class dbsubmissions extends dbtable
             return $data[0]['accessLevel'];
         }
         return 0;
-    }
-
-    /**
-    * Method to set the level of approval on an ETD.
-    * @param string $id The Id of the ETD.
-    * @param string $userId The user Id for the modifier.
-    * @param string $level The level of approval.
-    * @param string $access The level of access - private = user only; public = available; protected = metadata is available, file is hidden
-    * @return string $id
-    */
-    function changeApproval($id, $userId, $level, $status, $access = 'private')
-    {
-        $fields['approvalLevel'] = $level;
-        $fields['status'] = $status;
-        $fields['accessLevel'] = $access;
-        $fields['modifierId'] = $userId;
-        $fields['dateModified'] = date('Y-m-d H:i:s');
-        $this->update('id', $id, $fields);
-        return $id;
     }
 
     /**

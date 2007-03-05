@@ -13,6 +13,7 @@ if (!$GLOBALS['kewl_entry_point_run']){
 /**
 * dbfiles class for managing the data in the tbl_etd_submission_files table.
 * @author Megan Watson
+* @author Kevin Cyster
 * @copyright (c) 2004 UWC
 * @version 1.0
 */
@@ -29,15 +30,22 @@ class dbfiles extends dbtable
     */
     public function init()
     {
-        parent::init('tbl_etd_submission_files');
-        $this->table = 'tbl_etd_submission_files';
-
-        $this->objUser = &$this->newObject('user', 'security');
-        $this->userId = $this->objUser->userId();
+        try{
+            parent::init('tbl_etd_submission_files');
+            $this->table = 'tbl_etd_submission_files';
+    
+            $this->objUser = &$this->newObject('user', 'security');
+            $this->userId = $this->objUser->userId();
+        }catch(Exception $e){
+            throw customException($e->message());
+            exit();
+        }
     }
 
     /**
     * Method to insert file data into the table.
+    *
+    * @access public
     * @param string $submitId The id of the submission containing the file.
     * @param array $fileData The filedata to be stored
     * @return string $id The id of the file record
@@ -62,6 +70,20 @@ class dbfiles extends dbtable
             $id = $this->insert($fields);
         }
         return $id;
+    }
+    
+    /**
+    * Method to get the file data for downloading the full text.
+    *
+    * @access public
+    * @param string $submitId
+    * @return array The file data
+    */
+    public function getFile($submitId)
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE submissionid = '{$submitId}'";
+        
+        return $this->getArray($sql);
     }
 
     /**

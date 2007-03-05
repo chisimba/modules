@@ -23,55 +23,51 @@ class management extends object
     * Constructor for the class
     *
     * @access public
-    * @return
+    * @return void
     */
     public function init()
     {
-        $this->dbSubmissions =& $this->getObject('dbsubmissions', 'etd');
-        $this->dbSubmissions->setDocType('thesis');
-        $this->dbSubmissions->setSubmitType('etd');
-
-        $this->dbThesis =& $this->getObject('dbthesis', 'etd');
-        $this->dbThesis->setSubmitType('etd');
-
-        /*
-        $this->etdBridge =& $this->getObject('dbcollectsubmit', 'etd');
-        $this->etdCollections =& $this->getObject('dbcollection', 'etd');
-
-        $this->dbQualified =& $this->getObject('dbqualified', 'etd');
-
-        $this->dbFiles =& $this->getObject('dbfiles', 'etd');
-
-        $this->objComment =& $this->getObject('commentinterface', 'comment');
-        $this->objComment->useApproval(TRUE);
-        $this->objComment->set('moduleCode', 'etd');
-        $this->objComment->set('tableName', 'tbl_etd_submissions');
-        */
-
-        $this->etdTools =& $this->getObject('etdtools', 'etd');
-        $this->dbDublinCore =& $this->getObject('dbdublincore', 'etd');
-        $this->files =& $this->getObject('etdfiles', 'etd');
-        $this->xmlMetadata =& $this->getObject('xmlmetadata', 'etd');
-
-        $this->objLanguage =& $this->getObject('language', 'language');
-        $this->objUser =& $this->getObject('user', 'security');
-        $this->objDate =& $this->getObject('datetime', 'utilities');
-
-        $this->objHead =& $this->newObject('htmlheading', 'htmlelements');
-        $this->loadClass('htmltable', 'htmlelements');
-        $this->objEditor = $this->newObject('htmlarea', 'htmlelements');
-        $this->objIcon = $this->newObject('geticon', 'htmlelements');
-
-        $this->loadClass('tabbedbox', 'htmlelements');
-        $this->loadClass('form', 'htmlelements');
-        $this->loadClass('button', 'htmlelements');
-        $this->loadClass('textinput', 'htmlelements');
-        $this->loadClass('textarea', 'htmlelements');
-        $this->loadClass('label', 'htmlelements');
-        $this->loadClass('link', 'htmlelements');
-
-        $this->userId = $this->objUser->userId();
-        $this->fullName = $this->objUser->fullName();
+        try{
+            $this->dbSubmissions = $this->getObject('dbsubmissions', 'etd');
+            $this->dbSubmissions->setDocType('thesis');
+            $this->dbSubmissions->setSubmitType('etd');
+    
+            $this->dbThesis = $this->getObject('dbthesis', 'etd');
+            $this->dbThesis->setSubmitType('etd');
+    
+            $this->dbDegrees = $this->getObject('dbdegrees', 'etd');
+            $this->etdTools = $this->getObject('etdtools', 'etd');
+            $this->dbDublinCore = $this->getObject('dbdublincore', 'etd');
+            $this->files = $this->getObject('etdfiles', 'etd');
+            $this->xmlMetadata = $this->getObject('xmlmetadata', 'etd');
+    
+            $this->objLanguage = $this->getObject('language', 'language');
+            $this->objLangCode = $this->getObject('languagecode', 'language');
+            $this->objUser = $this->getObject('user', 'security');
+            $this->objDate = $this->getObject('datetime', 'utilities');
+    
+            $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
+            $this->objMsg = $this->getObject('timeoutmessage', 'htmlelements');
+            $this->objRound = $this->newObject('roundcorners', 'htmlelements');
+            $this->objHead = $this->newObject('htmlheading', 'htmlelements');
+            $this->objEditor = $this->newObject('htmlarea', 'htmlelements');
+            $this->objIcon = $this->newObject('geticon', 'htmlelements');
+    
+            $this->loadClass('htmltable', 'htmlelements');
+            $this->loadClass('tabbedbox', 'htmlelements');
+            $this->loadClass('form', 'htmlelements');
+            $this->loadClass('button', 'htmlelements');
+            $this->loadClass('textinput', 'htmlelements');
+            $this->loadClass('textarea', 'htmlelements');
+            $this->loadClass('label', 'htmlelements');
+            $this->loadClass('link', 'htmlelements');
+    
+            $this->userId = $this->objUser->userId();
+            $this->fullName = $this->objUser->fullName();
+        }catch(Exception $e){
+            throw customException($e->message());
+            exit();
+        }
     }
 
     /**
@@ -164,7 +160,7 @@ class management extends object
         $lbKeywords = $this->objLanguage->languageText('word_keywords');
         $btnSearch = $this->objLanguage->languageText('word_search');
 
-        $this->objHead->str = $head;
+        $this->objHead->str = ucwords($head);
         $this->objHead->type = 1;
         $str = $this->objHead->show();
 
@@ -201,12 +197,7 @@ class management extends object
         $objForm = new form('searcharchive', $this->uri(array('action' => 'managesubmissions', 'mode' => 'search')));
         $objForm->addToForm('<p style="padding:5px;">'.$objTable->show().'</p>');
 
-        $objTab = new tabbedbox();
-//        $objTab->extra = 'style="background-color: #FFFDF5"';
-        $objTab->cssClass = 'wrapperLightBkg';
-        $objTab->addTabLabel($lbSearch);
-        $objTab->addBoxContent($objForm->show());
-        $str .= $objTab->show();
+        $str .= '<br />'.$this->objRound->show('<h2>'.$lbSearch.'</h2>'.$objForm->show());
 
         return $str;
     }
@@ -230,7 +221,7 @@ class management extends object
 
         $this->objHead->str = $head.' ('.$count.')';
         $this->objHead->type = 3;
-        $str = $this->objHead->show();
+        $headStr = $this->objHead->show();
 
         if(!empty($data)){
             $hdArr = array();
@@ -269,11 +260,12 @@ class management extends object
 
                 $objTable->addRow($row, $class);
             }
-            $str .= $objTable->show();
+            $bodyStr = '<br />'.$objTable->show();
         }else{
-            $str .= '<p class="noRecordsMessage">'.$lbNone.'</p>';
+            $bodyStr = '<p class="noRecordsMessage">'.$lbNone.'</p>';
         }
 
+        $str = $this->objFeatureBox->showContent($headStr, $bodyStr);
         return $str;
     }
 
@@ -336,6 +328,10 @@ class management extends object
         $lbDateAdded = $this->objLanguage->languageText('phrase_dateadded');
         $lbContributor = $this->objLanguage->languageText('word_contributor');
         $lbPublisher = $this->objLanguage->languageText('word_publisher');
+        $lbFaculty = $this->objLanguage->languageText('word_faculty');
+        $lbDegree = $this->objLanguage->languageText('phrase_degreeobtained');
+        $lbLevel = $this->objLanguage->languageText('phrase_degreelevel');
+        $lbGrantor = $this->objLanguage->languageText('word_grantor');
         $lbDate = $this->objLanguage->languageText('word_year');
         $lbFormat = $this->objLanguage->languageText('word_format');
         $lbRights = $this->objLanguage->languageText('word_rights');
@@ -354,6 +350,46 @@ class management extends object
         $objTable->cellpadding = '5';
         $objTable->cellspacing = '5';
 
+        // Degree
+        $degree = '';
+        if(!empty($data['thesis_degree_name'])){
+            $degree = $data['thesis_degree_name'];
+        }
+        $objLabel = new label($lbDegree.': ', 'input_degree');
+        $drpDegree = $this->dbDegrees->getDropList('degree', $degree);
+        $objTable->addRow(array($objLabel->show(), $drpDegree));
+        
+        // Level
+        $level = '';
+        if(!empty($data['thesis_degree_level'])){
+            $level = $data['thesis_degree_level'];
+        }
+        $objLabel = new label($lbLevel.': ', 'input_level');
+        $drpLevel = $this->etdTools->getDegreeLevels($level);
+        $objTable->addRow(array($objLabel->show(), $drpLevel));
+        
+        // Faculty
+        $faculty = '';
+        if(!empty($data['thesis_degree_discipline'])){
+            $faculty = $data['thesis_degree_discipline'];
+        }
+        $objLabel = new label($lbFaculty.': ', 'input_faculty');
+        $drpFaculty = $this->dbDegrees->getDropList('faculty', $faculty);
+        $objTable->addRow(array($objLabel->show(), $drpFaculty));
+        
+        // Grantor
+        $grantor = '';
+        if(!empty($data['thesis_degree_grantor'])){
+            $grantor = $data['thesis_degree_grantor'];
+        }
+        $objLabel = new label($lbGrantor.': ', 'input_grantor');
+        $objInput = new textinput('grantor', $grantor, '', 60);
+        $drpGrantor = $objInput->show();
+        $objTable->addRow(array($objLabel->show(), $drpGrantor));
+
+        $objTable->addRow(array('<hr />', '<hr />'));
+
+        // title
         $title = '';
         if(!empty($data['dc_title'])){
             $title = $data['dc_title'];
@@ -362,25 +398,8 @@ class management extends object
         $objInput = new textinput('title', $title, '', 60);
 
         $objTable->addRow(array($objLabel->show(), $objInput->show()));
-
-        $author = '';
-        if(!empty($data['dc_creator'])){
-            $author = $data['dc_creator'];
-        }
-        $objLabel = new label($lbAuthor.': ', 'input_author');
-        $objInput = new textinput('author', $author, '', 60);
-
-        $objTable->addRow(array($objLabel->show(), $objInput->show()));
-
-        $date = '';
-        if(!empty($data['dc_date'])){
-            $date = $data['dc_date'];
-        }
-        $objLabel = new label($lbDate.': ', 'input_date');
-        $year = $this->etdTools->getYearSelect('date', $date);
-
-        $objTable->addRow(array($objLabel->show(), $year));
-
+      
+        // doc type
         $type = '';
         if(!empty($data['dc_type'])){
             $type = $data['dc_type'];
@@ -390,58 +409,7 @@ class management extends object
 
         $objTable->addRow(array($objLabel->show(), $objInput->show()));
 
-        $country = '';
-        if(!empty($data['dc_coverage'])){
-            $country = $data['dc_coverage'];
-        }
-        $objLabel = new label($lbCountry.': ', 'input_country');
-        $objTable->addRow(array($objLabel->show(), $this->etdTools->getCountriesDropdown($country)));
-
-        $keywords = '';
-        if(!empty($data['dc_subject'])){
-            $keywords = $data['dc_subject'];
-        }
-        $objLabel = new label($lbKeywords.': ', 'input_keywords');
-        $objText = new textarea('keywords', $keywords, 3, 58);
-
-        $objTable->addRow(array($objLabel->show(), $objText->show()));
-
-        $contributor = '';
-        if(!empty($data['dc_contributor'])){
-            $contributor = $data['dc_contributor'];
-        }
-        $objLabel = new label($lbContributor.': ', 'input_contributor');
-        $objInput = new textinput('contributor', $contributor, '', 60);
-
-        $objTable->addRow(array($objLabel->show(), $objInput->show()));
-
-        $relationship = '';
-        if(!empty($data['dc_relationship'])){
-            $relationship = $data['dc_relationship'];
-        }
-        $objLabel = new label($lbRelationship.': ', 'input_relationship');
-        $objInput = new textinput('relationship', $relationship, '', 60);
-
-        $objTable->addRow(array($objLabel->show(), $objInput->show()));
-
-        $publisher = '';
-        if(!empty($data['dc_publisher'])){
-            $publisher = $data['dc_publisher'];
-        }
-        $objLabel = new label($lbPublisher.': ', 'input_publisher');
-        $objInput = new textinput('publisher', $publisher, '', 60);
-
-        $objTable->addRow(array($objLabel->show(), $objInput->show()));
-
-        $rights = '';
-        if(!empty($data['dc_rights'])){
-            $rights = $data['dc_rights'];
-        }
-        $objLabel = new label($lbRights.': ', 'input_rights');
-        $objInput = new textinput('rights', $rights, '', 60);
-
-        $objTable->addRow(array($objLabel->show(), $objInput->show()));
-
+        // format
         $format = '';
         if(!empty($data['dc_format'])){
             $format = $data['dc_format'];
@@ -451,6 +419,87 @@ class management extends object
 
         $objTable->addRow(array($objLabel->show(), $objInput->show()));
 
+        // author
+        $author = '';
+        if(!empty($data['dc_creator'])){
+            $author = $data['dc_creator'];
+        }
+        $objLabel = new label($lbAuthor.': ', 'input_author');
+        $objInput = new textinput('author', $author, '', 60);
+
+        $objTable->addRow(array($objLabel->show(), $objInput->show()));
+
+        // year
+        $date = '';
+        if(!empty($data['dc_date'])){
+            $date = $data['dc_date'];
+        }
+        $objLabel = new label($lbDate.': ', 'input_date');
+        $year = $this->etdTools->getYearSelect('date', $date);
+
+        $objTable->addRow(array($objLabel->show(), $year));
+          
+        // country
+        $country = '';
+        if(!empty($data['dc_coverage'])){
+            $country = $data['dc_coverage'];
+        }
+        $objLabel = new label($lbCountry.': ', 'input_country');
+        $objTable->addRow(array($objLabel->show(), $this->etdTools->getCountriesDropdown($country)));
+
+        // keywords
+        $keywords = '';
+        if(!empty($data['dc_subject'])){
+            $keywords = $data['dc_subject'];
+        }
+        $objLabel = new label($lbKeywords.': ', 'input_keywords');
+        $objText = new textarea('keywords', $keywords, 3, 58);
+
+        $objTable->addRow(array($objLabel->show(), $objText->show()));
+
+        $objTable->addRow(array('<hr />', '<hr />'));
+
+        // contributor
+        $contributor = '';
+        if(!empty($data['dc_contributor'])){
+            $contributor = $data['dc_contributor'];
+        }
+        $objLabel = new label($lbContributor.': ', 'input_contributor');
+        $objInput = new textinput('contributor', $contributor, '', 60);
+
+        $objTable->addRow(array($objLabel->show(), $objInput->show()));
+
+        // relationship
+        $relationship = '';
+        if(!empty($data['dc_relationship'])){
+            $relationship = $data['dc_relationship'];
+        }
+        $objLabel = new label($lbRelationship.': ', 'input_relationship');
+        $objInput = new textinput('relationship', $relationship, '', 60);
+
+        $objTable->addRow(array($objLabel->show(), $objInput->show()));
+
+        // publisher
+        $publisher = '';
+        if(!empty($data['dc_publisher'])){
+            $publisher = $data['dc_publisher'];
+        }
+        $objLabel = new label($lbPublisher.': ', 'input_publisher');
+        $objInput = new textinput('publisher', $publisher, '', 60);
+
+        $objTable->addRow(array($objLabel->show(), $objInput->show()));
+
+        // rights
+        $rights = '';
+        if(!empty($data['dc_rights'])){
+            $rights = $data['dc_rights'];
+        }
+        $objLabel = new label($lbRights.': ', 'input_rights');
+        $objInput = new textinput('rights', $rights, '', 60);
+
+        $objTable->addRow(array($objLabel->show(), $objInput->show()));
+
+        // source
         $source = '';
         if(!empty($data['dc_source'])){
             $source = $data['dc_source'];
@@ -460,6 +509,7 @@ class management extends object
 
         $objTable->addRow(array($objLabel->show(), $objInput->show()));
 
+        // language
         $language = '';
         if(!empty($data['dc_language'])){
             $language = $data['dc_language'];
@@ -469,6 +519,7 @@ class management extends object
 
         $objTable->addRow(array($objLabel->show(), $objInput->show()));
 
+        // audience
         $audience = '';
         if(!empty($data['dc_audience'])){
             $audience = $data['dc_audience'];
@@ -478,6 +529,7 @@ class management extends object
 
         $objTable->addRow(array($objLabel->show(), $objInput->show()));
 
+        // abstract
         $abstract = '';
         if(!empty($data['dc_description'])){
             $abstract = $data['dc_description'];
@@ -486,20 +538,9 @@ class management extends object
         $this->objEditor->setBasicToolBar();
 
 
-        // Display the metadata in tabbed boxes
-        $objTab = new tabbedbox();
-//        $objTab->extra = 'style="background-color: #FFFDF5"';
-        $objTab->cssClass = 'wrapperLightBkg';
-        $objTab->addTabLabel($lbMetaData);
-        $objTab->addBoxContent('<div style="padding: 10px;">'.$objTable->show().'</div>');
-        $formStr = $objTab->show();
-
-        $objTab = new tabbedbox();
-//        $objTab->extra = 'style="background-color: #FFFDF5"';
-        $objTab->cssClass = 'wrapperLightBkg';
-        $objTab->addTabLabel($lbSummary);
-        $objTab->addBoxContent('<div style="padding: 10px;">'.$this->objEditor->showFCKEditor().'</div>');
-        $formStr .= $objTab->show();
+        // Display the metadata in feature boxes
+        $formStr = $this->objFeatureBox->show($lbMetaData, $objTable->show());
+        $formStr .= $this->objFeatureBox->show($lbSummary, $this->objEditor->showFCKEditor());
 
         $objButton = new button('save', $btnSave);
         $objButton->setToSubmit();
@@ -534,7 +575,7 @@ class management extends object
     *
     * @access private
     * @param string $submitId The submission id
-    * @return
+    * @return void
     */
     private function saveResource($submitId = NULL)
     {
@@ -566,10 +607,10 @@ class management extends object
         $thesisId = $this->getParam('thesisId');
         $fields['submitid'] = $submitId;
         $fields['dcmetaid'] = $metaId;
-        $fields['thesis_degree_name'] = $this->getParam('thesis_degree_name');
-        $fields['thesis_degree_level'] = $this->getParam('thesis_degree_level');
-        $fields['thesis_degree_discipline'] = $this->getParam('thesis_degree_discipline');
-        $fields['thesis_degree_grantor'] = $this->getParam('thesis_degree_grantor');
+        $fields['thesis_degree_name'] = $this->getParam('degree');
+        $fields['thesis_degree_level'] = $this->getParam('level');
+        $fields['thesis_degree_discipline'] = $this->getParam('faculty');
+        $fields['thesis_degree_grantor'] = $this->getParam('grantor');
         $this->dbThesis->insertMetadata($fields, $thesisId);
 
         return $submitId;
@@ -580,12 +621,12 @@ class management extends object
     *
     * @access private
     * @param string $submitId The submission id
-    * @return
+    * @return void
     */
     private function saveNewResource($submitId = NULL)
     {
         // Update the submissions table to show who modified it and when
-        $submitId = $this->dbSubmissions->editSubmission($this->userId, $submitId);
+        $submitId = $this->dbSubmissions->editSubmission($this->userId, $submitId, 'metadata');
 
         // Save the dublincore metadata
         $dublin = array();
@@ -607,10 +648,10 @@ class management extends object
 
         // Save the extended thesis metadata
         $thesis = array();
-        $thesis['thesis_degree_name'] = $this->getParam('thesis_degree_name');
-        $thesis['thesis_degree_level'] = $this->getParam('thesis_degree_level');
-        $thesis['thesis_degree_discipline'] = $this->getParam('thesis_degree_discipline');
-        $thesis['thesis_degree_grantor'] = $this->getParam('thesis_degree_grantor');
+        $thesis['thesis_degree_name'] = $this->getParam('degree');
+        $thesis['thesis_degree_level'] = $this->getParam('level');
+        $thesis['thesis_degree_discipline'] = $this->getParam('faculty');
+        $thesis['thesis_degree_grantor'] = $this->getParam('grantor');
 
         $extra = array();
         $extra['submitid'] = $submitId;
@@ -625,11 +666,35 @@ class management extends object
     }
 
     /**
+    * Method to move a resource from xml to the repository / database.
+    *
+    * @access private
+    * @param string $submitId The submissions table id
+    * @return void
+    */
+    private function approveResource($submitId)
+    {   
+        // Get xml metadata from file.
+        $xmlData = $this->xmlMetadata->openXML('etd_'.$submitId);
+        // Save metadata to database.
+        $meta = $this->dbDublinCore->moveXmlToDb($xmlData, $submitId);
+        // Create Url to resource, save to metadata - dc_identifier, url
+        $url = $this->uri(array('action' => 'viewtitle', 'id' => $meta['thesisId']));
+        $fields = array('dc_identifier' => $url, 'url' => $url);
+        $this->dbDublinCore->updateElement($fields, $meta['dcId']);
+        // Delete xml file
+        $this->xmlMetadata->deleteXML('etd_'.$submitId);
+        // Change submission status
+        $this->dbSubmissions->changeApproval($submitId, $this->userId, 6, 'archived', 'public');
+        return TRUE;
+    }
+
+    /**
     * Method to delete a resource
     *
     * @access private
     * @param string $submitId The submissions table id
-    * @return
+    * @return void
     */
     private function deleteResource($submitId)
     {
@@ -655,7 +720,7 @@ class management extends object
     *
     * @access private
     * @param string $submitId The submissions table id
-    * @return
+    * @return void
     */
     private function deleteNewResource($submitId)
     {
@@ -678,7 +743,7 @@ class management extends object
     * @param array $data The resource data
     * @return string html
     */
-    private function showResource($data, $editMode = 'editresource', $delMode = 'deleteresource', $nextMode = 'resources')
+    private function showResource($data, $editMode = 'editresource', $delMode = 'deleteresource', $nextMode = 'resources', $docMode = 'showresource')
     {
         $submitId = $this->getSession('submitId');
         $thesisId = '';
@@ -703,6 +768,10 @@ class management extends object
         $lbDateAdded = $this->objLanguage->languageText('phrase_dateadded');
         $lbContributor = $this->objLanguage->languageText('word_contributor');
         $lbPublisher = $this->objLanguage->languageText('word_publisher');
+        $lbFaculty = $this->objLanguage->languageText('word_faculty');
+        $lbDegree = $this->objLanguage->languageText('phrase_degreeobtained');
+        $lbLevel = $this->objLanguage->languageText('phrase_degreelevel');
+        $lbGrantor = $this->objLanguage->languageText('word_grantor');
         $lbDate = $this->objLanguage->languageText('word_year');
         $lbFormat = $this->objLanguage->languageText('word_format');
         $lbRights = $this->objLanguage->languageText('word_rights');
@@ -711,62 +780,81 @@ class management extends object
         $lbAudience = $this->objLanguage->languageText('word_audience');
         $lbKeywords = $this->objLanguage->languageText('word_keywords');
         $confirmDel = $this->objLanguage->languageText('mod_etd_confirmdeleteresource', 'etd');
+        $lbApprove = $this->objLanguage->languageText('mod_etd_approveaddrepository', 'etd');
 
         $icons = '&nbsp;&nbsp;';
         $icons .= $this->objIcon->getEditIcon($this->uri(array('action' => 'managesubmissions', 'mode' => $editMode)));
         $icons .= $this->objIcon->getDeleteIconWithConfirm('', array('action' => 'savesubmissions', 'mode' => $delMode, 'nextmode' => $nextMode, 'save' => 'true', 'dcMetaId' => $dcId, 'thesisId' => $thesisId),  'etd', $confirmDel);
+        
+        if($editMode == 'editnewresource'){
+            // Approve for repository
+            $this->objIcon->setIcon('etdapproval');
+            $this->objIcon->title = $lbApprove;
+            $objLink = new link($this->uri(array('action' => 'savesubmissions', 'mode' => 'approve', 'save' => 'true')));
+            $objLink->link = $this->objIcon->show();
+            $objLink->title = $lbApprove;
+            $icons .= $objLink->show();
+        }
 
         $this->objHead->str = $head.$icons;
         $this->objHead->type = 1;
         $str = $this->objHead->show();
+        $str .= '<br />';
+        
+        $msg = $this->getSession('resourceMsg');
+        if(isset($msg) && !empty($msg)){
+            $this->unsetSession('resourceMsg');
+            $this->objMsg->setMessage($msg);
+            $str .= '<p>'.$this->objMsg->show().'</p>';
+        }
 
         if(!empty($data)){
             $objTable = new htmltable();
             $objTable->cellpadding = 2;
             $objTable->cellspacing = 2;
 
+            $objTable->addRow(array($lbFaculty.': ', $data['thesis_degree_discipline']));
+            $objTable->addRow(array($lbDegree.': ', $data['thesis_degree_name']));
+            $objTable->addRow(array($lbLevel.': ', $data['thesis_degree_level']));
+            $objTable->addRow(array($lbGrantor.': ', $data['thesis_degree_grantor']));
+            $objTable->addRow(array('<hr />', '<hr />'));
+            
             $objTable->addRow(array($lbTitle.': ', $data['dc_title']));
             $objTable->addRow(array($lbAuthor.': ', $data['dc_creator']));
             $objTable->addRow(array($lbDate.': ', $data['dc_date']));
             $objTable->addRow(array($lbDocType.': ', $data['dc_type']));
-            $objTable->addRow(array($lbCountry.': ', $data['dc_coverage']));
+            $objTable->addRow(array($lbFormat.': ', $data['dc_format']));
+            
+            $country = '';
+            if(isset($data['dc_coverage']) && !empty($data['dc_coverage'])){
+                $country = $this->objLangCode->getName($data['dc_coverage']);
+            }
+            $objTable->addRow(array($lbCountry.': ', $country));
             $objTable->startRow();
             $objTable->addCell($lbKeywords.': ', '20%');
             $objTable->addCell($data['dc_subject']);
             $objTable->endRow();
+            $objTable->addRow(array('<hr />', '<hr />'));
+            
             $objTable->addRow(array($lbContributor.': ', $data['dc_contributor']));
             $objTable->addRow(array($lbRelationship.': ', $data['dc_relationship']));
             $objTable->addRow(array($lbPublisher.': ', $data['dc_publisher']));
             $objTable->addRow(array($lbRights.': ', $data['dc_rights']));
-            $objTable->addRow(array($lbFormat.': ', $data['dc_format']));
             $objTable->addRow(array($lbSource.': ', $data['dc_source']));
             $objTable->addRow(array($lbLanguage.': ', $data['dc_language']));
             $objTable->addRow(array($lbAudience.': ', $data['dc_audience']));
+            $objTable->addRow(array('<hr />', '<hr />'));
 
-            // Display the metadata in tabbed boxes
-            $objTab = new tabbedbox();
-//            $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
-            $objTab->cssClass = 'wrapperLightBkg';
-            $objTab->addTabLabel($lbMetaData);
-            $objTab->addBoxContent($objTable->show());
-            $str .= $objTab->show();
-
-            $objTab = new tabbedbox();
-//            $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
-            $objTab->cssClass = 'wrapperLightBkg';
-            $objTab->addTabLabel($lbSummary);
-            $objTab->addBoxContent($data['dc_description']);
-            $str .= $objTab->show();
+            // Display the metadata in feature boxes
+            
+            $str .= $this->objFeatureBox->showContent($lbMetaData, $objTable->show());
+            $str .= $this->objFeatureBox->show($lbSummary, $data['dc_description']);
         }
-
+        
         // Display the attached document for download or replacement
-        $docStr = $this->showDocument();
-        $objTab = new tabbedbox();
-//        $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
-        $objTab->cssClass = 'wrapperLightBkg';
-        $objTab->addTabLabel($lbDocument);
-        $objTab->addBoxContent($docStr);
-        $str .= $objTab->show();
+        $docStr = $this->showDocument($docMode);
+        $str .= $this->objFeatureBox->show($lbDocument, $docStr);
+
 
         // Display the references for the resource
 //        $refStr = $this->showReferences();
@@ -799,11 +887,10 @@ class management extends object
     * @access private
     * @return string html
     */
-    private function showDocument()
+    private function showDocument($nextMode)
     {
         $submitId = $this->getSession('submitId');
-//        $accessLevel = $this->getSession('accessLevel');
-        $data = array();//$this->dbFiles->getFiles($submitId);
+        $data = $this->files->getFile($submitId);
         $hidden = '';
 
         $lbFileSize = $this->objLanguage->languageText('phrase_filesize');
@@ -823,7 +910,7 @@ class management extends object
         $lbBytes = $this->objLanguage->languageText('word_bytes');
         $lbMb = $this->objLanguage->languageText('word_mb');
         $typePDF = $this->objLanguage->languageText('word_pdf');
-        $typeWord = $this->objLanguage->languageText('word_msword');
+        $typeWord = $this->objLanguage->languageText('phrase_msword');
         $typeExcel = $this->objLanguage->languageText('word_excel');
         $typeText = $this->objLanguage->languageText('phrase_plaintext');
 
@@ -834,11 +921,11 @@ class management extends object
 
             $objTable->startRow();
             $objTable->addCell($lbFileName.': ', '20%');
-            $objTable->addCell($data[0]['fileName']);
+            $objTable->addCell($data[0]['filename']);
             $objTable->endRow();
 
             // format size
-            $size = $data[0]['size'];
+            $size = $data[0]['filesize'];
             if($size < 1000){
                 $formSize = $size.'&nbsp;'.$lbBytes; // bytes
             }else if($size > 1000000){
@@ -849,7 +936,7 @@ class management extends object
             $objTable->addRow(array($lbFileSize.': ', $formSize));
 
             // format type
-            $format = $data[0]['filetype'];
+            $format = $data[0]['mimetype'];
             if(strpos($format, 'pdf')){
                 $format = $typePDF;
             }else if(strpos($format, 'msword')){
@@ -862,15 +949,15 @@ class management extends object
             $objTable->addRow(array($lbType.': ', $format));
 
             // date
-            if(!empty($data[0]['dateModified'])){
-                $date = $this->objDate->formatDate($data[0]['dateModified']);
+            if(!empty($data[0]['updated'])){
+                $date = $this->objDate->formatDate($data[0]['updated']);
             }else{
-                $date = $this->objDate->formatDate($data[0]['dateCreated']);
+                $date = $this->objDate->formatDate($data[0]['datecreated']);
             }
             $objTable->addRow(array($lbDate.': ', $date));
 
             // download
-            $url = $this->uri(array('action' => 'downloadfile', 'fileid' => $data[0]['fileId']));
+            $url = $data[0]['filepath'].$data[0]['storedname'];
             $this->objIcon->setIcon('fulltext');
             $this->objIcon->title = $lbDownload;
 
@@ -883,9 +970,6 @@ class management extends object
             // hidden fields
             $objInput = new textinput('id', $data[0]['id'], 'hidden');
             $hidden = $objInput->show();
-
-            $objInput = new textinput('fileId', $data[0]['fileId'], 'hidden');
-            $hidden .= $objInput->show();
         }
         $objInput = new textinput('submitId', $submitId, 'hidden');
         $hidden .= $objInput->show();
@@ -900,7 +984,7 @@ class management extends object
         $objButton->setToSubmit();
         $objTable->addRow(array('', $objButton->show()));
 
-        $objForm = new form('upload', $this->uri(array('action' => 'managesubmissions', 'mode' => 'uploaddoc', 'nextmode' => 'showresource')));
+        $objForm = new form('upload', $this->uri(array('action' => 'savesubmissions', 'mode' => 'uploaddoc', 'nextmode' => $nextMode)));
         $objForm->extra = 'enctype="multipart/form-data"';
         $objForm->addToForm($objTable->show());
         $objForm->addToForm($hidden);
@@ -908,7 +992,7 @@ class management extends object
         $str = $objForm->show();
 
 //        if($accessLevel == 'protected'){
-            $inputValue = 'public';
+//            $inputValue = 'public';
 //        }else{
 //            $btnSet = $btnUnSet;
 //            $lbDocHidden = $lbDocAvail;
@@ -983,26 +1067,33 @@ class management extends object
                 $this->setSession('submitId', $submitId);
                 return $submitId;
                 break;
+                
+            case 'approve':
+                $submitId = $this->getSession('submitId');
+                $this->approveResource($submitId);
+                break;
 
             case 'showresource':
-                $submitId = $this->getSession('submitId');
+                $submitId = $this->getParam('submitId');
                 if(!isset($submitId) || empty($submitId)){
-                    $submitId = $this->getParam('submitId');
+                    $submitId = $this->getSession('submitId');
+                }else{
                     $this->setSession('submitId', $submitId);
                 }
                 $data = $this->dbSubmissions->getSubmission($submitId);
                 return $this->showResource($data);
 
             case 'shownewresource':
-                $submitId = $this->getSession('submitId');
+                $submitId = $this->getParam('submitId');
                 if(!isset($submitId) || empty($submitId)){
-                    $submitId = $this->getParam('submitId');
+                    $submitId = $this->getSession('submitId');
+                }else{
                     $this->setSession('submitId', $submitId);
                 }
                 $xml = $this->xmlMetadata->openXML('etd_'.$submitId);
                 $dublin = $xml['metadata']['dublincore'];
                 $data = array_merge($dublin, $xml['metadata']['thesis']);
-                return $this->showResource($data, 'editnewresource', 'deletenewresource', '');
+                return $this->showResource($data, 'editnewresource', 'deletenewresource', '', 'shownewresource');
 
             case 'resources':
                 $this->unsetSession('submitId');
@@ -1010,9 +1101,10 @@ class management extends object
 
             case 'uploaddoc':
                 $submitId = $this->getSession('submitId');
-                return $this->files->uploadFile($submitId);
+                $id = $this->getParam('id');
+                $result = $this->files->uploadFile($submitId, $id);
+                $this->setSession('resourceMsg', $result);
                 break;
-
 
             case 'search':
                 $this->unsetSession('submitId');
@@ -1025,26 +1117,11 @@ class management extends object
                 }
                 return $str;
 
-
             default:
                 $this->unsetSession('submitId');
                 $data = $this->dbSubmissions->getNewSubmissions();
                 return $this->showSubmissions($data);
         }
     }
-/*
-            case 'uploaddoc':
-                $id = $this->getParam('id');
-                $submitId = $this->getSession('submitId');
-                $this->dbFiles->uploadFile($this->userId, 'document', $id);
-                break;
-
-            case 'setdoc':
-                $submitId = $this->getSession('submitId');
-                $access = $this->getParam('access');
-                return $this->dbSubmissions->changeAccess($submitId, $this->userId, $access);
-                break;
-
-    }*/
 }
 ?>

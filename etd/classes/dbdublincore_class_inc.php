@@ -29,13 +29,13 @@ class dbDublinCore extends object
     */
     public function init()
     {
-        $this->dbDublinCore =& $this->getObject('dublincore', 'dublincoremetadata');
-        $this->dbThesis =& $this->getObject('dbthesis', 'etd');
-//        $this->dbQualified =& $this->getObject('dbqualified', 'etd');
+        $this->dbDublinCore = $this->getObject('dublincore', 'dublincoremetadata');
+        $this->dbThesis = $this->getObject('dbthesis', 'etd');
+//        $this->dbQualified = $this->getObject('dbqualified', 'etd');
         $this->dcTable = $this->dbDublinCore->table;
         $this->thesisTable = $this->dbThesis->table;
 
-        $this->objUser =& $this->getObject('user', 'security');
+        $this->objUser = $this->getObject('user', 'security');
     }
 
     /**
@@ -148,7 +148,7 @@ class dbDublinCore extends object
     */
     public function deleteMetadata($id)
     {
-        $this->dbDublinCore->deletePermanently($id);
+        $this->dbDublinCore->deleteMetaData($id);
     }    
 }
 ?>
