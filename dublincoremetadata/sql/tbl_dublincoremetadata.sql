@@ -47,7 +47,7 @@ $fields = array(
 		'length' => 255
 		),
     'enterdate' => array(
-		'type' => 'date'
+		'type' => 'timestamp'
 		),
 	'oai_identifier' => array(
 		'type' => 'text',
@@ -65,16 +65,13 @@ $fields = array(
         'length' => 10
 		),
 	'dc_title' => array(
-		'type' => 'text',
-		'length' => 255
+		'type' => 'clob'
 		),
     'dc_subject' => array(
-		'type' => 'text',
-		'length' => 255
+		'type' => 'clob'
 		),
     'dc_description' => array(
-		'type' => 'text',
-		'length' => 255
+		'type' => 'clob'
 		),
     'dc_type' => array(
 		'type' => 'text',
