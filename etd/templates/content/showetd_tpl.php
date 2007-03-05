@@ -304,7 +304,7 @@ if(!empty($resource)){
 }
 
 // Set session for printing / emailing resource
-$this->setSession('resource', $resourceStr);
+$this->setSession('resource', $headStr.$resourceStr);
 
 $str = $objFeatureBox->showContent('<center>'.$headStr.'</center>', $resourceStr);
 

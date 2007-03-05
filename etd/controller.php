@@ -32,6 +32,14 @@ class etd extends controller
     public function init()
     {
         try{
+            // Set the permissions
+            $this->objGroup = $this->getObject('groupadminmodel', 'groupadmin');
+            $this->objUser = $this->getObject('user', 'security');
+            $this->userId = $this->objUser->userId();
+            $this->userPkId = $this->objUser->PKId();
+            $this->setGroupPermissions();
+            
+            // Create objects of the classes
             $this->etdTools = $this->getObject('etdtools', 'etd');
             $this->etdResource = $this->getObject('etdresource', 'etd');
             $this->etdFiles = $this->getObject('etdfiles', 'etd');
@@ -58,12 +66,7 @@ class etd extends controller
             $this->objFeeder = $this->newObject('feeder', 'feed');
             
             $this->loadClass('link', 'htmlelements');
-            
-            $this->objGroup = $this->getObject('groupadminmodel', 'groupadmin');
-            $this->objUser = $this->getObject('user', 'security');
-            $this->userId = $this->objUser->userId();
-            $this->userPkId = $this->objUser->PKId();
-            $this->setGroupPermissions();
+           
         }catch(Exception $e){
             throw customException($e->message());
             exit();
