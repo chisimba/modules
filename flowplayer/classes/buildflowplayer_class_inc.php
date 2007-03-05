@@ -195,7 +195,7 @@ class buildflowplayer extends object
     {
     	//die($this->objConfig->getValue('KEWL_SITE_ROOT'));
         return "<object type=\"application/x-shockwave-flash\" "
-          . "data=\"" . $this->objConfig->getsiteRoot(). "modules/flowplayer/resources/FlowPlayerLP.swf\" "
+          . "data=\"" . $this->getResourceUri('FlowPlayerLP.swf'). "\" "
           . "width=\"" . $this->width . "\" "
           . "height=\"" . $this->height . "\" "
           . "id=\"FlowPlayer\">\n";
@@ -224,7 +224,7 @@ class buildflowplayer extends object
             case "BASEURL":
                 return "    <param name = \"baseUrl\" "
                   //. "value = \"" . $this->baseUrl . "\" />\n";
-                  . "value = \"http://localhost/chisimba/modules/flowplayer/resources/\" />\n";
+                  . "value = \"".$this->getResourceUri()."\" />\n";
             case "NOVIDEOCLIP":
                 return "    <param name = \"noVideoClip\" "
                   . "value = \"" . $this->__getErrFile() . "\" />\n";
