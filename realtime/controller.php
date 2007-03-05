@@ -31,13 +31,50 @@ class realtime extends controller
 	// classes we need
 	$this->objUser = $this->newObject('user', 'security');
         $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objGroups = $this->getObject('groupadminmodel', 'groupadmin');
+
 
 	// The realtime class
 
 	// Get action from input parameter
 	$this->action = $this->getParam('action', NULL);
     }
+    public function getGroupID($groupName)
+    {
+     return $this->objGroups->getLeafId(array($this->contextcode, $groupName));
+    }
     
+    /**
+     * Method to assign the current user a level based on their highest group
+     *
+     * @param string $userName 
+     * @return string $userLevel
+     */
+    public function getUserLevel($userName)
+    {
+        // First, check for admin -- the most access
+        if ($this->objUser->isAdmin()) {
+            return "admin";
+        } else {
+            // Get userKey from PK, which needs user ID from username
+            $userid = $this->objUser->getUserId($userName);
+            $uKey = $this->objUser->PKId($userid);
+
+            // Check if lecturer first, then student
+            if ($this->objGroups->isGroupMember($uKey, $this->getGroupID("Lecturers")))
+	    {
+		return "lecturer";
+            } else if ($this->objGroups->isGroupMember($uKey, $this->getGroupID("Students") ))
+	    {
+		return "student";
+	    }
+        }
+
+	// if user is in no group, guest -- the least access
+        return "guest";
+    }
+
+
     /**
     * Method to process actions to be taken
     *
@@ -45,17 +82,17 @@ class realtime extends controller
 	*/
     function dispatch($action=Null)
     {
-	    $this->objLog->log();
-		$modUri = $this->objConfig->getItem('MODULE_URI');
+	$this->objLog->log();
+	$modUri = $this->objConfig->getItem('MODULE_URI');
+	$uName =  $this->objUser->userName();
 
 		if ($this->objUser->isLoggedIn())
 		{
-		   $this->setVar('userName', $this->objUser->userName());
-		   $this->setVar('userLevel', $this->objUser->userLevel());
+		   $this->setVar('userName', $uName);
 		} else {
 		   $this->setVar('userName', "Guest");
-		   $this->setVar('userLevel', "Guest");
 		}
+		$this->setVar('userLevel', $this->getUserLevel($uName));
 	
 		switch($action)
 		{
