@@ -14,31 +14,34 @@ if (!$GLOBALS['kewl_entry_point_run'])
 class block_formating extends object
 {
     /*
-    * @var object $objIcon The geticon class in the htmlelements module
+    * @var object $objIcon: The geticon class in the htmlelements module
     * @access private
     */
     private $objIcon;
 
     /*
-    * @var object $objLanguage The language class in the language module
+    * @var object $objLanguage: The language class in the language module
     * @access private
     */
     private $objLanguage;
 
     /*
-    * @var string $title The title of the block
+    * @var string $title: The title of the block
     * @access public
     */
     public $title;
 
     /*
-    * @var string $heading The heading of the block
-    * @access public
+    * @var string $heading: The heading of the block
+    * @access private
     */
-    public $heading;
+    private $heading;
 
     /**
     * Constructor for the class
+    *
+    * @access public
+    * @return
     */
     public function init()
     {
@@ -55,21 +58,27 @@ class block_formating extends object
         $label = $this->objLanguage->languageText('mod_messaging_formating', 'messaging');  
         $help = $this->objLanguage->languageText('mod_messaging_helpclick', 'messaging');
         
+        // help icon
         $this->objIcon->setIcon('help_small');
         $this->objIcon->align = 'top';
         $this->objIcon->title = $help;
         $this->objIcon->extra = ' onclick="alert(\''.$label.'\')"';
         $helpIcon = '<a href="#">'.$this->objIcon->show().'</a>';
         
+        // title
         $this->title = $this->heading.'&nbsp;'.$helpIcon;
         
     }
 
     /**
-    * Method to output a block with information on how help works
+    * Method to output a block with format codes
+    * 
+    * @access public
+    * @return string $str: The output string
     */
     public function show()
 	{
+        // main table
         $objTable = new htmltable();
         $objTable->cellspacing = '2';
         $objTable->cellpadding = '2';

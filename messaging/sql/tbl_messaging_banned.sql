@@ -18,6 +18,9 @@ $fields = array(
         'type' => 'text',
         'length' => 32,
         ),
+    'ban_reason' => array( // the reason the user is banned
+        'type' => 'clob',
+        ),
     'ban_type' => array( // tempory or indefinite ban
         'type' => 'integer',
         'length' => 1,

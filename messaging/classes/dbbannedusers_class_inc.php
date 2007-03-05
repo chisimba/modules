@@ -14,19 +14,19 @@ if(!$GLOBALS['kewl_entry_point_run']){
 class dbbannedusers extends dbTable
 {
     /**
-    * @var string $table The name of the database table to be affected
+    * @var string $table: The name of the main database table to be affected
     * @access private
     */
     private $table;
 
     /**
-    * @var object $objUser The user class of the security module
+    * @var object $objUser: The user class of the security module
     * @access private
     */
     private $objUser;
      
     /**
-    * @var string $userId The user id of the current logged in user
+    * @var string $userId: The user id of the current logged in user
     * @access private
     */
     private $userId;
@@ -42,6 +42,7 @@ class dbbannedusers extends dbTable
         parent::init('tbl_messaging_banned');
         $this->table = 'tbl_messaging_banned';
 
+        // system classes
         $this->objUser = $this->getObject('user', 'security');
         $this->userId = $this->objUser->userId(); 
     }
@@ -50,13 +51,14 @@ class dbbannedusers extends dbTable
     * Method to add a user to the banned user list
     *
     * @access public
-    * @param array $banData An array containing the banned user data
-    * @return string $bannedId The id of the banned user record
+    * @param array $banData: An array containing the banned user data
+    * @return string $bannedId: The id of the banned user record
     **/
     public function addUser($banData)
     {
         $fields['room_id'] = $banData['room_id'];
         $fields['user_id'] = $banData['user_id'];        
+        $fields['ban_reason'] = $banData['ban_reason'];        
         $fields['ban_type'] = $banData['ban_type'];
         if($banData['ban_type'] != 1){
             $fields['ban_start'] = date('Y-m-d H:i:s');        
@@ -73,11 +75,11 @@ class dbbannedusers extends dbTable
     }
 
     /**
-    * Method to return a user
+    * Method to return a banned user
     *
     * @access public
-    * @param string $bannedId  The id of the banned user record
-    * @return array $data The user data
+    * @param string $bannedId: The id of the banned user record
+    * @return array $data: The user data
     **/
     public function getUser($bannedId)
     {
@@ -91,10 +93,10 @@ class dbbannedusers extends dbTable
     }
 
     /**
-    * Method for deleting a chat room user
+    * Method for deleting a banned user record
     *
     * @access public
-    * @param string $bannedId  The id of the banned user record to be deleted
+    * @param string $bannedId: The id of the banned user record to be deleted
     * @return
     */
     public function deleteUser($bannedId)
@@ -103,10 +105,10 @@ class dbbannedusers extends dbTable
     }
     
     /**
-    * Method for deleting all banned chat room users
+    * Method for deleting all banned records for chat room
     *
     * @access public
-    * @param string $roomId  The id of the chat room to be deleted
+    * @param string $roomId: The id of the chat room to delete records from
     * @return
     */
     public function deleteUsers($roomId)
@@ -115,11 +117,11 @@ class dbbannedusers extends dbTable
     }
     
     /** 
-    * Method to list the users in the chat room the current user is in
+    * Method to list banned users of a chat room
     *
     * @access public
-    * @param array $roomId The id of the room to list banned users for
-    * @return array $data The chat room user list
+    * @param array $roomId: The id of the room to list banned users for
+    * @return array $data: The banned user list
     */
     public function listUsers($roomId)
     {
@@ -133,12 +135,12 @@ class dbbannedusers extends dbTable
     }
 
     /** 
-    * Method to check if a user is banned form a chat room
+    * Method to check if a user is banned from a chat room
     *
     * @access public
-    * @param array $userId The id of the user to check
-    * @param array $roomId The id of the chat room to check
-    * @return boolean TRUE if the user is banned from the chat room FALSE if not
+    * @param array $userId: The id of the user to check
+    * @param array $roomId: The id of the chat room to check
+    * @return array $data: The banned user data
     */
     public function isBanned($userId, $roomId)
     {

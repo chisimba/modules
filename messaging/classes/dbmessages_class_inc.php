@@ -1,5 +1,5 @@
 <?php
-/* ----------- data class extends dbTable for tbl_messaging ----------*/
+/* ----------- data class extends dbTable for tbl_messaging_messages ----------*/
 
 // security check - must be included in all scripts
 if(!$GLOBALS['kewl_entry_point_run']){
@@ -7,26 +7,26 @@ if(!$GLOBALS['kewl_entry_point_run']){
 }
 
 /**
-* Model class for the table tbl_messaging_rooms
+* Model class for the table tbl_messaging_messages
 * @author Kevin Cyster
 */
 
-class dbmessaging extends dbTable
+class dbmessages extends dbTable
 {
     /**
-    * @var string $table The name of the database table to be affected
+    * @var string $table: The name of the main database table to be affected
     * @access private
     */
     private $table;
 
     /**
-    * @var object $objUser The user class in the security module
+    * @var object $objUser: The user class in the security module
     * @access private
     */
     private $objUser;
 
     /**
-    * @var string $userId The user id of the current user
+    * @var string $userId: The user id of the current user
     * @access private
     */
     private $userId;
@@ -39,19 +39,21 @@ class dbmessaging extends dbTable
     */
     public function init()
     {
-        parent::init('tbl_messaging');
-        $this->table = 'tbl_messaging';
+        parent::init('tbl_messaging_messages');
+        $this->table = 'tbl_messaging_messages';
         
+        // system classes
         $this->objUser = $this->getObject('user', 'security');
         $this->userId = $this->objUser->userId();
     }
 
     /**
-    * Method to add a user to a chat room
+    * Method to add a chat message
     *
     * @access public
-    * @param string $message The chat message that is being sent
-    * @return string $messageId The id of the chat mesasge that was added
+    * @param string $message: The chat message that is being sent
+    * @param boolean $system: TRUE if the message is system generated FALSE if not
+    * @return string $messageId: The id of the chat mesasge that was added
     **/
     public function addChatMessage($message, $system = FALSE)
     {   
@@ -73,11 +75,12 @@ class dbmessaging extends dbTable
     }
 
     /**
-    * Method to return a chat messages that have not been displayed
+    * Method to return a chat room messages from a specific point
     *
     * @access public
-    * @param string $roomId The id of the room to get the data of
-    * @return array $data The chat room user data
+    * @param string $roomId: The id of the room to get the messages of
+    * @param string $counter: The position to get messaged from
+    * @return array $data: The chat room messages
     **/
     public function getChatMessages($roomId, $counter)
     {
@@ -96,12 +99,13 @@ class dbmessaging extends dbTable
     * Method to return the number of chat messages for the room
     *
     * @access public
-    * @param string $roomId The id of the room to get the data of
-    * @return string $messageCount
+    * @param string $roomId: The id of the room to count messages
+    * @return string $messageCount: The number of messages for the room
     **/
     public function getMessageCount($roomId)
     {
         $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE recipient_id = '".$roomId."'"
         $data = $this->getArray($sql);
         if(!empty($data)){
             return count($data);

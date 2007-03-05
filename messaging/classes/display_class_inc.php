@@ -92,10 +92,10 @@ class display extends object
     private $dbUserlog;
 
     /**
-    * @var object $dbMessaging: The dbmessaging class in the messaging module
+    * @var object $dbMessages: The dbmessages class in the messaging module
     * @access private
     */
-    private $dbMessaging;
+    private $dbMessages;
 
     /**
     * @var object $dbBanned: The dbbannedusers class in the messaging module
@@ -118,6 +118,7 @@ class display extends object
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('textarea', 'htmlelements');
         $this->loadClass('radio', 'htmlelements');
+        $this->loadClass('checkbox', 'htmlelements');
         $this->loadClass('dropdown', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
@@ -140,7 +141,7 @@ class display extends object
         $this->dbRooms = $this->getObject('dbrooms', 'messaging');
         $this->dbUsers = $this->getObject('dbusers', 'messaging');
         $this->dbUserlog = $this->getObject('dbuserlog', 'messaging');
-        $this->dbMessaging = $this->getObject('dbmessaging', 'messaging');
+        $this->dbMessages = $this->getObject('dbmessages', 'messaging');
         $this->dbBanned = $this->getObject('dbbannedusers', 'messaging');
     }
 
@@ -573,13 +574,13 @@ class display extends object
                 var url = "index.php";
                 var target = "chatDiv";
                 var pars = "module=messaging&action=getchat";
-                var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars, onComplete: chat_timer});
+                var myAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars, onComplete: chat_timer});
             }
 
             function chat_timer(){
                 var myDiv = document.getElementById("chatDiv");
                 myDiv.scrollTop = myDiv.scrollHeight
-                setTimeout("get_chat()", 1000);
+                setTimeout("get_chat()", 3000);
             }
             
             function send_chat(){
@@ -589,7 +590,7 @@ class display extends object
                     var url = "index.php";
                     var target = "input_message";
                     var pars = "module=messaging&action=sendchat&chat=" + msg.value;
-                    var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars});                
+                    var myAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars});                
                     msg.value = "";
                 }                
                 msg.focus();
@@ -672,16 +673,14 @@ class display extends object
     * Method to create the active users list
     * 
     * @access public
-    * @param boolean $isModerator 1 if the current user is a moderator 0 if not
     * @return string $str The template output string
     */
-    public function getUsers($isModerator)
+    public function getUsers()
     {
         // language items
         $activeLabel = $this->objLanguage->languageText('mod_messaging_active', 'messaging');
         $banLabel = $this->objLanguage->languageText('mod_messaging_ban', 'messaging');
         $unbanLabel = $this->objLanguage->languageText('mod_messaging_unban', 'messaging');
-        $bannedLabel = $this->objLanguage->languageText('mod_messaging_banned', 'messaging');
         $indefLabel = $this->objLanguage->languageText('mod_messaging_banindef', 'messaging');
         
         // get data
@@ -696,118 +695,79 @@ class display extends object
         $objTable = new htmltable();
         $objTable->cellspacing = '2';
         $objTable->cellpadding = '2';
-        foreach($users as $user){
-            $name = $this->objUser->fullname($user['user_id']);
-            $isBanned = FALSE;
-            $tempBan = FALSE;
-            if($bannedUsers != FALSE){
-                foreach($bannedUsers as $key=>$bannedUser){
-                    if($user['user_id'] == $bannedUser['user_id']){
-                        if($bannedUser['user_id'] == $this->userId){
-                            $banned = 'Y';
-                            $userId = $this->userId;
+        if($users != FALSE){
+            foreach($users as $user){
+                $name = $this->objUser->fullname($user['user_id']);
+                $isBanned = FALSE;
+                $tempBan = FALSE;
+                if($bannedUsers != FALSE){
+                    foreach($bannedUsers as $key=>$bannedUser){
+                        if($user['user_id'] == $bannedUser['user_id']){
+                            if($bannedUser['user_id'] == $this->userId){
+                                $banned = 'Y';
+                                $userId = $this->userId;
+                            }
+                            $isBanned = TRUE;
+                            $bannedId = $bannedUser['id'];
+                            if($bannedUser['ban_type'] != 1){
+                                $tempBan = TRUE;
+                            }   
                         }
-                        $isBanned = TRUE;
-                        $bannedId = $bannedUser['id'];
-                        if($bannedUser['ban_type'] != 1){
-                            $tempBan = TRUE;
-                        }   
                     }
                 }
-            }
-            if($isBanned){
-                if($tempBan){
-                    $dateNow = strtotime(date('Y-m-d H:i:s'));
-                    $banStop = strtotime($bannedUser['ban_stop']);
-                    if($dateNow >= $banStop){
-                        $this->dbBanned->deleteUser($bannedUser['id']);
-                        $array = array(
-                            'user' => $this->objUser->fullname($bannedUser['user_id'])
+                if($isBanned){
+                    if($tempBan){
+                        $dateNow = strtotime(date('Y-m-d H:i:s'));
+                        $banStop = strtotime($bannedUser['ban_stop']);
+                        if($dateNow >= $banStop){
+                            $this->dbBanned->deleteUser($bannedUser['id']);
+                            $array = array(
+                                'user' => $this->objUser->fullname($bannedUser['user_id'])
+                          );
+                            $message = $this->objLanguage->code2Txt('mod_messaging_unbantempmsg', 'messaging', $array);                    
+                            $this->dbMessages->addChatMessage($message, TRUE);             
+                        }
+                        $date = $this->objDatetime->formatDate($bannedUser['ban_stop']);    
+                       $array = array(
+                            'date' => $date,
                         );
-                        $message = $this->objLanguage->code2Txt('mod_messaging_unbantempmsg', 'messaging', $array);                    
-                        $this->dbMessaging->addChatMessage($message, TRUE);             
-                    }
-                    $date = $this->objDatetime->formatDate($bannedUser['ban_stop']);
-                    $array = array(
-                        'date' => $date,
-                    );
-                    $bannedLabel = $this->objLanguage->code2Txt(
-                    'mod_messaging_bantemp', 'messaging', $array);
+                        $bannedLabel = $this->objLanguage->code2Txt('mod_messaging_bantemp', 'messaging', $array);
 
-                    $this->objIcon->setIcon('failed');
-                    $this->objIcon->title = $bannedLabel;
-                    $icon = $this->objIcon->show();
-                    
-                    $nameLink = $name;                    
-               }else{
-                    if($isModerator == 1){
-                        $this->objIcon->title = $indefLabel;
-                        $this->objIcon->extra = '';
                         $this->objIcon->setIcon('failed');
+                        $this->objIcon->title = $bannedLabel;
                         $icon = $this->objIcon->show();
-                        
-                        $objLink = new link('#');
-                        $objLink->link = $name;
-                        $objLink->title = $unbanLabel;
-                        $objLink->extra = ' onclick="javascript:
-                            unban_user(\''.$bannedId.'\')"';
-                        $nameLink = $objLink->show();
-                    }else{
+                   }else{
                         $this->objIcon->title = $indefLabel;
                         $this->objIcon->setIcon('failed');
                         $this->objIcon->extra = '';
                         $icon = $this->objIcon->show();
-                        
-                        $nameLink = $name;                        
                     }
-                }
-            }else{
-                if($isModerator == 1 && $user['user_id'] != $this->userId){
-                    $this->objIcon->title = $activeLabel;
-                    $this->objIcon->setIcon('ok');
-                    $this->objIcon->extra = '';
-                    $icon = $this->objIcon->show();
-
-                    $objPopup = new windowpop();
-                    $objPopup->title = $banLabel;
-                    $objPopup->set('location',$this->uri(array(
-                        'action' => 'banpopup',
-                        'userId' => $user['user_id'],
-                    )));
-                    $objPopup->set('linktext', $name);
-                    $objPopup->set('width', '500');
-                    $objPopup->set('height', '350');
-                    $objPopup->set('left', '100');
-                    $objPopup->set('top', '100');
-                    $objPopup->set('scrollbars', 'no');
-                    $objPopup->putJs(); // you only need to do this once per page
-                    $nameLink = $objPopup->show();
                 }else{
                     $this->objIcon->title = $activeLabel;
                     $this->objIcon->setIcon('ok');
                     $this->objIcon->extra = '';
                     $icon = $this->objIcon->show();
-                    
-                    $nameLink = $name;                    
                 }
+                $objTable->startRow();
+                $objTable->addCell($name, '', '', '', '', '');
+                $objTable->addCell($icon, '', '', '', '', '');
+                $objTable->endRow();
             }
+            $objInput = new textinput('banned', $banned, 'hidden');
+            $bannedInput = $objInput->show();
+
+            $objInput = new textinput('userId', $userId, 'hidden');
+            $userIdInput = $objInput->show();
+
             $objTable->startRow();
-            $objTable->addCell($nameLink, '', '', '', '', '');
-            $objTable->addCell($icon, '', '', '', '', '');
+            $objTable->addCell($bannedInput.$userIdInput, '', '', '', '', '');
             $objTable->endRow();
-        }
-        $objInput = new textinput('banned', $banned, 'hidden');
-        $bannedInput = $objInput->show();
-
-        $objInput = new textinput('userId', $userId, 'hidden');
-        $userIdInput = $objInput->show();
-
-        $objTable->startRow();
-        $objTable->addCell($bannedInput.$userIdInput, '', '', '', '', '');
-        $objTable->endRow();
             
-        $str = $objTable->show();
-        echo $str;
+            $str = $objTable->show();
+            echo $str;
+        }else{
+            echo '';
+        }
     }
     
     /**
@@ -951,7 +911,7 @@ class display extends object
         // get data
         $roomId = $this->getSession('chat_room_id');
         $counter = $this->getSession('message_counter');
-        $messages = $this->dbMessaging->getChatMessages($roomId, $counter);
+        $messages = $this->dbMessages->getChatMessages($roomId, $counter);
         
         $str = '';
         if($messages != FALSE){
@@ -976,24 +936,110 @@ class display extends object
     }    
 
     /**
-    * Method to create the content for the banned user opopup
+    * Method to create the content for the banned user popup
     * 
     * @access public
-    * @param string $userId The userId of the user to be banned
     * @return string The template output string
     */
-    public function banPopup($userId)
+    public function banPopup()
     {
+         $style = '<style type="text/css">
+            div.autocomplete {
+                position:absolute;
+                background-color:white;
+            }    
+            div.autocomplete ul {
+                list-style-type:none;
+                margin:0px;
+                padding:0px;
+            }    
+            div.autocomplete ul li.selected {
+                border:1px solid #888;
+                background-color: #ffb;
+            }
+            div.autocomplete ul li {
+                border:1px solid #888;
+                list-style-type:none;
+                display:block;
+                margin:0;
+                cursor:pointer;
+            }
+        </style>';
+        $str = $style;
+
+        $script = '<script type="text/javaScript">
+            function users()
+            {        
+                var myRadio = document.getElementsByName("option");
+                var len = myRadio.length;
+                var myValue = "";
+                for(var i = 0; i <= len-1; i++){
+                    if(myRadio[i].checked){
+                        myValue = myRadio[i].value;
+                    }
+                }
+                var pars = "module=messaging&action=listusers&option="+myValue;
+                new Ajax.Autocompleter("input_username", "userDiv", "index.php", {parameters: pars});
+            }
+        </script>';
+        $str .= $script;
+
         // language items
+        $errLabel = $this->objLanguage->languageText('mod_messaging_errban', 'messaging');
+        $banLabel = $this->objLanguage->languageText('mod_messaging_ban', 'messaging');
+        $userLabel = $this->objLanguage->languageText('mod_messaging_worduser', 'messaging');
         $typeLabel = $this->objLanguage->languageText('mod_messaging_bantype', 'messaging');
         $tempLabel = $this->objLanguage->languageText('mod_messaging_temp', 'messaging');
         $indefLabel = $this->objLanguage->languageText('mod_messaging_indefinitely', 'messaging');
         $lengthLabel = $this->objLanguage->languageText('mod_messaging_banlength', 'messaging');
         $submitLabel = $this->objLanguage->languageText('mod_messaging_wordsubmit', 'messaging');
         $cancelLabel = $this->objLanguage->languageText('mod_messaging_wordcancel', 'messaging');
+        $nameLabel = $this->objLanguage->languageText('mod_messaging_firstname', 'messaging');
+        $surnameLabel = $this->objLanguage->languageText('mod_messaging_surname', 'messaging');
                 
+        $objHeader = new htmlheading();
+        $objHeader->str = $banLabel;
+        $objHeader->type = 1;
+        $heading = $objHeader->show();
+
         // get data
         $roomId = $this->getSession('chat_room_id');
+        
+        $objRadio = new radio('option');
+        $objRadio->addOption('firstname', '&nbsp;'.$nameLabel);
+        $objRadio->addOption('surname', '&nbsp;'.$surnameLabel);
+        $objRadio->setSelected('firstname');
+        $objRadio->extra = ' onchange="javascript:
+            var myInput = document.getElementById(\'input_username\');
+            myInput.value = \'\';
+            myInput.focus();"';
+        $choiceRadio = $objRadio->show();
+        
+        $objInput = new textinput('username', '', '', 50);
+        $objInput->extra = ' onkeyup="javascript:
+            users()"';
+        $userInput = $objInput->show();
+        
+        $objInput = new textinput('userId', '', 'hidden', '');
+        $userIdInput = $objInput->show();
+        
+        $objLayer = new layer();
+        $objLayer->id = 'userDiv';
+        $objLayer->cssClass = 'autocomplete';
+        $userDiv = $objLayer->show();
+        
+        $objTable = new htmltable();
+        $objTable->cellspacing = '2';
+        $objTable->cellpadding = '2';
+        $objTable->startRow();
+        $objTable->addCell($choiceRadio);
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($userInput.$userDiv.$userIdInput);
+        $objTable->endRow();
+        $userTable = $objTable->show();
+        
+        $userFeature = $this->objFeaturebox->show($userLabel, $userTable);
         
         $objRadio = new radio('type');
         $objRadio->addOption(0, '&nbsp;'.$tempLabel);
@@ -1012,11 +1058,6 @@ class display extends object
         $typeRadio = $objRadio->show();
         
         $typeFeature = $this->objFeaturebox->show($typeLabel, $typeRadio);
-        
-        $objLayer = new layer();
-        $objLayer->id = 'typeDiv';
-        $objLayer->addToStr($typeFeature);
-        $typeDiv = $objLayer->show();
         
         $objDrop = new dropdown('length');
         $objDrop->addOption(1, '&nbsp;1 min');
@@ -1038,8 +1079,13 @@ class display extends object
         
         $objButton = new button('send', $submitLabel);
         $objButton->extra = ' onclick="javascript:
-            var myForm = document.getElementById(\'form_ban\');
-            myForm.submit();"';
+            var el = document.getElementById(\'input_userId\');
+            if(el.value == \'\'){
+                alert(\''.$errLabel.'\');
+                return false;
+            }else{
+                document.getElementById(\'form_ban\').submit();
+            }"';
         $sendButton = $objButton->show();
         
         $objButton = new button('cancel', $cancelLabel);
@@ -1054,9 +1100,9 @@ class display extends object
         $objForm = new form('ban', $this->uri(array(
             'action' => 'banuser',
             'roomId' => $roomId,
-            'userId' => $userId,
             )));
-        $objForm->addToForm($typeDiv);
+        $objForm->addToForm($userFeature);
+        $objForm->addToForm($typeFeature);
         $objForm->addToForm($lengthDiv);
         $objForm->addToForm($buttonDiv);
         $banForm = $objForm->show();
@@ -1064,13 +1110,64 @@ class display extends object
         $objLayer = new layer();
         $objLayer->id = 'formDiv';
         $objLayer->padding = '10px';
-        $objLayer->addToStr($banForm);
+        $objLayer->addToStr($heading.$banForm);
         $formDiv = $objLayer->show();
-        $str = $formDiv;
+        $str .= $formDiv;
         
         return $str;
     }    
     
+    /**
+    * Method to show the list of users in the chat room
+    *
+    * @access public
+    * @param string $option: The field to search
+    * @param string $value: The value to search for
+    * @return string $str: The output string
+    */
+    public function listUsers($option, $value)
+    {
+        // get data
+        $roomId = $this->getSession('chat_room_id');
+        $contextcode = $this->getSession('contextCode');
+        $roomData = $this->dbRooms->getRoom($roomId);
+        $userList = $this->dbUserlog->searchUsers($roomId, $option, $value);
+        // language items
+        $noMatchLabel = $this->objLanguage->languageText('mod_messaging_nomatch', 'messaging');
+        
+        foreach($userList as $user){
+            $this->moderator = FALSE;
+            if($roomData['room_type'] == 0){
+                $isAdmin = $this->objUser->inAdminGroup($user['user_id']);
+                if($isAdmin){
+                    $this->moderator = TRUE;
+                }
+            }elseif($roomData['room_type'] == 1){
+                if($roomData['owner_id'] == $user['user_id']){
+                    $this->moderator = TRUE;
+                }
+            }elseif($roomData['room_type'] == 2){
+                $isLecturer = $this->objUser->isContextLecturer($user['user_id'], $contextCode);
+                if($isLecturer){
+                    $this->moderator = TRUE;
+                }
+            }elseif($roomData['room_type'] == 3){
+                //to do once workgroups is ported
+            }
+        }                    
+        if(isset($user['ban_type']) == FALSE && $this->moderator == FALSE){
+            $str = '<ul>';
+            $str .= '<li onclick="javascript:
+                document.getElementById(\'input_userId\').value=\''.$user['user_id'].'\'"><strong>';
+            $str .= $this->objUser->fullname($user['user_id']);
+            $str .= '</strong></li>';
+            $str .= '</ul>';            
+        }else{
+            $str = '<ul><li><strong>'.$noMatchLabel.'</strong></li></ul>';    
+        }
+        echo $str;        
+    }
+
     /**
     * Method to show the banned message div
     * 
@@ -1101,5 +1198,258 @@ class display extends object
         }
         echo $str;        
     }
+
+    /**
+    * Method to show the confirmed banned message
+    * 
+    * @access public
+    * @param string $banType: The type of ban selected
+    * @param string $userId: The id of the user banned
+    * @return string $str: The output string
+    */
+    public function confirmBan($banType, $userId)
+    {
+        // language items
+        $array = array(
+            'name' => $this->objUser->fullname($userId),
+        );        
+        $tempLabel = $this->objLanguage->code2Txt('mod_messaging_confirmtemp', 'messaging', $array);
+        $indefLabel = $this->objLanguage->code2Txt('mod_messaging_confirmindef', 'messaging', $array);
+        $closeLabel = $this->objLanguage->languageText('mod_messaging_wordclose', 'messaging');
+        $titleLabel = $this->objLanguage->languageText('mod_messaging_closetitle', 'messaging');
+        
+        $objHeader = new htmlheading();
+        if($banType == 1){
+            $objHeader->str = $indefLabel;
+        }else{
+            $objHeader->str = $tempLabel;
+        }
+        $objHeader->type = 3;
+        $heading = $objHeader->show();
+        $string = $heading;
+        
+        $objLink = new link('javascript:window.close()');
+        $objLink->title = $titleLabel;
+        $objLink->link = $closeLabel;
+        $closeLink = $objLink->show();
+
+        $objTable = new htmltable();
+        $objTable->cellspacing = '2';
+        $objTable->cellpadding = '2';
+        $objTable->startRow();
+        $objTable->addCell($closeLink, '', '', 'center', '', '');
+        $objTable->endRow();
+        $linkTable = $objTable->show();    
+        $string .= $linkTable;
+        
+        $objLayer = new layer();
+        $objLayer->addToStr($string);
+        $objLayer->padding = '10px';
+        $str = $objLayer->show();
+        
+        return $str;        
+    }
+    
+    /**
+    * Method to create the content for the unban user popup
+    * 
+    * @access public
+    * @return string The template output string
+    */
+    public function unbanPopup()
+    {
+        $headerParams = $this->getJavascriptFile('selectall.js', 'htmlelements');
+        $this->appendArrayVar('headerParams', $headerParams);
+        $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
+        $this->appendArrayVar('headerParams', $headerParams);
+
+        // language items
+        $unbanLabel = $this->objLanguage->languageText('mod_messaging_unban', 'messaging');
+        $noRecordsLabel = $this->objLanguage->languageText('mod_messaging_norecords', 'messaging');
+        $nameLabel = $this->objLanguage->languageText('mod_messaging_firstname', 'messaging');
+        $surnameLabel = $this->objLanguage->languageText('mod_messaging_surname', 'messaging');
+        $selectLabel = $this->objLanguage->languageText('mod_messaging_selectall', 'messaging');
+        $deselectLabel = $this->objLanguage->languageText('mod_messaging_deselectall', 'messaging');
+        $selectTitleLabel = $this->objLanguage->languageText('mod_messaging_selectalltitle', 'messaging');
+        $deselectTitleLabel = $this->objLanguage->languageText('mod_messaging_deselectalltitle', 'messaging');
+        $errLabel = $this->objLanguage->languageText('mod_messaging_errunban', 'messaging');
+        $submitLabel = $this->objLanguage->languageText('mod_messaging_wordsubmit', 'messaging');
+        $cancelLabel = $this->objLanguage->languageText('mod_messaging_wordcancel', 'messaging');
+        
+        // heading
+        $objHeader = new htmlheading();
+        $objHeader->str = $unbanLabel;
+        $objHeader->type = 1;
+        $heading = $objHeader->show();
+        $string = $heading;
+        
+        // get data
+        $roomId = $this->getSession('chat_room_id');
+        $bannedUsers = $this->dbBanned->listUsers($roomId);
+        
+        if($bannedUsers != FALSE){
+            foreach($bannedUsers as $key=>$user){
+                if($user['ban_type'] != 1){
+                    unset($bannedUsers[$key]);
+                }
+            }
+        }
+        $bannedUsers = count($bannedUsers) >= 1 ? $bannedUsers : FALSE;
+        
+        if($bannedUsers != FALSE){
+            $objTable = new htmltable();
+            $objTable->cellspacing = 2;
+            $objTable->cellpadding = 2;
+            
+            $objLink = new link('javascript:
+    SetAllCheckBoxes(\'unban\',\'userId[]\',true);');
+            $objLink->link = $selectLabel;
+            $objLink->title = $selectTitleLabel;
+            $selectLink = $objLink->show();
+            
+            $objLink = new link('javascript:
+    SetAllCheckBoxes(\'unban\',\'userId[]\',false);');
+            $objLink->link = $deselectLabel;
+            $objLink->title = $deselectTitleLabel;
+            $deselectLink = $objLink->show();
+
+            $links = $selectLink.'&nbsp;|&nbsp;'.$deselectLink;
+            $objTable->startRow();
+            $objTable->addCell($links, '', '', 'center', '', 'colspan="3"');
+            $objTable->endRow();
+            $linksTable = $objTable->show();
+            $string .= $linksTable;
+        }
+        
+        $objTable = new htmltable();
+        $objTable->cellpadding = 4;
+        $objTable->id = 'userList';
+        $objTable->css_class = 'sorttable';
+        $objTable->row_attributes = 'name="row_'.$objTable->id.'"';
+        $objTable->startRow();
+        $objTable->addCell('', '10%', '', '', 'heading', '');
+        $objTable->addCell($nameLabel, '45%', '', '', 'heading', '');
+        $objTable->addCell($surnameLabel, '', '', '', 'heading', '');
+        $objTable->endRow();
+        
+        if($bannedUsers == FALSE){
+            $objTable->startRow();
+            $objTable->addCell($noRecordsLabel, '', '', '', 'noRecordsMessage', 'colspan="3"');
+            $objTable->endRow();
+        }else{
+            foreach($bannedUsers as $user){
+                $userId = $user['user_id'];
+                $name = $this->objUser->getFirstname($user['user_id']);
+                $surname = $this->objUser->getSurname($user['user_id']);
+                $banType = $user['ban_type'];
+                
+                $objCheck = new checkbox('userId[]');
+                $objCheck->setValue($userId);
+                $userIdCheck = $objCheck->show();
+                
+                if($banType == 1){
+                    $objTable->startRow();
+                    $objTable->addCell($userIdCheck, '10%', '', 'center', '', '');
+                    $objTable->addCell($name, '45%', '', '', '', '');
+                    $objTable->addCell($surname, '', '', '', '', '');
+                    $objTable->endRow();
+                }
+            }
+        }
+        $usersTable = $objTable->show();
+
+        $objButton = new button('send', $submitLabel);
+        $objButton->extra = ' onclick="javascript:
+            var elChk = document.getElementsByName(\'userId[]\');
+            var elChkValue = false;
+            for(var i = 0; i &lt; elChk.length; i++){
+                if(elChk[i].checked == true){
+                    elChkValue = true;
+                }
+            }
+            if(elChkValue){
+                document.getElementById(\'form_unban\').submit();
+            }else{
+                alert(\''.$errLabel.'\');
+            }"';
+        $sendButton = $objButton->show();
+        
+        $objButton = new button('cancel', $cancelLabel);
+        $objButton->extra = ' onclick="javascript:window.close()"';
+        $cancelButton = $objButton->show();
+        
+        $objForm = new form('unban', $this->uri(array(
+            'action' => 'unbanusers',
+        )));
+        $objForm->addToForm($usersTable);
+        $objForm->addToForm('<br />'.$sendButton.'&nbsp;'.$cancelButton);
+        $unbanForm = $objForm->show();
+        $string .= $unbanForm;
+        
+        $objLayer = new layer();
+        $objLayer->padding = '10px';
+        $objLayer->addToStr($string);
+        $str = $objLayer->show();
+        
+        return $str;        
+    }
+
+    /**
+    * Method to show the confirmed unbanned message
+    * 
+    * @access public
+    * @param string $users: The list of users unbanned
+    * @return string $str: The output string
+    */
+    public function confirmUnban($users)
+    {
+        // get data
+        $usersList = explode('|', $users);
+        
+        // language items
+        $singleLabel = $this->objLanguage->code2Txt('mod_messaging_confirmunban1', 'messaging');
+        $multipleLabel = $this->objLanguage->code2Txt('mod_messaging_confirmunban2', 'messaging');
+        $closeLabel = $this->objLanguage->languageText('mod_messaging_wordclose', 'messaging');
+        $titleLabel = $this->objLanguage->languageText('mod_messaging_closetitle', 'messaging');
+        
+        $objHeader = new htmlheading();
+        if(count($usersList) > 1){
+            $objHeader->str = $multipleLabel;
+        }else{
+            $objHeader->str = $singleLabel;
+        }
+        $objHeader->type = 3;
+        $heading = $objHeader->show();
+        $string = $heading;
+        
+        $objLink = new link('javascript:window.close()');
+        $objLink->title = $titleLabel;
+        $objLink->link = $closeLabel;
+        $closeLink = $objLink->show();
+
+        $objTable = new htmltable();
+        $objTable->cellspacing = '2';
+        $objTable->cellpadding = '2';
+        foreach($usersList as $user){
+            $name = $this->objUser->fullname($user);
+            
+            $objTable->startRow();
+            $objTable->addCell($name, '', '', '', '', '');
+            $objTable->endRow();
+        }
+        $objTable->startRow();
+        $objTable->addCell($closeLink, '', '', 'center', '', '');
+        $objTable->endRow();
+        $linkTable = $objTable->show();    
+        $string .= $linkTable;
+        
+        $objLayer = new layer();
+        $objLayer->addToStr($string);
+        $objLayer->padding = '10px';
+        $str = $objLayer->show();
+        
+        return $str;        
+    }
+    
 }
 ?>

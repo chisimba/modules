@@ -1,6 +1,6 @@
 <?php
 //5ive definition
-$tablename = 'tbl_messaging';
+$tablename = 'tbl_messaging_messsges';
 
 //Options line for comments, encoding and character set
 $options = array('comment' => 'The main messaging table, holds all message details', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
@@ -42,7 +42,7 @@ $fields = array(
     );
 
 // create other indexes here...
-$name = 'tbl_messaging_index';
+$name = 'tbl_messaging_messages_index';
 
 $indexes = array(
                 'fields' => array(

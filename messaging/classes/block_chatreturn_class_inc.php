@@ -27,6 +27,9 @@ class block_chatreturn extends object
 
     /**
     * Constructor for the class
+    *
+    * @access public
+    * @return
     */
     public function init()
     {
@@ -39,13 +42,18 @@ class block_chatreturn extends object
     }
 
     /**
-    * Method to output a block with information on how help works
+    * Method to output a block with the exit link
+    *
+    * @access public
+    * @return string $str: The output string
     */
     public function show()
 	{
+        // language items
         $returnLabel = $this->objLanguage->languageText('mod_messaginge_return', 'messaging');  
         $returnTitleLabel = $this->objLanguage->languageText('mod_messaginge_returntitle', 'messaging');  
                       
+        // the exit link
         $objLink = new link($this->uri(array(
             'action' => 'leaveroom',
         ), 'messaging'));
@@ -53,6 +61,7 @@ class block_chatreturn extends object
         $objLink->title = $returnTitleLabel;
         $backLink = $objLink->show();
          
+        // main table
         $objTable = new htmltable();
         $objTable->cellspaccing = '2';
         $objTable->cellpadding = '2';

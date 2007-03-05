@@ -7,38 +7,41 @@ if (!$GLOBALS['kewl_entry_point_run'])
 // end security check
 
 /**
-* The class to display a block for smileys
+* The class to display a block for smiley icons
 *
 * @author Kevin Cyster
 */
 class block_smileys extends object
 {
     /*
-    * @var object $objIcon The geticon class in the htmlelements module
+    * @var object $objIcon: The geticon class in the htmlelements module
     * @access private
     */
     private $objIcon;
 
     /*
-    * @var object $objLanguage The language class in the language module
+    * @var object $objLanguage: The language class in the language module
     * @access private
     */
     private $objLanguage;
 
     /*
-    * @var string $title The title of the block
+    * @var string $title: The title of the block
     * @access public
     */
     public $title;
 
     /*
-    * @var array $shortList An associated array containg the smileys name and code
-    * @access static
+    * @var array $shortList: An associated array containg the smileys name and code
+    * @access private
     */
-    public $shortList;
+    private $shortList;
     
     /**
     * Constructor for the class
+    *
+    * @access public
+    * @return
     */
     public function init()
     {
@@ -55,14 +58,17 @@ class block_smileys extends object
         $label = $this->objLanguage->languageText('mod_messaging_smileys', 'messaging');  
         $help = $this->objLanguage->languageText('mod_messaging_helpclick', 'messaging');
         
+        // help icon
         $this->objIcon->setIcon('help_small');
         $this->objIcon->align = 'top';
         $this->objIcon->title = $help;
         $this->objIcon->extra = ' onclick="alert(\''.$label.'\')"';
         $helpIcon = '<a href="#">'.$this->objIcon->show().'</a>';
         
+        // title
         $this->title = $title.'&nbsp;'.$helpIcon;        
 
+        // smiley icon array
         $this->shortList = array(
             'angry' => '[ >:-( ]',
             'cool' => '[ B-) ]',
@@ -78,10 +84,14 @@ class block_smileys extends object
     }
 
     /**
-    * Method to output a block with information on how help works
+    * Method to output a block with smiley icons
+    *
+    * @access public
+    * @return string $str: The output string
     */
     public function show()
 	{
+        // javascript
         $script = '<script type="text/javaScript">
             var namelist = new Array("angry", "cool", "evil", "exclamation", "big_grin", "question", "raspberry", "sad", "smile", "wink");
             
@@ -104,9 +114,11 @@ class block_smileys extends object
         </script>';
         echo $script;
 
+        // language items
         $moreLabel = $this->objLanguage->languageText('mod_messaging_wordmore', 'messaging');
         $moreTitleLabel = $this->objLanguage->languageText('mod_messaging_smileytitle', 'messaging');
         
+        // popup link for more smiley icons
         $objPopup = new windowpop();
         $objPopup->title = $moreTitleLabel;
         $objPopup->set('location',$this->uri(array(
@@ -121,6 +133,7 @@ class block_smileys extends object
         $objPopup->putJs(); // you only need to do this once per page
         $morePopup = $objPopup->show();
 
+        // main table
         $objTable = new htmltable();
         $objTable->cellspacing = '2';
         $objTable->cellpadding = '2';

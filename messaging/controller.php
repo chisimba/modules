@@ -63,7 +63,7 @@ class messaging extends controller
 
     /**
     * @var object $objDisplay: The display class in the messaging module
-    * @access private
+    * @access protected
     */
     protected $objDisplay;
 
@@ -92,10 +92,10 @@ class messaging extends controller
     private $dbBanned;
 
     /**
-    * @var object $dbMessaging: The dbmessaging database class in the messaging module
+    * @var object $dbMessages: The dbmessages database class in the messaging module
     * @access private
     */
-    public $dbMessaging;
+    public $dbMessages;
 
     /**
     * @var object $objDatetime: The datetime class in the utilities module
@@ -136,7 +136,7 @@ class messaging extends controller
         $this->dbUsers = $this->getObject('dbusers', 'messaging');
         $this->dbUserlog = $this->getObject('dbuserlog', 'messaging');
         $this->dbBanned = $this->getObject('dbbannedusers', 'messaging');
-        $this->dbMessaging = $this->getObject('dbmessaging', 'messaging');
+        $this->dbMessages = $this->getObject('dbmessages', 'messaging');
     }
 
     /**
@@ -151,6 +151,7 @@ class messaging extends controller
     {
         // Now the main switch statement to pass values for $action
         switch($action){
+            // display a list of chat rooms
             case 'roomlist':
                 $templateContent = $this->objDisplay->roomList();
                 $this->setVarByRef('templateContent', $templateContent);
@@ -158,6 +159,7 @@ class messaging extends controller
                 return 'template_tpl.php';
                 break;
                 
+            // create a chat room
             case 'addroom':
                 $templateContent = $this->objDisplay->addRoom();
                 $this->setVarByRef('templateContent', $templateContent);
@@ -165,6 +167,7 @@ class messaging extends controller
                 return 'template_tpl.php';
                 break;
                 
+            // edit a chat room
             case 'editroom':
                 $roomId = $this->getParam('roomId');
                 $templateContent = $this->objDisplay->addRoom('edit', $roomId);
@@ -173,6 +176,7 @@ class messaging extends controller
                 return 'template_tpl.php';
                 break;
                 
+            // submit chat room data
             case 'submitroom':
                 $button = $this->getParam('button');
                 if($button == 'cancel'){
@@ -218,6 +222,7 @@ class messaging extends controller
                 return $this->nextAction('');
                 break;
                 
+            // delete a chat room
             case 'deleteroom':
                 $roomId = $this->getParam('roomId');
                 $this->dbRooms->deleteRoom($roomId);
@@ -227,6 +232,7 @@ class messaging extends controller
                 return $this->nextAction('');
                 break;
                 
+            // display the chat room description if the description is truncated
             case 'readmore':
                 $roomId = $this->getParam('room_id');
                 $templateContent = $this->objDisplay->readMore($roomId);
@@ -235,29 +241,31 @@ class messaging extends controller
                 return 'template_tpl.php';
                 break;
                 
+            // display the chat room page when entering the chat room
             case 'enterroom':
                 $roomId = $this->getParam('roomId');
                 $this->setSession('chat_room_id', $roomId);
                 $this->dbUserlog->addUser($roomId, $this->userId);
                 $roomData = $this->dbRooms->getRoom($roomId);
-                $counter = $this->dbMessaging->getMessageCount($roomId);
+                $counter = $this->dbMessages->getMessageCount($roomId);
                 $this->setSession('message_counter', $counter);
                 $array = array(
                     'name' => $this->name,
                 );
                 $message = $this->objLanguage->code2Txt('mod_messaging_userenter', 'messaging', $array);
-                $this->dbMessaging->addChatMessage($message, TRUE);
+                $this->dbMessages->addChatMessage($message, TRUE);
                 $templateContent = $this->objDisplay->chatRoom($roomData);
                 $this->setVarByRef('templateContent', $templateContent);
                 if($roomData['text_only'] != 1){
                     $this->setVar('mode', 'room');
-                    $this->setVar('script', TRUE);
                 }else{
                     $this->setVar('mode', 'textroom');
                 }
+                $this->setVar('scriptaculous', TRUE);
                 return 'template_tpl.php';
                 break;
                 
+            // exit the chat room page and display the chat room list
             case 'leaveroom':
                 $roomId = $this->getSession('chat_room_id');
                 $roomData = $this->dbRooms->getRoom($roomId);
@@ -265,16 +273,33 @@ class messaging extends controller
                     'name' => $this->name,
                 );
                 $message = $this->objLanguage->code2Txt('mod_messaging_userexit', 'messaging', $array);
-                $this->dbMessaging->addChatMessage($message, TRUE);
+                $this->dbMessages->addChatMessage($message, TRUE);
                 $this->unsetSession('chat_room_id');
                 return $this->nextAction('');
                 break;
                 
+            // display a list of users in the chat room
             case 'getusers':
-                $isModerator = $this->getParam('moderator');
-                return $this->objDisplay->getUsers($isModerator);
+                return $this->objDisplay->getUsers();
                 break;
                 
+            // display the popup page to ban users
+            case 'banpopup':
+                $templateContent = $this->objDisplay->banPopup();
+                $this->setVarByRef('templateContent', $templateContent);
+                $this->setVar('scriptaculous', TRUE);   
+                $this->setVar('mode', 'popup');
+                return 'template_tpl.php';
+                break;
+                
+            // display a list of users meeting the name criteria
+            case 'listusers':
+                $option = $this->getParam('option');
+                $value = $this->getparam('username');
+                return $this->objDisplay->listUsers($option, $value);
+                break;
+
+            // submit the banned user data
             case 'banuser':
                 $roomId = $this->getSession('chat_room_id');
                 $userId = $this->getParam('userId');
@@ -301,36 +326,68 @@ class messaging extends controller
                     );
                     $message = $this->objLanguage->code2Txt('mod_messaging_bantempmsg', 'messaging', $array);                    
                 }
-                $this->dbMessaging->addChatMessage($message, TRUE);
-                echo '<script type="text/javaScript">this.close();</script>';
+                $this->dbMessages->addChatMessage($message, TRUE);
+                return $this->nextAction('confirmban', array(
+                    'banType' => $banType,
+                    'userId' => $userId,
+                ));
                 break;
                 
+            // display the popup page to confirm the banning of a user
+            case 'confirmban':
+                $userId = $this->getParam('userId');
+                $banType = $this->getParam('banType');
+                $templateContent = $this->objDisplay->confirmBan($banType, $userId);
+                $this->setVarByRef('templateContent', $templateContent);
+                $this->setVar('mode', 'popup');
+                return 'template_tpl.php';
+                break;
+                
+            // display a message to the user if banned
             case 'getbanmsg':
                 $userId = $this->getParam('userId');
                 return $this->objDisplay->getBanMsg($userId);
                 break;
 
-            case 'unbanuser':
-                $bannedId = $this->getParam('bannedId');
-                $banData = $this->dbBanned->getUser($bannedId);
-                $this->dbBanned->deleteUser($bannedId);
-                $array = array(
-                    'mod' => $this->name,
-                    'user' => $this->objUser->fullname($banData['user_id']),
-                );
-                $message = $this->objLanguage->code2Txt('mod_messaging_unbanindefmsg', 'messaging', $array);
-                $this->dbMessaging->addChatMessage($message, TRUE);
-                break;
-
-            case 'banpopup':
-                $userId = $this->getParam('userId');
-                $templateContent = $this->objDisplay->banPopup($userId);
+            // display the popup page to unban users
+            case 'unbanpopup':
+                $templateContent = $this->objDisplay->unbanPopup();
                 $this->setVarByRef('templateContent', $templateContent);
-                $this->setVar('script', FALSE);
                 $this->setVar('mode', 'popup');
                 return 'template_tpl.php';
                 break;
                 
+            // submit the unbanned user data
+            case 'unbanusers':
+                $roomId = $this->getSession('chat_room_id');
+                $userList = $this->getParam('userId');
+                foreach($userList as $user){
+                    $bannedUser = $this->dbBanned->isBanned($user, $roomId);
+                    $bannedId = $bannedUser['id'];
+                    $this->dbBanned->deleteUser($bannedId);
+                    $array = array(
+                        'mod' => $this->name,
+                        'user' => $this->objUser->fullname($user),
+                    );
+                    $message = $this->objLanguage->code2Txt('mod_messaging_unbanindefmsg', 'messaging', $array);
+                    $this->dbMessages->addChatMessage($message, TRUE);
+                }
+                $users = implode('|', $userList);
+                return $this->nextAction('confirmunban', array(
+                    'users' => $users,
+                ));
+                break;
+
+            // display the popup page to confirm the unbanning of a user
+            case 'confirmunban':
+                $users = $this->getParam('users');
+                $templateContent = $this->objDisplay->confirmUnban($users);
+                $this->setVarByRef('templateContent', $templateContent);
+                $this->setVar('mode', 'popup');
+                return 'template_tpl.php';
+                break;
+                
+            // display the popup page to show more smiley icons
             case 'moresmileys':
                 $templateContent = $this->objDisplay->moreSmileys();
                 $this->setVarByRef('templateContent', $templateContent);
@@ -338,16 +395,19 @@ class messaging extends controller
                 return 'template_tpl.php';
                 break;
                 
+            // submit the chat message data
             case 'sendchat':
                 $message = $this->getParam('chat');
-                $messageId = $this->dbMessaging->addChatMessage($message);
-                return '';
+                $messageId = $this->dbMessages->addChatMessage($message);
+                return $messageId;
                 break;
                 
+            // get the chat messages posted to a chat room
             case 'getchat':
                 return $this->objDisplay->getChat();
                 break;
                                                                 
+            // display the chat room list as default
             default:
                 $this->unsetSession('chat_room_id');
                 $this->unsetSession('message_counter');

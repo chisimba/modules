@@ -14,7 +14,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
 class dbrooms extends dbTable
 {
     /**
-    * @var string $table The name of the database table to be affected
+    * @var string $table: The name of the main database table to be affected
     * @access private
     */
     private $table;
@@ -35,8 +35,8 @@ class dbrooms extends dbTable
     * Method to add a chat room
     *
     * @access public
-    * @param array $arrRoom An array containing the chat room data  
-    * @return string $roomId The id of the chat room that was added
+    * @param array $roomData: An array containing the chat room data  
+    * @return string $roomId: The id of the chat room that was added
     **/
     public function addRoom($roomData)
     {
@@ -53,11 +53,11 @@ class dbrooms extends dbTable
     }
 
     /**
-    * Method for editing a room in the database.
+    * Method for editing a room
     *
     * @access public
-    * @param array $arrRoom An array containing the chat room data  
-    * @param string $roomId The id of the chat room to edit
+    * @param array $roomData: An array containing the chat room data  
+    * @param string $roomId: The id of the chat room to edit
     * @return
     */
     public function editRoom($roomId, $roomData)
@@ -67,15 +67,15 @@ class dbrooms extends dbTable
         $fields['text_only'] = $roomData['text_only'];
         $fields['disabled'] = $roomData['disabled'];
         $fields['updated'] = date('Y-m-d H:i:s');
-        $this->update('id', $roomId,$fields);
+        $this->update('id', $roomId, $fields);
     }
 
     /**
-    * Method to return a chat room record
+    * Method to get a chat room
     *
     * @access public
-    * @param string $roomId The id of the room to get the data of
-    * @return array $data The chat room data
+    * @param string $roomId: The id of the room to get the data for
+    * @return array $data: The chat room data
     **/
     public function getRoom($roomId)
     {
@@ -92,8 +92,8 @@ class dbrooms extends dbTable
     * Method to return all chat room records
     *
     * @access public
-    * @param string $contextCode The context code if applicable
-    * @return array $data The chat room data
+    * @param string $contextCode: The context code if the user is in context
+    * @return array $data: The chat room data
     **/
     public function listRooms($contextCode)
     {
@@ -116,12 +116,35 @@ class dbrooms extends dbTable
     * Method for deleting a chat room
     *
     * @access public
-    * @param string $roomId  The id of the chat room to be deleted
+    * @param string $roomId:  The id of the chat room to be deleted
     * @return
     */
     public function deleteRoom($roomId)
     {
         $this->delete('id', $roomId);
     }
+    
+    /**
+    * Method to get a context chat room
+    * 
+    * @access public
+    * @param string $contextCode: The context code | Current contextCode if NULL
+    * @return string $data: The context chat room data
+    */
+    public function getContextRoom($contextCode = NULL)
+    {
+        if($contextCode == NULL){
+            $contextCode = $this->getSession('contextCode');
+        }
+        if($contextCode != NULL){
+            $sql = "SELECT * FROM ".$this->table;
+            $sql .= " WHERE owner_id = '".$contextCode."'";
+            $data = $this->getArray($sql);
+            if(!empty($data)){
+                return $data[0];
+            }
+        }
+        return FALSE;
+    }    
 }
 ?>
