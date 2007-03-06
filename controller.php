@@ -56,6 +56,7 @@ class realtime extends controller
 	// Get action from input parameter
 	$this->action = $this->getParam('action', NULL);
     }
+
     public function getGroupID($groupName)
     {
      return $this->objGroups->getLeafId(array($this->contextcode, $groupName));
@@ -73,18 +74,19 @@ class realtime extends controller
         if ($this->objUser->isAdmin()) {
             return "admin";
         } else {
-            // Get userKey from PK, which needs user ID from username
-            $userid = $this->objUser->getUserId($userName);
-            $uKey = $this->objUser->PKId($userid);
+            // Get userKey to look up group membership
+	    $uKey = $this->objUser->PKId();
+	    $lgrp = $this->objGroups->getLeafId(array('Lecturers'));
+	    $sgrp = $this->objGroups->getLeafId(array('Students'));
 
             // Check if lecturer first, then student
-            if ($this->objGroups->isGroupMember($uKey, $this->getGroupID("Lecturers")))
-	        {
+            if ($this->objGroups->isGroupMember($uKey, $lgrp))
+	    {
         		return "lecturer";
-            } else if ($this->objGroups->isGroupMember($uKey, $this->getGroupID("Students") ))
-	        {
-        		return "student";
-	        }
+            } else if ($this->objGroups->isGroupMember($uKey, $sgrp))
+	    {
+        	return "student";
+	    }
         }
 		// if user is in no group, guest -- the least access
         return "guest";
