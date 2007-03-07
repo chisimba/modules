@@ -49,6 +49,7 @@ class display extends object
     */
     private $objContext;
 
+    // TODO: Once workgroups has been ported
     /**
     * @var object $objWorkgroup: The dbworkgroup class in the workgroup module
     * @access public
@@ -149,9 +150,9 @@ class display extends object
     * Method to create the chat room list template
     *
     * @access public
-    * @return string $str The template output string
+    * @return string $str: The output string
     **/
-    public function roomList()
+    public function tplRoomList()
     {
         // language elements
         $chatHeading = $this->objLanguage->languageText('mod_messaging_chatheading', 'messaging');
@@ -193,6 +194,7 @@ class display extends object
         $header = $objHeader->show();
         $str .= $header;
         
+        // add link
         $objLink = new link($this->uri(array(
             'action' => 'addroom'
         ), 'messaging'));
@@ -201,6 +203,7 @@ class display extends object
         $addLink = $objLink->show(); 
         $str .= $addLink;
         
+        // main table heading
         $objTable = new htmlTable();
         $objTable->cellpadding = '2';
         $objTable->cellspacing = '2';
@@ -213,6 +216,7 @@ class display extends object
         $objTable->addHeaderCell('', '', '', '', '', '');
         $objTable->endHeaderRow();
         
+        // check if user can enter listed chat rooms
         if($rooms != FALSE){            
             $roomList = array();
             if($userRooms == FALSE){
@@ -242,6 +246,7 @@ class display extends object
             $roomList = FALSE;
         }
         
+        // main table
         if($roomList == FALSE){
             $objTable->startRow();
             $objTable->addCell($noRecordsLabel, '', '', '', 'noRecordsMessage', 'colspan="6"');
@@ -256,6 +261,8 @@ class display extends object
                     'room' => $roomName
                 );
                 $name = $this->objLanguage->code2Txt('mod_messaging_enter', 'messaging', $array);
+                
+                // enter room link
                 $objLink = new link($this->uri(array(
                     'action' => 'enterroom',
                     'roomId' => $room['id'],
@@ -268,6 +275,7 @@ class display extends object
                     $nameLink = '<strong>'.$roomName.'</strong><br />('.$disabledLabel.')';   
                 }
                 
+                // read more link if applicable
                 $roomDesc = $room['room_desc'];
                 if(strlen($roomDesc) > 255){
                     $objPopup = new windowpop();
@@ -299,9 +307,11 @@ class display extends object
                 }elseif($roomType == 2){
                     $owner = $this->objContext->getField('title', $room['owner_id']);
                 }else{
+                    // TODO: Once workgroups has been ported
                     $owner = 'to do - workgroup name';
                 }
                        
+                // edit link
                 $objLink = new link($this->uri(array(
                     'action' => 'editroom',
                     'roomId' => $room['id'],
@@ -310,6 +320,7 @@ class display extends object
                 $objLink->title = $editTitleLabel;
                 $editLink = '<nobr>'.$objLink->show().'</nobr>';
 
+                // exit link
                 $objLink = new link($this->uri(array(
                     'action' => 'deleteroom',
                     'roomId' => $room['id'],
@@ -352,6 +363,7 @@ class display extends object
         $listTable = $objTable->show();        
         $str .= $listTable;
 
+        // exit link
         $objLink = new link($this->uri(array(), '_default'));
         $objLink->link = $exitLabel;
         $objLink->title = $exitTitleLabel;
@@ -369,7 +381,7 @@ class display extends object
     * @param array $roomId The id of the chat room to edit
     * @return string $str The template output string
     */
-    public function addRoom($mode = 'add', $roomId = NULL)
+    public function tplAddRoom($mode = 'add', $roomId = NULL)
     {
         // language items
         $addLabel = $this->objLanguage->languageText('mod_messaging_addroom', 'messaging');
@@ -385,7 +397,8 @@ class display extends object
         $inputLabel = $this->objLanguage->languageText('mod_messaging_inputsetting', 'messaging');
         $typeLabel = $this->objLanguage->languageText('mod_messaging_wordtype', 'messaging');
         $contextLabel = $this->objLanguage->code2Txt('mod_messaging_contextroom', 'messaging');
-        $workgroupLabel = $this->objLanguage->code2Txt('mod_messaging_workgrouproom', 'messaging');
+        // TODO: Once workgroups has been ported
+        //$workgroupLabel = $this->objLanguage->code2Txt('mod_messaging_workgrouproom', 'messaging');
         $privateLabel = $this->objLanguage->languageText('mod_messaging_privateroom', 'messaging');
         $statusLabel = $this->objLanguage->code2Txt('mod_messaging_wordstatus', 'messaging');
         $enabledLabel = $this->objLanguage->languageText('mod_messaging_wordenabled', 'messaging');
@@ -419,25 +432,27 @@ class display extends object
             $disabled = $roomData['disabled'];
         }
         
-        $objInput = new textinput('roomId', $roomId, 'hidden');
-        $roomIdInput = $objInput->show();
-        
+        // room type radio
         $objRadio = new radio('room_type');
         $objRadio->addOption(1, '&nbsp;'.$privateLabel);
         if($this->isLecturer){
             $objRadio->addOption(2, '&nbsp;'.ucfirst($contextLabel));
         }
-//        $objRadio->addOption(3, ucfirst($workgroupLabel));
+        // TODO: Once workgroups has been ported
+        //$objRadio->addOption(3, ucfirst($workgroupLabel));
         $objRadio->setSelected($roomType);
         $objRadio->setBreakSpace('<br />');
         $typeRadio = $objRadio->show();
         
+        // room name input
         $objInput = new textinput('room_name', $roomName);
         $nameInput = $objInput->show();
         
+        // room description textarea
         $objText = new textarea('room_desc', $roomDesc);
         $descText = $objText->show();
 
+        // text only/smileys radio
         $objRadio = new radio('text_only');
         $objRadio->addOption(0, '&nbsp;'.$entitiesLabel);
         $objRadio->addOption(1, '&nbsp;'.$textLabel);
@@ -445,6 +460,7 @@ class display extends object
         $objRadio->setBreakSpace('<br />');
         $displayRadio = $objRadio->show();
         
+        // enabled/disabled radio
         $objRadio = new radio('disabled');
         $objRadio->addOption(0, '&nbsp;'.$enabledLabel);
         $objRadio->addOption(1, '&nbsp;'.$disabledLabel);
@@ -452,46 +468,49 @@ class display extends object
         $objRadio->setBreakSpace('<br />');
         $statusRadio = $objRadio->show();
         
+        // submit button
         $objButton = new button('submitbutton', $submitLabel);
         $objButton->setToSubmit();
         $objButton->extra = ' onclick="javascript:
-            var form = document.getElementById(\'form_submitform\');
-            var element = document.createElement(\'input\');
+            var el_Submitform = document.getElementById(\'form_submitform\');
+            var el = document.createElement(\'input\');
 
-            element.setAttribute(\'id\', \'input_button\');
-            element.setAttribute(\'name\', \'button\');
-            element.setAttribute(\'value\', \'submit\');
-            element.setAttribute(\'type\', \'hidden\');
+            el.setAttribute(\'id\', \'input_button\');
+            el.setAttribute(\'name\', \'button\');
+            el.setAttribute(\'value\', \'submit\');
+            el.setAttribute(\'type\', \'hidden\');
             
-            form.appendChild(element);
-            //form.submit();"';
+            el_Submitform.appendChild(el);"';
         $submitButton = $objButton->show();
 
+        // cancel button
         $objButton = new button('cancelbutton', $cancelLabel);
         $objButton->extra = ' onclick="javascript:
-            var form = document.getElementById(\'form_cancelform\');
-            var element = document.createElement(\'input\');
+            var el_Cancelform = document.getElementById(\'form_cancelform\');
+            var el = document.createElement(\'input\');
 
-            element.setAttribute(\'id\', \'input_button\');
-            element.setAttribute(\'name\', \'button\');
-            element.setAttribute(\'value\', \'cancel\');
-            element.setAttribute(\'type\', \'hidden\');
+            el.setAttribute(\'id\', \'input_button\');
+            el.setAttribute(\'name\', \'button\');
+            el.setAttribute(\'value\', \'cancel\');
+            el.setAttribute(\'type\', \'hidden\');
             
-            form.appendChild(element);
-            form.submit();"';
+            el_Cancelform.appendChild(element);
+            el_Cancelform.submit();"';
         $cancelButton = $objButton->show();
 
+        // feature boxes
         $typeBox = $this->objFeaturebox->show($typeLabel, $typeRadio);
         $nameBox = $this->objFeaturebox->show($nameLabel, $nameInput);
         $descBox = $this->objFeaturebox->show($descLabel, $descText);
         $inputBox = $this->objFeaturebox->show($inputLabel, $displayRadio);
         $statusBox = $this->objFeaturebox->show($statusLabel, $statusRadio);
         
+        // main form
         $objForm = new form('submitform', $this->uri(array(
             'action' => 'submitroom',
+            'roomId' => $roomId,
             'mode' => $mode,
         ), 'messaging'));
-        $objForm->addToForm($roomIdInput);
         if($mode == 'add'){
             $objForm->addToForm($typeBox);
         }
@@ -505,6 +524,7 @@ class display extends object
         $submitForm = $objForm->show();
         $str .= $submitForm;
         
+        // form for cancel button
         $objForm = new form('cancelform', $this->uri(array('
             action' => 'submitroom'
         ), 'messaging'));
@@ -521,7 +541,7 @@ class display extends object
     * @param array $roomId The id of the chat room to display
     * @return string $str The template output string
     */
-    public function readMore($roomId)
+    public function popReadMore($roomId)
     {
         // language items
         $nameLabel = $this->objLanguage->languageText('mod_messaging_wordname', 'messaging');
@@ -532,15 +552,17 @@ class display extends object
         // get data
         $roomData = $this->dbRooms->getRoom($roomId);
         
+        // feature boxes
         $string = $this->objFeaturebox->show($nameLabel, $roomData['room_name']);
         $string .= $this->objFeaturebox->show($descLabel, $roomData['room_desc']);
         
-        $objLink = new link('javascript:
-            this.close();');
+        // close link
+        $objLink = new link('javascript:window.close();');
         $objLink->link = $closeLabel;
         $objLink->title = $closeTitleLabel;
         $closeLink = $objLink->show();
 
+        // table to center close link
         $objTable = new htmltable();
         $objTable->cellspacing = '2';
         $objTable->cellpadding = '2';
@@ -548,7 +570,8 @@ class display extends object
         $objTable->addCell($closeLink, '', '', 'center', '', '');
         $objTable->endRow();
         $string .= $objTable->show();
-        
+
+        // main display layer
         $objLayer = new layer();
         $objLayer->padding = '10px';
         $objLayer->addToStr($string);
@@ -564,36 +587,36 @@ class display extends object
     * @param array $roomData An array containing the chat room data
     * @return string $str The template output string
     */
-    public function chatRoom($roomData)
+    public function tplChatRoom($roomData)
     {
         // javascript
         $script = '<script type="text/javaScript">
-            Event.observe(window, "load", get_chat, false);
+            Event.observe(window, "load", jsGetChat, false);
     
-            function get_chat(){
+            function jsGetChat(){
                 var url = "index.php";
                 var target = "chatDiv";
                 var pars = "module=messaging&action=getchat";
-                var myAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars, onComplete: chat_timer});
+                var myAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars, onComplete: jsChatTimer});
             }
 
-            function chat_timer(){
-                var myDiv = document.getElementById("chatDiv");
-                myDiv.scrollTop = myDiv.scrollHeight
-                setTimeout("get_chat()", 3000);
+            function jsChatTimer(){
+                var el_ChatDiv = document.getElementById("chatDiv");
+                el_ChatDiv.scrollTop = el_ChatDiv.scrollHeight
+                setTimeout("jsGetChat()", 3000);
             }
             
-            function send_chat(){
-                var msg = document.getElementById("input_message");
+            function jsSendChat(){
+                var el_Message = document.getElementById("input_message");
                 
-                if(msg.value != ""){
+                if(el_Message.value != ""){
                     var url = "index.php";
                     var target = "input_message";
-                    var pars = "module=messaging&action=sendchat&chat=" + msg.value;
+                    var pars = "module=messaging&action=sendchat&chat=" + el_Message.value;
                     var myAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars});                
-                    msg.value = "";
+                    el_Message.value = "";
                 }                
-                msg.focus();
+                el_Message.focus();
             }
         </script>';
         $str = $script;
@@ -605,7 +628,12 @@ class display extends object
         $heading = $this->objLanguage->code2Txt('mod_messaging_room', 'messaging', $array);
         $sendLabel = $this->objLanguage->languageText('mod_messaging_wordsend', 'messaging');
         $clearLabel = $this->objLanguage->languageText('mod_messaging_wordclear', 'messaging');
+        $inviteLabel = $this->objLanguage->languageText('mod_messaging_invite', 'messaging');
+        $removeLabel = $this->objLanguage->languageText('mod_messaging_remove', 'messaging');
+        $inviteTitleLabel = $this->objLanguage->languageText('mod_messaging_invitetitle', 'messaging');
+        $removeTitleLabel = $this->objLanguage->languageText('mod_messaging_removetitle', 'messaging');
                 
+        // banned notice div
         $objLayer = new layer();
         $objLayer->id = 'bannedDiv';
         $objLayer->padding = '10px';
@@ -620,6 +648,49 @@ class display extends object
         $header = $objHeader->show();        
         $str .= $header;
         
+        // popup links for creator of private chat room
+        if($roomData['room_type'] == 1 && $roomData['owner_id'] == $this->userId){
+            // popup link to invite users
+            $objPopup = new windowpop();
+            $objPopup->title = $inviteTitleLabel;
+            $objPopup->set('location',$this->uri(array(
+                'action' => 'invitepopup',
+            )));
+            $objPopup->set('linktext', $inviteLabel);
+            $objPopup->set('width', '500');
+            $objPopup->set('height', '500');
+            $objPopup->set('left', '100');
+            $objPopup->set('top', '100');
+            $objPopup->set('scrollbars', 'no');
+            $objPopup->putJs(); // you only need to do this once per page
+            $inviteLink = $objPopup->show();
+
+            // popup link to remove users
+            $objPopup = new windowpop();
+            $objPopup->title = $removeTitleLabel;
+            $objPopup->set('location',$this->uri(array(
+                'action' => 'removepopup',
+            )));
+            $objPopup->set('linktext', $removeLabel);
+            $objPopup->set('width', '500');
+            $objPopup->set('height', '500');
+            $objPopup->set('left', '100');
+            $objPopup->set('top', '100');
+            $objPopup->set('scrollbars', 'no');
+            $removeLink = $objPopup->show();
+            
+            // table to display popup links
+            $objTable = new htmltable();
+            $objTable->cellspacing = 2;
+            $objTable->cellpadding = 2;
+            $objTable->startRow();
+            $objTable->addCell($inviteLink.'&nbsp;|&nbsp;'.$removeLink);
+            $objTable->endRow();
+            $linkTable = $objTable->show();
+            $str .= $linkTable;
+        }
+        
+        // main chat display
         $objLayer = new layer();
         $objLayer->id = 'chatDiv';
         $objLayer->height = '300px';
@@ -628,22 +699,26 @@ class display extends object
         $chatLayer = $objLayer->show();
         $str .= $chatLayer;
         
+        // caht input area
         $objText = new textarea('message');
         $chatText = $objText->show();
         
+        // caht send button
         $objButton = new button('send', $sendLabel);
         $objButton->extra = ' onclick="javascript:
-            send_chat();"';
+            jsSendChat();"';
         $sendButton = $objButton->show();
         
+        // chat clear button
         $objButton = new button('clear', $clearLabel);
         $objButton->extra = 'onclick="javascript: 
-            var element = document.getElementById(\'input_message\');
-            element.value = \'\';
-            element.focus();
+            var el_Message = document.getElementById(\'input_message\');
+            el_Message.value = \'\';
+            el_Message.focus();
         "';
         $clearButton = $objButton->show();
         
+        // main table
         $objTable = new htmltable();
         $objTable->cellspacing = '2';
         $objTable->cellpadding = '2';
@@ -654,12 +729,14 @@ class display extends object
         $chatTable = $objTable->show();
         $string = $chatTable;
         
+        // chat send form 
         $objForm = new form('chat', $this->uri(array(
             'action' => 'sendchat'
         )));
         $objForm->addToForm($string);
         $chatForm = $objForm->show();
 
+        // main display div
         $objLayer = new layer();
         $objLayer->id = 'formDiv';
         $objLayer->addToStr($chatForm);
@@ -675,7 +752,7 @@ class display extends object
     * @access public
     * @return string $str The template output string
     */
-    public function getUsers()
+    public function divGetOnlineUsers()
     {
         // language items
         $activeLabel = $this->objLanguage->languageText('mod_messaging_active', 'messaging');
@@ -700,6 +777,7 @@ class display extends object
                 $name = $this->objUser->fullname($user['user_id']);
                 $isBanned = FALSE;
                 $tempBan = FALSE;
+                // check users banned status and ban type
                 if($bannedUsers != FALSE){
                     foreach($bannedUsers as $key=>$bannedUser){
                         if($user['user_id'] == $bannedUser['user_id']){
@@ -715,7 +793,9 @@ class display extends object
                         }
                     }
                 }
+                // set up user icons
                 if($isBanned){
+                    // check if temp ban must be removed and do so
                     if($tempBan){
                         $dateNow = strtotime(date('Y-m-d H:i:s'));
                         $banStop = strtotime($bannedUser['ban_stop']);
@@ -728,7 +808,7 @@ class display extends object
                             $this->dbMessages->addChatMessage($message, TRUE);             
                         }
                         $date = $this->objDatetime->formatDate($bannedUser['ban_stop']);    
-                       $array = array(
+                        $array = array(
                             'date' => $date,
                         );
                         $bannedLabel = $this->objLanguage->code2Txt('mod_messaging_bantemp', 'messaging', $array);
@@ -753,9 +833,11 @@ class display extends object
                 $objTable->addCell($icon, '', '', '', '', '');
                 $objTable->endRow();
             }
+            // hidden input used for banned notice
             $objInput = new textinput('banned', $banned, 'hidden');
             $bannedInput = $objInput->show();
 
+            // hidden input used for banned notice
             $objInput = new textinput('userId', $userId, 'hidden');
             $userIdInput = $objInput->show();
 
@@ -776,39 +858,40 @@ class display extends object
     * @access public
     * @return string $str The template output string
     */
-    public function moreSmileys()
+    public function popSmileys()
     {
         // javascript
         $this->setVar('pageSuppressXML', TRUE);
         $script = '<script type="text/javaScript">
-            var namelist = new Array("alien", "angel", "angry", "anticipation", "approve", "big_grin", "big_smile", "blush", "boom", "clown", "confused", "cool", "crying", "dead", "evil", "evil_eye", "exclamation", "flower", "geek", "kiss", "martian", "moon", "ogle", "ouch", "peace", "question", "rainbow", "raise_eyebrows", "raspberry", "roll_eyes", "sad", "shy", "sleepy", "smile", "stern", "surprise", "thoughtful", "thumbs_down", "thumbs_up", "unsure", "up_yours", "very_angry", "wink", "worried");
+            var arrNames = new Array("alien", "angel", "angry", "anticipation", "approve", "big_grin", "big_smile", "blush", "boom", "clown", "confused", "cool", "crying", "dead", "evil", "evil_eye", "exclamation", "flower", "geek", "kiss", "martian", "moon", "ogle", "ouch", "peace", "question", "rainbow", "raise_eyebrows", "raspberry", "roll_eyes", "sad", "shy", "sleepy", "smile", "stern", "surprise", "thoughtful", "thumbs_down", "thumbs_up", "unsure", "up_yours", "very_angry", "wink", "worried");
             
-            var codelist = new Array("[A51]", "[0:-)]", "[>:-(]", "[8-)]", "[^-)]", "[:-D]", "[:-]]", "[:-I]", "[<@>]", "[:o)]", "[<:-/]", "[B-)]", "[!-(]", "[xx-P]", "[}:-)]", "[};-)]", "[!]", "[F]", "[G]", "[:-x]", "[M]", "[B]", "[8-P]", "[P-(]", "[V]", "[?]", "[((]", "[E-)]", "[:-P]", "[8-]]", "[:-(]", "[8-/]", "[zzz]", "[:-)]", "[>:-.]", "[8-o]", "[>8-/]", "[-]", "[+]", "[:-/]", "[@#$%]", "[>:-0]", "[;-)]", "[8-(]");
+            var arrCodes = new Array("[A51]", "[0:-)]", "[>:-(]", "[8-)]", "[^-)]", "[:-D]", "[:-]]", "[:-I]", "[<@>]", "[:o)]", "[<:-/]", "[B-)]", "[!-(]", "[xx-P]", "[}:-)]", "[};-)]", "[!]", "[F]", "[G]", "[:-x]", "[M]", "[B]", "[8-P]", "[P-(]", "[V]", "[?]", "[((]", "[E-)]", "[:-P]", "[8-]]", "[:-(]", "[8-/]", "[zzz]", "[:-)]", "[>:-.]", "[8-o]", "[>8-/]", "[-]", "[+]", "[:-/]", "[@#$%]", "[>:-0]", "[;-)]", "[8-(]");
             
-            function addSmiley(elementId)
+            function jsAddSmiley(el_id)
             {
-                var msg = opener.document.getElementById("input_message");
-                for(i = 0; i <= namelist.length-1; i++){
-                        if(namelist[i] == elementId){
-                        if(msg.value == ""){
-                            msg.value = codelist[i];
+                var el_Message = opener.document.getElementById("input_message");
+                for(i = 0; i <= arrNames.length-1; i++){
+                        if(arrNames[i] == el_id){
+                        if(el_Message.value == ""){
+                            el_Message.value = arrCodes[i];
                         }else{
-                            msg.value = msg.value + " " + codelist[i];
+                            el_Message.value = el_Message.value + " " + arrCodes[i];
                         }
                     }
                 }
                 window.close();
-                msg.focus();
+                el_Message.focus();
             }
         </script>';
         $content = $script;
 
         // language items
-        $title = $this->objLanguage->languageText('mod_message_wordsmileys', 'messaging');
-        $smileyLabel = $this->objLanguage->languageText('mod_message_smileys', 'messaging');  
+        $title = $this->objLanguage->languageText('mod_messaging_wordsmileys', 'messaging');
+        $smileyLabel = $this->objLanguage->languageText('mod_messaging_smileys', 'messaging');  
         $closeLabel = $this->objLanguage->languageText('mod_messaging_wordclose', 'messaging');
         $closeTitleLabel = $this->objLanguage->languageText('mod_messaging_closetitle', 'messaging');
 
+        // list of smiley icons and their codes
         $list = array(
             'alien' => '[ A51 ]',
             'angel' => '[ 0:-) ]',
@@ -856,12 +939,13 @@ class display extends object
             'worried' => '[ 8-( ]',
         );
         
-        $objLink = new link('javascript:
-            this.close();');
+        // close link
+        $objLink = new link('javascript:window.close();');
         $objLink->link = $closeLabel;
         $objLink->title = $closeTitleLabel;
         $closeLink = $objLink->show();
         
+        // main table
         $objTable = new htmltable();
         $objTable->cellspacing = '2';
         $objTable->cellpadding = '2';
@@ -877,7 +961,7 @@ class display extends object
                 $this->objIcon->extra = '';
                 $icon = $this->objIcon->show();
                 
-                $objTable->addCell('<div id="'.$smiley.'" style="cursor: pointer;" onclick="addSmiley(this.id)">'.$icon.'</div>', '12.5%', '', 'center', '', '');
+                $objTable->addCell('<div id="'.$smiley.'" style="cursor: pointer;" onclick="jsAddSmiley(this.id)">'.$icon.'</div>', '12.5%', '', 'center', '', '');
                 $objTable->addCell('<nobr><font class="warning"><b>'.htmlentities($code).'</b></font></nobr>', '', '', '', '', '');
             }
             $objTable->endRow();
@@ -888,8 +972,10 @@ class display extends object
         $smileyTable = $objTable->show();
         $string = $smileyTable;
 
+        // feature box
         $content .= $this->objFeaturebox->show($title, $string);
 
+        // main display div
         $objLayer = new layer();
         $objLayer->padding = '10px';
         $objLayer->addToStr($content);
@@ -903,7 +989,7 @@ class display extends object
     * @access public
     * @return string The template output string
     */
-    public function getChat()
+    public function divGetChat()
     {
         // language items
         $systemLabel = $this->objLanguage->languageText('mod_messaging_wordsystem', 'messaging');
@@ -913,6 +999,7 @@ class display extends object
         $counter = $this->getSession('message_counter');
         $messages = $this->dbMessages->getChatMessages($roomId, $counter);
         
+        // ordered list of chat messages
         $str = '';
         if($messages != FALSE){
             $str = '<ul>';
@@ -941,8 +1028,13 @@ class display extends object
     * @access public
     * @return string The template output string
     */
-    public function banPopup()
+    public function popBan()
     {
+        // javascript to determine div height amongst other things
+        $headerParams = $this->getJavascriptFile('x.js', 'htmlelements');
+        $this->appendArrayVar('headerParams', $headerParams);
+
+         // style
          $style = '<style type="text/css">
             div.autocomplete {
                 position:absolute;
@@ -967,15 +1059,16 @@ class display extends object
         </style>';
         $str = $style;
 
+        // javascript
         $script = '<script type="text/javaScript">
-            function users()
+            function jsBanUserList()
             {        
-                var myRadio = document.getElementsByName("option");
-                var len = myRadio.length;
+                var el_option = document.getElementsByName("option");
+                var len = el_option.length;
                 var myValue = "";
                 for(var i = 0; i <= len-1; i++){
-                    if(myRadio[i].checked){
-                        myValue = myRadio[i].value;
+                    if(el_option[i].checked){
+                        myValue = el_option[i].value;
                     }
                 }
                 var pars = "module=messaging&action=listusers&option="+myValue;
@@ -996,7 +1089,10 @@ class display extends object
         $cancelLabel = $this->objLanguage->languageText('mod_messaging_wordcancel', 'messaging');
         $nameLabel = $this->objLanguage->languageText('mod_messaging_firstname', 'messaging');
         $surnameLabel = $this->objLanguage->languageText('mod_messaging_surname', 'messaging');
+        $reasonLabel = $this->objLanguage->languageText('mod_messaging_reason', 'messaging');
+        $errReasonLabel = $this->objLanguage->languageText('mod_messaging_errreason', 'messaging');
                 
+        // heading
         $objHeader = new htmlheading();
         $objHeader->str = $banLabel;
         $objHeader->type = 1;
@@ -1005,29 +1101,35 @@ class display extends object
         // get data
         $roomId = $this->getSession('chat_room_id');
         
+        // name/surname radio
         $objRadio = new radio('option');
         $objRadio->addOption('firstname', '&nbsp;'.$nameLabel);
         $objRadio->addOption('surname', '&nbsp;'.$surnameLabel);
+        $objRadio->setBreakSpace('table');
         $objRadio->setSelected('firstname');
         $objRadio->extra = ' onchange="javascript:
-            var myInput = document.getElementById(\'input_username\');
-            myInput.value = \'\';
-            myInput.focus();"';
+            var el_Username = document.getElementById(\'input_username\');
+            el_Username.value = \'\';
+            el_Username.focus();"';
         $choiceRadio = $objRadio->show();
         
+        // user search input
         $objInput = new textinput('username', '', '', 50);
         $objInput->extra = ' onkeyup="javascript:
-            users()"';
+            jsBanUserList()"';
         $userInput = $objInput->show();
         
+        // hidden user search selection input
         $objInput = new textinput('userId', '', 'hidden', '');
         $userIdInput = $objInput->show();
         
+        // user search results display div
         $objLayer = new layer();
         $objLayer->id = 'userDiv';
         $objLayer->cssClass = 'autocomplete';
         $userDiv = $objLayer->show();
         
+        // user search table
         $objTable = new htmltable();
         $objTable->cellspacing = '2';
         $objTable->cellpadding = '2';
@@ -1039,26 +1141,54 @@ class display extends object
         $objTable->endRow();
         $userTable = $objTable->show();
         
+        // user search feature box
         $userFeature = $this->objFeaturebox->show($userLabel, $userTable);
         
+        // ban reason text area
+        $objText = new textarea('reason');
+        $reasonText = $objText->show();
+        
+        // ban reason feature box
+        $reasonFeature = $this->objFeaturebox->show($reasonLabel, $reasonText);
+        
+        // ban type radio
         $objRadio = new radio('type');
-        $objRadio->addOption(0, '&nbsp;'.$tempLabel);
         $objRadio->addOption(1, '&nbsp;'.$indefLabel);
-        $objRadio->setSelected(0);
+        $objRadio->addOption(0, '&nbsp;'.$tempLabel);
+        $objRadio->setSelected(1);
         $objRadio->setBreakSpace('<br />');
         $objRadio->extra = ' onclick="javascript:
-            var lDiv = document.getElementById(\'lengthDiv\');
+            var el_TypeFeature = document.getElementById(\'typeFeature\');
+            var el_LengthFeature = document.getElementById(\'lengthFeature\');
+            var el_TypeDiv = document.getElementById(\'typeDiv\');
+            var el_LengthDiv = document.getElementById(\'lengthDiv\');
             if(this.value == 0){
-                lDiv.style.visibility = \'visible\';
-                lDiv.style.display = \'block\';
+                el_TypeDiv.style.width = \'49%\';
+                el_LengthDiv.style.width = \'49%\';
+                el_LengthDiv.style.height = \'126px\';
+                el_LengthDiv.style.visibility = \'visible\';
+                el_LengthDiv.style.display = \'block\';
+                xHeight(el_LengthFeature, xHeight(el_TypeFeature));
             }else{
-                lDiv.style.visibility = \'hidden\';
-                lDiv.style.display = \'none\';
+                el_TypeDiv.style.width = \'100%\';
+                el_LengthDiv.style.visibility = \'hidden\';
+                el_LengthDiv.style.display = \'none\';
             }"';
         $typeRadio = $objRadio->show();
         
+        // ban type feature box
+        $this->objFeaturebox->id = 'typeFeature';
         $typeFeature = $this->objFeaturebox->show($typeLabel, $typeRadio);
         
+        // ban type div
+        $objLayer = new layer();
+        $objLayer->id = 'typeDiv';
+        $objLayer->width = '100%';
+        $objLayer->floating = 'left';
+        $objLayer->addToStr($typeFeature);
+        $typeDiv = $objLayer->show();
+        
+        // ban length radio
         $objDrop = new dropdown('length');
         $objDrop->addOption(1, '&nbsp;1 min');
         $objDrop->addOption(5, '&nbsp;5 min');
@@ -1070,43 +1200,69 @@ class display extends object
         $objDrop->extra = ' style="width: 60px;"';
         $lengthDrop = $objDrop->show();
         
+        // ban length feature box
+        $this->objFeaturebox->id = 'lengthFeature';
         $lengthFeature = $this->objFeaturebox->show($lengthLabel, $lengthDrop);
 
+        // ban length div
         $objLayer = new layer();
         $objLayer->id = 'lengthDiv';
+        $objLayer->floating = 'right';
+        $objLayer->visibility = 'hidden';
+        $objLayer->display = 'none';
         $objLayer->addToStr($lengthFeature);
         $lengthDiv = $objLayer->show();
         
+        // ban div
+        $objLayer = new layer();
+        $objLayer->id = 'banDiv';
+        $objLayer->addToStr($typeDiv.$lengthDiv);
+        $banDiv = $objLayer->show();
+        
+        // submit button
         $objButton = new button('send', $submitLabel);
         $objButton->extra = ' onclick="javascript:
-            var el = document.getElementById(\'input_userId\');
-            if(el.value == \'\'){
+            var el_UserId = document.getElementById(\'input_userId\');
+            var el_Username = document.getElementById(\'input_username\');
+            var el_Reason = document.getElementById(\'input_reason\');
+            if(el_UserId.value == \'\'){
                 alert(\''.$errLabel.'\');
+                el_Username.value = \'\';
+                el_Username.focus();
                 return false;
             }else{
+                if(el_Reason.value == \'\'){
+                    alert(\''.$errReasonLabel.'\');
+                    el_Reason.focus();
+                    return false;
+                }
                 document.getElementById(\'form_ban\').submit();
             }"';
         $sendButton = $objButton->show();
         
+        // cancel button
         $objButton = new button('cancel', $cancelLabel);
         $objButton->extra = ' onclick="javascript:window.close()"';
         $cancelButton = $objButton->show();
         
+        // button div
         $objLayer = new layer();
         $objLayer->id = 'buttonDiv';
         $objLayer->addToStr($sendButton.'&nbsp;'.$cancelButton);
         $buttonDiv = $objLayer->show();
         
+        // ban form
         $objForm = new form('ban', $this->uri(array(
             'action' => 'banuser',
             'roomId' => $roomId,
-            )));
+        )));
         $objForm->addToForm($userFeature);
-        $objForm->addToForm($typeFeature);
-        $objForm->addToForm($lengthDiv);
+        $objForm->addToForm($reasonFeature);
+        $objForm->addToForm($banDiv);
         $objForm->addToForm($buttonDiv);
         $banForm = $objForm->show();
         
+        // main display div
         $objLayer = new layer();
         $objLayer->id = 'formDiv';
         $objLayer->padding = '10px';
@@ -1118,49 +1274,58 @@ class display extends object
     }    
     
     /**
-    * Method to show the list of users in the chat room
+    * Method to show the search results for users to ban
     *
     * @access public
     * @param string $option: The field to search
     * @param string $value: The value to search for
     * @return string $str: The output string
     */
-    public function listUsers($option, $value)
+    public function divGetBannedUsers($option, $value)
     {
         // get data
         $roomId = $this->getSession('chat_room_id');
         $contextcode = $this->getSession('contextCode');
         $roomData = $this->dbRooms->getRoom($roomId);
         $userList = $this->dbUserlog->searchUsers($roomId, $option, $value);
+
         // language items
         $noMatchLabel = $this->objLanguage->languageText('mod_messaging_nomatch', 'messaging');
         
-        foreach($userList as $user){
-            $this->moderator = FALSE;
-            if($roomData['room_type'] == 0){
-                $isAdmin = $this->objUser->inAdminGroup($user['user_id']);
-                if($isAdmin){
-                    $this->moderator = TRUE;
+        if($userList != FALSE){
+            foreach($userList as $key=>$user){
+                // check if moderator of already banned
+                if($roomData['room_type'] == 0){
+                    $isAdmin = $this->objUser->inAdminGroup($user['user_id']);
+                    if($isAdmin){
+                        unset($userList[$key]);
+                    }
+                }elseif($roomData['room_type'] == 1){
+                    if($roomData['owner_id'] == $user['user_id']){
+                        unset($userList[$key]);
+                    }
+                }elseif($roomData['room_type'] == 2){
+                    $isLecturer = $this->objUser->isContextLecturer($user['user_id'], $contextCode);
+                    if($isLecturer){
+                        unset($userList[$key]);
+                    }
+                }elseif($roomData['room_type'] == 3){
+                //TODO: Once workgroups is has been ported
+                }elseif(isset($user['ban_type'])){
+                    unset($userList[$key]);
                 }
-            }elseif($roomData['room_type'] == 1){
-                if($roomData['owner_id'] == $user['user_id']){
-                    $this->moderator = TRUE;
-                }
-            }elseif($roomData['room_type'] == 2){
-                $isLecturer = $this->objUser->isContextLecturer($user['user_id'], $contextCode);
-                if($isLecturer){
-                    $this->moderator = TRUE;
-                }
-            }elseif($roomData['room_type'] == 3){
-                //to do once workgroups is ported
-            }
-        }                    
-        if(isset($user['ban_type']) == FALSE && $this->moderator == FALSE){
+            }    
+        }
+        
+        // ordered list of search results
+        if(!empty($userList)){
             $str = '<ul>';
-            $str .= '<li onclick="javascript:
-                document.getElementById(\'input_userId\').value=\''.$user['user_id'].'\'"><strong>';
-            $str .= $this->objUser->fullname($user['user_id']);
-            $str .= '</strong></li>';
+            foreach($userList as $user){
+                $str .= '<li onclick="javascript:
+                    document.getElementById(\'input_userId\').value=\''.$user['user_id'].'\'"><strong>';
+                $str .= $this->objUser->fullname($user['user_id']);
+                $str .= '</strong></li>';
+            }
             $str .= '</ul>';            
         }else{
             $str = '<ul><li><strong>'.$noMatchLabel.'</strong></li></ul>';    
@@ -1175,7 +1340,7 @@ class display extends object
     * @param string $userId: The id of the user to show the div to
     * @return string $str: The output string
     */
-    public function getBanMsg($userId)
+    public function divBanMsg($userId)
     {
         // get data
         $roomId = $this->getSession('chat_room_id');
@@ -1207,7 +1372,7 @@ class display extends object
     * @param string $userId: The id of the user banned
     * @return string $str: The output string
     */
-    public function confirmBan($banType, $userId)
+    public function popConfirmBan($banType, $userId)
     {
         // language items
         $array = array(
@@ -1218,21 +1383,19 @@ class display extends object
         $closeLabel = $this->objLanguage->languageText('mod_messaging_wordclose', 'messaging');
         $titleLabel = $this->objLanguage->languageText('mod_messaging_closetitle', 'messaging');
         
-        $objHeader = new htmlheading();
         if($banType == 1){
-            $objHeader->str = $indefLabel;
+            $confirmLabel = $indefLabel;
         }else{
-            $objHeader->str = $tempLabel;
+            $confirmLabel = $tempLabel;
         }
-        $objHeader->type = 3;
-        $heading = $objHeader->show();
-        $string = $heading;
-        
+
+        // close link
         $objLink = new link('javascript:window.close()');
         $objLink->title = $titleLabel;
         $objLink->link = $closeLabel;
         $closeLink = $objLink->show();
 
+        // main table
         $objTable = new htmltable();
         $objTable->cellspacing = '2';
         $objTable->cellpadding = '2';
@@ -1240,8 +1403,11 @@ class display extends object
         $objTable->addCell($closeLink, '', '', 'center', '', '');
         $objTable->endRow();
         $linkTable = $objTable->show();    
-        $string .= $linkTable;
         
+        // confirm feature box
+        $string = $this->objFeaturebox->show($confirmLabel, $linkTable);
+        
+        // main display div
         $objLayer = new layer();
         $objLayer->addToStr($string);
         $objLayer->padding = '10px';
@@ -1256,8 +1422,9 @@ class display extends object
     * @access public
     * @return string The template output string
     */
-    public function unbanPopup()
+    public function popUnban()
     {
+        // javascript files to select all users and to sort user table
         $headerParams = $this->getJavascriptFile('selectall.js', 'htmlelements');
         $this->appendArrayVar('headerParams', $headerParams);
         $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
@@ -1287,6 +1454,7 @@ class display extends object
         $roomId = $this->getSession('chat_room_id');
         $bannedUsers = $this->dbBanned->listUsers($roomId);
         
+        // remove temp banned users
         if($bannedUsers != FALSE){
             foreach($bannedUsers as $key=>$user){
                 if($user['ban_type'] != 1){
@@ -1296,17 +1464,16 @@ class display extends object
         }
         $bannedUsers = count($bannedUsers) >= 1 ? $bannedUsers : FALSE;
         
+        // select all/Deselect all links
         if($bannedUsers != FALSE){
-            $objTable = new htmltable();
-            $objTable->cellspacing = 2;
-            $objTable->cellpadding = 2;
-            
+            // select all link
             $objLink = new link('javascript:
     SetAllCheckBoxes(\'unban\',\'userId[]\',true);');
             $objLink->link = $selectLabel;
             $objLink->title = $selectTitleLabel;
             $selectLink = $objLink->show();
             
+            // deselect all link
             $objLink = new link('javascript:
     SetAllCheckBoxes(\'unban\',\'userId[]\',false);');
             $objLink->link = $deselectLabel;
@@ -1314,13 +1481,19 @@ class display extends object
             $deselectLink = $objLink->show();
 
             $links = $selectLink.'&nbsp;|&nbsp;'.$deselectLink;
+
+            // links table
+            $objTable = new htmltable();
+            $objTable->cellspacing = 2;
+            $objTable->cellpadding = 2;            
             $objTable->startRow();
-            $objTable->addCell($links, '', '', 'center', '', 'colspan="3"');
+            $objTable->addCell($links, '', '', '', '', 'colspan="3"');
             $objTable->endRow();
             $linksTable = $objTable->show();
             $string .= $linksTable;
         }
         
+        // main table
         $objTable = new htmltable();
         $objTable->cellpadding = 4;
         $objTable->id = 'userList';
@@ -1343,6 +1516,7 @@ class display extends object
                 $surname = $this->objUser->getSurname($user['user_id']);
                 $banType = $user['ban_type'];
                 
+                // select user check box
                 $objCheck = new checkbox('userId[]');
                 $objCheck->setValue($userId);
                 $userIdCheck = $objCheck->show();
@@ -1358,26 +1532,29 @@ class display extends object
         }
         $usersTable = $objTable->show();
 
+        // submit button
         $objButton = new button('send', $submitLabel);
         $objButton->extra = ' onclick="javascript:
-            var elChk = document.getElementsByName(\'userId[]\');
-            var elChkValue = false;
-            for(var i = 0; i &lt; elChk.length; i++){
-                if(elChk[i].checked == true){
-                    elChkValue = true;
+            var el_checkbox = document.getElementsByName(\'userId[]\');
+            var myValue = false;
+            for(var i = 0; i &lt; el_checkbox.length; i++){
+                if(el_checkbox[i].checked == true){
+                    myValue = true;
                 }
             }
-            if(elChkValue){
+            if(myValue){
                 document.getElementById(\'form_unban\').submit();
             }else{
                 alert(\''.$errLabel.'\');
             }"';
         $sendButton = $objButton->show();
         
+        // cancel button
         $objButton = new button('cancel', $cancelLabel);
         $objButton->extra = ' onclick="javascript:window.close()"';
         $cancelButton = $objButton->show();
         
+        // unban form
         $objForm = new form('unban', $this->uri(array(
             'action' => 'unbanusers',
         )));
@@ -1386,6 +1563,7 @@ class display extends object
         $unbanForm = $objForm->show();
         $string .= $unbanForm;
         
+        // main display div
         $objLayer = new layer();
         $objLayer->padding = '10px';
         $objLayer->addToStr($string);
@@ -1401,7 +1579,7 @@ class display extends object
     * @param string $users: The list of users unbanned
     * @return string $str: The output string
     */
-    public function confirmUnban($users)
+    public function popConfirmUnban($users)
     {
         // get data
         $usersList = explode('|', $users);
@@ -1412,21 +1590,19 @@ class display extends object
         $closeLabel = $this->objLanguage->languageText('mod_messaging_wordclose', 'messaging');
         $titleLabel = $this->objLanguage->languageText('mod_messaging_closetitle', 'messaging');
         
-        $objHeader = new htmlheading();
         if(count($usersList) > 1){
-            $objHeader->str = $multipleLabel;
+            $confirmLabel = $multipleLabel;
         }else{
-            $objHeader->str = $singleLabel;
+            $confirmLabel = $singleLabel;
         }
-        $objHeader->type = 3;
-        $heading = $objHeader->show();
-        $string = $heading;
         
+        // close link
         $objLink = new link('javascript:window.close()');
         $objLink->title = $titleLabel;
         $objLink->link = $closeLabel;
         $closeLink = $objLink->show();
 
+        // main table
         $objTable = new htmltable();
         $objTable->cellspacing = '2';
         $objTable->cellpadding = '2';
@@ -1441,8 +1617,255 @@ class display extends object
         $objTable->addCell($closeLink, '', '', 'center', '', '');
         $objTable->endRow();
         $linkTable = $objTable->show();    
-        $string .= $linkTable;
+
+        // confirm feature box
+        $string = $this->objFeaturebox->show($confirmLabel, $linkTable);
         
+        // main display div
+        $objLayer = new layer();
+        $objLayer->addToStr($string);
+        $objLayer->padding = '10px';
+        $str = $objLayer->show();
+        
+        return $str;        
+    }   
+
+    /**
+    * Method to create the content for the invite user popup
+    * 
+    * @access public
+    * @return string The template output string
+    */
+    public function popInvite()
+    {
+        // css style
+        $style = '<style type="text/css">
+            div.autocomplete {
+                position:absolute;
+                background-color:white;
+            }    
+            div.autocomplete ul {
+                list-style-type:none;
+                margin:0px;
+                padding:0px;
+            }    
+            div.autocomplete ul li.selected {
+                border:1px solid #888;
+                background-color: #ffb;
+            }
+            div.autocomplete ul li {
+                border:1px solid #888;
+                list-style-type:none;
+                display:block;
+                margin:0;
+                cursor:pointer;
+            }
+        </style>';
+        $str = $style;
+
+        // javascript
+        $script = '<script type="text/javaScript">
+            function jsInviteUserList()
+            {        
+                var el_option = document.getElementsByName("option");
+                var len = el_option.length;
+                var myValue = "";
+                for(var i = 0; i <= len-1; i++){
+                    if(el_option[i].checked){
+                        myValue = el_option[i].value;
+                    }
+                }
+                var pars = "module=messaging&action=invitelist&option="+myValue;
+                new Ajax.Autocompleter("input_username", "userDiv", "index.php", {parameters: pars});
+            }
+        </script>';
+        $str .= $script;
+
+        // language items
+        $inviteLabel = $this->objLanguage->languageText('mod_messaging_invite', 'messaging');
+        $userLabel = $this->objLanguage->languageText('mod_messaging_worduser', 'messaging');
+        $submitLabel = $this->objLanguage->languageText('mod_messaging_wordsubmit', 'messaging');
+        $cancelLabel = $this->objLanguage->languageText('mod_messaging_wordcancel', 'messaging');
+        $nameLabel = $this->objLanguage->languageText('mod_messaging_firstname', 'messaging');
+        $surnameLabel = $this->objLanguage->languageText('mod_messaging_surname', 'messaging');
+        $errInviteLabel = $this->objLanguage->languageText('mod_messaging_errinvite', 'messaging');
+                
+        // heading
+        $objHeader = new htmlheading();
+        $objHeader->str = $inviteLabel;
+        $objHeader->type = 1;
+        $heading = $objHeader->show();
+
+        // name/surname radio
+        $objRadio = new radio('option');
+        $objRadio->addOption('firstname', '&nbsp;'.$nameLabel);
+        $objRadio->addOption('surname', '&nbsp;'.$surnameLabel);
+        $objRadio->setBreakSpace('table');
+        $objRadio->setSelected('firstname');
+        $objRadio->extra = ' onchange="javascript:
+            var el_Username = document.getElementById(\'input_username\');
+            el_Username.value = \'\';
+            el_Username.focus();"';
+        $choiceRadio = $objRadio->show();
+        
+        // user search input
+        $objInput = new textinput('username', '', '', 50);
+        $objInput->extra = ' onkeyup="javascript:
+            jsInviteUserList()"';
+        $userInput = $objInput->show();
+        
+        // hidden user search selection input
+        $objInput = new textinput('userId', '', 'hidden', '');
+        $userIdInput = $objInput->show();
+        
+        // search results display div
+        $objLayer = new layer();
+        $objLayer->id = 'userDiv';
+        $objLayer->cssClass = 'autocomplete';
+        $userDiv = $objLayer->show();
+
+        // user table
+        $objTable = new htmltable();
+        $objTable->cellspacing = '2';
+        $objTable->cellpadding = '2';
+        $objTable->startRow();
+        $objTable->addCell($choiceRadio);
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($userInput.$userDiv.$userIdInput);
+        $objTable->endRow();
+        $userTable = $objTable->show();
+        
+        // user feature box
+        $userFeature = $this->objFeaturebox->show($userLabel, $userTable);
+
+        // submit button
+        $objButton = new button('send', $submitLabel);
+        $objButton->extra = ' onclick="javascript:
+            var el_UserId = document.getElementById(\'input_userId\');
+            var el_Username = document.getElementById(\'input_username\');
+            if(el_UserId.value == \'\'){
+                alert(\''.$errInviteLabel.'\');
+                el_Username.value = \'\';
+                el_Username.focus();
+                return false;
+            }else{
+                document.getElementById(\'form_invite\').submit();
+            }"';
+        $sendButton = $objButton->show();
+        
+        // cancel button
+        $objButton = new button('cancel', $cancelLabel);
+        $objButton->extra = ' onclick="javascript:window.close()"';
+        $cancelButton = $objButton->show();
+        
+        $objLayer = new layer();
+        $objLayer->id = 'buttonDiv';
+        $objLayer->addToStr($sendButton.'&nbsp;'.$cancelButton);
+        $buttonDiv = $objLayer->show();
+
+        // invite form
+        $objForm = new form('invite', $this->uri(array(
+            'action' => 'inviteuser',
+            )));
+        $objForm->addToForm($userFeature);
+        $objForm->addToForm($buttonDiv);
+        $inviteForm = $objForm->show();
+
+        // main display div
+        $objLayer = new layer();
+        $objLayer->id = 'formDiv';
+        $objLayer->padding = '10px';
+        $objLayer->addToStr($heading.$inviteForm);
+        $formDiv = $objLayer->show();
+        $str .= $formDiv;
+
+        return $str;
+    } 
+       
+    /**
+    * Method to show the list of users to be invited
+    *
+    * @access public
+    * @param string $option: The field to search
+    * @param string $value: The value to search for
+    * @return string $str: The output string
+    */
+    public function divGetInviteUsers($option, $value)
+    {
+        // get data
+        $roomId = $this->getSession('chat_room_id');
+        $roomUsersList = $this->dbUsers->listRoomUsers($roomId);
+        $searchList = $this->dbUsers->searchUsers($option, $value);
+     
+        // language items
+        $noMatchLabel = $this->objLanguage->languageText('mod_messaging_nomatch', 'messaging');
+        
+        // check to see if user is owner or if already a member of the room
+        if($searchList != FALSE){
+            foreach($searchList as $key=>$user){
+                foreach($roomUsersList as $roomUser){
+                    if($user['userid'] == $roomUser['user_id']){
+                        unset($searchList[$key]);
+                    }elseif($user['userid'] == $this->userId){
+                        unset($searchList[$key]);
+                    }                    
+                }
+            }
+        }
+
+        // ordered list of search results
+        if(!empty($searchList)){            
+            $str = '<ul>';
+            foreach($searchList as $user){
+                $str .= '<li onclick="javascript:
+                    document.getElementById(\'input_userId\').value=\''.$user['userid'].'\'"><strong>';
+                $str .= $this->objUser->fullname($user['userid']);
+                $str .= '</strong></li>';
+            }           
+            $str .= '</ul>'; 
+        }else{
+            $str = '<ul><li><strong>'.$noMatchLabel.'</strong></li></ul>';    
+        }
+        echo $str;        
+    }
+
+    /**
+    * Method to show the confirmed invitation message
+    * 
+    * @access public
+    * @param string $userId: The id of the user banned
+    * @return string $str: The output string
+    */
+    public function popConfirmInvite($userId)
+    {
+        // language items
+        $array = array(
+            'user' => $this->objUser->fullname($userId),
+        );        
+        $confirmLabel = $this->objLanguage->code2Txt('mod_messaging_confirminvite', 'messaging', $array);
+        $closeLabel = $this->objLanguage->languageText('mod_messaging_wordclose', 'messaging');
+        $titleLabel = $this->objLanguage->languageText('mod_messaging_closetitle', 'messaging');
+        
+        // close link
+        $objLink = new link('javascript:window.close()');
+        $objLink->title = $titleLabel;
+        $objLink->link = $closeLabel;
+        $closeLink = $objLink->show();
+
+        // close link table
+        $objTable = new htmltable();
+        $objTable->cellspacing = '2';
+        $objTable->cellpadding = '2';
+        $objTable->startRow();
+        $objTable->addCell($closeLink, '', '', 'center', '', '');
+        $objTable->endRow();
+        $linkTable = $objTable->show();    
+        
+        // confirm feature box
+        $string = $this->objFeaturebox->show($confirmLabel, $linkTable);
+        
+        // main display div
         $objLayer = new layer();
         $objLayer->addToStr($string);
         $objLayer->padding = '10px';
@@ -1450,6 +1873,214 @@ class display extends object
         
         return $str;        
     }
-    
+    /**
+    * Method to create the content for the remove user popup
+    * 
+    * @access public
+    * @return string The template output string
+    */
+    public function popRemove()
+    {
+        // javascript files to select all users and to sort user table
+        $headerParams = $this->getJavascriptFile('selectall.js', 'htmlelements');
+        $this->appendArrayVar('headerParams', $headerParams);
+        $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
+        $this->appendArrayVar('headerParams', $headerParams);
+
+        // language items
+        $removeLabel = $this->objLanguage->languageText('mod_messaging_remove', 'messaging');
+        $noRecordsLabel = $this->objLanguage->languageText('mod_messaging_norecords', 'messaging');
+        $nameLabel = $this->objLanguage->languageText('mod_messaging_firstname', 'messaging');
+        $surnameLabel = $this->objLanguage->languageText('mod_messaging_surname', 'messaging');
+        $selectLabel = $this->objLanguage->languageText('mod_messaging_selectall', 'messaging');
+        $deselectLabel = $this->objLanguage->languageText('mod_messaging_deselectall', 'messaging');
+        $selectTitleLabel = $this->objLanguage->languageText('mod_messaging_selectalltitle', 'messaging');
+        $deselectTitleLabel = $this->objLanguage->languageText('mod_messaging_deselectalltitle', 'messaging');
+        $errLabel = $this->objLanguage->languageText('mod_messaging_errremove', 'messaging');
+        $submitLabel = $this->objLanguage->languageText('mod_messaging_wordsubmit', 'messaging');
+        $cancelLabel = $this->objLanguage->languageText('mod_messaging_wordcancel', 'messaging');
+        
+        // heading
+        $objHeader = new htmlheading();
+        $objHeader->str = $removeLabel;
+        $objHeader->type = 1;
+        $heading = $objHeader->show();
+        $string = $heading;
+        
+        // get data
+        $roomId = $this->getSession('chat_room_id');
+        $roomUsers = $this->dbUsers->listRoomUsers($roomId);
+
+        // remove room owner
+        if($roomUsers != FALSE){
+            foreach($roomUsers as $key=>$user){
+                if($user['user_id'] == $this->userId){
+                    unset($roomUsers[$key]);
+                }
+            }
+        }
+        
+        // select all/deselect all links
+        if($roomUsers != FALSE){
+            // select all link
+            $objLink = new link('javascript:
+    SetAllCheckBoxes(\'remove\',\'userId[]\',true);');
+            $objLink->link = $selectLabel;
+            $objLink->title = $selectTitleLabel;
+            $selectLink = $objLink->show();
+            
+            // deselect all link
+            $objLink = new link('javascript:
+    SetAllCheckBoxes(\'remove\',\'userId[]\',false);');
+            $objLink->link = $deselectLabel;
+            $objLink->title = $deselectTitleLabel;
+            $deselectLink = $objLink->show();
+
+            $links = $selectLink.'&nbsp;|&nbsp;'.$deselectLink;
+
+            // link table
+            $objTable = new htmltable();
+            $objTable->cellspacing = 2;
+            $objTable->cellpadding = 2;
+            $objTable->startRow();
+            $objTable->addCell($links, '', '', '', '', 'colspan="3"');
+            $objTable->endRow();
+            $linksTable = $objTable->show();
+            $string .= $linksTable;
+        }
+        
+        // main table
+        $objTable = new htmltable();
+        $objTable->cellpadding = 4;
+        $objTable->id = 'userList';
+        $objTable->css_class = 'sorttable';
+        $objTable->row_attributes = 'name="row_'.$objTable->id.'"';
+        $objTable->startRow();
+        $objTable->addCell('', '10%', '', '', 'heading', '');
+        $objTable->addCell($nameLabel, '45%', '', '', 'heading', '');
+        $objTable->addCell($surnameLabel, '', '', '', 'heading', '');
+        $objTable->endRow();
+        
+        if($roomUsers == FALSE){
+            $objTable->startRow();
+            $objTable->addCell($noRecordsLabel, '', '', '', 'noRecordsMessage', 'colspan="3"');
+            $objTable->endRow();
+        }else{
+            foreach($roomUsers as $user){
+                $userId = $user['user_id'];
+                $name = $this->objUser->getFirstname($user['user_id']);
+                $surname = $this->objUser->getSurname($user['user_id']);
+                
+                // select user checkbox
+                $objCheck = new checkbox('userId[]');
+                $objCheck->setValue($userId);
+                $userIdCheck = $objCheck->show();
+                
+                $objTable->startRow();
+                $objTable->addCell($userIdCheck, '10%', '', 'center', '', '');
+                $objTable->addCell($name, '45%', '', '', '', '');
+                $objTable->addCell($surname, '', '', '', '', '');
+                $objTable->endRow();
+            }
+        }
+        $usersTable = $objTable->show();
+
+        // submit button
+        $objButton = new button('send', $submitLabel);
+        $objButton->extra = ' onclick="javascript:
+            var el_checkbox = document.getElementsByName(\'userId[]\');
+            var myValue = false;
+            for(var i = 0; i &lt; el_checkbox.length; i++){
+                if(el_checkbox[i].checked == true){
+                    myValue = true;
+                }
+            }
+            if(myValue){
+                document.getElementById(\'form_remove\').submit();
+            }else{
+                alert(\''.$errLabel.'\');
+            }"';
+        $sendButton = $objButton->show();
+        
+        // cancel button
+        $objButton = new button('cancel', $cancelLabel);
+        $objButton->extra = ' onclick="javascript:window.close()"';
+        $cancelButton = $objButton->show();
+        
+        // remove form
+        $objForm = new form('remove', $this->uri(array(
+            'action' => 'removeusers',
+        )));
+        $objForm->addToForm($usersTable);
+        $objForm->addToForm('<br />'.$sendButton.'&nbsp;'.$cancelButton);
+        $unbanForm = $objForm->show();
+        $string .= $unbanForm;
+        
+        // main display layer
+        $objLayer = new layer();
+        $objLayer->padding = '10px';
+        $objLayer->addToStr($string);
+        $str = $objLayer->show();
+        
+        return $str;        
+    }
+
+    /**
+    * Method to show the confirmed removal message
+    * 
+    * @access public
+    * @param string $users: The list of users removed
+    * @return string $str: The output string
+    */
+    public function popConfirmRemove($users)
+    {
+        // get data
+        $usersList = explode('|', $users);
+        
+        // language items
+        $singleLabel = $this->objLanguage->code2Txt('mod_messaging_confirmremove1', 'messaging');
+        $multipleLabel = $this->objLanguage->code2Txt('mod_messaging_confirmremove2', 'messaging');
+        $closeLabel = $this->objLanguage->languageText('mod_messaging_wordclose', 'messaging');
+        $titleLabel = $this->objLanguage->languageText('mod_messaging_closetitle', 'messaging');
+        
+        if(count($usersList) > 1){
+            $confirmLabel = $multipleLabel;
+        }else{
+            $confirmLabel = $singleLabel;
+        }
+        
+        // close link
+        $objLink = new link('javascript:window.close()');
+        $objLink->title = $titleLabel;
+        $objLink->link = $closeLabel;
+        $closeLink = $objLink->show();
+
+        // main table
+        $objTable = new htmltable();
+        $objTable->cellspacing = '2';
+        $objTable->cellpadding = '2';
+        foreach($usersList as $user){
+            $name = $this->objUser->fullname($user);
+            
+            $objTable->startRow();
+            $objTable->addCell($name, '', '', '', '', '');
+            $objTable->endRow();
+        }
+        $objTable->startRow();
+        $objTable->addCell($closeLink, '', '', 'center', '', '');
+        $objTable->endRow();
+        $linkTable = $objTable->show();    
+
+        // confirm feature box
+        $string = $this->objFeaturebox->show($confirmLabel, $linkTable);
+        
+        // main display div
+        $objLayer = new layer();
+        $objLayer->addToStr($string);
+        $objLayer->padding = '10px';
+        $str = $objLayer->show();
+        
+        return $str;        
+    }   
 }
 ?>

@@ -147,7 +147,6 @@ class dbuserlog extends dbTable
         $sql .= " WHERE room_id = '".$roomId."'";
         $logData = $this->getArray($sql);
         if(!empty($logData)){
-            $data = array();
             foreach($logData as $key=>$line){
                 $sql = " SELECT * FROM ".$this->tblUsers;
                 $sql .= " WHERE userid = '".$line['user_id']."'";
@@ -165,9 +164,12 @@ class dbuserlog extends dbTable
                     $data[] = $array;
                 }
             }
-            return $data;
+            if(!empty($data)){
+                return $data;
+            }
+            return FALSE;
         }
-        return array();
+        return FALSE;
     }
 }
 ?>

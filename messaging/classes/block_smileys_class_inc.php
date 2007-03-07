@@ -93,23 +93,23 @@ class block_smileys extends object
 	{
         // javascript
         $script = '<script type="text/javaScript">
-            var namelist = new Array("angry", "cool", "evil", "exclamation", "big_grin", "question", "raspberry", "sad", "smile", "wink");
+            var arrNames = new Array("angry", "cool", "evil", "exclamation", "big_grin", "question", "raspberry", "sad", "smile", "wink");
             
-            var codelist = new Array("[>:-(]", "[B-)]", "[}:-)]", "[!]", "[:-D]", "[?]", "[:-P]", "[:-(]", "[:-)]", "[;-)]");
+            var arrCodes = new Array("[>:-(]", "[B-)]", "[}:-)]", "[!]", "[:-D]", "[?]", "[:-P]", "[:-(]", "[:-)]", "[;-)]");
             
-            function addSmiley(elementId)
+            function jsInsertSmiley(el_id)
             {
-                var msg = document.getElementById("input_message");
-                for(i = 0; i <= namelist.length-1; i++){
-                    if(namelist[i] == elementId){
-                        if(msg.value == ""){
-                            msg.value = codelist[i];
+                var el_Message = document.getElementById("input_message");
+                for(i = 0; i <= arrNames.length-1; i++){
+                    if(arrNames[i] == el_id){
+                        if(el_Message.value == ""){
+                            el_Message.value = arrCodes[i];
                         }else{
-                            msg.value = msg.value + " " + codelist[i];
+                            el_Message.value = el_Message.value + " " + arrCodes[i];
                         }
                     }
                 }
-                msg.focus();
+                el_Message.focus();
             }
         </script>';
         echo $script;
@@ -146,7 +146,7 @@ class block_smileys extends object
                 $this->objIcon->extra = '';
                 $icon = $this->objIcon->show();
                 
-                $objTable->addCell('<div id="'.$smiley.'" style="cursor: pointer;" onclick="addSmiley(this.id)">'.$icon.'</div>', '', '', '', '', '');
+                $objTable->addCell('<div id="'.$smiley.'" style="cursor: pointer;" onclick="jsInsertSmiley(this.id)">'.$icon.'</div>', '', '', '', '', '');
                 $objTable->addCell('<nobr><font class="warning"><b>'.$code.'</b></font></nobr>', '', '', '', '', '');
             }
             $objTable->endRow();

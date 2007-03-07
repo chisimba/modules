@@ -105,7 +105,7 @@ class dbmessages extends dbTable
     public function getMessageCount($roomId)
     {
         $sql = "SELECT * FROM ".$this->table;
-        $sql .= " WHERE recipient_id = '".$roomId."'"
+        $sql .= " WHERE recipient_id = '".$roomId."'";
         $data = $this->getArray($sql);
         if(!empty($data)){
             return count($data);

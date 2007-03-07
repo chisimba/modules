@@ -102,7 +102,7 @@ class block_onlineusers extends object
                 $this->moderator = TRUE;
             }
         }elseif($roomData['room_type'] == 3){
-            //to do once workgroups is ported
+            //TODO: Once workgroups has been ported
         }
         
         // set up help icon
@@ -123,7 +123,7 @@ class block_onlineusers extends object
     }
 
     /**
-    * Method to output a block with information on how help works
+    * Method to output a block with online users
     *
     * @access public
     * @return string $str: The output string
@@ -132,44 +132,44 @@ class block_onlineusers extends object
 	{
         // javascript
         $script = '<script type="text/javaScript">
-            Event.observe(window, "load", init_users, false);
-            var formDiv = document.getElementById("formDiv");
-            var bannedDiv = document.getElementById("bannedDiv");
-            hide_div(bannedDiv);
+            Event.observe(window, "load", jsGetOnlineUsers, false);
+            var el_FormDiv = document.getElementById("formDiv");
+            var el_BannedDiv = document.getElementById("bannedDiv");
+            jsHideDiv(el_BannedDiv);
             
-            function init_users(){
+            function jsGetOnlineUsers(){
                 var url = "index.php";
                 var target = "listDiv";
                 var pars = "module=messaging&action=getusers";
-                var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars, onComplete: users_timer});
+                var myAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars, onComplete: jsUserListTimer});
             }
 
-            function users_timer(){
-                var bannedEl = document.getElementById("input_banned");
-                if(bannedEl.value == "Y"){
-                    var useridEl = document.getElementById("input_userId");
+            function jsUserListTimer(){
+                var el_Banned = document.getElementById("input_banned");
+                if(el_Banned.value == "Y"){
+                    var el_UserId = document.getElementById("input_userId");
                     
                     var url = "index.php";
                     var target = "bannedDiv";
-                    var pars = "module=messaging&action=getbanmsg&userId="+useridEl.value;
+                    var pars = "module=messaging&action=getbanmsg&userId="+el_UserId.value;
                     var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars});
-                    show_div(bannedDiv);
-                    hide_div(formDiv);
+                    jsShowDiv(el_BannedDiv);
+                    jsHideDiv(el_FormDiv);
                 }else{
-                    hide_div(bannedDiv);
-                    show_div(formDiv);
+                    jsHideDiv(el_BannedDiv);
+                    jsShowDiv(el_FormDiv);
                 }                
-                setTimeout("init_users()", 3000);
+                setTimeout("jsGetOnlineUsers()", 3000);
             }
             
-            function show_div(myDiv){
-                myDiv.style.visibility = "visible";
-                myDiv.style.display = "block";
+            function jsShowDiv(el_div){
+                el_div.style.visibility = "visible";
+                el_div.style.display = "block";
             }
             
-            function hide_div(myDiv){
-                myDiv.style.visibility = "hidden";
-                myDiv.style.display = "none";
+            function jsHideDiv(el_div){
+                el_div.style.visibility = "hidden";
+                el_div.style.display = "none";
             }
         </script>';
         $str = $script;
@@ -188,7 +188,7 @@ class block_onlineusers extends object
         )));
         $objPopup->set('linktext', $banLabel);
         $objPopup->set('width', '500');
-        $objPopup->set('height', '520');
+        $objPopup->set('height', '580');
         $objPopup->set('left', '100');
         $objPopup->set('top', '100');
         $objPopup->set('scrollbars', 'no');
@@ -203,7 +203,7 @@ class block_onlineusers extends object
         )));
         $objPopup->set('linktext', $unbanLabel);
         $objPopup->set('width', '500');
-        $objPopup->set('height', '520');
+        $objPopup->set('height', '580');
         $objPopup->set('left', '100');
         $objPopup->set('top', '100');
         $objPopup->set('scrollbars', 'no');

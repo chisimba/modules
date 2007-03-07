@@ -1,6 +1,6 @@
 <?php
 //5ive definition
-$tablename = 'tbl_messaging_messsges';
+$tablename = 'tbl_messaging_messages';
 
 //Options line for comments, encoding and character set
 $options = array('comment' => 'The main messaging table, holds all message details', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');

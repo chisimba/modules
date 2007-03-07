@@ -20,6 +20,12 @@ class dbusers extends dbTable
     private $table;
 
     /**
+    * @var string $tblUsers: The name of an additional database table to be affected
+    * @access private
+    */
+    private $tblUsers;
+
+    /**
     * @var object $objUser: The user class in the security module
     * @access private
     */
@@ -41,6 +47,7 @@ class dbusers extends dbTable
     {
         parent::init('tbl_messaging_users');
         $this->table = 'tbl_messaging_users';
+        $this->tblUsers = 'tbl_users';
         
         // system classes
         $this->objUser = $this->getObject('user', 'security');
@@ -123,6 +130,50 @@ class dbusers extends dbTable
     public function deleteUsers($roomId)
     {
         $this->delete('room_id', $roomId);
+    }
+
+    /** 
+    * Method to search for users in a chat room
+    *
+    * @access public
+    * @param string $option: The field to search - firstname|surname
+    * @param string $value: The field value to search for
+    * @return array $array: The chat room user list
+    */
+    public function searchUsers($option, $value)
+    {
+        $sql = " SELECT * FROM ".$this->tblUsers;
+        $sql .= " WHERE ".$option." LIKE '".$value."%'";
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            if(count($data) > 20){
+                $array = array_slice($data, 0, 20);   
+            }else{
+                $array = $data;
+            }
+            return $array;
+        }
+        return array();
+    }
+    
+    /** 
+    * Method to check if a user is a user of the chat room
+    *
+    * @access public
+    * @param array $userId: The id of the user to check
+    * @param array $roomId: The id of the chat room to check
+    * @return array $data: The banned user data
+    */
+    public function getRoomUser($roomId, $userId)
+    {
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE user_id = '".$userId."'";
+        $sql .= " AND room_id = '".$roomId."'";
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data[0];
+        }
+        return FALSE;
     }
 }
 ?>
