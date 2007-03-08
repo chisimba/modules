@@ -70,10 +70,17 @@ class realtime extends controller
     public $objLog;
 
     /**
-    * @var string $modUri: The module uri
+    * @var object $whiteboardURL: The URL for the whiteboard applet files
     * @access public
     */
-    public $modUri;
+    public $whiteboardURL;
+
+    /**
+    * @var object $voiceURL: The URL for the voice applet files
+    * @access public
+    */
+    public $voiceURL;
+
 
     /**
      * Constructor method to instantiate objects and get variables
@@ -100,8 +107,11 @@ class realtime extends controller
         }        
         
         $this->objConfig = $this->getObject('altconfig', 'config');
-        $this->modUri = $this->objConfig->getItem('MODULE_URI');
+        $location = "http://". $_SERVER['HTTP_HOST'];
+        $this->whiteboardURL = $location.$this->getResourceUri('whiteboard', 'realtime');
+        $this->voiceURL = $location.$this->getResourceUri('voice', 'realtime');
     }
+    
     /**
     * Method to process actions to be taken
     *
@@ -112,35 +122,18 @@ class realtime extends controller
 		switch($action)
 		{
 		  case 'classroom':
-
-		     $this->setVar('whiteboardUrl',
-				"http://". $_SERVER['HTTP_HOST']."/".$modUri."realtime/whiteboard");
-				
-		     $this->setVar('voiceUrl',
-				"http://". $_SERVER['HTTP_HOST']."/".$modUri."realtime/voice");
-		     $this->setVar('realtimeUrl',
-				"http://". $_SERVER['HTTP_HOST']."/".$modUri."realtime");
-				
 		     return "realtime-classroom_tpl.php";
 		
 		  case 'whiteboard':
-
-		     $this->setVar('whiteboardUrl',
-				"http://". $_SERVER['HTTP_HOST']."/".$modUri."realtime/whiteboard");
 		     return "realtime-whiteboard_tpl.php";
 
 		  case 'voice':
-		     $this->setVar('voiceUrl',
-				"http://". $_SERVER['HTTP_HOST']."/".$modUri."realtime/voice");
-		     $this->setVar('realtimeUrl',
-				"http://". $_SERVER['HTTP_HOST']."/".$modUri."realtime");
-	
 		     return "realtime-voice_tpl.php";
 	
 		  default:
-		      var_dump($this->uri(array()));
 		     return "realtime_tpl.php";
 		}
 	
     }
 }
+?>
