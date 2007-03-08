@@ -413,7 +413,8 @@ class messaging extends controller
                 
             // get the chat messages posted to a chat room
             case 'getchat':
-                return $this->objDisplay->divGetChat();
+                $mode = $this->getParam('mode');
+                return $this->objDisplay->divGetChat($mode);
                 break;
                 
             // display the popup page to invite users to your chat room
@@ -482,8 +483,8 @@ class messaging extends controller
                 $this->setVar('mode', 'popup');
                 return 'template_tpl.php';
                 break;
-            // display the chat room list as default
-            
+                
+            // display the chat room list as default            
             default:
                 $this->unsetSession('chat_room_id');
                 $this->unsetSession('message_counter');

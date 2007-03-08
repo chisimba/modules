@@ -133,6 +133,8 @@ class block_onlineusers extends object
         // javascript
         $script = '<script type="text/javaScript">
             Event.observe(window, "load", jsGetOnlineUsers, false);
+            
+            var userTimer;
             var el_FormDiv = document.getElementById("formDiv");
             var el_BannedDiv = document.getElementById("bannedDiv");
             jsHideDiv(el_BannedDiv);
@@ -159,7 +161,7 @@ class block_onlineusers extends object
                     jsHideDiv(el_BannedDiv);
                     jsShowDiv(el_FormDiv);
                 }                
-                setTimeout("jsGetOnlineUsers()", 3000);
+                userTimer = setTimeout("jsGetOnlineUsers()", 3000);
             }
             
             function jsShowDiv(el_div){

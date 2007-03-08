@@ -20,6 +20,12 @@ class dbrooms extends dbTable
     private $table;
 
     /**
+    * @var object $objContext: The dbcontext class in the context module
+    * @access public
+    */
+    public $objContext;
+
+    /**
     * Method to construct the class
     *
     * @access public
@@ -29,6 +35,9 @@ class dbrooms extends dbTable
     {
         parent::init('tbl_messaging_rooms');
         $this->table = 'tbl_messaging_rooms';
+
+        // system classes
+        $this->objContext = $this->getObject('dbcontext', 'context');
     }
 
     /**
@@ -133,8 +142,8 @@ class dbrooms extends dbTable
     */
     public function getContextRoom($contextCode = NULL)
     {
-        if($contextCode == NULL){
-            $contextCode = $this->getSession('contextCode');
+        if($contextCode == NULL){            
+            $contextCode = $this->objContext->getContextCode();
         }
         if($contextCode != NULL){
             $sql = "SELECT * FROM ".$this->table;

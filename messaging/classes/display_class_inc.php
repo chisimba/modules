@@ -494,7 +494,7 @@ class display extends object
             el.setAttribute(\'value\', \'cancel\');
             el.setAttribute(\'type\', \'hidden\');
             
-            el_Cancelform.appendChild(element);
+            el_Cancelform.appendChild(el);
             el_Cancelform.submit();"';
         $cancelButton = $objButton->show();
 
@@ -592,7 +592,8 @@ class display extends object
         // javascript
         $script = '<script type="text/javaScript">
             Event.observe(window, "load", jsGetChat, false);
-    
+            var chatTimer;
+            
             function jsGetChat(){
                 var url = "index.php";
                 var target = "chatDiv";
@@ -603,7 +604,7 @@ class display extends object
             function jsChatTimer(){
                 var el_ChatDiv = document.getElementById("chatDiv");
                 el_ChatDiv.scrollTop = el_ChatDiv.scrollHeight
-                setTimeout("jsGetChat()", 3000);
+                chatTimer = setTimeout("jsGetChat()", 3000);
             }
             
             function jsSendChat(){
@@ -622,10 +623,6 @@ class display extends object
         $str = $script;
         
         // language items
-        $array = array(
-            'room' => $roomData['room_name'],
-        );
-        $heading = $this->objLanguage->code2Txt('mod_messaging_room', 'messaging', $array);
         $sendLabel = $this->objLanguage->languageText('mod_messaging_wordsend', 'messaging');
         $clearLabel = $this->objLanguage->languageText('mod_messaging_wordclear', 'messaging');
         $inviteLabel = $this->objLanguage->languageText('mod_messaging_invite', 'messaging');
@@ -642,6 +639,7 @@ class display extends object
         $str .= $bannedLayer;
         
         // heading
+        $heading = $roomData['room_name'];
         $objHeader = new htmlHeading();
         $objHeader->str = ucfirst($heading);
         $objHeader->type = 1;
@@ -703,7 +701,7 @@ class display extends object
         $objText = new textarea('message');
         $chatText = $objText->show();
         
-        // caht send button
+        // chat send button
         $objButton = new button('send', $sendLabel);
         $objButton->extra = ' onclick="javascript:
             jsSendChat();"';
@@ -863,9 +861,9 @@ class display extends object
         // javascript
         $this->setVar('pageSuppressXML', TRUE);
         $script = '<script type="text/javaScript">
-            var arrNames = new Array("alien", "angel", "angry", "anticipation", "approve", "big_grin", "big_smile", "blush", "boom", "clown", "confused", "cool", "crying", "dead", "evil", "evil_eye", "exclamation", "flower", "geek", "kiss", "martian", "moon", "ogle", "ouch", "peace", "question", "rainbow", "raise_eyebrows", "raspberry", "roll_eyes", "sad", "shy", "sleepy", "smile", "stern", "surprise", "thoughtful", "thumbs_down", "thumbs_up", "unsure", "up_yours", "very_angry", "wink", "worried");
+            var arrNames = new Array("alien" ,"angel", "angry", "applause", "black_eye", "bye", "cheeky", "chicken", "clown", "confused", "cool", "cowboy", "crazy", "cry", "dance_of_joy", "doh", "drool", "embarrassed", "evil", "frustrated", "grin", "hug", "hypnotised", "idea", "kiss", "laugh", "love", "nerd", "not_talking", "praying", "raise_eyebrow", "roll_eyes", "rose", "sad", "shame_on_you", "shocked", "shy", "sick", "skull", "sleeping", "smile", "straight_face", "thinking", "tired", "victory", "whistle", "wink", "worried");
             
-            var arrCodes = new Array("[A51]", "[0:-)]", "[>:-(]", "[8-)]", "[^-)]", "[:-D]", "[:-]]", "[:-I]", "[<@>]", "[:o)]", "[<:-/]", "[B-)]", "[!-(]", "[xx-P]", "[}:-)]", "[};-)]", "[!]", "[F]", "[G]", "[:-x]", "[M]", "[B]", "[8-P]", "[P-(]", "[V]", "[?]", "[((]", "[E-)]", "[:-P]", "[8-]]", "[:-(]", "[8-/]", "[zzz]", "[:-)]", "[>:-.]", "[8-o]", "[>8-/]", "[-]", "[+]", "[:-/]", "[@#$%]", "[>:-0]", "[;-)]", "[8-(]");
+            var arrCodes = new Array(">-)", "0:)", "X-(", "=D>", "b-(", ":\"(", ":p", "~:>", ":o)", ":-/", "B-)", "<):)", "8-}", ":((", "\\\:D/", "#-o", "=P~", ":\">", ">:)", ":-L", ":D", ">:D<", "@-)", "*-:)", ":*", ":))", ":x", ":-B", "[-(", "[-o<", "/:)", "8-|", "@};-", ":(", "[-X", ":O", ";;)", ":-&", "8-X", "I-)", ":)", ":|", ":-?", "(:|", ":)>-", ":-\"", ";)", ":-s");
             
             function jsAddSmiley(el_id)
             {
@@ -893,50 +891,54 @@ class display extends object
 
         // list of smiley icons and their codes
         $list = array(
-            'alien' => '[ A51 ]',
-            'angel' => '[ 0:-) ]',
-            'angry' => '[ >:-( ]',
-            'anticipation' => '[ 8-) ]',
-            'approve' => '[ ^-) ]',
-            'big_grin' => '[ :-D ]',
-            'big_smile' => '[ :-] ]',
-            'blush' => '[ :-I ]',
-            'boom' => '[ boom ]',
-            'clown' => '[ :o) ]',
-            'confused' => '[ <:-/ ]',
-            'cool' => '[ B-) ]',
-            'crying' => '[ !-( ]',
-            'dead' => '[ xx-P ]',
-            'evil' => '[ }:-) ]',
-            'evil_eye' => '[ };-) ]',
-            'exclamation' => '[ ! ]',
-            'flower' => '[ F ]',
-            'geek' => '[ G ]',
-            'kiss' => '[ :-x ]',
-            'martian' => '[ M ]',
-            'moon' => '[ moon ]',
-            'ogle' => '[ 8-P ]',
-            'ouch' => '[ P-( ]',
-            'peace' => '[ V ]',
-            'question' => '[ ? ]',
-            'rainbow' => '[ (( ]',
-            'raise_eyebrows' =>'[ E-) ]',
-            'raspberry' => '[ :-P ]',
-            'roll_eyes' => '[ 8-] ]',
-            'sad' => '[ :-( ]',
-            'shy' => '[ 8-/ ]',
-            'sleepy' => '[ zzz ]',
-            'smile' => '[ :-) ]',
-            'stern' => '[ >:-. ]',
-            'surprise' => '[ 8-o ]',
-            'thoughtful' => '[ >8-/ ]',
-            'thumbs_down' => '[ - ]',
-            'thumbs_up' => '[ + ]',
-            'unsure' => '[ :-/ ]',
-            'up_yours' => '[ @#%& ]',
-            'very_angry' => '[ >:-0 ]',
-            'wink' => '[ ;-) ]',
-            'worried' => '[ 8-( ]',
+            'alien' => '>-)',
+            'angel' => '0:)',
+            'angry' => 'X-(',
+            'applause' => '=D>',
+            'black_eye' => 'b-(',
+            'bye' => ':"(',
+            'cheeky' => ':p',
+            'chicken' => '~:>',
+            'clown' => ':o)',
+            'confused' => ':-/',
+            'cool' => 'B-)',
+            'cowboy' => '<):)',
+            'crazy' => '8-}',
+            'cry' => ':((',
+            'dance_of_joy' => '\:D/',
+            'doh' => '#-o',
+            'drool' => '=P~',
+            'embarrassed' => ':">',
+            'evil' => '>:)',
+            'frustrated' => ':-L',
+            'grin' => ':D',
+            'hug' => '>:D<',
+            'hypnotised' => '@-)',
+            'idea' => '*-:)',
+            'kiss' => ':*',
+            'laugh' => ':))',
+            'love' => ':x',
+            'nerd' => ':-B',
+            'not_talking' => '[-(',
+            'praying' => '[-o<',
+            'raise_eyebrow' => '/:)',
+            'roll_eyes' => '8-|',
+            'rose' => '@};-',
+            'sad' => ':(',
+            'shame_on_you' => '[-X',
+            'shocked' => ':O',
+            'shy' => ';;)',
+            'sick' => ':-&',
+            'skull' => '8-X',
+            'sleeping' => 'I-)',
+            'smile' => ':)',
+            'straight_face' => ':|',
+            'thinking' => ':-?',
+            'tired' => '(:|',
+            'victory' => ':)>-',
+            'whistle' => ':-"',
+            'wink' => ';)',
+            'worried' => ':-s',
         );
         
         // close link
@@ -962,7 +964,7 @@ class display extends object
                 $icon = $this->objIcon->show();
                 
                 $objTable->addCell('<div id="'.$smiley.'" style="cursor: pointer;" onclick="jsAddSmiley(this.id)">'.$icon.'</div>', '12.5%', '', 'center', '', '');
-                $objTable->addCell('<nobr><font class="warning"><b>'.htmlentities($code).'</b></font></nobr>', '', '', '', '', '');
+                $objTable->addCell('<nobr><font class="warning"><b>'.htmlentities($code).'</b></font></nobr>', '', '', 'center', '', '');
             }
             $objTable->endRow();
         }
@@ -987,9 +989,10 @@ class display extends object
     * Method to create the content for the chat message div
     * 
     * @access public
+    * @param string $mode: The way in which the chat must be displayed
     * @return string The template output string
     */
-    public function divGetChat()
+    public function divGetChat($mode = NULL)
     {
         // language items
         $systemLabel = $this->objLanguage->languageText('mod_messaging_wordsystem', 'messaging');
@@ -1009,11 +1012,19 @@ class display extends object
                 if($userId == 'system'){
                     $name = $systemLabel;   
                 }else{
-                    $name = $this->objUser->fullname($userId);
+                    if($mode == 'context'){              
+                        $name = $this->objUser->username($userId);
+                    }else{
+                        $name = $this->objUser->fullname($userid);
+                    }   
                 }
                 $date = $this->objDatetime->formatDate($message['date_created']);
-                $str .= '<strong>['.$name.'&nbsp;-&nbsp;';
-                $str .= $date.']:</strong><br />';
+                $str .= '<strong>['.$name;
+                if($mode == 'context'){
+                    $str .= ']:</strong><br />';
+                }else{
+                    $str .= '&nbsp;-&nbsp;'.$date.']:</strong><br />';
+                }
                 $str .= nl2br($message['message']);
                 $str .= '</li>';
             }

@@ -70,16 +70,16 @@ class block_smileys extends object
 
         // smiley icon array
         $this->shortList = array(
-            'angry' => '[ >:-( ]',
-            'cool' => '[ B-) ]',
-            'evil' => '[ }:-) ]',
-            'exclamation' => '[ ! ]',
-            'big_grin' => '[ :-D ]',
-            'question' => '[ ? ]',
-            'raspberry' => '[ :-P ]',
-            'sad' => '[ :-( ]',
-            'smile' => '[ :-) ]',
-            'wink' => '[ ;-) ]',
+            'angry' => 'X-(',
+            'cheeky' => ':P',
+            'confused' => ':-/',
+            'cool' => 'B-)',
+            'evil' => '>:)',
+            'idea' => '*-:)',
+            'grin' => ':D',
+            'sad' => ':(',
+            'smile' => ':)',
+            'wink' => ';)',
         );
     }
 
@@ -93,9 +93,9 @@ class block_smileys extends object
 	{
         // javascript
         $script = '<script type="text/javaScript">
-            var arrNames = new Array("angry", "cool", "evil", "exclamation", "big_grin", "question", "raspberry", "sad", "smile", "wink");
+            var arrNames = new Array("angry", "cheeky", "confused", "cool", "evil", "idea", "grin", "sad", "smile", "wink");
             
-            var arrCodes = new Array("[>:-(]", "[B-)]", "[}:-)]", "[!]", "[:-D]", "[?]", "[:-P]", "[:-(]", "[:-)]", "[;-)]");
+            var arrCodes = new Array("X-(", ":P", ":-/", "B-)", ">:)", "*-:)", ":D", ":(", ":)", ";)");
             
             function jsInsertSmiley(el_id)
             {
@@ -125,8 +125,8 @@ class block_smileys extends object
             'action'=>'moresmileys',
         )));
         $objPopup->set('linktext','[...'.$moreLabel.'...]');
-        $objPopup->set('width','600');
-        $objPopup->set('height','500');
+        $objPopup->set('width','650');
+        $objPopup->set('height','620');
         $objPopup->set('left','100');
         $objPopup->set('top','100');
         $objPopup->set('scrollbars', 'yes');
@@ -146,8 +146,8 @@ class block_smileys extends object
                 $this->objIcon->extra = '';
                 $icon = $this->objIcon->show();
                 
-                $objTable->addCell('<div id="'.$smiley.'" style="cursor: pointer;" onclick="jsInsertSmiley(this.id)">'.$icon.'</div>', '', '', '', '', '');
-                $objTable->addCell('<nobr><font class="warning"><b>'.$code.'</b></font></nobr>', '', '', '', '', '');
+                $objTable->addCell('<div id="'.$smiley.'" style="cursor: pointer;" onclick="jsInsertSmiley(this.id)">'.$icon.'</div>', '', '', 'center', '', '');
+                $objTable->addCell('<nobr><font class="warning"><b>'.$code.'</b></font></nobr>', '', '', 'center', '', '');
             }
             $objTable->endRow();
         }
