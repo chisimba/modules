@@ -114,6 +114,18 @@ class realtime extends controller
 	
 		switch($action)
 		{
+		  case 'classroom':
+
+		     $this->setVar('whiteboardUrl',
+				"http://". $_SERVER['HTTP_HOST']."/".$modUri."realtime/whiteboard");
+				
+		     $this->setVar('voiceUrl',
+				"http://". $_SERVER['HTTP_HOST']."/".$modUri."realtime/voice");
+		     $this->setVar('realtimeUrl',
+				"http://". $_SERVER['HTTP_HOST']."/".$modUri."realtime");
+				
+		     return "realtime-classroom_tpl.php";
+		
 		  case 'whiteboard':
 
 		     $this->setVar('whiteboardUrl',
