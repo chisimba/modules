@@ -11,13 +11,13 @@ $cssLayout=&$this->newObject('csslayout','htmlelements');
 $cssLayout->setNumColumns(3);
 
 $objBlocks = $this->newObject('blocks', 'blocks');
-$returnBlock = $objBlocks->showBlock('chatreturn', 'messaging');
-
 $chatBlock = $objBlocks->showBlock('contextchat', 'messaging');
+$voiceBlock = $objBlocks->showBlock('voice', 'realtime');
+
 
 $cssLayout->setLeftColumnContent($chatBlock);
 $cssLayout->setMiddleColumnContent($this->getContent());
-$cssLayout->setRightColumnContent("VOICE");
+$cssLayout->setRightColumnContent($voice);
 
 echo $cssLayout->show();
 ?>
