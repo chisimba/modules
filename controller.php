@@ -33,7 +33,47 @@ if (!$GLOBALS['kewl_entry_point_run'])
 */
 class realtime extends controller
 {
-    var $action;
+    /**
+    * @var object $objUser: The user class in the security module
+    * @access public
+    */
+    public $objUser;
+
+    /**
+    * @var string $userId: The user id of the currently logged in user
+    * @access public
+    */
+    public $userId;
+
+    /**
+    * @var string $userName: The username of the currently logged in user
+    * @access public
+    */
+    public $userName;
+
+    /**
+    * @var string $userLevel: The user's access level
+    * @access public
+    */
+    public $userLevel;
+
+    /**
+    * @var object $objConfig: The altconfig class in the config module
+    * @access public
+    */
+    public $objConfig;
+
+    /**
+    * @var object $objLog: The logactivity class in the logger module
+    * @access public
+    */
+    public $objLog;
+
+    /**
+    * @var string $modUri: The module uri
+    * @access public
+    */
+    public $modUri;
 
     /**
      * Constructor method to instantiate objects and get variables
@@ -45,54 +85,23 @@ class realtime extends controller
         //Log this module call
         $this->objLog->log();
 
-	// classes we need
-	$this->objUser = $this->newObject('user', 'security');
+        // classes we need
+        $this->objUser = $this->newObject('user', 'security');
+        $this->userId = $this->objUser->userId();
+        $this->userName = $this->objUser->username($this->userId);
+        if($this->objUser->isAdmin()){
+            $this->userLevel = 'admin';
+        }elseif($this->objUser->isLecturer()){
+            $this->userLevel = 'lecturer';
+        }elseif($this->objUser->isStudent()){
+            $this->userLevel = 'student';
+        }else{
+            $this->userLevel = 'guest';
+        }        
+        
         $this->objConfig = $this->getObject('altconfig', 'config');
-        $this->objGroups = $this->getObject('groupadminmodel', 'groupadmin');
-
-
-	// The realtime class
-
-	// Get action from input parameter
-	$this->action = $this->getParam('action', NULL);
+        $this->modUri = $this->objConfig->getItem('MODULE_URI');
     }
-
-    public function getGroupID($groupName)
-    {
-     return $this->objGroups->getLeafId(array($this->contextcode, $groupName));
-    }
-    
-    /**
-     * Method to determine the user level
-     *
-     * @param string $userName 
-     * @return string $userLevel
-     */
-    public function getUserLevel($userName)
-    {
-        // First, check for admin -- the most access
-        if ($this->objUser->isAdmin()) {
-            return "admin";
-        } else {
-            // Get userKey to look up group membership
-	    $uKey = $this->objUser->PKId();
-	    $lgrp = $this->objGroups->getLeafId(array('Lecturers'));
-	    $sgrp = $this->objGroups->getLeafId(array('Students'));
-
-            // Check if lecturer first, then student
-            if ($this->objGroups->isGroupMember($uKey, $lgrp))
-	    {
-        		return "lecturer";
-            } else if ($this->objGroups->isGroupMember($uKey, $sgrp))
-	    {
-        	return "student";
-	    }
-        }
-		// if user is in no group, guest -- the least access
-        return "guest";
-    }
-
-
     /**
     * Method to process actions to be taken
     *
@@ -100,18 +109,6 @@ class realtime extends controller
 	*/
     function dispatch($action=Null)
     {
-	$this->objLog->log();
-	$modUri = $this->objConfig->getItem('MODULE_URI');
-	$uName =  $this->objUser->userName();
-
-		if ($this->objUser->isLoggedIn())
-		{
-		   $this->setVar('userName', $uName);
-		} else {
-		   $this->setVar('userName', "Guest");
-		}
-		$this->setVar('userLevel', $this->getUserLevel($uName));
-	
 		switch($action)
 		{
 		  case 'classroom':
@@ -141,6 +138,7 @@ class realtime extends controller
 		     return "realtime-voice_tpl.php";
 	
 		  default:
+		      var_dump($this->uri(array()));
 		     return "realtime_tpl.php";
 		}
 	
