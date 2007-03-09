@@ -407,24 +407,24 @@ class cmsutils extends object
                     // Apply
 			 		$url = $this->uri(array('action' => 'releaselock'), 'cms');
 			 		$linkText = $this->objLanguage->languageText('word_apply');
-			 		$iconList = $icon_publish->getTextIcon($url, 'apply', $linkText, TRUE, 'gif', 'icons/cms/');
+			 		$iconList = $icon_publish->getTextIcon($url, 'apply', $linkText, 'gif', 'icons/cms/');
 
                     // Save
 			 		$url = "javascript:if(validate_addfrm_form(document.getElementById('form_addfrm')) == true){ document.getElementById('form_addfrm').submit(); }";
-			 		$extra = " onclick=\"javascript:if(validate_addfrm_form('addfrm') == 'ok'){ document.getElementById('form_addfrm').submit(); } \"";
 			 		$linkText = $this->objLanguage->languageText('word_save');
-			 		$iconList .= $icon_publish->getTextIcon($url, 'save', $linkText, TRUE, 'gif', 'icons/cms/', $extra);
-			 				
+			 		$iconList .= $icon_publish->getTextIcon($url, 'save', $linkText, 'gif', 'icons/cms/');
+			 		
 			 	    // Cancel	 		
 			 		$url = "javascript:history.back();";
 			 		$linkText = ucwords($this->objLanguage->languageText('word_cancel'));
-			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, TRUE, 'gif', 'icons/cms/');
-			 		// Preview
-			 		$url = $this->uri(array('action' => null), 'cms');
-			 		$extra = " onclick=\"window.open('{$url}', 'preview_cms', ' width=700, height=500, resizable=yes, toolbar=yes, scrollbars=yes')\"";
-			 		$linkText = $this->objLanguage->languageText('mod_cmsadmin_viewcms', 'cmsadmin');
-			 		$iconList .= $icon_publish->getTextIcon('#', 'preview', $linkText, TRUE, 'png', 'icons/cms/', $extra);
+			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, 'gif', 'icons/cms/');
 			 		
+			 		// Preview
+			 		$url1 = $this->uri('', 'cms');
+			 		$url = '#';
+			 		$extra = "onclick=\"window.open('{$url1}', 'preview_cms', ' width=700, height=500, resizable=yes, toolbar=yes, scrollbars=yes')\"";
+			 		$linkText = $this->objLanguage->languageText('mod_cmsadmin_viewcms', 'cmsadmin');
+			 		$iconList .= $icon_publish->getTextIcon($url, 'preview', $linkText, 'png', 'icons/cms/');
 			 		
 			 		return '<p style="align:right;">'.$iconList.'</p>';
 			 		break;
@@ -434,62 +434,61 @@ class cmsutils extends object
 			 		// Publish
 			 		$url = "javascript:if(checkSelect('select','input_arrayList[]')==false){alert('Please make a selection from the list to Publish');}else{submitbutton('select','publish');}";
 			 		$linkText = $this->objLanguage->languageText('word_publish');
-			 		$iconList = $icon_publish->getTextIcon($url, 'publish', $linkText, TRUE, 'png', 'icons/cms/');
+			 		$iconList = $icon_publish->getTextIcon($url, 'publish', $linkText, 'png', 'icons/cms/');
 			 		
 			 		// Unpublish
 			 		$url = "javascript:if(checkSelect('select','input_arrayList[]')==false){alert('Please make a selection from the list to Unpublish');}else{submitbutton('select','unpublish');}";
 			 		$linkText = $this->objLanguage->languageText('word_unpublish');
-			 		$iconList .= $icon_publish->getTextIcon($url, 'unpublish', $linkText, TRUE, 'png', 'icons/cms/');
+			 		$iconList .= $icon_publish->getTextIcon($url, 'unpublish', $linkText, 'png', 'icons/cms/');
 			 		/*
 			 		// Copy
-			 		$url = $this->uri(array('action' => null), 'cmsadmin');
+			 		$url = $this->uri('', 'cmsadmin');
 			 		$linkText = $this->objLanguage->languageText('word_copy');
-			 		$iconList .= $icon_publish->getTextIcon($url, 'copy', $linkText, TRUE, 'gif', 'icons/cms/');
+			 		$iconList .= $icon_publish->getTextIcon($url, 'copy', $linkText, 'gif', 'icons/cms/');
 			 		*/
 			 		
 			 		// New - add
 			 		$url = $this->uri(array('action' => 'addsection'), 'cmsadmin');
 			 		$linkText = $this->objLanguage->languageText('word_new');
-			 		$iconList .= $icon_publish->getTextIcon($url, 'new', $linkText, TRUE, 'gif', 'icons/cms/');
+			 		$iconList .= $icon_publish->getTextIcon($url, 'new', $linkText, 'gif', 'icons/cms/');
 			 		
 			 		// Cancel	 		
 			 		$url = "javascript:history.back();";
 			 		$linkText = ucwords($this->objLanguage->languageText('word_cancel'));
-			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, TRUE, 'gif', 'icons/cms/');
+			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, 'gif', 'icons/cms/');
 			 		
 			 		// Preview
-			 		$url = $this->uri(array('action' => null), 'cms');
-			 		$extra = " onclick=\"window.open('{$url}', 'preview_cms', ' width=700, height=500, resizable=yes, toolbar=yes, scrollbars=yes')\"";
+			 		$url1 = $this->uri('', 'cms');
+			 		$url = '#';
+			 		$extra = "onclick=\"window.open('{$url1}', 'preview_cms', ' width=700, height=500, resizable=yes, toolbar=yes, scrollbars=yes')\"";
 			 		$linkText = $this->objLanguage->languageText('mod_cmsadmin_viewcms', 'cmsadmin');
-			 		$iconList .= $icon_publish->getTextIcon('#', 'preview', $linkText, TRUE, 'png', 'icons/cms/', $extra);
-			 		
+			 		$iconList .= $icon_publish->getTextIcon($url, 'preview', $linkText, 'png', 'icons/cms/', $extra);
 			 		
 			 		return '<p style="align:right;">'.$iconList.'</p>';
-			 		
 			 		break;
 			 		
 			    case 'frontpage':
 			        // Publish
 			 		$url = "javascript: if(checkSelect('select','input_arrayList[]')==false){alert('Please make a selection from the list to Publish');}else{submitbutton('select','publish');}";
 			 		$linkText = $this->objLanguage->languageText('word_publish');
-			 		$iconList = $icon_publish->getTextIcon($url, 'publish', $linkText, TRUE, 'png', 'icons/cms/');
+			 		$iconList = $icon_publish->getTextIcon($url, 'publish', $linkText, 'png', 'icons/cms/');
 			 		
 			 		// Unpublish
 			 		$url = "javascript:if(checkSelect('select','input_arrayList[]')==false){alert('Please make a selection from the list to Unpublish');}else{submitbutton('select','unpublish');}";
 			 		$linkText = $this->objLanguage->languageText('word_unpublish');
-			 		$iconList .= $icon_publish->getTextIcon($url, 'unpublish', $linkText, TRUE, 'png', 'icons/cms/');
+			 		$iconList .= $icon_publish->getTextIcon($url, 'unpublish', $linkText, 'png', 'icons/cms/');
 			 		
 			 		// Cancel	 		
 			 		$url = "javascript:history.back();";
 			 		$linkText = ucwords($this->objLanguage->languageText('word_cancel'));
-			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, TRUE, 'gif', 'icons/cms/');
+			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, 'gif', 'icons/cms/');
 			 		
 			 		// Preview
-			 		$url = $this->uri(array('action' => null), 'cms');
-			 		$extra = " onclick=\"window.open('{$url}', 'preview_cms', ' width=700, height=500, resizable=yes, toolbar=yes, scrollbars=yes')\"";
+			 		$url1 = $this->uri('', 'cms');
+			 		$url = '#';
+			 		$extra = "onclick=\"window.open('{$url1}', 'preview_cms', ' width=700, height=500, resizable=yes, toolbar=yes, scrollbars=yes')\"";
 			 		$linkText = $this->objLanguage->languageText('mod_cmsadmin_viewcms', 'cmsadmin');
-			 		$iconList .= $icon_publish->getTextIcon('#', 'preview', $linkText, TRUE, 'png', 'icons/cms/', $extra);
-			 		
+			 		$iconList .= $icon_publish->getTextIcon($url, 'preview', $linkText, 'png', 'icons/cms/', $extra);
 			 		
 			 		return '<p style="align:right;">'.$iconList.'</p>';
 			 		break;
@@ -499,24 +498,24 @@ class cmsutils extends object
 			 		// Upload
 			 		$url = $this->uri(array('action' => 'uploadimage'), 'cmsadmin');
 			 		$linkText = $this->objLanguage->languageText('word_upload');
-			 		$iconList = $icon_publish->getTextIcon($url, 'upload', $linkText, TRUE, 'gif', 'icons/cms/');
-			 		
+			 		$iconList = $icon_publish->getTextIcon($url, 'upload', $linkText, 'gif', 'icons/cms/');
 			 				
 			 		// Save
 			 		$url = "javascript: if(validate_addsection_form(document.getElementById('addsection')) == true){ document.getElementById('addsection').submit(); }";
 			 		$linkText = $this->objLanguage->languageText('word_save');
-			 		$iconList .= $icon_publish->getTextIcon($url, 'save', $linkText, TRUE, 'gif', 'icons/cms/');
+			 		$iconList .= $icon_publish->getTextIcon($url, 'save', $linkText, 'gif', 'icons/cms/');
 			 		
 			 		// Cancel
 			 		$url = "javascript:history.back();";
 			 		$linkText = ucwords($this->objLanguage->languageText('word_cancel'));
-			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, TRUE, 'gif', 'icons/cms/');
+			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, 'gif', 'icons/cms/');
 			 		
 			 		// Preview
-			 		$url = $this->uri(array('action' => null), 'cms');
-			 		$extra = " onclick=\"window.open('{$url}', 'preview_cms', ' width=700, height=500, resizable=yes, toolbar=yes, scrollbars=yes')\"";
+			 		$url1 = $this->uri(array('action' => null), 'cms');
+			 		$url = '#';
+			 		$extra = "onclick=\"window.open('{$url1}', 'preview_cms', ' width=700, height=500, resizable=yes, toolbar=yes, scrollbars=yes')\"";
 			 		$linkText = $this->objLanguage->languageText('mod_cmsadmin_viewcms', 'cmsadmin');
-			 		$iconList .= $icon_publish->getTextIcon('#', 'preview', $linkText, TRUE, 'png', 'icons/cms/', $extra);
+			 		$iconList .= $icon_publish->getTextIcon($url, 'preview', $linkText, 'png', 'icons/cms/', $extra);
 
 			 		return '<p style="align:right;">'.$iconList.'</p>';
 			 		break;
@@ -525,31 +524,25 @@ class cmsutils extends object
 			 				 		
 			 		// Section manager
 			 		$url = $this->uri(array('action' => 'sections'), 'cmsadmin');
-
-			 		$linkText = null;//$this->objLanguage->languageText('mod_cmsadmin_sectionmanager', 'cmsadmin');
-			 		$iconList = $icon_publish->getTextIcon($url, 'section', $linkText, TRUE, 'png', 'icons/cms/');
-
 			 		$linkText = $this->objLanguage->languageText('mod_cmsadmin_sectionmanager', 'cmsadmin');
-			 		$iconList = $icon_publish->getTextIcon($url, 'section', '', TRUE, 'png', 'icons/cms/');
-
+			 		$iconList = $icon_publish->getTextIcon($url, 'section', $linkText, 'png', 'icons/cms/');
 			 		
 			 		// front page manager
 			 		$url = $this->uri(array('action' => 'frontpages'), 'cmsadmin');
-
 			 		$linkText = $this->objLanguage->languageText('mod_cmsadmin_frontpagemanager', 'cmsadmin');
-			 		$iconList .= $icon_publish->getTextIcon($url, 'frontpage', '', TRUE, 'png', 'icons/cms/');
+			 		$iconList .= $icon_publish->getTextIcon($url, 'frontpage', $linkText, 'png', 'icons/cms/');
 			 		
 			 		// Cancel	 		
 			 		$url = "javascript:history.back();";
 			 		$linkText = ucwords($this->objLanguage->languageText('word_cancel'));
-			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, TRUE, 'gif', 'icons/cms/');
+			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, 'gif', 'icons/cms/');
 			 		
 			 		// Preview
-			 		$url = $this->uri(array('action' => null), 'cms');
-			 		$extra = " onclick=\"window.open('{$url}', 'preview_cms', ' width=700, height=500, resizable=yes, toolbar=yes, scrollbars=yes')\"";
+			 		$url1 = $this->uri('', 'cms');
+			 		$url = '#';
+			 		$extra = "onclick=\"window.open('{$url1}', 'preview_cms', ' width=700, height=500, resizable=yes, toolbar=yes, scrollbars=yes')\"";
 			 		$linkText = $this->objLanguage->languageText('mod_cmsadmin_viewcms', 'cmsadmin');
-			 		$iconList .= $icon_publish->getTextIcon('#', 'preview', $linkText, TRUE, 'png', 'icons/cms/', $extra);			 		
-
+			 		$iconList .= $icon_publish->getTextIcon($url, 'preview', $linkText, 'png', 'icons/cms/', $extra);			 		
 			 		
 			 		return '<p style="align:right;">'.$iconList.'</p>';
 			 	    break;
@@ -557,60 +550,57 @@ class cmsutils extends object
 			 	case 'trash':
 
                     // Reload	 
-                    $url = "javascript:if(checkSelect('select','input_arrayList[]')==false){alert('Please make a selection from the list of articles to Restore');}else{submitbutton('select','restore');}";
-
+                    $url = "javascript: if(checkSelect('select','input_arrayList[]')==false){alert('Please make a selection from the list of articles to Restore');}else{submitbutton('select','restore');}";
 			 		$linkText = $this->objLanguage->languageText('mod_cmsadmin_restore', 'cmsadmin');
-			 		$iconList = $icon_publish->getTextIcon($url, 'restore', $linkText, TRUE, 'png', 'icons/cms/');
+			 		$iconList = $icon_publish->getTextIcon($url, 'restore', $linkText, 'png', 'icons/cms/');
 
 			 	    // Cancel	 		
 			 		$url = "javascript:history.back();";
 			 		$linkText = ucwords($this->objLanguage->languageText('word_cancel'));
-			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, TRUE, 'gif', 'icons/cms/');
+			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, 'gif', 'icons/cms/');
 			 		
 			 		// Preview
-			 		$url = $this->uri(array('action' => null), 'cms');
-			 		$extra = " onclick=\"window.open('{$url}', 'preview_cms', ' width=700, height=500, resizable=yes, toolbar=yes, scrollbars=yes')\"";
+			 		$url1 = $this->uri('', 'cms');
+			 		$url = '#';
+			 		$extra = "onclick=\"window.open('{$url1}', 'preview_cms', ' width=700, height=500, resizable=yes, toolbar=yes, scrollbars=yes')\"";
 			 		$linkText = $this->objLanguage->languageText('mod_cmsadmin_viewcms', 'cmsadmin');
-			 		$iconList .= $icon_publish->getTextIcon('#', 'preview', $linkText, TRUE, 'png', 'icons/cms/', $extra);
-			 		
-			 		
+			 		$iconList .= $icon_publish->getTextIcon($url, 'preview', $linkText, 'png', 'icons/cms/', $extra);
+			 					 		
 			 		return '<p style="align:right;">'.$iconList.'</p>';
 			 		break;
 			 		
 			 	case 'menu':
-					 $url = $this->uri(array('action' => 'addnewmenu','pageid'=>'0','add'=>'TRUE'), 'cmsadmin');
+					$url = $this->uri(array('action' => 'addnewmenu','pageid'=>'0','add'=>'TRUE'), 'cmsadmin');
 			 		$linkText = $this->objLanguage->languageText('word_new');
-			 		$iconList = $icon_publish->getTextIcon($url, 'new', $linkText, TRUE, 'gif', 'icons/cms/');
+			 		$iconList = $icon_publish->getTextIcon($url, 'new', $linkText, 'gif', 'icons/cms/');
 			 					 	    
 			 		// Cancel	 		
 			 		$url = "javascript:history.back();";
 			 		$linkText = ucwords($this->objLanguage->languageText('word_cancel'));
-			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, TRUE, 'gif', 'icons/cms/');
+			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, 'gif', 'icons/cms/');
 			 		
 			 		// Preview
-			 		$url = $this->uri(array('action' => null), 'cms');
-			 		$extra = " onclick=\"window.open('{$url}', 'preview_cms', ' width=700, height=500, resizable=yes, toolbar=yes, scrollbars=yes')\"";
+			 		$url1 = $this->uri('', 'cms');
+			 		$url = '#';
+			 		$extra = "onclick=\"window.open('{$url1}', 'preview_cms', ' width=700, height=500, resizable=yes, toolbar=yes, scrollbars=yes')\"";
 			 		$linkText = $this->objLanguage->languageText('mod_cmsadmin_viewcms', 'cmsadmin');
-			 		$iconList .= $icon_publish->getTextIcon('#', 'preview', $linkText, TRUE, 'png', 'icons/cms/', $extra);
-			 		
-			 		
+			 		$iconList .= $icon_publish->getTextIcon($url, 'preview', $linkText, 'png', 'icons/cms/', $extra);
+			 					 		
 			 		return '<p style="align:right;">'.$iconList.'</p>';
 			 		break;
 			 	    
 			 	default:
-			 					 
-					
 			 		// Cancel	 		
 			 		$url = "javascript:history.back();";
 			 		$linkText = ucwords($this->objLanguage->languageText('word_cancel'));
-			 		$iconList = $icon_publish->getTextIcon($url, 'cancel', $linkText, TRUE, 'gif', 'icons/cms/');
+			 		$iconList = $icon_publish->getTextIcon($url, 'cancel', $linkText, 'gif', 'icons/cms/');
 			 		
 			 		// Preview
-			 		$url = $this->uri(array('action' => null), 'cms');
-			 		$extra = " onclick=\"window.open('{$url}', 'preview_cms', ' width=700, height=500, resizable=yes, toolbar=yes, scrollbars=yes')\"";
+			 		$url1 = $this->uri('', 'cms');
+			 		$url = '#';
+			 		$extra = "onclick=\"window.open('{$url1}', 'preview_cms', ' width=700, height=500, resizable=yes, toolbar=yes, scrollbars=yes')\"";
 			 		$linkText = $this->objLanguage->languageText('mod_cmsadmin_viewcms', 'cmsadmin');
-			 		$iconList .= $icon_publish->getTextIcon('#', 'preview', $linkText, TRUE, 'png', 'icons/cms/', $extra);
-			 		
+			 		$iconList .= $icon_publish->getTextIcon($url, 'preview', $linkText, 'png', 'icons/cms/', $extra);
 			 		
 			 		return '<p style="align:right;">'.$iconList.'</p>';
 			 		break;
@@ -886,34 +876,25 @@ class cmsutils extends object
             //Create heading
 
             //Create cms admin link
-            $objIcon->setIcon('control_panel', 'png', 'icons/cms/');
-            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_cpanel','cmsadmin');
-            $link = new link($this->uri(NULL, 'cmsadmin'));
-            $link->link = $objIcon->show();
-            $cmsAdminLink = $link->show();
-            //Create RSS link
-            $objIcon->setIcon('rss', 'png', 'icons/cms/');
-            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_rss','cmsadmin');
-            $link->link = $objIcon->show();
-            $link->href = $this->uri(array('action' => 'createfeed'), 'cmsadmin');
-            $createRss = $link->show();
+            $link = $this->objLanguage->languageText('mod_cmsadmin_cpanel','cmsadmin');
+            $url = $this->uri('', 'cmsadmin');
+            $cmsAdminLink = $objIcon->getTextIcon($url, 'control_panel', $link, 'png', 'icons/cms/');
+            
+            // Create RSS link
+            $link = $this->objLanguage->languageText('mod_cmsadmin_rss','cmsadmin');
+            $url = $this->uri(array('action' => 'createfeed'), 'cmsadmin');
+            $createRss = $objIcon->getTextIcon($url, 'rss', $link, 'png', 'icons/cms/');
+            
             //Create menu management
-            $objIcon->setIcon('menu2', 'png', 'icons/cms/');
-            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_menu','cmsadmin');
-            $link->link = $objIcon->show();
-            $link->href = $this->uri(array('action' => 'managemenus'), 'cmsadmin');
-            $menuMangement = $link->show();
+            $link = $this->objLanguage->languageText('mod_cmsadmin_menu','cmsadmin');
+            $url = $this->uri(array('action' => 'managemenus'), 'cmsadmin');
+            $menuMangement = $objIcon->getTextIcon($url, 'menu2', $link, 'png', 'icons/cms/');
+            
             //Create filemanager menu
+            $link = $this->objLanguage->languageText('phrase_uploadfiles');
+            $url = $this->uri(array('action' => ''), 'filemanager');
+            $filemanager = $objIcon->getTextIcon($url, 'media', $link, 'png', 'icons/cms/');
             
-            $objIcon->setIcon('media', 'png', 'icons/cms/');
-            $objIcon->title = $this->objLanguage->languageText('phrase_uploadfiles');
-            $link->link = $objIcon->show();
-            $link->href = $this->uri(array('action' => ''), 'filemanager');
-            $filemanager = $link->show();
-            
-           
-           // $frontpageManagerLink = $link->show();
-
 			$objCMSTree = $this->getObject('cmstree');
 
             //Add links to the output layer
@@ -924,12 +905,12 @@ class cmsutils extends object
             //$nav .= $frontpageManagerLink;
             $nav .= '<br/>'.'&nbsp;'.'<br />';
             //$nav .= $viewCmsLink.'<br /><br />';
-			$nav .= $objRound->show('<strong>Navigation Links</strong><hr />
-					
-					&nbsp;&nbsp;'.$cmsAdminLink.'<br />
+			$nav .= $objFeatureBox->showContent('<strong>Navigation Links</strong><hr />
+					'.$cmsAdminLink.'<br />
 					&nbsp;&nbsp;'.$createRss.'<br />
 					&nbsp;&nbsp;'.$menuMangement.'<br />
 					&nbsp;&nbsp;'.$filemanager.'<br />
+					<div style="clear: both;">&nbsp;</div>
 					');
             $nav .= '<br />';
 

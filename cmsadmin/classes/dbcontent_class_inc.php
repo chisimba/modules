@@ -292,14 +292,59 @@ class dbcontent extends dbTable
          * @return bool
          */
         public function trashContent($id)
-        {
-           
+        {  
             //First remove from front page
             if ($this->_objFrontPage->isFrontPage($id)) {
                 $this->_objFrontPage->remove($id);
             }
-           $result =  $this->update('id', $id, array('trash' => 1));
-           return $result;
+            
+            $fields = array('trash' => 1, 'ordering' => '');
+            $result =  $this->update('id', $id, $fields);
+            
+            // Get the section id of the page - re order pages
+            $pageData = $this->getContentPage($id);
+            $sectionId = $pageData['sectionid'];
+            $this->reorderContent($sectionId);
+            
+            return $result;
+        }
+
+        /**
+        * Method to reorder the content in a section 
+        * After a page is trashed, etc
+        *
+        * @author Megan Watson
+        * @param string $sectionId The id of the section containing the content
+        * @access private
+        * @return bool
+        */
+        private function reorderContent($sectionId)
+        {   
+            // Get all pages in the section
+            $sectionData = $this->getPagesInSection($sectionId, FALSE);
+            
+            if(!empty($sectionData)){
+                // Reorder the pages
+                $i = 1;
+                foreach($sectionData as $key => $item){
+                    if($item['trash'] == 0){
+                        $this->update('id', $item['id'], array('ordering' => $i));
+                        $sectionData[$key]['ordering'] = $i++;
+                    }
+                }
+                
+                // Get the ordering position of the last section
+                $newData = array_reverse($sectionData);
+                $lastOrder = $newData[0]['ordering']+1;
+                
+                // Remove all null and negative numbers
+                foreach($sectionData as $key => $item){
+                    if(($item['ordering'] < 0 || is_null($item['ordering'])) && $item['trash'] == 0){
+                        $this->update('id', $item['id'], array('ordering' => $lastOrder));
+                        $sectionData[$key]['ordering'] = $lastOrder++;
+                    }
+                }
+            }
         }
 
         /**
@@ -311,7 +356,10 @@ class dbcontent extends dbTable
          */
         public function undelete($id)
         {
-            return $this->update('id', $id, array('trash' => 0));
+            $page = $this->getRow('id', $id);
+            $order = $this->getOrdering($page['sectionid']);
+            $fields = array('trash' => 0, 'ordering' => $order);
+            return $this->update('id', $id, $fields);
         }
 
         /**
@@ -327,23 +375,7 @@ class dbcontent extends dbTable
             $page = $this->getRow('id', $id);
             $pageOrderNo = $page['ordering'];
             $sectionId = $page['sectionid'];
-            $allPagesInSection = $this->getPagesInSection($sectionId);
-            foreach($allPagesInSection as $pg) {
-                if ($pg['ordering'] > $pageOrderNo) {
-                    $newOrder = $pg['ordering'] - '1';
-                    $this->update('id', $pg['id'], array('title' => $pg['title'],
-                                                         'sectionid' => $pg['sectionid'],
-                                                         'introtext' => $pg['introtext'],
-                                                         'body' => str_ireplace("<br />", " <br /> ", $pg['body']),
-                                                         'access' => $pg['access'],
-                                                         'ordering' => $newOrder,
-                                                         'published' => $pg['published'],
-                                                         'created' => $pg['created'],
-                                                         'modified' => $this->now(),
-                                                         'created_by' => $pg['created_by']
-                                                        ));
-                }
-            }
+            
             //First remove from front page
             if ($this->_objFrontPage->isFrontPage($id)) {
                 $this->_objFrontPage->remove($id);
@@ -355,8 +387,13 @@ class dbcontent extends dbTable
                     $this->_objBlocks->deleteBlock($pb['pageid'], $pb['blockid']);
                 }
             }
+            
             //Delete page
-            return $this->delete('id', $id);
+            $result = $this->delete('id', $id);
+            
+            // Reorder the content
+            $this->reorderContent($sectionId);
+            return $result;
         }
 
         /**
@@ -462,13 +499,22 @@ class dbcontent extends dbTable
         * @access public
         */
         public function resetSection($sectionId)
-        {
+        {   
             $arrContent = $this->getAll("WHERE sectionid = '$sectionId'");
             $bln = TRUE;
-            foreach ($arrContent as $page) {
-                $this->delete('id', $page['id']);
+            if(!empty($arrContent)){
+                foreach ($arrContent as $page) {
+                    //First remove from front page
+                    if ($this->_objFrontPage->isFrontPage($page['id'])) {
+                        $this->_objFrontPage->remove($page['id']);
+                    }
+                    
+                    // Trash / archive
+                    $fields = array('trash' => 1, 'ordering' => '');
+                    $result =  $this->update('id', $page['id'], $fields);
+                }
             }
-            return $bln;
+            return $result;
         }
 
         /**
@@ -502,7 +548,7 @@ class dbcontent extends dbTable
         {
             //If only the section id is set, return all records in the section
             if($title == NULL && $limit != NULL){
-                $sql = "SELECT id, title FROM tbl_cms_content ORDER BY created DESC LIMIT '$limit'";
+                $sql = "SELECT id, title FROM tbl_cms_content WHERE trash = '0' ORDER BY created DESC LIMIT '$limit'";
             //If only the limit is set, return set amount of pages from all sections
             } else if($title != NULL && $limit == NULL){
                 $sql = "SELECT id, title FROM tbl_cms_content WHERE title = '$title' ORDER BY created DESC";
@@ -511,7 +557,7 @@ class dbcontent extends dbTable
                 $sql = "SELECT id, title FROM tbl_cms_content WHERE title = '$title' ORDER BY created DESC LIMIT '$limit'";
             //Else if neither param is set, return all records
             } else {
-                $sql = "SELECT id, title FROM tbl_cms_content ORDER BY created DESC";
+                $sql = "SELECT id, title FROM tbl_cms_content WHERE trash = '0' ORDER BY created DESC";
             }
             $titles = $this->getArray($sql);
             return $titles;
@@ -528,7 +574,7 @@ class dbcontent extends dbTable
          */
         public function getLatestTitles($n=5)
         {
-            $sql = "SELECT id, title FROM tbl_cms_content ORDER BY created DESC LIMIT $n";
+            $sql = "SELECT id, title FROM tbl_cms_content WHERE trash = '0' ORDER BY created DESC LIMIT $n";
             return $this->getArray($sql);
         }
 
@@ -577,7 +623,7 @@ class dbcontent extends dbTable
         {
             $ordering = 1;
             //get last order value
-            $lastOrder = $this->getAll("WHERE sectionid = '$sectionId' ORDER BY ordering DESC LIMIT 1");
+            $lastOrder = $this->getAll("WHERE sectionid = '$sectionId' AND trash = '0' ORDER BY ordering DESC LIMIT 1");
             //add after this value
             if (!empty($lastOrder)) {
                 $ordering = $lastOrder['0']['ordering'] + 1;
@@ -595,9 +641,9 @@ class dbcontent extends dbTable
          * @author Warren Windvogel
          */
         public function getOrderingLink($sectionid, $id)
-        {
+        {   
             //Get the number of pages in the section
-            $lastOrd = $this->getAll("WHERE sectionid = '$sectionid' ORDER BY ordering DESC LIMIT 1");
+            $lastOrd = $this->getAll("WHERE sectionid = '$sectionid' AND trash = '0' ORDER BY ordering DESC LIMIT 1");
             $topOrder = $lastOrd['0']['ordering'];
             $links = " ";
 
@@ -663,7 +709,7 @@ class dbcontent extends dbTable
         public function changeOrder($sectionid, $id, $ordering)
         {
             //Get array of all page entries
-            $fpContent = $this->getAll("WHERE sectionid = '$sectionid' ORDER BY ordering");
+            $fpContent = $this->getAll("WHERE sectionid = '$sectionid' AND trash = '0' ORDER BY ordering");
             //Search for entry to be reordered and update order
             foreach($fpContent as $content) {
                 if ($content['id'] == $id) {
@@ -688,16 +734,20 @@ class dbcontent extends dbTable
             }
 
             //Get other entry to change
-            $entries = $this->getAll("WHERE sectionid = '$sectionid' AND ordering = '$toChange'");
+            $entries = $this->getAll("WHERE sectionid = '$sectionid' AND ordering = '$toChange' AND trash = '0'");
             foreach($entries as $entry) {
                 if ($entry['id'] != $id) {
                     $upArr = array(
                                  'ordering' => $changeTo,
                                  'modified' => $this->now()
                              );
-                    return $this->update('id', $entry['id'], $upArr);
+                    $result = $this->update('id', $entry['id'], $upArr);
                 }
             }
+            
+            // Reorder the content
+            $this->reorderContent($sectionid);
+            return $result;
         }
 
     /**

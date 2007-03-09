@@ -46,10 +46,10 @@ class dbcontentfrontpage extends dbTable
         {
         	try {
                 parent::init('tbl_cms_content_frontpage');
-                $this->_objUser = & $this->getObject('user', 'security');
-                $this->_objLanguage =& $this->newObject('language', 'language');
+                $this->_objUser = $this->getObject('user', 'security');
+                $this->_objLanguage = $this->newObject('language', 'language');
            } catch (Exception $e){
-       		    echo 'Caught exception: ',  $e->getMessage();
+       		    throw customException($e->getMessage());
         	    exit();
      	   }
         }
@@ -80,12 +80,20 @@ class dbcontentfrontpage extends dbTable
         /**
          * Method to remove a record
          *
-         * @param string $id The content Id that must be removed
+         * @param string $contentId The content Id that must be removed
          * @access public
          * @return bool
          */
-        public function remove($id)
+        public function remove($contentId)
         {
+            $page = $this->getRow('content_id', $contentId);
+//            $pageOrder = $page['ordering'];
+            $id = $page['id'];
+            
+            $result = $this->delete('id', $id);
+            $this->reorderContent();
+            return $result;
+            /*
             $page = $this->getRow('content_id', $id);
             
             $pageOrderNo = $page['ordering'];
@@ -97,8 +105,44 @@ class dbcontentfrontpage extends dbTable
                 }
             }
             return $this->delete('id', $page['id']);
+            */
         }
-
+        
+        /**
+        * Method to check the order of the front page content and remove any negative or null ordering
+        *
+        * @author Megan Watson
+        * @access private
+        * @param string $id The content id of the front page being deleted
+        * @param integer $pageOrder The order position from which to reorder the content
+        * @return void
+        */
+        private function reorderContent()
+        {   
+            // Get all pages
+            $pageData = $this->getFrontPages();
+            
+            if(!empty($pageData)){
+                    
+                $i = 1;
+                foreach($pageData as $key => $item){
+                    $this->update('id', $item['id'], array('ordering' => $i));
+                    $pageData[$key]['ordering'] = $i++;
+                }
+                        
+                // Get the ordering position of the last page
+                $newData = array_reverse($pageData);
+                $lastOrder = $newData[0]['ordering']+1;
+                            
+                // Remove all null and negative numbers
+                foreach($pageData as $key => $item){
+                    if($item['ordering'] < 0 || is_null($item['ordering'])){
+                        $this->update('id', $item['id'], array('ordering' => $lastOrder++));
+                    }
+                }
+            }
+        }
+        
         /**
          * Method to get all the front page id's
          *
@@ -189,7 +233,11 @@ class dbcontentfrontpage extends dbTable
                     $this->update('id', $entry['id'], $upArr);
                 }
             }
+            
+            // Re order the content
+            $this->reorderContent();
         }
+        
         /**
          * Method to return the ordering value of new content (gets added last)
          *

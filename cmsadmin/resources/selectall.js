@@ -70,8 +70,12 @@ function checkSelect(FormName, FieldName)
 		
 	var countCheckBoxes = objCheckBoxes.length;
 	var check=false;
-	if(!countCheckBoxes)
-	    countCheckBoxes = 1;
+	if(!countCheckBoxes){
+	    if(objCheckBoxes.checked == true){
+	        return true;
+	    }
+	    return false;
+	}
 	    
 	for(var i = 0; i < countCheckBoxes; i++){
 	    if(objCheckBoxes[i].checked == true){
