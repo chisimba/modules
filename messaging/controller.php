@@ -257,7 +257,7 @@ class messaging extends controller
                 );
                 $message = $this->objLanguage->code2Txt('mod_messaging_userenter', 'messaging', $array);
                 $this->dbMessages->addChatMessage($message, TRUE);
-                $templateContent = $this->objDisplay->tplChatRoom($roomData);
+                $templateContent = $this->objDisplay->tplChatRoom();
                 $this->setVarByRef('templateContent', $templateContent);
                 if($roomData['text_only'] != 1){
                     $this->setVar('mode', 'room');
@@ -479,6 +479,25 @@ class messaging extends controller
             case 'confirmremove':
                 $users = $this->getParam('users');
                 $templateContent = $this->objDisplay->popConfirmRemove($users);
+                $this->setVarByRef('templateContent', $templateContent);
+                $this->setVar('mode', 'popup');
+                return 'template_tpl.php';
+                break;
+                
+            // display the popup page for log functionality
+            case 'logs':
+                $templateContent = $this->objDisplay->popLogs();
+                $this->setVarByRef('templateContent', $templateContent);
+                $this->setVar('mode', 'popup');
+                return 'template_tpl.php';
+                break;
+                
+            // display the popup page for log functionality
+            case 'getlog':
+                $type = $this->getParam('type');
+                $start = $this->getParam('start');
+                $end = $this->getParam('end');
+                $templateContent = $this->objDisplay->popChatLog($type, $start, $end);
                 $this->setVarByRef('templateContent', $templateContent);
                 $this->setVar('mode', 'popup');
                 return 'template_tpl.php';

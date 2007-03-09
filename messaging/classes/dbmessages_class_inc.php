@@ -79,7 +79,7 @@ class dbmessages extends dbTable
     *
     * @access public
     * @param string $roomId: The id of the room to get the messages of
-    * @param string $counter: The position to get messaged from
+    * @param string $counter: The position to get messages from
     * @return array $data: The chat room messages
     **/
     public function getChatMessages($roomId, $counter)
@@ -87,6 +87,29 @@ class dbmessages extends dbTable
         $sql = "SELECT * FROM ".$this->table;
         $sql .= " WHERE recipient_id = '".$roomId."'";
         $sql .= " AND message_counter > '".$counter."'";
+        $sql .= " ORDER BY message_counter";
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data;
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to return a chat room messages for a period
+    *
+    * @access public
+    * @param string $roomId: The id of the room to get the messages of
+    * @param string $start: The start date to get messages from
+    * @param string $end: The end date to get messaged to
+    * @return array $data: The chat room messages
+    **/
+    public function getChatPeriod($roomId, $start, $end)
+    {
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE recipient_id = '".$roomId."'";
+        $sql .= " AND date_created >= '".$start."'";
+        $sql .= " AND date_created <= '".$end."'";
         $sql .= " ORDER BY message_counter";
         $data = $this->getArray($sql);
         if(!empty($data)){

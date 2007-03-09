@@ -26,6 +26,12 @@ class display extends object
     private $objFeaturebox;
 
     /**
+    * @var object $objPopupcal: The datepickajax class in the popupcalendar module
+    * @access private
+    */
+    private $objPopupcal;
+
+    /**
     * @var object $objLanguage: The language class of the language module
     * @access private
     */
@@ -128,7 +134,8 @@ class display extends object
         $this->loadClass('tabbedbox', 'htmlelements');
         $this->objIcon = $this->newObject('geticon', 'htmlelements');
         $this->objFeaturebox = $this->getObject('featurebox', 'navigation');
-
+        $this->objPopupcal = $this->newObject('datepickajax', 'popupcalendar');
+        
         // syatem classes
         $this->objLanguage = $this->getObject('language','language');
         $this->objUser = $this->getObject('user', 'security');
@@ -587,7 +594,7 @@ class display extends object
     * @param array $roomData An array containing the chat room data
     * @return string $str The template output string
     */
-    public function tplChatRoom($roomData)
+    public function tplChatRoom()
     {
         // javascript
         $script = '<script type="text/javaScript">
@@ -629,7 +636,13 @@ class display extends object
         $removeLabel = $this->objLanguage->languageText('mod_messaging_remove', 'messaging');
         $inviteTitleLabel = $this->objLanguage->languageText('mod_messaging_invitetitle', 'messaging');
         $removeTitleLabel = $this->objLanguage->languageText('mod_messaging_removetitle', 'messaging');
+        $logLabel = $this->objLanguage->languageText('mod_messaging_logs', 'messaging');
+        $logTitleLabel = $this->objLanguage->languageText('mod_messaging_logtitle', 'messaging');
                 
+        // get data
+        $roomId = $this->getSession('chat_room_id');
+        $roomData = $this->dbRooms->getRoom($roomId);
+        
         // banned notice div
         $objLayer = new layer();
         $objLayer->id = 'bannedDiv';
@@ -646,47 +659,67 @@ class display extends object
         $header = $objHeader->show();        
         $str .= $header;
         
-        // popup links for creator of private chat room
-        if($roomData['room_type'] == 1 && $roomData['owner_id'] == $this->userId){
-            // popup link to invite users
-            $objPopup = new windowpop();
-            $objPopup->title = $inviteTitleLabel;
-            $objPopup->set('location',$this->uri(array(
-                'action' => 'invitepopup',
-            )));
-            $objPopup->set('linktext', $inviteLabel);
-            $objPopup->set('width', '500');
-            $objPopup->set('height', '500');
-            $objPopup->set('left', '100');
-            $objPopup->set('top', '100');
-            $objPopup->set('scrollbars', 'no');
-            $objPopup->putJs(); // you only need to do this once per page
-            $inviteLink = $objPopup->show();
+        // popup links
+        // popup link to invite users
+        $objPopup = new windowpop();
+        $objPopup->title = $inviteTitleLabel;
+        $objPopup->set('location',$this->uri(array(
+            'action' => 'invitepopup',
+        )));
+        $objPopup->set('linktext', $inviteLabel);
+        $objPopup->set('width', '500');
+        $objPopup->set('height', '500');
+        $objPopup->set('left', '100');
+        $objPopup->set('top', '100');
+        $objPopup->set('scrollbars', 'no');
+        $objPopup->putJs(); // you only need to do this once per page
+        $inviteLink = $objPopup->show();
 
-            // popup link to remove users
-            $objPopup = new windowpop();
-            $objPopup->title = $removeTitleLabel;
-            $objPopup->set('location',$this->uri(array(
-                'action' => 'removepopup',
-            )));
-            $objPopup->set('linktext', $removeLabel);
-            $objPopup->set('width', '500');
-            $objPopup->set('height', '500');
-            $objPopup->set('left', '100');
-            $objPopup->set('top', '100');
-            $objPopup->set('scrollbars', 'no');
-            $removeLink = $objPopup->show();
+        // popup link to remove users
+        $objPopup = new windowpop();
+        $objPopup->title = $removeTitleLabel;
+        $objPopup->set('location',$this->uri(array(
+            'action' => 'removepopup',
+        )));
+        $objPopup->set('linktext', $removeLabel);
+        $objPopup->set('width', '500');
+        $objPopup->set('height', '500');
+        $objPopup->set('left', '100');
+        $objPopup->set('top', '100');
+        $objPopup->set('scrollbars', 'no');
+        $removeLink = $objPopup->show();
             
-            // table to display popup links
-            $objTable = new htmltable();
-            $objTable->cellspacing = 2;
-            $objTable->cellpadding = 2;
-            $objTable->startRow();
-            $objTable->addCell($inviteLink.'&nbsp;|&nbsp;'.$removeLink);
-            $objTable->endRow();
-            $linkTable = $objTable->show();
-            $str .= $linkTable;
+        // popup link to invite users
+        $objPopup = new windowpop();
+        $objPopup->title = $logTitleLabel;
+        $objPopup->set('location',$this->uri(array(
+            'action' => 'logs',
+        )));
+        $objPopup->set('linktext', $logLabel);
+        $objPopup->set('width', '500');
+        $objPopup->set('height', '500');
+        $objPopup->set('left', '100');
+        $objPopup->set('top', '100');
+        $objPopup->set('scrollbars', 'no');
+        $objPopup->putJs(); // you only need to do this once per page
+        $logLink = $objPopup->show();
+
+        if($roomData['room_type'] == 1 && $roomData['owner_id'] == $this->userId){
+            $links = $inviteLink.'&nbsp;|&nbsp;'.$removeLink;
+        }else{
+            $links = '';
         }
+            
+        // table to display popup links
+        $objTable = new htmltable();
+        $objTable->cellspacing = 2;
+        $objTable->cellpadding = 2;
+        $objTable->startRow();
+        $objTable->addCell($links, '', '', 'left', '', '');
+        $objTable->addCell($logLink, '', '', 'right', '', '');
+        $objTable->endRow();
+        $linkTable = $objTable->show();
+        $str .= $linkTable;
         
         // main chat display
         $objLayer = new layer();
@@ -1015,7 +1048,7 @@ class display extends object
                     if($mode == 'context'){              
                         $name = $this->objUser->username($userId);
                     }else{
-                        $name = $this->objUser->fullname($userid);
+                        $name = $this->objUser->fullname($userId);
                     }   
                 }
                 $date = $this->objDatetime->formatDate($message['date_created']);
@@ -2088,6 +2121,246 @@ class display extends object
         // main display div
         $objLayer = new layer();
         $objLayer->addToStr($string);
+        $objLayer->padding = '10px';
+        $str = $objLayer->show();
+        
+        return $str;        
+    }   
+
+    /**
+    * Method to show the logs template
+    * 
+    * @access public
+    * @return string $str: The output string
+    */
+    public function popLogs()
+    {
+        // language items
+        $heading = $this->objLanguage->languageText('mod_messaging_logs', 'messaging');
+        $typeLabel = $this->objLanguage->languageText('mod_messaging_logtype', 'messaging');
+        $completeLabel = $this->objLanguage->languageText('mod_messaging_complete', 'messaging');
+        $abridgedLabel = $this->objLanguage->languageText('mod_messaging_abridged', 'messaging');
+        $periodLabel = $this->objLanguage->languageText('mod_messaging_period', 'messaging');
+        $startLabel = $this->objLanguage->languageText('mod_messaging_start', 'messaging');
+        $endLabel = $this->objLanguage->languageText('mod_messaging_end', 'messaging');
+        $submitLabel = $this->objLanguage->languageText('mod_messaging_wordsubmit', 'messaging');        
+        $cancelLabel = $this->objLanguage->languageText('mod_messaging_wordcancel', 'messaging');        
+        $errStartLabel = $this->objLanguage->languageText('mod_messaging_errstart', 'messaging');
+        $errEndLabel = $this->objLanguage->languageText('mod_messaging_errend', 'messaging');
+        $errDateLabel = $this->objLanguage->languageText('mod_messaging_errdate', 'messaging');
+        
+        // heading
+        $objHeading = new htmlheading();
+        $objHeading->str = $heading;
+        $objHeading->type = 1;
+        $header = $objHeading->show();
+        $string = $header;
+        
+        // log type radio
+        $objRadio = new radio('type');
+        $objRadio->addOption(1, '&nbsp;'.$completeLabel);
+        $objRadio->addOption(2, '&nbsp;'.$abridgedLabel);
+        $objRadio->setSelected(1);
+        $objRadio->setBreakSpace('<br />');
+        $objRadio->extra = ' onchange="javascript:
+            var el_DateDiv = document.getElementById(\'dateDiv\');
+            if(this.value == 2){
+                el_DateDiv.style.visibility = \'visible\';
+                el_DateDiv.style.display = \'block\';
+            }else{
+                el_DateDiv.style.visibility = \'hidden\';
+                el_DateDiv.style.display = \'none\';
+            }" onsubmit="alert(\'here\');"';
+        $typeRadio = $objRadio->show();
+        
+        // Log type featurebox
+        $typeFeature = $this->objFeaturebox->show($typeLabel, $typeRadio);
+        
+        // date inputs
+        $startField = $this->objPopupcal->show('start', 'yes', 'no', '');
+        $endField = $this->objPopupcal->show('end', 'yes', 'no', '');
+        
+        // date table
+        $objTable = new htmltable();
+        $objTable->startRow();
+        $objTable->addCell($startLabel);
+        $objTable->addCell($startField);
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($endLabel);
+        $objTable->addCell($endField);
+        $objTable->endRow();
+        $dateTable = $objTable->show();
+        
+        $periodFeature = $this->objFeaturebox->show($periodLabel, $dateTable);
+        
+        // date div
+        $objLayer = new layer();
+        $objLayer->id = 'dateDiv';
+        $objLayer->visibility = 'hidden';
+        $objLayer->display = 'none';
+        $objLayer->addToStr($periodFeature);
+        $periodLayer = $objLayer->show();
+
+        // submit button
+        $objButton = new button('send', $submitLabel);
+        $objButton->extra = ' onclick="javascript:
+            var el_Type = document.getElementsByName(\'type\');
+            var el_InputStart = document.getElementById(\'input_start\');
+            var el_InputEnd = document.getElementById(\'input_end\');
+            var el_Log = document.getElementById(\'form_log\');
+            var len = el_Type.length;
+            if(el_Type[1].checked){
+                if(el_InputStart.value == \'\'){
+                    alert(\''.$errStartLabel.'\');
+                }else{
+                    if(el_InputEnd.value == \'\'){
+                        alert(\''.$errEndLabel.'\');
+                    }else{
+                        var startString = el_InputStart.value;
+                        var arrStartDateAndTime = startString.split(\' \');
+                        var arrStartDate = arrStartDateAndTime[0].split(\'-\');
+                        var arrStartTime = arrStartDateAndTime[1].split(\':\');
+                        var startDate = new Date();
+                        startDate.setYear(arrStartDate[0]);
+                        startDate.setMonth(arrStartDate[1]-1);
+                        startDate.setDate(arrStartDate[2]);
+                        startDate.setHours(arrStartTime[0]-1);
+                        startDate.setMinutes(arrStartTime[1]);
+                        
+                        var endString = el_InputEnd.value;
+                        var arrEndDateAndTime = endString.split(\' \');
+                        var arrEndDate = arrEndDateAndTime[0].split(\'-\');
+                        var arrEndTime = arrEndDateAndTime[1].split(\':\');
+                        var endDate = new Date();
+                        endDate.setYear(arrEndDate[0]);
+                        endDate.setMonth(arrEndDate[1]-1);
+                        endDate.setDate(arrEndDate[2]);
+                        endDate.setHours(arrEndTime[0]-1);
+                        endDate.setMinutes(arrEndTime[1]);
+
+                        if(endDate &lt; startDate){
+                            alert(\''.$errDateLabel.'\'); 
+                        }else{
+                            el_Log.submit();                                                
+                        }
+                    }
+                }                    
+            }else{
+                el_Log.submit();
+            }"';
+        $sendButton = $objButton->show();
+        
+        // cancel button
+        $objButton = new button('cancel', $cancelLabel);
+        $objButton->extra = ' onclick="javascript:window.close()"';
+        $cancelButton = $objButton->show();
+        
+        // remove form
+        $objForm = new form('log', $this->uri(array(
+            'action' => 'getlog',
+        )));
+        $objForm->addToForm($typeFeature);
+        $objForm->addToForm($periodLayer);
+        $objForm->addToForm($sendButton.'&nbsp;'.$cancelButton);
+        $logForm = $objForm->show();
+        $string .= $logForm;
+        
+        // main display div
+        $objLayer = new layer();
+        $objLayer->addToStr($string);
+        $objLayer->padding = '10px';
+        $str = $objLayer->show();
+        
+        return $str;        
+    }   
+ 
+    /**
+    * Method to show the logs template
+    * 
+    * @access public
+    * @param string $type: The type of log to generate
+    * @param string $start: The start date for an abridged log
+    * @param string $end: The end date for an abridged log
+    * @return string $str: The output string
+    */
+    public function popChatLog($type, $start = NULL, $end = NUL)
+    {
+        $body = 'window.resizeTo(650,650)';
+        $this->appendArrayVar('bodyOnLoad', $body);
+        
+        // get data
+        $roomId = $this->getSession('chat_room_id');
+        $roomData = $this->dbRooms->getRoom($roomId);
+        if($type == 1){
+            $array = array(
+                'name' => $roomData['room_name'],
+            );
+            $heading = $this->objLanguage->code2Txt('mod_messaging_logcomplete', 'messaging', $array);
+            $chatData = $this->dbMessages->getChatMessages($roomId, 0);
+        }else{
+            $array = array(
+                'name' => $roomData['room_name'],
+                'start' => '<nobr>'.$this->objDatetime->formatDate($start).'</nobr>',
+                'end' => '<nobr>'.$this->objDatetime->formatDate($end).'</nobr>',
+            );
+            $heading = $this->objLanguage->code2Txt('mod_messaging_logabridged', 'messaging', $array);
+            $chatData = $this->dbMessages->getChatPeriod($roomId, $start, $end);
+        }
+        
+        // language items
+        $saveLabel = $this->objLanguage->languageText('mod_messaging_save', 'messaging');
+        $saveTiteLabel = $this->objLanguage->languageText('mod_messaging_savetitle', 'messaging');
+        $fileLabel = $this->objLanguage->languageText('mod_messaging_filename', 'messaging');
+        $closeLabel = $this->objLanguage->languageText('mod_messaging_wordclose', 'messaging');        
+        $closeTitleLabel = $this->objLanguage->languageText('mod_messaging_closetitle', 'messaging'); 
+        $systemLabel = $this->objLanguage->languageText('mod_messaging_wordsystem', 'messaging');       
+       
+        // heading
+        $objHeading = new htmlheading();
+        $objHeading->str = $heading;
+        $objHeading->type = 1;
+        $header = $objHeading->show();
+        
+        // chat output
+        $string = '<ul>';
+        foreach($chatData as $line){
+            if($line['sender_id'] == 'system'){
+                $name = $systemLabel;
+            }else{
+                $name = $this->objUser->fullname($line['sender_id']);
+            }
+            $date = $this->objDatetime->formatDate($line['date_created']);
+            $string .= '<li>';
+            $string .= '<strong>['.$name.'&nbsp;-&nbsp;'.$date.']</strong><br />';
+            $string .= nl2br($line['message']);
+            $string .= '</li>';
+        }
+        $string .= '</ul>';
+        
+        $objLayer = new layer();
+        $objLayer->addToStr($string);
+        $objLayer->border = '1px solid black';
+        $objLayer->height = '435px';
+        $objLayer->overflow = 'auto';
+        $chatDiv = $objLayer->show();
+
+        $objLink = new link('javascript:window:close();');
+        $objLink->link = $closeLabel;
+        $objLink->title = $closeTitleLabel;
+        $closeLink = $objLink->show();
+        
+        $objTable = new htmltable();
+        $objTable->startRow();
+        $objTable->addCell($closeLink, '', '', 'center', '', '');
+        $objTable->endRow();
+        $closeTable = $objTable->show();
+        
+        // main display div
+        $objLayer = new layer();
+        $objLayer->addToStr($header.$chatDiv.$closeTable);
+        $objLayer->height = '630px';
+        $objLayer->overflow = 'auto';
         $objLayer->padding = '10px';
         $str = $objLayer->show();
         
