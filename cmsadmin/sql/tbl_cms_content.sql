@@ -48,7 +48,7 @@ $fields = array(
 
 		),
 	'created' => array(
-		'type' => 'date',
+		'type' => 'timestamp',
 
 		),
     'created_by' => array(
@@ -61,7 +61,7 @@ $fields = array(
         'length' => 100
 		),
     'modified' => array(
-		'type' => 'date',
+		'type' => 'timestamp',
 
 		),
     'modified_by' => array(
@@ -77,15 +77,15 @@ $fields = array(
 
 		),
     'checked_out_time' => array(
-		'type' => 'date',
+		'type' => 'timestamp',
 
 		),
     'publish_up' => array(
-		'type' => 'date',
+		'type' => 'timestamp',
 
 		),
     'publish_down' => array(
-		'type' => 'date',
+		'type' => 'timestamp',
 
 		),
     'images' => array(
@@ -137,6 +137,15 @@ $fields = array(
         'unsigned' => TRUE,
 
 		),
+	'start_publish' => array(
+		'type' => 'timestamp',
+
+		),
+    'end_publish' => array(
+		'type' => 'timestamp',
+
+		),
+	
 	);
 
 

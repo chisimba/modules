@@ -89,7 +89,7 @@ class cmsadmin extends controller
         * @access private
         * @var object
         */
-        var $objLanguage;
+        public $objLanguage;
 
         /**
         * The blocks object
@@ -97,7 +97,18 @@ class cmsadmin extends controller
         * @access private
         * @var object
         */
-        var $_objBlocks;
+        public $_objBlocks;
+        
+       /** the id of the current page
+       *
+       * @access public
+       * @var object
+       */
+       public $currentPageId;
+        
+       public $objTreeMenu;
+       
+       public $objTreeNodes;
 
 	   /**
 	    * Class Constructor
@@ -107,23 +118,27 @@ class cmsadmin extends controller
 	    */
         public function init()
         {
-        	try {
+        	try {       
                 // instantiate object
-                $this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
-                $this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
-                $this->_objBlocks = & $this->newObject('dbblocks', 'cmsadmin');
-                $this->_objUtils = & $this->newObject('cmsutils', 'cmsadmin');
-                $this->_objLayouts = & $this->newObject('dblayouts', 'cmsadmin');
-                $this->_objUser = & $this->newObject('user', 'security');
-                $this->objLanguage = & $this->newObject('language', 'language');
-                $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
-                $this->_objConfig = & $this->newObject('altconfig', 'config');
-                $this->_objContext = & $this->newObject('dbcontext', 'context');
-
-                $objModule = & $this->newObject('modules', 'modulecatalogue');
-
+                $this->_objSections =  $this->newObject('dbsections', 'cmsadmin');
+                $this->_objContent =  $this->newObject('dbcontent', 'cmsadmin');
+                $this->_objBlocks =  $this->newObject('dbblocks', 'cmsadmin');
+                $this->_objUtils =  $this->newObject('cmsutils', 'cmsadmin');
+                $this->_objLayouts =  $this->newObject('dblayouts', 'cmsadmin');
+                $this->_objUser =  $this->newObject('user', 'security');
+                $this->objLanguage =  $this->newObject('language', 'language');
+                $this->_objFrontPage =  $this->newObject('dbcontentfrontpage', 'cmsadmin');
+                $this->_objConfig =  $this->newObject('altconfig', 'config');
+                $this->_objContext =  $this->newObject('dbcontext', 'context');
+				$this->objProxy = $this->newObject('proxyparser', 'utilities');
+                $objModule = $this->newObject('modules', 'modulecatalogue');
+                $this->objTreeMenu = $this->newObject('buildtree', 'cmsadmin');
+                $this->objTreeNodes =  $this->newObject('treenodes', 'cmsadmin');
+                //feeds classes
+            	$this->objFeed = $this->getObject('feeds', 'feed');
+                
                 //Load the ajax classes
-                $this->loadClass('xajax', 'ajaxwrapper');
+                //$this->loadClass('xajax', 'ajaxwrapper');
                 $this->loadClass('xajaxresponse', 'ajaxwrapper');
 
                 if ($objModule->checkIfRegistered('context')) {
@@ -133,14 +148,14 @@ class cmsadmin extends controller
                     $this->inContextMode = FALSE;
                 }
 		   } catch (Exception $e){
-       		    echo 'Caught exception: ',  $e->getMessage();
+       		    throw customException($e->getMessage());
         	    exit();
-           }
+           }	    
         }
 
         /**
          * Method to handle actions from templates
-         *
+         * 
          * @access public
          * @param string $action Action to be performed
          * @return mixed Name of template to be viewed or function to call
@@ -152,31 +167,41 @@ class cmsadmin extends controller
 
                 switch ($action) {
 
-                case null:
-                        $myid = $this->_objUser->userId();
+                default:
+                    $myid = $this->_objUser->userId();
 
                     if ($this->_objUser->inAdminGroup($myid) != TRUE) {
                         die('<div id=featurebox>'.$this->objLanguage->languageText('mod_cmsadmin_nopermissionmsg', 'cmsadmin').'</div>');
+                    }elseif ($this->inContextMode==FALSE||$this->contextCode==NULL){
+                    	//continue;// 'cms_notincontext_view_tpl.php';
                     }
+                    $topNav = $this->_objUtils->topNav('home');
+                    $cpanel =  $this->_objUtils->getControlPanel();
+                    $this->setVarByRef('topNav',$topNav);
+                    $this->setVarByRef('cpanel',$cpanel);
+                    return 'cms_main_tpl.php';
+
+                /* ** Trash manager section ** */
+                case 'trashmanager':
+                    $text = $this->getParam('txtfilter');
+                    $data = $this->_objContent->getArchivePages($text); // Get trash data
+                    $topNav = $this->_objUtils->topNav('trash');
+                    $this->setVarByRef('topNav',$topNav);
+                    $this->setVarByRef('data', $data);
+                    return 'cms_trash_list_tpl.php';
+                    
+                case 'restore':
+                    $items = $this->getParam('arrayList');
+                    $this->unarchiveContentPages($items);
+                    return $this->nextAction('trashmanager');
 
                 //----------------------- section section
                 case 'sections':
-                    //Check whether to display all nodes or root nodes only
-                    $viewType = $this->getParam('viewType', 'root');
-                    $this->setVarByRef('viewType', $viewType);
+                    $this->getsections();
                     return 'cms_section_list_tpl.php';
 
                 case 'viewsection':
-                    $id = $this->getParam('id');
-                    //Get section data
-                    $section = $this->_objSections->getSection($id);
-                    $this->setVarByRef('section', $section);
-                    //Get sub sections
-                    $subSections = $this->_objSections->getSubSectionsInSection($id);
-                    $this->setVarByRef('subSections', $subSections);
-                    //Get content pages
-                    $pages = $this->_objContent->getPagesInSection($id);
-                    $this->setVarByRef('pages', $pages);
+                    $this->viewsections();
                     return 'cms_section_view_tpl.php';
 
                 case 'changesectionorder':
@@ -194,24 +219,12 @@ class cmsadmin extends controller
                     }
 
                 case 'addsection':
-                    // Generation of Ajax Scripts
-                    $ajax = $this->getObject('xajax', 'ajaxwrapper');
-                    $ajax->setRequestUri($this->uri(array('action'=>'addsection'), 'cmsadmin'));
-                    //$ajax = new xajax($this->uri(array('action'=>'addsection'), 'cmsadmin'));
-                    $ajax->registerFunction(array($this, 'processSection')); // Register another function in this controller
-                    $ajax->processRequests(); // XAJAX method to be called
-                    $this->appendArrayVar('headerParams', $ajax->getJavascript()); // Send JS to header
-                    //Get form
-                    $addEditForm = $this->_objUtils->getAddEditSectionForm($this->getParam('id'), $this->getParam('parentid'));
-                    $this->setVarByRef('addEditForm', $addEditForm);
-                    $parentid = $this->getParam('parentid');
-                    $level = $this->_objSections->getLevel($parentid);
-                    $this->setVarByRef('parentid', $parentid);
+                    $this->addEditsection();
                     return 'cms_section_add_tpl.php';
 
                 case 'createsection':
                     //Save the section
-                    $this->_objSections->add();
+                    $this->_objSections->add($this->contextCode);
                     $parent = $this->getParam('parentid');
                     if (!empty($parent)) {
                         return $this->nextAction('viewsection', array('id' => $parent), 'cmsadmin');
@@ -219,11 +232,45 @@ class cmsadmin extends controller
                         return $this->nextAction('sections');
                     }
 
-                case 'editsection';
+                case 'editsection':
                     $this->_objSections->edit();
                     $id = $this->getParam('id');
                     return $this->nextAction('viewsection', array('id' => $id), 'cmsadmin');
-
+                    
+                case 'select':
+                	$item = $this->getParam('arrayList');
+					$task = $this->getParam('task');
+					$this->processSelection($item, $task);
+					return $this->nextAction('sections');
+					
+				case 'filter':
+				       	$text = $this->getParam('txtfilter',null);
+				     	$drop_filter = $this->getParam('drp_filter',null);
+				     	
+				     	//echo '<pre>'; print_r($_POST); echo '</pre>';
+				     	$publish = FALSE;
+				     	if($drop_filter == 'published'){
+				     	    $publish = '1';
+				     	}else if($drop_filter == 'unpublished'){
+				     	    $publish = '0';
+				     	}
+				     	
+				     	$arrSections = $this->_objSections->getFilteredSections($text, $publish);
+				     	
+				     	/*get filtered sections
+				     	if ($txt_filter!=null) {
+				     		$arrSections = $this->_objSections->getFilteredSections(FALSE,$txt_filter);
+				     	}elseif ($drop_filter!='select'){
+				     		    $arrSections = $this->_objSections->getFilteredSections(TRUE,$txt_filter);
+				     	}
+				     	*/
+				     	
+                		 $topNav = $this->_objUtils->topNav('sections');
+                    	 $this->setVarByRef('topNav',$topNav);
+                		 $this->setVarByRef('arrSections', $arrSections);
+                    	 $this->setVarByRef('viewType', $viewType);
+                    	 return 'cms_section_list_tpl.php';            			
+				     	
                 case 'sectionpublish':
                     $this->_objSections->togglePublish($this->getParam('id'));
                     return $this->nextAction('sections');
@@ -234,8 +281,16 @@ class cmsadmin extends controller
 
                 //----------------------- front page section
                 case 'frontpages':
+                    $topNav = $this->_objUtils->topNav('frontpage');
+        	        $this->setVarByRef('topNav',$topNav);
                     $this->setVar('files', $this->_objFrontPage->getFrontPages());
                     return 'cms_frontpage_manager_tpl.php';
+                    
+                case 'publishfrontpage':
+                    $list = $this->getParam('arrayList');
+                    $task = $this->getParam('task');
+                    $this->publishFrontContent($list, $task);
+                    return $this->nextAction('frontpages');
 
                 case 'removefromfrontpage':
                     $id = $this->getParam('id');
@@ -260,7 +315,11 @@ class cmsadmin extends controller
                     //----------------------- content section
 
                 case 'addcontent':
+                	
                     $parentid = $this->getParam('parent', NULL);
+                    //Get top navigation
+                    $topNav = $this->_objUtils->topNav('createcontent');
+                    $this->setVarByRef('topNav',$topNav);
                     $addEditForm = $this->_objUtils->getAddEditContentForm($this->getParam('id'), $parentid);
                     $this->setVarByRef('addEditForm', $addEditForm);
                     $this->setVarByRef('section', $parentid);
@@ -276,10 +335,19 @@ class cmsadmin extends controller
                     } else {
                         return $this->nextAction('frontpages', array('filter' => 'trash'));
                     }
-
+				                    
                 case 'editcontent':
                     $this->_objContent->edit();
                     $sectionId = $this->getParam('parent', NULL);
+
+                    if (!empty($sectionId)) {
+                        return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
+                    } else {
+                        return $this->nextAction('frontpages', array('action' => 'frontpages'), 'cmsadmin');
+                    }
+                case 'viewcontent':
+//                    $this->_objContent->edit();
+                    $sectionId = $this->getParam('sectionid', NULL);
 
                     if (!empty($sectionId)) {
                         return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
@@ -293,7 +361,12 @@ class cmsadmin extends controller
                     return $this->nextAction('frontpages');
 
                 case 'trashcontent':
-                    $this->_objContent->trashContent($this->getParam('id'));
+                    $sectionId = $this->getParam('sectionid', NULL);
+                    $return = $this->_objContent->trashContent($this->getParam('id'));
+                    
+                    if (!empty($sectionId)) {
+                        return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
+                    }
                     return $this->nextAction('frontpages');
 
                 case 'deletecontent':
@@ -321,19 +394,19 @@ class cmsadmin extends controller
                     $pageId = $this->getParam('pageid', NULL);
                     $closePage = $this->getParam('closePage', FALSE);
                     switch ($blockCat) {
-
+                    
                     case 'frontpage':
                         $blockForm  = $this->_objBlocks->getAddRemoveBlockForm(NULL, NULL, 'frontpage');
                         break;
-
+                    
                     case 'section':
                         $blockForm  = $this->_objBlocks->getAddRemoveBlockForm(NULL, $sectionId, 'section');
-                        break;
+                        break;    
 
                     case 'content':
                         $blockForm  = $this->_objBlocks->getAddRemoveBlockForm($pageId, NULL, 'content');
                         break;
-
+                            
                     }
                     $this->setVarByRef('closePage', $closePage);
                     $this->setVarByRef('blockForm', $blockForm);
@@ -345,7 +418,7 @@ class cmsadmin extends controller
                     $pageId = $this->getParam('pageid', NULL);
                     //Get the section id of the page to add the block to
                     $sectionId = $this->getParam('sectionid', NULL);
-
+                    
                     if ($blockCat == 'frontpage') {
                         //Get blocks on the frontpage
                         $currentBlocks = $this->_objBlocks->getBlocksForFrontPage();
@@ -356,10 +429,10 @@ class cmsadmin extends controller
                         //Get all blocks already on the section
                         $currentBlocks = $this->_objBlocks->getBlocksForSection($sectionId);
                     }
-
+                    
                     //Get all available blocks
                     $blocks = $this->_objBlocks->getBlockEntries();
-
+                    
                     foreach($blocks as $block) {
                         $exists = FALSE;
                         $blockName = $block['blockname'];
@@ -377,7 +450,7 @@ class cmsadmin extends controller
                             if(!$exists) {
                                 $this->_objBlocks->add($pageId, $sectionId, $blockId, $blockCat);
                             }
-                        //If block isn't in list to be added check if it exists and delete it
+                        //If block isn't in list to be added check if it exists and delete it    
                         } else {
                             if($exists) {
                                 $this->_objBlocks->deleteBlock($pageId, $sectionId, $blockId, $blockCat);
@@ -394,7 +467,7 @@ class cmsadmin extends controller
                         return $this->nextAction('addblock', array('blockcat' => 'section', 'sectionid' => $sectionId), 'cmsadmin');
                     }
 
-
+							
                 case 'changeblocksorder':
                     //Get block entry details
                     $id = $this->getParam('id');
@@ -416,7 +489,7 @@ class cmsadmin extends controller
                     $pageId = $this->getParam('pageid');
                     $blockId = $this->getParam('blockid');
                     $this->_objBlocks->add($pageId, NULL, $blockId, 'content');
-
+                    
                     echo $this->createReturnBlock($blockId, 'usedblock');
 
                     break;
@@ -424,38 +497,273 @@ class cmsadmin extends controller
                     $pageId = $this->getParam('pageid');
                     $blockId = $this->getParam('blockid');
                     $this->_objBlocks->deleteBlock($pageId, NULL, $blockId, 'content');
-
+                    
                     echo $this->createReturnBlock($blockId, 'addblocks');
                     break;
                 case 'adddynamicfrontpageblock':
                     $blockId = $this->getParam('blockid');
                     $this->_objBlocks->add(NULL, NULL, $blockId, 'frontpage');
-
+                    
                     echo $this->createReturnBlock($blockId, 'usedblock');
 
                     break;
                 case 'removedynamicfrontpageblock':
                     $blockId = $this->getParam('blockid');
                     $this->_objBlocks->deleteBlock(NULL, NULL, $blockId, 'frontpage');
-
+                    
                     echo $this->createReturnBlock($blockId, 'addblocks');
                     break;
+                 case 'uploadimage':
+                 	  return 'cms_attachment_popup.php';
+                 	  break;
+                 case 'createfeed':
+                 		             		
+                 		return 'rssedit_tpl.php';
+                 		break;
+                 case 'addrss':
+					$this->addRss();
+        			$this->nextAction('createfeed');
+        			break;
+
+        		case 'rssedit':
+	        		$mode = $this->getParam('mode');
+	        		$rssname = $this->getParam('name');
+	        		$rssurl = $this->getParam('rssurl');
+	        		$rssdesc = $this->getParam('description');
+	        		$userid = $this->objUser->userId();
+	        		$id = $this->getParam('id');
+	
+	        		if($mode == 'edit')
+	        		{
+	        			$addarr = array('id' => $id, 'userid' => $userid, 'url' => $rssurl, 'name' => $rssname, 'description' => $rssdesc);
+	        			$this->objDbBlog->addRss($addarr, 'edit');
+	        		}
+	        		$userid = $this->objUser->userid();
+	        		$this->setVarByRef('userid', $userid);
+		        	return 'rssedit_tpl.php';
+		        	break;
+
+        		case 'deleterss':
+		        	$id = $this->getParam('id');
+		
+		        	$this->objDbBlog->delRSS($id);
+		        	$this->nextAction('rssedit');
+		        	break;
+		        case 'managemenus':
+					$pageId = $this->getParam('pageid',null);
+					$content = $this->objTreeNodes->getRootNodes();
+					$this->setVar('content',$content);
+					$this->currentPageId = $pageId;
+					$this->setVar('pageId', $pageId);
+					$topNav = $this->_objUtils->topNav('menu');
+                    $this->setVarByRef('topNav',$topNav);
+					return 'cms_menu_list_tpl.php';
+					break;
+				case 'savemenu':
+	                if (($this->getParam('published') == 'on') || ($this->getParam('published') == TRUE)){
+	                    $published = 1;
+	                } else {
+	                    $published = 0;
+	                }
+	                $pageId = $this->getParam('id');
+	                $this->objTreeNodes->edit($pageId, $this->getParam('title'), $this->getParam('nodetype'), $this->getParam('linkreference'), $this->getParam('banner'), $this->getParam('parentid'), $this->getParam('layout'), $this->getParam('css'), $published, $this->getParam('publisherid'), $this->getParam('ordering'));
+	                return $this->nextAction('managemenus', array('pageid'=>$pageId), 'cmsadmin');
+            	case 'moveup':
+	                $pageId = $this->getParam('pageid');
+	                $this->objTreeNodes->moveNodeUp($pageId);
+	                return $this->nextAction('managemenus', array('pageid'=>$pageId), 'cmsadmin');
+            	case 'movedown':
+	                $pageId = $this->getParam('pageid');
+	                $this->objTreeNodes->moveNodeDown($pageId);
+	                return $this->nextAction('managemenus', array('pageid'=>$pageId), 'cmsadmin');
+	            case 'addnewmenu':
+	            	 $this->currentPageId = $this->getParam('pageid',NULL);
+	            	 return $this->menuAdd();
+            	case 'addmenu':
+	                try {
+	                    if (($this->getParam('published') == 'on') || ($this->getParam('published') == TRUE)){
+	                        $published = 1;
+	                    } else {
+	                        $published = 0;
+	                    }
+	                    $orderNum = $this->objTreeNodes->getNewOrderNum($this->getParam('parentid'));
+	                    $this->objTreeNodes->add($this->getParam('title'), $this->getParam('nodetype'), $this->getParam('linkreference'), $this->getParam('banner'), $this->getParam('parentid'), $this->getParam('layout'), $this->getParam('css'), $published, $this->getParam('publisherid'), $orderNum);
+	
+	                    $pageId = $this->objTreeNodes->getLastInsertId();
+	                    return $this->nextAction('addnewmenu', array('pageid'=>$pageId), 'cmsadmin');
+	                }catch (Exception $e){
+	                    //if add fails do this
+	                    return $this->nextAction('addnewmenu', array(), 'cmsadmin');
+	                }
+
+            	case 'save':
+                	$this->objContent->edit();
+                	return $this->nextAction('addnewmenu', array('pageid'=>$pageId), 'cmsadmin');
+                	break;
+                	
+                 case 'deletemenu':
+                    $heading = '<h1><center>'.$this->objLanguage->languageText('phrase_menuadmin').'</center></h1><br /><br />';
+                    $this->setVarByRef('heading', $heading);
+
+                    $pageId = $this->getParam('pageid');
+                    if (!isset($pageId)) {
+                    	$pageId = $this->getParam('id');
+                    }
+                    $node = $this->objTreeNodes->getNode($pageId);
+                    $parentId = $node[0]['parent_id'];
+                    $this->objTreeNodes->deleteWithChildren($pageId);
+                    return $this->nextAction('managemenus', array('pageid'=>$parentId), 'cmsadmin');
+            	case 'showcmspages':
+	                $contentId = $this->getParam('id');
+	                $pageId = $this->getParam('pageid');
+	                $page = $this->_objContent->getContentPage($contentId);
+	                
+	    		    $this->setVar('content', $this->_objUtils->showBody($contentId, $pageId, FALSE));
+	
+	                if (count($page) == 0) {
+	                    $contentId = NULL;
+	                    $sectionId = NULL;
+	                } else {
+	                    $sectionId = $page['sectionid'];
+	                }
+	        	    $this->setVar('contentId', $contentId);
+	        	    $this->setVar('sectionId', $sectionId);
+	        	    $this->setLayoutTemplate('menu_cms_layout_tpl.php');
+	    			return  'cms_test_tpl.php';
+
+            	case 'showgrouplist':
+	                $groupId = $this->getParam('groupid');
+	        	    $this->setVar('groupId', $groupId);
+	        	    $this->setLayoutTemplate('');
+	    		    $this->setVar('content', $this->_objUtils->showGroupContent($groupId));
+	    			return  'cms_test_tpl.php';
+	                break;		       
                 }
-
-
+                
+                
         }
+        /**
+         * Method to query for sections
+         * This method can be used for queries related to sections
+         *
+         * @param string $contextcode
+         * @param string $rootType: this can be 'all' or 'root' depending what 
+         * type of results you want
+         * @return array of sections
+         */
+        
+        public function getsections($contextcode=null,$rootType=null){
+        	//Check whether the contextcode is set 
+        	if (isset($contextcode)) {
+        		$this->contextCode = $contextcode;
+        	}
+        	//Check whether to display all nodes or root nodes only
+        	if (isset($rootType)) {
+        		$viewType = $rootType;
+        	}else{
+        		$viewType = $this->getParam('viewType', 'all');
+        	}
+        	$topNav = $this->_objUtils->topNav('sections');
+        	$this->setVarByRef('topNav',$topNav);
+        	
+        	if($viewType == 'root') {
+        		$arrSections = $this->_objSections->getRootNodes(false,$this->contextCode);
+        	} else {
+        	
+        		$arrSections = $this->_objUtils->getSectionLinks(TRUE,$this->contextCode);
+        	}
+        	$this->setVarByRef('arrSections', $arrSections);
+        	$this->setVarByRef('viewType', $viewType);
+        	
+        	return $arrSections;
+        }
+        /**
+         * This method accepts a section id and
+         * returns an array of sections.For cms purposes
+         * it sets by reference subsections as well for 
+         * the cms display template
+         *
+         * @param int $sectionid
+         * @param int $subsectionid same as the section id
+         * @return array sections
+         */
+        public function viewsections($sectionid=null,$subsectionid=null){
+        	
+        	if (isset($sectionid)) {
+        		$id = $sectionid;
+        	}else{
+        		$id = $this->getParam('id');
+        	}
+        	
+        	//Get section data
+        	$section = $this->_objSections->getSection($id);
+        	
+        	$this->setVarByRef('section', $section);
+        	//Get sub sections
+        	$subSections = $this->_objSections->getSubSectionsInSection($id);
+        	$this->setVarByRef('subSections', $subSections);
+        	//Get content pages
+        	$pages = $this->_objContent->getPagesInSection($id);
+        	//Get top Nav
+        	$topNav = $this->_objUtils->topNav('viewsection');
+        	$this->setVarByRef('topNav',$topNav);
+        	$this->setVarByRef('pages', $pages);
+        	return $section;
+        }
+        /**
+         * Method to return the sections form. The form comes with
+         * ajax attached so no need to get that as well.
+         * The method accepts two params that of the parent
+         * and section ids. This is so you can have (n)levels
+         *
+         * @param int $sectionid
+         * @param int $parentid
+         * @return string form
+         */
+        public function addEditsection($sectionid=null,$parentid=null){
+        	 // Generation of Ajax Scripts
+             $ajax = $this->getObject('xajax', 'ajaxwrapper');
+             $ajax->setRequestURI($this->uri(array('action'=>'addsection'), 'cmsadmin'));
+        	 $ajax->registerFunction(array($this, 'processSection')); // Register another function in this controller
+        	 $ajax->processRequests(); // XAJAX method to be called
+        	 $this->appendArrayVar('headerParams', $ajax->getJavascript()); // Send JS to header
+        	 //Get form
+        	 if (!isset($sectionid) ) {
+        	 	$sectionid = $this->getParam('id');
+        	 }
+        	 if (!isset($parentid)) {
+        	 	$parentid = $this->getParam('parentid');
+        	 }
+        	 $addEditForm = $this->_objUtils->getAddEditSectionForm($sectionid, $parentid);
 
+        	 //Get Edit Form
+        	 $this->setVarByRef('addEditForm', $addEditForm);
+        	 $parentid = $this->getParam('parentid');
+        	 $level = $this->_objSections->getLevel($parentid);
+        	 $this->setVarByRef('parentid', $parentid);
+             return $addEditForm;
+        }
+        
+        /**
+         * Method creates the return blcks layout
+         * Facilitates the ajax return type for a block
+         *
+         * @param string $blockId: which bock is dragged
+         * @param string $cssClass: css layout class
+         * @return string block
+         */
+        
         private function createReturnBlock($blockId, $cssClass)
         {
             $objModuleBlocks =& $this->getObject('dbmoduleblocks', 'modulecatalogue');
             $objBlocks =& $this->getObject('blocks', 'blocks');
-
+            
             $blockRow = $objModuleBlocks->getRow('id', $blockId);
-
+            
             $str = trim($objBlocks->showBlock($blockRow['blockname'], $blockRow['moduleid']));
             $str = preg_replace('/type\\s??=\\s??"submit"/', 'type="button"', $str);
             $str = preg_replace('/href=".+?"/', 'href="javascript:alert(\''.$this->objLanguage->languageText('mod_cmsadmin_linkdisabled', 'cmsadmin', 'Link is Disabled.').'\');"', $str);
-
+            
             return '<div class="'.$cssClass.'" id="'.$blockRow['id'].'" style="border: 1px solid lightgray; padding: 5px; width:150px; float: left; z-index:20;">'.$str.'</div>';
         }
 
@@ -500,11 +808,164 @@ class cmsadmin extends controller
                 $objResponse->addAssign('showintrolabel','style.display', 'none');
                 $objResponse->addAssign('showintrocol','style.display', 'none');
             }
-
+            
             $objResponse->addScript('adjustLayout();');
 
             return $objResponse->getXML();
         }
+        
+         /**
+         * fuction to process publish or unpublish in sections
+         *
+         * @param array $itemsArray
+         */
+        private function processSelection($itemsArray, $publish)
+        {
+            if(!empty($itemsArray)){
+            	 foreach ($itemsArray as $line){
+               		 $this->_objSections->publish($line, $publish);
+            	 }
+            }
+        }
+        
+        /**
+        * Method to undelete a set of content pages
+        *
+        * @author Megan Watson
+        * @access private
+        * @param array $itemsArray The pages to undelete/unarchive
+        * @return
+        */
+        private function publishFrontContent($itemsArray, $publish = 'publish')
+        {
+            if(!empty($itemsArray)){
+            	 foreach ($itemsArray as $item){
+               		 $this->_objContent->publish($item, $publish);
+            	 }
+            }
+        }
+
+        /**
+        * Method to undelete a set of content pages
+        *
+        * @author Megan Watson
+        * @access private
+        * @param array $itemsArray The pages to undelete/unarchive
+        * @return
+        */
+        private function unarchiveContentPages($itemsArray)
+        {
+            if(!empty($itemsArray)){
+            	 foreach ($itemsArray as $item){
+               		 $this->_objContent->undelete($item);
+            	 }
+            }
+        }
+        
+        private function addRss()
+        {
+        	
+        	$rssname = $this->getParam('name');
+        	$rssurl = $this->getParam('rssurl');
+        	$rssdesc = $this->getParam('description');
+        	$userid = $this->_objUser->userId();
+        	$mode = $this->getParam('mode');
+        	if($mode == 'edit')
+        	{
+        		$id = $this->getParam('id');
+        		$rdata = $this->_objLayouts->getRssById($id);
+        		$this->setVarByRef('rdata', $rdata);
+        		return 'rssedit_tpl.php';
+        	}
+
+        	//get the cache
+        	//get the proxy info if set
+			$proxyArr = $this->objProxy->getProxy();
+
+			$ch = curl_init();
+   			curl_setopt($ch, CURLOPT_URL, $rssurl);
+   			//curl_setopt($ch, CURLOPT_HEADER, 1);
+   			curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+   			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+   			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   			if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
+            {
+            	curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_host'].":".$proxyArr['proxy_port']);
+            	curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxy_user'].":".$proxyArr['proxy_pass']);
+            }
+            
+   			$rsscache = curl_exec($ch);
+   			curl_close($ch);
+   			//put in a timestamp
+        	$addtime = time();
+        	$addarr = array('userid' => $userid, 'url' => $rssurl, 'name' => $rssname, 'description' => $rssdesc, 'rsscache' => htmlentities($rsscache), 'rsstime' => $addtime);
+
+        	//write the file down for caching
+        	$path = $this->_objConfig->getContentBasePath() . "/cms/rsscache/";
+        	$path =  str_replace('\\', '/',$path);
+        	$rsstime = time();
+        	if(!file_exists($path))
+        	{
+
+        		mkdir($path);
+        		chmod($path, 0777);
+        		$filename = $path . $userid . "_" . $rsstime . ".xml";
+        		if(!file_exists($filename))
+        		{
+        			touch($filename);
+
+        		}
+        		$handle = fopen($filename, 'wb');
+        		fwrite($handle, $rsscache);
+        	}
+        	else {
+        		$filename = $path . $userid . "_" . $rsstime . ".xml";
+        		$handle = fopen($filename, 'wb');
+        		fwrite($handle, $rsscache);
+        	}
+        	
+        	//add into the db
+
+        	$rssurl = htmlentities($rssurl, ENT_QUOTES);
+        	$rssname = htmlentities($rssname, ENT_QUOTES);
+        	$rssdesc = htmlentities($rssdesc, ENT_QUOTES);
+
+
+        	$addarr = array('userid' => $userid, 'url' => $rssurl, 'name' => $rssname, 'description' => $rssdesc, 'rsscache' => $filename, 'rsstime' => $rsstime);
+			$result = $this->_objLayouts->addRss($addarr);
+			
+			return ;
+        }
+        /**
+         * The method is designed to handle the menu form
+         * sets up the add/edit of menus
+         * @access private
+         * @return admin template
+         */
+        
+        private function menuAdd(){
+        	 $add = $this->getParam('add',FALSE);
+        	 
+			 $menuNode = $this->objTreeMenu->getNode($this->currentPageId, FALSE); 
+			 
+             if (!$add) {
+                    if (count($menuNode) > 0) {
+                    	
+        					$this->setVar('editForm', $this->_objUtils->showEditNode($this->currentPageId));
+                        }
+             } else {
+    					$this->setVar('editForm', $this->_objUtils->showAddNode($this->currentPageId));
+             }
+             if (count($menuNode) > 0) {
+             	 $this->setVar('menuNodeParent', $menuNode[0]['parent_id']);
+                    if ($menuNode[0]['node_type'] == 1)
+                    {
+                    	$this->setVar('content', $this->_objUtils->showBody($menuNode[0]['link_reference'], $this->currentPageId));
+                    }
+             }
+             return  'cms_menuadmin_tpl.php';	
+        }
+        
 
 }
 

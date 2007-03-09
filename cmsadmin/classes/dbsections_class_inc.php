@@ -38,6 +38,20 @@ class dbsections extends dbTable
         * @var object
         */
         protected $_objLanguage;
+        /**
+         * The user object
+         *
+         * @var object
+         */
+        protected $_objUser;
+        /**
+	     * The sections  object
+	     *
+	     * @access private
+	     * @var object
+	    */
+	    protected $TreeNodes;
+
 
 	   /**
 	    * Class Constructor
@@ -49,10 +63,13 @@ class dbsections extends dbTable
         {
         	try {        
                 parent::init('tbl_cms_sections');
+                $this->table = 'tbl_cms_sections';
                 $this->_objDBContent = & $this->newObject('dbcontent', 'cmsadmin');
                 $this->_objLanguage = & $this->newObject('language', 'language');
+                 $this->_objUser =  $this->newObject('user', 'security');
+                 $this->TreeNodes = & $this->newObject('treenodes', 'cmsadmin');
            } catch (Exception $e){
-       		    echo 'Caught exception: ',  $e->getMessage();
+       		    throw customException($e->getMessage());
         	    exit();
      	   }
         }
@@ -64,13 +81,46 @@ class dbsections extends dbTable
          * @param bool $isPublished TRUE | FALSE To get published sections
          * @return array An array of associative arrays of all sections
          */
-        public function getSections($isPublished = FALSE)
+        public function getSections($isPublished = NULL, $filter = null)
         {
-            if ($isPublished) {
+            if ($isPublished||$filter==null) {
                 return $this->getAll('WHERE published = 1 ORDER BY ordering');
-            } else {
-                return $this->getAll('ORDER BY ordering');
+            }elseif(!$isPublished||$filter!=null) {
+                return $this->getAll('WHERE title LIKE '%".$filter."%' ORDER BY ordering');
             }
+           // if ($filter!=null) {
+            ///	return $this->getAll('WHERE title LIKE '%".$filter."%' ORDER BY ordering');
+           // }
+        }
+
+        /**
+         * Method to get a filtered list of sections
+         *
+         * @author Megan Watson
+         * @access public
+         * @return array An array of associative arrays of the sections
+         */
+        public function getFilteredSections($text = '', $publish = FALSE)
+        {
+            $sql = "SELECT * FROM {$this->table} ";
+            $filter = '';
+            if(!($publish === FALSE)){
+                $filter .= "published = {$publish} ";
+            }
+            
+            if(!empty($text)){
+                if(!empty($filter)){
+                    $filter .= ' AND ';
+                }
+                $filter .= "(LOWER(title) LIKE '%".strtolower($text)."%' OR LOWER(menutext) LIKE '%".strtolower($text)."%')";
+            }
+            
+            if(!empty($filter)){
+                $sql .= "WHERE {$filter}";
+            }
+            $sql .= ' ORDER BY ordering';
+            
+            return $this->getArray($sql);
         }
 
         /**
@@ -78,14 +128,21 @@ class dbsections extends dbTable
          *
          * @access public
          * @param bool $isPublished TRUE | FALSE To get published sections
+         * @param string contextcode The current context the user is in
          * @return array An array of associative arrays of all root nodes
          */
-        public function getRootNodes($isPublished = FALSE)
+        public function getRootNodes($isPublished = FALSE,$contextcode=null)
         {
-            if ($isPublished) {
-                return $this->getAll('WHERE published = 1 AND nodelevel = 1 ORDER BY ordering');
-            } else {
-                return $this->getAll('WHERE nodelevel = 1 ORDER BY ordering');
+            if ($isPublished && $contextcode!=null) {
+            	$results = $this->getAll("WHERE published = 1 AND nodelevel = 1 AND contextcode= '$contextcode' ORDER BY ordering");
+                return $results;
+            }elseif ($isPublished && $contextcode=null){ 
+            	$results = $this->getAll("WHERE published = 1 AND nodelevel = 1 ORDER BY ordering");
+                return $results;
+            }
+            else {
+            	$results = $this->getAll("WHERE nodelevel = 1 ORDER BY ordering");
+            	return $results;
             }
         }
 
@@ -133,7 +190,7 @@ class dbsections extends dbTable
          * @access public
          * @return bool
          */
-        public function add()
+        public function add($contextcode=null)
         {
             //get param from dropdown
             $parentSelected = $this->getParam('parent');
@@ -142,43 +199,121 @@ class dbsections extends dbTable
             $parentid = $id;
 
             if ($this->getLevel($parentid) == '1' || $this->getLevel($parentid) == '0') {
+            	
                 $rootid = $parentid;
+                $rootnode = $this->checkindex($rootid);
+                //Get section details
+                $title = $this->getParam('title');
+                $menuText = $this->getParam('menutext');
+                $access = $this->getParam('access');
+                $description = $this->getParam('introtext');
+                $published = $this->getParam('published');
+                $layout = $this->getParam('display');
+                $showdate = $this->getParam('showdate');
+                $showintroduction = $this->getParam('showintro');
+                $user = $this->_objUser->userId();
+                if($this->getParam('pagenum') == 'custom') {
+                	$numpagedisplay = $this->getParam('customnumber');
+                } else {
+                	$numpagedisplay = $this->getParam('pagenum');
+                }
+                $ordertype = $this->getParam('pageorder');
+                $ordering = $this->getOrdering($parentid);
+
+                //Add section
+                $result = $this->insert(array(
+                'rootid' => $rootid,
+                'parentid' => $parentid,
+                'title' => $title,
+                'menutext' => $menuText,
+                'access' => $access,
+                'layout' => $layout,
+                'ordering' => $ordering,
+                'description' => $description,
+                'published' => $published,
+                'showdate' => $showdate,
+                'showintroduction' => $showintroduction,
+                'numpagedisplay' => $numpagedisplay,
+                'ordertype' => $ordertype,
+                'nodelevel' => $this->getLevel($parentid) + '1',
+                'datecreated'=>$this->now(),
+                'userid' => $user,
+                'link' => $this->getParam('imagesrc'),
+                'contextcode' =>$contextcode
+                ));
+                
+                return $result;
+                /*add to menu indexing by section id
+                if ($rootnode) {
+                    $orderNum = $this->TreeNodes->getNewOrderNum($rootnode);
+                	return $this->TreeNodes->add($this->getParam('title'), '1', $this->getParam('linkreference'), $this->getParam('banner'), $rootnode, $this->getParam('layout'), $this->getParam('css'), $published,$user, $orderNum,$result);
+                }else{ 
+                	$orderNum = $this->TreeNodes->getNewOrderNum($this->getParam('parentid'));
+                   	return $this->TreeNodes->add($this->getParam('title'), '0', $this->getParam('linkreference'), $this->getParam('banner'), $parentid, $this->getParam('layout'), $this->getParam('css'), $published,$user, $orderNum,$result);
+                }
+                */
+             
             } else {
                 $rootid = $this->getRootNodeId($id);
+                $rootnode = $this->checkindex($rootid);
+                //Get section details
+                $title = $this->getParam('title');
+                $menuText = $this->getParam('menutext');
+                $access = $this->getParam('access');
+                $description = $this->getParam('introtext');
+                $published = $this->getParam('published');
+                $layout = $this->getParam('display');
+                $showdate = $this->getParam('showdate');
+                $showintroduction = $this->getParam('showintro');
+                $user = $this->_objUser->userId();
+                if($this->getParam('pagenum') == 'custom') {
+                	$numpagedisplay = $this->getParam('customnumber');
+                } else {
+                	$numpagedisplay = $this->getParam('pagenum');
+                }
+                $ordertype = $this->getParam('pageorder');
+                $ordering = $this->getOrdering($parentid);
+
+                //Add section
+                $result = $this->insert(array(
+                'rootid' => $rootid,
+                'parentid' => $parentid,
+                'title' => $title,
+                'menutext' => $menuText,
+                'access' => $access,
+                'layout' => $layout,
+                'ordering' => $ordering,
+                'description' => $description,
+                'published' => $published,
+                'showdate' => $showdate,
+                'showintroduction' => $showintroduction,
+                'numpagedisplay' => $numpagedisplay,
+                'ordertype' => $ordertype,
+                'nodelevel' => $this->getLevel($parentid) + '1',
+                'datecreated'=>$this->now(),
+                'userid' => $user,
+                'link' => $this->getParam('imagesrc'),
+                'contextcode' =>$contextcode
+                ));
+                return $result;
+                /*add to menu indexing by section id
+                if ($rootnode) {
+                    $orderNum = $this->TreeNodes->getNewOrderNum($rootnode);
+                	return $this->TreeNodes->add($this->getParam('title'), '1', $this->getParam('linkreference'), $this->getParam('banner'), $rootnode, $this->getParam('layout'), $this->getParam('css'), $published,$user, $orderNum,$result);
+                }else{ 
+                	$orderNum = $this->TreeNodes->getNewOrderNum($this->getParam('parentid'));
+                   	return $this->TreeNodes->add($this->getParam('title'), '0', $this->getParam('linkreference'), $this->getParam('banner'), $parentid, $this->getParam('layout'), $this->getParam('css'), $published,$user, $orderNum,$result);
+                }
+                */
+                
             }
-            //Get section details
-            $title = $this->getParam('title');
-            $menuText = $this->getParam('menutext');
-            $access = $this->getParam('access');
-            $description = $this->getParam('introtext');
-            $published = $this->getParam('published');
-            $layout = $this->getParam('display');
-            $showdate = $this->getParam('showdate');
-            $showintroduction = $this->getParam('showintro');
-            if($this->getParam('pagenum') == 'custom') {
-                $numpagedisplay = $this->getParam('customnumber');
-            } else {
-                $numpagedisplay = $this->getParam('pagenum');
-            }
-            $ordertype = $this->getParam('pageorder');
-            $ordering = $this->getOrdering($parentid);
-            //Add section
-            return $this->insert(array(
-                                     'rootid' => $rootid,
-                                     'parentid' => $parentid,
-                                     'title' => $title,
-                                     'menutext' => $menuText,
-                                     'access' => $access,
-                                     'layout' => $layout,
-                                     'ordering' => $ordering,
-                                     'description' => $description,
-                                     'published' => $published,
-                                     'showdate' => $showdate,
-                                     'showintroduction' => $showintroduction,
-                                     'numpagedisplay' => $numpagedisplay,
-                                     'ordertype' => $ordertype,
-                                     'nodelevel' => $this->getLevel($parentid) + '1'
-                                 ));
+            
+        }
+        
+        private function checkindex($rootid=null,$parentid=null){
+        	
+        	$rootid = $this->TreeNodes->getArtifact($rootid);
+        	return $rootid;
         }
 
         /**
@@ -274,6 +409,9 @@ class dbsections extends dbTable
                              'ordertype' => $ordertype,
                              'description' => $description,
                              'nodelevel' => $count,
+                             'lastupdatedby'=> $this->_objUser->userid(),
+                             'updated' => $this->now(),
+                             'link' => $this->getParam('imagesrc'),
                              'published' => $published);
             return $this->update('id', $id, $arrFields);
         }
@@ -330,6 +468,29 @@ class dbsections extends dbTable
         }
 
         /**
+         * Method to publish or unpublish sections 
+         * 
+         * @param string id The id if the section
+         * @param string $task Publish or unpublish
+         * @access public
+         * @return boolean
+         * @author Megan Watson
+         */
+        public function publish($id, $task = 'publish')
+        {
+            switch($task){
+                case 'publish':
+                    $fields['published'] = 1;
+                    break;
+                case 'unpublish':
+                    $fields['published'] = 0;
+                    break;
+            }
+            
+            return $this->update('id', $id, $fields);
+        }
+
+        /**
          * Method to check if a section has child/leaf node(s)
          *
          * @param string $id The id(pk) of the section
@@ -338,7 +499,7 @@ class dbsections extends dbTable
          */
         public function hasNodes($id)
         {
-            $nodes = $this->getAll('WHERE parentid = \''.$id.'\'');
+            $nodes = $this->getAll("WHERE parentid = '$id'");
 
             if (count($nodes) > 0) {
                 $hasNodes = True;
@@ -399,9 +560,9 @@ class dbsections extends dbTable
         {
             if ($isPublished) {
                 //return all subsections
-                return $this->getAll('WHERE published = 1 AND parentid = \''.$sectionId.'\' ORDER BY ordering '.$order);
+                return $this->getAll("WHERE published = 1 AND parentid = '$sectionId' ORDER BY ordering $order");
             } else {
-                return $this->getAll('WHERE parentid = \''.$sectionId.'\' ORDER BY ordering '.$order);
+                return $this->getAll("WHERE parentid = '$sectionId' ORDER BY ordering $order");
             }
         }
 
@@ -413,13 +574,13 @@ class dbsections extends dbTable
          * @return array $subsections An array of associative arrays for all categories in the section
          * @access public
          */
-        public function getSubSectionsInRoot($rootId, $isPublished = FALSE)
+        public function getSubSectionsInRoot($rootId, $order = 'ASC',$isPublished = FALSE)
         {
             if ($isPublished) {
                 //return all subsections
-                return $this->getAll('WHERE published = 1 AND rootid = \''.$rootId.'\' ORDER BY ordering');
+                return $this->getAll("WHERE published = 1 AND rootid = '$rootId' ORDER BY ordering");
             } else {
-                return $this->getAll('WHERE rootid = \''.$rootId.'\' ORDER BY ordering');
+                return $this->getAll("WHERE rootid = '$rootId' ORDER BY ordering $order");
             }
         }
 
@@ -437,9 +598,9 @@ class dbsections extends dbTable
         {
             if ($isPublished) {
                 //return all subsections
-                return $this->getAll('WHERE published = 1 AND nodelevel = \''.$level.'\' AND rootid = \''.$rootId.'\' ORDER BY ordering '.$order);
+                return $this->getAll("WHERE published = 1 AND nodelevel = '$level' AND rootid = '$rootId' ORDER BY ordering $order");
             } else {
-                return $this->getAll('WHERE nodelevel = \''.$level.'\' AND rootid = \''.$rootId.'\' ORDER BY ordering '.$order);
+                return $this->getAll("WHERE nodelevel = '$level' AND rootid = '$rootId' ORDER BY ordering $order");
             }
         }
 
@@ -452,7 +613,7 @@ class dbsections extends dbTable
          */
         public function getNumSubSections($sectionId)
         {
-            $subSecs = $this->getAll('WHERE parentid = \''.$sectionId.'\'');
+            $subSecs = $this->getAll("WHERE parentid = '$sectionId'");
             $noSubSecs = count($subSecs);
             return $noSubSecs;
         }
@@ -480,7 +641,7 @@ class dbsections extends dbTable
                 //get an array of all the cats nodes
 
                 for ($i = $level; $i <= $numLevels; $i++) {
-                    $nodes = $this->getAll('WHERE parentid = \''.$parentId.'\' AND nodelevel = \''.$i.'\'');
+                    $nodes = $this->getAll("WHERE parentid = '$parentId' AND nodelevel ='$i'");
                     foreach($nodes as $node) {
                         $nodeIdArray[] = $node['id'];
                         $parentId = $node['id'];
@@ -513,7 +674,7 @@ class dbsections extends dbTable
         {
             $ordering = 1;
             //get last order value
-            $lastOrder = $this->getAll('WHERE parentid = \''.$parentid.'\' ORDER BY ordering DESC LIMIT 1');
+            $lastOrder = $this->getAll("WHERE parentid = '$parentid' ORDER BY ordering DESC LIMIT 1");
             //add after this value
 
             if (!empty($lastOrder)) {
@@ -540,10 +701,10 @@ class dbsections extends dbTable
 
             if (empty($parentId)) {
                 //Get the number of root sections
-                $lastOrd = $this->getAll('WHERE nodelevel = 1 ORDER BY ordering DESC LIMIT 1');
+                $lastOrd = $this->getAll("WHERE nodelevel = 1 ORDER BY ordering DESC LIMIT 1");
             } else {
                 //Get the number of sub sections in section
-                $lastOrd = $this->getAll('WHERE parentid = \''.$parentId.'\' ORDER BY ordering DESC LIMIT 1');
+                $lastOrd = $this->getAll("WHERE parentid = '$parentId' ORDER BY ordering DESC LIMIT 1");
             }
 
             $topOrder = $lastOrd['0']['ordering'];
@@ -609,7 +770,7 @@ class dbsections extends dbTable
         public function changeOrder($id, $ordering, $parentid)
         {
             //Get array of all sections in level
-            $fpContent = $this->getAll('WHERE parentid = \''.$parentid.'\' ORDER BY ordering ');
+            $fpContent = $this->getAll("WHERE parentid = '$parentid' ORDER BY ordering ");
             //Search for entry to be reordered and update order
             foreach($fpContent as $content) {
                 if ($content['id'] == $id) {
@@ -632,7 +793,7 @@ class dbsections extends dbTable
             }
 
             //Get other entry to change
-            $entries = $this->getAll('WHERE parentid = \''.$parentid.'\' AND ordering = \''.$toChange.'\'');
+            $entries = $this->getAll("WHERE parentid = '$parentid' AND ordering = '$toChange'");
             foreach($entries as $entry) {
                 if ($entry['id'] != $id) {
                     $upArr = array(
@@ -679,5 +840,118 @@ class dbsections extends dbTable
 
             return $order;
         }
+
+        public function luceneIndex($data)
+        {
+        	//print_r($data); die();
+        	$this->objConfig = $this->getObject('altconfig', 'config');
+        	$this->objUser = $this->getObject('user', 'security');
+        	$indexPath = $this->objConfig->getcontentBasePath();
+        	if(file_exists($indexPath.'chisimbaIndex/segments'))
+        	{
+        		chmod($indexPath.'chisimbaIndex', 0777);
+        		//we build onto the previous index
+        		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex');
+        	}
+        	else {
+        		//instantiate the lucene engine and create a new index
+        		mkdir($indexPath.'chisimbaIndex');
+        		chmod($indexPath.'chisimbaIndex', 0777);
+        		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex', true);
+        	}
+        	//hook up the document parser
+        	$document = new Zend_Search_Lucene_Document();
+        	//change directory to the index path
+        	chdir($indexPath);
+
+        	//set the properties that we want to use in our index
+        	//id for the index and optimization
+        	$document->addField(Zend_Search_Lucene_Field::UnStored('docid', $data['id']));
+        	//date
+        	$document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['creation']));
+        	//url
+        	$document->addField(Zend_Search_Lucene_Field::UnIndexed('url', $this->uri(array('module' => 'cms', 'action' => 'showsection', 'id' => $data['id'], 'sectionid'=> $data['sectionid']))));
+        	//createdBy
+        	$document->addField(Zend_Search_Lucene_Field::Text('createdBy', $this->objUser->fullName($data['userid'])));
+        	//document teaser
+        	$document->addField(Zend_Search_Lucene_Field::Text('teaser', $data['description']));
+        	//doc title
+        	$document->addField(Zend_Search_Lucene_Field::Text('title', $data['title']));
+        	//doc author
+        	$document->addField(Zend_Search_Lucene_Field::Text('author', $this->objUser->fullName($data['userid'])));
+        	//document body
+        	//NOTE: this is not actually put into the index, so as to keep the index nice and small
+        	//      only a reference is inserted to the index.
+        	$document->addField(Zend_Search_Lucene_Field::UnStored('contents', $data['body']));
+        	//what else do we need here???
+        	//add the document to the index
+        	$index->addDocument($document);
+        	//commit the index to disc
+        	$index->commit();
+        	//optimize the thing
+        	//$index->optimize();
+        }
+
+        public function luceneReIndex($data)
+        {
+        	//var_dump($data);
+        	$this->objConfig = $this->getObject('altconfig', 'config');
+        	$this->objUser = $this->getObject('user', 'security');
+        	$indexPath = $this->objConfig->getcontentBasePath();
+        	if(file_exists($indexPath.'chisimbaIndex/segments'))
+        	{
+        		chmod($indexPath.'chisimbaIndex', 0777);
+        		//we build onto the previous index
+        		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex');
+        	}
+        	else {
+        		//instantiate the lucene engine and create a new index
+        		mkdir($indexPath.'chisimbaIndex');
+        		chmod($indexPath.'chisimbaIndex', 0777);
+        		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex', true);
+        	}
+        	$docid = $data['id'];
+        	$removePath = $docid;
+        	$hits = $index->find('docid:' . $removePath);
+        	foreach ($hits as $hit) {
+        		$index->delete($hit->id);
+        	}
+
+        	//ok now re-add the doc to the index
+        	//hook up the document parser
+        	$document = new Zend_Search_Lucene_Document();
+        	//change directory to the index path
+        	chdir($indexPath);
+
+        	//set the properties that we want to use in our index
+        	//id for the index and optimization
+        	$document->addField(Zend_Search_Lucene_Field::UnStored('docid', $data['id']));
+        	//date
+        	$document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['created']));
+        	//url
+        	$document->addField(Zend_Search_Lucene_Field::UnIndexed('url', $this->uri(array('module' => 'cms', 'action' => 'showsection', 'id' => $data['id'], 'sectionid'=> $data['sectionid']))));
+        	//createdBy
+        	$document->addField(Zend_Search_Lucene_Field::Text('createdBy', $this->objUser->fullName($this->objUser->userId())));
+        	//document teaser
+        	$document->addField(Zend_Search_Lucene_Field::Text('teaser', $data['description']));
+        	//doc title
+        	$document->addField(Zend_Search_Lucene_Field::Text('title', $data['title']));
+        	//doc author
+        	$document->addField(Zend_Search_Lucene_Field::Text('author', $this->objUser->fullName($this->objUser->userId())));
+        	//document body
+        	//NOTE: this is not actually put into the index, so as to keep the index nice and small
+        	//      only a reference is inserted to the index.
+        	$document->addField(Zend_Search_Lucene_Field::UnStored('contents', $data['body']));
+        	//what else do we need here???
+        	//add the document to the index
+        	$index->addDocument($document);
+        	//commit the index to disc
+        	$index->commit();
+        	//optimize the thing
+        	//$index->optimize();
+
+        }
+
+
 }
 ?>

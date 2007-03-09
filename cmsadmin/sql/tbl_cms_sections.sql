@@ -2,7 +2,7 @@
 
 $tablename = 'tbl_cms_sections';
 
-$options = array('comment' => 'cms sections', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'CMS table used to store sections', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 $fields = array(
 	'id' => array(
@@ -55,7 +55,7 @@ $fields = array(
 
 		),
     'checked_out_time' => array(
-		'type' => 'date',
+		'type' => 'timestamp',
 
 		),
     'ordering' => array(
@@ -90,6 +90,38 @@ $fields = array(
     'link' => array(
              'type' => 'text',
              'length' => 255
-		)
+		),
+	'userid' => array(
+		'type' => 'text',
+		'length' => 255,
+        'notnull' => TRUE
+		),
+	'datecreated' => array(
+		'type' => 'timestamp'
+		),
+	'lastupdatedby' => array(
+        'type' => 'text',
+		'length' => 32        
+        ),
+    'updated' => array(
+        'type' => 'timestamp'
+        ),
+    'startdate' => array(
+		'type' => 'timestamp'
+		),
+	'finishdate' => array(
+		'type' => 'timestamp'
+		),
+	'contextcode' => array(
+		'type' => 'text',
+		'length' => 255
+        )    
 	);
+	$name = 'contextcode';
+
+$indexes = array(
+                'fields' => array(
+                	'id' => array()
+                )
+        );
 ?>

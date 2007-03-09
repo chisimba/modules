@@ -63,12 +63,13 @@ class dbcontent extends dbTable
         {
         	try {
                 parent::init('tbl_cms_content');
+                $this->table = 'tbl_cms_content';
                 $this->_objUser = & $this->getObject('user', 'security');
                 $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
                 $this->_objLanguage = & $this->newObject('language', 'language');
                 $this->_objBlocks = & $this->newObject('dbblocks', 'cmsadmin');
            } catch (Exception $e){
-       		    echo 'Caught exception: ',  $e->getMessage();
+       		    throw customException($e->getMessage());
         	    exit();
      	   }
         }
@@ -82,22 +83,30 @@ class dbcontent extends dbTable
         public function add()
         {
             //Create htmlcleaner object
-            $objHtmlCleaner =& $this->newObject('htmlcleaner', 'utilities');
+            $objHtmlCleaner = $this->newObject('htmlcleaner', 'utilities');
+            
             //Get details of the new entry
             $title = $this->getParam('title');
             $sectionid = $this->getParam('parent');
             $published = ($this->getParam('published') == '1') ? 1 : 0;
-            $creatorid = $this->_objUser->userId();
+            $override_date = $this->getParam('overide_date',null);
+            $start_publish = $this->getParam('publish_date',null);
+            $end_publish = $this->getParam('end_date',null);
+            if ($override_date==null) {
+            	$override_date =  $this->now();
+            }
+            $creatorid = $this->getParam('creator',null);
+            if ($creatorid==NUll) {
+            	 $creatorid = $this->_objUser->userId();
+            }
+           
             $access = $this->getParam('access');
-//            $introText = $this->getParam('intro');
-//            $fullText = $this->getParam('body');
-//            $introText = $objHtmlCleaner->cleanHtml($introText);
-//            $fullText = $objHtmlCleaner->cleanHtml($fullText);
-
-            $introText = $this->html2txt(stripslashes($this->getParam('intro')));
-            $fullText = $this->html2txt(stripslashes($this->getParam('body')));
-
-            $ccLicence = $this->getParam('creativecommons');
+			$created_by = $this->getParam('title_alias',null);
+			$introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
+            $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
+            $metakey = $this->getParam('keyword',null);
+			$metadesc = $this->getParam('description',null);
+            $ccLicence = $this->getParam('creativecommons',null);
 
             $newArr = array(
                           'title' => $title ,
@@ -110,11 +119,23 @@ class dbcontent extends dbTable
                           'created' => $this->now(),
                           'modified' => $this->now(),
                           'post_lic' => $ccLicence,
-                          'created_by' => $creatorid
+                          'created' =>$override_date,
+                          'created_by' => $creatorid,
+                          'created_by_alias'=>$created_by,
+                          'checked_out'=> $creatorid,
+                          'checked_out_time'=> $this->now(),
+                          'metakey'=>$metakey,
+                          'metadesc'=>$metadesc,
+                          'start_publish'=>$start_publish,
+                          'end_publish'=>$end_publish
+                          
                       );
 
             $newId = $this->insert($newArr);
-
+            $newArr['id'] = $newId;
+			$doc->introtext = $introText;
+			$doc->objTitle = $title;
+			$this->luceneIndex($newArr);
             //process the forntpage
             $isFrontPage = $this->getParam('frontpage');
 
@@ -141,14 +162,27 @@ class dbcontent extends dbTable
          */
         public function addNewPage($title, $sectionid, $published, $access, $introText, $fullText, $isFrontPage, $ccLicence)
         {
-            //Create htmlcleaner object
-            $objHtmlCleaner =& $this->newObject('htmlcleaner', 'utilities');
-            $introText = $this->html2txt($introText);
-            $fullText = $this->html2txt($fullText);
-//            $introText = $objHtmlCleaner->cleanHtml($introText);
-//            $fullText = $objHtmlCleaner->cleanHtml($fullText);
+            $introText = str_ireplace("<br />", " <br /> ", $introText);
+            $fullText = str_ireplace("<br />", " <br /> ", $fullText);
+			$override_date = $this->getParam('overide_date',null);
+            $start_publish = $this->getParam('publish_date',null);
+            $end_publish = $this->getParam('end_date',null);
+            if ($override_date!=null) {
+            	$override_date =  $this->now();
+            }
+            $creatorid = $this->getParam('creator',null);
+            if ($creatorid==NUll) {
+            	 $creatorid = $this->_objUser->userId();
+            }
 
-            $creatorid = $this->_objUser->userId();
+          	$access = $this->getParam('access');
+			$created_by = $this->getParam('author_alias',null);
+			
+            $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
+            $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
+            $metakey = $this->getParam('keyword',null);
+			$metadesc = $this->getParam('description',null);
+            $ccLicence = $this->getParam('creativecommons');
 
             $newArr = array(
                           'title' => $title ,
@@ -158,14 +192,21 @@ class dbcontent extends dbTable
                           'access' => $access,
                           'ordering' => $this->getOrdering($sectionid),
                           'published' => $published,
-                          'created' => $this->now(),
+                          'created' =>  $this->now(),
                           'modified' => $this->now(),
                           'post_lic' => $ccLicence,
-                          'created_by' => $creatorid
+                          'created_by' => $creatorid,
+                          'created_by_alias'=>$created_by,
+                          'checked_out'=> $creatorid,
+                          'checked_out_time'=> $this->now(),
+                          'metakey'=>$metakey,
+                          'metadesc'=>$metadesc,
+                          'start_publish'=>$start_publish,
+                          'end_publish'=>$$end_publish
                       );
 
             $newId = $this->insert($newArr);
-
+			$this->luceneIndex($newArr);
             if ($isFrontPage == 'on') {
                 $this->_objFrontPage->add($newId);
             }
@@ -181,37 +222,59 @@ class dbcontent extends dbTable
          */
         public function edit()
         {
-            //Create htmlcleaner object
-            $objHtmlCleaner = $this->newObject('htmlcleaner', 'utilities');
             $id = $this->getParam('id');
             $title = $this->getParam('title');
             $sectionid = $this->getParam('parent');
             $published = ($this->getParam('published') == '1') ? 1 : 0;
-            $creatorid = $this->_objUser->userId();
             $access = $this->getParam('access');
-            $introText = stripslashes($this->getParam('intro'));
-            $fullText = stripslashes($this->getParam('body'));
-//            $introText = $objHtmlCleaner->cleanHtml($introText);
-//            $fullText = $objHtmlCleaner->cleanHtml($fullText);
+            $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
+            $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
             $ordering = $this->getParam('ordering');
+            $override_date = $this->getParam('overide_date',null);
+            $start_publish = $this->getParam('publish_date',null);
+            $end_publish = $this->getParam('end_date',null);
+            if ($override_date!=null) {
+            	$override_date =  $this->now();
+            }
+            $creatorid = $this->getParam('creator',null);
+            if ($creatorid==NUll) {
+            	 $creatorid = $this->_objUser->userId();
+            }
+
+          	$access = $this->getParam('access');
+			$created_by = $this->getParam('author_alias',null);
+			
+            $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
+            $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
+            $metakey = $this->getParam('keyword',null);
+			$metadesc = $this->getParam('description',null);
             $ccLicence = $this->getParam('creativecommons');
 
             $newArr = array(
                           'title' => $title ,
                           'sectionid' => $sectionid,
                           'access' => $access,
-                          'introtext' => $this->html2txt((addslashes($introText))),
-                          'body' => $this->html2txt(addslashes($fullText)),
+                          'introtext' => addslashes($introText),
+                          'body' => addslashes($fullText),
                           'modified' => $this->now(),
                           'ordering' => $ordering,
                           'published' => $published,
                           'post_lic' => $ccLicence,
-                          'created_by' => $creatorid
+                          'created_by' => $creatorid,
+                          'created_by_alias'=>$created_by,
+                          'checked_out'=> $creatorid,
+                          'checked_out_time'=> $this->now(),
+                          'metakey'=>$metakey,
+                          'metadesc'=>$metadesc,
+                          'start_publish'=>$start_publish,
+                          'end_publish'=>$end_publish
                       );
 
             //process the forntpage
             $isFrontPage = $this->getParam('frontpage');
-
+            $newArr['id'] =$id;
+            $newArr['created'] = $this->now();
+			$this->luceneReIndex($newArr);
             if ($isFrontPage == '1') {
                 $this->_objFrontPage->add($id);
             } else {
@@ -230,7 +293,13 @@ class dbcontent extends dbTable
          */
         public function trashContent($id)
         {
-            return $this->update('id', $id, array('trash' => 1));
+           
+            //First remove from front page
+            if ($this->_objFrontPage->isFrontPage($id)) {
+                $this->_objFrontPage->remove($id);
+            }
+           $result =  $this->update('id', $id, array('trash' => 1));
+           return $result;
         }
 
         /**
@@ -265,7 +334,7 @@ class dbcontent extends dbTable
                     $this->update('id', $pg['id'], array('title' => $pg['title'],
                                                          'sectionid' => $pg['sectionid'],
                                                          'introtext' => $pg['introtext'],
-                                                         'body' => $this->html2txt($pg['body']),
+                                                         'body' => str_ireplace("<br />", " <br /> ", $pg['body']),
                                                          'access' => $pg['access'],
                                                          'ordering' => $newOrder,
                                                          'published' => $pg['published'],
@@ -277,10 +346,7 @@ class dbcontent extends dbTable
             }
             //First remove from front page
             if ($this->_objFrontPage->isFrontPage($id)) {
-                $fpEntry = $this->_objFrontPage->getRow('content_id', $id);
-                $fpEntryId = $fpEntry['id'];
-
-                $this->_objFrontPage->remove($fpEntryId);
+                $this->_objFrontPage->remove($id);
             }
             //Remove blocks for the page
             $pageBlocks = $this->_objBlocks->getBlocksForPage($id);
@@ -312,6 +378,26 @@ class dbcontent extends dbTable
         }
 
         /**
+         * Method to get the archived content
+         *
+         * @author Megan Watson
+         * @param string $filter The Filter
+         * @return  array An array of associative arrays of all content pages in relationto filter specified
+         * @access public
+         */
+        public function getArchivePages($filter = '')
+        {
+            $sql = "SELECT * FROM {$this->table} WHERE trash = 1 ";
+            
+            if(!empty($filter)){
+                $sql .= "AND LOWER(title) LIKE '%".strtolower($filter)."%' ";
+            }
+            
+            $sql .= 'ORDER BY ordering';
+            return $this->getArray($sql);
+        }
+
+        /**
          * Method to get a page content record
          *
          * @param string $id The id of the page content
@@ -320,8 +406,8 @@ class dbcontent extends dbTable
          */
         public function getContentPage($id)
         {
-            $content = $this->getRow('id', $id );
-            return $content;
+           	$content = $this->getRow('id', $id );
+           	return $content;
         }
 
         /**
@@ -342,6 +428,30 @@ class dbcontent extends dbTable
                 return $this->update('id', $id , array('published' => 1) );
             }
         }
+        
+        /**
+         * Method to publish or unpublish content 
+         * 
+         * @param string id The id if the content
+         * @param string $task Publish or unpublish
+         * @access public
+         * @return boolean
+         * @author Megan Watson
+         */
+        public function publish($id, $task = 'publish')
+        {
+            switch($task){
+                case 'publish':
+                    $fields['published'] = 1;
+                    break;
+                case 'unpublish':
+                    $fields['published'] = 0;
+                    break;
+            }
+            
+            return $this->update('id', $id, $fields);
+        }
+
 
         /**
         * Method to update all the content with the
@@ -353,7 +463,7 @@ class dbcontent extends dbTable
         */
         public function resetSection($sectionId)
         {
-            $arrContent = $this->getAll('WHERE sectionid = \''.$sectionId.'\'');
+            $arrContent = $this->getAll("WHERE sectionid = '$sectionId'");
             $bln = TRUE;
             foreach ($arrContent as $page) {
                 $this->delete('id', $page['id']);
@@ -369,9 +479,13 @@ class dbcontent extends dbTable
          * @access public
          * @author Warren Windvogel
          */
-        public function getPagesInSection($sectionId)
+        public function getPagesInSection($sectionId, $isPublished=FALSE)
         {
-            $pages = $this->getAll('WHERE sectionid = \''.$sectionId.'\' ORDER BY ordering');
+            $filter = "WHERE sectionid = '$sectionId' AND trash='0' ";
+            if($isPublished){
+                $filter .= "AND published='1' ";
+            }
+            $pages = $this->getAll($filter." ORDER BY ordering");
             return $pages;
         }
 
@@ -429,7 +543,7 @@ class dbcontent extends dbTable
         public function getNumberOfPagesInSection($sectionId)
         {
             $noPages = '0';
-            $pages = $this->getAll('WHERE sectionid = \''.$sectionId.'\' ORDER BY ordering');
+            $pages = $this->getAll("WHERE sectionid = '$sectionId' AND trash='0' ORDER BY ordering");
             $noPages = count($pages);
             return $noPages;
         }
@@ -463,7 +577,7 @@ class dbcontent extends dbTable
         {
             $ordering = 1;
             //get last order value
-            $lastOrder = $this->getAll('WHERE sectionid = \''.$sectionId.'\' ORDER BY ordering DESC LIMIT 1');
+            $lastOrder = $this->getAll("WHERE sectionid = '$sectionId' ORDER BY ordering DESC LIMIT 1");
             //add after this value
             if (!empty($lastOrder)) {
                 $ordering = $lastOrder['0']['ordering'] + 1;
@@ -483,7 +597,7 @@ class dbcontent extends dbTable
         public function getOrderingLink($sectionid, $id)
         {
             //Get the number of pages in the section
-            $lastOrd = $this->getAll('WHERE sectionid = \''.$sectionid.'\' ORDER BY ordering DESC LIMIT 1');
+            $lastOrd = $this->getAll("WHERE sectionid = '$sectionid' ORDER BY ordering DESC LIMIT 1");
             $topOrder = $lastOrd['0']['ordering'];
             $links = " ";
 
@@ -549,7 +663,7 @@ class dbcontent extends dbTable
         public function changeOrder($sectionid, $id, $ordering)
         {
             //Get array of all page entries
-            $fpContent = $this->getAll('WHERE sectionid = \''.$sectionid.'\' ORDER BY ordering');
+            $fpContent = $this->getAll("WHERE sectionid = '$sectionid' ORDER BY ordering");
             //Search for entry to be reordered and update order
             foreach($fpContent as $content) {
                 if ($content['id'] == $id) {
@@ -574,7 +688,7 @@ class dbcontent extends dbTable
             }
 
             //Get other entry to change
-            $entries = $this->getAll('WHERE sectionid = \''.$sectionid.'\' AND ordering = \''.$toChange.'\'');
+            $entries = $this->getAll("WHERE sectionid = '$sectionid' AND ordering = '$toChange'");
             foreach($entries as $entry) {
                 if ($entry['id'] != $id) {
                     $upArr = array(
@@ -618,11 +732,131 @@ class dbcontent extends dbTable
 		$text = str_replace("<br />  <br />", "<br />", $text);
 		$text = str_replace("<br\">","",$text);
 		$text = str_replace("<br />", " <br /> ", $text);
-		$text = str_replace("<", " <", $text);
-		$text = str_replace(">", "> ", $text);
+		//$text = str_replace("<", " <", $text);
+		//$text = str_replace(">", "> ", $text);
 		$text = rtrim($text, "\n");
 		return $text;
 	}
+	
+	/**
+	 * The method implements the lucene indexer
+	 * The method accepts an array of data,
+	 * generates a document to be indexed based on the
+	 * url and content inserted into the database 
+	 *
+	 * @param array $data
+	 */
+	public function luceneIndex($data)
+        {
+        	//print_r($data); die();
+        	$this->objConfig = $this->getObject('altconfig', 'config');
+        	$this->objUser = $this->getObject('user', 'security');
+        	$indexPath = $this->objConfig->getcontentBasePath();
+        	if(file_exists($indexPath.'chisimbaIndex/segments'))
+        	{
+        		chmod($indexPath.'chisimbaIndex', 0777);
+        		//we build onto the previous index
+        		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex');
+        	}
+        	else {
+        		//instantiate the lucene engine and create a new index
+        		mkdir($indexPath.'chisimbaIndex');
+        		chmod($indexPath.'chisimbaIndex', 0777);
+        		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex', true);
+        	}
+        	//hook up the document parser
+        	$document = new Zend_Search_Lucene_Document();
+        	//change directory to the index path
+        	chdir($indexPath);
+           
+        	//set the properties that we want to use in our index
+        	//id for the index and optimization
+        	$document->addField(Zend_Search_Lucene_Field::UnStored('docid', $data['id']));
+        	//date
+        	$document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['created']));
+        	//url
+        	$document->addField(Zend_Search_Lucene_Field::UnIndexed('url', $this->uri(array('module' => 'cms', 'action' => 'showfulltext', 'id' => $data['id'], 'sectionid'=> $data['sectionid']))));
+        	//createdBy
+        	$document->addField(Zend_Search_Lucene_Field::Text('createdBy', $this->objUser->fullName($data['created_by'])));
+        	//document teaser
+        	$document->addField(Zend_Search_Lucene_Field::Text('teaser', $data['introtext']));
+        	//doc title
+        	$document->addField(Zend_Search_Lucene_Field::Text('title', $data['title']));
+        	//doc author
+        	$document->addField(Zend_Search_Lucene_Field::Text('author', $this->objUser->fullName($data['created_by'])));
+        	//document body
+        	//NOTE: this is not actually put into the index, so as to keep the index nice and small
+        	//      only a reference is inserted to the index.
+        	$document->addField(Zend_Search_Lucene_Field::Text('contents', $data['body']));
+        	//what else do we need here???
+        	//add the document to the index
+        	$index->addDocument($document);
+        	//commit the index to disc
+        	$index->commit();
+        	//optimize the thing
+        	//$index->optimize();
+        }
+
+    public function luceneReIndex($data)
+        {
+        	//var_dump($data);
+        	$this->objConfig = $this->getObject('altconfig', 'config');
+        	$this->objUser = $this->getObject('user', 'security');
+        	$indexPath = $this->objConfig->getcontentBasePath();
+        	if(file_exists($indexPath.'chisimbaIndex/segments'))
+        	{
+        		chmod($indexPath.'chisimbaIndex', 0777);
+        		//we build onto the previous index
+        		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex');
+        	}
+        	else {
+        		//instantiate the lucene engine and create a new index
+        		mkdir($indexPath.'chisimbaIndex');
+        		chmod($indexPath.'chisimbaIndex', 0777);
+        		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex', true);
+        	}
+        	$docid = $data['id'];
+        	$removePath = $docid;
+        	$hits = $index->find('docid:' . $removePath);
+        	foreach ($hits as $hit) {
+        		$index->delete($hit->id);
+        	}
+
+        	//ok now re-add the doc to the index
+        	//hook up the document parser
+        	$document = new Zend_Search_Lucene_Document();
+        	//change directory to the index path
+        	chdir($indexPath);
+
+        	//set the properties that we want to use in our index
+        	//id for the index and optimization
+        	$document->addField(Zend_Search_Lucene_Field::UnStored('docid', $data['id']));
+        	//date
+        	$document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['created']));
+        	//url
+        	$document->addField(Zend_Search_Lucene_Field::UnIndexed('url', $this->uri(array('module' => 'cms', 'action' => 'showfulltext', 'id' => $data['id'], 'sectionid'=> $data['sectionid']))));
+        	//createdBy
+        	$document->addField(Zend_Search_Lucene_Field::Text('createdBy', $this->objUser->fullName($this->objUser->userId())));
+        	//document teaser
+        	$document->addField(Zend_Search_Lucene_Field::Text('teaser', $data['introtext']));
+        	//doc title
+        	$document->addField(Zend_Search_Lucene_Field::Text('title', $data['title']));
+        	//doc author
+        	$document->addField(Zend_Search_Lucene_Field::Text('author', $this->objUser->fullName($this->objUser->userId())));
+        	//document body
+        	//NOTE: this is not actually put into the index, so as to keep the index nice and small
+        	//      only a reference is inserted to the index.
+        	$document->addField(Zend_Search_Lucene_Field::Text('contents', $data['body']));
+        	//what else do we need here???
+        	//add the document to the index
+        	$index->addDocument($document);
+        	//commit the index to disc
+        	$index->commit();
+        	//optimize the thing
+        	//$index->optimize();
+
+        }
+
 }
 
 ?>

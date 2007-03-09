@@ -19,6 +19,14 @@ $objH->type = '2';
 $objIcon = & $this->newObject('geticon', 'htmlelements');
 //Create instance of link object
 $objLink = & $this->newObject('link', 'htmlelements');
+//Setup Header Navigation objects
+
+$objLayer =$this->newObject('layer','htmlelements');
+$objRound =$this->newObject('roundcorners','htmlelements');
+$headIcon = $this->newObject('geticon', 'htmlelements');
+$headIcon->setIcon('section','png');
+$tbl = $this->newObject('htmltable', 'htmlelements');
+
 
 //Get blocks icon
 $objIcon->setIcon('modules/blocks');
@@ -42,8 +50,8 @@ if (isset($section)) {
 
 //Get layout icon
 $layoutData = $this->_objLayouts->getLayout($layout);
-
-$img = '<img src="modules/cmsadmin/resources/'.$layoutData['imagename'].'" alt="'.$layoutData['imagename'].'"/>';
+$imageName = $layoutData['imagename'];
+$img = "<img src=\"{$this->getResourceUri("$imageName",'cmsadmin')}\" alt=\"'$imageName'\"/>";
 
 $other = '<b>'.$this->objLanguage->languageText('mod_cmsadmin_treemenuname', 'cmsadmin').':'.'</b>'.'&nbsp;'.$menuText.'<br/>';
 
@@ -190,7 +198,7 @@ if (count($pages) > '0') {
         $visibleIcon = $objIcon->show();
 
         //Create delete icon
-        $delArray = array('action' => 'deletecontent', 'confirm' => 'yes', 'id' => $pageId, 'sectionid' => $sectionId);
+        $delArray = array('action' => 'trashcontent', 'confirm' => 'yes', 'id' => $pageId, 'sectionid' => $sectionId);
         $deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelpage', 'cmsadmin');
         $delIcon = $objIcon->getDeleteIconWithConfirm($pageId, $delArray, 'cmsadmin', $deletephrase);
         //Create edit icon
@@ -268,15 +276,35 @@ if($isRegistered){
         $objAddSectionBlockLink->link = $blockIcon;
         $objAddSectionBlockLink->extra = "onclick = \"javascript:window.open('" . $this->uri(array('action' => 'addblock', 'sectionid' => $sectionId, 'blockcat' => 'section')) . "', 'branch', 'width=500, height=350, top=50, left=50, scrollbars')\"";
         //Set heading
-        $objH->str = $this->objLanguage->languageText('word_section').':'.'&nbsp;'.$title.'&nbsp;'.$objAddSectionBlockLink->show().'&nbsp;'.$editSectionIcon.'&nbsp;'.$delIcon;
+        $objH->str = $headIcon->show().'&nbsp;'.$this->objLanguage->languageText('word_section').':'.'&nbsp;'.$title.'&nbsp;'.$objAddSectionBlockLink->show().'&nbsp;'.$editSectionIcon.'&nbsp;'.$delIcon;
     } else {
-        $objH->str = $this->objLanguage->languageText('word_section').':'.'&nbsp;'.$title.'&nbsp;'.$editSectionIcon.'&nbsp;'.$delIcon;
+        $objH->str = $headIcon->show().'&nbsp;'.$this->objLanguage->languageText('word_section').':'.'&nbsp;'.$title.'&nbsp;'.$editSectionIcon.'&nbsp;'.$delIcon;
     }
 } else {
     //Set heading
     $objH->str = $this->objLanguage->languageText('word_section').':'.'&nbsp;'.$title.'&nbsp;'.$editSectionIcon.'&nbsp;'.$delIcon;
 }
-$middleColumnContent .= $objH->show();
+/*
+//attach heading to navigation table
+$tbl->startRow();
+$tbl->addCell( $objH->show());
+$tbl->addCell($topNav);
+$tbl->endRow();
+*/
+
+$objLayer->str = $objH->show();
+$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
+$header = $objLayer->show();
+
+$objLayer->str = $topNav;
+$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
+$header .= $objLayer->show();
+
+$objLayer->str = '';
+$objLayer->border = '; clear:both; margin:0px; padding:0px;';
+$headShow = $objLayer->show();
+
+$middleColumnContent .= $objRound->show($header.$headShow);//$tbl->show());
 
 //Display layout info
 $middleColumnContent .= $objDetailsTable->show();

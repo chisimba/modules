@@ -72,5 +72,66 @@ class dblayouts extends dbTable
             $description = $layout['description'];
             return $description;
         }
+        
+        /**
+	 * Method to add a RSS feed to the database
+	 *
+	 * @param string $userid
+	 * @param string $name
+	 * @param string $desc
+	 * @param string $url
+	 * @return bool
+	 */
+	public function addRss($rssarr, $mode = NULL)
+	{
+		$this->_changeTable("tbl_cms_rss");
+		if($mode == NULL)
+		{
+			return $this->insert($rssarr);
+		}
+		elseif($mode == 'edit') {
+			return $this->update('id', $rssarr['id'], $rssarr, "tbl_cms_rss");
+		}
+		else {
+			return FALSE;
+		}
+	}
+
+	public function getUserRss($userid)
+	{
+		$this->_changeTable("tbl_cms_rss");
+		return $this->getAll("WHERE userid = '$userid'");
+	}
+
+	public function getRssById($id)
+	{
+		$this->_changeTable("tbl_cms_rss");
+		return $this->getAll("WHERE id = '$id'");
+	}
+
+	public function delRss($id)
+	{
+		$this->_changeTable("tbl_cms_rss");
+		return $this->delete('id', $id, "tbl_cms_rss");
+	}
+/**
+	 * Method to dynamically switch tables
+	 *
+	 * @param string $table
+	 * @return boolean
+	 * @access private
+	 */
+	private function _changeTable($table)
+	{
+		try {
+			parent::init($table);
+			return TRUE;
+		}
+		catch (customException $e)
+		{
+			customException::cleanUp();
+			return FALSE;
+		}
+	}
 }
 ?>

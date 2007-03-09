@@ -50,10 +50,10 @@ $tablee->cellpadding='1';
 
 
 $titleInput->name = 'title';
-$titleInput->size = 50;
+$titleInput->size = 30;
 
 $menuTextInput->name = 'menutext';
-$menuTextInput->size = 50;
+$menuTextInput->size = 30;
 $bodyInput->name = 'description';
 
 $button->setToSubmit();

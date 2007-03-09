@@ -54,7 +54,7 @@ $fields = array(
 		'default' => '0'
 		),
     'checked_out_time' => array(
-		'type' => 'date',
+		'type' => 'timestamp',
 
 
 		),

@@ -1,12 +1,15 @@
 <?php
 
 //Template to view the different admin functions
+// Suppress normal page elements and layout
+$this->setVar('pageSuppressIM', FALSE);
+$this->setVar('pageSuppressBanner', FALSE);
+$this->setVar('pageSuppressToolbar', FALSE);
+$this->setVar('suppressFooter', FALSE);
 
-$tree = & $this->newObject('cmstree', 'cmsadmin');
+$objArticleBox = $this->newObject('articlebox', 'cmsadmin');
 
+echo $treeMenu;
 
-$str = $tree->show(null, true);
-
-echo $str;
-
+echo $objArticleBox->show($content);
 ?>

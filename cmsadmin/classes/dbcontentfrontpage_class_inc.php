@@ -87,6 +87,7 @@ class dbcontentfrontpage extends dbTable
         public function remove($id)
         {
             $page = $this->getRow('content_id', $id);
+            
             $pageOrderNo = $page['ordering'];
             $allPages = $this->getFrontPages();
             foreach($allPages as $pg) {
@@ -95,7 +96,7 @@ class dbcontentfrontpage extends dbTable
                     $this->update('id', $pg['id'], array('content_id' => $pg['content_id'], 'ordering' => $newOrder));
                 }
             }
-            return $this->delete('content_id', $id);
+            return $this->delete('id', $page['id']);
         }
 
         /**

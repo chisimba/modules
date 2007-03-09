@@ -135,4 +135,76 @@
       </change>
     </data>
   </update>
+  <update>
+  		<table>tbl_cms_sections</table>
+  		<version>1.42</version>
+  		<description> Added additional fields to sections to accommodate context</description>
+  		<data>
+  			<add>
+  				<name>userid</name>
+  				<type>text</type>
+  				<length>255</length>
+  				
+  			</add>
+  			</data>
+  			<data>
+  				<data>
+  				<name>datecreated</name>
+  				<type>date</type>
+  				</data>
+  			</data>
+  			<data>
+  			    <add>
+  				<name>lastupdatedby</name>
+  				<type>text</type>
+  				<length>32</length>
+  				</add>
+  			</data>
+  			<data>
+  				<add>
+  				<name>updated</name>
+  				<type>timestamp</type>
+  				</add>
+  			</data>
+  			<data>
+  			   <add>
+  				<name>startdate</name>
+  				<type>date</type>
+  			  </add>
+  			</data>
+  			<data>
+  			   <add>
+  				<name>finishdate</name>
+  				<type>date</type>
+  				</add>
+  			</data>
+  			<data>
+  				<add>
+  				<name>contextcode</name>
+  				<type>text</type>
+  				<length>255</length>
+  				</add>
+  			</data>
+  			
+  </update>
+  <update>
+    <table>tbl_cms_content</table>
+    <version>1.42</version>
+    <description>Added a start publishing date and end publishing Field</description>
+    <data>
+       	<add>
+   			<name>start_publish</name>
+	    	<type>Date</type>
+   			
+		</add>
+	</data>
+	<data>
+       	<add>
+   			<name>end_publish</name>
+	    	<type>Date</type>
+   			
+		</add>
+	</data>
+	
+  </update>
 </updates>

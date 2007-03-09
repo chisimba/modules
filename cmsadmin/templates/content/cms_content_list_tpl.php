@@ -54,7 +54,7 @@ if($mode == 'trash')
     $link->link = 'Content';
 } else
 {
-    $link->href = $this->uri(array('action' => 'deletecontent', 'filter' => 'trash'));
+    $link->href = $this->uri(array('action' => 'trashcontent', 'filter' => 'trash'));
     $link->link = 'Recycle Bin';
 }
 

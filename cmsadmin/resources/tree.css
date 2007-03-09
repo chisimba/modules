@@ -98,11 +98,11 @@ ul.tree a  {
 }
 ul.tree span.a.children a {
 	background-image: url(page-openfoldericon.png);
-//	background-image: none;
+
 }
 ul.tree span.a.children.spanClosed a {
 	background-image: url(page-foldericon.png);
-//	background-image: none;
+
 }
 
 /* Unformatted tree */

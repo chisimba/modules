@@ -55,9 +55,10 @@ class cmstree extends object
                 $this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
                 $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
                 $this->_objUser = & $this->newObject('user', 'security');
+                $buildtree = $this->newObject('buildtree');
                 $this->objLanguage =& $this->newObject('language', 'language');
            } catch (Exception $e){
-       		    echo 'Caught exception: ',  $e->getMessage();
+       		    throw customException($e->getMessage());
         	    exit();
      	   }
         }
@@ -88,7 +89,7 @@ class cmstree extends object
         {
             //check if there are any root nodes
             if ($this->getChildNodeCount('0') > 0) {
-                $html = '<ul class="treefolder">';
+                $html = '<ul class="tree">';
                 //start the tree building
                 $html .= $this->buildLevel('0', $currentNode, $admin);
                 $html .= '</ul>';
@@ -236,10 +237,11 @@ class cmstree extends object
 		public function getCMSTree()
 		{
 			$includeFrontPage = $this->_objFrontPage->hasFrontPageContent();
-			$menu = $this->getTree('cms', $includeFrontPage);
-			
-			$list = new htmllist($menu, array('topMostListClass'=>'treefolder'));
-            return $list->getMenu();
+			//$buildtree = $this->newObject('buildtree');
+			//$list = new htmllist($menu, array('topMostListClass'=>'treefolder'));
+			//$list = $buildtree->buildFoldoutMenu($parentId = '0', $onlyPublished = true);
+            $this->_objTree = & $this->newObject('contenttree', 'cmsadmin');
+			return $this->_objTree->show(null,TRUE,'cms','showsection','showfulltext');
 		}
 		
 		/**
@@ -249,10 +251,9 @@ class cmstree extends object
 		public function getCMSAdminTree()
 		{
 			
-			$menu = $this->getTree('cmsadmin', FALSE);
-			
-			$list = new htmllist($menu, array('topMostListClass'=>'treefolder'));
-            return $list->getMenu();
+			//$menu = $this->getTree('cmsadmin', FALSE);
+			 $this->_objTree = & $this->newObject('contenttree', 'cmsadmin');
+			return $this->_objTree->show(null,TRUE,'cmsadmin','viewsection','viewcontent');
 		}
 		
 		/**
@@ -279,7 +280,7 @@ class cmstree extends object
 		*/
         private function getTree($module='cmsadmin', $includeRoot=FALSE, $useLinks=TRUE)
         {
-            $this->loadClass('treemenu', 'tree');
+             $this->loadClass('treemenu', 'tree');
             $this->loadClass('treenode', 'tree');
             $this->loadClass('htmllist', 'tree');
 			
@@ -287,24 +288,24 @@ class cmstree extends object
 			
 			if ($module == 'cmsadmin') {
 				$sql = 'SELECT tbl_cms_sections. * , tbl_cms_content.id AS pagevisible
-FROM tbl_cms_sections
-LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid
-AND tbl_cms_content.published = \'1\' )
-GROUP BY tbl_cms_sections.id ORDER BY nodelevel, ordering';
+						FROM tbl_cms_sections
+						LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid
+						AND tbl_cms_content.published = \'1\' )
+						';
 				$useIcon = TRUE;
 			} else {
 				$sql = 'SELECT tbl_cms_sections. * , tbl_cms_content.id AS pagevisible
-FROM tbl_cms_sections
-LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid
-AND tbl_cms_content.published = \'1\' )
-WHERE tbl_cms_sections.published = \'1\' AND tbl_cms_content.published = \'1\'
-GROUP BY tbl_cms_sections.id ORDER BY nodelevel, ordering';
+						FROM tbl_cms_sections
+						LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid
+						AND tbl_cms_content.published = \'1\' )
+						WHERE tbl_cms_sections.published = \'1\' AND tbl_cms_content.published = \'1\'
+						';
 			}
 			
             $where = 'ORDER BY nodelevel, ordering';
             
             $sections = $this->_objSections->getArray($sql);
-            
+            //var_dump($sectionitems);
             $menu = new treemenu();
             
             $nodesArray = array();
@@ -321,6 +322,7 @@ GROUP BY tbl_cms_sections.id ORDER BY nodelevel, ordering';
             }
             
             if (count($sections) > 0) {
+            
                 foreach ($sections as $section)
                 {
                     if ($useLinks) {
@@ -336,7 +338,9 @@ GROUP BY tbl_cms_sections.id ORDER BY nodelevel, ordering';
 						$cssClass = 'sectionfolder'; // Default - Yellow folder
 						
 						// If section has no content - gets white folder
-						if (is_null($section['pagevisible']) || $section['pagevisible'] == '') {
+						$content = $this->_objContent->getNumberOfPagesInSection($section['id']);
+						
+						if ($content == 0) {
 							$cssClass = 'whitefolder';
 						} else {
 							// Lastly, check if parent will be shown
