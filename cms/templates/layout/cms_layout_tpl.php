@@ -111,7 +111,6 @@ $isLoggedIn = $objUser->isLoggedIn();
         $pageId = $this->getParam('id');
         $pageBlocks = $objDbBlocks->getBlocksForPage($pageId);    
     } else if($currentAction == 'home' || $currentAction == NULL){
-    	echo "pageblocks";
         $pageBlocks = $objDbBlocks->getBlocksForFrontPage();  
     }
     
