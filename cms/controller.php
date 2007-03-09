@@ -94,6 +94,18 @@ class cms extends controller
         * 
         */
         public $action;
+        /**
+     	* Feed creator object
+     	*
+     	* @var object
+     	*/
+    	public $objFeedCreator;
+    	/**
+     	* Configuration object
+     	*
+     	* @var object
+    	*/
+    	public $objConfig;
 
         /**
         * 
@@ -107,6 +119,11 @@ class cms extends controller
         {
             // instantiate the database object for sections
             $this->_objSections = $this->getObject('dbsections', 'cmsadmin');
+            
+            $this->objLayout = $this->getObject('cmslayouts', 'cms');
+            $this->rss = $this->getObject('dblayouts','cmsadmin');
+            //feed creator subsystem
+            $this->objFeedCreator = &$this->getObject('feeder', 'feed');
             // instantiate the database object for content
             $this->_objContent = $this->getObject('dbcontent', 'cmsadmin');
             // instantiate the object for CMS utilities
@@ -115,6 +132,8 @@ class cms extends controller
             $this->_objContext = $this->getObject('dbcontext', 'context');
             // instantiate the user object so we can retrieve user information
             $this->_objUser = $this->getObject('user', 'security');
+            //config object
+            $this->objConfig = $this->getObject('altconfig', 'config');
             //Create an instance of the language object for text rendering
             $this->objLanguage = $this->getObject('language', 'language');
 			//Create an instance of the modules object from modulecatalogue
@@ -165,18 +184,43 @@ class cms extends controller
         {
             //Create a local variable for whether the user is logged in
             $isLoggedIn = $this->_objUser->isLoggedIn();
-            $this->setLayoutTemplate('cms_layout_tpl.php');
+            //$this->setLayoutTemplate('cms_layout_tpl.php');
             //Get action from query string and set default to view
             //  and assign the action to a property of this object
             $this->action=$this->getParam('action', 'home');
+            // $this->setVar('pageSuppressXML', TRUE);
             /*
             * Convert the action into a method (alternative to
             * using case selections)
             */
             try {
-        	    $method = $this->_getMethod();
-            } catch (customException $e) {
-			    customException::cleanUp();
+            	
+            	switch ($this->action) {
+            		case 'makepdf':
+            		   
+            			$sectionid = $this->getParam('sectionid');
+        				//go and fetch the page in question from the db
+        				$data = $this->_objContent->getContentPage($this->getParam('id'));
+        				//create the pdf and send it out
+        				$header = $data['title'];
+        				$body = $data['body'];
+        				$pagedate = $data['created'];
+        							
+        				//put it all together
+        				//get the pdfmaker classes
+        				$objPdf = $this->getObject('fpdfwrapper','pdfmaker');
+        				$text = $header . "  " . $pagedate . "\r\n" . strip_tags($body);
+        				$objPdf->simplePdf($text);
+        				break;
+            	
+            		default:
+            			$method = $this->_getMethod();
+            			break;
+            	}
+        	    
+            } catch (Exception $e) {
+                throw customException($e->getMessage());
+			    //customException::cleanUp();
 			    exit;
 		    }
         	/*
@@ -198,6 +242,7 @@ class cms extends controller
          */
         private function _showsection()
         {
+        	$this->setLayoutTemplate('cms_layout_tpl.php');
             //Retrieve the section id from the querystring
 			$sectionId = $this->getParam('id');
 			//If the section id is not null, get the section and set the 
@@ -212,9 +257,9 @@ class cms extends controller
 			$this->setVarByRef('pageTitle', $siteTitle);
 			//We need the two if statements because pageTitle needs to be set first
 			if($sectionId != '') {
-				$this->bbcode = $this->getObject('bbcodeparser', 'utilities');
-				$content = $this->_objUtils->showSection();
-				$content = $this->bbcode->parse4bbcode($content);
+				$this->bbcode = $this->getObject('washout', 'utilities');
+				$content = $this->objLayout->showSection();
+				$content = $this->bbcode->parseText($content);
 			    $this->setVar('content', $content);
 			} else {
 			    $this->setVar('content', '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_cms_novisiblesections', 'cms').'</div>');
@@ -222,8 +267,72 @@ class cms extends controller
 			//Return the populated section template
 			return 'cms_section_tpl.php';
         }
-        
-        
+        /**
+         * Method to setup the mail to a friend functionality
+         * The method sets up the mail object
+         * and sends email about the article the user finds interesting
+         * @access private
+         */
+        private  function _mail2friend()
+        {
+        	$pageid = $this->getParam('id');
+        	$sectionId = $this->getParam('sectionid', NULL);
+        	$emailadd = $this->getParam('emailadd');
+        	$emailadd = explode(",",$emailadd);
+        	foreach($emailadd as $emails)
+        	{
+        		$trimmed[] = trim($emails);
+        	}
+        	$emailadd = $trimmed;
+        	$message = $this->getParam('msg');
+			$sendername = $this->getParam('sendername');
+
+        	if(empty($emailadd[0]))
+        	{
+        		$m2fdata = array('id' => $pageid);
+        		$this->setVarByRef('m2fdata', $m2fdata);
+        		//show the form
+        		return 'mail2friend_tpl.php';
+
+        	}
+        	else {
+        		//get the post from the page id
+        		$postcontent = $this->_objContent->getContentPage($pageid);
+        		//ok we have the content, lets parse for the [img] bbcode tags and replace them with real imgsrc
+        		preg_match_all('/\[img\](.*)\[\/img\]/U', $postcontent['body'], $matches, PREG_PATTERN_ORDER);
+        		unset($matches[0]);
+        		$mcount = 0;
+        		foreach($matches as $match)
+        		{
+        			$postcontent['body'] = preg_replace('/\[img\](.*)\[\/img\]/U', "<img src='".@$match[$mcount]."'/>", $postcontent['body']); 
+        			$mcount++;
+        		}
+				//thump together an email string (this must be html email as the post is html
+				$objMailer = $this->getObject('email', 'mail');
+				//munge together the bodyText...
+				$bodyText = $this->objLanguage->languageText("mod_cms_yourfriend", "cms") . ", " . $sendername . ", " .
+							$this->objLanguage->languageText("mod_cms_interestedin","cms"). ": <br /> " .
+							"<a href='".$this->uri(array('action' => 'showfulltext', 'id' => $pageid,'sectionid'=>$sectionId), 'cms')."'>".$this->uri(array('action' => 'showfulltext', 'id' => $pageid,'sectionid'=>$sectionId), 'cms')."</a>";
+				$bodyText .= "<br /><br />";
+				if(!empty($message))
+				{
+					$bodyText .= $this->objLanguage->languageText("mod_cms_additionalcomments", "cms") . ": <br />";
+					$bodyText .= $message . "<br /><br />";
+				}
+				$bodyText .= stripslashes($postcontent['created']);
+				$bodyText .= "<br /><br />";
+				$bodyText .= stripslashes($postcontent['body']);
+				$objMailer->setValue('IsHTML', TRUE);
+				$objMailer->setValue('to', $emailadd);
+				$objMailer->setValue('from', 'noreply@uwc.ac.za');
+				$objMailer->setValue('fromName', $this->objLanguage->languageText("mod_cms_email2ffromname", "cms"));
+				$objMailer->setValue('subject', $this->objLanguage->languageText("mod_cms_email2fsub", "cms"));
+				$objMailer->setValue('body', $bodyText);
+				$objMailer->send(TRUE);
+		   		$this->nextAction('');
+
+        	}
+        }
         /**
          * A method that corresponds to the showfulltext action parameter
          * from the querystring. It returns the formatted full page of content 
@@ -235,17 +344,20 @@ class cms extends controller
          */
         private function _showfulltext()
         {
+        		$this->setLayoutTemplate('cms_layout_tpl.php');
                 $fromadmin = $this->getParam('fromadmin', FALSE);
                 $sectionId = $this->getParam('sectionid', NULL);
+                $rss = $this->rss->getUserRss($sectionId);
+                $this->setVarByRef('rss', $rss);
                 $this->setVarByRef('sectionId', $sectionId);
                 $this->setVarByRef('fromadmin', $fromadmin);
                 $page = $this->_objContent->getContentPage($this->getParam('id'));
                 $siteTitle = $page['title'];
                 $this->setVarByRef('pageTitle', $siteTitle);
-                $this->bbcode = $this->getObject('bbcodeparser', 'utilities');
-                $content = $this->_objUtils->showBody();
-                $content = $this->bbcode->parse4bbcode($content);
-                $this->setVarByRef('content', $content);
+                $this->bbcode = $this->getObject('washout', 'utilities');
+                $content = $this->objLayout->showBody();
+                $content = $this->bbcode->parseText($content);
+                $this->setVarByRef('content',$content);
                 return 'cms_content_tpl.php';
         }
 
@@ -263,6 +375,7 @@ class cms extends controller
          */
         private function _showcontent()
         {
+        	$this->setLayoutTemplate('cms_layout_tpl.php');
         	return $this->_showfulltext();
         }
         
@@ -279,16 +392,18 @@ class cms extends controller
          */
         private function _home()
         {
-                $content = $this->_objUtils->getFrontPageContent();
-                if($content!='') {
-                	$this->bbcode = $this->getObject('bbcodeparser', 'utilities');
-                	$content = $this->bbcode->parse4bbcode($content);
-                    $this->setVarByRef('content', $content);
-                    return 'cms_section_tpl.php';
-                } else {
-                    $firstSectionId = $this->_objSections->getFirstSectionId(TRUE);
-                    return $this->nextAction('showsection', array('id'=>$firstSectionId,'sectionid'=>$firstSectionId));
-                }
+        	$this->setLayoutTemplate('cms_layout_tpl.php');
+        	$displayId = $this->getParam('displayId');
+            $content = $this->objLayout->getFrontPageContent($displayId);
+            if(!empty($content)) {
+             	$this->bbcode = $this->getObject('washout', 'utilities');
+               	$content = $this->bbcode->parseText($content);
+                $this->setVarByRef('content', $content);
+                return 'cms_section_tpl.php';
+            } else {
+                $firstSectionId = $this->_objSections->getFirstSectionId(TRUE);
+                return $this->nextAction('showsection', array('id'=>$firstSectionId,'sectionid'=>$firstSectionId));
+            }
         }
         
 	    /**
@@ -303,11 +418,18 @@ class cms extends controller
 	    */
 	    private function _getMethod()
 	    {
+	    		
+	    	
 	        if ($this->_validAction()) {
 	            return "_" . $this->action;
 	        } else {
 	            return "_actionError";
 	        }
+	    }
+	    
+	    private function _releaselock()
+	    {
+	    	$this->nextAction('',array('action' => 'viewsection'), 'cmsadmin');
 	    }
         
 	    /**
@@ -330,7 +452,7 @@ class cms extends controller
 	            return FALSE;
 	        }
 	    }
-        
+	    
 	    /**
 	    *
 	    * Method to return an error when the action is not a valid
@@ -342,11 +464,27 @@ class cms extends controller
 	    */
 	    private function _actionError()
 	    {
-	        $this->setVar('str', $this->objLanguage->languageText("mod_cms_errorbadaction", CMS) . ": <em>". $this->action . "</em>");
+	    	
+	        $this->setVar('str', $this->objLanguage->languageText("mod_cms_errorbadaction", 'cms') . ": <em>". $this->action . "</em>");
 	        return 'dump_tpl.php';
 	    }
         
 
+        /**
+        * Method to check if the user is in the CMS Authors group
+        *
+        * @access public
+        */
+        public function checkPermission()
+        {
+            $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
+            $groupId = $objGroups->getLeafId(array('CMSAuthors'));
+            if($objGroups->isGroupMember($this->_objUser->pkId(), $groupId)){
+                return TRUE;
+            }else{
+                return FALSE;
+            }   
+        }
 
 
         
@@ -375,6 +513,96 @@ class cms extends controller
         {
             return $this->_objUtils->getBreadCrumbs();
         }
+        
+        public function _feed()
+        {
+        	 //get the feed format parameter from the querystring
+                $format = $this->getParam('format');
+				$pageid = $this->getParam('pageid');
+                //grab the feed items
+                if(isset($pageid))
+                {
+                	$posts = $this->_objContent->getContentPage($pageid);
+                }
+                else {
+                	$posts['body'] = $this->objLayout->getFrontPageContent($pageid);
+                	$posts['title'] = $this->objConfig->getSiteName();
+                }
+                //print_r($posts); die();
+                //set up the feed...
+               
+                //title of the feed
+                $feedtitle = htmlentities($posts['title']);
+                //description
+				$feedDescription = null;
+                if(isset($posts['menutext']))
+                {
+                	$feedDescription = htmlentities($posts['menutext']);
+                }
+                
+                //link back to the blog
+                $feedLink = $this->objConfig->getSiteRoot() . "index.php?module=cms";
+                //sanitize the link
+                $feedLink = htmlentities($feedLink);
+                //set up the url
+                $feedURL = $this->objConfig->getSiteRoot() . "index.php?module=cms&action=feed&format=" . $format;
+                //print_r($feedURL);
+                $feedURL = htmlentities($feedURL);
+                 
+                //set up the feed
+                $result = $this->objFeedCreator->setupFeed(TRUE,$feedtitle, $feedDescription, $feedLink, $feedURL);
+               
+                //use the post title as the feed item title
+                $itemTitle = $posts['title'];
+                $itemLink = $this->uri(array('action' => 'showcontent', 'id' => $posts['id'], 'sectionid' => $posts['sectionid'])); //todo - add this to the posts table!
+                //description
+                $itemDescription = $posts['body'];
+                //where are we getting this from
+                $itemSource = $this->objConfig->getSiteRoot() . "index.php?module=cms&action=showcontent&id=".$posts['id']."&sectionid = ".$posts['sectionid'];
+                //feed author
+                $itemAuthor = htmlentities( $posts['created_by']);
+                //add this item to the feed
+                $this->objFeedCreator->addItem($itemTitle, $itemLink, $itemDescription, $itemSource, $itemAuthor);
+               
+               
+                //check which format was chosen and output according to that
+                switch ($format) {
+                    case 'rss2':
+                        $feed = $this->objFeedCreator->output('RSS2.0'); //defaults to RSS2.0
+                        break;
+                    case 'rss091':
+                        $feed = $this->objFeedCreator->output('RSS0.91');
+                        break;
+                    case 'rss1':
+                        $feed = $this->objFeedCreator->output('RSS1.0');
+                        break;
+                    case 'pie':
+                        $feed = $this->objFeedCreator->output('PIE0.1');
+                        break;
+                    case 'mbox':
+                        $feed = $this->objFeedCreator->output('MBOX');
+                        break;
+                    case 'opml':
+                        $feed = $this->objFeedCreator->output('OPML');
+                        break;
+                    case 'atom':
+                        $feed = $this->objFeedCreator->output('ATOM0.3');
+                        break;
+                    case 'html':
+                        $feed = $this->objFeedCreator->output('HTML');
+                        break;
+                    case 'js':
+                        $feed = $this->objFeedCreator->output('JS');
+                        break;
+
+                    default:
+                        $feed = $this->objFeedCreator->output(); //defaults to RSS2.0
+                        break;
+                }
+                //output the feed
+                echo htmlentities($feed);
+        }
+       
 
 }
 
