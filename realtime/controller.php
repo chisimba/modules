@@ -6,30 +6,10 @@ if (!$GLOBALS['kewl_entry_point_run'])
 }
 // end security check
 /**
- *  $Id$
- *
- *  Copyright (C) GNU/GPL AVOIR 2007
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
-/**
 * Realtime Controller
 * This class controls all functionality to run the realtime module.
-* @author Jessie
 * @package realtime
-* @version 1
+* @version $Id$
 */
 class realtime extends controller
 {
@@ -123,12 +103,15 @@ class realtime extends controller
 		{
 		  case 'classroom':
 		     return "realtime-classroom_tpl.php";
-		
-		  case 'whiteboard':
-		     return "realtime-whiteboard_tpl.php";
+
+		  case 'jmfinstall':
+		     return "realtime-jmfinstall_tpl.php";
 
 		  case 'voice':
 		     return "realtime-voice_tpl.php";
+		
+		  case 'whiteboard':
+		     return "realtime-whiteboard_tpl.php";
 	
 		  default:
 		     return "realtime_tpl.php";
