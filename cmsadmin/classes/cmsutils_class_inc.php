@@ -1154,7 +1154,7 @@ class cmsutils extends object
 		$objH = null;
         $objH = $this->newObject('htmlheading', 'htmlelements');
         $objH->type = '3';
-        $objH->str = 'Editing :'. $menuNode[0]['title'];
+        $objH->str = 'Editing: '. $menuNode[0]['title'];
         $strHTML = $objH->show();
 		
         $strHTML.= $objForm->show();
@@ -1280,7 +1280,7 @@ class cmsutils extends object
 		$objH = null;	
         $objH = $this->newObject('htmlheading', 'htmlelements');
         $objH->type = '3';
-        $objH->str = 'Add node to :'. $parentTitle;
+        $objH->str = 'Add node to: '. $parentTitle;
         $strHTML = $objH->show().'<p/>';
 
         $strHTML .= $objForm->show();
