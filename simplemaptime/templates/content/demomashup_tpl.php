@@ -6,16 +6,23 @@
 // Create the configuration object
 $objRsConfig = $this->getObject('altconfig', 'config');
 $moduleBase =  "http://" . $_SERVER['SERVER_NAME'] . $objRsConfig->getItem('MODULE_URI');
-$tlBase = $this->Uri(array("mode" => "plain"), "timeline");
-$mapBase = $this->Uri(array("mode" => "plain"), "simplemap");
-$tlUrl = htmlentities("http://localhost/chisimba/index.php?module=timeline&mode=plain");
+$tlBase = $this->Uri(array("mode" => "plain",
+	"action" => "viewdemo"), "timeline");
+$demoMap=  "http://" . $_SERVER['SERVER_NAME'] . $objRsConfig->getItem('MODULE_URI') . "simplemap/resources/jsmaps/madiba.smap";
+$mapBase = $this->Uri(array("mode" => "plain",
+  "action" => "viewmap"), "simplemap");
+$mapBase2 = $this->Uri(array("mode" => "plain",
+  "action" => "viewmap",
+  "smap" => $demoMap), "simplemap");
+
+
 ?>
 <div id="threecolumn">
 	<div id="wrapper"> 
 		<div id="content"> 
 			<div id="contentcontent">
 			<iframe id="mytimelines" name="mytimelines" 
-			  src="index.php?module=timeline&amp;mode=plain" width="100%" 
+			  src="<?php echo $tlBase; ?>" width="100%" 
 			  height="350">
 			</iframe>
 			<?php 
@@ -24,7 +31,7 @@ $tlUrl = htmlentities("http://localhost/chisimba/index.php?module=timeline&mode=
 				?>
 				<br /><br />
 				<iframe  id="mymap" name="mymap" 
-				  src="index.php?module=simplemap&amp;mode=plain&amp;width=1000" 
+				  src="<?php echo $mapBase2; ?>" 
 				  width="100%" height="620"></iframe>
 		    	<?php
 			}
@@ -55,10 +62,10 @@ $tlUrl = htmlentities("http://localhost/chisimba/index.php?module=timeline&mode=
 			<h3>Key places</h3>
 			<ul>
 				<?php if (!$hideMap == "TRUE") { ?>
-					<li><a href="<?php echo $mapBase; ?>&amp;gLat=-31.333576&amp;gLong=28.979391&amp;width=1000" target="mymap">Qunu, South Africa</a></li>
-					<li><a href="<?php echo $mapBase; ?>&amp;gLat=-25.732912&amp;gLong=28.187903&amp;width=1000" target="mymap">Pretoria, South Africa</a></li>
-					<li><a href="<?php echo $mapBase; ?>&amp;gLat=59.902214&amp;gLong=10.742189&amp;width=1000" target="mymap">Oslo, Norway</a></li>
-					<li><a href="<?php echo $mapBase; ?>&amp;gLat=43.641709&amp;gLong=-79.391686&amp;width=1000" target="mymap">Toronto, Canada</a></li>
+					<li><a href="<?php echo $mapBase2; ?>&amp;glat=-31.333576&amp;glong=28.979391&amp;width=1000" target="mymap">Qunu, South Africa</a></li>
+					<li><a href="<?php echo $mapBase2; ?>&amp;glat=-25.732912&amp;glong=28.187903&amp;width=1000" target="mymap">Pretoria, South Africa</a></li>
+					<li><a href="<?php echo $mapBase2; ?>&amp;glat=59.902214&amp;glong=10.742189&amp;width=1000" target="mymap">Oslo, Norway</a></li>
+					<li><a href="<?php echo $mapBase2; ?>&amp;glat=43.641709&amp;glong=-79.391686&amp;width=1000" target="mymap">Toronto, Canada</a></li>
 				<?php
 				} else {
 				    echo "<li>Turn on map to see list of places</li>";
