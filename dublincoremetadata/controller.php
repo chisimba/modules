@@ -27,7 +27,9 @@ class dublincoremetadata extends controller
    */   
     function init()
     {
-        $this->objLanguage = &$this->getObject('language', 'language');
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objSkin = $this->getObject('skin', 'skin');
     }
     
     /**
@@ -38,7 +40,7 @@ class dublincoremetadata extends controller
         switch ($action) 
         {
             case null:
-                $this->setPageTemplate('note_page_tpl.php');
+                //$this->setPageTemplate('note_page_tpl.php');
                 return 'add_tpl.php';
         }
     }

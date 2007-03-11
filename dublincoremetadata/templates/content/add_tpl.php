@@ -1,126 +1,120 @@
 <?php
-    $form = & $this->newObject('form','htmlelements');
-    $textarea = & $this->newObject('textarea','htmlelements');
-    $objButton = & $this->newObject('button','htmlelements');
+    $this->loadClass('form','htmlelements');
+    $this->loadClass('textarea','htmlelements');
+    $this->loadClass('button','htmlelements');
+    $this->loadClass('htmltable','htmlelements');
     //$form = & $this->newObject('form','htmlelements');
     
+    $table = new htmltable();
+    $table->cellpadding = '5';
+    $table->cellspacing = '2';
+    
     //setup form
-    $form->name='frm_dublincore';
-    $form->setAction($this->uri(array('action'=>'save')));
-    $form->setDisplayType(2);
-    
-    $textarea->setColumns(50);
-    $textarea->setRows(2);
-    $textarea->setContent(NULL);
-    
-    $objButton=new button('save');
-    $objButton->setToSubmit();
-    $objButton->setValue($this->objLanguage->languageText("mod_contextadmin_save"));
+    $form = new form('frm_dublincore', $this->uri(array('action'=>'save')));
     
     //title
-    $title = $textarea;    
-    $title->name = 'title';
-    $title->label = $this->objLanguage->languageText("word_title");
+    $title = new textarea('title', '', 2, 50);
+    $label = $this->objLanguage->languageText("word_title");
+    $table->addRow(array($label.': ', $title->show()));
     
     //subject
-    $subject = $textarea;
+    $subject = new textarea('subject', '', 2, 50);
     $subject->name = 'subject';
-    $subject->label = $this->objLanguage->languageText("mod_dublin_subject");
+    $label = $this->objLanguage->languageText("mod_dublin_subject", 'dublincoremetadata');
+    $table->addRow(array($label.': ', $subject->show()));
     
     //description
-    $description = $textarea;
+    $description = new textarea('description', '', 2, 50);
     $description->name = 'description';
-    $description->label = $this->objLanguage->languageText("mod_dublin_description");
+    $label = $this->objLanguage->languageText("mod_dublin_description", 'dublincoremetadata');
+    $table->addRow(array($label.': ', $description->show()));
     
     //source
-    $source = $textarea;
+    $source = new textarea('source', '', 2, 50);
     $source->name = 'source';
-    $source->label = $this->objLanguage->languageText("mod_dublin_source");
+    $label = $this->objLanguage->languageText("mod_dublin_source", 'dublincoremetadata');
+    $table->addRow(array($label.': ', $source->show()));
     
     //type
-    $type = $textarea;
+    $type = new textarea('type', '', 2, 50);
     $type->name = 'type';
-    $type->label = $this->objLanguage->languageText("mod_dublin_subject");
-    
-    //relationship
-    $relationship = $textarea;
-    $relationship->name = 'relationship';
-    $relationship->label = $this->objLanguage->languageText("mod_dublin_relationship");
+    $label = $this->objLanguage->languageText("mod_dublin_type", 'dublincoremetadata');
+    $table->addRow(array($label.': ', $type->show()));
     
     //coverage
-    $coverage = $textarea;
-    $coverage->name = 'relationship';
-    $coverage->label = $this->objLanguage->languageText("mod_dublin_coverage");
+    $coverage = new textarea('coverage', '', 2, 50);
+    $coverage->name = 'coverage';
+    $label = $this->objLanguage->languageText("mod_dublin_coverage", 'dublincoremetadata');
+    $table->addRow(array($label.': ', $coverage->show()));
     
     //creator
-    $creator = $textarea;
+    $creator = new textarea('creator', '', 2, 50);
     $creator->name = 'creator';
-    $creator->label = $this->objLanguage->languageText("mod_dublin_creator");
+    $label = $this->objLanguage->languageText("mod_dublin_creator", 'dublincoremetadata');
+    $table->addRow(array($label.': ', $creator->show()));
     
     //publisher
-    $publisher = $textarea;
+    $publisher = new textarea('publisher', '', 2, 50);
     $publisher->name = 'publisher';
-    $publisher->label = $this->objLanguage->languageText("mod_dublin_publisher");
+    $label = $this->objLanguage->languageText("mod_dublin_publisher", 'dublincoremetadata');
+    $table->addRow(array($label.': ', $publisher->show()));
     
     //contributor
-    $contributor = $textarea;
+    $contributor = new textarea('contributor', '', 2, 50);
     $contributor->name = 'contributor';
-    $contributor->label = $this->objLanguage->languageText("mod_dublin_contributor");
+    $label = $this->objLanguage->languageText("mod_dublin_contributor", 'dublincoremetadata');
+    $table->addRow(array($label.': ', $contributor->show()));
     
     //rights
-    $rights = $textarea;
+    $rights = new textarea('rights', '', 2, 50);
     $rights->name = 'rights';
-    $rights->label = $this->objLanguage->languageText("mod_dublin_rights");
+    $label = $this->objLanguage->languageText("mod_dublin_rights", 'dublincoremetadata');
+    $table->addRow(array($label.': ', $rights->show()));
 
     //relationship
-    $date = $textarea;
+    $date = new textarea('date', '', 2, 50);
     $date->name = 'date';
-    $date->label = $this->objLanguage->languageText("mod_dublin_date");
+    $label = $this->objLanguage->languageText("mod_dublin_date", 'dublincoremetadata');
+    $table->addRow(array($label.': ', $date->show()));
     
     //format
-    $format = $textarea;
+    $format = new textarea('format', '', 2, 50);
     $format->name = 'format';
-    $format->label = $this->objLanguage->languageText("mod_dublin_format");
+    $label = $this->objLanguage->languageText("mod_dublin_format", 'dublincoremetadata');
+    $table->addRow(array($label.': ', $format->show()));
     
     //relationship
-    $relationship = $textarea;
+    $relationship = new textarea('relationship', '', 2, 50);
     $relationship->name = 'relationship';
-    $relationship->label = $this->objLanguage->languageText("mod_dublin_relationship");
+    $label = $this->objLanguage->languageText("mod_dublin_relationship", 'dublincoremetadata');
+    $table->addRow(array($label.': ', $relationship->show()));
     
     //identifier
-    $identifier = $textarea;
+    $identifier = new textarea('identifier', '', 2, 50);
     $identifier->name = 'identifier';
-    $identifier->label = $this->objLanguage->languageText("mod_dublin_identifier");
+    $label = $this->objLanguage->languageText("mod_dublin_identifier", 'dublincoremetadata');
+    $table->addRow(array($label.': ', $identifier->show()));
     
     //language
-    $language = $textarea;
+    $language = new textarea('relationship', '', 2, 50);
     $language->name = 'relationship';
-    $language->label = $this->objLanguage->languageText("mod_dublin_language");
+    $label = $this->objLanguage->languageText("mod_dublin_language", 'dublincoremetadata');
+    $table->addRow(array($label.': ', $language->show()));
     
     //audience
-    $audience = $textarea;
+    $audience = new textarea('audience', '', 2, 50);
     $audience->name = 'audience';
-    $audience->label = $this->objLanguage->languageText("mod_dublin_audience");
+    $label = $this->objLanguage->languageText("mod_dublin_audience", 'dublincoremetadata');
+    $table->addRow(array($label.': ', $audience->show()));
     
-    $form->addToForm($title);
-    $form->addToForm($subject);
-    $form->addToForm($description);
-    $form->addToForm($source);
-    $form->addToForm($type);
-    $form->addToForm($relationship);
-    $form->addToForm($coverage);
-    $form->addToForm($creator);
-    $form->addToForm($publisher);
-    $form->addToForm($contributor);
-    $form->addToForm($rights);
-    $form->addToForm($date);
-    $form->addToForm($format);
-    $form->addToForm($identifier);
-    $form->addToForm($language);
-    $form->addToForm($audience);
-    $form->addToForm($objButton);
+    $form->addToForm($table->show());
     
-    echo '<h1>'. $this->objLanguage->languageText("mod_dublin_dcm"). '</h1>';
+    $objButton = new button('save');
+    $objButton->setToSubmit();
+    $objButton->setValue($this->objLanguage->languageText("mod_contextadmin_save", 'contextadmin'));
+    $form->addToForm($objButton->show());
+    
+    echo '<h1>'. $this->objLanguage->languageText("mod_dublin_dcm", 'dublincoremetadata'). '</h1>';
     echo $form->show();
     
 ?>
