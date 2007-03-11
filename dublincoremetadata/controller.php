@@ -40,6 +40,7 @@ class dublincoremetadata extends controller
         switch ($action) 
         {
             case null:
+            default:
                 //$this->setPageTemplate('note_page_tpl.php');
                 return 'add_tpl.php';
         }
