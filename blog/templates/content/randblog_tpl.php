@@ -69,7 +69,7 @@ if($this->objUser->isLoggedIn())
 	$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 }
 else {
-	$leftCol = $this->objblogOps->loginBox(TRUE);
+//	$leftCol = $this->objblogOps->loginBox(TRUE);
 	$leftCol .= $this->objblogOps->showProfile($userid);
 	//$rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
 }
