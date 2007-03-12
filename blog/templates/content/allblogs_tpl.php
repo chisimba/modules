@@ -52,7 +52,7 @@ if($this->objUser->isLoggedIn())
 	//$rightSideColumn .=$this->objblogOps->quickPost($this->objUser->userId(), TRUE);
 }
 else {
-	$leftCol = $this->objblogOps->loginBox(TRUE);
+//	$leftCol = $this->objblogOps->loginBox(TRUE);
 	//$rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
 }
 
