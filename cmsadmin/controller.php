@@ -610,9 +610,17 @@ class cmsadmin extends controller
                     	$pageId = $this->getParam('id');
                     }
                     $node = $this->objTreeNodes->getNode($pageId);
-                    $parentId = $node[0]['parent_id'];
-                    $this->objTreeNodes->deleteWithChildren($pageId);
-                    return $this->nextAction('managemenus', array('pageid'=>$parentId), 'cmsadmin');
+                    //var_dump($node);
+                    if(isset($node[0]['parent_id']))
+                    {
+                    	$parentId = $node[0]['parent_id'];
+                    	$this->objTreeNodes->deleteWithChildren($pageId);
+                    	return $this->nextAction('managemenus', array('pageid'=>$parentId), 'cmsadmin');
+                    }
+                    else {
+                    	$parentId = array();
+                    	return $this->nextAction('managemenus', array('pageid'=>$parentId), 'cmsadmin');
+                    }
             	case 'showcmspages':
 	                $contentId = $this->getParam('id');
 	                $pageId = $this->getParam('pageid');
