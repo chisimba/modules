@@ -81,6 +81,18 @@ class display extends object
     public $contextCode;
 
     /**
+    * @var object $objWash: The washout class in the utilities module
+    * @access public
+    */
+    public $objWash;
+
+    /**
+    * @var object $objModule: The modules class in the modulecatalogue module
+    * @access public
+    */
+    public $objModule;
+
+    /**
     * @var object $dbRooms: The dbrooms class in the messaging module
     * @access private
     */
@@ -132,6 +144,7 @@ class display extends object
         $this->loadClass('windowpop','htmlelements');
         $this->loadClass('layer','htmlelements');
         $this->loadClass('tabbedbox', 'htmlelements');
+        $this->loadClass('iframe', 'htmlelements');
         $this->objIcon = $this->newObject('geticon', 'htmlelements');
         $this->objFeaturebox = $this->getObject('featurebox', 'navigation');
         $this->objPopupcal = $this->newObject('datepickajax', 'popupcalendar');
@@ -144,6 +157,8 @@ class display extends object
         $this->userId = $this->objUser->userId(); 
         $this->isLecturer = $this->objUser->isContextLecturer();  
         $this->contextCode = $this->objContext->getContextCode();
+        $this->objWash = $this->getObject('washout', 'utilities');
+        $this->objModule = $this->getObject('modules', 'modulecatalogue');
         
         // messaging classes     
         $this->dbRooms = $this->getObject('dbrooms', 'messaging');
@@ -184,6 +199,7 @@ class display extends object
         $confirmLabel = $this->objLanguage->languageText('mod_messaging_confirm', 'messaging');
         $disabledLabel = $this->objLanguage->languageText('mod_messaging_worddisabled', 'messaging');
         
+        $str = $this->divShowIm();
         // get data
         $rooms = $this->dbRooms->listRooms($this->contextCode);
         $userRooms = $this->dbUsers->listUserRooms($this->userId);
@@ -193,7 +209,7 @@ class display extends object
         $objHeader->str = $chatHeading;
         $objHeader->type = 1;
         $header = $objHeader->show();        
-        $str = $header;
+        $str .= $header;
         
         $objHeader = new htmlHeading();
         $objHeader->str = $roomHeading;
@@ -613,19 +629,6 @@ class display extends object
                 el_ChatDiv.scrollTop = el_ChatDiv.scrollHeight
                 chatTimer = setTimeout("jsGetChat()", 3000);
             }
-            
-            function jsSendChat(){
-                var el_Message = document.getElementById("input_message");
-                
-                if(el_Message.value != ""){
-                    var url = "index.php";
-                    var target = "input_message";
-                    var pars = "module=messaging&action=sendchat&chat=" + el_Message.value;
-                    var myAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars});                
-                    el_Message.value = "";
-                }                
-                el_Message.focus();
-            }
         </script>';
         $str = $script;
         
@@ -729,48 +732,19 @@ class display extends object
         $objLayer->overflow = 'auto';
         $chatLayer = $objLayer->show();
         $str .= $chatLayer;
-        
-        // caht input area
-        $objText = new textarea('message');
-        $chatText = $objText->show();
-        
-        // chat send button
-        $objButton = new button('send', $sendLabel);
-        $objButton->extra = ' onclick="javascript:
-            jsSendChat();"';
-        $sendButton = $objButton->show();
-        
-        // chat clear button
-        $objButton = new button('clear', $clearLabel);
-        $objButton->extra = 'onclick="javascript: 
-            var el_Message = document.getElementById(\'input_message\');
-            el_Message.value = \'\';
-            el_Message.focus();
-        "';
-        $clearButton = $objButton->show();
-        
-        // main table
-        $objTable = new htmltable();
-        $objTable->cellspacing = '2';
-        $objTable->cellpadding = '2';
-        $objTable->startRow();
-        $objTable->addCell($chatText, '', '', '', '' ,'');
-        $objTable->addCell($sendButton.'<br />'.$clearButton, '', 'center', '', '' ,'');
-        $objTable->endRow();
-        $chatTable = $objTable->show();
-        $string = $chatTable;
-        
-        // chat send form 
-        $objForm = new form('chat', $this->uri(array(
-            'action' => 'sendchat'
-        )));
-        $objForm->addToForm($string);
-        $chatForm = $objForm->show();
+               
+        $iframe = new iframe();
+        $iframe->id = 'chatIframe';
+        $iframe->src = $this->uri(array('action' => 'chatform'));
+        $iframe->frameborder = 0;
+        $iframe->height = '93px';
+        $iframe->width = '480px';
+        $chatIframe = $iframe->show();
 
         // main display div
         $objLayer = new layer();
         $objLayer->id = 'formDiv';
-        $objLayer->addToStr($chatForm);
+        $objLayer->addToStr($chatIframe);
         $formLayer = $objLayer->show();
         $str .= $formLayer;
         
@@ -892,7 +866,7 @@ class display extends object
     public function popSmileys()
     {
         // javascript
-        $this->setVar('pageSuppressXML', TRUE);
+//        $this->setVar('pageSuppressXML', TRUE);
         $script = '<script type="text/javaScript">
             var arrNames = new Array("alien" ,"angel", "angry", "applause", "black_eye", "bye", "cheeky", "chicken", "clown", "confused", "cool", "cowboy", "crazy", "cry", "dance_of_joy", "doh", "drool", "embarrassed", "evil", "frustrated", "grin", "hug", "hypnotised", "idea", "kiss", "laugh", "love", "nerd", "not_talking", "praying", "raise_eyebrow", "roll_eyes", "rose", "sad", "shame_on_you", "shocked", "shy", "sick", "skull", "sleeping", "smile", "straight_face", "thinking", "tired", "victory", "whistle", "wink", "worried");
             
@@ -914,7 +888,7 @@ class display extends object
                 el_Message.focus();
             }
         </script>';
-        $content = $script;
+//        $content = $script;
 
         // language items
         $title = $this->objLanguage->languageText('mod_messaging_wordsmileys', 'messaging');
@@ -938,7 +912,7 @@ class display extends object
             'cowboy' => '<):)',
             'crazy' => '8-}',
             'cry' => ':((',
-            'dance_of_joy' => '\:D/',
+            'dance_of_joy' => '/:D/',
             'doh' => '#-o',
             'drool' => '=P~',
             'embarrassed' => ':">',
@@ -996,7 +970,8 @@ class display extends object
                 $this->objIcon->extra = '';
                 $icon = $this->objIcon->show();
                 
-                $objTable->addCell('<div id="'.$smiley.'" style="cursor: pointer;" onclick="jsAddSmiley(this.id)">'.$icon.'</div>', '12.5%', '', 'center', '', '');
+                $objTable->addCell('<div id="'.$smiley.'">'.$icon.'</div>', '12.5%', '', 'center', '', '');
+//                $objTable->addCell('<div id="'.$smiley.'" style="cursor: pointer;" onclick="jsAddSmiley(this.id)">'.$icon.'</div>', '12.5%', '', 'center', '', '');
                 $objTable->addCell('<nobr><font class="warning"><b>'.htmlentities($code).'</b></font></nobr>', '', '', 'center', '', '');
             }
             $objTable->endRow();
@@ -1008,7 +983,7 @@ class display extends object
         $string = $smileyTable;
 
         // feature box
-        $content .= $this->objFeaturebox->show($title, $string);
+        $content = $this->objFeaturebox->show($title, $string);
 
         // main display div
         $objLayer = new layer();
@@ -1032,6 +1007,7 @@ class display extends object
         
         // get data
         $roomId = $this->getSession('chat_room_id');
+        $roomData = $this->dbRooms->getRoom($roomId);
         $counter = $this->getSession('message_counter');
         $messages = $this->dbMessages->getChatMessages($roomId, $counter);
         
@@ -1058,7 +1034,12 @@ class display extends object
                 }else{
                     $str .= '&nbsp;-&nbsp;'.$date.']:</strong><br />';
                 }
-                $str .= nl2br($message['message']);
+                if($roomData['text_only'] == 1){
+                    $str .= nl2br($message['message']);
+                }else{
+                    $str .= nl2br($this->objWash->parseText($message['message']));
+                }
+                //$str .= nl2br($message['message']);
                 $str .= '</li>';
             }
             $str .= '</ul>';
@@ -1917,6 +1898,7 @@ class display extends object
         
         return $str;        
     }
+
     /**
     * Method to create the content for the remove user popup
     * 
@@ -2239,7 +2221,7 @@ class display extends object
                         endDate.setHours(arrEndTime[0]-1);
                         endDate.setMinutes(arrEndTime[1]);
 
-                        if(endDate &lt; startDate){
+                        if(endDate &lt;= startDate){
                             alert(\''.$errDateLabel.'\'); 
                         }else{
                             el_Log.submit();                                                
@@ -2284,10 +2266,12 @@ class display extends object
     * @param string $end: The end date for an abridged log
     * @return string $str: The output string
     */
-    public function popChatLog($type, $start = NULL, $end = NUL)
+    public function popChatLog($type, $start = NULL, $end = NUL, $mode = 'display')
     {
-        $body = 'window.resizeTo(650,650)';
-        $this->appendArrayVar('bodyOnLoad', $body);
+        if($mode == 'display'){
+            $body = 'window.resizeTo(650,650)';
+            $this->appendArrayVar('bodyOnLoad', $body);
+        }
         
         // get data
         $roomId = $this->getSession('chat_room_id');
@@ -2310,7 +2294,7 @@ class display extends object
         
         // language items
         $saveLabel = $this->objLanguage->languageText('mod_messaging_save', 'messaging');
-        $saveTiteLabel = $this->objLanguage->languageText('mod_messaging_savetitle', 'messaging');
+        $saveTitleLabel = $this->objLanguage->languageText('mod_messaging_savetitle', 'messaging');
         $fileLabel = $this->objLanguage->languageText('mod_messaging_filename', 'messaging');
         $closeLabel = $this->objLanguage->languageText('mod_messaging_wordclose', 'messaging');        
         $closeTitleLabel = $this->objLanguage->languageText('mod_messaging_closetitle', 'messaging'); 
@@ -2319,29 +2303,56 @@ class display extends object
         // heading
         $objHeading = new htmlheading();
         $objHeading->str = $heading;
-        $objHeading->type = 1;
+        $objHeading->type = 3;
         $header = $objHeading->show();
         
-        // chat output
-        $string = '<ul>';
-        foreach($chatData as $line){
-            if($line['sender_id'] == 'system'){
-                $name = $systemLabel;
-            }else{
-                $name = $this->objUser->fullname($line['sender_id']);
-            }
-            $date = $this->objDatetime->formatDate($line['date_created']);
-            $string .= '<li>';
-            $string .= '<strong>['.$name.'&nbsp;-&nbsp;'.$date.']</strong><br />';
-            $string .= nl2br($line['message']);
-            $string .= '</li>';
+        if($mode == 'display'){
+            $objLink = new link($this->uri(array(
+                'action' => 'savelog',
+                'type' => $type,
+                'start' => $start,
+                'end' => $end,
+                'mode' => 'save',
+            )));
+            $objLink->link = $saveLabel;
+            $objLink->title = $saveTitleLabel;
+            $saveLink = $objLink->show();
+        }else{
+            $saveLink = '';
         }
-        $string .= '</ul>';
+        
+        // chat output
+        if($chatData != FALSE){
+            $string = '<ul>';
+            foreach($chatData as $line){
+                if($line['sender_id'] == 'system'){
+                    $name = $systemLabel;
+                }else{
+                    $name = $this->objUser->fullname($line['sender_id']);
+                }
+                $date = $this->objDatetime->formatDate($line['date_created']);
+                $string .= '<li>';
+                $string .= '<strong>['.$name.'&nbsp;-&nbsp;'.$date.']</strong><br />';
+                if($roomData['text_only'] == 1){
+                    $string .= nl2br($line['message']);
+                }else{
+                    $string .= nl2br($this->objWash->parseText($line['message']));
+                }
+                $string .= '</li>';
+            }
+            $string .= '</ul>';
+        }else{
+            $string = '';
+        }
         
         $objLayer = new layer();
         $objLayer->addToStr($string);
         $objLayer->border = '1px solid black';
-        $objLayer->height = '435px';
+        if($type == 1){
+            $objLayer->height = '455px';
+        }else{
+            $objLayer->height = '425px';
+        }
         $objLayer->overflow = 'auto';
         $chatDiv = $objLayer->show();
 
@@ -2358,7 +2369,7 @@ class display extends object
         
         // main display div
         $objLayer = new layer();
-        $objLayer->addToStr($header.$chatDiv.$closeTable);
+        $objLayer->addToStr($header.$saveLink.$chatDiv.$closeTable);
         $objLayer->height = '630px';
         $objLayer->overflow = 'auto';
         $objLayer->padding = '10px';
@@ -2366,5 +2377,388 @@ class display extends object
         
         return $str;        
     }   
+    
+    /**
+    * Method to display the send chat form
+    *
+    * @access public
+    * @return string $str: The output string
+    */
+    public function tplChatForm()
+    {
+        // language items
+        $sendLabel = $this->objLanguage->languageText('mod_messaging_wordsend', 'messaging');
+        $clearLabel = $this->objLanguage->languageText('mod_messaging_wordclear', 'messaging');
+        
+        // chat input area
+        $objText = new textarea('message');
+        $chatText = $objText->show();
+        
+        // chat send button
+        $objButton = new button('send', $sendLabel);
+        $objButton->setToSubmit();
+        $sendButton = $objButton->show();
+        
+        // chat clear button
+        $objButton = new button('clear', $clearLabel);
+        $objButton->extra = 'onclick="javascript: 
+            var el_Message = document.getElementById(\'input_message\');
+            el_Message.value = \'\';
+            el_Message.focus();
+        "';
+        $clearButton = $objButton->show();
+        
+        // main table
+        $objTable = new htmltable();
+        $objTable->cellspacing = '2';
+        $objTable->cellpadding = '2';
+        $objTable->startRow();
+        $objTable->addCell($chatText, '40%', '', '', '' ,'');
+        $objTable->addCell($sendButton.'<br />'.$clearButton, '', 'center', 'left', '' ,'');
+        $objTable->endRow();
+        $chatTable = $objTable->show();
+        $string = $chatTable;
+        
+        // chat send form 
+        $objForm = new form('chat', $this->uri(array(
+            'action' => 'sendchat'
+        )));
+        $objForm->addToForm($string);
+        $chatForm = $objForm->show();
+        $str = $chatForm;
+        
+        return $str;
+    }
+    
+    /**
+    * Method to display the IM icon in a div that send ajax requests
+    *
+    * @access public
+    * @return string $str: The output string
+    */
+    public function divShowIM()
+    {
+        // language items
+        $imLabel = $this->objLanguage->languageText('mod_messaging_im', 'messaging');
+        $imTitleLabel = $this->objLanguage->languageText('mod_messaging_imtitle', 'messaging');
+        
+        // show only if messaging registered
+        if($this->objModule->checkIfRegistered('messaging')){
+            $this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
+            $this->objScriptaculous->show();
+            
+            // ajax to check for IM
+            $script = '<script type="text/javaScript">
+                Event.observe(window, "load", jsGetIm, false);                
+                var imTimer;
+                function jsGetIm(){
+                    var url = "index.php";
+                    var pars = "module=messaging&action=getim";
+                    var myAjax = new Ajax.Request(url, {method: "post", parameters: pars});
+                    imTimer = setTimeout("jsGetIm()", 3000);
+                }
+            </script>';
+            $string = $script;
+            
+            // IM Icon
+            $this->objIcon->title = $imTitleLabel;
+            $this->objIcon->setIcon('instantmessaging', 'gif', 'icons/modules');
+            $imIcon = $this->objIcon->show();
+                        
+            // popup link to ban users
+            $objPopup = new windowpop();
+            //$objPopup->title = $imTitleLabel;
+            $objPopup->set('location',$this->uri(array(
+                'action' => 'im',
+            )));
+            $objPopup->set('linktext', $imIcon);
+            $objPopup->set('width', '500');
+            $objPopup->set('height', '450');
+            $objPopup->set('left', '100');
+            $objPopup->set('top', '100');
+            $objPopup->set('scrollbars', 'no');
+            $objPopup->putJs(); // you only need to do this once per page
+            $imLink = $objPopup->show();
+            $string .= $imLink;
+            
+            // div to float the im icon
+            $objLayer = new layer();
+            $objLayer->id = 'imDiv';
+            $objLayer->floating = 'right';
+            $objLayer->addToStr($string);
+            $imDiv = $objLayer->show();
+            $str = $imDiv;  
+        }else{
+            $str = '';
+        }
+        return $str;       
+    }
+
+    /**
+    * Method to display the instant messaging popup
+    *
+    * @access public
+    * @return string $str: The output string
+    */
+    public function popSendIM()
+    {
+        // css style
+        $style = '<style type="text/css">
+            div.autocomplete {
+                position:absolute;
+                background-color:white;
+            }    
+            div.autocomplete ul {
+                list-style-type:none;
+                margin:0px;
+                padding:0px;
+            }    
+            div.autocomplete ul li.selected {
+                border:1px solid #888;
+                background-color: #ffb;
+            }
+            div.autocomplete ul li {
+                border:1px solid #888;
+                list-style-type:none;
+                display:block;
+                margin:0;
+                cursor:pointer;
+            }
+        </style>';
+        $str = $style;
+
+        // javascript
+        $script = '<script type="text/javaScript">
+            function jsImUserList()
+            {        
+                var el_option = document.getElementsByName("option");
+                var len = el_option.length;
+                var myValue = "";
+                for(var i = 0; i <= len-1; i++){
+                    if(el_option[i].checked){
+                        myValue = el_option[i].value;
+                    }
+                }
+                var pars = "module=messaging&action=getimusers&option="+myValue;
+                new Ajax.Autocompleter("input_username", "userDiv", "index.php", {parameters: pars});
+            }
+        </script>';
+        $str .= $script;
+
+        // language items
+        $imLabel = $this->objLanguage->languageText('mod_messaging_im', 'messaging');
+        $userLabel = $this->objLanguage->languageText('mod_messaging_worduser', 'messaging');
+        $submitLabel = $this->objLanguage->languageText('mod_messaging_wordsubmit', 'messaging');
+        $cancelLabel = $this->objLanguage->languageText('mod_messaging_wordcancel', 'messaging');
+        $nameLabel = $this->objLanguage->languageText('mod_messaging_firstname', 'messaging');
+        $surnameLabel = $this->objLanguage->languageText('mod_messaging_surname', 'messaging');
+        $errImUserLabel = $this->objLanguage->languageText('mod_messaging_errimuser', 'messaging');
+        $messageLabel = $this->objLanguage->languageText('mod_messaging_wordmessage', 'messaging');
+                
+                
+        // heading
+        $objHeader = new htmlheading();
+        $objHeader->str = $imLabel;
+        $objHeader->type = 1;
+        $heading = $objHeader->show();
+
+        // name/surname radio
+        $objRadio = new radio('option');
+        $objRadio->addOption('firstname', '&nbsp;'.$nameLabel);
+        $objRadio->addOption('surname', '&nbsp;'.$surnameLabel);
+        $objRadio->setBreakSpace('table');
+        $objRadio->setSelected('firstname');
+        $objRadio->extra = ' onchange="javascript:
+            var el_Username = document.getElementById(\'input_username\');
+            el_Username.value = \'\';
+            el_Username.focus();"';
+        $choiceRadio = $objRadio->show();
+        
+        // user search input
+        $objInput = new textinput('username', '', '', 50);
+        $objInput->extra = ' onkeyup="javascript:
+            jsImUserList()"';
+        $userInput = $objInput->show();
+        
+        // hidden user search selection input
+        $objInput = new textinput('userId', '', 'hidden', '');
+        $userIdInput = $objInput->show();
+        
+        // search results display div
+        $objLayer = new layer();
+        $objLayer->id = 'userDiv';
+        $objLayer->cssClass = 'autocomplete';
+        $userDiv = $objLayer->show();
+
+        // user table
+        $objTable = new htmltable();
+        $objTable->cellspacing = '2';
+        $objTable->cellpadding = '2';
+        $objTable->startRow();
+        $objTable->addCell($choiceRadio);
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($userInput.$userDiv.$userIdInput);
+        $objTable->endRow();
+        $userTable = $objTable->show();
+        
+        // user feature box
+        $userFeature = $this->objFeaturebox->show($userLabel, $userTable);
+
+        // message text area
+        $objText = new textarea('message');
+        $messageText = $objText->show();
+        
+        $messageFeature = $this->objFeaturebox->show($messageLabel, $messageText);
+        
+        // submit button
+        $objButton = new button('send', $submitLabel);
+        $objButton->extra = ' onclick="javascript:
+            var el_UserId = document.getElementById(\'input_userId\');
+            var el_Username = document.getElementById(\'input_username\');
+            if(el_UserId.value == \'\'){
+                alert(\''.$errImUserLabel.'\');
+                el_Username.value = \'\';
+                el_Username.focus();
+                return false;
+            }else{
+                document.getElementById(\'form_im\').submit();
+            }"';
+        $sendButton = $objButton->show();
+        
+        // cancel button
+        $objButton = new button('cancel', $cancelLabel);
+        $objButton->extra = ' onclick="javascript:window.close()"';
+        $cancelButton = $objButton->show();
+        
+        $objLayer = new layer();
+        $objLayer->id = 'buttonDiv';
+        $objLayer->addToStr($sendButton.'&nbsp;'.$cancelButton);
+        $buttonDiv = $objLayer->show();
+
+        // invite form
+        $objForm = new form('im', $this->uri(array(
+            'action' => 'sendim',
+            )));
+        $objForm->addToForm($userFeature);
+        $objForm->addToForm($messageFeature);
+        $objForm->addToForm($buttonDiv);
+        $inviteForm = $objForm->show();
+
+        // main display div
+        $objLayer = new layer();
+        $objLayer->id = 'formDiv';
+        $objLayer->padding = '10px';
+        $objLayer->addToStr($heading.$inviteForm);
+        $formDiv = $objLayer->show();
+        $str .= $formDiv;
+
+        return $str;
+    } 
+       
+    /**
+    * Method to show the list of users to send im to
+    *
+    * @access public
+    * @param string $option: The field to search
+    * @param string $value: The value to search for
+    * @return string $str: The output string
+    */
+    public function divGetImUsers($option, $value)
+    {
+        // get data
+        $searchList = $this->dbUsers->searchUsers($option, $value);
+     
+        // language items
+        $noMatchLabel = $this->objLanguage->languageText('mod_messaging_nomatch', 'messaging');
+        
+        // check to see if user is owner or if already a member of the room
+        if($searchList != FALSE){
+            foreach($searchList as $key=>$user){
+                if($user['userid'] == $this->userId){
+                    unset($searchList[$key]);                                        
+                }
+            }
+        }
+
+        // ordered list of search results
+        if(!empty($searchList)){            
+            $str = '<ul>';
+            foreach($searchList as $user){
+                $str .= '<li onclick="javascript:
+                    document.getElementById(\'input_userId\').value=\''.$user['userid'].'\'"><strong>';
+                $str .= $this->objUser->fullname($user['userid']);
+                $str .= '</strong></li>';
+            }           
+            $str .= '</ul>'; 
+        }else{
+            $str = '<ul><li><strong>'.$noMatchLabel.'</strong></li></ul>';    
+        }
+        echo $str;        
+    }
+
+    /**
+    * Method to show the confirmed instant message popup
+    * 
+    * @access public
+    * @param string $userId: The id of the user receiving the im
+    * @return string $str: The output string
+    */
+    public function popConfirmIm($userId)
+    {
+        // language items
+        $array = array(
+            'user' => $this->objUser->fullname($userId),
+        );        
+        $confirmLabel = $this->objLanguage->code2Txt('mod_messaging_confirmim', 'messaging', $array);
+        $closeLabel = $this->objLanguage->languageText('mod_messaging_wordclose', 'messaging');
+        $titleLabel = $this->objLanguage->languageText('mod_messaging_closetitle', 'messaging');
+        
+        // close link
+        $objLink = new link('javascript:window.close()');
+        $objLink->title = $titleLabel;
+        $objLink->link = $closeLabel;
+        $closeLink = $objLink->show();
+
+        // close link table
+        $objTable = new htmltable();
+        $objTable->cellspacing = '2';
+        $objTable->cellpadding = '2';
+        $objTable->startRow();
+        $objTable->addCell($closeLink, '', '', 'center', '', '');
+        $objTable->endRow();
+        $linkTable = $objTable->show();    
+        
+        // confirm feature box
+        $string = $this->objFeaturebox->show($confirmLabel, $linkTable);
+        
+        // main display div
+        $objLayer = new layer();
+        $objLayer->addToStr($string);
+        $objLayer->padding = '10px';
+        $str = $objLayer->show();
+        
+        return $str;        
+    }
+    
+    /**
+    * Method to show the instant message in a popup
+    * 
+    * @access public
+    * @return string $str: The output string
+    */
+    public function popGetIM()
+    {
+        // get data
+        $imData = $this->dbMessages->getInstantMessage();
+        
+        $str = '';
+        if($imData != FALSE){
+            foreach($imData as $message){
+                $str .= $message['message'];
+            }    
+        }
+        return $str;
+    }
 }
 ?>

@@ -15,7 +15,7 @@ $objBlocks = $this->newObject('blocks', 'blocks');
 $returnBlock = $objBlocks->showBlock('chatreturn', 'messaging');
 $usersBlock = $objBlocks->showBlock('onlineusers', 'messaging', '', '', FALSE);
 $smileyBlock = $objBlocks->showBlock('smileys', 'messaging', '', '', FALSE);
-$formatBlock = $objBlocks->showBlock('formating', 'messaging', '', '', FALSE);
+$formatBlock = $objBlocks->showBlock('formatting', 'messaging', '', '', FALSE);
 
 $cssLayout->setLeftColumnContent($returnBlock.$usersBlock.'<br />');
 $cssLayout->setMiddleColumnContent($this->getContent());

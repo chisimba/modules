@@ -22,7 +22,13 @@ if(isset($scriptaculous) && $scriptaculous != FALSE){
 }
 
 // set up layout
-if($mode == 'popup'){
+if($mode == 'iframe'){
+    $this->setVar('pageSuppressBanner', TRUE);
+    $this->setVar('pageSuppressContainer', TRUE);
+    $this->setVar('pageSuppressSearch', TRUE);
+    $this->setVar('pageSuppressToolbar', TRUE);
+    $this->setVar('suppressFooter', TRUE);
+}elseif($mode == 'popup'){
     $this->setVar('pageSuppressContainer', TRUE);
     $this->setVar('pageSuppressSearch', TRUE);
     $this->setVar('pageSuppressToolbar', TRUE);
@@ -34,7 +40,7 @@ if($mode == 'popup'){
     $this->setLayoutTemplate('room_text_only_tpl.php');
 }elseif($mode == 'room'){
     $this->setVar('pageSuppressSearch', TRUE);
-//    $this->setVar('pageSuppressToolbar', TRUE);
+    $this->setVar('pageSuppressToolbar', TRUE);
     $this->setVar('footerStr', '');
     $this->setLayoutTemplate('room_tpl.php');
 }else{

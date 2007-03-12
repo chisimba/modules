@@ -75,6 +75,26 @@ class dbmessages extends dbTable
     }
 
     /**
+    * Method to add a chat message
+    *
+    * @access public
+    * @param string $message: The chat message that is being sent
+    * @param boolean $system: TRUE if the message is system generated FALSE if not
+    * @return string $messageId: The id of the chat mesasge that was added
+    **/
+    public function addImMessage($userId, $message)
+    {   
+        $date = date('Y-m-d H:i:s');
+        $fields['sender_id'] = $this->userId;            
+        $fields['message'] = $message;
+        $fields['recipient_id'] = $userId;
+        $fields['date_created'] = $date;
+        $fields['updated'] = $date;
+        $messageId = $this->insert($fields);
+        return $messageId;
+    }
+
+    /**
     * Method to return a chat room messages from a specific point
     *
     * @access public
@@ -134,6 +154,24 @@ class dbmessages extends dbTable
             return count($data);
         }
         return 0;
+    }
+
+    /**
+    * Method to return unread instant messages
+    *
+    * @access public
+    * @param string $roomId: The id of the room to count messages
+    * @return string $messageCount: The number of messages for the room
+    **/
+    public function getInstantMessage()
+    {
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE recipient_id = '".$this->userId."'";
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data;
+        }
+        return FALSE;
     }
 }
 ?>

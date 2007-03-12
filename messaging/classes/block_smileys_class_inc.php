@@ -99,6 +99,7 @@ class block_smileys extends object
             
             function jsInsertSmiley(el_id)
             {
+                var el_ChatIframe = document.getElementById(\'chatIframe\');
                 var el_Message = document.getElementById("input_message");
                 for(i = 0; i <= arrNames.length-1; i++){
                     if(arrNames[i] == el_id){
@@ -112,7 +113,7 @@ class block_smileys extends object
                 el_Message.focus();
             }
         </script>';
-        echo $script;
+//        echo $script;
 
         // language items
         $moreLabel = $this->objLanguage->languageText('mod_messaging_wordmore', 'messaging');
@@ -146,7 +147,8 @@ class block_smileys extends object
                 $this->objIcon->extra = '';
                 $icon = $this->objIcon->show();
                 
-                $objTable->addCell('<div id="'.$smiley.'" style="cursor: pointer;" onclick="jsInsertSmiley(this.id)">'.$icon.'</div>', '', '', 'center', '', '');
+                $objTable->addCell('<div id="'.$smiley.'">'.$icon.'</div>', '', '', 'center', '', '');
+//                $objTable->addCell('<div id="'.$smiley.'" style="cursor: pointer;" onclick="jsInsertSmiley(this.id)">'.$icon.'</div>', '', '', 'center', '', '');
                 $objTable->addCell('<nobr><font class="warning"><b>'.$code.'</b></font></nobr>', '', '', 'center', '', '');
             }
             $objTable->endRow();

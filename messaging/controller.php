@@ -405,10 +405,45 @@ class messaging extends controller
                 break;
                 
             // submit the chat message data
-            case 'sendchat':
-                $message = $this->getParam('chat');
-                $messageId = $this->dbMessages->addChatMessage($message);
-                return $messageId;
+            case 'chatform':
+                $templateContent = $this->objDisplay->tplChatForm();
+                $this->setVarByRef('templateContent', $templateContent);
+                $this->setVar('mode', 'iframe');
+                return 'template_tpl.php';
+                break;
+                
+            // submit the chat message data
+            case 'sendchat':            
+                $message = $this->getParam('message');
+                // check to ensure closing tags are in place
+                $codes = array(
+                    '[B]' => '[/B]',
+                    '[I]' => '[/I]',
+                    '[U]' => '[/U]',
+                    '[RED]' => '[/RED]',
+                    '[BLUE]' => '[/BLUE]',
+                    '[YELLOW]' => '[/YELLOW]',
+                    '[GREEN]' => '[/GREEN]',
+                    '[S1]' => '[/S]',
+                    '[S2]' => '[/S]',
+                    '[S3]' => '[/S]',
+                    '[S4]' => '[/S]',
+                    '[S5]' => '[/S]',
+                    '[S6]' => '[/S]',
+                );
+                foreach($codes as $open => $close){
+                    $cntOpen = substr_count(strtoupper($message), strtoupper($open));
+                    $cntClose = substr_count(strtoupper($message), strtoupper($close));
+                    if($cntOpen > $cntClose){
+                        for($i = $cntClose; $i < $cntOpen; $i++){
+                            $message .= $close;
+                        }
+                    }
+                }
+                if($message != NULL){
+                    $messageId = $this->dbMessages->addChatMessage($message);
+                }
+                return $this->nextAction('chatform');
                 break;
                 
             // get the chat messages posted to a chat room
@@ -498,6 +533,72 @@ class messaging extends controller
                 $start = $this->getParam('start');
                 $end = $this->getParam('end');
                 $templateContent = $this->objDisplay->popChatLog($type, $start, $end);
+                $this->setVarByRef('templateContent', $templateContent);
+                $this->setVar('pageSuppressXML', TRUE);
+                $this->setVar('mode', 'popup');
+                return 'template_tpl.php';
+                break;
+                
+            // Save the chat log to a file
+            case 'savelog':
+                $type = $this->getParam('type');
+                $start = $this->getParam('start');
+                $end = $this->getParam('end');
+                $mode = $this->getParam('mode');
+                $templateContent = $this->objDisplay->popChatLog($type, $start, $end, $mode);
+                $this->setVarByRef('templateContent', $templateContent);
+                $this->setPageTemplate('savelog_page_tpl.php');
+                return 'savelog_tpl.php';
+                break;
+                
+            // Instant messaging
+            case 'im':
+                $templateContent = $this->objDisplay->popSendIM();
+                $this->setVarByRef('templateContent', $templateContent);
+                $this->setVar('mode', 'popup');
+                $this->setVar('scriptaculous', TRUE);
+                return 'template_tpl.php';
+                break;
+                
+            // get im 
+            case 'getim':
+                echo 'window.open("#", "Kevin", "")';
+                $templateContent = $this->objDisplay->popGetIM();
+                if($templateContent != ''){
+                    $this->setVarByRef('templateContent', $templateContent);
+                    $this->setVar('mode', 'popup');
+                    return 'template_tpl.php';
+                }else{
+                    die();                    
+                }
+                break;
+                
+            // display instant message in a popup
+            case 'showim':
+            
+                
+            
+            // get users for im
+            case 'getimusers':
+                $option = $this->getParam('option');
+                $value = $this->getparam('username');
+                return $this->objDisplay->divGetImUsers($option, $value);
+                break;
+                
+            // send im
+            case 'sendim':
+                $userId = $this->getParam('userId');
+                $message = $this->getParam('message');
+                $imMsgId = $this->dbMessages->addImMessage($userId, $message);
+                return $this->nextAction('confirmim', array(
+                    'userId' => $userId,
+                ));
+                break;
+                
+            // confirm im
+            case 'confirmim':
+                $userId = $this->getParam('userId');
+                $templateContent = $this->objDisplay->popConfirmIm($userId);
                 $this->setVarByRef('templateContent', $templateContent);
                 $this->setVar('mode', 'popup');
                 return 'template_tpl.php';
