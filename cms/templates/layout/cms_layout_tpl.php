@@ -1,11 +1,11 @@
 <?php
 //Developer identify yourself and please commebt your code - inserted by Derek 2006 12 16
 
-$this->appendArrayVar('headerParams', $this->getJavascriptFile('tree.js', 'cmsadmin'));
-$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("tree.css", 'cmsadmin').'" />';
-$this->appendArrayVar('headerParams', $css);
+//$this->appendArrayVar('headerParams', $this->getJavascriptFile('tree.js', 'cmsadmin'));
+//$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("tree.css", 'cmsadmin').'" />';
+//$this->appendArrayVar('headerParams', $css);
 //Set to automatically render htmllist into tree menu
-$this->appendArrayVar('bodyOnLoad', 'autoInit_trees()');
+//$this->appendArrayVar('bodyOnLoad', 'autoInit_trees()');
 
 $objFeatureBox = $this->newObject('featurebox', 'navigation');
 $objBlocks =  $this->newObject('blocks', 'blocks');
@@ -65,7 +65,7 @@ if(!empty($rss))
 	}
 }
 $id = $this->getParam('id');
-$leftSide .=  $this->objLayout->showFeeds($id,TRUE);
+$leftSide .=  $this->objLayout->showFeeds($id,TRUE, 'default');
 $leftSide .=  '<br />';
 
 /***************** END OF LEFT SIDE *******************************/
