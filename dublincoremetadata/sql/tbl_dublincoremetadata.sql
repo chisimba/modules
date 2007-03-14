@@ -67,6 +67,9 @@ $fields = array(
 	'dc_title' => array(
 		'type' => 'clob'
 		),
+	'dc_title_alternate' => array(
+		'type' => 'clob'
+		),
     'dc_subject' => array(
 		'type' => 'clob'
 		),
@@ -102,6 +105,10 @@ $fields = array(
 		'length' => 255
 		),
     'dc_contributor' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'dc_contributor_role' => array(
 		'type' => 'text',
 		'length' => 255
 		),

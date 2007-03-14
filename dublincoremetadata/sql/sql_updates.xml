@@ -39,4 +39,20 @@
 			</change>
 		</data>
 	</update>
+	<update>
+        <table>tbl_dublincoremetadata</table>
+        <version>1.82</version>
+        <description>Added new fields for alternative title and contributor role</description>
+        <data>
+            <add>
+                <name>dc_title_alternate</name>
+                <type>clob</type>
+            </add>
+            <add>
+                <name>dc_contributor_role</name>
+                <type>text</type>
+                <length>255</length>
+            </add>
+        </data>
+    </update>
 </updates>
