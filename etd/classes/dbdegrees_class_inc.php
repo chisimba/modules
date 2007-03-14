@@ -6,7 +6,7 @@
 */
 
 /**
-* Class for accessing the table listing the degrees and faculties in a university
+* Class for accessing the table listing the degrees, departments and faculties in a university
 * @author Megan Watson
 * @copyright (c) 2006 University of the Western Cape
 * @version 0.1
@@ -37,7 +37,7 @@ class dbDegrees extends dbTable
     * @access private
     * @return void
     */
-    private function addItem($name, $type, $id = NULL)
+    public function addItem($name, $type, $id = NULL)
     {    
         $fields = array();
         $fields['name'] = $name;
@@ -62,9 +62,9 @@ class dbDegrees extends dbTable
     * @access private
     * @return array The list of degrees / faculties
     */
-    private function getList($type = 'faculty')
+    public function getList($type = 'faculty')
     {
-        $sql = "SELECT * FROM {$this->table} WHERE type = '{$type}'";
+        $sql = "SELECT * FROM {$this->table} WHERE type = '{$type}' ORDER BY name";
         
         return $this->getArray($sql);
     }

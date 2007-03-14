@@ -30,8 +30,8 @@ class dbStatistics extends dbTable
                 
         $this->objLanguage =& $this->getObject('language', 'language');
         $this->objUser =& $this->getObject('user', 'security');
-//        $this->objUserStats =& $this->getObject('dbuserstats', 'sitestats');  
-//        $this->objLoginHistory =& $this->getObject('dbloginhistory', 'userstats');
+        $this->objUserStats =& $this->getObject('dbuserstats', 'sitestats');  
+        $this->objLoginHistory =& $this->getObject('dbloginhistory', 'userstats');
         $this->objIpCountry =& $this->getObject('iptocountry', 'utilities');
         $this->objDate =& $this->getObject('datetime', 'utilities');
         
@@ -110,8 +110,12 @@ class dbStatistics extends dbTable
     private function getStatsByMonth($type)
     {
         $year = date('Y');
-        $sql = "SELECT count(*) as cnt, MONTH(datecreated) as month FROM {$this->table}";
-        $sql .= " WHERE YEAR(datecreated) = '$year' AND hittype = '$type' GROUP BY MONTH(datecreated)";
+//        $sql = "SELECT count(*) as cnt, MONTH(datecreated) as month FROM {$this->table}";
+//        $sql .= " WHERE YEAR(datecreated) = '$year' AND hittype = '$type' GROUP BY MONTH(datecreated)";
+
+        
+        $sql = "SELECT count(*) as cnt, to_char(datecreated, 'MM') as month FROM {$this->table}";
+        $sql .= " WHERE to_char(datecreated, 'YY') = '$year' AND hittype = '$type' GROUP BY to_char(datecreated, 'MM')";
         
         $data = $this->getArray($sql);
         
@@ -250,7 +254,7 @@ class dbStatistics extends dbTable
     */
     public function getSideBlock()
     {
-        $userCount = 0;//$this->objUserStats->countUsers();
+        $userCount = $this->objUserStats->countUsers();
         $countryCount = 0;//$this->objUserStats->getTotalCountries();
         $totalLogins = 0;//$this->objLoginHistory->getTotalLogins();
         $countries = '';//$this->objUserStats->getFlags();

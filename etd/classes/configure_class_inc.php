@@ -32,6 +32,7 @@ class configure extends object
     {
         try{
             $this->dbCopyright = $this->getObject('dbcopyright', 'etd');
+            $this->dbDegrees = $this->getObject('dbdegrees', 'etd');
             
             $this->objUser = $this->getObject('user', 'security');
             $this->objLanguage = $this->getObject('language', 'language');
@@ -47,6 +48,7 @@ class configure extends object
             $this->loadClass('form', 'htmlelements');
             $this->loadClass('button', 'htmlelements');
             $this->loadClass('textinput', 'htmlelements');
+            $this->loadClass('link', 'htmlelements');
         }catch(Exception $e){
             throw customException($e->message());
             exit();
@@ -172,25 +174,114 @@ class configure extends object
     }
     
     /**
+    * Method to display the faculties, degrees and departments for adding / editing / deleting
+    *
+    * @access private
+    * @return string html
+    */
+    private function getFaculty($mode = NULL, $data = NULL)
+    {
+        $lbFaculty = $this->objLanguage->languageText('phrase_updatefaculties');
+        $lbDepartment = $this->objLanguage->languageText('phrase_updatedepartments');
+        $lbDegree = $this->objLanguage->languageText('phrase_updatedegrees');
+        $lbSave = $this->objLanguage->languageText('word_save');
+        
+        // Index - faculty, degree, department
+        $indexStr = '<ul>';
+        
+        $objLink = new link($this->uri(array('action' => 'showconfig', 'mode' => 'updatefaculty')));
+        $objLink->link = $lbFaculty;
+        $indexStr .= '<li>'.$objLink->show().'</li>';
+        
+        $objLink = new link($this->uri(array('action' => 'showconfig', 'mode' => 'updatedepartment')));
+        $objLink->link = $lbDepartment;
+        $indexStr .= '<li>'.$objLink->show().'</li>';
+        
+        $objLink = new link($this->uri(array('action' => 'showconfig', 'mode' => 'updatedegree')));
+        $objLink->link = $lbDegree;
+        $indexStr .= '<li>'.$objLink->show().'</li>';
+        
+        $indexStr .= '</ul>';
+        
+        // Form - submit box
+        $formStr = '';
+        if(isset($mode) && !empty($mode)){
+            switch($mode){
+                case 'faculty':
+                    $formHead = $lbFaculty;
+                    break;
+                case 'department':
+                    $formHead = $lbDepartment;
+                    break;
+                case 'degree':
+                    $formHead = $lbDegree;
+                    break;
+            }
+            
+            $formStr = '<p><b>'.$formHead.'</b></p>';
+            
+            $objInput = new textinput('name', '', '', 60);
+            $form = '<p>'.$objInput->show().'</p>';
+            
+            $objButton = new button('save', $lbSave);
+            $objButton->setToSubmit();
+            $form .= '<p>'.$objButton->show().'</p>';
+            
+            $objInput = new textinput('type', $mode, 'hidden', 60);
+            $hidden = $objInput->show();
+            
+            $objForm = new form('update', $this->uri(array('action' => 'saveconfig', 'mode' => 'saveupdate', 'nextmode' => 'update'.$mode)));
+            $objForm->addToForm($form);
+            $objForm->addToForm($hidden);
+            $formStr .= $objForm->show();
+        }
+        
+        // List - updated
+        $listStr = '';
+        if(!empty($data)){
+            $listStr = '<ul>';
+            
+            foreach($data as $item){
+                $listStr .= '<li>'.$item['name'].'</li>';
+            }
+            
+            $listStr .= '</ul>';
+        }
+        
+        // Display
+        $objTable = new htmltable();
+        $objTable->cellspacing = '2';
+        $objTable->startRow();
+        $objTable->addCell($indexStr);
+        $objTable->addCell('', '3%');
+        $objTable->addCell($listStr, '45%', '','','', 'rowspan="2"');
+        $objTable->endRow();
+        
+        $objTable->addRow(array($formStr, ''));
+        
+        return $objTable->show();
+    }
+    
+    /**
     * Method to display the configurable parameters - institution information, copyright, embargoes, approval settings
     *
     * @access private
     * @return string html
     */
-    private function showConfig()
+    private function showConfig($facultyMode = '', $data = NULL)
     {
         $head = $this->objLanguage->languageText('phrase_configuresystem');
         $lbInstitution = $this->objLanguage->languageText('phrase_institutioninformation');
+        $lbFaculty = $this->objLanguage->languageText('phrase_facultyinformation');
         
         $this->objHead->str = $head;
         $this->objHead->type = 1;
         $str = $this->objHead->show();
         
-//        $objTab = new tabbedbox();
-//        $objTab->extra = 'style="background-color: #FFFDF5; padding:5px;"';
-//        $objTab->addTabLabel($lbInstitution);
-//        $objTab->addBoxContent();
-//        $objTab->show();
+        // Degrees / faculties / departments
+        $str .= $this->objFeatureBox->show($lbFaculty, $this->getFaculty($facultyMode, $data));
+
+        // Institution information
         $str .= $this->objFeatureBox->show($lbInstitution, $this->getInstitute());
         
         return $str;
@@ -221,8 +312,28 @@ class configure extends object
                 return TRUE;
                 break;
                 
+            case 'updatefaculty':
+                $data = $this->dbDegrees->getList('faculty');
+                return $this->showConfig('faculty', $data);
+                
+            case 'updatedepartment':
+                $data = $this->dbDegrees->getList('department');
+                return $this->showConfig('department', $data);
+                
+            case 'updatedegree':
+                $data = $this->dbDegrees->getList('degree');
+                return $this->showConfig('degree', $data);
+                
+            case 'saveupdate':
+                $name = $this->getParam('name');
+                $type = $this->getParam('type');
+                $id = $this->getParam('id');
+                $this->dbDegrees->addItem($name, $type, $id);
+                return TRUE;
+                break;
+                
             default:
-                return $this->showConfig();
+                return $this->showConfig('');
         }
     }
     

@@ -51,6 +51,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 255
 		),
+	'thesis_degree_faculty' => array(
+		'type' => 'text',
+		'length' => 255
+		),
 	'thesis_degree_grantor' => array(
 		'type' => 'text',
 		'length' => 255

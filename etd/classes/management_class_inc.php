@@ -319,6 +319,7 @@ class management extends object
         }
         $lbMetaData = $this->objLanguage->languageText('word_metadata');
         $lbTitle = $this->objLanguage->languageText('phrase_documenttitle');
+        $lbAltTitle = $this->objLanguage->languageText('phrase_alternatetitle');
         $lbAuthor = $this->objLanguage->languageText('word_authors');
         $lbCitation = $this->objLanguage->languageText('word_citation');
         $lbSummary = $this->objLanguage->languageText('word_abstract');
@@ -327,8 +328,11 @@ class management extends object
         $lbSource = $this->objLanguage->languageText('word_source');
         $lbDateAdded = $this->objLanguage->languageText('phrase_dateadded');
         $lbContributor = $this->objLanguage->languageText('word_contributor');
+        $lbContributorRole = $this->objLanguage->languageText('phrase_contributorrole');
         $lbPublisher = $this->objLanguage->languageText('word_publisher');
         $lbFaculty = $this->objLanguage->languageText('word_faculty');
+        $lbDepartment = $this->objLanguage->languageText('word_department');
+        $lbInstitution = $this->objLanguage->languageText('word_institution');
         $lbDegree = $this->objLanguage->languageText('phrase_degreeobtained');
         $lbLevel = $this->objLanguage->languageText('phrase_degreelevel');
         $lbGrantor = $this->objLanguage->languageText('word_grantor');
@@ -350,45 +354,6 @@ class management extends object
         $objTable->cellpadding = '5';
         $objTable->cellspacing = '5';
 
-        // Degree
-        $degree = '';
-        if(!empty($data['thesis_degree_name'])){
-            $degree = $data['thesis_degree_name'];
-        }
-        $objLabel = new label($lbDegree.': ', 'input_degree');
-        $drpDegree = $this->dbDegrees->getDropList('degree', $degree);
-        $objTable->addRow(array($objLabel->show(), $drpDegree));
-        
-        // Level
-        $level = '';
-        if(!empty($data['thesis_degree_level'])){
-            $level = $data['thesis_degree_level'];
-        }
-        $objLabel = new label($lbLevel.': ', 'input_level');
-        $drpLevel = $this->etdTools->getDegreeLevels($level);
-        $objTable->addRow(array($objLabel->show(), $drpLevel));
-        
-        // Faculty
-        $faculty = '';
-        if(!empty($data['thesis_degree_discipline'])){
-            $faculty = $data['thesis_degree_discipline'];
-        }
-        $objLabel = new label($lbFaculty.': ', 'input_faculty');
-        $drpFaculty = $this->dbDegrees->getDropList('faculty', $faculty);
-        $objTable->addRow(array($objLabel->show(), $drpFaculty));
-        
-        // Grantor
-        $grantor = '';
-        if(!empty($data['thesis_degree_grantor'])){
-            $grantor = $data['thesis_degree_grantor'];
-        }
-        $objLabel = new label($lbGrantor.': ', 'input_grantor');
-        $objInput = new textinput('grantor', $grantor, '', 60);
-        $drpGrantor = $objInput->show();
-        $objTable->addRow(array($objLabel->show(), $drpGrantor));
-
-        $objTable->addRow(array('<hr />', '<hr />'));
-
         // title
         $title = '';
         if(!empty($data['dc_title'])){
@@ -399,23 +364,13 @@ class management extends object
 
         $objTable->addRow(array($objLabel->show(), $objInput->show()));
       
-        // doc type
-        $type = '';
-        if(!empty($data['dc_type'])){
-            $type = $data['dc_type'];
+        // Alternate title
+        $altTitle = '';
+        if(!empty($data['dc_title_alternate'])){
+            $altTitle = $data['dc_title_alternate'];
         }
-        $objLabel = new label($lbDocType.': ', 'input_type');
-        $objInput = new textinput('type', $type, '', 60);
-
-        $objTable->addRow(array($objLabel->show(), $objInput->show()));
-
-        // format
-        $format = '';
-        if(!empty($data['dc_format'])){
-            $format = $data['dc_format'];
-        }
-        $objLabel = new label($lbFormat.': ', 'input_format');
-        $objInput = new textinput('format', $format, '', 60);
+        $objLabel = new label($lbAltTitle.': ', 'input_alttitle');
+        $objInput = new textinput('alttitle', $altTitle, '', 60);
 
         $objTable->addRow(array($objLabel->show(), $objInput->show()));
 
@@ -438,7 +393,84 @@ class management extends object
         $year = $this->etdTools->getYearSelect('date', $date);
 
         $objTable->addRow(array($objLabel->show(), $year));
-          
+
+        $objTable->addRow(array('<hr />', '<hr />'));
+
+        // Degree
+        $degree = '';
+        if(!empty($data['thesis_degree_name'])){
+            $degree = $data['thesis_degree_name'];
+        }
+        $objLabel = new label($lbDegree.': ', 'input_degree');
+        $drpDegree = $this->dbDegrees->getDropList('degree', $degree);
+        $objTable->addRow(array($objLabel->show(), $drpDegree));
+        
+        /* Level
+        $level = '';
+        if(!empty($data['thesis_degree_level'])){
+            $level = $data['thesis_degree_level'];
+        }
+        $objLabel = new label($lbLevel.': ', 'input_level');
+        $drpLevel = $this->etdTools->getDegreeLevels($level);
+        $objTable->addRow(array($objLabel->show(), $drpLevel));
+        */
+        
+        // Faculty
+        $faculty = '';
+        if(!empty($data['thesis_degree_faculty'])){
+            $faculty = $data['thesis_degree_faculty'];
+        }
+        $objLabel = new label($lbFaculty.': ', 'input_faculty');
+        $drpFaculty = $this->dbDegrees->getDropList('faculty', $faculty);
+        $objTable->addRow(array($objLabel->show(), $drpFaculty));
+        
+        // Department
+        $department = '';
+        if(!empty($data['thesis_degree_discipline'])){
+            $department = $data['thesis_degree_discipline'];
+        }
+        $objLabel = new label($lbDepartment.': ', 'input_department');
+        $drpDepartment = $this->dbDegrees->getDropList('department', $department);
+        $objTable->addRow(array($objLabel->show(), $drpDepartment));
+
+        // Institution
+        $institution = '';
+        if(!empty($data['thesis_degree_grantor'])){
+            $institution = $data['thesis_degree_grantor'];
+        }
+        $objLabel = new label($lbInstitution.': ', 'input_institution');
+        $objInput = new textinput('institution', $institution, '', 60);
+        $drpInstitution = $objInput->show();
+        $objTable->addRow(array($objLabel->show(), $drpInstitution));
+//
+//        // Grantor
+//        $grantor = '';
+//        if(!empty($data['thesis_degree_grantor'])){
+//            $grantor = $data['thesis_degree_grantor'];
+//        }
+//        $objLabel = new label($lbGrantor.': ', 'input_grantor');
+//        $objInput = new textinput('grantor', $grantor, '', 60);
+//        $drpGrantor = $objInput->show();
+//        $objTable->addRow(array($objLabel->show(), $drpGrantor));
+
+        $objTable->addRow(array('<hr />', '<hr />'));
+
+        // language
+        $language = '';
+        if(!empty($data['dc_language'])){
+            $language = $data['dc_language'];
+        }
+        $objLabel = new label($lbLanguage.': ', 'input_language');
+        $objInput = new textinput('language', $language, '', 60);
+
+        $objDrop = new dropdown('language');
+        foreach($this->objLangCode->iso_639_2_tags->codes as $key => $item){
+            $objDrop->addOption($item, $item);
+        }
+        $objDrop->setSelected($language);
+
+        $objTable->addRow(array($objLabel->show(), $objDrop->show()));
+
         // country
         $country = '';
         if(!empty($data['dc_coverage'])){
@@ -457,6 +489,26 @@ class management extends object
 
         $objTable->addRow(array($objLabel->show(), $objText->show()));
 
+        // doc type
+        $type = '';
+        if(!empty($data['dc_type'])){
+            $type = $data['dc_type'];
+        }
+        $objLabel = new label($lbDocType.': ', 'input_type');
+        $objInput = new textinput('type', $type, '', 60);
+
+        $objTable->addRow(array($objLabel->show(), $objInput->show()));
+
+        // format
+        $format = '';
+        if(!empty($data['dc_format'])){
+            $format = $data['dc_format'];
+        }
+        $objLabel = new label($lbFormat.': ', 'input_format');
+        $objInput = new textinput('format', $format, '', 60);
+
+        $objTable->addRow(array($objLabel->show(), $objInput->show()));
+         
         $objTable->addRow(array('<hr />', '<hr />'));
 
         // contributor
@@ -466,6 +518,16 @@ class management extends object
         }
         $objLabel = new label($lbContributor.': ', 'input_contributor');
         $objInput = new textinput('contributor', $contributor, '', 60);
+
+        $objTable->addRow(array($objLabel->show(), $objInput->show()));
+
+        // contributor role
+        $contributorrole = '';
+        if(!empty($data['dc_contributor_role'])){
+            $contributorrole = $data['dc_contributor_role'];
+        }
+        $objLabel = new label($lbContributorRole.': ', 'input_contributorrole');
+        $objInput = new textinput('contributorrole', $contributorrole, '', 60);
 
         $objTable->addRow(array($objLabel->show(), $objInput->show()));
 
@@ -506,16 +568,6 @@ class management extends object
         }
         $objLabel = new label($lbSource.': ', 'input_source');
         $objInput = new textinput('source', $source, '', 60);
-
-        $objTable->addRow(array($objLabel->show(), $objInput->show()));
-
-        // language
-        $language = '';
-        if(!empty($data['dc_language'])){
-            $language = $data['dc_language'];
-        }
-        $objLabel = new label($lbLanguage.': ', 'input_language');
-        $objInput = new textinput('language', $language, '', 60);
 
         $objTable->addRow(array($objLabel->show(), $objInput->show()));
 
@@ -586,6 +638,7 @@ class management extends object
         $metaId = $this->getParam('dcMetaId');
         $fields = array();
         $fields['dc_title'] = $this->getParam('title');
+        $fields['dc_title_alternate'] = $this->getParam('alttitle');
         $fields['dc_creator'] = $this->getParam('author');
         $fields['dc_date'] = $this->getParam('date');
         $fields['dc_type'] = $this->getParam('type');
@@ -608,9 +661,10 @@ class management extends object
         $fields['submitid'] = $submitId;
         $fields['dcmetaid'] = $metaId;
         $fields['thesis_degree_name'] = $this->getParam('degree');
-        $fields['thesis_degree_level'] = $this->getParam('level');
-        $fields['thesis_degree_discipline'] = $this->getParam('faculty');
-        $fields['thesis_degree_grantor'] = $this->getParam('grantor');
+        $fields['thesis_degree_level'] = $this->getParam('degree');
+        $fields['thesis_degree_discipline'] = $this->getParam('department');
+        $fields['thesis_degree_faculty'] = $this->getParam('faculty');
+        $fields['thesis_degree_grantor'] = $this->getParam('institution');
         $this->dbThesis->insertMetadata($fields, $thesisId);
 
         return $submitId;
@@ -631,12 +685,14 @@ class management extends object
         // Save the dublincore metadata
         $dublin = array();
         $dublin['dc_title'] = $this->getParam('title');
+        $dublin['dc_title_alternate'] = $this->getParam('alttitle');
         $dublin['dc_creator'] = $this->getParam('author');
         $dublin['dc_date'] = $this->getParam('date');
         $dublin['dc_type'] = $this->getParam('type');
         $dublin['dc_coverage'] = $this->getParam('country');
         $dublin['dc_source'] = $this->getParam('source');
         $dublin['dc_contributor'] = $this->getParam('contributor');
+        $dublin['dc_contributor_role'] = $this->getParam('contributorrole');
         $dublin['dc_publisher'] = $this->getParam('publisher');
         $dublin['dc_format'] = $this->getParam('format');
         $dublin['dc_relationship'] = $this->getParam('relationship');
@@ -649,9 +705,10 @@ class management extends object
         // Save the extended thesis metadata
         $thesis = array();
         $thesis['thesis_degree_name'] = $this->getParam('degree');
-        $thesis['thesis_degree_level'] = $this->getParam('level');
-        $thesis['thesis_degree_discipline'] = $this->getParam('faculty');
-        $thesis['thesis_degree_grantor'] = $this->getParam('grantor');
+        $thesis['thesis_degree_level'] = $this->getParam('degree');
+        $thesis['thesis_degree_discipline'] = $this->getParam('department');
+        $thesis['thesis_degree_faculty'] = $this->getParam('faculty');
+        $thesis['thesis_degree_grantor'] = $this->getParam('institution');
 
         $extra = array();
         $extra['submitid'] = $submitId;
@@ -779,6 +836,11 @@ class management extends object
         $lbLanguage = $this->objLanguage->languageText('word_language');
         $lbAudience = $this->objLanguage->languageText('word_audience');
         $lbKeywords = $this->objLanguage->languageText('word_keywords');
+        $lbAltTitle = $this->objLanguage->languageText('phrase_alternatetitle');
+        $lbContributorRole = $this->objLanguage->languageText('phrase_contributorrole');
+        $lbFaculty = $this->objLanguage->languageText('word_faculty');
+        $lbDepartment = $this->objLanguage->languageText('word_department');
+        $lbInstitution = $this->objLanguage->languageText('word_institution');
         $confirmDel = $this->objLanguage->languageText('mod_etd_confirmdeleteresource', 'etd');
         $lbApprove = $this->objLanguage->languageText('mod_etd_approveaddrepository', 'etd');
 
@@ -813,17 +875,19 @@ class management extends object
             $objTable->cellpadding = 2;
             $objTable->cellspacing = 2;
 
-            $objTable->addRow(array($lbFaculty.': ', $data['thesis_degree_discipline']));
-            $objTable->addRow(array($lbDegree.': ', $data['thesis_degree_name']));
-            $objTable->addRow(array($lbLevel.': ', $data['thesis_degree_level']));
-            $objTable->addRow(array($lbGrantor.': ', $data['thesis_degree_grantor']));
-            $objTable->addRow(array('<hr />', '<hr />'));
-            
             $objTable->addRow(array($lbTitle.': ', $data['dc_title']));
+            $objTable->addRow(array($lbAltTitle.': ', $data['dc_title_alternate']));
             $objTable->addRow(array($lbAuthor.': ', $data['dc_creator']));
             $objTable->addRow(array($lbDate.': ', $data['dc_date']));
-            $objTable->addRow(array($lbDocType.': ', $data['dc_type']));
-            $objTable->addRow(array($lbFormat.': ', $data['dc_format']));
+            $objTable->addRow(array('<hr />', '<hr />'));
+
+            $objTable->addRow(array($lbDegree.': ', $data['thesis_degree_name']));
+            $objTable->addRow(array($lbFaculty.': ', $data['thesis_degree_faculty']));
+            $objTable->addRow(array($lbDepartment.': ', $data['thesis_degree_discipline']));
+            $objTable->addRow(array($lbInstitution.': ', $data['thesis_degree_grantor']));
+            $objTable->addRow(array('<hr />', '<hr />'));
+            
+            $objTable->addRow(array($lbLanguage.': ', $data['dc_language']));
             
             $country = '';
             if(isset($data['dc_coverage']) && !empty($data['dc_coverage'])){
@@ -834,14 +898,16 @@ class management extends object
             $objTable->addCell($lbKeywords.': ', '20%');
             $objTable->addCell($data['dc_subject']);
             $objTable->endRow();
+            $objTable->addRow(array($lbDocType.': ', $data['dc_type']));
+            $objTable->addRow(array($lbFormat.': ', $data['dc_format']));
             $objTable->addRow(array('<hr />', '<hr />'));
             
             $objTable->addRow(array($lbContributor.': ', $data['dc_contributor']));
+            $objTable->addRow(array($lbContributorRole.': ', $data['dc_contributor_role']));
             $objTable->addRow(array($lbRelationship.': ', $data['dc_relationship']));
             $objTable->addRow(array($lbPublisher.': ', $data['dc_publisher']));
             $objTable->addRow(array($lbRights.': ', $data['dc_rights']));
             $objTable->addRow(array($lbSource.': ', $data['dc_source']));
-            $objTable->addRow(array($lbLanguage.': ', $data['dc_language']));
             $objTable->addRow(array($lbAudience.': ', $data['dc_audience']));
             $objTable->addRow(array('<hr />', '<hr />'));
 

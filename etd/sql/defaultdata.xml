@@ -2,21 +2,6 @@
 <defaultdata>
   <!-- Table tbl_etd_degrees -->
     <tbl_etd_degrees>
-        <id>init_1</id>
-        <name>Bachelor of Science</name>
-        <type>degree</type>
-    </tbl_etd_degrees>
-    <tbl_etd_degrees>
-        <id>init_2</id>
-        <name>Bachelor of Commerce</name>
-        <type>degree</type>
-    </tbl_etd_degrees>
-    <tbl_etd_degrees>
-        <id>init_3</id>
-        <name>Bachelor of Art</name>
-        <type>degree</type>
-    </tbl_etd_degrees>
-    <tbl_etd_degrees>
         <id>init_4</id>
         <name>Masters of Commerce</name>
         <type>degree</type>
