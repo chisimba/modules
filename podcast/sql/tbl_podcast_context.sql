@@ -32,7 +32,7 @@ $name = 'tbl_podcast_context_idx';
 $indexes = array(
                 'fields' => array(
                 	'podcastId' => array(),
-                    'contextId' => array()
+                    'contextcode' => array()
                 )
         );
 ?>
