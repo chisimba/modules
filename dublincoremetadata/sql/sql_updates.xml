@@ -20,16 +20,14 @@
 		    			<type>clob</type>
     				</definition>
     			</dc_title>
-			</change>
-        	<change>
+			
         		<dc_subject>
         		<type>clob</type>
         			<definition>
 		    			<type>clob</type>
     				</definition>
     			</dc_subject>
-			</change>
-        	<change>
+			
         		<dc_description>
         		<type>clob</type>
         			<definition>
