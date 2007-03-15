@@ -63,7 +63,7 @@ if (count($contextList) > 0)
 		$str .= $featureBox->show($title, $content ).'<hr />';
 	}
 } else {
-	$str .= '<div align="center" style="font-size:large;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">You are associated with any courses</div>';
+	$str .= '<div align="center" style="font-size:large;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">You are not associated with any courses</div>';
 }
 
 
