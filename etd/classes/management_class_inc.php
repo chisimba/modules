@@ -345,6 +345,19 @@ class management extends object
         $lbKeywords = $this->objLanguage->languageText('word_keywords');
         $btnSave = $this->objLanguage->languageText('word_save');
         $btnCancel = $this->objLanguage->languageText('word_cancel');
+        $lbConfigure = $this->objLanguage->languageText('mod_etd_configuredegreeinformation', 'etd');
+        $errNoTitle = $this->objLanguage->languageText('mod_etd_errnotitle', 'etd');
+        $errNoAuthor = $this->objLanguage->languageText('mod_etd_errnoauthor', 'etd');
+        $errNoInstitution = $this->objLanguage->languageText('mod_etd_errnoinstitution', 'etd');
+        $errNoKeywords = $this->objLanguage->languageText('mod_etd_erraddkeywords', 'etd');
+
+        /* Create the icon to add / edit faculties, etc
+        $this->objIcon->setIcon('organiseadmin');
+        $this->objIcon->title = $lbConfigure;
+        $objLink = new link('#');
+        $objLink->link = $this->objIcon->show();
+        $icConfig = $objLink->show();
+        */
 
         $this->objHead->str = $head;
         $this->objHead->type = 1;
@@ -442,21 +455,11 @@ class management extends object
         $objInput = new textinput('institution', $institution, '', 60);
         $drpInstitution = $objInput->show();
         $objTable->addRow(array($objLabel->show(), $drpInstitution));
-//
-//        // Grantor
-//        $grantor = '';
-//        if(!empty($data['thesis_degree_grantor'])){
-//            $grantor = $data['thesis_degree_grantor'];
-//        }
-//        $objLabel = new label($lbGrantor.': ', 'input_grantor');
-//        $objInput = new textinput('grantor', $grantor, '', 60);
-//        $drpGrantor = $objInput->show();
-//        $objTable->addRow(array($objLabel->show(), $drpGrantor));
 
         $objTable->addRow(array('<hr />', '<hr />'));
 
         // language
-        $language = '';
+        $language = 'English';
         if(!empty($data['dc_language'])){
             $language = $data['dc_language'];
         }
@@ -617,6 +620,12 @@ class management extends object
         $objForm = new form('editresource', $this->uri(array('action' => 'savesubmissions', 'mode' => $mode, 'nextmode' => $nextmode)));
         $objForm->addToForm($formStr);
         $objForm->addToForm($hidden);
+        
+        // Title, author, keywords and institution are required
+        $objForm->addRule('title', $errNoTitle, 'required');
+        $objForm->addRule('author', $errNoAuthor, 'required');
+        $objForm->addRule('institution', $errNoInstitution, 'required');
+        $objForm->addRule('keywords', $errNoKeywords, 'required');
         $str .= $objForm->show();
 
         return $str;
@@ -645,6 +654,7 @@ class management extends object
         $fields['dc_coverage'] = $this->getParam('country');
         $fields['dc_source'] = $this->getParam('source');
         $fields['dc_contributor'] = $this->getParam('contributor');
+        $fields['dc_contributor_role'] = $this->getParam('contributorrole');
         $fields['dc_publisher'] = $this->getParam('publisher');
         $fields['dc_format'] = $this->getParam('format');
         $fields['dc_relationship'] = $this->getParam('relationship');

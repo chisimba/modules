@@ -97,6 +97,9 @@ class dbDegrees extends dbTable
                 $objDrop->addOption($item['name'], $item['name']);
             }
         }
+        if($type == 'department'){
+            $objDrop->addOption('', ' --- ');
+        }
         $objDrop->setSelected($select);
         
         return $objDrop->show();

@@ -298,6 +298,8 @@ class dbsubmissions extends dbtable
         
         $data = $this->getArray($sqlNorm.$sql);
         
+        
+        
         return $data;
     }
 
