@@ -60,7 +60,14 @@ class realtime extends controller
     * @access public
     */
     public $voiceURL;
-
+	
+	/**
+	 * @access public
+	 * @var contexctcode
+	 */
+	public $contextCode;
+	
+	public $baseModuleURL;
 
     /**
      * Constructor method to instantiate objects and get variables
@@ -71,7 +78,7 @@ class realtime extends controller
         $this->objLog = $this->newObject('logactivity', 'logger');
         //Log this module call
         $this->objLog->log();
-
+		$this->objrealtime =& $this->getObject('dbrealtime');
         // classes we need
         $this->objUser = $this->newObject('user', 'security');
         $this->userId = $this->objUser->userId();
@@ -84,12 +91,14 @@ class realtime extends controller
             $this->userLevel = 'student';
         }else{
             $this->userLevel = 'guest';
-        }        
-        
+        }   
+        $this->objContext = $this->getObject('dbcontext', 'context');     
+        $this->contextCode = $this->objContext->getContextCode();
         $this->objConfig = $this->getObject('altconfig', 'config');
         $location = "http://". $_SERVER['HTTP_HOST'];
         $this->whiteboardURL = $location.$this->getResourceUri('whiteboard', 'realtime');
         $this->voiceURL = $location.$this->getResourceUri('voice', 'realtime');
+        $this->baseModuleURL = $location."/chisimba_framework/app/index.php?module=realtime";
     }
     
     /**
@@ -112,11 +121,51 @@ class realtime extends controller
 		
 		  case 'whiteboard':
 		     return "realtime-whiteboard_tpl.php";
-	
+		  case 'requesttoken':
+		  	 return $this->request_Token($this->getParam('userid'),
+		  	 							$this->getParam('userlevel'),
+		  	 							$this->getParam('contextcode'));
+		  case 'releasetoken':
+		  	return $this->releaseToken($this->userId, $this->userLevel, $this->contextCode); 
+		  case 'startconversation':
+		  	return $this->startConversation($this->userId, $this->userLevel, $this->contextCode);								
 		  default:
 		     return "realtime_tpl.php";
 		}
 	
+    }
+    
+    function request_Token($userid, $userlevel, $contextcode)
+    {
+    	if(empty($userid) || empty($userlevel) || empty($contextcode)){
+    		return "realtime_tpl.php";
+    	}else{
+    		$hasToken = $this->objrealtime->requestToken($userid, $userlevel, $contextcode);
+    		$this->setVar('hastoken', $hasToken);
+    		return "redirect_tpl.php";
+    	}
+    }
+    
+    function releaseToken($userid, $userlevel, $contextcode)
+    {
+    	if(empty($userid) || empty($userlevel) || empty($contextcode)){
+    		return "realtime_tpl.php";
+    	}else{
+    		$hasToken = $this->objrealtime->releaseToken();
+    		$this->setVar('hastoken', $hasToken);
+    		return "redirect_tpl.php";
+    	}
+    }
+    
+    function startConversation($userid, $userlevel, $contextcode)
+    {
+    	if(empty($userid) || empty($userlevel)){
+    		return "realtime_tpl.php";
+    	}else{
+    		$hasToken = $this->objrealtime->startConversation($userid, $userlevel, $contextcode);
+    		$this->setVar('hastoken', $hasToken);
+    		return "redirect_tpl.php";
+    	}
     }
 }
 ?>
