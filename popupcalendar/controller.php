@@ -36,7 +36,12 @@ class popupcalendar extends controller
     */
     public function dispatch($action)
     {
-        switch ($action) {
+        switch ($action){
+            case 'buildcal':
+                $day = $this->getParam('day');
+                $month = $this->getParam('month');
+                $year = $this->getParam('year');
+                return $this->datePickajax->buildCal($day, $month, $year, 'js');
             default:
                 $field = $this->getParam('field', NULL);
                 $date = $this->getParam('date', NULL);

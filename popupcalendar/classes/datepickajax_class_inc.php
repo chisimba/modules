@@ -58,8 +58,8 @@ class datepickajax extends object
         $this->objLanguage = &$this->getObject('language', 'language');
         $this->objIcon = &$this->getObject('geticon', 'htmlelements');
         $this->objDate = &$this->newObject('datetime', 'utilities');
-        //$this->loadClass('xajax', 'ajaxwrapper');
-        $this->loadClass('xajaxresponse', 'ajaxwrapper');
+//        $this->loadClass('xajax', 'ajaxwrapper');
+//        $this->loadClass('xajaxresponse', 'ajaxwrapper');
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('htmltable', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
@@ -93,7 +93,8 @@ class datepickajax extends object
         $this->objIcon->extra = ' height="20" width="20"';
         $objLink = &new link('#');
         $objLink->link = $this->objIcon->show();
-        $objLink->extra = "onclick=\"xajax_buildCal($day, $nxMonth, $year); xajax_insertDate($day, $nxMonth, $year);\"";
+//        $objLink->extra = "onclick=\"xajax_buildCal($day, $nxMonth, $year); xajax_insertDate($day, $nxMonth, $year);\"";
+        $objLink->extra = ' onclick="javascript:jsBuildCal('.$day.', '.$nxMonth.', '.$year.'); jsInsertDate('.$day.', '.$nxMonth.', '.$year.')"';
         $icon = $objLink->show();
 
         $this->objIcon->setIcon('last');
@@ -101,7 +102,8 @@ class datepickajax extends object
         $this->objIcon->extra = ' height="20" width="20"';
         $objLink = &new link('#');
         $objLink->link = $this->objIcon->show();
-        $objLink->extra = "onclick=\"xajax_buildCal($day, $month, $nxYear); xajax_insertDate($day, $month, $nxYear);\"";
+//        $objLink->extra = "onclick=\"xajax_buildCal($day, $month, $nxYear); xajax_insertDate($day, $month, $nxYear);\"";
+        $objLink->extra = ' onclick="javascript:jsBuildCal('.$day.', '.$month.', '.$nxYear.'); jsInsertDate('.$day.', '.$month.', '.$nxYear.')"';
         $icon.= $objLink->show();
 
         return $icon;
@@ -132,7 +134,8 @@ class datepickajax extends object
         $this->objIcon->extra = ' height="20" width="20"';
         $objLink = &new link('#');
         $objLink->link = $this->objIcon->show();
-        $objLink->extra = "onclick=\"xajax_buildCal($day, $month, $prYear); xajax_insertDate($day, $month, $prYear);\"";
+//        $objLink->extra = "onclick=\"xajax_buildCal($day, $month, $prYear); xajax_insertDate($day, $month, $prYear);\"";
+        $objLink->extra = ' onclick="javascript:jsBuildCal('.$day.', '.$month.', '.$prYear.'); jsInsertDate('.$day.', '.$month.', '.$prYear.')"';
         $icon = $objLink->show();
 
         $this->objIcon->setIcon('prev');
@@ -140,7 +143,8 @@ class datepickajax extends object
         $this->objIcon->extra = ' height="20" width="20"';
         $objLink = &new link('#');
         $objLink->link = $this->objIcon->show();
-        $objLink->extra = "onclick=\"xajax_buildCal($day, $prMonth, $year); xajax_insertDate($day, $prMonth, $year);\"";
+//        $objLink->extra = "onclick=\"xajax_buildCal($day, $prMonth, $year); xajax_insertDate($day, $prMonth, $year);\"";
+        $objLink->extra = ' onclick="javascript:jsBuildCal('.$day.', '.$prMonth.', '.$year.'); jsInsertDate('.$day.', '.$prMonth.', '.$year.')"';
         $icon.= $objLink->show();
 
         return $icon;
@@ -166,7 +170,8 @@ class datepickajax extends object
             $newmonth = $key+1;
             $objLink = &new link('#');
             $objLink->link = $item;
-            $objLink->extra = "onclick=\"xajax_buildCal($day, $newmonth, $year); xajax_insertDate($day, $newmonth, $year);\"";
+//            $objLink->extra = "onclick=\"xajax_buildCal($day, $newmonth, $year); xajax_insertDate($day, $newmonth, $year);\"";
+        $objLink->extra = ' onclick="javascript:jsBuildCal('.$day.', '.$newmonth.', '.$year.'); jsInsertDate('.$day.', '.$newmonth.', '.$year.')"';
             $str.= $objLink->show();
         }
 
@@ -226,7 +231,7 @@ class datepickajax extends object
     * @param string $mnth The selected month
     * @param string $year The selected year
     * @return The XML for the function
-    */
+    *
     public function insertDate($mnDay, $mnth, $year)
     {
         $objResponse = &new xajaxResponse();
@@ -243,7 +248,7 @@ class datepickajax extends object
     * @param string $hour The selected hour
     * @param string $min The selected minutes
     * @return The XML for the function
-    */
+    *
     public function insertTime($hour, $min)
     {
         $objResponse = &new xajaxResponse();
@@ -262,9 +267,9 @@ class datepickajax extends object
     * @param string $year The default year
     * @return The XML for the function
     */
-    public function buildCal($day = NULL, $mnth = NULL, $year = NULL)
+    public function buildCal($day = NULL, $mnth = NULL, $year = NULL, $call = NULL)
     {
-        $objResponse = &new xajaxResponse();
+        //$objResponse = &new xajaxResponse();
         if (is_null($day)) {
             $day = date('d');
         }
@@ -352,7 +357,8 @@ class datepickajax extends object
                 } else {
                     // Make the day a link
                     $objLink = &new link('#');
-                    $objLink->extra = "onclick=\"xajax_buildCal($mnDay, $mnth, $year); xajax_insertDate($mnDay, $mnth, $year);\"";
+//                    $objLink->extra = "onclick=\"xajax_buildCal($mnDay, $mnth, $year); xajax_insertDate($mnDay, $mnth, $year);\"";
+        $objLink->extra = ' onclick="javascript:jsBuildCal('.$mnDay.', '.$mnth.', '.$year.'); jsInsertDate('.$mnDay.', '.$mnth.', '.$year.')"';
                     $objLink->link = $mnDay;
                     $link = $objLink->show();
                 }
@@ -372,9 +378,14 @@ class datepickajax extends object
         $wkDay = $weekFull[$numDay-1];
         $str.= '<p align = "center"><b><i> '.$wkDay.' '.$show.'</i></b></p>';
         $this->str = $str;
-        $objResponse->addAssign('calDiv', 'innerHTML', $str);
+        if($call != 'js'){
+            return $str;
+        }else{
+            echo $str;
+        }
+//        $objResponse->addAssign('calDiv', 'innerHTML', $str);
 
-        return $objResponse->getXML();
+//        return $objResponse->getXML();
     }
 
     /**
@@ -387,7 +398,7 @@ class datepickajax extends object
     */
     public function buildTime($hour, $min)
     {
-        $objResponse = &new xajaxResponse();
+        //$objResponse = &new xajaxResponse();
         $field = $this->session('field');
         $defaultDate = $this->session($field.'_defaultDate');
         if ($defaultDate != NULL) {
@@ -408,7 +419,8 @@ class datepickajax extends object
             $objDrop->addOption($i, $i.'&#160;');
         }
         $objDrop->setSelected($hour);
-        $objDrop->extra = "onchange = \"xajax_insertTime($hrSelect, $mnSelect);\"";
+//        $objDrop->extra = "onchange = \"xajax_insertTime($hrSelect, $mnSelect);\"";
+        $objDrop->extra = 'onchange="javascript:jsInsertTime('.$hrSelect.', '.$mnSelect.');"';
         $timeStr.= $objDrop->show();
 
         $objDrop = &new dropdown('min');
@@ -419,15 +431,16 @@ class datepickajax extends object
             $objDrop->addOption($i, $i.'&#160;');
         }
         $objDrop->setSelected($min);
-        $objDrop->extra = "onchange = \"xajax_insertTime($hrSelect, $mnSelect);\"";
+//        $objDrop->extra = "onchange = \"xajax_insertTime($hrSelect, $mnSelect);\"";
+        $objDrop->extra = 'onchange="javascript:jsInsertDate('.$hrSelect.', '.$mnSelect.');"';
         $timeStr.= '<b>:</b>&#160;&#160;'.$objDrop->show();
 
         $objForm = &new form('seltime', $this->uri(NULL));
         $objForm->addToForm($timeStr);
         $this->timeStr = $objForm->show();
-        $objResponse->addAssign('timeDiv', 'innerHTML', $objForm->show());
+        //$objResponse->addAssign('timeDiv', 'innerHTML', $objForm->show());
 
-        return $objResponse->getXML();
+        //return $objResponse->getXML();
     }
 
     /**
@@ -484,33 +497,33 @@ class datepickajax extends object
     public function showCal()
     {
         //$xajax = &new xajax($this->uri(array()));
-		$xajax = &$this->getObject('xajax', 'ajaxwrapper');
-		$xajax->setRequestUri($this->uri(array()));
+//		$xajax = &$this->getObject('xajax', 'ajaxwrapper');
+//		$xajax->setRequestUri($this->uri(array()));
         // Register functions
-        $xajax->registerFunction(array(
-            $this,
-            "buildCal"
-        ));
-        $xajax->registerFunction(array(
-            $this,
-            "insertDate"
-        ));
+//        $xajax->registerFunction(array(
+//            $this,
+//            "buildCal"
+//        ));
+//        $xajax->registerFunction(array(
+//            $this,
+//            "insertDate"
+//        ));
         $field = $this->session('field');
         $showTime = $this->session($field.'_showTime');
         if ($showTime) {
-            $xajax->registerFunction(array(
-                $this,
-                "buildTime"
-            ));
-            $xajax->registerFunction(array(
-                $this,
-                "insertTime"
-            ));
+//            $xajax->registerFunction(array(
+//                $this,
+//                "buildTime"
+//            ));
+//            $xajax->registerFunction(array(
+//                $this,
+//                "insertTime"
+//            ));
         }
         // XAJAX method to be called
-        $xajax->processRequests();
+//        $xajax->processRequests();
         // Send JS to header
-        $this->appendArrayVar('headerParams', $xajax->getJavascript());
+//        $this->appendArrayVar('headerParams', $xajax->getJavascript());
         // Set up initial page
         $initDate = $this->setUpInfo();
         $arrDateTime = explode(' ', $initDate);

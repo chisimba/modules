@@ -1,10 +1,19 @@
 <div style="padding:5px">
 <?php
+
 /**
 * @package popupcalendar
 * Template to display the date picker
 */
+
+$this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
+$this->objScriptaculous->show();
+
+$headerParams = $this->getJavascriptFile('jsFunctions.js', 'popupcalendar');
+$this->appendArrayVar('headerParams', $headerParams);
+
 // Suppress page elements
+$this->setVar('pageSuppressXML', TRUE);
 $this->setVar('pageSuppressContainer', TRUE);
 $this->setVar('pageSuppressBanner', TRUE);
 $this->setVar('pageSuppressToolbar', TRUE);
