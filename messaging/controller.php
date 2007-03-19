@@ -279,6 +279,8 @@ class messaging extends controller
                 $message = $this->objLanguage->code2Txt('mod_messaging_userexit', 'messaging', $array);
                 $this->dbMessages->addChatMessage($message, TRUE);
                 $this->unsetSession('chat_room_id');
+                $this->unsetSession('is_moderator');
+                $this->unsetSession('message_counter');
                 return $this->nextAction('');
                 break;
                 
@@ -364,10 +366,9 @@ class messaging extends controller
                 
             // display a message to the user if banned
             case 'getbanmsg':
-                $userId = $this->getParam('userId');
                 $type = $this->getParam('type');
                 $date = $this->getParam('date');
-                return $this->objDisplay->divBanMsg($userId, $type, $date);
+                return $this->objDisplay->divBanMsg($type, $date);
                 break;
 
             // display the popup page to unban users
@@ -423,7 +424,7 @@ class messaging extends controller
                 
             // submit the chat message data
             case 'sendchat':            
-                $message = $this->getParam('message');
+                $message = strip_tags(rawurldecode($this->getParam('message')));
                 // check to ensure closing tags are in place
                 $codes = array(
                     '[B]' => '[/B]',

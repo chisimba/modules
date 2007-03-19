@@ -1,14 +1,14 @@
 /**
-* =========================================
+* ================================
 *  Scriptaculous global variables
-* =========================================
+* ================================
 */
 var URL = "index.php";
 
 /**
-* =========================================
-*  Scriptaculous onload functions
-* =========================================
+* =====================================
+*  Scriptaculous page onload functions
+* =====================================
 */
 /**
 * Function to initialise onload events
@@ -19,9 +19,9 @@ function jsOnloadChat(){
 }
 
 /**
-* =========================================
-*  Js functions for common use
-* =========================================
+* ===========================================
+*  Js function to show or hide the help divs
+* ===========================================
 */
 /**
 * Function to display or hide the help div
@@ -30,7 +30,7 @@ function jsOnloadChat(){
 function jsShowHelp(el)
 {
     if(el.style.display == "none"){
-        new Effect.Appear(el.id);
+        Element.show(el.id);
         window.setTimeout("Element.hide('"+el.id+"')",5000);        
     }else{
         Element.hide(el.id);
@@ -42,16 +42,15 @@ function jsShowHelp(el)
 *  Js functions for the smiley feature box
 * =========================================
 */
-
 /**
-* Function to insert the smiley code form the smiley block into the chat text input box 
+* Function to insert the smiley code from the smiley block into the chat box 
 * @param string el_id: The smiley code - id of the clicked smiley
 */            
 function jsInsertBlockSmiley(el_id)
 {
     var arrNames = new Array("angry", "cheeky", "confused", "cool", "evil", "idea", "grin", "sad", "smile", "wink");            
     var arrCodes = new Array("X-(", ":P", ":-/", "B-)", ">:)", "*-:)", ":D", ":(", ":)", ";)");
-    var el_Message = document.getElementById("input_message");
+    var el_Message = $("input_message");
     for(i = 0; i <= arrNames.length-1; i++){
         if(arrNames[i] == el_id){
             if(el_Message.value == ""){
@@ -70,14 +69,14 @@ function jsInsertBlockSmiley(el_id)
 * ===============================================
 */
 /**
-* Function to insert the smiley code form the smiley popup into the chat text input box 
+* Function to insert the smiley code form the smiley popup into the chat box 
 * @param string el_id: The smiley code - id of the clicked smiley
 */            
 function jsInsertPopupSmiley(el_id)
 {
     var arrNames = new Array("alien" ,"angel", "angry", "applause", "black_eye", "bye", "cheeky", "chicken", "clown", "confused", "cool", "cowboy", "crazy", "cry", "dance_of_joy", "doh", "drool", "embarrassed", "evil", "frustrated", "grin", "hug", "hypnotised", "idea", "kiss", "laugh", "love", "nerd", "not_talking", "praying", "raise_eyebrow", "roll_eyes", "rose", "sad", "shame_on_you", "shocked", "shy", "sick", "skull", "sleeping", "smile", "straight_face", "thinking", "tired", "victory", "whistle", "wink", "worried");
     var arrCodes = new Array(">-)", "O:)", "X-(", "=D>", "b-(", ":\"(", ":p", "~:>", ":o)", ":-/", "B-)", "<):)", "8-}", ":((", "/:D/", "#-o", "=P~", ":\">", ">:)", ":-L", ":D", ">:D<", "@-)", "*-:)", ":*", ":))", ":x", ":-B", "[-(", "[-o<", "/:)", "8-|", "@};-", ":(", "[-X", ":O", ";;)", ":-&", "8-X", "I-)", ":)", ":|", ":-?", "(:|", ":)>-", ":-\"", ";)", ":-s");                        
-    var el_Message = opener.document.getElementById("input_message");
+    var el_Message = opener.$("input_message");
     for(i = 0; i <= arrNames.length-1; i++){
         if(arrNames[i] == el_id){
             if(el_Message.value == ""){
@@ -108,25 +107,26 @@ function jsGetOnlineUsers()
 
 /*
 * Function to repeat the online users ajax call
+* also handles the banned user display
 */
 function jsUserListTimer(){
-    var el_Banned = document.getElementById("input_banned");
-    var el_UserId = document.getElementById("input_userId");
-    var el_Type = document.getElementById("input_type");
-    var el_Date = document.getElementById("input_date");
+    var el_Banned = $("input_banned");
+    var el_UserId = $("input_userId");
+    var el_Type = $("input_type");
+    var el_Date = $("input_date");
     if(el_Banned.value == "Y"){                    
         var target = "bannedDiv";
-        var pars = "module=messaging&action=getbanmsg&userId="+el_UserId.value+"&type="+el_Type.value+"&date="+el_Date.value;
+        var pars = "module=messaging&action=getbanmsg&type="+el_Type.value+"&date="+el_Date.value;
         var myAjax = new Ajax.Updater(target, URL, {method: "post", parameters: pars});
         if(el_Type.value != 2){
-            new Effect.Appear("bannedDiv");
+            Element.show("bannedDiv");
             Element.hide("sendDiv");
         }else{
-            new Effect.Appear("bannedDiv");
-            new Effect.Appear("sendDiv");
+            Element.show("bannedDiv");
+            Element.show("sendDiv");
         }
     }else{
-        new Effect.Appear("sendDiv");
+        Element.show("sendDiv");
         Element.hide("bannedDiv");
     }                
     var userTimer = setTimeout("jsGetOnlineUsers()", 3000);
@@ -152,13 +152,14 @@ function jsGetChat()
 */
 function jsChatTimer()
 {
-    var el_ChatDiv = document.getElementById("chatDiv");
+    var el_ChatDiv = $("chatDiv");
     el_ChatDiv.scrollTop = el_ChatDiv.scrollHeight
     var chatTimer = setTimeout("jsGetChat()", 3000);
 }
 
 /*
-* Function to change the send action
+* Function to trap the enter key
+* @param event e: The onkeyup event
 */
 function jsTrapKeys(e)
 {
@@ -183,23 +184,38 @@ function jsTrapKeys(e)
 }
 
 /*
-* Function to send the chat message
+* Function to send the chat message via ajax
 */
 function jsSendMessage()
 {
-    <?php
-    echo "here";
-    ?>
-    alert("here");
-    var el_Message = document.getElementById("input_message");
-    var pars = "module=messaging&action=sendchat&message="+el_Message.value;
-    var myAjax = new Ajax.Request(URL, {method: "post", parameters: pars});    
+    var el_Message = $("input_message");
+    var message = encodeURIComponent(el_Message.value);
+    var pars = "module=messaging&action=sendchat&message="+message;
+    var myAjax = new Ajax.Request(URL, {method: "post", parameters: pars, onLoading:jsShowLoading, onComplete: jsHideLoading}); 
+    el_Message.value = "";
+    el_Message.focus();   
+}
+
+/*
+* Function to show the loading icon
+*/
+function jsShowLoading()
+{
+    Element.show("iconDiv");
+}
+
+/*
+* Function to hide the loading icon
+*/
+function jsHideLoading()
+{
+    Element.hide("iconDiv");
 }
 
 /**
-* ========================================
+* =====================================
 *  Js functions for the ban user popup
-* ========================================
+* =====================================
 */
 /*
 * Function to validate the ban user form
@@ -209,7 +225,7 @@ function jsSendMessage()
 function jsValidateBan(warn_err, ban_err)
 {
     var el_Type = document.getElementsByName("type");
-    var el_Reason = document.getElementById("input_reason");
+    var el_Reason = $("input_reason");
     var len = el_Type.length;
     for(var i = 0; i <= len-1; i++){
         if(el_Type[i].value == 2){
@@ -244,20 +260,18 @@ function jsValidateBan(warn_err, ban_err)
 */
 function jsBanLengthDiv(el)
 {
-    var el_TypeFeature = document.getElementById("typeFeature");
-    var el_LengthFeature = document.getElementById("lengthFeature");
-    var el_TypeDiv = document.getElementById("typeDiv");
-    var el_LengthDiv = document.getElementById("lengthDiv");
+    var el_TypeFeature = $("typeFeature");
+    var el_LengthFeature = $("lengthFeature");
+    var el_TypeDiv = $("typeDiv");
+    var el_LengthDiv = $("lengthDiv");
     if(el.value == 0){
         el_TypeDiv.style.width = "49%";
         el_LengthDiv.style.width = "49%";
-        el_LengthDiv.style.visibility = "visible";
-        el_LengthDiv.style.display = "block";
+        Element.show(el_LengthDiv.id)
         xHeight(el_LengthFeature, xHeight(el_TypeFeature));
     }else{
         el_TypeDiv.style.width = "100%";
-        el_LengthDiv.style.visibility = "hidden";
-        el_LengthDiv.style.display = "none";
+        Element.hide(el_LengthDiv.id)
     }    
 }
 
@@ -291,19 +305,17 @@ function jsInviteUserList()
 * ========================================
 */
 /*
-* Function to search for users using an ajax call 
+* Function to show hide the log dates div
 * @param object el: The log type radio
 */            
 function jsLogDateDiv(el)
 {        
-    var el_DateDiv = document.getElementById("dateDiv");
+    var el_DateDiv = $("dateDiv");
     if(el.value == 2){
-        el_DateDiv.style.visibility = "visible";
-        el_DateDiv.style.display = "block";
+        Element.show(el_DateDiv.id);
         window.resizeTo(500, 420);
     }else{
-        el_DateDiv.style.visibility = "hidden";
-        el_DateDiv.style.display = "none";
+        Element.hide(el_DateDiv.id);
         window.resizeTo(500, 280);
     }
 }
@@ -312,14 +324,14 @@ function jsLogDateDiv(el)
 * Function to validate chat log dates 
 * @param string err_start: The start date error message
 * @param string err_end: The end date error message
-* @param string err_date: The date comparison error message
+* @param string err_date: The date comparision error message
 */            
 function jsValidateDate(err_start, err_end, err_date)
 {
     var el_Type = document.getElementsByName("type");
-    var el_InputStart = document.getElementById("input_start");
-    var el_InputEnd = document.getElementById("input_end");
-    var el_Log = document.getElementById("form_log");
+    var el_InputStart = $("input_start");
+    var el_InputEnd = $("input_end");
+    var el_Log = $("form_log");
     var len = el_Type.length;
     if(el_Type[1].checked){
         if(el_InputStart.value == ""){
@@ -362,3 +374,51 @@ function jsValidateDate(err_start, err_end, err_date)
     return true;   
 }
 
+/**
+* ======================================
+*  Js functionfor the invite user popup
+* ======================================
+*/
+/*
+* Function to validate the invite user input
+* @param string err_invite: The user invite error message
+*/            
+function jsValidateInvite(err_invite)
+{
+    var el_UserId = $("input_userId");
+    var el_Username = $("input_username");
+    if(el_UserId.value == ""){
+        alert(err_invite);
+        el_Username.value = "";
+        el_Username.focus();
+        return false;
+    }else{
+        $("form_invite").submit();
+    }    
+}
+
+/**
+* ======================================
+*  Js functionfor the remove user popup
+* ======================================
+*/
+/*
+* Function to validate the removed user form
+* @param string err_remove: The user remove error message
+*/            
+function jsValidateRemove(err_remove)
+{
+    var el_checkbox = document.getElementsByName("userId[]");
+    var myValue = false;
+    for(var i = 0; i<el_checkbox.length; i++){
+        if(el_checkbox[i].checked == true){
+            myValue = true;
+        }
+    }
+    if(myValue){
+        $("form_remove").submit();
+    }else{
+        alert(err_remove);
+        return false;
+    }
+}
