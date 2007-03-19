@@ -20,15 +20,35 @@ $voice .= "</applet> ";
 
 $voiceBox = $this->objFeaturebox->show($voiceTitle, $voice);
 
-$cssLayout=&$this->newObject('csslayout','htmlelements');
-$cssLayout->setNumColumns(3);
+
 
 $objBlocks = $this->newObject('blocks', 'blocks');
 $chatBlock = $objBlocks->showBlock('contextchat', 'messaging');
+/*
 
+$cssLayout=&$this->newObject('csslayout','htmlelements');
+$cssLayout->setNumColumns(3);
 $cssLayout->setLeftColumnContent($chatBlock);
 $cssLayout->setMiddleColumnContent($whiteboard);
 $cssLayout->setRightColumnContent($voiceBox);
 
 echo $cssLayout->show();
+*/
+$objLayer = $this->newObject('layer', 'htmlelements');
+
+$objLayer->str = $voiceBox.$chatBlock;
+$objLayer->border = '; width: 40%; float: left';
+$layer1 = $objLayer->show();
+
+
+$objLayer->str = $whiteboard;
+$objLayer->border = '; width: 60%;';
+$objLayer->align = 'center';
+$layer2 = $objLayer->show();
+
+$objLayer->str = '';
+$objLayer->border = '; clear: both;';
+$layer3 = $objLayer->show();
+
+echo $layer1.$layer2.$layer3;
 ?>
