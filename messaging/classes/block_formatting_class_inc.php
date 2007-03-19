@@ -54,20 +54,28 @@ class block_formatting extends object
         $this->objLanguage = $this->getObject('language', 'language');
 
         // language items
-        $this->heading = $this->objLanguage->languageText('mod_messaging_wordformatting', 'messaging');
+        $title = $this->objLanguage->languageText('mod_messaging_wordformatting', 'messaging');
         $label = $this->objLanguage->languageText('mod_messaging_formatting', 'messaging');  
-        $help = $this->objLanguage->languageText('mod_messaging_helpclick', 'messaging');
+        $help = $this->objLanguage->languageText('mod_messaging_help', 'messaging');
         
         // help icon
         $this->objIcon->setIcon('help_small');
         $this->objIcon->align = 'top';
         $this->objIcon->title = $help;
-        $this->objIcon->extra = ' onclick="alert(\''.$label.'\')"';
-        $helpIcon = '<a href="#">'.$this->objIcon->show().'</a>';
+        $this->objIcon->extra = 'style="cursor: help;" onclick="javascript:
+            var el_Div = document.getElementById(\'formatHelpDiv\');
+            jsShowHelp(el_Div);"';
+        $helpIcon = $this->objIcon->show();
+        
+        // help layer
+        $objLayer = new layer();
+        $objLayer->id = 'formatHelpDiv';
+        $objLayer->display = 'none';
+        $objLayer->addToStr('<font size="1">'.$label.'</font>');
+        $helpLayer = $objLayer->show();
         
         // title
-        $this->title = $this->heading.'&nbsp;'.$helpIcon;
-        
+        $this->title = $title.'&nbsp;'.$helpIcon.$helpLayer;                
     }
 
     /**
@@ -78,31 +86,38 @@ class block_formatting extends object
     */
     public function show()
 	{
+        // language items
+        $bold = $this->objLanguage->languageText('mod_messaging_bold', 'messaging');
+        $underline = $this->objLanguage->languageText('mod_messaging_underline', 'messaging');
+        $italics = $this->objLanguage->languageText('mod_messaging_italics', 'messaging');
+        $colour = $this->objLanguage->languageText('mod_messaging_colour', 'messaging');
+        $size = $this->objLanguage->languageText('mod_messaging_size', 'messaging');
+        
         // main table
         $objTable = new htmltable();
         $objTable->cellspacing = '2';
         $objTable->cellpadding = '2';
         
         $objTable->startRow();
-        $objTable->addCell('<font class="warning"><b>[B]</b></font>&nbsp;<b>'.$this->heading.'</b>&nbsp;<font class="warning"><b>[/B]</b></font>', '', '', '', '', '');
+        $objTable->addCell('[B]&nbsp;<b>'.$bold.'</b>&nbsp;[/B]', '', '', '', '', '');
         $objTable->endRow();
         $objTable->startRow();
-        $objTable->addCell('<font class="warning"><b>[U]</b></font>&nbsp;<u>'.$this->heading.'</u>&nbsp;<font class="warning"><b>[/U]</b></font>', '', '', '', '', '');
+        $objTable->addCell('[U]&nbsp;<u>'.$underline.'</u>&nbsp;[/U]', '', '', '', '', '');
         $objTable->endRow();
         $objTable->startRow();
-        $objTable->addCell('<font class="warning"><b>[I]</b></font>&nbsp;<i>'.$this->heading.'</i>&nbsp;<font class="warning"><b>[/I]</b></font>', '', '', '', '', '');
+        $objTable->addCell('[I]&nbsp;<i>'.$italics.'</i>&nbsp;[/I]', '', '', '', '', '');
         $objTable->endRow();
         $objTable->startRow();
-        $objTable->addCell('<font class="warning"><b>[RED]</b></font>&nbsp;<font style="color: red;">'.$this->heading.'</font>&nbsp;<font class="warning"><b>[/RED]</b></font>', '', '', '', '', '');
+        $objTable->addCell('[RED]&nbsp;<font style="color: red;">'.$colour.'</font>&nbsp;[/RED]', '', '', '', '', '');
         $objTable->endRow();
         $objTable->startRow();
-        $objTable->addCell('<font class="warning"><b>[BLUE]</b></font>&nbsp;<font style="color: blue;">'.$this->heading.'</font>&nbsp;<font class="warning"><b>[/BLUE]</b></font>', '', '', '', '', '');
+        $objTable->addCell('[BLUE]&nbsp;<font style="color: blue;">'.$colour.'</font>&nbsp;[/BLUE]', '', '', '', '', '');
         $objTable->endRow();
         $objTable->startRow();
-        $objTable->addCell('<font class="warning"><b>[S1]</b></font>&nbsp;<font size="2">'.$this->heading.'</font>&nbsp;<font class="warning"><b>[/S]</b></font>', '', '', '', '', '');
+        $objTable->addCell('[S1]&nbsp;<font size="2">'.$size.'</font>&nbsp;[/S1]', '', '', '', '', '');
         $objTable->endRow();
         $objTable->startRow();
-        $objTable->addCell('<font class="warning"><b>[S2]</b></font>&nbsp;<font size="3">'.$this->heading.'</font>&nbsp;<font class="warning"><b>[/S]</b></font>', '', '', '', '', '');
+        $objTable->addCell('[S2]&nbsp;<font size="3">'.$size.'</font>&nbsp;[/S2]', '', '', '', '', '');
         $objTable->endRow();
         $formatTable = $objTable->show();
         $str = $formatTable;  

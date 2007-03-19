@@ -10,20 +10,20 @@ $fields = array(
         'type' => 'text',
         'length' => 32,
         ),
-    'room_id' => array( // room banned from
+    'room_id' => array( // the room the user is in
         'type' => 'text',
         'length' => 32,
         ),
-    'user_id' => array( // user banned
+    'user_id' => array( // the user id
         'type' => 'text',
         'length' => 32,
         ),
-    'ban_reason' => array( // the reason the user is banned
-        'type' => 'clob',
-        ),
-    'ban_type' => array( // tempory or indefinite ban
+    'ban_type' => array( // tempory, indefinite ban or warning
         'type' => 'integer',
         'length' => 1,
+        ),
+    'ban_reason' => array( // the reason the user is banned or warned
+        'type' => 'clob',
         ),
     'ban_start' => array( // from when does the tempory ban start
         'type' => 'timestamp',
@@ -31,13 +31,6 @@ $fields = array(
     'ban_stop' => array( // when does the tempory ban stop
         'type' => 'timestamp',
         ),  
-    'creator_id' => array(
-        'type' => 'text',
-        'length' => 32,
-        ),  
-    'updated' => array(
-        'type' => 'timestamp',
-        ),
     );
 
 // create other indexes here...
@@ -47,7 +40,6 @@ $indexes = array(
                 'fields' => array(
                     'room_id' => array(),
                     'user_id' => array(),
-                    'creator_id' => array(),
                 )
         );
 ?>

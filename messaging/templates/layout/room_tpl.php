@@ -19,7 +19,7 @@ $formatBlock = $objBlocks->showBlock('formatting', 'messaging', '', '', FALSE);
 
 $cssLayout->setLeftColumnContent($returnBlock.$usersBlock.'<br />');
 $cssLayout->setMiddleColumnContent($this->getContent());
-$cssLayout->setRightColumnContent($smileyBlock.$formatBlock);
+$cssLayout->setRightColumnContent($smileyBlock.$formatBlock.'<br />');
 
 echo $cssLayout->show();
 ?>

@@ -14,6 +14,12 @@ if (!$GLOBALS['kewl_entry_point_run'])
 class block_smileys extends object
 {
     /*
+    * @var object $objPopup: The windowpop class in the htmlelements module
+    * @access private
+    */
+    private $objPopup;
+
+    /*
     * @var object $objIcon: The geticon class in the htmlelements module
     * @access private
     */
@@ -46,8 +52,10 @@ class block_smileys extends object
     public function init()
     {
         // load html element classes
+        $this->loadClass('layer', 'htmlelements');
         $this->loadClass('htmltable', 'htmlelements');
         $this->loadClass('link', 'htmlelements');
+        $this->objPopup = $this->getObject('windowpop', 'htmlelements');
         $this->objIcon = $this->getObject('geticon', 'htmlelements');
         
         // system classes
@@ -56,17 +64,27 @@ class block_smileys extends object
         // language items
         $title = $this->objLanguage->languageText('mod_messaging_wordsmileys', 'messaging');
         $label = $this->objLanguage->languageText('mod_messaging_smileys', 'messaging');  
-        $help = $this->objLanguage->languageText('mod_messaging_helpclick', 'messaging');
+        $more = $this->objLanguage->languageText('mod_messaging_moresmileys', 'messaging');  
+        $help = $this->objLanguage->languageText('mod_messaging_help', 'messaging');
         
         // help icon
         $this->objIcon->setIcon('help_small');
         $this->objIcon->align = 'top';
         $this->objIcon->title = $help;
-        $this->objIcon->extra = ' onclick="alert(\''.$label.'\')"';
-        $helpIcon = '<a href="#">'.$this->objIcon->show().'</a>';
+        $this->objIcon->extra = 'style="cursor: help;" onclick="javascript:
+            var el_Div = document.getElementById(\'smileyHelpDiv\');
+            jsShowHelp(el_Div);"';
+        $helpIcon = $this->objIcon->show();
+        
+        // help layer
+        $objLayer = new layer();
+        $objLayer->id = 'smileyHelpDiv';
+        $objLayer->display = 'none';
+        $objLayer->addToStr('<font size="1">'.$label.$more.'</font>');
+        $helpLayer = $objLayer->show();
         
         // title
-        $this->title = $title.'&nbsp;'.$helpIcon;        
+        $this->title = $title.'&nbsp;'.$helpIcon.$helpLayer;        
 
         // smiley icon array
         $this->shortList = array(
@@ -91,48 +109,24 @@ class block_smileys extends object
     */
     public function show()
 	{
-        // javascript
-        $script = '<script type="text/javaScript">
-            var arrNames = new Array("angry", "cheeky", "confused", "cool", "evil", "idea", "grin", "sad", "smile", "wink");
-            
-            var arrCodes = new Array("X-(", ":P", ":-/", "B-)", ">:)", "*-:)", ":D", ":(", ":)", ";)");
-            
-            function jsInsertSmiley(el_id)
-            {
-                var el_ChatIframe = document.getElementById(\'chatIframe\');
-                var el_Message = document.getElementById("input_message");
-                for(i = 0; i <= arrNames.length-1; i++){
-                    if(arrNames[i] == el_id){
-                        if(el_Message.value == ""){
-                            el_Message.value = arrCodes[i];
-                        }else{
-                            el_Message.value = el_Message.value + " " + arrCodes[i];
-                        }
-                    }
-                }
-                el_Message.focus();
-            }
-        </script>';
-//        echo $script;
-
         // language items
         $moreLabel = $this->objLanguage->languageText('mod_messaging_wordmore', 'messaging');
         $moreTitleLabel = $this->objLanguage->languageText('mod_messaging_smileytitle', 'messaging');
         
         // popup link for more smiley icons
-        $objPopup = new windowpop();
-        $objPopup->title = $moreTitleLabel;
-        $objPopup->set('location',$this->uri(array(
+        $this->objPopup->windowPop();
+        $this->objPopup->title = $moreTitleLabel;
+        $this->objPopup->set('location', $this->uri(array(
             'action'=>'moresmileys',
         )));
-        $objPopup->set('linktext','[...'.$moreLabel.'...]');
-        $objPopup->set('width','650');
-        $objPopup->set('height','620');
-        $objPopup->set('left','100');
-        $objPopup->set('top','100');
-        $objPopup->set('scrollbars', 'yes');
-        $objPopup->putJs(); // you only need to do this once per page
-        $morePopup = $objPopup->show();
+        $this->objPopup->set('linktext', '[...'.$moreLabel.'...]');
+        $this->objPopup->set('width', '650');
+        $this->objPopup->set('height', '546');
+        $this->objPopup->set('left', '100');
+        $this->objPopup->set('top', '100');
+        $this->objPopup->set('scrollbars', 'yes');
+        $this->objPopup->putJs(); // you only need to do this once per page
+        $morePopup = $this->objPopup->show();
 
         // main table
         $objTable = new htmltable();
@@ -142,14 +136,18 @@ class block_smileys extends object
         foreach($array as $line){
             $objTable->startRow();
             foreach($line as $smiley => $code){
+                $array = array(
+                    'icon' => $smiley,
+                );
+                $iconLabel = $this->objLanguage->code2Txt('mod_messaging_icon', 'messaging', $array);
+
                 $this->objIcon->setIcon($smiley, 'gif', 'icons/smileys/');
-                $this->objIcon->title = '';
-                $this->objIcon->extra = '';
-                $icon = $this->objIcon->show();
+                $this->objIcon->title = $iconLabel;
+                $this->objIcon->extra = ' id="'.$smiley.'" style="cursor: pointer;" onclick="javascript:jsInsertBlockSmiley(this.id);"';
+                $smileyIcon = $this->objIcon->show();
                 
-                $objTable->addCell('<div id="'.$smiley.'">'.$icon.'</div>', '', '', 'center', '', '');
-//                $objTable->addCell('<div id="'.$smiley.'" style="cursor: pointer;" onclick="jsInsertSmiley(this.id)">'.$icon.'</div>', '', '', 'center', '', '');
-                $objTable->addCell('<nobr><font class="warning"><b>'.$code.'</b></font></nobr>', '', '', 'center', '', '');
+                $objTable->addCell($smileyIcon, '', '', 'center', '', '');
+                $objTable->addCell('<nobr>'.$code.'</nobr>', '', '', 'center', '', '');
             }
             $objTable->endRow();
         }

@@ -123,8 +123,14 @@ class dbuserlog extends dbTable
     */
     public function listUsers($roomId)
     {
-        $sql = "SELECT * FROM ".$this->table;
-        $sql .= " WHERE room_id = '".$roomId."'";
+        $sql = "SELECT *, log.id AS logid, ban.id AS bannedid";
+        $sql .= " FROM ".$this->table." AS log";
+        $sql .= " INNER JOIN ".$this->tblUsers." AS users";
+        $sql .= " ON log.user_id = users.userid";
+        $sql .= " LEFT JOIN ".$this->tblBanned." AS ban";
+        $sql .= " ON log.user_id = ban.user_id";
+        $sql .= " AND log.room_id = ban.room_id";
+        $sql .= " WHERE log.room_id = '".$roomId."'";
         $data = $this->getArray($sql);
         if(!empty($data)){
             return $data;

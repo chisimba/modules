@@ -20,6 +20,18 @@ class dbrooms extends dbTable
     private $table;
 
     /**
+    * @var object $objUser: The user class in the security module
+    * @access public
+    */
+    public $objUser;
+
+    /**
+    * @var string $userId: The id of the current logged in user
+    * @access public
+    */
+    public $userId;
+
+    /**
     * @var object $objContext: The dbcontext class in the context module
     * @access public
     */
@@ -38,6 +50,8 @@ class dbrooms extends dbTable
 
         // system classes
         $this->objContext = $this->getObject('dbcontext', 'context');
+        $this->objUser = $this->getObject('user', 'security');
+        $this->userId = $this->objUser->userId();
     }
 
     /**
@@ -154,6 +168,41 @@ class dbrooms extends dbTable
             }
         }
         return FALSE;
-    }    
+    }
+    
+    /**
+    * Method to return the users moderator status
+    * 
+    * @access public
+    * @param string $roomId: The id of the chat room
+    * @param string $userId: The id of the user
+    * @return bool $isModerator: TRUE if the user is a moderator FALSE if not
+    */
+    public function isModerator($roomId = NULL, $userId = NULL)
+    {
+        $roomId = isset($roomId) ? $roomId : $this->getSession('chat_room_id');
+        $userId = isset($userId) ? $userId : $this->userId;
+        
+        $roomData = $this->getRoom($roomId);
+        $isModerator = FALSE;
+        if($roomData['room_type'] == 0){
+            $isAdmin = $this->objUser->inAdminGroup($userId);
+            if($isAdmin){
+                $isModerator = TRUE;
+            }
+        }elseif($roomData['room_type'] == 1){
+            if($roomData['owner_id'] == $userId){
+                $isModerator = TRUE;
+            }
+        }elseif($roomData['room_type'] == 2){
+            $isLecturer = $this->objUser->isContextLecturer($userId);
+            if($isLecturer){
+                $isModerator = TRUE;
+            }
+        }elseif($roomData['room_type'] == 3){
+            //TODO: Once workgroups has been ported
+        }
+        return $isModerator;
+    }
 }
 ?>

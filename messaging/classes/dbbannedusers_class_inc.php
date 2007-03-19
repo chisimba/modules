@@ -60,18 +60,31 @@ class dbbannedusers extends dbTable
         $fields['user_id'] = $banData['user_id'];        
         $fields['ban_reason'] = $banData['ban_reason'];        
         $fields['ban_type'] = $banData['ban_type'];
-        if($banData['ban_type'] != 1){
+        if($banData['ban_type'] == 0){
             $fields['ban_start'] = date('Y-m-d H:i:s');        
             $fields['ban_stop'] = date('Y-m-d H:i:s', strtotime('+ '.$banData['ban_length'].' min'));        
         }        
-        $fields['creator_id'] = $this->userId;
-        $fields['updated'] = date('Y-m-d H:i:s');
-                
-        $isBanned = $this->isBanned($banData['user_id'], $banData['room_id']);
-        if($isBanned == FALSE){
-            $bannedId = $this->insert($fields);
-            return $bannedId;
-        }
+        $bannedId = $this->insert($fields);
+        return $bannedId;
+    }
+
+    /**
+    * Method to edit a banned record
+    *
+    * @access public
+    * @param string $bannedId: The id of the banned user record
+    * @param array $banData: An array containing the banned user data
+    * @return array $data: The user data
+    **/
+    public function editBan($bannedId, $banData)
+    {
+        $fields['ban_reason'] = $banData['ban_reason'];        
+        $fields['ban_type'] = $banData['ban_type'];
+        if($banData['ban_type'] == 0){
+            $fields['ban_start'] = date('Y-m-d H:i:s');        
+            $fields['ban_stop'] = date('Y-m-d H:i:s', strtotime('+ '.$banData['ban_length'].' min'));        
+        }        
+        $this->update('id', $bannedId, $fields);
     }
 
     /**
