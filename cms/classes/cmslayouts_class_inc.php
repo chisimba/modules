@@ -729,50 +729,51 @@ class cmslayouts extends object
         //RSS2.0
         $rss2 = $this->getObject('geticon', 'htmlelements');
         $rss2->setIcon('rss', 'gif', 'icons/filetypes');
+	$rss2->align = "top";
         $link = new href($this->uri(array('action' => 'feed', 'format' => 'rss2', 'pageid' => $pageid)), $this->objLanguage->languageText("mod_cms_word_rss2", "cms"));
-        $leftCol .= $rss2->show() . $link->show() . "<br />";
+        $leftCol .= $rss2->show() . "&nbsp;" . $link->show() . "<br />";
 
         //RSS0.91
         $rss091 = $this->getObject('geticon', 'htmlelements');
         $rss091->setIcon('rss', 'gif', 'icons/filetypes');
         $link = new href($this->uri(array('action' => 'feed', 'format' => 'rss091', 'pageid' => $pageid)),$this->objLanguage->languageText("mod_cms_word_rss091", "cms"));
-        $leftCol .= $rss091->show() . $link->show() . "<br />";
+        $leftCol .= $rss091->show() . "&nbsp;" .$link->show() . "<br />";
 
         //RSS1.0
         $rss1 = $this->getObject('geticon', 'htmlelements');
         $rss1->setIcon('rss', 'gif', 'icons/filetypes');
         $link = new href($this->uri(array('action' => 'feed', 'format' => 'rss1', 'pageid' => $pageid)),$this->objLanguage->languageText("mod_cms_word_rss1", "cms"));
-        $leftCol .= $rss1->show() . $link->show() . "<br />";
+        $leftCol .= $rss1->show() . "&nbsp;" . $link->show() . "<br />";
 
         //PIE
         $pie = $this->getObject('geticon', 'htmlelements');
         $pie->setIcon('rss', 'gif', 'icons/filetypes');
         $link = new href($this->uri(array('action' => 'feed', 'format' => 'pie', 'pageid' => $pageid)),$this->objLanguage->languageText("mod_cms_word_pie", "cms"));
-        $leftCol .= $pie->show() . $link->show() . "<br />";
+        $leftCol .= $pie->show() . "&nbsp;" . $link->show() . "<br />";
 
         //MBOX
         $mbox = $this->getObject('geticon', 'htmlelements');
         $mbox->setIcon('rss', 'gif', 'icons/filetypes');
         $link = new href($this->uri(array('action' => 'feed', 'format' => 'mbox', 'pageid' => $pageid)),$this->objLanguage->languageText("mod_cms_word_mbox", "cms"));
-        $leftCol .= $mbox->show() . $link->show() . "<br />";
+        $leftCol .= $mbox->show() . "&nbsp;" . $link->show() . "<br />";
 
         //OPML
         $opml = $this->getObject('geticon', 'htmlelements');
         $opml->setIcon('rss', 'gif', 'icons/filetypes');
         $link = new href($this->uri(array('action' => 'feed', 'format' => 'opml', 'pageid' => $pageid)),$this->objLanguage->languageText("mod_cms_word_opml", "cms"));
-        $leftCol .= $opml->show() . $link->show() . "<br />";
+        $leftCol .= $opml->show() . "&nbsp;" . $link->show() . "<br />";
 
         //ATOM
         $atom = $this->getObject('geticon', 'htmlelements');
         $atom->setIcon('rss', 'gif', 'icons/filetypes');
         $link = new href($this->uri(array('action' => 'feed', 'format' => 'atom', 'pageid' => $pageid)),$this->objLanguage->languageText("mod_cms_word_atom", "cms"));
-        $leftCol .= $atom->show() . $link->show() . "<br />";
+        $leftCol .= $atom->show() . "&nbsp;" . $link->show() . "<br />";
 
         //Plain HTML
         $html = $this->getObject('geticon', 'htmlelements');
         $html->setIcon('rss', 'gif', 'icons/filetypes');
         $link = new href($this->uri(array('action' => 'feed', 'format' => 'html', 'pageid' => $pageid)),$this->objLanguage->languageText("mod_cms_word_html", "cms"));
-        $leftCol .= $html->show() . $link->show() . "<br />";
+        $leftCol .= $html->show() . "&nbsp;" . $link->show() . "<br />";
         
         $this->setVar('pageSuppressXML',true);
         $icon = $this->getObject('geticon', 'htmlelements');
