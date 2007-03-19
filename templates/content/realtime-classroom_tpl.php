@@ -2,7 +2,7 @@
 $this->objLanguage = $this->getObject('language', 'language');
 $this->objFeaturebox = $this->newObject('featurebox', 'navigation');
 
-$whiteboard = '<applet width="400" height="600" code="avoir.realtime.whiteboard.client.WhiteboardApplet.class">';
+$whiteboard = '<applet width="600" height="600" code="avoir.realtime.whiteboard.client.WhiteboardApplet.class">';
 $whiteboard .= '    <param name="archive" value="'.$this->whiteboardURL.'/whiteboard-client.jar"/> ';
 $whiteboard .= '    <param name="userName" value="' . $this->userName . '"/>';
 $whiteboard .= '    <param name="userLevel" value="' . $this->userLevel . '"/>';
@@ -10,7 +10,7 @@ $whiteboard .= '    <param name="port" value="1981"/>';
 $whiteboard .= "</applet> ";
 
 $voiceTitle = $this->objLanguage->languageText('mod_realtime_voice', 'realtime');
-$voice = '<applet code="avoir.realtime.voice.VoiceApplet.class" width="500" height="100">';
+$voice = '<applet code="avoir.realtime.voice.VoiceApplet.class" width="320" height="100">';
 $voice .= '	<param name="archive" value="'.$this->voiceURL.'/voice-client.jar"/> ';
 $voice .= ' <param name="userName" value="' . $this->userName . '"/>';
 $voice .= ' <param name="userLevel" value="' . $this->userLevel . '"/>';
@@ -20,29 +20,16 @@ $voice .= "</applet> ";
 
 $voiceBox = $this->objFeaturebox->show($voiceTitle, $voice);
 
-
-
 $objBlocks = $this->newObject('blocks', 'blocks');
 $chatBlock = $objBlocks->showBlock('contextchat', 'messaging');
-/*
 
-$cssLayout=&$this->newObject('csslayout','htmlelements');
-$cssLayout->setNumColumns(3);
-$cssLayout->setLeftColumnContent($chatBlock);
-$cssLayout->setMiddleColumnContent($whiteboard);
-$cssLayout->setRightColumnContent($voiceBox);
-
-echo $cssLayout->show();
-*/
 $objLayer = $this->newObject('layer', 'htmlelements');
-
 $objLayer->str = $voiceBox.$chatBlock;
-$objLayer->border = '; width: 40%; float: left';
+$objLayer->border = '; width: 27%; float: left';
 $layer1 = $objLayer->show();
 
-
 $objLayer->str = $whiteboard;
-$objLayer->border = '; width: 60%;';
+$objLayer->border = '; width: 78%;';
 $objLayer->align = 'center';
 $layer2 = $objLayer->show();
 
