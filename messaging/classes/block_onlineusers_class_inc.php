@@ -84,7 +84,7 @@ class block_onlineusers extends object
         $this->objIcon->align = 'top';
         $this->objIcon->title = $help;
         $this->objIcon->extra = 'style="cursor: help;" onclick="javascript:
-            var el_Div = document.getElementById(\'usersHelpDiv\');
+            var el_Div = $(\'usersHelpDiv\');
             jsShowHelp(el_Div);"';
         $helpIcon = $this->objIcon->show();
         

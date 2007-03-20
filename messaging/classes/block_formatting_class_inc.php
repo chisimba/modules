@@ -63,7 +63,7 @@ class block_formatting extends object
         $this->objIcon->align = 'top';
         $this->objIcon->title = $help;
         $this->objIcon->extra = 'style="cursor: help;" onclick="javascript:
-            var el_Div = document.getElementById(\'formatHelpDiv\');
+            var el_Div = $(\'formatHelpDiv\');
             jsShowHelp(el_Div);"';
         $helpIcon = $this->objIcon->show();
         

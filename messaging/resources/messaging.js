@@ -4,6 +4,9 @@
 * ================================
 */
 var URL = "index.php";
+var userTimer;
+var chatTimer;
+var chatMode;
 
 /**
 * =====================================
@@ -12,10 +15,16 @@ var URL = "index.php";
 */
 /**
 * Function to initialise onload events
+* @param string mode: The mode of the onload - Context or Null
 */
-function jsOnloadChat(){
-    jsGetOnlineUsers();    
-    jsGetChat();    
+function jsOnloadChat(mode){
+    chatMode = mode;
+    if(mode == "context"){
+        jsGetChat();    
+    }else{
+        jsGetChat();    
+        jsGetOnlineUsers();    
+    }
 }
 
 /**
@@ -102,7 +111,7 @@ function jsGetOnlineUsers()
 {
     var target = "usersListDiv";
     var pars = "module=messaging&action=getusers";
-    var myAjax = new Ajax.Updater(target, URL, {method: "post", parameters: pars, onComplete: jsUserListTimer});
+    var usersAjax = new Ajax.Updater(target, URL, {method: "post", parameters: pars, onComplete: jsUserListTimer});
 }
 
 /*
@@ -117,7 +126,7 @@ function jsUserListTimer(){
     if(el_Banned.value == "Y"){                    
         var target = "bannedDiv";
         var pars = "module=messaging&action=getbanmsg&type="+el_Type.value+"&date="+el_Date.value;
-        var myAjax = new Ajax.Updater(target, URL, {method: "post", parameters: pars});
+        var bannedAjax = new Ajax.Updater(target, URL, {method: "post", parameters: pars});
         if(el_Type.value != 2){
             Element.show("bannedDiv");
             Element.hide("sendDiv");
@@ -129,7 +138,7 @@ function jsUserListTimer(){
         Element.show("sendDiv");
         Element.hide("bannedDiv");
     }                
-    var userTimer = setTimeout("jsGetOnlineUsers()", 3000);
+    userTimer = setTimeout("jsGetOnlineUsers()", 3000);
 }
 
 /**
@@ -139,12 +148,13 @@ function jsUserListTimer(){
 */
 /*
 * Function to get the chat messages via ajax
+* @param string mode: The mode of the onload - Context or Null
 */            
 function jsGetChat()
 {
     var target = "chatDiv";
-    var pars = "module=messaging&action=getchat";
-    var myAjax = new Ajax.Updater(target, URL, {method: "post", parameters: pars, onComplete: jsChatTimer});
+    var pars = "module=messaging&action=getchat&mode="+chatMode;
+    var chatAjax = new Ajax.Updater(target, URL, {method: "post", parameters: pars, onComplete: jsChatTimer});
 }
 
 /*
@@ -154,7 +164,7 @@ function jsChatTimer()
 {
     var el_ChatDiv = $("chatDiv");
     el_ChatDiv.scrollTop = el_ChatDiv.scrollHeight
-    var chatTimer = setTimeout("jsGetChat()", 3000);
+    chatTimer = setTimeout("jsGetChat()", 3000);
 }
 
 /*
@@ -189,19 +199,21 @@ function jsTrapKeys(e)
 function jsSendMessage()
 {
     var el_Message = $("input_message");
-    var message = encodeURIComponent(el_Message.value);
-    var pars = "module=messaging&action=sendchat&message="+message;
-    var myAjax = new Ajax.Request(URL, {method: "post", parameters: pars, onLoading:jsShowLoading, onComplete: jsHideLoading}); 
+    if(el_Message.value != ""){
+        var el_ChatIframe = $("chatIframe");
+        var el_iframe = el_ChatIframe.contentWindow || el_ChatIframe.contentDocument;
+        if(el_iframe.document){
+            el_iframe = el_iframe.document;
+        }
+        var el_form = el_iframe.getElementById("form_chat");
+        var el_Msg = el_iframe.getElementById("input_msg");
+        el_Msg.value = el_Message.value;                             
+        el_form.submit();    
+        Element.show("iconDiv");
+        el_Message.disabled = true;
+    }
     el_Message.value = "";
-    el_Message.focus();   
-}
-
-/*
-* Function to show the loading icon
-*/
-function jsShowLoading()
-{
-    Element.show("iconDiv");
+    el_Message.focus();
 }
 
 /*
@@ -209,7 +221,19 @@ function jsShowLoading()
 */
 function jsHideLoading()
 {
-    Element.hide("iconDiv");
+    parent.$("iconDiv").style.display = 'none';
+    parent.$("input_message").disabled = false;
+}
+
+/*
+* Function to process the clearing of the message window
+*/
+function jsClearWindow()
+{
+    clearTimeout(chatTimer);
+    var target = "hiddenDiv";
+    var pars = "module=messaging&action=clearwindow";
+    var clearAjax = new Ajax.Updater(target, URL, {method: "post", parameters: pars, onComplete: jsGetChat});
 }
 
 /**

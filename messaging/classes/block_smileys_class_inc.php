@@ -72,7 +72,7 @@ class block_smileys extends object
         $this->objIcon->align = 'top';
         $this->objIcon->title = $help;
         $this->objIcon->extra = 'style="cursor: help;" onclick="javascript:
-            var el_Div = document.getElementById(\'smileyHelpDiv\');
+            var el_Div = $(\'smileyHelpDiv\');
             jsShowHelp(el_Div);"';
         $helpIcon = $this->objIcon->show();
         

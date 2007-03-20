@@ -39,6 +39,7 @@ if($mode == 'iframe'){
     $this->setVar('pageSuppressSearch', TRUE);
     $this->setVar('pageSuppressToolbar', TRUE);
     $this->setVar('suppressFooter', TRUE);
+    $this->setVar('bodyParams', 'onload="javascript:jsHideLoading();"');
 }elseif($mode == 'popup'){
     // add x js library (cross browser library)
     $headerParams = $this->getJavascriptFile('x.js', 'htmlelements');
@@ -54,13 +55,13 @@ if($mode == 'iframe'){
 //    $this->setVar('pageSuppressToolbar', TRUE);
     $this->setVar('footerStr', '');
     $this->setLayoutTemplate('room_text_only_tpl.php');
-    $this->setVar('bodyParams', 'onload="javascript:jsOnloadChat();"');
+    $this->setVar('bodyParams', 'onload="javascript:jsOnloadChat(\'\');" onunload="clearTimeout(chatTimer);"');
 }elseif($mode == 'room'){
     $this->setVar('pageSuppressSearch', TRUE);
 //    $this->setVar('pageSuppressToolbar', TRUE);
     $this->setVar('footerStr', '');
     $this->setLayoutTemplate('room_tpl.php');
-    $this->setVar('bodyParams', 'onload="javascript:jsOnloadChat();"');
+    $this->setVar('bodyParams', 'onload="javascript:jsOnloadChat(\'\');" onunload="clearTimeout(chatTimer);clearTimeout(userTimer);"');
 }else{
     $this->setLayoutTemplate('layout_tpl.php');
 }

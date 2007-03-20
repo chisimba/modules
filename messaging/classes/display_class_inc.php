@@ -148,14 +148,15 @@ class display extends object
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('layer','htmlelements');
-        $this->loadClass('tabbedbox', 'htmlelements');
+        $this->loadClass('iframe', 'htmlelements');
         $this->objIcon = $this->newObject('geticon', 'htmlelements');
         $this->objPopup = $this->getObject('windowpop','htmlelements');
         $this->objFeaturebox = $this->getObject('featurebox', 'navigation');
         $this->objPopupcal = $this->newObject('datepickajax', 'popupcalendar');
         
         // syatem classes
-        $this->objLanguage = $this->getObject('language','language');
+                $this->loadClass('tabbedbox', 'htmlelements');
+$this->objLanguage = $this->getObject('language','language');
         $this->objUser = $this->getObject('user', 'security');
         $this->objDatetime = $this->getObject('datetime', 'utilities');
         $this->objContext = $this->getObject('dbcontext', 'context');
@@ -204,7 +205,7 @@ class display extends object
         $confirmLabel = $this->objLanguage->languageText('mod_messaging_confirm', 'messaging');
         $disabledLabel = $this->objLanguage->languageText('mod_messaging_worddisabled', 'messaging');
         
-        $str = $this->divShowIm();
+        //$str = $this->divShowIm();
         // get data
         $rooms = $this->dbRooms->listRooms($this->contextCode);
         $userRooms = $this->dbUsers->listUserRooms($this->userId);
@@ -214,7 +215,7 @@ class display extends object
         $objHeader->str = $chatHeading;
         $objHeader->type = 1;
         $header = $objHeader->show();        
-        $str .= $header;
+        $str = $header;
         
         $objHeader = new htmlheading();
         $objHeader->str = $roomHeading;
@@ -611,6 +612,8 @@ class display extends object
         $removeTitleLabel = $this->objLanguage->languageText('mod_messaging_removetitle', 'messaging');
         $logLabel = $this->objLanguage->languageText('mod_messaging_logs', 'messaging');
         $logTitleLabel = $this->objLanguage->languageText('mod_messaging_logtitle', 'messaging');
+        $windowLabel = $this->objLanguage->languageText('mod_messaging_clearwindow', 'messaging');
+        $winTitleLabel = $this->objLanguage->languageText('mod_messaging_cleartitle', 'messaging');
                 
         // get data
         $roomId = $this->getSession('chat_room_id');
@@ -661,7 +664,15 @@ class display extends object
         $objPopup->set('top', '100');
         $objPopup->set('scrollbars', 'no');
         $removeLink = $objPopup->show();
-            
+/*            
+        TO DO:
+        // link to clear window
+        $objLink = new link('#');
+        $objLink->extra = ' onclick="javascript:jsClearWindow();"';
+        $objLink->link = $windowLabel;
+        $objLink->title = $winTitleLabel;
+        $clearLink = $objLink->show();
+*/               
         // popup link to invite users
         $objPopup = new windowpop();
         $objPopup->title = $logTitleLabel;
@@ -677,9 +688,9 @@ class display extends object
         $logLink = $objPopup->show();
 
         if($roomData['room_type'] == 1 && $roomData['owner_id'] == $this->userId){
-            $links = $inviteLink.'&nbsp;|&nbsp;'.$removeLink;
+            $leftLinks = $inviteLink.'&nbsp;|&nbsp;'.$removeLink;
         }else{
-            $links = '';
+            $leftLinks = '';
         }
             
         // table to display popup links
@@ -687,7 +698,7 @@ class display extends object
         $objTable->cellspacing = 2;
         $objTable->cellpadding = 2;
         $objTable->startRow();
-        $objTable->addCell($links, '', '', 'left', '', '');
+        $objTable->addCell($leftLinks, '', '', 'left', '', '');
         $objTable->addCell($logLink, '', '', 'right', '', '');
         $objTable->endRow();
         $linkTable = $objTable->show();
@@ -709,6 +720,7 @@ class display extends object
         
         // chat loading icon
         $this->objIcon->setIcon('loading_bar');
+        $this->objIcon->extra = 'style="width: 100%; height: 20px"';
         $this->objIcon->title = $sendingLabel;
         $sendingIcon = $this->objIcon->show();
         
@@ -747,10 +759,44 @@ class display extends object
         $objLayer = new layer();
         $objLayer->id = 'sendDiv';
         $objLayer->addToStr($chatTable);
-        $formLayer = $objLayer->show();
-        $str .= $formLayer;
+        $sendLayer = $objLayer->show();
+        $str .= $sendLayer;
         
+        $objIframe = new iframe();
+        $objIframe->id = 'chatIframe';
+        $objIframe->frameborder = '0';
+        $objIframe->height = 0;
+        $objIframe->width = 0;
+        $objIframe->src = $this->uri(array(
+            'action' => 'chatform'
+        ));
+        $objIframe = $objIframe->show();
+        $str .= $objIframe;
+
         return $str;
+    }
+    
+    /**
+    * Method to display the chat form in a hidden iframe
+    *
+    * @access public
+    * @return string $str: The output string
+    */
+    public function tplChatForm()
+    {
+        // hidden text area
+        $objText = new textarea('msg');
+        $msgText = $objText->show();
+        
+        // hidden form
+        $objForm = new form('chat', $this->uri(array(
+            'action' => 'sendchat'
+        )));
+        $objForm->addToForm($msgText);
+        $chatForm = $objForm->show();        
+        $str = $chatForm;
+        
+        return $str;        
     }
     
     /**
@@ -781,134 +827,136 @@ class display extends object
         $objTable = new htmltable();
         $objTable->cellspacing = '2';
         $objTable->cellpadding = '2';
-        foreach($users as $user){
-            $name = $user['firstname'].' '.$user['surname'];
-            if($user['bannedid'] == NULL){                
-                $this->objIcon->setIcon('green_bullet');
-                $this->objIcon->title = $activeLabel;
-                $statusIcon = $this->objIcon->show();
+        if(!empty($users)){
+            foreach($users as $user){
+                $name = $user['firstname'].' '.$user['surname'];
+                if($user['bannedid'] == NULL){                
+                    $this->objIcon->setIcon('green_bullet');
+                    $this->objIcon->title = $activeLabel;
+                    $statusIcon = $this->objIcon->show();
                 
-                if($isModerator && $user['userid'] != $this->userId){
-                    // popup link for warn/ban user
-                    $this->objPopup->windowPop();
-                    $this->objPopup->title = $warnLabel;
-                    $this->objPopup->set('location', $this->uri(array(
-                        'action'=> 'banpopup',
-                        'name'=> $name,
-                        'userId'=> $user['userid'],
-                    )));
-                    $this->objPopup->set('linktext', $name);
-                    $this->objPopup->set('width', '500');
-                    $this->objPopup->set('height', '525');
-                    $this->objPopup->set('left', '100');
-                    $this->objPopup->set('top', '100');
-                    $this->objPopup->set('scrollbars', 'yes');
-                    $namePopup = $this->objPopup->show();
-                }else{
-                    $namePopup = $name;
-                }
-                
-            }else{
-                if($user['userid'] == $this->userId){
-                    $banned = 'Y';
-                    $type = $user['ban_type'];
-                    $date = $user['ban_stop'];
-                }
-                
-                if($user['ban_type'] == 2){
-                    $this->objIcon->setIcon('yellow_bullet');
-                    $this->objIcon->title = $warnedLabel;
-                    $statusIcon = $this->objIcon->show();    
-
-                    if($isModerator && $user['userid'] != $this->userId){
-                        // popup link for ban user
-                        $this->objPopup->windowPop();
-                        $this->objPopup->title = $banLabel;
-                        $this->objPopup->set('location', $this->uri(array(
-                            'action'=> 'banpopup',
-                            'name'=> $name,
-                            'logId'=> $user['logid'],
-                            'bannedId' => $user['bannedid'],
-                        )));
-                        $this->objPopup->set('linktext', $name);
-                        $this->objPopup->set('width', '500');
-                        $this->objPopup->set('height', '505');
-                        $this->objPopup->set('left', '100');
-                        $this->objPopup->set('top', '100');
-                        $this->objPopup->set('scrollbars', 'yes');
-                        $namePopup = $this->objPopup->show();
-                    }else{
-                        $namePopup = $name;
-                    }
-                }elseif($user['ban_type'] == 1){
-                    $this->objIcon->setIcon('red_bullet');
-                    $this->objIcon->title = $indefLabel;
-                    $statusIcon = $this->objIcon->show();    
-
                     if($isModerator && $user['userid'] != $this->userId){
                         // popup link for warn/ban user
                         $this->objPopup->windowPop();
-                        $this->objPopup->title = $unbanLabel;
+                        $this->objPopup->title = $warnLabel;
                         $this->objPopup->set('location', $this->uri(array(
-                            'action'=>'unbanpopup',
+                            'action'=> 'banpopup',
                             'name'=> $name,
-                            'bannedId' => $user['bannedid'],
+                            'userId'=> $user['userid'],
                         )));
                         $this->objPopup->set('linktext', $name);
                         $this->objPopup->set('width', '500');
-                        $this->objPopup->set('height', '225');
+                        $this->objPopup->set('height', '525');
                         $this->objPopup->set('left', '100');
                         $this->objPopup->set('top', '100');
                         $this->objPopup->set('scrollbars', 'yes');
                         $namePopup = $this->objPopup->show();
                     }else{
                         $namePopup = $name;
-                    }
+                    }                
                 }else{
-                    $array = array(
-                        'date' => $this->objDatetime->formatDate($user['ban_stop']),
-                    );
-                    $tempLabel = $this->objLanguage->code2Txt('mod_messaging_bantemp', 'messaging', $array);
-                    $this->objIcon->setIcon('red_bullet');
-                    $this->objIcon->title = $tempLabel;
-                    $statusIcon = $this->objIcon->show();    
-                    
-                    $dateNow = strtotime(date('Y-m-d H:i:s'));
-                    $banStop = strtotime($user['ban_stop']);
-                    if($dateNow >= $banStop){
-                        $this->dbBanned->deleteUser($user['bannedid']);
-                        $array = array(
-                                'user' => $name,
-                        );
-                        $message = $this->objLanguage->code2Txt('mod_messaging_unbantempmsg', 'messaging', $array);                    
-                        $this->dbMessages->addChatMessage($message, TRUE);             
+                    if($user['userid'] == $this->userId){
+                        $banned = 'Y';
+                        $type = $user['ban_type'];
+                        $date = $user['ban_stop'];
                     }
-                    $namePopup = $name;
-                }                
-            }            
+                    if($user['ban_type'] == 2){
+                        $this->objIcon->setIcon('yellow_bullet');   
+                        $this->objIcon->title = $warnedLabel;
+                        $statusIcon = $this->objIcon->show();    
+    
+                        if($isModerator && $user['userid'] != $this->userId){
+                            // popup link for ban user
+                            $this->objPopup->windowPop();
+                            $this->objPopup->title = $banLabel;
+                            $this->objPopup->set('location', $this->uri(array(
+                                'action'=> 'banpopup',
+                                'name'=> $name,
+                                'logId'=> $user['logid'],
+                                'bannedId' => $user['bannedid'],
+                            )));
+                            $this->objPopup->set('linktext', $name);
+                            $this->objPopup->set('width', '500');
+                            $this->objPopup->set('height', '505');
+                            $this->objPopup->set('left', '100');
+                            $this->objPopup->set('top', '100');
+                            $this->objPopup->set('scrollbars', 'yes');
+                            $namePopup = $this->objPopup->show();
+                        }else{
+                            $namePopup = $name;
+                        }
+                    }elseif($user['ban_type'] == 1){
+                        $this->objIcon->setIcon('red_bullet');
+                        $this->objIcon->title = $indefLabel;
+                        $statusIcon = $this->objIcon->show();    
+    
+                        if($isModerator && $user['userid'] != $this->userId){
+                            // popup link for warn/ban user
+                            $this->objPopup->windowPop();
+                            $this->objPopup->title = $unbanLabel;
+                            $this->objPopup->set('location', $this->uri(array(
+                                'action'=>'unbanpopup',
+                                'name'=> $name,
+                                'bannedId' => $user['bannedid'],
+                            )));
+                            $this->objPopup->set('linktext', $name);
+                            $this->objPopup->set('width', '500');
+                            $this->objPopup->set('height', '225');
+                            $this->objPopup->set('left', '100');
+                            $this->objPopup->set('top', '100');
+                            $this->objPopup->set('scrollbars', 'yes');
+                            $namePopup = $this->objPopup->show();
+                        }else{
+                            $namePopup = $name;
+                        }
+                    }else{
+                        $array = array(
+                            'date' => $this->objDatetime->formatDate($user['ban_stop']),
+                        );
+                        $tempLabel = $this->objLanguage->code2Txt('mod_messaging_bantemp', 'messaging', $array);
+                        $this->objIcon->setIcon('red_bullet');
+                        $this->objIcon->title = $tempLabel;
+                        $statusIcon = $this->objIcon->show();    
+                    
+                        $dateNow = strtotime(date('Y-m-d H:i:s'));
+                        $banStop = strtotime($user['ban_stop']);
+                        if($dateNow >= $banStop){
+                            $this->dbBanned->deleteUser($user['bannedid']);
+                            $array = array(
+                                    'user' => $name,
+                            );
+                            $message = $this->objLanguage->code2Txt('mod_messaging_unbantempmsg', 'messaging', $array);                    
+                            $this->dbMessages->addChatMessage($message, TRUE);             
+                        }
+                        $namePopup = $name;
+                    }                
+                }            
+                $objTable->startRow();
+                $objTable->addCell($namePopup);
+                $objTable->addCell($statusIcon);
+                $objTable->endRow();
+            }
+            // hidden input used for banned notice
+            $objInput = new textinput('banned', $banned, 'hidden');
+            $bannedInput = $objInput->show();
+
+            // hidden input used for banned notice
+            $objInput = new textinput('type', $type, 'hidden');
+            $typeInput = $objInput->show();
+
+            // hidden input used for banned notice
+            $objInput = new textinput('date', $date, 'hidden');
+            $dateInput = $objInput->show();
+
             $objTable->startRow();
-            $objTable->addCell($namePopup);
-            $objTable->addCell($statusIcon);
+            $objTable->addCell($bannedInput.$typeInput.$dateInput, '', '', '', '', ''); 
             $objTable->endRow();
-        }
-        // hidden input used for banned notice
-        $objInput = new textinput('banned', $banned, 'hidden');
-        $bannedInput = $objInput->show();
-
-        // hidden input used for banned notice
-        $objInput = new textinput('type', $type, 'hidden');
-        $typeInput = $objInput->show();
-
-        // hidden input used for banned notice
-        $objInput = new textinput('date', $date, 'hidden');
-        $dateInput = $objInput->show();
-
-        $objTable->startRow();
-        $objTable->addCell($bannedInput.$typeInput.$dateInput, '', '', '', '', '');
-        $objTable->endRow();
             
-        $str = $objTable->show();
-        echo $str;
+            $str = $objTable->show();
+            echo $str;
+        }else{
+            echo '';
+        }
     }
     
     /**

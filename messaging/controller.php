@@ -424,7 +424,7 @@ class messaging extends controller
                 
             // submit the chat message data
             case 'sendchat':            
-                $message = strip_tags(rawurldecode($this->getParam('message')));
+                $message = strip_tags(rawurldecode($this->getParam('msg')));
                 // check to ensure closing tags are in place
                 $codes = array(
                     '[B]' => '[/B]',
@@ -453,7 +453,6 @@ class messaging extends controller
                 if($message != NULL){
                     $messageId = $this->dbMessages->addChatMessage($message);
                 }
-                echo '';
                 return $this->nextAction('chatform');
                 break;
                 
@@ -462,6 +461,14 @@ class messaging extends controller
                 $mode = $this->getParam('mode');
                 return $this->objDisplay->divGetChat($mode);
                 break;
+                
+            // clear the contents of the chat window
+            case 'clearwindow':
+                $roomId = $this->getSession('chat_room_id');
+                $counter = $this->dbMessages->getMessageCount($roomId);
+                $this->setSession('message_counter', $counter - 1);
+                return $this->objDisplay->divHiddenResponse();
+                break;                
                 
             // display the popup page to invite users to your chat room
             case 'invitepopup':

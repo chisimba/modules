@@ -14,6 +14,12 @@ if (!$GLOBALS['kewl_entry_point_run'])
 class block_contextchat extends object
 {
     /*
+    * @var object $objIcon: The geticon class in the htmlelements module
+    * @access private
+    */
+    private $objIcon;
+
+    /*
     * @var object $objUser: The user class in the security module
     * @access private
     */
@@ -70,11 +76,13 @@ class block_contextchat extends object
     public function init()
     {
         // load html element classes
+        $this->loadClass('link', 'htmlelements');
         $this->loadClass('layer', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('htmltable', 'htmlelements');
+        $this->objIcon = $this->getObject('geticon', 'htmlelements');
 
         // system classes
         $this->objUser = $this->getObject('user', 'security');
@@ -110,45 +118,21 @@ class block_contextchat extends object
     */
     public function show()
 	{
+        // add scriptaculous js libraries
         $this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
         $this->objScriptaculous->show();
-        // javascript
-        $script = '<script type="text/javaScript">
-            Event.observe(window, "load", jsGetChat, false);
-            
-            var chatTimer;
-            
-            function jsGetChat(){
-                var url = "index.php";
-                var target = "chatDiv";
-                var pars = "module=messaging&action=getchat&mode=context";
-                var myAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars, onComplete: jsChatTimer});
-            }
 
-            function jsChatTimer(){
-                var el_ChatDiv = document.getElementById("chatDiv");
-                el_ChatDiv.scrollTop = el_ChatDiv.scrollHeight
-                chatTimer = setTimeout("jsGetChat()", 3000);
-            }
-            
-            function jsSendChat(){
-                var el_Message = document.getElementById("input_message");
-                
-                if(el_Message.value != ""){
-                    var url = "index.php";
-                    var target = "input_message";
-                    var pars = "module=messaging&action=sendchat&chat=" + el_Message.value;
-                    var myAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars});                
-                    el_Message.value = "";
-                }                
-                el_Message.focus();
-            }
-        </script>';
-        $str = $script;
+        // add messaging module js library
+        $headerParams = $this->getJavascriptFile('messaging.js', 'messaging');
+        $this->appendArrayVar('headerParams', $headerParams);
+
+        $body = 'onload="javascript:jsOnloadChat(\'context\');" onunload="javascript:clearTimeout(chatTimer);"';
+        $this->setVar('bodyParams', $body);
 
         // language items
         $sendLabel = $this->objLanguage->languageText('mod_messaging_wordsend', 'messaging');
         $clearLabel = $this->objLanguage->languageText('mod_messaging_wordclear', 'messaging');
+        $sendingLabel = $this->objLanguage->languageText('mod_messaging_sending', 'messaging');
         
         // display layer for chat
         $objLayer = new layer();
@@ -158,33 +142,45 @@ class block_contextchat extends object
         $objLayer->border = '1px solid black';
         $objLayer->overflow = 'auto';
         $chatLayer = $objLayer->show();
-        $str .= $chatLayer;
+        $str = $chatLayer;
         
-        // chat input
-        $objInput = new textinput('message');
-        $msgInput = $objInput->show();
+        // chat input area
+        $objText = new textarea('message', '', '', '');
+        $objText->extra = ' onkeyup="javascript:jsTrapKeys(event, this.value);"';
+        $chatText = $objText->show();
+        
+        // chat loading icon
+        $this->objIcon->setIcon('loading_bar');
+        $this->objIcon->extra = ' style="width: 90%"';
+        $this->objIcon->title = $sendingLabel;
+        $sendingIcon = $this->objIcon->show();
+        
+        $objLayer = new layer();
+        $objLayer->display = 'none';
+        $objLayer->addToStr($sendingIcon);
+        $objLayer->id = 'iconDiv';
+        $iconLayer = $objLayer->show();
         
         // chat send button
         $objButton = new button('send', $sendLabel);
-        $objButton->extra = ' onclick="javascript:
-            jsSendChat();"';
+        $objButton->extra = ' onclick="javascript:jsSendMessage();"';
         $sendButton = $objButton->show();
         
         // chat clear button
         $objButton = new button('clear', $clearLabel);
         $objButton->extra = 'onclick="javascript: 
-            var el_Message = document.getElementById(\'input_message\');
+            var el_Message = $(\'input_message\');
             el_Message.value = \'\';
             el_Message.focus();
         "';
         $clearButton = $objButton->show();
-
+        
         // main table
         $objTable = new htmltable();
         $objTable->cellspacing = '2';
         $objTable->cellpadding = '2';
         $objTable->startRow();
-        $objTable->addCell($msgInput, '', '', '', '' ,'');
+        $objTable->addCell($iconLayer.$chatText, '', '', '', '' ,'');
         $objTable->endRow();
         $objTable->startRow();
         $objTable->addCell($sendButton.'&nbsp;'.$clearButton, '', 'center', '', '' ,'');
@@ -192,14 +188,22 @@ class block_contextchat extends object
         $chatTable = $objTable->show();
         $string = $chatTable;
         
-        // chat send form 
-        $objForm = new form('chat', $this->uri(array(
-            'action' => 'sendchat'
-        )));
-        $objForm->addToForm($string);
-        $chatForm = $objForm->show();
-        
-        $str .= $chatForm;
+        $objLayer = new layer();
+        $objLayer->id = 'sendDiv';
+        $objLayer->addToStr($string);
+        $sendLayer = $objLayer->show();
+        $str .= $sendLayer;
+
+        $objIframe = new iframe();
+        $objIframe->id = 'chatIframe';
+        $objIframe->frameborder = '0';
+        $objIframe->height = 0;
+        $objIframe->width = 0;
+        $objIframe->src = $this->uri(array(
+            'action' => 'chatform'
+        ));
+        $objIframe = $objIframe->show();
+        $str .= $objIframe;
 
         return $str;
     }
