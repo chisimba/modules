@@ -12,6 +12,11 @@ $fields = array(
 			'length' => 32,
 			'notnull' => 1
 			),
+		'userid' => array(
+			'type' => 'text',
+			'length' => 32,
+			'notnull' => 1
+			),	
 		'contextcode' => array(
 			'type' => 'text',
 			'length' => 25,

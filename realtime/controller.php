@@ -92,8 +92,7 @@ class realtime extends controller
         }else{
             $this->userLevel = 'guest';
         }   
-        $this->objContext = $this->getObject('dbcontext', 'context');     
-        $this->contextCode = $this->objContext->getContextCode();
+        $this->objContext = $this->getObject('dbcontext', 'context');
         $this->objConfig = $this->getObject('altconfig', 'config');
         $location = "http://". $_SERVER['HTTP_HOST'];
         $this->whiteboardURL = $location.$this->getResourceUri('whiteboard', 'realtime');
@@ -108,6 +107,7 @@ class realtime extends controller
 	*/
     function dispatch($action=Null)
     {
+		$this->contextCode = $this->objContext->getContextCode();
 		switch($action)
 		{
 		  case 'classroom':
@@ -166,6 +166,11 @@ class realtime extends controller
     		$this->setVar('hastoken', $hasToken);
     		return "redirect_tpl.php";
     	}
+    }
+    
+    function stopConversation($userid, $userlevel, $contextcode)
+    {
+    	
     }
 }
 ?>
