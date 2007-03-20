@@ -33,17 +33,12 @@
 			/**
 			 * no open conversation and student can't start one
 			 */
-			if($userLevel=="Student"){
+			if(eregi("student",$userLevel)){
 				return FAILURE;
-			}elseif($userLevel == "Lecturer"){
+			}elseif(eregi("lecturer", $userLevel)){
 				/**
 				 * no open session yet
 				 */
-				 $addRow = array();
-				 $starttime = strftime('%Y-%m-%d %H:%M:%S', mktime());
-				 $addRow['contextcode'] = $contextCode;
-				 $addRow['starttime'] = $starttime;
-				 $this->insert($addRow, 'tbl_realtime_conversation');
 				
 				 return SUCCESS;
 			}else{
@@ -72,7 +67,7 @@
 				 * if the requester is lecturer,
 				 * give the token. otherwise return token not available
 				 */
-				 if($userLevel == "Lecturer"){
+				 if(eregi("lecturer", $userLevel)){
 				 	//delete details of who ever has the token.
 				 	
 				 	$sql = "delete from tbl_realtime_voicequeue";
@@ -114,28 +109,71 @@
  	 *  end conversation.
  	 *	return false
  	 */
- 	public function endConversation($userLevel){
- 		$sql = "delete from tbl_realtime_conversation";
- 		$this->query($sql);
- 		$sql = "delete from tbl_realtime_voicequeue";
- 		$this->query($sql);
- 		return FAILURE;
+ 	public function stopConversation($contextcode){
+		$this->removeConversation($contextcode);
+ 		return SUCCESS;
  	}
  	
  	public function startConversation($userid, $userlevel, $contextcode)
  	{
- 		 //lecturer starts one.
- 		$sql = "select id from tbl_realtime_conversation";
+ 		$sql = "select contextcode from tbl_realtime_conversation where contextcode=\"$contextcode\"";
+ 		$result = $this->getArray($sql);
+ 		
+ 		if(empty($result)){
+			$this->addConversation($userid, $userlevel, $contextcode);
+			return SUCCESS;	
+ 		}else{
+ 			foreach ($result as $context){
+ 				$contextC = $context['contextcode'];
+ 				$this->removeConversation($contextC);
+ 			}
+ 			$this->addConversation($userid, $userlevel, $contextcode);
+ 			return SUCCESS;
+ 		}		
+ 	}
+ 	
+ 	private function removeConversation($contextCode)
+ 	{
+ 		$sql = "select conversationid from tbl_realtime_conversation where contextcode=\"$contextCode\"";
+ 		$result = $this->getArray($sql);
+ 		if(empty($result)){
+ 			//return FAILURE;
+ 		}else{
+ 			foreach ($result as $id){
+ 				$convId = $id['conversationid'];
+ 			}
+ 			//delete entries from voicequeue table
+ 			$sql = "delete from tbl_realtime_voicequeue where conversationid=\"$convId\"";
+ 			$this->getArray($sql);
+ 			
+ 			//delete entries from conversation table
+ 			$sql = "delete from tbl_realtime_conversation where id=\"$convId\"";
+ 			$this->getArray($sql); 	
+ 			//return SUCCESS;		
+ 		}
+ 	}
+ 	
+ 	private function addConversation($userid, $userlevel, $contextcode)
+ 	{
+ 		$addRow = array();
+		$starttime = strftime('%Y-%m-%d %H:%M:%S', mktime());
+		$addRow['userid'] = $userid;
+		$addRow['contextcode'] = $contextcode;
+		$addRow['starttime'] = $starttime;
+		$this->insert($addRow, 'tbl_realtime_conversation');			
+		 
+	 	//lecturer starts one.
+		$sql = "select id from tbl_realtime_conversation";
 		$res = $this->getArray($sql);
 		foreach($res as $result){
 			$lastId = $result['id'];
 		}
+		
 		$queue = array();
 		$queue['conversationid'] = $lastId;
 		$queue['userid'] = $userid;
 		$queue['hastoken'] = 1;
-		$this->insert($queue, 'tbl_realtime_voicequeue');
-		return SUCCESS;		
+		$this->insert($queue, 'tbl_realtime_voicequeue'); 		
  	}
  }
 ?>
