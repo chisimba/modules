@@ -52,7 +52,7 @@ public  function  getAllstudents(){
 		$res = $this->objstudcard->getallstudinfo();
 		$stdCount=count($res); 
     $startat = $this->getParam('startat', 1);
-    $dispCount = $this->getParam('dispcount', 2);
+    $dispCount = $this->getParam('dispcount', 25);
     $page = $this->getParam('page', '1');
 
 //if(is_array($stdinfo)){
@@ -194,15 +194,15 @@ if ($stdCount > 0){
         $myTable->width = '100%';
 
         $myTable->startHeaderRow();
-        $myTable->addHeaderCell('Date',"6%", null, "left","header");
-        $myTable->addHeaderCell('School Name',"15%", null, "left","header");
-        $myTable->addHeaderCell('Surname',"15%", null, "left","header");
-        $myTable->addHeaderCell('Name',"15%", null, "left","header");
-        $myTable->addHeaderCell('Postal Address',"15%", null, "left","header");
-        $myTable->addHeaderCell('Postal Code',"10%", null, "left","header");
-        $myTable->addHeaderCell('Telephone Number',"15%", null, "left","header");
-        $myTable->addHeaderCell('Cell phone Number',"15%", null, "left","header");
-        $myTable->addHeaderCell('Email Address',"15%", null, "left","header");
+        $myTable->addHeaderCell('Date'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
+        $myTable->addHeaderCell('School'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
+        $myTable->addHeaderCell('Surname'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
+        $myTable->addHeaderCell('Name'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
+        $myTable->addHeaderCell('Address'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
+        $myTable->addHeaderCell('Postal Code'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
+        $myTable->addHeaderCell('Telephone Number'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
+        $myTable->addHeaderCell('Cell Number'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
+        $myTable->addHeaderCell('Email Address'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
         $myTable->endHeaderRow();
      
         $rowcount = 0;
@@ -212,15 +212,15 @@ if ($stdCount > 0){
              
          $myTable->startRow();
         (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-         $myTable->addCell($results[$i]->ENTRYDATE,"6%", null, "left","$oddOrEven");
-         $myTable->addCell($results[$i]->SCHOOLNAME,"15%", null, "left","$oddOrEven");
-         $myTable->addCell($results[$i]->SURNAME,"15%", null, "left","$oddOrEven");
-         $myTable->addCell($results[$i]->NAME,"15%", null, "left","$oddOrEven");
-         $myTable->addCell($results[$i]->POSTADDRESS,"15%", null, "left","$oddOrEven");
-         $myTable->addCell($results[$i]->POSTCODE,"10%", null, "left","$oddOrEven");
-         $myTable->addCell($results[$i]->TELCODE.' '.$results[$i]->TELNUMBER,"15%", null, "left","$oddOrEven");
-         $myTable->addCell($results[$i]->CELLNUMBER,"15%", null, "left","$oddOrEven");
-         $myTable->addCell($results[$i]->STUDEMAIL,"15%", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->ENTRYDATE,"", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->SCHOOLNAME,"", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->SURNAME,"", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->NAME,"", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->POSTADDRESS,"", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->POSTCODE,"", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->TELCODE.' '.$results[$i]->TELNUMBER,"", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->CELLNUMBER,"", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->STUDEMAIL,"", null, "left","$oddOrEven");
          $myTable->row_attributes = " class = \"$oddOrEven\"";
          $rowcount++;
          $myTable->endRow();
@@ -233,7 +233,7 @@ if ($stdCount > 0){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '30%';
+                 $myTable->width = '100%';
                  $myTable->css_class = 'highlightrows';
                  $myTable->row_attributes = " class = \"$oddEven\"";
                  
@@ -241,7 +241,7 @@ if ($stdCount > 0){
                  
                  $myTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
+                 $myTable->addCell('NO RECORDS FOUND',"100", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();
@@ -270,7 +270,7 @@ public  function allstudschool($school){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '100%';
+                 $myTable->width = '150%';
                  $myTable->css_class = 'highlightrows';
                  
                  $myTable->startHeaderRow();
@@ -298,7 +298,7 @@ public  function allstudschool($school){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '30%';
+                 $myTable->width = '130%';
                  $myTable->css_class = 'highlightrows';
                  $myTable->row_attributes = " class = \"$oddEven\"";
                  
@@ -306,7 +306,7 @@ public  function allstudschool($school){
                  
                  $myTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
+                 $myTable->addCell('NO RECORDS FOUND',"130%", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();
@@ -331,7 +331,7 @@ public  function  allwithexemption(){
 		$res = $this->objstudcard->allstudsexemption($where = 'where exemption = 1');
 		$stdCount=count($res); 
     $startat = $this->getParam('startat', 1);
-    $dispCount = $this->getParam('dispcount', 2);
+    $dispCount = $this->getParam('dispcount', 25);
     $page = $this->getParam('page', '1');
 
 //if(is_array($stdinfo)){
@@ -471,7 +471,7 @@ if ($stdCount > 0){
           $myTable->cellspacing = '1';
           $myTable->cellpadding = '2';
           $myTable->border='0';
-          $myTable->width = '100%';
+          $myTable->width = '130%';
           $myTable->css_class = 'highlightrows';
    
     
@@ -488,10 +488,10 @@ if ($stdCount > 0){
      
          $myTable->startRow();
          (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-         $myTable->addCell($results[$i]->SCHOOLNAME,"15%", null, "left","$oddOrEven");
-         $myTable->addCell($results[$i]->SURNAME, "15%", null, "left","$oddOrEven");
-         $myTable->addCell($results[$i]->NAME, "15%", null, "left","$oddOrEven");
-         $myTable->addCell('YES',"15%", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->SCHOOLNAME,"25%", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->SURNAME, "25%", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->NAME, "25%", null, "left","$oddOrEven");
+         $myTable->addCell('YES',"25%", null, "left","$oddOrEven");
          $myTable->row_attributes = " class = \"$oddOrEven\"";
          $rowcount++;
          $myTable->endRow();
@@ -504,7 +504,7 @@ if ($stdCount > 0){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '30%';
+                 $myTable->width = '130%';
                  $myTable->css_class = 'highlightrows';
                  $myTable->row_attributes = " class = \"$oddEven\"";
                  
@@ -512,7 +512,7 @@ if ($stdCount > 0){
                  
                  $myTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
+                 $myTable->addCell('NO RECORDS FOUND',"130%", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();
@@ -524,210 +524,6 @@ if ($stdCount > 0){
 
      return $content;
 }	
-/*------------------------------------------------------------------------------*/
-/**
- * Method to display all students that completed information and have the relevant subjects
- * @param array obj $results passed to function, contains all student details with relevant subjects
- * Call function allrelsubject() from dbstudcard class 
- * loop through contents of $school and create table rows
- * @return obj $myTable      
- */ 
-/*public function allwithrelsub($where = 'where relevantsubject = 1'){
-
-         $results = $this->objstudcard->allrelsubject();
- 		$res = $this->objstudcard->allstudsexemption($where = 'where exemption = 1');
-		$stdCount=count($res); 
-    $startat = $this->getParam('startat', 1);
-    $dispCount = $this->getParam('dispcount', 2);
-    $page = $this->getParam('page', '1');
-
-//if(is_array($stdinfo)){
-  //    $cnt = count($stdinfo);
-if ($stdCount > 0){
-      //***start of pages***
-     $links_code = "";
-     $pageCount = $stdCount/$dispCount;
-
-     $showlinks =& $this->getObject('htmlHeading','htmlelements');
-     if ($pageCount != floor($pageCount)) {
-         $pageCount = strtok(($pageCount+1), ".");
-     }
-     $startat = ($page - 1) * $dispCount;
-     $endat = $startat + $dispCount;
-     if ($endat > $stdCount){
-        $endat = $stdCount;
-     }
-     $dispcountfield = new textinput("dispcount", $dispCount,  "hidden", NULL);
-     $goButton = & $this->newObject('button','htmlelements');
-   	 $cancelButton = & $this->newObject('button','htmlelements');
-     $goButton = new button("submit",'Go');
-     $goButton->setToSubmit();
-	   $cancelButton = new button("cancel", 'Cancel');
-     $cancelButton->setToSubmit();
-     $dropdown =& $this->newObject("dropdown", "htmlelements");
-	   $dropdown->name = 'page';
-    	for ($i = 1; $i <= $pageCount; $i++){
-    	    $dropdown->addOption($i,$i."&nbsp;&nbsp;&nbsp;");
-            if ($i == $page){
-                $dropdown->setSelected($i);
-            }
-    	}
-      if ($page > 1){
-          $prevLink = new link();
-          $prevLink->href=$this->uri(array('action'=>'showsallearchslu','page'=>($page-1), 'dispcount'=>$dispCount));
-          $prevLink->link = 'Pervious';
-          $prevLink->style = "text-decoration:none";
-          $prev = $prevLink->show();
-      }else{
-          $prev = 'Pervious';
-      }
-
-      if ($page < $pageCount){
-          $nextLink = new link();
-          $nextLink->href=$this->uri(array('action'=>'showsallearchslu','page'=>($page+1), 'dispcount'=>$dispCount));
-          $nextLink->link = 'Next';
-          $nextLink->style = "text-decoration:none";
-          $next = $nextLink->show();
-      }else{
-          $next = 'Next';
-      }
-    $objPaging = new form('pagingform');
-    $objPaging->setAction($this->uri(array('action'=>'showsallearchslu', 'page'=>($page-1), 'dispcount'=>$dispCount)));
-	$objPaging->addToForm('<center>'.'Page '.$dropdown->show().' of '.'<b>'.$pageCount.'</b>'.' '.$goButton->show()."&nbsp;&nbsp;&nbsp;&nbsp;"."<span class='menulink'><b>".$prev."&nbsp;&nbsp;".$next.'</b></span></center>');
-    $paging = $objPaging->show();
-
-    $records = array(
-      'RANGE' => ($startat+1).'-'.$endat,
-      'TOTAL' => $stdCount);
-
-
-				
-		$start=$startat+1;
-     $viewpages = new link();
-	
-     for ($n=0; $n < $pageCount; $n++) {
-         $stdCountR = ($n * $dispCount);
-         $num = $n + 1;
-         if ($num != $page){
-            $viewpages->href=$this->uri(array('action'=>'showsallearchslu','startat'=>$stdCountR,'pg'=>$num, 'dispcount'=>$dispCount));
-            $viewpages->link = "$num";
-            $viewpages->style = "text-decoration:none";
-            $links_code .= $viewpages->show();
-         }else{
-            $links_code .= "$num";
-         }
-         if ($num == $pageCount){
-              // $links_code .= " ";
-         }else if($n < $pageCount){
-            $links_code .= " | ";
-         }
-     }
-     $endl = $startat + $dispCount;
-
-     if($stdCount<$dispCount){
-	     $endl=$stdCount;
-     }
-	 if ($endl > $stdCount){
-        $endl = $stdCount;
-     }
-     
-     $viewp ="";
-     $viewn ="";
-
-     if ($startat > 1){
-        $page = $this->getParam('pg');
-        $pg = $page - 1;
-        $stdCountR = $startat - $dispCount;
-
-        $viewprev = new link();
-        $viewprev->href=$this->uri(array('action'=>'showsallearchslu','startat'=>$stdCountR,'pg'=>$pg, 'dispcount'=>$dispCount));
-        $viewprev->link = 'Pervious';
-		
-        $viewprev->style = "text-decoration:none";
-        $viewp = $viewprev->show()." |";
-     }
-     $vntest = $stdCount - $dispCount;
-     if ($startat <= $vntest){
-        $pg = $page + 1;
-        $stdCountR = $startat + $dispCount;
-
-        $viewnext = new link();
-        $viewnext->href=$this->uri(array('action'=>'showsallearchslu','startat'=>$stdCountR,'pg'=>$pg, 'dispcount'=>$dispCount));
-        $viewnext->link = 'Next';
-        $viewnext->style = "text-decoration:none";
-        $viewn = "| ".$viewnext->show();
-     }
-
-     $Rectbl =" ";
-     $Rectbl.="Results <b>$start - $endl</b> of <b>$stdCount</b>";
-     $records = $Rectbl;
-     $showlinks->str = "$viewp $links_code $viewn";
-     $showlinks->align="center";
-
-      if($stdCount < $dispCount){
-          $pagelinks = "";
-      }else{
-          $pagelinks = $showlinks->show();
-      }
-             //***end of pagination***
-		 $results = $this->objstudcard->exemption($startat,$endat);
-
-//     if($results){ 
-         $oddEven = 'even';
-         $myTable =& $this->newObject('htmltable', 'htmlelements');
-         $myTable->cellspacing = '1';
-         $myTable->cellpadding = '2';
-         $myTable->border='0';
-         $myTable->width = '100%';
-         $myTable->css_class = 'highlightrows';
-      
-         $myTable->startHeaderRow();
-         $myTable->addHeaderCell('School Name', null,'top','left','header');
-         $myTable->addHeaderCell('Surname', null,'top','left','header');
-         $myTable->addHeaderCell('Name', null,'top','left','header');
-         $myTable->addHeaderCell('Relevant Subject', null,'top','left','header');
-         $myTable->endHeaderRow();
-        
-         $rowcount = 0;
-  
-     for($i=0; $i< count($results); $i++){
-     
-         $myTable->startRow();
-         (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-         $myTable->addCell($results[$i]->SCHOOLNAME,"15%", null, "left","$oddOrEven");
-         $myTable->addCell($results[$i]->SURNAME, "15%", null, "left","$oddOrEven");
-         $myTable->addCell($results[$i]->NAME, "15%", null, "left","$oddOrEven");
-         $myTable->addCell('YES',"15%", null, "left","$oddOrEven");
-         $myTable->row_attributes = " class = \"$oddOrEven\"";
-         $rowcount++;
-         $myTable->endRow();
-        
-   }
-   }else{
-   
-                $oddEven = 'even';
-                 $myTable =& $this->newObject('htmltable', 'htmlelements');
-                 $myTable->cellspacing = '1';
-                 $myTable->cellpadding = '2';
-                 $myTable->border='0';
-                 $myTable->width = '30%';
-                 $myTable->css_class = 'highlightrows';
-                 $myTable->row_attributes = " class = \"$oddEven\"";
-                 
-                 $rowcount = 0;
-                 
-                 $myTable->startRow();
-                (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
-                 $myTable->row_attributes = " class = \"$oddOrEven\"";
-                 $rowcount++;
-                 $myTable->endRow();
-   
-   
-   }  
-         return $myTable->show();
-  
-}
 /*------------------------------------------------------------------------------*/
 /**
  * Method to display all students that completed information grouped by faculty entered for
@@ -744,7 +540,7 @@ public function studfaculty(){
  		$res = $this->objstudcard->allbyfaculty();
 		$stdCount=count($res); 
     $startat = $this->getParam('startat', 1);
-    $dispCount = $this->getParam('dispcount', 2);
+    $dispCount = $this->getParam('dispcount', 25);
     $page = $this->getParam('page', '1');
 
 //if(is_array($stdinfo)){
@@ -884,7 +680,7 @@ if ($stdCount > 0){
          $myTable->cellspacing = '1';
          $myTable->cellpadding = '2';
          $myTable->border='0';
-         $myTable->width = '100%';
+         $myTable->width = '130%';
          $myTable->css_class = 'highlightrows';
          
          $myTable->startHeaderRow();
@@ -918,7 +714,7 @@ if ($stdCount > 0){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '30%';
+                 $myTable->width = '130%';
                  $myTable->css_class = 'highlightrows';
                  $myTable->row_attributes = " class = \"$oddEven\"";
                  
@@ -926,7 +722,7 @@ if ($stdCount > 0){
                  
                  $myTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
+                 $myTable->addCell('NO RECORDS FOUND',"130%", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();
@@ -951,7 +747,7 @@ public function studfaculty2ndchoice(){
    	$res = $this->objstudcard->allbyfaculty();
 		$stdCount=count($res); 
     $startat = $this->getParam('startat', 1);
-    $dispCount = $this->getParam('dispcount', 2);
+    $dispCount = $this->getParam('dispcount', 25);
     $page = $this->getParam('page', '1');
 
 //if(is_array($stdinfo)){
@@ -1091,7 +887,7 @@ if ($stdCount > 0){
          $myTable->cellspacing = '1';
          $myTable->cellpadding = '2';
          $myTable->border='0';
-         $myTable->width = '100%';
+         $myTable->width = '130%';
          $myTable->css_class = 'highlightrows';
          
          $myTable->startHeaderRow();
@@ -1111,9 +907,9 @@ if ($stdCount > 0){
               }
          $myTable->startRow();
          (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-         $myTable->addCell($results[$i]->SURNAME, "15%", null, "left","$oddOrEven");
-         $myTable->addCell($results[$i]->NAME, "15%", null, "left","$oddOrEven");
-         $myTable->addCell($fac,"15%", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->SURNAME, "35%", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->NAME, "35%", null, "left","$oddOrEven");
+         $myTable->addCell($fac,"35%", null, "left","$oddOrEven");
          $myTable->row_attributes = " class = \"$oddOrEven\"";
          $rowcount++;
          $myTable->endRow();
@@ -1125,7 +921,7 @@ if ($stdCount > 0){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '30%';
+                 $myTable->width = '130%';
                  $myTable->css_class = 'highlightrows';
                  $myTable->row_attributes = " class = \"$oddEven\"";
                  
@@ -1133,7 +929,7 @@ if ($stdCount > 0){
                  
                  $myTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
+                 $myTable->addCell('NO RECORDS FOUND',"130%", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();
@@ -1164,7 +960,7 @@ public function studcourse(){
     $res = $this->objstudcard->allbycourse();
 		$stdCount=count($res); 
     $startat = $this->getParam('startat', 1);
-    $dispCount = $this->getParam('dispcount', 2);
+    $dispCount = $this->getParam('dispcount', 25);
     $page = $this->getParam('page', '1');
 
 //if(is_array($stdinfo)){
@@ -1304,7 +1100,7 @@ if ($stdCount > 0){
           $myTable->cellspacing = '1';
           $myTable->cellpadding = '2';
           $myTable->border='0';
-          $myTable->width = '100%';
+          $myTable->width = '130%';
           $myTable->css_class = 'highlightrows';
          
           $myTable->startHeaderRow();
@@ -1333,10 +1129,10 @@ if ($stdCount > 0){
      
          $myTable->startRow();
          (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-         $myTable->addCell($results[$i]->SURNAME, "15%", null, "left","$oddOrEven");
-         $myTable->addCell($results[$i]->NAME, "15%", null, "left","$oddOrEven");
-         $myTable->addCell($crse,"10%", null, "left","$oddOrEven");
-         $myTable->addCell($fac,"10%", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->SURNAME, "25%", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->NAME, "25%", null, "left","$oddOrEven");
+         $myTable->addCell($crse,"25%", null, "left","$oddOrEven");
+         $myTable->addCell($fac,"25%", null, "left","$oddOrEven");
          $myTable->row_attributes = " class = \"$oddOrEven\"";
          $rowcount++;
          $myTable->endRow();
@@ -1349,7 +1145,7 @@ if ($stdCount > 0){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '30%';
+                 $myTable->width = '130%';
                  $myTable->css_class = 'highlightrows';
                  $myTable->row_attributes = " class = \"$oddEven\"";
                  
@@ -1357,7 +1153,7 @@ if ($stdCount > 0){
                  
                  $myTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
+                 $myTable->addCell('NO RECORDS FOUND',"130%", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();
@@ -1382,7 +1178,7 @@ public function studcourse2ndchoice(){
     $res = $this->objstudcard->allbycourse();
 		$stdCount=count($res); 
     $startat = $this->getParam('startat', 1);
-    $dispCount = $this->getParam('dispcount', 2);
+    $dispCount = $this->getParam('dispcount', 25);
     $page = $this->getParam('page', '1');
 
 //if(is_array($stdinfo)){
@@ -1522,7 +1318,7 @@ if ($stdCount > 0){
           $myTable->cellspacing = '1';
           $myTable->cellpadding = '2';
           $myTable->border='0';
-          $myTable->width = '100%';
+          $myTable->width = '130%';
           $myTable->css_class = 'highlightrows';
          
           $myTable->startHeaderRow();
@@ -1551,10 +1347,10 @@ if ($stdCount > 0){
      
          $myTable->startRow();
          (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-         $myTable->addCell($results[$i]->SURNAME, "15%", null, "left","$oddOrEven");
-         $myTable->addCell($results[$i]->NAME, "15%", null, "left","$oddOrEven");
-         $myTable->addCell($crse,"10%", null, "left","$oddOrEven");
-         $myTable->addCell($fac,"10%", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->SURNAME, "25%", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->NAME, "25%", null, "left","$oddOrEven");
+         $myTable->addCell($crse,"25%", null, "left","$oddOrEven");
+         $myTable->addCell($fac,"25%", null, "left","$oddOrEven");
          $myTable->row_attributes = " class = \"$oddOrEven\"";
          $rowcount++;
          $myTable->endRow();
@@ -1567,7 +1363,7 @@ if ($stdCount > 0){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '30%';
+                 $myTable->width = '130%';
                  $myTable->css_class = 'highlightrows';
                  $myTable->row_attributes = " class = \"$oddEven\"";
                  
@@ -1575,7 +1371,7 @@ if ($stdCount > 0){
                  
                  $myTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
+                 $myTable->addCell('NO RECORDS FOUND',"130%", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();
@@ -1606,7 +1402,7 @@ public function studarea(){
     $res = $this->objstudcard->getstudbyarea();
 		$stdCount=count($res); 
     $startat = $this->getParam('startat', 1);
-    $dispCount = $this->getParam('dispcount', 2);
+    $dispCount = $this->getParam('dispcount', 25);
     $page = $this->getParam('page', '1');
 
 //if(is_array($stdinfo)){
@@ -1746,7 +1542,7 @@ if ($stdCount > 0){
           $myTable->cellspacing = '1';
           $myTable->cellpadding = '2';
           $myTable->border='0';
-          $myTable->width = '100%';
+          $myTable->width = '130%';
           $myTable->css_class = 'highlightrows';
          
           $myTable->startHeaderRow();
@@ -1764,11 +1560,11 @@ if ($stdCount > 0){
      
            $myTable->startRow();
            (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-           $myTable->addCell($results[$i]->SURNAME, "15%", null, "left","$oddOrEven");
-           $myTable->addCell($results[$i]->NAME,"15%", null, "left","$oddOrEven");
-           $myTable->addCell($results[$i]->POSTADDRESS,"15%", null, "left","$oddOrEven");
+           $myTable->addCell($results[$i]->SURNAME, "25%", null, "left","$oddOrEven");
+           $myTable->addCell($results[$i]->NAME,"25%", null, "left","$oddOrEven");
+           $myTable->addCell($results[$i]->POSTADDRESS,"25%", null, "left","$oddOrEven");
            //$myTable->addCell($results[$i]->SCHOOLNAME,"15%", null, "left","$oddOrEven");
-           $myTable->addCell($results[$i]->AREA,"15%", null, "left","$oddOrEven");
+           $myTable->addCell($results[$i]->AREA,"25%", null, "left","$oddOrEven");
            $myTable->row_attributes = " class = \"$oddOrEven\"";
            $rowcount++;
            $myTable->endRow();
@@ -1781,7 +1577,7 @@ if ($stdCount > 0){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '30%';
+                 $myTable->width = '130%';
                  $myTable->css_class = 'highlightrows';
                  $myTable->row_attributes = " class = \"$oddEven\"";
                  
@@ -1789,7 +1585,7 @@ if ($stdCount > 0){
                  
                  $myTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
+                 $myTable->addCell('NO RECORDS FOUND',"130%", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();
@@ -1812,14 +1608,14 @@ if ($stdCount > 0){
  * @return obj $myTable      
  */
 public function studsdcase(){
-    		$details = '';
+    $details = '';
     $records = '';
     $paging = '';    
     //$results = $this->objstudcard->sdcases($where = 'where sdcase = 1 and exemption = 0');
     $res = $this->objstudcard->sdcases($where = 'where sdcase = 1 and exemption = 0');
 		$stdCount=count($res); 
     $startat = $this->getParam('startat', 1);
-    $dispCount = $this->getParam('dispcount', 2);
+    $dispCount = $this->getParam('dispcount', 25);
     $page = $this->getParam('page', '1');
 
 //if(is_array($stdinfo)){
@@ -1959,7 +1755,7 @@ if ($stdCount > 0){
          $myTable->cellspacing = '1';
          $myTable->cellpadding = '2';
          $myTable->border='0';
-         $myTable->width = '100%';
+         $myTable->width = '130%';
          $myTable->css_class = 'highlightrows';
   
          $myTable->startHeaderRow();
@@ -1974,10 +1770,10 @@ if ($stdCount > 0){
        
          $myTable->startRow();
          (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-         $myTable->addCell($results[$i]->SURNAME, "15%", null, "left","$oddOrEven");
-         $myTable->addCell($results[$i]->NAME, "15%", null, "left","$oddOrEven");
-         $myTable->addCell($results[$i]->SCHOOLNAME,"15%", null, "left","$oddOrEven");
-         $myTable->addCell('YES',"15%", null, "left","$oddOrEven"); 
+         $myTable->addCell($results[$i]->SURNAME, "25%", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->NAME, "25%", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->SCHOOLNAME,"25%", null, "left","$oddOrEven");
+         $myTable->addCell('YES',"25%", null, "left","$oddOrEven"); 
          $myTable->row_attributes = " class = \"$oddOrEven\"";
          $rowcount++;
          $myTable->endRow();
@@ -1990,7 +1786,7 @@ if ($stdCount > 0){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '30%';
+                 $myTable->width = '130%';
                  $myTable->css_class = 'highlightrows';
                  $myTable->row_attributes = " class = \"$oddEven\"";
                  
@@ -1998,7 +1794,7 @@ if ($stdCount > 0){
                  
                  $myTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
+                 $myTable->addCell('NO RECORDS FOUND',"130%", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();
@@ -2007,7 +1803,10 @@ if ($stdCount > 0){
     
     
     }
-         return $myTable->show();
+      $content  =$myTable->show();
+      $content = "<center>".$details.$records.$paging."</center> ".$content;
+
+     return $content;
 }     
 /*------------------------------------------------------------------------------*/
 /**
@@ -2026,7 +1825,7 @@ public function countstudfaculty($faculty11){
              $myTable->cellspacing = '1';
              $myTable->cellpadding = '2';
              $myTable->border='0';
-             $myTable->width = '100%';
+             $myTable->width = '130%';
              $myTable->css_class = 'highlightrows';
       
              $myTable->startHeaderRow();
@@ -2063,7 +1862,7 @@ public function countstudfaculty($faculty11){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '30%';
+                 $myTable->width = '130%';
                  $myTable->css_class = 'highlightrows';
                  $myTable->row_attributes = " class = \"$oddEven\"";
                  
@@ -2071,7 +1870,7 @@ public function countstudfaculty($faculty11){
                  
                  $myTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
+                 $myTable->addCell('NO RECORDS FOUND',"130%", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();
