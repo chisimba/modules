@@ -5,7 +5,7 @@
        *load all classes
        */
        //$this->objsearchinfo = & $this->getObject('searchinfo','marketingrecruitmentforum');
-       $this->objsearchfac  = & $this->newObject('searchfaculty','marketingrecruitmentforum');
+       $this->objsearchfac  = & $this->newObject('searchfaculty2','marketingrecruitmentforum');
        $this->objfaculties =& $this->getObject('dbstudentcard','marketingrecruitmentforum');
        
 /*---------------------------------------------------------------------------------------------------*/       
@@ -15,7 +15,7 @@
         */
         $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
         $this->objMainheading->type=1;
-        $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_infocardfaculty2','marketingrecruitmentforum');
+        $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_infocardfaculty2nd','marketingrecruitmentforum');
 /*---------------------------------------------------------------------------------------------------*/  
       /**
         *define all language items
@@ -33,27 +33,28 @@
         }
       
       //create dropdown for faculty values
-    	$objDropdown = new dropdown('facultynameval');  
+    	$objDropdown = new dropdown('facultynameval2nd');  
       sort($facVAL);   
       foreach($facVAL as $sessf){
           $objDropdown->addOption(NULL, ''.$facultyselect); 
           $objDropdown->addOption($sessf,$sessf); 
       }
        
-       $objDropdown->extra = ' onChange="document.searchsluresults.submit()"'; 
-       $objDropdown->setSelected($this->getParam('facultynameval',NULL));        
+       $objDropdown->extra = ' onChange="document.searchfacultydetails.submit()"'; 
+       $objDropdown->setSelected($this->getParam('facultynameval2nd',NULL)); 
+              
         
 /*---------------------------------------------------------------------------------------------------*/
      /**
       *call all class objects to define layout
       */
       
-      $facultyentered = $this->objsearchfac->studentsbyfaculty($facultyval);
+      $facultyentered = $this->objsearchfac->studentsbyfaculty2($facultyval2);
      //var_dump($facultyentered);
-      $exemptionfaculty = $this->objsearchfac->exemptionbyfaculty($facultyexmp);
-      $facrelsubj = $this->objsearchfac->relsubjbyfaculty($facsubj);
-      $coursefaculty  = $this->objsearchfac->coursebyfaculty($faccourse);
-      $sdcasefac  = $this->objsearchfac->sdcasebyfaculty($facsdcase);
+      $exemptionfaculty = $this->objsearchfac->exemptionbyfaculty2($facultyexmp2);
+      $facrelsubj = $this->objsearchfac->relsubjbyfaculty2($facsubj2);
+      $coursefaculty  = $this->objsearchfac->coursebyfaculty2($faccourse2);
+      $sdcasefac  = $this->objsearchfac->sdcasebyfaculty2($facsdcase2);
      
 /*---------------------------------------------------------------------------------------------------*/      
      /**
@@ -61,7 +62,7 @@
      */           
     
       $facultyinfo = & $this->newObject('tabcontent','htmlelements');
-      $facultyinfo->name = 'studfacdata';
+      $facultyinfo->name = 'studfacdata2';
       $facultyinfo->width = '500px';
       
       $facultyinfo->addTab('Students Entered For Faculty',$facultyentered, false);
@@ -75,7 +76,7 @@
      *create a form to place all elements in
      */
       
-     $objForm = new form('searchsluresults',$this->uri(array('action'=>'studcardfaculty')));
+     $objForm = new form('searchfacultydetails',$this->uri(array('action'=>'studcardfacultydetails')));
      $objForm->displayType = 3;
      $objForm->addToForm("<center>".$this->objMainheading->show(). '<br />' . '<br />'. '<b>' .$searchmsg . "&nbsp" .'</b>'. $objDropdown->show()."</center>" . '<br />' . '<br />' .$facultyinfo->show());
 

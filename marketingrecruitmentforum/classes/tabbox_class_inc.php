@@ -8,14 +8,14 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 
 /**
-* Model class for the table  
-* Creates the right-Quick Search box.
+* Model class used to create tabpane  
+* Also applies skin within resources folder to tabpane.
 */
 class tabbox extends object
 {
-    var $tabs;
-    var $tabCount;
-    var $tabName;
+    public $tabs;
+    public $tabCount;
+    public $tabName;
     
     function tabbox(){
         $this->tabs = array();

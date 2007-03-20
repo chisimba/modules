@@ -61,7 +61,7 @@
   */
   $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
   $this->objMainheading->type=1;
-  $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_schoollist','marketingrecruitmentforum');
+  $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_schoollist11','marketingrecruitmentforum');
   
   $this->objheading =& $this->newObject('htmlheading','htmlelements');
   $this->objheading->type=5;
@@ -135,10 +135,8 @@
        $schoolnames = $this->objfaculties->getSchools(); 
        for($i=0; $i < count($schoolnames); $i++){
             $schoolvalues[$i]=$schoolnames[$i]->SCHOOLNAME;
-            $schoolcodeval[$i]  = $schoolnames[$i]->SCHOOLCODE;
-            //$this->setSession('schoolcodeval',$schoolcodeval);
        }
-        
+
        //create dropdown list
        $searchlist  = new dropdown('schoollistactivity');
        
@@ -325,7 +323,7 @@
    *create a form to place all elements in
    */
    
-   $objForm = new form('schoollist',$this->uri(array('action'=>'showschooloutput')));
+   $objForm = new form('schoollist',$this->uri(array('action'=>'schooleditoutput')));
    $objForm->displayType = 3;
    $objForm->addToForm($this->objMainheading->show().'<br />'."<span class=error>".'<i>'.$this->objheading->show().'</i>'."</span>".'<br />'.$myTable->show());
    $objForm->addRule('schoollistactivity',$selectSch,'required');

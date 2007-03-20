@@ -1,100 +1,252 @@
 <?php
-//class use to perform all database manipulation of all SLU info captured
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
 /**
-* This object generates data used perform database manipulation
+* This class use to perform all database manipulation of all SLU info captured
 * @package 
 * @category sems
-* @copyright 2004, University of the Western Cape & AVOIR Project
+* @copyright 2005, University of the Western Cape & AVOIR Project
 * @license GNU GPL
 * @version
 * @author Colleen Tinker
 */
-class dbsluactivities extends dbTable{ 
+class dbsluactivities extends object{ 
 
-  //protected $_objUser;
- function init()
-	{
-	 try {
-     
-     
-      parent::init('tbl_sluactivities');
-		
-			
-		}catch (Exception $e){
-       		echo 'Caught exception: ',  $e->getMessage();
-        	exit();
-    }
-	}
-/*------------------------------------------------------------------------------*/
-  //insert all studcard information to database
-  public function addsluactivity($sluactivity)
-	{
-        $sluinfo = $this->insert($sluactivity);
-        return $sluinfo;
-  }	
-/*------------------------------------------------------------------------------*/
- //select all informatio from the stud card table
- public function getallsluactivity()
- {
-      $stmt = "select distinct(activity),date,schoolname,area,province from tbl_sluactivities order by date,activity";
-      $sluresults  = $this->getArray($stmt);
-      return  $sluresults;
- } 
-/*------------------------------------------------------------------------------*/
-//display all activities between two dates
-  public function getactivitydate($begindate,$enddate)
-  {
-    //how to specify the following
-    /* 2.	Select date, activity_type
-        	From activity
-          Where date between $this->getParam(date1) and $this->getParam(date2);
+	 /**
+    *
+    * @var string $objSoapClient A property used to hold the soap client object.
+    *
+    * @access public
+    *
     */
-      
-      $stmt = "select distinct(activity),date from tbl_sluactivities where date between '$begindate' and '$enddate' order by date,activity";
-      $activitydate  = $this->getArray($stmt);
-      return  $activitydate;
-  }   
+    public $objSoapClient;
+
+    /**
+    *
+    * @var string $schema A property used to hold the shema to use for the oracle db
+    *
+    * @access public
+    *
+    */
+    public $schema;
+    
+    
+
+  /**
+   * Standard init function
+   * @param reference tbl studcard 
+   * @param void
+   * @return void
+   */    
+
+ 
+ 	public function init()
+  {
+      		parent::init();
+        
+        try {
+            $this->schema = 'sems';
+            $objSysconfig =& $this->getObject('dbsysconfig', 'sysconfig');
+            $this->objSoapClient = new SoapClient('http://'.$objSysconfig->getValue('SEMSGENERICWS', 'marketingrecruitmentforum'));
+        } catch (Exception $e) {
+           die($e->getMessage());
+        }
+        
+   }
+	
 /*------------------------------------------------------------------------------*/
-//display all activities by type
-  public function getactivitytype()
-  {   //use filter and specify type
+/**
+ * Method to insert all SLU Activity into tbl sluactivities
+ */
+public function addsluactivity($cdate,$ddate,$date,$activity,$schoolname,$area,$province)
+{  
+    try {
+            $data = array();
+            $data[] = array( 'field' => 'id', 'value' => "init" . "_" . rand(1000,9999) . "_" . time());
+            $data[] = array( 'field' => 'createdby', 'value' => $cdate);
+            $data[] = array( 'field' => 'datecreated', 'value' => "to_date('".$ddate."', 'dd-mm-yyyy HH24:mi:ss')");
+            $data[] = array( 'field' => 'activitydate', 'value' => "to_date('".$date."', 'dd-mm-yyyy HH24:mi:ss')");
+            $data[] = array( 'field' => 'activity', 'value' => $activity);
+            $data[] = array( 'field' => 'schoolname', 'value' => $schoolname);
+            $data[] = array( 'field' => 'area', 'value' => $area);
+            $data[] = array( 'field' => 'province', 'value' => $province);
+               
+            $keys = array();
+            return $this->objSoapClient->writeQuery('tbl_mrf_sluactivities', $data ,$keys,  $this->schema);
+           //return $data;
+          //die;
+
+        } catch (Exception $e) {
+            return NULL;
+        }
+}	
+
+/*------------------------------------------------------------------------------*/
+/**
+ * Method to retrieve all slu activity info 
+ * @return obj $results    
+ */  
+public function getallsluactivity(){
+    $query = 'SELECT activity, activitydate, schoolname, area, province FROM '.$this->schema.'.tbl_mrf_sluactivities';
+    $results =  $this->objSoapClient->genericQuery($query);
+     return $results;
+}
+
+public function activitydetails($startat,$endat)
+{
+	try {
+		
+			if($startat!=0){
+			$startat++;
+			}
+			$sortfield = 'activitydate';
+			
+			
+		  return $this->objSoapClient->getlimitQuery('tbl_mrf_sluactivities','','', $sortfield, $startat, $endat,  $this->schema);
+	} catch(Exception $e) {
+         return NULL;
+    }
+}
+
   
+/*------------------------------------------------------------------------------*/
+/**
+ * Method to retrieve all slu activities btween two date values
+ * @param date $begindate
+ * @param date $enddate
+ */
+public function getactivitydate($begindate,$enddate )
+{
+      try {
+            $begindate = date("d-M-Y", strtotime($begindate));
+            $enddate = date("d-M-Y", strtotime($enddate));
+            
+            $where  = "where activitydate between '$begindate' and '$enddate' order by activitydate";
+            $query = 'SELECT activity, activitydate FROM '.$this->schema.'.tbl_mrf_sluactivities '.$where;
+            return $this->objSoapClient->genericQuery($query);
+
+          } catch(Exception $e) {
+            return NULL;
+          }
+}   
+    
+   
+/*------------------------------------------------------------------------------*/
+/**
+ * Method to retrieve slu activities by type
+ * @return obj $type
+ */
+  /*public function getactivitytype()
+  {   
       $stmt = "select distinct(activity) from tbl_sluactivities order by activity";
       $type  = $this->getArray($stmt);
       return  $type;
-  }   
+  } */
+public function getactivitytype(){
+    $query = 'SELECT distinct(activity) FROM '.$this->schema.'.tbl_mrf_sluactivities order by ACTIVITY';
+    $results =  $this->objSoapClient->genericQuery($query);
+     return $results;
+}
+
+public function activtypelimit($startat,$endat)
+{
+	try {
+			if($startat!=0){
+			$startat++;
+			}
+
+      $sortfield = 'activity';
+			return $this->objSoapClient->getlimitQuery('tbl_mrf_sluactivities','','', $sortfield, $startat, $endat,  $this->schema);
+	} catch(Exception $e) {
+         return NULL;
+    }
+}
 /*------------------------------------------------------------------------------*/
-//display all activities by province
-  public function getactivityprovince()
-  {   //use filter and specify province
+/**
+ * Method to retrieve all activities by province
+ * @return $province  
+ */
+  /*public function getactivityprovince()
+  {   
       $stmt = "select distinct(activity),province from tbl_sluactivities order by province";
       $province  = $this->getArray($stmt);
       return  $province;
-  }   
+  }*/
+public function getactivityprovince(){
+    $query = 'SELECT distinct(activity),province FROM '.$this->schema.'.tbl_mrf_sluactivities order by PROVINCE';
+    $results =  $this->objSoapClient->genericQuery($query);
+    return $results;
+}   
+
+public function activprovincedata($startat,$endat)
+{
+	try {
+		//print $startat;die('dsdsa');
+			if($startat!=0){
+			$startat++;
+			}
+			
+      $sortfield = 'province';
+			return $this->objSoapClient->getlimitQuery('tbl_mrf_sluactivities','','', $sortfield, $startat, $endat,  $this->schema);
+	} catch(Exception $e) {
+         return NULL;
+    }
+}
+
 /*------------------------------------------------------------------------------*/
-//display all activities by area
-  public function getactivityarea()
-  {   //use filter and specify area
+/**
+ * Method to retrieve activities by area
+ * @return $area
+ */
+/*  public function getactivityarea()
+  {
       $stmt = "select distinct(activity),area from tbl_sluactivities order by area";
       $area  = $this->getArray($stmt);
       return  $area;
     
-  }   
+  }*/
+public function getactivityarea(){
+    $query = 'SELECT distinct(activity),area FROM '.$this->schema.'.tbl_mrf_sluactivities order by AREA';
+    $results =  $this->objSoapClient->genericQuery($query);
+     return $results;
+}
+
+public function activareaedata($startat,$endat)
+{
+	try {
+		//print $startat;die('dsdsa');
+			if($startat!=0){
+			$startat++;
+			}
+			
+      $sortfield = 'area';
+			return $this->objSoapClient->getlimitQuery('tbl_mrf_sluactivities','','', $sortfield, $startat, $endat,  $this->schema);
+	} catch(Exception $e) {
+         return NULL;
+    }
+}   
 /*------------------------------------------------------------------------------*/
-//display all activities by school
-  public function getactivityschool($useToPopTbl)
-  {    
-       //use filter and specify school
-      $stmt = "select distinct(activity),schoolname from tbl_sluactivities where schoolname = '$useToPopTbl' order by schoolname";
-      $school  = $this->getArray($stmt);
-      return  $school;
-    
-  }   
+/**
+ * Method to retrieve activities by a specfic school
+ * @param string $useToPopTbl, schoolname value passed to function
+ */   
+public function getactivityschool($useToPopTbl, $field = 'schoolname', $start = 0, $limit = 0)
+{
+       try {
+            $keys = array();
+            $keys[] = array( 'field' => $field, 'value' => $useToPopTbl);
+
+            $fields = array( 'ACTIVITY', 'SCHOOLNAME');
+
+            return $this->objSoapClient->getlimitQuery('tbl_mrf_sluactivities ',$fields, $keys, 'ACTIVITY', $start, $limit,  $this->schema);
+
+       } catch(Exception $e) {
+         return NULL;
+       }
+}   
 /*------------------------------------------------------------------------------*/
   
 }//end of class 

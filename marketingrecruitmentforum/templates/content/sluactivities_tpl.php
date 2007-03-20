@@ -12,20 +12,22 @@
   $this->loadClass('dropdown','htmlelements');
   $this->loadClass('textinput','htmlelements');
   $this->loadClass('button','htmlelements');
-
+  
+  $this->objfaculties =& $this->getObject('dbstudentcard','marketingrecruitmentforum');
 /*------------------------------------------------------------------------------*/  
   
 /**
   *create all language elements
   */
   
-  $date = $this->objLanguage->languageText('word_date');
+  $date = $this->objLanguage->languageText('word_date1');
   $activity = $this->objLanguage->languageText('word_activity');
   $school = $this->objLanguage->languageText('phrase_schoolname');
-  $area = $this->objLanguage->languageText('word_area');
+  $area = $this->objLanguage->languageText('phrase_area');
   $province = $this->objLanguage->languageText('word_province');
   $btnNext  = $this->objLanguage->languageText('word_next');
   $str1 = ucfirst($btnNext);
+  $schoolselect = $this->objLanguage->languageText('mod_marketingrecruitmentforum_schoolselect','marketingrecruitmentforum');
 /*------------------------------------------------------------------------------*/  
 
 /**
@@ -33,50 +35,50 @@
   */
   $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
   $this->objMainheading->type=1;
-  $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_sluactivities','marketingrecruitmentforum');
+  $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_sluactivities12','marketingrecruitmentforum');
 
 /*------------------------------------------------------------------------------*/  
-  
 /**
-  *create all textinputs
-  */
-//   $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
-//   $values  = $this->objschoolname->readfiledata();
-     
-/*--------------------------------------------------------------------------------------------*/               
-       //create an object of the schoolnames class
-       //call the function that sets the session
-       //call the session
-       //populate list with values in the session array 
-       $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
-       $this->objschoolname->readfiledata();
-        
-       $searchlist  = new dropdown('schoollistactivity');
-       $shoolvalues = $this->getSession('schoolnames');
-       sort($shoolvalues);
+  *create a dropdown list containing school values
+  */   
+       $schoolvalues = array();
+       $schoolnames = $this->objfaculties->getSchools(); 
+       for($i=0; $i < count($schoolnames); $i++){
+            $schoolvalues[$i]=$schoolnames[$i]->SCHOOLNAME;
+       }
        
-       foreach($shoolvalues as $sessschool){
-          
+       $searchlist  = new dropdown('schoollistactivity');
+     //  $searchlist->size = 50;
+       
+       //populate list values with array data
+       sort( $schoolvalues);
+       foreach( $schoolvalues as $sessschool){
+          $searchlist->addOption(NULL, ''.$schoolselect);
           $searchlist->addOption($sessschool,$sessschool);
        }
+      
+
        
 /*--------------------------------------------------------------------------------------------*/       
 /**
  *create a dropdown list with all area values
  */
-    //$this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
-    $this->objschoolname->readareadata();
+  
+       $postAreaInfo = $this->objfaculties->getPostInfo(); 
+       for($i=0; $i < count($postAreaInfo); $i++){
+            $areavals[$i]=$postAreaInfo[$i]->CITY;
+       }
+    //   echo "<pre>";
+   // print_r($areavals);die;
+       //create dropdown list
+       $arealist  = new dropdown('area');
+      // $arealist->size = 50;
        
-    $arealist = new dropdown('area');
-    $areavalues = $this->getSession('area');
-  // var_dump($areavalues);
- //   die;
-    sort($areavalues);
-    
-    foreach($areavalues as $sessArea){
-        
-          $arealist->addOption($sessArea,$sessArea);
-    } 
+       sort($areavals);
+       foreach($areavals as $sessarea){
+          $arealist->addOption(NULL, ''.'Please select an area');
+          $arealist->addOption($sessarea,$sessarea);
+       } 
 /*--------------------------------------------------------------------------------------------*/ 
 /**
   *create all date selection elements
@@ -84,8 +86,8 @@
  
   $this->objdate = $this->newObject('datepicker','htmlelements');
   $name = 'txtdate';
-  $datevalue = date('Y-m-d');
-  $format = 'YYYY-MM-DD';
+  $datevalue = date('d-m-Y');
+  $format = 'DD-MM-YYYY';
   $this->objdate->setName($name);
   $this->objdate->setDefaultDate($datevalue);
   $this->objdate->setDateFormat($format); 
@@ -95,26 +97,20 @@
 /**
   *create all dropdown list
   */
-        
-              
-   $this->objactivitydropdown  = new dropdown('activityvalues');  //need exact info regarding activities
+   //All types of activities
+   $this->objactivitydropdown  = new dropdown('activityvalues');
+   $this->objactivitydropdown->addOption('Please select an activity','Please select an activity') ;
    $this->objactivitydropdown->addOption('School Visitation','School Visitation') ;
    $this->objactivitydropdown->addOption('University Open Day','University Open Day') ;
    $this->objactivitydropdown->addOption('Matric Camps','Matric Camps') ;
    $this->objactivitydropdown->addOption('Cape Careers Exhibitions','Cape Careers Exhibitions') ;
    $this->objactivitydropdown->addOption('Individual visit to SLU office','Individual visit to SLU office') ;
    $this->objactivitydropdown->addOption('Other','Other') ;
-   $this->objactivitydropdown->size = 50;
+//   $this->objactivitydropdown->size = 50;
    
-   $this->objareadropdown  = new dropdown('area');  //get info from abdul - box   --  check in link
-   $this->objareadropdown->addOption('Area 1','Area 1') ;
-   $this->objareadropdown->addOption('Area 2','Area 2') ;
-   $this->objareadropdown->addOption('Area 3','Area 3') ;
-   $this->objareadropdown->addOption('Area 4','Area 4') ;
-   $this->objareadropdown->addOption('Area 5','Area 5') ;
-   $this->objareadropdown->size = 50;
-   
-   $this->objprovincedropdown  = new dropdown('province');  //get info from abdul - box --  check in link
+   //All province names  
+   $this->objprovincedropdown  = new dropdown('province');
+   $this->objprovincedropdown->addOption('Please select a province','Please select a province') ;
    $this->objprovincedropdown->addOption('Western Cape','Western Cape') ;
    $this->objprovincedropdown->addOption('Eastern Cape','Eastern Cape') ;
    $this->objprovincedropdown->addOption('Northern Cape','Northern Cape') ;
@@ -124,7 +120,7 @@
    $this->objprovincedropdown->addOption('Mpumalanga','Mpumalanga') ;
    $this->objprovincedropdown->addOption('Limpopo Province','Limpopo Province') ;
    $this->objprovincedropdown->addOption('North-West Province','North-West Province') ;
-   $this->objprovincedropdown->size = 50;
+  // $this->objprovincedropdown->size = 60;
 
 /*------------------------------------------------------------------------------*/   
    /**

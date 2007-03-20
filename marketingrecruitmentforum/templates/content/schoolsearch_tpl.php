@@ -1,6 +1,6 @@
 <?php
-//search for existing school if it exist
-/**
+//template used to search for existing school if it exist
+     /**
        *create form heading
        */
        $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
@@ -8,24 +8,26 @@
        $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_captureschool1','marketingrecruitmentforum');
        
        $select =  'Select a school name';
+       
 /*----------------------------------------------------------------------------*/       
        /**
         *create dropdown with school values
         */
-                       
-       $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
-       $this->objschoolname->readfiledata();
-        
+       $this->objfaculties =& $this->getObject('dbstudentcard','marketingrecruitmentforum');
+       $schoolnames = $this->objfaculties->getSchools(); 
+       for($i=0; $i < count($schoolnames); $i++){
+            $schoolvalues[$i]=$schoolnames[$i]->SCHOOLNAME;
+       }
+       //create dropdown list
        $list  = new dropdown('schoolname');
+      // $list->size = 50;
        
-       $shoolvalues  = $this->getSession('schoolnames');
-       sort($shoolvalues);
-       foreach($shoolvalues as $sessschool){
+       sort($schoolvalues);
+       foreach($schoolvalues as $sessschool){
           $list->addOption(NULL, ''.'Select a school from the list');
           $list->addOption($sessschool,$sessschool);
-          
        }
-       $list->extra = ' onChange="document.school.submit()"';
+       $list->extra = ' onChange="document.school.submit()"'; 
 /*----------------------------------------------------------------------------*/
       /**
        *create a form to place all elements on
@@ -37,8 +39,5 @@
                        
 /*----------------------------------------------------------------------------*/
       //display info to the screan
-      
       echo $objForm->show();
-      //echo 'hello';
-
 ?>

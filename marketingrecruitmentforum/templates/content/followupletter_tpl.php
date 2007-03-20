@@ -14,8 +14,8 @@
     /**
      *get Student details from db
      */
-     $this->objstudcard = & $this->getObject('dbstudentcard','marketingrecruitmentforum');
-     $test  = $this->objstudcard->getstudInfo();
+//     $this->objstudcard = & $this->getObject('dbstudentcard','marketingrecruitmentforum');
+//     $test  = $this->objstudcard->getstudInfo();
      
             
      $string  = $name . ' '. $surname;

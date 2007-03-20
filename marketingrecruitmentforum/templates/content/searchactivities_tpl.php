@@ -10,6 +10,8 @@
        $this->objactivity  = & $this->newObject('searchactivities','marketingrecruitmentforum');
        $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
        
+       $this->objfaculties =& $this->getObject('dbstudentcard','marketingrecruitmentforum');
+       
 /*------------------------------------------------------------------------------*/       
       /**
         *create form heading
@@ -34,28 +36,27 @@
                     
       $this->objButtonGo  = new button('searchactiv', $displayactivities);
       $this->objButtonGo->setToSubmit();
+      
+      $this->objGo  = new button('searchgo', 'Go');
+      $this->objGo->setToSubmit();
 
 /*------------------------------------------------------------------------------*/              
-    /**
-     *create dropdwonlist with all schoolnames
-     */
-       //create an object of the schoolnames class
-       //call the function that sets the session
-       //call the session
-       //populate list with values in the session array 
-       
-       $this->objschoolname->readfiledata();
-       
+      $schoolnames = $this->objfaculties->getSchools(); 
+       for($i=0; $i < count($schoolnames); $i++){
+            $shoolvalues[$i]=$schoolnames[$i]->SCHOOLNAME;
+       }
+       //create dropdown list
        $schoollist  = new dropdown('schoollistnames');
-       $shoolvalues = $this->getSession('schoolnames');
+       //$schoollist->size = 50;
+       
        sort($shoolvalues);
        foreach($shoolvalues as $sessschool){
-       
-          $schoollist->addOption(NULL, ''.'[ Select A School from the list ]');
+          $schoollist->addOption(NULL, ''.' Select A School from the list ');
           $schoollist->addOption($sessschool,$sessschool);
-      }  
-          $schoollist->setSelected($this->getParam('schoollistnames'));
-          $schoollist->extra = ' onChange="document.searchactivity.submit()"';
+       }
+       $schoollist->setSelected($this->getParam('schoollistnames'));
+       $schoollist->extra = ' onChange="document.searchactivity.submit()"';
+     
       
 /*------------------------------------------------------------------------------*/
     /**
@@ -113,22 +114,17 @@
       $mydateTab->endRow();
       
 /*------------------------------------------------------------------------------*/
-    /**
-     *create tabpan and display search info
-     */         
-    //$daterange  = 'Start Date' . ' ' .$this->objdate->show() . ' ' . 'End Date'.$this->objtodate->show() . ' ' .$this->objButtonGo->show();
-    //$startdate  = 'Start Date' . ' ' .$this->objdate->show();
-    //$enddate  = 'End Date' . ' ' .$this->objdate->show();
      
-    $Activityinfo = & $this->newObject('tabbox','marketingrecruitmentforum');
-    $Activityinfo->tabName = 'ActivityInfo';
- 
-    $Activityinfo->addTab('activity', 'All Activities',$results.'<br />');
-    $Activityinfo->addTab('dates', 'Activities By Dates',$mydateTab->show().' <br />'. '<br />' . $activdates.'<br />');
-    $Activityinfo->addTab('type', 'All Activities By Type ',$activtype.'<br />');
-    $Activityinfo->addTab('province', 'Activities By Province',$province.'<br />');
-    $Activityinfo->addTab('area', 'Activities By Area',$area.'<br />');
-    $Activityinfo->addTab('school', 'Activities By School','<b>'.'Select a school to search by'.'</b>' . ' ' .$schoollist->show().' <br />'. '<br />' . $school.'<br />');
+    $Activityinfo = & $this->newObject('tabcontent','htmlelements');
+    $Activityinfo->name = 'ActivityInfo';
+    $Activityinfo->width = '950px';
+    
+    $Activityinfo->addTab('All Activities',$results, false);
+    $Activityinfo->addTab('Activities By Dates',$mydateTab->show().' <br />'. '<br />' . $activdates, false);
+    $Activityinfo->addTab('Activities By Type ',$activtype, false);
+    $Activityinfo->addTab('Activities By Area',$area, false);
+    $Activityinfo->addTab('Activities By Province',$province, false);
+    $Activityinfo->addTab('Activities By School','<b>'.'Select a school to search by'.'</b>' . ' ' .$schoollist->show().''.$this->objGo->show().' <br />'. '<br />' . $school, false);
     
     
 /*-------------------------------------------------------------------------------*/

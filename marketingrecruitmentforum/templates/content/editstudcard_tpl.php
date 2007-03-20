@@ -1,9 +1,9 @@
 <?php
 
   /**
-   *This template is used to create the student card interface
+   *create a template for capturing student card information
    */
-      
+  // $this->unsetSession('studentdata');   
 /*------------------------------------------------------------------------------*/      
    /**
      *load all classes
@@ -11,23 +11,21 @@
      
      $this->loadClass('textinput','htmlelements');
      $this->loadClass('dropdown','htmlelements');
-     $this->loadClass('radio','htmlelements');  
+     $this->loadClass('radio','htmlelements'); 
      $this->loadClass('datepicker','htmlelements');
      $this->loadClass('form','htmlelements');
      $this->loadClass('button','htmlelements');
      $this->loadClass('textarea','htmlelements');
      
-
-/*------------------------------------------------------------------------------*/     
      /**
-      *create instance of classes used
+      *create objects of all classes used
       */
       
+      $this->objfaculty = & $this->getObject('faculty','marketingrecruitmentforum'); 
       $this->objformval = & $this->getObject('form','htmlelements');
       $this->objfaculties =& $this->getObject('dbstudentcard','marketingrecruitmentforum');
-     
-      //$this->objfaculties->removeStud($where = 'where name = HAMZA');
-     
+      $this->objstudcard =& $this->getObject('dbstudentcard','marketingrecruitmentforum');
+		         
 /*------------------------------------------------------------------------------*/     
     /**
       *create all language elements
@@ -41,17 +39,18 @@
       $postalcode = $this->objLanguage->languageText('phrase_postalcode');
       $telnumber  = $this->objLanguage->languageText('phrase_telnumber');
       $telcode  = $this->objLanguage->languageText('phrase_telephonecode');
-      $id = $this->objLanguage->languageText('mod_marketingrecruitmentforum_noidnumber','marketingrecruitmentforum');
-      $id1  = strtoupper($id);
-      $facultyselect = $this->objLanguage->languageText('mod_marketingrecruitmentforum_facultymsg1','marketingrecruitmentforum');
-      $courseselect = $this->objLanguage->languageText('mod_marketingrecruitmentforum_coursemsg','marketingrecruitmentforum');
       $exemption  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_exemption1','marketingrecruitmentforum');
       $course  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_courseinterest','marketingrecruitmentforum');
       $subject  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_relevantsubject','marketingrecruitmentforum');
       $sdcase = $this->objLanguage->languageText('mod_marketingrecruitmentforum_sdcase','marketingrecruitmentforum');
       $btnNext  = $this->objLanguage->languageText('word_next');
       $str1 = ucfirst($btnNext);
+      $schoolselect = $this->objLanguage->languageText('mod_marketingrecruitmentforum_schoolselect','marketingrecruitmentforum');
+      $id1 = $this->objLanguage->languageText('mod_marketingrecruitmentforum_noidnumber','marketingrecruitmentforum');
+      $idval = strtoupper($id1);
       $areaselect = $this->objLanguage->languageText('mod_marketingrecruitmentforum_areaselect','marketingrecruitmentforum');
+      $facultyselect = $this->objLanguage->languageText('mod_marketingrecruitmentforum_facultymsg1','marketingrecruitmentforum');
+      $courseselect = $this->objLanguage->languageText('mod_marketingrecruitmentforum_coursemsg','marketingrecruitmentforum');
       
       $surnameval = $this->objLanguage->languageText('mod_marketingrecruitmentforum_surnamval','marketingrecruitmentforum');
       $surnamemaxval  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_surnammaxval','marketingrecruitmentforum');
@@ -63,22 +62,23 @@
       $telcode  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_telcode','marketingrecruitmentforum');
       $telcodelng  = $this->objLanguage->languageText('mod_marketingrecruitmentforum_longtelcode','marketingrecruitmentforum');
       $schoolselect = $this->objLanguage->languageText('mod_marketingrecruitmentforum_schoolselect','marketingrecruitmentforum');
-      
-      
-      
+
 
 /*------------------------------------------------------------------------------*/      
       
       /**
-       *create form heading
+       *create form headings
        */
        $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
        $this->objMainheading->type=1;
-       $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_studentcardheading','marketingrecruitmentforum');
+       $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_editstudcardtpl2','marketingrecruitmentforum');
       
        $this->objheading =& $this->newObject('htmlheading','htmlelements');
        $this->objheading->type=5;
-       $this->objheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_warning','marketingrecruitmentforum');         
+       $this->objheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_warning','marketingrecruitmentforum');
+       
+       $id = $this->objLanguage->languageText('mod_marketingrecruitmentforum_noidnumber','marketingrecruitmentforum');
+       $id1 = ucfirst($id);         
 /*------------------------------------------------------------------------------*/       
     /**
 	    * Used to populate all textfields with default values contained in a session variable.
@@ -98,6 +98,16 @@
         $studtelnumber = '';
         $studtelcode = '';
         $studcourse  = '';
+        $cellphno = '';
+        $emailaddy  = '';
+        
+        $idval = $this->getSession('idno');
+        //var_dump($idnumber);
+        if(!empty($idval)){
+        $id2  = $idval;
+        }else{
+        $id2 = $id1;
+        }
         
         
         if(!empty($sessionstudcard)){         
@@ -119,9 +129,16 @@
                   if($subkey == 'telcode') {
                      $studtelcode = $subval;
                   }
-                  if($subkey  ==  'courseinterest') {
-                     $studcourse = $subval;
+                  if($subkey == 'cellnumber') {
+                     $studcellno = $subval;
                   }
+                  if($subkey == 'studemail') {
+                     $studemail = $subval;
+                     
+                  }
+                //  if($subkey == 'idnumber') {
+                //    $idvalue = $subval;
+                //  }
               }
               
           }
@@ -147,6 +164,9 @@
                   $studpostalcode = $idsearch[$i]->POSTCODE;
                   $studtelcode = $idsearch[$i]->TELCODE;
                   $studtelnumber = $idsearch[$i]->TELNUMBER;
+                  $studcellno = $idsearch[$i]->CELLNUMBER;
+                  $studemail = $idsearch[$i]->STUDEMAIL;
+                  $id2 = $idsearch[$i]->IDNUMBER;
               }
           }
         
@@ -185,11 +205,46 @@
        }
        //create dropdown list
        $arealist  = new dropdown('areaschool');
+       
+       
        sort($areavals);
        foreach($areavals as $sessarea){
           $arealist->addOption(NULL, ''.$areaselect);
           $arealist->addOption($sessarea,$sessarea);
        }  
+/*--------------------------------------------------------------------------------------------*/       
+	   //call functions to the retrieve the faculty and course values
+    	$faculty = $this->objfaculties->getFaculties();
+  	  $course = $this->objfaculties->getcourse();
+  	  $fac = array();
+  	  $crse = array();
+  	  
+         
+     //store faculty values into an array
+      for($i=0; $i < count($faculty); $i++){
+          $fac[$i]= $faculty[$i]->NAME;
+      }
+      
+      //store course values into an array
+      for($i=0; $i < count($course); $i++){
+              $crse[$i]=$course[$i]->NAME;
+      }
+      
+      //create dropdown for faculty values and populate with array $fac data
+    	$objDropdown = new dropdown('faculty');  
+      sort($fac);   
+      foreach($fac as $sessf){
+          $objDropdown->addOption(NULL, ''.$facultyselect); 
+          $objDropdown->addOption($sessf,$sessf); 
+      }
+       
+    	//create dropdown for course values and populate with array $crse data 
+    	$objDropdown1 = new dropdown('course');
+    	sort($crse); 
+    	foreach($crse as $sessC){
+         $objDropdown1->addOption(NULL, ''.$courseselect);
+         $objDropdown1->addOption($sessC,$sessC); 
+      } 
 /*--------------------------------------------------------------------------------------------*/
       /**
        *create all textinputs
@@ -197,6 +252,9 @@
        $this->objtxtsurname = new textinput("txtsurname");
        $this->objtxtsurname->value  = $studsurname;
        $this->objtxtsurname->size  = 35;
+       
+       $this->objtxtidnumber = new textinput('studentidnumber'); 
+       $this->objtxtidnumber->value  = $id2;
        
        $this->objtxtname = new textinput("txtname");
        $this->objtxtname->value  = $studname;
@@ -217,11 +275,11 @@
        $this->objtxttelnumber->size  = 26;
 
        $this->objtxtcellno = new textinput("txtcellno");
-       $this->objtxtcellno->value  = ' ';//$studcellno;
+       $this->objtxtcellno->value  = $studcellno;
        $this->objtxtcellno->size  = 35;
        
        $this->objtxtemailaddy = new textinput("txtemail");
-       $this->objtxtemailaddy->value  = ' ';//$studemail;
+       $this->objtxtemailaddy->value  = $studemail;
        $this->objtxtemailaddy->size  = 35;
 
        $this->objtxttelcode = new textinput("txttelcode");
@@ -294,7 +352,7 @@
          
          $myTable->startRow();
          $myTable->addCell(ucfirst($idnumber));
-         $myTable->addCell("&nbsp"." ".$idval);
+         $myTable->addCell("&nbsp"." ".$this->objtxtidnumber->show());
          $myTable->endRow();
          
          
@@ -345,6 +403,10 @@
          $myTable->addCell("&nbsp"."&nbsp".$this->objtxttelcode->show().' '.$this->objtxttelnumber->show());
          $myTable->endRow();   
          
+         /**$myTable->startRow();
+         $myTable->addCell(ucfirst($telcode));
+         $myTable->addCell("&nbsp"."&nbsp".$this->objtxttelcode->show());
+         $myTable->endRow();**/
          
          $myTable->startRow();
          $myTable->addCell('Cellphone Number');
@@ -356,6 +418,34 @@
          $myTable->addCell("&nbsp"."&nbsp".$this->objtxtemailaddy->show());
          $myTable->endRow();
          
+         
+        /* $myTable->startRow();
+         $myTable->addCell(ucfirst($exemption));
+         $myTable->addCell("&nbsp"."&nbsp".$objElement->show());
+         $myTable->endRow();
+         
+         $myTable->startRow();
+         $myTable->addCell($facultyselect);
+         $myTable->addCell("&nbsp"."&nbsp".$objDropdown->show());
+         $myTable->endRow();
+         
+         
+         $myTable->startRow();
+         $myTable->addCell($courseselect);
+         $myTable->addCell("&nbsp"."&nbsp".$objDropdown1->show());
+         $myTable->endRow();
+
+         
+         $myTable->startRow();
+         $myTable->addCell(ucfirst($subject));
+         $myTable->addCell("&nbsp"."&nbsp".$objsubject->show());
+         $myTable->endRow();
+         
+         $myTable->startRow();
+         $myTable->addCell(ucfirst($sdcase));
+         $myTable->addCell("&nbsp"."&nbsp".$objsdcase->show());
+         $myTable->endRow();*/
+         
          $myTable->startRow();
          $myTable->addCell($this->objButtonNext->show());
          $myTable->endRow();
@@ -365,7 +455,7 @@
          /**
           *create a form to place all elements in
           */
-          $objForm = new form('studentcard',$this->uri(array('action'=>'continue')));
+          $objForm = new form('studentcard',$this->uri(array('action'=>'showoutput')));
           $objForm->displayType = 3;
           $objForm->addToForm($this->objMainheading->show() . '<br />'."<span class=error>".'<i>'.$this->objheading->show().'</i>'."</span>".'<br />' .$myTable->show());
           $objForm->addRule('schoollist','Please select a school','required');
@@ -377,13 +467,11 @@
           $objForm->addRule(array('name'=>'txtpostalcode','minnumber'=>4), $postcode, 'minnumber');
           $objForm->addRule(array('name'=>'txtpostalcode','length'=>4), $postcodelng, 'maxlength');
           $objForm->addRule('areaschool','Please select an area','required');
-          $emailinfo = $this->getParam('txtemail');
-          if(!empty($emailinfo)){
-            $objForm->addRule('txtemail','Please select an area','email');
-          }
-          /*$objForm->addRule('exemptionqualification','Please select a value for exemption','required');
-          $objForm->addRule('relevantsubject','Please select a value for relevant subject','required');
-          $objForm->addRule('sdcase','Please select a value for sd case','required');*/
+          $objForm->addRule('areaschool','Please select an area','required'); 
+          $objForm->addRule('txtemail','Please select an area','email');         
+//          $objForm->addRule('exemptionqualification','Please select a value for exemption','required');
+//          $objForm->addRule('relevantsubject','Please select a value for relevant subject','required');
+//          $objForm->addRule('sdcase','Please select a value for sd case','required');
           
         //  $objForm->addRule(array('name'=>'txttelcode','minnumber'=>3), $telcode, 'minnumber');
         //  $objForm->addRule(array('name'=>'txttelcode', 'length'=>3),$telcodelng, 'maxlength');

@@ -1,6 +1,11 @@
 <?php
+//output form after edit
 
-/**This template is used to edit data captured by the user**/    
+/*$d = $this->getSession('studentdata');
+$e = $this->getSession('studentdetails');
+$r = $this->getSession('studentfaccrse');
+$f  = $this->getSession('studentinfo');*/
+ 
   
   /**
    *load all classes and create all objects
@@ -63,13 +68,16 @@
    */     
 
     $editStudLink = new link($this->uri(array('action' => 'editstudcard', 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit')));
-    $editStudLink->link = $editstud;
+    $editStudLink->link = 'Edit';
     
-    $editSLUlink = new link($this->uri(array('action' => 'editsluactivity', 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit')));
-    $editSLUlink->link = $editslu;
+    $editSubjects = new link($this->uri(array('action' => 'editsubjects', 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit')));
+    $editSubjects->link = 'Edit';
     
-    $editSchoollink = new link($this->uri(array('action' => 'editschool', 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit')));
-    $editSchoollink->link = $editschool;
+    $editFacultyCrse = new link($this->uri(array('action' => 'editfacultycrse', 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit')));
+    $editFacultyCrse->link = 'Edit';
+    
+    $editMoreInfo = new link($this->uri(array('action' => 'editextra', 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit')));
+    $editMoreInfo->link = 'Edit';
 /*----------------------------------------------------------------------------------------*/ 
 
  /**
@@ -86,24 +94,7 @@
   $this->objSubmitstudcard  = new button('submitstudcard', $str1);
   $this->objSubmitstudcard->setToSubmit();
 /*----------------------------------------------------------------------------------------*/
-   
-   /**
-    *determine if session variables containing student card data, activities data and school data is empty or not 
-    *if !empty then user has not submited information as yet, therefore variable $hasSubmitted is initialised to no
-    *if empty, information submitted and therefore variable $hasSubmitted is initialised to yes 
-    */           
-     
-   // $sessionstudcard [] = $this->getSession('studentdata');
-    $sessionsluactivity [] = $this->getSession('sluactivitydata');
-    $sessionsschoolist [] = $this->getSession('schoolvalues');
-    
-   if((!empty($sessionstudcard) )|| (!empty($sessionsluactivity)) || (!empty($sessionsschoolist))){
-   
-          $hasSubmitted = 'no';
-   }else{
-          $hasSubmitted = 'yes';
-   }        
-/*----------------------------------------------------------------------------------------*/        
+
    /**
     *Table created to display the output/data captured of student card interface   
     *Get session with student idno
@@ -119,6 +110,8 @@
   }
   $idsearch  = $this->dbstudentcard->getstudbyid11($idnumber, 'IDNUMBER', 0, 0) ;         
   $this->setSession('idsearch',$idsearch);
+  
+  $sessionstud [] = $this->getSession('studentdata');
       if(!empty($idsearch) ){
       
             $objstudcardTable =& $this->newObject('htmltable', 'htmlelements');  
@@ -227,10 +220,10 @@
                 $objstudcardTable->addCell(strtoupper($sdvalues));
                 $objstudcardTable->endRow();
             }
-      }else{
-            $sessionstudcard [] = $this->getSession('studentdata');
-      //if(!empty($sessionstudcard)){
-          //Create table to display student details in session
+            
+      }elseif(!empty($sessionstud)){
+           
+     
               $objstudcardTable =& $this->newObject('htmltable', 'htmlelements');  
               $objstudcardTable =& $this->newObject('htmltable', 'htmlelements');
               $objstudcardTable->cellspacing = '2';
@@ -241,7 +234,7 @@
     
               
     
-              foreach($sessionstudcard as $sesStuddata){
+              foreach($sessionstud as $sesStud){
        
        /*           if($sesStuddata['exemption'] == 1){
                       $exemptionval = 'yes';
@@ -261,57 +254,62 @@
                   }*/    
                   
                   $objstudcardTable->startRow();
-                  $objstudcardTable->addCell($idnumber1);
+                  $objstudcardTable->addCell($idnumber1."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp");
                   $objstudcardTable->addCell($id2);
                   $objstudcardTable->endRow();
                   
                   $objstudcardTable->startRow();
                   $objstudcardTable->addCell($date);
-                  $objstudcardTable->addCell($sesStuddata['date']);
+                  $objstudcardTable->addCell($sesStud['date']);
                   $objstudcardTable->endRow();
     
                   $objstudcardTable->startRow();
                   $objstudcardTable->addCell($schoolname);
-                  $objstudcardTable->addCell(strtoupper($sesStuddata['schoolname'])); 
+                  $objstudcardTable->addCell(strtoupper($sesStud['schoolname'])); 
                   $objstudcardTable->endRow();
     
     
                   $objstudcardTable->startRow();
                   $objstudcardTable->addCell($surname);
-                  $objstudcardTable->addCell(strtoupper($sesStuddata['surname']));
+                  $objstudcardTable->addCell(strtoupper($sesStud['surname']));
                   $objstudcardTable->endRow();
     
                   $objstudcardTable->startRow();
                   $objstudcardTable->addCell($name);
-                  $objstudcardTable->addCell(strtoupper($sesStuddata['name']));
+                  $objstudcardTable->addCell(strtoupper($sesStud['name']));
                   $objstudcardTable->endRow();
     
                   $objstudcardTable->startRow();
                   $objstudcardTable->addCell($postaladdress);
-                  $objstudcardTable->addCell(strtoupper($sesStuddata['postaddress']));
+                  $objstudcardTable->addCell(strtoupper($sesStud['postaddress']));
                   $objstudcardTable->endRow();
     
                   $objstudcardTable->startRow();
                   $objstudcardTable->addCell($postalcode);
-                  $objstudcardTable->addCell(strtoupper($sesStuddata['postcode']));
+                  $objstudcardTable->addCell(strtoupper($sesStud['postcode']));
                   $objstudcardTable->endRow();
                   
-                  /*$myTable->startRow();
-                    $myTable->addCell("Area");
-                    $myTable->addCell(strtoupper($sesStuddata['area']));
-                    $myTable->endRow();*/
     
                   $objstudcardTable->startRow();
                   $objstudcardTable->addCell($telnumber);
-                  $objstudcardTable->addCell(strtoupper($sesStuddata['telnumber']));
+                  $objstudcardTable->addCell(strtoupper($sesStud['telnumber']));
                   $objstudcardTable->endRow();
     
                   $objstudcardTable->startRow();
                   $objstudcardTable->addCell($telcode);
-                  $objstudcardTable->addCell(strtoupper($sesStuddata['telcode']));
+                  $objstudcardTable->addCell(strtoupper($sesStud['telcode']));
                   $objstudcardTable->endRow();
-    
+                  
                   $objstudcardTable->startRow();
+                  $objstudcardTable->addCell('Cellphone Number');
+                  $objstudcardTable->addCell(strtoupper($sesStud['cellnumber']));
+                  $objstudcardTable->endRow();
+
+                  $objstudcardTable->startRow();
+                  $objstudcardTable->addCell('Email Address');
+                  $objstudcardTable->addCell(strtoupper($sesStud['studemail']));
+                  $objstudcardTable->endRow();    
+/*                  $objstudcardTable->startRow();
                   $objstudcardTable->addCell($exemption);
 //                  $objstudcardTable->addCell(strtoupper($exemptionval));
                   $objstudcardTable->endRow();
@@ -334,266 +332,185 @@
                   $objstudcardTable->startRow();
                   $objstudcardTable->addCell($sdcase);
 //                  $objstudcardTable->addCell(strtoupper($sdvalues));
-                  $objstudcardTable->endRow();
+                  $objstudcardTable->endRow();*/
             }
       }
-      
       
 /*----------------------------------------------------------------------------------------*/
-  /**
-   *display all sluactivity info contained session variable
-   */     
-  //  $sessionsluactivity [] = $this->getSession('sluactivitydata');
-        if(!empty($sessionsluactivity)){
-       
-              $objactivityTable =& $this->newObject('htmltable', 'htmlelements');
-              $objactivityTable->cellspacing = '2';
-              $objactivityTable->cellpadding = '2';
-              $objactivityTable->border='0';
-              $objactivityTable->width = '105%';
+            $sessionstuddetails [] = $this->getSession('studentdetails');
             
-            foreach($sessionsluactivity as $sesSLU){
+            foreach($sessionstuddetails as $sesdetails){
             
-              $objactivityTable->startRow();
-              $objactivityTable->addCell($date);
-              $objactivityTable->addCell(strtoupper($sesSLU['date']));
-              $objactivityTable->endRow();
-  
-              $objactivityTable->startRow();
-              $objactivityTable->addCell($activity);
-              $objactivityTable->addCell(strtoupper($sesSLU['activity']));
-              $objactivityTable->endRow();
-  
-              $objactivityTable->startRow();
-              $objactivityTable->addCell($schoolname);
-              $objactivityTable->addCell(strtoupper($sesSLU['schoolname']));
-              $objactivityTable->endRow();
-  
-              $objactivityTable->startRow();
-              $objactivityTable->addCell($area);
-              $objactivityTable->addCell(strtoupper($sesSLU['area']));
-              $objactivityTable->endRow();
-  
-              $objactivityTable->startRow();
-              $objactivityTable->addCell($province);
-              $objactivityTable->addCell(strtoupper($sesSLU['province']));
-              $objactivityTable->endRow();
-            }
+                    $objTable =& $this->newObject('htmltable', 'htmlelements');  
+                    $objTable->cellspacing = '2';
+                    $objTable->cellpadding = '2';
+                    $objTable->cellwidth = '10';
+                    $objTable->border='0';
+                    $objTable->width = '76%';       
+                    
+                    $objTable->startRow();
+                    $objTable->addCell('Subject 1'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp");
+                    $objTable->addCell(strtoupper($sesdetails['subject1']));
+                    $objTable->endRow();
+                    
+                    $objTable->startRow();
+                    $objTable->addCell('Subject 2');
+                    $objTable->addCell(strtoupper($sesdetails['subject2']));
+                    $objTable->endRow();
+                    
+                    $objTable->startRow();
+                    $objTable->addCell('Subject 3');
+                    $objTable->addCell(strtoupper($sesdetails['subject3']));
+                    $objTable->endRow();
+                    
+                    $objTable->startRow();
+                    $objTable->addCell('Subject 4');
+                    $objTable->addCell(strtoupper($sesdetails['subject4']));
+                    $objTable->endRow();
+                    
+                    $objTable->startRow();
+                    $objTable->addCell('Subject 5');
+                    $objTable->addCell(strtoupper($sesdetails['subject5']));
+                    $objTable->endRow();
+                    
+                    $objTable->startRow();
+                    $objTable->addCell('Subject 6');
+                    $objTable->addCell(strtoupper($sesdetails['subject6']));
+                    $objTable->endRow();
+                    
+                    $objTable->startRow();
+                    $objTable->addCell('Subject 7');
+                    $objTable->addCell(strtoupper($sesdetails['subject7']));
+                    $objTable->endRow();
+          }
+/*----------------------------------------------------------------------------------------*/
+              $sessionfaccres [] = $this->getSession('studentfaccrse');
              
-        }
-/*----------------------------------------------------------------------------------------*/  
-  /**
-   *display all school list info contained in session
-   */     
-       
-        $namevalue = $this->getSession('nameschool');
-        $school = $this->dbschoollist->getschoolbyname($namevalue, $field = 'schoolname', $start = 0, $limit = 0);
-        $this->setSession('schoovals',$school);
-        
-        
-        if(!empty($school)){
-        //Create table to display school list details in session  
-            $objschoolTable =& $this->newObject('htmltable', 'htmlelements');        
-            $objschoolTable->cellspacing = '2';
-            $objschoolTable->cellpadding = '2';
-            $objschoolTable->border='0';
-            $objschoolTable->width = '70%';
-          
-        //  foreach($school as $sesschool){
-         for($i=0; $i< count($school); $i++){
-          
-                        
-            $objschoolTable->startRow();
-            $objschoolTable->addCell($schoolname);
-            $objschoolTable->addCell(strtoupper($school[$i]->SCHOOLNAME));
+             
+              foreach($sessionfaccres as $sesfaccrse){
             
-            $objschoolTable->endRow();
-  
-            $objschoolTable->startRow();
-            $objschoolTable->addCell($schooladdy);
-            $objschoolTable->addCell(strtoupper($school[$i]->SCHOOLADDRESS));
-            $objschoolTable->endRow();
+                    $objTableFC =& $this->newObject('htmltable', 'htmlelements');  
+                    $objTableFC->cellspacing = '2';
+                    $objTableFC->cellpadding = '2';
+                    $objTableFC->cellwidth = '10';
+                    $objTableFC->border='0';
+                    $objTableFC->width = '80%'; 
+                   
+                    $objTableFC->startRow();
+                    $objTableFC->addCell('Faculty 1st choice');
+                    $objTableFC->addCell(strtoupper($sesfaccrse['1stfaculty']));
+                    $objTableFC->endRow();
+                
+             //   echo '<pre>';  var_dump($sesfaccrse['1stfaculty']);
+                    $objTableFC->startRow();
+                    $objTableFC->addCell('Course 1st choice');
+                    $objTableFC->addCell(strtoupper($sesfaccrse['1stcourse']));
+                    $objTableFC->endRow();
+                    
+                    $objTableFC->startRow();
+                    $objTableFC->addCell('Faculty 2nd choice');
+                    $objTableFC->addCell(strtoupper($sesfaccrse['2ndfaculty']));
+                    $objTableFC->endRow();
+                    
+                    $objTableFC->startRow();
+                    $objTableFC->addCell('Course 2nd choice');
+                    $objTableFC->addCell(strtoupper($sesfaccrse['2ndcourse']));
+                    $objTableFC->endRow();
+                
+                }
+                    
+                    
+/*----------------------------------------------------------------------------------------*/
+               $extrainfo [] = $this->getSession('studentinfo');
+               //var_dump($extrainfo);
+               
+               foreach($extrainfo as $sesinfo){
+               $exemp = strtoupper($sesinfo['exemption']);
+               $sdval = strtoupper($sesinfo['sdcase']);
+               $res   = $this->getParam('residence');
+           
+           
+               if($sdval == '1'){
+                  $result = 'YES';
+               }else{
+                  $result = 'NO';
+               }
+               
+               
+               if($exemp == '1'){
+                 $val = 'YES';
+               }else{
+                 $val = 'NO';
+               }
+                   
+                if($res == '1'){
+                  $resval = 'YES';
+                }else{
+                  $resval = 'NO';
+                } 
             
-            $objschoolTable->startRow();
-            $objschoolTable->addCell('Area');
-            $objschoolTable->addCell(strtoupper($school[$i]->SCHOOLAREA));
-            $objschoolTable->endRow();
-            
-            $objschoolTable->startRow();
-            $objschoolTable->addCell('Province');
-            $objschoolTable->addCell(strtoupper($school[$i]->SCHOOLPROV));
-            $objschoolTable->endRow();
-  
-            $objschoolTable->startRow();
-            $objschoolTable->addCell($telnumber);
-            $objschoolTable->addCell(strtoupper($school[$i]->TELNUMBER));
-            $objschoolTable->endRow();
-  
-            $objschoolTable->startRow();
-            $objschoolTable->addCell($faxno);
-            $objschoolTable->addCell(strtoupper($school[$i]->FAXNUMBER));
-            $objschoolTable->endRow();
-  
-            $objschoolTable->startRow();
-            $objschoolTable->addCell($email);
-            $objschoolTable->addCell(strtoupper($school[$i]->EMAIL));
-            $objschoolTable->endRow();
-  
-            $objschoolTable->startRow();
-            $objschoolTable->addCell($principal);
-            $objschoolTable->addCell(strtoupper($school[$i]->PRINCIPAL));
-            $objschoolTable->endRow();
-            
-            $objschoolTable->startRow();
-            $objschoolTable->addCell('Principal Email Address');
-            $objschoolTable->addCell(strtoupper($school[$i]->PRINCIPALEMAIL));
-            $objschoolTable->endRow(); 
-            
-            $objschoolTable->startRow();
-            $objschoolTable->addCell('Principal Cell Phone Number');
-            $objschoolTable->addCell(strtoupper($school[$i]->PRINCIPALCELLNO));
-            $objschoolTable->endRow(); 
+                    $objTableinfo =& $this->newObject('htmltable', 'htmlelements');  
+                    $objTableinfo->cellspacing = '2';
+                    $objTableinfo->cellpadding = '2';
+                    $objTableinfo->cellwidth = '10';
+                    $objTableinfo->border='0';
+                    $objTableinfo->width = '41%';
+                    
+                    $objTableinfo->startRow();
+                    $objTableinfo->addCell('Department information');
+                    $objTableinfo->addCell(strtoupper($sesinfo['info']));
+                    $objTableinfo->endRow();
 
-            
-            $objschoolTable->startRow();
-            $objschoolTable->addCell($guidteacher);
-            $objschoolTable->addCell(strtoupper($school[$i]->GUIDANCETEACHER));
-            $objschoolTable->endRow();
-            
-            
-            $objschoolTable->startRow();
-            $objschoolTable->addCell('Guidance Teacher Email');
-            $objschoolTable->addCell(strtoupper($school[$i]->GUIDANCETEACHEMAIL));
-            $objschoolTable->endRow();
-            
-            $objschoolTable->startRow();
-            $objschoolTable->addCell('Guidance Teacher Cellphone Number ');
-            $objschoolTable->addCell(strtoupper($school[$i]->GUIDANCETEACHCELLNO));
-            $objschoolTable->endRow();
-          }
-      }else{
-      
- 
-            $objschoolTable =& $this->newObject('htmltable', 'htmlelements');        
-            $objschoolTable->cellspacing = '2';
-            $objschoolTable->cellpadding = '2';
-            $objschoolTable->border='0';
-            $objschoolTable->width = '70%';
-            
-          foreach($sessionsschoolist as $sesschool){
-            
-                        
-            $objschoolTable->startRow();
-            $objschoolTable->addCell($schoolname);
-            $objschoolTable->addCell(strtoupper($sesschool['schoolname']));
-            $objschoolTable->endRow();
-  
-            $objschoolTable->startRow();
-            $objschoolTable->addCell($schooladdy);
-            $objschoolTable->addCell(strtoupper($sesschool['schooladdress']));
-            $objschoolTable->endRow();
-            
-            $objschoolTable->startRow();
-            $objschoolTable->addCell('Area');
-            $objschoolTable->addCell(strtoupper($sesschool['area']));
-            $objschoolTable->endRow();
-            
-            $objschoolTable->startRow();
-            $objschoolTable->addCell('Province');
-            $objschoolTable->addCell(strtoupper($sesschool['province']));
-            $objschoolTable->endRow();
-  
-            
-            $objschoolTable->startRow();
-            $objschoolTable->addCell($telnumber);
-            $objschoolTable->addCell(strtoupper($sesschool['telnumber']));
-            $objschoolTable->endRow();
-  
-            $objschoolTable->startRow();
-            $objschoolTable->addCell($faxno);
-            $objschoolTable->addCell(strtoupper($sesschool['faxnumber']));
-            $objschoolTable->endRow();
-  
-            $objschoolTable->startRow();
-            $objschoolTable->addCell($email);
-            $objschoolTable->addCell(strtoupper($sesschool['email']));
-            $objschoolTable->endRow();
-  
-            $objschoolTable->startRow();
-            $objschoolTable->addCell($principal);
-            $objschoolTable->addCell(strtoupper($sesschool['principal']));
-            $objschoolTable->endRow();
-            
-            $objschoolTable->startRow();
-            $objschoolTable->addCell('Principal Email Address');
-            $objschoolTable->addCell(strtoupper($sesschool['principalemail']));
-            $objschoolTable->endRow(); 
-            
-            $objschoolTable->startRow();
-            $objschoolTable->addCell('Principal Cell Phone Number');
-            $objschoolTable->addCell(strtoupper($sesschool['principalCellno']));
-            $objschoolTable->endRow();
-            
-            $objschoolTable->startRow();
-            $objschoolTable->addCell($guidteacher);
-            $objschoolTable->addCell(strtoupper($sesschool['guidanceteacher']));
-            $objschoolTable->endRow();
-            
-            
-                                 
-            $objschoolTable->startRow();
-            $objschoolTable->addCell('Guidance Teacher Email');
-            $objschoolTable->addCell(strtoupper($sesschool['guidanceteachemail']));
-            $objschoolTable->endRow();
-            
-            $objschoolTable->startRow();
-            $objschoolTable->addCell('Guidance Teacher Cellphone Number ');
-            $objschoolTable->addCell(strtoupper($sesschool['guidanceteachcellno']));
-            $objschoolTable->endRow();
-            
-          }
-      
-      
-      
-      }
+                    $objTableinfo->startRow();
+                    $objTableinfo->addCell('Residence');
+                    $objTableinfo->addCell($resval);
+                    $objTableinfo->endRow();
+                    
+                    $objTableinfo->startRow();
+                    $objTableinfo->addCell('Exemption');
+                    $objTableinfo->addCell($val);
+                    $objTableinfo->endRow();
+                    
+                    $objTableinfo->startRow();
+                    $objTableinfo->addCell('Senate Discretionary');
+                    $objTableinfo->addCell($result);
+                    $objTableinfo->endRow();
+                    
+              }                    
 /*----------------------------------------------------------------------------------------*/
 
     /**
      *create tabbed boxes to place elements in
      */
     
-    $strelements  =   $objstudcardTable->show(); 
-    $strelements1 =   $objactivityTable->show();
-    $strelements2 =   $objschoolTable->show();
-                  
+    $strelements  =   $objstudcardTable->show();// . $objTable->show(); 
+    
     $objstudtab = new tabbedbox();
     $objstudtab->addTabLabel($studcardinfo);
-    $objstudtab->addBoxContent("<div align=\"right\">" .$editStudLink->show() . "</div>".$strelements);
-
+    $objstudtab->addBoxContent("<div align=\"right\">" .$editStudLink->show() . "</div>"."<div align=\"left\">" .$strelements ."</div>");
     
-    $objslutab = new tabbedbox();
-    $objslutab->addTabLabel($sluactivity);
-    $objslutab->addBoxContent("<div align=\"right\">" .$editSLUlink->show() . "</div>".'<br />' . $strelements1);
-
+    $objstuddetails = new tabbedbox();
+    $objstuddetails->addTabLabel('Subjects');
+    $objstuddetails->addBoxContent("<div align=\"right\">" .$editSubjects->show() . "</div>"."<div align=\"left\">".$objTable->show()."</div>");
     
-    $objschooltab = new tabbedbox();
-    $objschooltab->addTabLabel('School Details');
-    $objschooltab->addBoxContent("<div align=\"right\">" .$editSchoollink->show() . "</div>".'<br />' . $strelements2);
-
-    $Studcardinfo = & $this->newObject('tabbox','marketingrecruitmentforum');
-    $Studcardinfo->tabName = 'OutputInfo';
-   
-/*----------------------------------------------------------------------------------------*/   
+    $objstudfaccrse = new tabbedbox();
+    $objstudfaccrse->addTabLabel('Faculty and Course');
+    $objstudfaccrse->addBoxContent("<div align=\"right\">" .$editFacultyCrse->show() . "</div>"."<div align=\"left\">".$objTableFC->show()."</div>");
+    
+    $objstudinfo = new tabbedbox();
+    $objstudinfo->addTabLabel('More information');
+    $objstudinfo->addBoxContent("<div align=\"right\">" .$editMoreInfo->show() . "</div>"."<div align=\"left\">".$objTableinfo->show()."</div>");
+    
+    /*----------------------------------------------------------------------------------------*/   
    /**
    *create a tabpane to place all form out elements in
    */     
   
-   $stringval = $objstudtab->show() . $objslutab->show() . $objschooltab->show();
+   $stringval = $objstudtab->show() . $objstuddetails->show().$objstudfaccrse->show() . $objstudinfo->show();// . $objslutab->show() . $objschooltab->show();
 
-   $objForm = new form('editdata',$this->uri(array('action'=>'submitinfo')));
+   $objForm = new form('studentoutput',$this->uri(array('action'=>'submitinfo')));
    $objForm->displayType = 3;
    $objForm->addToForm($this->objMainheading->show().'<br />' .'<br />'.$stringval . '<br />' . "<div align=left>".$this->objSubmitstudcard->show()."</div>"); 
 /*----------------------------------------------------------------------------------------*/  
-echo  $objForm->show();
- 
+echo $objForm->show();
 ?>

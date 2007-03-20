@@ -26,12 +26,8 @@
   */   
       $this->objstudcard = & $this->getObject('dbstudentcard','marketingrecruitmentforum');
       $results = $this->objstudcard->getallstudaddy();
-      //$results  = $results . $check; 
-     
-     
-    
-      // $css1 = '<link rel="stylesheet" type="text/css" href="modules/marketingrecruitmentforum/resources/mrsf.css" />';
-      // $this->appendArrayVar('headerParams', $css1);
+  
+       //create table to hold data containing student address details
        $oddEven = 'even';
        $myTable =& $this->newObject('htmltable', 'htmlelements');
        $myTable->cellspacing = '1';
@@ -39,28 +35,25 @@
        $myTable->border='0';
        $myTable->width = '100%';
        $myTable->css_class = 'highlightrows';
-    //   $myTable->row_attributes = " class = \"$oddEven\"";
-      
-  
+   
         $myTable->startHeaderRow();
         $myTable->addHeaderCell('Surname', null,'top','left','header');
         $myTable->addHeaderCell('Name', null,'top','left','header');
         $myTable->addHeaderCell('Address Details', null,'top','left','header');
-        $myTable->addHeaderCell('Post Letter', null,'top','left','header');
+    //    $myTable->addHeaderCell('Post Letter', null,'top','left','header');
         $myTable->endHeaderRow();
      
         $rowcount = '0';
   
-    foreach($results as $sessCard){
-     
-    //   $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+   // foreach($results as $sessCard){
+       for($i=0; $i< count($results); $i++){
        
        $myTable->startRow();
        (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-       $myTable->addCell($sessCard['surname'],"15%", null, "left","widelink");
-       $myTable->addCell($sessCard['name'],"15%", null, "left","widelink");
-       $myTable->addCell($sessCard['postaddress'],"15%", null, "left","widelink");
-       $myTable->addCell($check,"15%", null, "left","widelink");
+       $myTable->addCell($results[$i]->SURNAME, "10%", null, "left","$oddOrEven");
+       $myTable->addCell($results[$i]->NAME,"10%", null, "left","$oddOrEven");
+       $myTable->addCell($results[$i]->POSTADDRESS,"15%", null, "left","$oddOrEven");
+      // $myTable->addCell($check,"15%", null, "left","$oddOrEven");
        $myTable->row_attributes = " class = \"$oddOrEven\"";
        $rowcount++;
        $myTable->endRow();

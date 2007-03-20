@@ -22,6 +22,7 @@
         $searchmsg = $this->objLanguage->languageText('mod_marketingrecruitmentforum_schoolhelp','marketingrecruitmentforum');
         $click = $this->objLanguage->languageText('mod_marketingrecruitmentforum_click','marketingrecruitmentforum');
         $go = $this->objLanguage->languageText('word_go');
+        $schooselect = $this->objLanguage->languageText('mod_marketingrecruitmentforum_schoolselect','marketingrecruitmentforum');
         
         $instruction  = $searchmsg . '<br />' . $click;
 /*------------------------------------------------------------------------------*/  
@@ -31,23 +32,31 @@
                     
       $this->objButtonGo  = new button('go', $go);
       $this->objButtonGo->setToSubmit();
+      
+      $this->objGo  = new button('searchgo', $go);
+      $this->objGo->setToSubmit();
 /*------------------------------------------------------------------------------*/
-       //create an object of the schoolnames class
-       //call the function that sets the session
-       //call the session
-       //populate list with values in the session array 
-       $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
-       $this->objschoolname->readfiledata();
-        
+       $this->objfaculties =& $this->getObject('dbstudentcard','marketingrecruitmentforum');
+       
+       $schoolnames = $this->objfaculties->getSchools(); 
+       for($i=0; $i < count($schoolnames); $i++){
+            $schoolvalues[$i]=$schoolnames[$i]->SCHOOLNAME;
+       }
+
+       //create dropdown list
        $searchlist  = new dropdown('namevalues');
-       $shoolvalues = $this->getSession('schoolnames');
-       sort($shoolvalues);
-       foreach($shoolvalues as $sessschool){
-          $searchlist->addOption(NULL, ''.'[ Select A School from the list ]');
+      // $searchlist->size = 50;
+       
+       sort($schoolvalues);
+       foreach($schoolvalues as $sessschool){
+          $searchlist->addOption(NULL, ''.$schooselect);
           $searchlist->addOption($sessschool,$sessschool);
        }
-       $searchlist->setSelected($this->getParam('namevalues'));
+       $searchlist->setSelected($this->getParam('namevalues',NULL));
        $searchlist->extra = ' onChange="document.searchsschool.submit()"';
+       
+       
+
        
 /*--------------------------------------------------------------------------------------------*/       
  
@@ -65,13 +74,14 @@
     /**
      *create tabpan and display search info
      */         
-    $schoolinfo = & $this->newObject('tabbox','marketingrecruitmentforum');
-    $schoolinfo->tabName = 'ActivityInfo';
+    $schoolinfo = & $this->newObject('tabcontent','htmlelements');
+    $schoolinfo->name = 'schooldata';
+    $schoolinfo->width = "750px";
  
-    $schoolinfo->addTab('schoollist', 'All Schools',$results);
-    $schoolinfo->addTab('schoolname', 'School By Name','<br />' .'<b>'.'Select a school to search by'.'</b>'. ' '. $searchlist->show() . '<br />' . '<br />' .$schoolname);
-    $schoolinfo->addTab('areaschool', 'Schools By Area',$area);
-    $schoolinfo->addTab('schoolprovince', 'Schools By Province',$province);
+    $schoolinfo->addTab('All Schools',$results, false);
+    $schoolinfo->addTab('School By Name','<br />' .'<b>'.'Select a school to search by'.'</b>'. ' '. $searchlist->show().' '.$this->objGo->show() . '<br />' . '<br />' .$schoolname, false);
+    $schoolinfo->addTab('Schools By Area',$area, false);
+    $schoolinfo->addTab('Schools By Province',$province, false);
     //$Studcardinfo->addTab('area', 'Activities by area',$area);
     //$Studcardinfo->addTab('school', 'Activities by school','Select a school to search by' . ' ' .$schoollist->show() . ' '.$this->objButtonGo->show().' <br />'. '<br />' . $school);
     
