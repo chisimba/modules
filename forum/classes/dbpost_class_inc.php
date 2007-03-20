@@ -249,7 +249,7 @@ class dbPost extends dbTable
         LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId ) 
         LEFT JOIN tbl_forum_post_attachment ON (tbl_forum_post.id = tbl_forum_post_attachment.post_id)
         LEFT JOIN tbl_forum_post AS replypost ON (tbl_forum_post.id = replypost.post_parent)
-        LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND languageCheck.original_post="0" AND tbl_forum_post_text.language != languagecheck.language)
+        LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND languagecheck.original_post="0" AND tbl_forum_post_text.language != languagecheck.language)
         LEFT JOIN tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id)
         WHERE tbl_forum_post.topic_id = "'.$topic_id.'" AND tbl_forum_post.lft >= "'.$pointers['lft']. '" AND tbl_forum_post.rght <= "'.$pointers['rght'].'" 
         GROUP BY tbl_forum_post.id ORDER BY lft';
