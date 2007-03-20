@@ -52,7 +52,7 @@ public  function  getAllactivities(){
    	$res = $this->objactivity->getallsluactivity();
 		$stdCount=count($res); 
     $startat = $this->getParam('startat', 1);
-    $dispCount = $this->getParam('dispcount', 2);
+    $dispCount = $this->getParam('dispcount', 25);
     $page = $this->getParam('page', '1');
 
 //if(is_array($stdinfo)){
@@ -204,7 +204,7 @@ if ($stdCount > 0){
         $myTable->cellspacing = '1';
         $myTable->cellpadding = '2';
         $myTable->border='0';
-        $myTable->width = '100%';
+        $myTable->width = '130%';
         $myTable->css_class = 'highlightrows';
        
       
@@ -214,7 +214,7 @@ if ($stdCount > 0){
         $myTable->addHeaderCell($activity1, null,'top','left','header');
         $myTable->addHeaderCell($schoolname1, null,'top','left','header');
         $myTable->addHeaderCell($area1, null,'top','left','header');
-        $myTable->addHeaderCell($province1, null,'top','left','header');
+        $myTable->addHeaderCell($province1."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp", null,'top','left','header');
         $myTable->endHeaderRow();
      
         $rowcount = '0';
@@ -225,11 +225,11 @@ if ($stdCount > 0){
        
          $myTable->startRow();
          (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-         $myTable->addCell($results[$i]->ACTIVITYDATE,"15%", null, "left",$oddOrEven);
-         $myTable->addCell($results[$i]->ACTIVITY, "15%", null, "left",$oddOrEven);
-         $myTable->addCell($results[$i]->SCHOOLNAME,"15%", null, "left",$oddOrEven);
-         $myTable->addCell($results[$i]->AREA,"15%", null, "left",$oddOrEven);
-         $myTable->addCell($results[$i]->PROVINCE,"15%", null, "left",$oddOrEven);
+         $myTable->addCell($results[$i]->ACTIVITYDATE,"25%", null, "left",$oddOrEven);
+         $myTable->addCell($results[$i]->ACTIVITY, "25%", null, "left",$oddOrEven);
+         $myTable->addCell($results[$i]->SCHOOLNAME,"25%", null, "left",$oddOrEven);
+         $myTable->addCell($results[$i]->AREA,"25%", null, "left",$oddOrEven);
+         $myTable->addCell($results[$i]->PROVINCE,"30%", null, "left",$oddOrEven);
          $myTable->row_attributes = " class = \"$oddOrEven\"";
          $rowcount++;
          $myTable->endRow();
@@ -242,7 +242,7 @@ if ($stdCount > 0){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '30%';
+                 $myTable->width = '130%';
                  $myTable->css_class = 'highlightrows';
                  $myTable->row_attributes = " class = \"$oddEven\"";
                  
@@ -250,7 +250,7 @@ if ($stdCount > 0){
                  
                  $myTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
+                 $myTable->addCell('NO RECORDS FOUND',"130%", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();
@@ -283,7 +283,7 @@ public  function getactivdate($activitydate){
              $myTable->cellspacing = '1';
              $myTable->cellpadding = '2';
              $myTable->border='0';
-             $myTable->width = '100%';
+             $myTable->width = '130%';
              $myTable->css_class = 'highlightrows';
              
           
@@ -301,8 +301,8 @@ public  function getactivdate($activitydate){
             
              $myTable->startRow();
              (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-             $myTable->addCell($activitydate[$i]->ACTIVITYDATE,"15%", null, "left",$oddOrEven);
-             $myTable->addCell($activitydate[$i]->ACTIVITY, "15%", null, "left",$oddOrEven);
+             $myTable->addCell($activitydate[$i]->ACTIVITYDATE,"25%", null, "left",$oddOrEven);
+             $myTable->addCell($activitydate[$i]->ACTIVITY, "25%", null, "left",$oddOrEven);
              $myTable->row_attributes = " class = \"$oddOrEven\"";
              $rowcount++;
              $myTable->endRow();
@@ -314,7 +314,7 @@ public  function getactivdate($activitydate){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '30%';
+                 $myTable->width = '130%';
                  $myTable->css_class = 'highlightrows';
                  $myTable->row_attributes = " class = \"$oddEven\"";
                  
@@ -322,7 +322,7 @@ public  function getactivdate($activitydate){
                  
                  $myTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
+                 $myTable->addCell('NO RECORDS FOUND',"130%", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();
@@ -348,7 +348,7 @@ public  function activitytype(){
   	$res = $this->objactivity->getactivitytype();
 		$stdCount=count($res); 
     $startat = $this->getParam('startat', 1);
-    $dispCount = $this->getParam('dispcount', 2);
+    $dispCount = $this->getParam('dispcount', 25);
     $page = $this->getParam('page', '1');
 
 //if(is_array($stdinfo)){
@@ -492,7 +492,7 @@ if ($stdCount > 0){
          $myTable->cellspacing = '1';
          $myTable->cellpadding = '2';
          $myTable->border='0';
-         $myTable->width = '100%';
+         $myTable->width = '130%';
          $myTable->css_class = 'highlightrows';
       
          $myTable->startHeaderRow();
@@ -506,7 +506,7 @@ if ($stdCount > 0){
        
          $myTable->startRow();
          (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-         $myTable->addCell($results[$i]->ACTIVITY,"15%", null, "left",$oddOrEven);
+         $myTable->addCell($results[$i]->ACTIVITY,"130%", null, "left",$oddOrEven);
          $myTable->row_attributes = " class = \"$oddOrEven\"";
          $rowcount++;
          $myTable->endRow();
@@ -519,7 +519,7 @@ if ($stdCount > 0){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '30%';
+                 $myTable->width = '130%';
                  $myTable->css_class = 'highlightrows';
                  $myTable->row_attributes = " class = \"$oddEven\"";
                  
@@ -527,7 +527,7 @@ if ($stdCount > 0){
                  
                  $myTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
+                 $myTable->addCell('NO RECORDS FOUND',"130%", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();
@@ -552,7 +552,7 @@ public function activitybyprov(){
     $res = $this->objactivity->getactivityprovince();
 		$stdCount=count($res); 
     $startat = $this->getParam('startat', 1);
-    $dispCount = $this->getParam('dispcount', 2);
+    $dispCount = $this->getParam('dispcount', 25);
     $page = $this->getParam('page', '1');
 
 //if(is_array($stdinfo)){
@@ -701,7 +701,7 @@ if ($stdCount > 0){
          $myTable->cellspacing = '1';
          $myTable->cellpadding = '2';
          $myTable->border='0';
-         $myTable->width = '100%';
+         $myTable->width = '130%';
          $myTable->css_class = 'highlightrows';
          
         
@@ -718,8 +718,8 @@ if ($stdCount > 0){
        
        $myTable->startRow();
        (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-       $myTable->addCell($results[$i]->ACTIVITY,"15%", null, "left",$oddOrEven);
-       $myTable->addCell($results[$i]->PROVINCE, "15%", null, "left",$oddOrEven);
+       $myTable->addCell($results[$i]->ACTIVITY,"25%", null, "left",$oddOrEven);
+       $myTable->addCell($results[$i]->PROVINCE, "25%", null, "left",$oddOrEven);
        $myTable->row_attributes = " class = \"$oddOrEven\"";
        $rowcount++;
        $myTable->endRow();
@@ -732,7 +732,7 @@ if ($stdCount > 0){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '30%';
+                 $myTable->width = '130%';
                  $myTable->css_class = 'highlightrows';
                  $myTable->row_attributes = " class = \"$oddEven\"";
                  
@@ -740,7 +740,7 @@ if ($stdCount > 0){
                  
                  $myTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
+                 $myTable->addCell('NO RECORDS FOUND',"130%", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();
@@ -766,7 +766,7 @@ public function activitybyarea(){
   	$res = $this->objactivity->getactivityarea();
 		$stdCount=count($res); 
     $startat = $this->getParam('startat', 1);
-    $dispCount = $this->getParam('dispcount', 2);
+    $dispCount = $this->getParam('dispcount', 25);
     $page = $this->getParam('page', '1');
 
 //if(is_array($stdinfo)){
@@ -914,7 +914,7 @@ if ($stdCount > 0){
          $myTable->cellspacing = '1';
          $myTable->cellpadding = '2';
          $myTable->border='0';
-         $myTable->width = '100%';
+         $myTable->width = '130%';
          $myTable->css_class = 'highlightrows';
          
          $myTable->startHeaderRow();
@@ -930,8 +930,8 @@ if ($stdCount > 0){
        
          $myTable->startRow();
          (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-         $myTable->addCell($results[$i]->ACTIVITY, "15%", null, "left",$oddOrEven);
-         $myTable->addCell($results[$i]->AREA,"15%", null, "left",$oddOrEven);
+         $myTable->addCell($results[$i]->ACTIVITY, "25%", null, "left",$oddOrEven);
+         $myTable->addCell($results[$i]->AREA,"25%", null, "left",$oddOrEven);
          $myTable->row_attributes = " class = \"$oddOrEven\"";
          $rowcount++;
          $myTable->endRow();
@@ -944,7 +944,7 @@ if ($stdCount > 0){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '30%';
+                 $myTable->width = '130%';
                  $myTable->css_class = 'highlightrows';
                  $myTable->row_attributes = " class = \"$oddEven\"";
                  
@@ -952,7 +952,7 @@ if ($stdCount > 0){
                  
                  $myTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
+                 $myTable->addCell('NO RECORDS FOUND',"130%", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();

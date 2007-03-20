@@ -117,7 +117,7 @@
      
     $Activityinfo = & $this->newObject('tabcontent','htmlelements');
     $Activityinfo->name = 'ActivityInfo';
-    $Activityinfo->width = '950px';
+    $Activityinfo->width = '750px';
     
     $Activityinfo->addTab('All Activities',$results, false);
     $Activityinfo->addTab('Activities By Dates',$mydateTab->show().' <br />'. '<br />' . $activdates, false);

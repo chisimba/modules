@@ -76,7 +76,7 @@
      */         
     $schoolinfo = & $this->newObject('tabcontent','htmlelements');
     $schoolinfo->name = 'schooldata';
-    $schoolinfo->width = "750px";
+    $schoolinfo->width = "760px";
  
     $schoolinfo->addTab('All Schools',$results, false);
     $schoolinfo->addTab('School By Name','<br />' .'<b>'.'Select a school to search by'.'</b>'. ' '. $searchlist->show().' '.$this->objGo->show() . '<br />' . '<br />' .$schoolname, false);

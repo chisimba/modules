@@ -93,7 +93,7 @@ public  function studentsbyfaculty($facultyval){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '30%';
+                 $myTable->width = '100%';
                  $myTable->css_class = 'highlightrows';
                  $myTable->row_attributes = " class = \"$oddEven\"";
                  
@@ -101,7 +101,7 @@ public  function studentsbyfaculty($facultyval){
                  
                  $myTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
+                 $myTable->addCell('NO RECORDS FOUND',"100%", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();
@@ -174,7 +174,7 @@ public function exemptionbyfaculty($facultyexmp = NULL){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '30%';
+                 $myTable->width = '100%';
                  $myTable->css_class = 'highlightrows';
                  $myTable->row_attributes = " class = \"$oddEven\"";
                  
@@ -182,7 +182,7 @@ public function exemptionbyfaculty($facultyexmp = NULL){
                  
                  $myTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
+                 $myTable->addCell('NO RECORDS FOUND',"100%", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();
@@ -257,7 +257,7 @@ public  function relsubjbyfaculty($facsubj2 = NULL){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '30%';
+                 $myTable->width = '100%';
                  $myTable->css_class = 'highlightrows';
                  $myTable->row_attributes = " class = \"$oddEven\"";
                  
@@ -265,7 +265,7 @@ public  function relsubjbyfaculty($facsubj2 = NULL){
                  
                  $myTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
+                 $myTable->addCell('NO RECORDS FOUND',"100%", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();
@@ -341,7 +341,7 @@ public  function coursebyfaculty($faccourse){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '30%';
+                 $myTable->width = '100%';
                  $myTable->css_class = 'highlightrows';
                  $myTable->row_attributes = " class = \"$oddEven\"";
                  
@@ -349,7 +349,7 @@ public  function coursebyfaculty($faccourse){
                  
                  $myTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
+                 $myTable->addCell('NO RECORDS FOUND',"100%", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();
@@ -423,7 +423,7 @@ public  function sdcasebyfaculty($facsdcase){
                  $myTable->cellspacing = '1';
                  $myTable->cellpadding = '2';
                  $myTable->border='0';
-                 $myTable->width = '30%';
+                 $myTable->width = '100%';
                  $myTable->css_class = 'highlightrows';
                  $myTable->row_attributes = " class = \"$oddEven\"";
                  
@@ -431,7 +431,7 @@ public  function sdcasebyfaculty($facsdcase){
                  
                  $myTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                 $myTable->addCell('NO RECORDS FOUND',"15%", null, "left","$oddOrEven");
+                 $myTable->addCell('NO RECORDS FOUND',"100%", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();

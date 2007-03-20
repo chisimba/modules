@@ -686,7 +686,7 @@ if ($stdCount > 0){
          $myTable->startHeaderRow();
          $myTable->addHeaderCell('Surname', null,'top','left','header');
          $myTable->addHeaderCell('Name', null,'top','left','header');
-         $myTable->addHeaderCell('Faculty', null,'top','left','header');
+         $myTable->addHeaderCell('Faculty 1st Choice', null,'top','left','header');
           
          $rowcount = 0;
   
@@ -893,7 +893,7 @@ if ($stdCount > 0){
          $myTable->startHeaderRow();
          $myTable->addHeaderCell('Surname', null,'top','left','header');
          $myTable->addHeaderCell('Name', null,'top','left','header');
-         $myTable->addHeaderCell('Faculty', null,'top','left','header');
+         $myTable->addHeaderCell('Faculty 2nd Choice', null,'top','left','header');
           
          $rowcount = 0;
   
@@ -1106,8 +1106,8 @@ if ($stdCount > 0){
           $myTable->startHeaderRow();
           $myTable->addHeaderCell('Surname', null,'top','left','header');
           $myTable->addHeaderCell('Name', null,'top','left','header');
-          $myTable->addHeaderCell('Course', null,'top','left','header');
-          $myTable->addHeaderCell('Faculty', null,'top','left','header');
+          $myTable->addHeaderCell('Course 1st Choice', null,'top','left','header');
+          $myTable->addHeaderCell('Faculty 1st Choice', null,'top','left','header');
          
           $rowcount = 0;
   
@@ -1324,8 +1324,8 @@ if ($stdCount > 0){
           $myTable->startHeaderRow();
           $myTable->addHeaderCell('Surname', null,'top','left','header');
           $myTable->addHeaderCell('Name', null,'top','left','header');
-          $myTable->addHeaderCell('Course', null,'top','left','header');
-          $myTable->addHeaderCell('Faculty', null,'top','left','header');
+          $myTable->addHeaderCell('Course 2nd Choice', null,'top','left','header');
+          $myTable->addHeaderCell('Faculty 2nd Choice', null,'top','left','header');
          
           $rowcount = 0;
   

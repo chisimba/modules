@@ -84,7 +84,7 @@
      */         
     $Studcardinfo = & $this->newObject('tabcontent','htmlelements');
     $Studcardinfo->name = 'studcarddata';
-    $Studcardinfo->width = "950px";
+    $Studcardinfo->width = "760px";
     
     $Studcardinfo->addTab('Info Cards',$results,false);
     $Studcardinfo->addTab('School','<b>'.'Please select a school to search by'.'</b>' . ' ' .$schoollist->show() .' '.$this->objButtonGo->show(). ' <br />'. '<br />' . $schoolresults,false);
