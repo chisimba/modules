@@ -1091,7 +1091,7 @@ class blog extends controller
                 else {
                 	$stickypost = 0;
                 }
-                /*//set up for Google Blog API
+                //set up for Google Blog API
                 $changesURL = $this->uri(array('module' => 'blog', 'action' => 'feed', 'userid' => $userid));
                 $name = $this->objUser->fullname($userid) . " Chisimba blog";
                 $blogURL = $this->uri(array('module' => 'blog', 'action' => 'randblog', 'userid' => $userid));
@@ -1153,7 +1153,7 @@ class blog extends controller
                         log_debug("Google blogs API Failure! Google said: " . $code);
                         break;
                 }
-*/
+
                 //post quick add
                 if($mode == 'quickadd')
                 {
@@ -1343,22 +1343,34 @@ class blog extends controller
                     $this->setVarByRef('theurl', $theurl);
                     return 'tburl_tpl.php';
                 }
+                
+                //check for trackback spam
+                require_once 'Net/DNSBL.php';
+				$dnsbl = new Net_DNSBL();
+				$remoteIP = $pd['host'];
+				
+				$dnsbl->setBlacklists(array('dul.dnsbl.sorbs.net', 'rhsbl.sorbs.net', 'http.dnsbl.sorbs.net', 'socks.dnsbl.sorbs.net', 'misc.dnsbl.sorbs.net', 'smtp.dnsbl.sorbs.net',
+							'web.dnsbl.sorbs.net', 'block.dnsbl.sorbs.net', 'zombie.dnsbl.sorbs.net', 'badconf.rhsbl.sorbs.net', 'sbl.spamhaus.org', 'dnsbl.njabl.org', 'relays.ordb.org'));
+				if ($dnsbl->isListed($remoteIP)) {
+    				return 'tburl_tpl.php';
+				}
+				else {
 
-                //add the $data array to a db table
-                $this->objDbBlog->setTrackback($data);
+                	//add the $data array to a db table
+                	$this->objDbBlog->setTrackback($data);
 
-                $options = array(
-                    // Options for trackback directly
-                    'strictness'        => 1,
-                    'timeout'           => 30,          // seconds
-                    'fetchlines'        => 30,
-                    'fetchextra'        => true,
-                );
-                $this->objTB = $this->getObject("trackback");
-                //use the factory
-                $this->objTB->setup($data, $options);
-                echo $this->objTB->recTB($data);
-
+                	$options = array(
+                    	// Options for trackback directly
+                    	'strictness'        => 1,
+                    	'timeout'           => 30,          // seconds
+                    	'fetchlines'        => 30,
+                    	'fetchextra'        => true,
+                	);
+                	$this->objTB = $this->getObject("trackback");
+                	//use the factory
+                	$this->objTB->setup($data, $options);
+                	echo $this->objTB->recTB($data);
+				}
                 break;
 
             case 'tbsend':

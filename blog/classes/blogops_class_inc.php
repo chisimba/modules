@@ -1174,7 +1174,7 @@ class blogops extends object
         $rss2->setIcon('rss', 'gif', 'icons/filetypes');
         $link = new href($this->uri(array('action' => 'feed', 'format' => 'rss2', 'userid' => $userid)),$this->objLanguage->languageText("mod_blog_word_rss2", "blog"));
         $leftCol .= $rss2->show() . $link->show() . "<br />";
-
+        
         //RSS0.91
         $rss091 = $this->getObject('geticon', 'htmlelements');
         $rss091->setIcon('rss', 'gif', 'icons/filetypes');
