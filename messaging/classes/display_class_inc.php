@@ -1969,7 +1969,6 @@ $this->objLanguage = $this->getObject('language','language');
         // submit button
         $objButton = new button('send', $submitLabel);
         $objButton->setToSubmit();
-        $objButton->extra = ' onclick="javascript:return jsValidateDate(\''.$errStartLabel.'\', \''.$errEndLabel.'\', \''.$errDateLabel.'\')"';
         $sendButton = $objButton->show();
         
         // cancel button
@@ -1984,6 +1983,7 @@ $this->objLanguage = $this->getObject('language','language');
         $objForm->addToForm($typeFeature);
         $objForm->addToForm($periodLayer);
         $objForm->addToForm($sendButton.'&nbsp;'.$cancelButton);
+        $objForm->extra = ' onsubmit="javascript:return jsValidateDate(\''.$errStartLabel.'\', \''.$errEndLabel.'\', \''.$errDateLabel.'\')"';
         $logForm = $objForm->show();
         $string .= $logForm;
         
