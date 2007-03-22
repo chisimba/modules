@@ -32,13 +32,13 @@ class rubric extends controller
     public function init()
     {
       
-      $this->objUser =& $this->getObject('user', 'security');
-      $this->objLanguage =& $this->getObject('language','language');
-		$this->objDbRubricTables =& $this->getObject('dbrubrictables'); 
-		$this->objDbRubricPerformances =& $this->getObject('dbrubricperformances'); 
-		$this->objDbRubricObjectives =& $this->getObject('dbrubricobjectives'); 
-		$this->objDbRubricCells =& $this->getObject('dbrubriccells'); 
-		$this->objDbRubricAssessments =& $this->getObject('dbrubricassessments'); 
+        $this->objUser =& $this->getObject('user', 'security');
+        $this->objLanguage =& $this->getObject('language','language');
+		  $this->objDbRubricTables =& $this->getObject('dbrubrictables'); 
+		  $this->objDbRubricPerformances =& $this->getObject('dbrubricperformances'); 
+		  $this->objDbRubricObjectives =& $this->getObject('dbrubricobjectives'); 
+		  $this->objDbRubricCells =& $this->getObject('dbrubriccells'); 
+		  $this->objDbRubricAssessments =& $this->getObject('dbrubricassessments'); 
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');       
         //Log this module call
@@ -64,11 +64,11 @@ class rubric extends controller
         //    controller.
         // 3. Pass variables to the template
         $this->setVarByRef('objUser', $this->objUser);
-		$this->setVarByRef('objLanguage', $this->objLanguage);        
+		  $this->setVarByRef('objLanguage', $this->objLanguage);        
         // return the name of the template to use  because it is a page content template
         // the file must live in the templates/content subdir of the module directory
-		$this->objDbContext = &$this->getObject('dbcontext','context');
-		// Check if called from Megan's module.
+		  $this->objDbContext = &$this->getObject('dbcontext','context');
+		  // Check if called from Megan's module.
 		$noBanner = $this->getParam("NoBanner", "no");
 		$this->setVarByRef('noBanner', $noBanner);
 		if ($noBanner == "yes") {
