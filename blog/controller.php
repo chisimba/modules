@@ -1100,6 +1100,7 @@ class blog extends controller
                 //do the http request
                 //echo $gurl;
                 $gurl = str_replace('%26amp%3B', "&", $gurl);
+                $gurl = str_replace('&amp;', "&", $gurl);
 
                 //get the proxy info if set
                 $proxyArr = $this->objProxy->getProxy();
