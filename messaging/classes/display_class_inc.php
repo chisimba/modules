@@ -597,10 +597,10 @@ $this->objLanguage = $this->getObject('language','language');
     * Method to create the chat room template
     *
     * @access public
-    * @param array $roomData An array containing the chat room data
+    * @param string $counter: The number of messages on the database
     * @return string $str The template output string
     */
-    public function tplChatRoom()
+    public function tplChatRoom($counter)
     {
         // language items
         $sendingLabel = $this->objLanguage->languageText('mod_messaging_sending', 'messaging');
@@ -614,10 +614,23 @@ $this->objLanguage = $this->getObject('language','language');
         $logTitleLabel = $this->objLanguage->languageText('mod_messaging_logtitle', 'messaging');
         $windowLabel = $this->objLanguage->languageText('mod_messaging_clearwindow', 'messaging');
         $winTitleLabel = $this->objLanguage->languageText('mod_messaging_cleartitle', 'messaging');
+        $progressLabel = $this->objLanguage->languageText('mod_messaging_clearloading', 'messaging');
                 
         // get data
         $roomId = $this->getSession('chat_room_id');
         $roomData = $this->dbRooms->getRoom($roomId);
+        
+        // heading
+        $heading = $roomData['room_name'];
+        $objHeader = new htmlheading();
+        $objHeader->str = ucfirst($heading);
+        $objHeader->type = 1;
+        $header = $objHeader->show();        
+        $str = $header;
+        
+        $objInput = new textinput('counter', $counter, 'hidden');
+        $counterInput = $objInput->show();
+        $str .= $counterInput;
         
         // banned notice div
         $objLayer = new layer();
@@ -626,15 +639,7 @@ $this->objLanguage = $this->getObject('language','language');
         $objLayer->border = '1px solid red';
         $objLayer->display = 'none';
         $bannedLayer = $objLayer->show();
-        $str = $bannedLayer;
-        
-        // heading
-        $heading = $roomData['room_name'];
-        $objHeader = new htmlheading();
-        $objHeader->str = ucfirst($heading);
-        $objHeader->type = 1;
-        $header = $objHeader->show();        
-        $str .= $header;
+        $str .= $bannedLayer;
         
         // popup links
         // popup link to invite users
@@ -664,15 +669,30 @@ $this->objLanguage = $this->getObject('language','language');
         $objPopup->set('top', '100');
         $objPopup->set('scrollbars', 'no');
         $removeLink = $objPopup->show();
-/*            
-        TO DO:
+            
+        if($roomData['room_type'] == 1 && $roomData['owner_id'] == $this->userId){
+            $leftLinks = $inviteLink.'&nbsp;|&nbsp;'.$removeLink;
+        }else{
+            $leftLinks = '';
+        }
+            
+        $this->objIcon->setIcon('loader');
+        $this->objIcon->title = $progressLabel;
+        $loadingIcon = $this->objIcon->show();
+        
+        $objLayer = new layer();
+        $objLayer->id = 'loadDiv';
+        $objLayer->display = 'none';
+        $objLayer->addToStr($loadingIcon);
+        $loadingLayer = $objLayer->show();
+        
         // link to clear window
         $objLink = new link('#');
         $objLink->extra = ' onclick="javascript:jsClearWindow();"';
         $objLink->link = $windowLabel;
         $objLink->title = $winTitleLabel;
         $clearLink = $objLink->show();
-*/               
+               
         // popup link to invite users
         $objPopup = new windowpop();
         $objPopup->title = $logTitleLabel;
@@ -687,19 +707,16 @@ $this->objLanguage = $this->getObject('language','language');
         $objPopup->set('scrollbars', 'no');
         $logLink = $objPopup->show();
 
-        if($roomData['room_type'] == 1 && $roomData['owner_id'] == $this->userId){
-            $leftLinks = $inviteLink.'&nbsp;|&nbsp;'.$removeLink;
-        }else{
-            $leftLinks = '';
-        }
-            
+        $rightLinks = $clearLink.'&nbsp;|&nbsp;'.$logLink;
+        
         // table to display popup links
         $objTable = new htmltable();
         $objTable->cellspacing = 2;
         $objTable->cellpadding = 2;
         $objTable->startRow();
-        $objTable->addCell($leftLinks, '', '', 'left', '', '');
-        $objTable->addCell($logLink, '', '', 'right', '', '');
+        $objTable->addCell('<nobr>'.$leftLinks.'</nobr>', '25%', '', 'left', '', '');
+        $objTable->addCell($loadingLayer, '', '', 'right', '', '');
+        $objTable->addCell('<nobr>'.$rightLinks.'</nobr>', '25%', '', 'right', '', '');
         $objTable->endRow();
         $linkTable = $objTable->show();
         $str .= $linkTable;
@@ -1073,10 +1090,11 @@ $this->objLanguage = $this->getObject('language','language');
     * Method to create the content for the chat message div
     * 
     * @access public
+    * @param string $counter: The number of messages on the database
     * @param string $mode: The way in which the chat must be displayed
     * @return string The template output string
     */
-    public function divGetChat($mode = NULL)
+    public function divGetChat($counter, $mode = NULL)
     {
         // language items
         $systemLabel = $this->objLanguage->languageText('mod_messaging_wordsystem', 'messaging');
@@ -1084,13 +1102,13 @@ $this->objLanguage = $this->getObject('language','language');
         // get data
         $roomId = $this->getSession('chat_room_id');
         $roomData = $this->dbRooms->getRoom($roomId);
-        $counter = $this->getSession('message_counter');
+        //$counter = $this->getSession('message_counter');
         $messages = $this->dbMessages->getChatMessages($roomId, $counter);
         
         // ordered list of chat messages
         $str = '';
         if($messages != FALSE){
-            $str = '<ul>';
+            $str = '<ul id="chat">';
             foreach($messages as $message){
                 $str .= '<li>';
                 $userId = $message['sender_id'];
@@ -1119,6 +1137,11 @@ $this->objLanguage = $this->getObject('language','language');
                 $str .= '</li>';
             }
             $str .= '</ul>';
+            
+            // hidden input to hold the number of list entries
+            $objInput = new textinput('count', count($messages), 'hidden');
+            $countInput = $objInput->show();
+            $str .= $countInput;
         }
         echo $str;
     }    

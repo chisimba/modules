@@ -253,13 +253,13 @@ class messaging extends controller
                 $this->setSession('is_moderator', $isModerator);
                 $this->dbUserlog->addUser($roomId, $this->userId);
                 $counter = $this->dbMessages->getMessageCount($roomId);
-                $this->setSession('message_counter', $counter);
+                //$this->setSession('message_counter', $counter);
                 $array = array(
                     'name' => $this->name,
                 );
                 $message = $this->objLanguage->code2Txt('mod_messaging_userenter', 'messaging', $array);
                 $this->dbMessages->addChatMessage($message, TRUE);
-                $templateContent = $this->objDisplay->tplChatRoom();
+                $templateContent = $this->objDisplay->tplChatRoom($counter);
                 $this->setVarByRef('templateContent', $templateContent);
                 if($textOnly != 1){
                     $this->setVar('mode', 'room');
@@ -458,8 +458,9 @@ class messaging extends controller
                 
             // get the chat messages posted to a chat room
             case 'getchat':
+                $counter = $this->getParam('counter');
                 $mode = $this->getParam('mode');
-                return $this->objDisplay->divGetChat($mode);
+                return $this->objDisplay->divGetChat($counter, $mode);
                 break;
                 
             // clear the contents of the chat window

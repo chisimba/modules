@@ -138,7 +138,7 @@ function jsUserListTimer(){
         Element.show("sendDiv");
         Element.hide("bannedDiv");
     }                
-    userTimer = setTimeout("jsGetOnlineUsers()", 3000);
+    userTimer = setTimeout("jsGetOnlineUsers()", 2000);
 }
 
 /**
@@ -152,8 +152,9 @@ function jsUserListTimer(){
 */            
 function jsGetChat()
 {
+    var el_Counter = $("input_counter");
     var target = "chatDiv";
-    var pars = "module=messaging&action=getchat&mode="+chatMode;
+    var pars = "module=messaging&action=getchat&counter="+el_Counter.value+"&mode="+chatMode;
     var chatAjax = new Ajax.Updater(target, URL, {method: "post", parameters: pars, onComplete: jsChatTimer});
 }
 
@@ -162,9 +163,10 @@ function jsGetChat()
 */
 function jsChatTimer()
 {
+    Element.hide("loadDiv");
     var el_ChatDiv = $("chatDiv");
     el_ChatDiv.scrollTop = el_ChatDiv.scrollHeight
-    chatTimer = setTimeout("jsGetChat()", 3000);
+    chatTimer = setTimeout("jsGetChat()", 2000);
 }
 
 /*
@@ -210,10 +212,9 @@ function jsSendMessage()
         el_Msg.value = el_Message.value;                             
         el_form.submit();    
         Element.show("iconDiv");
+        el_Message.value = "";
         el_Message.disabled = true;
     }
-    el_Message.value = "";
-    el_Message.focus();
 }
 
 /*
@@ -222,7 +223,10 @@ function jsSendMessage()
 function jsHideLoading()
 {
     parent.$("iconDiv").style.display = 'none';
-    parent.$("input_message").disabled = false;
+    var el_Message = parent.$("input_message");
+    el_Message.disabled = false;
+    el_Message.value = "";
+    el_Message.focus();    
 }
 
 /*
@@ -230,10 +234,10 @@ function jsHideLoading()
 */
 function jsClearWindow()
 {
-    clearTimeout(chatTimer);
-    var target = "hiddenDiv";
-    var pars = "module=messaging&action=clearwindow";
-    var clearAjax = new Ajax.Updater(target, URL, {method: "post", parameters: pars, onComplete: jsGetChat});
+    Element.show("loadDiv");
+    var el_Counter = $("input_counter");
+    var el_Count = $("input_count");
+    el_Counter.value = Number(el_Counter.value) + Number(el_Count.value) - 1;
 }
 
 /**
@@ -251,6 +255,8 @@ function jsValidateBan(warn_err, ban_err)
     var el_Type = document.getElementsByName("type");
     var el_Reason = $("input_reason");
     var len = el_Type.length;
+    alert(el_Type);
+    alert(el_Type.length);
     for(var i = 0; i <= len-1; i++){
         if(el_Type[i].value == 2){
             if(el_Type[i].checked){
