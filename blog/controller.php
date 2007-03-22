@@ -1091,6 +1091,7 @@ class blog extends controller
                 else {
                 	$stickypost = 0;
                 }
+                /*
                 //set up for Google Blog API
                 $changesURL = $this->uri(array('module' => 'blog', 'action' => 'feed', 'userid' => $userid));
                 $name = $this->objUser->fullname($userid) . " Chisimba blog";
@@ -1154,7 +1155,7 @@ class blog extends controller
                         log_debug("Google blogs API Failure! Google said: " . $code);
                         break;
                 }
-
+				*/
                 //post quick add
                 if($mode == 'quickadd')
                 {
