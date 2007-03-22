@@ -122,20 +122,24 @@ class realtime extends controller
 		  case 'whiteboard':
 		     return "realtime-whiteboard_tpl.php";
 		  case 'requesttoken':
-		  	 return $this->request_Token($this->getParam('userid'),
-		  	 							$this->getParam('userlevel'),
-		  	 							$this->getParam('contextcode'));
+		  	 return $this->requestToken($this->userId, $this->userLevel, $this->contextCode);
 		  case 'releasetoken':
 		  	return $this->releaseToken($this->userId, $this->userLevel, $this->contextCode); 
 		  case 'startconversation':
 		  	return $this->startConversation($this->userId, $this->userLevel, $this->contextCode);								
+		  case 'stopconversation':
+		  	return $this->stopConversation($this->userId, $this->userLevel, $this->contextCode);
+		  case 'joinconversation':
+		  	return $this->joinConversation($this->userId, $this->userLevel, $this->contextCode);
+		  case 'leaveconversation':
+		  	return $this->leaveConversation($this->userId, $this->userLevel, $this->contextCode);
 		  default:
 		     return "realtime_tpl.php";
 		}
 	
     }
     
-    function request_Token($userid, $userlevel, $contextcode)
+    function requestToken($userid, $userlevel, $contextcode)
     {
     	if(empty($userid) || empty($userlevel) || empty($contextcode)){
     		return "realtime_tpl.php";
@@ -148,19 +152,17 @@ class realtime extends controller
     
     function releaseToken($userid, $userlevel, $contextcode)
     {
-    	if(empty($userid) || empty($userlevel) || empty($contextcode)){
-    		return "realtime_tpl.php";
-    	}else{
-    		$hasToken = $this->objrealtime->releaseToken();
-    		$this->setVar('hastoken', $hasToken);
-    		return "redirect_tpl.php";
-    	}
+		$hasToken = $this->objrealtime->releaseToken($userid, $userlevel, $contextcode);
+    	$this->setVar('hastoken', $hasToken);
+    	return "redirect_tpl.php";
+
     }
     
     function startConversation($userid, $userlevel, $contextcode)
     {
-    	if(empty($userid) || empty($userlevel)){
-    		return "realtime_tpl.php";
+    	if(empty($userid) || empty($userlevel) || empty($contextcode)){
+    		$hasToken = "FAILURE";
+    		return "redirect_tpl.php";
     	}else{
     		$hasToken = $this->objrealtime->startConversation($userid, $userlevel, $contextcode);
     		$this->setVar('hastoken', $hasToken);
@@ -170,7 +172,23 @@ class realtime extends controller
     
     function stopConversation($userid, $userlevel, $contextcode)
     {
-    	
+    	$hasToken = $this->objrealtime->stopConversation($userid, $userlevel, $contextcode);
+    	$this->setVar('hastoken', $hasToken);
+    	return "redirect_tpl.php";
+    }
+    
+    function leaveConversation($userid, $userlevel, $contextcode)
+    {
+    	$hasToken = $this->objrealtime->leaveConversation($userid, $userlevel, $contextcode);
+    	$this->setVar('hastoken', $hasToken);
+    	return "redirect_tpl.php";
+    }
+    
+    function joinConversation($userid, $userlevel, $contextcode)
+    {
+    	$hasToken = $this->objrealtime->joinConversation($userid, $userlevel, $contextcode);
+    	$this->setVar('hastoken', $hasToken);
+    	return "redirect_tpl.php";    	
     }
 }
 ?>
