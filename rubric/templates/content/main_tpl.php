@@ -96,8 +96,8 @@
                 
 	            $icon = $this->getObject('geticon','htmlelements');
                $icon->setIcon('assessments');
-               $icon->title = $objLanguage->languageText("word_assessments");
-	  				$icon->alt = $objLanguage->languageText("word_assessments");
+               $icon->title = $objLanguage->languageText("word_assessment");
+	  				$icon->alt = $objLanguage->languageText("word_assessment");
             
 				$options .= "<a href=\"" . 
 					$this->uri(array(
@@ -132,7 +132,7 @@
 	        // View table.            
             $icon = $this->getObject('geticon','htmlelements');
             $icon->setIcon('preview');
-            $icon->tiile = $objLanguage->languageText("word_view");
+            $icon->title = $objLanguage->languageText("word_view");
             $icon->alt = $objLanguage->languageText("word_view");
             $icon->align=false;            
             $options .= "<a href=\"" . 
@@ -276,7 +276,8 @@
                 // Rename table.
                 
                 $icon->setIcon('rename');
-                $icon->alt = $objLanguage->languageText("word_rename1",'rubric');
+                $icon->title = $objLanguage->languageText("word_rename1");
+                $icon->alt = $objLanguage->languageText("word_rename1");
                 
                 $options =  "<a href=\"" . 
                 $this->uri(array(
@@ -343,7 +344,7 @@
             // Edit table.            
                 $icon = $this->getObject('geticon','htmlelements');
                 $icon->setIcon('edit');
-                $icon->titel = $objLanguage->languageText("word_edit");
+                $icon->title = $objLanguage->languageText("word_edit");
                 $icon->alt = $objLanguage->languageText("word_edit");
                 $icon->align=false;            
                 $options .= "<a href=\"" . 
