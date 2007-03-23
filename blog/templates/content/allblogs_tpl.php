@@ -17,7 +17,6 @@ $middleColumn = NULL;
 $rightSideColumn .= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_bloglist", "blog"), $this->objLanguage->languageText("mod_blog_intro", "blog"));
 $rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
 
-
 if(empty($ret))
 {
 	$middleColumn .= $this->objLanguage->languageText("mod_blog_noblogs", "blog");
@@ -52,7 +51,7 @@ if($this->objUser->isLoggedIn())
 	//$rightSideColumn .=$this->objblogOps->quickPost($this->objUser->userId(), TRUE);
 }
 else {
-//	$leftCol = $this->objblogOps->loginBox(TRUE);
+	$leftCol = $this->objblogOps->loginBox(TRUE);
 	//$rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
 }
 
