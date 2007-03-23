@@ -96,7 +96,8 @@
                 
 	            $icon = $this->getObject('geticon','htmlelements');
                $icon->setIcon('assessments');
-               $icon->alt = $objLanguage->languageText("word_assessments");
+               $icon->title = $objLanguage->languageText("word_assessments");
+	  				$icon->alt = $objLanguage->languageText("word_assessments");
             
 				$options .= "<a href=\"" . 
 					$this->uri(array(
