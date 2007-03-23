@@ -71,14 +71,14 @@ $pageText->type=3;
 $pageText->str=ucwords($objLanguage->code2Txt("mod_workgroup_fileshare",'workgroup'));
 $middleContent .= $pageText->show();
 
-$objFileShareList =& $this->getObject('filesharelist', 'fileshare');
+$objFileShareList =& $this->getObject('fileshare', 'workgroup');
 //$middleContent .= '<div class="wrapperLightBkg" style="border: 5px outset #c0c0c0;">'.$objFileShareList->getFormattedDisplay($this->workgroupId).'</div>';
 
 $fileshareLink = new link($this->uri(NULL, 'fileshare'));
 $fileshareLink->link = ucwords($objLanguage->code2Txt('mod_workgroup_enterfileshare','workgroup'));
 
-$fileshareUploadLink = new link($this->uri(array('action'=>'upload'), 'fileshare'));
-$fileshareUploadLink->link = $objLanguage->languageText('mod_fileshare_uploaddocument','fileshare');
+$fileshareUploadLink = new link($this->uri(array('action'=>'upload'), 'workgroup'));
+$fileshareUploadLink->link = $objLanguage->languageText('mod_workgroup_uploaddocument','workgroup');
 
 $middleContent .= '<h3 align="center">'.$fileshareLink->show().'</h3>';
 $middleContent .= '<h3 align="center">'.$fileshareUploadLink->show().'</h3>';
