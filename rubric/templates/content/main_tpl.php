@@ -114,7 +114,8 @@
 	        // Rename table.
             
             $icon->setIcon('rename');
-            $icon->alt = $objLanguage->languageText("word_rename1","rubric");
+            $icon->title = $objLanguage->languageText("word_rename1");
+            $icon->alt = $objLanguage->languageText("word_rename1");
                 
 			$options .= "<a href=\"" . 
 				$this->uri(array(
@@ -131,7 +132,8 @@
 	        // View table.            
             $icon = $this->getObject('geticon','htmlelements');
             $icon->setIcon('preview');
-            $icon->alt = $objLanguage->languageText("word_view","rubric");
+            $icon->tiile = $objLanguage->languageText("word_view");
+            $icon->alt = $objLanguage->languageText("word_view");
             $icon->align=false;            
             $options .= "<a href=\"" . 
                 $this->uri(array(
@@ -147,7 +149,8 @@
 	        // Clone table.            
             $icon = $this->getObject('geticon','htmlelements');
             $icon->setIcon('copy');
-            $icon->alt = $objLanguage->languageText("word_copy","rubric");
+            $icon->title = $objLanguage->languageText("word_copy");
+            $icon->alt = $objLanguage->languageText("word_copy");
             $icon->align=false;            
             $options .= "<a href=\"" . 
                 $this->uri(array(
@@ -163,7 +166,8 @@
 	        // Edit table.    
             $icon = $this->getObject('geticon','htmlelements');
             $icon->setIcon('edit');
-            $icon->alt = $objLanguage->languageText("word_edit","rubric");
+            $icon->title = $objLanguage->languageText("word_edit");
+            $icon->alt = $objLanguage->languageText("word_edit");
             $icon->align=false;            
             $options .= "<a href=\"" . 
 				$this->uri(array(
@@ -179,7 +183,8 @@
             $objConfirm=&$this->newObject('confirm','utilities');
             $icon = $this->getObject('geticon','htmlelements');
             $icon->setIcon('delete');
-            $icon->alt = $objLanguage->languageText("word_delete","rubric");
+            $icon->title = $objLanguage->languageText("word_delete");
+            $icon->alt = $objLanguage->languageText("word_delete");
             $icon->align=false;
             $objConfirm->setConfirm(
                 $icon->show(),
@@ -287,7 +292,8 @@
             // View table.            
                 $icon = $this->getObject('geticon','htmlelements');
                 $icon->setIcon('preview');
-                $icon->alt = $objLanguage->languageText("word_view",'rubric');
+                $icon->title = $objLanguage->languageText("word_view");
+                $icon->alt = $objLanguage->languageText("word_view");
                 $icon->align=false;            
                 $options .= "<a href=\"" . 
                     $this->uri(array(
@@ -303,7 +309,8 @@
             // Clone table.            
                 $icon = $this->getObject('geticon','htmlelements');
                 $icon->setIcon('copy');
-                $icon->alt = $objLanguage->languageText("word_copy",'rubric');
+                $icon->title = $objLanguage->languageText("word_copy");
+                $icon->alt = $objLanguage->languageText("word_copy");
                 $icon->align=false;            
                 $options .= "<a href=\"" . 
                     $this->uri(array(
@@ -319,7 +326,8 @@
             // Copy table.
                 $icon = $this->getObject('geticon','htmlelements');
                 $icon->setIcon('copy');
-                $icon->alt = $objLanguage->code2Txt("mod_rubric_copytocontext",'rubric');
+                $icon->title = $objLanguage->code2Txt("mod_rubric_copytocontext");
+                $icon->alt = $objLanguage->code2Txt("mod_rubric_copytocontext");
                 $icon->align=false;            
 	            $options .=  "<a href=\"" . 
 	                $this->uri(array(
@@ -335,7 +343,8 @@
             // Edit table.            
                 $icon = $this->getObject('geticon','htmlelements');
                 $icon->setIcon('edit');
-                $icon->alt = $objLanguage->languageText("word_edit",'rubric');
+                $icon->titel = $objLanguage->languageText("word_edit");
+                $icon->alt = $objLanguage->languageText("word_edit");
                 $icon->align=false;            
                 $options .= "<a href=\"" . 
                     $this->uri(array(
@@ -352,7 +361,8 @@
                 $objConfirm=&$this->newObject('confirm','utilities');
                 $icon = $this->getObject('geticon','htmlelements');
                 $icon->setIcon('delete');
-                $icon->alt = $objLanguage->languageText("word_delete",'rubric');
+                $icon->title = $objLanguage->languageText("word_delete");
+                $icon->alt = $objLanguage->languageText("word_delete");
                 $icon->align=false;
                 $objConfirm->setConfirm(
                     $icon->show(),
@@ -360,7 +370,7 @@
                         'module'=>'rubric',
                         'action'=>'deletetable',
                         'tableId'=>$pdtable['id'])),
-                $objLanguage->languageText('mod_rubric_suredelete'));
+                $objLanguage->languageText('mod_rubric_suredelete','rubric'));
                 $options .= $objConfirm->show();
             }
             $tblclass->addCell($options, "null", "top", "left", $oddOrEven, null);
