@@ -9,7 +9,7 @@
 /**
 * Admin Menu Class
 * This class generates a context lefthand side workgroup navigation menu 
-* @author Tohir Solomons
+* @author Tohir Solomons, Juliet Mulindwa
 * @copyright (c) 2004 University of the Western Cape
 * @version 1
 */

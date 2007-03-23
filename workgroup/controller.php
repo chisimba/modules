@@ -49,9 +49,9 @@ class workgroup extends controller
     function dispatch($action=Null)
     {
         $this->objConfig = &$this->getObject('altconfig','config');
-        $systemType = $this->objConfig->getValue("SYSTEM_TYPE", "contextabstract");
-        $isAlumni = ($systemType == "alumni");
-        $this->setVar('isAlumni',$isAlumni);
+        //$systemType = $this->objConfig->getValue("SYSTEM_TYPE", "contextabstract");
+        //$isAlumni = ($systemType == "alumni");
+        //$this->setVar('isAlumni',$isAlumni);
         // Set the layout template.
         
         $this->workgroupId = $this->objDbWorkgroup->getWorkgroupId();
@@ -82,12 +82,12 @@ class workgroup extends controller
 		$this->setVarByRef('contextCode', $contextCode);
         // Check if we are not in a context...
 		if ($contextCode == null) {
-            if ($isAlumni) {
-    			$contextTitle = "Lobby";
-    			$this->setVarByRef('contextTitle', $contextTitle);
-            } else {
+            //if ($isAlumni) {
+    		//	$contextTitle = "Lobby";
+    		//	$this->setVarByRef('contextTitle', $contextTitle);
+            //} else {
                 return "error_tpl.php";
-            }
+            //}
 		} else {
             // ... else 
 			$contextTitle = 'context0'; //$objDbContext->getTitle();

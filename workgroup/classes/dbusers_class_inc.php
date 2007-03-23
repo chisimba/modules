@@ -8,7 +8,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 * Model class for the table tbl_users
-* @author Jeremy O'Connor
+* @author Jeremy O'Connor, Juliet Mulindwa
 * @copyright 2004 University of the Western Cape
 */
 class dbUsers extends dbTable
