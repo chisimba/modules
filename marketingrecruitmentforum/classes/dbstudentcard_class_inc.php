@@ -147,7 +147,7 @@ public function addstudcard($createdby,$datecreate,$id,$date,$surname,$name,$dob
             VAR_DUMP($data);DIE;*/
             
             $keys = array();
-           return  $this->objSoapClient->writeQuery('tbl_mrf_studcard', $data ,$keys,  $this->schema);
+           return  $this->objSoapClient->writeQuery('tbl_mrf_studcard', $data ,$keys,$this->schema);
       //  } catch(Exception $e) {
       //    return NULL;
       //  }

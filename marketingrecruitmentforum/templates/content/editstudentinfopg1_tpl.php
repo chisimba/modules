@@ -33,16 +33,19 @@
 /**more info required from**/
     $deptnames  = array('1' =>  'Financial Aid',
                         '2' =>  'Student Credit Management',
-                        '3' =>  'Residence and Catering',
+                        '3' =>  'Residence and Catering', 
                         '4' =>  'Edu Loan',
-                        '5' =>  'Sports Admin', 
+                        '5' =>  'Sports Admin',
                    );
-    $objdeptnames = new dropdown('moreinfo');
-    foreach($deptnames as $dept){
-      $objdeptnames->addOption(NULL, ''.'Please select a department'); 
-      $objdeptnames->addOption($dept,$dept);
-    } 
-
+     $objdeptnames = new dropdown('moreinfo');
+     $objdeptnames->multiple = true;
+     $objdeptnames->addOption(NULL ,  'Please select a department');
+     $objdeptnames->addOption('Financial Aid','Financial Aid');
+     $objdeptnames->addOption('Student Credit Management' ,'Student Credit Management');
+     $objdeptnames->addOption('Residence and Catering' ,'Residence and Catering');
+     $objdeptnames->addOption('Edu Loan' ,'Edu Loan');
+     $objdeptnames->addOption('Sports Admin' ,'Sports Admin');
+     $objdeptnames->setMultiSelected($deptnames);
 /**
   *create a next button
   */

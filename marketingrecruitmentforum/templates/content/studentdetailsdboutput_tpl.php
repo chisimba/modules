@@ -751,19 +751,19 @@ $check15 = $objElement15->show();
   //  $strelements  =   $objstudcardTable->show();// . $objTable->show(); 
     
     $objstudtab = new tabbedbox();
-    $objstudtab->addTabLabel($studcardinfo);
+    $objstudtab->addTabLabel('Student Personal Data');
     $objstudtab->addBoxContent("<div align=\"right\">" .$editStudLink->show() . "</div>"."<div align=\"left\">" .$objstudcardTable->show() ."</div>");
     
     $objstuddetails = new tabbedbox();
-    $objstuddetails->addTabLabel('Subjects');
+    $objstuddetails->addTabLabel('Subjects taken at school');
     $objstuddetails->addBoxContent("<div align=\"right\">" .$editSubjects->show() . "</div>"."<div align=\"left\">".$objTable->show()."</div>");
     
     $objstudfaccrse = new tabbedbox();
-    $objstudfaccrse->addTabLabel('Faculty and Course');
+    $objstudfaccrse->addTabLabel('Faculties / Courses');
     $objstudfaccrse->addBoxContent("<div align=\"right\">" .$editFacultyCrse->show() . "</div>"."<div align=\"left\">".$objTableFC->show()."</div>");
     
     $objstudinfo = new tabbedbox();
-    $objstudinfo->addTabLabel('More information');
+    $objstudinfo->addTabLabel('Addtional Information');
     $objstudinfo->addBoxContent("<div align=\"right\">" .$editMoreInfo->show() . "</div>"."<div align=\"left\">".$objTableinfo->show()."</div>");
     
     /*----------------------------------------------------------------------------------------*/   

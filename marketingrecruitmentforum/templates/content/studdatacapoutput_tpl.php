@@ -641,7 +641,11 @@ $check15 = $objElement15->show();
                 }else{
                   $resval = 'NO';
                 } 
-             
+                $v = '';
+                $addInfo [] = $sesinfo['info'];
+                foreach($addInfo[0] as $add){
+                   $v .= $add .'<br/>';
+                }                  
                     $objTableinfo =& $this->newObject('htmltable', 'htmlelements');  
                     $objTableinfo->cellspacing = '2';
                     $objTableinfo->cellpadding = '2';
@@ -652,7 +656,7 @@ $check15 = $objElement15->show();
                     $objTableinfo->startRow();
                     (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                     $objTableinfo->addCell('Department information',"15%", null, "left",$oddOrEven);
-                    $objTableinfo->addCell(strtoupper($sesinfo['info']),"15%", null, "left",$oddOrEven);
+                    $objTableinfo->addCell($v,"15%", null, "left",$oddOrEven);
                     $objTableinfo->row_attributes = " class = \"$oddOrEven\"";
                     $rowcount++;
                     $objTableinfo->endRow();
@@ -770,7 +774,7 @@ $check15 = $objElement15->show();
     $objstuddetails->addBoxContent("<div align=\"right\">" .$editSubjects->show() . "</div>"."<div align=\"left\">".$objTable->show()."</div>");
     
     $objstudfaccrse = new tabbedbox();
-    $objstudfaccrse->addTabLabel('Faculty / Course');
+    $objstudfaccrse->addTabLabel('Faculties / Courses');
     $objstudfaccrse->addBoxContent("<div align=\"right\">" .$editFacultyCrse->show() . "</div>"."<div align=\"left\">".$objTableFC->show()."</div>");
     
     $objstudinfo = new tabbedbox();

@@ -260,6 +260,8 @@ function dispatch($action)
                   $this->studentInfoDetails();
                   return  'studentdetailsdboutput_tpl.php';
               }elseif($this->objSemsSecurity->inGroup('MRSF Student View')) {
+                        $d = $this->getParam('moreinfo');
+                        //var_dump($d);die;
                         $this->studentInfoDetails();
                         return  'studdatacapoutput_tpl.php';
               }else{
@@ -489,7 +491,12 @@ function dispatch($action)
         $studmoreinfo[] = $this->getSession('studentinfo');  
         if(!empty($studmoreinfo) && ($studmoreinfo[0] != NULL)){
                   foreach($studmoreinfo as $sess2){
-                             $info = ucfirst($sess2['info']);
+                             //$info = ucfirst($sess2['info']);
+                             $info = '';
+                             $addInfo [] = $sess2['info'];
+                              foreach($addInfo[0] as $add){
+                                 $info .= $add.';';
+                              } 
                              $residence = $sess2['residence'];
                              $exemption  = $sess2['exemption'];
                              $sdcase = $sess2['sdcase'];
