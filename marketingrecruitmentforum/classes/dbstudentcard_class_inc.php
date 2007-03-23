@@ -928,7 +928,7 @@ public function getstudbyid($idnumber, $field = 'IDNUMBER', $firstname, $field2 
             $keys[] = array( 'field' => 'name', 'value' => $name);
             
             
-            return $this->objSoapClient->writeQuery('tbl_mrf_studcard', $data , $keys,  $this->schema);
+            return $this->objSoapClient->writeQuery('tbl_mrf_studcard', $data , $keys, $this->schema);
             //return $data;
   }
 
