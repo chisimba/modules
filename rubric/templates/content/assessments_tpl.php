@@ -43,7 +43,7 @@
     $tblclass->addHeaderCell($objLanguage->languageText('rubric_score','rubric'), 60);
     $tblclass->addHeaderCell(ucfirst($objLanguage->code2Txt('rubric_teacher','rubric')), 60);
     $tblclass->addHeaderCell($objLanguage->languageText('rubric_date','rubric'), 60);
-    $tblclass->addHeaderCell("rubric_action",,'rubric', 60);
+    $tblclass->addHeaderCell("rubric_action",'rubric', 60);
     $tblclass->endHeaderRow();    
 
     // Display the assessments.
