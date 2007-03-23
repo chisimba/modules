@@ -13,6 +13,7 @@
     $this->loadClass('button','htmlelements');  
     $this->loadClass('tabbedbox', 'htmlelements');
     $this->loadClass('link', 'htmlelements');
+    $this->loadClass('checkbox', 'htmlelements');
 
 /*----------------------------------------------------------------------------------------*/     
   
@@ -93,6 +94,9 @@
    */
   $this->objSubmitstudcard  = new button('submitstudcard', $str1);
   $this->objSubmitstudcard->setToSubmit();
+//$check15 = '';
+$objElement15 = new checkbox('confirmation',NULL,true);
+$check15 = $objElement15->show();
 /*----------------------------------------------------------------------------------------*/
 
    /**
@@ -170,6 +174,22 @@
                   (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                   $objstudcardTable->addCell($name,"15%", null, "left",$oddOrEven);
                   $objstudcardTable->addCell(strtoupper($sesStuddata['name']),"15%", null, "left",$oddOrEven);
+                  $objstudcardTable->row_attributes = " class = \"$oddOrEven\"";
+                  $rowcount++;
+                  $objstudcardTable->endRow();
+                  
+                  $objstudcardTable->startRow();
+                  (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                  $objstudcardTable->addCell('Date of birth',"15%", null, "left",$oddOrEven);
+                  $objstudcardTable->addCell($sesStuddata['dob'],"15%", null, "left",$oddOrEven);
+                  $objstudcardTable->row_attributes = " class = \"$oddOrEven\"";
+                  $rowcount++;
+                  $objstudcardTable->endRow();
+                  
+                  $objstudcardTable->startRow();
+                  (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                  $objstudcardTable->addCell('Grade',"15%", null, "left",$oddOrEven);
+                  $objstudcardTable->addCell(strtoupper($sesStuddata['grade']),"15%", null, "left",$oddOrEven);
                   $objstudcardTable->row_attributes = " class = \"$oddOrEven\"";
                   $rowcount++;
                   $objstudcardTable->endRow();
@@ -362,7 +382,7 @@
                         $objTable->startRow();
                         (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                         $objTable->addCell('Subject 1'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","15%", null, "left",$oddOrEven);
-                        $objTable->addCell(strtoupper($sesdetails['subject1']).' '.strtoupper($sesdetails['gradetype1']),"15%", null, "left",$oddOrEven);
+                        $objTable->addCell(strtoupper($sesdetails['subject1']).' '.strtoupper($sesdetails['gradetype1']).' '.$sesdetails['mark1'].'%',"15%", null, "left",$oddOrEven);
                         $objTable->row_attributes = " class = \"$oddOrEven\"";
                         $rowcount++;
                         $objTable->endRow();
@@ -370,7 +390,7 @@
                         $objTable->startRow();
                         (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                         $objTable->addCell('Subject 2',"15%", null, "left",$oddOrEven);
-                        $objTable->addCell(strtoupper($sesdetails['subject2']).' '.strtoupper($sesdetails['gradetype2']),"15%", null, "left",$oddOrEven);
+                        $objTable->addCell(strtoupper($sesdetails['subject2']).' '.strtoupper($sesdetails['gradetype2']).' '.$sesdetails['mark2'].'%',"15%", null, "left",$oddOrEven);
                         $objTable->row_attributes = " class = \"$oddOrEven\"";
                         $rowcount++;
                         $objTable->endRow();
@@ -378,7 +398,7 @@
                         $objTable->startRow();
                         (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                         $objTable->addCell('Subject 3',"15%", null, "left",$oddOrEven);
-                        $objTable->addCell(strtoupper($sesdetails['subject3']).' '.strtoupper($sesdetails['gradetype3']),"15%", null, "left",$oddOrEven);
+                        $objTable->addCell(strtoupper($sesdetails['subject3']).' '.strtoupper($sesdetails['gradetype3']).' '.$sesdetails['mark3'].'%',"15%", null, "left",$oddOrEven);
                         $myTable->row_attributes = " class = \"$oddOrEven\"";
                         $rowcount++;
                         $objTable->endRow();
@@ -386,7 +406,7 @@
                         $objTable->startRow();
                         (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                         $objTable->addCell('Subject 4',"15%", null, "left",$oddOrEven);
-                        $objTable->addCell(strtoupper($sesdetails['subject4']).' '.strtoupper($sesdetails['gradetype4']),"15%", null, "left",$oddOrEven);
+                        $objTable->addCell(strtoupper($sesdetails['subject4']).' '.strtoupper($sesdetails['gradetype4']).' '.$sesdetails['mark4'].'%',"15%", null, "left",$oddOrEven);
                         $objTable->row_attributes = " class = \"$oddOrEven\"";
                         $rowcount++;
                         $objTable->endRow();
@@ -394,7 +414,7 @@
                         $objTable->startRow();
                         (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                         $objTable->addCell('Subject 5',"15%", null, "left",$oddOrEven);
-                        $objTable->addCell(strtoupper($sesdetails['subject5']).' '.strtoupper($sesdetails['gradetype5']),"15%", null, "left",$oddOrEven);
+                        $objTable->addCell(strtoupper($sesdetails['subject5']).' '.strtoupper($sesdetails['gradetype5']).' '.$sesdetails['mark5'].'%',"15%", null, "left",$oddOrEven);
                         $objTable->row_attributes = " class = \"$oddOrEven\"";
                         $rowcount++;
                         $objTable->endRow();
@@ -402,7 +422,7 @@
                         $objTable->startRow();
                         (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                         $objTable->addCell('Subject 6',"15%", null, "left",$oddOrEven);
-                        $objTable->addCell(strtoupper($sesdetails['subject6']).' '.strtoupper($sesdetails['gradetype6']),"15%", null, "left",$oddOrEven);
+                        $objTable->addCell(strtoupper($sesdetails['subject6']).' '.strtoupper($sesdetails['gradetype6']).' '.$sesdetails['mark6'].'%',"15%", null, "left",$oddOrEven);
                         $objTable->row_attributes = " class = \"$oddOrEven\"";
                         $rowcount++;
                         $objTable->endRow();
@@ -410,7 +430,7 @@
                         $objTable->startRow();
                         (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                         $objTable->addCell('Subject 7',"15%", null, "left",$oddOrEven);
-                        $objTable->addCell(strtoupper($sesdetails['subject7']).' '. strtoupper($sesdetails['gradetype7']),"15%", null, "left",$oddOrEven);
+                        $objTable->addCell(strtoupper($sesdetails['subject7']).' '. strtoupper($sesdetails['gradetype7']).' '.$sesdetails['mark7'],"15%", null, "left",$oddOrEven);
                         $objTable->row_attributes = " class = \"$oddOrEven\"";
                         $rowcount++;
                         $objTable->endRow();
@@ -634,7 +654,7 @@
                     $rowcount++;
                     $objTableinfo->endRow();
                     
-                    $objTableinfo->startRow();
+                   /* $objTableinfo->startRow();
                     (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                     $objTableinfo->addCell('Exemption',"15%", null, "left",$oddOrEven);
                     $objTableinfo->addCell($val,"15%", null, "left",$oddOrEven);
@@ -648,7 +668,7 @@
                     $objTableinfo->addCell($result,"15%", null, "left",$oddOrEven);
                     $objTableinfo->row_attributes = " class = \"$oddOrEven\"";
                     $rowcount++;
-                    $objTableinfo->endRow();
+                    $objTableinfo->endRow();*/
                     
               }
       }else{
@@ -704,7 +724,7 @@
                     $rowcount++;
                     $objTableinfo->endRow();
                     
-                    $objTableinfo->startRow();
+                   /* $objTableinfo->startRow();
                     (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                     $objTableinfo->addCell('Exemption',"15%", null, "left",$oddOrEven);
                     $objTableinfo->addCell($val,"15%", null, "left",$oddOrEven);
@@ -718,7 +738,7 @@
                     $objTableinfo->addCell($result,"15%", null, "left",$oddOrEven);
                     $objTableinfo->row_attributes = " class = \"$oddOrEven\"";
                     $rowcount++;
-                    $objTableinfo->endRow();            
+                    $objTableinfo->endRow();*/            
             }   
         } 
      }                
@@ -755,7 +775,8 @@
 
    $objForm = new form('studentoutput',$this->uri(array('action'=>'submitinfo','submitmsg' => 'yes')));
    $objForm->displayType = 3;
-   $objForm->addToForm($this->objMainheading->show().'<br />' .'<br />'.$stringval . '<br />' . "<div align=left>".$this->objSubmitstudcard->show()."</div>"); 
+   $objForm->addToForm($this->objMainheading->show().'<br />' .'<br />'.$stringval . '<br />' .'<h3>'. " I hereby confirm that the information entered above is complete and accurate.".$check15.'</h>'.' '. ' '."<div align=left>".$this->objSubmitstudcard->show()."</div>");
+   $objForm->addRule('confirmation','Field not checked','required'); 
 /*----------------------------------------------------------------------------------------*/  
 echo $objForm->show();
 ?>

@@ -86,7 +86,7 @@ class dbstudentcard extends object{
  *
  */
  
-public function addstudcard($createdby,$datecreate,$id,$date,$surname,$name,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$grade,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$keys = NULL)
+public function addstudcard($createdby,$datecreate,$id,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$grade,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$keys = NULL)
 {
         //  try {
            //print_r($studcarddata);die;
@@ -111,6 +111,7 @@ public function addstudcard($createdby,$datecreate,$id,$date,$surname,$name,$sch
             $data[] = array( 'field' => 'course', 'value' => $course);
             $data[] = array( 'field' => 'sdcase', 'value' => $sdcase);
             $data[] = array( 'field' => 'area', 'value' => $areastud);
+            $data[] = array( 'field' => 'dob', 'value' => "to_date('".$dob."', 'dd-mm-yyyy HH24:mi:ss')");
             $data[] = array( 'field' => 'grade', 'value' => $grade);            
             $data[] = array( 'field' => 'cellnumber', 'value' => $cellnumber);
             $data[] = array( 'field' => 'studemail', 'value' => $studemail);
@@ -132,6 +133,16 @@ public function addstudcard($createdby,$datecreate,$id,$date,$surname,$name,$sch
             $data[] = array( 'field' => 'gradetype5', 'value' => $gradetype5);
             $data[] = array( 'field' => 'gradetype6', 'value' => $gradetype6);
             $data[] = array( 'field' => 'gradetype7', 'value' => $gradetype7);
+            $data[] = array( 'field' => 'markgrade', 'value' => $markgrade);
+            $data[] = array( 'field' => 'MARK1', 'value' => $markval);
+            $data[] = array( 'field' => 'MARK2', 'value' => $markval2);
+            $data[] = array( 'field' => 'MARK3', 'value' => $markval3);
+            $data[] = array( 'field' => 'MARK4', 'value' => $markval4);
+            $data[] = array( 'field' => 'MARK5', 'value' => $markval5);
+            $data[] = array( 'field' => 'MARK6', 'value' => $markval6);
+            $data[] = array( 'field' => 'MARK7', 'value' => $markval7);
+            $data[] = array( 'field' => 'CONFIRM', 'value' => $confirmation);
+            
             /*echo "<pre>";
             VAR_DUMP($data);DIE;*/
             
@@ -811,7 +822,7 @@ public function getstudbyid($idnumber, $field = 'IDNUMBER', $firstname, $field2 
             $keys[] = array( 'field' => $field2,'value' => $lastname);
             $keys[] = array( 'field' => $field3,'value' => $firstname);
             
-            $fields = array( 'ID', 'ENTRYDATE', 'IDNUMBER', 'SURNAME', 'NAME', 'SCHOOLNAME', 'POSTADDRESS', 'POSTCODE', 'AREA', 'TELNUMBER', 'TELCODE', 'EXEMPTION', 'FACULTY', 'COURSE', 'SDCASE', 'CELLNUMBER', 'STUDEMAIL','SUBJECT1','SUBJECT2','SUBJECT3','SUBJECT4','SUBJECT5','SUBJECT6','SUBJECT7','INFODEPARTMENT','FACULTY2','COURSE2','RESIDENCE','GRADETYPE1','GRADETYPE2','GRADETYPE3','GRADETYPE4','GRADETYPE5','GRADETYPE6','GRADETYPE7','GRADE');
+            $fields = array( 'ID', 'ENTRYDATE', 'IDNUMBER', 'SURNAME', 'NAME', 'SCHOOLNAME', 'POSTADDRESS', 'POSTCODE', 'AREA', 'TELNUMBER', 'TELCODE', 'EXEMPTION', 'FACULTY', 'COURSE', 'SDCASE', 'CELLNUMBER', 'STUDEMAIL','SUBJECT1','SUBJECT2','SUBJECT3','SUBJECT4','SUBJECT5','SUBJECT6','SUBJECT7','INFODEPARTMENT','FACULTY2','COURSE2','RESIDENCE','GRADETYPE1','GRADETYPE2','GRADETYPE3','GRADETYPE4','GRADETYPE5','GRADETYPE6','GRADETYPE7','GRADE','DOB','MARK1','MARK2','MARK3','MARK4','MARK5','MARK6','MARK7','MARKGRADE');
 
             return $this->objSoapClient->getlimitQuery('tbl_mrf_studcard',$fields, $keys, 'IDNUMBER', $start, $limit,  $this->schema);
 
@@ -857,17 +868,19 @@ public function getstudbyid($idnumber, $field = 'IDNUMBER', $firstname, $field2 
  * @param string $stmt SQL statement,updates all columns specified with variable values passed to function 
  * @return array $stmt 
  */
-  public function updatestudinfo($createdby,$datecreate,$idsearch,$date,$surname,$name,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$grade,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$newIDNum)
+  public function updatestudinfo($createdby,$datecreate,$idsearch,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$grade,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$latestID,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation)
   {
   
             $data = array();
             $data[] = array( 'field' => 'id', 'value' => "init" . "_" . rand(1000,9999) . "_" . time());
             $data[] = array( 'field' => 'createdby', 'value' => $createdby);
             $data[] = array( 'field' => 'datecreated', 'value' => "to_date('".$datecreate."', 'dd-mm-yyyy HH24:mi:ss')");
-         //   $data[] = array( 'field' => 'idnumber', 'value' => $newIDNum);
+            $data[] = array( 'field' => 'idnumber', 'value' => $latestID);
             $data[] = array( 'field' => 'entryDate', 'value' => "to_date('".$date."', 'dd-mm-yyyy HH24:mi:ss')");
           //  $data[] = array( 'field' => 'name', 'value' => $name);
           //  $data[] = array( 'field' => 'surname', 'value' => $surname);
+            $data[] = array( 'field' => 'dob', 'value' => "to_date('".$dob."', 'dd-mm-yyyy HH24:mi:ss')");
+         
             $data[] = array( 'field' => 'schoolname', 'value' => $schoolname);
             $data[] = array( 'field' => 'postaddress', 'value' => $postaddress);
             $data[] = array( 'field' => 'postcode', 'value' => $postcode);
@@ -899,9 +912,18 @@ public function getstudbyid($idnumber, $field = 'IDNUMBER', $firstname, $field2 
             $data[] = array( 'field' => 'gradetype5', 'value' => $gradetype5);
             $data[] = array( 'field' => 'gradetype6', 'value' => $gradetype6);
             $data[] = array( 'field' => 'gradetype7', 'value' => $gradetype7);
+            $data[] = array( 'field' => 'markgrade', 'value' => $markgrade);
+            $data[] = array( 'field' => 'MARK1', 'value' => $markval);
+            $data[] = array( 'field' => 'MARK2', 'value' => $markval2);
+            $data[] = array( 'field' => 'MARK3', 'value' => $markval3);
+            $data[] = array( 'field' => 'MARK4', 'value' => $markval4);
+            $data[] = array( 'field' => 'MARK5', 'value' => $markval5);
+            $data[] = array( 'field' => 'MARK6', 'value' => $markval6);
+            $data[] = array( 'field' => 'MARK7', 'value' => $markval7);
+            $data[] = array( 'field' => 'CONFIRM', 'value' => $confirmation);
             
             $keys = array();
-            $keys[] = array( 'field' => 'idnumber', 'value' => $idsearch);
+            //$keys[] = array( 'field' => 'idnumber', 'value' => $idsearch);
             $keys[] = array( 'field' => 'surname', 'value' => $surname);
             $keys[] = array( 'field' => 'name', 'value' => $name);
             

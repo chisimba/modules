@@ -249,6 +249,7 @@
       /**
        *create all textinputs
        */ 
+       
        $this->objtxtsurname = new textinput("txtsurname");
        $this->objtxtsurname->value  = $studsurname;
        $this->objtxtsurname->size  = 35;
@@ -304,6 +305,14 @@
         $this->objdate->setName($datename);
         $this->objdate->setDefaultDate($datevalue);
         $this->objdate->setDateFormat($format); 
+        
+        $this->objdob = $this->newObject('datepicker','htmlelements');
+        $name = 'txtdob';
+        $value= '01-Jan-0000';
+        $format = 'DD-MM-YYYY';
+        $this->objdob->setName($name);
+        $this->objdob->setDefaultDate($value);
+        $this->objdob->setDateFormat($format); 
 
 /*------------------------------------------------------------------------------*/
         
@@ -377,8 +386,13 @@
          $myTable->endRow();
          
          $myTable->startRow();
+         $myTable->addCell(ucfirst('Date of birth'));
+         $myTable->addCell($this->objdob->show());
+         $myTable->endRow();
+         
+         $myTable->startRow();
          $myTable->addCell('Grade');
-         $myTable->addCell("&nbsp"."&nbsp".' '.$this->objgradedropdown->show());
+         $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.$this->objgradedropdown->show());
          $myTable->endRow();
          
          $myTable->startRow();
@@ -463,12 +477,13 @@
           $objForm->addRule(array('name'=>'txtsurname','length'=>45), $surnamemaxval, 'maxlength');
           $objForm->addRule('txtname',$nameval,'required');
           $objForm->addRule(array('name'=>'txtname','length'=>45), $namemaxval, 'maxlength');
+          $objForm->addRule('grade','Please select a grade','required');
           $objForm->addRule('postaladdress',$postaladd,'required');
           $objForm->addRule(array('name'=>'txtpostalcode','minnumber'=>4), $postcode, 'minnumber');
           $objForm->addRule(array('name'=>'txtpostalcode','length'=>4), $postcodelng, 'maxlength');
           $objForm->addRule('areaschool','Please select an area','required');
-          $objForm->addRule('areaschool','Please select an area','required'); 
-          $objForm->addRule('txtemail','Please select an area','email');         
+//          $objForm->addRule('areaschool','Please select an area','required'); 
+//          $objForm->addRule('txtemail','Please select an area','email');         
 //          $objForm->addRule('exemptionqualification','Please select a value for exemption','required');
 //          $objForm->addRule('relevantsubject','Please select a value for relevant subject','required');
 //          $objForm->addRule('sdcase','Please select a value for sd case','required');

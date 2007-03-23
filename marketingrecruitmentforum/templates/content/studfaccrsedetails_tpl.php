@@ -34,6 +34,8 @@
     $deptnames  = array('1' =>  'Financial Aid',
                         '2' =>  'Student Credit Management',
                         '3' =>  'Residence and Catering', 
+                        '4' =>  'Edu Loan',
+                        '5' =>  'Sports Admin',
                    );
     $objdeptnames = new dropdown('moreinfo');
     foreach($deptnames as $dept){
@@ -177,10 +179,10 @@
     $myTable->addCell($objResidence->show());
     $myTable->endRow();
     
-    $myTable->startRow();
+    /*$myTable->startRow();
     $myTable->addCell('Do you Qualify for an Exemption');
     $myTable->addCell($objElement->show());
-    $myTable->endRow();
+    $myTable->endRow();*/
     
 /*    $myTable->startRow();
     $myTable->addCell('Senate Discretionary (SD) Case');
@@ -198,6 +200,7 @@
 $objForm = new form('studedudata',$this->uri(array('action'=>'showdboutput')));
 $objForm->displayType = 3;
 $objForm->addToForm($content . '<br/>'.$myTable->show());
+$objForm->addRule('residence','Please complete residence field ','required');
 
 echo  $objForm->show();                  
 ?>

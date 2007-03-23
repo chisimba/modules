@@ -234,6 +234,9 @@
       $this->objgradedropdown->addOption('10','10');
       $this->objgradedropdown->addOption('11','11');                 
       $this->objgradedropdown->addOption('12','12');
+      
+
+      
 /*------------------------------------------------------------------------------*/       
        /**
         *create a date selection
@@ -246,6 +249,14 @@
         $this->objdate->setName($datename);
         $this->objdate->setDefaultDate($datevalue);
         $this->objdate->setDateFormat($format); 
+        
+        $this->objdob = $this->newObject('datepicker','htmlelements');
+        $name1 = 'txtdob';
+        $value= '01-Jan-0000';
+        $format = 'DD-MM-YYYY';
+        $this->objdob->setName($name1);
+        $this->objdob->setDefaultDate($value);
+        $this->objdob->setDateFormat($format); 
 
 /*------------------------------------------------------------------------------*/
         
@@ -319,8 +330,13 @@
          $myTable->endRow();
          
          $myTable->startRow();
+         $myTable->addCell('Date of Birth');
+         $myTable->addCell($this->objdob->show());
+         $myTable->endRow();
+         
+         $myTable->startRow();
          $myTable->addCell('Grade');
-         $myTable->addCell("&nbsp"."&nbsp".' '.$this->objgradedropdown->show());
+         $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.$this->objgradedropdown->show());
          $myTable->endRow();
          
          $myTable->startRow();
@@ -373,6 +389,7 @@
           $objForm->addRule(array('name'=>'txtsurname','length'=>45), $surnamemaxval, 'maxlength');
           $objForm->addRule('txtname',$nameval,'required');
           $objForm->addRule(array('name'=>'txtname','length'=>45), $namemaxval, 'maxlength');
+          $objForm->addRule('grade','Please select a grade','required');
           $objForm->addRule('postaladdress',$postaladd,'required');
           $objForm->addRule(array('name'=>'txtpostalcode','minnumber'=>4), $postcode, 'minnumber');
           $objForm->addRule(array('name'=>'txtpostalcode','length'=>4), $postcodelng, 'maxlength');

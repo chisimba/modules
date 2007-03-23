@@ -13,6 +13,7 @@
     $this->loadClass('button','htmlelements');  
     $this->loadClass('tabbedbox', 'htmlelements');
     $this->loadClass('link', 'htmlelements');
+    $this->loadClass('checkbox', 'htmlelements');
 
 /*----------------------------------------------------------------------------------------*/     
   
@@ -93,6 +94,9 @@
    */
   $this->objSubmitstudcard  = new button('submitstudcard', $str1);
   $this->objSubmitstudcard->setToSubmit();
+  
+$objElement15 = new checkbox('confirmation',NULL,true);
+$check15 = $objElement15->show();
 /*----------------------------------------------------------------------------------------*/
 
    /**
@@ -165,6 +169,23 @@
                   (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                   $objstudcardTable->addCell($name,"15%", null, "left",$oddOrEven);
                   $objstudcardTable->addCell(strtoupper($sesStuddata['name']),"15%", null, "left",$oddOrEven);
+                  $objstudcardTable->row_attributes = " class = \"$oddOrEven\"";
+                  $rowcount++;
+                  $objstudcardTable->endRow();
+                  
+                      
+                  $objstudcardTable->startRow();
+                  (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                  $objstudcardTable->addCell('Date of birth',"15%", null, "left",$oddOrEven);
+                  $objstudcardTable->addCell(strtoupper($sesStuddata['dob']),"15%", null, "left",$oddOrEven);
+                  $objstudcardTable->row_attributes = " class = \"$oddOrEven\"";
+                  $rowcount++;
+                  $objstudcardTable->endRow();
+                  
+                  $objstudcardTable->startRow();
+                  (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                  $objstudcardTable->addCell('Grade',"15%", null, "left",$oddOrEven);
+                  $objstudcardTable->addCell(strtoupper($sesStuddata['grade']),"15%", null, "left",$oddOrEven);
                   $objstudcardTable->row_attributes = " class = \"$oddOrEven\"";
                   $rowcount++;
                   $objstudcardTable->endRow();
@@ -279,7 +300,22 @@
                 $objstudcardTable->row_attributes = " class = \"$oddOrEven\"";
                 $rowcount++;
                 $objstudcardTable->endRow();
-  
+                
+                $objstudcardTable->startRow();
+                (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                $objstudcardTable->addCell('Date of Birth',"15%", null, "left",$oddOrEven);
+                $objstudcardTable->addCell(strtoupper($idsearch[$i]->DOB),"15%", null, "left",$oddOrEven);
+                $objstudcardTable->row_attributes = " class = \"$oddOrEven\"";
+                $rowcount++;
+                $objstudcardTable->endRow();
+
+                $objstudcardTable->startRow();
+                (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                $objstudcardTable->addCell('Grade',"15%", null, "left",$oddOrEven);
+                $objstudcardTable->addCell(strtoupper($idsearch[$i]->GRADE),"15%", null, "left",$oddOrEven);
+                $objstudcardTable->row_attributes = " class = \"$oddOrEven\"";
+                $rowcount++;
+                $objstudcardTable->endRow();  
                 $objstudcardTable->startRow();
                 (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                 $objstudcardTable->addCell($postaladdress,"15%", null, "left",$oddOrEven);
@@ -629,7 +665,7 @@
                     $rowcount++;
                     $objTableinfo->endRow();
                     
-                    $objTableinfo->startRow();
+                   /* $objTableinfo->startRow();
                     (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                     $objTableinfo->addCell('Exemption',"15%", null, "left",$oddOrEven);
                     $objTableinfo->addCell($val,"15%", null, "left",$oddOrEven);
@@ -643,7 +679,7 @@
                     $objTableinfo->addCell($result,"15%", null, "left",$oddOrEven);
                     $objTableinfo->row_attributes = " class = \"$oddOrEven\"";
                     $rowcount++;
-                    $objTableinfo->endRow();
+                    $objTableinfo->endRow();*/
                     
               }
       }else{
@@ -699,7 +735,7 @@
                     $rowcount++;
                     $objTableinfo->endRow();
                     
-                    $objTableinfo->startRow();
+                   /* $objTableinfo->startRow();
                     (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                     $objTableinfo->addCell('Exemption',"15%", null, "left",$oddOrEven);
                     $objTableinfo->addCell($val,"15%", null, "left",$oddOrEven);
@@ -713,7 +749,7 @@
                     $objTableinfo->addCell($result,"15%", null, "left",$oddOrEven);
                     $objTableinfo->row_attributes = " class = \"$oddOrEven\"";
                     $rowcount++;
-                    $objTableinfo->endRow();            
+                    $objTableinfo->endRow();*/            
             }   
         } 
      }                
@@ -726,19 +762,19 @@
   //  $strelements  =   $objstudcardTable->show();// . $objTable->show(); 
     
     $objstudtab = new tabbedbox();
-    $objstudtab->addTabLabel($studcardinfo);
+    $objstudtab->addTabLabel("Student Personal Data");
     $objstudtab->addBoxContent("<div align=\"right\">" .$editStudLink->show() . "</div>"."<div align=\"left\">" .$objstudcardTable->show() ."</div>");
     
     $objstuddetails = new tabbedbox();
-    $objstuddetails->addTabLabel('Subjects');
+    $objstuddetails->addTabLabel('Subjects taken at school');
     $objstuddetails->addBoxContent("<div align=\"right\">" .$editSubjects->show() . "</div>"."<div align=\"left\">".$objTable->show()."</div>");
     
     $objstudfaccrse = new tabbedbox();
-    $objstudfaccrse->addTabLabel('Faculty and Course');
+    $objstudfaccrse->addTabLabel('Faculty / Course');
     $objstudfaccrse->addBoxContent("<div align=\"right\">" .$editFacultyCrse->show() . "</div>"."<div align=\"left\">".$objTableFC->show()."</div>");
     
     $objstudinfo = new tabbedbox();
-    $objstudinfo->addTabLabel('More information');
+    $objstudinfo->addTabLabel('Addtional Information');
     $objstudinfo->addBoxContent("<div align=\"right\">" .$editMoreInfo->show() . "</div>"."<div align=\"left\">".$objTableinfo->show()."</div>");
     
     /*----------------------------------------------------------------------------------------*/   
@@ -750,7 +786,8 @@
 
    $objForm = new form('studentoutput',$this->uri(array('action'=>'submitinfo','submitmsg' => 'yes')));
    $objForm->displayType = 3;
-   $objForm->addToForm($this->objMainheading->show().'<br />' .'<br />'.$stringval . '<br />' . "<div align=left>".$this->objSubmitstudcard->show()."</div>"); 
+   $objForm->addToForm($this->objMainheading->show().'<br />' .'<br />'.$stringval . '<br />'.'<h3>'. " I hereby confirm that the information entered above is complete and accurate.".$check15.'</h>'.' '. ' '."<div align=left>".$this->objSubmitstudcard->show()."</div>");
+   //$objForm->addRule('confirm','Field not checked','required'); 
 /*----------------------------------------------------------------------------------------*/  
 echo $objForm->show();
 ?>

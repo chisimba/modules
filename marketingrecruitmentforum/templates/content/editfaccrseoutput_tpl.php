@@ -234,7 +234,7 @@ switch($faculty2ndchoice){
   *create table to place form elements in
   */
     $myTable=$this->newObject('htmltable','htmlelements');
-    $myTable->width='80%';
+    $myTable->width='100%';
     $myTable->border='0';
     $myTable->cellspacing='6';
     $myTable->cellpadding='10';
@@ -252,7 +252,7 @@ switch($faculty2ndchoice){
     $myTable->endRow();
     
     $myNextButTable=$this->newObject('htmltable','htmlelements');
-    $myNextButTable->width='80%';
+    $myNextButTable->width='100%';
     $myNextButTable->border='0';
     $myNextButTable->cellspacing='6';
     $myNextButTable->cellpadding='10';

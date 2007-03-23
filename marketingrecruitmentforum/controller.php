@@ -133,7 +133,7 @@ function dispatch($action)
                       return "noaccess_tpl.php";
                 }
                 $idnumber  = $this->getParam('idnumber');
-                var_dump($idnumber);
+                //var_dump($idnumber);
                 $firstname = ucfirst($this->getParam('firstname'));
                 $lastname  = ucfirst($this->getParam('lastname'));
                 $this->setSession('idno',$idnumber);
@@ -287,8 +287,7 @@ function dispatch($action)
                 if (!$this->objSemsSecurity->inGroup('MRSF Student View')) {
                       return "noaccess_tpl.php";
                 }
-                
-        		    return  'editstudsubjects_tpl.php';
+                return  'editstudsubjects_tpl.php';
             break;
             
             case  'editfacultycrse':
@@ -308,7 +307,7 @@ function dispatch($action)
             
             case  'editextra':
                 if ($this->objSemsSecurity->inGroup('MRSF Student View')) {
-                   return  'editstudinfopg_tpl.php';
+                   return  'editstudentinfopg1_tpl.php';
                 }elseif($this->objSemsSecurity->inGroup('MRSF Full')) {
              	    return  'editstudinfopg_tpl.php';
              	  }else{
@@ -364,6 +363,7 @@ function dispatch($action)
                //if (!$this->objSemsSecurity->inGroup('MRSF Student View')) {
                  //     return "noaccess_tpl.php";
                // }
+                  $confirmation = $this->getParam('confirmation');
                   $submitmsg = $this->getParam('submitmsg', 'no');
                   $this->setVarByRef('submitmsg', $submitmsg);
                   //submit studcard info -- personal data
@@ -383,6 +383,7 @@ function dispatch($action)
                             $studentidnumber  = $idsearch; // CHANGE TO SESSION IDNUMBER captured when capturing personal details $this->getSession('changeIDnumber'); HOW
                             $surname  = ucfirst($resdata['surname']);
                             $name = ucfirst($resdata['name']);
+                            $dob  = $resdata['dob'];
                             $grade =  $resdata['grade'];
                             $schoolname = ucfirst($resdata['schoolname']);
                             $postaddress  = ucfirst($resdata['postaddress']);
@@ -399,9 +400,10 @@ function dispatch($action)
                             $createdby  = ucfirst($username);
                             $datecreate = date('Y-m-d');
                             $date = $idexist[$i]->ENTRYDATE;
-                            $studentidnumber  = $idsearch;  // leave as is or use id in db ?
+                            $studentidnumber  = $idexist[$i]->IDNUMBER;  // leave as is or use id in db ?
                             $surname  = ucfirst($idexist[$i]->SURNAME);
                             $name = ucfirst($idexist[$i]->NAME);
+                            $dob  = $idexist[$i]->DOB;
                             $grade =  ucfirst($idexist[$i]->GRADE);
                             $schoolname = ucfirst($idexist[$i]->SCHOOLNAME);
                             $postaddress  = ucfirst($idexist[$i]->POSTADDRESS);
@@ -416,6 +418,7 @@ function dispatch($action)
           $studsubjectdetail [] =  $this->getSession('studentdetails');
           if(!empty($studsubjectdetail) && ($studsubjectdetail[0] != NULL)){
                      foreach($studsubjectdetail as $sess){
+                             $markgrade = $sess['markgrade']; 
                              $subject1 = ucfirst($sess['subject1']);
                              $subject2 = ucfirst($sess['subject2']);
                              $subject3 = ucfirst($sess['subject3']);
@@ -430,9 +433,17 @@ function dispatch($action)
                              $gradetype5 = strtoupper($sess['gradetype5']);
                              $gradetype6 = strtoupper($sess['gradetype6']);
                              $gradetype7 = strtoupper($sess['gradetype7']);
+                             $markval = $sess['mark1'];
+                             $markval2 = $sess['mark2'];
+                             $markval3 = $sess['mark3'];
+                             $markval4 = $sess['mark4'];
+                             $markval5 = $sess['mark5'];
+                             $markval6 = $sess['mark6'];
+                             $markval7 = $sess['mark7'];
                     }       
          }elseif(!empty($idexist)){
                   for($i=0; $i< count($idexist); $i++){
+                             $markgrade =$idexist[$i]->MARKGRADE; 
                              $subject1 = ucfirst($idexist[$i]->SUBJECT1);
                              $subject2 = ucfirst($idexist[$i]->SUBJECT2);
                              $subject3 = ucfirst($idexist[$i]->SUBJECT3);
@@ -447,6 +458,13 @@ function dispatch($action)
                              $gradetype5 = strtoupper($idexist[$i]->GRADETYPE5);
                              $gradetype6 = strtoupper($idexist[$i]->GRADETYPE6);
                              $gradetype7 = strtoupper($idexist[$i]->GRADETYPE7);
+                             $markval = $idexist[$i]->MARK1;
+                             $markval2 = $idexist[$i]->MARK2;
+                             $markval3 = $idexist[$i]->MARK3;
+                             $markval4 = $idexist[$i]->MARK4;
+                             $markval5 = $idexist[$i]->MARK5;
+                             $markval6 = $idexist[$i]->MARK6;
+                             $markval7 = $idexist[$i]->MARK7;
                   
                   }
         }
@@ -496,71 +514,15 @@ function dispatch($action)
                   //    $idsearch = $this->getSession('idno');                   
                   //    $idexist  = $this->dbstudentcard->getstudbyid($idsearch, $field = 'IDNUMBER', $firstname, $field2 = 'NAME', $lastname, $field3 = 'SURNAME', $start = 0, $limit = 0);
        if(!empty($idexist)){
-                          $this->dbstudentcard->updatestudinfo($createdby,$datecreate,$idsearch,$date,$surname,$name,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$grade,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$newIDNum);
-                      /*}else{
-                            //if(!empty($studcarddata)){
-                              foreach($studcarddata as $resdata){
-                              $createdby  = $resdata['createdby'];
-                              $datecreate = $resdata['datecreated'];
-                              $id = $resdata['idnumber'];
-                              $date = $resdata['date'];
-                              $surname  = strtoupper($resdata['surname']);
-                              $name = strtoupper($resdata['name']);
-                              $grade =  $resdata['grade'];
-                              $schoolname = strtoupper($resdata['schoolname']);
-                              $postaddress  = strtoupper($resdata['postaddress']);
-                              $postcode = strtoupper($resdata['postcode']); 
-                              $areastud = strtoupper($resdata['area']);
-                              $telnumber  = strtoupper($resdata['telnumber']);
-                              $telcode  = $resdata['telcode'];
-                              $cellnumber = $resdata['cellnumber'];
-                              $studemail = strtoupper($resdata['studemail']);
-                          }
-                          //subject details
-                           $studsubjectdetail [] =  $this->getSession('studentdetails');
-                           if(!empty($studsubjectdetail)){
-                                 foreach($studsubjectdetail as $sess){
-                                         $subject1 = strtoupper($sess['subject1']);
-                                         $subject2 = strtoupper($sess['subject2']);
-                                         $subject3 = strtoupper($sess['subject3']);
-                                         $subject4 = strtoupper($sess['subject4']);
-                                         $subject5 = strtoupper($sess['subject5']);
-                                         $subject6 = strtoupper($sess['subject6']);
-                                         $subject7 = strtoupper($sess['subject7']);
-                                         $gradetype1 = strtoupper($sess['gradetype1']);
-                                         $gradetype2 = strtoupper($sess['gradetype2']);
-                                         $gradetype3 = strtoupper($sess['gradetype3']);
-                                         $gradetype4 = strtoupper($sess['gradetype4']);
-                                         $gradetype5 = strtoupper($sess['gradetype5']);
-                                         $gradetype6 = strtoupper($sess['gradetype6']);
-                                         $gradetype7 = strtoupper($sess['gradetype7']);
-                                 }       
-                           
-                           }
-                         //course and faculty info
-                         $studfacdetails []  = $this->getSession('studentfaccrse');
-                         if(!empty($studfacdetails)){
-                               foreach($studfacdetails as $sess1){
-                                       $faculty = strtoupper($sess1['1stfaculty']);
-                                       $course = strtoupper($sess1['1stcourse']);
-                                       $faculty2 = strtoupper($sess1['2ndfaculty']);
-                                       $course2 = strtoupper($sess1['2ndcourse']);
-                               }       
-                         
-                         }
-                         $studmoreinfo [] = $this->getSession('studentinfo');  
-                         if(!empty($studmoreinfo)){
-                               foreach($studmoreinfo as $sess2){
-                                       $info = strtoupper($sess2['info']);            //PROBLEM
-                                       $residence = strtoupper($sess2['residence']);
-                                       $exemption  = strtoupper($sess2['exemption']);
-                                       $sdcase = strtoupper($sess2['sdcase']);         //PROBLEM
-                               }       
-                         
-                         }*/  
-                                          
+                          if(!empty($newIDNum)){
+                              $latestID = $newIDNum;
+                          }else{
+                              $latestID = $studentidnumber;
+                          }         
+                          $this->dbstudentcard->updatestudinfo($createdby,$datecreate,$idsearch,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$grade,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$latestID,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation);
+                          
         }elseif($studcarddata[0]!= NULL && $studsubjectdetail[0] != NULL && $studfacdetails[0] != NULL && $studmoreinfo[0] != NULL ){
-                  $this->dbstudentcard->addstudcard($createdby,$datecreate,$idsearch,$date,$surname,$name,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$grade,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$keys = NULL);
+                  $this->dbstudentcard->addstudcard($createdby,$datecreate,$idsearch,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$grade,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$keys = NULL);
         }
         //            }
                            
@@ -786,7 +748,8 @@ function dispatch($action)
                if (!$this->objSemsSecurity->inGroup('MRSF Full')) {
                       return "noaccess_tpl.php";
                 }
-              $go = $this->getParam('searchbutton');  
+              $go = $this->getParam('searchbutton');
+              //$pgGo = $this->getParam('submit');    
               if(isset($go)){  
                 $useToPopTbl  = $this->getParam('schoollistnames',NULL);  
                 $school = $this->dbstudentcard->getstudschool($useToPopTbl, $field = 'schoolname', $start = 0, $limit = 0);
@@ -926,6 +889,7 @@ function dispatch($action)
                                  'date'             =>  $this->getParam('datestud'),
                                  'surname'          =>  $this->getParam('txtsurname'),
                                  'name'             =>  $this->getParam('txtname'),
+                                 'dob'              =>  $this->getParam('txtdob'),
                                  'grade'            =>  $this->getParam('grade'), 
                                  'schoolname'       =>  $this->getParam('schoollist'),
                                  'postaddress'      =>  $this->getParam('postaladdress'),
@@ -948,20 +912,28 @@ function dispatch($action)
            
            $username  = $this->objUser->fullname();
            $studentdetails = array( 
+                                'markgrade'        =>  $this->getParam('gradeval'),
                                 'subject1'         =>  $this->getParam('subjlist1'),
-                                'gradetype1'       =>  $this->getParam('grade'),      
+                                'gradetype1'       =>  $this->getParam('grade'),    
+                                'mark1'            =>  $this->getParam('txtPercentage1'),  
                                 'subject2'         =>  $this->getParam('subjlist2'),
                                 'gradetype2'       =>  $this->getParam('grade2'),
+                                'mark2'            =>  $this->getParam('txtPercentage2'), 
                                 'subject3'         =>  $this->getParam('subjlist3'),
                                 'gradetype3'       =>  $this->getParam('grade3'),
+                                'mark3'            =>  $this->getParam('txtPercentage3'), 
                                 'subject4'         =>  $this->getParam('subjlist4'),
                                 'gradetype4'       =>  $this->getParam('grade4'),
+                                'mark4'            =>  $this->getParam('txtPercentage4'), 
                                 'subject5'         =>  $this->getParam('subjlist5'),
                                 'gradetype5'       =>  $this->getParam('grade5'),
+                                'mark5'            =>  $this->getParam('txtPercentage5'), 
                                 'subject6'         =>  $this->getParam('subjlist6'),
                                 'gradetype6'       =>  $this->getParam('grade6'),
+                                'mark6'            =>  $this->getParam('txtPercentage6'), 
                                 'subject7'         =>  $this->getParam('subjlist7'),
                                 'gradetype7'       =>  $this->getParam('grade7'),
+                                'mark7'            =>  $this->getParam('txtPercentage7'), 
           );
         $this->setSession('studentdetails',$studentdetails);
   } 

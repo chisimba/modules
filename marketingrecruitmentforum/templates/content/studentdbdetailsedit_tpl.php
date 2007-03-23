@@ -13,8 +13,9 @@
     $this->loadClass('button','htmlelements');  
     $this->loadClass('tabbedbox', 'htmlelements');
     $this->loadClass('link', 'htmlelements');
+    $this->loadClass('checkbox', 'htmlelements');
     
-    $this->dbstudentcard  = & $this->getObject('dbstudentcard','marketingrecruitmentforum');
+     $this->dbstudentcard  = & $this->getObject('dbstudentcard','marketingrecruitmentforum');
      $firstname  = $this->getSession('name');
      $lastname = $this->getSession('surname');
      $idsearch = $this->getSession('idno');
@@ -99,132 +100,11 @@
    */
   $this->objSubmitstudcard  = new button('submitstudcard', $str1);
   $this->objSubmitstudcard->setToSubmit();
+  
+  $objElement = new checkbox('a',NULL,true);
+  $check = $objElement->show();
+  
 /*----------------------------------------------------------------------------------------*/
-
-   /**
-    *Table created to display the output/data captured of student card interface   
-    *Get session with student idno
-    *Call to function getstudbyid($idnum) using idno in session
-    *create a table based on this information        
-    */  
-         
-/*  $idnumber = $this->getSession('idno');
-  if(!empty($idnumber)){
-      $id2  = $idnumber;
-  }else{
-     $id2 = $id1;
-  }
-  $idsearch  = $this->dbstudentcard->getstudbyid11($idnumber, 'IDNUMBER', 0, 0) ;         
-  $this->setSession('idsearch',$idsearch);
-      if(!empty($idsearch) ){
-      
-            $objstudcardTable =& $this->newObject('htmltable', 'htmlelements');  
-            $objstudcardTable->cellspacing = '2';
-            $objstudcardTable->cellpadding = '2';
-            $objstudcardTable->cellwidth = '10';
-            $objstudcardTable->border='0';
-            $objstudcardTable->width = '80%';
-  
-           // foreach($idsearch as $sesStuddata){
-             for($i=0; $i< count($idsearch); $i++){
-     
-                if($idsearch[$i]->EXEMPTION == 1){
-                    $exemptionval = 'yes';
-                }else{
-                      $exemptionval = 'no';
-                }
-                
-                if($idsearch[$i]->RELEVANTSUBJECT == 1){
-                    $relsubjval = 'yes';
-                }else{
-                    $relsubjval = 'no';
-                }
-                if($idsearch[$i]->SDCASE == 1){
-                    $sdvalues = 'yes';
-                }else{
-                    $sdvalues = 'no';
-                }    
-                
-                $objstudcardTable->startRow();
-                $objstudcardTable->addCell($idnumber1);
-                $objstudcardTable->addCell($id2);
-                $objstudcardTable->endRow();
-                
-                $objstudcardTable->startRow();
-                $objstudcardTable->addCell($date);
-                $objstudcardTable->addCell($idsearch[$i]->ENTRYDATE);
-                $objstudcardTable->endRow();
-  
-                $objstudcardTable->startRow();
-                $objstudcardTable->addCell($schoolname);
-                $objstudcardTable->addCell(strtoupper($idsearch[$i]->SCHOOLNAME)); 
-                $objstudcardTable->endRow();
-  
-  
-                $objstudcardTable->startRow();
-                $objstudcardTable->addCell($surname);
-                $objstudcardTable->addCell(strtoupper($idsearch[$i]->SURNAME));
-                $objstudcardTable->endRow();
-  
-                $objstudcardTable->startRow();
-                $objstudcardTable->addCell($name);
-                $objstudcardTable->addCell(strtoupper($idsearch[$i]->NAME));
-                $objstudcardTable->endRow();
-  
-                $objstudcardTable->startRow();
-                $objstudcardTable->addCell($postaladdress);
-                $objstudcardTable->addCell(strtoupper($idsearch[$i]->POSTADDRESS));
-                $objstudcardTable->endRow();
-  
-                
-                            
-                $objstudcardTable->startRow();
-                $objstudcardTable->addCell($postalcode);
-                $objstudcardTable->addCell(strtoupper($idsearch[$i]->POSTCODE));
-                $objstudcardTable->endRow();
-                
-                $objstudcardTable->startRow();
-                $objstudcardTable->addCell("Residential Area");
-                $objstudcardTable->addCell($idsearch[$i]->AREA);
-                $objstudcardTable->endRow();
-                
-  
-                $objstudcardTable->startRow();
-                $objstudcardTable->addCell($telnumber);
-                $objstudcardTable->addCell(strtoupper($idsearch[$i]->TELNUMBER));
-                $objstudcardTable->endRow();
-  
-                $objstudcardTable->startRow();
-                $objstudcardTable->addCell($telcode);
-                $objstudcardTable->addCell(strtoupper($idsearch[$i]->TELCODE));
-                $objstudcardTable->endRow();
-  
-                $objstudcardTable->startRow();
-                $objstudcardTable->addCell($exemption);
-                $objstudcardTable->addCell(strtoupper($exemptionval));
-                $objstudcardTable->endRow();
-                
-                $objstudcardTable->startRow();
-                $objstudcardTable->addCell($facultyname);
-                $objstudcardTable->addCell(strtoupper($idsearch[$i]->FACULTY));
-                $objstudcardTable->endRow();
-                
-                $objstudcardTable->startRow();
-                $objstudcardTable->addCell($crseinterest);
-                $objstudcardTable->addCell(strtoupper($idsearch[$i]->COURSE));
-                $objstudcardTable->endRow();
-  
-                $objstudcardTable->startRow();
-                $objstudcardTable->addCell($relsubj);
-                $objstudcardTable->addCell(strtoupper($relsubjval));
-                $objstudcardTable->endRow();
-  
-                $objstudcardTable->startRow();
-                $objstudcardTable->addCell($sdcase);
-                $objstudcardTable->addCell(strtoupper($sdvalues));
-                $objstudcardTable->endRow();
-            }
-      }else{*/
 
       if(!empty($idsearch)){
      
@@ -237,7 +117,8 @@
 
              for($i=0; $i< count($idsearch); $i++){
                           $rowcount = 0; 
-      
+                          $dob  = date("d-M-Y", strtotime($idsearch[$i]->DOB));
+                          
                             $myTable->startHeaderRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                             $myTable->addHeaderCell('Student Card Details of ', null,'top','left','header');
@@ -274,6 +155,22 @@
                            (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                            $myTable->addCell("Name","15%", null, "left",$oddOrEven);
                            $myTable->addCell($idsearch[$i]->NAME,"15%", null, "left",$oddOrEven);
+                           $myTable->row_attributes = " class = \"$oddOrEven\"";
+                           $rowcount++;                           
+                           $myTable->endRow(); 
+                           
+                           $myTable->startRow();
+                           (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                           $myTable->addCell("Date of birth","15%", null, "left",$oddOrEven);
+                           $myTable->addCell($dob,"15%", null, "left",$oddOrEven);
+                           $myTable->row_attributes = " class = \"$oddOrEven\"";
+                           $rowcount++;                           
+                           $myTable->endRow(); 
+                           
+                           $myTable->startRow();
+                           (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                           $myTable->addCell("Grade","15%", null, "left",$oddOrEven);
+                           $myTable->addCell($idsearch[$i]->GRADE,"15%", null, "left",$oddOrEven);
                            $myTable->row_attributes = " class = \"$oddOrEven\"";
                            $rowcount++;                           
                            $myTable->endRow(); 
@@ -356,53 +253,59 @@ if(!empty($idsearch)){
                   $objTable->width = '70%';
               for($i=0; $i< count($idsearch); $i++){
                           $rowcount = 0;
-            
+                            $objTable->startRow();
+                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                            $objTable->addCell('Subjects and results for grade',"15%", null, "left",$oddOrEven);
+                            $objTable->addCell($idsearch[$i]->MARKGRADE,"15%", null, "left",$oddOrEven);
+                            $rowcount++;
+                            $objTable->endRow();
+                            
                             $objTable->startRow();
                              (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                             $objTable->addCell('Subject 1',"15%", null, "left",$oddOrEven);
-                            $objTable->addCell($idsearch[$i]->SUBJECT1.' '.$idsearch[$i]->GRADETYPE1,"15%", null, "left",$oddOrEven);
+                            $objTable->addCell($idsearch[$i]->SUBJECT1.' '.$idsearch[$i]->GRADETYPE1.' '.$idsearch[$i]->MARK1 .'%',"15%", null, "left",$oddOrEven);
                             $rowcount++;
                             $objTable->endRow();
                             
                             $objTable->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                             $objTable->addCell('Subject 2',"15%", null, "left",$oddOrEven);
-                            $objTable->addCell($idsearch[$i]->SUBJECT2.' '.$idsearch[$i]->GRADETYPE2,"15%", null, "left",$oddOrEven);
+                            $objTable->addCell($idsearch[$i]->SUBJECT2.' '.$idsearch[$i]->GRADETYPE2.' '.$idsearch[$i]->MARK2 .'%',"15%", null, "left",$oddOrEven);
                             $rowcount++;
                             $objTable->endRow();
                             
                             $objTable->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                             $objTable->addCell('Subject 3',"15%", null, "left",$oddOrEven);
-                            $objTable->addCell($idsearch[$i]->SUBJECT3.' '.$idsearch[$i]->GRADETYPE3,"15%", null, "left",$oddOrEven);
+                            $objTable->addCell($idsearch[$i]->SUBJECT3.' '.$idsearch[$i]->GRADETYPE3.' '.$idsearch[$i]->MARK3 .'%',"15%", null, "left",$oddOrEven);
                             $rowcount++;
                             $objTable->endRow();
                             
                             $objTable->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                             $objTable->addCell('Subject 4',"15%", null, "left",$oddOrEven);
-                            $objTable->addCell($idsearch[$i]->SUBJECT4.' '.$idsearch[$i]->GRADETYPE4,"15%", null, "left",$oddOrEven);
+                            $objTable->addCell($idsearch[$i]->SUBJECT4.' '.$idsearch[$i]->GRADETYPE4.' '.$idsearch[$i]->MARK4 .'%',"15%", null, "left",$oddOrEven);
                             $rowcount++;
                             $objTable->endRow();
                             
                             $objTable->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                             $objTable->addCell('Subject 5',"15%", null, "left",$oddOrEven);
-                            $objTable->addCell($idsearch[$i]->SUBJECT5.' '.$idsearch[$i]->GRADETYPE5,"15%", null, "left",$oddOrEven);
+                            $objTable->addCell($idsearch[$i]->SUBJECT5.' '.$idsearch[$i]->GRADETYPE5.' '.$idsearch[$i]->MARK5 .'%',"15%", null, "left",$oddOrEven);
                             $rowcount++;
                             $objTable->endRow();
                             
                             $objTable->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                             $objTable->addCell('Subject 6',"15%", null, "left",$oddOrEven);
-                            $objTable->addCell($idsearch[$i]->SUBJECT6.' '.$idsearch[$i]->GRADETYPE6,"15%", null, "left",$oddOrEven);
+                            $objTable->addCell($idsearch[$i]->SUBJECT6.' '.$idsearch[$i]->GRADETYPE6.' '.$idsearch[$i]->MARK6 .'%',"15%", null, "left",$oddOrEven);
                             $rowcount++;
                             $objTable->endRow();
                             
                             $objTable->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                             $objTable->addCell('Subject 7',"15%", null, "left",$oddOrEven);
-                            $objTable->addCell($idsearch[$i]->SUBJECT7.' '.$idsearch[$i]->GRADETYPE7,"15%", null, "left",$oddOrEven);
+                            $objTable->addCell($idsearch[$i]->SUBJECT7.' '.$idsearch[$i]->GRADETYPE7.' '.$idsearch[$i]->MARK7 .'%',"15%", null, "left",$oddOrEven);
                             $rowcount++;
                             $objTable->endRow();
           }
@@ -506,7 +409,7 @@ if(!empty($idsearch)){
                             $rowcount++;
                             $objTableinfo->endRow();
                             
-                            $objTableinfo->startRow();
+                           /* $objTableinfo->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                             $objTableinfo->addCell('Exemption',"15%", null, "left",$oddOrEven);
                             $objTableinfo->addCell($exemptionval,"15%", null, "left",$oddOrEven);
@@ -520,7 +423,7 @@ if(!empty($idsearch)){
                             $objTableinfo->addCell($sdvalues,"15%", null, "left",$oddOrEven);
                             $objTableinfo->row_attributes = " class = \"$oddOrEven\"";
                             $rowcount++;
-                            $objTableinfo->endRow();
+                            $objTableinfo->endRow();*/
                     
               }                    
 }
@@ -533,19 +436,19 @@ if(!empty($idsearch)){
     $strelements  =   $myTable->show();// . $objTable->show(); 
     
     $objstudtab = new tabbedbox();
-    $objstudtab->addTabLabel($studcardinfo);
+    $objstudtab->addTabLabel('Student Personal Data');
     $objstudtab->addBoxContent("<div align=\"right\">" .$editStudLink->show() . "</div>"."<div align=\"left\">" .$strelements ."</div>");
     
     $objstuddetails = new tabbedbox();
-    $objstuddetails->addTabLabel('Subjects');
+    $objstuddetails->addTabLabel('Subjects taken at school');
     $objstuddetails->addBoxContent("<div align=\"right\">" .$editSubjects->show() . "</div>"."<div align=\"left\">".$objTable->show()."</div>");
     
     $objstudfaccrse = new tabbedbox();
-    $objstudfaccrse->addTabLabel('Faculty and Course');
+    $objstudfaccrse->addTabLabel('Faculties / Courses');
     $objstudfaccrse->addBoxContent("<div align=\"right\">" .$editFacultyCrse->show() . "</div>"."<div align=\"left\">".$objTableFC->show()."</div>");
     
     $objstudinfo = new tabbedbox();
-    $objstudinfo->addTabLabel('More information');
+    $objstudinfo->addTabLabel('Additional information');
     $objstudinfo->addBoxContent("<div align=\"right\">" .$editMoreInfo->show() . "</div>"."<div align=\"left\">".$objTableinfo->show()."</div>");
     
     /*----------------------------------------------------------------------------------------*/   
@@ -557,7 +460,8 @@ if(!empty($idsearch)){
 
    $objForm = new form('studentoutput',$this->uri(array('action'=>'submitinfo')));
    $objForm->displayType = 3;
-   $objForm->addToForm($this->objMainheading->show().'<br />' .'<br />'.$stringval . '<br />' . "<div align=left>".$this->objSubmitstudcard->show()."</div>"); 
+   $objForm->addToForm($this->objMainheading->show().'<br />' .'<br />'.$stringval . '<br />'  .'<h3>'. " I hereby confirm that the information entered above is complete and accurate.".$check.'</h>'.' '. ' '."<div align=left>".$this->objSubmitstudcard->show()."</div>");
+   $objForm->addRule('a','Field not checked','required');  
 /*----------------------------------------------------------------------------------------*/  
 echo $objForm->show();
 ?>
