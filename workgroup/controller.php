@@ -131,14 +131,14 @@ class workgroup extends controller
 	
 		// Get the groupAdminModel object.
 		$groups =& $this->getObject("groupAdminModel", "groupadmin");
-        if ($isAlumni) {
+        //if ($isAlumni) {
 			// Get a list of students who are not already in a workgroup.
-			$gid=$groups->getLeafId(array('Lecturers'));
-		}
-		else {
+		//	$gid=$groups->getLeafId(array('Lecturers'));
+		//}
+		//else {
 			// Get a list of students who are not already in a workgroup.
 			$gid=$groups->getLeafId(array($contextCode,'Lecturers'));
-		}
+		//}
 		$lecturers = $groups->getGroupUsers($gid, array('userId',"'firstName' || ' ' || 'surname' AS fullname"), "ORDER BY fullname");
 		$this->setVar('lecturers',$lecturers);
 

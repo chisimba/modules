@@ -71,7 +71,7 @@ $pageText->type=3;
 $pageText->str=ucwords($objLanguage->code2Txt("mod_workgroup_fileshare",'workgroup'));
 $middleContent .= $pageText->show();
 
-$objFileShareList =& $this->getObject('fileshare', 'workgroup');
+$objFileShareList =& $this->getObject('dbfileshare', 'workgroup');
 //$middleContent .= '<div class="wrapperLightBkg" style="border: 5px outset #c0c0c0;">'.$objFileShareList->getFormattedDisplay($this->workgroupId).'</div>';
 
 $fileshareLink = new link($this->uri(NULL, 'fileshare'));
