@@ -194,14 +194,14 @@
     <data>
        	<add>
    			<name>start_publish</name>
-	    	<type>Date</type>
+	    	<type>date</type>
    			
 		</add>
 	</data>
 	<data>
        	<add>
    			<name>end_publish</name>
-	    	<type>Date</type>
+	    	<type>date</type>
    			
 		</add>
 	</data>
