@@ -598,7 +598,7 @@ class messaging extends controller
             // get users for im
             case 'getimusers':
                 $option = $this->getParam('option');
-                $value = $this->getparam('username');
+                $value = $this->getparam('value');
                 return $this->objDisplay->divGetImUsers($option, $value);
                 break;
                 

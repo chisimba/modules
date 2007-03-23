@@ -329,6 +329,24 @@ function jsInviteUserList()
     new Ajax.Autocompleter(input, target, URL, {parameters: pars});
 }
 
+/*
+* Function to validate the invite user input
+* @param string err_invite: The user invite error message
+*/            
+function jsValidateInvite(err_invite)
+{
+    var el_UserId = $("input_userId");
+    var el_Username = $("input_username");
+    if(el_UserId.value == ""){
+        alert(err_invite);
+        el_Username.value = "";
+        el_Username.focus();
+        return false;
+    }else{
+        $("form_invite").submit();
+    }    
+}
+
 /**
 * ========================================
 *  Js functions for the chat log popup
@@ -406,30 +424,7 @@ function jsValidateDate(err_start, err_end, err_date)
 
 /**
 * ======================================
-*  Js functionfor the invite user popup
-* ======================================
-*/
-/*
-* Function to validate the invite user input
-* @param string err_invite: The user invite error message
-*/            
-function jsValidateInvite(err_invite)
-{
-    var el_UserId = $("input_userId");
-    var el_Username = $("input_username");
-    if(el_UserId.value == ""){
-        alert(err_invite);
-        el_Username.value = "";
-        el_Username.focus();
-        return false;
-    }else{
-        $("form_invite").submit();
-    }    
-}
-
-/**
-* ======================================
-*  Js functionfor the remove user popup
+*  Js function for the remove user popup
 * ======================================
 */
 /*
@@ -452,3 +447,46 @@ function jsValidateRemove(err_remove)
         return false;
     }
 }
+
+/**
+* ======================================
+*  Js function for the im popup
+* ======================================
+*/
+/*
+* Function to validate the im input
+* @param string err_invite: The user im error message
+*/            
+function jsValidateUser(err_user)
+{
+    var el_UserId = $("input_userId");
+    var el_Username = $("input_value");
+    if(el_UserId.value == ""){
+        alert(err_user);
+        el_Username.value = "";
+        el_Username.focus();
+        return false;
+    }else{
+        $("form_im").submit();
+    }    
+}
+
+/*
+* Function to search for users using an ajax call 
+*/            
+function jsImUserList()
+{        
+    var el_option = document.getElementsByName("option");
+    var len = el_option.length;
+    var myValue = "";
+    for(var i = 0; i <= len-1; i++){
+        if(el_option[i].checked){
+            myValue = el_option[i].value;
+        }
+    }
+    var input = "input_value";
+    var target = "userDiv";
+    var pars = "module=messaging&action=getimusers&option="+myValue;
+    new Ajax.Autocompleter(input, target, URL, {parameters: pars});
+}
+

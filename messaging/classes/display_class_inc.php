@@ -1577,7 +1577,7 @@ $this->objLanguage = $this->getObject('language','language');
 
         // submit button
         $objButton = new button('send', $submitLabel);
-        $objButton->extra = ' onclick="javascript:return jsValidateInvite('.$errInviteLabel.')"';
+        $objButton->extra = ' onclick="javascript:return jsValidateInvite(\''.$errInviteLabel.'\')"';
         $sendButton = $objButton->show();
         
         // cancel button
@@ -2216,19 +2216,6 @@ $this->objLanguage = $this->getObject('language','language');
 
         // javascript
         $script = '<script type="text/javaScript">
-            function jsImUserList()
-            {        
-                var el_option = document.getElementsByName("option");
-                var len = el_option.length;
-                var myValue = "";
-                for(var i = 0; i <= len-1; i++){
-                    if(el_option[i].checked){
-                        myValue = el_option[i].value;
-                    }
-                }
-                var pars = "module=messaging&action=getimusers&option="+myValue;
-                new Ajax.Autocompleter("input_username", "userDiv", "index.php", {parameters: pars});
-            }
         </script>';
         $str .= $script;
 
@@ -2237,6 +2224,7 @@ $this->objLanguage = $this->getObject('language','language');
         $userLabel = $this->objLanguage->languageText('mod_messaging_worduser', 'messaging');
         $submitLabel = $this->objLanguage->languageText('mod_messaging_wordsubmit', 'messaging');
         $cancelLabel = $this->objLanguage->languageText('mod_messaging_wordcancel', 'messaging');
+        $usernameLabel = $this->objLanguage->languageText('word_username');
         $nameLabel = $this->objLanguage->languageText('mod_messaging_firstname', 'messaging');
         $surnameLabel = $this->objLanguage->languageText('mod_messaging_surname', 'messaging');
         $errImUserLabel = $this->objLanguage->languageText('mod_messaging_errimuser', 'messaging');
@@ -2253,16 +2241,17 @@ $this->objLanguage = $this->getObject('language','language');
         $objRadio = new radio('option');
         $objRadio->addOption('firstname', '&nbsp;'.$nameLabel);
         $objRadio->addOption('surname', '&nbsp;'.$surnameLabel);
+        $objRadio->addOption('username', '&nbsp;'.$usernameLabel);
         $objRadio->setBreakSpace('table');
         $objRadio->setSelected('firstname');
         $objRadio->extra = ' onchange="javascript:
-            var el_Username = $(\'input_username\');
+            var el_Username = $(\'input_value\');
             el_Username.value = \'\';
             el_Username.focus();"';
         $choiceRadio = $objRadio->show();
         
         // user search input
-        $objInput = new textinput('username', '', '', 50);
+        $objInput = new textinput('value', '', '', 50);
         $objInput->extra = ' onkeyup="javascript:
             jsImUserList()"';
         $userInput = $objInput->show();
@@ -2294,23 +2283,14 @@ $this->objLanguage = $this->getObject('language','language');
 
         // message text area
         $objText = new textarea('message');
+        $objText->extra = ' style="width: 95%;"';
         $messageText = $objText->show();
         
         $messageFeature = $this->objFeaturebox->show($messageLabel, $messageText);
         
         // submit button
         $objButton = new button('send', $submitLabel);
-        $objButton->extra = ' onclick="javascript:
-            var el_UserId = $(\'input_userId\');
-            var el_Username = $(\'input_username\');
-            if(el_UserId.value == \'\'){
-                alert(\''.$errImUserLabel.'\');
-                el_Username.value = \'\';
-                el_Username.focus();
-                return false;
-            }else{
-                $(\'form_im\').submit();
-            }"';
+        $objButton->extra = ' onclick="javascript:return jsValidateInvite(\''.$errImUserLabel.'\')"';
         $sendButton = $objButton->show();
         
         // cancel button
