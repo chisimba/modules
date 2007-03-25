@@ -24,6 +24,7 @@ class block_managemenu extends object
         
         //Set the title
         $this->title = $this->objLanguage->languageText('word_management');
+        $this->access = $this->getSession('accessLevel', array());
     }
     
     /**
@@ -44,17 +45,15 @@ class block_managemenu extends object
         $objLink->link = $submissions;
         $list = '<p style="padding-top: 5px;">'.$objLink->show().'</p>';
 
-        $objLink = new link($this->uri(array('action'=>'managesubmissions', 'mode' => 'resources')));
-        $objLink->link = $repository;
-        $list .= '<p>'.$objLink->show().'</p>';
-        
-//        $objLink = new link($this->uri(array('action'=>'showconfig', 'mode' => 'permissions')));
-//        $objLink->link = $users;
-//        $list .= '<p>'.$objLink->show().'</p>';
-        
-        $objLink = new link($this->uri(array('action'=>'showconfig')));
-        $objLink->link = $configure;
-        $list .= '<p>'.$objLink->show().'</p>';
+        if(in_array('manager', $this->access)){
+            $objLink = new link($this->uri(array('action'=>'managesubmissions', 'mode' => 'resources')));
+            $objLink->link = $repository;
+            $list .= '<p>'.$objLink->show().'</p>';
+                    
+            $objLink = new link($this->uri(array('action'=>'showconfig')));
+            $objLink->link = $configure;
+            $list .= '<p>'.$objLink->show().'</p>';
+        }
         
         return $list;
     }

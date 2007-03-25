@@ -112,10 +112,12 @@ class dbStatistics extends dbTable
         $year = date('Y');
 //        $sql = "SELECT count(*) as cnt, MONTH(datecreated) as month FROM {$this->table}";
 //        $sql .= " WHERE YEAR(datecreated) = '$year' AND hittype = '$type' GROUP BY MONTH(datecreated)";
-
+//        $sql = "SELECT count(*) as cnt, to_char(datecreated, 'MM') as month FROM {$this->table}";
+//        $sql .= " WHERE to_char(datecreated, 'YY') = '$year' AND hittype = '$type' GROUP BY to_char(datecreated, 'MM')";
         
-        $sql = "SELECT count(*) as cnt, to_char(datecreated, 'MM') as month FROM {$this->table}";
-        $sql .= " WHERE to_char(datecreated, 'YY') = '$year' AND hittype = '$type' GROUP BY to_char(datecreated, 'MM')";
+        $sql = "SELECT count(*) as cnt, EXTRACT(MONTH FROM datecreated) as month FROM {$this->table}";
+        $sql .= " WHERE EXTRACT(YEAR FROM datecreated) = '$year' AND hittype = '$type' GROUP BY EXTRACT(MONTH FROM datecreated)";
+
         
         $data = $this->getArray($sql);
         
@@ -255,9 +257,9 @@ class dbStatistics extends dbTable
     public function getSideBlock()
     {
         $userCount = $this->objUserStats->countUsers();
-        $countryCount = 0;//$this->objUserStats->getTotalCountries();
-        $totalLogins = 0;//$this->objLoginHistory->getTotalLogins();
-        $countries = '';//$this->objUserStats->getFlags();
+        $countryCount = $this->objUserStats->getTotalCountries();
+        $totalLogins = $this->objLoginHistory->getTotalLogins();
+        $countries = $this->objUserStats->getFlags();
         
         $hdUser = $this->objLanguage->languageText('phrase_userstats');
         $lbTotalUsers = $this->objLanguage->languageText('phrase_totalusers');
@@ -266,8 +268,11 @@ class dbStatistics extends dbTable
         
         $str = '<p>'.$lbTotalUsers.': '.$userCount.'</p>';
         $str .= '<p>'.$lbTotalLogins.': '.$totalLogins.'</p>';
-        $str .= '<p>'.$lbUserCountries.': '.$countryCount.'<br />';
-        $str .= $countries.'</p>';
+        $str .= '<p>'.$lbUserCountries.': '.$countryCount.'</p>';
+        
+        $this->objLayer->str = $countries;
+        $this->objLayer->padding = '0px; padding-left: 10px';
+        $str .= $this->objLayer->show();
         
         $objTab = new tabbedbox();
         $objTab->extra = 'style="background-color: #FCFAF2; padding: 5px;"';

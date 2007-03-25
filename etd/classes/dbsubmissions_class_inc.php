@@ -149,36 +149,6 @@ class dbsubmissions extends dbtable
             return $data[0];
         }
         return array();
-        
-        
-        /*
-        $sqlSelect = ''; $sqlJoin = '';
-        if(!$archive){
-            $sqlSelect = ', extra.id AS metaId, extra.*, dc.id AS dcId, dc.* ';
-            if($this->metaType == 'qualified'){
-                $sqlJoin = 'LEFT JOIN '.$this->qualifiedTable.' AS extra ON etd.id = extra.submitId ';
-            }else{
-                $sqlJoin = 'LEFT JOIN '.$this->thesisTable.' AS extra ON etd.id = extra.submitId ';
-            }
-            $sqlJoin .= 'LEFT JOIN '.$this->dcTable.' AS dc ON dc.id = extra.dcMetaId ';
-        }
-
-        $sql = 'SELECT etd.id as submitId, etd.*'.$sqlSelect.' FROM '.$this->table.' AS etd '.$sqlJoin;
-        $sql .= "WHERE etd.id = '$id'";
-        $data = $this->getArray($sql);
-        
-        $sql = 'SELECT * FROM '.$this->table.' AS etd ';
-        $sql .= "WHERE etd.id = '$id'";
-        $data = $this->getArray($sql);
-        
-        if($archive){
-            $data = $this->getXmlMeta($data);
-        }
-        if(!empty($data)){
-            return $data[0];
-        }
-        return array();
-        */
     }
 
     /**
@@ -226,52 +196,6 @@ class dbsubmissions extends dbtable
         $count = $this->getArray($sqlCount.$sql);
         
         return array($data, $count[0]['count']);
-        
-        /*
-        $sqlNorm = 'SELECT * ';
-        $sqlNorm .= 'FROM '.$this->table.' AS submit ';
-
-        $sqlCount = 'SELECT COUNT(*) as count FROM '.$this->table.' AS submit ';
-
-        //$sql = $this->getSession('filter', NULL);
-        
-        //if(is_null($sql)){
-        
-            if($this->metaType == 'qualified'){
-                $sql .= 'LEFT JOIN '.$this->qualifiedTable.' AS extra ON submit.id = extra.submitId ';
-            }else{
-                $sql .= 'LEFT JOIN '.$this->thesisTable.' AS extra ON submit.id = extra.submitId ';
-            }
-            
-            $sql .= 'LEFT JOIN '.$this->dcTable.' AS dc ON dc.id = extra.dcMetaId ';
-            $sql .= "WHERE submissionType = '{$this->subType}' AND status = 'archived' ";
-            
-            if(!empty($criteria)){
-                $critSql = '';
-                foreach($criteria as $item){
-                    if(!empty($critSql)){
-                        $critSql .= ' OR ';
-                    }
-                    $critSql .= $item['field'].' '.$item['compare']." '".$item['value']."'";
-                }
-                $sql .= " AND ($critSql) ";
-            }
-            
-            if(!is_null($limit)){
-                $sql .= " LIMIT $limit";
-            }
-        //}
-
-        //$this->setSession('filter', $sql);
-
-        $offset = "LIMIT 10 OFFSET $start";
-
-        $data = $this->getArray($sqlNorm.$sql.$offset);
-
-        $count = $this->getArray($sqlCount.$sql);
-
-        */
-
     }
     
     /**
@@ -296,10 +220,7 @@ class dbsubmissions extends dbtable
         
         $sql .= "ORDER BY dc.enterdate DESC LIMIT 10";
         
-        $data = $this->getArray($sqlNorm.$sql);
-        
-        
-        
+        $data = $this->getArray($sqlNorm.$sql);        
         return $data;
     }
 
@@ -307,15 +228,25 @@ class dbsubmissions extends dbtable
     * Method to get a list of non-archived submissions by status
     *
     * @access public
-    * @param
+    * @param string $levels The levels of approval to display
     * @return array $data The submissions
     */
-    public function getNewSubmissions()
+    public function getNewSubmissions($levels)
     {
         $sql = 'SELECT * FROM '.$this->table;
-        $sql .= " WHERE status = 'metadata' ";
-        $sql .= " AND submissiontype = '{$this->subType}' ";
+        $sql .= " WHERE (status = 'metadata' OR status = 'pending') 
+        AND submissiontype = '{$this->subType}' ";
         
+        if(!empty($levels)){
+            $filter = '';
+            foreach($levels as $item){
+                if(!empty($filter)){
+                    $filter .= 'OR ';
+                }
+                $filter .= "approvallevel = '{$item}' ";
+            }
+            $sql .= "AND ({$filter})";
+        }
         $data = $this->getArray($sql);
         
         // For each submission get the related xml file
@@ -380,241 +311,5 @@ class dbsubmissions extends dbtable
     {
         $this->delete('id', $id);
     }
-
-
-/* ** Methods below have not yet been ported ** */
-
-    /**
-    * Method to insert a new etd into the database.
-    * @param string $userId The user Id for the creator.
-    * @param string $studentId The user Id for the student.
-    */
-    function addETD($userId, $studentId = NULL)
-    {
-        $fields = array();
-        $fields['authorId'] = $studentId;
-        $fields['submissionType'] = $this->subType;
-        $fields['creatorId'] = $userId;
-        $fields['dateCreated'] = date('Y-m-d H:i:s');
-        $id = $this->insert($fields);
-        return $id;
-    }
-
-    /**
-    * Method to add the student's user id if etd is entered by a manager.
-    * @param string $id The Id of the ETD.
-    * @param string $studentId The user Id for the student.
-    */
-    function setStudentId($id, $studentId)
-    {
-        $fields = array();
-        $fields['authorId'] = $studentId;
-        $this->update('id', $id, $fields);
-        return $id;
-    }
-
-    /**
-    * Method to change the status on an ETD.
-    * @param string $id The Id of the ETD.
-    * @param string $userId The user Id for the modifier.
-    * @param string $status The status of the submission. Assembly, pending approval, awaiting metadata, archived.
-    */
-    function changeStatus($id, $userId, $status)
-    {
-        $fields['status'] = $status;
-        $fields['modifierId'] = $userId;
-        $fields['dateModified'] = date('Y-m-d H:i:s');
-        $this->update('id', $id, $fields);
-        return $id;
-    }
-
-    /**
-    * Method to get the ETD submission data (no metadata) for checking status or approval level.
-    */
-    function getETDStatus($id)
-    {
-        $sql = 'SELECT * FROM '.$this->table;
-        $sql .= " WHERE id = '$id'";
-        $data = $this->getArray($sql);
-
-        if(!empty($data)){
-            return $data[0];
-        }
-        return FALSE;
-    }
-       
-    /**
-    * Method to get the comment count on a resource
-    */
-    function getCommentCount($id)
-    {
-        $sql = 'SELECT commentCount FROM '.$this->table;
-        $sql .= " WHERE id = '$id'";
-        $data = $this->getArray($sql);
-
-        if(!empty($data)){
-            return $data[0]['commentCount'];
-        }
-        return 0;
-    }
-    
-    /**
-    * Method to get the access level of a resource
-    */
-    function getAccessLevel($id)
-    {
-        $sql = 'SELECT accessLevel FROM '.$this->table;
-        $sql .= " WHERE id = '$id'";
-        $data = $this->getArray($sql);
-
-        if(!empty($data)){
-            return $data[0]['accessLevel'];
-        }
-        return 0;
-    }
-
-    /**
-    * Method to set the access level of an ETD.
-    * @param string $id The Id of the ETD.
-    * @param string $userId The user Id for the modifier.
-    * @param string $access The level of access - private = user only; public = available; protected = metadata is available, file is hidden
-    * @return string $id
-    */
-    function changeAccess($id, $userId, $access)
-    {
-        $fields['accessLevel'] = $access;
-        $fields['modifierId'] = $userId;
-        $fields['dateModified'] = date('Y-m-d H:i:s');
-        $this->update('id', $id, $fields);
-        return $id;
-    }
-
-    /**
-    * Method to get a user's submissions.
-    * @param string $userId The user Id for the user.
-    * @param string $status The status of the requested submissions.
-    */
-    function getUserEtd($userId, $status=NULL)
-    {
-        $sqlSelect = ''; $sqlJoin = '';
-        if($status == 'archived'){
-            $sqlSelect = ', extra.id as mdId, extra.*, dc.* ';
-            if($this->metaType == 'qualified'){
-                $sqlJoin = 'LEFT JOIN '.$this->qualifiedTable.' AS extra ON etd.id = extra.submitId ';
-            }else{
-                $sqlJoin = 'LEFT JOIN '.$this->thesisTable.' AS extra ON etd.id = extra.submitId ';
-            }
-            $sqlJoin .= 'LEFT JOIN '.$this->dcTable.' AS dc ON dc.id = extra.dcMetaId ';
-        }
-
-        $sql = 'SELECT etd.id as submitId, embargo.id as embId, etd.*, embargo.* '.$sqlSelect;
-        $sql .= 'FROM '.$this->table.' AS etd '.$sqlJoin;
-        $sql .= 'LEFT JOIN '.$this->embargoTable.' AS embargo ON etd.id = embargo.submissionId ';
-        $sql .= "WHERE submissionType = '{$this->subType}' AND (";
-        $sql .= "(etd.creatorId = '$userId' OR etd.authorId = '$userId')";
-
-        if($status){
-            $sql .= " AND etd.status = '$status'";
-        }else{
-            $sql .= " AND etd.status != 'archived'";
-        }
-        $sql .= ')';
-
-        $data = $this->getArray($sql);
-
-        if($status != 'archived'){
-            $data = $this->getXmlMeta($data);
-        }
-        return $data;
-    }
-
-    /**
-    * Method to get submissions dependent on their status.
-    * The method also checks the approval level of the submissions if required.
-    * @param string $status The requested status of the submissions.
-    * @param string $level The approval level of the submissions.
-    */
-    function getEtdByStatus($status, $level = NULL)
-    {
-        $sqlSelect = ''; $sqlJoin = '';
-        if($status == 'archived'){
-            $sqlSelect = ', extra.id as mdId, extra.*, dc.* ';
-            if($this->metaType == 'qualified'){
-                $sqlJoin = 'LEFT JOIN '.$this->qualifiedTable.' AS extra ON etd.id = extra.submitId ';
-            }else{
-                $sqlJoin = 'LEFT JOIN '.$this->thesisTable.' AS extra ON etd.id = extra.submitId ';
-            }
-            $sqlJoin .= 'LEFT JOIN '.$this->dcTable.' AS dc ON dc.id = extra.dcMetaId ';
-        }
-
-        $sql = 'SELECT etd.id as submitId, etd.* '.$sqlSelect;
-        $sql .= ' FROM '.$this->table.' AS etd '.$sqlJoin;
-        $sql .= " WHERE  submissionType = '{$this->subType}' AND (etd.status = '$status'";
-
-        if(!is_null($level)){
-            $sql .= " AND etd.approvalLevel = '$level'";
-        }
-        $sql .= ')';
-
-        $data = $this->getArray($sql);
-
-        if($status != 'archived'){
-            $data = $this->getXmlMeta($data);
-        }
-        return $data;
-    }
-
-    /**
-    * Method to fetch an ETD based on given information.
-    * The method can either match the info, or match similar information.
-    */
-    function fetchETD($author, $title, $student, $department, $start = 0, $compare = '=')
-    {
-        $sqlNorm = 'SELECT thesis.id, dc.id AS dcId, etd.authorId as col3, dc.dc_title as col1, ';
-        $sqlNorm .= 'dc.dc_creator as col2, thesis.thesis_degree_discipline as col4 ';
-        $sqlNorm .= 'FROM '.$this->table.' AS etd ';
-
-        $sqlCount = 'SELECT COUNT(*) as count FROM '.$this->table.' AS etd ';
-
-        $sql = $this->getSession('filter', NULL);
-
-        if(is_null($sql)){
-            $sql = 'LEFT JOIN '.$this->thesisTable.' AS thesis ON etd.id = thesis.submitId ';
-            $sql .= 'LEFT JOIN '.$this->dcTable.' AS dc ON dc.id = thesis.dcMetaId ';
-            $sql .= "WHERE submissionType = '{$this->subType}' AND (dc.dc_creator $compare '$author' ";
-            $sql .= "AND dc.dc_title $compare '$title' ";
-            $sql .= "AND etd.authorId $compare '$student' ";
-            $sql .= "AND thesis.thesis_degree_discipline $compare '$department' ";
-            $sql .= ") ORDER BY dc.dc_title LIMIT 10";
-        }
-
-        $this->setSession('filter', $sql);
-
-        $offset = " OFFSET $start";
-
-        $data = $this->getArray($sqlNorm.$sql.$offset);
-
-        $count = $this->getArray($sqlCount.$sql);
-
-        return array($data, $count[0]['count']);
-    }
-
-    /**
-    * Method to return the total number of archived submissions
-    *
-    * @access publice
-    * @return int $count
-    */
-    function getCount()
-    {
-        $sql = 'SELECT count(*) AS cnt FROM '.$this->table;
-        $sql .= " WHERE submissionType = '".$this->subType."' and status = 'archived'";
-        
-        $data = $this->getArray($sql);
-        if(!empty($data)){
-            return $data[0]['cnt'];
-        }
-        return 0;
-    }    
 }
 ?>

@@ -48,7 +48,7 @@ class etdtools extends object
     /**
     * @var bool $hideHelp Boolean value determining whether to hide the help block on the right side
     */
-    private $access = 'user';
+    private $access = array('user');
 
     /**
     * Constructor method
@@ -67,7 +67,7 @@ class etdtools extends object
 
         $this->objBlocks = & $this->newObject('blocks', 'blocks');
         
-        $this->access = $this->getSession('accessLevel');
+        $this->access = $this->getSession('accessLevel', array());
     }
 
     /**
@@ -117,7 +117,7 @@ class etdtools extends object
         if(!$this->hideLinks){
             $str .= $this->objBlocks->showBlock('etdlinks', 'etd');
         }
-        if($this->access == 'manager'){
+        if(in_array('manager', $this->access) || in_array('editor', $this->access) || in_array('board', $this->access)){
             $str .= $this->objBlocks->showBlock('managemenu', 'etd');
         }
         if(!$this->hideHelp){
@@ -194,11 +194,8 @@ class etdtools extends object
     * @return string html
     */
     public function getCountriesDropdown($selected = 'South Africa')
-    {
-//        $objDrop = new dropdown('country');
-//        $objDrop->addFromDB($this->objCountries->getAll(' order by name'), 'printable_name', 'printable_name', $selected);
-        
-        return $this->objCountry->country();//$objDrop->show();
+    {   
+        return $this->objCountry->country();
     }
 
     /**
@@ -239,108 +236,6 @@ class etdtools extends object
         }
         $objDrop->setSelected($select);
         return $objDrop->show();
-    }
-
-
-
-/* ** Methods below from KINKY version - unused as of yet ** */
-
-    /**
-    * Method to create the Left Side Menu.
-    * @param string $accessLevel The level of access a user has.
-    */
-    function getLeftMenu($accessLevel)
-    {
-        $home = $this->objLanguage->languageText('mod_etd_etdhome');
-        $browse = $this->objLanguage->languageText('mod_etd_browse');
-        $collections = $this->objLanguage->languageText('mod_etd_collections');
-        $authors = $this->objLanguage->languageText('mod_etd_authors');
-        $titles = $this->objLanguage->languageText('mod_etd_titles');
-        $manageColl = $this->objLanguage->languageText('mod_etd_managecollections');
-        $managedETD = $this->objLanguage->languageText('mod_etd_manageetd');
-        $configETD = $this->objLanguage->languageText('mod_etd_configureetd');
-
-        $user = $this->objUser->fullName();
-
-        $str = '';
-
-        $this->objTable->init();
-        $this->objTable->cellpadding = 5;
-
-        // User name
-        $this->objHead->str = $user;
-        $this->objHead->type = 3;
-        $this->objTable->addRow(array('', $this->objHead->show(), ''));
-
-        // ETD home link
-        $objLink = new link($this->uri(''));
-        $objLink->link = $home;
-        $this->objTable->addRow(array('', $objLink->show(), ''));
-
-        // Browse label
-        $list = '<b>'.$browse.':</b><ul>';
-        $objLink = new link($this->uri(array('action'=>'browse_collection')));
-        $objLink->link = $collections;
-        $list .= '<li>'.$objLink->show().'</li>';
-        $objLink = new link($this->uri(array('action'=>'browse_author')));
-        $objLink->link = $authors;
-        $list .= '<li>'.$objLink->show().'</li>';
-        $objLink = new link($this->uri(array('action'=>'browse_title')));
-        $objLink->link = $titles;
-        $list .= '<li>'.$objLink->show().'</li>';
-        $list .= '</ul>';
-        $this->objTable->addRow(array('', $list, ''));
-
-        if($accessLevel >= 5){
-            // Manage collections link
-            $objLink = new link($this->uri(array('action'=>'managecollections')));
-            $objLink->link = $manageColl;
-            $this->objTable->addRow(array('', $objLink->show(), ''));
-
-            // Manage ETDs link
-            $objLink = new link($this->uri(array('action'=>'manageetd')));
-            $objLink->link = $managedETD;
-            $this->objTable->addRow(array('', $objLink->show(), ''));
-
-            // Configure ETD link
-            $objLink = new link($this->uri(array('action'=>'configureetd')));
-            $objLink->link = $configETD;
-            $this->objTable->addRow(array('', $objLink->show(), ''));
-        }
-
-        $str .= $this->objTable->show();
-
-        return $str;
-    }
-
-    /**
-    * Method to create the Right Side Menu.
-    *
-    function getRightMenu()
-    {
-        $intro = $this->objLanguage->languageText('mod_etd_intro');
-        $more = $this->objLanguage->languageText('mod_etd_more');
-        $intro = substr($intro, 0, 212);
-
-        $objLink = new link('javascript:void(0)');
-        $objLink->extra = "onclick=\"javascript:window.open('" .$this->uri(array('action'=>'showinfo'))."', 'etdinfo', 'width=450, height=300, scrollbars=1')\"";
-        $objLink->link = $more.'...';
-        $intro .= '<br>['.$objLink->show().']';
-
-        $str = '';
-        $str .= $this->objBlocks->showBlock('searchetd', 'etd');
-
-        $str .= '<p>'.$intro.'</p>';
-        return $str;
-    }
-
-    /**
-    * Method to create the Right Side Menu for the search template.
-    */
-    function getSearchRightMenu()
-    {
-        $str = '';
-        return $str;
     }
 }
 ?>

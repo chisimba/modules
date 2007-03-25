@@ -20,6 +20,7 @@ $objViewBrowse = $this->getObject( 'viewbrowse', 'etd' );
 $objViewBrowse->create($browseType);
 $objViewBrowse->setNumCols($num);
 $objViewBrowse->setAccess(FALSE);
+$objViewBrowse->useSortTable();
 
 // Show
 $objLayer = $this->newObject('layer', 'htmlelements');

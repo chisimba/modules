@@ -680,7 +680,7 @@ class viewBrowse extends object
         $tblResults = new htmltable();
         $tblResults->width = '100%';
         $tblResults->cellpadding = 5;
-        $tblResults->cellspacing = 2;
+        //$tblResults->cellspacing = 2;
 
         $oddEven = 'even';
         if(empty($this->data)) {
@@ -688,21 +688,25 @@ class viewBrowse extends object
         } else {
             // Check for sort table and reinitialise
             if($this->sortTable){
-                $tblResults = $this->objSortTable;
-                $tblResults->width = '100%';
+                $headerParams=$this->getJavascriptFile('new_sorttable.js','htmlelements');
+                $this->appendArrayVar('headerParams',$headerParams);
+    
+                $tblResults->id="newtable";
+                $tblResults->css_class="sorttable";
                 $tblResults->cellpadding = 5;
-                $tblResults->cellspacing = 2;
+                //$tblResults->cellspacing = '';
             }
 
-            $tblResults->startHeaderRow();
+            $tblResults->row_attributes = 'name="row_'.$tblResults->id.'"';
+            $tblResults->startRow();
                 for($i = 1; $i <= $this->numCols; $i++){
-                    $tblResults->addHeaderCell($this->header['col'.$i]);
+                    $tblResults->addCell($this->header['col'.$i],'', '','','heading');
                 }
-                $this->allowManage ? $tblResults->addHeaderCell('', '8%') : '';
-            $tblResults->endHeaderRow();
+                $this->allowManage ? $tblResults->addCell('', '8%', '','','heading') : '';
+            $tblResults->endRow();
 
             foreach( $this->data as $row ) {
-                $tblResults->row_attributes = "class =\"$oddEven\"";
+                $tblResults->row_attributes = "name='row_".$tblResults->id."' onmouseover=\"this.className='tbl_ruler';\" onmouseout=\"this.className='".$oddEven."'; \" class ='$oddEven'";
                 $tblResults->startRow();
                     $id = '';
                     if(isset($row['id'])){

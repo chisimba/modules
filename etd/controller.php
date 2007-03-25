@@ -47,6 +47,7 @@ class etd extends controller
             $this->submit = $this->getObject('submit', 'etd');
             $this->config = $this->getObject('configure', 'etd');
             $this->dbStats = $this->getObject('dbstatistics', 'etd');
+            $this->dbCitations = $this->getObject('dbcitations', 'etd');
             $this->dbThesis = $this->getObject('dbthesis');
             $this->dbThesis->setSubmitType('etd');
     
@@ -71,45 +72,6 @@ class etd extends controller
             throw customException($e->message());
             exit();
         }
-        
-        /*
-        $this->etdSubmit = $this->getObject('submit');
-        $this->dbSubmit = $this->getObject('dbsubmissions');
-        $this->dbThesisMeta = $this->getObject('dbthesis');
-        $this->dbFiles = $this->getObject('dbfiles');
-        $this->dbCollection = $this->getObject('dbcollection');
-        $this->dbCollectSubmit = $this->getObject('dbcollectsubmit');
-        $this->etdConfig = $this->getObject('configure');
-        $this->dbEtdConfig = $this->getObject('dbetdconfig');
-        $this->dbInstitute = $this->getObject('dbinstituteinfo');
-        $this->dbEmbargo = $this->getObject('dbembargo');
-        $this->xmlMetaData = $this->getObject('xmlmetadata');
-        $this->objKeyword = $this->getObject('keyword');
-
-        $this->objDate = $this->getObject('simplecal', 'datetime');
-        $this->objGroup = $this->getObject('groupadminmodel', 'groupadmin');
-        $this->objUser = $this->getObject('user', 'security');
-        $this->userId = $this->objUser->userId();
-        $this->userPkId = $this->objUser->PKId();
-
-        $this->objFile = $this->getObject('fileupload', 'filestore');
-        $this->objFile->changeTables('tbl_etd_filestore', 'tbl_etd_blob');
-
-        // Log this call if registered
-        $this->objModules = $this->newObject('modulesadmin','modulelist');
-        if(!$this->objModules->checkIfRegistered('logger', 'logger')){
-            //Get the activity logger class
-            $this->objLog=$this->newObject('logactivity', 'logger');
-            //Log this module call
-            $this->objLog->log();
-        }
-
-        // Get audit trail class
-        $this->objAudit = $this->getObject('audit_facet', 'audit');
-
-        // Determine the users access level
-        $this->accessLevel();
-        */
     }
 
     /**
@@ -121,17 +83,6 @@ class etd extends controller
     */
     public function dispatch($action)
     {
-        /*
-        // Access control for browse pages
-        $isManager = FALSE;
-
-        // unset keywords session
-        if($action != 'addkeywords' && $action != 'managekeywords'){
-            $this->unsetSession('keyForm');
-            $this->unsetSession('keyField');
-            $this->unsetSession('keyManage');
-        }
-        */
         $this->unsetSession('resourceId');
 
         switch($action){
@@ -143,9 +94,11 @@ class etd extends controller
                 $this->unsetSession('resource');
                 $metaId = $this->getParam('id');
                 $resource = $this->dbThesis->getMetadata($metaId);
-//                $files = $this->dbFiles->getFiles($etd['submitId']);
+                $citationList = $this->dbCitations->getList($resource['submitid']);
+                $metaTags = $this->etdResource->getMetadataTags($resource);
                 $this->setVarByRef('resource', $resource);
-//                $this->setVarByRef('files', $files);
+                $this->setVarByRef('citationList', $citationList);
+                $this->setVarByRef('metaTags', $metaTags);
                 $this->dbStats->recordVisit($metaId);
                 $this->setSession('resourceId', $metaId);
                 $leftSide = $this->objBlocks->showBlock('resourcemenu', 'etd');
@@ -712,7 +665,7 @@ class etd extends controller
     /**
     * Method to display the etd front page, depending on the access level of the user.
     */
-    function home()
+    private function home()
     {
         /*
         switch($this->accessLevel){
@@ -792,7 +745,7 @@ class etd extends controller
 
     /**
     * Method to display the reason for an embargo request or grant.
-    */
+    *
     function viewEmbargo()
     {
         $heading = $this->objLanguage->languageText('mod_etd_reason');
@@ -810,7 +763,7 @@ class etd extends controller
     /**
     * Method to display a form to add submissions to a given collection.
     * The method saves the submitting form information.
-    */
+    *
     function addTitleToCollection()
     {
         $save = $this->getParam('save', NULL);
@@ -835,7 +788,7 @@ class etd extends controller
 
     /**
     * Method to fetch an etd for managing.
-    */
+    *
     function fetchEtd()
     {
         $lbAuthor = $this->objLanguage->languageText('mod_etd_author');
@@ -879,7 +832,7 @@ class etd extends controller
 
     /**
     * Method to display pages for editing metadata
-    */
+    *
     function showEditPage()
     {
         $page = $this->getParam('page', 1);
@@ -918,7 +871,7 @@ class etd extends controller
     * (2) Metadata editors/catalogers - edit metadata.
     * (1) Users 1 - browse & submit.
     * (0) Users 2 - browse with restrictions on embargoed items.
-    */
+    *
     function accessLevel()
     {
         $groupId = $this->objGroup->getLeafId(array('etdAdmin'));
@@ -951,27 +904,40 @@ class etd extends controller
                     }
                 }
             }
-        }/*
-        $this->accessLevel = 4;*/
+        }
+        //$this->accessLevel = 4;
     }
+    */
     
     /**
-    * Temporary fix for context permissions
+    * Temporary fix for context permissions.
+    * The method builds an array of groups in which the user is a member. The group determines the users level of access in the site.
+    *
+    * @access private
+    * @return void
     */
-    function setGroupPermissions()
+    private function setGroupPermissions()
     {
         if($this->objUser->isLoggedIn()){
             $access = $this->getSession('accessLevel');
             if(!(isset($access) && !empty($access))){
-                $accessLevel = 'user';
+                $accessLevel = array();
+                $accessLevel[] = 'user';
                 $groupId = $this->objGroup->getLeafId(array('ETD Managers'));
                 if($this->objGroup->isGroupMember($this->userPkId, $groupId)){
-                    $accessLevel = 'manager';
-                }else{
-                    $groupId = $this->objGroup->getLeafId(array('Students'));
-                    if($this->objGroup->isGroupMember($this->userPkId, $groupId)){
-                        $accessLevel = 'student';
-                    }
+                    $accessLevel[] = 'manager';
+                }
+                $groupId = $this->objGroup->getLeafId(array('ETD Editors'));
+                if($this->objGroup->isGroupMember($this->userPkId, $groupId)){
+                    $accessLevel[] = 'editor';
+                }
+                $groupId = $this->objGroup->getLeafId(array('ETD Exam Board'));
+                if($this->objGroup->isGroupMember($this->userPkId, $groupId)){
+                    $accessLevel[] = 'board';
+                }
+                $groupId = $this->objGroup->getLeafId(array('Students'));
+                if($this->objGroup->isGroupMember($this->userPkId, $groupId)){
+                    $accessLevel[] = 'student';
                 }
                 $this->setSession('accessLevel', $accessLevel);
             }
@@ -981,8 +947,10 @@ class etd extends controller
     /**
     * Method to set login requirement to False
     * Required to be false. - will be extended to set the ction items where login is required
+    *
+    * @access public
     */
-    function requiresLogin($action)
+    public function requiresLogin($action)
     {
         switch($action){
             case 'viewauthor':

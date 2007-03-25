@@ -30,7 +30,7 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
-	'submissionId' => array(
+	'submissionid' => array(
 		'type' => 'text',
 		'length' => 32
 		),
@@ -81,7 +81,7 @@ $name = 'etd_embargoes_id';
 
 $indexes = array(
                 'fields' => array(
-                	'submissionId' => array()
+                	'submissionid' => array()
                 )
         );
 ?>

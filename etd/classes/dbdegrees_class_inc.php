@@ -72,10 +72,10 @@ class dbDegrees extends dbTable
     /**
     * Method to remove a degree / faculty from the list
     *
-    * @access private
+    * @access public
     * @return void
     */
-    private function deleteItem($id)
+    public function deleteItem($id)
     {
         $this->delete('id', $id);
     }

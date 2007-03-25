@@ -20,6 +20,12 @@ if (!$GLOBALS['kewl_entry_point_run']){
 class management extends object
 {
     /**
+    * @var array $access The users access level within the class - set in the controller according to the group in which the user is a member.
+    * @access private
+    */
+    private $access;
+    
+    /**
     * Constructor for the class
     *
     * @access public
@@ -36,6 +42,8 @@ class management extends object
             $this->dbThesis->setSubmitType('etd');
     
             $this->dbDegrees = $this->getObject('dbdegrees', 'etd');
+            $this->dbCitations = $this->getObject('dbcitations', 'etd');
+            $this->dbProcess = $this->getObject('dbprocess', 'etd');
             $this->etdTools = $this->getObject('etdtools', 'etd');
             $this->dbDublinCore = $this->getObject('dbdublincore', 'etd');
             $this->files = $this->getObject('etdfiles', 'etd');
@@ -64,6 +72,8 @@ class management extends object
     
             $this->userId = $this->objUser->userId();
             $this->fullName = $this->objUser->fullName();
+            
+            $this->access = $this->getSession('accessLevel', array());
         }catch(Exception $e){
             throw customException($e->message());
             exit();
@@ -102,7 +112,6 @@ class management extends object
             $hdArr[] = $hdAuthor;
             $hdArr[] = $hdStatus;
             $hdArr[] = $hdDate;
-            $hdArr[] = ' ';
 
             $objTable->addHeader($hdArr);
 
@@ -127,7 +136,6 @@ class management extends object
                 $arrRow[] = $author;
                 $arrRow[] = $item['status'];
                 $arrRow[] = $item['datecreated'];
-                $arrRow[] = '';
 
                 $objTable->addRow($arrRow, $class);
             }
@@ -137,10 +145,12 @@ class management extends object
 
         $str .= '<p>'.$objTable->show().'</p>';
 
-        // link to add a new submission
-        $objLink = new link($this->uri(array('action' => 'managesubmissions', 'mode' => 'addsubmission')));
-        $objLink->link = $lnSubmit;
-        $str .= '<p>'.$objLink->show().'</p>';
+        if(in_array('manager', $this->access) || in_array('editor', $this->access)){
+            // link to add a new submission
+            $objLink = new link($this->uri(array('action' => 'managesubmissions', 'mode' => 'addsubmission')));
+            $objLink->link = $lnSubmit;
+            $str .= '<p>'.$objLink->show().'</p>';
+        }
 
         return $str;
     }
@@ -853,19 +863,54 @@ class management extends object
         $lbInstitution = $this->objLanguage->languageText('word_institution');
         $confirmDel = $this->objLanguage->languageText('mod_etd_confirmdeleteresource', 'etd');
         $lbApprove = $this->objLanguage->languageText('mod_etd_approveaddrepository', 'etd');
+        $lbComplete = $this->objLanguage->languageText('mod_etd_completemetadata', 'etd');
+        $lbPass = $this->objLanguage->languageText('mod_etd_passresource', 'etd');
+        $lbCitation = $this->objLanguage->languageText('phrase_citationlist');
+        $lbEdit = $this->objLanguage->languageText('phrase_editmetadata');
 
         $icons = '&nbsp;&nbsp;';
-        $icons .= $this->objIcon->getEditIcon($this->uri(array('action' => 'managesubmissions', 'mode' => $editMode)));
-        $icons .= $this->objIcon->getDeleteIconWithConfirm('', array('action' => 'savesubmissions', 'mode' => $delMode, 'nextmode' => $nextMode, 'save' => 'true', 'dcMetaId' => $dcId, 'thesisId' => $thesisId),  'etd', $confirmDel);
         
-        if($editMode == 'editnewresource'){
-            // Approve for repository
-            $this->objIcon->setIcon('etdapproval');
-            $this->objIcon->title = $lbApprove;
-            $objLink = new link($this->uri(array('action' => 'savesubmissions', 'mode' => 'approve', 'save' => 'true')));
+        // Managers and metadata editors / cataloguers can edit
+        if(in_array('manager', $this->access) || in_array('editor', $this->access)){
+            $this->objIcon->setIcon('editmetadata');
+            $this->objIcon->title = $lbEdit;
+            $objLink = new link($this->uri(array('action' => 'managesubmissions', 'mode' => $editMode)));
             $objLink->link = $this->objIcon->show();
-            $objLink->title = $lbApprove;
             $icons .= $objLink->show();
+        }
+        
+        // Only managers can approve resources for the repository
+        // Each level approves the resource to move onto the next level
+        if($editMode == 'editnewresource'){
+            $icTitle = '';
+            $lnArr = '';
+            
+            if(in_array('board', $this->access)){ 
+                $icTitle = $lbPass;
+                $lnArr = array('action' => 'savesubmissions', 'mode' => 'approveboard', 'save' => 'true');
+            }
+
+            if(in_array('editor', $this->access)){ 
+                $icTitle = $lbComplete;
+                $lnArr = array('action' => 'savesubmissions', 'mode' => 'approvemetadata', 'save' => 'true');
+            }
+                       
+            if(in_array('manager', $this->access)){ 
+                $icTitle = $lbApprove;
+                $lnArr = array('action' => 'savesubmissions', 'mode' => 'approve', 'save' => 'true');
+            }
+            
+            $this->objIcon->setIcon('etdapproval');
+            $this->objIcon->title = $icTitle;
+            $objLink = new link($this->uri($lnArr));
+            $objLink->link = $this->objIcon->show();
+            $objLink->title = $icTitle;
+            $icons .= '&nbsp;'.$objLink->show();
+        }
+
+        // Only managers can delete resources
+        if(in_array('manager', $this->access)){
+            $icons .= '&nbsp;'.$this->objIcon->getDeleteIconWithConfirm('', array('action' => 'savesubmissions', 'mode' => $delMode, 'nextmode' => $nextMode, 'save' => 'true', 'dcMetaId' => $dcId, 'thesisId' => $thesisId),  'etd', $confirmDel);
         }
 
         $this->objHead->str = $head.$icons;
@@ -931,28 +976,9 @@ class management extends object
         $docStr = $this->showDocument($docMode);
         $str .= $this->objFeatureBox->show($lbDocument, $docStr);
 
-
-        // Display the references for the resource
-//        $refStr = $this->showReferences();
-//        $objTab = new tabbedbox();
-//        $objTab->addTabLabel($lbReferences);
-//        $objTab->addBoxContent($refStr);
-//        $str .= $objTab->show();
-
-        // Display the authors declaration on the document
-//        $decStr = $this->showDeclaration();
-//        $objTab = new tabbedbox();
-//        $objTab->addTabLabel($lbDeclaration);
-//        $objTab->addBoxContent($decStr);
-//        $str .= $objTab->show();
-
-        // Display the authors declaration on the document
-//        $this->objComment->set('sourceId', $submitId);
-//        $comStr = $this->objComment->showAll();
-//        $objTab = new tabbedbox();
-//        $objTab->addTabLabel($lbComments);
-//        $objTab->addBoxContent($comStr);
-//        $str .= $objTab->show();
+        // Display the citation list
+        $citationStr = $this->showCitationList($docMode);
+        $str .= $this->objFeatureBox->show($lbCitation, $citationStr);
 
         return $str.'<br />';
     }
@@ -1047,25 +1073,31 @@ class management extends object
             $objInput = new textinput('id', $data[0]['id'], 'hidden');
             $hidden = $objInput->show();
         }
-        $objInput = new textinput('submitId', $submitId, 'hidden');
-        $hidden .= $objInput->show();
-
-        // Section to upload a new / replace an existing document
-        $objLabel = new label($lbUpload.': ', 'input_fileupload');
-        $objInput = new textinput('fileupload', '', 'file', 60);
-
-        $objTable->addRow(array($objLabel->show(), $objInput->show()));
-
-        $objButton = new button('save', $btnUpload);
-        $objButton->setToSubmit();
-        $objTable->addRow(array('', $objButton->show()));
-
-        $objForm = new form('upload', $this->uri(array('action' => 'savesubmissions', 'mode' => 'uploaddoc', 'nextmode' => $nextMode)));
-        $objForm->extra = 'enctype="multipart/form-data"';
-        $objForm->addToForm($objTable->show());
-        $objForm->addToForm($hidden);
-
-        $str = $objForm->show();
+        
+        // Only managers can replace existing documents
+        if(in_array('manager', $this->access)){
+            $objInput = new textinput('submitId', $submitId, 'hidden');
+            $hidden .= $objInput->show();
+    
+            // Section to upload a new / replace an existing document
+            $objLabel = new label($lbUpload.': ', 'input_fileupload');
+            $objInput = new textinput('fileupload', '', 'file', 60);
+    
+            $objTable->addRow(array($objLabel->show(), $objInput->show()));
+    
+            $objButton = new button('save', $btnUpload);
+            $objButton->setToSubmit();
+            $objTable->addRow(array('', $objButton->show()));
+    
+            $objForm = new form('upload', $this->uri(array('action' => 'savesubmissions', 'mode' => 'uploaddoc', 'nextmode' => $nextMode)));
+            $objForm->extra = 'enctype="multipart/form-data"';
+            $objForm->addToForm($objTable->show());
+            $objForm->addToForm($hidden);
+    
+            $str = $objForm->show();
+        }else{
+            $str = $objTable->show();
+        }
 
 //        if($accessLevel == 'protected'){
 //            $inputValue = 'public';
@@ -1090,6 +1122,75 @@ class management extends object
 //        $str .= '<p style="padding-top:5px;">'.$objForm->show().'</p>';
 
         return $str;
+    }
+
+    /**
+    * Method to display the list of citations associated with a resource for adding / editing
+    *
+    * @access private
+    * @return string html
+    */
+    private function showCitationList($nextMode)
+    {
+        $submitId = $this->getSession('submitId');
+        $data = $this->dbCitations->getList($submitId);
+        $str = '';
+        
+        $lnUpdate = $this->objLanguage->languageText('phrase_updatecitationlist');
+        
+        if(in_array('manager', $this->access) || in_array('editor', $this->access)){
+            $objLink = new link($this->uri(array('action' => 'managesubmissions', 'mode' => 'updatecitation', 'nextmode' => $nextMode)));
+            $objLink->link = $lnUpdate;
+            $str = '<p>'.$objLink->show().'</p>';
+        }
+        
+        if(!empty($data) && !($data === FALSE)){
+            $str .= $data['citation_list'];
+        }
+        return $str;
+    }
+    
+    /**
+    * Method to display the citation list in a form for updating
+    *
+    * @access private
+    * @param array $data The citation list
+    * @return string html
+    */
+    private function editCitation($nextMode, $data = NULL)
+    {
+        $list = ''; $id = '';
+        if(!empty($data)){
+            $list = $data['citation_list'];
+            $id = $data['id'];
+        }
+        
+        $head = $this->objLanguage->languageText('phrase_updatecitationlist');
+        $btnSave = $this->objLanguage->languageText('word_save');
+        $btnCancel = $this->objLanguage->languageText('word_cancel');
+        
+        $this->objEditor->init('list', $list, '400px', '700px');
+        $this->objEditor->setBasicToolBar();
+        $formStr = $this->objEditor->showFCKEditor();
+                
+        $objButton = new button('save', $btnSave);
+        $objButton->setToSubmit();
+        $formStr .= '<p>'.$objButton->show().'&nbsp;&nbsp;&nbsp;';
+        
+        $objButton = new button('cancel', $btnCancel);
+        $objButton->setToSubmit();
+        $formStr .= $objButton->show().'</p>';
+        
+        if(!empty($id)){
+            $objInput = new textinput('id', $id, 'hidden');
+            $formStr .= $objInput->show();
+        }
+
+        $objForm = new form('updatelist', $this->uri(array('action' => 'savesubmissions', 'mode' => 'savecitation', 'nextmode' => $nextMode)));
+        $objForm->addToForm($formStr);
+        $str = $objForm->show();
+        
+        return $this->objFeatureBox->show($head, $str);
     }
 
     /**
@@ -1148,7 +1249,20 @@ class management extends object
                 $submitId = $this->getSession('submitId');
                 $this->approveResource($submitId);
                 break;
+                                
+            case 'approvemetadata':
+                $submitId = $this->getSession('submitId');
+                // Set the next level of submission - management
+                $this->dbSubmissions->changeApproval($submitId, $this->userId, 5, 'metadata', 'private');
+                break;
 
+            case 'approveboard':
+                $submitId = $this->getSession('submitId');
+                // Get the next level of submission - metadata editing / management
+                $nextStep = $this->dbProcess->getNextStep(3);
+                $this->dbSubmissions->changeApproval($submitId, $this->userId, $nextStep, 'metadata', 'private');
+                break;
+                
             case 'showresource':
                 $submitId = $this->getParam('submitId');
                 if(!isset($submitId) || empty($submitId)){
@@ -1181,6 +1295,20 @@ class management extends object
                 $result = $this->files->uploadFile($submitId, $id);
                 $this->setSession('resourceMsg', $result);
                 break;
+                
+            case 'updatecitation':
+                $submitId = $this->getSession('submitId');
+                $nextMode = $this->getParam('nextmode');
+                $data = $this->dbCitations->getList($submitId);
+                return $this->editCitation($nextMode, $data);
+                break;
+                
+            case 'savecitation':
+                $submitId = $this->getSession('submitId');
+                $id = $this->getParam('id');
+                $list = $this->getParam('list');
+                $this->dbCitations->addList($list, $submitId, $id);
+                break;
 
             case 'search':
                 $this->unsetSession('submitId');
@@ -1195,7 +1323,19 @@ class management extends object
 
             default:
                 $this->unsetSession('submitId');
-                $data = $this->dbSubmissions->getNewSubmissions();
+                $list = array();
+                // Get submissions by the users groups
+                if(in_array('manager', $this->access)){
+                    $list[] = '5';
+                }
+                if(in_array('editor', $this->access)){
+                    $list[] = '4';
+                }
+                if(in_array('board', $this->access)){
+                    $list[] = '3';
+                }
+                
+                $data = $this->dbSubmissions->getNewSubmissions($list);
                 return $this->showSubmissions($data);
         }
     }

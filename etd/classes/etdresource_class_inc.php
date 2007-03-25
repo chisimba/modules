@@ -92,5 +92,30 @@ class etdresource extends object
         
         return $this->objFeatureBox->showContent($headStr, $str);
     }
+    
+    /**
+    * Method that generates metadata tags for display in the resource.
+    *
+    * @access public
+    * @param array $data The resource metadata.
+    * @return string html
+    */
+    public function getMetadataTags($data)
+    {
+        if(!empty($data)){
+            $str = "\n<link rel='schema.DC' href='http://purl.org/dc/elements/1.1/' />\n";
+            
+            foreach($data as $key => $item){
+                $check = strpos($key, 'dc_');
+                $check2 = strpos($key, 'thesis_');
+                                
+                if($check !== FALSE || $check2 !== FALSE){
+                    $metaName = str_replace('_', '.', $key);
+                    $str .= "<meta name='{$metaName}' content='{$item}' />\n";
+                }
+            }
+        }
+        return $str;
+    }
 }
 ?>

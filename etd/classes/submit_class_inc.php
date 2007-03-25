@@ -41,6 +41,7 @@ class submit extends object
             $this->etdTools = $this->getObject('etdtools', 'etd');
             $this->dbEmbargo = $this->getObject('dbembargo', 'etd');
             $this->dbDegrees = $this->getObject('dbdegrees', 'etd');
+            $this->dbProcess = $this->getObject('dbprocess', 'etd');
             $this->dbCopyright = $this->getObject('dbcopyright', 'etd');
             $this->dbDublinCore = $this->getObject('dbdublincore', 'etd');
             $this->xmlMetadata = $this->getObject('xmlmetadata', 'etd');
@@ -738,19 +739,26 @@ class submit extends object
     {
         $submitId = $this->getSession('submitId');
         $data = $this->dbEmbargo->getEmbargoRequest($submitId);
-        $reason = ''; $period = '';
+        $reason = ''; $period = ''; $requested = FALSE;
         if(!empty($data)){
+            $requested = TRUE;
             $reason = $data['request'];
             $period = $data['period'];
         }
         
         $lbEmbargo = $this->objLanguage->languageText('mod_etd_requestembargoforperiod', 'etd');
+        $lbSubmitted = $this->objLanguage->languageText('mod_etd_embargorequestsubmit', 'etd');
         $lbReason = $this->objLanguage->languageText('word_reason');
         $lbPeriod = $this->objLanguage->languageText('word_period');
         $months = $this->objLanguage->languageText('word_months');
-        $btnRequest = $this->objLanguage->languageText('word_request');
+        $btnRequest = $this->objLanguage->languageText('phrase_saverequest');
+        $btnDelete = $this->objLanguage->languageText('phrase_deleterequest');
 
-        $str = '<p>'.$lbEmbargo.'</p>';
+        if($requested){
+            $str = '<p class="warning">'.$lbSubmitted.'</p>';
+        }else{
+            $str = '<p>'.$lbEmbargo.'</p>';
+        }
 
         $objLabel = new label($lbReason.': ', 'input_reason');
         $objText = new textarea('reason', $reason, '4', '100');
@@ -765,12 +773,18 @@ class submit extends object
         $objDrop->setSelected($period);
         $formStr .= '<p>'.$objLabel->show().'&nbsp;&nbsp;'.$objDrop->show().'</p>';
 
-
-        $objButton = new button('save', $btnRequest);
+        $objButton = new button('request', $btnRequest);
         $objButton->setToSubmit();
-        $formStr .= '<p>'.$objButton->show().'</p>';
+        $formStr .= '<p>'.$objButton->show();
+        
+        if($requested){
+            $objButton = new button('delete', $btnDelete);
+            $objButton->setToSubmit();
+            $formStr .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$objButton->show();
+        }
+        $formStr .= '</p>';
 
-        $objForm = new form('request', $this->uri(array('action' => 'savesubmit', 'mode' => 'embargo', 'nextmode' => 'showresource')));
+        $objForm = new form('request', $this->uri(array('action' => 'savesubmit', 'mode' => 'embargo', 'nextmode' => 'showresource', 'save' => 'save')));
         $objForm->addToForm($formStr);
         $str .= '<p>'.$objForm->show().'</p>';
 
@@ -801,16 +815,24 @@ class submit extends object
     }
 
     /**
-    * Method to display the copyright for acceptance
+    * Method to display the copyright for acceptance.
     *
     * @access private
+    * @param string $name The students name.
+    * @param string $degree The degree for which the thesis / resource has been submitted.
+    * @param string $department The department in which the degree was submitted.
     * @return string html
     */
-    private function showCopyright()
+    private function showCopyright($name, $degree, $department)
     {
         $btnAccept = $this->objLanguage->languageText('mod_etd_acceptconditions', 'etd');
 
+        // Get the copyright message and replace the student name, department and degree
         $copy = $this->dbCopyright->getCopyright('');
+        $copyright = $copy['copyright'];
+        $copyright = str_replace('[-studentname-]', $name, $copyright);
+        $copyright = str_replace('[-departmentname-]', $degree, $copyright);
+        $copyright = str_replace('[-degreename-]', $department, $copyright);
 
         if(!$copy){
             $email = $this->objConfig->getsiteEmail();
@@ -822,7 +844,7 @@ class submit extends object
             return $str;
         }
 
-        $str = $copy['copyright'];
+        $str = $copyright;
 
         $objButton = new button('save', $btnAccept);
         $objButton->setToSubmit();
@@ -888,16 +910,38 @@ class submit extends object
 
             case 'embargo':
                 $submitId = $this->getSession('submitId');
-                return $this->dbEmbargo->saveEmbargoRequest($submitId);
+                $request = $this->getParam('request');
+                $delete = $this->getParam('delete');
+                if(isset($request) && !empty($request)){
+                    return $this->dbEmbargo->saveEmbargoRequest($submitId);
+                }else if(isset($delete) && !empty($delete)){
+                    $data = $this->dbEmbargo->getEmbargoRequest($submitId);
+                    $id = $data['id'];
+                    return $this->dbEmbargo->removeEmbargo($id);
+                }
                 break;
 
             case 'copyright':
-                return $this->showCopyright();
+                $submitId = $this->getSession('submitId');
+                $xml = $this->xmlMetadata->openXML('etd_'.$submitId);
+                $name = $xml['metadata']['dublincore']['dc_creator'];
+                $degree = $xml['metadata']['thesis']['thesis_degree_name'];
+                $dept = $xml['metadata']['thesis']['thesis_degree_discipline'];
+                return $this->showCopyright($name, $degree, $dept);
                 break;
                 
             case 'accept':
                 $submitId = $this->getSession('submitId');
-                return $this->dbSubmissions->changeApproval($submitId, $this->userId, 3, 'metadata', 'private');
+                // Get the next level of submission - examination / metadata editing / management / etc
+                $nextStep = $this->dbProcess->getNextStep(0);
+                $status = 'pending';
+                if($nextStep > 3){
+                    $status = 'metadata';
+                }
+                // Update the level of submission
+                $this->dbSubmissions->changeApproval($submitId, $this->userId, $nextStep, $status, 'private');
+                // Send alert email
+                //$this->
                 break;
 
             default:
