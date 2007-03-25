@@ -27,10 +27,10 @@ class dbuserstats extends dbTable
     function getTotalCountries()
     {
         $sql="SELECT COUNT(DISTINCT(country)) 
-          AS TotalCountries
+          AS totalcountries
           FROM tbl_users";
         $ar = $this->getArray($sql);
-        return $ar[0]['TotalCountries'];
+        return $ar[0]['totalcountries'];
     }
     
     /**
@@ -58,8 +58,8 @@ class dbuserstats extends dbTable
         $str = '&nbsp;&nbsp;&nbsp;';
         foreach ($ar as $line) {
             $str .= " <img src=\""
-              . $objFlags->getCountryFlag($line['countryCode'])
-              . "\" alt=\"" . $line['countryCode'] . "\" /> ";
+              . $objFlags->getCountryFlag($line['countrycode'])
+              . "\" alt=\"" . $line['countrycode'] . "\" /> ";
         }
         return $str;
     }

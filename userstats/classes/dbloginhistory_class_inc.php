@@ -46,18 +46,18 @@ class dbloginhistory extends dbTable
     */
     function getTotalLogins()
     {
-        $sql="SELECT COUNT(userid) AS TotalLogins 
+        $sql="SELECT COUNT(userid) AS totallogins 
           FROM tbl_userloginhistory";
         $ar = $this->getArray($sql);
-        return $ar[0]['TotalLogins'];
+        return $ar[0]['totallogins'];
     }
     
     function getUniqueLogins()
     {
         $sql="SELECT COUNT(DISTINCT(userid)) 
-          AS UniqueLogins FROM tbl_userloginhistory";
+          AS uniquelogins FROM tbl_userloginhistory";
         $ar = $this->getArray($sql);
-        return $ar[0]['UniqueLogins'];
+        return $ar[0]['uniquelogins'];
     }
     
 }  #end of class
