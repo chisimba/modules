@@ -35,7 +35,7 @@ if(!empty($rss))
 		$timenow = time();
 		if(($timenow - $feeds['rsstime']) > 43200)
 		{
-			$url = $feeds['url'];
+			$url = htmlentities($feeds['url']);
 		}
 		else {
 			$url = $feeds['rsscache'];
