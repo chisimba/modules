@@ -457,11 +457,19 @@ class dbblog extends dbTable
 	 * @param integer $userid
 	 * @return array
 	 */
-	public function getLastPosts($num = 10)
+	public function getLastPosts($num = 10, $userid = FALSE)
 	{
-		$this->_changeTable('tbl_blog_posts');
-		$filter = "ORDER BY post_ts DESC LIMIT {$num}";
-		$posts = $this->getAll($filter);
+		if($userid == FALSE)
+		{
+			$this->_changeTable('tbl_blog_posts');
+			$filter = "ORDER BY post_ts DESC LIMIT {$num}";
+			$posts = $this->getAll($filter);
+		}
+		else {
+			$this->_changeTable('tbl_blog_posts');
+			$filter = "WHERE userid = '$userid' ORDER BY post_ts DESC LIMIT {$num}";
+			$posts = $this->getAll($filter);
+		}
 		
 		return $posts;
 	}

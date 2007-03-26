@@ -283,7 +283,7 @@ class blog extends controller
                 $posts = $this->objDbBlog->getPostsMonthly(time(), $userid);
                 if(count($posts) < 2)
                 {
-                	$posts = $this->objDbBlog->getLastPosts(10);
+                	$posts = $this->objDbBlog->getLastPosts(10, $userid);
                 }
                 //$posts = $this->objDbBlog->getAllPosts($userid, 0); //$catid = NULL);
                 //get the sticky posts too
@@ -874,7 +874,7 @@ class blog extends controller
                     $posts = $this->objDbBlog->getPostsMonthly(time(), $userid);
                		if(count($posts) < 2)
                 	{
-                		$posts = $this->objDbBlog->getLastPosts(10);
+                		$posts = $this->objDbBlog->getLastPosts(10, $userid);
                 	}
                     //$posts = $this->objDbBlog->getAllPosts($userid, 0);//getAbsAllPostsNoDrafts($userid);
                 }
