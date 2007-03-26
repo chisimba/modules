@@ -308,7 +308,7 @@ $v = "Grade";
   *display content to screen -- add to form
   */
     
-$objForm = new form('studedudata',$this->uri(array('action'=>'studentdetailsoutput')));
+$objForm = new form('studedudata',$this->uri(array('action'=>'showsportpage')));
 $objForm->displayType = 3;
 $objForm->addToForm($content . '<br/>'.$myTable->show());
 $objForm->addRule('gradeval','Please select school grade','required');

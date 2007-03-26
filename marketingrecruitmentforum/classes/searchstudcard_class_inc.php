@@ -1938,23 +1938,27 @@ public  function searchID($idsearch){
                           $dateEntered  = date("d-M-Y", strtotime($entrydateval));
                           $dob  = date("d-M-Y", strtotime($idsearch[$i]->DOB));
                           
-                           if($idsearch[$i]->EXEMPTION == 1){
+                          if($idsearch[$i]->EXEMPTION == 1){
                                 $exemptionval = 'YES';
-                          }else{
+                          }elseif($idsearch[$i]->EXEMPTION == 0){
                                 $exemptionval = 'NO';
+                          }else{
+                                $exemptionval = 'Null';
                           }
                 
-                        if($idsearch[$i]->RESIDENCE== 1){
-                              $residence = 'YES';
+                          if($idsearch[$i]->RESIDENCE == 1){
+                                $residence = 'YES';
                           }else{
-                              $residence = 'NO';
-                        }
+                                $residence = 'NO';
+                          }
                         
                           if($idsearch[$i]->SDCASE == 1){
                               $sdvalues = 'YES';
-                          }else{
+                          }elseif($idsearch[$i]->SDCASE == 0){
                               $sdvalues = 'NO';
-                          }    
+                          }else{
+                              $sdvalues = 'Null';
+                          }  
                           
                            $idno  = $this->getSession('idno');
                            $firstname = $this->getSession('firstname');
@@ -2155,11 +2159,35 @@ public  function searchID($idsearch){
                             $myTable->row_attributes = " class = \"$oddOrEven\"";
                             $rowcount++;
                             $myTable->endRow();
+                            
+                            $myTable->startRow();
+                            (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                            $myTable->addCell("Participated in sports","15%", null, "left",$oddOrEven);
+                            $myTable->addCell($idsearch[$i]->SPORTPART,"15%", null, "left",$oddOrEven);
+                            $myTable->row_attributes = " class = \"$oddOrEven\"";
+                            $rowcount++;
+                            $myTable->endRow();
                           
                             $myTable->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                            $myTable->addCell("Course 1st choice","15%", null, "left",$oddOrEven);
-                            $myTable->addCell($idsearch[$i]->COURSE,"15%", null, "left",$oddOrEven);
+                            $myTable->addCell("Leadership Position(s)","15%", null, "left",$oddOrEven);
+                            $myTable->addCell($idsearch[$i]->LEADERSHIPPOS,"15%", null, "left",$oddOrEven);
+                            $myTable->row_attributes = " class = \"$oddOrEven\"";
+                            $rowcount++;
+                            $myTable->endRow();
+                            
+                            $myTable->startRow();
+                            (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                            $myTable->addCell("Sport code(s)","15%", null, "left",$oddOrEven);
+                            $myTable->addCell($idsearch[$i]->SPORTCODE,"15%", null, "left",$oddOrEven);
+                            $myTable->row_attributes = " class = \"$oddOrEven\"";
+                            $rowcount++;
+                            $myTable->endRow();
+                            
+                            $myTable->startRow();
+                            (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                            $myTable->addCell("Apply for sport bursary","15%", null, "left",$oddOrEven);
+                            $myTable->addCell($idsearch[$i]->SPORTBURSARY,"15%", null, "left",$oddOrEven);
                             $myTable->row_attributes = " class = \"$oddOrEven\"";
                             $rowcount++;
                             $myTable->endRow();
@@ -2196,7 +2224,7 @@ public  function searchID($idsearch){
                             $rowcount++;
                             $myTable->endRow();
                             
-                           /* $myTable->startRow();
+                            $myTable->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                             $myTable->addCell('Exemption',"15%", null, "left",$oddOrEven);
                             $myTable->addCell($exemptionval,"15%", null, "left",$oddOrEven);
@@ -2210,7 +2238,7 @@ public  function searchID($idsearch){
                             $myTable->addCell($sdvalues,"15%", null, "left",$oddOrEven);
                             $myTable->row_attributes = " class = \"$oddOrEven\"";
                             $rowcount++;
-                            $myTable->endRow();*/
+                            $myTable->endRow();
                              
                             $myTable->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';

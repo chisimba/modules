@@ -721,19 +721,15 @@
            
                if($sdval == '1'){
                   $result = 'YES';
-               }elseif($sdval == '0'){
-                  $result = 'NO';
                }else{
-                  $result = 'Null';
+                  $result = 'NO';
                }
                
                
                if($exemp == '1'){
                  $val = 'YES';
-               }elseif($exemp == '0'){
-                 $val = 'NO';
                }else{
-                 $val = 'Null';
+                 $val = 'NO';
                }
                    
                 if($res == '1'){
@@ -765,7 +761,7 @@
                     $rowcount++;
                     $objTableinfo->endRow();
                     
-                   /* $objTableinfo->startRow();
+                    $objTableinfo->startRow();
                     (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                     $objTableinfo->addCell('Exemption',"15%", null, "left",$oddOrEven);
                     $objTableinfo->addCell($val,"15%", null, "left",$oddOrEven);
@@ -779,7 +775,7 @@
                     $objTableinfo->addCell($result,"15%", null, "left",$oddOrEven);
                     $objTableinfo->row_attributes = " class = \"$oddOrEven\"";
                     $rowcount++;
-                    $objTableinfo->endRow();*/
+                    $objTableinfo->endRow();
                     
               }
       }else{
@@ -789,21 +785,24 @@
                $exemp = $idsearch[$i]->EXEMPTION;
                $sdval = $idsearch[$i]->SDCASE;
                $res   = $idsearch[$i]->RESIDENCE;
-           
-           
+               
                if($sdval == '1'){
                   $result = 'YES';
-               }else{
+               }elseif($sdval == '0'){
                   $result = 'NO';
+               }else{
+                  $result = 'Null';
                }
                
                
                if($exemp == '1'){
                  $val = 'YES';
-               }else{
+               }elseif($exemp == '0'){
                  $val = 'NO';
-               }
-                   
+               }else{
+                 $val = 'Null';
+               }      
+               
                 if($res == '1'){
                   $resval = 'YES';
                 }else{
@@ -835,7 +834,7 @@
                     $rowcount++;
                     $objTableinfo->endRow();
                     
-                   /* $objTableinfo->startRow();
+                    $objTableinfo->startRow();
                     (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                     $objTableinfo->addCell('Exemption',"15%", null, "left",$oddOrEven);
                     $objTableinfo->addCell($val,"15%", null, "left",$oddOrEven);
@@ -849,7 +848,7 @@
                     $objTableinfo->addCell($result,"15%", null, "left",$oddOrEven);
                     $objTableinfo->row_attributes = " class = \"$oddOrEven\"";
                     $rowcount++;
-                    $objTableinfo->endRow();*/            
+                    $objTableinfo->endRow();            
             }   
         } 
      }                

@@ -133,9 +133,12 @@ function dispatch($action)
                       return "noaccess_tpl.php";
                 }
                 $idnumber  = $this->getParam('idnumber');
-                //var_dump($idnumber);
                 $firstname = ucfirst($this->getParam('firstname'));
-                $lastname  = ucfirst($this->getParam('lastname'));
+                $lastname = ucfirst($this->getParam('lastname'));
+                
+                //$firstname = ucfirst($f);
+               // var_dump($firstname);
+                //$lastname = ucfirst($l); 
                 $this->setSession('idno',$idnumber);
                 $this->setSession('name',$firstname);
                 $this->setSession('surname',$lastname);
@@ -222,21 +225,32 @@ function dispatch($action)
             break;
             
             case  'showoutput':
-               if (!$this->objSemsSecurity->inGroup('MRSF Student View')) {
+               if($this->objSemsSecurity->inGroup('MRSF Full')) {
+                      $changeIDnumber = $this->getParam('studentidnumber');
+                      $this->setSession('changeIDnumber',$changeIDnumber);
+                      $this->getStudentDetails();
+                      return "mrfstudentdetailsdboutput_tpl.php";
+                }elseif($this->objSemsSecurity->inGroup('MRSF Student View')) {
+                      $changeIDnumber = $this->getParam('studentidnumber');
+                      $this->setSession('changeIDnumber',$changeIDnumber);
+                      $this->getStudentDetails();
+                      return  'studentdetailsdboutput_tpl.php';
+                }else{
                       return "noaccess_tpl.php";
                 }
-                $changeIDnumber = $this->getParam('studentidnumber');
-                $this->setSession('changeIDnumber',$changeIDnumber);
-                $this->getStudentDetails();
-                return  'studentdetailsdboutput_tpl.php';
+                
             break;
             
             case 'showeditsubjectoutput' :
-                if (!$this->objSemsSecurity->inGroup('MRSF Student View')) {
+                if($this->objSemsSecurity->inGroup('MRSF Student View')) {
+                      $this->getStudSubjInfo();
+                      return  'studentdetailsdboutput_tpl.php';
+                }elseif($this->objSemsSecurity->inGroup('MRSF Full')) {
+                    $this->getStudSubjInfo();
+                    return  'mrfstudentdetailsdboutput_tpl.php';
+                }else{
                       return "noaccess_tpl.php";
                 }
-                $this->getStudSubjInfo();
-                return  'studentdetailsdboutput_tpl.php';
             break; 
             
             case  'showschooloutput':
@@ -258,10 +272,9 @@ function dispatch($action)
             case  'showdboutput':
               if($this->objSemsSecurity->inGroup('MRSF Full')) {
                   $this->studentInfoDetails();
-                  return  'studentdetailsdboutput_tpl.php';
+                  return  'mrfstudentdetailsdboutput_tpl.php';
               }elseif($this->objSemsSecurity->inGroup('MRSF Student View')) {
                         $d = $this->getParam('moreinfo');
-                        //var_dump($d);die;
                         $this->studentInfoDetails();
                         return  'studdatacapoutput_tpl.php';
               }else{
@@ -271,11 +284,15 @@ function dispatch($action)
             break;
             
             case  'showeditedinfooutput':
-                if (!$this->objSemsSecurity->inGroup('MRSF Student View')) {
+                if ($this->objSemsSecurity->inGroup('MRSF Student View')) {
+                      $this->getFacAndCrse();
+                      return  'studentdetailsdboutput_tpl.php';
+                }elseif($this->objSemsSecurity->inGroup('MRSF Full')) {
+                      $this->getFacAndCrse();
+                      return  'mrfstudentdetailsdboutput_tpl.php';
+                }else{
                       return "noaccess_tpl.php";
                 }
-                $this->getFacAndCrse();
-               return  'studentdetailsdboutput_tpl.php';
             break;
 //edit links to each studcard section            
             case  'editstudcard':
@@ -290,6 +307,13 @@ function dispatch($action)
                       return "noaccess_tpl.php";
                 }
                 return  'editstudsubjects_tpl.php';
+            break;
+            
+            case  'editsport':
+                if (!$this->objSemsSecurity->inGroup('MRSF Student View')) {
+                      return "noaccess_tpl.php";
+                }
+                return  'sportsedit_tpl.php';
             break;
             
             case  'editfacultycrse':
@@ -380,7 +404,7 @@ function dispatch($action)
               if(!empty($studcarddata) && ($studcarddata[0] != NULL)){  
                       foreach($studcarddata as $resdata){
                             $createdby  = ucfirst($username);
-                            $datecreate = date('Y-m-d');
+                            $datecreate = date('d-m-Y');
                             $date = $resdata['date'];
                             $studentidnumber  = $idsearch; // CHANGE TO SESSION IDNUMBER captured when capturing personal details $this->getSession('changeIDnumber'); HOW
                             $surname  = ucfirst($resdata['surname']);
@@ -470,6 +494,37 @@ function dispatch($action)
                   
                   }
         }
+        //sport info 
+        $studssportinfo [] =  $this->getSession('sportdata');
+          if(!empty($studssportinfo) && ($studssportinfo[0] != NULL)){
+                     foreach($studssportinfo as $sess){
+                            
+                             $sportCode = '';
+                             $sportC [] = $sess['sportCode'];
+                             foreach($sportC[0] as $sesssport){
+                               $sportCode .= $sesssport .';';
+                             }
+                    
+                            $achievlevel = '';
+                            $achievmentlevel [] = $sess['achievlevel'];
+                            foreach($achievmentlevel[0] as $sessachiev){
+                                 $achievlevel .= $sessachiev .';';
+                            } 
+                             $sportPart = $sess['sportPart']; 
+                             $leadershipPos = ucfirst($sess['leadershipPos']);
+                            // $sportCode = ucfirst($val);
+                            // $achievlevel = ucfirst($value);
+                             $sportBursary = ucfirst($sess['sportBursary']);
+                     }       
+         }elseif(!empty($idexist)){
+                  for($i=0; $i< count($idexist); $i++){
+                             $sportPart =$idexist[$i]->SPORTPART; 
+                             $leadershipPos = ucfirst($idexist[$i]->LEADERSHIPPOS);
+                             $sportCode = ucfirst($idexist[$i]->SPORTCODE);
+                             $achievlevel = ucfirst($idexist[$i]->ACHIEVELEVEL);
+                             $sportBursary = ucfirst($idexist[$i]->SPORTBURSARY);
+                  }
+        }
         //course and faculty info
         $studfacdetails []  = $this->getSession('studentfaccrse');
         if(!empty($studfacdetails) && ($studfacdetails[0] != NULL)){
@@ -510,31 +565,17 @@ function dispatch($action)
                             $sdcase = ucfirst($idexist[$i]->SDCASE);
                   }
        }
-               //more info details   
-                      /**
-                       *get student details with matching id no
-                       *if student exist, update student details with data in session variable
-                       *else insert data in session variable into db                                                                    
-                       */   
-                  //    $firstname  = $this->getSession('name');
-                  //    $lastname = $this->getSession('surname');
-                  //    $idsearch = $this->getSession('idno');                   
-                  //    $idexist  = $this->dbstudentcard->getstudbyid($idsearch, $field = 'IDNUMBER', $firstname, $field2 = 'NAME', $lastname, $field3 = 'SURNAME', $start = 0, $limit = 0);
-       if(!empty($idexist)){
+      if(!empty($idexist)){
                           if(!empty($newIDNum)){
                               $latestID = $newIDNum;
                           }else{
                               $latestID = $studentidnumber;
                           }         
-                          $this->dbstudentcard->updatestudinfo($createdby,$datecreate,$idsearch,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$grade,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$latestID,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation);
+                          $this->dbstudentcard->updatestudinfo($createdby,$datecreate,$idsearch,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$grade,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$latestID,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$sportPart,$leadershipPos,$sportCode,$achievlevel,$sportBursary);
                           
-        }elseif($studcarddata[0]!= NULL && $studsubjectdetail[0] != NULL && $studfacdetails[0] != NULL && $studmoreinfo[0] != NULL ){
-                  $this->dbstudentcard->addstudcard($createdby,$datecreate,$idsearch,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$grade,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$keys = NULL);
+        }elseif($studcarddata[0]!= NULL && $studsubjectdetail[0] != NULL && $studssportinfo [0] != NULL && $studfacdetails[0] != NULL && $studmoreinfo[0] != NULL ){
+                  $this->dbstudentcard->addstudcard($createdby,$datecreate,$idsearch,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$grade,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$sportPart,$leadershipPos,$sportCode,$achievlevel,$sportBursary,$keys = NULL);
         }
-        //            }
-                           
-       //       }
-              // }
                   $this->unsetSession('idno');
                   $this->unsetSession('studentdata');
                   $this->unsetSession('studentdetails');
@@ -605,26 +646,6 @@ function dispatch($action)
                      if(!empty($namefound)){
                              $this->dbschoollist->updateschoollist($createdby,$datecreate,$schname,$schooladdress,$scharea,$schprovince,$txttelcode,$telnumber,$txtfaxcode,$faxnumber,$email,$principal,$guidanceteacher,$principalemailaddy,$principalcellno,$guidanceteacheamil,$guidanceteachcellno,$schcodeval);
                      }else{
-                         /* foreach($schoolinfodata as $data){  
-                                $createdby  =   ucfirst($data['createdby']);
-                                $datecreate =   $data['datecreated'];
-                                $schnameval  =  ucfirst($data['schoolname']);
-                                $schooladdress    =  ucfirst($data['schooladdress']);
-                                $scharea          =  ucfirst($data['area']);
-                                $schprovince      =  ucfirst($data['province']);
-                                $telnumber        =  ucfirst($data['telnumber']);
-                                $faxnumber        =  ucfirst($data['faxnumber']);
-                                $email            =  ucfirst($data['email']);
-                                $principal        =  ucfirst($data['principal']);
-                                $guidanceteacher  =  ucfirst($data['guidanceteacher']); 
-                                $guidanceteacher  =  ucfirst($data['guidanceteacher']);
-                                $principalemailaddy = ucfirst($data['principalemail']);
-                                $principalcellno  =  ucfirst($data['principalCellno']);
-                                $guidanceteacheamil = ucfirst($data['guidanceteachemail']);
-                                $guidanceteachcellno  = ucfirst($data['guidanceteachcellno']);
-                                $schcodeval =     $data['schoolcode'];    
-                          }*/
-                      
                           if(!empty($schname)){
                               $namevalue = $schname;
                           }else{
@@ -811,13 +832,60 @@ function dispatch($action)
                 return 'addressgen_tpl.php';
            break;
           
-          case 'studentdetailsoutput':
+          case 'showsportpage':
               if (!$this->objSemsSecurity->inGroup('MRSF Student View')) {
                   return "noaccess_tpl.php";    
               }
               $this->getStudSubjInfo();
-              return 'studentfaccrse_tpl.php';
-           break;
+              return 'sports_tpl.php';
+              
+          break;
+          
+          case 'studentdetailsoutput':
+              if (!$this->objSemsSecurity->inGroup('MRSF Student View')) {
+                  return "noaccess_tpl.php";    
+              }
+              /*$leadership = $this->getParam('listB');
+             //VAR_DUMP($leadership);
+              $sportcodeval = $this->getParam('listC');
+              $sportPart = $this->getParam('sportParticipated');
+              $next  = $this->getParam('next');
+           
+              if(isset($leadership) || isset($sportcode)){
+                $this->setVarByRef('leadership',$leadership);
+                $this->setVarByRef('sportcodeval',$sportcodeval);
+                return 'sports_tpl.php';
+              }else{*/
+                $this->getSportValues();
+               return 'studentfaccrse_tpl.php'; 
+              //}
+          break;
+          
+          case 'sportoutputshow':
+              if ($this->objSemsSecurity->inGroup('MRSF Student View')) {
+                  $leadership = $this->getParam('listB');
+                  $sportcode = $this->getParam('listC');
+                  $sportPart = $this->getParam('sportParticipated');
+                  $next  = $this->getParam('next');
+           
+                  if(isset($leadership)){
+                    $this->setVarByRef('leadership',$leadership);
+                    return 'sports_tpl.php';
+                  }elseif(isset($sportcode)){
+                    $this->setVarByRef('sportcode',$sportcode);
+                    return 'sports_tpl.php';
+                  }else{
+                    $this->getSportValues();
+                   return 'studentdetailsdboutput_tpl.php'; 
+                  }        
+              }elseif($this->objSemsSecurity->inGroup('MRSF Full')){
+                  $this->getSportValues();
+                  return 'mrfstudentdetailsdboutput_tpl.php';
+              }else{
+                  return "noaccess_tpl.php";
+              }
+              
+          break;
           
           case 'studentfinal':
             if (!$this->objSemsSecurity->inGroup('MRSF Student View')) {
@@ -826,12 +894,6 @@ function dispatch($action)
             $facultylist  = ' ';
             $facultylist  = $this->getParam('faculty');
             $faculty2ndchoice  = $this->getParam('faculty2nd');
-            //$course1    = $this->getParam('course');
-            //$course2    = $this->getParam('course2nd');
-            /*var_dump($course1);
-            var_dump($course2);*/
-            //$this->setSession('course1',$course1);
-            //$this->setSession('course2',$course2);
             $this->setSession('facultylist',$facultylist);
             $this->setSession('faculty2ndchoice',$faculty2ndchoice);
             $this->setVarByRef('facultylist',$facultylist);
@@ -846,12 +908,6 @@ function dispatch($action)
             $facultylist  = ' ';
             $facultylist  = $this->getParam('faculty');
             $faculty2ndchoice  = $this->getParam('faculty2nd');
-            //$course1    = $this->getParam('course');
-            //$course2    = $this->getParam('course2nd');
-            /*var_dump($course1);
-            var_dump($course2);*/
-            //$this->setSession('course1',$course1);
-            //$this->setSession('course2',$course2);
             $this->setSession('facultylist',$facultylist);
             $this->setSession('faculty2ndchoice',$faculty2ndchoice);
             $this->setVarByRef('facultylist',$facultylist);
@@ -869,6 +925,25 @@ function dispatch($action)
               }else{
                       return 'noaccess_tpl.php';    
               }
+           break;
+           
+           /*case 'sportdetails':
+           $leadership = $this->getParam('listB');
+           $sportcode = $this->getParam('listC');
+           $sportPart = $this->getParam('sportParticipated');
+           $next  = $this->getParam('next');
+           
+           if(isset($leadership)){
+               $this->setVarByRef('leadership',$leadership);
+               return 'sports_tpl.php';
+           }elseif(isset($sportcode)){
+               $this->setVarByRef('sportcode',$sportcode);
+               return 'sports_tpl.php';
+           }else{
+               $this->getSportValues();
+               return '?_tpl.php'; //nxtPg 
+           }*/
+           
            break;
             
            default:
@@ -960,6 +1035,32 @@ function dispatch($action)
           );
           $this->setSession('studentfaccrse',$studentfaccrse);
   }
+  
+  
+  private function getSportValues(){
+          $sportPart  = $this->getParam('sportParticipated');
+          $leadership = $this->getParam('listB');
+          
+          if($sportPart == 'Yes'){
+              $sportPval  = 'Yes';
+          }else{
+              $sportPval  = 'No';
+          }
+          
+          if($leadership == 'Yes'){
+              $leadershipval  = 'Yes';
+          }else{
+              $leadershipval  = 'No';
+          }
+          $sportdata      = array('sportPart'       =>  $sportPval,
+                                  'leadershipPos'   =>  $leadershipval,  
+                                  'sportCode'       =>  $this->getParam('listC'),
+                                  'achievlevel'     =>  $this->getParam('listA'),
+                                  'sportBursary'    =>  $this->getParam('sportBursary'),   
+          );
+          $this->setSession('sportdata',$sportdata);
+  
+  }
    
   private function studentInfoDetails(){
            $exemp = $this->getParam('exemptionqualification');
@@ -972,15 +1073,19 @@ function dispatch($action)
            
            if($sdval == '1'){
               $result = 1;
-           }else{
+           }elseif($sdval = '2'){
               $result = 0;
+           }else{
+              $result = 'NULL';
            }
            
            
            if($exemp == '1'){
              $val = 1;
-           }else{
+           }elseif($exemp = '2'){
              $val = 0;
+           }else{
+             $val = 'NULL';
            }
            
            if($res == '1'){

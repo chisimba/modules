@@ -80,6 +80,9 @@
     $editSubjects = new link($this->uri(array('action' => 'editsubjects', 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit')));
     $editSubjects->link = 'Edit';
     
+    $editSport = new link($this->uri(array('action' => 'editsport', 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit')));
+    $editSport->link = 'Edit';
+        
     $editFacultyCrse = new link($this->uri(array('action' => 'editfacultycrse', 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit')));
     $editFacultyCrse->link = 'Edit';
     
@@ -311,6 +314,59 @@ if(!empty($idsearch)){
           }
 }
 /*----------------------------------------------------------------------------------------*/
+if(!empty($idsearch)){
+                for($i=0; $i< count($idsearch); $i++){
+                        $rowcount = 0;
+                
+                    $objTablesport =& $this->newObject('htmltable', 'htmlelements');  
+                    $objTablesport->cellspacing = '2';
+                    $objTablesport->cellpadding = '2';
+                    $objTablesport->cellwidth = '10';
+                    $objTablesport->border='0';
+                    $objTablesport->width = '70%';       
+                 
+                    $objTablesport->startRow();
+                    (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                    $objTablesport->addCell('Sport Participation',"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell(strtoupper($idsearch[$i]->SPORTPART),"15%", null, "left",$oddOrEven);
+                    $objTablesport->row_attributes = " class = \"$oddOrEven\"";
+                    $rowcount++;
+                    $objTablesport->endRow();
+                    
+                    $objTablesport->startRow();
+                    (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                    $objTablesport->addCell('Leadership position(s)',"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell(strtoupper($idsearch[$i]->LEADERSHIPPOS),"15%", null, "left",$oddOrEven);
+                    $objTablesport->row_attributes = " class = \"$oddOrEven\"";
+                    $rowcount++;
+                    $objTablesport->endRow();
+                    
+                    $objTablesport->startRow();
+                    (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                    $objTablesport->addCell('Sport code(s)',"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell(strtoupper($idsearch[$i]->SPORTCODE),"15%", null, "left",$oddOrEven);
+                    $objTablesport->row_attributes = " class = \"$oddOrEven\"";
+                    $rowcount++;
+                    $objTablesport->endRow();   
+                                     
+                    $objTablesport->startRow();
+                    (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                    $objTablesport->addCell('Achievement level',"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell(strtoupper($idsearch[$i]->ACHIEVELEVEL),"15%", null, "left",$oddOrEven);
+                    $objTablesport->row_attributes = " class = \"$oddOrEven\"";
+                    $rowcount++;
+                    $objTablesport->endRow();
+                    
+                    $objTablesport->startRow();
+                    (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                    $objTablesport->addCell('Apply for sport bursary',"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell(strtoupper($idsearch[$i]->SPORTBURSARY),"15%", null, "left",$oddOrEven);
+                    $objTablesport->row_attributes = " class = \"$oddOrEven\"";
+                    $rowcount++;
+                    $objTablesport->endRow();
+                  }
+               }
+/*----------------------------------------------------------------------------------------*/
 //              $sessionfaccres [] = $this->getSession('studentfaccrse');
 if(!empty($idsearch)){        
              
@@ -370,20 +426,24 @@ if(!empty($idsearch)){
                           $rowcount = 0;
                           if($idsearch[$i]->EXEMPTION == 1){
                                 $exemptionval = 'YES';
-                          }else{
+                          }elseif($idsearch[$i]->EXEMPTION == 0){
                                 $exemptionval = 'NO';
+                          }else{
+                                $exemptionval = 'Null';
                           }
                 
-                          if($idsearch[$i]->RESIDENCE== 1){
+                          if($idsearch[$i]->RESIDENCE == 1){
                                 $residence = 'YES';
-                            }else{
+                          }else{
                                 $residence = 'NO';
                           }
                         
                           if($idsearch[$i]->SDCASE == 1){
                               $sdvalues = 'YES';
-                          }else{
+                          }elseif($idsearch[$i]->SDCASE == 0){
                               $sdvalues = 'NO';
+                          }else{
+                              $sdvalues = 'Null';
                           }
             
                             $objTableinfo =& $this->newObject('htmltable', 'htmlelements');  
@@ -443,6 +503,10 @@ if(!empty($idsearch)){
     $objstuddetails->addTabLabel('Subjects taken at school');
     $objstuddetails->addBoxContent("<div align=\"right\">" .$editSubjects->show() . "</div>"."<div align=\"left\">".$objTable->show()."</div>");
     
+    $objstudsport = new tabbedbox();
+    $objstudsport->addTabLabel('Sports Information');
+    $objstudsport->addBoxContent("<div align=\"right\">" .$editSport->show() . "</div>"."<div align=\"left\">".$objTablesport->show()."</div>");
+    
     $objstudfaccrse = new tabbedbox();
     $objstudfaccrse->addTabLabel('Faculties / Courses');
     $objstudfaccrse->addBoxContent("<div align=\"right\">" .$editFacultyCrse->show() . "</div>"."<div align=\"left\">".$objTableFC->show()."</div>");
@@ -456,7 +520,7 @@ if(!empty($idsearch)){
    *create a tabpane to place all form out elements in
    */     
   
-   $stringval = $objstudtab->show() . $objstuddetails->show().$objstudfaccrse->show() . $objstudinfo->show();// . $objslutab->show() . $objschooltab->show();
+   $stringval = $objstudtab->show() . $objstuddetails->show().$objstudsport->show().$objstudfaccrse->show() . $objstudinfo->show();// . $objslutab->show() . $objschooltab->show();
 
    $objForm = new form('studentoutput',$this->uri(array('action'=>'submitinfo')));
    $objForm->displayType = 3;

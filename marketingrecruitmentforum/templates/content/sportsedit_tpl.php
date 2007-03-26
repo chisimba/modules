@@ -15,7 +15,7 @@ $this->loadClass('textinput','htmlelements');
  */
 $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
 $this->objMainheading->type=1;
-$this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_sportheading','marketingrecruitmentforum');
+$this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_sportedit','marketingrecruitmentforum');
 
 /**
   *create radio buttons
@@ -27,10 +27,6 @@ $objsport->addOption('No','No');
 $objsportbursary = new radio('sportBursary');
 $objsportbursary->addOption('Yes','Yes');
 $objsportbursary->addOption('No','No');
-
-$objleadpos = new radio('listB');
-$objleadpos->addOption('Yes','Yes');
-$objleadpos->addOption('No','No');
 
 /**
  *create dropdown list for achievement level
@@ -55,10 +51,10 @@ $list->setMultiSelected($a);
 /**
  *create dropdown list for leadership position
  */
-/*$b  = array('1' =>  'Head girl or Head boy',
+$b  = array('1' =>  'Head girl or Head boy',
             '2' =>  'Captain',
             '3' =>  'prefect',
-            '4' =>  'Other',
+            //'4' =>  'Other',
             );
 $list2 = new dropdown('listB');
 $list2->multiple = true;
@@ -66,10 +62,10 @@ foreach($b as $b1){
    $list2->addOption(NULL, ''.''); 
    $list2->addOption($b1,$b1);
 }
-//$list->addOption('Other','Other');
+$list->addOption('Other','Other');
 $list2->setMultiSelected($b);
 $list2->setSelected($this->getParam('listB','Please select an option'));
-//$list2->extra = ' onChange="document.sportdata.submit()"';*/
+$list2->extra = ' onChange="document.sportdata.submit()"';
 
 /**
  *create dropdown list for sport codes
@@ -99,7 +95,7 @@ $list3->addOption('Pool','Pool');
 $list3->addOption('Other','Other');
 $list3->setMultiSelected($c);
 $list3->setSelected($this->getParam('listC','Please select an option'));
-//$list3->extra = ' onChange="document.sportdata.submit()"';
+$list3->extra = ' onChange="document.sportdata.submit()"';
 
 /** 
  *CREATE text fields
@@ -117,17 +113,13 @@ $this->objleadership->value  = " ";
 $this->objButtonNext  = new button('next', 'Next');
 $this->objButtonNext->setToSubmit();
 
-/*if($leadership){
-    $leadOther = $this->objleadership->show();
-}else{
-    $leadOther = " ";
-}*/
+if($leadership = 'Other'){
+  $leadOther  = $this->objleadership->show();
+}
 
-//if($sportcodeval){
+if($sportcode = 'Other'){
  $SportOther  = $this->objOtherCode->show();
-//}else{
-//$SportOther  = " ";
-//}
+}
 /**
   *create table to place form elements in
   */
@@ -145,7 +137,7 @@ $myTable->endRow();
 
 $myTable->startRow();
 $myTable->addCell('Are you in any leadership positions?');
-$myTable->addCell($objleadpos->show());
+$myTable->addCell($list2->show().' '.$leadOther);
 $myTable->endRow();
 
 $myTable->startRow();
@@ -173,7 +165,7 @@ $myTable->endRow();
   *display content to screen -- add to form
   */
   
-$objForm = new form('sportdata',$this->uri(array('action'=>'studentdetailsoutput')));
+$objForm = new form('sportdata',$this->uri(array('action'=>'sportoutputshow')));
 $objForm->displayType = 3;
 $objForm->addToForm($this->objMainheading->show().'<br/>'.$myTable->show());
 

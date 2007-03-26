@@ -73,6 +73,9 @@
     $editSubjects = new link($this->uri(array('action' => 'editsubjects', 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit')));
     $editSubjects->link = 'Edit';
     
+    $editSport = new link($this->uri(array('action' => 'editsport', 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit')));
+    $editSport->link = 'Edit';
+    
     $editFacultyCrse = new link($this->uri(array('action' => 'editfacultycrse', 'module' => 'marketingrecruitmentforum', 'linktext' => 'edit')));
     $editFacultyCrse->link = 'Edit';
     
@@ -498,6 +501,61 @@
                     
                     
 /*----------------------------------------------------------------------------------------*/
+$sessionsportdetails [] = $this->getSession('sportdata');
+    if(!empty($sessionsportdetails)&& ($sessionsportdetails [0] != NULL)){
+    
+        foreach($sessionsportdetails as $sesssport){
+
+                    $objTablesport =& $this->newObject('htmltable', 'htmlelements');  
+                    $objTablesport->cellspacing = '2';
+                    $objTablesport->cellpadding = '2';
+                    $objTablesport->cellwidth = '10';
+                    $objTablesport->border='0';
+                    $objTablesport->width = '70%'; 
+                   
+                    $objTablesport->startRow();
+                    (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                    $objTablesport->addCell('Sport Participation',"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell(strtoupper($sesssport['sportPart']),"15%", null, "left",$oddOrEven);
+                    $objTablesport->row_attributes = " class = \"$oddOrEven\"";
+                    $rowcount++;
+                    $objTablesport->endRow();
+                    
+                    $objTablesport->startRow();
+                    (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                    $objTablesport->addCell('Leadership position(s)',"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell(strtoupper($sesssport['leadershipPos']),"15%", null, "left",$oddOrEven);
+                    $objTablesport->row_attributes = " class = \"$oddOrEven\"";
+                    $rowcount++;
+                    $objTablesport->endRow();
+                    
+                    $objTablesport->startRow();
+                    (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                    $objTablesport->addCell('Sport code(s)',"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell(strtoupper($sesssport['sportCode']),"15%", null, "left",$oddOrEven);
+                    $objTablesport->row_attributes = " class = \"$oddOrEven\"";
+                    $rowcount++;
+                    $objTablesport->endRow();   
+                                     
+                    $objTablesport->startRow();
+                    (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                    $objTablesport->addCell('Achievement level',"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell(strtoupper($sesssport['achievlevel']),"15%", null, "left",$oddOrEven);
+                    $objTablesport->row_attributes = " class = \"$oddOrEven\"";
+                    $rowcount++;
+                    $objTablesport->endRow();
+                    
+                    $objTablesport->startRow();
+                    (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                    $objTablesport->addCell('Apply for sport bursary',"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell(strtoupper($sesssport['sportBursary']),"15%", null, "left",$oddOrEven);
+                    $objTablesport->row_attributes = " class = \"$oddOrEven\"";
+                    $rowcount++;
+                    $objTablesport->endRow();                             
+        
+        }
+     }
+/*----------------------------------------------------------------------------------------*/
                $extrainfo [] = $this->getSession('studentinfo');
                //var_dump($extrainfo);
                
@@ -507,17 +565,21 @@
                $res   = $this->getParam('residence');
            
            
-               if($sdval == '1'){
+              if($sdval == '1'){
                   $result = 'YES';
-               }else{
+               }elseif($sdval == '0'){
                   $result = 'NO';
+               }else{
+                  $result = 'Null';
                }
                
                
                if($exemp == '1'){
                  $val = 'YES';
-               }else{
+               }elseif($exemp == '0'){
                  $val = 'NO';
+               }else{
+                 $val = 'Null';
                }
                    
                 if($res == '1'){
@@ -582,6 +644,10 @@
     $objstuddetails->addTabLabel('Subjects');
     $objstuddetails->addBoxContent("<div align=\"right\">" .$editSubjects->show() . "</div>"."<div align=\"left\">".$objTable->show()."</div>");
     
+    $objstudsport = new tabbedbox();
+    $objstudsport->addTabLabel('Sports Information');
+    $objstudsport->addBoxContent("<div align=\"right\">" .$editSport->show() . "</div>"."<div align=\"left\">".$objTablesport->show()."</div>");
+    
     $objstudfaccrse = new tabbedbox();
     $objstudfaccrse->addTabLabel('Faculty and Course');
     $objstudfaccrse->addBoxContent("<div align=\"right\">" .$editFacultyCrse->show() . "</div>"."<div align=\"left\">".$objTableFC->show()."</div>");
@@ -595,11 +661,11 @@
    *create a tabpane to place all form out elements in
    */     
   
-   $stringval = $objstudtab->show() . $objstuddetails->show().$objstudfaccrse->show() . $objstudinfo->show();// . $objslutab->show() . $objschooltab->show();
+   $stringval = $objstudtab->show() . $objstuddetails->show().$objstudsport->show().$objstudfaccrse->show() . $objstudinfo->show();// . $objslutab->show() . $objschooltab->show();
 
    $objForm = new form('studentoutput',$this->uri(array('action'=>'submitinfo','submitmsg' => 'yes')));
    $objForm->displayType = 3;
-   $objForm->addToForm($this->objMainheading->show().'<br />' .'<br />'.$stringval . '<br />' . "<div align=left>".$this->objSubmitstudcard->show()."</div>"); 
+   $objForm->addToForm($this->objMainheading->show().'<br />' .'<br />'.$stringval . '<br />' .'<h3>'. " I hereby confirm that the information entered above is complete and accurate.".$check15.'</h>'.' '. ' '. "<div align=left>".$this->objSubmitstudcard->show()."</div>"); 
 /*----------------------------------------------------------------------------------------*/  
 echo $objForm->show();
 ?>

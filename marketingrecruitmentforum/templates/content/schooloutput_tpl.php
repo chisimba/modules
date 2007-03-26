@@ -347,10 +347,10 @@
     *create a form to place all elements in
     */
      
-     echo  $this->objMainheading->show();
+     
      $objForm = new form('outputdata',$this->uri(array('action'=>'submitschooldata','submitmsg' => 'yes')));
      $objForm->displayType = 3;
-     $objForm->addToForm($stringval . '<br />' . "<div align=left>".$this->objSubmitstudcard->show()."</div>"); 
+     $objForm->addToForm($this->objMainheading->show().'<br/>'.$stringval . '<br />' . "<div align=left>".$this->objSubmitstudcard->show()."</div>"); 
      echo  $objForm->show();
   
 ?>
