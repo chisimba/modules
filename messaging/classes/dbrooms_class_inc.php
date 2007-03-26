@@ -176,7 +176,7 @@ class dbrooms extends dbTable
                 $fields['date_created'] = date('Y-m-d H:i:s');
                 $fields['updated'] = date('Y-m-d H:i:s');
                 $roomId = $this->insert($fields);
-                $data = $this->getRoom($roomId)
+                $data = $this->getRoom($roomId);
                 return $data[0];
             }
         }
