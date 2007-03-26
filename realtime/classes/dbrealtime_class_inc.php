@@ -223,5 +223,26 @@ class dbrealtime extends dbTable
 	{
 		return SUCCESS;
 	}
+
+	/**
+	* @author Mohamed Yusuf
+	* @param string userId user identification number
+	* @param string userLevel group that user belongs to
+	* @param string contextCode Course code
+	* @return String SUCCESS/FAILURE
+	*/	
+	public function checkToken($userId, $userLevel, $contextCode)
+	{
+		$sql = "select hastoken from tbl_realtime_voicequeue where userid=\"$userId\"";
+		$result = $this->getArray($sql);
+		if(empty($result)){
+			//log_debug("empty array, statement did not fetch rows");
+			return FAILURE;
+		}else{
+			//log_debug("statement did fetch rows");
+			return SUCCESS;
+		}
+		
+	}
 }
 ?>
