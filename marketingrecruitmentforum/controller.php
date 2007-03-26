@@ -1013,8 +1013,6 @@ function dispatch($action)
   private function getFacAndCrse(){
   $faculty1 = $this->getSession('facultylist');
   $faculty2 = $this->getSession('faculty2ndchoice');
-  //$course1st  = $this->getSession('course1');
-  //$course2nd  = $this->getSession('course2');
   $course1st    = $this->getParam('course');
   $course2nd    = $this->getParam('course2nd');
         

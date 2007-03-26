@@ -2179,6 +2179,14 @@ public  function searchID($idsearch){
                             
                             $myTable->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                            $myTable->addCell("Achievement Level","15%", null, "left",$oddOrEven);
+                            $myTable->addCell($idsearch[$i]->ACHIEVELEVEL,"15%", null, "left",$oddOrEven);
+                            $myTable->row_attributes = " class = \"$oddOrEven\"";
+                            $rowcount++;
+                            $myTable->endRow();
+                            
+                            $myTable->startRow();
+                            (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                             $myTable->addCell("Apply for sport bursary","15%", null, "left",$oddOrEven);
                             $myTable->addCell($idsearch[$i]->SPORTBURSARY,"15%", null, "left",$oddOrEven);
                             $myTable->row_attributes = " class = \"$oddOrEven\"";
