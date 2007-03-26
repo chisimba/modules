@@ -280,7 +280,12 @@ class blog extends controller
                 //get the link categories
                 $linkcats = $this->objDbBlog->getAllLinkCats($userid);
                 //get all the posts by this user
-                $posts = $this->objDbBlog->getAllPosts($userid, 0); //$catid = NULL);
+                $posts = $this->objDbBlog->getPostsMonthly(time(), $userid);
+                if(count($posts) < 2)
+                {
+                	$posts = $this->objDbBlog->getLastPosts(10);
+                }
+                //$posts = $this->objDbBlog->getAllPosts($userid, 0); //$catid = NULL);
                 //get the sticky posts too
                 
                 $latestpost[0] = $this->objDbBlog->getLatestPost($userid);
@@ -866,7 +871,12 @@ class blog extends controller
                 }
                 else {
                     //otherwise grab all the Published posts
-                    $posts = $this->objDbBlog->getAllPosts($userid, 0);//getAbsAllPostsNoDrafts($userid);
+                    $posts = $this->objDbBlog->getPostsMonthly(time(), $userid);
+               		if(count($posts) < 2)
+                	{
+                		$posts = $this->objDbBlog->getLastPosts(10);
+                	}
+                    //$posts = $this->objDbBlog->getAllPosts($userid, 0);//getAbsAllPostsNoDrafts($userid);
                 }
                 $latestpost[0] = $this->objDbBlog->getLatestPost($userid);
                 $this->setVarByRef('latestpost', $latestpost);

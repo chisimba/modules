@@ -19,6 +19,7 @@ $rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
 
 //show the categories menu (if there are cats)
 $rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE, $userid);
+$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 
 $leftCol = NULL;
 $middleColumn = NULL;
@@ -69,7 +70,7 @@ if($this->objUser->isLoggedIn())
 	$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 }
 else {
-//	$leftCol = $this->objblogOps->loginBox(TRUE);
+	$leftCol = $this->objblogOps->loginBox(TRUE);
 	$leftCol .= $this->objblogOps->showProfile($userid);
 	//$rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
 }
