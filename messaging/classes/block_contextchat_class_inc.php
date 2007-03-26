@@ -82,6 +82,7 @@ class block_contextchat extends object
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('htmltable', 'htmlelements');
+        $this->loadClass('iframe', 'htmlelements');
         $this->objIcon = $this->getObject('geticon', 'htmlelements');
 
         // system classes
