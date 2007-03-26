@@ -511,7 +511,18 @@
     if(!empty($sessionsportdetails)&& ($sessionsportdetails [0] != NULL)){
     
         foreach($sessionsportdetails as $sesssport){
-
+                    $val = '';
+                    $sportC [] = $sesssport['sportCode'];
+                    foreach($sportC[0] as $sport){
+                         $val .= $sport .'<br/>';
+                    }
+                    
+                    $value = '';
+                    $achievlevel [] = $sesssport['achievlevel'];
+                    foreach($achievlevel[0] as $achiev){
+                         $value .= $achiev .'<br/>';
+                    }
+                    
                     $objTablesport =& $this->newObject('htmltable', 'htmlelements');  
                     $objTablesport->cellspacing = '2';
                     $objTablesport->cellpadding = '2';
@@ -538,7 +549,7 @@
                     $objTablesport->startRow();
                     (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                     $objTablesport->addCell('Sport code(s)',"15%", null, "left",$oddOrEven);
-                    $objTablesport->addCell(strtoupper($sesssport['sportCode']),"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell(strtoupper($val),"15%", null, "left",$oddOrEven);
                     $objTablesport->row_attributes = " class = \"$oddOrEven\"";
                     $rowcount++;
                     $objTablesport->endRow();   
@@ -546,7 +557,7 @@
                     $objTablesport->startRow();
                     (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                     $objTablesport->addCell('Achievement level',"15%", null, "left",$oddOrEven);
-                    $objTablesport->addCell(strtoupper($sesssport['achievlevel']),"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell(strtoupper($value),"15%", null, "left",$oddOrEven);
                     $objTablesport->row_attributes = " class = \"$oddOrEven\"";
                     $rowcount++;
                     $objTablesport->endRow();

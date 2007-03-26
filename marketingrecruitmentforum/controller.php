@@ -863,33 +863,21 @@ function dispatch($action)
           
           case 'sportoutputshow':
               if ($this->objSemsSecurity->inGroup('MRSF Student View')) {
-                  $leadership = $this->getParam('listB');
-                  $sportcode = $this->getParam('listC');
-                  $sportPart = $this->getParam('sportParticipated');
-                  $next  = $this->getParam('next');
-           
-                  if(isset($leadership)){
-                    $this->setVarByRef('leadership',$leadership);
-                    return 'sports_tpl.php';
-                  }elseif(isset($sportcode)){
-                    $this->setVarByRef('sportcode',$sportcode);
-                    return 'sports_tpl.php';
-                  }else{
-                    $this->getSportValues();
-                   return 'studentdetailsdboutput_tpl.php'; 
-                  }        
-              }elseif($this->objSemsSecurity->inGroup('MRSF Full')){
                   $this->getSportValues();
-                  return 'mrfstudentdetailsdboutput_tpl.php';
+                  return 'studdatacapoutput_tpl.php';
+              }elseif($this->objSemsSecurity->inGroup('MRSF Full')) {
+                   $this->getSportValues();
+                    return 'mrfstudentdetailsdboutput_tpl.php';
               }else{
-                  return "noaccess_tpl.php";
+                      return "noaccess_tpl.php";
               }
+                 
               
           break;
           
           case 'studentfinal':
             if (!$this->objSemsSecurity->inGroup('MRSF Student View')) {
-                            return "noaccess_tpl.php";
+                            
             }
             $facultylist  = ' ';
             $facultylist  = $this->getParam('faculty');
