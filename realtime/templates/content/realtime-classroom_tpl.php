@@ -51,7 +51,7 @@ $voice .= '	<param name="archive" value="'.$this->voiceURL.'/voice-client.jar"/>
 $voice .= ' <param name="userName" value="' . $this->userName . '"/>';
 $voice .= ' <param name="userLevel" value="' . $this->userLevel . '"/>';
 $voice .= ' <param name="voiceURL" value="'.$this->voiceURL.'"/>';
-$voice .= ' <param name="baseModuleURL" value="'.$this->baseModuleURL.'"/>';
+$voice .= ' <param name="realtimeControllerURL" value="'.$this->realtimeControllerURL.'"/>';
 $voice .= "</applet> ";
 
 $voiceBox = $this->objFeaturebox->show($voiceTitle, $voice);
