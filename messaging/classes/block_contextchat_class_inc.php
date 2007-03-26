@@ -78,7 +78,7 @@ class block_contextchat extends object
         // load html element classes
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('layer', 'htmlelements');
-        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('textarea', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('htmltable', 'htmlelements');
