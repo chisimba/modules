@@ -38,7 +38,7 @@ if(!empty($rss))
 			$url = htmlentities($feeds['url']);
 		}
 		else {
-			$url = $feeds['rsscache'];
+			$url = htmlentities($feeds['rsscache']);
 		}
 		$leftCol .= $this->objblogOps->rssBox($url, $feeds['name']);
 	}
