@@ -62,6 +62,12 @@ class block_contextchat extends object
     private $dbMessages;
 
     /*
+    * @var string $counter: The count of the number of messsges posted
+    * @access public
+    */
+    public $counter;
+
+    /*
     * @var string $title: The title of the block
     * @access public
     */
@@ -99,8 +105,7 @@ class block_contextchat extends object
         // set up data
         $roomData = $this->dbRooms->getContextRoom();
         $this->setSession('chat_room_id', $roomData['id']);
-        $counter = $this->dbMessages->getMessageCount($roomData['id']);
-        $this->setSession('message_counter', $counter);
+        $this->counter = $this->dbMessages->getMessageCount($roomData['id']);
         $array = array(
             'name' => $this->fullname,
         );
@@ -135,6 +140,10 @@ class block_contextchat extends object
         $clearLabel = $this->objLanguage->languageText('mod_messaging_wordclear', 'messaging');
         $sendingLabel = $this->objLanguage->languageText('mod_messaging_sending', 'messaging');
         
+        $objInput = new textinput('counter', $this->counter, 'hidden');
+        $counterInput = $objInput->show();
+        $str = $counterInput;
+        
         // display layer for chat
         $objLayer = new layer();
         $objLayer->id = 'chatDiv';
@@ -143,7 +152,7 @@ class block_contextchat extends object
         $objLayer->border = '1px solid black';
         $objLayer->overflow = 'auto';
         $chatLayer = $objLayer->show();
-        $str = $chatLayer;
+        $str .= $chatLayer;
         
         // chat input area
         $objText = new textarea('message', '', '', '');
@@ -151,8 +160,7 @@ class block_contextchat extends object
         $chatText = $objText->show();
         
         // chat loading icon
-        $this->objIcon->setIcon('loading_bar');
-        $this->objIcon->extra = ' style="width: 90%"';
+        $this->objIcon->setIcon('loader');
         $this->objIcon->title = $sendingLabel;
         $sendingIcon = $this->objIcon->show();
         

@@ -163,7 +163,9 @@ function jsGetChat()
 */
 function jsChatTimer()
 {
-    Element.hide("loadDiv");
+    if(chatMode != "context"){
+        Element.hide("loadDiv");
+    }
     var el_ChatDiv = $("chatDiv");
     el_ChatDiv.scrollTop = el_ChatDiv.scrollHeight
     chatTimer = setTimeout("jsGetChat()", 2000);
