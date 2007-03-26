@@ -34,12 +34,18 @@
     $deptnames  = array('1' =>  'Financial Aid',
                         '2' =>  'Student Credit Management',
                         '3' =>  'Residence and Catering', 
+                        '4' =>  'Edu Loan',
+                        '5' =>  'Sports Admin',
                    );
-    $objdeptnames = new dropdown('moreinfo');
-    foreach($deptnames as $dept){
-      $objdeptnames->addOption(NULL, ''.'Please select a department'); 
-      $objdeptnames->addOption($dept,$dept);
-    } 
+     $objdeptnames = new dropdown('moreinfo');
+     $objdeptnames->multiple = true;
+     $objdeptnames->addOption(NULL ,  'Please select a department');
+     $objdeptnames->addOption('Financial Aid','Financial Aid');
+     $objdeptnames->addOption('Student Credit Management' ,'Student Credit Management');
+     $objdeptnames->addOption('Residence and Catering' ,'Residence and Catering');
+     $objdeptnames->addOption('Edu Loan' ,'Edu Loan');
+     $objdeptnames->addOption('Sports Admin' ,'Sports Admin');
+     $objdeptnames->setMultiSelected($deptnames);
 
 /**
   *create a next button
@@ -73,82 +79,7 @@
     $myTable->cellspacing='6';
     $myTable->cellpadding='10';
     
-    
-/*    $myTable->startRow();
-    $myTable->addCell('Please select your school subjects');
-    $myTable->addCell($objsubjlist1->show().' '.$this->objgradelist->show());
-    $myTable->endRow();
-    
-    $myTable->startRow();
-    $myTable->addCell(' ');
-    $myTable->addCell($objsubjlist2->show().' '.$this->objgradelist->show());
-    $myTable->endRow();
-    
-    $myTable->startRow();
-    $myTable->addCell(' ');
-    $myTable->addCell($objsubjlist3->show().' '.$this->objgradelist->show());
-    $myTable->endRow();
-    
-    $myTable->startRow();
-    $myTable->addCell(' ');
-    $myTable->addCell($objsubjlist4->show().' '.$this->objgradelist->show());
-    $myTable->endRow();
-    
-    $myTable->startRow();
-    $myTable->addCell(' ');
-    $myTable->addCell($objsubjlist5->show().' '.$this->objgradelist->show());
-    $myTable->endRow();
-    
-    $myTable->startRow();
-    $myTable->addCell(' ');
-    $myTable->addCell($objsubjlist6->show().' '.$this->objgradelist->show());
-    $myTable->endRow();
-    
-    $myTable->startRow();
-    $myTable->addCell(' ');
-    $myTable->addCell($objsubjlist7->show().' '.$this->objgradelist->show());
-    $myTable->endRow();
-    
-    /*$myTable->startRow();
-    $myTable->addCell(' ');
-    $myTable->addCell(' ');
-    $myTable->endRow();
-
-    $myTable->startRow();
-    $myTable->addCell(' ');
-    $myTable->addCell(' ');
-    $myTable->endRow();    
-    
-    $myTable->startRow();
-    $myTable->addCell('Please select your 1st choice faculty');
-    $myTable->addCell($objDropdown->show());
-    $myTable->endRow();
-    
-    $myTable->startRow();
-    $myTable->addCell('Please select your 1st choice course');
-    $myTable->addCell($objDropdown1->show());
-    $myTable->endRow();
-    
-    $myTable->startRow();
-    $myTable->addCell('Please select your 2nd choice faculty');
-    $myTable->addCell($objDropdown2->show());
-    $myTable->endRow();  
-    
-    $myTable->startRow();
-    $myTable->addCell('Please select your 2st choice course');
-    $myTable->addCell($objDropdown22->show());
-    $myTable->endRow();
-    
-    $myTable->startRow();
-    $myTable->addCell(' ');
-    $myTable->addCell(' ');
-    $myTable->endRow();
-    
-    $myTable->startRow();
-    $myTable->addCell(' ');
-    $myTable->addCell(' ');
-    $myTable->endRow();*/
-    
+  
     $myTable->startRow();
     $myTable->addCell('More information required from');
     $myTable->addCell($objdeptnames->show());
@@ -177,7 +108,7 @@
   *display content to screen -- add to form
   */
   
-$objForm = new form('studedudata',$this->uri(array('action'=>'showdboutput')));
+$objForm = new form('studexemdata',$this->uri(array('action'=>'showdboutput')));
 $objForm->displayType = 3;
 $objForm->addToForm($content . '<br/>'.$myTable->show());
 

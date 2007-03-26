@@ -133,8 +133,8 @@ function dispatch($action)
                       return "noaccess_tpl.php";
                 }
                 $idnumber  = $this->getParam('idnumber');
-                $firstname = ucfirst($this->getParam('firstname'));
-                $lastname = ucfirst($this->getParam('lastname'));
+                $firstname = strtoupper($this->getParam('firstname'));
+                $lastname = strtoupper($this->getParam('lastname'));
                 
                 //$firstname = ucfirst($f);
                // var_dump($firstname);
@@ -332,13 +332,13 @@ function dispatch($action)
             break;
             
             case  'editextra':
-                if ($this->objSemsSecurity->inGroup('MRSF Student View')) {
-                   return  'editstudentinfopg1_tpl.php';
-                }elseif($this->objSemsSecurity->inGroup('MRSF Full')) {
+            if($this->objSemsSecurity->inGroup('MRSF Full')) {
              	    return  'editstudinfopg_tpl.php';
-             	  }else{
+            }elseif ($this->objSemsSecurity->inGroup('MRSF Student View')) {
+                   return  'editstudentinfopg1_tpl.php';
+            }else{
                   return "noaccess_tpl.php";
-                }
+            }
             break;
             
             case 'showinfoeditoutput' :
@@ -379,10 +379,14 @@ function dispatch($action)
             break;
             
             case  'editoutput':
-               if (!$this->objSemsSecurity->inGroup('MRSF Student View')) {
-                      return "noaccess_tpl.php";
-                }
-               return  'studentdbdetailsedit_tpl.php';
+               if($this->objSemsSecurity->inGroup('MRSF Full')) {
+                    return  'mrfstudentdetailsdboutput_tpl.php';
+                    
+               }elseif($this->objSemsSecurity->inGroup('MRSF Student View')) {
+                    return  'studentdbdetailsedit_tpl.php';
+               }else{
+                    return "noaccess_tpl.php";
+               }
             break;
 
             case  'submitinfo':
@@ -424,7 +428,7 @@ function dispatch($action)
             }elseif(!empty($idexist)){
                   for($i=0; $i< count($idexist); $i++){
                             $createdby  = strtoupper($username);
-                            $datecreate = date('Y-m-d');
+                            $datecreate = date('d-m-Y');
                             $date = $idexist[$i]->ENTRYDATE;
                             $studentidnumber  = $idexist[$i]->IDNUMBER;  // leave as is or use id in db ?
                             $surname  = strtoupper($idexist[$i]->SURNAME);
@@ -1029,14 +1033,18 @@ function dispatch($action)
           
           if($sportPart == 'Yes'){
               $sportPval  = 'Yes';
-          }else{
+          }elseif($sportPart == 'No'){
               $sportPval  = 'No';
+          }else{
+              $sportPval  = 'Null';
           }
           
           if($leadership == 'Yes'){
               $leadershipval  = 'Yes';
-          }else{
+          }elseif($leadership == 'No'){
               $leadershipval  = 'No';
+          }else{
+          $leadershipval  = 'Null';
           }
           $sportdata      = array('sportPart'       =>  $sportPval,
                                   'leadershipPos'   =>  $leadershipval,  

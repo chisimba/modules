@@ -450,7 +450,7 @@
                         $objTable->startRow();
                         (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                         $objTable->addCell('Subject 1'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","15%", null, "left",$oddOrEven);
-                        $objTable->addCell(strtoupper($idsearch[$i]->SUBJECT1).' '.strtoupper($idsearch[$i]->GRADETYPE1),"15%", null, "left",$oddOrEven);
+                        $objTable->addCell(strtoupper($idsearch[$i]->SUBJECT1).' '.strtoupper($idsearch[$i]->GRADETYPE1.''.$idsearch[$i]->MARK1.'%'),"15%", null, "left",$oddOrEven);
                         $objTable->row_attributes = " class = \"$oddOrEven\"";
                         $rowcount++;
                         $objTable->endRow();
@@ -458,7 +458,7 @@
                         $objTable->startRow();
                         (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                         $objTable->addCell('Subject 2',"15%", null, "left",$oddOrEven);
-                        $objTable->addCell(strtoupper($idsearch[$i]->SUBJECT2).' '.strtoupper($idsearch[$i]->GRADETYPE2),"15%", null, "left",$oddOrEven);
+                        $objTable->addCell(strtoupper($idsearch[$i]->SUBJECT2).' '.strtoupper($idsearch[$i]->GRADETYPE2.''.$idsearch[$i]->MARK2.'%'),"15%", null, "left",$oddOrEven);
                         $objTable->row_attributes = " class = \"$oddOrEven\"";
                         $rowcount++;
                         $objTable->endRow();
@@ -466,7 +466,7 @@
                         $objTable->startRow();
                         (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                         $objTable->addCell('Subject 3',"15%", null, "left",$oddOrEven);
-                        $objTable->addCell(strtoupper($idsearch[$i]->SUBJECT3).' '.strtoupper($idsearch[$i]->GRADETYPE3),"15%", null, "left",$oddOrEven);
+                        $objTable->addCell(strtoupper($idsearch[$i]->SUBJECT3).' '.strtoupper($idsearch[$i]->GRADETYPE3.''.$idsearch[$i]->MARK3.'%'),"15%", null, "left",$oddOrEven);
                         $objTable->row_attributes = " class = \"$oddOrEven\"";
                         $rowcount++;
                         $objTable->endRow();
@@ -474,7 +474,7 @@
                         $objTable->startRow();
                         (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                         $objTable->addCell('Subject 4',"15%", null, "left",$oddOrEven);
-                        $objTable->addCell(strtoupper($idsearch[$i]->SUBJECT4).' '.strtoupper($idsearch[$i]->GRADETYPE4),"15%", null, "left",$oddOrEven);
+                        $objTable->addCell(strtoupper($idsearch[$i]->SUBJECT4).' '.strtoupper($idsearch[$i]->GRADETYPE4.''.$idsearch[$i]->MARK4.'%'),"15%", null, "left",$oddOrEven);
                         $objTable->row_attributes = " class = \"$oddOrEven\"";
                         $rowcount++;
                         $objTable->endRow();
@@ -482,7 +482,7 @@
                         $objTable->startRow();
                         (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                         $objTable->addCell('Subject 5',"15%", null, "left",$oddOrEven);
-                        $objTable->addCell(strtoupper($idsearch[$i]->SUBJECT5).' '.strtoupper($idsearch[$i]->GRADETYPE5),"15%", null, "left",$oddOrEven);
+                        $objTable->addCell(strtoupper($idsearch[$i]->SUBJECT5).' '.strtoupper($idsearch[$i]->GRADETYPE5.''.$idsearch[$i]->MARK5.'%'),"15%", null, "left",$oddOrEven);
                         $objTable->row_attributes = " class = \"$oddOrEven\"";
                         $rowcount++;
                         $objTable->endRow();
@@ -490,7 +490,7 @@
                         $objTable->startRow();
                         (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                         $objTable->addCell('Subject 6',"15%", null, "left",$oddOrEven);
-                        $objTable->addCell(strtoupper($idsearch[$i]->SUBJECT6).' '.strtoupper($idsearch[$i]->GRADETYPE6),"15%", null, "left",$oddOrEven);
+                        $objTable->addCell(strtoupper($idsearch[$i]->SUBJECT6).' '.strtoupper($idsearch[$i]->GRADETYPE6.''.$idsearch[$i]->MARK6.'%'),"15%", null, "left",$oddOrEven);
                         $objTable->row_attributes = " class = \"$oddOrEven\"";
                         $rowcount++;
                         $objTable->endRow();
@@ -498,7 +498,7 @@
                         $objTable->startRow();
                         (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                         $objTable->addCell('Subject 7',"15%", null, "left",$oddOrEven);
-                        $objTable->addCell(strtoupper($idsearch[$i]->SUBJECT7).' '.strtoupper($idsearch[$i]->GRADETYPE7),"15%", null, "left",$oddOrEven);
+                        $objTable->addCell(strtoupper($idsearch[$i]->SUBJECT7).' '.strtoupper($idsearch[$i]->GRADETYPE7.''.$idsearch[$i]->MARK7),"15%", null, "left",$oddOrEven);
                         $objTable->row_attributes = " class = \"$oddOrEven\"";
                         $rowcount++;
                         $objTable->endRow();                 
@@ -748,6 +748,12 @@
                 }else{
                   $resval = 'NO';
                 } 
+                
+                 $v = '';
+                $addInfo [] = $sesinfo['info'];
+                foreach($addInfo[0] as $add){
+                   $v .= $add .'<br/>';
+                } 
              
                     $objTableinfo =& $this->newObject('htmltable', 'htmlelements');  
                     $objTableinfo->cellspacing = '2';
@@ -759,7 +765,7 @@
                     $objTableinfo->startRow();
                     (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                     $objTableinfo->addCell('Department information',"15%", null, "left",$oddOrEven);
-                    $objTableinfo->addCell(strtoupper($sesinfo['info']),"15%", null, "left",$oddOrEven);
+                    $objTableinfo->addCell(strtoupper($v),"15%", null, "left",$oddOrEven);
                     $objTableinfo->row_attributes = " class = \"$oddOrEven\"";
                     $rowcount++;
                     $objTableinfo->endRow();

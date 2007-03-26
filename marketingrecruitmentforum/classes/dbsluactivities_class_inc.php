@@ -67,8 +67,8 @@ public function addsluactivity($cdate,$ddate,$date,$activity,$schoolname,$area,$
             $data = array();
             $data[] = array( 'field' => 'id', 'value' => "init" . "_" . rand(1000,9999) . "_" . time());
             $data[] = array( 'field' => 'createdby', 'value' => $cdate);
-            $data[] = array( 'field' => 'datecreated', 'value' => "to_date('".$ddate."', 'dd-mm-yyyy HH24:mi:ss')");
-            $data[] = array( 'field' => 'activitydate', 'value' => "to_date('".$date."', 'dd-mm-yyyy HH24:mi:ss')");
+            $data[] = array( 'field' => 'datecreated', 'value' => "to_date('".$ddate."', 'dd-mm-yyyy')");
+            $data[] = array( 'field' => 'activitydate', 'value' => "to_date('".$date."', 'dd-mm-yyyy')");
             $data[] = array( 'field' => 'activity', 'value' => $activity);
             $data[] = array( 'field' => 'schoolname', 'value' => $schoolname);
             $data[] = array( 'field' => 'area', 'value' => $area);

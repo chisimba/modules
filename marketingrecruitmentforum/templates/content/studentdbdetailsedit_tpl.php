@@ -115,7 +115,7 @@
               $myTable->cellspacing = '2';
               $myTable->cellpadding = '2';
               $myTable->border='0';
-              $myTable->width = '70%';
+              $myTable->width = '80%';
               $myTable->css_class = 'highlightrows';
 
              for($i=0; $i< count($idsearch); $i++){
@@ -253,7 +253,7 @@ if(!empty($idsearch)){
                   $objTable->cellpadding = '2';
                   $objTable->cellwidth = '10';
                   $objTable->border='0';
-                  $objTable->width = '70%';
+                  $objTable->width = '80%';
               for($i=0; $i< count($idsearch); $i++){
                           $rowcount = 0;
                             $objTable->startRow();
@@ -308,7 +308,7 @@ if(!empty($idsearch)){
                             $objTable->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                             $objTable->addCell('Subject 7',"15%", null, "left",$oddOrEven);
-                            $objTable->addCell($idsearch[$i]->SUBJECT7.' '.$idsearch[$i]->GRADETYPE7.' '.$idsearch[$i]->MARK7 .'%',"15%", null, "left",$oddOrEven);
+                            $objTable->addCell($idsearch[$i]->SUBJECT7.' '.$idsearch[$i]->GRADETYPE7.' '.$idsearch[$i]->MARK7 ,"15%", null, "left",$oddOrEven);
                             $rowcount++;
                             $objTable->endRow();
           }
@@ -323,7 +323,7 @@ if(!empty($idsearch)){
                     $objTablesport->cellpadding = '2';
                     $objTablesport->cellwidth = '10';
                     $objTablesport->border='0';
-                    $objTablesport->width = '70%';       
+                    $objTablesport->width = '80%';       
                  
                     $objTablesport->startRow();
                     (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
@@ -379,7 +379,7 @@ if(!empty($idsearch)){
                     $objTableFC->cellpadding = '2';
                     $objTableFC->cellwidth = '10';
                     $objTableFC->border='0';
-                    $objTableFC->width = '70%'; 
+                    $objTableFC->width = '80%'; 
                    
                             $objTableFC->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
@@ -451,7 +451,7 @@ if(!empty($idsearch)){
                             $objTableinfo->cellpadding = '2';
                             $objTableinfo->cellwidth = '10';
                             $objTableinfo->border='0';
-                            $objTableinfo->width = '70%';
+                            $objTableinfo->width = '80%';
                     
                             $objTableinfo->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';

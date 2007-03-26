@@ -81,7 +81,7 @@ public function addsschoollist($createdby,$datecreate,$namevalue,$schooladdress,
             $data = array();
             $data[] = array( 'field' => 'id', 'value' => "init" . "_" . rand(1000,9999) . "_" . time());
             $data[] = array( 'field' => 'createdby', 'value' => $createdby);
-            $data[] = array( 'field' => 'datecreated', 'value' => "to_date('".$datecreate."', 'dd-mm-yyyy HH24:mi:ss')");
+            $data[] = array( 'field' => 'datecreated', 'value' => "to_date('".$datecreate."', 'dd-mm-yyyy')");
             $data[] = array( 'field' => 'schoolname', 'value' => $namevalue);
             $data[] = array( 'field' => 'schooladdress', 'value' => $schooladdress);
             $data[] = array( 'field' => 'schoolarea', 'value' => $scharea);
@@ -258,7 +258,7 @@ public function updateschoollist($createdby,$datecreate,$schname,$schooladdress,
             $data = array();
             $data[] = array( 'field' => 'id', 'value' => "init" . "_" . rand(1000,9999) . "_" . time());
             $data[] = array( 'field' => 'createdby', 'value' => $createdby);
-            $data[] = array( 'field' => 'datecreated', 'value' => "to_date('".$datecreate."', 'dd-mm-yyyy HH24:mi:ss')");
+            $data[] = array( 'field' => 'datecreated', 'value' => "to_date('".$datecreate."', 'dd-mm-yyyy')");
             $data[] = array( 'field' => 'schooladdress', 'value' => $schooladdress);
             $data[] = array( 'field' => 'schoolarea', 'value' => $scharea);
             $data[] = array( 'field' => 'schoolprov', 'value' => $schprovince);

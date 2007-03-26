@@ -1908,7 +1908,7 @@ public  function searchID($idsearch){
   
   $this->objheading =& $this->newObject('htmlheading','htmlelements');
   $this->objheading->type=3;
-  $this->objheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_existingrec1','marketingrecruitmentforum');
+  $this->objheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_existingrec11','marketingrecruitmentforum');
            
           if(!empty($idsearch)){
                 
@@ -1993,7 +1993,7 @@ public  function searchID($idsearch){
                         
                            $myTable->startRow();
                            (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                           $myTable->addCell("Date","15%", null, "left",$oddOrEven);
+                           $myTable->addCell("Campaign Date","15%", null, "left",$oddOrEven);
                            $myTable->addCell(strtoupper($dateEntered),"15%", null, "left",$oddOrEven);
                            $myTable->row_attributes = " class = \"$oddOrEven\"";
                            $rowcount++;
@@ -2148,17 +2148,10 @@ public  function searchID($idsearch){
                             $myTable->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                             $myTable->addCell('Subject 7',"15%", null, "left",$oddOrEven);
-                            $myTable->addCell($idsearch[$i]->SUBJECT7.' '.$idsearch[$i]->GRADETYPE7.' '.$idsearch[$i]->MARK7 .'%',"15%", null, "left",$oddOrEven);
+                            $myTable->addCell($idsearch[$i]->SUBJECT7.' '.$idsearch[$i]->GRADETYPE7.' '.$idsearch[$i]->MARK7,"15%", null, "left",$oddOrEven);
                             $rowcount++;
                             $myTable->endRow();
                             
-                            $myTable->startRow();
-                            (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                            $myTable->addCell("Faculty 1st choice","15%", null, "left",$oddOrEven);
-                            $myTable->addCell($idsearch[$i]->FACULTY,"15%", null, "left",$oddOrEven);
-                            $myTable->row_attributes = " class = \"$oddOrEven\"";
-                            $rowcount++;
-                            $myTable->endRow();
                             
                             $myTable->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
@@ -2194,8 +2187,25 @@ public  function searchID($idsearch){
                             
                             $myTable->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                            $myTable->addCell("Faculty 1st choice","15%", null, "left",$oddOrEven);
+                            $myTable->addCell($idsearch[$i]->FACULTY,"15%", null, "left",$oddOrEven);
+                            $myTable->row_attributes = " class = \"$oddOrEven\"";
+                            $rowcount++;
+                            $myTable->endRow();
+                            
+                            
+                            $myTable->startRow();
+                            (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                             $myTable->addCell('Faculty 2nd choice',"15%", null, "left",$oddOrEven);
                             $myTable->addCell($idsearch[$i]->FACULTY2,"15%", null, "left",$oddOrEven);
+                            $myTable->row_attributes = " class = \"$oddOrEven\"";
+                            $rowcount++;
+                            $myTable->endRow();
+                            
+                            $myTable->startRow();
+                            (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                            $myTable->addCell('Course 1st choice',"15%", null, "left",$oddOrEven);
+                            $myTable->addCell($idsearch[$i]->COURSE,"15%", null, "left",$oddOrEven);
                             $myTable->row_attributes = " class = \"$oddOrEven\"";
                             $rowcount++;
                             $myTable->endRow();
