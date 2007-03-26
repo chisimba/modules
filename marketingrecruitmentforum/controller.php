@@ -403,42 +403,42 @@ function dispatch($action)
                   $studcarddata []   = $this->getSession('studentdata');
               if(!empty($studcarddata) && ($studcarddata[0] != NULL)){  
                       foreach($studcarddata as $resdata){
-                            $createdby  = ucfirst($username);
+                            $createdby  = strtoupper($username);
                             $datecreate = date('d-m-Y');
                             $date = $resdata['date'];
                             $studentidnumber  = $idsearch; // CHANGE TO SESSION IDNUMBER captured when capturing personal details $this->getSession('changeIDnumber'); HOW
-                            $surname  = ucfirst($resdata['surname']);
-                            $name = ucfirst($resdata['name']);
+                            $surname  = strtoupper($resdata['surname']);
+                            $name = strtoupper($resdata['name']);
                             $dob  = $resdata['dob'];
                             $grade =  $resdata['grade'];
-                            $schoolname = ucfirst($resdata['schoolname']);
-                            $postaddress  = ucfirst($resdata['postaddress']);
-                            $postcode = ucfirst($resdata['postcode']); 
-                            $areastud = ucfirst($resdata['area']);
-                            $telnumber  = ucfirst($resdata['telnumber']);
+                            $schoolname = strtoupper($resdata['schoolname']);
+                            $postaddress  = strtoupper($resdata['postaddress']);
+                            $postcode = strtoupper($resdata['postcode']); 
+                            $areastud = strtoupper($resdata['area']);
+                            $telnumber  = strtoupper($resdata['telnumber']);
                             $telcode  = $resdata['telcode'];
                             $cellnumber = $resdata['cellnumber'];
-                            $studemail = ucfirst($resdata['studemail']);
+                            $studemail = strtoupper($resdata['studemail']);
                             $changedIDnum = $newIDNum;
                       }
             }elseif(!empty($idexist)){
                   for($i=0; $i< count($idexist); $i++){
-                            $createdby  = ucfirst($username);
+                            $createdby  = strtoupper($username);
                             $datecreate = date('Y-m-d');
                             $date = $idexist[$i]->ENTRYDATE;
                             $studentidnumber  = $idexist[$i]->IDNUMBER;  // leave as is or use id in db ?
-                            $surname  = ucfirst($idexist[$i]->SURNAME);
-                            $name = ucfirst($idexist[$i]->NAME);
+                            $surname  = strtoupper($idexist[$i]->SURNAME);
+                            $name = strtoupper($idexist[$i]->NAME);
                             $dob  = $idexist[$i]->DOB;
-                            $grade =  ucfirst($idexist[$i]->GRADE);
-                            $schoolname = ucfirst($idexist[$i]->SCHOOLNAME);
-                            $postaddress  = ucfirst($idexist[$i]->POSTADDRESS);
-                            $postcode = ucfirst($idexist[$i]->POSTCODE); 
-                            $areastud = ucfirst($idexist[$i]->AREA);
-                            $telnumber  = ucfirst($idexist[$i]->TELNUMBER);
-                            $telcode  = ucfirst($idexist[$i]->TELCODE);
-                            $cellnumber = ucfirst($idexist[$i]->CELLNUMBER);
-                            $studemail = ucfirst($idexist[$i]->STUDEMAIL);
+                            $grade =  strtoupper($idexist[$i]->GRADE);
+                            $schoolname = strtoupper($idexist[$i]->SCHOOLNAME);
+                            $postaddress  = strtoupper($idexist[$i]->POSTADDRESS);
+                            $postcode = strtoupper($idexist[$i]->POSTCODE); 
+                            $areastud = strtoupper($idexist[$i]->AREA);
+                            $telnumber  = strtoupper($idexist[$i]->TELNUMBER);
+                            $telcode  = strtoupper($idexist[$i]->TELCODE);
+                            $cellnumber = strtoupper($idexist[$i]->CELLNUMBER);
+                            $studemail = strtoupper($idexist[$i]->STUDEMAIL);
                  }
           }
           $studsubjectdetail [] =  $this->getSession('studentdetails');
@@ -512,8 +512,6 @@ function dispatch($action)
                             } 
                              $sportPart = $sess['sportPart']; 
                              $leadershipPos = ucfirst($sess['leadershipPos']);
-                            // $sportCode = ucfirst($val);
-                            // $achievlevel = ucfirst($value);
                              $sportBursary = ucfirst($sess['sportBursary']);
                      }       
          }elseif(!empty($idexist)){
