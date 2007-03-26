@@ -160,10 +160,23 @@ class dbrooms extends dbTable
             $contextCode = $this->objContext->getContextCode();
         }
         if($contextCode != NULL){
+            $contextDetails = $this->objContext->getContextDetails($contextCode);
             $sql = "SELECT * FROM ".$this->table;
             $sql .= " WHERE owner_id = '".$contextCode."'";
             $data = $this->getArray($sql);
             if(!empty($data)){
+                return $data[0];
+            }else{
+                $fields['room_type'] = 2;
+                $fields['room_name'] = $contextDetails['title'];
+                $fields['room_desc'] = $contextDetails['about'];
+                $fields['text_only'] = 0;
+                $fields['disabled'] = 0;
+                $fields['owner_id'] = $contextCode;
+                $fields['date_created'] = date('Y-m-d H:i:s');
+                $fields['updated'] = date('Y-m-d H:i:s');
+                $roomId = $this->insert($fields);
+                $data = $this->getRoom($roomId)
                 return $data[0];
             }
         }
