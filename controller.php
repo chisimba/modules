@@ -67,6 +67,9 @@ class realtime extends controller
 	 */
 	public $contextCode;
 	
+	/**
+	 * @var String the site url of the module
+	 */
 	public $baseModuleURL;
 
     /**
@@ -133,6 +136,8 @@ class realtime extends controller
 		  	return $this->joinConversation($this->userId, $this->userLevel, $this->contextCode);
 		  case 'leaveconversation':
 		  	return $this->leaveConversation($this->userId, $this->userLevel, $this->contextCode);
+		  case 'checktoken':
+		  	return $this->checkToken($this->userId, $this->userLevel, $this->contextCode);
 		  default:
 		     return "realtime_tpl.php";
 		}
@@ -189,6 +194,13 @@ class realtime extends controller
     	$hasToken = $this->objrealtime->joinConversation($userid, $userlevel, $contextcode);
     	$this->setVar('hastoken', $hasToken);
     	return "redirect_tpl.php";    	
+    }
+    
+    function checkToken($userid, $userlevel, $contextcode)
+    {
+    	$hasToken = $this->objrealtime->checkToken($userid, $userlevel, $contextcode);
+    	$this->setVar('hastoken', $hasToken);
+    	return "redirect_tpl.php";
     }
 }
 ?>
