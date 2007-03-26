@@ -67,10 +67,7 @@ class realtime extends controller
 	 */
 	public $contextCode;
 	
-	/**
-	 * @var String the site url of the module
-	 */
-	public $baseModuleURL;
+	public $realtimeControllerURL;
 
     /**
      * Constructor method to instantiate objects and get variables
@@ -100,7 +97,7 @@ class realtime extends controller
         $location = "http://". $_SERVER['HTTP_HOST'];
         $this->whiteboardURL = $location.$this->getResourceUri('whiteboard', 'realtime');
         $this->voiceURL = $location.$this->getResourceUri('voice', 'realtime');
-        $this->baseModuleURL = $location."/chisimba_framework/app/index.php?module=realtime";
+        $this->realtimeControllerURL = $location."/chisimba_framework/app/index.php?module=realtime";
     }
     
     /**
@@ -167,6 +164,7 @@ class realtime extends controller
     {
     	if(empty($userid) || empty($userlevel) || empty($contextcode)){
     		$hasToken = "FAILURE";
+    		$this->setVar('hastoken', $hasToken);
     		return "redirect_tpl.php";
     	}else{
     		$hasToken = $this->objrealtime->startConversation($userid, $userlevel, $contextcode);
