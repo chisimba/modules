@@ -1582,7 +1582,7 @@ class blog extends controller
             //echo $path;
             //add into the db
 
-            $rssurl = htmlentities($rssurl, ENT_QUOTES);
+            $rssurl = urlencode($rssurl); //, ENT_QUOTES);
             $rssname = htmlentities($rssname, ENT_QUOTES);
             $rssdesc = htmlentities($rssdesc, ENT_QUOTES);
 
