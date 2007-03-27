@@ -84,7 +84,7 @@ function jsInsertBlockSmiley(el_id)
 function jsInsertPopupSmiley(el_id)
 {
     var arrNames = new Array("alien" ,"angel", "angry", "applause", "black_eye", "bye", "cheeky", "chicken", "clown", "confused", "cool", "cowboy", "crazy", "cry", "dance_of_joy", "doh", "drool", "embarrassed", "evil", "frustrated", "grin", "hug", "hypnotised", "idea", "kiss", "laugh", "love", "nerd", "not_talking", "praying", "raise_eyebrow", "roll_eyes", "rose", "sad", "shame_on_you", "shocked", "shy", "sick", "skull", "sleeping", "smile", "straight_face", "thinking", "tired", "victory", "whistle", "wink", "worried");
-    var arrCodes = new Array(">-)", "O:)", "X-(", "=D>", "b-(", ":\"(", ":p", "~:>", ":o)", ":-/", "B-)", "<):)", "8-}", ":((", "/:D/", "#-o", "=P~", ":\">", ">:)", ":-L", ":D", ">:D<", "@-)", "*-:)", ":*", ":))", ":x", ":-B", "[-(", "[-o<", "/:)", "8-|", "@};-", ":(", "[-X", ":O", ";;)", ":-&", "8-X", "I-)", ":)", ":|", ":-?", "(:|", ":)>-", ":-\"", ";)", ":-s");                        
+    var arrCodes = new Array(">-)", "O:)", "X-(", "=D>", "b-(", ":\"(", ":P", "~:>", ":o)", ":-/", "B-)", "<):)", "8-}", ":((", "/:D/", "#-o", "=P~", ":\">", ">:)", ":-L", ":D", ">:D<", "@-)", "*-:)", ":*", ":))", ":x", ":-B", "[-(", "[-o<", "/:)", "8-|", "@};-", ":(", "[-X", ":O", ";;)", ":-&", "8-X", "I-)", ":)", ":|", ":-?", "(:|", ":)>-", ":-\"", ";)", ":-s");                        
     var el_Message = opener.$("input_message");
     for(i = 0; i <= arrNames.length-1; i++){
         if(arrNames[i] == el_id){

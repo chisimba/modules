@@ -434,12 +434,12 @@ class messaging extends controller
                     '[BLUE]' => '[/BLUE]',
                     '[YELLOW]' => '[/YELLOW]',
                     '[GREEN]' => '[/GREEN]',
-                    '[S1]' => '[/S]',
-                    '[S2]' => '[/S]',
-                    '[S3]' => '[/S]',
-                    '[S4]' => '[/S]',
-                    '[S5]' => '[/S]',
-                    '[S6]' => '[/S]',
+                    '[S1]' => '[/S1]',
+                    '[S2]' => '[/S2]',
+                    '[S3]' => '[/S3]',
+                    '[S4]' => '[/S4]',
+                    '[S5]' => '[/S5]',
+                    '[S6]' => '[/S6]',
                 );
                 foreach($codes as $open => $close){
                     $cntOpen = substr_count(strtoupper($message), strtoupper($open));

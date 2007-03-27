@@ -998,7 +998,7 @@ $this->objLanguage = $this->getObject('language','language');
             'applause' => '=D>',
             'black_eye' => 'b-(',
             'bye' => ':"(',
-            'cheeky' => ':p',
+            'cheeky' => ':P',
             'chicken' => '~:>',
             'clown' => ':o)',
             'confused' => ':-/',
