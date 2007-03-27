@@ -311,5 +311,23 @@ class dbsubmissions extends dbtable
     {
         $this->delete('id', $id);
     }
+    
+    /** 	 
+     * Method to return the total number of archived submissions 	 
+     * 	 
+     * @access publice 	 
+     * @return int $count 	 
+     */ 	 
+     function getCount() 	 
+     { 	 
+         $sql = 'SELECT count(*) AS cnt FROM '.$this->table; 	 
+         $sql .= " WHERE submissionType = '".$this->subType."' and status = 'archived'"; 	 
+  	 
+         $data = $this->getArray($sql); 	 
+         if(!empty($data)){ 	 
+             return $data[0]['cnt']; 	 
+         } 	 
+         return 0; 	 
+     }
 }
 ?>

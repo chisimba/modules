@@ -379,6 +379,7 @@ class configure extends object
                 
                     $userStr .= '<li>'.$item['surname'].', '.$item['firstname'].'&nbsp;&nbsp;'.$remLink.'</li>';
                 }
+                $userStr .= '</ul>';
             }else{
                 $userStr .= '<p class = "noRecordsMessage">'.$lbNoUsers.'</p>';
             }
