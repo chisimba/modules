@@ -25,6 +25,7 @@ $lbFilter = $this->objLanguage->languageText('word_filter');
 $lbGo = $this->objLanguage->languageText('word_go');
 $lbReset = $this->objLanguage->languageText('word_reset');
 $lbNoTrash = $this->objLanguage->languageText('mod_cmsadmin_noitems', 'cmsadmin');
+$lnConfigureBlocks = $this->objLanguage->languageText('mod_cmsadmin_configureleftblocks', 'cmsadmin');
 
 // table headings
 $hdPageTitle = $this->objLanguage->languageText('mod_cmsadmin_pagetitle', 'cmsadmin');
@@ -120,6 +121,10 @@ if(!empty($content)){
 }else{
     $str .= '<p class="noRecordsMessage">'.$lbNoTrash.'</p>';
 }
+
+$objLink = new link($this->uri(array('action' => 'configleftblocks')));
+$objLink->link = $lnConfigureBlocks;
+$str .= '<p><br />'.$objLink->show().'</p>';
 
 echo $str;
 ?>

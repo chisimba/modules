@@ -1,5 +1,19 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <updates>
+
+    <update>
+    <table>tbl_cms_blocks</table>
+    <version>1.47</version>
+    <description>Added leftside_blocks to allow configuring blocks on the left below the menu</description>
+    <data>
+       	<add>
+   			<name>leftside_blocks</name>
+	    	<type>integer</type>
+   			<length>3</length>
+		</add>
+	</data>
+  </update>
+  
   <update>
     <table>tbl_cms_blocks</table>
     <version>1.31</version>

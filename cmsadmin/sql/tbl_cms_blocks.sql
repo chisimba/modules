@@ -26,6 +26,10 @@ $fields = array(
 		'type' => 'integer',
 		'length' => 3
 		),
+    'leftside_blocks' => array(
+		'type' => 'integer',
+		'length' => 3
+		),
     'ordering' => array(
 		'type' => 'integer',
         'length' => 11

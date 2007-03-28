@@ -633,7 +633,7 @@ class dbsections extends dbTable
                 $category = $this->getSection($id);
 
                 //get number of levels in section
-                $this->objCmsUtils = & $this->newObject('cmsutils', 'cmsadmin');
+                $this->objCmsUtils = $this->newObject('cmsutils', 'cmsadmin');
                 $numLevels = $this->objCmsUtils->getNumNodeLevels($category['id']);
                 $parentId = $id;
                 $nodeIdArray = array();
@@ -642,23 +642,27 @@ class dbsections extends dbTable
 
                 for ($i = $level; $i <= $numLevels; $i++) {
                     $nodes = $this->getAll("WHERE parentid = '$parentId' AND nodelevel ='$i'");
-                    foreach($nodes as $node) {
-                        $nodeIdArray[] = $node['id'];
-                        $parentId = $node['id'];
+                    if(!empty($nodes)){
+                        foreach($nodes as $node) {
+                            $nodeIdArray[] = $node['id'];
+                            $parentId = $node['id'];
+                        }
                     }
                 }
 
-                //delete each node in array
-                foreach($nodeIdArray as $data) {
-                    $this->_objDBContent->resetSection($data);
-                    $this->delete('id', $data);
+                //archive each node in array
+                if(!empty($nodeIdArray)){
+                    foreach($nodeIdArray as $data) {
+                        $this->_objDBContent->resetSection($data);
+                        $this->archive($data);
+                    }
                 }
                 //delete original category
                 $this->_objDBContent->resetSection($id);
-                return $this->delete('id', $id);
+                return $this->archive($id);
             } else {
                 $this->_objDBContent->resetSection($id);
-                return $this->delete('id', $id);
+                return $this->archive($id);
             }
         }
 
@@ -802,7 +806,43 @@ class dbsections extends dbTable
                     $this->update('id', $entry['id'], $upArr);
                 }
             }
+            $this->reorderSections($parentid);
         }
+        
+        /**
+        * Method to reorder the sections
+        *
+        * @author Megan Watson
+        * @param string $parentid The parent id of the sections to be re ordered
+        * @access private
+        * @return void
+        */
+        private function reorderSections($parentid)
+        {   
+            // Get all pages
+            $sectionData = $this->getAll("WHERE parentid = '$parentid' ORDER BY ordering ");
+            
+            if(!empty($sectionData)){
+                    
+                $i = 1;
+                foreach($sectionData as $key => $item){
+                    $this->update('id', $item['id'], array('ordering' => $i));
+                    $sectionData[$key]['ordering'] = $i++;
+                }
+                        
+                // Get the ordering position of the last page
+                $newData = array_reverse($sectionData);
+                $lastOrder = $newData[0]['ordering']+1;
+                            
+                // Remove all null and negative numbers
+                foreach($sectionData as $key => $item){
+                    if($item['ordering'] < 0 || is_null($item['ordering'])){
+                        $this->update('id', $item['id'], array('ordering' => $lastOrder++));
+                    }
+                }
+            }
+        }
+
         /**
         * Method to get the type of section in a human readable format
         *

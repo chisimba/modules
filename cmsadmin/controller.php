@@ -123,6 +123,7 @@ class cmsadmin extends controller
                 $this->_objSections =  $this->newObject('dbsections', 'cmsadmin');
                 $this->_objContent =  $this->newObject('dbcontent', 'cmsadmin');
                 $this->_objBlocks =  $this->newObject('dbblocks', 'cmsadmin');
+                $this->_objHtmlBlock =  $this->newObject('dbhtmlblock', 'cmsadmin');
                 $this->_objUtils =  $this->newObject('cmsutils', 'cmsadmin');
                 $this->_objLayouts =  $this->newObject('dblayouts', 'cmsadmin');
                 $this->_objUser =  $this->newObject('user', 'security');
@@ -134,6 +135,8 @@ class cmsadmin extends controller
                 $objModule = $this->newObject('modules', 'modulecatalogue');
                 $this->objTreeMenu = $this->newObject('buildtree', 'cmsadmin');
                 $this->objTreeNodes =  $this->newObject('treenodes', 'cmsadmin');
+                $this->dbMenuStyle =  $this->newObject('dbmenustyles', 'cmsadmin');
+                $this->_objCMSLayouts =  $this->newObject('cmslayouts', 'cms');
                 //feeds classes
             	$this->objFeed = $this->getObject('feeds', 'feed');
                 
@@ -339,12 +342,15 @@ class cmsadmin extends controller
                 case 'editcontent':
                     $this->_objContent->edit();
                     $sectionId = $this->getParam('parent', NULL);
+                    $is_front = $this->getParam('frontpage', FALSE);
 
-                    if (!empty($sectionId)) {
+                    if (!empty($sectionId) && !$is_front) {
                         return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
                     } else {
                         return $this->nextAction('frontpages', array('action' => 'frontpages'), 'cmsadmin');
                     }
+                    break;
+                    
                 case 'viewcontent':
 //                    $this->_objContent->edit();
                     $sectionId = $this->getParam('sectionid', NULL);
@@ -549,6 +555,39 @@ class cmsadmin extends controller
 		        	$this->objDbBlog->delRSS($id);
 		        	$this->nextAction('rssedit');
 		        	break;
+		        	
+		        // Switch menu style - Megan Watson 26/03/2007
+		        case 'menustyle':
+		            $data = $this->dbMenuStyle->getStyles();
+		            $topNav = $this->_objUtils->topNav('menu');
+                    $this->setVarByRef('topNav', $topNav);
+                    $this->setVarByRef('data', $data);
+					return 'cms_menu_switch_tpl.php';
+					break;
+					
+		        case 'updatemenustyle':
+		            $styleId = $this->getParam('style');
+		            $this->dbMenuStyle->updateActive($styleId);
+		            $this->_objCMSLayouts->getMenuStyle(TRUE);
+		            return $this->nextAction('menustyle');
+		            break;
+		            
+		        case 'configleftblocks':
+		            $block = $this->_objHtmlBlock->getBlock($this->contextCode);
+		            $topNav = $this->_objUtils->topNav('menu');
+                    $this->setVarByRef('topNav', $topNav);
+                    $this->setVarByRef('block', $block);
+		            return 'cms_config_leftblocks_tpl.php';
+		            break;
+		            
+		        case 'createblock':
+		            $id = $this->getParam('id');
+		            $this->_objHtmlBlock->updateBlock($id);
+		            return $this->nextAction('configleftblocks');
+		            break;
+		        
+		        // End switch menu style
+		        	
 		        case 'managemenus':
 					$pageId = $this->getParam('pageid',null);
 					$content = $this->objTreeNodes->getRootNodes();

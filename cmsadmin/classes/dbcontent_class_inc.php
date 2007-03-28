@@ -229,7 +229,6 @@ class dbcontent extends dbTable
             $access = $this->getParam('access');
             $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
             $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
-            $ordering = $this->getParam('ordering');
             $override_date = $this->getParam('overide_date',null);
             $start_publish = $this->getParam('publish_date',null);
             $end_publish = $this->getParam('end_date',null);
@@ -257,7 +256,6 @@ class dbcontent extends dbTable
                           'introtext' => addslashes($introText),
                           'body' => addslashes($fullText),
                           'modified' => $this->now(),
-                          'ordering' => $ordering,
                           'published' => $published,
                           'post_lic' => $ccLicence,
                           'created_by' => $creatorid,

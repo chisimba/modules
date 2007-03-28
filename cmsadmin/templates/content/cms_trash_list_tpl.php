@@ -127,5 +127,62 @@ if(!empty($data)){
     $str .= '<p class="noRecordsMessage">'.$lbNoTrash.'</p>';
 }
 
+// archived sections
+ if(!empty($data)){
+    $class = 'odd';
+  
+    $objTable = new htmltable();
+    $objTable->cellpadding = '5';
+    $objTable->cellspacing = '2';
+    
+    $objCheck = new checkbox('toggle');
+    $objCheck->extra = "onclick=\"javascript:ToggleCheckBoxes('select', 'arrayList[]', 'toggle');\"";
+       
+    $hdArr = array();
+    $hdArr[] = $objCheck->show();
+    $hdArr[] = $hdPageTitle;
+    $hdArr[] = $hdDate;
+    $hdArr[] = $hdSection;
+    $hdArr[] = $hdOptions;
+    
+    $objTable->addHeader($hdArr);
+    
+    foreach($data as $item){
+        $class = ($class == 'odd') ? 'even':'odd';
+        $sectionInfo = $objSectionInfo->getSection($item['sectionid']);
+        
+        $objCheck = new checkbox('arrayList[]');
+        $objCheck->setValue($item['id']);
+        $objCheck->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+        
+        //Create delete icon
+		$delArray = array('action' => 'deletecontent', 'confirm'=>'yes', 'id'=>$item['id']);
+		$deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelsection', 'cmsadmin');
+		$delIcon = $objIcon->getDeleteIconWithConfirm($item['id'], $delArray,'cmsadmin',$deletephrase);
+	
+		//edit icon
+		//$editIcon = $objEditIcon->getEditIcon($this->uri(array('action' => 'editcontent', 'id' => $item['id'])));
+        $options = '&nbsp;'.$delIcon;
+        
+        $row = array();
+        $row[] = $objCheck->show();
+        $row[] = $item['title'];
+        $row[] = @date('r', $item['start_publish']);
+        $row[] = $sectionInfo['title'];
+        $row[] = $options;
+        
+        $objTable->addRow($row, $class);
+    }
+    
+    $objInput = new textinput('task', '', 'hidden');
+    $hidden = $objInput->show();
+    
+    $objForm = new form('select', $this->uri(array('action' => 'restore')));
+    $objForm->addToForm($objTable->show().$hidden);
+    $str .= $objForm->show();
+}else{
+    $str .= '<p class="noRecordsMessage">'.$lbNoTrash.'</p>';
+}
+
 echo $str;
 ?>

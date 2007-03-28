@@ -77,5 +77,19 @@
       <content_id>init_1</content_id>
       <ordering>1</ordering>
    </tbl_cms_content_frontpage>
+   
+   <!-- tbl_cms_menustyles -->
+   <tbl_cms_menustyles>
+       <id>init_1</id>
+       <menu_style>tree</menu_style>
+       <root_nodes>0</root_nodes>
+       <is_active>1</is_active>
+   </tbl_cms_menustyles>
+   <tbl_cms_menustyles>
+       <id>init_2</id>
+       <menu_style>buttons</menu_style>
+       <root_nodes>1</root_nodes>
+       <is_active>0</is_active>
+   </tbl_cms_menustyles>
   
 </defaultdata>

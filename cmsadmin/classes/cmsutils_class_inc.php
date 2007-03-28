@@ -146,6 +146,7 @@ class cmsutils extends object
                 $this->loadClass('label', 'htmlelements');
                 $this->loadClass('hiddeninput', 'htmlelements');
                 $this->loadClass('textarea','htmlelements');
+                $this->loadClass('htmltable','htmlelements');
                 
 
 		   } catch (Exception $e){
@@ -322,10 +323,11 @@ class cmsutils extends object
 		            $link = $this->objLanguage->languageText('mod_cmsadmin_rss', 'cmsadmin');
 					$icnRss = $objIcon->getBlockIcon($url, 'rss', $link, 'png', 'icons/cms/');
 					
-					// Menu manager link
+					/* Menu manager link
 		            $url = $this->uri(array('action' => 'managemenus'));
 		            $link = $this->objLanguage->languageText('mod_cmsadmin_menu', 'cmsadmin');
 					$icnMenu = $objIcon->getBlockIcon($url, 'menu2', $link, 'png', 'icons/cms/');
+					*/
 					
 					// File manager link
 		            $url = $this->uri('', 'filemanager');
@@ -341,7 +343,7 @@ class cmsutils extends object
 					
 					$tbl->startRow();
 					$tbl->addCell($icnRss);
-					$tbl->addCell($icnMenu);
+					//$tbl->addCell($icnMenu);
 		            $tbl->addCell($icnFiles);
 					$tbl->addCell('');
 					$tbl->endRow();
@@ -570,9 +572,16 @@ class cmsutils extends object
 			 		break;
 			 		
 			 	case 'menu':
+			 	
+			 	    // Switch menu style
+					$url = $this->uri(array('action' => 'menustyle'), 'cmsadmin');
+			 		$linkText = $this->objLanguage->languageText('phrase_menustyle');
+			 		$iconList = $icon_publish->getTextIcon($url, 'menu2', $linkText, 'png', 'icons/cms/');
+			 		
+			 	    // New menu
 					$url = $this->uri(array('action' => 'addnewmenu','pageid'=>'0','add'=>'TRUE'), 'cmsadmin');
 			 		$linkText = $this->objLanguage->languageText('word_new');
-			 		$iconList = $icon_publish->getTextIcon($url, 'new', $linkText, 'gif', 'icons/cms/');
+			 		$iconList .= $icon_publish->getTextIcon($url, 'new', $linkText, 'gif', 'icons/cms/');
 			 					 	    
 			 		// Cancel	 		
 			 		$url = "javascript:history.back();";
@@ -885,10 +894,11 @@ class cmsutils extends object
             $url = $this->uri(array('action' => 'createfeed'), 'cmsadmin');
             $createRss = $objIcon->getTextIcon($url, 'rss', $link, 'png', 'icons/cms/');
             
-            //Create menu management
+            /*Create menu management
             $link = $this->objLanguage->languageText('mod_cmsadmin_menu','cmsadmin');
             $url = $this->uri(array('action' => 'managemenus'), 'cmsadmin');
             $menuMangement = $objIcon->getTextIcon($url, 'menu2', $link, 'png', 'icons/cms/');
+            */
             
             //Create filemanager menu
             $link = $this->objLanguage->languageText('phrase_uploadfiles');
@@ -908,10 +918,13 @@ class cmsutils extends object
 			$nav .= $objFeatureBox->showContent('<strong>Navigation Links</strong><hr />
 					'.$cmsAdminLink.'<br />
 					&nbsp;&nbsp;'.$createRss.'<br />
-					&nbsp;&nbsp;'.$menuMangement.'<br />
+					
 					&nbsp;&nbsp;'.$filemanager.'<br />
 					<div style="clear: both;">&nbsp;</div>
 					');
+					
+					/* &nbsp;&nbsp;'.$menuMangement.'<br /> */
+					
             $nav .= '<br />';
 
             return $nav;
@@ -1968,11 +1981,6 @@ class cmsutils extends object
                     }
                 }
             }
-
-            //initiate objects
-            $table =$this->newObject('htmltable', 'htmlelements');
-            $h3 =$this->newObject('htmlheading', 'htmlelements');
-			
     
             // Title Input
             $titleInput = new textinput ('title');
@@ -2047,6 +2055,7 @@ class cmsutils extends object
 
             $objCCLicence = $this->newObject('licensechooser', 'creativecommons');
 
+            $is_front = FALSE;
             if ($contentId == NULL) {
                 $action = 'createcontent';
                 $editmode = FALSE;
@@ -2059,6 +2068,7 @@ class cmsutils extends object
 
                 if ( $this->getParam('frontpage') == 'true') {
                     $frontPage->setChecked(TRUE);
+                    $is_front = TRUE;
                 }
             } else {
                 $action = 'editcontent';
@@ -2069,7 +2079,8 @@ class cmsutils extends object
                 $introInput->setContent(stripslashes($arrContent['introtext']));
                 $bodyInput->setContent((stripslashes($arrContent['body'])));
 
-                $frontPage->setChecked($this->_objFrontPage->isFrontPage($arrContent['id']));
+                $is_front = $this->_objFrontPage->isFrontPage($arrContent['id']);
+                $frontPage->setChecked($is_front);
                 $published->setChecked($arrContent['published']);
                 $visible = $arrContent['published'];
                 if(isset($arrContent['post_lic'])){
@@ -2078,13 +2089,13 @@ class cmsutils extends object
             }
 
             //setup form
-            $objForm = new form('addfrm', $this->uri(array('action' => $action, 'id' => $contentId, 'frontpage' => $this->getParam('frontpage')), 'cmsadmin'));
+            $objForm = new form('addfrm', $this->uri(array('action' => $action, 'id' => $contentId, 'frontpage' => $is_front), 'cmsadmin'));
             $objForm->setDisplayType(3);
 
             if ($editmode) {
                 //Set ordering as hidden field
                 $sections = new hiddeninput('parent', $arrContent['sectionid']);
-                $objOrdering = new hiddeninput('ordering', $arrContent['ordering']);
+//                $objOrdering = new hiddeninput('ordering', $arrContent['ordering']);
 
             } else {
                 if (isset($section) && !empty($section)) {
@@ -2094,6 +2105,7 @@ class cmsutils extends object
                 }
             }
            
+            $table = new htmltable();
 
             $table->startRow();
             $table->addCell($this->objLanguage->languageText('word_title').': ', 150);
@@ -2126,15 +2138,18 @@ class cmsutils extends object
             $objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
 
 
+            $h3 = $this->newObject('htmlheading', 'htmlelements');
+            $h3->str = $this->objLanguage->languageText('word_introduction').' ('.$this->objLanguage->languageText('word_required').')';
+            $h3->type = 3;
 			
             //intro input
             $objForm->addToForm('<div id="introdiv">');
-            $objForm->addToForm('<br /><h3>'.$this->objLanguage->languageText('word_introduction').' ('.$this->objLanguage->languageText('word_required').')'.'</h3>');
+            $objForm->addToForm('<br />'.$h3->show());
             $objForm->addToForm($introInput->show());
             $objForm->addToForm('</div>');
 
             //body
-            $table2 =$this->newObject('htmltable','htmlelements');
+            $table2 = new htmltable();
             $table2->startRow();
             $table2->addCell($bodyInput->show(),'70%','top','left');
             if (!$editmode) {
@@ -2143,7 +2158,10 @@ class cmsutils extends object
             	$table2->addCell($this->getConfigTabs($arrContent),'30%','top','right');
             }
             $table2->endRow();
-            $objForm->addToForm('<br /><h3>'.$this->objLanguage->languageText('mod_cmsadmin_maintext', 'cmsadmin').'</h3>');
+            
+            $h3->str = $this->objLanguage->languageText('mod_cmsadmin_maintext', 'cmsadmin');
+            $h3->type = 3;
+            $objForm->addToForm('<br />'.$h3->show());
             $objForm->addToForm($table2->show());
 
             $objModulesInfo =& $this->getObject('modules', 'modulecatalogue');
@@ -2153,7 +2171,9 @@ class cmsutils extends object
 
             //cc licence input
             if ($objModulesInfo->checkIfRegistered('creativecommons')) {
-                $objForm->addToForm('<br /><h3>'.$this->objLanguage->languageText('word_licence').'</h3>');
+                $h3->str = $this->objLanguage->languageText('word_licence');
+                $h3->type = 3;
+                $objForm->addToForm('<br />'.$h3->show());
                 $objForm->addToForm($objCCLicence->show());
             } else {
                 $creativecommons = new hiddeninput('creativecommons', '');
@@ -2502,6 +2522,21 @@ class cmsutils extends object
         return $strBody;
     }
 
+    /**
+    * Method to check if the user is in the CMS Authors group
+    *
+    * @access public
+    */
+    public function checkPermission()
+    {
+        $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
+        $groupId = $objGroups->getLeafId(array('CMSAuthors'));
+        if($objGroups->isGroupMember($this->_objUser->pkId(), $groupId)){
+            return TRUE;
+        }else{
+            return FALSE;
+        }   
+    }
 
 
 }
