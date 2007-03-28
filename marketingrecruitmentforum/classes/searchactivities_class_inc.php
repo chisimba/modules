@@ -194,7 +194,7 @@ if ($stdCount > 0){
         $activity1 = ucfirst($activity); 
         $schoolname = $this->objLanguage->languageText('phrase_schoolname');
         $schoolname1 = ucfirst($schoolname);
-        $area = $this->objLanguage->languageText('word_area');
+        $area = 'Area';
         $area1 = ucfirst($area);
         $province = $this->objLanguage->languageText('word_province');
         $province1 = ucfirst($province);
@@ -906,7 +906,7 @@ if ($stdCount > 0){
           */
           $activity = $this->objLanguage->languageText('word_activity');
           $activity1 = ucfirst($activity);
-          $area = $this->objLanguage->languageText('word_area');
+          $area = 'Area';
           $area1 = ucfirst($area);                    
         
          $oddEven = 'even';
