@@ -64,7 +64,6 @@
       for($i=0; $i< count($res); $i++){
           $count='';
           $count  = $count + $res[$i]->TOTSTUD;
-       
       }
       $val  = $count;
 /*------------------------------------------------------------------------------*/       
@@ -127,6 +126,8 @@
       $objForm = new form('reportfaculty',$this->uri(array('action'=>'reportdropdown')));
       $objForm->displayType = 3;
       $objForm->addToForm($this->objMainheading->show().'<br />' .'<br />'.$this->objheading->show().'<br />'.$this->objnamehead->show().'<br />'.$this->objtotstud->show().'<br />' .'<br />' .$facultydetails) . '</br>' .'<br />';
+      
+      
 /*-------------------------------------------------------------------------------*/        
       /**
        *display contents to screen
@@ -136,5 +137,5 @@
        $printView='<div id="printFocus">'.$frmElements.'</div>';
        echo $printView;
        echo  $this->objPrint->show(); 			
-/*------------------------------------------------------------------------------*/            
+            
 ?>

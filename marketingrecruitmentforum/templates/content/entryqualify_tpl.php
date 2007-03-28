@@ -61,14 +61,13 @@
        $total = $this->objstudcard->allstudq($where = 'where exemption = 1 AND sdcase = 0');
        $this->setSession('total',$total);
        $totcount  = 0;
-       //get  the total of all sd cases
-      // foreach($total as $sessCount){
+       
       $tot = 0;
       for($i=0; $i< count($total); $i++){
       
           $tot  = $total[$i]->ENTRY;
-       }
-       $displaytot  = ':' . $tot;
+      }
+      $displaytot  = ':' . $tot;
       
 /*------------------------------------------------------------------------------*/       
       /**

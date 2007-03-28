@@ -98,7 +98,7 @@
   $this->objSubmitstudcard  = new button('submitstudcard', $str1);
   $this->objSubmitstudcard->setToSubmit();
   
-$objElement15 = new checkbox('confirmation',NULL,true);
+$objElement15 = new checkbox('confirmation',NULL,false);
 $check15 = $objElement15->show();
 /*----------------------------------------------------------------------------------------*/
 
@@ -767,7 +767,7 @@ $check15 = $objElement15->show();
                 $v = '';
                 $addInfo [] = $sesinfo['info'];
                 foreach($addInfo[0] as $add){
-                   $v .= $add .'<br/>';
+                   $v .= strtoupper($add) .'<br/>';
                 }                  
                     $objTableinfo =& $this->newObject('htmltable', 'htmlelements');  
                     $objTableinfo->cellspacing = '2';

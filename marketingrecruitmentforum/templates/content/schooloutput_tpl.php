@@ -71,7 +71,7 @@
   */
   $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
   $this->objMainheading->type=1;
-  $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_output','marketingrecruitmentforum');
+  $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_output1','marketingrecruitmentforum');
   
 /**
   *create all form buttons

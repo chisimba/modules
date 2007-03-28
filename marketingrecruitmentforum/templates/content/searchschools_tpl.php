@@ -20,7 +20,7 @@
         *define all language items
         */
         $searchmsg = $this->objLanguage->languageText('mod_marketingrecruitmentforum_schoolhelp','marketingrecruitmentforum');
-        $click = $this->objLanguage->languageText('mod_marketingrecruitmentforum_click','marketingrecruitmentforum');
+        $click = $this->objLanguage->languageText('mod_marketingrecruitmentforum_click11','marketingrecruitmentforum');
         $go = $this->objLanguage->languageText('word_go');
         $schooselect = $this->objLanguage->languageText('mod_marketingrecruitmentforum_schoolselect','marketingrecruitmentforum');
         
@@ -45,7 +45,6 @@
 
        //create dropdown list
        $searchlist  = new dropdown('namevalues');
-      // $searchlist->size = 50;
        
        sort($schoolvalues);
        foreach($schoolvalues as $sessschool){
@@ -82,16 +81,12 @@
     $schoolinfo->addTab('School By Name','<br />' .'<b>'.'Select a school to search by'.'</b>'. ' '. $searchlist->show().' '.$this->objGo->show() . '<br />' . '<br />' .$schoolname, false);
     $schoolinfo->addTab('Schools By Area',$area, false);
     $schoolinfo->addTab('Schools By Province',$province, false);
-    //$Studcardinfo->addTab('area', 'Activities by area',$area);
-    //$Studcardinfo->addTab('school', 'Activities by school','Select a school to search by' . ' ' .$schoollist->show() . ' '.$this->objButtonGo->show().' <br />'. '<br />' . $school);
-    
-    
 /*-------------------------------------------------------------------------------*/
   
   /**
    *create a form to place all elements in
    */
-   // $val  = $this->objsearchinfo->schoolsearch();
+
    $objForm = new form('searchsschool',$this->uri(array('action'=>'showschoolbyname')));
    $objForm->displayType = 3;
    $objForm->addToForm("<center>".$this->objMainheading->show() . '<br />' . '<br />'.'<b>'.'<i>'. $instruction.'</i>'.'</b>'."</center>" .'<br />' . '<br />' . $schoolinfo->show() . '<br />' . '<br />');

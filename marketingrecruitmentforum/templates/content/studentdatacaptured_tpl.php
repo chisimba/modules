@@ -1,12 +1,7 @@
 <?php
 //student data captured output
 
-//$d = $this->getSession('studentdata');
-//$e = $this->getSession('studentdetails');
-//$r = $this->getSession('studentfaccrse');
-//$f  = $this->getSession('studentinfo');
- 
-  
+
   /**
    *load all classes and create all objects
    */
@@ -241,22 +236,6 @@
     
               foreach($sessionstudcard as $sesStuddata){
               $rowcount = 0;
-       /*           if($sesStuddata['exemption'] == 1){
-                      $exemptionval = 'yes';
-                  }else{
-                        $exemptionval = 'no';
-                  }
-                  
-                  if($sesStuddata['relevantsubject'] == 1){
-                      $relsubjval = 'yes';
-                  }else{
-                      $relsubjval = 'no';
-                  }
-                  if($sesStuddata['sdcase'] == 1){
-                      $sdvalues = 'yes';
-                  }else{
-                      $sdvalues = 'no';
-                  }*/    
                   
                   $objstudcardTable->startRow();
                   (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
@@ -355,30 +334,7 @@
                   $myTable->row_attributes = " class = \"$oddOrEven\"";
                   $rowcount++;
                   $objstudcardTable->endRow();    
-/*                  $objstudcardTable->startRow();
-                  $objstudcardTable->addCell($exemption);
-//                  $objstudcardTable->addCell(strtoupper($exemptionval));
-                  $objstudcardTable->endRow();
-                  
-                  $objstudcardTable->startRow();
-                  $objstudcardTable->addCell($facultyname);
-//                  $objstudcardTable->addCell(strtoupper($sesStuddata['faculty']));
-                  $objstudcardTable->endRow();
-                  
-                  $objstudcardTable->startRow();
-                  $objstudcardTable->addCell($crseinterest);
-//                  $objstudcardTable->addCell(strtoupper($sesStuddata['course']));
-                  $objstudcardTable->endRow();
-    
-                  $objstudcardTable->startRow();
-                  $objstudcardTable->addCell($relsubj);
-//                  $objstudcardTable->addCell(strtoupper($relsubjval));
-                  $objstudcardTable->endRow();
-    
-                  $objstudcardTable->startRow();
-                  $objstudcardTable->addCell($sdcase);
-//                  $objstudcardTable->addCell(strtoupper($sdvalues));
-                  $objstudcardTable->endRow();*/
+
             }
       }
       

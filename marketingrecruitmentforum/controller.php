@@ -132,7 +132,7 @@ function dispatch($action)
                 if (!$this->objSemsSecurity->inGroup('MRSF Student View')) {
                       return "noaccess_tpl.php";
                 }
-                $idnumber  = $this->getParam('idnumber');
+                $idnumber  = strtoupper($this->getParam('idnumber'));
                 $firstname = strtoupper($this->getParam('firstname'));
                 $lastname = strtoupper($this->getParam('lastname'));
                 
@@ -242,12 +242,12 @@ function dispatch($action)
             break;
             
             case 'showeditsubjectoutput' :
-                if($this->objSemsSecurity->inGroup('MRSF Student View')) {
-                      $this->getStudSubjInfo();
-                      return  'studentdetailsdboutput_tpl.php';
-                }elseif($this->objSemsSecurity->inGroup('MRSF Full')) {
+                if($this->objSemsSecurity->inGroup('MRSF Full')) {
                     $this->getStudSubjInfo();
                     return  'mrfstudentdetailsdboutput_tpl.php';
+                }elseif($this->objSemsSecurity->inGroup('MRSF Student View')) {
+                      $this->getStudSubjInfo();
+                      return  'studentdetailsdboutput_tpl.php';
                 }else{
                       return "noaccess_tpl.php";
                 }
@@ -284,12 +284,12 @@ function dispatch($action)
             break;
             
             case  'showeditedinfooutput':
-                if ($this->objSemsSecurity->inGroup('MRSF Student View')) {
-                      $this->getFacAndCrse();
-                      return  'studentdetailsdboutput_tpl.php';
-                }elseif($this->objSemsSecurity->inGroup('MRSF Full')) {
+               if($this->objSemsSecurity->inGroup('MRSF Full')) {
                       $this->getFacAndCrse();
                       return  'mrfstudentdetailsdboutput_tpl.php';
+                }elseif ($this->objSemsSecurity->inGroup('MRSF Student View')) {
+                      $this->getFacAndCrse();
+                      return  'studentdetailsdboutput_tpl.php';
                 }else{
                       return "noaccess_tpl.php";
                 }
@@ -410,7 +410,7 @@ function dispatch($action)
                             $createdby  = strtoupper($username);
                             $datecreate = date('d-m-Y');
                             $date = $resdata['date'];
-                            $studentidnumber  = $idsearch; // CHANGE TO SESSION IDNUMBER captured when capturing personal details $this->getSession('changeIDnumber'); HOW
+                            $studentidnumber  = strtoupper($idsearch); // CHANGE TO SESSION IDNUMBER captured when capturing personal details $this->getSession('changeIDnumber'); HOW
                             $surname  = strtoupper($resdata['surname']);
                             $name = strtoupper($resdata['name']);
                             $dob  = $resdata['dob'];
@@ -430,7 +430,7 @@ function dispatch($action)
                             $createdby  = strtoupper($username);
                             $datecreate = date('d-m-Y');
                             $date = $idexist[$i]->ENTRYDATE;
-                            $studentidnumber  = $idexist[$i]->IDNUMBER;  // leave as is or use id in db ?
+                            $studentidnumber  = strtoupper($idexist[$i]->IDNUMBER);  // leave as is or use id in db ?
                             $surname  = strtoupper($idexist[$i]->SURNAME);
                             $name = strtoupper($idexist[$i]->NAME);
                             $dob  = $idexist[$i]->DOB;
@@ -642,7 +642,7 @@ function dispatch($action)
                                   $principalcellno  = ucfirst($data['principalCellno']);
                                   $guidanceteacheamil =ucfirst($data['guidanceteachemail']);
                                   $guidanceteachcellno  = ucfirst($data['guidanceteachcellno']);
-                                  $schcodeval =     $data['schoolcode'];
+                                 // $schcodeval =     $data['schoolcode'];
                      }
                      $namefound  = $this->dbschoollist->getschoolbyname($schname, $field = 'schoolname', $start = 0, $limit = 0);
                      if(!empty($namefound)){
@@ -864,12 +864,12 @@ function dispatch($action)
           break;
           
           case 'sportoutputshow':
-              if ($this->objSemsSecurity->inGroup('MRSF Student View')) {
-                  $this->getSportValues();
-                  return 'studdatacapoutput_tpl.php';
-              }elseif($this->objSemsSecurity->inGroup('MRSF Full')) {
+              if($this->objSemsSecurity->inGroup('MRSF Full')) {
                    $this->getSportValues();
                     return 'mrfstudentdetailsdboutput_tpl.php';
+              }elseif ($this->objSemsSecurity->inGroup('MRSF Student View')) {
+                  $this->getSportValues();
+                  return 'studdatacapoutput_tpl.php';
               }else{
                       return "noaccess_tpl.php";
               }
@@ -1117,11 +1117,11 @@ function dispatch($action)
    *  store array data in a session variable    
    */    
   private function getSchoolist(){
-         $schcode = $this->getSession('schoolcodeval'); 
+        $nameselected  = $this->getSession('nameschool'); 
         $username  = $this->objUser->fullname();
         $schoolistdata  = array( 'createdby'        =>  $username,
                                  'datecreated'      =>  date('d-m-Y'),
-                                 'schoolname'       =>  $this->getParam('schoollistactivity'),
+                                 'schoolname'       =>  $nameselected,
                                  'schooladdress'    =>  $this->getParam('schooladdress'),
                                  'area'             =>  $this->getParam('areaschool'),
                                  'province'         =>  $this->getParam('provinceschool'),
@@ -1136,7 +1136,7 @@ function dispatch($action)
                                  'guidanceteacher'  =>  $this->getParam('txtteacher'),
                                  'guidanceteachemail'=> $this->getParam('txtteacheremail'),
                                  'guidanceteachcellno'=> $this->getParam('txtteachercellno'),
-                                 'schoolcode'         => $schcode
+                                // 'schoolcode'         => $schcode
                             );
        $this->setSession('schoolvalues',$schoolistdata);
   }

@@ -45,7 +45,7 @@
      $objdeptnames->addOption('Residence and Catering' ,'Residence and Catering');
      $objdeptnames->addOption('Edu Loan' ,'Edu Loan');
      $objdeptnames->addOption('Sports Admin' ,'Sports Admin');
-     $objdeptnames->setMultiSelected($deptnames);
+//     $objdeptnames->setMultiSelected($deptnames);
 //$objdeptnames->extra = ' onChange="document.studedudata.submit()"';
    
 /**

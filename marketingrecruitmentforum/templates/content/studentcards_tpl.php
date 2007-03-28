@@ -398,12 +398,6 @@
           if(!empty($emailinfo)){
             $objForm->addRule('txtemail','Please select an area','email');
           }
-          /*$objForm->addRule('exemptionqualification','Please select a value for exemption','required');
-          $objForm->addRule('relevantsubject','Please select a value for relevant subject','required');
-          $objForm->addRule('sdcase','Please select a value for sd case','required');*/
-          
-        //  $objForm->addRule(array('name'=>'txttelcode','minnumber'=>3), $telcode, 'minnumber');
-        //  $objForm->addRule(array('name'=>'txttelcode', 'length'=>3),$telcodelng, 'maxlength');
 /*------------------------------------------------------------------------------*/
           
           /**

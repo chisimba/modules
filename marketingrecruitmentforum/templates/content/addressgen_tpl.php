@@ -17,15 +17,15 @@
    *create a checkbox for selection when sending a letter
    */
    $this->loadClass('checkbox','htmlelements');
-   $objElement = new checkbox('post');  // this will checked
+   $objElement = new checkbox('post');
    $objElement->extra = ' onClick="document.addressgen.submit()"';
    $check = $objElement->show();     
 /*------------------------------------------------------------------------------*/
  /**
   * create table to display all addy's in
   */   
-      $this->objstudcard = & $this->getObject('dbstudentcard','marketingrecruitmentforum');
-      $results = $this->objstudcard->getallstudaddy();
+       $this->objstudcard = & $this->getObject('dbstudentcard','marketingrecruitmentforum');
+       $results = $this->objstudcard->getallstudaddy();
   
        //create table to hold data containing student address details
        $oddEven = 'even';
@@ -36,16 +36,13 @@
        $myTable->width = '100%';
        $myTable->css_class = 'highlightrows';
    
-        $myTable->startHeaderRow();
-        $myTable->addHeaderCell('Surname', null,'top','left','header');
-        $myTable->addHeaderCell('Name', null,'top','left','header');
-        $myTable->addHeaderCell('Address Details', null,'top','left','header');
-    //    $myTable->addHeaderCell('Post Letter', null,'top','left','header');
-        $myTable->endHeaderRow();
+       $myTable->startHeaderRow();
+       $myTable->addHeaderCell('Surname', null,'top','left','header');
+       $myTable->addHeaderCell('Name', null,'top','left','header');
+       $myTable->addHeaderCell('Address Details', null,'top','left','header');
+       $myTable->endHeaderRow();
      
         $rowcount = '0';
-  
-   // foreach($results as $sessCard){
        for($i=0; $i< count($results); $i++){
        
        $myTable->startRow();
@@ -53,7 +50,6 @@
        $myTable->addCell($results[$i]->SURNAME, "10%", null, "left","$oddOrEven");
        $myTable->addCell($results[$i]->NAME,"10%", null, "left","$oddOrEven");
        $myTable->addCell($results[$i]->POSTADDRESS,"15%", null, "left","$oddOrEven");
-      // $myTable->addCell($check,"15%", null, "left","$oddOrEven");
        $myTable->row_attributes = " class = \"$oddOrEven\"";
        $rowcount++;
        $myTable->endRow();

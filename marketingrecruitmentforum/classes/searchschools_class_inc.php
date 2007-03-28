@@ -87,11 +87,11 @@ if ($stdCount > 0){
       if ($page > 1){
           $prevLink = new link();
           $prevLink->href=$this->uri(array('action'=>'showsallearchslu','page'=>($page-1), 'dispcount'=>$dispCount));
-          $prevLink->link = 'Pervious';
+          $prevLink->link = 'Previous';
           $prevLink->style = "text-decoration:none";
           $prev = $prevLink->show();
       }else{
-          $prev = 'Pervious';
+          $prev = 'Previous';
       }
 
       if ($page < $pageCount){
@@ -153,7 +153,7 @@ if ($stdCount > 0){
 
         $viewprev = new link();
         $viewprev->href=$this->uri(array('action'=>'nextpgschoolsearch','startat'=>$stdCountR,'pg'=>$pg, 'dispcount'=>$dispCount));
-        $viewprev->link = 'Pervious';
+        $viewprev->link = 'Previous';
 		
         $viewprev->style = "text-decoration:none";
         $viewp = $viewprev->show()." |";
@@ -396,11 +396,11 @@ if ($stdCount > 0){
       if ($page > 1){
           $prevLink = new link();
           $prevLink->href=$this->uri(array('action'=>'nextpgschoolsearch','page'=>($page-1), 'dispcount'=>$dispCount));
-          $prevLink->link = 'Pervious';
+          $prevLink->link = 'Previous';
           $prevLink->style = "text-decoration:none";
           $prev = $prevLink->show();
       }else{
-          $prev = 'Pervious';
+          $prev = 'Previous';
       }
 
       if ($page < $pageCount){
@@ -462,7 +462,7 @@ if ($stdCount > 0){
 
         $viewprev = new link();
         $viewprev->href=$this->uri(array('action'=>'nextpgschoolsearch','startat'=>$stdCountR,'pg'=>$pg, 'dispcount'=>$dispCount));
-        $viewprev->link = 'Pervious';
+        $viewprev->link = 'Previous';
 		
         $viewprev->style = "text-decoration:none";
         $viewp = $viewprev->show()." |";
@@ -609,11 +609,11 @@ if ($stdCount > 0){
       if ($page > 1){
           $prevLink = new link();
           $prevLink->href=$this->uri(array('action'=>'nextpgschoolsearch','page'=>($page-1), 'dispcount'=>$dispCount));
-          $prevLink->link = 'Pervious';
+          $prevLink->link = 'Previous';
           $prevLink->style = "text-decoration:none";
           $prev = $prevLink->show();
       }else{
-          $prev = 'Pervious';
+          $prev = 'Previous';
       }
 
       if ($page < $pageCount){
@@ -675,7 +675,7 @@ if ($stdCount > 0){
 
         $viewprev = new link();
         $viewprev->href=$this->uri(array('action'=>'nextpgschoolsearch','startat'=>$stdCountR,'pg'=>$pg, 'dispcount'=>$dispCount));
-        $viewprev->link = 'Pervious';
+        $viewprev->link = 'Previous';
 		
         $viewprev->style = "text-decoration:none";
         $viewp = $viewprev->show()." |";

@@ -98,7 +98,7 @@
   $this->objSubmitstudcard  = new button('submitstudcard', $str1);
   $this->objSubmitstudcard->setToSubmit();
 
-  $objElement15 = new checkbox('confirmation',NULL,true);
+  $objElement15 = new checkbox('confirmation',NULL,false);
   $check15 = $objElement15->show();
 /*----------------------------------------------------------------------------------------*/
 

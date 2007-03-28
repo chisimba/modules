@@ -9,8 +9,6 @@
        $this->loadClass('datepicker','htmlelements');
        $this->objsearchinfo = & $this->getObject('searchinfo','marketingrecruitmentforum');
        $this->objreport  = & $this->newObject('reportinfo','marketingrecruitmentforum');
-      // $this->objschoolname = & $this->getObject('schoolnames', 'marketingrecruitmentforum');
-       
 /*------------------------------------------------------------------------------*/       
       /**
         *create form heading

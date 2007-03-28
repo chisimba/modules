@@ -36,6 +36,10 @@
   $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
   $this->objMainheading->type=1;
   $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_sluactivities12','marketingrecruitmentforum');
+  
+  $this->objheading =& $this->newObject('htmlheading','htmlelements');
+  $this->objheading->type=5;
+  $this->objheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_warning','marketingrecruitmentforum');
 
 /*------------------------------------------------------------------------------*/  
 /**
@@ -48,8 +52,7 @@
        }
        
        $searchlist  = new dropdown('schoollistactivity');
-     //  $searchlist->size = 50;
-       
+     
        //populate list values with array data
        sort( $schoolvalues);
        foreach( $schoolvalues as $sessschool){
@@ -72,8 +75,7 @@
    // print_r($areavals);die;
        //create dropdown list
        $arealist  = new dropdown('area');
-      // $arealist->size = 50;
-       
+     
        sort($areavals);
        foreach($areavals as $sessarea){
           $arealist->addOption(NULL, ''.'Please select an area');
@@ -99,18 +101,18 @@
   */
    //All types of activities
    $this->objactivitydropdown  = new dropdown('activityvalues');
-   $this->objactivitydropdown->addOption('Please select an activity','Please select an activity') ;
+   $this->objactivitydropdown->addOption(NULL,'Please select an activity') ;
    $this->objactivitydropdown->addOption('School Visitation','School Visitation') ;
    $this->objactivitydropdown->addOption('University Open Day','University Open Day') ;
    $this->objactivitydropdown->addOption('Matric Camps','Matric Camps') ;
    $this->objactivitydropdown->addOption('Cape Careers Exhibitions','Cape Careers Exhibitions') ;
    $this->objactivitydropdown->addOption('Individual visit to SLU office','Individual visit to SLU office') ;
    $this->objactivitydropdown->addOption('Other','Other') ;
-//   $this->objactivitydropdown->size = 50;
+
    
    //All province names  
    $this->objprovincedropdown  = new dropdown('province');
-   $this->objprovincedropdown->addOption('Please select a province','Please select a province') ;
+   $this->objprovincedropdown->addOption(NULL,'Please select a province') ;
    $this->objprovincedropdown->addOption('Western Cape','Western Cape') ;
    $this->objprovincedropdown->addOption('Eastern Cape','Eastern Cape') ;
    $this->objprovincedropdown->addOption('Northern Cape','Northern Cape') ;
@@ -148,22 +150,22 @@
          
   $myTable->startRow();
   $myTable->addCell(ucfirst($activity));
-  $myTable->addCell($this->objactivitydropdown->show());
+  $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.$this->objactivitydropdown->show());
   $myTable->endRow();
   
   $myTable->startRow();
   $myTable->addCell(ucfirst($school));
-  $myTable->addCell($searchlist->show());
+  $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.$searchlist->show());
   $myTable->endRow();
   
   $myTable->startRow();
   $myTable->addCell(ucfirst($area));
-  $myTable->addCell($arealist->show());
+  $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.$arealist->show());
   $myTable->endRow();
   
   $myTable->startRow();
   $myTable->addCell(ucfirst($province));
-  $myTable->addCell($this->objprovincedropdown->show());
+  $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.$this->objprovincedropdown->show());
   $myTable->endRow();       
   
   $myTable->startRow();
@@ -178,8 +180,12 @@
   $this->loadClass('form','htmlelements');
   $objForm = new form('sluactivities',$this->uri(array('action'=>'showschoolist')));
   $objForm->displayType = 3;
-  $objForm->addToForm($this->objMainheading->show() . '<br>' . $myTable->show());
-
+  $objForm->addToForm($this->objMainheading->show() . '<br />'."<span class=error>".'<i>'.$this->objheading->show().'</i>'."</span>".'<br />' . $myTable->show());
+  $objForm->addRule('activityvalues','Please select an activity','required');
+  $objForm->addRule('schoollistactivity','Please select a school','required');
+  $objForm->addRule('area','Please select a area','required');
+  $objForm->addRule('province','Please select a province','required');
+  
 /*------------------------------------------------------------------------------*/  
           
   /**

@@ -238,12 +238,16 @@
      */
     $this->objButtonNext  = new button('schoolnext', $str1);
     $this->objButtonNext->setToSubmit();
-
+   
+   /**
+     * get the schoolname selected from session variable
+     */        
+     $nameselected  = $this->getSession('nameschool');
 /*------------------------------------------------------------------------------*/   
   /**
    *create a table to place all form elements in
    */
-   
+    
     $myTable=$this->newObject('htmltable','htmlelements');
     $myTable->width='80%';
     $myTable->border='0';
@@ -252,7 +256,7 @@
            
     $myTable->startRow();
     $myTable->addCell(ucfirst($schoolname));
-    $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.' '.$searchlist->show());
+    $myTable->addCell('<h3>'.$nameselected.'<h3/>');
     $myTable->endRow();   
     
     $myTable->startRow();
@@ -328,12 +332,12 @@
    $objForm = new form('schoollist',$this->uri(array('action'=>'showschooloutput')));
    $objForm->displayType = 3;
    $objForm->addToForm($this->objMainheading->show().'<br />'."<span class=error>".'<i>'.$this->objheading->show().'</i>'."</span>".'<br />'.$myTable->show());
-   $objForm->addRule('schoollistactivity',$selectSch,'required');
+//   $objForm->addRule('schoollistactivity',$selectSch,'required');
    $objForm->addRule('schooladdress',$schvalid,'required');
    $objForm->addRule('areaschool',$selectArea,'required');
    $objForm->addRule('provinceschool',$selectProvince,'required');
-   $objForm->addRule('txttelnumber',$telvalid,'required');
-   $objForm->addRule('txtfaxnumber',$faxval,'required');
+   //$objForm->addRule('txttelnumber',$telvalid,'required');
+   //$objForm->addRule('txtfaxnumber',$faxval,'required');
    $objForm->addRule('txtemail',$emailvalid,'required');
    $objForm->addRule('txtemail',$emailformat,'email');
    $objForm->addRule('txtprincipal',$enterPrincipalname,'required');

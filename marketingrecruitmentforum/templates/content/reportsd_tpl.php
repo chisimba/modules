@@ -65,12 +65,9 @@
        
        $totresult = $this->objstudcard->allsdcases($where =  'where sdcase = 1 and exemption = 0');
        $totcount  = 0;
-       //get  the total of all sd cases
-       //foreach($total as $sessCount){
+
        for($i=0; $i< count($totresult); $i++){
           $totcount  = $totresult[$i]->SDRESULT;
-          //var_dump($totcount);
-          //die;
        }
        $displaytot  = ':' . $totcount;
 /*------------------------------------------------------------------------------*/       

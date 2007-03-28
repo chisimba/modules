@@ -50,7 +50,7 @@ foreach($a as $a1){
    $list->addOption(NULL, ''.'Please select an option'); 
    $list->addOption($a1,$a1);
 }
-$list->setMultiSelected($a);
+//$list->setMultiSelected($a);
 
 /**
  *create dropdown list for leadership position
@@ -97,8 +97,8 @@ $list3->addOption('Boxing','Boxing');
 $list3->addOption('Golf','Golf');
 $list3->addOption('Pool','Pool');
 $list3->addOption('Other','Other');
-$list3->setMultiSelected($c);
-$list3->setSelected($this->getParam('listC','Please select an option'));
+//$list3->setMultiSelected($c);
+//$list3->setSelected($this->getParam('listC','Please select an option'));
 //$list3->extra = ' onChange="document.sportdata.submit()"';
 
 /** 

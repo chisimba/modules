@@ -6,11 +6,7 @@
        */               
        $this->loadClass('button','htmlelements');
        $this->loadClass('textinput','htmlelements');
-       
-       //$this->objfaculties =& $this->getObject('dbstudentcard','marketingrecruitmentforum');
-       //$d = $this->objfaculties->getFaculties();
-       //echo "<pre>";
-         //       print_r($d);die;
+       $this->loadClass('domtt','htmlelements');
        
 /*----------------------------------------------------------------------------*/       
       /**
@@ -18,7 +14,7 @@
        */
        $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
        $this->objMainheading->type=1;
-       $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_studentcardinterface1','marketingrecruitmentforum');
+       $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_studinterface1','marketingrecruitmentforum');
        
        $this->objheading =& $this->newObject('htmlheading','htmlelements');
        $this->objheading->type=5;
@@ -49,6 +45,7 @@
        $this->objtxtidnumber = new textinput('idnumber'); 
        $this->objtxtidnumber->value  = "No id number";
        
+     
        
        $this->objtxtfirstname = new textinput('firstname'); 
        $this->objtxtfirstname->value  = "";             
@@ -104,5 +101,5 @@
 
 /*----------------------------------------------------------------------------*/
       //display info to the screan
-      echo $objForm->show();// . $objForm1->show();       
+      echo $objForm->show();       
 ?>
