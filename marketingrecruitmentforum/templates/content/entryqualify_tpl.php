@@ -75,7 +75,7 @@
         */
         $this->objMainheading =& $this->getObject('htmlheading','htmlelements');
         $this->objMainheading->type=1;
-        $this->objMainheading->str=$objLanguage->languageText('mod_marketingrecruitmentforum_entryqualify1','marketingrecruitmentforum');
+        $this->objMainheading->str='Qualifying Student Entries';
         
         $this->objheading =& $this->newObject('htmlheading','htmlelements');
         $this->objheading->type=3;

@@ -385,9 +385,9 @@
           $objForm->displayType = 3;
           $objForm->addToForm($this->objMainheading->show() . '<br />'."<span class=error>".'<i>'.$this->objheading->show().'</i>'."</span>".'<br />' .$myTable->show());
           $objForm->addRule('schoollist','Please select a school','required');
-          $objForm->addRule('txtsurname',$surnameval,'required');
-          $objForm->addRule(array('name'=>'txtsurname','length'=>45), $surnamemaxval, 'maxlength');
-          $objForm->addRule('txtname',$nameval,'required');
+          $objForm->addRule('txtname','Please enter surname','required');
+          $objForm->addRule(array('name'=>'txtsurname','length'=>45), , 'maxlength');
+          $objForm->addRule('txtsurname','Please enter surname','required');
           $objForm->addRule(array('name'=>'txtname','length'=>45), $namemaxval, 'maxlength');
           $objForm->addRule('grade','Please select a grade','required');
           $objForm->addRule('postaladdress',$postaladd,'required');
