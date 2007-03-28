@@ -143,7 +143,7 @@ function dispatch($action)
                 $this->setSession('name',$firstname);
                 $this->setSession('surname',$lastname);
                 $idsearch  = $this->dbstudentcard->getstudbyid($idnumber, $field = 'IDNUMBER', $firstname, $field2 = 'NAME', $lastname, $field3 = 'SURNAME', $start = 0, $limit = 0);
-                var_dump($idsearch);
+               // var_dump($idsearch);
                 $this->setVarByRef('idsearch', $idsearch);
                 return 'idnumberform_tpl.php';
            break;
