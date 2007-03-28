@@ -867,7 +867,7 @@ public function studarealimit($startat,$endat)
  */
 public function getstudbyid($idnumber, $field = 'IDNUMBER', $firstname, $field2 = 'NAME', $lastname, $field3 = 'SURNAME', $start = 0, $limit = 0) 
 {
-   //try {
+   try {
             $keys  = array();
             $keys[] = array( 'field' => $field, 'value' => $idnumber);
             $keys[] = array( 'field' => $field2,'value' => $lastname);
@@ -877,9 +877,9 @@ public function getstudbyid($idnumber, $field = 'IDNUMBER', $firstname, $field2 
                           
             return $this->getWSQuery('tbl_mrf_studcard','IDNUMBER',null,null,$keys,$start, $limit,$fields);
 
-     // } catch(Exception $e) {
-       //   return NULL;
-      //}
+      } catch(Exception $e) {
+        return NULL;
+     }
 }
   
 /**

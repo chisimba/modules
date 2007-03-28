@@ -1918,7 +1918,7 @@ public  function searchID($idsearch){
                            $myTable->border='0';
                            $myTable->width = '70%';
                            $myTable->css_class = 'highlightrows';
-                           ///$myTable->row_attributes = " class = \"$oddEven\"";
+                           
                     
                      
                     // foreach($idsearch as $sessCard){
