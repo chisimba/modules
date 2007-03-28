@@ -14,20 +14,13 @@ $fields = array(
         'type' => 'text',
         'length' => 32,
         ),
-    'notify_type' => array( // on logon, anytime, time interval
+    'delivery_type' => array( // anytime, on logon, time interval
         'type' => 'integer',
         'length' => 1,
         ),
     'time_interval' => array( // time in minutes
         'type' => 'integer',
         'length' => 2,
-        ),
-    'user_available' => array(
-        'type' => 'integer',
-        'length' => 1,
-        ),
-    'date_created' => array(
-        'type' => 'timestamp',
         ),
     'updated' => array(
         'type' => 'timestamp',

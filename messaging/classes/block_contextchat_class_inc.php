@@ -50,16 +50,10 @@ class block_contextchat extends object
     private $objLanguage;
 
     /**
-    * @var object $dbRooms: The dbrooms class in the messaging module
+    * @var object $dbMessaging: The dbmessaging class in the messaging module
     * @access private
     */
-    private $dbRooms;
-
-    /**
-    * @var object $dbMessages: The dbmessages class in the messaging module
-    * @access private
-    */
-    private $dbMessages;
+    private $dbMessaging;
 
     /*
     * @var string $counter: The count of the number of messsges posted
@@ -99,18 +93,17 @@ class block_contextchat extends object
         $this->objLanguage = $this->getObject('language', 'language');
         
         // messaging classes
-        $this->dbRooms = $this->getObject('dbrooms', 'messaging');
-        $this->dbMessages = $this->getObject('dbmessages', 'messaging');
+        $this->dbMessaging = $this->getObject('dbmessaging', 'messaging');
         
         // set up data
-        $roomData = $this->dbRooms->getContextRoom();
+        $roomData = $this->dbMessaging->getContextChatRoom();
         $this->setSession('chat_room_id', $roomData['id']);
-        $this->counter = $this->dbMessages->getMessageCount($roomData['id']);
+        $this->counter = $this->dbMessaging->getMessageCount($roomData['id']);
         $array = array(
             'name' => $this->fullname,
         );
         $message = $this->objLanguage->code2Txt('mod_messaging_userenter', 'messaging', $array);
-        $this->dbMessages->addChatMessage($message, TRUE);
+        $this->dbMessaging->addChatMessage($message, TRUE);
         
         // set up title
         $this->title = $roomData['room_name'];

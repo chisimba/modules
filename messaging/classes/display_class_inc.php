@@ -14,6 +14,12 @@ if(!$GLOBALS['kewl_entry_point_run']){
 class display extends object
 {
     /**
+    * @var object $objTimeOut: The timeoutMessage class of the htmlelements module
+    * @access private
+    */
+    private $objTimeOut;
+     
+    /**
     * @var object $objPopup: The windowpop class of the htmlelements module
     * @access private
     */
@@ -99,34 +105,10 @@ class display extends object
     public $objModule;
 
     /**
-    * @var object $dbRooms: The dbrooms class in the messaging module
+    * @var object $dbMessaging: The dbmessaging class in the messaging module
     * @access private
     */
-    private $dbRooms;
-
-    /**
-    * @var object $dbUsers: The dbusers class in the messaging module
-    * @access private
-    */
-    private $dbUsers;
-
-    /**
-    * @var object $dbUserlog: The dbuserlog class in the messaging module
-    * @access private
-    */
-    private $dbUserlog;
-
-    /**
-    * @var object $dbMessages: The dbmessages class in the messaging module
-    * @access private
-    */
-    private $dbMessages;
-
-    /**
-    * @var object $dbBanned: The dbbannedusers class in the messaging module
-    * @access private
-    */
-    private $dbBanned;
+    private $dbMessaging;
 
     /**
     * Method to construct the class
@@ -153,6 +135,7 @@ class display extends object
         $this->objPopup = $this->getObject('windowpop','htmlelements');
         $this->objFeaturebox = $this->getObject('featurebox', 'navigation');
         $this->objPopupcal = $this->newObject('datepickajax', 'popupcalendar');
+        $this->objTimeOut = $this->newObject('timeoutMessage','htmlelements');
         
         // syatem classes
                 $this->loadClass('tabbedbox', 'htmlelements');
@@ -167,11 +150,7 @@ $this->objLanguage = $this->getObject('language','language');
         $this->objModule = $this->getObject('modules', 'modulecatalogue');
         
         // messaging classes     
-        $this->dbRooms = $this->getObject('dbrooms', 'messaging');
-        $this->dbUsers = $this->getObject('dbusers', 'messaging');
-        $this->dbUserlog = $this->getObject('dbuserlog', 'messaging');
-        $this->dbMessages = $this->getObject('dbmessages', 'messaging');
-        $this->dbBanned = $this->getObject('dbbannedusers', 'messaging');
+        $this->dbMessaging = $this->getObject('dbmessaging', 'messaging');
     }
 
     /**
@@ -207,8 +186,8 @@ $this->objLanguage = $this->getObject('language','language');
         
         //$str = $this->divShowIm();
         // get data
-        $rooms = $this->dbRooms->listRooms($this->contextCode);
-        $userRooms = $this->dbUsers->listUserRooms($this->userId);
+        $rooms = $this->dbMessaging->listChatRooms($this->contextCode);
+        $userRooms = $this->dbMessaging->listUserPrivateRooms($this->userId);
                 
         // headings
         $objHeader = new htmlheading();
@@ -361,7 +340,7 @@ $this->objLanguage = $this->getObject('language','language');
                     return confirm(\''.$confirmLabel.'\');"';
                 $deleteLink = '<nobr>'.$objLink->show().'</nobr>';
                 
-                $activeUsers = $this->dbUserlog->listUsers($room['id']);
+                $activeUsers = $this->dbMessaging->listRoomUsers($room['id']);
                 $userCount = $activeUsers ? count($activeUsers) : 0;
                 
                 if($roomType == 1 && $ownerId == $this->userId){
@@ -454,7 +433,7 @@ $this->objLanguage = $this->getObject('language','language');
             $textOnly = 0;
             $disabled = 0;
         }else{
-            $roomData = $this->dbRooms->getRoom($roomId);
+            $roomData = $this->dbMessaging->getChatRoom($roomId);
             $roomType = $roomData['room_type'];
             $roomName = $roomData['room_name'];
             $roomDesc = $roomData['room_desc'];
@@ -563,7 +542,7 @@ $this->objLanguage = $this->getObject('language','language');
         $closeTitleLabel = $this->objLanguage->languageText('mod_messaging_closetitle', 'messaging');
         
         // get data
-        $roomData = $this->dbRooms->getRoom($roomId);
+        $roomData = $this->dbMessaging->getChatRoom($roomId);
         
         // feature boxes
         $string = $this->objFeaturebox->show($nameLabel, $roomData['room_name']);
@@ -618,7 +597,7 @@ $this->objLanguage = $this->getObject('language','language');
                 
         // get data
         $roomId = $this->getSession('chat_room_id');
-        $roomData = $this->dbRooms->getRoom($roomId);
+        $roomData = $this->dbMessaging->getChatRoom($roomId);
         
         // heading
         $heading = $roomData['room_name'];
@@ -726,6 +705,7 @@ $this->objLanguage = $this->getObject('language','language');
         $objLayer->id = 'chatDiv';
         $objLayer->height = '300px';
         $objLayer->border = '1px solid black';
+        $objLayer->padding = '10px';
         $objLayer->overflow = 'auto';
         $chatLayer = $objLayer->show();
         $str .= $chatLayer;
@@ -835,7 +815,7 @@ $this->objLanguage = $this->getObject('language','language');
         // get data
         $roomId = $this->getSession('chat_room_id');
         $isModerator = $this->getSession('is_moderator');
-        $users = $this->dbUserlog->listUsers($roomId);
+        $users = $this->dbMessaging->listRoomUsers($roomId);
 
         $banned = 'N';
         $type = '';
@@ -938,12 +918,12 @@ $this->objLanguage = $this->getObject('language','language');
                         $dateNow = strtotime(date('Y-m-d H:i:s'));
                         $banStop = strtotime($user['ban_stop']);
                         if($dateNow >= $banStop){
-                            $this->dbBanned->deleteUser($user['bannedid']);
+                            $this->dbMessaging->deleteBannedUser($user['bannedid']);
                             $array = array(
                                     'user' => $name,
                             );
                             $message = $this->objLanguage->code2Txt('mod_messaging_unbantempmsg', 'messaging', $array);                    
-                            $this->dbMessages->addChatMessage($message, TRUE);             
+                            $this->dbMessaging->addChatMessage($message, TRUE);             
                         }
                         $namePopup = $name;
                     }                
@@ -993,52 +973,52 @@ $this->objLanguage = $this->getObject('language','language');
         // list of smiley icons and their codes
         $list = array(
             'alien' => '>-)',
-            'angel' => 'O:)',
+            'angel' => 'O:-)',
             'angry' => 'X-(',
             'applause' => '=D>',
             'black_eye' => 'b-(',
-            'bye' => ':"(',
-            'cheeky' => ':P',
+            'bye' => ':-[',
+            'cheeky' => ':-P',
             'chicken' => '~:>',
             'clown' => ':o)',
             'confused' => ':-/',
             'cool' => 'B-)',
-            'cowboy' => '<):)',
+            'cowboy' => '<):-)>',
             'crazy' => '8-}',
-            'cry' => ':((',
-            'dance_of_joy' => '/:D/',
+            'cry' => ':-((',
+            'dance_of_joy' => '/:-D/',
             'doh' => '#-o',
             'drool' => '=P~',
-            'embarrassed' => ':">',
-            'evil' => '>:)',
+            'embarrassed' => ':"->',
+            'evil' => '>:-)',
             'frustrated' => ':-L',
-            'grin' => ':D',
-            'hug' => '>:D<',
+            'grin' => ':-D',
+            'hug' => '>:-D<',
             'hypnotised' => '@-)',
-            'idea' => '*-:)',
-            'kiss' => ':*',
-            'laugh' => ':))',
-            'love' => ':x',
+            'idea' => '*-:-)',
+            'kiss' => ':-*',
+            'laugh' => ':-))',
+            'love' => ':-x',
             'nerd' => ':-B',
             'not_talking' => '[-(',
             'praying' => '[-o<',
-            'raise_eyebrow' => '/:)',
+            'raise_eyebrow' => '/:-)',
             'roll_eyes' => '8-|',
             'rose' => '@};-',
-            'sad' => ':(',
+            'sad' => ':-(',
             'shame_on_you' => '[-X',
-            'shocked' => ':O',
-            'shy' => ';;)',
+            'shocked' => ':-O',
+            'shy' => ';;-)',
             'sick' => ':-&',
             'skull' => '8-X',
             'sleeping' => 'I-)',
-            'smile' => ':)',
-            'straight_face' => ':|',
+            'smile' => ':-)',
+            'straight_face' => ':-|',
             'thinking' => ':-?',
-            'tired' => '(:|',
-            'victory' => ':)>-',
+            'tired' => '(:-|',
+            'victory' => ':-)>-',
             'whistle' => ':-"',
-            'wink' => ';)',
+            'wink' => ';-)',
             'worried' => ':-s',
         );
         
@@ -1101,16 +1081,16 @@ $this->objLanguage = $this->getObject('language','language');
         
         // get data
         $roomId = $this->getSession('chat_room_id');
-        $roomData = $this->dbRooms->getRoom($roomId);
+        $roomData = $this->dbMessaging->getChatRoom($roomId);
         //$counter = $this->getSession('message_counter');
-        $messages = $this->dbMessages->getChatMessages($roomId, $counter);
+        $messages = $this->dbMessaging->getChatMessages($roomId, $counter);
         
         // ordered list of chat messages
         $str = '';
         if($messages != FALSE){
-            $str = '<ul id="chat">';
+//            $str = '<ul id="chat">';
             foreach($messages as $message){
-                $str .= '<li>';
+//                $str .= '<li>';
                 $userId = $message['sender_id'];
                 if($userId == 'system'){
                     $name = $systemLabel;   
@@ -1122,7 +1102,7 @@ $this->objLanguage = $this->getObject('language','language');
                     }   
                 }
                 $date = $this->objDatetime->formatDate($message['date_created']);
-                $str .= '<strong>['.$name;
+                $str = '<strong>['.$name;
                 if($mode == 'context'){
                     $str .= ']:</strong><br />';
                 }else{
@@ -1134,15 +1114,19 @@ $this->objLanguage = $this->getObject('language','language');
                     $str .= nl2br($this->objWash->parseText($message['message']));
                 }
                 //$str .= nl2br($message['message']);
-                $str .= '</li>';
+//                $str .= '</li>';
+                $str .= '<br />';
             }
-            $str .= '</ul>';
-            
-            // hidden input to hold the number of list entries
-            $objInput = new textinput('count', count($messages), 'hidden');
-            $countInput = $objInput->show();
-            $str .= $countInput;
+//            $str .= '</ul>';
+            $count = count($messages);
+        }else{
+            $count = 0;
         }
+        // hidden input to hold the number of list entries
+        $objInput = new textinput('count', $count, 'hidden');
+        $countInput = $objInput->show();
+        $str .= $countInput;
+
         echo $str;
     }    
 
@@ -1225,14 +1209,13 @@ $this->objLanguage = $this->getObject('language','language');
         
         // ban length radio
         $objDrop = new dropdown('length');
-        $objDrop->addOption(1, '&nbsp;1 min');
         $objDrop->addOption(5, '&nbsp;5 min');
         $objDrop->addOption(10, '&nbsp;10 min');
         $objDrop->addOption(15, '&nbsp;15 min');
         $objDrop->addOption(30, '&nbsp;30 min');
         $objDrop->addOption(45, '&nbsp;45 min');
         $objDrop->addOption(60, '&nbsp;60 min');
-        $objDrop->extra = ' style="width: 60px;"';
+        $objDrop->extra = ' style="width: 30%;"';
         $lengthDrop = $objDrop->show();
         
         // ban length feature box
@@ -1621,8 +1604,8 @@ $this->objLanguage = $this->getObject('language','language');
     {
         // get data
         $roomId = $this->getSession('chat_room_id');
-        $roomUsersList = $this->dbUsers->listRoomUsers($roomId);
-        $searchList = $this->dbUsers->searchUsers($option, $value);
+        $roomUsersList = $this->dbMessaging->listPrivateRoomUsers($roomId);
+        $searchList = $this->dbMessaging->searchUsers($option, $value);
      
         // language items
         $noMatchLabel = $this->objLanguage->languageText('mod_messaging_nomatch', 'messaging');
@@ -1734,7 +1717,7 @@ $this->objLanguage = $this->getObject('language','language');
         
         // get data
         $roomId = $this->getSession('chat_room_id');
-        $roomUsers = $this->dbUsers->listRoomUsers($roomId);
+        $roomUsers = $this->dbMessaging->listPrivateRoomUsers($roomId);
 
         // remove room owner
         if($roomUsers != FALSE){
@@ -1812,7 +1795,7 @@ $this->objLanguage = $this->getObject('language','language');
 
         // submit button
         $objButton = new button('send', $submitLabel);
-        $objButton->extra = ' onclick="javascript:return jsValidateRemove('.$errLabel.')"';
+        $objButton->extra = ' onclick="javascript:return jsValidateRemove(\''.$errLabel.'\')"';
         $sendButton = $objButton->show();
         
         // cancel button
@@ -2014,13 +1997,13 @@ $this->objLanguage = $this->getObject('language','language');
         
         // get data
         $roomId = $this->getSession('chat_room_id');
-        $roomData = $this->dbRooms->getRoom($roomId);
+        $roomData = $this->dbMessaging->getChatRoom($roomId);
         if($type == 1){
             $array = array(
                 'name' => $roomData['room_name'],
             );
             $heading = $this->objLanguage->code2Txt('mod_messaging_logcomplete', 'messaging', $array);
-            $chatData = $this->dbMessages->getChatMessages($roomId, 0);
+            $chatData = $this->dbMessaging->getChatMessages($roomId, 0);
         }else{
             $array = array(
                 'name' => $roomData['room_name'],
@@ -2028,7 +2011,7 @@ $this->objLanguage = $this->getObject('language','language');
                 'end' => '<nobr>'.$this->objDatetime->formatDate($end).'</nobr>',
             );
             $heading = $this->objLanguage->code2Txt('mod_messaging_logabridged', 'messaging', $array);
-            $chatData = $this->dbMessages->getChatPeriod($roomId, $start, $end);
+            $chatData = $this->dbMessaging->getChatPeriod($roomId, $start, $end);
         }
         
         // language items
@@ -2213,12 +2196,7 @@ $this->objLanguage = $this->getObject('language','language');
             }
         </style>';
         $str = $style;
-
-        // javascript
-        $script = '<script type="text/javaScript">
-        </script>';
-        $str .= $script;
-
+        
         // language items
         $imLabel = $this->objLanguage->languageText('mod_messaging_im', 'messaging');
         $userLabel = $this->objLanguage->languageText('mod_messaging_worduser', 'messaging');
@@ -2229,13 +2207,28 @@ $this->objLanguage = $this->getObject('language','language');
         $surnameLabel = $this->objLanguage->languageText('mod_messaging_surname', 'messaging');
         $errImUserLabel = $this->objLanguage->languageText('mod_messaging_errimuser', 'messaging');
         $messageLabel = $this->objLanguage->languageText('mod_messaging_wordmessage', 'messaging');
-                
-                
+        $settingsLabel = $this->objLanguage->languageText('mod_messaging_settings', 'messaging');
+        $settingsTitleLabel = $this->objLanguage->languageText('mod_messaging_settingstitle', 'messaging');
+                               
         // heading
         $objHeader = new htmlheading();
         $objHeader->str = $imLabel;
         $objHeader->type = 1;
         $heading = $objHeader->show();
+
+        // popup link to invite users
+        $objPopup = new windowpop();
+        $objPopup->title = $settingsTitleLabel;
+        $objPopup->set('location',$this->uri(array(
+            'action' => 'imsettings',
+        )));
+        $objPopup->set('linktext', $settingsLabel);
+        $objPopup->set('width', '500');
+        $objPopup->set('height', '250');
+        $objPopup->set('left', '100');
+        $objPopup->set('top', '100');
+        $objPopup->set('scrollbars', 'no');
+        $settingsLink = $objPopup->show();
 
         // name/surname radio
         $objRadio = new radio('option');
@@ -2252,7 +2245,7 @@ $this->objLanguage = $this->getObject('language','language');
         
         // user search input
         $objInput = new textinput('value', '', '', 50);
-        $objInput->extra = ' onkeyup="javascript:
+        $objInput->extra = ' onkeydown="javascript:
             jsImUserList()"';
         $userInput = $objInput->show();
         
@@ -2290,7 +2283,7 @@ $this->objLanguage = $this->getObject('language','language');
         
         // submit button
         $objButton = new button('send', $submitLabel);
-        $objButton->extra = ' onclick="javascript:return jsValidateInvite(\''.$errImUserLabel.'\')"';
+        $objButton->extra = ' onclick="javascript:return jsValidateUser(\''.$errImUserLabel.'\')"';
         $sendButton = $objButton->show();
         
         // cancel button
@@ -2310,15 +2303,15 @@ $this->objLanguage = $this->getObject('language','language');
         $objForm->addToForm($userFeature);
         $objForm->addToForm($messageFeature);
         $objForm->addToForm($buttonDiv);
-        $inviteForm = $objForm->show();
+        $sendForm = $objForm->show();
 
         // main display div
         $objLayer = new layer();
-        $objLayer->id = 'formDiv';
+        $objLayer->id = 'mainDiv';
         $objLayer->padding = '10px';
-        $objLayer->addToStr($heading.$inviteForm);
-        $formDiv = $objLayer->show();
-        $str .= $formDiv;
+        $objLayer->addToStr($heading.$settingsLink.$sendForm);
+        $mainDiv = $objLayer->show();
+        $str .= $mainDiv;
 
         return $str;
     } 
@@ -2334,7 +2327,7 @@ $this->objLanguage = $this->getObject('language','language');
     public function divGetImUsers($option, $value)
     {
         // get data
-        $searchList = $this->dbUsers->searchUsers($option, $value);
+        $searchList = $this->dbMessaging->searchUsers($option, $value);
      
         // language items
         $noMatchLabel = $this->objLanguage->languageText('mod_messaging_nomatch', 'messaging');
@@ -2343,7 +2336,7 @@ $this->objLanguage = $this->getObject('language','language');
         if($searchList != FALSE){
             foreach($searchList as $key=>$user){
                 if($user['userid'] == $this->userId){
-                    unset($searchList[$key]);                                        
+                    //unset($searchList[$key]);                                        
                 }
             }
         }
@@ -2373,6 +2366,9 @@ $this->objLanguage = $this->getObject('language','language');
     */
     public function popConfirmIm($userId)
     {
+        $body = 'window.resizeTo(500,200); setTimeout("window.close()", 6000)';
+        $this->appendArrayVar('bodyOnLoad', $body);
+
         // language items
         $array = array(
             'user' => $this->objUser->fullname($userId),
@@ -2417,7 +2413,7 @@ $this->objLanguage = $this->getObject('language','language');
     public function popGetIM()
     {
         // get data
-        $imData = $this->dbMessages->getInstantMessage();
+        $imData = $this->dbMessaging->getInstantMessage();
         
         $str = '';
         if($imData != FALSE){
@@ -2427,5 +2423,145 @@ $this->objLanguage = $this->getObject('language','language');
         }
         return $str;
     }
+    
+    /**
+    * Method to display the instant messaging popup
+    *
+    * @access public
+    * @param bool $update: TRUE if the settings have been updated FALSE if not
+    * @return string $str: The output string
+    */
+    public function popSetIM($update = FALSE)
+    {
+        // language items
+        $imSettingsLabel = $this->objLanguage->languageText('mod_messaging_imsettings', 'messaging');
+        $imLabel = $this->objLanguage->languageText('mod_messaging_im', 'messaging');
+        $imTitleLabel = $this->objLanguage->languageText('mod_messaging_imtitle', 'messaging');
+        $settingsLabel = $this->objLanguage->languageText('mod_messaging_imsettings', 'messaging');
+        $deliveryLabel = $this->objLanguage->languageText('mod_messaging_delivery', 'messaging');
+        $anyLabel = $this->objLanguage->languageText('mod_messaging_anytime', 'messaging');
+        $logonLabel = $this->objLanguage->languageText('mod_messaging_logon', 'messaging');
+        $timeLabel = $this->objLanguage->languageText('mod_messaging_time', 'messaging');
+        $intervalLabel = $this->objLanguage->languageText('mod_messaging_interval', 'messaging');
+        $submitLabel = $this->objLanguage->languageText('mod_messaging_wordsubmit', 'messaging');
+        $cancelLabel = $this->objLanguage->languageText('mod_messaging_wordcancel', 'messaging');
+                               
+        // get data
+        $settingData= $this->dbMessaging->getUserSettings();
+        if(!empty($settingData)){
+            $delivery = $settingData['delivery_type'];
+            $interval = $settingData['interval'];            
+        }else{
+            $delivery = 0;
+            $interval = '';
+        }
+        
+        // heading
+        $objHeader = new htmlheading();
+        $objHeader->str = $imSettingsLabel;
+        $objHeader->type = 1;
+        $heading = $objHeader->show();
+        
+        // confirmation message
+        if($update){
+            $array = array(
+                'date' => $this->objDatetime->formatDate(date('Y-m-d H:i:s')),
+            );
+            $confimUpdateLabel = $this->objLanguage->code2Txt('mod_messaging_update', 'messaging');
+            $this->objTimeOut->init();
+            $this->objTimeOut->setMessage($confimUpdateLabel);
+            $this->objTimeOut->setTimeout(3000);
+            $msg = '<b>'.$this->objTimeOut->show().'</b>';            
+        }else{
+            $msg = '';
+        }
+
+        // popup link to invite users
+        $objPopup = new windowpop();
+        $objPopup->title = $imTitleLabel;
+        $objPopup->set('location',$this->uri(array(
+            'action' => 'im',
+        )));
+        $objPopup->set('linktext', $imLabel);
+        $objPopup->set('width', '500');
+        $objPopup->set('height', '250');
+        $objPopup->set('left', '100');
+        $objPopup->set('top', '100');
+        $objPopup->set('scrollbars', 'no');
+        $sendLink = $objPopup->show();
+
+        // delivery type radio
+        $objRadio = new radio('delivery');
+        $objRadio->addOption('0', '&nbsp;'.$anyLabel);
+        $objRadio->addOption('1', '&nbsp;'.$logonLabel);
+        $objRadio->addOption('2', '&nbsp;'.$timeLabel);
+        $objRadio->setBreakSpace('<br />');
+        $objRadio->setSelected($delivery);
+        $objRadio->extra = ' onchange="javascript:jsIntervalDiv(this);"';
+        $deliveryRadio = $objRadio->show();
+        
+        // delivery feature box
+        $deliveryFeature = $this->objFeaturebox->show($deliveryLabel, $deliveryRadio);
+
+        $objLayer = new layer();
+        $objLayer->id = 'deliveryDiv';
+        $objLayer->addToStr($deliveryFeature);
+        $deliveryDiv = $objLayer->show();
+
+        // interval dropdown
+        $objDrop = new dropdown('interval');
+        $objDrop->addOption('5', '&nbsp; 5 min');
+        $objDrop->addOption('10', '&nbsp;10 min');
+        $objDrop->addOption('15', '&nbsp;15 min');
+        $objDrop->addOption('30', '&nbsp;30 min');
+        $objDrop->addOption('45', '&nbsp;45 min');
+        $objDrop->addOption('60', '&nbsp;60 min');
+        $objDrop->setSelected($interval);
+        $objDrop->extra = 'style="width: 20%;"';
+        $intervalDrop = $objDrop->show();        
+        
+        // ionterval feature box
+        $intervalFeature = $this->objFeaturebox->show($intervalLabel, $intervalDrop);
+        
+        $objLayer = new layer();
+        $objLayer->id = 'intervalDiv';
+        $objLayer->display = 'none';
+        $objLayer->addToStr($intervalFeature);
+        $intervalDiv = $objLayer->show();
+
+        // submit button
+        $objButton = new button('send', $submitLabel);
+        $objButton->setToSubmit();
+        $sendButton = $objButton->show();
+        
+        // cancel button
+        $objButton = new button('cancel', $cancelLabel);
+        $objButton->extra = ' onclick="javascript:window.close()"';
+        $cancelButton = $objButton->show();
+        
+        $objLayer = new layer();
+        $objLayer->id = 'buttonDiv';
+        $objLayer->addToStr($sendButton.'&nbsp;'.$cancelButton);
+        $buttonDiv = $objLayer->show();
+
+        // invite form
+        $objForm = new form('im', $this->uri(array(
+            'action' => 'sendim',
+            )));
+        $objForm->addToForm($deliveryDiv);
+        $objForm->addToForm($intervalDiv);
+        $objForm->addToForm($buttonDiv);
+        $settngsForm = $objForm->show();
+
+        // main display div
+        $objLayer = new layer();
+        $objLayer->id = 'mainDiv';
+        $objLayer->padding = '10px';
+        $objLayer->addToStr($heading.$sendLink.$settngsForm);
+        $mainDiv = $objLayer->show();
+        $str = $mainDiv;
+
+        return $str;
+    } 
 }
 ?>

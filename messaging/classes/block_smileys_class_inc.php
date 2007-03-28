@@ -89,15 +89,15 @@ class block_smileys extends object
         // smiley icon array
         $this->shortList = array(
             'angry' => 'X-(',
-            'cheeky' => ':P',
+            'cheeky' => ':-P',
             'confused' => ':-/',
             'cool' => 'B-)',
-            'evil' => '>:)',
-            'idea' => '*-:)',
-            'grin' => ':D',
-            'sad' => ':(',
-            'smile' => ':)',
-            'wink' => ';)',
+            'evil' => '>:-)',
+            'idea' => '*-:-)',
+            'grin' => ':-D',
+            'sad' => ':-(',
+            'smile' => ':-)',
+            'wink' => ';-)',
         );
     }
 
