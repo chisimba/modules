@@ -323,11 +323,11 @@ class cmsutils extends object
 		            $link = $this->objLanguage->languageText('mod_cmsadmin_rss', 'cmsadmin');
 					$icnRss = $objIcon->getBlockIcon($url, 'rss', $link, 'png', 'icons/cms/');
 					
-					/* Menu manager link
-		            $url = $this->uri(array('action' => 'managemenus'));
+					// Menu manager link
+		            //$url = $this->uri(array('action' => 'managemenus'));
+		            $url = $this->uri(array('action' => 'menustyle'));
 		            $link = $this->objLanguage->languageText('mod_cmsadmin_menu', 'cmsadmin');
 					$icnMenu = $objIcon->getBlockIcon($url, 'menu2', $link, 'png', 'icons/cms/');
-					*/
 					
 					// File manager link
 		            $url = $this->uri('', 'filemanager');
@@ -343,7 +343,7 @@ class cmsutils extends object
 					
 					$tbl->startRow();
 					$tbl->addCell($icnRss);
-					//$tbl->addCell($icnMenu);
+					$tbl->addCell($icnMenu);
 		            $tbl->addCell($icnFiles);
 					$tbl->addCell('');
 					$tbl->endRow();
@@ -402,6 +402,7 @@ class cmsutils extends object
         	$lnk_sections = $this->newObject('link', 'htmlelements');
         	$icon_frontpage = $this->newObject('geticon', 'htmlelements');
         	$lnk_frontpage = $this->newObject('link', 'htmlelements');
+		    $iconList = '';
 						 
 			 switch ($action) {
 			 	case 'createcontent':
@@ -573,10 +574,11 @@ class cmsutils extends object
 			 		
 			 	case 'menu':
 			 	
-			 	    // Switch menu style
+			 	    /* Switch menu style
 					$url = $this->uri(array('action' => 'menustyle'), 'cmsadmin');
 			 		$linkText = $this->objLanguage->languageText('phrase_menustyle');
 			 		$iconList = $icon_publish->getTextIcon($url, 'menu2', $linkText, 'png', 'icons/cms/');
+			 		*/
 			 		
 			 	    // New menu
 					$url = $this->uri(array('action' => 'addnewmenu','pageid'=>'0','add'=>'TRUE'), 'cmsadmin');
@@ -894,11 +896,11 @@ class cmsutils extends object
             $url = $this->uri(array('action' => 'createfeed'), 'cmsadmin');
             $createRss = $objIcon->getTextIcon($url, 'rss', $link, 'png', 'icons/cms/');
             
-            /*Create menu management
+            //Create menu management
             $link = $this->objLanguage->languageText('mod_cmsadmin_menu','cmsadmin');
-            $url = $this->uri(array('action' => 'managemenus'), 'cmsadmin');
+            //$url = $this->uri(array('action' => 'managemenus'), 'cmsadmin');
+            $url = $this->uri(array('action' => 'menustyle'), 'cmsadmin');
             $menuMangement = $objIcon->getTextIcon($url, 'menu2', $link, 'png', 'icons/cms/');
-            */
             
             //Create filemanager menu
             $link = $this->objLanguage->languageText('phrase_uploadfiles');
@@ -918,13 +920,10 @@ class cmsutils extends object
 			$nav .= $objFeatureBox->showContent('<strong>Navigation Links</strong><hr />
 					'.$cmsAdminLink.'<br />
 					&nbsp;&nbsp;'.$createRss.'<br />
-					
+					&nbsp;&nbsp;'.$menuMangement.'<br />
 					&nbsp;&nbsp;'.$filemanager.'<br />
 					<div style="clear: both;">&nbsp;</div>
 					');
-					
-					/* &nbsp;&nbsp;'.$menuMangement.'<br /> */
-					
             $nav .= '<br />';
 
             return $nav;

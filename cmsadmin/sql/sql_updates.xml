@@ -1,6 +1,26 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <updates>
-
+    
+    <update>
+    <table>tbl_cms_menustyles</table>
+    <version>1.48</version>
+    <description>Added default data for the menu styles</description>
+    <data>
+        <insert>
+           <id>init_1</id>
+           <menu_style>tree</menu_style>
+           <root_nodes>0</root_nodes>
+           <is_active>1</is_active>
+       </insert>
+       <insert>
+           <id>init_2</id>
+           <menu_style>buttons</menu_style>
+           <root_nodes>1</root_nodes>
+           <is_active>0</is_active>
+       </insert>
+   </data>
+   </update>
+   
     <update>
     <table>tbl_cms_blocks</table>
     <version>1.47</version>
