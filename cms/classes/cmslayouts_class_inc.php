@@ -29,6 +29,9 @@ class cmslayouts extends object
             $this->_objSections =$this->newObject('dbsections', 'cmsadmin');
             $this->_objContent =$this->newObject('dbcontent', 'cmsadmin');
             $this->_objFrontPage =$this->newObject('dbcontentfrontpage', 'cmsadmin');
+            $this->_objMenuStyles =$this->newObject('dbmenustyles', 'cmsadmin');
+            $this->_objHtmlBlock =$this->newObject('dbhtmlblock', 'cmsadmin');
+            $this->_objCmsUtils =$this->newObject('cmsutils', 'cmsadmin');
                 
             $this->objUser = $this->newObject('user', 'security');
             $this->objDate = $this->getObject('datetime', 'utilities');
@@ -50,6 +53,192 @@ class cmslayouts extends object
             throw customException($e->getMessage());
             exit();
         }
+    }
+
+    /**
+    * Method to get the left side menu
+    *
+    * @access public
+    * @param string $currentNode The id of the selected node
+    * @param array $rss RSS feeds to display
+    * @return string html
+    */
+    public function getLeftMenu($currentNode, $rss = NULL)
+    {
+        $adminLn = $this->objLanguage->languageText('mod_cms_cmsadmin', 'cms');
+        
+        // Create menu
+        $style = $this->getMenuStyle();
+        $leftSide = $this->getMenu($style, $currentNode);
+        
+        // Add admin link
+        if($this->objUser->isAdmin() || $this->_objCmsUtils->checkPermission()){
+            $objAdminLink = new link($this->uri(array(NULL), 'cmsadmin'));
+            $objAdminLink->link = $adminLn;
+        
+            $leftSide .= '<br />';
+            $leftSide .= $objAdminLink->show();
+        }
+        
+        
+        // Additional items for the left side menu
+        $leftSide .= '<p/>';
+        $leftSide .= $this->additionalMenuItems($rss);
+        $leftSide .=  '<br />';
+        
+        return $leftSide;
+    }
+    
+    /**
+    * Method to display the menu
+    *
+    * @access public
+    * @param string $style The menu style
+    * @return string html
+    */
+    public function getMenu($style, $currentNode = '')
+    {
+        switch($style){
+            case 'buttons':
+                $menu = $this->showButtonsMenu($currentNode);
+                break;
+            case 'tree':
+            default:
+                $menu = $this->showTreeMenu($currentNode);
+        }
+        return $menu;
+    }
+
+    /**
+    * Method to determine which style of menu to display
+    *
+    * @access public
+    * @param bool $reset If true - reset the session
+    * @return string The style
+    */
+    public function getMenuStyle($reset = FALSE)
+    {
+        $active = $this->getSession('menuStyle');
+        if(!empty($active) && !$reset){
+            return $active;
+        }
+        $active = $this->_objMenuStyles->getActive();
+        $this->setSession('menuStyle', $active);
+        return $active;
+    }
+
+    /**
+    * Method to display the Tree style menu
+    * 
+    * @access private
+    * @param string $currentNode The id of the selected node
+    * @return string html
+    */
+    private function showTreeMenu($currentNode)
+    {
+        // bust out a featurebox for consistency
+        $objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $objTreeMenu = $this->newObject('cmstree', 'cmsadmin');
+
+        $head = $this->objLanguage->languageText("mod_cms_navigation", "cms");
+
+        // Load header parameters
+        $this->appendArrayVar('headerParams', $this->getJavascriptFile('tree.js', 'cmsadmin'));
+        $css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("tree.css", 'cmsadmin').'" />';
+        $this->appendArrayVar('headerParams', $css);
+        //Set to automatically render htmllist into tree menu
+        $this->appendArrayVar('bodyOnLoad', 'autoInit_trees()');
+                       
+        return $objFeatureBox->show($head, $objTreeMenu->getCMSTree($currentNode));
+    }
+
+    /**
+    * Method to display the Buttons style menu
+    *
+    * @access private
+    * @param string $currentNode The id of the selected node
+    * @return string html
+    */
+    private function showButtonsMenu($currentNode)
+    {
+        // Get the sections
+        $sectionData = $this->_objSections->getRootNodes();
+        
+        // home link
+        $sel = FALSE;
+        if(empty($currentNode)){
+            $sel = TRUE;
+        }
+        $linkText = $this->objLanguage->languageText('word_home');
+        $html = $this->createButton(array(), $linkText, $sel);
+
+        if(!empty($sectionData)){
+            foreach($sectionData as $item){
+                $selected = FALSE;
+                if($item['id'] == $currentNode){
+                    $selected = TRUE;
+                }
+                
+                $linkUrl = array('action' => 'showsection', 'id' => $item['id'], 'sectionid' => $item['id']);
+                $linkText = $item['menutext'];
+                $html .= $this->createButton($linkUrl, $linkText, $selected);
+            }
+        }
+        return $html.'<br />';
+    }
+    
+    /**
+    * Method to create the button
+    *
+    * @access private
+    * @param array $url The link array
+    * @param string $text The link text
+    * @return string html
+    */
+    private function createButton($url, $text, $selected = FALSE)
+    {
+        $objLink = new link($this->uri($url));
+        $objLink->link = $text;
+        
+        $class = 'menuBtn';
+        if($selected){
+            $class = 'menuBtnOn';
+        }
+        $str = "<div class='{$class}'>".$objLink->show().'</div>';
+        return $str;
+    }
+
+    /**
+    * Method to get the additional items for the left menu
+    *
+    * @access private
+    * @param array $rss RSS feeds to display
+    * @return string html
+    */
+    private function additionalMenuItems($rss)
+    {
+        $str = '';
+        if(!empty($rss))
+        {
+        	foreach($rss as $feeds)
+        	{
+        		$timenow = time();
+        		if($timenow - $feeds['rsstime'] > 43200)
+        		{
+        			$url = $feeds['url'];
+        		}
+        		else {
+        			$url = $feeds['rsscache'];
+        		}
+        		$str .= $this->rssBox($url, $feeds['name']);
+        	}
+        }
+        $id = $this->getParam('id');
+        $str .=  $this->showFeeds($id, TRUE, 'default');
+        
+        $str .= $this->_objHtmlBlock->displayBlock('');
+        
+        return $str;
     }
 
         /**

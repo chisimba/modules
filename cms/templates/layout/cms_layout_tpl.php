@@ -1,11 +1,7 @@
 <?php
 //Developer identify yourself and please commebt your code - inserted by Derek 2006 12 16
 
-$this->appendArrayVar('headerParams', $this->getJavascriptFile('tree.js', 'cmsadmin'));
-$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("tree.css", 'cmsadmin').'" />';
-$this->appendArrayVar('headerParams', $css);
-//Set to automatically render htmllist into tree menu
-$this->appendArrayVar('bodyOnLoad', 'autoInit_trees()');
+
 
 $objFeatureBox = $this->newObject('featurebox', 'navigation');
 $objBlocks =  $this->newObject('blocks', 'blocks');
@@ -29,44 +25,14 @@ $objDbBlocks =& $this->newObject('dbblocks', 'cmsadmin');
 
 
 /*****************LEFT SIDE ***************************************/
-//Navigation
+
+// Navigation
 $currentNode = $this->getParam('sectionid', NULL);
-//bust out a featurebox for consistency
-$objFeatureBox = $this->newObject('featurebox', 'navigation');
- 
-$leftSide = $objFeatureBox->show($this->objLanguage->languageText("mod_cms_navigation", "cms") ,$objTreeMenu->getCMSTree($currentNode));
 
-if($objUser->isAdmin() || $this->checkPermission()){
-    $objAdminLink =& $this->newObject('link', 'htmlelements');
-    $objAdminLink->link($this->uri(array(NULL), 'cmsadmin'));
-    $objAdminLink->link = $objLanguage->languageText('mod_cms_cmsadmin', 'cms');
-
-    $leftSide .= '<br />';
-    $leftSide .= $objAdminLink->show();
+if(!isset($rss)){
+    $rss = '';
 }
-
-
-//Add anything you want to the left template here
-$leftSide .='<p/>';
-
-if(!empty($rss))
-{
-	foreach($rss as $feeds)
-	{
-		$timenow = time();
-		if($timenow - $feeds['rsstime'] > 43200)
-		{
-			$url = $feeds['url'];
-		}
-		else {
-			$url = $feeds['rsscache'];
-		}
-		$leftSide .= $this->objLayout->rssBox($url, $feeds['name']);
-	}
-}
-$id = $this->getParam('id');
-$leftSide .=  $this->objLayout->showFeeds($id,TRUE, 'default');
-$leftSide .=  '<br />';
+$leftSide = $this->objLayout->getLeftMenu($currentNode, $rss);
 
 /***************** END OF LEFT SIDE *******************************/
 
