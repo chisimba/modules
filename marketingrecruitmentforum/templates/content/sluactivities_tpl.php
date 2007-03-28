@@ -147,7 +147,7 @@
   $myTable->addCell(ucfirst($date));
   $myTable->addCell($this->objdate->show());
   $myTable->endRow();
-         
+  
   $myTable->startRow();
   $myTable->addCell(ucfirst($activity));
   $myTable->addCell("<span class=error>" .'<b>'.'*'."</span>".'</b>'.$this->objactivitydropdown->show());
