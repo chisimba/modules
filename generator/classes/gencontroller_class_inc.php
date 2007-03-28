@@ -59,7 +59,12 @@ class gencontroller extends abgenerator implements ifgenerator
             die();
         }		  
         //Insert the classname first setting it in the session since its a controller
-        $this->setSession('classname', $this->getParam('modulecode', NULL));
+        $className=$this->getSession('modulecode');
+        if ($className == NULL || $className == "") {
+            $this->setSession('classname', $this->getParam('modulecode', NULL));
+        } else {
+            $this->setSession('classname', $className);
+        }
         $this->classname();
         //Put in the author
         $this->author();
@@ -72,6 +77,12 @@ class gencontroller extends abgenerator implements ifgenerator
         //Insert the copyright
         $this->copyright();
         //Insert the database class
+        $dbTableClass=$this->getSession('databaseclass');
+        if ($dbTableClass == NULL || $dbTableClass == "") {
+            $this->setSession('databaseclass', "db" . $this->getSession('modulecode'));
+        } else {
+            $this->setSession('databaseclass', $dbTableClass);
+        }
         $this->databaseclass();
         //Add code for logging
         $this->logger();
@@ -105,7 +116,7 @@ class gencontroller extends abgenerator implements ifgenerator
         $this->insertItem('controller', 'class', 'methods');
 	}
 	
-		/**
+	/**
 	 * 
 	 * A method corresponding to the {SPECIALMETHODS} parsecode that
 	 * must be replaced if you have any special methods 

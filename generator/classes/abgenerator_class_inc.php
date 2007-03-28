@@ -234,8 +234,8 @@ abstract class abgenerator extends object
     {
         //Get the module sopyright from parameter
         $databaseTable = $this->getItem('databasetable');
-        //Insert the copyright
-        $this->classCode = str_replace('{COPYRIGHT}', $databaseTable, $this->classCode);
+        //Insert the database table instantiation
+        $this->classCode = str_replace('{DATABASETABLE}', $databaseTable, $this->classCode);
     }
     
     /**
