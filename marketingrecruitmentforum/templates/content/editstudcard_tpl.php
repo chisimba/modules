@@ -199,7 +199,7 @@
        
        sort($areavals);
        foreach($areavals as $sessarea){
-          $arealist->addOption(NULL, ''.$areaselect);
+          $arealist->addOption(NULL, ''.'Please select an area');
           $arealist->addOption($sessarea,$sessarea);
        }  
 /*--------------------------------------------------------------------------------------------*/       
