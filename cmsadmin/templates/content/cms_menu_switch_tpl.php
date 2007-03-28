@@ -88,5 +88,10 @@ $objTable->endRow();
 
 $str .= $objTable->show();
 
+$lnConfigureBlocks = $this->objLanguage->languageText('mod_cmsadmin_configureleftblocks', 'cmsadmin');
+$objLink = new link($this->uri(array('action' => 'configleftblocks')));
+$objLink->link = $lnConfigureBlocks;
+$str .= '<p><br />'.$objLink->show().'</p>';
+
 echo $str;
 ?>
