@@ -51,7 +51,7 @@ if (isset($section)) {
 //Get layout icon
 $layoutData = $this->_objLayouts->getLayout($layout);
 $imageName = $layoutData['imagename'];
-$img = "<img src=\"{$this->getResourceUri("$imageName",'cmsadmin')}\" alt=\"'$imageName'\"/>";
+$img = "<img src=\"{$this->getResourceUri('$imageName','cmsadmin')}\" alt=\"'$imageName'\"/>";
 
 $other = '<b>'.$this->objLanguage->languageText('mod_cmsadmin_treemenuname', 'cmsadmin').':'.'</b>'.'&nbsp;'.$menuText.'<br/>';
 
