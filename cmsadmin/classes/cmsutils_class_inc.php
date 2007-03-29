@@ -419,7 +419,7 @@ class cmsutils extends object
 			 		
 			 	    // Cancel	 		
 			 		$url = "javascript:history.back();";
-			 		$linkText = ucwords($this->objLanguage->languageText('word_cancel'));
+			 		$linkText = ucwords($this->objLanguage->languageText('word_back'));
 			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, 'gif', 'icons/cms/');
 			 		
 			 		// Preview
@@ -457,7 +457,7 @@ class cmsutils extends object
 			 		
 			 		// Cancel	 		
 			 		$url = "javascript:history.back();";
-			 		$linkText = ucwords($this->objLanguage->languageText('word_cancel'));
+			 		$linkText = ucwords($this->objLanguage->languageText('word_back'));
 			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, 'gif', 'icons/cms/');
 			 		
 			 		// Preview
@@ -483,7 +483,7 @@ class cmsutils extends object
 			 		
 			 		// Cancel	 		
 			 		$url = "javascript:history.back();";
-			 		$linkText = ucwords($this->objLanguage->languageText('word_cancel'));
+			 		$linkText = ucwords($this->objLanguage->languageText('word_back'));
 			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, 'gif', 'icons/cms/');
 			 		
 			 		// Preview
@@ -510,7 +510,7 @@ class cmsutils extends object
 			 		
 			 		// Cancel
 			 		$url = "javascript:history.back();";
-			 		$linkText = ucwords($this->objLanguage->languageText('word_cancel'));
+			 		$linkText = ucwords($this->objLanguage->languageText('word_back'));
 			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, 'gif', 'icons/cms/');
 			 		
 			 		// Preview
@@ -537,7 +537,7 @@ class cmsutils extends object
 			 		
 			 		// Cancel	 		
 			 		$url = "javascript:history.back();";
-			 		$linkText = ucwords($this->objLanguage->languageText('word_cancel'));
+			 		$linkText = ucwords($this->objLanguage->languageText('word_back'));
 			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, 'gif', 'icons/cms/');
 			 		
 			 		// Preview
@@ -559,7 +559,7 @@ class cmsutils extends object
 
 			 	    // Cancel	 		
 			 		$url = "javascript:history.back();";
-			 		$linkText = ucwords($this->objLanguage->languageText('word_cancel'));
+			 		$linkText = ucwords($this->objLanguage->languageText('word_back'));
 			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, 'gif', 'icons/cms/');
 			 		
 			 		// Preview
@@ -587,7 +587,7 @@ class cmsutils extends object
 			 					 	    
 			 		// Cancel	 		
 			 		$url = "javascript:history.back();";
-			 		$linkText = ucwords($this->objLanguage->languageText('word_cancel'));
+			 		$linkText = ucwords($this->objLanguage->languageText('word_back'));
 			 		$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, 'gif', 'icons/cms/');
 			 		
 			 		// Preview
@@ -603,7 +603,7 @@ class cmsutils extends object
 			 	default:
 			 		// Cancel	 		
 			 		$url = "javascript:history.back();";
-			 		$linkText = ucwords($this->objLanguage->languageText('word_cancel'));
+			 		$linkText = ucwords($this->objLanguage->languageText('word_back'));
 			 		$iconList = $icon_publish->getTextIcon($url, 'cancel', $linkText, 'gif', 'icons/cms/');
 			 		
 			 		// Preview
@@ -1981,26 +1981,8 @@ class cmsutils extends object
                 }
             }
     
-            // Title Input
-            $titleInput = new textinput ('title');
-            $titleInput->extra = ' style="width: 50%"';
-
-            // Content Area
-            $bodyInput = $this->newObject('htmlarea', 'htmlelements');
-            $bodyInput->name = 'body';
-            $bodyInput->height = '400px';
-            $bodyInput->width = '100%';
-
-            // Introduction Area
-            $introInput = $this->newObject('htmlarea', 'htmlelements');
-            $introInput->name = 'intro';
-            $introInput->setBasicToolBar();
-            $introInput->height = '200px';
-            $introInput->width = '100%';
-
-            // Submit Button
-            $button = new button('submitform', $this->objLanguage->languageText('word_save'));
-            $button->setToSubmit();
+            
+            
 
 
 
@@ -2046,9 +2028,6 @@ class cmsutils extends object
 				</style>');
             }
 
-
-
-
             $objOrdering =$this->newObject('textinput', 'htmlelements');
 
 
@@ -2058,8 +2037,9 @@ class cmsutils extends object
             if ($contentId == NULL) {
                 $action = 'createcontent';
                 $editmode = FALSE;
-                $titleInput->value = '';
-                $introInput->value = '';
+                $titleInputValue = '';
+                $bodyInputValue = '';
+                $introInputValue = '';
                 $published->setChecked(TRUE);
                 $visible = TRUE;
                 $contentId = '';
@@ -2073,10 +2053,10 @@ class cmsutils extends object
                 $action = 'editcontent';
                 $editmode = TRUE;
                 $arrContent = $this->_objContent->getContentPage($contentId);
-                $titleInput->value = $arrContent['title'];
+                $titleInputValue = $arrContent['title'];
 
-                $introInput->setContent(stripslashes($arrContent['introtext']));
-                $bodyInput->setContent((stripslashes($arrContent['body'])));
+                $introInputValue = stripslashes($arrContent['introtext']);
+                $bodyInputValue = stripslashes($arrContent['body']);
 
                 $is_front = $this->_objFrontPage->isFrontPage($arrContent['id']);
                 $frontPage->setChecked($is_front);
@@ -2106,6 +2086,10 @@ class cmsutils extends object
            
             $table = new htmltable();
 
+            // Title Input
+            $titleInput = new textinput ('title', $titleInputValue);
+            $titleInput->extra = ' style="width: 50%"';
+            
             $table->startRow();
             $table->addCell($this->objLanguage->languageText('word_title').': ', 150);
             $table->addCell($titleInput->show());
@@ -2141,11 +2125,26 @@ class cmsutils extends object
             $h3->str = $this->objLanguage->languageText('word_introduction').' ('.$this->objLanguage->languageText('word_required').')';
             $h3->type = 3;
 			
+			// Introduction Area
+            $introInput = $this->newObject('htmlarea', 'htmlelements');
+            $introInput->init('intro', $introInputValue);
+            $introInput->setContent($introInputValue);
+            $introInput->setBasicToolBar();
+            $introInput->height = '200px';
+            $introInput->width = '100%';
+			
             //intro input
             $objForm->addToForm('<div id="introdiv">');
             $objForm->addToForm('<br />'.$h3->show());
             $objForm->addToForm($introInput->show());
             $objForm->addToForm('</div>');
+
+            // Content Area
+            $bodyInput = $this->newObject('htmlarea', 'htmlelements');
+            $bodyInput->init('body', $bodyInputValue);
+            $bodyInput->setContent($bodyInputValue);
+            $bodyInput->height = '400px';
+            $bodyInput->width = '100%';
 
             //body
             $table2 = new htmltable();
@@ -2181,6 +2180,9 @@ class cmsutils extends object
             //create heading
             //$h3->str = $this->objLanguage->languageText('mod_cmsadmin_contentitem', 'cmsadmin').':'.'&nbsp;'.$this->objLanguage->languageText('word_new');
 
+            // Submit Button
+            $button = new button('submitform', $this->objLanguage->languageText('word_save'));
+            $button->setToSubmit();
             $objForm->addToForm('<p><br />'.$button->show().'</p>');
 			
 			$display = $objForm->show(); 	
