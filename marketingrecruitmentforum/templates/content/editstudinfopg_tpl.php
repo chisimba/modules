@@ -38,6 +38,7 @@
                         '5' =>  'Sports Admin',
                    );
      $objdeptnames = new dropdown('moreinfo');
+     $objdeptnames->size = 5;
      $objdeptnames->multiple = true;
      $objdeptnames->addOption(NULL ,  'Please select a department');
      $objdeptnames->addOption('Financial Aid','Financial Aid');

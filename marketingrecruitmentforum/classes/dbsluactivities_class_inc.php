@@ -312,10 +312,10 @@ public function activitydetails($startat,$endat)
   			if($startat!=0){
   			$startat++;
   			}
-  			$sortfield = 'ACTIVITYDATE';
+  			$sortfield = 'order by ACTIVITYDATE';
 		   	$sqlQuery = "SELECT * FROM ".$this->schema.".tbl_mrf_sluactivities";
         
-        $sql = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (".$sqlQuery.") a WHERE ROWNUM <= ".$endat.") WHERE rnum > ".$startat;
+        $sql = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (".$sqlQuery.") a WHERE ROWNUM <= ".$endat.") WHERE rnum > ".$startat.$sortfield;
         $result = $this->getWSGenericQuery($sql, 'SEMS');
 			  return $result;
 			  
@@ -363,8 +363,8 @@ public function activtypelimit($startat,$endat)
   			if($startat!=0){
   			$startat++;
   			}
-  			$sortfield = 'ACTIVITY';
-		   	$sqlQuery = "SELECT * FROM ".$this->schema.".tbl_mrf_sluactivities";
+  			$sortfield = 'order by ACTIVITY';
+		   	$sqlQuery = "SELECT DISTINCT(ACTIVITY) FROM ".$this->schema.".tbl_mrf_sluactivities";
         
         $sql = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (".$sqlQuery.") a WHERE ROWNUM <= ".$endat.") WHERE rnum > ".$startat;
         $result = $this->getWSGenericQuery($sql, 'SEMS');
@@ -395,7 +395,7 @@ public function activprovincedata($startat,$endat)
   			$startat++;
   			}
   			$sortfield = 'PROVINCE';
-		   	$sqlQuery = "SELECT * FROM ".$this->schema.".tbl_mrf_sluactivities";
+		   	$sqlQuery = "SELECT DISTINCT(ACTIVITY),PROVINCE FROM ".$this->schema.".tbl_mrf_sluactivities";
         
         $sql = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (".$sqlQuery.") a WHERE ROWNUM <= ".$endat.") WHERE rnum > ".$startat;
         $result = $this->getWSGenericQuery($sql, 'SEMS');
@@ -427,8 +427,8 @@ public function activareaedata($startat,$endat)
   			if($startat!=0){
   			$startat++;
   			}
-  			$sortfield = 'AREA';
-		   	$sqlQuery = "SELECT * FROM ".$this->schema.".tbl_mrf_sluactivities";
+  			$sortfield = 'order by AREA';
+		   	$sqlQuery = "SELECT DISTINCT(ACTIVITY),AREA FROM ".$this->schema.".tbl_mrf_sluactivities";
         
         $sql = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (".$sqlQuery.") a WHERE ROWNUM <= ".$endat.") WHERE rnum > ".$startat;
         $result = $this->getWSGenericQuery($sql, 'SEMS');

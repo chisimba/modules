@@ -31,7 +31,7 @@
   * create dropdown list
   */
 /**more info required from**/
-    $deptnames  = array('1' =>  'Financial Aid',
+   $deptnames  = array('1' =>  'Financial Aid',
                         '2' =>  'Student Credit Management',
                         '3' =>  'Residence and Catering', 
                         '4' =>  'Edu Loan',
@@ -39,6 +39,7 @@
                    );
      $objdeptnames = new dropdown('moreinfo');
      $objdeptnames->multiple = true;
+     $objdeptnames->size  = 5;
      $objdeptnames->addOption(NULL ,  'Please select a department');
      $objdeptnames->addOption('Financial Aid','Financial Aid');
      $objdeptnames->addOption('Student Credit Management' ,'Student Credit Management');
