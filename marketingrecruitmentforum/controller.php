@@ -399,7 +399,9 @@ function dispatch($action)
                   $firstname  = $this->getSession('name');
                   $lastname = $this->getSession('surname');
                   $idsearch = $this->getSession('idno');
+                  // VAR_DUMP($idsearch);DIE;
                   $idexist  = $this->dbstudentcard->getstudbyid($idsearch, $field = 'IDNUMBER', $firstname, $field2 = 'NAME', $lastname, $field3 = 'SURNAME', $start = 0, $limit = 0);
+                  //VAR_DUMP($idexist);DIE;
                   $username  = $this->objUser->fullname();
                   $newIDNum = $this->getSession('changeIDnumber');
                                     
@@ -502,28 +504,31 @@ function dispatch($action)
           if(!empty($studssportinfo) && ($studssportinfo[0] != NULL)){
                      foreach($studssportinfo as $sess){
                             
-                             $sportCode = '';
-                             $sportC [] = $sess['sportCode'];
-                             foreach($sportC[0] as $sesssport){
-                               $sportCode .= $sesssport .';';
-                             }
-                    
-                            $achievlevel = '';
-                            $achievmentlevel [] = $sess['achievlevel'];
-                            foreach($achievmentlevel[0] as $sessachiev){
-                                 $achievlevel .= $sessachiev .';';
-                            } 
                              $sportPart = $sess['sportPart']; 
-                             $leadershipPos = ucfirst($sess['leadershipPos']);
-                             $sportBursary = ucfirst($sess['sportBursary']);
+                             $leadershipPos = strtoupper($sess['leadershipPos']);
+                             $leadtype = strtoupper($sess['leadtype']);
+                             $sportCodeAndLevel1 = strtoupper($sess['sportCodeAndLevel1']);
+	                           $sportCodeAndLevel2 = strtoupper($sess['sportCodeAndLevel2']);
+	                           $sportCodeAndLevel3 = strtoupper($sess['sportCodeAndLevel3']);
+	                           $sportCodeAndLevel4 = strtoupper($sess['sportCodeAndLevel4']);
+	                           $sportCodeAndLevel5 = strtoupper($sess['sportCodeAndLevel5']);
+	                           $sportCodeAndLevel6 = strtoupper($sess['sportCodeAndLevel6']);
+	                           $OtherSportcode  = strtoupper($sess['OtherSportcode']);
+                             $sportBursary = strtoupper($sess['sportBursary']);
                      }       
          }elseif(!empty($idexist)){
                   for($i=0; $i< count($idexist); $i++){
-                             $sportPart =$idexist[$i]->SPORTPART; 
-                             $leadershipPos = ucfirst($idexist[$i]->LEADERSHIPPOS);
-                             $sportCode = ucfirst($idexist[$i]->SPORTCODE);
-                             $achievlevel = ucfirst($idexist[$i]->ACHIEVELEVEL);
-                             $sportBursary = ucfirst($idexist[$i]->SPORTBURSARY);
+                             $sportPart = $idexist[$i]->SPORTPART; 
+                             $leadershipPos = $idexist[$i]->LEADERSHIPPOS;
+                             $leadtype = $idexist[$i]->LEADTYPE;
+                             $sportCodeAndLevel1 = $idexist[$i]->SPORTCODEANDLEVEL1;
+	                           $sportCodeAndLevel2 = $idexist[$i]->SPORTCODEANDLEVEL2;
+	                           $sportCodeAndLevel3 = $idexist[$i]->SPORTCODEANDLEVEL3;
+	                           $sportCodeAndLevel4 = $idexist[$i]->SPORTCODEANDLEVEL4;
+	                           $sportCodeAndLevel5 = $idexist[$i]->SPORTCODEANDLEVEL5;
+	                           $sportCodeAndLevel6 = $idexist[$i]->SPORTCODEANDLEVEL6;
+	                           $OtherSportcode  = $idexist[$i]->OTHERSPORTCODE;
+                             $sportBursary = $idexist[$i]->SPORTSBURSARY;
                   }
         }
         //course and faculty info
@@ -571,11 +576,12 @@ function dispatch($action)
                               $latestID = $newIDNum;
                           }else{
                               $latestID = $studentidnumber;
-                          }         
-                          $this->dbstudentcard->updatestudinfo($createdby,$datecreate,$idsearch,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$grade,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$latestID,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$sportPart,$leadershipPos,$sportCode,$achievlevel,$sportBursary);
+                          }   
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                          $this->dbstudentcard->updatestudinfo($createdby,$datecreate,$latestID,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$grade,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$latestID,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$sportPart,$leadershipPos,$leadtype,$sportCodeAndLevel1,$sportCodeAndLevel2,$sportCodeAndLevel3,$sportCodeAndLevel4,$sportCodeAndLevel5,$sportCodeAndLevel6,$OtherSportcode,$sportBursary);
                           
         }elseif($studcarddata[0]!= NULL && $studsubjectdetail[0] != NULL && $studssportinfo [0] != NULL && $studfacdetails[0] != NULL && $studmoreinfo[0] != NULL ){
-                  $this->dbstudentcard->addstudcard($createdby,$datecreate,$idsearch,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$grade,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$sportPart,$leadershipPos,$sportCode,$achievlevel,$sportBursary,$keys = NULL);
+                  $this->dbstudentcard->addstudcard($createdby,$datecreate,$idsearch,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$grade,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$sportPart,$leadershipPos,$leadtype,$sportCodeAndLevel1,$sportCodeAndLevel2,$sportCodeAndLevel3,$sportCodeAndLevel4,$sportCodeAndLevel5,$sportCodeAndLevel6,$OtherSportcode,$sportBursary,$keys = NULL);
         }
                   $this->unsetSession('idno');
                   $this->unsetSession('studentdata');

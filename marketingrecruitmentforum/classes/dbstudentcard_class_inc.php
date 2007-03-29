@@ -97,13 +97,13 @@ public function getWSQuery($tableName, $orderBy, $value = null, $field = null, $
             $keys[] = array( 'field' => $field, 'value' => $value);
         }
        
-
+  
         $tableName = $this->objCrypt->encrypt($tableName, $this->sessionKey);
         $keys = $this->objCrypt->encryptArray($keys, $this->sessionKey);
 
         $keys = $this->objCrypt->arrayToObject($keys);
         $orderBy = $this->objCrypt->encrypt($orderBy, $this->sessionKey);
-       
+      
         $arr = $this->objSoapClient->getlimitQuery($tableName, $retFields, $keys, $orderBy, $start, $limit, 'SEMS');
         $arr = $this->objCrypt->encryptObject($arr, $this->sessionKey, TRUE);
         return $arr;
@@ -287,14 +287,14 @@ public function getWSCount($tableName, $value = null, $field = null, $keys = nul
  *
  */
  
-public function addstudcard($createdby,$datecreate,$id,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$grade,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$sportPart,$leadershipPos,$sportCode,$achievlevel,$sportBursary,$keys = NULL)
+public function addstudcard($createdby,$datecreate,$idsearch,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$grade,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$sportPart,$leadershipPos,$leadtype,$sportCodeAndLevel1,$sportCodeAndLevel2,$sportCodeAndLevel3,$sportCodeAndLevel4,$sportCodeAndLevel5,$sportCodeAndLevel6,$OtherSportcode,$sportBursary,$keys = NULL)
 {
       try {
             $data = array();
             $data[] = array( 'field' => 'ID', 'value' => "init" . "_" . rand(1000,9999) . "_" . time());
             $data[] = array( 'field' => 'CREADTEDBY', 'value' => $createdby);
             $data[] = array( 'field' => 'DATECREATED', 'value' => "to_date('".$datecreate."', 'dd-mm-yyyy')");
-            $data[] = array( 'field' => 'IDNUMBER', 'value' => $id);
+            $data[] = array( 'field' => 'IDNUMBER', 'value' => $idsearch);
             $data[] = array( 'field' => 'ENTRYDATE', 'value' => "to_date('".$date."', 'dd-mm-yyyy')");
             $data[] = array( 'field' => 'NAME', 'value' => $name);
             $data[] = array( 'field' => 'SURNAME', 'value' => $surname);
@@ -341,11 +341,21 @@ public function addstudcard($createdby,$datecreate,$id,$date,$surname,$name,$dob
             $data[] = array( 'field' => 'CONFIRM', 'value' => $confirmation);
             $data[] = array( 'field' => 'SPORTPART', 'value' => $sportPart);
             $data[] = array( 'field' => 'LEADERSHIPPOS', 'value' => $leadershipPos);
-            $data[] = array( 'field' => 'SPORTCODE', 'value' => $sportCode);
-            $data[] = array( 'field' => 'ACHIEVELEVEL', 'value' => $achievlevel);
-            $data[] = array( 'field' => 'SPORTBURSARY', 'value' => $sportBursary);
-           
-            $keys = array();
+            $data[] = array( 'field' => 'leadtype', 'value' => $leadtype);
+            $data[] = array( 'field' => 'sportCodeAndLevel1', 'value' => $sportCodeAndLevel1);
+            $data[] = array( 'field' => 'sportCodeAndLevel2', 'value' => $sportCodeAndLevel2);
+            $data[] = array( 'field' => 'sportCodeAndLevel3', 'value' => $sportCodeAndLevel3);
+            $data[] = array( 'field' => 'sportCodeAndLevel4', 'value' => $sportCodeAndLevel4);
+            $data[] = array( 'field' => 'sportCodeAndLevel5', 'value' => $sportCodeAndLevel5);
+            $data[] = array( 'field' => 'sportCodeAndLevel6', 'value' => $sportCodeAndLevel6);
+            $data[] = array( 'field' => 'OtherSportcode', 'value' => $OtherSportcode);
+            $data[] = array( 'field' => 'sportBursary', 'value' => $sportBursary);
+            
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+	                            
+	          $keys = array();
            return  $this->writeWSQuery('tbl_mrf_studcard', $data ,$keys);
       } catch(Exception $e) {
         return NULL;
@@ -376,19 +386,25 @@ public function getallstudinfo()
  * @return array: The array of matching records from the database
  * @access public
  */
-function getstudinfo($startat,$endat)
+public function getstudinfo($startat,$endat)
 {
 	try {
 		
-    			if($startat!=0){
-    			$startat++;
-    			}
-			
-	 	return $this->objSoapClient->getWSQuery('tbl_mrf_studcard','ENTRYDATE', null, null,'', $startat, $endat,'');
-		} catch(Exception $e) {
-         return NULL;
-       }
-}
+  			if($startat!=0){
+  			$startat++;
+  			}
+  			$sortfield = 'ENTRYDATE';
+		   	$sqlQuery = "SELECT * FROM ".$this->schema.".tbl_mrf_studcard";
+        
+        $sql = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (".$sqlQuery.") a WHERE ROWNUM <= ".$endat.") WHERE rnum > ".$startat;
+        
+			  $result = $this->getWSGenericQuery($sql, 'SEMS');
+			  return $result;
+			  
+	} catch(Exception $e) {
+    return NULL;
+  }
+}     
 /**
  * Method to retrieve school subjects from linc db
  */  
@@ -465,18 +481,22 @@ public function exemption($startat,$endat)
 {
 	try {
 		
-			if($startat!=0){
-			$startat++;
-			}
-			$keys = array();
-      $keys[] = array( 'field'=>'EXEMPTION', 'value'=>'1');
-      $orderBy = 'SCHOOLNAME';
-                                    	
-		  return $this->getWSQuery('tbl_mrf_studcard',$orderBy,null,null,$keys,$startat, $endat,'');
+  			if($startat!=0){
+  			$startat++;
+  			}
+  			$sortfield = 'EXEMPTION';
+		   	$sqlQuery = "SELECT * FROM ".$this->schema.".tbl_mrf_studcard";
+        
+        $sql = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (".$sqlQuery.") a WHERE ROWNUM <= ".$endat.") WHERE rnum > ".$startat;
+        
+			  $result = $this->getWSGenericQuery($sql, 'SEMS');
+			  return $result;
+			  
 	} catch(Exception $e) {
-         return NULL;
-    }
-}
+    return NULL;
+  }
+}   
+
 
 /**
  * Method to return all students ordered by faculty
@@ -500,30 +520,39 @@ public function studfacultycount($startat,$endat)
   			if($startat!=0){
   			$startat++;
   			}
-			  $orderBy = 'FACULTY';
-			
-			
-		  return $this->getWSQuery('tbl_mrf_studcard', $orderBy, null, null, '', '', $startat, $endat,'');
+  			$sortfield = 'FACULTY';
+		   	$sqlQuery = "SELECT * FROM ".$this->schema.".tbl_mrf_studcard";
+        
+        $sql = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (".$sqlQuery.") a WHERE ROWNUM <= ".$endat.") WHERE rnum > ".$startat;
+        
+			  $result = $this->getWSGenericQuery($sql, 'SEMS');
+			  return $result;
+			  
 	} catch(Exception $e) {
-         return NULL;
-    }
-}
+    return NULL;
+  }
+}  
 
 //to return all students ordered by 2nd faculty choice using limts
 public function studfacultycount2($startat,$endat)
 {
 	try {
-			if($startat!=0){
-			$startat++;
-			}
-		  $sortfield = 'FACULTY2';
-			
-		  return $this->getWSQuery('tbl_mrf_studcard', $orderBy, null, null, '', '', $startat, $endat,'');
- 	} catch(Exception $e) {
-         return NULL;
+		
+  			if($startat!=0){
+  			$startat++;
+  			}
+  			$sortfield = 'FACULTY2';
+		   	$sqlQuery = "SELECT * FROM ".$this->schema.".tbl_mrf_studcard";
+        
+        $sql = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (".$sqlQuery.") a WHERE ROWNUM <= ".$endat.") WHERE rnum > ".$startat;
+        
+			  $result = $this->getWSGenericQuery($sql, 'SEMS');
+			  return $result;
+			  
+	} catch(Exception $e) {
+    return NULL;
   }
-}
- 
+}   
 /**
  * Method to return all students by course
  * @param string $filter a SQL WHERE clause,specifies the order of resultset returned by SQL statement 
@@ -543,32 +572,42 @@ public function allbycourse(){
 public function studcoursecount($startat,$endat)
 {
 	try {
-
-			if($startat!=0){
-			$startat++;
-			}
-      $sortfield = 'COURSE,FACULTY';
-			
-		  return $this->getWSQuery('tbl_mrf_studcard', $orderBy, null, null, '', '', $startat, $endat,'');
-	   } catch(Exception $e) {
-         return NULL;
-    }
-}
+		
+  			if($startat!=0){
+  			$startat++;
+  			}
+  			$sortfield = 'COURSE,FACULTY';
+		   	$sqlQuery = "SELECT * FROM ".$this->schema.".tbl_mrf_studcard";
+        
+        $sql = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (".$sqlQuery.") a WHERE ROWNUM <= ".$endat.") WHERE rnum > ".$startat;
+        
+			  $result = $this->getWSGenericQuery($sql, 'SEMS');
+			  return $result;
+			  
+	} catch(Exception $e) {
+    return NULL;
+  }
+} 
 //2nd faculty and course details
 public function studcoursecount2($startat,$endat)
 {
 	try {
 		
-			if($startat!=0){
-			$startat++;
-			}
-		  $sortfield = 'COURSE2,FACULTY2';
-			
-		  return $this->getWSQuery('tbl_mrf_studcard', $orderBy, null, null, '', '', $startat, $endat,'');
-	    } catch(Exception $e) {
-         return NULL;
-    }
-}
+  			if($startat!=0){
+  			$startat++;
+  			}
+  			 $sortfield = 'COURSE2,FACULTY2';
+		   	$sqlQuery = "SELECT * FROM ".$this->schema.".tbl_mrf_studcard";
+        
+        $sql = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (".$sqlQuery.") a WHERE ROWNUM <= ".$endat.") WHERE rnum > ".$startat;
+        
+			  $result = $this->getWSGenericQuery($sql, 'SEMS');
+			  return $result;
+			  
+	} catch(Exception $e) {
+    return NULL;
+  }
+} 
  
 /**
  * Method to count the no of students that are sd cases
@@ -591,17 +630,21 @@ public function studsdcasecount($startat,$endat)
 {
 	try {
 		
-			if($startat!=0){
-			$startat++;
-			}
-		  $orderBy = 'SURNAME';
-		
-		   return $this->getWSQuery('tbl_mrf_studcard', $orderBy, null, null, '', '', $startat, $endat,'');
+  			if($startat!=0){
+  			$startat++;
+  			}
+  			 $sortfield = 'SURNAME';
+		   	$sqlQuery = "SELECT * FROM ".$this->schema.".tbl_mrf_studcard";
+        
+        $sql = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (".$sqlQuery.") a WHERE ROWNUM <= ".$endat.") WHERE rnum > ".$startat;
+        
+			  $result = $this->getWSGenericQuery($sql, 'SEMS');
+			  return $result;
+			  
 	} catch(Exception $e) {
-         return NULL;
-    }
-} 
-
+    return NULL;
+  }
+}
 /**
  * Method to get all student details that are sdcases
  * @param string $stmt used in a SQL WHERE clause,counts all id values where sdcase = true(1) and exemption = false(2)
@@ -778,6 +821,7 @@ public function facultysdcase2($facultynameval2){
        }
 }  
 
+
 /**
  * Method to count the total amount of students for a certain faculty
  * @param string $facultynameval, variable passed to function
@@ -860,20 +904,27 @@ public function getstudbyarea()
 }
 
   
+
 public function studarealimit($startat,$endat)
 {
 	try {
 		
-			if($startat!=0){
-			$startat++;
-			}
-		  $sortfield = 'surname';    
-                       
-		  return $this->getWSQuery('tbl_mrf_studcard',$sortfield,'','','', $startat, $endat,'');
+  			if($startat!=0){
+  			$startat++;
+  			}
+  			$sortfield = 'SURNAME';
+		   	$sqlQuery = "SELECT * FROM ".$this->schema.".tbl_mrf_studcard";
+        
+        $sql = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (".$sqlQuery.") a WHERE ROWNUM <= ".$endat.") WHERE rnum > ".$startat;
+        
+			  $result = $this->getWSGenericQuery($sql, 'SEMS');
+			  return $result;
+			  
 	} catch(Exception $e) {
-         return NULL;
+    return NULL;
   }
 }
+
 /**
   * Method to get a students information using their id no
   *   
@@ -891,9 +942,9 @@ public function getstudbyid($idnumber, $field = 'IDNUMBER', $firstname, $field2 
             $keys[] = array( 'field' => $field2,'value' => $lastname);
             $keys[] = array( 'field' => $field3,'value' => $firstname);
             //var_dump($keys);
-            $fields = array( 'ID', 'ENTRYDATE', 'IDNUMBER', 'SURNAME', 'NAME', 'SCHOOLNAME', 'POSTADDRESS', 'POSTCODE', 'AREA', 'TELNUMBER', 'TELCODE', 'EXEMPTION', 'FACULTY', 'COURSE', 'SDCASE', 'CELLNUMBER', 'STUDEMAIL','SUBJECT1','SUBJECT2','SUBJECT3','SUBJECT4','SUBJECT5','SUBJECT6','SUBJECT7','INFODEPARTMENT','FACULTY2','COURSE2','RESIDENCE','GRADETYPE1','GRADETYPE2','GRADETYPE3','GRADETYPE4','GRADETYPE5','GRADETYPE6','GRADETYPE7','GRADE','DOB','MARK1','MARK2','MARK3','MARK4','MARK5','MARK6','MARK7','MARKGRADE','SPORTPART','LEADERSHIPPOS','SPORTCODE','ACHIEVELEVEL','SPORTBURSARY');
+            $fields = array( 'ID', 'ENTRYDATE', 'IDNUMBER', 'SURNAME', 'NAME', 'SCHOOLNAME', 'POSTADDRESS', 'POSTCODE', 'AREA', 'TELNUMBER', 'TELCODE', 'EXEMPTION', 'FACULTY', 'COURSE', 'SDCASE', 'CELLNUMBER', 'STUDEMAIL','SUBJECT1','SUBJECT2','SUBJECT3','SUBJECT4','SUBJECT5','SUBJECT6','SUBJECT7','INFODEPARTMENT','FACULTY2','COURSE2','RESIDENCE','GRADETYPE1','GRADETYPE2','GRADETYPE3','GRADETYPE4','GRADETYPE5','GRADETYPE6','GRADETYPE7','GRADE','DOB','MARK1','MARK2','MARK3','MARK4','MARK5','MARK6','MARK7','MARKGRADE','SPORTPART','LEADERSHIPPOS','LEADTYPE','SPORTCODEANDLEVEL1','SPORTCODEANDLEVEL2','SPORTCODEANDLEVEL3','SPORTCODEANDLEVEL4','SPORTCODEANDLEVEL5','SPORTCODEANDLEVEL6','OTHERSPORTCODE','SPORTBURSARY');
                           
-            return $this->getWSQuery('tbl_mrf_studcard','IDNUMBER',null,null,$keys,$start, $limit,$fields);
+            return $this->getWSQuery('tbl_mrf_studcard','IDNUMBER',null,null,$keys,$start,$limit,$fields);
 
    //   } catch(Exception $e) {
    //     return NULL;
@@ -919,7 +970,7 @@ public function getstudbyid($idnumber, $field = 'IDNUMBER', $firstname, $field2 
  * @param string $stmt SQL statement,updates all columns specified with variable values passed to function 
  * @return array $stmt 
  */
-public function updatestudinfo($createdby,$datecreate,$idsearch,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$grade,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$latestID,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$sportPart,$leadershipPos,$sportCode,$achievlevel,$sportBursary)
+public function updatestudinfo($createdby,$datecreate,$latestID,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$grade,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$latestID,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$sportPart,$leadershipPos,$leadtype,$sportCodeAndLevel1,$sportCodeAndLevel2,$sportCodeAndLevel3,$sportCodeAndLevel4,$sportCodeAndLevel5,$sportCodeAndLevel6,$OtherSportcode,$sportBursary)
 {
         try {
             $data = array();
@@ -973,9 +1024,15 @@ public function updatestudinfo($createdby,$datecreate,$idsearch,$date,$surname,$
             $data[] = array( 'field' => 'CONFIRM', 'value' => $confirmation);
             $data[] = array( 'field' => 'SPORTPART', 'value' => $sportPart);
             $data[] = array( 'field' => 'LEADERSHIPPOS', 'value' => $leadershipPos);
-            $data[] = array( 'field' => 'SPORTCODE', 'value' => $sportCode);
-            $data[] = array( 'field' => 'ACHIEVELEVEL', 'value' => $achievlevel);
-            $data[] = array( 'field' => 'SPORTBURSARY', 'value' => $sportBursary);
+            $data[] = array( 'field' => 'leadtype', 'value' => $leadtype);
+            $data[] = array( 'field' => 'sportCodeAndLevel1', 'value' => $sportCodeAndLevel1);
+            $data[] = array( 'field' => 'sportCodeAndLevel2', 'value' => $sportCodeAndLevel2);
+            $data[] = array( 'field' => 'sportCodeAndLevel3', 'value' => $sportCodeAndLevel3);
+            $data[] = array( 'field' => 'sportCodeAndLevel4', 'value' => $sportCodeAndLevel4);
+            $data[] = array( 'field' => 'sportCodeAndLevel5', 'value' => $sportCodeAndLevel5);
+            $data[] = array( 'field' => 'sportCodeAndLevel6', 'value' => $sportCodeAndLevel6);
+            $data[] = array( 'field' => 'OtherSportcode', 'value' => $OtherSportcode);
+            $data[] = array( 'field' => 'sportBursary', 'value' => $sportBursary);
             
             $keys = array();
             //$keys[] = array( 'field' => 'idnumber', 'value' => $idsearch);
