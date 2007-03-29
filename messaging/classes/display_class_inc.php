@@ -2450,7 +2450,7 @@ $this->objLanguage = $this->getObject('language','language');
         $settingData= $this->dbMessaging->getUserSettings();
         if(!empty($settingData)){
             $delivery = $settingData['delivery_type'];
-            $interval = $settingData['interval'];            
+            $interval = $settingData['time_interval'];            
         }else{
             $delivery = 0;
             $interval = '';
@@ -2465,13 +2465,13 @@ $this->objLanguage = $this->getObject('language','language');
         // confirmation message
         if($update){
             $array = array(
-                'date' => $this->objDatetime->formatDate(date('Y-m-d H:i:s')),
+                'date' => '<nobr>'.$this->objDatetime->formatDate(date('Y-m-d H:i:s')).'</nobr>',
             );
-            $confimUpdateLabel = $this->objLanguage->code2Txt('mod_messaging_update', 'messaging');
+            $confimUpdateLabel = $this->objLanguage->code2Txt('mod_messaging_update', 'messaging', $array);
             $this->objTimeOut->init();
             $this->objTimeOut->setMessage($confimUpdateLabel);
             $this->objTimeOut->setTimeout(3000);
-            $msg = '<b>'.$this->objTimeOut->show().'</b>';            
+            $msg = '<b>'.$this->objTimeOut->show().'</b><br />';            
         }else{
             $msg = '';
         }
@@ -2525,7 +2525,9 @@ $this->objLanguage = $this->getObject('language','language');
         
         $objLayer = new layer();
         $objLayer->id = 'intervalDiv';
-        $objLayer->display = 'none';
+        if($delivery != 2){
+            $objLayer->display = 'none';
+        }
         $objLayer->addToStr($intervalFeature);
         $intervalDiv = $objLayer->show();
 
@@ -2546,7 +2548,7 @@ $this->objLanguage = $this->getObject('language','language');
 
         // invite form
         $objForm = new form('im', $this->uri(array(
-            'action' => 'sendim',
+            'action' => 'submitsettings',
             )));
         $objForm->addToForm($deliveryDiv);
         $objForm->addToForm($intervalDiv);
@@ -2557,7 +2559,7 @@ $this->objLanguage = $this->getObject('language','language');
         $objLayer = new layer();
         $objLayer->id = 'mainDiv';
         $objLayer->padding = '10px';
-        $objLayer->addToStr($heading.$sendLink.$settngsForm);
+        $objLayer->addToStr($heading.$msg.$sendLink.$settngsForm);
         $mainDiv = $objLayer->show();
         $str = $mainDiv;
 

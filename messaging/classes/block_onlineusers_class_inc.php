@@ -37,12 +37,6 @@ class block_onlineusers extends object
     */
     private $objLanguage;
 
-   /*
-    * @var object $dbRooms: The dbrooms database class in the messgaing module
-    * @access private
-    */
-    private $dbRooms;
-
     /*
     * @var string $title: The title of the block
     * @access public
@@ -67,9 +61,6 @@ class block_onlineusers extends object
         $this->userId = $this->objUser->userId();
         $this->objLanguage = $this->getObject('language', 'language');
         
-        // messaging classes
-        $this->dbRooms = $this->getObject('dbrooms', 'messaging');
-
         // language elements
         $title = $this->objLanguage->languageText('mod_messaging_userschatting', 'messaging');
         $label = $this->objLanguage->languageText('mod_messaging_userlist', 'messaging');  

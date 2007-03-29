@@ -792,13 +792,15 @@ class dbmessaging extends dbTable
     public function saveUserSettings($delivery, $interval = NULL)
     {
         $this->_setSettingsTable();
-        $this->deleteUserSettings($userId);
+        $this->deleteUserSettings($this->userId);
         $date = date('Y-m-d H:i:s');
         
         $fields = array();
         $fields['user_id'] = $this->userId;
         $fields['delivery_type'] = $delivery;
-        $fields['time_interval'] = $interval;
+        if($delivery == 2){
+            $fields['time_interval'] = $interval;
+        }
         $fields['updated'] = $date;
         $settingId = $this->insert($fields);
         return $settingId;
