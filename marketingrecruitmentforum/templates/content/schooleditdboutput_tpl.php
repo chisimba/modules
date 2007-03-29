@@ -257,7 +257,7 @@
             $objschoolTable->startRow();
             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
             $objschoolTable->addCell('Telephone Number',"15%", null, "left","$oddOrEven");
-            $objschoolTable->addCell($sesschool['telcode'].$sesschool['telnumber'],"15%", null, "left","$oddOrEven");
+            $objschoolTable->addCell($sesschool['telcode'].' '.$sesschool['telnumber'],"15%", null, "left","$oddOrEven");
             $myTable->row_attributes = " class = \"$oddOrEven\"";
             $rowcount++;
             $objschoolTable->endRow();
@@ -265,7 +265,7 @@
             $objschoolTable->startRow();
             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
             $objschoolTable->addCell('Fax Number',"15%", null, "left","$oddOrEven");
-            $objschoolTable->addCell($sesschool['faxcode'].$sesschool['faxnumber'],"15%", null, "left","$oddOrEven");
+            $objschoolTable->addCell($sesschool['faxcode'].' '.$sesschool['faxnumber'],"15%", null, "left","$oddOrEven");
             $myTable->row_attributes = " class = \"$oddOrEven\"";
             $rowcount++;
             $objschoolTable->endRow();

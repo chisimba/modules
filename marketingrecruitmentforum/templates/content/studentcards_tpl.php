@@ -136,7 +136,7 @@
 	        $idnum = $this->getSession('idno');  
 	        $firstname  = $this->getSession('name');
           $lastname = $this->getSession('surname');
-          $idsearch  = $this->dbstudentcard->getstudbyid($idnum, $field = 'IDNUMBER', $firstname, $field2 = 'NAME', $lastname, $field3 = 'SURNAME', $start = 0, $limit = 0); 
+          $idsearch  = $this->objfaculties->getstudbyid($idnum, $field = 'IDNUMBER', $firstname, $field2 = 'NAME', $lastname, $field3 = 'SURNAME', $start = 0, $limit = 0); 
           if(!empty($idsearch)){         
              
               for($i=0; $i< count($idsearch); $i++){
@@ -159,7 +159,7 @@
         * create dropdwonlist and populate it with values in the multi-dim array
         */
         
-       $schoolnames = $this->objfaculties->getSchools(); 
+      $schoolnames = $this->objfaculties->getSchools(); 
        for($i=0; $i < count($schoolnames); $i++){
             $school[$i]=$schoolnames[$i]->SCHOOLNAME;
        }
@@ -385,10 +385,10 @@
           $objForm->displayType = 3;
           $objForm->addToForm($this->objMainheading->show() . '<br />'."<span class=error>".'<i>'.$this->objheading->show().'</i>'."</span>".'<br />' .$myTable->show());
           $objForm->addRule('schoollist','Please select a school','required');
-          $objForm->addRule('txtname','Please enter surname','required');
-          $objForm->addRule(array('name'=>'txtsurname','length'=>45), , 'maxlength');
-          $objForm->addRule('txtsurname','Please enter surname','required');
-          $objForm->addRule(array('name'=>'txtname','length'=>45), $namemaxval, 'maxlength');
+         // $objForm->addRule('txtname','Please enter surname','required');
+         // $objForm->addRule(array('name'=>'txtsurname','length'=>45),'maxlength');
+         // $objForm->addRule('txtsurname','Please enter surname','required');
+         // $objForm->addRule(array('name'=>'txtname','length'=>45), $namemaxval, 'maxlength');
           $objForm->addRule('grade','Please select a grade','required');
           $objForm->addRule('postaladdress',$postaladd,'required');
           $objForm->addRule(array('name'=>'txtpostalcode','minnumber'=>4), $postcode, 'minnumber');

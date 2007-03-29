@@ -48,6 +48,7 @@ public  function  getAllschools(){
 
        //$results = $this->objschool->getallsschools();
     $res = $this->objschool->getallsschools();
+    //var_dump($res);
 		$stdCount=count($res); 
     $startat = $this->getParam('startat', 1);
     $dispCount = $this->getParam('dispcount', 25);
@@ -183,7 +184,7 @@ if ($stdCount > 0){
       }
              //***end of pagination***
 		$results = $this->objschool->schoollimitdata($startat,$endat);
-
+    //var_dump($results);
      //if($results){   
        $schoolname = $this->objLanguage->languageText('phrase_schoolname');
        $schoolname1 = ucfirst($schoolname);
@@ -491,7 +492,7 @@ if ($stdCount > 0){
           $pagelinks = $showlinks->show();
       }
              //***end of pagination***
-		$results = $this->objschool->schoolarealimit($startat,$endat);
+		$results = $this->objschool->schoollimitdata($startat,$endat);
      //if($results){
          /**
            * define all lanuguage text elements
@@ -704,7 +705,7 @@ if ($stdCount > 0){
           $pagelinks = $showlinks->show();
       }
              //***end of pagination***
-		$results = $this->objschool->schoolprovlimit($startat,$endat);  
+		$results = $this->objschool->schoollimitdata($startat,$endat);  
        //if($results){
          /**
            * define all lanuguage text elements

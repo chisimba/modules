@@ -63,7 +63,7 @@
     /**
      *call to all functions from class searchstudcard
      */         
-      $results =  $this->objschool->getAllschools();   
+      $results =  $this->objschool->getAllschools(); 
       $schoolname  = $this->objschool->schoolbyname($schoolbyname);
       $area  = $this->objschool->schoolbyarea(); 
       $province = $this->objschool->activitybyprov();

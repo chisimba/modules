@@ -281,7 +281,7 @@ public function getWSCount($tableName, $value = null, $field = null, $keys = nul
  * @param string $guidanceteacher
  * @param return object $results  
  */ 
-public function addsschoollist($createdby,$datecreate,$namevalue,$schooladdress,$scharea,$schprovince,$txttelcode,$telnumber,$txtfaxcode,$faxnumber,$email,$principal,$guidanceteacher,$principalemailaddy,$principalcellno,$guidanceteacheamil,$guidanceteachcellno,$schcodeval)
+public function addsschoollist($createdby,$datecreate,$namevalue,$schooladdress,$scharea,$schprovince,$txttelcode,$telnumber,$txtfaxcode,$faxnumber,$email,$principal,$guidanceteacher,$principalemailaddy,$principalcellno,$guidanceteacheamil,$guidanceteachcellno)
 {
         try {
             $keys = NULL;
@@ -344,12 +344,16 @@ public function schoollimitdata($startat,$endat)
   			$startat++;
   			}
   			$sortfield = 'SCHOOLNAME';
-			
-			
-		    return $this->getWSQuery('tbl_mrf_schoollist',$sortfield,'','', '', $startat, $endat, '');
+		   	$sqlQuery = "SELECT * FROM ".$this->schema.".tbl_mrf_schoollist";
+        
+        $sql = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (".$sqlQuery.") a WHERE ROWNUM <= ".$endat.") WHERE rnum > ".$startat;
+        
+			  $result = $this->getWSGenericQuery($sql, 'SEMS');
+			  return $result;
+			  
 	} catch(Exception $e) {
-         return NULL;
-    }
+    return NULL;
+  }
 }     
   
 /**
@@ -406,7 +410,7 @@ public function schoolarealimit($startat,$endat)
          return NULL;
     }
 }  
-     
+   
 /**
  * @author Colleen Tinker
  * Method used to return unique school names, province from tables tbl schoollist 
@@ -458,7 +462,7 @@ public function schoolprovlimit($startat,$endat)
  * @param return object $res   
  * This function is used to update exisiting school info within the db, it uses the $key value as a search indicator and if this value exist replace it with new info 
  */
-public function updateschoollist($createdby,$datecreate,$schname,$schooladdress,$scharea,$schprovince,$txttelcode,$telnumber,$txtfaxcode,$faxnumber,$email,$principal,$guidanceteacher,$principalemailaddy,$principalcellno,$guidanceteacheamil,$guidanceteachcellno,$schcodeval)
+public function updateschoollist($createdby,$datecreate,$schname,$schooladdress,$scharea,$schprovince,$txttelcode,$telnumber,$txtfaxcode,$faxnumber,$email,$principal,$guidanceteacher,$principalemailaddy,$principalcellno,$guidanceteacheamil,$guidanceteachcellno)
 {
        try {
             $data = array();

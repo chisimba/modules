@@ -39,6 +39,7 @@
                    );
      $objdeptnames = new dropdown('moreinfo');
      $objdeptnames->multiple = true;
+     $objdeptnames->size  = 5;
      $objdeptnames->addOption(NULL ,  'Please select a department');
      $objdeptnames->addOption('Financial Aid','Financial Aid');
      $objdeptnames->addOption('Student Credit Management' ,'Student Credit Management');

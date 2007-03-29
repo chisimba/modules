@@ -135,7 +135,7 @@
        $schoolnames = $this->objfaculties->getSchools(); 
        for($i=0; $i < count($schoolnames); $i++){
             $schoolvalues[$i]=$schoolnames[$i]->SCHOOLNAME;
-            $schoolcodeval[$i]  = $schoolnames[$i]->SCHOOLCODE;
+           // $schoolcodeval[$i]  = $schoolnames[$i]->SCHOOLCODE;
             //$this->setSession('schoolcodeval',$schoolcodeval);
        }
         

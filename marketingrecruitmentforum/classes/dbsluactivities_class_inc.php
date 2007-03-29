@@ -295,7 +295,8 @@ public function addsluactivity($cdate,$ddate,$date,$activity,$schoolname,$area,$
  * @return obj $results    
  */  
 public function getallsluactivity(){
-    $query = 'SELECT ACTIVITY, ACTIVITYDATE, SCHOOLNAME, AREA, PROVINCE FROM '.$this->schema.'tbl_mrf_sluactivities';
+    
+    $query = "SELECT ACTIVITY, ACTIVITYDATE, SCHOOLNAME, AREA, PROVINCE FROM ".$this->schema.'.tbl_mrf_sluactivities';
     $results =  $this->getWSGenericQuery($query);
      return $results;
 }
@@ -308,18 +309,20 @@ public function activitydetails($startat,$endat)
 {
 	try {
 		
-			if($startat!=0){
-			$startat++;
-			}
-			$sortfield = 'ACTIVITYDATE';
-			
-			
-		  return $this->getWSQuery('tbl_mrf_sluactivities',$sortfield,null,null,'', $startat, $endat,'');
-	  } catch(Exception $e) {
-         return NULL;
-    }
-}
-
+  			if($startat!=0){
+  			$startat++;
+  			}
+  			$sortfield = 'ACTIVITYDATE';
+		   	$sqlQuery = "SELECT * FROM ".$this->schema.".tbl_mrf_sluactivities";
+        
+        $sql = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (".$sqlQuery.") a WHERE ROWNUM <= ".$endat.") WHERE rnum > ".$startat;
+        $result = $this->getWSGenericQuery($sql, 'SEMS');
+			  return $result;
+			  
+	} catch(Exception $e) {
+    return NULL;
+  }
+}   
 /**
  * Method to retrieve all slu activities btween two date values
  * @param date $begindate
@@ -356,17 +359,21 @@ public function getactivitytype(){
 public function activtypelimit($startat,$endat)
 {
 	try {
-			if($startat!=0){
-			$startat++;
-			}
-
-      $sortfield = 'ACTIVITY';
-			return $this->getWSQuery('tbl_mrf_sluactivities',$sortfield,null,null,'',$startat, $endat,'');
+		
+  			if($startat!=0){
+  			$startat++;
+  			}
+  			$sortfield = 'ACTIVITY';
+		   	$sqlQuery = "SELECT * FROM ".$this->schema.".tbl_mrf_sluactivities";
+        
+        $sql = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (".$sqlQuery.") a WHERE ROWNUM <= ".$endat.") WHERE rnum > ".$startat;
+        $result = $this->getWSGenericQuery($sql, 'SEMS');
+			  return $result;
+			  
 	} catch(Exception $e) {
-         return NULL;
-    }
-}
-
+    return NULL;
+  }
+}   
 /**
  * Method to retrieve all activities by province
  * @return $province  
@@ -383,16 +390,20 @@ public function getactivityprovince(){
 public function activprovincedata($startat,$endat)
 {
 	try {
-
-			if($startat!=0){
-			$startat++;
-			}
-			
-      $sortfield = 'PROVINCE';
-			return $this->getWSQuery('tbl_mrf_sluactivities',$sortfield,null,null,'',$startat, $endat,'');
+		
+  			if($startat!=0){
+  			$startat++;
+  			}
+  			$sortfield = 'PROVINCE';
+		   	$sqlQuery = "SELECT * FROM ".$this->schema.".tbl_mrf_sluactivities";
+        
+        $sql = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (".$sqlQuery.") a WHERE ROWNUM <= ".$endat.") WHERE rnum > ".$startat;
+        $result = $this->getWSGenericQuery($sql, 'SEMS');
+			  return $result;
+			  
 	} catch(Exception $e) {
-         return NULL;
-    }
+    return NULL;
+  }
 }
 
 /**
@@ -413,17 +424,20 @@ public function activareaedata($startat,$endat)
 {
 	try {
 		
-			if($startat!=0){
-			$startat++;
-			}
-			
-      $sortfield = 'AREA';
-			return $this->getWSQuery('tbl_mrf_sluactivities',$sortfield,null,null,'',$startat, $endat,'');
-	   }catch(Exception $e) {
-         return NULL;
-    }
-}   
-
+  			if($startat!=0){
+  			$startat++;
+  			}
+  			$sortfield = 'AREA';
+		   	$sqlQuery = "SELECT * FROM ".$this->schema.".tbl_mrf_sluactivities";
+        
+        $sql = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (".$sqlQuery.") a WHERE ROWNUM <= ".$endat.") WHERE rnum > ".$startat;
+        $result = $this->getWSGenericQuery($sql, 'SEMS');
+			  return $result;
+			  
+	} catch(Exception $e) {
+    return NULL;
+  }
+}
 /**
  * Method to retrieve activities by a specfic school
  * @param string $useToPopTbl, schoolname value passed to function

@@ -145,7 +145,8 @@
 	        $idnum = $this->getSession('idno');  
 	        $firstname  = $this->getSession('name');
           $lastname = $this->getSession('surname');
-          $idsearch  = $this->dbstudentcard->getstudbyid($idnum, $field = 'IDNUMBER', $firstname, $field2 = 'NAME', $lastname, $field3 = 'SURNAME', $start = 0, $limit = 0); 
+          $idsearch  = $this->dbstudentcard->getstudbyid($idnum, $field = 'IDNUMBER', $firstname, $field2 = 'NAME', $lastname, $field3 = 'SURNAME', $start = 0, $limit = 0);
+          var_dump($idsearch);die; 
           if(!empty($idsearch)){         
              
               for($i=0; $i< count($idsearch); $i++){

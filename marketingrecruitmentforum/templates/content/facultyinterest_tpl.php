@@ -59,13 +59,14 @@
        $this->dbstudentcard  = & $this->getObject('dbstudentcard','marketingrecruitmentforum'); 
        $res = $this->dbstudentcard->faccountval($facultyname);
        
-       
+       if(!empty($res)){
+          $val  = $res;  
+       }else{
+          $val  = '0';
+       }
       
-      for($i=0; $i< count($res); $i++){
-          $count='';
-          $count  = $count + $res[$i]->TOTSTUD;
-      }
-      $val  = $count;
+     
+      
 /*------------------------------------------------------------------------------*/       
        /**
         *create form heading

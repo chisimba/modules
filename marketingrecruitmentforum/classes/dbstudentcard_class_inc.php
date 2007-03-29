@@ -233,10 +233,7 @@ public function writeWSQuery($tableName, $data, $keys = null)
     */
 public function getWSGenericQuery($query)
 {
-      //var_dump($query);
         $query = $this->objCrypt->encrypt($query, $this->sessionKey);
-      //  var_dump($query);
-       // var_dump($this->sessionKey);
         $arr =  $this->objSoapClient->genericQuery($query);
         $arr = $this->objCrypt->encryptObject($arr, $this->sessionKey, TRUE);
         return $arr;
@@ -800,12 +797,33 @@ public function facultycount($facultyname)
        }
 }
 
-public function faccountval($facultyname){
+/*public function faccountval($facultyname){
         
             $where = "where faculty = '$facultyname'"; 
             $query = 'SELECT count(ID) AS TOTSTUD FROM '.$this->schema.'tbl_mrf_studcard '.$where;
             $result = $this->getWSGenericQuery($query);
             return $result;
+}*/
+
+public function faccountval($facultyname)
+{
+        try {
+
+            $keys = array();
+            $keys[] = array( 'field' =>'FACULTY', 'value' => $facultyname);
+            
+
+            $appCount = $this->getWSCount('tbl_mrf_studcard',null, null, $keys);
+
+            if ($appCount > 0) {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+
+        } catch(Exception $e) {
+            return NULL;
+        }
 }
 
 /**
@@ -867,7 +885,7 @@ public function studarealimit($startat,$endat)
  */
 public function getstudbyid($idnumber, $field = 'IDNUMBER', $firstname, $field2 = 'NAME', $lastname, $field3 = 'SURNAME', $start = 0, $limit = 0) 
 {
-   try {
+  // try {
             $keys  = array();
             $keys[] = array( 'field' => $field, 'value' => $idnumber);
             $keys[] = array( 'field' => $field2,'value' => $lastname);
@@ -877,9 +895,9 @@ public function getstudbyid($idnumber, $field = 'IDNUMBER', $firstname, $field2 
                           
             return $this->getWSQuery('tbl_mrf_studcard','IDNUMBER',null,null,$keys,$start, $limit,$fields);
 
-      } catch(Exception $e) {
-        return NULL;
-     }
+   //   } catch(Exception $e) {
+   //     return NULL;
+   //  }
 }
   
 /**
@@ -982,7 +1000,7 @@ public function getFaculties()
 {
      try {
 
-            $query = 'SELECT * FROM '.$this->schema.'tbl_mrf_academicprog_faculties ';
+            $query = 'SELECT * FROM '.$this->schema.'.tbl_mrf_academicprog_faculties ';
             $result = $this->getWSGenericQuery($query);
             return $result;
         
@@ -1017,15 +1035,15 @@ public function getcourse()
  */
 public function getSchools()
 {
-    //try {
+    try {
 
-            $query = 'SELECT * FROM '.$this->schema.'.tbl_mrf_schoolnames';
+            $query = 'SELECT SCHOOLNAME FROM '.$this->schema.'.tbl_mrf_schoolnames';
             $result = $this->getWSGenericQuery($query);
             return $result;
           
-    //} catch (Exception $e) {
-      //      return NULL;
-    //}
+    } catch (Exception $e) {
+          return NULL;
+    }
  
 }
 
@@ -1036,15 +1054,16 @@ public function getSchools()
  */
 public function getPostInfo()
 {
-    try {
+   // try {
 
-            $query = 'SELECT * FROM '.$this->schema.'.tbl_mrf_postcodes ';
+            $query = 'SELECT CITY FROM '.$this->schema.'.tbl_mrf_postcodes';
+            
             $result = $this->getWSGenericQuery($query);
             return $result;
             
-    } catch (Exception $e) {
-            return NULL;
-    }
+   // } catch (Exception $e) {
+   //         return NULL;
+   // }*/
  
 }
 

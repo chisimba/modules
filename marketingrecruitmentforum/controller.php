@@ -136,14 +136,12 @@ function dispatch($action)
                 $firstname = strtoupper($this->getParam('firstname'));
                 $lastname = strtoupper($this->getParam('lastname'));
                 
-                //$firstname = ucfirst($f);
-               // var_dump($firstname);
-                //$lastname = ucfirst($l); 
+               
                 $this->setSession('idno',$idnumber);
                 $this->setSession('name',$firstname);
                 $this->setSession('surname',$lastname);
                 $idsearch  = $this->dbstudentcard->getstudbyid($idnumber, $field = 'IDNUMBER', $firstname, $field2 = 'NAME', $lastname, $field3 = 'SURNAME', $start = 0, $limit = 0);
-               // var_dump($idsearch);
+              //var_dump($idsearch);die('k'); 
                 $this->setVarByRef('idsearch', $idsearch);
                 return 'idnumberform_tpl.php';
            break;
@@ -647,7 +645,7 @@ function dispatch($action)
                      }
                      $namefound  = $this->dbschoollist->getschoolbyname($schname, $field = 'schoolname', $start = 0, $limit = 0);
                      if(!empty($namefound)){
-                             $this->dbschoollist->updateschoollist($createdby,$datecreate,$schname,$schooladdress,$scharea,$schprovince,$txttelcode,$telnumber,$txtfaxcode,$faxnumber,$email,$principal,$guidanceteacher,$principalemailaddy,$principalcellno,$guidanceteacheamil,$guidanceteachcellno,$schcodeval);
+                             $this->dbschoollist->updateschoollist($createdby,$datecreate,$schname,$schooladdress,$scharea,$schprovince,$txttelcode,$telnumber,$txtfaxcode,$faxnumber,$email,$principal,$guidanceteacher,$principalemailaddy,$principalcellno,$guidanceteacheamil,$guidanceteachcellno);
                      }else{
                           if(!empty($schname)){
                               $namevalue = $schname;
@@ -656,7 +654,7 @@ function dispatch($action)
                           }
                           //
                           if($schoolinfodata[0] != NULL){ 
-                             $this->dbschoollist->addsschoollist($createdby,$datecreate,$namevalue,$schooladdress,$scharea,$schprovince,$txttelcode,$telnumber,$txtfaxcode,$faxnumber,$email,$principal,$guidanceteacher,$principalemailaddy,$principalcellno,$guidanceteacheamil,$guidanceteachcellno,$schcodeval);
+                             $this->dbschoollist->addsschoollist($createdby,$datecreate,$namevalue,$schooladdress,$scharea,$schprovince,$txttelcode,$telnumber,$txtfaxcode,$faxnumber,$email,$principal,$guidanceteacher,$principalemailaddy,$principalcellno,$guidanceteacheamil,$guidanceteachcellno);
                           }
                        }
           }
@@ -848,19 +846,8 @@ function dispatch($action)
               if (!$this->objSemsSecurity->inGroup('MRSF Student View')) {
                   return "noaccess_tpl.php";    
               }
-              /*$leadership = $this->getParam('listB');
-             //VAR_DUMP($leadership);
-              $sportcodeval = $this->getParam('listC');
-              $sportPart = $this->getParam('sportParticipated');
-              $next  = $this->getParam('next');
-           
-              if(isset($leadership) || isset($sportcode)){
-                $this->setVarByRef('leadership',$leadership);
-                $this->setVarByRef('sportcodeval',$sportcodeval);
-                return 'sports_tpl.php';
-              }else{*/
-                $this->getSportValues();
-               return 'studentfaccrse_tpl.php'; 
+              $this->getSportValues();
+              return 'studentfaccrse_tpl.php'; 
               //}
           break;
           
@@ -1026,34 +1013,103 @@ function dispatch($action)
   }
   
   
-  private function getSportValues(){
-          $sportPart  = $this->getParam('sportParticipated');
-          $leadership = $this->getParam('listB');
-          
+private function getSportValues(){
+   $sportPart  = $this->getParam('sportParticipated');
+   $leadership = $this->getParam('leadPos');
+   $leadtype   = $this->getParam('listC'); 
+   $leadOther  = $this->getParam('txtleadership');
+   $leadtype   = $this->getParam('leadership');
+  // $otherlist  = $this->getParam('other'); 
+   $otherCode  = $this->getParam('otherCode');
+   
+   $sportCode1       =  $this->getParam('listC');
+   $sportCode2       =  $this->getParam('listC2');
+   $sportCode3       =  $this->getParam('listC3');
+   $sportCode4       =  $this->getParam('listC4');
+   $sportCode5       =  $this->getParam('listC5');
+   $sportCode6       =  $this->getParam('listC6');
+   $achievlevel1      =  $this->getParam('listB');
+   $achievlevel2      =  $this->getParam('listB1');
+   $achievlevel3      =  $this->getParam('listB2');
+   $achievlevel4      =  $this->getParam('listB3');
+   $achievlevel5      =  $this->getParam('listB4');
+   $achievlevel6      =  $this->getParam('listB5');
+
+   if(!empty($sportCode1) && !empty($achievlevel1)){
+       $A = $sportCode1.' at '.$achievlevel1.' level';
+   }else{
+       $A = NULL;
+   }
+
+   if(!empty($sportCode2) && !empty($achievlevel2)){
+       $B = $sportCode2.' at '.$achievlevel2.' level' ;
+   }else{
+       $B = NULL;
+   }
+   
+   if(!empty($sportCode3) && !empty($achievlevel3)){
+       $C = $sportCode3.' at '.$achievlevel3.' level';
+   }else{
+       $C = NULL;
+   }
+   
+   if(!empty($sportCode4) && !empty($achievlevel4)){
+       $D = $sportCode4.' at '.$achievlevel4.' level';
+   }else{
+       $D = NULL;
+   }
+   
+   if(!empty($sportCode5) && !empty($achievlevel5)){
+       $E = $sportCode5.' at '.$achievlevel5.' level ';
+   }else{
+       $E = NULL;
+   } 
+   
+   if(!empty($sportCode6) && !empty($achievlevel6)){
+       $F = $sportCode6.' at '.$achievlevel6.' level ';
+   }else{
+       $F = NULL;
+   } 
+   if(!empty($otherCode)){
+       $g = $otherCode;
+   }else{
+       $g = 'None';
+   }                                                                                    
           if($sportPart == 'Yes'){
-              $sportPval  = 'Yes';
+             $sportPval  = 'Yes';
           }elseif($sportPart == 'No'){
-              $sportPval  = 'No';
+             $sportPval  = 'No';
           }else{
-              $sportPval  = 'Null';
+             $sportPval  = 'Null';
           }
-          
+                                                                                    
+                                                                                    
           if($leadership == 'Yes'){
-              $leadershipval  = 'Yes';
+             $leadershipval  = 'Yes';
           }elseif($leadership == 'No'){
               $leadershipval  = 'No';
           }else{
-          $leadershipval  = 'Null';
+              $leadershipval  = 'Null';
           }
-          $sportdata      = array('sportPart'       =>  $sportPval,
-                                  'leadershipPos'   =>  $leadershipval,  
-                                  'sportCode'       =>  $this->getParam('listC'),
-                                  'achievlevel'     =>  $this->getParam('listA'),
-                                  'sportBursary'    =>  $this->getParam('sportBursary'),   
-          );
-          $this->setSession('sportdata',$sportdata);
-  
-  }
+          $valLead = '';
+          foreach($leadtype as $sessLead){
+                $valLead  .= $sessLead.';';
+          }
+                                  
+    $sportdata =      array('sportPart'          =>  $sportPval,
+                            'leadershipPos'     =>  $leadershipval,
+                            'leadtype'          =>  $valLead.' '.$leadOther,
+                            'sportCodeAndLevel1' =>  $A,
+                            'sportCodeAndLevel2' =>  $B,
+                            'sportCodeAndLevel3' =>  $C,
+                            'sportCodeAndLevel4' =>  $D,
+                            'sportCodeAndLevel5' =>  $E,
+                            'sportCodeAndLevel6' =>  $F,
+                            'OtherSportcode'         => $g,
+                            'sportBursary'      =>  $this->getParam('sportBursary'), 
+          ); 
+      $this->setSession('sportdata',$sportdata);  
+}
    
   private function studentInfoDetails(){
            $exemp = $this->getParam('exemptionqualification');
