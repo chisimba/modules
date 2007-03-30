@@ -1185,9 +1185,10 @@ class blogops extends object
         }
         //RSS2.0
         $rss2 = $this->getObject('geticon', 'htmlelements');
+        $rss2->align = "top";
         $rss2->setIcon('rss', 'gif', 'icons/filetypes');
         $link = new href($this->uri(array('action' => 'feed', 'format' => 'rss2', 'userid' => $userid)),$this->objLanguage->languageText("mod_blog_word_rss2", "blog"));
-        $leftCol .= $rss2->show() . $link->show() . "<br />";
+        $rss2feed = $rss2->show() . $link->show() . "<br />";
         
         //RSS0.91
         $rss091 = $this->getObject('geticon', 'htmlelements');
@@ -1223,7 +1224,8 @@ class blogops extends object
         $atom = $this->getObject('geticon', 'htmlelements');
         $atom->setIcon('rss', 'gif', 'icons/filetypes');
         $link = new href($this->uri(array('action' => 'feed', 'format' => 'atom', 'userid' => $userid)),$this->objLanguage->languageText("mod_blog_word_atom", "blog"));
-        $leftCol .= $atom->show() . $link->show() . "<br />";
+        $atomfeed = $atom->show() . $link->show() . "<br />";
+        //$leftCol .= $atomfeed;
 
         //Plain HTML
         $html = $this->getObject('geticon', 'htmlelements');
@@ -1247,6 +1249,7 @@ title=\"down\"></a>";
         $icon->setIcon('down');
         //$str .="<a href=\"#\" onclick=\"Effect.SlideDown('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
 		
+        $topper = $rss2feed . $atomfeed;
 		
         $str .='<div id="feedmenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
         $str .= $leftCol;
@@ -1259,7 +1262,7 @@ title=\"down\"></a>";
         }
         else {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_feedheader","blog"), $str);
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_feedheader","blog"), $topper . "<br />" . $str);
             return $ret;
         }
 
