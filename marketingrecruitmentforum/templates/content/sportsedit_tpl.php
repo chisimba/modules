@@ -267,14 +267,20 @@ $myTable->endRow();
 $objForm = new form('sportdata',$this->uri(array('action'=>'sportoutputshow')));
 $objForm->displayType = 3;
 $objForm->addToForm($this->objMainheading->show().'<br/>'.$myTable->show());
-$objForm->addRule('sportParticipated','Please select an option','required');
-$objForm->addRule('leadPos','Please select an option','required');
-$objForm->addRule('sportBursary','Please select an option','required');
-//$leadPostype = $this->getParam('leadPos');
-//var_dump($leadPostype);
-//if($leadPostype){
-// $objForm->addRule('leadership','Please select an option','required');
-//}
-
+$objForm->addRule('sportParticipated','Please select an option for sport','required');
+$objForm->addRule('leadPos','Please select an option leadership','required');
+$objForm->addRule('sportBursary','Please select an option bursary','required');
+$sportCode1       =  $this->getParam('listC');
+$sportCode2       =  $this->getParam('listC2');
+$sportCode3       =  $this->getParam('listC3');
+$sportCode4       =  $this->getParam('listC4');
+$sportCode5       =  $this->getParam('listC5');
+$sportCode6       =  $this->getParam('listC6');
+$achievlevel1      =  $this->getParam('listB');
+$achievlevel2      =  $this->getParam('listB1');
+$achievlevel3      =  $this->getParam('listB2');
+$achievlevel4      =  $this->getParam('listB3');
+$achievlevel5      =  $this->getParam('listB4');
+$achievlevel6      =  $this->getParam('listB5');
 echo  $objForm->show();               
 ?>

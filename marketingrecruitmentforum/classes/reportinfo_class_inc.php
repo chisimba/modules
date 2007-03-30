@@ -43,7 +43,8 @@ public	function init()
  */  
 public function displaysdcases(){
   
-         $results = $this->objstudcard->sdcases($where = 'where sdcase = 1 and exemption = 0 ');
+         $results = $this->objstudcard->sdcases($where = 'where SDCASE = 1 and EXEMPTION = 0 ');
+         
          
          /**
           * define all language item text

@@ -656,16 +656,16 @@ public function studsdcasecount($startat,$endat)
  * @return array $totalsd   
  */
 public function sdcases($where = 'where SDCASE = 1 and EXEMPTION = 0 '){
-       try {
+       //try {
 
           
         $query = 'SELECT SURNAME, NAME, SCHOOLNAME, SDCASE FROM '.$this->schema.'.tbl_mrf_studcard '.$where;
         $results =  $this->getWSGenericQuery($query);
         return $results;
 
-      }catch(Exception $e) {
-       return NULL;
-      }
+      //}catch(Exception $e) {
+      // return NULL;
+      //}
 }  
  
 /**
@@ -975,18 +975,20 @@ public function getstudbyid($idnumber, $field = 'IDNUMBER', $firstname, $field2 
  * @param string $stmt SQL statement,updates all columns specified with variable values passed to function 
  * @return array $stmt 
  */
-public function updatestudinfo($createdby,$datecreate,$latestID,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$latestID,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$sportPart,$leadershipPos,$leadtype,$sportCodeAndLevel1,$sportCodeAndLevel2,$sportCodeAndLevel3,$sportCodeAndLevel4,$sportCodeAndLevel5,$sportCodeAndLevel6,$OtherSportcode,$sportBursary)
+public function updatestudinfo($createdby,$datecreate,$latestID,$date,$surname,$name,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$sportPart,$leadershipPos,$leadtype,$sportCodeAndLevel1,$sportCodeAndLevel2,$sportCodeAndLevel3,$sportCodeAndLevel4,$sportCodeAndLevel5,$sportCodeAndLevel6,$OtherSportcode,$sportBursary)
 {
         //try {
             $data = array();
+           
             $data[] = array( 'field' => 'ID', 'value' => "init" . "_" . rand(1000,9999) . "_" . time());
             $data[] = array( 'field' => 'CREATEDBY', 'value' => $createdby);
             $data[] = array( 'field' => 'DATECREATED', 'value' => "to_date('".$datecreate."', 'dd-mm-yyyy')");
             $data[] = array( 'field' => 'IDNUMBER', 'value' => $latestID);
             $data[] = array( 'field' => 'ENTRYDATE', 'value' => "to_date('".$date."', 'dd-mm-yyyy')");
-          //  $data[] = array( 'field' => 'name', 'value' => $name);
-          //  $data[] = array( 'field' => 'surname', 'value' => $surname);
-            $data[] = array( 'field' => 'DOB', 'value' => "to_date('".$dob."', 'dd-mm-yyyy')");
+            $data[] = array( 'field' => 'SURNAME', 'value' => $surname);
+            $data[] = array( 'field' => 'NAME', 'value' => $name);
+           // $data[] = array( 'field' => 'DOB', 'value' => "to_date('".$dob."', 'dd-mm-yyyy')");
+            $data[] = array( 'field' => 'GRADE', 'value' => $grade);
             $data[] = array( 'field' => 'SCHOOLNAME', 'value' => $schoolname);
             $data[] = array( 'field' => 'POSTADDRESS', 'value' => $postaddress);
             $data[] = array( 'field' => 'POSTCODE', 'value' => $postcode);
@@ -997,7 +999,6 @@ public function updatestudinfo($createdby,$datecreate,$latestID,$date,$surname,$
             $data[] = array( 'field' => 'COURSE', 'value' => $course);
             $data[] = array( 'field' => 'SDCASE', 'value' => $sdcase);
             $data[] = array( 'field' => 'AREA', 'value' => $areastud);
-            $data[] = array( 'field' => 'GRADE', 'value' => $grade);            
             $data[] = array( 'field' => 'CELLNUMBER', 'value' => $cellnumber);
             $data[] = array( 'field' => 'STUDEMAIL', 'value' => $studemail);
             $data[] = array( 'field' => 'SUBJECT1', 'value' => $subject1);
@@ -1018,7 +1019,6 @@ public function updatestudinfo($createdby,$datecreate,$latestID,$date,$surname,$
             $data[] = array( 'field' => 'GRADETYPE5', 'value' => $gradetype5);
             $data[] = array( 'field' => 'GRADETYPE6', 'value' => $gradetype6);
             $data[] = array( 'field' => 'GRADETYPE7', 'value' => $gradetype7);
-            $data[] = array( 'field' => 'MARKGRADE', 'value' => $markgrade);
             $data[] = array( 'field' => 'MARK1', 'value' => $markval);
             $data[] = array( 'field' => 'MARK2', 'value' => $markval2);
             $data[] = array( 'field' => 'MARK3', 'value' => $markval3);
@@ -1026,19 +1026,20 @@ public function updatestudinfo($createdby,$datecreate,$latestID,$date,$surname,$
             $data[] = array( 'field' => 'MARK5', 'value' => $markval5);
             $data[] = array( 'field' => 'MARK6', 'value' => $markval6);
             $data[] = array( 'field' => 'MARK7', 'value' => $markval7);
+            $data[] = array( 'field' => 'MARKGRADE', 'value' => $markgrade);
             $data[] = array( 'field' => 'CONFIRM', 'value' => $confirmation);
             $data[] = array( 'field' => 'SPORTPART', 'value' => $sportPart);
             $data[] = array( 'field' => 'LEADERSHIPPOS', 'value' => $leadershipPos);
-            $data[] = array( 'field' => 'leadtype', 'value' => $leadtype);
-            $data[] = array( 'field' => 'sportCodeAndLevel1', 'value' => $sportCodeAndLevel1);
-            $data[] = array( 'field' => 'sportCodeAndLevel2', 'value' => $sportCodeAndLevel2);
-            $data[] = array( 'field' => 'sportCodeAndLevel3', 'value' => $sportCodeAndLevel3);
-            $data[] = array( 'field' => 'sportCodeAndLevel4', 'value' => $sportCodeAndLevel4);
-            $data[] = array( 'field' => 'sportCodeAndLevel5', 'value' => $sportCodeAndLevel5);
-            $data[] = array( 'field' => 'sportCodeAndLevel6', 'value' => $sportCodeAndLevel6);
-            $data[] = array( 'field' => 'OtherSportcode', 'value' => $OtherSportcode);
-            $data[] = array( 'field' => 'sportBursary', 'value' => $sportBursary);
-            
+            $data[] = array( 'field' => 'LEADTYPE', 'value' => $leadtype);
+            $data[] = array( 'field' => 'SPORTCODEANDLEVEL1', 'value' => $sportCodeAndLevel1);
+            $data[] = array( 'field' => 'SPORTCODEANDLEVEL2', 'value' => $sportCodeAndLevel2);
+            $data[] = array( 'field' => 'SPORTCODEANDLEVEL3', 'value' => $sportCodeAndLevel3);
+            $data[] = array( 'field' => 'SPORTCODEANDLEVEL4', 'value' => $sportCodeAndLevel4);
+            $data[] = array( 'field' => 'SPORTCODEANDLEVEL5', 'value' => $sportCodeAndLevel5);
+            $data[] = array( 'field' => 'SPORTCODEANDLEVEL6', 'value' => $sportCodeAndLevel6);
+            $data[] = array( 'field' => 'OTHERSPORTCODE', 'value' => $OtherSportcode);
+            $data[] = array( 'field' => 'SPORTBURSARY', 'value' => $sportBursary);
+               
             $keys = array();
             //$keys[] = array( 'field' => 'idnumber', 'value' => $idsearch);
             $keys[] = array( 'field' => 'SURNAME', 'value' => $surname);

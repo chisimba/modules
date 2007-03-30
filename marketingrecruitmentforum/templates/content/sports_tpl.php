@@ -262,8 +262,8 @@ $myTable->endRow();
 $objForm = new form('sportdata',$this->uri(array('action'=>'studentdetailsoutput')));
 $objForm->displayType = 3;
 $objForm->addToForm($this->objMainheading->show().'<br/>'.$myTable->show());
-$objForm->addRule('sportParticipated','Please select an option','required');
-$objForm->addRule('leadPos','Please select an option','required');
-$objForm->addRule('sportBursary','Please select an option','required');
+$objForm->addRule('sportParticipated','Please select an option for sport','required');
+$objForm->addRule('leadPos','Please select an option leadership','required');
+$objForm->addRule('sportBursary','Please select an option bursary','required');
 echo  $objForm->show();              
 ?>
