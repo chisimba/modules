@@ -1090,6 +1090,7 @@ class blog extends controller
                 $status = $this->getParam('status');
                 $commentsallowed = $this->getParam('commentsallowed');
                 $stickypost = $this->getParam('stickypost');
+                $showpdf = $this->getParam('showpdf');
                 $excerpt = $this->getParam('postexcerpt');
                 $postts = $this->getParam('post_ts');
                 $tags = $this->getParam('tags');
@@ -1100,6 +1101,13 @@ class blog extends controller
                 }
                 else {
                 	$stickypost = 0;
+                }
+                if($showpdf == "on")
+                {
+                	$showpdf = 1;
+                }
+                else {
+                	$showpdf = 0;
                 }
                 /*
                 //set up for Google Blog API
@@ -1181,7 +1189,7 @@ class blog extends controller
                     $insarredit = array('id' => $id,'posttitle' => $posttitle, 'postcontent' => $postcontent,
                                                     'postcat' => $cat, 'postexcerpt' => $excerpt, 'poststatus' => $status,
                                                     'commentstatus' => $commentsallowed,
-                                                    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate, 'postts' => $postts, 'cclic' => $cclic, 'stickypost' => $stickypost);
+                                                    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate, 'postts' => $postts, 'cclic' => $cclic, 'stickypost' => $stickypost, 'showpdf' => $showpdf);
 
                     $this->objblogOps->quickPostAdd($userid, $insarredit, $mode);
 
@@ -1229,7 +1237,7 @@ class blog extends controller
                     $this->objblogOps->quickPostAdd($userid, array('id' => $id, 'posttitle' => $posttitle, 'postcontent' => $postcontent,
                                                     'postcat' => $cat, 'postexcerpt' => $excerpt, 'poststatus' => $status,
                                                     'commentstatus' => $commentsallowed,
-                                                    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate, 'cclic' => $cclic, 'stickypost' => $stickypost));
+                                                    'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $postdate, 'cclic' => $cclic, 'stickypost' => $stickypost, 'showpdf' => $showpdf));
                     //dump in the tags
                     if(!empty($tagarray) && $tagarray[0] != "")
                     {

@@ -1031,8 +1031,11 @@ class blogops extends object
             		$mtfimg = $mtficon->show();
 
                     $mtflink = new href($this->uri(array('action' => 'mail2friend', 'postid' => $post['id'], 'bloggerid' => $post['userid'])), $mtfimg, NULL);
-
-                    $tbl->addCell($pdflink->show() . $mtflink->show());
+                    if($post['showpdf'] == '1' || $post['showpdf'] == 'on')
+                	{
+                    	$tbl->addCell($pdflink->show() . $mtflink->show());
+                	}
+                    
                     $tbl->endRow();
                     echo $this->objTB->autodiscCode();
                     //tack the tags onto the end of the post content...
@@ -1651,6 +1654,7 @@ title=\"down\"></a>";
         $ptable->addCell($pdlabel->show());
         $ptable->addCell($pDrop->show());
         $ptable->endRow();
+        
         //post status dropdown
         $ptable->startRow();
         $pslabel = new label($this->objLanguage->languageText('mod_blog_poststatus', 'blog') .':', 'input_status');
@@ -1661,6 +1665,7 @@ title=\"down\"></a>";
         $ptable->addCell($pslabel->show());
         $ptable->addCell($psDrop->show());
         $ptable->endRow();
+        
         //allow comments?
         $this->loadClass("checkbox", "htmlelements");
         $commentsallowed = new checkbox('commentsallowed', $this->objLanguage->languageText("mod_blog_word_yes", "blog") , true);
@@ -1669,6 +1674,7 @@ title=\"down\"></a>";
         $ptable->addCell($pcomlabel->show());
         $ptable->addCell($commentsallowed->show());
         $ptable->endRow();
+        
         //Sticky post?
         $this->loadClass("checkbox", "htmlelements");
         if (isset($editparams['stickypost']) && $editparams['stickypost'] == 1) 
@@ -1683,6 +1689,22 @@ title=\"down\"></a>";
         $ptable->addCell($pstickylabel->show());
         $ptable->addCell($sticky->show());
         $ptable->endRow();
+        
+        //show as a PDF?
+        $this->loadClass("checkbox", "htmlelements");
+        if (isset($editparams['showpdf']) && $editparams['showpdf'] == 1) 
+        {
+        	$showpdf = new checkbox('showpdf', 1 , TRUE);
+        }
+        else {
+        	$showpdf = new checkbox('showpdf', 1 , FALSE);
+        }
+        $ptable->startRow();
+        $showpdflabel = new label($this->objLanguage->languageText('mod_blog_showpdf', 'blog') .':', 'input_showpdf');
+        $ptable->addCell($showpdflabel->show());
+        $ptable->addCell($showpdf->show());
+        $ptable->endRow();
+                
         //post excerpt
         $this->loadClass('textarea', 'htmlelements');
         $pexcerptlabel = new label($this->objLanguage->languageText('mod_blog_postexcerpt', 'blog') .':', 'input_postexcerpt');

@@ -98,6 +98,11 @@ $fields = array(
 		'length' => 20,
 		'default' => 0,
 		),
+	'showpdf' => array(
+		'type' => 'integer',
+		'length' => 20,
+		'default' => 0,
+		),
 	);
 
 //create other indexes here...

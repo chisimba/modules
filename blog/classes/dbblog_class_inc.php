@@ -535,7 +535,8 @@ class dbblog extends dbTable
 							'comment_count' => $postarr['commentcount'],
 							'post_ts' => time(),
 							'post_lic' => $postarr['cclic'],
-							'stickypost' => $postarr['stickypost']);
+							'stickypost' => $postarr['stickypost'],
+							'showpdf' => $postarr['showpdf']);
 
 			$insarr['id'] = $this->insert($insarr, 'tbl_blog_posts');
 			return $this->luceneIndex($insarr);
@@ -559,7 +560,8 @@ class dbblog extends dbTable
 							'comment_count' => $postarr['commentcount'],
 							'post_ts' => $postarr['postts'], //time(),
 							'post_lic' => $postarr['cclic'],
-							'stickypost' => $postarr['stickypost']);
+							'stickypost' => $postarr['stickypost'],
+							'showpdf' => $postarr['showpdf']);
 
 			$this->update('id',$postarr['id'], $edarr, 'tbl_blog_posts');
 			return $this->luceneReIndex($postarr);
@@ -626,7 +628,8 @@ class dbblog extends dbTable
 							'comment_count' => $postarr['commentcount'],
 							'post_ts' => strtotime($postarr['postdate']),
 							'post_lic' => $postarr['cclic'],
-							'stickypost' => $postarr['stickypost']);
+							'stickypost' => $postarr['stickypost'],
+							'showpdf' => $postarr['showpdf']);
 
 			$this->update('id',$postarr['id'], $inseditarr, 'tbl_blog_posts');
 			return $this->luceneReIndex($postarr);
