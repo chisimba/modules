@@ -179,6 +179,7 @@ function dispatch($action)
                       return "noaccess_tpl.php";
                 }
                   $this->unsetSession('idno');
+                  $this->unsetSession('changeIDnumber');
                   $this->unsetSession('studentdata');
                   $this->unsetSession('studentdetails');
                   $this->unsetSession('studentfaccrse');
@@ -389,29 +390,33 @@ function dispatch($action)
             break;
 
             case  'submitinfo':
-               //if (!$this->objSemsSecurity->inGroup('MRSF Student View')) {
-                 //     return "noaccess_tpl.php";
-               // }
-                  $confirmation = $this->getParam('confirmation');
                   $submitmsg = $this->getParam('submitmsg', 'no');
                   $this->setVarByRef('submitmsg', $submitmsg);
+                  //check that all info entered is correct
+                  $confirm = $this->getParam('confirmation');
+                  if($confirm){
+                      $confirmation = 'Yes';
+                  }else{
+                      $confirmation = 'No';
+                  }
+                  
                   //submit studcard info -- personal data
                   $firstname  = $this->getSession('name');
                   $lastname = $this->getSession('surname');
                   $idsearch = $this->getSession('idno');
-                  // VAR_DUMP($idsearch);DIE;
                   $idexist  = $this->dbstudentcard->getstudbyid($idsearch, $field = 'IDNUMBER', $firstname, $field2 = 'NAME', $lastname, $field3 = 'SURNAME', $start = 0, $limit = 0);
-                  //VAR_DUMP($idexist);DIE;
+                  
                   $username  = $this->objUser->fullname();
+                  //newidNum after edit
                   $newIDNum = $this->getSession('changeIDnumber');
-                                    
+                  //loop thru details in various sessions                   
                   $studcarddata []   = $this->getSession('studentdata');
               if(!empty($studcarddata) && ($studcarddata[0] != NULL)){  
                       foreach($studcarddata as $resdata){
                             $createdby  = strtoupper($username);
                             $datecreate = date('d-m-Y');
                             $date = $resdata['date'];
-                            $studentidnumber  = strtoupper($idsearch); // CHANGE TO SESSION IDNUMBER captured when capturing personal details $this->getSession('changeIDnumber'); HOW
+                            $studentidnumber  = $idsearch; 
                             $surname  = strtoupper($resdata['surname']);
                             $name = strtoupper($resdata['name']);
                             $dob  = $resdata['dob'];
@@ -504,7 +509,7 @@ function dispatch($action)
           if(!empty($studssportinfo) && ($studssportinfo[0] != NULL)){
                      foreach($studssportinfo as $sess){
                             
-                             $sportPart = $sess['sportPart']; 
+                             $sportPart = strtoupper($sess['sportPart']); 
                              $leadershipPos = strtoupper($sess['leadershipPos']);
                              $leadtype = strtoupper($sess['leadtype']);
                              $sportCodeAndLevel1 = strtoupper($sess['sportCodeAndLevel1']);
@@ -581,8 +586,9 @@ function dispatch($action)
                           $this->dbstudentcard->updatestudinfo($createdby,$datecreate,$latestID,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$latestID,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$sportPart,$leadershipPos,$leadtype,$sportCodeAndLevel1,$sportCodeAndLevel2,$sportCodeAndLevel3,$sportCodeAndLevel4,$sportCodeAndLevel5,$sportCodeAndLevel6,$OtherSportcode,$sportBursary);
                           
         }elseif($studcarddata[0]!= NULL && $studsubjectdetail[0] != NULL && $studssportinfo [0] != NULL && $studfacdetails[0] != NULL && $studmoreinfo[0] != NULL ){
-                  $this->dbstudentcard->addstudcard($createdby,$datecreate,$idsearch,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$sportPart,$leadershipPos,$leadtype,$sportCodeAndLevel1,$sportCodeAndLevel2,$sportCodeAndLevel3,$sportCodeAndLevel4,$sportCodeAndLevel5,$sportCodeAndLevel6,$OtherSportcode,$sportBursary,$keys = NULL);
+                          $this->dbstudentcard->addstudcard($createdby,$datecreate,$studentidnumber,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$sportPart,$leadershipPos,$leadtype,$sportCodeAndLevel1,$sportCodeAndLevel2,$sportCodeAndLevel3,$sportCodeAndLevel4,$sportCodeAndLevel5,$sportCodeAndLevel6,$OtherSportcode,$sportBursary);
         }
+                  $this->unsetSession('idno');
                   $this->unsetSession('idno');
                   $this->unsetSession('studentdata');
                   $this->unsetSession('studentdetails');
@@ -613,6 +619,7 @@ function dispatch($action)
                      }
                  }
                   $this->unsetSession('idno');
+                  $this->unsetSession('changeIDnumber');
                   $this->unsetSession('studentdata');
                   $this->unsetSession('studentdetails');
                   $this->unsetSession('studentfaccrse');
@@ -940,13 +947,13 @@ function dispatch($action)
  *create a session variable to store the array data in
  *@param private            
  */
-   private function getStudentDetails(){
-    $idnum = $this->getSession('idno');
+private function getStudentDetails(){
+    /*    $idnum = $this->getSession('idno');
            if(!empty($idnum)){
               $id = $idnum;
            }else{
               $id = "No id number";
-           }
+           }*/
            
            $username  = $this->objUser->fullname();
            $studentdata  = array('createdby'        =>  $username,
@@ -963,8 +970,8 @@ function dispatch($action)
                                  'area'             =>  $this->getParam('areaschool'),
                                  'telnumber'        =>  $this->getParam('txttelnumber'),
                                  'telcode'          =>  $this->getParam('txttelcode'),
-                                 'cellnumber'       =>  $this->getParam('txtcellno'),//new field to be created
-                                 'studemail'        =>  $this->getParam('txtemail'),//new field to be created
+                                 'cellnumber'       =>  $this->getParam('txtcellno'),
+                                 'studemail'        =>  $this->getParam('txtemail'),
            );
            $this->setSession('studentdata',$studentdata);
 }
@@ -1022,10 +1029,9 @@ function dispatch($action)
 private function getSportValues(){
    $sportPart  = $this->getParam('sportParticipated');
    $leadership = $this->getParam('leadPos');
-   $leadtype   = $this->getParam('listC'); 
+   $leadtype   = $this->getParam('leadership'); 
    $leadOther  = $this->getParam('txtleadership');
-   $leadtype   = $this->getParam('leadership');
-  // $otherlist  = $this->getParam('other'); 
+   //$leadtype   = $this->getParam('leadership');
    $otherCode  = $this->getParam('otherCode');
    
    $sportCode1       =  $this->getParam('listC');
@@ -1040,41 +1046,42 @@ private function getSportValues(){
    $achievlevel4      =  $this->getParam('listB3');
    $achievlevel5      =  $this->getParam('listB4');
    $achievlevel6      =  $this->getParam('listB5');
+   $sportBursary      =  $this->getParam('sportBursary'); 
 
    if(!empty($sportCode1) && !empty($achievlevel1)){
        $A = $sportCode1.' at '.$achievlevel1.' level';
    }else{
-       $A = NULL;
+       $A = '';
    }
 
    if(!empty($sportCode2) && !empty($achievlevel2)){
        $B = $sportCode2.' at '.$achievlevel2.' level' ;
    }else{
-       $B = NULL;
+       $B = '';
    }
    
    if(!empty($sportCode3) && !empty($achievlevel3)){
        $C = $sportCode3.' at '.$achievlevel3.' level';
    }else{
-       $C = NULL;
+       $C = '';
    }
    
    if(!empty($sportCode4) && !empty($achievlevel4)){
        $D = $sportCode4.' at '.$achievlevel4.' level';
    }else{
-       $D = NULL;
+       $D = '';
    }
    
    if(!empty($sportCode5) && !empty($achievlevel5)){
        $E = $sportCode5.' at '.$achievlevel5.' level ';
    }else{
-       $E = NULL;
+       $E = '';
    } 
    
    if(!empty($sportCode6) && !empty($achievlevel6)){
        $F = $sportCode6.' at '.$achievlevel6.' level ';
    }else{
-       $F = NULL;
+       $F = '';
    } 
    if(!empty($otherCode)){
        $g = $otherCode;
@@ -1086,7 +1093,7 @@ private function getSportValues(){
           }elseif($sportPart == 'No'){
              $sportPval  = 'No';
           }else{
-             $sportPval  = 'Null';
+             $sportPval  = '';
           }
                                                                                     
                                                                                     
@@ -1095,13 +1102,20 @@ private function getSportValues(){
           }elseif($leadership == 'No'){
               $leadershipval  = 'No';
           }else{
-              $leadershipval  = 'Null';
+              $leadershipval  = '';
           }
           $valLead = '';
           foreach($leadtype as $sessLead){
                 $valLead  .= $sessLead.';';
           }
-                                  
+          
+          if($sportBursary == 'Yes'){
+             $sportBurs  = 'Yes';
+          }elseif($sportBursary == 'No'){
+             $sportBurs  = 'No';
+          }else{
+             $sportBurs  = '';
+          }                                  
     $sportdata =      array('sportPart'          =>  $sportPval,
                             'leadershipPos'     =>  $leadershipval,
                             'leadtype'          =>  $valLead.' '.$leadOther,
@@ -1112,7 +1126,7 @@ private function getSportValues(){
                             'sportCodeAndLevel5' =>  $E,
                             'sportCodeAndLevel6' =>  $F,
                             'OtherSportcode'         => $g,
-                            'sportBursary'      =>  $this->getParam('sportBursary'), 
+                            'sportBursary'      =>  $sportBurs, 
           ); 
       $this->setSession('sportdata',$sportdata);  
 }

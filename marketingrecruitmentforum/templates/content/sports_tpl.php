@@ -127,7 +127,6 @@ foreach($c as $cc2){
 }
 
 $list5 = new dropdown('listC3');
-
 foreach($c as $cc3){
   $list5->addOption(NULL, ''.'Please select an option');
   $list5->addOption($cc3,$cc3);

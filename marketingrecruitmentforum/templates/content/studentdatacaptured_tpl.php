@@ -462,6 +462,9 @@ $sessionsportdetails [] = $this->getSession('sportdata');
     
         foreach($sessionsportdetails as $sesssport){
 
+          $sportingCodes= strtoupper($sesssport['sportCodeAndLevel1']).'<br/>'.strtoupper($sesssport['sportCodeAndLevel2']).'<br/>'.strtoupper($sesssport['sportCodeAndLevel3']).'<br/>'.strtoupper($sesssport['sportCodeAndLevel4']).'<br/>'.strtoupper($sesssport['sportCodeAndLevel5']).'<br/>'.strtoupper($sesssport['sportCodeAndLevel6']);
+                    
+                    
                     $objTablesport =& $this->newObject('htmltable', 'htmlelements');  
                     $objTablesport->cellspacing = '2';
                     $objTablesport->cellpadding = '2';
@@ -480,7 +483,7 @@ $sessionsportdetails [] = $this->getSession('sportdata');
                     $objTablesport->startRow();
                     (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                     $objTablesport->addCell('Leadership position(s)',"15%", null, "left",$oddOrEven);
-                    $objTablesport->addCell(strtoupper($sesssport['leadershipPos']),"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell(strtoupper($sesssport['leadtype']),"15%", null, "left",$oddOrEven);
                     $objTablesport->row_attributes = " class = \"$oddOrEven\"";
                     $rowcount++;
                     $objTablesport->endRow();
@@ -488,15 +491,15 @@ $sessionsportdetails [] = $this->getSession('sportdata');
                     $objTablesport->startRow();
                     (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                     $objTablesport->addCell('Sport code(s)',"15%", null, "left",$oddOrEven);
-                    $objTablesport->addCell(strtoupper($sesssport['sportCode']),"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell($sportingCodes,"15%", null, "left",$oddOrEven);
                     $objTablesport->row_attributes = " class = \"$oddOrEven\"";
                     $rowcount++;
                     $objTablesport->endRow();   
                                      
                     $objTablesport->startRow();
                     (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                    $objTablesport->addCell('Achievement level',"15%", null, "left",$oddOrEven);
-                    $objTablesport->addCell(strtoupper($sesssport['achievlevel']),"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell('Other Sport Code',"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell(strtoupper($sesssport['OtherSportcode']),"15%", null, "left",$oddOrEven);
                     $objTablesport->row_attributes = " class = \"$oddOrEven\"";
                     $rowcount++;
                     $objTablesport->endRow();
@@ -507,7 +510,7 @@ $sessionsportdetails [] = $this->getSession('sportdata');
                     $objTablesport->addCell(strtoupper($sesssport['sportBursary']),"15%", null, "left",$oddOrEven);
                     $objTablesport->row_attributes = " class = \"$oddOrEven\"";
                     $rowcount++;
-                    $objTablesport->endRow();                             
+                    $objTablesport->endRow();                          
         
         }
      }

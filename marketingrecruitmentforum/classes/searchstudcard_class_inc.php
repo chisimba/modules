@@ -1937,7 +1937,7 @@ public  function searchID($idsearch){
                           //$surname  = $idsearch[$i]->SURNAME;
                           $dateEntered  = date("d-M-Y", strtotime($entrydateval));
                           $dob  = date("d-M-Y", strtotime($idsearch[$i]->DOB));
-                          
+                    $sportcodeAndLevel = strtoupper($idsearch[$i]->SPORTCODEANDLEVEL1).'<br/>'.strtoupper($idsearch[$i]->SPORTCODEANDLEVEL2).'<br/>'.strtoupper($idsearch[$i]->SPORTCODEANDLEVEL3).'<br/>'.strtoupper($idsearch[$i]->SPORTCODEANDLEVEL4).'<br/>'.strtoupper($idsearch[$i]->SPORTCODEANDLEVEL5).'<br/>'.strtoupper($idsearch[$i]->SPORTCODEANDLEVEL6);      
                           if($idsearch[$i]->EXEMPTION == 1){
                                 $exemptionval = 'YES';
                           }elseif($idsearch[$i]->EXEMPTION == 0){
@@ -2155,44 +2155,53 @@ public  function searchID($idsearch){
                             
                             $myTable->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                            $myTable->addCell("Participated in sports","15%", null, "left",$oddOrEven);
-                            $myTable->addCell($idsearch[$i]->SPORTPART,"15%", null, "left",$oddOrEven);
-                            $myTable->row_attributes = " class = \"$oddOrEven\"";
-                            $rowcount++;
-                            $myTable->endRow();
-                          
-                            $myTable->startRow();
-                            (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                            $myTable->addCell("Leadership Position(s)","15%", null, "left",$oddOrEven);
-                            $myTable->addCell($idsearch[$i]->LEADERSHIPPOS,"15%", null, "left",$oddOrEven);
+                            $myTable->addCell('Sport Participation',"15%", null, "left",$oddOrEven);
+                            $myTable->addCell(strtoupper($idsearch[$i]->SPORTPART),"15%", null, "left",$oddOrEven);
                             $myTable->row_attributes = " class = \"$oddOrEven\"";
                             $rowcount++;
                             $myTable->endRow();
                             
                             $myTable->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                            $myTable->addCell("Sport code(s)","15%", null, "left",$oddOrEven);
-                            $myTable->addCell($idsearch[$i]->SPORTCODE,"15%", null, "left",$oddOrEven);
+                            $myTable->addCell('Leadership position(s)',"15%", null, "left",$oddOrEven);
+                            $myTable->addCell(strtoupper($idsearch[$i]->LEADERSHIPPOS),"15%", null, "left",$oddOrEven);
                             $myTable->row_attributes = " class = \"$oddOrEven\"";
                             $rowcount++;
                             $myTable->endRow();
                             
                             $myTable->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                            $myTable->addCell("Achievement Level","15%", null, "left",$oddOrEven);
-                            $myTable->addCell($idsearch[$i]->ACHIEVELEVEL,"15%", null, "left",$oddOrEven);
+                            $myTable->addCell('Leadership type(s)',"15%", null, "left",$oddOrEven);
+                            $myTable->addCell(strtoupper($idsearch[$i]->LEADTYPE),"15%", null, "left",$oddOrEven);
+                            $myTable->row_attributes = " class = \"$oddOrEven\"";
+                            $rowcount++;
+                            $myTable->endRow();   
+                                             
+                            $myTable->startRow();
+                            (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                            $myTable->addCell('Sporting codes and achievement level',"15%", null, "left",$oddOrEven);
+                            $myTable->addCell($sportcodeAndLevel,"15%", null, "left",$oddOrEven);
                             $myTable->row_attributes = " class = \"$oddOrEven\"";
                             $rowcount++;
                             $myTable->endRow();
                             
                             $myTable->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                            $myTable->addCell("Apply for sport bursary","15%", null, "left",$oddOrEven);
-                            $myTable->addCell($idsearch[$i]->SPORTBURSARY,"15%", null, "left",$oddOrEven);
+                            $myTable->addCell('Other Sporting Code',"15%", null, "left",$oddOrEven);
+                            $myTable->addCell(strtoupper($idsearch[$i]->OTHERSPORTCODE),"15%", null, "left",$oddOrEven);
                             $myTable->row_attributes = " class = \"$oddOrEven\"";
                             $rowcount++;
                             $myTable->endRow();
                             
+                            
+                            $myTable->startRow();
+                            (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                            $myTable->addCell('Apply for sport bursary',"15%", null, "left",$oddOrEven);
+                            $myTable->addCell(strtoupper($idsearch[$i]->SPORTBURSARY),"15%", null, "left",$oddOrEven);
+                            $myTable->row_attributes = " class = \"$oddOrEven\"";
+                            $rowcount++;
+                            $myTable->endRow();
+                                                        
                             $myTable->startRow();
                             (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
                             $myTable->addCell("Faculty 1st choice","15%", null, "left",$oddOrEven);

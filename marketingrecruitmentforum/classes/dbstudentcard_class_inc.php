@@ -63,8 +63,8 @@ class dbstudentcard extends object{
   {
     parent::init();
         try {
-            $this->schema = 'sems';
-            $this->schema2 = 'linc';
+            $this->schema = 'SEMS';
+            $this->schema2 = 'LINC';
             $objSysconfig =& $this->getObject('dbsysconfig', 'sysconfig');
 			      $this->objSoapClient = new SoapClient('http://'.$objSysconfig->getValue('SEMSGENERICWS', 'marketingrecruitmentforum'));
             $this->objSoapClient2 = new SoapClient('http://'.$objSysconfig->getValue('LINCGENERICWS', 'marketingrecruitmentforum'));
@@ -134,7 +134,7 @@ public function writeWSQuery($tableName, $data, $keys = null)
             }
         }
         $data = $this->objCrypt->arrayToObject($data);
-
+       
 
         $schema = 'SEMS';
         $insert = TRUE;
@@ -184,7 +184,7 @@ public function writeWSQuery($tableName, $data, $keys = null)
                 return FALSE;
             }
     		$query = "INSERT INTO ".strtoupper($schema).".".strtoupper($tableName). " (".$fields.") VALUES (".$values.")";
-
+ //VAR_DUMP($query);
         }else{
             $counter = 1;
             $fields = "";
@@ -211,10 +211,11 @@ public function writeWSQuery($tableName, $data, $keys = null)
             }
     		$query = "UPDATE ".strtoupper($schema).".".strtoupper($tableName). " SET ".$fields.$where;
         }
+  //       var_dump($query);die; 
         $query = $this->objCrypt->encrypt($query, $this->sessionKey);
-
+ //var_dump($query);die; 
         $arr = $this->objSoapClient->genericQuery($query);
-
+//        var_dump($arr);   
 
 //        $arr = $this->objSoapClient->writeQuery($tableName, $data ,$keys,  'SEMS');
         return $arr;
@@ -290,17 +291,20 @@ public function getWSCount($tableName, $value = null, $field = null, $keys = nul
  *
  */
  
-public function addstudcard($createdby,$datecreate,$idsearch,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$sportPart,$leadershipPos,$leadtype,$sportCodeAndLevel1,$sportCodeAndLevel2,$sportCodeAndLevel3,$sportCodeAndLevel4,$sportCodeAndLevel5,$sportCodeAndLevel6,$OtherSportcode,$sportBursary,$keys = NULL)
+public function addstudcard($createdby,$datecreate,$studentidnumber,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$sportPart,$leadershipPos,$leadtype,$sportCodeAndLevel1,$sportCodeAndLevel2,$sportCodeAndLevel3,$sportCodeAndLevel4,$sportCodeAndLevel5,$sportCodeAndLevel6,$OtherSportcode,$sportBursary)
 {
      // try {
+            $keys = NULL;   
             $data = array();
             $data[] = array( 'field' => 'ID', 'value' => "init" . "_" . rand(1000,9999) . "_" . time());
-            $data[] = array( 'field' => 'CREADTEDBY', 'value' => $createdby);
+            $data[] = array( 'field' => 'CREATEDBY', 'value' => $createdby);
             $data[] = array( 'field' => 'DATECREATED', 'value' => "to_date('".$datecreate."', 'dd-mm-yyyy')");
-            $data[] = array( 'field' => 'IDNUMBER', 'value' => $idsearch);
+            $data[] = array( 'field' => 'IDNUMBER', 'value' => $studentidnumber);
             $data[] = array( 'field' => 'ENTRYDATE', 'value' => "to_date('".$date."', 'dd-mm-yyyy')");
-            $data[] = array( 'field' => 'NAME', 'value' => $name);
             $data[] = array( 'field' => 'SURNAME', 'value' => $surname);
+            $data[] = array( 'field' => 'NAME', 'value' => $name);
+            $data[] = array( 'field' => 'DOB', 'value' => "to_date('".$dob."', 'dd-mm-yyyy')");
+            $data[] = array( 'field' => 'GRADE', 'value' => $grade);
             $data[] = array( 'field' => 'SCHOOLNAME', 'value' => $schoolname);
             $data[] = array( 'field' => 'POSTADDRESS', 'value' => $postaddress);
             $data[] = array( 'field' => 'POSTCODE', 'value' => $postcode);
@@ -311,8 +315,6 @@ public function addstudcard($createdby,$datecreate,$idsearch,$date,$surname,$nam
             $data[] = array( 'field' => 'COURSE', 'value' => $course);
             $data[] = array( 'field' => 'SDCASE', 'value' => $sdcase);
             $data[] = array( 'field' => 'AREA', 'value' => $areastud);
-            $data[] = array( 'field' => 'DOB', 'value' => "to_date('".$dob."', 'dd-mm-yyyy')");
-            $data[] = array( 'field' => 'GRADE', 'value' => $grade);            
             $data[] = array( 'field' => 'CELLNUMBER', 'value' => $cellnumber);
             $data[] = array( 'field' => 'STUDEMAIL', 'value' => $studemail);
             $data[] = array( 'field' => 'SUBJECT1', 'value' => $subject1);
@@ -333,7 +335,6 @@ public function addstudcard($createdby,$datecreate,$idsearch,$date,$surname,$nam
             $data[] = array( 'field' => 'GRADETYPE5', 'value' => $gradetype5);
             $data[] = array( 'field' => 'GRADETYPE6', 'value' => $gradetype6);
             $data[] = array( 'field' => 'GRADETYPE7', 'value' => $gradetype7);
-            $data[] = array( 'field' => 'MARKGRADE', 'value' => $markgrade);
             $data[] = array( 'field' => 'MARK1', 'value' => $markval);
             $data[] = array( 'field' => 'MARK2', 'value' => $markval2);
             $data[] = array( 'field' => 'MARK3', 'value' => $markval3);
@@ -341,6 +342,7 @@ public function addstudcard($createdby,$datecreate,$idsearch,$date,$surname,$nam
             $data[] = array( 'field' => 'MARK5', 'value' => $markval5);
             $data[] = array( 'field' => 'MARK6', 'value' => $markval6);
             $data[] = array( 'field' => 'MARK7', 'value' => $markval7);
+            $data[] = array( 'field' => 'MARKGRADE', 'value' => $markgrade);
             $data[] = array( 'field' => 'CONFIRM', 'value' => $confirmation);
             $data[] = array( 'field' => 'SPORTPART', 'value' => $sportPart);
             $data[] = array( 'field' => 'LEADERSHIPPOS', 'value' => $leadershipPos);
@@ -348,18 +350,18 @@ public function addstudcard($createdby,$datecreate,$idsearch,$date,$surname,$nam
             $data[] = array( 'field' => 'SPORTCODEANDLEVEL1', 'value' => $sportCodeAndLevel1);
             $data[] = array( 'field' => 'SPORTCODEANDLEVEL2', 'value' => $sportCodeAndLevel2);
             $data[] = array( 'field' => 'SPORTCODEANDLEVEL3', 'value' => $sportCodeAndLevel3);
-            $data[] = array( 'field' => 'SPORTCODEANDLEVEL', 'value' => $sportCodeAndLevel4);
+            $data[] = array( 'field' => 'SPORTCODEANDLEVEL4', 'value' => $sportCodeAndLevel4);
             $data[] = array( 'field' => 'SPORTCODEANDLEVEL5', 'value' => $sportCodeAndLevel5);
             $data[] = array( 'field' => 'SPORTCODEANDLEVEL6', 'value' => $sportCodeAndLevel6);
             $data[] = array( 'field' => 'OTHERSPORTCODE', 'value' => $OtherSportcode);
             $data[] = array( 'field' => 'SPORTBURSARY', 'value' => $sportBursary);
             
 
-           //   echo '<pre>';print_r($data);die;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+       //   echo '<pre>';print_r($data);die;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
 	                            
-	          $keys = array();
-           return  $this->writeWSQuery('tbl_mrf_studcard', $data ,null);
+           $keys = array();
+           return  $this->writeWSQuery('tbl_mrf_studcard', $data , $keys);
     //  } catch(Exception $e) {
     //    return NULL;
     //  }
@@ -507,7 +509,7 @@ public function exemption($startat,$endat)
  */   
 public function allbyfaculty(){
     try {
-            $query = 'SELECT * FROM '.$this->schema.'tbl_mrf_studcard order by FACULTY';
+            $query = 'SELECT * FROM '.$this->schema.'.tbl_mrf_studcard order by FACULTY';
             $results =  $this->getWSGenericQuery($query);
             return $results;
     } catch(Exception $e) {
@@ -653,7 +655,7 @@ public function studsdcasecount($startat,$endat)
  * @param string $stmt used in a SQL WHERE clause,counts all id values where sdcase = true(1) and exemption = false(2)
  * @return array $totalsd   
  */
-public function sdcases($where = 'where SDCASE = 1 and EXEMPTION = 2 '){
+public function sdcases($where = 'where SDCASE = 1 and EXEMPTION = 0 '){
        try {
 
           

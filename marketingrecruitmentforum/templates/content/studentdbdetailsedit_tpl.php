@@ -318,12 +318,13 @@ if(!empty($idsearch)){
                 for($i=0; $i< count($idsearch); $i++){
                         $rowcount = 0;
                 
+                   $sportcodeAndLevel = strtoupper($idsearch[$i]->SPORTCODEANDLEVEL1).'<br/>'.strtoupper($idsearch[$i]->SPORTCODEANDLEVEL2).'<br/>'.strtoupper($idsearch[$i]->SPORTCODEANDLEVEL3).'<br/>'.strtoupper($idsearch[$i]->SPORTCODEANDLEVEL4).'<br/>'.strtoupper($idsearch[$i]->SPORTCODEANDLEVEL5).'<br/>'.strtoupper($idsearch[$i]->SPORTCODEANDLEVEL6);
                     $objTablesport =& $this->newObject('htmltable', 'htmlelements');  
                     $objTablesport->cellspacing = '2';
                     $objTablesport->cellpadding = '2';
                     $objTablesport->cellwidth = '10';
                     $objTablesport->border='0';
-                    $objTablesport->width = '80%';       
+                    $objTablesport->width = '70%';       
                  
                     $objTablesport->startRow();
                     (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
@@ -343,19 +344,28 @@ if(!empty($idsearch)){
                     
                     $objTablesport->startRow();
                     (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                    $objTablesport->addCell('Sport code(s)',"15%", null, "left",$oddOrEven);
-                    $objTablesport->addCell(strtoupper($idsearch[$i]->SPORTCODE),"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell('Leadership type(s)',"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell(strtoupper($idsearch[$i]->LEADTYPE),"15%", null, "left",$oddOrEven);
                     $objTablesport->row_attributes = " class = \"$oddOrEven\"";
                     $rowcount++;
                     $objTablesport->endRow();   
                                      
                     $objTablesport->startRow();
                     (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                    $objTablesport->addCell('Achievement level',"15%", null, "left",$oddOrEven);
-                    $objTablesport->addCell(strtoupper($idsearch[$i]->ACHIEVELEVEL),"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell('Sporting codes and achievement level',"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell($sportcodeAndLevel,"15%", null, "left",$oddOrEven);
                     $objTablesport->row_attributes = " class = \"$oddOrEven\"";
                     $rowcount++;
                     $objTablesport->endRow();
+                    
+                    $objTablesport->startRow();
+                    (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+                    $objTablesport->addCell('Other Sporting Code',"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell(strtoupper($idsearch[$i]->OTHERSPORTCODE),"15%", null, "left",$oddOrEven);
+                    $objTablesport->row_attributes = " class = \"$oddOrEven\"";
+                    $rowcount++;
+                    $objTablesport->endRow();
+                    
                     
                     $objTablesport->startRow();
                     (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
