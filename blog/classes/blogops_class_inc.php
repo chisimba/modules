@@ -1175,7 +1175,7 @@ class blogops extends object
      * @return string
      * @deprecated - old method
      */
-    public function showFeeds($userid, $featurebox = FALSE, $showOrHide = 'default')
+    public function showFeeds($userid, $featurebox = FALSE, $showOrHide = 'none')
     {
         $this->objUser = $this->getObject('user', 'security');
         $leftCol = NULL;
