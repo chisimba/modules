@@ -498,7 +498,7 @@ $sessionsportdetails [] = $this->getSession('sportdata');
                                      
                     $objTablesport->startRow();
                     (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                    $objTablesport->addCell('Other Sport Code',"15%", null, "left",$oddOrEven);
+                    $objTablesport->addCell('Sport Code "Other"',"15%", null, "left",$oddOrEven);
                     $objTablesport->addCell(strtoupper($sesssport['OtherSportcode']),"15%", null, "left",$oddOrEven);
                     $objTablesport->row_attributes = " class = \"$oddOrEven\"";
                     $rowcount++;

@@ -513,7 +513,7 @@ if ($stdCount > 0){
   
          $myTable->startHeaderRow();
          $myTable->addHeaderCell($schoolname1, null,'top','left','header');
-         $myTable->addHeaderCell($area1, null,'top','left','header');
+         $myTable->addHeaderCell('Area', null,'top','left','header');
          $myTable->endHeaderRow();
          
          $rowcount = '0';
@@ -877,7 +877,7 @@ public function schoolexisting($schoolbyname){
                     
                     $myTable->startRow();
                     (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-                    $myTable->addCell($area1,"15%", null, "left",$oddOrEven);
+                    $myTable->addCell('Area',"15%", null, "left",$oddOrEven);
                     $myTable->addCell($schoolbyname[$i]->SCHOOLAREA,"15%", null, "left",$oddOrEven);
                     $myTable->row_attributes = " class = \"$oddOrEven\"";
                     $rowcount++;

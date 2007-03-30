@@ -24,9 +24,11 @@ $objsport = new radio('sportParticipated');
 $objsport->addOption('Yes','Yes');
 $objsport->addOption('No','No');
 
+
 $objlead = new radio('leadPos');
 $objlead->addOption('Yes','Yes');
 $objlead->addOption('No','No');
+
     
 $objsportbursary = new radio('sportBursary');
 $objsportbursary->addOption('Yes','Yes');
@@ -262,6 +264,6 @@ $objForm->displayType = 3;
 $objForm->addToForm($this->objMainheading->show().'<br/>'.$myTable->show());
 $objForm->addRule('sportParticipated','Please select an option','required');
 $objForm->addRule('leadPos','Please select an option','required');
-
+$objForm->addRule('sportBursary','Please select an option','required');
 echo  $objForm->show();              
 ?>

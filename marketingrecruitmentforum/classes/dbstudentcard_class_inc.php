@@ -434,7 +434,7 @@ public function getSubjects()
 public function getstudqualify($where = 'WHERE SDCASE = 0 and EXEMPTION = 1')
 {
         try {
-            $query = 'SELECT NAME, SURNAME, EXEMPTION FROM '.$this->schema.'.tbl_mrf_studcard '.$where;
+            $query = 'SELECT NAME, SURNAME, EXEMPTION, SCHOOLNAME, GRADE FROM '.$this->schema.'.tbl_mrf_studcard '.$where;
             $results =  $this->getWSGenericQuery($query);
             return $results;
 
@@ -837,7 +837,7 @@ public function facultycount($facultyname)
 {
        try {
             $where = "where FACULTY = '$facultyname'"; 
-            $query = 'SELECT SURNAME, NAME, POSTADDRESS, SCHOOLNAME, FACULTY FROM '.$this->schema.'tbl_mrf_studcard '.$where;
+            $query = 'SELECT SURNAME, NAME, POSTADDRESS, SCHOOLNAME, FACULTY FROM '.$this->schema.'.tbl_mrf_studcard '.$where;
             $result = $this->getWSGenericQuery($query);
             return $result;
 

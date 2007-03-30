@@ -115,11 +115,13 @@ public function entryQualification(){
          $myTable->cellspacing = '1';
          $myTable->cellpadding = '2';
          $myTable->border='0';
-         $myTable->width = '80%';
+         $myTable->width = '100%';
          $myTable->css_class = 'highlightrows';
     
   
          $myTable->startHeaderRow();
+         $myTable->addHeaderCell('School Name', null,'top','left','header');
+         $myTable->addHeaderCell('Grade', null,'top','left','header');
          $myTable->addHeaderCell($surname, null,'top','left','header');
          $myTable->addHeaderCell($name, null,'top','left','header');
          $myTable->addHeaderCell($exemption, null,'top','left','header');
@@ -135,6 +137,8 @@ public function entryQualification(){
      
          $myTable->startRow();
          (($rowcount % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+         $myTable->addCell($results[$i]->SCHOOLNAME,"15%", null, "left",$oddOrEven);
+         $myTable->addCell($results[$i]->GRADE,"15%", null, "left",$oddOrEven);
          $myTable->addCell($results[$i]->SURNAME,"15%", null, "left",$oddOrEven);
          $myTable->addCell($results[$i]->NAME, "15%", null, "left",$oddOrEven);
          $myTable->addCell('YES', "15%", null, "left",$oddOrEven);

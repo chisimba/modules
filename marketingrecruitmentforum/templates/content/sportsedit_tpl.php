@@ -269,6 +269,12 @@ $objForm->displayType = 3;
 $objForm->addToForm($this->objMainheading->show().'<br/>'.$myTable->show());
 $objForm->addRule('sportParticipated','Please select an option','required');
 $objForm->addRule('leadPos','Please select an option','required');
+$objForm->addRule('sportBursary','Please select an option','required');
+//$leadPostype = $this->getParam('leadPos');
+//var_dump($leadPostype);
+//if($leadPostype){
+// $objForm->addRule('leadership','Please select an option','required');
+//}
 
 echo  $objForm->show();               
 ?>

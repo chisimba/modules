@@ -859,8 +859,9 @@ function dispatch($action)
               if (!$this->objSemsSecurity->inGroup('MRSF Student View')) {
                   return "noaccess_tpl.php";    
               }
-              $this->getSportValues();
-              return 'studentfaccrse_tpl.php'; 
+                $this->getSportValues();
+                return 'studentfaccrse_tpl.php';
+               
               //}
           break;
           
