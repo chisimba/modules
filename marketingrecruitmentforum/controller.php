@@ -688,7 +688,7 @@ function dispatch($action)
                 $facultynameval = $this->getParam('facultynameval');
                 $facultyval = $this->dbstudentcard->allstudfaculty($facultynameval);
                 $facultyexmp  = $this->dbstudentcard->facultyexempted($facultynameval);
-                $facsubj  = $this->dbstudentcard->facsubject($facultynameval);
+//                $facsubj  = $this->dbstudentcard->facsubject($facultynameval);
                 $faccourse  =  $this->dbstudentcard->faccourse($facultynameval, $field = 'faculty', $start = 0, $limit = 0);
                 $facsdcase  = $this->dbstudentcard->facultysdcase($facultynameval);
                 $this->setVarByRef('facultyval', $facultyval);
@@ -708,7 +708,7 @@ function dispatch($action)
                 //var_dump($facultynameval2);
                 $facultyval2 = $this->dbstudentcard->allstudfaculty2($facultynameval2);
                 $facultyexmp2  = $this->dbstudentcard->facultyexempted2($facultynameval2);
-                $facsubj2  = $this->dbstudentcard->facsubject2($facultynameval2);
+             //   $facsubj2  = $this->dbstudentcard->facsubject2($facultynameval2);
                 $faccourse2  =  $this->dbstudentcard->faccourse2($facultynameval2, $field = 'faculty2', $start = 0, $limit = 0);
                 $facsdcase2  = $this->dbstudentcard->facultysdcase2($facultynameval2);
                 $this->setVarByRef('facultyval2', $facultyval2);

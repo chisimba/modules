@@ -328,7 +328,8 @@ public  function  allwithexemption(){
     		$details = '';
     $records = '';
     $paging = ''; 
-		$res = $this->objstudcard->allstudsexemption($where = 'where exemption = 1');
+		$res = $this->objstudcard->allstudsexemption($where = 'where EXEMPTION = 1');
+		//VAR_DUMP($res);
 		$stdCount=count($res); 
     $startat = $this->getParam('startat', 1);
     $dispCount = $this->getParam('dispcount', 25);
@@ -1612,7 +1613,7 @@ public function studsdcase(){
     $records = '';
     $paging = '';    
     //$results = $this->objstudcard->sdcases($where = 'where sdcase = 1 and exemption = 0');
-    $res = $this->objstudcard->sdcases($where = 'where sdcase = 1 and exemption = 0');
+    $res = $this->objstudcard->sdcases($where = 'where SDCASE = 1 and EXEMPTION = 0');
 		$stdCount=count($res); 
     $startat = $this->getParam('startat', 1);
     $dispCount = $this->getParam('dispcount', 25);

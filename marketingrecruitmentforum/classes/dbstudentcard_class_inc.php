@@ -471,14 +471,14 @@ public function getstudschool($useToPopTbl, $field = 'SCHOOLNAME', $start = 0, $
  */   
 public function allstudsexemption($where = 'where EXEMPTION = 1')
 {
-        try {
-            $query = 'SELECT SCHOOLNAME, SURNAME, NAME, EXEMPTION FROM '.$this->schema.'tbl_mrf_studcard '.$where;
+       // try {
+            $query = 'SELECT SCHOOLNAME, SURNAME, NAME, EXEMPTION FROM '.$this->schema.'.tbl_mrf_studcard '.$where;
             $results =  $this->getWSGenericQuery($query);
             return $results;
 
-        } catch(Exception $e) {
+        //} catch(Exception $e) {
           return NULL;
-        }
+        //}
 } 
 
 // get all students that qualify for an exemption using limits           
