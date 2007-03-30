@@ -244,7 +244,7 @@ class blogops extends object
         $rssurl = new textinput('rssurl');
         if(isset($rdata['url']))
         {
-        $rssurl->setValue($rdata['url']);
+        $rssurl->setValue(htmlentities($rdata['url'], ENT_QUOTES));
        // $rssurl->setValue('url');
 
 		}
