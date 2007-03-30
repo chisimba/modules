@@ -144,6 +144,10 @@ class realtime extends controller
 				return $this->checkToken($this->userId, $this->userLevel, $this->contextCode);
 			case 'checkturn' :
 				return $this->checkToken($this->userId, $this->userLevel, $this->contextCode);
+			case 'voicequeue' :
+				return $this->makeQueue($this->userId, $this->userLevel, $this->contextCode);
+			case 'assigntoken' :
+				return $this->assignToken($this->getParam('id'), $this->contextCode);	
 			default :
 				return "realtime_tpl.php";
 		}
@@ -165,7 +169,7 @@ class realtime extends controller
 
 	function releaseToken($userid, $userlevel, $contextcode)
 	{
-		$hasToken = $this->objrealtime->releaseToken($userid, $userlevel, $contextcode);
+		$hasToken = $this->objrealtime->releaseToken($userid, $contextcode);
 		$this->setVar('hastoken', $hasToken);
 		return "redirect_tpl.php";
 
@@ -180,7 +184,7 @@ class realtime extends controller
 			return "redirect_tpl.php";
 		} else
 		{
-			$hasToken = $this->objrealtime->startConversation($userid, $userlevel, $contextcode);
+			$hasToken = $this->objrealtime->startConversation($userid, $contextcode);
 			$this->setVar('hastoken', $hasToken);
 			return "redirect_tpl.php";
 		}
@@ -188,28 +192,52 @@ class realtime extends controller
 
 	function stopConversation($userid, $userlevel, $contextcode)
 	{
-		$hasToken = $this->objrealtime->stopConversation($userid, $userlevel, $contextcode);
+		$hasToken = $this->objrealtime->stopConversation($userid, $contextcode);
 		$this->setVar('hastoken', $hasToken);
 		return "redirect_tpl.php";
 	}
 
-	function leaveConversation($userid, $userlevel, $contextcode)
+	function leaveConversation($userid, $contextcode)
 	{
-		$hasToken = $this->objrealtime->leaveConversation($userid, $userlevel, $contextcode);
+		$hasToken = $this->objrealtime->leaveConversation($userid,  $contextcode);
 		$this->setVar('hastoken', $hasToken);
 		return "redirect_tpl.php";
 	}
 
 	function joinConversation($userid, $userlevel, $contextcode)
 	{
-		$hasToken = $this->objrealtime->joinConversation($userid, $userlevel, $contextcode);
+		$hasToken = $this->objrealtime->joinConversation($userid,  $contextcode);
 		$this->setVar('hastoken', $hasToken);
 		return "redirect_tpl.php";
 	}
 
-	function checkToken($userid, $userlevel, $contextcode)
+	function checkToken($userid, $userLevel, $contextcode)
 	{
-		$hasToken = $this->objrealtime->checkToken($userid, $userlevel, $contextcode);
+		$hasToken = $this->objrealtime->checkToken($userid, $contextcode);
+		$this->setVar('hastoken', $hasToken);
+		return "redirect_tpl.php";
+	}
+	
+	function makeQueue($userid, $userLevel, $contextCode)
+	{
+		
+		if(eregi("lecturer", $userLevel)){
+			
+			$users = $this->objrealtime->makeQueue($userid, $userLevel, $contextCode);
+			$this->setVar('hastoken', $users);
+
+			return "redirect_tpl.php";
+		}else { 
+			$notAllowed = "You,are,not-authorised,to,view-this,page,aka-";
+			$this->setVar('hastoken', $notAllowed);
+
+			return "redirect_tpl.php";
+		}
+	}
+	
+	function assignToken($userId, $contextCode)
+	{
+		$hasToken = $this->objrealtime->assignToken($userId, $contextCode);
 		$this->setVar('hastoken', $hasToken);
 		return "redirect_tpl.php";
 	}
