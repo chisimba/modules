@@ -180,7 +180,7 @@ $this->objButtonNext->setToSubmit();
   *create table to place form elements in
   */
 $myTable=$this->newObject('htmltable','htmlelements');
-$myTable->width='70%';
+$myTable->width='100%';
 $myTable->border='0';
 $myTable->cellspacing='6';
 $myTable->cellpadding='10';
