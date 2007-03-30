@@ -267,6 +267,8 @@ $myTable->endRow();
 $objForm = new form('sportdata',$this->uri(array('action'=>'sportoutputshow')));
 $objForm->displayType = 3;
 $objForm->addToForm($this->objMainheading->show().'<br/>'.$myTable->show());
+$objForm->addRule('sportParticipated','Please select an option','required');
+$objForm->addRule('leadPos','Please select an option','required');
 
 echo  $objForm->show();               
 ?>

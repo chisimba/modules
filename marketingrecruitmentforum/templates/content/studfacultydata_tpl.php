@@ -244,6 +244,8 @@
        
       $this->objgradedropdown  = new dropdown('gradeval');
       $this->objgradedropdown->addOption(NULL,' ');
+      $this->objgradedropdown->addOption('9','9');                 
+      $this->objgradedropdown->addOption('10','10');
       $this->objgradedropdown->addOption('11','11');                 
       $this->objgradedropdown->addOption('12','12');
 
