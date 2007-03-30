@@ -91,6 +91,7 @@ class blogops extends object
      */
     public function rssBox($url, $name)
     {
+    	$url = urldecode($url);
     	$objFeatureBox = $this->getObject('featurebox', 'navigation');
         $objRss = $this->getObject('rssreader', 'feed');
         $objRss->parseRss($url);
