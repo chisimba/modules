@@ -855,10 +855,20 @@ class blogops extends object
                 {
                 	$objStickyIcon = $this->newObject('geticon', 'htmlelements');
 					$objStickyIcon->setIcon('sticky_yes');
-					$head = $objStickyIcon->show() . stripslashes($post['post_title']) ."<br />".$dt;
+					$headLink = new href($this->uri(array(
+                		'action' => 'viewsingle',
+                		'postid' => $post['id'],
+                		'userid' => $post['userid']
+            		)) , stripslashes($post['post_title']) , NULL);
+					$head = $objStickyIcon->show() . $headLink->show() ."<br />".$dt;
                 }
                 else {
-                	$head = stripslashes($post['post_title']) ."<br />".$dt;
+                	$headLink = new href($this->uri(array(
+                		'action' => 'viewsingle',
+                		'postid' => $post['id'],
+                		'userid' => $post['userid']
+            		)) , stripslashes($post['post_title']) , NULL);
+					$head = $headLink->show() ."<br />".$dt;
                 }
                 //dump in the post content and voila! you have it...
                 //build the post content plus comment count and stats???
