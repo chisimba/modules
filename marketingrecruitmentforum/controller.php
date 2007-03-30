@@ -533,7 +533,7 @@ function dispatch($action)
 	                           $sportCodeAndLevel5 = $idexist[$i]->SPORTCODEANDLEVEL5;
 	                           $sportCodeAndLevel6 = $idexist[$i]->SPORTCODEANDLEVEL6;
 	                           $OtherSportcode  = $idexist[$i]->OTHERSPORTCODE;
-                             $sportBursary = $idexist[$i]->SPORTSBURSARY;
+                             $sportBursary = $idexist[$i]->SPORTBURSARY;
                   }
         }
         //course and faculty info

@@ -977,7 +977,7 @@ public function getstudbyid($idnumber, $field = 'IDNUMBER', $firstname, $field2 
  */
 public function updatestudinfo($createdby,$datecreate,$latestID,$date,$surname,$name,$dob,$grade,$schoolname,$postaddress,$postcode,$telnumber,$telcode,$exemption,$faculty,$course,$sdcase,$areastud,$cellnumber,$studemail,$subject1,$subject2,$subject3,$subject4,$subject5,$subject6,$subject7,$info,$faculty2,$course2,$residence,$gradetype1,$gradetype2,$gradetype3,$gradetype4,$gradetype5,$gradetype6,$gradetype7,$latestID,$markval,$markval2,$markval3,$markval4,$markval5,$markval6,$markval7,$markgrade,$confirmation,$sportPart,$leadershipPos,$leadtype,$sportCodeAndLevel1,$sportCodeAndLevel2,$sportCodeAndLevel3,$sportCodeAndLevel4,$sportCodeAndLevel5,$sportCodeAndLevel6,$OtherSportcode,$sportBursary)
 {
-        try {
+        //try {
             $data = array();
             $data[] = array( 'field' => 'ID', 'value' => "init" . "_" . rand(1000,9999) . "_" . time());
             $data[] = array( 'field' => 'CREATEDBY', 'value' => $createdby);
@@ -1046,9 +1046,9 @@ public function updatestudinfo($createdby,$datecreate,$latestID,$date,$surname,$
             
             
             return $this->writeWSQuery('tbl_mrf_studcard', $data , $keys);
-      } catch(Exception $e) {
-          return NULL;
-      }
+     // } catch(Exception $e) {
+     //     return NULL;
+     // }
             
 }
 
