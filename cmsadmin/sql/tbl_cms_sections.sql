@@ -74,6 +74,12 @@ $fields = array(
         'unsigned' => TRUE,
 
 		),
+	'trash' => array(
+		'type' => 'integer',
+        'length' => 1,
+        'notnull' => TRUE,
+        'default' => '0'
+		),
     'nodelevel' => array(
 		'type' => 'integer',
         'length' => 11,

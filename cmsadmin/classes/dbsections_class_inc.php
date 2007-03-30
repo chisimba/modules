@@ -84,9 +84,9 @@ class dbsections extends dbTable
         public function getSections($isPublished = NULL, $filter = null)
         {
             if ($isPublished||$filter==null) {
-                return $this->getAll('WHERE published = 1 ORDER BY ordering');
+                return $this->getAll('WHERE published = 1 AND trash = 0 ORDER BY ordering');
             }elseif(!$isPublished||$filter!=null) {
-                return $this->getAll('WHERE title LIKE '%".$filter."%' ORDER BY ordering');
+                return $this->getAll('WHERE title LIKE '%".$filter."%' AND trash = 0 ORDER BY ordering');
             }
            // if ($filter!=null) {
             ///	return $this->getAll('WHERE title LIKE '%".$filter."%' ORDER BY ordering');
@@ -116,13 +116,35 @@ class dbsections extends dbTable
             }
             
             if(!empty($filter)){
-                $sql .= "WHERE {$filter}";
+                $sql .= "WHERE {$filter} AND trash = 0 ";
+            }else{
+                $sql .= "WHERE trash = 0 ";
             }
             $sql .= ' ORDER BY ordering';
             
             return $this->getArray($sql);
         }
 
+        /**
+         * Method to get the archived content
+         *
+         * @author Megan Watson
+         * @param string $filter The Filter
+         * @return  array An array of associative arrays of all content pages in relationto filter specified
+         * @access public
+         */
+        public function getArchiveSections($filter = '')
+        {
+            $sql = "SELECT * FROM {$this->table} WHERE trash = 1 ";
+            
+            if(!empty($filter)){
+                $sql .= "AND LOWER(title) LIKE '%".strtolower($filter)."%' ";
+            }
+            
+            $sql .= 'ORDER BY ordering';
+            return $this->getArray($sql);
+        }
+        
         /**
          * Method to get the list of root nodes
          *
@@ -134,14 +156,14 @@ class dbsections extends dbTable
         public function getRootNodes($isPublished = FALSE,$contextcode=null)
         {
             if ($isPublished && $contextcode!=null) {
-            	$results = $this->getAll("WHERE published = 1 AND nodelevel = 1 AND contextcode= '$contextcode' ORDER BY ordering");
+            	$results = $this->getAll("WHERE published = 1 AND nodelevel = 1 AND contextcode= '$contextcode' AND trash = 0 ORDER BY ordering");
                 return $results;
             }elseif ($isPublished && $contextcode=null){ 
-            	$results = $this->getAll("WHERE published = 1 AND nodelevel = 1 ORDER BY ordering");
+            	$results = $this->getAll("WHERE published = 1 AND nodelevel = 1 AND trash = 0 ORDER BY ordering");
                 return $results;
             }
             else {
-            	$results = $this->getAll("WHERE nodelevel = 1 ORDER BY ordering");
+            	$results = $this->getAll("WHERE nodelevel = 1 AND trash = 0 ORDER BY ordering");
             	return $results;
             }
         }
@@ -168,7 +190,7 @@ class dbsections extends dbTable
         public function getFirstSectionId($isPublished = FALSE)
         {
             $firstSectionId = '';
-            $firstSection = $this->getAll('WHERE parentid=0 ORDER BY ordering');
+            $firstSection = $this->getAll('WHERE parentid=0 AND trash = 0 ORDER BY ordering');
             if(!empty($firstSection)) {
                 if($isPublished) {
                     foreach($firstSection as $section) {
@@ -499,7 +521,7 @@ class dbsections extends dbTable
          */
         public function hasNodes($id)
         {
-            $nodes = $this->getAll("WHERE parentid = '$id'");
+            $nodes = $this->getAll("WHERE parentid = '$id' AND trash = 0");
 
             if (count($nodes) > 0) {
                 $hasNodes = True;
@@ -560,9 +582,9 @@ class dbsections extends dbTable
         {
             if ($isPublished) {
                 //return all subsections
-                return $this->getAll("WHERE published = 1 AND parentid = '$sectionId' ORDER BY ordering $order");
+                return $this->getAll("WHERE published = 1 AND parentid = '$sectionId' AND trash = 0 ORDER BY ordering $order");
             } else {
-                return $this->getAll("WHERE parentid = '$sectionId' ORDER BY ordering $order");
+                return $this->getAll("WHERE parentid = '$sectionId' AND trash = 0 ORDER BY ordering $order");
             }
         }
 
@@ -578,9 +600,9 @@ class dbsections extends dbTable
         {
             if ($isPublished) {
                 //return all subsections
-                return $this->getAll("WHERE published = 1 AND rootid = '$rootId' ORDER BY ordering");
+                return $this->getAll("WHERE published = 1 AND rootid = '$rootId' AND trash = 0 ORDER BY ordering");
             } else {
-                return $this->getAll("WHERE rootid = '$rootId' ORDER BY ordering $order");
+                return $this->getAll("WHERE rootid = '$rootId' AND trash = 0 ORDER BY ordering $order");
             }
         }
 
@@ -598,9 +620,9 @@ class dbsections extends dbTable
         {
             if ($isPublished) {
                 //return all subsections
-                return $this->getAll("WHERE published = 1 AND nodelevel = '$level' AND rootid = '$rootId' ORDER BY ordering $order");
+                return $this->getAll("WHERE published = 1 AND nodelevel = '$level' AND rootid = '$rootId' AND trash = 0 ORDER BY ordering $order");
             } else {
-                return $this->getAll("WHERE nodelevel = '$level' AND rootid = '$rootId' ORDER BY ordering $order");
+                return $this->getAll("WHERE nodelevel = '$level' AND rootid = '$rootId' AND trash = 0 ORDER BY ordering $order");
             }
         }
 
@@ -613,7 +635,7 @@ class dbsections extends dbTable
          */
         public function getNumSubSections($sectionId)
         {
-            $subSecs = $this->getAll("WHERE parentid = '$sectionId'");
+            $subSecs = $this->getAll("WHERE parentid = '$sectionId' AND trash = 0");
             $noSubSecs = count($subSecs);
             return $noSubSecs;
         }
@@ -667,6 +689,19 @@ class dbsections extends dbTable
         }
 
         /**
+        * Method to archive a section
+        *
+        * @access private
+        * @param string $id The section id
+        * @return bool
+        */
+        private function archive($id)
+        {
+            $fields = array('trash' => 1, 'ordering' => '');
+            $result =  $this->update('id', $id, $fields);
+        }
+
+        /**
          * Method to return the ordering value of new section (gets added last)
          *
          * @param string $parentid The id(pk) of the parent. Uses root node order if NULL
@@ -678,7 +713,7 @@ class dbsections extends dbTable
         {
             $ordering = 1;
             //get last order value
-            $lastOrder = $this->getAll("WHERE parentid = '$parentid' ORDER BY ordering DESC LIMIT 1");
+            $lastOrder = $this->getAll("WHERE parentid = '$parentid' AND trash = 0 ORDER BY ordering DESC LIMIT 1");
             //add after this value
 
             if (!empty($lastOrder)) {
@@ -705,10 +740,10 @@ class dbsections extends dbTable
 
             if (empty($parentId)) {
                 //Get the number of root sections
-                $lastOrd = $this->getAll("WHERE nodelevel = 1 ORDER BY ordering DESC LIMIT 1");
+                $lastOrd = $this->getAll("WHERE nodelevel = 1 AND trash = 0 ORDER BY ordering DESC LIMIT 1");
             } else {
                 //Get the number of sub sections in section
-                $lastOrd = $this->getAll("WHERE parentid = '$parentId' ORDER BY ordering DESC LIMIT 1");
+                $lastOrd = $this->getAll("WHERE parentid = '$parentId' AND trash = 0 ORDER BY ordering DESC LIMIT 1");
             }
 
             $topOrder = $lastOrd['0']['ordering'];
@@ -774,7 +809,7 @@ class dbsections extends dbTable
         public function changeOrder($id, $ordering, $parentid)
         {
             //Get array of all sections in level
-            $fpContent = $this->getAll("WHERE parentid = '$parentid' ORDER BY ordering ");
+            $fpContent = $this->getAll("WHERE parentid = '$parentid' AND trash = 0 ORDER BY ordering ");
             //Search for entry to be reordered and update order
             foreach($fpContent as $content) {
                 if ($content['id'] == $id) {
@@ -797,7 +832,7 @@ class dbsections extends dbTable
             }
 
             //Get other entry to change
-            $entries = $this->getAll("WHERE parentid = '$parentid' AND ordering = '$toChange'");
+            $entries = $this->getAll("WHERE parentid = '$parentid' AND ordering = '$toChange' AND trash = 0");
             foreach($entries as $entry) {
                 if ($entry['id'] != $id) {
                     $upArr = array(
@@ -820,7 +855,7 @@ class dbsections extends dbTable
         private function reorderSections($parentid)
         {   
             // Get all pages
-            $sectionData = $this->getAll("WHERE parentid = '$parentid' ORDER BY ordering ");
+            $sectionData = $this->getAll("WHERE parentid = '$parentid' AND trash = 0 ORDER BY ordering ");
             
             if(!empty($sectionData)){
                     

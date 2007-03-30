@@ -2,6 +2,21 @@
 <updates>
     
     <update>
+        <table>tbl_cms_sections</table>
+        <version>1.49</version>
+        <description>Added trash column for deleted/archived sections</description>
+        <data>
+           	<add>
+       			<name>trash</name>
+    	    	<type>integer</type>
+       			<length>1</length>
+       			<notnull>TRUE</notnull>
+       			<default>0</default>
+    		</add>
+    	</data>
+	</update>
+		
+    <update>
     <table>tbl_cms_menustyles</table>
     <version>1.48</version>
     <description>Added default data for the menu styles</description>

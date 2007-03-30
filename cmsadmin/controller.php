@@ -187,10 +187,12 @@ class cmsadmin extends controller
                 /* ** Trash manager section ** */
                 case 'trashmanager':
                     $text = $this->getParam('txtfilter');
-                    $data = $this->_objContent->getArchivePages($text); // Get trash data
+                    $data = $this->_objContent->getArchivePages($text); // Get trashed content data
+                    $sectionData = $this->_objSections->getArchiveSections($text); // Get trashed section data
                     $topNav = $this->_objUtils->topNav('trash');
                     $this->setVarByRef('topNav',$topNav);
                     $this->setVarByRef('data', $data);
+                    $this->setVarByRef('sectionData', $sectionData);
                     return 'cms_trash_list_tpl.php';
                     
                 case 'restore':
@@ -271,7 +273,7 @@ class cmsadmin extends controller
                 		 $topNav = $this->_objUtils->topNav('sections');
                     	 $this->setVarByRef('topNav',$topNav);
                 		 $this->setVarByRef('arrSections', $arrSections);
-                    	 $this->setVarByRef('viewType', $viewType);
+                    	 $this->setVar('viewType', 'root');
                     	 return 'cms_section_list_tpl.php';            			
 				     	
                 case 'sectionpublish':
