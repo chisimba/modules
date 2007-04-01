@@ -199,6 +199,11 @@ class cmsadmin extends controller
                     $items = $this->getParam('arrayList');
                     $this->unarchiveContentPages($items);
                     return $this->nextAction('trashmanager');
+                
+                case 'restoresections':
+                    $items = $this->getParam('arrayList');
+                    $this->unarchiveSections($items);
+                    return $this->nextAction('trashmanager');
 
                 //----------------------- section section
                 case 'sections':
@@ -908,6 +913,23 @@ class cmsadmin extends controller
             	 foreach ($itemsArray as $item){
                		 $this->_objContent->undelete($item);
             	 }
+            }
+        }
+        
+        /**
+        * Method to undelete a set of sections with their contents
+        *
+        * @author Megan Watson
+        * @access private
+        * @param array $itemsArray The sections to undelete/unarchive
+        * @return
+        */
+        private function unarchiveSections($itemsArray)
+        {
+            if(!empty($itemsArray)){
+               foreach ($itemsArray as $item){
+                   $this->_objSections->unarchiveSection($item);
+               }
             }
         }
         

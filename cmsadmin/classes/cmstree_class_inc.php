@@ -289,8 +289,9 @@ class cmstree extends object
 			if ($module == 'cmsadmin') {
 				$sql = 'SELECT tbl_cms_sections. * , tbl_cms_content.id AS pagevisible
 						FROM tbl_cms_sections
-						LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid
-						AND tbl_cms_content.published = \'1\' )
+						LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid )
+						WHERE tbl_cms_content.published = \'1\'  
+						AND tbl_cms_sections.trash = \'0\'
 						';
 				$useIcon = TRUE;
 			} else {
@@ -298,7 +299,8 @@ class cmstree extends object
 						FROM tbl_cms_sections
 						LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid
 						AND tbl_cms_content.published = \'1\' )
-						WHERE tbl_cms_sections.published = \'1\' AND tbl_cms_content.published = \'1\'
+						WHERE tbl_cms_sections.published = \'1\' AND tbl_cms_content.published = \'1\' 
+						AND tbl_cms_sections.trash = \'0\'
 						';
 			}
 			

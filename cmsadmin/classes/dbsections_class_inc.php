@@ -64,10 +64,10 @@ class dbsections extends dbTable
         	try {        
                 parent::init('tbl_cms_sections');
                 $this->table = 'tbl_cms_sections';
-                $this->_objDBContent = & $this->newObject('dbcontent', 'cmsadmin');
-                $this->_objLanguage = & $this->newObject('language', 'language');
-                 $this->_objUser =  $this->newObject('user', 'security');
-                 $this->TreeNodes = & $this->newObject('treenodes', 'cmsadmin');
+                $this->_objDBContent = $this->getObject('dbcontent', 'cmsadmin');
+                $this->_objLanguage = $this->getObject('language', 'language');
+                $this->_objUser =  $this->getObject('user', 'security');
+                $this->TreeNodes = & $this->newObject('treenodes', 'cmsadmin');
            } catch (Exception $e){
        		    throw customException($e->getMessage());
         	    exit();
@@ -649,42 +649,32 @@ class dbsections extends dbTable
          */
         public function deleteSection($id)
         {
-            //if cat has nodes delete nodes as well
-            if ($this->hasNodes($id)) {
-                //get cat details
-                $category = $this->getSection($id);
-
-                //get number of levels in section
-                $this->objCmsUtils = $this->newObject('cmsutils', 'cmsadmin');
-                $numLevels = $this->objCmsUtils->getNumNodeLevels($category['id']);
-                $parentId = $id;
-                $nodeIdArray = array();
-                $level = $category['nodelevel'] + '1';
-                //get an array of all the cats nodes
-
-                for ($i = $level; $i <= $numLevels; $i++) {
-                    $nodes = $this->getAll("WHERE parentid = '$parentId' AND nodelevel ='$i'");
-                    if(!empty($nodes)){
-                        foreach($nodes as $node) {
-                            $nodeIdArray[] = $node['id'];
-                            $parentId = $node['id'];
-                        }
+            $sectionData = $this->getSection($id);
+            
+            // if section is root - archive everything below it
+            if($sectionData['nodelevel'] == 1){
+                $nodes = $this->getAll("WHERE rootid = '{$id}'");
+                
+                if(!empty($nodes)){
+                    foreach($nodes as $item){
+                        $this->_objDBContent->resetSection($item['id']);
+                        $this->archive($item['id']);
                     }
                 }
-
-                //archive each node in array
-                if(!empty($nodeIdArray)){
-                    foreach($nodeIdArray as $data) {
-                        $this->_objDBContent->resetSection($data);
-                        $this->archive($data);
+                // Restore root node
+                $this->_objDBContent->resetSection($id);
+                $this->archive($id);
+            }else{
+                // find nodes below section
+                $nodeData = $this->getAll("WHERE parentid = '{$id}'");
+                
+                if(!empty($nodeData)){
+                    foreach($nodeData as $item){
+                        $this->deleteSection($item['id']);
                     }
                 }
-                //delete original category
                 $this->_objDBContent->resetSection($id);
-                return $this->archive($id);
-            } else {
-                $this->_objDBContent->resetSection($id);
-                return $this->archive($id);
+                $this->archive($id);
             }
         }
 
@@ -695,10 +685,66 @@ class dbsections extends dbTable
         * @param string $id The section id
         * @return bool
         */
-        private function archive($id)
+        private function archive($id, $restore = FALSE)
         {
-            $fields = array('trash' => 1, 'ordering' => '');
+            $trash = 1;
+            $order = '';
+            
+            if($restore){
+                $trash = 0;
+                $order = $this->getOrdering($id);
+            }
+            $fields = array('trash' => $trash, 'ordering' => $order);
             $result =  $this->update('id', $id, $fields);
+        }
+
+        /**
+        * Method to restore a section
+        *
+        * @access public
+        * @param string $id The section id
+        * @return bool
+        */
+        public function unarchiveSection($id)
+        {
+            $sectionData = $this->getSection($id);
+            
+            if($sectionData['nodelevel'] == 1){
+                $nodes = $this->getAll("WHERE rootid = '{$id}'");
+                
+                if(!empty($nodes)){
+                    foreach($nodes as $item){
+                        $this->unarchiveSectionContent($item['id']);
+                        $this->archive($item['id'], TRUE);
+                    }
+                }
+                // Restore root node
+                $this->unarchiveSectionContent($id);
+                $this->archive($id, TRUE);
+            }else{
+                // find nodes below section
+                $nodeData = $this->getAll("WHERE parentid = '{$id}'");
+                
+                if(!empty($nodeData)){
+                    foreach($nodeData as $item){
+                        $this->unarchiveSection($item['id']);
+                    }
+                }
+                $this->unarchiveSectionContent($id);
+                $this->archive($id, TRUE);
+            }
+        }
+        
+        /**
+        * Method to loop through and restore the content in a section
+        *
+        * @access private
+        * @param string $id The section id
+        * @return bool
+        */
+        private function unarchiveSectionContent($id)
+        {
+            return $this->_objDBContent->unarchiveSection($id);
         }
 
         /**

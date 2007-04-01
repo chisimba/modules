@@ -91,6 +91,9 @@ class dbcontent extends dbTable
             $published = ($this->getParam('published') == '1') ? 1 : 0;
             $override_date = $this->getParam('overide_date',null);
             $start_publish = $this->getParam('publish_date',null);
+            if($published == 1){
+                $start_publish = $this->now();
+            }
             $end_publish = $this->getParam('end_date',null);
             if ($override_date==null) {
             	$override_date =  $this->now();
@@ -231,17 +234,17 @@ class dbcontent extends dbTable
             $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
             $override_date = $this->getParam('overide_date',null);
             $start_publish = $this->getParam('publish_date',null);
+            if($published == 1 && empty($start_publish)){
+                $start_publish = $this->now();
+            }
             $end_publish = $this->getParam('end_date',null);
             if ($override_date!=null) {
             	$override_date =  $this->now();
             }
-            $creatorid = $this->getParam('creator',null);
-            if ($creatorid==NUll) {
-            	 $creatorid = $this->_objUser->userId();
-            }
-
+            
           	$access = $this->getParam('access');
-			$created_by = $this->getParam('author_alias',null);
+          	$modifiedBy = $this->_objUser->userId();
+          	$modifiedDate = $this->now();
 			
             $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
             $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
@@ -255,11 +258,10 @@ class dbcontent extends dbTable
                           'access' => $access,
                           'introtext' => addslashes($introText),
                           'body' => addslashes($fullText),
-                          'modified' => $this->now(),
+                          'modified' => $modifiedDate,
+                          'modified_by' => $modifiedBy,
                           'published' => $published,
                           'post_lic' => $ccLicence,
-                          'created_by' => $creatorid,
-                          'created_by_alias'=>$created_by,
                           'checked_out'=> $creatorid,
                           'checked_out_time'=> $this->now(),
                           'metakey'=>$metakey,
@@ -270,8 +272,6 @@ class dbcontent extends dbTable
 
             //process the forntpage
             $isFrontPage = $this->getParam('frontpage');
-            $newArr['id'] =$id;
-            $newArr['created'] = $this->now();
 			$this->luceneReIndex($newArr);
             if ($isFrontPage == '1') {
                 $this->_objFrontPage->add($id);
@@ -296,7 +296,7 @@ class dbcontent extends dbTable
                 $this->_objFrontPage->remove($id);
             }
             
-            $fields = array('trash' => 1, 'ordering' => '');
+            $fields = array('trash' => 1, 'ordering' => '', 'end_publish' => $this->now());
             $result =  $this->update('id', $id, $fields);
             
             // Get the section id of the page - re order pages
@@ -458,9 +458,9 @@ class dbcontent extends dbTable
             $row = $this->getContentPage($id);
 
             if ($row['published'] == 1) {
-                return $this->update('id', $id , array('published' => 0) );
+                return $this->update('id', $id , array('published' => 0, 'end_publish' => $this->now(), 'start_publish' => '') );
             } else {
-                return $this->update('id', $id , array('published' => 1) );
+                return $this->update('id', $id , array('published' => 1, 'start_publish' => $this->now()) );
             }
         }
         
@@ -478,9 +478,12 @@ class dbcontent extends dbTable
             switch($task){
                 case 'publish':
                     $fields['published'] = 1;
+                    $fields['start_publish'] = $this->now();
+                    $fields['end_publish'] = '';
                     break;
                 case 'unpublish':
                     $fields['published'] = 0;
+                    $fields['end_publish'] = $this->now();
                     break;
             }
             
@@ -499,7 +502,7 @@ class dbcontent extends dbTable
         public function resetSection($sectionId)
         {   
             $arrContent = $this->getAll("WHERE sectionid = '$sectionId'");
-            $bln = TRUE;
+            
             if(!empty($arrContent)){
                 foreach ($arrContent as $page) {
                     //First remove from front page
@@ -509,6 +512,29 @@ class dbcontent extends dbTable
                     
                     // Trash / archive
                     $fields = array('trash' => 1, 'ordering' => '');
+                    $result =  $this->update('id', $page['id'], $fields);
+                }
+            }
+            return $result;
+        }
+        
+        /**
+        * Method to update all the content with the
+        * sections that will be deleted
+        *
+        * @param string $sectionId The section Id
+        * @return boolean
+        * @access public
+        */
+        public function unarchiveSection($sectionId)
+        {   
+            $arrContent = $this->getAll("WHERE sectionid = '$sectionId'");
+            
+            if(!empty($arrContent)){
+                $order = 1;
+                foreach ($arrContent as $page) {
+                    // Restore
+                    $fields = array('trash' => 0, 'ordering' => $order++);
                     $result =  $this->update('id', $page['id'], $fields);
                 }
             }

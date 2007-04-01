@@ -20,11 +20,14 @@ $this->loadClass('form', 'htmlelements');
 $this->loadClass('htmltable', 'htmlelements');
 
 $head = $this->objLanguage->languageText('mod_cmsadmin_archive', 'cmsadmin');
+$pageHead = $this->objLanguage->languageText('mod_cmsadmin_archivedpages', 'cmsadmin');
+$sectionHead = $this->objLanguage->languageText('mod_cmsadmin_archivedsections', 'cmsadmin');
 $objSectionInfo = $this->newObject('dbsections','cmsadmin');
 $lbFilter = $this->objLanguage->languageText('word_filter');
 $lbGo = $this->objLanguage->languageText('word_go');
 $lbReset = $this->objLanguage->languageText('word_reset');
 $lbNoTrash = $this->objLanguage->languageText('mod_cmsadmin_noitemsinarchive', 'cmsadmin');
+$lbNoTrash2 = $this->objLanguage->languageText('mod_cmsadmin_nosectionsinarchive', 'cmsadmin');
 
 // table headings
 $hdPageTitle = $this->objLanguage->languageText('mod_cmsadmin_pagetitle', 'cmsadmin');
@@ -75,6 +78,11 @@ $str .= '<p>'.$objForm->show().'</p>';
 
 
 /* ** archived content pages ** */
+
+$objHead->str = $pageHead;
+$objHead->type = 3;
+$str .= $objHead->show();
+
 if(!empty($data)){
     $class = 'odd';
   
@@ -112,7 +120,11 @@ if(!empty($data)){
         $row = array();
         $row[] = $objCheck->show();
         $row[] = $item['title'];
-        $row[] = @date('r', $item['start_publish']);
+        if(!empty($item['start_publish'])){
+            $row[] = @date('r', $item['start_publish']);
+        }else{
+            $row[] = @date('r', $item['created']);
+        }
         $row[] = $sectionInfo['title'];
         $row[] = $options;
         
@@ -130,6 +142,11 @@ if(!empty($data)){
 }
 
 /* ** archived sections ** */
+
+$objHead->str = $sectionHead;
+$objHead->type = 3;
+$str .= $objHead->show();
+
  if(!empty($sectionData)){
     $class = 'odd';
   
@@ -177,7 +194,7 @@ if(!empty($data)){
     $objForm->addToForm($objTable->show().$hidden);
     $str .= $objForm->show();
 }else{
-    $str .= '<p class="noRecordsMessage">'.$lbNoTrash.'</p>';
+    $str .= '<p class="noRecordsMessage">'.$lbNoTrash2.'</p>';
 }
 
 echo $str;

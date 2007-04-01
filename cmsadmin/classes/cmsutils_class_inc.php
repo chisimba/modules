@@ -435,12 +435,14 @@ class cmsutils extends object
 			 	case 'sections':
 			 			 		
 			 		// Publish
-			 		$url = "javascript:if(checkSelect('select','input_arrayList[]')==false){alert('Please make a selection from the list to Publish');}else{submitbutton('select','publish');}";
+			 		$alertText = $this->objLanguage->languageText('mod_cmsadmin_selectpublishlist', 'cmsadmin');
+                    $url = "javascript:if(checkSelect('select','input_arrayList[]')==false){alert('{$alertText}');}else{submitbutton('select','publish');}";
 			 		$linkText = $this->objLanguage->languageText('word_publish');
 			 		$iconList = $icon_publish->getTextIcon($url, 'publish', $linkText, 'png', 'icons/cms/');
 			 		
 			 		// Unpublish
-			 		$url = "javascript:if(checkSelect('select','input_arrayList[]')==false){alert('Please make a selection from the list to Unpublish');}else{submitbutton('select','unpublish');}";
+			 		$alertText = $this->objLanguage->languageText('mod_cmsadmin_selectunpublishlist', 'cmsadmin');
+			 		$url = "javascript:if(checkSelect('select','input_arrayList[]')==false){alert('{$alertText}');}else{submitbutton('select','unpublish');}";
 			 		$linkText = $this->objLanguage->languageText('word_unpublish');
 			 		$iconList .= $icon_publish->getTextIcon($url, 'unpublish', $linkText, 'png', 'icons/cms/');
 			 		/*
@@ -472,12 +474,14 @@ class cmsutils extends object
 			 		
 			    case 'frontpage':
 			        // Publish
-			 		$url = "javascript: if(checkSelect('select','input_arrayList[]')==false){alert('Please make a selection from the list to Publish');}else{submitbutton('select','publish');}";
+			        $alertText = $this->objLanguage->languageText('mod_cmsadmin_selectpublishlist', 'cmsadmin');
+			        $url = "javascript: if(checkSelect('select','input_arrayList[]')==false){alert('{$alertText}');}else{submitbutton('select','publish');}";
 			 		$linkText = $this->objLanguage->languageText('word_publish');
 			 		$iconList = $icon_publish->getTextIcon($url, 'publish', $linkText, 'png', 'icons/cms/');
 			 		
 			 		// Unpublish
-			 		$url = "javascript:if(checkSelect('select','input_arrayList[]')==false){alert('Please make a selection from the list to Unpublish');}else{submitbutton('select','unpublish');}";
+			 		$alertText = $this->objLanguage->languageText('mod_cmsadmin_selectunpublishlist', 'cmsadmin');
+			 		$url = "javascript:if(checkSelect('select','input_arrayList[]')==false){alert('{$alertText}');}else{submitbutton('select','unpublish');}";
 			 		$linkText = $this->objLanguage->languageText('word_unpublish');
 			 		$iconList .= $icon_publish->getTextIcon($url, 'unpublish', $linkText, 'png', 'icons/cms/');
 			 		
@@ -552,11 +556,18 @@ class cmsutils extends object
 			 	    
 			 	case 'trash':
 
-                    // Reload	 
-                    $url = "javascript: if(checkSelect('select','input_arrayList[]')==false){alert('Please make a selection from the list of articles to Restore');}else{submitbutton('select','restore');}";
+                    // Restore
+                    $alertText = $this->objLanguage->languageText('mod_cmsadmin_selectrestorelist', 'cmsadmin');
+                    $url = "javascript: if(checkSelect('select','input_arrayList[]')==false){alert('{$alertText}');}else{submitbutton('select','restore');}";
 			 		$linkText = $this->objLanguage->languageText('mod_cmsadmin_restore', 'cmsadmin');
 			 		$iconList = $icon_publish->getTextIcon($url, 'restore', $linkText, 'png', 'icons/cms/');
-
+			 		
+			 		// Restore sections
+			 		$alertText = $this->objLanguage->languageText('mod_cmsadmin_selectrestoresections', 'cmsadmin');
+			 		$url = "javascript: if(checkSelect('selectsections','input_arrayList[]')==false){alert('{$alertText}');}else{submitbutton('selectsections','restore');}";
+			 		$linkText = $this->objLanguage->languageText('mod_cmsadmin_restoresections', 'cmsadmin');
+			 		$iconList .= $icon_publish->getTextIcon($url, 'restoresection', $linkText, 'png', 'icons/cms/');
+			 		
 			 	    // Cancel	 		
 			 		$url = "javascript:history.back();";
 			 		$linkText = ucwords($this->objLanguage->languageText('word_back'));
