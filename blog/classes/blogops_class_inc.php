@@ -810,6 +810,11 @@ class blogops extends object
      */
     public function showPosts($posts, $showsticky = FALSE)
     {
+    	$scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
+                      <script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
+                      <script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
+        $this->appendArrayVar('headerParams',$scripts);
+        
     	$mm = $this->getObject('parse4mindmap', 'filters');
         $this->objComments = &$this->getObject('commentapi', 'blogcomments');
         $this->objTB = $this->getObject("trackback");
@@ -1066,6 +1071,10 @@ class blogops extends object
                     			   "</em><hr />".
                     			   "<center>".$tbl->show() ."</center>");
 
+                   /* $headmod = '<p id="editme">'.$head.'</p>
+<script type="text/javascript">
+ new Ajax.InPlaceEditor("editme", "/demoajaxreturn.html", {rows:5,cols:60});
+</script>'; */
                     $ret.= $objFeatureBox->showContent($head, $fboxcontent);
                 } else {
                     //table of non logged in options
@@ -1241,10 +1250,9 @@ class blogops extends object
                       <script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
         $this->appendArrayVar('headerParams',$scripts);
         //$str = "<a href=\"#\" onclick=\"Effect.SlideUp('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
-        $str = "<a href=\"javascript:;\" onclick=\"Effect.SlideUp('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});adjustLayout();\"><img src=\"skins/_common/icons/up.gif\" border=\"0\" align=\"middle\" alt=\"up\"
-title=\"up\"></a>";
-        $str .= "<a href=\"javascript:;\" onclick=\"Effect.SlideDown('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\"><img src=\"skins/_common/icons/down.gif\" border=\"0\" align=\"middle\" alt=\"down\"
-title=\"down\"></a>";
+        //$str = "<a href=\"javascript:;\" onclick=\"Effect.Toggle('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});adjustLayout();\"><img src=\"skins/_common/icons/up.gif\" border=\"0\" align=\"middle\" alt=\"up\"
+//title=\"up\"></a>";
+        $str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('feedmenu','slide', adjustLayout());\">[...]</a>";
 
         $icon->setIcon('down');
         //$str .="<a href=\"#\" onclick=\"Effect.SlideDown('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
@@ -2288,10 +2296,10 @@ title=\"down\"></a>";
                       <script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
                       <script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
         $this->appendArrayVar('headerParams',$scripts);
-        $str = "<a href=\"#\" onclick=\"Effect.SlideUp('contextmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
-        $icon->setIcon('down');
-        $str .="<a href=\"#\" onclick=\"Effect.SlideDown('contextmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
-
+        //$str = "<a href=\"#\" onclick=\"Effect.SlideUp('contextmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
+        //$icon->setIcon('down');
+        //$str .="<a href=\"#\" onclick=\"Effect.SlideDown('contextmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
+		$str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('contextmenu','slide', adjustLayout());\">[...]</a>";
         $str .='<div id="contextmenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
         $str .= $this->objTC->buildCloud($ret);
         $str .= '</div>';
