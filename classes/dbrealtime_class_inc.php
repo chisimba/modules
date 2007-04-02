@@ -229,7 +229,7 @@ class dbrealtime extends dbTable
 		{
 			foreach ($result as $results)
 			{
-				$commaDelimitedText .= $this->objUser->getSurname($results['userid']) .
+				$commaDelimitedText .= $this->objUser->getFirstname($results['userid']) .
 				"," . $results['userid'] . "," . $results['hastoken'] . "," . $userLevel . ",-";
 			}
 			return $commaDelimitedText;
