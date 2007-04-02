@@ -3,7 +3,8 @@
 	$this->loadClass("form","htmlelements");
 	$this->loadClass("textinput","htmlelements");
 	$this->loadClass("button","htmlelements");
-	$objLabel =& $this->newObject('label', 'htmlelements');
+	$this->loadClass("htmltable", 'htmlelements');
+//	$objLabel =& $this->newObject('label', 'htmlelements');
 	$objWindow =& $this->newObject('windowpop','htmlelements');
 	$objHeading =& $this->getObject('htmlheading','htmlelements');
 	$objHeading->type=1;
@@ -14,7 +15,7 @@
 	    		'module'=>'readinglist',
 	   		'action'=>'addConfirm'
 	)));
-	$objTable =& $this->newObject('htmltable','htmlelements');
+	$objTable = new htmltable();
 	$objTable->width='30';
 	$objTable->attributes=" align='center' border='0'";
 	$objTable->cellspacing='12';

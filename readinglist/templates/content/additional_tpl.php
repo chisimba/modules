@@ -6,7 +6,8 @@
 	$this->loadClass("button","htmlelements");
 	$this->loadClass("link","htmlelements");
 	$this->loadClass("tabbedbox","htmlelements");
-	$objLabel =& $this->newObject('label', 'htmlelements');
+	$this->loadClass("htmltable", "htmlelements");
+	//$objLabel =& $this->newObject('label', 'htmlelements');
 //	$this->loadClass('htmlheading','htmlelements');
 	$objHeading1 =& $this->getObject('htmlheading','htmlelements');
 	
@@ -15,7 +16,7 @@
 	//echo $objHeading->show();
 		
         	
-	$objTable =& $this->newObject('htmltable','htmlelements');
+	$objTable = new htmltable();
         //$objTable->width='20';
         $objTable->cellspacing='12';
         $objTable->cellpadding='12';

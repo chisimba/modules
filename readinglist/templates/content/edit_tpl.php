@@ -3,7 +3,7 @@
 	$this->loadClass("form","htmlelements");
 	$this->loadClass("textinput","htmlelements");
 	$this->loadClass("button","htmlelements");
-	$objLabel =& $this->newObject('label', 'htmlelements');
+	//$objLabel =& $this->newObject('label', 'htmlelements');
 	$objHeading =& $this->getObject('htmlheading','htmlelements');
 	
 	$objHeading->type=1;
