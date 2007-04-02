@@ -28,7 +28,7 @@ class datefunctions extends object
     */
     public function init()
     {
-        $this->objSimpleCal =& $this->getObject('datetime','utilities');
+        $this->objSimpleCal =& $this->getObject('dateandtime','utilities');
         $this->months3letter = $this->objSimpleCal->getMonthsAsArray('3letter');
     }
 
