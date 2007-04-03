@@ -1242,13 +1242,14 @@ class blogops extends object
         $link = new href($this->uri(array('action' => 'feed', 'format' => 'html', 'userid' => $userid)),$this->objLanguage->languageText("mod_blog_word_html", "blog"));
         $leftCol .= $html->show() . $link->show() . "<br />";
         
-        $this->setVar('pageSuppressXML',true);
+        /* scriptaculous moved to default page template / no need to suppress XML*/        
+        //$this->setVar('pageSuppressXML',true);
         $icon = $this->getObject('geticon', 'htmlelements');
         $icon->setIcon('up');
-        $scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
-                      <script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
-                      <script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
-        $this->appendArrayVar('headerParams',$scripts);
+        //$scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
+                      //<script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
+                      //<script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
+        //$this->appendArrayVar('headerParams',$scripts);
         //$str = "<a href=\"#\" onclick=\"Effect.SlideUp('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
         //$str = "<a href=\"javascript:;\" onclick=\"Effect.Toggle('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});adjustLayout();\"><img src=\"skins/_common/icons/up.gif\" border=\"0\" align=\"middle\" alt=\"up\"
 //title=\"up\"></a>";
