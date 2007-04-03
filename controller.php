@@ -75,6 +75,7 @@ class realtime extends controller
 	 */
 	function init()
 	{
+		$this->objLanguage =& $this->getObject('language', 'language');
 		//Get the activity logger class
 		$this->objLog = $this->newObject('logactivity', 'logger');
 		//Log this module call
@@ -118,13 +119,13 @@ class realtime extends controller
 		switch ($action)
 		{
 			case 'classroom' :
-				return "realtime-classroom_tpl.php";
+				return $this->showClassRoom($this->contextCode);
 
 			case 'jmfinstall' :
 				return "realtime-jmfinstall_tpl.php";
 
 			case 'voice' :
-				return "realtime-voice_tpl.php";
+				return $this->showApplet($this->contextCode);
 
 			case 'whiteboard' :
 				return "realtime-whiteboard_tpl.php";
@@ -139,7 +140,7 @@ class realtime extends controller
 			case 'joinconversation' :
 				return $this->joinConversation($this->userId, $this->userLevel, $this->contextCode);
 			case 'leaveconversation' :
-				return $this->leaveConversation($this->userId, $this->userLevel, $this->contextCode);
+				return $this->leaveConversation($this->userId, $this->contextCode);
 			case 'checktoken' :
 				return $this->checkToken($this->userId, $this->userLevel, $this->contextCode);
 			case 'checkturn' :
@@ -235,11 +236,31 @@ class realtime extends controller
 		}
 	}
 	
-	function assignToken($userId, $contextCode)
+	function assignToken($userId, $contextcode)
 	{
-		$hasToken = $this->objrealtime->assignToken($userId, $contextCode);
+		$hasToken = $this->objrealtime->assignToken($userId, $contextcode);
 		$this->setVar('hastoken', $hasToken);
 		return "redirect_tpl.php";
+	}
+	
+	function showApplet($contextcode)
+	{
+		if(empty($contextcode)){
+			$this->setVar("noContextCode", $this->objLanguage->languageText('mod_realtime_nocontextcode', 'realtime'));
+			return "realtime-voice_tpl.php";
+		}else{
+			return "realtime-voice_tpl.php";
+		}
+	}
+	
+	function showClassRoom($contextcode)
+	{
+		if(empty($contextcode)){
+			$this->setVar("noContextCode", $this->objLanguage->languageText('mod_realtime_nocontextcode', 'realtime'));
+			return "realtime-classroom_tpl.php";			
+		} else {
+			return "realtime-classroom_tpl.php";
+		}
 	}
 }
 ?>
