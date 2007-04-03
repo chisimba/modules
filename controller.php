@@ -125,7 +125,7 @@ class realtime extends controller
 				return "realtime-jmfinstall_tpl.php";
 
 			case 'voice' :
-				return $this->showApplet($this->contextCode);
+				return $this->showVoiceApplet($this->contextCode);
 
 			case 'whiteboard' :
 				return "realtime-whiteboard_tpl.php";
@@ -243,24 +243,20 @@ class realtime extends controller
 		return "redirect_tpl.php";
 	}
 	
-	function showApplet($contextcode)
+	function showVoiceApplet($contextcode)
 	{
 		if(empty($contextcode)){
 			$this->setVar("noContextCode", $this->objLanguage->languageText('mod_realtime_nocontextcode', 'realtime'));
-			return "realtime-voice_tpl.php";
-		}else{
-			return "realtime-voice_tpl.php";
 		}
+		return "realtime-voice_tpl.php";
 	}
 	
 	function showClassRoom($contextcode)
 	{
 		if(empty($contextcode)){
 			$this->setVar("noContextCode", $this->objLanguage->languageText('mod_realtime_nocontextcode', 'realtime'));
-			return "realtime-classroom_tpl.php";			
-		} else {
-			return "realtime-classroom_tpl.php";
-		}
+		} 
+		return "realtime-classroom_tpl.php";
 	}
 }
 ?>
