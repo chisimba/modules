@@ -55,7 +55,7 @@ class pbl extends controller
         $this->objContext = &$this->getObject('dbcontext', 'context');
         // create an instance of the usersdb object in groupadmin
         $this->objGroupUser = &$this->getObject('usersdb', 'groupadmin');
-        $this->objDate = &$this->newObject('datetime','utilities');
+        $this->objDate = &$this->newObject('dateandtime','utilities');
         $this->objModules =& $this->newObject('modules','modulecatalogue');
     } // end of init
 

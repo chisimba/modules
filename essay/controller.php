@@ -75,7 +75,7 @@ class essay extends controller
      //   $this->objDate = $this->newObject('simplecal','datetime');
         $this->objDate = $this->newObject('datepicker','htmlelements');
         
-        $this->objDateformat = $this->newObject('datetime','utilities');
+        $this->objDateformat = $this->newObject('dateandtime','utilities');
         
 		$this->objFile = $this->newObject('upload','filemanager');
         // Log this call if registered

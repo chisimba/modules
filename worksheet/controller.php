@@ -54,7 +54,7 @@ class worksheet extends controller
         $this->objWorksheetQuestions =& $this->getObject('dbworksheetquestions','worksheet');
         $this->objWorksheetAnswers =& $this->getObject('dbworksheetanswers','worksheet');
         $this->objWorksheetResults =& $this->getObject('dbworksheetresults','worksheet');
-        $this->objDate =& $this->newObject('datetime','utilities');
+        $this->objDate =& $this->newObject('dateandtime','utilities');
 			
         // User
         $this->objUser =& $this->getObject('user', 'security');

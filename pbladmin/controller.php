@@ -61,7 +61,7 @@ class pbladmin extends controller
         // Get an instance of the groups usersdb object
         $this->objGroupUser = &$this->getObject('usersdb', 'groupadmin');
         $this->objHelp = &$this->newObject('helplink','help');
-        $this->objDate = &$this->newObject('datetime','utilities');
+        $this->objDate = &$this->newObject('dateandtime','utilities');
         $this->objModules =& $this->newObject('modules','modulecatalogue');
 
         // Log this call if registered

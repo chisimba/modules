@@ -39,7 +39,7 @@ $objWorksheet =& $this->getObject('dbworksheet','worksheet');
 $objWorksheetresults =& $this->getObject('dbworksheetresults','worksheet');
 
 //datetime object
-$objDatetime =& $this->getObject('datetime','utilities');
+$objDatetime =& $this->getObject('dateandtime','utilities');
 
 //number of students
 $numberStudents=0;

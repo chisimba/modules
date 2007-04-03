@@ -37,7 +37,7 @@ $objTestresults =& $this->getObject('dbresults','mcqtests');
 $objWorksheet =& $this->getObject('dbworksheet','worksheet');
 $objWorksheetresults =& $this->getObject('dbworksheetresults','worksheet');
 //datetime object
-$objDatetime =& $this->getObject('datetime','utilities');
+$objDatetime =& $this->getObject('dateandtime','utilities');
 //$objFormattedDate =& $this->getObject('simplecal','datetime');
 
 //context management

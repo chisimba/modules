@@ -85,7 +85,7 @@ class essayadmin extends controller
         $this->objContext=& $this->getObject('dbcontext','context');
 
         $this->objHelp = $this->newObject('helplink','help');
-       	$this->objDateformat = $this->newObject('datetime','utilities');
+       	$this->objDateformat = $this->newObject('dateandtime','utilities');
        
        
     

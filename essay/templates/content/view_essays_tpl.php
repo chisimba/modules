@@ -11,7 +11,7 @@
 // set layout template
 $this->setLayoutTemplate('essay_layout_tpl.php');
 
-$this->objDateformat = $this->newObject('datetime','utilities');
+$this->objDateformat = $this->newObject('dateandtime','utilities');
 
  $this->loadclass('htmltable','htmlelements'); 
   $objPopup=&$this->loadClass('windowpop','htmlelements');

@@ -76,7 +76,7 @@ class assignment extends controller
             $this->dbTestResults =& $this->newObject('dbresults','testadmin');
         }
 	*/
-        $this->objDate =& $this->newObject('datetime','utilities');
+        $this->objDate =& $this->newObject('dateandtime','utilities');
         $this->objLanguage =& $this->newObject('language','language');
         $this->objUser =& $this->newObject('user','security');
         //$this->objGroups =& $this->newObject('groupAdminModel','groupadmin');
