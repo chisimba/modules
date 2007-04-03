@@ -45,8 +45,8 @@ if ($id != '') {
     $objCMSBlocks = $this->getObject('dbblocks', 'cmsadmin');
     $objBlocks = $this->getObject('blocks', 'blocks');
 
-    $this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
-    $this->objScriptaculous->show();
+//    $this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
+//    $this->objScriptaculous->show();
 
     $blocks = $objModuleBlocks->getBlocks('normal');
     $thisPageBlocks = $objCMSBlocks->getBlocksForPage($id);

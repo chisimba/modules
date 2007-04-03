@@ -154,8 +154,8 @@ echo '<h2>'.$this->objLanguage->languageText('mod_cmsadmin_frontpageblocks', 'cm
     
     
 
-    $this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
-    $this->objScriptaculous->show();
+//    $this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
+//    $this->objScriptaculous->show();
 
     $blocks = $objModuleBlocks->getBlocks('normal');
     $thisPageBlocks = $objCMSBlocks->getBlocksForFrontPage();
