@@ -37,6 +37,7 @@ class leftcontent extends object{
    $entryQualify    =    $this->objLanguage->languageText('mod_marketingrecruitmentforum_entryqualify101','marketingrecruitmentforum');
    $totsdcase       =    $this->objLanguage->languageText('mod_marketingrecruitmentforum_stotsdcase','marketingrecruitmentforum');
    $totstudinterest =    $this->objLanguage->languageText('mod_marketingrecruitmentforum_reportfaculty11','marketingrecruitmentforum');
+   $staffdata       =    $this->objLanguage->languageText('mod_marketingrecruitmentforum_reportstaffinfo','marketingrecruitmentforum');
    
    $addgenerator    =    $this->objLanguage->languageText('mod_marketingrecruitmentforum_addgenerator','marketingrecruitmentforum');
    $communication   =    $this->objLanguage->languageText('mod_marketingrecruitmentforum_communication','marketingrecruitmentforum');
@@ -60,6 +61,7 @@ class leftcontent extends object{
    $EntryQualify[] = array('params' => array("action" => "totalentry"), 'module' => 'marketingrecruitmentforum', 'linktext' => $entryQualify);
    $EntryQualify[] = array('params' => array("action" => "totalsd"), 'module' => 'marketingrecruitmentforum', 'linktext' => $totsdcase);
    $EntryQualify[] = array('params' => array("action" => "totalfaculty"), 'module' => 'marketingrecruitmentforum', 'linktext' => $totstudinterest);
+   $EntryQualify[] = array('params' => array("action" => "facultyuse"), 'module' => 'marketingrecruitmentforum', 'linktext' => $staffdata);
    $EntryQualify[] = array('params' => array("action" => "NULL"), 'module' => 'marketingrecruitmentforum', 'linktext' => '');
    
    $AddressGenLink = array();

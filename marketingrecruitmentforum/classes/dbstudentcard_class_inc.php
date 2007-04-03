@@ -1130,6 +1130,40 @@ public function getPostInfo()
  
 }
 
+public function getincompletedata($where = 'where SDCASE = 0 and EXEMPTION = 0')
+{
+    //try {
+        $query = 'SELECT IDNUMBER, NAME, SURNAME, SCHOOLNAME, EXEMPTION, SDCASE FROM '.$this->schema.'.tbl_mrf_studcard '.$where;
+        $result = $this->getWSGenericQuery($query);
+        return $result;
+    //} catch (Exception $e) {
+    //        return NULL;
+   // }
+}
+
+  
+
+public function incompletestudlimit($startat,$endat)
+{
+	//try {
+		
+  			if($startat!=0){
+  			$startat++;
+  			}
+  			
+  			$sortfield = 'SCHOOLNAME';
+  			 $where = 'where SDCASE = 0 and EXEMPTION = 0';
+		   	$sqlQuery = "SELECT * FROM ".$this->schema.".tbl_mrf_studcard ".$where;
+       
+        $sql = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (".$sqlQuery.") a WHERE ROWNUM <= ".$endat.") WHERE rnum > ".$startat;
+        
+			  $result = $this->getWSGenericQuery($sql, 'SEMS');
+			  return $result;
+			  
+	//} catch(Exception $e) {
+  //  return NULL;
+  //}
+}
 
 }//end of class 
 ?>

@@ -89,11 +89,11 @@ if ($stdCount > 0){
       if ($page > 1){
           $prevLink = new link();
           $prevLink->href=$this->uri(array('action'=>'showstudschool','page'=>($page-1), 'dispcount'=>$dispCount));
-          $prevLink->link = 'Pervious';
+          $prevLink->link = 'Previous';
           $prevLink->style = "text-decoration:none";
           $prev = $prevLink->show();
       }else{
-          $prev = 'Pervious';
+          $prev = 'Previous';
       }
 
       if ($page < $pageCount){
@@ -155,7 +155,7 @@ if ($stdCount > 0){
 
         $viewprev = new link();
         $viewprev->href=$this->uri(array('action'=>'showstudschool','startat'=>$stdCountR,'pg'=>$pg, 'dispcount'=>$dispCount));
-        $viewprev->link = 'Pervious';
+        $viewprev->link = 'Previous';
 		
         $viewprev->style = "text-decoration:none";
         $viewp = $viewprev->show()." |";
@@ -191,16 +191,16 @@ if ($stdCount > 0){
         $myTable->cellspacing = '1';
         $myTable->cellpadding = '2';
         $myTable->border='0';
-        $myTable->width = '100%';
+        $myTable->width = '120%';
 
         $myTable->startHeaderRow();
         $myTable->addHeaderCell('Date'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
         $myTable->addHeaderCell('School'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
         $myTable->addHeaderCell('Surname'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
         $myTable->addHeaderCell('Name'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
-        $myTable->addHeaderCell('Address'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
-        $myTable->addHeaderCell('Postal Code'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
-        $myTable->addHeaderCell('Telephone Number'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
+        $myTable->addHeaderCell('Address'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
+        //$myTable->addHeaderCell('Postal Code'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
+        //$myTable->addHeaderCell('Telephone Number'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
         $myTable->addHeaderCell('Cell Number'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
         $myTable->addHeaderCell('Email Address'."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp"."&nbsp","", null, "left","header");
         $myTable->endHeaderRow();
@@ -216,9 +216,9 @@ if ($stdCount > 0){
          $myTable->addCell($results[$i]->SCHOOLNAME,"", null, "left","$oddOrEven");
          $myTable->addCell($results[$i]->SURNAME,"", null, "left","$oddOrEven");
          $myTable->addCell($results[$i]->NAME,"", null, "left","$oddOrEven");
-         $myTable->addCell($results[$i]->POSTADDRESS,"", null, "left","$oddOrEven");
-         $myTable->addCell($results[$i]->POSTCODE,"", null, "left","$oddOrEven");
-         $myTable->addCell($results[$i]->TELCODE.' '.$results[$i]->TELNUMBER,"", null, "left","$oddOrEven");
+         $myTable->addCell($results[$i]->POSTADDRESS . '<br/>'.$results[$i]->POSTCODE,"", null, "left","$oddOrEven");
+         //$myTable->addCell(,"", null, "left","$oddOrEven");
+         //$myTable->addCell($results[$i]->TELCODE.' '.$results[$i]->TELNUMBER,"", null, "left","$oddOrEven");
          $myTable->addCell($results[$i]->CELLNUMBER,"", null, "left","$oddOrEven");
          $myTable->addCell($results[$i]->STUDEMAIL,"", null, "left","$oddOrEven");
          $myTable->row_attributes = " class = \"$oddOrEven\"";
@@ -274,9 +274,10 @@ public  function allstudschool($school){
                  $myTable->css_class = 'highlightrows';
                  
                  $myTable->startHeaderRow();
-                 $myTable->addHeaderCell('School Name', null,'top','left','header');
-                 $myTable->addHeaderCell('Surname', null,'top','left','header');
-                 $myTable->addHeaderCell('Name', null,'top','left','header');
+                 $myTable->addHeaderCell('School Name', '35%','top','left','header');
+                 $myTable->addHeaderCell('Surname', '20%','top','left','header');
+                 $myTable->addHeaderCell('Name', '20%','top','left','header');
+           //      $myTable->addHeaderCell('Email Address', '25%','top','left','header');
                 
                  $rowcount = 0;
       
@@ -287,6 +288,7 @@ public  function allstudschool($school){
                  $myTable->addCell($school[$i]->SCHOOLNAME,"15%", null, "left","$oddOrEven");
                  $myTable->addCell($school[$i]->SURNAME, "10%", null, "left","$oddOrEven");
                  $myTable->addCell($school[$i]->NAME,"10%", null, "left","$oddOrEven");
+             //    $myTable->addCell($school[$i]->STUDEMAIL,"", null, "left","$oddOrEven");
                  $myTable->row_attributes = " class = \"$oddOrEven\"";
                  $rowcount++;
                  $myTable->endRow();
@@ -325,7 +327,7 @@ public  function allstudschool($school){
  * @return obj $myTable      
  */ 
 public  function  allwithexemption(){
-    		$details = '';
+ 		$details = '';
     $records = '';
     $paging = ''; 
 		$res = $this->objstudcard->allstudsexemption($where = 'where EXEMPTION = 1');
@@ -369,11 +371,11 @@ if ($stdCount > 0){
       if ($page > 1){
           $prevLink = new link();
           $prevLink->href=$this->uri(array('action'=>'showstudschool','page'=>($page-1), 'dispcount'=>$dispCount));
-          $prevLink->link = 'Pervious';
+          $prevLink->link = 'Previous';
           $prevLink->style = "text-decoration:none";
           $prev = $prevLink->show();
       }else{
-          $prev = 'Pervious';
+          $prev = 'Previous';
       }
 
       if ($page < $pageCount){
@@ -435,7 +437,7 @@ if ($stdCount > 0){
 
         $viewprev = new link();
         $viewprev->href=$this->uri(array('action'=>'showstudschool','startat'=>$stdCountR,'pg'=>$pg, 'dispcount'=>$dispCount));
-        $viewprev->link = 'Pervious';
+        $viewprev->link = 'Previous';
 		
         $viewprev->style = "text-decoration:none";
         $viewp = $viewprev->show()." |";
@@ -578,11 +580,11 @@ if ($stdCount > 0){
       if ($page > 1){
           $prevLink = new link();
           $prevLink->href=$this->uri(array('action'=>'showstudschool','page'=>($page-1), 'dispcount'=>$dispCount));
-          $prevLink->link = 'Pervious';
+          $prevLink->link = 'Previous';
           $prevLink->style = "text-decoration:none";
           $prev = $prevLink->show();
       }else{
-          $prev = 'Pervious';
+          $prev = 'Previous';
       }
 
       if ($page < $pageCount){
@@ -644,7 +646,7 @@ if ($stdCount > 0){
 
         $viewprev = new link();
         $viewprev->href=$this->uri(array('action'=>'showstudschool','startat'=>$stdCountR,'pg'=>$pg, 'dispcount'=>$dispCount));
-        $viewprev->link = 'Pervious';
+        $viewprev->link = 'Previous';
 		
         $viewprev->style = "text-decoration:none";
         $viewp = $viewprev->show()." |";
@@ -785,11 +787,11 @@ if ($stdCount > 0){
       if ($page > 1){
           $prevLink = new link();
           $prevLink->href=$this->uri(array('action'=>'showstudschool','page'=>($page-1), 'dispcount'=>$dispCount));
-          $prevLink->link = 'Pervious';
+          $prevLink->link = 'Previous';
           $prevLink->style = "text-decoration:none";
           $prev = $prevLink->show();
       }else{
-          $prev = 'Pervious';
+          $prev = 'Previous';
       }
 
       if ($page < $pageCount){
@@ -851,7 +853,7 @@ if ($stdCount > 0){
 
         $viewprev = new link();
         $viewprev->href=$this->uri(array('action'=>'showstudschool','startat'=>$stdCountR,'pg'=>$pg, 'dispcount'=>$dispCount));
-        $viewprev->link = 'Pervious';
+        $viewprev->link = 'Previous';
 		
         $viewprev->style = "text-decoration:none";
         $viewp = $viewprev->show()." |";
@@ -998,11 +1000,11 @@ if ($stdCount > 0){
       if ($page > 1){
           $prevLink = new link();
           $prevLink->href=$this->uri(array('action'=>'showstudschool','page'=>($page-1), 'dispcount'=>$dispCount));
-          $prevLink->link = 'Pervious';
+          $prevLink->link = 'Previous';
           $prevLink->style = "text-decoration:none";
           $prev = $prevLink->show();
       }else{
-          $prev = 'Pervious';
+          $prev = 'Previous';
       }
 
       if ($page < $pageCount){
@@ -1064,7 +1066,7 @@ if ($stdCount > 0){
 
         $viewprev = new link();
         $viewprev->href=$this->uri(array('action'=>'showstudschool','startat'=>$stdCountR,'pg'=>$pg, 'dispcount'=>$dispCount));
-        $viewprev->link = 'Pervious';
+        $viewprev->link = 'Previous';
 		
         $viewprev->style = "text-decoration:none";
         $viewp = $viewprev->show()." |";
@@ -1216,11 +1218,11 @@ if ($stdCount > 0){
       if ($page > 1){
           $prevLink = new link();
           $prevLink->href=$this->uri(array('action'=>'showstudschool','page'=>($page-1), 'dispcount'=>$dispCount));
-          $prevLink->link = 'Pervious';
+          $prevLink->link = 'Previous';
           $prevLink->style = "text-decoration:none";
           $prev = $prevLink->show();
       }else{
-          $prev = 'Pervious';
+          $prev = 'Previous';
       }
 
       if ($page < $pageCount){
@@ -1282,7 +1284,7 @@ if ($stdCount > 0){
 
         $viewprev = new link();
         $viewprev->href=$this->uri(array('action'=>'showstudschool','startat'=>$stdCountR,'pg'=>$pg, 'dispcount'=>$dispCount));
-        $viewprev->link = 'Pervious';
+        $viewprev->link = 'Previous';
 		
         $viewprev->style = "text-decoration:none";
         $viewp = $viewprev->show()." |";
@@ -1440,11 +1442,11 @@ if ($stdCount > 0){
       if ($page > 1){
           $prevLink = new link();
           $prevLink->href=$this->uri(array('action'=>'showstudschool','page'=>($page-1), 'dispcount'=>$dispCount));
-          $prevLink->link = 'Pervious';
+          $prevLink->link = 'Previous';
           $prevLink->style = "text-decoration:none";
           $prev = $prevLink->show();
       }else{
-          $prev = 'Pervious';
+          $prev = 'Previous';
       }
 
       if ($page < $pageCount){
@@ -1506,7 +1508,7 @@ if ($stdCount > 0){
 
         $viewprev = new link();
         $viewprev->href=$this->uri(array('action'=>'showstudschool','startat'=>$stdCountR,'pg'=>$pg, 'dispcount'=>$dispCount));
-        $viewprev->link = 'Pervious';
+        $viewprev->link = 'Previous';
 		
         $viewprev->style = "text-decoration:none";
         $viewp = $viewprev->show()." |";
@@ -1653,11 +1655,11 @@ if ($stdCount > 0){
       if ($page > 1){
           $prevLink = new link();
           $prevLink->href=$this->uri(array('action'=>'showstudschool','page'=>($page-1), 'dispcount'=>$dispCount));
-          $prevLink->link = 'Pervious';
+          $prevLink->link = 'Previous';
           $prevLink->style = "text-decoration:none";
           $prev = $prevLink->show();
       }else{
-          $prev = 'Pervious';
+          $prev = 'Previous';
       }
 
       if ($page < $pageCount){
@@ -1719,7 +1721,7 @@ if ($stdCount > 0){
 
         $viewprev = new link();
         $viewprev->href=$this->uri(array('action'=>'showstudschool','startat'=>$stdCountR,'pg'=>$pg, 'dispcount'=>$dispCount));
-        $viewprev->link = 'Pervious';
+        $viewprev->link = 'Previous';
 		
         $viewprev->style = "text-decoration:none";
         $viewp = $viewprev->show()." |";
@@ -1917,7 +1919,7 @@ public  function searchID($idsearch){
                            $myTable->cellspacing = '1';
                            $myTable->cellpadding = '2';
                            $myTable->border='0';
-                           $myTable->width = '70%';
+                           $myTable->width = '100%';
                            $myTable->css_class = 'highlightrows';
                            
                     
@@ -2283,7 +2285,7 @@ public  function searchID($idsearch){
                    $myTable->cellspacing = '1';
                    $myTable->cellpadding = '2';
                    $myTable->border='0';
-                   $myTable->width = '30%';
+                   $myTable->width = '100%';
                    
                    $idno  = $this->getSession('idno');
                    $firstname = $this->getSession('name');

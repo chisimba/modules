@@ -919,6 +919,12 @@ function dispatch($action)
               }
            break;
            
+           case 'facultyuse' :
+              if (!$this->objSemsSecurity->inGroup('MRSF Full')) {
+                      return "noaccess_tpl.php";
+              }
+              return 'mrsfstaffinfo_tpl.php';
+            break;
            /*case 'sportdetails':
            $leadership = $this->getParam('listB');
            $sportcode = $this->getParam('listC');
