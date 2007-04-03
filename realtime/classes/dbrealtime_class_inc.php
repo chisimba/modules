@@ -35,7 +35,6 @@ class dbrealtime extends dbTable
 		//log_debug("userid: " . $userId . " userlevel: " . $userLevel . " contextcode: " . $contextCode);
 		$userLevel = strtolower($userLevel);
 		$convId = $this->getConversationId($contextCode);
-		log_debug("convid". $convId);
 		$sql = "select hastoken, puid from tbl_realtime_voicequeue where conversationid=\"$convId\"";
 		$result = $this->getArray($sql);
 
@@ -89,17 +88,16 @@ class dbrealtime extends dbTable
 	 */
 	public function releaseToken($userId, $contextCode)
 	{
-		log_debug("userid" . $userId);
 		$convId = $this->getConversationId($contextCode);
 		$sql = "delete from tbl_realtime_voicequeue where conversationid=\"$convId\" && userid=\"$userId\"";
-		log_debug("convid =" . $convId . " userid " . $userId);
+
 		$this->getArray($sql);
 
 		$sql = "select puid from tbl_realtime_voicequeue where conversationid=\"$convId\" order by puid limit 1";
 		$result = $this->getArray($sql);
 		if (empty ($result))
 		{
-			log_debug("nothing happened");
+			//log_debug("nothing happened");
 			//do nothing
 		} else
 		{
@@ -183,6 +181,9 @@ class dbrealtime extends dbTable
 	 */
 	public function leaveConversation($userId, $contextCode)
 	{
+		$convId = $this->getConversationId($contextCode);
+		$sql = "delete from tbl_realtime_voicequeue where userid=\"$userId\" && conversationid=\"$convId\"";
+		$this->getArray($sql);
 		return SUCCESS;
 	}
 
@@ -229,17 +230,17 @@ class dbrealtime extends dbTable
 		{
 			foreach ($result as $results)
 			{
-				$commaDelimitedText .= $this->objUser->getFirstname($results['userid']) .
-				"," . $results['userid'] . "," . $results['hastoken'] . "," . $userLevel . ",-";
+				$delimitedText .= $this->objUser->getFirstname($results['userid']) .
+				"," . $results['userid'] . "," . $results['hastoken'] . "," . $userLevel . ",|";
 			}
-			return $commaDelimitedText;
+			return $delimitedText;
 		}
 	}
 
 	public function assignToken($userId, $contextCode)
 	{
 		$convId = $this->getConversationId($contextCode);
-		log_debug("id " . $userId . " context " . $contextCode);
+
 		$sql = "delete from tbl_realtime_voicequeue where conversationid=\"$convId\" && hastoken=1";
 		$this->getArray($sql);
 
@@ -249,17 +250,16 @@ class dbrealtime extends dbTable
 		{
 			$puid = $res['puid'];
 		}
-		log_debug("puid" . $puid);
+
 		$update = array ();
 		$update['hastoken'] = 1;
 
 		if ($this->update("puid", $puid, $update, "tbl_realtime_voicequeue"))
 		{
-			log_debug("excuted");
 			return SUCCESS;
 		} else
 		{
-			log_debug("failure excuted");
+			return FAILURE;
 		}
 	}
 

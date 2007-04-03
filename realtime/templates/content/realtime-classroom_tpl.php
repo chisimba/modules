@@ -1,3 +1,9 @@
+<?php
+if (isset ($noContextCode))
+{
+	echo $noContextCode;
+} else {
+?>
 <!-- START FILE MANAGER FILE CHOOSER CODE-->
 <script type="text/javascript">
 
@@ -26,48 +32,51 @@
 </script>
 <div style="display:none;">
 <?php
-$objSelectFile = $this->getObject('selectrealtimeimage', 'filemanager');
-$objSelectFile->name = 'selectimage';
-$this->setVar('pageSuppressXML', TRUE);
-echo $objSelectFile->show();
+
+	$objSelectFile = $this->getObject('selectrealtimeimage', 'filemanager');
+	$objSelectFile->name = 'selectimage';
+	$this->setVar('pageSuppressXML', TRUE);
+	echo $objSelectFile->show();
 ?>
 </div>
 <!-- END FILE MANAGER FILE CHOOSER CODE-->
 
 <?php
-$this->objLanguage = $this->getObject('language', 'language');
-$this->objFeaturebox = $this->newObject('featurebox', 'navigation');
 
-$whiteboard = '<applet id="whiteboardapplet" width="660" height="600" code="avoir.realtime.whiteboard.client.WhiteboardApplet.class">';
-$whiteboard .= '    <param name="archive" value="'.$this->whiteboardURL.'/whiteboard-client.jar"/> ';
-$whiteboard .= '    <param name="userName" value="' . $this->userName . '"/>';
-$whiteboard .= '    <param name="userLevel" value="' . $this->userLevel . '"/>';
-$whiteboard .= '    <param name="port" value="1981"/>';
-$whiteboard .= "</applet> ";
+	$this->objLanguage = $this->getObject('language', 'language');
+	$this->objFeaturebox = $this->newObject('featurebox', 'navigation');
 
-$voiceTitle = $this->objLanguage->languageText('mod_realtime_voice', 'realtime');
-$voice = '<applet code="avoir.realtime.voice.VoiceApplet.class" width="300" height="120">';
-$voice .= '	<param name="archive" value="'.$this->voiceURL.'/voice-client.jar"/>';
-$voice .= ' <param name="userName" value="' . $this->userName . '"/>';
-$voice .= ' <param name="userLevel" value="' . $this->userLevel . '"/>';
-$voice .= ' <param name="voiceURL" value="'.$this->voiceURL.'"/>';
-$voice .= ' <param name="realtimeControllerURL" value="'.$this->realtimeControllerURL.'"/>';
-$voice .= "</applet> ";
+	$whiteboard = '<applet id="whiteboardapplet" width="660" height="600" code="avoir.realtime.whiteboard.client.WhiteboardApplet.class">';
+	$whiteboard .= '    <param name="archive" value="' . $this->whiteboardURL . '/whiteboard-client.jar"/> ';
+	$whiteboard .= '    <param name="userName" value="' . $this->userName . '"/>';
+	$whiteboard .= '    <param name="userLevel" value="' . $this->userLevel . '"/>';
+	$whiteboard .= '    <param name="port" value="1981"/>';
+	$whiteboard .= "</applet> ";
 
-$voiceBox = $this->objFeaturebox->show($voiceTitle, $voice);
+	$voiceTitle = $this->objLanguage->languageText('mod_realtime_voice', 'realtime');
+	$voice = '<applet code="avoir.realtime.voice.VoiceApplet.class" width="300" height="120">';
+	$voice .= '	<param name="archive" value="' . $this->voiceURL . '/voice-client.jar"/>';
+	$voice .= ' <param name="userName" value="' . $this->userName . '"/>';
+	$voice .= ' <param name="userLevel" value="' . $this->userLevel . '"/>';
+	$voice .= ' <param name="voiceURL" value="' . $this->voiceURL . '"/>';
+	$voice .= ' <param name="realtimeControllerURL" value="' . $this->realtimeControllerURL . '"/>';
+	$voice .= "</applet> ";
 
-$objBlocks = $this->newObject('blocks', 'blocks');
-$chatBlock = $objBlocks->showBlock('contextchat', 'messaging');
+	$voiceBox = $this->objFeaturebox->show($voiceTitle, $voice);
 
-$objLayer = $this->newObject('layer', 'htmlelements');
-$objLayer->str = $voiceBox.$chatBlock;
-$objLayer->border = '; width: 320px; float: left';
-$layer1 = $objLayer->show();
+	$objBlocks = $this->newObject('blocks', 'blocks');
+	$chatBlock = $objBlocks->showBlock('contextchat', 'messaging');
 
-$objLayer->str = $whiteboard;
-$objLayer->border = '; width: 660px; float: right';
-$objLayer->align = 'center';
-$layer2 = $objLayer->show();
+	$objLayer = $this->newObject('layer', 'htmlelements');
+	$objLayer->str = $voiceBox . $chatBlock;
+	$objLayer->border = '; width: 320px; float: left';
+	$layer1 = $objLayer->show();
 
-echo $layer1.$layer2;
+	$objLayer->str = $whiteboard;
+	$objLayer->border = '; width: 660px; float: right';
+	$objLayer->align = 'center';
+	$layer2 = $objLayer->show();
+
+	echo $layer1 . $layer2;
+}
 ?>
