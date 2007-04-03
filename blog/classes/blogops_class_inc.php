@@ -810,10 +810,11 @@ class blogops extends object
      */
     public function showPosts($posts, $showsticky = FALSE)
     {
-    	$scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
-                      <script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
-                      <script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
-        $this->appendArrayVar('headerParams',$scripts);
+    	/* scriptaculous moved to default page template / no need to suppress XML*/        
+//$scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
+                      //<script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
+                      //<script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
+        //$this->appendArrayVar('headerParams',$scripts);
         
     	$mm = $this->getObject('parse4mindmap', 'filters');
         $this->objComments = &$this->getObject('commentapi', 'blogcomments');
@@ -2290,13 +2291,14 @@ class blogops extends object
             $ret[] = $tag4cloud;
         }
 
-		$this->setVar('pageSuppressXML',true);
+        /* scriptaculous moved to default page template / no need to suppress XML*/        
+		//$this->setVar('pageSuppressXML',true);
         $icon = $this->getObject('geticon', 'htmlelements');
         $icon->setIcon('up');
-        $scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
-                      <script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
-                      <script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
-        $this->appendArrayVar('headerParams',$scripts);
+        //$scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
+                      //<script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
+                      //<script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
+        //$this->appendArrayVar('headerParams',$scripts);
         //$str = "<a href=\"#\" onclick=\"Effect.SlideUp('contextmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
         //$icon->setIcon('down');
         //$str .="<a href=\"#\" onclick=\"Effect.SlideDown('contextmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
