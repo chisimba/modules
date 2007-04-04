@@ -272,7 +272,7 @@ class dbcontent extends dbTable
 
             //process the forntpage
             $isFrontPage = $this->getParam('frontpage');
-			$this->luceneReIndex($newArr);
+			//$this->luceneReIndex($newArr);
             if ($isFrontPage == '1') {
                 $this->_objFrontPage->add($id);
             } else {
