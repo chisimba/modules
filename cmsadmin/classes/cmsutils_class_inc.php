@@ -898,12 +898,12 @@ class cmsutils extends object
             //Create heading
 
             //Create cms admin link
-            $link = $this->objLanguage->languageText('mod_cmsadmin_cpanel','cmsadmin');
+            $link = $this->objLanguage->languageText('phrase_controlpanel');
             $url = $this->uri('', 'cmsadmin');
             $cmsAdminLink = $objIcon->getTextIcon($url, 'control_panel', $link, 'png', 'icons/cms/');
             
             // Create RSS link
-            $link = $this->objLanguage->languageText('mod_cmsadmin_rss','cmsadmin');
+            $link = $this->objLanguage->languageText('phrase_rssfeeds');
             $url = $this->uri(array('action' => 'createfeed'), 'cmsadmin');
             $createRss = $objIcon->getTextIcon($url, 'rss', $link, 'png', 'icons/cms/');
             
