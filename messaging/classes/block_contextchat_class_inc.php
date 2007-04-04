@@ -118,8 +118,8 @@ class block_contextchat extends object
     public function show()
 	{
         // add scriptaculous js libraries
-        $this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
-        $this->objScriptaculous->show();
+        //$this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
+        //$this->objScriptaculous->show();
 
         // add messaging module js library
         $headerParams = $this->getJavascriptFile('messaging.js', 'messaging');
