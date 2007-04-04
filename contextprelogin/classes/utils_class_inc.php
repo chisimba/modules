@@ -189,16 +189,14 @@ class utils extends object
 		$objBlocks = & $this->newObject('blocks', 'blocks');
 		//$userMenu  = &$this->newObject('postloginmenu','toolbar');
 		$leftSideColumn = $this->loginBox(TRUE);//$this->getUserPic();//$userMenu->show();;
-		
+	   $leftSideColumn .= $this->registerBox();		
+		//$leftSideColumn =  $this->registerBox(TRUE);
 		//Add loginhistory block
-		
-		
-		//$leftSideColumn .= $objBlocks->showBlock('latest', 'blog');
-		
-		//$leftSideColumn .= $objBlocks->showBlock('loginstats', 'context');
-		
-        //$leftSideColumn .= $objBlocks->showBlock('calendar', 'eventscalendar');
-        $leftSideColumn .= $objBlocks->showBlock('stories', 'stories');
+      $leftSideColumn .= $objBlocks->showBlock('register', 'security');
+ 		
+      //$leftSideColumn .= $objBlocks->showBlock('login', 'security');
+      //echo $objBlocks->show
+      $leftSideColumn .= $objBlocks->showBlock('stories', 'stories');
         
 		$leftSideColumn .= $objBlocks->showBlock('latestpodcast', 'podcast');
 
@@ -273,6 +271,16 @@ class utils extends object
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
                     return   $objFeatureBox->show($this->_objLanguage->languageText("word_login",   "system") , $objLogin->renderLoginBox('blog'));
         }
+    }
+    
+     /**
+     * Method to display the register box for prelogin blog operations
+     *
+     * @param bool $featurebox
+     * @return string
+     */
+    public function registerBox()
+    {
     }
     
 	  /**

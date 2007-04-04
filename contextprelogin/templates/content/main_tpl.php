@@ -153,7 +153,7 @@ $config = '';
 	$other .='<hr />'.$featureBox->show('Courses', $table->show() );
 }else {
 	
-	$other .= '<div align="center" style="font-size:large;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">No Public or Open Courses is available</div>';
+	$other .= '<div align="center" style="font-size:large;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">No Public or Open Courses are available</div>';
 }
 
 //$tabBox->addTab(array('name'=>'My Courses','content' => $str));
