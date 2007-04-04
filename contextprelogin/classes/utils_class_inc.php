@@ -191,8 +191,8 @@ class utils extends object
 		$leftSideColumn = $this->loginBox(TRUE);//$this->getUserPic();//$userMenu->show();;
 	   $leftSideColumn .= $this->registerBox();		
 		//$leftSideColumn =  $this->registerBox(TRUE);
-		//Add loginhistory block
-      $leftSideColumn .= $objBlocks->showBlock('register', 'security');
+		//Add Register block
+      $leftSideColumn .= $objBlocks->showBlock('registercontext', 'security');
  		
       //$leftSideColumn .= $objBlocks->showBlock('login', 'security');
       //echo $objBlocks->show
