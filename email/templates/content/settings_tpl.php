@@ -14,64 +14,11 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 // set up javascript headers
 $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
 $this->appendArrayVar('headerParams', $headerParams);
-$this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
-$this->objScriptaculous->show();
-$this->setVar('pageSuppressXML', TRUE);
-
-// set up scriptaculous javascript
-$script = '<script type="text/javaScript">
-    Event.observe(window, "load", init, false);
-    
-    function init(){
-        Event.observe("input_name", "change", nameOrder, false);
-        Event.observe("input_username", "change", displayUsername, false);
-        Event.observe("input_defaultfolder", "change", folderButton, false);
-        Event.observe("input_autodelete", "change", deleteButton, false);
-        Event.observe("input_signature", "keypress", signatureButton, false);
-    }
-
-    function nameOrder(){
-        var fieldValue = document.getElementById("input_name").value;
-        var otherValue = document.getElementById("input_username").value;
-        var url = "index.php";
-        var pars = "module=email&action=namedisplay&field=name&value="+fieldValue+"&other="+otherValue;
-        var target = "userdisplay";
-        var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars});
-        
-        addButton("user_button");
-    }
-
-    function displayUsername(){
-        var fieldValue = document.getElementById("input_username").value;
-        var otherValue = document.getElementById("input_name").value;
-        var url = "index.php";
-        var pars = "module=email&action=namedisplay&field=username&value="+fieldValue+"&other="+otherValue;
-        var target = "userdisplay";
-        var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars});
-        
-        addButton("user_button");
-    }
-    
-    function folderButton(){
-        addButton("folder_button");
-    }
-    
-    function deleteButton(){
-        addButton("delete_button");
-    }
-    
-    function signatureButton(){
-        addButton("signature_button");
-    }
-    
-    function addButton(section){
-        var url = "index.php";
-        var pars = "module=email&action=buttondisplay&section="+section;
-        var target = section;
-        var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars});        
-    }
-</script>';
-echo $script;
+$headerParams = $this->getJavascriptFile('settings.js', 'email');
+$this->appendArrayVar('headerParams', $headerParams);
+//$this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
+//$this->objScriptaculous->show();
+//$this->setVar('pageSuppressXML', TRUE);
 
 // set up html elements
 $objIcon = &$this->newObject('geticon', 'htmlelements');
@@ -168,12 +115,14 @@ $objDrop = new dropdown('name');
 $objDrop->addOption(0, $noLabel);
 $objDrop->addOption(1, $yesLabel.'&nbsp;');
 $objDrop->setSelected($surnameFirst);
+$objDrop->extra = 'onchange="javascript:nameOrder();"';
 $surnameDrop = $objDrop->show();
 
 $objDrop = new dropdown('username');
 $objDrop->addOption(1, $noLabel);
 $objDrop->addOption(0, $yesLabel.'&nbsp;');
 $objDrop->setSelected($hideUsername);
+$objDrop->extra = 'onchange="javascript:displayUsername();"';
 $usernameDrop = $objDrop->show();
 
 $objLayer = new layer();
@@ -220,6 +169,7 @@ $userTabbedbox = $objTabbedbox->show();
 
 // set up default folder
 $objText = new textarea('signature', $signature, '5', '40');
+$objText->extra = 'onkeyup="javascript:signatureButton();"';
 $signatureText = $objText->show();
 
 $objLayer = new layer();
@@ -256,6 +206,7 @@ foreach($arrFolderList as $folder) {
     $objDrop->addOption($folder['id'], $folder['folder_name']);
 }
 $objDrop->setSelected($defaultFolderId);
+$objDrop->extra = 'onchange="javascript:folderButton();"';
 $folderDrop = $objDrop->show();
 
 $objLayer = new layer();
@@ -292,6 +243,7 @@ $objDrop = new dropdown('autodelete');
 $objDrop->addOption(0, $noLabel);
 $objDrop->addOption(1, $yesLabel.'&nbsp;');
 $objDrop->setSelected($autoDelete);
+$objDrop->extra = 'onchange="javascript:deleteButton();"';
 $autoDrop = $objDrop->show();
 
 $objLayer = new layer();

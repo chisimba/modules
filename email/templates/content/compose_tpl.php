@@ -12,8 +12,11 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  */
 
 // set up scriptaculous
-$this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
-$this->objScriptaculous->show();
+//$this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
+//$this->objScriptaculous->show();
+
+$headerParams = $this->getJavascriptFile('compose.js', 'email');
+$this->appendArrayVar('headerParams', $headerParams);
 
 // set up style for autocomplete
 $style = '<style type="text/css">
@@ -39,88 +42,6 @@ $style = '<style type="text/css">
     }
 </style>';
 echo $style;
-
-$script = '<script type="text/javaScript">
-    Event.observe(window, "load", init, false);
-    
-    function init()
-    {
-        Event.observe("input_firstname", "keyup", listfirstname, false);
-        Event.observe("input_surname", "keyup", listsurname, false);
-    }
-
-    function listfirstname()
-    {        
-        document.getElementById("input_surname").value = "";
-
-        var pars = "module=email&action=composelist&field=firstname";
-        new Ajax.Autocompleter("input_firstname", "firstnameDiv", "index.php", {parameters: pars});
-    }
-
-    function listsurname()
-    {        
-        document.getElementById("input_firstname").value = "";
-
-        var pars = "module=email&action=composelist&field=surname";
-        new Ajax.Autocompleter("input_surname", "surnameDiv", "index.php", {parameters: pars});
-    }
-    
-    function addRecipient(userid)
-    {
-        var el = document.getElementById("input_recipient");
-        var elArr = el.value.split("|");
-        var len = elArr.length
-        var exist = false;
-        for(i=0; i<len; i++){
-            if(elArr[i] == userid){
-                exist = true;
-            }
-        }
-        if(exist == false){
-            if(el.value == ""){
-                el.value = userid;
-            }else{
-                el.value = el.value + "|" + userid;
-            }
-        }
-        var url = "index.php";
-        var pars = "module=email&action=makelist&recipientList=" + el.value;
-        var target = "toList";
-        var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars, onLoading: addLoad, onComplete: addComplete});
-    }
-    
-    function addLoad()
-    {
-    	$("add_load").style.visibility = "visible";
-    }
-
-    function addComplete()
-    {
-    	$("add_load").style.visibility = "hidden";
-    }
-    
-    function deleteRecipient(userid)
-    {
-        var el = document.getElementById("input_recipient");
-        var elArr = el.value.split("|");
-        el.value = "";
-        var len = elArr.length;
-        for(i=0; i<len; i++){
-            if(elArr[i] != userid){
-                if(el.value == ""){
-                    el.value = elArr[i];
-                }else{
-                    el.value = el.value + "|" + elArr[i];
-                }
-            }
-        }
-        var url = "index.php";
-        var pars = "module=email&action=makelist&recipientList=" + el.value;
-        var target = "toList";
-        var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars, onLoading: addLoad, onComplete: addComplete});
-    }
-</script>';
-echo $script;
 
 // set up html elements
 $objIcon = &$this->newObject('geticon', 'htmlelements');
@@ -182,8 +103,7 @@ $pageData = $objHeader->show();
 
 // set up html elements
 $objInput = new textinput('firstname', '', '', '50');
-$objInput->extra = ' onfocus="javascript:
-    this.value=\'\'"';
+$objInput->extra = ' onfocus="javascript:this.value=\'\'" onkeyup="javascript:listfirstname();"';
 $firstnameInput = $objInput->show();
 
 $objLayer = new layer();
@@ -192,8 +112,7 @@ $objLayer->cssClass = 'autocomplete';
 $nameLayer = $objLayer->show();
 
 $objInput = new textinput('surname', '', '', '50');
-$objInput->extra = ' onfocus="javascript:
-    this.value=\'\'"';
+$objInput->extra = ' onfocus="javascript:this.value=\'\'" onkeyup="javascript:listsurname();"';
 $surnameInput = $objInput->show();
 
 $objLayer = new layer();

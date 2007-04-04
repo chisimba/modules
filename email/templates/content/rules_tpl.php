@@ -12,64 +12,11 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  */
 
 // set up scriptaculous
-$this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
-$this->objScriptaculous->show();
+//$this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
+//$this->objScriptaculous->show();
 
-$script = '<script type="text/javaScript">
-    Event.observe(window, "load", init, false);
-    
-    function init(){
-        var mailAction = document.getElementById("input_mailAction");
-        var messageField = document.getElementById("input_messageField");
-
-        if(mailAction){
-            Event.observe("input_mailAction", "change", mailaction, false);
-        }
-        if(messageField){
-            Event.observe("input_messageField", "change", messagefield, false);
-        }
-    }
-
-    function mailaction(){
-        var el = document.getElementById("input_mailAction");        
-        var url = "index.php";
-        var target = "actionLayer";
-        var pars = "module=email&action=actiondisplay&mailAction=" + el.value + "&target=" + target;
-        var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars});
-        var target = "destLayer";
-        var pars = "module=email&action=actiondisplay&mailAction=" + el.value + "&target=" + target;
-        var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars});
-    }
-
-    function messagefield(){        
-        var el = document.getElementById("input_messageField");        
-        var url = "index.php";
-        var target = "fieldLayer";
-        var pars = "module=email&action=filterdisplay&messageField=" + el.value + "&target=" + target;
-        var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars});
-        var target = "criteriaLayer";
-        var pars = "module=email&action=filterdisplay&messageField=" + el.value + "&target=" + target;
-        var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars});
-    }
-
-    function mailfield(){        
-        var el = document.getElementById("input_mailField");        
-        var url = "index.php";
-        var target = "criteriaLayer";
-        var pars = "module=email&action=criteriadisplay&mailField=" + el.value;
-        var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars});
-    }
-
-    function ruleaction(){        
-        var el = document.getElementById("input_ruleAction");        
-        var el1 = document.getElementById("input_mailAction");        
-        var url = "index.php";
-        var target = "destLayer";
-        var pars = "module=email&action=destdisplay&ruleAction="+el.value+"&mailAction="+el1.value;
-        var myAjax = new Ajax.Updater(target, url, {method: "get", parameters: pars});
-    }
-</script>';
-echo $script;
+$headerParams = $this->getJavascriptFile('rules.js', 'email');
+$this->appendArrayVar('headerParams', $headerParams);
 
 // set up html elements
 $objIcon = &$this->newObject('geticon', 'htmlelements');
@@ -139,6 +86,7 @@ $objDrop->addOption(NULL, '- '.$selectLabel.' -');
 $objDrop->addOption(1, $incomingLabel);
 $objDrop->addOption(2, $outgoingLabel);
 $objDrop->setSelected($mailAction);
+$objDrop->extra = 'onchange="javascript:mailaction();"';
 $mailDrop = $objDrop->show();
 
 $objDrop = new dropdown('messageField');
@@ -146,6 +94,7 @@ $objDrop->addOption(NULL, '- '.$selectLabel.' -');
 $objDrop->addOption(1, $allMessagesLabel);
 $objDrop->addOption(2, $filteredMessagesLabel);
 $objDrop->setSelected($messageField);
+$objDrop->extra = 'onchange="javascript:messagefield();"';
 $messageDrop = $objDrop->show();
 
 if ($mode == 'editrule') {
