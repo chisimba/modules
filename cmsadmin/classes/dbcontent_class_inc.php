@@ -262,7 +262,7 @@ class dbcontent extends dbTable
                           'modified_by' => $modifiedBy,
                           'published' => $published,
                           'post_lic' => $ccLicence,
-                          'checked_out'=> $creatorid,
+                          'checked_out'=> $modifiedBy,
                           'checked_out_time'=> $this->now(),
                           'metakey'=>$metakey,
                           'metadesc'=>$metadesc,
