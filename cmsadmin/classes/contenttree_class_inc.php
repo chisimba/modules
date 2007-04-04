@@ -93,7 +93,7 @@ class contenttree extends object
                 $objLink = new link($this->uri('', $module));
                 $objLink->link = $this->objLanguage->languageText('word_home');
                 $html = $objLink->show();
-                $html .= '<ul class="tree" style="margin-left:-14px;">';
+                $html .= '<ul class="tree">';
                 //start the tree building
                 $html .= $this->buildLevel('0', $currentNode, $admin, $module, $sectionAction, $contentAction);
                 $html .= '</ul>';
