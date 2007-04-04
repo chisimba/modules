@@ -1,11 +1,11 @@
-<SCRIPT LANGUAGE="JavaScript">
+<script type="text/javascript">
 <!-- Dynamic Version by: Nannette Thacker -->
 <!-- http://www.shiningstar.net -->
 <!-- Original by :  Ronnie T. Moore -->
 <!-- Web Site:  The JavaScript Source -->
 <!-- Use one function for multiple text areas on a page -->
 <!-- Limit the number of characters per textarea -->
-<!-- Begin
+
 function textCounter(field,cntfield,maxlimit) {
 if (field.value.length > maxlimit) // if too long...trim it!
 field.value = field.value.substring(0, maxlimit);
@@ -13,13 +13,12 @@ field.value = field.value.substring(0, maxlimit);
 else
 cntfield.value = maxlimit - field.value.length;
 }
-//  End -->
 </script>
 <?php
 
-$this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
-$this->objScriptaculous->show();
-$this->setVar('pageSuppressXML', TRUE);
+//$this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
+//$this->objScriptaculous->show();
+//$this->setVar('pageSuppressXML', TRUE);
 
 if ($mode == 'fixup') {
     $number = $this->getParam('autocomplete_parameter');
@@ -58,7 +57,7 @@ div.autocomplete {
     }
 </style>
 <form name="myForm"
-action="index.php?module=smssender&action=sendmessage"
+action="<?php $this->uri(array('action' => 'sendmessage')) ?>"
 method="post">
 <table  border="0" cellspacing="0" cellpadding="0">
   <tr>
@@ -72,13 +71,15 @@ method="post">
 onkeydown="textCounter(document.forms['myForm'].message1,document.forms['myForm'].remLen1,125)"
 onkeyup="textCounter(document.forms['myForm'].message1,document.forms['myForm'].remLen1,125)"><?php echo $message; ?></textarea>
       <br />
-      <input readonly type="text" name="remLen1" size="3" maxlength="3" value="125" />
+      <input readonly="readonly" type="text" name="remLen1" size="3" maxlength="3" value="125" />
 characters left</td>
   </tr>
 </table>
 <input type="submit" name="sendsms" value="Send SMS" />
 </form>
 <script type="text/javaScript">
-var pars   = 'module=smssender&action=listusers';
-new Ajax.Autocompleter("autocomplete", "autocomplete_choices", "index.php", {parameters: pars});
+//<![CDATA[
+    var pars   = 'module=smssender&action=listusers';
+    new Ajax.Autocompleter("autocomplete", "autocomplete_choices", "index.php", {parameters: pars});
+//]]>
 </script>

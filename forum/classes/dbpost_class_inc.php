@@ -595,8 +595,8 @@ class dbPost extends dbTable
         //echo($this->forumRatingsArray);
         
         // Load Scriptaculous and Prototype to Header
-        $objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
-        $objScriptaculous->show();
+        //$objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
+        //$objScriptaculous->show();
         
         // Load JavaScript Function
         $this->appendArrayVar('headerParams', $this->getTranslationAjaxScript());
