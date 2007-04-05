@@ -854,7 +854,7 @@ public function facultycount($facultyname)
             return $result;
 }*/
 
-public function faccountval($facultyname)
+/*public function faccountval($facultyname)
 {
         try {
 
@@ -870,6 +870,17 @@ public function faccountval($facultyname)
                 return FALSE;
             }
 
+        } catch(Exception $e) {
+            return NULL;
+        }
+}*/
+public function faccountval($facultyname)
+{
+        try {
+             $where =  "where FACULTY = '$facultyname'";
+             $query = 'SELECT COUNT(ID) FACRESULT FROM '.$this->schema. '.tbl_mrf_studcard '.$where;
+             $results =  $this->getWSGenericQuery($query);
+             return $results;
         } catch(Exception $e) {
             return NULL;
         }

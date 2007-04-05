@@ -58,9 +58,12 @@
        
        $this->dbstudentcard  = & $this->getObject('dbstudentcard','marketingrecruitmentforum'); 
        $res = $this->dbstudentcard->faccountval($facultyname);
+       for($i=0; $i< count($res); $i++){
+          $totcount  = $res[$i]->FACRESULT;
+       }
        
-       if(!empty($res)){
-          $val  = $res;  
+       if(!empty($totcount)){
+          $val  = $totcount;  
        }else{
           $val  = '0';
        }

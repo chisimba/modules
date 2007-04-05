@@ -353,6 +353,14 @@ function dispatch($action)
                if (!$this->objSemsSecurity->inGroup('MRSF Full')) {
                       return "noaccess_tpl.php";
                 }
+               /*$activity = $this->getParam('activityvalues');
+               $area = $this->getParam('area');
+               $province = $this->getParam('province');
+               $schoolname = $this->getParam('schoollistactivity');
+               $this->setVarByRef('activity', $activity);
+               $this->setVarByRef('area', $area);
+               $this->setVarByRef('province', $province);
+               $this->setVarByRef('schoolname', $schoolname); */
                return 'sluactivities_tpl.php';
             break;
             
