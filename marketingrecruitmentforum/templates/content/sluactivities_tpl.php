@@ -14,6 +14,7 @@
   $this->loadClass('button','htmlelements');
   
   $this->objfaculties =& $this->getObject('dbstudentcard','marketingrecruitmentforum');
+  $this->schoolnames =& $this->getObject('schoolnames','marketingrecruitmentforum');
 /*------------------------------------------------------------------------------*/  
   
 /**
@@ -45,11 +46,18 @@
 /**
   *create a dropdown list containing school values
   */   
-       $schoolvalues = array();
-       $schoolnames = $this->objfaculties->getSchools(); 
-       for($i=0; $i < count($schoolnames); $i++){
-            $schoolvalues[$i]=$schoolnames[$i]->SCHOOLNAME;
-       }
+      // $schoolvalues = array();
+       //$schoolnames = $this->objfaculties->getSchools(); 
+    //   for($i=0; $i < count($schoolnames); $i++){
+           // $schoolvalues[$i]=$schoolnames[$i]->SCHOOLNAME;
+    //   }
+       
+        $schoolnames = $this->schoolnames->readfiledata();
+
+        for($i=0; $i < count($schoolnames); $i++){
+            $schoolvalues[$i]=$schoolnames[$i];
+        }
+       
        
        $searchlist  = new dropdown('schoollistactivity');
      
@@ -60,19 +68,25 @@
           $searchlist->addOption($sessschool,$sessschool);
        }
       
-
+      
        
 /*--------------------------------------------------------------------------------------------*/       
 /**
  *create a dropdown list with all area values
  */
   
-       $postAreaInfo = $this->objfaculties->getPostInfo(); 
-       for($i=0; $i < count($postAreaInfo); $i++){
-            $areavals[$i]=$postAreaInfo[$i]->CITY;
-       }
+      // $postAreaInfo = $this->objfaculties->getPostInfo(); 
+      // for($i=0; $i < count($postAreaInfo); $i++){
+      //      $areavals[$i]=$postAreaInfo[$i]->CITY;
+      // }
     //   echo "<pre>";
    // print_r($areavals);die;
+     //$this->schoolnames =& $this->getObject('schoolnames','marketingrecruitmentforum');
+     
+      $areadetails = $this->schoolnames->readareadata();
+      for($i=0; $i < count($areadetails); $i++){
+            $areavals[$i]=$areadetails[$i];
+        }
        //create dropdown list
        $arealist  = new dropdown('area');
      
@@ -81,6 +95,8 @@
           $arealist->addOption(NULL, ''.'Please select an area');
           $arealist->addOption($sessarea,$sessarea);
        } 
+       
+       
 /*--------------------------------------------------------------------------------------------*/ 
 /**
   *create all date selection elements
