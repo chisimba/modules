@@ -361,6 +361,7 @@ class blog extends controller
                 $this->setVarByRef('postid', $postid);
                 $this->setVarByRef('posts', $posts);
                 $this->setVarByRef('userid', $userid);
+                $this->setVar('pageSuppressXML', TRUE);
                 return 'viewsingle_tpl.php';
                 break;
 
