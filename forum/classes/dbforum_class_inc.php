@@ -56,7 +56,7 @@ class dbForum extends dbTable
 		$sql='';
 		if (isset($context))
 		{
-			$sql = 'WHERE forum_context = \''.$context.'\' AND forum_type= \'context\' AND forum_visible="Y"';
+			$sql = 'WHERE forum_context = \''.$context.'\' AND forum_type= \'context\' AND forum_visible=\'Y\'';
 		}
 		
 		return $this->getRecordCount($sql);
@@ -73,7 +73,7 @@ class dbForum extends dbTable
 		$sql='';
 		if (isset($context))
 		{
-			$sql = 'WHERE forum_context = \''.$context.'\' AND forum_type= \'context\' AND forum_visible="Y"';
+			$sql = 'WHERE forum_context = \''.$context.'\' AND forum_type= \'context\' AND forum_visible=\'Y\'';
 		}
 		
 		return $this->getAll($sql);
@@ -90,7 +90,7 @@ class dbForum extends dbTable
 		$sql='';
 		if (isset($context))
 		{
-			$sql = 'WHERE forum_context = "'.$context.'" AND forum_type= \'context\'';
+			$sql = 'WHERE forum_context = \''.$context.'\' AND forum_type= \'context\'';
 		}
 		
 		return $this->getAll($sql);
@@ -150,15 +150,15 @@ class dbForum extends dbTable
         FROM tbl_forum LEFT JOIN tbl_forum_topic AS topicCountLink ON ( topicCountLink.forum_id = tbl_forum.id ) 
         LEFT JOIN tbl_forum_post AS postCountLink ON ( postCountLink.topic_id = topicCountLink.id )  ';
         
-        $sql .= ' WHERE forum_visible="Y" ';
+        $sql .= ' WHERE forum_visible=\'Y\' ';
         
         if (isset($context))
         {
-            $sql .= '  AND tbl_forum.forum_context = "'.$context.'" AND forum_type= \'context\'';
+            $sql .= '  AND tbl_forum.forum_context = \''.$context.'\' AND forum_type= \'context\'';
         }
         
         $sql .= ' GROUP BY tbl_forum.id';
-        $sql .= ' ORDER BY defaultforum, topics DESC  ';
+        $sql .= ' ORDER BY defaultforum, topicCountLink.id DESC  ';
         
         return $this->getArray($sql);
     }
@@ -174,7 +174,7 @@ class dbForum extends dbTable
 	*/
     function otherForums($forum_id, $context)
     {
-        $sql = 'SELECT tbl_forum.id AS forum_id, tbl_forum.*, count(tbl_forum_topic.id) AS topics from tbl_forum_topic RIGHT JOIN tbl_forum ON (tbl_forum_topic.forum_id = tbl_forum.id) WHERE forum_visible="Y" AND forum_type= \'context\' AND tbl_forum.forum_context = "'.$context.'" AND tbl_forum.id != "'.$forum_id.'"';
+        $sql = 'SELECT tbl_forum.id AS forum_id, tbl_forum.*, count(tbl_forum_topic.id) AS topics from tbl_forum_topic RIGHT JOIN tbl_forum ON (tbl_forum_topic.forum_id = tbl_forum.id) WHERE forum_visible=\'Y\' AND forum_type= \'context\' AND tbl_forum.forum_context = \''.$context.'\' AND tbl_forum.id != \''.$forum_id.'\'';
 	 
 	 $sql .= ' GROUP BY tbl_forum.id';
      $sql .= ' ORDER BY defaultforum, topics DESC  ';
@@ -284,7 +284,7 @@ class dbForum extends dbTable
 	*/
     function getDefaultForum($context)
     {
-		 $sql = 'SELECT id FROM tbl_forum WHERE forum_context= "'.$context.'"  AND forum_type= \'context\' AND defaultforum="Y"';
+		 $sql = 'SELECT id FROM tbl_forum WHERE forum_context= \''.$context.'\'  AND forum_type= \'context\' AND defaultforum=\'Y\'';
          
          $list = $this->getArray($sql);
          
@@ -419,7 +419,7 @@ class dbForum extends dbTable
     */
     function getWorkgroupForum($context, $workgroup)
     {
-        $sql = 'SELECT id FROM tbl_forum WHERE forum_context= "'.$context.'"  AND forum_workgroup= "'.$workgroup.'"';
+        $sql = 'SELECT id FROM tbl_forum WHERE forum_context= \''.$context.'\'  AND forum_workgroup= \''.$workgroup.'\'';
         
         $list = $this->getArray($sql);
         

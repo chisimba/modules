@@ -150,9 +150,9 @@ class dbtopic extends dbTable
         // Get the type of topic
         .' INNER JOIN tbl_forum_discussiontype ON (tbl_forum_topic.type_id = tbl_forum_discussiontype.id)'
         // Get the title of the topic
-        .' INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id AND tbl_forum_post_text.original_post = "1")'
+        .' INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id AND tbl_forum_post_text.original_post = \'1\')'
         // Check if the user has read this topic alreadt
-        .' LEFT JOIN tbl_forum_topic_read ON (tbl_forum_topic.id = tbl_forum_topic_read.topic_id AND tbl_forum_topic_read.userId = "'.$userId.'") '
+        .' LEFT JOIN tbl_forum_topic_read ON (tbl_forum_topic.id = tbl_forum_topic_read.topic_id AND tbl_forum_topic_read.userId = \''.$userId.'\') '
         // Check if this topic has a tangent
         .' LEFT  JOIN tbl_forum_topic as tangentCheck ON ( tangentCheck.topic_tangent_parent = tbl_forum_topic.id ) '
         // Get details of the last post
@@ -160,10 +160,10 @@ class dbtopic extends dbTable
         // Get user who did the last post
         .' LEFT  JOIN tbl_users as lastPostUser ON ( post2.userId = lastPostUser.userId ) '
         // Restrict to current forum and topics that aren't tangents
-        .' WHERE tbl_forum_topic.forum_id="'.$forum_id.'" AND tbl_forum_topic.topic_tangent_parent = "0"  ';
+        .' WHERE tbl_forum_topic.forum_id=\''.$forum_id.'\' AND tbl_forum_topic.topic_tangent_parent = \'0\'  ';
         //OR tbl_forum_topic.topic_tangent_parent = 0)
         if ($archiveDate != NULL) {
-            $sql .= ' AND tbl_forum_topic.dateLastUpdated > "'.$archiveDate.' 00:00:00"';
+            $sql .= ' AND tbl_forum_topic.dateLastUpdated > \''.$archiveDate.' 00:00:00\'';
         }
         
         $sql .= $additionalWhere;
@@ -206,7 +206,7 @@ class dbtopic extends dbTable
     */
     function getLastRightPointer($forum) 
     {
-        $sql = 'SELECT tbl_forum_topic.rght FROM tbl_forum_topic WHERE tbl_forum_topic.forum_id = "'.$forum.'"  ORDER BY rght DESC LIMIT 1';
+        $sql = 'SELECT tbl_forum_topic.rght FROM tbl_forum_topic WHERE tbl_forum_topic.forum_id = \''.$forum.'\'  ORDER BY rght DESC LIMIT 1';
         
         $list =$this->getArray($sql);
         
@@ -231,7 +231,7 @@ class dbtopic extends dbTable
                 INNER JOIN tbl_forum_post AS post2 ON (tbl_forum_topic.last_post = post2.id)
                 LEFT JOIN tbl_users ON ( tbl_forum_topic.userId = tbl_users.userId )
                 LEFT  JOIN tbl_users as lastPostUser ON ( post2.userId = lastPostUser.userId )
-                WHERE tbl_forum_topic.topic_tangent_parent = "'.$topic.'"
+                WHERE tbl_forum_topic.topic_tangent_parent = \''.$topic.'\'
 GROUP BY tbl_forum_topic.id                ';
         return $this->getArray($sql);
     }
@@ -391,7 +391,7 @@ GROUP BY tbl_forum_topic.id                ';
     */
     function getTopicDetails($topic_id)
     {
-        $sql = 'SELECT tbl_forum_topic.*, tbl_forum_discussiontype.*, tbl_forum_topic.id AS topic_id, tbl_forum_topic.status AS topicstatus, post_title FROM tbl_forum_topic INNER JOIN tbl_forum_post_text ON ( tbl_forum_topic.first_post = tbl_forum_post_text.post_id AND tbl_forum_post_text.original_post = "1" ) INNER JOIN tbl_forum_discussiontype ON (tbl_forum_topic.type_id = tbl_forum_discussiontype.id) WHERE tbl_forum_topic.id = "'.$topic_id.'" GROUP BY tbl_forum_topic.id LIMIT 1';
+        $sql = 'SELECT tbl_forum_topic.*, tbl_forum_discussiontype.*, tbl_forum_topic.id AS topic_id, tbl_forum_topic.status AS topicstatus, post_title FROM tbl_forum_topic INNER JOIN tbl_forum_post_text ON ( tbl_forum_topic.first_post = tbl_forum_post_text.post_id AND tbl_forum_post_text.original_post = "1" ) INNER JOIN tbl_forum_discussiontype ON (tbl_forum_topic.type_id = tbl_forum_discussiontype.id) WHERE tbl_forum_topic.id = \''.$topic_id.'\' GROUP BY tbl_forum_topic.id LIMIT 1';
         
         $topic = $this->getArray($sql);
         
@@ -411,7 +411,7 @@ GROUP BY tbl_forum_topic.id                ';
     {
         $sql = 'SELECT tbl_forum.* FROM tbl_forum_topic 
         INNER JOIN tbl_forum ON ( tbl_forum_topic.forum_id = tbl_forum.id) 
-        WHERE tbl_forum_topic.id = "'.$topic_id.'" GROUP BY tbl_forum_topic.id LIMIT 1';
+        WHERE tbl_forum_topic.id = \''.$topic_id.'\' GROUP BY tbl_forum_topic.id LIMIT 1';
         
         $forum = $this->getArray($sql);
         
@@ -506,7 +506,7 @@ GROUP BY tbl_forum_topic.id                ';
     */
     function moveAllTangentsToRootTopic($topic)
     {
-        $tangents = $this->getAll(' WHERE topic_tangent_parent="'.$topic.'"');
+        $tangents = $this->getAll(' WHERE topic_tangent_parent=\''.$topic.'\'');
         
         $this->beginTransaction();
         $this->update('topic_tangent_parent', $topic, array('topic_tangent_parent'=>'0'));
@@ -564,10 +564,10 @@ GROUP BY tbl_forum_topic.id                ';
     */
     function getNumTopicsInForum($forum_id, $includeTangents=TRUE)
     {
-        $sql = ' WHERE forum_id="'.$forum_id.'"';
+        $sql = ' WHERE forum_id=\''.$forum_id.'\'';
         
         if (!$includeTangents) {
-            $sql .= ' AND topic_tangent_parent="0" ';
+            $sql .= ' AND topic_tangent_parent=\'0\' ';
         }
         
         return $this->getRecordCount($sql);

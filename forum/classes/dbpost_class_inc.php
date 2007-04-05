@@ -165,7 +165,7 @@ class dbPost extends dbTable
     */
     function getLastRightPointer($forum) 
     {
-        $sql = 'SELECT tbl_forum_post.rght FROM tbl_forum_topic  INNER JOIN tbl_forum_post ON (tbl_forum_post.topic_id = tbl_forum_topic.id) WHERE tbl_forum_topic.forum_id = "'.$forum.'" ORDER BY rght DESC LIMIT 1';
+        $sql = 'SELECT tbl_forum_post.rght FROM tbl_forum_topic  INNER JOIN tbl_forum_post ON (tbl_forum_post.topic_id = tbl_forum_topic.id) WHERE tbl_forum_topic.forum_id = \''.$forum.'\' ORDER BY rght DESC LIMIT 1';
         
         $list =$this->getArray($sql);
         
@@ -183,7 +183,7 @@ class dbPost extends dbTable
     */
     function getTopicPointer($topic_id)
     {
-        $sql = 'SELECT lft, rght FROM tbl_forum_post WHERE topic_id="'.$topic_id.'" AND post_parent = "0" ORDER BY level LIMIT 1'; 
+        $sql = 'SELECT lft, rght FROM tbl_forum_post WHERE topic_id=\''.$topic_id.'\' AND post_parent = \'0\' ORDER BY level LIMIT 1'; 
         
         $array = $this->getArray($sql);
         
@@ -203,7 +203,7 @@ class dbPost extends dbTable
     */
     function getLastPostOrder($topic_id)
     {
-        $sql = 'SELECT post_order FROM tbl_forum_post WHERE topic_id="'.$topic_id.'" ORDER BY post_order DESC LIMIT 1';
+        $sql = 'SELECT post_order FROM tbl_forum_post WHERE topic_id=\''.$topic_id.'\' ORDER BY post_order DESC LIMIT 1';
         $array = $this->getArray($sql);
         
         if (count($array) == 0) {
@@ -220,7 +220,7 @@ class dbPost extends dbTable
     */
     function getPostRightPointer($post_id)
     {
-        $sql = 'SELECT rght FROM tbl_forum_post WHERE id="'.$post_id.'" LIMIT 1';
+        $sql = 'SELECT rght FROM tbl_forum_post WHERE id=\''.$post_id.'\' LIMIT 1';
         $array = $this->getArray($sql);
         
         if (count($array) == 0) {
@@ -251,7 +251,7 @@ class dbPost extends dbTable
         LEFT JOIN tbl_forum_post AS replypost ON (tbl_forum_post.id = replypost.post_parent)
         LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND languagecheck.original_post="0" AND tbl_forum_post_text.language != languagecheck.language)
         LEFT JOIN tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id)
-        WHERE tbl_forum_post.topic_id = "'.$topic_id.'" AND tbl_forum_post.lft >= "'.$pointers['lft']. '" AND tbl_forum_post.rght <= "'.$pointers['rght'].'" 
+        WHERE tbl_forum_post.topic_id = \''.$topic_id.'\' AND tbl_forum_post.lft >= \''.$pointers['lft']. '\' AND tbl_forum_post.rght <= \''.$pointers['rght'].'\' 
         GROUP BY tbl_forum_post.id ORDER BY lft';
         
         return $this->getArray($sql);
@@ -268,13 +268,13 @@ class dbPost extends dbTable
         $sql = 'SELECT tbl_forum_post.*,  tbl_forum_post_text.*, tbl_users.firstname, tbl_users.surname, 
         tbl_forum_post_attachment.attachment_id, replypost.id AS replypost, languagecheck.id AS anotherlanguage, tbl_forum_post_ratings.rating
         FROM tbl_forum_post 
-        INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id  AND tbl_forum_post_text.original_post = "1") 
+        INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id  AND tbl_forum_post_text.original_post = \'1\') 
         LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId ) 
         LEFT JOIN tbl_forum_post_attachment ON (tbl_forum_post.id = tbl_forum_post_attachment.post_id)
         LEFT JOIN tbl_forum_post AS replypost ON (tbl_forum_post.id = replypost.post_parent)
-        LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND languagecheck.original_post="0" AND tbl_forum_post_text.language != languagecheck.language) 
+        LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND languagecheck.original_post=\'0\' AND tbl_forum_post_text.language != languagecheck.language) 
         LEFT JOIN tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id) 
-        WHERE tbl_forum_post.topic_id = "'.$topic.'" GROUP BY tbl_forum_post.id ORDER BY post_order';
+        WHERE tbl_forum_post.topic_id = \''.$topic.'\' GROUP BY tbl_forum_post.id ORDER BY post_order';
         
         return $this->getArray($sql);
     }
@@ -289,15 +289,15 @@ class dbPost extends dbTable
         $sql = 'SELECT tbl_forum_post.*, tbl_forum_topic.*,  tbl_forum_post_text.*, forum_name, forum_id, tbl_users.firstname, tbl_users.surname, 
         tbl_forum_post_attachment.attachment_id, replyPost.id AS replypost, languagecheck.id AS anotherlanguage, 
         tbl_forum_post_ratings.rating, tbl_forum_post.lft as postleft, tbl_forum_post.rght as postright
-        FROM tbl_forum_post INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id AND tbl_forum_post_text.original_post="1") 
+        FROM tbl_forum_post INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id AND tbl_forum_post_text.original_post=\'1\') 
         INNER JOIN tbl_forum_topic ON (tbl_forum_topic.id = tbl_forum_post.topic_id) 
         INNER JOIN tbl_forum ON (tbl_forum.id = tbl_forum_topic.forum_id) 
         LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId ) 
         LEFT JOIN tbl_forum_post_attachment ON (tbl_forum_post.id = tbl_forum_post_attachment.post_id)
         LEFT JOIN tbl_forum_post AS replyPost ON (tbl_forum_post.id = replyPost.post_parent)
-        LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND languagecheck.original_post="0" AND tbl_forum_post_text.language != languagecheck.language) 
+        LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND languagecheck.original_post=\'0\' AND tbl_forum_post_text.language != languagecheck.language) 
         LEFT JOIN tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id) 
-        WHERE tbl_forum_post.topic_id="'.$topic.'" AND tbl_forum_post.post_parent = "0" 
+        WHERE tbl_forum_post.topic_id=\''.$topic.'\' AND tbl_forum_post.post_parent = \'0\' 
         GROUP BY tbl_forum_post.id  LIMIT 1';//AND tbl_forum_post.level = "1" 
         
         $results = $this->getArray($sql);
@@ -318,14 +318,14 @@ class dbPost extends dbTable
     {
         $sql = 'SELECT tbl_forum_post.*, tbl_forum_post_text.*, tbl_forum_topic.*, tbl_users.firstname, tbl_users.surname, tbl_forum_post.datelastupdated AS datelastupdated, tbl_forum_post_attachment.attachment_id, replyPost.id AS replypost, languagecheck.id AS anotherlanguage, tbl_forum_post_ratings.rating, tbl_forum_post.lft as postleft, tbl_forum_post.rght as postright
         FROM tbl_forum_post 
-        INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id AND tbl_forum_post_text.original_post="1" ) 
+        INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id AND tbl_forum_post_text.original_post=\'1\' ) 
         INNER JOIN tbl_forum_topic ON (tbl_forum_post.topic_id = tbl_forum_topic.id) 
         LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId ) 
         LEFT JOIN tbl_forum_post_attachment ON (tbl_forum_post.id = tbl_forum_post_attachment.post_id)
         LEFT JOIN tbl_forum_post AS replyPost ON (tbl_forum_post.id = replyPost.post_parent)
-        LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND languagecheck.original_post="0" AND tbl_forum_post_text.language != languagecheck.language)
+        LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND languagecheck.original_post=\'0\' AND tbl_forum_post_text.language != languagecheck.language)
         LEFT JOIN tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id) 
-        WHERE tbl_forum_post_text.post_id = "'.$post.'" GROUP BY tbl_forum_post.id LIMIT 1';
+        WHERE tbl_forum_post_text.post_id = \''.$post.'\' GROUP BY tbl_forum_post.id LIMIT 1';
         
         $results = $this->getArray($sql);
         
@@ -353,7 +353,7 @@ class dbPost extends dbTable
         LEFT JOIN tbl_forum_post_attachment ON (tbl_forum_post.id = tbl_forum_post_attachment.post_id)
         LEFT JOIN tbl_forum_post AS replyPost ON (tbl_forum_post.id = replyPost.post_parent)
         LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND tbl_forum_post_text.language != languagecheck.language)
-        WHERE tbl_forum_post_text.id = "'.$postTextId.'" GROUP BY tbl_forum_post.id LIMIT 1';
+        WHERE tbl_forum_post_text.id = \''.$postTextId.'\' GROUP BY tbl_forum_post.id LIMIT 1';
         
         
         //return array('post_text'=>$sql);
@@ -804,10 +804,10 @@ class dbPost extends dbTable
     function getLastPost($forum)
     {
         $sql = 'SELECT tbl_forum_post_text. * , tbl_forum_post.topic_id, tbl_users.firstname, tbl_users.surname
-        FROM tbl_forum_post INNER JOIN tbl_forum_post_text ON ( tbl_forum_post_text.post_id = tbl_forum_post.id AND tbl_forum_post_text.original_post="1")
+        FROM tbl_forum_post INNER JOIN tbl_forum_post_text ON ( tbl_forum_post_text.post_id = tbl_forum_post.id AND tbl_forum_post_text.original_post=\'1\')
         INNER JOIN tbl_forum_topic ON ( tbl_forum_post.topic_id = tbl_forum_topic.id )
         LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId ) 
-        WHERE tbl_forum_topic.forum_id = "'.$forum.'"
+        WHERE tbl_forum_topic.forum_id = \''.$forum.'\'
         ORDER BY tbl_forum_post.datelastupdated DESC LIMIT 1';
         
         $results = $this->getArray($sql);
@@ -838,10 +838,10 @@ class dbPost extends dbTable
         } else {
             // If forum exists, get the last '10' posts or whatever limit is specified
             $sql = 'SELECT tbl_forum_post_text. * , tbl_forum_post.topic_id, tbl_users.firstname, tbl_users.surname
-            FROM tbl_forum_post INNER JOIN tbl_forum_post_text ON ( tbl_forum_post_text.post_id = tbl_forum_post.id AND tbl_forum_post_text.original_post="1")
+            FROM tbl_forum_post INNER JOIN tbl_forum_post_text ON ( tbl_forum_post_text.post_id = tbl_forum_post.id AND tbl_forum_post_text.original_post=\'1\')
             INNER JOIN tbl_forum_topic ON ( tbl_forum_post.topic_id = tbl_forum_topic.id )
             LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId ) 
-            WHERE tbl_forum_topic.forum_id = "'.$workgroupForum.'"
+            WHERE tbl_forum_topic.forum_id = \''.$workgroupForum.'\'
             ORDER BY tbl_forum_post.dateLastUpdated DESC LIMIT '.$limit;
             
             $results = $this->getArray($sql);
@@ -1209,7 +1209,7 @@ function clearForTangent()
     */
     function getIdFirstPostInTopic($topic_id)
     {
-        $sql = 'SELECT id FROM tbl_forum_post WHERE topic_id="'.$topic_id.'" ORDER BY post_order LIMIT 1';
+        $sql = 'SELECT id FROM tbl_forum_post WHERE topic_id=\''.$topic_id.'\' ORDER BY post_order LIMIT 1';
         $results = $this->getArray($sql);
         
         if (count($results) > 0) {
@@ -1253,7 +1253,7 @@ function clearForTangent()
         $sql = 'SELECT tbl_forum.* FROM tbl_forum_post 
         INNER JOIN tbl_forum_topic ON ( tbl_forum_post.topic_id = tbl_forum_topic.id) 
         INNER JOIN tbl_forum ON ( tbl_forum_topic.forum_id = tbl_forum.id) 
-        WHERE tbl_forum_topic.id = "'.$post_id.'" GROUP BY tbl_forum_post.id LIMIT 1';
+        WHERE tbl_forum_topic.id = \''.$post_id.'\' GROUP BY tbl_forum_post.id LIMIT 1';
         
         $forum = $this->getArray($sql);
         
@@ -1332,7 +1332,7 @@ function clearForTangent()
         }
         
         // Check if there are any duplicate Left Values
-        $leftSql = 'SELECT t1.id  FROM tbl_forum_post t1, tbl_forum_post t2 WHERE (t1.lft = t2.lft) AND t1.topic_id = "'.$topic.'" AND t2.topic_id = "'.$topic.'" AND t1.id != t2.id GROUP BY t1.lft';
+        $leftSql = 'SELECT t1.id  FROM tbl_forum_post t1, tbl_forum_post t2 WHERE (t1.lft = t2.lft) AND t1.topic_id = \''.$topic.'\' AND t2.topic_id = \''.$topic.'\' AND t1.id != t2.id GROUP BY t1.lft';
         $leftResults = $this->getArray($leftSql);
         
         if (count($leftResults) > 0) {
@@ -1343,7 +1343,7 @@ function clearForTangent()
         }
         
         // Check if there are any duplicate Right Values
-        $rightSql = 'SELECT t1.id  FROM tbl_forum_post t1, tbl_forum_post t2 WHERE (t1.rght = t2.rght) AND t1.topic_id = "'.$topic.'" AND t2.topic_id = "'.$topic.'" AND t1.id != t2.id GROUP BY t1.lft';
+        $rightSql = 'SELECT t1.id  FROM tbl_forum_post t1, tbl_forum_post t2 WHERE (t1.rght = t2.rght) AND t1.topic_id = \''.$topic.'\' AND t2.topic_id = \''.$topic.'\' AND t1.id != t2.id GROUP BY t1.lft';
         $rightResults = $this->getArray($rightSql);
         
         if (count($rightResults) > 0) {
@@ -1390,7 +1390,7 @@ function clearForTangent()
         $right = $left+1;
        
         // get all children of this node
-        $result = $this->getAll(' WHERE  post_parent="'.$parent.'"');
+        $result = $this->getAll(' WHERE  post_parent=\''.$parent.'\'');
         
         foreach ($result as $row)
         {
@@ -1449,9 +1449,9 @@ function clearForTangent()
     function getChildPostsSQL($topic, $left, $right)
     {
         $sql = 'SELECT tbl_forum_post.*, tbl_forum_post_text.*, tbl_users.firstname, tbl_users.surname FROM tbl_forum_post 
-        INNER JOIN tbl_forum_post_text ON ( tbl_forum_post_text.post_id = tbl_forum_post.id AND tbl_forum_post_text.original_post="1")
+        INNER JOIN tbl_forum_post_text ON ( tbl_forum_post_text.post_id = tbl_forum_post.id AND tbl_forum_post_text.original_post=\'1\')
         LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId ) 
-        WHERE topic_id="'.$topic.'" AND lft>'.$left.' AND rght<'.$right.' ORDER BY lft';
+        WHERE topic_id=\''.$topic.'\' AND lft>'.$left.' AND rght<'.$right.' ORDER BY lft';
         
         return $this->getArray($sql);
     }
