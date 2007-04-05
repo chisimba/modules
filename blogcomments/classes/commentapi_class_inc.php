@@ -191,7 +191,7 @@ class commentapi extends object
 		if(empty($comms))
 		{
 			//shouldn't happen except on permalinks....?
-			return $objFeatureBox->showContent($this->objLanguage->languageText("mod_blogcomments_comment4post", "blogcomments"), "<em>".$this->objLanguage->languageText("mod_blogcomments_nocomments", "blogcomments")."</em>");
+			return $objFeatureBox->showComment($this->objLanguage->languageText("mod_blogcomments_comment4post", "blogcomments"), "<em>".$this->objLanguage->languageText("mod_blogcomments_nocomments", "blogcomments")."</em>");
 		}
 
 		$commtext = NULL;
@@ -260,7 +260,7 @@ class commentapi extends object
 
 			
 
-			$commtext .= $objFeatureBox->showContent($fboxhead, $washer->parseText($fboxcontent));
+			$commtext .= $objFeatureBox->showComment($fboxhead, $washer->parseText($fboxcontent));
 		}
 		return $commtext;
 	}
