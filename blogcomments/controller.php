@@ -118,7 +118,7 @@ class blogcomments extends controller
             	
             case 'updatecomment':
             	$commid = $this->getParam('commid');
-            	$edits = $this->getParam('newcomment');
+            	$edits = nl2br($this->getParam('newcomment'));
             	echo $this->objDbcomm->updateComment($commid, $edits);
             	break;
             	
