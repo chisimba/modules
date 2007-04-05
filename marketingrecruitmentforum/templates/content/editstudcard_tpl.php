@@ -21,6 +21,7 @@
       $this->objformval = & $this->getObject('form','htmlelements');
       $this->objfaculties =& $this->getObject('dbstudentcard','marketingrecruitmentforum');
       $this->objstudcard =& $this->getObject('dbstudentcard','marketingrecruitmentforum');
+      $this->schoolnames =& $this->getObject('schoolnames','marketingrecruitmentforum');
 		         
 /*------------------------------------------------------------------------------*/     
     /**
@@ -170,10 +171,11 @@
         * create dropdwonlist and populate it with values in the multi-dim array
         */
         
-       $schoolnames = $this->objfaculties->getSchools(); 
-       for($i=0; $i < count($schoolnames); $i++){
-            $school[$i]=$schoolnames[$i]->SCHOOLNAME;
-       }
+      $schoolnames = $this->schoolnames->readfiledata();
+
+        for($i=0; $i < count($schoolnames); $i++){
+            $school[$i]=$schoolnames[$i];
+        }
        //create dropdown list
        $schoollist  = new dropdown('schoollist');
        
@@ -188,16 +190,16 @@
 /**
  *create a dropdown list with all area values
  */
-     $postAreaInfo = $this->objfaculties->getPostInfo(); 
+     //postAreaInfo = $this->objfaculties->getPostInfo(); 
     //echo "<pre>";
     //print_r($postAreaInfo);die;
+              
+       $postAreaInfo = $this->schoolnames->readareadata();
        for($i=0; $i < count($postAreaInfo); $i++){
-            $areavals[$i]=$postAreaInfo[$i]->CITY;
+            $areavals[$i]=$postAreaInfo[$i];
        }
        //create dropdown list
        $arealist  = new dropdown('areaschool');
-       
-       
        sort($areavals);
        foreach($areavals as $sessarea){
           $arealist->addOption(NULL, ''.'Please select an area');

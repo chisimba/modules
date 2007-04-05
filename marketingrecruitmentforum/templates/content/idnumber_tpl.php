@@ -91,11 +91,12 @@
        $objForm = new form('idsearch',$this->uri(array('action'=>'searchidnumber')));
        $objForm->displayType = 3;
        $objForm->addToForm($this->objMainheading->show() .'<br />'."<span class=error>".'<i>'.$this->objheading->show().'</i>'."</span>". '<br />'. $myTable->show());
-       $objForm->addRule('lastname','Please enter surname','required');
-       $objForm->addRule(array('name'=>'lastname','length'=>45),'Surname cannot be longer than 45characters', 'maxlength');
-       $objForm->addRule(array('name'=>'idnumber','length'=>13),$idexceed, 'maxlength');
-       $objForm->addRule('firstname','Please enter name','required');
+       $objForm->addRule('firstname','Please enter surname','required');
        $objForm->addRule(array('name'=>'firstname','length'=>45),'Name cannot be longer than 45characters', 'maxlength');
+       $objForm->addRule('lastname','Please enter name','required');
+       $objForm->addRule(array('name'=>'lastname','length'=>45),'Surname cannot be longer than 45characters', 'maxlength');
+       //$objForm->addRule(array('name'=>'idnumber','length'=>13),$idexceed, 'maxlength');
+       
        
 
 /*----------------------------------------------------------------------------*/

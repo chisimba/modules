@@ -197,12 +197,7 @@ $myTable->addCell($objlead->show());
 $myTable->endRow();
 
 $myTable->startRow();
-$myTable->addCell('');
 $myTable->addCell('Please select the position(s) you held');
-$myTable->endRow();
-
-$myTable->startRow();
-$myTable->addCell('');
 $myTable->addCell($listleadership->show().' '.' '.'Please specify' .' '.' '.$this->objleadershipother->show());
 $myTable->endRow();
 

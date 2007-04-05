@@ -67,7 +67,7 @@
           $searchlist->addOption(NULL, ''.$schoolselect);
           $searchlist->addOption($sessschool,$sessschool);
        }
-      
+       $searchlist->setSelected($this->getParam('schoollistactivity'));
       
        
 /*--------------------------------------------------------------------------------------------*/       
@@ -95,7 +95,7 @@
           $arealist->addOption(NULL, ''.'Please select an area');
           $arealist->addOption($sessarea,$sessarea);
        } 
-       
+       $arealist->setSelected($this->getParam('area'));
        
 /*--------------------------------------------------------------------------------------------*/ 
 /**
@@ -124,7 +124,7 @@
    $this->objactivitydropdown->addOption('Cape Careers Exhibitions','Cape Careers Exhibitions') ;
    $this->objactivitydropdown->addOption('Individual visit to SLU office','Individual visit to SLU office') ;
    $this->objactivitydropdown->addOption('Other','Other') ;
-
+   $this->objactivitydropdown->setSelected($this->getParam('activityvalues'));
    
    //All province names  
    $this->objprovincedropdown  = new dropdown('province');
@@ -138,6 +138,7 @@
    $this->objprovincedropdown->addOption('Mpumalanga','Mpumalanga') ;
    $this->objprovincedropdown->addOption('Limpopo Province','Limpopo Province') ;
    $this->objprovincedropdown->addOption('North-West Province','North-West Province') ;
+   $this->objprovincedropdown->setSelected($this->getParam('activityvalues'));
   // $this->objprovincedropdown->size = 60;
 
 /*------------------------------------------------------------------------------*/   

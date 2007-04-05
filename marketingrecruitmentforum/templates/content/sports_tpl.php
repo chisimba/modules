@@ -198,17 +198,12 @@ $myTable->addCell($objlead->show());
 $myTable->endRow();
 
 $myTable->startRow();
-$myTable->addCell('');
 $myTable->addCell('Please select the position(s) you held');
-$myTable->endRow();
-
-$myTable->startRow();
-$myTable->addCell('');
 $myTable->addCell($listleadership->show().' '.' '.'Please specify' .' '.' '.$this->objleadershipother->show());
 $myTable->endRow();
 
-$myTable->startRow();
 
+$myTable->startRow();
 $myTable->addCell('Which sporting codes have you been involved in?');
 $myTable->addCell($list3->show().' '.' '.'At what level' .' '.' '."&nbsp"."&nbsp"."&nbsp".$list->show());
 $myTable->endRow();
