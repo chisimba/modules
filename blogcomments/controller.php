@@ -115,6 +115,22 @@ class blogcomments extends controller
             	$this->objDbcomm->addComm2Db($addinfo);
 
             	$this->nextAction('viewsingle',array('postid' => $addinfo['postid'], 'userid' => $this->objUser->userId()), $addinfo['mod']);
+            	
+            case 'updatecomment':
+            	$commid = $this->getParam('commid');
+            	$edits = $this->getParam('newcomment');
+            	echo $this->objDbcomm->updateComment($commid, $edits);
+            	break;
+            	
+            case 'deletecomment':
+            	$commentid = $this->getParam('commentid');
+            	$this->objDbcomm->deletecomment($commentid);
+            	
+            	//$this->nextAction('viewsingle',array('postid' => $addinfo['postid'], 'userid' => $this->objUser->userId()), $addinfo['mod']);
+            	
+            default:
+            	die("unknown action");
+            	break;
         }
     }
 }

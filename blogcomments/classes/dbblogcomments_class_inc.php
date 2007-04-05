@@ -36,6 +36,18 @@ class dbblogcomments extends dbTable
 		$this->objLanguage = $this->getObject('language', 'language');
 		$this->objConfig = $this->getObject('altconfig', 'config');
 	}
+	
+	/**
+	 * Method to delete a comment
+	 * 
+	 * @param string id
+	 * @return bool
+	 */
+	public function deleteComment($id)
+	{
+		$this->_changeTable('tbl_blogcomments');
+		return $this->delete('id', $id, 'tbl_blogcomments');
+	}
 
 	/**
 	 * Method to add a comment to the comments table
@@ -138,6 +150,26 @@ class dbblogcomments extends dbTable
 	{
 		$this->_changeTable("tbl_blog_posts");
 		return $this->getAll("WHERE id = '$id'");
+	}
+	
+	/**
+	 * Method to grab a single comment by ID
+	 * 
+	 * @param $id
+	 * @return array
+	 */
+	public function getCommentById($id)
+	{
+		$this->_changeTable('tbl_blogcomments');
+		return $this->getAll("WHERE id = '$id'");
+	}
+	
+	public function updateComment($id, $newcomment)
+	{
+		$this->_changeTable('tbl_blogcomments');
+		//$commarr = $this->getCommentById($id);
+		$this->update('id', $id, array('comment_content' => $newcomment));
+		return $newcomment;
 	}
 
 		/**

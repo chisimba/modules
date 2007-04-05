@@ -120,7 +120,7 @@ class commentapi extends object
 		$ctbl->startRow();
 		if($editor == TRUE)
 		{
-			echo "start";
+			//echo "start";
 			$comm = $this->getObject('htmlarea','htmlelements');
 			$comm->setName('comment');
 			$comm->height = 400;
@@ -183,6 +183,7 @@ class commentapi extends object
 	 */
 	public function showComments($pid)
 	{
+		$washer = $this->getObject('washout', 'utilities');
 		$this->objDbComm = $this->getObject('dbblogcomments');
 		$objFeatureBox = $this->newObject('featurebox', 'navigation');
 		$comms = $this->objDbComm->grabComments($pid);
@@ -212,16 +213,54 @@ class commentapi extends object
 			$auth = $comm['comment_author'];
 			$authurl = $comm['comment_author_url'];
 			$authemail = $comm['comment_author_email'];
+			//do a check to see if the comment author is the viewer so that they can edit the comment inline
+			//get the userid
+			$viewerid = $this->objUser->userId();
+			$vemail = $this->objUser->email($viewerid);
+			if($vemail == $comm['comment_author_email'])
+			{
+				$scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
+                      <script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
+                      <script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
+        		$this->appendArrayVar('headerParams',$scripts);
+				//display the inline editor
+				$updateuri = 'index.php'; //$this->uri(array('module' =>'blogcomments','action' => 'updatecomment'));
+				$commid = $comm['id'];
+				$script = '<p id="editme2">'.stripslashes($comm['comment_content']).'</p>';
+				$script .= '<script type="text/javascript">';
+				$script .= "new Ajax.InPlaceEditor('editme2', '$updateuri', {rows:15,cols:40, callback: function(form, value) { return 'module=blogcomments&action=updatecomment&commid=' + escape('$commid') + '&newcomment=' +escape(value) }});";
+				$script .= "</script>";
+				
+				//echo $updateuri; die();
+				$this->objIcon = $this->getObject('geticon', 'htmlelements');
+                $edIcon = $this->objIcon->getEditIcon($this->uri(array(
+                    'action' => 'updatecomment',
+                    'id' => $comm['id'],
+                    'module' => 'blogcomments'
+                )));
+                //$editic = $edIcon->show();
+                $delIcon = $this->objIcon->getDeleteIconWithConfirm($comm['id'], array(
+                    'module' => 'blogcomments',
+                    'action' => 'deletecomment',
+                    'id' => $comm['id']
+                ) , 'blogcomments');
+                //$delic = $delIcon->show();
+                
+				$fboxcontent = $script; //stripslashes($comm['comment_content']); // . "<br /><br />" . $delIcon;
+			}
+			else {
+				$fboxcontent = stripslashes($comm['comment_content']);	
+			}
 			//$link = new href(urlencode($authurl), $auth, NULL);
 			//$link->show();
 
 			$authemail = "[".$authemail."]";
-			$authhead = $auth . " " . $authemail; // . " (".htmlentities($authurl).")";
+			$authhead = $auth; // . " " . $authemail; // . " (".htmlentities($authurl).")";
 			$fboxhead = $authhead; // . " " . $authemail;
 
-			$fboxcontent = stripslashes($comm['comment_content']);
+			
 
-			$commtext .= $objFeatureBox->showContent($fboxhead, $fboxcontent);
+			$commtext .= $objFeatureBox->showContent($fboxhead, $washer->parseText($fboxcontent));
 		}
 		return $commtext;
 	}
