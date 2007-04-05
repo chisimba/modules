@@ -30,6 +30,7 @@
      $schoolselect = $this->objLanguage->languageText('mod_marketingrecruitmentforum_schoolselect','marketingrecruitmentforum');
       
      $this->objfaculties =& $this->getObject('dbstudentcard','marketingrecruitmentforum');
+     $this->schoolnames =& $this->getObject('schoolnames','marketingrecruitmentforum');
 /*------------------------------------------------------------------------------*/      
     /**
      *create dropdwonlist with all schoolnames
@@ -46,10 +47,12 @@
       $this->objButtonGo  = new button('searchbutton', 'Go');
       $this->objButtonGo->setToSubmit();
        
-       $schoolnames = $this->objfaculties->getSchools(); 
-       for($i=0; $i < count($schoolnames); $i++){
-            $schoolvalues[$i]=$schoolnames[$i]->SCHOOLNAME;
-       }
+      
+       $schoolnames = $this->schoolnames->readfiledata();
+
+        for($i=0; $i < count($schoolnames); $i++){
+            $schoolvalues[$i]=$schoolnames[$i];
+        }
        //create dropdown list
        $schoollist  = new dropdown('schoollistnames');
      //  $schoollist->size = 50;

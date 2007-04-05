@@ -7,6 +7,7 @@
  $this->loadClass('textinput','htmlelements');
  $this->loadClass('textarea','htmlelements');
  $this->loadclass('button','htmlelements');
+  $this->schoolnames =& $this->getObject('schoolnames','marketingrecruitmentforum');
 /*------------------------------------------------------------------------------*/ 
  
  /**
@@ -130,7 +131,7 @@
   }
 /*--------------------------------------------------------------------------------------------*/               
 
-       $this->objfaculties =& $this->getObject('dbstudentcard','marketingrecruitmentforum');
+      /* $this->objfaculties =& $this->getObject('dbstudentcard','marketingrecruitmentforum');
        $schoolvalues = array();
        $schoolnames = $this->objfaculties->getSchools(); 
        for($i=0; $i < count($schoolnames); $i++){
@@ -144,7 +145,7 @@
        foreach($schoolvalues as $sessschool){
           $searchlist->addOption(NULL, ''.$schooselect);
           $searchlist->addOption($sessschool,$sessschool);
-       }
+       }*/
 /*--------------------------------------------------------------------------------------------*/ 
    /**
      *create dropdown list for all province values
@@ -165,10 +166,10 @@
 /**
  *create a dropdown list with all area values
  */
-     $postAreaInfo = $this->objfaculties->getPostInfo(); 
-       for($i=0; $i < count($postAreaInfo); $i++){
-            $areavals[$i]=$postAreaInfo[$i]->CITY;
-       }
+      $postAreaInfo = $this->schoolnames->readareadata();
+      for($i=0; $i < count($postAreaInfo); $i++){
+            $areavals[$i]=$postAreaInfo[$i];
+        }
        //create dropdown list
        $arealist  = new dropdown('areaschool');
        sort($areavals);
