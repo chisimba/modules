@@ -70,7 +70,7 @@ class hivaidsforum extends controller
                 
             case 'savecat':
                 $forumId = $this->dbHivForum->saveCategory();
-                return $this->nextAction('showcat', array('forumId' => $forumId));
+                return $this->nextAction('showcat', array('catId' => $forumId));
                 break;
                 
             case 'addtopic':

@@ -112,6 +112,7 @@ class dbhivforum extends dbtable
 	                $objTable->startRow();
 	                $objTable->addCell('<b>'.$item['post_title'].'</b>');
 	                $objTable->addCell($posted, '', '', 'right');
+	                $objTable->endRow();
     	            $inStr = $objTable->show();
     	            $inStr .= $item['post_text'];
     	            

@@ -210,7 +210,7 @@ class hivtools extends object
         $objRadio = new radio('visible');
         $objRadio->addOption('Y', $lbYes);
         $objRadio->addOption('N', $lbNo);
-        $objRadio->setSelected('yes');
+        $objRadio->setSelected('Y');
         $objRadio->setBreakSpace('&nbsp;&nbsp;&nbsp;');
         $formStr .= '<p>'.$objLabel->show().':&nbsp;&nbsp;&nbsp;'.$objRadio->show().'</p>';
         
