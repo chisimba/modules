@@ -151,7 +151,7 @@ if(!empty($rss))
 
 //$leftCol .= $this->objblogOps->rssBox('http://5ive.uwc.ac.za/index.php?module=blog&action=feed&userid=5729061010', 'Paul on 5ive');
 
-$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
+//$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 //dump the cssLayout to screen
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol);
