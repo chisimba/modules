@@ -39,7 +39,7 @@ class googleanalytics extends controller
     {
     	$objCr = $this->getObject("createanalytic", "googleanalytics");
     	$str = $objCr->show();
-    	$str=htmlspecialchars($str);
+    	$str=nl2br(htmlspecialchars($str));
         $this->setVarByRef("str", $str);
         /*
         * Return the template determined by the method resulting 
