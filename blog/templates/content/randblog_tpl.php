@@ -16,10 +16,10 @@ $rightSideColumn = NULL;
 //show the link to all blogs
 $rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
 $rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
-
+$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 //show the categories menu (if there are cats)
 $rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE, $userid);
-$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
+
 
 $leftCol = NULL;
 $middleColumn = NULL;
