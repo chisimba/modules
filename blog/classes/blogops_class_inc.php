@@ -1845,7 +1845,7 @@ class blogops extends object
             $recs = $recs-1;
         }
         if (!empty($revposts)) {
-        	echo count($revposts);
+        	//echo count($revposts);
             $lastrec = $revposts[$recs]['post_ts'];
             $firstrec = $revposts[0]['post_ts'];
             $startdate = date("m", $firstrec);
@@ -1853,6 +1853,7 @@ class blogops extends object
             //create a while loop to get all the posts between start and end dates
             $postarr = array();
             while ($startdate <= $enddate) {
+            	echo $startdate;
                 $posts = $this->objDbBlog->getPostsMonthly(mktime(0, 0, 0, $startdate, 1, date("y", $firstrec)) , $userid);
                 $postarr[$startdate] = $posts;
                 $startdate++;
