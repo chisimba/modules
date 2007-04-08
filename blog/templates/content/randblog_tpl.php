@@ -15,8 +15,9 @@ $rightSideColumn = NULL;
 //set up a link to the other users blogs...
 //show the link to all blogs
 $rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
-$rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
 $rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
+$rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
+
 //show the categories menu (if there are cats)
 $rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE, $userid);
 

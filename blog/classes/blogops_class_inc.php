@@ -1871,7 +1871,7 @@ class blogops extends object
     {
         //get the posts for each month
         $posts = $this->_archiveArr($userid);
-        //print_r($posts);die();
+        print_r($posts);die();
         if (!empty($posts)) {
             $months = array_keys($posts);
             //print_r($posts);die();
