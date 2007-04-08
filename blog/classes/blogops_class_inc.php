@@ -1845,6 +1845,7 @@ class blogops extends object
             $recs = $recs-1;
         }
         if (!empty($revposts)) {
+        	echo count($revposts);
             $lastrec = $revposts[$recs]['post_ts'];
             $firstrec = $revposts[0]['post_ts'];
             $startdate = date("m", $firstrec);
