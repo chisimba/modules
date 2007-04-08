@@ -1838,6 +1838,7 @@ class blogops extends object
     {
         //add in a foreach for each year
         $allposts = $this->objDbBlog->getAbsAllPosts($userid);
+        print_r($allposts);
         $revposts = array_reverse($allposts);
         $recs = count($revposts);
         if ($recs > 0) {
