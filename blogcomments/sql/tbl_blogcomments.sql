@@ -21,7 +21,7 @@ $fields = array(
 		),
 	'comment_author' => array(
 		'type' => 'text',
-		'length' => 50,
+		'length' => 150,
 		),
 	'comment_author_email' => array(
 		'type' => 'text',
