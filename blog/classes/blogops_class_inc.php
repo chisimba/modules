@@ -1147,10 +1147,10 @@ class blogops extends object
         }
         return $ret;
     }
-    public function addCommentForm($postid, $userid)
+    public function addCommentForm($postid, $userid, $captcha = FALSE)
     {
         $this->objComApi = $this->getObject('commentapi', 'blogcomments');
-        return $this->objComApi->commentAddForm($postid, 'blog', 'tbl_blog_posts', $userid, TRUE, TRUE, FALSE);
+        return $this->objComApi->commentAddForm($postid, 'blog', 'tbl_blog_posts', $userid, TRUE, TRUE, FALSE, $captcha);
     }
     public function setComments($post, $icon = TRUE)
     {

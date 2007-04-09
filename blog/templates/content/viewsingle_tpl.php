@@ -14,7 +14,10 @@ $rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
 $middleColumn .= ($this->objblogOps->showPosts($posts, TRUE));
 if($this->objUser->isLoggedIn() == TRUE)
 {
-	$middleColumn .= $this->objblogOps->addCommentForm($postid, $userid);
+	$middleColumn .= $this->objblogOps->addCommentForm($postid, $userid, $captcha = FALSE);
+}
+else {
+	$middleColumn .= $this->objblogOps->addCommentForm($postid, $userid, $captcha = TRUE);
 }
 
 $middleColumn .= $this->objComments->showComments($postid);

@@ -105,7 +105,7 @@ class blogcomments extends controller
 
             case 'addtodb':
             	//$this->requiresLogin(FALSE);
-            	$addinfo = $this->objComm->addToDb(NULL);
+            	$addinfo['useremail'] = $this->getParam('email');
             	$addinfo['postuserid'] = $this->getParam('userid');
             	$addinfo['postid'] = $this->getParam('postid');
             	$addinfo['table'] = $this->getParam('table');
@@ -113,6 +113,8 @@ class blogcomments extends controller
             	$addinfo['aurl'] = $this->getParam('url');
             	$addinfo['ctype'] = $this->getParam('type');
             	$addinfo['comment'] = $this->getParam('comment');
+            	$addinfo = $this->objComm->addToDb($addinfo);
+            	//print_r($addinfo);die();
             	$this->objDbcomm->addComm2Db($addinfo);
 
             	$this->nextAction('viewsingle',array('postid' => $addinfo['postid'], 'userid' => $this->objUser->userId()), $addinfo['mod']);

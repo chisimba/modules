@@ -64,7 +64,7 @@ class commentapi extends object
 	 * @param Do we want to show the types dropdown? $showtypes
 	 * @return string form
 	 */
-	public function commentAddForm($postid, $module, $table, $postuserid = NULL, $editor = TRUE, $featurebox = TRUE, $showtypes = TRUE)
+	public function commentAddForm($postid, $module, $table, $postuserid = NULL, $editor = TRUE, $featurebox = TRUE, $showtypes = TRUE, $captcha = FALSE)
 	{
 		try {
 			$this->loadClass('form', 'htmlelements');
@@ -74,6 +74,7 @@ class commentapi extends object
 			//$this->loadClass('htmlarea', 'htmlelements');
 			$this->loadClass('dropdown', 'htmlelements');
 			$this->loadClass('label', 'htmlelements');
+			//$objCaptcha = $this->getObject('captcha', 'utilities');
 		}
 		catch (customException $e)
 		{
@@ -152,7 +153,16 @@ class commentapi extends object
 			$ctbl->addCell($ctype->show());
 			$ctbl->endRow();
 		}
+		$ctbl->startRow();
+		//$objCaptcha = $this->getObject('captcha', 'utilities');
+		$captcha = new textinput('request_captcha');
+		$captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_request_captcha');
 
+		$fieldset2 = $this->newObject('fieldset', 'htmlelements');
+		$fieldset2->legend = 'Verify Image';
+		//$fieldset2->contents = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')).'<br /><div id="captchaDiv">'.$objCaptcha->show().'</div>'.$captcha->show().$required.'  <a href="javascript:redraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>';
+
+		$ctbl->endRow();
 		//$cform->addRule('comment', $this->objLanguage->languageText("mod_blogcomments_commentval",'blogcomments'), 'required');
 		$cform->addRule('email', $this->objLanguage->languageText("mod_blogcomments_emailval",'blogcomments'), 'required');
 
