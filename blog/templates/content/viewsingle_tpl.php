@@ -1,3 +1,24 @@
+<script type="text/javascript">
+//<![CDATA[
+function init () {
+	$('input_redraw').onclick = function () {
+		redraw();
+	}
+}
+function redraw () {
+	var url = 'index.php';
+	var pars = 'module=security&action=generatenewcaptcha';
+	var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onComplete: showResponse} );
+}
+function showLoad () {
+	$('load').style.display = 'block';
+}
+function showResponse (originalRequest) {
+	var newData = originalRequest.responseText;
+	$('captchaDiv').innerHTML = newData;
+}
+//]]>
+</script>
 <?php
 
 $cssLayout = &$this->newObject('csslayout', 'htmlelements');
