@@ -74,14 +74,14 @@ class commentapi extends object
 			//$this->loadClass('htmlarea', 'htmlelements');
 			$this->loadClass('dropdown', 'htmlelements');
 			$this->loadClass('label', 'htmlelements');
-			//$objCaptcha = $this->getObject('captcha', 'utilities');
+			$objCaptcha = $this->getObject('captcha', 'utilities');
 		}
 		catch (customException $e)
 		{
 			customException::cleanUp();
 			exit;
 		}
-
+		$required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
 		$cform = new form('commentadd', $this->uri(array('module' => 'blogcomments', 'action' => 'addtodb', 'table' => $table, 'mod' => $module, 'postid' => $postid, 'userid' => $postuserid)));
 		$cfieldset = $this->getObject('fieldset', 'htmlelements');
 		//$cfieldset->setLegend($this->objLanguage->languageText('mod_blogcomments_addcomment', 'blogcomments'));
@@ -107,7 +107,7 @@ class commentapi extends object
 		}
 		$emaillabel = new label($this->objLanguage->languageText("mod_blogcomments_email", "blogcomments") . ':', 'input_email');
 		$ctbl->startRow();
-		$ctbl->addCell($emaillabel->show());
+		$ctbl->addCell($emaillabel->show().$required);
 		$ctbl->endRow();
 		$ctbl->startRow();
 		$ctbl->addCell($email->show());
@@ -154,17 +154,14 @@ class commentapi extends object
 			$ctbl->endRow();
 		}
 		$ctbl->startRow();
-		//$objCaptcha = $this->getObject('captcha', 'utilities');
+		
 		$captcha = new textinput('request_captcha');
 		$captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_request_captcha');
-
-		$fieldset2 = $this->newObject('fieldset', 'htmlelements');
-		$fieldset2->legend = 'Verify Image';
-		//$fieldset2->contents = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')).'<br /><div id="captchaDiv">'.$objCaptcha->show().'</div>'.$captcha->show().$required.'  <a href="javascript:redraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>';
-
+		$ctbl->addCell(stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')).'<br /><div id="captchaDiv">'.$objCaptcha->show().'</div>'.$captcha->show().$required.'  <a href="javascript:redraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>');
 		$ctbl->endRow();
 		//$cform->addRule('comment', $this->objLanguage->languageText("mod_blogcomments_commentval",'blogcomments'), 'required');
 		$cform->addRule('email', $this->objLanguage->languageText("mod_blogcomments_emailval",'blogcomments'), 'required');
+		$cform->addRule('request_captcha', $this->objLanguage->languageText("mod_blogcomments_captchaval",'blogcomments'), 'required');
 
  		//end off the form and add the buttons
 		$this->objCButton = &new button($this->objLanguage->languageText('word_save', 'system'));

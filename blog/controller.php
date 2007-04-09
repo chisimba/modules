@@ -351,6 +351,14 @@ class blog extends controller
 
             case 'viewsingle':
                 //single post view for the bookmarks/comments etc
+                $msg = $this->getParam('msg');
+                //echo $msg;
+                if(isset($msg))
+                {
+                	$this->setVarByRef('msg', $msg);
+                	//echo "<h1>".$msg."</h1>";die();
+                	//return 'viewsingle_tpl.php';
+                }
                 $postid = $this->getParam('postid');
                 $userid = $this->getParam('userid');
                 if(isset($userid))

@@ -20,7 +20,10 @@ function showResponse (originalRequest) {
 //]]>
 </script>
 <?php
-
+if(isset($msg))
+{
+	echo urldecode(stripslashes($msg));
+}
 $cssLayout = &$this->newObject('csslayout', 'htmlelements');
 // Set columns to 3
 $cssLayout->setNumColumns(3);
