@@ -1854,11 +1854,13 @@ class blogops extends object
             $enddate = date("m", $lastrec); //. " " .date("Y", $lastrec);
             //create a while loop to get all the posts between start and end dates
             $postarr = array();
+            //echo $c1, $c2;
             //echo $startdate, $enddate;
-            while ($startdate <= $enddate) {
-                $posts = $this->objDbBlog->getPostsMonthly(mktime(0, 0, 0, $startdate, 1, date("y", $firstrec)) , $userid);
-                $postarr[$startdate] = $posts;
-                $startdate++;
+            foreach($revposts as $themonths)
+            {
+            	$months[] = date("ym",$themonths['post_ts']);
+            	$posts = $this->objDbBlog->getPostsMonthly(mktime(0, 0, 0, date("m",$themonths['post_ts']), 1, date("y", $themonths['post_ts'])) , $userid);
+            	$postarr[date("Ym",$themonths['post_ts'])] = $posts;
             }
             return $postarr;
         } else {
@@ -1878,14 +1880,14 @@ class blogops extends object
         $posts = $this->_archiveArr($userid);
         //print_r($posts);die();
         if (!empty($posts)) {
-            $months = array_keys($posts);
-            //print_r($posts);die();
+            $yearmonth = array_keys($posts);
             $arks = NULL;
-            foreach($months as $month) {
-                $thedate = mktime(0, 0, 0, $month, 1, date("Y", $posts[$month][0]['post_ts']));
+            foreach($yearmonth as $months) {
+            	$month = str_split($months, 4);
+                $thedate = mktime(0, 0, 0, intval($month[1]), 1, intval($month[0]));
                 $arks[] = array(
                     'formatted' => date("F", $thedate) ." ".date("Y", $thedate) ,
-                    'raw' => $month,
+                    'raw' => $month[1],
                     'rfc' => $thedate
                 );
             }

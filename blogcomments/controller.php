@@ -104,6 +104,7 @@ class blogcomments extends controller
                 break;
 
             case 'addtodb':
+            	//$this->requiresLogin(FALSE);
             	$addinfo = $this->objComm->addToDb(NULL);
             	$addinfo['postuserid'] = $this->getParam('userid');
             	$addinfo['postid'] = $this->getParam('postid');
@@ -132,6 +133,18 @@ class blogcomments extends controller
             	die("unknown action");
             	break;
         }
+    }
+    
+    /**
+     * Ovveride the login object in the parent class
+     *
+     * @param void
+     * @return bool
+     * @access public
+     */
+    public function requiresLogin()
+    {
+        return FALSE;
     }
 }
 ?>
