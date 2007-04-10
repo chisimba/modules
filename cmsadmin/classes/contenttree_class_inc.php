@@ -126,7 +126,7 @@ class contenttree extends object
 
                     if (!is_null($sectionAction)) {
                         $nodeUri = $this->uri(array('action' => $sectionAction, 'id' => $node['id'], 'sectionid' => $node['id']), $module);
-                        $link = '<a href="'.$nodeUri.'">'.$node['title'].'</a>';
+                        $link = '<a href="'.$nodeUri.'">'.htmlentities($node['title']).'</a>';
                     } else {
                         $link = $node['title'];
                     }
@@ -233,7 +233,7 @@ class contenttree extends object
                 foreach($contentNodes as $contentNode) {
                     if (!is_null($contentAction)) {
                         $contentUri = $this->uri(array('action' => $contentAction, 'id' => $contentNode['id'], 'sectionid' => $contentNode['sectionid']), $module);
-                        $link = '<a href="'.$contentUri.'">'.$contentNode['title'].'</a>';
+                        $link = '<a href="'.$contentUri.'">'.htmlentities($contentNode['title']).'</a>';
                     } else {
                         $link = $contentNode['title'];
                     }
