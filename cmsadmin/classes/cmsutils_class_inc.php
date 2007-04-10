@@ -928,8 +928,8 @@ class cmsutils extends object
             //$nav .= $frontpageManagerLink;
             $nav .= '<br/>'.'&nbsp;'.'<br />';
             //$nav .= $viewCmsLink.'<br /><br />';
-			$nav .= $objFeatureBox->showContent('<strong>Navigation Links</strong><hr />
-					'.$cmsAdminLink.'<br />
+			$nav .= $objFeatureBox->showContent('Navigation Links',
+					'<hr />'.$cmsAdminLink.'<br />
 					&nbsp;&nbsp;'.$createRss.'<br />
 					&nbsp;&nbsp;'.$menuMangement.'<br />
 					&nbsp;&nbsp;'.$filemanager.'<br />
@@ -2001,10 +2001,6 @@ class cmsutils extends object
                 }
             }
     
-            
-            
-
-
 
             $published = new checkbox('published');
             $frontPage = new checkbox('frontpage');
@@ -2062,6 +2058,7 @@ class cmsutils extends object
                 $introInputValue = '';
                 $published->setChecked(TRUE);
                 $visible = TRUE;
+                $hide_title = '0';
                 $contentId = '';
                 $arrContent = null;
 
@@ -2082,6 +2079,7 @@ class cmsutils extends object
                 $frontPage->setChecked($is_front);
                 $published->setChecked($arrContent['published']);
                 $visible = $arrContent['published'];
+                $hide_title = $arrContent['hide_title'];
                 if(isset($arrContent['post_lic'])){
                     $objCCLicence->defaultValue = $arrContent['post_lic'];
                 }
@@ -2129,6 +2127,20 @@ class cmsutils extends object
             $table->startRow();
             $table->addCell($this->objLanguage->languageText('word_visible').': &nbsp; ');
             $table->addCell($this->getYesNoRadion('published', $visible));
+            //$table->addCell($published->show());
+            $table->endRow();
+
+            $lbNo = $this->objLanguage->languageText('word_no');
+            $lbYes = $this->objLanguage->languageText('word_yes');
+            $objRadio = new radio('hide_title');
+            $objRadio->addOption('1', '&nbsp;'.$lbYes);
+            $objRadio->addOption('0', '&nbsp;'.$lbNo);
+            $objRadio->setSelected($hide_title);
+            $objRadio->setBreakSpace('&nbsp;&nbsp;');
+            
+            $table->startRow();
+            $table->addCell($this->objLanguage->languageText('phrase_hidetitle').': &nbsp; ');
+            $table->addCell($objRadio->show());
             //$table->addCell($published->show());
             $table->endRow();
 
