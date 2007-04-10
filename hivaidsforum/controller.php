@@ -28,6 +28,10 @@ class hivaidsforum extends controller
             $this->objUser = $this->getObject('user', 'security');
             $this->hivTools = $this->getObject('hivtools', 'hivaidsforum');
             $this->dbHivForum = $this->getObject('dbhivforum', 'hivaidsforum');
+            
+            //Get the activity logger class and log this module call
+            $objLog = $this->getObject('logactivity', 'logger');
+            $objLog->log();
         }catch(Exception $e){
             throw customException($e->message());
             exit();
