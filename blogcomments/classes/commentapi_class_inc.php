@@ -231,6 +231,17 @@ class commentapi extends object
 			$vemail = $this->objUser->email($viewerid);
 			if($post['userid'] == $this->objUser->userId())
 			{
+				$scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
+                      <script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
+                      <script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
+        		$this->appendArrayVar('headerParams',$scripts);
+				//display the inline editor
+				$updateuri = 'index.php'; //$this->uri(array('module' =>'blogcomments','action' => 'updatecomment'));
+				$commid = $comm['id'];
+				$script = '<p id="editme2">'.stripslashes($comm['comment_content']).'</p>';
+				$script .= '<script type="text/javascript">';
+				$script .= "new Ajax.InPlaceEditor('editme2', '$updateuri', {rows:15,cols:40, callback: function(form, value) { return 'module=blogcomments&action=updatecomment&commid=' + escape('$commid') + '&newcomment=' +escape(value) }});";
+				$script .= "</script>";
 				$this->objIcon = $this->getObject('geticon', 'htmlelements');
 				$delIcon = $this->objIcon->getDeleteIconWithConfirm($comm['id'], array(
                     'module' => 'blogcomments',
@@ -240,7 +251,7 @@ class commentapi extends object
                 ) , 'blogcomments');
                 //$delic = $delIcon->show();
                 
-				$fboxcontent = stripslashes($comm['comment_content'])."<br /><br />".$delIcon; //stripslashes($comm['comment_content']); // . "<br /><br />" . $delIcon;
+				$fboxcontent = $script."<br /><br />".$delIcon; //stripslashes($comm['comment_content']); // . "<br /><br />" . $delIcon;
 			}
 			elseif($vemail == $comm['comment_author_email'])
 			{
