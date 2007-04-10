@@ -150,6 +150,9 @@ class cms extends controller
             	//   the inContextMode property of this object
                 $this->inContextMode = FALSE;
             }
+            //Get the activity logger class and log this module call
+            $objLog = $this->getObject('logactivity', 'logger');
+            $objLog->log();
         }
 
         /**

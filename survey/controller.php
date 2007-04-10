@@ -87,9 +87,7 @@ class survey extends controller
         $this->questions=&$this->newObject('questions');
 
         //Get the activity logger class
-        $this->objLog=$this->newObject('logactivity','logger');
-
-        //Log this module call
+        $this->objLog = $this->getObject('logactivity','logger');
         $this->objLog->log();
     }
 

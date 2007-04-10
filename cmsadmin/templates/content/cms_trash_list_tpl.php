@@ -28,6 +28,8 @@ $lbGo = $this->objLanguage->languageText('word_go');
 $lbReset = $this->objLanguage->languageText('word_reset');
 $lbNoTrash = $this->objLanguage->languageText('mod_cmsadmin_noitemsinarchive', 'cmsadmin');
 $lbNoTrash2 = $this->objLanguage->languageText('mod_cmsadmin_nosectionsinarchive', 'cmsadmin');
+$lbMove = $this->objLanguage->languageText('mod_cmsadmin_movetosection', 'cmsadmin');
+$lbRestore = $this->objLanguage->languageText('mod_cmsadmin_restoresection', 'cmsadmin');
 
 // table headings
 $hdPageTitle = $this->objLanguage->languageText('mod_cmsadmin_pagetitle', 'cmsadmin');
@@ -86,6 +88,8 @@ $str .= $objHead->show();
 if(!empty($data)){
     $class = 'odd';
   
+    $sectionList = $this->_objSections->getAllSections();
+  
     $objTable = new htmltable();
     $objTable->cellpadding = '5';
     $objTable->cellspacing = '2';
@@ -117,6 +121,25 @@ if(!empty($data)){
 	    
         $options = '&nbsp;'.$delIcon;
         
+        $sectionTitle = $sectionInfo['title'];
+        if($sectionInfo['trash'] == 1){
+            $sectionTitle = "<font class='warning'>".$sectionInfo['title'].'</font>';
+            
+            $objCheck = new checkbox('sectionList[]');
+            $objCheck->setValue($sectionInfo['id']);
+            
+            $options .= '&nbsp;'.$lbRestore.': '.$objCheck->show();
+            
+            if(!empty($sectionList)){
+                $objDrop = new dropdown($item['id']);
+                
+                foreach($sectionList as $sect){
+                    $objDrop->addOption($sect['id'], $sect['title']);
+                }
+            }
+            $options .= '&nbsp;/&nbsp;'.$lbMove.': '.$objDrop->show();
+        }
+        
         $row = array();
         $row[] = $objCheck->show();
         $row[] = $item['title'];
@@ -125,7 +148,7 @@ if(!empty($data)){
         }else{
             $row[] = @date('r', $item['created']);
         }
-        $row[] = $sectionInfo['title'];
+        $row[] = $sectionTitle;
         $row[] = $options;
         
         $objTable->addRow($row, $class);

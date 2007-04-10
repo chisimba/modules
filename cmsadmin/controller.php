@@ -150,6 +150,11 @@ class cmsadmin extends controller
                 } else {
                     $this->inContextMode = FALSE;
                 }
+                
+                //Get the activity logger class and log this module call
+                $objLog = $this->getObject('logactivity', 'logger');
+                $objLog->log();
+            
 		   } catch (Exception $e){
        		    throw customException($e->getMessage());
         	    exit();

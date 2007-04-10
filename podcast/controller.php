@@ -13,13 +13,22 @@ class podcast extends controller
      */
     public function init()
     {
-        $this->objPodcast =& $this->getObject('dbpodcast');
-        $this->objUser =& $this->getObject('user', 'security');
-        $this->objDateTime =& $this->getObject('datetime', 'utilities');
-        $this->objUtils = & $this->getObject('utils','contextadmin');
-        $this->objLanguage =& $this->getObject('language', 'language');
-        $this->objConfig =& $this->getObject('altconfig', 'config');
-		$this->dbContext =& $this->getObject('dbcontext','context');
+        try{
+            $this->objPodcast =& $this->getObject('dbpodcast');
+            $this->objUser =& $this->getObject('user', 'security');
+            $this->objDateTime =& $this->getObject('datetime', 'utilities');
+            $this->objUtils = & $this->getObject('utils','contextadmin');
+            $this->objLanguage =& $this->getObject('language', 'language');
+            $this->objConfig =& $this->getObject('altconfig', 'config');
+    		$this->dbContext =& $this->getObject('dbcontext','context');
+		
+            //Get the activity logger class and log this module call
+            $objLog = $this->getObject('logactivity', 'logger');
+            $objLog->log();
+        } catch(Exception $e) {
+            throw customException($e->getMessage());
+            exit();
+        }
     }
     
     /**

@@ -569,6 +569,16 @@ class dbsections extends dbTable
         }
 
         /**
+        * Method to return all sections
+        *
+        * @access public
+        */
+        public function getAllSections()
+        {
+            return $this->getAll("WHERE trash = '0'");
+        }
+
+        /**
          * Method to get all subsections in a specific section
          *
          * @param string $sectionId The id(pk) of the section
