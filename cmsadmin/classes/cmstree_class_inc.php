@@ -287,11 +287,11 @@ class cmstree extends object
 			$action = ($module == 'cms') ? 'showsection' : 'viewsection';
 			
 			if ($module == 'cmsadmin') {
-				$sql = 'SELECT tbl_cms_sections. * , tbl_cms_content.id AS pagevisible
+				$sql = 'SELECT tbl_cms_sections.* , tbl_cms_content.id AS pagevisible
 						FROM tbl_cms_sections
-						LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid )
-						WHERE tbl_cms_content.published = \'1\'  
-						AND tbl_cms_sections.trash = \'0\'
+						LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid 
+						AND tbl_cms_content.published = \'1\')
+						WHERE tbl_cms_sections.trash = \'0\'
 						';
 				$useIcon = TRUE;
 			} else {
