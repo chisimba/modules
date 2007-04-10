@@ -113,8 +113,8 @@ if (isset($subSections)) {
         $class = (($i++ % 2) == 0) ? 'odd' : 'even';
         //Get sub sec data
         $subSecId = $subsec['id'];
-        $subSecTitle = $subsec['title'];
-        $subSecMenuText = $subsec['menutext'];
+        $subSecTitle = htmlentities($subsec['title']);
+        $subSecMenuText = htmlentities($subsec['menutext']);
         $subSecPublished = $subsec['published'];
         $subSecLayout = $this->_objLayouts->getLayout($subsec['layout']);
         $subSecLayoutName = $subSecLayout['name'];
@@ -185,7 +185,7 @@ if (count($pages) > '0') {
         //Get page data
         $pageId = $page['id'];
         $ordering = $page['ordering'];
-        $pageTitle = $page['title'];
+        $pageTitle = htmlentities($page['title']);
         $articleDate = $page['modified'];
         $pagePublished = $page['published'];
 
