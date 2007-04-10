@@ -684,7 +684,7 @@ class blogops extends object
      * @param bool $featurebox
      * @return string
      */
-    public function showAdminSection($featurebox = FALSE, $blogadmin = FALSE)
+    public function showAdminSection($featurebox = FALSE, $blogadmin = FALSE, $showOrHide = 'none')
     {
         //admin section
         if ($featurebox == FALSE) {
@@ -797,8 +797,12 @@ class blogops extends object
         if ($featurebox == FALSE) {
             return $ret;
         } else {
+        	$str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('adminmenu','slide', adjustLayout());\">[...]</a>";
+        	$str .='<div id="adminmenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
+        	$str .= $ret;
+        	$str .= '</div>';
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_admin", "blog") , $ret);
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_admin", "blog") , $str);
             return $ret;
         }
     }
