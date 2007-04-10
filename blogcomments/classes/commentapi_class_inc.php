@@ -44,6 +44,7 @@ class commentapi extends object
 		try {
 			$this->objLanguage = $this->getObject('language', 'language');
 			$this->objUser =  $this->getObject("user", "security");
+			$this->objDbBlog = $this->getObject("dbblog", "blog");
 		}
 		catch (customException $e)
 		{
@@ -190,6 +191,10 @@ class commentapi extends object
 	 */
 	public function showComments($pid)
 	{
+		//get the post info
+		$post = $this->grabPostInfo($pid);
+		$post = $post[0];
+		//print_r($post);
 		$washer = $this->getObject('washout', 'utilities');
 		$this->objDbComm = $this->getObject('dbblogcomments');
 		$objFeatureBox = $this->newObject('featurebox', 'navigation');
@@ -224,7 +229,20 @@ class commentapi extends object
 			//get the userid
 			$viewerid = $this->objUser->userId();
 			$vemail = $this->objUser->email($viewerid);
-			if($vemail == $comm['comment_author_email'])
+			if($post['userid'] == $this->objUser->userId())
+			{
+				$this->objIcon = $this->getObject('geticon', 'htmlelements');
+				$delIcon = $this->objIcon->getDeleteIconWithConfirm($comm['id'], array(
+                    'module' => 'blogcomments',
+                    'action' => 'deletecomment',
+                    'commentid' => $comm['id'],
+                    'postid' => $pid
+                ) , 'blogcomments');
+                //$delic = $delIcon->show();
+                
+				$fboxcontent = stripslashes($comm['comment_content'])."<br /><br />".$delIcon; //stripslashes($comm['comment_content']); // . "<br /><br />" . $delIcon;
+			}
+			elseif($vemail == $comm['comment_author_email'])
 			{
 				$scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
                       <script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
@@ -327,6 +345,17 @@ class commentapi extends object
 	{
 		$this->objDbComm = $this->getObject('dbblogcomments');
 		return $this->objDbComm->commentCount($pid);
+	}
+	
+	/**
+	 * Method to grab all the post info for a post ID
+	 * 
+	 * @param string $pid
+	 * @return array
+	 */
+	public function grabPostInfo($pid)
+	{
+		return $this->objDbBlog->getPostById($pid);
 	}
 
 }//end class
