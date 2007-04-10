@@ -1874,7 +1874,7 @@ class blogops extends object
      * @param objetc $featurebox
      * @return string
      */
-    public function archiveBox($userid, $featurebox = FALSE)
+    public function archiveBox($userid, $featurebox = FALSE, $showOrHide = 'none')
     {
         //get the posts for each month
         $posts = $this->_archiveArr($userid);
@@ -1907,9 +1907,14 @@ class blogops extends object
                     )) , $ark['formatted']);
                     $lnks.= $lnk->show() ."<br />";
                 }
-                $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_archives", "blog") , $lnks);
+                $str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('archivemenu','slide', adjustLayout());\">[...]</a>";
+        		$str .='<div id="archivemenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
+        		$str .= $lnks;
+        		$str .= '</div>';
+                $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_archives", "blog") , $str);
                 return $ret;
             }
+            
         } else {
             return NULL;
         }
