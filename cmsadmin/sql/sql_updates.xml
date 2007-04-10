@@ -2,6 +2,21 @@
 <updates>
     
     <update>
+        <table>tbl_cms_content</table>
+        <version>1.52</version>
+        <description>Added column to hide the title - allows users to style their own titles</description>
+        <data>
+           	<add>
+       			<name>hide_title</name>
+    	    	<type>integer</type>
+       			<length>1</length>
+       			<notnull>TRUE</notnull>
+       			<default>0</default>
+    		</add>
+    	</data>
+	</update>
+
+    <update>
         <table>tbl_cms_sections</table>
         <version>1.49</version>
         <description>Added trash column for deleted/archived sections</description>

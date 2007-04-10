@@ -102,6 +102,7 @@ class dbcontent extends dbTable
             if ($creatorid==NUll) {
             	 $creatorid = $this->_objUser->userId();
             }
+            $hide_title = $this->getParam('hide_title','0');
            
             $access = $this->getParam('access');
 			$created_by = $this->getParam('title_alias',null);
@@ -119,6 +120,7 @@ class dbcontent extends dbTable
                           'access' => $access,
                           'ordering' => $this->getOrdering($sectionid),
                           'published' => $published,
+                          'hide_title' => $hide_title,
                           'created' => $this->now(),
                           'modified' => $this->now(),
                           'post_lic' => $ccLicence,
@@ -186,6 +188,7 @@ class dbcontent extends dbTable
             $metakey = $this->getParam('keyword',null);
 			$metadesc = $this->getParam('description',null);
             $ccLicence = $this->getParam('creativecommons');
+            $hide_title = $this->getParam('hide_title','0');
 
             $newArr = array(
                           'title' => $title ,
@@ -195,6 +198,7 @@ class dbcontent extends dbTable
                           'access' => $access,
                           'ordering' => $this->getOrdering($sectionid),
                           'published' => $published,
+                          'hide_title' => $hide_title,
                           'created' =>  $this->now(),
                           'modified' => $this->now(),
                           'post_lic' => $ccLicence,
@@ -251,6 +255,7 @@ class dbcontent extends dbTable
             $metakey = $this->getParam('keyword',null);
 			$metadesc = $this->getParam('description',null);
             $ccLicence = $this->getParam('creativecommons');
+            $hide_title = $this->getParam('hide_title','0');
 
             $newArr = array(
                           'title' => $title ,
@@ -261,6 +266,7 @@ class dbcontent extends dbTable
                           'modified' => $modifiedDate,
                           'modified_by' => $modifiedBy,
                           'published' => $published,
+                          'hide_title' => $hide_title,
                           'post_lic' => $ccLicence,
                           'checked_out'=> $modifiedBy,
                           'checked_out_time'=> $this->now(),

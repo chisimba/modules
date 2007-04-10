@@ -929,7 +929,7 @@ class cmsutils extends object
             $nav .= '<br/>'.'&nbsp;'.'<br />';
             //$nav .= $viewCmsLink.'<br /><br />';
 			$nav .= $objFeatureBox->showContent('Navigation Links',
-					'<hr />'.$cmsAdminLink.'<br />
+					$cmsAdminLink.'<br />
 					&nbsp;&nbsp;'.$createRss.'<br />
 					&nbsp;&nbsp;'.$menuMangement.'<br />
 					&nbsp;&nbsp;'.$filemanager.'<br />
