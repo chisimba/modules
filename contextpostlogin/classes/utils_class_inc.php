@@ -23,7 +23,7 @@ class utils extends object
      */
     public function init()
     {
-        
+       
           $this->_objContextModules = & $this->newObject('dbcontextmodules', 'context');
 	      $this->_objLanguage = & $this->newObject('language', 'language');
 	      $this->_objUser = & $this->newObject('user', 'security');
@@ -228,22 +228,56 @@ class utils extends object
 	      $objGroupName = & $this->getObject('groupadminmodel', 'groupadmin');
 	      $arr = $objGroup->getUserRoles($this->_objUser->PKId());
 	     // var_dump($arr);
-	     
-	      $str = '';
-	      
+   	   $str = '';
+	      $str1 = '';
+	      $str2 = '';
+	      $heading1 = '';
+	      $heading = '';
 	       foreach ($arr as $group)
 	      {
 	          if(strpos($objGroupName->getFullPath($group['group_id']),'/'))
 	          {
 	              $strArr = explode('/',$objGroupName->getFullPath($group['group_id'])) ;
-	              $heading = $this->_objDBContext->getMenuText($strArr[0]). ' - '. $strArr[1];
+	              $heading1 = $this->_objDBContext->getMenuText($strArr[0]);
+	              // this variable stores the lecturer or student // - '. $strArr[1];
+	              $Usertype = $strArr[1];
+	              if($Usertype=="Lecturers")
+	              {
+	              $str .= '<br/>'. $heading1 ;
+					  }
+					  elseif($Usertype=="Students")
+					  {
+					  $str2 .= '<br/>'. $heading1 ;
+					  }	
 	          } else {
 	              $heading = $objGroupName->getFullPath($group['group_id']);
 	          }
-	          $str .= '<br/>'. $heading ;
+	          
 	      }
-	    
-	      return 'You are part of <span class="highlight">'.$str.'</span>';
+	      $str1 .= '<br/>'. $heading ;
+	      
+	      $data = 'My Site groups:  <span class="highlight">'.$str1.'</span>';
+	      if(strlen($str) > 0)
+	      {
+         $data1 = 'My Courses as (lecturer) <span class="highlight">'.$str.'</span>';
+         }
+         else
+         {
+         $data1 = "";
+			}
+         
+         if(strlen($str2) > 0)
+         {
+         $data2 = 'My Courses as (students) <span class="highlight">'.$str2.'</span>';
+         }
+         else
+         {
+         $data2 = "";
+         }
+			         
+         
+         $fullresult = $data."<br/>".$data1."<br/>".$data2;
+         return $fullresult;
 	  }
 	  /**
 	   * Method to get the right widgets
