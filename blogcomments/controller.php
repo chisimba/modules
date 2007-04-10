@@ -140,9 +140,11 @@ class blogcomments extends controller
             	
             case 'deletecomment':
             	$commentid = $this->getParam('commentid');
+            	$postid = $this->getParam('postid');
+            	$module = 'blog';
             	$this->objDbcomm->deletecomment($commentid);
             	
-            	//$this->nextAction('viewsingle',array('postid' => $addinfo['postid'], 'userid' => $this->objUser->userId()), $addinfo['mod']);
+            	$this->nextAction('viewsingle',array('postid' => $postid), $module);
             	
             default:
             	die("unknown action");

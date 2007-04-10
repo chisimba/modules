@@ -249,11 +249,12 @@ class commentapi extends object
                 $delIcon = $this->objIcon->getDeleteIconWithConfirm($comm['id'], array(
                     'module' => 'blogcomments',
                     'action' => 'deletecomment',
-                    'id' => $comm['id']
+                    'commentid' => $comm['id'],
+                    'postid' => $pid
                 ) , 'blogcomments');
                 //$delic = $delIcon->show();
                 
-				$fboxcontent = $script; //stripslashes($comm['comment_content']); // . "<br /><br />" . $delIcon;
+				$fboxcontent = $script."<br /><br />".$delIcon; //stripslashes($comm['comment_content']); // . "<br /><br />" . $delIcon;
 			}
 			else {
 				$fboxcontent = stripslashes($comm['comment_content']);	
@@ -263,7 +264,13 @@ class commentapi extends object
 
 			$authemail = "[".$authemail."]";
 			$authhead = $auth; // . " " . $authemail; // . " (".htmlentities($authurl).")";
-			$fboxhead = $authhead; // . " " . $authemail;
+			if(isset($delIcon))
+			{
+				$fboxhead = $authhead; // . " " . $authemail;
+			}
+			else {
+				$fboxhead = $authhead;
+			}
 
 			
 
