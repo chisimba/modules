@@ -191,3 +191,30 @@ function ca_setupDeleteBlocks()
     }
     Droppables.add('deletezone', {onDrop:ca_removeBlock, accept:'usedblock'});
 }
+
+/* ---------------- section_add ------------------*/
+/*
+Function to intitialize scriptaculous for section_add
+*/
+function sa_processSection(sectionType)
+{
+    if(sectionType == "page"){
+        Element.hide("pagenumlabel");
+        Element.hide("pagenumcol");
+        Element.hide("dateshowlabel");
+        Element.hide("dateshowcol");
+    } else {
+        Element.show("pagenumlabel");
+        Element.show("pagenumcol");
+        Element.show("dateshowlabel");
+        Element.show("dateshowcol");
+    }   
+
+    if (sectionType == 'summaries' || sectionType == 'list') {
+        Element.show("showintrolabel");
+        Element.show("showintrocol");
+    } else {
+        Element.hide("showintrolabel");
+        Element.hide("showintrocol");
+    }            
+}

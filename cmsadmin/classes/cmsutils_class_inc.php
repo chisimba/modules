@@ -1624,14 +1624,22 @@ class cmsutils extends object
             if ($editmode) {
                 $objDrop->setSelected($section['layout']);
                 $imgPath = $this->getResourceUri('section_'.$section['layout'].'.gif', 'cmsadmin');
-                $this->appendArrayVar('bodyOnLoad', 'xajax_processSection(\''.$section['layout'].'\')');
+                //$this->appendArrayVar('bodyOnLoad', 'xajax_processSection(\''.$section['layout'].'\')');
+                $this->setVar('bodyParams', 'onload="javascript:sa_processSection(\''.$section['layout'].'\');"');
             } else {
                 $objDrop->setSelected('page');
                 $imgPath = $this->getResourceUri('section_page.gif', 'cmsadmin');
-                $this->appendArrayVar('bodyOnLoad', 'xajax_processSection(\'page\')');
+                //$this->appendArrayVar('bodyOnLoad', 'xajax_processSection(\'page\')');
+                $this->setVar('bodyParams', 'onload="javascript:sa_processSection(\'page\');"');
             }
             
-            $objDrop->extra = "onchange=\"xajax_processSection(this.value); javascript: 
+//            $objDrop->extra = "onchange=\"xajax_processSection(this.value); javascript: 
+//            var path = '{$this->getResourceUri('', 'cmsadmin')}'; 
+//            var image = path+'section_'+this.value+'.gif';
+//            document.getElementById('img').src = image;\"";
+            
+            $objDrop->extra = "onchange=\"javascript:
+            sa_processSection(this.value); 
             var path = '{$this->getResourceUri('', 'cmsadmin')}'; 
             var image = path+'section_'+this.value+'.gif';
             document.getElementById('img').src = image;\"";
@@ -1649,7 +1657,8 @@ class cmsutils extends object
 		    
 			$drp_image = new dropdown('image');
 			$drp_image->id= 'image';
-			$drp_image->extra ="onchange=\"javascript:if (this.options[selectedIndex].value!='') {document.getElementById('imagelib').src= 'usrfiles/'+this.options[selectedIndex].value,document.getElementById('input_imagesrc').value= 'usrfiles/'+this.options[selectedIndex].value} else {document.getElementById('imagelib').src='../images/blank.png'}\"";
+			//$drp_image->extra ="onchange=\"javascript:if (this.options[selectedIndex].value!='') {document.getElementById('imagelib').src= 'usrfiles/'+this.options[selectedIndex].value,document.getElementById('input_imagesrc').value= 'usrfiles/'+this.options[selectedIndex].value} else {document.getElementById('imagelib').src='../images/blank.png'}\"";
+			$drp_image->extra = 'onchange="javascript:if(this.value!=\'\'){$(\'imagelib\').src = \'usrfiles/\'+this.value;$(\'input_imagesrc\').value = \'usrfiles/\'+this.value}else{$(\'imagelib\').src = \'../images/blank.png\'}"';
 			$drp_image->addOption('','- Select Image -');
 			$drp_image->addFromDB($listFiles,'filename','path');
             $objForm =& $this->newObject('form', 'htmlelements');
@@ -1664,7 +1673,7 @@ class cmsutils extends object
             }
             
 
-             $objForm->setDisplayType(3);
+            $objForm->setDisplayType(3);
             $table->cellpadding = '5';  
             $table->cellspacing = '2';  
             //the title
@@ -1767,7 +1776,7 @@ class cmsutils extends object
 
             $table->startRow();
             $table->addCell('&nbsp;');
-            $table->addCell('&nbsp;','','','','',"colspan='2'");
+            $table->addCell($image.$imageThumb->show(),'','','','',"colspan='2'");
             $table->endRow();
             
             //layout

@@ -142,7 +142,7 @@ class cmsadmin extends controller
                 
                 //Load the ajax classes
                 //$this->loadClass('xajax', 'ajaxwrapper');
-                $this->loadClass('xajaxresponse', 'ajaxwrapper');
+                //$this->loadClass('xajaxresponse', 'ajaxwrapper');
 
                 if ($objModule->checkIfRegistered('context')) {
                     $this->inContextMode = $this->_objContext->getContextCode();
@@ -776,11 +776,11 @@ class cmsadmin extends controller
          */
         public function addEditsection($sectionid=null,$parentid=null){
         	 // Generation of Ajax Scripts
-             $ajax = $this->getObject('xajax', 'ajaxwrapper');
-             $ajax->setRequestURI($this->uri(array('action'=>'addsection'), 'cmsadmin'));
-        	 $ajax->registerFunction(array($this, 'processSection')); // Register another function in this controller
-        	 $ajax->processRequests(); // XAJAX method to be called
-        	 $this->appendArrayVar('headerParams', $ajax->getJavascript()); // Send JS to header
+             //$ajax = $this->getObject('xajax', 'ajaxwrapper');
+             //$ajax->setRequestURI($this->uri(array('action'=>'addsection'), 'cmsadmin'));
+        	 //$ajax->registerFunction(array($this, 'processSection')); // Register another function in this controller
+        	 //$ajax->processRequests(); // XAJAX method to be called
+        	 //$this->appendArrayVar('headerParams', $ajax->getJavascript()); // Send JS to header
         	 //Get form
         	 if (!isset($sectionid) ) {
         	 	$sectionid = $this->getParam('id');
@@ -838,7 +838,8 @@ class cmsadmin extends controller
         * @access public
         * @param string $sectionType Type of Section to base options on
         * @return string The ajax response
-        */
+        * @deprecated
+        *
         public function processSection($sectionType)
         {
             $objResponse = new xajaxResponse();
