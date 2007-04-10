@@ -282,11 +282,15 @@ class cmslayouts extends object
                         $pageStr = '';
                         $cnt++;
                         
-                        // Page heading
-                        $this->objHead->type = '2';
-                        $this->objHead->str = $page['title'];
-    
-                        $pageStr = $this->objHead->show();
+                        // Page heading - hide if set
+                        if(isset($page['hide_title']) && $page['hide_title'] == 1){
+                            $pageStr = '';
+                        }else{
+                            $this->objHead->type = '2';
+                            $this->objHead->str = $page['title'];
+                            
+                            $pageStr = $this->objHead->show();
+                        }
                         
                         // Read more link
                         $moreLink = $this->uri(array('displayId' => $frontPage['content_id'], 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
@@ -417,9 +421,14 @@ class cmslayouts extends object
                     }
     
                     if ($pageId == $page['id']) {
-                        $this->objHead->str = $page['title'];
-                        $this->objHead->type = 2;
-                        $strBody = $this->objHead->show();
+                        // hide the title if set
+                        if(isset($page['hide_title']) && $page['hide_title'] == 1){
+                            $strBody = '';
+                        }else{
+                            $this->objHead->str = $page['title'];
+                            $this->objHead->type = 2;
+                            $strBody = $this->objHead->show();
+                        }
                         $strBody .= stripslashes($page['body']);
                         $foundPage = TRUE;
                         
@@ -498,20 +507,24 @@ class cmslayouts extends object
                 foreach ($arrPages as $page) {
                     $pageStr = '';
                     
-                    $this->objHead->type = '4';
-                    $this->objHead->str = $page['title'];
-                    $pageStr .= $this->objHead->show();
-                   
-                    $pageStr .= '<p>';
-                    if (isset($page['created_by'])) {
-                        $pageStr .= '<span class="minute">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span>';
+                    if(isset($page['hide_title']) && $page['hide_title'] == 1){
+                        $pageStr = '';
+                    }else{
+                        $this->objHead->type = '4';
+                        $this->objHead->str = $page['title'];
+                        $pageStr .= $this->objHead->show();
+                       
+                        $pageStr .= '<p>';
+                        if (isset($page['created_by'])) {
+                            $pageStr .= '<span class="minute">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span>';
+                        }
+                        
+                        if($showDate){
+                            $creationDate = $this->objDate->formatDate($page['created']);
+                            $pageStr .= '<span class="date">'.$creationDate.'</span>';
+                        }
+                        $pageStr .= '</p>';
                     }
-                    
-                    if($showDate){
-                        $creationDate = $this->objDate->formatDate($page['created']);
-                        $pageStr .= '<span class="date">'.$creationDate.'</span>';
-                    }
-                    $pageStr .= '</p>';
                     
                     // introduction text
                     $pageStr .= '<p>'.stripslashes($page['introtext']);
@@ -598,9 +611,13 @@ class cmslayouts extends object
             	 }
                 foreach ($arrPages as $page) {
                     if ($pageId == $page['id']) {
-                        $this->objHead->type = 2;
-                        $this->objHead->str = $page['title'];
-                        $pageStr = $this->objHead->show();
+                        if(isset($page['hide_title']) && $page['hide_title'] == 1){
+                            $pageStr = '';
+                        }else{
+                            $this->objHead->type = 2;
+                            $this->objHead->str = $page['title'];
+                            $pageStr = $this->objHead->show();
+                        }
                         $pageStr .= stripslashes($page['body']);
                         
                         $topStr = $this->objRound->show($pageStr);
@@ -776,16 +793,12 @@ class cmslayouts extends object
             $mtflink = new href($this->uri(array('action' => 'mail2friend', 'sectionid' => $page['sectionid'], 'id' => $page['id'])), $mtfimg, NULL);
          
             //Create heading
-
-            $this->objHead->type = 2;
-            $this->objHead->str = $page['title'];
-           
             //Lets format the header information for the page
             $tblh = $this->newObject('htmltable', 'htmlelements');
             $tblh->cellpadding = 3;
             $tblh->width = "100%";
             $tblh->align = "center";
-            $tblh->startRow();
+            
             //PDF link into header
             $pdficon = $this->newObject('geticon', 'htmlelements');
             $pdficon->setIcon('filetypes/pdf');
@@ -795,9 +808,12 @@ class cmslayouts extends object
             $pdfimg = $pdficon->show();
 			$pdflink = null;
             $pdflink = new href($pdfurl, $pdfimg, NULL);
-			$tblh->addCell($this->objHead->show());
+			
+			$tblh->startRow();
+            $tblh->addCell($page['title']);
             $tblh->addCell($pdflink->show() . $mtflink->show(),null,null,'center'); //pdf icon
             $tblh->endRow();
+            
             $strBody = null;
             $strBody .= '<p><span class="date">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span>';
 
