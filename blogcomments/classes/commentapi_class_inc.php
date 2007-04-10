@@ -244,11 +244,12 @@ class commentapi extends object
 			}
 			elseif($vemail == $comm['comment_author_email'])
 			{
-				$scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
-                      <script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
-                      <script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
-        		$this->appendArrayVar('headerParams',$scripts);
-				//display the inline editor
+				//$scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
+                      //<script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
+                      //<script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
+        		//$this->appendArrayVar('headerParams',$scripts);
+				
+                //display the inline editor
 				$updateuri = 'index.php'; //$this->uri(array('module' =>'blogcomments','action' => 'updatecomment'));
 				$commid = $comm['id'];
 				$script = '<p id="editme2">'.stripslashes($comm['comment_content']).'</p>';
