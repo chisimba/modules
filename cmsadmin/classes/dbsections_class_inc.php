@@ -153,19 +153,28 @@ class dbsections extends dbTable
          * @param string contextcode The current context the user is in
          * @return array An array of associative arrays of all root nodes
          */
-        public function getRootNodes($isPublished = FALSE,$contextcode=null)
+        public function getRootNodes($isPublished = FALSE, $contextcode = NULL)
         {
-            if ($isPublished && $contextcode!=null) {
-            	$results = $this->getAll("WHERE published = 1 AND nodelevel = 1 AND contextcode= '$contextcode' AND trash = 0 ORDER BY ordering");
-                return $results;
-            }elseif ($isPublished && $contextcode=null){ 
-            	$results = $this->getAll("WHERE published = 1 AND nodelevel = 1 AND trash = 0 ORDER BY ordering");
-                return $results;
+            $sql = '';
+            // Check for published / visible
+            if($isPublished){
+                $sql = 'published = 1 ';
             }
-            else {
-            	$results = $this->getAll("WHERE nodelevel = 1 AND trash = 0 ORDER BY ordering");
-            	return $results;
+            // Check for the context code
+            if(!empty($contextcode)){
+                if(!empty($sql)){
+                    $sql .= 'AND ';
+                }
+                $sql .= "contextcode = '$contextcode' ";
             }
+            
+            if(!empty($sql)){
+                $sql .= 'AND ';
+            }
+            
+            $filter = "WHERE {$sql} nodelevel = 1 AND trash = 0 ORDER BY ordering";
+            $results = $this->getAll($filter);
+            return $results;
         }
 
         /**
