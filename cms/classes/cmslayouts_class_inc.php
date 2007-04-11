@@ -259,6 +259,33 @@ class cmslayouts extends object
             //set a counter for the records .. display on the first 2  the rest will be dsiplayed as links
             $cnt = 0 ;
 
+            $numPages = count($arrFrontPages);
+            // If only 1 page is on the front - display the full page
+            if($numPages == 1){
+                $page = $this->_objContent->getContentPage($arrFrontPages[0]['content_id']);
+
+                // Page heading - hide if set
+                if(isset($page['hide_title']) && $page['hide_title'] == 1){
+                    $pageStr = '';
+                }else{
+                    $this->objHead->type = '2';
+                    $this->objHead->str = htmlentities($page['title']);
+                    $pageStr = $this->objHead->show();
+                
+                    $pageStr .= '<p><span class="date">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
+                            
+                    if(isset($page['created']) && !empty($page['created'])){
+                        $pageStr .= '<span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
+                    }
+                    $pageStr .= '</p>';
+                    $pageStr .= stripslashes($page['introtext']);
+                    $pageStr .= '<p />';
+                }
+                $pageStr .= $page['body'];
+                
+                return $this->objRound->show($pageStr);
+            }
+
             // Display the selected page above the others
             if(!empty($displayId) && !empty($arrFrontPages)) {
                 foreach ($arrFrontPages as $frontPage) {
@@ -287,7 +314,7 @@ class cmslayouts extends object
                             $pageStr = '';
                         }else{
                             $this->objHead->type = '2';
-                            $this->objHead->str = $page['title'];
+                            $this->objHead->str = htmlentities($page['title']);
                             
                             $pageStr = $this->objHead->show();
                         }
@@ -425,7 +452,7 @@ class cmslayouts extends object
                         if(isset($page['hide_title']) && $page['hide_title'] == 1){
                             $strBody = '';
                         }else{
-                            $this->objHead->str = $page['title'];
+                            $this->objHead->str = htmlentities($page['title']);
                             $this->objHead->type = 2;
                             $strBody = $this->objHead->show();
                         }
@@ -511,7 +538,7 @@ class cmslayouts extends object
                         $pageStr = '';
                     }else{
                         $this->objHead->type = '4';
-                        $this->objHead->str = $page['title'];
+                        $this->objHead->str = htmlentities($page['title']);
                         $pageStr .= $this->objHead->show();
                        
                         $pageStr .= '<p>';
@@ -615,7 +642,7 @@ class cmslayouts extends object
                             $pageStr = '';
                         }else{
                             $this->objHead->type = 2;
-                            $this->objHead->str = $page['title'];
+                            $this->objHead->str = htmlentities($page['title']);
                             $pageStr = $this->objHead->show();
                         }
                         $pageStr .= stripslashes($page['body']);
