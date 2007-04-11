@@ -162,7 +162,7 @@ class cmslayouts extends object
     private function showButtonsMenu($currentNode)
     {
         // Get the sections
-        $sectionData = $this->_objSections->getRootNodes();
+        $sectionData = $this->_objSections->getRootNodes(TRUE);
         
         // home link
         $sel = FALSE;

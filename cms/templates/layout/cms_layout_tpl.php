@@ -51,12 +51,14 @@ $rightSide = "";
 $isLoggedIn = $objUser->isLoggedIn();
 
  if(!$isLoggedIn){
+     /* We don't want to hard code any blocks
      $hasBlocks = TRUE;
      $loginBlock = $objDbBlocks->getBlockByName('login');
      $registerBlock = $objDbBlocks->getBlockByName('register');
 
      $rightSide .= $objBlocks->showBlock($loginBlock['blockname'], $loginBlock['moduleid']);
      $rightSide .= $objBlocks->showBlock($registerBlock['blockname'], $registerBlock['moduleid']);
+     */
      
      $pageBlocks = $objDbBlocks->getBlocksForFrontPage();  
      if(!empty($pageBlocks)) {
@@ -91,7 +93,7 @@ $isLoggedIn = $objUser->isLoggedIn();
     }
 }
 
-$cssLayout =& $this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 if($hasBlocks){
     $cssLayout->setNumColumns(3);
     $cssLayout->setRightColumnContent($rightSide);
