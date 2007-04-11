@@ -1,7 +1,7 @@
 <?
 
 //5ive definition
-$tablename = 'tbl_contextcontent_order';
+$tablename = 'tbl_contextcontent_chaptercontent';
 
 //Options line for comments, encoding and character set
 $options = array('collate' => 'utf8_general_ci', 'character_set' => 'utf8');
@@ -12,47 +12,38 @@ $fields = array(
 		'length' => 32,
         'notnull' => TRUE
 		),
-    'contextcode' => array(
+    'chapterid' => array(
+		'type' => 'text',
+		'length' => 32,
+        'notnull' => TRUE
+		),
+    'chaptertitle' => array(
 		'type' => 'text',
 		'length' => 255,
         'notnull' => TRUE
 		),
-    'titleid' => array(
-		'type' => 'text',
-		'length' => 32,
-        'notnull' => TRUE
+    'introduction' => array(
+		'type' => 'text'
 		),
-    'chapterid' => array(
-		'type' => 'text',
-		'length' => 32,
-		),
-    'parentid' => array(
+    'license' => array(
 		'type' => 'text',
 		'length' => 32
 		),
-    'lft' => array(
-		'type' => 'integer',
-		'length' => 11,
+    'language' => array(
+		'type' => 'text',
+		'length' => 3,
         'notnull' => TRUE,
-        'default' => 0
+        'default' => 'en'
 		),
-    'rght' => array(
-		'type' => 'integer',
-		'length' => 11,
-        'notnull' => TRUE,
-        'default' => 0
-		),
-    'pageorder' => array(
-		'type' => 'integer',
-		'length' => 11,
-        'notnull' => TRUE,
-        'default' => 0
-		),
-    'visibility' => array(
+    'original' => array(
 		'type' => 'text',
 		'length' => 1,
         'notnull' => TRUE,
-        'default' => 'Y'
+        'default' => 'N'
+		),
+    'lockuser' => array(
+		'type' => 'text',
+		'length' => 25
 		),
     'creatorid' => array(
 		'type' => 'text',
@@ -74,16 +65,16 @@ $fields = array(
     
 //create other indexes here...
 
-$name = 'tbl_contextcontent_order_idx';
+$name = 'tbl_contextcontent_chaptercontent_idx';
 
 $indexes = array(
                 'fields' => array(
-                	'contextcode' => array(),
-                	'titleid' => array(),
-                	'parentid' => array(),
-                	'lft' => array(),
-                	'rght' => array(),
-                    'visibility' => array()
+                	'chapterid' => array(),
+                	'chaptertitle' => array(),
+                	'license' => array(),
+                	'language' => array(),
+                    'creatorid' => array(),
+                    'modifierid' => array()
                 )
         );
 ?>

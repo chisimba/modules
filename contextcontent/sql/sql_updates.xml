@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<updates>
+    <update>
+        <table>tbl_contextcontent_order</table>
+        <version>0.4</version>
+        <description>Added a field for chapter</description>
+        <data>
+        	<add>
+    			<name>chapterid</name>
+		    	<type>text</type>
+    			<length>32</length>
+			</add>
+		</data>
+	</update>
+</updates>

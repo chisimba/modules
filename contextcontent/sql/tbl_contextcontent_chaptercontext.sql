@@ -1,7 +1,7 @@
 <?
 
 //5ive definition
-$tablename = 'tbl_contextcontent_order';
+$tablename = 'tbl_contextcontent_chaptercontext';
 
 //Options line for comments, encoding and character set
 $options = array('collate' => 'utf8_general_ci', 'character_set' => 'utf8');
@@ -12,37 +12,17 @@ $fields = array(
 		'length' => 32,
         'notnull' => TRUE
 		),
+    'chapterid' => array(
+		'type' => 'text',
+		'length' => 32,
+        'notnull' => TRUE
+		),
     'contextcode' => array(
 		'type' => 'text',
 		'length' => 255,
         'notnull' => TRUE
 		),
-    'titleid' => array(
-		'type' => 'text',
-		'length' => 32,
-        'notnull' => TRUE
-		),
-    'chapterid' => array(
-		'type' => 'text',
-		'length' => 32,
-		),
-    'parentid' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-    'lft' => array(
-		'type' => 'integer',
-		'length' => 11,
-        'notnull' => TRUE,
-        'default' => 0
-		),
-    'rght' => array(
-		'type' => 'integer',
-		'length' => 11,
-        'notnull' => TRUE,
-        'default' => 0
-		),
-    'pageorder' => array(
+    'chapterorder' => array(
 		'type' => 'integer',
 		'length' => 11,
         'notnull' => TRUE,
@@ -51,7 +31,6 @@ $fields = array(
     'visibility' => array(
 		'type' => 'text',
 		'length' => 1,
-        'notnull' => TRUE,
         'default' => 'Y'
 		),
     'creatorid' => array(
@@ -74,15 +53,12 @@ $fields = array(
     
 //create other indexes here...
 
-$name = 'tbl_contextcontent_order_idx';
+$name = 'tbl_contextcontent_chaptercontext_idx';
 
 $indexes = array(
                 'fields' => array(
                 	'contextcode' => array(),
-                	'titleid' => array(),
-                	'parentid' => array(),
-                	'lft' => array(),
-                	'rght' => array(),
+                	'chapterorder' => array(),
                     'visibility' => array()
                 )
         );
