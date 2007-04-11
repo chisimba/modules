@@ -2094,7 +2094,7 @@ class blogops extends object
         // Display the posts
         if(!empty($data)){
             foreach($data as $item){
-            	$linkuri = $this->uri(array('action' => 'viewsingle', 'postid' => $item['id']));
+            	$linkuri = $this->uri(array('action' => 'viewsingle', 'postid' => $item['id'], 'userid' => $item['userid']));
             	$link = new href($linkuri, $item['post_title']);
                 $str .= '<p>';
                 $str .= '<b>'.$link->show().'</b><br />';
