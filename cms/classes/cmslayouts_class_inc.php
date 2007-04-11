@@ -701,7 +701,12 @@ class cmslayouts extends object
                 foreach ($arrPages as $page) {
                     $link = new link ($this->uri(array('action' => 'showcontent', 'id' => $page['id'], 'sectionid' => $page['sectionid']), $module));
                     $link->link = $page['title'];
-                    $str .= '<li>'.$this->objDate->formatDate($page['created']).' - '. $link->show() .'</li>';
+                    $listStr = '';
+                    if($showDate){
+                        $listStr = $this->objDate->formatDate($page['created']).' - ';
+                    }
+                    $listStr .= $link->show();
+                    $str .= '<li>'.$listStr.'</li>';
                 }
                 $str .= '</ul>';
             }
