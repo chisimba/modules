@@ -1911,11 +1911,11 @@ class blogops extends object
                     )) , $ark['formatted']);
                     $lnks.= $lnk->show() ."<br />";
                 }
-                $str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('archivemenu','slide', adjustLayout());\">[...]</a>";
-        		$str .='<div id="archivemenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
-        		$str .= $lnks;
-        		$str .= '</div>';
-                $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_archives", "blog") , $str);
+                //$str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('archivemenu','slide', adjustLayout());\">[...]</a>";
+        		//$str .='<div id="archivemenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
+        		//$str .= $lnks;
+        		//$str .= '</div>';
+                $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_archives", "blog") , $lnks);
                 return $ret;
             }
             
