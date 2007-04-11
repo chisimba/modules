@@ -1,6 +1,6 @@
 <?php
 /**
-* Template to display the main page for the new forum
+* Template to display the registration page
 * @access public
 */
 

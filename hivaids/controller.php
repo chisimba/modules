@@ -26,6 +26,7 @@ class hivaids extends controller
     {
         try{
             $this->hivTools = $this->getObject('hivaidstools', 'hivaids');
+            $this->objConfig = $this->getObject('altconfig', 'config');
             $this->objUser = $this->getObject('user', 'security');
             $this->objUserAdmin = $this->getObject('useradmin_model2','security');
             
@@ -57,6 +58,17 @@ class hivaids extends controller
                 $id = $this->saveRegister();
                 return $this->nextAction('confirm', array('newId' => $id), 'userregistration');
                 
+            case 'playyourmoves':
+                $check = $this->inIpRange();
+                if($check){
+                    $skinroot = $this->objConfig->getskinRoot().'uwchivaids/';
+                    $this->setVarByRef('skin', $skinroot);
+                    return 'game_tpl.php';
+                }
+                $display = $this->notAllowed();
+                $this->setVarByRef('display', $display);
+                return 'home_tpl.php';
+                
             default:
                 $display = '';
                 $this->setVarByRef('display', $display);
@@ -86,12 +98,48 @@ class hivaids extends controller
         
         // Check that username is available
         if ($this->objUserAdmin->userNameAvailable($username) == FALSE) {
-            
+            return $this->nextAction('showregister');
         }
         
         $pkid = $this->objUserAdmin->addUser($userId, $username, $password, $title, $firstname, $surname, '', $gender, $country, '', '', 'useradmin', '1');
         
         return $pkid;
+    }
+    
+    /**
+    * Method to check if the users IP is within the allowed IP range
+    *
+    * @access private
+    * @return bool
+    */
+    private function inIpRange()
+    {
+        // Proxy: 192.102.x
+        // Intranet: 172.16.x
+        $ipRange = '172.16.';
+        
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $pos = strpos($ip, $ipRange, 0);
+                
+        if($pos === FALSE){
+            return FALSE;
+        }
+        return TRUE;
+    }
+    
+    /**
+    * Method to display a message if the user is outside the IP range
+    *
+    * @access private
+    * @return string html
+    */
+    private function notAllowed()
+    {
+        $objLanguage = $this->getObject('language', 'language');
+        $msg = $objLanguage->languageText('mod_hivaids_notallowedplaygame', 'hivaids');
+                
+        $str = '<p class="noRecordsMessage error">'.$msg.'</p>';
+        return $str;
     }
     
     /**
