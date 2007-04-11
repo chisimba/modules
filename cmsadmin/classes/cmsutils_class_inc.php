@@ -134,7 +134,7 @@ class cmsutils extends object
                     $this->inContextMode = FALSE;
                 }
 
-                $this->objDateTime = $this->getObject('datetime', 'utilities');
+                $this->objDateTime = $this->getObject('dateandtime', 'utilities');
 
                 $this->loadClass('textinput', 'htmlelements');
                 $this->loadClass('checkbox', 'htmlelements');

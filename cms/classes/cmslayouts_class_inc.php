@@ -34,7 +34,7 @@ class cmslayouts extends object
             $this->_objCmsUtils =$this->newObject('cmsutils', 'cmsadmin');
                 
             $this->objUser = $this->newObject('user', 'security');
-            $this->objDate = $this->getObject('datetime', 'utilities');
+            $this->objDate = $this->getObject('dateandtime', 'utilities');
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objCCLicense = $this->getObject('displaylicense', 'creativecommons');
             
