@@ -48,9 +48,9 @@ if(!$this->getParam('query') == ''){
 $hasBlocks = FALSE;
 $rightSide = "";
 
-$isLoggedIn = $objUser->isLoggedIn();
+//$isLoggedIn = $objUser->isLoggedIn();
 
- if(!$isLoggedIn){
+/* if(!$isLoggedIn){
      /* We don't want to hard code any blocks
      $hasBlocks = TRUE;
      $loginBlock = $objDbBlocks->getBlockByName('login');
@@ -58,7 +58,7 @@ $isLoggedIn = $objUser->isLoggedIn();
 
      $rightSide .= $objBlocks->showBlock($loginBlock['blockname'], $loginBlock['moduleid']);
      $rightSide .= $objBlocks->showBlock($registerBlock['blockname'], $registerBlock['moduleid']);
-     */
+     *
      
      $pageBlocks = $objDbBlocks->getBlocksForFrontPage();  
      if(!empty($pageBlocks)) {
@@ -71,6 +71,7 @@ $isLoggedIn = $objUser->isLoggedIn();
         }
      }    
  } else {
+     */
     $currentAction = $this->getParam('action', NULL);
     if($currentAction == 'showsection'){
         $sectionId = $this->getParam('id');
@@ -91,7 +92,7 @@ $isLoggedIn = $objUser->isLoggedIn();
             $rightSide .= $objBlocks->showBlock($blockToShow['blockname'], $blockToShow['moduleid']);
         }
     }
-}
+//}
 
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 if($hasBlocks){
