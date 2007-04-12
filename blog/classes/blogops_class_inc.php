@@ -97,7 +97,7 @@ class blogops extends object
     				<img src=" " style="width : 120px; height : 80px;" alt="random selection of pictures" id="imageDiaporama"/>
 					</div>  ';
  		$this->objFeaturebox = $this->getObject('featurebox', 'navigation');
- 		$ret = $this->objFeaturebox->show($this->objLanguage->languageText("mod_blog_recentpics", "blog"), $content);
+ 		$ret = $this->objFeaturebox->showContent($this->objLanguage->languageText("mod_blog_recentpics", "blog"), $content);
  		return $ret;
     }
 
