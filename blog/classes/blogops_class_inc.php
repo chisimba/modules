@@ -51,19 +51,41 @@ class blogops extends object
             throw new customException($this->objLanguage->languageText("mod_blog_sanity_bbcodeparser", "blog"));
         }
     }
-    public function commentAddForm()
+    
+    public function showDiaporama()
     {
-    }
-    public function commentDelForm()
-    {
-    }
-    public function passProtectPost()
-    {
-    }
-    public function liveSearchForm()
-    {
-    }
+    	$head = '<script type="text/javascript">
+				var id_current = 0;
 
+				function majDiaporama ()
+				{
+ 					var t_img = new Array(); 
+ 					t_img[0] = "http://ns34.hosteur.com/~learnc/images/1146933426.jpg"; 
+ 					t_img[1] = "http://ns34.hosteur.com/~learnc/images/1146935211.jpg"; 
+ 					t_img[2] = "http://ns34.hosteur.com/~learnc/images/1148147739.gif"; 
+ 					t_img[3] = "http://ns34.hosteur.com/~learnc/images/1148147779.gif";';
+
+ 		$head .=	"var img = $('imageDiaporama');
+
+   					Element.hide('imageDiaporama');
+   					img.src = '';
+   					if (id_current < (t_img.length-1)) id_current++;
+   					else id_current = 0;
+   					img.src = t_img[id_current];
+   					new Effect.Appear('imageDiaporama');";
+
+ 		$head .= 	'window.setTimeout("majDiaporama()",5000);
+				}
+			</script>';
+ 		$this->appendArrayVar('headerParams', $head);
+ 		
+ 		$content = '<body onLoad="majDiaporama ();">
+					<div class="featurebox" id="photoLog">
+    				<img src=" " style="width : 120px; height : 80px;" alt="random selection of pictures" id="imageDiaporama"/>
+					</div>  ';
+ 		
+ 		return $content;
+    }
 
     /**
      * Method to display the login box for prelogin blog operations

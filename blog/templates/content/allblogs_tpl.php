@@ -16,6 +16,7 @@ $middleColumn = NULL;
 
 $rightSideColumn .= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_bloglist", "blog"), $this->objLanguage->languageText("mod_blog_intro", "blog"));
 $rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
+//$rightSideColumn .= $this->objblogOps->showDiaporama();
 
 if(empty($ret))
 {
