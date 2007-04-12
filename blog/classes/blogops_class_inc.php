@@ -60,7 +60,12 @@ class blogops extends object
     	chdir($path);
     	$counter = 0;
     	$entry = NULL;
-    	foreach(glob('*.jpg') as $images)
+    	$filearr = glob('*.jpg');
+    	if(empty($filearr))
+    	{
+    		return NULL;
+    	}
+    	foreach($filearr as $images)
     	{
     		$entry .= 't_img['.$counter.'] = "'.$this->objConfig->getSiteRoot() . "usrfiles/blog/" .$images.'";';
     		$counter++;
