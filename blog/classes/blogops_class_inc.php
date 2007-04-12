@@ -60,7 +60,7 @@ class blogops extends object
     	chdir($path);
     	$counter = 0;
     	$entry = NULL;
-    	$filearr = glob('*.jpg');
+    	$filearr = glob("{*.jpg,*.JPG,*.png,*.PNG,*.gif,*.GIF}",GLOB_BRACE);
     	if(empty($filearr))
     	{
     		return NULL;
