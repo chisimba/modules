@@ -54,17 +54,25 @@ class blogops extends object
     
     public function showDiaporama()
     {
+    	$this->objConfig = $this->getObject('altconfig', 'config');
+    	//build up the array of images...
+    	$path = $this->objConfig->getContentBasePath() . 'blog/';
+    	chdir($path);
+    	$counter = 0;
+    	$entry = NULL;
+    	foreach(glob('*.jpg') as $images)
+    	{
+    		$entry .= 't_img['.$counter.'] = "'.$this->objConfig->getSiteRoot() . "usrfiles/blog/" .$images.'";';
+    		$counter++;
+    	}
+    	
     	$head = '<script type="text/javascript">
 				var id_current = 0;
 
 				function majDiaporama ()
 				{
- 					var t_img = new Array(); 
- 					t_img[0] = "http://ns34.hosteur.com/~learnc/images/1146933426.jpg"; 
- 					t_img[1] = "http://ns34.hosteur.com/~learnc/images/1146935211.jpg"; 
- 					t_img[2] = "http://ns34.hosteur.com/~learnc/images/1148147739.gif"; 
- 					t_img[3] = "http://ns34.hosteur.com/~learnc/images/1148147779.gif";';
-
+ 					var t_img = new Array();';
+    	$head .=    $entry; 
  		$head .=	"var img = $('imageDiaporama');
 
    					Element.hide('imageDiaporama');
@@ -80,11 +88,12 @@ class blogops extends object
  		$this->appendArrayVar('headerParams', $head);
  		
  		$content = '<body onLoad="majDiaporama ();">
-					<div class="featurebox" id="photoLog">
+					<div class="warning" id="photoLog">
     				<img src=" " style="width : 120px; height : 80px;" alt="random selection of pictures" id="imageDiaporama"/>
 					</div>  ';
- 		
- 		return $content;
+ 		$this->objFeaturebox = $this->getObject('featurebox', 'navigation');
+ 		$ret = $this->objFeaturebox->show($this->objLanguage->languageText("mod_blog_recentpics", "blog"), $content);
+ 		return $ret;
     }
 
     /**
