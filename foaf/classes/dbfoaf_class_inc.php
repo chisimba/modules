@@ -181,6 +181,10 @@ class dbfoaf extends dbtable
         $this->_changeTable('tbl_foaf_organization');
         $ret = $this->getAll("WHERE userid = ".$userid);
         //print_r($ret);
+        if(empty($ret))
+        {
+        	return NULL;
+        }
         foreach($ret as $returns) {
             $retarr[] = array(
                 'id' => $returns['id'],

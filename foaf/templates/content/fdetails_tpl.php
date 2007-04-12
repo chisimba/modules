@@ -200,7 +200,7 @@ if (isset($tcont->foaf['knows'])) {
     }
 } else {
     $myFriendsForm = $this->objFoafOps->addDD();
-    $myFriendsForm.= $this->objFoafOps->remDD();
+   // $myFriendsForm.= $this->objFoafOps->remDD();
     $objFeatureBox = $this->newObject('featurebox', 'navigation');
     $myFbox = $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_nofriends', 'foaf') , $this->objLanguage->languageText('mod_foaf_nofriendstxt', 'foaf'));
 }
@@ -212,7 +212,7 @@ if (isset($tcont->foaf['knows'])) {
  */
 $myorgs = $this->objFoafOps->orgaRemForm() .$this->objFoafOps->orgaAddForm();
 //build the featureboxen for the orgs
-if (!is_array($tcont->foaf['knows'])) {
+if (!array_key_exists('knows', $tcont->foaf)) {
     $tcont->foaf['knows'] = array();
 }
 if (!isset($tcont->foaf['knows'])) {

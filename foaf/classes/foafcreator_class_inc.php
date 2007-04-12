@@ -113,7 +113,7 @@ class foafcreator extends object
      */
     public function newAgent($agent_type = 'Person') 
     {
-        require_once 'XML/Tree.php';
+        require_once $this->getResourcePath('Tree.php', 'foaf');
         $this->xml_tree = new XML_Tree;
         $agent_type = strtolower($agent_type);
         $this->agent = $agent_type;
