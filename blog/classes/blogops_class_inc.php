@@ -57,6 +57,10 @@ class blogops extends object
     	$this->objConfig = $this->getObject('altconfig', 'config');
     	//build up the array of images...
     	$path = $this->objConfig->getContentBasePath() . 'blog/';
+    	if(!file_exists($path))
+    	{
+    		mkdir($path, 0777);
+    	}
     	chdir($path);
     	$counter = 0;
     	$entry = NULL;
