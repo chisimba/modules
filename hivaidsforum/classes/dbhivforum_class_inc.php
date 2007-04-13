@@ -428,7 +428,7 @@ class dbhivforum extends dbtable
         if(isset($forumId) && !empty($forumId)){
             $sql .= "WHERE id = '{$forumId}' ";
         }else{
-            $sql .= " WHERE defaultforum = 'Y' AND forum_context = '$this->context') ";
+            $sql .= " WHERE defaultforum = 'Y' AND forum_context = '$this->context' ";
         }
         
         $data = $this->getArray($sql);

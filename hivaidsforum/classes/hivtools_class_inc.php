@@ -187,6 +187,11 @@ class hivtools extends object
     */
     public function showAddCategory()
     {
+        // Check users permissions - must be site lecturer or admin
+        if(!$this->checkPermissions()){
+            return '';
+        }
+        
         $lbAddCat = ucwords($this->objLanguage->languageText('phrase_addcategory'));
         $lbCategory = $this->objLanguage->languageText('phrase_categoryname');
         $lbDescription = $this->objLanguage->languageText('word_description');
@@ -232,6 +237,11 @@ class hivtools extends object
     */
     public function showAddTopic()
     {
+        // Check users permissions - must be site lecturer or admin
+        if(!$this->checkPermissions()){
+            return '';
+        }
+        
         $lbAddTopic = ucwords($this->objLanguage->languageText('phrase_addtopic'));
         $lbSubject = $this->objLanguage->languageText('word_subject');
         $lbMessage = $this->objLanguage->languageText('word_message');
@@ -274,7 +284,7 @@ class hivtools extends object
     private function checkPermissions()
     {
         $perms = $this->getSession('isManager');
-        if(!empty($perms)){
+        if(!empty($perms) && !is_null($perms)){
             if($perms == 'yes'){
                 return TRUE;
             }
