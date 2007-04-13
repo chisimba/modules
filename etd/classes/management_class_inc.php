@@ -625,6 +625,10 @@ class management extends object
             $objInput = new textinput('thesisId', $data['metaid'], 'hidden');
             $hidden .= $objInput->show();
         }
+        if(!empty($data['status'])){
+            $objInput = new textinput('status', $data['status'], 'hidden');
+            $hidden .= $objInput->show();
+        }
 
         // Add to a form
         $objForm = new form('editresource', $this->uri(array('action' => 'savesubmissions', 'mode' => $mode, 'nextmode' => $nextmode)));
@@ -651,7 +655,8 @@ class management extends object
     private function saveResource($submitId = NULL)
     {
         // Update the submissions table to show who modified it and when
-        $submitId = $this->dbSubmissions->editSubmission($this->userId, $submitId);
+        $status = $this->getParam('status', 'metadata');
+        $submitId = $this->dbSubmissions->editSubmission($this->userId, $submitId, $status);
 
         // Save the dublincore metadata
         $metaId = $this->getParam('dcMetaId');

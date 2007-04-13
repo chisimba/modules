@@ -111,7 +111,8 @@ class etdresource extends object
                                 
                 if($check !== FALSE || $check2 !== FALSE){
                     $metaName = str_replace('_', '.', $key);
-                    $str .= "<meta name='{$metaName}' content='{$item}' />\n";
+                    $metaContent = htmlentities($item);
+                    $str .= "<meta name='{$metaName}' content=\"{$metaContent}\" />\n";
                 }
             }
         }
