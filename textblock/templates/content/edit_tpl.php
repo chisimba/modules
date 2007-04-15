@@ -70,7 +70,7 @@ $objForm->addToForm($wsiLabel->show()."<br />".$objElement->show()."<br /><br />
 //------------------------------------------------------------------------
 //Create an element for the input of title
 $objElement = new textinput ("title");
-//Set the value of the element to $blocktext
+//Set the value of the element to $title
 if (isset($title)) {
     $objElement->setValue($title);
 }
@@ -79,11 +79,13 @@ $wsiLabel = new label($this->objLanguage->languageText('mod_textblock_field_titl
 //Add the $blocktext element to the form
 $objForm->addToForm($wsiLabel->show()."<br />".$objElement->show()."<br /><br />");
 //------------------------------------------------------------------------
+//die(htmlspecialchars($blocktext));
+
 //Create an element for the input of block text
 $objElement = new textarea ("blocktext");
 //Set the value of the element to $title
 if (isset($blocktext)) {
-    $objElement->setContent($blocktext);
+    $objElement->setContent(htmlspecialchars($blocktext));
 }
 //Create label for the input of quote
 $quoteLabel = new label($this->objLanguage->languageText('mod_textblock_field_blocktext','textblock'), "input_blocktext");
