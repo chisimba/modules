@@ -83,8 +83,8 @@ class dbPost extends dbTable
         $this->objLanguage =& $this->getObject('language', 'language'); 
         
         // Load Forum Subscription classes
-		$this->objForumSubscriptions =& $this->getObject('dbforumsubscriptions');
-		$this->objTopicSubscriptions =& $this->getObject('dbtopicsubscriptions');
+		  $this->objForumSubscriptions =& $this->getObject('dbforumsubscriptions');
+		  $this->objTopicSubscriptions =& $this->getObject('dbtopicsubscriptions');
         
         $this->objTranslatedDate = $this->getObject('translatedatedifference', 'utilities');
         $this->objDateTime = $this->getObject('datetime', 'utilities');
@@ -93,9 +93,7 @@ class dbPost extends dbTable
         $this->contextObject =& $this->getObject('dbcontext', 'context');
         $this->contextCode = $this->contextObject->getContextCode();
         
-        $this->objMediaFilter = $this->getObject('parse4mmedia', 'filters');
-        $this->objStringsFilter = $this->getObject('parse4display', 'strings');
-        $this->objMindMap = $this->getObject('parse4mindmap', 'filters');
+        $this->objWashoutFilters = $this->getObject('washout', 'utilities');
         
         $this->objIcon = $this->newObject('geticon', 'htmlelements');
         
@@ -455,13 +453,11 @@ class dbPost extends dbTable
                     $return .= '</div>';
                 }
                 $return .= '<div id="loading_'.$post['post_id'].'"></div>';
-                $return .= '<div id="text_'.$post['post_id'].'">'.$this->objMindMap->parse($this->objStringsFilter->prepare(// Apply String Filters
-                                
-                                $this->objMediaFilter->parseAll( // Apply Media Filters
-                                    $this->objScriptClear->removeScript( // Apply Script Removal Filters
+                $return .= '<div id="text_'.$post['post_id'].'">'.$this->objWashoutFilters->parseText(
+                                   $this->objScriptClear->removeScript( // Apply Script Removal Filters
                                         stripslashes( // Remove Slashes
                                             $post['post_text']
-                            ))))).'</div>';
+                            ))).'</div>';
                 
                 // Check if the post has attachments
                 if ($post['attachment_id'] != NULL) {
