@@ -19,7 +19,7 @@ $fields = array(
     ),
    'topic'  => array(
      'type'  =>  'text',
-     'length' =>  225
+     'length' =>  100
        
     ),	
 	
@@ -37,14 +37,18 @@ $fields = array(
       'type'    =>  'timestamp'
       
     ),
+	'options'  =>  array(
+      'type'    =>  'integer',
+	  'length'=>1
+      
+    ),
     'hasanswers'  =>  array(
        'type' => 'integer',
         'length' => 1
      
     ),
     'examyear'  =>  array(
-      'type'    =>  'date' 
-      
+      'type'    =>  'date'       
     ),
    
     'updated'  =>  array(

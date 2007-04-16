@@ -20,7 +20,7 @@ $contextCode  = $this->_objDBContext->getContextCode();
 $contextName = $this->_objDBContext->getTitle($contextCode);
   
 //check if there are some past papers in the database and if there are some, display a list 
-$past_papers = $this->pastpapers->getpapers($contextCode);  
+$past_papers = $this->pastpapers->getotherpapers($contextCode);  
 
 if(!empty($past_papers)){  
 $heading->str = $this->objLanguage->languageText('mod_pastpapers_listofotherpapers','pastpapers');
@@ -43,14 +43,31 @@ $heading->str = $this->objLanguage->languageText('mod_pastpapers_listofotherpape
 	 $class = ($class == 'odd') ? 'even':'odd';
 	 
 	 if($p['hasanswers']==0){$hasanswers = "No";} else {$hasanswers = "Yes";}
-	 $addedby = $this->objUser->fullname($p['userid']);
+	 $addedby = $this->objUser->fullname($p['userid']);	
+		
 		
 	$downloadlink = new link();
 	$downloadlink->link = $p['filename'];
-	$downloadlink->href = "modules/pastpapers/papers/".$p['filename'];
+	
+	if($p['contextcode']){
+	  $downloadlink->href = str_replace('\\', '/',$this->objConfig->getcontentRoot())."content/".$contextCode."/papers/".$p['filename'];	
+	}
+	
+	else 	
+	   	$downloadlink->href = str_replace('\\', '/',$this->objConfig->getcontentRoot())."content/papers/".$p['filename'];	
+		
+	if($p['contextcode']){
+	  $contextname = $this->_objDBContext->getTitle($p['contextcode']);
+	}
+	
+	else 
+	   $contextname = $this->objLanguage->languageText('mod_pastpapers_lobby','pastpapers');
+	
 	
 	$table->startRow();	
-	$table->addCell($this->_objDBContext->getTitle($p['contextcode']),'','','left',$class);
+	
+	$table->addCell($contextname,'','','left',$class);
+	
 	$table->addCell($downloadlink->show(),'','','left',$class);
 	$table->addCell($p['examyear'],'','','left',$class);	
 	$table->addCell($hasanswers,'','','left',$class);

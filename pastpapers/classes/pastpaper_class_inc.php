@@ -8,12 +8,13 @@
 
 class pastpaper extends dbTable{
 
-public function init(){
+function init(){
 parent::init('tbl_pastpapers');
 $this->table = 'tbl_pastpapers';
 
 //instance of the language items
 $this->objLanguage = & $this->getObject('language','language');
+$this->objConfig = & $this->getParam('altconfig','config');
 
 }
 
@@ -21,17 +22,15 @@ $this->objLanguage = & $this->getObject('language','language');
 * Function to upload the pastpapers
 * $filename - name of the file that has been uploaded
 */
-
-public function uploadfile(){
+function uploadfile($folder,$contextCode='lobby'){
 $this->objConfig = & $this->getObject('altconfig','config');
 //$contextCode = $this->_objDBContext->getContextCode();
  if (is_uploaded_file($_FILES['filename']['tmp_name'])) {
    $file_name = $_FILES['filename']['name'];   
    $tmp = $_FILES['filename']['tmp_name'];
    $size = $_FILES['filename']['size'];     
-   
-   $folderpath = $this->objConfig->getModulePath().'pastpapers/papers/'.$file_name;   
-  
+  // getModulePath()
+   $folderpath = $folder."/".$file_name;     
    $path = str_replace('\\', '/',$folderpath);
    
    //check extensions
@@ -41,7 +40,9 @@ $this->objConfig = & $this->getObject('altconfig','config');
     switch($extn){ 
 			case "doc":
 			case "pdf":
-			case "txt":					
+			case "txt":
+			case "ppt":	
+			case "xls":				
 			 $res= move_uploaded_file($tmp,$path);
 			break;
 		
@@ -53,9 +54,6 @@ $this->objConfig = & $this->getObject('altconfig','config');
   else return false;	
 }//closing if not uploaded
 
-
-
-
 }
 
 
@@ -64,17 +62,18 @@ $this->objConfig = & $this->getObject('altconfig','config');
 * @param - $file_name - name of the file
 * @param - $examyear Year the paper was sat for
 */
-function savepaper($file_name,$examyear,$topic){
+function savepaper($file_name,$examyear,$topic,$option ){
 $this->_objDBContext = $this->getObject('dbcontext','context');
 $this->objUser = $this->getObject('user','security');
 
    $uploadDate = date('Y-m-d H:i:s');
-   $contextCode = $this->_objDBContext->getContextCode();   
+   $contextCode = $this->_objDBContext->getContextCode();    
     $fields = array( 'contextcode' => $contextCode,
                         'userid' => $this->objUser->userId(),
 						'topic'=>$topic,
                         'filename' => $file_name,
                         'dateuploaded' => $uploadDate,
+						'options'=> $option,
                         'hasanswers' => 0,
                         'examyear' =>$examyear
                         ); 
@@ -87,8 +86,18 @@ $this->objUser = $this->getObject('user','security');
 * Function to get all the available pastpapers for the course
 * @param $contextcode 
 */
-public function getpapersforcontext($contextcode){
-$sql = "select * from ".$this->table." where contextcode ='$contextcode'";
+function getpapersforcontext($contextcode){
+
+//check if person is in context
+if(!$contextcode){
+
+   $sql = "select * from ".$this->table." where contextcode IS NULL";
+}
+else {
+  $sql = "select * from ".$this->table." where contextcode ='$contextcode'";
+  
+   }   
+   
 $ar = $this->getArray($sql);
 if($ar ){ return $ar;}
 
@@ -101,8 +110,14 @@ if($ar ){ return $ar;}
 /*
 * Funcion to didplay a list of all the papaers that are in the conext outside the one user is in
 */
-public function getpapers($contextcode){
-$sql = "select * from ".$this->table." where contextcode !='$contextcode'";
+function getotherpapers($contextcode){
+if($contextcode){
+$sql = "select * from ".$this->table." where contextcode !='$contextcode' or contextcode IS NULL ";
+}
+
+else 
+  $sql = "select * from ".$this->table." where contextcode IS NOT NULL ";
+
 $ar = $this->getArray($sql);
 if($ar ){ return $ar;}
 
@@ -114,7 +129,7 @@ if($ar ){ return $ar;}
 /*
 * Function to get the details of the paper
 */
-public function getPaperDetails($paperid){
+function getPaperDetails($paperid){
 $this->_objDBContext = & $this->getObject('dbcontext','context');
 
 $sql = "select * from ".$this->table." where id ='$paperid'";
@@ -125,6 +140,69 @@ if($ar ){ return $this->_objDBContext->getTitle($this->_objDBContext->getContext
 
 
 }
+
+/*
+* Function to check if other people can add answers
+*/
+function allCanAddAnswers($contextCode,$id)
+    {	
+	$sql = "select * from $this->table where contextcode= '$contextCode' and id='$id'";
+	$ar = $this->getArray($sql);
+	if($ar){
+	
+	return $ar[0]['options'];
+	
+	  }
+	
+	else return false;
+	
+         
+    } 
+	
+
+     /**
+    * method to create specified folder
+    * @access public
+    * @param string $folder The folder that needs to be created
+    */
+    public function makeFolder($folder_name,$contextCode=NULL)
+    {   $this->objConfig = & $this->getObject('altconfig','config');
+        $dir = $this->objConfig->getcontentBasePath().'content';
+
+        if (!(file_exists($dir))){
+            $oldumask = umask(0);
+            $ret = mkdir($dir, 0777);
+            umask($oldumask);
+        }
+        
+        if ($contextCode==''){	
+		
+			$dir_i = $this->objConfig->getcontentBasePath().'content/'.$folder_name;
+			$dir = str_replace('\\', '/',$dir_i);
+        } else {
+            $dir_i =$this->objConfig->getcontentBasePath().'content/'.$contextCode.'/'.$folder_name;
+			$dir = str_replace('\\', '/',$dir_i);
+        }
+		
+		//echo $dir; exit;
+		
+        if (!(file_exists($dir))){		
+		
+            $oldumask = umask(0);
+            $ret_2 = mkdir($dir, 0777);  //STILL NEED A DECISION ON BLOBS OR FILE SYSTEM
+            umask($oldumask);
+			
+			
+        }
+        else
+        {
+            $ret = FALSE;
+        }
+        
+        return $ret;
+    }
+    
+   
 
 
 
