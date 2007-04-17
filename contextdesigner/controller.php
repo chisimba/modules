@@ -57,7 +57,7 @@ class contextdesigner extends controller
                 $this->setVar('modules', $this->_objDBContextModules->getContextModules($this->_objDBContext->getContextCode()));
                 return 'add_tpl.php';
             case 'addstep2':
-           
+          
                 $this->setVar('links',$this->_objUtils->getModuleLinks($this->getParam('moduleid')));
                 return 'addstep2_tpl.php';
                 

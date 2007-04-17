@@ -7,6 +7,7 @@ $icon =  & $this->newObject('geticon', 'htmlelements');
 $table = & $this->newObject('htmltable', 'htmlelements');
 $domtt = & $this->newObject('domtt', 'htmlelements');
 $objContextGroups = & $this->newObject('onlinecount', 'contextgroups');
+//$objContextPostLogin = & $this->newObject('utils' , 'contextpostlogin');
 /*
 $str = '';
 $other = '';
@@ -85,8 +86,12 @@ if(count($publicCourses) > 0)
 		$oddOrEven = ($rowcount == 0) ? "even" : "odd";
         
         //get the lecturers 
-		$lecturers = $this->_objUtils->getContextLecturers($context['contextcode']);
-		
+        $objLeaf = $this->newObject('groupadminmodel', 'groupadmin');
+	  	$leafId = $objLeaf->getLeafId(array($context['contextcode'],'Lecturers'));
+	  		
+	  		$lecturers = $objLeaf->getGroupUsers($leafId);
+		//$lecturers =$objContextPostLogin->getContextLecturers($context['contextcode']);
+		$objLeaf = null;
         //reset the $lects
         $lects = '';
         
@@ -94,9 +99,14 @@ if(count($publicCourses) > 0)
 		if(is_array($lecturers))
 		{
             //get their names
+			$c = 0;
 			foreach($lecturers as $lecturer)
 			{
-				$lects .= $lecturer['fullname'].', ';
+			    $c++;
+				$lects .= $this->_objUser->fullname($lecturer['userid']);
+				$lects .= ($c < count($lecturers)) ? ', ' : '';
+				
+				
 			}
 		} else {
 			$lects = 'No Instructor for this course';

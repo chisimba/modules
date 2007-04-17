@@ -136,6 +136,9 @@ class eventscalendar extends controller
                 }
                 return $this->nextAction('categories');
                 
+             case 'merge';
+                $this->_objDBEventsCalendar->mergeEvents();
+                return $this->nextAction(null);
         }
     }
     
@@ -147,6 +150,9 @@ class eventscalendar extends controller
     {
         return $this->_objUtils->getNav();
     }
+    
+    
+
 }
 
 ?>

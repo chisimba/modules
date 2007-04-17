@@ -48,7 +48,7 @@ class utilities extends object
      * registered to the current context and get the
      * list of links that the module has made available
      * 
-     * @return 
+     * @return boolean|array
      * @access public
      * @package null
      * @author Wesley Nitsckie
@@ -56,14 +56,17 @@ class utilities extends object
     public function getModuleLinks($moduleId)
     {
         try{
-           if(file_exists('modules/'.$moduleId.'/classes/modulelinks_'.$moduleId.'_class_inc.php'))
+            $objConfig = $this->getObject('altconfig','config');
+           if(file_exists($objConfig->getModulePath().$moduleId.'/classes/modulelinks_'.$moduleId.'_class_inc.php'))
            {
                 $objModuleLink = $this->newObject('modulelinks_'.$moduleId, $moduleId);
                 if(method_exists($objModuleLink,'getContextLinks'))
                 {
                     return $objModuleLink->getContextLinks( $this->_objDBContext->getContextCode());
                 }
-           } 
+           } else {
+               return FALSE;
+           }
         }                        
         catch (customException $e)
         {

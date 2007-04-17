@@ -42,7 +42,7 @@ class dbcontextdesigner extends dbTable
     {
         try 
         {
-            
+            //print_r($this->getParam('selecteditems'));
             foreach($this->getParam('selecteditems') as $row)
             {
                 $selectedItemsArr = split('===',$row);    
@@ -54,7 +54,8 @@ class dbcontextdesigner extends dbTable
                 $description = $selectedItemsArr[2];
                 $linkid = $selectedItemsArr[0];
                 $params = $this->getParam($linkid);//print  $selectedItemsArr[1];
-//                print_r($selectedItemsArr);
+              //  print_r($selectedItemsArr);
+              //  print_r($row);
 //                print($params);
                 $fields = array(
                     'contextcode' => $contextCode,
@@ -66,11 +67,13 @@ class dbcontextdesigner extends dbTable
                     'access' => 'Published',
                     'params' => $params
                 );
-                
+                //var_dump($fields);
+               
                 if(!$this->checkExist($contextCode, $params, $moduleId))
                 {
-                    $this->insert($fields);
-                }
+                    $this->insert($fields);                    
+                   //die('done');
+                } 
             
             }
             
@@ -113,9 +116,9 @@ class dbcontextdesigner extends dbTable
      */
     public function getPublishedContextLinks($contextCode = null)
     {
-        
+       
          $contextCode = (is_null($contextCode)) ? $this->_contextCode : $contextCode;
-        
+  
         $linksArr = $this->getAll("WHERE contextcode = '{$contextCode}' AND access='Published' ORDER BY linkorder");
         if(count($linksArr) > 0)
         { 
@@ -156,7 +159,7 @@ class dbcontextdesigner extends dbTable
      */
     public function getLastOrderPosition($contextCode)
     {
-        $rows = $this->getAll('WHERE contextcode = "'.$contextCode.'"');
+        $rows = $this->getAll("WHERE contextcode = '".$contextCode."'");
         return count($rows) + 1;
     }
     
@@ -170,6 +173,7 @@ class dbcontextdesigner extends dbTable
     {
         
         $record = $this->getAll("WHERE contextcode='".$contextCode."' AND params='".$params."' AND moduleid='".$moduleid."'");
+        
         if(count($record) > 0 )
         {
             return TRUE;

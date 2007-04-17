@@ -32,7 +32,7 @@ class modulelinks_eventscalendar extends object
      */
     public function getContextLinks($contextCode)
     { 
-       /*
+       
           $catId = $this->_objDBCategories->getCatId('context', $contextCode);
          
           $events =  $this->_objDBEventsCalendar->getAll('WHERE catid="'.$catId.'" ORDER BY event_date' );
@@ -51,7 +51,7 @@ class modulelinks_eventscalendar extends object
           }
           
           return $bigArr;
-          */
+          
     }
     
 }

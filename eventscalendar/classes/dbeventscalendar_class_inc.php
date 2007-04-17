@@ -31,7 +31,7 @@ class dbeventscalendar extends dbTable
     public function init()
     {
     	
-    	
+    	$this->_objUser = & $this->getObject('user', 'security');
         parent::init('tbl_eventscalendar');
        // $this->_objDBLookup = & $this->newObject('dbeventslookup', 'eventscalendar');
     }
@@ -339,5 +339,52 @@ class dbeventscalendar extends dbTable
 		//the multisort
 	
 		return $array;
+	}
+	
+	
+	/**
+	 * Method to merge context and personal 
+	 * events
+	 * 
+	 * @param 
+	 * @access public
+	 * 
+	 */
+	public function mergeEvents()
+	{
+	    try {
+    	    $userId = $this->_objUser->userId();
+    	    $objContext = & $this->getObject('dbcontext','context');
+    	    $objCat = & $this->getObject('dbeventscalendarcategories','eventscalendar');
+    	    
+    	    $contextCode = $objContext->getContextCode();
+    	    $ids = $objCat->getCatId('context',$contextCode);
+    	    $contextEventsArr = $this->getAll("WHERE catId='".$ids."'");
+    	    $userIdCatId =  $objCat->getCatId('user',$userId);
+    	    
+    	    foreach ($contextEventsArr as $event)
+    	    {
+    	        $fields = array (
+                        'title' => $event['title'],
+                        'description' => $event['description'],
+                        'start_time' => $event['start_time'],
+                        'end_time' => $event['end_time'],
+                        'event_date' => $event['event_date'],
+                        'catid' => $userIdCatId,
+                        'location' => $event['location'],
+                        'contextevent_id' => $event['id']            
+                );           	
+               // print_r($fields);
+               // die;
+               // print $this->insert($fields);
+    	    }
+    	    
+    	    
+	    }
+        catch (customException $e)
+        {
+        	echo customException::cleanUp($e);
+        	die();
+        }
 	}
 }

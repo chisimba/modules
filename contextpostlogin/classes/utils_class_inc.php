@@ -211,7 +211,7 @@ class utils extends object
 	  	$str = '<p align="center"><img src="'.$objUserPic->userpicture($this->_objUser->userId() ).'" alt="'.$this->_objUser->fullName().'" /></p>';
 	  	$str .= $this->getUserRole();
 	  	
-	  	return $objBox->show($this->_objUser->fullName(), $str);
+	  	return $objBox->show($this->_objUser->fullName(), $str,'userbox');
 	  }
 	  
 	  /**
@@ -279,6 +279,9 @@ class utils extends object
          $fullresult = $data."<br/>".$data1."<br/>".$data2;
          return $fullresult;
 	  }
+	  
+	 
+	  
 	  /**
 	   * Method to get the right widgets
 	   * @return string
@@ -319,7 +322,7 @@ class utils extends object
 	  		$objLeaf = $this->newObject('groupadminmodel', 'groupadmin');
 	  		$leafId = $objLeaf->getLeafId(array($contextCode,'Lecturers'));
 	  		
-	  		$arr = $objLeaf->getSubGroupUsers($leafId);
+	  		$arr = $objLeaf->getGroupUsers($leafId);
 	  		
 	  		return $arr;
 	  		
