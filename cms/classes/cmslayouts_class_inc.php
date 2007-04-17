@@ -32,7 +32,8 @@ class cmslayouts extends object
             $this->_objMenuStyles =$this->newObject('dbmenustyles', 'cmsadmin');
             $this->_objHtmlBlock =$this->newObject('dbhtmlblock', 'cmsadmin');
             $this->_objCmsUtils =$this->newObject('cmsutils', 'cmsadmin');
-                
+            $this->objModule=&$this->getObject('modules','modulecatalogue');
+               
             $this->objUser = $this->newObject('user', 'security');
             $this->objDate = $this->getObject('dateandtime', 'utilities');
             $this->objLanguage = $this->getObject('language', 'language');
@@ -66,11 +67,14 @@ class cmslayouts extends object
     public function getLeftMenu($currentNode, $rss = NULL)
     {
         $adminLn = $this->objLanguage->languageText('mod_cms_cmsadmin', 'cms');
-        
-        // Create menu
-        $style = $this->getMenuStyle();
-        $leftSide = $this->getMenu($style, $currentNode);
-        
+        if ($this->objModule->checkIfRegistered('context', 'context')){
+           $objContextUtils = & $this->getObject('utilities','context');
+            $leftSide = $objContextUtils->getHiddenContextMenu('cms','none','show');
+        } else {
+            // Create menu
+            $style = $this->getMenuStyle();
+            $leftSide = $this->getMenu($style, $currentNode);
+        }
         // Add admin link
         if($this->objUser->isAdmin() || $this->_objCmsUtils->checkPermission()){
             $objAdminLink = new link($this->uri(array(NULL), 'cmsadmin'));

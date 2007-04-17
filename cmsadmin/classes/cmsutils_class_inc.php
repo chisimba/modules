@@ -114,6 +114,7 @@ class cmsutils extends object
         {
         	try {
                 $this->_objSections =$this->newObject('dbsections', 'cmsadmin');
+                $this->_objDBContext =$this->getObject('dbcontext', 'context');
                 $this->_objContent =$this->newObject('dbcontent', 'cmsadmin');
                 $this->_objConfig =$this->newObject('altconfig', 'config');
                 $this->_objBlocks =$this->newObject('dbblocks', 'cmsadmin');
@@ -125,6 +126,7 @@ class cmsutils extends object
                 $this->objLanguage =$this->newObject('language', 'language');
                 $this->_objContext =$this->newObject('dbcontext', 'context');
 				$this->objFeatureBox = $this->newObject('featurebox', 'navigation');
+				$this->objModule=&$this->getObject('modules','modulecatalogue');
 				
                 $objModule =$this->newObject('modules', 'modulecatalogue');
                 if ($objModule->checkIfRegistered('context')) {
@@ -275,6 +277,108 @@ class cmsutils extends object
             $str .= '</tr></table>';
             return $str;
         }
+        
+        
+        /**
+         * Method to get the control panel for the context
+         * 
+         * @param 
+         * @return string
+         * 
+         */
+        public function getContextControlPanel()
+        {
+            
+           $objLayer = $this->newObject('layer', 'htmlelements');
+            $this->loadClass('htmltable', 'htmlelements');
+            
+        			$tbl = new htmltable();
+                    $tbl->cellspacing = '5';
+                    $tbl->cellpadding = '5';
+                    $tbl->width = "45%";
+                    $tbl->align = "left";
+                          
+                    $link =$this->newObject('link', 'htmlelements');
+                    $objIcon = $this->newObject('geticon', 'htmlelements');
+
+                    //view content link
+					$link = $this->objLanguage->languageText('mod_cmsadmin_viewcontent', 'cmsadmin');
+					$arrSection = $this->_objSections->getSectionByContextCode();
+					$url = $this->uri(array('action' => 'viewsection','id' => $arrSection['id']));
+					$icnViewContent = $objIcon->getBlockIcon($url, 'add_article', $link, 'png', 'icons/cms/');
+
+					//content link
+					$link = $this->objLanguage->languageText('mod_cmsadmin_contentitem', 'cmsadmin');
+					$url = $this->uri(array('action' => 'addcontent'));
+					$icnContent = $objIcon->getBlockIcon($url, 'add_article', $link, 'png', 'icons/cms/');
+                      
+					//Import link
+					$link = $this->objLanguage->languageText('mod_cmsadmin_import', 'cmsadmin'); 
+					$url = $this->uri(array('action' => 'import'));
+					$icnImport = $objIcon->getBlockIcon($url, 'import', $link, 'png', 'icons/cms/');
+					
+					 //Create export manager link
+		            $link = $this->objLanguage->languageText('mod_cmsadmin_export', 'cmsadmin');
+		            $url = $this->uri(array('action' => 'export'), 'cmsadmin');
+		            $icnExport = $objIcon->getBlockIcon($url, 'export', $link, 'png', 'icons/cms/');
+		            
+		            //Page Organisor
+		            $link = $this->objLanguage->languageText('mod_cmsadmin_organisor', 'cmsadmin');
+		            $url = $this->uri(array('action' => 'organisor'), 'cmsadmin');
+		            $icnPageOrganisor = $objIcon->getBlockIcon($url, 'organisor', $link, 'png', 'icons/cms/');
+		            
+		            // Create archive / trash manager link
+		            $url = $this->uri(array('action' => 'trashmanager'));
+		            $link = $this->objLanguage->languageText('mod_cmsadmin_archive', 'cmsadmin');
+					$icnArchive = $objIcon->getBlockIcon($url, 'trash', $link, 'png', 'icons/cms/');
+					
+					// RSS feeds manager link
+		            $url = $this->uri(array('action' => 'createfeed'));
+		            $link = $this->objLanguage->languageText('mod_cmsadmin_rss', 'cmsadmin');
+					$icnRss = $objIcon->getBlockIcon($url, 'rss', $link, 'png', 'icons/cms/');
+					
+					// Menu manager link
+		            //$url = $this->uri(array('action' => 'managemenus'));
+		            $url = $this->uri(array('action' => 'menustyle'));
+		            $link = $this->objLanguage->languageText('mod_cmsadmin_menu', 'cmsadmin');
+					$icnMenu = $objIcon->getBlockIcon($url, 'menu2', $link, 'png', 'icons/cms/');
+					
+					// File manager link
+		            $url = $this->uri('', 'filemanager');
+		            $link = $this->objLanguage->languageText('phrase_uploadfiles');
+					$icnFiles = $objIcon->getBlockIcon($url, 'media', $link, 'png', 'icons/cms/');
+					
+					$tbl->startRow();
+					$tbl->addCell($icnViewContent);
+					$tbl->addCell($icnContent);
+					//$tbl->addCell($icnImport);
+		           // $tbl->addCell($icnExport);
+		           $tbl->addCell($icnMenu);
+					//$tbl->addCell($icnPageOrganisor);
+					$tbl->endRow();
+					
+					$tbl->startRow();
+					$tbl->addCell($icnArchive);
+					$tbl->addCell($icnRss);
+					
+		            $tbl->addCell($icnFiles);
+					$tbl->addCell('');
+					$tbl->endRow();
+					
+					$tbl->startRow();
+		            $tbl->addCell('&nbsp;');
+					$tbl->endRow();
+					
+					$tbl->startRow();
+					$tbl->endRow();
+					
+                    $objLayer->str = $tbl->show();
+                    $objLayer->id = 'cpanel';
+                    $fboxcontent = $objLayer->show();
+
+                    return $this->objFeatureBox->showContent('',$fboxcontent);
+        }
+        
         
         /**
          * Method to get the Control Panel
@@ -918,11 +1022,20 @@ class cmsutils extends object
             $url = $this->uri(array('action' => ''), 'filemanager');
             $filemanager = $objIcon->getTextIcon($url, 'media', $link, 'png', 'icons/cms/');
             
-			$objCMSTree = $this->getObject('cmstree');
-
-            //Add links to the output layer
-            $nav = $objFeatureBox->show($this->objLanguage->languageText('word_sections'),$objCMSTree->getCMSAdminTree());
-            //$nav .= '<br/>';
+            $nav = '';
+            $objCMSTree = $this->getObject('cmstree');
+            if($this->_objDBContext->isInContext() && $this->objModule->checkIfRegistered('context', 'context'))
+            {
+                $objContextUtils = & $this->getObject('utilities','context');
+                $nav = $objContextUtils->getHiddenContextMenu('cms','none','show');
+            } else {
+    			
+    
+                //Add links to the output layer
+                $nav = $objFeatureBox->show($this->objLanguage->languageText('word_sections'),$objCMSTree->getCMSAdminTree());
+            }
+                
+                //$nav .= '<br/>';
 			// $nav .= $createSectionLink;
             // $nav .= '<br/>'.'&nbsp;'.'<br/>';
             //$nav .= $frontpageManagerLink;

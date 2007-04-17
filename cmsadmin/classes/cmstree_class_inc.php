@@ -264,7 +264,14 @@ class cmstree extends object
 		*/
 		public function getCMSAdminDropdownTree($defaultSelected=NULL, $includeRoot=TRUE)
 		{
-			$menu = $this->getTree('cmsadmin', $includeRoot, FALSE);
+		    $objDBContext = $this->getObject('dbcontext', 'context');
+		    if($objDBContext->isInContext())
+		    {		        
+		        $menu = $this->getTreeForInContext('cmsadmin', $includeRoot, FALSE);
+		    } else {
+		        $menu = $this->getTree('cmsadmin', $includeRoot, FALSE);  
+		    }
+			
 			
 			$this->loadClass('htmldropdown', 'tree');
 			
@@ -287,11 +294,12 @@ class cmstree extends object
 			$action = ($module == 'cms') ? 'showsection' : 'viewsection';
 			
 			if ($module == 'cmsadmin') {
+			    
 				$sql = 'SELECT tbl_cms_sections.* , tbl_cms_content.id AS pagevisible
 						FROM tbl_cms_sections
 						LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid 
 						AND tbl_cms_content.published = \'1\')
-						WHERE tbl_cms_sections.trash = \'0\'
+						WHERE tbl_cms_sections.trash = \'0\' 
 						';
 				$useIcon = TRUE;
 			} else {
@@ -317,6 +325,120 @@ class cmstree extends object
             if ($includeRoot) {
 				if ($module == 'cmsadmin') {
 					$rootNode =& new treenode (array('text'=>'[- Root -]', 'link'=>0));
+				} else {
+					$rootNode =& new treenode (array('text'=>$this->objLanguage->languageText('word_home'), 'link'=>$this->uri(NULL, 'cms'), 'liClass'=>'sectionfolder'));
+				}
+                $menu->addItem($rootNode);
+            }
+            
+            if (count($sections) > 0) {
+            
+                foreach ($sections as $section)
+                {
+                    if ($useLinks) {
+						$link = $this->uri(array('action'=>$action, 'id'=>$section['id']), $module);
+					} else {
+						$link = $section['id'];
+					}
+					
+					// Determine the Colour Coding for Sections based on settings
+					if ($section['published'] == '0') { // If section is not visible - code is orange
+						$cssClass = 'orangefolder';
+					} else {
+						$cssClass = 'sectionfolder'; // Default - Yellow folder
+						
+						// If section has no content - gets white folder
+						$content = $this->_objContent->getNumberOfPagesInSection($section['id']);
+						
+						if ($content == 0) {
+							$cssClass = 'whitefolder';
+						} else {
+							// Lastly, check if parent will be shown
+							if ($section['parentid'] == '0') { // Root Folder. Meets all criteria, so add
+								$visibleNodes[] = $section['id'];
+							} else {
+								// For others check whether parents are visible - give green folder if not
+								if (!in_array($section['parentid'], $visibleNodes)) {
+									$cssClass = 'greenfolder';
+								} else {
+									// if parents are visible. add to list of visible items
+									$visibleNodes[] = $section['id'];
+								}
+							}
+						}
+					}
+					
+					
+					$node =& new treenode(array('text'=>$section['menutext'], 'link'=>$link, 'liClass'=>$cssClass));
+                    
+					if ($section['parentid'] == '0') {
+						$nodesArray[$section['id']] =& $node;
+						
+						if ($includeRoot && $module == 'cmsadmin') {
+                            $rootNode->addItem($node);
+                        } else {
+                            $menu->addItem($node);
+                        }
+					} else {
+						if (array_key_exists($section['parentid'], $nodesArray)) {
+                            $nodesArray[$section['id']] =& $node;
+                            $nodesArray[$section['parentid']]->addItem($node);
+                        }
+					}
+                }
+            }
+            
+			return $menu;
+            
+            
+        }
+        
+        /**
+		* Method to generate trees for the CMS
+		* @param string $module Calling Module for which to set the link to
+		* @param boolean $includeRoot Flag to add --Root-- to menu. For CMS, this is the front page
+		* @param boolean $useLinks Flag whether to generate a URI or pass the ID only
+		*/
+        private function getTreeForInContext($module='cmsadmin', $includeRoot=FALSE, $useLinks=TRUE)
+        {
+             $this->loadClass('treemenu', 'tree');
+            $this->loadClass('treenode', 'tree');
+            $this->loadClass('htmllist', 'tree');
+			
+			$action = ($module == 'cms') ? 'showsection' : 'viewsection';
+			
+			if ($module == 'cmsadmin') {
+			    $objDBContext = $this->getObject('dbcontext', 'context');
+				$sql = 'SELECT tbl_cms_sections.* , tbl_cms_content.id AS pagevisible
+						FROM tbl_cms_sections
+						LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid 
+						AND tbl_cms_content.published = \'1\')
+						WHERE tbl_cms_sections.trash = \'0\'AND tbl_cms_sections.contextcode=\''.$objDBContext->getContextCode().'\'
+						';
+				$useIcon = TRUE;
+			} else {
+				$sql = 'SELECT tbl_cms_sections. * , tbl_cms_content.id AS pagevisible
+						FROM tbl_cms_sections
+						LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid
+						AND tbl_cms_content.published = \'1\' )
+						WHERE tbl_cms_sections.published = \'1\' AND tbl_cms_content.published = \'1\' 
+						AND tbl_cms_sections.trash = \'0\' 
+						';
+			}
+			
+            $where = 'ORDER BY nodelevel, ordering';
+            
+            $sections = $this->_objSections->getArray($sql);
+            //var_dump($sectionitems);
+            $menu = new treemenu();
+            
+            $nodesArray = array();
+            $rootNodesArray = array();
+			$visibleNodes = array();
+            $includeRoot = false;
+            if ($includeRoot) {
+				if ($module == 'cmsadmin') {
+					$rootNode =& new treenode (array('text'=>'[- Root WES-]', 'link'=>0));
 				} else {
 					$rootNode =& new treenode (array('text'=>$this->objLanguage->languageText('word_home'), 'link'=>$this->uri(NULL, 'cms'), 'liClass'=>'sectionfolder'));
 				}

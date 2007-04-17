@@ -361,10 +361,11 @@ class dbsections extends dbTable
          * @param bool $showintroduction Whether introduction will be visible or not
          * @param int $numpagedisplay Number of pages to display 
          * @param string $ordertype How the page should be ordered
+         * @param string $contextCode The context code if you are using the cms as the context content manager
          * @access public
          * @return bool
          */
-        public function addNewSection($parent, $title, $menuText, $access, $description, $published, $layout, $showdate, $showintroduction, $numpagedisplay, $ordertype)
+        public function addNewSection($parent, $title, $menuText, $access, $description, $published, $layout, $showdate, $showintroduction, $numpagedisplay, $ordertype, $contextCode = null)
         {
             //get param from dropdown
             $parentSelected = $parent;
@@ -394,7 +395,8 @@ class dbsections extends dbTable
                                      'showintroduction' => $showintroduction,
                                      'numpagedisplay' => $numpagedisplay,
                                      'ordertype' => $ordertype,
-                                     'nodelevel' => $this->getLevel($parentid) + '1'
+                                     'nodelevel' => $this->getLevel($parentid) + '1',
+                                     'contextcode' => $contextCode
                                  ));
         }
 
@@ -1091,6 +1093,46 @@ class dbsections extends dbTable
         	//$index->optimize();
 
         }
+        
+        /**
+         * Method to get the section id from the 
+         * contextcode
+         * @param string $contextCode The Context Code
+         * @return string
+         * @access public
+         * @author Wesley Nitsckie
+         * 
+         */
+        public function getSectionByContextCode()
+        {
+            $objDBContext = $this->getObject('dbcontext', 'context');
+            $contextCode = $objDBContext->getContextCode();
+            //return $this->getAll("WHERE contextCode='".$contextCode."' AND rootid=0" );
+            $ret =  $this->getRow("contextcode", $contextCode);
+            
+            if($ret == FALSE)
+            {
+                //create an entry
+                //die('no section');
+                $this->addNewSection(0,
+                                $objDBContext->getTitle(),
+                                $objDBContext->getMenuText(),
+                                0,
+                                $objDBContext->getAbout(),
+                                1,
+                                'page',
+                                1,
+                                1,
+                                1,
+                                'pageorder',
+                                $contextCode);
+                 return $this->getSectionByContextCode();
+            } else {
+                return $ret;
+            }
+        }
+        
+        
 
 
 }

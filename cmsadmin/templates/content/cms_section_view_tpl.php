@@ -46,6 +46,13 @@ if (isset($section)) {
     $layout = $section['layout'];
     $published = $section['published'];
     $description = $section['description'];
+} else {
+    $sectionId = '';
+    $title = '';
+    $menuText = '';
+    $layout = '';
+    $published = '';
+    $description = '';
 }
 
 //Get layout icon

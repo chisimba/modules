@@ -121,6 +121,7 @@ class cmsadmin extends controller
         	try {       
                 // instantiate object
                 $this->_objSections =  $this->newObject('dbsections', 'cmsadmin');
+                $this->_objDBContext = $this->getObject('dbcontext', 'context');
                 $this->_objContent =  $this->newObject('dbcontent', 'cmsadmin');
                 $this->_objBlocks =  $this->newObject('dbblocks', 'cmsadmin');
                 $this->_objHtmlBlock =  $this->newObject('dbhtmlblock', 'cmsadmin');
@@ -145,10 +146,11 @@ class cmsadmin extends controller
                 //$this->loadClass('xajaxresponse', 'ajaxwrapper');
 
                 if ($objModule->checkIfRegistered('context')) {
-                    $this->inContextMode = $this->_objContext->getContextCode();
+                    $this->inContextMode = $this->_objContext->isInContext();
                     $this->contextCode = $this->_objContext->getContextCode();
                 } else {
                     $this->inContextMode = FALSE;
+                    $this->contextCode = NULL;
                 }
                 
                 //Get the activity logger class and log this module call
@@ -176,12 +178,13 @@ class cmsadmin extends controller
                 switch ($action) {
 
                 default:
+                    if ($this->inContextMode){
+                    	return 'cms_context_view_tpl.php';//continue;// 'cms_notincontext_view_tpl.php';
+                    }
                     $myid = $this->_objUser->userId();
 
                     if ($this->_objUser->inAdminGroup($myid) != TRUE) {
                         die('<div id=featurebox>'.$this->objLanguage->languageText('mod_cmsadmin_nopermissionmsg', 'cmsadmin').'</div>');
-                    }elseif ($this->inContextMode==FALSE||$this->contextCode==NULL){
-                    	//continue;// 'cms_notincontext_view_tpl.php';
                     }
                     $topNav = $this->_objUtils->topNav('home');
                     $cpanel =  $this->_objUtils->getControlPanel();
@@ -216,6 +219,7 @@ class cmsadmin extends controller
                     return 'cms_section_list_tpl.php';
 
                 case 'viewsection':
+                
                     $this->viewsections();
                     return 'cms_section_view_tpl.php';
 
@@ -727,8 +731,7 @@ class cmsadmin extends controller
         	
         	if($viewType == 'root') {
         		$arrSections = $this->_objSections->getRootNodes(false,$this->contextCode);
-        	} else {
-        	
+        	} elseif($this->objModule->checkIfRegistered('context', 'context')) {        	
         		$arrSections = $this->_objUtils->getSectionLinks(TRUE,$this->contextCode);
         	}
         	$this->setVarByRef('arrSections', $arrSections);
@@ -748,12 +751,21 @@ class cmsadmin extends controller
          */
         public function viewsections($sectionid=null,$subsectionid=null){
         	
-        	if (isset($sectionid)) {
+            
+        	
+            if (isset($sectionid) && ($this->inContextMode == FALSE)) {
         		$id = $sectionid;
         	}else{
         		$id = $this->getParam('id');
         	}
         	
+        	if($id == NULL && $this->_objDBContext->isInContext())
+            {
+                $arrSection = $this->_objSections->getSectionByContextCode($this->contextCode);
+                $id = $arrSection['id'];
+            }
+            
+            
         	//Get section data
         	$section = $this->_objSections->getSection($id);
         	
