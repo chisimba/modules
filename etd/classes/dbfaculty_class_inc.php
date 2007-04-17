@@ -31,16 +31,16 @@ class dbFaculty extends dbthesis
     */
     public function getData($limit = 10, $start = NULL, $joinId = NULL)
     {
-        $sqlNorm = "SELECT DISTINCT thesis.thesis_degree_discipline as col1, count(*) as cnt, thesis.thesis_degree_discipline as id ";
+        $sqlNorm = "SELECT DISTINCT thesis.thesis_degree_faculty as col1, count(*) as cnt, thesis.thesis_degree_faculty as id ";
         $sqlFound = "SELECT COUNT(*) AS count ";
         
         $sql = "FROM {$this->table} AS thesis, {$this->submitTable} AS submit, {$this->dcTable} AS dc ";
         
-        $sql .= "WHERE submit.id = thesis.submitid AND dc.id = thesis.dcmetaid ";
+        $sql .= "WHERE submit.id = thesis.submitid AND dc.id = thesis.dcmetaid AND thesis.thesis_degree_faculty != '' ";
         $sql .= "AND submit.submissiontype = '{$this->subType}' AND submit.status = 'archived' ";
-        $sql .= "GROUP BY thesis.thesis_degree_discipline ";
+        $sql .= "GROUP BY thesis.thesis_degree_faculty ";
         
-        $sqlLimit = "ORDER BY thesis.thesis_degree_discipline ";
+        $sqlLimit = "ORDER BY thesis.thesis_degree_faculty ";
         
         $sqlLimit .= $limit ? "LIMIT $limit " : NULL;
         $sqlLimit .= $start ? "OFFSET $start " : NULL;
@@ -68,29 +68,29 @@ class dbFaculty extends dbthesis
     public function getByLetter($letter = 'a', $limit = 10, $start = NULL, $joinId = NULL)
     {
         $letter = strtolower($letter);
-        $sqlNorm = "SELECT thesis.thesis_degree_discipline as col1, count(*) as cnt, thesis.thesis_degree_discipline as id ";
+        $sqlNorm = "SELECT thesis.thesis_degree_faculty as col1, count(*) as cnt, thesis.thesis_degree_faculty as id ";
         $sqlFound = "SELECT COUNT(*) AS count ";
         
         $sql = "FROM {$this->table} AS thesis, {$this->submitTable} AS submit, {$this->dcTable} AS dc ";
         
-        $sql .= "WHERE submit.id = thesis.submitid AND dc.id = thesis.dcmetaid ";
+        $sql .= "WHERE submit.id = thesis.submitid AND dc.id = thesis.dcmetaid AND thesis.thesis_degree_faculty != '' ";
         $sql .= "AND submit.submissiontype = '{$this->subType}' AND submit.status = 'archived' ";
-        $sql .= "AND ( LOWER(thesis.thesis_degree_discipline) LIKE '$letter%' ";
+        $sql .= "AND ( LOWER(thesis.thesis_degree_faculty) LIKE '$letter%' ";
         
         if(strtolower($letter) == 'a'){
-            $sql .= "AND NOT ( LOWER(thesis.thesis_degree_discipline) LIKE 'a %' OR LOWER(thesis.thesis_degree_discipline) LIKE 'an %') ";
+            $sql .= "AND NOT ( LOWER(thesis.thesis_degree_faculty) LIKE 'a %' OR LOWER(thesis.thesis_degree_faculty) LIKE 'an %') ";
         }
         if(strtolower($letter) == 't'){
-            $sql .= "AND NOT ( LOWER(thesis.thesis_degree_discipline) LIKE 'the %') ";
+            $sql .= "AND NOT ( LOWER(thesis.thesis_degree_faculty) LIKE 'the %') ";
         }
         
-        $sql .= " OR LOWER(thesis.thesis_degree_discipline) LIKE 'the $letter%' ";
-        $sql .= " OR LOWER(thesis.thesis_degree_discipline) LIKE 'a $letter%' ";
-        $sql .= " OR LOWER(thesis.thesis_degree_discipline) LIKE 'an $letter%' ";
-        $sql .= " OR LOWER(thesis.thesis_degree_discipline) LIKE '`n $letter%' ) ";
+        $sql .= " OR LOWER(thesis.thesis_degree_faculty) LIKE 'the $letter%' ";
+        $sql .= " OR LOWER(thesis.thesis_degree_faculty) LIKE 'a $letter%' ";
+        $sql .= " OR LOWER(thesis.thesis_degree_faculty) LIKE 'an $letter%' ";
+        $sql .= " OR LOWER(thesis.thesis_degree_faculty) LIKE '`n $letter%' ) ";
         
-        $sql .= "GROUP BY thesis.thesis_degree_discipline ";
-        $sqlLimit = "ORDER BY thesis.thesis_degree_discipline ";
+        $sql .= "GROUP BY thesis.thesis_degree_faculty ";
+        $sqlLimit = "ORDER BY thesis.thesis_degree_faculty ";
         
         $sqlLimit .= $limit ? "LIMIT $limit " : NULL;
         $sqlLimit .= $start ? "OFFSET $start " : NULL;

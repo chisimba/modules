@@ -175,6 +175,20 @@ class configure extends object
     */
     private function getFaculty($mode = NULL, $data = NULL)
     {
+        $name = '';
+        $itemId = $this->getSession('update_id');
+        if(isset($itemId) && !empty($itemId)){
+            if(!empty($data)){
+                foreach($data as $item){
+                    if($item['id'] == $itemId){
+                        $itemData = $item;
+                        $name = $item['name'];
+                        continue;
+                    }
+                }
+            }
+        }
+        
         $lbFaculty = $this->objLanguage->languageText('phrase_updatefaculties');
         $lbDepartment = $this->objLanguage->languageText('phrase_updatedepartments');
         $lbDegree = $this->objLanguage->languageText('phrase_updatedegrees');
@@ -214,8 +228,13 @@ class configure extends object
             
             $formStr = '<p><b>'.$formHead.'</b></p>';
             
-            $objInput = new textinput('name', '', '', 60);
+            $objInput = new textinput('name', $name, '', 60);
             $form = '<p>'.$objInput->show().'</p>';
+            
+            if(isset($itemId) && !empty($itemId)){
+                $objInput = new textinput('id', $itemId, 'hidden');
+                $form .= $objInput->show();
+            }
             
             $objButton = new button('save', $lbSave);
             $objButton->setToSubmit();
@@ -236,6 +255,16 @@ class configure extends object
             $listStr = '<ul>';
             
             foreach($data as $item){
+                // edit icon
+                $this->objIcon->setIcon('edit');
+                $this->objIcon->extra = ' width="15px" height="15px"';
+                $this->objIcon->title = $this->objLanguage->languagetext('word_edit');
+                $linkArr = array('action' => 'showconfig', 'mode' => 'editupdate', 'type' => $mode, 'id' => $item['id']);
+                $objLink = new link($this->uri($linkArr));
+                $objLink->link = $this->objIcon->show();
+        
+                $icons = $objLink->show();
+                
                 // delete icon
                 $this->objIcon->setIcon('delete');
                 $this->objIcon->extra = ' width="15px" height="15px"';
@@ -244,7 +273,7 @@ class configure extends object
                 $objLink = new link($this->uri($linkArr));
                 $objLink->link = $this->objIcon->show();
         
-                $icons = $objLink->show();
+                $icons .= $objLink->show();
                 
                 $listStr .= '<li>'.$item['name'].'&nbsp;&nbsp;&nbsp;'.$icons.'</li>';
             }
@@ -497,9 +526,12 @@ class configure extends object
     */
     public function show($mode)
     {
+        $this->unsetSession('update_id');
         switch($mode){
             case 'permissions':
                 break;
+                
+            /* ** Main config - institution info ** */
                 
             case 'saveyear':
                 $pvalue = $this->getParam('year');
@@ -512,6 +544,8 @@ class configure extends object
                 $this->dbCopyright->addCopyright($this->objUser->userId(), $copyId);
                 return TRUE;
                 break;
+                
+            /* ** Faculties, departments and degrees ** */
                 
             case 'updatefaculty':
                 $data = $this->dbDegrees->getList('faculty');
@@ -529,8 +563,17 @@ class configure extends object
                 $name = $this->getParam('name');
                 $type = $this->getParam('type');
                 $id = $this->getParam('id');
+                $this->unsetSession('update_id');
                 $this->dbDegrees->addItem($name, $type, $id);
                 return TRUE;
+                break;
+                
+            case 'editupdate':
+                $type = $this->getParam('type');
+                $id = $this->getParam('id');
+                $this->setSession('update_id', $id);
+                $data = $this->dbDegrees->getList($type);
+                return $this->showConfig($type, '', $data);
                 break;
                 
             case 'deleteupdate':
@@ -538,6 +581,8 @@ class configure extends object
                 $this->dbDegrees->deleteItem($id);
                 return TRUE;
                 break;
+                
+            /* ** Submission process & manage users ** */
                 
             case 'saveprocess':
                 $type = $this->getParam('type');

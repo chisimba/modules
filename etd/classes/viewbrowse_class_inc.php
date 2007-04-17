@@ -706,7 +706,7 @@ class viewBrowse extends object
             $tblResults->endRow();
 
             foreach( $this->data as $row ) {
-                $tblResults->row_attributes = "name='row_".$tblResults->id."' onmouseover=\"this.className='tbl_ruler';\" onmouseout=\"this.className='".$oddEven."'; \" class ='$oddEven'";
+                $tblResults->row_attributes = "name='row_".$tblResults->id."' onmouseover=\"this.className='tbl_ruler';\" onmouseout=\"this.className=''; \" class =''";
                 $tblResults->startRow();
                     $id = '';
                     if(isset($row['id'])){

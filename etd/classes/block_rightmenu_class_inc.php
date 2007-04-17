@@ -46,10 +46,12 @@ class block_rightmenu extends object
 
         // search button and input
         $objInput = new textinput('searchField');
+        $objInput->extra = "autocomplete='off'";
         $objInput->size = 10;
         $search = '<p>'.$lbKeywords.':<br />'.$objInput->show().'</p>';
 
         $objInput = new textinput('searchAuthors');
+        $objInput->extra = "autocomplete='off'";
         $objInput->size = 10;
         $search .= '<p>'.$lbAuthors.':<br />'.$objInput->show().'</p>';
 

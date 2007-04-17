@@ -111,8 +111,10 @@ class search extends object
         $this->searchCriteria[] =  array('label'=>$this->objLanguage->languageText('word_title'), 'value'=>'dc_title');
         $this->searchCriteria[] =  array('label'=>$this->objLanguage->languageText('word_keywords'), 'value'=>'dc_subject');
         $this->searchCriteria[] =  array('label'=>$this->objLanguage->languageText('word_abstract'), 'value'=>'dc_description');
+        $this->searchCriteria[] =  array('label'=>$this->objLanguage->languageText('word_faculty'), 'value'=>'thesis_degree_faculty');
         $this->searchCriteria[] =  array('label'=>$this->objLanguage->languageText('word_department'), 'value'=>'thesis_degree_discipline');
-        $this->searchCriteria[] =  array('label'=>$this->objLanguage->languageText('phrase_degreeobtained'), 'value'=>'thesis_degree_level');
+        $this->searchCriteria[] =  array('label'=>$this->objLanguage->languageText('phrase_degreeobtained'), 'value'=>'thesis_degree_name');
+        $this->searchCriteria[] =  array('label'=>$this->objLanguage->languageText('word_language'), 'value'=>'dc_language');
         
         $this->crossRef[] = array('label'=>$this->objLanguage->languageText('word_and'), 'value'=>'and');
         $this->crossRef[] = array('label'=>$this->objLanguage->languageText('word_or'), 'value'=>'or');
@@ -184,14 +186,17 @@ class search extends object
 
         $objLabel = new label($lbAll.': ', 'input_all');
         $objInput = new textinput('all', '', NULL, '65');
+        $objInput->extra = "autocomplete='off'";
         $this->objTable->addRow(array($objLabel->show(), $objInput->show()));
 
         $objLabel = new label($lbPhrase.': ', 'input_phrase');
         $objInput = new textinput('phrase', '', NULL, '65');
+        $objInput->extra = "autocomplete='off'";
         $this->objTable->addRow(array($objLabel->show(), $objInput->show()));
 
         $objLabel = new label($lbSome.': ', 'input_some');
         $objInput = new textinput('some', '', NULL, '65');
+        $objInput->extra = "autocomplete='off'";
         $this->objTable->addRow(array($objLabel->show(), $objInput->show()));
 
         $dispStr = $this->getDisplayDropDown();
@@ -232,12 +237,15 @@ class search extends object
         $this->objTable->row_attributes = " height='35'";
 
         $objInput = new textinput('box1', '', NULL, '57');
+        $objInput->extra = "autocomplete='off'";
         $this->objTable->addRow(array('', $this->getCriteria(1), $objInput->show()));
 
         $objInput = new textinput('box2', '', NULL, '57');
+        $objInput->extra = "autocomplete='off'";
         $this->objTable->addRow(array($this->getCrossRef(1), $this->getCriteria(2), $objInput->show()));
 
         $objInput = new textinput('box3', '', NULL, '57');
+        $objInput->extra = "autocomplete='off'";
         $this->objTable->addRow(array($this->getCrossRef(2), $this->getCriteria(3), $objInput->show()));
 
         // date search

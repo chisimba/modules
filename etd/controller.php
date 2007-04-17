@@ -117,7 +117,7 @@ class etd extends controller
                 $shortName = $this->objConfig->getinstitutionShortName().':';
                 $subject = $this->objLanguage->code2Txt('mod_etd_requestedresource', 'etd', array('shortname' => $shortName));
                 $this->emailResults->setHeading($head);
-                $this->emailResults->setSubject($subject, TRUE);
+                $this->emailResults->setSubject($subject, FALSE);
                 $this->emailResults->setMessage($message);
                 $this->emailResults->setEmailBody($resource);
                 $email = $this->emailResults->showEmail();

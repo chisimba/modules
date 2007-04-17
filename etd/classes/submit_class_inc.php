@@ -156,6 +156,9 @@ class submit extends object
         $lbLanguage = $this->objLanguage->languageText('word_language');
         $lbAudience = $this->objLanguage->languageText('word_audience');
         $lbKeywords = $this->objLanguage->languageText('word_keywords');
+        $lbPdf = $this->objLanguage->languageText('word_pdf');
+        $lbThesisDiss = $this->objLanguage->languageText('phrase_thesisanddissertation');
+        $lbCopyright = $this->objLanguage->languageText('word_copyright');
         $btnSave = $this->objLanguage->languageText('word_save');
         $btnCancel = $this->objLanguage->languageText('word_cancel');
         $errNoTitle = $this->objLanguage->languageText('mod_etd_errnotitle', 'etd');
@@ -298,7 +301,7 @@ class submit extends object
         $objTable->addRow(array($objLabel->show(), $objText->show()));
 
         // doc type
-        $type = '';
+        $type = $lbThesisDiss;
         if(!empty($data['dc_type'])){
             $type = $data['dc_type'];
         }
@@ -308,7 +311,7 @@ class submit extends object
         $objTable->addRow(array($objLabel->show(), $objInput->show()));
 
         // format
-        $format = '';
+        $format = $lbPdf;
         if(!empty($data['dc_format'])){
             $format = $data['dc_format'];
         }
@@ -360,7 +363,7 @@ class submit extends object
         $objTable->addRow(array($objLabel->show(), $objInput->show()));
 
         // rights
-        $rights = '';
+        $rights = $lbCopyright.': '.$institution;
         if(!empty($data['dc_rights'])){
             $rights = $data['dc_rights'];
         }
@@ -624,6 +627,10 @@ class submit extends object
     */
     private function showDocument()
     {
+        // set php.ini to 250MB
+        ini_set('post_max_size', '250M');
+        ini_set('upload_max_filesize', '250M');
+            
         $submitId = $this->getSession('submitId');
         $data = $this->files->getFile($submitId);
         $hidden = '';
@@ -905,7 +912,12 @@ class submit extends object
 
             case 'uploaddoc':
                 $submitId = $this->getSession('submitId');
-                return $this->files->uploadFile($submitId);
+                $result = $this->files->uploadFile($submitId);
+                
+                // restore php.ini settings
+                ini_restore('post_max_size');
+                ini_restore('upload_max_filesize');
+                return $result;
                 break;
 
             case 'embargo':

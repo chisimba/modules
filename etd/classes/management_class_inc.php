@@ -51,6 +51,7 @@ class management extends object
     
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objLangCode = $this->getObject('languagecode', 'language');
+            $this->objConfig = $this->getObject('altconfig', 'config');
             $this->objUser = $this->getObject('user', 'security');
             $this->objDate = $this->getObject('datetime', 'utilities');
     
@@ -353,6 +354,9 @@ class management extends object
         $lbLanguage = $this->objLanguage->languageText('word_language');
         $lbAudience = $this->objLanguage->languageText('word_audience');
         $lbKeywords = $this->objLanguage->languageText('word_keywords');
+        $lbPdf = $this->objLanguage->languageText('word_pdf');
+        $lbThesisDiss = $this->objLanguage->languageText('phrase_thesisanddissertation');
+        $lbCopyright = $this->objLanguage->languageText('word_copyright');
         $btnSave = $this->objLanguage->languageText('word_save');
         $btnCancel = $this->objLanguage->languageText('word_cancel');
         $lbConfigure = $this->objLanguage->languageText('mod_etd_configuredegreeinformation', 'etd');
@@ -457,7 +461,7 @@ class management extends object
         $objTable->addRow(array($objLabel->show(), $drpDepartment));
 
         // Institution
-        $institution = '';
+        $institution = $this->objConfig->getinstitutionName();
         if(!empty($data['thesis_degree_grantor'])){
             $institution = $data['thesis_degree_grantor'];
         }
@@ -503,7 +507,7 @@ class management extends object
         $objTable->addRow(array($objLabel->show(), $objText->show()));
 
         // doc type
-        $type = '';
+        $type = $lbThesisDiss;
         if(!empty($data['dc_type'])){
             $type = $data['dc_type'];
         }
@@ -513,7 +517,7 @@ class management extends object
         $objTable->addRow(array($objLabel->show(), $objInput->show()));
 
         // format
-        $format = '';
+        $format = $lbPdf;
         if(!empty($data['dc_format'])){
             $format = $data['dc_format'];
         }
@@ -565,7 +569,7 @@ class management extends object
         $objTable->addRow(array($objLabel->show(), $objInput->show()));
 
         // rights
-        $rights = '';
+        $rights = $lbCopyright.': '.$institution;
         if(!empty($data['dc_rights'])){
             $rights = $data['dc_rights'];
         }
@@ -1081,6 +1085,10 @@ class management extends object
         
         // Only managers can replace existing documents
         if(in_array('manager', $this->access)){
+            // set php.ini to 250MB
+            ini_set('post_max_size', '250M');
+            ini_set('upload_max_filesize', '250M');
+            
             $objInput = new textinput('submitId', $submitId, 'hidden');
             $hidden .= $objInput->show();
     
@@ -1299,6 +1307,10 @@ class management extends object
                 $id = $this->getParam('id');
                 $result = $this->files->uploadFile($submitId, $id);
                 $this->setSession('resourceMsg', $result);
+                
+                // restore php.ini settings
+                ini_restore('post_max_size');
+                ini_restore('upload_max_filesize');
                 break;
                 
             case 'updatecitation':
