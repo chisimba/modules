@@ -133,7 +133,7 @@ class cmsadmin extends controller
                 $this->_objConfig =  $this->newObject('altconfig', 'config');
                 $this->_objContext =  $this->newObject('dbcontext', 'context');
 				$this->objProxy = $this->newObject('proxyparser', 'utilities');
-                $objModule = $this->newObject('modules', 'modulecatalogue');
+                $this->objModule = $this->newObject('modules', 'modulecatalogue');
                 $this->objTreeMenu = $this->newObject('buildtree', 'cmsadmin');
                 $this->objTreeNodes =  $this->newObject('treenodes', 'cmsadmin');
                 $this->dbMenuStyle =  $this->newObject('dbmenustyles', 'cmsadmin');
