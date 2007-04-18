@@ -52,6 +52,90 @@ class blogops extends object
         }
     }
     
+    public function findGeoTag($params = array(), $limit='10')
+    {
+    	//do a sanity check on the array of params...
+    	
+    	$wsurl = "http://ws.geonames.org/search?";
+    	$searchparams = "q=" . $params['place'] . "&country=" . $params['countrycode'] . "&maxRows=" . $limit;
+    	$url = $wsurl.$searchparams;
+    	//set a client to get the request
+    	//get the proxy info if set
+    	$this->objProxy = $this->getObject('proxyparser', 'utilities');
+    	$proxyArr = $this->objProxy->getProxy();
+
+    	$ch = curl_init();
+    	curl_setopt($ch, CURLOPT_URL, $url);
+    	curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+    	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    	if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
+    	{
+    		curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_host'].":".$proxyArr['proxy_port']);
+    		curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxy_user'].":".$proxyArr['proxy_pass']);
+    	}
+    	$code = curl_exec($ch);
+    	curl_close($ch);
+    	
+    	return $code;
+
+    }
+    
+    public function geoTagForm()
+    {
+    	$this->loadClass('href', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('textarea', 'htmlelements');
+    	$this->objUser = $this->getObject('user', 'security');
+    	$geoform = new form('checkgeo', $this->uri(array(
+            	'action' => 'checkgeo'
+        	)));
+    	
+        //add rules
+        $geoform->addRule('geoplace', $this->objLanguage->languageText("mod_blog_phrase_geoplacereq", "blog") , 'required');
+        $geoform->addRule('geocountrycode', $this->objLanguage->languageText("mod_blog_phrase_geocountrycodereq", "blog") , 'required');
+        
+        //start a fieldset
+        $geofieldset = $this->getObject('fieldset', 'htmlelements');
+        $geoadd = $this->newObject('htmltable', 'htmlelements');
+        $geoadd->cellpadding = 3;
+
+        //place textfield
+        $geoadd->startRow();
+        $geoplacelabel = new label($this->objLanguage->languageText('mod_blog_geoplace', 'blog') .':', 'input_geoplace');
+        $geoplace = new textinput('geoplace');
+        $geoadd->addCell($geoplacelabel->show());
+        $geoadd->addCell($geoplace->show());
+        $geoadd->endRow();
+
+        //Country code
+        $geoadd->startRow();
+        $geocountrycodelabel = new label($this->objLanguage->languageText('mod_blog_geocountrycode', 'blog') .':', 'input_geocountrycode');
+        $geocountrycode = new textinput('geocountrycode');
+        $geoadd->addCell($geocountrycodelabel->show());
+        $geoadd->addCell($geocountrycode->show());
+        $geoadd->endRow();
+        
+        //end off the form and add the buttons
+        $this->objGeoButton = &new button($this->objLanguage->languageText('word_lookup', 'blog'));
+        $this->objGeoButton->setValue($this->objLanguage->languageText('word_lookup', 'blog'));
+        $this->objGeoButton->setToSubmit();
+        $geofieldset->addContent($geoadd->show());
+        $geoform->addToForm($geofieldset->show());
+        $geoform->addToForm($this->objGeoButton->show());
+        $geoform = $geoform->show();
+        
+        //featurebox it...
+        $objGeoFeaturebox = $this->getObject('featurebox', 'navigation');
+        return $objGeoFeaturebox->show($this->objLanguage->languageText("mod_blog_geolookup", "blog"), $geoform);
+    }
+
+    /**
+     * Method to show the latest images posted to the blog as a slideshow
+     *
+     * @return string
+     */
     public function showDiaporama()
     {
     	$this->objConfig = $this->getObject('altconfig', 'config');
@@ -583,6 +667,7 @@ class blogops extends object
         $servdrop = new dropdown('server');
         $servdrop->addOption("fsiu", $this->objLanguage->languageText("mod_blog_fsiu", "blog"));
         $servdrop->addOption("elearn", $this->objLanguage->languageText("mod_blog_elearn", "blog"));
+        $servdrop->addOption("freecourseware", $this->objLanguage->languageText("mod_blog_freecourseware", "blog"));
         $imadd->startRow();
         $servlabel = new label($this->objLanguage->languageText('mod_blog_impserv', 'blog') .':', 'input_importfrom');
         $imadd->addCell($servlabel->show());
@@ -599,6 +684,7 @@ class blogops extends object
         $imadd->addCell($imulabel->show());
         $imadd->addCell($imuser->show());
         $imadd->endRow();
+        
         //end off the form and add the buttons
         $this->objIMButton = &new button($this->objLanguage->languageText('word_import', 'system'));
         $this->objIMButton->setValue($this->objLanguage->languageText('word_import', 'system'));
