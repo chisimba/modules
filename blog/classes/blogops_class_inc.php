@@ -655,9 +655,6 @@ class blogops extends object
         $imform = new form('importblog', $this->uri(array(
             'action' => 'importblog'
         )));
-        //add rules
-        $imform->addRule('server', $this->objLanguage->languageText("mod_blog_phrase_imserverreq", "blog") , 'required');
-        $imform->addRule('username', $this->objLanguage->languageText("mod_blog_phrase_imuserreq", "blog") , 'required');
         //start a fieldset
         $imfieldset = $this->getObject('fieldset', 'htmlelements');
         //$imfieldset->setLegend($this->objLanguage->languageText('mod_blog_importblog', 'blog'));
@@ -684,6 +681,10 @@ class blogops extends object
         $imadd->addCell($imulabel->show());
         $imadd->addCell($imuser->show());
         $imadd->endRow();
+        
+        //add rules
+        //$imform->addRule('server', $this->objLanguage->languageText("mod_blog_phrase_imserverreq", "blog") , 'required');
+        //$imform->addRule('username', $this->objLanguage->languageText("mod_blog_phrase_imuserreq", "blog") , 'required');
         
         //end off the form and add the buttons
         $this->objIMButton = &new button($this->objLanguage->languageText('word_import', 'system'));
