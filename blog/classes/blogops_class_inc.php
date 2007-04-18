@@ -81,6 +81,32 @@ class blogops extends object
 
     }
     
+    public function myBlogTimeline($posts, $userid)
+    {
+    	$this->objUser = $this->getObject('user', 'security');
+    	//parse the hell outta the posts and build up the timeline XML
+    	$str = '<data date-time-format="iso8601">';
+    	foreach($posts as $post)
+    	{
+    		//start the event tag
+    		$str .= "<event ";
+    		//add in the event details
+    		$date = date('Y-m-d');
+    		$title = $post['post_title'];
+    		$image = $this->objUser->getUserImageNoTags($userid);
+    		$str .= 'start="'.$date.'" title="'.$title.'" image="'.$image.'">';
+    		$str .= htmlentities($post['post_excerpt']);
+    		$str .= "</event>";		
+    	}
+    	$str .= "</data>";
+    	return $str;
+    }
+    
+    public function siteBlogTimeline()
+    {
+    	//grab all of the posts
+    }
+    
     public function geoTagForm()
     {
     	$this->loadClass('href', 'htmlelements');

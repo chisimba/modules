@@ -1828,7 +1828,40 @@ class blog extends controller
         	
         	echo "Your info is: ".$placename." in ".$country . " (".$cuntcode.") " . "at lat: ". $lat. " and long: " .$lng;
         	break;
+        
+        case 'timeline':
+        	$userid = $this->getParam('userid');
+        	$info = $this->objDbBlog->getAbsAllPosts($userid);
+        	$tl = $this->objblogOps->myBlogTimeline($info, $userid);
+        	//echo htmlentities($tl);
+        	//save the timeline as a file. (Not sure if this is necessary or not...
+        	$filename = $this->objConfig->getcontentBasePath() . "users/" .$userid.'/'.$userid.'_temptimeline.xml';
+        	$somecontent = $tl;
+        	if(!file_exists($filename))
+        	{
+        		touch($filename);
+        		chmod($filename, 0777);
+        	}
+        	// Let's make sure the file exists and is writable first.
+        	if (is_writable($filename)) {
+        		if (!$handle = fopen($filename, 'w')) {
+        			exit;
+        		}
+        		// Write $somecontent to our opened file.
+        		if (fwrite($handle, $somecontent) === FALSE) {
+        			exit;
+        		}
+        		fclose($handle);
 
+        	} else {
+				exit;
+        	}
+        	$tlurl = $this->objConfig->getsiteRoot() . $this->objConfig->getcontentPath() . "users/" .$userid.'/'.$userid.'_temptimeline.xml';
+        
+        	$this->setVarByRef('tlurl',$tlurl);
+        	//$this->setVar("pageSuppressXML", TRUE);
+        	return "tl_tpl.php";
+        	break;
         }//action
 
     }
