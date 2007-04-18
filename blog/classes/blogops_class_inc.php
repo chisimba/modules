@@ -665,6 +665,10 @@ class blogops extends object
         $servdrop->addOption("fsiu", $this->objLanguage->languageText("mod_blog_fsiu", "blog"));
         $servdrop->addOption("elearn", $this->objLanguage->languageText("mod_blog_elearn", "blog"));
         $servdrop->addOption("freecourseware", $this->objLanguage->languageText("mod_blog_freecourseware", "blog"));
+        $servdrop->addOption("5ive", $this->objLanguage->languageText("mod_blog_5ive", "blog"));
+        $servdrop->addOption("pear", $this->objLanguage->languageText("mod_blog_peardemo", "blog"));
+        $servdrop->addOption("dfx", $this->objLanguage->languageText("mod_blog_dfx", "blog"));
+        
         $imadd->startRow();
         $servlabel = new label($this->objLanguage->languageText('mod_blog_impserv', 'blog') .':', 'input_importfrom');
         $imadd->addCell($servlabel->show());

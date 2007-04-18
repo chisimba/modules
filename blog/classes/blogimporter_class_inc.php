@@ -85,6 +85,18 @@ class blogimporter extends object
             	$this->dsn = 'mysql://next:n3xt@172.16.203.178/ocw';
             	return $this->dsn;
             	break;
+            case '5ive':
+            	$this->dsn = 'mysql://root:0h5h1t.pear@196.21.45.41/chisimba';
+            	return $this->dsn;
+            	break;
+            case 'pear':
+            	$this->dsn = 'mysql://root:0h5h1t.pear@196.21.45.41/chisimbademo';
+            	return $this->dsn;
+            	break;
+            case 'dfx':
+            	$this->dsn = 'mysql://root:0h5h1t.pear@196.21.45.41/dfx';
+            	return $this->dsn;
+            	break;
         }
     }
     /**
