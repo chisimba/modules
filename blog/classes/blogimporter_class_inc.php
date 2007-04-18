@@ -81,6 +81,10 @@ class blogimporter extends object
                 $this->dsn = 'mysql://reader:reader@172.16.203.210/nextgen';
                 return $this->dsn;
                 break;
+            case 'freecourseware':
+            	$this->dsn = 'mysql://next:n3xt@172.16.203.178/ocw';
+            	return $this->dsn;
+            	break;
         }
     }
     /**
