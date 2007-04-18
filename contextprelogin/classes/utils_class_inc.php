@@ -2,35 +2,35 @@
 // security check - must be included in all scripts
 if ( !$GLOBALS['kewl_entry_point_run'] ) {
     die( "You cannot view this page directly" );
-} 
+}
 // end security check
 /**
- * The context postlogin controls the information 
+ * The context postlogin controls the information
  * of courses that a user is registered to and the tools
  * that goes courses
- * 
+ *
  * @author Wesley Nitsckie
  * @copyright 2004, University of the Western Cape & AVOIR Project
  * @license GNU GPL
  * @package context
  */
 
-class utils extends object 
+class utils extends object
 {
-    
+
     /**
      * The constructor
      */
     public function init()
     {
-        
+
           $this->_objContextModules = & $this->newObject('dbcontextmodules', 'context');
 	      $this->_objLanguage = & $this->newObject('language', 'language');
 	      $this->_objUser = & $this->newObject('user', 'security');
 	      $this->_objDBContext = & $this->newObject('dbcontext', 'context');
     }
-       
-    
+
+
     /**
 	   * Method to get the users context that he
 	   * is registered to
@@ -44,16 +44,16 @@ class utils extends object
 		  	$objGroups = & $this->newObject('managegroups', 'contextgroups');
 		  	$contextCodes = $objGroups->usercontextcodes($this->_objUser->userId());
 		  	$objMM = & $this->newObject('mmutils', 'mediamanager');
-		  	
+
 		  	$arr = array();
 		  	foreach ($contextCodes as $code)
 		  	{
-		  		$arr[] = $this->_objDBContext->getRow('contextcode',$code); 
-		  		
+		  		$arr[] = $this->_objDBContext->getRow('contextcode',$code);
+
 		  	}
-		  	
-		  	
-		  	
+
+
+
 		  	//print_r($arr);
 		  	return $arr;
 	  	 }
@@ -62,7 +62,7 @@ class utils extends object
     		exit();
     	}
 	  }
-	  
+
 	  /**
 	   * Method to get the public context for prelogin module
 	   * @param array $myCourses
@@ -81,8 +81,8 @@ class utils extends object
 		  		if($filter == 'listall')
 		  		{
 		  			$filter = '';
-		  		} 
-		  		else 
+		  		}
+		  		else
 		  		{
 		  			$filter = '  AND title LIKE "'.$filter.'%" ';
 		  		}
@@ -90,17 +90,17 @@ class utils extends object
 		  	//get all public courses
 		  	$publicCourses = $this->_objDBContext->getAll( "WHERE status = 'Published' AND access = 'Public' ".$filter."  ORDER BY title ");
 		  	//return $publicCourses;
-		  	
+
 		  	foreach($publicCourses as $pCourse)
 		  	{
 		  		if(!$objMM->deep_in_array($pCourse['contextcode'], $myCourses))
 		  		{
-		  			$arr[] = $this->_objDBContext->getRow('contextcode',$pCourse['contextcode']); 
+		  			$arr[] = $this->_objDBContext->getRow('contextcode',$pCourse['contextcode']);
 		  		}
-		  		
+
 		  	}
-		  
-		  
+
+
 		  	return $arr;//$objGroups->usercontextcodes($this->_objUser->userId());
 	  	}
 	  	catch (Exception $e) {
@@ -108,7 +108,7 @@ class utils extends object
     		exit();
     	}
 	  }
-	  
+
 	  /**
 	   * Method to get the users context that he
 	   * is registered to
@@ -126,8 +126,8 @@ class utils extends object
 		  		if($filter == 'listall')
 		  		{
 		  			$filter = '';
-		  		} 
-		  		else 
+		  		}
+		  		else
 		  		{
 		  			$filter = '  AND title LIKE "'.$filter.'%" ';
 		  		}
@@ -135,17 +135,17 @@ class utils extends object
 		  	//get all public courses
 		  	$publicCourses = $this->_objDBContext->getAll( "WHERE status = 'Published' OR status = '' ".$filter."  ORDER BY title ");
 		  	//print_r($publicCourses);
-		  	
+
 		  	foreach($publicCourses as $pCourse)
 		  	{
 		  		if(!$objMM->deep_in_array($pCourse['contextcode'], $myCourses))
 		  		{
-		  			$arr[] = $this->_objDBContext->getRow('contextcode',$pCourse['contextcode']); 
+		  			$arr[] = $this->_objDBContext->getRow('contextcode',$pCourse['contextcode']);
 		  		}
-		  		
+
 		  	}
-		  
-		  	
+
+
 		  	return $arr;//$objGroups->usercontextcodes($this->_objUser->userId());
 	  	}
 	  	catch (Exception $e) {
@@ -153,7 +153,7 @@ class utils extends object
     		exit();
     	}
 	  }
-	  
+
 	  /**
 	   * Method to get a filter list to filter the courses
 	   * @param array $courseList the list of courses
@@ -162,22 +162,22 @@ class utils extends object
 	   */
 	  public function getFilterList($courseList)
 	  {
-	  	
+
 	  	try {
 	  		$objAlphabet=& $this->getObject('alphabet','navigation');
 	  		$linkarray=array('filter'=>'LETTER');
 			$url=$this->uri($linkarray,'contextprelogin');
 	  		$str = $objAlphabet->putAlpha($url);
 	  		return $str;
-	  		
+
 	  	}
 	  	catch (Exception $e) {
     		echo customException::cleanUp('Caught exception: '.$e->getMessage());
     		exit();
     	}
 	  }
-	  
-	  
+
+
 	  /**
 	   * Method to get the left widgets
 	   * @return string
@@ -189,19 +189,19 @@ class utils extends object
 		$objBlocks = & $this->newObject('blocks', 'blocks');
 		//$userMenu  = &$this->newObject('postloginmenu','toolbar');
 		$leftSideColumn = $this->loginBox(TRUE);//$this->getUserPic();//$userMenu->show();;
-	   $leftSideColumn .= $this->registerBox();		
+	   $leftSideColumn .= $this->registerBox();
 		//$leftSideColumn =  $this->registerBox(TRUE);
 		//Add Register block
       $leftSideColumn .= $objBlocks->showBlock('registercontext', 'security');
- 		
+
       //$leftSideColumn .= $objBlocks->showBlock('login', 'security');
       //echo $objBlocks->show
       $leftSideColumn .= $objBlocks->showBlock('stories', 'stories');
-        
+
 		$leftSideColumn .= $objBlocks->showBlock('latestpodcast', 'podcast');
 
 		//$leftSideColumn .= $objBlocks->showBlock('chat', 'chat');
-		
+
 		//$leftSideColumn .= $objBlocks->showBlock('loginstats', 'context');
 		//Add guestbook block
 		$leftSideColumn .= $objBlocks->showBlock('guestinput', 'guestbook');
@@ -212,13 +212,13 @@ class utils extends object
 		//Add random quote block
 		$leftSideColumn .= $objBlocks->showBlock('rquote', 'quotes');
 		$leftSideColumn .= $objBlocks->showBlock('today_weather','weather');
-		
+
 	      return $leftSideColumn;
 	  }
-	   
+
 	  /**
 	   * Method to get the user images
-	   * 
+	   *
 	   */
 	  public function getUserPic()
 	  {
@@ -227,7 +227,7 @@ class utils extends object
 	  	$str = '<p align="center"><img src="'.$objUserPic->userpicture($this->_objUser->userId() ).'" alt="User Image" /></p>';
 	  	return $objBox->show($this->_objUser->fullName(), $str);
 	  }
-	  
+
 	  /**
 	   * Method to get the right widgets
 	   * @return string
@@ -252,10 +252,10 @@ class utils extends object
 		//Put a wikipedia search
 		$rightSideColumn .= $objBlocks->showBlock('wikipedia', 'websearch');
 		//Put a dictionary lookup
-		
+
 		return $rightSideColumn;
-	  } 
-	  
+	  }
+
 	  /**
      * Method to display the login box for prelogin blog operations
      *
@@ -266,13 +266,13 @@ class utils extends object
     {
         $objLogin = &$this->getObject('logininterface', 'security');
         if ($featurebox == FALSE) {
-            return $objLogin->renderLoginBox('blog');
+            return $objLogin->renderLoginBox('contextpostlogin');
         } else {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-                    return   $objFeatureBox->show($this->_objLanguage->languageText("word_login",   "system") , $objLogin->renderLoginBox('blog'));
+                    return   $objFeatureBox->show($this->_objLanguage->languageText("word_login",   "system") , $objLogin->renderLoginBox('contextpostlogin'));
         }
     }
-    
+
      /**
      * Method to display the register box for prelogin blog operations
      *
@@ -282,7 +282,7 @@ class utils extends object
     public function registerBox()
     {
     }
-    
+
 	  /**
 	   * Method to get the Lectures for a course
 	   * @param string $contextCode The context code
@@ -293,19 +293,19 @@ class utils extends object
 	  {
 	  		$objLeaf = $this->newObject('groupadminmodel', 'groupadmin');
 	  		$leafId = $objLeaf->getLeafId(array($contextCode,'Lecturers'));
-	  		
+
 	  		$arr = $objLeaf->getSubGroupUsers($leafId);
-	  		
+
 	  		return $arr;
-	  		
+
 	  }
-	  
+
 	  /**
-	   * Method to get a plugins for a context 
+	   * Method to get a plugins for a context
 	   * @param string $contextCode The Context Code
-	   * @return string 
+	   * @return string
 	   * @access public
-	   * 
+	   *
 	   */
 	  public function getPlugins($contextCode)
 	  {
@@ -318,22 +318,22 @@ class utils extends object
 	  	{
 	  		foreach($arr as $plugin)
 	  		{
-	  			
+
 	  			$modInfo =$objModule->getModuleInfo($plugin['moduleid']);
-	  			
+
 	  			$objIcon->setModuleIcon($plugin['moduleid']);
 	  			$objIcon->alt = $this->_objDBContext->getTitle($contextCode). ' : '.$modInfo['name'];
-	  			
+
 	  			$objLink->href = $this->uri(array ('action' => 'gotomodule', 'moduleid' => $plugin['moduleid'], 'contextcode' => $contextCode), 'context');
 	  			$objLink->link = $objIcon->show();
 	  			$str .= $objLink->show().'   ';
 	  		}
-	  		
+
 	  		return $str;
 	  	} else {
 	  		return '';
 	  	}
-	  	
+
 	  }
-}	
+}
 ?>
