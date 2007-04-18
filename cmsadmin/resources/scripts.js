@@ -104,7 +104,7 @@ function fm_setupDeleteBlocks()
 /*
 Function to intitialize scriptaculous for content_add
 */
-function ca_init(pageid, setionid)
+function ca_init(pageid, sectionid)
 {
     ID = pageid;
     SECTION = sectionid;
