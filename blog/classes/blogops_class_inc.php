@@ -95,7 +95,7 @@ class blogops extends object
     		$title = $post['post_title'];
     		$image = $this->objUser->getUserImageNoTags($userid);
     		$str .= 'start="'.$date.'" title="'.$title.'" image="'.$image.'">';
-    		$str .= htmlentities($post['post_excerpt']);
+    		$str .= htmlentities($post['post_excerpt']) . "<br />" . $this->uri(array('action' => 'viewsingle', 'postid' => $post['id'], 'userid' => $post['userid']), 'blog');
     		$str .= "</event>";		
     	}
     	$str .= "</data>";
