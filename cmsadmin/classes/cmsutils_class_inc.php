@@ -1024,16 +1024,17 @@ class cmsutils extends object
             
             $nav = '';
             $objCMSTree = $this->getObject('cmstree');
+            /*
             if($this->_objDBContext->isInContext() && $this->objModule->checkIfRegistered('context', 'context'))
             {
                 $objContextUtils = & $this->getObject('utilities','context');
                 $nav = $objContextUtils->getHiddenContextMenu('cms','none','show');
             } else {
-    			
+    		*/	
     
                 //Add links to the output layer
                 $nav = $objFeatureBox->show($this->objLanguage->languageText('word_sections'),$objCMSTree->getCMSAdminTree());
-            }
+            //}
                 
                 //$nav .= '<br/>';
 			// $nav .= $createSectionLink;
