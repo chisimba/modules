@@ -299,7 +299,7 @@ class dbmessaging extends dbTable
             $workgroupId = $this->objWorkgroup->getWorkgroupId();
         }
         if($workgroupId != NULL){
-            $workgroupDetails = $this->objWorkgroups->getDescription($workgroupId);
+            $workgroupDetails = $this->objWorkgroup->getDescription($workgroupId);
             $sql = " WHERE owner_id = '".$workgroupId."'";
             $data = $this->getAll($sql);
             if(!empty($data)){
