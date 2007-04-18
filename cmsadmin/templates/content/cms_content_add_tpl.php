@@ -66,7 +66,7 @@ if ($id != '') {
     {
         $str = trim($objBlocks->showBlock($block['blockname'], $block['moduleid']));
         $str = preg_replace('/type\\s??=\\s??"submit"/', 'type="button"', $str);
-        $str = preg_replace('/href=".+?"/', 'href="javascript:alert(\'<h3>'.$this->objLanguage->languageText('mod_cmsadmin_pageblocks', 'cmsadmin', 'Page Blocks').'</h3><p>'.$this->objLanguage->languageText('mod_cmsadmin_linkdisabled', 'cmsadmin', 'Link is Disabled.').'\');"', $str);
+        $str = preg_replace('/href=".+?"/', 'href="javascript:alert(\''.$this->objLanguage->languageText('mod_cmsadmin_pageblocks', 'cmsadmin', 'Page Blocks').$this->objLanguage->languageText('mod_cmsadmin_linkdisabled', 'cmsadmin', 'Link is Disabled.').'\');"', $str);
         
         $usedBlocks[] = $block['blockid'];
         
