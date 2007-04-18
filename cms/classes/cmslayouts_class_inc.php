@@ -67,14 +67,16 @@ class cmslayouts extends object
     public function getLeftMenu($currentNode, $rss = NULL)
     {
         $adminLn = $this->objLanguage->languageText('mod_cms_cmsadmin', 'cms');
+        /*
         if ($this->objModule->checkIfRegistered('context', 'context')){
            $objContextUtils = & $this->getObject('utilities','context');
             $leftSide = $objContextUtils->getHiddenContextMenu('cms','none','show');
         } else {
+            */
             // Create menu
             $style = $this->getMenuStyle();
             $leftSide = $this->getMenu($style, $currentNode);
-        }
+        //}
         // Add admin link
         if($this->objUser->isAdmin() || $this->_objCmsUtils->checkPermission()){
             $objAdminLink = new link($this->uri(array(NULL), 'cmsadmin'));
