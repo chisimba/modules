@@ -93,9 +93,10 @@ class blogops extends object
     		//add in the event details
     		$date = date('Y-m-d');
     		$title = $post['post_title'];
+    		$plink = new href($this->uri(array('action' => 'viewsingle', 'postid' => $post['id'], 'userid' => $post['userid']), 'blog'),$this->objLanguage->languageText("mod_blog_viewpost", "blog"),NULL);
     		$image = $this->objUser->getUserImageNoTags($userid);
     		$str .= 'start="'.$date.'" title="'.$title.'" image="'.$image.'">';
-    		$str .= htmlentities($post['post_excerpt']) . "<br />" . $this->uri(array('action' => 'viewsingle', 'postid' => $post['id'], 'userid' => $post['userid']), 'blog');
+    		$str .= htmlentities($post['post_excerpt'] . "<br />" . $plink->show());
     		$str .= "</event>";		
     	}
     	$str .= "</data>";
