@@ -91,7 +91,7 @@ class blogops extends object
     		//start the event tag
     		$str .= "<event ";
     		//add in the event details
-    		$date = date('Y-m-d');
+    		$date = date('Y-m-d', $post['post_ts']);
     		$title = $post['post_title'];
     		$plink = new href($this->uri(array('action' => 'viewsingle', 'postid' => $post['id'], 'userid' => $post['userid']), 'blog'),$this->objLanguage->languageText("mod_blog_viewpost", "blog"),NULL);
     		$image = $this->objUser->getUserImageNoTags($userid);
