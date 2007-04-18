@@ -145,7 +145,7 @@ class cmsadmin extends controller
                 //$this->loadClass('xajax', 'ajaxwrapper');
                 //$this->loadClass('xajaxresponse', 'ajaxwrapper');
 
-                if ($objModule->checkIfRegistered('context')) {
+                if ($this->objModule->checkIfRegistered('context')) {
                     $this->inContextMode = $this->_objContext->isInContext();
                     $this->contextCode = $this->_objContext->getContextCode();
                 } else {
