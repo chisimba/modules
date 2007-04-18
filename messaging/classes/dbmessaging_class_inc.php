@@ -26,6 +26,12 @@ class dbmessaging extends dbTable
     public $objContext;
 
     /**
+    * @var object $objWorkgroup: The dbworkgroup class in the workgroup module
+    * @access public
+    */
+    public $objWorkgroup;
+
+    /**
     * @var string $userId: The user id of the current user
     * @access private
     */
@@ -50,6 +56,7 @@ class dbmessaging extends dbTable
         // system classes
         $this->objUser = $this->getObject('user', 'security');
         $this->objContext = $this->getObject('dbcontext', 'context');
+        $this->objWorkgroup = $this->getObject('dbworkgroup', 'workgroup');
         
         // global variables
         $this->userId = $this->objUser->userId();
@@ -268,6 +275,42 @@ class dbmessaging extends dbTable
                 $fields['text_only'] = 0;
                 $fields['disabled'] = 0;
                 $fields['owner_id'] = $contextCode;
+                $fields['date_created'] = date('Y-m-d H:i:s');
+                $fields['updated'] = date('Y-m-d H:i:s');
+                $roomId = $this->insert($fields);
+                $data = $this->getChatRoom($roomId);
+                return $data;
+            }
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to get a workgroup chat room
+    * 
+    * @access public
+    * @param string $workgroupId: The workgroup id| Current workgroupId if NULL
+    * @return array/boolean $data: The workgroup chat room data / FALSE on failure
+    */
+    public function getWorkgroupChatRoom($workgroupId = NULL)
+    {
+        $this->_setRoomTable();
+        if($workgroupId == NULL){            
+            $workgroupId = $this->objWorkgroup->getWorkgroupId();
+        }
+        if($workgroupId != NULL){
+            $workgroupDetails = $this->objWorkgroups->getDescription($workgroupId);
+            $sql = " WHERE owner_id = '".$workgroupId."'";
+            $data = $this->getAll($sql);
+            if(!empty($data)){
+                return $data[0];
+            }else{
+                $fields['room_type'] = 3;
+                $fields['room_name'] = $workgroupDetails;
+                $fields['room_desc'] = $workgroupDetails;
+                $fields['text_only'] = 0;
+                $fields['disabled'] = 0;
+                $fields['owner_id'] = $workgroupId;
                 $fields['date_created'] = date('Y-m-d H:i:s');
                 $fields['updated'] = date('Y-m-d H:i:s');
                 $roomId = $this->insert($fields);
