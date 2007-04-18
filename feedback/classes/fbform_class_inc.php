@@ -143,8 +143,8 @@ class fbform extends object
 		$fbadd->endRow();
 		
 		//add rules
-		$dfbform->addRule('name', $this->objLanguage->languageText("mod_feedback_phrase_needname", "feedback") , 'required');
-		$dfbform->addRule('email', $this->objLanguage->languageText("mod_feedback_phrase_needemail", "feedback") , 'required');
+		$dfbform->addRule('fbname', $this->objLanguage->languageText("mod_feedback_phrase_needname", "feedback") , 'required');
+		$dfbform->addRule('fbemail', $this->objLanguage->languageText("mod_feedback_phrase_needemail", "feedback") , 'required');
 		$dfbform->addRule('request_captcha', $this->objLanguage->languageText("mod_feedback_captchaval",'feedback'), 'required');
 
 		//end off the form and add the buttons
@@ -163,7 +163,8 @@ class fbform extends object
 	
 	public function thanks()
 	{
-		$tamsg = $this->objLanguage->languageText("mod_feedback_thanksmsg", "feedback");
+		$backlink = new href($this->uri(array(),'_default'), $this->objLanguage->languageText("mod_feedback_back", "feedback"), NULL);
+		$tamsg = $this->objLanguage->languageText("mod_feedback_thanksmsg", "feedback") . "<br /><br />" . $backlink->show();
 		$objFbFeaturebox = $this->getObject('featurebox', 'navigation');
 		return $objFbFeaturebox->show($this->objLanguage->languageText("mod_feedback_thanks", "feedback"), $tamsg);
 	}
