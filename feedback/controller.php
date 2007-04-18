@@ -43,6 +43,7 @@ class feedback extends controller
 			case 'save':
 				$this->requiresLogin(FALSE);
 				try {
+					$captcha = $this->getParam('request_captcha');
 					$userid = $this->objUser->userId();
 					$fbname = $this->getParam('fbname');
 					$fbemail = $this->getParam('fbemail');
@@ -53,7 +54,14 @@ class feedback extends controller
 					$fbee = $this->getParam('fbee');
 					$fbw = $this->getParam('fbw');
 					
-					if(!isset($fbname) && !isset($fbemail))
+					if (md5(strtoupper($captcha)) != $this->getParam('request_captcha') || empty($captcha))
+					{
+						$msg = 'badcaptcha';
+						$this->setVarByRef('msg', $msg);
+						return 'form_tpl.php';
+					}
+					
+					elseif(!isset($fbname) && !isset($fbemail))
 					{
 						$msg = 'nodata';
 						$this->setVarByRef('msg', $msg);
