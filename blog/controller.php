@@ -1793,6 +1793,41 @@ class blog extends controller
 
             }
             break;
+            
+        case 'checkgeo':
+        	$countrycode = $this->getParam('geocountrycode');
+        	$place = $this->getParam('geoplace');
+        	$params = array();
+        	$params['place'] = urlencode($place);
+        	$params['countrycode'] = urlencode($countrycode);
+        	//print_r($params);
+        	$return = $this->objblogOps->findGeoTag($params, '10');
+        	if(empty($return))
+        	{
+        		break;
+        	}
+        	$doc = simplexml_load_string($return);
+        	//var_dump($doc);
+        	if($doc->totalResultsCount > 1)
+        	{
+        		foreach($doc->geoname as $items)
+        		{
+        			print_r($items);
+        		}
+        		//print_r($item); die();
+        		die();
+        	}
+        	else {
+        		$country = $doc->geoname->countryName;
+        		$cuntcode = $doc->geoname->countryCode;
+        		$placename = $doc->geoname->name;
+        		$lat = $doc->geoname->lat;
+        		$lng = $doc->geoname->lng;
+        	}
+        	
+        	
+        	echo "Your info is: ".$placename." in ".$country . " (".$cuntcode.") " . "at lat: ". $lat. " and long: " .$lng;
+        	break;
 
         }//action
 
