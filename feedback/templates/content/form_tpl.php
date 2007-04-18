@@ -38,10 +38,15 @@ $middleColumn = NULL;
 if ($msg == 'save') {
     $objmsg->message = $this->objLanguage->languageText('mod_feedback_recsaved', 'feedback');
     echo $objmsg->show();
-} elseif($msg = 'nodata') {
+} elseif($msg == 'nodata') {
 	$objmsg->message = $this->objLanguage->languageText('mod_feedback_elaborate', 'feedback');
     echo $objmsg->show();
     $msg = NULL;
+}
+elseif($msg == 'badcaptcha')
+{
+	$objmsg->message = $this->objLanguage->languageText('mod_feedback_badcaptcha', 'feedback');
+    echo $objmsg->show();
 }
 else {
 	$msg = NULL;
@@ -56,7 +61,12 @@ else {
 	$leftCol = $this->objFb->loginBox(TRUE);
 	
 }
-$middleColumn = $this->objFb->dfbform();
+if(empty($insarr))
+{
+	$insarr = NULL;
+}
+//print_r($insarr);
+$middleColumn = $this->objFb->dfbform($insarr);
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());

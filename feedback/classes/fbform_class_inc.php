@@ -26,7 +26,7 @@ class fbform extends object
 		}
 	}
 
-	public function dfbform()
+	public function dfbform($insarr)
 	{
 		$objCaptcha = $this->getObject('captcha', 'utilities');
 		$required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
@@ -44,6 +44,10 @@ class fbform extends object
 		$fbadd->startRow();
 		$fbnamelabel = new label($this->objLanguage->languageText('mod_feedback_thename', 'feedback') .':', 'input_fbname');
 		$fbname = new textinput('fbname');
+		if(isset($insarr['fbname']))
+		{
+			$fbname->setValue($insarr['fbname']);
+		}
 		$fbadd->addCell($fbnamelabel->show().$required);
 		$fbadd->addCell($fbname->show());
 		$fbadd->endRow();
@@ -52,6 +56,10 @@ class fbform extends object
 		$fbadd->startRow();
 		$fbemaillabel = new label($this->objLanguage->languageText('mod_feedback_email', 'feedback') .':', 'input_fbemail');
 		$fbemail = new textinput('fbemail');
+		if(isset($insarr['fbemail']))
+		{
+			$fbemail->setValue($insarr['fbemail']);
+		}
 		$fbadd->addCell($fbemaillabel->show().$required);
 		$fbadd->addCell($fbemail->show());
 		$fbadd->endRow();
@@ -60,6 +68,10 @@ class fbform extends object
 		$fbadd->startRow();
 		$fbwwlabel = new label($this->objLanguage->languageText('mod_feedback_ww', 'feedback') .':', 'input_fbww');
 		$fbww = new textarea('fbww');
+		if(isset($insarr['fbww']))
+		{
+			$fbww->setValue($insarr['fbww']);
+		}
 		$fbadd->addCell($fbwwlabel->show());
 		$fbadd->addCell($fbww->show());
 		$fbadd->endRow();
@@ -68,6 +80,10 @@ class fbform extends object
 		$fbadd->startRow();
 		$fbnwlabel = new label($this->objLanguage->languageText('mod_feedback_nw', 'feedback') .':', 'input_fbnw');
 		$fbnw = new textarea('fbnw');
+		if(isset($insarr['fbnw']))
+		{
+			$fbnw->setValue($insarr['fbnw']);
+		}
 		$fbadd->addCell($fbnwlabel->show());
 		$fbadd->addCell($fbnw->show());
 		$fbadd->endRow();
@@ -76,6 +92,10 @@ class fbform extends object
 		$fbadd->startRow();
 		$fblolabel = new label($this->objLanguage->languageText('mod_feedback_lo', 'feedback') .':', 'input_fblo');
 		$fblo = new textarea('fblo');
+		if(isset($insarr['fblo']))
+		{
+			$fblo->setValue($insarr['fblo']);
+		}
 		$fbadd->addCell($fblolabel->show());
 		$fbadd->addCell($fblo->show());
 		$fbadd->endRow();
@@ -84,6 +104,10 @@ class fbform extends object
 		$fbadd->startRow();
 		$fbsplabel = new label($this->objLanguage->languageText('mod_feedback_sp', 'feedback') .':', 'input_fbsp');
 		$fbsp = new textarea('fbsp');
+		if(isset($insarr['fbsp']))
+		{
+			$fbsp->setValue($insarr['fbsp']);
+		}
 		$fbadd->addCell($fbsplabel->show());
 		$fbadd->addCell($fbsp->show());
 		$fbadd->endRow();
@@ -92,6 +116,10 @@ class fbform extends object
 		$fbadd->startRow();
 		$fbeelabel = new label($this->objLanguage->languageText('mod_feedback_ee', 'feedback') .':', 'input_fbee');
 		$fbee = new textarea('fbee');
+		if(isset($insarr['fbee']))
+		{
+			$fbee->setValue($insarr['fbee']);
+		}
 		$fbadd->addCell($fbeelabel->show());
 		$fbadd->addCell($fbee->show());
 		$fbadd->endRow();
@@ -100,6 +128,10 @@ class fbform extends object
 		$fbadd->startRow();
 		$fbwlabel = new label($this->objLanguage->languageText('mod_feedback_w', 'feedback') .':', 'input_fbw');
 		$fbw = new textarea('fbw');
+		if(isset($insarr['fbw']))
+		{
+			$fbw->setValue($insarr['fbw']);
+		}
 		$fbadd->addCell($fbwlabel->show());
 		$fbadd->addCell($fbw->show());
 		$fbadd->endRow();

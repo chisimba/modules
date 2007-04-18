@@ -54,17 +54,21 @@ class feedback extends controller
 					$fbee = $this->getParam('fbee');
 					$fbw = $this->getParam('fbw');
 					
-					if (md5(strtoupper($captcha)) != $this->getParam('request_captcha') || empty($captcha))
+					if (md5(strtoupper($captcha)) != $this->getParam('request_captcha') || !isset($captcha))
 					{
+						$insarr = array('userid' => $userid, 'fbname' => $fbname, 'fbemail' => $fbemail, 'fbww' => $fbww, 'fbnw' => $fbnw, 'fblo' => $fblo, 'fbsp' => $fbsp, 'fbee' => $fbee, 'fbw' => $fbw);
 						$msg = 'badcaptcha';
 						$this->setVarByRef('msg', $msg);
+						$this->setVarByRef('insarr', $insarr);
 						return 'form_tpl.php';
 					}
 					
 					elseif(!isset($fbname) && !isset($fbemail))
 					{
+						$insarr = array('userid' => $userid, 'fbname' => $fbname, 'fbemail' => $fbemail, 'fbww' => $fbww, 'fbnw' => $fbnw, 'fblo' => $fblo, 'fbsp' => $fbsp, 'fbee' => $fbee, 'fbw' => $fbw);
 						$msg = 'nodata';
 						$this->setVarByRef('msg', $msg);
+						$this->setVarByRef('insarr', $insarr);
 						return 'form_tpl.php';
 					}
 					else {
