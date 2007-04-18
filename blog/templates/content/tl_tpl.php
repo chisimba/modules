@@ -23,7 +23,8 @@ else {
 	
 }
 $washer = $this->getObject('washout', 'utilities');
-$middleColumn = $washer->parseText('[TIMELINE]<a href="'.$tlurl.'">blogtimeline</a>[/TIMELINE]');
+//echo $startdate;
+$middleColumn = $this->objblogOps->parseTimeline("MONTH", $startdate, $tlurl); //$washer->parseText('[TIMELINE]<a href="'.$tlurl.'">blogtimeline</a>[/TIMELINE]');
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());

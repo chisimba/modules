@@ -99,8 +99,23 @@ class blogops extends object
     		$str .= htmlentities($post['post_excerpt'] . "<br />" . $plink->show());
     		$str .= "</event>";		
     	}
+    	$startdate = date('Y', $posts[0]['post_ts']);
     	$str .= "</data>";
-    	return $str;
+    	return array($str, $startdate);
+    }
+    
+    public function parseTimeline($int, $fdate, $timeline)
+    {
+    	$objIframe = $this->getObject('iframe', 'htmlelements');
+    	$objIframe->width = "100%";
+    	$objIframe->height="330";
+     	$ret = $this->uri(array("mode" => "plain",
+	          "action" => "viewtimeline", 
+			  "timeLine" => $timeline,
+			  "intervalUnit" => $int,
+			  "focusDate" => $fdate), "timeline");
+    	$objIframe->src=$ret;
+        return $objIframe->show();
     }
     
     public function siteBlogTimeline()
