@@ -4,7 +4,7 @@ $headerParams = $this->getJavascriptFile('scripts.js', 'cmsadmin');
 $this->appendArrayVar('headerParams', $headerParams);
 
 // initialize scripts
-$this->setVar('bodyParams', 'onload="javascript:ca_init();"');
+$this->setVar('bodyParams', 'onload="javascript:ca_init(\''.$id.'\', \''.$section.'\');"');
 
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $tbl = $this->newObject('htmltable', 'htmlelements');

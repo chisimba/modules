@@ -1,4 +1,9 @@
 /* ---------------- frontpage_manager ------------------*/
+/**
+Global Vars
+*/
+var ID;
+var SECTION;
 /*
 Function to intitialize scriptaculous for frontpage_manager
 */
@@ -99,8 +104,10 @@ function fm_setupDeleteBlocks()
 /*
 Function to intitialize scriptaculous for content_add
 */
-function ca_init()
+function ca_init(pageid, setionid)
 {
+    ID = pageid;
+    SECTION = sectionid;
     ca_setupAddBlocks();
     ca_setupDeleteBlocks();
 }
@@ -132,7 +139,7 @@ function ca_sendData (prod, action, responseFunction)
 {
     var url    = 'index.php';
     var rand   = Math.random(9999);
-    var pars   = 'module=cmsadmin&action='+action+'&pageid=<?php echo $id; ?>&sectionid=<?php echo $section; ?>&blockid=' + prod + '&rand=' + rand;
+    var pars   = 'module=cmsadmin&action='+action+'&pageid='+ID+'&sectionid='+SECTION+'&blockid=' + prod + '&rand=' + rand;
     var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onLoading: ca_showLoad, onComplete: responseFunction} );
 }
 
