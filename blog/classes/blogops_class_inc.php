@@ -108,7 +108,7 @@ class blogops extends object
     {
     	$objIframe = $this->getObject('iframe', 'htmlelements');
     	$objIframe->width = "100%";
-    	$objIframe->height="330";
+    	$objIframe->height="700";
      	$ret = $this->uri(array("mode" => "plain",
 	          "action" => "viewtimeline", 
 			  "timeLine" => $timeline,

@@ -16,10 +16,18 @@ $middleColumn = NULL;
 if($this->objUser->isLoggedIn())
 {
 	$leftCol .= $objSideBar->show();
+	$leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
+	$leftCol .= $this->objblogOps->showProfile($userid);
+	$leftCol .= $this->objblogOps->showAdminSection(TRUE);
+	$leftCol .= $this->objblogOps->archiveBox($userid, TRUE);
 	
 }
 else {
-	$leftCol = null;
+	$leftCol .= $this->objblogOps->loginBox(TRUE);
+	//$leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
+	$leftCol .= $this->objblogOps->showProfile($userid);
+	$leftCol .= $this->objblogOps->showBlogsLink(TRUE);
+	$leftCol .= $this->objblogOps->archiveBox($userid, TRUE);
 	
 }
 $washer = $this->getObject('washout', 'utilities');

@@ -1864,6 +1864,7 @@ class blog extends controller
         	$tlurl = $this->objConfig->getsiteRoot() . $this->objConfig->getcontentPath() . "users/" .$userid.'/'.$userid.'_temptimeline.xml';
         
         	$this->setVarByRef('tlurl',$tlurl);
+        	$this->setVarByRef('userid',$userid);
         	$this->setVarByRef('startdate', $tl[1]);
         	//$this->setVar("pageSuppressXML", TRUE);
         	return "tl_tpl.php";
