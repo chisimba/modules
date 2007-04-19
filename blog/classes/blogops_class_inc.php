@@ -113,7 +113,8 @@ class blogops extends object
 	          "action" => "viewtimeline", 
 			  "timeLine" => $timeline,
 			  "intervalUnit" => $int,
-			  "focusDate" => $fdate), "timeline");
+			  "focusDate" => $fdate,
+			  "tlHeight" => '700'), "timeline");
     	$objIframe->src=$ret;
         return $objIframe->show();
     }
