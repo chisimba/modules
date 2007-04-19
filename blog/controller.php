@@ -1836,9 +1836,14 @@ class blog extends controller
         	//save the timeline as a file. (Not sure if this is necessary or not...
         	$filename = $this->objConfig->getcontentBasePath() . "users/" .$userid.'/'.$userid.'_temptimeline.xml';
         	$somecontent = $tl[0];
-        	print_r($somecontent);
+        	//print_r($somecontent);
         	if(!file_exists($filename))
         	{
+        		touch($filename);
+        		chmod($filename, 0777);
+        	}
+        	else {
+        		unlink($filename);
         		touch($filename);
         		chmod($filename, 0777);
         	}
