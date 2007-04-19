@@ -1833,10 +1833,10 @@ class blog extends controller
         	$userid = $this->getParam('userid');
         	$info = $this->objDbBlog->getAbsAllPosts($userid);
         	$tl = $this->objblogOps->myBlogTimeline($info, $userid);
-        	//echo htmlentities($tl);
         	//save the timeline as a file. (Not sure if this is necessary or not...
         	$filename = $this->objConfig->getcontentBasePath() . "users/" .$userid.'/'.$userid.'_temptimeline.xml';
-        	$somecontent = $tl;
+        	$somecontent = $tl[0];
+        	print_r($somecontent);
         	if(!file_exists($filename))
         	{
         		touch($filename);
@@ -1859,6 +1859,7 @@ class blog extends controller
         	$tlurl = $this->objConfig->getsiteRoot() . $this->objConfig->getcontentPath() . "users/" .$userid.'/'.$userid.'_temptimeline.xml';
         
         	$this->setVarByRef('tlurl',$tlurl);
+        	$this->setVarByRef('startdate', $tl[1]);
         	//$this->setVar("pageSuppressXML", TRUE);
         	return "tl_tpl.php";
         	break;
