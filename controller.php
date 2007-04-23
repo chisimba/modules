@@ -75,12 +75,20 @@ class realtime extends controller
 	 */
 	function init()
 	{
+		//Get configuration class
+		$this->objConfig =& $this->getObject('config','config');
+		
+		//Get language class
 		$this->objLanguage =& $this->getObject('language', 'language');
+		
 		//Get the activity logger class
+		$this->config =& $this->getObject('config','config');
 		$this->objLog = $this->newObject('logactivity', 'logger');
+		
 		//Log this module call
 		$this->objLog->log();
 		$this->objrealtime = & $this->getObject('dbrealtime');
+		
 		// classes we need
 		$this->objUser = $this->newObject('user', 'security');
 		$this->userId = $this->objUser->userId();
@@ -185,6 +193,7 @@ class realtime extends controller
 			return "redirect_tpl.php";
 		} else
 		{
+			$this->deleteFilesInServer();
 			$hasToken = $this->objrealtime->startConversation($userid, $contextcode);
 			$this->setVar('hastoken', $hasToken);
 			return "redirect_tpl.php";
@@ -197,7 +206,7 @@ class realtime extends controller
 		$this->setVar('hastoken', $hasToken);
 		return "redirect_tpl.php";
 	}
-
+	
 	function leaveConversation($userid, $contextcode)
 	{
 		$hasToken = $this->objrealtime->leaveConversation($userid,  $contextcode);
@@ -219,12 +228,12 @@ class realtime extends controller
 		return "redirect_tpl.php";
 	}
 	
-	function makeQueue($userid, $userLevel, $contextCode)
+	function makeQueue($userId, $userLevel, $contextCode)
 	{
 		
 		if(eregi("lecturer", $userLevel)){
 			
-			$users = $this->objrealtime->makeQueue($userid, $userLevel, $contextCode);
+			$users = $this->objrealtime->makeQueue($userId, $userLevel, $contextCode);
 			$this->setVar('hastoken', $users);
 
 			return "redirect_tpl.php";
@@ -241,6 +250,19 @@ class realtime extends controller
 		$hasToken = $this->objrealtime->assignToken($userId, $contextcode);
 		$this->setVar('hastoken', $hasToken);
 		return "redirect_tpl.php";
+	}
+	
+	function deleteFilesInServer(){
+		$this->basePath = $this->objConfig->getModulePath();
+		$this->modulePath = $this->basePath."realtime/resources/voice/audio";
+		$this->file = "";
+		if($this->handle = opendir($this->modulePath)){
+			while(false !== ($this->file = readdir($this->handle))){
+				if(ereg(".gsm", $this->file))
+					unlink($this->modulePath.'/'.$this->file);
+			}
+			closedir($this->handle);
+		}
 	}
 	
 	function showVoiceApplet($contextcode)
