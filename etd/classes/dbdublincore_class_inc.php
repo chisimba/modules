@@ -38,6 +38,30 @@ class dbDublinCore extends object
         $this->objUser = $this->getObject('user', 'security');
     }
 
+    function patch()
+    {
+        $sql = "SELECT * FROM {$this->dcTable} ";
+        
+        $data = $this->dbDublinCore->getArray($sql);
+        
+        if(!empty($data)){
+            foreach($data as $item){
+                $url = ''; $new_url = ''; 
+                $id = $item['id'];
+                $url = $item['url'];
+                
+                $new_url = urlencode(urldecode($url));
+                
+                echo '<p>Url: '.$url."<br /> ".$new_url.'</p>';
+                
+                $fields['url'] = $new_url;
+                $fields['datestamp'] = $this->dbDublinCore->now();
+                $fields['updated'] = $this->dbDublinCore->now();
+                $this->dbDublinCore->update('id', $id, $fields);
+            }
+        }
+    }
+
     /**
     * Method to insert the metadata extracted from xml into the dublincore table.
     *

@@ -87,6 +87,10 @@ class etd extends controller
 
         switch($action){
 
+            case 'patchdata':
+                $this->patchData();
+                break;
+
             /* *** Functions for displaying the resources *** */
 
             case 'viewauthor':
@@ -942,6 +946,13 @@ class etd extends controller
                 $this->setSession('accessLevel', $accessLevel);
             }
         }
+    }
+
+    function patchData()
+    {
+        $this->dbDublinCore = $this->getObject('dbdublincore', 'etd');
+        
+        $this->dbDublinCore->patch();
     }
 
     /**
