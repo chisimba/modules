@@ -764,9 +764,12 @@ class management extends object
         $xmlData = $this->xmlMetadata->openXML('etd_'.$submitId);
         // Save metadata to database.
         $meta = $this->dbDublinCore->moveXmlToDb($xmlData, $submitId);
+        
         // Create Url to resource, save to metadata - dc_identifier, url
         $url = $this->uri(array('action' => 'viewtitle', 'id' => $meta['thesisId']));
-        $fields = array('dc_identifier' => $url, 'url' => $url);
+        $url1 = html_entity_decode($url);
+        $url2 = urlencode($url1);
+        $fields = array('dc_identifier' => $url1, 'url' => $url2);
         $this->dbDublinCore->updateElement($fields, $meta['dcId']);
         // Delete xml file
         $this->xmlMetadata->deleteXML('etd_'.$submitId);

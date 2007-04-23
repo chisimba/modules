@@ -40,7 +40,8 @@ class dbDublinCore extends object
 
     function patch()
     {
-        $sql = "SELECT * FROM {$this->dcTable} ";
+        $sql = "SELECT dc.id, dc.url, th.datecreated, th.updated FROM {$this->dcTable} AS dc, $this->thesisTable AS th 
+        WHERE dc.id = th.dcmetaid";
         
         $data = $this->dbDublinCore->getArray($sql);
         
@@ -48,15 +49,16 @@ class dbDublinCore extends object
             foreach($data as $item){
                 $url = ''; $new_url = ''; 
                 $id = $item['id'];
-                $url = $item['url'];
+                //$url = $item['url'];
                 
-                $new_url = urlencode(urldecode($url));
+                //$new_url = urlencode(urldecode($url));
                 
-                echo '<p>Url: '.$url."<br /> ".$new_url.'</p>';
+                //echo '<p>Url: '.$url."<br /> ".$new_url.'</p>';
                 
-                $fields['url'] = $new_url;
-                $fields['datestamp'] = $this->dbDublinCore->now();
-                $fields['updated'] = $this->dbDublinCore->now();
+                //$fields['url'] = $new_url;
+                $fields['enterdate'] = $item['datecreated'];
+                $fields['datestamp'] = isset($item['updated']) ? $item['updated'] : $item['datecreated'];
+                $fields['updated'] = isset($item['updated']) ? $item['updated'] : $item['datecreated'];
                 $this->dbDublinCore->update('id', $id, $fields);
             }
         }
@@ -74,6 +76,7 @@ class dbDublinCore extends object
     {
         $dcData = $xml['metadata']['dublincore'];
         $dcId = $this->dbDublinCore->addMetaData($dcData);
+        
         $thesisData = $xml['metadata']['thesis'];
         $thesisData['dcMetaId'] = $dcId;
         $thesisData['submitId'] = $submitId;

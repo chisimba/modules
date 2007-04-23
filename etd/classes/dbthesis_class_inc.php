@@ -116,13 +116,13 @@ class dbThesis extends dbtable
     {
         if($id){
             $fields['modifierid'] = $this->objUser->userId();
-            $fields['datemodified'] = date('Y-m-d H:i');
-            $fields['updated'] = date('Y-m-d H:i:s');
+            $fields['datemodified'] = $this->now();
+            $fields['updated'] = $this->now();
             $this->update('id', $id, $fields);
         }else{
             $fields['creatorid'] = $this->objUser->userId();
-            $fields['datecreated'] = date('Y-m-d H:i');
-            $fields['updated'] = date('Y-m-d H:i:s');
+            $fields['datecreated'] = $this->now();
+            $fields['updated'] = $this->now();
             $id = $this->insert($fields);
         }
         return $id;
