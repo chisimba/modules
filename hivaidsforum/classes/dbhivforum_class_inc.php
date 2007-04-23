@@ -204,6 +204,7 @@ class dbhivforum extends dbtable
 	        $objTable->startRow();
 	        $objTable->addCell('<b>'.$data['post_title'].'</b>');
 	        $objTable->addCell($posted, '', '', 'right');
+	        $objTable->endRow();
     	    $inStr = $objTable->show();
             $inStr .= $data['post_text'];
     	            
@@ -263,6 +264,9 @@ class dbhivforum extends dbtable
             $objHead->str = $lbTopics;
             $objHead->type = '4';
             return $this->objRound->show($objHead->show().$str);
+        }
+        if($dispType == 'nobox'){
+            return $str;
         }
         return $this->objFeatureBox->show($lbTopics, $str);
     }
@@ -328,7 +332,7 @@ class dbhivforum extends dbtable
 	* @access public
 	* @return string html
     */
-    public function showCategoryList()
+    public function showCategoryList($dispType = '')
     {
         // Get the current forum
         $forumId = $this->getSession('forumId');
@@ -348,6 +352,10 @@ class dbhivforum extends dbtable
                 }
                 $str .= '<p style="margin: 0px;">'.$lnForum.'</p>';
             }
+        }
+        
+        if($dispType == 'nobox'){
+            return $str;
         }
         return $this->objFeatureBox->show($lbCats, $str);
     }
