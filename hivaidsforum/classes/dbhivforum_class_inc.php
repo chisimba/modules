@@ -240,7 +240,7 @@ class dbhivforum extends dbtable
 	* @param string $dispType The format of the display - featurebox or div
 	* @return string html
     */
-    public function showTopicList($dispType = 'box')
+    public function showTopicList($dispType = 'box', $linkAll = FALSE)
     {
         $topicId = $this->getSession('topicId');
         $lbTopics = $this->objLanguage->languageText('word_topics');
@@ -249,7 +249,7 @@ class dbhivforum extends dbtable
         $str = '';
         if(!empty($list)){
             foreach($list as $item){
-                if($item['topicid'] == $topicId){
+                if($item['topicid'] == $topicId AND !$linkAll){
                     $lnTopic = $item['post_title'];
                 }else{
                     $objLink = new link($this->uri(array('action' => 'showtopic', 'topicId' => $item['topicid'])));
@@ -332,7 +332,7 @@ class dbhivforum extends dbtable
 	* @access public
 	* @return string html
     */
-    public function showCategoryList($dispType = '')
+    public function showCategoryList($dispType = '', $linkAll = FALSE)
     {
         // Get the current forum
         $forumId = $this->getSession('forumId');
@@ -343,7 +343,7 @@ class dbhivforum extends dbtable
         $str = '';
         if(!empty($list)){
             foreach($list as $item){
-                if($item['id'] == $forumId){
+                if($item['id'] == $forumId AND !$linkAll){
                     $lnForum = $item['forum_name'];
                 }else{
                     $objLink = new link($this->uri(array('action' => 'showcat', 'catId' => $item['id'])));

@@ -32,6 +32,6 @@ class block_categorylist extends object
     */
     public function show()
 	{
-	    return $this->dbHivForum->showCategoryList('nobox');
+	    return $this->dbHivForum->showCategoryList('nobox', TRUE);
 	}
 }

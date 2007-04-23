@@ -33,6 +33,6 @@ class block_topiclist extends object
     */
     public function show()
 	{
-	    return $this->dbHivForum->showTopicList('nobox');
+	    return $this->dbHivForum->showTopicList('nobox', TRUE);
     }
 }
