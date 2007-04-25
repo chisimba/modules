@@ -48,40 +48,22 @@
 	$row = array("<b>".$label = $objLanguage->languageText("mod_readinglist_publisher",'readinglist').":</b>",
 	$textinput->show());
 
- 	//Publishing Year text field
+ 	//Publishing Year select field
 	$objTable->addRow($row, 'even');
+ 	$table = $this->newObject('htmltable', 'htmlelements');
+	$addDropdown = new dropdown('publishingYear');
+	$year=array("yr_80", "yr_81", "yr_82", "yr_83", "yr_84", "yr_85", "yr_86", "yr_87", "yr_88", "yr_89", "yr_90", "yr_91", "yr_92", "yr_93", "yr_94", "yr_95", "yr_96", "yr_97", "yr_98", "yr_99", "yr_00", "yr_01", "yr_02", "yr_03", "yr_04", "yr_05", "yr_06", "yr_07");
+	foreach ($year as $row)
+	{
+    		$row=trim($this->objLanguage->languageText($row));
+    		$addDropdown->addOption($row,$row);
+	}
 
-
-/*$addDropdown = new dropdown('publishingYear');
-        $year=array("yr_80", "yr_81", "yr_82", "yr_83", "yr_84", "yr_85", "yr_86", "yr_87", "yr_88", "yr_89", "yr_90", "yr_91", "yr_92", "yr_93", "yr_94", "yr_95", "yr_96", "yr_97", "yr_98", "yr_99", "yr_00", "yr_01", "yr_02", "yr_03", "yr_04", "yr_05", "yr_06", "yr_07");
-		foreach ($year as $row)
-	        {
-			$row=$objLanguage->languageText($row);
-			$addDropdown->addOption($row,$row);
-                }
-	$addDropdown->size = 4;
+	$table->startRow();
 	$row=array("<b>".$label = $objLanguage->languageText("mod_readinglist_year",'readinglist')."</b>",
 	$addDropdown->show());
-*/
- $table = $this->newObject('htmltable', 'htmlelements');
-$addDropdown = new dropdown('publishingYear');
-//$titlesLabel = new label($this->objLanguage->languageText('word_title', 'system').'&nbsp;', 'input_register_title');
-$year=array("yr_80", "yr_81", "yr_82", "yr_83", "yr_84", "yr_85", "yr_86", "yr_87", "yr_88", "yr_89", "yr_90", "yr_91", "yr_92", "yr_93", "yr_94", "yr_95", "yr_96", "yr_97", "yr_98", "yr_99", "yr_00", "yr_01", "yr_02", "yr_03", "yr_04", "yr_05", "yr_06", "yr_07");
-foreach ($year as $row)
-{
-    $row=trim($this->objLanguage->languageText($row));
-    $addDropdown->addOption($row,$row);
-}
-
-//if ($mode == 'addfixup') {
- //   $titlesDropdown->setSelected($this->getParam('register_title'));
-//}
-$table->startRow();
-$row=array("<b>".$label = $objLanguage->languageText("mod_readinglist_year",'readinglist')."</b>",
-	$addDropdown->show());
-//$table->addCell($titlesLabel->show(), 150, NULL, 'right');
-$table->addCell($addDropdown->show());
-$table->endRow();
+	$table->addCell($addDropdown->show());
+	$table->endRow();
 
 
 

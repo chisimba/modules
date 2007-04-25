@@ -87,17 +87,13 @@
         $addUrl->set('top','100');
         $addUrl->set('scrollbars','yes');
         //$addUrl->putJs();      
-	    $linkWindow = $addUrl->show();    
-		
-		 
-        $textinput = new textinput("link",$link);
+	$linkWindow = $addUrl->show();    
+	$textinput = new textinput("link",$link);
         //$textinput-> set('linktext',$iconWindow->show());
         $textinput->size = 50;
         $row = array("<b>".$label=$objLanguage->languageText("mod_readinglist_link",'readinglist').":</b>",
         $textinput->show(),$linkWindow);
         
-		
-
 	//Publication text box
 	$objTable->addRow($row, 'even');
         $textinput = new textinput("publication",$publication);
