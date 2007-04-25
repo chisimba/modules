@@ -241,6 +241,7 @@ class dbsections extends dbTable
                 $published = $this->getParam('published');
                 $layout = $this->getParam('display');
                 $showdate = $this->getParam('showdate');
+                $hidetitle = $this->getParam('hidetitle');
                 $showintroduction = $this->getParam('showintro');
                 $user = $this->_objUser->userId();
                 if($this->getParam('pagenum') == 'custom') {
@@ -262,6 +263,7 @@ class dbsections extends dbTable
                 'ordering' => $ordering,
                 'description' => $description,
                 'published' => $published,
+                'hidetitle' => $hidetitle,
                 'showdate' => $showdate,
                 'showintroduction' => $showintroduction,
                 'numpagedisplay' => $numpagedisplay,
@@ -295,6 +297,7 @@ class dbsections extends dbTable
                 $published = $this->getParam('published');
                 $layout = $this->getParam('display');
                 $showdate = $this->getParam('showdate');
+                $hidetitle = $this->getParam('hidetitle');
                 $showintroduction = $this->getParam('showintro');
                 $user = $this->_objUser->userId();
                 if($this->getParam('pagenum') == 'custom') {
@@ -317,6 +320,7 @@ class dbsections extends dbTable
                 'description' => $description,
                 'published' => $published,
                 'showdate' => $showdate,
+                'hidetitle' => $hidetitle,
                 'showintroduction' => $showintroduction,
                 'numpagedisplay' => $numpagedisplay,
                 'ordertype' => $ordertype,
@@ -419,6 +423,7 @@ class dbsections extends dbTable
             $published = $this->getParam('published');
             $layout = $this->getParam('display');
             $showdate = $this->getParam('showdate');
+            $hidetitle = $this->getParam('hidetitle');
             $showintroduction = $this->getParam('showintro');
             if($this->getParam('pagenum') == 'custom') {
                 $numpagedisplay = $this->getParam('customnumber');
@@ -437,6 +442,7 @@ class dbsections extends dbTable
                              'layout' => $layout,
                              'ordering' => $ordering,
                              'showdate' => $showdate,
+                             'hidetitle' => $hidetitle,
                              'showintroduction' => $showintroduction,
                              'numpagedisplay' => $numpagedisplay,
                              'ordertype' => $ordertype,

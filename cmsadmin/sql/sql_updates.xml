@@ -1,6 +1,27 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <updates>
     
+	'hidetitle' => array(
+		'type' => 'integer',
+		'length' => 3
+
+		),
+		
+    <update>
+        <table>tbl_cms_sections</table>
+        <version>1.53</version>
+        <description>Added column to hide the title in the section - allows users to style their own titles</description>
+        <data>
+           	<add>
+       			<name>hidetitle</name>
+    	    	<type>integer</type>
+       			<length>3</length>
+       			<notnull>TRUE</notnull>
+       			<default>0</default>
+    		</add>
+    	</data>
+	</update>
+	
     <update>
         <table>tbl_cms_content</table>
         <version>1.52</version>

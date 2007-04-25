@@ -41,7 +41,12 @@ $fields = array(
 	'showintroduction' => array(
 		'type' => 'integer',
 		'length' => 3
-
+		),
+	'hidetitle' => array(
+		'type' => 'integer',
+		'length' => 3,
+		'notnull' => TRUE,
+		'default' => '0'
 		),
 	'numpagedisplay' => array(
 		'type' => 'integer',

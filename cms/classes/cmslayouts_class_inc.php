@@ -497,14 +497,19 @@ class cmslayouts extends object
 
             $orderType = $arrSection['ordertype'];
             $showIntro = $arrSection['showintroduction'];
+            $hideTitle = isset($arrSection['hidetitle']) ? $arrSection['hidetitle'] : FALSE;
             $showDate = $arrSection['showdate'];
             $description = $arrSection['description'];
             $sectionTitle = $arrSection['title'];
 
             //Add section title
-            $this->objHead->type = 2;
-            $this->objHead->str = $sectionTitle;
-            $headStr = $this->objHead->show();
+            if($hideTitle){
+                $headStr = '';
+            }else{
+                $this->objHead->type = 2;
+                $this->objHead->str = $sectionTitle;
+                $headStr = $this->objHead->show();
+            }
             
             //Check if section intro should be displayed and act accordingly
             if($showIntro && !empty($description)) {
@@ -630,18 +635,19 @@ class cmslayouts extends object
                     $pageId = $arrPages[0]['id'];
                 }
             }
+            
+            
+            if(!empty($description)) {
+            	 $introStr = null;
+            	 $introStr .= '<p><hr /><span>'.$arrSection['title'].'&nbsp;'.'</span>';
+				 $introStr .= '</p>';
+                 $introStr .=  '<em><span>'.$description.'</span>';
+                 $introStr .= '<br /></em><hr />';
+            }
 
             // Display the selected page
             // Display links to the other pages
             if(!empty($arrPages)){
-            	 if(!empty($description)) {
-            	 	 $introStr = null;
-            	 	 $introStr .= '<p><hr /><span>'.$arrSection['title'].'&nbsp;'.'</span>';
-					 $introStr .= '</p>';
-            		 $introStr .=  '<em><span>'.$description.'</span>';
-                     $introStr .= '<br /></em><hr />';
-                	
-            	 }
                 foreach ($arrPages as $page) {
                     if ($pageId == $page['id']) {
                         if(isset($page['hide_title']) && $page['hide_title'] == 1){
@@ -703,6 +709,7 @@ class cmslayouts extends object
             $description = stripslashes($arrSection['description']);
             $imagesrc = $arrSection['link'];
             $title = $arrSection['title'];
+            $hideTitle = isset($arrSection['hidetitle']) ? $arrSection['hidetitle'] : FALSE;
 
             switch ($orderType) {
     
@@ -744,9 +751,13 @@ class cmslayouts extends object
                 $str .= '</ul>';
             }
             
-            $this->objHead->str = $title;
-            $this->objHead->type = 2;
-            $introStr = $this->objHead->show();
+            if($hideTitle){
+                $introStr = '';
+            }else{
+                $this->objHead->str = $title;
+                $this->objHead->type = 2;
+                $introStr = $this->objHead->show();
+            }
             
             //parse the body stuff
             $objMindMap->parse($description);

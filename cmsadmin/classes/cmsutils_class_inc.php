@@ -1805,6 +1805,7 @@ class cmsutils extends object
                 $menuTextInput->value = $section['menutext'];
                 $layout = $section['layout'];
                 $isPublished = $section['published'];
+                $hideTitle = isset($section['hidetitle']) ? $section['hidetitle'] : '0';
                 //Set rootid as hidden field
                 $objRootId->name = 'rootid';
                 $objRootId->id = 'rootid';
@@ -1829,6 +1830,7 @@ class cmsutils extends object
                 $bodyInput->value = '';
                 $layout = 0;
                 $isPublished = '1';
+                $hideTitle = '0';
             }
 
             //Add form elements to the table
@@ -1881,6 +1883,18 @@ class cmsutils extends object
             $table->startRow();
             $table->addCell($this->objLanguage->languageText('word_section').'&nbsp;'.$this->objLanguage->languageText('word_visible').': ');
             $table->addCell($this->getYesNoRadion('published', $isPublished),'','','','',"colspan='2'");
+            $table->endRow();
+            
+            // hide title
+            $objRadio = new radio('hidetitle');
+            $objRadio->addOption('1', '&nbsp;&nbsp;'.$this->objLanguage->languageText('word_yes'));
+            $objRadio->addOption('0', '&nbsp;&nbsp;'.$this->objLanguage->languageText('word_no'));
+            $objRadio->setSelected($hideTitle);
+            $objRadio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
+            
+            $table->startRow();
+            $table->addCell($this->objLanguage->languageText('phrase_hidetitle').': ');
+            $table->addCell($objRadio->show(),'','','','',"colspan='2'");
             $table->endRow();
 
             $table->startRow();
@@ -1935,7 +1949,7 @@ class cmsutils extends object
             $showdate->addOption('1', $this->objLanguage->languageText('word_yes'));
             $showdate->addOption('0', $this->objLanguage->languageText('word_no'));
             if ($editmode) {
-                $showdate->setSelected($section['showdate']);
+                $showdate->setSelected($section['showintroduction']);
             } else {
                 $showdate->setSelected('1');
             }
