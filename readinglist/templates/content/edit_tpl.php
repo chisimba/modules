@@ -3,6 +3,7 @@
 	$this->loadClass("form","htmlelements");
 	$this->loadClass("textinput","htmlelements");
 	$this->loadClass("button","htmlelements");
+	$this->loadclass("dropdown","htmlelements");
 	//$objLabel =& $this->newObject('label', 'htmlelements');
 	$objHeading =& $this->getObject('htmlheading','htmlelements');
 	
@@ -50,14 +51,25 @@
         $textinput->show());
 						     
 	
-    	//Publishing year text box
-        $objTable->addRow($row, 'even');
-        $textinput = new textinput("publishingYear",$publishingYear);
-        $textinput->size = 4;
-        $row = array("<b>".$label=$objLanguage->languageText("mod_readinglist_year",'readinglist').":</b>",
-        $textinput->show());
-		
-        //Link text box
+    	//Publishing year select box
+	$objTable->addRow($row, 'even');
+ 	$table = $this->newObject('htmltable', 'htmlelements');
+	$addDropdown = new dropdown('publishingYear');
+	$year=array("yr_80", "yr_81", "yr_82", "yr_83", "yr_84", "yr_85", "yr_86", "yr_87", "yr_88", "yr_89", "yr_90", "yr_91", "yr_92", "yr_93", "yr_94", "yr_95", "yr_96", "yr_97", "yr_98", "yr_99", "yr_00", "yr_01", "yr_02", "yr_03", "yr_04", "yr_05", "yr_06", "yr_07");
+	foreach ($year as $row)
+	{
+    		$row=trim($this->objLanguage->languageText($row));
+    		$addDropdown->addOption($row,$row);
+	}
+
+	$table->startRow();
+	$row=array("<b>".$label = $objLanguage->languageText("mod_readinglist_year",'readinglist')."</b>",
+	$addDropdown->show());
+	$table->addCell($addDropdown->show());
+	$table->endRow();
+
+
+         //Link text box
         $objTable->addRow($row, 'even');		
 		$iconWindow = $this->getObject('geticon','htmlelements');
 		$iconWindow->setIcon('addsibling');
@@ -92,19 +104,17 @@
         $textinput->size = 70;
         $row = array("<b>".$label=$objLanguage->languageText("mod_readinglist_publication",'readinglist').":</b>",
         $textinput->show());
-	
-	
-	//Country text box
 	$objTable->addRow($row, 'even');
-        $textinput = new textinput("country",$country);
-        $textinput->size = 70;
-        $row = array("<b>".$label=$objLanguage->languageText("mod_readinglist_country",'readinglist').":</b>",
-        $textinput->show());
 	
-	
+	//Country select box
+	$objTable->startRow();
+   	$countries=&$this->getObject('languagecode','language');
+    	$objTable->addCell($this->objLanguage->languageText("mod_readinglist_country", 'readinglist'));
+        $objTable->addCell($countries->country());
+	$objTable->endRow();
+        
 	//Language text box
-	$objTable->addRow($row, 'even');
-        $textinput = new textinput("language",$language);
+	$textinput = new textinput("language",$language);
         $textinput->size = 70;
         $row = array("<b>".$label=$objLanguage->languageText("mod_readinglist_language",'readinglist').":</b>",
         $textinput->show());
