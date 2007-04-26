@@ -21,7 +21,7 @@ if (isset($listContent)) {
 	    $isPrivate=$line["isprivate"];
 	    $groupId=$line["groupid"];
     }
-    $titleLine=$this->objLanguage->LanguageText('phrase_new_bookmark');
+    $titleLine=$this->objLanguage->LanguageText('phrase_newbookmark');
     $infoBookmark=$this->objLanguage->LanguageText('mod_bookmark_details','kbookmark');
     $bkForm= new form('addForm');
     $bkForm->setAction($this->uri(array('action'=>'save_edit','id'=>$this->getParam('id'),'item'=>$this->getParam('item'),'folderid'=>$this->getParam('folderId'))));

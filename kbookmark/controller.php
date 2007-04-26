@@ -67,14 +67,14 @@ class kbookmark extends controller
      
     function init()
     {
-        $this->objLanguage=& $this->getObject('language', 'language');
-        $this->objIcon=& $this->getObject('geticon','htmlelements');
-        $this->objUser= & $this->getObject('user','security');
-        $this->objLink=&$this->newObject('link','htmlelements');
-        $this->objDbBookmark=& $this->newObject('dbbookmark','kbookmark');
-        $this->objDbGroup=& $this->newObject('dbgroup','kbookmark');
-        $this->xbel=& $this->newObject('xbookmark','kbookmark');
-	$this->urlVal=& $this->newObject('url','strings');
+        $this->objLanguage= $this->getObject('language', 'language');
+        $this->objIcon= $this->getObject('geticon','htmlelements');
+        $this->objUser= $this->getObject('user','security');
+        $this->objLink= $this->newObject('link','htmlelements');
+        $this->objDbBookmark= $this->newObject('dbbookmark','kbookmark');
+        $this->objDbGroup= $this->newObject('dbgroup','kbookmark');
+        $this->xbel= $this->newObject('xbookmark','kbookmark');
+	    $this->urlVal= $this->newObject('url','strings');
     }
     
     /**
@@ -385,12 +385,11 @@ fclose($file_handle);
             $title=$_POST['title'];
             $description=$_POST['description'];
             $isprivate=$_POST['private'];
-            $datecreated=mktime();
-            $datemodified='0000-00-00 00:00:00';
+            $datecreated=$this->objDbGroup->now();
             $isdefault='0';
             $creatorid=$this->objUser->userId();
             $this->objDbGroup->insertSingle($title,$description,
-            $isprivate,$datecreated,$datemodified,$isdefault,$creatorid);
+            $isprivate,$datecreated,$isdefault,$creatorid);
             $titleLine=$this->objLanguage->languageText('mod_bookmark_foldersaved','kbookmark');
             if ($options=='options') {
                 return $this->nextAction('options', array('status'=>'success','title'=>$titleLine));
@@ -403,16 +402,14 @@ fclose($file_handle);
             $title=$_POST['title'];
             $url=$_POST['url'];
             $description=$_POST['description'];
-            $datecreated=mktime();
+            $datecreated=$this->objDbBookmark->now();
             $isprivate=$_POST['private'];
-            $datelastaccessed='0000-00-00 00:00:00';
             $creatorid=$this->objUser->userId();
             $visitcount='0';
-            $datemodified='0000-00-00 00:00:00';
             $isdeleted='0';
             $this->objDbBookmark->insertSingle($groupid,$title, $url,
-            $description, $datecreated, $isprivate, $datelastaccessed,
-            $creatorid, $visitcount, $datemodified);
+            $description, $datecreated, $isprivate,
+            $creatorid, $visitcount);
             $titleLine=$this->objLanguage->languageText('mod_bookmark_foldersaved','kbookmark');
             return $this->nextAction('view', array('status'=>'success', 'folderId'=>$groupid, 'title'=>$titleLine));
         }
@@ -430,7 +427,7 @@ fclose($file_handle);
             $title=$_POST['title'];
             $id=$_POST['id'];
             $description=$_POST['description'];
-            $datemodified=strftime('%Y-%m-%d %H:%M:%S',mktime());
+            $datemodified=$this->objDbGroup->now();
             $isprivate=$_POST['isprivate'];
             $this->objDbGroup->update('id',$id, array('title'=>$title,'description'=>$description, 'isprivate'=>$isprivate,'datemodified'=>$datemodified));
         } else {

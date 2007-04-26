@@ -8,49 +8,33 @@ $options = array('comment' => 'Bookmarks Groups', 'collate' => 'utf8_general_ci'
 $fields = array(
 	'id' => array(
 		'type' => 'text',
-		'length' => 32,
-		'notnull' => TRUE,
-		'default' => '',
+		'length' => 32
 		),
 	'title' => array(
 		'type' => 'text',
-		'length' => 100,
-		'notnull' => TRUE,
-		'default' => '',
+		'length' => 100
 		),
 	'description' => array(
 		'type' => 'text',
-		'length' => 255,
-		'notnull' => TRUE,
-		'default' => '',
+		'length' => 255
 		),
 	'isprivate' => array(
 		'type' => 'text',
-		'length' => 1,
-		'notnull' => TRUE,
-		'default' => '',
+		'length' => 1
 		),
 	'datecreated' => array(
-		'type' => 'timestamp',
-		'notnull' => TRUE,
-		'default' => '0000-00-00 00:00:00',
+		'type' => 'timestamp'
 		),
 	'datemodified' => array(
-		'type' => 'timestamp',
-		'notnull' => TRUE,
-		'default' => '0000-00-00 00:00:00',
+		'type' => 'timestamp'
 		),
 	'creatorid' => array(
 		'type' => 'text',
-		'length' => 32,
-		'notnull' => TRUE,
-		'default' => '',
+		'length' => 32
 		),
 	'isdefault' => array(
 		'type' => 'text',
-		'length' => 1,
-		'notnull' => TRUE,
-		'default' => ''
+		'length' => 1
 		)
 	);
 ?>

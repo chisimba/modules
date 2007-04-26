@@ -35,7 +35,7 @@ if ($item=='bookmark') {
 
     $headerString = $this->objLanguage->LanguageText('mod_bookmark_addbookmark','kbookmark');
 
-    $titleLine=$this->objLanguage->LanguageText('phrase_new_bookmark');
+    $titleLine=$this->objLanguage->LanguageText('phrase_newbookmark');
     $infoBookmark=$this->objLanguage->LanguageText('mod_bookmark_addbookmark','kbookmark');
     $bkForm= new form('addForm');
     $bkForm->setAction($this->uri(array('action'=>$action,'id'=>$this->getParam('id'),'item'=>$this->getParam('item'))));
@@ -239,4 +239,3 @@ echo $this->header->show();
 print $bkForm->show();
 
 ?>
-

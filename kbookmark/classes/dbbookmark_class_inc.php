@@ -39,20 +39,18 @@ class dbBookmark extends dbTable
     *
     */
     function insertSingle($groupid,$title, $url,
-            $description, $datecreated, $isprivate, $datelastaccessed,
-            $creatorid, $visitcount, $datemodified)
+            $description, $datecreated, $isprivate,
+            $creatorid, $visitcount)
     {
         $this->insert(array(
              'groupid' =>$groupid,
              'title'   =>$title,
              'url'     =>$url,
              'description'=>$description,
-             'datecreated'=>strftime('%Y-%m-%d %H:%M:%S', $datecreated),
+             'datecreated'=> $datecreated,
              'isprivate'  =>$isprivate,
-             'datelastaccessed'=>$datelastaccessed,
              'creatorid'   => $creatorid,
-             'visitcount'  =>$visitcount,
-             'datemodified'=>$datemodified));
+             'visitcount'  =>$visitcount));
          return;
     }
     
@@ -63,15 +61,15 @@ class dbBookmark extends dbTable
     */
     function updateBookmark()
     {
-            $id=$this->getParam('id');
+        $id=$this->getParam('id');
 	    $fields = array();
 	    $fields['groupid']=$this->getParam('parent');
-            $fields['title']=$this->getParam('title');
-            $fields['url']=$this->getParam('url');
-            $fields['description']=$this->getParam('description');
-            $fields['isprivate']= $this->getParam('private');
-            $fields['datemodified']=strftime('%Y-%m-%d %H:%M:%S',mktime());
-            $this->update('id', $id, $fields);
+        $fields['title']=$this->getParam('title');
+        $fields['url']=$this->getParam('url');
+        $fields['description']=$this->getParam('description');
+        $fields['isprivate']= $this->getParam('private');
+        $fields['datemodified']=$this->now();
+        $this->update('id', $id, $fields);
     }
     
     /**
@@ -99,8 +97,7 @@ class dbBookmark extends dbTable
     
     function updateVisitHit($pageId)
     {
-        $hitTime=mktime();
-		$hitTime=strftime('%Y-%m-%d %H:%M:%S',$hitTime);
+		$hitTime=$this->now();
 		$visitcount=$this->getHits($pageId);
 
 		$visitcount=$visitcount+1;

@@ -430,13 +430,12 @@ $xbelOutput = trim($this->xbelOutput);
              $title=$line['title'];
              $description=$line['description'];
              $isprivate = "1";
-             $datecreated=mktime();
-             $datemodified='0000-00-00 00:00:00';
+             $datecreated=$this->now();
              $isdefault='0';
              $creatorid=$this->objUser->userId();
              //insert into db
              $this->objDbGroup->insertSingle($title,$description,
-             $isprivate,$datecreated,$datemodified,$isdefault,$creatorid);
+             $isprivate,$datecreated,$isdefault,$creatorid);
         }
      
     
@@ -454,20 +453,17 @@ $xbelOutput = trim($this->xbelOutput);
             $title=$line['title'];
             $description=$line['description'];
             $isprivate = "1";
-            $datecreated=mktime();
-            $datemodified='0000-00-00 00:00:00';
+            $datecreated=$this->now();
             $isdefault='0';
             $creatorid=$this->objUser->userId();
             $groupid=$this->objDbGroup->folderById($line['folder']);;
             $url=$line['url'];
-            $datelastaccessed='0000-00-00 00:00:00';
             $visitcount='0';
-            $datemodified='0000-00-00 00:00:00';
             $isdeleted='0';
             //insert into db
             $this->objDbBookmark->insertSingle($groupid,$title, $url,
-            $description, $datecreated, $isprivate, $datelastaccessed,
-            $creatorid, $visitcount, $datemodified);
+            $description, $datecreated, $isprivate,
+            $creatorid, $visitcount);
         }
     }
     

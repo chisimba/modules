@@ -105,7 +105,7 @@ if (isset($listFolderContent)) {
 	$folderId=$this->getParam('folderId');
     $sortOrder=(($sortOrder=="ASC")?"DESC":"ASC");
     $titleLink="<a href='".$this->uri(array('action'=>$action,'folderId'=>$folderId,'folderOrder'=>'title','sortOrder'=>$sortOrder))."' >".$this->objLanguage->LanguageText('word_title')."</a>";
-    $dateAccessedLink="<a href='".$this->uri(array('action'=>$action,'folderId'=>$folderId,'folderOrder'=>'datelastaccessed','sortOrder'=>$sortOrder))."' >".$this->objLanguage->LanguageText('word_date_accessed')."</a>";
+    $dateAccessedLink="<a href='".$this->uri(array('action'=>$action,'folderId'=>$folderId,'folderOrder'=>'datelastaccessed','sortOrder'=>$sortOrder))."' >".$this->objLanguage->LanguageText('phrase_dateaccessed')."</a>";
     $hitsLink="<a href='".$this->uri(array('action'=>$action,'folderId'=>$folderId,'folderOrder'=>'visitcount','sortOrder'=>$sortOrder))."' >".$this->objLanguage->LanguageText('word_hits')."</a>";
 
     $row=array('',$titleLink,$dateAccessedLink,$hitsLink,'','');

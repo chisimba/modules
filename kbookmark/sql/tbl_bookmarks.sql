@@ -8,72 +8,48 @@ $options = array('comment' => 'Bookmarks', 'collate' => 'utf8_general_ci', 'char
 $fields = array(
 	'id' => array(
 		'type' => 'text',
-		'length' => 32,
-		'notnull' => TRUE,
-		'default' => '',
+		'length' => 32
 		),
 	'groupid' => array(
 		'type' => 'text',
-		'length' => 32,
-		'notnull' => TRUE,
-		'default' => '',
+		'length' => 32
 		),
 	'title' => array(
 		'type' => 'text',
-		'length' => 100,
-		'notnull' => TRUE,
-		'default' => '',
+		'length' => 100
 		),
 	'url' => array(
 		'type' => 'text',
-		'length' => 255,
-		'notnull' => TRUE,
-		'default' => '',
+		'length' => 255
 		),
 	'description' => array(
 		'type' => 'text',
-		'length' => 255,
-		'notnull' => TRUE,
-		'default' => '',
+		'length' => 255
 		),
 	'datecreated' => array(
-		'type' => 'timestamp',
-		'notnull' => TRUE,
-		'default' => '0000-00-00 00:00:00',
+		'type' => 'timestamp'
 		),
 	'isprivate' => array(
 		'type' => 'text',
-		'length' => 1,
-		'notnull' => TRUE,
-		'default' => '',
+		'length' => 1
 		),
 	'datelastaccessed' => array(
-		'type' => 'timestamp',
-		'notnull' => TRUE,
-		'default' => '0000-00-00 00:00:00',
+		'type' => 'timestamp'
 		),
 	'creatorid' => array(
 		'type' => 'text',
-		'length' => 32,
-		'notnull' => TRUE,
-		'default' => '',
+		'length' => 32
 		),
 	'visitcount' => array(
 		'type' => 'integer',
-		'length' => 11,
-		'notnull' => TRUE,
-		'default' => ''
+		'length' => 11
 		),
 	'datemodified' => array(
-		'type' => 'timestamp',
-		'notnull' => TRUE,
-		'default' => '0000-00-00 00:00:00',
+		'type' => 'timestamp'
 		),
 	'isdeleted' => array(
 		'type' => 'text',
-		'length' => 1,
-		'notnull' => TRUE,
-		'default' => ''
+		'length' => 1
 		)
 	);
 ?>

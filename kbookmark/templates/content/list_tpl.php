@@ -168,8 +168,8 @@ if (isset($listFolderContent)) {
     if ($count>0) {
 	$sortOrder=(($sortOrder=="ASC")?"DESC":"ASC");
     $titleLink="<a href='".$this->uri(array('action'=>$action,'folderId'=>$folderId,'folderOrder'=>'title','sortOrder'=>$sortOrder))."' >".$this->objLanguage->LanguageText('word_title')."</a>";
-    $dateCreatedLink="<a href='".$this->uri(array('action'=>$action,'folderId'=>$folderId,'folderOrder'=>'datecreated','sortOrder'=>$sortOrder))."' >".$this->objLanguage->LanguageText('word_date_created')."</a>";
-    $dateAccessedLink="<a href='".$this->uri(array('action'=>$action,'folderId'=>$folderId,'folderOrder'=>'datelastaccessed','sortOrder'=>$sortOrder))."' >".$this->objLanguage->LanguageText('word_date_accessed')."</a>";
+    $dateCreatedLink="<a href='".$this->uri(array('action'=>$action,'folderId'=>$folderId,'folderOrder'=>'datecreated','sortOrder'=>$sortOrder))."' >".$this->objLanguage->LanguageText('phrase_datecreated')."</a>";
+    $dateAccessedLink="<a href='".$this->uri(array('action'=>$action,'folderId'=>$folderId,'folderOrder'=>'datelastaccessed','sortOrder'=>$sortOrder))."' >".$this->objLanguage->LanguageText('phrase_dateaccessed')."</a>";
     $hitsLink="<a href='".$this->uri(array('action'=>$action,'folderId'=>$folderId,'folderOrder'=>'visitcount','sortOrder'=>$sortOrder))."' >".$this->objLanguage->LanguageText('word_hits')."</a>";
 
     $row=array('',$titleLink,$dateCreatedLink,$dateAccessedLink,$hitsLink,'','');
@@ -341,7 +341,7 @@ if (isset($searchResults)){
     $objSearchTable->cellpadding='2';
     
     $titleLink=$this->objLanguage->LanguageText('word_title');
-    $dateAccessedLink=$this->objLanguage->LanguageText('word_date_accessed');
+    $dateAccessedLink=$this->objLanguage->LanguageText('phrase_dateaccessed');
     $hitsLink=$this->objLanguage->LanguageText('word_hits');
     $ownerLink=$this->objLanguage->LanguageText('word_owner');
 

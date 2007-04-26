@@ -18,8 +18,8 @@ class dbGroup extends dbTable
     function init()
     {
         parent::init('tbl_bookmarks_groups');
-        $this->USE_PREPARED_STATEMENTS=True;
-        $this->objLanguage=& $this->getObject('language', 'language');
+        //$this->USE_PREPARED_STATEMENTS=True;
+        $this->objLanguage = $this->getObject('language', 'language');
     }
     
     /**
@@ -59,14 +59,13 @@ class dbGroup extends dbTable
     *
     */
     function insertSingle($title,$description,
-             $isprivate,$datecreated,$datemodified,$isdefault,$creatorId)
+             $isprivate,$datecreated,$isdefault,$creatorId)
     {
         $this->insert(array(
             'title'  		=> $title,
             'description'	=> $description,
             'isprivate' 	=> $isprivate,
-            'datecreated'	=>strftime('%Y-%m-%d %H:%M:%S', $datecreated),
-            'datemodified'  =>strftime('%Y-%m-%d %H:%M:%S', $datemodified),
+            'datecreated'	=> $datecreated,
             'isdefault'     =>$isdefault,
             'creatorid'    =>$creatorId
     	));
@@ -83,15 +82,12 @@ class dbGroup extends dbTable
         $title=$this->objLanguage->LanguageText('mod_bookmark_defaultfolder','kbookmark');
         $description=$this->objLanguage->LanguageText('mod_bookmark_defaultfolder','kbookmark');
         $isprivate='0';
-        $datecreated=mktime();
-        $datemodified='0000-00-00 00:00:00';
+        $datecreated=$this->now();
         $isdefault='1';
         $creatorId=$userId;
-        //$creatorId=$this->objUser->userId();
+        
         $this->insertSingle($title,$description,
-        $isprivate,$datecreated,$datemodified,$isdefault,$creatorId);
-
-        //$this->nextAction('','','');
+        $isprivate,$datecreated,$isdefault,$creatorId);
     }
 
     /**
@@ -140,7 +136,10 @@ class dbGroup extends dbTable
 	*/
 	function getSharedWithBookmarks()
 	{
-	    $sql="SELECT DISTINCT(tbl_bookmarks_groups.id), tbl_bookmarks_groups.creatorid, tbl_bookmarks_groups.isprivate, tbl_bookmarks_groups.title FROM tbl_bookmarks_groups JOIN tbl_bookmarks ON tbl_bookmarks_groups.id=tbl_bookmarks.groupid WHERE (tbl_bookmarks_groups.isprivate='0')";
+	    $sql="SELECT DISTINCT(tbl_bookmarks_groups.id), tbl_bookmarks_groups.creatorid, tbl_bookmarks_groups.isprivate, tbl_bookmarks_groups.title 
+	    FROM tbl_bookmarks_groups 
+	    LEFT JOIN tbl_bookmarks ON tbl_bookmarks_groups.id=tbl_bookmarks.groupid 
+	    WHERE (tbl_bookmarks_groups.isprivate='0')";
 		return $this->getArray($sql);
 	}
     
@@ -151,7 +150,9 @@ class dbGroup extends dbTable
 	*/
 	function getUsersWithSharedBookmarks()
 	{
-	    $sql="SELECT DISTINCT(tbl_bookmarks_groups.creatorid) FROM tbl_bookmarks_groups JOIN tbl_bookmarks ON tbl_bookmarks_groups.id=tbl_bookmarks.groupid WHERE (tbl_bookmarks_groups.isprivate='0')";
+	    $sql="SELECT DISTINCT(tbl_bookmarks_groups.creatorid) FROM tbl_bookmarks_groups 
+	    LEFT JOIN tbl_bookmarks ON tbl_bookmarks_groups.id=tbl_bookmarks.groupid 
+	    WHERE (tbl_bookmarks_groups.isprivate='0')";
 		return $this->getArray($sql);
 	}
     
@@ -162,7 +163,10 @@ class dbGroup extends dbTable
 	*/
 	function getShared4User($userId)
 	{
-	    $sql="SELECT DISTINCT(tbl_bookmarks_groups.id), tbl_bookmarks_groups.creatorid, tbl_bookmarks_groups.isprivate, tbl_bookmarks_groups.title FROM tbl_bookmarks_groups JOIN tbl_bookmarks ON tbl_bookmarks_groups.id=tbl_bookmarks.groupid WHERE (tbl_bookmarks_groups.isprivate='0' AND tbl_bookmarks_groups.creatorid='$userId')";
+	    $sql="SELECT DISTINCT(tbl_bookmarks_groups.id), tbl_bookmarks_groups.creatorid, tbl_bookmarks_groups.isprivate, tbl_bookmarks_groups.title 
+	    FROM tbl_bookmarks_groups 
+	    LEFT JOIN tbl_bookmarks ON tbl_bookmarks_groups.id=tbl_bookmarks.groupid 
+	    WHERE (tbl_bookmarks_groups.isprivate='0' AND tbl_bookmarks_groups.creatorid='$userId')";
 		return $this->getArray($sql);
 	}
 

@@ -61,4 +61,3 @@ $link->link=$this->objLanguage->languageText("word_back");
 echo $link->show()
 
 ?>
-
