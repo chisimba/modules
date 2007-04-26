@@ -65,7 +65,12 @@ class dbGroup extends dbTable
             'title'  		=> $title,
             'description'	=> $description,
             'isprivate' 	=> $isprivate,
+//<<<<<<< dbgroup_class_inc.php
+//            'datecreated'	=>strftime('%Y-%m-%d %H:%M:%S', $datecreated),
+            //'datemodified'  =>strftime('%Y-%m-%d %H:%M:%S', $datemodified),
+//=======
             'datecreated'	=> $datecreated,
+//>>>>>>> 1.2
             'isdefault'     =>$isdefault,
             'creatorid'    =>$creatorId
     	));
