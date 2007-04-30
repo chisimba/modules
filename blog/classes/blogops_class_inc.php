@@ -52,9 +52,21 @@ class blogops extends object
         }
     }
     
+    /**
+     * Method to look up geonames database for lat lon cords of a certain place as a string
+     *
+     * @param array $params
+     * @param integer $limit
+     * @return string
+     */
     public function findGeoTag($params = array(), $limit='10')
     {
     	//do a sanity check on the array of params...
+    	if(!isset($params['place']) || !isset($params['countrycode']))
+    	{
+    		return FALSE;
+    		break;
+    	}
     	
     	$wsurl = "http://ws.geonames.org/search?";
     	$searchparams = "q=" . $params['place'] . "&country=" . $params['countrycode'] . "&maxRows=" . $limit;
@@ -81,6 +93,13 @@ class blogops extends object
 
     }
     
+    /**
+     * Method to return a timeline object of a specific users blog posts
+     *
+     * @param array $posts
+     * @param integer $userid
+     * @return array
+     */
     public function myBlogTimeline($posts, $userid)
     {
     	$this->objUser = $this->getObject('user', 'security');
@@ -104,6 +123,14 @@ class blogops extends object
     	return array($str, $startdate);
     }
     
+    /**
+     * Method to parse the timeline URI data
+     *
+     * @param integer $int
+     * @param integer $fdate
+     * @param string $timeline
+     * @return mixed
+     */
     public function parseTimeline($int, $fdate, $timeline)
     {
     	$objIframe = $this->getObject('iframe', 'htmlelements');
@@ -119,11 +146,21 @@ class blogops extends object
         return $objIframe->show();
     }
     
+    /**
+     * Method not yet implemented due to processor usage and db hit rate
+     *
+     */
     public function siteBlogTimeline()
     {
     	//grab all of the posts
     }
     
+    /**
+     * Method to create the form used in the geoTag block
+     *
+     * @param void
+     * @return string
+     */
     public function geoTagForm()
     {
     	$this->loadClass('href', 'htmlelements');
@@ -148,16 +185,20 @@ class blogops extends object
         $geoadd->startRow();
         $geoplacelabel = new label($this->objLanguage->languageText('mod_blog_geoplace', 'blog') .':', 'input_geoplace');
         $geoplace = new textinput('geoplace');
+        $geoplace->size = '45%';
         $geoadd->addCell($geoplacelabel->show());
         $geoadd->addCell($geoplace->show());
         $geoadd->endRow();
 
         //Country code
         $geoadd->startRow();
+        //get the codes and countries from the languagecode class
+        $langcode = $this->getObject('languagecode', 'language');
+        $list = $langcode->country();
         $geocountrycodelabel = new label($this->objLanguage->languageText('mod_blog_geocountrycode', 'blog') .':', 'input_geocountrycode');
-        $geocountrycode = new textinput('geocountrycode');
+        $geocountrycode = $list; //new textinput('geocountrycode');
         $geoadd->addCell($geocountrycodelabel->show());
-        $geoadd->addCell($geocountrycode->show());
+        $geoadd->addCell($geocountrycode); //->show());
         $geoadd->endRow();
         
         //end off the form and add the buttons
@@ -2821,11 +2862,12 @@ class blogops extends object
     	$this->loadClass('href', 'htmlelements');
     	$this->objUser = $this->getObject('user', 'security');
     	$this->objConfig = $this->getObject('altconfig', 'config');
-
+		$tllink = new href($this->uri(array('module' => 'blog', 'action' => 'timeline', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
     	$check = $this->objDbBlog->checkProfile($userid);
         if($check != FALSE)
         {
         	$link = new href($this->uri(array('module' => 'blog', 'action' => 'viewprofile', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewprofileof", "blog") . " " . $this->objUser->userName($userid));
+        	$tllink = new href($this->uri(array('module' => 'blog', 'action' => 'timeline', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
         	$foaffile = $this->objConfig->getsiteRoot() . "usrfiles/users/" . $userid . "/". $userid . ".rdf";
         	@$rdfcont = file($foaffile);
         	if(!empty($rdfcont))
@@ -2837,15 +2879,18 @@ class blogops extends object
 
                 $ficon = $lficon->show();
         		//new href($this->objConfig->getsiteRoot() . "/usrfiles/users/" . $userid . "/". $userid . ".rdf", $this->objLanguage->languageText("mod_blog_foaflink", "blog"));
-        		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $link->show() . "<br />" . $ficon);
+        		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $link->show() . "<br />" . $ficon . "<br />" . $tllink->show());
         	}
         	else {
-        		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $link->show());
+        		$objFeatureBox = $this->getObject("featurebox", "navigation");
+    	
+        		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $link->show() . "<br />" . $tllink->show());
         	}
 
         }
         else {
-        	return NULL;
+        	$objFeatureBox = $this->getObject("featurebox", "navigation");
+        	return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $tllink->show());
         }
     }
 
