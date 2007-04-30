@@ -1128,7 +1128,7 @@ class blog extends controller
                 else {
                 	$showpdf = 0;
                 }
-                /*
+                
                 //set up for Google Blog API
                 $changesURL = $this->uri(array('module' => 'blog', 'action' => 'feed', 'userid' => $userid));
                 $name = $this->objUser->fullname($userid) . " Chisimba blog";
@@ -1139,11 +1139,35 @@ class blog extends controller
                 //echo $gurl;
                 $gurl = str_replace('%26amp%3B', "&", $gurl);
                 $gurl = str_replace('&amp;', "&", $gurl);
+                $gurl = $gurl."?name=".urlencode($name)."&url=".urlencode($blogURL)."&changesUrl=".urlencode($changesURL);
 
                 //get the proxy info if set
                 $proxyArr = $this->objProxy->getProxy();
                 //print_r($proxyArr); die();
+                if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
+                {
+                    $parr = array(
+                    'proxy_host'        => $proxyArr['proxy_host'],
+                    'proxy_port'        => $proxyArr['proxy_port'],
+                    'proxy_user'        => $proxyArr['proxy_user'],
+                    'proxy_pass'        => $proxyArr['proxy_pass']
+                    );
+                }
+                //echo $gurl; die();
+                $ch = curl_init();
+    			curl_setopt($ch, CURLOPT_URL, $gurl);
+    			curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+    			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    			if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
+    			{
+    				curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_host'].":".$proxyArr['proxy_port']);
+    				curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxy_user'].":".$proxyArr['proxy_pass']);
+    			}
+    			$code = curl_exec($ch);
+    			curl_close($ch);
 
+                /*
                 require_once "HTTP/Request.php";
                 //define the request options
                 $reqopts = array(
@@ -1184,6 +1208,7 @@ class blog extends controller
                 }
                 $code = $req->getResponseBody(); //$req->getResponseCode();
 
+                */
                 switch ($code) {
                     case "Thanks for the ping.":
                         log_debug("Google blogs API Success! Google said: " . $code);
@@ -1192,7 +1217,7 @@ class blog extends controller
                         log_debug("Google blogs API Failure! Google said: " . $code);
                         break;
                 }
-				*/
+				
                 //post quick add
                 if($mode == 'quickadd')
                 {
@@ -1795,8 +1820,10 @@ class blog extends controller
             break;
             
         case 'checkgeo':
-        	$countrycode = $this->getParam('geocountrycode');
+        	$countrycode = $this->getParam('country');
+        	//check that the countrycode is a 2 letter string, otherwise try and rectify it.
         	$place = $this->getParam('geoplace');
+        	//echo $place, $countrycode; die();
         	$params = array();
         	$params['place'] = urlencode($place);
         	$params['countrycode'] = urlencode($countrycode);
