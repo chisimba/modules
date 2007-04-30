@@ -22,10 +22,11 @@ $middleColumn = NULL;
 
 //left menu section
 $leftCol = $leftMenu->show();
+//$leftCol .= $this->objblogOps->geoTagForm();
 
 //get the posts editor
 $middleColumn = $this->objblogOps->postEditor($userid, NULL);
-
+$middleColumn .= $this->objblogOps->geoTagForm();
 $rightSideColumn .= $this->objblogOps->quickCats(TRUE);
 $rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);//quickPost($userid, TRUE);
 $cssLayout->setMiddleColumnContent($middleColumn);
