@@ -87,7 +87,7 @@ class dbPost extends dbTable
 		  $this->objTopicSubscriptions =& $this->getObject('dbtopicsubscriptions');
         
         $this->objTranslatedDate = $this->getObject('translatedatedifference', 'utilities');
-        $this->objDateTime = $this->getObject('datetime', 'utilities');
+        $this->objDateTime = $this->getObject('dateandtime', 'utilities');
         
         // Get Context Code Settings
         $this->contextObject =& $this->getObject('dbcontext', 'context');

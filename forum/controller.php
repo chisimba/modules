@@ -109,7 +109,7 @@ class forum extends controller
 		
         // Load Menu Tools Class
         $this->objMenuTools =& $this->getObject('tools', 'toolbar');
-        $this->objDateTime =& $this->getObject('datetime', 'utilities');
+        $this->objDateTime =& $this->getObject('dateandtime', 'utilities');
         $this->objFiles =& $this->getObject('dbfile', 'filemanager');
 		
         $this->loadClass('link', 'htmlelements');

@@ -33,7 +33,7 @@ class dbtopic extends dbTable
         $this->objPost =& $this->getObject('dbpost');
         
         $this->objIcon = $this->getObject('geticon', 'htmlelements');
-        $this->objDateTime =& $this->getObject('datetime', 'utilities');
+        $this->objDateTime =& $this->getObject('dateandtime', 'utilities');
     }
     
     /**
