@@ -163,6 +163,10 @@ class realtime extends controller
 
 	}
 
+    /**
+     * Informs the server that a user is requesting a voice token, assigns token to User if the token is
+     * available.
+     */	
 	function requestToken($userid, $userlevel, $contextcode)
 	{
 		if (empty ($userid) || empty ($userlevel) || empty ($contextcode))
@@ -176,6 +180,9 @@ class realtime extends controller
 		}
 	}
 
+    /**
+     * Inform applet that User has released token.
+     */
 	function releaseToken($userid, $userlevel, $contextcode)
 	{
 		$hasToken = $this->objrealtime->releaseToken($userid, $contextcode);
@@ -184,6 +191,9 @@ class realtime extends controller
 
 	}
 
+    /**
+     * Informs server that lecturer would like to start a conversation.
+     */
 	function startConversation($userid, $userlevel, $contextcode)
 	{
 		if (empty ($userid) || empty ($userlevel) || empty ($contextcode))
@@ -200,13 +210,19 @@ class realtime extends controller
 		}
 	}
 
+    /**
+     * Informs the server that the lecturer is stopping a conversation.
+     */
 	function stopConversation($userid, $userlevel, $contextcode)
 	{
 		$hasToken = $this->objrealtime->stopConversation($userid, $contextcode);
 		$this->setVar('hastoken', $hasToken);
 		return "redirect_tpl.php";
 	}
-	
+
+    /**
+     * Informs server that user wants to leave a conversation.
+     */	
 	function leaveConversation($userid, $contextcode)
 	{
 		$hasToken = $this->objrealtime->leaveConversation($userid,  $contextcode);
@@ -214,6 +230,9 @@ class realtime extends controller
 		return "redirect_tpl.php";
 	}
 
+    /**
+     * Informs server that a user wants to join a conversation.
+     */
 	function joinConversation($userid, $userlevel, $contextcode)
 	{
 		$hasToken = $this->objrealtime->joinConversation($userid,  $contextcode);
@@ -221,6 +240,9 @@ class realtime extends controller
 		return "redirect_tpl.php";
 	}
 
+	/**
+	 *	checks availability of token
+	 */
 	function checkToken($userid, $userLevel, $contextcode)
 	{
 		$hasToken = $this->objrealtime->checkToken($userid, $contextcode);
@@ -228,6 +250,9 @@ class realtime extends controller
 		return "redirect_tpl.php";
 	}
 	
+	/**
+	 * creates queue(list) of user's who request token
+	 */
 	function makeQueue($userId, $userLevel, $contextCode)
 	{
 		
@@ -244,7 +269,10 @@ class realtime extends controller
 			return "redirect_tpl.php";
 		}
 	}
-	
+
+    /**
+     * Informs the server that the lecturer is assigning the token to a particular user.
+     */	
 	function assignToken($userId, $contextcode)
 	{
 		$hasToken = $this->objrealtime->assignToken($userId, $contextcode);
@@ -252,6 +280,9 @@ class realtime extends controller
 		return "redirect_tpl.php";
 	}
 	
+	/**
+	 *	deletes audio files of the previous conversation when the next conversation stars.
+	 */
 	function deleteFilesInServer(){
 		$this->basePath = $this->objConfig->getModulePath();
 		$this->modulePath = $this->basePath."realtime/resources/voice/audio";
@@ -265,6 +296,9 @@ class realtime extends controller
 		}
 	}
 	
+	/**
+	 * shows voice applet to user if user first entered a context.
+	 */
 	function showVoiceApplet($contextcode)
 	{
 		if(empty($contextcode)){
@@ -273,6 +307,9 @@ class realtime extends controller
 		return "realtime-voice_tpl.php";
 	}
 	
+	/**
+	 * shows classroom applet to user if the user first entered a context
+	 */
 	function showClassRoom($contextcode)
 	{
 		if(empty($contextcode)){
