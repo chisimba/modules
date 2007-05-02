@@ -211,6 +211,9 @@ class blog extends controller
             $this->objLog = $this->newObject('logactivity', 'logger');
             //Log this module call
             $this->objLog->log();
+            //sys-config object
+            $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+
         }
         catch(customException $e) {
             //oops, something not there - bail out
@@ -230,6 +233,14 @@ class blog extends controller
     {
         switch ($action) {
             default:
+
+		$blog_action = $this->objSysConfig->getValue('blog_action','blog');
+		//var_dump($blog_action);
+		
+		if(!empty($blog_action) && $blog_action != 'default')
+		{
+		return $this->nextAction($blog_action);
+		}
                 //check if the user is logged in
                 if($this->objUser->isLoggedIn() == TRUE)
                 {
