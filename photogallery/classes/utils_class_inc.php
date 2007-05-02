@@ -377,10 +377,10 @@ class utils extends object
                $ret = TRUE;
 
                //check the images folder;
-               $ret = (file_exists($this->galFolder.'/images') == TRUE ) ? TRUE : mkdir($galFolder.'/images',0777);
+               $ret = (file_exists($this->galFolder.'/images') == TRUE ) ? TRUE : mkdir($this->galFolder.'/images',0777);
 
                //check the thumbs folder;
-               $ret = (file_exists($this->galFolder.'/thumbs') == TRUE ) ? TRUE : mkdir($galFolder.'/thumbs',0777);
+               $ret = (file_exists($this->galFolder.'/thumbs') == TRUE ) ? TRUE : mkdir($this->galFolder.'/thumbs',0777);
 
            } else {
                //create the folder
