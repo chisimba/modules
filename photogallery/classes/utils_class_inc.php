@@ -305,7 +305,7 @@ class utils extends object
            //die;
            if (is_uploaded_file($_FILES['uploadedfile']['tmp_name']))
            {
-                $newImage = $this->galFolder.'/images/'.$_FILES['uploadedfile']['name'];
+                $newImage = strtolower($this->galFolder.'/images/'.$_FILES['uploadedfile']['name']);
 
                 if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'],$newImage))
                 {
@@ -331,7 +331,7 @@ class utils extends object
 
                     $license = null;
 
-                    $path =  '/photogallery/images/'.$_FILES['uploadedfile']['name'];
+                    $path =  strtolower('/photogallery/images/'.$_FILES['uploadedfile']['name']);
 
                     $line = $objDBFile->getRow('path',$path);
                     if(is_array($line))
@@ -339,7 +339,7 @@ class utils extends object
                         $fileId = $line['id'];
                     } else {
                         $fileId = $objDBFile->addFile(
-                                     $_FILES['uploadedfile']['name'],
+                                     strtolower($_FILES['uploadedfile']['name']),
                                      $path, $filesize, $mimetype, $category, $version, $userId, $description, $license);
                     }
                     //create the thumbnail
