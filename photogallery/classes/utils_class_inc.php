@@ -634,7 +634,7 @@ class utils extends object
         }
 
         $handle = fopen('usrfiles/photogallery/vfpg_config.txt','w+');
-        fwrite($handle,$str);
+        fwrite($handle,strtolower($str));
         fclose($handle);
 
 
