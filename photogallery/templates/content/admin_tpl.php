@@ -83,4 +83,13 @@ $objH->str = 'Photo Gallery Admin';
 echo $objH->show();
 echo $str;
 echo $this->_objUtils->getAdminSection();
+
+$icon = $this->newObject('geticon', 'htmlelements');
+    $icon->setModuleIcon('photogallery');
+
+    $link = $this->newObject('link','htmlelements');
+    $link->href = $this->uri(null);
+    $link->link = $icon->show().' '.$this->objLanguage->languageText("mod_photogallery_view",'photogallery');
+
+    echo '<br/>'.$link->show();
 ?>

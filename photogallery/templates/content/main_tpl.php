@@ -10,5 +10,17 @@ $str = '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="h
 
 echo $str;
 
+if($this->_objUser->isAdmin())
+{
 
+
+    $icon = $this->newObject('geticon', 'htmlelements');
+    $icon->setModuleIcon('photogallery');
+
+    $link = $this->newObject('link','htmlelements');
+    $link->href = $this->uri(array('action' => 'admin'));
+    $link->link = $icon->show().' '.$this->objLanguage->languageText("mod_photogallery_admin",'photogallery');
+
+    echo '<br/>'.$link->show();
+}
 ?>
