@@ -15,6 +15,7 @@ $this->table = 'tbl_pastpapers';
 //instance of the language items
 $this->objLanguage = & $this->getObject('language','language');
 $this->objConfig = & $this->getParam('altconfig','config');
+$this->objDbanswers = $this->getObject('dbanswers');
 
 }
 
@@ -184,7 +185,7 @@ function allCanAddAnswers($contextCode,$id)
 			$dir = str_replace('\\', '/',$dir_i);
         }
 		
-		//echo $dir; exit;
+
 		
         if (!(file_exists($dir))){		
 		
@@ -202,6 +203,41 @@ function allCanAddAnswers($contextCode,$id)
         return $ret;
     }
     
+//function to search through the past papers  
+
+function searchforpapers($option,$searchoption ){
+$sql = "select * from $this->table where  $searchoption like '%$option%'";
+
+
+$ar = $this->getArray($sql);
+
+if($ar){ return $ar;}
+else return false;
+	
+}
+
+function getPaperAuthor($id){
+$sql = "select * from $this->table where id ='$id'";
+$ar = $this->getArray($sql);
+if($ar){
+  return $ar[0]['userid'];}
+
+else return false;
+}
+
+/*
+* Function for adding deleting a paper
+*/
+function deletepaper($paperid){
+ 
+$sql = "DELETE FROM ".$this->table." WHERE id='$paperid'";
+
+///delete the answers also
+$this->objDbanswers->deleteanswers($paperid);
+
+return $this->query($sql);
+
+}
    
 
 

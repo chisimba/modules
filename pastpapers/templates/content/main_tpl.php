@@ -3,6 +3,11 @@
 * A template to display a list of available pastpapers for a given context
 or lobby
 */
+$objIcon = & $this->newObject('geticon', 'htmlelements');
+$this->loadClass('form','htmlelements');
+$this->loadClass('textinput','htmlelements');
+$this->loadClass('radio','htmlelements');
+$this->loadClass('button','htmlelements');
 $this->objUser = & $this->getObject('user','security');
 $this->pastpapers = $this->getObject('pastpaper');
 $this->_objDBContext->getContextCode();
@@ -12,7 +17,6 @@ $content = "";
 $this->objLanguage= $this->getObject('language','language');
 $this->loadClass('htmltable','htmlelements');
 $addicon = $this->getObject('geticon','htmlelements');
-$this->loadClass('htmltable','htmlelements');
 $this->objPastpapers = & $this->getObject('pastpaper');
 $this->objDbanswers = & $this->getObject('dbanswers');
 
@@ -35,13 +39,40 @@ $contextName = $this->objLanguage->languageText('word_inlobby');
 
  }
  
+$search_label =  $this->objLanguage->languageText('mod_pastpapers_searchby','pastpapers'); 
+$searchfield = new textinput('search');
+//submit button
+$submit = new button('submit',$this->objLanguage->languageText('word_submit'));
+$submit->setToSubmit();
+
+//options to use for searching
+$searchoption = new radio("searchoption");
+
+$searchoption->addOption('topic',$this->objLanguage->languageText('mod_pastpapers_topic','pastpapers'));
+$searchoption->addOption('examyear',$this->objLanguage->languageText('word_date'));
+$searchoption->setSelected('topic');
+ 
+$searchdata = $search_label."&nbsp;".$searchfield->show()."&nbsp;".$searchoption->show()."&nbsp;".$submit->show();
+$uri = $this->uri(array('action'=>'search'));
+$form = new form('searchform',$uri);
+$form->addToForm($searchdata);
+ 
+$content .=  $form->show();
+ 
+ 
 //check if there are some past papers in the database and if there are some, display a list 
 $past_papers = $this->pastpapers->getpapersforcontext($contextCode);  
 $table = new htmltable();
 $table->cellspacing = 2;
 
-if(!empty($past_papers)){  
+if(empty($past_papers)){  
+
 $heading->str = $this->objLanguage->languageText('mod_pastpapers_listofpapers','pastpapers')."&nbsp;".$contextName."&nbsp;".$addicon->getAddIcon($this->uri(array('action'=>'add')));
+
+}
+
+else {
+
 
 //begin collecting one by one row 
     $table->startRow();
@@ -55,7 +86,8 @@ $heading->str = $this->objLanguage->languageText('mod_pastpapers_listofpapers','
  //if ($this->objUser->isCourseAdmin() && $this->objPastpapers->allCanAddAnswers($contextCode)){  
    
     $table->addHeaderCell("<b/>".$this->objLanguage->languageText('mod_pastpapers_answers','pastpapers')."<b/>",'','','left');
-//}
+   $table->addHeaderCell("<b/>".$this->objLanguage->languageText('word_action')."<b/>",'','','left');
+
 	$table->endRow();
 	
 	$class = 'even';
@@ -69,13 +101,14 @@ $heading->str = $this->objLanguage->languageText('mod_pastpapers_listofpapers','
 	$downloadlink->link = $p['filename'];
 	$root = $downloadlink->href .= str_replace('\\', '/',$this->objConfig->getcontentRoot());
 	$downloadlink->href = $root."content/".$contextCode."/papers/".$p['filename'];	
-	//$downloadlink->href .= str_replace('\\', '/',$downloadlink);
 	
 	$answeraddlink = new link($this->uri(array('action'=>'addanswers','paperid'=>$p['id'])));
 	$answeraddlink->link = $this->objLanguage->languageText('mod_pastpapers_addanswers','pastpapers');
 	
 	$viewlink = new link($this->uri(array('action'=>'viewanswers','paperid'=>$p['id'])));
 	$viewlink->link = $this->objLanguage->languageText('mod_pastpapers_viewanswers','pastpapers'); 
+	
+	
 	
 	
 	$table->startRow();	
@@ -85,39 +118,72 @@ $heading->str = $this->objLanguage->languageText('mod_pastpapers_listofpapers','
 	$table->addCell($answerexists,'','','left',$class);
 	$table->addCell($addedby,'','','left',$class);
 	$table->addCell($p['dateuploaded'],'','','left',$class);
-	 if (!($this->objUser->isCourseAdmin()) && $this->objPastpapers->allCanAddAnswers($contextCode,$p['id'])==0){  
-        $action = "cannot add answers";
+	
+	
+	if($contextCode){
+	  if($this->objUser->isCourseAdmin() || $this->objDbanswers->hasAnswers($p['id'])=='yes'){
+	  
+	  $action = $answeraddlink->show();
+	
+		$view = $viewlink->show();
+		
+		$view = "";
+	 
+	  $table->addCell($action."|".$view,'','','left',$class);
+	  
+	  }
+	
+	
+	}
+	else {	
+	
+	//not in context but user is the site admin or author
+	 if($this->objUser->isAdmin() ||  $this->objPastpapers->getPaperAuthor($p['id'])== $this->objUser->userId()){
+	   
+		 $action = $answeraddlink->show();		 
+		 
 		if($this->objDbanswers->hasAnswers($p['id'])=='yes'){
 		$view = $viewlink->show();}
 		
-		else $view = "";		
+		else  {$view = "";}
 	   $table->addCell($action."|".$view,'','','left',$class);
-	
-	}
-	
-	else {
-	$action = $answeraddlink->show();
-	if($this->objDbanswers->hasAnswers($p['id'])=='yes'){
-		$view = $viewlink->show();}
+	   
+	   }
+	   
+else {
+	   	$action = $this->objLanguage->languageText('mod_pastpapers_cannotadd','pastpapers');
+
+	   if($this->objDbanswers->hasAnswers($p['id'])=='yes'){
+			$view = $viewlink->show();
 		
-		else $view = "";
+		}
+		
+		else  {
+		   $view = "";
+
+		}
 	 
 	  $table->addCell($action."|".$view,'','','left',$class);
+	   
+	   }
+	
+	
 	}
+	
+	//link for adding a delete 
+	$link = new link();
+	$objIcon->setIcon('delete');
+    $link->link = $objIcon->show();
+    $link->href = $this->uri(array('action' => 'deletepaper','id' => $p['id']));
+	  if($this->objUser->isAdmin() ||  $this->objPastpapers->getPaperAuthor($p['id'])== $this->objUser->userId()){
+	 $table->addCell($link->show(),'','','left',$class);
+	 }
+	 
 	$table->endRow();
-	}
-
+	
+}
 
 }
-else {
- $heading->str = $this->objLanguage->languageText('mod_pastpapers_nopapers','pastpapers')."&nbsp;".$contextName."&nbsp;".$addicon->getAddIcon($this->uri(array('action'=>'add')));
- 
-    $table->startRow();
-	$table->addCell("",'','','left');	
-	$table->endRow();
-
-}
-
 $content .= $heading->show();
 
 $content .= $table->show();

@@ -1,4 +1,5 @@
 <?php
+
 $this->_objDBContext = $this->getObject('dbcontext','context');
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
     
@@ -15,6 +16,18 @@ $contextName = $this->objLanguage->languageText('mod_pastpapers_lobby','pastpape
 $content = "";
 $content .= $contextName."<br/><br/>";
 $content .= $instructions;
+
+//add link that will nbe used throughout navigation
+$addlink = new link($this->uri(array('action'=>'add')));
+$addlink->link = $this->objLanguage->languageText('mod_pastpapers_addpaper','pastpapers');
+
+$mainlink = new link($this->uri(array('action'=>NULL)));
+$mainlink->link = $this->objLanguage->languageText('mod_pastpapers_main','pastpapers');
+
+$content .= "<br/>".$addlink->show();
+if($this->getParam('action',NULL)){
+$content .= "<br/>".$mainlink->show();}
+
 $cssLayout->setLeftColumnContent($content);
 $cssLayout->setMiddleColumnContent($head.$this->getContent());
 

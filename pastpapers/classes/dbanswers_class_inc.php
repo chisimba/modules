@@ -52,16 +52,22 @@ $this->objUser = $this->getObject('user','security');
 */
 public function getpastpaperanswers($paperid){
 //give a full list of the answers if user is an administrator or context lecturer
-if($this->objUser->isCourseAdmin()){
+$this->objpastpapers = & $this->getObject('pastpaper');
+if($this->objUser->isCourseAdmin() || $this->objpastpapers->getPaperAuthor($paperid)){
 	$sql = "select * from $this->table where paperid='$paperid'";
 		}
 	
 else {
+ 
 	$sql = "select * from $this->table where paperid='$paperid' and published=1";
+    
 }
+
+
 
  $ar = $this->getArray($sql);
 	if($ar){return $ar;}
+	
 	else return false;
 	
 	
@@ -169,6 +175,18 @@ public function unpublish($paperid){
 $this->update("id", $paperid, array(
 			'published'=> 0,				
 			'updated' => date("Y-m-d H:m:s")));
+
+}
+
+
+/*
+* Function to delete the answers for a particular paper
+* @param  $paperid - id of the paper to be deleted
+*/
+
+function deleteanswers($id){
+$sql = "DELETE FROM ".$this->table." WHERE paperid='$id'";
+return $this->query($sql);
 
 }
 

@@ -100,6 +100,8 @@ class pastpapers extends controller
 	   break;
 	   
 	   case "viewanswers":
+	   $paperid = $this->getParam('paperid',NULL);	   
+	   
 	     return "showanswers_tpl.php";
 	   break;
 	   
@@ -120,6 +122,14 @@ class pastpapers extends controller
 		return "showanswers_tpl.php"; 
 	   break;
 	   
+	   case "deletepaper":
+	   $paperid = $this->getParam('id',NULL);
+	   
+	
+	     $this->pastpaper->deletepaper($paperid);
+		 return "main_tpl.php";
+	   break;
+	   
 	   case "unpublish":
 	      $id = $this->getParam('id',NULL);
 	      $paperid = $this->getParam('paperid',NULL);
@@ -129,6 +139,11 @@ class pastpapers extends controller
 	    
 	   break;
 	   
+	   case "search":
+	   $search = $this->getParam('search',NULL);	
+	   $searchoption = $this->getParam('searchoption',NULL);    
+	   return "search_tpl.php";
+	   break;	   
 	   
 	   default : return "main_tpl.php";
 	 

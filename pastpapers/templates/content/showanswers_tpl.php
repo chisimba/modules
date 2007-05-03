@@ -5,6 +5,8 @@
 * Author : Nsabagwa Mary
 * A template to give a list of the answers for the pastpapers
 */
+$paperid = $this->getParam('paperid',NULL);
+$this->objpastpapers = & $this->getObject('pastpaper');
 if($this->_objDBContext->isInContext()){
 $contextCode  = $this->_objDBContext->getContextCode();
 //get the name of the context
@@ -19,7 +21,7 @@ $contextName = $this->objLanguage->languageText('mod_pastpapers_lobby','pastpape
  
 //the link class
 $this->loadClass('link','htmlelements');
-$paperid = $this->getParam('paperid',NULL);
+
 
 //instance of the user class for permissions
 $this->objUser = $this->getObject('user','security');
@@ -33,7 +35,6 @@ $heading->align = "center";
 
 $content .= $heading->show();
 
-$paperid = $this->getParam('paperid',NULL);
 $content = "";
 
 $table = new htmltable();
@@ -41,8 +42,9 @@ $table = new htmltable();
 //check if there are any papers to display
 $paperlist = $this->objDbanswers->getpastpaperanswers($paperid);
 
+
 if(!empty($paperlist)){
-//isCourseAdmin()
+
 
 $heading->str = $this->objLanguage->languageText('mod_pastpapers_answerlist','pastpapers')."&nbsp;".$contextName;
 
@@ -55,7 +57,7 @@ $heading->str .= "&nbsp;".$addicon->getAddIcon($this->uri(array('action'=>'addan
     $table->addHeaderCell($this->objLanguage->languageText('word_date'));
 	$table->addHeaderCell($this->objLanguage->languageText('mod_pastpapers_addedby','pastpapers'));
 	//if this is an administrator or a contextauthor
-	if($this->objUser->isCourseAdmin()){
+	if($this->objUser->isCourseAdmin() || $this->objpastpapers->getPaperAuthor($paperid)==$this->objUser->userId()){
     $table->addHeaderCell($this->objLanguage->languageText('word_visible'));	
 	}
 	$table->endRow();
@@ -91,12 +93,16 @@ $heading->str .= "&nbsp;".$addicon->getAddIcon($this->uri(array('action'=>'addan
 	  $table->addCell($filelink->show());
 	  $table->addCell($p['dateuploaded']);
 	  $table->addCell($addedby);
-	  if($this->objUser->isCourseAdmin()){
+	  if($this->objUser->isCourseAdmin() || $this->objpastpapers->getPaperAuthor($paperid)==$this->objUser->userId()){
+	  
 	  $table->addCell($this->objDbanswers->isVisible($p['id'])."[".$publishlink->show()."]");
 	  }
 	  $table->endRow();	
 	}///closing foreach
-}
+}//closing if not empty
+
+
+
 else {
 
    $table->startRow();

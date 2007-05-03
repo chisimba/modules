@@ -3,6 +3,7 @@
 $content = "";
 $this->loadClass('textinput','htmlelements');
 $this->loadClass('hiddeninput','htmlelements');
+$this->loadClass('link','htmlelements');
 
 $this->objLanguage = & $this->getObject('language','language');
 $this->loadClass('textinput','htmlelements');
