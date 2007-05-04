@@ -118,7 +118,7 @@ class simplemapinterface extends object {
     private function setFields()
     {
         $this->fields = array("id", "title", "description", "url", "glat", 
-  		  "glong", "magnify", "maptype", "created", "creatorid");
+  		  "glong", "magnify", "width", "height", "maptype", "created", "creatorid");
     }
     
     /**
@@ -149,8 +149,14 @@ class simplemapinterface extends object {
         	$tmp="";
         	foreach ($this->fields as $field) {
         		if ($field !== 'focusdate' //$field !== 'id' && 
-        		   && $field !== 'tlheight' 
-        		   && $field !== "creatorid") {
+        		  && $field !== 'tlheight' 
+        		  && $field !== "creatorid"
+    	    	  && $field !== "glat"
+	        	  && $field !== "glong"
+	        	  && $field !== "width"
+	        	  && $field !== "height"
+	        	  && $field !== "magnify"
+	        	  && $field !== "maptype") {
         		   	$paramArray = array('action' => 'viewall', 
  				      'order' => $field);
 		        	$tmp .= "<td class=\"heading\"><a href=\""
@@ -240,12 +246,21 @@ class simplemapinterface extends object {
 	    			  "smap" => $row["url"],
 	    			  "glat" => $row["glat"],
 	    			  "glong" => $row["glong"],
+	    			  "width" => $row["width"],
+	    			  "height" => $row["height"],
 	    			  "magnify" => $row["magnify"],
 	    			  "maptype" => $row["maptype"]
 	    			  ), "simplemap");
 	        	    foreach ($this->fields as $field) {
 	        	    	if ($field !== 'focusdate'
-	        	    	  && $field !== 'tlheight'  && $field !== "creatorid" ) {
+	        	    	  && $field !== 'tlheight'  
+	        	    	  && $field !== "creatorid" 
+	        	    	  && $field !== "glat"
+	        	    	  && $field !== "glong"
+	        	    	  && $field !== "width"
+	        	    	  && $field !== "height"
+	        	    	  && $field !== "magnify"
+	        	    	  && $field !== "maptype") {
 	        	    		if ($field !== 'url') {
 	        	    		    $str .= "<td class=\"" . $oddOrEven . "\">" . $row[$field] . "</td>\n";
 	        	    		} else {

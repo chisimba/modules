@@ -261,5 +261,23 @@ class simplebuildmap extends object
 		    </script>";
         return $ret;
     }
+    
+	/**
+	 * 
+	 * Method to create a map from an XML file with XML
+	 * data corresponding to the pins on the map.
+	 * 
+	 */    
+    function createSmapFromXml($fullFilePath)
+    {
+    	simplexml_load_file($fullFilePath);
+    	$strRet = "";
+        foreach($xml->pin as $pin) {
+        	$strRet .= "var point = new GLatLng($pin->glat,$pin->glong);\n";
+        	$strRet .= "var marker = createMarker($pin->markertype,'" . $pin->popup . "')\n";
+        	$strRet .= " map.addOverlay($pin->overlay);\n\n";
+        }
+        return $strRet;
+    }
 }
 ?>
