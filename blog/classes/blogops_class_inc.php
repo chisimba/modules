@@ -1012,12 +1012,8 @@ class blogops extends object
         if ($featurebox == FALSE) {
             return $ret;
         } else {
-        	$str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('adminmenu','slide', adjustLayout());\">[...]</a>";
-        	$str .='<div id="adminmenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
-        	$str .= $ret;
-        	$str .= '</div>';
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_admin", "blog") , $str);
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_admin", "blog") , $ret, 'adminmenu', 'none');
             return $ret;
         }
     }
@@ -1464,20 +1460,10 @@ class blogops extends object
         
         /* scriptaculous moved to default page template / no need to suppress XML*/        
         //$this->setVar('pageSuppressXML',true);
-        $icon = $this->getObject('geticon', 'htmlelements');
-        $icon->setIcon('up');
-        //$scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
-                      //<script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
-                      //<script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
-        //$this->appendArrayVar('headerParams',$scripts);
-        //$str = "<a href=\"#\" onclick=\"Effect.SlideUp('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
-        //$str = "<a href=\"javascript:;\" onclick=\"Effect.Toggle('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});adjustLayout();\"><img src=\"skins/_common/icons/up.gif\" border=\"0\" align=\"middle\" alt=\"up\"
-//title=\"up\"></a>";
-        $str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('feedmenu','slide', adjustLayout());\">[...]</a>";
-
-        $icon->setIcon('down');
-        //$str .="<a href=\"#\" onclick=\"Effect.SlideDown('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
-		
+        $objIcon =&$this->getObject('geticon', 'htmlelements');
+  		$objIcon->setIcon('toggle');
+        $str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('feedmenu','slide', adjustLayout());\">".$objIcon->show()."</a>";
+     
         $topper = $rss2feed . $atomfeed;
 		
         $str .='<div id="feedmenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
@@ -2126,11 +2112,11 @@ class blogops extends object
                     )) , $ark['formatted']);
                     $lnks.= $lnk->show() ."<br />";
                 }
-                $str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('archivemenu','slide', adjustLayout());\">[...]</a>";
-        		$str .='<div id="archivemenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
-        		$str .= $lnks;
-        		$str .= '</div>';
-                $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_archives", "blog"), $str);
+                //$str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('archivemenu','slide', adjustLayout());\">[...]</a>";
+        		//$str .='<div id="archivemenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
+        		//$str .= $lnks;
+        		//$str .= '</div>';
+                $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_archives", "blog"), $lnks, 'arkbox', 'none');
                 return $ret;
             }
             
@@ -2521,28 +2507,13 @@ class blogops extends object
             );
             $ret[] = $tag4cloud;
         }
-
-        /* scriptaculous moved to default page template / no need to suppress XML*/        
-		//$this->setVar('pageSuppressXML',true);
         $icon = $this->getObject('geticon', 'htmlelements');
         $icon->setIcon('up');
-        //$scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
-                      //<script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
-                      //<script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
-        //$this->appendArrayVar('headerParams',$scripts);
-        //$str = "<a href=\"#\" onclick=\"Effect.SlideUp('contextmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
-        //$icon->setIcon('down');
-        //$str .="<a href=\"#\" onclick=\"Effect.SlideDown('contextmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
-		$str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('contextmenu','slide', adjustLayout());\">[...]</a>";
-        $str .='<div id="contextmenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
-        $str .= $this->objTC->buildCloud($ret);
-        $str .= '</div>';
 
         $objFeatureBox = $this->getObject('featurebox', 'navigation');
-        return $objFeatureBox->show($this->objLanguage->languagetext("mod_blog_tagcloud", "blog"), $str);
-        //return $str;
-        //return $this->objTC->buildCloud($ret);
+        return $objFeatureBox->show($this->objLanguage->languagetext("mod_blog_tagcloud", "blog"), $this->objTC->buildCloud($ret), 'tagcloud', 'none');
     }
+    
     /**
      * Method to show the trackbacks in the trackback table to the user on a singleview post display
      *
