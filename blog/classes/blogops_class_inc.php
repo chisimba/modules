@@ -53,6 +53,153 @@ class blogops extends object
     }
     
     /**
+     * Methods to control blog links and blogrolls...
+     */
+    
+    public function showBlinks($featurebox = FALSE)
+    {
+    	
+    }
+    
+    public function addBlink()
+    {
+    	
+    }
+    
+    public function deleteBlink()
+    {
+    	
+    }
+    
+    public function editBlinks($featurebox = FALSE, $ldata = NULL)
+    {
+    	$this->loadClass('href', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('textarea', 'htmlelements');
+
+    	$this->objUser = $this->getObject('user', 'security');
+    	if($ldata == NULL)
+    	{
+        	$lform = new form('addlink', $this->uri(array(
+            	'action' => 'addlink'
+        	)));
+    	}
+    	else {
+    		$ldata = $ldata[0];
+    		$lform = new form('addlink', $this->uri(array(
+            	'action' => 'linkedit', 'mode' => 'edit', 'id' => $ldata['id']
+        	)));
+    	}
+        //add rules
+        //$lform->addRule('rssurl', $this->objLanguage->languageText("mod_blog_phrase_lurlreq", "blog") , 'required');
+        //$lform->addRule('name', $this->objLanguage->languageText("mod_blog_phrase_lnamereq", "blog") , 'required');
+        //start a fieldset
+        $lfieldset = $this->getObject('fieldset', 'htmlelements');
+        $ladd = $this->newObject('htmltable', 'htmlelements');
+        $ladd->cellpadding = 3;
+
+        //url textfield
+        $ladd->startRow();
+        $lurllabel = new label($this->objLanguage->languageText('mod_blog_lurl', 'blog') .':', 'input_lurl');
+        $lurl = new textinput('lurl');
+        if(isset($ldata['link_url']))
+        {
+        	$lurl->setValue(htmlentities($ldata['link_url'], ENT_QUOTES));
+		}
+        $ladd->addCell($lurllabel->show());
+        $ladd->addCell($lurl->show());
+        $ladd->endRow();
+
+        //name
+        $ladd->startRow();
+        $lnamelabel = new label($this->objLanguage->languageText('mod_blog_lname', 'blog') .':', 'input_lname');
+        $lname = new textinput('lname');
+        if(isset($ldata['link_name']))
+        {
+        	$lname->setValue($ldata['link_name']);
+        }
+        $ladd->addCell($lnamelabel->show());
+        $ladd->addCell($lname->show());
+        $ladd->endRow();
+
+        //description
+        $ladd->startRow();
+        $ldesclabel = new label($this->objLanguage->languageText('mod_blog_ldesc', 'blog') .':', 'input_ldesc');
+        $ldesc = new textarea('ldescription');
+        if(isset($ldata['link_description']))
+        {
+          	$ldesc->setValue($ldata['link_description']);
+        }
+        $ladd->addCell($ldesclabel->show());
+        $ladd->addCell($ldesc->show());
+        $ladd->endRow();
+        
+        
+
+        //end off the form and add the buttons
+        $this->objLButton = &new button($this->objLanguage->languageText('word_save', 'system'));
+        $this->objLButton->setValue($this->objLanguage->languageText('word_save', 'system'));
+        $this->objLButton->setToSubmit();
+        $lfieldset->addContent($ladd->show());
+        $lform->addToForm($lfieldset->show());
+        $lform->addToForm($this->objLButton->show());
+        $lform = $lform->show();
+
+        /*ok now the table with the edit/delete for each rss feed
+        $efeeds = $this->objDbBlog->getUserRss($this->objUser->userId());
+        $ftable = $this->newObject('htmltable', 'htmlelements');
+        $ftable->cellpadding = 3;
+        //$ftable->border = 1;
+        //set up the header row
+        $ftable->startHeaderRow();
+        $ftable->addHeaderCell($this->objLanguage->languageText("mod_blog_fhead_name", "blog"));
+        $ftable->addHeaderCell($this->objLanguage->languageText("mod_blog_fhead_description", "blog"));
+        $ftable->addHeaderCell('');
+        $ftable->endHeaderRow();
+
+        //set up the rows and display
+        if (!empty($efeeds)) {
+            foreach($efeeds as $rows) {
+                $ftable->startRow();
+                $feedlink = new href($rows['url'], $rows['name']);
+                $ftable->addCell($feedlink->show());
+                //$ftable->addCell(htmlentities($rows['name']));
+                $ftable->addCell(($rows['description']));
+                $this->objIcon = &$this->getObject('geticon', 'htmlelements');
+                $edIcon = $this->objIcon->getEditIcon($this->uri(array(
+                    'action' => 'addrss',
+                    'mode' => 'edit',
+                    'id' => $rows['id'],
+                    //'url' => $rows['url'],
+                    //'description' => $rows['description'],
+                    'module' => 'blog'
+                )));
+                $delIcon = $this->objIcon->getDeleteIconWithConfirm($rows['id'], array(
+                    'module' => 'blog',
+                    'action' => 'deleterss',
+                    'id' => $rows['id']
+                ) , 'blog');
+                $ftable->addCell($edIcon.$delIcon);
+                $ftable->endRow();
+            }
+            //$ftable = $ftable->show();
+        }
+
+		*/
+
+        if ($featurebox == TRUE) {
+            $objFeatureBox = $this->getObject('featurebox', 'navigation');
+            $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_importblog", "blog") , $imform);
+            return $ret;
+        } else {
+            return $rssform;
+        }
+    	
+    }
+    
+    
+    /**
      * Method to look up geonames database for lat lon cords of a certain place as a string
      *
      * @param array $params
