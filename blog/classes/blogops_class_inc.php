@@ -282,11 +282,13 @@ class blogops extends object
     public function loginBox($featurebox = FALSE)
     {
         $objLogin = &$this->getObject('logininterface', 'security');
+        $objRegister = $this->getObject('block_register', 'security');
+        
         if ($featurebox == FALSE) {
-            return $objLogin->renderLoginBox('blog');
+            return $objLogin->renderLoginBox('blog') . "<br />" . $objRegister->show();
         } else {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            return $objFeatureBox->show($this->objLanguage->languageText("word_login", "system") , $objLogin->renderLoginBox('blog'));
+            return $objFeatureBox->show($this->objLanguage->languageText("word_login", "system") , $objLogin->renderLoginBox('blog') . "<br />" . $objRegister->show());
         }
     }
 
