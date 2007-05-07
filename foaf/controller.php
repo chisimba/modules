@@ -89,6 +89,8 @@ class foaf extends controller
 	 * @var string
 	 */
 	public $savepath;
+	
+	public $objUi;
 
 	/**
      * Constructor method to instantiate objects and get variables
@@ -110,6 +112,8 @@ class foaf extends controller
 			$this->objFoafParser = $this->getObject('foafparser');
 			//load up the foaf factory class
 			$this->objFoafOps = $this->getObject('foafops');
+			//load up the UI elements
+			$this->objUi = $this->getObject('foafui');
 			//LOAD UP THE USER OBJECT
 			$this->objUser = $this->getObject('user', 'security');
 			//hook up the database models
