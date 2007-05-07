@@ -61,6 +61,10 @@ $fields = array(
 	'link_notes' => array(
 		'type' => 'clob',
 		),
+	'link_type' => array(
+		'type' => 'text',
+		'length' => 255,
+		),
 	'link_rss' => array(
 		'type' => 'text',
 		'length' => 255,

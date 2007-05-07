@@ -1845,6 +1845,14 @@ class blog extends controller
         	//$this->setVar("pageSuppressXML", TRUE);
         	return "tl_tpl.php";
         	break;
+        	
+        case 'addlink':
+        	//do some catching and inserting
+        	break;
+        	
+        case 'linkeditor':
+        	return 'bloglinks_tpl.php';
+        	break;
         }//action
 
     }

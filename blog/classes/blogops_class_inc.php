@@ -190,10 +190,10 @@ class blogops extends object
 
         if ($featurebox == TRUE) {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_importblog", "blog") , $imform);
+            $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_linkedit", "blog") , $lform);
             return $ret;
         } else {
-            return $rssform;
+            return $lform;
         }
     	
     }

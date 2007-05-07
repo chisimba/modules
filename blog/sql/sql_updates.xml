@@ -85,4 +85,16 @@
 			</add>
 		</data>
 	</update>
+	<update>
+        <table>tbl_blog_links</table>
+        <version>1.26</version>
+        <description>added a link type field</description>
+        <data>
+        	<add>
+    			<name>link_type</name>
+		    	<type>text</type>
+    			<length>255</length>
+			</add>
+		</data>
+	</update>
 </updates>
