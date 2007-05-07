@@ -987,6 +987,12 @@ class dbblog extends dbTable
     	//$index->optimize();
 
     }
+    
+    public function getUserLinks($userid)
+    {
+    	$this->_changeTable('tbl_blog_links');
+    	return $this->getAll("WHERE userid = '$userid'");
+    }
 
 
 	/**
