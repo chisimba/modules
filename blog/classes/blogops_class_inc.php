@@ -77,6 +77,7 @@ class blogops extends object
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('textarea', 'htmlelements');
+        $this->loadClass('dropdown', 'htmlelements');
 
     	$this->objUser = $this->getObject('user', 'security');
     	if($ldata == NULL)
@@ -103,6 +104,7 @@ class blogops extends object
         $ladd->startRow();
         $lurllabel = new label($this->objLanguage->languageText('mod_blog_lurl', 'blog') .':', 'input_lurl');
         $lurl = new textinput('lurl');
+        $lurl->size = "100%";
         if(isset($ldata['link_url']))
         {
         	$lurl->setValue(htmlentities($ldata['link_url'], ENT_QUOTES));
@@ -115,6 +117,7 @@ class blogops extends object
         $ladd->startRow();
         $lnamelabel = new label($this->objLanguage->languageText('mod_blog_lname', 'blog') .':', 'input_lname');
         $lname = new textinput('lname');
+        $lname->size = '100%';
         if(isset($ldata['link_name']))
         {
         	$lname->setValue($ldata['link_name']);
@@ -127,6 +130,7 @@ class blogops extends object
         $ladd->startRow();
         $ldesclabel = new label($this->objLanguage->languageText('mod_blog_ldesc', 'blog') .':', 'input_ldesc');
         $ldesc = new textarea('ldescription');
+        $ldes->size = '100%';
         if(isset($ldata['link_description']))
         {
           	$ldesc->setValue($ldata['link_description']);
@@ -135,7 +139,27 @@ class blogops extends object
         $ladd->addCell($ldesc->show());
         $ladd->endRow();
         
+        //link target dropdown
+        $ladd->startRow();
+        $ltargetlabel = new label($this->objLanguage->languageText('mod_blog_ltarget', 'blog') .':', 'input_ltarget');
+        $ltarget = new dropdown('ltarget');
+        $ltarget->addOption('_blank', $this->objLanguage->languageText("mod_blog_linktarget_blank", 'blog'));
+        $ltarget->addOption('_self', $this->objLanguage->languageText("mod_blog_linktarget_self", 'blog'));
+        $ltarget->addOption('_parent', $this->objLanguage->languageText("mod_blog_linktarget_parent", 'blog'));
+        $ltarget->addOption('_top', $this->objLanguage->languageText("mod_blog_linktarget_top", 'blog'));
+        $ladd->addCell($ltargetlabel->show());
+        $ladd->addCell($ltarget->show());
+        $ladd->endRow();
         
+        //link type dropdown
+        $ladd->startRow();
+        $ltypelabel = new label($this->objLanguage->languageText('mod_blog_ltype', 'blog') .':', 'input_ltype');
+        $ltype = new dropdown('ltype');
+        $ltype->addOption('blogroll', $this->objLanguage->languageText("mod_blog_linktype_blogroll", 'blog'));
+        $ltype->addOption('bloglink', $this->objLanguage->languageText("mod_blog_linktype_bloglink", 'blog'));
+        $ladd->addCell($ltypelabel->show());
+        $ladd->addCell($ltype->show());
+        $ladd->endRow();
 
         //end off the form and add the buttons
         $this->objLButton = &new button($this->objLanguage->languageText('word_save', 'system'));
