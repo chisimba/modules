@@ -102,6 +102,18 @@ class dbPost extends dbTable
         $this->objScriptClear = $this->getObject('script', 'utilities');
         
         $this->showModeration = FALSE;
+        
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        
+        $this->showFullName = $this->objSysConfig->getValue('SHOWFULLNAME', 'forum');
+        
+        if ($this->showFullName == '') {
+            $this->showFullName = TRUE;
+        }
+        
+        if ($this->showFullName != FALSE) {
+            $this->showFullName = TRUE;
+        }
     }
     
     
@@ -241,7 +253,7 @@ class dbPost extends dbTable
     {
         $pointers = $this->getTopicPointer($topic_id);
         
-        $sql = 'SELECT tbl_forum_post.*, tbl_forum_post_text.*, tbl_users.firstname, tbl_users.surname, 
+        $sql = 'SELECT tbl_forum_post.*, tbl_forum_post_text.*, tbl_users.firstname, tbl_users.surname, tbl_users.username,
         tbl_forum_post_attachment.attachment_id, replypost.id AS replypost, languagecheck.id AS anotherlanguage, tbl_forum_post_ratings.rating FROM tbl_forum_post 
         INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id AND tbl_forum_post_text.original_post = "1") 
         LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId ) 
@@ -263,7 +275,7 @@ class dbPost extends dbTable
     */
     function getFlatThread($topic)
     {
-        $sql = 'SELECT tbl_forum_post.*,  tbl_forum_post_text.*, tbl_users.firstname, tbl_users.surname, 
+        $sql = 'SELECT tbl_forum_post.*,  tbl_forum_post_text.*, tbl_users.firstname, tbl_users.surname, tbl_users.username, 
         tbl_forum_post_attachment.attachment_id, replypost.id AS replypost, languagecheck.id AS anotherlanguage, tbl_forum_post_ratings.rating
         FROM tbl_forum_post 
         INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id  AND tbl_forum_post_text.original_post = \'1\') 
@@ -284,7 +296,7 @@ class dbPost extends dbTable
     */
     function getRootPost ($topic)
     {
-        $sql = 'SELECT tbl_forum_post.*, tbl_forum_topic.*,  tbl_forum_post_text.*, forum_name, forum_id, tbl_users.firstname, tbl_users.surname, 
+        $sql = 'SELECT tbl_forum_post.*, tbl_forum_topic.*,  tbl_forum_post_text.*, forum_name, forum_id, tbl_users.firstname, tbl_users.surname, tbl_users.username, 
         tbl_forum_post_attachment.attachment_id, replyPost.id AS replypost, languagecheck.id AS anotherlanguage, 
         tbl_forum_post_ratings.rating, tbl_forum_post.lft as postleft, tbl_forum_post.rght as postright
         FROM tbl_forum_post INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id AND tbl_forum_post_text.original_post=\'1\') 
@@ -314,7 +326,7 @@ class dbPost extends dbTable
     */
     function getPostWithText ($post)
     {
-        $sql = 'SELECT tbl_forum_post.*, tbl_forum_post_text.*, tbl_forum_topic.*, tbl_users.firstname, tbl_users.surname, tbl_forum_post.datelastupdated AS datelastupdated, tbl_forum_post_attachment.attachment_id, replyPost.id AS replypost, languagecheck.id AS anotherlanguage, tbl_forum_post_ratings.rating, tbl_forum_post.lft as postleft, tbl_forum_post.rght as postright
+        $sql = 'SELECT tbl_forum_post.*, tbl_forum_post_text.*, tbl_forum_topic.*, tbl_users.firstname, tbl_users.surname, tbl_users.username, tbl_forum_post.datelastupdated AS datelastupdated, tbl_forum_post_attachment.attachment_id, replyPost.id AS replypost, languagecheck.id AS anotherlanguage, tbl_forum_post_ratings.rating, tbl_forum_post.lft as postleft, tbl_forum_post.rght as postright
         FROM tbl_forum_post 
         INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id AND tbl_forum_post_text.original_post=\'1\' ) 
         INNER JOIN tbl_forum_topic ON (tbl_forum_post.topic_id = tbl_forum_topic.id) 
@@ -379,8 +391,7 @@ class dbPost extends dbTable
         } else {
             $margin = NULL;
         }
-        $return = NULL;
-        
+        $return = '';
         
         if ($makeContractible) {
             if ($post['level'] <= $this->threadDisplayLevel) {
@@ -428,10 +439,15 @@ class dbPost extends dbTable
                 }
                 
                 
+                if ($this->showFullName) {
                 
+                    // Start of the Title Area
+                    $return .= '<div class="forumTopicTitle"><strong>'.stripslashes($post['post_title']).'</strong><br />by '.$post['firstname'].' '.$post['surname'].' - '.$this->objDateTime->formatDateOnly($post['datelastupdated']).' at '.$this->objDateTime->formatTime($post['datelastupdated']).' ('.$this->objTranslatedDate->getDifference($post['datelastupdated']).') </div>';
                 
-                // Start of the Title Area
-                $return .= '<div class="forumTopicTitle"><strong>'.stripslashes($post['post_title']).'</strong><br />by '.$post['firstname'].' '.$post['surname'].' - '.$this->objDateTime->formatDateOnly($post['datelastupdated']).' at '.$this->objDateTime->formatTime($post['datelastupdated']).' ('.$this->objTranslatedDate->getDifference($post['datelastupdated']).') </div>';
+                } else {
+                    // Start of the Title Area
+                    $return .= '<div class="forumTopicTitle"><strong>'.stripslashes($post['post_title']).'</strong><br />by '.$post['username'].' - '.$this->objDateTime->formatDateOnly($post['datelastupdated']).' at '.$this->objDateTime->formatTime($post['datelastupdated']).' ('.$this->objTranslatedDate->getDifference($post['datelastupdated']).') </div>';
+                }
                 // Ebd Title Area
             $return .= '</div>'."\r\n";
             
@@ -775,14 +791,23 @@ class dbPost extends dbTable
         
         if ($highlightPost) {
             $cssClass = 'confirm';
-            $treenode = '<strong> '.$post['firstname'].' '.$post['surname'].'</strong> -  <em>'.trim($text).'</em> ('.$datefield.')';
+            
+            if ($this->showFullName) {
+                $treenode = '<strong> '.$post['firstname'].' '.$post['surname'].'</strong> -  <em>'.trim($text).'</em> ('.$datefield.')';
+            } else {
+                $treenode = '<strong> '.$post['username'].'</strong> -  <em>'.trim($text).'</em> ('.$datefield.')';
+            }
         } else {
             $cssClass = NULL;
             $link =& $this->getObject('link', 'htmlelements');
             $link->href = $this->uri(array('action'=>'viewtopic', 'id'=>$post['topic_id'], 'post'=>$post['post_id']));
             $link->link = $text;
-            //$link->anchor = 'post_'.$post['topic_id'];
-            $treenode = '<strong> '.$post['firstname'].' '.$post['surname'].'</strong> -  <em>'.$link->show().'</em> ('.$datefield.')';
+            
+            if ($this->showFullName) {
+                $treenode = '<strong> '.$post['firstname'].' '.$post['surname'].'</strong> -  <em>'.$link->show().'</em> ('.$datefield.')';
+            } else {
+                $treenode = '<strong> '.$post['username'].'</strong> -  <em>'.$link->show().'</em> ('.$datefield.')';
+            }
         }
         
         $icon =& $this->getObject('geticon', 'htmlelements');
@@ -799,7 +824,7 @@ class dbPost extends dbTable
     */
     function getLastPost($forum)
     {
-        $sql = 'SELECT tbl_forum_post_text. * , tbl_forum_post.topic_id, tbl_users.firstname, tbl_users.surname
+        $sql = 'SELECT tbl_forum_post_text. * , tbl_forum_post.topic_id, tbl_users.firstname, tbl_users.surname, tbl_users.username
         FROM tbl_forum_post INNER JOIN tbl_forum_post_text ON ( tbl_forum_post_text.post_id = tbl_forum_post.id AND tbl_forum_post_text.original_post=\'1\')
         INNER JOIN tbl_forum_topic ON ( tbl_forum_post.topic_id = tbl_forum_topic.id )
         LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId ) 

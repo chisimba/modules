@@ -116,27 +116,41 @@ class forum extends controller
         
         
         //Get the activity logger class
-        //$this->objLog=$this->newObject('logactivity', 'logger');
+        $this->objLog=$this->newObject('logactivity', 'logger');
         //Log this module call
-        //$this->objLog->log();
+        $this->objLog->log();
         
         if (strtolower($this->getParam('passthroughlogin')) == 'true') {
             $this->updatePassThroughLogin();
         }
+        
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        
+        $this->showFullName = $this->objSysConfig->getValue('SHOWFULLNAME', 'forum');
+        
+        if ($this->showFullName == '') {
+            $this->showFullName = TRUE;
+        }
+        
+        if ($this->showFullName != FALSE) {
+            $this->showFullName = TRUE;
+        }
+        
     }
     
     public function requiresLogin()
     {
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         
-        // Check if Glossary Parsing is allowed
+        // Check if User is allowed to view forum without being logged in
         $allowPrelogin = $objSysConfig->getValue('ALLOW_PRELOGIN', 'forum');
         
+        // If turned off, user requires login for ALL actions
         if ($allowPrelogin != '1') {
             return TRUE;
         }
         
-        
+        // Else user requires login for some actions
         switch ($this->getParam('action', NULL))
         {
             case NULL:
@@ -339,7 +353,6 @@ class forum extends controller
         if (isset($_SERVER['HTTP_REFERER'])  && substr_count($_SERVER['HTTP_REFERER'], 'type=workgroup') > 0 && $this->getParam('type') != 'context') {
             return $this->nextAction('workgroup');
         }
-
         
         $forumNum = $this->objForum->getNumForums($this->contextCode);
         
@@ -349,16 +362,6 @@ class forum extends controller
             $newforum = $this->objForum->autoCreateForum($this->contextCode, $this->contextTitle);
             
             return $this->nextAction('forum', array('id'=>$newforum));
-            
-        } else if ($forumNum == 1) {
-            //$contextForum = $this->objForum->onlyForum($this->contextCode);
-            
-            //return $this->nextAction('forum', array('id'=>$contextForum['id']));
-            
-            $allForums = $this->objForum->showAllForums($this->contextCode);
-            $this->setVarByRef('forums', $allForums);
-            
-            return 'forum_list.php';
             
         } else {
             $allForums = $this->objForum->showAllForums($this->contextCode);
@@ -2072,7 +2075,7 @@ class forum extends controller
             // Reference the array element with the record id
             $nodeArray[$topic['topic_id']] =& $node;
             
-            if ($topic['tangentCheck'] != '') {
+            if ($topic['tangentcheck'] != '') {
                 $tangents = $this->objTopic->getTangents($topic['topic_id']);
                 
                 foreach ($tangents as $tangent)
@@ -2213,8 +2216,12 @@ class forum extends controller
             // Set Edge Width - 8 is nice and thick!
             $nodeDetails['edgeWidth'] = 8;
             
-            // Start text of the node
-            $text = $topic['firstname'].' '.$topic['surname'].' ';
+            if ($this->showFullName) {
+                // Start text of the node
+                $text = $topic['firstname'].' '.$topic['surname'].' ';
+            } else {
+                $text = $topic['username'].' ';
+            }
             
             // Check if Start of Topic or Reply
             if ($topic['post_parent'] == '0') {

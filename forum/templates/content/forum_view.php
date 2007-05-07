@@ -189,7 +189,13 @@ $tblTopic->endHeaderRow();
                 }
                 
                 $tblTopic->addCell($sticky.$link->show(), '30%', 'center');
-                $tblTopic->addCell($topic['firstname'].' '.$topic['surname'], Null, 'center', 'center');
+                
+                if ($this->showFullName) {
+                    $tblTopic->addCell($topic['firstname'].' '.$topic['surname'], Null, 'center', 'center');
+                } else {
+                    $tblTopic->addCell($topic['username'], Null, 'center', 'center');
+                }
+                
                 $tblTopic->addCell($topic['replies'], Null, 'center', 'center');
                 $tblTopic->addCell($topic['views'], Null, 'center', 'center');
                 
@@ -207,7 +213,11 @@ $tblTopic->endHeaderRow();
                 $lastPostLink = new link ($this->uri(array('action'=>'viewtopic', 'id'=>$topic['topic_id'], 'post'=>$topic['last_post'], 'type'=>$forumtype)));
                 $lastPostLink->link = $objIcon->show();
                 
-                $tblTopic->addCell($datefield.'<br />'.$topic['lastfirstname'].' '.$topic['lastsurname'].$lastPostLink->show(), Null, 'center', 'right', 'smallText');
+                if ($this->showFullName) {
+                    $tblTopic->addCell($datefield.'<br />'.$topic['lastfirstname'].' '.$topic['lastsurname'].$lastPostLink->show(), Null, 'center', 'right', 'smallText');
+                } else {
+                    $tblTopic->addCell($datefield.'<br />'.$topic['lastusername'].$lastPostLink->show(), Null, 'center', 'right', 'smallText');
+                }
                 
                 $objIcon->align='absmiddle';
                 
@@ -229,7 +239,12 @@ $tblTopic->endHeaderRow();
                         $objIcon->title = $this->objLanguage->languageText('word_tangent');
                         
                         $tblTopic->addCell($objIcon->show().' '.$link->show(), Null, 'center');
-                        $tblTopic->addCell($tangent['firstname'].' '.$tangent['surname'], Null, 'center', 'center');
+                        
+                        if ($this->showFullName) {
+                            $tblTopic->addCell($tangent['firstname'].' '.$tangent['surname'], Null, 'center', 'center');
+                        } else {
+                            $tblTopic->addCell($tangent['username'], Null, 'center', 'center');
+                        }
                         $tblTopic->addCell($tangent['replies'], Null, 'center', 'center');
                         $tblTopic->addCell($tangent['views'], Null, 'center', 'center');
                         
@@ -251,7 +266,11 @@ $tblTopic->endHeaderRow();
                         
                         $objIcon->setIcon('gotopost', NULL, 'icons/forum/');
                         
-                        $tblTopic->addCell($datefield.'<br />'.$tangent['lastfirstname'].' '.$tangent['lastsurname'].$lastPostLink->show(), Null, 'center', 'right', 'smallText');
+                        if ($this->showFullName) {
+                            $tblTopic->addCell($datefield.'<br />'.$tangent['lastfirstname'].' '.$tangent['lastsurname'].$lastPostLink->show(), Null, 'center', 'right', 'smallText');
+                        } else {
+                            $tblTopic->addCell($datefield.'<br />'.$tangent['lastusername'].$lastPostLink->show(), Null, 'center', 'right', 'smallText');
+                        }
                         
                         $tblTopic->endRow();
                     }

@@ -95,7 +95,11 @@ foreach ($forums as $forum)
         $postDetails .= '<br />'.$this->trimstrObj->strTrim(stripslashes(str_replace("\r\n", ' ', strip_tags($post['post_text']))), 80);
         
         if ($post['firstname'] != '') {
-            $user = 'By: '.$post['firstname'].' '.$post['surname'].' - ';
+            if ($this->showFullName) {
+                $user = 'By: '.$post['firstname'].' '.$post['surname'].' - ';
+            } else {
+                $user = 'By: '.$post['username'].' - ';
+            }
         } else {
             $user = '';
         }

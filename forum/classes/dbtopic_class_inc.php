@@ -139,7 +139,7 @@ class dbtopic extends dbTable
     */ 
     function showTopicsInForum($forum_id, $userId, $archiveDate = NULL, $order=NULL, $direction=NULL, $additionalWhere = NULL, $limit = NULL)
     {
-        $sql = 'SELECT tbl_forum_topic.id AS topic_id,tbl_forum_topic.*, tbl_forum_topic.status AS topicstatus, tbl_users.firstname, tbl_users.surname, tbl_forum_discussiontype.*, tbl_forum_post_text.post_title, tbl_forum_topic_read.id AS readtopic, tbl_forum_topic_read.post_id AS lastreadpost, lastPostUser.firstname AS lastfirstname, lastPostUser.surname AS lastsurname, post2.datelastupdated AS lastdate, tangentCheck.id AS tangentcheck'
+        $sql = 'SELECT tbl_forum_topic.id AS topic_id,tbl_forum_topic.*, tbl_forum_topic.status AS topicstatus, tbl_users.firstname, tbl_users.surname, tbl_users.username, tbl_forum_discussiontype.*, tbl_forum_post_text.post_title, tbl_forum_topic_read.id AS readtopic, tbl_forum_topic_read.post_id AS lastreadpost, lastPostUser.firstname AS lastfirstname, lastPostUser.surname AS lastsurname, lastPostUser.username AS lastusername, post2.datelastupdated AS lastdate, tangentCheck.id AS tangentcheck'
         
         .' FROM tbl_forum_topic'
         
@@ -224,7 +224,7 @@ class dbtopic extends dbTable
     */
     function getTangents($topic)
     {
-        $sql = 'SELECT tbl_forum_topic. * , tbl_forum_post_text.post_title, tbl_users.firstname, tbl_users.surname,lastPostUser.firstName AS lastFirstName, lastPostUser.surname AS lastSurname, post2.dateLastUpdated AS lastdate
+        $sql = 'SELECT tbl_forum_topic. * , tbl_forum_post_text.post_title, tbl_users.firstname, tbl_users.surname,tbl_users.username,lastPostUser.firstName AS lastFirstName, lastPostUser.surname AS lastSurname, lastPostUser.username AS lastusername, post2.dateLastUpdated AS lastdate
                 FROM tbl_forum_topic
                 INNER JOIN tbl_forum_post ON ( tbl_forum_post.topic_id = tbl_forum_topic.id AND tbl_forum_post.post_parent="0")
                 INNER JOIN tbl_forum_post_text ON ( tbl_forum_post_text.post_id = tbl_forum_post.id )
