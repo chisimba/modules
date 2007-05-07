@@ -54,7 +54,9 @@
     $form->setAction($this->uri($paramArray,'userimport'));
 
     //the file input
-    $fileInput=&$this->newObject('textinput','htmlelements');
+    $this->loadClass('textinput','htmlelements');
+    
+    $fileInput= new textinput('uploadCSV');
     $fileInput->fldType='file';
     $fileInput->label=$this->objLanguage->languageText("mod_userimport_message2",'userimport');
     $fileInput->name='uploadCSV';
