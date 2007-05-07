@@ -29,7 +29,7 @@ if($this->getParam('action',NULL)){
 $content .= "<br/>".$mainlink->show();}
 
 $cssLayout->setLeftColumnContent($content);
-$cssLayout->setMiddleColumnContent($head.$this->getContent());
+$cssLayout->setMiddleColumnContent($this->getContent());
 
 echo $cssLayout->show();
 
