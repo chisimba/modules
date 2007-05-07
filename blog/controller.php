@@ -297,9 +297,8 @@ class blog extends controller
                 {
                 	$posts = $this->objDbBlog->getLastPosts(10, $userid);
                 }
-                //$posts = $this->objDbBlog->getAllPosts($userid, 0); //$catid = NULL);
+             
                 //get the sticky posts too
-                
                 $latestpost[0] = $this->objDbBlog->getLatestPost($userid);
                 $rss = $this->objDbBlog->getUserRss($userid);
                 $stickypost = $this->objDbBlog->getStickyPosts($userid);
@@ -322,7 +321,7 @@ class blog extends controller
                  //get the category ID if any
                 $catid = $this->getParam('catid');
                 //grab the user id
-                $userid = 1 ;//$this->getParam('userid');
+                $userid = 1 ;
 
                 if(!isset($userid))
                 {
@@ -363,12 +362,9 @@ class blog extends controller
             case 'viewsingle':
                 //single post view for the bookmarks/comments etc
                 $msg = $this->getParam('msg');
-                //echo $msg;
                 if(isset($msg))
                 {
                 	$this->setVarByRef('msg', $msg);
-                	//echo "<h1>".$msg."</h1>";die();
-                	//return 'viewsingle_tpl.php';
                 }
                 $postid = $this->getParam('postid');
                 $userid = $this->getParam('userid');
@@ -392,7 +388,6 @@ class blog extends controller
                 if($this->objUser->isLoggedIn() == FALSE || $this->objUser->inAdminGroup($this->objUser->userId()) == FALSE)
                 {
                     //user is not logged in, bust out of this case and go to the default
-                    //echo "You don't have permissions to do this dude!";
                     $this->nextAction('');
                     exit;
                 }
@@ -408,7 +403,6 @@ class blog extends controller
                     //check that all the settings are there!
                     if(empty($sprot) || empty($muser) || empty($mpass) || empty($mserver) || empty($mport) || empty($mbox))
                     {
-                        //echo $sprot, $muser, $mpass, $mserver, $mport, $mbox;
                         return 'mailsetup_tpl.php';
                     }
 
@@ -660,18 +654,7 @@ class blog extends controller
 
                         $blog = $this->objBlogImport->importBlog($username);
 
-                    /*
-                    //dump it to screen as a debug
-                    if(is_null($blog))
-                    {
-                        die("Incorrect user");
-                    }
-                    if($blog == 56)
-                    {
-                        die("blog table from remote is empty");
-                    }
-                    */
-                    //else {
+             
                     $userid = $this->objUser->userId();
                     foreach($blog as $blogs)
                     {
@@ -1177,49 +1160,6 @@ class blog extends controller
     			}
     			$code = curl_exec($ch);
     			curl_close($ch);
-
-                /*
-                require_once "HTTP/Request.php";
-                //define the request options
-                $reqopts = array(
-                    // Options for request directly
-                    'useragent'         => 'Chisimba',
-                    'strictness'        => 1,
-                    'timeout'           => 30,          // seconds
-                    'fetchlines'        => 30,
-                    'fetchextra'        => true,
-                    'http'              => "1.0",
-                    'method'            => "GET",
-                    'saveBody'          => true,
-                );
-                if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
-                {
-                    $parr = array(
-                    'proxy_host'        => $proxyArr['proxy_host'],
-                    'proxy_port'        => $proxyArr['proxy_port'],
-                    'proxy_user'        => $proxyArr['proxy_user'],
-                    'proxy_pass'        => $proxyArr['proxy_pass']
-                    );
-
-                    $proxyArr = array_merge($reqopts, $parr);
-                }
-                $req =& new HTTP_Request($gurl, $reqopts);
-
-                $req->setMethod(HTTP_REQUEST_METHOD_GET);
-                $req->addQueryString('name', $name);
-                $req->addQueryString('url', $blogURL);
-                $req->addQueryString('changesURL', $changesURL);
-
-                $request = $req->sendRequest(true);
-                //var_dump(urldecode($req->getUrl($req))); die();
-                if(PEAR::isError($req))
-                {
-                    //var_dump($req);
-                    log_debug($req->getMessage());
-                }
-                $code = $req->getResponseBody(); //$req->getResponseCode();
-
-                */
                 switch ($code) {
                     case "Thanks for the ping.":
                         log_debug("Google blogs API Success! Google said: " . $code);
@@ -1257,11 +1197,9 @@ class blog extends controller
                             //remove all the tags for the post so that we can populate with the new ones
                             foreach($etags as $rmtags)
                             {
-                                //print_r($rmtags);
                                 $this->objDbBlog->removeAllTags($rmtags['id']);
                             }
-                            //echo "inserting ";
-                            //print_r($tagarray);
+                            
                             $this->objDbBlog->insertTags($tagarray, $userid, $id);
                         }
                         //clean out the duplicate tags
