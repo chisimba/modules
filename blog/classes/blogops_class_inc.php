@@ -921,6 +921,7 @@ class blogops extends object
         $servdrop = new dropdown('server');
         $servdrop->addOption("fsiu", $this->objLanguage->languageText("mod_blog_fsiu", "blog"));
         $servdrop->addOption("elearn", $this->objLanguage->languageText("mod_blog_elearn", "blog"));
+        $servdrop->addOption("santec", $this->objLanguage->languageText("mod_blog_santec", "blog"));
         //$servdrop->addOption("freecourseware", $this->objLanguage->languageText("mod_blog_freecourseware", "blog"));
         //$servdrop->addOption("5ive", $this->objLanguage->languageText("mod_blog_5ive", "blog"));
         //$servdrop->addOption("pear", $this->objLanguage->languageText("mod_blog_peardemo", "blog"));

@@ -688,6 +688,73 @@ class blog extends controller
 
                 break;
 
+            case 'importallblogs':
+                //check if the user is logged in
+                if($this->objUser->isLoggedIn() == FALSE)
+                {
+                    //no, redirect to the main blog page
+                    $this->nextAction('');
+                    //get outta this action immediately
+                    exit;
+                }
+                //get some info
+                $server = 'santec';//$this->getParam('server');
+                if(empty($server))
+                {
+                    return "importform_tpl.php";
+                }
+                else {
+                    try {
+                        //set up to connect to the server
+                        $this->objBlogImport->setup($server);
+                        //connect to the remote db
+                        $this->objBlogImport->_dbObject();
+
+                        $blog = $this->objBlogImport->importAllBlogs();
+
+                    foreach($blog as $blogs)
+                    {
+                        $userArr = array(); $postarr = array();
+                        
+                        // get the users new user id - if the user doesn't exist, then skip.
+                        $sql = "SELECT * FROM tbl_users WHERE userid = '".$blogs['userid']."'";
+                            
+                        $userArr = $this->objUser->getArray($sql);
+                            
+                        if(!empty($userArr)){
+                            $userid = $userArr[0]['userid'];
+                        
+                            // create the post array in a format the this blog can understand...
+                            $postarr = array('userid' => $userid,
+                            'postdate' => strtotime($blogs['dateadded']),
+                            'postcontent' => $this->objblogOps->html2txt(htmlentities($blogs['content']), TRUE),
+                            'posttitle' => $this->objblogOps->html2txt(htmlentities($blogs['title']), TRUE),
+                            'postcat' => 0,
+                            'postexcerpt' => $this->objblogOps->html2txt(htmlentities($blogs['headline']), TRUE),
+                            'poststatus' => 0,
+                            'commentstatus' => 'Y',
+                            'postmodified' => $blogs['dateadded'],
+                            'commentcount' => 0,
+                            'postdate' => $blogs['dateadded']
+                            );
+                            //use the insertPost methods to populate...
+                            $this->objblogOps->quickPostAdd($userid, $postarr, 'import');
+                            
+                        }
+                        //clear $postarr
+                        $postarr = NULL;
+                    }
+                    $this->nextAction('viewblog');
+                    }
+                    catch (Exception $e)
+                    {
+                        throw customException($e->getMessage());
+                        exit();
+                    }
+                }
+
+                break;
+
             case 'feedurl':
                 //get the feed format parameter from the querystring
                 $format = $this->getParam('feedselector');
