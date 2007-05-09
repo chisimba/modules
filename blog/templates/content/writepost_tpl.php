@@ -26,7 +26,7 @@ $leftCol = $leftMenu->show();
 
 //get the posts editor
 $middleColumn = $this->objblogOps->postEditor($userid, NULL);
-$middleColumn .= $this->objblogOps->geoTagForm();
+//$middleColumn .= $this->objblogOps->geoTagForm();
 $rightSideColumn .= $this->objblogOps->quickCats(TRUE);
 $rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);//quickPost($userid, TRUE);
 $cssLayout->setMiddleColumnContent($middleColumn);
