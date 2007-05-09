@@ -1811,6 +1811,13 @@ class blog extends controller
         	$tl = $this->objblogOps->myBlogTimeline($info, $userid);
         	//save the timeline as a file. (Not sure if this is necessary or not...
         	$filename = $this->objConfig->getcontentBasePath() . "users/" .$userid.'/'.$userid.'_temptimeline.xml';
+        	$filepath = $this->objConfig->getcontentBasePath() . "users/" .$userid;
+        	//check first that the path eists
+        	if(!file_exists($filepath))
+        	{
+        		mkdir($filepath);
+        		chmod($filepath, 0777);
+        	}
         	$somecontent = $tl[0];
         	//print_r($somecontent);
         	if(!file_exists($filename))
