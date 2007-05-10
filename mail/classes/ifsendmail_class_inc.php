@@ -22,5 +22,6 @@ interface ifsendmail
     function send();
     function attach($file);
     function clearAttachments();
+    function htmlMail();
 }
 ?>
