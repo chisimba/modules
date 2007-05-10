@@ -10,6 +10,7 @@ class hrwizard extends controller
     public $objLog;
     public $objLanguage;
     public $objHrOps;
+    public $recarr;
 
     /**
      * Constructor method to instantiate objects and get variables
@@ -39,7 +40,7 @@ class hrwizard extends controller
     
         switch ($action) {
             default:
-            	return 'upload_tpl.php';
+            	return 'message_tpl.php';
             	break;
             	
             case 'uploaddatafile':
@@ -51,9 +52,22 @@ class hrwizard extends controller
             	
             case 'uploadcsvfile':
             	$csv = $this->getParam('csvfile');
-            	$recarr = $this->objHrOps->parseCSV($csv);
-            	$this->objHrOps->sendMails($recarr, "a message!");
-            	return 'done_tpl.php';
+            	$this->recarr = $this->objHrOps->parseCSV($csv);
+            	$this->setVarByRef('msg', $this->recarr);
+            	return 'message_tpl.php';
+            	break;
+            	
+            case 'addmessage':
+            	$bodytext = $this->getParam('bodytext');
+            	$file = $this->getParam('zipfile');
+            	$csv = $this->getParam('csvfile');
+            	
+            	$pdfzip = $this->objHrOps->unpackPdfs($file);
+            	$this->recarr = $this->objHrOps->parseCSV($csv);
+            	
+            	$ret = $this->objHrOps->sendMails($this->recarr, $bodytext);
+            	$this->setVarByRef('ret', $ret);
+            	return "done_tpl.php";
             	break;
             	
             	
