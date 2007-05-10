@@ -177,7 +177,7 @@ class hrwizardops extends object {
 				$objMailer->setValue('from', 'hr@uwc.ac.za');
 				$objMailer->setValue('fromName', $this->objLanguage->languageText("mod_hrwizard_emailfromname", "hrwizard"));
 				$objMailer->setValue('subject', $this->objLanguage->languageText("mod_hrwizard_emailsub", "hrwizard"));
-				$objMailer->setValue('body', $bodyText);
+				$objMailer->setValue('body', strip_tags($bodyText));
 				$objMailer->attach($file, $record[0]);
 				//$objMailer->htmlMail();
 				$objMailer->send();

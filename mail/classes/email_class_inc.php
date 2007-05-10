@@ -54,7 +54,7 @@ class email extends absendmail implements ifsendmail
     * Standard init method
     *
     */
-    function init()
+    function __construct()
     {
     	$this->objBaseMail = new PHPMailer;
 	    //Get an instance of the config object
