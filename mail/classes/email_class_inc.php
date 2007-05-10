@@ -58,7 +58,7 @@ class email extends absendmail implements ifsendmail
     {
     	$this->objBaseMail = new PHPMailer;
 	    //Get an instance of the config object
-        $objConfig=&$this->newObject('altconfig','config');
+        $objConfig=&$this->newObject('dbsysconfig','sysconfig');
         //Get the value of the delimiter
         $method = $objConfig->getValue('MAIL_SEND_METHOD', 'mail');
         switch ($method) {
@@ -86,6 +86,7 @@ class email extends absendmail implements ifsendmail
         //Check if we should use HTML mail
         $useHTMLMail = $objConfig->getValue('MAIL_USE_HTML_AS_DEFAULT', 'mail');
         if ($useHTMLMail == "true") {
+        	//echo "html";
         	$this->objBaseMail->IsHTML(TRUE);
         } else {
             $this->objBaseMail->IsHTML(FALSE);
