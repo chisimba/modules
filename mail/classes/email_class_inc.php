@@ -192,5 +192,10 @@ class email extends absendmail implements ifsendmail
     {
         $this->objBaseMail->ClearAddresses();
     }
+    
+    public function setHTMLMail()
+    {
+    	$this->objBaseMail->IsHTML(TRUE);
+    }
 }
 ?>
