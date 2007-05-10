@@ -259,6 +259,9 @@ class hrwizardops extends object {
 		}
 		$ctbl->endRow();
 		
+		//add some rules
+		//$cform->addRule('csvfile', $this->objLanguage->languageText("mod_hrwizard_csvfilereq",'hrwizard'), 'required');
+		//$cform->addRule('zipfile', $this->objLanguage->languageText("mod_hrwizard_zipfilereq",'hrwizard'), 'required');
  		//end off the form and add the buttons
 		$this->objCButton = &new button($this->objLanguage->languageText('word_save', 'system'));
 		$this->objCButton->setValue($this->objLanguage->languageText('word_save', 'system'));
