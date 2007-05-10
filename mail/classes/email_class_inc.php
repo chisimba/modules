@@ -104,14 +104,6 @@ class email extends absendmail implements ifsendmail
     */
     public function send()
     {
-    	$objConfig = $this->getObject('dbsysconfig','sysconfig');
-    	$useHTMLMail = $objConfig->getValue('MAIL_USE_HTML_AS_DEFAULT', 'mail');
-        if ($useHTMLMail == "true") {
-        	//echo "html";
-        	$this->objBaseMail->IsHTML(TRUE);
-        } else {
-            $this->objBaseMail->IsHTML(FALSE);
-        }
 		$this->objBaseMail->From =  $this->from;
 		$this->objBaseMail->FromName = $this->fromName;
 		$this->objBaseMail->Subject = $this->subject;
