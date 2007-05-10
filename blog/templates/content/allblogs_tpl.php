@@ -28,7 +28,15 @@ else {
 	{
 		//grab the user info from the user object
 		$id = $users['userid'];
-		$name = $this->objUser->fullName($id);
+		//echo $this->showfullname;
+		if($this->showfullname == 'FALSE')
+        {
+        	$name = $this->objUser->userName($id);
+        }
+        else {
+        	$name = $this->objUser->fullname($id);
+        }
+		//$name = $this->objUser->fullName($id);
 		$laston = $this->objUser->getLastLoginDate($id);
 		$img = $this->objUser->getUserImage($id, FALSE);
 

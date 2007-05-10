@@ -1298,7 +1298,7 @@ class blogops extends object
                 	$blog_name = $bloggerprofile['blog_name']; //$this->getParam('blog_name');
                 }
                 else {
-                	if($this->showfullname == FALSE)
+                	if($this->showfullname == 'FALSE')
                 	{
                 		$blog_name = $this->objUser->userName($userid);
                 	}
@@ -1344,7 +1344,7 @@ class blogops extends object
                 	$blog_name = $bloggerprofile['blog_name']; //$this->getParam('blog_name');
                 }
                 else {
-                	if($this->showfullname == FALSE)
+                	if($this->showfullname == 'FALSE')
                 	{
                 		$blog_name = $this->objUser->userName($userid);
                 	}
@@ -2496,7 +2496,7 @@ class blogops extends object
             	$link = new href($linkuri, $item['post_title']);
                 $str .= '<p>';
                 $str .= '<b>'.$link->show().'</b><br />';
-                if($this->showfullname == FALSE)
+                if($this->showfullname == 'FALSE')
                 {
                 	$nameshow = $this->objUser->userName($item['userid']);
                 }
@@ -2878,7 +2878,7 @@ class blogops extends object
     	$this->objUser = $this->getObject('user', 'security');
     	if($this->objUser->isLoggedIn())
 		{
-			if($this->showfullname == FALSE)
+			if($this->showfullname == 'FALSE')
             {
             	$theuser = $this->objUser->userName($this->objUser->userid());
             }
@@ -3115,7 +3115,7 @@ class blogops extends object
 
         $content = $prtable->show();
 
-        if($this->showfullname == FALSE)
+        if($this->showfullname == 'FALSE')
         {
            	$namer = $this->objUser->userName($userid);
         }

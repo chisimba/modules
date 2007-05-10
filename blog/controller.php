@@ -156,6 +156,8 @@ class blog extends controller
      * @var object
      */
     public $objProxy;
+    
+    public $showfullname;
 
     /**
      * Constructor method to instantiate objects and get variables
@@ -213,6 +215,8 @@ class blog extends controller
             $this->objLog->log();
             //sys-config object
             $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            //$this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            $this->showfullname = $this->objSysConfig->getValue('show_fullname', 'blog');
 
         }
         catch(customException $e) {

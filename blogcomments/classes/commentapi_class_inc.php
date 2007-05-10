@@ -31,6 +31,8 @@ class commentapi extends object
 	 * @var object
 	 */
 	protected $objLanguage;
+	
+	public $showfullname;
 
 	/**
 	 * Standard init function to __construct the class
@@ -45,6 +47,8 @@ class commentapi extends object
 			$this->objLanguage = $this->getObject('language', 'language');
 			$this->objUser =  $this->getObject("user", "security");
 			$this->objDbBlog = $this->getObject("dbblog", "blog");
+			$this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            $this->showfullname = $this->sysConfig->getValue('show_fullname', 'blog');
 		}
 		catch (customException $e)
 		{
@@ -332,7 +336,14 @@ class commentapi extends object
 		}
 		if(!isset($cominfo['commentauthor']))
 		{
-			$cominfo['commentauthor'] = $this->objUser->fullname($cominfo['userid']);
+			if($this->showfullname == 'FALSE')
+            {
+            	$cominfo['commentauthor'] = $this->objUser->userName($cominfo['userid']);
+            }
+            else {
+            	$cominfo['commentauthor'] = $this->objUser->fullname($cominfo['userid']);
+            }
+			//$cominfo['commentauthor'] = $this->objUser->fullname($cominfo['userid']);
 		}
 		if(!isset($cominfo['ip']))
 		{
