@@ -47,7 +47,7 @@ class email extends absendmail implements ifsendmail
 	 * @var string Object $objBaseMail String object to hold the mailer instance
 	 *
 	 */
-	private $objBaseMail;
+	public $objBaseMail;
 
     /**
     *
