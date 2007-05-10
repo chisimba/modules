@@ -246,7 +246,7 @@ class hrwizardops extends object {
 		{
 			//echo "start";
 			$comm = $this->getObject('htmlarea','htmlelements');
-			$comm->setName('comment');
+			$comm->setName('bodytext');
 			$comm->height = 400;
 			$comm->width = 420;
 			$comm->setBasicToolBar();

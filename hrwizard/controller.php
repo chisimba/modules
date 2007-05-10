@@ -61,7 +61,7 @@ class hrwizard extends controller
             	$bodytext = $this->getParam('bodytext');
             	$file = $this->getParam('zipfile');
             	$csv = $this->getParam('csvfile');
-            	
+            
             	$pdfzip = $this->objHrOps->unpackPdfs($file);
             	$this->recarr = $this->objHrOps->parseCSV($csv);
             	
