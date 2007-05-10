@@ -19,6 +19,8 @@ class blogops extends object
 	public $objConfig;
 
 	public $mail2blog = TRUE;
+	
+	public $showfullname;
 
     /**
      * Standard init function called by the constructor call of Object
@@ -34,6 +36,8 @@ class blogops extends object
             $this->objDbBlog = $this->getObject('dbblog');
             $this->loadClass('href', 'htmlelements');
             $tt = $this->newObject('domtt', 'htmlelements');
+            $this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            $this->showfullname = $this->sysConfig->getValue('show_fullname', 'blog');
         }
         catch(customException $e) {
             echo customException::cleanUp();
@@ -93,8 +97,8 @@ class blogops extends object
         	)));
     	}
         //add rules
-        //$lform->addRule('rssurl', $this->objLanguage->languageText("mod_blog_phrase_lurlreq", "blog") , 'required');
-        //$lform->addRule('name', $this->objLanguage->languageText("mod_blog_phrase_lnamereq", "blog") , 'required');
+        $lform->addRule('lurl', $this->objLanguage->languageText("mod_blog_phrase_lurlreq", "blog") , 'required');
+        $lform->addRule('lname', $this->objLanguage->languageText("mod_blog_phrase_lnamereq", "blog") , 'required');
         //start a fieldset
         $lfieldset = $this->getObject('fieldset', 'htmlelements');
         $ladd = $this->newObject('htmltable', 'htmlelements');
@@ -104,7 +108,7 @@ class blogops extends object
         $ladd->startRow();
         $lurllabel = new label($this->objLanguage->languageText('mod_blog_lurl', 'blog') .':', 'input_lurl');
         $lurl = new textinput('lurl');
-        $lurl->size = "100%";
+        $lurl->size = "56%";
         if(isset($ldata['link_url']))
         {
         	$lurl->setValue(htmlentities($ldata['link_url'], ENT_QUOTES));
@@ -117,7 +121,7 @@ class blogops extends object
         $ladd->startRow();
         $lnamelabel = new label($this->objLanguage->languageText('mod_blog_lname', 'blog') .':', 'input_lname');
         $lname = new textinput('lname');
-        $lname->size = '100%';
+        $lname->size = '56%';
         if(isset($ldata['link_name']))
         {
         	$lname->setValue($ldata['link_name']);
@@ -130,7 +134,7 @@ class blogops extends object
         $ladd->startRow();
         $ldesclabel = new label($this->objLanguage->languageText('mod_blog_ldesc', 'blog') .':', 'input_ldesc');
         $ldesc = new textarea('ldescription');
-        $ldes->size = '100%';
+        $ldesc->setColumns(48);
         if(isset($ldata['link_description']))
         {
           	$ldesc->setValue($ldata['link_description']);
@@ -143,6 +147,7 @@ class blogops extends object
         $ladd->startRow();
         $ltargetlabel = new label($this->objLanguage->languageText('mod_blog_ltarget', 'blog') .':', 'input_ltarget');
         $ltarget = new dropdown('ltarget');
+        $ltarget->extra = ' style="width:64%;" ';
         $ltarget->addOption('_blank', $this->objLanguage->languageText("mod_blog_linktarget_blank", 'blog'));
         $ltarget->addOption('_self', $this->objLanguage->languageText("mod_blog_linktarget_self", 'blog'));
         $ltarget->addOption('_parent', $this->objLanguage->languageText("mod_blog_linktarget_parent", 'blog'));
@@ -155,12 +160,26 @@ class blogops extends object
         $ladd->startRow();
         $ltypelabel = new label($this->objLanguage->languageText('mod_blog_ltype', 'blog') .':', 'input_ltype');
         $ltype = new dropdown('ltype');
+        $ltype->extra = ' style="width:64%;" ';
         $ltype->addOption('blogroll', $this->objLanguage->languageText("mod_blog_linktype_blogroll", 'blog'));
         $ltype->addOption('bloglink', $this->objLanguage->languageText("mod_blog_linktype_bloglink", 'blog'));
         $ladd->addCell($ltypelabel->show());
         $ladd->addCell($ltype->show());
         $ladd->endRow();
 
+        //notes
+        $ladd->startRow();
+        $lnoteslabel = new label($this->objLanguage->languageText('mod_blog_lnotes', 'blog') .':', 'input_lnotes');
+        $lnotes = new textarea('lnotes');
+        $lnotes->setColumns(48);
+        if(isset($ldata['link_notes']))
+        {
+          	$ldesc->setValue($ldata['link_notes']);
+        }
+        $ladd->addCell($lnoteslabel->show());
+        $ladd->addCell($lnotes->show());
+        $ladd->endRow();
+        
         //end off the form and add the buttons
         $this->objLButton = &new button($this->objLanguage->languageText('word_save', 'system'));
         $this->objLButton->setValue($this->objLanguage->languageText('word_save', 'system'));
@@ -170,54 +189,51 @@ class blogops extends object
         $lform->addToForm($this->objLButton->show());
         $lform = $lform->show();
 
-        /*ok now the table with the edit/delete for each rss feed
-        $efeeds = $this->objDbBlog->getUserRss($this->objUser->userId());
-        $ftable = $this->newObject('htmltable', 'htmlelements');
-        $ftable->cellpadding = 3;
-        //$ftable->border = 1;
+        //ok now the table with the edit/delete for each rss feed
+        $elinks = $this->objDbBlog->getUserLinks($this->objUser->userId());
+        $eltable = $this->newObject('htmltable', 'htmlelements');
+        $eltable->cellpadding = 3;
+        //$eltable->border = 1;
         //set up the header row
-        $ftable->startHeaderRow();
-        $ftable->addHeaderCell($this->objLanguage->languageText("mod_blog_fhead_name", "blog"));
-        $ftable->addHeaderCell($this->objLanguage->languageText("mod_blog_fhead_description", "blog"));
-        $ftable->addHeaderCell('');
-        $ftable->endHeaderRow();
+        $eltable->startHeaderRow();
+        $eltable->addHeaderCell($this->objLanguage->languageText("mod_blog_lhead_name", "blog"));
+        $eltable->addHeaderCell($this->objLanguage->languageText("mod_blog_lhead_description", "blog"));
+        $eltable->addHeaderCell($this->objLanguage->languageText("mod_blog_lhead_type", "blog"));
+        $eltable->addHeaderCell('');
+        $eltable->endHeaderRow();
 
         //set up the rows and display
-        if (!empty($efeeds)) {
-            foreach($efeeds as $rows) {
-                $ftable->startRow();
-                $feedlink = new href($rows['url'], $rows['name']);
-                $ftable->addCell($feedlink->show());
-                //$ftable->addCell(htmlentities($rows['name']));
-                $ftable->addCell(($rows['description']));
+        if (!empty($elinks)) {
+            foreach($elinks as $rows) {
+                $eltable->startRow();
+                $linklink = new href($rows['link_url'], $rows['link_name']);
+                $eltable->addCell($linklink->show());
+                $eltable->addCell(($rows['link_description']));
+                $eltable->addCell(($rows['link_type']));
                 $this->objIcon = &$this->getObject('geticon', 'htmlelements');
                 $edIcon = $this->objIcon->getEditIcon($this->uri(array(
-                    'action' => 'addrss',
+                    'action' => 'addlink',
                     'mode' => 'edit',
                     'id' => $rows['id'],
-                    //'url' => $rows['url'],
-                    //'description' => $rows['description'],
                     'module' => 'blog'
                 )));
                 $delIcon = $this->objIcon->getDeleteIconWithConfirm($rows['id'], array(
                     'module' => 'blog',
-                    'action' => 'deleterss',
+                    'action' => 'deletelink',
                     'id' => $rows['id']
                 ) , 'blog');
-                $ftable->addCell($edIcon.$delIcon);
-                $ftable->endRow();
+                $eltable->addCell($edIcon.$delIcon);
+                $eltable->endRow();
             }
-            //$ftable = $ftable->show();
+            //$eltable = $eltable->show();
         }
-
-		*/
 
         if ($featurebox == TRUE) {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_linkedit", "blog") , $lform);
+            $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_linkedit", "blog") , $lform . $eltable->show());
             return $ret;
         } else {
-            return $lform;
+            return $lform . $eltable->show();
         }
     	
     }
@@ -1121,6 +1137,9 @@ class blogops extends object
         //add/delete RSS feeds
         $rssedits = new href($this->uri(array(
         	'action' => 'rssedit')) , $this->objLanguage->languageText("mod_blog_rssaddedit", "blog"));
+        //add/delete RSS feeds
+        $linksedits = new href($this->uri(array(
+        	'action' => 'linkeditor')) , $this->objLanguage->languageText("mod_blog_linksaddedit", "blog"));
         //view all other blogs
         $viewblogs = new href($this->uri(array(
             'action' => 'allblogs'
@@ -1147,6 +1166,7 @@ class blogops extends object
                     $editpost,
                     $editcats,
                     $rssedits,
+                    $linksedits,
                     $viewblogs,
                     $viewmyblog
                 );
@@ -1159,6 +1179,7 @@ class blogops extends object
                     $editpost,
                     $editcats,
                     $rssedits,
+                    $linksedits,
                     $viewblogs,
                     $viewmyblog
                 );
@@ -1174,13 +1195,13 @@ class blogops extends object
             if ($this->objUser->inAdminGroup($this->objUser->userId())) {
             	if($this->mail2blog == FALSE)
             	{
-            		$ret.= $admin->show() ."<br />". $profile->show() . "<br />" . $import->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
+            		$ret.= $admin->show() ."<br />". $profile->show() . "<br />" . $import->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$linksedits->show()."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
             	}
             	else {
-                	$ret.= $admin->show() ."<br />". $profile->show() . "<br />" . $import->show() ."<br />".$mailsetup->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
+                	$ret.= $admin->show() ."<br />". $profile->show() . "<br />" . $import->show() ."<br />".$mailsetup->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$linksedits->show()."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
             	}
             } else {
-                $ret.= $admin->show() ."<br />". $profile->show() . "<br />" .$import->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$rssedits->show() ."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
+                $ret.= $admin->show() ."<br />". $profile->show() . "<br />" .$import->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$rssedits->show() ."<br />".$linksedits->show()."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
             }
         }
         if ($featurebox == FALSE) {
@@ -1198,13 +1219,7 @@ class blogops extends object
      * @return string
      */
     public function showPosts($posts, $showsticky = FALSE)
-    {
-    	/* scriptaculous moved to default page template / no need to suppress XML*/        
-//$scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
-                      //<script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
-                      //<script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
-        //$this->appendArrayVar('headerParams',$scripts);
-        
+    {        
     	$mm = $this->getObject('parse4mindmap', 'filters');
         $this->objComments = &$this->getObject('commentapi', 'blogcomments');
         $this->objTB = $this->getObject("trackback");
@@ -1283,7 +1298,13 @@ class blogops extends object
                 	$blog_name = $bloggerprofile['blog_name']; //$this->getParam('blog_name');
                 }
                 else {
-                	$blog_name = $this->objUser->fullname($userid);
+                	if($this->showfullname == FALSE)
+                	{
+                		$blog_name = $this->objUser->userName($userid);
+                	}
+                	else {
+                		$blog_name = $this->objUser->fullname($userid);
+                	}
                 }
                 //$blog_name = $this->objUser->fullname($userid);
                 $url = $this->uri(array(
@@ -1323,7 +1344,13 @@ class blogops extends object
                 	$blog_name = $bloggerprofile['blog_name']; //$this->getParam('blog_name');
                 }
                 else {
-                	$blog_name = $this->objUser->fullname($userid);
+                	if($this->showfullname == FALSE)
+                	{
+                		$blog_name = $this->objUser->userName($userid);
+                	}
+                	else {
+                		$blog_name = $this->objUser->fullname($userid);
+                	}
                 }
                 //$blog_name = $this->objUser->fullname($userid);
                 $sender = $this->uri(array(
@@ -1461,10 +1488,6 @@ class blogops extends object
                     			   "</em><hr />".
                     			   "<center>".$tbl->show() ."</center>");
 
-                   /* $headmod = '<p id="editme">'.$head.'</p>
-<script type="text/javascript">
- new Ajax.InPlaceEditor("editme", "/demoajaxreturn.html", {rows:5,cols:60});
-</script>'; */
                     $ret.= $objFeatureBox->showContent($head, $fboxcontent);
                 } else {
                     //table of non logged in options
@@ -2473,7 +2496,14 @@ class blogops extends object
             	$link = new href($linkuri, $item['post_title']);
                 $str .= '<p>';
                 $str .= '<b>'.$link->show().'</b><br />';
-                $str .= '<font class="minute">'.$objUser->fullName($item['userid']).'</font>';
+                if($this->showfullname == FALSE)
+                {
+                	$nameshow = $this->objUser->userName($item['userid']);
+                }
+                else {
+                	$nameshow = $this->objUser->fullname($item['userid']);
+                }
+                $str .= '<font class="minute">'.$nameshow.'</font>';
                 //$str .= '<br />'.$item['post_excerpt'];
                 $str .= '<hr /></p>';
             }
@@ -2848,7 +2878,14 @@ class blogops extends object
     	$this->objUser = $this->getObject('user', 'security');
     	if($this->objUser->isLoggedIn())
 		{
-			$theuser = $this->objUser->fullName($this->objUser->userid());
+			if($this->showfullname == FALSE)
+            {
+            	$theuser = $this->objUser->userName($this->objUser->userid());
+            }
+            else {
+            	$theuser = $this->objUser->fullname($this->objUser->userid());
+            }
+			//$theuser = $this->objUser->fullName($this->objUser->userid());
 		}
 		else {
 			$theuser = $this->objLanguage->languageText("mod_blog_word_anonymous", "blog");
@@ -3078,7 +3115,14 @@ class blogops extends object
 
         $content = $prtable->show();
 
-        return $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_profileof", "blog") . " " . $this->objUser->fullName($userid), $content);
+        if($this->showfullname == FALSE)
+        {
+           	$namer = $this->objUser->userName($userid);
+        }
+        else {
+          	$namer = $this->objUser->fullname($userid);
+        }
+        return $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_profileof", "blog") . " " . $namer, $content);
 
     }
 }
