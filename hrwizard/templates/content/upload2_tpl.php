@@ -16,6 +16,7 @@ $leftCol .= $objSideBar->show();
 
 $middleColumn .= $this->objHrOps->uploadCSVFile();
 
+
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());
 $cssLayout->setRightColumnContent($rightSideColumn);
