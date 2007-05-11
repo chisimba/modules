@@ -73,7 +73,7 @@ if(!empty($rss))
 }
 
 //show the feeds section
-$leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
+//$leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
 //$rightSideColumn .= $this->objblogOps->quickPost($userid, TRUE);
 //dump the cssLayout to screen
 $cssLayout->setMiddleColumnContent($middleColumn);
