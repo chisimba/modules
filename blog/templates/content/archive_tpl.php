@@ -50,6 +50,8 @@ else {
 	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
 	//show the feeds section
 $leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
+$leftCol .= $this->objblogOps->showBlinks($userid, TRUE);
+$leftCol .= $this->objblogOps->showBroll($userid, TRUE);
 if(!empty($rss))
 {
 	foreach($rss as $feeds)

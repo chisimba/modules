@@ -61,6 +61,8 @@ else {
 }
 //show the feeds section
 $leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
+$leftCol .= $this->objblogOps->showBlinks($userid, TRUE);
+$leftCol .= $this->objblogOps->showBroll($userid, TRUE);
 $rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 
 //dump the cssLayout to screen

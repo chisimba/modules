@@ -73,7 +73,7 @@ class blogops extends object
     	$str = NULL;
     	foreach($links as $link)
     	{
-    		$hr = new href($link['link_url'], $link['link_name'], 'target="'.$link['link_target'].'"');
+    		$hr = new href($link['link_url'], $link['link_name'], 'target="'.$link['link_target'].'" alt="'.$link['link_description'].'"');
     		$str .= "<ul>".$hr->show()."</ul>";
     	}
     	
@@ -98,7 +98,7 @@ class blogops extends object
     	$str = NULL;
     	foreach($links as $link)
     	{
-    		$hr = new href($link['link_url'], $link['link_name'], 'target="'.$link['link_target'].'"');
+    		$hr = new href($link['link_url'], $link['link_name'], 'target="'.$link['link_target'].'" alt="'.$link['link_description'].'"');
     		$str .= "<ul>".$hr->show()."</ul>";
     	}
     	
