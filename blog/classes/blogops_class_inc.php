@@ -61,9 +61,54 @@ class blogops extends object
      * Methods to control blog links and blogrolls...
      */
     
-    public function showBlinks($featurebox = FALSE)
+    public function showBlinks($userid, $featurebox = FALSE)
     {
+    	$this->loadClass('href', 'htmlelements');
+    	//grab all of the links for the user
+    	$links = $this->objDbBlog->getUserLinksonly($userid);
+    	if(empty($links))
+    	{
+    		return NULL;
+    	}
+    	$str = NULL;
+    	foreach($links as $link)
+    	{
+    		$hr = new href($link['link_url'], $link['link_name'], 'target="'.$link['link_target'].'"');
+    		$str .= "<ul>".$hr->show()."</ul>";
+    	}
     	
+    	if ($featurebox == TRUE) {
+            $objFeatureBox = $this->getObject('featurebox', 'navigation');
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_links", "blog") , $str, 'bloglinks', 'none');
+            return $ret;
+        } else {
+            return $str;
+        }
+    }
+    
+    public function showBroll($userid, $featurebox = FALSE)
+    {
+    	$this->loadClass('href', 'htmlelements');
+    	//grab all of the links for the user
+    	$links = $this->objDbBlog->getUserbroll($userid);
+    	if(empty($links))
+    	{
+    		return NULL;
+    	}
+    	$str = NULL;
+    	foreach($links as $link)
+    	{
+    		$hr = new href($link['link_url'], $link['link_name'], 'target="'.$link['link_target'].'"');
+    		$str .= "<ul>".$hr->show()."</ul>";
+    	}
+    	
+    	if ($featurebox == TRUE) {
+            $objFeatureBox = $this->getObject('featurebox', 'navigation');
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_blogroll", "blog") , $str, 'blogroll', 'none');
+            return $ret;
+        } else {
+            return $str;
+        }
     }
     
     public function addBlink()

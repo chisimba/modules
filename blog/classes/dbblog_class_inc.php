@@ -994,6 +994,18 @@ class dbblog extends dbTable
     	return $this->getAll("WHERE userid = '$userid'");
     }
     
+    public function getUserLinksonly($userid)
+    {
+    	$this->_changeTable('tbl_blog_links');
+    	return $this->getAll("WHERE userid = '$userid' AND link_type='bloglink'");
+    }
+    
+    public function getUserbroll($userid)
+    {
+    	$this->_changeTable('tbl_blog_links');
+    	return $this->getAll("WHERE userid = '$userid' AND link_type='blogroll'");
+    }
+    
     public function getUserLink($id, $userid)
     {
     	$this->_changeTable('tbl_blog_links');
