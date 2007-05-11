@@ -73,8 +73,8 @@ class kmlgen extends object {
 		$str .= '<name>'.$name.'</name>';
 		$str .= '<description>'.$description.'</description>';
 		
-		$this->kml = $str;
-		return $this;
+		return $str;
+		//return $this;
 	}
 	
 	/**
@@ -98,8 +98,8 @@ class kmlgen extends object {
     	$spm .= '</Point>';
     	$spm .= '</Placemark>';
     	
-    	$this->kml .= $spm;
-    	return $this;
+    	//$this->kml .= $spm;
+    	return $spm;
 		
 	}
 	
@@ -115,8 +115,8 @@ class kmlgen extends object {
 		$suffix .= '</Document>';
 		$suffix .= '</kml>';
 		
-		$this->kml .= $suffix;
-		return $this;
+		//$this->kml .= $suffix;
+		return $suffix;
 	}
 	
 	/**
