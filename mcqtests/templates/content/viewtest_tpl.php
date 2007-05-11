@@ -9,13 +9,13 @@
 $this->setLayoutTemplate('mcqtests_layout_tpl.php');
 
 // Classes used in this module
-$objHeading = &$this->loadClass('htmlheading', 'htmlelements');
-$objTable = &$this->loadClass('htmltable', 'htmlelements');
-$objLink = &$this->loadClass('link', 'htmlelements');
-$objLayer = &$this->loadClass('layer', 'htmlelements');
-$objIcon = &$this->newObject('geticon', 'htmlelements');
-$objConfirm = &$this->loadClass('confirm', 'utilities');
-$objMsg = &$this->newObject('timeoutmessage', 'htmlelements');
+$objHeading = $this->loadClass('htmlheading', 'htmlelements');
+$objTable = $this->loadClass('htmltable', 'htmlelements');
+$objLink = $this->loadClass('link', 'htmlelements');
+$objLayer = $this->loadClass('layer', 'htmlelements');
+$objIcon = $this->newObject('geticon', 'htmlelements');
+$objConfirm = $this->loadClass('confirm', 'utilities');
+$objMsg = $this->newObject('timeoutmessage', 'htmlelements');
 
 // set up language items
 $head = $objLanguage->languageText('mod_mcqtests_test', 'mcqtests');
@@ -32,7 +32,7 @@ $questionLabel = $objLanguage->languageText('mod_mcqtests_question', 'mcqtests')
 $markLabel = $objLanguage->languageText('mod_mcqtests_mark', 'mcqtests');
 $numansLabel = $objLanguage->languageText('mod_mcqtests_numanswers', 'mcqtests');
 $actionLabel = $objLanguage->languageText('mod_mcqtests_actions', 'mcqtests');
-$lbConfirm = $objLanguage->languageText('mod_mcqtests_deletetest', 'mcqtests');
+$lbConfirm = $objLanguage->languageText('mod_mcqtests_deletequestion', 'mcqtests');
 $listLabel = ucwords($objLanguage->code2Txt('mod_mcqtests_liststudents', 'mcqtests', array(
     'readonlys' => 'students'
 )));
@@ -274,7 +274,7 @@ if (!empty($questions)) {
             'questionId' => $line['id'],
             'id' => $data['id'],
             'mark' => $line['mark']
-        )) , $lbConfirm.': '.$conQuestion.'?');
+        )) , $lbConfirm);
         $icons.= $objConfirm->show();
         // link name to edit question - shorten the question to 100 characters or the first line break
         $pos = FALSE;
