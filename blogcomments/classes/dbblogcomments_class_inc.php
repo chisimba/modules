@@ -108,7 +108,7 @@ class dbblogcomments extends dbTable
 			$objMailer->setValue('from', 'noreply@uwc.ac.za');
 			$objMailer->setValue('fromName', $this->objLanguage->languageText("mod_blog_emailfromname", "blogcomments"));
 			$objMailer->setValue('subject', $this->objLanguage->languageText("mod_blog_emailsub", "blogcomments"));
-			$objMailer->setValue('body', $bodyText);
+			$objMailer->setValue('body', strip_tags($bodyText));
 			if ($objMailer->send()) {
 		   		return TRUE;
 			} else {
