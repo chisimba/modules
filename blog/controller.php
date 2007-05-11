@@ -1926,11 +1926,64 @@ class blog extends controller
         	
         case 'addlink':
         	//do some catching and inserting
+        	$mode = $this->getParam('mode');
+        	if($mode == 'edit')
+        	{
+        		$id = $this->getParam('id');
+        		$editvars = $this->objDbBlog->getUserLink($id, $this->objUser->userId());
+        		$this->setVarByRef('editvars', $editvars);
+        		return 'bloglinks_tpl.php';
+        	}
+        	$lurl = $this->getParam('lurl');
+        	$lname = $this->getParam('lname');
+        	$ldescription = $this->getParam('ldescription');
+        	$ltarget = $this->getParam('ltarget');
+        	$ltype = $this->getParam('ltype');
+        	$lnotes = $this->getParam('lnotes');
+        	
+        	//echo $lurl, $lname, $ldescription, $ltarget, $ltype, $lnotes;
+        	
+        	//create the insert array and pop into the db
+        	$insarr = array('userid' => $this->objUser->userId(), 'link_url' => $lurl, 'link_name' => $lname,
+        					'link_image' => '', 'link_target' => $ltarget, 'link_category' => 'default', 
+        					'link_description' => $ldescription, 'link_visible' => '1', 'link_owner' => $this->objUser->userName($this->objUser->userId()), 
+        					'link_rating' => 0, 'link_updated' => time(), 'link_rel' => '', 'link_notes' => $lnotes, 'link_rss' => '', 'link_type' => $ltype);
+        					
+        	$this->objDbBlog->insertUserLink($insarr);
+        	return 'bloglinks_tpl.php';
+        	break;
+        	
+        case 'deletelink':
+        	$id = $this->getParam('id');
+        	$this->objDbBlog->deleteBlink($id);
+        	return 'bloglinks_tpl.php';
         	break;
         	
         case 'linkeditor':
         	return 'bloglinks_tpl.php';
         	break;
+        	
+        case 'linkedit':
+        	$id = $this->getParam('id');
+        	$lurl = $this->getParam('lurl');
+        	$lname = $this->getParam('lname');
+        	$ldescription = $this->getParam('ldescription');
+        	$ltarget = $this->getParam('ltarget');
+        	$ltype = $this->getParam('ltype');
+        	$lnotes = $this->getParam('lnotes');
+        	
+        	//echo $lurl, $lname, $ldescription, $ltarget, $ltype, $lnotes;
+        	
+        	//create the insert array and pop into the db
+        	$insarr = array('userid' => $this->objUser->userId(), 'link_url' => $lurl, 'link_name' => $lname,
+        					'link_image' => '', 'link_target' => $ltarget, 'link_category' => 'default', 
+        					'link_description' => $ldescription, 'link_visible' => '1', 'link_owner' => $this->objUser->userName($this->objUser->userId()), 
+        					'link_rating' => 0, 'link_updated' => time(), 'link_rel' => '', 'link_notes' => $lnotes, 'link_rss' => '', 'link_type' => $ltype);
+        	
+        	$this->objDbBlog->updateUserLink($id, $insarr);
+        	return 'bloglinks_tpl.php';
+        	break;
+        	
         }//action
 
     }

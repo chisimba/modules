@@ -20,9 +20,9 @@ else {
 	$leftCol = $leftMenu->show();
 	$leftCol .= "<br />";
 	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
-	if(!empty($ldata))
+	if(!empty($editvars))
 	{
-		$middleColumn .= $this->objblogOps->editBlinks(TRUE, $ldata);
+		$middleColumn .= $this->objblogOps->editBlinks(TRUE, $editvars);
 	}
 	else {
 		$middleColumn .= $this->objblogOps->editBlinks(TRUE);

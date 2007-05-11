@@ -175,7 +175,7 @@ class blogops extends object
         $lnotes->setColumns(48);
         if(isset($ldata['link_notes']))
         {
-          	$ldesc->setValue($ldata['link_notes']);
+          	$lnotes->setValue($ldata['link_notes']);
         }
         $ladd->addCell($lnoteslabel->show());
         $ladd->addCell($lnotes->show());

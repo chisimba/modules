@@ -52,7 +52,8 @@ $fields = array(
 		'length' => 5,
 		),
 	'link_updated' => array(
-		'type' => 'timestamp',
+		'type' => 'text',
+		'length' => 50,
 		),
 	'link_rel' => array(
 		'type' => 'text',

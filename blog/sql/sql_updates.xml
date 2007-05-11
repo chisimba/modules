@@ -97,4 +97,20 @@
 			</add>
 		</data>
 	</update>
+	<update>
+        <table>tbl_blog_links</table>
+        <version>1.29</version>
+        <description>modified timestamp field to cater for integers</description>
+        <data>
+        	<change>
+        		<link_updated>
+        		<type>text</type>
+        			<definition>
+		    			<type>text</type>
+    					<length>50</length>
+    				</definition>
+    			</link_updated>
+			</change>
+		</data>
+	</update>
 </updates>

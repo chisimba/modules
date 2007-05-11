@@ -993,6 +993,30 @@ class dbblog extends dbTable
     	$this->_changeTable('tbl_blog_links');
     	return $this->getAll("WHERE userid = '$userid'");
     }
+    
+    public function getUserLink($id, $userid)
+    {
+    	$this->_changeTable('tbl_blog_links');
+    	return $this->getAll("WHERE id = '$id' AND userid = '$userid'");
+    }
+    
+    public function insertUserLink($insarr)
+    {
+    	$this->_changeTable('tbl_blog_links');
+    	return $this->insert($insarr, 'tbl_blog_links');
+    }
+    
+    public function updateUserLink($id, $insarr)
+    {
+    	$this->_changeTable('tbl_blog_links');
+    	return $this->update('id', $id, $insarr, 'tbl_blog_links');
+    }
+    
+    public function deleteBlink($id)
+    {
+    	$this->_changeTable('tbl_blog_links');
+    	return $this->delete('id', $id, 'tbl_blog_links');
+    }
 
 
 	/**
