@@ -99,7 +99,7 @@
 	</update>
 	<update>
         <table>tbl_blog_links</table>
-        <version>1.29</version>
+        <version>1.31</version>
         <description>modified timestamp field to cater for integers</description>
         <data>
         	<change>
