@@ -108,17 +108,69 @@ class simplebuildmap extends object
     /**
      * 
     * A method to return the map Javascript as a string
+    * It also caters for different file types. Currently SMAP
+    * and KML.
     * @return string The map Javascript 
     * @access public
     * 
     */
     public function show()
     {
-    	$str = $this->insertMapLayer();
-    	$str .= $this->setupScript();
-    	$myMap = $this->getMapContents();
-    	
-		return str_replace ("[[SMAP_INSERT_HERE]]", $myMap, $str);
+
+		$fileType = $this->getFileType();
+		switch ($fileType) {
+		    case "smap":
+		    	$str = $this->insertMapLayer();
+		    	$str .= $this->setupScript();
+		    	$myMap = $this->getMapContents();
+				return str_replace ("[[SMAP_INSERT_HERE]]", $myMap, $str);
+		    	break;
+		    	
+		    case "kml":
+		    	$str = $this->insertMapLayer();
+		    	$str .= $this->setupScript();
+		    	return str_replace ("[[SMAP_INSERT_HERE]]", $this->insertKml(), $str);
+		     	break;
+		     	
+		    default:
+		    	return "<div class=\"error\">" . $this->objLanguage->languageText("mod_simplemap_error_novalidmapfile", "simplemap") 
+		    	  . ": " . $this->smap . "</div>"; 
+		    	break;
+		    	
+		}
+		
+
+    }
+    
+    /**
+    * Method to get the file type and see if its a valid file type
+    * @return boolean TRUE|FALSE TRUE if valid file type FALSE if not 
+     */
+    function getFileType()
+    {
+        $validFiles=array("smap", "kml");
+		if (isset($this->smap) && $this->smap !== "") {
+		    $ftArr = explode(".", strtolower($this->smap));
+		    if (count($ftArr) > 0) {
+			    $fileType = end($ftArr);
+				if (in_array($fileType, $validFiles)) {
+					return $fileType;
+				}
+		    } 
+		}
+		//No valid file type found
+		return NULL;
+    }
+    
+    /**
+    * Method to insert the javascript to process the KML
+    * @return string The formatted javascript for the KML 
+    */
+    function insertKml()
+    {   
+    	$ret = "var kml = new GGeoXml(\"" . $this->smap . "\");\n"
+    	  . "map.addOverlay(kml)";
+        return $ret;
     }
 
     /**
