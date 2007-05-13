@@ -57,13 +57,20 @@ class gravatar extends controller
     public function dispatch()
     {
     	$objavatar = $this->getObject("getgravatar", "gravatar");
+    	//Test with working data
     	$str = "Testing with known user: <br />" 
     	  . $objavatar->show("dkeats@uwc.ac.za") 
     	  . "<br />for dkeats@uwc.ac.za<br />" 
     	  . $objavatar->gravatarLink
-    	  . "<br /><br />Testing with user who does not exist: <br />" 
+    	  . "<br />Testing with user who does not exist: <br />" 
     	  . $objavatar->show("nopossibility@nothing.noplace") 
-    	  . "<br />for nopossibility@nothing.noplace <br />" 
+    	  . "<br />for nopossibility@nothing.noplace <br />"
+    	  . $objavatar->gravatarLink;
+    	//Test with a size setting
+    	$objavatar->avatarSize="30";
+    	$str .= "<br /><br />Testing with avatar size setting: <br />" 
+    	  . $objavatar->show("dkeats@uwc.ac.za") 
+    	  . "<br />for dkeats@uwc.ac.za<br />"
     	  . $objavatar->gravatarLink;
 		$this->setVarByRef("str", $str);
         /*

@@ -74,7 +74,7 @@ class getgravatar extends object {
     * as check settings and set parameters accordingly
     *
     */
-    function init()
+    public function init()
     {
         $this->objLanguage =& $this->getObject('language', 'language');
         //Set the URL to the gravatar site + the querystring delimiter
@@ -95,7 +95,7 @@ class getgravatar extends object {
     * @return string The rating of NULL if the ratind is NONE
     *  
     */
-    function getRating()
+    public function getRating()
     {
         $rating = $this->objConfig->getValue('mod_gravatar_rating', 'gravatar');
         if ($rating=="NONE") {
@@ -117,7 +117,7 @@ class getgravatar extends object {
     * @return string The rating of NULL if the ratind is NONE
     *  
     */
-    function getDefaultavatar()
+    public function getDefaultavatar()
     {
         $avatar = $this->objConfig->getValue('mod_gravatar_default', 'gravatar');
         if ($avatar=="DEFAULT" || $avatar=="NONE") {
@@ -133,7 +133,7 @@ class getgravatar extends object {
     * @return string The rating of NULL if the ratind is NONE
     *  
     */
-    function getavatarSize()
+    public function getAvatarSize()
     {
         $size = $this->objConfig->getValue('mod_gravatar_size', 'gravatar');
         if ($size=="DEFAULT" || $avatar=="NONE") {
@@ -153,8 +153,8 @@ class getgravatar extends object {
     public function show($email)
     {
  		$this->gravatarId = md5($email);
- 		$ret = "<img src=\"" . $this->gravatarBase ."gravatar_id="
- 		  . $this->gravatarId . "{EXTRA}\" alt=\"\" />";
+ 		$ret = $this->gravatarBase ."gravatar_id="
+ 		  . $this->gravatarId . "{EXTRA}";
  		//Determine if extra parameters should be passed
  		$extra="";
  		if ($this->rating !== NULL) {
@@ -167,7 +167,8 @@ class getgravatar extends object {
  		    $extra .= "&size=" . $this->avatarSize;
  		}
  		$ret = str_replace("{EXTRA}", $extra, $ret);
- 		$this->gravatarLink=htmlentities($ret);
+ 		$this->gravatarLink = str_replace("&", "&amp;", $ret);
+ 		$ret = "<img src=\"" . $this->gravatarLink . "\" alt=\"\" />";
         return $ret;
     }
   
