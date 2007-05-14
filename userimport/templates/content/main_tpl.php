@@ -47,9 +47,10 @@
 */
 
     //Creating the form
-    $form=&$this->newObject('form','htmlelements');
+    $this->loadClass('form', 'htmlelements');
+    $form = new form('importusers');
     $form->extra=' enctype="multipart/form-data" ';
-    $form->name='importusers';
+    //$form->name='importusers';
     $paramArray = array('action' => 'upload');
     $form->setAction($this->uri($paramArray,'userimport'));
 
@@ -68,10 +69,9 @@
     $objElement->setValue($this->objLanguage->languageText("word_upload"));
 
     //the file input
-    $fileInput2=&$this->newObject('textinput','htmlelements');
+    $fileInput2= new textinput('uploadXML');
     $fileInput2->fldType='file';
     $fileInput2->label=$this->objLanguage->languageText("mod_userimport_message4",'userimport');
-    $fileInput2->name='uploadXML';
     $fileInput2->size=60;
 
     //the submit button
