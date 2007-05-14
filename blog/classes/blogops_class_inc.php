@@ -57,6 +57,16 @@ class blogops extends object
         }
     }
     
+    public function showKML()
+    {
+    	$kml = $this->getObject('kmlgen','simplemap');
+	 	$doc = $kml->overlay('my map','a test map');
+	 	$doc .= $kml->generateSimplePlacemarker('place1', 'a place', '18.629057','-33.932922',0);
+	 	$doc .= $kml->generateSimplePlacemarker('place2', 'another place', '32.56667','0.33333',0);
+	 	$doc .= $kml->simplePlaceSuffix();
+	 	
+	 	return $doc;
+    }
     /**
      * Methods to control blog links and blogrolls...
      */
@@ -1241,21 +1251,34 @@ class blogops extends object
             if ($this->objUser->inAdminGroup($this->objUser->userId())) {
             	if($this->mail2blog == FALSE)
             	{
-            		$ret.= $admin->show() ."<br />". $profile->show() . "<br />" . $import->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$linksedits->show()."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
+            		$topper = $newpost->show() ."<br />".$editpost->show() ."<br />".$viewmyblog->show();
+            		$ret.= $admin->show() ."<br />". $profile->show() . "<br />" . $import->show() ."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$linksedits->show()."<br />".$viewblogs->show();
             	}
             	else {
-                	$ret.= $admin->show() ."<br />". $profile->show() . "<br />" . $import->show() ."<br />".$mailsetup->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$linksedits->show()."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
+            		$topper = $newpost->show() ."<br />".$editpost->show() ."<br />".$viewmyblog->show();
+                	$ret.= $admin->show() ."<br />". $profile->show() . "<br />" . $import->show() ."<br />".$mailsetup->show()."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$linksedits->show()."<br />".$viewblogs->show();
             	}
             } else {
-                $ret.= $admin->show() ."<br />". $profile->show() . "<br />" .$import->show() ."<br />".$newpost->show() ."<br />".$editpost->show() ."<br />".$editcats->show() ."<br />".$rssedits->show() ."<br />".$linksedits->show()."<br />".$viewblogs->show() ."<br />".$viewmyblog->show();
+            	$topper = $newpost->show() ."<br />".$editpost->show() ."<br />".$viewmyblog->show();
+                $ret.= $admin->show() ."<br />". $profile->show() . "<br />" .$import->show() ."<br />".$editcats->show() ."<br />".$rssedits->show() ."<br />".$linksedits->show()."<br />".$viewblogs->show();
             }
         }
         if ($featurebox == FALSE) {
             return $ret;
         } else {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_admin", "blog") , $ret, 'adminmenu', 'none');
-            return $ret;
+            /* scriptaculous moved to default page template / no need to suppress XML*/        
+        	//$this->setVar('pageSuppressXML',true);
+        	$objIcon =&$this->getObject('geticon', 'htmlelements');
+  			$objIcon->setIcon('toggle');
+        	
+  			$str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('adminmenu','slide', adjustLayout());\">".$objIcon->show()."</a>";
+        	$str .='<div id="adminmenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
+        	$str .= $ret;
+        	$str .= '</div>';
+
+            $box = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_admin", "blog") , $topper."<br />". $str);
+            return $box;
         }
     }
     /**
