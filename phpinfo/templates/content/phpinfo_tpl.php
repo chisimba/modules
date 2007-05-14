@@ -19,6 +19,7 @@ ob_start();
 phpinfo();
 $str = ob_get_contents();
 ob_end_clean();
+$str = str_replace('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">',"", $str);
 $str = str_replace("<html>", "", $str);
 $str = str_replace("<head>", "", $str);
 $str = str_replace("</html>", "", $str);
