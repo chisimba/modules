@@ -10,7 +10,8 @@
 	$this->loadClass("textarea","htmlelements");
 	$this->loadClass("button","htmlelements");
 	$this->loadClass("textinput","htmlelements");
-	$objLabel =& $this->newObject('label', 'htmlelements');
+	$this->loadClass("label", "htmlelements");
+	//$objLabel =& $this->newObject('label', 'htmlelements');
 	
 	
 	$form = new form("comment", 
