@@ -61,7 +61,7 @@ class email extends controller
         $this->objGroups = & $this->newObject('managegroups', 'contextgroups');
         $this->objGroupAdmin = &$this->newObject('groupadminmodel', 'groupadmin');
         $this->objContext = &$this->newObject('dbcontext', 'context');
-        $this->objDate = &$this->newObject('datetime', 'utilities');
+        $this->objDate = &$this->newObject('dateandtime', 'utilities');
         $this->objConfig = &$this->newObject('altconfig', 'config');
         $this->noSubject = $this->objLanguage->languageText('phrase_nosubject');
 
