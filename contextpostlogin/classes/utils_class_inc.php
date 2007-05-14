@@ -24,10 +24,10 @@ class utils extends object
     public function init()
     {
        
-          $this->_objContextModules = & $this->newObject('dbcontextmodules', 'context');
-	      $this->_objLanguage = & $this->newObject('language', 'language');
-	      $this->_objUser = & $this->newObject('user', 'security');
-	      $this->_objDBContext = & $this->newObject('dbcontext', 'context');
+          $this->_objContextModules = $this->newObject('dbcontextmodules', 'context');
+	      $this->_objLanguage = $this->newObject('language', 'language');
+	      $this->_objUser = $this->newObject('user', 'security');
+	      $this->_objDBContext = $this->newObject('dbcontext', 'context');
     }
     
     /**
@@ -256,10 +256,10 @@ class utils extends object
 	      }
 	      $str1 .= '<br/>'. $heading ;
 	      
-	      $data = 'My Site groups:  <span class="highlight">'.$str1.'</span>';
+	      $data = $this->_objLanguage->code2Txt('phrase_mysitegroups').':  <span class="highlight">'.$str1.'</span>';
 	      if(strlen($str) > 0)
 	      {
-         $data1 = 'My Courses as (lecturer) <span class="highlight">'.$str.'</span>';
+         $data1 = $this->_objLanguage->code2Txt('mod_contextpostlogin_mycourseslect', 'contextpostlogin').' <span class="highlight">'.$str.'</span>';
          }
          else
          {
@@ -268,7 +268,7 @@ class utils extends object
          
          if(strlen($str2) > 0)
          {
-         $data2 = 'My Courses as (students) <span class="highlight">'.$str2.'</span>';
+         $data2 = $this->_objLanguage->code2Txt('mod_contextpostlogin_mycoursesstudent', 'contextpostlogin').' <span class="highlight">'.$str2.'</span>';
          }
          else
          {

@@ -1,12 +1,12 @@
 <?php
 
-$tabBox = & $this->newObject('tabpane', 'htmlelements');
-$featureBox = & $this->newObject('featurebox', 'navigation');
-$objLink =  & $this->newObject('link', 'htmlelements');
-$icon =  & $this->newObject('geticon', 'htmlelements');
-$table = & $this->newObject('htmltable', 'htmlelements');
-$domtt = & $this->newObject('domtt', 'htmlelements');
-$objContextGroups = & $this->newObject('onlinecount', 'contextgroups');
+$tabBox = $this->newObject('tabpane', 'htmlelements');
+$featureBox = $this->newObject('featurebox', 'navigation');
+$objLink = $this->newObject('link', 'htmlelements');
+$icon = $this->newObject('geticon', 'htmlelements');
+$table = $this->newObject('htmltable', 'htmlelements');
+$domtt = $this->newObject('domtt', 'htmlelements');
+$objContextGroups = $this->newObject('onlinecount', 'contextgroups');
 
 $str = '';
 $other = '';
@@ -34,10 +34,10 @@ if (count($contextList) > 0)
 
 			}
 		} else {
-			$lects = 'No Instructor for this course';
+			$lects = $this->_objLanguage->code2Txt('mod_contextpostlogin_nolectforcourse', 'contextpostlogin'); //'No Instructor for this course';
 		}
 
-		$content = '<span class="caption">Instructors : '.$lects.'</span>';
+		$content = '<span class="caption">'.$this->_objLanguage->code2Txt('word_lecturers').' : '.$lects.'</span>';// Instructors
 		$content .= '<p>'.stripslashes($context['about']).'</p>';
 		$content .= '<p>'.$this->_objUtils->getPlugins($context['contextcode']).'</p>';
 
@@ -48,12 +48,12 @@ if (count($contextList) > 0)
 		{
 		    $objLink->href = $this->uri(array('action' => 'leavecontext','contextCode'=>$contextCode), 'context');
 		    $icon->setIcon('leavecourse');
-		    $icon->alt = 'Leave Course';
+		    $icon->alt = $this->_objLanguage->code2Txt('phrase_leavecourse'); //'Leave Course';
     		$objLink->link = $icon->show();
 		} else {
 		    $objLink->href = $this->uri(array('action' => 'joincontext','contextCode'=>$contextCode), 'context');
     		$icon->setIcon('entercourse');
-    		$icon->alt = 'Enter Course';
+    		$icon->alt = $this->_objLanguage->code2Txt('phrase_entercourse'); //'Enter Course';
     		$objLink->link =$icon->show();
 		}
 		$title = $objLink->show();
@@ -63,12 +63,13 @@ if (count($contextList) > 0)
 		$str .= $featureBox->show($title, $content ).'<hr />';
 	}
 } else {
-	$str .= '<div align="center" style="font-size:large;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">You are not associated with any courses</div>';
+	$str .= '<div align="center" style="font-size:large;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">'.
+	$this->_objLanguage->code2Txt('mod_contextpostlogin_notassocanycourses', 'contextpostlogin').'</div>';//You are not associated with any courses
 }
 
 
 //public courses
-$other = $featureBox->show('Browse Courses', $filter);
+$other = $featureBox->show($this->_objLanguage->code2Txt('phrase_browsecourses'), $filter); //'Browse Courses'
 
 if(count($otherCourses) > 0)
 {
@@ -109,10 +110,10 @@ if(count($otherCourses) > 0)
 
 			}
 		} else {
-			$lects = 'No Instructor for this course';
+			$lects = $this->_objLanguage->code2Txt('mod_contextpostlogin_nolectforcourse', 'contextpostlogin'); //'No Instructor for this course';
 		}
 
-		$content = '<span class="caption">Instructors : '.$lects.'</span>';
+		$content = '<span class="caption">'.$this->_objLanguage->code2Txt('word_lecturers').' : '.$lects.'</span>';
 		$content .= '<p>'.$context['about'].'</p>';
 		$content .= '<p>'.$this->_objUtils->getPlugins($context['contextcode']).'</p>';
 
@@ -120,7 +121,7 @@ if(count($otherCourses) > 0)
 		//link to join the context
 		$objLink->href = $this->uri(array('action' => 'joincontext','contextCode'=>$context['contextcode']), 'context');
 		$icon->setIcon('leavecourse');
-		$icon->alt = 'Enter Course '.$context['title'];
+		$icon->alt = $this->_objLanguage->code2Txt('phrase_entercourse').' '.$context['title'];
 		$objLink->link = $icon->show();
 
 
@@ -139,12 +140,12 @@ if(count($otherCourses) > 0)
 
         //formulate the message for the mouseover
 		$mes = '';
-		$mes .= ($context['access'] != '') ?  'Access : <span class="highlight">'.$context['access'].'</span>' : '' ;
-		$mes .= ($context['startdate'] != '') ? '<br/>Start Date : <span class="highlight">'.$context['startdate'].'</span>'  : '';
-		$mes .= ($context['finishdate'] != '') ? '<br/>Finish Date : <span class="highlight">'.$context['finishdate'].'</span>'  : '';
-		$mes .= ($lects != '') ? '<br/>Lecturers : <span class="highlight">'.$lects.'</span>'  : '';
+		$mes .= ($context['access'] != '') ?  $this->_objLanguage->code2Txt('word_access').' : <span class="highlight">'.$context['access'].'</span>' : '' ;
+		$mes .= ($context['startdate'] != '') ? '<br/>'.$this->_objLanguage->code2Txt('phrase_startdate').' : <span class="highlight">'.$context['startdate'].'</span>'  : '';
+		$mes .= ($context['finishdate'] != '') ? '<br/>'.$this->_objLanguage->code2Txt('phrase_finishdate').' : <span class="highlight">'.$context['finishdate'].'</span>'  : '';
+		$mes .= ($lects != '') ? '<br/>'.$this->_objLanguage->code2Txt('word_lecturers').' : <span class="highlight">'.$lects.'</span>'  : '';
 		$scnt = $objContextGroups->getUserCount($context['contextcode']);
-		$mes .= ($scnt > 0) ? '<br />No. Registered Students : <span class="highlight">'.$scnt.'</span>' : '';
+		$mes .= ($scnt > 0) ? '<br />'.$this->_objLanguage->code2Txt('mod_contextpostlogin_numregstudents', 'contextpostlogin').' : <span class="highlight">'.$scnt.'</span>' : '';
 		$mes = htmlentities($mes);
 
 		$info = $domtt->show(htmlentities($context['title']),$mes,$icon->show());
@@ -163,12 +164,13 @@ if(count($otherCourses) > 0)
 	$other .='<hr />'.$featureBox->show('Courses', $table->show() );
 }else {
 
-	$other .= '<div align="center" style="font-size:large;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">No Public or Open Courses is available</div>';
+	$other .= '<div align="center" style="font-size:large;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">'.
+	$this->_objLanguage->code2Txt('mod_contextpostlogin_nopublicopencourses', 'contextpostlogin').'</div>';
 }
 
-$tabBox->addTab(array('name'=>'My Courses','content' => $str));
+$tabBox->addTab(array('name'=> $this->_objLanguage->code2Txt('phrase_mycourses'),'content' => $str));
 
-$tabBox->addTab(array('name'=>'Other Courses','content' => $other));
+$tabBox->addTab(array('name'=> $this->_objLanguage->code2Txt('phrase_othercourses'),'content' => $other));
 echo $tabBox->show();
 
 ?>
