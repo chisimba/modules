@@ -3006,7 +3006,8 @@ class blogops extends object
         $mtable->endRow();
 
         //add a rule
-        $mform->addRule('emailadd', $this->objLanguage->languageText("mod_blog_phrase_femailreq", "blog") , 'required');
+        $mform->addRule('emailadd', $this->objLanguage->languageText("mod_blog_phrase_femailreq", "blog") , 'email');
+        
         $mfieldset->addContent($mtable->show());
         $mform->addToForm($mfieldset->show());
         $this->objMButton = new button($this->objLanguage->languageText('mod_blog_word_sendmail', 'blog'));
