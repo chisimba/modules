@@ -783,7 +783,7 @@ class blog extends controller
                 $userid = $this->getParam('userid');
                 $bloggerprofile = $this->objDbBlog->checkProfile($userid);
                 //grab the feed items
-                $posts = $this->objDbBlog->getAllPosts($userid, $catid = NULL);
+                $posts = $this->objDbBlog->getPostsMonthly(mktime(0,0,0,date("m", time()), 1, date("y", time())),$userid); //, $catid = NULL);
 
                 //set up the feed...
                 //who's blog is this?

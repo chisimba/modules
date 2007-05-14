@@ -2574,7 +2574,7 @@ class blogops extends object
                 }
                 $str .= '<font class="minute">'.$nameshow.'</font>';
                 //$str .= '<br />'.$item['post_excerpt'];
-                $str .= '<hr /></p>';
+                $str .= '</p>';
             }
         }
                 
