@@ -117,11 +117,12 @@ class cms extends controller
         */
         public function init()
         {
-            // instantiate the database object for sections
-            $this->_objSections = $this->getObject('dbsections', 'cmsadmin');
+        	try {
+            	// instantiate the database object for sections
+            	$this->_objSections = $this->getObject('dbsections', 'cmsadmin');
             
-            $this->objLayout = $this->getObject('cmslayouts', 'cms');
-            $this->rss = $this->getObject('dblayouts','cmsadmin');
+            	$this->objLayout = $this->getObject('cmslayouts', 'cms');
+            	$this->rss = $this->getObject('dblayouts','cmsadmin');
             //feed creator subsystem
             $this->objFeedCreator = &$this->getObject('feeder', 'feed');
             // instantiate the database object for content
@@ -150,9 +151,17 @@ class cms extends controller
             	//   the inContextMode property of this object
                 $this->inContextMode = FALSE;
             }
+            
             //Get the activity logger class and log this module call
             $objLog = $this->getObject('logactivity', 'logger');
             $objLog->log();
+            
+        	}
+        	catch (customException $e)
+        	{
+        		customException::cleanUp();
+        		exit;
+        	}
         }
 
         /**
@@ -212,6 +221,7 @@ class cms extends controller
         				//put it all together
         				//get the pdfmaker classes
         				$objPdf = $this->getObject('fpdfwrapper','pdfmaker');
+        				
         				$text = $header . "  " . $pagedate . "\r\n" . strip_tags($body);
         				$objPdf->simplePdf($text);
         				break;
