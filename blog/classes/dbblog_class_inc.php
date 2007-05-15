@@ -539,7 +539,8 @@ class dbblog extends dbTable
 							'showpdf' => $postarr['showpdf']);
 
 			$insarr['id'] = $this->insert($insarr, 'tbl_blog_posts');
-			return $this->luceneIndex($insarr);
+			//return $this->luceneIndex($insarr);
+			return TRUE;
 		}
 		if($mode == 'editpost')
 		{
@@ -564,7 +565,8 @@ class dbblog extends dbTable
 							'showpdf' => $postarr['showpdf']);
 
 			$this->update('id',$postarr['id'], $edarr, 'tbl_blog_posts');
-			return $this->luceneReIndex($postarr);
+			//return $this->luceneReIndex($postarr);
+			return TRUE;
 		}
 		if($mode == 'import')
 		{
@@ -586,7 +588,8 @@ class dbblog extends dbTable
 							'post_lic' => $postarr['cclic']);
 
 			$imparr['id'] = $this->insert($imparr, 'tbl_blog_posts');
-			return $this->luceneIndex($imparr);
+			//return $this->luceneIndex($imparr);
+			return TRUE;
 
 		}
 		if($mode == 'mail')
@@ -610,7 +613,8 @@ class dbblog extends dbTable
 							'post_lic' => $postarr['cclic']);
 
 			$mparr['id'] = $this->insert($mparr, 'tbl_blog_posts');
-			return $this->luceneIndex($mparr);
+			//return $this->luceneIndex($mparr);
+			return TRUE;
 		}
 		else {
 			//$this->epcleaner = $this->newObject('htmlcleaner', 'utilities');
@@ -632,7 +636,8 @@ class dbblog extends dbTable
 							'showpdf' => $postarr['showpdf']);
 
 			$this->update('id',$postarr['id'], $inseditarr, 'tbl_blog_posts');
-			return $this->luceneReIndex($postarr);
+			//return $this->luceneReIndex($postarr);
+			return TRUE;
 		}
 	}
 

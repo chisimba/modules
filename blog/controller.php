@@ -1193,7 +1193,7 @@ class blog extends controller
                 else {
                 	$showpdf = 0;
                 }
-                
+                /*
                 //set up for Google Blog API
                 $changesURL = $this->uri(array('module' => 'blog', 'action' => 'feed', 'userid' => $userid));
                 $name = $this->objUser->fullname($userid) . " Chisimba blog";
@@ -1239,7 +1239,7 @@ class blog extends controller
                         log_debug("Google blogs API Failure! Google said: " . $code);
                         break;
                 }
-				
+				*/
                 //post quick add
                 if($mode == 'quickadd')
                 {
@@ -1431,7 +1431,7 @@ class blog extends controller
                 }
                 
                 //check for trackback spam
-                require_once 'Net/DNSBL.php';
+                require_once $this->getPearResource('Net/DNSBL.php');
 				$dnsbl = new Net_DNSBL();
 				$remoteIP = $pd['host'];
 				
