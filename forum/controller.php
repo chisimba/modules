@@ -1859,18 +1859,19 @@ class forum extends controller
             // Check if we are deleting a tangent.
             if ($topicInfo['topic_tangent_parent'] != '0') {
                 $results = $this->objTopic->deleteTopic($_POST['id']);
+                $this->objForum->updateForumAfterDelete($topicInfo['forum_id']);
                 return $this->nextAction('viewtopic', array('id'=>$topicInfo['topic_tangent_parent'], 'message'=>'tangentdeleted'));
             } else { // Deleting a topic with tangents
                 if (isset($_POST['tangentoption']) && $_POST['tangentoption'] == 'delete') {
                     $results = $this->objTopic->deleteTopic($_POST['id']);
                     $results = $this->objTopic->deleteTangents($_POST['id']);
-                    
+                    $this->objForum->updateForumAfterDelete($topicInfo['forum_id']);
                     return $this->nextAction('forum', array('id'=>$topicInfo['forum_id'], 'message'=>'topictangentsdeleted'));
                 } else if (isset($_POST['tangentoption']) && $_POST['tangentoption'] == 'move') {
 
                     $this->objTopic->moveTangentsToAnotherTopic($_POST['id'], $_POST['topicmove']);
                     $results = $this->objTopic->deleteTopic($_POST['id']);
-                    
+                    $this->objForum->updateForumAfterDelete($topicInfo['forum_id']);
                     return $this->nextAction('forum', array('id'=>$topicInfo['forum_id'], 'message'=>'topicdeletedtangentsmoved'));
                     
                 } else if (isset($_POST['tangentoption']) && $_POST['tangentoption'] == 'newtopic') {
@@ -1881,6 +1882,7 @@ class forum extends controller
                     
                 } else { // Simply delete topic - has no tangents
                     $results = $this->objTopic->deleteTopic($_POST['id']);
+                    $this->objForum->updateForumAfterDelete($topicInfo['forum_id']);
                     return $this->nextAction('forum', array('id'=>$topicInfo['forum_id'], 'message'=>'topicdeleted'));
                 }
             }
@@ -2434,7 +2436,8 @@ class forum extends controller
         
         if ($_POST['confirmdelete'] == 'Y') {
             $this->objPost->deletePostAndReplies($_POST['id']);
-            
+            $this->objTopic->updateTopicAfterDelete($post['topic_id']);
+            $this->objForum->updateForumAfterDelete($post['forum_id']);
             return $this->nextAction('viewtopic', array('id'=>$post['topic_id'], 'message'=>'posthasbeendeleted'));
             
         } else {

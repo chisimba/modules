@@ -67,8 +67,8 @@ echo $changeDisplayForm;
 
 if ($post['status'] =='CLOSE') {
     echo '<div class="forumTangentIndent">';
-    echo '<strong>'.$this->objLanguage->languageText('mod_forum_topiclockedby', 'forum').' '.$this->objUser->fullname($post['lockuser']).' on '.formatdate($post['lockdate']).'</strong>';
-    echo '<p>'.$post['lockReason'].'</p>';
+    echo '<strong>'.$this->objLanguage->languageText('mod_forum_topiclockedby', 'forum').' '.$this->objUser->fullname($post['lockuser']).' on '.$this->objDateTime->formatdate($post['lockdate']).'</strong>';
+    echo '<p>'.$post['lockreason'].'</p>';
     echo '</div>';
 }
 

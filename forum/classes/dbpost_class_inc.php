@@ -1525,6 +1525,32 @@ function loadTranslation(post, lang) {
     
     }
     
+    /**
+    * Method to get the last post in a topic
+    * @param string $topicid Record Id of the Topic
+    * @return string Record Id of the last post
+    */
+    function getLastTopicPost($topicid)
+    {
+        $results = $this->getAll(' WHERE topic_id = "'.$topicid.'" ORDER BY tbl_forum_post.dateLastUpdated DESC LIMIT 1');
+        
+        if (count($results) == 0) {
+            return FALSE;
+        } else {
+            return $results[0]['id'];
+        }
+    }
+    
+    /**
+    * Method to get the amount of posts in a topic
+    * @param string $topicid Record Id of the Topic
+    * @return int Number of Posts
+    */
+    function getNumPostsInTopic($topicid)
+    {
+        return $this->getRecordCount(' WHERE topic_id = "'.$topicid.'"');
+    }
+    
 	
 }
 

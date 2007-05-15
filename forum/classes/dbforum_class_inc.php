@@ -531,6 +531,98 @@ class dbForum extends dbTable
         
     }
     
+    /**
+    * Method to update the last post and number of topics/posts in a forum after deleting a topic/post
+    * @param string $forum_id Record Id of the Forum
+    * @return boolean Result of Update
+    */
+    function updateForumAfterDelete($forum_id)
+    {
+        
+        $lastPost = $this->getLastForumPost($forum_id);
+        $numPosts = $this->getNumPostsInForum($forum_id);
+        
+        $lastPost = ($lastPost == FALSE) ? NULL : $lastPost;
+        
+        $lastTopic = $this->getLastForumTopic($forum_id);
+        $numTopic = $this->getNumTopicsInForum($forum_id);
+        
+        $lastTopic = ($lastTopic == FALSE) ? NULL : $lastTopic;
+        
+        $this->update('id', $forum_id, array('lastpost'=>$lastPost, 'post'=>$numPosts, 'lasttopic'=>$lastTopic, 'topics'=>$numTopic));
+        
+    }
+    
+    /**
+    * Method to get the number of posts in a forum
+    * @param string $forumId Record Id of the Forum
+    * @return int Number of Posts
+    */
+    function getNumPostsInForum($forumId)
+    {
+        $sql = 'SELECT tbl_forum_post.id FROM tbl_forum_post 
+        INNER JOIN tbl_forum_topic ON ( tbl_forum_post.topic_id = tbl_forum_topic.id) 
+        WHERE tbl_forum_topic.forum_id = "'.$forumId.'" ';
+        
+        $results = $this->getArray($sql);
+        
+        return count($results);
+    }
+    
+    /**
+    * Method to get the last post in a forum
+    * @param string $forumId Record Id of the Forum
+    * @return string Record Id of Last Post
+    */
+    function getLastForumPost($forumId)
+    {
+        $sql = 'SELECT tbl_forum_post.id FROM tbl_forum_post 
+        INNER JOIN tbl_forum_topic ON ( tbl_forum_post.topic_id = tbl_forum_topic.id) 
+        WHERE tbl_forum_topic.forum_id = "'.$forumId.'" ORDER BY tbl_forum_post.dateLastUpdated DESC LIMIT 1';
+        
+        $results = $this->getArray($sql);
+        
+        if (count($results) == 0) {
+            return FALSE;
+        } else {
+            return $results[0]['id'];
+        }
+    }
+    
+    /**
+    * Method to get the number of topics in a forum
+    * @param string $forumId Record Id of the Forum
+    * @return int Number of Topics
+    */
+    function getNumTopicsInForum($forumId)
+    {
+        $sql = 'SELECT tbl_forum_topic.id FROM tbl_forum_topic 
+        WHERE tbl_forum_topic.forum_id = "'.$forumId.'" ';
+        
+        $results = $this->getArray($sql);
+        
+        return count($results);
+    }
+    
+    /**
+    * Method to get the last topic in a forum
+    * @param string $forumId Record Id of the Forum
+    * @return string Record Id of Last Topic
+    */
+    function getLastForumTopic($forumId)
+    {
+        $sql = 'SELECT tbl_forum_topic.id FROM tbl_forum_topic 
+        WHERE tbl_forum_topic.forum_id = "'.$forumId.'" ORDER BY tbl_forum_topic.dateLastUpdated DESC LIMIT 1';
+        
+        $results = $this->getArray($sql);
+        
+        if (count($results) == 0) {
+            return FALSE;
+        } else {
+            return $results[0]['id'];
+        }
+    }
+    
     
  }
  ?>

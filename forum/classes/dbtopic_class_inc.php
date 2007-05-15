@@ -645,9 +645,33 @@ GROUP BY tbl_forum_topic.id                ';
         return $numPages;
     }
     
+    /**
+    * Method to move a topic to another forum
+    * @param string $id Record Id of the Topic
+    * @param string $forum Record Id of the new forum
+    * @return boolean result of move
+    */
     function switchTopicForum($id, $forum)
     {
         return $this->update('id', $id, array('forum_id' => $forum));
+    }
+    
+    /**
+    * Method to update the last post and replies value of a topic after deleting a post
+    * @param string $topic_id Record Id of the Topic
+    */
+    function updateTopicAfterDelete($topic_id)
+    {
+        $lastPost = $this->objPost->getLastTopicPost($topic_id);
+        $numPosts = $this->objPost->getNumPostsInTopic($topic_id);
+        
+        if ($numPosts == 0) {
+            $numPosts = 1;
+        }
+        
+        if ($lastPost != '' && $lastPost != FALSE) {
+            $this->update('id', $topic_id, array('last_post'=>$lastPost, 'replies'=>$numPosts-1));
+        }
     }
     
  }

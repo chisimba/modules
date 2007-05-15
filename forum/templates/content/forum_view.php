@@ -90,7 +90,7 @@ if ($topicsNum > 0)
 $tblTopic->startHeaderRow();
         
         
-        $tblTopic->addHeaderCell($this->objForum->forumSortLink ($forumid, 'status', $this->objLanguage->languageText('word_status', 'forum')), '30', 'center');
+        $tblTopic->addHeaderCell($this->objForum->forumSortLink ($forumid, 'status', $this->objLanguage->languageText('word_status', 'forum', 'Status')), '30', 'center');
         
         // --------------
         
@@ -100,7 +100,7 @@ $tblTopic->startHeaderRow();
         // --------------
         
 		
-		$tblTopic->addHeaderCell($this->objForum->forumSortLink ($forumid, 'type', $this->objLanguage->languageText('word_type', 'forum')), '30', 'center');
+		$tblTopic->addHeaderCell($this->objForum->forumSortLink ($forumid, 'type', $this->objLanguage->languageText('word_type', 'forum', 'Type')), '30', 'center');
         
         // --------------
         
