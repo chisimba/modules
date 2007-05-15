@@ -57,7 +57,7 @@ class datepickajax extends object
     {
         $this->objLanguage = &$this->getObject('language', 'language');
         $this->objIcon = &$this->getObject('geticon', 'htmlelements');
-        $this->objDate = &$this->newObject('datetime', 'utilities');
+        $this->objDate = &$this->newObject('dateandtime', 'utilities');
 //        $this->loadClass('xajax', 'ajaxwrapper');
 //        $this->loadClass('xajaxresponse', 'ajaxwrapper');
         $this->loadClass('link', 'htmlelements');
