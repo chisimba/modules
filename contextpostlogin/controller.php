@@ -26,6 +26,7 @@ class contextpostlogin extends controller
 	      $this->_objUtils = $this->newObject('utils', 'contextpostlogin');
 	      $this->_objLanguage = $this->newObject('language', 'language');
 	      $this->_objUser = $this->newObject('user', 'security');
+	      $this->_objModules = $this->newObject('modules', 'modulecatalogue');
 	      $this->_objDBContext = $this->newObject('dbcontext', 'context');
 	      $this->_objDBContextUtils = $this->newObject('utilities', 'context');
 	  }

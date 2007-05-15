@@ -173,4 +173,11 @@ $tabBox->addTab(array('name'=> $this->_objLanguage->code2Txt('phrase_mycourses')
 $tabBox->addTab(array('name'=> $this->_objLanguage->code2Txt('phrase_othercourses'),'content' => $other));
 echo $tabBox->show();
 
+// Add postlogin stories below the tabbed box
+
+if($this->_objModules->checkIfRegistered('stories')){
+    $objStories = $this->getObject('sitestories','stories');
+    echo '<br />'.$objStories->fetchCategory('postlogin');
+}
+
 ?>
