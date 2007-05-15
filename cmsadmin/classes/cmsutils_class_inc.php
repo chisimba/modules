@@ -1793,8 +1793,8 @@ class cmsutils extends object
             //the title
             $titleInput = new textinput('title',null,null,30);
             $menuTextInput = new textinput('menutext',null,null,30);
-            $objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
-            $objForm->addRule('menutext', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddmenutext', 'cmsadmin'), 'required');
+            //$objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
+            //$objForm->addRule('menutext', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddmenutext', 'cmsadmin'), 'required');
             //$button->setToSubmit();
             $button->name = 'save';
             $button->id = 'save';
@@ -2172,7 +2172,8 @@ class cmsutils extends object
 				</style>');
             }
 
-            $objOrdering =$this->newObject('textinput', 'htmlelements');
+            //$objOrdering =$this->newObject('textinput', 'htmlelements');
+            $objOrdering = new textinput();
 
 
             $objCCLicence = $this->newObject('licensechooser', 'creativecommons');
@@ -2231,9 +2232,10 @@ class cmsutils extends object
             }
            
             $table = new htmltable();
-
+			$this->loadClass('textinput', 'htmlelements');
             // Title Input
             $titleInput = new textinput ('title', $titleInputValue);
+            $titleInput->cssId = 'title_input'; 
             $titleInput->extra = ' style="width: 50%"';
             
             $table->startRow();
@@ -2278,7 +2280,7 @@ class cmsutils extends object
             $table->endRow();
 
             $objForm->addToForm($table->show());
-            $objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
+            //$objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
 
 
             $h3 = $this->newObject('htmlheading', 'htmlelements');
@@ -2507,8 +2509,8 @@ class cmsutils extends object
         	)));
     	}
         //add rules
-        $rssform->addRule('rssurl', $this->objLanguage->languageText("mod_cms_phrase_rssurlreq", "cmsadmin") , 'required');
-        $rssform->addRule('name', $this->objLanguage->languageText("mod_cms_phrase_rssnamereq", "cmsadmin") , 'required');
+        //$rssform->addRule('rssurl', $this->objLanguage->languageText("mod_cms_phrase_rssurlreq", "cmsadmin") , 'required');
+        //$rssform->addRule('name', $this->objLanguage->languageText("mod_cms_phrase_rssnamereq", "cmsadmin") , 'required');
         //start a fieldset
         $rssfieldset = $this->getObject('fieldset', 'htmlelements');
         $rssadd = $this->newObject('htmltable', 'htmlelements');
@@ -2655,7 +2657,7 @@ class cmsutils extends object
         $table->addCell($titleInput->show(), NULL, NULL, NULL, NULL, ' colspan="3"');
         $table->endRow();
         $objForm->addToForm($table->show());
-        $objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
+        //$objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
 
 
         //body
