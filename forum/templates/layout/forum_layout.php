@@ -2,8 +2,8 @@
 <?php
 if($this->contextObject->isInContext())
 {
-    $objContextUtils = & $this->getObject('utilities','context');
-    echo $objContextUtils->getHiddenContextMenu('forum','none');
+    //$objContextUtils = $this->getObject('utilities','context');
+    //echo $objContextUtils->getHiddenContextMenu('forum','none');
      
 }
 echo $this->getContent(); 
