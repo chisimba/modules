@@ -27,6 +27,7 @@ class utils extends object
           $this->_objContextModules = $this->newObject('dbcontextmodules', 'context');
 	      $this->_objLanguage = $this->newObject('language', 'language');
 	      $this->_objUser = $this->newObject('user', 'security');
+	      $this->_objModules = $this->newObject('modules', 'modulecatalogue');
 	      $this->_objDBContext = $this->newObject('dbcontext', 'context');
     }
     
@@ -290,7 +291,14 @@ class utils extends object
 	  public function getRightContent()
 	  {
 	     $rightSideColumn = "";
-	     $objBlocks = & $this->newObject('blocks', 'blocks');
+	     $objBlocks = $this->newObject('blocks', 'blocks');
+	     
+	    // Add postlogin stories
+        if($this->_objModules->checkIfRegistered('stories')){
+            $objStories = $this->getObject('sitestories','stories');
+            $rightSideColumn .= $objStories->fetchCategory('postlogin');
+        }
+	     
 		//Add the getting help block
 		$rightSideColumn .= $objBlocks->showBlock('dictionary', 'dictionary');
 		//Add the latest in blog as a a block
@@ -306,6 +314,8 @@ class utils extends object
 		//Put a wikipedia search
 		$rightSideColumn .= $objBlocks->showBlock('wikipedia', 'websearch');
 		//Put a dictionary lookup
+		
+		
 		
 		return $rightSideColumn;
 	  } 
