@@ -33,7 +33,7 @@ class dbStatistics extends dbTable
         $this->objUserStats =& $this->getObject('dbuserstats', 'sitestats');  
         $this->objLoginHistory =& $this->getObject('dbloginhistory', 'userstats');
         $this->objIpCountry =& $this->getObject('iptocountry', 'utilities');
-        $this->objDate =& $this->getObject('datetime', 'utilities');
+        $this->objDate =& $this->getObject('dateandtime', 'utilities');
         
         $this->objHead =& $this->newObject('htmlheading', 'htmlelements');
         $this->objLayer =& $this->newObject('layer', 'htmlelements');

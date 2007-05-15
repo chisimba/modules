@@ -50,7 +50,7 @@ class submit extends object
             $this->objLangCode = $this->getObject('languagecode', 'language');
             $this->objConfig = $this->getObject('altconfig', 'config');
             $this->objUser = $this->getObject('user', 'security');
-            $this->objDate = $this->getObject('datetime', 'utilities');
+            $this->objDate = $this->getObject('dateandtime', 'utilities');
     
             $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
             $this->objHead = $this->newObject('htmlheading', 'htmlelements');
