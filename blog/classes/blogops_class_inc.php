@@ -114,7 +114,7 @@ class blogops extends object
     	
     	if ($featurebox == TRUE) {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_blogroll", "blog") , $str, 'blogroll', 'none');
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_blogroll", "blog") , $str, 'blogroll', 'default');
             return $ret;
         } else {
             return $str;
