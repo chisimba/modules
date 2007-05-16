@@ -5,17 +5,19 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 }
 // end security check
 
-/**
- * Controller class for the blog module that extends the base controller
- *
- * @author Paul Scott <pscott@uwc.ac.za>
- * @copyright AVOIR
- * @package blog
- * @category chisimba
- * @licence GPL
- */
 class blog extends controller
 {
+	
+	/**
+     * Controller class for the blog module that extends the base controller
+     *
+     * @author Paul Scott <pscott@uwc.ac.za>
+     * @copyright 2007 AVOIR
+     * @package blog
+     * @category chisimba
+     * @license GPL
+     */
+
     /**
      * User object
      *
@@ -161,8 +163,8 @@ class blog extends controller
 
     /**
      * Constructor method to instantiate objects and get variables
-     *
-     * @param void
+     * 
+     * @since  1.0.0
      * @return string
      * @access public
      */
@@ -271,7 +273,8 @@ class blog extends controller
                     $this->nextAction('allblogs');
                     exit;
 
-                    /*//no userid is set
+                    /**
+                    //no userid is set
                     $this->setVarByRef('message', $this->objLanguage->languageText("mod_blog_word_randomblog"));
                     //get a random blog from the blog table
                     $r = $this->objDbBlog->getRandBlog();
@@ -284,7 +287,8 @@ class blog extends controller
                     else {
                         //oh dear, no blogs on this instance of chisimba!
                         return 'noblogs_tpl.php';
-                    }*/
+                    }
+                    */
                 }
 
                     // $this->requiresLogin(FALSE);
@@ -784,7 +788,10 @@ class blog extends controller
                 $bloggerprofile = $this->objDbBlog->checkProfile($userid);
                 //grab the feed items
                 $posts = $this->objDbBlog->getPostsMonthly(mktime(0,0,0,date("m", time()), 1, date("y", time())),$userid); //, $catid = NULL);
-
+				if(empty($posts))
+				{
+					$posts = $this->objDbBlog->getLastPosts(10, $userid);
+				}
                 //set up the feed...
                 //who's blog is this?
                 if(isset($bloggerprofile['blog_name']))
@@ -1194,52 +1201,52 @@ class blog extends controller
                 	$showpdf = 0;
                 }
                 /*
-                //set up for Google Blog API
-                $changesURL = $this->uri(array('module' => 'blog', 'action' => 'feed', 'userid' => $userid));
-                $name = $this->objUser->fullname($userid) . " Chisimba blog";
-                $blogURL = $this->uri(array('module' => 'blog', 'action' => 'randblog', 'userid' => $userid));
-                //OK lets put it together...
-                $gurl = "http://blogsearch.google.com/ping";
-                //do the http request
-                //echo $gurl;
-                $gurl = str_replace('%26amp%3B', "&", $gurl);
-                $gurl = str_replace('&amp;', "&", $gurl);
-                $gurl = $gurl."?name=".urlencode($name)."&url=".urlencode($blogURL)."&changesUrl=".urlencode($changesURL);
+                	//set up for Google Blog API
+                	$changesURL = $this->uri(array('module' => 'blog', 'action' => 'feed', 'userid' => $userid));
+                	$name = $this->objUser->fullname($userid) . " Chisimba blog";
+                	$blogURL = $this->uri(array('module' => 'blog', 'action' => 'randblog', 'userid' => $userid));
+                	//OK lets put it together...
+                	$gurl = "http://blogsearch.google.com/ping";
+                	//do the http request
+                	//echo $gurl;
+                	$gurl = str_replace('%26amp%3B', "&", $gurl);
+                	$gurl = str_replace('&amp;', "&", $gurl);
+                	$gurl = $gurl."?name=".urlencode($name)."&url=".urlencode($blogURL)."&changesUrl=".urlencode($changesURL);
 
-                //get the proxy info if set
-                $proxyArr = $this->objProxy->getProxy();
-                //print_r($proxyArr); die();
-                if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
-                {
-                    $parr = array(
-                    'proxy_host'        => $proxyArr['proxy_host'],
-                    'proxy_port'        => $proxyArr['proxy_port'],
-                    'proxy_user'        => $proxyArr['proxy_user'],
-                    'proxy_pass'        => $proxyArr['proxy_pass']
-                    );
-                }
-                //echo $gurl; die();
-                $ch = curl_init();
-    			curl_setopt($ch, CURLOPT_URL, $gurl);
-    			curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-    			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-    			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    			if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
-    			{
-    				curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_host'].":".$proxyArr['proxy_port']);
-    				curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxy_user'].":".$proxyArr['proxy_pass']);
-    			}
-    			$code = curl_exec($ch);
-    			curl_close($ch);
-                switch ($code) {
-                    case "Thanks for the ping.":
-                        log_debug("Google blogs API Success! Google said: " . $code);
-                        break;
-                    default:
-                        log_debug("Google blogs API Failure! Google said: " . $code);
-                        break;
-                }
-				*/
+                	//get the proxy info if set
+                	$proxyArr = $this->objProxy->getProxy();
+                	//print_r($proxyArr); die();
+                	if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
+                	{
+                		$parr = array(
+                		'proxy_host'        => $proxyArr['proxy_host'],
+                		'proxy_port'        => $proxyArr['proxy_port'],
+                		'proxy_user'        => $proxyArr['proxy_user'],
+                		'proxy_pass'        => $proxyArr['proxy_pass']
+                		);
+                	}
+                	//echo $gurl; die();
+                	$ch = curl_init();
+                	curl_setopt($ch, CURLOPT_URL, $gurl);
+                	curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+                	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+                	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                	if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
+                	{
+                		curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_host'].":".$proxyArr['proxy_port']);
+                		curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxy_user'].":".$proxyArr['proxy_pass']);
+                	}
+                	$code = curl_exec($ch);
+                	curl_close($ch);
+                	switch ($code) {
+                	case "Thanks for the ping.":
+                		log_debug("Google blogs API Success! Google said: " . $code);
+                		break;
+                	default:
+                		log_debug("Google blogs API Failure! Google said: " . $code);
+                		break;
+                	}
+                */
                 //post quick add
                 if($mode == 'quickadd')
                 {
