@@ -112,6 +112,7 @@ if (isset($ar)) {
     //Initialize the odd/even counter
     $rowcount = 0;
     //Output the data
+    
     foreach ($ar as $line) {
         $oddOrEven = ($rowcount == 0) ? "odd" : "even";
         $tableRow[]=$line['title'];
@@ -119,7 +120,7 @@ if (isset($ar)) {
         $tableRow[]=$line['surname'];
         $tableRow[]=$line['country'];
         $tableRow[]=$line['emailaddress'];
-        $tableRow[]=$line['lastOn'];
+        $tableRow[]=$line['laston'];
         $tableRow[]=$line['logins'];
         //Add the row to the table for output
         $objTable->addRow($tableRow, $oddOrEven);
