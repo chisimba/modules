@@ -424,7 +424,7 @@ class dbblog extends dbTable
 	public function getLatestPost($userid)
 	{
 		$this->_changeTable('tbl_blog_posts');
-		$filter = "WHERE userid = '$userid' ORDER BY post_ts DESC";
+		$filter = "WHERE userid = '$userid' AND post_status = '0' ORDER BY post_ts DESC";
 		$lastpost = $this->getAll($filter);
 		if(isset($lastpost[0]))
 		{
