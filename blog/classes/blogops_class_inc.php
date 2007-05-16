@@ -3116,7 +3116,11 @@ class blogops extends object
     	$this->objUser = $this->getObject('user', 'security');
     	$this->objConfig = $this->getObject('altconfig', 'config');
 		$tllink = new href($this->uri(array('module' => 'blog', 'action' => 'timeline', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
-    	$check = $this->objDbBlog->checkProfile($userid);
+    	//go back to your blog
+        $viewmyblog = new href($this->uri(array(
+            'action' => 'viewblog'
+        )) , $this->objLanguage->languageText("mod_blog_viewmyblog", "blog"));
+		$check = $this->objDbBlog->checkProfile($userid);
         if($check != FALSE)
         {
         	$link = new href($this->uri(array('module' => 'blog', 'action' => 'viewprofile', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewprofileof", "blog") . " " . $this->objUser->userName($userid));
@@ -3137,13 +3141,13 @@ class blogops extends object
         	else {
         		$objFeatureBox = $this->getObject("featurebox", "navigation");
     	
-        		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $link->show() . "<br />" . $tllink->show());
+        		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $link->show() . "<br />" . $tllink->show(). "<br />". $viewmyblog->show());
         	}
 
         }
         else {
         	$objFeatureBox = $this->getObject("featurebox", "navigation");
-        	return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $tllink->show());
+        	return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $tllink->show() . "<br />". $viewmyblog->show());
         }
     }
 
