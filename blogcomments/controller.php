@@ -105,7 +105,10 @@ class blogcomments extends controller
 
             case 'addtodb':
             	//$this->requiresLogin(FALSE);
-            	$captcha = $this->getParam('request_captcha');
+            	if(!$this->objUser->isLoggedIn())
+            	{
+            		$captcha = $this->getParam('request_captcha');
+            	}
             	$addinfo['useremail'] = $this->getParam('email');
             	$addinfo['postuserid'] = $this->getParam('userid');
             	$addinfo['postid'] = $this->getParam('postid');
@@ -116,16 +119,19 @@ class blogcomments extends controller
             	$addinfo['comment'] = $this->getParam('comment');
             	$addinfo = $this->objComm->addToDb($addinfo);
             	//check that the captcha is correct
-          		if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha))
-          		{
-          			//get a timeoutmessage and display it...
-          			$tmsg = $this->getObject('timeoutmessage', 'htmlelements');
-          			$tmsg->setMessage = $this->objLanguage->languageText("mod_blogcomments_badcaptcha", "blogcomments");
-          			$msg = $tmsg->show();
-          			$this->setVarByRef('msg', $msg);
-          			$this->setVarByRef('addinfo', $addinfo);
-          			$this->nextAction('viewsingle',array('msg' => $msg, 'postid' => $addinfo['postid'], 'userid' => $this->objUser->userId()), $addinfo['mod']);
-          			exit;
+            	if(!$this->objUser->isLoggedIn())
+            	{
+          			if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha))
+          			{
+          				//get a timeoutmessage and display it...
+          				$tmsg = $this->getObject('timeoutmessage', 'htmlelements');
+          				$tmsg->setMessage = $this->objLanguage->languageText("mod_blogcomments_badcaptcha", "blogcomments");
+          				$msg = $tmsg->show();
+          				$this->setVarByRef('msg', $msg);
+          				$this->setVarByRef('addinfo', $addinfo);
+          				$this->nextAction('viewsingle',array('msg' => $msg, 'postid' => $addinfo['postid'], 'userid' => $this->objUser->userId()), $addinfo['mod']);
+          				exit;
+          			}
           		}
             	//print_r($addinfo);die();
             	$this->objDbcomm->addComm2Db($addinfo);

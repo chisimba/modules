@@ -67,6 +67,7 @@ if($this->objUser->isLoggedIn())
 {
 	$leftCol .= $objSideBar->show();
 	$leftCol .= $this->objblogOps->showProfile($userid);
+	$leftCol .= $this->objblogOps->showAdminSection(TRUE);
 	$rightSideColumn .=$this->objblogOps->quickPost($this->objUser->userId(), TRUE);
 	//$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 }
