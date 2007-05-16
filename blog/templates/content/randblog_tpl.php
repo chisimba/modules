@@ -96,7 +96,8 @@ if(!empty($rss))
 
 	}
 }
-
+$leftCol .= $this->objblogOps->showBlinks($userid, TRUE);
+$leftCol .= $this->objblogOps->showBroll($userid, TRUE);
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());
 $cssLayout->setRightColumnContent($rightSideColumn);
