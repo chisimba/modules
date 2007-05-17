@@ -46,6 +46,7 @@ class etd extends controller
             $this->manage = $this->getObject('management', 'etd');
             $this->submit = $this->getObject('submit', 'etd');
             $this->config = $this->getObject('configure', 'etd');
+            $this->dbIntro = $this->getObject('dbintro', 'etd');
             $this->dbStats = $this->getObject('dbstatistics', 'etd');
             $this->dbCitations = $this->getObject('dbcitations', 'etd');
             $this->objFaculty = $this->getObject('dbfaculty', 'etd');
@@ -602,6 +603,10 @@ class etd extends controller
         $this->setVarByRef('archiveData', $archiveData);
         return 'etd_tpl.php';
         */
+        
+        $txtIntro = $this->dbIntro->getParsedIntro();
+        $this->setVarByRef('txtIntro', $txtIntro);
+        
         return 'home_tpl.php';
     }
 

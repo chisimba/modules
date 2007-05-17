@@ -49,6 +49,7 @@ class configure extends object
             $this->objUserDb = $this->getObject('usersdb', 'groupadmin');
             $this->objUser = $this->getObject('user', 'security');
             $this->pkId = $this->objUser->PKId();
+            $this->userId = $this->objUser->userId();
             
             $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
             $this->objHead = $this->newObject('htmlheading', 'htmlelements');
@@ -79,21 +80,44 @@ class configure extends object
     */
     function editIntro()
     {
-        $introduction = $this->dbIntro->getIntro();
-        if(empty($introduction)){
+        $btnSave = $this->objLanguage->languageText('word_save');
+        $lbCodes = $this->objLanguage->languageText('mod_etd_introusecodes', 'etd');
+        $lbInstitutionCode = $this->objLanguage->languageText('mod_etd_codeinstitution', 'etd');
+        $lbAbbrCode = $this->objLanguage->languageText('mod_etd_codeabbrevinstitution', 'etd');
+        
+        $introData = $this->dbIntro->getIntro();
+        if(!empty($introData)){
+            $introduction = $introData['introduction'];
+        }else{
             $introduction = $this->objLanguage->languageText('mod_etd_welcomeintro', 'etd');
         }
+        
+        // Explanation of codes
+        $editorStr = '<p>'.$lbCodes.'<ul><li>'.$lbInstitutionCode.'</li><li>'.$lbAbbrCode.'</li></ul></p>';
+        
+        // Form for updating the intro
         $this->objEditor->init('introduction', $introduction, '10', '50');
         $this->objEditor->width = '400px';
         $this->objEditor->height = '400px';
         $this->objEditor->setBasicToolBar(); 
-        $editorStr = '<p>'.$this->objEditor->showFCKEditor().'</p>';
+        $editorStr .= '<p>'.$this->objEditor->showFCKEditor().'</p>';
         
-        $objForm = new form('saveintro', $this->uri(''));
+        $objButton = new button('save', $btnSave);
+        $objButton->setToSubmit();
+        $editorStr .= '<p>'.$objButton->show().'</p>';
+        
+        if(isset($introData['id']) && !empty($introData['id'])){
+            $objInput = new textinput('id', $introData['id'], 'hidden');
+            $editorStr .= $objInput->show();
+        }
+        
+        $objForm = new form('saveintro', $this->uri(array('action' => 'saveconfig', 'mode' => 'saveintro')));
         $objForm->addToForm($editorStr);
         
-        $editShow = '<p>'.$introduction.'</p>';
+        // Preview the intro
+        $editShow = '<p>'.$this->dbIntro->parseIntro($introduction).'</p>';
         
+        // Display
         $objTable = new htmltable();
         $objTable->cellspacing = '2';
         $objTable->startRow();
@@ -121,7 +145,9 @@ class configure extends object
         $lbCodes = $this->objLanguage->languageText('mod_etd_usecodes', 'etd');
         $btnUpdate = $this->objLanguage->languageText('word_update');
         $btnChange = $this->objLanguage->languageText('word_change');
-        
+        $codeName = $this->objLanguage->languageText('mod_etd_codestudentname', 'etd');
+        $codeDegree = $this->objLanguage->languageText('mod_etd_codedegree', 'etd');
+        $codeDept = $this->objLanguage->languageText('mod_etd_codedepartment', 'etd');
 
         // institute name
         $str = '<p><b>'.$lbName.':</b>&nbsp;&nbsp;'.$this->objConfig->getInstitutionName().'</p>';
@@ -146,7 +172,8 @@ class configure extends object
 
         // copyright
         $str .= '<p><b>'.$lbCopyright.'</b><br />('.$lbAccept.')</p>';
-        $editorStr = '<p>'.$lbCodes.'</p>';
+        
+        $editorStr = '<p>'.$lbCodes.'<ul><li>'.$codeName.'</li><li>'.$codeDegree.'</li><li>'.$codeDept.'</li></ul></p>';
         
         $lang = '';
         // Get the copyright message and replace the student name, department and degree
@@ -692,6 +719,13 @@ class configure extends object
                     $userId = $this->getParam('id');
                     $this->objGroups->deleteGroupUser($groupId, $userId);
                 }
+                break;
+                
+            /* *** Edit introduction *** */
+            
+            case 'saveintro':
+                $id = $this->getParam('id');
+                $this->dbIntro->addIntro($this->userId, $id);
                 break;
                 
             default:

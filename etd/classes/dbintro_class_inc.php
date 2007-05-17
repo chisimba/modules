@@ -54,7 +54,7 @@ class dbIntro extends dbtable
     }
 
     /**
-    * Method to get a copyright by language.
+    * Method to get the introduction by language.
     * @param string $lang The language given.
     */
     function getIntro($lang = 'en')
@@ -64,11 +64,55 @@ class dbIntro extends dbtable
             $sql .= " WHERE language = '$lang'";
         }
         $data = $this->getArray($sql);
-
+        
         if(!empty($data)){
             return $data[0];
         }
+        
+        if($lang != 'en'){
+            return $this->getIntro('en');
+        }
+        
         return '';
+    }
+    
+    /**
+    * Method to get the introduction text. Parsed.
+    *
+    * @access public
+    * @return string
+    */
+    function getParsedIntro()
+    {
+        $lang = ''; $text = '';
+        $data = $this->getIntro($lang);
+        if(isset($data['introduction'])){
+            $text = $data['introduction'];
+        }
+        return $this->parseIntro($text);
+    }
+    
+    /**
+    * Method to parse the introduction text for keywords.
+    *
+    * @access public
+    * @param string $text The text to be parsed
+    * @return string
+    */
+    function parseIntro($text = '')
+    {
+        $objConfig = $this->getObject('altconfig', 'config');
+        $institution = $objConfig->getinstitutionName();
+        $shortname = $objConfig->getinstitutionShortName();
+        
+        if(empty($text)){
+            $objLanguage = $this->getObject('language', 'language');
+            return $objLanguage->code2Txt('mod_etd_welcomeintro', 'etd', array('institution' => $institution, 'shortname' => $shortname));
+        }
+        
+        $text = str_replace('[-institution-]', $institution, $text);
+        $text = str_replace('[-shortname-]', $shortname, $text);
+        return $text;
     }
 
     /**
