@@ -48,6 +48,7 @@ class etd extends controller
             $this->config = $this->getObject('configure', 'etd');
             $this->dbStats = $this->getObject('dbstatistics', 'etd');
             $this->dbCitations = $this->getObject('dbcitations', 'etd');
+            $this->objFaculty = $this->getObject('dbfaculty', 'etd');
             $this->dbThesis = $this->getObject('dbthesis');
             $this->dbThesis->setSubmitType('etd');
     
@@ -86,10 +87,6 @@ class etd extends controller
         $this->unsetSession('resourceId');
 
         switch($action){
-
-            case 'patchdata':
-                $this->patchData();
-                break;
 
             /* *** Functions for displaying the resources *** */
 
@@ -135,6 +132,7 @@ class etd extends controller
                 if(!empty($faculty)){
                     $this->setSession('faculty', $faculty);
                 }
+                $faculty = $this->getSession('faculty');
             
                 $this->unsetSession('resource');
                 // set a session to use when returning from a resource or from emailing a resource.
@@ -149,10 +147,18 @@ class etd extends controller
                 $objTitle->setBrowseType('title');
                 $this->setVar('num', 3);
                 $this->setVarByRef('browseType', $objTitle);
+                $this->setVarByRef('pageTitle', $faculty);
                 return 'browse_tpl.php';
                 
 
             case 'browsefaculty':
+                $this->unsetSession('resource');
+                $this->unsetSession('faculty');
+                $display = $this->objFaculty->listFaculties();
+                $this->setVarByRef('search', $display);
+                return 'search_tpl.php';
+            
+            /*
                 $this->unsetSession('resource');
                 $this->unsetSession('faculty');
                 // set a session to use when returning from a resource or from emailing a resource.
@@ -168,6 +174,39 @@ class etd extends controller
                 $this->setVar('num', 1);
                 $this->setVarByRef('browseType', $objFaculty);
                 return 'browse_tpl.php';
+            */
+
+            case 'viewdepartment':
+                $department = $this->getParam('id');
+                if(!empty($department)){
+                    $this->setSession('department', $department);
+                }
+                $department = $this->getSession('department');
+            
+                $this->unsetSession('resource');
+                // set a session to use when returning from a resource or from emailing a resource.
+                $session = array();
+                $session['searchForLetter'] = $this->getParam('searchForLetter');
+                $session['displayLimit'] = $this->getParam('displayLimit');
+                $session['displayStart'] = $this->getParam('displayStart');
+                $session['action'] = 'viewfaculty';
+                $this->setSession('return', $session);
+
+                $objTitle = $this->getObject('viewdepartment', 'etd');
+                $objTitle->setBrowseType('title');
+                $this->setVar('num', 3);
+                $this->setVarByRef('browseType', $objTitle);
+                $this->setVarByRef('pageTitle', $department);
+                return 'browse_tpl.php';
+                
+
+            case 'browsedepartment':
+                $this->unsetSession('resource');
+                $this->unsetSession('department');
+                $objDept = $this->getObject('viewdepartment', 'etd');
+                $display = $objDept->listDepartment();
+                $this->setVarByRef('search', $display);
+                return 'search_tpl.php';
 
             case 'browseauthor':
                 $this->unsetSession('resource');
@@ -337,111 +376,6 @@ class etd extends controller
                 break;
 
 
-        /*
-            case 'showinfo':
-                $heading = $this->objLanguage->languageText('mod_etd_name');
-                $body = $this->objLanguage->languageText('mod_etd_intro');
-                $this->setVarByRef('heading', $heading);
-                $this->setVarByRef('body', $body);
-                return 'etdinfo_tpl.php';
-
-            case 'viewembargo':
-                return $this->viewEmbargo();
-
-            case 'viewetd':
-                $mode = TRUE;
-
-            case 'showetd': // xml based - pre archive
-                $submitId = $this->getParam('submitId');
-                $mode = $this->getParam('mode', FALSE);
-                $submitStatus = $this->getParam('submitStatus', FALSE);
-                $etd = $this->dbSubmit->getETD($submitId, $submitStatus);
-                $files = $this->dbFiles->getFiles($submitId);
-                $this->setVarByRef('mode', $mode);
-                $this->setVarByRef('submitStatus', $submitStatus);
-                $this->setVarByRef('etd', $etd);
-                $this->setVarByRef('files', $files);
-                return 'showetd_tpl.php';
-
-            case 'showextra':
-                $submitId = $this->getParam('submitId');
-                $mode = $this->getParam('mode', FALSE);
-                $submitStatus = $this->getParam('submitStatus', FALSE);
-                $etd = $this->dbSubmit->getETD($submitId, $submitStatus);
-                $this->setVarByRef('mode', $mode);
-                $this->setVarByRef('etd', $etd);
-                return 'showextra_tpl.php';
-
-            case 'downloadfile':
-                $this->setPageTemplate('download_page_tpl.php');
-                return 'download_tpl.php';
-
-            /* *** Configure ETD *** *
-
-            case 'configureetd':
-                $this->etdConfig->index();
-                return 'configure_tpl.php';
-
-            case 'configinfo':
-                $exit = $this->getParam('exit', NULL);
-                if(isset($exit) && !empty($exit)){
-                    return $this->nextAction('configureetd');
-                }
-                $step = $this->getParam('step', 1);
-                $extra = $this->getParam('extra', NULL);
-                if($this->etdConfig->configureInfo($step, $extra)){
-                    return 'configure_tpl.php';
-                }
-                return $this->nextAction('configureetd');
-
-            case 'saveconfig':
-                $exit = $this->getParam('exit', NULL);
-                if(isset($exit) && !empty($exit)){
-                    return $this->nextAction('configureetd');
-                }
-                $step = $this->getParam('step', 2);
-                $extra = $this->getParam('extra', NULL);
-                $saveaction = $this->getParam('saveaction', NULL);
-                $this->objAudit->addAuditTrail('Save the configuration. Save action: '.$saveaction);
-                $this->etdConfig->saveConfigInfo($saveaction);
-                return $this->nextAction('configinfo', array('step'=>$step, 'extra'=>$extra));
-
-            case 'deleteconfig':
-                $id = $this->getParam('id');
-                $step = $this->getParam('step', 3);
-                $this->objAudit->addAuditTrail('Delete the configuration. Id: '.$id);
-                $this->dbInstitute->deleteInfo($id);
-                return $this->nextAction('configinfo', array('step'=>$step));
-
-            case 'configprocess':
-                $this->objAudit->addAuditTrail('');
-                $this->etdConfig->configureApproval();
-                return 'configure_tpl.php';
-
-            case 'saveprocess':
-                $exit = $this->getParam('exit', NULL);
-                if(isset($exit) && !empty($exit)){
-                    return $this->nextAction('configureetd');
-                }
-                $this->objAudit->addAuditTrail('Save the submission process.');
-                $this->etdConfig->saveProcess();
-                return $this->nextAction('configureetd');
-
-            case 'configperms':
-                $group = $this->getParam('group', NULL);
-                $this->objAudit->addAuditTrail($group);
-                $this->etdConfig->configurePerms($group);
-                return 'configure_tpl.php';
-
-            case 'saveconfperms':
-                $button = $this->getParam('button', NULL);
-                if($button == 'cancel'){
-                    return $this->nextAction('configperms');
-                }
-                $this->objAudit->addAuditTrail('');
-                $this->etdConfig->savePerms();
-                return $this->nextAction('configperms');
-
             /* *** Keywords in submit generic class *** *
 
             case 'importkeywords':
@@ -470,75 +404,7 @@ class etd extends controller
                 $this->setVarByRef('search', $search);
                 return 'print_tpl.php';
 
-            /* *** Submit etd *** *
-
-            case 'submit':
-                $submitId = $this->getParam('submitId', NULL);
-                $page = $this->getParam('page', 1);
-                $extra = $this->getParam('extra', NULL);
-                $dispPage = $this->etdSubmit->createForm($submitId, $this->accessLevel, $page, $extra);
-                if($dispPage === FALSE){
-                    return $this->nextAction('');
-                }
-                $this->setVar('page', $dispPage);
-                return 'submit_tpl.php';
-
-            case 'saveetd':
-                $exit = $this->getParam('exit', NULL);
-                if(isset($exit) && !empty($exit)){
-                    return $this->nextAction('');
-                }
-                $submitId = $this->getParam('submitId', NULL);
-                $saveaction = $this->getParam('saveaction', 'start');
-                $page = $this->getParam('page', 0)+1;
-                $extra = $this->getParam('extra', NULL);
-                $this->objAudit->addAuditTrail('Save edited metadata on an XML (pre-archived) document. Submission id: '.$submitId.'. Save action: '.$saveaction);
-                $this->objAudit->addAuditTrail($saveaction.' '.$submitId);
-                $submitId = $this->etdSubmit->saveEtd($saveaction, $submitId);
-                $arr = array('submitId'=>$submitId, 'page'=>$page, 'extra'=>$extra);
-                return $this->nextAction('submit', $arr);
-
-            case 'deleteetd':
-                $submitId = $this->getParam('submitId');
-                $this->objAudit->addAuditTrail('XML format. Submission id: '.$submitId);
-                $this->dbSubmit->deleteETD($submitId);
-                $this->xmlMetaData->deleteXML('etd_'.$submitId);
-                return $this->nextAction('');
-
-            case 'archive':
-                $submitId = $this->getParam('submitId');
-                $this->objAudit->addAuditTrail('Move XML into dublincore table. Submission id: '.$submitId);
-                $this->etdSubmit->archiveETD($submitId);
-                return $this->nextAction('');
-
-            case 'upload':
-                $cancel = $this->getParam('exit', NULL);
-                $submitId = $this->getParam('submitId');
-                $nextAction = $this->getParam('nextAction', 'submit');
-                $page = $this->getParam('page');
-                $mode = $this->getParam('mode', 'add');
-                if(isset($cancel) && !empty($cancel)){
-                    return $this->nextAction($nextAction, array('page'=>$page, 'submitId'=>$submitId));
-                }
-                $this->etdSubmit->uploadEtd($submitId, $mode);
-                return $this->nextAction($nextAction, array('page'=>$page, 'submitId'=>$submitId));
-
-            case 'editfile':
-                $submitId = $this->getParam('submitId');
-                $dispPage = $this->etdSubmit->uploadEtd($submitId, 'edit');
-                $this->objAudit->addAuditTrail('Edit an uploaded document. Submission id: '.$submitId);
-                if($dispPage === FALSE){
-                    return $this->nextAction('');
-                }
-                $this->setVar('page', $dispPage);
-                return 'submit_tpl.php';
-
-            /* *** Search Repository *** *
-
-
-
-
-
+            
             /* *** Manage Collections in Repository *** *
 
             case 'managecollections':
@@ -603,30 +469,6 @@ class etd extends controller
                 $this->dbCollectSubmit->removeSubmissionFromCollection($metaId, $collectId);
                 return $this->nextAction('viewcollection', array('id'=>$collectId, 'allowManage' => TRUE));
 
-
-            /* *** Manage etd's in repository *** *
-
-            case 'manageetd':
-                return 'manageetd_tpl.php';
-
-            case 'fetchetd':
-                return $this->fetchEtd();
-
-            case 'editmetadata':
-                return $this->showEditPage();
-
-            case 'savemeta':
-                $exit = $this->getParam('exit', NULL);
-                $submitId = $this->getParam('submitId', NULL);
-                if(isset($exit) && !empty($exit)){
-                    return $this->nextAction('showetd', array('submitId' => $submitId, 'mode' => TRUE));
-                }
-                $saveaction = $this->getParam('saveaction');
-                $page = $this->getParam('page', 0)+1;
-                $this->objAudit->addAuditTrail('Save edited metadata on an archived document. Submission id: '.$submitId.'. Save action: '.$saveaction);
-                $submitId = $this->etdSubmit->saveEtd($saveaction, $submitId, TRUE);
-                return $this->nextAction('editmetadata', array('page'=>$page, 'submitId'=>$submitId));
-
             */
 
             /* *** Additional Functionality *** */
@@ -634,6 +476,19 @@ class etd extends controller
             case 'viewstats':
                 $display = $this->dbStats->showAll();
                 $this->setVarByRef('search', $display);
+                return 'search_tpl.php';
+                
+            case 'showrss':
+                $institution = $this->objConfig->getinstitutionName();
+                $title = $this->objLanguage->code2Txt('mod_etd_etdrss', 'etd', array('institution' => $institution));
+                $objHead = new htmlheading();
+                $objHead->str = $title;
+                $objHead->type = 1;
+                $rssLink = $objHead->show();
+                $objLink = new link($this->uri(array('action' => 'rss')));
+                $objLink->link = $this->uri(array('action' => 'rss'));
+                $rssLink .= '<p style="padding-top: 10px; font-size: 125%;">'.$objLink->show().'</p>';
+                $this->setVarByRef('search', $rssLink);
                 return 'search_tpl.php';
 
             case 'rss':
@@ -658,6 +513,9 @@ class etd extends controller
 
                 $feed = $this->objFeeder->output();
                 echo $feed;
+                break;
+                
+            case 'metalib':
                 break;
 
             default:

@@ -81,6 +81,7 @@ class block_rightmenu extends object
         $home = $this->objLanguage->languageText('word_home');
         $browse = $this->objLanguage->languageText('word_browse');
         $faculties = $this->objLanguage->languageText('word_faculties');
+        $departments = $this->objLanguage->languageText('word_departments');
         $authors = $this->objLanguage->languageText('word_authors');
         $titles = $this->objLanguage->languageText('word_titles');
         $list = '';
@@ -97,6 +98,10 @@ class block_rightmenu extends object
         $objLink->link = $faculties;
         $list .= '<li style="padding-bottom: 5px;">'.$objLink->show().'</li>';
         
+        $objLink = new link($this->uri(array('action'=>'browsedepartment')));
+        $objLink->link = $departments;
+        $list .= '<li style="padding-bottom: 5px;">'.$objLink->show().'</li>';
+
         $objLink = new link($this->uri(array('action'=>'browseauthor')));
         $objLink->link = $authors;
         $list .= '<li style="padding-bottom: 5px;">'.$objLink->show().'</li>';

@@ -699,7 +699,12 @@ class viewBrowse extends object
 
             $tblResults->row_attributes = 'name="row_'.$tblResults->id.'"';
             $tblResults->startRow();
-                for($i = 1; $i <= $this->numCols; $i++){
+                $colWidth = '';
+                if($this->numCols <= 3){
+                    $colWidth = '40%';
+                }
+                $tblResults->addCell($this->header['col1'], $colWidth, '','','heading');
+                for($i = 2; $i <= $this->numCols; $i++){
                     $tblResults->addCell($this->header['col'.$i],'', '','','heading');
                 }
                 $this->allowManage ? $tblResults->addCell('', '8%', '','','heading') : '';

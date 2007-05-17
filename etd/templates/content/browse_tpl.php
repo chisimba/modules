@@ -22,6 +22,11 @@ $objViewBrowse->setNumCols($num);
 $objViewBrowse->setAccess(FALSE);
 $objViewBrowse->useSortTable();
 
+
+if(isset($pageTitle) && !empty($pageTitle)){
+    $objViewBrowse->setPageTitle($pageTitle);
+}
+
 // Show
 $objLayer = $this->newObject('layer', 'htmlelements');
 $objLayer->str = $objViewBrowse->show();

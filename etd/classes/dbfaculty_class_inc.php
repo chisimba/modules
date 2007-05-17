@@ -22,6 +22,54 @@ $this->loadClass('dbthesis', 'etd');
 class dbFaculty extends dbthesis
 {
     /**
+    * Class constructor extends dbthesis constructor
+    */
+    public function init()
+    {
+        parent::init();
+        
+        $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $this->loadClass('htmltable', 'htmlelements'); 
+        $this->loadClass('link', 'htmlelements');
+    }
+    
+    /**
+    * Method to display a list of faculties
+    *
+    * @access public
+    * @return string html
+    */
+    public function listFaculties()
+    {
+        $data = $this->getData('');
+        //echo '<pre>'; print_r($data);
+        
+        $head = $this->objLanguage->languageText('word_faculties');
+        $lbNoFaculty = $this->objLanguage->languageText('mod_etd_nofacultiesavailable', 'etd');
+        
+        $str = '<br />';
+        if(!empty($data)){
+            $class = 'even';
+            $objTable = new htmltable();
+            $i = 1;
+            foreach($data as $item){
+                $class = ($class == 'even') ? 'odd' : 'even';
+                
+                $objLink = new link($this->uri(array('action' => 'viewfaculty', 'id' => $item['id'])));
+                $objLink->link = $item['col1'];
+                $name = $objLink->show();
+                
+                $objTable->addRow(array($i++, $name), $class);
+            }
+            $str .= $objTable->show();
+        }else{
+            $str = '<p class="noRecordsMessage">'.$lbNoFaculty.'</p>';
+        }
+        
+        return $this->objFeatureBox->showContent($head, $str);
+    }
+    
+    /**
     * Method to get metadata records limited to a given number of results.
     *
     * @access public
@@ -56,6 +104,7 @@ class dbFaculty extends dbthesis
         
         return $data;
     }
+    
     /**
     * Method to get metadata records by letter.
     *

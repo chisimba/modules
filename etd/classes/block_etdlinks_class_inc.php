@@ -33,11 +33,11 @@ class block_etdlinks extends object
     */
     public function init()
     {
-        $this->dbSubmit =& $this->getObject('dbsubmissions', 'etd');
-        $this->objLanguage =& $this->getObject('language', 'language');
-        $this->objUser =& $this->getObject('user', 'security');
+        $this->dbSubmit = $this->getObject('dbsubmissions', 'etd');
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objUser = $this->getObject('user', 'security');
         
-        $this->objIcon =& $this->newObject('geticon', 'htmlelements');
+        $this->objIcon = $this->newObject('geticon', 'htmlelements');
         $this->loadClass('link','htmlelements');
 
         $this->title = $this->objLanguage->languageText('word_links');
@@ -93,7 +93,7 @@ class block_etdlinks extends object
 		
         // RSS link
 		$this->objIcon->setIcon('rss', 'gif', 'icons/filetypes');
-		$objLink = new link($this->uri(array('action' => 'rss')));
+		$objLink = new link($this->uri(array('action' => 'showrss')));
 		$objLink->link = $rss;
 		$list .= '<p>'.$this->objIcon->show().' '.$objLink->show().'</p>';
 

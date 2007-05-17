@@ -39,7 +39,7 @@ class viewFaculty extends dbthesis
         
         $sql .= "WHERE submit.id = thesis.submitid AND dc.id = thesis.dcmetaid ";
         $sql .= "AND submit.submissiontype = '{$this->subType}' AND submit.status = 'archived' ";
-        $sql .= "AND thesis.thesis_degree_discipline = '{$faculty}' ";
+        $sql .= "AND thesis.thesis_degree_faculty = '{$faculty}' ";
         
         $sqlLimit = "ORDER BY LOWER({$this->col1Field}) ";
         
@@ -69,6 +69,7 @@ class viewFaculty extends dbthesis
     */
     public function getByLetter($letter = 'a', $limit = 10, $start = NULL, $joinId = NULL)
     {
+        $faculty = $this->getSession('faculty');
         $letter = strtolower($letter);
         $sqlNorm = "SELECT dc.{$this->col1Field} as col1, dc.{$this->col2Field} as col2, dc.{$this->col3Field} as col3, thesis.id as id ";
         $sqlFound = "SELECT COUNT(*) AS count ";
@@ -77,6 +78,7 @@ class viewFaculty extends dbthesis
         
         $sql .= "WHERE submit.id = thesis.submitid AND dc.id = thesis.dcmetaid ";
         $sql .= "AND submit.submissiontype = '{$this->subType}' AND submit.status = 'archived' ";
+        $sql .= "AND thesis.thesis_degree_faculty = '{$faculty}' ";
         $sql .= "AND ( LOWER({$this->col1Field}) LIKE '$letter%' ";
         
         if(strtolower($letter) == 'a'){
