@@ -189,7 +189,7 @@ class etd extends controller
                 $session['searchForLetter'] = $this->getParam('searchForLetter');
                 $session['displayLimit'] = $this->getParam('displayLimit');
                 $session['displayStart'] = $this->getParam('displayStart');
-                $session['action'] = 'viewfaculty';
+                $session['action'] = 'viewdepartment';
                 $this->setSession('return', $session);
 
                 $objTitle = $this->getObject('viewdepartment', 'etd');
