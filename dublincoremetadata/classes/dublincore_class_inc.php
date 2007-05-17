@@ -312,8 +312,14 @@ class dublincore extends dbTable
     function addMetaData($fields, $id = NULL)
     {
         if(isset($id) && !empty($id)){
+            $fields['datestamp'] = $this->now();
+            $fields['updated'] = $this->now();
             $this->update('id', $id, $fields);
         }else{
+            $fields['enterdate'] = $this->now();
+            $fields['datestamp'] = $this->now();
+            $fields['updated'] = $this->now();
+            $fields['deleted'] = 0;
             $id = $this->insert($fields);
         }
         return $id;
