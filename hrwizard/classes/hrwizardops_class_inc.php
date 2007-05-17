@@ -164,7 +164,7 @@ class hrwizardops extends object {
     
     public function sendMails($recarr, $bodyText)
     {
-    	    		print_r($recarr); die();
+    	    	//	print_r($recarr); die();
     	foreach($recarr as $record)
     	{
     		//get the pdf associated with the employee number
