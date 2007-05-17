@@ -40,6 +40,7 @@ class configure extends object
             $this->dbCopyright = $this->getObject('dbcopyright', 'etd');
             $this->dbDegrees = $this->getObject('dbdegrees', 'etd');
             $this->dbProcess = $this->getObject('dbprocess', 'etd');
+            $this->dbIntro = $this->getObject('dbintro', 'etd');
             
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objConfig = $this->getObject('altconfig', 'config');
@@ -68,6 +69,41 @@ class configure extends object
             throw customException($e->message());
             exit();
         }
+    }
+    
+    /**
+    * Method to make the introductory text editable
+    *
+    * @access private
+    * @return string html
+    */
+    function editIntro()
+    {
+        $introduction = $this->dbIntro->getIntro();
+        if(empty($introduction)){
+            $introduction = $this->objLanguage->languageText('mod_etd_welcomeintro', 'etd');
+        }
+        $this->objEditor->init('introduction', $introduction, '10', '50');
+        $this->objEditor->width = '400px';
+        $this->objEditor->height = '400px';
+        $this->objEditor->setBasicToolBar(); 
+        $editorStr = '<p>'.$this->objEditor->showFCKEditor().'</p>';
+        
+        $objForm = new form('saveintro', $this->uri(''));
+        $objForm->addToForm($editorStr);
+        
+        $editShow = '<p>'.$introduction.'</p>';
+        
+        $objTable = new htmltable();
+        $objTable->cellspacing = '2';
+        $objTable->startRow();
+        $objTable->addCell($objForm->show());
+        $objTable->addCell('', '3%');
+        $objTable->addCell($editShow, '50%');
+        $objTable->endRow();
+        
+        $str = '<p>'.$objTable->show().'</p>';
+        return $str;
     }
     
     /**
@@ -499,6 +535,7 @@ class configure extends object
         $lbInstitution = $this->objLanguage->languageText('phrase_institutioninformation');
         $lbFaculty = $this->objLanguage->languageText('phrase_facultyinformation');
         $lbSubmission = $this->objLanguage->languageText('phrase_submissionprocess');
+        $lbIntro = $this->objLanguage->languageText('phrase_editintroduction');
         
         $this->objHead->str = $head;
         $this->objHead->type = 1;
@@ -512,6 +549,9 @@ class configure extends object
         
         // Submission process
         $str .= $this->objFeatureBox->show($lbSubmission, $this->getSubmissionProcess($userMode, $data));
+        
+        // Submission process
+        $str .= $this->objFeatureBox->show($lbIntro, $this->editIntro());//$userMode, $data));
         
         $str .= '<br />';
         return $str;
