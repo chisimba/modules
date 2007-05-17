@@ -620,22 +620,15 @@ class blogops extends object
     	$this->objDbBlog->updateRss($addarr, $feedid);
     	//echo $rsscache;
     	$objRss->parseRss($rsscache);
-    	/*
-    	$head = $this->objLanguage->languageText("mod_blog_word_headlinesfrom", "blog");
-    	$head .= " " . $name;
-    	$content = "<ul>\n"; */
     	$rssbits = $objRss->getRssItems();
     	if(empty($rssbits))
     	{
     		$objRss2 = $this->newObject('rssreader', 'feed');
-    		//$rssurl = urldecode($rssurl);
-    		//echo $rssurl;
-    		//fallback to the known good url
+    		// fallback to the known good url
     		$objRss2->parseRss($rssurl);
        		$head = $this->objLanguage->languageText("mod_blog_word_headlinesfrom", "blog");
         	$head .= " " . $name;
         	$content = "<ul>\n";
-        	//var_dump($objRss2->getRssItems());
         	foreach ($objRss2->getRssItems() as $item)
         	{
         		
@@ -696,6 +689,7 @@ class blogops extends object
         $rssadd->startRow();
         $rssurllabel = new label($this->objLanguage->languageText('mod_blog_rssurl', 'blog') .':', 'input_rssuser');
         $rssurl = new textinput('rssurl');
+        $rssurl->size = "100%";
         if(isset($rdata['url']))
         {
         $rssurl->setValue(htmlentities($rdata['url'], ENT_QUOTES));
@@ -710,6 +704,7 @@ class blogops extends object
         $rssadd->startRow();
         $rssnamelabel = new label($this->objLanguage->languageText('mod_blog_rssname', 'blog') .':', 'input_rssname');
         $rssname = new textinput('name');
+        $rssname->size = "100%";
         if(isset($rdata['name']))
         {
         	$rssname->setValue($rdata['name']);
@@ -722,6 +717,7 @@ class blogops extends object
         $rssadd->startRow();
         $rssdesclabel = new label($this->objLanguage->languageText('mod_blog_rssdesc', 'blog') .':', 'input_rssname');
         $rssdesc = new textarea('description');
+        $rssdesc->extra = ' style="width:65%;" ';
         if(isset($rdata['description']))
         {
           	//var_dump($rdata['description']);
@@ -1749,53 +1745,7 @@ class blogops extends object
 
 
     }
-    
-   /* public function showFeeds($userid, $featurebox = FALSE)
-    {
-        $this->loadClass('dropdown', 'htmlelements');
-        $dropdown = &new dropdown('feedselector');
-        $rss2 = $this->objLanguage->languageText("mod_blog_word_rss2", "blog");
-        $dropdown->addOption('rss2', $rss2);
-        $rss091 = $this->objLanguage->languageText("mod_blog_word_rss091", "blog");
-        $dropdown->addOption('rss091', $rss091);
-        $rss1 = $this->objLanguage->languageText("mod_blog_word_rss1", "blog");
-        $dropdown->addOption('rss1', $rss1);
-        $pie = $this->objLanguage->languageText("mod_blog_word_pie", "blog");
-        $dropdown->addOption('pie', $pie);
-        $mbox = $this->objLanguage->languageText("mod_blog_word_mbox", "blog");
-        $dropdown->addOption('mbox', $mbox);
-        $opml = $this->objLanguage->languageText("mod_blog_word_opml", "blog");
-        $dropdown->addOption('opml', $opml);
-        $atom = $this->objLanguage->languageText("mod_blog_word_atom", "blog");
-        $dropdown->addOption('atom', $atom);
-        $html = $this->objLanguage->languageText("mod_blog_word_html", "blog");
-        $dropdown->addOption('html', $html);
-        $this->loadClass('button', 'htmlelements');
-        $this->objButton = &new button($this->objLanguage->languageText('word_show'));
-        $this->objButton->setValue($this->objLanguage->languageText('word_show'));
-        $this->objButton->setToSubmit();
-        $this->objUser = $this->getObject('user', 'security');
-        $leftCol = NULL;
-        if ($featurebox == FALSE) {
-            $leftCol.= "<em>".$this->objLanguage->languageText("mod_blog_feedheader", "blog") ."</em><br />";
-        }
-        $leftCol.= $dropdown->show() ."<br />";
-        $leftCol.= $this->objButton->show() ."<br />";
-        if ($featurebox == FALSE) {
-            return $leftCol;
-        } else {
-            $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_feedheader", 'blog') , $leftCol);
-            //creating form
-            $form = new form('formname', $this->uri(array(
-                'action' => 'feed',
-                'userid' => $userid
-            )));
-            $form->addToForm($ret);
-            return $form->show();
-        }
-    }
-    
+     
     /**
      * Method to quickly add a category to the default category (parent = 0)
      * Can take a comma delimited list as an input arg
