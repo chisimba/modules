@@ -142,9 +142,14 @@ class mapinput extends object
         $latitude = new textinput('latitude');
         $latitude->cssId = 'latitude';
         $latitudeLabel = new label ($this->objLanguage->languageText('word_latitude'), 'latitude');
+        
         $longitude = new textinput('longitude');
         $longitude->cssId = 'longitude';
         $longitudeLabel = new label ($this->objLanguage->languageText('word_longitude'), 'latitude');
+        
+        $zoomlevel = new textinput('zoomlevel');
+        $zoomlevel->cssId = 'zoomlevel';
+        $zoomlevelLabel = new label ('Zoom Level', 'zoomlevel');
         
         $heading = new htmlheading();
         $heading->str = $this->objLanguage->languageText('word_coordinates');
@@ -154,6 +159,7 @@ class mapinput extends object
         
         $right .= '<p>'.$latitudeLabel->show().'<br />'.$latitude->show().'</p>';
         $right .= '<p>'.$longitudeLabel->show().'<br />'.$longitude->show().'</p>';
+        $right .= '<p>'.$zoomlevelLabel->show().'<br />'.$zoomlevel->show().'</p>';
         
         return $right;
     }
@@ -207,7 +213,15 @@ class mapinput extends object
     GEvent.addListener(map, \'click\', function(overlay, point) {
             document.getElementById("latitude").value=point.y;
             document.getElementById("longitude").value=point.x;
+            document.getElementById("zoomlevel").value=map.getZoomLevel();
     });
+
+    // Recenter Map and add Coords by clicking the map
+    GEvent.addListener(map, \'zoomend\', function() {
+            document.getElementById("zoomlevel").value=map.getZoomLevel();
+    });
+
+
 //]]>
 </script>';
     }
