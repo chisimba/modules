@@ -162,7 +162,7 @@ class hrwizardops extends object {
 
     }
     
-    public function sendMails($recarr, $bodyText)
+    public function sendMails($recarr, $bodyText, $subject)
     {
     	    	//	print_r($recarr); die();
     	foreach($recarr as $record)
@@ -178,7 +178,7 @@ class hrwizardops extends object {
 				$objMailer->setValue('to', array($record[1]));
 				$objMailer->setValue('from', 'hr@uwc.ac.za');
 				$objMailer->setValue('fromName', $this->objLanguage->languageText("mod_hrwizard_emailfromname", "hrwizard"));
-				$objMailer->setValue('subject', $this->objLanguage->languageText("mod_hrwizard_emailsub", "hrwizard"));
+				$objMailer->setValue('subject', $subject);
 				$objMailer->setValue('body', strip_tags($bodyText));
 				$objMailer->attach($file, $record[0]);
 				//$objMailer->htmlMail();
@@ -240,6 +240,15 @@ class hrwizardops extends object {
         $ctbl->addCell($csvfilelabel->show() . $required);
         $ctbl->addCell($objSelectFile2->show());
         $ctbl->endRow();
+        
+        //message subject
+        $commlabel = new label($this->objLanguage->languageText('mod_hrwizard_messagesubject', 'hrwizard') .':', 'input_msgsubinput');
+		$ctbl->startRow();
+		$ctbl->addCell($commlabel->show());
+		$subj = new textinput('subject');
+		$ctbl->addCell($subj->show());
+		$ctbl->endRow();
+		
         
 		//textarea for the message
 		$commlabel = new label($this->objLanguage->languageText('mod_hrwizard_message', 'hrwizard') .':', 'input_msginput');

@@ -58,6 +58,7 @@ class hrwizard extends controller
             	break;
             	
             case 'addmessage':
+            	$subject = $this->getParam('subject');
             	$bodytext = $this->getParam('bodytext');
             	$file = $this->getParam('zipfile');
             	$csv = $this->getParam('csvfile');
@@ -65,7 +66,7 @@ class hrwizard extends controller
             	$pdfzip = $this->objHrOps->unpackPdfs($file);
             	$this->recarr = $this->objHrOps->parseCSV($csv);
             	
-            	$ret = $this->objHrOps->sendMails($this->recarr, $bodytext);
+            	$ret = $this->objHrOps->sendMails($this->recarr, nl2br($bodytext), $subject);
             	$this->setVarByRef('ret', $ret);
             	return "done_tpl.php";
             	break;
