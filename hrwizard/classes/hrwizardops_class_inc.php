@@ -27,8 +27,8 @@ class hrwizardops extends object {
     	$objFile = $this->getObject('dbfile', 'filemanager');
 		$csv = $objFile->getFullFilePath($csvfile);
 		$csvname = $objFile->getFileName($csvfile);
-		require_once "File/Archive.php"; 
-		File_Archive::extract($csv,$path);
+		@require_once "File/Archive.php"; 
+		@File_Archive::extract($csv,$path);
 		chdir($path);
 		
 		$row = 1;
@@ -108,7 +108,7 @@ class hrwizardops extends object {
 		//echo $pdfzip;
 		
 		require_once "File/Archive.php"; 
-		File_Archive::extract($pdfzip,$path);
+		@File_Archive::extract($pdfzip,$path);
 		chdir($path);
 		exec('unzip -o '.$pdfzip);
 		//cleanup

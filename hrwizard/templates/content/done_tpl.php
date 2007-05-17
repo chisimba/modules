@@ -13,7 +13,6 @@ $leftCol = NULL;
 $middleColumn = NULL;
 
 $leftCol .= $objSideBar->show();
-
 foreach($ret as $rec)
 {
 	$middleColumn .= $this->objLanguage->languageText('mod_hrwizard_sentto','hrwizard') . ": ".$rec[0] . "<br />";

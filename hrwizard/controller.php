@@ -65,7 +65,7 @@ class hrwizard extends controller
             
             	$pdfzip = $this->objHrOps->unpackPdfs($file);
             	$this->recarr = $this->objHrOps->parseCSV($csv);
-            	
+            	//print_r($this->recarr);
             	$ret = $this->objHrOps->sendMails($this->recarr, nl2br($bodytext), $subject);
             	$this->setVarByRef('ret', $ret);
             	return "done_tpl.php";
