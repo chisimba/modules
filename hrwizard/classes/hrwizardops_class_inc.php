@@ -164,16 +164,18 @@ class hrwizardops extends object {
     
     public function sendMails($recarr, $bodyText)
     {
+    	    		print_r($recarr); die();
     	foreach($recarr as $record)
     	{
     		//get the pdf associated with the employee number
+
     		$path = $this->objConfig->getcontentBasePath()."hrtmp/";
     		$file = $record[0] . ".pdf";
     		//print_r($record);
     		if(file_exists($file))
     		{
     			$objMailer = $this->getObject('email', 'mail');
-				$objMailer->setValue('to', array($record[3]));
+				$objMailer->setValue('to', array($record[1]));
 				$objMailer->setValue('from', 'hr@uwc.ac.za');
 				$objMailer->setValue('fromName', $this->objLanguage->languageText("mod_hrwizard_emailfromname", "hrwizard"));
 				$objMailer->setValue('subject', $this->objLanguage->languageText("mod_hrwizard_emailsub", "hrwizard"));
@@ -183,7 +185,7 @@ class hrwizardops extends object {
 				$objMailer->send();
 				$objMailer->clearAttachments();
 				$objMailer->clearAddresses();
-				$retarr[] = array($record[3], $file);
+				$retarr[] = array($record[1], $file);
 				unlink($file);
     		}
     	}
