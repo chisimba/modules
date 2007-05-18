@@ -40,10 +40,19 @@ else {
 if(!$this->objUser->isLoggedIn())
 {
 	$leftCol = $this->objblogOps->loginBox(TRUE);
-	$leftCol .= $this->objblogOps->showProfile($userid);
+	$leftCol .= $this->objblogOps->showFullProfile($userid);
 }
 else {
-	$leftCol = $leftMenu->show();
+	$guestid = $this->objUser->userId();
+	if($guestid == $userid)
+	{
+		$leftCol .= $leftMenu->show();
+		$leftCol .= $this->objblogOps->showProfile($userid);
+	}
+	else {
+		//echo "guest is diff";
+		$leftCol .= $this->objblogOps->showFullProfile($userid);
+	}
 	$leftCol .= "<br />";
 	$leftCol .= $this->objblogOps->showProfile($userid);
 	//show the admin section (if user is logged in)

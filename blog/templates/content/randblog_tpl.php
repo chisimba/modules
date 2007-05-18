@@ -84,7 +84,8 @@ if($this->objUser->isLoggedIn())
 }
 else {
 	$leftCol = $this->objblogOps->loginBox(TRUE);
-	$leftCol .= $this->objblogOps->showProfile($userid);
+	$leftCol .= $this->objblogOps->showFullProfile($userid);
+	//$leftCol .= $this->objblogOps->showProfile($userid);
 	//$rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
 }
 //show the feeds section

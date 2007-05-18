@@ -18,14 +18,20 @@ $rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 if(!$this->objUser->isLoggedIn())
 {
 	$leftCol = $this->objblogOps->loginBox(TRUE);
-	$leftCol .= $this->objblogOps->showProfile($userid);
+	$leftCol .= $this->objblogOps->showFullProfile($userid);
 }
 else {
-	//show the categories menu (if there are cats)
-	//$rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE);
-	//left menu section
-	//display the menu
-	$leftCol = $leftMenu->show();
+	$guestid = $this->objUser->userId();
+	if($guestid == $userid)
+	{
+		$leftCol .= $leftMenu->show();
+		$leftCol .= $this->objblogOps->showProfile($userid);
+	}
+	else {
+		//echo "guest is diff";
+		$leftCol .= $this->objblogOps->showFullProfile($userid);
+	}
+	
 	$leftCol .= "<br />";
 	$leftCol .= $this->objblogOps->showProfile($userid);
 	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);

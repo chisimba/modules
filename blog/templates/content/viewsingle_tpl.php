@@ -56,8 +56,21 @@ $leftCol = NULL;
 if(!$this->objUser->isLoggedIn())
 {
 	$leftCol = $this->objblogOps->loginBox(TRUE);
+	$leftCol .= $this->objblogOps->showFullProfile($userid);
+	
 }
 else {
+	$guestid = $this->objUser->userId();
+	if($guestid == $userid)
+	{
+		$leftCol .= $objSideBar->show();
+		$leftCol .= $this->objblogOps->showProfile($userid);
+	}
+	else {
+		//echo "guest is diff";
+		$leftCol .= $this->objblogOps->showFullProfile($userid);
+	}
+	//$leftCol .= $objSideBar->show();
 	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
 }
 //show the feeds section

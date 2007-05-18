@@ -25,17 +25,17 @@ if(!$this->objUser->isLoggedIn())
 	$leftCol .= $this->objblogOps->showProfile($userid);
 }
 else {
-	//show the categories menu (if there are cats)
-	//$rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE);
-	//left menu section
-	//display the menu
-	if($this->objUser->userId() === $userid)
+	$guestid = $this->objUser->userId();
+	if($guestid == $userid)
 	{
-		$leftCol = $leftMenu->show();
+		$leftCol .= $leftMenu->show();
+		$leftCol .= $this->objblogOps->showProfile($userid);
 	}
 	else {
-		$this->objblogOps->showFullProfile($userid);
+		//echo "guest is diff";
+		$leftCol .= $this->objblogOps->showFullProfile($userid);
 	}
+	//$leftCol .= $objSideBar->show();
 	$leftCol .= "<br />";
 	$leftCol .= $this->objblogOps->showProfile($userid);
 	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
