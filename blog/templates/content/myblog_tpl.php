@@ -17,7 +17,7 @@ $rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
 //show the categories menu (if there are cats)
 $rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE, $userid);
 $rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
-
+$leftCol = NULL;
 //show the admin section (if user is logged in)
 if(!$this->objUser->isLoggedIn())
 {

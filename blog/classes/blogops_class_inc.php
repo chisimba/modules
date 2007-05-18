@@ -3105,7 +3105,7 @@ class blogops extends object
     	$this->loadClass('href', 'htmlelements');
     	$this->objUser = $this->getObject('user', 'security');
     	$this->objConfig = $this->getObject('altconfig', 'config');
-    	$userimg = "<center>".$this->objUser->getUserImage()."</center>";
+    	$userimg = "<center>".$this->objUser->getUserImage($userid)."</center>";
 		$tllink = new href($this->uri(array('module' => 'blog', 'action' => 'timeline', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
     	//go back to your blog
         $viewmyblog = new href($this->uri(array(
