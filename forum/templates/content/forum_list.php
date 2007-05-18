@@ -46,8 +46,8 @@ $tblclass->width='99%';
 $tblclass->startHeaderRow();
 $tblclass->addHeaderCell('&nbsp;', 10, 'center');
 $tblclass->addHeaderCell('<strong>'.$this->objLanguage->languageText('mod_forum', 'forum').'</strong>', '40%');
-$tblclass->addHeaderCell('<strong><nobr>'.$this->objLanguage->languageText('word_topics', 'forum').'</nobr></strong>', 100, NULL,'center');
-$tblclass->addHeaderCell('<strong><nobr>'.$this->objLanguage->languageText('word_posts', 'forum').'</nobr></strong>', 100, NULL, 'center');
+$tblclass->addHeaderCell('<strong><nobr>'.$this->objLanguage->languageText('word_topics').'</nobr></strong>', 100, NULL,'center');
+$tblclass->addHeaderCell('<strong><nobr>'.$this->objLanguage->languageText('word_posts').'</nobr></strong>', 100, NULL, 'center');
 $tblclass->addHeaderCell('<strong><nobr>'.$this->objLanguage->languageText('mod_forum_lastpost', 'forum').'</nobr></strong>', 100);
 $tblclass->endHeaderRow();
 
