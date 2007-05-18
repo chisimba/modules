@@ -65,8 +65,19 @@ $leftCol = NULL;
 //check if the user is logged in or not...
 if($this->objUser->isLoggedIn())
 {
-	$leftCol .= $objSideBar->show();
-	$leftCol .= $this->objblogOps->showProfile($userid);
+	
+	$guestid = $this->objUser->userId();
+	if($guestid == $userid)
+	{
+		$leftCol .= $objSideBar->show();
+		$leftCol .= $this->objblogOps->showProfile($userid);
+	}
+	else {
+		//echo "guest is diff";
+		$leftCol .= $this->objblogOps->showFullProfile($userid);
+	}
+	//$leftCol .= $objSideBar->show();
+	
 	$leftCol .= $this->objblogOps->showAdminSection(TRUE);
 	$rightSideColumn .=$this->objblogOps->quickPost($this->objUser->userId(), TRUE);
 	//$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);

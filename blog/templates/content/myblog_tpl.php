@@ -29,7 +29,13 @@ else {
 	//$rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE);
 	//left menu section
 	//display the menu
-	$leftCol = $leftMenu->show();
+	if($this->objUser->userId() === $userid)
+	{
+		$leftCol = $leftMenu->show();
+	}
+	else {
+		$this->objblogOps->showFullProfile($userid);
+	}
 	$leftCol .= "<br />";
 	$leftCol .= $this->objblogOps->showProfile($userid);
 	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);

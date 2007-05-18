@@ -3090,6 +3090,57 @@ class blogops extends object
         	return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $tllink->show() . "<br />". $viewmyblog->show());
         }
     }
+    
+    public function showFullProfile($userid)
+    {
+    	if($this->showfullname == 'FALSE')
+    	{
+    		$pname = $this->objUser->userName($userid);
+    	}
+    	else {
+    		$pname = $this->objUser->fullName($userid);
+    	}
+    	$objFeatureBox = $this->getObject("featurebox", "navigation");
+    	$this->loadClass('label', 'htmlelements');
+    	$this->loadClass('href', 'htmlelements');
+    	$this->objUser = $this->getObject('user', 'security');
+    	$this->objConfig = $this->getObject('altconfig', 'config');
+    	$userimg = "<center>".$this->objUser->getUserImage()."</center>";
+		$tllink = new href($this->uri(array('module' => 'blog', 'action' => 'timeline', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
+    	//go back to your blog
+        $viewmyblog = new href($this->uri(array(
+            'action' => 'viewblog'
+        )) , $this->objLanguage->languageText("mod_blog_viewmyblog", "blog"));
+		$check = $this->objDbBlog->checkProfile($userid);
+        if($check != FALSE)
+        {
+        	$link = new href($this->uri(array('module' => 'blog', 'action' => 'viewprofile', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewprofileof", "blog") . " " . $this->objUser->userName($userid));
+        	$tllink = new href($this->uri(array('module' => 'blog', 'action' => 'timeline', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
+        	$foaffile = $this->objConfig->getsiteRoot() . "usrfiles/users/" . $userid . "/". $userid . ".rdf";
+        	@$rdfcont = file($foaffile);
+        	if(!empty($rdfcont))
+        	{
+        		$objFIcon = $this->newObject('geticon', 'htmlelements');
+        		$objFIcon->setIcon('foaftiny', 'gif', 'icons');
+                $lficon = new href($this->objConfig->getsiteRoot() . "/usrfiles/users/" . $userid . "/". $userid . ".rdf",
+                				   $objFIcon->show(),NULL);
+
+                $ficon = $lficon->show();
+        		//new href($this->objConfig->getsiteRoot() . "/usrfiles/users/" . $userid . "/". $userid . ".rdf", $this->objLanguage->languageText("mod_blog_foaflink", "blog"));
+        		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog")." ".$pname, $link->show() . "<br />" . $ficon . "<br />" . $tllink->show());
+        	}
+        	else {
+        		$objFeatureBox = $this->getObject("featurebox", "navigation");
+    	
+        		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog")." ".$pname, $link->show() . "<br />" . $tllink->show(). "<br />". $viewmyblog->show());
+        	}
+
+        }
+        else {
+        	$objFeatureBox = $this->getObject("featurebox", "navigation");
+        	return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog")." ".$pname, $userimg . "<br />" .$tllink->show() . "<br />". $viewmyblog->show());
+        }
+    }
 
     public function displayProfile($userid, $profile)
     {
