@@ -63,7 +63,7 @@ else {
 	$guestid = $this->objUser->userId();
 	if($guestid == $userid)
 	{
-		$leftCol .= $objSideBar->show();
+		$leftCol .= $leftMenu->show();
 		$leftCol .= $this->objblogOps->showProfile($userid);
 	}
 	else {

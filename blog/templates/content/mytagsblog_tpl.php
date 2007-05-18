@@ -13,7 +13,7 @@ $rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
 //show the categories menu (if there are cats)
 $rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE, $userid);
 $rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
-
+$leftCol = NULL;
 //show the admin section (if user is logged in)
 if(!$this->objUser->isLoggedIn())
 {
@@ -32,13 +32,13 @@ else {
 		$leftCol .= $this->objblogOps->showFullProfile($userid);
 	}
 	
-	$leftCol .= "<br />";
-	$leftCol .= $this->objblogOps->showProfile($userid);
+	//$leftCol .= "<br />";
+	//$leftCol .= $this->objblogOps->showProfile($userid);
 	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
 }
 
 //check for sticky posts
-if(!is_null($stickyposts))
+if(isset($stickyposts))
 {
 	$middlecolumn .= $this->objblogOps->showPosts($stickyposts, TRUE);
 }
@@ -155,7 +155,7 @@ if(!empty($rss))
 	}
 }
 
-$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
+//$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 //dump the cssLayout to screen
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol);

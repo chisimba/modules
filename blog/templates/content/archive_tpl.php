@@ -34,7 +34,7 @@ if($this->objblogOps->showPosts($posts) == FALSE)
 else {
 	$middleColumn .= ($this->objblogOps->showPosts($posts));
 }
-
+$leftCol = NULL;
 //left menu section
 //display the menu
 if(!$this->objUser->isLoggedIn())
@@ -53,8 +53,8 @@ else {
 		//echo "guest is diff";
 		$leftCol .= $this->objblogOps->showFullProfile($userid);
 	}
-	$leftCol .= "<br />";
-	$leftCol .= $this->objblogOps->showProfile($userid);
+	//$leftCol .= "<br />";
+	//$leftCol .= $this->objblogOps->showProfile($userid);
 	//show the admin section (if user is logged in)
 	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
 	//show the feeds section
