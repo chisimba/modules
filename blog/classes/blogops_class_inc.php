@@ -121,16 +121,6 @@ class blogops extends object
         }
     }
     
-    public function addBlink()
-    {
-    	
-    }
-    
-    public function deleteBlink()
-    {
-    	
-    }
-    
     public function editBlinks($featurebox = FALSE, $ldata = NULL)
     {
     	$this->loadClass('href', 'htmlelements');
@@ -689,7 +679,7 @@ class blogops extends object
         $rssadd->startRow();
         $rssurllabel = new label($this->objLanguage->languageText('mod_blog_rssurl', 'blog') .':', 'input_rssuser');
         $rssurl = new textinput('rssurl');
-        $rssurl->size = "100%";
+        $rssurl->extra = ' style="width:60%;" ';
         if(isset($rdata['url']))
         {
         $rssurl->setValue(htmlentities($rdata['url'], ENT_QUOTES));
@@ -704,7 +694,7 @@ class blogops extends object
         $rssadd->startRow();
         $rssnamelabel = new label($this->objLanguage->languageText('mod_blog_rssname', 'blog') .':', 'input_rssname');
         $rssname = new textinput('name');
-        $rssname->size = "100%";
+        $rssname->extra = ' style="width:60%;" ';
         if(isset($rdata['name']))
         {
         	$rssname->setValue($rdata['name']);
@@ -717,7 +707,7 @@ class blogops extends object
         $rssadd->startRow();
         $rssdesclabel = new label($this->objLanguage->languageText('mod_blog_rssdesc', 'blog') .':', 'input_rssname');
         $rssdesc = new textarea('description');
-        $rssdesc->extra = ' style="width:65%;" ';
+        $rssdesc->extra = ' style="width:60%;" ';
         if(isset($rdata['description']))
         {
           	//var_dump($rdata['description']);
