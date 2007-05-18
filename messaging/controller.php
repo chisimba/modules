@@ -97,7 +97,7 @@ class messaging extends controller
         // system objects
         $this->objUser = $this->getObject('user', 'security');
         $this->objContext = $this->getObject('dbcontext', 'context');
-        $this->objDatetime = $this->getObject('datetime', 'utilities');
+        $this->objDatetime = $this->getObject('dateandtime', 'utilities');
         $this->objLanguage = $this->getObject('language', 'language');
         //TODO: Once workgroups has been ported
         //$this->objWorkgroup = $this->getObject('dbworkgroup', 'workgroup');
@@ -406,12 +406,13 @@ class messaging extends controller
                     '[BLUE]' => '[/BLUE]',
                     '[YELLOW]' => '[/YELLOW]',
                     '[GREEN]' => '[/GREEN]',
+                    '[ORANGE]' => '[/ORANGE]',
+                    '[PURPLE]' => '[/PURPLE]',
+                    '[PINK]' => '[/PINK]',
                     '[S1]' => '[/S1]',
                     '[S2]' => '[/S2]',
                     '[S3]' => '[/S3]',
                     '[S4]' => '[/S4]',
-                    '[S5]' => '[/S5]',
-                    '[S6]' => '[/S6]',
                 );
                 foreach($codes as $open => $close){
                     $cntOpen = substr_count(strtoupper($message), strtoupper($open));

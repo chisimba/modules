@@ -138,10 +138,10 @@ class display extends object
         $this->objTimeOut = $this->newObject('timeoutMessage','htmlelements');
         
         // syatem classes
-                $this->loadClass('tabbedbox', 'htmlelements');
-$this->objLanguage = $this->getObject('language','language');
+        $this->loadClass('tabbedbox', 'htmlelements');
+        $this->objLanguage = $this->getObject('language','language');
         $this->objUser = $this->getObject('user', 'security');
-        $this->objDatetime = $this->getObject('datetime', 'utilities');
+        $this->objDatetime = $this->getObject('dateandtime', 'utilities');
         $this->objContext = $this->getObject('dbcontext', 'context');
         $this->userId = $this->objUser->userId(); 
         $this->isLecturer = $this->objUser->isContextLecturer();  
@@ -399,7 +399,7 @@ $this->objLanguage = $this->getObject('language','language');
         $descLabel = $this->objLanguage->languageText('mod_messaging_worddesscription', 'messaging');
         $entitiesLabel = $this->objLanguage->languageText('mod_messaging_entities', 'messaging');
         $textLabel = $this->objLanguage->languageText('mod_messaging_textonly', 'messaging');
-        $submitLabel = $this->objLanguage->languageText('mod_messaging_wordsubmit', 'messaging');
+        $submitLabel = $this->objLanguage->languageText('mod_messaging_createroom', 'messaging');
         $cancelLabel = $this->objLanguage->languageText('mod_messaging_wordcancel', 'messaging');
         $errNameLabel = $this->objLanguage->languageText('mod_messaging_errname', 'messaging');
         $errDescLabel = $this->objLanguage->languageText('mod_messaging_errdesc', 'messaging');
@@ -1106,7 +1106,7 @@ $this->objLanguage = $this->getObject('language','language');
                 if($mode == 'context'){
                     $str .= ']:</strong><br />';
                 }else{
-                    $str .= '&nbsp;-&nbsp;'.$date.']:</strong><br />';
+                    $str .= '&#160;-&#160;'.$date.']:</strong><br />';
                 }
                 if($roomData['text_only'] == 1){
                     $str .= nl2br($message['message']);
