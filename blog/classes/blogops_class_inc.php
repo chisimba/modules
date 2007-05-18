@@ -611,7 +611,7 @@ class blogops extends object
     	//echo $rsscache;
     	$objRss->parseRss($rsscache);
     	$rssbits = $objRss->getRssItems();
-    	if(empty($rssbits))
+    	if(empty($rssbits) || !isset($rssbits))
     	{
     		$objRss2 = $this->newObject('rssreader', 'feed');
     		// fallback to the known good url

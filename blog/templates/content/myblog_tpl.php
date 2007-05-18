@@ -135,7 +135,7 @@ if(!empty($rss))
 	foreach($rss as $feeds)
 	{
 		$timenow = time();
-		if($timenow - $feeds['rsstime'] > 43200)
+		if($timenow - $feeds['rsstime'] > 1) //43200)
 		{
 			$url = urldecode($feeds['url']);
 			$id = $feeds['id'];
