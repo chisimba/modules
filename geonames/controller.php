@@ -24,6 +24,7 @@ class geonames extends controller
         	$this->objDbGeo = $this->getObject('dbgeonames');
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objUser = $this->getObject('user', 'security');
+            $this->objConfig = $this->getObject('altconfig', 'config');
             //Get the activity logger class
             $this->objLog = $this->newObject('logactivity', 'logger');
             //Log this module call
@@ -66,9 +67,61 @@ class geonames extends controller
             						);
             		$this->objDbGeo->insertRecord($insarr);
             	}
+            	$message = $this->objLanguage->languageText("mod_geonames_uploaddone", "geonames");
+            	$this->setVarByRef('message', $message);
             	return 'main_tpl.php';
             	break;
-            	  	
+            	
+            case 'viewaskml':
+            	// grab the database and send out as kml
+            	$kml = $this->getObject('kmlgen','simplemap');
+            	// get all entries
+            	$entries = $this->objDbGeo->grabAllRecords();
+            	$doc = $kml->overlay('my map','a test map');
+            	foreach($entries as $row)
+            	{
+            		if(empty($row['elevation']))
+            		{
+            			$el = 0;
+            		}
+            		else {
+            			$el = $row['elevation'];
+            		}
+            		$doc .= $kml->generateSimplePlacemarker($row['name'], $row['name'], $row['longitude'],$row['latitude'],$el);
+            	}
+            	$doc .= $kml->simplePlaceSuffix();
+            	//echo $doc;
+            	$filename = $this->objConfig->getcontentbasePath().'test.kml';
+            	touch($filename);
+            	chmod($filename, 0777);
+				$somecontent = $doc;
+
+				// Let's make sure the file exists and is writable first.
+				if (is_writable($filename)) {
+
+					// In our example we're opening $filename in append mode.
+					// The file pointer is at the bottom of the file hence
+					// that's where $somecontent will go when we fwrite() it.
+					if (!$handle = fopen($filename, 'w')) {
+						echo "Cannot open file ($filename)";
+						exit;
+					}
+
+					// Write $somecontent to our opened file.
+					if (fwrite($handle, $somecontent) === FALSE) {
+						echo "Cannot write to file ($filename)";
+						exit;
+					}
+
+					echo "Success, wrote kml to file ($filename)";
+
+					fclose($handle);
+
+				} else {
+					echo "The file $filename is not writable";
+				}
+				break;
+
         }
     }
 }

@@ -6,12 +6,15 @@ $objFeatureBox = $this->newObject('featurebox', 'navigation');
 // Set columns to 3
 $cssLayout->setNumColumns(3);
 $leftMenu = NULL;
-
 $rightSideColumn = NULL;
-
 $leftCol = NULL;
 $middleColumn = NULL;
 
+// check for a message
+if(!empty($message))
+{
+	echo $message;
+}
 $leftCol .= $objSideBar->show();
 
 $middleColumn .= $this->objGeoOps->uploadDataFile();

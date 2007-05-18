@@ -48,7 +48,7 @@ class geoops extends object
         
         if ($featurebox == TRUE) {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_geonames_uploadpdfzipfile", "geonames") , $fileform);
+            $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_geonames_uploadzipfile", "geonames") , $fileform);
             return $ret;
         } else {
             return $fileform;

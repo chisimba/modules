@@ -42,5 +42,9 @@ class dbgeonames extends dbTable
 		return $this->insert($insarr, 'tbl_geonames');
 	}
 	
+	public function grabAllRecords()
+	{
+		return $this->getAll();
+	}
 }
 ?>
