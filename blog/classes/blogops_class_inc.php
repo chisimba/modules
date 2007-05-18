@@ -679,7 +679,7 @@ class blogops extends object
         $rssadd->startRow();
         $rssurllabel = new label($this->objLanguage->languageText('mod_blog_rssurl', 'blog') .':', 'input_rssuser');
         $rssurl = new textinput('rssurl');
-        $rssurl->extra = ' style="width:80%;" ';
+        $rssurl->extra = ' style="width:100%;" ';
         if(isset($rdata['url']))
         {
         $rssurl->setValue(htmlentities($rdata['url'], ENT_QUOTES));
@@ -694,7 +694,7 @@ class blogops extends object
         $rssadd->startRow();
         $rssnamelabel = new label($this->objLanguage->languageText('mod_blog_rssname', 'blog') .':', 'input_rssname');
         $rssname = new textinput('name');
-        $rssname->extra = ' style="width:80%;" ';
+        $rssname->extra = ' style="width:100%;" ';
         if(isset($rdata['name']))
         {
         	$rssname->setValue($rdata['name']);
@@ -707,7 +707,7 @@ class blogops extends object
         $rssadd->startRow();
         $rssdesclabel = new label($this->objLanguage->languageText('mod_blog_rssdesc', 'blog') .':', 'input_rssname');
         $rssdesc = new textarea('description');
-        $rssdesc->extra = ' style="width:80%;" ';
+        $rssdesc->extra = ' style="width:100%;" ';
         if(isset($rdata['description']))
         {
           	//var_dump($rdata['description']);
