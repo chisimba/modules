@@ -89,7 +89,7 @@ class blogops extends object
     	
     	if ($featurebox == TRUE) {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_links", "blog") , $str, 'bloglinks', 'none');
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_links", "blog") , $str, 'bloglinks', 'default');
             return $ret;
         } else {
             return $str;
@@ -3276,6 +3276,31 @@ class blogops extends object
         $pform->addToForm($this->objPButton->show());
         $pform = $pform->show();
         return $pform;
+    }
+    
+    public function showPages($userid, $featurebox = FALSE)
+    {
+    	$this->loadClass('href', 'htmlelements');
+    	//grab all of the links for the user
+    	$pages = $this->objDbBlog->getPages($userid);
+    	if(empty($pages))
+    	{
+    		return NULL;
+    	}
+    	$str = NULL;
+    	foreach($pages as $page)
+    	{
+    		$hr = new href($page['page_name'], $page['page_name'], 'target="_blank" alt="'.$page['page_name'].'"');
+    		$str .= "<ul>".$hr->show()."</ul>";
+    	}
+    	
+    	if ($featurebox == TRUE) {
+            $objFeatureBox = $this->getObject('featurebox', 'navigation');
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_pages", "blog") , $str, 'blogpages', 'default');
+            return $ret;
+        } else {
+            return $str;
+        }
     }
 
 }

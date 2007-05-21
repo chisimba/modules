@@ -88,6 +88,7 @@ class blogui extends object
 		$leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
 		$leftCol .= $this->objblogOps->showBlinks($userid, TRUE);
 		$leftCol .= $this->objblogOps->showBroll($userid, TRUE);
+		$leftCol .= $this->objblogOps->showPages($userid, TRUE);
 		
 		return $leftCol;
 	}
