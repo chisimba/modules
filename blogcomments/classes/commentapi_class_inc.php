@@ -231,6 +231,8 @@ class commentapi extends object
 			$auth = $comm['comment_author'];
 			$authurl = $comm['comment_author_url'];
 			$authemail = $comm['comment_author_email'];
+			$commentdate = $comm['comment_date'];
+			$hrcdate = date('r', $commentdate);
 			//do a check to see if the comment author is the viewer so that they can edit the comment inline
 			//get the userid
 			$viewerid = $this->objUser->userId();
@@ -310,7 +312,7 @@ class commentapi extends object
 
 			
 
-			$commtext .= $objFeatureBox->showComment($fboxhead, $washer->parseText($fboxcontent));
+			$commtext .= $objFeatureBox->showComment($fboxhead . " - ".$hrcdate, $washer->parseText($fboxcontent));
 		}
 		return $commtext;
 	}
