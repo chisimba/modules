@@ -2078,13 +2078,17 @@ class blogops extends object
         if (isset($editparams['post_category'])) {
             $pDrop->addOption($editparams['post_category'], $editparams['post_category']);
             $pDrop->setSelected($editparams['post_category']);
+            $pDrop->addOption(1, $this->objLanguage->languageText("mod_blog_defcat", "blog"));
+        }
+        else {
+        	$pDrop->addOption(0, $this->objLanguage->languageText("mod_blog_defcat", "blog"));
         }
 
         $pcats = $this->objDbBlog->getAllCats($userid);
         foreach($pcats as $adds) {
             $pDrop->addOption($adds['id'], stripslashes($adds['cat_name']));
         }
-        $pDrop->addOption(0, $this->objLanguage->languageText("mod_blog_defcat", "blog"));
+        
         $ptable->addCell($pdlabel->show());
         $ptable->addCell($pDrop->show());
         $ptable->endRow();
