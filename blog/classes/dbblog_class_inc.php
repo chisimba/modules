@@ -539,7 +539,7 @@ class dbblog extends dbTable
 							'showpdf' => $postarr['showpdf']);
 
 			$insarr['id'] = $this->insert($insarr, 'tbl_blog_posts');
-			//return $this->luceneIndex($insarr);
+			$this->luceneIndex($insarr);
 			return TRUE;
 		}
 		if($mode == 'editpost')
@@ -565,7 +565,7 @@ class dbblog extends dbTable
 							'showpdf' => $postarr['showpdf']);
 
 			$this->update('id',$postarr['id'], $edarr, 'tbl_blog_posts');
-			//return $this->luceneReIndex($postarr);
+			$this->luceneReIndex($postarr);
 			return TRUE;
 		}
 		if($mode == 'import')
@@ -588,7 +588,7 @@ class dbblog extends dbTable
 							'post_lic' => $postarr['cclic']);
 
 			$imparr['id'] = $this->insert($imparr, 'tbl_blog_posts');
-			//return $this->luceneIndex($imparr);
+			$this->luceneIndex($imparr);
 			return TRUE;
 
 		}
@@ -613,7 +613,7 @@ class dbblog extends dbTable
 							'post_lic' => $postarr['cclic']);
 
 			$mparr['id'] = $this->insert($mparr, 'tbl_blog_posts');
-			//return $this->luceneIndex($mparr);
+			$this->luceneIndex($mparr);
 			return TRUE;
 		}
 		else {
@@ -636,7 +636,7 @@ class dbblog extends dbTable
 							'showpdf' => $postarr['showpdf']);
 
 			$this->update('id',$postarr['id'], $inseditarr, 'tbl_blog_posts');
-			//return $this->luceneReIndex($postarr);
+			$this->luceneReIndex($postarr);
 			return TRUE;
 		}
 	}
@@ -907,7 +907,7 @@ class dbblog extends dbTable
 
     	//set the properties that we want to use in our index
     	//id for the index and optimization
-		$document->addField(Zend_Search_Lucene_Field::UnStored('docid', $data['id']));
+		$document->addField(Zend_Search_Lucene_Field::Text('docid', $data['id']));
     	//date
     	$document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['post_date']));
     	//url
@@ -966,7 +966,7 @@ class dbblog extends dbTable
 
     	//set the properties that we want to use in our index
     	//id for the index and optimization
-		$document->addField(Zend_Search_Lucene_Field::UnStored('docid', $data['id']));
+		$document->addField(Zend_Search_Lucene_Field::Text('docid', $data['id']));
     	//date
     	$document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['postdate']));
     	//url
