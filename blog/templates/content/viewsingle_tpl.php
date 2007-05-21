@@ -27,13 +27,7 @@ if(isset($msg))
 $cssLayout = &$this->newObject('csslayout', 'htmlelements');
 // Set columns to 3
 $cssLayout->setNumColumns(3);
-$leftMenu = &$this->newObject('usermenu', 'toolbar');
-$rightSideColumn = NULL; //$this->objLanguage->languageText('mod_blog_instructions', 'blog');
 $middleColumn = NULL;
-
-$rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
-$rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
-
 //show all the posts
 $middleColumn .= ($this->objblogOps->showPosts($posts, TRUE));
 $middleColumn .= $this->objComments->showComments($postid);
@@ -45,40 +39,11 @@ if($this->objUser->isLoggedIn() == TRUE)
 else {
 	$middleColumn .= $this->objblogOps->addCommentForm($postid, $userid, $captcha = TRUE);
 }
-
-
-
-//show the comments for this post
-
-
-$leftCol = NULL;
-
-if(!$this->objUser->isLoggedIn())
-{
-	$leftCol = $this->objblogOps->loginBox(TRUE);
-	$leftCol .= $this->objblogOps->showFullProfile($userid);
-	
-}
-else {
-	$guestid = $this->objUser->userId();
-	if($guestid == $userid)
-	{
-		$leftCol .= $leftMenu->show();
-		$leftCol .= $this->objblogOps->showProfile($userid);
-	}
-	else {
-		//echo "guest is diff";
-		$leftCol .= $this->objblogOps->showFullProfile($userid);
-	}
-	//$leftCol .= $objSideBar->show();
-	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
-}
-//show the feeds section
-$leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
-$leftCol .= $this->objblogOps->showBlinks($userid, TRUE);
-$leftCol .= $this->objblogOps->showBroll($userid, TRUE);
-$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
-
+$objUi = $this->getObject('blogui');
+// left hand blocks
+$leftCol = $objUi->leftBlocks($userid);
+// right side blocks
+$rightSideColumn = $objUi->rightBlocks($userid, NULL);
 //dump the cssLayout to screen
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol);

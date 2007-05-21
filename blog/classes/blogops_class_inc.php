@@ -2036,6 +2036,12 @@ class blogops extends object
      */
     public function postEditor($userid, $editid = NULL)
     {
+    	$this->loadClass('label', 'htmlelements');
+		$this->loadClass('textinput', 'htmlelements');
+		$this->loadClass('form', 'htmlelements');
+		//$this->loadClass('heading', 'htmlelements');
+		$this->loadClass('href', 'htmlelements');
+		$this->loadClass('htmlarea', 'htmlelements');
         if (isset($editid)) {
             $mode = 'editpost';
             //get the relevant post from the editid

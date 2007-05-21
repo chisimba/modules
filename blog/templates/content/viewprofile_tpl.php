@@ -3,16 +3,9 @@
 $cssLayout = &$this->newObject('csslayout', 'htmlelements');
 // Set columns to 3
 $cssLayout->setNumColumns(3);
-$leftMenu = &$this->newObject('usermenu', 'toolbar');
-$rightSideColumn = NULL; //$this->objLanguage->languageText('mod_blog_instructions', 'blog');
 $middleColumn = NULL;
-
-//show the link to all blogs
-$rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
-//show the admin section (if user is logged in)
 if(!$this->objUser->isLoggedIn())
 {
-	$leftCol = $this->objblogOps->loginBox(TRUE);
 	if(isset($vprofile))
 	{
 		$middleColumn .= $this->objblogOps->displayProfile($userid, $vprofile);
@@ -22,11 +15,6 @@ if(!$this->objUser->isLoggedIn())
 	}
 }
 else {
-	//display the menu
-	$leftCol = $leftMenu->show();
-	//$leftCol .= $this->objblogOps->showProfile($userid);
-	$leftCol .= "<br />";
-	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
 	if(isset($vprofile))
 	{
 		$middleColumn .= $this->objblogOps->displayProfile($userid, $vprofile);
@@ -34,9 +22,12 @@ else {
 	else {
 		$middleColumn .= $this->objLanguage->languageText("mod_blog_noprofile", "blog");
 	}
-
 }
-
+$objUi = $this->getObject('blogui');
+// left hand blocks
+$leftCol = $objUi->leftBlocks($userid);
+// right side blocks
+$rightSideColumn = $objUi->rightBlocks($userid, NULL);
 //dump the cssLayout to screen
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol);
