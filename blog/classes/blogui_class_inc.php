@@ -99,7 +99,10 @@ class blogui extends object
 		$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 		$rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
 		$rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE, $userid);
-		$rightSideColumn .= $this->objblogOps->quickCats(TRUE);
+		if($this->objUser->isLoggedIn())
+		{
+			$rightSideColumn .= $this->objblogOps->quickCats(TRUE);
+		}
 		
 		return $rightSideColumn;
 	}

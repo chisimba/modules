@@ -1422,6 +1422,7 @@ class blog extends controller
                 $req = $_REQUEST;
                 $id = $this->getParam('postid');
                 $userid = $this->getParam('userid');
+                $this->setVarByRef('userid', $userid);
                 $pd = $_POST;
                 $pd['host'] = $_SERVER['REMOTE_ADDR'];
                 $pd['id'] =  $id;

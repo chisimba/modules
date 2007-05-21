@@ -8,7 +8,7 @@ $middleColumn = NULL;
 $objFeatureBox = $this->getObject('featurebox', 'navigation');
 $theurl = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_tbheader","blog"), $theurl);
 $middleColumn .= $theurl;
-$userid = $this->objUser->userId();
+//$userid = $this->objUser->userId();
 $objUi = $this->getObject('blogui');
 // left hand blocks
 $leftCol = $objUi->leftBlocks($userid);
