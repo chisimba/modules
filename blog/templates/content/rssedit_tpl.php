@@ -9,6 +9,17 @@ $objUi = $this->getObject('blogui');
 $leftCol = $objUi->leftBlocks($userid);
 // right side blocks
 $rightSideColumn = $objUi->rightBlocks($userid, NULL);
+
+if($this->objUser->isLoggedIn())
+{
+	if(!empty($rdata))
+	{
+		$middleColumn .= $this->objblogOps->rssEditor(FALSE, $rdata);
+	}
+	else {
+		$middleColumn .= $this->objblogOps->rssEditor(FALSE);
+	}
+}
 if(!empty($rss))
 {
 	foreach($rss as $feeds)
@@ -24,6 +35,7 @@ if(!empty($rss))
 		$leftCol .= $this->objblogOps->rssBox($url, $feeds['name']);
 	}
 }
+
 //dump the cssLayout to screen
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol);

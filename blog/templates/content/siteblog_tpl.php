@@ -1,39 +1,13 @@
 <?php
-
 $cssLayout = &$this->newObject('csslayout', 'htmlelements');
 // Set columns to 3
 $cssLayout->setNumColumns(3);
-$leftMenu = &$this->newObject('usermenu', 'toolbar');
-$rightSideColumn = NULL; //$this->objLanguage->languageText('mod_blog_instructions', 'blog');
 $middleColumn = NULL;
-
-$rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
-
-
-$rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
-
-//$rightSideColumn .= "<br />";
-
-//show the link categories (if any)
-//$rightSideColumn .= $this->objblogOps->showLinkCats($linkcats, TRUE);
-
-//show the admin section (if user is logged in)
-if(!$this->objUser->isLoggedIn())
-{
-    //$leftCol = $this->objblogOps->loginBox(TRUE);
-}
-else {
-	$rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
-    //show the categories menu (if there are cats)
-    $rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE);
-    //left menu section
-    //display the menu
-  //  $leftCol = $leftMenu->show();
-   // $leftCol .= "<br />";
-   // $rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);
-}
-
-
+$objUi = $this->getObject('blogui');
+// left hand blocks
+$leftCol = $objUi->leftBlocks($userid);
+// right side blocks
+$rightSideColumn = $objUi->rightBlocks($userid, NULL);
 //show all the posts
 if(isset($catid) && empty($posts))
 {
@@ -51,12 +25,6 @@ elseif(!isset($catid) && empty($posts))
 else {
     $middleColumn .= ($this->objblogOps->showPosts($posts));
 }
-
-
-
-//show the feeds section
-$leftCol = $this->objblogOps->showFeeds($userid, TRUE);
-$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
 //dump the cssLayout to screen
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol);
