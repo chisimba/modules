@@ -1035,6 +1035,11 @@ class dbblog extends dbTable
     	return $this->delete('id', $id, 'tbl_blog_links');
     }
 
+    public function savepage($pagearr)
+    {
+    	$this->_changeTable('tbl_blog_pages');
+    	return $this->insert($pagearr, 'tbl_blog_pages');
+    }
 
 	/**
 	 * Method to dynamically switch tables

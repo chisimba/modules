@@ -1992,6 +1992,30 @@ class blog extends controller
         	return 'bloglinks_tpl.php';
         	break;
         	
+        case 'setpage':
+            //page stuff
+            $mode = $this->getParam('mode');
+            $userid = $this->objUser->userId();
+            //ok lets check if this user already has a page or not...
+            //$check = $this->objDbBlog->checkpage($userid);
+            
+            if($mode == 'savepage')
+            {
+                $pagename = addslashes($this->getParam('page_name'));
+                $pagecontent = addslashes($this->getParam('page_content'));
+                // save the page to the table
+                $prfarr = array('userid' => $userid, 'page_name' => $pagename, 'page_content' => $pagecontent);
+                $this->objDbBlog->savepage($prfarr);
+                $this->nextAction('viewblog');
+                break;
+            }
+            //set up the template
+            $this->setVarByRef('userid', $userid);
+            $this->setVar('pageSuppressXML', TRUE);
+            return 'page_tpl.php';
+            break;
+
+        	
         }//action
 
     }

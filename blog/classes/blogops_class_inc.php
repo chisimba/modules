@@ -3211,5 +3211,72 @@ class blogops extends object
         return $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_profileof", "blog") . " " . $namer, $content);
 
     }
+    
+    public function pageEditor($userid, $page = NULL)
+    {
+    	//start a form object
+        $this->loadClass('textarea', 'htmlelements');
+        $this->loadClass('htmlarea', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        if($page != NULL)
+        {
+        	$pform = new form('setpage', $this->uri(array(
+            'action' => 'editpage', 'mode' => 'editpage', 'id' => $page['id']
+        	)));
+        }
+        else {
+        	$pform = new form('setpage', $this->uri(array(
+            	'action' => 'setpage', 'mode' => 'savepage',
+        	)));
+        }
+        $pfieldset = $this->newObject('fieldset', 'htmlelements');
+        //$pfieldset->setLegend($this->objLanguage->languageText('mod_blog_setpage', 'blog'));
+        $ptable = $this->newObject('htmltable', 'htmlelements');
+        $ptable->cellpadding = 3;
+        $ptable->startHeaderRow();
+        $ptable->addHeaderCell('');
+        $ptable->addHeaderCell('');
+        $ptable->endHeaderRow();
+
+        //page name field
+        $ptable->startRow();
+        $bnamelabel = new label($this->objLanguage->languageText('mod_blog_pagename', 'blog') .':', 'input_pagename');
+        $bname = new textinput('page_name');
+        if(isset($page['page_name']))
+        {
+        	$bname->setValue($page['page_name']);
+        }
+        $bname->size = 59;
+        //$bname->setValue();
+        $ptable->addCell($bnamelabel->show());
+        $ptable->addCell($bname->show());
+        $ptable->endRow();
+
+        //content page field
+        $ptable->startRow();
+        $bprflabel = new label($this->objLanguage->languageText('mod_blog_pagecontent', 'blog') .':', 'input_pagecontent');
+        $bprf = $this->newObject('htmlarea', 'htmlelements');
+        $bprf->setName('page_content');
+        if(isset($page['page_content']))
+        {
+        	$bprf->setcontent($page['page_content']);
+        }
+
+        $ptable->addCell($bprflabel->show());
+        $ptable->addCell($bprf->showFCKEditor());
+        $ptable->endRow();
+
+        //put it all together and set up a submit button
+        $pfieldset->addContent($ptable->show());
+        $pform->addToForm($pfieldset->show());
+        $this->objPButton = new button($this->objLanguage->languageText('word_save', 'system'));
+        $this->objPButton->setValue($this->objLanguage->languageText('word_save', 'system'));
+        $this->objPButton->setToSubmit();
+        $pform->addToForm($this->objPButton->show());
+        $pform = $pform->show();
+        return $pform;
+    }
+
 }
 ?>
