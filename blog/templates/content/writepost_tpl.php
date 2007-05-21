@@ -9,7 +9,7 @@ $this->loadClass('form', 'htmlelements');
 $this->loadClass('href', 'htmlelements');
 $this->loadClass('htmlarea', 'htmlelements');
 
-
+//echo $this->objblogOps->showKML(); die();
 $cssLayout = &$this->newObject('csslayout', 'htmlelements');
 $objSideBar = $this->newObject('sidebar', 'navigation');
 
@@ -26,7 +26,10 @@ $leftCol = $leftMenu->show();
 
 //get the posts editor
 $middleColumn = $this->objblogOps->postEditor($userid, NULL);
-//$middleColumn .= $this->objblogOps->geoTagForm();
+
+//geotag part
+$middleColumn .= $this->objblogOps->geoTagForm();
+
 $rightSideColumn .= $this->objblogOps->quickCats(TRUE);
 $rightSideColumn .= $this->objblogOps->showAdminSection(TRUE);//quickPost($userid, TRUE);
 $cssLayout->setMiddleColumnContent($middleColumn);

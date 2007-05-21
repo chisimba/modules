@@ -1745,6 +1745,7 @@ class blogops extends object
      */
     public function quickCats($featurebox = FALSE)
     {
+    	$this->loadClass('textinput', 'htmlelements');
         $qcatform = new form('qcatadd', $this->uri(array(
             'action' => 'catadd',
             'mode' => 'quickadd'
@@ -1965,6 +1966,12 @@ class blogops extends object
     }
     public function catedit($catarr, $userid, $catid)
     {
+    	$this->loadClass('label', 'htmlelements');
+		$this->loadClass('textinput', 'htmlelements');
+		$this->loadClass('form', 'htmlelements');
+		//$this->loadClass('heading', 'htmlelements');
+		$this->loadClass('href', 'htmlelements');
+		$this->loadClass('htmlarea', 'htmlelements');
         //add a new category form:
         $catform = new form('catadd', $this->uri(array(
             'action' => 'catadd',
@@ -2396,7 +2403,10 @@ class blogops extends object
                 $post['post_category'] = $this->objLanguage->languageText("mod_blog_word_default", "blog");
             } else {
                 $mapcats = $this->objDbBlog->mapKid2Parent($post['post_category']);
-                $post['post_category'] = $mapcats[0]['cat_name'];
+                if(isset($mapcats[0]))
+                {
+                	$post['post_category'] = $mapcats[0]['cat_name'];
+                }
             }
             $edtable->addCell($post['post_category']);
             //do the edit and delete icon

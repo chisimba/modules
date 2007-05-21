@@ -1,30 +1,12 @@
 <?php
-
-//random blog template
-
+// random blog template
 $this->loadClass('href', 'htmlelements');
-$tt = $this->newObject('domtt', 'htmlelements');
 $cssLayout = &$this->newObject('csslayout', 'htmlelements');
-$objSideBar = $this->newObject('usermenu', 'toolbar');
+$objUi = $this->getObject('blogui');
 // Set columns to 3
 $cssLayout->setNumColumns(3);
-$leftMenu = NULL;
-
-$rightSideColumn = NULL;
-
-//set up a link to the other users blogs...
-//show the link to all blogs
-$rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
-$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
-$rightSideColumn .= $this->objblogOps->blogTagCloud($userid);
-
-//show the categories menu (if there are cats)
-$rightSideColumn .= $this->objblogOps->showCatsMenu($cats, TRUE, $userid);
-
-
-$leftCol = NULL;
 $middleColumn = NULL;
-//var_dump($latestpost);
+
 //check for sticky posts
 if(!is_null($stickypost))
 {
@@ -60,36 +42,12 @@ else {
 		$middleColumn .= "<center>" . $linker->show() . "</center>";
 	}
 }
-//left menu section
-$leftCol = NULL;
-//check if the user is logged in or not...
-if($this->objUser->isLoggedIn())
-{
-	
-	$guestid = $this->objUser->userId();
-	if($guestid == $userid)
-	{
-		$leftCol .= $objSideBar->show();
-		$leftCol .= $this->objblogOps->showProfile($userid);
-	}
-	else {
-		//echo "guest is diff";
-		$leftCol .= $this->objblogOps->showFullProfile($userid);
-	}
-	//$leftCol .= $objSideBar->show();
-	
-	$leftCol .= $this->objblogOps->showAdminSection(TRUE);
-	$rightSideColumn .=$this->objblogOps->quickPost($this->objUser->userId(), TRUE);
-	//$rightSideColumn .= $this->objblogOps->archiveBox($userid, TRUE);
-}
-else {
-	$leftCol = $this->objblogOps->loginBox(TRUE);
-	$leftCol .= $this->objblogOps->showFullProfile($userid);
-	//$leftCol .= $this->objblogOps->showProfile($userid);
-	//$rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
-}
-//show the feeds section
-$leftCol .= $this->objblogOps->showFeeds($userid, TRUE);
+
+// left hand blocks
+$leftCol = $objUi->leftBlocks($userid);
+// right side blocks
+$rightSideColumn = $objUi->rightBlocks($userid, $cats);
+
 if(!empty($rss))
 {
 	foreach($rss as $feeds)
@@ -108,8 +66,7 @@ if(!empty($rss))
 
 	}
 }
-$leftCol .= $this->objblogOps->showBlinks($userid, TRUE);
-$leftCol .= $this->objblogOps->showBroll($userid, TRUE);
+
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());
 $cssLayout->setRightColumnContent($rightSideColumn);
