@@ -1691,21 +1691,24 @@ class cmsutils extends object
         {
 
             //initiate objects
+            $this->loadClass('textinput', 'htmlelements');
+            $this->loadClass('htmltable', 'htmlelements');
+            
             $table =$this->newObject('htmltable', 'htmlelements');
 			$objRound =$this->newObject('roundcorners','htmlelements');
 			$objIcon =  $this->newObject('geticon', 'htmlelements');
 			$tbl = $this->newObject('htmltable', 'htmlelements');
-            $titleInput =$this->newObject('textinput', 'htmlelements');
-            $menuTextInput =$this->newObject('textinput', 'htmlelements');
+            //$titleInput =$this->newObject('textinput', 'htmlelements');
+            //$menuTextInput =$this->newObject('textinput', 'htmlelements');
             $h3 =$this->newObject('htmlheading', 'htmlelements');
-            $sections =$this->newObject('dropdown', 'htmlelements');
-            $parent =$this->newObject('dropdown', 'htmlelements');
+            //$sections =$this->newObject('dropdown', 'htmlelements');
+            //$parent =$this->newObject('dropdown', 'htmlelements');
             $button =$this->newObject('button', 'htmlelements');
-            $objRootId =$this->newObject('textinput', 'htmlelements');
-            $objParentId =$this->newObject('textinput', 'htmlelements');
-            $objCount =$this->newObject('textinput', 'htmlelements');
-            $objOrdering =$this->newObject('textinput', 'htmlelements');
-			$ContextInput =$this->newObject('textinput', 'htmlelements');
+            //$objRootId =$this->newObject('textinput', 'htmlelements');
+            //$objParentId =$this->newObject('textinput', 'htmlelements');
+            //$objCount =$this->newObject('textinput', 'htmlelements');
+            //$objOrdering =$this->newObject('textinput', 'htmlelements');
+			//$ContextInput =$this->newObject('textinput', 'htmlelements');
 			$objLayer =$this->newObject('layer', 'htmlelements');
 			$this->loadClass('image','htmlelements');
 			$objFiles =$this->getObject('dbfile','filemanager');
@@ -1807,20 +1810,24 @@ class cmsutils extends object
                 $isPublished = $section['published'];
                 $hideTitle = isset($section['hidetitle']) ? $section['hidetitle'] : '0';
                 //Set rootid as hidden field
+                $objRootId = new textinput();
                 $objRootId->name = 'rootid';
                 $objRootId->id = 'rootid';
                 $objRootId->fldType = 'hidden';
                 $objRootId->value = $section['rootid'];
                 //Set parentid as hidden field
+                $objParentId = new textinput();
                 $objParentId->name = 'parent';
                 $objParentId->id = 'parent';
                 $objParentId->fldType = 'hidden';
                 $objParentId->value = $section['parentid'];
                 //Set parentid as hidden field
+                $objCount = new textinput();
                 $objCount->name = 'count';
                 $objCount->fldType = 'hidden';
                 $objCount->value = $section['nodelevel'];
                 //Set parentid as hidden field
+                $objOrdering = new textinput();
                 $objOrdering->name = 'ordering';
                 $objOrdering->fldType = 'hidden';
                 $objOrdering->value = $section['ordering'];
@@ -1956,7 +1963,9 @@ class cmsutils extends object
             $showdate->setBreakSpace(' &nbsp; ');
 
             //Intro text
-            $introText =& $this->newObject('htmlarea', 'htmlelements');
+            $this->loadClass('textarea', 'htmlelements');
+            $introText = new textarea();
+            //$introText =& $this->newObject('htmlarea', 'htmlelements');
             $introText->name = 'introtext';
             $introText->height = '500px';
             if ($editmode) {
