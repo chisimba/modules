@@ -2014,6 +2014,14 @@ class blog extends controller
             $this->setVar('pageSuppressXML', TRUE);
             return 'page_tpl.php';
             break;
+            
+        case 'showpage':
+        	$pageid = $this->getParam('pageid');
+        	// grab the page out of the db and display it
+        	$page = $this->objDbBlog->getPageById($pageid);
+        	// parse with the washout class
+        	$this->setVarByRef('page', $page);
+        	return 'pageview_tpl.php';
 
         	
         }//action

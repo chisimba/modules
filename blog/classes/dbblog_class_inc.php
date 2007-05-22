@@ -1046,6 +1046,12 @@ class dbblog extends dbTable
     	$this->_changeTable('tbl_blog_pages');
     	return $this->getAll("WHERE userid = '$userid'");
     }
+    
+    public function getPageById($id)
+    {
+    	$this->_changeTable('tbl_blog_pages');
+    	return $this->getAll("WHERE id = '$id'");
+    }
 
 	/**
 	 * Method to dynamically switch tables
