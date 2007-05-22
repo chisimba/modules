@@ -1995,9 +1995,10 @@ class blog extends controller
         case 'setpage':
             //page stuff
             $mode = $this->getParam('mode');
+            //echo $mode;
             $userid = $this->objUser->userId();
             //ok lets check if this user already has a page or not...
-            //$check = $this->objDbBlog->checkpage($userid);
+            $check = $this->objDbBlog->getPages($userid);
             
             if($mode == 'savepage')
             {
@@ -2005,11 +2006,38 @@ class blog extends controller
                 $pagecontent = addslashes($this->getParam('page_content'));
                 // save the page to the table
                 $prfarr = array('userid' => $userid, 'page_name' => $pagename, 'page_content' => $pagecontent);
+                $this->setVarByRef('userid', $userid);
                 $this->objDbBlog->savepage($prfarr);
-                $this->nextAction('viewblog');
+                $this->nextAction('setpage');
                 break;
             }
+            elseif($mode == 'editpage')
+            {
+            	$pageid = $this->getParam('id');
+            	$pagename = addslashes($this->getParam('page_name'));
+                $pagecontent = addslashes($this->getParam('page_content'));
+                //echo $pagename, $pagecontent, $pageid;
+                if(!empty($pagename) && !empty($pagecontent))
+                {
+                	//echo "updating page";
+                	// save the page to the table
+                	$this->objDbBlog->updatePage($pageid, array('userid' => $userid, 'page_name' => $pagename, 'page_content' => $pagecontent));
+                	$this->nextAction('setpage');
+                }
+                
+            	$userid = $this->objUser->userId();
+            	// get the page
+            	$page = $this->objDbBlog->getPageById($pageid);
+            	$this->setVarByRef('pagetoedit', $page);
+            	$this->setVarByRef('userid', $userid);
+            	$this->setVarByRef('check', $check);
+            	$this->setVar('pageSuppressXML', TRUE);
+            	return 'page_tpl.php';
+            	break;
+            	
+            }
             //set up the template
+            $this->setVarByRef('check', $check);
             $this->setVarByRef('userid', $userid);
             $this->setVar('pageSuppressXML', TRUE);
             return 'page_tpl.php';
@@ -2020,7 +2048,14 @@ class blog extends controller
         	// grab the page out of the db and display it
         	$page = $this->objDbBlog->getPageById($pageid);
         	$this->setVarByRef('page', $page);
+        	$this->setVar('pageSuppressXML', TRUE);
         	return 'pageview_tpl.php';
+        	
+        case 'deletepage':
+        	$pageid = $this->getParam('id');
+        	$this->objDbBlog->deletePage($pageid);
+        	$this->nextAction('setpage');
+        	break;
 
         	
         }//action

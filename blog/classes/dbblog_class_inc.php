@@ -1041,6 +1041,18 @@ class dbblog extends dbTable
     	return $this->insert($pagearr, 'tbl_blog_pages');
     }
     
+    public function updatePage($id, $pagearr)
+    {
+    	$this->_changeTable('tbl_blog_pages');
+    	return $this->update('id',$id, $pagearr, 'tbl_blog_pages');
+    }
+    
+    public function deletePage($id)
+    {
+    	$this->_changeTable('tbl_blog_pages');
+    	return $this->delete('id',$id,'tbl_blog_pages');
+    }
+    
     public function getPages($userid)
     {
     	$this->_changeTable('tbl_blog_pages');

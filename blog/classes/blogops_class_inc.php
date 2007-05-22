@@ -1183,6 +1183,10 @@ class blogops extends object
         $linksedits = new href($this->uri(array(
         	'action' => 'linkeditor')) , $this->objLanguage->languageText("mod_blog_linksaddedit", "blog"));
         //view all other blogs
+        $addeditpages = new href($this->uri(array(
+            'action' => 'setpage'
+        )) , $this->objLanguage->languageText("mod_blog_blogpages", "blog"));
+        //view all other blogs
         $viewblogs = new href($this->uri(array(
             'action' => 'allblogs'
         )) , $this->objLanguage->languageText("mod_blog_viewallblogs", "blog"));
@@ -1238,15 +1242,15 @@ class blogops extends object
             	if($this->mail2blog == FALSE)
             	{
             		$topper = $newpost->show() ."<br />".$editpost->show() ."<br />".$viewmyblog->show();
-            		$ret.= $admin->show() ."<br />". $profile->show() . "<br />" . $import->show() ."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$linksedits->show()."<br />".$viewblogs->show();
+            		$ret.= $admin->show() ."<br />". $profile->show() . "<br />" . $import->show() ."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$linksedits->show()."<br />".$addeditpages->show()."<br />".$viewblogs->show();
             	}
             	else {
             		$topper = $newpost->show() ."<br />".$editpost->show() ."<br />".$viewmyblog->show();
-                	$ret.= $admin->show() ."<br />". $profile->show() . "<br />" . $import->show() ."<br />".$mailsetup->show()."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$linksedits->show()."<br />".$viewblogs->show();
+                	$ret.= $admin->show() ."<br />". $profile->show() . "<br />" . $import->show() ."<br />".$mailsetup->show()."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$linksedits->show()."<br />".$addeditpages->show()."<br />".$viewblogs->show();
             	}
             } else {
             	$topper = $newpost->show() ."<br />".$editpost->show() ."<br />".$viewmyblog->show();
-                $ret.= $admin->show() ."<br />". $profile->show() . "<br />" .$import->show() ."<br />".$editcats->show() ."<br />".$rssedits->show() ."<br />".$linksedits->show()."<br />".$viewblogs->show();
+                $ret.= $admin->show() ."<br />". $profile->show() . "<br />" .$import->show() ."<br />".$editcats->show() ."<br />".$rssedits->show() ."<br />".$linksedits->show()."<br />".$addeditpages->show()."<br />".$viewblogs->show();
             }
         }
         if ($featurebox == FALSE) {
@@ -3212,17 +3216,19 @@ class blogops extends object
 
     }
     
-    public function pageEditor($userid, $page = NULL)
+    public function pageEditor($userid, $check = NULL, $page = NULL, $featurebox = FALSE)
     {
     	//start a form object
-        $this->loadClass('textarea', 'htmlelements');
+        $this->loadClass('href', 'htmlelements');
+    	$this->loadClass('textarea', 'htmlelements');
         $this->loadClass('htmlarea', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
+        //var_dump($page);
         if($page != NULL)
         {
         	$pform = new form('setpage', $this->uri(array(
-            'action' => 'editpage', 'mode' => 'editpage', 'id' => $page['id']
+            'action' => 'setpage', 'mode' => 'editpage', 'id' => $page[0]['id']
         	)));
         }
         else {
@@ -3243,9 +3249,9 @@ class blogops extends object
         $ptable->startRow();
         $bnamelabel = new label($this->objLanguage->languageText('mod_blog_pagename', 'blog') .':', 'input_pagename');
         $bname = new textinput('page_name');
-        if(isset($page['page_name']))
+        if(isset($page[0]['page_name']))
         {
-        	$bname->setValue($page['page_name']);
+        	$bname->setValue($page[0]['page_name']);
         }
         $bname->size = 59;
         //$bname->setValue();
@@ -3258,9 +3264,9 @@ class blogops extends object
         $bprflabel = new label($this->objLanguage->languageText('mod_blog_pagecontent', 'blog') .':', 'input_pagecontent');
         $bprf = $this->newObject('htmlarea', 'htmlelements');
         $bprf->setName('page_content');
-        if(isset($page['page_content']))
+        if(isset($page[0]['page_content']))
         {
-        	$bprf->setcontent($page['page_content']);
+        	$bprf->setcontent($page[0]['page_content']);
         }
 
         $ptable->addCell($bprflabel->show());
@@ -3275,7 +3281,53 @@ class blogops extends object
         $this->objPButton->setToSubmit();
         $pform->addToForm($this->objPButton->show());
         $pform = $pform->show();
-        return $pform;
+        
+        //ok now the table with the edit/delete for each rss feed
+        $efeeds = $this->objDbBlog->getUserRss($this->objUser->userId());
+        $ftable = $this->newObject('htmltable', 'htmlelements');
+        $ftable->cellpadding = 3;
+        //$ftable->border = 1;
+        //set up the header row
+        $ftable->startHeaderRow();
+        $ftable->addHeaderCell($this->objLanguage->languageText("mod_blog_phead_name", "blog"));
+        //$ftable->addHeaderCell($this->objLanguage->languageText("mod_blog_phead_description", "blog"));
+        $ftable->addHeaderCell('');
+        $ftable->endHeaderRow();
+
+        //set up the rows and display
+        if (!empty($check)) {
+            foreach($check as $rows) {
+                $ftable->startRow();
+                $feedlink = new href($this->uri(array('action' => 'showpage', 'pageid' => $rows['id'])), $rows['page_name'], 'target="_blank" alt="'.$rows['page_name'].'"');
+                $ftable->addCell($feedlink->show());
+                //$ftable->addCell(htmlentities($rows['name']));
+                $this->objIcon = &$this->getObject('geticon', 'htmlelements');
+                $edIcon = $this->objIcon->getEditIcon($this->uri(array(
+                    'action' => 'setpage',
+                    'mode' => 'editpage',
+                    'id' => $rows['id'],
+                    'module' => 'blog'
+                )));
+                $delIcon = $this->objIcon->getDeleteIconWithConfirm($rows['id'], array(
+                    'module' => 'blog',
+                    'action' => 'deletepage',
+                    'id' => $rows['id']
+                ) , 'blog');
+                $ftable->addCell($edIcon.$delIcon);
+                $ftable->endRow();
+            }
+            //$ftable = $ftable->show();
+        }
+
+        if ($featurebox == TRUE) {
+            $objFeatureBox = $this->getObject('featurebox', 'navigation');
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_editpages", "blog") , $pform.$ftable->show());
+            return $ret;
+        } else {
+            return $pform . $ftable->show();
+        }
+
+        //return $pform;
     }
     
     public function showPages($userid, $featurebox = FALSE)

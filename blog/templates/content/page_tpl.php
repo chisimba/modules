@@ -11,12 +11,13 @@ $leftCol = $objUi->leftBlocks($userid);
 $rightSideColumn = $objUi->rightBlocks($userid, NULL);
 if($this->objUser->isLoggedIn())
 {
-	if(isset($page))
+	if(isset($pagetoedit) && isset($check))
 	{
-		$middleColumn .= $this->objblogOps->pageEditor($userid, $page);
+		//echo "editing a page";
+		$middleColumn .= $this->objblogOps->pageEditor($userid, $check, $pagetoedit);
 	}
 	else {
-		$middleColumn .= $this->objblogOps->pageEditor($userid);
+		$middleColumn .= $this->objblogOps->pageEditor($userid, $check);
 	}
 }
 //dump the cssLayout to screen
