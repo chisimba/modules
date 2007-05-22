@@ -21,10 +21,11 @@ if ($contextCode == NULL) {
 else {
 	$context = $objDbContext->getTitle();
 }
+$objConfig = $this->getObject('altconfig', 'config');
 // Applet
 $applet = '
 <applet 
-codebase="modules/ircchat/resources"
+codebase="'.$objConfig->getModuleURI().'/ircchat/resources/"
 code="IRCApplet.class"
 archive="
 	irc.jar,
