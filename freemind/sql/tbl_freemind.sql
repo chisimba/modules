@@ -1,13 +1,35 @@
-<?
-  $sqldata[]="CREATE TABLE tbl_freemind (
-  id varchar(32) NOT NULL,
-  contextCode varchar(255) NOT NULL,
-  title varchar(255) default NULL,
-  map TEXT default NULL,
-  dateCreated datetime default NULL,
-  PRIMARY KEY  (id)
-  
-) 
-TYPE=InnoDB
-";
+<?php
+$tablename = 'tbl_freemind';
+
+//Options line for comments, encoding and character set
+$options = array('collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+
+$fields = array(
+	'id' => array(
+		'type' => 'text',
+		'length' => 32,
+		),
+    'contextcode' => array(
+		'type' => 'text',
+		'length' => 255,
+		),
+    'title' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+    'map' => array(
+		'type' => 'clob',
+		),
+    'datecreated' => array(
+		'type' => 'timestamp',
+        ),
+//create other indexes here...
+
+$name = 'userid';
+
+$indexes = array(
+                'fields' => array(
+                	'userid' => array(),
+                )
+        );
 ?>
