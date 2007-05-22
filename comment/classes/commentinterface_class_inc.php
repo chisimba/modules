@@ -183,7 +183,9 @@ class commentinterface extends object
             $tar = $objCat->getAll();
 
             //Create a dropdown for the comment type selector
-            $objCat = $this->newObject("dropdown", "htmlelements");
+            $this->loadClass('dropdown', 'htmlelements');
+            $objCat = new dropdown();
+            //$objCat = $this->newObject("dropdown", "htmlelements");
             $objCat->name = 'type';
 
             //Added 2006/07/18 by Serge Meunier for client side validation
