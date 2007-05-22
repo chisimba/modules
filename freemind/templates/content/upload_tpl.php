@@ -5,7 +5,7 @@ $form->setDisplayType(3);
 $form->extra=' enctype="multipart/form-data" ';
 
 $h3=$this->newObject('htmlheading','htmlelements');
-$h3->str=$this->objLanguage->languageText("mod_freemind_upload");
+$h3->str=$this->objLanguage->languageText("mod_freemind_upload", "freemind");
 
 $file=&$this->newObject('textinput','htmlelements');
 $file->fldType='file';

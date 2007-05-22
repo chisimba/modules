@@ -20,7 +20,7 @@ $cssLayout2->setNumColumns(2);
 //$cssLayout->setLeftColumnContent($leftSideColumn);// Add the heading to the content
 $this->objH =& $this->getObject('htmlheading', 'htmlelements');
 $this->objH->type=3; //Heading <h3>
-$this->objH->str=  $this->objLanguage->languageText("mod_freemind_mindmapping"); //ucwords($this->objLanguage->code2Txt('mod_contextadmin_name',array('context'=>'course')));mod_freemind_mindmapping
+$this->objH->str=  $this->objLanguage->languageText("mod_freemind_mindmapping", "freemind"); //ucwords($this->objLanguage->code2Txt('mod_contextadmin_name',array('context'=>'course')));mod_freemind_mindmapping
 $rightSideColumn2 = "<div align=\"center\">" 
   . $this->objH->show()  . "</div>";
 
@@ -33,8 +33,8 @@ $table->attributes="align=\"center\"";
 $tableRow=array();
 
 //$tableHd[]="Code";
-$tableHd[]=$this->objLanguage->languageText("word_title");
-$tableHd[]=$this->objLanguage->languageText("mod_freemind_date");
+$tableHd[]=$this->objLanguage->languageText("word_title", "freemind");
+$tableHd[]=$this->objLanguage->languageText("mod_freemind_date", "freemind");
 
 $allowAdmin = True; //You need to write your security here
 if ($allowAdmin) {
@@ -70,7 +70,7 @@ if (is_array($ar)) {
        
                $paramArray = array('action' => 'viewmap','id' => $line['id']);
                 $objConfIcon->setIcon('view');
-                $objConfIcon->alt=$this->objLanguage->languageText("mod_freemind_viewmap");
+                $objConfIcon->alt=$this->objLanguage->languageText("mod_freemind_viewmap", "freemind");
                 $objLink->href=$this->uri($paramArray);                
                 $objLink->link=$objConfIcon->show();
                 $config = $objLink->show().'&nbsp;';
@@ -78,7 +78,7 @@ if (is_array($ar)) {
             //The URL for the edit link
             $editLink=$this->uri(array('action' => 'edit',
               'id' =>$line['id']));
-            $objEditIcon->alt=$this->objLanguage->languageText("mod_quotes_editalt");
+            $objEditIcon->alt=$this->objLanguage->languageText("mod_quotes_editalt", "freemind");
             $ed = $objEditIcon->getEditIcon($editLink);
 
             // The delete icon with link uses confirm delete utility

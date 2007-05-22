@@ -23,6 +23,7 @@ $fields = array(
     'datecreated' => array(
 		'type' => 'timestamp',
         ),
+ );
 //create other indexes here...
 
 $name = 'userid';
