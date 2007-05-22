@@ -22,6 +22,7 @@ else {
 	$context = $objDbContext->getTitle();
 }
 $objConfig = $this->getObject('altconfig', 'config');
+
 // Applet
 $applet = '
 <applet 
