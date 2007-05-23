@@ -57,6 +57,7 @@ class email extends absendmail implements ifsendmail
     function __construct()
     {
     	$this->objBaseMail = new PHPMailer;
+    	$this->objBaseMail->IsHTML(TRUE);
 	    //Get an instance of the config object
         $objConfig=&$this->newObject('dbsysconfig','sysconfig');
         //Get the value of the delimiter
