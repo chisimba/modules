@@ -32,8 +32,7 @@ class trackback extends object
 	 */
 	public function init()
 	{
-		require_once($this->getResourcePath('Trackback.php', 'blog'));
-		//require_once('modules/blog/resources/Trackback.php');
+		//require_once($this->getResourcePath('Trackback.php', 'blog'));
 	}
 
 	/**
@@ -45,7 +44,8 @@ class trackback extends object
 	 */
 	public function setup($data, $options)
 	{
-		$this->objTrackBack = Services_Trackback::create($data, $options);
+		$this->objTrackBack = $this->getObject('servicestrackback');
+		$this->objTrackBack->create($data, $options);
 		return $this->objTrackBack;
 
 	}
