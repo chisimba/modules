@@ -160,6 +160,8 @@ class blog extends controller
     public $objProxy;
     
     public $showfullname;
+    
+    public $googleBlogPing;
 
     /**
      * Constructor method to instantiate objects and get variables
@@ -1200,7 +1202,12 @@ class blog extends controller
                 else {
                 	$showpdf = 0;
                 }
-                /*
+                
+                //check the sysconfig as to whether we should enable the google ping
+                $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+           		$this->googleBlogPing = $this->objSysConfig->getValue('ping_google', 'blog');
+           		if($this->googleBlogPing == 'TRUE')
+           		{
                 	//set up for Google Blog API
                 	$changesURL = $this->uri(array('module' => 'blog', 'action' => 'feed', 'userid' => $userid));
                 	$name = $this->objUser->fullname($userid) . " Chisimba blog";
@@ -1246,7 +1253,7 @@ class blog extends controller
                 		log_debug("Google blogs API Failure! Google said: " . $code);
                 		break;
                 	}
-                */
+           		}
                 //post quick add
                 if($mode == 'quickadd')
                 {
