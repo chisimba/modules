@@ -174,6 +174,7 @@ class hrwizardops extends object {
     		//print_r($record);
     		if(file_exists($file))
     		{
+    			str_replace('&nbsp;', '\r\n', $bodyText);
     			$objMailer = $this->getObject('email', 'mail');
 				$objMailer->setValue('to', array($record[1]));
 				$objMailer->setValue('from', 'hr@uwc.ac.za');
