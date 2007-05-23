@@ -49,9 +49,9 @@ class blogops extends object
 			$this->mail2blog = FALSE;
 		}
         //some sanity checks first!
-        if (!include_once ('HTTP/Request.php')) {
-            throw new customException($this->objLanguage->languageText("mod_blog_sanity_httpreq", "blog"));
-        }
+        //if (!include_once ('HTTP/Request.php')) {
+        //    throw new customException($this->objLanguage->languageText("mod_blog_sanity_httpreq", "blog"));
+        //}
         //if (!include_once ($this->getPearResource('HTML/BBCodeParser.php'))) {
         //    throw new customException($this->objLanguage->languageText("mod_blog_sanity_bbcodeparser", "blog"));
         //}

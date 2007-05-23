@@ -440,10 +440,10 @@ class servicestrackback extends object
     	
         // Check return code
         if ($code != 200) {
-            log_debug("trackback failed with response code $code");
+            //log_debug("trackback failed with response code $code");
         	return FALSE;
         }
-        log_debug("Successful Trackback");
+        //log_debug("Successful Trackback");
         return $this->_interpretTrackbackResponse($code);
     }
 
