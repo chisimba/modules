@@ -54,7 +54,7 @@ $urlInput->value = 'http://';
 $addTable->addCell($urlInput->show(), null);
 
 $addTable->endRow();
-
+$addForm->addRule('url', $this->objLanguage->languageText('mod_glossary_urlnotvalid'), 'alphanumeric');
 
 
 if ($numRecords > 0)
