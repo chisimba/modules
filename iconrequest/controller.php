@@ -57,6 +57,7 @@ class iconrequest extends controller
             	// Welcome screen displaying current requests
             	case null:
 			$sortBy = "n";
+			$this->setVar('pageSuppressXML', TRUE);
 			$this->setVar('sortBy',$sortBy);
                     return "request_tpl.php";
 
@@ -68,27 +69,33 @@ class iconrequest extends controller
             	case sortByPriority:
 			$sortBy = "p";
 			$this->setVar('sortBy',$sortBy);
+			$this->setVar('pageSuppressXML', TRUE);
                     return "request_tpl.php";
 
             	// Welcome screen displaying current requests sorted by description
             	case sortByDescription:
 			$sortBy = "d";
 			$this->setVar('sortBy',$sortBy);
+			$this->setVar('pageSuppressXML', TRUE);
                     return "request_tpl.php";
 
                 case "test":
+                	$this->setVar('pageSuppressXML', TRUE);
                     return "test2_tpl.php";
 
             	// Edit an icon request
             	case "edit":
+            		$this->setVar('pageSuppressXML', TRUE);
             		return "icon_form_tpl.php";
 
 		        // Template to edit the icon developer details
 		        case "developer":
+		        	$this->setVar('pageSuppressXML', TRUE);
             		return "dev_edit_tpl.php";
 
             	// Template to get all the icon request data from the user
             	case "request":
+            		$this->setVar('pageSuppressXML', TRUE);
 			        return "icon_form_tpl.php";
 
 		//content of iframe for dynamically uploading icon
@@ -100,6 +107,7 @@ class iconrequest extends controller
         		$this->setVar('pageSuppressBanner', TRUE);
         		$this->setVar('pageSuppressContainer', TRUE);
         		$this->setVar('suppressFooter', TRUE);
+        		$this->setVar('pageSuppressXML', TRUE);
 			return "upload_icon_tpl.php";
 
 		// Submit a new request to the DB
