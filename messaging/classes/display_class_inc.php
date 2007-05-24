@@ -2120,6 +2120,9 @@ class display extends object
     */
     public function divShowIM()
     {
+        $headerParams = $this->getJavascriptFile('messaging.js', 'messaging');
+        $this->appendArrayVar('headerParams', $headerParams);
+
         $body = 'jsGetImSettings(\''.$this->uri(array(), 'messaging').'\')';
         $this->appendArrayVar('bodyOnLoad', $body);
         

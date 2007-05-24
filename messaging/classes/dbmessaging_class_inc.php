@@ -228,7 +228,7 @@ class dbmessaging extends dbTable
         }else{
             $sql = " WHERE room_type < 2";
         }
-        $sql .= " ORDER BY 'date_created' ";
+        $sql .= " ORDER BY date_created ";
         $data = $this->getAll($sql);
         if(!empty($data)){
             return $data;
