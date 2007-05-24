@@ -13,7 +13,7 @@ $leftCol = NULL;
 $middleColumn = NULL;
 
 $leftCol .= $objSideBar->show();
-$middleColumn .= $this->objHrOps->bodyTextEditor();
+$middleColumn .= $this->objHrOps->bodyTextEditor(FALSE);
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());

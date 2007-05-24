@@ -267,7 +267,7 @@ class hrwizardops extends object {
 		}
 		else {
 			$comm = new textarea;
-			$comm->setName('comment');
+			$comm->setName('bodytext');
 			$ctbl->addCell($comm->show());
 		}
 		$ctbl->endRow();
