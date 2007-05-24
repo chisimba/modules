@@ -7,6 +7,10 @@ var URL = "index.php";
 var userTimer;
 var chatTimer;
 var chatMode;
+var URI;
+var settingsTimer;
+var imTimer;
+
 
 /**
 * =====================================
@@ -40,7 +44,7 @@ function jsShowHelp(el)
 {
     if(el.style.display == "none"){
         Element.show(el.id);
-        window.setTimeout("Element.hide('"+el.id+"')",5000);        
+        window.setTimeout("Element.hide('"+el.id+"')",10000);        
     }else{
         Element.hide(el.id);
     }            
@@ -353,9 +357,9 @@ function jsValidateInvite(err_invite)
 }
 
 /**
-* ========================================
+* =====================================
 *  Js functions for the chat log popup
-* ========================================
+* =====================================
 */
 /*
 * Function to show hide the log dates div
@@ -428,9 +432,9 @@ function jsValidateDate(err_start, err_end, err_date)
 }
 
 /**
-* ======================================
+* =======================================
 *  Js function for the remove user popup
-* ======================================
+* =======================================
 */
 /*
 * Function to validate the removed user form
@@ -454,9 +458,9 @@ function jsValidateRemove(err_remove)
 }
 
 /**
-* ======================================
+* ==============================
 *  Js function for the im popup
-* ======================================
+* ==============================
 */
 /*
 * Function to validate the im input
@@ -472,7 +476,7 @@ function jsValidateUser(err_user)
         el_Username.focus();
         return false;
     }else{
-        $("form_im").submit();
+        $("form_sendim").submit();
     }    
 }
 
@@ -507,4 +511,212 @@ function jsIntervalDiv(el)
     }else{
         Element.hide(el_IntervalDiv.id)
     }    
+}
+
+/**
+* ========================================
+*  Js Functions to generate the IM popups
+* ========================================
+*/
+/*
+* Function to get IM settings
+* @param string uri: The current uri
+*/
+function jsGetImSettings(uri)
+{
+    URI = uri;
+    var target = $("settingsDiv");
+    var pars = "module=messaging&action=getimsettings";
+    var myAjax = new Ajax.Updater(target, URL, {method: "post", parameters: pars, onComplete: jsImSettingsTimer});        
+}
+
+/*
+* Function to check the Im settings every half hour
+*/
+function jsImSettingsTimer()
+{
+    settingsTimer = setTimeout("jsGetImSettings('"+URI+"')", 900000);
+    clearTimeout(imTimer);
+    jsImTimer();
+}
+
+/*
+* Function to set Im request interval
+*/
+function jsImTimer()
+{
+    var login = $F("input_im_login");
+    var delivery = $F("input_im_delivery");
+    var interval = $F("input_im_interval");
+    if(delivery == 0){
+        imInterval = 60000;
+        jsCheckForIm();
+    }else if(delivery == 2){
+        imInterval = Number(interval) * 60000;
+        jsCheckForIm();
+    }else{
+        imInterval = "null"
+        if(login == "true"){
+            jsCheckForIm();
+        }        
+    }
+}
+
+/*
+* Function to check for IM
+*/
+function jsCheckForIm()
+{
+    var target = $("imDiv");
+    var pars = "module=messaging&action=checkforim";
+    var myAjax = new Ajax.Updater(target, URL, {method: "post", parameters: pars, onComplete: jsDisplayIm});            
+}
+
+/*
+* Function to generate popups for each IM and iterate for interval
+*/
+function jsDisplayIm()
+{
+    var imcount = $F("input_imcount");
+    var count = Number(imcount);
+    if(count > 0){
+        for(var i = 1; i <= count; i++){
+            openWindow(URI+"&action=displayim", "new_"+i, "toolbar=no, menubar=no, width=500, height=300, resizable=no, scrollbars=yes, toolbar=no top=100 screenY=100 left=100 screenX=100");
+        }
+    }
+    if(imInterval != "null"){
+        imTimer = setTimeout("jsCheckForIm()", imInterval);    
+    }
+}
+
+/**
+* ============================================================
+*  Js function to insert formatting codes around selected text
+* ============================================================
+*/
+/*
+* Function to validate the im input
+* @param string err_invite: The user im error message
+*/            
+function jsGetSelText(format){
+    var el_Message = $("input_message");
+    if(el_Message.selectionStart >= 0){
+        var txt = el_Message.value;
+        var startPos = el_Message.selectionStart;
+        var endPos = el_Message.selectionEnd;
+        var startTxt = txt.substr(0, startPos);
+        var midTxt = txt.substr(startPos, endPos-startPos);
+        var endTxt = txt.substr(endPos);
+        if(format == "bold"){
+            el_Message.value = startTxt+"[b]"+midTxt+"[/b]"+endTxt;
+        }else if(format == "underline"){
+            el_Message.value = startTxt+"[u]"+midTxt+"[/u]"+endTxt;
+        }else if(format == "italics"){
+            el_Message.value = startTxt+"[i]"+midTxt+"[/i]"+endTxt;
+        }else if(format == "red"){
+            el_Message.value = startTxt+"[red]"+midTxt+"[/red]"+endTxt;
+        }else if(format == "orange"){
+            el_Message.value = startTxt+"[orange]"+midTxt+"[/orange]"+endTxt;
+        }else if(format == "yellow"){
+            el_Message.value = startTxt+"[yellow]"+midTxt+"[/yellow]"+endTxt;
+        }else if(format == "green"){
+            el_Message.value = startTxt+"[green]"+midTxt+"[/green]"+endTxt;
+        }else if(format == "blue"){
+            el_Message.value = startTxt+"[blue]"+midTxt+"[/blue]"+endTxt;
+        }else if(format == "purple"){
+            el_Message.value = startTxt+"[purple]"+midTxt+"[/purple]"+endTxt;
+        }else if(format == "pink"){
+            el_Message.value = startTxt+"[pink]"+midTxt+"[/pink]"+endTxt;
+        }else if(format == "s1"){
+            el_Message.value = startTxt+"[s1]"+midTxt+"[/s1]"+endTxt;
+        }else if(format == "s2"){
+            el_Message.value = startTxt+"[s2]"+midTxt+"[/s2]"+endTxt;
+        }else if(format == "s3"){
+            el_Message.value = startTxt+"[s3]"+midTxt+"[/s3]"+endTxt;
+        }else if(format == "s4"){
+            el_Message.value = startTxt+"[s4]"+midTxt+"[/s4]"+endTxt;
+        }
+    }else{
+        var rng = document.selection.createRange();
+        if(format == "bold"){
+            rng.text = "[b]" + rng.text + "[/b]";
+        }else if(format == "underline"){
+            rng.text = "[u]" + rng.text + "[/u]";
+        }else if(format == "italics"){
+            rng.text = "[i]" + rng.text + "[/i]";
+        }else if(format == "red"){
+            rng.text = "[red]" + rng.text + "[/red]";
+        }else if(format == "orange"){
+            rng.text = "[orange]" + rng.text + "[/orange]";
+        }else if(format == "yellow"){
+            rng.text = "[yellow]" + rng.text + "[/yellow]";
+        }else if(format == "green"){
+            rng.text = "[green]" + rng.text + "[/green]";
+        }else if(format == "blue"){
+            rng.text = "[blue]" + rng.text + "[/blue]";
+        }else if(format == "purple"){
+            rng.text = "[purple]" + rng.text + "[/purple]";
+        }else if(format == "pink"){
+            rng.text = "[pink]" + rng.text + "[/pink]";
+        }else if(format == "s1"){
+            rng.text = "[s1]" + rng.text + "[/s1]";
+        }else if(format == "s2"){
+            rng.text = "[s2]" + rng.text + "[/s2]";
+        }else if(format == "s3"){
+            rng.text = "[s3]" + rng.text + "[/s3]";
+        }else if(format == "s4"){
+            rng.text = "[s4]" + rng.text + "[/s4]";
+        }
+    }
+}
+
+/*
+* Function to expand the colour format div
+*/
+function jsExpandStyle()
+{
+    var el_Style = $("styleDiv");
+    var el_Colour = $("colourDiv");
+    var el_Font = $("fontDiv");
+    if(el_Style.style.display == "none"){
+        Element.hide(el_Colour.id);
+        Element.hide(el_Font.id);
+        Element.show(el_Style.id);
+    }else{
+        Element.hide(el_Style.id);
+    }
+}
+
+/*
+* Function to expand the colour format div
+*/
+function jsExpandColour()
+{
+    var el_Style = $("styleDiv");
+    var el_Colour = $("colourDiv");
+    var el_Font = $("fontDiv");
+    if(el_Colour.style.display == "none"){
+        Element.hide(el_Style.id);
+        Element.hide(el_Font.id);
+        Element.show(el_Colour.id);
+    }else{
+        Element.hide(el_Colour.id);
+    }
+}
+
+/*
+* Function to expand the font size format div
+*/
+function jsExpandFont()
+{
+    var el_Style = $("styleDiv");
+    var el_Colour = $("colourDiv");
+    var el_Font = $("fontDiv");
+    if(el_Font.style.display == "none"){
+        Element.hide(el_Style.id);
+        Element.hide(el_Colour.id);
+        Element.show(el_Font.id);
+    }else{
+        Element.hide(el_Font.id);
+    }
 }

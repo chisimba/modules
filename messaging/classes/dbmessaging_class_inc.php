@@ -77,10 +77,10 @@ class dbmessaging extends dbTable
 			parent::init($table);
 			return TRUE;
 		}
-		catch (customException $e)
+		catch (Exception $e)
 		{
-			customException::cleanUp();
-			return FALSE;
+		    throw customException($e->getMessage());
+		    exit();
 		}
 	}
 	
@@ -396,7 +396,7 @@ class dbmessaging extends dbTable
     * @param boolean $system: TRUE if the message is system generated FALSE if not
     * @return string $messageId: The id of the IM mesasge that was added
     **/
-    public function addImMessage($message, $userId, $system = FALSE)
+    public function addImMessage($userId, $message, $system = FALSE)
     {   
         $this->_setMessagesTable();
         $count = $this->getMessageCount($userId);
@@ -410,6 +410,7 @@ class dbmessaging extends dbTable
         $fields['message_type'] = 1;
         $fields['message'] = $message;
         $fields['recipient_id'] = $userId;
+        $fields['delivery_state'] = 0;
         $fields['message_counter'] = $count + 1;
         $fields['date_created'] = $date;
         $fields['updated'] = $date;
@@ -488,12 +489,13 @@ class dbmessaging extends dbTable
     * @access public
     * @return array/boolean $data: The instant messages for a user / FALSE on failure
     **/
-    public function getInstantMessage()
+    public function getAllIm()
     {
         $this->_setMessagesTable();
 
         $sql = "WHERE recipient_id = '".$this->userId."'";
-        $sql .= " AND delivery_state != '1'";
+        $sql .= " AND delivery_state < 1";
+        $sql .= " ORDER BY message_counter";
         $data = $this->getAll($sql);
         if(!empty($data)){
             return $data;
@@ -501,6 +503,30 @@ class dbmessaging extends dbTable
         return FALSE;
     }
 
+    /**
+    * Method to return instant message for display
+    *
+    * @access public
+    * @return array/boolean $data: The instant messages for a user / FALSE on failure
+    **/
+    public function getIM()
+    {
+        $this->_setMessagesTable();
+
+        $sql = "SELECT *, messages.id AS mid FROM tbl_messaging_messages AS messages";
+        $sql .= " LEFT JOIN tbl_messaging_settings AS settings";
+        $sql .= " ON messages.sender_id = settings.user_id";
+        $sql .= " WHERE recipient_id = '".$this->userId."'";
+        $sql .= " AND delivery_state < 1";
+        $sql .= " ORDER BY message_counter";
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            $imData = $data[0];
+            $this->update('id', $imData['mid'], array('delivery_state' => 1));            
+            return $imData;
+        }
+        return FALSE;
+    }
 /* ------------------ Functions for tbl_messaging_userlog ------------------*/
 
     /**
@@ -822,17 +848,18 @@ class dbmessaging extends dbTable
         return FALSE;
     }
 
-/* ------------------ Functions for tbl_messaging_banned ------------------*/
+/* ------------------ Functions for tbl_messaging_settings ------------------*/
 
     /**
     * Method to set the users instant messaging settings
     *
     * @access public
     * @param string $delivery: The IM delivery type
+    * @param integer $display: An indicator to show how the name should be displayed
     * @param string $interval: The IM delivery interval if applicable
     * @return string $settingId: The id of the settings record
     */
-    public function saveUserSettings($delivery, $interval = NULL)
+    public function saveUserSettings($delivery, $display, $interval = NULL)
     {
         $this->_setSettingsTable();
         $this->deleteUserSettings($this->userId);
@@ -843,7 +870,10 @@ class dbmessaging extends dbTable
         $fields['delivery_type'] = $delivery;
         if($delivery == 2){
             $fields['time_interval'] = $interval;
+        }else{
+            $fields['time_interval'] = 0;            
         }
+        $fields['name_display'] = $display;
         $fields['updated'] = $date;
         $settingId = $this->insert($fields);
         return $settingId;
@@ -892,6 +922,7 @@ class dbmessaging extends dbTable
     */
     public function searchUsers($field, $value)
     {
+        $this->_setUsersTable();
         $sql = " SELECT * FROM ".$this->tblUsers;
         $sql .= " WHERE ".$field." LIKE '".$value."%'";
         $data = $this->getArray($sql);

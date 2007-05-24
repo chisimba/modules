@@ -534,9 +534,18 @@ class messaging extends controller
                 return 'savelog_tpl.php';
                 break;
                 
+            // get im settings
+            case 'getimsettings':
+                return $this->objDisplay->divGetImSettings();
+                break;
+                
+            case 'checkforim':
+                return $this->objDisplay->divCheckIm();
+                break;
+                
             // Instant messaging
             case 'im':
-                $templateContent = $this->objDisplay->popSendIM();
+                $templateContent = $this->objDisplay->popIM();
                 $this->setVarByRef('templateContent', $templateContent);
                 $this->setVar('mode', 'popup');
                 return 'template_tpl.php';
@@ -570,31 +579,32 @@ class messaging extends controller
                 
             // get im 
             case 'getim':
-                echo 'window.open("#", "Kevin", "")';
-                $templateContent = $this->objDisplay->popGetIM();
-                if($templateContent != ''){
-                    $this->setVarByRef('templateContent', $templateContent);
-                    $this->setVar('mode', 'popup');
-                    return 'template_tpl.php';
-                }else{
-                    die();                    
-                }
+                return $this->objDisplay->divGetIM();
                 break;
                 
             // display instant message in a popup
-            case 'imsettings':
-                $templateContent = $this->objDisplay->popSetIM();
+            case 'displayim':
+                $templateContent = $this->objDisplay->popDisplayIM();
                 $this->setVarByRef('templateContent', $templateContent);
                 $this->setVar('mode', 'popup');
                 return 'template_tpl.php';
                 break;               
             
+            // Instant messaging
+            case 'imsettings':
+                $templateContent = $this->objDisplay->popImSettings();
+                $this->setVarByRef('templateContent', $templateContent);
+                $this->setVar('mode', 'popup');
+                return 'template_tpl.php';
+                break;
+                
             // submit the settings
             case 'submitsettings':
+                $display = $this->getParam('display');
                 $delivery = $this->getParam('delivery');
                 $interval = $this->getParam('interval');
-                $this->dbMessaging->saveUserSettings($delivery, $interval);
-                $templateContent = $this->objDisplay->popSetIM(TRUE);
+                $this->dbMessaging->saveUserSettings($delivery, $display, $interval);
+                $templateContent = $this->objDisplay->popIM(TRUE);
                 $this->setVarByRef('templateContent', $templateContent);
                 $this->setVar('mode', 'popup');
                 return 'template_tpl.php';

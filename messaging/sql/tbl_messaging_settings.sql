@@ -22,6 +22,10 @@ $fields = array(
         'type' => 'integer',
         'length' => 2,
         ),
+    'name_display' => array( // full, username only
+        'type' => 'integer',
+        'length' => 2,
+        ),
     'updated' => array(
         'type' => 'timestamp',
         ),

@@ -55,13 +55,13 @@ if($mode == 'iframe'){
     $this->setVar('pageSuppressToolbar', TRUE);
     $this->setVar('footerStr', '');
     $this->setLayoutTemplate('room_text_only_tpl.php');
-    $this->setVar('bodyParams', 'onload="javascript:jsOnloadChat(\'\');" onunload="clearTimeout(chatTimer);"');
+    $this->setVar('bodyParams', 'onload="javascript:jsOnloadChat(\'standard\');" onunload="clearTimeout(chatTimer);"');
 }elseif($mode == 'room'){
     $this->setVar('pageSuppressSearch', TRUE);
     $this->setVar('pageSuppressToolbar', TRUE);
     $this->setVar('footerStr', '');
     $this->setLayoutTemplate('room_tpl.php');
-    $this->setVar('bodyParams', 'onload="javascript:jsOnloadChat(\'\');" onunload="clearTimeout(chatTimer);clearTimeout(userTimer);"');
+    $this->setVar('bodyParams', 'onload="javascript:jsOnloadChat(\'standard\');" onunload="clearTimeout(chatTimer);clearTimeout(userTimer);"');
 }else{
     $this->setLayoutTemplate('layout_tpl.php');
 }

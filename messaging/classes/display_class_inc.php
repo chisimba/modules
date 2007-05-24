@@ -111,6 +111,18 @@ class display extends object
     private $dbMessaging;
 
     /**
+    * @var object $objSysconfig: The dbsysconfig class in the sysconfig module
+    * @access private
+    */
+    private $objSysconfig;
+
+    /**
+    * @var string $displayIm: The config variable to show/suppress instant messaging 
+    * @access private
+    */
+    private $displayIm;
+
+    /**
     * Method to construct the class
     *
     * @access public
@@ -148,6 +160,8 @@ class display extends object
         $this->contextCode = $this->objContext->getContextCode();
         $this->objWash = $this->getObject('washout', 'utilities');
         $this->objModule = $this->getObject('modules', 'modulecatalogue');
+        $this->objSysconfig = &$this->newObject('dbsysconfig', 'sysconfig');
+        $this->displayIm = $this->objSysconfig->getValue('DISPLAY_IM', 'messaging');
         
         // messaging classes     
         $this->dbMessaging = $this->getObject('dbmessaging', 'messaging');
@@ -275,7 +289,7 @@ class display extends object
                     'action' => 'enterroom',
                     'roomId' => $room['id'],
                     'textOnly' => $room['text_only'],
-                )));
+                ), 'messaging'));
                 $objLink->title = $name;
                 $objLink->link = $roomName;
                 $nameLink = $objLink->show();
@@ -292,7 +306,7 @@ class display extends object
                     $objPopup->set('location',$this->uri(array(
                         'action' => 'readmore',
                         'room_id' => $room['id']
-                    )));
+                    ), 'messaging'));
                     $objPopup->set('linktext', '[...'.$moreLabel.'...]');
                     $objPopup->set('width', '600');
                     $objPopup->set('height', '500');
@@ -359,7 +373,7 @@ class display extends object
                     $links = '';
                 }
 
-                $this->objIcon = $objTable->startRow();
+                $objTable->startRow();
                 $objTable->addCell($nameLink, '15%', '', '', $class, '');
                 $objTable->addCell($roomDesc, '', '', '', $class, '');
                 $objTable->addCell($owner, '15%', '', '', $class, '');
@@ -626,7 +640,7 @@ class display extends object
         $objPopup->title = $inviteTitleLabel;
         $objPopup->set('location',$this->uri(array(
             'action' => 'invitepopup',
-        )));
+        ), 'messaging'));
         $objPopup->set('linktext', $inviteLabel);
         $objPopup->set('width', '500');
         $objPopup->set('height', '250');
@@ -640,7 +654,7 @@ class display extends object
         $objPopup->title = $removeTitleLabel;
         $objPopup->set('location',$this->uri(array(
             'action' => 'removepopup',
-        )));
+        ), 'messaging'));
         $objPopup->set('linktext', $removeLabel);
         $objPopup->set('width', '500');
         $objPopup->set('height', '500');
@@ -677,7 +691,7 @@ class display extends object
         $objPopup->title = $logTitleLabel;
         $objPopup->set('location',$this->uri(array(
             'action' => 'logs',
-        )));
+        ), 'messaging'));
         $objPopup->set('linktext', $logLabel);
         $objPopup->set('width', '500');
         $objPopup->set('height', '240');
@@ -766,7 +780,7 @@ class display extends object
         $objIframe->width = 0;
         $objIframe->src = $this->uri(array(
             'action' => 'chatform'
-        ));
+        ), 'messaging');
         $objIframe = $objIframe->show();
         $str .= $objIframe;
 
@@ -788,7 +802,7 @@ class display extends object
         // hidden form
         $objForm = new form('chat', $this->uri(array(
             'action' => 'sendchat'
-        )));
+        ), 'messaging'));
         $objForm->addToForm($msgText);
         $chatForm = $objForm->show();        
         $str = $chatForm;
@@ -840,7 +854,7 @@ class display extends object
                             'action'=> 'banpopup',
                             'name'=> $name,
                             'userId'=> $user['userid'],
-                        )));
+                        ), 'messaging'));
                         $this->objPopup->set('linktext', $name);
                         $this->objPopup->set('width', '500');
                         $this->objPopup->set('height', '525');
@@ -871,7 +885,7 @@ class display extends object
                                 'name'=> $name,
                                 'logId'=> $user['logid'],
                                 'bannedId' => $user['bannedid'],
-                            )));
+                            ), 'messaging'));
                             $this->objPopup->set('linktext', $name);
                             $this->objPopup->set('width', '500');
                             $this->objPopup->set('height', '505');
@@ -895,7 +909,7 @@ class display extends object
                                 'action'=>'unbanpopup',
                                 'name'=> $name,
                                 'bannedId' => $user['bannedid'],
-                            )));
+                            ), 'messaging'));
                             $this->objPopup->set('linktext', $name);
                             $this->objPopup->set('width', '500');
                             $this->objPopup->set('height', '225');
@@ -1150,7 +1164,7 @@ class display extends object
         $indefLabel = $this->objLanguage->languageText('mod_messaging_indefinitely', 'messaging');
         $warningLabel = $this->objLanguage->languageText('mod_messaging_warning', 'messaging');
         $lengthLabel = $this->objLanguage->languageText('mod_messaging_banlength', 'messaging');
-        $submitLabel = $this->objLanguage->languageText('mod_messaging_wordsubmit', 'messaging');
+        $submitLabel = $this->objLanguage->languageText('mod_messaging_submitban', 'messaging');
         $cancelLabel = $this->objLanguage->languageText('mod_messaging_wordcancel', 'messaging');
         $reasonLabel = $this->objLanguage->languageText('mod_messaging_reason', 'messaging');
         $errBanLabel = $this->objLanguage->languageText('mod_messaging_errbanreason', 'messaging');
@@ -1196,8 +1210,7 @@ class display extends object
         $typeRadio = $objRadio->show();
         
         // ban type feature box
-        $this->objFeaturebox->id = 'typeFeature';
-        $typeFeature = $this->objFeaturebox->show($typeLabel, $typeRadio);
+        $typeFeature = $this->objFeaturebox->show($typeLabel, $typeRadio, 'typeFeature', '', FALSE);
         
         // ban type div
         $objLayer = new layer();
@@ -1219,8 +1232,7 @@ class display extends object
         $lengthDrop = $objDrop->show();
         
         // ban length feature box
-        $this->objFeaturebox->id = 'lengthFeature';
-        $lengthFeature = $this->objFeaturebox->show($lengthLabel, $lengthDrop);
+        $lengthFeature = $this->objFeaturebox->show($lengthLabel, $lengthDrop, 'lengthFeature', '', FALSE);
 
         // ban length div
         $objLayer = new layer();
@@ -1259,7 +1271,7 @@ class display extends object
             'name' => $name,
             'userId' => $userId,
             'bannedId' => $bannedId,
-        )));
+        ), 'messaging'));
         $objForm->addToForm($userFeature);
         $objForm->addToForm($reasonFeature);
         $objForm->addToForm($banDiv);
@@ -1374,7 +1386,7 @@ class display extends object
         // language items
         $unbanLabel = $this->objLanguage->languageText('mod_messaging_unbantitle', 'messaging');
         $userLabel = $this->objLanguage->languageText('mod_messaging_worduser', 'messaging');
-        $submitLabel = $this->objLanguage->languageText('mod_messaging_wordsubmit', 'messaging');
+        $submitLabel = $this->objLanguage->languageText('mod_messaging_submitunban', 'messaging');
         $cancelLabel = $this->objLanguage->languageText('mod_messaging_wordcancel', 'messaging');
         
         // heading
@@ -1402,7 +1414,7 @@ class display extends object
             'action' => 'unbanusers',
             'bannedId' => $bannedId,
             'name' => $name,
-        )));
+        ), 'messaging'));
         $objForm->addToForm($userFeature);
         $objForm->addToForm($sendButton.'&nbsp;'.$cancelButton);
         $unbanForm = $objForm->show();
@@ -1503,7 +1515,7 @@ class display extends object
         // language items
         $inviteLabel = $this->objLanguage->languageText('mod_messaging_invite', 'messaging');
         $userLabel = $this->objLanguage->languageText('mod_messaging_worduser', 'messaging');
-        $submitLabel = $this->objLanguage->languageText('mod_messaging_wordsubmit', 'messaging');
+        $submitLabel = $this->objLanguage->languageText('mod_messaging_invite', 'messaging');
         $cancelLabel = $this->objLanguage->languageText('mod_messaging_wordcancel', 'messaging');
         $nameLabel = $this->objLanguage->languageText('mod_messaging_firstname', 'messaging');
         $surnameLabel = $this->objLanguage->languageText('mod_messaging_surname', 'messaging');
@@ -1576,7 +1588,7 @@ class display extends object
         // invite form
         $objForm = new form('invite', $this->uri(array(
             'action' => 'inviteuser',
-            )));
+        ), 'messaging'));
         $objForm->addToForm($userFeature);
         $objForm->addToForm($buttonDiv);
         $inviteForm = $objForm->show();
@@ -1705,7 +1717,7 @@ class display extends object
         $selectTitleLabel = $this->objLanguage->languageText('mod_messaging_selectalltitle', 'messaging');
         $deselectTitleLabel = $this->objLanguage->languageText('mod_messaging_deselectalltitle', 'messaging');
         $errLabel = $this->objLanguage->languageText('mod_messaging_errremove', 'messaging');
-        $submitLabel = $this->objLanguage->languageText('mod_messaging_wordsubmit', 'messaging');
+        $submitLabel = $this->objLanguage->languageText('mod_messaging_remove', 'messaging');
         $cancelLabel = $this->objLanguage->languageText('mod_messaging_wordcancel', 'messaging');
         
         // heading
@@ -1806,7 +1818,7 @@ class display extends object
         // remove form
         $objForm = new form('remove', $this->uri(array(
             'action' => 'removeusers',
-        )));
+        ), 'messaging'));
         $objForm->addToForm($usersTable);
         $objForm->addToForm('<br />'.$sendButton.'&nbsp;'.$cancelButton);
         $unbanForm = $objForm->show();
@@ -1899,7 +1911,7 @@ class display extends object
         $periodLabel = $this->objLanguage->languageText('mod_messaging_period', 'messaging');
         $startLabel = $this->objLanguage->languageText('mod_messaging_start', 'messaging');
         $endLabel = $this->objLanguage->languageText('mod_messaging_end', 'messaging');
-        $submitLabel = $this->objLanguage->languageText('mod_messaging_wordsubmit', 'messaging');        
+        $submitLabel = $this->objLanguage->languageText('mod_messaging_submitlog', 'messaging');        
         $cancelLabel = $this->objLanguage->languageText('mod_messaging_wordcancel', 'messaging');        
         $errStartLabel = $this->objLanguage->languageText('mod_messaging_errstart', 'messaging');
         $errEndLabel = $this->objLanguage->languageText('mod_messaging_errend', 'messaging');
@@ -1962,7 +1974,7 @@ class display extends object
         // remove form
         $objForm = new form('log', $this->uri(array(
             'action' => 'getlog',
-        )));
+        ), 'messaging'));
         $objForm->addToForm($typeFeature);
         $objForm->addToForm($periodLayer);
         $objForm->addToForm($sendButton.'&nbsp;'.$cancelButton);
@@ -2035,7 +2047,7 @@ class display extends object
                 'start' => $start,
                 'end' => $end,
                 'mode' => 'save',
-            )));
+            ), 'messaging'));
             $objLink->link = $saveLabel;
             $objLink->title = $saveTitleLabel;
             $saveLink = $objLink->show();
@@ -2108,31 +2120,30 @@ class display extends object
     */
     public function divShowIM()
     {
+        $body = 'jsGetImSettings(\''.$this->uri(array(), 'messaging').'\')';
+        $this->appendArrayVar('bodyOnLoad', $body);
+        
         // language items
         $imLabel = $this->objLanguage->languageText('mod_messaging_im', 'messaging');
         $imTitleLabel = $this->objLanguage->languageText('mod_messaging_imtitle', 'messaging');
         
         // show only if messaging registered
-        if($this->objModule->checkIfRegistered('messaging')){
-            $this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
-            $this->objScriptaculous->show();
-            
-            // ajax to check for IM
-            $script = '<script type="text/javaScript">
-                Event.observe(window, "load", jsGetIm, false);                
-                var imTimer;
-                function jsGetIm(){
-                    var url = "index.php";
-                    var pars = "module=messaging&action=getim";
-                    var myAjax = new Ajax.Request(url, {method: "post", parameters: pars});
-                    imTimer = setTimeout("jsGetIm()", 3000);
-                }
-            </script>';
-            $string = $script;
-            
+        if($this->objModule->checkIfRegistered('messaging') && $this->displayIm == 'TRUE'){
+            // hidden div for IM settings
+            $objLayer = new layer();
+            $objLayer->id = 'settingsDiv';
+            $settingsDiv = $objLayer->show();
+            $string = $settingsDiv;  
+        
+            // hidden div for IM
+            $objLayer = new layer();
+            $objLayer->id = 'imDiv';
+            $imDiv = $objLayer->show();
+            $string .= $imDiv;  
+        
             // IM Icon
-            $this->objIcon->title = $imTitleLabel;
             $this->objIcon->setIcon('instantmessaging', 'gif', 'icons/modules');
+            $this->objIcon->title = $imTitleLabel;
             $imIcon = $this->objIcon->show();
                         
             // popup link to ban users
@@ -2140,21 +2151,20 @@ class display extends object
             //$objPopup->title = $imTitleLabel;
             $objPopup->set('location',$this->uri(array(
                 'action' => 'im',
-            )));
+            ), 'messaging'));
             $objPopup->set('linktext', $imIcon);
             $objPopup->set('width', '500');
-            $objPopup->set('height', '450');
+            $objPopup->set('height', '400');
             $objPopup->set('left', '100');
             $objPopup->set('top', '100');
             $objPopup->set('scrollbars', 'no');
-            $objPopup->putJs(); // you only need to do this once per page
+            //$objPopup->putJs(); // you only need to do this once per page
             $imLink = $objPopup->show();
             $string .= $imLink;
             
             // div to float the im icon
             $objLayer = new layer();
-            $objLayer->id = 'imDiv';
-            $objLayer->floating = 'right';
+            $objLayer->id = 'imDisplayDiv';
             $objLayer->addToStr($string);
             $imDiv = $objLayer->show();
             $str = $imDiv;  
@@ -2165,13 +2175,85 @@ class display extends object
     }
 
     /**
-    * Method to display the instant messaging popup
-    *
+    * Method to get the Im settings
+    * 
     * @access public
     * @return string $str: The output string
     */
-    public function popSendIM()
+    public function divGetImSettings()
     {
+        // get data
+        $firstLogin = $this->getSession('firstlogin');
+        if(empty($firstLogin)){
+            $firstLogin = 'true';
+            $this->setSession('firstlogin', 'false');            
+        }
+        
+        $imData = $this->dbMessaging->getUserSettings();
+        if($imData != FALSE){
+            $display = $imData['name_display'];
+            $delivery = $imData['delivery_type'];
+            $interval = $imData['time_interval'];
+        }else{
+            $display = 0;
+            $delivery = 0;
+            $interval = 0;            
+        }
+
+        $objInput = new textinput('im_login', $firstLogin, 'hidden');
+        $imLogin = $objInput->show();
+        $str = $imLogin;
+        
+        $objInput = new textinput('im_display', $display, 'hidden');
+        $imDisplay = $objInput->show();
+        $str .= $imDisplay;
+        
+        $objInput = new textinput('im_delivery', $delivery, 'hidden');
+        $imDelivery = $objInput->show();
+        $str .= $imDelivery;
+
+        $objInput = new textinput('im_interval', $interval, 'hidden');
+        $imInterval = $objInput->show();
+        $str .= $imInterval;
+        
+        echo $str;
+    }
+    
+    /**
+    * Method check for IM
+    * 
+    * @access public
+    * @return string $str: The output string
+    */
+    public function divCheckIm()
+    {
+        // get data
+        $imData = $this->dbMessaging->getAllIm();
+
+        if($imData != FALSE){
+            $count = count($imData);
+        }else{
+            $count = 0;
+        }
+
+        $objInput = new textinput('imcount', $count, 'hidden');
+        $imCount = $objInput->show();
+        $str = $imCount;
+        echo $str;
+    }
+
+    /**
+    * Method to display the instant messaging popup
+    *
+    * @access public
+    * @param bool $update: TRUE if the settings have been updated FALSE if not
+    * @return string $str: The output string
+    */
+    public function popIM($update = FALSE)
+    {
+        $body = 'window.resizeTo(500,470);';
+        $this->appendArrayVar('bodyOnLoad', $body);
+        
         // css style
         $style = '<style type="text/css">
             div.autocomplete {
@@ -2199,16 +2281,16 @@ class display extends object
         
         // language items
         $imLabel = $this->objLanguage->languageText('mod_messaging_im', 'messaging');
-        $userLabel = $this->objLanguage->languageText('mod_messaging_worduser', 'messaging');
-        $submitLabel = $this->objLanguage->languageText('mod_messaging_wordsubmit', 'messaging');
+        $userLabel = $this->objLanguage->languageText('mod_messaging_recipient', 'messaging');
+        $sendLabel = $this->objLanguage->languageText('mod_messaging_wordsend', 'messaging');
         $cancelLabel = $this->objLanguage->languageText('mod_messaging_wordcancel', 'messaging');
         $usernameLabel = $this->objLanguage->languageText('word_username');
         $nameLabel = $this->objLanguage->languageText('mod_messaging_firstname', 'messaging');
         $surnameLabel = $this->objLanguage->languageText('mod_messaging_surname', 'messaging');
-        $errImUserLabel = $this->objLanguage->languageText('mod_messaging_errimuser', 'messaging');
         $messageLabel = $this->objLanguage->languageText('mod_messaging_wordmessage', 'messaging');
         $settingsLabel = $this->objLanguage->languageText('mod_messaging_settings', 'messaging');
         $settingsTitleLabel = $this->objLanguage->languageText('mod_messaging_settingstitle', 'messaging');
+        $errImUserLabel = $this->objLanguage->languageText('mod_messaging_errimuser', 'messaging');
                                
         // heading
         $objHeader = new htmlheading();
@@ -2216,20 +2298,34 @@ class display extends object
         $objHeader->type = 1;
         $heading = $objHeader->show();
 
-        // popup link to invite users
+        // confirmation message
+        if($update){
+            $array = array(
+                'date' => '<nobr>'.$this->objDatetime->formatDate(date('Y-m-d H:i:s')).'</nobr>',
+            );
+            $confimUpdateLabel = $this->objLanguage->code2Txt('mod_messaging_update', 'messaging', $array);
+            $this->objTimeOut->init();
+            $this->objTimeOut->setMessage($confimUpdateLabel);
+            $this->objTimeOut->setTimeout(5000);
+            $msg = '<b>'.$this->objTimeOut->show().'</b><br />';            
+        }else{
+            $msg = '';
+        }
+
+        // link to change settings
         $objPopup = new windowpop();
         $objPopup->title = $settingsTitleLabel;
         $objPopup->set('location',$this->uri(array(
             'action' => 'imsettings',
-        )));
+        ), 'messaging'));
         $objPopup->set('linktext', $settingsLabel);
         $objPopup->set('width', '500');
-        $objPopup->set('height', '250');
+        $objPopup->set('height', '490');
         $objPopup->set('left', '100');
         $objPopup->set('top', '100');
         $objPopup->set('scrollbars', 'no');
         $settingsLink = $objPopup->show();
-
+        
         // name/surname radio
         $objRadio = new radio('option');
         $objRadio->addOption('firstname', '&nbsp;'.$nameLabel);
@@ -2282,7 +2378,7 @@ class display extends object
         $messageFeature = $this->objFeaturebox->show($messageLabel, $messageText);
         
         // submit button
-        $objButton = new button('send', $submitLabel);
+        $objButton = new button('send', $sendLabel);
         $objButton->extra = ' onclick="javascript:return jsValidateUser(\''.$errImUserLabel.'\')"';
         $sendButton = $objButton->show();
         
@@ -2297,9 +2393,9 @@ class display extends object
         $buttonDiv = $objLayer->show();
 
         // invite form
-        $objForm = new form('im', $this->uri(array(
+        $objForm = new form('sendim', $this->uri(array(
             'action' => 'sendim',
-            )));
+        ), 'messaging'));
         $objForm->addToForm($userFeature);
         $objForm->addToForm($messageFeature);
         $objForm->addToForm($buttonDiv);
@@ -2307,9 +2403,9 @@ class display extends object
 
         // main display div
         $objLayer = new layer();
-        $objLayer->id = 'mainDiv';
+        $objLayer->id = 'imDiv';
         $objLayer->padding = '10px';
-        $objLayer->addToStr($heading.$settingsLink.$sendForm);
+        $objLayer->addToStr($heading.$msg.$settingsLink.$sendForm);
         $mainDiv = $objLayer->show();
         $str .= $mainDiv;
 
@@ -2328,7 +2424,6 @@ class display extends object
     {
         // get data
         $searchList = $this->dbMessaging->searchUsers($option, $value);
-     
         // language items
         $noMatchLabel = $this->objLanguage->languageText('mod_messaging_nomatch', 'messaging');
         
@@ -2405,34 +2500,17 @@ class display extends object
     }
     
     /**
-    * Method to show the instant message in a popup
-    * 
-    * @access public
-    * @return string $str: The output string
-    */
-    public function popGetIM()
-    {
-        // get data
-        $imData = $this->dbMessaging->getInstantMessage();
-        
-        $str = '';
-        if($imData != FALSE){
-            foreach($imData as $message){
-                $str .= $message['message'];
-            }    
-        }
-        return $str;
-    }
-    
-    /**
     * Method to display the instant messaging popup
     *
     * @access public
     * @param bool $update: TRUE if the settings have been updated FALSE if not
     * @return string $str: The output string
     */
-    public function popSetIM($update = FALSE)
+    public function popImSettings($update = FALSE)
     {
+        $body = 'window.resizeTo(500,530)';
+        $this->appendArrayVar('bodyOnLoad', $body);
+
         // language items
         $imSettingsLabel = $this->objLanguage->languageText('mod_messaging_imsettings', 'messaging');
         $imLabel = $this->objLanguage->languageText('mod_messaging_im', 'messaging');
@@ -2443,17 +2521,22 @@ class display extends object
         $logonLabel = $this->objLanguage->languageText('mod_messaging_logon', 'messaging');
         $timeLabel = $this->objLanguage->languageText('mod_messaging_time', 'messaging');
         $intervalLabel = $this->objLanguage->languageText('mod_messaging_interval', 'messaging');
-        $submitLabel = $this->objLanguage->languageText('mod_messaging_wordsubmit', 'messaging');
+        $submitLabel = $this->objLanguage->languageText('mod_messaging_wordupdate', 'messaging');
         $cancelLabel = $this->objLanguage->languageText('mod_messaging_wordcancel', 'messaging');
+        $displayLabel = $this->objLanguage->languageText('mod_messaging_namedisplay', 'messaging');
+        $nameLabel = $this->objLanguage->languageText('mod_messaging_fullname', 'messaging');
+        $userLabel = $this->objLanguage->languageText('mod_messaging_usernameonly', 'messaging');
                                
         // get data
         $settingData= $this->dbMessaging->getUserSettings();
         if(!empty($settingData)){
+            $display = $settingData['name_display'];
             $delivery = $settingData['delivery_type'];
             $interval = $settingData['time_interval'];            
         }else{
+            $display = 0;
             $delivery = 0;
-            $interval = '';
+            $interval = 0;
         }
         
         // heading
@@ -2462,33 +2545,35 @@ class display extends object
         $objHeader->type = 1;
         $heading = $objHeader->show();
         
-        // confirmation message
-        if($update){
-            $array = array(
-                'date' => '<nobr>'.$this->objDatetime->formatDate(date('Y-m-d H:i:s')).'</nobr>',
-            );
-            $confimUpdateLabel = $this->objLanguage->code2Txt('mod_messaging_update', 'messaging', $array);
-            $this->objTimeOut->init();
-            $this->objTimeOut->setMessage($confimUpdateLabel);
-            $this->objTimeOut->setTimeout(3000);
-            $msg = '<b>'.$this->objTimeOut->show().'</b><br />';            
-        }else{
-            $msg = '';
-        }
-
-        // popup link to invite users
+        // popup link to send im
         $objPopup = new windowpop();
         $objPopup->title = $imTitleLabel;
         $objPopup->set('location',$this->uri(array(
             'action' => 'im',
-        )));
+        ), 'messaging'));
         $objPopup->set('linktext', $imLabel);
         $objPopup->set('width', '500');
-        $objPopup->set('height', '250');
+        $objPopup->set('height', '400');
         $objPopup->set('left', '100');
         $objPopup->set('top', '100');
         $objPopup->set('scrollbars', 'no');
         $sendLink = $objPopup->show();
+
+        // display radio
+        $objRadio = new radio('display');
+        $objRadio->addOption('0', '&nbsp;'.$nameLabel);
+        $objRadio->addOption('1', '&nbsp;'.$userLabel);
+        $objRadio->setBreakSpace('<br />');
+        $objRadio->setSelected($display);
+        $displayRadio = $objRadio->show();
+        
+        // delivery feature box
+        $displayFeature = $this->objFeaturebox->show($displayLabel, $displayRadio);
+        
+        $objLayer = new layer();
+        $objLayer->id = 'displayDiv';
+        $objLayer->addToStr($displayFeature);
+        $displayDiv = $objLayer->show();
 
         // delivery type radio
         $objRadio = new radio('delivery');
@@ -2549,7 +2634,8 @@ class display extends object
         // invite form
         $objForm = new form('im', $this->uri(array(
             'action' => 'submitsettings',
-            )));
+        ), 'messaging'));
+        $objForm->addToForm($displayDiv);
         $objForm->addToForm($deliveryDiv);
         $objForm->addToForm($intervalDiv);
         $objForm->addToForm($buttonDiv);
@@ -2559,11 +2645,79 @@ class display extends object
         $objLayer = new layer();
         $objLayer->id = 'mainDiv';
         $objLayer->padding = '10px';
-        $objLayer->addToStr($heading.$msg.$sendLink.$settngsForm);
+        $objLayer->addToStr($heading.$sendLink.$settngsForm);
         $mainDiv = $objLayer->show();
         $str = $mainDiv;
 
         return $str;
+    } 
+
+    /**
+    * Method to display an instant messaging
+    *
+    * @access public
+    * @return string $str: The output string
+    */
+    public function popDisplayIM()
+    {
+        // resize the window
+        $body = 'window.resizeTo(500,300); setTimeout("window.close()", 10000)';
+        $this->appendArrayVar('bodyOnLoad', $body);
+
+        // language items
+        $imLabel = $this->objLanguage->languageText('mod_messaging_im', 'messaging');
+        $closeLabel = $this->objLanguage->languageText('mod_messaging_wordclose', 'messaging');
+        $titleLabel = $this->objLanguage->languageText('mod_messaging_closetitle', 'messaging');
+
+        // get data
+        $imData = $this->dbMessaging->getIM();
+        if($imData['name_display'] != 1){
+            $name = $this->objUser->fullname($imData['sender_id']);
+        }else{
+            $name = $this->objUser->username($imData['sender_id']);
+        }
+        $array = array(
+            'name' => $name,
+            'date' => $this->objDatetime->formatDate($imData['date_created']),
+        );
+        $fromLabel = $this->objLanguage->code2Txt('mod_messaging_imreceive', 'messaging', $array);
+        
+        $closeLabel = $this->objLanguage->languageText('mod_messaging_wordclose', 'messaging');
+                               
+        // heading
+        $objHeader = new htmlheading();
+        $objHeader->str = $imLabel;
+        $objHeader->type = 1;
+        $string = $objHeader->show();
+
+        // close link
+        $objLink = new link('javascript:window.close()');
+        $objLink->title = $titleLabel;
+        $objLink->link = $closeLabel;
+        $closeLink = $objLink->show();
+
+        // user table
+        $objTable = new htmltable();
+        $objTable->cellspacing = '2';
+        $objTable->cellpadding = '2';
+        $objTable->startRow();
+        $objTable->addCell($imData['message']);
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($closeLink, '', '', 'center', '', '');
+        $objTable->endRow();
+        $messageTable = $objTable->show();
+        
+        // user feature box
+        $string .= $this->objFeaturebox->show($fromLabel, $messageTable);
+
+        // main display div
+        $objLayer = new layer();
+        $objLayer->addToStr($string);
+        $objLayer->padding = '10px';
+        $str = $objLayer->show();
+        
+        return $str;        
     } 
 }
 ?>
