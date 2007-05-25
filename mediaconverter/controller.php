@@ -16,6 +16,12 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  */
 class mediaconverter extends controller 
 {
+	
+	public $objMedia;
+	public $objUser;
+	public $objLanguage;
+	public $objConfig;
+	public $objLog;
 	/**
      * Constructor method to instantiate objects and get variables
      *
@@ -26,6 +32,7 @@ class mediaconverter extends controller
     public function init()
     {
         try {
+        	$this->objMedia = $this->getObject('media');
             $this->objUser = $this->getObject('user', 'security');
             //language object
             $this->objLanguage = $this->getObject('language', 'language');
@@ -55,7 +62,9 @@ class mediaconverter extends controller
     {
         switch ($action) {
             default:
-            	
+            	$file = "/var/www/Swizz.3gp";
+            	echo $this->objMedia->convert3gp2flv($file);
+            	//echo "test done!";
             	//return 'test_tpl.php';
             	break;
         }
