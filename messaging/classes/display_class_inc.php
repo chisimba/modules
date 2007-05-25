@@ -2120,12 +2120,6 @@ class display extends object
     */
     public function divShowIM()
     {
-        $headerParams = $this->getJavascriptFile('messaging.js', 'messaging');
-        $this->appendArrayVar('headerParams', $headerParams);
-
-        $body = 'jsGetImSettings(\''.$this->uri(array(), 'messaging').'\')';
-        $this->appendArrayVar('bodyOnLoad', $body);
-        
         // language items
         $imLabel = $this->objLanguage->languageText('mod_messaging_im', 'messaging');
         $imTitleLabel = $this->objLanguage->languageText('mod_messaging_imtitle', 'messaging');
@@ -2722,5 +2716,19 @@ class display extends object
         
         return $str;        
     } 
+    
+    /**
+    * Method to generate the page header for the messaging js file
+    *
+    * @access public
+    * @return array $array: The header params as an associative array
+    */
+    function imParams()
+    {
+        $bodyOnLoad = 'jsGetImSettings(\''.$this->uri(array(), 'messaging').'\')';
+        $headerParams = $this->getJavascriptFile('messaging.js', 'messaging');
+        $array = array('headerParams' => $headerParams, 'bodyOnLoad' => $bodyOnLoad);
+        return $array;
+    }
 }
 ?>
