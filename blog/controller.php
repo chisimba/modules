@@ -577,6 +577,14 @@ class blog extends controller
                                         //add the img stuff to the body at the end of the "post"
                                         $newbod .= "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]" . "<br />";
                                     }
+                                    elseif($tparts[1] == "3gpp")
+                                    {
+                                    	//send to the mediaconverter to convert to flv
+                                    	$mediacon = $this->getObject('media', 'mediaconverter');
+                                    	$file = $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename;
+                                    	$flv = $mediacon->convert3gp2flv($file);
+                                    	$newbod .= "[FLV]".$flv."[/FLV]"."<br />";
+                                    }
                                     else {
                                         //add the img stuff to the body at the end of the "post"
                                         $newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . urlencode($filename) . "[/url]" . "<br />";
