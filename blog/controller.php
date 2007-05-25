@@ -507,6 +507,7 @@ class blog extends controller
                                     $validated = NULL;
                                 }
                                 else {
+                                	//echo "Valid user!";
                                     //match found, you are a valid user dude!
                                     $validated = TRUE;
                                     //set the userid
@@ -572,6 +573,7 @@ class blog extends controller
                                     fclose($handle);
                                     $type = mime_content_type($filename);
                                     $tparts = explode("/", $type);
+                                    //print_r($tparts);
                                     if($tparts[0] == "image")
                                     {
                                         //add the img stuff to the body at the end of the "post"
@@ -579,11 +581,15 @@ class blog extends controller
                                     }
                                     elseif($tparts[1] == "3gpp")
                                     {
+                                    	//echo "Found a 3gp file!";
                                     	//send to the mediaconverter to convert to flv
                                     	$mediacon = $this->getObject('media', 'mediaconverter');
-                                    	$file = $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename;
+                                    	$file = $this->objConfig->getcontentbasePath() . 'blog/' . $filename;
+                                    	//echo $file;
                                     	$flv = $mediacon->convert3gp2flv($file);
-                                    	$newbod .= "[FLV]".$flv."[/FLV]"."<br />";
+                                    	//echo "file saved to: $flv";
+                                    	$newbod .= "[FLV]".$flv."[/FLV]"." <br />";
+                                    	//echo $newbod;
                                     }
                                     else {
                                         //add the img stuff to the body at the end of the "post"
