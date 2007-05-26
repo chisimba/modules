@@ -9,19 +9,19 @@
 $this->setLayoutTemplate('mcqtests_layout_tpl.php');
 
 // set up html elements
-$objTable = &$this->loadClass('htmltable', 'htmlelements');
-$objForm = &$this->loadClass('form', 'htmlelements');
-$objInput = &$this->loadClass('textinput', 'htmlelements');
-$objText = &$this->loadClass('textarea', 'htmlelements');
-$objRadio = &$this->loadClass('radio', 'htmlelements');
-$objCheck = &$this->loadClass('checkbox', 'htmlelements');
-$objButton = &$this->loadClass('button', 'htmlelements');
-$objDropDown = &$this->loadClass('dropdown', 'htmlelements');
-$objLayer = &$this->loadClass('layer', 'htmlelements');
-$objLabel = &$this->loadClass('label', 'htmlelements');
-$objLink = &$this->loadClass('link', 'htmlelements');
-$objIcon = &$this->newObject('geticon', 'htmlelements');
-$objPopupcal = &$this->newObject('datepickajax', 'popupcalendar');
+$objTable = $this->loadClass('htmltable', 'htmlelements');
+$objForm = $this->loadClass('form', 'htmlelements');
+$objInput = $this->loadClass('textinput', 'htmlelements');
+$objText = $this->loadClass('textarea', 'htmlelements');
+$objRadio = $this->loadClass('radio', 'htmlelements');
+$objCheck = $this->loadClass('checkbox', 'htmlelements');
+$objButton = $this->loadClass('button', 'htmlelements');
+$objDropDown = $this->loadClass('dropdown', 'htmlelements');
+$objLayer = $this->loadClass('layer', 'htmlelements');
+$objLabel = $this->loadClass('label', 'htmlelements');
+$objLink = $this->loadClass('link', 'htmlelements');
+$objIcon = $this->newObject('geticon', 'htmlelements');
+$objPopupcal = $this->newObject('datepickajax', 'popupcalendar');
 
 // set up language items
 $addHeading = $this->objLanguage->languageText('mod_mcqtests_addtest', 'mcqtests');
@@ -66,7 +66,7 @@ if ($mode == 'edit') {
 if (!empty($data)) {
     $id = $data[0]['id'];
     $name = $data[0]['name'];
-    $chapter = $data[0]['chapter'];
+    //$chapter = $data[0]['chapter'];
     $status = $data[0]['status'];
     $px = explode('.', $data[0]['percentage']);
     $percent = $px[0];
@@ -118,7 +118,8 @@ $objTable->startRow();
 $objTable->addCell($objLabel->show() , '30%');
 $objTable->addCell($objInput->show() , '70%');
 $objTable->endRow();
-// Set content chapter
+
+/* Set content chapter
 
 $objLabel = new label('<b>'.$chapterLabel.':</b>', 'input_chapter');
 
@@ -131,6 +132,8 @@ $objTable->addRow(array(
     $objLabel->show() ,
     $objDropDown->show()
 ));
+*/
+
 // Set activity status - not active if in add mode
 
 $objLabel = new label('<b>'.$statusLabel.':</b>', 'input_status');

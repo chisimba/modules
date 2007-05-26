@@ -69,7 +69,7 @@ class mcqtests extends controller
         $this->dbResults = &$this->newObject('dbresults');
         $this->objUser = &$this->newObject('user', 'security');
         $this->objLanguage = &$this->newObject('language', 'language');
-        $this->objDate = &$this->newObject('datetime', 'utilities');
+        $this->objDate = &$this->newObject('dateandtime', 'utilities');
         $this->objConfig = &$this->newObject('altconfig', 'config');
         $this->objMkdir = &$this->newObject('mkdir', 'files');
         $this->user = $this->objUser->fullname();
@@ -499,7 +499,7 @@ class mcqtests extends controller
         $fields['name'] = $this->getParam('name', '');
         $fields['context'] = $this->contextCode;
         $fields['userid'] = $this->userId;
-        $fields['chapter'] = $this->getParam('chapter', '');
+        // $fields['chapter'] = $this->getParam('chapter', '');
         $fields['status'] = $this->getParam('status', '');
         $percent = $this->getParam('percent', 0);
         $decimal = $this->getParam('decimal', 0);
@@ -575,15 +575,16 @@ class mcqtests extends controller
     {
         $testId = $this->getParam('id');
         $data = $this->dbTestadmin->getTests($this->contextCode, '*', $testId);
-        $nodesSQL = 'SELECT tbl_context_nodes.id AS chapter_id,
+        /* $nodesSQL = 'SELECT tbl_context_nodes.id AS chapter_id,
         tbl_context_nodes.title AS chapter_title FROM tbl_context_nodes
         INNER JOIN tbl_context_parentnodes ON ( tbl_context_parentnodes_id =
         tbl_context_parentnodes.id )
         WHERE tbl_context_parentnodes.tbl_context_parentnodes_has_tbl_context_tbl_context_contextCode
         = "'.$this->contextCode.'"'; // AND parent_Node = "" ';
+        */
         $allPercent = $this->dbTestadmin->getPercentage($this->contextCode, $testId);
         $this->setVarByRef('allPercent', $allPercent);
-        $this->setVarByRef('nodes', $nodes);
+        //$this->setVarByRef('nodes', $nodes);
         $this->setVarByRef('data', $data);
         $this->setVar('mode', 'edit');
         return 'addtest_tpl.php';

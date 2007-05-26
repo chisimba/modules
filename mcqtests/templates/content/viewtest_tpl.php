@@ -84,19 +84,19 @@ $objTable->width = '99%';
 
 // Add Context and Name of Chapter
 $objTable->startRow();
-$objTable->addCell('<b>'.$chapterLabel.'</b>: '.$data['node'], '50%');
-$objTable->addCell('<b>% '.$percentLabel.'</b>: '.$data['percentage']);
+$objTable->addCell('');//'<b>'.$chapterLabel.'</b>: '.$data['node'], '50%');
 $objTable->endRow();
 
 // Add Activity Status and percentage of mark
 $objTable->startRow();
 $objTable->addCell('<b>'.$statusLabel.'</b>: '.$objLanguage->languageText('mod_mcqtests_'.$data['status'], 'mcqtests'));
-$objTable->addCell('<b>'.$totalLabel.'</b>: '.$data['totalmark']);
+$objTable->addCell('<b>% '.$percentLabel.'</b>: '.$data['percentage']);
 $objTable->endRow();
 
 // Add Start date
 $objTable->startRow();
 $objTable->addCell('<b>'.$startdateLabel.'</b>: '.$this->objDate->formatDate($data['startdate']));
+$objTable->addCell('<b>'.$totalLabel.'</b>: '.$data['totalmark']);
 if ($data['timed']) {
     $duration = (0) .'&nbsp;'.$hoursLabel;
     if ($data['duration'] > 0) {
