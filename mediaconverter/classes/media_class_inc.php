@@ -22,25 +22,33 @@ class media extends object
 		}
 	}
 	
-	public function convert3gp2flv($file)
+	public function convert3gp2flv($file, $savepath)
 	{
-		if(!file_exists($this->objConfig->getcontentbasePath().'mediaconverter/'))
-		{
-			mkdir($this->objConfig->getcontentbasePath().'mediaconverter/');
-			chmod($this->objConfig->getcontentbasePath().'mediaconverter/', 0777);
-		}
-		$siteroot = $this->objConfig->getSiteRoot();
 		$rfile = basename($file, ".3gp");
 		$newfile = $rfile.time().".flv";
-		$res = $this->objConfig->getcontentbasePath().'mediaconverter/'.$newfile;
-		system("$this->ffmpeg -i $file -acodec mp3 -ar 22050 -ab 32 -f flv -s 320x240 $res", $results);
+		system("$this->ffmpeg -i $file -acodec mp3 -ar 22050 -ab 32 -f flv -s 320x240 $newfile", $results);
 		if($results == 0)
 		{
-			return $siteroot.'usrfiles/mediaconverter/'.$newfile;
+			return $savepath.$newfile; //$siteroot.'usrfiles/mediaconverter/'.$newfile;
 		}
 		else {
 			return FALSE;
 		}
+	}
+	
+	public function convertAmr2Mp3($file, $savepath)
+	{
+		$rfile = basename($file, ".amr");
+		$newfile = $rfile.time().".mp3";
+		system("$this->ffmpeg -i $file -acodec mp3 -ar 22050 -ab 32 -f mp3 $newfile", $results);
+		if($results == 0)
+		{
+			return $savepath.$newfile;
+		}
+		else {
+			return FALSE;
+		}
+		
 	}
 }
 ?>

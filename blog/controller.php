@@ -556,8 +556,10 @@ class blog extends controller
                                     //decode the attachment data
                                     $filedata = base64_decode($files['filedata']);
                                     //set the path to write down the file to
-                                    $path = $this->objConfig->getContentBasePath() . 'blog/';
+                                    $path = $this->objConfig->getContentBasePath() . 'users/'.$userid.'/';  // 'blog/';
+                                    $fullpath = $this->objConfig->getsiteRoot()."/usrfiles/users/".$userid.'/';
                                     //check that the data dir is there
+                                    //echo $path, $fullpath; die();
                                     if(!file_exists($path))
                                     {
                                         //dir doesn't exist so create it quickly
@@ -565,6 +567,7 @@ class blog extends controller
                                     }
                                     //fix up the filename a little
                                     $filename = str_replace(" ","_", $filename);
+                                    $filename = str_replace("%20","_", $filename);
                                     //change directory to the data dir
                                     chdir($path);
                                     //write the file
@@ -577,23 +580,37 @@ class blog extends controller
                                     if($tparts[0] == "image")
                                     {
                                         //add the img stuff to the body at the end of the "post"
-                                        $newbod .= "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]" . "<br />";
+                                        $newbod .= "[img]" . $path . $filename . "[/img]" . "<br />";
                                     }
                                     elseif($tparts[1] == "3gpp")
                                     {
-                                    	//echo "Found a 3gp file!";
-                                    	//send to the mediaconverter to convert to flv
-                                    	$mediacon = $this->getObject('media', 'mediaconverter');
-                                    	$file = $this->objConfig->getcontentbasePath() . 'blog/' . $filename;
-                                    	//echo $file;
-                                    	$flv = $mediacon->convert3gp2flv($file);
-                                    	//echo "file saved to: $flv";
-                                    	$newbod .= "[FLV]".$flv."[/FLV]"." <br />";
-                                    	//echo $newbod;
+                                    	if($tparts[0] == "video")
+                                    	{
+                                    		log_debug("Found a 3gp Video file! Processing...");
+                                    		//send to the mediaconverter to convert to flv
+                                    		$mediacon = $this->getObject('media', 'mediaconverter');
+                                    		$file = $path . $filename;
+                                    		//echo $file;
+                                    		$flv = $mediacon->convert3gp2flv($file, $fullpath);
+                                    		//echo "file saved to: $flv";
+                                    		$newbod .= "[FLV]".$flv."[/FLV]"." <br />";
+                                    		echo $newbod;
+                                    	}
+                                    	elseif($tparts[0] == "audio")
+                                    	{
+                                    		log_debug("Found a 3gp amr file! Processing...");
+                                    		//amr file
+                                    		$mediacon = $this->getObject('media', 'mediaconverter');
+                                    		$file = $path . $filename;
+                                    		//echo $file;
+                                    		$mp3 = $mediacon->convertAmr2Mp3($file, $fullpath);
+                                    		$newbod .= "[EMBED]".$mp3."[/EMBED]"." <br />";
+                                    		
+                                    	}
                                     }
                                     else {
                                         //add the img stuff to the body at the end of the "post"
-                                        $newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . urlencode($filename) . "[/url]" . "<br />";
+                                        $newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/users/'.$userid.'/' . urlencode($filename) . "[/url]" . "<br />";
                                     }
                                 }
                             }

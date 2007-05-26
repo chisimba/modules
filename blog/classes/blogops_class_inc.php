@@ -1528,7 +1528,7 @@ class blogops extends object
                 	}
                     
                     $tbl->endRow();
-                    echo $this->objTB->autodiscCode();
+                    //echo $this->objTB->autodiscCode();
                     //tack the tags onto the end of the post content...
                     $thetags = $this->objDbBlog->getPostTags($post['id']);
                     $linkstr = NULL;
