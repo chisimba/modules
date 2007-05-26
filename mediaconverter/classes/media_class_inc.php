@@ -50,5 +50,20 @@ class media extends object
 		}
 		
 	}
+	
+	public function convertMp32Amr($file, $savepath)
+	{
+		$rfile = basename($file, ".mp3");
+		$newfile = $rfile.time().".amr";
+		system("$this->ffmpeg -i $file -ac 1 -ab 8 -ar 8000 -f amr -acodec amr_nb $newfile", $results);
+		if($results == 0)
+		{
+			return $savepath.$newfile;
+		}
+		else {
+			return FALSE;
+		}
+		
+	}
 }
 ?>
