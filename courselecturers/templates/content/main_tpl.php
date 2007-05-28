@@ -99,7 +99,7 @@ $objTableClass->addCell($pic, '', 'top', 'center', $class);
         $online = $onlineIcon->show();
         $objTableClass->addCell($online, '', 'top', 'center', $class);
     } 
-    // Show buddy name
+    // Show Lecturer name
     $name = $objUser->fullname($buddyId);
     $objTableClass->addCell($name, '', '', '', $class); 
     // Show instant messaging icon
@@ -149,7 +149,7 @@ $objTableClass->addCell($pic, '', 'top', 'center', $class);
         'module' => 'courselecturers',
         'confirm' => 'yes',
         );
-    $deletephrase = $objLanguage->languageText('mod_buddies_removebuddy', 'buddies');
+    $deletephrase = $objLanguage->languageText('mod_courselecturers_removelecturer', 'courselecturers');
     $conf = $objDelIcon->getDeleteIconWithConfirm('', $delLink, 'courselecturers', $deletephrase);
     $objTableClass->addCell($conf, '', 'top', 'center', $class);
 //} 
