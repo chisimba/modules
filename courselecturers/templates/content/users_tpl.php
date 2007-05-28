@@ -5,7 +5,7 @@ $pgTitle->type = 1;
 if($searchField=='listall'){
 $pgTitle->str = $objLanguage->languageText('mod_courselecturers_addabuddylistall', 'courselecturers');
 } else {
-$pgTitle->str = $objLanguage->languageText('mod_courselecturers_addabuddy', 'courselecturers')."&nbsp;"./*'-'."&nbsp;".$objLanguage->languageText('mod_buddies_letter')."&nbsp;".*/ '"' . $searchField . '"' ;
+$pgTitle->str = $objLanguage->languageText('mod_courselecturers_addalecturer', 'courselecturers')."&nbsp;"./*'-'."&nbsp;".$objLanguage->languageText('mod_buddies_letter')."&nbsp;".*/ '"' . $searchField . '"' ;
 }
 // Create alphabet display object
 $objAlphabet = &$this->getObject('alphabet', 'navigation');
