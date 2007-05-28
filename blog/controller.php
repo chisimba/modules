@@ -580,7 +580,7 @@ class blog extends controller
                                     if($tparts[0] == "image")
                                     {
                                         //add the img stuff to the body at the end of the "post"
-                                        $newbod .= "[img]" . $path . $filename . "[/img]" . "<br />";
+                                        $newbod .= "[img]" . $fullpath . $filename . "[/img]" . "<br />";
                                     }
                                     elseif($tparts[1] == "3gpp")
                                     {
