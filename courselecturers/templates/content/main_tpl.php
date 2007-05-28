@@ -154,7 +154,7 @@ $objTableClass->addCell($pic, '', 'top', 'center', $class);
     $objTableClass->addCell($conf, '', 'top', 'center', $class);
 //} 
 if (empty($buddies)) {
-    $objTableClass->addCell("<span class='noRecordsMessage'>" . $objLanguage->languageText('mod_buddies_nodata', 'buddies') . "</span>", NULL, 'top', 'center', null, 'colspan=10');
+    $objTableClass->addCell("<span class='noRecordsMessage'>" . $objLanguage->languageText('mod_courselecturers_nodata', 'courselecturers') . "</span>", NULL, 'top', 'center', null, 'colspan=10');
 } 
 $middleColumnContent = "";
 $middleColumnContent .= $pgTitle->show();
