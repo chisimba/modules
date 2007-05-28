@@ -74,6 +74,7 @@ if(!empty($resource)){
         $objIcon->setIcon('fulltext');
         $objIcon->title = $lbFulltext;
         $objLink = new link($url);
+        $objLink->extra = 'onclick="javascript:var url = \'index.php\';var pars = \'module=etd&amp;action=registerdownload\';var regDownload = new Ajax.Request(url, {method: \'post\', parameters: pars});"';            
         $objLink->link = $objIcon->show();
         
         $downloadStr = '<p><b>'.$lbFulltext.':</b> &nbsp; '.$objLink->show().'</p>';

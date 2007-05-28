@@ -126,6 +126,10 @@ class etd extends controller
                 $this->setVarByRef('search', $email);
                 return 'search_tpl.php';
 
+            case 'registerdownload':
+                $this->dbStats->recordDownload();
+                break;
+
             /* *** Functions for browsing the repository *** */
 
             case 'viewfaculty':
