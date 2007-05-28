@@ -7,13 +7,33 @@ $objTable = & $this->newObject('htmltable', 'htmlelements');
 $objIcon = & $this->newObject('geticon', 'htmlelements');
 $objLink = & $this->newObject('link', 'htmlelements');
 $objForm = & $this->newObject('form', 'htmlelements');
+$objForm2 = & $this->newObject('form', 'htmlelements');
 $objInput = & $this->newObject('textinput', 'htmlelements');
 $objFeatureBox = & $this->newObject('featurebox', 'navigation');
+$inpButton =  $this->newObject('button','htmlelements');
 
 //the heading
 $objH->str = 'Course Designer';
 
 echo $objH->show();//'the generated list of links will show here';
+
+//the back button
+//Button
+$inpButton->cssClass = 'f-submit';
+$inpButton->setValue('Back');
+$inpButton->setToSubmit();
+//administer context
+//enter context
+$icon = $this->newObject('geticon', 'htmlelements');
+$objLink->href = $this->uri(array('action' => 'admincontext', 'contextcode' => $context['contextcode']), 'contextadmin');
+$icon->setModuleIcon('contextadmin');
+$icon->alt = 'Administer Course';
+$objLink->link = $icon->show();
+
+//Form
+$objForm2->name = 'impfrm';
+$objForm2->action = $this->uri(array('action' => 'default'));
+$objForm2->addToForm($objLink->show()."Context Admin".'<br/>');
 
 
 if(is_array($linkList) && $linkList > 0)
@@ -106,4 +126,5 @@ $objLink->href = $this->uri(array('action' => 'add'));
 $objLink->link = 'Add new Links ';
 
 echo $objLink->show().$objIcon->getAddIcon($this->uri(array('action' => 'add')));
+print $objForm2->show().'<br/>';
 ?>
