@@ -220,7 +220,7 @@ if (count($pages) > '0') {
         $frontPageLink->href = $this->uri(array('action' => 'changefpstatus', 'pageid' => $pageId, 'sectionid' => $sectionId), 'cmsadmin');
         if($this->_objFrontPage->isFrontPage($pageId)) {
             $objIcon->setIcon('greentick');
-            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_confirmremovefromfp', 'cmsadmin');
+            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addpagetofp', 'cmsadmin');
             $frontPageLink->title = $this->objLanguage->languageText('mod_cmsadmin_confirmremovefromfp', 'cmsadmin');
         } else {
             $frontPageLink->title = $this->objLanguage->languageText('mod_cmsadmin_addpagetofp', 'cmsadmin');
@@ -230,7 +230,7 @@ if (count($pages) > '0') {
         $frontPageLink->link = $objIcon->show();
 
         // set up link to view contact details in a popup window
-        $objBlocksLink = new link('javascript:void(0)');
+        $objBlocksLink = new link('#');
         $objBlocksLink -> link = $blockIcon;
         $objBlocksLink -> extra = "onclick = \"javascript:window.open('" . $this->uri(array('action' => 'addblock', 'sectionId' => $sectionId, 'pageid' => $pageId, 'blockcat' => 'content')) . "', 'branch', 'width=500, height=350, top=50, left=50, scrollbars')\"";
 
@@ -251,9 +251,13 @@ if (count($pages) > '0') {
 }
 
 //Create add sub section icon
+$objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addsubsection','cmsadmin');
 $addSubSecIcon = $objIcon->getLinkedIcon($this->uri(array('action' => 'addsection', 'parentid' => $sectionId)), 'create_folder');
 
+
+
 //Create add page icon
+$objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addpage','cmsadmin');
 $addPageIcon = $objIcon->getLinkedIcon($this->uri(array('action' => 'addcontent', 'parent' => $sectionId)), 'create_page');
 
 //Create edit section icon
