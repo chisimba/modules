@@ -15,42 +15,10 @@ $middleContent = $pageText->show();
 $middleContent = '';
 
 // -------------------------------------------------------------------------
-/*
-// Join chat room.    
-$pageText->type=3;
-$pageText->str=$objLanguage->languageText('mod_workgroup_chatroom','workgroup');
-$middleContent .= $pageText->show();
 
-// Get Chat Text
-$objChatContent =& $this->getObject('model', 'chat');
-$chatContent = $objChatContent->getLast10($contextCode, $this->workgroupId);
-
-/*
-if ($chatContent == $objLanguage->languageText('mod_chat_noposts')) {
-    $chatContent = '<div class="noRecordsMessage">'.$chatContent.'</div>';
-}
-
-
-$middleContent .= '<div class="wrapperLightBkg" style="border: 5px outset #c0c0c0;">'.$chatContent.'</div>';
-
-
-$chatLink = new link ($this->uri(array('action'=>'join','context'=>$contextCode.' ('.$workgroupDescription.')', 'type'=>'workgroup'), 'chat'));
-$chatLink->link = $objLanguage->languageText("mod_workgroup_enterchat",'workgroup');
-
-$middleContent .= '<h3 align="center">'.$chatLink->show().'</h3>';
-*/
-// -------------------------------------------------------------------------
-
-/*
-    Instantiate the 'selectfile' class from the file manager, and add it to the form.
-*/
-
-//$objSelectFile = $this->newObject('selectfile', 'filemanager');
-//$objSelectFile->name = 'nameofforminput';
-/*
 //Join Discussion Forum 
 $pageText->type=3;
-$pageText->str=$objLanguage->languageText('mod_workgroup_forum');
+$pageText->str=ucwords($objLanguage->code2Txt("mod_workgroup_forum",'workgroup'));
 $middleContent .= $pageText->show();
 
 
@@ -59,10 +27,9 @@ $workgroupPosts =& $this->getObject('dbpost', 'forum');
 $middleContent .= '<div class="wrapperLightBkg" style="border: 5px outset #c0c0c0;">'.$workgroupPosts->getWorkGroupPosts($this->workgroupId, $contextCode).'</div>';
 
 $forumLink = new link ($this->uri(array('action'=>'workgroup'), 'forum'));
-$forumLink->link = $objLanguage->languageText('mod_workgroup_enterforum');
+$forumLink->link = $objLanguage->languageText('mod_workgroup_enterforum','workgroup');
 
 $middleContent .= '<h3 align="center">'.$forumLink->show().'</h3>';
-*/
 
 // -------------------------------------------------------------------------
 
@@ -71,11 +38,8 @@ $pageText->type=3;
 $pageText->str=ucwords($objLanguage->code2Txt("mod_workgroup_fileshare",'workgroup'));
 $middleContent .= $pageText->show();
 
-$objFileShareList =& $this->getObject('dbfileshare', 'workgroup');
-//$middleContent .= '<div class="wrapperLightBkg" style="border: 5px outset #c0c0c0;">'.$objFileShareList->getFormattedDisplay($this->workgroupId).'</div>';
-
-$fileshareLink = new link($this->uri(NULL, 'fileshare'));
-$fileshareLink->link = ucwords($objLanguage->code2Txt('mod_workgroup_enterfileshare','workgroup'));
+$fileshareLink = new link($this->uri(array('action'=>'uploadDocument'),'workgroup'));
+//$fileshareLink->link = ucwords($objLanguage->code2Txt('mod_workgroup_enterfileshare','workgroup'));
 
 $fileshareUploadLink = new link($this->uri(array('action'=>'upload'), 'workgroup'));
 $fileshareUploadLink->link = $objLanguage->languageText('mod_workgroup_uploaddocument','workgroup');
@@ -83,6 +47,18 @@ $fileshareUploadLink->link = $objLanguage->languageText('mod_workgroup_uploaddoc
 $middleContent .= '<h3 align="center">'.$fileshareLink->show().'</h3>';
 $middleContent .= '<h3 align="center">'.$fileshareUploadLink->show().'</h3>';
 
+
+/*
+$refLink = new link('#');
+		$url = $this->uri(array(
+                'action'=>'comment',
+                'id' => $id
+            ));
+		$refLink->link = $objLanguage->languageText("phrase_addreference");
+		$refLink->extra = "onclick=\"javascript:window.open('{$url}', 'refs', 'width=440, height=200, left=100,top=100,scrollbars = yes');\"";
+		$linkWindow = $refLink->show();
+
+*/
 // -------------------------------------------------------------------------
 
 // Logout
@@ -190,7 +166,8 @@ if ($objContextCondition->isContextMember('Lecturers')) {
 
 
 // ------------- END RIGHT CONTENT ------------------- //
-
+$this->objBlock = $this->newObject('blocks', 'blocks');
+$chatBlock = $this->objBlock->showBlock('workgroupchat', 'messaging');
 
 $cssLayout =& $this->getObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(3);
@@ -199,9 +176,9 @@ $cssLayout->setNumColumns(3);
 $menuBar=& $this->getObject('workgroupmenu');
 */
 //$sideMenu=& $this->getObject('sidemenu','toolbar');
-$cssLayout->setLeftColumnContent(''/*$sideMenu->show('workgroup')*//*$menuBar->show()*/);
+$cssLayout->setLeftColumnContent($rightContent);
 $cssLayout->setMiddleColumnContent($middleContent);
-$cssLayout->setRightColumnContent($rightContent);
+$cssLayout->setRightColumnContent($chatBlock);
 echo $cssLayout->show(); 
 
 
