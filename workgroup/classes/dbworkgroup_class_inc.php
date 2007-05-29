@@ -182,6 +182,7 @@ class dbWorkgroup extends dbTable
 		);
 	}
 	
+	
 	/**
 	* Delete a record
 	* @param string The workgroup id
@@ -190,5 +191,94 @@ class dbWorkgroup extends dbTable
 	{
 		$this->delete("id", $id);
 	}
+	
+	/**
+    * Insert a file.
+    * @param string $contextCode Context Code
+    * @param string $workgroupId Workgroup ID
+    * @param string $filename
+    * @param string $filetype
+    * @param string $filesize
+	* @param string $path The full filesystem path to the file
+	* @param string $title
+	* @param string $description
+	* @param string $version
+    */
+    /*public function insertFile(
+		$fileid,
+		//$contextCode,
+		$workgroupId,
+		$userId,
+		$filename,
+		//$filetype,
+		//$filesize,
+		$path,
+		$title,
+		$description,
+		$version
+	)
+    {
+		//if (preg_match('/^.*\.(.*)$/i',$filename,$matches)) {
+		//	if (strtolower( $matches[1] )=='php')
+		//    	return;
+		//}
+    	//$filename = preg_replace('/^(.*)\.php$/i', '\\1.phps', $filename);
+        $sql=array(
+			'fileid'=>$fileid,
+			//'contextCode'=>$contextCode,
+			'workgroupid'=>$workgroupId,
+			'userid'=>$userId,
+			'filename'=>$filename,
+			//'filetype'=>$filetype,
+			//'filesize'=>$filesize,
+			'path'=>$path,
+			'title'=>$title,
+			'description'=>$description,
+			'version'=>$version,
+			'uploadtime'=>mktime()
+		);
+        $this->insert($sql);
+    }*/
+	
+	/**
+    * Upload a file onto the filesystem and into the database.
+    * @param string $contextCode Context Code
+    * @param string $workgroupId Workgroup ID
+	* @param string $title Title
+	* @param string $description Description
+	* @param string $version Version
+    * @return boolean 
+    */
+    /*public function uploadFile(
+		//$contextCode,
+		$workgroupId,
+		$userId,
+		$path,
+		$title,
+		$description,
+		$version
+	)
+	{
+		$this->objUpload =& $this->getObject('upload','filemanager');
+		$result = $this->objUpload->uploadFile('upload');
+		if ($result['success']=='1') {
+            $this->insertFile(
+				$result['fileid'],
+				//$contextCode,
+				$workgroupId,
+				$userId,
+				$result['name'],
+				//$filetype,
+				//$filesize,
+				$path,
+				$title,
+				$description,
+				$version
+			);
+		    
+		}
+		
+	}*/
+
 }
 ?>

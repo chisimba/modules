@@ -9,7 +9,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 * Workgroup module
-* @author Jeremy O'Connor
+* @author Jeremy O'Connor, Juliet Mulindwa
 * @copyright 2004 University of the Western Cape
 * $Id$
 */
@@ -28,6 +28,7 @@ class workgroup extends controller
     function init()
     {
         $this->objUser =& $this->getObject('user', 'security');
+        $this->objFile =& $this->getObject('dbfile', 'filemanager');
         $this->objLanguage =& $this->getObject('language','language');
 		$this->objDbWorkgroup =& $this->getObject('dbworkgroup'); 
 		$this->objDbWorkgroupUsers =& $this->getObject('dbworkgroupusers'); 
@@ -55,7 +56,8 @@ class workgroup extends controller
         // Set the layout template.
         
         $this->workgroupId = $this->objDbWorkgroup->getWorkgroupId();
-        $userId = $this->objUser->userId();        
+        $userId = $this->objUser->userId(); 
+		//$objfile = $this->objFile->userId();       
         $userInWorkGroup = $this->objDbWorkgroupUsers->memberOfWorkGroup($userId, $this->workgroupId);
         
         if (is_null($this->workgroupId)) {
@@ -79,6 +81,8 @@ class workgroup extends controller
 		// Get context code.
 		//$objDbContext = &$this->getObject('dbcontext','context');
 		$contextCode = '0'; //$objDbContext->getContextCode();
+		$workgroupId = '0';
+		$userId = '0';
 		$this->setVarByRef('contextCode', $contextCode);
         // Check if we are not in a context...
 		if ($contextCode == null) {
@@ -100,6 +104,26 @@ class workgroup extends controller
             case 'leaveworkgroup':
                 $this->objDbWorkgroup->unsetWorkgroupId();
                 return $this->nextAction(null,null);
+            case 'upload':
+            	$this->objDbWorkgroup->listAll($contextCode);
+            	return "uploadDocument_tpl.php";
+            /*case 'uploadconfirm':
+            	$this->objDbWorkgroup->uploadFile(
+				//$contextCode,	
+				$workgroupId,
+				$userId,
+				$_POST['path'],
+				$_POST['title'],
+				$_POST['description'],
+				$_POST['version']
+			);
+			$objfile->getFileName($this->getParam('fileupload'));
+			//$objFile->getFileSize(($this->getParam('fileupload'));
+			//$objFile->getFilePath($this->getParam('nameofforminput'));
+            //$this->setLayoutTemplate("layout_tpl.php");
+            
+            //return 'upload_tpl.php';
+			return "main_tpl.php";*/
             default:
                 break;
         }
@@ -130,7 +154,7 @@ class workgroup extends controller
 		$objBreadcrumbs->insertBreadCrumb(array($link->show()));
 	
 		// Get the groupAdminModel object.
-		$groups =& $this->getObject("groupAdminModel", "groupadmin");
+		$groups = $this->getObject("groupAdminModel", "groupadmin");
         //if ($isAlumni) {
 			// Get a list of students who are not already in a workgroup.
 		//	$gid=$groups->getLeafId(array('Lecturers'));
@@ -139,7 +163,10 @@ class workgroup extends controller
 			// Get a list of students who are not already in a workgroup.
 			$gid=$groups->getLeafId(array($contextCode,'Lecturers'));
 		//}
-		$lecturers = $groups->getGroupUsers($gid, array('userId',"'firstName' || ' ' || 'surname' AS fullname"), "ORDER BY fullname");
+		//$lecturers = $groups->getGroupUsers($gid, array('userId',"'firstname' || ' ' || 'surname' AS fullname"), "ORDER BY fullname");
+		
+		//EDIT THIS ION MONDAY!!!!!!!!
+		$lecturers = $groups->getGroupUsers($gid, array('userId',"'firstname' || ' ' || 'surname' AS fullname"), "ORDER BY fullname");
 		$this->setVar('lecturers',$lecturers);
 
         return "main_tpl.php";

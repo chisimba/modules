@@ -71,14 +71,14 @@ class dbWorkgroupUsers extends dbTable
     */
 	function listAll($workgroupId)
 	{
-		$sql = "SELECT {$this->_tableName}.userid, 'tbl_users.firstName' || ' ' || 'tbl_users.surname' AS fullname FROM $this->_tableName, tbl_users
+		$sql = "SELECT {$this->_tableName}.userid, tbl_users.firstname, tbl_users.surname FROM $this->_tableName, tbl_users
 		WHERE {$this->_tableName}.userid=tbl_users.userid
         AND {$this->_tableName}.workgroupid='" . $workgroupId . "'
-		ORDER BY fullname";
+		ORDER BY surname";
 		$rows = $this->getArray($sql);
 		$count = count($rows);
 		for ($i = 0; $i < $count; $i++) {
-			$rows[$i]['fullname'] = stripslashes($rows[$i]['fullname']);
+			$rows[$i]['fullname'] = stripslashes($rows[$i]['firstname']).' '.stripslashes($rows[$i]['surname']);
 		}
 		return $rows;
 		//return $this->getAll("WHERE workgroupId='".$workgroupId."'");

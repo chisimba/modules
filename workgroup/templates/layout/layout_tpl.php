@@ -9,7 +9,8 @@ $cssLayout->setMiddleColumnContent($this->getContent());
 echo $cssLayout->show();
 */
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
-$userMenuBar=& $this->getObject('sidemenu','toolbar');
+//$userMenuBar=& $this->getObject('sidemenu','toolbar');
+$cssLayout->setNumColumns(3);
 
 $cssLayout->setLeftColumnContent($userMenuBar->show('workgroup')); /*menuUser*/
 $cssLayout->setMiddleColumnContent($this->getContent());
