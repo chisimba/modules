@@ -65,5 +65,19 @@ class media extends object
 		}
 		
 	}
+	
+	public function convertMp42flv($file, $savepath)
+	{
+		$rfile = basename($file, ".mp4");
+		$newfile = $rfile.time().".flv";
+		system("$this->ffmpeg -i $file -acodec mp3 -ar 22050 -ab 32 -f flv -s 320x240 $newfile", $results);
+		if($results == 0)
+		{
+			return $savepath.$newfile;
+		}
+		else {
+			return FALSE;
+		}	
+	}
 }
 ?>

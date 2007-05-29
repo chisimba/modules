@@ -527,7 +527,7 @@ class blog extends controller
 
                         //delete the message as we don't need it anymore
                         echo "sorting " . $this->msgCount . "messages";
-                        $this->objImap->delMsg($i);
+                        //$this->objImap->delMsg($i);
                         $i++;
                     }
                     //is the data var set?
@@ -594,7 +594,7 @@ class blog extends controller
                                     		$flv = $mediacon->convert3gp2flv($file, $fullpath);
                                     		//echo "file saved to: $flv";
                                     		$newbod .= "[FLV]".$flv."[/FLV]"." <br />";
-                                    		echo $newbod;
+                                    		//echo $newbod;
                                     	}
                                     	elseif($tparts[0] == "audio")
                                     	{
@@ -606,6 +606,20 @@ class blog extends controller
                                     		$mp3 = $mediacon->convertAmr2Mp3($file, $fullpath);
                                     		$newbod .= "[EMBED]".$mp3."[/EMBED]"." <br />";
                                     		
+                                    	}
+                                    }
+                                    elseif($tparts[1] == "mp4")
+                                    {
+                                    	if($tparts[0] == "video")
+                                    	{
+                                    		log_debug("Found an MP4 container file");
+                                    		//send to the mediaconverter to convert to flv
+                                    		$mediacon = $this->getObject('media', 'mediaconverter');
+                                    		$file = $path . $filename;
+                                    		//echo $file;
+                                    		$flv = $mediacon->convertMp42flv($file, $fullpath);
+                                    		//echo "file saved to: $flv";
+                                    		$newbod .= "[FLV]".$flv."[/FLV]"." <br />";
                                     	}
                                     }
                                     else {
