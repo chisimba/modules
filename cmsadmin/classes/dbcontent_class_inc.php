@@ -276,6 +276,12 @@ class dbcontent extends dbTable
                           'end_publish'=>$end_publish
                       );
 
+            
+            $creatorid = $this->getParam('creator',null);
+            if(!empty($creatorid)){
+                $newArr['created_by'] = $creatorid;
+            }
+            
             //process the forntpage
             $isFrontPage = $this->getParam('frontpage');
 			//$this->luceneReIndex($newArr);

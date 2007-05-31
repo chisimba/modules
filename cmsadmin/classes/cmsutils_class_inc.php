@@ -799,7 +799,7 @@ class cmsutils extends object
         		//Pre-populated dropdown
         		$creator = new dropdown('creator');
         		$users = $this->_objUserModel->getUsers('username','listall');
-        		$creator->addFromDB($users,"username","userid");
+        		$creator->addFromDB($users,"username","userid", $this->_objUser->userId());
         		$lbl_creator = new label($this->objLanguage->languageText('mod_cmsadmin_change_author','cmsadmin'),'creator');
         		//Change Created Date
         		$lbl_date_created = new label($this->objLanguage->languageText('mod_cmsadmin_override_creation_date','cmsadmin'),'overide_date');
