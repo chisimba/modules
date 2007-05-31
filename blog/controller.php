@@ -2110,6 +2110,9 @@ class blog extends controller
         	break;
 
         	
+        case 'googlegadget':
+        	//$this->setVar('pageSuppressHeader', TRUE);
+        	return 'gadget_tpl.php';
         }//action
 
     }
