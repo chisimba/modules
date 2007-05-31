@@ -1089,8 +1089,8 @@ class management extends object
         // Only managers can replace existing documents
         if(in_array('manager', $this->access)){
             // set php.ini to 250MB
-            ini_set('post_max_size', '250M');
-            ini_set('upload_max_filesize', '250M');
+            //ini_set('post_max_size', '250M');
+            //ini_set('upload_max_filesize', '250M');
             
             $objInput = new textinput('submitId', $submitId, 'hidden');
             $hidden .= $objInput->show();
@@ -1312,8 +1312,8 @@ class management extends object
                 $this->setSession('resourceMsg', $result);
                 
                 // restore php.ini settings
-                ini_restore('post_max_size');
-                ini_restore('upload_max_filesize');
+                //ini_restore('post_max_size');
+                //ini_restore('upload_max_filesize');
                 break;
                 
             case 'updatecitation':

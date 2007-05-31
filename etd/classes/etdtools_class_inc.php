@@ -65,7 +65,7 @@ class etdtools extends object
         $this->objLayer = $this->newObject('layer', 'htmlelements');
         $this->loadClass('link', 'htmlelements');
 
-        $this->objBlocks = & $this->newObject('blocks', 'blocks');
+        $this->objBlocks = $this->newObject('blocks', 'blocks');
         
         $this->access = $this->getSession('accessLevel', array());
     }
@@ -112,16 +112,16 @@ class etdtools extends object
     {
         $str = '';
         if(!$this->hideMenu){
-            $str = $this->objBlocks->showBlock('rightmenu', 'etd');
+            $str = $this->objBlocks->showBlock('rightmenu', 'etd', '','','', FALSE);
         }
         if(!$this->hideLinks){
-            $str .= $this->objBlocks->showBlock('etdlinks', 'etd');
+            $str .= $this->objBlocks->showBlock('etdlinks', 'etd', '','','', FALSE);
         }
         if(in_array('manager', $this->access) || in_array('editor', $this->access) || in_array('board', $this->access)){
-            $str .= $this->objBlocks->showBlock('managemenu', 'etd');
+            $str .= $this->objBlocks->showBlock('managemenu', 'etd', '','','', FALSE);
         }
         if(!$this->hideHelp){
-            //$str .= $this->objBlocks->showBlock('etdhelp', 'etd');
+            //$str .= $this->objBlocks->showBlock('etdhelp', 'etd', '','','', FALSE);
         }
         return $str;
     }
@@ -134,7 +134,7 @@ class etdtools extends object
     */
     private function getLogin()
     {
-        $str = $this->objBlocks->showBlock('login', 'security');
+        $str = $this->objBlocks->showBlock('login', 'security', '','','', FALSE);
         return $str;
     }
     

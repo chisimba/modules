@@ -835,6 +835,8 @@ class etd extends controller
             case 'viewtitle':
             case 'printresource':
             case 'emailresource':
+            case 'viewdepartment':
+            case 'browsedepartment':
             case 'viewfaculty':
             case 'browsefaculty':
             case 'browseauthor':
@@ -845,6 +847,7 @@ class etd extends controller
             case 'emailsearch':
             case 'sendemail':
             case 'viewstats':
+            case 'showrss':
             case 'rss':
             case '';
                 return FALSE;
