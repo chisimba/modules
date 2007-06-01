@@ -173,7 +173,7 @@ $str .= $objHead->show();
         $objCheck->extra = "onclick=\"javascript: ToggleMainBox('selectsections', 'toggle', this.checked);\"";
         
         //Create delete icon
-		$delArray = array('action' => 'deletecontent', 'confirm'=>'yes', 'id'=>$item['id']);
+		$delArray = array('action' => 'removesection', 'confirm'=>'yes', 'id'=>$item['id']);
 		$deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelsection', 'cmsadmin');
 		$delIcon = $objIcon->getDeleteIconWithConfirm($item['id'], $delArray,'cmsadmin',$deletephrase);
         $options = '&nbsp;'.$delIcon;

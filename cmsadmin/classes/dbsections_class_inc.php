@@ -775,6 +775,18 @@ class dbsections extends dbTable
         }
 
         /**
+        * Method to permanently delete a section
+        *
+        * @access public
+        * @param string $id The section id
+        * @return bool
+        */
+        public function permanentlyDelete($id)
+        {
+            return $this->delete('id', $id);
+        }
+
+        /**
          * Method to return the ordering value of new section (gets added last)
          *
          * @param string $parentid The id(pk) of the parent. Uses root node order if NULL

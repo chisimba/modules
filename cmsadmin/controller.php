@@ -298,6 +298,10 @@ class cmsadmin extends controller
                     $this->_objSections->deleteSection($this->getParam('id'));
                     return $this->nextAction('sections', array(NULL), 'cmsadmin');
 
+                case 'removesection':
+                    $this->_objSections->permanentlyDelete($this->getParam('id'));
+                    return $this->nextAction('trashmanager');
+
                 //----------------------- front page section
                 case 'frontpages':
                     $topNav = $this->_objUtils->topNav('frontpage');
