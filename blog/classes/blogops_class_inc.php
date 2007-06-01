@@ -3343,7 +3343,7 @@ class blogops extends object
     	foreach($pages as $page)
     	{
     		$link = $this->uri(array('action' => 'showpage', 'pageid' => $page['id']));
-    		$hr = new href($link, $page['page_name'], 'target="_blank" alt="'.$page['page_name'].'"');
+    		$hr = new href($link, $page['page_name'], ' alt="'.$page['page_name'].'"');
     		$str .= "<ul>".$hr->show()."</ul>";
     	}
     	
