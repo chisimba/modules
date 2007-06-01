@@ -964,13 +964,15 @@ class cmsutils extends object
          */
         public function getCheckIcon($isCheck, $returnFalse = TRUE)
         {
-            $objIcon =$this->newObject('geticon', 'htmlelements');
+            $objIcon = $this->newObject('geticon', 'htmlelements');
 
             if ($isCheck) {
                 $objIcon->setIcon('visible', 'gif');
+                $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_isvisible', 'cmsadmin');
             } else {
                 if ($returnFalse) {
                     $objIcon->setIcon('not_visible', 'gif');
+                    $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_isnotvisible', 'cmsadmin');
                 }
             }
 
@@ -2244,7 +2246,7 @@ class cmsutils extends object
 			$this->loadClass('textinput', 'htmlelements');
             // Title Input
             $titleInput = new textinput ('title', $titleInputValue);
-            $titleInput->cssId = 'title_input'; 
+            $titleInput->cssId = 'input_title'; 
             $titleInput->extra = ' style="width: 50%"';
             
             $table->startRow();
@@ -2314,6 +2316,7 @@ class cmsutils extends object
             $bodyInput = $this->newObject('htmlarea', 'htmlelements');
             $bodyInput->init('body', $bodyInputValue);
             $bodyInput->setContent($bodyInputValue);
+            $bodyInput->setDefaultToolBarSetWithoutSave();
             $bodyInput->height = '400px';
             $bodyInput->width = '100%';
 
@@ -2355,6 +2358,9 @@ class cmsutils extends object
             $button = new button('submitform', $this->objLanguage->languageText('word_save'));
             $button->setToSubmit();
             $objForm->addToForm('<p><br />'.$button->show().'</p>');
+            
+            $errTitle = $this->objLanguage->languageText('mod_cmsadmin_entertitle', 'cmsadmin');
+            $objForm->addRule('title', $errTitle, 'required');
 			
 			$display = $objForm->show(); 	
             return $display;
