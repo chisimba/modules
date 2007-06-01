@@ -211,7 +211,7 @@ class photogallery extends controller
         		return 'orderimages_tpl.php';
         	case 'saveimageorder':
         		$this->_objDBImage->reOrderImages($this->getParam('albumid'));
-        		return $this->nextAction('editalbum',array('albumid' => $this->getParam('albumid')));
+        		return $this->nextAction('sortalbumimages',array('albumid' => $this->getParam('albumid')));
         }
     }
 
