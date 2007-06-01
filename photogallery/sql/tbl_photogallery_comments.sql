@@ -1,6 +1,6 @@
 <?php
 // Table Name
-$tablename = 'tbl_photogallery_images';
+$tablename = 'tbl_photogallery_comments';
 
 //Options line for comments, encoding and character set
 $options = array('comment' => 'Photo Gallery Comments', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
