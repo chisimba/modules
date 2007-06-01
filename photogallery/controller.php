@@ -177,7 +177,8 @@ class photogallery extends controller
 				}
                 
                 $this->_objUtils->doUpload($this->getParam('albumselect'));
-                return $this->nextAction('uploadsection');
+                die;
+				return $this->nextAction('uploadsection');
                 
                 
             case 'overview':

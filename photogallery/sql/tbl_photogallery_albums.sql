@@ -38,6 +38,9 @@ $fields = array(
 	'created_date' => array(
 		'type' => 'date',
 		),
+	'title' => array(
+		'type' => 'clob',
+		),
 	'description' => array(
 		'type' => 'clob',
 		),
