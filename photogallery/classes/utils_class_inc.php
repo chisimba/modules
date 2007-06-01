@@ -27,11 +27,221 @@ class utils extends object
        $this->_objUser = $this->getObject('user', 'security');
        $this->objLanguage = & $this->getObject('language','language');
        $this->_objConfig = & $this->getObject('altconfig','config');
-
+       $this->_objDBAlbum = & $this->getObject('dbalbum', 'photogallery');
+       $this->_objDBImages = & $this->getObject('dbimages', 'photogallery');
        $this->galFolder = $this->_objConfig->getcontentBasePath().'photogallery';
 
     }
 
+    /**
+     * Method to get the navigation
+     *
+     */
+    public function getNav()
+    {
+       // $this->loadClass('sidebar' , 'navigation');
+        if ($this->_objUser->isLoggedIn())
+        {
+			
+			
+			$objSideBar = $this->getObject('sidebar', 'navigation');//new sidebar();
+			
+			$nodes[] = array('text' => 'Overview', 'uri' => $this->uri(array('action' => 'overview')),  'nodeid' => 'overview');
+			$nodes[] = array('text' => 'Comments', 'uri' => $this->uri(array('action' => 'comments')),  'nodeid' => 'comments');
+			$nodes[] = array('text' => 'Upload', 'uri' => $this->uri(array('action' => 'uploadsection')),  'nodeid' => 'uploadsection');
+			$nodes[] = array('text' => 'Edit', 'uri' => $this->uri(array('action' => 'editsection')),  'nodeid' => 'editsection');
+	
+			return $objSideBar->show($nodes, $this->getParam('action'));
+		} else {
+			return FALSE;
+		}
+    }
+  
+    /**
+     *Method to do the upload process
+     *@return boolean
+     *@access public
+     *@param string $albumId optional     
+     */
+     public function doUpload($albumId = null)
+     {
+        //check the album 
+        if($albumId == null)
+        {
+            //if new album then add to database and get the new id
+            $albumId = $this->_objDBAlbum->createAlbum($this->getParam('albumtitle'));
+        }
+        
+        //upload images and add entries to the database
+        $results = $this->uploadImages();       
+        
+        $this->insertToImagesTable($results);
+        
+     }                   
+  
+  
+  	/**
+  	* Method to upload the photos
+  	* @return array
+  	*/
+  	public function uploadImages()
+  	{
+		
+		$objUpload =& $this->newObject('upload', 'filemanager');
+		$objUpload->setUploadFolder('users/'.$this->_objUser->userId().'/photos/');
+		$results = $objUpload->uploadFiles();
+		
+		return $results;
+	}
+  
+  	/**
+  	* Method to insert the details into the
+  	* database
+  	* @param array $results The results of the upload
+	* @return boolean
+	* @access public
+	*/
+	public function insertToImagesTable($results = null)
+	{
+		if($results == null)
+		{
+			return FALSE;
+		} 
+		
+		$albumId = $this->getParam('albumselect');
+		foreach($results as $result)
+		{
+			if($result['fileid'] != '')
+			{
+				$fields = array();
+				$fields['file_id'] = $result['fileid'];
+				$fields['album_id'] = $albumId;
+				//var_dump($fields);
+				$this->_objDBImages->insertImageData($fields);
+				
+				if(!$this->_objDBAlbum->hasThumb($albumId))
+				{
+					$this->_objDBAlbum->update('id', $albumId, array('thumbnail' =>$result['fileid'] ));
+				}	
+			}
+			
+		}
+		
+	}
+  
+  
+	/**
+	* Method to save the edit for albums
+	*/
+	public function saveAlbumEdit()
+	{
+	
+		
+		$objDBAlbum = & $this->getObject('dbalbum', 'photogallery');
+		$objDBImage = & $this->getObject('dbimages', 'photogallery');
+		$isshared = ($this->getParam('isshared') == 'on')? 1 : 0;
+		$fields = array('title' => $this->getParam('albumtitle'),                        
+                        'no_pics' => $this->getParam('totalimages'),                       
+                        'is_shared' => $isshared,
+                        'description' => $this->getParam('description'),
+                        'thumbnail' =>  $this->getParam('thumbselect'));
+                        
+                        //var_dump($fields);die;
+		$objDBAlbum->updateAlbum($this->getParam('albumid'), $fields);
+		
+		$imgCnt = $this->getParam('totalimages');
+		for($i = 0; $i < $imgCnt; $i++)
+		{
+		 	$id = $this->getParam($i.'-id');
+			$fields = array('title' => $this->getParam($i.'-title'),
+							'description' => $this->getParam($i.'-desc'));
+			$objDBImage->updateImage($id, $fields);
+		}
+	}
+  
+  
+	  /**
+	  * Method to delete an album
+	  * this will delete all images and comments on 
+	  * album
+	  * @param string $albumId
+	  * @access public
+	  */
+  	public function deleteAlbum($albumId)
+  	{
+		$objDBAlbum = & $this->getObject('dbalbum', 'photogallery');
+		$objDBImage = & $this->getObject('dbimages', 'photogallery');
+		$objDBComments = & $this->getObject('dbcomments', 'photogallery');
+		
+		//get all in images
+		$images = $objDBImage->getAll("WHERE album_id='".$albumId."'");
+		foreach($images as $image)
+		{
+			
+			$objDBComments->delete('file_id',$image['id']);
+		}
+		
+		$objDBImage->delete('album_id', $albumId);
+		$objDBAlbum->delete('id', $albumId);
+	}
+  
+   /**
+	  * Method to delete an image
+	  * this will delete all  comments on 
+	  * image
+	  * @param string $imageId
+	  * @access public
+	  */
+  	public function deleteImage($imageId)
+  	{
+  		$objDBImage = & $this->getObject('dbimages', 'photogallery');
+		$objDBComments = & $this->getObject('dbcomments', 'photogallery');
+		
+		$objDBComments->delete('file_id', $imageId);
+		$objDBImage->delete('id', $imageId);
+  
+  	}
+  
+  
+  	/**
+  	* Method to generate the navigation for the image
+  	* @param string $imageId
+  	* @access public
+  	*/
+  	public function getImageNav($imageId)
+  	{
+		
+		
+	}
+  	
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
    /**
     * Method to read the xml gallery file
     *
@@ -593,7 +803,7 @@ class utils extends object
     * Merhod to delete the image
     * @param string fileId The file id
     */
-   public function deleteImage($id)
+   public function deleteImage2($id)
    {
        $objDBFile = & $this->getObject('dbfile', 'filemanager');
        $file = $objDBFile->getRow('id',$id);
