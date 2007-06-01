@@ -890,14 +890,14 @@ class dbblog extends dbTable
     	$indexPath = $this->objConfig->getcontentBasePath();
     	if(file_exists($indexPath.'chisimbaIndex/segments'))
     	{
-    		chmod($indexPath.'chisimbaIndex', 0777);
+    		@chmod($indexPath.'chisimbaIndex', 0777);
     		//we build onto the previous index
     		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex');
     	}
     	else {
     		//instantiate the lucene engine and create a new index
-    		mkdir($indexPath.'chisimbaIndex');
-    		chmod($indexPath.'chisimbaIndex', 0777);
+    		@mkdir($indexPath.'chisimbaIndex');
+    		@chmod($indexPath.'chisimbaIndex', 0777);
     		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex', true);
     	}
     	//hook up the document parser
@@ -948,7 +948,7 @@ class dbblog extends dbTable
     	else {
     		//instantiate the lucene engine and create a new index
     		mkdir($indexPath.'chisimbaIndex');
-    		chmod($indexPath.'chisimbaIndex', 0777);
+    		@chmod($indexPath.'chisimbaIndex', 0777);
     		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex', true);
     	}
     	$docid = $data['id'];
