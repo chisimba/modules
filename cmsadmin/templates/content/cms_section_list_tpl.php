@@ -126,7 +126,7 @@ $table->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_nameofsecti
 $table->addHeaderCell($this->objLanguage->languageText('word_pages'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_displaytype', 'cmsadmin'));
 $table->addHeaderCell($this->objLanguage->languageText('word_order'));
-$table->addHeaderCell($this->objLanguage->languageText('word_visible'));
+$table->addHeaderCell($this->objLanguage->languageText('word_published'));
 $table->addHeaderCell($this->objLanguage->languageText('word_options'));
 $table->endHeaderRow();
 

@@ -86,7 +86,7 @@ $table->cellpadding = '5';
 $table->startHeaderRow();
 $table->addHeaderCell($objCheck->show());
 $table->addHeaderCell($this->objLanguage->languageText('word_title'));
-$table->addHeaderCell($this->objLanguage->languageText('word_visible'));
+$table->addHeaderCell($this->objLanguage->languageText('word_published'));
 $table->addHeaderCell($this->objLanguage->languageText('word_section'));
 $table->addHeaderCell($this->objLanguage->languageText('word_order'));
 $table->addHeaderCell($this->objLanguage->languageText('word_options'));

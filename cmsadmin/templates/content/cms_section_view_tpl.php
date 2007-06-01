@@ -107,7 +107,7 @@ $objSubSecTable->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_me
 $objSubSecTable->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_nameofsection', 'cmsadmin'));
 $objSubSecTable->addHeaderCell($this->objLanguage->languageText('word_pages'));
 $objSubSecTable->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_displaytype', 'cmsadmin'));
-$objSubSecTable->addHeaderCell($this->objLanguage->languageText('word_visible'));
+$objSubSecTable->addHeaderCell($this->objLanguage->languageText('word_published'));
 $objSubSecTable->addHeaderCell($this->objLanguage->languageText('word_order'));
 $objSubSecTable->addHeaderCell($this->objLanguage->languageText('word_options'));
 $objSubSecTable->endHeaderRow();
@@ -129,8 +129,10 @@ if (isset($subSections)) {
 
         if ($subSecPublished == '1') {
             $objIcon->setIcon('visible');
+            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_isvisible', 'cmsadmin');
         } else {
             $objIcon->setIcon('not_visible');
+            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_isnotvisible', 'cmsadmin');
         }
 
         $visibleIcon = $objIcon->show();
@@ -174,7 +176,7 @@ $objPagesTable->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_pag
 
 $objPagesTable->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_articledate', 'cmsadmin'));
 
-$objPagesTable->addHeaderCell($this->objLanguage->languageText('word_visible'));
+$objPagesTable->addHeaderCell($this->objLanguage->languageText('word_published'));
 
 $objPagesTable->addHeaderCell($this->objLanguage->languageText('word_order'));
 
@@ -198,8 +200,10 @@ if (count($pages) > '0') {
 
         if ($pagePublished == '1') {
             $objIcon->setIcon('visible');
+            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_isvisible', 'cmsadmin');
         } else {
             $objIcon->setIcon('not_visible');
+            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_isnotvisible', 'cmsadmin');
         }
 
         $visibleIcon = $objIcon->show();
