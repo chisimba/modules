@@ -87,7 +87,7 @@ class dbimages extends dbTable
 		$this->update('id', $imageId,$views);
 	}
 	
-		/**
+	/**
 	* Method to reorder the ablums
 	* 
 	*/
@@ -95,18 +95,18 @@ class dbimages extends dbTable
 	{
 		$order = str_replace('images[]=','',$this->getParam('imageOrder'));
 		$newOrder = split('&',$order);
-		var_dump($newOrder);
+		//var_dump($newOrder);
 		$images = $this->getAlbumImages($albumId);
-	    print '<pre>';
-		print_r($images);
+	    //print '<pre>';
+		//print_r($images);
 		$cnt = 0;
 		foreach ($images as $image)
 		{
-		 print '<br>'.$newOrder[$cnt] .' --> '.$image['id'];
-		//	$this->update('id', $image['id'], array('position' => intval($newOrder[$cnt])));
+	//	 print '<br>'.$image['title'].' --> '.$newOrder[$cnt] ;
+			$this->update('id', $image['id'], array('position' => $newOrder[$cnt]));
 			$cnt++;
 		}
-		die;
+//		die;
 	}
 }
 ?>
