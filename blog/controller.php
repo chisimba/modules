@@ -588,7 +588,7 @@ class blog extends controller
                                     	{
                                     		log_debug("Found a 3gp Video file! Processing...");
                                     		//send to the mediaconverter to convert to flv
-                                    		$mediacon = $this->getObject('media', 'mediaconverter');
+                                    		$mediacon = $this->getObject('media', 'utilities');
                                     		$file = $path . $filename;
                                     		//echo $file;
                                     		$flv = $mediacon->convert3gp2flv($file, $fullpath);
@@ -600,7 +600,7 @@ class blog extends controller
                                     	{
                                     		log_debug("Found a 3gp amr file! Processing...");
                                     		//amr file
-                                    		$mediacon = $this->getObject('media', 'mediaconverter');
+                                    		$mediacon = $this->getObject('media', 'utilities');
                                     		$file = $path . $filename;
                                     		//echo $file;
                                     		$mp3 = $mediacon->convertAmr2Mp3($file, $fullpath);
@@ -614,7 +614,7 @@ class blog extends controller
                                     	{
                                     		log_debug("Found an MP4 container file");
                                     		//send to the mediaconverter to convert to flv
-                                    		$mediacon = $this->getObject('media', 'mediaconverter');
+                                    		$mediacon = $this->getObject('media', 'utilities');
                                     		$file = $path . $filename;
                                     		//echo $file;
                                     		$flv = $mediacon->convertMp42flv($file, $fullpath);
