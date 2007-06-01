@@ -65,8 +65,8 @@ echo '<div id="main">'.$str;
       <br/><br/>
         <div>
       		<form action="<?php echo $this->uri(array('action' => 'saveimageorder', 'albumid' => $this->getParam('albumid'))) ?>" method="POST" onSubmit="populateHiddenVars();" name="sortableListForm" id="sortableListForm">
-						<input type="text" name="imageOrder" id="imageOrder" size="60">
-						<input type="text" name="sortableListsSubmitted" value="true">
+						<input type="hidden" name="imageOrder" id="imageOrder" size="60">
+						<input type="hidden" name="sortableListsSubmitted" value="true">
 						<input type="submit" value="Save" class="button">
 		</form>
 		      </div>
@@ -80,9 +80,9 @@ echo '<div id="main">'.$str;
   
   <script language="JavaScript" type="text/javascript"><!--
 			function populateHiddenVars() {
-			 alert('here');
+			
 									document.getElementById('imageOrder').value = Sortable.serialize('images');
-									alert('dd');
+									
 									return true;
 			}
 		
