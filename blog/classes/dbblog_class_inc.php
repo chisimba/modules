@@ -941,7 +941,7 @@ class dbblog extends dbTable
     	$indexPath = $this->objConfig->getcontentBasePath();
     	if(file_exists($indexPath.'chisimbaIndex/segments'))
     	{
-    		chmod($indexPath.'chisimbaIndex', 0777);
+    		@chmod($indexPath.'chisimbaIndex', 0777);
     		//we build onto the previous index
     		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex');
     	}
