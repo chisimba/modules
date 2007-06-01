@@ -2111,8 +2111,9 @@ class blog extends controller
 
         	
         case 'googlegadget':
+        	echo $this->objblogOps->showLastTenPosts();
         	//$this->setVar('pageSuppressHeader', TRUE);
-        	return 'gadget_tpl.php';
+        	//return 'gadget_tpl.php';
         }//action
 
     }
