@@ -2375,7 +2375,7 @@ class blogops extends object
         //$posts = $this->objDbBlog->getPostsMonthly(mktime(0,0,0,date("m", time()), 1, date("y", time())), $userid); //change this to get from the form input rather
         if ($month == NULL && $year == NULL) {
             
-            if($this->objUser->isInAdminGroup($userid))
+            if($this->objUser->inAdminGroup($userid))
             {
             	$posts = $this->objDbBlog->getAbsAllPostsWithSiteBlogs($userid);
             }
