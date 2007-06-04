@@ -126,7 +126,7 @@ class utils extends object
 					$this->_objDBAlbum->update('id', $albumId, array('thumbnail' =>$result['fileid'] ));
 				}	
 				
-					var_dump($fields);
+				//	var_dump($fields);
 			}
 			
 		}
