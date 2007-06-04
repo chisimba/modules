@@ -6,7 +6,7 @@ $objThumbnail = & $this->getObject('thumbnails','filemanager');
 $link->href = $this->uri(null,'photogallery');
 $link->link = 'Photo Gallery';
 
-$head = '<div id="gallerytitle">
+$head = '<div id="main2"><div id="gallerytitle">
 		<h2><span>'.$link->show().' | </span> '.$this->_objDBAlbum->getAlbumTitle($this->getParam('albumid')).'
 </h2></div>
 <div id="albumDesc" style="display: block;">'.$this->_objDBAlbum->getAlbumDescription($this->getParam('albumid')).'</div>
@@ -28,13 +28,13 @@ if(count($images) > 0)
 		$str.=$link->show().'</div></div>';
 	}
 	
-	print $str.'</div>
+	print $str.'
 	
 	<div class="pagelist">
 <ul class="pagelist">
   
 </ul>
-</div>';
+</div></div>';
 }else {
 	
 	print 'No Photos for '.$album['title'];

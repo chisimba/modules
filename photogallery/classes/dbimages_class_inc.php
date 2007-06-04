@@ -108,5 +108,16 @@ class dbimages extends dbTable
 		}
 //		die;
 	}
+	
+	/**
+	* Method to get the count of images
+	* for an album
+	*@param string $albumId
+	*/
+	public function getImageCount($albumId)
+	{
+		$images = $this->getAll("WHERE albumId = '.$albumId.'");
+		return count($images);
+	}
 }
 ?>

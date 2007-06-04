@@ -26,7 +26,7 @@ if($this->_objUser->isLoggedIn())
 }
 $objH->type = 2;
 
-echo '<div id="gallerytitle">'.$objH->show().'</div>';
+echo '<div id="main2"><div id="gallerytitle">'.$objH->show().'</div>';
 
 
 if(count($albums) > 0 && $this->_objUser->isLoggedIn() && $this->getParam('mode') != 'shared')
@@ -47,13 +47,15 @@ if(count($albums) > 0 && $this->_objUser->isLoggedIn() && $this->getParam('mode'
 		
 		$link->href = $this->uri(array('action' => 'viewalbum', 'albumid' => $album['id']));
 	 	$link->link = $album['title'];
-
-		$str .=	'<h3>'.$link->show().'</h3><p>'.$album['description'].'</p></div>
+	 	
+	 	$imageCount = count($this->_objDBImage->getAll("WHERE album_id= '".$album['id']."'"));
+	 	$cntStr = ($imageCount > 1) ? $imageCount.' photos' : $imageCount.' photo';
+	 	$str .=	'<h3>'.$link->show().'</h3>'.$album['description'].'<br/><span class="subdued">('.$cntStr.')</span></div>
 					<p style="clear: both; "></p></div>';
 		
 	}
 	
-	print '<div id="albums">'. $str .'</div>';
+	print '<div id="albums">'. $str .'</div></div>';
 } else {
  
 
@@ -80,14 +82,18 @@ if(count($albums) > 0 && $this->_objUser->isLoggedIn() && $this->getParam('mode'
 				$link->href = $this->uri(array('action' => 'viewalbum', 'albumid' => $sharedAlbum['id']));
 			 	$link->link = $sharedAlbum['title'];
 		
+				$imageCount = count($this->_objDBImage->getAll("WHERE album_id= '".$sharedAlbum['id']."'"));
+			 	$cntStr = ($imageCount > 1) ? $imageCount.' photos' : $imageCount.' photo';
+	 	
 				$str .=	'<h3>'.$link->show().'</h3>'.$sharedAlbum['description'].'
+						<br/><span class="subdued">('.$cntStr.')</span>
 						</div>
 							<p style="clear: both; "></p>
 						</div>';
 				
 			}
 			
-			echo '<div id="albums">'. $str .'</div>';	
+			echo '<div id="albums">'. $str .'</div></div>';	
 				
 		
 		}

@@ -65,6 +65,11 @@ class utils extends object
      */
      public function doUpload($albumId = null)
      {
+        
+        //upload images and add entries to the database
+        $results = $this->uploadImages();       
+        
+		//var_dump($results);
         //check the album 
         if($albumId == null)
         {
@@ -72,10 +77,7 @@ class utils extends object
             $albumId = $this->_objDBAlbum->createAlbum($this->getParam('albumtitle'));
         }
         
-        //upload images and add entries to the database
-        $results = $this->uploadImages();       
-        
-        $this->insertToImagesTable($results);
+        $this->insertToImagesTable($albumId ,$results);
         
      }                   
   
@@ -101,14 +103,14 @@ class utils extends object
 	* @return boolean
 	* @access public
 	*/
-	public function insertToImagesTable($results = null)
+	public function insertToImagesTable($albumId, $results = null)
 	{
 		if($results == null)
 		{
 			return FALSE;
 		} 
 		
-		$albumId = $this->getParam('albumselect');
+		//$albumId = $this->getParam('albumselect');
 		foreach($results as $result)
 		{
 			if($result['fileid'] != '')
@@ -116,13 +118,15 @@ class utils extends object
 				$fields = array();
 				$fields['file_id'] = $result['fileid'];
 				$fields['album_id'] = $albumId;
-				//var_dump($fields);
+			
 				$this->_objDBImages->insertImageData($fields);
 				
 				if(!$this->_objDBAlbum->hasThumb($albumId))
 				{
 					$this->_objDBAlbum->update('id', $albumId, array('thumbnail' =>$result['fileid'] ));
 				}	
+				
+					var_dump($fields);
 			}
 			
 		}

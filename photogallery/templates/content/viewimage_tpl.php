@@ -89,7 +89,7 @@ $nav = '<div class="imgnav">
 				<div class="imgnext"><a href="/zenphoto/zach/SSA41060.JPG.php" title="Next Image">next &raquo;</a></div>
 			</div>';
 			
-$head = '<div id="gallerytitle">
+$head = '<div id="main2">'.$nav.'<div id="gallerytitle">
 		<h2><span>'.$galLink.' | </span> <span>'.$albumLink.'
 		| </span>'.$image['title'].'
 		</h2></div>
@@ -97,12 +97,12 @@ $head = '<div id="gallerytitle">
 	';
 
 $desc  = '<div id="narrow"><div id="iamgeDesc" style="display: block;">'.$image['description'].'</div>';
-echo $nav;	
+	
 print $head;
 
 echo $str;
 echo $desc;
 echo $strComment;
-echo $form->show().'</div>';
+echo $form->show().'</div></div>';
 
 ?>
