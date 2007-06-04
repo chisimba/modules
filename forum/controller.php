@@ -1454,7 +1454,7 @@ class forum extends controller
     {
         $files = $this->objPostAttachments->downloadAttachment($id);
         if (count($files) > 0) {
-            $location = $this->objFiles->getFilePath($files[0]['id']);
+            $location = $this->objFiles->getFullFilePath($files[0]['id']);
             header('Content-Disposition: attachment; filename="'.$files[0]['filename'].'"');
             readfile($location);
             //header('Location:'.$location); // Todo - Force Download
