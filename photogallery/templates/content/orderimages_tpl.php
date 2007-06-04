@@ -33,9 +33,9 @@ $str .= $link->show().' | ';
 
 
 
-$script = '  <script type="text/javascript" src="/zen/zen/admin.js"></script>	
-<script src="/zen/zen/scriptaculous/prototype.js" type="text/javascript"></script>
-		<script src="/zen/zen/scriptaculous/scriptaculous.js" type="text/javascript"></script>
+$script = '<script type="text/javascript" src="'.$this->getResourceUri('admin.js','photogallery').'"></script>	
+<script src="'.$this->getResourceUri('scriptaculous/prototype.js','photogallery').'" type="text/javascript"></script>
+		<script src="'.$this->getResourceUri('scriptaculous/scriptaculous.js','photogallery').'" type="text/javascript"></script>
 <script language="JavaScript" type="text/javascript"><!--
 			';
 
