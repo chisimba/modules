@@ -32,6 +32,7 @@ class photogallery extends controller
         $this->_objDBImage = & $this->getObject('dbimages', 'photogallery');
         $this->_objFileMan = & $this->getObject('dbfile','filemanager');
         $this->_objDBComments = & $this->getObject('dbcomments','photogallery');
+        $this->_objConfig = $this->getObject('altconfig', 'config');
 /*
 
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('SpryData.js','photogallery'));

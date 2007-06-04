@@ -42,8 +42,9 @@ $description = new textarea('description');
 $description->value = $album['description'];
 
 $dropdown = new dropdown('thumbselect');
-//$dropdown->name = 'thumbselect';
-//$dropdown->id = 'thumbselect';
+$dropdown->cssClass = 'thumbselect';
+//$dropdown->size = 2;
+$dropdown->cssId = 'thumbselect';
 $dropdown->extra = 'onchange="updateThumbPreview(this)"';
 
 $table2 = new htmltable();
@@ -55,14 +56,17 @@ foreach($thumbnails as $thumbnail)
 {
 	$filename = $this->_objFileMan->getFileName($thumbnail['file_id']); 
  	$path = $objThumbnail->getThumbnail($thumbnail['file_id'],$filename);
- 	$extra = 'class="thumboption" style="background-image: url(/chisimba_framework/app/'.$path.'); background-repeat: no-repeat;"';
+ 	$extra = 'class="thumboption" style="background-image: url('.$this->_objConfig->getsiteRoot().$path.'); background-repeat: no-repeat;"';
 	
+	$dropdown->addOption($thumbnail['file_id'],$thumbnail['title'].' ('.$filename.')',$extra);
+	
+
 	if($thumbnail['file_id'] == $album['thumbnail'] )
 	{
 		$dropdown->setSelected($thumbnail['file_id']);
 	}
 
-	$dropdown->addOption($thumbnail['file_id'],$cnt.$thumbnail['title'].' ('.$filename.')',$extra);
+	
 	
 	$bigPath = $this->_objFileMan->getFilePath($thumbnail['file_id']);
 	$img = '<img id="thumb-'.$cnt.'" src="'.$path.'" alt="'.$thumbnail['title'].'" 
@@ -147,5 +151,5 @@ function toggleBigImage(id, largepath) {
 		</script>
 <?php
 
-echo '<div id="main">'.$form->show().'</div';
+echo '<div id="main"><div class="box" style="padding: 15px;">'.$form->show().'</div></div';
 ?>
