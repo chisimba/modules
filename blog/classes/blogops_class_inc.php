@@ -2374,6 +2374,11 @@ class blogops extends object
         //grab the posts for this month
         //$posts = $this->objDbBlog->getPostsMonthly(mktime(0,0,0,date("m", time()), 1, date("y", time())), $userid); //change this to get from the form input rather
         if ($month == NULL && $year == NULL) {
+            
+            if($this->objUser->isInAdminGroup($userid))
+            {
+            	$posts = $this->objDbBlog->getAbsAllPostsWithSiteBlogs($userid);
+            }
             $posts = $this->objDbBlog->getAbsAllPosts($userid);
         }
 		$count = count($posts);

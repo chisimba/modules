@@ -282,6 +282,11 @@ class dbblog extends dbTable
 		return $this->getAll("WHERE userid = '$userid' ORDER BY post_ts DESC");
 	}
 
+	public function getAbsAllPostsWithSiteBlogs($userid)
+	{
+		$this->_changeTable('tbl_blog_posts');
+		return $this->getAll("WHERE userid = '$userid' OR userid = '1' ORDER BY post_ts DESC");
+	}
 	/**
 	 * Method to get all the posts in a category (published posts as well as drafts)
 	 *
