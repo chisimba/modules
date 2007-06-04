@@ -20,8 +20,10 @@ function showResponse (originalRequest) {
 //]]>
 </script>
 <?php
+$middleColumn = NULL;
 if(isset($comment) && isset($useremail))
 {
+	//$middleColumn = "CAPTCHA was kakka";
 	$comment = urldecode($comment);
 	$useremail = urldecode($useremail);
 }
@@ -32,7 +34,7 @@ else {
 $cssLayout = &$this->newObject('csslayout', 'htmlelements');
 // Set columns to 3
 $cssLayout->setNumColumns(3);
-$middleColumn = NULL;
+
 //show all the posts
 $middleColumn .= ($this->objblogOps->showPosts($posts, TRUE));
 $middleColumn .= $this->objComments->showComments($postid);

@@ -381,12 +381,17 @@ class blog extends controller
                 }
                 $postid = $this->getParam('postid');
                 $userid = $this->getParam('userid');
+                $posts = $this->objDbBlog->getPostByPostID($postid);
+                //print_r($posts);
                 if(isset($userid))
                 {
                     $catarr = $this->objDbBlog->getCatsTree($userid);
                     $this->setVarByRef('cats', $catarr);
                 }
-                $posts = $this->objDbBlog->getPostByPostID($postid);
+                else {
+                	$userid = $posts[0]['userid'];
+                }
+                
                 //get the post with comments and trackbacks and display it.
 				$this->setVarByRef('addinfo', $addinfo);
                 $this->setVarByRef('postid', $postid);
