@@ -96,6 +96,8 @@ if(count($albums) > 0 && $this->_objUser->isLoggedIn() && $this->getParam('mode'
 			echo '<div id="albums">'. $str .'</div></div>';	
 				
 		
+		} else {
+			print 'No Albums available';
 		}
 
 	}
