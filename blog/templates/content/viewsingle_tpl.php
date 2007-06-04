@@ -20,9 +20,14 @@ function showResponse (originalRequest) {
 //]]>
 </script>
 <?php
-if(isset($msg))
+if(isset($comment) && isset($useremail))
 {
-	echo urldecode(stripslashes($msg));
+	$comment = urldecode($comment);
+	$useremail = urldecode($useremail);
+}
+else {
+	$comment = NULL;
+	$useremail = NULL;
 }
 $cssLayout = &$this->newObject('csslayout', 'htmlelements');
 // Set columns to 3
@@ -34,10 +39,10 @@ $middleColumn .= $this->objComments->showComments($postid);
 $middleColumn .= $tracks = $this->objblogOps->showTrackbacks($postid);
 if($this->objUser->isLoggedIn() == TRUE)
 {
-	$middleColumn .= $this->objblogOps->addCommentForm($postid, $userid, $captcha = FALSE);
+	$middleColumn .= $this->objblogOps->addCommentForm($postid, $userid, $captcha = FALSE, $comment, $useremail);
 }
 else {
-	$middleColumn .= $this->objblogOps->addCommentForm($postid, $userid, $captcha = TRUE);
+	$middleColumn .= $this->objblogOps->addCommentForm($postid, $userid, $captcha = TRUE, $comment, $useremail);
 }
 $objUi = $this->getObject('blogui');
 // left hand blocks

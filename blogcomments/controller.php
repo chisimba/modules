@@ -118,6 +118,7 @@ class blogcomments extends controller
             	$addinfo['ctype'] = $this->getParam('type');
             	$addinfo['comment'] = $this->getParam('comment');
             	$addinfo = $this->objComm->addToDb($addinfo);
+            	//print_r($addinfo);
             	//check that the captcha is correct
             	if(!$this->objUser->isLoggedIn())
             	{
@@ -128,8 +129,7 @@ class blogcomments extends controller
           				$tmsg->setMessage = $this->objLanguage->languageText("mod_blogcomments_badcaptcha", "blogcomments");
           				$msg = $tmsg->show();
           				$this->setVarByRef('msg', $msg);
-          				$this->setVarByRef('addinfo', $addinfo);
-          				$this->nextAction('viewsingle',array('msg' => $msg, 'postid' => $addinfo['postid'], 'userid' => $this->objUser->userId()), $addinfo['mod']);
+          				$this->nextAction('viewsingle',array('postid' => $addinfo['postid'], 'userid' => $this->objUser->userId(), 'comment' => $addinfo['comment'], 'useremail' => $addinfo['useremail']), $addinfo['mod']);
           				exit;
           			}
           		}

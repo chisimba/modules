@@ -69,7 +69,7 @@ class commentapi extends object
 	 * @param Do we want to show the types dropdown? $showtypes
 	 * @return string form
 	 */
-	public function commentAddForm($postid, $module, $table, $postuserid = NULL, $editor = TRUE, $featurebox = TRUE, $showtypes = TRUE, $captcha = FALSE)
+	public function commentAddForm($postid, $module, $table, $postuserid = NULL, $editor = TRUE, $featurebox = TRUE, $showtypes = TRUE, $captcha = FALSE, $comment = NULL, $useremail = NULL)
 	{
 		try {
 			$this->loadClass('form', 'htmlelements');
@@ -110,6 +110,10 @@ class commentapi extends object
 		{
 			$email->setValue($this->objUser->email());
 		}
+		elseif(isset($useremail))
+		{
+			$email->setValue($useremail);
+		}
 		$emaillabel = new label($this->objLanguage->languageText("mod_blogcomments_email", "blogcomments") . ':', 'input_email');
 		$ctbl->startRow();
 		$ctbl->addCell($emaillabel->show().$required);
@@ -129,6 +133,10 @@ class commentapi extends object
 			//echo "start";
 			$comm = $this->getObject('htmlarea','htmlelements');
 			$comm->setName('comment');
+			if(isset($comment))
+			{
+				$comm->setContent($comment);
+			}
 			$comm->height = 400;
 			$comm->width = 420;
 			$comm->setBasicToolBar();
@@ -137,6 +145,10 @@ class commentapi extends object
 		else {
 			$comm = new textarea;
 			$comm->setName('comment');
+			if(isset($comment))
+			{
+				$comm->setValue($comment);
+			}
 			$ctbl->addCell($comm->show());
 		}
 		$ctbl->endRow();

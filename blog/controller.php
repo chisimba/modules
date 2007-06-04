@@ -371,10 +371,13 @@ class blog extends controller
 
             case 'viewsingle':
                 //single post view for the bookmarks/comments etc
-                $msg = $this->getParam('msg');
-                if(isset($msg))
+                $comment = $this->getParam('comment');
+                $useremail = $this->getParam('useremail');
+                //echo $comment, $useremail;
+                if(isset($comment) && isset($useremail))
                 {
-                	$this->setVarByRef('msg', $msg);
+                	$this->setVarByRef('comment', $comment);
+                	$this->setVarByRef('useremail', $useremail);
                 }
                 $postid = $this->getParam('postid');
                 $userid = $this->getParam('userid');
@@ -385,7 +388,7 @@ class blog extends controller
                 }
                 $posts = $this->objDbBlog->getPostByPostID($postid);
                 //get the post with comments and trackbacks and display it.
-
+				$this->setVarByRef('addinfo', $addinfo);
                 $this->setVarByRef('postid', $postid);
                 $this->setVarByRef('posts', $posts);
                 $this->setVarByRef('userid', $userid);
