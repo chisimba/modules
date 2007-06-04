@@ -2470,12 +2470,12 @@ class blogops extends object
         $qptitletxt = $this->objLanguage->languageText("mod_blog_posttitle", "blog") ."<br />";
         $qptitle = new textinput('posttitle');
         //post content textarea
-        $qpcontenttxt = $this->objLanguage->languageText("mod_blog_pcontent", "blog");
+        $qpcontenttxt = $this->objLanguage->languageText("mod_blog_pcontent", "blog")."<br />";
         $qpcontent = new textarea('postcontent');
         //$qpcontent->setName('postcontent');
         //$qpcontent->setBasicToolBar();
         //dropdown of cats
-        $qpcattxt = $this->objLanguage->languageText("mod_blog_postcat", "blog");
+        $qpcattxt = $this->objLanguage->languageText("mod_blog_postcat", "blog")."<br />";
         $qpDrop = new dropdown('cat');
         $qpDrop->addOption(0, $this->objLanguage->languageText("mod_blog_defcat", "blog"));
         //loop through the existing cats and make sure not to add a child to the dd

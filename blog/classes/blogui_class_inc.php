@@ -103,6 +103,7 @@ class blogui extends object
 		if($this->objUser->isLoggedIn())
 		{
 			$rightSideColumn .= $this->objblogOps->quickCats(TRUE);
+			//$rightSideColumn .= $this->objblogOps->quickPost($userid, TRUE);
 		}
 		
 		return $rightSideColumn;
