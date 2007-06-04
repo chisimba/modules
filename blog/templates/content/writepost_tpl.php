@@ -7,7 +7,7 @@ $middleColumn = NULL;
 //get the posts editor
 $middleColumn = $this->objblogOps->postEditor($userid, NULL);
 //geotag part
-$middleColumn .= $this->objblogOps->geoTagForm();
+//$middleColumn .= $this->objblogOps->geoTagForm();
 $objUi = $this->getObject('blogui');
 // left hand blocks
 $leftCol = $objUi->leftBlocks($userid);
