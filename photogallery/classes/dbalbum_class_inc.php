@@ -89,7 +89,7 @@ class dbalbum extends dbTable
       */
       public function getSharedAlbums()
       {
-          return $this->getAll("WHERE is_shared=1");
+          return $this->getAll("WHERE is_shared=1 ORDER BY position");
       
       }       
 	  
