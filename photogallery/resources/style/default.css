@@ -16,12 +16,12 @@ html {
 
 /* Main Layout
 ------------------------------ */
-body {
+/*body {
 	background: #F5F5F3;
 	margin: 0px;
 	padding: 0px 0px 50px;
 	text-align: center;
-}
+}*/
 #main2 {
 	text-align: left;
 	margin: 20px auto;

@@ -84,10 +84,7 @@ $link->href = $this->uri(array('action' => 'viewalbum', 'albumid' =>$this->getPa
 $link->link = $this->_objDBAlbum->getAlbumTitle($this->getParam('albumid'));
 $albumLink = $link->show();
 
-$nav = '<div class="imgnav">
-				<div class="imgprevious"><a href="/zenphoto/zach/SSA41005.JPG.php" title="Previous Image">&laquo; prev</a></div>
-				<div class="imgnext"><a href="/zenphoto/zach/SSA41060.JPG.php" title="Next Image">next &raquo;</a></div>
-			</div>';
+$nav = $this->_objUtils->getImageNav($image['id']);
 			
 $head = '<div id="main2">'.$nav.'<div id="gallerytitle">
 		<h2><span>'.$galLink.' | </span> <span>'.$albumLink.'

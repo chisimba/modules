@@ -50,7 +50,7 @@ if(count($albums) > 0 && $this->_objUser->isLoggedIn() && $this->getParam('mode'
 	 	
 	 	$imageCount = count($this->_objDBImage->getAll("WHERE album_id= '".$album['id']."'"));
 	 	$cntStr = ($imageCount > 1) ? $imageCount.' photos' : $imageCount.' photo';
-	 	$str .=	'<h3>'.$link->show().'</h3>'.$album['description'].'<br/><span class="subdued">('.$cntStr.')</span></div>
+	 	$str .=	'<h3>'.$link->show().'</h3>'.$album['description'].'<br/><span class="caption">('.$cntStr.')</span></div>
 					<p style="clear: both; "></p></div>';
 		
 	}
@@ -86,7 +86,7 @@ if(count($albums) > 0 && $this->_objUser->isLoggedIn() && $this->getParam('mode'
 			 	$cntStr = ($imageCount > 1) ? $imageCount.' photos' : $imageCount.' photo';
 	 	
 				$str .=	'<h3>'.$link->show().'</h3>'.$sharedAlbum['description'].'
-						<br/><span class="subdued">('.$cntStr.')</span>
+						<br/><span class="caption">('.$cntStr.')</span>
 						</div>
 							<p style="clear: both; "></p>
 						</div>';
