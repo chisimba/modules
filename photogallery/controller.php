@@ -196,7 +196,7 @@ class photogallery extends controller
         		return 'editalbum_tpl.php';
         	case 'savealbumedit':
         		$this->_objUtils->saveAlbumEdit();
-        		return $this->nextAction('editalbum',array('albumid' => $this->getParam('albumid')));
+//        		return $this->nextAction('editalbum',array('albumid' => $this->getParam('albumid')));
         	case 'savealbumorder':
         		$this->_objDBAlbum->reOrderAlbums();
         		return $this->nextAction('editsection');
