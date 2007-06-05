@@ -29,6 +29,7 @@ class hivaidstools extends object
         $this->objCountries = $this->getObject('languagecode','language');
         
         $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $this->objIcon = $this->newObject('geticon', 'htmlelements');
         $this->loadClass('htmltable', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
@@ -36,6 +37,78 @@ class hivaidstools extends object
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('radio', 'htmlelements');
         $this->loadClass('dropdown', 'htmlelements');
+        $this->loadClass('layer', 'htmlelements');
+    }
+    
+    /**
+    * Method to display the management page - links into the forum admin, logger, etc.
+    *
+    * @access public
+    * @return string html
+    */
+    public function showManagement()
+    {
+        $head = ucwords($this->objLanguage->languageText('phrase_sitemanagement'));
+        $lnForum = $this->objLanguage->languageText('mod_forum_name', 'forum');
+        $lnCMS = $this->objLanguage->languageText('mod_cmsadmin_name', 'cmsadmin');
+        $lnUsStats = $this->objLanguage->languageText('mod_userstats_name', 'userstats');
+        $lnSiStats = $this->objLanguage->languageText('mod_sitestats_name', 'sitestats');
+        $lnLogger = $this->objLanguage->languageText('mod_logger_name', 'logger');
+        $lnSurvey = $this->objLanguage->languageText('mod_survey_name', 'survey');
+        
+        // Forum
+        $url = $this->uri('', 'forum');
+        $name = 'forum';
+        $blForum = $this->objIcon->getBlockIcon($url, $name, $lnForum, 'gif', $iconfolder='icons/modules/');
+        
+        // CMS Admin
+        $url = $this->uri('', 'cmsadmin');
+        $name = 'cmsadmin';
+        $blCms = $this->objIcon->getBlockIcon($url, $name, $lnCMS, 'gif', $iconfolder='icons/modules/');
+        
+        // User stats
+        $url = $this->uri('', 'userstats');
+        $name = 'userstats';
+        $blUsSt = $this->objIcon->getBlockIcon($url, $name, $lnUsStats, 'gif', $iconfolder='icons/modules/');
+        
+        // Site stats
+        $url = $this->uri('', 'sitestats');
+        $name = 'sitestats';
+        $blSiStat = '';//$this->objIcon->getBlockIcon($url, $name, $lnSiStats, 'gif', $iconfolder='icons/modules/');
+        
+        // Logger
+        $url = $this->uri('', 'logger');
+        $name = 'logger';
+        $blLog = $this->objIcon->getBlockIcon($url, $name, $lnLogger, 'gif', $iconfolder='icons/modules/');
+        
+        // Survey
+        $url = $this->uri('', 'survey');
+        $name = 'survey';
+        $blSurvey = $this->objIcon->getBlockIcon($url, $name, $lnSurvey, 'gif', $iconfolder='icons/modules/');
+        
+        // Poll
+        
+        // Video repository
+        
+        // Podcasting
+        
+        // User profiles
+        
+        $objTable = new htmltable();
+        $objTable->cellpadding = '5';
+        
+        $objTable->addRow(array($blForum, $blCms, $blSurvey));
+        $objTable->addRow(array('&nbsp;'));
+        $objTable->addRow(array($blLog, $blUsSt, $blSiStat));
+        $str = $objTable->show();
+        
+        $box = $this->objFeatureBox->showContent($head, $str);
+        
+        $objLayer = new layer();
+        $objLayer->str = $box;
+        $objLayer->id = 'cpanel';
+        
+        return $objLayer->show();
     }
     
     /**

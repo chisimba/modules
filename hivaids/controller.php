@@ -70,7 +70,7 @@ class hivaids extends controller
                 return 'home_tpl.php';
                 
             default:
-                $display = '';
+                $display = $this->hivTools->showManagement();
                 $this->setVarByRef('display', $display);
                 return 'home_tpl.php';
         }
@@ -136,7 +136,9 @@ class hivaids extends controller
     private function notAllowed()
     {
         $objLanguage = $this->getObject('language', 'language');
-        $msg = $objLanguage->languageText('mod_hivaids_notallowedplaygame', 'hivaids');
+        $institution = $this->objConfig->getinstitutionName();
+        $arr = array('institution' => $institution);
+        $msg = $objLanguage->code2Txt('mod_hivaids_notallowedplaygame', 'hivaids', $arr);
                 
         $str = '<p class="noRecordsMessage error">'.$msg.'</p>';
         return $str;
@@ -147,9 +149,15 @@ class hivaids extends controller
     *
     * @access public
     */
-    public function requiresLogin()
+    public function requiresLogin($action)
     {
-        return FALSE;
+        switch($action){
+            case 'showregister':
+            case 'register':
+            case 'playyourmoves':
+                return FALSE;
+        }
+        return TRUE;
     }
 } // end of controller class
 ?>
