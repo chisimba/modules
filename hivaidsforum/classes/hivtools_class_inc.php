@@ -46,6 +46,7 @@ class hivtools extends object
         $this->objEditor = $this->newObject('htmlarea', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('textarea', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('radio', 'htmlelements');
@@ -255,7 +256,7 @@ class hivtools extends object
         
         // subject
         $objLabel = new label($lbSubject, 'input_subject');
-        $objInput = new textinput('subject');
+        $objInput = new textarea('subject', '', '2', '100');
         $formStr = '<p>'.$objLabel->show().':<br />'.$objInput->show().'</p>';
         
         // message
