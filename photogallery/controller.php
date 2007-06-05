@@ -88,6 +88,7 @@ class photogallery extends controller
 					$this->setVar('albums',$this->_objDBAlbum->getUserAlbums());
             	}
             	$this->setVar('sharedalbums',$this->_objDBAlbum->getSharedAlbums());
+            	$this->setVar('pageTitle', 'Photo Gallery');
             	return 'front_tpl.php';
             case 'viewalbum':
             	$this->_objDBAlbum->incrementHitCount($this->getParam('albumid'));

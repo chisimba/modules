@@ -5,6 +5,8 @@ $this->loadClass('textarea','htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $this->loadClass('checkbox','htmlelements');
 $this->loadClass('button','htmlelements');
+$objCC = $this->getObject('licensechooser', 'creativecommons');
+
 $objThumbnail = & $this->getObject('thumbnails','filemanager');
 $link = $this->getObject('link','htmlelements');
 //$button = $this->getObject('button','htmlelements');
@@ -76,10 +78,10 @@ foreach($thumbnails as $thumbnail)
 	
 	 
 	$imgDescription = new textarea($cnt.'-desc',$thumbnail['description'],'4','60');
-	  
+	  var_dump($objCC->show());
 	$table2->startRow();
 	$table2->addCell($img.$imgId->show(),null,'center');
-	$table2->addCell('Title: <br />'.$imgTitle->show().'<br/>Description: <br />'.$imgDescription->show().'<br/><br/>');
+	$table2->addCell('Title: <br />'.$imgTitle->show().$objCC->show().'cc<br/>Description: <br />'.$imgDescription->show().'<br/><br/>');
 	
 	$table2->addCell($icon->getDeleteIconWithConfirm($thumbnail['id'],array('action' => 'deleteimage', 'imageid' => $thumbnail['id'], 'albumid' => $thumbnail['album_id']),'photogallery'),null,'center');
 	$table2->endRow();

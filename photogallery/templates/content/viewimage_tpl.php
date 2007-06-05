@@ -61,6 +61,9 @@ $button = new button();
 $button->value = 'Add Comment';
 $button->setToSubmit();
 
+
+$this->setVar('pageTitle', 'Photo Gallery - '.$this->_objDBAlbum->getAlbumTitle($this->getParam('albumid')).' - '.$image['title']);
+
 $form->addToForm('<h3>Add a comment</h3>'.$table->show());
 $form->addToForm($commentField->show().'<br/>'.$button->show());
 
@@ -103,7 +106,3 @@ echo $strComment;
 echo $form->show().'</div></div>';
 
 ?>
-
-<a href="images/image-1.jpg" rel="lightbox[roadtrip]">image #1</a>
-<a href="http://localhost/chisimba_framework/app/usrfiles/users/1/photos/SSA40962.JPG" rel="lightbox[roadtrip]">image #2</a>
-<a href="http://www.diy-home-makeover.com/pictures/accessories-furniture/carpet/carpet-9659-s.jpg" rel="lightbox[roadtrip]">image #3</a>

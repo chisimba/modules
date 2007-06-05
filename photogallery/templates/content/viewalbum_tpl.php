@@ -6,6 +6,8 @@ $objThumbnail = & $this->getObject('thumbnails','filemanager');
 $link->href = $this->uri(null,'photogallery');
 $link->link = 'Photo Gallery';
 
+$this->setVar('pageTitle', 'Photo Gallery - '.$this->_objDBAlbum->getAlbumTitle($this->getParam('albumid')));
+
 $head = '<div id="main2"><div id="gallerytitle">
 		<h2><span>'.$link->show().' | </span> '.$this->_objDBAlbum->getAlbumTitle($this->getParam('albumid')).'
 </h2></div>
