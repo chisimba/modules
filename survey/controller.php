@@ -60,7 +60,7 @@ class survey extends controller
 
         $this->objLanguage=&$this->newObject('language','language');
         $this->objGroupAdmin=&$this->newObject('groupadminmodel','groupadmin');
-        $this->objDate=&$this->newObject('datetime','utilities');
+        $this->objDate=&$this->newObject('dateandtime','utilities');
         $this->objComment=&$this->newObject('commentinterface','comment');
 
         $this->objMailer=$this->newObject('email', 'mail');
