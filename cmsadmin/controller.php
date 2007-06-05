@@ -399,6 +399,7 @@ class cmsadmin extends controller
                     $this->_objContent->deleteContent($this->getParam('id'));
                     $sectionId = $this->getParam('sectionid', NULL);
 
+                    return $this->nextAction('trashmanager');
                     if (!empty($sectionId)) {
                         return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
                     } else {
