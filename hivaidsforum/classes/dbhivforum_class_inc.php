@@ -250,7 +250,11 @@ class dbhivforum extends dbtable
         if(!empty($list)){
             foreach($list as $item){
                 if($item['topicid'] == $topicId AND !$linkAll){
-                    $lnTopic = $item['post_title'];
+                    //$lnTopic = $item['post_title'];
+                    $objLink = new link($this->uri(array('action' => 'showtopic', 'topicId' => $item['topicid'])));
+                    $objLink->link = $item['post_title'];
+                    $objLink->style = "color: #0000BB;";
+                    $lnTopic = $objLink->show();
                 }else{
                     $objLink = new link($this->uri(array('action' => 'showtopic', 'topicId' => $item['topicid'])));
                     $objLink->link = $item['post_title'];
@@ -344,7 +348,11 @@ class dbhivforum extends dbtable
         if(!empty($list)){
             foreach($list as $item){
                 if($item['id'] == $forumId AND !$linkAll){
-                    $lnForum = $item['forum_name'];
+                    //$lnForum = $item['forum_name'];
+                    $objLink = new link($this->uri(array('action' => 'showcat', 'catId' => $item['id'])));
+                    $objLink->link = $item['forum_name'];
+                    $objLink->style = "color: #0000BB;";
+                    $lnForum = $objLink->show();
                 }else{
                     $objLink = new link($this->uri(array('action' => 'showcat', 'catId' => $item['id'])));
                     $objLink->link = $item['forum_name'];
