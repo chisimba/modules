@@ -133,8 +133,7 @@ $addTable->startRow();
     $addTable->addCell($languageLabel->show(), 120);
     
     //$language =& $this->newObject('language','language');
-    $languageDropdown = $this->newObject('dropdown', 'htmlelements');
-    $languageDropdown->name = 'language';
+    $languageDropdown = new dropdown('language');
     
     
     $languageCodes = & $this->newObject('languagecode','language');
