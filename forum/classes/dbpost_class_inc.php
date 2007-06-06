@@ -879,7 +879,7 @@ class dbPost extends dbTable
                 
                 $objTable->startHeaderRow();
                 $objTable->addHeaderCell($this->objLanguage->languageText('mod_forum_topicconversation', 'forum'));
-                $objTable->addHeaderCell($this->objLanguage->languageText('word_message', 'forum'), '60%');
+                $objTable->addHeaderCell($this->objLanguage->languageText('word_message'), '60%');
                 $objTable->addHeaderCell($this->objLanguage->languageText('word_author'), 100);
                 $objTable->endHeaderRow();
                 
@@ -1042,7 +1042,7 @@ class dbPost extends dbTable
             
             $addTable->startRow();
             
-            $addTable->addCell($this->objLanguage->languageText('word_message', 'forum').':', 140);
+            $addTable->addCell($this->objLanguage->languageText('word_message').':', 140);
             
             $editor=&$this->newObject('htmlarea','htmlelements');
             $editor->setName('message');

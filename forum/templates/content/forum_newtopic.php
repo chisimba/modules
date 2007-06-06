@@ -161,7 +161,7 @@ $addTable->endRow();
 
 $addTable->startRow();
 
-$htmlareaLabel = new label($this->objLanguage->languageText('word_message', 'forum').':', 'message');
+$htmlareaLabel = new label($this->objLanguage->languageText('word_message').':', 'message');
 
 if ($mode == 'fix') {
     $messageCSS = 'error';

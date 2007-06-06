@@ -67,7 +67,7 @@ $formTable->endRow();
 
 $formTable->startRow();
 
-$formTable->addCell($this->objLanguage->languageText('word_message', 'forum').':', 140);
+$formTable->addCell($this->objLanguage->languageText('word_message').':', 140);
 
 $editor=&$this->newObject('htmlarea','htmlelements');
 $editor->setName('message');
