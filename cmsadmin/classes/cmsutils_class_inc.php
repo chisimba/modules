@@ -2504,7 +2504,6 @@ class cmsutils extends object
 
     public function rssEditor($featurebox = FALSE, $rdata = NULL)
     {
-    	//print_r($rdata);
     	$this->loadClass('href', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
@@ -2520,7 +2519,7 @@ class cmsutils extends object
     	else {
     		$rdata = $rdata[0];
     		$rssform = new form('addrss', $this->uri(array(
-            	'action' => 'rssedit', 'mode' => 'edit', 'id' => $rdata['id']
+            	'action' => 'addrss', 'mode' => 'edit', 'id' => $rdata['id']
         	)));
     	}
         //add rules
@@ -2571,7 +2570,7 @@ class cmsutils extends object
         $rssadd->endRow();
 
         //end off the form and add the buttons
-        $this->objRssButton = &new button($this->objLanguage->languageText('word_save', 'system'));
+        $this->objRssButton = new button($this->objLanguage->languageText('word_save', 'system'));
         $this->objRssButton->setValue($this->objLanguage->languageText('word_save', 'system'));
         $this->objRssButton->setToSubmit();
         $rssfieldset->addContent($rssadd->show());
@@ -2601,7 +2600,7 @@ class cmsutils extends object
                 $ftable->addCell(($rows['description']));
                 $this->objIcon = &$this->getObject('geticon', 'htmlelements');
                 $edIcon = $this->objIcon->getEditIcon($this->uri(array(
-                    'action' => 'addrss',
+                    'action' => 'rssedit',
                     'mode' => 'edit',
                     'id' => $rows['id'],
                     //'url' => $rows['url'],

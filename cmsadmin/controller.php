@@ -138,6 +138,7 @@ class cmsadmin extends controller
                 $this->objTreeNodes =  $this->newObject('treenodes', 'cmsadmin');
                 $this->dbMenuStyle =  $this->newObject('dbmenustyles', 'cmsadmin');
                 $this->_objCMSLayouts =  $this->newObject('cmslayouts', 'cms');
+                
                 //feeds classes
             	$this->objFeed = $this->getObject('feeds', 'feed');
                 
@@ -557,15 +558,18 @@ class cmsadmin extends controller
 	        		$rssname = $this->getParam('name');
 	        		$rssurl = $this->getParam('rssurl');
 	        		$rssdesc = $this->getParam('description');
-	        		$userid = $this->objUser->userId();
+	        		$userid = $this->_objUser->userId();
 	        		$id = $this->getParam('id');
 	
 	        		if($mode == 'edit')
 	        		{
-	        			$addarr = array('id' => $id, 'userid' => $userid, 'url' => $rssurl, 'name' => $rssname, 'description' => $rssdesc);
-	        			$this->objDbBlog->addRss($addarr, 'edit');
+//	         			$addarr = array('id' => $id, 'userid' => $userid, 'url' => $rssurl, 'name' => $rssname, 'description' => $rssdesc);
+//	        			$this->_objLayouts->addRss($addarr, 'edit');
+	        			$id = $this->getParam('id');
+                		$rdata = $this->_objLayouts->getRssById($id);
+                		$this->setVarByRef('rdata', $rdata);
 	        		}
-	        		$userid = $this->objUser->userid();
+	        		$userid = $this->_objUser->userid();
 	        		$this->setVarByRef('userid', $userid);
 		        	return 'rssedit_tpl.php';
 		        	break;
@@ -573,7 +577,7 @@ class cmsadmin extends controller
         		case 'deleterss':
 		        	$id = $this->getParam('id');
 		
-		        	$this->objDbBlog->delRSS($id);
+		        	$this->_objLayouts->delRSS($id);
 		        	$this->nextAction('rssedit');
 		        	break;
 		        	
@@ -964,11 +968,12 @@ class cmsadmin extends controller
         	$rssdesc = $this->getParam('description');
         	$userid = $this->_objUser->userId();
         	$mode = $this->getParam('mode');
-        	if($mode == 'edit')
-        	{
-        		$id = $this->getParam('id');
-        		$rdata = $this->_objLayouts->getRssById($id);
-        		$this->setVarByRef('rdata', $rdata);
+        	if($mode == 'edit'){
+        	   $id = $this->getParam('id');
+        	   $addarr = array('id' => $id, 'userid' => $userid, 'url' => $rssurl, 'name' => $rssname, 'description' => $rssdesc);
+	           $this->_objLayouts->addRss($addarr, 'edit');
+	        			
+        		
         		return 'rssedit_tpl.php';
         	}
 
@@ -982,8 +987,7 @@ class cmsadmin extends controller
    			curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
    			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
    			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-   			if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
-            {
+   			if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != ''){
             	curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_host'].":".$proxyArr['proxy_port']);
             	curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxy_user'].":".$proxyArr['proxy_pass']);
             }
@@ -995,14 +999,22 @@ class cmsadmin extends controller
         	$addarr = array('userid' => $userid, 'url' => $rssurl, 'name' => $rssname, 'description' => $rssdesc, 'rsscache' => htmlentities($rsscache), 'rsstime' => $addtime);
 
         	//write the file down for caching
-        	$path = $this->_objConfig->getContentBasePath() . "/cms/rsscache/";
+        	$path = $this->_objConfig->getContentBasePath() . "cms/";
         	$path =  str_replace('\\', '/',$path);
+        	
+        	if(!is_dir($path)){
+        	   mkdir($path, 0700);
+        	}
+        	$path .= "rsscache/";
+        	$path =  str_replace('\\', '/',$path);
+        	
+        	if(!is_dir($path)){
+        	   mkdir($path, 0700);
+        	}
+        	
         	$rsstime = time();
         	if(!file_exists($path))
         	{
-
-        		mkdir($path);
-        		chmod($path, 0777);
         		$filename = $path . $userid . "_" . $rsstime . ".xml";
         		if(!file_exists($filename))
         		{
