@@ -65,7 +65,7 @@ font: bold 90% 'Trebuchet MS', 'Lucida Grande', Arial, sans-serif;
 <?php
 
 $cssLayout = $this->getObject('csslayout', 'htmlelements');
-$cssLayout->setNumColumns(3);
+$cssLayout->setNumColumns(2);
 
 $leftContent = $this->objNewsCategories->getCategoriesMenu();
 
@@ -96,6 +96,7 @@ $keywordTagCloudLink = new link ($this->uri(array('action'=>'themecloud')));
 $keywordTagCloudLink->link = 'Keyword Tag Clouds';
 $leftContent .= '<li>'.$keywordTagCloudLink->show().'</li>';
 
+$leftContent .= '</ul>';
 
 $cssLayout->setLeftColumnContent($leftContent);
 $cssLayout->setMiddleColumnContent($this->getContent());

@@ -11,6 +11,20 @@ class news extends controller
     {
         $this->objNewsCategories = $this->getObject('dbnewscategories');
         $this->objNewsLocations = $this->getObject('dbnewslocations');
+        $this->objNewsStories = $this->getObject('dbnewsstories');
+		$this->objKeywords = $this->getObject('dbnewskeywords');
+		$this->objTags = $this->getObject('dbnewstags');
+    }
+    
+    private function putLayoutTemplate($action)
+    {
+        $twoCols = array('admin', 'addcategory', 'managelocations', 'addlocation', 'savelocation', 'viewlocation', 'addstory', 'editstory', 'themecloud', 'tagcloud', 'viewtimeline', 'viewbykeyword', 'viewcategory', 'viewlocation', 'viewlocation', 'viewlocation');
+        
+        if (in_array($action, $twoCols)) {
+            $this->setLayoutTemplate('2collayout.php');
+        } else {
+            $this->setLayoutTemplate('layout.php');
+        }
     }
     
     /**
@@ -19,7 +33,10 @@ class news extends controller
     */
     public function dispatch($action)
     {
-        $this->setLayoutTemplate('layout.php');
+        $this->setVar('pageSuppressXML', TRUE);
+		
+		$this->putLayoutTemplate($action);
+        
         switch($action)
         {
             case 'managecategories':
@@ -34,6 +51,36 @@ class news extends controller
                 return $this->saveLocation();
             case 'viewlocation':
                 return $this->viewLocation($this->getParam('id'));
+			case 'addstory':
+				return $this->addStory();
+			case 'savestory':
+				return $this->saveStory();
+			case 'viewstories':
+				return $this->viewStories();
+			case 'viewstory':
+                return $this->viewStory($this->getParam('id'));
+            case 'editstory':
+                return $this->editStory($this->getParam('id'));
+            case 'updatestory':
+				return $this->updateStory();
+			case 'ajaxkeywords':
+				return $this->ajaxKeywords();
+			case 'themecloud':
+				return $this->themeCloud();
+			case 'tagcloud':
+				return $this->tagCloud();
+			case 'viewtimeline':
+				return $this->viewTimeline();
+			case 'generatetimeline':
+				return $this->generateTimeline();
+            case 'viewbykeyword':
+                return $this->viewByKeyword($this->getParam('id'));
+            case 'generatekeywordtimeline':
+                return $this->generateKeywordTimeline($this->getParam('id'));
+            case 'viewcategory':
+                return $this->viewCategory($this->getParam('id'));
+			case 'home':
+				return $this->home();
             default:
                 return $this->newsHome();
         }
@@ -47,6 +94,21 @@ class news extends controller
     {
         return 'main.php';
     }
+	
+	private function home()
+	{
+		$this->setLayoutTemplate('layout.php');
+		
+		$topStories = $this->objNewsStories->getTopStoriesFormatted();
+		$this->setVarByRef('topStories', $topStories['stories']);
+		
+		$this->setVarByRef('topStoriesId', $topStories['topstoryids']);
+		
+		$categories = $this->objNewsCategories->getCategoriesWithStories('categoryname');
+        $this->setVarByRef('categories', $categories);
+		
+		return 'home.php';
+	}
     
     /**
     *
@@ -127,7 +189,202 @@ class news extends controller
         
         return 'viewlocation.php';
     }
+	
+	private function addStory()
+	{
+		$this->setVar('mode', 'add');
+		
+		$tree = $this->objNewsLocations->getLocationsTree('storylocation');
+        $this->setVarByRef('tree', $tree);
+		
+		$categories = $this->objNewsCategories->getCategories('categoryname');
+        $this->setVarByRef('categories', $categories);
+		
+		return 'addeditstory.php';
+	}
+	
+	private function saveStory()
+	{
+		
+		$storyTitle = $this->getParam('storytitle');
+		$storyDate = $this->getParam('storydate');
+		$storyCategory = $this->getParam('storycategory');
+		$storyLocation = $this->getParam('storylocation');
+		$storyText = $this->getParam('storytext');
+		$storySource = $this->getParam('storysource');
+		$storyImage = $this->getParam('imageselect');
+		
+		$tags = $this->getParam('storytags');
+		$keyTags = array($this->getParam('keytag1'), $this->getParam('keytag2'), $this->getParam('keytag3'));
+		
+		$storyId = $this->objNewsStories->addStory($storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags);
+		
+		return $this->nextAction('viewstory', array('id'=>$storyId));
+	}
+	
+	private function viewStory($id)
+	{
+		// Turn off exist Template
+		// Content uses 3 col layout
+		$this->setLayoutTemplate(NULL);
+		
+		$story = $this->objNewsStories->getStory($id);
+		
+		if ($story == FALSE) {
+			return $this->nextAction('home', array('error'=>'nostory'));
+		} else {
+			$this->setVarByRef('story', $story);
+			
+			return 'viewstory.php';
+		}
+	}
     
+    private function editStory($id)
+    {
+        $story = $this->objNewsStories->getStory($id);
+		
+		if ($story == FALSE) {
+			return $this->nextAction('home', array('error'=>'nostory'));
+		} else {
+			$this->setVar('mode', 'edit');
+            
+            $this->setVarByRef('story', $story);
+            
+            $tree = $this->objNewsLocations->getLocationsTree('storylocation');
+            $this->setVarByRef('tree', $tree);
+            
+            $categories = $this->objNewsCategories->getCategories('categoryname');
+            $this->setVarByRef('categories', $categories);
+            
+            $keywords = $this->objKeywords->getStoryKeywords($id);
+            $this->setVarByRef('keywords', $keywords);
+            
+            $tags = $this->objTags->getStoryTags($id);
+            $this->setVarByRef('tags', $tags);
+			
+			return 'addeditstory.php';
+		}
+    }
+    
+    private function updateStory()
+    {
+        $id = $this->getParam('id');
+        $storyTitle = $this->getParam('storytitle');
+		$storyDate = $this->getParam('storydate');
+		$storyCategory = $this->getParam('storycategory');
+		$storyLocation = $this->getParam('storylocation');
+		$storyText = $this->getParam('storytext');
+		$storySource = $this->getParam('storysource');
+		$storyImage = $this->getParam('imageselect');
+		
+		$tags = $this->getParam('storytags');
+		$keyTags = array($this->getParam('keytag1'), $this->getParam('keytag2'), $this->getParam('keytag3'));
+		
+		$result = $this->objNewsStories->updateStory($id, $storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags);
+        
+        return $this->nextAction('viewstory', array('id'=>$id));
+    }
+	
+	function ajaxKeywords()
+	{
+		$start = $this->getParam($this->getParam('tag'));
+		
+		$keywords = $this->objKeywords->getAjaxKeywords($start);
+		
+		if (count($keywords) > 0) {
+			echo '<ul>';
+			$counter = 1;
+			foreach ($keywords as $keyword)
+			{
+				echo '<li id="'.$counter.'">'.$keyword['keyword'].'</li>';
+				$counter++;
+			}
+			echo '</ul>';
+		}
+	}
+	
+	private function viewStories()
+	{
+		
+	}
+	
+	private function themeCloud()
+	{
+		echo $this->objKeywords->getKeywordCloud();
+	}
+	
+	private function tagCloud()
+	{
+		
+	}
+	
+	private function viewTimeline()
+	{
+		$int = 'WEEK';
+		$fdate = "Jan 1 2007 00:00:00 GMT";
+		$timeline = $this->uri(array('action'=>'generatetimeline'));
+		$timeline = str_replace('&amp;', '&', $timeline);
+		$objIframe = $this->getObject('iframe', 'htmlelements');
+    	$objIframe->width = "100%";
+    	$objIframe->height="300";
+     	$ret = $this->uri(array("mode" => "plain",
+	          "action" => "viewtimeline", 
+			  "timeLine" => ($timeline),
+			  //"timeLine" => urlencode($timeline),
+			  "intervalUnit" => $int,
+			  "focusDate" => $fdate,
+			  "tlHeight" => '300'), "timeline");
+    	$objIframe->src=$ret;
+        echo $objIframe->show();
+	}
+	
+	private function generateTimeline()
+	{
+		header('Content-type: text/xml');
+		echo $this->objNewsStories->generateTimeline();
+	}
+    
+    private function viewByKeyword($keyword)
+    {
+        $this->setLayoutTemplate('2collayout.php');
+        
+        $stories = $this->objNewsStories->getKeywordStories($keyword);
+        
+        if (count($stories) == 0) {
+            return $this->nextAction('home');
+        } else {
+            $this->setVarByRef('keyword', $keyword);
+            $this->setVarByRef('stories', $stories);
+            
+            return 'viewbykeyword.php';
+        }
+    }
+    
+    private function generateKeywordTimeline($keyword)
+	{
+		header('Content-type: text/xml');
+		echo $this->objNewsStories->generateKeywordTimeline($keyword);
+	}
+    
+    private function viewCategory($id)
+    {
+        $this->setLayoutTemplate('2collayout.php');
+        
+        $categoryName = $this->objNewsCategories->getCategoryName($id);
+        
+        if ($categoryName == FALSE) {
+            return $this->nextAction('home', array('error'=>'nocategory'));
+        }
+        
+        $this->setVarByRef('id', $id);
+        
+        $this->setVarByRef('categoryName', $categoryName);
+        
+        $categoryStories = $this->objNewsStories->getCategoryStories($id);
+        $this->setVarByRef('categoryStories', $categoryStories);
+        
+        return 'viewcategory.php';
+    }
 }
 
 ?>

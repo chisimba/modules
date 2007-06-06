@@ -28,6 +28,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32,
 	),
+	'storycategory' => array (
+		'type' => 'text',
+		'length' => 32,
+	),
     'storydate' => array (
 		'type' => 'date',
 		'notnull' => 1
@@ -64,6 +68,7 @@ $indexes = array(
                 	'storydate' => array(),
                 	'storylocation' => array(),
                 	'storyimage' => array(),
+                	'storycategory' => array(),
                 	'datecreated' => array(),
                 	'datemodified' => array(),
                 )
