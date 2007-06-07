@@ -61,6 +61,7 @@ class admops extends object
     	try {
     		//grab a list of all valid users to an array for verification later
     		//$valid = $this->objDbAdm->checkValidUser();
+    		$valid = array();
     		$valadds = array();
     		//cycle through the valid email addresses and check that the mail is from a real user
     		foreach($valid as $addys)
@@ -144,6 +145,7 @@ class admops extends object
     					}
     				}
     			}
+    			$validated = TRUE;
     			if($validated == TRUE)
     			{
     				//insert the mail data into an array for manipulation
@@ -152,11 +154,11 @@ class admops extends object
     			}
 
     			//delete the message as we don't need it anymore
-    			echo "sorting " . $this->msgCount . "messages";
+    			//echo "sorting " . $this->msgCount . "messages";
     			//$this->objImap->delMsg($i);
     			$i++;
     		}
-    		print_r($data); die();
+    		//print_r($data); die();
     		//is the data var set?
     		if(!isset($data))
     		{
@@ -182,7 +184,7 @@ class admops extends object
     						$filedata = base64_decode($files['filedata']);
     						//set the path to write down the file to
     						$path = $this->objConfig->getContentBasePath() . 'adm/';
-    						$fullpath = $this->objConfig->getsiteRoot()."/usrfiles/adm/";
+    						$fullpath = $this->objConfig->getsiteRootPath()."/usrfiles/adm/";
     						if(!file_exists($path))
     						{
     							//dir doesn't exist so create it quickly
@@ -199,11 +201,11 @@ class admops extends object
     						fclose($handle);
     						$type = mime_content_type($filename);
     						$tparts = explode("/", $type);
-    						print_r($tparts);
-    						if($tparts[0] == "text")
+    						//print_r($tparts); die();
+    						if($tparts[0] == "text" && $tparts[1] == "plain")
     						{
-    							//add the img stuff to the body at the end of the "post"
-    							$newbod .= "[img]" . $fullpath . $filename . "[/img]" . "<br />";
+    							return $fullpath.$filename;
+    							
     						}
     						else {
     							return FALSE;
@@ -211,49 +213,12 @@ class admops extends object
     					}
     				}
     				else {
-    					//set the filename of the attachment
-    					$fname = $datum['attachments'][0]['filename'];
-    					$filenamearr = explode(".", $fname);
-    					$ext = pathinfo($fname);
-    					$filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];
-    					//decode the attachment data
-    					$filedata = base64_decode($datum['attachments'][0]['filedata']);
-    					//set the path to write down the file to
-    					$path = $this->objConfig->getContentBasePath() . 'adm/';
-    					//check that the data dir is there
-    					if($filename != "sqllog.log")
-    					{
-    						return FALSE;
-    					}
-    					if(!file_exists($path))
-    					{
-    						//dir doesn't exist so create it quickly
-    						mkdir($path, 0777);
-    					}
-    					//change directory to the data dir
-    					chdir($path);
-    					//write the file
-    					$handle = fopen($filename, 'wb');
-    					fwrite($handle, $filedata);
-    					fclose($handle);
-    					$type = mime_content_type($filename);
-    					$tparts = explode("/", $type);
-    					if($tparts[0] == "text")
-    					{
-    						//parse the file
-    					}
-    					else {
-    						return FALSE;
-    					}
-    				}
-    			}
-    			else {
-    				//no attachments to worry about
-    				return FALSE;
+    					
     			}
     			
     		}
 
+    	}
     	}
     	//any issues?
     	catch(customException $e) {

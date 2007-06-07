@@ -41,6 +41,25 @@ class adm extends controller
             	
             case 'parsemail':
             	// grab the mail off the mail server and parse the heck out of it
+            	$status = $this->objAdmOps->parsemail();
+            	if(file_exists($status))
+            	{
+            		$file = file($status);
+            		// loop through the file array and do the inserts
+            		foreach($file as $str)
+            		{
+            			preg_match_all('/\[SQLDATA\](.*)\[\/SQLDATA\]/U', $str, $results, PREG_PATTERN_ORDER);
+        				$counter = 0;
+        				foreach ($results[1] as $item)
+        				{
+            				$stmt = $item;
+            				$counter++;
+            				
+            				echo $stmt."<br />";
+        				}
+            		}
+            	}
+            	die();
             	
         }
     }
