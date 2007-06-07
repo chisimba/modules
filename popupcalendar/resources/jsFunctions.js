@@ -27,7 +27,7 @@ function jsBuildCal(xDay, xMonth, xYear)
 function jsInsertDate(xDay, xMonth, xYear)
 {
     var el_Date = document.getElementById("input_date");
-    el_Date.value = xDay+"-"+xMonth+"-"+xYear; 
+    el_Date.value = xYear+"-"+xMonth+"-"+xDay; /*xDay+"-"+xMonth+"-"+xYear; */
 }
 
 /**
