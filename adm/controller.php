@@ -43,6 +43,7 @@ class adm extends controller
 					$objMailer->setValue('fromName', $this->objLanguage->languageText("mod_adm_emailfromname", "adm"));
 					$objMailer->setValue('subject', $this->objLanguage->languageText("mod_adm_emailsub", "adm"));
 					$objMailer->setValue('body', date('r'));
+					$objMailer->attach($path, $this->objLanguage->languageText("mod_adm_sqldata", "adm"));
 					if ($objMailer->send()) {
 		   				echo "Sent!";
 		   				unlink($path);
