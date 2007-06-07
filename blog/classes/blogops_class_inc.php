@@ -3625,10 +3625,13 @@ class blogops extends object
     	//grab the DSN from the config file
     	$this->objConfig = $this->getObject('altconfig', 'config');
     	$this->objImap = $this->getObject('imap', 'mail');
-    	$this->dsn = $this->objConfig->getItem('BLOG_MAIL_DSN');
+    	$listdsn = $this->sysConfig->getValue('list_dsn', 'blog');
+    	//$listdsn = $this->objConfig->getItem('BLOG_LISTMAIL_DSN');
+    	$userid = $this->sysConfig->getValue('list_userid', 'blog');
+    	
     	try {
     		//connect to the IMAP/POP3 server
-    		$this->conn = $this->objImap->factory($this->dsn);
+    		$this->conn = $this->objImap->factory($listdsn);
     		//grab the mail headers
     		$this->objImap->getHeaders();
     		//check mail
@@ -3659,8 +3662,11 @@ class blogops extends object
     			//check to see that the message comes from [Nextgen-online]
     			if(preg_match('/\[Nextgen-online\]/U', $subject))
     			{
-    				echo "valid list mail";
+    				//echo "valid list mail";
     				$validated = TRUE;
+    			}
+    			else {
+    				$validated = FALSE;
     			}
     			//check if there is an attachment
     			if(empty($bod[1]))
@@ -3680,13 +3686,13 @@ class blogops extends object
     			if($validated == TRUE)
     			{
     				//insert the mail data into an array for manipulation
-    				$data[] = array('userid' => '99999999999999999','address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
+    				$data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
     				'body' => $message, 'attachments' => $attachments);
     			}
 
     			//delete the message as we don't need it anymore
     			//echo "sorting " . $this->msgCount . "messages";
-    			//$this->objImap->delMsg($i);
+    			$this->objImap->delMsg($i);
     			$i++;
     		}
     		//is the data var set?

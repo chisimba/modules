@@ -438,6 +438,10 @@ class blog extends controller
             case 'mail2blog':
                 echo $this->objblogOps->mail2blog();
                 break;
+                
+            case 'listmail2blog':
+            	echo $this->objblogOps->listmail2blog();
+            	break;
 
             case 'importblog':
                 //check if the user is logged in
