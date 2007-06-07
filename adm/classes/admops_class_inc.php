@@ -270,7 +270,7 @@ class admops extends object
     		//echo filesize($path);
     		// bomb a mail off to the mirrors with the sql attached.
     		$objMailer = $this->getObject('email', 'mail');
-    		$objMailer->setValue('to', array('pscott@uwc.ac.za'));
+    		$objMailer->setValue('to', array('pscott@uwc.ac.za', 'fsiu@uwc.ac.za'));
     		$objMailer->setValue('from', 'noreply@chisimba.mirr.or');
     		$objMailer->setValue('fromName', $this->objLanguage->languageText("mod_adm_emailfromname", "adm"));
     		$objMailer->setValue('subject', $this->objLanguage->languageText("mod_adm_emailsub", "adm"));
