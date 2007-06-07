@@ -3628,7 +3628,7 @@ class blogops extends object
     	$listdsn = $this->sysConfig->getValue('list_dsn', 'blog');
     	//$listdsn = $this->objConfig->getItem('BLOG_LISTMAIL_DSN');
     	$userid = $this->sysConfig->getValue('list_userid', 'blog');
-    	
+    	$listidentifier = $this->sysConfig->getValue('list_identifier', 'blog');
     	try {
     		//connect to the IMAP/POP3 server
     		$this->conn = $this->objImap->factory($listdsn);
@@ -3660,7 +3660,7 @@ class blogops extends object
     			$bod = $this->objImap->getMessage($i);
     			
     			//check to see that the message comes from [Nextgen-online]
-    			if(preg_match('/\[Nextgen-online\]/U', $subject))
+    			if(preg_match('/\['.$listidentifier.'\]/U', $subject))
     			{
     				//echo "valid list mail";
     				$validated = TRUE;
