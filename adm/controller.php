@@ -7,6 +7,9 @@ ini_set("max_execution_time", -1);
 // end security check
 class adm extends controller
 {
+	public $objAdmOps;
+	public $objLanguage;
+	public $objConfig;
 	/**
      * Constructor method to instantiate objects and get variables
      */
@@ -15,6 +18,7 @@ class adm extends controller
         try {
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objConfig = $this->getObject('altconfig', 'config');
+            $this->objAdmOps = $this->getObject('admops');
         }
         catch(customException $e) {
             echo customException::cleanUp();
@@ -32,29 +36,12 @@ class adm extends controller
             default:
             	
             case 'maillog':
-            	$path = $this->objConfig->getsiteRootPath()."/error_log/sqllog.log";
-            	if(file_exists($path) && filesize($path) > 0)
-            	{
-            		echo filesize($path);
-            		// bomb a mail off to the mirrors with the sql attached.
-            		$objMailer = $this->getObject('email', 'mail');
-					$objMailer->setValue('to', array('pscott@uwc.ac.za'));
-					$objMailer->setValue('from', 'noreply@chisimba.mirr.or');
-					$objMailer->setValue('fromName', $this->objLanguage->languageText("mod_adm_emailfromname", "adm"));
-					$objMailer->setValue('subject', $this->objLanguage->languageText("mod_adm_emailsub", "adm"));
-					$objMailer->setValue('body', date('r'));
-					$objMailer->attach($path, $this->objLanguage->languageText("mod_adm_sqldata", "adm"));
-					if ($objMailer->send()) {
-		   				echo "Sent!";
-		   				unlink($path);
-		   				touch($path);
-					} else {
-		   				echo "Uh-oh!";
-					}
-            	}
-            	else {
-            		echo "File is of zero length";
-            	}
+            	echo $this->objAdmOps->sendLog();
+            	break;
+            	
+            case 'parsemail':
+            	// grab the mail off the mail server and parse the heck out of it
+            	
         }
     }
 }
