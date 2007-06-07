@@ -3606,7 +3606,7 @@ class blogops extends object
     				$newbod = $datum['body'];
     			}
     			//Write the new post to the database as a "Quick Post"
-    			return $this->quickPostAdd($datum['userid'], array('posttitle' => $datum['subject'], 'postcontent' => $newbod,
+    			$this->quickPostAdd($datum['userid'], array('posttitle' => $datum['subject'], 'postcontent' => $newbod,
     			'postcat' => 0, 'postexcerpt' => '', 'poststatus' => '0',
     			'commentstatus' => 'Y',
     			'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $datum['date']), 'mail');
@@ -3620,5 +3620,227 @@ class blogops extends object
     	}
     }
 
+    public function listmail2blog()
+    {
+    	//grab the DSN from the config file
+    	$this->objConfig = $this->getObject('altconfig', 'config');
+    	$this->objImap = $this->getObject('imap', 'mail');
+    	$this->dsn = $this->objConfig->getItem('BLOG_MAIL_DSN');
+    	try {
+    		//connect to the IMAP/POP3 server
+    		$this->conn = $this->objImap->factory($this->dsn);
+    		//grab the mail headers
+    		$this->objImap->getHeaders();
+    		//check mail
+    		$this->thebox = $this->objImap->checkMbox();
+    		//get the mail folders
+    		$this->folders = $this->objImap->populateFolders($this->thebox);
+    		//count the messages
+    		$this->msgCount = $this->objImap->numMails();
+    		echo $this->msgCount;
+    		//get the meassge headers
+    		$i = 1;
+    		//parse the messages
+    		while ($i <= $this->msgCount)
+    		{
+    			//get the header info
+    			$headerinfo = $this->objImap->getHeaderInfo($i);
+    			//from
+    			$address = $headerinfo->fromaddress;
+    			//subject
+    			$subject = $headerinfo->subject;
+    			//date
+    			$date = $headerinfo->Date;
+    			//message flag
+    			$read = $headerinfo->Unseen;
+    			//message body
+    			$bod = $this->objImap->getMessage($i);
+    			
+    			//check to see that the message comes from [Nextgen-online]
+    			if(preg_match('/\[Nextgen-online\]/U', $subject))
+    			{
+    				echo "valid list mail";
+    				$validated = TRUE;
+    			}
+    			//check if there is an attachment
+    			if(empty($bod[1]))
+    			{
+    				//nope no attachments
+    				$attachments = NULL;
+    			}
+    			else {
+    				//set the attachment
+    				$attachments = $bod[1];
+    				//loop through the attachments and write them down
+
+    			}
+    			//make sure the body doesn't have any nasty chars
+    			$message = @htmlentities($bod[0]);
+
+    			if($validated == TRUE)
+    			{
+    				//insert the mail data into an array for manipulation
+    				$data[] = array('userid' => '99999999999999999','address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
+    				'body' => $message, 'attachments' => $attachments);
+    			}
+
+    			//delete the message as we don't need it anymore
+    			//echo "sorting " . $this->msgCount . "messages";
+    			//$this->objImap->delMsg($i);
+    			$i++;
+    		}
+    		//is the data var set?
+    		if(!isset($data))
+    		{
+    			$data = array();
+    		}
+    		//lets look at the data now
+    		foreach ($data as $datum)
+    		{
+    			$newbod = $datum['body'];
+    			//add the [img][/img] tags to the body so that the images show up
+    			//we discard any other mimetypes for now...
+    			if(!empty($datum['attachments']))
+    			{
+    				if(is_array($datum['attachments']))
+    				{
+    					foreach($datum['attachments'] as $files)
+    					{
+    						//do check for multiple attachments
+    						//set the filename of the attachment
+    						$fname = $files['filename'];
+    						$filenamearr = explode(".", $fname);
+    						$ext = pathinfo($fname);
+    						$filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];
+    						//decode the attachment data
+    						$filedata = base64_decode($files['filedata']);
+    						//set the path to write down the file to
+    						$path = $this->objConfig->getContentBasePath() . 'users/'.$userid.'/';  // 'blog/';
+    						$fullpath = $this->objConfig->getsiteRoot()."/usrfiles/users/".$userid.'/';
+    						//check that the data dir is there
+    						//echo $path, $fullpath; die();
+    						if(!file_exists($path))
+    						{
+    							//dir doesn't exist so create it quickly
+    							mkdir($path, 0777);
+    						}
+    						//fix up the filename a little
+    						$filename = str_replace(" ","_", $filename);
+    						$filename = str_replace("%20","_", $filename);
+    						//change directory to the data dir
+    						chdir($path);
+    						//write the file
+    						$handle = fopen($filename, 'wb');
+    						fwrite($handle, $filedata);
+    						fclose($handle);
+    						$type = mime_content_type($filename);
+    						$tparts = explode("/", $type);
+    						//print_r($tparts);
+    						if($tparts[0] == "image")
+    						{
+    							//add the img stuff to the body at the end of the "post"
+    							$newbod .= "[img]" . $fullpath . $filename . "[/img]" . "<br />";
+    						}
+    						elseif($tparts[1] == "3gpp")
+    						{
+    							if($tparts[0] == "video")
+    							{
+    								log_debug("Found a 3gp Video file! Processing...");
+    								//send to the mediaconverter to convert to flv
+    								$mediacon = $this->getObject('media', 'utilities');
+    								$file = $path . $filename;
+    								//echo $file;
+    								$flv = $mediacon->convert3gp2flv($file, $fullpath);
+    								//echo "file saved to: $flv";
+    								$newbod .= "[FLV]".$flv."[/FLV]"." <br />";
+    								//echo $newbod;
+    							}
+    							elseif($tparts[0] == "audio")
+    							{
+    								log_debug("Found a 3gp amr file! Processing...");
+    								//amr file
+    								$mediacon = $this->getObject('media', 'utilities');
+    								$file = $path . $filename;
+    								//echo $file;
+    								$mp3 = $mediacon->convertAmr2Mp3($file, $fullpath);
+    								$newbod .= "[EMBED]".$mp3."[/EMBED]"." <br />";
+
+    							}
+    						}
+    						elseif($tparts[1] == "mp4")
+    						{
+    							if($tparts[0] == "video")
+    							{
+    								log_debug("Found an MP4 container file");
+    								//send to the mediaconverter to convert to flv
+    								$mediacon = $this->getObject('media', 'utilities');
+    								$file = $path . $filename;
+    								//echo $file;
+    								$flv = $mediacon->convertMp42flv($file, $fullpath);
+    								//echo "file saved to: $flv";
+    								$newbod .= "[FLV]".$flv."[/FLV]"." <br />";
+    							}
+    						}
+    						else {
+    							//add the img stuff to the body at the end of the "post"
+    							$newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/users/'.$userid.'/' . urlencode($filename) . "[/url]" . "<br />";
+    						}
+    					}
+    				}
+    				else {
+    					//set the filename of the attachment
+    					$fname = $datum['attachments'][0]['filename'];
+    					$filenamearr = explode(".", $fname);
+    					$ext = pathinfo($fname);
+    					$filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];
+    					//decode the attachment data
+    					$filedata = base64_decode($datum['attachments'][0]['filedata']);
+    					//set the path to write down the file to
+    					$path = $this->objConfig->getContentBasePath() . 'blog/';
+    					//check that the data dir is there
+    					//fix up the filename a little
+    					$filename = str_replace(" ","_", $filename);
+    					if(!file_exists($path))
+    					{
+    						//dir doesn't exist so create it quickly
+    						mkdir($path, 0777);
+    					}
+    					//change directory to the data dir
+    					chdir($path);
+    					//write the file
+    					$handle = fopen($filename, 'wb');
+    					fwrite($handle, $filedata);
+    					fclose($handle);
+    					$type = mime_content_type($filename);
+    					$tparts = explode("/", $type);
+    					if($tparts[0] == "image")
+    					{
+    						//add the img stuff to the body at the end of the "post"
+    						$newbod .= "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]" . "<br />";
+    					}
+    					else {
+    						//add the img stuff to the body at the end of the "post"
+    						$newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . urlencode($filename) . "[/url]" . "<br />";
+    					}
+    				}
+    			}
+    			else {
+    				//no attachments to worry about
+    				$newbod = $datum['body'];
+    			}
+    			//Write the new post to the database as a "Quick Post"
+    			$this->quickPostAdd($datum['userid'], array('posttitle' => $datum['subject'], 'postcontent' => $newbod,
+    			'postcat' => 0, 'postexcerpt' => '', 'poststatus' => '0',
+    			'commentstatus' => 'Y',
+    			'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $datum['date']), 'mail');
+    		}
+
+    	}
+    	//any issues?
+    	catch(customException $e) {
+    		//clean up and die!
+    		customException::cleanUp();
+    	}
+    }
 }
 ?>
