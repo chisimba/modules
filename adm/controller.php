@@ -14,7 +14,7 @@ class adm extends controller
     {
         try {
             $this->objLanguage = $this->getObject('language', 'language');
-            
+            $this->objConfig = $this->getObject('altconfig', 'config');
         }
         catch(customException $e) {
             echo customException::cleanUp();
@@ -28,12 +28,32 @@ class adm extends controller
      */
     public function dispatch($action = Null)
     {
-        //$this->setLayoutTemplate('beautifier_layout_tpl.php');
-
         switch ($action) {
             default:
-                echo "ADM is a work in progress!";
-                die();
+            	
+            case 'maillog':
+            	$path = $this->objConfig->getsiteRootPath()."/error_log/sqllog.log";
+            	if(file_exists($path) && filesize($path) > 0)
+            	{
+            		echo filesize($path);
+            		// bomb a mail off to the mirrors with the sql attached.
+            		$objMailer = $this->getObject('email', 'mail');
+					$objMailer->setValue('to', array('pscott@uwc.ac.za'));
+					$objMailer->setValue('from', 'noreply@chisimba.mirr.or');
+					$objMailer->setValue('fromName', $this->objLanguage->languageText("mod_adm_emailfromname", "adm"));
+					$objMailer->setValue('subject', $this->objLanguage->languageText("mod_adm_emailsub", "adm"));
+					$objMailer->setValue('body', date('r'));
+					if ($objMailer->send()) {
+		   				echo "Sent!";
+		   				unlink($path);
+		   				touch($path);
+					} else {
+		   				echo "Uh-oh!";
+					}
+            	}
+            	else {
+            		echo "File is of zero length";
+            	}
         }
     }
 }
