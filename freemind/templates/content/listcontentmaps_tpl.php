@@ -33,7 +33,7 @@ $table->attributes="align=\"center\"";
 $tableRow=array();
 
 //$tableHd[]="Code";
-$tableHd[]=$this->objLanguage->languageText("word_title", "freemind");
+$tableHd[]=$this->objLanguage->languageText("word_title");
 $tableHd[]=$this->objLanguage->languageText("mod_freemind_date", "freemind");
 
 $allowAdmin = True; //You need to write your security here
@@ -78,7 +78,7 @@ if (is_array($ar)) {
             //The URL for the edit link
             $editLink=$this->uri(array('action' => 'edit',
               'id' =>$line['id']));
-            $objEditIcon->alt=$this->objLanguage->languageText("mod_quotes_editalt", "freemind");
+            $objEditIcon->alt=$this->objLanguage->languageText("mod_quotes_editalt", "quotes");
             $ed = $objEditIcon->getEditIcon($editLink);
 
             // The delete icon with link uses confirm delete utility
@@ -93,7 +93,7 @@ if (is_array($ar)) {
             
             $rep = array('ITEM', $line['id']);
             $objConfirm->setConfirm($objDelIcon->show(),
-            $delLink,$this->objLanguage->code2Txt("mod_quotes_confirm", $rep));
+            $delLink,$this->objLanguage->code2Txt("mod_quotes_confirm",'qoutes', $rep ));
             $conf = $objConfirm->show();
             $tableRow[]=$config;
            // $tableRow[]=$ed;
