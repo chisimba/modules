@@ -53,19 +53,22 @@ class admops extends object
     	//grab the DSN from the config file
     	$this->objConfig = $this->getObject('altconfig', 'config');
     	$this->objImap = $this->getObject('imap', 'mail');
-    	$this->dsn = $this->objConfig->getItem('BLOG_MAIL_DSN');
+    	$admdsn = $this->sysConfig->getValue('ADM_MAIL_DSN', 'adm');
+    	if($admdsn == "not set")
+    	{
+    		return FALSE;
+    	}
     	try {
     		//grab a list of all valid users to an array for verification later
-    		$valid = $this->objDbBlog->checkValidUser();
+    		//$valid = $this->objDbAdm->checkValidUser();
     		$valadds = array();
     		//cycle through the valid email addresses and check that the mail is from a real user
     		foreach($valid as $addys)
     		{
     			$valadds[] = array('address' => $addys['emailaddress'], 'userid' => $addys['userid']);
     		}
-
     		//connect to the IMAP/POP3 server
-    		$this->conn = $this->objImap->factory($this->dsn);
+    		$this->conn = $this->objImap->factory($admdsn);
     		//grab the mail headers
     		$this->objImap->getHeaders();
     		//var_dump($this->objImap->getHeaders());
@@ -97,18 +100,18 @@ class admops extends object
     			//check if there is an attachment
     			if(empty($bod[1]))
     			{
-    				//nope no attachments
+    				// nope no attachments
     				$attachments = NULL;
+    				// we can return because the sql data is sent as an attachment (sqldata.log)
+    				return FALSE;
     			}
     			else {
     				//set the attachment
     				$attachments = $bod[1];
     				//loop through the attachments and write them down
-
     			}
     			//make sure the body doesn't have any nasty chars
     			$message = @htmlentities($bod[0]);
-
     			//check for a valid user
     			if(!empty($address))
     			{
@@ -134,7 +137,7 @@ class admops extends object
     						//match found, you are a valid user dude!
     						$validated = TRUE;
     						//set the userid
-    						$userid = $user['userid'];
+    						//$userid = $user['userid'];
     						//all is cool, so lets break out of this loop and carry on
     						break;
 
@@ -144,15 +147,16 @@ class admops extends object
     			if($validated == TRUE)
     			{
     				//insert the mail data into an array for manipulation
-    				$data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
+    				$data[] = array('address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
     				'body' => $message, 'attachments' => $attachments);
     			}
 
     			//delete the message as we don't need it anymore
     			echo "sorting " . $this->msgCount . "messages";
-    			$this->objImap->delMsg($i);
+    			//$this->objImap->delMsg($i);
     			$i++;
     		}
+    		print_r($data); die();
     		//is the data var set?
     		if(!isset($data))
     		{
@@ -162,8 +166,6 @@ class admops extends object
     		foreach ($data as $datum)
     		{
     			$newbod = $datum['body'];
-    			//add the [img][/img] tags to the body so that the images show up
-    			//we discard any other mimetypes for now...
     			if(!empty($datum['attachments']))
     			{
     				if(is_array($datum['attachments']))
@@ -179,10 +181,8 @@ class admops extends object
     						//decode the attachment data
     						$filedata = base64_decode($files['filedata']);
     						//set the path to write down the file to
-    						$path = $this->objConfig->getContentBasePath() . 'users/'.$userid.'/';  // 'blog/';
-    						$fullpath = $this->objConfig->getsiteRoot()."/usrfiles/users/".$userid.'/';
-    						//check that the data dir is there
-    						//echo $path, $fullpath; die();
+    						$path = $this->objConfig->getContentBasePath() . 'adm/';
+    						$fullpath = $this->objConfig->getsiteRoot()."/usrfiles/adm/";
     						if(!file_exists($path))
     						{
     							//dir doesn't exist so create it quickly
@@ -199,55 +199,14 @@ class admops extends object
     						fclose($handle);
     						$type = mime_content_type($filename);
     						$tparts = explode("/", $type);
-    						//print_r($tparts);
-    						if($tparts[0] == "image")
+    						print_r($tparts);
+    						if($tparts[0] == "text")
     						{
     							//add the img stuff to the body at the end of the "post"
     							$newbod .= "[img]" . $fullpath . $filename . "[/img]" . "<br />";
     						}
-    						elseif($tparts[1] == "3gpp")
-    						{
-    							if($tparts[0] == "video")
-    							{
-    								log_debug("Found a 3gp Video file! Processing...");
-    								//send to the mediaconverter to convert to flv
-    								$mediacon = $this->getObject('media', 'utilities');
-    								$file = $path . $filename;
-    								//echo $file;
-    								$flv = $mediacon->convert3gp2flv($file, $fullpath);
-    								//echo "file saved to: $flv";
-    								$newbod .= "[FLV]".$flv."[/FLV]"." <br />";
-    								//echo $newbod;
-    							}
-    							elseif($tparts[0] == "audio")
-    							{
-    								log_debug("Found a 3gp amr file! Processing...");
-    								//amr file
-    								$mediacon = $this->getObject('media', 'utilities');
-    								$file = $path . $filename;
-    								//echo $file;
-    								$mp3 = $mediacon->convertAmr2Mp3($file, $fullpath);
-    								$newbod .= "[EMBED]".$mp3."[/EMBED]"." <br />";
-
-    							}
-    						}
-    						elseif($tparts[1] == "mp4")
-    						{
-    							if($tparts[0] == "video")
-    							{
-    								log_debug("Found an MP4 container file");
-    								//send to the mediaconverter to convert to flv
-    								$mediacon = $this->getObject('media', 'utilities');
-    								$file = $path . $filename;
-    								//echo $file;
-    								$flv = $mediacon->convertMp42flv($file, $fullpath);
-    								//echo "file saved to: $flv";
-    								$newbod .= "[FLV]".$flv."[/FLV]"." <br />";
-    							}
-    						}
     						else {
-    							//add the img stuff to the body at the end of the "post"
-    							$newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/users/'.$userid.'/' . urlencode($filename) . "[/url]" . "<br />";
+    							return FALSE;
     						}
     					}
     				}
@@ -260,10 +219,12 @@ class admops extends object
     					//decode the attachment data
     					$filedata = base64_decode($datum['attachments'][0]['filedata']);
     					//set the path to write down the file to
-    					$path = $this->objConfig->getContentBasePath() . 'blog/';
+    					$path = $this->objConfig->getContentBasePath() . 'adm/';
     					//check that the data dir is there
-    					//fix up the filename a little
-    					$filename = str_replace(" ","_", $filename);
+    					if($filename != "sqllog.log")
+    					{
+    						return FALSE;
+    					}
     					if(!file_exists($path))
     					{
     						//dir doesn't exist so create it quickly
@@ -277,26 +238,20 @@ class admops extends object
     					fclose($handle);
     					$type = mime_content_type($filename);
     					$tparts = explode("/", $type);
-    					if($tparts[0] == "image")
+    					if($tparts[0] == "text")
     					{
-    						//add the img stuff to the body at the end of the "post"
-    						$newbod .= "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]" . "<br />";
+    						//parse the file
     					}
     					else {
-    						//add the img stuff to the body at the end of the "post"
-    						$newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . urlencode($filename) . "[/url]" . "<br />";
+    						return FALSE;
     					}
     				}
     			}
     			else {
     				//no attachments to worry about
-    				$newbod = $datum['body'];
+    				return FALSE;
     			}
-    			//Write the new post to the database as a "Quick Post"
-    			$this->quickPostAdd($datum['userid'], array('posttitle' => $datum['subject'], 'postcontent' => $newbod,
-    			'postcat' => 0, 'postexcerpt' => '', 'poststatus' => '0',
-    			'commentstatus' => 'Y',
-    			'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $datum['date']), 'mail');
+    			
     		}
 
     	}
