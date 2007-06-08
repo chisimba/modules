@@ -316,6 +316,10 @@ class display extends object
         
         // text elements
         $articleLabel = $this->objLanguage->languageText('word_article');
+        $previewLabel = $this->objLanguage->languageText('word_preview');
+        $noPreviewLabel = $this->objLanguage->languageText('mod_wiki2_nopreview', 'wiki2');
+        $refreshLabel = $this->objLanguage->languageText('word_refresh');
+        $refreshTitleLabel = $this->objLanguage->languageText('mod_wiki2_refreshtitle', 'wiki2');
         $addLabel = $this->objLanguage->languageText('mod_wiki2_addarticle', 'wiki2');
         $listLabel = $this->objLanguage->languageText('mod_wiki2_listarticles', 'wiki2');
         $summaryLabel = $this->objLanguage->languageText('mod_wiki2_listsummaries', 'wiki2');
@@ -404,6 +408,32 @@ class display extends object
                 'content' => $string,
             );
             $this->objTab->addTab($tabArray);
+            
+            // refresh link
+            $objLink = new link('#');
+            $objLink->link = $refreshLabel;
+            $objLink->title = $refreshTitleLabel;
+            $objLink->extra = 'onclick="javascript:refreshPreview()"';
+            $refreshLink = $objLink->show();
+            
+            $objLayer = new layer();
+            $objLayer->id = 'previewDiv';
+            $objLayer->addToStr('<ul><li>'.$noPreviewLabel.'</li></ul>');
+            $previewLayer = $objLayer->show();
+            
+            $objLayer = new layer();
+            $objLayer->id = 'refreshDiv';
+            $objLayer->cssClass = 'featurebox';
+            $objLayer->addToStr($refreshLink.'<br />'.$previewLayer);
+            $refreshLayer = $objLayer->show();
+            $string = $refreshLayer;
+            
+            // add page tab
+            $tabArray = array(
+                'name' => $previewLabel,
+                'content' => $string,
+            );
+            $this->objTab->addTab($tabArray);
         }else{
             // list all pages
             $list = $this->_showAllPages();
@@ -445,7 +475,7 @@ class display extends object
         $this->objTab->setSelected = $tab;
         $str = $this->objTab->show();
         
-        return $str;
+        return $str.'<br />';
     }
     
     /**
@@ -731,11 +761,17 @@ class display extends object
         
         // page name textinput
         $objInput = new textinput('name', '', '', '96');
+        $objInput->extra = 'onblur="javascript:validateName(this);"';
         $nameInput = $objInput->show();
                
+        // page name error layer
+        $objLayer = new layer();
+        $objLayer->id = 'errorDiv';
+        $errorLayer = $objLayer->show();
+                
         // page name layer
         $objLayer = new layer();
-        $objLayer->addToStr($heading.$nameInput);        
+        $objLayer->addToStr($heading.$nameInput.$errorLayer);        
         $pageLayer = $objLayer->show();
                 
         // summary
@@ -773,7 +809,7 @@ class display extends object
                 
         // create button
         $objButton = new button('create', $createLabel);
-        $objButton->extra = 'onclick="javascript: validateCreate(\''.$pageErrorLabel.'\', \''.$nameErrorLabel.'\', \''.$summaryErrorLabel.'\', \''.$contentErrorLabel.'\');"';
+        $objButton->extra = 'onclick="javascript: validateCreate(\''.$pageErrorLabel.'\', \''.$summaryErrorLabel.'\', \''.$contentErrorLabel.'\');"';
         $createButton = $objButton->show();
         
         // create button
@@ -801,12 +837,46 @@ class display extends object
     }
 
     /**
+    * Method to display the preview content area
+    *
+    * @access public
+    * @param string $name: The name of the page
+    * @param string $content: The page content
+    * @return string $str: The output string
+    **/
+    public function showPreview($name, $content)
+    {
+        // text eleements
+        $pageLabel = $this->objLanguage->languageText('mod_wiki2_pagename', 'wiki2');
+        $noPreviewLabel = $this->objLanguage->languageText('mod_wiki2_nopreview', 'wiki2');
+        
+        if(!empty($name) || !empty($content)){
+            if(!empty($name)){
+                $pageName = $this->objWiki->renderTitle($name);
+            }else{
+                $pageName = $pageLabel;
+            }
+            $objHeader = new htmlheading();
+            $objHeader->str = $pageName;
+            $objHeader->type = 1;
+            $heading = $objHeader->show();
+            $str = $heading;
+        
+            $str .= $this->objWiki->transform($content).'<br />';
+        }else{
+            $str = '<ul><li>'.$noPreviewLabel.'</li></ul>';
+        }
+        
+         echo $str;
+    }
+    
+    /**
     * Method create a list all wiki pages
     *
     * @access private
     * @return string $str: The output string
     **/
-    private function _showAllPages()
+    private function _showSummaries()
     {
         // text elements
         $pageLabel = $this->objLanguage->languageText('mod_wiki2_pagename', 'wiki2');
@@ -869,7 +939,7 @@ class display extends object
     * @access private
     * @return string $str: The output string
     **/
-    private function _showSummaries()
+    private function _showAllPages()
     {
         // text elements
         $titleLabel = $this->objLanguage->languageText('mod_wiki2_view', 'wiki2');
@@ -1506,7 +1576,51 @@ You can create tables using pairs of vertical bars:
         $this->objTab->useCookie = 'false';
         $str = $this->objTab->show();
         
-        return $str;
+        return $str.'<br />';
+    }
+    
+    /** 
+    * Method to create the page name error message
+    *
+    * @access public
+    * @param string $name: The name of the page to validate
+    * @return string $str: The output string
+    **/
+    public function showValidateName($name)
+    {
+        $camelcaseLabel = $this->objLanguage->languageText('mod_wiki2_camelcase', 'wiki2');
+        $lettersonlyLabel = $this->objLanguage->languageText('mod_wiki2_lettersonly', 'wiki2');
+        $existsLabel = $this->objLanguage->languageText('mod_wiki2_exists', 'wiki2');
+        
+        $errors = array();
+        
+        // check name
+        $data = $this->objDbwiki->getPage($name);
+        if(!empty($data)){
+            $errors[] = $existsLabel;
+        }
+        
+        // check alpha only
+        if(preg_match('/\P{L}/', $name) == 1){
+            $errors[] = $lettersonlyLabel;
+        }
+        
+        // check camel case first
+        if(!ereg('^([A-Z]([a-z]+)){2,}$', $name)){
+            $errors[] = $camelcaseLabel;
+        }        
+        
+        if(!empty($errors)){
+            $string = '<ul>';
+            foreach($errors as $error){
+                $string .= '<li><font class="warning">'.$error.'</font></li>';
+            }
+            $string .= '</ul>';
+        }else{
+            $string = '';
+        }
+
+        echo $string;
     }
 }
 ?>

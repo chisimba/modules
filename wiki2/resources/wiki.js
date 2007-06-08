@@ -5,38 +5,38 @@
 /*
 
 /**
-* Method to check the create form fields
+* Method to validate the create form fields
 *
 * @param string err_page: The no page name error message
 * @param string err_name: The no capital letter error message
 * @param string err_summary: The no summary error message
 * @param string err_content: The no content error message 
 */
-function validateCreate(err_page, err_name, err_summary, err_content)
+function validateCreate(err_page, err_summary, err_content)
 {
-    var myName = $("input_name");
-    var mySummary = $("input_summary");
-    var myChoice = $("input_choice");
-    var myContent = $("input_content");
+    var name_input = $("input_name");
+    var summary_input = $("input_summary");
+    var choice_input = $("input_choice");
+    var content_input = $("input_content");
     
-    if(myName.value == ''){
+    if(name_input.value == ''){
         alert(err_page);
-        myName.focus();
+        name_input.focus();
         return false;
     }
     
-    if(mySummary.value == ''){
+    if(summary_input.value == ''){
         if(confirm(err_summary)){
-            myChoice.value = 'yes';
+            choice_input.value = 'yes';
         }else{
-            mySummary.focus();
+            summary_input.focus();
             return false;
         }
     }
     
-    if(myContent.value == ''){
+    if(content_input.value == ''){
         alert(err_content);
-        myContent.focus
+        content_input.focus
         return false;
     }
     
@@ -44,7 +44,7 @@ function validateCreate(err_page, err_name, err_summary, err_content)
 }
 
 /**
-* Method to check the update form fields
+* Method to validate the update form fields
 *
 * @param string err_content: The no content error message 
 * @param string err_summary: The no summary error message
@@ -52,31 +52,76 @@ function validateCreate(err_page, err_name, err_summary, err_content)
 */
 function validateUpdate(err_summary, err_content, err_comment)
 {
-    var mySummary = $("input_summary");
-    var myChoice = $("input_choice");
-    var myContent = $("input_content");
-    var myComment = $("input_comment");
+    var summary_input = $("input_summary");
+    var choice_input = $("input_choice");
+    var content_input = $("input_content");
+    var comment_input = $("input_comment");
     
     
-    if(mySummary.value == ''){
+    if(summary_input.value == ''){
         if(confirm(err_summary)){
-            myChoice.value = 'yes';
+            choice_input.value = 'yes';
         }else{
-            mySummary.focus();
+            summary_input.focus();
             return false;
         }
     }
-    if(myContent.value == ''){
+    if(content_input.value == ''){
         alert(err_content);
-        myContent.focus
+        content_input.focus
         return false;
     }
 
-    if(myComment.value == ''){
+    if(comment_input.value == ''){
         alert(err_comment);
-        myComment.focus
+        comment_input.focus
         return false;
     }
     
    $("form_update").submit();
+}
+
+/**
+* Method to validate the page name
+*
+* @param string name_input: The page name input element
+*/
+function validateName(name_input)
+{
+    var url = "index.php";
+    var target = "errorDiv";
+    var pars = "module=wiki2&action=validate_name&name="+name_input.value;
+    var validateAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars, onComplete: validationEffects});    
+}
+
+/**
+* Method to show effects if valudation fails
+*/
+function validationEffects()
+{
+    var name_input = $("input_name"); 
+    var summary_input = $("input_summary");   
+    var div_errorDiv = $("errorDiv");
+    if(Element.empty(div_errorDiv) == null){
+        name_input.style.backgroundColor = "yellow";
+        name_input.focus();
+        name_input.select();
+    }else{
+        name_input.style.backgroundColor = "";
+        summary_input.focus();
+    }
+    adjustLayout();        
+}
+
+/**
+* Method to call jax to generate the preview
+*/
+function refreshPreview()
+{
+    var name_value = $F("input_name");
+    var content_value = $F("input_content");
+    var url = "index.php";
+    var target = "previewDiv";
+    var pars = "module=wiki2&action=preview_page&name="+name_value+"&content="+content_value;
+    var previewAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars});    
 }

@@ -83,6 +83,8 @@ class wiki2 extends controller {
                     $data['page_content'] = $content;
                     $data['version_comment'] = $this->objLanguage->languageText('mod_wiki2_newpage', 'wiki2');
                     $pageId = $this->objDbwiki->addPage($data);                    
+                }else{
+                    $name = '';
                 }
                 return $this->nextAction('view_page', array(
                     'name' => $name,
@@ -171,6 +173,19 @@ class wiki2 extends controller {
                 $templateContent = $this->objDisplay->showAuthors($author);
                 $this->setVarByRef('templateContent', $templateContent);
                 return 'template_tpl.php';
+                break;
+                
+            case 'validate_name':
+                $name = $this->getParam('name');
+                $divContent = $this->objDisplay->showValidateName($name);
+                return $divContent;
+                break;
+
+            case 'preview_page':
+                $name = $this->getParam('name');
+                $content = $this->getParam('content');
+                $divContent = $this->objDisplay->showPreview($name, $content);
+                return $divContent;
                 break;
 
             default:
