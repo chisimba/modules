@@ -101,7 +101,7 @@ $bigString = '<div style="position: relative; display: inline;">
 
 $form->addToForm($bigString);
 
-echo '<div id="main">'.$form->show().'</div';
+echo '<div id="main">'.$form->show().'</div>';
 
 ?>
 
