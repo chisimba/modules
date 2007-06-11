@@ -375,12 +375,13 @@ class dbThesis extends dbtable
                 
         $sqlOrder = "ORDER BY dc.dc_date ";
         
-        echo $sqlNorm.$sql.$sqlOrder;
+//        echo $sqlNorm.$sql.$sqlOrder;
         
         $data = $this->getArray($sqlNorm.$sql.$sqlOrder);
         $data2 = $this->getArray($sqlCount.$sql);
+        $count = isset($data2[0]['cnt']) ? $data2[0]['cnt'] : 0;
         
-        return $data;
+        return array($data, $count);
     }
 
 

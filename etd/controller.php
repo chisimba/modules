@@ -426,10 +426,15 @@ class etd extends controller
                 
             case 'metalib':
                 $term = $this->getParam('keyword');
+                $count = 0;
                 if(!empty($term)){
-                    $data = $this->dbThesis->search2($term);
+                    $res = $this->dbThesis->search2($term);
+                    $data = $res[0];
+                    $count = $res[1];
+                    
                     //echo $term.'<pre>'; print_r($data); echo '</pre>';
                 }
+                return '<b>'.$count.'</b> records found';
                 break;
 
             default:
