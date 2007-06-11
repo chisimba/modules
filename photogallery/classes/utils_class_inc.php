@@ -45,11 +45,12 @@ class utils extends object
 			
 			
 			$objSideBar = $this->getObject('sidebar', 'navigation');//new sidebar();
-			
+			$nodes[] = array('text' => 'View Photos', 'uri' => $this->uri(array('action' => 'front')),  'nodeid' => 'front');
 			$nodes[] = array('text' => 'Overview', 'uri' => $this->uri(array('action' => 'overview')),  'nodeid' => 'overview');
 			$nodes[] = array('text' => 'Comments', 'uri' => $this->uri(array('action' => 'comments')),  'nodeid' => 'comments');
 			$nodes[] = array('text' => 'Upload', 'uri' => $this->uri(array('action' => 'uploadsection')),  'nodeid' => 'uploadsection');
 			$nodes[] = array('text' => 'Edit', 'uri' => $this->uri(array('action' => 'editsection')),  'nodeid' => 'editsection');
+			//$nodes[] = array('text' => 'Flickr', 'uri' => $this->uri(array('action' => 'editsection')),  'nodeid' => 'flickr');
 	
 			return $objSideBar->show($nodes, $this->getParam('action'));
 		} else {

@@ -93,12 +93,67 @@ if(count($albums) > 0 && $this->_objUser->isLoggedIn() && $this->getParam('mode'
 				
 			}
 			
-			echo '<div id="albums">'. $str .'</div></div>';	
+			$bigStr = '<div id="albums">'. $str .'</div>';	
 				
 		
 		} else {
 			print 'No Albums available';
 		}
+		
+		$str = '';
+		if(count($flickralbums) > 0 )
+		{
+			
+			foreach($flickralbums as $userAlbums)
+			{
+			  foreach ($userAlbums['sets'][0]['photoset'] as $sharedAlbum)
+			  {	
+			   
+			   	
+				$str .= '<div class="album">';
+				
+				//$user = $this->_objFlickr->people_findByUsername($userAlbums['flickr_username']);
+     		 	//$sets = $this->_objFlickr->photosets_getList($user['id']);
+		 	    $photos = $this->_objFlickr->photosets_getPhotos($sharedAlbum['id']);
+				
+				foreach($photos['photo'] as $photo)
+				{
+				 	if($photo['isprimary'] == 1)
+				 	{
+						$thumb = '<img  src="'.$this->_objFlickr->buildPhotoURL($photo, "Square").'">';
+					}
+				}
+			 	$link->href = $this->uri(array('action' => 'viewalbum', 'albumid' => $sharedAlbum['id'], 'mode' => 'flickr'));
+			 	$link->link = $thumb;
+				
+				$str .= $link->show();
+				$str .= '
+						<div class="albumdesc">
+							<small></small>';
+				
+				$link->href = $this->uri(array('action' => 'viewalbum', 'albumid' => $sharedAlbum['id'], 'mode' => 'flickr'));
+			 	$link->link = $sharedAlbum['title'];
+		
+				$imageCount = count($photos);
+			 	$cntStr = ($imageCount > 1) ? $imageCount.' photos' : $imageCount.' photo';
+	 	
+	 			$imageCount = 0;
+				$str .=	'<h3><span> '.$userAlbums['flickr_username'].'</span> | '.$link->show().'</h3>'.$sharedAlbum['description'].'
+						<br/><span class="caption">('.$cntStr.')</span>
+						</div>
+							<p style="clear: both; "></p>
+						</div>';
+				}
+			}
+			
+			$bigStr .= '<div id="albums">'. $str .'</div>';	
+				
+		
+		}
+		
+		echo $bigStr.'</div>';
+		//print '<pre>';
+		//var_dump($flickralbums);
 
 	}
 ?>

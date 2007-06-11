@@ -193,7 +193,7 @@ hr {
 	margin: 1em 0px;
 }
 table.bordered {
-	width: 100%;
+	/*width: 100%;*/
 	
 	padding: 0px;
 	border-spacing: 1px;

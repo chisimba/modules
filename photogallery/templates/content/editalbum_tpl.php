@@ -153,5 +153,5 @@ function toggleBigImage(id, largepath) {
 		</script>
 <?php
 
-echo '<div id="main"><div class="box" style="padding: 15px;">'.$form->show().'</div></div';
+echo '<div id="main"><div class="box" style="padding: 15px;">'.$form->show().'</div></div>';
 ?>
