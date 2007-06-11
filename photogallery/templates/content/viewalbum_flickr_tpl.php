@@ -10,7 +10,7 @@ $albumInfo = $this->_objFlickr->photosets_getInfo($this->getParam('albumid'));
 $this->setVar('pageTitle', 'Photo Gallery - '. $albumInfo['title']);
 
 $head = '<div id="main2"><div id="gallerytitle">
-		<h2><span>'.$link->show().' | </span> '.$albumInfo['title'].'
+		<h2><span>'.$link->show().' | </span><img src="http://static.netvibes.com/img/flickr.png"> '.$albumInfo['title'].'
 </h2></div>
 <div id="albumDesc" style="display: block;">'.$albumInfo['description'].'</div>
 	';

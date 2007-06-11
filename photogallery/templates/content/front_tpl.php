@@ -138,7 +138,8 @@ if(count($albums) > 0 && $this->_objUser->isLoggedIn() && $this->getParam('mode'
 			 	$cntStr = ($imageCount > 1) ? $imageCount.' photos' : $imageCount.' photo';
 	 	
 	 			$imageCount = 0;
-				$str .=	'<h3><span> '.$userAlbums['flickr_username'].'</span> | '.$link->show().'</h3>'.$sharedAlbum['description'].'
+				$str .=	'<img src="http://static.netvibes.com/img/flickr.png">
+							<h3><span> '.$userAlbums['flickr_username'].'</span> | '.$link->show().'</h3>'.$sharedAlbum['description'].'
 						<br/><span class="caption">('.$cntStr.')</span>
 						</div>
 							<p style="clear: both; "></p>

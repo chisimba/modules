@@ -86,15 +86,15 @@ $link->link = 'Photo Gallery';
 $galLink = $link->show();
 
 $link->href = $this->uri(array('action' => 'viewalbum', 'albumid' =>$this->getParam('albumid') ),'photogallery');
-$link->link = $this->_objDBAlbum->getAlbumTitle($this->getParam('albumid'));
+$link->link = $albums['title'];
 $albumLink = $link->show();
 
 $nav = $this->_objUtils->getImageNav($image['id']);
 			
 $head = '<div id="main2">'.$nav.'<div id="gallerytitle">
-		<h2><span>'.$galLink.' | </span> <span>'.$albumLink.'
+		<h2><span>'.$galLink.' | </span> <span><img src="http://static.netvibes.com/img/flickr.png">'.$albumLink.'
 		| </span>'.$image['title'].'
-		</h2></div>
+		</h2></div><a title="View this image on Flickr" href="'.$image['urls']['url'][0]['_content'].'"><img alt="View this image on Flickr" src="http://l.yimg.com/www.flickr.com/images/flickr_logo_gamma.gif.v1.5.7"></a>
 
 	';
 
