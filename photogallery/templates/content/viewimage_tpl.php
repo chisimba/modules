@@ -12,10 +12,10 @@ $form = $this->getObject('form', 'htmlelements');
 
 
 
-$scripts = '<script type="text/javascript" src="'.$this->_objConfig->getModuleURI().'/photogallery/resources/lightbox/js/prototype.js"></script>
-<script type="text/javascript" src="'.$this->_objConfig->getModuleURI().'/photogallery/resources/lightbox/js/scriptaculous.js?load=effects"></script>
-<script type="text/javascript" src="'.$this->_objConfig->getModuleURI().'/photogallery/resources/lightbox/js/lightbox.js"></script>
-<link rel="stylesheet" href="'.$this->_objConfig->getModuleURI().'/photogallery/resources/lightbox/css/lightbox.css" type="text/css" media="screen" />';
+$scripts = '<script type="text/javascript" src="'.$this->_objConfig->getModuleURI().'photogallery/resources/lightbox/js/prototype.js"></script>
+<script type="text/javascript" src="'.$this->_objConfig->getModuleURI().'photogallery/resources/lightbox/js/scriptaculous.js?load=effects"></script>
+<script type="text/javascript" src="'.$this->_objConfig->getModuleURI().'photogallery/resources/lightbox/js/lightbox.js"></script>
+<link rel="stylesheet" href="'.$this->_objConfig->getModuleURI().'photogallery/resources/lightbox/css/lightbox.css" type="text/css" media="screen" />';
 $this->appendArrayVar('headerParams',$scripts);
 $str = '<div id="image">';
 //$link->href = $this->uri(array('action' => 'viewimage', 'imageid' => $image['id']));
