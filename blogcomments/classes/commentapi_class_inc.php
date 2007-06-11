@@ -251,9 +251,11 @@ class commentapi extends object
 			$vemail = $this->objUser->email($viewerid);
 			if($post['userid'] == $this->objUser->userId())
 			{
-				//$scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
-                      //<script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
-                      //<script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
+				//$this->objConfig = $this->getObject('altconfig', 'config');
+				//$scripts = '<script type="text/javascript" src="core_modules/htmlelements/resources/scriptaculous/1.6.5/scriptaculous.js"></script>';
+				//echo file_get_contents("/var/www/chisimba_framework/app/core_modules/htmlelements/resources/scriptaculous/1.6.5/scriptaculous.js");
+                   //   <script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
+                   //   <script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
         		//$this->appendArrayVar('headerParams',$scripts);
 				//display the inline editor
 				$updateuri = 'index.php'; //$this->uri(array('module' =>'blogcomments','action' => 'updatecomment'));
@@ -262,6 +264,7 @@ class commentapi extends object
 				$script .= '<script type="text/javascript">';
 				$script .= "new Ajax.InPlaceEditor('editme2', '$updateuri', {rows:15,cols:40, callback: function(form, value) { return 'module=blogcomments&action=updatecomment&commid=' + escape('$commid') + '&newcomment=' +escape(value) }});";
 				$script .= "</script>";
+				//var_dump($script);
 				$this->objIcon = $this->getObject('geticon', 'htmlelements');
 				$delIcon = $this->objIcon->getDeleteIconWithConfirm($comm['id'], array(
                     'module' => 'blogcomments',
@@ -275,6 +278,8 @@ class commentapi extends object
 			}
 			elseif($vemail == $comm['comment_author_email'])
 			{
+				//$scripts = '<script type="text/javascript" src="core_modules/htmlelements/resources/scriptaculous/1.6.5/scriptaculous.js"></script>';
+				//$this->appendArrayVar('headerParams',$scripts);
 				//$scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
                       //<script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
                       //<script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
