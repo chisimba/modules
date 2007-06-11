@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<updates>
+    <add>
+        <table>tbl_photogallery_flickr_users</table>
+        <version>1.2</version>
+        <description>Added the flickr users table</description>
+        <data>
+        	<add>
+    			<name>id</name>
+		    	<type>text</type>
+    			<length>32</length>
+		</add>
+		<add>
+    			<name>userid</name>
+		    	<type>text</type>
+    			<length>32</length>
+		</add>
+		<add>
+    			<name>flickr_username</name>
+		    	<type>text</type>
+    			<length>55</length>
+		</add>
+		<add>
+    			<name>flickr_password</name>
+		    	<type>text</type>
+    			<length>55</length>
+		</add>
+		<add>
+    			<name>isreal</name>
+		    	<type>integer</type>
+    			<length>11</length>
+		</add>
+	</data>
+	
+    </add>
+</updates>
