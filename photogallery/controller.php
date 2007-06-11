@@ -34,31 +34,18 @@ class photogallery extends controller
         $this->_objFileMan = & $this->getObject('dbfile','filemanager');
         $this->_objDBComments = & $this->getObject('dbcomments','photogallery');
         $this->_objConfig = $this->getObject('altconfig', 'config');
-      //  die(KEWL_DB_DSN);
-        $this->_objFlickr = new phpFlickr("710e95b3b34ad8669fe36534a8343773");
+      	
+      	$this->_objFlickr = new phpFlickr("710e95b3b34ad8669fe36534a8343773");
+      	
+      	//setup the proxy to get the flickr images
+      	$objProxy = $this->getObject('proxy','utilities');
+      	$arrProxy = $objProxy->getProxy();
+      	$this->_objFlickr->setProxy($arrProxy['proxyserver'], $arrProxy['proxyport']);
+      	
+        
         $this->_objFlickr->enableCache("db",KEWL_DB_DSN);
         $this->_objDBFlickrUsernames = $this->getObject('dbflickrusernames' , 'photogallery');
-/*
 
-        $this->appendArrayVar('headerParams', $this->getJavascriptFile('SpryData.js','photogallery'));
-
-        $this->appendArrayVar('headerParams', $this->getJavascriptFile('SpryEffects.js','photogallery'));
-        $this->appendArrayVar('headerParams', $this->getJavascriptFile('SpryXML.js','photogallery'));
-        $this->appendArrayVar('headerParams', $this->getJavascriptFile('xpath.js','photogallery'));
-        $str = '<link href="'.$this->getResourceUri('screen.css','photogallery').'" rel="stylesheet" type="text/css" />
-                <script type="text/javascript">
-                var dsGalleries = new Spry.Data.XMLDataSet("'.$this->_objConfig->getSiteRoot().'usrfiles/galleries/galleries.xml", "galleries/gallery", { useCache:  false });
-                var dsGallery = new Spry.Data.XMLDataSet("'.$this->_objConfig->getSiteRoot().'usrfiles/galleries/{dsGalleries::@base}{dsGalleries::@file}", "gallery",{ useCache:  false });
-                var dsPhotos = new Spry.Data.XMLDataSet("'.$this->_objConfig->getSiteRoot().'usrfiles/galleries/{dsGalleries::@base}{dsGalleries::@file}", "gallery/photos/photo",{ useCache:  false });
-
-                </script>';
-        $this->appendArrayVar('headerParams', $this->getJavascriptFile('gallery.js','photogallery'));
-        $this->appendArrayVar('headerParams', $str);
-        $this->setVar('bodyParams', ' id="gallery" ');
-        $css = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('drop_shadow.css','photogallery').'" />';
-
-        $this->appendArrayVar('headerParams',$css);
-        */
     }
 
 
@@ -153,38 +140,8 @@ class photogallery extends controller
 				var_dump($this->_objFlickr->photos_comments_addComment($this->getParam('imageid'), $this->getParam('comment')));die;
 				return $this->nextAction('viewimage', array('albumid' => $this->getParam('albumid'), 'imageid' => $this->getParam('imageid')));
 			
-			//overview
-			
-			case 'null':
-            	return $this->nextAction('uploadsection');
-                //$this->appendArrayVar('bodyOnLoad', 'ind = document.forms[\'grid\'].gallerySelect.selectedIndex;  alert(document.forms[\'grid\'].gallerySelect.options[ind].value); ');
-                // $this->setVar('admin', $this->);
-                //$this->setVar('resourcePath', $this->getResourceUri('','photogallery'));
-                $this->setVar('resourcePath', 'usrfiles/photogallery/');
-                return 'main_tpl.php';
-            case 'galleries':
-                $this->setVar('galleries', $this->_objUtils->readGalleries());
-                return 'galleries_tpl.php';
-            case 'createfolder':
-
-                $this->_objUtils->createGallery($this->getParam('newgallery'));
-                return $this->nextAction(null);
-           /*
-            case 'admin';
-                $this->setVar('imageArr', $this->_objUtils->getImagesAdminList());
-                return 'admin_tpl.php';
-            case 'admin2';
-                //$this->setVar('imageArr', $this->_objUtils->getImagesAdminList());
-                return 'admin2_tpl.php';
-
-            case 'deleteimage':
-                $this->_objUtils->deleteImage($this->getParam('fileid'));
-                return $this->nextAction('admin');
-            case 'sync':
-                $this->_objUtils->syncImageList();
-                return $this->nextAction(null);
-
-*/
+		
+         
 			//upload section
             case 'uploadsection':
             	if($this->getParam('errmsg') != '')
