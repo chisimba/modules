@@ -1012,51 +1012,7 @@ class blog extends controller
            		$this->googleBlogPing = $this->objSysConfig->getValue('ping_google', 'blog');
            		if($this->googleBlogPing == 'TRUE')
            		{
-                	//set up for Google Blog API
-                	$changesURL = $this->uri(array('module' => 'blog', 'action' => 'feed', 'userid' => $userid));
-                	$name = $this->objUser->fullname($userid) . " Chisimba blog";
-                	$blogURL = $this->uri(array('module' => 'blog', 'action' => 'randblog', 'userid' => $userid));
-                	//OK lets put it together...
-                	$gurl = "http://blogsearch.google.com/ping";
-                	//do the http request
-                	//echo $gurl;
-                	$gurl = str_replace('%26amp%3B', "&", $gurl);
-                	$gurl = str_replace('&amp;', "&", $gurl);
-                	$gurl = $gurl."?name=".urlencode($name)."&url=".urlencode($blogURL)."&changesUrl=".urlencode($changesURL);
-
-                	//get the proxy info if set
-                	$proxyArr = $this->objProxy->getProxy();
-                	//print_r($proxyArr); die();
-                	if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
-                	{
-                		$parr = array(
-                		'proxy_host'        => $proxyArr['proxy_host'],
-                		'proxy_port'        => $proxyArr['proxy_port'],
-                		'proxy_user'        => $proxyArr['proxy_user'],
-                		'proxy_pass'        => $proxyArr['proxy_pass']
-                		);
-                	}
-                	//echo $gurl; die();
-                	$ch = curl_init();
-                	curl_setopt($ch, CURLOPT_URL, $gurl);
-                	curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-                	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-                	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                	if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
-                	{
-                		curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_host'].":".$proxyArr['proxy_port']);
-                		curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxy_user'].":".$proxyArr['proxy_pass']);
-                	}
-                	$code = curl_exec($ch);
-                	curl_close($ch);
-                	switch ($code) {
-                	case "Thanks for the ping.":
-                		log_debug("Google blogs API Success! Google said: " . $code);
-                		break;
-                	default:
-                		log_debug("Google blogs API Failure! Google said: " . $code);
-                		break;
-                	}
+                	$this->objblogOps->pingGoogle($userid);
            		}
                 //post quick add
                 if($mode == 'quickadd')

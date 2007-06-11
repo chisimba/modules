@@ -3849,5 +3849,59 @@ class blogops extends object
     		customException::cleanUp();
     	}
     }
+    
+
+    public function pingGoogle($userid)
+    {
+    	$objBk = $this->getObject('background', 'utilities');
+    	$status = $objBk->isUserConn();
+    	$callback = $objBk->keepAlive();
+    	$this->objProxy = $this->getObject('proxy', 'utilities');
+    	//set up for Google Blog API
+    	$changesURL = $this->uri(array('module' => 'blog', 'action' => 'feed', 'userid' => $userid));
+    	$name = $this->objUser->fullname($userid) . " Chisimba blog";
+    	$blogURL = $this->uri(array('module' => 'blog', 'action' => 'randblog', 'userid' => $userid));
+    	//OK lets put it together...
+    	$gurl = "http://blogsearch.google.com/ping";
+    	//do the http request
+    	//echo $gurl;
+    	$gurl = str_replace('%26amp%3B', "&", $gurl);
+    	$gurl = str_replace('&amp;', "&", $gurl);
+    	$gurl = $gurl."?name=".urlencode($name)."&url=".urlencode($blogURL)."&changesUrl=".urlencode($changesURL);
+
+    	//get the proxy info if set
+    	$proxyArr = $this->objProxy->getProxy(NULL);
+    	//print_r($proxyArr); die();
+    	if(!empty($proxyArr))
+    	{
+    		$parr = array(
+    		'proxy_host'        => $proxyArr['proxyserver'],
+    		'proxy_port'        => $proxyArr['proxyport'],
+    		'proxy_user'        => $proxyArr['proxyusername'],
+    		'proxy_pass'        => $proxyArr['proxypassword']
+    		);
+    	}
+    	//echo $gurl; die();
+    	$ch = curl_init();
+    	curl_setopt($ch, CURLOPT_URL, $gurl);
+    	curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+    	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    	if(!empty($proxyArr))
+    	{
+    		curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxyserver'].":".$proxyArr['proxyport']);
+    		curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxyusername'].":".$proxyArr['proxypassword']);
+    	}
+    	$code = curl_exec($ch);
+    	curl_close($ch);
+    	switch ($code) {
+    		case "Thanks for the ping.":
+    			log_debug("Google blogs API Success! Google said: " . $code);
+    			break;
+    		default:
+    			log_debug("Google blogs API Failure! Google said: " . $code);
+    			break;
+    	}
+    }
 }
 ?>
