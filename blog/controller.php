@@ -1823,6 +1823,18 @@ class blog extends controller
         	$this->objDbBlog->deletePage($pageid);
         	$this->nextAction('setpage');
         	break;
+        	
+        case 'blogsearch':
+        	$userid = $this->objUser->userId();
+        	$seekterm = $this->getParam('searchterm');
+        	$seekterm = trim($seekterm);
+        	$seekterm = strip_tags($seekterm);
+        	
+        	$res = $this->objblogOps->quickSearch($seekterm);
+        	$this->setVarByRef('searchres', $res);
+        	$this->setVarByRef('userid', $userid);
+        	$this->setVar('pageSuppressXML', TRUE);
+        	return 'searchres_tpl.php';
 
         	
         case 'googlegadget':

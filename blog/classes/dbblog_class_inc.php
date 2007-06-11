@@ -523,6 +523,7 @@ class dbblog extends dbTable
 
 		if($mode == NULL)
 		{
+			//log_debug($postarr['postcontent']);
 			//$this->pcleaner = $this->newObject('htmlcleaner', 'utilities');
 			//$this->ecleaner = $this->newObject('htmlcleaner', 'utilities');
 			//$postarr['postcontent'] = preg_replace("/(\r\n|\n|\r)/", "", $postarr['postcontent']);
@@ -544,6 +545,7 @@ class dbblog extends dbTable
 							'showpdf' => $postarr['showpdf']);
 
 			$insarr['id'] = $this->insert($insarr, 'tbl_blog_posts');
+			
 			$this->luceneIndex($insarr);
 			return TRUE;
 		}
@@ -1068,6 +1070,13 @@ class dbblog extends dbTable
     {
     	$this->_changeTable('tbl_blog_pages');
     	return $this->getAll("WHERE id = '$id'");
+    }
+    
+    public function quickSearch($term)
+    {
+    	$this->_changeTable('tbl_blog_posts');
+    	$ret = $this->getAll("WHERE post_content LIKE '%%$term%%' OR post_title LIKE '%%$term%%' OR post_excerpt LIKE '%%$term%%'");
+    	return $ret;
     }
 
 	/**

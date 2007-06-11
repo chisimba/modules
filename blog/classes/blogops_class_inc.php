@@ -3903,5 +3903,56 @@ class blogops extends object
     			break;
     	}
     }
+    
+    public function quickSearch($term)
+    {
+    	$ret = $this->objDbBlog->quickSearch($term);
+    	return $ret;
+    }
+    
+    public function searchBox($featurebox=TRUE)
+    {
+    	$this->loadClass('textinput', 'htmlelements');
+        $qseekform = new form('qseek', $this->uri(array(
+            'action' => 'blogsearch',
+        )));
+        $qseekform->addRule('searchterm', $this->objLanguage->languageText("mod_blog_phrase_searchtermreq", "blog") , 'required');
+        $qseekterm = new textinput('searchterm');
+        $qseekterm->size = 15;
+        $qseekform->addToForm($qseekterm->show());
+        $this->objsTButton = &new button($this->objLanguage->languageText('word_search', 'system'));
+        $this->objsTButton->setValue($this->objLanguage->languageText('word_search', 'system'));
+        $this->objsTButton->setToSubmit();
+        $qseekform->addToForm($this->objsTButton->show());
+        $qseekform = $qseekform->show();
+        if ($featurebox == FALSE) {
+            return $qseekform;
+        } else {
+            $objFeatureBox = $this->getObject('featurebox', 'navigation');
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_qseek", "blog") , $this->objLanguage->languageText("mod_blog_qseekinstructions", "blog") ."<br />".$qseekform);
+            return $ret;
+        }
+    }
+    
+    public function displaySearchResults($searchres)
+    {
+    	$res = NULL;
+    	if(empty($searchres))
+    	{
+    		$res .= "<hr>";
+    		$res .= "<h1>".$this->objLanguage->languageText("mod_blog_noresultsfound", "blog")."</h1>";
+    		return $res;
+    	}
+    	else {
+    		$res .= "<h3>".$this->objLanguage->languageText("mod_blog_searchresults", "blog")."</h3><br />";
+    	}
+    	foreach ($searchres as $results)
+		{
+			$link = new href($this->uri(array('module' => 'blog', 'action' => 'viewsingle', 'postid' => $results['id'])), $results['post_title']);
+			$teaser = $results['post_excerpt'] . "<br />";
+			$res .= $link->show() . "<br />" . $teaser . "<br /><hr>";
+		}
+		return $res;
+    }
 }
 ?>
