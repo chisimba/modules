@@ -3946,12 +3946,35 @@ class blogops extends object
     	else {
     		$res .= "<h3>".$this->objLanguage->languageText("mod_blog_searchresults", "blog")."</h3><br />";
     	}
+    	
+    	
+               
     	foreach ($searchres as $results)
 		{
+			if($this->showfullname == "FALSE")
+			{
+				$blogger = $this->objUser->userName($results['userid']);
+			}
+			else {
+				$blogger = $this->objUser->fullName($results['userid']);
+			}
 			$image = $this->objUser->getUserImage($results['userid']);
 			$link = new href($this->uri(array('module' => 'blog', 'action' => 'viewsingle', 'postid' => $results['id'])), $results['post_title']);
 			$teaser = $results['post_excerpt'] . "<br />";
-			$res .= $image."<br />".$link->show() . "<br />" . $teaser . "<br /><hr>";
+			// pull together a table
+    		$srtable = $this->newObject('htmltable', 'htmlelements');
+        	$srtable->cellpadding = 2;
+        	//set up the header row
+        	$srtable->startHeaderRow();
+        	$srtable->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_blogger", "blog") . ":");
+        	$srtable->addHeaderCell(''); //"<em>" . $rec['name'] . "</em>");
+        	$srtable->endHeaderRow();
+			$srtable->startRow();
+        	$srtable->addCell("<strong>".$blogger."</strong>"."<br />".$image);
+        	$srtable->addCell("<br />".$link->show()."<br />".$teaser);
+        	$srtable->endRow();
+			        	
+			$res .= $srtable->show()."<br /><hr><br />";
 		}
 		return $res;
     }
