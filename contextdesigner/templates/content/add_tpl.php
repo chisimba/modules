@@ -4,13 +4,17 @@
 // of links for that module
 
 //echo 'modules will be listed here then after a module selected a list of links will be displayed with checked boxes that are available for adding into the context designer';
+$this->loadClass('dropdown' , 'htmlelements');
+$this->loadClass('button' , 'htmlelements');
+
 $objH = & $this->newObject('htmlheading', 'htmlelements');
-$objButton = & $this->newObject('button', 'htmlelements');
-$objButton2 = & $this->newObject('button', 'htmlelements');
+$objButton = new button();//& $this->newObject('button', 'htmlelements');
+$objButton2 = new button();//& $this->newObject('button', 'htmlelements');
 $objIcon = & $this->newObject('geticon', 'htmlelements');
 $objLink = & $this->newObject('link', 'htmlelements');
 $objForm = & $this->newObject('form', 'htmlelements');
-$objDropDown = & $this->newObject('dropdown', 'htmlelements');
+
+$objDropDown = new dropdown();//& $this->newObject('dropdown', 'htmlelements');
 $objFeatureBox = & $this->newObject('featurebox', 'navigation');
 
 

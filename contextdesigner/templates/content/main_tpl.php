@@ -8,7 +8,8 @@ $objIcon = & $this->newObject('geticon', 'htmlelements');
 $objLink = & $this->newObject('link', 'htmlelements');
 $objForm = & $this->newObject('form', 'htmlelements');
 $objForm2 = & $this->newObject('form', 'htmlelements');
-$objInput = & $this->newObject('textinput', 'htmlelements');
+$this->loadClass('textinput', 'htmlelements');
+$objInput = new textinput();//& $this->newObject('textinput', 'htmlelements');
 $objFeatureBox = & $this->newObject('featurebox', 'navigation');
 $inpButton =  $this->newObject('button','htmlelements');
 

@@ -1,14 +1,17 @@
 <?php
+$this->loadClass('checkbox' , 'htmlelements');
+$this->loadClass('button' , 'htmlelements');
+$this->loadClass('dropdown' , 'htmlelements');
 
 $objH = & $this->newObject('htmlheading', 'htmlelements');
-$objButton = & $this->newObject('button', 'htmlelements');
-$objButton2 = & $this->newObject('button', 'htmlelements');
+$objButton2 = new button();
+$objButton = new button();
 $objIcon = & $this->newObject('geticon', 'htmlelements');
 $objLink = & $this->newObject('link', 'htmlelements');
 $objForm = & $this->newObject('form', 'htmlelements');
-$objCheckBox = & $this->newObject('checkbox', 'htmlelements');
+$objCheckBox = new checkbox('selecteditems[]');//& $this->newObject('checkbox', 'htmlelements');
 
-$objDropDown = & $this->newObject('dropdown', 'htmlelements');
+$objDropDown = new dropdown();//& $this->newObject('dropdown', 'htmlelements');
 $objFeatureBox = & $this->newObject('featurebox', 'navigation');
 $objTable = & $this->newObject('htmltable', 'htmlelements');
 
@@ -17,7 +20,7 @@ $objButton2->value = $this->_objLanguage->languageText('word_cancel');
 $objButton2->setOnClick('javascript:document.location = \''.$this->uri(null).'\'');
 
 
-if(count($links) > 0 )
+if($links)
 {
     $objTable->width = '60%';
     //$objTable->cellspacing='1';
@@ -33,6 +36,7 @@ if(count($links) > 0 )
     $objTable->endHeaderRow();
     $rowcount = 0;
     $i=1;
+	var_dump($links);
     foreach ($links as $link)
     {
         $oddOrEven = ($rowcount == 0) ? "even" : "odd";
