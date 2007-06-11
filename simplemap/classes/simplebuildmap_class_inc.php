@@ -1,4 +1,4 @@
-<?
+<?php
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
 {
@@ -128,8 +128,9 @@ class simplebuildmap extends object
 		    	
 		    case "kml":
 		    	$str = $this->insertMapLayer();
-		    	$str .= $this->setupScript();
-		    	return str_replace ("[[SMAP_INSERT_HERE]]", $this->insertKml(), $str);
+		    	$str .= $this->setupKmlScript();
+		    	$this->setVar('bodyParams', 'onLoad = "load()";');
+		    	return $str;
 		     	break;
 		     	
 		    default:
@@ -169,7 +170,7 @@ class simplebuildmap extends object
     function insertKml()
     {   
     	$ret = "var kml = new GGeoXml(\"" . $this->smap . "\");\n"
-    	  . "map.addOverlay(kml)";
+    	  . "map.addOverlay(kml);";
         return $ret;
     }
 
@@ -309,6 +310,54 @@ class simplebuildmap extends object
 		    else {
 		      alert(\"$incompat\");
 		    }
+		    //]]>
+		    </script>";
+        return $ret;
+    }
+    
+        /*
+    * 
+    * Method to return the script for inclusion in the browser for
+    * displaying a KML file
+    * 
+    * @access public
+    * @return srting The Javascript for generating the map 
+    * 
+    */
+    function setupKmlScript()
+    {		
+    	$ret = $this->getNoScript();
+    	$lat = $this->gLat;
+    	$long = $this->gLong;
+    	$mag = $this->magnify;
+    	$incompat = $this->objLanguage->languageText("mod_simplemap_incompatible", "simplemap");
+		//Valid types are G_NORMAL_MAP, G_SATELLITE_MAP, G_HYBRID_MAP
+		$gMapType = $this->getParam("maptype", NULL);
+		if ($gMapType !== NULL) {
+			$gMapType = ",{mapTypes:[" . $gMapType . "]}";
+		}
+		
+    	$ret .="
+            <script type=\"text/javascript\">
+    		//<![CDATA[
+			// The GGeoXml constructor takes a URL pointing to a KML or GeoRSS file.
+			// You add the GGeoXml object to the map as an overlay, and remove it as an overlay as well.
+			// The Maps API determines implicitly whether the file is a KML or GeoRSS file.
+
+			var map;
+			var geoXml = new GGeoXml(\"$this->smap\");
+			function load() {
+  			    if (GBrowserIsCompatible()) {
+				    map = new GMap2(document.getElementById(\"map\")$gMapType); 
+	    			map.addControl(new GLargeMapControl());
+	    		 	map.setCenter(new GLatLng($lat,$long),$mag); 
+				    map.addControl(new GLargeMapControl());
+				    map.addOverlay(geoXml);
+			    } else {
+			        // display a warning if the browser was not compatible
+					alert(\"$incompat\");
+		        }
+            }
 		    //]]>
 		    </script>";
         return $ret;
