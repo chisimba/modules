@@ -25,7 +25,7 @@ $str = '<div id="image">';
  		///var_dump($image);
  
 
-$link->href = $this->_objFlickr->buildPhotoURL($image, "Large");
+$link->href = $this->_objFlickr->buildPhotoURL($image, "Medium");
 $thumb = '<img  src="'.$this->_objFlickr->buildPhotoURL($image, "Medium").'">';
 $link->link = $thumb;
 $link->extra = ' rel="lightbox" ';
