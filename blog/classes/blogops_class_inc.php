@@ -2570,9 +2570,10 @@ class blogops extends object
         $link = new href($this->uri(array(
             'action' => 'randblog',
             'userid' => $rec['id']
-        )) , $lastentry['post_title']);
+        )) , stripslashes($lastentry['post_title']));
         $this->cleaner = $this->newObject('htmlcleaner', 'utilities');
-        $txt = $lastentry['post_excerpt'];
+        $txt = stripslashes($lastentry['post_excerpt']);
+        $txt = stripslashes($txt);
         $txtlen = 100;
         $str_to_count = $txt; // html_entity_decode($txt);
         if (strlen($str_to_count) <= $txtlen) {
