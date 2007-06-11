@@ -7,6 +7,7 @@ if(isset($noContextCode)){
 	echo '	<param name="userName" value="' . $this->userName . '"/>';
 	echo '  <param name="userLevel" value="' . $this->userLevel . '"/>';
 	echo '  <param name="voiceURL" value="'.$this->voiceURL.'"/>';
+	echo '  <param name="deleteFILE" value="true"/>';
 	echo '  <param name="realtimeControllerURL" value="'.$this->realtimeControllerURL.'"/>';
 	echo "</applet> ";
 }
