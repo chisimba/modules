@@ -81,7 +81,7 @@ foreach($thumbnails as $thumbnail)
 	 // var_dump($objCC->show());
 	$table2->startRow();
 	$table2->addCell($img.$imgId->show(),null,'center');
-	$table2->addCell('Title: <br />'.$imgTitle->show()./*$objCC->show()*/<br/>Description: <br />'.$imgDescription->show().'<br/><br/>');
+	$table2->addCell('Title: <br />'.$imgTitle->show()./*$objCC->show()*/'<br/>Description: <br />'.$imgDescription->show().'<br/><br/>');
 	
 	$table2->addCell($icon->getDeleteIconWithConfirm($thumbnail['id'],array('action' => 'deleteimage', 'imageid' => $thumbnail['id'], 'albumid' => $thumbnail['album_id']),'photogallery'),null,'center');
 	$table2->endRow();
