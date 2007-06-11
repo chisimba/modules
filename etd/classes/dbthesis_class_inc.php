@@ -370,8 +370,8 @@ class dbThesis extends dbtable
         $sql = "FROM {$this->table} AS thesis, {$this->dcTable} AS dc, {$this->submitTable} AS submit 
                 WHERE thesis.dcmetaid = dc.id AND thesis.submitid = submit.id 
                 AND submit.submissiontype = '{$this->subType}' 
-                AND (dc.dc_creator LIKE '%$keyword%' OR dc.dc_title LIKE '%$keyword%'
-                OR dc.dc_subject LIKE '%$keyword%') ";
+                AND (LOWER(dc.dc_creator) LIKE LOWER('%$keyword%') OR LOWER(dc.dc_title) LIKE LOWER('%$keyword%')
+                OR LOWER(dc.dc_subject) LIKE LOWER('%$keyword%')) ";
                 
         $sqlOrder = "ORDER BY dc.dc_date ";
         

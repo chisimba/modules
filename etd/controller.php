@@ -416,6 +416,7 @@ class etd extends controller
                         $itemDescription = substr($item['dc_subject'], 100, 0);
                         $itemAuthor = $item['dc_creator'];
                         $itemLink = $this->uri(array('action' => 'viewtitle', 'id' => $item['metaid']));// todo: build up item link $item['dc_identifier'];
+                        $itemLink = html_entity_decode($itemLink);
                	        $this->objFeeder->addItem($itemTitle, $itemLink, $itemDescription, $link, $itemAuthor);
                     }
                 }
@@ -434,7 +435,7 @@ class etd extends controller
                     
                     //echo $term.'<pre>'; print_r($data); echo '</pre>';
                 }
-                return '<b>'.$count.'</b> records found';
+                echo '<b>'.$count.'</b> records found';
                 break;
 
             default:
