@@ -435,7 +435,9 @@ class etd extends controller
                     
                     //echo $term.'<pre>'; print_r($data); echo '</pre>';
                 }
-                echo '<b>'.$count.'</b> records found';
+                $display = '<b>'.$count.'</b> records found';
+                $this->setVarByRef('search', $display);
+                return 'search_tpl.php';
                 break;
 
             default:
