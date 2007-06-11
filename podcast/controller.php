@@ -1,4 +1,10 @@
 <?php
+// security check - must be included in all scripts
+if (!$GLOBALS['kewl_entry_point_run'])
+{
+    die("You cannot view this page directly");
+}
+// end security check
 
 /**
  * Controller for the podcast module
@@ -16,7 +22,7 @@ class podcast extends controller
         try{
             $this->objPodcast =& $this->getObject('dbpodcast');
             $this->objUser =& $this->getObject('user', 'security');
-            $this->objDateTime =& $this->getObject('datetime', 'utilities');
+            $this->objDateTime =& $this->getObject('dateandtime', 'utilities');
             $this->objUtils = & $this->getObject('utils','contextadmin');
             $this->objLanguage =& $this->getObject('language', 'language');
             $this->objConfig =& $this->getObject('altconfig', 'config');
