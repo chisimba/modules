@@ -50,7 +50,7 @@ class utils extends object
 			$nodes[] = array('text' => 'Comments', 'uri' => $this->uri(array('action' => 'comments')),  'nodeid' => 'comments');
 			$nodes[] = array('text' => 'Upload', 'uri' => $this->uri(array('action' => 'uploadsection')),  'nodeid' => 'uploadsection');
 			$nodes[] = array('text' => 'Edit', 'uri' => $this->uri(array('action' => 'editsection')),  'nodeid' => 'editsection');
-			$nodes[] = array('text' => 'Flickr', 'uri' => $this->uri(array('action' => 'editsection')),  'nodeid' => 'flickr');
+			$nodes[] = array('text' => 'Flickr', 'uri' => $this->uri(array('action' => 'flickr')),  'nodeid' => 'flickr');
 	
 			return $objSideBar->show($nodes, $this->getParam('action'));
 		} else {
