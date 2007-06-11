@@ -94,7 +94,8 @@ class dbDegrees extends dbTable
         
         if(!empty($data)){
             foreach($data as $item){
-                $objDrop->addOption($item['name'], $item['name']);
+                $value = htmlentities($item['name']);
+                $objDrop->addOption($value, $value);
             }
         }
         if($type == 'department'){

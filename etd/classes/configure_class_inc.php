@@ -338,7 +338,7 @@ class configure extends object
         
                 $icons .= $objLink->show();
                 
-                $listStr .= '<li>'.$item['name'].'&nbsp;&nbsp;&nbsp;'.$icons.'</li>';
+                $listStr .= '<li>'. htmlentities($item['name']).'&nbsp;&nbsp;&nbsp;'.$icons.'</li>';
             }
             
             $listStr .= '</ul>';

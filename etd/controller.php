@@ -5,10 +5,11 @@
 * @filesource
 */
 
-// security check - must be included in all scripts
+/* security check - must be included in all scripts - removed for accessing via metalib
 if (!$GLOBALS['kewl_entry_point_run']){
     die("You cannot view this page directly");
 }
+*/
 
 /**
 * Controller class for etd module
