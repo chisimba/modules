@@ -18,6 +18,9 @@ $fields = array(
 	'file_id' => array(
 		'type' => 'text',
 		'length' => 32
+		),
+	'description' => array(
+		'type' => 'clob',		
 		),	
 	'no_views' => array(
 		'type' => 'integer',
