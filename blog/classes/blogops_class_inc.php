@@ -3948,9 +3948,10 @@ class blogops extends object
     	}
     	foreach ($searchres as $results)
 		{
+			$image = $this->objUser->getUserImage($results['userid']);
 			$link = new href($this->uri(array('module' => 'blog', 'action' => 'viewsingle', 'postid' => $results['id'])), $results['post_title']);
 			$teaser = $results['post_excerpt'] . "<br />";
-			$res .= $link->show() . "<br />" . $teaser . "<br /><hr>";
+			$res .= $image."<br />".$link->show() . "<br />" . $teaser . "<br /><hr>";
 		}
 		return $res;
     }
