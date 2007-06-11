@@ -380,102 +380,6 @@ class etd extends controller
                 return $this->nextAction('');
                 break;
 
-
-            /* *** Keywords in submit generic class *** *
-
-            case 'importkeywords':
-                $search = $this->objKeyword->showUpload();
-                $this->setVarByRef('search', $search);
-                return 'print_tpl.php';
-
-            case 'importcsv':
-                $filepath = $_FILES['filepath']['tmp_name'];
-                $this->objKeyword->importCSV($filepath);
-                return 'submit_tpl.php';
-
-            case 'managekeywords':
-                $this->setSession('keyManage', TRUE);
-
-            case 'addkeywords':
-                $form = $this->getSession('keyForm', NULL);
-                $field = $this->getSession('keyField');
-                if(is_null($form)){
-                    $form = $this->getParam('formname');
-                    $field = $this->getParam('fieldname');
-                    $this->setSession('keyForm', $form);
-                    $this->setSession('keyField', $field);
-                }
-                $search = $this->objKeyword->showKeywords($form, $field);
-                $this->setVarByRef('search', $search);
-                return 'print_tpl.php';
-
-            
-            /* *** Manage Collections in Repository *** *
-
-            case 'managecollections':
-                $objCollection = $this->getObject( 'dbcollection', 'etd' );
-                $this->setVar( 'browseType', $objCollection );
-                $this->setVar( 'isManager', TRUE );
-                return 'browse_tpl.php';
-
-            case 'viewcollection':
-                $id = $this->getParam('id', NULL);
-                if(is_null($id)){
-                    $id = $this->getParam('joinId');
-                }
-                $mode = $this->getParam('allowManage', FALSE);
-                $data = $this->dbCollection->getCollection($id);
-                $objTitle = $this->getObject( 'dbthesis', 'etd' );
-                $objTitle->setBrowseType( 'title' );
-
-                $this->setVar( 'num', 3 );
-                $this->setVar( 'browseType', $objTitle );
-                $this->setVarByRef( 'isManager', $mode );
-                $this->setVarByRef('collectionId', $id);
-                $this->setVarByRef('data', $data);
-                return 'viewcollection_tpl.php';
-
-            case 'addcollection':
-                $this->setVar('mode', 'add');
-                return 'addcollection_tpl.php';
-
-            case 'editcollection':
-                $data = $this->dbCollection->getCollection($this->getParam('id'));
-                $this->setVar('mode', 'edit');
-                $this->setVarByRef('data', $data);
-                return 'addcollection_tpl.php';
-
-            case 'savecollection':
-                $exit = $this->getParam('exit', NULL);
-                if(isset($exit) && !empty($exit)){
-                    return $this->nextAction('manageCollections');
-                }
-                $collectionId = $this->getParam('id', NULL);
-                $this->objAudit->addAuditTrail('Add or edit a collection. Collection id: '.$collectionId);
-                $this->dbCollection->saveCollection($this->userId, $collectionId);
-                return $this->nextAction('manageCollections');
-
-            case 'deletecollection':
-                $collectionId = $this->getParam('id', NULL);
-                if($this->dbCollection->deleteCollection($collectionId) === FALSE){
-                    return $this->nextAction('manageCollections');
-                }
-                $this->objAudit->addAuditTrail('Delete a collection. Collection id: '.$collectionId);
-                return $this->nextAction('manageCollections');
-
-            case 'edittitle':
-            case 'addtitle':
-                return $this->addTitleToCollection();
-
-            case 'deletetitle':
-                $collectId = $this->getParam('joinId');
-                $metaId = $this->getParam('id');
-                $this->objAudit->addAuditTrail('Delete a title from a collection. Collection id: '.$collectionId.'. Submission metadata id: '.$metaId);
-                $this->dbCollectSubmit->removeSubmissionFromCollection($metaId, $collectId);
-                return $this->nextAction('viewcollection', array('id'=>$collectId, 'allowManage' => TRUE));
-
-            */
-
             /* *** Additional Functionality *** */
 
             case 'viewstats':
@@ -521,6 +425,11 @@ class etd extends controller
                 break;
                 
             case 'metalib':
+                $term = $this->getParam('keyword');
+                if(!empty($term)){
+                    $data = $this->dbThesis->search2($term);
+                    //echo $term.'<pre>'; print_r($data); echo '</pre>';
+                }
                 break;
 
             default:
@@ -533,252 +442,12 @@ class etd extends controller
     * Method to display the etd front page, depending on the access level of the user.
     */
     private function home()
-    {
-        /*
-        switch($this->accessLevel){
-            // student home page
-            case 1:
-                $openData = $this->dbSubmit->getUserEtd($this->userId);
-                $archiveData = $this->dbSubmit->getUserEtd($this->userId, 'archived');
-
-                $head1 = $this->objLanguage->languageText('mod_etd_newsubmissions');
-                $head2 = $this->objLanguage->languageText('mod_etd_recentcompletesubmissions');
-                $this->setVar('statusCond', 'assembly');
-                $this->setVar('dispLink', TRUE);
-                break;
-
-            // metadata editors
-            case 2:
-                $openData = $this->dbSubmit->getEtdByStatus('metadata');
-
-                $head1 = $this->objLanguage->languageText('mod_etd_newsubmissions');
-                $head2 = $this->objLanguage->languageText('mod_etd_recentcompletesubmissions');
-                $this->setVar('statusCond', 'metadata');
-                $this->setVar('dispLink', FALSE);
-                break;
-
-            // initial approvers
-            case 3:
-                $openData = $this->dbSubmit->getEtdByStatus('pending', 0);
-                $minorData = $this->dbSubmit->getEtdByStatus('pending', 1);
-                $majorData = $this->dbSubmit->getEtdByStatus('pending', 2);
-                $secondData = $this->dbSubmit->getEtdByStatus('pending', 4);
-                $openData = array_merge($openData, $minorData);
-                $openData = array_merge($openData, $majorData);
-                $openData = array_merge($openData, $secondData);
-
-                $head1 = $this->objLanguage->languageText('mod_etd_newsubmissions');
-                $head2 = $this->objLanguage->languageText('mod_etd_recentcompletesubmissions');
-                $this->setVar('statusCond', 'pending');
-                $this->setVar('dispLink', FALSE);
-                break;
-
-            // secondary approvers
-            case 4:
-                $openData = $this->dbSubmit->getEtdByStatus('pending', 3);
-                $majorData = $this->dbSubmit->getEtdByStatus('pending', 5);
-                $openData = array_merge($openData, $majorData);
-
-                $head1 = $this->objLanguage->languageText('mod_etd_newsubmissions');
-                $head2 = $this->objLanguage->languageText('mod_etd_recentcompletesubmissions');
-                $this->setVar('statusCond', 'pending');
-                $this->setVar('dispLink', FALSE);
-                break;
-
-            // managers
-            case 5:
-            // administrators
-            case 6:
-                $openData = $this->dbSubmit->getUserEtd($this->userId);
-
-                $head1 = $this->objLanguage->languageText('mod_etd_newsubmissions');
-                $head2 = $this->objLanguage->languageText('mod_etd_recentcompletesubmissions');
-                $this->setVar('statusCond', 'assembly');
-                $this->setVar('dispLink', TRUE);
-                break;
-
-            default: // case 0
-                return $this->nextAction('browse_collection');
-        }
-
-        $this->setVarByRef('head1', $head1);
-        $this->setVarByRef('head2', $head2);
-        $this->setVarByRef('openData', $openData);
-        $this->setVarByRef('archiveData', $archiveData);
-        return 'etd_tpl.php';
-        */
-        
+    {   
         $txtIntro = $this->dbIntro->getParsedIntro();
         $this->setVarByRef('txtIntro', $txtIntro);
         
         return 'home_tpl.php';
     }
-
-    /**
-    * Method to display the reason for an embargo request or grant.
-    *
-    function viewEmbargo()
-    {
-        $heading = $this->objLanguage->languageText('mod_etd_reason');
-        $id = $this->getParam('id');
-        $type = $this->getParam('type');
-
-        $data = $this->dbEmbargo->getField($id, $type);
-        $body = $data[$type];
-
-        $this->setVarByRef('heading', $heading);
-        $this->setVarByRef('body', $body);
-        return 'etdinfo_tpl.php';
-    }
-
-    /**
-    * Method to display a form to add submissions to a given collection.
-    * The method saves the submitting form information.
-    *
-    function addTitleToCollection()
-    {
-        $save = $this->getParam('save', NULL);
-        $collectId = $this->getParam('joinId');
-
-        if(isset($save) && !empty($save)){
-            $submissions = $this->getParam('submissions', array());
-            $audSubmits = implode(', ', $submissions);
-            $this->objAudit->addAuditTrail('Add or edit a title in a collection. Collection id: '.$collectId.'. Submissions: '.$audSubmits);
-            $this->dbCollectSubmit->addSubmitToCollection($submissions, $collectId);
-            return $this->nextAction('viewcollection', array('id' => $collectId, 'allowManage' => TRUE));
-        }
-
-        $data = $this->dbCollection->getCollection($collectId);
-        $meta = $this->dbThesisMeta->getAllMeta();
-        $meta2 = $this->dbThesisMeta->getMetaInCollection($collectId);
-        $this->setVarByRef('collection', $data);
-        $this->setVarByRef('meta', $meta);
-        $this->setVarByRef('meta2', $meta2);
-        return 'addtitle_tpl.php';
-    }
-
-    /**
-    * Method to fetch an etd for managing.
-    *
-    function fetchEtd()
-    {
-        $lbAuthor = $this->objLanguage->languageText('mod_etd_author');
-        $lbTitle = $this->objLanguage->languageText('mod_etd_title');
-        $lbStudent = $this->objLanguage->languageText('mod_etd_studentnumber');
-        $lbDepartment = $this->objLanguage->languageText('mod_etd_department');
-        $lbEtds = $this->objLanguage->languageText('mod_etd_etds');
-
-        $unset = $this->getParam('unset', NULL);
-        if(!is_null($unset)){
-            $this->unsetSession('filter');
-        }
-        $author = $this->getParam('author', NULL);
-        $title = $this->getParam('title', NULL);
-        $student = $this->getParam('student', NULL);
-        $department = $this->getParam('department', NULL);
-        $start = $this->getParam( 'displayStart', 0 );
-
-        $data = $this->dbSubmit->fetchETD('%'.$author.'%', '%'.$title.'%', '%'.$student.'%', '%'.$department.'%', $start, 'LIKE');
-
-        $this->setVarByRef('results', $data);
-        $this->setVar('find', TRUE);
-        $header = array('col1'=>$lbTitle, 'col2'=>$lbAuthor, 'col3'=>$lbStudent, 'col4'=>$lbDepartment);
-
-        $pageTitle = '';
-        $objViewBrowse = $this->getObject( 'viewbrowse', 'etd' );
-        $objViewBrowse->create(NULL, FALSE, $lbEtds, 'etd', $data[0]);
-        $objViewBrowse->displayLimit = 10;
-        $objViewBrowse->displayStart = $start;
-        $objViewBrowse->displayMax = $data[1];
-        $objViewBrowse->setHeader($header);
-        $objViewBrowse->setNumCols(4);
-        $objViewBrowse->setAccess(FALSE);
-        $objViewBrowse->showAlpha(FALSE);
-        $objViewBrowse->showSearch(FALSE);
-        $objViewBrowse->setPageTitle($pageTitle);
-        $search = $objViewBrowse->show();
-        $this->setVarByRef('search', $search);
-        return 'manageetd_tpl.php';
-    }
-
-    /**
-    * Method to display pages for editing metadata
-    *
-    function showEditPage()
-    {
-        $page = $this->getParam('page', 1);
-        $submitId = $this->getParam('submitId');
-
-        switch($page){
-            case 1:
-                $dispPage = $this->etdSubmit->createPage1($submitId, $page, $this->accessLevel, 'savemeta', TRUE);
-                break;
-
-            case 2:
-                $dispPage = $this->etdSubmit->createPage2($submitId, $page, FALSE, 'savemeta', TRUE);
-                break;
-
-            case 3:
-                $dispPage = $this->etdSubmit->createPage3($submitId, $page, '', 'savemeta', 'editmetadata');
-                break;
-
-            default:
-                return $this->nextAction('showetd', array('submitId' => $submitId, 'mode' => TRUE));
-        }
-
-        if($dispPage === FALSE){
-            return $this->nextAction('showetd', array('submitId' => $submitId, 'mode' => TRUE));
-        }
-
-        $this->setVar('page', $dispPage);
-        return 'submit_tpl.php';
-    }
-
-    /**
-    * Method to determine the level of access a user has in the site.
-    * Levels: (5) Administrator - full access (audit trail, delete submissions).
-    * (4) Managers - add/edit/approve/submit.
-    * (3) Approvers - approve.
-    * (2) Metadata editors/catalogers - edit metadata.
-    * (1) Users 1 - browse & submit.
-    * (0) Users 2 - browse with restrictions on embargoed items.
-    *
-    function accessLevel()
-    {
-        $groupId = $this->objGroup->getLeafId(array('etdAdmin'));
-        if($this->objGroup->isGroupMember($this->userPkId, $groupId)){
-            $this->accessLevel = 6;
-        }else{
-            $groupId = $this->objGroup->getLeafId(array('etdManager'));
-            if($this->objGroup->isGroupMember($this->userPkId, $groupId)){
-                $this->accessLevel = 5;
-            }else{
-                $groupId = $this->objGroup->getLeafId(array('etdApprover'));
-                if($this->objGroup->isGroupMember($this->userPkId, $groupId)){
-                    $this->accessLevel = 4;
-                }else{
-                    $groupId = $this->objGroup->getLeafId(array('etdInitialApprover'));
-                    if($this->objGroup->isGroupMember($this->userPkId, $groupId)){
-                        $this->accessLevel = 3;
-                    }else{
-                        $groupId = $this->objGroup->getLeafId(array('etdCataloger'));
-                        if($this->objGroup->isGroupMember($this->userPkId, $groupId)){
-                            $this->accessLevel = 2;
-                        }else{
-                            $groupId = $this->objGroup->getLeafId(array('Students'));
-                            if($this->objGroup->isGroupMember($this->userPkId, $groupId)){
-                                $this->accessLevel = 1;
-                            }else{
-                                $this->accessLevel = 0;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        //$this->accessLevel = 4;
-    }
-    */
     
     /**
     * Temporary fix for context permissions.
@@ -849,6 +518,7 @@ class etd extends controller
             case 'viewstats':
             case 'showrss':
             case 'rss':
+            case 'metalib';
             case '';
                 return FALSE;
         }

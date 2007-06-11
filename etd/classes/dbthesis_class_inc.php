@@ -190,34 +190,6 @@ class dbThesis extends dbtable
         }
         
         return $data;
-        
-        /*
-        $sql = "SELECT DISTINCT dc.{$this->col1Field} as col1, dc.{$this->col2Field} as col2, dc.{$this->col3Field} as col3, thesis.id as id";
-        $sql .= ' FROM '.$this->table.' AS thesis ';
-        $sqljoin = 'LEFT JOIN '.$this->submitTable.' AS submit ON submit.id = thesis.submitId ';
-        $sql .= $sqljoin;
-        $sql .= 'LEFT JOIN '.$this->dcTable.' AS dc ON dc.id = thesis.dcMetaId ';
-        $filter = " WHERE submissionType = '{$this->subType}' AND (submit.status = 'archived' ";
-
-        $join = ''; $joinFilter = '';
-        if(isset($joinId) && !empty($joinId)){
-            $join = ' LEFT JOIN '.$this->bridgeTable.' AS bridge ON bridge.submissionId = thesis.submitId';
-            $joinFilter = " AND bridge.collectionId = '$joinId'";
-        }
-        $filter .= $joinFilter.')';
-
-        $orderBy = " ORDER by LOWER({$this->col1Field})";
-
-        $sqlLimit = $limit ? " LIMIT $limit" : NULL;
-        $sqlLimit .= $start ? " OFFSET $start" : NULL;
-        $results = $this->getArray( $sql.$join.$filter.$orderBy.$sqlLimit );
-
-        // Get bounds
-        $sqlFound = 'SELECT DISTINCT COUNT(*) as found FROM '.$this->table.' AS thesis ';
-        $row = $this->getArray( $sqlFound.$sqljoin.$join.$filter );
-        $this->recordsFound = $row[0]['found'];
-        return $results;
-        */
     }
 
     /**
@@ -268,44 +240,6 @@ class dbThesis extends dbtable
         }
         
         return $data;
-        
-        /*
-        $sql = "SELECT DISTINCT dc.{$this->col1Field} as col1, dc.{$this->col2Field} as col2, dc.{$this->col3Field} as col3, thesis.id";
-        $sql .= ' FROM '.$this->table.' AS thesis ';
-        $sqljoin = 'LEFT JOIN '.$this->submitTable.' AS submit ON submit.id = thesis.submitId ';
-        $sqljoin .= 'LEFT JOIN '.$this->dcTable.' AS dc ON dc.id = thesis.dcMetaId ';
-
-        $join = ''; $joinFilter = '';
-        if(isset($joinId) && !empty($joinId)){
-            $join = ' LEFT JOIN '.$this->bridgeTable.' AS bridge ON bridge.submissionId = thesis.submitId';
-            $joinFilter = " AND bridge.collectionId = '$joinId'";
-        }
-
-        $filter = " WHERE submissionType = '{$this->subType}' AND ((";
-        $filter .= "LOWER({$this->col1Field}) LIKE '$letter%' ";
-        if(strtolower($letter) == 'a'){
-            $filter .= "AND NOT ({$this->col1Field} LIKE 'a %' OR {$this->col1Field} LIKE 'an %')";
-        }
-        if(strtolower($letter) == 't'){
-            $filter .= "AND NOT ({$this->col1Field} LIKE 'the %')";
-        }
-        $filter .= " OR {$this->col1Field} LIKE 'the $letter%' ";
-        $filter .= " OR {$this->col1Field} LIKE 'a $letter%' ";
-        $filter .= " OR {$this->col1Field} LIKE 'an $letter%' )";
-        $filter .= " AND status = 'archived' ";
-        $filter .= $joinFilter.')';
-
-        $orderBy = " ORDER by LOWER({$this->col1Field})";
-        $sqlLimit = $limit ? " LIMIT $limit" : NULL;
-        $sqlLimit .= $start ? " OFFSET $start" : NULL;
-        $results = $this->getArray( $sql.$sqljoin.$join.$filter.$orderBy.$sqlLimit );
-
-        // Get bounds
-        $sqlFound = "SELECT DISTINCT COUNT(*) as found FROM ".$this->table.' AS thesis ';
-        $row = $this->getArray( $sqlFound.$sqljoin.$join.$filter );
-        $this->recordsFound = $row[0]['found'];
-        return $results;
-        */
     }
 
     /**
@@ -398,22 +332,6 @@ class dbThesis extends dbtable
         }
 
         return array($data, $count);
-
-        /*
-        // Join on dublincore metadata table
-        $joinSql = 'LEFT JOIN '.$this->dcTable.' AS dc ON thesis.dcMetaId = dc.id ';
-        // Join on submissions table to determine submission type
-        $joinSql .= 'LEFT JOIN '.$this->submitTable.' AS submit ON thesis.submitId = submit.id ';
-        $sql .= $joinSql;
-        $sql .= "WHERE submit.submissionType = '{$this->subType}' AND {$filter} ORDER by dc.dc_date ";
-        $sql .= $limit ? " LIMIT $limit OFFSET $start" : NULL;
-
-        $data = $this->getArray($sql);
-
-        $sqlCount = 'SELECT DISTINCT COUNT(*) as count FROM '.$this->table.' AS thesis '.$joinSql;
-        $sqlCount .= " WHERE {$filter}";
-        */
-
     }
 
     /**
@@ -435,9 +353,39 @@ class dbThesis extends dbtable
         }
         return FALSE;
     }
+    
+    /**
+    * Method to execute a search using a given filter - used by external searches.
+    *
+    * @access public
+    * @param string $filter The search criteria.
+    * @param string $limit The limit on the results returned.
+    * @return array The result set and count
+    */
+    function search2($keyword)
+    {
+        $sqlNorm = 'SELECT thesis.id AS id, dc.*, thesis.* ';
+        $sqlCount = 'SELECT count(*) AS cnt ';
+        
+        $sql = "FROM {$this->table} AS thesis, {$this->dcTable} AS dc, {$this->submitTable} AS submit 
+                WHERE thesis.dcmetaid = dc.id AND thesis.submitid = submit.id 
+                AND submit.submissiontype = '{$this->subType}' 
+                AND (dc.dc_creator LIKE '%$keyword%' OR dc.dc_title LIKE '%$keyword%'
+                OR dc.dc_subject LIKE '%$keyword%') ";
+                
+        $sqlOrder = "ORDER BY dc.dc_date ";
+        
+        echo $sqlNorm.$sql.$sqlOrder;
+        
+        $data = $this->getArray($sqlNorm.$sql.$sqlOrder);
+        $data2 = $this->getArray($sqlCount.$sql);
+        
+        return $data;
+    }
 
 
-/* *** function below have not been ported *** */
+
+/* *** functions below have not been ported *** */
 
     /**
     * Method to get etd metadata

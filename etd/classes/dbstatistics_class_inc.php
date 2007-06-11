@@ -26,17 +26,17 @@ class dbStatistics extends dbTable
         parent::init('tbl_etd_statistics');
         $this->table = 'tbl_etd_statistics';
                 
-        $this->etdDbSubmissions =& $this->getObject('dbsubmissions', 'etd');
+        $this->etdDbSubmissions = $this->getObject('dbsubmissions', 'etd');
                 
-        $this->objLanguage =& $this->getObject('language', 'language');
-        $this->objUser =& $this->getObject('user', 'security');
-        $this->objUserStats =& $this->getObject('dbuserstats', 'sitestats');  
-        $this->objLoginHistory =& $this->getObject('dbloginhistory', 'userstats');
-        $this->objIpCountry =& $this->getObject('iptocountry', 'utilities');
-        $this->objDate =& $this->getObject('dateandtime', 'utilities');
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objUser = $this->getObject('user', 'security');
+        $this->objUserStats = $this->getObject('dbuserstats', 'sitestats');  
+        $this->objLoginHistory = $this->getObject('dbloginhistory', 'userstats');
+        $this->objIpCountry = $this->getObject('iptocountry', 'utilities');
+        $this->objDate = $this->getObject('dateandtime', 'utilities');
         
-        $this->objHead =& $this->newObject('htmlheading', 'htmlelements');
-        $this->objLayer =& $this->newObject('layer', 'htmlelements');
+        $this->objHead = $this->newObject('htmlheading', 'htmlelements');
+        $this->objLayer = $this->newObject('layer', 'htmlelements');
         
         $this->loadClass('htmltable', 'htmlelements');
         $this->loadClass('tabbedbox', 'htmlelements');
@@ -72,7 +72,7 @@ class dbStatistics extends dbTable
         $fields['ipaddress'] = $ip;
         $fields['countrycode'] = $code;
         $fields['creatorid'] = $this->userId;
-        $fields['datecreated'] = date('Y-m-d H:i:s');
+        $fields['datecreated'] = $this->now();
         $this->insert($fields);
     }
     
