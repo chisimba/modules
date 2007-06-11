@@ -260,7 +260,10 @@ class commentapi extends object
 				//display the inline editor
 				$updateuri = 'index.php'; //$this->uri(array('module' =>'blogcomments','action' => 'updatecomment'));
 				$commid = $comm['id'];
-				$script = '<p id="editme2">'.stripslashes(strip_tags($comm['comment_content'])).'</p>';
+				$commcont = $comm['comment_content'];
+				$commcont = str_replace("<p>", '', $commcont);
+				$commcont = str_replace('</p>', '', $commcont);
+				$script = '<p id="editme2">'.stripslashes(nl2br($commcont)).'</p>';
 				$script .= '<script type="text/javascript">';
 				$script .= "new Ajax.InPlaceEditor('editme2', '$updateuri', {rows:15,cols:40, callback: function(form, value) { return 'module=blogcomments&action=updatecomment&commid=' + escape('$commid') + '&newcomment=' +escape(value) }});";
 				$script .= "</script>";
