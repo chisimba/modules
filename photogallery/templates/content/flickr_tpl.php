@@ -27,7 +27,7 @@ $button->value = 'Add';
 $button->setToSubmit();
 
 $form->addToForm($username);
-$form->addToForm($password);
+//$form->addToForm($password);
 $form->addToForm($button);
 
 
@@ -56,9 +56,13 @@ if(count($usernames) > 0)
 		$table->addCell('');
 		$table->endRow();
 	}
+	
+	$list =  $table->show();
+} else {
+	//$list = 'No Flickr usernames available';
 }
 echo '<div id="main"><h2><img src="http://l.yimg.com/www.flickr.com/images/flickr_logo_gamma.gif.v1.5.7"> Flickr Usernames</h2>';
-echo '<div class="box" style="padding: 15px;">'.$form->show(). $table->show().'</div>';
+echo '<div class="box" style="padding: 15px;">'.$form->show().$list.'</div>';
 
 echo '</div>'
 ?>
