@@ -34,7 +34,7 @@ class photogallery extends controller
         $this->_objFileMan = & $this->getObject('dbfile','filemanager');
         $this->_objDBComments = & $this->getObject('dbcomments','photogallery');
         $this->_objConfig = $this->getObject('altconfig', 'config');
-        
+        /*
         $this->_objFlickr = new phpFlickr("710e95b3b34ad8669fe36534a8343773");
         $this->_objFlickr->enableCache("db","mysql://root:@localhost/chisimba_framework");
         $this->_objDBFlickrUsernames = $this->getObject('dbflickrusernames' , 'photogallery');
