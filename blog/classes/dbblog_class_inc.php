@@ -1078,7 +1078,18 @@ class dbblog extends dbTable
     	$ret = $this->getAll("WHERE post_content LIKE '%%$term%%' OR post_title LIKE '%%$term%%' OR post_excerpt LIKE '%%$term%%'");
     	return $ret;
     }
+    
+    public function getLists()
+    {
+    	$this->_changeTable('tbl_blog_lists');
+    	return $this->getAll();
+    }
 
+    public function getListInfo($list_identifier)
+    {
+    	$this->_changeTable('tbl_blog_lists');
+    	return $this->getAll("WHERE list_identifier = '$list_identifier'");
+    }
 	/**
 	 * Method to dynamically switch tables
 	 *

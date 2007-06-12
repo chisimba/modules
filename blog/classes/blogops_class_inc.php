@@ -3628,8 +3628,16 @@ class blogops extends object
     	$this->objImap = $this->getObject('imap', 'mail');
     	$listdsn = $this->sysConfig->getValue('list_dsn', 'blog');
     	//$listdsn = $this->objConfig->getItem('BLOG_LISTMAIL_DSN');
-    	$userid = $this->sysConfig->getValue('list_userid', 'blog');
-    	$listidentifier = $this->sysConfig->getValue('list_identifier', 'blog');
+    	//$userid = $this->sysConfig->getValue('list_userid', 'blog');
+    	//$listidentifier = $this->sysConfig->getValue('list_identifier', 'blog');
+    	
+    	// grab a list of identified lists
+    	$validlists = $this->objDbBlog->getLists();
+    	// create an array of valid identifiers
+    	foreach($validlists as $valididentifiers)
+    	{
+    		$valid[] = $valididentifiers['list_identifier'];
+    	}
     	try {
     		//connect to the IMAP/POP3 server
     		$this->conn = $this->objImap->factory($listdsn);
@@ -3641,7 +3649,7 @@ class blogops extends object
     		$this->folders = $this->objImap->populateFolders($this->thebox);
     		//count the messages
     		$this->msgCount = $this->objImap->numMails();
-    		echo $this->msgCount;
+    		//echo $this->msgCount;
     		//get the meassge headers
     		$i = 1;
     		//parse the messages
@@ -3650,25 +3658,31 @@ class blogops extends object
     			//get the header info
     			$headerinfo = $this->objImap->getHeaderInfo($i);
     			//from
-    			$address = $headerinfo->fromaddress;
+    			$address = @$headerinfo->fromaddress;
     			//subject
-    			$subject = $headerinfo->subject;
+    			$subject = @$headerinfo->subject;
     			//date
-    			$date = $headerinfo->Date;
+    			$date = @$headerinfo->Date;
     			//message flag
-    			$read = $headerinfo->Unseen;
+    			$read = @$headerinfo->Unseen;
     			//message body
     			$bod = $this->objImap->getMessage($i);
-    			
+    				
+    			//put this into a foreach to check all valid lists	
     			//check to see that the message comes from [Nextgen-online]
-    			if(preg_match('/\['.$listidentifier.'\]/U', $subject))
+    			foreach($valid as $listidentifier)
     			{
-    				//echo "valid list mail";
-    				$validated = TRUE;
+    				if(preg_match('/\['.$listidentifier.'\]/U', $subject))
+    				{
+    					echo "valid list mail";
+    					$validated = TRUE;
+    					break;
+    				}
+    				else {
+    					$validated = FALSE;
+    				}
     			}
-    			else {
-    				$validated = FALSE;
-    			}
+    			
     			//check if there is an attachment
     			if(empty($bod[1]))
     			{
@@ -3686,6 +3700,11 @@ class blogops extends object
 
     			if($validated == TRUE)
     			{
+    				//echo "grabbing the list info";
+    				// grab the userid from the table
+    				$listinfo = $this->objDbBlog->getListInfo($listidentifier);
+    				//print_r($listinfo);die();
+    				$userid = $listinfo[0]['listuser'];
     				//insert the mail data into an array for manipulation
     				$data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
     				'body' => $message, 'attachments' => $attachments);
@@ -3945,10 +3964,7 @@ class blogops extends object
     	}
     	else {
     		$res .= "<h3>".$this->objLanguage->languageText("mod_blog_searchresults", "blog")."</h3><br />";
-    	}
-    	
-    	
-               
+    	}       
     	foreach ($searchres as $results)
 		{
 			if($this->showfullname == "FALSE")
@@ -3966,8 +3982,8 @@ class blogops extends object
         	$srtable->cellpadding = 2;
         	//set up the header row
         	$srtable->startHeaderRow();
-        	$srtable->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_blogger", "blog") . ":");
-        	$srtable->addHeaderCell(''); //"<em>" . $rec['name'] . "</em>");
+        	$srtable->addHeaderCell('');
+        	$srtable->addHeaderCell('');
         	$srtable->endHeaderRow();
 			$srtable->startRow();
         	$srtable->addCell("<strong>".$blogger."</strong>"."<br />".$image);
