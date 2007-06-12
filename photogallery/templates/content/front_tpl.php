@@ -136,7 +136,7 @@ if(count($albums) > 0 && $this->_objUser->isLoggedIn() && $this->getParam('mode'
 						$link->href = $this->uri(array('action' => 'viewalbum', 'albumid' => $sharedAlbum['id'], 'mode' => 'flickr'));
 					 	$link->link = $sharedAlbum['title'];
 				
-						$imageCount = count($photos);
+						$imageCount = count($photos['photo']);
 					 	$cntStr = ($imageCount > 1) ? $imageCount.' photos' : $imageCount.' photo';
 			 	
 			 			$imageCount = 0;
