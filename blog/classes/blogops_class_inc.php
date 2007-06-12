@@ -3674,6 +3674,8 @@ class blogops extends object
     			{
     				if(preg_match('/\['.$listidentifier.'\]/U', $subject))
     				{
+    					$message = @htmlentities($bod[0]);
+
     					$listinfo = $this->objDbBlog->getListInfo($listidentifier);
     					//print_r($listinfo);die();
     					$userid = $listinfo[0]['listuser'];
