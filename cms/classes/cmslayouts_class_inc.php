@@ -983,9 +983,9 @@ class cmslayouts extends object
         //RSS2.0
         $rss2 = $this->getObject('geticon', 'htmlelements');
         $rss2->setIcon('rss', 'gif', 'icons/filetypes');
-	$rss2->align = "top";
+		$rss2->align = "top";
         $link = new href($this->uri(array('action' => 'feed', 'format' => 'rss2', 'pageid' => $pageid)), $this->objLanguage->languageText("mod_cms_word_rss2", "cms"));
-        $leftCol .= $rss2->show() . "&nbsp;" . $link->show() . "<br />";
+        $rss2feed = $rss2->show() . "&nbsp;" . $link->show() . "<br />";
 
         //RSS0.91
         $rss091 = $this->getObject('geticon', 'htmlelements');
@@ -1021,7 +1021,7 @@ class cmslayouts extends object
         $atom = $this->getObject('geticon', 'htmlelements');
         $atom->setIcon('rss', 'gif', 'icons/filetypes');
         $link = new href($this->uri(array('action' => 'feed', 'format' => 'atom', 'pageid' => $pageid)),$this->objLanguage->languageText("mod_cms_word_atom", "cms"));
-        $leftCol .= $atom->show() . "&nbsp;" . $link->show() . "<br />";
+        $atomfeed = $atom->show() . "&nbsp;" . $link->show() . "<br />";
 
         //Plain HTML
         $html = $this->getObject('geticon', 'htmlelements');
@@ -1029,28 +1029,25 @@ class cmslayouts extends object
         $link = new href($this->uri(array('action' => 'feed', 'format' => 'html', 'pageid' => $pageid)),$this->objLanguage->languageText("mod_cms_word_html", "cms"));
         $leftCol .= $html->show() . "&nbsp;" . $link->show() . "<br />";
         
-        /* scriptaculous moved to default page template / no need to suppress XML*/        
-        //$this->setVar('pageSuppressXML',true);
         $icon = $this->getObject('geticon', 'htmlelements');
-        $icon->setIcon('up');
-        //$scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
-                      //<script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
-                      //<script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
-        //$this->appendArrayVar('headerParams',$scripts);
-        $str = "<a href=\"#\" onclick=\"Effect.SlideUp('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
-        $icon->setIcon('down');
-        $str .="<a href=\"#\" onclick=\"Effect.SlideDown('feedmenu',{queue:{scope:'myscope', position:'end', limit: 1}});\">".$icon->show()."</a>";
-
-        $str .='<div id="feedmenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
+        $objIcon =&$this->getObject('geticon', 'htmlelements');
+  		$objIcon->setIcon('toggle');
+        $str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('feedmenu','slide', adjustLayout());\">".$objIcon->show()."</a>";
+     
+        $topper = $rss2feed . $atomfeed;
+		
+        $str .='<div id="feedmenu"  style="width:170px;overflow: hidden;display:none;"> ';
         $str .= $leftCol;
         $str .= '</div>';
+        
+        //$str .= '</div>';
 
 
         if($featurebox == FALSE){
             return $str;
         }else {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_cms_feedheader","cms"), $str);
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_cms_feedheader","cms"), $topper . "<br />" . $str);
             return $ret;
         }
 
