@@ -3674,9 +3674,9 @@ class blogops extends object
     			{
     				if(preg_match('/\['.$listidentifier.'\]/U', $subject))
     				{
-    					echo "valid list mail";
+    					//echo "valid list mail";
     					$validated = TRUE;
-    					break;
+    					//break;
     				}
     				else {
     					$validated = FALSE;
