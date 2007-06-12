@@ -95,18 +95,15 @@ class dbimages extends dbTable
 	{
 		$order = str_replace('images[]=','',$this->getParam('imageOrder'));
 		$newOrder = split('&',$order);
-		//var_dump($newOrder);
+	
 		$images = $this->getAlbumImages($albumId);
-	    //print '<pre>';
-		//print_r($images);
+	   
 		$cnt = 0;
-		foreach ($images as $image)
+		foreach($newOrder  as $arr)
 		{
-	//	 print '<br>'.$image['title'].' --> '.$newOrder[$cnt] ;
-			$this->update('id', $image['id'], array('position' => $newOrder[$cnt]));
-			$cnt++;
+		 	$cnt++;		
+			$this->update('id', $images[$arr-1]['id'], array('position' => $cnt));
 		}
-//		die;
 	}
 	
 	/**

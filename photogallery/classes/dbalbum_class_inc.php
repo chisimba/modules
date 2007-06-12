@@ -151,12 +151,12 @@ class dbalbum extends dbTable
 		$newOrder = split('&',$order);
 		$albums = $this->getUserAlbums();
 		$cnt = 0;
-		foreach ($albums as $album)
-		{
-			$this->update('id', $album['id'], array('position' => $newOrder[$cnt]));
-			$cnt++;
-		}
 		
+		foreach($newOrder  as $arr)
+		{
+		 	$cnt++;		
+			$this->update('id', $albums[$arr-1]['id'], array('position' => $cnt));
+		}
 	}
 }
 ?>
