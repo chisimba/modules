@@ -3674,6 +3674,12 @@ class blogops extends object
     			{
     				if(preg_match('/\['.$listidentifier.'\]/U', $subject))
     				{
+    					$listinfo = $this->objDbBlog->getListInfo($listidentifier);
+    					//print_r($listinfo);die();
+    					$userid = $listinfo[0]['listuser'];
+    					//insert the mail data into an array for manipulation
+    					$data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
+    						'body' => $message, 'attachments' => $attachments);
     					//echo "valid list mail";
     					$validated = TRUE;
     					//break;
@@ -3698,7 +3704,7 @@ class blogops extends object
     			//make sure the body doesn't have any nasty chars
     			$message = @htmlentities($bod[0]);
 
-    			if($validated == TRUE)
+    			/*if($validated == TRUE)
     			{
     				//echo "grabbing the list info";
     				// grab the userid from the table
@@ -3708,7 +3714,7 @@ class blogops extends object
     				//insert the mail data into an array for manipulation
     				$data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
     				'body' => $message, 'attachments' => $attachments);
-    			}
+    			}*/
 
     			//delete the message as we don't need it anymore
     			//echo "sorting " . $this->msgCount . "messages";
