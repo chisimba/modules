@@ -16,11 +16,11 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  */
 class blogops extends object
 {
-	public $objConfig;
+    public $objConfig;
 
-	public $mail2blog = TRUE;
-	
-	public $showfullname;
+    public $mail2blog = TRUE;
+    
+    public $showfullname;
 
     /**
      * Standard init function called by the constructor call of Object
@@ -45,9 +45,9 @@ class blogops extends object
             die();
         }
         if(!extension_loaded("imap"))
-		{
-			$this->mail2blog = FALSE;
-		}
+        {
+            $this->mail2blog = FALSE;
+        }
         //some sanity checks first!
         //if (!include_once ('HTTP/Request.php')) {
         //    throw new customException($this->objLanguage->languageText("mod_blog_sanity_httpreq", "blog"));
@@ -59,13 +59,13 @@ class blogops extends object
     
     public function showKML()
     {
-    	$kml = $this->getObject('kmlgen','simplemap');
-	 	$doc = $kml->overlay('my map','a test map');
-	 	$doc .= $kml->generateSimplePlacemarker('place1', 'a place', '18.629057','-33.932922',0);
-	 	$doc .= $kml->generateSimplePlacemarker('place2', 'another place', '32.56667','0.33333',0);
-	 	$doc .= $kml->simplePlaceSuffix();
-	 	
-	 	return $doc;
+        $kml = $this->getObject('kmlgen','simplemap');
+         $doc = $kml->overlay('my map','a test map');
+         $doc .= $kml->generateSimplePlacemarker('place1', 'a place', '18.629057','-33.932922',0);
+         $doc .= $kml->generateSimplePlacemarker('place2', 'another place', '32.56667','0.33333',0);
+         $doc .= $kml->simplePlaceSuffix();
+         
+         return $doc;
     }
     /**
      * Methods to control blog links and blogrolls...
@@ -73,21 +73,21 @@ class blogops extends object
     
     public function showBlinks($userid, $featurebox = FALSE)
     {
-    	$this->loadClass('href', 'htmlelements');
-    	//grab all of the links for the user
-    	$links = $this->objDbBlog->getUserLinksonly($userid);
-    	if(empty($links))
-    	{
-    		return NULL;
-    	}
-    	$str = NULL;
-    	foreach($links as $link)
-    	{
-    		$hr = new href($link['link_url'], $link['link_name'], 'target="'.$link['link_target'].'" alt="'.$link['link_description'].'"');
-    		$str .= "<ul>".$hr->show()."</ul>";
-    	}
-    	
-    	if ($featurebox == TRUE) {
+        $this->loadClass('href', 'htmlelements');
+        //grab all of the links for the user
+        $links = $this->objDbBlog->getUserLinksonly($userid);
+        if(empty($links))
+        {
+            return NULL;
+        }
+        $str = NULL;
+        foreach($links as $link)
+        {
+            $hr = new href($link['link_url'], $link['link_name'], 'target="'.$link['link_target'].'" alt="'.$link['link_description'].'"');
+            $str .= "<ul>".$hr->show()."</ul>";
+        }
+        
+        if ($featurebox == TRUE) {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
             $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_links", "blog") , $str, 'bloglinks', 'default');
             return $ret;
@@ -98,21 +98,21 @@ class blogops extends object
     
     public function showBroll($userid, $featurebox = FALSE)
     {
-    	$this->loadClass('href', 'htmlelements');
-    	//grab all of the links for the user
-    	$links = $this->objDbBlog->getUserbroll($userid);
-    	if(empty($links))
-    	{
-    		return NULL;
-    	}
-    	$str = NULL;
-    	foreach($links as $link)
-    	{
-    		$hr = new href($link['link_url'], $link['link_name'], 'target="'.$link['link_target'].'" alt="'.$link['link_description'].'"');
-    		$str .= "<ul>".$hr->show()."</ul>";
-    	}
-    	
-    	if ($featurebox == TRUE) {
+        $this->loadClass('href', 'htmlelements');
+        //grab all of the links for the user
+        $links = $this->objDbBlog->getUserbroll($userid);
+        if(empty($links))
+        {
+            return NULL;
+        }
+        $str = NULL;
+        foreach($links as $link)
+        {
+            $hr = new href($link['link_url'], $link['link_name'], 'target="'.$link['link_target'].'" alt="'.$link['link_description'].'"');
+            $str .= "<ul>".$hr->show()."</ul>";
+        }
+        
+        if ($featurebox == TRUE) {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
             $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_blogroll", "blog") , $str, 'blogroll', 'default');
             return $ret;
@@ -123,25 +123,25 @@ class blogops extends object
     
     public function editBlinks($featurebox = FALSE, $ldata = NULL)
     {
-    	$this->loadClass('href', 'htmlelements');
+        $this->loadClass('href', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('textarea', 'htmlelements');
         $this->loadClass('dropdown', 'htmlelements');
 
-    	$this->objUser = $this->getObject('user', 'security');
-    	if($ldata == NULL)
-    	{
-        	$lform = new form('addlink', $this->uri(array(
-            	'action' => 'addlink'
-        	)));
-    	}
-    	else {
-    		$ldata = $ldata[0];
-    		$lform = new form('addlink', $this->uri(array(
-            	'action' => 'linkedit', 'mode' => 'edit', 'id' => $ldata['id']
-        	)));
-    	}
+        $this->objUser = $this->getObject('user', 'security');
+        if($ldata == NULL)
+        {
+            $lform = new form('addlink', $this->uri(array(
+                'action' => 'addlink'
+            )));
+        }
+        else {
+            $ldata = $ldata[0];
+            $lform = new form('addlink', $this->uri(array(
+                'action' => 'linkedit', 'mode' => 'edit', 'id' => $ldata['id']
+            )));
+        }
         //add rules
         $lform->addRule('lurl', $this->objLanguage->languageText("mod_blog_phrase_lurlreq", "blog") , 'required');
         $lform->addRule('lname', $this->objLanguage->languageText("mod_blog_phrase_lnamereq", "blog") , 'required');
@@ -157,8 +157,8 @@ class blogops extends object
         $lurl->size = "56%";
         if(isset($ldata['link_url']))
         {
-        	$lurl->setValue(htmlentities($ldata['link_url'], ENT_QUOTES));
-		}
+            $lurl->setValue(htmlentities($ldata['link_url'], ENT_QUOTES));
+        }
         $ladd->addCell($lurllabel->show());
         $ladd->addCell($lurl->show());
         $ladd->endRow();
@@ -170,7 +170,7 @@ class blogops extends object
         $lname->size = '56%';
         if(isset($ldata['link_name']))
         {
-        	$lname->setValue($ldata['link_name']);
+            $lname->setValue($ldata['link_name']);
         }
         $ladd->addCell($lnamelabel->show());
         $ladd->addCell($lname->show());
@@ -183,7 +183,7 @@ class blogops extends object
         $ldesc->setColumns(48);
         if(isset($ldata['link_description']))
         {
-          	$ldesc->setValue($ldata['link_description']);
+              $ldesc->setValue($ldata['link_description']);
         }
         $ladd->addCell($ldesclabel->show());
         $ladd->addCell($ldesc->show());
@@ -220,7 +220,7 @@ class blogops extends object
         $lnotes->setColumns(48);
         if(isset($ldata['link_notes']))
         {
-          	$lnotes->setValue($ldata['link_notes']);
+              $lnotes->setValue($ldata['link_notes']);
         }
         $ladd->addCell($lnoteslabel->show());
         $ladd->addCell($lnotes->show());
@@ -281,7 +281,7 @@ class blogops extends object
         } else {
             return $lform . $eltable->show();
         }
-    	
+        
     }
     
     
@@ -294,35 +294,35 @@ class blogops extends object
      */
     public function findGeoTag($params = array(), $limit='10')
     {
-    	//do a sanity check on the array of params...
-    	if(!isset($params['place']) || !isset($params['countrycode']))
-    	{
-    		return FALSE;
-    		break;
-    	}
-    	
-    	$wsurl = "http://ws.geonames.org/search?";
-    	$searchparams = "q=" . $params['place'] . "&country=" . $params['countrycode'] . "&maxRows=" . $limit;
-    	$url = $wsurl.$searchparams;
-    	//set a client to get the request
-    	//get the proxy info if set
-    	$this->objProxy = $this->getObject('proxyparser', 'utilities');
-    	$proxyArr = $this->objProxy->getProxy();
+        //do a sanity check on the array of params...
+        if(!isset($params['place']) || !isset($params['countrycode']))
+        {
+            return FALSE;
+            break;
+        }
+        
+        $wsurl = "http://ws.geonames.org/search?";
+        $searchparams = "q=" . $params['place'] . "&country=" . $params['countrycode'] . "&maxRows=" . $limit;
+        $url = $wsurl.$searchparams;
+        //set a client to get the request
+        //get the proxy info if set
+        $this->objProxy = $this->getObject('proxyparser', 'utilities');
+        $proxyArr = $this->objProxy->getProxy();
 
-    	$ch = curl_init();
-    	curl_setopt($ch, CURLOPT_URL, $url);
-    	curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-    	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    	if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
-    	{
-    		curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_host'].":".$proxyArr['proxy_port']);
-    		curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxy_user'].":".$proxyArr['proxy_pass']);
-    	}
-    	$code = curl_exec($ch);
-    	curl_close($ch);
-    	
-    	return $code;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
+        {
+            curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_host'].":".$proxyArr['proxy_port']);
+            curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxy_user'].":".$proxyArr['proxy_pass']);
+        }
+        $code = curl_exec($ch);
+        curl_close($ch);
+        
+        return $code;
 
     }
     
@@ -335,25 +335,25 @@ class blogops extends object
      */
     public function myBlogTimeline($posts, $userid)
     {
-    	$this->objUser = $this->getObject('user', 'security');
-    	//parse the hell outta the posts and build up the timeline XML
-    	$str = '<data date-time-format="iso8601">';
-    	foreach($posts as $post)
-    	{
-    		//start the event tag
-    		$str .= "<event ";
-    		//add in the event details
-    		$date = date('Y-m-d', $post['post_ts']);
-    		$title = $post['post_title'];
-    		$plink = new href($this->uri(array('action' => 'viewsingle', 'postid' => $post['id'], 'userid' => $post['userid']), 'blog'),$this->objLanguage->languageText("mod_blog_viewpost", "blog"),NULL);
-    		$image = $this->objUser->getUserImageNoTags($userid);
-    		$str .= 'start="'.$date.'" title="'.$title.'" image="'.$image.'">';
-    		$str .= htmlentities($post['post_excerpt'] . "<br />" . $plink->show());
-    		$str .= "</event>";		
-    	}
-    	$startdate = date('Y', $posts[0]['post_ts']);
-    	$str .= "</data>";
-    	return array($str, $startdate);
+        $this->objUser = $this->getObject('user', 'security');
+        //parse the hell outta the posts and build up the timeline XML
+        $str = '<data date-time-format="iso8601">';
+        foreach($posts as $post)
+        {
+            //start the event tag
+            $str .= "<event ";
+            //add in the event details
+            $date = date('Y-m-d', $post['post_ts']);
+            $title = $post['post_title'];
+            $plink = new href($this->uri(array('action' => 'viewsingle', 'postid' => $post['id'], 'userid' => $post['userid']), 'blog'),$this->objLanguage->languageText("mod_blog_viewpost", "blog"),NULL);
+            $image = $this->objUser->getUserImageNoTags($userid);
+            $str .= 'start="'.$date.'" title="'.$title.'" image="'.$image.'">';
+            $str .= htmlentities($post['post_excerpt'] . "<br />" . $plink->show());
+            $str .= "</event>";        
+        }
+        $startdate = date('Y', $posts[0]['post_ts']);
+        $str .= "</data>";
+        return array($str, $startdate);
     }
     
     /**
@@ -366,16 +366,16 @@ class blogops extends object
      */
     public function parseTimeline($int, $fdate, $timeline)
     {
-    	$objIframe = $this->getObject('iframe', 'htmlelements');
-    	$objIframe->width = "100%";
-    	$objIframe->height="700";
-     	$ret = $this->uri(array("mode" => "plain",
-	          "action" => "viewtimeline", 
-			  "timeLine" => $timeline,
-			  "intervalUnit" => $int,
-			  "focusDate" => $fdate,
-			  "tlHeight" => '700'), "timeline");
-    	$objIframe->src=$ret;
+        $objIframe = $this->getObject('iframe', 'htmlelements');
+        $objIframe->width = "100%";
+        $objIframe->height="700";
+         $ret = $this->uri(array("mode" => "plain",
+              "action" => "viewtimeline", 
+              "timeLine" => $timeline,
+              "intervalUnit" => $int,
+              "focusDate" => $fdate,
+              "tlHeight" => '700'), "timeline");
+        $objIframe->src=$ret;
         return $objIframe->show();
     }
     
@@ -385,7 +385,7 @@ class blogops extends object
      */
     public function siteBlogTimeline()
     {
-    	//grab all of the posts
+        //grab all of the posts
     }
     
     /**
@@ -396,15 +396,15 @@ class blogops extends object
      */
     public function geoTagForm()
     {
-    	$this->loadClass('href', 'htmlelements');
+        $this->loadClass('href', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('textarea', 'htmlelements');
-    	$this->objUser = $this->getObject('user', 'security');
-    	$geoform = new form('checkgeo', $this->uri(array(
-            	'action' => 'checkgeo'
-        	)));
-    	
+        $this->objUser = $this->getObject('user', 'security');
+        $geoform = new form('checkgeo', $this->uri(array(
+                'action' => 'checkgeo'
+            )));
+        
         //add rules
         $geoform->addRule('geoplace', $this->objLanguage->languageText("mod_blog_phrase_geoplacereq", "blog") , 'required');
         $geoform->addRule('geocountrycode', $this->objLanguage->languageText("mod_blog_phrase_geocountrycodereq", "blog") , 'required');
@@ -455,55 +455,55 @@ class blogops extends object
      */
     public function showDiaporama()
     {
-    	$this->objConfig = $this->getObject('altconfig', 'config');
-    	//build up the array of images...
-    	$path = $this->objConfig->getContentBasePath() . 'blog/';
-    	if(!file_exists($path))
-    	{
-    		mkdir($path, 0777);
-    	}
-    	chdir($path);
-    	$counter = 0;
-    	$entry = NULL;
-    	$filearr = glob("{*.jpg,*.JPG,*.png,*.PNG,*.gif,*.GIF}",GLOB_BRACE);
-    	if(empty($filearr))
-    	{
-    		return NULL;
-    	}
-    	foreach($filearr as $images)
-    	{
-    		$entry .= 't_img['.$counter.'] = "'.$this->objConfig->getSiteRoot() . "usrfiles/blog/" .$images.'";';
-    		$counter++;
-    	}
-    	
-    	$head = '<script type="text/javascript">
-				var id_current = 0;
+        $this->objConfig = $this->getObject('altconfig', 'config');
+        //build up the array of images...
+        $path = $this->objConfig->getContentBasePath() . 'blog/';
+        if(!file_exists($path))
+        {
+            mkdir($path, 0777);
+        }
+        chdir($path);
+        $counter = 0;
+        $entry = NULL;
+        $filearr = glob("{*.jpg,*.JPG,*.png,*.PNG,*.gif,*.GIF}",GLOB_BRACE);
+        if(empty($filearr))
+        {
+            return NULL;
+        }
+        foreach($filearr as $images)
+        {
+            $entry .= 't_img['.$counter.'] = "'.$this->objConfig->getSiteRoot() . "usrfiles/blog/" .$images.'";';
+            $counter++;
+        }
+        
+        $head = '<script type="text/javascript">
+                var id_current = 0;
 
-				function majDiaporama ()
-				{
- 					var t_img = new Array();';
-    	$head .=    $entry; 
- 		$head .=	"var img = $('imageDiaporama');
+                function majDiaporama ()
+                {
+                     var t_img = new Array();';
+        $head .=    $entry; 
+         $head .=    "var img = $('imageDiaporama');
 
-   					Element.hide('imageDiaporama');
-   					img.src = '';
-   					if (id_current < (t_img.length-1)) id_current++;
-   					else id_current = 0;
-   					img.src = t_img[id_current];
-   					new Effect.Appear('imageDiaporama');";
+                       Element.hide('imageDiaporama');
+                       img.src = '';
+                       if (id_current < (t_img.length-1)) id_current++;
+                       else id_current = 0;
+                       img.src = t_img[id_current];
+                       new Effect.Appear('imageDiaporama');";
 
- 		$head .= 	'window.setTimeout("majDiaporama()",5000);
-				}
-			</script>';
- 		$this->appendArrayVar('headerParams', $head);
- 		
- 		$content = '<body onLoad="majDiaporama ();">
-					<div class="warning" id="photoLog">
-    				<img src=" " style="width : 120px; height : 80px;" alt="random selection of pictures" id="imageDiaporama"/>
-					</div>  ';
- 		$this->objFeaturebox = $this->getObject('featurebox', 'navigation');
- 		$ret = $this->objFeaturebox->showContent($this->objLanguage->languageText("mod_blog_recentpics", "blog"), $content);
- 		return $ret;
+         $head .=     'window.setTimeout("majDiaporama()",5000);
+                }
+            </script>';
+         $this->appendArrayVar('headerParams', $head);
+         
+         $content = '<body onLoad="majDiaporama ();">
+                    <div class="warning" id="photoLog">
+                    <img src=" " style="width : 120px; height : 80px;" alt="random selection of pictures" id="imageDiaporama"/>
+                    </div>  ';
+         $this->objFeaturebox = $this->getObject('featurebox', 'navigation');
+         $ret = $this->objFeaturebox->showContent($this->objLanguage->languageText("mod_blog_recentpics", "blog"), $content);
+         return $ret;
     }
 
     /**
@@ -534,8 +534,8 @@ class blogops extends object
      */
     public function rssBox($url, $name)
     {
-    	$url = urldecode($url);
-    	$objFeatureBox = $this->getObject('featurebox', 'navigation');
+        $url = urldecode($url);
+        $objFeatureBox = $this->getObject('featurebox', 'navigation');
         $objRss = $this->getObject('rssreader', 'feed');
         $objRss->parseRss($url);
         $head = $this->objLanguage->languageText("mod_blog_word_headlinesfrom", "blog");
@@ -543,130 +543,130 @@ class blogops extends object
         $content = "<ul>\n";
         foreach ($objRss->getRssItems() as $item)
         {
-        	if(!isset($item['link']))
-        	{
-        		$item['link'] = NULL;
-        	}
-    		@$content .= "<li><a href=\"" . htmlentities($item['link']) . "\">" . htmlentities($item['title']) . "</a></li>\n";
-		}
-		$content .=  "</ul>\n";
-		return $objFeatureBox->show($head, $content);
+            if(!isset($item['link']))
+            {
+                $item['link'] = NULL;
+            }
+            @$content .= "<li><a href=\"" . htmlentities($item['link']) . "\">" . htmlentities($item['title']) . "</a></li>\n";
+        }
+        $content .=  "</ul>\n";
+        return $objFeatureBox->show($head, $content);
     }
 
     public function rssRefresh($rssurl, $name, $feedid)
     {
-    	//echo $rssurl; die();
-    	$objFeatureBox = $this->getObject('featurebox', 'navigation');
-    	$objRss = $this->getObject('rssreader', 'feed');
-    	$this->objConfig = $this->getObject('altconfig', 'config');
+        //echo $rssurl; die();
+        $objFeatureBox = $this->getObject('featurebox', 'navigation');
+        $objRss = $this->getObject('rssreader', 'feed');
+        $this->objConfig = $this->getObject('altconfig', 'config');
 
-    	//get the proxy info if set
-    	$objProxy = $this->getObject('proxyparser', 'utilities');
-    	$proxyArr = $objProxy->getProxy();
+        //get the proxy info if set
+        $objProxy = $this->getObject('proxyparser', 'utilities');
+        $proxyArr = $objProxy->getProxy();
 
-    	$ch = curl_init();
-    	curl_setopt($ch, CURLOPT_URL, $rssurl);
-    	//curl_setopt($ch, CURLOPT_HEADER, 1);
-    	curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-    	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    	if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
-    	{
-    		curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_host'].":".$proxyArr['proxy_port']);
-    		curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxy_user'].":".$proxyArr['proxy_pass']);
-    	}
-    	$rsscache = curl_exec($ch);
-    	curl_close($ch);
-    	//var_dump($rsscache);
-    	//put in a timestamp
-    	$addtime = time();
-    	$addarr = array('url' => $rssurl, 'rsstime' => $addtime);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $rssurl);
+        //curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
+        {
+            curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_host'].":".$proxyArr['proxy_port']);
+            curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxy_user'].":".$proxyArr['proxy_pass']);
+        }
+        $rsscache = curl_exec($ch);
+        curl_close($ch);
+        //var_dump($rsscache);
+        //put in a timestamp
+        $addtime = time();
+        $addarr = array('url' => $rssurl, 'rsstime' => $addtime);
 
-    	//write the file down for caching
-    	$path = $this->objConfig->getContentBasePath() . "/blog/rsscache/";
-    	$rsstime = time();
-    	if(!file_exists($path))
-    	{
+        //write the file down for caching
+        $path = $this->objConfig->getContentBasePath() . "/blog/rsscache/";
+        $rsstime = time();
+        if(!file_exists($path))
+        {
 
-    		mkdir($path);
-    		chmod($path, 0777);
-    		$filename = $path . $this->objUser->userId() . "_" . $rsstime . ".xml";
-    		if(!file_exists($filename))
-    		{
-    			touch($filename);
+            mkdir($path);
+            chmod($path, 0777);
+            $filename = $path . $this->objUser->userId() . "_" . $rsstime . ".xml";
+            if(!file_exists($filename))
+            {
+                touch($filename);
 
-    		}
-    		$handle = fopen($filename, 'wb');
-    		fwrite($handle, $rsscache);
-    	}
-    	else {
-    		$filename = $path . $this->objUser->userId() . "_" . $rsstime . ".xml";
-    		$handle = fopen($filename, 'wb');
-    		fwrite($handle, $rsscache);
-    	}
-    	//update the db
-    	$addarr = array('url' => $rssurl, 'rsscache' => $filename, 'rsstime' => $addtime);
-    	//print_r($addarr);
-    	$this->objDbBlog->updateRss($addarr, $feedid);
-    	//echo $rsscache;
-    	$objRss->parseRss($rsscache);
-    	$rssbits = $objRss->getRssItems();
-    	if(empty($rssbits) || !isset($rssbits))
-    	{
-    		$objRss2 = $this->newObject('rssreader', 'feed');
-    		// fallback to the known good url
-    		$objRss2->parseRss($rssurl);
-       		$head = $this->objLanguage->languageText("mod_blog_word_headlinesfrom", "blog");
-        	$head .= " " . $name;
-        	$content = "<ul>\n";
-        	foreach ($objRss2->getRssItems() as $item)
-        	{
-        		
-        		if(!isset($item['link']))
-        		{
-        			$item['link'] = NULL;
-        		}
-    			@$content .= "<li><a href=\"" . htmlentities($item['link']) . "\">" . htmlentities($item['title']) . "</a></li>\n";
-			}
-			$content .=  "</ul>\n";
-			return $objFeatureBox->show($head, $content);
-    	}
-    	else {
-    		foreach ($objRss->getRssItems() as $item)
-    		{
-    			if(!isset($item['link']))
-    			{
-    				$item['link'] = NULL;
-    			}
-    			@$content .= "<li><a href=\"" . htmlentities($item['link']) . "\">" . htmlentities($item['title']) . "</a></li>\n";
-    		}
-    		$content .=  "</ul>\n";
-    	}
-    	return $objFeatureBox->show($head, $content);
+            }
+            $handle = fopen($filename, 'wb');
+            fwrite($handle, $rsscache);
+        }
+        else {
+            $filename = $path . $this->objUser->userId() . "_" . $rsstime . ".xml";
+            $handle = fopen($filename, 'wb');
+            fwrite($handle, $rsscache);
+        }
+        //update the db
+        $addarr = array('url' => $rssurl, 'rsscache' => $filename, 'rsstime' => $addtime);
+        //print_r($addarr);
+        $this->objDbBlog->updateRss($addarr, $feedid);
+        //echo $rsscache;
+        $objRss->parseRss($rsscache);
+        $rssbits = $objRss->getRssItems();
+        if(empty($rssbits) || !isset($rssbits))
+        {
+            $objRss2 = $this->newObject('rssreader', 'feed');
+            // fallback to the known good url
+            $objRss2->parseRss($rssurl);
+               $head = $this->objLanguage->languageText("mod_blog_word_headlinesfrom", "blog");
+            $head .= " " . $name;
+            $content = "<ul>\n";
+            foreach ($objRss2->getRssItems() as $item)
+            {
+                
+                if(!isset($item['link']))
+                {
+                    $item['link'] = NULL;
+                }
+                @$content .= "<li><a href=\"" . htmlentities($item['link']) . "\">" . htmlentities($item['title']) . "</a></li>\n";
+            }
+            $content .=  "</ul>\n";
+            return $objFeatureBox->show($head, $content);
+        }
+        else {
+            foreach ($objRss->getRssItems() as $item)
+            {
+                if(!isset($item['link']))
+                {
+                    $item['link'] = NULL;
+                }
+                @$content .= "<li><a href=\"" . htmlentities($item['link']) . "\">" . htmlentities($item['title']) . "</a></li>\n";
+            }
+            $content .=  "</ul>\n";
+        }
+        return $objFeatureBox->show($head, $content);
 
     }
 
     public function rssEditor($featurebox = FALSE, $rdata = NULL)
     {
-    	//print_r($rdata);
-    	$this->loadClass('href', 'htmlelements');
+        //print_r($rdata);
+        $this->loadClass('href', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('textarea', 'htmlelements');
 
-    	$this->objUser = $this->getObject('user', 'security');
-    	if($rdata == NULL)
-    	{
-        	$rssform = new form('addrss', $this->uri(array(
-            	'action' => 'addrss'
-        	)));
-    	}
-    	else {
-    		$rdata = $rdata[0];
-    		$rssform = new form('addrss', $this->uri(array(
-            	'action' => 'rssedit', 'mode' => 'edit', 'id' => $rdata['id']
-        	)));
-    	}
+        $this->objUser = $this->getObject('user', 'security');
+        if($rdata == NULL)
+        {
+            $rssform = new form('addrss', $this->uri(array(
+                'action' => 'addrss'
+            )));
+        }
+        else {
+            $rdata = $rdata[0];
+            $rssform = new form('addrss', $this->uri(array(
+                'action' => 'rssedit', 'mode' => 'edit', 'id' => $rdata['id']
+            )));
+        }
         //add rules
         $rssform->addRule('rssurl', $this->objLanguage->languageText("mod_blog_phrase_rssurlreq", "blog") , 'required');
         $rssform->addRule('name', $this->objLanguage->languageText("mod_blog_phrase_rssnamereq", "blog") , 'required');
@@ -685,7 +685,7 @@ class blogops extends object
         $rssurl->setValue(htmlentities($rdata['url'], ENT_QUOTES));
        // $rssurl->setValue('url');
 
-		}
+        }
         $rssadd->addCell($rssurllabel->show());
         $rssadd->addCell($rssurl->show());
         $rssadd->endRow();
@@ -697,7 +697,7 @@ class blogops extends object
         $rssname->extra = ' style="width:100%;" ';
         if(isset($rdata['name']))
         {
-        	$rssname->setValue($rdata['name']);
+            $rssname->setValue($rdata['name']);
         }
         $rssadd->addCell($rssnamelabel->show());
         $rssadd->addCell($rssname->show());
@@ -710,8 +710,8 @@ class blogops extends object
         $rssdesc->extra = ' style="width:100%;" ';
         if(isset($rdata['description']))
         {
-          	//var_dump($rdata['description']);
-        	$rssdesc->setValue($rdata['description']);
+              //var_dump($rdata['description']);
+            $rssdesc->setValue($rdata['description']);
         }
         $rssadd->addCell($rssdesclabel->show());
         $rssadd->addCell($rssdesc->show());
@@ -803,21 +803,21 @@ class blogops extends object
             $ret = $oblogs->show() . "<br />" . $defmodLink->show();
         } else {
 
-			$boxContent = $oblogs->show()."<br />";
-	 		$boxContent .= $defmodLink->show()."<br />";
+            $boxContent = $oblogs->show()."<br />";
+             $boxContent .= $defmodLink->show()."<br />";
 
 
-		 //
+         //
 
-            	//database abstraction object
-            	$this->objDbBlog = $this->getObject('dbblog');
-				$postresults = $this->objDbBlog->getAllPosts($userid=1,null);
+                //database abstraction object
+                $this->objDbBlog = $this->getObject('dbblog');
+                $postresults = $this->objDbBlog->getAllPosts($userid=1,null);
 
-			 if(!$postresults==null){
-			$boxContent .= $ositeblogs->show() . "<br />";
-			}
+             if(!$postresults==null){
+            $boxContent .= $ositeblogs->show() . "<br />";
+            }
 
-		$objFeatureBox = $this->getObject('featurebox', 'navigation');
+        $objFeatureBox = $this->getObject('featurebox', 'navigation');
         $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_otherblogs","blog"), $boxContent);
 
 
@@ -843,7 +843,7 @@ class blogops extends object
      */
     public function showCatsMenu($cats, $featurebox = FALSE, $userid = NULL)
     {
-    	$this->objUser = $this->getObject('user', 'security');
+        $this->objUser = $this->getObject('user', 'security');
         $objSideBar = $this->newObject('sidebar', 'navigation');
         $nodes = array();
         $childnodes = array();
@@ -854,51 +854,51 @@ class blogops extends object
                 //build the sub list as well
                 if (isset($categories['child'])) {
                     foreach($categories['child'] as $kid) {
-                    	if($this->objUser->isLoggedIn())
-                    	{
-                        	$childnodes[] = array(
-                            	'text' => $kid['cat_nicename'],
-                            	'uri' => $this->uri(array(
-                                	'action' => 'viewblog',
-                                	'catid' => $kid['id'],
-                                	'userid' => $userid
-                            	) , 'blog')
-                        	);
-                    	}
-                    	else {
-                    		$childnodes[] = array(
-                            	'text' => $kid['cat_nicename'],
-                            	'uri' => $this->uri(array(
-                                	'action' => 'viewblog',
-                                	'catid' => $kid['id'],
-                                	'userid' => $userid
-                            	) , 'blog')
-                        	);
-                    	}
+                        if($this->objUser->isLoggedIn())
+                        {
+                            $childnodes[] = array(
+                                'text' => $kid['cat_nicename'],
+                                'uri' => $this->uri(array(
+                                    'action' => 'viewblog',
+                                    'catid' => $kid['id'],
+                                    'userid' => $userid
+                                ) , 'blog')
+                            );
+                        }
+                        else {
+                            $childnodes[] = array(
+                                'text' => $kid['cat_nicename'],
+                                'uri' => $this->uri(array(
+                                    'action' => 'viewblog',
+                                    'catid' => $kid['id'],
+                                    'userid' => $userid
+                                ) , 'blog')
+                            );
+                        }
                     }
                 }
                 if($this->objUser->isLoggedIn())
                 {
-                	$nodestoadd[] = array(
-                    	'text' => $categories['cat_nicename'],
-                    	'uri' => $this->uri(array(
-                        	'action' => 'viewblog',
-                        	'catid' => $categories['id'],
-                        	'userid' => $userid
-                    	) , 'blog') ,
-                    	'haschildren' => $childnodes
-                	);
+                    $nodestoadd[] = array(
+                        'text' => $categories['cat_nicename'],
+                        'uri' => $this->uri(array(
+                            'action' => 'viewblog',
+                            'catid' => $categories['id'],
+                            'userid' => $userid
+                        ) , 'blog') ,
+                        'haschildren' => $childnodes
+                    );
                 }
                 else {
-                	$nodestoadd[] = array(
-                    	'text' => $categories['cat_nicename'],
-                    	'uri' => $this->uri(array(
-                        	'action' => 'viewblog',
-                        	'catid' => $categories['id'],
-                        	'userid' => $userid
-                    	) , 'blog') ,
-                    	'haschildren' => $childnodes
-                	);
+                    $nodestoadd[] = array(
+                        'text' => $categories['cat_nicename'],
+                        'uri' => $this->uri(array(
+                            'action' => 'viewblog',
+                            'catid' => $categories['id'],
+                            'userid' => $userid
+                        ) , 'blog') ,
+                        'haschildren' => $childnodes
+                    );
                 }
                 $childnodes = NULL;
                 $nodes = NULL;
@@ -1031,10 +1031,10 @@ class blogops extends object
      */
     public function showMailSetup($featurebox = TRUE, $dsnarr = NULL)
     {
-    	if($this->mail2blog == FALSE)
-    	{
-    		return NULL;
-    	}
+        if($this->mail2blog == FALSE)
+        {
+            return NULL;
+        }
         //start a form to go back to the setupmail action with the vars
         //make sure that all form vars are required!
         $mform = new form('setupmail', $this->uri(array(
@@ -1154,12 +1154,12 @@ class blogops extends object
         //mail setup
         if($this->mail2blog == FALSE)
         {
-        	$mailsetup = NULL;
+            $mailsetup = NULL;
         }
         else {
-        	$mailsetup = new href($this->uri(array(
-            	'action' => 'setupmail'
-        	)) , $this->objLanguage->languageText("mod_blog_setupmail", "blog"));
+            $mailsetup = new href($this->uri(array(
+                'action' => 'setupmail'
+            )) , $this->objLanguage->languageText("mod_blog_setupmail", "blog"));
         }
         //write new post link
         $newpost = new href($this->uri(array(
@@ -1178,10 +1178,10 @@ class blogops extends object
         )) , $this->objLanguage->languageText("mod_blog_word_categories", "blog"));
         //add/delete RSS feeds
         $rssedits = new href($this->uri(array(
-        	'action' => 'rssedit')) , $this->objLanguage->languageText("mod_blog_rssaddedit", "blog"));
+            'action' => 'rssedit')) , $this->objLanguage->languageText("mod_blog_rssaddedit", "blog"));
         //add/delete RSS feeds
         $linksedits = new href($this->uri(array(
-        	'action' => 'linkeditor')) , $this->objLanguage->languageText("mod_blog_linksaddedit", "blog"));
+            'action' => 'linkeditor')) , $this->objLanguage->languageText("mod_blog_linksaddedit", "blog"));
         //view all other blogs
         $addeditpages = new href($this->uri(array(
             'action' => 'setpage'
@@ -1239,17 +1239,17 @@ class blogops extends object
             //build the links
             $this->objUser = $this->getObject('user', 'security');
             if ($this->objUser->inAdminGroup($this->objUser->userId())) {
-            	if($this->mail2blog == FALSE)
-            	{
-            		$topper = $newpost->show() ."<br />".$editpost->show() ."<br />".$viewmyblog->show();
-            		$ret.= $admin->show() ."<br />". $profile->show() . "<br />" . $import->show() ."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$linksedits->show()."<br />".$addeditpages->show()."<br />".$viewblogs->show();
-            	}
-            	else {
-            		$topper = $newpost->show() ."<br />".$editpost->show() ."<br />".$viewmyblog->show();
-                	$ret.= $admin->show() ."<br />". $profile->show() . "<br />" . $import->show() ."<br />".$mailsetup->show()."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$linksedits->show()."<br />".$addeditpages->show()."<br />".$viewblogs->show();
-            	}
+                if($this->mail2blog == FALSE)
+                {
+                    $topper = $newpost->show() ."<br />".$editpost->show() ."<br />".$viewmyblog->show();
+                    $ret.= $admin->show() ."<br />". $profile->show() . "<br />" . $import->show() ."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$linksedits->show()."<br />".$addeditpages->show()."<br />".$viewblogs->show();
+                }
+                else {
+                    $topper = $newpost->show() ."<br />".$editpost->show() ."<br />".$viewmyblog->show();
+                    $ret.= $admin->show() ."<br />". $profile->show() . "<br />" . $import->show() ."<br />".$mailsetup->show()."<br />".$editcats->show() ."<br />".$rssedits->show()."<br />".$linksedits->show()."<br />".$addeditpages->show()."<br />".$viewblogs->show();
+                }
             } else {
-            	$topper = $newpost->show() ."<br />".$editpost->show() ."<br />".$viewmyblog->show();
+                $topper = $newpost->show() ."<br />".$editpost->show() ."<br />".$viewmyblog->show();
                 $ret.= $admin->show() ."<br />". $profile->show() . "<br />" .$import->show() ."<br />".$editcats->show() ."<br />".$rssedits->show() ."<br />".$linksedits->show()."<br />".$addeditpages->show()."<br />".$viewblogs->show();
             }
         }
@@ -1258,14 +1258,14 @@ class blogops extends object
         } else {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
             /* scriptaculous moved to default page template / no need to suppress XML*/        
-        	//$this->setVar('pageSuppressXML',true);
-        	$objIcon =&$this->getObject('geticon', 'htmlelements');
-  			$objIcon->setIcon('toggle');
-        	
-  			$str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('adminmenu','slide', adjustLayout());\">".$objIcon->show()."</a>";
-        	$str .='<div id="adminmenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
-        	$str .= $ret;
-        	$str .= '</div>';
+            //$this->setVar('pageSuppressXML',true);
+            $objIcon =&$this->getObject('geticon', 'htmlelements');
+              $objIcon->setIcon('toggle');
+            
+              $str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('adminmenu','slide', adjustLayout());\">".$objIcon->show()."</a>";
+            $str .='<div id="adminmenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
+            $str .= $ret;
+            $str .= '</div>';
 
             $box = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_admin", "blog") , $topper."<br />". $str);
             return $box;
@@ -1279,7 +1279,7 @@ class blogops extends object
      */
     public function showPosts($posts, $showsticky = FALSE)
     {        
-    	$mm = $this->getObject('parse4mindmap', 'filters');
+        $mm = $this->getObject('parse4mindmap', 'filters');
         $this->objComments = &$this->getObject('commentapi', 'blogcomments');
         $this->objTB = $this->getObject("trackback");
         //set the trackback options
@@ -1302,9 +1302,9 @@ class blogops extends object
         //break out the ol featurebox...
         if (!empty($posts)) {
             foreach($posts as $post) {
-				//get the washout class and parse for all the bits and pieces
-				$washer = $this->getObject('washout', 'utilities');
-				$post['post_content'] = $washer->parseText($post['post_content']);
+                //get the washout class and parse for all the bits and pieces
+                $washer = $this->getObject('washout', 'utilities');
+                $post['post_content'] = $washer->parseText($post['post_content']);
 
                 $objFeatureBox = $this->getObject('featurebox', 'navigation');
                 //build the top level stuff
@@ -1313,31 +1313,31 @@ class blogops extends object
                 $userid = $this->objUser->userId();
                 if($showsticky == FALSE)
                 {
-                	if($post['stickypost'] == 1)
-                	{
-                		unset($post);
-                		continue;
-                	}
-                	
+                    if($post['stickypost'] == 1)
+                    {
+                        unset($post);
+                        continue;
+                    }
+                    
                 }
                 if($post['stickypost'] == 1)
                 {
-                	$objStickyIcon = $this->newObject('geticon', 'htmlelements');
-					$objStickyIcon->setIcon('sticky_yes');
-					$headLink = new href($this->uri(array(
-                		'action' => 'viewsingle',
-                		'postid' => $post['id'],
-                		'userid' => $post['userid']
-            		)) , stripslashes($post['post_title']) , NULL);
-					$head = $objStickyIcon->show() . $headLink->show() ."<br />".$dt;
+                    $objStickyIcon = $this->newObject('geticon', 'htmlelements');
+                    $objStickyIcon->setIcon('sticky_yes');
+                    $headLink = new href($this->uri(array(
+                        'action' => 'viewsingle',
+                        'postid' => $post['id'],
+                        'userid' => $post['userid']
+                    )) , stripslashes($post['post_title']) , NULL);
+                    $head = $objStickyIcon->show() . $headLink->show() ."<br />".$dt;
                 }
                 else {
-                	$headLink = new href($this->uri(array(
-                		'action' => 'viewsingle',
-                		'postid' => $post['id'],
-                		'userid' => $post['userid']
-            		)) , stripslashes($post['post_title']) , NULL);
-					$head = $headLink->show() ."<br />".$dt;
+                    $headLink = new href($this->uri(array(
+                        'action' => 'viewsingle',
+                        'postid' => $post['id'],
+                        'userid' => $post['userid']
+                    )) , stripslashes($post['post_title']) , NULL);
+                    $head = $headLink->show() ."<br />".$dt;
                 }
                 //dump in the post content and voila! you have it...
                 //build the post content plus comment count and stats???
@@ -1354,16 +1354,16 @@ class blogops extends object
                 $bloggerprofile = $this->objDbBlog->checkProfile($this->objUser->userId());
                 if(isset($bloggerprofile['blog_name']))
                 {
-                	$blog_name = $bloggerprofile['blog_name']; //$this->getParam('blog_name');
+                    $blog_name = $bloggerprofile['blog_name']; //$this->getParam('blog_name');
                 }
                 else {
-                	if($this->showfullname == 'FALSE')
-                	{
-                		$blog_name = $this->objUser->userName($userid);
-                	}
-                	else {
-                		$blog_name = $this->objUser->fullname($userid);
-                	}
+                    if($this->showfullname == 'FALSE')
+                    {
+                        $blog_name = $this->objUser->userName($userid);
+                    }
+                    else {
+                        $blog_name = $this->objUser->fullname($userid);
+                    }
                 }
                 //$blog_name = $this->objUser->fullname($userid);
                 $url = $this->uri(array(
@@ -1400,16 +1400,16 @@ class blogops extends object
                 //set up the link to SEND a trackback
                 if(isset($bloggerprofile['blog_name']))
                 {
-                	$blog_name = $bloggerprofile['blog_name']; //$this->getParam('blog_name');
+                    $blog_name = $bloggerprofile['blog_name']; //$this->getParam('blog_name');
                 }
                 else {
-                	if($this->showfullname == 'FALSE')
-                	{
-                		$blog_name = $this->objUser->userName($userid);
-                	}
-                	else {
-                		$blog_name = $this->objUser->fullname($userid);
-                	}
+                    if($this->showfullname == 'FALSE')
+                    {
+                        $blog_name = $this->objUser->userName($userid);
+                    }
+                    else {
+                        $blog_name = $this->objUser->fullname($userid);
+                    }
                 }
                 //$blog_name = $this->objUser->fullname($userid);
                 $sender = $this->uri(array(
@@ -1468,9 +1468,9 @@ class blogops extends object
                 //$commentLink = $this->objComments->addCommentLink($type = NULL);
                 if($post['comment_status'] == 'Y' || $post['comment_status'] == 'on')
                 {
-                	$commentCount = $this->objComments->getCount($post['id']);
+                    $commentCount = $this->objComments->getCount($post['id']);
                 }
-                	//edit icon in a table 1 row x however number of things to do
+                    //edit icon in a table 1 row x however number of things to do
                 if ($post['userid'] == $userid) {
                     $tburl = $tburl."<br />".$numtb."<br />".$sendtblink;
                     $this->objIcon = &$this->getObject('geticon', 'htmlelements');
@@ -1489,9 +1489,9 @@ class blogops extends object
                     $tbl->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_editpost", "blog")); //edit
                     $tbl->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_bookmarkpost", "blog")); //bookmark
                     if($post['comment_status'] == 'Y' || $post['comment_status'] == 'on')
-                	{
-                    	$tbl->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_leavecomment", "blog")); //comments
-                	}
+                    {
+                        $tbl->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_leavecomment", "blog")); //comments
+                    }
                     $tbl->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_trackbackurl", "blog")); //trackback
                     $tbl->addHeaderCell('');//$this->objLanguage->languageText("mod_blog_cclic", "blog")); //Licence
                     $tbl->addHeaderCell(''); //save as pdf
@@ -1500,32 +1500,32 @@ class blogops extends object
                     $tbl->addCell($edIcon); //edit icon
                     $tbl->addCell($bookmark->show()); //bookmark link(s)
                     if($post['comment_status'] == 'Y' || $post['comment_status'] == 'on')
-                	{
-                    	$tbl->addCell($this->setComments($post, FALSE) ." ".$commentCount); //$commentLink); //comment link(s)
-                	}
+                    {
+                        $tbl->addCell($this->setComments($post, FALSE) ." ".$commentCount); //$commentLink); //comment link(s)
+                    }
                     $tbl->addCell($tburl); //trackback URL
                     $tbl->addCell($iconList); //cc licence
                     $pdficon = $this->newObject('geticon', 'htmlelements');
-            		$pdficon->setIcon('filetypes/pdf');
-            		$lblView = $this->objLanguage->languageText("mod_blog_saveaspdf", "blog");
-            		$pdficon->alt = $lblView;
-            		$pdficon->align = false;
-            		$pdfimg = $pdficon->show();
+                    $pdficon->setIcon('filetypes/pdf');
+                    $lblView = $this->objLanguage->languageText("mod_blog_saveaspdf", "blog");
+                    $pdficon->alt = $lblView;
+                    $pdficon->align = false;
+                    $pdfimg = $pdficon->show();
 
                     $pdflink = new href($pdfurl, $pdfimg, NULL);
                     //and the mail to a friend icon
                     $mtficon = $this->newObject('geticon', 'htmlelements');
-            		$mtficon->setIcon('filetypes/eml');
-            		$lblmtf = $this->objLanguage->languageText("mod_blog_mailtofriend", "blog");
-            		$mtficon->alt = $lblmtf;
-            		$mtficon->align = false;
-            		$mtfimg = $mtficon->show();
+                    $mtficon->setIcon('filetypes/eml');
+                    $lblmtf = $this->objLanguage->languageText("mod_blog_mailtofriend", "blog");
+                    $mtficon->alt = $lblmtf;
+                    $mtficon->align = false;
+                    $mtfimg = $mtficon->show();
 
                     $mtflink = new href($this->uri(array('action' => 'mail2friend', 'postid' => $post['id'], 'bloggerid' => $post['userid'])), $mtfimg, NULL);
                     if($post['showpdf'] == '1' || $post['showpdf'] == 'on')
-                	{
-                    	$tbl->addCell($pdflink->show() . $mtflink->show());
-                	}
+                    {
+                        $tbl->addCell($pdflink->show() . $mtflink->show());
+                    }
                     
                     $tbl->endRow();
                     //echo $this->objTB->autodiscCode();
@@ -1534,18 +1534,18 @@ class blogops extends object
                     $linkstr = NULL;
                     foreach($thetags as $tags)
                     {
-                    	$link = new href($this->uri(array('action' => 'viewblogbytag', 'userid' => $userid, 'tag' => $tags['meta_value'])),$tags['meta_value']);
-                    	$linkstr .= $link->show();
-                    	$link = NULL;
+                        $link = new href($this->uri(array('action' => 'viewblogbytag', 'userid' => $userid, 'tag' => $tags['meta_value'])),$tags['meta_value']);
+                        $linkstr .= $link->show();
+                        $link = NULL;
                     }
                     if(empty($linkstr))
                     {
-                    	$linkstr = $this->objLanguage->languageText("mod_blog_word_notags", "blog");
+                        $linkstr = $this->objLanguage->languageText("mod_blog_word_notags", "blog");
                     }
                     $fboxcontent = $post['post_content'] .$this->cleaner->cleanHtml(
-                    			   "<br /><hr />" . "<center><em><b>" . $this->objLanguage->languageText("mod_blog_word_tags4thispost", "blog") . "</b><br />" . $linkstr .
-                    			   "</em><hr />".
-                    			   "<center>".$tbl->show() ."</center>");
+                                   "<br /><hr />" . "<center><em><b>" . $this->objLanguage->languageText("mod_blog_word_tags4thispost", "blog") . "</b><br />" . $linkstr .
+                                   "</em><hr />".
+                                   "<center>".$tbl->show() ."</center>");
 
                     $ret.= $objFeatureBox->showContent($head, $fboxcontent);
                 } else {
@@ -1560,9 +1560,9 @@ class blogops extends object
                     $tblnl->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_bookmarkpost", "blog")); //bookmark
                     $tblnl->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_trackbackurl", "blog")); //trackback
                     if($post['comment_status'] == 'Y' || $post['comment_status'] == 'on')
-                	{
-                    	$tblnl->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_leavecomment", "blog"));
-                	}
+                    {
+                        $tblnl->addHeaderCell(''); //$this->objLanguage->languageText("mod_blog_leavecomment", "blog"));
+                    }
                     $tblnl->addHeaderCell('');//$this->objLanguage->languageText("mod_blog_cclic", "blog")); //Licence
                     $tblnl->addHeaderCell('');
                     $tblnl->endHeaderRow();
@@ -1570,26 +1570,26 @@ class blogops extends object
                     $tblnl->addCell($bookmark->show()); //bookmark link(s)
                     $tblnl->addCell($tburl."&nbsp;".$numtb); //trackback URL
                     if($post['comment_status'] == 'Y' || $post['comment_status'] == 'on')
-                	{
-                    	$tblnl->addCell($this->setComments($post, FALSE) ." ".$commentCount);
-                	}
+                    {
+                        $tblnl->addCell($this->setComments($post, FALSE) ." ".$commentCount);
+                    }
                     $tblnl->addCell($iconList); //cc licence
                     $pdficon = $this->newObject('geticon', 'htmlelements');
-            		$pdficon->setIcon('filetypes/pdf');
-            		$lblView = $this->objLanguage->languageText("mod_blog_saveaspdf", "blog");
-            		$pdficon->alt = $lblView;
-            		$pdficon->align = false;
-            		$pdfimg = $pdficon->show();
+                    $pdficon->setIcon('filetypes/pdf');
+                    $lblView = $this->objLanguage->languageText("mod_blog_saveaspdf", "blog");
+                    $pdficon->alt = $lblView;
+                    $pdficon->align = false;
+                    $pdfimg = $pdficon->show();
 
                     $pdflink = new href($pdfurl, $pdfimg, NULL);
 
                     //and the mail to a friend icon
                     $mtficon = $this->newObject('geticon', 'htmlelements');
-            		$mtficon->setIcon('filetypes/eml');
-            		$lblmtf = $this->objLanguage->languageText("mod_blog_mailtofriend", "blog");
-            		$mtficon->alt = $lblmtf;
-            		$mtficon->align = false;
-            		$mtfimg = $mtficon->show();
+                    $mtficon->setIcon('filetypes/eml');
+                    $lblmtf = $this->objLanguage->languageText("mod_blog_mailtofriend", "blog");
+                    $mtficon->alt = $lblmtf;
+                    $mtficon->align = false;
+                    $mtfimg = $mtficon->show();
 
                     $mtflink = new href($this->uri(array('action' => 'mail2friend', 'postid' => $post['id'], 'bloggerid' => $post['userid'])), $mtfimg, NULL);
 
@@ -1601,13 +1601,13 @@ class blogops extends object
                     $linkstr = NULL;
                     foreach($thetags as $tags)
                     {
-                    	$link = new href($this->uri(array('action' => 'viewblogbytag', 'userid' => $userid, 'tag' => $tags['meta_value'])),$tags['meta_value']);
-                    	$linkstr .= $link->show();
-                    	$link = NULL;
+                        $link = new href($this->uri(array('action' => 'viewblogbytag', 'userid' => $userid, 'tag' => $tags['meta_value'])),$tags['meta_value']);
+                        $linkstr .= $link->show();
+                        $link = NULL;
                     }
                     if(empty($linkstr))
                     {
-                    	$linkstr = $this->objLanguage->languageText("mod_blog_word_notags", "blog");
+                        $linkstr = $this->objLanguage->languageText("mod_blog_word_notags", "blog");
                     }
                     $ret.= $objFeatureBox->showContent($head, /*$this->cleaner->cleanHtml(*/$post['post_content']) ."<center>".$tblnl->show() ."</center>"/*)*/;
                 }
@@ -1618,11 +1618,22 @@ class blogops extends object
         }
         return $ret;
     }
+    
+
+    /** 
+    * Function addCommentForm
+    *
+    */
     public function addCommentForm($postid, $userid, $captcha = FALSE, $comment = NULL, $useremail = NULL)
     {
         $this->objComApi = $this->getObject('commentapi', 'blogcomments');
         return $this->objComApi->commentAddForm($postid, 'blog', 'tbl_blog_posts', $userid, TRUE, TRUE, FALSE, $captcha, $comment, $useremail);
     }
+
+
+    /**
+    *
+    */
     public function setComments($post, $icon = TRUE)
     {
         //COMMENTS
@@ -1717,11 +1728,11 @@ class blogops extends object
         /* scriptaculous moved to default page template / no need to suppress XML*/        
         //$this->setVar('pageSuppressXML',true);
         $objIcon =&$this->getObject('geticon', 'htmlelements');
-  		$objIcon->setIcon('toggle');
+          $objIcon->setIcon('toggle');
         $str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('feedmenu','slide', adjustLayout());\">".$objIcon->show()."</a>";
      
         $topper = $rss2feed . $atomfeed;
-		
+        
         $str .='<div id="feedmenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
         $str .= $leftCol;
         $str .= '</div>';
@@ -1749,7 +1760,7 @@ class blogops extends object
      */
     public function quickCats($featurebox = FALSE)
     {
-    	$this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
         $qcatform = new form('qcatadd', $this->uri(array(
             'action' => 'catadd',
             'mode' => 'quickadd'
@@ -1970,12 +1981,12 @@ class blogops extends object
     }
     public function catedit($catarr, $userid, $catid)
     {
-    	$this->loadClass('label', 'htmlelements');
-		$this->loadClass('textinput', 'htmlelements');
-		$this->loadClass('form', 'htmlelements');
-		//$this->loadClass('heading', 'htmlelements');
-		$this->loadClass('href', 'htmlelements');
-		$this->loadClass('htmlarea', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('form', 'htmlelements');
+        //$this->loadClass('heading', 'htmlelements');
+        $this->loadClass('href', 'htmlelements');
+        $this->loadClass('htmlarea', 'htmlelements');
         //add a new category form:
         $catform = new form('catadd', $this->uri(array(
             'action' => 'catadd',
@@ -2040,12 +2051,12 @@ class blogops extends object
      */
     public function postEditor($userid, $editid = NULL)
     {
-    	$this->loadClass('label', 'htmlelements');
-		$this->loadClass('textinput', 'htmlelements');
-		$this->loadClass('form', 'htmlelements');
-		//$this->loadClass('heading', 'htmlelements');
-		$this->loadClass('href', 'htmlelements');
-		$this->loadClass('htmlarea', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('form', 'htmlelements');
+        //$this->loadClass('heading', 'htmlelements');
+        $this->loadClass('href', 'htmlelements');
+        $this->loadClass('htmlarea', 'htmlelements');
         if (isset($editid)) {
             $mode = 'editpost';
             //get the relevant post from the editid
@@ -2053,9 +2064,9 @@ class blogops extends object
 
             if(!empty($editparams))
             {
- //           	print_r($editparams);
-            	$editparams = $editparams[0];
-            	$editparams['tags'] = $this->objDbBlog->getPostTags($editid);
+ //               print_r($editparams);
+                $editparams = $editparams[0];
+                $editparams['tags'] = $this->objDbBlog->getPostTags($editid);
             }
         }
         if (!isset($mode)) {
@@ -2098,7 +2109,7 @@ class blogops extends object
             $pDrop->addOption(1, $this->objLanguage->languageText("mod_blog_defcat", "blog"));
         }
         else {
-        	$pDrop->addOption(0, $this->objLanguage->languageText("mod_blog_defcat", "blog"));
+            $pDrop->addOption(0, $this->objLanguage->languageText("mod_blog_defcat", "blog"));
         }
 
         $pcats = $this->objDbBlog->getAllCats($userid);
@@ -2134,10 +2145,10 @@ class blogops extends object
         $this->loadClass("checkbox", "htmlelements");
         if (isset($editparams['stickypost']) && $editparams['stickypost'] == 1) 
         {
-        	$sticky = new checkbox('stickypost', 1 , TRUE);
+            $sticky = new checkbox('stickypost', 1 , TRUE);
         }
         else {
-        	$sticky = new checkbox('stickypost', 1 , FALSE);
+            $sticky = new checkbox('stickypost', 1 , FALSE);
         }
         $ptable->startRow();
         $pstickylabel = new label($this->objLanguage->languageText('mod_blog_stickypost', 'blog') .':', 'input_stickypost');
@@ -2149,10 +2160,10 @@ class blogops extends object
         $this->loadClass("checkbox", "htmlelements");
         if (isset($editparams['showpdf']) && $editparams['showpdf'] == 1) 
         {
-        	$showpdf = new checkbox('showpdf', 1 , TRUE);
+            $showpdf = new checkbox('showpdf', 1 , TRUE);
         }
         else {
-        	$showpdf = new checkbox('showpdf', 1 , FALSE);
+            $showpdf = new checkbox('showpdf', 1 , FALSE);
         }
         $ptable->startRow();
         $showpdflabel = new label($this->objLanguage->languageText('mod_blog_showpdf', 'blog') .':', 'input_showpdf');
@@ -2177,9 +2188,9 @@ class blogops extends object
         $pclabel = new label($this->objLanguage->languageText('mod_blog_pcontent', 'blog') .':', 'input_postcontent');
         $pcon = $this->newObject('htmlarea', 'htmlelements');
         $pcon->setName('postcontent');
-		$pcon->height = 400;
-		$pcon->width = 420;
-		$pcon->setDefaultToolbarSet();
+        $pcon->height = 400;
+        $pcon->width = 420;
+        $pcon->setDefaultToolbarSet();
         if (isset($editparams['post_content'])) {
             $pcon->setcontent((stripslashes(($editparams['post_content']))));
         }
@@ -2194,13 +2205,13 @@ class blogops extends object
         $tags = new textinput('tags');
         $tags->size = 65;
         if (isset($editparams['tags'])) {
-        	//this thing should be an array, so we need to loop thru and create the comma sep list again
-        	$tagstr = NULL;
+            //this thing should be an array, so we need to loop thru and create the comma sep list again
+            $tagstr = NULL;
             foreach($editparams['tags'] as $taglets)
             {
-            	$tagstr .= $taglets['meta_value'] . ",";
+                $tagstr .= $taglets['meta_value'] . ",";
             }
-        	$tags->setValue(stripslashes($tagstr));
+            $tags->setValue(stripslashes($tagstr));
         }
         $ptable->addCell($tlabel->show());
         $ptable->addCell($tags->show());
@@ -2277,7 +2288,7 @@ class blogops extends object
             $recs = $recs-1;
         }
         if (!empty($revposts)) {
-        	//echo count($revposts);
+            //echo count($revposts);
             $lastrec = $revposts[$recs]['post_ts'];
             $firstrec = $revposts[0]['post_ts'];
             $c1 = date("ym", $firstrec);
@@ -2290,9 +2301,9 @@ class blogops extends object
             //echo $startdate, $enddate;
             foreach($revposts as $themonths)
             {
-            	$months[] = date("ym",$themonths['post_ts']);
-            	$posts = $this->objDbBlog->getPostsMonthly(mktime(0, 0, 0, date("m",$themonths['post_ts']), 1, date("y", $themonths['post_ts'])) , $userid);
-            	$postarr[date("Ym",$themonths['post_ts'])] = $posts;
+                $months[] = date("ym",$themonths['post_ts']);
+                $posts = $this->objDbBlog->getPostsMonthly(mktime(0, 0, 0, date("m",$themonths['post_ts']), 1, date("y", $themonths['post_ts'])) , $userid);
+                $postarr[date("Ym",$themonths['post_ts'])] = $posts;
             }
             return $postarr;
         } else {
@@ -2315,7 +2326,7 @@ class blogops extends object
             $yearmonth = array_keys($posts);
             $arks = NULL;
             foreach($yearmonth as $months) {
-            	$month = str_split($months, 4);
+                $month = str_split($months, 4);
                 $thedate = mktime(0, 0, 0, intval($month[1]), 1, intval($month[0]));
                 $arks[] = array(
                     'formatted' => date("F", $thedate) ." ".date("Y", $thedate) ,
@@ -2340,9 +2351,9 @@ class blogops extends object
                     $lnks.= $lnk->show() ."<br />";
                 }
                 //$str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('archivemenu','slide', adjustLayout());\">[...]</a>";
-        		//$str .='<div id="archivemenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
-        		//$str .= $lnks;
-        		//$str .= '</div>';
+                //$str .='<div id="archivemenu"  style="width:170px;overflow: hidden;display:'.$showOrHide.';"> ';
+                //$str .= $lnks;
+                //$str .= '</div>';
                 $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_archives", "blog"), $lnks, 'arkbox', 'none');
                 return $ret;
             }
@@ -2377,11 +2388,11 @@ class blogops extends object
             
             if($this->objUser->inAdminGroup($userid))
             {
-            	$posts = $this->objDbBlog->getAbsAllPostsWithSiteBlogs($userid);
+                $posts = $this->objDbBlog->getAbsAllPostsWithSiteBlogs($userid);
             }
             $posts = $this->objDbBlog->getAbsAllPosts($userid);
         }
-		$count = count($posts);
+        $count = count($posts);
 
         //print_r($posts);
         //add in a table header...
@@ -2393,8 +2404,8 @@ class blogops extends object
         $edtable->addHeaderCell($this->objLanguage->languageText("mod_blog_editdelete", "blog"));
         $edtable->endHeaderRow();
         foreach($posts as $post) {
-        	(($count % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
-        	$edtable->row_attributes=" onmouseover=\"this.className='tbl_ruler';\" onmouseout=\"this.className='".$oddOrEven."'; \"";
+            (($count % 2) == 0)? $oddOrEven = 'even' : $oddOrEven = 'odd';
+            $edtable->row_attributes=" onmouseover=\"this.className='tbl_ruler';\" onmouseout=\"this.className='".$oddOrEven."'; \"";
             $edtable->startRow();
             $edtable->addCell($post['post_title']);
             $edtable->addCell(date('r', $post['post_ts']));
@@ -2420,7 +2431,7 @@ class blogops extends object
                 $mapcats = $this->objDbBlog->mapKid2Parent($post['post_category']);
                 if(isset($mapcats[0]))
                 {
-                	$post['post_category'] = $mapcats[0]['cat_name'];
+                    $post['post_category'] = $mapcats[0]['cat_name'];
                 }
             }
             $edtable->addCell($post['post_category']);
@@ -2441,7 +2452,7 @@ class blogops extends object
             $this->loadClass('checkbox', 'htmlelements');
             $cbox = new checkbox('arrayList[]');
             $cbox->cssId = 'checkbox_'.$post['id'];
-        	$cbox->setValue($post['id']);
+            $cbox->setValue($post['id']);
 
             $edtable->addCell($edIcon.$delIcon.$cbox->show());
             $edtable->endRow();
@@ -2530,16 +2541,16 @@ class blogops extends object
         // Display the posts
         if(!empty($data)){
             foreach($data as $item){
-            	$linkuri = $this->uri(array('action' => 'viewsingle', 'postid' => $item['id'], 'userid' => $item['userid']));
-            	$link = new href($linkuri, $item['post_title']);
+                $linkuri = $this->uri(array('action' => 'viewsingle', 'postid' => $item['id'], 'userid' => $item['userid']));
+                $link = new href($linkuri, $item['post_title']);
                 $str .= '<p>';
                 $str .= '<b>'.$link->show().'</b><br />';
                 if($this->showfullname == 'FALSE')
                 {
-                	$nameshow = $this->objUser->userName($item['userid']);
+                    $nameshow = $this->objUser->userName($item['userid']);
                 }
                 else {
-                	$nameshow = $this->objUser->fullname($item['userid']);
+                    $nameshow = $this->objUser->fullname($item['userid']);
                 }
                 $str .= '<font class="minute">'.$nameshow.'</font>';
                 //$str .= '<br />'.$item['post_excerpt'];
@@ -2729,21 +2740,21 @@ class blogops extends object
         $tagarr = $this->objDbBlog->getTagsByUser($userid);
         if(empty($tagarr))
         {
-        	return NULL;
+            return NULL;
         }
         foreach($tagarr as $uni)
         {
-        	$t[] = $uni['meta_value'];
+            $t[] = $uni['meta_value'];
         }
         $utags = array_unique($t);
         foreach($utags as $tag)
         {
-        	//create the url
-        	$url = $this->uri(array('action' => 'viewblogbytag', 'tag' => $tag, 'userid' => $userid));
-        	//get the count of the tag (weight)
-        	$weight = $this->objDbBlog->getTagWeight($tag, $userid);
-        	$weight = $weight*1000;
-        	$tag4cloud = array(
+            //create the url
+            $url = $this->uri(array('action' => 'viewblogbytag', 'tag' => $tag, 'userid' => $userid));
+            //get the count of the tag (weight)
+            $weight = $this->objDbBlog->getTagWeight($tag, $userid);
+            $weight = $weight*1000;
+            $tag4cloud = array(
                 'name' => $tag,
                 'url' => $url,
                 'weight' => $weight,
@@ -2915,22 +2926,22 @@ class blogops extends object
 
     public function sendMail2FriendForm($m2fdata)
     {
-    	$this->objUser = $this->getObject('user', 'security');
-    	if($this->objUser->isLoggedIn())
-		{
-			if($this->showfullname == 'FALSE')
+        $this->objUser = $this->getObject('user', 'security');
+        if($this->objUser->isLoggedIn())
+        {
+            if($this->showfullname == 'FALSE')
             {
-            	$theuser = $this->objUser->userName($this->objUser->userid());
+                $theuser = $this->objUser->userName($this->objUser->userid());
             }
             else {
-            	$theuser = $this->objUser->fullname($this->objUser->userid());
+                $theuser = $this->objUser->fullname($this->objUser->userid());
             }
-			//$theuser = $this->objUser->fullName($this->objUser->userid());
-		}
-		else {
-			$theuser = $this->objLanguage->languageText("mod_blog_word_anonymous", "blog");
-		}
-    	//start a form object
+            //$theuser = $this->objUser->fullName($this->objUser->userid());
+        }
+        else {
+            $theuser = $this->objLanguage->languageText("mod_blog_word_anonymous", "blog");
+        }
+        //start a form object
         $this->loadClass('textarea', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
@@ -2962,7 +2973,7 @@ class blogops extends object
         $emailadd->size = '80%';
         if(isset($m2fdata['user']))
         {
-        	$emailadd->setValue($m2fdata['user']);
+            $emailadd->setValue($m2fdata['user']);
         }
         $mtable->addCell($femaillabel->show());
         $mtable->addCell($emailadd->show());
@@ -2995,23 +3006,23 @@ class blogops extends object
 
     public function profileEditor($userid, $profile = NULL)
     {
-    	//print_r($profile);
-    	//profile editor and creator
-    	//start a form object
+        //print_r($profile);
+        //profile editor and creator
+        //start a form object
         $this->loadClass('textarea', 'htmlelements');
         $this->loadClass('htmlarea', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
         if($profile != NULL)
         {
-        	$pform = new form('setprofile', $this->uri(array(
+            $pform = new form('setprofile', $this->uri(array(
             'action' => 'editprofile', 'mode' => 'editprofile', 'id' => $profile['id']
-        	)));
+            )));
         }
         else {
-        	$pform = new form('setprofile', $this->uri(array(
-            	'action' => 'setprofile', 'mode' => 'saveprofile',
-        	)));
+            $pform = new form('setprofile', $this->uri(array(
+                'action' => 'setprofile', 'mode' => 'saveprofile',
+            )));
         }
         $pfieldset = $this->newObject('fieldset', 'htmlelements');
         //$pfieldset->setLegend($this->objLanguage->languageText('mod_blog_setprofile', 'blog'));
@@ -3028,7 +3039,7 @@ class blogops extends object
         $bname = new textinput('blogname');
         if(isset($profile['blog_name']))
         {
-        	$bname->setValue($profile['blog_name']);
+            $bname->setValue($profile['blog_name']);
         }
         $bname->size = 59;
         //$bname->setValue();
@@ -3042,7 +3053,7 @@ class blogops extends object
         $bdec = new textarea('blogdesc');
         if(isset($profile['blog_descrip']))
         {
-        	$bdec->setValue($profile['blog_descrip']);
+            $bdec->setValue($profile['blog_descrip']);
         }
         $ptable->addCell($bdeclabel->show());
         $ptable->addCell($bdec->show());
@@ -3055,7 +3066,7 @@ class blogops extends object
         $bprf->setName('blogprofile');
         if(isset($profile['blogger_profile']))
         {
-        	$bprf->setcontent($profile['blogger_profile']);
+            $bprf->setcontent($profile['blogger_profile']);
         }
 
         $ptable->addCell($bprflabel->show());
@@ -3080,106 +3091,106 @@ class blogops extends object
 
     public function showProfile($userid)
     {
-    	$objFeatureBox = $this->getObject("featurebox", "navigation");
-    	$this->loadClass('label', 'htmlelements');
-    	$this->loadClass('href', 'htmlelements');
-    	$this->objUser = $this->getObject('user', 'security');
-    	$this->objConfig = $this->getObject('altconfig', 'config');
-		$tllink = new href($this->uri(array('module' => 'blog', 'action' => 'timeline', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
-    	//go back to your blog
+        $objFeatureBox = $this->getObject("featurebox", "navigation");
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('href', 'htmlelements');
+        $this->objUser = $this->getObject('user', 'security');
+        $this->objConfig = $this->getObject('altconfig', 'config');
+        $tllink = new href($this->uri(array('module' => 'blog', 'action' => 'timeline', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
+        //go back to your blog
         $viewmyblog = new href($this->uri(array(
             'action' => 'viewblog'
         )) , $this->objLanguage->languageText("mod_blog_viewmyblog", "blog"));
-		$check = $this->objDbBlog->checkProfile($userid);
+        $check = $this->objDbBlog->checkProfile($userid);
         if($check != FALSE)
         {
-        	$link = new href($this->uri(array('module' => 'blog', 'action' => 'viewprofile', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewprofileof", "blog") . " " . $this->objUser->userName($userid));
-        	$tllink = new href($this->uri(array('module' => 'blog', 'action' => 'timeline', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
-        	$foaffile = $this->objConfig->getsiteRoot() . "usrfiles/users/" . $userid . "/". $userid . ".rdf";
-        	@$rdfcont = file($foaffile);
-        	if(!empty($rdfcont))
-        	{
-        		$objFIcon = $this->newObject('geticon', 'htmlelements');
-        		$objFIcon->setIcon('foaftiny', 'gif', 'icons');
+            $link = new href($this->uri(array('module' => 'blog', 'action' => 'viewprofile', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewprofileof", "blog") . " " . $this->objUser->userName($userid));
+            $tllink = new href($this->uri(array('module' => 'blog', 'action' => 'timeline', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
+            $foaffile = $this->objConfig->getsiteRoot() . "usrfiles/users/" . $userid . "/". $userid . ".rdf";
+            @$rdfcont = file($foaffile);
+            if(!empty($rdfcont))
+            {
+                $objFIcon = $this->newObject('geticon', 'htmlelements');
+                $objFIcon->setIcon('foaftiny', 'gif', 'icons');
                 $lficon = new href($this->objConfig->getsiteRoot() . "/usrfiles/users/" . $userid . "/". $userid . ".rdf",
-                				   $objFIcon->show(),NULL);
+                                   $objFIcon->show(),NULL);
 
                 $ficon = $lficon->show();
-        		//new href($this->objConfig->getsiteRoot() . "/usrfiles/users/" . $userid . "/". $userid . ".rdf", $this->objLanguage->languageText("mod_blog_foaflink", "blog"));
-        		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $link->show() . "<br />" . $ficon . "<br />" . $tllink->show());
-        	}
-        	else {
-        		$objFeatureBox = $this->getObject("featurebox", "navigation");
-    	
-        		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $link->show() . "<br />" . $tllink->show(). "<br />". $viewmyblog->show());
-        	}
+                //new href($this->objConfig->getsiteRoot() . "/usrfiles/users/" . $userid . "/". $userid . ".rdf", $this->objLanguage->languageText("mod_blog_foaflink", "blog"));
+                return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $link->show() . "<br />" . $ficon . "<br />" . $tllink->show());
+            }
+            else {
+                $objFeatureBox = $this->getObject("featurebox", "navigation");
+        
+                return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $link->show() . "<br />" . $tllink->show(). "<br />". $viewmyblog->show());
+            }
 
         }
         else {
-        	$objFeatureBox = $this->getObject("featurebox", "navigation");
-        	return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $tllink->show() . "<br />". $viewmyblog->show());
+            $objFeatureBox = $this->getObject("featurebox", "navigation");
+            return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog"), $tllink->show() . "<br />". $viewmyblog->show());
         }
     }
     
     public function showFullProfile($userid)
     {
-    	if($this->showfullname == 'FALSE')
-    	{
-    		$pname = $this->objUser->userName($userid);
-    	}
-    	else {
-    		$pname = $this->objUser->fullName($userid);
-    	}
-    	$objFeatureBox = $this->getObject("featurebox", "navigation");
-    	$this->loadClass('label', 'htmlelements');
-    	$this->loadClass('href', 'htmlelements');
-    	$this->objUser = $this->getObject('user', 'security');
-    	$this->objConfig = $this->getObject('altconfig', 'config');
-    	$userimg = "<center>".$this->objUser->getUserImage($userid)."</center>";
-		$tllink = new href($this->uri(array('module' => 'blog', 'action' => 'timeline', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
-    	//go back to your blog
+        if($this->showfullname == 'FALSE')
+        {
+            $pname = $this->objUser->userName($userid);
+        }
+        else {
+            $pname = $this->objUser->fullName($userid);
+        }
+        $objFeatureBox = $this->getObject("featurebox", "navigation");
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('href', 'htmlelements');
+        $this->objUser = $this->getObject('user', 'security');
+        $this->objConfig = $this->getObject('altconfig', 'config');
+        $userimg = "<center>".$this->objUser->getUserImage($userid)."</center>";
+        $tllink = new href($this->uri(array('module' => 'blog', 'action' => 'timeline', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
+        //go back to your blog
         $viewmyblog = new href($this->uri(array(
             'action' => 'viewblog'
         )) , $this->objLanguage->languageText("mod_blog_viewmyblog", "blog"));
-		$check = $this->objDbBlog->checkProfile($userid);
+        $check = $this->objDbBlog->checkProfile($userid);
         if($check != FALSE)
         {
-        	$link = new href($this->uri(array('module' => 'blog', 'action' => 'viewprofile', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewprofileof", "blog") . " " . $this->objUser->userName($userid));
-        	$tllink = new href($this->uri(array('module' => 'blog', 'action' => 'timeline', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
-        	$foaffile = $this->objConfig->getsiteRoot() . "usrfiles/users/" . $userid . "/". $userid . ".rdf";
-        	@$rdfcont = file($foaffile);
-        	if(!empty($rdfcont))
-        	{
-        		$objFIcon = $this->newObject('geticon', 'htmlelements');
-        		$objFIcon->setIcon('foaftiny', 'gif', 'icons');
+            $link = new href($this->uri(array('module' => 'blog', 'action' => 'viewprofile', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewprofileof", "blog") . " " . $this->objUser->userName($userid));
+            $tllink = new href($this->uri(array('module' => 'blog', 'action' => 'timeline', 'userid' => $userid)), $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
+            $foaffile = $this->objConfig->getsiteRoot() . "usrfiles/users/" . $userid . "/". $userid . ".rdf";
+            @$rdfcont = file($foaffile);
+            if(!empty($rdfcont))
+            {
+                $objFIcon = $this->newObject('geticon', 'htmlelements');
+                $objFIcon->setIcon('foaftiny', 'gif', 'icons');
                 $lficon = new href($this->objConfig->getsiteRoot() . "/usrfiles/users/" . $userid . "/". $userid . ".rdf",
-                				   $objFIcon->show(),NULL);
+                                   $objFIcon->show(),NULL);
 
                 $ficon = $lficon->show();
-        		//new href($this->objConfig->getsiteRoot() . "/usrfiles/users/" . $userid . "/". $userid . ".rdf", $this->objLanguage->languageText("mod_blog_foaflink", "blog"));
-        		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog")." ".$pname, $link->show() . "<br />" . $ficon . "<br />" . $tllink->show());
-        	}
-        	else {
-        		$objFeatureBox = $this->getObject("featurebox", "navigation");
-    	
-        		return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog")." ".$pname, $link->show() . "<br />" . $tllink->show(). "<br />". $viewmyblog->show());
-        	}
+                //new href($this->objConfig->getsiteRoot() . "/usrfiles/users/" . $userid . "/". $userid . ".rdf", $this->objLanguage->languageText("mod_blog_foaflink", "blog"));
+                return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog")." ".$pname, $link->show() . "<br />" . $ficon . "<br />" . $tllink->show());
+            }
+            else {
+                $objFeatureBox = $this->getObject("featurebox", "navigation");
+        
+                return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog")." ".$pname, $link->show() . "<br />" . $tllink->show(). "<br />". $viewmyblog->show());
+            }
 
         }
         else {
-        	$objFeatureBox = $this->getObject("featurebox", "navigation");
-        	return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog")." ".$pname, $userimg . "<br />" .$tllink->show() . "<br />". $viewmyblog->show());
+            $objFeatureBox = $this->getObject("featurebox", "navigation");
+            return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog")." ".$pname, $userimg . "<br />" .$tllink->show() . "<br />". $viewmyblog->show());
         }
     }
 
     public function displayProfile($userid, $profile)
     {
-    	$objFeatureBox = $this->getObject("featurebox", "navigation");
-    	$this->objUser = $this->getObject('user', 'security');
-    	$this->objConfig = $this->getObject('altconfig', 'config');
-    	$this->bbcode = $this->getObject('bbcodeparser', 'utilities');
-    	$prtable = $this->newObject('htmltable', 'htmlelements');
-    	$this->loadClass('label', 'htmlelements');
+        $objFeatureBox = $this->getObject("featurebox", "navigation");
+        $this->objUser = $this->getObject('user', 'security');
+        $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->bbcode = $this->getObject('bbcodeparser', 'utilities');
+        $prtable = $this->newObject('htmltable', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
         $prtable->cellpadding = 3;
         $prtable->startHeaderRow();
         $prtable->addHeaderCell('');
@@ -3213,10 +3224,10 @@ class blogops extends object
 
         if($this->showfullname == 'FALSE')
         {
-           	$namer = $this->objUser->userName($userid);
+               $namer = $this->objUser->userName($userid);
         }
         else {
-          	$namer = $this->objUser->fullname($userid);
+              $namer = $this->objUser->fullname($userid);
         }
         return $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_profileof", "blog") . " " . $namer, $content);
 
@@ -3224,23 +3235,23 @@ class blogops extends object
     
     public function pageEditor($userid, $check = NULL, $page = NULL, $featurebox = FALSE)
     {
-    	//start a form object
+        //start a form object
         $this->loadClass('href', 'htmlelements');
-    	$this->loadClass('textarea', 'htmlelements');
+        $this->loadClass('textarea', 'htmlelements');
         $this->loadClass('htmlarea', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
         //var_dump($page);
         if($page != NULL)
         {
-        	$pform = new form('setpage', $this->uri(array(
+            $pform = new form('setpage', $this->uri(array(
             'action' => 'setpage', 'mode' => 'editpage', 'id' => $page[0]['id']
-        	)));
+            )));
         }
         else {
-        	$pform = new form('setpage', $this->uri(array(
-            	'action' => 'setpage', 'mode' => 'savepage',
-        	)));
+            $pform = new form('setpage', $this->uri(array(
+                'action' => 'setpage', 'mode' => 'savepage',
+            )));
         }
         $pfieldset = $this->newObject('fieldset', 'htmlelements');
         //$pfieldset->setLegend($this->objLanguage->languageText('mod_blog_setpage', 'blog'));
@@ -3257,7 +3268,7 @@ class blogops extends object
         $bname = new textinput('page_name');
         if(isset($page[0]['page_name']))
         {
-        	$bname->setValue($page[0]['page_name']);
+            $bname->setValue($page[0]['page_name']);
         }
         $bname->size = 59;
         //$bname->setValue();
@@ -3272,7 +3283,7 @@ class blogops extends object
         $bprf->setName('page_content');
         if(isset($page[0]['page_content']))
         {
-        	$bprf->setcontent($page[0]['page_content']);
+            $bprf->setcontent($page[0]['page_content']);
         }
 
         $ptable->addCell($bprflabel->show());
@@ -3338,22 +3349,22 @@ class blogops extends object
     
     public function showPages($userid, $featurebox = FALSE)
     {
-    	$this->loadClass('href', 'htmlelements');
-    	//grab all of the links for the user
-    	$pages = $this->objDbBlog->getPages($userid);
-    	if(empty($pages))
-    	{
-    		return NULL;
-    	}
-    	$str = NULL;
-    	foreach($pages as $page)
-    	{
-    		$link = $this->uri(array('action' => 'showpage', 'pageid' => $page['id']));
-    		$hr = new href($link, $page['page_name'], ' alt="'.$page['page_name'].'"');
-    		$str .= "<ul>".$hr->show()."</ul>";
-    	}
-    	
-    	if ($featurebox == TRUE) {
+        $this->loadClass('href', 'htmlelements');
+        //grab all of the links for the user
+        $pages = $this->objDbBlog->getPages($userid);
+        if(empty($pages))
+        {
+            return NULL;
+        }
+        $str = NULL;
+        foreach($pages as $page)
+        {
+            $link = $this->uri(array('action' => 'showpage', 'pageid' => $page['id']));
+            $hr = new href($link, $page['page_name'], ' alt="'.$page['page_name'].'"');
+            $str .= "<ul>".$hr->show()."</ul>";
+        }
+        
+        if ($featurebox == TRUE) {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
             $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_pages", "blog") , $str, 'blogpages', 'default');
             return $ret;
@@ -3364,582 +3375,582 @@ class blogops extends object
     
     public function mail2blog()
     {
-    	//grab the DSN from the config file
-    	$this->objConfig = $this->getObject('altconfig', 'config');
-    	$this->objImap = $this->getObject('imap', 'mail');
-    	$this->dsn = $this->objConfig->getItem('BLOG_MAIL_DSN');
-    	try {
-    		//grab a list of all valid users to an array for verification later
-    		$valid = $this->objDbBlog->checkValidUser();
-    		$valadds = array();
-    		//cycle through the valid email addresses and check that the mail is from a real user
-    		foreach($valid as $addys)
-    		{
-    			$valadds[] = array('address' => $addys['emailaddress'], 'userid' => $addys['userid']);
-    		}
+        //grab the DSN from the config file
+        $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objImap = $this->getObject('imap', 'mail');
+        $this->dsn = $this->objConfig->getItem('BLOG_MAIL_DSN');
+        try {
+            //grab a list of all valid users to an array for verification later
+            $valid = $this->objDbBlog->checkValidUser();
+            $valadds = array();
+            //cycle through the valid email addresses and check that the mail is from a real user
+            foreach($valid as $addys)
+            {
+                $valadds[] = array('address' => $addys['emailaddress'], 'userid' => $addys['userid']);
+            }
 
-    		//connect to the IMAP/POP3 server
-    		$this->conn = $this->objImap->factory($this->dsn);
-    		//grab the mail headers
-    		$this->objImap->getHeaders();
-    		//var_dump($this->objImap->getHeaders());
-    		//check mail
-    		$this->thebox = $this->objImap->checkMbox();
-    		//get the mail folders
-    		$this->folders = $this->objImap->populateFolders($this->thebox);
-    		//count the messages
-    		$this->msgCount = $this->objImap->numMails();
-    		//echo $this->msgCount;
-    		//get the meassge headers
-    		$i = 1;
-    		//parse the messages
-    		while ($i <= $this->msgCount)
-    		{
-    			//get the header info
-    			$headerinfo = $this->objImap->getHeaderInfo($i);
-    			//from
-    			$address = $headerinfo->fromaddress;
-    			//subject
-    			$subject = $headerinfo->subject;
-    			//date
-    			$date = $headerinfo->Date;
-    			//message flag
-    			$read = $headerinfo->Unseen;
-    			//message body
-    			$bod = $this->objImap->getMessage($i);
+            //connect to the IMAP/POP3 server
+            $this->conn = $this->objImap->factory($this->dsn);
+            //grab the mail headers
+            $this->objImap->getHeaders();
+            //var_dump($this->objImap->getHeaders());
+            //check mail
+            $this->thebox = $this->objImap->checkMbox();
+            //get the mail folders
+            $this->folders = $this->objImap->populateFolders($this->thebox);
+            //count the messages
+            $this->msgCount = $this->objImap->numMails();
+            //echo $this->msgCount;
+            //get the meassge headers
+            $i = 1;
+            //parse the messages
+            while ($i <= $this->msgCount)
+            {
+                //get the header info
+                $headerinfo = $this->objImap->getHeaderInfo($i);
+                //from
+                $address = $headerinfo->fromaddress;
+                //subject
+                $subject = $headerinfo->subject;
+                //date
+                $date = $headerinfo->Date;
+                //message flag
+                $read = $headerinfo->Unseen;
+                //message body
+                $bod = $this->objImap->getMessage($i);
 
-    			//check if there is an attachment
-    			if(empty($bod[1]))
-    			{
-    				//nope no attachments
-    				$attachments = NULL;
-    			}
-    			else {
-    				//set the attachment
-    				$attachments = $bod[1];
-    				//loop through the attachments and write them down
+                //check if there is an attachment
+                if(empty($bod[1]))
+                {
+                    //nope no attachments
+                    $attachments = NULL;
+                }
+                else {
+                    //set the attachment
+                    $attachments = $bod[1];
+                    //loop through the attachments and write them down
 
-    			}
-    			//make sure the body doesn't have any nasty chars
-    			$message = @htmlentities($bod[0]);
+                }
+                //make sure the body doesn't have any nasty chars
+                $message = @htmlentities($bod[0]);
 
-    			//check for a valid user
-    			if(!empty($address))
-    			{
-    				//check the address against tbl_users to see if its valid.
-    				//just get the email addy, we dont need the name as it can be faked
-    				$fadd = $address;
-    				//get rid of the RFC formatted email bits
-    				$parts = explode("<", $fadd);
-    				$parts = explode(">", $parts[1]);
-    				//raw address string that we can use to check against
-    				$addy = $parts[0];
-    				//check if the address we get from the msg is in the array of valid addresses
-    				foreach ($valadds as $user)
-    				{
-    					//check if there is a match to the user list
-    					if($user['address'] != $addy)
-    					{
-    						//Nope, no match, not validated!
-    						$validated = NULL;
-    					}
-    					else {
-    						//echo "Valid user!";
-    						//match found, you are a valid user dude!
-    						$validated = TRUE;
-    						//set the userid
-    						$userid = $user['userid'];
-    						//all is cool, so lets break out of this loop and carry on
-    						break;
+                //check for a valid user
+                if(!empty($address))
+                {
+                    //check the address against tbl_users to see if its valid.
+                    //just get the email addy, we dont need the name as it can be faked
+                    $fadd = $address;
+                    //get rid of the RFC formatted email bits
+                    $parts = explode("<", $fadd);
+                    $parts = explode(">", $parts[1]);
+                    //raw address string that we can use to check against
+                    $addy = $parts[0];
+                    //check if the address we get from the msg is in the array of valid addresses
+                    foreach ($valadds as $user)
+                    {
+                        //check if there is a match to the user list
+                        if($user['address'] != $addy)
+                        {
+                            //Nope, no match, not validated!
+                            $validated = NULL;
+                        }
+                        else {
+                            //echo "Valid user!";
+                            //match found, you are a valid user dude!
+                            $validated = TRUE;
+                            //set the userid
+                            $userid = $user['userid'];
+                            //all is cool, so lets break out of this loop and carry on
+                            break;
 
-    					}
-    				}
-    			}
-    			if($validated == TRUE)
-    			{
-    				//insert the mail data into an array for manipulation
-    				$data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
-    				'body' => $message, 'attachments' => $attachments);
-    			}
+                        }
+                    }
+                }
+                if($validated == TRUE)
+                {
+                    //insert the mail data into an array for manipulation
+                    $data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
+                    'body' => $message, 'attachments' => $attachments);
+                }
 
-    			//delete the message as we don't need it anymore
-    			echo "sorting " . $this->msgCount . "messages";
-    			$this->objImap->delMsg($i);
-    			$i++;
-    		}
-    		//is the data var set?
-    		if(!isset($data))
-    		{
-    			$data = array();
-    		}
-    		//lets look at the data now
-    		foreach ($data as $datum)
-    		{
-    			$newbod = $datum['body'];
-    			//add the [img][/img] tags to the body so that the images show up
-    			//we discard any other mimetypes for now...
-    			if(!empty($datum['attachments']))
-    			{
-    				if(is_array($datum['attachments']))
-    				{
-    					foreach($datum['attachments'] as $files)
-    					{
-    						//do check for multiple attachments
-    						//set the filename of the attachment
-    						$fname = $files['filename'];
-    						$filenamearr = explode(".", $fname);
-    						$ext = pathinfo($fname);
-    						$filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];
-    						//decode the attachment data
-    						$filedata = base64_decode($files['filedata']);
-    						//set the path to write down the file to
-    						$path = $this->objConfig->getContentBasePath() . 'users/'.$userid.'/';  // 'blog/';
-    						$fullpath = $this->objConfig->getsiteRoot()."/usrfiles/users/".$userid.'/';
-    						//check that the data dir is there
-    						//echo $path, $fullpath; die();
-    						if(!file_exists($path))
-    						{
-    							//dir doesn't exist so create it quickly
-    							mkdir($path, 0777);
-    						}
-    						//fix up the filename a little
-    						$filename = str_replace(" ","_", $filename);
-    						$filename = str_replace("%20","_", $filename);
-    						//change directory to the data dir
-    						chdir($path);
-    						//write the file
-    						$handle = fopen($filename, 'wb');
-    						fwrite($handle, $filedata);
-    						fclose($handle);
-    						$type = mime_content_type($filename);
-    						$tparts = explode("/", $type);
-    						//print_r($tparts);
-    						if($tparts[0] == "image")
-    						{
-    							//add the img stuff to the body at the end of the "post"
-    							$newbod .= "[img]" . $fullpath . $filename . "[/img]" . "<br />";
-    						}
-    						elseif($tparts[1] == "3gpp")
-    						{
-    							if($tparts[0] == "video")
-    							{
-    								log_debug("Found a 3gp Video file! Processing...");
-    								//send to the mediaconverter to convert to flv
-    								$mediacon = $this->getObject('media', 'utilities');
-    								$file = $path . $filename;
-    								//echo $file;
-    								$flv = $mediacon->convert3gp2flv($file, $fullpath);
-    								//echo "file saved to: $flv";
-    								$newbod .= "[FLV]".$flv."[/FLV]"." <br />";
-    								//echo $newbod;
-    							}
-    							elseif($tparts[0] == "audio")
-    							{
-    								log_debug("Found a 3gp amr file! Processing...");
-    								//amr file
-    								$mediacon = $this->getObject('media', 'utilities');
-    								$file = $path . $filename;
-    								//echo $file;
-    								$mp3 = $mediacon->convertAmr2Mp3($file, $fullpath);
-    								$newbod .= "[EMBED]".$mp3."[/EMBED]"." <br />";
+                //delete the message as we don't need it anymore
+                echo "sorting " . $this->msgCount . "messages";
+                $this->objImap->delMsg($i);
+                $i++;
+            }
+            //is the data var set?
+            if(!isset($data))
+            {
+                $data = array();
+            }
+            //lets look at the data now
+            foreach ($data as $datum)
+            {
+                $newbod = $datum['body'];
+                //add the [img][/img] tags to the body so that the images show up
+                //we discard any other mimetypes for now...
+                if(!empty($datum['attachments']))
+                {
+                    if(is_array($datum['attachments']))
+                    {
+                        foreach($datum['attachments'] as $files)
+                        {
+                            //do check for multiple attachments
+                            //set the filename of the attachment
+                            $fname = $files['filename'];
+                            $filenamearr = explode(".", $fname);
+                            $ext = pathinfo($fname);
+                            $filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];
+                            //decode the attachment data
+                            $filedata = base64_decode($files['filedata']);
+                            //set the path to write down the file to
+                            $path = $this->objConfig->getContentBasePath() . 'users/'.$userid.'/';  // 'blog/';
+                            $fullpath = $this->objConfig->getsiteRoot()."/usrfiles/users/".$userid.'/';
+                            //check that the data dir is there
+                            //echo $path, $fullpath; die();
+                            if(!file_exists($path))
+                            {
+                                //dir doesn't exist so create it quickly
+                                mkdir($path, 0777);
+                            }
+                            //fix up the filename a little
+                            $filename = str_replace(" ","_", $filename);
+                            $filename = str_replace("%20","_", $filename);
+                            //change directory to the data dir
+                            chdir($path);
+                            //write the file
+                            $handle = fopen($filename, 'wb');
+                            fwrite($handle, $filedata);
+                            fclose($handle);
+                            $type = mime_content_type($filename);
+                            $tparts = explode("/", $type);
+                            //print_r($tparts);
+                            if($tparts[0] == "image")
+                            {
+                                //add the img stuff to the body at the end of the "post"
+                                $newbod .= "[img]" . $fullpath . $filename . "[/img]" . "<br />";
+                            }
+                            elseif($tparts[1] == "3gpp")
+                            {
+                                if($tparts[0] == "video")
+                                {
+                                    log_debug("Found a 3gp Video file! Processing...");
+                                    //send to the mediaconverter to convert to flv
+                                    $mediacon = $this->getObject('media', 'utilities');
+                                    $file = $path . $filename;
+                                    //echo $file;
+                                    $flv = $mediacon->convert3gp2flv($file, $fullpath);
+                                    //echo "file saved to: $flv";
+                                    $newbod .= "[FLV]".$flv."[/FLV]"." <br />";
+                                    //echo $newbod;
+                                }
+                                elseif($tparts[0] == "audio")
+                                {
+                                    log_debug("Found a 3gp amr file! Processing...");
+                                    //amr file
+                                    $mediacon = $this->getObject('media', 'utilities');
+                                    $file = $path . $filename;
+                                    //echo $file;
+                                    $mp3 = $mediacon->convertAmr2Mp3($file, $fullpath);
+                                    $newbod .= "[EMBED]".$mp3."[/EMBED]"." <br />";
 
-    							}
-    						}
-    						elseif($tparts[1] == "mp4")
-    						{
-    							if($tparts[0] == "video")
-    							{
-    								log_debug("Found an MP4 container file");
-    								//send to the mediaconverter to convert to flv
-    								$mediacon = $this->getObject('media', 'utilities');
-    								$file = $path . $filename;
-    								//echo $file;
-    								$flv = $mediacon->convertMp42flv($file, $fullpath);
-    								//echo "file saved to: $flv";
-    								$newbod .= "[FLV]".$flv."[/FLV]"." <br />";
-    							}
-    						}
-    						else {
-    							//add the img stuff to the body at the end of the "post"
-    							$newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/users/'.$userid.'/' . urlencode($filename) . "[/url]" . "<br />";
-    						}
-    					}
-    				}
-    				else {
-    					//set the filename of the attachment
-    					$fname = $datum['attachments'][0]['filename'];
-    					$filenamearr = explode(".", $fname);
-    					$ext = pathinfo($fname);
-    					$filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];
-    					//decode the attachment data
-    					$filedata = base64_decode($datum['attachments'][0]['filedata']);
-    					//set the path to write down the file to
-    					$path = $this->objConfig->getContentBasePath() . 'blog/';
-    					//check that the data dir is there
-    					//fix up the filename a little
-    					$filename = str_replace(" ","_", $filename);
-    					if(!file_exists($path))
-    					{
-    						//dir doesn't exist so create it quickly
-    						mkdir($path, 0777);
-    					}
-    					//change directory to the data dir
-    					chdir($path);
-    					//write the file
-    					$handle = fopen($filename, 'wb');
-    					fwrite($handle, $filedata);
-    					fclose($handle);
-    					$type = mime_content_type($filename);
-    					$tparts = explode("/", $type);
-    					if($tparts[0] == "image")
-    					{
-    						//add the img stuff to the body at the end of the "post"
-    						$newbod .= "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]" . "<br />";
-    					}
-    					else {
-    						//add the img stuff to the body at the end of the "post"
-    						$newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . urlencode($filename) . "[/url]" . "<br />";
-    					}
-    				}
-    			}
-    			else {
-    				//no attachments to worry about
-    				$newbod = $datum['body'];
-    			}
-    			//Write the new post to the database as a "Quick Post"
-    			$this->quickPostAdd($datum['userid'], array('posttitle' => $datum['subject'], 'postcontent' => $newbod,
-    			'postcat' => 0, 'postexcerpt' => '', 'poststatus' => '0',
-    			'commentstatus' => 'Y',
-    			'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $datum['date']), 'mail');
-    		}
+                                }
+                            }
+                            elseif($tparts[1] == "mp4")
+                            {
+                                if($tparts[0] == "video")
+                                {
+                                    log_debug("Found an MP4 container file");
+                                    //send to the mediaconverter to convert to flv
+                                    $mediacon = $this->getObject('media', 'utilities');
+                                    $file = $path . $filename;
+                                    //echo $file;
+                                    $flv = $mediacon->convertMp42flv($file, $fullpath);
+                                    //echo "file saved to: $flv";
+                                    $newbod .= "[FLV]".$flv."[/FLV]"." <br />";
+                                }
+                            }
+                            else {
+                                //add the img stuff to the body at the end of the "post"
+                                $newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/users/'.$userid.'/' . urlencode($filename) . "[/url]" . "<br />";
+                            }
+                        }
+                    }
+                    else {
+                        //set the filename of the attachment
+                        $fname = $datum['attachments'][0]['filename'];
+                        $filenamearr = explode(".", $fname);
+                        $ext = pathinfo($fname);
+                        $filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];
+                        //decode the attachment data
+                        $filedata = base64_decode($datum['attachments'][0]['filedata']);
+                        //set the path to write down the file to
+                        $path = $this->objConfig->getContentBasePath() . 'blog/';
+                        //check that the data dir is there
+                        //fix up the filename a little
+                        $filename = str_replace(" ","_", $filename);
+                        if(!file_exists($path))
+                        {
+                            //dir doesn't exist so create it quickly
+                            mkdir($path, 0777);
+                        }
+                        //change directory to the data dir
+                        chdir($path);
+                        //write the file
+                        $handle = fopen($filename, 'wb');
+                        fwrite($handle, $filedata);
+                        fclose($handle);
+                        $type = mime_content_type($filename);
+                        $tparts = explode("/", $type);
+                        if($tparts[0] == "image")
+                        {
+                            //add the img stuff to the body at the end of the "post"
+                            $newbod .= "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]" . "<br />";
+                        }
+                        else {
+                            //add the img stuff to the body at the end of the "post"
+                            $newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . urlencode($filename) . "[/url]" . "<br />";
+                        }
+                    }
+                }
+                else {
+                    //no attachments to worry about
+                    $newbod = $datum['body'];
+                }
+                //Write the new post to the database as a "Quick Post"
+                $this->quickPostAdd($datum['userid'], array('posttitle' => $datum['subject'], 'postcontent' => $newbod,
+                'postcat' => 0, 'postexcerpt' => '', 'poststatus' => '0',
+                'commentstatus' => 'Y',
+                'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $datum['date']), 'mail');
+            }
 
-    	}
-    	//any issues?
-    	catch(customException $e) {
-    		//clean up and die!
-    		customException::cleanUp();
-    	}
+        }
+        //any issues?
+        catch(customException $e) {
+            //clean up and die!
+            customException::cleanUp();
+        }
     }
 
     public function listmail2blog()
     {
-    	//grab the DSN from the config file
-    	$this->objConfig = $this->getObject('altconfig', 'config');
-    	$this->objImap = $this->getObject('imap', 'mail');
-    	$listdsn = $this->sysConfig->getValue('list_dsn', 'blog');
-    	//$listdsn = $this->objConfig->getItem('BLOG_LISTMAIL_DSN');
-    	//$userid = $this->sysConfig->getValue('list_userid', 'blog');
-    	//$listidentifier = $this->sysConfig->getValue('list_identifier', 'blog');
-    	
-    	// grab a list of identified lists
-    	$validlists = $this->objDbBlog->getLists();
-    	// create an array of valid identifiers
-    	foreach($validlists as $valididentifiers)
-    	{
-    		$valid[] = $valididentifiers['list_identifier'];
-    	}
-    	try {
-    		//connect to the IMAP/POP3 server
-    		$this->conn = $this->objImap->factory($listdsn);
-    		//grab the mail headers
-    		$this->objImap->getHeaders();
-    		//check mail
-    		$this->thebox = $this->objImap->checkMbox();
-    		//get the mail folders
-    		$this->folders = $this->objImap->populateFolders($this->thebox);
-    		//count the messages
-    		$this->msgCount = $this->objImap->numMails();
-    		//echo $this->msgCount;
-    		//get the meassge headers
-    		$i = 1;
-    		//parse the messages
-    		while ($i <= $this->msgCount)
-    		{
-    			//get the header info
-    			$headerinfo = $this->objImap->getHeaderInfo($i);
-    			//from
-    			$address = @$headerinfo->fromaddress;
-    			//subject
-    			$subject = @$headerinfo->subject;
-    			//date
-    			$date = @$headerinfo->Date;
-    			//message flag
-    			$read = @$headerinfo->Unseen;
-    			//message body
-    			$bod = $this->objImap->getMessage($i);
-    				
-    			//put this into a foreach to check all valid lists	
-    			//check to see that the message comes from [Nextgen-online]
-    			foreach($valid as $listidentifier)
-    			{
-    				if(preg_match('/\['.$listidentifier.'\]/U', $subject))
-    				{
-    					$message = @htmlentities($bod[0]);
+        //grab the DSN from the config file
+        $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objImap = $this->getObject('imap', 'mail');
+        $listdsn = $this->sysConfig->getValue('list_dsn', 'blog');
+        //$listdsn = $this->objConfig->getItem('BLOG_LISTMAIL_DSN');
+        //$userid = $this->sysConfig->getValue('list_userid', 'blog');
+        //$listidentifier = $this->sysConfig->getValue('list_identifier', 'blog');
+        
+        // grab a list of identified lists
+        $validlists = $this->objDbBlog->getLists();
+        // create an array of valid identifiers
+        foreach($validlists as $valididentifiers)
+        {
+            $valid[] = $valididentifiers['list_identifier'];
+        }
+        try {
+            //connect to the IMAP/POP3 server
+            $this->conn = $this->objImap->factory($listdsn);
+            //grab the mail headers
+            $this->objImap->getHeaders();
+            //check mail
+            $this->thebox = $this->objImap->checkMbox();
+            //get the mail folders
+            $this->folders = $this->objImap->populateFolders($this->thebox);
+            //count the messages
+            $this->msgCount = $this->objImap->numMails();
+            //echo $this->msgCount;
+            //get the meassge headers
+            $i = 1;
+            //parse the messages
+            while ($i <= $this->msgCount)
+            {
+                //get the header info
+                $headerinfo = $this->objImap->getHeaderInfo($i);
+                //from
+                $address = @$headerinfo->fromaddress;
+                //subject
+                $subject = @$headerinfo->subject;
+                //date
+                $date = @$headerinfo->Date;
+                //message flag
+                $read = @$headerinfo->Unseen;
+                //message body
+                $bod = $this->objImap->getMessage($i);
+                    
+                //put this into a foreach to check all valid lists    
+                //check to see that the message comes from [Nextgen-online]
+                foreach($valid as $listidentifier)
+                {
+                    if(preg_match('/\['.$listidentifier.'\]/U', $subject))
+                    {
+                        $message = @htmlentities($bod[0]);
 
-    					$listinfo = $this->objDbBlog->getListInfo($listidentifier);
-    					//print_r($listinfo);die();
-    					$userid = $listinfo[0]['listuser'];
-    					//insert the mail data into an array for manipulation
-    					$data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
-    						'body' => $message, 'attachments' => $attachments);
-    					//echo "valid list mail";
-    					$validated = TRUE;
-    					//break;
-    				}
-    				else {
-    					$validated = FALSE;
-    				}
-    			}
-    			
-    			//check if there is an attachment
-    			if(empty($bod[1]))
-    			{
-    				//nope no attachments
-    				$attachments = NULL;
-    			}
-    			else {
-    				//set the attachment
-    				$attachments = $bod[1];
-    				//loop through the attachments and write them down
+                        $listinfo = $this->objDbBlog->getListInfo($listidentifier);
+                        //print_r($listinfo);die();
+                        $userid = $listinfo[0]['listuser'];
+                        //insert the mail data into an array for manipulation
+                        $data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
+                            'body' => $message, 'attachments' => $attachments);
+                        //echo "valid list mail";
+                        $validated = TRUE;
+                        //break;
+                    }
+                    else {
+                        $validated = FALSE;
+                    }
+                }
+                
+                //check if there is an attachment
+                if(empty($bod[1]))
+                {
+                    //nope no attachments
+                    $attachments = NULL;
+                }
+                else {
+                    //set the attachment
+                    $attachments = $bod[1];
+                    //loop through the attachments and write them down
 
-    			}
-    			//make sure the body doesn't have any nasty chars
-    			$message = @htmlentities($bod[0]);
+                }
+                //make sure the body doesn't have any nasty chars
+                $message = @htmlentities($bod[0]);
 
-    			/*if($validated == TRUE)
-    			{
-    				//echo "grabbing the list info";
-    				// grab the userid from the table
-    				$listinfo = $this->objDbBlog->getListInfo($listidentifier);
-    				//print_r($listinfo);die();
-    				$userid = $listinfo[0]['listuser'];
-    				//insert the mail data into an array for manipulation
-    				$data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
-    				'body' => $message, 'attachments' => $attachments);
-    			}*/
+                /*if($validated == TRUE)
+                {
+                    //echo "grabbing the list info";
+                    // grab the userid from the table
+                    $listinfo = $this->objDbBlog->getListInfo($listidentifier);
+                    //print_r($listinfo);die();
+                    $userid = $listinfo[0]['listuser'];
+                    //insert the mail data into an array for manipulation
+                    $data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
+                    'body' => $message, 'attachments' => $attachments);
+                }*/
 
-    			//delete the message as we don't need it anymore
-    			//echo "sorting " . $this->msgCount . "messages";
-    			$this->objImap->delMsg($i);
-    			$i++;
-    		}
-    		//is the data var set?
-    		if(!isset($data))
-    		{
-    			$data = array();
-    		}
-    		//lets look at the data now
-    		foreach ($data as $datum)
-    		{
-    			$newbod = $datum['body'];
-    			//add the [img][/img] tags to the body so that the images show up
-    			//we discard any other mimetypes for now...
-    			if(!empty($datum['attachments']))
-    			{
-    				if(is_array($datum['attachments']))
-    				{
-    					foreach($datum['attachments'] as $files)
-    					{
-    						//do check for multiple attachments
-    						//set the filename of the attachment
-    						$fname = $files['filename'];
-    						$filenamearr = explode(".", $fname);
-    						$ext = pathinfo($fname);
-    						$filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];
-    						//decode the attachment data
-    						$filedata = base64_decode($files['filedata']);
-    						//set the path to write down the file to
-    						$path = $this->objConfig->getContentBasePath() . 'users/'.$userid.'/';  // 'blog/';
-    						$fullpath = $this->objConfig->getsiteRoot()."/usrfiles/users/".$userid.'/';
-    						//check that the data dir is there
-    						//echo $path, $fullpath; die();
-    						if(!file_exists($path))
-    						{
-    							//dir doesn't exist so create it quickly
-    							mkdir($path, 0777);
-    						}
-    						//fix up the filename a little
-    						$filename = str_replace(" ","_", $filename);
-    						$filename = str_replace("%20","_", $filename);
-    						//change directory to the data dir
-    						chdir($path);
-    						//write the file
-    						$handle = fopen($filename, 'wb');
-    						fwrite($handle, $filedata);
-    						fclose($handle);
-    						$type = mime_content_type($filename);
-    						$tparts = explode("/", $type);
-    						//print_r($tparts);
-    						if($tparts[0] == "image")
-    						{
-    							//add the img stuff to the body at the end of the "post"
-    							$newbod .= "[img]" . $fullpath . $filename . "[/img]" . "<br />";
-    						}
-    						elseif($tparts[1] == "3gpp")
-    						{
-    							if($tparts[0] == "video")
-    							{
-    								log_debug("Found a 3gp Video file! Processing...");
-    								//send to the mediaconverter to convert to flv
-    								$mediacon = $this->getObject('media', 'utilities');
-    								$file = $path . $filename;
-    								//echo $file;
-    								$flv = $mediacon->convert3gp2flv($file, $fullpath);
-    								//echo "file saved to: $flv";
-    								$newbod .= "[FLV]".$flv."[/FLV]"." <br />";
-    								//echo $newbod;
-    							}
-    							elseif($tparts[0] == "audio")
-    							{
-    								log_debug("Found a 3gp amr file! Processing...");
-    								//amr file
-    								$mediacon = $this->getObject('media', 'utilities');
-    								$file = $path . $filename;
-    								//echo $file;
-    								$mp3 = $mediacon->convertAmr2Mp3($file, $fullpath);
-    								$newbod .= "[EMBED]".$mp3."[/EMBED]"." <br />";
+                //delete the message as we don't need it anymore
+                //echo "sorting " . $this->msgCount . "messages";
+                $this->objImap->delMsg($i);
+                $i++;
+            }
+            //is the data var set?
+            if(!isset($data))
+            {
+                $data = array();
+            }
+            //lets look at the data now
+            foreach ($data as $datum)
+            {
+                $newbod = $datum['body'];
+                //add the [img][/img] tags to the body so that the images show up
+                //we discard any other mimetypes for now...
+                if(!empty($datum['attachments']))
+                {
+                    if(is_array($datum['attachments']))
+                    {
+                        foreach($datum['attachments'] as $files)
+                        {
+                            //do check for multiple attachments
+                            //set the filename of the attachment
+                            $fname = $files['filename'];
+                            $filenamearr = explode(".", $fname);
+                            $ext = pathinfo($fname);
+                            $filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];
+                            //decode the attachment data
+                            $filedata = base64_decode($files['filedata']);
+                            //set the path to write down the file to
+                            $path = $this->objConfig->getContentBasePath() . 'users/'.$userid.'/';  // 'blog/';
+                            $fullpath = $this->objConfig->getsiteRoot()."/usrfiles/users/".$userid.'/';
+                            //check that the data dir is there
+                            //echo $path, $fullpath; die();
+                            if(!file_exists($path))
+                            {
+                                //dir doesn't exist so create it quickly
+                                mkdir($path, 0777);
+                            }
+                            //fix up the filename a little
+                            $filename = str_replace(" ","_", $filename);
+                            $filename = str_replace("%20","_", $filename);
+                            //change directory to the data dir
+                            chdir($path);
+                            //write the file
+                            $handle = fopen($filename, 'wb');
+                            fwrite($handle, $filedata);
+                            fclose($handle);
+                            $type = mime_content_type($filename);
+                            $tparts = explode("/", $type);
+                            //print_r($tparts);
+                            if($tparts[0] == "image")
+                            {
+                                //add the img stuff to the body at the end of the "post"
+                                $newbod .= "[img]" . $fullpath . $filename . "[/img]" . "<br />";
+                            }
+                            elseif($tparts[1] == "3gpp")
+                            {
+                                if($tparts[0] == "video")
+                                {
+                                    log_debug("Found a 3gp Video file! Processing...");
+                                    //send to the mediaconverter to convert to flv
+                                    $mediacon = $this->getObject('media', 'utilities');
+                                    $file = $path . $filename;
+                                    //echo $file;
+                                    $flv = $mediacon->convert3gp2flv($file, $fullpath);
+                                    //echo "file saved to: $flv";
+                                    $newbod .= "[FLV]".$flv."[/FLV]"." <br />";
+                                    //echo $newbod;
+                                }
+                                elseif($tparts[0] == "audio")
+                                {
+                                    log_debug("Found a 3gp amr file! Processing...");
+                                    //amr file
+                                    $mediacon = $this->getObject('media', 'utilities');
+                                    $file = $path . $filename;
+                                    //echo $file;
+                                    $mp3 = $mediacon->convertAmr2Mp3($file, $fullpath);
+                                    $newbod .= "[EMBED]".$mp3."[/EMBED]"." <br />";
 
-    							}
-    						}
-    						elseif($tparts[1] == "mp4")
-    						{
-    							if($tparts[0] == "video")
-    							{
-    								log_debug("Found an MP4 container file");
-    								//send to the mediaconverter to convert to flv
-    								$mediacon = $this->getObject('media', 'utilities');
-    								$file = $path . $filename;
-    								//echo $file;
-    								$flv = $mediacon->convertMp42flv($file, $fullpath);
-    								//echo "file saved to: $flv";
-    								$newbod .= "[FLV]".$flv."[/FLV]"." <br />";
-    							}
-    						}
-    						else {
-    							//add the img stuff to the body at the end of the "post"
-    							$newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/users/'.$userid.'/' . urlencode($filename) . "[/url]" . "<br />";
-    						}
-    					}
-    				}
-    				else {
-    					//set the filename of the attachment
-    					$fname = $datum['attachments'][0]['filename'];
-    					$filenamearr = explode(".", $fname);
-    					$ext = pathinfo($fname);
-    					$filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];
-    					//decode the attachment data
-    					$filedata = base64_decode($datum['attachments'][0]['filedata']);
-    					//set the path to write down the file to
-    					$path = $this->objConfig->getContentBasePath() . 'blog/';
-    					//check that the data dir is there
-    					//fix up the filename a little
-    					$filename = str_replace(" ","_", $filename);
-    					if(!file_exists($path))
-    					{
-    						//dir doesn't exist so create it quickly
-    						mkdir($path, 0777);
-    					}
-    					//change directory to the data dir
-    					chdir($path);
-    					//write the file
-    					$handle = fopen($filename, 'wb');
-    					fwrite($handle, $filedata);
-    					fclose($handle);
-    					$type = mime_content_type($filename);
-    					$tparts = explode("/", $type);
-    					if($tparts[0] == "image")
-    					{
-    						//add the img stuff to the body at the end of the "post"
-    						$newbod .= "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]" . "<br />";
-    					}
-    					else {
-    						//add the img stuff to the body at the end of the "post"
-    						$newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . urlencode($filename) . "[/url]" . "<br />";
-    					}
-    				}
-    			}
-    			else {
-    				//no attachments to worry about
-    				$newbod = $datum['body'];
-    			}
-    			//Write the new post to the database as a "Quick Post"
-    			$this->quickPostAdd($datum['userid'], array('posttitle' => $datum['subject'], 'postcontent' => $newbod,
-    			'postcat' => 0, 'postexcerpt' => '', 'poststatus' => '0',
-    			'commentstatus' => 'Y',
-    			'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $datum['date']), 'mail');
-    		}
+                                }
+                            }
+                            elseif($tparts[1] == "mp4")
+                            {
+                                if($tparts[0] == "video")
+                                {
+                                    log_debug("Found an MP4 container file");
+                                    //send to the mediaconverter to convert to flv
+                                    $mediacon = $this->getObject('media', 'utilities');
+                                    $file = $path . $filename;
+                                    //echo $file;
+                                    $flv = $mediacon->convertMp42flv($file, $fullpath);
+                                    //echo "file saved to: $flv";
+                                    $newbod .= "[FLV]".$flv."[/FLV]"." <br />";
+                                }
+                            }
+                            else {
+                                //add the img stuff to the body at the end of the "post"
+                                $newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/users/'.$userid.'/' . urlencode($filename) . "[/url]" . "<br />";
+                            }
+                        }
+                    }
+                    else {
+                        //set the filename of the attachment
+                        $fname = $datum['attachments'][0]['filename'];
+                        $filenamearr = explode(".", $fname);
+                        $ext = pathinfo($fname);
+                        $filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];
+                        //decode the attachment data
+                        $filedata = base64_decode($datum['attachments'][0]['filedata']);
+                        //set the path to write down the file to
+                        $path = $this->objConfig->getContentBasePath() . 'blog/';
+                        //check that the data dir is there
+                        //fix up the filename a little
+                        $filename = str_replace(" ","_", $filename);
+                        if(!file_exists($path))
+                        {
+                            //dir doesn't exist so create it quickly
+                            mkdir($path, 0777);
+                        }
+                        //change directory to the data dir
+                        chdir($path);
+                        //write the file
+                        $handle = fopen($filename, 'wb');
+                        fwrite($handle, $filedata);
+                        fclose($handle);
+                        $type = mime_content_type($filename);
+                        $tparts = explode("/", $type);
+                        if($tparts[0] == "image")
+                        {
+                            //add the img stuff to the body at the end of the "post"
+                            $newbod .= "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]" . "<br />";
+                        }
+                        else {
+                            //add the img stuff to the body at the end of the "post"
+                            $newbod .= "[url]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . urlencode($filename) . "[/url]" . "<br />";
+                        }
+                    }
+                }
+                else {
+                    //no attachments to worry about
+                    $newbod = $datum['body'];
+                }
+                //Write the new post to the database as a "Quick Post"
+                $this->quickPostAdd($datum['userid'], array('posttitle' => $datum['subject'], 'postcontent' => $newbod,
+                'postcat' => 0, 'postexcerpt' => '', 'poststatus' => '0',
+                'commentstatus' => 'Y',
+                'postmodified' => date('r'), 'commentcount' => 0, 'postdate' => $datum['date']), 'mail');
+            }
 
-    	}
-    	//any issues?
-    	catch(customException $e) {
-    		//clean up and die!
-    		customException::cleanUp();
-    	}
+        }
+        //any issues?
+        catch(customException $e) {
+            //clean up and die!
+            customException::cleanUp();
+        }
     }
     
 
     public function pingGoogle($userid)
     {
-    	$objBk = $this->getObject('background', 'utilities');
-    	$status = $objBk->isUserConn();
-    	$callback = $objBk->keepAlive();
-    	$this->objProxy = $this->getObject('proxy', 'utilities');
-    	//set up for Google Blog API
-    	$changesURL = $this->uri(array('module' => 'blog', 'action' => 'feed', 'userid' => $userid));
-    	$name = $this->objUser->fullname($userid) . " Chisimba blog";
-    	$blogURL = $this->uri(array('module' => 'blog', 'action' => 'randblog', 'userid' => $userid));
-    	//OK lets put it together...
-    	$gurl = "http://blogsearch.google.com/ping";
-    	//do the http request
-    	//echo $gurl;
-    	$gurl = str_replace('%26amp%3B', "&", $gurl);
-    	$gurl = str_replace('&amp;', "&", $gurl);
-    	$gurl = $gurl."?name=".urlencode($name)."&url=".urlencode($blogURL)."&changesUrl=".urlencode($changesURL);
+        $objBk = $this->getObject('background', 'utilities');
+        $status = $objBk->isUserConn();
+        $callback = $objBk->keepAlive();
+        $this->objProxy = $this->getObject('proxy', 'utilities');
+        //set up for Google Blog API
+        $changesURL = $this->uri(array('module' => 'blog', 'action' => 'feed', 'userid' => $userid));
+        $name = $this->objUser->fullname($userid) . " Chisimba blog";
+        $blogURL = $this->uri(array('module' => 'blog', 'action' => 'randblog', 'userid' => $userid));
+        //OK lets put it together...
+        $gurl = "http://blogsearch.google.com/ping";
+        //do the http request
+        //echo $gurl;
+        $gurl = str_replace('%26amp%3B', "&", $gurl);
+        $gurl = str_replace('&amp;', "&", $gurl);
+        $gurl = $gurl."?name=".urlencode($name)."&url=".urlencode($blogURL)."&changesUrl=".urlencode($changesURL);
 
-    	//get the proxy info if set
-    	$proxyArr = $this->objProxy->getProxy(NULL);
-    	//print_r($proxyArr); die();
-    	if(!empty($proxyArr))
-    	{
-    		$parr = array(
-    		'proxy_host'        => $proxyArr['proxyserver'],
-    		'proxy_port'        => $proxyArr['proxyport'],
-    		'proxy_user'        => $proxyArr['proxyusername'],
-    		'proxy_pass'        => $proxyArr['proxypassword']
-    		);
-    	}
-    	//echo $gurl; die();
-    	$ch = curl_init();
-    	curl_setopt($ch, CURLOPT_URL, $gurl);
-    	curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-    	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    	if(!empty($proxyArr))
-    	{
-    		curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxyserver'].":".$proxyArr['proxyport']);
-    		curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxyusername'].":".$proxyArr['proxypassword']);
-    	}
-    	$code = curl_exec($ch);
-    	curl_close($ch);
-    	switch ($code) {
-    		case "Thanks for the ping.":
-    			log_debug("Google blogs API Success! Google said: " . $code);
-    			break;
-    		default:
-    			log_debug("Google blogs API Failure! Google said: " . $code);
-    			break;
-    	}
+        //get the proxy info if set
+        $proxyArr = $this->objProxy->getProxy(NULL);
+        //print_r($proxyArr); die();
+        if(!empty($proxyArr))
+        {
+            $parr = array(
+            'proxy_host'        => $proxyArr['proxyserver'],
+            'proxy_port'        => $proxyArr['proxyport'],
+            'proxy_user'        => $proxyArr['proxyusername'],
+            'proxy_pass'        => $proxyArr['proxypassword']
+            );
+        }
+        //echo $gurl; die();
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $gurl);
+        curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        if(!empty($proxyArr))
+        {
+            curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxyserver'].":".$proxyArr['proxyport']);
+            curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxyusername'].":".$proxyArr['proxypassword']);
+        }
+        $code = curl_exec($ch);
+        curl_close($ch);
+        switch ($code) {
+            case "Thanks for the ping.":
+                log_debug("Google blogs API Success! Google said: " . $code);
+                break;
+            default:
+                log_debug("Google blogs API Failure! Google said: " . $code);
+                break;
+        }
     }
     
     public function quickSearch($term)
     {
-    	$ret = $this->objDbBlog->quickSearch($term);
-    	return $ret;
+        $ret = $this->objDbBlog->quickSearch($term);
+        return $ret;
     }
     
     public function searchBox($featurebox=TRUE)
     {
-    	$this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
         $qseekform = new form('qseek', $this->uri(array(
             'action' => 'blogsearch',
         )));
@@ -3963,44 +3974,44 @@ class blogops extends object
     
     public function displaySearchResults($searchres)
     {
-    	$res = NULL;
-    	if(empty($searchres))
-    	{
-    		$res .= "<hr>";
-    		$res .= "<h1>".$this->objLanguage->languageText("mod_blog_noresultsfound", "blog")."</h1>";
-    		return $res;
-    	}
-    	else {
-    		$res .= "<h3>".$this->objLanguage->languageText("mod_blog_searchresults", "blog")."</h3><br />";
-    	}       
-    	foreach ($searchres as $results)
-		{
-			if($this->showfullname == "FALSE")
-			{
-				$blogger = $this->objUser->userName($results['userid']);
-			}
-			else {
-				$blogger = $this->objUser->fullName($results['userid']);
-			}
-			$image = $this->objUser->getUserImage($results['userid']);
-			$link = new href($this->uri(array('module' => 'blog', 'action' => 'viewsingle', 'postid' => $results['id'])), $results['post_title']);
-			$teaser = $results['post_excerpt'] . "<br />";
-			// pull together a table
-    		$srtable = $this->newObject('htmltable', 'htmlelements');
-        	$srtable->cellpadding = 2;
-        	//set up the header row
-        	$srtable->startHeaderRow();
-        	$srtable->addHeaderCell('');
-        	$srtable->addHeaderCell('');
-        	$srtable->endHeaderRow();
-			$srtable->startRow();
-        	$srtable->addCell("<strong>".$blogger."</strong>"."<br />".$image);
-        	$srtable->addCell("<br />".$link->show()."<br />".$teaser);
-        	$srtable->endRow();
-			        	
-			$res .= $srtable->show()."<br /><hr><br />";
-		}
-		return $res;
+        $res = NULL;
+        if(empty($searchres))
+        {
+            $res .= "<hr>";
+            $res .= "<h1>".$this->objLanguage->languageText("mod_blog_noresultsfound", "blog")."</h1>";
+            return $res;
+        }
+        else {
+            $res .= "<h3>".$this->objLanguage->languageText("mod_blog_searchresults", "blog")."</h3><br />";
+        }       
+        foreach ($searchres as $results)
+        {
+            if($this->showfullname == "FALSE")
+            {
+                $blogger = $this->objUser->userName($results['userid']);
+            }
+            else {
+                $blogger = $this->objUser->fullName($results['userid']);
+            }
+            $image = $this->objUser->getUserImage($results['userid']);
+            $link = new href($this->uri(array('module' => 'blog', 'action' => 'viewsingle', 'postid' => $results['id'])), $results['post_title']);
+            $teaser = $results['post_excerpt'] . "<br />";
+            // pull together a table
+            $srtable = $this->newObject('htmltable', 'htmlelements');
+            $srtable->cellpadding = 2;
+            //set up the header row
+            $srtable->startHeaderRow();
+            $srtable->addHeaderCell('');
+            $srtable->addHeaderCell('');
+            $srtable->endHeaderRow();
+            $srtable->startRow();
+            $srtable->addCell("<strong>".$blogger."</strong>"."<br />".$image);
+            $srtable->addCell("<br />".$link->show()."<br />".$teaser);
+            $srtable->endRow();
+                        
+            $res .= $srtable->show()."<br /><hr><br />";
+        }
+        return $res;
     }
 }
 ?>
