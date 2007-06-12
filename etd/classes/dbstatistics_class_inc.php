@@ -249,12 +249,12 @@ class dbStatistics extends dbTable
     }
         
     /**
-    * Method to generate the left side 'menu' for the statistics page
+    * Method to generate the user statistics
     *
     * @access public
     * @return string html
     */
-    public function getSideBlock()
+    public function getUserStats()
     {
         $userCount = $this->objUserStats->countUsers();
         $countryCount = $this->objUserStats->getTotalCountries();
@@ -450,7 +450,7 @@ class dbStatistics extends dbTable
         $str = $this->objHead->show();
         
         $layerStr = $this->getSiteStats();
-        $layerStr .= '<p>'.$this->getSideBlock().'</p>';
+        $layerStr .= '<p>'.$this->getUserStats().'</p>';
         $layerStr .= '<p>'.$this->getStatsByResource().'</p>';
         
         $this->objLayer->init();

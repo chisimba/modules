@@ -41,6 +41,7 @@ class management extends object
             $this->dbThesis = $this->getObject('dbthesis', 'etd');
             $this->dbThesis->setSubmitType('etd');
     
+            $this->dbEmbargo = $this->getObject('dbembargo', 'etd');
             $this->dbDegrees = $this->getObject('dbdegrees', 'etd');
             $this->dbCitations = $this->getObject('dbcitations', 'etd');
             $this->dbProcess = $this->getObject('dbprocess', 'etd');
@@ -879,6 +880,7 @@ class management extends object
         $lbPass = $this->objLanguage->languageText('mod_etd_passresource', 'etd');
         $lbCitation = $this->objLanguage->languageText('phrase_citationlist');
         $lbEdit = $this->objLanguage->languageText('phrase_editmetadata');
+        $lbEmbargo = $this->objLanguage->languageText('phrase_embargorequest');
 
         $icons = '&nbsp;&nbsp;';
         
@@ -987,6 +989,10 @@ class management extends object
         // Display the attached document for download or replacement
         $docStr = $this->showDocument($docMode);
         $str .= $this->objFeatureBox->show($lbDocument, $docStr);
+
+        // Display the citation list
+        $embargoStr = $this->showEmbargo();
+        $str .= $this->objFeatureBox->show($lbEmbargo, $embargoStr);
 
         // Display the citation list
         $citationStr = $this->showCitationList($docMode);
@@ -1139,6 +1145,58 @@ class management extends object
 
         return $str;
     }
+    
+    /**
+    * Method to display embargo request
+    *
+    * @access private
+    * @return string html
+    */
+    private function showEmbargo()
+    {
+        $submitId = $this->getSession('submitId');
+        $data = $this->dbEmbargo->getEmbargoRequest($submitId);
+        $str = '';
+        
+        if(!empty($data)){
+            $requested = TRUE;
+            $reason = $data['request'];
+            $period = $data['period'];
+            $id = $data['id'];
+        
+            $lbPeriod = $this->objLanguage->languageText('word_period');
+            $lbReason = $this->objLanguage->languageText('mod_etd_reasonforapprovedeny', 'etd');
+            $months = $this->objLanguage->languageText('word_months');
+            $btnRequest = $this->objLanguage->languageText('phrase_approverequest');
+            $btnDelete = $this->objLanguage->languageText('phrase_denyrequest');    
+        
+            $str = '<p class="warning">'.$reason.'</p>';
+            $str .= "<p>$lbPeriod: $period $months</p>";
+        
+            $objLabel = new label($lbReason, 'input_reason');
+            $objText = new textarea('reason');
+            $formStr = '<p>'.$objLabel->show().': <br />'.$objText->show().'</p>';
+        
+            $objButton = new button('approve', $btnRequest);
+            $objButton->setToSubmit();
+            $formStr .= '<p>'.$objButton->show();
+            
+            $objButton = new button('deny', $btnDelete);
+            $objButton->setToSubmit();
+            $formStr .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$objButton->show();
+            
+            $objInput = new textinput('id', $id, 'hidden');
+            $formStr .= $objInput->show();
+                
+            $formStr .= '</p>';
+            
+            $objForm = new form('request', $this->uri(array('action' => 'savesubmissions', 'mode' => 'embargo', 'nextmode' => 'shownewresource', 'save' => 'save')));
+            $objForm->addToForm($formStr);
+            $str .= '<p>'.$objForm->show().'</p>';
+        }
+
+        return $str;
+    }
 
     /**
     * Method to display the list of citations associated with a resource for adding / editing
@@ -1259,6 +1317,10 @@ class management extends object
                 $submitId = $this->saveNewResource($submitId);
                 $this->setSession('submitId', $submitId);
                 return $submitId;
+                break;
+                
+            case 'embargo':
+                //$this->dbEmbargo
                 break;
                 
             case 'approve':

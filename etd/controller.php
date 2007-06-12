@@ -104,7 +104,7 @@ class etd extends controller
                 $this->setVarByRef('metaTags', $metaTags);
                 $this->dbStats->recordVisit($metaId);
                 $this->setSession('resourceId', $metaId);
-                $leftSide = $this->objBlocks->showBlock('resourcemenu', 'etd');
+                $leftSide = $this->objBlocks->showBlock('resourcemenu', 'etd', '','','', FALSE);
                 $this->etdTools->setLeftSide($leftSide);
                 return 'showetd_tpl.php';
 
@@ -435,9 +435,38 @@ class etd extends controller
                     $count = $res[1];
                     
                     //echo $term.'<pre>'; print_r($data); echo '</pre>';
+                }else{
+                    $return = $this->getSession('return');
+                    $count = $return['count'];
                 }
                 $display = '<b>'.$count.'</b> records found';
-                $this->setVarByRef('search', $display);
+                //$this->setVarByRef('search', $display);
+                //return 'search_tpl.php';
+                //$pageTitle = '<b>'.$count.'</b> records found';
+                
+                $this->unsetSession('resource');
+                // set a session to use when returning from a resource or from emailing a resource.
+                $session['displayLimit'] = $this->getParam('displayLimit');
+                $session['displayStart'] = $this->getParam('displayStart');
+                $session['action'] = 'metalib';
+                $session['count'] = $count;
+                $this->setSession('return', $session);
+
+                $pageTitle = $this->objLanguage->languageText('phrase_searchresults');
+                $objViewBrowse = $this->getObject('viewbrowse', 'etd');
+                $objViewBrowse->create($this->etdSearch);
+                $objViewBrowse->setAccess( FALSE );
+                $objViewBrowse->showAlpha(FALSE);
+                $objViewBrowse->showPrint();
+                $objViewBrowse->setNumCols(3);
+                $objViewBrowse->setPageTitle($pageTitle);
+                $objViewBrowse->addExtra($display);
+                
+                $this->objLink = new link($this->uri(array('action'=>'search')));
+                $this->objLink->link = $this->objLanguage->languageText('phrase_newsearch');
+                $search = $objViewBrowse->show();
+                $this->setVarByRef('search', $search);
+                $this->etdTools->setLeftBlocks(FALSE, TRUE, FALSE);
                 return 'search_tpl.php';
                 break;
 

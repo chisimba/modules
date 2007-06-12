@@ -107,7 +107,7 @@ class search extends object
 
         $this->setBrowseType();
 
-        $this->searchCriteria[] =  array('label'=>$this->objLanguage->languageText('word_author'), 'value'=>'dc_creator');
+        $this->searchCriteria[] =  array('label'=>$this->objLanguage->languageText('mod_etd_authorsurnamename', 'etd'), 'value'=>'dc_creator');
         $this->searchCriteria[] =  array('label'=>$this->objLanguage->languageText('word_title'), 'value'=>'dc_title');
         $this->searchCriteria[] =  array('label'=>$this->objLanguage->languageText('word_keywords'), 'value'=>'dc_subject');
         $this->searchCriteria[] =  array('label'=>$this->objLanguage->languageText('word_abstract'), 'value'=>'dc_description');
@@ -552,13 +552,22 @@ class search extends object
             $filter = ''; $keyfilter = '';
 
             if(isset($author) && !empty($author)){
-                $arrAuthor = explode(' ', $author);
+                /*$arrAuthor = explode(' ', $author);
                 foreach($arrAuthor as $val){
                     if(!empty($filter)){
                         $filter .= ' AND ';
                     }
                     $filter .= "LOWER(dc_creator) LIKE '%".strtolower($val)."%'";
                 }
+                */
+                if(!empty($filter)){
+                        $filter .= ' AND ';
+                }
+                $comma = '';
+                if(strpos($author, ',') === FALSE){
+                    $comma = ',';
+                }
+                $filter .= "LOWER(dc_creator) LIKE '".strtolower($author).$comma."%'";
                 $filter = '('.$filter.')';
             }
 
@@ -689,6 +698,7 @@ class search extends object
     {
         $filter = '';
         if($criteria == 'dc_creator'){
+            /*
             $arrCrit = explode(' ', $input);
             foreach($arrCrit as $val){
                 if(!empty($filter)){
@@ -696,6 +706,29 @@ class search extends object
                 }
                 $filter .= "LOWER($criteria) LIKE '%".strtolower($val)."%'";
             }
+            */
+            // if author list separated by ;
+            if(strpos($input, '; ') === FALSE){
+                $arrCrit = explode('; ', $input);
+                foreach($arrCrit as $val){
+                   if(!empty($filter)){
+                       $filter .= ' AND ';
+                   }
+                   $comma = '';
+                   if(strpos($input, ',') === FALSE){
+                       $comma = ',';
+                   }
+                   $filter .= "LOWER($criteria) LIKE '".strtolower($val).$comma."%'";
+               }
+            }else{
+                // if only one author
+                $comma = '';
+                if(strpos($input, ',') === FALSE){
+                    $comma = ',';
+                }
+                $filter .= "LOWER($criteria) LIKE '".strtolower($input).$comma."%'";
+            }
+            
             $filter = '('.$filter.') OR ';
         }else if($criteria == 'dc_subject'){
             $strCrit = str_replace(', ', ',', $input);

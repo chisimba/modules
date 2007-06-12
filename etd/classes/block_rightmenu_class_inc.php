@@ -42,7 +42,7 @@ class block_rightmenu extends object
         $searchLabel = $this->objLanguage->languageText('word_search');
         $advSearchLabel = $this->objLanguage->languageText('phrase_advancedsearch');
         $lbKeywords = $this->objLanguage->languageText('word_keywords');
-        $lbAuthors = $this->objLanguage->languageText('word_author');
+        $lbAuthors = $this->objLanguage->languageText('mod_etd_authorsurnamename', 'etd');
 
         // search button and input
         $objInput = new textinput('searchField');

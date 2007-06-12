@@ -774,9 +774,10 @@ class submit extends object
         $objLabel = new label($lbPeriod.': ', 'input_reason');
         $objDrop = new dropdown('period');
         //for($i = $config['shortPeriod']; $i <= $config['longPeriod']; $i += $config['incPeriod']){
-        for($i = 0; $i <= 12; $i += 3){
-            $objDrop->addoption($i, $i.$months);
-        }
+        /*for($i = 0; $i <= 12; $i += 3){
+            $objDrop->addoption($i, $i.' '.$months);
+        }*/
+        $objDrop->addoption('12', '12 '.$months);
         $objDrop->setSelected($period);
         $formStr .= '<p>'.$objLabel->show().'&nbsp;&nbsp;'.$objDrop->show().'</p>';
 

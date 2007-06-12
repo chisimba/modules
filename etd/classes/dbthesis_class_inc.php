@@ -223,7 +223,8 @@ class dbThesis extends dbtable
         $sql .= " OR LOWER({$this->col1Field}) LIKE 'the $letter%' ";
         $sql .= " OR LOWER({$this->col1Field}) LIKE 'a $letter%' ";
         $sql .= " OR LOWER({$this->col1Field}) LIKE 'an $letter%' ";
-        $sql .= " OR LOWER({$this->col1Field}) LIKE '`n $letter%' ) ";
+        $sql .= " OR LOWER({$this->col1Field}) LIKE '\'n $letter%' ";
+        $sql .= " OR LOWER({$this->col1Field}) LIKE '\"$letter%' ) ";
         
         $sqlLimit = "ORDER BY LOWER({$this->col1Field}) ";
         
@@ -367,20 +368,24 @@ class dbThesis extends dbtable
         $sqlNorm = 'SELECT thesis.id AS id, dc.*, thesis.* ';
         $sqlCount = 'SELECT count(*) AS cnt ';
         
+        $term = strtolower($keyword);
+        
         $sql = "FROM {$this->table} AS thesis, {$this->dcTable} AS dc, {$this->submitTable} AS submit 
                 WHERE thesis.dcmetaid = dc.id AND thesis.submitid = submit.id 
                 AND submit.submissiontype = '{$this->subType}' 
-                AND (LOWER(dc.dc_creator) LIKE LOWER('%$keyword%') OR LOWER(dc.dc_title) LIKE LOWER('%$keyword%')
-                OR LOWER(dc.dc_subject) LIKE LOWER('%$keyword%')) ";
+                AND "; 
+        $filter = "(LOWER(dc.dc_creator) LIKE '%$term%' OR LOWER(dc.dc_title) LIKE '%$term%'
+                OR LOWER(dc.dc_subject) LIKE '%$term%') ";
                 
         $sqlOrder = "ORDER BY dc.dc_date ";
         
 //        echo $sqlNorm.$sql.$sqlOrder;
         
-        $data = $this->getArray($sqlNorm.$sql.$sqlOrder);
-        $data2 = $this->getArray($sqlCount.$sql);
+        $data = $this->getArray($sqlNorm.$sql.$filter.$sqlOrder);
+        $data2 = $this->getArray($sqlCount.$sql.$filter);
         $count = isset($data2[0]['cnt']) ? $data2[0]['cnt'] : 0;
         
+        $this->setSession('sql', $filter); 
         return array($data, $count);
     }
 

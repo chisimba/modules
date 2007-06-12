@@ -76,7 +76,7 @@ class block_etdlinks extends object
 		$list = '<p>'.$objLink->show().'</p>';
 		
 		// Check for a current submission - only submit one document at a time.
-		if($this->access == 'student'){
+		if(isset($this->access) && in_array('student', $this->access)){
     		$check = $this->checkSubmissions();
     		if(!($check === FALSE)){
     		    // Submission link

@@ -74,14 +74,20 @@ class emailResults extends object
     */
     function init()
     {
-        $this->objLanguage =& $this->getObject('language', 'language');
-        $this->objMailer =& $this->getObject('kngemail','utilities');
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objMailer = $this->getObject('kngemail','utilities');
 
-        $this->objUser =& $this->getObject('user', 'security');
-        $this->email = $this->objUser->email();
-        $this->user = $this->objUser->fullname();
+        $this->objUser = $this->getObject('user', 'security');
+        if($this->objUser->isLoggedIn()){
+            $this->email = $this->objUser->email();
+            $this->user = $this->objUser->fullname();
+        }else{
+            $objConfig = $this->getObject('altconfig', 'config');
+            $this->email = $objConfig->getsiteEmail();
+            $this->user = $objConfig->getinstitutionName();
+        }
 
-        $this->objHeading =& $this->getObject('htmlheading', 'htmlelements');
+        $this->objHeading = $this->newObject('htmlheading', 'htmlelements');
 
         $this->loadClass('link', 'htmlelements');
         $this->loadClass( 'button', 'htmlelements' );
