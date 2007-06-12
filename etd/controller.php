@@ -439,7 +439,7 @@ class etd extends controller
                     $return = $this->getSession('return');
                     $count = $return['count'];
                 }
-                $display = '<b>'.$count.'</b> records found';
+                $display = '<B>'.$count.'</B> records found';
                 //$this->setVarByRef('search', $display);
                 //return 'search_tpl.php';
                 //$pageTitle = '<b>'.$count.'</b> records found';
