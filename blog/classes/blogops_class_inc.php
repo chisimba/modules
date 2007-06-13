@@ -3693,7 +3693,7 @@ class blogops extends object
     					//lets strip out the email addresses first to stop spam bots
     					$message = str_replace("<","", $message);
 						$message = str_replace(">","", $message);
-						$message = preg_replace("/^[^0-9][A-z0-9_]+([.][A-z0-9_]+)*[@][A-z0-9_]+([.][A-z0-9_]+)*[.][A-z]{2,4}$/",$this->objLanguage->languageText("mod_blog_emailreplaced", "blog"), $message);
+						$message = preg_replace('/[^0-9][A-z0-9_]+([.][A-z0-9_]+)*[@][A-z0-9_]+([.][A-z0-9_]+)*[.][A-z]{2,4}/im'," ".$this->objLanguage->languageText("mod_blog_emailreplaced", "blog"), $message);
     					//insert the mail data into an array for manipulation
     					$data[] = array('userid' => $userid,'address' => $address, 'subject' => $subject, 'date' => $date, 'messageid' => $i, 'read' => $read,
     						'body' => $message, 'attachments' => $attachments);
