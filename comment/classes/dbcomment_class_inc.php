@@ -212,25 +212,27 @@ class dbcomment extends dbTable
     */
     public function updateCounter($tableName, $sourceId, $sourceModule)
     {
-        $dtClass = 'db' . substr($tableName, 4);
-        $objDb2Update = & $this->getObject($dtClass, $sourceModule);
-        $cSql = "SELECT id, commentcount FROM " . $tableName
-          . " WHERE id = '" . $sourceId . "'";
-        $ar = $objDb2Update->getArray($cSql);
+        if(!empty($tableName) && !empty($sourceModule)){
+            $dtClass = 'db' . substr($tableName, 4);
+            $objDb2Update = & $this->getObject($dtClass, $sourceModule);
+            $cSql = "SELECT id, commentcount FROM " . $tableName
+              . " WHERE id = '" . $sourceId . "'";
+            $ar = $objDb2Update->getArray($cSql);
 
-        //----------
-        //Modified by Serge Meunier 19/07/2006 to correct a bug in the comment count
-        //caused by commentCount being out of sync with the tbl_commment table
+            //----------
+            //Modified by Serge Meunier 19/07/2006 to correct a bug in the comment count
+            //caused by commentCount being out of sync with the tbl_commment table
 
-         //$comments = $ar[0]['commentCount'];
-         //$comments++;
+             //$comments = $ar[0]['commentCount'];
+             //$comments++;
 
-        $where = " WHERE tablename='" . $tableName  . "' AND sourceid='" . $sourceId . "'";
-        $comments = $this->getRecordCount($where);
-        //----------
+            $where = " WHERE tablename='" . $tableName  . "' AND sourceid='" . $sourceId . "'";
+            $comments = $this->getRecordCount($where);
+            //----------
 
-        $objDb2Update->update("id", $ar[0]['id'], array(
-          'commentcount' => $comments));
+            $objDb2Update->update("id", $ar[0]['id'], array(
+              'commentcount' => $comments));
+        }
 
     }
     /**
