@@ -139,8 +139,15 @@ class etd extends controller
                 $objHead = new htmlheading();
                 $objHead->str = $head;
                 $objHead->type = 2;
-                $page = $objHead->show();
+                $objLink = new link('#');
+                $objLink->extra = "onClick=\"javascript: window.open('".$this->uri('')."', 'etd', 'height=600, width=800');\"";
+                $objLink->style = "text-decoration:none;";
+                $objLink->link = $objHead->show();
+                $page = $objLink->show();
                 $page .= $this->etdResource->getRecentResources();
+                $objLink = new link($this->uri(''));
+                $objLink->link = $head;
+                $page .= $objLink->show();
                 $this->setVarByRef('search', $page);
                 return 'print_tpl.php';
                 break;
