@@ -58,6 +58,7 @@ class userparamsadmin extends controller
                  if ($confirm=="yes") {
                  	$key = $this->getParam('key');
                  	$ret = $this->objDbUserparamsadmin->delete($key);
+                 	
                  	//$ar = $this->objDbUserparamsadmin->readConfig();
                     //$this->objDbUserparamsadmin->delete($ar->toArray(), $this->getParam('key', Null));
                     $this->nextAction(null,null,'userparamsadmin');
