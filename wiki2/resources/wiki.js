@@ -214,5 +214,23 @@ function addRating(rating)
     var target = "ratingDiv";
     var url = "index.php";
     var pars = "module=wiki2&action=add_rating&name="+name_value+"&rating="+rating;
-    var lockAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars});      
+    var ratingAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars});      
+}
+
+/**
+* Method to update the watchlist
+*
+* @param bool $watch: The state of the checkbox
+*/
+function updateWatchlist(watch)
+{
+    if(watch){
+        var mode = 'add';
+    }else{
+        var mode = 'delete';
+    }
+    var name_value = $F("input_name");
+    var url = "index.php";
+    var pars = "module=wiki2&action=update_watch&name="+name_value+"&mode="+mode;
+    var watchAjax = new Ajax.Request(url, {method: "post", parameters: pars});          
 }

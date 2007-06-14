@@ -116,7 +116,7 @@ class display extends object
         $this->loadClass('radio', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('layer', 'htmlelements');
-        //$this->loadClass('tabber', 'htmlelements');
+        $this->loadClass('checkbox', 'htmlelements');
 
         // system classes
         $this->objLanguage = $this->newObject('language','language');
@@ -170,10 +170,11 @@ class display extends object
         $authorsTitleLabel = $this->objLanguage->languageText('mod_wiki2_authorstitle', 'wiki2');
         $rankingLabel = $this->objLanguage->languageText('mod_wiki2_viewraking', 'wiki2');
         $rankingTitleLabel = $this->objLanguage->languageText('mod_wiki2_rankingtitle', 'wiki2');
-        $loginLabel = $this->objLanguage->languageText('mod_wiki2_login', 'wiki2');
-        $loginTitleLabel = $this->objLanguage->languageText('mod-wiki2_logintitle', 'wiki2');
+        $watchLabel = $this->objLanguage->languageText('mod_wiki2_watchlist', 'wiki2');
+        $watchTitleLabel = $this->objLanguage->languageText('mod_wiki2_watchlisttitle', 'wiki2');
         
         $str = '';
+        // login box
         if(!$this->isLoggedIn){
             $loginBlock = $this->objBlocks->showBlock('login', 'security', '', 20, TRUE, TRUE, 'none');
             $str .= $loginBlock;
@@ -228,6 +229,17 @@ class display extends object
         $rankLink = $objLink->show();
         $string .= '<li>'.$rankLink.'</li>';
 
+        if($this->isLoggedIn){
+            // watchlist link
+            $objLink = new link($this->uri(array(
+                'action' => 'view_watchlist',
+            ), 'wiki2'));
+            $objLink->link = $watchLabel;
+            $objLink->title = $watchTitleLabel;
+            $watchLink = $objLink->show();
+            $string .= '<li>'.$watchLink.'</li>';
+        }
+        
         // popup link for formatting rules
         $objPopup = new windowpop();
         $objPopup->title = $formatTitleLabel;
@@ -266,7 +278,7 @@ class display extends object
         
         $objForm = new form('search', $this->uri(array(
             'action' => 'search_wiki',
-        )));
+        ), 'wiki2'));
         $objForm->addToForm($fieldDrop.'<p />');
         $objForm->addToForm($valueInput);
         $objForm->addToForm($searchButton);
@@ -330,7 +342,6 @@ class display extends object
     * @access public
     * @param string $name: The name of the page to show
     * @param integer $version: The version of the page to show
-    * @param string $mode: The mode of the page to show
     * @param integer $tab: The tab to set to default
     * @return string $str: The output string
     **/
@@ -372,6 +383,7 @@ class display extends object
         $ratingLabel = $this->objLanguage->languageText('word_rating');
         
         $contents = '';
+        // rating nested tab
         if(empty($version)){
             $rating = $this->showRating($name);
         
@@ -669,6 +681,7 @@ class display extends object
     {
         // get data
         $data = $this->objDbwiki->getPageById($id);
+        $isWatched = $this->objDbwiki->getWatch($data['page_name']);
         $pageTitle = $this->objWiki->renderTitle($data['page_name']);
         
         // text elements
@@ -681,18 +694,20 @@ class display extends object
         $summaryLabel = $this->objLanguage->languageText('mod_wiki2_pagesummary', 'wiki2');
         $summaryErrorLabel = $this->objLanguage->languageText('mod_wiki2_summaryerror', 'wiki2');
         
+        // add to watchlist
+        $watchList = $this->showAddWatchlist(!empty($isWatched), TRUE);
+
         // heading
         $objHeader = new htmlheading();
         $objHeader->str = $pageTitle;
         $objHeader->type = 1;
         $heading = $objHeader->show();
-        $string = $heading;
         
         // summary
         $objHeader = new htmlheading();
         $objHeader->str = $summaryLabel;
         $objHeader->type = 4;
-        $heading = $objHeader->show();
+        $heading .= $objHeader->show();
         
         // summary textarea
         $objText = new textarea('summary', $data['page_summary'], '4', '70');
@@ -766,12 +781,13 @@ class display extends object
         $objForm = new form('update', $this->uri(array(
             'action' => 'update_page',
         ), 'wiki2'));
+        $objForm->addToForm($watchList);
         $objForm->addToForm($summaryLayer);
         $objForm->addToForm($contentLayer);
         $objForm->addToForm($commentLayer);
         $objForm->addToForm($buttonLayer);
         $createForm = $objForm->show();
-        $string .= $createForm;
+        $string = $createForm;
         
         $objLayer = new layer();
         $objLayer->cssClass = 'featurebox';
@@ -810,6 +826,9 @@ class display extends object
         $refreshTitleLabel = $this->objLanguage->languageText('mod_wiki2_refreshtitle', 'wiki2');
         $previewLabel = $this->objLanguage->languageText('word_preview');
         $noPreviewLabel = $this->objLanguage->languageText('mod_wiki2_nopreview', 'wiki2');
+        
+        // add to watchlist
+        $watchList = $this->showAddWatchlist();
         
         // page name
         $objHeader = new htmlheading();
@@ -884,6 +903,7 @@ class display extends object
         $objForm = new form('create', $this->uri(array(
             'action' => 'create_page',
         ), 'wiki2'));
+        $objForm->addToForm($watchList);
         $objForm->addToForm($pageLayer);
         $objForm->addToForm($summaryLayer);
         $objForm->addToForm($contentLayer);
@@ -2047,6 +2067,125 @@ You can create tables using pairs of vertical bars:
         // add page tab
         $tabArray = array(
             'name' => $rankingLabel,
+            'content' => $contentLayer,
+        ); 
+              
+        //display tabs 
+        $this->objTab->init();       
+        $this->objTab->addTab($tabArray);
+        $str = $this->objTab->show();
+        
+        return $str.'<br />';
+    }
+    
+    /**
+    * Method to show the watchlist checkbox
+    *
+    * @access public
+    * @param bool $watch: TRUE if the page should be watched
+    * @param bool $onchange: TRUE if the checkbox should have an onclick
+    * @return string $str: The output string
+    */
+    public function showAddWatchlist($watch = FALSE, $onchange = FALSE)
+    {
+        $watchLabel = $this->objLanguage->languageText('mod_wiki2_watch', 'wiki2');
+        
+        $objCheck = new checkbox('watch');
+        if($watch){
+            $objCheck->setChecked(TRUE);
+        }
+        if($onchange){
+            $objCheck->extra= 'onchange="javascript:updateWatchlist(this.checked);"';
+        }
+        $watchCheck = $objCheck->show();
+        
+        $str = $watchCheck.'&#160;&#160;'.$watchLabel;
+        
+        return $str;        
+    }    
+
+    /**
+    * Method to display page watchlist
+    * 
+    * @access public
+    * @return string $str: The output string
+    */
+    public function showWatchlist()
+    {
+        // add javascript to sort table
+        $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
+        $this->appendArrayVar('headerParams', $headerParams);
+
+        // get data
+        $data = $this->objDbwiki->getAllWatches();
+
+        // text elements
+        $pageLabel = $this->objLanguage->languageText('mod_wiki2_pagename', 'wiki2');
+        $watchlistLabel = $this->objLanguage->languageText('word_watchlist');
+        $deleteLabel = $this->objLanguage->languageText('word_delete');
+        $delConfirmLabel = $this->objLanguage->languageText('mod_wiki2_deleteconfirm', 'wiki2');
+        $noRecordsLabel = $this->objLanguage->languageText('mod_wiki2_norecords', 'wiki2');
+        $pageTitleLabel = $this->objLanguage->languageText('mod_wiki2_pagetitle', 'wiki2');
+        $deleteTitleLabel = $this->objLanguage->languageText('mod_wiki2_deletewatch', 'wiki2');
+
+        // create display table
+        $objTable = new htmltable();
+        $objTable->id = 'watchList';
+        $objTable->css_class = 'sorttable';
+        $objTable->cellpadding = '2';
+        $objTable->border = '1';
+        $objTable->row_attributes = ' name="row_'.$objTable->id.'"';
+        $objTable->startRow();
+        $objTable->addCell($pageLabel, '', '', '', 'heading', '');
+        $objTable->addCell('', '10%', '', 'center', 'heading', '');
+        $objTable->endRow();
+        if(empty($data)){
+            // no records
+            $objTable->startRow();
+            $objTable->addCell($noRecordsLabel, '', '', '', 'noRecordsMessage', 'colspan="3"');
+            $objTable->endRow();
+        }else{
+            // loop through data and display each record in the table
+            foreach($data as $line){
+                $name = $line['page_name'];
+                $pageTitle = $this->objWiki->renderTitle($name);
+
+                // name link
+                $objLink = new link($this->uri(array(
+                    'action' => 'view_page',
+                    'name' => $name,
+                ), 'wiki2'));
+                $objLink->link = $pageTitle;
+                $objLink->title = $pageTitleLabel;
+                $pageLink = $objLink->show();
+                
+                // delete link
+                $objLink = new link($this->uri(array(
+                    'action' => 'delete_watch',
+                    'id' => $line['id'],
+                ), 'wiki2'));
+                $objLink->link = $deleteLabel;
+                $objLink->title = $deleteTitleLabel;
+                $objLink->extra = 'onclick="javascript:if(!confirm(\''.$delConfirmLabel.'\')){return false};"';
+                $deleteLink = $objLink->show();
+                
+                // data display
+                $objTable->startRow();
+                $objTable->addCell($pageLink, '', '', '', '', '');
+                $objTable->addCell($deleteLink, '', '', 'center', '', '');
+                $objTable->endRow();
+            }
+        }
+        $pageTable = $objTable->show();
+            
+        $objLayer = new layer();
+        $objLayer->cssClass = 'featurebox';
+        $objLayer->addToStr($pageTable);
+        $contentLayer = $objLayer->show();
+        
+        // add page tab
+        $tabArray = array(
+            'name' => $watchlistLabel,
             'content' => $contentLayer,
         ); 
               

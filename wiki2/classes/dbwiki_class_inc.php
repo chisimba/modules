@@ -96,6 +96,17 @@ class dbwiki extends dbTable
         return $this->_changeTable('tbl_wiki2_rating');
     }
 
+	/**
+	* Method to set the watch table
+	*
+	* @access private
+	* @return boolean: TRUE on success FALSE on failure
+	*/
+	private function _setWatch()
+	{
+        return $this->_changeTable('tbl_wiki2_watch');
+    }
+
 /* ----- Functions for tbl_wiki2_pages ----- */
 
     /**
@@ -479,7 +490,7 @@ class dbwiki extends dbTable
         $fields['page_rating'] = $rating;
         $fields['creator_id'] = $this->userId;
         
-        $ratingId = $this->insert($fields);
+        return $ratingId = $this->insert($fields);
     }
 
     /**
@@ -558,6 +569,99 @@ class dbwiki extends dbTable
         $sql .= " GROUP BY page_name";
         $sql .= " ORDER BY tot DESC, cnt DESC";
         $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data;
+        }
+        return FALSE;
+    }
+
+/* ----- Functions for tbl_wiki2_watch ----- */
+
+    /**
+    * Method to add a page to your watchlist
+    *
+    * @access public
+    * @param string $wikiId: The id of the wiki the page falls under
+    * @param string $name: The name of the wiki page
+    * @return string|bool $watchId: The wiki page watch id |False on failure
+    */
+    public function addWatch($name)
+    {
+        $watch = $this->getWatch($name);
+        if(!empty($watch)){
+            $watchId = $watch['id'];
+        }else{
+            $this->_setWatch();
+            $fields['wiki_id'] = 'init_1';
+            $fields['page_name'] = $name;
+            $fields['creator_id'] = $this->userId;
+        
+            $watchId = $this->insert($fields);                
+        }
+        return $watchId;
+    }
+
+    /**
+    * Method to get a page from your watchlist
+    *
+    * @access public
+    * @param string $wikiId: The id of the wiki the page falls under
+    * @param string $name: The name of the wiki page
+    * @return array|bool $data: Wiki page data on success | False on failure
+    */
+    public function getWatch($name)
+    {
+        $this->_setWatch();
+        $sql = "WHERE wiki_id = 'init_1'";
+        $sql .= " AND page_name = '".$name."'";
+        $sql .= " AND creator_id = '".$this->userId."'";
+        $data = $this->getAll($sql);
+        if(!empty($data)){
+            return $data[0];
+        }
+        return FALSE;
+    }
+
+    /**
+    * Method to delete a page from your watchlist
+    *
+    * @access public
+    * @param string $id: The id of the watch to delete
+    * @return void
+    */
+    public function deleteWatchById($id)
+    {
+        $this->_setWatch();
+        $this->delete('id', $id);
+    }
+
+    /**
+    * Method to delete a page from your watchlist
+    *
+    * @access public
+    * @param string $id: The id of the watch to delete
+    * @return void
+    */
+    public function deleteWatchByName($name)
+    {
+        $watch = $this->getWatch($name);
+        if(!empty($watch)){
+            $this->_setWatch();
+            $this->delete('id', $watch['id']);
+        }
+    }
+
+    /**
+    * Method to get pages you are watching
+    *
+    * @access public
+    * @return array|bool $data: Wiki page data on success | False on failure
+    */
+    public function getAllWatches()
+    {
+        $this->_setWatch();
+        $sql = "WHERE creator_id = '".$this->userId."'";
+        $data = $this->getAll($sql);
         if(!empty($data)){
             return $data;
         }

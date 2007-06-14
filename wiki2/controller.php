@@ -88,7 +88,8 @@ class wiki2 extends controller {
             case 'preview_page':
             case 'deleted_page':
             case 'check_lock':
-            case 'lock_page':
+            case 'view_watchlist':
+            case 'delete_watch':
                 return TRUE;
             case 'view_rules':
             case 'view_all':
@@ -144,7 +145,12 @@ class wiki2 extends controller {
                     $data['page_summary'] = $summary;
                     $data['page_content'] = $content;
                     $data['version_comment'] = $this->objLanguage->languageText('mod_wiki2_newpage', 'wiki2');
-                    $pageId = $this->objDbwiki->addPage($data);                    
+                    $pageId = $this->objDbwiki->addPage($data); 
+                    
+                    $watch = $this->getParam('watch');
+                    if(!empty($watch)){
+                        $this->objDbwiki->addWatch($name);
+                    }                   
                 }else{
                     $name = '';
                 }
@@ -310,6 +316,28 @@ class wiki2 extends controller {
                 $templateContent = $this->objDisplay->showRanking();
                 $this->setVarByRef('templateContent', $templateContent);
                 return 'template_tpl.php';
+                break;
+                
+            case 'view_watchlist':
+                $templateContent = $this->objDisplay->showWatchlist();
+                $this->setVarByRef('templateContent', $templateContent);
+                return 'template_tpl.php';
+                break;
+                
+            case 'delete_watch':
+                $id =$this->getParam('id');
+                $this->objDbwiki->deleteWatchById($id);
+                return $this->nextAction('view_watchlist');
+                break;
+                
+            case 'update_watch':
+                $mode = $this->getParam('mode');
+                $name = $this->getParam('name');
+                if($mode == 'add'){
+                    return $this->objDbwiki->addWatch($name);
+                }else{
+                    return $this->objDbwiki->deleteWatchByName($name);
+                }
                 break;
                 
             default:
