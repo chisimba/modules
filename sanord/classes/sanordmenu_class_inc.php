@@ -18,8 +18,8 @@ class sanordmenu extends object
     {
         // List of Menu Items
         $this->menuItems = array(
-            array('title'=>'News', 'module'=>'cms'),
-            array('title'=>'Discussion', 'module'=>'forum'),
+            //array('title'=>'Home', 'module'=>'cms'),
+            array('title'=>'Members', 'module'=>'cms'),
         );
         
         $this->objUser = $this->getObject('user', 'security');
