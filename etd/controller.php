@@ -135,7 +135,7 @@ class etd extends controller
                 break;
                 
             case 'showrecent':
-                $head = $this->objLanguage->languageText('mod_etd_name');
+                $head = $this->objLanguage->languageText('mod_etd_name', 'etd');
                 $objHead = new htmlheading();
                 $objHead->str = $head;
                 $objHead->type = 2;
