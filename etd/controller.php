@@ -87,6 +87,8 @@ class etd extends controller
     public function dispatch($action)
     {
         $this->unsetSession('resourceId');
+        $pgTitle = $this->objLanguage->languageText('mod_etd_name', 'etd');
+        $this->setVar('pageTitle', $pgTitle);
 
         switch($action){
 
@@ -129,6 +131,12 @@ class etd extends controller
 
             case 'registerdownload':
                 $this->dbStats->recordDownload();
+                break;
+                
+            case 'showrecent':
+                $page = $this->etdResource->getRecentResources();
+                $this->setVarByRef('search', $page);
+                return 'print_tpl.php';
                 break;
 
             /* *** Functions for browsing the repository *** */
@@ -433,16 +441,11 @@ class etd extends controller
                     $res = $this->dbThesis->search2($term);
                     $data = $res[0];
                     $count = $res[1];
-                    
-                    //echo $term.'<pre>'; print_r($data); echo '</pre>';
                 }else{
                     $return = $this->getSession('return');
                     $count = $return['count'];
                 }
                 $display = '<p class="error"><B>'.$count.'</B> records found</p>';
-                //$this->setVarByRef('search', $display);
-                //return 'search_tpl.php';
-                //$pageTitle = '<b>'.$count.'</b> records found';
                 
                 $this->unsetSession('resource');
                 // set a session to use when returning from a resource or from emailing a resource.
@@ -557,6 +560,7 @@ class etd extends controller
             case 'showrss':
             case 'rss':
             case 'metalib';
+            case 'showrecent';
             case '';
                 return FALSE;
         }
