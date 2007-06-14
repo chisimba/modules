@@ -56,8 +56,10 @@ class userparamsadmin extends controller
                  // retrieve the confirmation code from the querystring
                  $confirm=$this->getParam("confirm", "no");
                  if ($confirm=="yes") {
-                 	$ar = $this->objDbUserparamsadmin->readConfig();
-                    $this->objDbUserparamsadmin->delete($ar->toArray(), $this->getParam('key', Null));
+                 	$key = $this->getParam('key');
+                 	$ret = $this->objDbUserparamsadmin->delete($key);
+                 	//$ar = $this->objDbUserparamsadmin->readConfig();
+                    //$this->objDbUserparamsadmin->delete($ar->toArray(), $this->getParam('key', Null));
                     $this->nextAction(null,null,'userparamsadmin');
                      }
                   break;
@@ -68,7 +70,9 @@ class userparamsadmin extends controller
                 break;
 
             case 'save':
-                $this->objDbUserparamsadmin->writeProperties($this->getParam('mode', Null), $this->objUser->userId());
+            	$pname = $this->getParam('pname');
+            	$ptag = $this->getParam('ptag');
+                $this->objDbUserparamsadmin->writeProperties($this->getParam('mode', Null), $this->objUser->userId(), $pname, $ptag);
 	            $this->nextAction(null,null,'userparamsadmin');
                 
                 break;
