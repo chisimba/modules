@@ -50,11 +50,6 @@ class etdresource extends object
         $hdAuthor = $this->objLanguage->languageText('word_author');
         $hdDate = $this->objLanguage->languageText('word_date');
         
-        $objHead = new htmlheading();
-        $objHead->str = $hdHead;
-        $objHead->type = 3;
-        $headStr = $objHead->show();
-        
         $str = '';
         
         if(!empty($data)){
@@ -90,7 +85,7 @@ class etdresource extends object
             $str .= "<p class='noRecordsMessage'>".$lbError.'</p>';
         }
         
-        return $this->objFeatureBox->showContent($headStr, $str);
+        return $this->objFeatureBox->showContent($hdHead, $str);
     }
     
     /**
