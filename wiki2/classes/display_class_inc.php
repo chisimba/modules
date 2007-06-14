@@ -62,6 +62,18 @@ class display extends object
     public $userId;
 
     /**
+    * @var string $isLoggedIn: The login status of the user
+    * @access public
+    */
+    public $isLoggedIn;
+
+    /**
+    * @var bool $isAdmin: TRUE if the user is in the Site Admin group FALSE if not
+    * @access public
+    */
+    public $isAdmin;
+
+    /**
     * @var object $objTab: The tabpane class in the htmlelements module
     * @access public
     */
@@ -95,8 +107,10 @@ class display extends object
         $this->loadClass('dropdown', 'htmlelements');
         $this->loadClass('textarea', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
+        $this->loadClass('radio', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('layer', 'htmlelements');
+        //$this->loadClass('tabber', 'htmlelements');
 
         // system classes
         $this->objLanguage = $this->newObject('language','language');
@@ -108,9 +122,13 @@ class display extends object
         $this->objDate = $this->newObject('dateandtime', 'utilities');
         $this->objUser = $this->newObject('user', 'security');
         $this->userId = $this->objUser->userId();
-        $this->objTab = $this->newObject('tabpane', 'htmlelements');
+        $this->isLoggedIn = $this->objUser->isLoggedIn();
+        $this->isAdmin = $this->objUser->inAdminGroup($this->userId);
+
+        $this->objTab = $this->newObject('tabber', 'htmlelements');
         $this->objBizCard = $this->getObject('userbizcard', 'useradmin');
         $this->objUserAdmin = $this->getObject('useradmin_model2','security');
+        $this->objConfig = $this->newObject('altconfig', 'config');
     }
 
     /**
@@ -143,6 +161,10 @@ class display extends object
         $bothLabel = $this->objLanguage->languageText('mod_wiki2_both', 'wiki2');
         $authorLabel = $this->objLanguage->languageText('mod_wiki2_authors', 'wiki2');
         $authorsTitleLabel = $this->objLanguage->languageText('mod_wiki2_authorstitle', 'wiki2');
+        $rankingLabel = $this->objLanguage->languageText('mod_wiki2_viewraking', 'wiki2');
+        $rankingTitleLabel = $this->objLanguage->languageText('mod_wiki2_rankingtitle', 'wiki2');
+        $loginLabel = $this->objLanguage->languageText('mod-wiki2_login', 'wiki2');
+        $loginTitleLabel = $this->objLanguage->languageText('mod-wiki2_logintitle', 'wiki2');
         
         // links
         $string = '<ul>';
@@ -157,8 +179,7 @@ class display extends object
         
         // add page link
         $objLink = new link($this->uri(array(
-            'action' => 'view_page',
-            'mode' => 'add',
+            'action' => 'add_page',
         ), 'wiki2'));
         $objLink->link = $addLabel;
         $objLink->title = $addTitleLabel;
@@ -182,6 +203,24 @@ class display extends object
         $objLink->title = $authorsTitleLabel;
         $viewLink = $objLink->show();
         $string .= '<li>'.$viewLink.'</li>';
+
+        // view ranking link
+        $objLink = new link($this->uri(array(
+            'action' => 'view_ranking',
+        ), 'wiki2'));
+        $objLink->link = $rankingLabel;
+        $objLink->title = $rankingTitleLabel;
+        $rankLink = $objLink->show();
+        $string .= '<li>'.$rankLink.'</li>';
+
+        if(!$this->isLoggedIn){
+            // view ranking link
+            $objLink = new link($this->uri(array()));
+            $objLink->link = $loginLabel;
+            $objLink->title = $loginTitleLabel;
+            $loginLink = $objLink->show();
+            $string .= '<li>'.$loginLink.'</li>';
+        }
 
         // popup link for formatting rules
         $objPopup = new windowpop();
@@ -208,6 +247,7 @@ class display extends object
         $objDrop->addOption(2, $titleLabel);
         $objDrop->addOption(3, $contentLabel);
         $objDrop->setSelected(1);
+        $objDrop->extra = 'style="width: 140px;"';
         $fieldDrop = $objDrop->show();
         
         $objInput = new textinput('value', '', '', '');
@@ -281,38 +321,32 @@ class display extends object
     * Method to display the main wiki content area
     *
     * @access public
-    * @param string $pageName: The name of the page to show
+    * @param string $name: The name of the page to show
     * @param integer $version: The version of the page to show
     * @param string $mode: The mode of the page to show
     * @param integer $tab: The tab to set to default
     * @return string $str: The output string
     **/
-    public function showMain($pageName = NULL, $version = NULL, $mode = NULL, $tab = 0)
+    public function showMain($name = NULL, $version = NULL, $tab = 0)
     {
         // add  javascript
         $headerParams = $this->getJavascriptFile('wiki.js', 'wiki2');
         $this->appendArrayVar('headerParams', $headerParams);
 
-        // add javascript to sort table
-        $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
-        $this->appendArrayVar('headerParams', $headerParams);
-
         // get data
-        if(empty($mode) || $mode == 'edit'){
-            if(empty($pageName)){
-                $data = $this->objDbwiki->getMainPage();
-            }else{
-                $data = $this->objDbwiki->getPage($pageName, $version);
-            }
-            $pageId = $data['id'];
-            $pageName = $data['page_name'];
-            $pageTitle = $this->objWiki->renderTitle($pageName);    
-            $wikiText = $this->objWiki->transform($data['page_content']);
-            $array = array(
-                'date' => $this->objDate->formatDate($data['date_created']),
-            );
-            $modifiedLabel = $this->objLanguage->code2Txt('mod_wiki2_modified', 'wiki2', $array);
+        if(empty($name)){
+            $data = $this->objDbwiki->getMainPage();
+        }else{
+            $data = $this->objDbwiki->getPage($name, $version);
         }
+        $pageId = $data['id'];
+        $name = $data['page_name'];
+        $pageTitle = $this->objWiki->renderTitle($name);    
+        $wikiText = $this->objWiki->transform($data['page_content']);
+        $array = array(
+            'date' => $this->objDate->formatDate($data['date_created']),
+        );
+        $modifiedLabel = $this->objLanguage->code2Txt('mod_wiki2_modified', 'wiki2', $array);
         
         // text elements
         $articleLabel = $this->objLanguage->languageText('word_article');
@@ -320,95 +354,83 @@ class display extends object
         $noPreviewLabel = $this->objLanguage->languageText('mod_wiki2_nopreview', 'wiki2');
         $refreshLabel = $this->objLanguage->languageText('word_refresh');
         $refreshTitleLabel = $this->objLanguage->languageText('mod_wiki2_refreshtitle', 'wiki2');
-        $addLabel = $this->objLanguage->languageText('mod_wiki2_addarticle', 'wiki2');
-        $listLabel = $this->objLanguage->languageText('mod_wiki2_listarticles', 'wiki2');
-        $summaryLabel = $this->objLanguage->languageText('mod_wiki2_listsummaries', 'wiki2');
         $historyLabel = $this->objLanguage->languageText('word_history');
         $editLabel = $this->objLanguage->languageText('word_edit');
-        $versionLabel = $this->objLanguage->languageText('mod_wiki2_version', 'wiki2');
+        $versionLabel = $this->objLanguage->languageText('word_version');
+        $editArticelLabel = $this->objLanguage->languageText('mod_wiki2_editarticle', 'wiki2');
+        $previewLabel = $this->objLanguage->languageText('word_preview');
+        $refreshLabel = $this->objLanguage->languageText('word_refresh');
+        $refreshTitleLabel = $this->objLanguage->languageText('mod_wiki2_refreshtitle', 'wiki2');
+        $noPreviewLabel = $this->objLanguage->languageText('mod_wiki2_nopreview', 'wiki2');
+        $ratingLabel = $this->objLanguage->languageText('word_rating');
         
-        if(empty($mode) || $mode == 'edit'){
-            // wiki page
-            if(empty($version)){
-                $versionTitle = $pageTitle;
-            }else{
-                $versionTitle = $pageTitle.':&#160;'.$versionLabel.'&#160;'.$version;
-            }
-            $objHeader = new htmlheading();
-            $objHeader->str = $versionTitle;
-            $objHeader->type = 1;
-            $heading = $objHeader->show();
-            $contents = $heading;
-        
-            $contents .= $wikiText;
-            $contents .= '<hr />'.$modifiedLabel;
+        $contents = '';
+        if(empty($version)){
+            $rating = $this->showRating($name);
         
             $objLayer = new layer();
-            $objLayer->cssClass = 'featurebox';
-            $objLayer->addToStr($contents);
-            $contentLayer = $objLayer->show();
-            
-            $string = $contentLayer;
+            $objLayer->id = 'ratingDiv';
+            $objLayer->addToStr($rating);
+            $ratingLayer = $objLayer->show();
         
-            // wiki page tab
-            $tabArray = array(
-                'name' => $articleLabel,
-                'content' => $string,
+            $ratingTab = array(
+                'name' => $ratingLabel,
+                'content' => $ratingLayer,
             );
-            $this->objTab->addTab($tabArray);
+        }
+        
+        //display tabs
+        $this->objTab->init();
+        $this->objTab->tabId = 'ratingTab'; 
+        $this->objTab->addTab($ratingTab);
+        $string = $this->objTab->show();
+        $contents .= $string.'<br />';
+        
+        // wiki page
+        if(empty($version)){
+            $versionTitle = $pageTitle;
+        }else{
+            $versionTitle = $pageTitle.':&#160;'.$versionLabel.'&#160;'.$version;
+        }
+        $objHeader = new htmlheading();
+        $objHeader->str = $versionTitle;
+        $objHeader->type = 1;
+        $heading = $objHeader->show();
+        $contents .= $heading;
+       
+        $contents .= $wikiText;
+        $contents .= '<hr />'.$modifiedLabel;
+    
+        $objLayer = new layer();
+        $objLayer->cssClass = 'featurebox';
+        $objLayer->addToStr($contents);
+        $contentLayer = $objLayer->show();
             
-            // edit page
-            if(empty($version)){ // can only edit latest version
-                $edit = $this->_showEditPage($pageId);
-        
-                $objLayer = new layer();
-                $objLayer->cssClass = 'featurebox';
-                $objLayer->addToStr($edit);
-                $contentLayer = $objLayer->show();
-        
-                $string = $contentLayer;
-        
-                // edit page tab
-                $tabArray = array(
-                    'name' => $editLabel,
-                    'content' => $string,
-                );
-                $this->objTab->addTab($tabArray);
-            }
-        
-            // page history
-            $history = $this->_showPageHistory($pageName);
-        
+        // wiki page tab
+        $mainTab = array(
+            'name' => $articleLabel,
+            'content' => $contentLayer,
+        );
+            
+        // edit page
+        if(empty($version)){ // can only edit latest version
             $objLayer = new layer();
+            $objLayer->id = 'lockedDiv';
             $objLayer->cssClass = 'featurebox';
-            $objLayer->addToStr($history);
-            $contentLayer = $objLayer->show();
-            
-            $string = $contentLayer;
-        
-            // page history tab
-            $tabArray = array(
-                'name' => $historyLabel,
-                'content' => $string,
+            $editLayer = $objLayer->show();
+                
+            // edit page tab
+            $lockedTab = array(
+                'name' => $editLabel,
+                'content' => $editLayer,
             );
-            $this->objTab->addTab($tabArray);
-        }elseif($mode == 'add'){
-            $add = $this->_showAddPage();
             
-            $objLayer = new layer();
-            $objLayer->cssClass = 'featurebox';
-            $objLayer->addToStr($add);
-            $contentLayer = $objLayer->show();
-        
-            $string = $contentLayer;
-        
-            // add page tab
-            $tabArray = array(
-                'name' => $addLabel,
-                'content' => $string,
-            );
-            $this->objTab->addTab($tabArray);
-            
+            $edit = $this->_showEditPage($pageId);
+            $editTab = array(
+                'name' => $editArticelLabel,
+                'content' => $edit,
+            );            
+
             // refresh link
             $objLink = new link('#');
             $objLink->link = $refreshLabel;
@@ -426,55 +448,44 @@ class display extends object
             $objLayer->cssClass = 'featurebox';
             $objLayer->addToStr($refreshLink.'<br />'.$previewLayer);
             $refreshLayer = $objLayer->show();
-            $string = $refreshLayer;
             
-            // add page tab
-            $tabArray = array(
+            $previewTab = array(
                 'name' => $previewLabel,
-                'content' => $string,
-            );
-            $this->objTab->addTab($tabArray);
-        }else{
-            // list all pages
-            $list = $this->_showAllPages();
-            
-            $objLayer = new layer();
-            $objLayer->cssClass = 'featurebox';
-            $objLayer->addToStr($list);
-            $contentLayer = $objLayer->show();
-        
-            $string = $contentLayer;
-        
-            // add page tab
-            $tabArray = array(
-                'name' => $listLabel,
-                'content' => $string,
-            );
-            $this->objTab->addTab($tabArray);
-            
-            // list summaries
-            $list = $this->_showSummaries();
-            
-            $objLayer = new layer();
-            $objLayer->cssClass = 'featurebox';
-            $objLayer->addToStr($list);
-            $contentLayer = $objLayer->show();
-        
-            $string = $contentLayer;
-        
-            // add page tab
-            $tabArray = array(
-                'name' => $summaryLabel,
-                'content' => $string,
-            );
-            $this->objTab->addTab($tabArray);
+                'content' => $refreshLayer,
+            );            
         }
         
-        //display tabs        
-        $this->objTab->useCookie = 'false';
+        // page history
+        $history = $this->_showPageHistory($name);
+        
+        $objLayer = new layer();
+        $objLayer->cssClass = 'featurebox';
+        $objLayer->addToStr($history);
+        $contentLayer = $objLayer->show();
+            
+        // page history tab
+        $historyTab = array(
+            'name' => $historyLabel,
+            'content' => $contentLayer,
+        );
+
+        //display tabs
+//        $this->objTab = new tabber();
+        $this->objTab->init();
+        $this->objTab->tabId = 'mainTab'; 
+        $this->objTab->addTab($mainTab);
+        if(empty($version)){
+            $this->objTab->addTab($lockedTab);            
+            $this->objTab->addTab($editTab);            
+            $this->objTab->addTab($previewTab);            
+        }
+        $this->objTab->addTab($historyTab);
         $this->objTab->setSelected = $tab;
         $str = $this->objTab->show();
-        
+        if(empty($version)){
+            $body = 'tabClickEvents();';
+            $this->appendArrayVar('bodyOnLoad', $body);            
+        }
         return $str.'<br />';
     }
     
@@ -482,13 +493,13 @@ class display extends object
     * Method to show the page history
     * 
     * @access private
-    * @param string $pageName: The name of the page to show the history for
+    * @param string $name: The name of the page to show the history for
     * @return string $str: The table with the page history
     */
-    private function _showPageHistory($pageName)
+    private function _showPageHistory($name)
     {
         // get data
-        $data = $this->objDbwiki->getPagesByName($pageName);
+        $data = $this->objDbwiki->getPagesByName($name);
         $pageTitle = $this->objWiki->renderTitle($data[0]['page_name']);
         
         // text elements
@@ -501,11 +512,17 @@ class display extends object
         $originalLabel = $this->objLanguage->languageText('word_original');
         $restoreLabel = $this->objLanguage->languageText('word_restore');
         $restoreTitleLabel = $this->objLanguage->languageText('mod_wiki2_restoretitle', 'wiki2');
-        $confirmLabel = $this->objLanguage->languageText('mod_wiki2_restoreconfirm', 'wiki2');
+        $confRestoreLabel = $this->objLanguage->languageText('mod_wiki2_restoreconfirm', 'wiki2');
         $restoredLabel = $this->objLanguage->languageText('word_restored');
         $overwrittenLabel = $this->objLanguage->languageText('word_overwritten');
         $commentLabel = $this->objLanguage->languageText('mod_wiki2_comment', 'wiki2');
-        
+        $reinstatedLabel = $this->objLanguage->languageText('word_reinstated');
+        $reinstateLabel = $this->objLanguage->languageText('word_reinstate');
+        $reinstateTitleLabel = $this->objLanguage->languageText('mod_wiki2_reinstatetitle', 'wiki2');
+        $confReinstateLabel = $this->objLanguage->languageText('mod_wiki2_reinstateconfirm', 'wiki2');
+        $archivedLabel = $this->objLanguage->languageText('word_archived');
+        $deletedLabel = $this->objLanguage->languageText('word_deleted');
+                
         // page heading
         $objHeader = new htmlheading();
         $objHeader->str = $pageTitle;
@@ -544,12 +561,18 @@ class display extends object
                 $pageStatus = $line['page_status'];
                 $versionComment = $line['version_comment'];
                 
-                if($pageVersion == 1){
+                if($pageVersion == 1 && $pageStatus != 5){
                     $version = $pageVersion.'&#160;-&#160;'.$originalLabel;
-                }elseif($pageStatus == 3){
-                    $version = $pageVersion.'&#160;-&#160;'.$overwrittenLabel;
                 }elseif($pageStatus == 2){
                     $version = $pageVersion.'&#160;-&#160;'.$restoredLabel;
+                }elseif($pageStatus == 3){
+                    $version = $pageVersion.'&#160;-&#160;'.$reinstatedLabel;
+                }elseif($pageStatus == 4){
+                    $version = $pageVersion.'&#160;-&#160;'.$overwrittenLabel;
+                }elseif($pageStatus == 5){
+                    $version = $pageVersion.'&#160;-&#160;'.$archivedLabel;
+                }elseif($pageStatus == 6){
+                    $version = $pageVersion.'&#160;-&#160;'.$deletedLabel;
                 }else{
                     $version = $line['page_version'];
                 }
@@ -585,7 +608,7 @@ class display extends object
                 $authorLink = $objLink->show();
                 
                 // restore link
-                if($pageStatus < 4 && count($data) != $pageVersion){
+                if($pageStatus < 5 && count($data) != $pageVersion){
                     $objLink = new link($this->uri(array(
                         'action' => 'restore_page',
                         'name' => $name,
@@ -593,7 +616,18 @@ class display extends object
                     ), 'wiki2'));
                     $objLink->link = $restoreLabel;
                     $objLink->title = $restoreTitleLabel;
-                $objLink->extra = 'onclick="javascript:if(!confirm(\''.$confirmLabel.'\')){return false};"';
+                    $objLink->extra = 'onclick="javascript:if(!confirm(\''.$confRestoreLabel.'\')){return false};"';
+                    $restoreLink = $objLink->show();                
+                }elseif($pageStatus == 6 && $this->isAdmin){
+                    $objLink = new link($this->uri(array(
+                        'action' => 'restore_page',
+                        'name' => $name,
+                        'version' => $pageVersion,
+                        'mode' => 'reinstate',
+                    ), 'wiki2'));
+                    $objLink->link = $reinstateLabel;
+                    $objLink->title = $reinstateTitleLabel;
+                    $objLink->extra = 'onclick="javascript:if(!confirm(\''.$confReinstateLabel.'\')){return false};"';
                     $restoreLink = $objLink->show();                
                 }else{
                     $restoreLink = '&#160;';
@@ -645,7 +679,7 @@ class display extends object
         $objHeader->str = $pageTitle;
         $objHeader->type = 1;
         $heading = $objHeader->show();
-        $str = $heading;
+        $string = $heading;
         
         // summary
         $objHeader = new htmlheading();
@@ -660,12 +694,14 @@ class display extends object
         $objInput = new textinput('choice', 'no', 'hidden', '');
         $hiddenInput = $objInput->show();
                
+        $objInput = new textinput('id', $data['id'], 'hidden', '');
+        $hiddenInput .= $objInput->show();
+               
         // summary layer
         $objLayer = new layer();
         $objLayer->addToStr($heading.$summaryText.$hiddenInput);        
         $summaryLayer = $objLayer->show();
                 
-
         // content
         $objHeader = new htmlheading();
         $objHeader->str = $contentLabel;
@@ -728,20 +764,31 @@ class display extends object
         $objForm->addToForm($commentLayer);
         $objForm->addToForm($buttonLayer);
         $createForm = $objForm->show();
-        $str .= $createForm;
+        $string .= $createForm;
         
+        $objLayer = new layer();
+        $objLayer->cssClass = 'featurebox';
+        $objLayer->addToStr($string);
+        $contentLayer = $objLayer->show();
+        $str = $contentLayer;    
         return $str;       
     }
 
     /**
     * Method to add wiki pages
     * 
-    * @access private
+    * @access public
+    * @param string $name: The name of the page if from a link
     * @return string $str: The output string
     */
-    private function _showAddPage()
+    public function showAddPage($name = NULL)
     {
+        // add  javascript
+        $headerParams = $this->getJavascriptFile('wiki.js', 'wiki2');
+        $this->appendArrayVar('headerParams', $headerParams);
+
         // text elements
+        $addLabel = $this->objLanguage->languageText('mod_wiki2_addarticle', 'wiki2');
         $titleLabel = $this->objLanguage->languageText('mod_wiki2_add', 'wiki2');
         $pageLabel = $this->objLanguage->languageText('mod_wiki2_pagename', 'wiki2');
         $pageErrorLabel = $this->objLanguage->languageText('mod_wiki2_pageerror', 'wiki2');
@@ -752,6 +799,10 @@ class display extends object
         $contentErrorLabel = $this->objLanguage->languageText('mod_wiki2_contenterror', 'wiki2');
         $createLabel = $this->objLanguage->languageText('mod_wiki2_create', 'wiki2');
         $cancelLabel = $this->objLanguage->languageText('word_cancel');
+        $refreshLabel = $this->objLanguage->languageText('word_refresh');
+        $refreshTitleLabel = $this->objLanguage->languageText('mod_wiki2_refreshtitle', 'wiki2');
+        $previewLabel = $this->objLanguage->languageText('word_preview');
+        $noPreviewLabel = $this->objLanguage->languageText('mod_wiki2_nopreview', 'wiki2');
         
         // page name
         $objHeader = new htmlheading();
@@ -760,7 +811,7 @@ class display extends object
         $heading = $objHeader->show();
         
         // page name textinput
-        $objInput = new textinput('name', '', '', '96');
+        $objInput = new textinput('name', $name, '', '96');
         $objInput->extra = 'onblur="javascript:validateName(this);"';
         $nameInput = $objInput->show();
                
@@ -831,7 +882,49 @@ class display extends object
         $objForm->addToForm($contentLayer);
         $objForm->addToForm($buttonLayer);
         $createForm = $objForm->show();
-        $str = $createForm;
+        
+        $objLayer = new layer();
+        $objLayer->cssClass = 'featurebox';
+        $objLayer->addToStr($createForm);
+        $createLayer = $objLayer->show();
+            
+        // add page tab
+        $addTab = array(
+            'name' => $addLabel,
+            'content' => $createLayer,
+        );
+            
+        // refresh link
+        $objLink = new link('#');
+        $objLink->link = $refreshLabel;
+        $objLink->title = $refreshTitleLabel;
+        $objLink->extra = 'onclick="javascript:refreshPreview()"';
+        $refreshLink = $objLink->show();
+            
+        $objLayer = new layer();
+        $objLayer->id = 'previewDiv';
+        $objLayer->addToStr('<ul><li>'.$noPreviewLabel.'</li></ul>');
+        $previewLayer = $objLayer->show();
+            
+        $objLayer = new layer();
+        $objLayer->id = 'refreshDiv';
+        $objLayer->cssClass = 'featurebox';
+        $objLayer->addToStr($refreshLink.'<br />'.$previewLayer);
+        $refreshLayer = $objLayer->show();
+        $string = $refreshLayer;
+            
+        // add page tab
+        $previewTab = array(
+            'name' => $previewLabel,
+            'content' => $string,
+        );
+        
+        //display tabs
+        $this->objTab->init();        
+        $this->objTab->addTab($addTab);
+        $this->objTab->addTab($previewTab);
+        $this->objTab->useCookie = 'false';
+        $str = $this->objTab->show();
         
         return $str;       
     }
@@ -936,11 +1029,15 @@ class display extends object
     /**
     * Method create a list all wiki pages
     *
-    * @access private
+    * @access public
     * @return string $str: The output string
     **/
-    private function _showAllPages()
+    public function showAllPages()
     {
+        // add javascript to sort table
+        $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
+        $this->appendArrayVar('headerParams', $headerParams);
+
         // text elements
         $titleLabel = $this->objLanguage->languageText('mod_wiki2_view', 'wiki2');
         $pageLabel = $this->objLanguage->languageText('mod_wiki2_pagename', 'wiki2');
@@ -954,6 +1051,8 @@ class display extends object
         $delConfirmLabel = $this->objLanguage->languageText('mod_wiki2_deleteconfirm', 'wiki2');
         $pageTitleLabel = $this->objLanguage->languageText('mod_wiki2_pagetitle', 'wiki2');
         $authorTitleLabel = $this->objLanguage->languageText('mod_wiki2_authortitle', 'wiki2');
+        $listLabel = $this->objLanguage->languageText('mod_wiki2_listarticles', 'wiki2');
+        $summaryLabel = $this->objLanguage->languageText('mod_wiki2_listsummaries', 'wiki2');
         
         // get data
         $data = $this->objDbwiki->getAllCurrentPages();
@@ -1044,7 +1143,41 @@ class display extends object
             }
         }
         $pageTable = $objTable->show();
-        $str = $pageTable;
+        $list = $pageTable;
+        
+        $objLayer = new layer();
+        $objLayer->cssClass = 'featurebox';
+        $objLayer->addToStr($list);
+        $contentLayer = $objLayer->show();
+        
+        // add page tab
+        $pageTab = array(
+            'name' => $listLabel,
+            'content' => $contentLayer,
+        );
+ 
+        // list summaries
+        $list = $this->_showSummaries();
+            
+        $objLayer = new layer();
+        $objLayer->cssClass = 'featurebox';
+        $objLayer->addToStr($list);
+        $contentLayer = $objLayer->show();
+        
+        $string = $contentLayer;
+        
+        // add page tab
+        $summaryTab = array(
+            'name' => $summaryLabel,
+            'content' => $string,
+        );
+
+        //display tabs 
+        $this->objTab->init();       
+        $this->objTab->addTab($pageTab);
+        $this->objTab->addTab($summaryTab);
+        $this->objTab->useCookie = 'false';
+        $str = $this->objTab->show();
         
         return $str;
     }
@@ -1416,7 +1549,8 @@ You can create tables using pairs of vertical bars:
             'content' => $string,
         );
        
-        //display tabs        
+        //display tabs
+        $this->objTab->init();        
         $this->objTab->addTab($tabArray);
         $this->objTab->useCookie = 'false';
         $str = $this->objTab->show();
@@ -1510,14 +1644,6 @@ You can create tables using pairs of vertical bars:
             $this->objBizCard->setUserArray($user);
             $bizCard = $this->objBizCard->show();
 
-            $objLayer = new layer();
-            $objLayer->cssClass = 'featurebox';
-            $objLayer->addToStr($bizCard);
-            $contentLayer = $objLayer->show();
-        
-            $string = $contentLayer.'<br />';
-            
-
             // create display table
             $objTable = new htmltable();
             $objTable->id = 'articleList';
@@ -1560,18 +1686,17 @@ You can create tables using pairs of vertical bars:
             
             $objLayer = new layer();
             $objLayer->cssClass = 'featurebox';
-            $objLayer->addToStr($pageTable);
+            $objLayer->addToStr($bizCard.'<br />'.$pageTable);
             $contentLayer = $objLayer->show();
-        
-            $string .= $contentLayer;
             
             // add page tab
             $tabArray = array(
                 'name' => $detailsLabel,
-                'content' => $string,
+                'content' => $contentLayer,
             );       
         }
-        //display tabs        
+        //display tabs 
+        $this->objTab->init();       
         $this->objTab->addTab($tabArray);
         $this->objTab->useCookie = 'false';
         $str = $this->objTab->show();
@@ -1621,6 +1746,309 @@ You can create tables using pairs of vertical bars:
         }
 
         echo $string;
+    }
+
+    /**
+    * Method to display the main wiki content area
+    *
+    * @access public
+    * @param string $name: The name of the page to show
+    * @return string $str: The output string
+    **/
+    public function showDeletedPage($name)
+    {
+        // add  javascript
+        $headerParams = $this->getJavascriptFile('wiki.js', 'wiki2');
+        $this->appendArrayVar('headerParams', $headerParams);
+
+        // get data
+        $data = $this->objDbwiki->getPage($name);
+
+        $pageId = $data['id'];
+        $name = $data['page_name'];
+        $pageTitle = $this->objWiki->renderTitle($name);    
+        $wikiText = $this->objWiki->transform($data['page_content']);
+        $array = array(
+            'date' => $this->objDate->formatDate($data['date_created']),
+        );
+        $modifiedLabel = $this->objLanguage->code2Txt('mod_wiki2_modified', 'wiki2', $array);
+        
+        // text elements
+        $articleLabel = $this->objLanguage->languageText('mod_wiki2_deletedarticle', 'wiki2');
+        $content1Label = $this->objLanguage->languageText('mod_wiki2_deletedpage_1', 'wiki2');
+        $content2Label = $this->objLanguage->languageText('mod_wiki2_deletedpage_2', 'wiki2');
+        $content3Label = $this->objLanguage->languageText('mod_wiki2_deletedpage_3', 'wiki2');
+        $content4Label = $this->objLanguage->languageText('mod_wiki2_deletedpage_4', 'wiki2');
+        $deletedLabel = $this->objLanguage->languageText('word_deleted');
+        $historyLabel = $this->objLanguage->languageText('word_history');        
+        $versionTitle = $pageTitle.':&#160;'.$deletedLabel;
+        
+        $objHeader = new htmlheading();
+        $objHeader->str = $versionTitle;
+        $objHeader->type = 1;
+        $heading = $objHeader->show();
+        $contents = $heading;
+        
+        $string = $content1Label;
+        $string .= '<ul>';
+        $string .= '<li>'.$content2Label.'</li>';
+        $string .= '<li>'.$content3Label.'</li>';
+        $string .= '<li>'.$content4Label.'</li>';
+        $string .= '</ul>';
+        
+        $objLayer = new layer();
+        $objLayer->cssClass = 'featurebox';
+        $objLayer->addToStr($contents.$string);
+        $contentLayer = $objLayer->show();
+            
+        // wiki page tab
+        $mainTab = array(
+            'name' => $articleLabel,
+            'content' => $contentLayer,
+        );
+            
+        // page history
+        $history = $this->_showPageHistory($name);
+        
+        $objLayer = new layer();
+        $objLayer->cssClass = 'featurebox';
+        $objLayer->addToStr($history);
+        $contentLayer = $objLayer->show();
+            
+        // page history tab
+        $historyTab = array(
+            'name' => $historyLabel,
+            'content' => $contentLayer,
+        );
+
+        //display tabs
+        $this->objTab->init();
+        $this->objTab->tabId = 'mainTab';        
+        $this->objTab->addTab($mainTab);
+        if($this->isAdmin){
+            $this->objTab->addTab($historyTab);
+        }
+        $this->objTab->useCookie = 'false';
+        $str = $this->objTab->show();
+        
+        return $str.'<br />';
+    }
+    
+    /**
+    * Method to display the locked page message
+    * 
+    * @access public
+    * @param var $lockedForEdit: An indicator to show if the page is locked for edit
+    * @return string $str: The output string
+    */
+    public function showLockedMessage($lockedForEdit = FALSE)
+    {
+        // text elements
+        $lockedLabel = $this->objLanguage->languageText('mod_wiki2_locked', 'wiki2');
+        $retryLabel = $this->objLanguage->languageText('mod_wiki2_retry', 'wiki2');
+        
+        $str = '<ul>';
+        $str .= '<li>'.$lockedLabel.'</li>';
+        $str .= '<li>'.$retryLabel.'</li>';
+        $str .= '</ul>';
+        
+        if($lockedForEdit === 'keeplocked'){
+            $str = 'locked';
+        }elseif($lockedForEdit){
+            $objInput = new textinput('locked', 'locked', 'hidden');
+            $str = $objInput->show();
+        }else{
+            $objInput = new textinput('locked', 'unlocked', 'hidden');
+            $str .= $objInput->show();
+        }
+        echo $str;   
+    }
+    
+    /**
+    * method to display the rating div
+    *
+    * @access public
+    * @param string $name: The name of the page
+    * @param boolean $ajax: TRUE if the function is called via ajax | FALSE if not
+    * @return string $str: THe output string    
+    */
+    public function showRating($name, $ajax = FALSE)
+    {
+        // get data
+        $data = $this->objDbwiki->getRating($name);
+        $wasRated = $this->objDbwiki->wasRated($name);
+
+        // text elements
+        $ratedLabel = $this->objLanguage->languageText('word_rated');
+        $badLabel = $this->objLanguage->languageText('mod_wiki2_bad', 'wiki2');
+        $goodLabel = $this->objLanguage->languageText('mod_wiki2_good', 'wiki2');
+        $notRatedLabel = $this->objLanguage->languageText('mod_wiki2_notrated', 'wiki2');
+        $array = array(
+            'num' => $data['votes'],
+        );
+        $votersLabel = $this->objLanguage->code2Txt('mod_wiki2_voters', 'wiki2', $array);
+        $array = array(
+            'num' => $data['rating'],
+            'voters' => $data['votes'],
+        );
+        $countLabel = $this->objLanguage->code2Txt('mod_wiki2_rated', 'wiki2', $array);
+        
+        // rating radio
+        $str = '';
+        if(!$wasRated){
+            $objRadio = new radio('rating');
+            for($i = 1; $i <= 5; $i++){
+                $objRadio->addOption($i, '&#160;&#160;');
+                $objRadio->extra = 'style="vertical-align: middle;" onclick="javascript:addRating(this.value);"';
+            }
+            $ratingRadio = $objRadio->show();
+        
+            $str .= '<b>'.$badLabel.'</b>';
+            $str .= '&#160;&#160;'.$ratingRadio.'&#160;&#160;';
+            $str .= '<b>'.$goodLabel.'</b>';
+        }
+        
+        $str .= '&#160;&#160;&#160;&#160;'.$ratedLabel.'&#160;&#160;';
+        if($data['votes'] == 0){
+            for($i = 1; $i <= 5; $i++){
+                $this->objIcon->setIcon('grey_bullet');
+                $this->objIcon->extra = 'style="vertical-align: middle;"';
+                $this->objIcon->title = $notRatedLabel;
+                $str .= $this->objIcon->show();                               
+            }
+        }else{
+            if($data['rating'] == 0){
+                for($i = 1; $i <= 5; $i++){
+                    $this->objIcon->setIcon('grey_bullet');
+                    $this->objIcon->extra = 'style="vertical-align: middle;"';
+                    $this->objIcon->title = $countLabel;
+                    $str .= $this->objIcon->show();                               
+                }
+            }else{
+                for($i = 1; $i <= $data['rating']; $i++){
+                    $this->objIcon->setIcon('green_bullet');
+                    $this->objIcon->extra = 'style="vertical-align: middle;"';
+                    $this->objIcon->title = $countLabel;
+                    $str .= $this->objIcon->show();                               
+                }
+                for($i = 1; $i <= (5 - $data['rating']); $i++){
+                    $this->objIcon->setIcon('grey_bullet');
+                    $this->objIcon->extra = 'style="vertical-align: middle;"';
+                    $this->objIcon->title = $countLabel;
+                    $str .= $this->objIcon->show();                               
+                }
+            }
+        }
+        $str .= '&#160;&#160;'.$votersLabel; 
+
+        if($ajax){
+            echo $str;
+        }else{
+            return $str;   
+        }
+    }
+    
+    /**
+    * Method to display page ranking
+    * 
+    * @access public
+    * @return string $str: The output string
+    */
+    public function showRanking()
+    {
+        // add javascript to sort table
+        $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
+        $this->appendArrayVar('headerParams', $headerParams);
+
+        // get data
+        $data = $this->objDbwiki->getRanking();
+
+        // text elements
+        $pageLabel = $this->objLanguage->languageText('mod_wiki2_pagename', 'wiki2');
+        $rankLabel = $this->objLanguage->languageText('word_rank');
+        $rankingLabel = $this->objLanguage->languageText('word_ranking');
+        $ratingLabel = $this->objLanguage->languageText('word_rating');
+        $noRecordsLabel = $this->objLanguage->languageText('mod_wiki2_norecords', 'wiki2');
+        $pageTitleLabel = $this->objLanguage->languageText('mod_wiki2_pagetitle', 'wiki2');
+        // create display table
+        $objTable = new htmltable();
+        $objTable->id = 'rankList';
+        $objTable->css_class = 'sorttable';
+        $objTable->cellpadding = '2';
+        $objTable->border = '1';
+        $objTable->row_attributes = ' name="row_'.$objTable->id.'"';
+        $objTable->startRow();
+        $objTable->addCell($rankLabel, '10%', '', 'center', 'heading', '');
+        $objTable->addCell($pageLabel, '', '', '', 'heading', '');
+        $objTable->addCell($ratingLabel, '10%', '', 'center', 'heading', '');
+        $objTable->endRow();
+        if(empty($data)){
+            // no records
+            $objTable->startRow();
+            $objTable->addCell($noRecordsLabel, '', '', '', 'noRecordsMessage', 'colspan="3"');
+            $objTable->endRow();
+        }else{
+            // loop through data and display each record in the table
+            foreach($data as $key => $line){
+                $name = $line['page_name'];
+                $pageTitle = $this->objWiki->renderTitle($name);
+                $rank = ($key + 1);
+                $rating = ceil($line['tot'] / $line['cnt']);
+                
+                $objLink = new link($this->uri(array(
+                    'action' => 'view_page',
+                    'name' => $name,
+                ), 'wiki2'));
+                $objLink->link = $pageTitle;
+                $objLink->title = $pageTitleLabel;
+                $pageLink = $objLink->show();
+                
+                $array = array(
+                    'num' => $rating,
+                    'voters' => $line['cnt'],
+                );
+                $countLabel = $this->objLanguage->code2Txt('mod_wiki2_rated', 'wiki2', $array);
+                $str = '';
+                for($i = 1; $i <= $rating; $i++){
+                    $this->objIcon->setIcon('green_bullet');
+                    $this->objIcon->extra = 'style="vertical-align: middle;"';
+                    $this->objIcon->title = $countLabel;
+                    $str .= $this->objIcon->show();                               
+                }
+                for($i = 1; $i <= (5 - $rating); $i++){
+                    $this->objIcon->setIcon('grey_bullet');
+                    $this->objIcon->extra = 'style="vertical-align: middle;"';
+                    $this->objIcon->title = $countLabel;
+                    $str .= $this->objIcon->show();                               
+                }
+
+                // data display
+                $objTable->startRow();
+                $objTable->addCell($rank, '', '', 'center', '', '');
+                $objTable->addCell($pageLink, '', '', '', '', '');
+                $objTable->addCell($str, '', '', 'center', '', '');
+                $objTable->endRow();
+            }
+        }
+        $pageTable = $objTable->show();
+            
+        $objLayer = new layer();
+        $objLayer->cssClass = 'featurebox';
+        $objLayer->addToStr($pageTable);
+        $contentLayer = $objLayer->show();
+        
+        // add page tab
+        $tabArray = array(
+            'name' => $rankingLabel,
+            'content' => $contentLayer,
+        ); 
+              
+        //display tabs 
+        $this->objTab->init();       
+        $this->objTab->addTab($tabArray);
+        $str = $this->objTab->show();
+        
+        return $str.'<br />';
     }
 }
 ?>

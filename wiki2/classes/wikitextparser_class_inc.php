@@ -24,6 +24,7 @@ class wikiTextParser extends object
     public function init()
     {
     	$this->objLanguage = $this->getObject('language', 'language');
+    	$this->objConfig = $this->getObject('altconfig', 'config');
         $errorLabel = $this->objLanguage->languageText('mod_wiki2_missingpear', 'wiki2');
         
         if (!@include_once('Text/Wiki.php')) {
@@ -31,6 +32,7 @@ class wikiTextParser extends object
     		return FALSE;
     	}
         $this->objWiki = new Text_Wiki();
+        $this->configure();
     }
 
     
@@ -59,28 +61,30 @@ class wikiTextParser extends object
      
      public function configure()
      {
-	 // Disabling HTML tags	 
-	 $this->objWiki->disableRule('Html');
+         // Disabling HTML tags	 
+    	 $this->objWiki->disableRule('Html');
 	 	 
-     //Set the params for the table rule
-     $this->objWiki->setRenderConf('xhtml', 'Table', 'css_table');  //, '"" border = 1');
+         //Set the params for the table rule
+         $this->objWiki->setRenderConf('xhtml', 'Table', 'css_table');  //, '"" border = 1');
 
-     //Set the add page url param for the wikilink rule
-     $addUrl = $this->objConfig->getsiteRoot().'index.php?module=wiki2&action=add_page&pagename=%s';
-     $this->objWiki->setRenderConf("xhtml", "Wikilink", "new_url", "$addUrl");
+         //Set the add page url param for the wikilink rule
+         $addUrl = $this->objConfig->getsiteRoot().'index.php?module=wiki2&action=add_page&name=%s';
+         $encodedUrl = htmlentities($addUrl);
+         $this->objWiki->setRenderConf("xhtml", "Wikilink", "new_url", "$encodedUrl");
 
-     //Set the view page url param for the wikilink rule
-     $viewUrl = $this->objConfig->getsiteRoot().'index.php?module=wiki&action=wiki_link&pagename=%s';
-     $this->objWiki->setRenderConf("xhtml", "Wikilink", "view_url", "$viewUrl");
+         //Set the view page url param for the wikilink rule
+         $viewUrl = $this->objConfig->getsiteRoot().'index.php?module=wiki2&action=view_page&name=%s';
+         $encodedUrl = htmlentities($viewUrl);
+         $this->objWiki->setRenderConf("xhtml", "Wikilink", "view_url", "$encodedUrl");
 
-     //Set the sites array for the interwiki rule
-     $pages = "";//$this->objDbWiki->listpagenames();
-     $this->objWiki->setRenderConf("xhtml", "Wikilink", "pages", "$pages");
-     $sites = array('MeatBall' => 'http://www.usemod.com/cgi-bin/mb.pl?%s',
+         //Set the sites array for the interwiki rule
+         $pages = "";//$this->objDbWiki->listpagenames();
+         $this->objWiki->setRenderConf("xhtml", "Wikilink", "pages", "$pages");
+         $sites = array('MeatBall' => 'http://www.usemod.com/cgi-bin/mb.pl?%s',
              'Wiki'       => 'http://c2.com/cgi/wiki?%s',
              'Wikipedia' => 'http://en.wikipedia.org/wiki/%s'
              );
-     $this->objWiki->setRenderConf("xhtml", "Interwiki", "", "$sites");
+        $this->objWiki->setRenderConf("xhtml", "Interwiki", "", "$sites");
      }
 
     /**

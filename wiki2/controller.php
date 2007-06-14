@@ -35,6 +35,24 @@ class wiki2 extends controller {
     public $objDbwiki;
     
     /**
+    * @var object $objLock: The wikipagelock class in the wiki version 2 module
+    * @access public
+    */
+    public $objLock;
+    
+    /**
+    * @var object $objUser: The user class in the security module
+    * @access public
+    */
+    public $objUser;
+    
+    /**
+    * @var string $userId: The user id of the current logged in user
+    * @access public
+    */
+    public $userId;
+        
+    /**
     * Method to initialise the controller
     * 
     * @access public
@@ -45,8 +63,45 @@ class wiki2 extends controller {
         $this->objLanguage = $this->getObject( 'language', 'language' );
         $this->objDisplay = $this->newObject('display', 'wiki2');
         $this->objDbwiki = $this->newObject('dbwiki', 'wiki2');        
+        $this->objLock = $this->newObject('wikipagelock', 'wiki2');        
+        $this->objUser = $this->newObject('user', 'security');
+        $this->userId = $this->objUser->userId();        
     }
     
+    /**
+    * Method to check if login needed (depending on operation)
+    * 
+    * @access public 
+    * @return boolean True or False
+    */
+    public function requiresLogin()
+    {
+        $action = $this->getParam("action", NULL);
+        //Allow viewing anonymously
+        switch($action){
+            case 'add_page':
+            case 'create_page':
+            case 'update_page':
+            case 'delete_page':
+            case 'restore_page':
+            case 'validate_name':
+            case 'preview_page':
+            case 'deleted_page':
+            case 'check_lock':
+            case 'lock_page':
+                return TRUE;
+            case 'view_rules':
+            case 'view_all':
+            case 'view_page':
+            case 'search_wiki':
+            case 'view_authors':
+            case 'add_rating':
+            case 'view_ranking':
+            default:
+                return FALSE;
+        }
+    }
+
     /**
     * Method the engine uses to kickstart the module
     * 
@@ -64,6 +119,13 @@ class wiki2 extends controller {
                 return 'template_tpl.php';
                 break;
                 
+            case 'add_page':
+                $name = $this->getParam('name');
+                $templateContent = $this->objDisplay->showAddPage($name);
+                $this->setVarByRef('templateContent', $templateContent);
+                return 'template_tpl.php';
+                break;
+                               
             case 'create_page':
                 $cancel = $this->getParam('cancel', NULL);
                 if(empty($cancel)){
@@ -94,6 +156,7 @@ class wiki2 extends controller {
             case 'update_page':
                 $cancel = $this->getParam('cancel', NULL);
                 $name = $this->getParam('name');
+                $id = $this->getParam('id');
                 if(empty($cancel)){
                     $name = $this->getParam('name');
                     $main = $this->getParam('main');
@@ -116,6 +179,7 @@ class wiki2 extends controller {
                     $data['page_content'] = $content;
                     $pageId = $this->objDbwiki->addPage($data);                    
                 }
+                $this->objLock->unlockEdit('tbl_wiki2_pages', $id, $this->userId);
                 return $this->nextAction('view_page', array(
                     'name' => $name,
                 ));
@@ -128,17 +192,28 @@ class wiki2 extends controller {
                 break;
                 
             case 'view_all':
-                $templateContent = $this->objDisplay->showMain('', '', 'list');
+                $templateContent = $this->objDisplay->showAllPages();
                 $this->setVarByRef('templateContent', $templateContent);
                 return 'template_tpl.php';
                 break;
                 
             case 'view_page':
                 $name = $this->getParam('name');
+                if(!empty($name)){
+                    $page = $this->objDbwiki->getPage($name);
+                    if(empty($page)){
+                        return $this->nextAction('add_page', array(
+                            'name' => $name,
+                        ));
+                    }elseif($page['page_status'] == 6){
+                        return $this->nextAction('deleted_page', array(
+                            'name' => $name,
+                        ));
+                    }
+                }
                 $version = $this->getParam('version');
-                $mode = $this->getParam('mode');
                 $tab = $this->getParam('tab', 0);
-                $templateContent = $this->objDisplay->showMain($name, $version, $mode, $tab);
+                $templateContent = $this->objDisplay->showMain($name, $version, $tab);            
                 $this->setVarByRef('templateContent', $templateContent);
                 return 'template_tpl.php';
                 break;
@@ -146,7 +221,12 @@ class wiki2 extends controller {
             case 'restore_page':
                 $name = $this->getParam('name');
                 $version = $this->getParam('version');
-                $this->objDbwiki->restorePage($name, $version);
+                $mode = $this->getParam('mode');
+                if($mode == 'reinstate'){
+                    $this->objDbwiki->reinstatePage($name, $version);
+                }else{
+                    $this->objDbwiki->restorePage($name, $version);
+                }
                 $templateContent = $this->objDisplay->showMain($name);
                 $this->setVarByRef('templateContent', $templateContent);
                 return 'template_tpl.php';
@@ -187,7 +267,51 @@ class wiki2 extends controller {
                 $divContent = $this->objDisplay->showPreview($name, $content);
                 return $divContent;
                 break;
-
+                
+            case 'deleted_page':
+                $name = $this->getParam('name');
+                $templateContent = $this->objDisplay->showDeletedPage($name);
+                $this->setVarByRef('templateContent', $templateContent);
+                return 'template_tpl.php';
+                break;
+                
+            case 'check_lock':
+                $id = $this->getParam('id');
+        		// If user can edit , then lock it and continue
+        		$canEdit = $this->objLock->canUserEdit($id, $this->userId);
+                if($canEdit){
+                    // If page is locked, force unlock
+                    $isLocked = $this->objLock->isEditLocked('tbl_wiki2_pages', $id); 
+                    if($isLocked){
+                        $this->objLock->forceEditUnlock('tbl_wiki2_pages', $id);
+                		$this->objLock->lockEdit('tbl_wiki2_pages', $id, $this->userId);
+                    }
+                    return $this->objDisplay->showLockedMessage(TRUE);
+                }else{
+                // Page is currently locked by another user notify user
+                    return $this->objDisplay->showLockedMessage();
+                }
+                break;
+                
+            case 'lock_page':
+                $id = $this->getParam('id');
+                $this->objLock->lockEdit('tbl_wiki2_pages', $id, $this->userId);
+                return $this->objDisplay->showLockedMessage('keeplocked');
+                break;
+                
+            case 'add_rating':
+                $name = $this->getParam('name');
+                $rating = $this->getParam('rating');
+                $this->objDbwiki->addRating($name, $rating);
+                return $this->objDisplay->showRating($name, TRUE);
+                break;
+                
+            case 'view_ranking':
+                $templateContent = $this->objDisplay->showRanking();
+                $this->setVarByRef('templateContent', $templateContent);
+                return 'template_tpl.php';
+                break;
+                
             default:
                 return $this->nextAction('view_page');
                 break;

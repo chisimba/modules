@@ -14,8 +14,6 @@
         <wiki_id>init_1</wiki_id>
         <page_name>MainPage</page_name>
         <main_page>1</main_page>
-        <page_lock>0</page_lock>
-        <page_locker_id></page_locker_id>
         <page_summary>A brief overview of what a wiki is all about</page_summary>
         <page_content>[[toc]]
 +++ What is a wiki

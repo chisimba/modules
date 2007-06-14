@@ -1,4 +1,4 @@
-/* 
+324/* 
 * ===================================================================== 
 *  File to hold the javascript functions for the wiki version 2 module
 * =====================================================================
@@ -114,7 +114,7 @@ function validationEffects()
 }
 
 /**
-* Method to call jax to generate the preview
+* Method to call ajax to generate the preview
 */
 function refreshPreview()
 {
@@ -123,5 +123,96 @@ function refreshPreview()
     var url = "index.php";
     var target = "previewDiv";
     var pars = "module=wiki2&action=preview_page&name="+name_value+"&content="+content_value;
-    var previewAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars});    
+    var refreshAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars,onComplete: resizeRefresh});    
+}
+
+/**
+* Method to adjust the layout
+*/
+function resizeRefresh()
+{
+    adjustLayout();
+}
+
+/**
+* Method to link ajax functions to the tab onclick events
+*/
+function tabClickEvents()
+{
+    $("mainTabnav3").parentNode.style.display = 'none';
+    $("mainTabnav4").parentNode.style.display = 'none';
+    var editLink = $("mainTabnav2");
+    editLink.onclick = function(){
+        checkLock();
+    }
+}
+
+/**
+* Method to check if the user can edit the page
+*/
+function checkLock()
+{
+    var id = $F("input_id");
+    var target = 'lockedDiv';
+    var url = "index.php";
+    var pars = "module=wiki2&action=check_lock&id="+id;
+    var checkAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars, onComplete: updatePage});    
+}
+
+/**
+* Method to update the page after the lock check
+*/
+function updatePage()
+{
+    var locked_input = $F("input_locked");
+    if(locked_input == "locked"){
+        $("mainTabnav1").parentNode.style.display = 'none';
+        $("mainTabnav2").parentNode.style.display = 'none';
+        $("mainTabnav3").parentNode.style.display = '';
+        $("mainTabnav4").parentNode.style.display = '';
+        $("mainTabnav5").parentNode.style.display = 'none';
+        $('mainTab').tabber.tabShow(2);;
+        lockPage();        
+    }else{
+        $("mainTabnav1").parentNode.style.display = '';
+        $("mainTabnav2").parentNode.style.display = '';
+        $("mainTabnav3").parentNode.style.display = 'none';
+        $("mainTabnav4").parentNode.style.display = 'none';
+        $("mainTabnav5").parentNode.style.display = '';
+        $('mainTab').tabber.tabShow(1);;
+    }
+}
+
+/**
+* Method to lock the page for editing
+*/
+function lockPage()
+{
+    var id = $F("input_id");
+    var target = "input_locked";
+    var url = "index.php";
+    var pars = "module=wiki2&action=lock_page&id="+id;
+    var lockAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars, onComplete: wikiLockTimer});    
+}
+
+/*
+* Function to set the lock timer
+*/
+function wikiLockTimer()
+{
+    var lockTimer = setTimeout("lockPage()", 60000);    
+}
+
+/**
+* Method to add a rating
+* 
+* @param string rating: The rating that was given
+*/
+function addRating(rating)
+{
+    var name_value = $F("input_name");
+    var target = "ratingDiv";
+    var url = "index.php";
+    var pars = "module=wiki2&action=add_rating&name="+name_value+"&rating="+rating;
+    var lockAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars});      
 }

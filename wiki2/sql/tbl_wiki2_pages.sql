@@ -44,7 +44,7 @@ $fields = array(
 	'version_comment' => array(
 		'type' => 'clob',
 	),
-	'page_status' => array( // current, restored, overwritten, archived, deleted
+	'page_status' => array( // current, restored, reinstated, overwritten, archived, deleted
 		'type' => 'integer',
 		'length' => 1,
 	),

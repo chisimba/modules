@@ -64,14 +64,36 @@ class dbwiki extends dbTable
 	}
 	
 	/**
-	* Method to set the module table
+	* Method to set the wiki table
 	*
 	* @access private
 	* @return boolean: TRUE on success FALSE on failure
 	*/
 	private function _setWiki()
 	{
+        return $this->_changeTable('tbl_wiki2_wikis');
+    }
+
+	/**
+	* Method to set the pages table
+	*
+	* @access private
+	* @return boolean: TRUE on success FALSE on failure
+	*/
+	private function _setPages()
+	{
         return $this->_changeTable('tbl_wiki2_pages');
+    }
+
+	/**
+	* Method to set the rating table
+	*
+	* @access private
+	* @return boolean: TRUE on success FALSE on failure
+	*/
+	private function _setRating()
+	{
+        return $this->_changeTable('tbl_wiki2_rating');
     }
 
 /* ----- Functions for tbl_wiki2_pages ----- */
@@ -81,7 +103,7 @@ class dbwiki extends dbTable
     *
     * @access public
     * @param array $data: The array of wiki page data
-    * @return string|bool $pageId: The condition type id |False on failure
+    * @return string|bool $pageId: The wiki page id |False on failure
     **/
     public function addPage($data)
     {
@@ -105,11 +127,11 @@ class dbwiki extends dbTable
     */
     public function getAllCurrentPages()
     {
-        $this->_setWiki();
+        $this->_setPages();
         $sql = "WHERE (page_name, page_version)";
         $sql .= " IN (SELECT page_name, MAX(page_version)";
         $sql .= "     FROM tbl_wiki2_pages GROUP BY page_name)";
-        $sql .= " AND page_status < 3";
+        $sql .= " AND page_status < 4";
         $sql .= " ORDER BY date_created DESC";
         $data = $this->getAll($sql);
         if(!empty($data)){
@@ -127,7 +149,7 @@ class dbwiki extends dbTable
     */
     public function getPagesByName($name)
     {
-        $this->_setWiki();        
+        $this->_setPages();        
         $sql = "WHERE page_name = '".$name."'";
         $sql .= " ORDER BY page_version DESC";
         $data = $this->getAll($sql);
@@ -147,7 +169,7 @@ class dbwiki extends dbTable
     */
     public function getPage($name, $version = NULL)
     {
-        $this->_setWiki();        
+        $this->_setPages();        
         $sql = "WHERE page_name = '".$name."'";
         if(!empty($version)){
             $sql .= " AND page_version = '".$version."'";
@@ -169,7 +191,7 @@ class dbwiki extends dbTable
     */
     public function getPageById($id)
     {
-        $this->_setWiki();        
+        $this->_setPages();        
         $sql = "WHERE id = '".$id."'";
         $data = $this->getAll($sql);
         if(!empty($data)){
@@ -186,7 +208,7 @@ class dbwiki extends dbTable
     */
     public function getMainPage()
     {
-        $this->_setWiki();        
+        $this->_setPages();        
         $sql = "WHERE main_page = '1'";
         $sql .= " ORDER BY page_version DESC";
         $data = $this->getAll($sql);
@@ -204,9 +226,9 @@ class dbwiki extends dbTable
     */
     public function getRecentlyAdded()
     {
-        $this->_setWiki(); 
+        $this->_setPages(); 
         $sql = "WHERE page_version = 1";
-        $sql .= " AND page_status < 4";
+        $sql .= " AND page_status < 5";
         $sql .= " ORDER BY date_created DESC LIMIT 5";
         $data = $this->getAll($sql);
         if(!empty($data)){
@@ -223,50 +245,18 @@ class dbwiki extends dbTable
     */
     public function getRecentlyUpdated()
     {
-        $this->_setWiki();
+        $this->_setPages();
         $sql = "WHERE (page_name, page_version)";
         $sql .= " IN (SELECT page_name, MAX(page_version)";
         $sql .= "     FROM tbl_wiki2_pages GROUP BY page_name)";
         $sql .= " AND page_version > 1";
-        $sql .= " AND page_status < 4";
+        $sql .= " AND page_status < 5";
         $sql .= " ORDER BY date_created DESC LIMIT 5";
         $data = $this->getAll($sql);
         if(!empty($data)){
             return $data;
         }
         return FALSE;
-    }    
-
-    /**
-    * Method to lock a wiki page for editing
-    *
-    * @access public
-    * @param string $name: The name of the page to lock
-    * @return void
-    */
-    public function lockPage($name)
-    {
-        $this->_setWiki();        
-        $this->update('page_name', $name, array(
-            'page_lock' => 1,
-            'page_locker_id' => $this->userId,
-        ));
-    }    
-
-    /**
-    * Method to unlock a wiki page after editing
-    *
-    * @access public
-    * @param string $name: The name of the page to unlock
-    * @return void
-    */
-    public function unlockPage($name)
-    {
-        $this->_setWiki();        
-        $this->update('page_name', $name, array(
-            'page_lock' => 0,
-            'page_locker_id' => '',
-        ));
     }    
 
     /**
@@ -280,7 +270,7 @@ class dbwiki extends dbTable
     */
     public function editPageField($id, $field, $name)
     {
-        $this->_setWiki();        
+        $this->_setPages();        
         $this->update('id', $id, array($field => $value));
     }    
     
@@ -293,9 +283,9 @@ class dbwiki extends dbTable
     */
     public function deletePage($name)
     {
-        $this->_setWiki();        
+        $this->_setPages();        
         $this->update('page_name', $name, array(
-            'page_status' => 5,
+            'page_status' => 6,
         ));
     }
     
@@ -314,14 +304,14 @@ class dbwiki extends dbTable
         );
         $restoreLabel = $this->objLanguage->code2Txt('mod_wiki2_restoration', 'wiki2', $array);
         
-        $this->_setWiki();
+        $this->_setPages();
         $sql = "WHERE page_name = '".$name."'";
         $sql .= " AND page_version > '".$version."'";
         $overWrittenPages = $this->getAll($sql);
         if(!empty($overWrittenPages)){
             foreach($overWrittenPages as $page){
                 $this->update('id', $page['id'], array(
-                    'page_status' => 3,
+                    'page_status' => 4,
                 ));
             }
         }
@@ -332,6 +322,45 @@ class dbwiki extends dbTable
         $pageToRestore['page_version'] = $this->getVersion($name);
         $pageToRestore['version_comment'] = $restoreLabel;
         $pageToRestore['page_status'] = 2;
+        $pageToRestore['page_author_id'] = $this->userId;
+        $pageToRestore['date_created'] = date('Y-m-d H:i:s');
+        $pageId = $this->insert($pageToRestore);
+        
+        return $pageId;        
+    }
+    
+    /**
+    * Method to restore a wiki page
+    * 
+    * @access public
+    * @param string $name: The page name to restore
+    * @param integer $version: The page version to restore
+    * @return string $pageId: The id of the resored page
+    */
+    public function reinstatePage($name, $version)
+    {
+        $array = array(
+            'num' => $version,
+        );
+        $reinstateLabel = $this->objLanguage->code2Txt('mod_wiki2_reinstatement', 'wiki2', $array);
+
+        $this->_setPages();
+        $sql = "WHERE page_name = '".$name."'";
+        $archivedPages = $this->getAll($sql);
+        if(!empty($archivedPages)){
+            foreach($archivedPages as $page){
+                $this->update('id', $page['id'], array(
+                    'page_status' => 5,
+                ));
+            }
+        }
+
+        $pageToRestore = $this->getPage($name, $version);
+        $temp = array_pop($pageToRestore);
+        $temp = array_shift($pageToRestore);
+        $pageToRestore['page_version'] = $this->getVersion($name);
+        $pageToRestore['version_comment'] = $reinstateLabel;
+        $pageToRestore['page_status'] = 3;
         $pageToRestore['page_author_id'] = $this->userId;
         $pageToRestore['date_created'] = date('Y-m-d H:i:s');
         $pageId = $this->insert($pageToRestore);
@@ -367,12 +396,12 @@ class dbwiki extends dbTable
     */
     public function searchWiki($column, $value)
     {
-        $this->_setWiki();
+        $this->_setPages();
         $smashValue = str_replace(' ', '', ucwords($value));
         $sql = "WHERE (page_name, page_version)";
         $sql .= " IN (SELECT page_name, MAX(page_version)";
         $sql .= "     FROM tbl_wiki2_pages GROUP BY page_name)";
-        $sql .= " AND page_status < 3";
+        $sql .= " AND page_status < 4";
         if($column == 'both'){
             $sql .= " AND (page_name = '".$smashValue."'";
             $sql .= " OR page_content LIKE '%".$value."%')";
@@ -397,7 +426,7 @@ class dbwiki extends dbTable
     */
     public function getAuthors()
     {
-        $this->_setWiki();
+        $this->_setPages();
         $sql = "SELECT *, COUNT(page_author_id) AS cnt FROM tbl_wiki2_pages";
         $sql .= " GROUP BY page_author_id";
         $data = $this->getArray($sql);
@@ -416,11 +445,11 @@ class dbwiki extends dbTable
     */
     public function getAuthorArticles($author)
     {
-        $this->_setWiki();
+        $this->_setPages();
         $sql = "WHERE (page_name, page_version)";
         $sql .= " IN (SELECT page_name, MAX(page_version)";
         $sql .= "     FROM tbl_wiki2_pages GROUP BY page_name)";
-        $sql .= " AND page_status < 3";
+        $sql .= " AND page_status < 4";
         $sql .= " AND page_author_id = '".$author."'";
         $sql .= " ORDER BY date_created DESC";
         $data = $this->getAll($sql);
@@ -429,5 +458,110 @@ class dbwiki extends dbTable
         }
         return FALSE;
     }    
+
+/* ----- Functions for tbl_wiki2_pages ----- */
+    
+    /**
+    * Method to add a wiki page rating
+    *
+    * @access public
+    * @param string $wikiId: The id of the wiki the page is for
+    * @param string $name: The wiki page name
+    * @param integer $rating: The rating the page recieved
+    * @return string|bool $ratingId: The wiki page rating id |False on failure
+    */
+    public function addRating($name, $rating)
+    {
+        $this->_setRating();
+        $fields = array();
+        $fields['wiki_id'] = 'init_1';
+        $fields['page_name'] = $name;
+        $fields['page_rating'] = $rating;
+        $fields['creator_id'] = $this->userId;
+        
+        $ratingId = $this->insert($fields);
+    }
+
+    /**
+    * Method to get a wiki page rating
+    *
+    * @access public
+    * @param string $wikiId: The id of the wiki the page is for
+    * @param string $name: The wiki page name
+    * @return array $array: The array of wiki page rating and votes
+    */
+    public function getRating($name)
+    {
+        $this->_setRating();
+        $sql = "WHERE wiki_id = 'init_1'";
+        $sql .= " AND page_name = '".$name."'";
+        $data = $this->getAll($sql);
+        if(!empty($data)){
+            $vote = 0;
+            foreach($data as $line){
+                $vote = $vote + $line['page_rating'];
+            }
+            $votes = count($data);
+            if($vote > 0){
+                $rating = ceil($vote / $votes);
+            }else{
+                $rating = 0;
+            }
+            $array = array(
+                'rating' => $rating,
+                'votes' => $votes,
+            );
+            return $array;
+        }
+        $array = array(
+            'rating' => 0,
+            'votes' => 0,
+        );
+        return $array;
+    }
+    
+    /**
+    * Method to check if a user has rated a page
+    *
+    * @access public
+    * @param string $wikiId: The id of the wiki the page is for
+    * @param string $name: The wiki page name
+    * @return boolean $rated: TRUE if the user has rated the page | FALSE if not
+    */
+    public function wasRated($name)
+    {
+        $this->_setRating();
+        $sql = "WHERE wiki_id = 'init_1'";
+        $sql .= " AND page_name = '".$name."'";
+        $sql .= " AND creator_id = '".$this->userId."'";
+        $data = $this->getAll($sql);
+        if(!empty($data)){
+            return TRUE;
+        }
+        return FALSE;
+    }
+
+    /**
+    * Method to add a wiki page ranking
+    *
+    * @access public
+    * @param string $wikiId: The id of the wiki the page is for
+    * @param string $name: The wiki page name
+    * @return float $ranking: The wiki page ranking
+    */
+    public function getRanking()
+    {
+        $this->_setRating();
+        $sql = "SELECT *, COUNT(page_name) AS cnt, SUM(page_rating) AS tot";
+        $sql .= " FROM tbl_wiki2_rating ";
+        $sql .= " WHERE wiki_id = 'init_1'";
+        $sql .= " GROUP BY page_name";
+        $sql .= " ORDER BY tot DESC, cnt DESC";
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data;
+        }
+        return FALSE;
+    }
 }
 ?>
