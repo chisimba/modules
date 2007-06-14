@@ -18,8 +18,8 @@ class sanordmenu extends object
     {
         // List of Menu Items
         $this->menuItems = array(
-            //array('title'=>'Home', 'module'=>'cms'),
-            array('title'=>'Members', 'module'=>'cms'),
+            //array('title'=>'Home', 'module'=>'cms'), http://64.191.50.197/sanord/chisimba_framework/app/index.php?module=cms&action=showsection&pageid=gen10Srv58Nme22_2875_1181819042&id=init_1&sectionid=init_1
+            array('title'=>'Members', 'module'=>'cms', 'action' => 'showsection', 'pageid' => 'gen10Srv58Nme22_2875_1181819042', 'id' => 'init_1', 'sectionid' => 'init_1'),
         );
         
         $this->objUser = $this->getObject('user', 'security');
