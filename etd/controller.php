@@ -70,6 +70,7 @@ class etd extends controller
             $this->objFeeder = $this->newObject('feeder', 'feed');
             
             $this->loadClass('link', 'htmlelements');
+            $this->loadClass('htmlheading', 'htmlelements');
            
         }catch(Exception $e){
             throw customException($e->message());
@@ -134,7 +135,12 @@ class etd extends controller
                 break;
                 
             case 'showrecent':
-                $page = $this->etdResource->getRecentResources();
+                $head = $this->objLanguage->languageText('mod_etd_name');
+                $objHead = new htmlheading();
+                $objHead->str = $head;
+                $objHead->type = 2;
+                $page = $objHead->show();
+                $page .= $this->etdResource->getRecentResources();
                 $this->setVarByRef('search', $page);
                 return 'print_tpl.php';
                 break;
