@@ -163,7 +163,7 @@ class display extends object
         $authorsTitleLabel = $this->objLanguage->languageText('mod_wiki2_authorstitle', 'wiki2');
         $rankingLabel = $this->objLanguage->languageText('mod_wiki2_viewraking', 'wiki2');
         $rankingTitleLabel = $this->objLanguage->languageText('mod_wiki2_rankingtitle', 'wiki2');
-        $loginLabel = $this->objLanguage->languageText('mod-wiki2_login', 'wiki2');
+        $loginLabel = $this->objLanguage->languageText('mod_wiki2_login', 'wiki2');
         $loginTitleLabel = $this->objLanguage->languageText('mod-wiki2_logintitle', 'wiki2');
         
         // links
@@ -177,14 +177,16 @@ class display extends object
         $mainLink = $objLink->show();
         $string .= '<li>'.$mainLink.'</li>';
         
-        // add page link
-        $objLink = new link($this->uri(array(
-            'action' => 'add_page',
-        ), 'wiki2'));
-        $objLink->link = $addLabel;
-        $objLink->title = $addTitleLabel;
-        $addLink = $objLink->show();
-        $string .= '<li>'.$addLink.'</li>';
+        if($this->isLoggedIn){
+            // add page link
+            $objLink = new link($this->uri(array(
+                'action' => 'add_page',
+            ), 'wiki2'));
+            $objLink->link = $addLabel;
+            $objLink->title = $addTitleLabel;
+            $addLink = $objLink->show();
+            $string .= '<li>'.$addLink.'</li>';
+        }
         
         // view all page link
         $objLink = new link($this->uri(array(
@@ -213,15 +215,6 @@ class display extends object
         $rankLink = $objLink->show();
         $string .= '<li>'.$rankLink.'</li>';
 
-        if(!$this->isLoggedIn){
-            // view ranking link
-            $objLink = new link($this->uri(array()));
-            $objLink->link = $loginLabel;
-            $objLink->title = $loginTitleLabel;
-            $loginLink = $objLink->show();
-            $string .= '<li>'.$loginLink.'</li>';
-        }
-
         // popup link for formatting rules
         $objPopup = new windowpop();
         $objPopup->title = $formatTitleLabel;
@@ -237,6 +230,16 @@ class display extends object
         $objPopup->putJs(); // you only need to do this once per page
         $formatPopup = $objPopup->show();
         $string .= '<li>'.$formatPopup.'</li>';
+
+        if(!$this->isLoggedIn){
+            $preLogin = $this->objConfig->getPrelogin();
+            // view login link
+            $objLink = new link($this->uri(array(), $preLogin));
+            $objLink->link = $loginLabel;
+            $objLink->title = $loginTitleLabel;
+            $loginLink = $objLink->show();
+            $string .= '<li>'.$loginLink.'</li>';
+        }
         $string .= '</ul>';
         
         $str = $this->objFeature->show($nameLabel, $string);
@@ -413,7 +416,7 @@ class display extends object
         );
             
         // edit page
-        if(empty($version)){ // can only edit latest version
+        if(empty($version) && $this->isLoggedIn){ // can only edit latest version
             $objLayer = new layer();
             $objLayer->id = 'lockedDiv';
             $objLayer->cssClass = 'featurebox';
@@ -474,7 +477,7 @@ class display extends object
         $this->objTab->init();
         $this->objTab->tabId = 'mainTab'; 
         $this->objTab->addTab($mainTab);
-        if(empty($version)){
+        if(empty($version) && $this->isLoggedIn){
             $this->objTab->addTab($lockedTab);            
             $this->objTab->addTab($editTab);            
             $this->objTab->addTab($previewTab);            
@@ -482,7 +485,7 @@ class display extends object
         $this->objTab->addTab($historyTab);
         $this->objTab->setSelected = $tab;
         $str = $this->objTab->show();
-        if(empty($version)){
+        if(empty($version) && $this->isLoggedIn){
             $body = 'tabClickEvents();';
             $this->appendArrayVar('bodyOnLoad', $body);            
         }
@@ -1895,20 +1898,20 @@ You can create tables using pairs of vertical bars:
         
         // rating radio
         $str = '';
-        if(!$wasRated){
+        if(!$wasRated && $this->isLoggedIn){
             $objRadio = new radio('rating');
             for($i = 1; $i <= 5; $i++){
-                $objRadio->addOption($i, '&#160;&#160;');
+                $objRadio->addOption($i, '&#160;');
                 $objRadio->extra = 'style="vertical-align: middle;" onclick="javascript:addRating(this.value);"';
             }
             $ratingRadio = $objRadio->show();
         
             $str .= '<b>'.$badLabel.'</b>';
             $str .= '&#160;&#160;'.$ratingRadio.'&#160;&#160;';
-            $str .= '<b>'.$goodLabel.'</b>';
+            $str .= '<b>'.$goodLabel.'</b><br />';
         }
         
-        $str .= '&#160;&#160;&#160;&#160;'.$ratedLabel.'&#160;&#160;';
+        $str .= $ratedLabel.'&#160;&#160;';
         if($data['votes'] == 0){
             for($i = 1; $i <= 5; $i++){
                 $this->objIcon->setIcon('grey_bullet');

@@ -58,7 +58,7 @@ class block_wiki extends object
         // the exit link
         $this->objLink = new link($this->uri(array(), 'wiki2'));
         $this->objLink->link = $wikiLabel;
-        $this->objLinkk->title = $wikiTitleLabel;
+        $this->objLink->title = $wikiTitleLabel;
         $wikiLink = $this->objLink->show();
          
         return $wikiLink;
