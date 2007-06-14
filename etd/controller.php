@@ -145,7 +145,8 @@ class etd extends controller
                 $objLink->link = $objHead->show();
                 $page = $objLink->show();
                 $page .= $this->etdResource->getRecentResources();
-                $objLink = new link($this->uri(''));
+                $objLink = new link('#');
+                $objLink->extra = "onClick=\"javascript: window.open('".$this->uri('')."', 'etd', 'height=600, width=800');\"";
                 $objLink->link = $head;
                 $page .= $objLink->show();
                 $this->setVarByRef('search', $page);
