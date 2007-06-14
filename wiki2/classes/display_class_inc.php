@@ -92,6 +92,12 @@ class display extends object
     public $objUserAdmin;
 
     /**
+    * @var object $objBlocks: The blocks class in the blocks module
+    * @access public
+    */
+    public $objBlocks;
+
+    /**
     * Method to construct the class
     *
     * @access public
@@ -121,6 +127,7 @@ class display extends object
         $this->objWiki = $this->newObject('wikitextparser', 'wiki2');
         $this->objDate = $this->newObject('dateandtime', 'utilities');
         $this->objUser = $this->newObject('user', 'security');
+        $this->objBlocks = $this->newObject('blocks', 'blocks');
         $this->userId = $this->objUser->userId();
         $this->isLoggedIn = $this->objUser->isLoggedIn();
         $this->isAdmin = $this->objUser->inAdminGroup($this->userId);
@@ -166,6 +173,12 @@ class display extends object
         $loginLabel = $this->objLanguage->languageText('mod_wiki2_login', 'wiki2');
         $loginTitleLabel = $this->objLanguage->languageText('mod-wiki2_logintitle', 'wiki2');
         
+        $str = '';
+        if(!$this->isLoggedIn){
+            $loginBlock = $this->objBlocks->showBlock('login', 'security', '', 20, TRUE, TRUE, 'none');
+            $str .= $loginBlock;
+        }
+
         // links
         $string = '<ul>';
         // main page link
@@ -231,18 +244,9 @@ class display extends object
         $formatPopup = $objPopup->show();
         $string .= '<li>'.$formatPopup.'</li>';
 
-        if(!$this->isLoggedIn){
-            $preLogin = $this->objConfig->getPrelogin();
-            // view login link
-            $objLink = new link($this->uri(array(), $preLogin));
-            $objLink->link = $loginLabel;
-            $objLink->title = $loginTitleLabel;
-            $loginLink = $objLink->show();
-            $string .= '<li>'.$loginLink.'</li>';
-        }
         $string .= '</ul>';
         
-        $str = $this->objFeature->show($nameLabel, $string);
+        $str .= $this->objFeature->show($nameLabel, $string);
         
         // seacrh box
         $objDrop = new dropdown('field');
