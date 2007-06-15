@@ -36,6 +36,26 @@ class dbkarma extends dbTable
 
 	}
 	
+
+	/**
+	 * Method to dynamically switch tables
+	 *
+	 * @param string $table
+	 * @return boolean
+	 * @access private
+	 */
+	private function _changeTable($table)
+	{
+		try {
+			parent::init($table);
+			return TRUE;
+		}
+		catch (customException $e)
+		{
+			customException::cleanUp();
+			return FALSE;
+		}
+	}
 }
 ?>
 	

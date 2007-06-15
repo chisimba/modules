@@ -38,6 +38,7 @@ class karmapoints extends controller
     {
         switch ($action) {
             default:
+            	// show the users account
             	break;
             	
             case 'someshit':
