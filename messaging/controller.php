@@ -109,7 +109,7 @@ class messaging extends controller
         $this->contextCode = $this->objContext->getContextCode();
         
         // messaging objects
-        $this->objDisplay = $this->getObject('display', 'messaging');
+        $this->objDisplay = $this->getObject('chatdisplay', 'messaging');
         $this->dbMessaging = $this->getObject('dbmessaging', 'messaging');
     }
 
