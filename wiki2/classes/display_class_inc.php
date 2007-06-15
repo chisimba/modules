@@ -2237,10 +2237,13 @@ You can create tables using pairs of vertical bars:
                 // create body text
                 $array = array(
                     'name' => $user['firstname'].' '.$user['surname'],
-                    'pagelink' => $pagelink,
-                    'removelink' => $removelink,
                 );
-                $body = $this->objLanguage->code2Txt('mod_wiki2_email', 'wiki2', $array);
+                $body = $this->objLanguage->code2Txt('mod_wiki2_email_1', 'wiki2', $array);
+                $body .= "\r\n".$this->objLanguage->code2Txt('mod_wiki2_email_2', 'wiki2');
+                $body .= "\r\n".$this->objLanguage->code2Txt('mod_wiki2_email_3', 'wiki2');
+                $body .= ":-\r\n".$pagelink;
+                $body .= "\r\n".$this->objLanguage->code2Txt('mod_wiki2_email_4', 'wiki2');
+                $body .= ":-\r\n".$removelink;
                 
                 // set up email
                 $this->objMailer->setValue('to', array($user['emailaddress']));
