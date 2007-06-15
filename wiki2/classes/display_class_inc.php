@@ -2236,7 +2236,7 @@ You can create tables using pairs of vertical bars:
                 ), 'wiki2');
                 // create body text
                 $array = array(
-                    'name' => $user['firstname'].'&#160;'.$user['surname'],
+                    'name' => $user['firstname'].' '.$user['surname'],
                     'pagelink' => $pagelink,
                     'removelink' => $removelink,
                 );
