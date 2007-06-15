@@ -587,7 +587,7 @@ class dbwiki extends dbTable
     */
     public function addWatch($name)
     {
-        $watch = $this->getWatch($name);
+        $watch = $this->getUserPageWatch($name);
         if(!empty($watch)){
             $watchId = $watch['id'];
         }else{
@@ -607,14 +607,17 @@ class dbwiki extends dbTable
     * @access public
     * @param string $wikiId: The id of the wiki the page falls under
     * @param string $name: The name of the wiki page
+    * @param string $userId: The id of the user with a page watch
     * @return array|bool $data: Wiki page data on success | False on failure
     */
-    public function getWatch($name)
+    public function getUserPageWatch($name, $userId = NULL)
     {
+        $userId = isset($userId) ? $userId : $this->userId;
+        
         $this->_setWatch();
         $sql = "WHERE wiki_id = 'init_1'";
         $sql .= " AND page_name = '".$name."'";
-        $sql .= " AND creator_id = '".$this->userId."'";
+        $sql .= " AND creator_id = '".$userId."'";
         $data = $this->getAll($sql);
         if(!empty($data)){
             return $data[0];
@@ -639,12 +642,15 @@ class dbwiki extends dbTable
     * Method to delete a page from your watchlist
     *
     * @access public
-    * @param string $id: The id of the watch to delete
+    * @param string $name: The name of the watch to delete
+    * @param string $userId: The id of the user who has a page watch
     * @return void
     */
-    public function deleteWatchByName($name)
+    public function deleteWatchByName($name, $userId = NULL)
     {
-        $watch = $this->getWatch($name);
+        $userId = isset($userId) ? $userId : $this->userId;
+        
+        $watch = $this->getWatch($name, $userId);
         if(!empty($watch)){
             $this->_setWatch();
             $this->delete('id', $watch['id']);
@@ -657,10 +663,29 @@ class dbwiki extends dbTable
     * @access public
     * @return array|bool $data: Wiki page data on success | False on failure
     */
-    public function getAllWatches()
+    public function getAllUserWatches()
     {
         $this->_setWatch();
         $sql = "WHERE creator_id = '".$this->userId."'";
+        $data = $this->getAll($sql);
+        if(!empty($data)){
+            return $data;
+        }
+        return FALSE;
+    }
+
+    /**
+    * Method to get all watchers of a page
+    *
+    * @access public
+    * @param string $name: The name of the page
+    * @return array|bool $data: Wiki page data on success | False on failure
+    */
+    public function getPageWatches($name)
+    {
+        $this->_setWatch();
+        $sql = "WHERE wiki_id = 'init_1'";
+        $sql .= " AND page_name = '".$name."'";
         $data = $this->getAll($sql);
         if(!empty($data)){
             return $data;

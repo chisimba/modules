@@ -98,6 +98,7 @@ class wiki2 extends controller {
             case 'view_authors':
             case 'add_rating':
             case 'view_ranking':
+            case 'remove_watch':
             default:
                 return FALSE;
         }
@@ -183,7 +184,8 @@ class wiki2 extends controller {
                     $data['page_summary'] = $summary;
                     $data['version_comment'] = $comment;
                     $data['page_content'] = $content;
-                    $pageId = $this->objDbwiki->addPage($data);                    
+                    $pageId = $this->objDbwiki->addPage($data); 
+                    $this->objDisplay->sendMail($name);                   
                 }
                 $this->objLock->unlockEdit('tbl_wiki2_pages', $id, $this->userId);
                 return $this->nextAction('view_page', array(
@@ -338,6 +340,13 @@ class wiki2 extends controller {
                 }else{
                     return $this->objDbwiki->deleteWatchByName($name);
                 }
+                break;
+                
+            case 'remove_watch':
+                $name = $this->getParam('name');
+                $userId = $this->getParam('id');
+                $this->objDbwiki->deleteWatchByName($name, $id);
+                return $this->nextAction('');
                 break;
                 
             default:

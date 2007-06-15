@@ -98,6 +98,12 @@ class display extends object
     public $objBlocks;
 
     /**
+    * @var object $objMailer: The email class in the mail module
+    * @access public
+    */
+    public $objMailer;
+
+    /**
     * Method to construct the class
     *
     * @access public
@@ -136,6 +142,7 @@ class display extends object
         $this->objBizCard = $this->getObject('userbizcard', 'useradmin');
         $this->objUserAdmin = $this->getObject('useradmin_model2','security');
         $this->objConfig = $this->newObject('altconfig', 'config');
+		$this->objMailer = $this->newObject('email', 'mail');
     }
 
     /**
@@ -680,7 +687,7 @@ class display extends object
     {
         // get data
         $data = $this->objDbwiki->getPageById($id);
-        $getWatched = $this->objDbwiki->getWatch($data['page_name']);
+        $getWatched = $this->objDbwiki->getUserPageWatch($data['page_name']);
         $pageTitle = $this->objWiki->renderTitle($data['page_name']);
         
         // text elements
@@ -2116,7 +2123,7 @@ You can create tables using pairs of vertical bars:
         $this->appendArrayVar('headerParams', $headerParams);
 
         // get data
-        $data = $this->objDbwiki->getAllWatches();
+        $data = $this->objDbwiki->getAllUserWatches();
 
         // text elements
         $pageLabel = $this->objLanguage->languageText('mod_wiki2_pagename', 'wiki2');
@@ -2194,6 +2201,57 @@ You can create tables using pairs of vertical bars:
         $str = $this->objTab->show();
         
         return $str.'<br />';
+    }
+    
+    /**
+    * Method to send email notification of updates to the page
+    *
+    * @access public
+    * @params string $name: The name of the page
+    * @return bool $mail: TRUE if the mail was sent successfully FALSE if not
+    */
+    public function sendMail($name)
+    {
+        // get data
+        $data = $this->objDbwiki->getPageWatches($name);        
+        $pagelink = $this->uri(array(
+            'action' => 'view_page',
+            'name' => $name,
+        ), 'wiki2');
+        
+        // text elements
+        $fromLabel = $this->objLanguage->languageText('mod_wiki2_name', 'wiki2');
+        $subjectLabel = $this->objLanguage->languageText('mod_wiki2_subject', 'wiki2');
+        
+        if(!empty($data)){
+            foreach($data as $line){
+                // get user data
+                $user = $this->objUserAdmin->getUserDetails($this->objUser->PKId($line['creator_id']));    
+                
+                // create remove watch link
+                $removelink = $this->uri(array(
+                    'action' => 'remove_watch',
+                    'name' => $name,
+                    'id' => $line['userid'],
+                ), 'wiki2');
+                // create body text
+                $array = array(
+                    'name' => $user['firstname'].'&#160;'.$user['surname'],
+                    'pagelink' => $pagelink,
+                    'removelink' => $removelink,
+                );
+                $body = $this->objLanguage->code2Txt('mod_wiki2_email', 'wiki2', $array);
+                
+                // set up email
+                $objMailer->setValue('to', array($user['emailaddress']));
+                $objMailer->setValue('from', 'noreply@uwc.ac.za');
+                $objMailer->setValue('fromName', $fromLabel);
+                $objMailer->setValue('subject', $subjectLabel);
+                $objMailer->setValue('body', $body);
+                $objMailer->send();
+            }
+        }
+        
     }
 }
 ?>
