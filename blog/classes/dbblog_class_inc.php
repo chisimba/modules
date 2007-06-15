@@ -724,8 +724,8 @@ class dbblog extends dbTable
 	 */
 	public function getPostTags($postid)
 	{
-		$this->_changeTable("tbl_blog_postmeta");
-		return $this->getAll("WHERE post_id = '$postid'");
+		$this->_changeTable("tbl_tags");
+		return $this->getAll("WHERE item_id = '$postid' AND module = 'blog'");
 	}
 
 	/**
@@ -737,13 +737,13 @@ class dbblog extends dbTable
 	 */
 	public function insertTags($tagarray, $userid, $postid)
 	{
-		$this->_changeTable("tbl_blog_postmeta");
+		$this->_changeTable("tbl_tags");
 		foreach($tagarray as $tins)
 		{
 			$tins = trim($tins);
 			if(!empty($tins))
 			{
-				$this->insert(array('userid' => $userid, 'post_id' => $postid, 'meta_key' => 'tag', 'meta_value' => $tins));
+				$this->insert(array('userid' => $userid, 'item_id' => $postid, 'meta_key' => 'tag', 'meta_value' => $tins, 'module' => 'blog'));
 			}
 		}
 
@@ -757,8 +757,8 @@ class dbblog extends dbTable
 	 */
 	public function removeAllTags($postid)
 	{
-		$this->_changeTable("tbl_blog_postmeta");
-		return $this->delete('id', $postid, 'tbl_blog_postmeta');
+		$this->_changeTable("tbl_tags");
+		return $this->delete('id', $postid, 'tbl_tags');
 	}
 
 	/**
@@ -769,8 +769,8 @@ class dbblog extends dbTable
 	 */
 	public function getTagsByUser($userid)
 	{
-		$this->_changeTable("tbl_blog_postmeta");
-		return $this->getAll("WHERE userid = '$userid' and meta_key = 'tag'");
+		$this->_changeTable("tbl_tags");
+		return $this->getAll("WHERE userid = '$userid' and meta_key = 'tag' and module = 'blog'");
 	}
 
 	/**
@@ -782,8 +782,8 @@ class dbblog extends dbTable
 	 */
 	public function getTagWeight($tag, $userid)
 	{
-		$this->_changeTable("tbl_blog_postmeta");
-		$count = $this->getRecordCount("WHERE meta_value = '$tag' AND userid = '$userid'");
+		$this->_changeTable("tbl_tags");
+		$count = $this->getRecordCount("WHERE meta_value = '$tag' AND userid = '$userid' and module = 'blog'");
 		return $count;
 	}
 
@@ -797,12 +797,12 @@ class dbblog extends dbTable
 	public function getAllPostsByTag($userid, $tag)
 	{
 		//first do a lookup and see what the post(s) id is/are
-		$this->_changeTable("tbl_blog_postmeta");
+		$this->_changeTable("tbl_tags");
 		$poststoget = $this->getAll("WHERE meta_value = '$tag' AND userid = '$userid'");
 		//print_r($poststoget);
 		foreach($poststoget as $gettables)
 		{
-			$ptg[] = $gettables['post_id'];
+			$ptg[] = $gettables['item_id'];
 		}
 		//print_r($ptg); die();
 		//now get the posts and return them
