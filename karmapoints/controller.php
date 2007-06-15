@@ -40,7 +40,7 @@ class karmapoints extends controller
         switch ($action) {
             default:
             	// show the users account
-            	echo "karma"; die();
+            	echo "The person whose mind is always free from attachment, who has subdued the mind and senses, and who is free from desires, attains the supreme perfection of freedom from Karma through renunciation."; die();
             	break;
             	
             case 'addpoint':
