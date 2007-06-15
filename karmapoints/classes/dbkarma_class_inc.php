@@ -77,4 +77,4 @@ class dbkarma extends dbTable
 		}
 	}
 }
-?>	
+?>
