@@ -39,8 +39,9 @@ class tagging extends controller
         switch ($action) {
             default:
             	//build a site wide tag cloud and display it
-            	echo $this->siteTagCloud();
-            	//echo $this->objLanguage->languageText("mod_tagging_nofunctionality", "tagging");
+            	$cloud = $this->siteTagCloud();
+            	$this->setVarByRef('cloud', $cloud);
+            	return 'sitecloud_tpl.php';
             	break;
             	
             case 'importblogs':
@@ -85,12 +86,6 @@ class tagging extends controller
         }
         
         return $this->objTC->buildCloud($ret);
-        
-        //$icon = $this->getObject('geticon', 'htmlelements');
-        //$icon->setIcon('up');
-
-        //$objFeatureBox = $this->getObject('featurebox', 'navigation');
-        //return $objFeatureBox->show($this->objLanguage->languagetext("mod_blog_tagcloud", "blog"), $this->objTC->buildCloud($ret), 'tagcloud', 'none');
     }
 }
 ?>
