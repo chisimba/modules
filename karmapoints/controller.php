@@ -45,7 +45,7 @@ class karmapoints extends controller
             	
             case 'addpoint':
             	$userid = $this->objUser->userId();
-            	echo $this->objDbKarma->addPoints($userid, '1');
+            	$this->objDbKarma->addPoints($userid, '1');
             	break;
         }
     }

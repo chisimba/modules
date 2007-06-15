@@ -49,10 +49,12 @@ class dbkarma extends dbTable
 		$check = $this->getAll("WHERE userid = '$userid'");
 		if(empty($check))
 		{
-			return $this->insert(array('points' => $points), 'tbl_karmapoints');
+			return $this->insert(array('points' => $points, 'userid' => $userid), 'tbl_karmapoints');
 		}
 		else {
-			return $this->update('id', $check[0]['id'], array('points' => $points), 'tbl_karmapoints');
+			$points = $check[0]['points'] + $points;
+			echo $points;
+			return $this->update('id', $check[0]['id'], array('points' => $points, 'userid' => $userid), 'tbl_karmapoints');
 		}
 	}
 	
