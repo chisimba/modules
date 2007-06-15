@@ -36,6 +36,26 @@ class dbkarma extends dbTable
 
 	}
 	
+	/**
+	 * Method to add an arbitary number of points to a users point collection
+	 * 
+	 * @param string $userid
+	 * @param integer $points
+	 */
+	public function addPoints($userid, $points)
+	{
+		$this->_changeTable('tbl_karmapoints');
+		// check first that the userid exists
+		$check = $this->getAll("WHERE userid = '$userid'");
+		if(empty($check))
+		{
+			return $this->insert(array('points' => $points), 'tbl_karmapoints');
+		}
+		else {
+			return $this->update('id', $check[0]['id'], array('points' => $points), 'tbl_karmapoints');
+		}
+	}
+	
 
 	/**
 	 * Method to dynamically switch tables
@@ -57,5 +77,4 @@ class dbkarma extends dbTable
 		}
 	}
 }
-?>
-	
+?>	

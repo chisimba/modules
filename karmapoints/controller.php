@@ -16,6 +16,7 @@ class karmapoints extends controller
     public function init()
     {
         try {
+        	$this->objUser = $this->getObject('user', 'security');
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objDbKarma = $this->getObject('dbkarma');
             //Get the activity logger class
@@ -39,9 +40,12 @@ class karmapoints extends controller
         switch ($action) {
             default:
             	// show the users account
+            	echo "karma"; die();
             	break;
             	
-            case 'someshit':
+            case 'addpoint':
+            	$userid = $this->objUser->userId();
+            	echo $this->objDbKarma->addPoints($userid, '1');
             	break;
         }
     }
