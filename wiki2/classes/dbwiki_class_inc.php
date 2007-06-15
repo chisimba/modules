@@ -650,7 +650,7 @@ class dbwiki extends dbTable
     {
         $userId = isset($userId) ? $userId : $this->userId;
         
-        $watch = $this->getWatch($name, $userId);
+        $watch = $this->getUserPageWatch($name, $userId);
         if(!empty($watch)){
             $this->_setWatch();
             $this->delete('id', $watch['id']);
