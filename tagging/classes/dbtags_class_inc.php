@@ -36,6 +36,12 @@ class dbtags extends dbTable
 
 	}
 	
+	public function getAllTags()
+	{
+		$this->_changeTable('tbl_tags');
+		return $this->getAll();
+	}
+	
 	public function deleteTags($itemId, $module)
 	{
 		//change tables to the postmeta table to delete the tags
@@ -108,6 +114,20 @@ class dbtags extends dbTable
 	{
 		$this->_changeTable("tbl_tags");
 		$count = $this->getRecordCount("WHERE meta_value = '$tag' AND userid = '$userid'");
+		return $count;
+	}
+	
+	/**
+	 * Method to get a tag weight by counting the tags
+	 *
+	 * @param string $tag
+	 * @param string $userid
+	 * @return integer
+	 */
+	public function getSiteTagWeight($tag)
+	{
+		$this->_changeTable("tbl_tags");
+		$count = $this->getRecordCount("WHERE meta_value = '$tag'");
 		return $count;
 	}
 

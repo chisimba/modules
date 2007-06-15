@@ -38,13 +38,59 @@ class tagging extends controller
     {
         switch ($action) {
             default:
-            	echo $this->objLanguage->languageText("mod_tagging_nofunctionality", "tagging");
+            	//build a site wide tag cloud and display it
+            	echo $this->siteTagCloud();
+            	//echo $this->objLanguage->languageText("mod_tagging_nofunctionality", "tagging");
             	break;
             	
             case 'importblogs':
             	$this->objDbTags->migrateBlogTags();
             	break;
         }
+    }
+    
+    /**
+     * Method to build a tag cloud from site entry tags
+     *
+     * @return array
+     */
+    public function siteTagCloud($showOrHide = 'none')
+    {
+        $this->objTC = $this->getObject('tagcloud', 'utilities');
+        //get all the tags
+        $tagarr = $this->objDbTags->getAllTags();
+        if(empty($tagarr))
+        {
+            return NULL;
+        }
+        foreach($tagarr as $uni)
+        {
+            $t[] = $uni['meta_value'];
+        }
+        $utags = array_unique($t);
+        foreach($utags as $tag)
+        {
+            //create the url
+            $url = $this->uri(array(),$uni['module']);
+            //get the count of the tag (weight)
+            $weight = $this->objDbTags->getSiteTagWeight($tag, NULL);
+            $weight = $weight*1000;
+            $tag4cloud = array(
+                'name' => $tag,
+                'url' => $url,
+                'weight' => $weight,
+                'time' => time()
+            );
+            $ret[] = $tag4cloud;
+        }
+        
+        return $this->objTC->buildCloud($ret);
+        
+        //$icon = $this->getObject('geticon', 'htmlelements');
+        //$icon->setIcon('up');
+
+        //$objFeatureBox = $this->getObject('featurebox', 'navigation');
+        //return $objFeatureBox->show($this->objLanguage->languagetext("mod_blog_tagcloud", "blog"), $this->objTC->buildCloud($ret), 'tagcloud', 'none');
     }
 }
 ?>
