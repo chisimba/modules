@@ -489,7 +489,6 @@ class display extends object
         );
 
         //display tabs
-//        $this->objTab = new tabber();
         $this->objTab->init();
         $this->objTab->tabId = 'mainTab'; 
         $this->objTab->addTab($mainTab);
@@ -681,7 +680,7 @@ class display extends object
     {
         // get data
         $data = $this->objDbwiki->getPageById($id);
-        $isWatched = $this->objDbwiki->getWatch($data['page_name']);
+        $getWatched = $this->objDbwiki->getWatch($data['page_name']);
         $pageTitle = $this->objWiki->renderTitle($data['page_name']);
         
         // text elements
@@ -695,7 +694,7 @@ class display extends object
         $summaryErrorLabel = $this->objLanguage->languageText('mod_wiki2_summaryerror', 'wiki2');
         
         // add to watchlist
-        $watchList = $this->showAddWatchlist(!empty($isWatched), TRUE);
+        $watchList = $this->showAddWatchlist(!empty($getWatched), TRUE);
 
         // heading
         $objHeader = new htmlheading();

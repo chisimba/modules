@@ -171,7 +171,8 @@ function updatePage()
         $("mainTabnav3").parentNode.style.display = '';
         $("mainTabnav4").parentNode.style.display = '';
         $("mainTabnav5").parentNode.style.display = 'none';
-        $('mainTab').tabber.tabShow(2);;
+        $('mainTab').tabber.tabShow(2);
+        adjustLayout();
         lockPage();        
     }else{
         $("mainTabnav1").parentNode.style.display = '';
@@ -179,7 +180,7 @@ function updatePage()
         $("mainTabnav3").parentNode.style.display = 'none';
         $("mainTabnav4").parentNode.style.display = 'none';
         $("mainTabnav5").parentNode.style.display = '';
-        $('mainTab').tabber.tabShow(1);;
+        $('mainTab').tabber.tabShow(1);
     }
 }
 
