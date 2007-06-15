@@ -2243,12 +2243,12 @@ You can create tables using pairs of vertical bars:
                 $body = $this->objLanguage->code2Txt('mod_wiki2_email', 'wiki2', $array);
                 
                 // set up email
-                $objMailer->setValue('to', array($user['emailaddress']));
-                $objMailer->setValue('from', 'noreply@uwc.ac.za');
-                $objMailer->setValue('fromName', $fromLabel);
-                $objMailer->setValue('subject', $subjectLabel);
-                $objMailer->setValue('body', $body);
-                $objMailer->send();
+                $this->objMailer->setValue('to', array($user['emailaddress']));
+                $this->objMailer->setValue('from', 'noreply@uwc.ac.za');
+                $this->objMailer->setValue('fromName', $fromLabel);
+                $this->objMailer->setValue('subject', $subjectLabel);
+                $this->objMailer->setValue('body', $body);
+                $this->objMailer->send();
             }
         }
         
