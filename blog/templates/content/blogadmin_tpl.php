@@ -37,7 +37,7 @@ $leftCol = $leftMenu->show();
 //$leftCol .= $this->objblogOps->rssBox('http://slashdot.org/slashdot.rdf', 'Slashdot');
 
 $tabpane = $this->getObject('tabcontent', 'htmlelements');
-$tabpane->width = '80%';
+$tabpane->width = '100%';
 
 //write new post
 $nplabel = $this->objLanguage->languageText("mod_blog_writepost", "blog");
