@@ -53,12 +53,6 @@ class wiki2 extends controller {
     public $userId;
         
     /**
-    * @var object $objLog: The logactivity class in the logger module
-    * @access public
-    */
-    public $objLog;
-
-    /**
     * Method to initialise the controller
     * 
     * @access public
@@ -72,10 +66,6 @@ class wiki2 extends controller {
         $this->objLock = $this->newObject('wikipagelock', 'wiki2');        
         $this->objUser = $this->newObject('user', 'security');
         $this->userId = $this->objUser->userId();        
-        //Get the activity logger class
-        $this->objLog = $this->newObject('logactivity', 'logger');
-        //Log this module call
-        $this->objLog->log();
     }
     
     /**
