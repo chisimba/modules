@@ -179,9 +179,13 @@ $objForm->addToForm("<tr><td>"
 
 //Set the value of the element to maptype
 //Create a text input element for $maptype
-$objElement = new textinput("maptype");
-$objElement->setValue($maptype);
-$objElement->size=10;
+$objElement = new dropdown("maptype");
+$objElement->addOption('G_NORMAL_MAP', $this->objLanguage->languageText("mod_simplemap_normalmap", "simplemap"));
+$objElement->addOption('G_SATELLITE_MAP', $this->objLanguage->languageText("mod_simplemap_satmap", "simplemap"));
+$objElement->addOption('G_HYBRID_MAP', $this->objLanguage->languageText("mod_simplemap_hybridmap", "simplemap"));
+//$objElement = new textinput("maptype");
+//$objElement->setValue($maptype);
+//$objElement->size=10;
 //Add the $maptype element to the form
 $objForm->addToForm("<tr><td>" . $this->objLanguage->languageText("mod_simplemap_fieldname_maptype", 
   "simplemap") . "</td><td>" . $objElement->show() . "</td></tr>");
