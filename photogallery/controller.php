@@ -219,8 +219,8 @@ class photogallery extends controller
 				
 				$this->setPageTemplate('');
 				$this->setLayoutTemplate('');
-				$this->_objTags->insertTags(array($this->getParam('myinput')), $this->_objUser->userId(), $this->getParam('albumid'), 'photogallery', $uri);	
-				echo $this->_objUtils->getTagLIst($this->getParam('albumid'));
+				$this->_objTags->insertTags(array($this->getParam('myinput'.$this->getParam('imageid'))), $this->_objUser->userId(), $this->getParam('imageid'), 'photogallery', $uri);	
+				echo $this->_objUtils->getTagLIst($this->getParam('imageid'));
 				break; 
 				
 			case 'deletetag':print $this->getParam('tagid');

@@ -267,10 +267,10 @@ class utils extends object
 	}
   	
   
-   public function getTagLIst($albumId)
+   public function getTagLIst($imageId)
    {
 		$link = $this->getObject('link', 'htmlelements');
-		$tagsArr = $this->_objTags->getPostTags($albumId, 'photogallery');
+		$tagsArr = $this->_objTags->getPostTags($imageId, 'photogallery');
 		if(count($tagsArr) > 0 )
 		{
 			$cnt = 0; 	
@@ -279,7 +279,7 @@ class utils extends object
 			{
 			
 		 		$cnt++;
-		 		$link->href = $this->uri(array('action'=>'deletetag' , 'tagid' => $t['id'], 'albumid' => $this->getParam('albumid')));
+		 		$link->href = $this->uri(array('action'=>'deletetag' , 'tagid' => $t['id'], 'albumid' => $this->getParam('imageId')));
 		 		$link->link = 'x';
 		 		$tagsStr .= $t['meta_value'].'['.$link->show().']';
 				$tagsStr .= ($cnt < $max) ? ', ' : '';

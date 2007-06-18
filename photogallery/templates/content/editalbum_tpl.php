@@ -40,7 +40,7 @@ $title = new textinput('albumtitle');
 $title->value = $album['title'];
 
 //tagging
-$tags = new textinput('tags');
+
 
 
 
@@ -87,9 +87,19 @@ foreach($thumbnails as $thumbnail)
 	 // var_dump($objCC->show());
 	$table2->startRow();
 	$table2->addCell($img.$imgId->show(),null,'center');
-	$table2->addCell('Title: <br />'.$imgTitle->show()./*$objCC->show()*/'<br/>Description: <br />'.$imgDescription->show().'<br/><br/>');
+	$table2->addCell('Title: <br />'.$imgTitle->show()./*$objCC->show()*/'<br/>Description: <br />'.$imgDescription->show().'<br/>');
+	
+	
+	$script = "<form id=\"myform".$thumbnail['id']."\" name=\"myform".$thumbnail['id']."\" action=\"".$this->uri(array('action' => 'addtags', 'imageid' =>  $thumbnail['id']))."\" method=\"post\" onsubmit=\"return false;\"><input type=\"text\" id=\"myinput".$thumbnail['id']."\" name=\"myinput".$thumbnail['id']."\" /><input type=\"button\" value=\"Add Tag\" onclick=\"$('taglist".$thumbnail['id']."').innerHTML = 'Refreshing...'; new Ajax.Updater('taglist".$thumbnail['id']."', 'index.php', { parameters: 'module=photogallery&action=addtags&imageid=".$thumbnail['id']."&myinput".$thumbnail['id']."=' + $(myinput".$thumbnail['id'].").value,  onComplete: showResponse,});\"> </form>";
+
 	
 	$table2->addCell($icon->getDeleteIconWithConfirm($thumbnail['id'],array('action' => 'deleteimage', 'imageid' => $thumbnail['id'], 'albumid' => $thumbnail['album_id']),'photogallery'),null,'center');
+	$table2->endRow();
+	
+	
+	$table2->startRow();
+	$table2->addCell('');
+	$table2->addCell('Tags:  <div id="taglist'.$thumbnail['id'].'" class="subdued">'.$this->_objUtils->getTagLIst($thumbnail['id']).'</div>'.$script);
 	$table2->endRow();
 	
 	$cnt++;
@@ -124,28 +134,8 @@ $table->addCell('Share this album');
 $table->addCell($checkbox->show());
 $table->endRow();
 
-$table->startRow();
-$table->addCell('Tags');
-$table->addCell(' <div id="taglist" class="subdued">'.$tagsStr.'</div>');
-$table->endRow();
-
-$script = "<form id=\"myform\" name=\"myform\" action=\"".$this->uri(array('action' => 'addtags', 'albumid',  $albumId))."\" method=\"post\" onsubmit=\"return false;\"><input type=\"text\" id=\"myinput\" name=\"myinput\" /><input type=\"button\" value=\"Add Tag\" onclick=\"$('taglist').innerHTML = 'Refreshing...'; new Ajax.Updater('taglist', 'index.php', { parameters: 'module=photogallery&action=addtags&albumid=".$albumId."&myinput=' + $(myinput).value,  onComplete: showResponse,});\"> </form><div id=\"changeme\"></div>";
-
-$updateuri = $this->uri(array('action' => 'addtag','albumid' => $this->getParam('albumid')));
-$updateuri = 'index.php';
-$scriptqq = '<p id="editme2">..add more tags</p>';
-				$script .= '<script type="text/javascript">';
-				$script .= "new Ajax.InPlaceEditor('editme2', '$updateuri', {rows:1,cols:30, callback: function(form, value) { return 'module=photogallery&action=addtags&albumid=' + escape('$albumId') + '&newtag=' +escape(value) }});";
-				$script .= "</script>";
-				
-$table->startRow();
-$table->addCell('');
-$tagForm = $this->getObject('form', 'htmlelements');
-//$tagForm->action = $this->uri(array('action' => 'addtag', 'albumid' => $this->getParam('albumid')));
 
 
-$table->addCell($script);
-$table->endRow();
 
 $link->href = $this->uri(array('action' => 'editsection'));
 $link->link = '&laquo; back to the list';

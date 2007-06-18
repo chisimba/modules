@@ -17,12 +17,7 @@ $scripts = '<script type="text/javascript" src="'.$this->_objConfig->getModuleUR
 <link rel="stylesheet" href="'.$this->_objConfig->getModuleURI().'photogallery/resources/lightbox/css/lightbox.css" type="text/css" media="screen" />';
 $this->appendArrayVar('headerParams',$scripts);
 $str = '<div id="image">';
-//$link->href = $this->uri(array('action' => 'viewimage', 'imageid' => $image['id']));
 
-//$filename = $this->_objFileMan->getFileName($image['file_id']); 
-//$path = $objThumbnail->getThumbnail($image['file_id'],$filename);
-//$bigPath = $this->_objFileMan->getFilePath($image['file_id']);
- 		///var_dump($image);
  
 
 $link->href = $this->_objFlickr->buildPhotoURL($image, "Medium");
@@ -89,7 +84,27 @@ $link->href = $this->uri(array('action' => 'viewalbum', 'albumid' =>$this->getPa
 $link->link = $albums['title'];
 $albumLink = $link->show();
 
-$nav = $this->_objUtils->getImageNav($image['id']);
+$arrNav = $this->_objFlickr->photos_getContext($image['id']);
+
+$nav = '<div class="imgnav">';
+if($arrNav['prevphoto']['id'] != '')
+{
+	$nav .= '<div class="imgprevious">';
+	$nav .='<a href="'.$this->uri(array('action' => 'viewimage','mode' => 'flickr', 'imageid' => $arrNav['prevphoto']['id'], 'albumid' => $this->getParam('albumid'))).'" 
+				title="Previous Image - '.$arrNav['prevphoto']['title'].'">&laquo; prev</a></div>';	
+}
+if($arrNav['nextphoto']['id'] != '')
+{
+ 	$nav .= '<div class="imgnext">';
+ 	$nav .= '<a href="'.$this->uri(array('action' => 'viewimage','mode' => 'flickr', 'imageid' => $arrNav['nextphoto']['id'], 'albumid' => $this->getParam('albumid'))).'"
+	 			 title="Next Image - '.$arrNav['nextphoto']['title'].'">next &raquo;</a></div>';	
+	
+}
+
+$nav .= '</div>';
+
+//print '<pre>';
+//var_dump($arrNav);
 			
 $head = '<div id="main2">'.$nav.'<div id="gallerytitle">
 		<h2><span>'.$galLink.' | </span> <span><img src="http://static.netvibes.com/img/flickr.png">'.$albumLink.'
