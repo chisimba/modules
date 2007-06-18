@@ -11,7 +11,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
 * @author Kevin Cyster
 */
 
-class display extends object
+class wikidisplay extends object
 {
     /**
     * @var object $objLanguage: The language class of the language module
@@ -104,6 +104,24 @@ class display extends object
     public $objMailer;
 
     /**
+    * @var object $objWash: The washout class in the utilities module
+    * @access public
+    */
+    public $objWash;
+
+    /**
+    * @var object $objWiki: The wikitextparser class in the wiki version 2 module
+    * @access public
+    */
+    public $objWiki;
+
+    /**
+    * @var object $objTextdiff: The wikitextdiff class in the wiki version 2 module
+    * @access public
+    */
+    public $objTextdiff;
+
+    /**
     * Method to construct the class
     *
     * @access public
@@ -125,15 +143,15 @@ class display extends object
         $this->loadClass('checkbox', 'htmlelements');
 
         // system classes
-        $this->objLanguage = $this->newObject('language','language');
-        $this->objDbwiki = $this->newObject('dbwiki', 'wiki2');
+        $this->objLanguage = $this->getObject('language','language');
+        $this->objDbwiki = $this->getObject('dbwiki', 'wiki2');
         $this->objIcon = $this->newObject('geticon', 'htmlelements');
         $this->objFeature = $this->newObject('featurebox', 'navigation');
         $this->objPopup = $this->newObject('windowpop', 'htmlelements');
-        $this->objWiki = $this->newObject('wikitextparser', 'wiki2');
-        $this->objDate = $this->newObject('dateandtime', 'utilities');
-        $this->objUser = $this->newObject('user', 'security');
-        $this->objBlocks = $this->newObject('blocks', 'blocks');
+        $this->objWiki = $this->getObject('wikitextparser', 'wiki2');
+        $this->objDate = $this->getObject('dateandtime', 'utilities');
+        $this->objUser = $this->getObject('user', 'security');
+        $this->objBlocks = $this->getObject('blocks', 'blocks');
         $this->userId = $this->objUser->userId();
         $this->isLoggedIn = $this->objUser->isLoggedIn();
         $this->isAdmin = $this->objUser->inAdminGroup($this->userId);
@@ -141,8 +159,10 @@ class display extends object
         $this->objTab = $this->newObject('tabber', 'htmlelements');
         $this->objBizCard = $this->getObject('userbizcard', 'useradmin');
         $this->objUserAdmin = $this->getObject('useradmin_model2','security');
-        $this->objConfig = $this->newObject('altconfig', 'config');
-		$this->objMailer = $this->newObject('email', 'mail');
+        $this->objConfig = $this->getObject('altconfig', 'config');
+		$this->objMailer = $this->getObject('email', 'mail');
+		$this->objWash = $this->getObject('washout', 'utilities');		
+		$this->objTextdiff = $this->getObject('wikitextdiff', 'wiki2');		
     }
 
     /**
@@ -367,7 +387,8 @@ class display extends object
         $pageId = $data['id'];
         $name = $data['page_name'];
         $pageTitle = $this->objWiki->renderTitle($name);    
-        $wikiText = $this->objWiki->transform($data['page_content']);
+        $text = $this->objWiki->transform($data['page_content']);
+        $wikiText = $this->objWash->parseText($text);
         $array = array(
             'date' => $this->objDate->formatDate($data['date_created']),
         );
@@ -388,8 +409,24 @@ class display extends object
         $refreshTitleLabel = $this->objLanguage->languageText('mod_wiki2_refreshtitle', 'wiki2');
         $noPreviewLabel = $this->objLanguage->languageText('mod_wiki2_nopreview', 'wiki2');
         $ratingLabel = $this->objLanguage->languageText('word_rating');
+        $diffLabel = $this->objLanguage->languageText('word_diff');
+        $addedLabel = $this->objLanguage->languageText('mod_wiki2_textadded', 'wiki2');
+        $removedLabel = $this->objLanguage->languageText('mod_wiki2_textremoved', 'wiki2');
+        $legendLabel = $this->objLanguage->languageText('word_legend');
         
-        $contents = '';
+        
+        // wiki page
+        if(empty($version)){
+            $versionTitle = $pageTitle;
+        }else{
+            $versionTitle = $pageTitle.':&#160;'.$versionLabel.'&#160;'.$version;
+        }
+        $objHeader = new htmlheading();
+        $objHeader->str = $versionTitle;
+        $objHeader->type = 1;
+        $heading = $objHeader->show();
+        $contents = $heading;
+       
         // rating nested tab
         if(empty($version)){
             $rating = $this->showRating($name);
@@ -412,18 +449,6 @@ class display extends object
         $string = $this->objTab->show();
         $contents .= $string.'<br />';
         
-        // wiki page
-        if(empty($version)){
-            $versionTitle = $pageTitle;
-        }else{
-            $versionTitle = $pageTitle.':&#160;'.$versionLabel.'&#160;'.$version;
-        }
-        $objHeader = new htmlheading();
-        $objHeader->str = $versionTitle;
-        $objHeader->type = 1;
-        $heading = $objHeader->show();
-        $contents .= $heading;
-       
         $contents .= $wikiText;
         $contents .= '<hr />'.$modifiedLabel;
     
@@ -494,6 +519,43 @@ class display extends object
             'name' => $historyLabel,
             'content' => $contentLayer,
         );
+        
+        // diff tab
+        // legend
+        $legend = '<font class="diff_add">'.$addedLabel.'</font>';
+        $legend .= '<br />';
+        $legend .= '<font class="diff_remove">'.$removedLabel.'</font>';
+
+        $objLayer = new layer();
+        $objLayer->id = 'legendDiv';
+        $objLayer->addToStr($legend);
+        $legendLayer = $objLayer->show();
+        
+        $legendTab = array(
+            'name' => $legendLabel,
+            'content' => $legendLayer,
+        );
+        
+        //display tabs
+        $this->objTab->init();
+        $this->objTab->tabId = 'legendTab'; 
+        $this->objTab->addTab($legendTab);
+        $string = $this->objTab->show();
+        
+        $objLayer = new layer();
+        $objLayer->id = 'diffDiv';
+        $diffLayer = $objLayer->show();
+            
+        $objLayer = new layer();
+        $objLayer->id = 'mainDiv';
+        $objLayer->addToStr($string.'<br />'.$diffLayer);
+        $objLayer->cssClass = 'featurebox';
+        $mainLayer = $objLayer->show();
+            
+        $diffTab = array(
+            'name' => $diffLabel,
+            'content' => $mainLayer,
+        );
 
         //display tabs
         $this->objTab->init();
@@ -505,6 +567,7 @@ class display extends object
             $this->objTab->addTab($previewTab);            
         }
         $this->objTab->addTab($historyTab);
+        $this->objTab->addTab($diffTab);
         $this->objTab->setSelected = $tab;
         $str = $this->objTab->show();
         if(empty($version) && $this->isLoggedIn){
@@ -547,13 +610,29 @@ class display extends object
         $confReinstateLabel = $this->objLanguage->languageText('mod_wiki2_reinstateconfirm', 'wiki2');
         $archivedLabel = $this->objLanguage->languageText('word_archived');
         $deletedLabel = $this->objLanguage->languageText('word_deleted');
+        $viewLabel = $this->objLanguage->languageText('mod_wiki2_viewdiff', 'wiki2');
+        $viewTitleLabel = $this->objLanguage->languageText('mod_wiki2_difftitle', 'wiki2');
+        $diffLabel = $this->objLanguage->languageText('word_diff');
+        $fromLabel = $this->objLanguage->languageText('word_from');
+        $toLabel = $this->objLanguage->languageText('word_to');
                 
+        // diff link
+        $objLink = new link('#');
+        $objLink->link = $viewLabel;
+        $objLink->title = $viewTitleLabel;
+        $objLink->extra = 'onclick="javascript:getDiff();"';
+        $diffLink = $objLink->show();
+        if(count($data) > 1){
+            $str = $diffLink;           
+        }else{
+            $str = '';
+        }
         // page heading
         $objHeader = new htmlheading();
         $objHeader->str = $pageTitle;
         $objHeader->type = 1;
         $heading = $objHeader->show();
-        $str = $heading;
+        $str .= $heading;
         
         // create display table
         $objTable = new htmltable();
@@ -561,13 +640,16 @@ class display extends object
         $objTable->border = '1';
         $objTable->row_attributes = ' name="row_'.$objTable->id.'"';
         $objTable->startRow();
-        $objTable->addCell('<b>'.$versionLabel.'</b>', '', '', '', 'heading', '');
-        $objTable->addCell('<b>'.$authorLabel.'</b>', '', '', '', 'heading', '');
+        if(count($data) > 1){
+            $objTable->addCell('<b>'.$diffLabel.'<br />'.$fromLabel.'&#160;|&#160;'.$toLabel.'</b>', '5%', '', 'center', 'heading', 'rowspan="2"');
+        }
+        $objTable->addCell('&#160;'.'<b>'.$versionLabel.'</b>', '', '', '', 'heading', '');
+        $objTable->addCell('&#160;'.'<b>'.$authorLabel.'</b>', '', '', '', 'heading', '');
         $objTable->addCell('<b>'.$dateLabel.'</b>', '', '', 'center', 'heading', '');
         $objTable->addCell('&#160;', '', '', 'center', 'heading', 'rowspan="2"');
         $objTable->endRow();
         $objTable->startRow();
-        $objTable->addCell('<b>'.$commentLabel.'</b>', '', '', '', 'heading', 'colspan="3"');
+        $objTable->addCell('&#160;'.'<b>'.$commentLabel.'</b>', '', '', '', 'heading', 'colspan="4"');
         $objTable->endRow();
         
         if(empty($data)){
@@ -658,15 +740,50 @@ class display extends object
                     $restoreLink = '&#160;';
                 }
                 
+                // diff radios
+                if($pageVersion != count($data)){
+                    $objRadio = new radio('from');
+                    $objRadio->addOption($pageVersion, '');
+                    $objRadio->setSelected(count($data) - 1);
+                    $objRadio->extra = 'style="vertical-align: middle;" onclick="javascript:manipulateRadios(this);"';
+                    $fromRadio = $objRadio->show();
+                }else{
+                    $fromRadio = '&#160;';
+                }
+                
+                if($pageVersion != 1){
+                    $objRadio = new radio('to');
+                    $objRadio->addOption($pageVersion, '');
+                    $objRadio->setSelected(count($data));
+                    if($pageVersion != count($data)){
+                        $objRadio->extra = 'style="vertical-align: middle; visibility: hidden;" onclick="javascript:manipulateRadios(this);"';
+                    }else{
+                        $objRadio->extra = 'style="vertical-align: middle;" onclick="javascript:manipulateRadios(this);"';
+                    }
+                    $toRadio = $objRadio->show();
+                }else{
+                    $toRadio = '&#160;';
+                }
+                
+                $subTable = new htmltable();
+                $subTable->startRow();
+                $subTable->addCell($fromRadio, '50%', '', 'right', '', '');
+                $subTable->addCell('&#160;'.$toRadio, '50%', '', 'left', '', '');
+                $subTable->endRow();
+                $radioTable = $subTable->show();
+                
                 // data display
                 $objTable->startRow();
-                $objTable->addCell($pageLink, '', '', '', $class, '');
-                $objTable->addCell($authorLink, '30%', '', '', $class, '');
+                if(count($data) > 1){
+                    $objTable->addCell($radioTable, '', '', 'center', $class, 'rowspan="2"');
+                }
+                $objTable->addCell('&#160;'.$pageLink, '', '', '', $class, '');
+                $objTable->addCell('&#160;'.$authorLink, '30%', '', '', $class, '');
                 $objTable->addCell($date, '20%', '', 'center', $class, '');
                 $objTable->addCell($restoreLink, '', '', 'center', $class, 'rowspan="2"');
                 $objTable->endRow();
                 $objTable->startRow();
-                $objTable->addCell($versionComment, '', '', '', $class, 'colspan="3"');
+                $objTable->addCell('&#160;'.$versionComment, '', '', '', $class, 'colspan="3"');
                 $objTable->endRow();
             }
         }
@@ -988,7 +1105,8 @@ class display extends object
             $heading = $objHeader->show();
             $str = $heading;
         
-            $str .= $this->objWiki->transform($content).'<br />';
+            $text = $this->objWiki->transform($content);
+            $str .= $this->objWash->parseText($text);
         }else{
             $str = '<ul><li>'.$noPreviewLabel.'</li></ul>';
         }
@@ -1871,22 +1989,34 @@ You can create tables using pairs of vertical bars:
     * Method to display the locked page message
     * 
     * @access public
+    * @param string $id: The id of the page locked
     * @param var $lockedForEdit: An indicator to show if the page is locked for edit
     * @return string $str: The output string
     */
-    public function showLockedMessage($lockedForEdit = FALSE)
+    public function showLockedMessage($id, $lockedForEdit = FALSE)
     {
+        // get data
+        $data = $this->objDbwiki->getPageById($id);
+        $pageTitle = $this->objWiki->renderTitle($data['page_name']);
+        
         // text elements
         $lockedLabel = $this->objLanguage->languageText('mod_wiki2_locked', 'wiki2');
         $retryLabel = $this->objLanguage->languageText('mod_wiki2_retry', 'wiki2');
         
-        $str = '<ul>';
+        $objHeader = new htmlheading();
+        $objHeader->str = $pageTitle;
+        $objHeader->type = 1;
+        $heading = $objHeader->show();
+        $str = $heading;
+       
+        $str .= '<ul>';
         $str .= '<li>'.$lockedLabel.'</li>';
         $str .= '<li>'.$retryLabel.'</li>';
         $str .= '</ul>';
         
         if($lockedForEdit === 'keeplocked'){
-            $str = 'locked';
+            $objInput = new textinput('locked', 'locked', 'hidden');
+            $str = $objInput->show();
         }elseif($lockedForEdit){
             $objInput = new textinput('locked', 'locked', 'hidden');
             $str = $objInput->show();
@@ -2255,6 +2385,84 @@ You can create tables using pairs of vertical bars:
             }
         }
         
+    }
+    
+    /**
+    * Method to generate the diff output
+    *
+    * @access public
+    * @param string $name: The name of the page
+    * @param integer $from: The version to diff from
+    * @param integer $to: The version to diff to
+    * @return string $str: The output string
+    */
+    public function showDiff($name, $from, $to)
+    {
+        // get data
+        $dataFrom = $this->objDbwiki->getPage($name, $from);
+        $dataTo = $this->objDbwiki->getPage($name, $to);
+        
+        $summaryTo = explode("\n", $dataTo['page_summary']);
+        $summaryFrom = explode("\n", $dataFrom['page_summary']);
+        
+        $contentTo = explode("\n", $dataTo['page_content']);
+        $contentFrom = explode("\n", $dataFrom['page_content']);
+        
+        $summaryDiff = $this->objTextdiff->getDiffs($summaryFrom, $summaryTo);
+        $contentDiff = $this->objTextdiff->getDiffs($contentFrom, $contentTo);
+        $pageTitle = $this->objWiki->renderTitle($name);
+        
+        // get text elements
+        $contentLabel = $this->objLanguage->languageText('mod_wiki2_pagecontent', 'wiki2');
+        $summaryLabel = $this->objLanguage->languageText('mod_wiki2_pagesummary', 'wiki2');
+        $noDiffLabel = $this->objLanguage->languageText('mod_wiki2_nochange', 'wiki2');
+        $array = array(
+            'num_1' => $to,
+            'num_2' => $from,
+        );
+        $versionLabel = $this->objLanguage->code2Txt('mod_wiki2_diff', 'wiki2', $array);
+        // heading
+        $objHeader = new htmlheading();
+        $objHeader->str = $pageTitle.':<br />'.$versionLabel;
+        $objHeader->type = 1;
+        $str = $objHeader->show();
+        
+        if(!empty($summaryDiff)){
+            // summary
+            $objHeader = new htmlheading();
+            $objHeader->str = $summaryLabel;
+            $objHeader->type = 4;
+            $str .= $objHeader->show();
+            
+            $string = str_replace('<ins>', '<font class="diff_add">', nl2br($summaryDiff));
+            $string = str_replace('</ins>', '</font>', $string);
+            $string = str_replace('<del>', '<font class="diff_remove">', $string);
+            $string = str_replace('</del>', '</font>', $string);
+        
+            $str .= $string;
+        }
+        
+        if(!empty($contentDiff)){
+            // content
+            $objHeader = new htmlheading();
+            $objHeader->str = $contentLabel;
+            $objHeader->type = 4;
+            $str .= $objHeader->show();
+        
+            $string = str_replace('<ins>', '<font class="diff_add">', nl2br($contentDiff));
+            $string = str_replace('</ins>', '</font>', $string);
+            $string = str_replace('<del>', '<font class="diff_remove">', $string);
+            $string = str_replace('</del>', '</font>', $string);
+        
+            $str .= $string;
+        }
+        
+        if(empty($summaryDiff) && empty($contentDiff)){
+            $str .= '<ul><li>'.$noDiffLabel.'</li></ul>';
+            echo $str;       
+        }else{
+            echo $str;
+        }        
     }
 }
 ?>

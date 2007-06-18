@@ -10,7 +10,7 @@
 $cssLayout=&$this->newObject('csslayout','htmlelements');
 $cssLayout->setNumColumns(2);
 
-$leftColumn=$this->newObject('display','wiki2');
+$leftColumn=$this->newObject('wikidisplay','wiki2');
 
 $cssLayout->setLeftColumnContent($leftColumn->showWikiToolbar());
 $cssLayout->setMiddleColumnContent($this->getContent());

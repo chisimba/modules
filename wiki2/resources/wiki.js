@@ -141,6 +141,7 @@ function tabClickEvents()
 {
     $("mainTabnav3").parentNode.style.display = 'none';
     $("mainTabnav4").parentNode.style.display = 'none';
+    $("mainTabnav6").parentNode.style.display = 'none';
     var editLink = $("mainTabnav2");
     editLink.onclick = function(){
         checkLock();
@@ -171,6 +172,7 @@ function updatePage()
         $("mainTabnav3").parentNode.style.display = '';
         $("mainTabnav4").parentNode.style.display = '';
         $("mainTabnav5").parentNode.style.display = 'none';
+        $("mainTabnav6").parentNode.style.display = 'none';
         $('mainTab').tabber.tabShow(2);
         adjustLayout();
         lockPage();        
@@ -180,6 +182,7 @@ function updatePage()
         $("mainTabnav3").parentNode.style.display = 'none';
         $("mainTabnav4").parentNode.style.display = 'none';
         $("mainTabnav5").parentNode.style.display = '';
+        $("mainTabnav6").parentNode.style.display = 'none';
         $('mainTab').tabber.tabShow(1);
     }
 }
@@ -234,4 +237,78 @@ function updateWatchlist(watch)
     var url = "index.php";
     var pars = "module=wiki2&action=update_watch&name="+name_value+"&mode="+mode;
     var watchAjax = new Ajax.Request(url, {method: "post", parameters: pars});          
+}
+
+/**
+* Method to hide/display diff radios
+*
+* @param object el_radio: The radio element clicked
+*/
+function manipulateRadios(el_radio)
+{
+    var fromRadios = document.getElementsByName("from");
+    var toRadios = document.getElementsByName("to");
+
+    if(el_radio.name == "from"){
+        for(var i = 0; i <= toRadios.length - 1; i++){
+            if(toRadios[i].value > el_radio.value){
+                toRadios[i].style.visibility = "";
+            }else{
+                toRadios[i].style.visibility = "hidden";
+            }
+        }
+    }else{
+        for(var i = 0; i <= fromRadios.length - 1; i++){
+            if(fromRadios[i].value < el_radio.value){
+                fromRadios[i].style.visibility = "";
+            }else{
+                fromRadios[i].style.visibility = "hidden";
+            }
+        }
+    }   
+}
+
+/**
+* Method to send a ajax call to get the diff
+*/
+function getDiff()
+{
+    var fromRadios = document.getElementsByName("from");
+    var toRadios = document.getElementsByName("to");
+    for(var i = 0; i <= fromRadios.length - 1; i++){
+        if(fromRadios[i].checked == true){
+            var from_value = fromRadios[i].value;
+        }
+    }
+    for(var i = 0; i <= toRadios.length - 1; i++){
+        if(toRadios[i].checked == true){
+            var to_value = toRadios[i].value;
+        }
+    }
+
+    var name_value = $F("input_name");
+    var target = "diffDiv";
+    var url = "index.php";
+    var pars = "module=wiki2&action=show_diff&name="+name_value+"&from="+from_value+"&to="+to_value;
+    var diffAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars, onComplete: showDiff});      
+}
+
+/**
+* Method to display the diff
+*/
+function showDiff()
+{
+    var articleLink = $("mainTabnav1");
+    articleLink.onclick = function(){
+        $("mainTabnav6").parentNode.style.display = 'none';
+        $('mainTab').tabber.tabShow(0);
+    }
+    var historyLink = $("mainTabnav5");
+    historyLink.onclick = function(){
+        $("mainTabnav6").parentNode.style.display = 'none';
+        $('mainTab').tabber.tabShow(4);
+    }
+    $("mainTabnav6").parentNode.style.display = '';
+    $('mainTab').tabber.tabShow(5);
+    adjustLayout();
 }
