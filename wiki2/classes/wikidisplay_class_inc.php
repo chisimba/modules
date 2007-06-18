@@ -464,47 +464,45 @@ class wikidisplay extends object
         );
             
         // edit page
-        if(empty($version) && $this->isLoggedIn){ // can only edit latest version
-            $objLayer = new layer();
-            $objLayer->id = 'lockedDiv';
-            $objLayer->cssClass = 'featurebox';
-            $editLayer = $objLayer->show();
+        $objLayer = new layer();
+        $objLayer->id = 'lockedDiv';
+        $objLayer->cssClass = 'featurebox';
+        $editLayer = $objLayer->show();
                 
-            // edit page tab
-            $lockedTab = array(
-                'name' => $editLabel,
-                'content' => $editLayer,
-            );
+        // edit page tab
+        $lockedTab = array(
+            'name' => $editLabel,
+            'content' => $editLayer,
+        );
             
-            $edit = $this->_showEditPage($pageId);
-            $editTab = array(
-                'name' => $editArticelLabel,
-                'content' => $edit,
-            );            
+        $edit = $this->_showEditPage($pageId);
+        $editTab = array(
+            'name' => $editArticelLabel,
+            'content' => $edit,
+        );            
 
-            // refresh link
-            $objLink = new link('#');
-            $objLink->link = $refreshLabel;
-            $objLink->title = $refreshTitleLabel;
-            $objLink->extra = 'onclick="javascript:refreshPreview()"';
-            $refreshLink = $objLink->show();
+        // refresh link
+        $objLink = new link('#');
+        $objLink->link = $refreshLabel;
+        $objLink->title = $refreshTitleLabel;
+        $objLink->extra = 'onclick="javascript:refreshPreview()"';
+        $refreshLink = $objLink->show();
             
-            $objLayer = new layer();
-            $objLayer->id = 'previewDiv';
-            $objLayer->addToStr('<ul><li><font class="diff_add">'.$noPreviewLabel.'</font></li></ul>');
-            $previewLayer = $objLayer->show();
+        $objLayer = new layer();
+        $objLayer->id = 'previewDiv';
+        $objLayer->addToStr('<ul><li>'.$noPreviewLabel.'</li></ul>');
+        $previewLayer = $objLayer->show();
             
-            $objLayer = new layer();
-            $objLayer->id = 'refreshDiv';
-            $objLayer->cssClass = 'featurebox';
-            $objLayer->addToStr($refreshLink.'<br />'.$previewLayer);
-            $refreshLayer = $objLayer->show();
+        $objLayer = new layer();
+        $objLayer->id = 'refreshDiv';
+        $objLayer->cssClass = 'featurebox';
+        $objLayer->addToStr($refreshLink.'<br />'.$previewLayer);
+        $refreshLayer = $objLayer->show();
             
-            $previewTab = array(
-                'name' => $previewLabel,
-                'content' => $refreshLayer,
-            );            
-        }
+        $previewTab = array(
+            'name' => $previewLabel,
+            'content' => $refreshLayer,
+        );            
         
         // page history
         $history = $this->_showPageHistory($name);
@@ -561,19 +559,19 @@ class wikidisplay extends object
         $this->objTab->init();
         $this->objTab->tabId = 'mainTab'; 
         $this->objTab->addTab($mainTab);
-        if(empty($version) && $this->isLoggedIn){
-            $this->objTab->addTab($lockedTab);            
-            $this->objTab->addTab($editTab);            
-            $this->objTab->addTab($previewTab);            
-        }
+        $this->objTab->addTab($lockedTab);            
+        $this->objTab->addTab($editTab);            
+        $this->objTab->addTab($previewTab);            
         $this->objTab->addTab($historyTab);
         $this->objTab->addTab($diffTab);
         $this->objTab->setSelected = $tab;
         $str = $this->objTab->show();
         if(empty($version) && $this->isLoggedIn){
-            $body = 'tabClickEvents();';
-            $this->appendArrayVar('bodyOnLoad', $body);            
+            $body = 'tabClickEvents("can_edit");';
+        }else{
+            $body = 'tabClickEvents("no_edit");';
         }
+        $this->appendArrayVar('bodyOnLoad', $body);            
         return $str.'<br />';
     }
     
@@ -953,16 +951,29 @@ class wikidisplay extends object
         // add to watchlist
         $watchList = $this->showAddWatchlist();
         
-        // page name
-        $objHeader = new htmlheading();
-        $objHeader->str = $pageLabel;
-        $objHeader->type = 4;
-        $heading = $objHeader->show();
+        if(empty($name)){
+            // page name
+            $objHeader = new htmlheading();
+            $objHeader->str = $pageLabel;
+            $objHeader->type = 4;
+            $heading = $objHeader->show();
         
-        // page name textinput
-        $objInput = new textinput('name', $name, '', '96');
-        $objInput->extra = 'onblur="javascript:validateName(this);"';
-        $nameInput = $objInput->show();
+            // page name textinput
+            $objInput = new textinput('name', $name, '', '96');
+            $objInput->extra = 'onblur="javascript:validateName(this);"';
+            $nameInput = $objInput->show();
+        }else{
+            $pageTitle = $this->objWiki->renderTitle($name);
+            // page name
+            $objHeader = new htmlheading();
+            $objHeader->str = $pageTitle;
+            $objHeader->type = 1;
+            $heading = $objHeader->show();
+        
+            // page name textinput
+            $objInput = new textinput('name', $name, 'hidden', '96');
+            $nameInput = $objInput->show();
+        }
                
         // page name error layer
         $objLayer = new layer();

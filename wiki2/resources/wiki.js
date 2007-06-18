@@ -136,15 +136,25 @@ function resizeRefresh()
 
 /**
 * Method to link ajax functions to the tab onclick events
+* 
+* @param string edit_state
 */
-function tabClickEvents()
+function tabClickEvents(edit_state)
 {
-    $("mainTabnav3").parentNode.style.display = 'none';
-    $("mainTabnav4").parentNode.style.display = 'none';
-    $("mainTabnav6").parentNode.style.display = 'none';
-    var editLink = $("mainTabnav2");
-    editLink.onclick = function(){
-        checkLock();
+    if(edit_state == "can_edit"){
+        $("mainTabnav3").parentNode.style.display = 'none';
+        $("mainTabnav4").parentNode.style.display = 'none';
+        $("mainTabnav6").parentNode.style.display = 'none';
+        var editLink = $("mainTabnav2");
+        editLink.onclick = function(){
+            checkLock();
+        }
+    }else{
+        $("mainTabnav2").parentNode.style.display = 'none';
+        $("mainTabnav3").parentNode.style.display = 'none';
+        $("mainTabnav4").parentNode.style.display = 'none';
+        $("mainTabnav6").parentNode.style.display = 'none';
+        
     }
 }
 
