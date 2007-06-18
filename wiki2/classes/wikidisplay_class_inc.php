@@ -1893,10 +1893,14 @@ You can create tables using pairs of vertical bars:
         }
         
         // check camel case first
-        if(!ereg('^([A-Z]([a-z]+)){2,}$', $name)){
+//        if(!ereg('^([A-Z]([a-z]+)){2,}$', $name)){
+//            $errors[] = $camelcaseLabel;
+//        }        
+        
+        if(ereg('^([A-Z]){2,}', $name) || !ereg('^([A-Z]([a-z])*){2,}', $name)){
             $errors[] = $camelcaseLabel;
         }        
-        
+
         if(!empty($errors)){
             $string = '<ul>';
             foreach($errors as $error){
