@@ -7,6 +7,8 @@ $this->loadClass('checkbox','htmlelements');
 $this->loadClass('button','htmlelements');
 $objCC = $this->getObject('licensechooser', 'creativecommons');
 
+$albumId = $this->getParam('albumid');
+
 $objThumbnail = & $this->getObject('thumbnails','filemanager');
 $link = $this->getObject('link','htmlelements');
 //$button = $this->getObject('button','htmlelements');
@@ -36,6 +38,10 @@ $form->action = $this->uri(array('action' => 'savealbumedit','albumid' => $this-
 
 $title = new textinput('albumtitle');
 $title->value = $album['title'];
+
+//tagging
+$tags = new textinput('tags');
+
 
 
 $checkbox = new checkbox('isshared','isshared',$album['is_shared']);
@@ -118,6 +124,29 @@ $table->addCell('Share this album');
 $table->addCell($checkbox->show());
 $table->endRow();
 
+$table->startRow();
+$table->addCell('Tags');
+$table->addCell(' <div id="taglist" class="subdued">'.$tagsStr.'</div>');
+$table->endRow();
+
+$script = "<form id=\"myform\" name=\"myform\" action=\"".$this->uri(array('action' => 'addtags', 'albumid',  $albumId))."\" method=\"post\" onsubmit=\"return false;\"><input type=\"text\" id=\"myinput\" name=\"myinput\" /><input type=\"button\" value=\"Add Tag\" onclick=\"$('taglist').innerHTML = 'Refreshing...'; new Ajax.Updater('taglist', 'index.php', { parameters: 'module=photogallery&action=addtags&albumid=".$albumId."&myinput=' + $(myinput).value,  onComplete: showResponse,});\"> </form><div id=\"changeme\"></div>";
+
+$updateuri = $this->uri(array('action' => 'addtag','albumid' => $this->getParam('albumid')));
+$updateuri = 'index.php';
+$scriptqq = '<p id="editme2">..add more tags</p>';
+				$script .= '<script type="text/javascript">';
+				$script .= "new Ajax.InPlaceEditor('editme2', '$updateuri', {rows:1,cols:30, callback: function(form, value) { return 'module=photogallery&action=addtags&albumid=' + escape('$albumId') + '&newtag=' +escape(value) }});";
+				$script .= "</script>";
+				
+$table->startRow();
+$table->addCell('');
+$tagForm = $this->getObject('form', 'htmlelements');
+//$tagForm->action = $this->uri(array('action' => 'addtag', 'albumid' => $this->getParam('albumid')));
+
+
+$table->addCell($script);
+$table->endRow();
+
 $link->href = $this->uri(array('action' => 'editsection'));
 $link->link = '&laquo; back to the list';
 
@@ -126,6 +155,8 @@ $form->addToForm($table->show().'<br/>'.$button->show());
 $form->addToForm($totalimages->show().'</div><hr /><div class="box" style="padding: 15px;"><p>Click the images for a larger version</p>');
 $form->addToForm($table2->show().$button->show().'</div>');
 $form->addToForm('<p>'.$link->show().'</p>');
+
+
 ?>
 <script language="JavaScript" type="text/javascript"><!--
 function updateThumbPreview(selectObj) {
@@ -151,7 +182,21 @@ function toggleBigImage(id, largepath) {
 }
   //-->
 		</script>
+		
+		
 <?php
 
 echo '<div id="main"><div class="box" style="padding: 15px;">'.$form->show().'</div></div>';
 ?>
+
+
+
+
+<script>
+
+function showResponse(req)
+{
+$('taglist').innerHTML = req.responseText;
+}
+
+</script>

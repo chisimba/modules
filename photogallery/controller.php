@@ -34,18 +34,10 @@ class photogallery extends controller
         $this->_objFileMan = & $this->getObject('dbfile','filemanager');
         $this->_objDBComments = & $this->getObject('dbcomments','photogallery');
         $this->_objConfig = $this->getObject('altconfig', 'config');
+      	$this->_objTags = $this->getObject('dbtags', 'tagging');
       	
-      	$this->_objFlickr = new phpFlickr("710e95b3b34ad8669fe36534a8343773");
       	
-      	//setup the proxy to get the flickr images
-      	$objProxy = $this->getObject('proxy','utilities');
-      	$arrProxy = $objProxy->getProxy();
-      	$this->_objFlickr->setProxy($arrProxy['proxyserver'], $arrProxy['proxyport']);
       	
-        
-        $this->_objFlickr->enableCache("db",KEWL_DB_DSN);
-        $this->_objDBFlickrUsernames = $this->getObject('dbflickrusernames' , 'photogallery');
-
     }
 
 
@@ -85,6 +77,7 @@ class photogallery extends controller
 				{
 					$this->setVar('albums',$this->_objDBAlbum->getUserAlbums());
             	}
+            	$this->initFlickr();
             	$this->setVar('sharedalbums',$this->_objDBAlbum->getSharedAlbums());
             	$this->setVar('flickralbums', $this->_objDBFlickrUsernames->getFlickrSharedAlbums());
             	$this->setVar('pageTitle', 'Photo Gallery');
@@ -92,7 +85,7 @@ class photogallery extends controller
             case 'viewalbum':
             	if($this->getParam('mode') == 'flickr')
             	{
-            	 	
+            	 	$this->initFlickr();
             	 	$this->setVar('images', $this->_objFlickr->photosets_getPhotos($this->getParam('albumid')));
 					return 'viewalbum_flickr_tpl.php';
 				}
@@ -104,6 +97,7 @@ class photogallery extends controller
             
             	if($this->getParam('mode') == 'flickr')
             	{
+            	 	$this->initFlickr();
             	 	$this->setVar('albums', $this->_objFlickr->photosets_getInfo($this->getParam('albumid')));
             	 	$this->setVar('image', $this->_objFlickr->photos_getInfo($this->getParam('imageid') /*photosets_getPhotos($this->getParam('albumid')*/));
             	 	$this->setVar('comments',$this->_objFlickr->photos_comments_getList($this->getParam('imageid')));
@@ -136,7 +130,7 @@ class photogallery extends controller
 				$this->_objDBComments->delete('id', $this->getParam('commentid'));
 				return $this->nextAction('comments');
 			case 'addflickrcomment':
-			print $this->getParam('comment');
+				$this->initFlickr();
 				var_dump($this->_objFlickr->photos_comments_addComment($this->getParam('imageid'), $this->getParam('comment')));die;
 				return $this->nextAction('viewimage', array('albumid' => $this->getParam('albumid'), 'imageid' => $this->getParam('imageid')));
 			
@@ -176,6 +170,7 @@ class photogallery extends controller
             
 			//edit section
 			case 'editsection':
+				$this->initFlickr();
             	$this->setVar('arrAlbum',$this->_objDBAlbum->getUserAlbums());
             	$this->setVar('flickrusernames',$this->_objDBFlickrUsernames->getUsernames());
                 return 'edit_tpl.php';
@@ -183,6 +178,7 @@ class photogallery extends controller
         	case 'editalbum':
         		$this->setVar('album', $this->_objDBAlbum->getRow('id',$this->getParam('albumid')));
         		$this->setVar('thumbnails', $this->_objDBImage->getAlbumImages($this->getParam('albumid')));
+        		$this->setVar('tagsStr', $this->_objUtils->getTagLIst($this->getParam('albumid')));
         		return 'editalbum_tpl.php';
         	case 'savealbumedit':
         		$this->_objUtils->saveAlbumEdit();
@@ -205,9 +201,11 @@ class photogallery extends controller
         		return $this->nextAction('sortalbumimages',array('albumid' => $this->getParam('albumid')));
         		
         	case 'flickr':
+        		$this->initFlickr();
         		$this->setVar('usernames', $this->_objDBFlickrUsernames->getUsernames());
         		return 'flickr_tpl.php';
         	case 'validateflickusername':
+        		$this->initFlickr();
         		if($this->_objFlickr->people_findByUsername($this->getParam('username')) == FALSE)
         		{  
 				 	 $msg = 'The username you added was invalid';
@@ -215,8 +213,41 @@ class photogallery extends controller
 	     			 $this->_objDBFlickrUsernames->addUsername();					
 				}
 				return $this->nextAction('flickr');
+				
+			case 'addtags':
+				$uri = $this->uri(array('action' => 'viewalbum', 'albumid' => $this->getParam('albumid')));					
+				
+				$this->setPageTemplate('');
+				$this->setLayoutTemplate('');
+				$this->_objTags->insertTags(array($this->getParam('myinput')), $this->_objUser->userId(), $this->getParam('albumid'), 'photogallery', $uri);	
+				echo $this->_objUtils->getTagLIst($this->getParam('albumid'));
+				break; 
+				
+			case 'deletetag':print $this->getParam('tagid');
+				$this->_objTags->delete('id', $this->getParam('tagid'), 'tbl_tags');
+				return $this->nextAction('editalbum',array('albumid' => $this->getParam('albumid')));
         }
     }
+    
+    
+    /**
+    * Method to initialize flickr api
+    */
+    public function  initFlickr()
+    {
+      	$this->_objFlickr = new phpFlickr("710e95b3b34ad8669fe36534a8343773");
+      
+		//setup the proxy to get the flickr images
+      	$objProxy = $this->getObject('proxy','utilities');
+      	$arrProxy = $objProxy->getProxy();
+      	$this->_objFlickr->setProxy($arrProxy['proxyserver'], $arrProxy['proxyport']);
+      	
+       
+        $this->_objFlickr->enableCache("db",KEWL_DB_DSN);
+        $this->_objDBFlickrUsernames = $this->getObject('dbflickrusernames' , 'photogallery');
+        
+
+	}
 
     /**
      * Method to get the menu

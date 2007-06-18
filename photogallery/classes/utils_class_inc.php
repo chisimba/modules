@@ -30,7 +30,7 @@ class utils extends object
        $this->_objDBAlbum = & $this->getObject('dbalbum', 'photogallery');
        $this->_objDBImages = & $this->getObject('dbimages', 'photogallery');
        $this->galFolder = $this->_objConfig->getcontentBasePath().'photogallery';
-
+       $this->_objTags = $this->getObject('dbtags', 'tagging');
     }
 
     /**
@@ -144,7 +144,10 @@ class utils extends object
 		
 		$objDBAlbum = & $this->getObject('dbalbum', 'photogallery');
 		$objDBImage = & $this->getObject('dbimages', 'photogallery');
+		
+		
 		$isshared = ($this->getParam('isshared') == 'on')? 1 : 0;
+		
 		$fields = array('title' => $this->getParam('albumtitle'),                        
                         'no_pics' => $this->getParam('totalimages'),                       
                         'is_shared' => $isshared,
@@ -153,6 +156,11 @@ class utils extends object
                         
                         //var_dump($fields);die;
 		$objDBAlbum->updateAlbum($this->getParam('albumid'), $fields);
+		
+		$tagsArr = spliti(',',$this->getParam('tags'));
+		$uri = $this->uri(array('action' => 'viewalbum', 'albumid' => $this->getParam('albumid')));
+		
+		$this->_objTags->insertTags($tagsArr, $this->_objUser->userId(), $this->getParam('albumid'), 'photogallery', $uri);
 		
 		$imgCnt = $this->getParam('totalimages');
 		for($i = 0; $i < $imgCnt; $i++)
@@ -259,8 +267,33 @@ class utils extends object
 	}
   	
   
+   public function getTagLIst($albumId)
+   {
+		$link = $this->getObject('link', 'htmlelements');
+		$tagsArr = $this->_objTags->getPostTags($albumId, 'photogallery');
+		if(count($tagsArr) > 0 )
+		{
+			$cnt = 0; 	
+			$max = count($tagsArr);
+			foreach($tagsArr as $t)
+			{
+			
+		 		$cnt++;
+		 		$link->href = $this->uri(array('action'=>'deletetag' , 'tagid' => $t['id'], 'albumid' => $this->getParam('albumid')));
+		 		$link->link = 'x';
+		 		$tagsStr .= $t['meta_value'].'['.$link->show().']';
+				$tagsStr .= ($cnt < $max) ? ', ' : '';
+			//	$tagsStr .= ', ';
+			
+			}
+		} else {
+			$tagsStr = '';
+		}
+		
+		return $tagsStr;
+	}
   
-  
+  	
   
   
   
