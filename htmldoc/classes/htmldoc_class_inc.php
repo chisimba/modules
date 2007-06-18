@@ -67,16 +67,31 @@ class htmldoc extends object
 
 
 	/**
-	 * Renders the pdf from the given html source 
-	 * 
-	 * @access public
-	 * @param string $path path to the html source
-	 * @return mixed the pdf content
-	 */ 
-	public function render( $path)
+    * Renders the pdf from the given html source 
+    * 
+    * @access public
+    * @param string $path path to the htmldoc binary
+    * @param boolean $asBook Flag on whether to render the PDF with table of contents
+    * @param boolean $asWebPage Flag on whether to render the PDF as a webpage or not.
+    * @param string $destination path to save the rendered binary to
+    * @return mixed the pdf content
+    *
+    * If destination is given, user has to ensure that any existing files are removed.
+    */ 
+	public function render($path, $asBook=TRUE, $asWebPage=FALSE, $destination='')
 	{
-		//TODO: High risk for failure, should wrap in try/catch
-		return shell_exec($this->htmldocPath . 'htmldoc --book -t pdf14 ' . $path);
+		$asBook = ($asBook) ? ' --book' : '';
+		$asWebPage = ($asWebPage) ? ' --webpage' : '';
+        
+        if ($destination != '') {
+            $destination = ' -f '.$destination;
+        }
+        
+        //TODO: High risk for failure, should wrap in try/catch
+        $shellCommand = $this->htmldocPath . 'htmldoc '.$asBook.' '.$asWebPage.' -t pdf14 ' . $path.' '.$destination;
+        
+        //return $shellCommand;
+		return shell_exec($shellCommand);
 
 	}
 
