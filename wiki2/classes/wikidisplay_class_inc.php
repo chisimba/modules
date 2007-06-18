@@ -491,7 +491,7 @@ class wikidisplay extends object
             
             $objLayer = new layer();
             $objLayer->id = 'previewDiv';
-            $objLayer->addToStr('<ul><li>'.$noPreviewLabel.'</li></ul>');
+            $objLayer->addToStr('<ul><li><font class="diff_add">'.$noPreviewLabel.'</font></li></ul>');
             $previewLayer = $objLayer->show();
             
             $objLayer = new layer();
@@ -2362,7 +2362,7 @@ You can create tables using pairs of vertical bars:
                 $removelink = $this->uri(array(
                     'action' => 'remove_watch',
                     'name' => $name,
-                    'id' => $line['userid'],
+                    'id' => $line['creator_id'],
                 ), 'wiki2');
                 // create body text
                 $array = array(
