@@ -30,6 +30,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 255,
 		),
+	'uri' => array(
+		'type' => 'text',
+		'length' => 255,
+		),
 	);
 
 //create other indexes here...
