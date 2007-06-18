@@ -77,7 +77,7 @@ class dbtags extends dbTable
 	 * @param String $itemId
 	 * @param string $module
 	 */
-	public function insertTags($tagarray, $userid, $itemId, $module)
+	public function insertTags($tagarray, $userid, $itemId, $module, $uri)
 	{
 		$this->_changeTable("tbl_tags");
 		foreach($tagarray as $tins)
@@ -85,7 +85,7 @@ class dbtags extends dbTable
 			$tins = trim($tins);
 			if(!empty($tins))
 			{
-				$this->insert(array('userid' => $userid, 'item_id' => $itemId, 'meta_key' => 'tag', 'meta_value' => $tins, 'module' => $module));
+				$this->insert(array('userid' => $userid, 'item_id' => $itemId, 'meta_key' => 'tag', 'meta_value' => $tins, 'module' => $module, 'uri' => $uri));
 			}
 		}
 
