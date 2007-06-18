@@ -13,7 +13,7 @@ $cssLayout =& $this->newObject('csslayout', 'htmlelements');
     $cssLayout->setLeftColumnContent($this->_objUtils->getLeftContent());
 
 
-$cssLayout->setRightColumnContent($this->_objUtils->getRightContent());
+$cssLayout->setRightColumnContent(/*$this->_objUtils->getRightContent()*/" ");
 $cssLayout->setMiddleColumnContent($this->getContent());
 
 

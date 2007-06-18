@@ -126,7 +126,7 @@ if(count($otherCourses) > 0)
 
 
         //check if this user can join this context before showing the link
-		if($this->_objDBContextUtils->canJoin($context['contextcode']))
+	if($this->_objDBContextUtils->canJoin($context['contextcode']))
 		{
 			$config = $objLink->show();
 		} else {
@@ -172,7 +172,8 @@ $tabBox->addTab(array('name'=> $this->_objLanguage->code2Txt('phrase_mycourses')
 
 $tabBox->addTab(array('name'=> $this->_objLanguage->code2Txt('phrase_othercourses'),'content' => $other));
 echo $tabBox->show();
-
+echo "<br /><br />";
+echo $Stories;
 
 
 ?>
