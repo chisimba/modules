@@ -1832,7 +1832,6 @@ You can create tables using pairs of vertical bars:
                     $objLink = new link($this->uri(array(
                     'action' => 'view_page',
                         'name' => $name,
-                        'tab' => 2,
                     ), 'wiki2'));
                     $objLink->link = $pageTitle;
                     $objLink->title = $pageTitleLabel;
