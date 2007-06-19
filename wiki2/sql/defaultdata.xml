@@ -52,4 +52,19 @@
         <page_author_id>1</page_author_id>
         <date_created>2007-06-01 12:00:00</date_created>
     </tbl_wiki2_pages>
+    <tbl_wiki2_links>
+        <id>init_1</id>
+        <wiki_name>MeatBall</wiki_name>
+        <wiki_link>http://www.usemod.com/cgi-bin/mb.pl?%s</wiki_link>
+    </tbl_wiki2_links>
+    <tbl_wiki2_links>
+        <id>init_2</id>
+        <wiki_name>Wiki</wiki_name>
+        <wiki_link>http://c2.com/cgi/wiki?%s</wiki_link>
+    </tbl_wiki2_links>
+    <tbl_wiki2_links>
+        <id>init_3</id>
+        <wiki_name>Wikipedia</wiki_name>
+        <wiki_link>http://en.wikipedia.org/wiki/%s</wiki_link>
+    </tbl_wiki2_links>
 </defaultdata>

@@ -25,6 +25,21 @@ class wikiTextParser extends object
     {
     	$this->objLanguage = $this->getObject('language', 'language');
     	$this->objConfig = $this->getObject('altconfig', 'config');
+    	$this->objDbwiki = $this->getObject('dbwiki', 'wiki2');
+    	$pages = $this->getSession('pages');
+    	if(empty($pages)){
+            $pages = $this->objDbwiki->getAllCurrentPages();
+            if(!empty($pages)){
+                $this->setSession('pages', $pages);
+            }
+        }
+    	$links = $this->getSession('links');
+    	if(empty($links)){
+            $links = $this->objDbwiki->getLinks();
+            if(!empty($links)){
+                $this->setSession('links', $links);
+            }
+        }
         $errorLabel = $this->objLanguage->languageText('mod_wiki2_missingpear', 'wiki2');
         
         if (!@include_once('Text/Wiki.php')) {
@@ -32,7 +47,7 @@ class wikiTextParser extends object
     		return FALSE;
     	}
         $this->objWiki = new Text_Wiki();
-        $this->configure();
+        $this->configure($pages, $links);
     }
 
     
@@ -56,36 +71,47 @@ class wikiTextParser extends object
     * Method to configure Text_Wiki parser
     * 
     * @access public
+    * @param array $pages: The array of pages in this wiki
+    * @param array $links: The array of interwiki links
     * @return void
     */
      
-     public function configure()
+     public function configure($pages, $links)
      {
-         // Disabling HTML tags	 
-    	 $this->objWiki->disableRule('Html');
-	 	 
-         //Set the params for the table rule
-         $this->objWiki->setRenderConf('xhtml', 'Table', 'css_table');  //, '"" border = 1');
-
-         //Set the add page url param for the wikilink rule
-         $addUrl = $this->objConfig->getsiteRoot().'index.php?module=wiki2&action=add_page&name=%s';
-         $encodedUrl = htmlentities($addUrl);
-         $this->objWiki->setRenderConf("xhtml", "Wikilink", "new_url", "$encodedUrl");
+        // Disabling HTML tags	 
+    	$this->objWiki->disableRule('Html');
+	 	
+        //Set the params for the table rule
+        $this->objWiki->setRenderConf('xhtml', 'Table', 'css_table', 'wiki_table');
+        $this->objWiki->setRenderConf('xhtml', 'Table', 'css_th', 'wiki_th');
+        $this->objWiki->setRenderConf('xhtml', 'Table', 'css_td', 'wiki_td');
+        
+        //Set the add page url param for the wikilink rule
+        $addUrl = $this->objConfig->getsiteRoot().'index.php?module=wiki2&action=add_page&name=%s';
+        $encodedUrl = htmlentities($addUrl);
+        $this->objWiki->setRenderConf("xhtml", "Wikilink", "new_url", "$encodedUrl");
 
          //Set the view page url param for the wikilink rule
          $viewUrl = $this->objConfig->getsiteRoot().'index.php?module=wiki2&action=view_page&name=%s';
          $encodedUrl = htmlentities($viewUrl);
          $this->objWiki->setRenderConf("xhtml", "Wikilink", "view_url", "$encodedUrl");
 
-         //Set the sites array for the interwiki rule
-         $pages = "";//$this->objDbWiki->listpagenames();
-         $this->objWiki->setRenderConf("xhtml", "Wikilink", "pages", "$pages");
-         $sites = array('MeatBall' => 'http://www.usemod.com/cgi-bin/mb.pl?%s',
-             'Wiki'       => 'http://c2.com/cgi/wiki?%s',
-             'Wikipedia' => 'http://en.wikipedia.org/wiki/%s'
-             );
-        $this->objWiki->setRenderConf("xhtml", "Interwiki", "", "$sites");
-     }
+        //Set the sites array for the interwiki rule
+        $wikiPages = array();
+        if(!empty($pages)){
+            foreach($pages as $page){
+                $wikiPages[] = $page['page_name'];
+            }
+        }
+        $wikiLinks = array();
+        if(!empty($links)){
+            foreach($links as $link){
+                $wikiLinks[$link['wiki_name']] = $link['wiki_link'];
+            }
+        }
+        $this->objWiki->setRenderConf("xhtml", "Wikilink", "pages", "$wikiPages");
+        $this->objWiki->setRenderConf("xhtml", "Interwiki", "", "$wikiLinks");
+    }
 
     /**
     * Method to render a title from SmashWords to Smash Words

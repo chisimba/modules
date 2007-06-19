@@ -107,6 +107,17 @@ class dbwiki extends dbTable
         return $this->_changeTable('tbl_wiki2_watch');
     }
 
+	/**
+	* Method to set the links table
+	*
+	* @access private
+	* @return boolean: TRUE on success FALSE on failure
+	*/
+	private function _setLinks()
+	{
+        return $this->_changeTable('tbl_wiki2_links');
+    }
+
 /* ----- Functions for tbl_wiki2_pages ----- */
 
     /**
@@ -470,7 +481,7 @@ class dbwiki extends dbTable
         return FALSE;
     }    
 
-/* ----- Functions for tbl_wiki2_pages ----- */
+/* ----- Functions for tbl_wiki2_rating ----- */
     
     /**
     * Method to add a wiki page rating
@@ -691,5 +702,103 @@ class dbwiki extends dbTable
         }
         return FALSE;
     }
+
+/* ----- Functions for tbl_wiki2_links ----- */
+    
+    /**
+    * Method to add a interwiki link
+    *
+    * @access public
+    * @param string $name: The name of the wiki site
+    * @param string $link: The url of the wiki site
+    * @return string|bool $linkId: The interwiki link id |False on failure
+    */
+    public function addLink($name, $link)
+    {
+        $this->_setLinks();
+        
+        $wiki = $this->getLinkByName($name);
+        if(!empty($wiki)){
+            $linkId = $wiki['id'];
+        }else{
+            $fields = array();
+            $fields['wiki_name'] = $name;
+            $fields['wiki_link'] = $link;
+            $fields['creator_id'] = $this->userId;
+            $linkId = $this->insert($fields);
+        }
+        return $linkId;
+    }
+
+    /**
+    * Method to get a list interwiki links
+    *
+    * @access public
+    * @return array|bool $data: Interwiki link data on success | False on failure
+    */
+    public function getLinks()
+    {
+        $this->_setLinks();
+        $data = $this->getAll();
+        if(!empty($data)){
+            return $data;
+        }
+        return FALSE;
+    }    
+
+    /**
+    * Method to get an interwiki link
+    *
+    * @access public
+    * @param string $name: The name of the wiki site
+    * @return array|bool $data: Interwiki link data on success | False on failure
+    */
+    public function getLinkByName($name)
+    {
+        $this->_setLinks();
+        $sql = "WHERE wiki_name = '".$name."'";
+        $data = $this->getAll($sql);
+        if(!empty($data)){
+            return $data[0];
+        }
+        return FALSE;
+    }    
+
+    /**
+    * Method to get an interwiki link
+    *
+    * @access public
+    * @param string $id: The wiki link id
+    * @return array|bool $data: Interwiki link data on success | False on failure
+    */
+    public function getLinkById($id)
+    {
+        $this->_setLinks();
+        $sql = "WHERE id = '".$id."'";
+        $data = $this->getAll($sql);
+        if(!empty($data)){
+            return $data[0];
+        }
+        return FALSE;
+    }    
+
+    /**
+    * Method to edit an interwiki link
+    *
+    * @access public
+    * @param string $id: The wiki link id
+    * @param string $name: The name wiki site
+    * @param string $link: The url of the wiki site
+    * @return void
+    */
+    public function editLink($id, $name, $link)
+    {
+        $this->_setLinks();
+        $fields = array();
+        $fields['wiki_name'] = $name;
+        $fields['wiki_link'] = $link;
+        $fields['creator_id'] = $this->userId;
+        $this->update('id', $id, $fields);
+    }    
 }
 ?>

@@ -12,7 +12,7 @@
 * @param string err_summary: The no summary error message
 * @param string err_content: The no content error message 
 */
-function validateCreate(err_page, err_summary, err_content)
+function validateCreatePage(err_page, err_summary, err_content)
 {
     var name_input = $("input_name");
     var summary_input = $("input_summary");
@@ -50,7 +50,7 @@ function validateCreate(err_page, err_summary, err_content)
 * @param string err_summary: The no summary error message
 * @param string err_comment: The no comment error message 
 */
-function validateUpdate(err_summary, err_content, err_comment)
+function validateUpdatePage(err_summary, err_content, err_comment)
 {
     var summary_input = $("input_summary");
     var choice_input = $("input_choice");

@@ -90,6 +90,9 @@ class wiki2 extends controller {
             case 'check_lock':
             case 'view_watchlist':
             case 'delete_watch':
+            case 'add_link':
+            case 'edit_link':
+            case 'update_link':
                 return TRUE;
             case 'view_rules':
             case 'view_all':
@@ -100,6 +103,7 @@ class wiki2 extends controller {
             case 'view_ranking':
             case 'remove_watch':
             case 'show_diff':
+            case 'show_links':
             default:
                 return FALSE;
         }
@@ -355,6 +359,40 @@ class wiki2 extends controller {
                 $from = $this->getParam('from');
                 $to = $this->getParam('to');
                 return $this->objWikidisplay->showDiff($name, $from, $to);
+                break;
+                
+            case 'view_links':
+                $templateContent = $this->objWikidisplay->showLinks();
+                $this->setVarByRef('templateContent', $templateContent);
+                return 'template_tpl.php';
+                break;
+                
+            case 'add_link':
+                $templateContent = $this->objWikidisplay->showLinkPage();
+                $this->setVarByRef('templateContent', $templateContent);
+                return 'template_tpl.php';
+                break;
+                
+            case 'edit_link':
+                $id = $this->getParam('id');
+                $templateContent = $this->objWikidisplay->showLinkPage($id);
+                $this->setVarByRef('templateContent', $templateContent);
+                return 'template_tpl.php';
+                break;
+                
+            case 'update_link':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                $url = $this->getParam('url');
+                $cancel = $this->getParam('cancel', NULL);
+                if(empty($cancel)){
+                    if(empty($id)){
+                        $this->objDbwiki->addLink($name, $url);
+                    }else{
+                        $this->objDbwiki->editLink($id, $name, $url);
+                    }
+                }
+                return $this->nextAction('view_links');
                 break;
                 
             default:
