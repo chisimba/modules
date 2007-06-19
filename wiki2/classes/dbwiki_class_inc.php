@@ -649,7 +649,6 @@ class dbwiki extends dbTable
     public function deleteWatchByName($name, $userId = NULL)
     {
         $userId = isset($userId) ? $userId : $this->userId;
-        
         $watch = $this->getUserPageWatch($name, $userId);
         if(!empty($watch)){
             $this->_setWatch();

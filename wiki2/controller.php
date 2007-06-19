@@ -346,7 +346,7 @@ class wiki2 extends controller {
             case 'remove_watch':
                 $name = $this->getParam('name');
                 $userId = $this->getParam('id');
-                $this->objDbwiki->deleteWatchByName($name, $id);
+                $this->objDbwiki->deleteWatchByName($name, $userId);
                 return $this->nextAction('');
                 break;
                 
