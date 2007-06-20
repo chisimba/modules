@@ -388,7 +388,22 @@ class dbuserparamsadmin extends object
 	}
 
 
-
+   /** Added by jameel for the websearch module
+    * Method to check if a configuration parameter is set
+    * 
+    * @var string $module The module code of the module owning the config item
+    * @var string $name The name of the parameter being set
+    */
+    
+    public function checkIfSet($pname, $userId=NULL)
+    {
+        
+        if ($pname >= 1 && $userId >= 1 ) {
+            return true;
+        } else {
+            return false;
+       } #if
+    } #function checkIfSet
 
 
 
