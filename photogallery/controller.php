@@ -49,13 +49,13 @@ class photogallery extends controller
         $this->setVar('pageSuppressXML',true);
         $action = $this->getParam("action");
         $this->setLayoutTemplate('layout_tpl.php');
-		if($this->requiresLogin())
-		{
+		//if($this->requiresLogin())
+		//{
 		 $css = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('admin.css','photogallery').'" />';
 		
-		} else {
-			$css = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('style/default.css','photogallery').'" />';
-		}
+		//} else {
+			$css .= '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('style/default.css','photogallery').'" />';
+		//}
 		$this->appendArrayVar('headerParams',$css);
         switch ($action)
         {
@@ -199,7 +199,13 @@ class photogallery extends controller
         	case 'saveimageorder':
         		$this->_objDBImage->reOrderImages($this->getParam('albumid'));
         		return $this->nextAction('sortalbumimages',array('albumid' => $this->getParam('albumid')));
-        		
+        	case 'savealbumdescription':
+        		$this->setPageTemplate('');
+				$this->setLayoutTemplate('');
+        		$this->_objDBAlbum->saveDescription($this->getParam('albumid'), $this->getParam('description'));
+        		echo $this->getParam('description');
+        		break;
+			//flickr	
         	case 'flickr':
         		$this->initFlickr();
         		$this->setVar('usernames', $this->_objDBFlickrUsernames->getUsernames());
@@ -223,9 +229,23 @@ class photogallery extends controller
 				echo $this->_objUtils->getTagLIst($this->getParam('imageid'));
 				break; 
 				
-			case 'deletetag':print $this->getParam('tagid');
+			case 'deletetag':
+			
 				$this->_objTags->delete('id', $this->getParam('tagid'), 'tbl_tags');
 				return $this->nextAction('editalbum',array('albumid' => $this->getParam('albumid')));
+				
+			case 'popular':
+				$this->setVar('cloud',$this->_objUtils->getPopular());
+				$this->setVar('imagelist', $this->_objUtils->getPopularPhotos());
+				if($this->getParam('meta_value'))
+				{
+					$this->setVar('taggedImages', $this->_objUtils->getTaggedImages($this->getParam('meta_value')));
+				}
+				return 'popular_tpl.php';
+			case 'viewtag':
+				
+				
+				
         }
     }
     
@@ -280,7 +300,11 @@ class photogallery extends controller
 			case 'addcomment':
 				return FALSE;	
 			case 'addflickrcomment':
-				return FALSE;				 
+				return FALSE;	
+			case 'popular':
+				return FALSE;
+			case 'viewtag':
+				return FALSE;			 
 			default:
 				return TRUE; 		
         	

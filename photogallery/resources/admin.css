@@ -219,10 +219,17 @@ table.bordered td {
 }
 .box { 
   background: #F7F8F9;
-	border: 1px solid #BAC9CF;
+  border: 1px solid #BAC9CF;
   border-bottom-width: 5px;
+  padding: 4px 12px;
 }
 
+div.box { 
+  background: #F7F8F9;
+  border: 1px solid #BAC9CF;
+  border-bottom-width: 5px;
+  padding: 4px 12px;
+}
 .imagethumb { margin: 0px; padding: 1px;}
 
 

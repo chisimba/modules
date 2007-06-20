@@ -31,6 +31,7 @@ class utils extends object
        $this->_objDBImages = & $this->getObject('dbimages', 'photogallery');
        $this->galFolder = $this->_objConfig->getcontentBasePath().'photogallery';
        $this->_objTags = $this->getObject('dbtags', 'tagging');
+        $this->_objFileMan = & $this->getObject('dbfile','filemanager');
     }
 
     /**
@@ -266,7 +267,12 @@ class utils extends object
 		
 	}
   	
-  
+   /**
+   * Method to get a list of tags for 
+   * an image
+   *  @param string $imageId
+   * @return string
+   */
    public function getTagLIst($imageId)
    {
 		$link = $this->getObject('link', 'htmlelements');
@@ -294,8 +300,115 @@ class utils extends object
 	}
   
   	
+  /**
+  * Method to generate a tag cloud
+  * 
+  * @return string
+  */
+  public function getPopular()
+  {
+		$objTagCloud = $this->getObject('tagcloud', 'utilities');
+		//	return $objTagCloud->exampletags();
+		
+		$tags = $this->_objTags->getTagsByModule('photogallery');
+		
+		
+		foreach ($tags as $tag)
+		{
+		 	$weight = $this->_objTags->getRecordCount("WHERE meta_value='".$tag['meta_value']."'");
+		// print $weight.' - '.$tag['meta_value'].'<br>';
+		 	$uri = $this->uri(array('action' => 'popular', 'meta_value' => $tag['meta_value']));
+		 	
+			$objTagCloud->addElement($tag['meta_value'],$uri  , $weight, time());
+		}
+		
+		return $objTagCloud->biuldAll();
+
+		
+	
+  }
   
   
+  /**
+  * Method to generate a list of images for a given tag
+  * @param string $tag
+  * @return string
+  */
+  public function getTaggedImages($tag)
+  {
+   		$objTag = $this->getObject('dbtags', 'tagging');
+   		$taggedList = $objTag->getAll("WHERE meta_value='".$tag."' AND module='photogallery'");
+   	//	print '<pre>';
+   		
+   	//	var_dump()
+		//$images = $this->_objDBImages->getAll("WHERE is_shared=0 AND ORDER BY no_views DESC LIMIT 8");
+		$objThumbnail = & $this->getObject('thumbnails','filemanager');
+		$link = $this->getObject('link','htmlelements');
+		
+		$arrCheck = array();
+		
+		foreach($taggedList as $tagged)
+		{
+		 	if(!in_array($tagged['item_id'],$arrCheck))
+		 	{
+				
+			
+		 	$image = $this->_objDBImages->getRow('id', $tagged['item_id']);
+		 	
+			$str.='<div class="image">
+					<div class="imagethumb">';
+			$filename = $this->_objFileMan->getFileName($image['file_id']); 
+	 		$path = $objThumbnail->getThumbnail($image['file_id'],$filename);
+	 		$bigPath = $this->_objFileMan->getFilePath($image['file_id']);
+		 	$link->href = $this->uri(array('action' => 'viewimage', 'albumid' => $image['album_id'],'imageid' => $image['id']));
+		 	$link->link = '<img title="'.$image['title'].' - '.$image['no_views'].' Hits" src="'.$path.'" alt="'.$image['title'].'"  />';
+		 	$link->extra = ' rel="lightbox" ';
+			$str.=$link->show().'</div></div>';
+			
+			$arrCheck[] = $tagged['item_id'];
+			}
+		}
+		
+			return '<div style="padding: 10px; margin-top:10px; margin-left:5px; border: solid 2px #eee; width:550px; background: #f5f5f5;">
+				<h2>Photos tagged as \''.$tag.'\'</h2>
+				<div style = "display:table-row-group; margin-bottom:2em; top:300px; position:static; padding: 10px; margin-top:10px; margin-left:5px; border: solid 2px #eee; width:550px; background: #f5f5f5;">
+			'.$str.'</div></div>';
+	
+	
+  }
+  
+  /**
+  * Method to get the top ten photos
+  * 
+  * @access public
+  */
+  public function getPopularPhotos()
+  {
+		$images = $this->_objDBImages->getAll("WHERE is_shared=0 ORDER BY no_views DESC LIMIT 8");
+		$objThumbnail = & $this->getObject('thumbnails','filemanager');
+		$link = $this->getObject('link','htmlelements');
+		
+		if(count($images) > 0)
+		{
+			
+			foreach($images as $image)
+			{
+				$str.='<div class="image"><div class="imagethumb">';
+				$filename = $this->_objFileMan->getFileName($image['file_id']); 
+		 		$path = $objThumbnail->getThumbnail($image['file_id'],$filename);
+		 		$bigPath = $this->_objFileMan->getFilePath($image['file_id']);
+			 	$link->href = $this->uri(array('action' => 'viewimage', 'albumid' => $image['album_id'],'imageid' => $image['id']));
+			 	$link->link = '<img title="'.$image['title'].' - '.$image['no_views'].' Hits" src="'.$path.'" alt="'.$image['title'].'"  />';
+			 	$link->extra = ' rel="lightbox" ';
+				$str.=$link->show().'</div></div>';
+			}
+			
+			return '<div style="padding: 10px; margin-top:10px; margin-left:5px; border: solid 2px #eee; width:550px; background: #f5f5f5;">
+						<h3> Popular Images</h3>
+						<div style = "display:table-row-group;  padding: 10px; margin-top:10px; margin-left:5px; border: solid 2px #eee; width:550px; background: #f5f5f5;">
+						'.$str.'</div></div>';
+		}
+  }
   
   
   

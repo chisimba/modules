@@ -19,7 +19,7 @@ foreach($arrAlbum as $album)
 	$link->href = 'javascript: confirmDeleteAlbum(\'?page=edit&action=deletealbum&album=zach\');';
 	$icon->setIcon('delete');
 	$link->link = $icon->show(); 
-	$table->addCell('Shared  '.$icon->getDeleteIconWithConfirm($album['id'],array('action' => 'deletealbum', 'albumid' => $album['id']),'photogallery'),null,null,'right');
+	$table->addCell($icon->getDeleteIconWithConfirm($album['id'],array('action' => 'deletealbum', 'albumid' => $album['id']),'photogallery'),null,null,'right');
 	$table->endRow();
 	$str .= '<div id="id_'.$cnt.'">'.$table->show().'</div>';
 	
@@ -74,15 +74,15 @@ if(count($flickrusernames) > 0)
 				
 				$link->href = $this->uri(array('action' => 'editalbum', 'albumid' => $album['id']));
 				$link->link =$thumb;
-				$tbl2->addCell($link->show(),20);
+				$tbl2->addCell($thumb,20);
 				
 				$link->link = $set['title'];
-				$tbl2->addCell($link->show());
+				$tbl2->addCell($set['title']);
 				
 				$link->href = 'javascript: confirmDeleteAlbum(\'?page=edit&action=deletealbum&album=zach\');';
 				$icon->setIcon('delete');
 				$link->link = $icon->show(); 
-				$tbl2->addCell('Shared  '.$icon->getDeleteIconWithConfirm($album['id'],array('action' => 'deletealbum', 'albumid' => $album['id']),'photogallery'),null,null,'right');
+				//$tbl2->addCell($icon->getDeleteIconWithConfirm($album['id'],array('action' => 'deletealbum', 'albumid' => $album['id']),'photogallery'),null,null,'right');
 				$tbl2->endRow();
 				$strF .= '<div id="'.$set['title'].'">'.$tbl2->show().'</div>';
 				$tbl2 = null;

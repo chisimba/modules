@@ -24,6 +24,10 @@ if($this->_objUser->isLoggedIn())
 } else {
 	$objH->str ='Photo Gallery ';
 }
+
+$link->href = $this->uri(array('action' => 'popular'));
+		$link->link = 'Popular';
+$objH->str .= ' | '.$link->show();
 $objH->type = 2;
 
 echo '<div id="main2"><div id="gallerytitle">'.$objH->show().'</div>';
