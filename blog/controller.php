@@ -870,6 +870,7 @@ class blog extends controller
                 break;
 
             case 'showarchives':
+            	ini_set('max_execution_time', -1);
                 //get the date and user id
                 $date = $this->getParam('year');
                 $userid = $this->getParam('userid');

@@ -2309,9 +2309,10 @@ class blogops extends object
             foreach($revposts as $themonths)
             {
                 $months[] = date("ym",$themonths['post_ts']);
-                $posts = $this->objDbBlog->getPostsMonthly(mktime(0, 0, 0, date("m",$themonths['post_ts']), 1, date("y", $themonths['post_ts'])) , $userid);
+                $posts = array(); //$this->objDbBlog->getPostsMonthly(mktime(0, 0, 0, date("m",$themonths['post_ts']), 1, date("y", $themonths['post_ts'])) , $userid);
                 $postarr[date("Ym",$themonths['post_ts'])] = $posts;
             }
+            
             return $postarr;
         } else {
             return NULL;
