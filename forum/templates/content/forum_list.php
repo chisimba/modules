@@ -27,7 +27,7 @@ switch (strtolower($this->getParam('error')))
 $header = new htmlheading();
 $header->type=1;
 
-$string = str_replace('{Context}', $contextTitle, $this->objLanguage->languageText('mod_forum_forumsInContext', 'forum'));
+$string = str_replace('{Context}', $contextTitle, $this->objLanguage->languageText('mod_forum_forumsincontext', 'forum'));
 
 $header->str=$string;
 
