@@ -303,7 +303,7 @@ class blog extends controller
                 $linkcats = $this->objDbBlog->getAllLinkCats($userid);
                 //get all the posts by this user
                 $posts = $this->objDbBlog->getPostsMonthly(time(), $userid);
-                if(count($posts) < 2)
+                if(count($posts) < 2 || count($posts) > 25)
                 {
                 	$posts = $this->objDbBlog->getLastPosts(10, $userid);
                 }
