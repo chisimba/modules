@@ -302,10 +302,14 @@ class blog extends controller
                 //get the link categories
                 $linkcats = $this->objDbBlog->getAllLinkCats($userid);
                 //get all the posts by this user
-                $posts = $this->objDbBlog->getPostsMonthly(time(), $userid);
-                if(count($posts) < 2 || count($posts) > 25)
+                $postcount = $this->objDbBlog->getMonthPostCount(time(), $userid);
+                
+                if($postcount <= 2 || $postcount >= 20)
                 {
                 	$posts = $this->objDbBlog->getLastPosts(10, $userid);
+                }
+                else {
+                	$posts = $this->objDbBlog->getPostsMonthly(time(), $userid);
                 }
              
                 //get the sticky posts too
