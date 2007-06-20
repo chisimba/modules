@@ -15,13 +15,19 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
-	'sports' => array(
+	'course' => array(
 		'type' => 'text',
 		'length' => 255
 		),
-	'hobbies' => array(
+	'study_year' => array(
 		'type' => 'text',
-		'length' => 255
+		'length' => 10
+		),
+	'modifierid' => array(
+		'type' => 'timestamp'
+		),
+	'datecreated' => array(
+		'type' => 'timestamp'
 		),
 	'updated' => array(
 		'type' => 'timestamp'

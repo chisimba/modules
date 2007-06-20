@@ -28,6 +28,7 @@ class hivaids extends controller
             $this->hivTools = $this->getObject('hivaidstools', 'hivaids');
             $this->repository = $this->getObject('repository', 'hivaids');
             $this->dbVideos = $this->getObject('dbvideos', 'hivaids');
+            $this->dbUsers = $this->getObject('dbusers', 'hivaids');
             
             $this->objConfig = $this->getObject('altconfig', 'config');
             $this->objUser = $this->getObject('user', 'security');
@@ -149,8 +150,8 @@ class hivaids extends controller
         $surname = $this->getParam('surname');
         $gender = $this->getParam('gender');
         $country = $this->getParam('country');
-        $sports = $this->getParam('sports');
-        $hobbies = $this->getParam('hobbies');
+        $course = $this->getParam('course');
+        $yearstudy = $this->getParam('yearstudy');
         
         // Check that username is available
         if ($this->objUserAdmin->userNameAvailable($username) == FALSE) {
@@ -158,6 +159,7 @@ class hivaids extends controller
         }
         
         $pkid = $this->objUserAdmin->addUser($userId, $username, $password, $title, $firstname, $surname, '', $gender, $country, '', '', 'useradmin', '1');
+        $this->dbUsers->addUser($userId);
         
         return $pkid;
     }

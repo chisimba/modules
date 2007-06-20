@@ -146,6 +146,8 @@ class hivaidstools extends object
         $lbHobbies = $this->objLanguage->languageText('word_hobbies');
         $lbMale = $this->objLanguage->languageText('word_male');
         $lbFemale = $this->objLanguage->languageText('word_female');
+        $lbCourse = $this->objLanguage->languageText('mod_hivaids_whatyoustudying', 'hivaids');
+        $lbYearStudy = $this->objLanguage->languageText('mod_hivaids_yearofstudy', 'hivaids');
         $btnComplete = $this->objLanguage->languageText('phrase_completeregistration');
         
         $errUsername = $this->objLanguage->languageText('mod_hivaids_errornousername', 'hivaids');
@@ -228,15 +230,15 @@ class hivaidstools extends object
         // Additional details - sports, hobbies
         $objTable->addRow(array('<b>'.$lbAdditional.'</b>'));
         
-        $objLabel = new label($lbSports.': ', 'input_sports');
-        $objInput = new textinput('sports');
-        $objInput->setId('input_sports');
+        $objLabel = new label($lbCourse.': ', 'input_course');
+        $objInput = new textinput('course');
+        $objInput->setId('input_course');
         
         $objTable->addRow(array('', $objLabel->show(), $objInput->show()));
 
-        $objLabel = new label($lbHobbies.': ', 'input_hobbies');
-        $objInput = new textinput('hobbies');
-        $objInput->setId('input_hobbies');
+        $objLabel = new label($lbYearStudy.': ', 'input_yearstudy');
+        $objInput = new textinput('yearstudy');
+        $objInput->setId('input_yearstudy');
         
         $objTable->addRow(array('', $objLabel->show(), $objInput->show()));
 
