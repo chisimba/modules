@@ -41,6 +41,7 @@ class dbusers extends dbtable
     public function addUser($userId = NULL, $id = NULL)
     {
         $fields = array();
+        $fields['staff_student'] = $this->getParam('staff_student');
         $fields['course'] = $this->getParam('course');
         $fields['study_year'] = $this->getParam('yearstudy');
         $fields['updated'] = $this->now();

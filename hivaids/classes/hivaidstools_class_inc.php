@@ -25,6 +25,7 @@ class hivaidstools extends object
     public function init()
     {        
         $this->objUser = $this->getObject('user', 'security');
+        $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objCountries = $this->getObject('languagecode','language');
         
@@ -157,6 +158,10 @@ class hivaidstools extends object
         $errSurname = $this->objLanguage->languageText('mod_hivaids_errornosurname', 'hivaids');
         $errNoMatch = $this->objLanguage->languageText('mod_hivaids_errornomatchpw', 'hivaids');
         
+        $institution = $this->objConfig->getinstitutionShortName();
+        $array = array('institution' => $institution);
+        $lbStaff = $this->objLanguage->code2Txt('mod_hivaids_stafforstudentatinst', 'hivaids', $array);
+        
         $str = '<p>'.$lbRegister.'</p><br />';
         
         $objTable = new htmltable();
@@ -227,8 +232,14 @@ class hivaidstools extends object
         
         $objTable->addRow(array('', $objLabel->show(), $list));
         
-        // Additional details - sports, hobbies
+        // Additional details - staff / student, course, year of study
         $objTable->addRow(array('<b>'.$lbAdditional.'</b>'));
+       
+        $objLabel = new label($lbStaff.': ', 'input_staff_student');
+        $objInput = new textinput('staff_student');
+        $objInput->setId('input_staff_student');
+        
+        $objTable->addRow(array('', $objLabel->show(), $objInput->show()));
         
         $objLabel = new label($lbCourse.': ', 'input_course');
         $objInput = new textinput('course');

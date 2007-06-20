@@ -15,6 +15,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
+	'staff_student' => array(
+		'type' => 'text',
+		'length' => 100
+		),
 	'course' => array(
 		'type' => 'text',
 		'length' => 255
