@@ -325,14 +325,12 @@ class blog extends controller
                 return 'randblog_tpl.php';
                 break;
 
-                //The siteblog function added by Irshaad Hoosain
-                case 'siteblog':
-
+            // The siteblog function added by Irshaad Hoosain
+            case 'siteblog':
                  //get the category ID if any
                 $catid = $this->getParam('catid');
                 //grab the user id
                 $userid = 1 ;
-
                 if(!isset($userid))
                 {
                     //fix the user id just in case
@@ -345,8 +343,6 @@ class blog extends controller
                         exit;
                     }
                 }
-
-
                 if(isset($catid))
                 {
                     //grab all the posts in that category
@@ -355,9 +351,7 @@ class blog extends controller
                 else {
 
                 }
-
-               $posts = $this->objDbBlog->getAllPosts($userid, $catid);
-			
+                $posts = $this->objDbBlog->getAllPosts($userid, $catid);
                 //send all that to the template
                 $this->setVarByRef('catid', $catid);
                 $this->setVarByRef('posts', $posts);
@@ -971,7 +965,7 @@ class blog extends controller
 
                 $mode = $this->getParam('mode');
 
-                if(!$this->getParam('checkbox')==null){
+                if($this->getParam('checkbox') != NULL){
                     $userid = 1 ;
                 } else {
                     $userid = $this->objUser->userId();
@@ -1006,14 +1000,6 @@ class blog extends controller
                 else {
                 	$showpdf = 0;
                 }
-                
-                //check the sysconfig as to whether we should enable the google ping
-                $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-           		$this->googleBlogPing = $this->objSysConfig->getValue('ping_google', 'blog');
-           		if($this->googleBlogPing == 'TRUE')
-           		{
-                	$this->objblogOps->pingGoogle($userid);
-           		}
                 //post quick add
                 if($mode == 'quickadd')
                 {
