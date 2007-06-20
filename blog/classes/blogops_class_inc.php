@@ -1818,7 +1818,7 @@ class blogops extends object
         $this->googleBlogPing = $this->objSysConfig->getValue('ping_google', 'blog');
         if($this->googleBlogPing == 'TRUE')
         {
-          	$this->objblogOps->pingGoogle($userid);
+          	$this->pingGoogle($userid);
         }
         if (!empty($postarr)) {
             if ($mode == NULL) {
