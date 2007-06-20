@@ -26,6 +26,9 @@ class hivaids extends controller
     {
         try{
             $this->hivTools = $this->getObject('hivaidstools', 'hivaids');
+            $this->repository = $this->getObject('repository', 'hivaids');
+            $this->dbVideos = $this->getObject('dbvideos', 'hivaids');
+            
             $this->objConfig = $this->getObject('altconfig', 'config');
             $this->objUser = $this->getObject('user', 'security');
             $this->objUserAdmin = $this->getObject('useradmin_model2','security');
@@ -49,6 +52,52 @@ class hivaids extends controller
     public function dispatch($action)
     {
         switch($action){
+            /* ** Video repository actions ** */
+            case 'repository':
+                $data = $this->dbVideos->getVideos();
+                $display = $this->repository->show($data);
+                $this->setVarByRef('display', $display);
+                return 'home_tpl.php';
+                
+            case 'preview':
+                $fileId = $this->getParam('fileid');
+                $display = $this->repository->preview($fileId);
+                $this->setVar('suppressLayout', TRUE);
+                $this->setVarByRef('display', $display);
+                return 'home_tpl.php';
+            
+            case 'addvideo':
+                $id = $this->getParam('id');
+                $fileId = $this->getParam('fileid');
+                $description = '';
+                if(!empty($id)){
+                    $data = $this->dbVideos->getVideo($id);
+                    $description = $data['description'];
+                }
+                $display = $this->repository->upload($id, $fileId, $description);
+                $this->setVarByRef('display', $display);
+                return 'home_tpl.php';
+                
+            case 'savevideo':
+                $save = $this->getParam('save');
+                $id = $this->getParam('id');
+                if(isset($save) && !empty($save)){
+                    $this->dbVideos->addVideo($id);
+                }
+                return $this->nextAction('repository');
+                
+            case 'deletevideo':
+                $id = $this->getParam('id');
+                $this->dbVideos->deleteVideo($id);
+                return $this->nextAction('repository');
+            
+            case 'videolist':
+                $data = $this->dbVideos->getVideos();
+                $display = $this->repository->listVideos($data);
+                $this->setVarByRef('display', $display);
+                return 'home_tpl.php';
+            
+            /* ** Registration actions ** */
             case 'showregister':
                 $display = $this->hivTools->showRegistration();
                 $this->setVarByRef('display', $display);
@@ -58,6 +107,7 @@ class hivaids extends controller
                 $id = $this->saveRegister();
                 return $this->nextAction('confirm', array('newId' => $id), 'userregistration');
                 
+            /* ** General actions ** */
             case 'playyourmoves':
                 $check = $this->inIpRange();
                 if($check){
@@ -68,6 +118,12 @@ class hivaids extends controller
                 $display = $this->notAllowed();
                 $this->setVarByRef('display', $display);
                 return 'home_tpl.php';
+                
+            case 'survey':
+                return $this->nextAction('', '', 'survey');
+                
+            case 'podcast':
+                return $this->nextAction('', '', 'podcast');
                 
             default:
                 $display = $this->hivTools->showManagement();

@@ -55,6 +55,8 @@ class hivaidstools extends object
         $lnSiStats = $this->objLanguage->languageText('mod_sitestats_name', 'sitestats');
         $lnLogger = $this->objLanguage->languageText('mod_logger_name', 'logger');
         $lnSurvey = $this->objLanguage->languageText('mod_survey_name', 'survey');
+        $lnPodcast = $this->objLanguage->languageText('mod_podcast_name', 'podcast');
+        $lnRepository = $this->objLanguage->languageText('mod_hivaids_videorepository', 'hivaids');
         
         // Forum
         $url = $this->uri('', 'forum');
@@ -89,8 +91,14 @@ class hivaidstools extends object
         // Poll
         
         // Video repository
+        $url = $this->uri(array('action' => 'repository'));
+        $name = 'resourcekit';
+        $blRepository = $this->objIcon->getBlockIcon($url, $name, $lnRepository, 'gif', $iconfolder='icons/modules/');
         
         // Podcasting
+        $url = $this->uri('', 'podcast');
+        $name = 'podcast';
+        $blPodcast = $this->objIcon->getBlockIcon($url, $name, $lnPodcast, 'gif', $iconfolder='icons/modules/');
         
         // User profiles
         
@@ -99,7 +107,9 @@ class hivaidstools extends object
         
         $objTable->addRow(array($blForum, $blCms, $blSurvey));
         $objTable->addRow(array('&nbsp;'));
-        $objTable->addRow(array($blLog, $blUsSt, $blSiStat));
+        $objTable->addRow(array($blLog, $blUsSt, $blPodcast));
+        $objTable->addRow(array('&nbsp;'));
+        $objTable->addRow(array($blRepository));
         $str = $objTable->show();
         
         $box = $this->objFeatureBox->showContent($head, $str);
