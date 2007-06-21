@@ -26,6 +26,7 @@ class dbusers extends dbtable
     {
         parent::init('tbl_hivaids_users');
         $this->table = 'tbl_hivaids_users';
+        $this->tblLogin = 'tbl_userloginhistory';
         
         $this->objUser = $this->getObject('user', 'security');
         $this->userId = $this->objUser->userId();
@@ -54,6 +55,26 @@ class dbusers extends dbtable
             $fields['datecreated'] = $this->now();
             $id = $this->insert($fields);
         }
+    }
+    
+    /**
+    * Method to get the login history count from the database along with the users details
+    *
+    * @access public
+    * @return array $data
+    */
+    public function getLoginHistory()
+    {
+        $order= $this->getParam('order', 'surname');
+        $sql="SELECT count(tbl_userloginhistory.userid) 
+          AS logins, max(lastlogindatetime) 
+          AS lastOn, tbl_users.title, tbl_users.firstname,
+          tbl_users.surname, tbl_users.country, 
+          tbl_users.emailaddress, tbl_users.userid FROM  tbl_userloginhistory
+          LEFT JOIN tbl_users  ON tbl_userloginhistory.userid = tbl_users.userid
+          GROUP BY tbl_userloginhistory.userid
+          ORDER BY " . $order;
+        return $this->getArray($sql);
     }
 }
 ?>

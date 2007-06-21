@@ -1,8 +1,8 @@
 <?
 /**
-* @package etd
+* @package hivaids
 *
-* Layout template for the etd module
+* Layout template for the hivaids module
 */
 
 $objBlocks = $this->getObject('blocks', 'blocks');

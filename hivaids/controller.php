@@ -98,7 +98,7 @@ class hivaids extends controller
                 $this->setVarByRef('display', $display);
                 return 'home_tpl.php';
             
-            /* ** Registration actions ** */
+            /* ** User and Registration actions ** */
             case 'showregister':
                 $display = $this->hivTools->showRegistration();
                 $this->setVarByRef('display', $display);
@@ -107,6 +107,12 @@ class hivaids extends controller
             case 'register':
                 $id = $this->saveRegister();
                 return $this->nextAction('confirm', array('newId' => $id), 'userregistration');
+                
+            case 'userstats':
+                $display = $this->hivTools->showUserStats();
+                $this->setVarByRef('display', $display);
+                $this->setVar('suppressLeft', TRUE);
+                return 'home_tpl.php';
                 
             /* ** General actions ** */
             case 'playyourmoves':
@@ -213,6 +219,8 @@ class hivaids extends controller
             case 'showregister':
             case 'register':
             case 'playyourmoves':
+            case 'videolist':
+            case 'podcast':
                 return FALSE;
         }
         return TRUE;

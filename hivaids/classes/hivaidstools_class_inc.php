@@ -26,8 +26,10 @@ class hivaidstools extends object
     {        
         $this->objUser = $this->getObject('user', 'security');
         $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objDate = $this->getObject('dateandtime', 'utilities');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objCountries = $this->getObject('languagecode','language');
+        $this->objLoginHist = $this->getObject('dbloginhistory','userstats');
         
         $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
         $this->objIcon = $this->newObject('geticon', 'htmlelements');
@@ -52,7 +54,7 @@ class hivaidstools extends object
         $head = ucwords($this->objLanguage->languageText('phrase_sitemanagement'));
         $lnForum = $this->objLanguage->languageText('mod_forum_name', 'forum');
         $lnCMS = $this->objLanguage->languageText('mod_cmsadmin_name', 'cmsadmin');
-        $lnUsStats = $this->objLanguage->languageText('mod_userstats_name', 'userstats');
+        $lnUsStats = $this->objLanguage->languageText('mod_hivaids_userstats', 'hivaids');
         $lnSiStats = $this->objLanguage->languageText('mod_sitestats_name', 'sitestats');
         $lnLogger = $this->objLanguage->languageText('mod_logger_name', 'logger');
         $lnSurvey = $this->objLanguage->languageText('mod_survey_name', 'survey');
@@ -70,7 +72,7 @@ class hivaidstools extends object
         $blCms = $this->objIcon->getBlockIcon($url, $name, $lnCMS, 'gif', $iconfolder='icons/modules/');
         
         // User stats
-        $url = $this->uri('', 'userstats');
+        $url = $this->uri(array('action' => 'userstats'));
         $name = 'userstats';
         $blUsSt = $this->objIcon->getBlockIcon($url, $name, $lnUsStats, 'gif', $iconfolder='icons/modules/');
         
@@ -123,6 +125,72 @@ class hivaidstools extends object
     }
     
     /**
+    * Method to display the user statistics for the site
+    *
+    * @access public
+    * @return string html
+    */
+    public function showUserStats()
+    {
+        $data = $this->objLoginHist->getLoginHistory();
+        
+        $headerParams = $this->getJavascriptFile('new_sorttable.js','htmlelements');
+        $this->appendArrayVar('headerParams',$headerParams);
+        
+        $head = $this->objLanguage->languageText('mod_hivaids_userstats', 'hivaids');
+        $hdTitle = $this->objLanguage->languageText('word_title');
+        $hdName = $this->objLanguage->languageText('word_name');
+        $hdCountry = $this->objLanguage->languageText('word_country');
+        $hdLastOn = $this->objLanguage->languageText('phrase_laston');
+        $hdLogins = $this->objLanguage->languageText('word_logins');
+        
+        $objHead = new htmlheading();
+        $objHead->type = 1;
+        $objHead->str = $head;
+        $str = $objHead->show();
+        
+//        echo '<pre>'; print_r($data);
+        
+        if(!empty($data)){
+    
+            $objTable = new htmltable();
+            $objTable->cellpadding = '5';
+            //$objTable->cellspacing = '2';
+            $objTable->id = 'statstable';
+            $objTable->css_class = 'sorttable';
+            
+            $hdArr = array();
+            $hdArr[] = $hdTitle;
+            $hdArr[] = $hdName;
+            $hdArr[] = $hdCountry;
+            $hdArr[] = $hdLastOn;
+            $hdArr[] = $hdLogins;
+            
+            $objTable->row_attributes = 'name = "row_'.$objTable->id.'"';
+            $objTable->addRow($hdArr, 'heading');
+            
+            foreach($data as $item){
+                if(empty($item['userid'])){
+                    continue;
+                }
+                $objTable->row_attributes = 'name = "row_'.$objTable->id.'" onmouseover="this.className=\'tbl_ruler\';" onmouseout="this.className=\'\';"';
+                
+                $row = array();
+                $row[] = $item['title'];
+                $row[] = $item['surname'].', '.$item['firstname'];
+                $row[] = $this->objCountries->getName($item['country']);
+                $row[] = $this->objDate->formatDate($item['laston']);
+                $row[] = $item['logins'];
+                
+                $objTable->addRow($row);
+            }
+            $str .= $objTable->show();
+        }       
+        
+        return $str;
+    }
+    
+    /**
     * Method to display the user registration form
     *
     * @access public
@@ -147,6 +215,9 @@ class hivaidstools extends object
         $lbHobbies = $this->objLanguage->languageText('word_hobbies');
         $lbMale = $this->objLanguage->languageText('word_male');
         $lbFemale = $this->objLanguage->languageText('word_female');
+        $lbStaff = $this->objLanguage->languageText('word_staff');
+        $lbStudent = $this->objLanguage->languageText('word_student');
+        //$lbNeither = $this->objLanguage->languageText('word_neither');
         $lbCourse = $this->objLanguage->languageText('mod_hivaids_whatyoustudying', 'hivaids');
         $lbYearStudy = $this->objLanguage->languageText('mod_hivaids_yearofstudy', 'hivaids');
         $btnComplete = $this->objLanguage->languageText('phrase_completeregistration');
@@ -160,7 +231,8 @@ class hivaidstools extends object
         
         $institution = $this->objConfig->getinstitutionShortName();
         $array = array('institution' => $institution);
-        $lbStaff = $this->objLanguage->code2Txt('mod_hivaids_stafforstudentatinst', 'hivaids', $array);
+        $lbStaffStud = $this->objLanguage->code2Txt('mod_hivaids_stafforstudentatinst', 'hivaids', $array);
+        $lbNeither = $this->objLanguage->code2Txt('mod_hivaids_notatinst', 'hivaids', $array);
         
         $str = '<p>'.$lbRegister.'</p><br />';
         
@@ -235,11 +307,18 @@ class hivaidstools extends object
         // Additional details - staff / student, course, year of study
         $objTable->addRow(array('<b>'.$lbAdditional.'</b>'));
        
-        $objLabel = new label($lbStaff.': ', 'input_staff_student');
-        $objInput = new textinput('staff_student');
-        $objInput->setId('input_staff_student');
+        $objLabel = new label($lbStaffStud.': ', 'input_staff_student');
+        //$objInput = new textinput('staff_student');
+        //$objInput->setId('input_staff_student');
         
-        $objTable->addRow(array('', $objLabel->show(), $objInput->show()));
+        $objRadio = new radio('staff_student');
+        $objRadio->addOption('staff', '&nbsp;'.$lbStaff);
+        $objRadio->addOption('student', '&nbsp;'.$lbStudent);
+        $objRadio->addOption('neither', '&nbsp;'.$lbNeither);
+        $objRadio->setSelected('student');
+        $objRadio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
+        
+        $objTable->addRow(array('', $objLabel->show(), $objRadio->show()));
         
         $objLabel = new label($lbCourse.': ', 'input_course');
         $objInput = new textinput('course');
@@ -248,10 +327,17 @@ class hivaidstools extends object
         $objTable->addRow(array('', $objLabel->show(), $objInput->show()));
 
         $objLabel = new label($lbYearStudy.': ', 'input_yearstudy');
-        $objInput = new textinput('yearstudy');
-        $objInput->setId('input_yearstudy');
+        //$objInput = new textinput('yearstudy');
+        //$objInput->setId('input_yearstudy');
         
-        $objTable->addRow(array('', $objLabel->show(), $objInput->show()));
+        $objDrop = new dropdown('yearstudy');
+        $year = date('Y');
+        $objDrop->addOption('NULL', ' ---- ');
+        for($i = $year; $i >= 1950; $i--){
+            $objDrop->addOption($i, $i);
+        }
+        
+        $objTable->addRow(array('', $objLabel->show(), $objDrop->show()));
 
         $objButton = new button('save', $btnComplete);
         $objButton->setToSubmit();
