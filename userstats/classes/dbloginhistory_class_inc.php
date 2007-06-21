@@ -31,7 +31,7 @@ class dbloginhistory extends dbTable
           AS logins, max(lastlogindatetime) 
           AS lastOn, tbl_users.title, tbl_users.firstname,
           tbl_users.surname, tbl_users.country, 
-          tbl_users.emailaddress FROM  tbl_userloginhistory
+          tbl_users.emailaddress, tbl_users.userid FROM  tbl_userloginhistory
           LEFT JOIN tbl_users  ON tbl_userloginhistory.userid = tbl_users.userid
           GROUP BY tbl_userloginhistory.userid
           ORDER BY " . $order;
