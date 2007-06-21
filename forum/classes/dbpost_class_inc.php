@@ -530,7 +530,7 @@ class dbPost extends dbTable
                 if ($this->repliesAllowed) {
                     $link = new link($this->uri(array('action'=>'postreply', 'id'=>$post['post_id'], 'type'=>$this->forumtype)));
                     $link->link = $this->objLanguage->languageText('mod_forum_postreply', 'forum');
-                    $return .= '<br />'.$link->show();
+                    $return .= '<br clear="both" />'.$link->show();
                 }
                 
                 // Check if user can edit post
