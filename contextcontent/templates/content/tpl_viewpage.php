@@ -1,6 +1,8 @@
 <?php
 
-$addLink = new link ($this->uri(array('action'=>'addpage', 'id'=>$page['id'], 'context'=>$this->contextCode)));
+
+
+$addLink = new link ($this->uri(array('action'=>'addpage', 'id'=>$page['id'], 'context'=>$this->contextCode, 'chapter'=>$page['chapterid'])));
 $addLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextpages','contextcontent');
 
 $editLink = new link ($this->uri(array('action'=>'editpage', 'id'=>$page['id'], 'context'=>$this->contextCode)));
@@ -9,7 +11,7 @@ $editLink->link = $this->objLanguage->languageText('mod_contextcontent_editconte
 if (($page['rght'] - $page['lft'] - 1) == 0) {
     $deleteLink = new link ($this->uri(array('action'=>'deletepage', 'id'=>$page['id'], 'context'=>$this->contextCode)));
 } else {
-    $deleteLink = new link ("javascript:alert('This Page cannot be deleted until the Sub Pages are Deleted.');");
+    $deleteLink = new link ("javascript:alert('".$this->objLanguage->languageText('mod_contextcontent_pagecannotbedeleteduntil','contextcontent').".');");
 }
 $deleteLink->link = $this->objLanguage->languageText('mod_contextcontent_delcontextpages','contextcontent');
 
@@ -41,13 +43,26 @@ if (count($list) == 0) {
 }
 
 if ($this->isValid('movepageup')) {
-$link = new link($this->uri(array('action'=>'movepageup', 'id'=>$page['id'])));
-$link->link = 'Move Page Up';
-
-$link2 = new link($this->uri(array('action'=>'movepagedown', 'id'=>$page['id'])));
-$link2->link = 'Move Page Down';
-
-$middle .= '<br />'.$link->show().' / '.$link2->show();
+    
+    $middle .= '<br />';
+    
+    if ($isFirstPageOnLevel) {
+        $middle .= '<span style="text-decoration: line-through;" title="'.$this->objLanguage->languageText('mod_contextcontent_isfirstpageonlevel','contextcontent').'">'.$this->objLanguage->languageText('mod_contextcontent_movepageup','contextcontent').'</span>';
+    } else {
+        $link = new link($this->uri(array('action'=>'movepageup', 'id'=>$page['id'])));
+        $link->link = $this->objLanguage->languageText('mod_contextcontent_movepageup','contextcontent');
+        $middle .= $link->show();
+    }
+    
+    $middle .= ' / ';
+    
+    if ($isLastPageOnLevel) {
+        $middle .= '<span style="text-decoration: line-through;" title="'.$this->objLanguage->languageText('mod_contextcontent_islastpageonlevel','contextcontent').'">'.$this->objLanguage->languageText('mod_contextcontent_movepagedown','contextcontent').'</span>';
+    } else {
+        $link = new link($this->uri(array('action'=>'movepagedown', 'id'=>$page['id'])));
+        $link->link = $this->objLanguage->languageText('mod_contextcontent_movepagedown','contextcontent');
+        $middle .= $link->show();
+    }
 }
 
 
@@ -58,6 +73,12 @@ $table->addCell($middle, '33%', 'top', 'center');
 $table->addCell($nextPage, '33%', 'top', 'right');
 $table->endRow();
 
+$topTable = $this->newObject('htmltable', 'htmlelements');
+$topTable->startRow();
+$topTable->addCell($prevPage, '50%', 'top');
+$topTable->addCell($nextPage, '50%', 'top', 'right');
+$topTable->endRow();
+
 
 $this->loadClass('link', 'htmlelements');
 
@@ -65,31 +86,54 @@ $this->setVar('pageTitle', htmlentities($this->objContext->getTitle().' - '.$pag
 
 if (trim($page['headerscripts']) != '') {
 
+/*
     $header = '
 <![CDATA[
 '.$page['headerscripts'].'
 ]]>
-';
-    $this->appendArrayVar('headerParams', $header);
+';*/
+    $this->appendArrayVar('headerParams', $page['headerscripts']);
 
 
 }
 
-//echo $table->show();
+echo $topTable->show();
 
-echo '<div id="breadcrumb">'.$breadcrumbs.'</div>';
-
-echo $page['pagecontent'];
+$objWashout = $this->getObject('washout', 'utilities');
+echo $objWashout->parseText($page['pagecontent']);
 
 
 echo '<hr />';
 
-
-
-
-
 echo $table->show();
 
+if (count($chapters) > 0) {
+    $this->loadClass('form', 'htmlelements');
+    $this->loadClass('dropdown', 'htmlelements');
+    $this->loadClass('hiddeninput', 'htmlelements');
+    $this->loadClass('button', 'htmlelements');
+    $this->loadClass('label', 'htmlelements');
+
+    $form = new form ('movetochapter', $this->uri(array('action'=>'movetochapter')));
+    $hiddenInput = new hiddeninput('id', $page['id']);
+
+    $dropdown = new dropdown('chapter');
+    foreach ($chapters as $chapterItem)
+    {
+        $dropdown->addOption($chapterItem['chapterid'], $chapterItem['chaptertitle']);
+    }
+    $dropdown->setSelected($page['chapterid']);
+    
+    $label = new label ($this->objLanguage->languageText('mod_contextcontent_movepagetoanotherchapter','contextcontent').': ', 'input_chapter');
+    
+    $button = new button ('movepage', $this->objLanguage->languageText('mod_contextcontent_move','contextcontent'));
+    $button->setToSubmit();
+    
+    $form->addToForm($hiddenInput->show().$label->show().$dropdown->show().' '.$button->show());
+    
+    echo $form->show();
+    
+}
 
 
 ?>

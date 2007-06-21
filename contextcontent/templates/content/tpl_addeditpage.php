@@ -12,11 +12,11 @@ $this->loadClass('button', 'htmlelements');
 
 $header = new htmlheading();
 if ($mode=='edit') {
-    $header->str = $this->objLanguage->languageText('mod_contextcontent_editcontextpages','contextcontent')." ".htmlentities($page['menutitle']);
-    $this->setVar('pageTitle', htmlentities($this->objContext->getTitle().' - Edit Page: '.$page['menutitle']));
+    $header->str = $this->objLanguage->languageText('mod_contextcontent_editcontextpages','contextcontent').': '.htmlentities($page['menutitle']);
+    $this->setVar('pageTitle', htmlentities($this->objContext->getTitle().' - '.$this->objLanguage->languageText('mod_contextcontent_editcontextpages','contextcontent').': '.$page['menutitle']));
 } else {
     $header->str = $this->objLanguage->languageText('mod_contextcontent_addnewcontextpages','contextcontent');
-    $this->setVar('pageTitle', htmlentities($this->objContext->getTitle().' - Add New Page'));
+    $this->setVar('pageTitle', htmlentities($this->objContext->getTitle().' - '.$this->objLanguage->languageText('mod_contextcontent_addnewcontextpages','contextcontent')));
 }
 $header->type = 1;
 echo $header->show();
@@ -25,7 +25,7 @@ $form = new form('addpage', $this->uri(array('action'=>$formaction)));
 $formTable = $this->newObject('htmltable', 'htmlelements');
 
 //if ($mode=='add') {
-    $label = new label ('Parent', 'input_parentnode');
+    $label = new label ($this->objLanguage->languageText('mod_contextcontent_parent','contextcontent'), 'input_parentnode');
 
     $formTable->startRow();
     $formTable->addCell($label->show());
@@ -39,7 +39,7 @@ if ($mode=='edit') {
     $menuTitle->value = htmlentities($page['menutitle']);
 }
 
-$label = new label ('Menu Title', 'input_menutitle');
+$label = new label ($this->objLanguage->languageText('mod_contextcontent_pagetitle','contextcontent'), 'input_menutitle');
 
 $formTable->startRow();
 $formTable->addCell($label->show());
@@ -54,7 +54,7 @@ if ($mode == 'add') {
     $htmlarea->setContent($page['pagecontent']);
 }
 
-$label = new label ('Page Content', 'input_htmlarea');
+$label = new label ($this->objLanguage->languageText('mod_contextcontent_pagecontent','contextcontent'), 'input_htmlarea');
 
 $formTable->startRow();
 $formTable->addCell($label->show());
@@ -65,12 +65,12 @@ $textarea = new textarea('headerscripts');
 $textarea->extra = ' style="width: 100%"';
 $textarea->rows = 10;
 if ($mode=='edit') {
-    $textarea->value = $page['headerscripts'];
+    $textarea->value = htmlentities($page['headerscripts']);
 }
-$label = new label ('<strong>Meta Tags / JavaScript</strong>', 'input_headerscripts');
+$label = new label ('<strong>'.$this->objLanguage->languageText('mod_contextcontent_metatags_javascript','contextcontent').'</strong>', 'input_headerscripts');
 
 $formTable->startRow();
-$formTable->addCell($label->show().'<p>Enter any JavaScript or Meta Tags that you need to be loaded into the &lt;head&gt; tags</p>', '240');
+$formTable->addCell($label->show().'<p>'.$this->objLanguage->languageText('mod_contextcontent_enterjavascript','contextcontent').'</p>', '240');
 $formTable->addCell($textarea->show());
 $formTable->endRow();
 
@@ -92,7 +92,7 @@ $formTable->addCell('&nbsp;');
 $formTable->addCell('&nbsp;');
 $formTable->endRow();
 
-$button = new button('submitform', 'Save Page');
+$button = new button('submitform', $this->objLanguage->languageText('mod_contextcontent_savepage','contextcontent'));
 $button->setToSubmit();
 
 $formTable->startRow();
@@ -107,11 +107,15 @@ if ($mode == 'edit') {
     $form->addToForm($hiddeninput->show());
     $hiddeninput = new hiddeninput('context', $this->contextCode);
     $form->addToForm($hiddeninput->show());
+} else {
+    $hiddeninput = new hiddeninput('chapter', $chapter);
+    $form->addToForm($hiddeninput->show());
+
 }
 
 // Rules
 
-$form->addRule('menutitle', 'This field is required', 'required');
+$form->addRule('menutitle', $this->objLanguage->languageText('mod_contextcontent_pleaseenterpagetitle','contextcontent'), 'required');
 
 echo $form->show();
 
