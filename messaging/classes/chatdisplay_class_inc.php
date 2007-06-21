@@ -2129,12 +2129,14 @@ class chatdisplay extends object
             // hidden div for IM settings
             $objLayer = new layer();
             $objLayer->id = 'settingsDiv';
+            $objLayer->display = 'inline';
             $settingsDiv = $objLayer->show();
             $string = $settingsDiv;  
         
             // hidden div for IM
             $objLayer = new layer();
             $objLayer->id = 'imDiv';
+            $objLayer->display = 'inline';
             $imDiv = $objLayer->show();
             $string .= $imDiv;  
         
@@ -2163,6 +2165,7 @@ class chatdisplay extends object
             $objLayer = new layer();
             $objLayer->id = 'imDisplayDiv';
             $objLayer->addToStr($string);
+            $objLayer->display = 'inline';
             $imDiv = $objLayer->show();
             $str = $imDiv;  
         }else{
