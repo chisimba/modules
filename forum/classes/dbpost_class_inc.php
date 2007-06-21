@@ -473,7 +473,7 @@ class dbPost extends dbTable
                                    $this->objScriptClear->removeScript( // Apply Script Removal Filters
                                         stripslashes( // Remove Slashes
                                             $post['post_text']
-                            ))).'</div>';
+                            ))).'</div><br clear="both" />';
                 
                 // Check if the post has attachments
                 if ($post['attachment_id'] != NULL) {
@@ -530,7 +530,7 @@ class dbPost extends dbTable
                 if ($this->repliesAllowed) {
                     $link = new link($this->uri(array('action'=>'postreply', 'id'=>$post['post_id'], 'type'=>$this->forumtype)));
                     $link->link = $this->objLanguage->languageText('mod_forum_postreply', 'forum');
-                    $return .= '<br clear="both" />'.$link->show();
+                    $return .= '<br />'.$link->show();
                 }
                 
                 // Check if user can edit post
