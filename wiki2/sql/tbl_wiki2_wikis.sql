@@ -11,19 +11,22 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32,
 	),
-	'group_type' => array(
+	'group_type' => array( // default, context, personal etc
 	   'type' => 'text',
 	   'length' => 255,
     ),
-    'group_id' => array(
+    'group_id' => array( // context code, user id etc
         'type' => 'text',
         'length' => 255,
     ),
-    'description' => array(
+    'wiki_name' => array(
         'type' => 'text',
         'length' => 255,
     ),
-	'visibility' => array(
+    'wiki_description' => array(
+        'type' => 'clob',
+    ),
+	'wiki_visibility' => array( // 1 = public, 2 = open, 3 = private
 		'type' => 'integer',
 		'length' => 1,
 	),

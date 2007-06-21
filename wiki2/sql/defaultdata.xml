@@ -2,10 +2,11 @@
 <defaultdata>
     <tbl_wiki2_wikis>
         <id>init_1</id>
-        <group_type>Default</group_type>
-        <group_id>system</group_id>
-        <description>The default wiki for the site</description>
-        <visibility>1</visibility>
+        <group_type>default</group_type>
+        <group_id>1</group_id>
+        <wiki_name>Default wiki</wiki_name>
+        <wiki_description>The default wiki for the site</wiki_description>
+        <wiki_visibility>1</wiki_visibility>
         <creator_id>1</creator_id>
         <date_created>2007-06-01 12:00:00</date_created>
     </tbl_wiki2_wikis>

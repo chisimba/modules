@@ -66,6 +66,11 @@ class wiki2 extends controller {
         $this->objLock = $this->newObject('wikipagelock', 'wiki2');        
         $this->objUser = $this->newObject('user', 'security');
         $this->userId = $this->objUser->userId();
+        
+        $wikiId = $this->getSession('wiki_id');
+        if(empty($wikiId)){
+            $this->setSession('wiki_id', 'init_1');
+        }
     }
     
     /**
@@ -94,6 +99,8 @@ class wiki2 extends controller {
             case 'update_post':
             case 'delete_post':
             case 'restore_post':
+            case 'add_wiki';
+            case 'create_wiki';
                 return TRUE;
             case 'view_rules':
             case 'view_all':
@@ -145,7 +152,6 @@ class wiki2 extends controller {
                     $summary = $sum;
                 }
                 $data = array();
-                $data['wiki_id'] = 'init_1'; // TODO: extend for context etc.
                 $data['page_name'] = strip_tags($name);
                 $data['page_summary'] = strip_tags($summary);
                 $data['page_content'] = strip_tags($content, '<code>');
@@ -158,7 +164,7 @@ class wiki2 extends controller {
                 }                   
                 return $this->nextAction('view_page', array(
                     'name' => $name,
-                ));
+                ), 'wiki2');
                 break;
                 
             case 'update_page':
@@ -177,7 +183,6 @@ class wiki2 extends controller {
                 }
 
                 $data = array();
-                $data['wiki_id'] = 'init_1'; // TODO: extend for context etc.
                 $data['page_name'] = strip_tags($name);
                 $data['main_page'] = $main;
                 $data['page_summary'] = strip_tags($summary);
@@ -188,13 +193,13 @@ class wiki2 extends controller {
                 $this->objLock->unlockEdit('tbl_wiki2_pages', $id, $this->userId);
                 return $this->nextAction('view_page', array(
                     'name' => $name,
-                ));
+                ), 'wiki2');
                 break;
                 
             case 'delete_page':
                 $name = $this->getParam('name');
                 $this->objDbwiki->deletePage($name);
-                return $this->nextAction('view_all');
+                return $this->nextAction('view_all', array(), 'wiki2');
                 break;
                 
             case 'view_all':
@@ -210,11 +215,11 @@ class wiki2 extends controller {
                     if(empty($page)){
                         return $this->nextAction('add_page', array(
                             'name' => $name,
-                        ));
+                        ), 'wiki2');
                     }elseif($page['page_status'] == 6){
                         return $this->nextAction('deleted_page', array(
                             'name' => $name,
-                        ));
+                        ), 'wiki2');
                     }
                 }
                 $version = $this->getParam('version');
@@ -327,7 +332,7 @@ class wiki2 extends controller {
             case 'delete_watch':
                 $id =$this->getParam('id');
                 $this->objDbwiki->deleteWatchById($id);
-                return $this->nextAction('view_watchlist');
+                return $this->nextAction('view_watchlist', array(), 'wiki2');
                 break;
                 
             case 'update_watch':
@@ -344,7 +349,7 @@ class wiki2 extends controller {
                 $name = $this->getParam('name');
                 $userId = $this->getParam('id');
                 $this->objDbwiki->deleteWatchByName($name, $userId);
-                return $this->nextAction('');
+                return $this->nextAction('', array(), 'wiki2');
                 break;
                 
             case 'show_diff':
@@ -369,17 +374,16 @@ class wiki2 extends controller {
                 }else{
                     $this->objDbwiki->editLink($id, $name, $url);
                 }
-                return $this->nextAction('view_links');
+                return $this->nextAction('view_links', array(), 'wiki2');
                 break;
                 
             case 'update_post':
                 $id = $this->getParam('id');
-                $wikiId = $this->getParam('wiki_id');                
                 $name = $this->getParam('name');
                 $title = $this->getParam('post_title', $this->getParam('post_title_'.$id));
                 $content = $this->getParam('post_content', $this->getParam('post_content_'.$id));
                 if(empty($id)){
-                    $this->objDbwiki->addPost($wikiId, $name, $title, $content);
+                    $this->objDbwiki->addPost($name, $title, $content);
                 }else{
                     $this->objDbwiki->editPost($id, $title, $content);
                 }
@@ -409,8 +413,22 @@ class wiki2 extends controller {
                 ), 'wiki2');
                 break;
                 
+            case 'add_wiki':
+                $templateContent = $this->objWikidisplay->showAddWiki();
+                $this->setVarByRef('templateContent', $templateContent);
+                return 'template_tpl.php';
+                break;
+                
+            case 'create_wiki':
+                $name = $this->getParam('name');
+                $desc = $this->getParam('desc');
+                $visibility = $this->getParam('visibility');
+                $this->objDbwiki->addWiki($name, $desc, $visibility);
+                return $this->nextAction('view_page', array(), 'wiki2');
+                break;
+                
             default:
-                return $this->nextAction('view_page');
+                return $this->nextAction('view_page', array(), 'wiki2');
                 break;
         }
     }

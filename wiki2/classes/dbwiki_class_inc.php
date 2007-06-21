@@ -31,6 +31,12 @@ class dbwiki extends dbTable
     private $userId;
 
     /**
+    * @var string $wikiId: The id of the wiki the user is currently browsing
+    * @access private
+    */
+    private $wikiId;
+
+    /**
     * Method to construct the class
     *
     * @access public
@@ -41,6 +47,7 @@ class dbwiki extends dbTable
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objUser = $this->getObject('user', 'security');
         $this->userId = $this->objUser->userId();
+        $this->wikiId = $this->getSession('wiki_id');
     }
     
 /* ----- Functions for changeing tables ----- */
@@ -129,7 +136,81 @@ class dbwiki extends dbTable
         return $this->_changeTable('tbl_wiki2_forum');
     }
 
+/* ----- Functions for tbl_wiki2_wikis ----- */
+
+    /**
+    * Method to check if a user has a wiki
+    *
+    * @access public
+    * @param string $userId: The user id of the user to check
+    * @return bool $hasWiki: TRUE if the user has a wiki | FALSE if not
+    */
+    public function hasWiki($userId)
+    {
+        $this->_setWiki();
+        $sql = "WHERE group_type = 'personal'";
+        $sql .= " AND group_id = '".$userId."'";
+        $data = $this->getAll($sql);
+        if(!empty($data)){
+            return TRUE;
+        }else{
+            return FALSE;
+        }
+    }
+    
+    /**
+    * Method to add a wiki
+    * 
+    * @access public
+    * @param string $name: The wiki name
+    * @param string $desc: The wiki description
+    * @param integer $visibility: THe visibility of the wiki
+    * @return string|bool $wikiId: The wiki id |False on failure
+    */
+    public function addWiki($name, $desc, $visibility)
+    {
+        $this->_setWiki();
+        $fields = array();
+        $fields['group_type'] = 'personal';
+        $fields['group_id'] = $this->userId;
+        $fields['wiki_name'] = $name;
+        $fields['wiki_description'] = $desc;
+        $fields['wiki_visibility'] = $visibility;
+        $fields['creator_id'] = $this->userId;
+        $fields['date_created'] = date('Y-m-d H:i:s');
+        $wikiId = $this->insert($fields);
+        $this->setSession('wiki_id', $wikiId);
+        $this->wikiId = $wikiId;
+        $this->personalMainPage();
+        return $wikiId;
+    }
+    
 /* ----- Functions for tbl_wiki2_pages ----- */
+
+    /**
+    * Method to auto create the main page after creating a personal wiki
+    *
+    * @access public
+    * @param string $wikiId: The id of the wiki the main page is being created for
+    * @return string|bool $pageId: The wiki page id on success|FALSE on failure
+    */
+    public function personalMainPage()
+    {
+        // get text elements
+        $text1Label = $this->objLanguage->languageText('mod_wiki2_default_4', 'wiki2');
+        $text2Label = $this->objLanguage->languageText('mod_wiki2_default_3', 'wiki2');
+        $text3Label = $this->objLanguage->languageText('mod_wiki2_default_2', 'wiki2');
+        $text4Label = $this->objLanguage->languageText('mod_wiki2_newpage', 'wiki2');
+        $this->_setPages();
+        $fields = array();
+        $fields['page_name'] = 'MainPage';
+        $fields['page_summary'] = $text1Label;
+        $fields['page_content'] = $text3Label."\n".$text2Label;
+        $fields['version_comment'] = $text4Label;
+        $fields['main_page'] = 1;
+        
+        $this->addPage($fields);
+    }
 
     /**
     * Method to add a wiki page
@@ -144,6 +225,7 @@ class dbwiki extends dbTable
             return FALSE;
         }
         
+        $data['wiki_id'] = $this->wikiId;
         $data['page_version'] = $this->getVersion($data['page_name']);
         $data['page_status'] = 1;
         $data['page_author_id'] = $this->userId;
@@ -164,6 +246,7 @@ class dbwiki extends dbTable
         $sql = "WHERE (page_name, page_version)";
         $sql .= " IN (SELECT page_name, MAX(page_version)";
         $sql .= "     FROM tbl_wiki2_pages GROUP BY page_name)";
+        $sql .= " AND wiki_id = '".$this->wikiId."'";
         $sql .= " AND page_status < 4";
         $sql .= " ORDER BY date_created DESC";
         $data = $this->getAll($sql);
@@ -185,6 +268,7 @@ class dbwiki extends dbTable
         $sql = "WHERE (page_name, page_version)";
         $sql .= " IN (SELECT page_name, MAX(page_version)";
         $sql .= "     FROM tbl_wiki2_pages GROUP BY page_name)";
+        $sql .= " AND wiki_id = '".$this->wikiId."'";
         $sql .= " ORDER BY date_created DESC";
         $data = $this->getAll($sql);
         if(!empty($data)){
@@ -204,6 +288,7 @@ class dbwiki extends dbTable
     {
         $this->_setPages();        
         $sql = "WHERE page_name = '".$name."'";
+        $sql .= " AND wiki_id = '".$this->wikiId."'";
         $sql .= " ORDER BY page_version DESC";
         $data = $this->getAll($sql);
         if(!empty($data)){
@@ -227,6 +312,7 @@ class dbwiki extends dbTable
         if(!empty($version)){
             $sql .= " AND page_version = '".$version."'";
         }
+        $sql .= " AND wiki_id = '".$this->wikiId."'";
         $sql .= " ORDER BY page_version DESC";
         $data = $this->getAll($sql);
         if(!empty($data)){
@@ -263,6 +349,7 @@ class dbwiki extends dbTable
     {
         $this->_setPages();        
         $sql = "WHERE main_page = '1'";
+        $sql .= " AND wiki_id = '".$this->wikiId."'";
         $sql .= " ORDER BY page_version DESC";
         $data = $this->getAll($sql);
         if(!empty($data)){
@@ -282,6 +369,7 @@ class dbwiki extends dbTable
         $this->_setPages(); 
         $sql = "WHERE page_version = 1";
         $sql .= " AND page_status < 5";
+        $sql .= " AND wiki_id = '".$this->wikiId."'";
         $sql .= " ORDER BY date_created DESC LIMIT 5";
         $data = $this->getAll($sql);
         if(!empty($data)){
@@ -304,6 +392,7 @@ class dbwiki extends dbTable
         $sql .= "     FROM tbl_wiki2_pages GROUP BY page_name)";
         $sql .= " AND page_version > 1";
         $sql .= " AND page_status < 5";
+        $sql .= " AND wiki_id = '".$this->wikiId."'";
         $sql .= " ORDER BY date_created DESC LIMIT 5";
         $data = $this->getAll($sql);
         if(!empty($data)){
@@ -336,10 +425,13 @@ class dbwiki extends dbTable
     */
     public function deletePage($name)
     {
-        $this->_setPages();        
-        $this->update('page_name', $name, array(
-            'page_status' => 6,
-        ));
+        $this->_setPages();
+        $this->getPagesByName($name);
+        foreach($data as $line){
+            $this->update('id', $line['id'], array(
+                'page_status' => 6,
+            ));
+        }        
     }
     
     /**
@@ -360,6 +452,7 @@ class dbwiki extends dbTable
         $this->_setPages();
         $sql = "WHERE page_name = '".$name."'";
         $sql .= " AND page_version > '".$version."'";
+        $sql .= " AND wiki_id = '".$this->wikiId."'";
         $overWrittenPages = $this->getAll($sql);
         if(!empty($overWrittenPages)){
             foreach($overWrittenPages as $page){
@@ -372,6 +465,7 @@ class dbwiki extends dbTable
         $pageToRestore = $this->getPage($name, $version);
         $temp = array_pop($pageToRestore);
         $temp = array_shift($pageToRestore);
+        $pageToRestore['wiki_id'] = $this->wikiId;
         $pageToRestore['page_version'] = $this->getVersion($name);
         $pageToRestore['version_comment'] = $restoreLabel;
         $pageToRestore['page_status'] = 2;
@@ -399,6 +493,7 @@ class dbwiki extends dbTable
 
         $this->_setPages();
         $sql = "WHERE page_name = '".$name."'";
+        $sql .= " AND wiki_id = '".$this->wikiId."'";
         $archivedPages = $this->getAll($sql);
         if(!empty($archivedPages)){
             foreach($archivedPages as $page){
@@ -408,15 +503,16 @@ class dbwiki extends dbTable
             }
         }
 
-        $pageToRestore = $this->getPage($name, $version);
+        $pageToReinstate = $this->getPage($name, $version);
         $temp = array_pop($pageToRestore);
         $temp = array_shift($pageToRestore);
-        $pageToRestore['page_version'] = $this->getVersion($name);
-        $pageToRestore['version_comment'] = $reinstateLabel;
-        $pageToRestore['page_status'] = 3;
-        $pageToRestore['page_author_id'] = $this->userId;
-        $pageToRestore['date_created'] = date('Y-m-d H:i:s');
-        $pageId = $this->insert($pageToRestore);
+        $pageToReinstate['wiki_id'] = $this->wikiId;
+        $pageToReinstate['page_version'] = $this->getVersion($name);
+        $pageToReinstate['version_comment'] = $reinstateLabel;
+        $pageToReinstate['page_status'] = 3;
+        $pageToReinstate['page_author_id'] = $this->userId;
+        $pageToReinstate['date_created'] = date('Y-m-d H:i:s');
+        $pageId = $this->insert($pageToReinstate);
         
         return $pageId;        
     }
@@ -463,6 +559,7 @@ class dbwiki extends dbTable
         }else{
             $sql .= " AND LOWER(".$column.") LIKE '%".strtolower($value)."%'";
         }
+        $sql .= " AND wiki_id = '".$this->wikiId."'";
         $sql .= " ORDER BY date_created DESC";
         $data = $this->getAll($sql);
         if(!empty($data)){
@@ -481,6 +578,7 @@ class dbwiki extends dbTable
     {
         $this->_setPages();
         $sql = "SELECT *, COUNT(page_author_id) AS cnt FROM tbl_wiki2_pages";
+        $sql .= " WHERE wiki_id = '".$this->wikiId."'";
         $sql .= " GROUP BY page_author_id";
         $data = $this->getArray($sql);
         if(!empty($data)){
@@ -504,6 +602,7 @@ class dbwiki extends dbTable
         $sql .= "     FROM tbl_wiki2_pages GROUP BY page_name)";
         $sql .= " AND page_status < 4";
         $sql .= " AND page_author_id = '".$author."'";
+        $sql .= " AND wiki_id = '".$this->wikiId."'";
         $sql .= " ORDER BY date_created DESC";
         $data = $this->getAll($sql);
         if(!empty($data)){
@@ -527,7 +626,7 @@ class dbwiki extends dbTable
     {
         $this->_setRating();
         $fields = array();
-        $fields['wiki_id'] = 'init_1';
+        $fields['wiki_id'] = $this->wikiId;
         $fields['page_name'] = $name;
         $fields['page_rating'] = $rating;
         $fields['creator_id'] = $this->userId;
@@ -546,7 +645,7 @@ class dbwiki extends dbTable
     public function getRating($name)
     {
         $this->_setRating();
-        $sql = "WHERE wiki_id = 'init_1'";
+        $sql = "WHERE wiki_id = '".$this->wikiId."'";
         $sql .= " AND page_name = '".$name."'";
         $data = $this->getAll($sql);
         if(!empty($data)){
@@ -584,7 +683,7 @@ class dbwiki extends dbTable
     public function wasRated($name)
     {
         $this->_setRating();
-        $sql = "WHERE wiki_id = 'init_1'";
+        $sql = "WHERE wiki_id = '".$this->wikiId."'";
         $sql .= " AND page_name = '".$name."'";
         $sql .= " AND creator_id = '".$this->userId."'";
         $data = $this->getAll($sql);
@@ -607,7 +706,7 @@ class dbwiki extends dbTable
         $this->_setRating();
         $sql = "SELECT *, COUNT(page_name) AS cnt, SUM(page_rating) AS tot";
         $sql .= " FROM tbl_wiki2_rating ";
-        $sql .= " WHERE wiki_id = 'init_1'";
+        $sql .= " WHERE wiki_id = '".$this->wikiId."'";
         $sql .= " GROUP BY page_name";
         $sql .= " ORDER BY tot DESC, cnt DESC";
         $data = $this->getArray($sql);
@@ -634,7 +733,7 @@ class dbwiki extends dbTable
             $watchId = $watch['id'];
         }else{
             $this->_setWatch();
-            $fields['wiki_id'] = 'init_1';
+            $fields['wiki_id'] = $this->wikiId;
             $fields['page_name'] = $name;
             $fields['creator_id'] = $this->userId;
         
@@ -657,7 +756,7 @@ class dbwiki extends dbTable
         $userId = isset($userId) ? $userId : $this->userId;
         
         $this->_setWatch();
-        $sql = "WHERE wiki_id = 'init_1'";
+        $sql = "WHERE wiki_id = '".$this->wikiId."'";
         $sql .= " AND page_name = '".$name."'";
         $sql .= " AND creator_id = '".$userId."'";
         $data = $this->getAll($sql);
@@ -708,6 +807,7 @@ class dbwiki extends dbTable
     {
         $this->_setWatch();
         $sql = "WHERE creator_id = '".$this->userId."'";
+        $sql .= " AND wiki_id = '".$this->wikiId."'";
         $data = $this->getAll($sql);
         if(!empty($data)){
             return $data;
@@ -725,7 +825,7 @@ class dbwiki extends dbTable
     public function getPageWatches($name)
     {
         $this->_setWatch();
-        $sql = "WHERE wiki_id = 'init_1'";
+        $sql = "WHERE wiki_id = '".$this->wikiId."'";
         $sql .= " AND page_name = '".$name."'";
         $data = $this->getAll($sql);
         if(!empty($data)){
@@ -838,17 +938,16 @@ class dbwiki extends dbTable
     * Method to add a wiki discussion post
     *
     * @access public
-    * @param string $id: The wiki id
     * @param string $name: The wiki page name
     * @param string $title: The discussion post title
     * @param string $content: The discussion post text
     * @return string|bool $postId: The discussion post id|False on failure
     */
-    public function addPost($id = 'init_1', $name, $title, $content)
+    public function addPost($name, $title, $content)
     {
         $this->_setForum();
         
-        $data = $this->getPosts($id, $name);
+        $data = $this->getPosts($name);
         if(!empty($data)){
             $count = count($data) + 1;
         }else{
@@ -856,7 +955,7 @@ class dbwiki extends dbTable
         }
         
         $fields = array();
-        $fields['wiki_id'] = $id;
+        $fields['wiki_id'] = $this->wikiId;
         $fields['page_name'] = $name;
         $fields['post_title'] = $title;
         $fields['post_content'] = $content;
@@ -873,14 +972,13 @@ class dbwiki extends dbTable
     * Method to get a list of wiki discussion posts
     *
     * @access public
-    * @param string $id: The wiki id
     * @param string $name: The wiki page name
     * @return array|bool $data: Discussion post data on success | False on failure
     */
-    public function getPosts($id = 'init_1', $name)
+    public function getPosts($name)
     {
         $this->_setForum();
-        $sql = "WHERE wiki_id = '".$id."'";
+        $sql = "WHERE wiki_id = '".$this->wikiId."'";
         $sql .= " AND page_name = '".$name."'";
         $sql .= " ORDER BY post_order ASC";
         $data = $this->getAll($sql);

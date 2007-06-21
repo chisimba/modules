@@ -23,14 +23,6 @@ $fields = array(
 		'type' => 'integer',
 		'length' => 1,
 	),
-	'page_lock' => array(
-		'type' => 'integer',
-		'length' => 1,
-	),
-	'page_locker_id' => array(
-		'type' => 'text',
-		'length' => 32,
-	),
 	'page_summary' => array(
 		'type' => 'clob',
 	),

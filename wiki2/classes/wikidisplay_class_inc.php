@@ -201,6 +201,8 @@ class wikidisplay extends object
         $watchTitleLabel = $this->objLanguage->languageText('mod_wiki2_watchlisttitle', 'wiki2');
         $linkLabel = $this->objLanguage->languageText('mod_wiki2_viwlinks', 'wiki2');
         $linkTitleLabel = $this->objLanguage->languageText('mod_wiki2_viewlinktitle', 'wiki2');
+        $createLabel = $this->objLanguage->languageText('mod_wiki2_createwiki', 'wiki2');
+        $createTitleLabel = $this->objLanguage->languageText('mod_wiki2_createwikititle', 'wiki2');
         
         $str = '';
         // login box
@@ -208,9 +210,24 @@ class wikidisplay extends object
             $loginBlock = $this->objBlocks->showBlock('login', 'security', '', 20, TRUE, TRUE, 'none');
             $str .= $loginBlock;
         }
-
+        
         // links
         $string = '<ul>';
+        if($this->isLoggedIn){
+            // get data
+            $hasWiki = $this->objDbwiki->hasWiki($this->userId);            
+            if(!$hasWiki){
+                // create wiki link
+                $objLink = new link($this->uri(array(
+                    'action' => 'add_wiki',
+                ), 'wiki2'));
+                $objLink->link = $createLabel;
+                $objLink->title = $createTitleLabel;
+                $addLink = $objLink->show();
+                $string .= '<li>'.$addLink.'</li>';
+            }
+        }
+        
         // main page link
         $objLink = new link($this->uri(array(
             'action' => 'view_page',
@@ -395,6 +412,7 @@ class wikidisplay extends object
         }else{
             $data = $this->objDbwiki->getPage($name, $version);
         }
+
         $pageId = $data['id'];
         $name = $data['page_name'];
         $pageTitle = $this->objWiki->renderTitle($name);    
@@ -2765,7 +2783,7 @@ You can create tables using pairs of vertical bars:
         
         $str = '';
         if($this->isLoggedIn){
-            $str .= $this->_addPost($name);
+            $str .= $this->_showAddPost($name);
         }
                 
         if(empty($data)){
@@ -2873,7 +2891,7 @@ You can create tables using pairs of vertical bars:
         $string = $objLayer->show();
         if(!empty($data)){
             foreach($data as $line){
-                $string .= $this->_editPost($line['id']);
+                $string .= $this->_showEditPost($line['id']);
             }
         }
         $str = $string;
@@ -2887,7 +2905,7 @@ You can create tables using pairs of vertical bars:
     * @param string $nameId: The name of the wiki page
     * @return string $str: The output string
     */
-    private function _addPost($name)
+    private function _showAddPost($name)
     {
         $addLabel = $this->objLanguage->languageText('mod_wiki2_addpost', 'wiki2');
         $addTitleLabel = $this->objLanguage->languageText('mod_wiki2_posttitle', 'wiki2');
@@ -2974,7 +2992,7 @@ You can create tables using pairs of vertical bars:
     * @param string $postId: The id of the post
     * @return string $str: The output string
     */
-    private function _editPost($postId)
+    private function _showEditPost($postId)
     {
         // text elements
         $titleLabel = $this->objLanguage->languageText('mod_wiki2_posttitle', 'wiki2');
@@ -3043,6 +3061,124 @@ You can create tables using pairs of vertical bars:
         $str = $objLayer->show();
         
         return $str;
+    }
+
+    /**
+    * Method to add wikis
+    * 
+    * @access public
+    * @return string $str: The output string
+    */
+    public function showAddWiki()
+    {
+        // add  javascript
+        $headerParams = $this->getJavascriptFile('wiki.js', 'wiki2');
+        $this->appendArrayVar('headerParams', $headerParams);
+
+        // text elements
+        $wikiLabel = $this->objLanguage->languageText('mod_wiki2_createwiki', 'wiki2');
+        $nameLabel = $this->objLanguage->languageText('mod_wiki2_linkname', 'wiki2');
+        $descLabel = $this->objLanguage->languageText('mod_wiki2_description', 'wiki2');
+        $visibilityLabel = $this->objLanguage->languageText('mod_wiki2_visibility', 'wiki2');
+        $createLabel = $this->objLanguage->languageText('mod_wiki2_wiki', 'wiki2');
+        $cancelLabel = $this->objLanguage->languageText('word_cancel');
+        $publicLabel = $this->objLanguage->languageText('word_public');
+        $openLabel = $this->objLanguage->languageText('word_open');
+        $privateLabel = $this->objLanguage->languageText('word_private');
+        $publicTextLabel = $this->objLanguage->languageText('mod_wiki2_public', 'wiki2');
+        $openTextLabel = $this->objLanguage->languageText('mod_wiki2_open', 'wiki2');
+        $privateTextLabel = $this->objLanguage->languageText('mod_wiki2_private', 'wiki2');
+        $nameErrorLabel = $this->objLanguage->languageText('mod_wiki2_errorwiki', 'wiki2');
+        $descErrorLabel = $this->objLanguage->languageText('mod_wiki2_errordesc', 'wiki2');
+                
+        // wiki name
+        $objHeader = new htmlheading();
+        $objHeader->str = $nameLabel;
+        $objHeader->type = 4;
+        $content = $objHeader->show();
+        
+        // wiki name textinput
+        $objInput = new textinput('name', '', '', '96');
+        $content .= $objInput->show();
+                
+        // wiki description
+        $objHeader = new htmlheading();
+        $objHeader->str = $descLabel;
+        $objHeader->type = 4;
+        $content .= $objHeader->show();
+        
+        // wiki name textinput
+        $objText = new textarea('desc', '', '4', '70');
+        $content .= $objText->show();
+                
+        // wiki description
+        $objHeader = new htmlheading();
+        $objHeader->str = $visibilityLabel;
+        $objHeader->type = 4;
+        $content .= $objHeader->show();
+        
+        $objRadio = new radio('visibility');
+        $objRadio->addOption(1, '&#160;'.$publicLabel);
+        $objRadio->extra = 'style="vertical-align: middle;"';
+        $content .= $objRadio->show();
+        $content .= '<ul><li><b>'.$publicTextLabel.'</b></li></ul>';
+        
+        $objRadio = new radio('visibility');
+        $objRadio->addOption(2, '&#160;'.$openLabel);
+        $objRadio->extra = 'style="vertical-align: middle;"';
+        $content .= $objRadio->show();
+        $content .= '<ul><li><b>'.$openTextLabel.'</b></li></ul>';
+
+        $objRadio = new radio('visibility');
+        $objRadio->addOption(3, '&#160;'.$privateLabel);
+        $objRadio->extra = 'style="vertical-align: middle;"';
+        $objRadio->setSelected(3);
+        $content .= $objRadio->show();
+        $content .= '<ul><li><b>'.$privateTextLabel.'</b></li></ul>';
+        
+        // create button
+        $objButton = new button('create', $createLabel);
+        $objButton->setToSubmit();
+        $createButton = $objButton->show();
+        
+        // create button
+        $objButton = new button('cancel', $cancelLabel);
+        $objButton->extra = 'onclick="javascript:history.back();"';
+        $cancelButton = $objButton->show();
+        
+        // button layer
+        $objLayer = new layer();
+        $objLayer->addToStr($createButton.'&#160;'.$cancelButton);        
+        $buttonLayer = $objLayer->show();
+
+        // form
+        $objForm = new form('create', $this->uri(array(
+            'action' => 'create_wiki',
+        ), 'wiki2'));
+        $objForm->addToForm($content);
+        $objForm->addToForm($buttonLayer);
+        $objForm->addRule('name', $nameErrorLabel, 'required');
+        $objForm->addRule('desc', $descErrorLabel, 'required');
+        $createForm = $objForm->show();
+        
+        $objLayer = new layer();
+        $objLayer->cssClass = 'featurebox';
+        $objLayer->addToStr($createForm);
+        $createLayer = $objLayer->show();
+            
+        // add page tab
+        $addTab = array(
+            'name' => $wikiLabel,
+            'content' => $createLayer,
+        );
+            
+         //display tabs
+        $this->objTab->init();        
+        $this->objTab->addTab($addTab);
+        $this->objTab->useCookie = 'false';
+        $str = $this->objTab->show();
+        
+        return $str;       
     }
 }
 ?>
