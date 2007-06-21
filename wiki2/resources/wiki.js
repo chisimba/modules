@@ -1,8 +1,10 @@
-324/* 
+/* 
 * ===================================================================== 
 *  File to hold the javascript functions for the wiki version 2 module
 * =====================================================================
-/*
+*/
+
+var lockTimer;
 
 /**
 * Method to validate the create form fields
@@ -19,22 +21,22 @@ function validateCreatePage(err_page, err_summary, err_content)
     var choice_input = $("input_choice");
     var content_input = $("input_content");
     
-    if(name_input.value == ''){
+    if(name_input.value == ""){
         alert(err_page);
         name_input.focus();
         return false;
     }
     
-    if(summary_input.value == ''){
+    if(summary_input.value == ""){
         if(confirm(err_summary)){
-            choice_input.value = 'yes';
+            choice_input.value = "yes";
         }else{
             summary_input.focus();
             return false;
         }
     }
     
-    if(content_input.value == ''){
+    if(content_input.value == ""){
         alert(err_content);
         content_input.focus
         return false;
@@ -58,21 +60,21 @@ function validateUpdatePage(err_summary, err_content, err_comment)
     var comment_input = $("input_comment");
     
     
-    if(summary_input.value == ''){
+    if(summary_input.value == ""){
         if(confirm(err_summary)){
-            choice_input.value = 'yes';
+            choice_input.value = "yes";
         }else{
             summary_input.focus();
             return false;
         }
     }
-    if(content_input.value == ''){
+    if(content_input.value == ""){
         alert(err_content);
         content_input.focus
         return false;
     }
 
-    if(comment_input.value == ''){
+    if(comment_input.value == ""){
         alert(err_comment);
         comment_input.focus
         return false;
@@ -142,19 +144,18 @@ function resizeRefresh()
 function tabClickEvents(edit_state)
 {
     if(edit_state == "can_edit"){
-        $("mainTabnav3").parentNode.style.display = 'none';
-        $("mainTabnav4").parentNode.style.display = 'none';
-        $("mainTabnav6").parentNode.style.display = 'none';
+        $("mainTabnav3").parentNode.style.display = "none";
+        $("mainTabnav4").parentNode.style.display = "none";
+        $("mainTabnav6").parentNode.style.display = "none";
         var editLink = $("mainTabnav2");
         editLink.onclick = function(){
             checkLock();
         }
     }else{
-        $("mainTabnav2").parentNode.style.display = 'none';
-        $("mainTabnav3").parentNode.style.display = 'none';
-        $("mainTabnav4").parentNode.style.display = 'none';
-        $("mainTabnav6").parentNode.style.display = 'none';
-        
+        $("mainTabnav2").parentNode.style.display = "none";
+        $("mainTabnav3").parentNode.style.display = "none";
+        $("mainTabnav4").parentNode.style.display = "none";
+        $("mainTabnav6").parentNode.style.display = "none";
     }
 }
 
@@ -164,7 +165,7 @@ function tabClickEvents(edit_state)
 function checkLock()
 {
     var id = $F("input_id");
-    var target = 'lockedDiv';
+    var target = "lockedDiv";
     var url = "index.php";
     var pars = "module=wiki2&action=check_lock&id="+id;
     var checkAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars, onComplete: updatePage});    
@@ -177,23 +178,25 @@ function updatePage()
 {
     var locked_input = $F("input_locked");
     if(locked_input == "locked"){
-        $("mainTabnav1").parentNode.style.display = 'none';
-        $("mainTabnav2").parentNode.style.display = 'none';
-        $("mainTabnav3").parentNode.style.display = '';
-        $("mainTabnav4").parentNode.style.display = '';
-        $("mainTabnav5").parentNode.style.display = 'none';
-        $("mainTabnav6").parentNode.style.display = 'none';
-        $('mainTab').tabber.tabShow(2);
+        $("mainTabnav1").parentNode.style.display = "none";
+        $("mainTabnav2").parentNode.style.display = "none";
+        $("mainTabnav3").parentNode.style.display = "";
+        $("mainTabnav4").parentNode.style.display = "";
+        $("mainTabnav5").parentNode.style.display = "none";
+        $("mainTabnav6").parentNode.style.display = "none";
+        $("mainTabnav7").parentNode.style.display = "none";
+        $("mainTab").tabber.tabShow(2);
         adjustLayout();
         lockPage();        
     }else{
-        $("mainTabnav1").parentNode.style.display = '';
-        $("mainTabnav2").parentNode.style.display = '';
-        $("mainTabnav3").parentNode.style.display = 'none';
-        $("mainTabnav4").parentNode.style.display = 'none';
-        $("mainTabnav5").parentNode.style.display = '';
-        $("mainTabnav6").parentNode.style.display = 'none';
-        $('mainTab').tabber.tabShow(1);
+        $("mainTabnav1").parentNode.style.display = "";
+        $("mainTabnav2").parentNode.style.display = "";
+        $("mainTabnav3").parentNode.style.display = "none";
+        $("mainTabnav4").parentNode.style.display = "none";
+        $("mainTabnav5").parentNode.style.display = "";
+        $("mainTabnav6").parentNode.style.display = "none";
+        $("mainTabnav7").parentNode.style.display = "";
+        $("mainTab").tabber.tabShow(1);
     }
 }
 
@@ -214,7 +217,7 @@ function lockPage()
 */
 function wikiLockTimer()
 {
-    var lockTimer = setTimeout("lockPage()", 60000);    
+    lockTimer = setTimeout("lockPage()", 60000);    
 }
 
 /**
@@ -239,9 +242,9 @@ function addRating(rating)
 function updateWatchlist(watch)
 {
     if(watch){
-        var mode = 'add';
+        var mode = "add";
     }else{
-        var mode = 'delete';
+        var mode = "delete";
     }
     var name_value = $F("input_name");
     var url = "index.php";
@@ -310,15 +313,119 @@ function showDiff()
 {
     var articleLink = $("mainTabnav1");
     articleLink.onclick = function(){
-        $("mainTabnav6").parentNode.style.display = 'none';
-        $('mainTab').tabber.tabShow(0);
+        $("mainTabnav6").parentNode.style.display = "none";
+        $("mainTab").tabber.tabShow(0);
     }
     var historyLink = $("mainTabnav5");
     historyLink.onclick = function(){
-        $("mainTabnav6").parentNode.style.display = 'none';
-        $('mainTab').tabber.tabShow(4);
+        $("mainTabnav6").parentNode.style.display = "none";
+        $("mainTab").tabber.tabShow(4);
     }
-    $("mainTabnav6").parentNode.style.display = '';
-    $('mainTab').tabber.tabShow(5);
+    $("mainTabnav6").parentNode.style.display = "";
+    $("mainTab").tabber.tabShow(5);
+    adjustLayout();
+}
+
+/**
+* Method to exit the edit page
+*/
+function exitEdit()
+{
+    $("mainTabnav1").parentNode.style.display = ""
+    $("mainTabnav2").parentNode.style.display = ""
+    $("mainTabnav3").parentNode.style.display = "none"
+    $("mainTabnav4").parentNode.style.display = "none"
+    $("mainTabnav5").parentNode.style.display = ""
+    $("mainTabnav6").parentNode.style.display = "none"
+    $("mainTabnav7").parentNode.style.display = ""
+    $("mainTab").tabber.tabShow(0);
+    clearTimeout(lockTimer);
+    scrollTo(0,0);
+    adjustLayout();
+}
+
+/**
+* Method to populate the interwiki link fields
+*/
+function setEdit(id, wiki, url)
+{
+    Element.show("updateLinkLayer");
+    Element.hide("addLink");
+    Element.hide("addLinkLayer");
+    $("input_id").value = id;
+    $("input_update_name").value = wiki;
+    $("input_update_url").value = url;   
+}
+
+/*
+* Method to show the add interwiki link
+*/
+function showAddLink()
+{
+    Element.hide("addLink");
+    Element.hide("updateLinkLayer");
+    Element.show("addLinkLayer");
+}
+
+/*
+* Method to cancel the add interwiki link
+*/
+function cancelAddLink()
+{
+    $("input_name").value = "";
+    $("input_url").value = "";
+    Element.show("addLink");
+    Element.hide("addLinkLayer");
+}
+
+/*
+* Method to cancel the update interwiki link
+*/
+function cancelUpdateLink()
+{
+    Element.show("addLink");
+    Element.hide("updateLinkLayer");
+}
+
+/*
+* Method to show add discussion post
+*/
+function showAddPost()
+{
+    Element.hide("addLink");
+    Element.show("addDiv");
+    adjustLayout();
+}
+
+/*
+* Method to cancel add discussion post
+*/
+function cancelAddPost()
+{
+    $("input_post_title").value = "";
+    $("input_post_content").value = "";
+    Element.hide("addDiv");
+    Element.show("addLink");
+}
+
+/*
+* Method to show update discussion post
+*/
+function showUpdatePost(postId, title, content)
+{
+    Element.hide("tableLayer");
+    Element.show("tab_"+postId);
+    $("input_post_title_"+postId).value = title;
+    $("input_post_content_"+postId).value = content;
+    adjustLayout();
+}
+
+/*
+* Method to cancel update discussion post
+*/
+function cancelUpdatePost(postId)
+{
+    Element.hide("tab_"+postId);
+    Element.show("tableLayer");
     adjustLayout();
 }

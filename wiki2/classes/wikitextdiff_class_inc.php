@@ -1,5 +1,5 @@
 <?php
-/* ----------- wikiTextParser class extends object ----------*/
+/* ----------- wikitextdiff class extends object ----------*/
 
 // security check - must be included in all scripts
 if(!$GLOBALS['kewl_entry_point_run']){
@@ -16,6 +16,12 @@ if(!$GLOBALS['kewl_entry_point_run']){
 class wikitextdiff extends object 
 { 
     /**
+    * @var object $objLanguage: The language class in the language module
+    * @access public
+    */
+    public $objLangauge;
+    
+    /**
     * Method to check if Text_Diff PEAR package is installed and define the class
     * 
     * @access public
@@ -24,8 +30,7 @@ class wikitextdiff extends object
     public function init()
     {
     	$this->objLanguage = $this->getObject('language', 'language');
-    	$this->objConfig = $this->getObject('altconfig', 'config');
-        $errorLabel = $this->objLanguage->languageText('mod_wiki2_missingpear_1', 'wiki2');
+         $errorLabel = $this->objLanguage->languageText('mod_wiki2_missingpear_1', 'wiki2');
         
         if (!@include_once('Text/Diff.php')) {
     		throw new customException($errorLabel);

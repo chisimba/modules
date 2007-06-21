@@ -16,6 +16,18 @@ if(!$GLOBALS['kewl_entry_point_run']){
 class wikiTextParser extends object 
 { 
     /**
+    * @var object $objLanguage: The language class in the language module
+    * @access public
+    */
+    public $objLangauge;
+    
+    /**
+    * @var object $objConfig: The altconfig class in the config module
+    * @access public
+    */
+    public $objConfig;
+    
+    /**
     * Method to check if Text_Wiki PEAR package is installed and define the class
     * 
     * @access public
@@ -26,20 +38,6 @@ class wikiTextParser extends object
     	$this->objLanguage = $this->getObject('language', 'language');
     	$this->objConfig = $this->getObject('altconfig', 'config');
     	$this->objDbwiki = $this->getObject('dbwiki', 'wiki2');
-    	$pages = $this->getSession('pages');
-    	if(empty($pages)){
-            $pages = $this->objDbwiki->getAllCurrentPages();
-            if(!empty($pages)){
-                $this->setSession('pages', $pages);
-            }
-        }
-    	$links = $this->getSession('links');
-    	if(empty($links)){
-            $links = $this->objDbwiki->getLinks();
-            if(!empty($links)){
-                $this->setSession('links', $links);
-            }
-        }
         $errorLabel = $this->objLanguage->languageText('mod_wiki2_missingpear', 'wiki2');
         
         if (!@include_once('Text/Wiki.php')) {
@@ -47,7 +45,7 @@ class wikiTextParser extends object
     		return FALSE;
     	}
         $this->objWiki = new Text_Wiki();
-        $this->configure($pages, $links);
+        $this->configure();
     }
 
     
@@ -76,7 +74,7 @@ class wikiTextParser extends object
     * @return void
     */
      
-     public function configure($pages, $links)
+     public function configure()
      {
         // Disabling HTML tags	 
     	$this->objWiki->disableRule('Html');
@@ -86,31 +84,31 @@ class wikiTextParser extends object
         $this->objWiki->setRenderConf('xhtml', 'Table', 'css_th', 'wiki_th');
         $this->objWiki->setRenderConf('xhtml', 'Table', 'css_td', 'wiki_td');
         
-        //Set the add page url param for the wikilink rule
-        $addUrl = $this->objConfig->getsiteRoot().'index.php?module=wiki2&action=add_page&name=%s';
-        $encodedUrl = htmlentities($addUrl);
-        $this->objWiki->setRenderConf("xhtml", "Wikilink", "new_url", "$encodedUrl");
-
-         //Set the view page url param for the wikilink rule
-         $viewUrl = $this->objConfig->getsiteRoot().'index.php?module=wiki2&action=view_page&name=%s';
-         $encodedUrl = htmlentities($viewUrl);
-         $this->objWiki->setRenderConf("xhtml", "Wikilink", "view_url", "$encodedUrl");
-
         //Set the sites array for the interwiki rule
+        $pages = $this->objDbwiki->getAllPages();
         $wikiPages = array();
         if(!empty($pages)){
             foreach($pages as $page){
                 $wikiPages[] = $page['page_name'];
             }
         }
+        $links = $this->objDbwiki->getLinks();
         $wikiLinks = array();
         if(!empty($links)){
             foreach($links as $link){
                 $wikiLinks[$link['wiki_name']] = $link['wiki_link'];
             }
         }
-        $this->objWiki->setRenderConf("xhtml", "Wikilink", "pages", "$wikiPages");
-        $this->objWiki->setRenderConf("xhtml", "Interwiki", "", "$wikiLinks");
+        $this->objWiki->setRenderConf("xhtml", "Wikilink", "pages", $wikiPages);
+        $this->objWiki->setRenderConf("xhtml", "Interwiki", "sites", "$wikiLinks");
+
+        //Set the add page url param for the wikilink rule
+        $addUrl = $this->objConfig->getsiteRoot().'index.php?module=wiki2&action=add_page&name=%s';
+        $this->objWiki->setRenderConf("xhtml", "Wikilink", "new_url", "$addUrl");
+
+         //Set the view page url param for the wikilink rule
+         $viewUrl = $this->objConfig->getsiteRoot().'index.php?module=wiki2&action=view_page&name=%s';
+         $this->objWiki->setRenderConf("xhtml", "Wikilink", "view_url", "$viewUrl");
     }
 
     /**

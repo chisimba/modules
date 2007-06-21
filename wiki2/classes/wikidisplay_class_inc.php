@@ -195,7 +195,7 @@ class wikidisplay extends object
         $bothLabel = $this->objLanguage->languageText('mod_wiki2_both', 'wiki2');
         $authorLabel = $this->objLanguage->languageText('mod_wiki2_authors', 'wiki2');
         $authorsTitleLabel = $this->objLanguage->languageText('mod_wiki2_authorstitle', 'wiki2');
-        $rankingLabel = $this->objLanguage->languageText('mod_wiki2_viewraking', 'wiki2');
+        $rankingLabel = $this->objLanguage->languageText('mod_wiki2_viewranking', 'wiki2');
         $rankingTitleLabel = $this->objLanguage->languageText('mod_wiki2_rankingtitle', 'wiki2');
         $watchLabel = $this->objLanguage->languageText('mod_wiki2_watchlist', 'wiki2');
         $watchTitleLabel = $this->objLanguage->languageText('mod_wiki2_watchlisttitle', 'wiki2');
@@ -424,10 +424,24 @@ class wikidisplay extends object
         $addedLabel = $this->objLanguage->languageText('mod_wiki2_textadded', 'wiki2');
         $removedLabel = $this->objLanguage->languageText('mod_wiki2_textremoved', 'wiki2');
         $legendLabel = $this->objLanguage->languageText('word_legend');
-        
+        $discussionLabel = $this->objLanguage->languageText('word_discussion');
+        $deleteLabel = $this->objLanguage->languageText('mod_wiki2_deletepage', 'wiki2');
+        $deleteTitleLabel = $this->objLanguage->languageText('mod_wiki2_deletetitle', 'wiki2');
+        $delConfirmLabel = $this->objLanguage->languageText('mod_wiki2_deleteconfirm', 'wiki2');
         
         // wiki page
+        $contents = '';
         if(empty($version)){
+            if($this->isLoggedIn && $data['main_page'] != 1){
+                $objLink = new link($this->uri(array(
+                    'action' => 'delete_page',
+                    'name' => $name,
+                ), 'wiki2'));
+                $objLink->link = $deleteLabel;
+                $objLink->title = $deleteTitleLabel;
+                $objLink->extra = 'onclick="javascript:if(!confirm(\''.$delConfirmLabel.'\')){return false};"';
+                $contents .= $objLink->show();
+            }                
             $versionTitle = $pageTitle;
         }else{
             $versionTitle = $pageTitle.':&#160;'.$versionLabel.'&#160;'.$version;
@@ -436,7 +450,7 @@ class wikidisplay extends object
         $objHeader->str = $versionTitle;
         $objHeader->type = 1;
         $heading = $objHeader->show();
-        $contents = $heading;
+        $contents .= $heading;
        
         // rating nested tab
         if(empty($version)){
@@ -565,7 +579,21 @@ class wikidisplay extends object
             'name' => $diffLabel,
             'content' => $mainLayer,
         );
-
+        
+        //discussion tab
+        $discussion = $this->showDiscussion($name);
+        
+        $objLayer = new layer();
+        $objLayer->cssClass = 'featurebox';
+        $objLayer->addToStr($discussion.'<br />');
+        $contentLayer = $objLayer->show();
+            
+        // add page tab
+        $discussionTab = array(
+            'name' => $discussionLabel,
+            'content' => $contentLayer,
+        );
+        
         //display tabs
         $this->objTab->init();
         $this->objTab->tabId = 'mainTab'; 
@@ -575,6 +603,7 @@ class wikidisplay extends object
         $this->objTab->addTab($previewTab);            
         $this->objTab->addTab($historyTab);
         $this->objTab->addTab($diffTab);
+        $this->objTab->addTab($discussionTab);
         $this->objTab->setSelected = $tab;
         $str = $this->objTab->show();
         if(empty($version) && $this->isLoggedIn){
@@ -901,7 +930,7 @@ class wikidisplay extends object
         
         // create button
         $objButton = new button('cancel', $cancelLabel);
-        $objButton->setToSubmit();
+        $objButton->extra = 'onclick="javascript:exitEdit();"';
         $cancelButton = $objButton->show();
         
         // button layer
@@ -1036,7 +1065,7 @@ class wikidisplay extends object
         
         // create button
         $objButton = new button('cancel', $cancelLabel);
-        $objButton->setToSubmit();
+        $objButton->extra = 'onclick="javascript:history.back();"';
         $cancelButton = $objButton->show();
         
         // button layer
@@ -1219,9 +1248,6 @@ class wikidisplay extends object
         $noRecordsLabel = $this->objLanguage->languageText('mod_wiki2_norecords', 'wiki2');
         $editLabel = $this->objLanguage->languageText('word_edit');
         $editTitleLabel = $this->objLanguage->languageText('mod_wiki2_edittitle', 'wiki2');
-        $deleteLabel = $this->objLanguage->languageText('word_delete');
-        $deleteTitleLabel = $this->objLanguage->languageText('mod_wiki2_deletetitle', 'wiki2');
-        $delConfirmLabel = $this->objLanguage->languageText('mod_wiki2_deleteconfirm', 'wiki2');
         $pageTitleLabel = $this->objLanguage->languageText('mod_wiki2_pagetitle', 'wiki2');
         $authorTitleLabel = $this->objLanguage->languageText('mod_wiki2_authortitle', 'wiki2');
         $listLabel = $this->objLanguage->languageText('mod_wiki2_listarticles', 'wiki2');
@@ -1241,7 +1267,6 @@ class wikidisplay extends object
         $objTable->addCell($pageLabel, '', '', '', 'heading', '');
         $objTable->addCell($authorLabel, '', '', '', 'heading', '');
         $objTable->addCell($dateLabel, '', '', 'center', 'heading', '');
-        $objTable->addCell('&#160;', '', '', '', 'heading', '');
         $objTable->endRow();
         
         if(empty($data)){
@@ -1279,39 +1304,11 @@ class wikidisplay extends object
                 $objLink->title = $authorTitleLabel;
                 $authorLink = $objLink->show();
                 
-                // edit link
-                $objLink = new link($this->uri(array(
-                    'action' => 'view_page',
-                    'name' => $name,
-                    'mode' => 'edit',
-                    'tab' => 1,
-                ), 'wiki2'));
-                $objLink->link = $editLabel;
-                $objLink->title = $editTitleLabel;
-                $editLink = $objLink->show();
-                
-                // delete link
-                $objLink = new link($this->uri(array(
-                    'action' => 'delete_page',
-                    'name' => $name,
-                ), 'wiki2'));
-                $objLink->link = $deleteLabel;
-                $objLink->title = $deleteTitleLabel;
-                $objLink->extra = 'onclick="javascript:if(!confirm(\''.$delConfirmLabel.'\')){return false};"';
-                $deleteLink = $objLink->show();
-                
-                if($type == 1){
-                    $links = $editLink;
-                }else{
-                    $links = $editLink.'&#160;|&#160;'.$deleteLink;
-                }
-                
                 // data display
                 $objTable->startRow();
                 $objTable->addCell($pageLink, '', '', '', '', '');
                 $objTable->addCell($authorLink, '30%', '', '', '', '');
                 $objTable->addCell($date, '20%', '', 'center', '', '');
-                $objTable->addCell($links, '15%', '', 'center', '', '');
                 $objTable->endRow();
             }
         }
@@ -2503,6 +2500,8 @@ You can create tables using pairs of vertical bars:
         // add javascript to sort table
         $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
         $this->appendArrayVar('headerParams', $headerParams);
+        $headerParams = $this->getJavascriptFile('wiki.js', 'wiki2');
+        $this->appendArrayVar('headerParams', $headerParams);
 
         // text elements
         $titleLabel = $this->objLanguage->languageText('mod_wiki2_link', 'wiki2');
@@ -2513,21 +2512,170 @@ You can create tables using pairs of vertical bars:
         $noRecordsLabel = $this->objLanguage->languageText('mod_wiki2_norecords', 'wiki2');
         $editLabel = $this->objLanguage->languageText('word_edit');
         $editTitleLabel = $this->objLanguage->languageText('mod_wiki2_editlinktitle', 'wiki2');
+        $editLinkLabel = $this->objLanguage->languageText('mod_wiki2_editlink', 'wiki2');
+        $wikiErrorLabel = $this->objLanguage->languageText('mod_wiki2_wikierror', 'wiki2');
+        $urlErrorLabel = $this->objLanguage->languageText('mod_wiki2_urlerror', 'wiki2');
+
+        $nameLabel = $this->objLanguage->languageText('mod_wiki2_linkname', 'wiki2');
+        $urlLabel = $this->objLanguage->languageText('mod_wiki2_linkurl', 'wiki2');
+
+        $createLabel = $this->objLanguage->languageText('mod_wiki2_createlink', 'wiki2');
+        $cancelLabel = $this->objLanguage->languageText('word_cancel');
+        $updateLabel = $this->objLanguage->languageText('word_update');
+        
 
         // get data
         $data = $this->objDbwiki->getLinks();
 
         $string = '';
+        $addLink = '';
         if($this->isAdmin){
             // add link
-            $objLink = new link($this->uri(array(
-                'action' => 'add_link',
-            ), 'wiki2'));
+            $objLink = new link('#');
             $objLink->link = $addLabel;
             $objLink->title = $addTitleLabel;
-            $string = $objLink->show();
+            $objLink->extra = 'id="addLink" onclick="javascript:showAddLink();"';
+            $addLink = $objLink->show();
         }
                 
+        // link name
+        $objHeader = new htmlheading();
+        $objHeader->str = $nameLabel;
+        $objHeader->type = 4;
+        $string .= $objHeader->show();
+        
+        // page name textinput
+        $objInput = new textinput('name', '', '', '96');
+        $string .= $objInput->show();
+                      
+        // link name
+        $objHeader = new htmlheading();
+        $objHeader->str = $urlLabel;
+        $objHeader->type = 4;
+        $string .= $objHeader->show();
+        
+        // page name textinput
+        $objInput = new textinput('url', '', '', '96');
+        $string .= $objInput->show();
+               
+        // content layer
+        $objLayer = new layer();
+        $objLayer->addToStr($string);        
+        $contentLayer = $objLayer->show();
+                
+        // create button
+        $objButton = new button('create', $createLabel);
+        $objButton->setToSubmit();
+        $createButton = $objButton->show();
+        
+        // create button
+        $objButton = new button('cancel', $cancelLabel);
+        $objButton->extra = 'onclick="javascript:cancelAddLink();"';
+        $cancelButton = $objButton->show();
+        
+        // button layer
+        $objLayer = new layer();
+        $objLayer->addToStr($createButton.'&#160;'.$cancelButton);        
+        $buttonLayer = $objLayer->show();
+
+        // form
+        $objForm = new form('create', $this->uri(array(
+            'action' => 'update_link',
+        ), 'wiki2'));
+        $objForm->addToForm($contentLayer);
+        $objForm->addToForm($buttonLayer);
+        $objForm->addRule('name', $wikiErrorLabel, 'required');
+        $objForm->addRule('url', $urlErrorLabel, 'required');
+        $createForm = $objForm->show();
+        
+        // add page tab
+        $addData = array(
+            'name' => $addLabel,
+            'content' => $createForm,
+        );
+        //display tabs
+        $this->objTab->init();
+        $this->objTab->tabId = 'addTab';        
+        $this->objTab->addTab($addData);
+        $addTab = $this->objTab->show();
+        
+        $objLayer = new layer();
+        $objLayer->id = 'addLinkLayer';
+        $objLayer->display = 'none';
+        $objLayer->addToStr($addTab.'<br />');
+        $addLinkLayer = $objLayer->show();
+        
+        // page name textinput
+        $objInput = new textinput('id', '', 'hidden', '');
+        $string = $objInput->show();
+                      
+        // link name
+        $objHeader = new htmlheading();
+        $objHeader->str = $nameLabel;
+        $objHeader->type = 4;
+        $string .= $objHeader->show();
+        
+        // page name textinput
+        $objInput = new textinput('update_name', '', '', '96');
+        $string .= $objInput->show();
+                      
+        // link name
+        $objHeader = new htmlheading();
+        $objHeader->str = $urlLabel;
+        $objHeader->type = 4;
+        $string .= $objHeader->show();
+        
+        // page name textinput
+        $objInput = new textinput('update_url', '', '', '96');
+        $string .= $objInput->show();
+               
+        // content layer
+        $objLayer = new layer();
+        $objLayer->addToStr($string);        
+        $contentLayer = $objLayer->show();
+                
+        // create button
+        $objButton = new button('create', $updateLabel);
+        $objButton->setToSubmit();
+        $createButton = $objButton->show();
+        
+        // create button
+        $objButton = new button('cancel', $cancelLabel);
+        $objButton->extra = 'onclick="javascript:cancelUpdateLink();"';
+        $cancelButton = $objButton->show();
+        
+        // button layer
+        $objLayer = new layer();
+        $objLayer->addToStr($createButton.'&#160;'.$cancelButton);        
+        $buttonLayer = $objLayer->show();
+
+        // form
+        $objForm = new form('update', $this->uri(array(
+            'action' => 'update_link',
+        ), 'wiki2'));
+        $objForm->addToForm($contentLayer);
+        $objForm->addToForm($buttonLayer);
+        $objForm->addRule('update_name', $wikiErrorLabel, 'required');
+        $objForm->addRule('update_url', $urlErrorLabel, 'required');
+        $createForm = $objForm->show();
+        
+        // add page tab
+        $addData = array(
+            'name' => $editLinkLabel,
+            'content' => $createForm,
+        );
+        //display tabs
+        $this->objTab->init();
+        $this->objTab->tabId = 'updateTab';        
+        $this->objTab->addTab($addData);
+        $addTab = $this->objTab->show();
+        
+        $objLayer = new layer();
+        $objLayer->id = 'updateLinkLayer';
+        $objLayer->display = 'none';
+        $objLayer->addToStr($addTab.'<br />');
+        $updateLinkLayer = $objLayer->show();
+
         // create display table
         $objTable = new htmltable();
         $objTable->id = 'linksList';
@@ -2555,12 +2703,10 @@ You can create tables using pairs of vertical bars:
                 $link = $line['wiki_link'];
                 
                 // page name link
-                $objLink = new link($this->uri(array(
-                    'action' => 'edit_link',
-                    'id' => $line['id'],
-                ), 'wiki2'));
+                $objLink = new link('#');
                 $objLink->link = $editLabel;
                 $objLink->title = $editTitleLabel;
+                $objLink->extra = 'onclick="javascript:setEdit(\''.$line['id'].'\', \''.$name.'\',\''.$link.'\')"';
                 $editLink = $objLink->show();
                 
                 // data display
@@ -2574,11 +2720,10 @@ You can create tables using pairs of vertical bars:
             }
         }
         $pageTable = $objTable->show();
-        $string .= $pageTable;
         
         $objLayer = new layer();
         $objLayer->cssClass = 'featurebox';
-        $objLayer->addToStr($string);
+        $objLayer->addToStr($addLink.$addLinkLayer.$updateLinkLayer.$pageTable);
         $contentLayer = $objLayer->show();
         
         // add page tab
@@ -2587,7 +2732,8 @@ You can create tables using pairs of vertical bars:
             'content' => $contentLayer,
         );
         //display tabs 
-        $this->objTab->init();       
+        $this->objTab->init();
+        $this->objTab->tabId = 'linkTab';       
         $this->objTab->addTab($linksTab);
         $str = $this->objTab->show();
         
@@ -2595,83 +2741,194 @@ You can create tables using pairs of vertical bars:
     }
 
     /**
-    * Method to add/edit interwiki links
+    * Method to display the discussion tab
     * 
     * @access public
-    * @param string $id: The id of the wiki link
+    * @param string $name: The wiki page name
     * @return string $str: The output string
     */
-    public function showLinkPage($id = NULL)
+    public function showDiscussion($name)
     {
-        // add  javascript
-        $headerParams = $this->getJavascriptFile('wiki.js', 'wiki2');
-        $this->appendArrayVar('headerParams', $headerParams);
-
-        // text elements
-        $addLabel = $this->objLanguage->languageText('mod_wiki2_addlink', 'wiki2');
-        $editLabel = $this->objLanguage->languageText('mod_wiki2_editlink', 'wiki2');
-
-        $wikiErrorLabel = $this->objLanguage->languageText('mod_wiki2_wikierror', 'wiki2');
-        $urlErrorLabel = $this->objLanguage->languageText('mod_wiki2_urlerror', 'wiki2');
-
-        $nameLabel = $this->objLanguage->languageText('mod_wiki2_linkname', 'wiki2');
-        $urlLabel = $this->objLanguage->languageText('mod_wiki2_linkurl', 'wiki2');
-
-        $createLabel = $this->objLanguage->languageText('mod_wiki2_createlink', 'wiki2');
-        $cancelLabel = $this->objLanguage->languageText('word_cancel');
-        $updateLabel = $this->objLanguage->languageText('word_update');
-        
         // get data
-        $data = $this->objDbwiki->getLinkById($id);
+        $data = $this->objDbwiki->getPosts('init_1', $name);
         
-        if(!empty($data)){
-            $id = $data['id'];
-            $name = $data['wiki_name'];    
-            $url = $data['wiki_link'];
-        }else{
-            $id = NULL;
-            $name = '';
-            $url = '';
+        // text elements
+        $noRecordsLabel = $this->objLanguage->languageText('mod_wiki2_norecords', 'wiki2');
+        $editLabel = $this->objLanguage->languageText('mod_wiki2_editpost', 'wiki2');
+        $editTitleLabel = $this->objLanguage->languageText('mod_wiki2_postedit', 'wiki2');
+        $deleteLabel = $this->objLanguage->languageText('mod_wiki2_deletepost', 'wiki2');
+        $deleteTitleLabel = $this->objLanguage->languageText('mod_wiki2_deleteposttitle', 'wiki2');
+        $deleteConfirmLabel = $this->objLanguage->languageText('mod_wiki2_postconfirm', 'wiki2');
+        $deletedLabel = $this->objLanguage->languageText('mod_wiki2_postdeleted', 'wiki2');
+        $restoreLabel = $this->objLanguage->languageText('mod_wiki2_restorepost', 'wiki2');
+        $restoreTitleLabel = $this->objLanguage->languageText('mod_wiki2_restoreposttitle', 'wiki2');
+        
+        $str = '';
+        if($this->isLoggedIn){
+            $str .= $this->_addPost($name);
         }
-        
-        // page name textinput
-        $objInput = new textinput('id', $id, 'hidden', '');
-        $string = $objInput->show();
-                      
-        // link name
-        $objHeader = new htmlheading();
-        $objHeader->str = $nameLabel;
-        $objHeader->type = 4;
-        $string .= $objHeader->show();
-        
-        // page name textinput
-        $objInput = new textinput('name', $name, '', '96');
-        $string .= $objInput->show();
-                      
-        // link name
-        $objHeader = new htmlheading();
-        $objHeader->str = $urlLabel;
-        $objHeader->type = 4;
-        $string .= $objHeader->show();
-        
-        // page name textinput
-        $objInput = new textinput('url', $url, '', '96');
-        $string .= $objInput->show();
-               
-        // content layer
-        $objLayer = new layer();
-        $objLayer->addToStr($string);        
-        $contentLayer = $objLayer->show();
                 
+        if(empty($data)){
+            $objTable = new htmltable();
+            $objTable->cellpadding = '2';
+            $objTable->border = '1';
+            $objTable->startRow();
+            $objTable->addCell($noRecordsLabel, '', '', '', 'noRecordsMessage', '');
+            $objTable->endRow();
+            $str .= $objTable->show();
+        }else{            
+            if(count($data) > 5){
+                $sections = array_chunk($data, 5);
+            }
+            $this->objTab->init();
+            $i = 1;
+            foreach($sections as $key => $subsection){
+                $string = '';
+                $ii = 0;
+                foreach($subsection as $line){
+                    $class = (($ii++%2) == 0) ? 'even' : 'odd';
+                    $postId = $line['id'];
+                                    
+                    // title
+                    $array = array(
+                        'name' => $this->objUser->fullname($line['author_id']),
+                        'date' => $this->objDate->formatDate($line['date_created']),
+                    );
+                    $author = $this->objLanguage->code2Txt('mod_wiki2_postauthor', 'wiki2', $array);
+                    $link = '';
+                    if($this->isAdmin && $line['post_status'] == 1){
+                        $objLink = new link($this->uri(array(
+                            'action' => 'delete_post',
+                            'name' => $name,
+                            'id' => $postId,
+                        ), 'wiki2'));
+                        $objLink->link = $deleteLabel;
+                        $objLink->title = $deleteTitleLabel;
+                        $objLink->extra = 'onclick="javascript:if(!confirm(\''.$deleteConfirmLabel.'\')){return false};"';
+                        $link = $objLink->show();
+                    }elseif($this->isAdmin && $line['post_status'] == 2){
+                        $objLink = new link($this->uri(array(
+                            'action' => 'restore_post',
+                            'name' => $name,
+                            'id' => $postId,
+                        ), 'wiki2'));
+                        $objLink->link = $restoreLabel;
+                        $objLink->title = $restoreTitleLabel;
+                        $link = $objLink->show();
+                    }
+                
+                    $content = $this->objWiki->transform($line['post_content']);
+                
+                    // edit post link
+                    $objLink = new link('#');
+                    $objLink->link = $editLabel;
+                    $objLink->title = $editTitleLabel;
+                    $objLink->extra = 'onclick="javascript:showUpdatePost(\''.$postId.'\', \''.$line['post_title'].'\', \''.$line['post_content'].'\')"';
+                    $editLink = $objLink->show();
+                
+                    if(strtotime(date('Y-m-d H:i:s')) <= strtotime('+ 10 min', strtotime($line['date_created'])) && $this->userId == $line['author_id']){
+                        $content .= $editLink;   
+                    }
+                
+                    if($this->isAdmin && $line['post_status'] == 2){
+                        $content = '<ul><li><b>'.$deletedLabel.'</b></li></ul>'.$content;
+                    }elseif($line['post_status'] == 2){
+                        $content = '<ul><li><b>'.$deletedLabel.'</b></li></ul>';
+                    }
+                
+                    $objLayer = new layer();
+                    $objLayer->padding = '10px';
+                    $objLayer->addToStr($content);
+                    $contentLayer = $objLayer->show();
+                
+                    $objTable = new htmltable();
+                    $objTable->cellpadding = '2';
+                    $objTable->border = '1';
+                    $objTable->startRow();
+                    $objTable->addCell($i++.'.', '5%', 'center', 'center', 'heading', '');
+                    $objTable->addCell('&#160;<b>'.$line['post_title'].'</b><br />&#160;'.$author, '', 'center', '', 'heading', '');
+                    if(!empty($link)){
+                        $objTable->addCell($link, '', 'center', 'center', 'heading', '');
+                    }
+                    $objTable->endRow();
+                    $objTable->startRow();
+                    $objTable->addCell($contentLayer, '', '', '', $class, 'colspan="3"');
+                    $objTable->endRow();
+                    $string .= $objTable->show().'<br />';                   
+                }
+                $start = (($key * 5) + 1);
+                $end = (($key * 5) + count($subsection));
+                $tabArray = array(
+                    'name' => $start.' - '.$end,
+                    'content' => $string,
+                );
+                $this->objTab->addTab($tabArray);
+            }
+            $this->objTab->tabId = 'sectionTab';
+            $str .= $this->objTab->show();
+        }        
+        $objLayer = new layer();
+        $objLayer->id = 'tableLayer';
+        $objLayer->addToStr($str);
+        $string = $objLayer->show();
+        if(!empty($data)){
+            foreach($data as $line){
+                $string .= $this->_editPost($line['id']);
+            }
+        }
+        $str = $string;
+        return $str;
+    }
+
+    /**
+    * Method to display the add post tabs
+    * 
+    * @access private
+    * @param string $nameId: The name of the wiki page
+    * @return string $str: The output string
+    */
+    private function _addPost($name)
+    {
+        $addLabel = $this->objLanguage->languageText('mod_wiki2_addpost', 'wiki2');
+        $addTitleLabel = $this->objLanguage->languageText('mod_wiki2_posttitle', 'wiki2');
+        $titleLabel = $this->objLanguage->languageText('mod_wiki2_posttitle', 'wiki2');
+        $contentLabel = $this->objLanguage->languageText('mod_wiki2_postcontent', 'wiki2');
+        $createLabel = $this->objLanguage->languageText('mod_wiki2_createpost', 'wiki2');
+        $cancelLabel = $this->objLanguage->languageText('word_cancel');
+
+        // add post link
+        $objLink = new link('#');
+        $objLink->link = $addLabel;
+        $objLink->title = $addTitleLabel;
+        $objLink->extra = 'id="addLink" onclick="javascript:showAddPost();"';
+        $str = $objLink->show();
+        
+        // post title
+        $objHeader = new htmlheading();
+        $objHeader->str = $titleLabel;
+        $objHeader->type = 4;
+        $string = $objHeader->show();
+        
+        $objInput = new textinput('post_title', '', '', '96');
+        $string .= $objInput->show();
+        
+        // post content
+        $objHeader = new htmlheading();
+        $objHeader->str = $contentLabel;
+        $objHeader->type = 4;
+        $string .= $objHeader->show();
+        
+        $objText = new textarea('post_content', '', '4', '70');
+        $string .= $objText->show();
+        
         // create button
-        $label = !empty($id) ? $updateLabel : $createLabel;
         $objButton = new button('create', $createLabel);
         $objButton->setToSubmit();
         $createButton = $objButton->show();
         
-        // create button
+        // cancel button
         $objButton = new button('cancel', $cancelLabel);
-        $objButton->extra = 'onclick="javascript:history.back();"';
+        $objButton->extra = 'onclick="javascript:cancelAddPost()"';
         $cancelButton = $objButton->show();
         
         // button layer
@@ -2681,31 +2938,111 @@ You can create tables using pairs of vertical bars:
 
         // form
         $objForm = new form('create', $this->uri(array(
-            'action' => 'update_link',
+            'action' => 'update_post',
+            'wiki_id' => 'init_1',
+            'name' => $name,
         ), 'wiki2'));
-        $objForm->addToForm($contentLayer);
+        $objForm->addToForm($string);
         $objForm->addToForm($buttonLayer);
-        $objForm->addRule('name', $wikiErrorLabel, 'required');
-        $objForm->addRule('url', $urlErrorLabel, 'required');
         $createForm = $objForm->show();
         
-        $objLayer = new layer();
-        $objLayer->cssClass = 'featurebox';
-        $objLayer->addToStr($createForm);
-        $formLayer = $objLayer->show();
-            
         // add page tab
-        $label = !empty($id) ? $editLabel : $addLabel;
-        $formTab = array(
-            'name' => $label,
-            'content' => $formLayer,
+        $tab = array(
+            'name' => $addLabel,
+            'content' => $createForm,
         );
-        //display tabs
-        $this->objTab->init();        
-        $this->objTab->addTab($formTab);
-        $str = $this->objTab->show();
         
-        return $str;       
+        //display tabs 
+        $this->objTab->init();
+        $this->objTab->tabId = 'addTab';       
+        $this->objTab->addTab($tab);
+        $addTab = $this->objTab->show();
+
+        $objLayer = new layer();
+        $objLayer->id = 'addDiv';
+        $objLayer->addToStr($addTab);
+        $objLayer->display = 'none';
+        $str .= $objLayer->show().'<br />';
+        
+        return $str;
+    }
+
+    /**
+    * Method to display the edit post tabs
+    * 
+    * @access private
+    * @param string $postId: The id of the post
+    * @return string $str: The output string
+    */
+    private function _editPost($postId)
+    {
+        // text elements
+        $titleLabel = $this->objLanguage->languageText('mod_wiki2_posttitle', 'wiki2');
+        $contentLabel = $this->objLanguage->languageText('mod_wiki2_postcontent', 'wiki2');
+        $updateLabel = $this->objLanguage->languageText('word_update');
+        $cancelLabel = $this->objLanguage->languageText('word_cancel');
+        $editLabel = $this->objLanguage->languageText('mod_wiki2_editpost', 'wiki2');
+        // post title
+        $objHeader = new htmlheading();
+        $objHeader->str = $titleLabel;
+        $objHeader->type = 4;
+        $string = $objHeader->show();
+        
+        $objInput = new textinput('post_title_'.$postId, '', '', '96');
+        $string .= $objInput->show();
+        
+        // post content
+        $objHeader = new htmlheading();
+        $objHeader->str = $contentLabel;
+        $objHeader->type = 4;
+        $string .= $objHeader->show();
+        
+        $objText = new textarea('post_content_'.$postId, '', '4', '70');
+        $string .= $objText->show();
+        
+        // create button
+        $objButton = new button('create', $updateLabel);
+        $objButton->setToSubmit();
+        $createButton = $objButton->show();
+        
+        // cancel button
+        $objButton = new button('cancel', $cancelLabel);
+        $objButton->extra = 'onclick="javascript:cancelUpdatePost(\''.$postId.'\')"';
+        $cancelButton = $objButton->show();
+        
+        // button layer
+        $objLayer = new layer();
+        $objLayer->addToStr($createButton.'&#160;'.$cancelButton);        
+        $buttonLayer = $objLayer->show();
+
+        // form
+        $objForm = new form('update_'.$postId, $this->uri(array(
+            'action' => 'update_post',
+            'id' => $postId,
+        ), 'wiki2'));
+        $objForm->addToForm($string);
+        $objForm->addToForm($buttonLayer);
+        $updateForm = $objForm->show();
+        
+        // add page tab
+        $tab = array(
+            'name' => $editLabel,
+            'content' => $updateForm,
+        );
+        
+        //display tabs 
+        $this->objTab->init();       
+        $this->objTab->addTab($tab);
+        $this->objTab->tabId = $postId;
+        $editTab = $this->objTab->show();
+
+        $objLayer = new layer();
+        $objLayer->id = 'tab_'.$postId;
+        $objLayer->addToStr($editTab);
+        $objLayer->display = 'none';
+        $str = $objLayer->show();
+        
+        return $str;
     }
 }
 ?>

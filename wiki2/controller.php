@@ -65,7 +65,7 @@ class wiki2 extends controller {
         $this->objDbwiki = $this->newObject('dbwiki', 'wiki2');        
         $this->objLock = $this->newObject('wikipagelock', 'wiki2');        
         $this->objUser = $this->newObject('user', 'security');
-        $this->userId = $this->objUser->userId();        
+        $this->userId = $this->objUser->userId();
     }
     
     /**
@@ -90,9 +90,10 @@ class wiki2 extends controller {
             case 'check_lock':
             case 'view_watchlist':
             case 'delete_watch':
-            case 'add_link':
-            case 'edit_link':
             case 'update_link':
+            case 'update_post':
+            case 'delete_post':
+            case 'restore_post':
                 return TRUE;
             case 'view_rules':
             case 'view_all':
@@ -134,64 +135,56 @@ class wiki2 extends controller {
                 break;
                                
             case 'create_page':
-                $cancel = $this->getParam('cancel', NULL);
-                if(empty($cancel)){
-                    $name = $this->getParam('name');
-                    $sum = $this->getParam('summary');
-                    $choice = $this->getParam('choice');
-                    $content = $this->getParam('content');
-                    if($choice == 'yes'){
-                        $summary = substr($content, 0, 255);
-                    }else{
-                        $summary = $sum;
-                    }
-                    $data = array();
-                    $data['wiki_id'] = 'init_1'; // TODO: extend for context etc.
-                    $data['page_name'] = strip_tags($name);
-                    $data['page_summary'] = strip_tags($summary);
-                    $data['page_content'] = strip_tags($content, '<code>');
-                    $data['version_comment'] = $this->objLanguage->languageText('mod_wiki2_newpage', 'wiki2');
-                    $pageId = $this->objDbwiki->addPage($data); 
-                    
-                    $watch = $this->getParam('watch');
-                    if(!empty($watch)){
-                        $this->objDbwiki->addWatch($name);
-                    }                   
+                $name = $this->getParam('name');
+                $sum = $this->getParam('summary');
+                $choice = $this->getParam('choice');
+                $content = $this->getParam('content');
+                if($choice == 'yes'){
+                    $summary = substr($content, 0, 255);
                 }else{
-                    $name = '';
+                    $summary = $sum;
                 }
+                $data = array();
+                $data['wiki_id'] = 'init_1'; // TODO: extend for context etc.
+                $data['page_name'] = strip_tags($name);
+                $data['page_summary'] = strip_tags($summary);
+                $data['page_content'] = strip_tags($content, '<code>');
+                $data['version_comment'] = $this->objLanguage->languageText('mod_wiki2_newpage', 'wiki2');
+                $pageId = $this->objDbwiki->addPage($data); 
+                    
+                $watch = $this->getParam('watch');
+                if(!empty($watch)){
+                    $this->objDbwiki->addWatch($name);
+                }                   
                 return $this->nextAction('view_page', array(
                     'name' => $name,
                 ));
                 break;
                 
             case 'update_page':
-                $cancel = $this->getParam('cancel', NULL);
                 $name = $this->getParam('name');
                 $id = $this->getParam('id');
-                if(empty($cancel)){
-                    $name = $this->getParam('name');
-                    $main = $this->getParam('main');
-                    $sum = $this->getParam('summary');                    
-                    $comment = $this->getParam('comment');
-                    $content = $this->getParam('content');
-                    $choice = $this->getParam('choice');
-                    if($choice == 'yes'){
-                        $summary = substr($content, 0, 255);
-                    }else{
-                        $summary = $sum;
-                    }
-
-                    $data = array();
-                    $data['wiki_id'] = 'init_1'; // TODO: extend for context etc.
-                    $data['page_name'] = strip_tags($name);
-                    $data['main_page'] = $main;
-                    $data['page_summary'] = strip_tags($summary);
-                    $data['version_comment'] = strip_tags($comment);
-                    $data['page_content'] = strip_tags($content, '<code>');
-                    $pageId = $this->objDbwiki->addPage($data); 
-                    $this->objWikidisplay->sendMail($name);                   
+                $name = $this->getParam('name');
+                $main = $this->getParam('main');
+                $sum = $this->getParam('summary');                    
+                $comment = $this->getParam('comment');
+                $content = $this->getParam('content');
+                $choice = $this->getParam('choice');
+                if($choice == 'yes'){
+                    $summary = substr($content, 0, 255);
+                }else{
+                    $summary = $sum;
                 }
+
+                $data = array();
+                $data['wiki_id'] = 'init_1'; // TODO: extend for context etc.
+                $data['page_name'] = strip_tags($name);
+                $data['main_page'] = $main;
+                $data['page_summary'] = strip_tags($summary);
+                $data['version_comment'] = strip_tags($comment);
+                $data['page_content'] = strip_tags($content, '<code>');
+                $pageId = $this->objDbwiki->addPage($data); 
+                $this->objWikidisplay->sendMail($name);                   
                 $this->objLock->unlockEdit('tbl_wiki2_pages', $id, $this->userId);
                 return $this->nextAction('view_page', array(
                     'name' => $name,
@@ -367,32 +360,53 @@ class wiki2 extends controller {
                 return 'template_tpl.php';
                 break;
                 
-            case 'add_link':
-                $templateContent = $this->objWikidisplay->showLinkPage();
-                $this->setVarByRef('templateContent', $templateContent);
-                return 'template_tpl.php';
-                break;
-                
-            case 'edit_link':
-                $id = $this->getParam('id');
-                $templateContent = $this->objWikidisplay->showLinkPage($id);
-                $this->setVarByRef('templateContent', $templateContent);
-                return 'template_tpl.php';
-                break;
-                
             case 'update_link':
                 $id = $this->getParam('id');
-                $name = $this->getParam('name');
-                $url = $this->getParam('url');
-                $cancel = $this->getParam('cancel', NULL);
-                if(empty($cancel)){
-                    if(empty($id)){
-                        $this->objDbwiki->addLink($name, $url);
-                    }else{
-                        $this->objDbwiki->editLink($id, $name, $url);
-                    }
+                $name = $this->getParam('name', $this->getParam('update_name'));
+                $url = $this->getParam('url', $this->getParam('update_url'));
+                if(empty($id)){
+                    $this->objDbwiki->addLink($name, $url);
+                }else{
+                    $this->objDbwiki->editLink($id, $name, $url);
                 }
                 return $this->nextAction('view_links');
+                break;
+                
+            case 'update_post':
+                $id = $this->getParam('id');
+                $wikiId = $this->getParam('wiki_id');                
+                $name = $this->getParam('name');
+                $title = $this->getParam('post_title', $this->getParam('post_title_'.$id));
+                $content = $this->getParam('post_content', $this->getParam('post_content_'.$id));
+                if(empty($id)){
+                    $this->objDbwiki->addPost($wikiId, $name, $title, $content);
+                }else{
+                    $this->objDbwiki->editPost($id, $title, $content);
+                }
+                return $this->nextAction('view_page', array(
+                    'name' => $name,
+                    'tab' => 6,
+                ), 'wiki2');
+                break;
+                
+            case 'delete_post':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                $this->objDbwiki->deletePost($id);
+                return $this->nextAction('view_page', array(
+                    'name' => $name,
+                    'tab' => 6,
+                ), 'wiki2');
+                break;
+                
+            case 'restore_post':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                $this->objDbwiki->restorePost($id);
+                return $this->nextAction('view_page', array(
+                    'name' => $name,
+                    'tab' => 6,
+                ), 'wiki2');
                 break;
                 
             default:

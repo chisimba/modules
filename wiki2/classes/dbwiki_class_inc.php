@@ -118,6 +118,17 @@ class dbwiki extends dbTable
         return $this->_changeTable('tbl_wiki2_links');
     }
 
+	/**
+	* Method to set the forum table
+	*
+	* @access private
+	* @return boolean: TRUE on success FALSE on failure
+	*/
+	private function _setForum()
+	{
+        return $this->_changeTable('tbl_wiki2_forum');
+    }
+
 /* ----- Functions for tbl_wiki2_pages ----- */
 
     /**
@@ -154,6 +165,26 @@ class dbwiki extends dbTable
         $sql .= " IN (SELECT page_name, MAX(page_version)";
         $sql .= "     FROM tbl_wiki2_pages GROUP BY page_name)";
         $sql .= " AND page_status < 4";
+        $sql .= " ORDER BY date_created DESC";
+        $data = $this->getAll($sql);
+        if(!empty($data)){
+            return $data;
+        }
+        return FALSE;
+    }    
+
+    /**
+    * Method to get all wiki pages
+    *
+    * @access public
+    * @return array|bool $data: Wiki page data on success | False on failure
+    */
+    public function getAllPages()
+    {
+        $this->_setPages();
+        $sql = "WHERE (page_name, page_version)";
+        $sql .= " IN (SELECT page_name, MAX(page_version)";
+        $sql .= "     FROM tbl_wiki2_pages GROUP BY page_name)";
         $sql .= " ORDER BY date_created DESC";
         $data = $this->getAll($sql);
         if(!empty($data)){
@@ -798,6 +829,112 @@ class dbwiki extends dbTable
         $fields['wiki_name'] = $name;
         $fields['wiki_link'] = $link;
         $fields['creator_id'] = $this->userId;
+        $this->update('id', $id, $fields);
+    }    
+
+/* ----- Functions for tbl_wiki2_forum ----- */
+    
+    /**
+    * Method to add a wiki discussion post
+    *
+    * @access public
+    * @param string $id: The wiki id
+    * @param string $name: The wiki page name
+    * @param string $title: The discussion post title
+    * @param string $content: The discussion post text
+    * @return string|bool $postId: The discussion post id|False on failure
+    */
+    public function addPost($id = 'init_1', $name, $title, $content)
+    {
+        $this->_setForum();
+        
+        $data = $this->getPosts($id, $name);
+        if(!empty($data)){
+            $count = count($data) + 1;
+        }else{
+            $count = 1;
+        }
+        
+        $fields = array();
+        $fields['wiki_id'] = $id;
+        $fields['page_name'] = $name;
+        $fields['post_title'] = $title;
+        $fields['post_content'] = $content;
+        $fields['post_order'] = $count;
+        $fields['post_status'] = '1';
+        $fields['author_id'] = $this->userId;
+        $fields['date_created'] = date('Y-m-d H:i:s');
+        $postId = $this->insert($fields);
+        
+        return $postId;
+    }
+
+    /**
+    * Method to get a list of wiki discussion posts
+    *
+    * @access public
+    * @param string $id: The wiki id
+    * @param string $name: The wiki page name
+    * @return array|bool $data: Discussion post data on success | False on failure
+    */
+    public function getPosts($id = 'init_1', $name)
+    {
+        $this->_setForum();
+        $sql = "WHERE wiki_id = '".$id."'";
+        $sql .= " AND page_name = '".$name."'";
+        $sql .= " ORDER BY post_order ASC";
+        $data = $this->getAll($sql);
+        if(!empty($data)){
+            return $data;
+        }
+        return FALSE;
+    }    
+
+    /**
+    * Method to edit a wiki discussion post
+    *
+    * @access public
+    * @param string $id: The wiki discussion post id
+    * @param string $content: The discussion post text
+    * @return void
+    */
+    public function editPost($id, $title, $content)
+    {
+        $this->_setForum();
+        $fields = array();
+        $fields['post_title'] = $title;
+        $fields['post_content'] = $content;
+        $fields['date_modified'] = date('Y-m-d H:i:s');
+        $this->update('id', $id, $fields);
+    }    
+
+    /**
+    * Method to delete a wiki discussion post
+    *
+    * @access public
+    * @param string $id: The wiki discussion post id
+    * @return void
+    */
+    public function deletePost($id)
+    {
+        $this->_setForum();
+        $fields = array();
+        $fields['post_status'] = '2';
+        $this->update('id', $id, $fields);
+    }    
+
+    /**
+    * Method to restore a wiki discussion post
+    *
+    * @access public
+    * @param string $id: The wiki discussion post id
+    * @return void
+    */
+    public function restorePost($id)
+    {
+        $this->_setForum();
+        $fields = array();
+        $fields['post_status'] = '1';
         $this->update('id', $id, $fields);
     }    
 }
