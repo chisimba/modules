@@ -144,7 +144,7 @@ class validate extends object
             }
             if($field=='max_responses'){
                 if($value!==""){
-                    if(!ctype_digit($value)){
+                    if(!is_numeric($value)){
                         $valid=FALSE;
                         $array=array('fieldname'=>$maxresponse);
                         $errMsg[$field]=$this->objLanguage->code2Txt('mod_survey_error_2','survey',$array);

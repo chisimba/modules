@@ -292,7 +292,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $submitButton=$objButton->show();
 
 // set up form
-    $objForm=new form('addForm',$this->uri(array('action'=>'validatesurvey','mode'=>$mode), 'survey'));
+    $objForm=new form('addForm',$this->uri(array('action'=>'validatesurvey','mode'=>$mode)));
     $objForm->addToForm($objTable->show());
     $objForm->addToForm('<br />'.$submitButton);
     $str=$objForm->show();
