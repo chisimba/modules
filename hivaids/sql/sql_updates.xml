@@ -3,7 +3,7 @@
 
     <update>
         <table>tbl_hivaids_users</table>
-        <version>0.28</version>
+        <version>0.30</version>
         <description>Added a field for staff / student at the university</description>
         <data>
         	<add>
