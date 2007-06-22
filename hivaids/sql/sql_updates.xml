@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<updates>
+
+    <update>
+        <table>tbl_hivaids_users</table>
+        <version>0.28</version>
+        <description>Added a field for staff / student at the university</description>
+        <data>
+        	<add>
+    			<name>staff_student</name>
+		    	<type>text</type>
+    			<length>100</length>
+			</add>
+		</data>
+	</update>
+	
+</updates>
