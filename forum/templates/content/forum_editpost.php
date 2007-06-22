@@ -48,8 +48,7 @@ $addTable->startRow();
     $languageLabel = new label($this->objLanguage->languageText('word_language').':', 'input_language');
     $addTable->addCell($languageLabel->show(), 100);
     
-    $languageList = $this->newObject('dropdown', 'htmlelements');
-    $languageList->name = 'language';
+    $languageList = new dropdown('language');
     $languageCodes = & $this->newObject('languagecode','language');
     
     foreach ($languageCodes->iso_639_2_tags->codes as $key => $value) {
