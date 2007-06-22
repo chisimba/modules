@@ -23,7 +23,8 @@ class hivaidstools extends object
     * Constructor method
     */
     public function init()
-    {        
+    {
+        $this->dbUsers = $this->getObject('dbusers', 'hivaids');
         $this->objUser = $this->getObject('user', 'security');
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objDate = $this->getObject('dateandtime', 'utilities');
@@ -132,10 +133,17 @@ class hivaidstools extends object
     */
     public function showUserStats()
     {
-        $data = $this->objLoginHist->getLoginHistory();
+        $data = $this->dbUsers->getLoginHistory();
+        $numStaff = $this->dbUsers->getStaffInfo();
+        $numStudent = $this->dbUsers->getStudentInfo();
+        $total = $this->objLoginHist->getTotalLogins();
+        $unique = $this->objLoginHist->getUniqueLogins();
         
         $headerParams = $this->getJavascriptFile('new_sorttable.js','htmlelements');
         $this->appendArrayVar('headerParams',$headerParams);
+        
+        $institution = $this->objConfig->getinstitutionShortName();
+        $array = array('institution' => $institution);
         
         $head = $this->objLanguage->languageText('mod_hivaids_userstats', 'hivaids');
         $hdTitle = $this->objLanguage->languageText('word_title');
@@ -143,19 +151,31 @@ class hivaidstools extends object
         $hdCountry = $this->objLanguage->languageText('word_country');
         $hdLastOn = $this->objLanguage->languageText('phrase_laston');
         $hdLogins = $this->objLanguage->languageText('word_logins');
+        $hdStaffStud = $this->objLanguage->code2Txt('mod_hivaids_atinstitution', 'hivaids', $array);
+        $hdCourse = $this->objLanguage->languageText('word_course');
+        $hdYear = $this->objLanguage->languageText('phrase_yearofstudy');
+        $staff = $this->objLanguage->languageText('word_staff');
+        $student = $this->objLanguage->languageText('word_student');
+        $no = $this->objLanguage->languageText('word_no');
+        $lbTotal = $this->objLanguage->languageText('mod_hivaids_totallogins', 'hivaids');
+        $lbUnique = $this->objLanguage->languageText('mod_hivaids_uniqueusers', 'hivaids');
+        $lbStaff = $this->objLanguage->code2Txt('mod_hivaids_staffatinstitution', 'hivaids', $array);
+        $lbStudents = $this->objLanguage->code2Txt('mod_hivaids_studentsatinstitution', 'hivaids', $array);
         
         $objHead = new htmlheading();
         $objHead->type = 1;
         $objHead->str = $head;
         $str = $objHead->show();
         
-//        echo '<pre>'; print_r($data);
+        $str .= '<p style="padding-top:10px;"><b>'.$lbTotal.':</b>&nbsp;&nbsp;'.$total;
+        $str .= '<br /><b>'.$lbUnique.':</b>&nbsp;&nbsp;'.$unique;
+        $str .= '<br /><b>'.$lbStaff.':</b>&nbsp;&nbsp;'.$numStaff;
+        $str .= '<br /><b>'.$lbStudents.':</b>&nbsp;&nbsp;'.$numStudent.'</p>';
         
         if(!empty($data)){
     
             $objTable = new htmltable();
             $objTable->cellpadding = '5';
-            //$objTable->cellspacing = '2';
             $objTable->id = 'statstable';
             $objTable->css_class = 'sorttable';
             
@@ -163,6 +183,9 @@ class hivaidstools extends object
             $hdArr[] = $hdTitle;
             $hdArr[] = $hdName;
             $hdArr[] = $hdCountry;
+            $hdArr[] = $hdStaffStud;
+            $hdArr[] = $hdCourse;
+            $hdArr[] = $hdYear;
             $hdArr[] = $hdLastOn;
             $hdArr[] = $hdLogins;
             
@@ -179,6 +202,9 @@ class hivaidstools extends object
                 $row[] = $item['title'];
                 $row[] = $item['surname'].', '.$item['firstname'];
                 $row[] = $this->objCountries->getName($item['country']);
+                $row[] = isset($item['staff_student']) ? $$item['staff_student'] : '';
+                $row[] = isset($item['course']) ? $item['course'] : '';
+                $row[] = isset($item['study_year']) ? $item['study_year'] : '';
                 $row[] = $this->objDate->formatDate($item['laston']);
                 $row[] = $item['logins'];
                 
@@ -314,7 +340,7 @@ class hivaidstools extends object
         $objRadio = new radio('staff_student');
         $objRadio->addOption('staff', '&nbsp;'.$lbStaff);
         $objRadio->addOption('student', '&nbsp;'.$lbStudent);
-        $objRadio->addOption('neither', '&nbsp;'.$lbNeither);
+        $objRadio->addOption('no', '&nbsp;'.$lbNeither);
         $objRadio->setSelected('student');
         $objRadio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
         

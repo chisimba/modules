@@ -26,6 +26,7 @@ class dbusers extends dbtable
     {
         parent::init('tbl_hivaids_users');
         $this->table = 'tbl_hivaids_users';
+        $this->tblUser = 'tbl_users';
         $this->tblLogin = 'tbl_userloginhistory';
         
         $this->objUser = $this->getObject('user', 'security');
@@ -58,6 +59,44 @@ class dbusers extends dbtable
     }
     
     /**
+    * Method to get the number of staff at the institution
+    *
+    * @access public
+    * @return int the number of staff
+    */
+    public function getStaffInfo()
+    {
+        $sql = "SELECT count(user_id) AS cnt FROM {$this->table}
+            WHERE staff_student = 'staff'";
+            
+        $data = $this->getArray($sql);
+        
+        if(!empty($data)){
+            return $data[0]['cnt'];
+        }
+        return 0;
+    }
+    
+    /**
+    * Method to get the number of students at the institution
+    *
+    * @access public
+    * @return int the number of students
+    */
+    public function getStudentInfo()
+    {
+        $sql = "SELECT count(user_id) AS cnt FROM {$this->table}
+            WHERE staff_student = 'student'";
+            
+        $data = $this->getArray($sql);
+        
+        if(!empty($data)){
+            return $data[0]['cnt'];
+        }
+        return 0;
+    }
+    
+    /**
     * Method to get the login history count from the database along with the users details
     *
     * @access public
@@ -65,7 +104,16 @@ class dbusers extends dbtable
     */
     public function getLoginHistory()
     {
-        $order= $this->getParam('order', 'surname');
+        $sql = "SELECT *, count(l.userid) AS logins, max(l.lastlogindatetime) AS laston
+            FROM {$this->tblLogin} AS l, {$this->tblUser} AS u 
+            LEFT JOIN {$this->table} AS h ON (u.userid = h.user_id)
+            WHERE l.userid = u.userid
+            GROUP BY l.userid
+            ORDER BY u.surname";
+            
+        $data  = $this->getArray($sql);
+        return $data;
+        
         $sql="SELECT count(tbl_userloginhistory.userid) 
           AS logins, max(lastlogindatetime) 
           AS lastOn, tbl_users.title, tbl_users.firstname,
