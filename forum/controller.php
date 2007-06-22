@@ -33,6 +33,11 @@ class forum extends controller
     */
     public function init()
     {
+        //Get the activity logger class
+        $this->objLog=$this->newObject('logactivity', 'logger');
+        //Log this module call
+        $this->objLog->log();
+        
         // General Classes
         $this->objUser =& $this->getObject('user', 'security');
         $this->userId = $this->objUser->userId();
@@ -115,10 +120,7 @@ class forum extends controller
         $this->loadClass('link', 'htmlelements');
         
         
-        //Get the activity logger class
-        $this->objLog=$this->newObject('logactivity', 'logger');
-        //Log this module call
-        $this->objLog->log();
+        
         
         if (strtolower($this->getParam('passthroughlogin')) == 'true') {
             $this->updatePassThroughLogin();
