@@ -13,9 +13,9 @@
     public function init()
     {
         //Include the class file to wrap 
-        require_once('{WRAPCLASSSFULLPATH}');
+        require_once({WRAPCLASSSFULLPATH});
         //Instantiate the class
-        $this->$obj{WRAPCLASS} = new {WRAPCLASSINSTANCE}({WRAPCLASSPARAMS});
+        $this->$obj{WRAPCLASS}wrapper = new {WRAPCLASSINSTANCE}({WRAPCLASSPARAMS});
     }
 </code>
 </item>
@@ -32,9 +32,9 @@
 * the {WRAPCLASS} documentation.
 *
 */
-class {WRAPPERCLASS} extends object
+class {WRAPPERCLASS}wrapper extends object
 {
-	{PROPERTIES}
+{PROPERTIES}
 	{METHODS}
 }
 </code>
