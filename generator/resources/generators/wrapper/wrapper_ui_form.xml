@@ -21,7 +21,7 @@ must reside in the lib directory of the module that whill house the wrapper clas
 <label>Module code</label>
 <validation/>
 <description>Enter the module code for the module where the foreign class
-is located in that module's lib directory.</description>
+is located in that module's resources directory.</description>
 </item>
 
 <item elementname="filename">
@@ -32,6 +32,17 @@ is located in that module's lib directory.</description>
 <validation/>
 <description>Type in the filename of the foreign class to wrap. Make sure that
 you use the correct case for the file name.</description>
+</item>
+
+<item elementname="classname">
+<name>classname</name>
+<type>textinput</type>
+<width>65</width>
+<label>Class name of foreign class</label>
+<validation/>
+<description>Type in the name of the foreign class to wrap. Make sure that
+you use the correct case for the class name as it might be different from 
+that of the file name.</description>
 </item>
 
 

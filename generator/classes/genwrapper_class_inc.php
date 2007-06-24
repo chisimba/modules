@@ -59,7 +59,7 @@ class genwrapper extends abgenerator implements ifgenerator
     * @var string $generatorBaseDir The base path to the generators directory 
     * @access Private
     */
-    private $generatorBaseDir;
+    public $generatorBaseDir;
    
     /**
     * 
@@ -67,11 +67,11 @@ class genwrapper extends abgenerator implements ifgenerator
     * form that has been submitted
     * 
     */
-    function init()
+    public function init()
     {
         //Get the values needed to do the work
         $this->classFile = $this->getParam('filename', NULL);
-        $this->wrModule = $this->getParam('wrModule', NULL);
+        $this->wrModule = $this->getParam('modulecode', NULL);
         $this->params = $this->getParam('params', NULL);
         $this->className = $this->getParam('classname', NULL);
         parent::init();
@@ -85,12 +85,16 @@ class genwrapper extends abgenerator implements ifgenerator
     * to generate
     * 
 	*/
-	public function generate($className)
+	public function generate($className=NULL)
 	{
+        //Load the class to be wrapped using require_once
         $this->loadWrapClass();
+        
+        //Get the name of the class to wrap from the filename
         $this->objToWrap = $this->getWrapClassName();
+        //Prepare the contents of the wrapper from the XML file
         $this->prepareWrapper();
-        //Replace template elemente for name of class
+        //Replace template element for name of class
         $this->classCode = str_replace('{WRAPCLASS}', 
           $this->objToWrap, $this->classCode);
         $this->classCode = str_replace('{WRAPCLASSINSTANCE}', 
@@ -99,13 +103,24 @@ class genwrapper extends abgenerator implements ifgenerator
           $this->getConstructorParams(), $this->classCode);
         $this->classCode = str_replace('{WRAPPERCLASS}', 
           $this->className, $this->classCode);
+        
+        //Insert the correct code to load the wrapped class
+        $modPathRep = "\$this->getResourcePath('" . $this->classFile . "', '" . $this->wrModule . "')";  
         $this->classCode = str_replace('{WRAPCLASSSFULLPATH}', 
-          "modules/" . $this->wrModule . "/lib/" . $this->classFile,
-          $this->classCode);
+          $modPathRep, $this->classCode);
+          
+        
+          
         //Start up the class
         $objWrapee = $this->instantiateClass();
+        
+        //Get all the properties
         $this->classCode = str_replace('{METHODS}', 
           $this->getMethods($this->objToWrap), $this->classCode);
+          
+        //Get all the methods
+        $this->classCode = str_replace('{PROPERTIES}', 
+          $this->getProperties($this->objToWrap), $this->classCode);
 
         //Clean up unused template tags
         $this->cleanUp();
@@ -121,7 +136,7 @@ class genwrapper extends abgenerator implements ifgenerator
     private function loadWrapClass()
     {
         //load the class
-        require_once($this->moduleUri . $this->wrModule . "/lib/" . $this->classFile);
+        require_once($this->getResourcePath($this->classFile, $this->wrModule));
     }
     
     /**
@@ -134,8 +149,7 @@ class genwrapper extends abgenerator implements ifgenerator
     */
     private function getWrapClassName()
     {
-        $f = "modules/" . $this->wrModule 
-          . "/lib/" . $this->classFile;
+        $f = $this->getResourcePath($this->classFile, $this->wrModule);
         //Read the file into a string
         $fp = fopen($f, "r");
         $this->strClass = fread($fp, filesize($f));
@@ -147,28 +161,25 @@ class genwrapper extends abgenerator implements ifgenerator
         } else {
             $ret = "{COULDNOTEXTRACTCLASSNAME}";
         }
-        return $ret;
+        return trim($ret);
     }
     
     /**
     * 
-    * Method to instantiate the class being wrapped. 
+    * Method to instantiate the class being wrapped. It uses the Reflection
+    * API to enable the methods and properties to be extracted from it.
     * 
     */
     private function instantiateClass()
     {
-        $params = $this->getConstructorParams();
-        //Add params if any are required
-        if ($params !== "") {
-            @$this->objWrapped = new $this->objToWrap($params); #can this work???????
-        } else {
-            @$this->objWrapped = new $this->objToWrap();
-        }
+        $clName = trim(strtolower($this->objToWrap));
+        $this->objWrapped = new ReflectionClass($clName);
     }
 
     /**
     * 
-    * Method to get all properties of the class to be wrapped
+    * Method to get all properties of the class to be wrapped by
+    * making use of the reflection API to do the introspection.
     * 
     * Note: This will not return private and protected properties
     * which is exactly as we want it. We do not want to wrap
@@ -180,10 +191,14 @@ class genwrapper extends abgenerator implements ifgenerator
     */
     private function getProperties()
     {
-        $prp = get_object_vars($this->objWrapped);
+        //Initialize the return string
         $ret="";
-        foreach ($prp as $property) {
-            $ret .= "public " . $property . "\n";
+        $counter=1;
+        //Use reflection API and loop over the properties
+        foreach ($this->objWrapped->getProperties() as $reflectProperty) {
+            if (!$reflectProperty->isPrivate()) {
+                $ret .= "    public \$" . $reflectProperty->getName() . ";\n";
+            }
         }
         return $ret;
     }
@@ -194,7 +209,8 @@ class genwrapper extends abgenerator implements ifgenerator
     * 
     * Note: This will not return private and protected methods
     * which is exactly as we want it. We do not want to wrap
-    * private methods.
+    * private methods. This uses the reflection API to carry 
+    * out the introspection.
     * 
     * @return string array An array of all the methods of the
     * class being wrapped
@@ -202,21 +218,42 @@ class genwrapper extends abgenerator implements ifgenerator
     */
     private function getMethods()
     {
-        $mth = get_class_methods($this->objWrapped);
-        $ret="";
-        foreach ($mth as $method) {
-            if (trim($method) != "__construct") {
-                $params = $this->extractParams($method);
-                $ret .= "\n    /**\n    *\n    * Wrapper method for " 
-                  . $method . " in the " . $this->objToWrap . "\n    * "
-                  . "class being wrapped. "
-                  . "See that class for details of the \n" 
-                  . "    * ". $method . "method.\n    *\n    */\n"
-                  . "    public " . $method . "(" . $params . ")\n    {\n"
-                  . "        return \$this->" . $this->objToWrap . "->" 
-                  . $method . "(". $params . ");\n    }\n";
+        //Use reflection API and loop over the methods
+        foreach ($this->objWrapped->getMethods() as $reflectMethod) {
+            //Get the name of the method that we are in
+            $method = $reflectMethod->getName();
+            //We do not wrap the constructor method of the class
+            if ($method !== "__construct") {
+                //We do not need to wrap private methods
+                if (!$reflectMethod->isPrivate()) {
+                    $params = "";
+                    $ar = $reflectMethod->getParameters();
+                    $prCount = count($ar);
+                    $counter = 1;
+                    foreach($ar as $param) {
+                        $params .= $param->getName();
+                        //If it allows NULL then add this to the output
+                        if ($param->allowsNull) {
+                            $params .= "=NULL";
+                        }
+                        if ($counter !== $prCount) {
+                            $params .= ",";
+                        }
+                        $counter++;
+                    }
+                    $ret .= "\n    /**\n    *\n    * Wrapper method for " 
+                      . $method . " in the " . $this->objToWrap . "\n    * "
+                      . "class being wrapped. "
+                      . "See that class for details of the \n" 
+                      . "    * ". $method . "method.\n    *\n    */\n"
+                      . "    public " . $method . "(" . $params . ")\n    {\n"
+                      . "        return \$this->" . $this->objToWrap . "->" 
+                      . $method . "(". $params . ");\n    }\n";
+                }
             }
+
         }
+
         return $ret;
     }
     
