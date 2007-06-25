@@ -37,6 +37,30 @@ class dbwiki extends dbTable
     private $wikiId;
 
     /**
+    * @var object $objContext: The dbcontext class in the context module
+    * @access public
+    */
+    public $objContext;
+
+    /**
+    * @var object $objGroups: The managegroups class in the contextgroups module
+    * @access public
+    */
+    public $objGroups;
+
+    /**
+    * @var object $objModules: The modules class in the modulecatalogue module
+    * @access public
+    */
+    public $objModules;
+
+    /**
+    * @var bool $contextExists: TRUE if context is registered|FALSE if not
+    * @access public
+    */
+    public $contextExists;
+
+    /**
     * Method to construct the class
     *
     * @access public
@@ -48,6 +72,10 @@ class dbwiki extends dbTable
         $this->objUser = $this->getObject('user', 'security');
         $this->userId = $this->objUser->userId();
         $this->wikiId = $this->getSession('wiki_id');
+        $this->objModules = $this->getObject('modules', 'modulecatalogue');
+        $this->contextExists = $this->objModules->checkIfRegistered('context');
+        $this->objContext = $this->getObject('dbcontext', 'context');
+        $this->objGroups = $this->getObject('managegroups', 'contextgroups');
     }
     
 /* ----- Functions for changeing tables ----- */
@@ -185,6 +213,117 @@ class dbwiki extends dbTable
         return $wikiId;
     }
     
+    /**
+    * Method to get the context wiki
+    *
+    * @access public
+    * @param string $contextCode: The context to get the wiki of
+    * @return string $wikiId: The id of the context wiki
+    */
+    public function getContextWiki($contextCode)
+    {
+        $this->_setWiki();
+        $sql = "WHERE group_type = 'context'";
+        $sql .= " AND group_id = '".$contextCode."'";
+        $data = $this->getAll($sql);
+        if(empty($data)){
+            $wikiId = $this->createContextWiki($contextCode);
+        }else{
+            $wikiId = $data[0]['id'];
+        }
+        return $wikiId;
+    }
+    
+    /**
+    * Method to auto create a context wiki
+    *
+    * @access public
+    * @param string $contextCode: The context for the wiki
+    * @return string|bool $wikiId: The id of the wiki for the context
+    */
+    public function createContextWiki($contextCode)
+    {
+        $data = $this->objContext->getContextDetails($contextCode);
+        $array = array(
+            'name' => $data['title'],
+        );
+        $descLabel = $this->objLanguage->code2Txt('mod_wiki2_contextdesc', 'wiki2', $array);
+        $wikiLabel = $this->objLanguage->languageText('mod_wiki2_name', 'wiki2');
+        
+        switch($data['access']){
+            case 'Public':
+                $visibility = 1;
+                break;
+            case 'Open':
+                $visibility = 2;
+                break;
+            case 'Private':
+                $visibility = 3;
+                break;
+            default:
+                $visibility = 1;
+                break;
+        }
+        
+        $this->_setWiki();
+        $fields = array();
+        $fields['group_type'] = 'context';
+        $fields['group_id'] = $contextCode;
+        $fields['wiki_name'] = ucfirst(strtolower($data['title'].' '.$wikiLabel));
+        $fields['wiki_description'] = $descLabel;
+        $fields['wiki_visibility'] = $visibility;
+        $fields['creator_id'] = $this->userId;
+        $fields['date_created'] = date('Y-m-d H:i:s');
+        $wikiId = $this->insert($fields);
+        $this->setSession('wiki_id', $wikiId);
+        $this->wikiId = $wikiId;
+        $this->contextMainPage();
+        return $wikiId;
+    }
+    
+    /**
+    * Method to get the public wikis
+    * 
+    * @access public
+    * @return array|bool $data: The wiki data on success|FALSE on failure
+    */
+    public function getPublicWikis()
+    {
+        $this->_setWiki();
+        $sql = " WHERE wiki_visibility = '1'";
+        $data = $this->getAll($sql);
+        if(!empty($data)){
+            return $data;
+        }
+        return FALSE;
+    } 
+    
+    /**
+    * Method to get the open wikis
+    * 
+    * @access public
+    * @return array|bool $data: The wiki data on success|FALSE on failure
+    */
+    public function getUserWikis()
+    {
+        if($this->contextExists){
+            $contexts = $this->objGroups->usercontextcodes($this->userId);
+        }
+        $this->_setWiki();
+        $sql = " WHERE wiki_visibility < '3'";
+        $sql .= " OR (group_type = 'personal' AND group_id = '".$this->userId."')";
+        if($this->contextExists && !empty($contexts)){
+            foreach($contexts as $context){
+                $sql .= " OR (group_type = 'context' AND group_id = '".$context."')";
+            }
+        }        
+        $data = $this->getAll($sql);
+        if(!empty($data)){
+            return $data;
+        }
+        return FALSE;
+    } 
+
 /* ----- Functions for tbl_wiki2_pages ----- */
 
     /**
@@ -205,7 +344,31 @@ class dbwiki extends dbTable
         $fields = array();
         $fields['page_name'] = 'MainPage';
         $fields['page_summary'] = $text1Label;
-        $fields['page_content'] = $text3Label."\n".$text2Label;
+        $fields['page_content'] = $text2Label."\n".$text3Label;
+        $fields['version_comment'] = $text4Label;
+        $fields['main_page'] = 1;
+        
+        $this->addPage($fields);
+    }
+
+    /**
+    * Method to auto create the main page after creating a context wiki
+    *
+    * @access public
+    * @param string $wikiId: The id of the wiki the main page is being created for
+    * @return string|bool $pageId: The wiki page id on success|FALSE on failure
+    */
+    public function contextMainPage()
+    {
+        // get text elements
+        $text1Label = $this->objLanguage->code2Txt('mod_wiki2_default_1', 'wiki2');
+        $text3Label = $this->objLanguage->languageText('mod_wiki2_default_2', 'wiki2');
+        $text4Label = $this->objLanguage->languageText('mod_wiki2_newpage', 'wiki2');
+        $this->_setPages();
+        $fields = array();
+        $fields['page_name'] = 'MainPage';
+        $fields['page_summary'] = $text1Label;
+        $fields['page_content'] = "* ".$text1Label."\n".$text3Label;
         $fields['version_comment'] = $text4Label;
         $fields['main_page'] = 1;
         

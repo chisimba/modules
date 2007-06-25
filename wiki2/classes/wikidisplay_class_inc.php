@@ -211,8 +211,10 @@ class wikidisplay extends object
             $str .= $loginBlock;
         }
         
+        $string = $this->showSelector();
+        
         // links
-        $string = '<ul>';
+        $string .= '<ul>';
         if($this->isLoggedIn){
             // get data
             $hasWiki = $this->objDbwiki->hasWiki($this->userId);            
@@ -425,17 +427,15 @@ class wikidisplay extends object
         
         // text elements
         $articleLabel = $this->objLanguage->languageText('word_article');
-        $previewLabel = $this->objLanguage->languageText('word_preview');
-        $noPreviewLabel = $this->objLanguage->languageText('mod_wiki2_nopreview', 'wiki2');
+/*
         $refreshLabel = $this->objLanguage->languageText('word_refresh');
         $refreshTitleLabel = $this->objLanguage->languageText('mod_wiki2_refreshtitle', 'wiki2');
+*/
         $historyLabel = $this->objLanguage->languageText('word_history');
         $editLabel = $this->objLanguage->languageText('word_edit');
         $versionLabel = $this->objLanguage->languageText('word_version');
         $editArticelLabel = $this->objLanguage->languageText('mod_wiki2_editarticle', 'wiki2');
         $previewLabel = $this->objLanguage->languageText('word_preview');
-        $refreshLabel = $this->objLanguage->languageText('word_refresh');
-        $refreshTitleLabel = $this->objLanguage->languageText('mod_wiki2_refreshtitle', 'wiki2');
         $noPreviewLabel = $this->objLanguage->languageText('mod_wiki2_nopreview', 'wiki2');
         $ratingLabel = $this->objLanguage->languageText('word_rating');
         $diffLabel = $this->objLanguage->languageText('word_diff');
@@ -446,6 +446,7 @@ class wikidisplay extends object
         $deleteLabel = $this->objLanguage->languageText('mod_wiki2_deletepage', 'wiki2');
         $deleteTitleLabel = $this->objLanguage->languageText('mod_wiki2_deletetitle', 'wiki2');
         $delConfirmLabel = $this->objLanguage->languageText('mod_wiki2_deleteconfirm', 'wiki2');
+        $loadingLabel = $this->objLanguage->languageText('mod_wiki2_loading', 'wiki2');
         
         // wiki page
         $contents = '';
@@ -523,23 +524,31 @@ class wikidisplay extends object
             'name' => $editArticelLabel,
             'content' => $edit,
         );            
-
+/*
         // refresh link
         $objLink = new link('#');
         $objLink->link = $refreshLabel;
         $objLink->title = $refreshTitleLabel;
         $objLink->extra = 'onclick="javascript:refreshPreview()"';
         $refreshLink = $objLink->show();
+*/            
+        $this->objIcon->setIcon('loading_bar');
+        $this->objIcon->title = $loadingLabel;
+        $loadingIcon = $this->objIcon->show(); 
+                                              
+        $objLayer = new layer();
+        $objLayer->id = 'loadingDiv';
+        $objLayer->addToStr($loadingLabel.'<br />'.$loadingIcon);
+        $loadingLayer = $objLayer->show();
             
         $objLayer = new layer();
         $objLayer->id = 'previewDiv';
-        $objLayer->addToStr('<ul><li>'.$noPreviewLabel.'</li></ul>');
         $previewLayer = $objLayer->show();
             
         $objLayer = new layer();
         $objLayer->id = 'refreshDiv';
         $objLayer->cssClass = 'featurebox';
-        $objLayer->addToStr($refreshLink.'<br />'.$previewLayer);
+        $objLayer->addToStr($loadingLayer.$previewLayer);
         $refreshLayer = $objLayer->show();
             
         $previewTab = array(
@@ -1001,10 +1010,13 @@ class wikidisplay extends object
         $contentErrorLabel = $this->objLanguage->languageText('mod_wiki2_contenterror', 'wiki2');
         $createLabel = $this->objLanguage->languageText('mod_wiki2_create', 'wiki2');
         $cancelLabel = $this->objLanguage->languageText('word_cancel');
+/*
         $refreshLabel = $this->objLanguage->languageText('word_refresh');
         $refreshTitleLabel = $this->objLanguage->languageText('mod_wiki2_refreshtitle', 'wiki2');
+*/
         $previewLabel = $this->objLanguage->languageText('word_preview');
         $noPreviewLabel = $this->objLanguage->languageText('mod_wiki2_nopreview', 'wiki2');
+        $loadingLabel = $this->objLanguage->languageText('mod_wiki2_loading', 'wiki2');
         
         // add to watchlist
         $watchList = $this->showAddWatchlist();
@@ -1112,23 +1124,31 @@ class wikidisplay extends object
             'name' => $addLabel,
             'content' => $createLayer,
         );
-            
+/*            
         // refresh link
         $objLink = new link('#');
         $objLink->link = $refreshLabel;
         $objLink->title = $refreshTitleLabel;
         $objLink->extra = 'onclick="javascript:refreshPreview()"';
         $refreshLink = $objLink->show();
+*/            
+        $this->objIcon->setIcon('loading_bar');
+        $this->objIcon->title = $loadingLabel;
+        $loadingIcon = $this->objIcon->show(); 
+                                              
+        $objLayer = new layer();
+        $objLayer->id = 'loadingDiv';
+        $objLayer->addToStr($loadingLabel.'<br />'.$loadingIcon);
+        $loadingLayer = $objLayer->show();
             
         $objLayer = new layer();
         $objLayer->id = 'previewDiv';
-        $objLayer->addToStr('<ul><li>'.$noPreviewLabel.'</li></ul>');
         $previewLayer = $objLayer->show();
             
         $objLayer = new layer();
         $objLayer->id = 'refreshDiv';
         $objLayer->cssClass = 'featurebox';
-        $objLayer->addToStr($refreshLink.'<br />'.$previewLayer);
+        $objLayer->addToStr($loadingLayer.$previewLayer);
         $refreshLayer = $objLayer->show();
         $string = $refreshLayer;
             
@@ -1140,10 +1160,12 @@ class wikidisplay extends object
         
         //display tabs
         $this->objTab->init();        
+        $this->objTab->tabId = 'addTab'; 
         $this->objTab->addTab($addTab);
         $this->objTab->addTab($previewTab);
-        $this->objTab->useCookie = 'false';
         $str = $this->objTab->show();
+        $body = 'tabClickEvents("");';
+        $this->appendArrayVar('bodyOnLoad', $body);            
         
         return $str;       
     }
@@ -1301,8 +1323,6 @@ class wikidisplay extends object
                 $author = $this->objUser->fullname($authorId);
                 $date = $this->objDate->formatDate($line['date_created']);
                 $type = $line['main_page'];
-                $locked = $line['page_lock'];
-                $lockerId = $line['page_locker_id'];
                 
                 // page name link
                 $objLink = new link($this->uri(array(
@@ -2768,7 +2788,7 @@ You can create tables using pairs of vertical bars:
     public function showDiscussion($name)
     {
         // get data
-        $data = $this->objDbwiki->getPosts('init_1', $name);
+        $data = $this->objDbwiki->getPosts($name);
         
         // text elements
         $noRecordsLabel = $this->objLanguage->languageText('mod_wiki2_norecords', 'wiki2');
@@ -2797,6 +2817,8 @@ You can create tables using pairs of vertical bars:
         }else{            
             if(count($data) > 5){
                 $sections = array_chunk($data, 5);
+            }else{
+                $sections[] = $data;
             }
             $this->objTab->init();
             $i = 1;
@@ -2957,7 +2979,6 @@ You can create tables using pairs of vertical bars:
         // form
         $objForm = new form('create', $this->uri(array(
             'action' => 'update_post',
-            'wiki_id' => 'init_1',
             'name' => $name,
         ), 'wiki2'));
         $objForm->addToForm($string);
@@ -3179,6 +3200,41 @@ You can create tables using pairs of vertical bars:
         $str = $this->objTab->show();
         
         return $str;       
+    }
+    
+    /**
+    * Method to create the wiki selector
+    *
+    * @access public
+    * @return string $str: The output string
+    */
+    public function showSelector()
+    {
+        // get data
+        if(!$this->isLoggedIn){
+            $data = $this->objDbwiki->getPublicWikis();
+        }else{
+            $data = $this->objDbwiki->getUserWikis();
+        }
+        
+        // text elements
+        $selectLabel = $this->objLanguage->languageText('mod_wiki2_select', 'wiki2');
+        $objDrop = new dropdown('wiki');
+        $objDrop->addOption(NULL, $selectLabel);
+        foreach($data as $line){
+            $objDrop->addOption($line['id'], $line['wiki_name']);
+        }
+        $objDrop->setSelected($this->getSession('wiki_id'));
+        $objDrop->extra = 'onchange="javascript:if(this.value != \'\'){$(\'form_select\').submit();}else{return false}"';
+        $selectDrop = $objDrop->show();
+        
+        $objForm = new form('select', $this->uri(array(
+            'action' => 'select_wiki',
+        ), 'wiki2'));
+        $objForm->addToForm($selectDrop);        
+        $str = $objForm->show();
+        
+        return $str;
     }
 }
 ?>

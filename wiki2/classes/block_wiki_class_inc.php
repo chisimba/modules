@@ -33,13 +33,16 @@ class block_wiki extends object
     */
     public function init()
     {
-        // load html element classes
-        $this->objLink = $this->newObject('link', 'htmlelements');
+        // load htmlelements
+        $this->loadClass('form', 'htmlelements');
+        $this->loadClass('dropdown', 'htmlelements');
+        
+        $this->objDbwiki = $this->newObject('dbwiki', 'wiki2');
         
         // system classes
         $this->objLanguage = $this->getObject('language', 'language');
         
-        // language items
+         // language items
         $this->title = $this->objLanguage->languageText('mod_wiki2_name', 'wiki2');
     }
 
@@ -51,17 +54,27 @@ class block_wiki extends object
     */
     public function show()
 	{
-        // language items
-        $wikiLabel = $this->objLanguage->languageText('mod_wiki2_name', 'wiki2');  
-        $wikiTitleLabel = $this->objLanguage->languageText('mod_wiki2_title', 'wiki2');  
-                      
-        // the exit link
-        $this->objLink = new link($this->uri(array(), 'wiki2'));
-        $this->objLink->link = $wikiLabel;
-        $this->objLink->title = $wikiTitleLabel;
-        $wikiLink = $this->objLink->show();
-         
-        return $wikiLink;
+        // get data
+        $data = $this->objDbwiki->getPublicWikis();
+
+        // text elements
+        $selectLabel = $this->objLanguage->languageText('mod_wiki2_select', 'wiki2');
+        $objDrop = new dropdown('wiki');
+        $objDrop->addOption(NULL, $selectLabel);
+        foreach($data as $line){
+            $objDrop->addOption($line['id'], $line['wiki_name']);
+        }
+        $objDrop->setSelected($this->getSession('wiki_id'));
+        $objDrop->extra = 'onchange="javascript:if(this.value != \'\'){$(\'form_select\').submit();}else{return false}"';
+        $selectDrop = $objDrop->show();
+        
+        $objForm = new form('select', $this->uri(array(
+            'action' => 'select_wiki',
+        ), 'wiki2'));
+        $objForm->addToForm($selectDrop);        
+        $str = $objForm->show();
+        
+        return $str;
     }
 }
 ?>

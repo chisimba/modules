@@ -53,6 +53,18 @@ class wiki2 extends controller {
     public $userId;
         
     /**
+    * @var object $objContext: The dbcontext class in the context module
+    * @access public
+    */
+    public $objContext;
+
+    /**
+    * @var object $objModules: The modules class in the modulecatalogue module
+    * @access public
+    */
+    public $objModules;
+
+    /**
     * Method to initialise the controller
     * 
     * @access public
@@ -66,10 +78,24 @@ class wiki2 extends controller {
         $this->objLock = $this->newObject('wikipagelock', 'wiki2');        
         $this->objUser = $this->newObject('user', 'security');
         $this->userId = $this->objUser->userId();
+        $this->objContext = $this->getObject('dbcontext', 'context');
+        $this->objModules = $this->getObject('modules', 'modulecatalogue');
         
         $wikiId = $this->getSession('wiki_id');
         if(empty($wikiId)){
-            $this->setSession('wiki_id', 'init_1');
+            $contextExists = $this->objModules->checkIfRegistered('context');
+            if($contextExists){
+                $contextCode = $this->objContext->getContextCode();    
+                if(!empty($contextCode)){
+                    $wikiId = $this->objDbwiki->getContextWiki($contextCode);
+                    $this->setSession('wiki_id', $wikiId);
+                }else{
+                    $this->setSession('wiki_id', 'init_1');
+                }
+            }else{
+                $this->setSession('wiki_id', 'init_1');
+            }
+            
         }
     }
     
@@ -82,7 +108,6 @@ class wiki2 extends controller {
     public function requiresLogin()
     {
         $action = $this->getParam("action", NULL);
-        //Allow viewing anonymously
         switch($action){
             case 'add_page':
             case 'create_page':
@@ -101,17 +126,19 @@ class wiki2 extends controller {
             case 'restore_post':
             case 'add_wiki';
             case 'create_wiki';
+            case 'add_rating':
                 return TRUE;
+                //Allow viewing anonymously
             case 'view_rules':
             case 'view_all':
             case 'view_page':
             case 'search_wiki':
             case 'view_authors':
-            case 'add_rating':
             case 'view_ranking':
             case 'remove_watch':
             case 'show_diff':
             case 'show_links':
+            case 'select_wiki':
             default:
                 return FALSE;
         }
@@ -424,6 +451,12 @@ class wiki2 extends controller {
                 $desc = $this->getParam('desc');
                 $visibility = $this->getParam('visibility');
                 $this->objDbwiki->addWiki($name, $desc, $visibility);
+                return $this->nextAction('view_page', array(), 'wiki2');
+                break;
+                
+            case 'select_wiki':
+                $wikiId = $this->getParam('wiki');
+                $this->setSession('wiki_id', $wikiId);
                 return $this->nextAction('view_page', array(), 'wiki2');
                 break;
                 
