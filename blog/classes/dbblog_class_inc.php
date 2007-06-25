@@ -43,7 +43,7 @@ class dbblog extends dbTable
     public function getAllCats($userid) 
     {
         $this->_changeTable('tbl_blog_cats');
-        return $this->getAll(' where userid = \'' . $userid . '\'');
+        return $this->getAll(" where userid = '$userid'");
     }
     public function deleteCat($catid) 
     {
@@ -59,7 +59,7 @@ class dbblog extends dbTable
     public function getParentCats($userid) 
     {
         $this->_changeTable('tbl_blog_cats');
-        return $this->getAll("where userid = '" . $userid . "' AND cat_parent = '0'");
+        return $this->getAll("where userid = '$userid' AND cat_parent = '0'");
     }
     /**
      * Grab the child categories as a userl, according to the parent category
@@ -168,7 +168,7 @@ class dbblog extends dbTable
     public function getAllLinkCats($userid) 
     {
         $this->_changeTable('tbl_blog_linkcats');
-        return $this->getAll(' where userid = \'' . $userid . '\'');
+        return $this->getAll(" where userid = '$userid'");
     }
     /**
      * Get the links per category
