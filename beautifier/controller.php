@@ -20,9 +20,9 @@ class beautifier extends controller
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objBeauty = $this->getObject('addbeauty');
             //Get the activity logger class
-            $this->objLog = $this->newObject('logactivity', 'logger');
+            //$this->objLog = $this->newObject('logactivity', 'logger');
             //Log this module call
-            $this->objLog->log();
+            //$this->objLog->log();
         }
         catch(customException $e) {
             echo customException::cleanUp();
