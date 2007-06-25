@@ -274,7 +274,7 @@ class dbblog extends dbTable
      */
     public function getAllPosts($userid, $catid) 
     {
-        if (!isset($catid)) {
+        if ($catid == '') {
             $this->_changeTable('tbl_blog_posts');
             return $this->getAll("WHERE userid = '$userid' AND post_status = '0' ORDER BY post_ts DESC");
         }
