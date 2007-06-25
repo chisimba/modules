@@ -13,7 +13,7 @@ $middleColumn = NULL;
 //load up a featurebox and display it nicely
 $objFeatureBox = $this->getObject('featurebox', 'navigation');
 //gooi the form with a message and the name thing with email address(es) to send to
-$middleColumn .= $this->objblogOps->sendMail2FriendForm($m2fdata);
+$middleColumn.= $this->objblogOps->sendMail2FriendForm($m2fdata);
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());
 $cssLayout->setRightColumnContent($rightSideColumn);

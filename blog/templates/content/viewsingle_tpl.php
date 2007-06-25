@@ -21,30 +21,25 @@ function showResponse (originalRequest) {
 </script>
 <?php
 $middleColumn = NULL;
-if(isset($comment) && isset($useremail))
-{
-	//$middleColumn = "CAPTCHA was kakka";
-	$comment = urldecode($comment);
-	$useremail = urldecode($useremail);
-}
-else {
-	$comment = NULL;
-	$useremail = NULL;
+if (isset($comment) && isset($useremail)) {
+    //$middleColumn = "CAPTCHA was kakka";
+    $comment = urldecode($comment);
+    $useremail = urldecode($useremail);
+} else {
+    $comment = NULL;
+    $useremail = NULL;
 }
 $cssLayout = &$this->newObject('csslayout', 'htmlelements');
 // Set columns to 3
 $cssLayout->setNumColumns(3);
-
 //show all the posts
-$middleColumn .= ($this->objblogOps->showPosts($posts, TRUE));
-$middleColumn .= $this->objComments->showComments($postid);
-$middleColumn .= $tracks = $this->objblogOps->showTrackbacks($postid);
-if($this->objUser->isLoggedIn() == TRUE)
-{
-	$middleColumn .= $this->objblogOps->addCommentForm($postid, $userid, $captcha = FALSE, $comment, $useremail);
-}
-else {
-	$middleColumn .= $this->objblogOps->addCommentForm($postid, $userid, $captcha = TRUE, $comment, $useremail);
+$middleColumn.= ($this->objblogOps->showPosts($posts, TRUE));
+$middleColumn.= $this->objComments->showComments($postid);
+$middleColumn.= $tracks = $this->objblogOps->showTrackbacks($postid);
+if ($this->objUser->isLoggedIn() == TRUE) {
+    $middleColumn.= $this->objblogOps->addCommentForm($postid, $userid, $captcha = FALSE, $comment, $useremail);
+} else {
+    $middleColumn.= $this->objblogOps->addCommentForm($postid, $userid, $captcha = TRUE, $comment, $useremail);
 }
 $objUi = $this->getObject('blogui');
 // left hand blocks

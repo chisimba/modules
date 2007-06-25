@@ -10,7 +10,7 @@ $leftCol = $objUi->leftBlocks($userid);
 // right side blocks
 $rightSideColumn = $objUi->rightBlocks($userid, NULL);
 $middleColumn = NULL;
-$middleColumn .= $this->objblogOps->displaySearchResults($searchres);
+$middleColumn.= $this->objblogOps->displaySearchResults($searchres);
 //dump the cssLayout to screen
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol);

@@ -6,8 +6,8 @@ $cssLayout->setNumColumns(3);
 $middleColumn = NULL;
 //load up a featurebox and display it nicely
 $objFeatureBox = $this->getObject('featurebox', 'navigation');
-$theurl = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_tbheader","blog"), $theurl);
-$middleColumn .= $theurl;
+$theurl = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_tbheader", "blog") , $theurl);
+$middleColumn.= $theurl;
 //$userid = $this->objUser->userId();
 $objUi = $this->getObject('blogui');
 // left hand blocks

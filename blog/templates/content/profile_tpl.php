@@ -9,15 +9,12 @@ $objUi = $this->getObject('blogui');
 $leftCol = $objUi->leftBlocks($userid);
 // right side blocks
 $rightSideColumn = $objUi->rightBlocks($userid, NULL);
-if($this->objUser->isLoggedIn())
-{
-	if(isset($profile))
-	{
-		$middleColumn .= $this->objblogOps->profileEditor($userid, $profile);
-	}
-	else {
-		$middleColumn .= $this->objblogOps->profileEditor($userid);
-	}
+if ($this->objUser->isLoggedIn()) {
+    if (isset($profile)) {
+        $middleColumn.= $this->objblogOps->profileEditor($userid, $profile);
+    } else {
+        $middleColumn.= $this->objblogOps->profileEditor($userid);
+    }
 }
 //dump the cssLayout to screen
 $cssLayout->setMiddleColumnContent($middleColumn);

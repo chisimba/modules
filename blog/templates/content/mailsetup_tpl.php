@@ -10,13 +10,11 @@ $cssLayout = &$this->newObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(3);
 $middleColumn = NULL;
 //check if there are previous values
-$dsnparse = $this->objblogOps-> getMailDSN();
-if($dsnparse == FALSE)
-{
-	$middleColumn .= $this->objblogOps->showMailSetup(TRUE);
-}
-else {
-	$middleColumn .= $this->objblogOps->showMailSetup(TRUE, $dsnparse);
+$dsnparse = $this->objblogOps->getMailDSN();
+if ($dsnparse == FALSE) {
+    $middleColumn.= $this->objblogOps->showMailSetup(TRUE);
+} else {
+    $middleColumn.= $this->objblogOps->showMailSetup(TRUE, $dsnparse);
 }
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol);

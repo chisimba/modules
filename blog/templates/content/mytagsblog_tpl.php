@@ -11,77 +11,66 @@ $leftCol = $objUi->leftBlocks($userid);
 // right side blocks
 $rightSideColumn = $objUi->rightBlocks($userid, NULL);
 //check for sticky posts
-if(isset($stickyposts))
-{
-	$middlecolumn .= $this->objblogOps->showPosts($stickyposts, TRUE);
+if (isset($stickyposts)) {
+    $middlecolumn.= $this->objblogOps->showPosts($stickyposts, TRUE);
 }
-
 //show all the posts
-if(isset($catid) && empty($posts) && empty($latestpost))
-{
-	$middleColumn .= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_nopostsincat", "blog") . "</center></em></h1>";
-	if($this->objUser->userId() == $userid)
-	{
-		$linker = new href($this->uri(array('module' => 'blog', 'action' => 'blogadmin', 'mode' => 'writepost')), $this->objLanguage->languageText("mod_blog_writepost", "blog"), NULL); //$this->objblogOps->showAdminSection(TRUE);
-		$middleColumn .= "<center>" . $linker->show() . "</center>";
-	}
+if (isset($catid) && empty($posts) && empty($latestpost)) {
+    $middleColumn.= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_nopostsincat", "blog") . "</center></em></h1>";
+    if ($this->objUser->userId() == $userid) {
+        $linker = new href($this->uri(array(
+            'module' => 'blog',
+            'action' => 'blogadmin',
+            'mode' => 'writepost'
+        )) , $this->objLanguage->languageText("mod_blog_writepost", "blog") , NULL); //$this->objblogOps->showAdminSection(TRUE);
+        $middleColumn.= "<center>" . $linker->show() . "</center>";
+    }
+} elseif (!isset($catid) && empty($posts) && empty($latestpost)) {
+    $middleColumn.= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_noposts", "blog") . "</center></em></h1>";
+} elseif (isset($catid) && !empty($posts)) {
+    foreach($posts as $p) {
+        $middleColumn.= ($this->objblogOps->showPosts($p));
+    }
+} elseif (isset($catid) && empty($posts) && empty($latestpost)) {
+    $middleColumn.= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_nopostsincat", "blog") . "</center></em></h1>";
+    if ($this->objUser->userId() == $userid) {
+        $linker = new href($this->uri(array(
+            'module' => 'blog',
+            'action' => 'blogadmin',
+            'mode' => 'writepost'
+        )) , $this->objLanguage->languageText("mod_blog_writepost", "blog") , NULL); //$this->objblogOps->showAdminSection(TRUE);
+        $middleColumn.= "<center>" . $linker->show() . "</center>";
+    }
+} else {
+    if (!empty($latestpost) && !empty($posts)) {
+        foreach($posts as $p) {
+            $middleColumn.= ($this->objblogOps->showPosts($p));
+        }
+    } else {
+        $middleColumn.= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_nopostsincat", "blog") . "</center></em></h1>";
+        if ($this->objUser->userId() == $userid) {
+            $linker = new href($this->uri(array(
+                'module' => 'blog',
+                'action' => 'blogadmin',
+                'mode' => 'writepost'
+            )) , $this->objLanguage->languageText("mod_blog_writepost", "blog") , NULL); //$this->objblogOps->showAdminSection(TRUE);
+            $middleColumn.= "<center>" . $linker->show() . "</center>";
+        }
+    }
 }
-elseif(!isset($catid) && empty($posts) && empty($latestpost))
-{
-	$middleColumn .= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_noposts", "blog") . "</center></em></h1>";
-}
-elseif(isset($catid) && !empty($posts))
-{
-	foreach($posts as $p)
-	{
-		$middleColumn .= ($this->objblogOps->showPosts($p));
-	}
-}
-elseif(isset($catid) && empty($posts) && empty($latestpost))
-{
-	$middleColumn .= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_nopostsincat", "blog") . "</center></em></h1>";
-	if($this->objUser->userId() == $userid)
-	{
-		$linker = new href($this->uri(array('module' => 'blog', 'action' => 'blogadmin', 'mode' => 'writepost')), $this->objLanguage->languageText("mod_blog_writepost", "blog"), NULL); //$this->objblogOps->showAdminSection(TRUE);
-		$middleColumn .= "<center>" . $linker->show() . "</center>";
-	}
-}
-else {
-
-	if(!empty($latestpost) && !empty($posts))
-	{
-		foreach($posts as $p)
-		{
-			$middleColumn .= ($this->objblogOps->showPosts($p));
-		}
-	}
-	else {
-		$middleColumn .= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_nopostsincat", "blog") . "</center></em></h1>";
-		if($this->objUser->userId() == $userid)
-		{
-			$linker = new href($this->uri(array('module' => 'blog', 'action' => 'blogadmin', 'mode' => 'writepost')), $this->objLanguage->languageText("mod_blog_writepost", "blog"), NULL); //$this->objblogOps->showAdminSection(TRUE);
-			$middleColumn .= "<center>" . $linker->show() . "</center>";
-		}
-	}
-}
-
-if(!empty($rss))
-{
-	foreach($rss as $feeds)
-	{
-		$timenow = time();
-		if($timenow - $feeds['rsstime'] > 43200)
-		{
-			$url = $feeds['url'];
-			$id = $feeds['id'];
-			$leftCol .= $this->objblogOps->rssBox($url, $feeds['name']);//Refresh($url, $feeds['name'], $id);
-		}
-		else {
-			$url = $feeds['rsscache'];
-			$leftCol .= $this->objblogOps->rssBox($url, $feeds['name']);
-		}
-
-	}
+if (!empty($rss)) {
+    foreach($rss as $feeds) {
+        $timenow = time();
+        if ($timenow-$feeds['rsstime'] > 43200) {
+            $url = $feeds['url'];
+            $id = $feeds['id'];
+            $leftCol.= $this->objblogOps->rssBox($url, $feeds['name']); //Refresh($url, $feeds['name'], $id);
+            
+        } else {
+            $url = $feeds['rsscache'];
+            $leftCol.= $this->objblogOps->rssBox($url, $feeds['name']);
+        }
+    }
 }
 //dump the cssLayout to screen
 $cssLayout->setMiddleColumnContent($middleColumn);

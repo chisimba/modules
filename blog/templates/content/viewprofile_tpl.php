@@ -4,24 +4,18 @@ $cssLayout = &$this->newObject('csslayout', 'htmlelements');
 // Set columns to 3
 $cssLayout->setNumColumns(3);
 $middleColumn = NULL;
-if(!$this->objUser->isLoggedIn())
-{
-	if(isset($vprofile))
-	{
-		$middleColumn .= $this->objblogOps->displayProfile($userid, $vprofile);
-	}
-	else {
-		$middleColumn .= $this->objLanguage->languageText("mod_blog_noprofile", "blog");
-	}
-}
-else {
-	if(isset($vprofile))
-	{
-		$middleColumn .= $this->objblogOps->displayProfile($userid, $vprofile);
-	}
-	else {
-		$middleColumn .= $this->objLanguage->languageText("mod_blog_noprofile", "blog");
-	}
+if (!$this->objUser->isLoggedIn()) {
+    if (isset($vprofile)) {
+        $middleColumn.= $this->objblogOps->displayProfile($userid, $vprofile);
+    } else {
+        $middleColumn.= $this->objLanguage->languageText("mod_blog_noprofile", "blog");
+    }
+} else {
+    if (isset($vprofile)) {
+        $middleColumn.= $this->objblogOps->displayProfile($userid, $vprofile);
+    } else {
+        $middleColumn.= $this->objLanguage->languageText("mod_blog_noprofile", "blog");
+    }
 }
 $objUi = $this->getObject('blogui');
 // left hand blocks

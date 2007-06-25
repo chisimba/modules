@@ -81,28 +81,31 @@ class blogimporter extends object
                 $this->dsn = 'mysql://reader:reader@172.16.203.210/nextgen';
                 return $this->dsn;
                 break;
-                
+
             case 'santec':
                 $this->dsn = 'mysql://reader:reader@172.16.203.173/santec';
                 return $this->dsn;
                 break;
-                
+
             case 'freecourseware':
-            	$this->dsn = 'mysql://next:n3xt@172.16.203.178/ocw';
-            	return $this->dsn;
-            	break;
+                $this->dsn = 'mysql://next:n3xt@172.16.203.178/ocw';
+                return $this->dsn;
+                break;
+
             case '5ive':
-            	$this->dsn = 'mysql://root:0h5h1t.pear@196.21.45.41/chisimba';
-            	return $this->dsn;
-            	break;
+                $this->dsn = 'mysql://root:0h5h1t.pear@196.21.45.41/chisimba';
+                return $this->dsn;
+                break;
+
             case 'pear':
-            	$this->dsn = 'mysql://root:0h5h1t.pear@196.21.45.41/chisimbademo';
-            	return $this->dsn;
-            	break;
+                $this->dsn = 'mysql://root:0h5h1t.pear@196.21.45.41/chisimbademo';
+                return $this->dsn;
+                break;
+
             case 'dfx':
-            	$this->dsn = 'mysql://root:0h5h1t.pear@196.21.45.41/dfx';
-            	return $this->dsn;
-            	break;
+                $this->dsn = 'mysql://root:0h5h1t.pear@196.21.45.41/dfx';
+                return $this->dsn;
+                break;
         }
     }
     /**
@@ -147,7 +150,6 @@ class blogimporter extends object
         //set the return mode to return an associative array
         return $res->fetchAll(MDB2_FETCHMODE_ASSOC);
     }
-    
     /**
      * Method to get the blog contents per user (username) into an array
      *
@@ -168,7 +170,7 @@ class blogimporter extends object
             exit;
         }
         $ures = $res1->fetchAll(MDB2_FETCHMODE_ASSOC);
-        $fname = $ures[0]['firstname']." ".$ures[0]['surname'];
+        $fname = $ures[0]['firstname'] . " " . $ures[0]['surname'];
         //lets check that the users name is the same, or else drop his ass
         $locname = trim($this->objUser->fullname());
         $fname = trim($fname);
@@ -197,31 +199,27 @@ class blogimporter extends object
             throw new customException($this->objLanguage->languageText("mod_blog_import_unomatch", "blog"));
         }
     }
-    
     /**
      * Method to get the blog contents from a site
      *
      * @return array
      * @access public
      */
-    public function importAllBlogs()
-    {        
+    public function importAllBlogs() 
+    {
         $sql = "SELECT b.*, u.firstname, u.surname, u.userid FROM tbl_blog AS b, 
             tbl_users AS u 
             WHERE u.userid = b.userid";
-            
         $result = $this->objDb->query($sql);
-        
         if (PEAR::isError($result)) {
             //uh oh.... blog not installed, or cannot be found on remote
             throw new customException($this->objLanguage->languageText("mod_blog_import_noblog", "blog"));
         }
         //return the associative array of fetched values.
         $bres = $result->fetchAll(MDB2_FETCHMODE_ASSOC);
-        
         if (empty($bres)) {
             throw new customException($this->objLanguage->languageText("mod_blog_import_unoblog", "blog")); //56
-              
+            
         } else {
             return $bres;
         }

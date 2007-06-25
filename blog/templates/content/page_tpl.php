@@ -9,16 +9,13 @@ $objUi = $this->getObject('blogui');
 $leftCol = $objUi->leftBlocks($userid);
 // right side blocks
 $rightSideColumn = $objUi->rightBlocks($userid, NULL);
-if($this->objUser->isLoggedIn())
-{
-	if(isset($pagetoedit) && isset($check))
-	{
-		//echo "editing a page";
-		$middleColumn .= $this->objblogOps->pageEditor($userid, $check, $pagetoedit);
-	}
-	else {
-		$middleColumn .= $this->objblogOps->pageEditor($userid, $check);
-	}
+if ($this->objUser->isLoggedIn()) {
+    if (isset($pagetoedit) && isset($check)) {
+        //echo "editing a page";
+        $middleColumn.= $this->objblogOps->pageEditor($userid, $check, $pagetoedit);
+    } else {
+        $middleColumn.= $this->objblogOps->pageEditor($userid, $check);
+    }
 }
 //dump the cssLayout to screen
 $cssLayout->setMiddleColumnContent($middleColumn);

@@ -11,7 +11,6 @@ $cssLayout->setNumColumns(3);
 $middleColumn = NULL;
 //get the posts manager
 $middleColumn = $this->objblogOps->catedit($catarr, $userid, $catid);
-
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol);
 $cssLayout->setRightColumnContent($rightSideColumn);

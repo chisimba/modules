@@ -9,7 +9,7 @@ $leftCol = $objUi->leftBlocks($userid);
 // right side blocks
 $rightSideColumn = $objUi->rightBlocks($userid, NULL);
 $middleColumn = NULL;
-$middleColumn .= $this->objblogOps->showImportForm(TRUE);
+$middleColumn.= $this->objblogOps->showImportForm(TRUE);
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol);
 $cssLayout->setRightColumnContent($rightSideColumn);
