@@ -56,6 +56,7 @@ class realtime extends controller
 	*/
 	public $whiteboardURL;
 
+        
 	/**
 	* @var object $voiceURL: The URL for the voice applet files
 	* @access public
@@ -69,7 +70,8 @@ class realtime extends controller
 	public $contextCode;
 
 	public $realtimeControllerURL;
-
+        
+        public $presentationsURL;
 	/**
 	 * Constructor method to instantiate objects and get variables
 	 */
@@ -112,7 +114,8 @@ class realtime extends controller
 		$this->objConfig = $this->getObject('altconfig', 'config');
 		$location = "http://" . $_SERVER['HTTP_HOST'];
 		$this->whiteboardURL = $location . $this->getResourceUri('whiteboard', 'realtime');
-		$this->voiceURL = $location . $this->getResourceUri('voice', 'realtime');
+		$this->presentationsURL = $location . $this->getResourceUri('presentations', 'realtime');
+$this->voiceURL = $location . $this->getResourceUri('voice', 'realtime');
 		$this->realtimeControllerURL = $location . "/chisimba_framework/app/index.php?module=realtime";
 	}
 
@@ -137,6 +140,8 @@ class realtime extends controller
 
 			case 'whiteboard' :
 				return "realtime-whiteboard_tpl.php";
+			case 'presentations' :
+				return "realtime-presentations_tpl.php";
 			case 'requesttoken' :
 				return $this->requestToken($this->userId, $this->userLevel, $this->contextCode);
 			case 'releasetoken' :
