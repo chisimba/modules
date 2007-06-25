@@ -282,23 +282,23 @@ class simplebuildmap extends object
 		}
 		
     	$ret .="
-            <script type=\"text/javascript\">
-    		//<![CDATA[
-		    if (GBrowserIsCompatible()) { 
-		      // A function to create the marker and set up the event window
-		      // Dont try to modify this function. It has to be here for the map to display
-		      // Each instance of the function preserves the contents of a different instance
-		      // of the \"marker\" and \"html\" variables which will be needed later when the event triggers.    
-		      function createMarker(point,html) {
-		        var marker = new GMarker(point);
-		        GEvent.addListener(marker, \"click\", function() {
-		          marker.openInfoWindowHtml(html);
-		        });
-		        return marker;
+            <script type=\"text/javascript\">\n
+    		//<![CDATA[\n
+		    if (GBrowserIsCompatible()) {\n 
+		      // A function to create the marker and set up the event window\n
+		      // Dont try to modify this function. It has to be here for the map to display\n
+		      // Each instance of the function preserves the contents of a different instance\n
+		      // of the \"marker\" and \"html\" variables which will be needed later when the event triggers. \n   
+		      function createMarker(point,html) {\n
+		        var marker = new GMarker(point);\
+		        GEvent.addListener(marker, \"click\", function() {\n
+		          marker.openInfoWindowHtml(html);\n
+		        });\n
+		        return marker;\n
 		      }
 		      // Display the map, with some controls and set the initial location 
 		      var map = new GMap2(document.getElementById(\"map\")$gMapType);
-		      map.addControl(new GLargeMapControl());
+		      $this->getZoomControl()
 		      map.addControl(new GMapTypeControl());
 		      map.setCenter(new GLatLng($lat,$long),$mag);
       
@@ -348,8 +348,8 @@ class simplebuildmap extends object
 			var geoXml = new GGeoXml(\"$this->smap\");
 			function load() {
   			    if (GBrowserIsCompatible()) {
-				    map = new GMap2(document.getElementById(\"map\")$gMapType); 
-	    			map.addControl(new GLargeMapControl());
+				    map = new GMap2(document.getElementById(\"map\")$gMapType);
+				    $this->getZoomControl()
 	    		 	map.setCenter(new GLatLng($lat,$long),$mag); 
 				    map.addControl(new GLargeMapControl());
 				    map.addOverlay(geoXml);
@@ -379,6 +379,24 @@ class simplebuildmap extends object
         	$strRet .= " map.addOverlay($pin->overlay);\n\n";
         }
         return $strRet;
+    }
+    
+    /**
+    * 
+    * A method to control whether or not the large map zoom control shows
+    * or no, or what type of control displays
+    * 
+    */
+    function getZoomControl()
+    {
+    	switch ($this->mapControlType) {
+    		case "large":
+    			$ret = "map.addControl(new GLargeMapControl());";
+    			break;
+    		default:
+    			$ret = "";
+    	}
+    	return $ret; 
     }
 }
 ?>
