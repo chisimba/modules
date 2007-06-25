@@ -231,7 +231,7 @@ class genwrapper extends abgenerator implements ifgenerator
                     $prCount = count($ar);
                     $counter = 1;
                     foreach($ar as $param) {
-                        $params .= $param->getName();
+                        $params .= "\$" . $param->getName();
                         //If it allows NULL then add this to the output
                         if ($param->allowsNull) {
                             $params .= "=NULL";
@@ -246,8 +246,8 @@ class genwrapper extends abgenerator implements ifgenerator
                       . "class being wrapped. "
                       . "See that class for details of the \n" 
                       . "    * ". $method . "method.\n    *\n    */\n"
-                      . "    public " . $method . "(" . $params . ")\n    {\n"
-                      . "        return \$this->" . $this->objToWrap . "->" 
+                      . "    public function " . $method . "(" . $params . ")\n    {\n"
+                      . "        return \$this->obj" . $this->objToWrap . "wrapper->" 
                       . $method . "(". $params . ");\n    }\n";
                 }
             }
