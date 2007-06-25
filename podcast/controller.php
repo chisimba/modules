@@ -320,8 +320,14 @@ class podcast extends controller
         
         foreach ($podcasts as $podcast)
         {
+            if ($podcast['artist'] == '') {
+                $artist = $this->objUser->fullname($podcast['creatorid']);
+            } else {
+                $artist = $podcast['artist'];
+            }
+            
             $link = $this->uri(array('action'=>'downloadfile', 'id'=>$podcast['id']));
-            $rssFeed->addItem(htmlentities($podcast['title']), $link, htmlentities($podcast['description']), $podcast['datecreated'], $this->objUser->fullname($podcast['creatorid']), 'audio/mpeg', $podcast['filesize'], $podcast['playtime']);
+            $rssFeed->addItem(htmlentities($podcast['title']), $link, htmlentities($podcast['description']), $podcast['datecreated'], $artist, 'audio/mpeg', $podcast['filesize'], $podcast['playtime']);
         }
         
         $this->setVarByRef('feed', $rssFeed->show());

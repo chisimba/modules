@@ -45,11 +45,17 @@ if (count($podcasts) == 0) {
 		}         
        	$table = $this->newObject('htmltable', 'htmlelements');
        	$table->startRow();
+            if ($podcast['artist'] == '') {
+                $artist = $this->objUser->fullname($podcast['creatorid']);
+            } else {
+                $artist = $podcast['artist'];
+            }
+            
            	if (isset($id)) {  
-               	$table->addCell('<strong>'.$this->objLanguage->languageText('word_by', 'system').':</strong> '.$this->objUser->fullname($podcast['creatorid']), '50%');
+               	$table->addCell('<strong>'.$this->objLanguage->languageText('word_by', 'system').':</strong> '.$artist, '50%');
            	} else {
                	$authorLink = new link ($this->uri(array('action'=>'byuser', 'id'=>$podcast['creatorid'])));
-               	$authorLink->link = $this->objUser->fullname($podcast['creatorid']);
+               	$authorLink->link = $artist;
                	$table->addCell('<strong>'.$this->objLanguage->languageText('word_by', 'system').':</strong> '.$authorLink->show(), '50%');
            	}
         $table->addCell('<strong>'.$this->objLanguage->languageText('word_date', 'system').':</strong> '.$this->objDateTime->formatDate($podcast['datecreated']), '50%');
