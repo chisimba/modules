@@ -671,7 +671,7 @@ class blog extends controller
                     $posts = $this->objDbBlog->getAllPosts($userid, $catid);
                 } else {
                     //otherwise grab all the Published posts
-                    $posts = $this->objDbBlog->getPostsMonthly(time() , $userid);
+                    $posts = $this->objDbBlog->getAllPosts($userid, $catid); // getPostsMonthly(time() , $userid);
                     if (count($posts) < 2) {
                         $posts = $this->objDbBlog->getLastPosts(10, $userid);
                     }
