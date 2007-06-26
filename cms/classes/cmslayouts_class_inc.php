@@ -236,7 +236,8 @@ class cmslayouts extends object
         $str = '';
         if(!empty($rss))
         {
-        	foreach($rss as $feeds)
+        	$str .= '<div id="rssfeeds">';
+            foreach($rss as $feeds)
         	{
         		$timenow = time();
         		if($timenow - $feeds['rsstime'] > 43200)
@@ -248,13 +249,14 @@ class cmslayouts extends object
         		}
         		$str .= $this->rssBox($url, $feeds['name']);
         	}
+            $str .= '</div>';
         }
         $id = $this->getParam('id');
         $str .=  $this->showFeeds($id, TRUE, 'default');
         
         $str .= $this->_objHtmlBlock->displayBlock('');
         
-        return '<div id="cmsrss">'.$str.'</div>';
+        return $str;
     }
 
         /**
