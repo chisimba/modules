@@ -19,7 +19,7 @@ class sanordmenu extends object
         // List of Menu Items
         $this->menuItems = array(
             //array('title'=>'Home', 'module'=>'cms'), http://64.191.50.197/sanord/chisimba_framework/app/index.php?module=cms&action=showsection&pageid=gen10Srv58Nme22_2875_1181819042&id=init_1&sectionid=init_1
-            array('title'=>'Members', 'module'=>'cms', 'action' => 'showsection',  'id' => 'init_1', 'sectionid' => 'init_1'),
+            array('title'=>'Members', 'module'=>'cms', 'action' => 'showsection','id' => 'init_1', 'sectionid' => 'init_1'),
         );
         
         $this->objUser = $this->getObject('user', 'security');
@@ -48,12 +48,12 @@ class sanordmenu extends object
         }
         
         // Add Home Link
-        $str .= $this->prepareModuleItem('Home', '_default');
+        $str .= $this->prepareModuleItem(array('title'=>'Home', 'module'=>'_default'));
         
         // Build Items into menu
         foreach ($this->menuItems as $menuItem)
         {
-            $str .= $this->prepareModuleItem($menuItem['title'], $menuItem['module']);
+            $str .= $this->prepareModuleItem($menuItem);
         }
         
         
@@ -74,11 +74,17 @@ class sanordmenu extends object
     * @param string $title Title of the Item
     * @param string $module Name of the Module
     */
-    private function prepareModuleItem($title, $module)
+    private function prepareModuleItem($item)
     {
         // Get Current Module from URL
         $currentModule = $this->getParam('module');
         $isCurrent = FALSE;
+        
+        $title = $item['title'];
+        $module = $item['module'];
+        
+        unset($item['title']);
+        unset($item['module']);
         
         // Check if Current Module
         if ($module == $currentModule) {
@@ -99,7 +105,7 @@ class sanordmenu extends object
         }
         
         // Create Link
-        $link = $this->uri(NULL, $module);
+        $link = $this->uri($item, $module);
         
         // Build Menu Item
         return $this->prepareItem($title, $link, $isCurrent);
