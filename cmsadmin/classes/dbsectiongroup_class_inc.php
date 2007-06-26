@@ -127,8 +127,23 @@ class dbsectiongroup extends dbTable
      * @return array The node record from the db
      * @access public
 	 */
-  	public function getNode($id, $noPermissions = TRUE)
+  	public function getNode($id, $admin = FALSE) //$noPermissions = TRUE)
 	{
+	   try {
+	       $sql = "SELECT * FROM tbl_cms_sections WHERE id = '{$id}'";
+	       
+	       $data = $this->getArray($sql);
+	       if(!empty($data)){
+	           return $data[0];
+	       }
+	       return $data;
+	       
+	   }catch(Exception $e) {
+	       throw customException($e->getMessage());
+	       exit();
+	   }
+	   return '';
+	   /*
 		try {
             if (($noPermissions) || ($this->objUser->isAdmin())) {
                 $sql = "SELECT tbl_cms_sections.id, tbl_cms_sections.rootid, tbl_cms_sections.parentid, tbl_cms_sections.title, tbl_cms_sections.menutext, tbl_cms_sections.description, "
@@ -159,6 +174,7 @@ class dbsectiongroup extends dbTable
             echo customException::cleanUp();
             die();
         }
+        */
 	}
 
 

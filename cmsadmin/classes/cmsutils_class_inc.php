@@ -187,9 +187,11 @@ class cmsutils extends object
             $objIcon =& $this->newObject('geticon', 'htmlelements');
             //Not visible
             $objIcon->setIcon('not_visible');
+            $objIcon->title = $this->objLanguage->languageText('phrase_notpublished');
             $notVisibleIcon = $objIcon->show();
             //Visible
             $objIcon->setIcon('visible');
+            $objIcon->title = $this->objLanguage->languageText('word_published');
             $visibleIcon = $objIcon->show();
 
             $objRadio = new radio ($name);
@@ -693,12 +695,12 @@ class cmsutils extends object
 					$url = $this->uri(array('action' => 'menustyle'), 'cmsadmin');
 			 		$linkText = $this->objLanguage->languageText('phrase_menustyle');
 			 		$iconList = $icon_publish->getTextIcon($url, 'menu2', $linkText, 'png', 'icons/cms/');
-			 		*/
 			 		
 			 	    // New menu
 					$url = $this->uri(array('action' => 'addnewmenu','pageid'=>'0','add'=>'TRUE'), 'cmsadmin');
 			 		$linkText = $this->objLanguage->languageText('word_new');
 			 		$iconList .= $icon_publish->getTextIcon($url, 'new', $linkText, 'gif', 'icons/cms/');
+			 		*/
 			 					 	    
 			 		// Cancel	 		
 			 		$url = "javascript:history.back();";
@@ -968,11 +970,11 @@ class cmsutils extends object
 
             if ($isCheck) {
                 $objIcon->setIcon('visible', 'gif');
-                $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_isvisible', 'cmsadmin');
+                $objIcon->title = $this->objLanguage->languageText('word_published');
             } else {
                 if ($returnFalse) {
                     $objIcon->setIcon('not_visible', 'gif');
-                    $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_isnotvisible', 'cmsadmin');
+                    $objIcon->title = $this->objLanguage->languageText('phrase_notpublished');
                 }
             }
 
@@ -1035,7 +1037,8 @@ class cmsutils extends object
     		*/	
     
                 //Add links to the output layer
-                $nav = $objFeatureBox->show($this->objLanguage->languageText('word_sections'),$objCMSTree->getCMSAdminTree());
+                $currentNode = $this->getParam('sectionid');
+                $nav = $objFeatureBox->show($this->objLanguage->languageText('word_sections'),$objCMSTree->getCMSAdminTree($currentNode));
             //}
                 
                 //$nav .= '<br/>';
@@ -1890,7 +1893,7 @@ class cmsutils extends object
 
             //published
             $table->startRow();
-            $table->addCell($this->objLanguage->languageText('word_section').'&nbsp;'.$this->objLanguage->languageText('word_visible').': ');
+            $table->addCell($this->objLanguage->languageText('word_section').'&nbsp;'.$this->objLanguage->languageText('word_publish').': ');
             $table->addCell($this->getYesNoRadion('published', $isPublished),'','','','',"colspan='2'");
             $table->endRow();
             
@@ -2226,7 +2229,8 @@ class cmsutils extends object
             }
 
             //setup form
-            $objForm = new form('addfrm', $this->uri(array('action' => $action, 'id' => $contentId, 'frontpage' => $is_front), 'cmsadmin'));
+            $frontMan = $this->getParam('frontmanage', FALSE);
+            $objForm = new form('addfrm', $this->uri(array('action' => $action, 'id' => $contentId, 'frontman' => $frontMan), 'cmsadmin'));
             $objForm->setDisplayType(3);
 
             if ($editmode) {
@@ -2266,7 +2270,7 @@ class cmsutils extends object
             }
 
             $table->startRow();
-            $table->addCell($this->objLanguage->languageText('word_visible').': &nbsp; ');
+            $table->addCell($this->objLanguage->languageText('word_publish').': &nbsp; ');
             $table->addCell($this->getYesNoRadion('published', $visible));
             //$table->addCell($published->show());
             $table->endRow();
@@ -2316,7 +2320,7 @@ class cmsutils extends object
             $bodyInput = $this->newObject('htmlarea', 'htmlelements');
             $bodyInput->init('body', $bodyInputValue);
             $bodyInput->setContent($bodyInputValue);
-            $bodyInput->setDefaultToolBarSetWithoutSave();
+            $bodyInput->setDefaultToolBarSet();
             $bodyInput->height = '400px';
             $bodyInput->width = '100%';
 

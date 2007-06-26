@@ -292,7 +292,14 @@ class cmsadmin extends controller
                     	 return 'cms_section_list_tpl.php';            			
 				     	
                 case 'sectionpublish':
-                    $this->_objSections->togglePublish($this->getParam('id'));
+                    $id = $this->getParam('id');
+                    $mode = $this->getParam('mode');
+                    $this->_objSections->publish($id, $mode);
+                    
+                    $sectionId = $this->getParam('sectionid');
+                    if(!empty($sectionId)){
+                        return $this->nextAction('viewsection', array('id' => $sectionId));
+                    }
                     return $this->nextAction('sections');
 
                 case 'deletesection':
@@ -363,7 +370,7 @@ class cmsadmin extends controller
                 case 'editcontent':
                     $this->_objContent->edit();
                     $sectionId = $this->getParam('parent', NULL);
-                    $is_front = $this->getParam('frontpage', FALSE);
+                    $is_front = $this->getParam('frontman', FALSE);
 
                     if (!empty($sectionId) && !$is_front) {
                         return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
@@ -373,18 +380,26 @@ class cmsadmin extends controller
                     break;
                     
                 case 'viewcontent':
-//                    $this->_objContent->edit();
-                    $sectionId = $this->getParam('sectionid', NULL);
+                    $id = $this->getParam('id');
+                    $sectionId = $this->getParam('sectionid');
+                    return $this->nextAction('addcontent', array('id' => $id, 'parent' =>$sectionId));
+                    /*$this->_objContent->edit();
 
                     if (!empty($sectionId)) {
                         return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
                     } else {
                         return $this->nextAction('frontpages', array('action' => 'frontpages'), 'cmsadmin');
-                    }
+                    }*/
 
                 case 'contentpublish':
-                    //Change state between published and not published
-                    $this->_objContent->togglePublish($this->getParam('id'));
+                    $id = $this->getParam('id');
+                    $mode = $this->getParam('mode');
+                    $this->_objContent->publish($id, $mode);
+                    
+                    $sectionId = $this->getParam('sectionid');
+                    if(!empty($sectionId)){
+                        return $this->nextAction('viewsection', array('id' => $sectionId));
+                    }
                     return $this->nextAction('frontpages');
 
                 case 'trashcontent':

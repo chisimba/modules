@@ -104,7 +104,7 @@ if(!empty($files)){
         //Create delete & edit icon for removing content from front page
         $objIcon = & $this->newObject('geticon', 'htmlelements');
         $objIcon->setIcon('edit');
-        $link = new link($this->uri(array('action' => 'addcontent', 'id' => $arrFile['id'], 'parent' => $arrFile['sectionid'])));
+        $link = new link($this->uri(array('action' => 'addcontent', 'id' => $arrFile['id'], 'parent' => $arrFile['sectionid'], 'frontmanage' => TRUE)));
         $link->link = $objIcon->show();
         $editPage = $link->show();
     

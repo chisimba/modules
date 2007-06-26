@@ -234,26 +234,25 @@ class cmstree extends object
 		* Method to get the tree to display on the CMS module
 		* @return string
 		*/
-		public function getCMSTree()
+		public function getCMSTree($current)
 		{
-			$includeFrontPage = $this->_objFrontPage->hasFrontPageContent();
+			//$includeFrontPage = $this->_objFrontPage->hasFrontPageContent();
 			//$buildtree = $this->newObject('buildtree');
 			//$list = new htmllist($menu, array('topMostListClass'=>'treefolder'));
 			//$list = $buildtree->buildFoldoutMenu($parentId = '0', $onlyPublished = true);
             $this->_objTree = & $this->newObject('contenttree', 'cmsadmin');
-			return $this->_objTree->show(null,TRUE,'cms','showsection','showfulltext');
+			return $this->_objTree->show($current,FALSE,'cms','showsection','showfulltext');
 		}
 		
 		/**
 		* Method to get the tree to display on the CMS Admin module
 		* @return string
 		*/
-		public function getCMSAdminTree()
+		public function getCMSAdminTree($current)
 		{
-			
 			//$menu = $this->getTree('cmsadmin', FALSE);
 			 $this->_objTree = & $this->newObject('contenttree', 'cmsadmin');
-			return $this->_objTree->show(null,TRUE,'cmsadmin','viewsection','viewcontent');
+			return $this->_objTree->show($current,TRUE,'cmsadmin','viewsection','viewcontent');
 		}
 		
 		/**

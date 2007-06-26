@@ -125,17 +125,19 @@ if (isset($subSections)) {
         $subSecPublished = $subsec['published'];
         $subSecLayout = $this->_objLayouts->getLayout($subsec['layout']);
         $subSecLayoutName = $subSecLayout['name'];
-        //Get $visivle icon
 
-        if ($subSecPublished == '1') {
-            $objIcon->setIcon('visible');
-            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_isvisible', 'cmsadmin');
-        } else {
-            $objIcon->setIcon('not_visible');
-            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_isnotvisible', 'cmsadmin');
-        }
-
-        $visibleIcon = $objIcon->show();
+	    //publish, visible
+	    if($subSecPublished){
+	       $url = $this->uri(array('action' => 'sectionpublish', 'id' => $subsec['id'], 'mode' => 'unpublish', 'sectionid' => $sectionId));
+	       $icon = $this->_objUtils->getCheckIcon(TRUE);
+	    }else{
+	       $url = $this->uri(array('action' => 'sectionpublish', 'id' => $subsec['id'], 'mode' => 'publish', 'sectionid' => $sectionId));
+	       $icon = $this->_objUtils->getCheckIcon(FALSE);
+	    }
+	    $objLink = new link($url);
+	    $objLink->link = $icon;
+	    $visibleIcon = $objLink->show();
+	    
         //Create delete icon
         $delArray = array('action' => 'deletesection', 'confirm' => 'yes', 'id' => $subSecId);
         $deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelsection', 'cmsadmin');
@@ -198,6 +200,7 @@ if (count($pages) > '0') {
         $articleDate = $page['modified'];
         $pagePublished = $page['published'];
 
+/*
         if ($pagePublished == '1') {
             $objIcon->setIcon('visible');
             $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_isvisible', 'cmsadmin');
@@ -206,7 +209,19 @@ if (count($pages) > '0') {
             $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_isnotvisible', 'cmsadmin');
         }
 
-        $visibleIcon = $objIcon->show();
+        $visibleIcon = $objIcon->show();*/
+
+        //publish, visible
+	    if($pagePublished){
+	       $url = $this->uri(array('action' => 'contentpublish', 'id' => $page['id'], 'mode' => 'unpublish', 'sectionid' => $sectionId));
+	       $icon = $this->_objUtils->getCheckIcon(TRUE);
+	    }else{
+	       $url = $this->uri(array('action' => 'contentpublish', 'id' => $page['id'], 'mode' => 'publish', 'sectionid' => $sectionId));
+	       $icon = $this->_objUtils->getCheckIcon(FALSE);
+	    }
+	    $objLink = new link($url);
+	    $objLink->link = $icon;
+	    $visibleIcon = $objLink->show();
 
         //Create delete icon
         $delArray = array('action' => 'trashcontent', 'confirm' => 'yes', 'id' => $pageId, 'sectionid' => $sectionId);

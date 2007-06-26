@@ -167,7 +167,16 @@ if (is_array($arrSections)) {
 		$objCheck->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
 		
 	    //publish, visible
-	    $visibleLink = $this->_objUtils->getCheckIcon($section['published']);
+	    if($section['published']){
+	       $url = $this->uri(array('action' => 'sectionpublish', 'id' => $section['id'], 'mode' => 'unpublish'));
+	       $icon = $this->_objUtils->getCheckIcon(TRUE);
+	    }else{
+	       $url = $this->uri(array('action' => 'sectionpublish', 'id' => $section['id'], 'mode' => 'publish'));
+	       $icon = $this->_objUtils->getCheckIcon(FALSE);
+	    }
+	    $objLink = new link($url);
+	    $objLink->link = $icon;
+	    $visibleLink = $objLink->show();
 	
 	    //Create delete icon
 	    $delArray = array('action' => 'deletesection', 'confirm'=>'yes', 'id'=>$section['id']);

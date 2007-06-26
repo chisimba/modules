@@ -166,17 +166,6 @@ class contenttree extends object
                             $htmlLevel .= $htmlChildren.'</ul></li>';
                         }
 
-                        elseif($admin == TRUE) {
-
-                            if (in_array($node['id'], $openNodes)) {
-                                $htmlLevel .= '<li>'.$link.'<ul>';
-                            } else {
-                                $htmlLevel .= '<li class="closed">'.$link.'<ul>';
-                            }
-
-                            $htmlLevel .= '</ul></li>';
-                        }
-
                         //nodes with no are content suppressed, if not admin
                     }
                 }
