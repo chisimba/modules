@@ -86,11 +86,21 @@ class facebookapps extends controller
     */
     private function __default()
     {
+        $this->setVar('pageSuppressContainer',TRUE);
+        $this->setVar('suppressFooter', TRUE); # suppress default page footer
+        $this->setVar('pageSuppressIM', TRUE);
+        $this->setVar('pageSuppressToolbar', TRUE);
+        $this->setVar('pageSuppressBanner', TRUE);
     	$this->setVar('pageSuppressXML', TRUE);
     	$str = "Working here";
     	$this->setVarByRef('str', $str);
         return "dump_tpl.php";
     }
+    
+    private function __playapp()
+    {
+        $app = $this->getParam('action', 'default');
+    } 
 
     
     /**
