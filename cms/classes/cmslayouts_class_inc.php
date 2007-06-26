@@ -173,6 +173,8 @@ class cmslayouts extends object
     */
     private function showButtonsMenu($currentNode)
     {
+        $objLayer = $this->newObject('layer', 'htmlelements');
+        
         // Get the sections
         $sectionData = $this->_objSections->getRootNodes(TRUE);
         
@@ -196,7 +198,9 @@ class cmslayouts extends object
                 $html .= $this->createButton($linkUrl, $linkText, $selected);
             }
         }
-        return $html.'<br />';
+        $objLayer->str = $html;
+        $objLayer->id = 'cmsnavigation';
+        return $objLayer->show().'<br />';
     }
     
     /**
