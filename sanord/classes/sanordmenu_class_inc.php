@@ -104,6 +104,10 @@ class sanordmenu extends object
             $isCurrent = TRUE;
         }
         
+        if ($isCurrent && isset($item['id']) && $item['id'] != $this->getParam('id')) {
+            $isCurrent = FALSE;
+        }
+        
         // Create Link
         $link = $this->uri($item, $module);
         
