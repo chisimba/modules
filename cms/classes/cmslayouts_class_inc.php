@@ -254,7 +254,7 @@ class cmslayouts extends object
         
         $str .= $this->_objHtmlBlock->displayBlock('');
         
-        return $str;
+        return '<div id="cmsrss">'.$str.'</div>';
     }
 
         /**
