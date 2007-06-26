@@ -44,11 +44,11 @@ class cmslayouts extends object
 
             $this->loadClass('href', 'htmlelements');
 
-            $this->objLayer = $this->newObject('layer', 'htmlelements');
             $this->objIcon = $this->newObject('geticon', 'htmlelements');
 
             $this->loadClass('link', 'htmlelements');
             $this->loadClass('htmltable', 'htmlelements');
+            $this->loadClass('layer', 'htmlelements');
             
         }catch(Exception $e){
             throw customException($e->getMessage());
@@ -145,7 +145,6 @@ class cmslayouts extends object
         // bust out a featurebox for consistency
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
         $objTreeMenu = $this->newObject('cmstree', 'cmsadmin');
-        $objLayer = $this->newObject('layer', 'htmlelements');
         
         $currentNode = $this->getParam('sectionid');
 
@@ -158,6 +157,7 @@ class cmslayouts extends object
         //Set to automatically render htmllist into tree menu
         $this->appendArrayVar('bodyOnLoad', 'autoInit_trees()');
         
+        $objLayer = new layer();
         $objLayer->str = $objFeatureBox->show($head, $objTreeMenu->getCMSTree($currentNode));
         $objLayer->id = 'cmsnavigation';
         
@@ -172,9 +172,7 @@ class cmslayouts extends object
     * @return string html
     */
     private function showButtonsMenu($currentNode)
-    {
-        $objLayer = $this->newObject('layer', 'htmlelements');
-        
+    {   
         // Get the sections
         $sectionData = $this->_objSections->getRootNodes(TRUE);
         
@@ -198,6 +196,7 @@ class cmslayouts extends object
                 $html .= $this->createButton($linkUrl, $linkText, $selected);
             }
         }
+        $objLayer = new layer();
         $objLayer->str = $html;
         $objLayer->id = 'cmsnavigation';
         return $objLayer->show().'<br />';
@@ -236,7 +235,6 @@ class cmslayouts extends object
         $str = '';
         if(!empty($rss))
         {
-        	$str .= '<div id="rssfeeds">';
             foreach($rss as $feeds)
         	{
         		$timenow = time();
@@ -249,10 +247,13 @@ class cmslayouts extends object
         		}
         		$str .= $this->rssBox($url, $feeds['name']);
         	}
-            $str .= '</div>';
         }
         $id = $this->getParam('id');
-        $str .=  $this->showFeeds($id, TRUE, 'default');
+        
+        $objLayer = new layer();
+        $objLayer->str = $this->showFeeds($id, TRUE, 'default');
+        $objLayer->id = 'cmsrss';
+        $str .= $objLayer->show();
         
         $str .= $this->_objHtmlBlock->displayBlock('');
         
