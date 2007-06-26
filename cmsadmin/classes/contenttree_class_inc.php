@@ -114,67 +114,92 @@ class contenttree extends object
         public function buildLevel($parentId, $currentNode, $admin, $module, $sectionAction, $contentAction)
         {
             //gets all the child nodes of id
-            $nodes = $this->getChildNodes($parentId);
+            $nodes = $this->getChildNodes($parentId, $admin);
+            
             //get the list of nodes that need to stay open for the currently selected node
-            $openNodes = $this->getOpenNodes($currentNode);
-            if (count($nodes)) {
+            //$openNodes = $this->getOpenNodes($currentNode);
+            //echo '<pre>'; print_r($nodes); 
+            //echo '</pre>';
+            
+            if (!empty($nodes)) {
 
                 $htmlLevel = '';
                 foreach($nodes as $node) {
                     $htmlChildren = '';
-                    $htmlChildren .= $this->addContent($node['id'], $module, $contentAction);
+                    $htmlChildren .= $this->addContent($node['id'], $module, $contentAction, $admin);
 
-                    if (!is_null($sectionAction)) {
+                    if (!empty($sectionAction)) {
                         $nodeUri = $this->uri(array('action' => $sectionAction, 'id' => $node['id'], 'sectionid' => $node['id']), $module);
                         $link = '<a href="'.$nodeUri.'">'.htmlentities($node['title']).'</a>';
                     } else {
-                        $link = $node['title'];
+                        $link = htmlentities($node['title']);
                     }
 
+                    // if node has further child nodes, recursively call buildLevel
                     if ($this->getChildNodeCount($node['id']) > 0) {
-
-
-                        //if node has further child nodes, recursively call buildLevel
-
                         $htmlChildren .= $this->buildLevel($node['id'], $currentNode, $admin, $module, $sectionAction, $contentAction);
+                    }
+                    
+                    // if no content or child nodes with content, then suppress the node, else build it
+                    if(!empty($htmlChildren) || $admin){
+                        $class = 'closed';
+                        if($node['id'] == $currentNode){
+                            $class = '';
+                        }
+                        $htmlLevel .= "<li class='{$class}'>".$link;
+                        $htmlLevel .= '<ul>'.$htmlChildren.'</ul></li>';
+                    }
 
-
+/*
                         //if no content or child nodes with content, then suppress the node, else build it
                         if (($htmlChildren == '') && ($admin == FALSE)) {
                             $htmlLevel = '';
                         } else {
-
+                            $class = 'closed';
+                            if($node['id'] == $currentNode){
+                                $class = '';
+                            }
+                            $htmlLevel .= "<li class='{$class}'>".$link;
+                            /*
                             if (in_array($node['id'], $openNodes)) {
                                 $htmlLevel .= '<li>'.$link.'<ul>';
                             } else {
                                 $htmlLevel .= '<li class="closed">'.$link.'<ul>';
                             }
+                            *
 
-                            $htmlLevel .= $htmlChildren;
-                            $htmlLevel .= '</ul></li>';
+                            if(!empty($htmlChildren)){
+                                $htmlLevel .= '<ul>'.$htmlChildren.'</ul>';
+                            }
+                            $htmlLevel .= '</li>';
                         }
                     } else {
                         //if node has no child nodes, then just get content nodes
 
                         if ($this->getNodeContentCount($node['id']) > 0) {
+                            $class = 'closed';
+                            if($node['id'] == $currentNode){
+                                $class = '';
+                            }
+                            $htmlLevel .= "<li class='{$class}'>".$link.'<ul>';
+                            /*
                             if (in_array($node['id'], $openNodes)) {
                                 $htmlLevel .= '<li>'.$link.'<ul>';
                             } else {
                                 $htmlLevel .= '<li class="closed">'.$link.'<ul>';
                             }
+                            *
 
                             $htmlLevel .= $htmlChildren.'</ul></li>';
                         }
-
-                        //nodes with no are content suppressed, if not admin
-                    }
+                        
+                    }*/
                 }
 
                 return $htmlLevel;
-            } else {
-                //if no nodes return empty string
-                return '';
             }
+            // if no nodes return empty string
+            return '';
         }
 
         /**
@@ -213,26 +238,24 @@ class contenttree extends object
          * @return string
          * @access public
          */
-        public function addContent($id, $module, $contentAction)
+        public function addContent($id, $module, $action = '', $admin = FALSE)
         {
-            $contentNodes = $this->getContent($id);
+            $contentNodes = $this->getContent($id, $admin);
 
-            if (count($contentNodes)) {
-                $htmlContent = '';
+            $htmlContent = '';
+            if (!empty($contentNodes)) {
                 foreach($contentNodes as $contentNode) {
-                    if (!is_null($contentAction)) {
-                        $contentUri = $this->uri(array('action' => $contentAction, 'id' => $contentNode['id'], 'sectionid' => $contentNode['sectionid']), $module);
-                        $link = '<a href="'.$contentUri.'">'.htmlentities($contentNode['title']).'</a>';
+                    if (!empty($action)) {
+                        $url = $this->uri(array('action' => $action, 'id' => $contentNode['id'], 'sectionid' => $contentNode['sectionid']), $module);
+                        $link = '<a href="'.$url.'">'.htmlentities($contentNode['title']).'</a>';
                     } else {
-                        $link = $contentNode['title'];
+                        $link = htmlentities($contentNode['title']);
                     }
                     $htmlContent .= '<li>'.$link.'</li>';
                 }
-
                 return $htmlContent;
-            } else {
-                return '';
             }
+            return '';
         }
 
         /**
@@ -263,9 +286,10 @@ class contenttree extends object
          * @return array
          * @access public
          */
-        public function getContent($sectionId)
+        public function getContent($sectionId, $admin)
         {
-            return $this->_objContent->getPagesInSection($sectionId, TRUE);
+            $published = !$admin;
+            return $this->_objContent->getPagesInSection($sectionId, $published);
         }
 
         /**

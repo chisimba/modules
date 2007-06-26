@@ -39,7 +39,7 @@ class dbsectiongroup extends dbTable
             $this->objUser = & $this->newObject('user', 'security');
 
        } catch (Exception $e){
-            echo 'Caught exception: ',  $e->getMessage();
+            throw customException($e->getMessage());
             exit();
        }
     }
@@ -53,8 +53,29 @@ class dbsectiongroup extends dbTable
      * @return array The array of child nodes
      * @access public
 	 */
-    public function getChildNodes($parentId, $noPermissions)
+    public function getChildNodes($parentId, $admin = FALSE) //$noPermissions)
     {
+        try {
+            
+            if($admin){
+                $sql = "SELECT * FROM tbl_cms_sections 
+                    WHERE parentid = '{$parentId}' AND trash = 0
+                    ORDER BY ordering";
+            }else{
+                $sql = "SELECT * FROM tbl_cms_sections 
+                    WHERE parentid = '{$parentId}' AND trash = 0 AND published = 1 
+                    ORDER BY ordering";
+            }
+            
+            $data = $this->getArray($sql);
+            return $data;
+            
+        }catch(Exception $e){
+            throw customException($e->getMessage());
+            exit();
+        }
+        return '';
+        /*
 		try {
 
             if ($noPermissions != TRUE) {
@@ -81,6 +102,7 @@ class dbsectiongroup extends dbTable
             echo customException::cleanUp();
             die();
         }
+        */
     }
 
     /**
