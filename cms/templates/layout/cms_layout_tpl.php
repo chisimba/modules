@@ -32,7 +32,7 @@ $currentNode = $this->getParam('sectionid', NULL);
 if(!isset($rss)){
     $rss = '';
 }
-$leftSide = $this->objLayout->getLeftMenu($currentNode, $rss);
+$leftSide = '<div id="cmsnavigation">'.$this->objLayout->getLeftMenu($currentNode, $rss).'</div>';
 
 /***************** END OF LEFT SIDE *******************************/
 
