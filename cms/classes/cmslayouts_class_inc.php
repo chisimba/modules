@@ -145,6 +145,9 @@ class cmslayouts extends object
         // bust out a featurebox for consistency
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
         $objTreeMenu = $this->newObject('cmstree', 'cmsadmin');
+        $objLayer = $this->newObject('layer', 'htmlelements');
+        
+        $currentNode = $this->getParam('sectionid');
 
         $head = $this->objLanguage->languageText("mod_cms_navigation", "cms");
 
@@ -154,8 +157,11 @@ class cmslayouts extends object
         $this->appendArrayVar('headerParams', $css);
         //Set to automatically render htmllist into tree menu
         $this->appendArrayVar('bodyOnLoad', 'autoInit_trees()');
-                       
-        return $objFeatureBox->show($head, $objTreeMenu->getCMSTree($currentNode));
+        
+        $objLayer->str = $objFeatureBox->show($head, $objTreeMenu->getCMSTree($currentNode));
+        $objLayer->id = 'cmsnavigation';
+        
+        return $objLayer->show();
     }
 
     /**
