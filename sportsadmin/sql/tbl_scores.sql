@@ -1,5 +1,5 @@
 <?php
-  /*
+
   $sqldata[]="CREATE TABLE tbl_scores(
   id varchar(32) NOT NULL default '',
   sportId varchar(32),
@@ -39,74 +39,6 @@
  
 )TYPE=InnoDB
 ";
-*/
 
 
-//5ive definition
-$tablename = 'tbl_scores';
-
-//Options line for comments, encoding and character set
-$options = array('comment' => 'Table to hold the scores', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
-
-//
-$fields = array(
-	'id' => array(
-		'type' => 'text',
-		'length' => 32,
-		'notnull' => 1
-		),
-	'sportId' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'playerId' => array(
-		'type' => 'text',
-		'length' => 32,
-		'notnull'=> 1
-		),
-	'fixtureId' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'tournamentId' => array(
-		'type' => 'text',
-		'length'=> 32
-		),
-	'teamId' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'matchDate' => array(
-		'type' => 'timestamp'
-		),
-	'time' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'enteredBy' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'creationDate' => array(
-		'type' => 'timestamp'
-		),
-	'updatedBy' => array(
-		'type' => 'text',
-		'length' => 32
-		)
-	);
-	
-// create other indexes here...
-$name = 'scores_index';
-
-$indexes = array(
-                'fields' => array(
-					'sportId' => array(),
-                    'tournamentId' => array(),
-					'fixtureId' => array(),
-                    'enteredBy' => array(),
-					'teamId' => array(),
-                    'playerId' => array(),
-                ),
-        );
 ?>
