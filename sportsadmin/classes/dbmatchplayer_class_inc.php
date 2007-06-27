@@ -13,13 +13,13 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 class dbmatchplayer extends dbtable{
 
-public function init(){
+ function init(){
 	parent::init('tbl_match_players');
 	$this->table = "tbl_match_players";
 
 }
 
-public function getAll(){
+ function getAll(){
 $sql = "select * from ".$this->table;
 
 $ar = $this->getArray($sql);
@@ -31,7 +31,7 @@ else return false;
 }
 
 
-public function saveplayer($n,$teamid,$fixtureid,$tournamentid,$sportid){
+ function saveplayer($n,$teamid,$fixtureid,$tournamentid,$sportid){
 $sql = $this->insert(
    array(
    'playerId'=>$n,
@@ -53,7 +53,7 @@ $sql = $this->insert(
 * @param $teamid - id of th team to which the player belongs
 * @param $fixtureid - fixture to witch the match belongs
 */
-public function getPlayersForTeamInFixture($teamid,$fixtureid){
+ function getPlayersForTeamInFixture($teamid,$fixtureid){
 $sql = "select  playerId from ".$this->table." where teamId='".$teamid."' and fixtureId='".$fixtureid."'";
 $ar = $this->getArray($sql);
 if($sql){
@@ -66,14 +66,14 @@ else
 }
 
 //function to check if team has players in a agiven match
-public function playersExist($teamid,$fixtureid){
+ function playersExist($teamid,$fixtureid){
 $sql = "select * from ".$this->table." where teamId='$teamid' and fixtureId='$fixtureid'";
 return $this->getArray($sql);
 }
 
 
 //function to return members of a team not yet in the fixture/match
-public function getTeamMembersNotInMatch($teamid,$fixtureid){
+ function getTeamMembersNotInMatch($teamid,$fixtureid){
 $t = "tbl_player";
 $s = "tbl_match_players";
 
@@ -105,7 +105,7 @@ else
 * Function to delete the players from a match
 $ @param $playerid- id of the player to be deleted
 */
-public function removePlayer($playerid){
+ function removePlayer($playerid){
 $sql = "DELETE FROM ".$this->table." WHERE playerId='".$playerid."'";
 	return $this->query($sql);
 }
