@@ -1,5 +1,5 @@
 <?php
-  /*
+
   $sqldata[]="CREATE TABLE tbl_tournament(
   id varchar(32) NOT NULL,
   name varchar(32) NOT NULL,
@@ -18,56 +18,7 @@
   
 )TYPE=InnoDB
 ";
-*/
 
 
-//5ive definition
-$tablename = 'tbl_tournament';
 
-//Options line for comments, encoding and character set
-$options = array('comment' => 'Table to hold the fixtures', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
-
-//
-$fields = array(
-	'id' => array(
-		'type' => 'text',
-		'length' => 32,
-		'notnull' => 1
-		),
-	'name' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'sponsorName' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'creator' => array(
-		'type' => 'text',
-		'length' => 32,
-		),
-	'startDate' => array(
-		'type' => 'timestamp'
-		),
-	'endDate' => array(
-		'type' => 'timestamp'
-		),
-	'sportId' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'updated' => array(
-		'type' => 'timestamp'
-		)
-	);
-	
-// create other indexes here...
-$name = 'tournament_index';
-
-$indexes = array(
-                'fields' => array(
-					'creator' => array(),
-                    'sportId' => array(),
-                ),
-        );
 ?>
