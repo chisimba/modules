@@ -12,10 +12,10 @@ if (!$GLOBALS['kewl_entry_point_run'])
 */
 class dbplayer extends dbTable {
 
-public $objUser;
-public $objLanguage;
+ var $objUser;
+ var $objLanguage;
 
-	public function init(){
+	 function init(){
 		parent::init('tbl_player');
 		$this->table = "tbl_player";
 
@@ -27,7 +27,7 @@ public $objLanguage;
 * Function to pick all the entries from tbl_player
 *
 */
-public function geAll(){
+ function geAll(){
 
 $sql = "SELECT tbl_player.* FROM ".$this->table." ";
 $ar = $this->getArray($sql);
@@ -44,7 +44,7 @@ else
 
 
 //function to get all the players for a specific sport
-public function getPlayersForSport($sportid){
+ function getPlayersForSport($sportid){
 //echo $sportid;
 $sql = "SELECT * FROM ".$this->table." WHERE sportId='".$sportid."'";
 
@@ -64,7 +64,7 @@ else
 /*function to get the details of the player 
 * @param - $playerid  id of the player whose details are being picked
 */
-public function getPlayerDetails($playerid){
+ function getPlayerDetails($playerid){
 $sql = "SELECT * FROM ".$this->table." WHERE id='".$playerid."'";
 $ar = $this->getArray($sql);
 if($ar){
@@ -76,7 +76,7 @@ return $ar;
 /*function to get the details of the player 
 * @param - $playerid  id of the player whose details are being picked
 */
-public function getPlayerNameById($playerid){
+ function getPlayerNameById($playerid){
 $sql = "SELECT * FROM ".$this->table." WHERE id='".$playerid."'";
 $ar = $this->getArray($sql);
 if($ar){
@@ -97,7 +97,7 @@ else
 * @param  $position - Role of player in the team(eg captain, coach,stricker,etc)
 * @param  $sportid  - id of the sport to which the player is registered
 */
-public function saveplayer($name,$team ,$country, $dob ,$position, $sportid,$imagefile ){
+ function saveplayer($name,$team ,$country, $dob ,$position, $sportid,$imagefile ){
 
 $this->insert(array(
 	'name'=>$name,
@@ -116,7 +116,7 @@ $this->insert(array(
 *
 * Param $teamid - the unique identification of the selected team
 */
-public function getTeamMembers($teamid,$sportid){
+ function getTeamMembers($teamid,$sportid){
 $sql =" SELECT * FROM ".$this->table." WHERE team='".$teamid."' and sportId='".$sportid."' ";
 $ar = $this->getArray($sql);
 if($ar){
@@ -132,7 +132,7 @@ else
 * @param $teamid - the id of the team whose players are required
 */
 
-public function getPlayersForTeam($teamid){
+ function getPlayersForTeam($teamid){
 
 $sql = " SELECT * FROM ".$this->table." WHERE team='".$teamid."'";
 $ar  = $this->getArray($sql);
@@ -149,7 +149,7 @@ $ar  = $this->getArray($sql);
 * @Param $searchfield - the data that is being searched for 
 * @param $option- search criteria a corresponding column name in tbl_player
 */
-public function searchForPlayer($searchfield,$option){
+ function searchForPlayer($searchfield,$option){
 
 $sql = "SELECT * FROM ".$this->table." where ".$option." like '%$searchfield%' ";
 
@@ -169,7 +169,7 @@ $ar = $this->getArray($sql);
 	* @param playerid - the id of the player to be deleted
 	*/
 	
-	public function deleteplayer($playerid){
+	 function deleteplayer($playerid){
 	$sql = "DELETE FROM ".$this->table." WHERE id='".$playerid."'";
     $res = $this->getArray($sql);
    if($sql){
@@ -179,7 +179,7 @@ $ar = $this->getArray($sql);
 	
 	}
 	
-public function modifyplayer($playerid,$position,$name,$team,$country){
+ function modifyplayer($playerid,$position,$name,$team,$country){
 	$updatedBy = $this->objUser->userId();
        $this->update("id", $playerid, array(
 			'country' => $country,
@@ -191,7 +191,7 @@ public function modifyplayer($playerid,$position,$name,$team,$country){
 	
 }
 //function to return the total number of players for a given sport 
-public function numberOfPlayers($sportid){
+ function numberOfPlayers($sportid){
 $sql = "select count(sportId) as playerno from ".$this->table." where sportId= '$sportid' ";
 	$ar = $this->getArray($sql);
 	return $ar[0]['playerno'];
@@ -205,7 +205,7 @@ $sql = "select count(sportId) as playerno from ".$this->table." where sportId= '
     * @access public
     * @param string $folder The folder that needs to be created
     */
-    public function makeFolder($folder_name)
+    function makeFolder($folder_name)
     {     
             $oldumask = umask(0);
             $ret = mkdir($folder_name, 0777);
@@ -217,7 +217,8 @@ $sql = "select count(sportId) as playerno from ".$this->table." where sportId= '
 	
 	
 function uploadfile($folder){
-$this->objConfig = & $this->getObject('altconfig','config');
+
+$this->objConfig = & $this->getObject('config','config');
 
  if (is_uploaded_file($_FILES['playerimage']['tmp_name'])) {
    $file_name = $_FILES['playerimage']['name'];   
