@@ -1,5 +1,5 @@
 <?php
-/*
+
   $sqldata[]="CREATE TABLE tbl_sportsnews (
   id varchar(32) NOT NULL default '',
   news text,
@@ -30,57 +30,6 @@
   
 )TYPE=InnoDB
 ";
-*/
 
-//5ive definition
-$tablename = 'tbl_sportsnews';
 
-//Options line for comments, encoding and character set
-$options = array('comment' => 'Table to hold the news for each sport', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
-
-//
-$fields = array(
-	'id' => array(
-		'type' => 'text',
-		'length' => 32,
-		'notnull' => 1
-		),
-	'news' => array(
-		'type' => 'clob'
-		),
-	'creator' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'teamId' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'sportId' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'modifiedBy' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'dateCreated' => array(
-		'type' => 'timestamp'
-		),
-	'updated' => array(
-		'type' => 'timestamp'
-		)
-	);
-	
-// create other indexes here...
-$name = 'sportsnews_index';
-
-$indexes = array(
-                'fields' => array(
-					'teamId' => array(),
-                    'modifiedBy' => array(),
-					'creator' => array(),
-                    'sportId' => array(),
-                ),
-        );
 ?>
