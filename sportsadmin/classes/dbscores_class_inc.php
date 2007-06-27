@@ -15,9 +15,9 @@ class dbscores extends dbtable{
 
 
 //variable
-public $objUser;
+var $objUser;
 
-public function init(){
+ function init(){
 parent::init('tbl_scores');
 $this->table = 'tbl_scores';
 
@@ -29,7 +29,7 @@ $this->objUser  =& $this->getObject('user','security');
 *   function to get the scores
 *  
 */
-public function getAll(){
+ function getAll(){
 
 $sql = "SELECT * FROM ".$this->table;
 $sql .=" WHERE sportId='".$sportid."' ";
@@ -42,7 +42,7 @@ return $ar;
 /*
 * Function to get the scores for a given fixture
 */
-public function getFixtureScore($fixtureid){
+ function getFixtureScore($fixtureid){
 
 $sql = "SELECT * FROM ".$this->table." WHERE fixtureId='".$fixtureid."'";
 
@@ -62,7 +62,7 @@ $ar = $this->getArray($sql);
 * @Param $fixtureid - id of the fixture
 * 
 */
-public function insertdata($sportid,$tournamentId,$teamid,$fixtureid,$time,$playerid ){
+ function insertdata($sportid,$tournamentId,$teamid,$fixtureid,$time,$playerid ){
 
 $this->insert(
 	array(
@@ -83,7 +83,7 @@ $this->insert(
 * @param $playerid- id of the player
 */
 
-public function getscoresForPlayer($playerid,$fixtureid){
+ function getscoresForPlayer($playerid,$fixtureid){
 	$sql = "select count(playerId) as scores from ".$this->table." where playerId= '$playerid' and fixtureId='$fixtureid'";
 	$ar = $this->getArray($sql);
 	return $ar[0]['scores'];
@@ -91,7 +91,7 @@ public function getscoresForPlayer($playerid,$fixtureid){
 
 
 //functon to get the total number of goals for a team in a tournament
-public function getGoalForTeam($tournamentid,$teamid){
+ function getGoalForTeam($tournamentid,$teamid){
 $sql = "select count(teamId) as goals from ".$this->table." where tournamentId='$tournamentid' and teamId='$teamid' ";
 $ar = $this->getArray($sql);
 return $ar[0]['goals'];
@@ -110,7 +110,7 @@ $this->objDbfixtures = $this->getObject('dbfixtures');
 //get fixtures in which team is participating
 $fixturelist = $this->objDbfixtures->getAllFixturesForTournament($teamid,$tournamentid);
 
-
+if(!empty($fixturelist)){
 foreach($fixturelist as $f){
 
 $opponent = $this->objDbfixtures->getOpponent($teamid,$f['id']);
@@ -128,7 +128,7 @@ print_r ($scorediff);
 	 }
 	 
 }
-
+}
 return $w;
 
 
@@ -139,7 +139,7 @@ return $w;
 /*function to get the numbet of losses for a team in all the fixtures it is participating
 * In one tournament
 */
-public function getLossesForTeam($teamid,$tournamentid){
+ function getLossesForTeam($teamid,$tournamentid){
 
 $l= 0; //to store the losses for the team
 
@@ -148,7 +148,7 @@ $this->objDbfixtures = $this->getObject('dbfixtures');
 
 //get fixtures in which team is participating
 $fixturelist = $this->objDbfixtures->getAllFixturesForTournament($teamid,$tournamentid);
-
+if(!empty($fixturelist))
 foreach($fixturelist as $f){
 
 $opponent = $this->objDbfixtures->getOpponent($teamid,$f['id']);
@@ -174,7 +174,7 @@ return $l;
 
 //function to get the number of draws for a team
 
-public function getDrawsForTeam($teamid,$tournamentid){
+ function getDrawsForTeam($teamid,$tournamentid){
 
 $d= 0; //to store the losses for the team
 
@@ -183,6 +183,8 @@ $this->objDbfixtures = $this->getObject('dbfixtures');
 
 //get fixtures in which team is participating
 $fixturelist = $this->objDbfixtures->getAllFixturesForTournament($teamid,$tournamentid);
+
+if(!empty($fixturelist)){
 foreach($fixturelist as $f){
 $opponent = $this->objDbfixtures->getOpponent($teamid,$f['id']);
 
@@ -196,7 +198,7 @@ $scorediff = $teamscores - $opponentscores;
 	 if($scorediff==0){
 	 $d +=1;
 	 }
-	 
+	} 
 }
 
 return $d;
@@ -206,7 +208,7 @@ return $d;
 
 
 //function to get the score details for the match 
-public function getscoredetails($teamid,$fixtureid){
+ function getscoredetails($teamid,$fixtureid){
 $sql = "select * from ".$this->table." where teamId='$teamid' and fixtureId='$fixtureid'";
 $ar = $this->getArray($sql);
 if($ar){
@@ -225,7 +227,7 @@ if($ar){
 * @param teamid - id of the team 
 *@param $fixtureid - fixture in questin
 */
-public function getscoresForteam($teamid,$fixtureid){
+ function getscoresForteam($teamid,$fixtureid){
 
 	$sql = "select count(playerId) as scores from ".$this->table." where teamId= '$teamid' and fixtureId='$fixtureid'";
 
