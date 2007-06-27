@@ -13,7 +13,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 class dbteam extends dbtable{
 
-public function init(){
+ function init(){
 parent::init('tbl_team');
 $this->table = 'tbl_team';
 
@@ -25,7 +25,7 @@ $this->objLanguage = & $this->getObject('language','language');
 /*  function to find pick the teams registered
 *   @param $id - sportid for which the item belongs 
 */
-public function getAll($sportid){
+ function getAll($sportid){
 
 $sql = "SELECT tbl_team.* FROM ".$this->table;
 $sql .=" WHERE sportId='".$sportid."' ";
@@ -42,7 +42,7 @@ return $ar;
 * @Param $homeground - the home ground of the team
 * @Param $coach- coach of the team
 */
-public function saveteam($sportId, $name,$homeground,$filename,$motto){
+ function saveteam($sportId, $name,$homeground,$filename,$motto){
 	$this->insert(
 	array(
 	'name'=>$name,
@@ -60,7 +60,7 @@ public function saveteam($sportId, $name,$homeground,$filename,$motto){
 * Function to pick the name of the team using the id
 */
 
-public function getTeamNameById($id){
+ function getTeamNameById($id){
 $sql = "SELECT * FROM ".$this->table;
 $sql .=" WHERE id='".$id."' ";
 
@@ -78,7 +78,7 @@ if($ar){
 * Function to pick the details of a selected team
 */
 
-public function getTeamDetails($id){
+ function getTeamDetails($id){
 
 $sql = "SELECT * FROM ".$this->table;
 $sql .=" WHERE id='".$id."' ";
@@ -99,7 +99,7 @@ if($ar){
 * @ param $teamid - id of the team to be deleted
 */
 
-public function deleteTeam($sportid,$teamid){
+ function deleteTeam($sportid,$teamid){
 
 $sql = "DELETE FROM ".$this->table." WHERE sportId='".$sportid."' and id='".$teamid."'";
 return $this->query($sql);
@@ -109,7 +109,7 @@ return $this->query($sql);
 * Function to to return the number of teams registered in a sport
 * @param $sportid - id of the sport whose team numbers are required
 */
-public function getTeamNumber($sportid){
+ function getTeamNumber($sportid){
 $sql = "select count(id) as number from ".$this->table." where sportId='".$sportid."'";
 $ar = $this->getArray($sql);
 return $ar[0]['number'];
@@ -117,7 +117,7 @@ return $ar[0]['number'];
 }
 
 //function to get the id of the team
-public function getTeamId($teamname){
+ function getTeamId($teamname){
 
 $sql = "SELECT * FROM ".$this->table." WHERE name like '%$teamname%' ";
 
@@ -133,7 +133,7 @@ $sql = "SELECT * FROM ".$this->table." WHERE name like '%$teamname%' ";
 * Function to modify the team information
 */
 
-public function modifyteam($teamid,$name,$homeground,$motto){
+ function modifyteam($teamid,$name,$homeground,$motto){
 //$updatedBy = $this->objUser->userId();
 $this->update("id", $teamid, array(
 			'name' => $name,
