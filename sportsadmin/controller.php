@@ -300,9 +300,9 @@ public function dispatch($action)
 			$objTools->addToBreadCrumbs($crumbs);
 			 
 		//for adding breadcrumbs
-			$objTools = & $this->newObject('tools','toolbar');			     
+			/*$objTools = & $this->newObject('tools','toolbar');			     
 			$crumbs = $this->getBreadCrumbs($tournamentid,TRUE,'tournament');
-			$objTools->addToBreadCrumbs($crumbs);			
+			$objTools->addToBreadCrumbs($crumbs);	*/		
 			 
 			return "sportsdetail_tpl.php";				
 				

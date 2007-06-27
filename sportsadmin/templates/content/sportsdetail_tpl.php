@@ -181,6 +181,8 @@ $item = $this->getParam('item',NULL);
 		}
 		
 		else if($item=='tournament') {
+		
+		
 	    $addtoururi = $this->uri(array('module'=>'sportsadmin','sportid'=>$sportid,'addurl'=>'addurl','action'=>'addtournament','item'=>'tournament'));
         $AddIcon->getAddIcon($addtoururi);
 		$heading->str = $this->objLanguage->languageText('mod_sports_tournamentsfor','sports').'&nbsp;'.$this->objDbsports->getSportsById($this->getParam('sportid',NULL)).'&nbsp;'.$AddIcon->getAddIcon($addtoururi);

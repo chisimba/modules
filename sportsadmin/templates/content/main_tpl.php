@@ -26,7 +26,7 @@ $cssLayout->setNumColumns(2);
     $addurl = $this->uri(array('module'=>'sports','action'=>'add'));
     $addIconLink= $addIcon->getAddIcon($addurl);
 	
-	$objHeader->str = $objLanguage->languageText('mod_sports_sporttypes','sports').'&nbsp;&nbsp;&nbsp;'.$addIconLink;
+	$objHeader->str = $objLanguage->languageText('mod_sports','sports').'&nbsp;&nbsp;&nbsp;'.$addIconLink;
 
 // set up language items
    	$sportName = $objLanguage->languageText('mod_sports_sportname','sports');

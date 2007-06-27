@@ -15,6 +15,16 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * 
 */
 $content ='';
+
+$addnews = & $this->getObject('geticon','htmlelements');
+
+
+//new for the team
+
+//$news = "<strong>".$this->objLanguage->languageText('mod_sportsadmin_sportsnews','sportsadmin')."</strong>&nbsp;".$addnews->getAddIcon($addnewsurl);
+
+
+
 $this->loadClass('htmltable','htmlelements');
 $t_id = $this->getParam('teamid',NULL);
 $imagepath = $this->objConfig->getcontentRoot()."teamlogos/";
@@ -37,8 +47,9 @@ $objHeading->align = "center";
 
 
 $table =new htmltable(); 
-$table->width= '50%';
+$table->width= '100%';
 $table->align = 'center';
+
 
 $outertable = $this->getObject('htmltable','htmlelements');
 
@@ -47,10 +58,10 @@ $teamdata = $this->objDbteam->getTeamDetails($t_id);
 //go through the list and display
 foreach($teamdata as $p){
 $name = $p['name'];
-$fileld = $p['homeGround'];
-$coach= $p['coach'];
+$fileld = $p['homeground'];
+//$coach= $p['coach'];
 $logofile = $p['logofile'];
-$sportId = $p['sportId'];
+$sportId = $p['sportid'];
 $motto = $p['motto'];
 $teamid = $p['id'];
 }
@@ -76,26 +87,48 @@ $image = '<p><img src="'.$path.'" /></p>';
 $table->startRow();
 $table->addCell("<strong>".$this->objLanguage->languageText('word_name','system')."</strong>");
 $table->addCell($name);
+$table->addCell("");
 $table->endRow();
 
 
 $table->startRow();
 $table->addCell("<strong>".$this->objLanguage->languageText('mod_sportsadmin_homeground','sportsadmin')."</strong>");
 $table->addCell($fileld);
+$table->addCell("");
 $table->endRow();
 
 $teamname = $this->objDbteam->getTeamNameById($teamid);
 
 $table->startRow();
-$table->addCell("<strong>".$this->objLanguage->languageText('mod_sportsadmin_coach','sportsadmin')."</strong>");
-$table->addCell($coach);
-$table->endRow();
-
-
-$table->startRow();
-$table->addCell("<strong>".$this->objLanguage->languageText('mod_sportsadmin_motto','sportsadmin')."</strong>");
+$table->addCell("<strong>".$this->objLanguage->languageText('mod_sportsadmin_motto','sportsadmin')."</strong>",'20%');
 $table->addCell($motto);
+$table->addCell("");
 $table->endRow();
+
+$addnewsurl = $this->uri(array('action'=>'addnews','teamid'=>$teamid,'sportid'=>$sportid));
+  $table->startRow();
+  $table->addCell("<strong>".$this->objLanguage->languageText('mod_sportsadmin_sportsnews','sportsadmin')."    </strong>&nbsp;".$addnews->getAddIcon($addnewsurl));
+  $table->endRow();
+
+$news_list = $this->objDbsportsnews->getLatestNewsForTeam($teamid,$sportid);
+
+if(!empty($news_list)){
+
+
+  foreach($news_list  as $n){
+  $table->startRow();
+   $table->addCell("");
+  $table->addCell($n['news']); 
+  $table->endRow();  
+  
+  }
+}
+
+
+/*$table->startRow();
+$table->addCell("");
+$table->endRow();*/
+
 
 $table->startRow();
 $table->addCell('');
@@ -117,11 +150,11 @@ $fixtureheader = "<strong>".$this->objLanguage->languageText('mod_sportsadmin_fi
 $tournaments = $this->objDbfixtures->getAllFixturesForTournament($teamid);
 
 if(!empty($tournaments)){
-   $matchtable->startRow();
-   $matchtable->addHeaderCell($this->objLanguage->languageText('word_date','system'));
-   $matchtable->addHeaderCell($this->objLanguage->languageText('mod_sportsadmin_opponent','sportsadmin'));
+    $matchtable->startRow();
+    $matchtable->addHeaderCell($this->objLanguage->languageText('word_date','system'));
+    $matchtable->addHeaderCell($this->objLanguage->languageText('mod_sportsadmin_opponent','sportsadmin'));
     $matchtable->addHeaderCell($this->objLanguage->languageText('mod_sportsadmin_field','sportsadmin'));
-$matchtable->addHeaderCell($this->objLanguage->languageText('mod_sportsadmin_tournament','sportsadmin'));
+    $matchtable->addHeaderCell($this->objLanguage->languageText('mod_sportsadmin_tournament','sportsadmin'));
    $matchtable->endRow();   
 
   $class = 'even';
@@ -137,7 +170,7 @@ $matchtable->addHeaderCell($this->objLanguage->languageText('mod_sportsadmin_tou
 	//get the name of the tournament
     $tournamentname = $this->objDbtournament->getTournamentNameById($t['tournamentId']);
 	
-   $class = ($class == 'odd') ? 'even':'odd';
+     $class = ($class == 'odd') ? 'even':'odd';
      $matchtable->startRow();
 	 $matchtable->addCell($t['matchDate'],'','','',$class);
 	 $matchtable->addCell( $team_name,'','','',$class);
@@ -149,13 +182,20 @@ $matchtable->addHeaderCell($this->objLanguage->languageText('mod_sportsadmin_tou
 }else { 
 
 		$matchtable->startRow();
-		$matchtable->addCell($this->objLanguage->languageText('mod_sportsadmin_nofixturesforteam','sportsadmin'));
+		$matchtable->addCell($this->objLanguage->languageText('mod_sportsadmin_nofixturesforteam','sportsadmin')."&nbsp;".$teamname);
 		$matchtable->endRow();
 
    }
+   
 
 $outertable->startRow();
-$outertable ->addCell($image);
+$outertable ->addCell("");
+$outertable->addCell("");
+$outertable ->endRow();
+
+
+$outertable->startRow();
+$outertable ->addCell($image,'','','');
 $outertable->addCell($table->show());
 $outertable ->endRow();
 
@@ -200,40 +240,12 @@ if(!empty($playerlist)){
 
 else {
     $playertable->startRow();
-    $playertable->addCell($this->objLanguage->languageText('mod_sportadmin_noplayersfor','sportsadmin')."&nbsp;<strong>".$teamname."</strong>");
+    $playertable->addCell($this->objLanguage->languageText('mod_sportadmin_noplayersfor','sportsadmin')."&nbsp;<strong>".$name."</strong>");
     $playertable->endRow();
  
  }
 
-$addnews = & $this->getObject('geticon','htmlelements');
 
-//new for the team
-$addnewsurl = $this->uri(array('action'=>'addnews','teamid'=>$teamid,'sportid'=>$sportid));
-$news = "<strong>".$this->objLanguage->languageText('mod_sportsadmin_sportsnews','sportsadmin')."</strong>&nbsp;".$addnews->getAddIcon($addnewsurl);
-
-//get the latest entries of news
-$news_list = $this->objDbsportsnews->getLatestNewsForTeam($teamid,$sportid);
-$newstable = new htmltable();
-//check if there are some rows returned 
-if(!empty($news_list )){
-//table headers
-$newstable->startRow();
-$newstable->addHeaderCell($this->objLanguage->languageText('mod_sportsadmin_sportsnews','sportsadmin'));
-$newstable->endRow();
-
-  foreach($news_list  as $n){
-  $newstable->startRow();
-  $newstable->addCell($n['news']);
-  $newstable->endRow();
-  
-  
-  }
-
-}else {
-
-	$newstable->startRow();
-	$newstable->addCell($this->objLanguage->languageText('mod_sportsadmin_nosportsnews','sportsadmin')."&nbsp;<strong>".$teamname."</strong>");
-	$newstable->endRow();}
 	
 
 $detailstable = new htmltable();
@@ -242,7 +254,6 @@ $detailstable = new htmltable();
 $back = & $this->getObject('link','htmlelements');
 $back->href = "javascript:history.back()"; 
 $back->link = $this->objLanguage->languageText('word_back','system');
-
 
 $detailstable->startRow();
 $detailstable->addCell($fixtureheader);
@@ -263,27 +274,27 @@ $detailstable->endRow();
 
 
 $detailstable->startRow();
-$detailstable->addCell($news);
+$detailstable->addCell("");
 $detailstable->endRow();
-
 
 $detailstable->startRow();
-$detailstable->addCell($newstable->show());
+$detailstable->addCell("");
 $detailstable->endRow();
+/*
+$detailstable->startRow();
+$detailstable->addCell($news);
+$detailstable->endRow();*/
 
-
-//trying out the marque
-//$marque = $this->getObject('marque','htmlelements');
-//$marque->elemenets= "thsshshsh";
-//$marque->setBehavior('alternate');
+/*
+$detailstable->startRow();
+$detailstable->addCell($newstable->show());
+$detailstable->endRow();*/
 
 echo $objHeading->show();
 echo $outertable->show();
 
 echo $detailstable->show();
 
-
-//echo $marque->show();
 echo $back->show();
 
 ?>

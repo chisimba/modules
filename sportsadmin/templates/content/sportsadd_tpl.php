@@ -4,7 +4,7 @@
 	$this->loadClass("textarea","htmlelements");
 	$this->loadClass('hiddeninput','htmlelements');
 	$this->loadClass("button","htmlelements");
-	$objLabel =& $this->newObject('label', 'htmlelements');
+	//$objLabel =& $this->newObject('label', 'htmlelements');
 	$objHeading =& $this->getObject('htmlheading','htmlelements');
 	$objHeading->type=1;
 	$objHeading->str =$objLanguage->languageText('mod_sports_add','sports');

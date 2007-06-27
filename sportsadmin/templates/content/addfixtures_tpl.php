@@ -49,7 +49,7 @@ $heading->align = 'center';
     $tblLayout->addCell($teamAmember->show().'<br/>'.$teamBmember->show());
     $tblLayout->endRow();
 	
-	$tblLayout->startRow();
+$tblLayout->startRow();
 $tblLayout->addCell('<strong>'.$this->objLanguage->languageText('mod_sports_place','sports').'</strong>','','','left');
 $tblLayout->addCell($placeinput->show());
 $tblLayout->endRow();
@@ -58,6 +58,7 @@ $tblLayout->startRow();
 $tblLayout->addCell('<strong>'.$this->objLanguage->languageText('mod_sportsadmin_matchdatetime','sportsadmin').'</strong>&nbsp;','','','left');
 $tblLayout->addCell($startDate );
 $tblLayout->endRow();	
+
 
 
 $frmManage->addToForm($heading->show()."<br/>");

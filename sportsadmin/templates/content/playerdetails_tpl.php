@@ -112,6 +112,7 @@ if($this->objUser->isAdmin()){
 		$playerinfo = $this->objDbplayerdata->getPlayerData($playerid);
 		//$playerinfo->cellspacing =3;
 		$infotable = new htmltable();
+		$infotable->width = "80%"; 
 		if(!empty($playerinfo)){
 		
 		//modify link
@@ -123,7 +124,7 @@ if($this->objUser->isAdmin()){
 		
 		//profile of the player
 		$infotable->startRow();
-		$infotable->addHeaderCell($this->objLanguage->languagetext('mod_sportsadmin_profile','sportsadmin'),'','','center');
+		$infotable->addCell("<strong>".$this->objLanguage->languagetext('mod_sportsadmin_profile','sportsadmin')."</strong>",'','','left');
 		$infotable->endRow();
 		 
 			foreach($playerinfo as $pi){
