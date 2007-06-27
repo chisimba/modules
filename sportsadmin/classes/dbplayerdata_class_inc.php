@@ -17,9 +17,9 @@ class dbplayerdata extends dbtable{
 
 
 //user object 
-public $objUser;
+var $objUser;
 
-public function init(){
+ function init(){
 parent::init('tbl_playerdata');
 $this->table = 'tbl_playerdata';
 
@@ -32,7 +32,7 @@ $this->objUser = & $this->getObject('user','security');
 * Function to add player information to the database
 * @param = playerid
 */
-public function addplayerinfo($playerid,$event){
+ function addplayerinfo($playerid,$event){
 $enteredBy = $this->objUser->userId();
 
 $sql = $this->insert(
@@ -46,7 +46,7 @@ $sql = $this->insert(
 }
 
 //function to pick all the infomation enetered on a specific player
-public function getPlayerData($playerid){
+ function getPlayerData($playerid){
   $sql = "SELECT * FROM ".$this->table." WHERE 	playerId='".$playerid."' order by dateEntered desc limit 3 ";
   $ar = $this->getArray($sql);
   if($ar){
@@ -57,7 +57,7 @@ public function getPlayerData($playerid){
 
 
 //function to pick the playe information using the id
-public function getplayerinfo($playerid){
+ function getplayerinfo($playerid){
 $sql = "SELECT * FROM ".$this->table." WHERE id='".$playerid."'";
 $ar = $this->getArray($sql);
 if($ar){
@@ -69,7 +69,7 @@ if($ar){
 /*
 * Function to delete the information entered for a player
 */
-public function deleteplayerdata($infoid){
+ function deleteplayerdata($infoid){
 $sql = "DELETE FROM ".$this->table." WHERE id='".$infoid."'";
 $res = $this->getArray($sql);
  if($sql){
@@ -82,7 +82,7 @@ else return false;
 * Function to modify the event entries for a player
 * @Param $infoid - id of the event to be modified
 */
-public function modifyplayerinfo($infoid,$event){
+ function modifyplayerinfo($infoid,$event){
 $updatedBy = $this->objUser->userId();
 $this->update("id", $infoid, array(
 			'updatedBy' => $updatedBy,
