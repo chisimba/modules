@@ -1,5 +1,5 @@
 <?php
-/*
+
   $sqldata[]="CREATE TABLE tbl_gameinfo(
   id varchar(32) NOT NULL default '',
   sportId varchar(32),
@@ -8,7 +8,7 @@
   teamBId varchar(32) NOT NULL default '',
   teamAscores int(3),
   teamBscores int(3),
-  creationDate date,
+  creationDate timestamp,
   updatedBy varchar(32),
   PRIMARY KEY(id),
   FOREIGN KEY (sportId)
@@ -31,65 +31,5 @@
   
 )TYPE=InnoDB
 ";
-*/
 
-//5ive definition
-$tablename = 'tbl_gameinfo';
-
-//Options line for comments, encoding and character set
-$options = array('comment' => 'Table to hold the game information', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
-
-//
-$fields = array(
-	'id' => array(
-		'type' => 'text',
-		'length' => 32,
-		'notnull' => 1
-		),
-	'sportId' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'tournamentId' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'teamAId' => array(
-		'type' => 'text',
-		'length' => 32,
-		'notnull'=> 1
-		),
-	'teamBId' => array(
-		'type' => 'text',
-		'length' => 32,
-		'notnull'=> 1
-		),
-	'teamAscores' => array(
-		'type' => 'integer',
-		'length' => 3
-		),
-	'teamBscores' => array(
-		'type' => 'integer',
-		'length' => 3
-		),
-	'creationDate' => array(
-		'type' => 'timestamp'
-		),
-	'updatedBy' => array(
-		'type' => 'text',
-		'length' => 32
-		)
-	);
-	
-// create other indexes here...
-$name = 'gameinfo_index';
-
-$indexes = array(
-                'fields' => array(
-					'teamAId' => array(),
-					'teamBId' => array(),
-					'tournamentId' => array(),
-                    'sportId' => array(),
-                ),
-        );
 ?>
