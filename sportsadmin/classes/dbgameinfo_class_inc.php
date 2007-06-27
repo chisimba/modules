@@ -13,7 +13,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 class dbgameinfo extends dbtable{
 
-	public function init(){
+	 function init(){
 		parent::init('tbl_gameinfo');
 		$this->table = 'tbl_gameinfo';
 
@@ -25,7 +25,7 @@ class dbgameinfo extends dbtable{
 /*  function to find out if there are fixtures for a certain sport
 *   @param $id - sportid for which the item belongs 
 */
-	public function getAll($sportid){
+	 function getAll($sportid){
 
 		$sql = "SELECT * FROM ".$this->table;
 		$sql .=" WHERE sportId='".$sportid."' ";
@@ -42,7 +42,7 @@ class dbgameinfo extends dbtable{
 * @Param $homeground - the home ground of the team
 * @Param $coach- coach of the team
 */
-	public function insertdata($sportid,$tournamentId,$teamAId,$teamBId ,$teamAscores,$teamBscores){
+	 function insertdata($sportid,$tournamentId,$teamAId,$teamBId ,$teamAscores,$teamBscores){
 		$this->insert(
 			array(
 				'tournamentId'=>$tournamentId,

@@ -13,7 +13,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 class dbfixtures extends dbtable{
 
-public function init(){
+function init(){
 parent::init('tbl_fixtures');
 $this->table = 'tbl_fixtures';
 
@@ -31,7 +31,7 @@ $this->objLanguage = & $this->getObject('language','language');
 * @parm  $time - start time of the match
 */
 
-public function insertFixture($sportId,$teamA,$teamB,$place,$startDate,$tournamentId){
+function insertFixture($sportId,$teamA,$teamB,$place,$startDate,$tournamentId){
 
 $this->insert(
 array(
@@ -53,7 +53,7 @@ array(
 
 */
 
-public function deletefixture($sportid,$fixtureId){
+function deletefixture($sportid,$fixtureId){
 
 $sql = "delete from ".$this->table." where sportId ='".$sportid."' and id='".$fixtureId."' "; 
 
@@ -62,7 +62,7 @@ return $this->query($sql);
 }
 
 //function to get fixtures by sports id
-public function getFixturesBySportId($sportid){
+function getFixturesBySportId($sportid){
 
 $sql = "SELECT * from ".$this->table;
 $sql .=" WHERE sportId='".$sportid."'";
@@ -79,7 +79,7 @@ return false;
 
 }
 
-public function getFixtureforgame($sportid,$fixtureid){
+function getFixtureforgame($sportid,$fixtureid){
 
 $sql = "SELECT * from ".$this->table;
 $sql .=" WHERE sportId='".$sportid."' and id='".$fixtureid."'";
@@ -96,7 +96,7 @@ return $ar;
 }
 
 //function to modify a fixture
-public function modifyfixture($fixtureid,$place,$startDate){
+function modifyfixture($fixtureid,$place,$startDate){
 
 $this->update("id", $fixtureid, array(
 			'place' => $place,
@@ -107,7 +107,7 @@ $this->update("id", $fixtureid, array(
 
 
 //function to get name of fixture by id
-public function getFixtureById($id){
+function getFixtureById($id){
 
 $sql = "SELECT * FROM ".$this->table ." WHERE id='".$id."'";
 
@@ -124,7 +124,7 @@ else
 }
 
 //function to pick all the fixtures of the tournament
-public function getFixturesForTournament($tournamentid,$sportid){
+function getFixturesForTournament($tournamentid,$sportid){
 $sql = "SELECT * FROM ".$this->table." WHERE sportId= '".$sportid."' and  tournamentId='".$tournamentid."'";
 $ar = $this->getArray($sql);
 if($ar){
@@ -145,7 +145,7 @@ else
 * @param $teamid - name of the team whose fixture are being searched
 */
 
-public function getAllFixturesForTournament($teamid){
+function getAllFixturesForTournament($teamid){
 $sql = "SELECT * FROM ".$this->table." WHERE team_A= '".$teamid."' or team_B='".$teamid."'";
 $ar = $this->getArray($sql);
  if ($ar){
@@ -162,7 +162,7 @@ $ar = $this->getArray($sql);
 * @param - $tournamentid - id of the tournament to which the teams that
 *  are being searched for are attached
 */
-public function getTournamentteams($tournamentid){
+function getTournamentteams($tournamentid){
 $sql = "select team_A, team_B from ".$this->table." where tournamentId='$tournamentid'";
 $ar = $this->getArray($sql);
 if($ar){
@@ -178,7 +178,7 @@ else
 
 //function to pick the opponent of a team
 
-public function getOpponent($teamid,$fixtureid){
+function getOpponent($teamid,$fixtureid){
 $sql = "select * from ".$this->table." where team_A='$teamid' or team_B='$teamid'  and id='$fixtureid'";
 $ar = $this->getArray($sql);
 if(!$sql){return false;}
