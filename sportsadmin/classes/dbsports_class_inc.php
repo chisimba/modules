@@ -14,16 +14,16 @@ if (!$GLOBALS['kewl_entry_point_run'])
 class dbsports extends dbTable
 {
 	//variable holding the user object
-	public $objUser;
+	var $objUser;
 	//variable holding the language object
-	public $objLanguage;
+	var $objLanguage;
 	
 	//Icon object
-	public $objGetIcon;
+	var $objGetIcon;
     /**
     * Constructor method to define the table
     */
-    public function init() 
+     function init() 
     {
         parent::init('tbl_sports');
 		$this->table = 'tbl_sports';
@@ -34,7 +34,7 @@ class dbsports extends dbTable
 	* function to a given sport from the table
 	* based on the id
 	*/
-	public function getSportsById($id)
+	 function getSportsById($id)
 	{
 		$sql = 'SELECT tbl_sports.* FROM '.$this->table;
 		$sql .= " WHERE id='".$id."'";
@@ -49,7 +49,7 @@ class dbsports extends dbTable
 	* Return all records
 	* @return array The entries
 	*/
-	public function listAll()
+	 function listAll()
 	{
 		$sql = "SELECT tbl_sports.* FROM ".$this->table." ";
 		return $this->getArray($sql);
@@ -61,7 +61,7 @@ class dbsports extends dbTable
 	* $name - insert into name:tbl_sports
 	* $description - insert into description:tbl_sports
 	*/		
-	public function insertSport($name,$player_no,$description,$evaluation)
+	 function insertSport($name,$player_no,$description,$evaluation)
 	{
 		$this->insert(array(
 		'name' => $name,
@@ -79,7 +79,7 @@ class dbsports extends dbTable
 	* $name - update name:tbl_sports
 	* $description - update description:tbl_sports
 	*/
-    public function updateSport($id,$name,$player_no,$description,$evaluation)
+     function updateSport($id,$name,$player_no,$description,$evaluation)
     {
 		$this->update("id", $id, array(
 			'name' => $name,
@@ -94,7 +94,7 @@ class dbsports extends dbTable
 	* that is,sport whose dateEnd field < curdate();
 	*/
 
-	public function deleteSport($id)
+	 function deleteSport($id)
 	{
 		$sql = "DELETE FROM ".$this->table." WHERE id='$id'";
 		return $this->query($sql);
@@ -103,7 +103,7 @@ class dbsports extends dbTable
 	* function to read a specific student's faculty description/comment from the table
 	* based on the id
 	*/
-	public function getSportsDescriptionById($id)
+	 function getSportsDescriptionById($id)
 	{
 		$sql = 'SELECT tbl_sports.* FROM '.$this->table;
 		$sql .= " WHERE id='".$id."'";
@@ -118,7 +118,7 @@ class dbsports extends dbTable
 	/**
 	* Function to return the evaluation of the sport 
 	*/
-	public function getevaluation($sportid)
+	 function getevaluation($sportid)
 	{  
 		$sql = 'SELECT tbl_sports.* FROM '.$this->table;
 		$sql .= " WHERE id='".$sportid."'";
@@ -131,7 +131,7 @@ class dbsports extends dbTable
 	}
 	
 	//function to select all the registered sport activities and displaying them
-	public function listAllSports(){
+	 function listAllSports(){
 	
 	$sql = "SELECT tbl_sports.* from ".$this->table;
 	$ar = $this->getArray($sql);
