@@ -89,13 +89,15 @@ class dbuserimport extends dbTable
         foreach ($list as $line)
         {
             if (!$this->objUser->inAdminGroup($line['userid'])){
+                // Delete from the import-batch
                 $this->delete('id',$line['id']);
+                // now from tbl_users...
                 // Don't delete a user that wasn't added by the userimport method!
                 // Or if in more than one context!
-                $userPK=$this->objUser->PKId($line['userId']);
-                if ((trim($this->objUser->getItemFromPkId($userPK,'howCreated'))=='import')&&
-                    ( count($this->objContextGroups->userContexts($line['userId'],array('contextcode')))<2) ){
-                    $this->objUserAdmin->delete('userId',$line['userid']);
+                $userPK=$this->objUser->PKId($line['userid']);
+                if ((trim($this->objUser->getItemFromPkId($userPK,'howcreated'))=='import')&&
+                    ( count($this->objContextGroups->userContexts($line['userid'],array('contextcode')))<2) ){
+                    $this->objUserAdmin->delete('userid',$line['userid']);
                 } else {
                 // Here they didn't cascade-delete, so we have to remove them specifically.
                     if ($groupId==NULL){

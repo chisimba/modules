@@ -154,7 +154,7 @@ class importuserdata extends object
         $username=$line['username'];
         $surname=$line['surname'];
         $firstname=$line['firstname'];
-        $email=$line['emailAddress'];
+        $email=$line['emailaddress'];
         
 
         // Now some checks - some of the fields could be blank,
@@ -199,6 +199,13 @@ class importuserdata extends object
                     $username=str_replace(' ','',strtolower($firstname[0].$surname.rand(100,999)));
                 }
             }
+        
+        // check for email
+        if (isset($line['emailAddress'])){
+            $email=$line['emailAddress'];
+        } else {
+            $line['emailAddress']=$line['emailaddress'];
+        }
         
             // Now we get the array ready to pass through to the security class
             // where the new account will be created.
