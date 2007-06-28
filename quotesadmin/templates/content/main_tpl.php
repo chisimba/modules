@@ -5,7 +5,7 @@
 
 //Set up the button class to make the edit, add and delet icons
 $objButtons = & $this->getObject('navbuttons', 'navigation');
-$objDate =  & $this->getObject("datetime", "utilities");
+$objDate =  & $this->getObject("dateandtime", "utilities");
 
 // Create an instance of the css layout class
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
