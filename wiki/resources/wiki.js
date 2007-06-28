@@ -120,11 +120,9 @@ function validationEffects()
 */
 function refreshPreview()
 {
-    var name_value = $F("input_name");
-    var content_value = $F("input_content");
     var url = "index.php";
     var target = "previewDiv";
-    var pars = "module=wiki&action=preview_page&name="+name_value+"&content="+content_value;
+    var pars = "module=wiki&action=preview_page";
     var refreshAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars,onComplete: resizeRefresh});    
 }
 
@@ -150,7 +148,6 @@ function tabClickEvents(edit_state)
         $("mainTabnav6").parentNode.style.display = "none";
         var editLink = $("mainTabnav2");
         editLink.onclick = function(){
-            refreshPreview();
             checkLock();
         }
     }else if(edit_state == 'no_edit'){
@@ -161,9 +158,8 @@ function tabClickEvents(edit_state)
     }else{
         var previewLink = $("addTabnav2");
         previewLink.onclick = function(){
-            Element.show("loadingDiv");
+            submitPreview();
             $("addTab").tabber.tabShow(1);
-            refreshPreview();
         }        
     }
 }
@@ -216,9 +212,8 @@ function updatePage()
         }     
         var previewLink = $("mainTabnav4");
         previewLink.onclick = function(){
-            Element.show("loadingDiv");
+            submitPreview();
             $("mainTab").tabber.tabShow(3);
-            refreshPreview();
         }
         $("mainTabnav2").parentNode.style.display = "none";
         $("mainTabnav3").parentNode.style.display = "";
@@ -466,4 +461,26 @@ function cancelUpdatePost(postId)
     Element.hide("tab_"+postId);
     Element.show("tableLayer");
     adjustLayout();
+}
+
+/**
+* Method to submit the preview in an iframe
+*/
+function submitPreview()
+{
+    var name_input = $("input_name");
+    var content_input = $("input_content");
+    var preview_iframe = $("previewIframe");
+    var el_iframe = preview_iframe.contentWindow || preview_iframe.contentDocument;
+    if(el_iframe.document){
+        el_iframe = el_iframe.document;
+    }
+    var el_form = el_iframe.getElementById("form_preview");
+    var el_name = el_iframe.getElementById("input_preview_name");
+    var el_content = el_iframe.getElementById("input_preview_content");
+    el_name.value = name_input.value;                             
+    el_content.value = content_input.value;
+    el_form.submit();
+    Element.show("loadingDiv");
+    refreshPreview();
 }

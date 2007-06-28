@@ -141,6 +141,7 @@ class wikidisplay extends object
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('layer', 'htmlelements');
         $this->loadClass('checkbox', 'htmlelements');
+        $this->loadClass('iframe', 'htmlelements');
 
         // system classes
         $this->objLanguage = $this->getObject('language','language');
@@ -982,6 +983,18 @@ class wikidisplay extends object
         $objLayer->addToStr($string);
         $contentLayer = $objLayer->show();
         $str = $contentLayer;    
+
+        $objIframe = new iframe();
+        $objIframe->id = 'previewIframe';
+        $objIframe->frameborder = '0';
+        $objIframe->height = 0;
+        $objIframe->width = 0;
+        $objIframe->src = $this->uri(array(
+            'action' => 'preview_iframe'
+        ), 'wiki');
+        $objIframe = $objIframe->show();
+        $str .= $objIframe;
+
         return $str;       
     }
 
@@ -1167,6 +1180,17 @@ class wikidisplay extends object
         $body = 'tabClickEvents("");';
         $this->appendArrayVar('bodyOnLoad', $body);            
         
+        $objIframe = new iframe();
+        $objIframe->id = 'previewIframe';
+        $objIframe->frameborder = '0';
+        $objIframe->height = 0;
+        $objIframe->width = 0;
+        $objIframe->src = $this->uri(array(
+            'action' => 'preview_iframe'
+        ), 'wiki');
+        $objIframe = $objIframe->show();
+        $str .= $objIframe;
+
         return $str;       
     }
 
@@ -1574,9 +1598,9 @@ You can create a described or labeled link to a wiki page by putting the page na
 Interwiki links are links to pages on other Wiki sites. 
 Type the {{``SiteName:PageName``}} like this:
 * MeatBall:RecentChanges
-* Advogato:proj/WikkiTikkiTavi
+* Wikipedia:Wiki
 * Wiki:WorseIsBetter
-> **Note:** the interwiki site must be in the [RuleInterwiki interwiki] {{sites}} configuration array.
+> **Note:** the interwiki site must be in the [http://localhost/chisimba_framework/app/index.php?module=wiki&action=view_links interwiki] {{sites}} configuration array.
 ++++ URLs
 Create a remote link simply by typing its URL: http://ciaweb.net.
 If you like, enclose it in brackets to create a numbered reference and avoid cluttering the page; {{``[http://ciaweb.net/free/]``}} becomes [http://ciaweb.net/free/].
@@ -3235,6 +3259,29 @@ You can create tables using pairs of vertical bars:
         $str = $objForm->show();
         
         return $str;
+    }
+    
+    /**
+    * Method to create content for an iframe to submit the preview
+    *
+    * @access public
+    * @return string $str: The output string
+    */
+    public function iframeContent()
+    {
+        $objInput = new textinput('preview_name', '', '', '');
+        $string = $objInput->show();
+        
+        $objText = new textarea('preview_content', '', '', '');
+        $string .= $objText->show();
+        
+         $objForm = new form('preview', $this->uri(array(
+            'action' => 'submit_preview'
+        ), 'wiki'));
+        $objForm->addToForm($string);
+        $str = $objForm->show();
+
+       return $str;
     }
 }
 ?>
