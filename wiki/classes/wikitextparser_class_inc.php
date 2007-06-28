@@ -109,9 +109,7 @@ class wikiTextParser extends object
         //Set the view page url param for the wikilink rule
         $viewUrl = $this->objConfig->getsiteRoot().'index.php?module=wiki&action=view_page&name=';
         $this->objWiki->setRenderConf("xhtml", "Wikilink", "view_url", $viewUrl);
-        
-        //Set url encoding
-        //$this->objWiki->setFormatConf("Xhtml", "translate", HTML_ENTITIES);
+        //$this->objWiki->setRenderConf("xhtml", "Url", "inline", "_blank");
     }
 
     /**

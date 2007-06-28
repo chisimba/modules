@@ -31,6 +31,6 @@ if(isset($popup)){
 }else{
     $this->setLayoutTemplate('layout_tpl.php');
 }
-//$this->setVar('pageSuppressXML', TRUE);
+$this->setVar('pageSuppressXML', TRUE);
 echo $templateContent;
 ?>

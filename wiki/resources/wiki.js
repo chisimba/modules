@@ -482,5 +482,5 @@ function submitPreview()
     el_content.value = content_input.value;
     el_form.submit();
     Element.show("loadingDiv");
-    refreshPreview();
+    setTimeout("refreshPreview()", 1000);
 }
