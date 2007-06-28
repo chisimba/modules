@@ -31,7 +31,7 @@ class userimport extends controller
     var $objDBContext;
     var $objGroups;
     
-    function init()
+    public function init()
     {
         // The user and useradmin objects
         $this->objUser=& $this->getObject('user', 'security');
@@ -74,7 +74,7 @@ class userimport extends controller
     * It calls other functions depending on the value of $action
     * @param string $action
     */
-    function dispatch($action=Null)
+    public function dispatch($action=Null)
     {
         // To use this module you must be either a siteAdmin or
         // within a context in which you are a lecturer.
