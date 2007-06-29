@@ -34,6 +34,28 @@ if(!isset($rss)){
 }
 $leftSide = $this->objLayout->getLeftMenu($currentNode, $rss);
 
+// Add blocks
+$currentAction = $this->getParam('action', NULL);
+/*
+switch($currentAction){
+    case 'showsection':
+        $sectionId = $this->getParam('id');
+        $pageBlocks = $objDbBlocks->getBlocksForSection($sectionId);
+        break;
+    
+    case 'showcontent':
+    case 'showfulltext':
+        $sectionId = $this->getParam('sectionid');
+        $pageId = $this->getParam('id');
+        $pageBlocks = $objDbBlocks->getBlocksForPage($pageId, $sectionId);
+        break;
+    
+    case 'home':
+    case '':
+        $pageBlocks = $objDbBlocks->getBlocksForFrontPage();
+        break;
+}
+*/
 /***************** END OF LEFT SIDE *******************************/
 
 if(!$this->getParam('query') == ''){
@@ -46,53 +68,38 @@ if(!$this->getParam('query') == ''){
 /***************** Right Side Content *******************************/
 
 $hasBlocks = FALSE;
-$rightSide = "";
+$rightSide = '';
 
-//$isLoggedIn = $objUser->isLoggedIn();
-
-/* if(!$isLoggedIn){
-     /* We don't want to hard code any blocks
-     $hasBlocks = TRUE;
-     $loginBlock = $objDbBlocks->getBlockByName('login');
-     $registerBlock = $objDbBlocks->getBlockByName('register');
-
-     $rightSide .= $objBlocks->showBlock($loginBlock['blockname'], $loginBlock['moduleid']);
-     $rightSide .= $objBlocks->showBlock($registerBlock['blockname'], $registerBlock['moduleid']);
-     *
-     
-     $pageBlocks = $objDbBlocks->getBlocksForFrontPage();  
-     if(!empty($pageBlocks)) {
-        $hasBlocks = TRUE;
-        foreach($pageBlocks as $pbks) {
-            $blockId = $pbks['blockid'];
-            $blockToShow = $objDbBlocks->getBlock($blockId);
-
-            $rightSide .= $objBlocks->showBlock($blockToShow['blockname'], $blockToShow['moduleid']);
-        }
-     }    
- } else {
-     */
-    $currentAction = $this->getParam('action', NULL);
-    if($currentAction == 'showsection'){
+// Add blocks
+switch($currentAction){
+    case 'showsection':
         $sectionId = $this->getParam('id');
-        $pageBlocks = $objDbBlocks->getBlocksForSection($sectionId);    
-    } else if($currentAction == 'showcontent' || $currentAction == 'showfulltext' ){
-        $pageId = $this->getParam('id');
-        $pageBlocks = $objDbBlocks->getBlocksForPage($pageId);    
-    } else if($currentAction == 'home' || $currentAction == NULL){
-        $pageBlocks = $objDbBlocks->getBlocksForFrontPage();  
-    }
+        $pageBlocks = $objDbBlocks->getBlocksForSection($sectionId);
+        break;
     
-    if(!empty($pageBlocks)) {
-        $hasBlocks = TRUE;
-        foreach($pageBlocks as $pbks) {
-            $blockId = $pbks['blockid'];
-            $blockToShow = $objDbBlocks->getBlock($blockId);
+    case 'showcontent':
+    case 'showfulltext':
+        $sectionId = $this->getParam('sectionid');
+        $pageId = $this->getParam('id');
+        $pageBlocks = $objDbBlocks->getBlocksForPage($pageId, $sectionId);
+        break;
+    
+    case 'home':
+    case '':
+        $pageBlocks = $objDbBlocks->getBlocksForFrontPage();
+        break;
+}
+    
+if(!empty($pageBlocks)) {
+    $hasBlocks = TRUE;
+    foreach($pageBlocks as $pbks) {
+        $blockId = $pbks['blockid'];
+        $blockToShow = $objDbBlocks->getBlock($blockId);
 
-            $rightSide .= $objBlocks->showBlock($blockToShow['blockname'], $blockToShow['moduleid']);
-        }
+        $rightSide .= $objBlocks->showBlock($blockToShow['blockname'], $blockToShow['moduleid']);
     }
-//}
+}
+
 
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 if($hasBlocks){

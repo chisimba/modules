@@ -4,6 +4,7 @@ Global Vars
 */
 var ID;
 var SECTION;
+
 /*
 Function to intitialize scriptaculous for frontpage_manager
 */
@@ -200,6 +201,104 @@ function ca_setupDeleteBlocks()
 }
 
 /* ---------------- section_add ------------------*/
+/*
+Function to intitialize scriptaculous for section_add
+*/
+function sa_init(sectionid)
+{
+    SECTION = sectionid;
+    sa_setupAddBlocks();
+    sa_setupDeleteBlocks();
+}
+
+/*
+Function to add a block. This function is called everytime an unused block is dropped on the 'dropzone' div
+*/
+function sa_addBlock(element, dropon, event)
+{
+    Droppables.remove($(element.id));
+    Element.remove($(element.id));
+    sa_sendData(element.id, 'adddynamicsectionblock', sa_showAddResponse);
+}
+
+/*
+Function to remove a block. This function is called everytime an used block is dropped on the 'deletezone' div
+*/
+function sa_removeBlock(element, dropon, event)
+{
+    Droppables.remove($(element.id));
+    Element.remove($(element.id));
+    sa_sendData(element.id, 'removedynamicsectionblock', sa_showDeleteResponse);
+}
+
+/*
+Ajax Function - Method to send the block to the server
+*/
+function sa_sendData (prod, action, responseFunction)
+{
+    var url    = 'index.php';
+    var rand   = Math.random(9999);
+    var pars   = 'module=cmsadmin&action='+action+'&sectionid='+SECTION+'&blockid=' + prod + '&rand=' + rand;
+    var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onLoading: sa_showLoad, onComplete: responseFunction} );
+}
+
+/*
+Method to show the loading icon, once the ajax function is processed
+*/
+function sa_showLoad ()
+{
+    Element.show('loading');
+}
+
+/*
+Method to show the Ajax Response once a block is added
+*/
+function sa_showAddResponse (originalRequest)
+{
+    Element.hide('loading');
+    $('dropzone').innerHTML += originalRequest.responseText;
+    sa_setupAddBlocks();
+    sa_setupDeleteBlocks();
+    adjustLayout();
+}
+
+/*
+Method to show the Ajax Response once a block is removed
+*/
+function sa_showDeleteResponse (originalRequest)
+{
+    Element.hide('loading');
+    $('deletezone').innerHTML += originalRequest.responseText;
+    sa_setupAddBlocks();
+    sa_setupDeleteBlocks();
+    adjustLayout();
+}
+
+/*
+Method to make the unused blocks draggable. Also sets up drop zone
+*/
+function sa_setupAddBlocks()
+{
+    var addblocks = document.getElementsByClassName('addblocks');
+    for (var i = 0; i < addblocks.length; i++) {
+    	new Draggable(addblocks[i].id, {ghosting:false, revert:true, zindex:2000});	
+    }
+    Droppables.add('dropzone', {onDrop:sa_addBlock, accept:'addblocks'});
+}
+
+/*
+Method to make the used blocks draggable. Also sets up drop zone
+*/
+function sa_setupDeleteBlocks()
+{   
+    var deleteblocks = document.getElementsByClassName('usedblock');
+    for (var i = 0; i < deleteblocks.length; i++) {
+    	new Draggable(deleteblocks[i].id, {ghosting:false, revert:true, zindex:20})	
+    }
+    Droppables.add('deletezone', {onDrop:sa_removeBlock, accept:'usedblock'});
+}
+
+
 /*
 Function to intitialize scriptaculous for section_add
 */

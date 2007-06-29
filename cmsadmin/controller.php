@@ -220,7 +220,6 @@ class cmsadmin extends controller
                     return 'cms_section_list_tpl.php';
 
                 case 'viewsection':
-                
                     $this->viewsections();
                     return 'cms_section_view_tpl.php';
 
@@ -329,18 +328,21 @@ class cmsadmin extends controller
                     return $this->nextAction('frontpages', array(NULL), 'cmsadmin');
 
                 case 'changefpstatus':
-                    $pageId = $this->getParam('pageid');
+                    $id = $this->getParam('id');
                     $sectionId = $this->getParam('sectionid');
-                    $this->_objFrontPage->changeStatus($pageId);
+                    $mode = $this->getParam('mode');
+                    
+                    $this->_objFrontPage->changeStatus($id, $mode);
                     return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
 
                 case 'changefporder':
                     //Get front page details
                     $id = $this->getParam('id');
+                    $pos = $this->getParam('position');
                     $ordering = $this->getParam('ordering');
+                    
                     //Change the ordering on the front page
-                    $this->_objFrontPage->changeOrder($id, $ordering);
-                    $this->setVar('files', $this->_objFrontPage->getFrontPages());
+                    $this->_objFrontPage->changeOrder($id, $ordering, $pos);
                     return $this->nextAction('frontpages', array(NULL), 'cmsadmin');
 
                     //----------------------- content section
@@ -528,34 +530,47 @@ class cmsadmin extends controller
                         //Get all blocks already on the section
                         return $this->nextAction('addblock', array('blockcat' => 'section', 'sectionid' => $sectionId), 'cmsadmin');
                     }
+                    
                 case 'adddynamicpageblock':
                     $pageId = $this->getParam('pageid');
                     $blockId = $this->getParam('blockid');
                     $this->_objBlocks->add($pageId, NULL, $blockId, 'content');
-                    
                     echo $this->createReturnBlock($blockId, 'usedblock');
-
                     break;
+                    
                 case 'removedynamicpageblock':
                     $pageId = $this->getParam('pageid');
                     $blockId = $this->getParam('blockid');
                     $this->_objBlocks->deleteBlock($pageId, NULL, $blockId, 'content');
-                    
                     echo $this->createReturnBlock($blockId, 'addblocks');
                     break;
+                    
                 case 'adddynamicfrontpageblock':
                     $blockId = $this->getParam('blockid');
                     $this->_objBlocks->add(NULL, NULL, $blockId, 'frontpage');
-                    
                     echo $this->createReturnBlock($blockId, 'usedblock');
-
                     break;
+                    
                 case 'removedynamicfrontpageblock':
                     $blockId = $this->getParam('blockid');
                     $this->_objBlocks->deleteBlock(NULL, NULL, $blockId, 'frontpage');
-                    
                     echo $this->createReturnBlock($blockId, 'addblocks');
                     break;
+                    
+                case 'adddynamicsectionblock':
+                    $sectionId = $this->getParam('sectionid');
+                    $blockId = $this->getParam('blockid');
+                    $this->_objBlocks->add('', $sectionId, $blockId, 'section');
+                    echo $this->createReturnBlock($blockId, 'usedblock');
+                    break;
+                    
+                case 'removedynamicsectionblock':
+                    $sectionId = $this->getParam('sectionid');
+                    $blockId = $this->getParam('blockid');
+                    $this->_objBlocks->deleteBlock('', $sectionId, $blockId, 'section');
+                    echo $this->createReturnBlock($blockId, 'addblocks');
+                    break;
+                    
                  case 'uploadimage':
                  	  return 'cms_attachment_popup.php';
                  	  break;
@@ -773,9 +788,8 @@ class cmsadmin extends controller
          * @param int $subsectionid same as the section id
          * @return array sections
          */
-        public function viewsections($sectionid=null,$subsectionid=null){
-        	
-            
+        public function viewsections($sectionid=null,$subsectionid=null)
+        {
         	
             if (isset($sectionid) && ($this->inContextMode == FALSE)) {
         		$id = $sectionid;
@@ -783,8 +797,7 @@ class cmsadmin extends controller
         		$id = $this->getParam('id');
         	}
         	
-        	if($id == NULL && $this->_objDBContext->isInContext())
-            {
+        	if($id == NULL && $this->_objDBContext->isInContext()){
                 $arrSection = $this->_objSections->getSectionByContextCode($this->contextCode);
                 $id = $arrSection['id'];
             }
@@ -798,13 +811,14 @@ class cmsadmin extends controller
         	$subSections = $this->_objSections->getSubSectionsInSection($id);
         	$this->setVarByRef('subSections', $subSections);
         	//Get content pages
-        	$pages = $this->_objContent->getPagesInSection($id);
+        	$pages = $this->_objContent->getPagesInSectionJoinFront($id);
         	//Get top Nav
         	$topNav = $this->_objUtils->topNav('viewsection');
         	$this->setVarByRef('topNav',$topNav);
         	$this->setVarByRef('pages', $pages);
         	return $section;
         }
+        
         /**
          * Method to return the sections form. The form comes with
          * ajax attached so no need to get that as well.
@@ -836,6 +850,7 @@ class cmsadmin extends controller
         	 $parentid = $this->getParam('parentid');
         	 $level = $this->_objSections->getLevel($parentid);
         	 $this->setVarByRef('parentid', $parentid);
+        	 $this->setVarByRef('sectionid', $sectionid);
              return $addEditForm;
         }
         

@@ -288,7 +288,7 @@ class dbcontent extends dbTable
             if ($isFrontPage == '1') {
                 $this->_objFrontPage->add($id);
             } else {
-                $this->_objFrontPage->remove($id);
+                $this->_objFrontPage->removeIfExists($id);
             }
 
             return $this->update('id', $id, $newArr);
@@ -304,9 +304,7 @@ class dbcontent extends dbTable
         public function trashContent($id)
         {  
             //First remove from front page
-            if ($this->_objFrontPage->isFrontPage($id)) {
-                $this->_objFrontPage->remove($id);
-            }
+            $this->_objFrontPage->removeIfExists($id);
             
             $fields = array('trash' => 1, 'ordering' => '', 'end_publish' => $this->now());
             $result =  $this->update('id', $id, $fields);
@@ -387,9 +385,8 @@ class dbcontent extends dbTable
             $sectionId = $page['sectionid'];
             
             //First remove from front page
-            if ($this->_objFrontPage->isFrontPage($id)) {
-                $this->_objFrontPage->remove($id);
-            }
+            $this->_objFrontPage->removeIfExists($id);
+            
             //Remove blocks for the page
             $pageBlocks = $this->_objBlocks->getBlocksForPage($id);
             if(!empty($pageBlocks)) {
@@ -518,9 +515,7 @@ class dbcontent extends dbTable
             if(!empty($arrContent)){
                 foreach ($arrContent as $page) {
                     //First remove from front page
-                    if ($this->_objFrontPage->isFrontPage($page['id'])) {
-                        $this->_objFrontPage->remove($page['id']);
-                    }
+                    $this->_objFrontPage->removeIfExists($page['id']);
                     
                     // Trash / archive
                     $fields = array('trash' => 1, 'ordering' => '');
@@ -567,8 +562,28 @@ class dbcontent extends dbTable
             if($isPublished){
                 $filter .= "AND published='1' ";
             }
-            $pages = $this->getAll($filter." ORDER BY ordering");
+            $pages = $this->getAll($filter.' ORDER BY ordering');
             return $pages;
+        }
+
+        /**
+         * Method to get all pages in a specific section, including those on the front page
+         *
+         * @access public
+         * @author Megan Watson
+         * @param string $sectionId The id of the section
+         * @return array $data An array of all pages in the section
+         */
+        public function getPagesInSectionJoinFront($sectionId)
+        {
+            $sql = "SELECT *, fr.id AS front_id, co.id AS page_id, co.ordering AS co_order 
+                FROM tbl_cms_content AS co 
+                LEFT JOIN tbl_cms_content_frontpage AS fr ON (fr.content_id = co.id)
+                WHERE sectionid = '$sectionId' AND trash='0'
+                ORDER BY co.ordering";
+                
+            $data = $this->getArray($sql);
+            return $data;
         }
 
         /**

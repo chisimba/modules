@@ -189,9 +189,18 @@ class dbblocks extends dbTable
          * @access public
          * @return array $pageBlocks An array of associative arrays of all blocks on the page
          */
-        public function getBlocksForPage($pageId)
+        public function getBlocksForPage($pageId, $sectionId = NULL)
         {
-            $sql = 'SELECT tbl_cms_blocks.*, moduleid, blockname FROM tbl_cms_blocks, tbl_module_blocks WHERE (blockid = tbl_module_blocks.id) AND pageid = \''.$pageId.'\' AND frontpage_block=0 ORDER BY ordering';
+            $sql = "SELECT cb.*, mb.moduleid, mb.blockname 
+                FROM tbl_cms_blocks AS cb, tbl_module_blocks AS mb
+                WHERE (cb.blockid = mb.id) AND frontpage_block = 0 
+                AND (pageid = '{$pageId}' ";
+                
+            if(!empty($sectionId)){
+                $sql .= " OR sectionid = '{$sectionId}' ";
+            }
+                
+            $sql .= ') GROUP BY cb.blockid ORDER BY cb.ordering';
             
             return $this->getArray($sql);
         }
@@ -204,9 +213,12 @@ class dbblocks extends dbTable
          * @return array $pageBlocks An array of associative arrays of all blocks in the section
          */
         public function getBlocksForSection($sectionId)
-        {
-            $pageBlocks = $this->getAll('WHERE sectionid = \''.$sectionId.'\' ORDER BY ordering');
-            return $pageBlocks;
+        {   
+            $sql = "SELECT tbl_cms_blocks.*, moduleid, blockname FROM tbl_cms_blocks, tbl_module_blocks 
+                WHERE (blockid = tbl_module_blocks.id) AND sectionid = '{$sectionId}' AND frontpage_block=0 
+                GROUP BY blockid ORDER BY ordering";
+            
+            return $this->getArray($sql);
         }
 
         /**
@@ -217,7 +229,9 @@ class dbblocks extends dbTable
          */
         public function getBlocksForFrontPage()
         {
-            $sql = 'SELECT tbl_cms_blocks.*, moduleid, blockname FROM tbl_cms_blocks, tbl_module_blocks WHERE (blockid = tbl_module_blocks.id) AND frontpage_block = \'1\' ORDER BY ordering';
+            $sql = "SELECT tbl_cms_blocks.*, moduleid, blockname FROM tbl_cms_blocks, tbl_module_blocks 
+                WHERE (blockid = tbl_module_blocks.id) AND frontpage_block = '1' 
+                GROUP BY blockid ORDER BY ordering";
             
             return $this->getArray($sql);
         }

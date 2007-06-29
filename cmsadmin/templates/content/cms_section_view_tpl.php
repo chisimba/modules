@@ -13,19 +13,17 @@ $this->setLayoutTemplate('cms_layout_tpl.php');
 $this->loadClass('link', 'htmlelements');
 
 //Create htmlheading for page title
-$objH = & $this->newObject('htmlheading', 'htmlelements');
+$objH = $this->newObject('htmlheading', 'htmlelements');
 $objH->type = '2';
 //Create instance of geticon object
 $objIcon = & $this->newObject('geticon', 'htmlelements');
-//Create instance of link object
-$objLink = & $this->newObject('link', 'htmlelements');
 //Setup Header Navigation objects
 
 $objLayer =$this->newObject('layer','htmlelements');
 $objRound =$this->newObject('roundcorners','htmlelements');
 $headIcon = $this->newObject('geticon', 'htmlelements');
 $headIcon->setIcon('section','png');
-$tbl = $this->newObject('htmltable', 'htmlelements');
+$this->loadClass('htmltable', 'htmlelements');
 
 
 //Get blocks icon
@@ -58,7 +56,8 @@ if (isset($section)) {
 //Get layout icon
 $layoutData = $this->_objLayouts->getLayout($layout);
 $imageName = $layoutData['imagename'];
-$img = "<img src=\"{$this->getResourceUri('$imageName','cmsadmin')}\" alt=\"'$imageName'\"/>";
+$imgPath = $this->getResourceUri($imageName,'cmsadmin');
+$img = "<img src=\"{$imgPath}\" alt=\"'$imageName'\"/>";
 
 $other = '<b>'.$this->objLanguage->languageText('mod_cmsadmin_treemenuname', 'cmsadmin').':'.'</b>'.'&nbsp;'.$menuText.'<br/>';
 
@@ -78,27 +77,20 @@ $other .= '<b>'.$this->objLanguage->languageText('mod_cmsadmin_pagesorderedby', 
 
 
 //Create table contain layout, visible, etc details
-$objDetailsTable = & $this->newObject('htmltable', 'htmlelements');
-
+$objDetailsTable = new htmltable();
 $objDetailsTable->cellspacing = '2';
-
 $objDetailsTable->cellpadding = '2';
-
 $objDetailsTable->startRow();
-
 $objDetailsTable->addCell($img, '39%', 'top', 'center', '');
-
 $objDetailsTable->addCell($other, '60%', 'top', 'left', '');
-
 $objDetailsTable->endRow();
 
+$tblDetails = $objDetailsTable->show();
+
 //Create table for subsections
-$objSubSecTable = & $this->newObject('htmltable', 'htmlelements');
-
+$objSubSecTable =  new htmltable();
 $objSubSecTable->cellpadding = '2';
-
 $objSubSecTable->cellspacing = '2';
-
 $objSubSecTable->width = '99%';
 
 //Create table header row
@@ -145,8 +137,8 @@ if (isset($subSections)) {
         //Create edit icon
         $editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addsection', 'id' => $subSecId)));
         //Make title link to view section
+        $objLink = new link($this->uri(array('action' => 'viewsection', 'id' => $subSecId)));
         $objLink->link = $subSecMenuText;
-        $objLink->href = $this->uri(array('action' => 'viewsection', 'id' => $subSecId));
         $viewSubSecLink = $objLink->show();
 
         //Add sub sec data to table
@@ -161,32 +153,24 @@ if (isset($subSections)) {
         $objSubSecTable->endRow();
     }
 }
+$tblSubSec = $objSubSecTable->show();
 
 //Create table for pages
-$objPagesTable = & $this->newObject('htmltable', 'htmlelements');
-
+$objPagesTable = new htmltable();
 $objPagesTable->cellpadding = '2';
-
 $objPagesTable->cellspacing = '2';
-
 $objPagesTable->width = '99%';
 
 //Create table header row
 $objPagesTable->startHeaderRow();
-
 $objPagesTable->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_pagetitle', 'cmsadmin'));
-
 $objPagesTable->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_articledate', 'cmsadmin'));
-
 $objPagesTable->addHeaderCell($this->objLanguage->languageText('word_published'));
-
 $objPagesTable->addHeaderCell($this->objLanguage->languageText('word_order'));
-
 $objPagesTable->addHeaderCell($this->objLanguage->languageText('word_options'));
-
 $objPagesTable->endHeaderRow();
 
-if (count($pages) > '0') {
+if (!empty($pages)) {
     $i = 0;
     foreach($pages as $page) {
         //Set odd even row count variable
@@ -194,29 +178,18 @@ if (count($pages) > '0') {
         $class = (($i++ % 2) == 0) ? 'odd' : 'even';
 
         //Get page data
-        $pageId = $page['id'];
-        $ordering = $page['ordering'];
+        $pageId = $page['page_id'];
+        $ordering = $page['co_order'];
         $pageTitle = htmlentities($page['title']);
         $articleDate = $page['modified'];
         $pagePublished = $page['published'];
 
-/*
-        if ($pagePublished == '1') {
-            $objIcon->setIcon('visible');
-            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_isvisible', 'cmsadmin');
-        } else {
-            $objIcon->setIcon('not_visible');
-            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_isnotvisible', 'cmsadmin');
-        }
-
-        $visibleIcon = $objIcon->show();*/
-
         //publish, visible
 	    if($pagePublished){
-	       $url = $this->uri(array('action' => 'contentpublish', 'id' => $page['id'], 'mode' => 'unpublish', 'sectionid' => $sectionId));
+	       $url = $this->uri(array('action' => 'contentpublish', 'id' => $page['page_id'], 'mode' => 'unpublish', 'sectionid' => $sectionId));
 	       $icon = $this->_objUtils->getCheckIcon(TRUE);
 	    }else{
-	       $url = $this->uri(array('action' => 'contentpublish', 'id' => $page['id'], 'mode' => 'publish', 'sectionid' => $sectionId));
+	       $url = $this->uri(array('action' => 'contentpublish', 'id' => $page['page_id'], 'mode' => 'publish', 'sectionid' => $sectionId));
 	       $icon = $this->_objUtils->getCheckIcon(FALSE);
 	    }
 	    $objLink = new link($url);
@@ -230,28 +203,27 @@ if (count($pages) > '0') {
         //Create edit icon
         $editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addcontent', 'id' => $pageId, 'parent' => $sectionId)));
         //Make title link to view section
+        $objLink = new link($this->uri(array('action' => 'showcontent', 'id' => $pageId, 'fromadmin' => TRUE, 'sectionid' => $sectionId), 'cms'));
         $objLink->link = $pageTitle;
-        $objLink->href = $this->uri(array('action' => 'showcontent', 'id' => $pageId, 'fromadmin' => TRUE, 'sectionid' => $sectionId), 'cms');
         $viewPageLink = $objLink->show();
 
         //Icon for toggling front page status
-        $frontPageLink =& $this->newObject('link', 'htmlelements');
-        $frontPageLink->href = $this->uri(array('action' => 'changefpstatus', 'pageid' => $pageId, 'sectionid' => $sectionId), 'cmsadmin');
-        if($this->_objFrontPage->isFrontPage($pageId)) {
+        if(isset($page['front_id']) && !empty($page['front_id'])) {
             $objIcon->setIcon('greentick');
-            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addpagetofp', 'cmsadmin');
-            $frontPageLink->title = $this->objLanguage->languageText('mod_cmsadmin_confirmremovefromfp', 'cmsadmin');
+            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_confirmremovefromfp', 'cmsadmin');
+            $url = array('action' => 'changefpstatus', 'id' => $page['front_id'], 'sectionid' => $sectionId, 'mode' => 'remove');
         } else {
-            $frontPageLink->title = $this->objLanguage->languageText('mod_cmsadmin_addpagetofp', 'cmsadmin');
-            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addpagetofp', 'cmsadmin');
             $objIcon->setIcon('redcross');
+            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addpagetofp', 'cmsadmin');
+            $url = array('action' => 'changefpstatus', 'id' => $pageId, 'sectionid' => $sectionId, 'mode' => 'add');
         }
+        $frontPageLink = new link($this->uri($url, 'cmsadmin'));
         $frontPageLink->link = $objIcon->show();
 
         // set up link to view contact details in a popup window
         $objBlocksLink = new link('#');
-        $objBlocksLink -> link = $blockIcon;
-        $objBlocksLink -> extra = "onclick = \"javascript:window.open('" . $this->uri(array('action' => 'addblock', 'sectionId' => $sectionId, 'pageid' => $pageId, 'blockcat' => 'content')) . "', 'branch', 'width=500, height=350, top=50, left=50, scrollbars')\"";
+        $objBlocksLink->link = $blockIcon;
+        $objBlocksLink->extra = "onclick = \"javascript:window.open('" . $this->uri(array('action' => 'addblock', 'sectionId' => $sectionId, 'pageid' => $pageId, 'blockcat' => 'content')) . "', 'branch', 'width=500, height=350, top=50, left=50, scrollbars')\"";
 
         //Add sub sec data to table
         $objPagesTable->startRow();
@@ -268,6 +240,7 @@ if (count($pages) > '0') {
 
     }
 }
+$tblPages = $objPagesTable->show();
 
 //Create add sub section icon
 $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addsubsection','cmsadmin');
@@ -288,14 +261,12 @@ $deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelsection
 $delIcon = $objIcon->getDeleteIconWithConfirm($sectionId, $delArray, 'cmsadmin', $deletephrase);
 
 //Create add section link
-$objNewSectionLink =& $this->newObject('link', 'htmlelements');
+$objNewSectionLink = new link($this->uri(array('action' => 'addsection', 'parentid' => $sectionId)));
 $objNewSectionLink->link = $this->objLanguage->languageText('mod_cmsadmin_addnewsection', 'cmsadmin');
-$objNewSectionLink->href = $this->uri(array('action' => 'addsection', 'parentid' => $sectionId));
 
 //Create add page link
-$objNewPageLink =& $this->newObject('link', 'htmlelements');
+$objNewPageLink = new link($this->uri(array('action' => 'addcontent', 'parent' => $sectionId)));
 $objNewPageLink->link = $this->objLanguage->languageText('phrase_addanewpage');
-$objNewPageLink->href = $this->uri(array('action' => 'addcontent', 'parent' => $sectionId));
 
 //Add content to the output layer
 $middleColumnContent = "";
@@ -314,13 +285,6 @@ if($isRegistered){
     //Set heading
     $objH->str = $this->objLanguage->languageText('word_section').':'.'&nbsp;'.$title.'&nbsp;'.$editSectionIcon.'&nbsp;'.$delIcon;
 }
-/*
-//attach heading to navigation table
-$tbl->startRow();
-$tbl->addCell( $objH->show());
-$tbl->addCell($topNav);
-$tbl->endRow();
-*/
 
 $objLayer->str = $objH->show();
 $objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
@@ -337,13 +301,13 @@ $headShow = $objLayer->show();
 $middleColumnContent .= $objRound->show($header.$headShow);//$tbl->show());
 
 //Display layout info
-$middleColumnContent .= $objDetailsTable->show();
+$middleColumnContent .= $tblDetails;
 
 //Sub sections table
 $objH->str = $this->objLanguage->languageText('mod_cmsadmin_subsections', 'cmsadmin').'&nbsp;'.'('.$this->_objSections->getNumSubSections($sectionId).')'.'&nbsp;'.$addSubSecIcon;
 $middleColumnContent .= '&nbsp;'.'<br/>';
 $middleColumnContent .= $objH->show();
-$middleColumnContent .= $objSubSecTable->show();
+$middleColumnContent .= $tblSubSec;
 
 if (empty($subSections)) {
     $middleColumnContent .= '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_cmsadmin_nosubsectionsfound', 'cmsadmin').'</div>';
@@ -353,7 +317,7 @@ if (empty($subSections)) {
 $objH->str = $this->objLanguage->languageText('word_pages').'&nbsp;'.'('.$this->_objContent->getNumberOfPagesInSection($sectionId).')'.'&nbsp;'.$addPageIcon;
 $middleColumnContent .= '&nbsp;'.'<br/>';
 $middleColumnContent .= $objH->show();
-$middleColumnContent .= $objPagesTable->show();
+$middleColumnContent .= $tblPages;
 
 if (empty($pages)) {
     $middleColumnContent .= '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_cmsadmin_nopagesfoundinthissection', 'cmsadmin').'</div>';

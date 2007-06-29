@@ -46,8 +46,12 @@ class dbcontentfrontpage extends dbTable
         {
         	try {
                 parent::init('tbl_cms_content_frontpage');
+                
                 $this->_objUser = $this->getObject('user', 'security');
                 $this->_objLanguage = $this->newObject('language', 'language');
+                
+                $this->objIcon = $this->newObject('geticon', 'htmlelements');
+                $this->loadClass('link', 'htmlelements');
            } catch (Exception $e){
        		    throw customException($e->getMessage());
         	    exit();
@@ -80,32 +84,38 @@ class dbcontentfrontpage extends dbTable
         /**
          * Method to remove a record
          *
-         * @param string $contentId The content Id that must be removed
+         * @param string $id The row Id that must be removed
          * @access public
          * @return bool
          */
-        public function remove($contentId)
+        public function remove($id)
         {
-            $page = $this->getRow('content_id', $contentId);
-//            $pageOrder = $page['ordering'];
-            $id = $page['id'];
-            
             $result = $this->delete('id', $id);
+            
             $this->reorderContent();
             return $result;
-            /*
-            $page = $this->getRow('content_id', $id);
+        }
+        
+        /**
+        * Method to remove a record if it exists
+        *
+        * @access public
+        * @param string $pageId The page to remove
+        * @return bool
+        */
+        public function removeIfExists($pageId)
+        {
+            $sql = "SELECT id FROM tbl_cms_content_frontpage
+                WHERE content_id = '$pageId'";
             
-            $pageOrderNo = $page['ordering'];
-            $allPages = $this->getFrontPages();
-            foreach($allPages as $pg) {
-                if($pg['ordering'] > $pageOrderNo) {
-                    $newOrder = $pg['ordering'] - '1';
-                    $this->update('id', $pg['id'], array('content_id' => $pg['content_id'], 'ordering' => $newOrder));
-                }
+            $data = $this->getArray($sql);
+            
+            if(!empty($data)){
+                $id = $data[0]['id'];
+                $this->remove($id);
+                return TRUE;
             }
-            return $this->delete('id', $page['id']);
-            */
+            return '';
         }
         
         /**
@@ -119,27 +129,28 @@ class dbcontentfrontpage extends dbTable
         */
         private function reorderContent()
         {   
-            // Get all pages
+            // Get all pages in ascending order
             $pageData = $this->getFrontPages();
-            
+                        
             if(!empty($pageData)){
-                    
                 $i = 1;
+                // Reorder the pages
                 foreach($pageData as $key => $item){
-                    $this->update('id', $item['id'], array('ordering' => $i));
-                    $pageData[$key]['ordering'] = $i++;
+                    $this->update('id', $item['front_id'], array('ordering' => $i));
+                    $pageData[$key]['pos'] = $i++;
                 }
                         
-                // Get the ordering position of the last page
+                /* Get the ordering position of the last page
                 $newData = array_reverse($pageData);
-                $lastOrder = $newData[0]['ordering']+1;
+                $lastOrder = $newData[0]['pos']+1;
                             
                 // Remove all null and negative numbers
                 foreach($pageData as $key => $item){
-                    if($item['ordering'] < 0 || is_null($item['ordering'])){
+                    if($item['pos'] < 0 || is_null($item['pos'])){
                         $this->update('id', $item['id'], array('ordering' => $lastOrder++));
                     }
                 }
+                */
             }
         }
         
@@ -149,10 +160,20 @@ class dbcontentfrontpage extends dbTable
          * @return array $allFrontPages An array of oll entries in the content front page table
          * @access public
          */
-        public function getFrontPages()
+        public function getFrontPages($published = FALSE)
         {
-            $allFrontPages = $this->getAll('ORDER BY ordering');
-            return $allFrontPages;
+            $sql = 'SELECT *, fr.ordering AS pos, fr.id AS front_id 
+                FROM tbl_cms_content_frontpage AS fr, tbl_cms_content AS co
+                WHERE fr.content_id = co.id AND co.trash = 0 ';
+                
+            if($published){
+                $sql .= 'AND co.published = 1 ';
+            }
+                
+            $sql .= 'ORDER BY fr.ordering ASC';
+                
+            $data = $this->getArray($sql);
+            return $data; 
         }
 
 
@@ -173,17 +194,18 @@ class dbcontentfrontpage extends dbTable
          * Method to change the status of a page
          *
          * @param string $pageId The id of the page to be changed
+         * @param string $mode Remove / add the page to the front page
          * @access public
          * @return bool
          */
-        public function changeStatus($pageId)
+        public function changeStatus($id, $mode)
         {
-            //If it is on the front page then remove it
-            if($this->isFrontPage($pageId)) {
-                return $this->remove($pageId);
-            //If it is not on the front page then add it
-            } else {
-                return $this->add($pageId);
+            switch($mode){
+                case 'remove':
+                    return $this->remove($id);
+                    
+                case 'add':
+                    return $this->add($id);
             }
         }
 
@@ -192,50 +214,40 @@ class dbcontentfrontpage extends dbTable
          *
          * @param string $id The id of the entry to move
          * @param int $ordering How to update the order(up or down).
+         * @param int $position The current position in the order
          * @access public
          * @return bool
          * @author Warren Windvogel
          */
-        public function changeOrder($id, $ordering)
+        public function changeOrder($id, $ordering, $position)
         {
             //Get array of all front page entries
-            $fpContent = $this->getAll('ORDER BY ordering');
-            //Search for entry to be reordered and update order
-            foreach($fpContent as $content) {
-                if($content['id'] == $id) {
-                    if($ordering == 'up') {
-                        $changeTo = $content['ordering'];
-                        $toChange = $content['ordering'] + 1;
-                        $updateArray = array(
-                                           'content_id' => $content['content_id'],
-                                           'ordering' => $toChange
-                                       );
-                        $this->update('id', $id, $updateArray);
-                    } else {
-                        $changeTo = $content['ordering'];
-                        $toChange = $content['ordering'] - 1;
-                        $updateArray = array(
-                                           'content_id' => $content['content_id'],
-                                           'ordering' => $toChange
-                                       );
-                        $this->update('id', $id, $updateArray);
-                    }
-                }
+            //$fpContent = $this->getAll('ORDER BY ordering');
+            
+            switch($ordering){
+                case 'up':
+                    $newPos = $position - 1;
+                    break;
+                case 'down':
+                    $newPos = $position + 1;
+                    break;
             }
-            //Get other entry to change
-            $entries = $this->getAll("WHERE ordering = '$toChange'");
-            foreach($entries as $entry) {
-                if($entry['id'] != $id) {
-                    $upArr = array(
-                                 'content_id' => $entry['content_id'],
-                                 'ordering' => $changeTo
-                             );
-                    $this->update('id', $entry['id'], $upArr);
-                }
+            
+            // Get the entry to be swapped and update it with the current entries position
+            $swapEntry = $this->getRow('ordering', $newPos);
+            if(!empty($swapEntry) && !empty($position)){
+                $this->update('id', $swapEntry['id'], array('ordering' => $position));
+            }
+            
+            // Update the current entry with the new position
+            if(!empty($id) && !empty($newPos)){
+                $this->update('id', $id, array('ordering' => $newPos));
             }
             
             // Re order the content
-            $this->reorderContent();
+            //$this->reorderContent();
+            
+            return TRUE;
         }
         
         /**
@@ -263,55 +275,51 @@ class dbcontentfrontpage extends dbTable
          * @return string $links The html for the links
          * @access public
          * @author Warren Windvogel
+         * @author Megan Watson modified 27/06/07
          */
-        public function getOrderingLink($id)
+        public function getOrderingLink($id, $pos, $number, $total)
         {
-            //Get the number of pages on the front page
-            $lastOrd = $this->getAll('ORDER BY ordering DESC LIMIT 1');
-            $topOrder = $lastOrd['0']['ordering'];
-            $links = " ";
-            if($topOrder > '1') {
-                //Get the order position
-                $entry = $this->getRow('id', $id);
-                //Create geticon obj
-                $this->objIcon =& $this->newObject('geticon', 'htmlelements');
-                if($entry['ordering'] == '1') {
-                    //return down arrow link
-                    //icon
-                    $this->objIcon->setIcon('downend');
-                    $this->objIcon->title = $this->_objLanguage->languageText('mod_cmsadmin_changeorderdown', 'cmsadmin');
-                    //link
-                    $downLink =& $this->newObject('link', 'htmlelements');
-                    $downLink->href = $this->uri(array('action' => 'changefporder', 'id' => $id, 'ordering' => 'up'));
-                    $downLink->link = $this->objIcon->show();
-                    $links .= $downLink->show();
-                } else if($entry['ordering'] == $topOrder) {
-                    //return up arrow
-                    //icon
-                    $this->objIcon->setIcon('upend');
-                    $this->objIcon->title = $this->_objLanguage->languageText('mod_cmsadmin_changeorderup', 'cmsadmin');
-                    //link
-                    $upLink =& $this->newObject('link', 'htmlelements');
-                    $upLink->href = $this->uri(array('action' => 'changefporder', 'id' => $id, 'ordering' => 'down'));
-                    $upLink->link = $this->objIcon->show();
-                    $links .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $upLink->show();
-                } else {
-                    //return both arrows
-                    //icon
-                    $this->objIcon->setIcon('down');
-                    $this->objIcon->title = $this->_objLanguage->languageText('mod_cmsadmin_changeorderdown', 'cmsadmin');
-                    //link
-                    $downLink =& $this->newObject('link', 'htmlelements');
-                    $downLink->href = $this->uri(array('action' => 'changefporder', 'id' => $id, 'ordering' => 'up'));
-                    $downLink->link = $this->objIcon->show();
-                    //icon
-                    $this->objIcon->setIcon('up');
-                    $this->objIcon->title = $this->_objLanguage->languageText('mod_cmsadmin_changeorderup', 'cmsadmin');
-                    //link
-                    $upLink =& $this->newObject('link', 'htmlelements');
-                    $upLink->href = $this->uri(array('action' => 'changefporder', 'id' => $id, 'ordering' => 'down'));
-                    $upLink->link = $this->objIcon->show();
-                    $links .= $downLink->show() . '&nbsp;' . $upLink->show();
+            $links = '';
+            
+            $lbDown = $this->_objLanguage->languageText('mod_cmsadmin_changeorderdown', 'cmsadmin');
+            $lbUp = $this->_objLanguage->languageText('mod_cmsadmin_changeorderup', 'cmsadmin');
+            
+            $this->objIcon->setIcon('down');
+            $this->objIcon->title = $lbDown;
+            $icDown = $this->objIcon->show();
+            
+            $this->objIcon->setIcon('up');
+            $this->objIcon->title = $lbUp;
+            $icUp = $this->objIcon->show();
+            
+            $this->objIcon->setIcon('downend');
+            $this->objIcon->title = $lbDown;
+            $icDownEnd = $this->objIcon->show();
+            
+            $this->objIcon->setIcon('upend');
+            $this->objIcon->title = $lbUp;
+            $icUpEnd = $this->objIcon->show();
+            
+            // if there are more than 1 entries
+            if($total > 1){
+                if($number == 1){
+                    // Add the down end icon
+                    $objLink = new link($this->uri(array('action' => 'changefporder', 'id' => $id, 'position' => $pos, 'ordering' => 'down')));
+                    $objLink->link = $icDownEnd;
+                    $links = $objLink->show();
+                }else if($number == $total){
+                    // Add the up end icon
+                    $objLink = new link($this->uri(array('action' => 'changefporder', 'id' => $id, 'position' => $pos, 'ordering' => 'up')));
+                    $objLink->link = $icUpEnd;
+                    $links = $objLink->show();
+                }else{
+                    $objLink = new link($this->uri(array('action' => 'changefporder', 'id' => $id, 'position' => $pos, 'ordering' => 'up')));
+                    $objLink->link = $icUp;
+                    $links = $objLink->show().'&nbsp;';
+                    
+                    $objLink = new link($this->uri(array('action' => 'changefporder', 'id' => $id, 'position' => $pos, 'ordering' => 'down')));
+                    $objLink->link = $icDown;
+                    $links .= $objLink->show();
                 }
             }
             return $links;

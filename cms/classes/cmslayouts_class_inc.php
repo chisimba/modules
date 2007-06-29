@@ -272,7 +272,7 @@ class cmslayouts extends object
         {   
             $lbRead = $this->objLanguage->languageText('phrase_readmore');
             $lbWritten = $this->objLanguage->languageText('phrase_writtenby');
-            $arrFrontPages = $this->_objFrontPage->getFrontPages();
+            $arrFrontPages = $this->_objFrontPage->getFrontPages(TRUE);
 
             $str = '';
             //set a counter for the records .. display on the first 2  the rest will be dsiplayed as links

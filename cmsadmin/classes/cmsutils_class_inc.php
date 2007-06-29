@@ -149,7 +149,7 @@ class cmsutils extends object
                 $this->loadClass('hiddeninput', 'htmlelements');
                 $this->loadClass('textarea','htmlelements');
                 $this->loadClass('htmltable','htmlelements');
-                
+                $this->loadClass('layer', 'htmlelements');
 
 		   } catch (Exception $e){
        		    throw customException($e->getMessage());
@@ -184,7 +184,7 @@ class cmsutils extends object
         public function getYesNoRadion($name, $selected = '1')
         {
             //Get visible not visible icons
-            $objIcon =& $this->newObject('geticon', 'htmlelements');
+            $objIcon = $this->newObject('geticon', 'htmlelements');
             //Not visible
             $objIcon->setIcon('not_visible');
             $objIcon->title = $this->objLanguage->languageText('phrase_notpublished');
@@ -1703,17 +1703,8 @@ class cmsutils extends object
 			$objRound =$this->newObject('roundcorners','htmlelements');
 			$objIcon =  $this->newObject('geticon', 'htmlelements');
 			$tbl = $this->newObject('htmltable', 'htmlelements');
-            //$titleInput =$this->newObject('textinput', 'htmlelements');
-            //$menuTextInput =$this->newObject('textinput', 'htmlelements');
             $h3 =$this->newObject('htmlheading', 'htmlelements');
-            //$sections =$this->newObject('dropdown', 'htmlelements');
-            //$parent =$this->newObject('dropdown', 'htmlelements');
             $button =$this->newObject('button', 'htmlelements');
-            //$objRootId =$this->newObject('textinput', 'htmlelements');
-            //$objParentId =$this->newObject('textinput', 'htmlelements');
-            //$objCount =$this->newObject('textinput', 'htmlelements');
-            //$objOrdering =$this->newObject('textinput', 'htmlelements');
-			//$ContextInput =$this->newObject('textinput', 'htmlelements');
 			$objLayer =$this->newObject('layer', 'htmlelements');
 			$this->loadClass('image','htmlelements');
 			$objFiles =$this->getObject('dbfile','filemanager');
@@ -1741,24 +1732,16 @@ class cmsutils extends object
             $objDrop->addOption('previous', $this->objLanguage->languageText('mod_cmsadmin_layout_previouspagebelow', 'cmsadmin'));
             $objDrop->addOption('list', $this->objLanguage->languageText('mod_cmsadmin_layout_listofpages', 'cmsadmin'));
             $objDrop->addOption('summaries', $this->objLanguage->languageText('mod_cmsadmin_layout_summaries', 'cmsadmin'));
-            //$objDrop->addOption('columns', $this->objLanguage->languageText('mod_cmsadmin_layout_columns', 'cmsadmin'));
             
             if ($editmode) {
                 $objDrop->setSelected($section['layout']);
                 $imgPath = $this->getResourceUri('section_'.$section['layout'].'.gif', 'cmsadmin');
-                //$this->appendArrayVar('bodyOnLoad', 'xajax_processSection(\''.$section['layout'].'\')');
-                $this->setVar('bodyParams', 'onload="javascript:sa_processSection(\''.$section['layout'].'\');"');
+                $this->appendArrayVar('bodyOnLoad', "sa_processSection('{$section['layout']}');");
             } else {
                 $objDrop->setSelected('page');
                 $imgPath = $this->getResourceUri('section_page.gif', 'cmsadmin');
-                //$this->appendArrayVar('bodyOnLoad', 'xajax_processSection(\'page\')');
-                $this->setVar('bodyParams', 'onload="javascript:sa_processSection(\'page\');"');
+                $this->appendArrayVar('bodyOnLoad', "sa_processSection('page');");
             }
-            
-//            $objDrop->extra = "onchange=\"xajax_processSection(this.value); javascript: 
-//            var path = '{$this->getResourceUri('', 'cmsadmin')}'; 
-//            var image = path+'section_'+this.value+'.gif';
-//            document.getElementById('img').src = image;\"";
             
             $objDrop->extra = "onchange=\"javascript:
             sa_processSection(this.value); 
@@ -1779,7 +1762,6 @@ class cmsutils extends object
 		    
 			$drp_image = new dropdown('image');
 			$drp_image->id= 'image';
-			//$drp_image->extra ="onchange=\"javascript:if (this.options[selectedIndex].value!='') {document.getElementById('imagelib').src= 'usrfiles/'+this.options[selectedIndex].value,document.getElementById('input_imagesrc').value= 'usrfiles/'+this.options[selectedIndex].value} else {document.getElementById('imagelib').src='../images/blank.png'}\"";
 			$drp_image->extra = 'onchange="javascript:if(this.value!=\'\'){$(\'imagelib\').src = \'usrfiles/\'+this.value;$(\'input_imagesrc\').value = \'usrfiles/\'+this.value}else{$(\'imagelib\').src = \'../images/blank.png\'}"';
 			$drp_image->addOption('','- Select Image -');
 			$drp_image->addFromDB($listFiles,'filename','path');
@@ -1801,13 +1783,12 @@ class cmsutils extends object
             //the title
             $titleInput = new textinput('title',null,null,30);
             $menuTextInput = new textinput('menutext',null,null,30);
-            //$objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
-            //$objForm->addRule('menutext', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddmenutext', 'cmsadmin'), 'required');
+            $objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
+            $objForm->addRule('menutext', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddmenutext', 'cmsadmin'), 'required');
             //$button->setToSubmit();
-            $button->name = 'save';
+            $button = new button('save', $this->objLanguage->languageText('word_save'));
             $button->id = 'save';
-            $button->value = $this->objLanguage->languageText('word_save');
-            $button->setToSubmit(); //onclick = 'return validate_addsectionfrm_form(this.form) ';
+            $button->setToSubmit(); 
             if ($editmode) {
                 $titleInput->value = $section['title'];
                 $menuTextInput->value = $section['menutext'];
@@ -2087,14 +2068,6 @@ class cmsutils extends object
             }
             //Heading box
             $topNav = $this->topNav('addsection');
-            /*
-			$tbl->startRow();
-			//Get top navigation
-			$tbl->addCell($h3->show());
-			$tbl->addCell($topNav, '','','right');
-			$tbl->endRow();
-            //$objRound->show
-            */
 
             $objLayer->str = $h3->show();
             $objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
@@ -2702,7 +2675,174 @@ class cmsutils extends object
 
         return $strBody;
     }
-
+    
+    /**
+    * Method to return the form for adding/removing blocks from the front page
+    *
+    * @access public
+    * @return string html
+    */
+    public function showFrontBlocksForm()
+    {
+        $objCMSBlocks = $this->_objBlocks;
+        $thisPageBlocks = $objCMSBlocks->getBlocksForFrontPage();
+        
+        $init = 'fm_init();';
+        $str = $this->showBlocksForm($thisPageBlocks, $init);
+        
+        return $str;
+    }
+    
+    /**
+    * Method to return the form for adding/removing blocks from the content page
+    *
+    * @access public
+    * @param string $id The row id of the content page where the blocks will be added
+    * @param string $section The id of the section containing the content page
+    * @return string html
+    */
+    public function showContentBlocksForm($id, $section)
+    {
+        $objCMSBlocks = $this->_objBlocks;
+        $thisPageBlocks = $objCMSBlocks->getBlocksForPage($id);
+        
+        $init = "ca_init('{$id}', '{$section}');";
+        $str = $this->showBlocksForm($thisPageBlocks, $init);
+        
+        return $str;
+    }
+    
+    /**
+    * Method to return the form for adding/removing blocks from the section
+    *
+    * @access public
+    * @param string $id The row id of the section
+    * @return string html
+    */
+    public function showSectionBlocksForm($id)
+    {
+        $objCMSBlocks = $this->_objBlocks;
+        $thisPageBlocks = $objCMSBlocks->getBlocksForSection($id);
+        
+        $init = "sa_init('{$id}')";
+        $str = $this->showBlocksForm($thisPageBlocks, $init);
+        
+        return $str;
+    }
+    
+    /**
+    * Method to display the form for adding and removing blocks to/from the left and right hand columns
+    *
+    * @access public
+    * @return string html
+    */
+    public function showBlocksForm($thisPageBlocks, $onload = '')
+    {
+        $objIcon = $this->newObject('geticon', 'htmlelements');
+        $objModuleBlocks = $this->getObject('dbmoduleblocks', 'modulecatalogue');
+        $objBlocks = $this->getObject('blocks', 'blocks');
+        
+        $blocks = $objModuleBlocks->getBlocks('normal');
+        
+        // add js script library
+        $headerParams = $this->getJavascriptFile('scripts.js', 'cmsadmin');
+        $this->appendArrayVar('headerParams', $headerParams);
+        
+        // initialize onload scripts
+        $this->appendArrayVar('bodyOnLoad', $onload);
+        
+        // language elements
+        $lbAddedBl = $this->objLanguage->languageText('mod_cmsadmin_addedblocks', 'cmsadmin');
+        $lbDragBl = $this->objLanguage->languageText('mod_cmsadmin_dragaddblocks', 'cmsadmin');
+        $lbPageBl = $this->objLanguage->languageText('mod_cmsadmin_pageblocks', 'cmsadmin');
+        $lbLinkDis = $this->objLanguage->languageText('mod_cmsadmin_warnlinkdisabled', 'cmsadmin');
+        $lbLoading = $this->objLanguage->languageText('word_loading');
+        $lbAvailBl = $this->objLanguage->languageText('mod_cmsadmin_availableblocks', 'cmsadmin');
+        $lbDragRem = $this->objLanguage->languageText('mod_cmsadmin_dragremoveblocks', 'cmsadmin');
+        
+        /* Create drop zone */
+        $objHead = new htmlheading();
+        $objHead->str = $lbAddedBl;
+        $objHead->type = 4;
+        $dropStr = $objHead->show();
+        $dropStr .= $lbDragBl;
+        
+        $usedBlocks = array();
+        if(!empty($thisPageBlocks)){
+            foreach ($thisPageBlocks as $block){
+                $str = trim($objBlocks->showBlock($block['blockname'], $block['moduleid'], '', 20, TRUE, TRUE, 'none'));
+                $str = preg_replace('/type\\s??=\\s??"submit"/', 'type="button"', $str);
+                $str = preg_replace('/href=".+?"/', 'href="javascript:alert(\''.$lbLinkDis.'\');"', $str);
+                $str = preg_replace('/onchange =".+"/', 'onchange="javascript:alert(\''.$lbLinkDis.'\');"', $str);
+                
+                $usedBlocks[] = $block['blockid'];
+                
+                $objLayer = new layer();
+                $objLayer->str = $str;
+                $objLayer->id = $block['blockid'];
+                $objLayer->cssClass = 'usedblock';
+                $dropStr .= $objLayer->show();
+            }
+        }
+        
+        
+        // Drop zone for adding blocks
+        $objLayer = new layer();
+        $objLayer->str = $dropStr;
+        $objLayer->id = 'dropzone';
+        $objLayer->cssClass = 'dropblock';
+        $blStr = $objLayer->show();
+    
+        $blStr .= '<br clear="left" /><br /><br />';
+        
+        // Display loding bar
+        $objIcon->setIcon('loading_bar', 'gif', 'icons/');
+        $objIcon->title = $lbLoading;
+        
+        $objLayer = new layer();
+        $objLayer->str = $objIcon->show();
+        $objLayer->id = 'loading';
+        $objLayer->display = 'none';
+        $blStr .= $objLayer->show();
+        
+        /* Create delete zone */        
+        $objHead = new htmlheading();
+        $objHead->str = $lbAvailBl;
+        $objHead->type = '4';
+        $delStr = $objHead->show();
+        $delStr .= $lbDragRem;
+        
+        if(!empty($blocks)){
+            foreach ($blocks as $block){
+                if (!in_array($block['id'], $usedBlocks)) {
+                    $str = trim($objBlocks->showBlock($block['blockname'], $block['moduleid'], '', 20, TRUE, TRUE, 'none'));
+                    $str = preg_replace('/type\\s??=\\s??"submit"/', 'type="button"', $str);
+                    $str = preg_replace('/href=".+?"/', 'href="javascript:alert(\''.$lbLinkDis.'\');"', $str);
+                    $str = preg_replace('/onchange =".+"/', 'onchange="javascript:alert(\''.$lbLinkDis.'\');"', $str);
+                                    
+                    $objLayer = new layer();
+                    $objLayer->str = $str;
+                    $objLayer->id = $block['id'];
+                    $objLayer->cssClass = 'addblocks';
+                    $delStr .= $objLayer->show();
+                }
+            }
+        }
+       
+        $objLayer = new layer();
+        $objLayer->str = $delStr;
+        $objLayer->id = 'deletezone';
+        $objLayer->cssClass = 'deleteblock';
+        $blStr .= $objLayer->show();
+        $blStr .= '<br clear="left" />';
+        
+        $objLayer = new layer();
+        $objLayer->str = $blStr;
+        $objLayer->id = 'selectblocks';
+        
+        return $objLayer->show();
+    }
+    
     /**
     * Method to check if the user is in the CMS Authors group
     *

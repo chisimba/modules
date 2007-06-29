@@ -8,14 +8,6 @@
  * @author Wesley Nitskie
  */
 
-
-// add js script library
-$headerParams = $this->getJavascriptFile('scripts.js', 'cmsadmin');
-$this->appendArrayVar('headerParams', $headerParams);
-
-// initialize scripts
-$this->setVar('bodyParams', 'onload="javascript:fm_init();"');
-
 //initiate objects
 //$table =  $this->newObject('htmltable', 'htmlelements');
 $this->loadClass('htmltable', 'htmlelements');
@@ -92,45 +84,57 @@ $table->addHeaderCell($this->objLanguage->languageText('word_order'));
 $table->addHeaderCell($this->objLanguage->languageText('word_options'));
 $table->endHeaderRow();
 
-$rowcount = 0;
-//var_dump($files);
+$lbConfirm = $this->objLanguage->languageText('mod_cmsadmin_confirmremovefromfp', 'cmsadmin');
+
 //setup the tables rows  and loop though the records
 if(!empty($files)){
-    foreach($files as $file) {
-        $arrFile = $this->_objContent->getContentPage($file['content_id']);
+    $count = 1;
+    $total = count($files);
     
-        $oddOrEven = ($rowcount == 0) ? "even" : "odd";
+    $oddOrEven = 'even';
+    foreach($files as $file) {
+        //$arrFile = $this->_objContent->getContentPage($file['content_id']);
+    
+        $oddOrEven = ($oddOrEven == 'odd') ? 'even' : 'odd';
     
         //Create delete & edit icon for removing content from front page
-        $objIcon = & $this->newObject('geticon', 'htmlelements');
         $objIcon->setIcon('edit');
-        $link = new link($this->uri(array('action' => 'addcontent', 'id' => $arrFile['id'], 'parent' => $arrFile['sectionid'], 'frontmanage' => TRUE)));
+        $link = new link($this->uri(array('action' => 'addcontent', 'id' => $file['content_id'], 'parent' => $file['sectionid'], 'frontmanage' => TRUE)));
         $link->link = $objIcon->show();
         $editPage = $link->show();
     
-        $delArray = array('action' => 'removefromfrontpage', 'confirm' => 'yes', 'id' => $file['content_id']);
-        $deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmremovefromfp', 'cmsadmin');
-        $delIcon = $objIcon->getDeleteIconWithConfirm($file['id'], $delArray, 'cmsadmin', $deletephrase);
+        $delArray = array('action' => 'removefromfrontpage', 'id' => $file['front_id']);
+        $delIcon = $objIcon->getDeleteIconWithConfirm('', $delArray, 'cmsadmin', $lbConfirm);
     
         $objCheck = new checkbox('arrayList[]');
         $objCheck->setValue($file['content_id']);
         $objCheck->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
-            
+        
+	    //publish, visible
+	    if($file['published']){
+	       $url = $this->uri(array('action' => 'contentpublish', 'id' => $file['content_id'], 'mode' => 'unpublish'));
+	       $icon = $this->_objUtils->getCheckIcon(TRUE);
+	    }else{
+	       $url = $this->uri(array('action' => 'contentpublish', 'id' => $file['content_id'], 'mode' => 'publish'));
+	       $icon = $this->_objUtils->getCheckIcon(FALSE);
+	    }
+	    $objLink = new link($url);
+	    $objLink->link = $icon;
+	    $visibleLink = $objLink->show();
     
         $tableRow = array();
         $tableRow[] = $objCheck->show();
-        $tableRow[] = $arrFile['title'];
-        $tableRow[] = $this->_objUtils->getCheckIcon($arrFile['published'], TRUE);
+        $tableRow[] = $file['title'];
+        $tableRow[] = $visibleLink;
     
-        $link = new link($this->uri(array('action' => 'viewsection', 'id' => $arrFile['sectionid'])));
-        $link->link = $this->_objSections->getMenuText($arrFile['sectionid']);
+        $link = new link($this->uri(array('action' => 'viewsection', 'id' => $file['sectionid'])));
+        $link->link = $this->_objSections->getMenuText($file['sectionid']);
     
         $tableRow[] = $link->show();
-        $tableRow[] = $this->_objFrontPage->getOrderingLink($file['id']);
+        $tableRow[] = $this->_objFrontPage->getOrderingLink($file['front_id'], $file['pos'], $count++, $total);
         $tableRow[] = $editPage.'&nbsp;'.$delIcon;
     
         $table->addRow($tableRow, $oddOrEven);
-        $rowcount = ($rowcount == 0) ? 1 : 0;
     }
 }
 
@@ -155,61 +159,5 @@ echo $middleColumnContent;
 echo '<br />';
 echo '<h2>'.$this->objLanguage->languageText('mod_cmsadmin_frontpageblocks', 'cmsadmin', 'Front Page Blocks').'</h2>';
 
-    $objModuleBlocks =& $this->getObject('dbmoduleblocks', 'modulecatalogue');
-    $objCMSBlocks =& $this->getObject('dbblocks', 'cmsadmin');
-    $objBlocks =& $this->getObject('blocks', 'blocks');
-    
-    
-
-//    $this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
-//    $this->objScriptaculous->show();
-
-    $blocks = $objModuleBlocks->getBlocks('normal');
-    $thisPageBlocks = $objCMSBlocks->getBlocksForFrontPage();
-    
-    
-    echo '<div id="dropzone" style="border: 1px dashed black; background-color: lightyellow; z-index:1; position: relative; padding: 4px;"><h4>'.$this->objLanguage->languageText('mod_cmsadmin_addedblocks', 'cmsadmin', 'Added Blocks').'</h4>'.$this->objLanguage->languageText('mod_cmsadmin_dragaddblocks', 'cmsadmin', 'Drag and drop the blocks you want to add here.');
-    
-    $usedBlocks = array();
-    
-    foreach ($thisPageBlocks as $block)
-    {
-        $str = trim($objBlocks->showBlock($block['blockname'], $block['moduleid']));
-        $str = preg_replace('/type\\s??=\\s??"submit"/', 'type="button"', $str);
-        $str = preg_replace('/href=".+?"/', 'href="javascript:alert(\''.$this->objLanguage->languageText('mod_cmsadmin_pageblocks', 'cmsadmin', 'Page Blocks').$this->objLanguage->languageText('mod_cmsadmin_linkdisabled', 'cmsadmin', 'Link is Disabled.').'\');"', $str);
-        
-        $usedBlocks[] = $block['blockid'];
-        
-        echo '<div class="usedblock" id="'.$block['blockid'].'" style="border: 1px solid lightgray; padding: 5px; width:150px; float: left; z-index:1000;">'.$str.'</div>';
-    }
-    echo '</div>';
-
-    echo '<br clear="left" /><br /><br />';
-    
-    $objIcon->setIcon('loading_bar', 'gif', 'icons/');
-    $objIcon->title = $this->objLanguage->languageText('word_loading');
-    echo '<div id="loading" style="display:none;">'.$objIcon->show().'</div>';
-    
-    echo '<div id="deletezone" style="border: 1px dashed black; background-color: lightyellow; position: relative; padding: 4px;"><h4>'.$this->objLanguage->languageText('mod_cmsadmin_availableblocks', 'cmsadmin', 'Available Blocks').'</h4>'.$this->objLanguage->languageText('mod_cmsadmin_dragremoveblocks', 'cmsadmin', 'Drag and drop the blocks you want to remove here.');
-    
-    foreach ($blocks as $block)
-    {
-        if (!in_array($block['id'], $usedBlocks)) {
-            $str = trim($objBlocks->showBlock($block['blockname'], $block['moduleid']));
-            $str = preg_replace('/type\\s??=\\s??"submit"/', 'type="button"', $str);
-            $str = preg_replace('/href=".+?"/', 'href="javascript:alert(\''.$this->objLanguage->languageText('mod_cmsadmin_linkdisabled', 'cmsadmin', 'Link is Disabled.').'\');"', $str);
-            
-            echo '<div class="addblocks" id="'.$block['id'].'" style="border: 1px solid lightgray; padding: 5px; width:150px; float: left; z-index:1000;">'.$str.'</div>';
-        }
-    }
-    echo '</div>';
+echo $this->_objUtils->showFrontBlocksForm();
 ?>
-
-<br clear="left" />
-
-
-<style type="text/css">
-div.addblocks div.featurebox, div.usedblock div.featurebox {
-    margin: 0;
-}
-</style>
