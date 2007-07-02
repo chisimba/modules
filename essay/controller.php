@@ -50,14 +50,24 @@ class essay extends controller
         // form, table, link, textinput, button, icon, layer, checkbox, textarea, iframe
         $this->objForm=& $this->newObject('form','htmlelements');
         $this->loadclass('htmltable','htmlelements');
-        $this->objLayer=& $this->newObject('layer','htmlelements');
-        $this->objLink=& $this->newObject('link','htmlelements');
-        $this->objInput=& $this->newObject('textinput','htmlelements');
-        $this->objButton=& $this->newObject('button','htmlelements');
-        $this->objCheck=& $this->newObject('checkbox','htmlelements');
-        $this->objText=& $this->newObject('textarea','htmlelements');
-        $this->objIcon=& $this->newObject('geticon','htmlelements');
-        $this->objIframe=& $this->newObject('iframe','htmlelements');
+		$this->loadclass('layer','htmlelements');
+		$this->loadclass('link','htmlelements');
+		$this->loadclass('textinput','htmlelements');
+		$this->loadclass('button','htmlelements');
+		$this->loadclass('checkbox','htmlelements');
+		$this->loadclass('textarea','htmlelements');
+		$this->loadclass('iframe','htmlelements');
+		
+		
+        $this->objLayer=new layer();
+        $this->objLink=new link();
+        $this->objInput=new textinput();
+        $this->objButton=new button();
+        $this->objCheck=new checkbox('tempname');
+        $this->objText=new textarea();
+        $this->objIcon= $this->newObject('geticon','htmlelements');
+        $this->objIframe=new iframe();
+		
         // Get an instance of the confirmation object
         $this->objConfirm=& $this->newObject('confirm','utilities');
         // Get an instance of the language object
