@@ -244,7 +244,7 @@ class utils extends object
 		//Add the latest in blog as a a block
 		$rightSideColumn .= $objBlocks->showBlock('latestpodcast', 'podcast');
 		//Add a block for chat
-		$rightSideColumn .= $objBlocks->showBlock('chat', 'chat');
+		//$rightSideColumn .= $objBlocks->showBlock('chat', 'chat');
 		//Add a block for the google api search
 		$rightSideColumn .= $objBlocks->showBlock('google', 'websearch');
 		//Put the google scholar google search
