@@ -182,7 +182,7 @@ class utils extends object
 
 		$leftSideColumn .= $objBlocks->showBlock('latestpodcast', 'podcast');
 
-		$leftSideColumn .= $objBlocks->showBlock('chat', 'chat');
+		//$leftSideColumn .= $objBlocks->showBlock('chat', 'chat');
 		/*
 		$leftSideColumn .= $objBlocks->showBlock('loginstats', 'context');
 		//Add guestbook block
