@@ -10,16 +10,18 @@ if (!$GLOBALS['kewl_entry_point_run'])
 //Create template heading
 $objH = $this->newObject('htmlheading','htmlelements');
 $objH->type = 1;
-$objH->str = $this->objLanguage->languageText("mod_dev_page_title");
+//$objH->str = $this->objLanguage->languageText("mod_dev_page_title");
+//$objH->str = $this->objLanguage->languageText('mod_iconrequest_page_title', 'iconrequest');
+$objH->str = $this->objLanguage->languageText('mod_dev_page_title', 'iconrequest');
 
 //Display current developer if set, else appropraite message
 if (!$this->dbDev->isEmpty()) {
     $id = $this->dbDev->getId();
 	$email = $this->objUser->email($id);
 	$developer = $this->objUser->fullname($id);
-	$developerMsg = $this->objLanguage->languageText("dev_msg").' '.$developer;
+	$developerMsg = $this->objLanguage->languageText("dev_msg", 'iconrequest').' '.$developer;
 } else {
-	$developerMsg = $this->objLanguage->languageText("no_dev_msg");
+	$developerMsg = $this->objLanguage->languageText("no_dev_msg", 'iconrequest');
 }
 
 //Table for header
@@ -46,12 +48,12 @@ foreach ($users as $u) {
 
 
 //initialise the lables and inputs
-$label1 = new label($objLanguage->languageText('mod_iconrequest_changedeveloper'),'dev_name');
+$label1 = new label($objLanguage->languageText('mod_iconrequest_changedeveloper', 'iconrequest'),'dev_name');
 
 //initialise buttons
-$objSubmit = new button('form_submit',$objLanguage->languageText('word_submit'));
+$objSubmit = new button('form_submit',$objLanguage->languageText('word_submit', 'iconrequest'));
 $objSubmit->setToSubmit();
-$objClear = new button('form_clear',$objLanguage->languageText('word_cancel'));
+$objClear = new button('form_clear',$objLanguage->languageText('word_cancel', 'iconrequest'));
 $returnUrl = $this->uri(null);
 $objClear->setOnClick("window.location = '$returnUrl'");
 
@@ -65,7 +67,7 @@ $objForm->addToFormEx($objSubmit->show(),$objClear->show());
 if (($this->objUser->userId() == $this->dbDev->getId()) || ($this->objUser->isAdmin())) {
 	$content = $hTable->show().$objForm->show();
 } else {
-	$msg = $this->objLanguage->languageText('mod_iconrequest_permission');
+	$msg = $this->objLanguage->languageText('mod_iconrequest_permission', 'iconrequest');
 	$content = $hTable->show()."<p><span class=noRecordsMessage>$msg</span><br />&nbsp;</p>";
 }
 echo $content;

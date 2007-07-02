@@ -17,22 +17,23 @@ $objAddIcon->alt = $objLanguage->languageText('mod_add_request');
 $add = $objAddIcon->getAddIcon($objLink);
 $objH = &$this->newObject('htmlheading','htmlelements');
 $objH->type = 1;
-$objH->str = $this->objLanguage->languageText("mod_iconrequest_page_title"). "&nbsp" .$add;
+//$objH->str = $this->objLanguage->languageText("mod_iconrequest_page_title"). "&nbsp" .$add;
+$objH->str = $this->objLanguage->languageText("mod_iconrequest_page_title", 'iconrequest'). "&nbsp" .$add;
 
 //Create text link to add request
 $addLink = &$this->newObject('link', 'htmlelements');
 $addLink->link($this->uri(array('action' => 'request')));
-$addLink->link = $objLanguage->languageText('mod_add_request');
+$addLink->link = $objLanguage->languageText('mod_add_request', 'iconrequest');
 
 //Timeout message informing whether add succeeded or not
 $submitMsg = & $this->newObject('timeoutMessage','htmlelements');
 switch ($this->getParam('message')) {
 	case 'confirm':
-		$submitMsg->setMessage($this->objLanguage->languageText("phrase_success"));
+		$submitMsg->setMessage($this->objLanguage->languageText("phrase_success", 'iconrequest'));
 		break;
 	case 'fail':
 		$submitMsg->cssId = "error";
-		$submitMsg->setMessage($this->objLanguage->languageText("phrase_error"));
+		$submitMsg->setMessage($this->objLanguage->languageText("phrase_error", 'iconrequest'));
 		break;
 	default: break;
 }
@@ -48,9 +49,9 @@ if (!$this->dbDev->isEmpty()) {
     $id = $this->dbDev->getId();
 	$email = $this->objUser->email($id);
 	$developer = $this->objUser->fullname($id);
-	$developerMsg = $this->objLanguage->languageText("dev_msg").' '.$developer.' '.$changeDeveloper;
+	$developerMsg = $this->objLanguage->languageText("dev_msg", 'iconrequest').' '.$developer.' '.$changeDeveloper;
 } else {
-	$developerMsg = $this->objLanguage->languageText("no_dev_msg").' '.$changeDeveloper;
+	$developerMsg = $this->objLanguage->languageText("no_dev_msg", 'iconrequest').' '.$changeDeveloper;
 }
 
 //Table for header
@@ -66,7 +67,7 @@ $hTable->startRow();
 $hTable->addCell($developerMsg,Null,'top','left');
 $hTable->endRow();
 $hTable->startRow();
-$hTable->addCell($this->objLanguage->languageText('mod_iconrequest_noadmin'),null,'top','left');
+$hTable->addCell($this->objLanguage->languageText('mod_iconrequest_noadmin', 'iconrequest'),null,'top','left');
 $hTable->endRow();
 
 // Create a table for the data
@@ -76,15 +77,15 @@ $dataTable->cellpadding = "2";
 $dataTable->width = "90%";
 $dataTable->attributes = "border='0'";
 $tableRow = array();
-$tableHd[] = $objLanguage->languageText('form_label1');
-$tableHd[] = $objLanguage->languageText('form_label2');
-$tableHd[] = $objLanguage->languageText('form_label3');
-$tableHd[] = $objLanguage->languageText('form_label4');
-$tableHd[] = $objLanguage->languageText('form_label11');
-$tableHd[] = $objLanguage->languageText('heading_complete');
-$tableHd[] = $objLanguage->languageText('heading_user');
-$tableHd[] = $objLanguage->languageText('heading_added');
-$tableHd[] = $objLanguage->languageText('heading_action');
+$tableHd[] = $objLanguage->languageText('form_label1', 'iconrequest');
+$tableHd[] = $objLanguage->languageText('form_label2', 'iconrequest');
+$tableHd[] = $objLanguage->languageText('form_label3', 'iconrequest');
+$tableHd[] = $objLanguage->languageText('form_label4', 'iconrequest');
+$tableHd[] = $objLanguage->languageText('form_label11', 'iconrequest');
+$tableHd[] = $objLanguage->languageText('heading_complete', 'iconrequest');
+$tableHd[] = $objLanguage->languageText('heading_user', 'iconrequest');
+$tableHd[] = $objLanguage->languageText('heading_added', 'iconrequest');
+$tableHd[] = $objLanguage->languageText('heading_action', 'iconrequest');
 
 // Create the table header for display
 $dataTable->addHeader($tableHd, "heading");

@@ -20,7 +20,7 @@ $this->loadClass('hiddeninput', 'htmlelements');
 
 $objH = &$this->newObject('htmlheading','htmlelements');
 $objH->type = 1;
-$objH->str = $this->objLanguage->languageText("mod_request_page_title");
+$objH->str = $this->objLanguage->languageText("mod_request_page_title", 'iconrequest');
 
 $hTable = &$this->newObject('htmltable','htmlelements');
 $hTable->width = '100%';
@@ -257,18 +257,18 @@ echo $objForm->show();
 } else {
 $back = $this->getObject('link','htmlelements');
 $back->link($this->uri(Null));
-$back->link = $this->objLanguage->languageText('word_back');
+$back->link = $this->objLanguage->languageText('word_back', 'iconrequest');
 $back->extra = "class=pseudobutton";
-$content = $this->objLanguage->languageText('mod_iconrequest_notadmin').'<br>';
+$content = $this->objLanguage->languageText('mod_iconrequest_notadmin', 'iconrequest').'<br>';
 $content .= $back->show();
 echo $content;
 }
 } else {	//display message prompting user to set icon developer information
 $back = $this->getObject('link','htmlelements');
 $back->link($this->uri(Null));
-$back->link = $this->objLanguage->languageText('word_back');
+$back->link = $this->objLanguage->languageText('word_back', 'iconrequest');
 $back->extra = "class=pseudobutton";
-$content = $this->objLanguage->languageText('mod_set_dev_inf').'<br>';
+$content = $this->objLanguage->languageText('mod_set_dev_inf', 'iconrequest').'<br>';
 $content .= $back->show();
 echo $content;
 }
