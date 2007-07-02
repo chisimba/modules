@@ -2873,7 +2873,7 @@ class cmsutils extends object
         $allStr = $objLayer->show();
         
     
-        $blStr .= $rightStr.$allStr.$leftStr.'<br clear="left" />';
+        $blStr .= $leftStr.$allStr.$rightStr.'<br clear="left" />';
         
         $objLayer = new layer();
         $objLayer->str = $blStr;
