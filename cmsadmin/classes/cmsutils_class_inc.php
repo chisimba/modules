@@ -783,8 +783,14 @@ class cmsutils extends object
         		$lbl_author = new label( $this->objLanguage->languageText('mod_cmsadmin_author_alias','cmsadmin'),'author_alias');
         		//Pre-populated dropdown
         		$creator = new dropdown('creator');
-        		$users = $this->_objUserModel->getUsers('username','listall');
-        		$creator->addFromDB($users,"username","userid",$arrContent['created_by']);
+        		$users = $this->_objUserModel->getUsers('surname', 'listall');
+        		
+        		if(!empty($users)){
+        		  foreach($users as $item){
+        		      $creator->addOption($item['userid'], $item['surname'].', '.$item['firstname']);
+        		  }
+        		  $creator->setSelected($arrContent['created_by']);
+        		}
         		$lbl_creator = new label($this->objLanguage->languageText('mod_cmsadmin_change_author','cmsadmin'),'creator');
         		//Change Created Date
         		$lbl_date_created = new label($this->objLanguage->languageText('mod_cmsadmin_override_creation_date','cmsadmin'),'overide_date');
@@ -800,8 +806,14 @@ class cmsutils extends object
         		$lbl_author = new label( $this->objLanguage->languageText('mod_cmsadmin_author_alias','cmsadmin'),'author_alias');
         		//Pre-populated dropdown
         		$creator = new dropdown('creator');
-        		$users = $this->_objUserModel->getUsers('username','listall');
-        		$creator->addFromDB($users,"username","userid", $this->_objUser->userId());
+        		$users = $this->_objUserModel->getUsers('surname', 'listall');
+        		
+        		if(!empty($users)){
+        		  foreach($users as $item){
+        		      $creator->addOption($item['userid'], $item['surname'].', '.$item['firstname']);
+        		  }
+        		  $creator->setSelected($this->_objUser->userId());
+        		}
         		$lbl_creator = new label($this->objLanguage->languageText('mod_cmsadmin_change_author','cmsadmin'),'creator');
         		//Change Created Date
         		$lbl_date_created = new label($this->objLanguage->languageText('mod_cmsadmin_override_creation_date','cmsadmin'),'overide_date');
