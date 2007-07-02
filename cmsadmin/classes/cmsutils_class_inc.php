@@ -2689,7 +2689,7 @@ class cmsutils extends object
         $leftBlocks = $objCMSBlocks->getBlocksForFrontPage(1);
         
         //$init = 'fm_init();';
-        $init = "bl_init('adddynamicfrontpageblock', 'addleftfrontpageblock', 'removedynamicfrontpageblock', '', '');";
+        $init = "bl_init('adddynamicfrontpageblock', 'addleftfrontpageblock', 'removedynamicfrontpageblock', 'init_x', 'init_x');";
         $str = $this->showBlocksForm($thisPageBlocks, $leftBlocks, $init);
         
         return $str;
