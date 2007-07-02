@@ -133,7 +133,7 @@ if(!empty($files)){
     
         $tableRow[] = $link->show();
         $tableRow[] = $this->_objFrontPage->getOrderingLink($file['front_id'], $file['pos'], $count++, $total);
-        $tableRow[] = $editPage.'&nbsp;'.$delIcon;
+        $tableRow[] = '<nobr>'.$editPage.$delIcon.'</nobr>';
     
         $table->addRow($tableRow, $oddOrEven);
     }

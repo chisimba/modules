@@ -194,11 +194,7 @@ if (is_array($arrSections)) {
 	    $tableRow[] = $this->_objLayouts->getLayoutDescription($section['layout']);
 	    $tableRow[] = $this->_objSections->getOrderingLink($section['id']);//$this->_objSections->getPageOrderType($section['ordertype']);
 	    $tableRow[] = $visibleLink;
-	    if($viewType == 'root') {
-	        $tableRow[] = $editIcon.'&nbsp;'.$delIcon.'&nbsp;'.'&nbsp;'.'&nbsp;'.$this->_objSections->getOrderingLink($section['id']);
-	    } else {
-	        $tableRow[] = $editIcon.'&nbsp;'.$delIcon;
-	    }
+	    $tableRow[] = '<nobr>'.$editIcon.$delIcon.'</nobr>';
 
 	    $table->addRow($tableRow, $oddOrEven);
 	

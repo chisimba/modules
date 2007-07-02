@@ -149,7 +149,7 @@ if (isset($subSections)) {
         $objSubSecTable->addCell($this->_objLayouts->getLayoutDescription($subSecLayoutName), '', '', '', $class);
         $objSubSecTable->addCell($visibleIcon, '', '', '', $class);
         $objSubSecTable->addCell($this->_objSections->getPageOrderType($section['ordertype']), '', '', '', $class);
-        $objSubSecTable->addCell($editIcon.'&nbsp;'.$delIcon.'&nbsp;'.$this->_objSections->getOrderingLink($subSecId), '', '', '', $class);
+        $objSubSecTable->addCell('<nobr>'.$editIcon.$delIcon.$this->_objSections->getOrderingLink($subSecId).'</nobr>', '', '', '', $class);
         $objSubSecTable->endRow();
     }
 }
@@ -232,9 +232,9 @@ if (!empty($pages)) {
         $objPagesTable->addCell($visibleIcon, '', '', '', $class);
         $objPagesTable->addCell($this->_objContent->getOrderingLink($sectionId, $pageId), '', '', '', $class);
         if ($isRegistered) {
-            $objPagesTable->addCell($objBlocksLink->show().'&nbsp;'.$frontPageLink->show().'&nbsp;'.$editIcon.'&nbsp;'.$delIcon, '', '', '', $class);
+            $objPagesTable->addCell('<nobr>'.$objBlocksLink->show().$frontPageLink->show().$editIcon.$delIcon.'</nobr>', '', '', '', $class);
         } else {
-            $objPagesTable->addCell($frontPageLink->show().'&nbsp;'.$editIcon.'&nbsp;'.$delIcon, '', '', '', $class);
+            $objPagesTable->addCell('<nobr>'.$frontPageLink->show().$editIcon.$delIcon.'</nobr>', '', '', '', $class);
         }
         $objPagesTable->endRow();
 
