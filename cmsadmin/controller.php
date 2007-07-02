@@ -531,11 +531,20 @@ class cmsadmin extends controller
                         return $this->nextAction('addblock', array('blockcat' => 'section', 'sectionid' => $sectionId), 'cmsadmin');
                     }
                     
+                /* *** Add / remove blocks *** */
+                    
                 case 'adddynamicpageblock':
                     $pageId = $this->getParam('pageid');
                     $blockId = $this->getParam('blockid');
                     $this->_objBlocks->add($pageId, NULL, $blockId, 'content');
                     echo $this->createReturnBlock($blockId, 'usedblock');
+                    break;
+                    
+                case 'addleftpageblock':
+                    $pageId = $this->getParam('pageid');
+                    $blockId = $this->getParam('blockid');
+                    $this->_objBlocks->add($pageId, NULL, $blockId, 'content', 1);
+                    echo $this->createReturnBlock($blockId, 'leftblocks');
                     break;
                     
                 case 'removedynamicpageblock':
@@ -551,6 +560,12 @@ class cmsadmin extends controller
                     echo $this->createReturnBlock($blockId, 'usedblock');
                     break;
                     
+                case 'addleftfrontpageblock':
+                    $blockId = $this->getParam('blockid');
+                    $this->_objBlocks->add(NULL, NULL, $blockId, 'frontpage', 1);
+                    echo $this->createReturnBlock($blockId, 'leftblocks');
+                    break;
+                    
                 case 'removedynamicfrontpageblock':
                     $blockId = $this->getParam('blockid');
                     $this->_objBlocks->deleteBlock(NULL, NULL, $blockId, 'frontpage');
@@ -564,12 +579,21 @@ class cmsadmin extends controller
                     echo $this->createReturnBlock($blockId, 'usedblock');
                     break;
                     
+                case 'addleftsectionblock':
+                    $sectionId = $this->getParam('sectionid');
+                    $blockId = $this->getParam('blockid');
+                    $this->_objBlocks->add('', $sectionId, $blockId, 'section', 1);
+                    echo $this->createReturnBlock($blockId, 'leftblocks');
+                    break;
+                    
                 case 'removedynamicsectionblock':
                     $sectionId = $this->getParam('sectionid');
                     $blockId = $this->getParam('blockid');
                     $this->_objBlocks->deleteBlock('', $sectionId, $blockId, 'section');
                     echo $this->createReturnBlock($blockId, 'addblocks');
                     break;
+                    
+                /* *** Rss functions *** */
                     
                  case 'uploadimage':
                  	  return 'cms_attachment_popup.php';
@@ -865,16 +889,25 @@ class cmsadmin extends controller
         
         private function createReturnBlock($blockId, $cssClass)
         {
-            $objModuleBlocks =& $this->getObject('dbmoduleblocks', 'modulecatalogue');
-            $objBlocks =& $this->getObject('blocks', 'blocks');
+            $objModuleBlocks = $this->getObject('dbmoduleblocks', 'modulecatalogue');
+            $objBlocks = $this->getObject('blocks', 'blocks');
+            $this->loadClass('layer', 'htmlelements');
             
             $blockRow = $objModuleBlocks->getRow('id', $blockId);
             
-            $str = trim($objBlocks->showBlock($blockRow['blockname'], $blockRow['moduleid']));
-            $str = preg_replace('/type\\s??=\\s??"submit"/', 'type="button"', $str);
-            $str = preg_replace('/href=".+?"/', 'href="javascript:alert(\''.$this->objLanguage->languageText('mod_cmsadmin_linkdisabled', 'cmsadmin', 'Link is Disabled.').'\');"', $str);
+            $lbDisabled = $this->objLanguage->languageText('mod_cmsadmin_warnlinkdisabled', 'cmsadmin');
             
-            return '<div class="'.$cssClass.'" id="'.$blockRow['id'].'" style="border: 1px solid lightgray; padding: 5px; width:150px; float: left; z-index:20;">'.$str.'</div>';
+            $str = trim($objBlocks->showBlock($blockRow['blockname'], $blockRow['moduleid'], '', 20, TRUE, TRUE, 'none'));
+            $str = preg_replace('/type\\s??=\\s??"submit"/', 'type="button"', $str);
+            $str = preg_replace('/href=".+?"/', 'href="javascript:alert(\''.$lbDisabled.'\');"', $str);
+            
+            //return '<div class="'.$cssClass.'" id="'.$blockRow['id'].'" style="border: 1px solid lightgray; padding: 5px; width:150px; float: left; z-index:20;">'.$str.'</div>';
+            
+            $objLayer = new layer();
+            $objLayer->str = $str;
+            $objLayer->id = $blockRow['id'];
+            $objLayer->cssClass = $cssClass;
+            return $objLayer->show();
         }
 
         /**

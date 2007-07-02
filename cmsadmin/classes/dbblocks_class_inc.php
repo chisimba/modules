@@ -57,7 +57,7 @@ class dbblocks extends dbTable
                 $this->_objUser = & $this->getObject('user', 'security');
                 $this->_objLanguage = & $this->newObject('language', 'language');
            } catch (Exception $e){
-       		    echo 'Caught exception: ',  $e->getMessage();
+       		    throw customException($e->getMessage());
         	    exit();
      	   }
         }
@@ -72,7 +72,7 @@ class dbblocks extends dbTable
          * @access public
          * @return bool
          */
-        public function add($pageId=NULL, $sectionId=NULL, $blockId, $blockCat)
+        public function add($pageId=NULL, $sectionId=NULL, $blockId = '', $blockCat = 'frontpage', $left = 0)
         {
             if ($blockCat == 'frontpage') {
                 //Get ordering
@@ -82,6 +82,7 @@ class dbblocks extends dbTable
                               'blockid' => $blockId,
                               'sectionid' => $sectionId,
                               'frontpage_block' => 1,
+                              'leftside_blocks' => $left,
                               'ordering' => $ordering
                           );
             } else if ($blockCat == 'content') {
@@ -92,6 +93,7 @@ class dbblocks extends dbTable
                               'blockid' => $blockId,
                               'sectionid' => NULL,
                               'frontpage_block' => 0,
+                              'leftside_blocks' => $left,
                               'ordering' => $ordering
                           );
             } else {
@@ -102,6 +104,7 @@ class dbblocks extends dbTable
                               'blockid' => $blockId,
                               'sectionid' => $sectionId,
                               'frontpage_block' => 0,
+                              'leftside_blocks' => $left,
                               'ordering' => $ordering
                           );
             }
@@ -189,12 +192,14 @@ class dbblocks extends dbTable
          * @access public
          * @return array $pageBlocks An array of associative arrays of all blocks on the page
          */
-        public function getBlocksForPage($pageId, $sectionId = NULL)
+        public function getBlocksForPage($pageId, $sectionId = NULL, $left = '0')
         {
+            $left = (isset($left) && !empty($left)) ? $left : 0;
+            
             $sql = "SELECT cb.*, mb.moduleid, mb.blockname 
                 FROM tbl_cms_blocks AS cb, tbl_module_blocks AS mb
                 WHERE (cb.blockid = mb.id) AND frontpage_block = 0 
-                AND (pageid = '{$pageId}' ";
+                AND leftside_blocks = '{$left}' AND (pageid = '{$pageId}'";
                 
             if(!empty($sectionId)){
                 $sql .= " OR sectionid = '{$sectionId}' ";
@@ -212,10 +217,13 @@ class dbblocks extends dbTable
          * @access public
          * @return array $pageBlocks An array of associative arrays of all blocks in the section
          */
-        public function getBlocksForSection($sectionId)
+        public function getBlocksForSection($sectionId, $left = '0')
         {   
+            $left = (isset($left) && !empty($left)) ? $left : 0;
+            
             $sql = "SELECT tbl_cms_blocks.*, moduleid, blockname FROM tbl_cms_blocks, tbl_module_blocks 
-                WHERE (blockid = tbl_module_blocks.id) AND sectionid = '{$sectionId}' AND frontpage_block=0 
+                WHERE (blockid = tbl_module_blocks.id) AND sectionid = '{$sectionId}' 
+                AND frontpage_block = 0  AND leftside_blocks = '{$left}' 
                 GROUP BY blockid ORDER BY ordering";
             
             return $this->getArray($sql);
@@ -227,10 +235,12 @@ class dbblocks extends dbTable
          * @access public
          * @return array $pageBlocks An array of associative arrays of all blocks on the front page
          */
-        public function getBlocksForFrontPage()
+        public function getBlocksForFrontPage($left = '0')
         {
+            $left = (isset($left) && !empty($left)) ? $left : 0;
+            
             $sql = "SELECT tbl_cms_blocks.*, moduleid, blockname FROM tbl_cms_blocks, tbl_module_blocks 
-                WHERE (blockid = tbl_module_blocks.id) AND frontpage_block = '1' 
+                WHERE (blockid = tbl_module_blocks.id) AND frontpage_block = '1' AND leftside_blocks = '{$left}' 
                 GROUP BY blockid ORDER BY ordering";
             
             return $this->getArray($sql);

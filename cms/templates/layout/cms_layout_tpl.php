@@ -12,7 +12,7 @@ $objTreeMenu = $this->newObject('cmstree', 'cmsadmin');
 $objUser = $this->newObject('user', 'security');
 $objLanguage = $this->newObject('language', 'language');
 $objArticleBox = $this->newObject('articlebox', 'cmsadmin');
-$objDbBlocks =& $this->newObject('dbblocks', 'cmsadmin');
+$objDbBlocks = $this->newObject('dbblocks', 'cmsadmin');
 //Insert script for generating tree menu
 ///$js = $this->getJavascriptFile('tree.js', 'cmsadmin');
 //$this->appendArrayVar('headerParams', $js);
@@ -36,26 +36,39 @@ $leftSide = $this->objLayout->getLeftMenu($currentNode, $rss);
 
 // Add blocks
 $currentAction = $this->getParam('action', NULL);
-/*
+
 switch($currentAction){
     case 'showsection':
         $sectionId = $this->getParam('id');
         $pageBlocks = $objDbBlocks->getBlocksForSection($sectionId);
+        $leftPageBlocks = $objDbBlocks->getBlocksForSection($sectionId, 1);
         break;
     
     case 'showcontent':
     case 'showfulltext':
         $sectionId = $this->getParam('sectionid');
         $pageId = $this->getParam('id');
+        $leftPageBlocks = $objDbBlocks->getBlocksForPage($pageId, $sectionId, 1);
         $pageBlocks = $objDbBlocks->getBlocksForPage($pageId, $sectionId);
         break;
     
     case 'home':
     case '':
+        $leftPageBlocks = $objDbBlocks->getBlocksForFrontPage(1);
         $pageBlocks = $objDbBlocks->getBlocksForFrontPage();
         break;
 }
-*/
+
+// Add left blocks    
+if(!empty($leftPageBlocks)) {
+    foreach($leftPageBlocks as $pbks) {
+        $blockId = $pbks['blockid'];
+        $blockToShow = $objDbBlocks->getBlock($blockId);
+
+        $leftSide .= $objBlocks->showBlock($blockToShow['blockname'], $blockToShow['moduleid']);
+    }
+}
+
 /***************** END OF LEFT SIDE *******************************/
 
 if(!$this->getParam('query') == ''){
@@ -70,26 +83,7 @@ if(!$this->getParam('query') == ''){
 $hasBlocks = FALSE;
 $rightSide = '';
 
-// Add blocks
-switch($currentAction){
-    case 'showsection':
-        $sectionId = $this->getParam('id');
-        $pageBlocks = $objDbBlocks->getBlocksForSection($sectionId);
-        break;
-    
-    case 'showcontent':
-    case 'showfulltext':
-        $sectionId = $this->getParam('sectionid');
-        $pageId = $this->getParam('id');
-        $pageBlocks = $objDbBlocks->getBlocksForPage($pageId, $sectionId);
-        break;
-    
-    case 'home':
-    case '':
-        $pageBlocks = $objDbBlocks->getBlocksForFrontPage();
-        break;
-}
-    
+// Add right blocks    
 if(!empty($pageBlocks)) {
     $hasBlocks = TRUE;
     foreach($pageBlocks as $pbks) {

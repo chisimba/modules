@@ -2686,9 +2686,11 @@ class cmsutils extends object
     {
         $objCMSBlocks = $this->_objBlocks;
         $thisPageBlocks = $objCMSBlocks->getBlocksForFrontPage();
+        $leftBlocks = $objCMSBlocks->getBlocksForFrontPage(1);
         
-        $init = 'fm_init();';
-        $str = $this->showBlocksForm($thisPageBlocks, $init);
+        //$init = 'fm_init();';
+        $init = "bl_init('adddynamicfrontpageblock', 'addleftfrontpageblock', 'removedynamicfrontpageblock', '', '');";
+        $str = $this->showBlocksForm($thisPageBlocks, $leftBlocks, $init);
         
         return $str;
     }
@@ -2705,9 +2707,11 @@ class cmsutils extends object
     {
         $objCMSBlocks = $this->_objBlocks;
         $thisPageBlocks = $objCMSBlocks->getBlocksForPage($id);
+        $leftBlocks = $objCMSBlocks->getBlocksForPage($id, '', 1);
         
-        $init = "ca_init('{$id}', '{$section}');";
-        $str = $this->showBlocksForm($thisPageBlocks, $init);
+//        $init = "ca_init('{$id}', '{$section}');";
+        $init = "bl_init('adddynamicpageblock', 'addleftpageblock', 'removedynamicpageblock', '{$id}', '{$section}');";
+        $str = $this->showBlocksForm($thisPageBlocks, $leftBlocks, $init);
         
         return $str;
     }
@@ -2723,9 +2727,11 @@ class cmsutils extends object
     {
         $objCMSBlocks = $this->_objBlocks;
         $thisPageBlocks = $objCMSBlocks->getBlocksForSection($id);
+        $leftBlocks = $objCMSBlocks->getBlocksForSection($id, 1);
         
-        $init = "sa_init('{$id}')";
-        $str = $this->showBlocksForm($thisPageBlocks, $init);
+//        $init = "sa_init('{$id}')";
+        $init = "bl_init('adddynamicsectionblock', 'addleftsectionblock', 'removedynamicsectionblock', '', '{$id}');";
+        $str = $this->showBlocksForm($thisPageBlocks, $leftBlocks, $init);
         
         return $str;
     }
@@ -2736,7 +2742,7 @@ class cmsutils extends object
     * @access public
     * @return string html
     */
-    public function showBlocksForm($thisPageBlocks, $onload = '')
+    public function showBlocksForm($thisPageBlocks, $leftBlocks, $onload = '')
     {
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $objModuleBlocks = $this->getObject('dbmoduleblocks', 'modulecatalogue');
@@ -2752,7 +2758,8 @@ class cmsutils extends object
         $this->appendArrayVar('bodyOnLoad', $onload);
         
         // language elements
-        $lbAddedBl = $this->objLanguage->languageText('mod_cmsadmin_addedblocks', 'cmsadmin');
+        $lbAddedBl = $this->objLanguage->languageText('mod_cmsadmin_rightsideblocks', 'cmsadmin');
+        $lbLeftBl = $this->objLanguage->languageText('mod_cmsadmin_leftsideblocks', 'cmsadmin');
         $lbDragBl = $this->objLanguage->languageText('mod_cmsadmin_dragaddblocks', 'cmsadmin');
         $lbPageBl = $this->objLanguage->languageText('mod_cmsadmin_pageblocks', 'cmsadmin');
         $lbLinkDis = $this->objLanguage->languageText('mod_cmsadmin_warnlinkdisabled', 'cmsadmin');
@@ -2760,14 +2767,25 @@ class cmsutils extends object
         $lbAvailBl = $this->objLanguage->languageText('mod_cmsadmin_availableblocks', 'cmsadmin');
         $lbDragRem = $this->objLanguage->languageText('mod_cmsadmin_dragremoveblocks', 'cmsadmin');
         
-        /* Create drop zone */
+        $blStr = ''; $usedBlocks = array();
+        
+        // Display loding bar
+        $objIcon->setIcon('loading_bar', 'gif', 'icons/');
+        $objIcon->title = $lbLoading;
+        
+        $objLayer = new layer();
+        $objLayer->str = $objIcon->show();
+        $objLayer->id = 'loading';
+        $objLayer->display = 'none';
+        $blStr .= $objLayer->show();
+                
+        /* Create right side drop zone */
         $objHead = new htmlheading();
         $objHead->str = $lbAddedBl;
         $objHead->type = 4;
         $dropStr = $objHead->show();
-        $dropStr .= $lbDragBl;
+        $dropStr .= '<p>'.$lbDragBl.'</p>';
         
-        $usedBlocks = array();
         if(!empty($thisPageBlocks)){
             foreach ($thisPageBlocks as $block){
                 $str = trim($objBlocks->showBlock($block['blockname'], $block['moduleid'], '', 20, TRUE, TRUE, 'none'));
@@ -2785,32 +2803,51 @@ class cmsutils extends object
             }
         }
         
-        
         // Drop zone for adding blocks
         $objLayer = new layer();
         $objLayer->str = $dropStr;
         $objLayer->id = 'dropzone';
         $objLayer->cssClass = 'dropblock';
-        $blStr = $objLayer->show();
+        $rightStr = $objLayer->show();
     
-        $blStr .= '<br clear="left" /><br /><br />';
+        /* Create left side drop zone */
+        $objHead = new htmlheading();
+        $objHead->str = $lbLeftBl;
+        $objHead->type = 4;
+        $dropStr = $objHead->show();
+        $dropStr .= '<p>'.$lbDragBl.'</p>';
         
-        // Display loding bar
-        $objIcon->setIcon('loading_bar', 'gif', 'icons/');
-        $objIcon->title = $lbLoading;
+        if(!empty($leftBlocks)){
+            foreach ($leftBlocks as $block){
+                $str = trim($objBlocks->showBlock($block['blockname'], $block['moduleid'], '', 20, TRUE, TRUE, 'none'));
+                $str = preg_replace('/type\\s??=\\s??"submit"/', 'type="button"', $str);
+                $str = preg_replace('/href=".+?"/', 'href="javascript:alert(\''.$lbLinkDis.'\');"', $str);
+                $str = preg_replace('/onchange =".+"/', 'onchange="javascript:alert(\''.$lbLinkDis.'\');"', $str);
+                
+                $usedBlocks[] = $block['blockid'];
+                
+                $objLayer = new layer();
+                $objLayer->str = $str;
+                $objLayer->id = $block['blockid'];
+                $objLayer->cssClass = 'leftblocks';
+                $dropStr .= $objLayer->show();
+            }
+        }
         
+        
+        // Drop zone for adding blocks
         $objLayer = new layer();
-        $objLayer->str = $objIcon->show();
-        $objLayer->id = 'loading';
-        $objLayer->display = 'none';
-        $blStr .= $objLayer->show();
+        $objLayer->str = $dropStr;
+        $objLayer->id = 'leftzone';
+        $objLayer->cssClass = 'dropleft';
+        $leftStr = $objLayer->show();
         
-        /* Create delete zone */        
+        /* Create delete zone */
         $objHead = new htmlheading();
         $objHead->str = $lbAvailBl;
         $objHead->type = '4';
         $delStr = $objHead->show();
-        $delStr .= $lbDragRem;
+        $delStr .= '<p>'.$lbDragRem.'</p>';
         
         if(!empty($blocks)){
             foreach ($blocks as $block){
@@ -2833,8 +2870,10 @@ class cmsutils extends object
         $objLayer->str = $delStr;
         $objLayer->id = 'deletezone';
         $objLayer->cssClass = 'deleteblock';
-        $blStr .= $objLayer->show();
-        $blStr .= '<br clear="left" />';
+        $allStr = $objLayer->show();
+        
+    
+        $blStr .= $rightStr.$allStr.$leftStr.'<br clear="left" />';
         
         $objLayer = new layer();
         $objLayer->str = $blStr;

@@ -26,13 +26,14 @@ $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addremoveblocks
 $blockIcon = $objIcon->show();
 
 //Check if blocks module is registered
-$this->objModule = &$this->newObject('modules', 'modulecatalogue');
+$this->objModule = $this->newObject('modules', 'modulecatalogue');
 $isRegistered = $this->objModule->checkIfRegistered('blocks');
 
 //Create link
+$url = $this->uri(array('action' => 'addblock', 'blockcat' => 'frontpage'));
 $objBlocksLink = new link('#');
 $objBlocksLink -> link = $blockIcon;
-$objBlocksLink -> extra = "onclick = \"javascript:window.open('" . $this->uri(array('action' => 'addblock', 'blockcat' => 'frontpage')) . "', 'branch', 'width=500, height=350, top=50, left=50, scrollbars')\"";
+$objBlocksLink -> extra = "onclick = \"javascript:window.open('" . $url . "', 'branch', 'width=500, height=350, top=50, left=50, scrollbars');\"";
 
 //Heading box
 $objIcon->setIcon('frontpage', 'png', 'icons/cms/');
@@ -147,7 +148,7 @@ $objForm->addToForm($table->show().$hidden);
 //print out the page
 $middleColumnContent = "";
 $middleColumnContent .= $header;//objH->show();
-$middleColumnContent .= '<br/>';
+$middleColumnContent .= '<br />';
 $middleColumnContent .= $objForm->show();
 
 if (empty($files)) {
