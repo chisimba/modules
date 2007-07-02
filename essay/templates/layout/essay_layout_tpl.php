@@ -8,6 +8,15 @@
 * @param string $leftNav The left panel on the page containing user information
 */
 
+$this->_objDBContext = $this->getObject('dbcontext','context');
+if($this->_objDBContext->isInContext())
+{
+    $objContextUtils = & $this->getObject('utilities','context');
+    $cm = $objContextUtils->getHiddenContextMenu('glossary','none');
+} else {
+    $cm ='';
+}
+
 $leftMenu=& $this->newObject('sidemenu','toolbar');
 
 $objLayer=$this->objLayer;
@@ -22,7 +31,7 @@ $objLayer->str = $this->getContent();
 
 $main.=$objLayer->show();
 
-$cssLayout->setLeftColumnContent($leftMenu->menuContext());
+$cssLayout->setLeftColumnContent($leftMenu->menuContext().$cm);
 $cssLayout->setMiddleColumnContent($main);
 
 echo $cssLayout->show();
