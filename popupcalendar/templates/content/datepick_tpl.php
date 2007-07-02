@@ -6,8 +6,8 @@
 * Template to display the date picker
 */
 
-$this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
-$this->objScriptaculous->show();
+//$this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
+//$this->objScriptaculous->show();
 
 $headerParams = $this->getJavascriptFile('jsFunctions.js', 'popupcalendar');
 $this->appendArrayVar('headerParams', $headerParams);
