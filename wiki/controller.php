@@ -194,6 +194,15 @@ class wiki extends controller {
                 ), 'wiki');
                 break;
                 
+            case 'preview_iframe':
+                $name = $this->getParam('preview_name', NULL);
+                $content = $this->getParam('preview_content', NULL);
+                $templateContent = $this->objWikidisplay->submitIframe($name, $content);
+                $this->setVarByRef('templateContent', $templateContent);
+                $this->setVar('iframe', TRUE);
+                return 'template_tpl.php';
+                break;
+                
             case 'update_page':
                 $name = $this->getParam('name');
                 $id = $this->getParam('id');
@@ -299,26 +308,9 @@ class wiki extends controller {
                 return $divContent;
                 break;
 
-            case 'preview_iframe':
-                $this->unsetSession('name');
-                $this->unsetSession('content');
-                $templateContent = $this->objWikidisplay->iframeContent();
-                $this->setVarByRef('templateContent', $templateContent);
-                $this->setVar('iframe', TRUE);
-                return 'template_tpl.php';
-                break;
-                
-            case 'submit_preview':
-                $name = $this->getParam('preview_name');
-                $content = $this->getParam('preview_content');
-                $this->setSession('name', $name);
-                $this->setSession('content', $content);
-                return $this->nextAction('preview_iframe', array(), 'wiki');
-                break;
-
             case 'preview_page':
-                $name = $this->getSession('name');
-                $content = $this->getSession('content');
+                $name = $this->getParam('name');
+                $content = $this->getParam('content');
                 $divContent = $this->objWikidisplay->showPreview($name, $content);
                 return $divContent;
                 break;

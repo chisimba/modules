@@ -16,20 +16,14 @@ if(!$GLOBALS['kewl_entry_point_run']){
 * Author Kevin Cyster
 * */
 
-if(isset($popup)){
-    $this->setVar('pageSuppressBanner', TRUE);
-    $this->setVar('pageSuppressContainer', TRUE);
-    $this->setVar('pageSuppressSearch', TRUE);
-    $this->setVar('pageSuppressToolbar', TRUE);
-    $this->setVar('suppressFooter', TRUE);    
-}elseif(isset($iframe)){
+if(isset($popup) || isset($iframe)){
     $this->setVar('pageSuppressBanner', TRUE);
     $this->setVar('pageSuppressContainer', TRUE);
     $this->setVar('pageSuppressSearch', TRUE);
     $this->setVar('pageSuppressToolbar', TRUE);
     $this->setVar('suppressFooter', TRUE);    
 }else{
-    $this->setLayoutTemplate('layout_tpl.php');
+   $this->setLayoutTemplate('layout_tpl.php');
 }
 $this->setVar('pageSuppressXML', TRUE);
 echo $templateContent;

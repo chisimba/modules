@@ -116,17 +116,6 @@ function validationEffects()
 }
 
 /**
-* Method to call ajax to generate the preview
-*/
-function refreshPreview()
-{
-    var url = "index.php";
-    var target = "previewDiv";
-    var pars = "module=wiki&action=preview_page";
-    var refreshAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars,onComplete: resizeRefresh});    
-}
-
-/**
 * Method to adjust the layout
 */
 function resizeRefresh()
@@ -158,8 +147,9 @@ function tabClickEvents(edit_state)
     }else{
         var previewLink = $("addTabnav2");
         previewLink.onclick = function(){
-            submitPreview();
             $("addTab").tabber.tabShow(1);
+            moveContent();
+            adjustLayout();
         }        
     }
 }
@@ -212,8 +202,9 @@ function updatePage()
         }     
         var previewLink = $("mainTabnav4");
         previewLink.onclick = function(){
-            submitPreview();
             $("mainTab").tabber.tabShow(3);
+            moveContent();
+            adjustLayout();
         }
         $("mainTabnav2").parentNode.style.display = "none";
         $("mainTabnav3").parentNode.style.display = "";
@@ -463,24 +454,21 @@ function cancelUpdatePost(postId)
     adjustLayout();
 }
 
-/**
-* Method to submit the preview in an iframe
+/*
+* Method to move the input contents for preview submission
 */
-function submitPreview()
+function moveContent()
 {
-    var name_input = $("input_name");
-    var content_input = $("input_content");
-    var preview_iframe = $("previewIframe");
-    var el_iframe = preview_iframe.contentWindow || preview_iframe.contentDocument;
+    var el_name = $("input_name");
+    var el_content = $("input_content");
+    var el_pIframe = $("submitIframe");
+    var el_iframe = el_pIframe.contentWindow || el_pIframe.contentDocument;
     if(el_iframe.document){
         el_iframe = el_iframe.document;
     }
-    var el_form = el_iframe.getElementById("form_preview");
-    var el_name = el_iframe.getElementById("input_preview_name");
-    var el_content = el_iframe.getElementById("input_preview_content");
-    el_name.value = name_input.value;                             
-    el_content.value = content_input.value;
-    el_form.submit();
-    Element.show("loadingDiv");
-    setTimeout("refreshPreview()", 1000);
+    var el_form = el_iframe.getElementById("form_iframe_form");
+    var el_pName = el_iframe.getElementById("input_preview_name");
+    var el_pContent = el_iframe.getElementById("input_preview_content");
+    el_pName.value = el_name.value;                             
+    el_pContent.value = el_content.value;
 }

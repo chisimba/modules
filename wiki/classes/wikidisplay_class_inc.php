@@ -318,7 +318,7 @@ class wikidisplay extends object
         
         $str .= $this->objFeature->show($nameLabel, $string);
         
-        // seacrh box
+        // search box
         $objDrop = new dropdown('field');
         $objDrop->addOption(1, $bothLabel);
         $objDrop->addOption(2, $titleLabel);
@@ -428,16 +428,11 @@ class wikidisplay extends object
         
         // text elements
         $articleLabel = $this->objLanguage->languageText('word_article');
-/*
-        $refreshLabel = $this->objLanguage->languageText('word_refresh');
-        $refreshTitleLabel = $this->objLanguage->languageText('mod_wiki_refreshtitle', 'wiki');
-*/
         $historyLabel = $this->objLanguage->languageText('word_history');
         $editLabel = $this->objLanguage->languageText('word_edit');
         $versionLabel = $this->objLanguage->languageText('word_version');
         $editArticelLabel = $this->objLanguage->languageText('mod_wiki_editarticle', 'wiki');
         $previewLabel = $this->objLanguage->languageText('word_preview');
-        $noPreviewLabel = $this->objLanguage->languageText('mod_wiki_nopreview', 'wiki');
         $ratingLabel = $this->objLanguage->languageText('word_rating');
         $diffLabel = $this->objLanguage->languageText('word_diff');
         $addedLabel = $this->objLanguage->languageText('mod_wiki_textadded', 'wiki');
@@ -447,17 +442,19 @@ class wikidisplay extends object
         $deleteLabel = $this->objLanguage->languageText('mod_wiki_deletepage', 'wiki');
         $deleteTitleLabel = $this->objLanguage->languageText('mod_wiki_deletetitle', 'wiki');
         $delConfirmLabel = $this->objLanguage->languageText('mod_wiki_deleteconfirm', 'wiki');
-        $loadingLabel = $this->objLanguage->languageText('mod_wiki_loading', 'wiki');
         
         // wiki page
         $contents = '';
         if(empty($version)){
             if($this->isLoggedIn && $data['main_page'] != 1){
+                $objButton = new button('submit', $deleteLabel);
+                $deleteButton = $objButton->show();
+                
                 $objLink = new link($this->uri(array(
                     'action' => 'delete_page',
                     'name' => $name,
                 ), 'wiki'));
-                $objLink->link = $deleteLabel;
+                $objLink->link = $deleteButton;
                 $objLink->title = $deleteTitleLabel;
                 $objLink->extra = 'onclick="javascript:if(!confirm(\''.$delConfirmLabel.'\')){return false};"';
                 $contents .= $objLink->show();
@@ -525,36 +522,20 @@ class wikidisplay extends object
             'name' => $editArticelLabel,
             'content' => $edit,
         );            
-/*
-        // refresh link
-        $objLink = new link('#');
-        $objLink->link = $refreshLabel;
-        $objLink->title = $refreshTitleLabel;
-        $objLink->extra = 'onclick="javascript:refreshPreview()"';
-        $refreshLink = $objLink->show();
-*/            
-        $this->objIcon->setIcon('loading_bar');
-        $this->objIcon->title = $loadingLabel;
-        $loadingIcon = $this->objIcon->show(); 
-                                              
-        $objLayer = new layer();
-        $objLayer->id = 'loadingDiv';
-        $objLayer->addToStr($loadingLabel.'<br />'.$loadingIcon);
-        $loadingLayer = $objLayer->show();
-            
-        $objLayer = new layer();
-        $objLayer->id = 'previewDiv';
-        $previewLayer = $objLayer->show();
-            
-        $objLayer = new layer();
-        $objLayer->id = 'refreshDiv';
-        $objLayer->cssClass = 'featurebox';
-        $objLayer->addToStr($loadingLayer.$previewLayer);
-        $refreshLayer = $objLayer->show();
-            
+
+        // preview iframe
+        $objIframe = new iframe();
+        $objIframe->id = 'submitIframe';
+        $objIframe->frameborder = '0';
+        $objIframe->width = '100%';
+        $objIframe->src = $this->uri(array(
+            'action' => 'preview_iframe'
+        ), 'wiki');
+        $submitIframe = $objIframe->show();
+
         $previewTab = array(
             'name' => $previewLabel,
-            'content' => $refreshLayer,
+            'content' => $submitIframe,
         );            
         
         // page history
@@ -683,8 +664,11 @@ class wikidisplay extends object
         $toLabel = $this->objLanguage->languageText('word_to');
                 
         // diff link
+        $objButton = new button('submit', $viewLabel);
+        $viewButton = $objButton->show();
+
         $objLink = new link('#');
-        $objLink->link = $viewLabel;
+        $objLink->link = $viewButton;
         $objLink->title = $viewTitleLabel;
         $objLink->extra = 'onclick="javascript:getDiff();"';
         $diffLink = $objLink->show();
@@ -693,6 +677,7 @@ class wikidisplay extends object
         }else{
             $str = '';
         }
+        
         // page heading
         $objHeader = new htmlheading();
         $objHeader->str = $pageTitle;
@@ -983,18 +968,6 @@ class wikidisplay extends object
         $objLayer->addToStr($string);
         $contentLayer = $objLayer->show();
         $str = $contentLayer;    
-
-        $objIframe = new iframe();
-        $objIframe->id = 'previewIframe';
-        $objIframe->frameborder = '0';
-        $objIframe->height = 0;
-        $objIframe->width = 0;
-        $objIframe->src = $this->uri(array(
-            'action' => 'preview_iframe'
-        ), 'wiki');
-        $objIframe = $objIframe->show();
-        $str .= $objIframe;
-
         return $str;       
     }
 
@@ -1137,40 +1110,21 @@ class wikidisplay extends object
             'name' => $addLabel,
             'content' => $createLayer,
         );
-/*            
-        // refresh link
-        $objLink = new link('#');
-        $objLink->link = $refreshLabel;
-        $objLink->title = $refreshTitleLabel;
-        $objLink->extra = 'onclick="javascript:refreshPreview()"';
-        $refreshLink = $objLink->show();
-*/            
-        $this->objIcon->setIcon('loading_bar');
-        $this->objIcon->title = $loadingLabel;
-        $loadingIcon = $this->objIcon->show(); 
-                                              
-        $objLayer = new layer();
-        $objLayer->id = 'loadingDiv';
-        $objLayer->addToStr($loadingLabel.'<br />'.$loadingIcon);
-        $loadingLayer = $objLayer->show();
-            
-        $objLayer = new layer();
-        $objLayer->id = 'previewDiv';
-        $previewLayer = $objLayer->show();
-            
-        $objLayer = new layer();
-        $objLayer->id = 'refreshDiv';
-        $objLayer->cssClass = 'featurebox';
-        $objLayer->addToStr($loadingLayer.$previewLayer);
-        $refreshLayer = $objLayer->show();
-        $string = $refreshLayer;
-            
-        // add page tab
+        // preview iframe
+        $objIframe = new iframe();
+        $objIframe->id = 'submitIframe';
+        $objIframe->frameborder = '0';
+        $objIframe->width = '100%';
+        $objIframe->src = $this->uri(array(
+            'action' => 'preview_iframe'
+        ), 'wiki');
+        $submitIframe = $objIframe->show();
+
         $previewTab = array(
             'name' => $previewLabel,
-            'content' => $string,
-        );
-        
+            'content' => $submitIframe,
+        );            
+                
         //display tabs
         $this->objTab->init();        
         $this->objTab->tabId = 'addTab'; 
@@ -1180,17 +1134,6 @@ class wikidisplay extends object
         $body = 'tabClickEvents("");';
         $this->appendArrayVar('bodyOnLoad', $body);            
         
-        $objIframe = new iframe();
-        $objIframe->id = 'previewIframe';
-        $objIframe->frameborder = '0';
-        $objIframe->height = 0;
-        $objIframe->width = 0;
-        $objIframe->src = $this->uri(array(
-            'action' => 'preview_iframe'
-        ), 'wiki');
-        $objIframe = $objIframe->show();
-        $str .= $objIframe;
-
         return $str;       
     }
 
@@ -1598,9 +1541,9 @@ You can create a described or labeled link to a wiki page by putting the page na
 Interwiki links are links to pages on other Wiki sites. 
 Type the {{``SiteName:PageName``}} like this:
 * MeatBall:RecentChanges
-* Wikipedia:Wiki
+* Advogato:proj/WikkiTikkiTavi
 * Wiki:WorseIsBetter
-> **Note:** the interwiki site must be in the [http://localhost/chisimba_framework/app/index.php?module=wiki&action=view_links interwiki] {{sites}} configuration array.
+> **Note:** the interwiki site must be in the [RuleInterwiki interwiki] {{sites}} configuration array.
 ++++ URLs
 Create a remote link simply by typing its URL: http://ciaweb.net.
 If you like, enclose it in brackets to create a numbered reference and avoid cluttering the page; {{``[http://ciaweb.net/free/]``}} becomes [http://ciaweb.net/free/].
@@ -2593,8 +2536,11 @@ You can create tables using pairs of vertical bars:
         $addLink = '';
         if($this->isAdmin){
             // add link
+            $objButton = new button('submit', $addLabel);
+            $addButton = $objButton->show();
+            
             $objLink = new link('#');
-            $objLink->link = $addLabel;
+            $objLink->link = $addButton;
             $objLink->title = $addTitleLabel;
             $objLink->extra = 'id="addLink" onclick="javascript:showAddLink();"';
             $addLink = $objLink->show();
@@ -2765,8 +2711,11 @@ You can create tables using pairs of vertical bars:
                 $link = $line['wiki_link'];
                 
                 // page name link
+                $objButton = new button('submit', $editLabel);
+                $editButton = $objButton->show();
+            
                 $objLink = new link('#');
-                $objLink->link = $editLabel;
+                $objLink->link = $editButton;
                 $objLink->title = $editTitleLabel;
                 $objLink->extra = 'onclick="javascript:setEdit(\''.$line['id'].'\', \''.$name.'\',\''.$link.'\')"';
                 $editLink = $objLink->show();
@@ -2861,22 +2810,28 @@ You can create tables using pairs of vertical bars:
                     $author = $this->objLanguage->code2Txt('mod_wiki_postauthor', 'wiki', $array);
                     $link = '';
                     if($this->isAdmin && $line['post_status'] == 1){
+                        $objButton = new button('submit', $deleteLabel);
+                        $deleteButton = $objButton->show();
+
                         $objLink = new link($this->uri(array(
                             'action' => 'delete_post',
                             'name' => $name,
                             'id' => $postId,
                         ), 'wiki'));
-                        $objLink->link = $deleteLabel;
+                        $objLink->link = $deleteButton;
                         $objLink->title = $deleteTitleLabel;
                         $objLink->extra = 'onclick="javascript:if(!confirm(\''.$deleteConfirmLabel.'\')){return false};"';
                         $link = $objLink->show();
                     }elseif($this->isAdmin && $line['post_status'] == 2){
+                        $objButton = new button('submit', $restoreLabel);
+                        $restoreButton = $objButton->show();
+
                         $objLink = new link($this->uri(array(
                             'action' => 'restore_post',
                             'name' => $name,
                             'id' => $postId,
                         ), 'wiki'));
-                        $objLink->link = $restoreLabel;
+                        $objLink->link = $restoreButton;
                         $objLink->title = $restoreTitleLabel;
                         $link = $objLink->show();
                     }
@@ -2884,8 +2839,11 @@ You can create tables using pairs of vertical bars:
                     $content = $this->objWiki->transform($line['post_content']);
                 
                     // edit post link
+                    $objButton = new button('submit', $editLabel);
+                    $editButton = $objButton->show();
+
                     $objLink = new link('#');
-                    $objLink->link = $editLabel;
+                    $objLink->link = $editButton;
                     $objLink->title = $editTitleLabel;
                     $objLink->extra = 'onclick="javascript:showUpdatePost(\''.$postId.'\', \''.$line['post_title'].'\', \''.$line['post_content'].'\')"';
                     $editLink = $objLink->show();
@@ -2954,19 +2912,22 @@ You can create tables using pairs of vertical bars:
     private function _showAddPost($name)
     {
         $addLabel = $this->objLanguage->languageText('mod_wiki_addpost', 'wiki');
-        $addTitleLabel = $this->objLanguage->languageText('mod_wiki_posttitle', 'wiki');
+        $addTitleLabel = $this->objLanguage->languageText('mod_wiki_titlepost', 'wiki');
         $titleLabel = $this->objLanguage->languageText('mod_wiki_posttitle', 'wiki');
         $contentLabel = $this->objLanguage->languageText('mod_wiki_postcontent', 'wiki');
         $createLabel = $this->objLanguage->languageText('mod_wiki_createpost', 'wiki');
         $cancelLabel = $this->objLanguage->languageText('word_cancel');
 
         // add post link
+        $objButton = new button('submit', $addLabel);
+        $addButton = $objButton->show();
+
         $objLink = new link('#');
-        $objLink->link = $addLabel;
+        $objLink->link = $addButton;
         $objLink->title = $addTitleLabel;
         $objLink->extra = 'id="addLink" onclick="javascript:showAddPost();"';
-        $str = $objLink->show();
-        
+        $str = $objLink->show();        
+
         // post title
         $objHeader = new htmlheading();
         $objHeader->str = $titleLabel;
@@ -3165,21 +3126,21 @@ You can create tables using pairs of vertical bars:
         $objRadio = new radio('visibility');
         $objRadio->addOption(1, '&#160;'.$publicLabel);
         $objRadio->extra = 'style="vertical-align: middle;"';
-        $content .= $objRadio->show();
-        $content .= '<ul><li><b>'.$publicTextLabel.'</b></li></ul>';
+        $content .= '<b>'.$objRadio->show().'</b>';
+        $content .= '<ul><li>'.$publicTextLabel.'</li></ul>';
         
         $objRadio = new radio('visibility');
         $objRadio->addOption(2, '&#160;'.$openLabel);
         $objRadio->extra = 'style="vertical-align: middle;"';
-        $content .= $objRadio->show();
-        $content .= '<ul><li><b>'.$openTextLabel.'</b></li></ul>';
+        $content .= '<b>'.$objRadio->show().'</b>';
+        $content .= '<ul><li>'.$openTextLabel.'</li></ul>';
 
         $objRadio = new radio('visibility');
         $objRadio->addOption(3, '&#160;'.$privateLabel);
         $objRadio->extra = 'style="vertical-align: middle;"';
         $objRadio->setSelected(3);
-        $content .= $objRadio->show();
-        $content .= '<ul><li><b>'.$privateTextLabel.'</b></li></ul>';
+        $content .= '<b>'.$objRadio->show().'</b>';
+        $content .= '<ul><li>'.$privateTextLabel.'</li></ul>';
         
         // create button
         $objButton = new button('create', $createLabel);
@@ -3262,26 +3223,88 @@ You can create tables using pairs of vertical bars:
     }
     
     /**
-    * Method to create content for an iframe to submit the preview
+    * Method to display the contents of an iframe to submit the preview
     *
     * @access public
     * @return string $str: The output string
     */
-    public function iframeContent()
+    public function submitIframe($name = NULL, $content = NULL)
     {
-        $objInput = new textinput('preview_name', '', '', '');
-        $string = $objInput->show();
-        
-        $objText = new textarea('preview_content', '', '', '');
-        $string .= $objText->show();
-        
-         $objForm = new form('preview', $this->uri(array(
-            'action' => 'submit_preview'
-        ), 'wiki'));
-        $objForm->addToForm($string);
-        $str = $objForm->show();
 
-       return $str;
+        $refreshLabel = $this->objLanguage->languageText('mod_wiki_loadpreview', 'wiki');
+        $refreshTitleLabel = $this->objLanguage->languageText('mod_wiki_loadtitle', 'wiki');
+
+        $loadingLabel = $this->objLanguage->languageText('mod_wiki_loading', 'wiki');
+        $noPreviewLabel = $this->objLanguage->languageText('mod_wiki_nopreview', 'wiki');
+        
+        // refresh link
+        $objButton = new button('submit', $refreshLabel);
+        $refreshButton = $objButton->show();
+        
+        $objLink = new link('#');
+        $objLink->link = $refreshButton;
+        $objLink->title = $refreshTitleLabel;
+        $objLink->extra = 'onclick="javascript:Element.show(\'loadingDiv\');$(\'form_iframe_form\').submit();"';
+        $refreshLink = $objLink->show();
+            
+        // loading bar
+        $this->objIcon->setIcon('loading_bar');
+        $this->objIcon->title = $loadingLabel;
+        $loadingIcon = $this->objIcon->show(); 
+                                              
+        $objLayer = new layer();
+        $objLayer->id = 'loadingDiv';
+        $objLayer->display = 'none';
+        $objLayer->addToStr($loadingLabel.'<br />'.$loadingIcon);
+        $loadingLayer = $objLayer->show();
+        
+        $objInput = new textinput('preview_name');
+        $nameInput = $objInput->show();
+        
+        $objText = new textarea('preview_content');
+        $contentText = $objText->show();
+        
+        $objForm = new form('iframe_form', $this->uri(array(
+            'action' => 'preview_iframe',
+        ), 'wiki'));
+        $objForm->addToForm($nameInput. $contentText);
+        $previewForm = $objForm->show();
+        
+        $objLayer = new layer();
+        $objLayer->id = 'formDiv';
+        $objLayer->display = 'none';
+        $objLayer->addToStr($previewForm);
+        $formLayer = $objLayer->show();
+        
+        $string = '';
+        if(!empty($name)){
+            $title = $this->objWiki->renderTitle($name);
+            $objHeader = new htmlheading();
+            $objHeader->str = $title;
+            $objHeader->type = 1;
+            $string .= $objHeader->show();
+        }
+        if(!empty($content)){
+            $string .= $this->objWiki->transform($content);
+        }
+        if(empty($name) && empty($content)){
+            $string .= '<ul><li><b>'.$noPreviewLabel.'</b></li></ul>';
+        }        
+        
+        $objLayer = new layer();
+        $objLayer->id = 'contentDiv';
+        $objLayer->addToStr($string);
+        $contentLayer = $objLayer->show();
+        
+        $objLayer = new layer();
+        $objLayer->id = 'iframeDiv';
+        $objLayer->cssClass = 'featurebox';
+        $objLayer->addToStr($refreshLink.$loadingLayer.$formLayer.$contentLayer);
+        $frameLayer = $objLayer->show();
+        
+        $str = $frameLayer;
+        
+        return $str;
     }
 }
 ?>

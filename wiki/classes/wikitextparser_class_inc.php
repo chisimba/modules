@@ -100,16 +100,15 @@ class wikiTextParser extends object
             }
         }
         $this->objWiki->setRenderConf("xhtml", "Wikilink", "pages", $wikiPages);
-        $this->objWiki->setRenderConf("xhtml", "Interwiki", "sites", $wikiLinks);
+        $this->objWiki->setRenderConf("xhtml", "Interwiki", "sites", "$wikiLinks");
 
         //Set the add page url param for the wikilink rule
         $addUrl = $this->objConfig->getsiteRoot().'index.php?module=wiki&action=add_page&name=';
         $this->objWiki->setRenderConf("xhtml", "Wikilink", "new_url", $addUrl);
 
-        //Set the view page url param for the wikilink rule
-        $viewUrl = $this->objConfig->getsiteRoot().'index.php?module=wiki&action=view_page&name=';
-        $this->objWiki->setRenderConf("xhtml", "Wikilink", "view_url", $viewUrl);
-        //$this->objWiki->setRenderConf("xhtml", "Url", "inline", "_blank");
+         //Set the view page url param for the wikilink rule
+         $viewUrl = $this->objConfig->getsiteRoot().'index.php?module=wiki&action=view_page&name=';
+         $this->objWiki->setRenderConf("xhtml", "Wikilink", "view_url", $viewUrl);
     }
 
     /**
