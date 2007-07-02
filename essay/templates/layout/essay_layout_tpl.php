@@ -12,7 +12,7 @@ $this->_objDBContext = $this->getObject('dbcontext','context');
 if($this->_objDBContext->isInContext())
 {
     $objContextUtils = & $this->getObject('utilities','context');
-    $cm = $objContextUtils->getHiddenContextMenu('glossary','none');
+    $cm = $objContextUtils->getHiddenContextMenu('essay','none');
 } else {
     $cm ='';
 }
