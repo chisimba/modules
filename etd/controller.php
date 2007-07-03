@@ -575,6 +575,7 @@ class etd extends controller
             case 'rss':
             case 'metalib';
             case 'showrecent';
+            case 'registerdownload':
             case '';
                 return FALSE;
         }
