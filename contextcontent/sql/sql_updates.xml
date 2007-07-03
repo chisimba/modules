@@ -1,14 +1,38 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <updates>
-    <update>
-        <table>tbl_contextcontent_order</table>
-        <version>0.4</version>
-        <description>Added a field for chapter</description>
-        <data>
-        	<add>
-    			<name>chapterid</name>
-		    	<type>text</type>
-    			<length>32</length>
+	<update>
+		<table>tbl_contextcontent_order</table>
+		<version>0.6</version>
+		<description>Added a field for navigation visibility</description>
+		<data>
+			<add>
+				<name>isbookmarked</name>
+				<type>text</type>
+				<length>32</length>
+			</add>
+		</data>
+	</update>
+	<update>
+		<table>tbl_contextcontent_order</table>
+		<version>0.5</version>
+		<description>Added a field for navigation manipulation</description>
+		<data>
+			<add>
+				<name>bookmark</name>
+				<type>text</type>
+				<length>32</length>
+			</add>
+		</data>
+	</update>
+    	<update>
+        	<table>tbl_contextcontent_order</table>
+        	<version>0.4</version>
+        	<description>Added a field for chapter</description>
+        	<data>
+        		<add>
+    				<name>chapterid</name>
+		    		<type>text</type>
+    				<length>32</length>
 			</add>
 		</data>
 	</update>

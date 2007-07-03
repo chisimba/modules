@@ -142,7 +142,7 @@ class db_contextcontent_order extends dbtable
     */
     public function getContextPages($context, $chapter='')
     {
-        $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.parentid, tbl_contextcontent_pages.menutitle, lft, rght FROM tbl_contextcontent_order 
+        $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.parentid, tbl_contextcontent_pages.menutitle, lft, rght, tbl_contextcontent_order.bookmark, tbl_contextcontent_order.isbookmark FROM tbl_contextcontent_order 
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
         INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id) 
         WHERE tbl_contextcontent_order.contextcode= \''.$context.'\'  ';
@@ -168,7 +168,7 @@ class db_contextcontent_order extends dbtable
     public function getTree($context, $chapter='', $type='dropdown', $defaultSelected='', $module='contextcontent', $disabledNode='')
     {
         $results = $this->getContextPages($context, $chapter);
-        
+        //var_dump($results);die;
         if ($defaultSelected != '') {
             $this->defaultSelected = $this->getRow('id', $defaultSelected);
             
@@ -233,12 +233,14 @@ class db_contextcontent_order extends dbtable
             $node =& new treenode ($nodeDetails);
             $nodeArray[$treeItem['id']] =& $node;
             
+		if($treeItem['isbookmark'] == 'Y'){
             if ($treeItem['parentid'] == 'root') {
                 $treeMenu->addItem($node);
             } else {
                 if (array_key_exists($treeItem['parentid'], $nodeArray)) {
                     $nodeArray[$treeItem['parentid']]->addItem($node);
                 }
+	}
             }
         }
         
@@ -274,12 +276,14 @@ class db_contextcontent_order extends dbtable
             $node =& new treenode ($nodeDetails);
             $nodeArray[$treeItem['id']] =& $node;
             
+		if($treeItem['isbookmark'] == 'Y'){
             if ($treeItem['parentid'] == 'root') {
                 $treeMenu->addItem($node);
             } else {
                 if (array_key_exists($treeItem['parentid'], $nodeArray)) {
                     $nodeArray[$treeItem['parentid']]->addItem($node);
                 }
+}
             }
         }
         
@@ -316,13 +320,15 @@ class db_contextcontent_order extends dbtable
             
             $node =& new treenode ($nodeDetails);
             $nodeArray[$treeItem['id']] =& $node;
-            
+            //var_dump($treeItem);die;
+		if($treeItem['isbookmark'] == 'Y'){
             if ($treeItem['parentid'] == 'root') {
-                $rootnode->addItem($node);
+                	$rootnode->addItem($node);
             } else {
                 if (array_key_exists($treeItem['parentid'], $nodeArray)) {
                     $nodeArray[$treeItem['parentid']]->addItem($node);
                 }
+}
             }
         }
         
@@ -340,7 +346,7 @@ class db_contextcontent_order extends dbtable
     * @return array Details of the Page, FALSE if does not exist
     * @access private
     */
-    public function addPageToContext($titleId, $parentId, $context, $chapter='')
+    public function addPageToContext($titleId, $parentId, $context, $chapter='', $bookmark='', $isBookmark='')
     {
         $lastRight = $this->getLastRight($context, $parentId, $chapter);
         $leftPointer = $lastRight;
@@ -360,12 +366,12 @@ class db_contextcontent_order extends dbtable
         
         $this->clearChapterPDF($chapter, $context);
         
-        return $this->insertTitle($context, $chapter, $titleId, $parentId, $leftPointer, $rightPointer, $pageOrder);
+        return $this->insertTitle($context, $chapter, $titleId, $parentId, $leftPointer, $rightPointer, $pageOrder, 'Y', $bookmark, $isBookmark);
     }
     
     
     
-    private function insertTitle($context, $chapter='', $titleId, $parentId, $left, $right, $pageOrder=1, $visibility='Y')
+    private function insertTitle($context, $chapter='', $titleId, $parentId, $left, $right, $pageOrder=1, $visibility='Y', $bookmark='', $isBookmark='N')
     {
         $lastId = $this->insert(array(
                 'contextcode' => $context,
@@ -377,7 +383,9 @@ class db_contextcontent_order extends dbtable
                 'pageorder' => $pageOrder,
                 'visibility' => $visibility,
                 'creatorid' => $this->objUser->userId(),
-                'datecreated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
+                'datecreated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
+		'bookmark' => $bookmark,
+		'isbookmark' => $isBookmark
             ));
         
         // Extra Step to Prevent Null Values
@@ -818,19 +826,14 @@ class db_contextcontent_order extends dbtable
 	function getTwoLevelNav($context, $chapter, $id)
 	{
 		$record = $this->getRow('id', $id);
-		
 		// Fix up if record dows not exist
 		if ($record == FALSE) {
 			return 'RECORD DOES NOT EXIST';
 		}
-		
 		// Create Menu for Nodes
 		$treeMenu = new treemenu();
-        
 		// Create Array for Nodes
-        $nodeArray = array();
-		
-		
+        	$nodeArray = array();
 		// Option 1 - Node is Root Node on First Level
 		if ($record['parentid'] == 'root') {
 			// Get Siblings
@@ -838,9 +841,10 @@ class db_contextcontent_order extends dbtable
 			// Loop through siblings
 			foreach ($firstLevelNodes as $treeItem)
 			{
+				//var_dump($treeItem);die;
 				// Create Array with Node Details
 				$nodeDetails = array('text'=>htmlentities($treeItem['menutitle']), 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id'])));
-				
+				//var_dump($nodeDetails);die;
 				// Add style if current node
 				if ($treeItem['id'] == $id) {
 					unset($nodeDetails['link']); // Disable Link
@@ -872,7 +876,8 @@ class db_contextcontent_order extends dbtable
 				}
 				
 				// Add to Menu
-				$treeMenu->addItem($node);
+				if($treeItem['isbookmark'] == 'Y')
+					$treeMenu->addItem($node);
 			}
 			
 			// Create Menu Display
@@ -956,7 +961,7 @@ class db_contextcontent_order extends dbtable
 	
 	function getPages($chapter, $contextCode, $where='', $order='lft')
 	{
-	$sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.chapterid, tbl_contextcontent_order.parentid, tbl_contextcontent_pages.menutitle, lft, rght, tbl_contextcontent_pages.id as pageid, tbl_contextcontent_order.titleid
+	$sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.chapterid, tbl_contextcontent_order.parentid, tbl_contextcontent_pages.menutitle, lft, rght, tbl_contextcontent_pages.id as pageid, tbl_contextcontent_order.titleid, tbl_contextcontent_order.bookmark, tbl_contextcontent_order.isbookmark
         FROM tbl_contextcontent_order 
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
         INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id AND original=\'Y\') 

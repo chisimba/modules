@@ -69,6 +69,14 @@ $fields = array(
 		),
     'datemodified' => array(
 		'type' => 'timestamp'
+		),
+    'bookmark' => array(
+		'type' => 'text',
+		'length' => 32,
+		),
+    'isbookmark' => array(
+		'type' => 'text',
+		'length' => 32,
 		)
 	);
     
