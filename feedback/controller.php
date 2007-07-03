@@ -17,7 +17,6 @@ class feedback extends controller
 	public function init()
 	{
 		try {
-			
 			$this->objLanguage = $this->getObject('language', 'language');
 			$this->objUser = $this->getObject('user', 'security');
 			//$this->display_post();
