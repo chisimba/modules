@@ -145,12 +145,8 @@ if(empty($insarr))
 		$editLink = $objIcon->getEditIcon($editUrl);
          
         for($i = 0; $i < count($questions); $i ++){
-                //$objCheck = new checkbox('checkbox_'.($i + 1));
-                //echo 'checkbox_'.($i + 1)."<br/>";
-                $deleteIcon = $objIcon->getDeleteIcon($this->uri(array(
-    		                            'action' => 'delete_question',
-    		                            'delete_id' => $questions[$i]['puid']
-		                                )));
+                $deleteArray= array('action' => 'delete_question','delete_id' => $questions[$i]['puid']);
+                $deleteIcon=$objIcon->getDeleteIconWithConfirm('', $deleteArray,'feedback','Are you sure you want to delete this question?');
                // $editLink = $objIcon->getEditIcon($editUrl);
                 $tableRow  = array(($i + 1),$questions[$i]['fb_question'], $deleteIcon, $editLink);
                 $table->addRow($tableRow, ($i + 1));
