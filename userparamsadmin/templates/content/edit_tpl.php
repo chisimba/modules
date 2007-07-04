@@ -63,12 +63,21 @@ $objForm->addToForm($objElement->show());
 $pnameLabel = new label($this->objLanguage->languageText("mod_userparamsadmin_pname",'userparamsadmin'), "input_pname");
 //Create an element for the input of pname
 $objElement = new textinput ("pname");
-//Set the value of the element to $pname
-if (isset($pname)) {
-    $objElement->setValue($pname);
+//Hide it to avoid breaking the system if its an edit
+if ($mode=="edit") {
+    $objElement->fldType="hidden";
+    //Set the value of the element to $pname
+    if (isset($pname)) {
+        $objElement->setValue($pname);
+    }
+    $txtToShow = $objElement->show() . $pname;
+} else {
+    //We are adding
+    $txtToShow = $objElement->show();
 }
+
 //Add the $pname element to the form
-$objForm->addToForm($pnameLabel->show().": ".$objElement->show()."<br /><br />");
+$objForm->addToForm($pnameLabel->show().": ". $txtToShow ."<br /><br />");
 
 //Create label for the input of ptag
 $ptagLabel = new label($this->objLanguage->languageText("mod_userparamsadmin_pvalue",'userparamsadmin'), "input_ptag");

@@ -94,16 +94,14 @@ class userparamsadmin extends controller
     function getForEdit($mode)
     {
         $this->setvar('mode', $mode);
-            // retrieve the PK value from the querystring
+        // retrieve the PK value from the querystring
         $key=$this->getParam("key", NULL);
         $value =$this->getParam("value", NULL);
         if (!$key) {
             die($this->objLanguage->languageText("modules_badkey").": ".$key);
         }
-        // Get the data for edit
-         $valueEdit = $this->objDbUserparamsadmin->getItem($key,NULL);
-         $this->setVar('keyEdit', $key);
-        $this->setVar('valueEdit', $valueEdit);
+        $this->setVar('keyEdit', $key);
+        $this->setVar('valueEdit', $value);
     }#getForedit
     
     

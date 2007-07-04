@@ -9,8 +9,13 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 * 
-* Model class for writing INIFiles.The class provides data access features for administering the list
-* of user parameters used in the userparams module.
+* Model class for writing the user paramters as used by the userparamsadmin
+* module into an INI file. The class provides data access features for 
+* administering the list  of user parameters stored in this INI file. The
+* INI file is stored in  usrfiles/users/<userid>/userconfig_properties.ini
+* 
+* English translation of internal documentation from Klingon by Lt Worf.
+* 
 * @author Prince Mbekwa
 * @todo userconfig properties' set and get
 * @todo module config (especially from module admin)
@@ -296,6 +301,29 @@ class dbuserparamsadmin extends object
 			exit();
 		}
 	}
+    
+    /**
+     * 
+     * A method to return the value of the parameter requested
+     * @param string $pname The parameter code for the parameter to return
+     * @return string the value of the parameter
+     */
+    public function getValue($pname)
+    {
+        try {
+            $Settings =& $this->_root->getItem("section", "Settings");
+            $this->SettingsDirective =& $Settings->getItem("directive", "{$pname}");
+            if ($this->SettingsDirective) {
+                $pname = $this->SettingsDirective->getContent();
+            } else {
+                $pname=NULL;
+            }
+            return $pname;
+        } catch (Exception $e) {
+            customException::cleanUp();
+            exit();
+        }
+    }
 
 
 	/**
@@ -314,7 +342,7 @@ class dbuserparamsadmin extends object
 				$read = $this->readConfig();
 			}
 			if ($read == FALSE) {
-				return $read;
+                return $read;               
 			}
 			//Lets get the parent node section first
 			$Settings =& $this->_root->getItem("section", "Settings");
@@ -355,7 +383,7 @@ class dbuserparamsadmin extends object
 			$Settings =& $this->_root->getItem("section", "Settings");
 			//Now onto the directive node
 			//check to see if one of them isset to search by
-			$this->SettingsDirective =& $Settings->getItem("directive", "{$pname}");
+			$this->SettingsDirective = $Settings->getItem("directive", "{$pname}");
 			$this->SettingsDirective->setContent($pvalue);
 			$result =$this->objConf->writeConfig();
 			return $result;
@@ -365,6 +393,11 @@ class dbuserparamsadmin extends object
 		}
 	}
 	
+    /**
+     * 
+     * The module author feels he is too important to add comments
+     * 
+     */
 	public function delete($pname)
 	{
 		try {
