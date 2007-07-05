@@ -661,6 +661,7 @@ class cmslayouts extends object
             // Display the selected page
             // Display links to the other pages
             if(!empty($arrPages)){
+                $pgCnt = count($arrPages);
                 foreach ($arrPages as $page) {
                     if ($pageId == $page['id']) {
                         if(isset($page['hide_title']) && $page['hide_title'] == 1){
@@ -673,7 +674,9 @@ class cmslayouts extends object
                         $pageStr .= stripslashes($page['body']);
                         
                         $topStr = $this->objRound->show($pageStr);
-                        $str .= $page['title'].' | ';
+                        if($pgCnt > 1){
+                            $str .= $page['title'].' | ';
+                        }
                     } else {
                         $link = new link($this->uri(array('action' => 'showsection', 'pageid' => $page['id'], 'id' => $page['sectionid'], 'sectionid' => $page['sectionid']), $module));
                         $link->link = $page['title'];
