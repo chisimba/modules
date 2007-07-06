@@ -19,19 +19,19 @@ class dbmaillist extends dbTable
     * @param void
     * @return object resource ID
     */
-    function init()
+    public function init()
     {
         parent::init('tbl_maillist_mail');
-        $this->objUser = & $this->getObject("user", "security");
+        $this->objUser =  $this->getObject("user", "security");
     }
 
    /**
     * Save method for editing a record in this table
     *@param string $mode: edit if coming from edit, add if coming from add
     */
-    function saveRecord($mode, $userId, $mess)
+    public function saveRecord($mode, $userId, $mess)
     {
-        $id=$this->getParam('id', NULL);
+        $id = $this->getParam('id', NULL);
         $body = $mess['body'];
         $subject = $mess['subject'];
         $filename = $mess['fileid'];
@@ -46,7 +46,9 @@ class dbmaillist extends dbTable
             'sender' => $from,
             'fileid' => $filename,
             'userId' => $userId));
+            
             $this->changeTable('tbl_maillist_mailarchive');
+            
             $this->insert(array(
             'body' => $body,
             'subject' => $subject,
@@ -58,13 +60,16 @@ class dbmaillist extends dbTable
         // if add use insert
         if ($mode=="add") {
             $this->changeTable('tbl_maillist_mail');
+            
             $this->insert(array(
             'body' => $body,
             'subject' => $subject,
             'sender' => $from,
             'fileid' => $filename,
             'userId' => $userId));
+            
             $this->changeTable('tbl_maillist_mailarchive');
+            
             $this->insert(array(
             'body' => $body,
             'subject' => $subject,
@@ -73,7 +78,7 @@ class dbmaillist extends dbTable
             'userId' => $userId));
 
         }//if
-    }//function
+    }//public function
 
     /**
      * Method to return the messages from the database
@@ -81,10 +86,11 @@ class dbmaillist extends dbTable
      * @param int $messcount
      * @return array $messages
      */
-    function getRecords($messcount)
+    public function getRecords($messcount)
     {
     	$this->changeTable('tbl_maillist_mail');
-        $messages = $this->getAll(); //"ORDER BY 'id' DESC LIMIT $messcount");
+        
+    	$messages = $this->getAll(); //"ORDER BY 'id' DESC LIMIT $messcount");
     	return $messages;
     }
 
@@ -93,10 +99,11 @@ class dbmaillist extends dbTable
      * @param void
      * @return void
      */
-    function clearTable($table = 'tbl_maillist_mail')
+    public function clearTable($table = 'tbl_maillist_mail')
     {
     	$this->changeTable($table);
-    	$filter = "TRUNCATE TABLE $table";
+    	
+    	$filter = "TRUNCATE TABLE '$table'";
     	$this->_execute($filter);
     }
 	 /**
@@ -104,7 +111,7 @@ class dbmaillist extends dbTable
      * @param
      * @return
      */
-	function setDefaultList($insarray)
+	public function setDefaultList($insarray)
     {
     	$this->changeTable('tbl_maillist_subscribers');
     	$this->insert($insarray);
@@ -115,7 +122,7 @@ class dbmaillist extends dbTable
    *@param
    *@return
    */
-    function insertListDetails($inslist)
+    public function insertListDetails($inslist)
     {
 		$this->changeTable('tbl_mailinglist_lists');
 		$this->insert($inslist);
@@ -128,7 +135,7 @@ class dbmaillist extends dbTable
      * @return null
      * @access public
      */
-    function changeTable($table)
+    public function changeTable($table)
     {
         parent::init($table);
     }
@@ -140,7 +147,7 @@ class dbmaillist extends dbTable
      * @param mixed $email
      * @return int $userid
      */
-    function getID($email)
+    public function getID($email)
     {
     	$this->changeTable('tbl_users');
     	$filter = "WHERE emailAddress='$email'";
@@ -156,7 +163,7 @@ class dbmaillist extends dbTable
      * @param mixed $email
      * @return $listname
      */
-    function getListName($userId, $email)
+    public function getListName($userId, $email)
     {
     	//change to tbl_users
     	$this->changeTable('tbl_users');
@@ -190,12 +197,19 @@ class dbmaillist extends dbTable
      * @param int $uid - the user id
      * @return mixed $emails
      */
-    function getMailAddys($uid)
+    public function getMailAddys($uid)
     {
     	$this->changeTable('tbl_users');
-    	$state2 = $this->getAll("WHERE userId = $uid");
+    	$state2 = $this->getAll("WHERE userId = '$uid'");
     	return $state2[0];
 
+    }
+    
+    public public function checkValidUser() 
+    {
+        $this->_changeTable('tbl_users');
+        $val = $this->getAll();
+        return $val;
     }
 
 } #end of class

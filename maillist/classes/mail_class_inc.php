@@ -23,27 +23,27 @@ class mail extends object
 	/**
 	 * @var string mailserv - the mail server hostname
 	 */
-	var $mailserv;
+	public $mailserv;
 
 	/**
 	 * @var string mailuser - the mail username
 	 */
-	var $mailuser;
+	public $mailuser;
 
 	/**
 	 * @var string mailpass - the mail server password
 	 */
-	var $mailpass;
+	public $mailpass;
 
 	/**
 	 * @var string basepath - the path for saving attachments to
 	 */
-	var $basepath;
+	public $basepath;
 
 	/**
 	 * @var string spamword - spam filtering keyword
 	 */
-	var $spamword;
+	public $spamword;
 
 	/**
 	 * Class constructor
@@ -54,205 +54,203 @@ class mail extends object
 	function init()
 	{
 		//The user object
-		$this->objUser =  & $this->getObject("user", "security");
+		$this->objUser =   $this->getObject("user", "security");
         //get the db table derived class for this module
-        $this->objDb = &$this->getObject("dbmaillist",'maillist');
+        $this->objDbMaillistMaillist = $this->getObject("dbmaillist",'maillist');
 
 	}
-
-	/**
-	 * Setup method to properly instantiate the mail class by setting the properties
-	 * Used in the log in and parsing of the POP3 mail
-	 * @param mixed mailserv
-	 * @param mixed mailpass
-	 * @param mixed mailuser
-	 * @param mixed basepath
-	 * @return void property setup
-	 */
-	function setup($mailserv, $mailpass, $mailuser, $basepath)
-	{
-		$this->mailserv = $mailserv;
-		$this->mailuser = $mailuser;
-		$this->mailpass = $mailpass;
-		$this->basepath = $basepath;
-	}
-
+	
 	/**
 	 * function to connect to the pop3 server Non SASL
 	 * @param string $delete - default false
 	 * @return array $msg - the mail message array
 	 */
-	function connectMail($delete = false)
-	{
-		// pop3 connection and log-in
-		$pop3 =& new Net_POP3();
-		$pop3->connect($this->mailserv, 110) or die("mailserver down");
-		$pop3->login($this->mailuser, $this->mailpass) or die("bad password");;
-		//successfully logged in, so lets go!
-
-		$num_msgs = $pop3->numMsg();
-		//no messages;
-		if ($num_msgs == 0)
-		{
-			// pop3 disconnect
-			$pop3->disconnect();
-			$msg = 0;
-			return $msg; // "\n ** No mail found **";
-		}
-		else
-		{
-			// message list
-			$list = $pop3->getListing();
-			//takes the array list and gets the messages
-			//first check that we are getting an array!
-			if(is_array($list))
-			{
-				for ($c = 0; $c < count($list); $c++)
-				{
-					$msg[$c] = $pop3->getMsg($list[$c]['msg_id']);
-					if($delete == true)
-					{
-						$pop3->deleteMsg($list[$c]['msg_id']);
-					}
-				}
-				// pop3 disconnect
-				$pop3->disconnect();
-			}
-			return $msg;
-		}
-	}
-
-	/**
-	 * Function to decode the messages using Mail::MimeDecode
-	 * @param array $messages
-	 * @return array $insertbody - the mail messages
-	 */
-	function decodeMessages($messages)
-	{
-		//get the basepath
-		$basepath = $this->basepath;
-		// posts counter
-		$post_cnt = 0;
-
-		for($msg_cnt = 0; $msg_cnt < count($messages); $msg_cnt++)
-		{
-			$myDecoder[$msg_cnt] = new Mail_mimeDecode($messages[$msg_cnt]);
-			//set up the decoding params
-			$params['include_bodies'] = true;
-			$params['decode_bodies']  = true;
-			$params['decode_headers'] = true;
-
-			$decoded_msg[$msg_cnt] =  $myDecoder[$msg_cnt]->decode($params);
-			//print_r($decoded_msg);
-			$posts[$post_cnt]['msg_id'] = $msg_cnt;
-
-			//subject
-			$posts[$post_cnt]['post_mail_subject'] = $decoded_msg[$msg_cnt]->headers['subject'];
-			$subject = $posts[$post_cnt]['post_mail_subject'];
-
-			//date
-			$posts[$post_cnt]['post_mail_date'] = $decoded_msg[$msg_cnt]->headers['date'];
-			$date = $posts[$post_cnt]['post_mail_date'];
-
-			//From
-			$posts[$post_cnt]['post_mail_from'] = stripslashes($decoded_msg[$msg_cnt]->headers['from']);
-			$from = $posts[$post_cnt]['post_mail_from'];
-
-			// user-agent || x-mailer
-			if ($decoded_msg[$msg_cnt]->headers['user-agent'] == '')
-			{
-				$posts[$post_cnt]['post_mail_user_agent'] = $decoded_msg[$msg_cnt]->headers['x-mailer'];
-			}
-			else
-			{
-				$posts[$post_cnt]['post_mail_user_agent'] = $decoded_msg[$msg_cnt]->headers['user-agent'];
-			}
-			$useragent = $posts[$post_cnt]['post_mail_user_agent'];
-
-			// mime type (ctype_primary/ctype_secondary)
-			$posts[$post_cnt]['post_ctype'] = strtolower($decoded_msg[$msg_cnt]->ctype_primary . "/" .$decoded_msg[$msg_cnt]->ctype_secondary);
-			$ctype = $posts[$post_cnt]['post_ctype'];
-
-			//end message headers section
-
-			//create a bunch of arrays to hold the images info
-			$posts[$post_cnt]['images'] = array();
-			$posts[$post_cnt]['images_mime'] = array();
-			$posts[$post_cnt]['images_cid'] = array();
-			$posts[$post_cnt]['images_tmp'] = array();
-
-			//multipart
-			//set up a filename
-			$now = str_replace(' ', '', microtime()).rand();
-			if(is_array($decoded_msg[$msg_cnt]->parts))
-			{
-				for($p = 0; $p < count($decoded_msg[$msg_cnt]->parts); $p++)
-				{
-					$text_plain = 0;
-					$text_html = 0;
-					$body = $decoded_msg[$msg_cnt]->parts[$p]->body;
-					if(is_object($decoded_msg[$msg_cnt]->parts[$p]))
-					{
-						$original_filename = $decoded_msg[$msg_cnt]->parts[$p]->d_parameters[filename];
-						$filename = NULL;
-						if($decoded_msg[$msg_cnt]->parts[$p]->disposition == "attachment")
-						{
-							$mimetype = strtolower($decoded_msg[$msg_cnt]->parts[$p]->ctype_primary . "/" . $decoded_msg[$msg_cnt]->parts[$p]->ctype_secondary);
-							$ext_type = $decoded_msg[$msg_cnt]->parts[$p]->ctype_secondary;
-
-							$filename = $filename . $decoded_msg[$msg_cnt]->parts[$p]->d_parameters[filename];
-							$filename = $filename."_".time();
-
-							$fp = @fopen ($this->basepath . $filename, 'wb');
-							@fwrite ($fp, $decoded_msg[$msg_cnt]->parts[$p]->body);
-							@fclose($fp);
-							//now we dump it into the storage db
-
-							$textbodyplain = $decoded_msg[$msg_cnt]->parts[0]->body;
-							if(!empty($textbodyplain))
-							{
-								$insertbody = array('body' => $textbodyplain,'subject' =>$subject, 'from' => $from, 'fileid' => $filename);
-								$this->objDb->saveRecord('add', $this->objUser->userId(),$insertbody);
-
-							}
-
-						}
-						if($decoded_msg[$msg_cnt]->parts[$p]->disposition == "inline")
-						{
-							//now we dump it into the storage db
-							$fileid = null;
-							//insert body text to mysql
-							if(!empty($body))
-							{
-								$insertbody = array('body' => $body,'subject' => $subject, 'from' =>$from, 'fileid' => $filename);
-								$this->objDb->saveRecord('add', $this->objUser->userId(),$insertbody);
-							}
-							$filename = $filename . $decoded_msg[$msg_cnt]->parts[$p]->d_parameters[filename];
-							$filename = $filename."_".time();
-
-							$fp = @fopen ($this->basepath . $filename, 'wb');
-							@fwrite ($fp, $decoded_msg[$msg_cnt]->parts[$p]->body);
-							@fclose($fp);
-
-						}
-					}
-
-				}
-			}//if is_array
-			else
-			{
-				//plaintext - no multipart
-				$body = $decoded_msg[$msg_cnt]->body;
-				if(!empty($body))
-				{
-					$fileid = null;
-					$insertbody = array('body' => $body,'subject' => $subject, 'from' =>$from, 'fileid' => $filename);
-					$this->objDb->saveRecord('add', $this->objUser->userId(),$insertbody);
-				}
-			}
-		}
-		//return $insertbody;
-	}//end function
-
+	public function maildecode() 
+    {
+        //grab the DSN from the config file
+        $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objImap = $this->getObject('imap', 'mail');
+        $this->dsn = $this->objConfig->getItem('MAILLIST_MAIL_DSN');
+        try {
+            //grab a list of all valid users to an array for verification later
+            $valid = $this->objDbMaillist->checkValidUser();
+            $valadds = array();
+            //cycle through the valid email addresses and check that the mail is from a real user
+            foreach($valid as $addys) {
+                $valadds[] = array(
+                    'address' => $addys['emailaddress'],
+                    'userid' => $addys['userid']
+                );
+            }
+            //connect to the IMAP/POP3 server
+            $this->conn = $this->objImap->factory($this->dsn);
+            //grab the mail headers
+            $this->objImap->getHeaders();
+            //var_dump($this->objImap->getHeaders());
+            //check mail
+            $this->thebox = $this->objImap->checkMbox();
+            //get the mail folders
+            $this->folders = $this->objImap->populateFolders($this->thebox);
+            //count the messages
+            $this->msgCount = $this->objImap->numMails();
+            //echo $this->msgCount;
+            //get the meassge headers
+            $i = 1;
+            //parse the messages
+            while ($i <= $this->msgCount) {
+                //get the header info
+                $headerinfo = $this->objImap->getHeaderInfo($i);
+                //from
+                $address = $headerinfo->fromaddress;
+                //subject
+                $subject = $headerinfo->subject;
+                //date
+                $date = $headerinfo->Date;
+                //message flag
+                $read = $headerinfo->Unseen;
+                //message body
+                $bod = $this->objImap->getMessage($i);
+                //check if there is an attachment
+                if (empty($bod[1])) {
+                    //nope no attachments
+                    $attachments = NULL;
+                } else {
+                    //set the attachment
+                    $attachments = $bod[1];
+                    //loop through the attachments and write them down
+                    
+                }
+                //make sure the body doesn't have any nasty chars
+                $message = @htmlentities($bod[0]);
+                //check for a valid user
+                if (!empty($address)) {
+                    //check the address against tbl_users to see if its valid.
+                    //just get the email addy, we dont need the name as it can be faked
+                    $fadd = $address;
+                    //get rid of the RFC formatted email bits
+                    $parts = explode("<", $fadd);
+                    $parts = explode(">", $parts[1]);
+                    //raw address string that we can use to check against
+                    $addy = $parts[0];
+                    //check if the address we get from the msg is in the array of valid addresses
+                    foreach($valadds as $user) {
+                        //check if there is a match to the user list
+                        if ($user['address'] != $addy) {
+                            //Nope, no match, not validated!
+                            $validated = NULL;
+                        } else {
+                            //echo "Valid user!";
+                            //match found, you are a valid user dude!
+                            $validated = TRUE;
+                            //set the userid
+                            $userid = $user['userid'];
+                            //all is cool, so lets break out of this loop and carry on
+                            break;
+                        }
+                    }
+                }
+                if ($validated == TRUE) {
+                    //insert the mail data into an array for manipulation
+                    $data[] = array(
+                        'userid' => $userid,
+                        'address' => $address,
+                        'subject' => $subject,
+                        'date' => $date,
+                        'messageid' => $i,
+                        'read' => $read,
+                        'body' => $message,
+                        'attachments' => $attachments
+                    );
+                }
+                //delete the message as we don't need it anymore
+                echo "sorting " . $this->msgCount . "messages";
+                $this->objImap->delMsg($i);
+                $i++;
+            }
+            //is the data var set?
+            if (!isset($data)) {
+                $data = array();
+            }
+            //lets look at the data now
+            foreach($data as $datum) {
+                $newbod = $datum['body'];
+                if (!empty($datum['attachments'])) {
+                    if (is_array($datum['attachments'])) {
+                        foreach($datum['attachments'] as $files) {
+                            //do check for multiple attachments
+                            //set the filename of the attachment
+                            $fname = $files['filename'];
+                            $filenamearr = explode(".", $fname);
+                            $ext = pathinfo($fname);
+                            $filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];
+                            //decode the attachment data
+                            $filedata = base64_decode($files['filedata']);
+                            //set the path to write down the file to
+                            $path = $this->objConfig->getContentBasePath() . 'users/' . $userid . '/';
+                            $fullpath = $this->objConfig->getsiteRoot() . "/usrfiles/users/" . $userid . '/';
+                            //check that the data dir is there
+                            if (!file_exists($path)) {
+                                //dir doesn't exist so create it quickly
+                                mkdir($path, 0777);
+                            }
+                            //fix up the filename a little
+                            $filename = str_replace(" ", "_", $filename);
+                            $filename = str_replace("%20", "_", $filename);
+                            //change directory to the data dir
+                            chdir($path);
+                            //write the file
+                            $handle = fopen($filename, 'wb');
+                            fwrite($handle, $filedata);
+                            fclose($handle);
+                
+                        }
+                    } else {
+                        //set the filename of the attachment
+                        $fname = $datum['attachments'][0]['filename'];
+                        $filenamearr = explode(".", $fname);
+                        $ext = pathinfo($fname);
+                        $filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];
+                        //decode the attachment data
+                        $filedata = base64_decode($datum['attachments'][0]['filedata']);
+                        //set the path to write down the file to
+                        $path = $this->objConfig->getContentBasePath() . 'users/' . $userid . '/';
+                        //check that the data dir is there
+                        //fix up the filename a little
+                        $filename = str_replace(" ", "_", $filename);
+                        if (!file_exists($path)) {
+                            //dir doesn't exist so create it quickly
+                            mkdir($path, 0777);
+                        }
+                        //change directory to the data dir
+                        chdir($path);
+                        //write the file
+                        $handle = fopen($filename, 'wb');
+                        fwrite($handle, $filedata);
+                        fclose($handle);
+                    }
+                } else {
+                    //no attachments to worry about
+                    $newbod = $datum['body'];
+                }
+                //Write the new post to the database as a "Quick Post"
+                $ret = array($datum['userid'], array(
+                    'posttitle' => $datum['subject'],
+                    'postcontent' => $newbod,
+                    'postcat' => 0,
+                    'postexcerpt' => '',
+                    'poststatus' => '0',
+                    'commentstatus' => 'Y',
+                    'postmodified' => date('r') ,
+                    'commentcount' => 0,
+                    'postdate' => $datum['date']
+                ) , 'mail');
+            }
+        }
+        //any issues?
+        catch(customException $e) {
+            //clean up and die!
+            customException::cleanUp();
+        }
+    }
 }//end class
 ?>
