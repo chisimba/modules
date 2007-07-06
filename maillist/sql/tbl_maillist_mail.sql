@@ -1,13 +1,45 @@
 <?php
-$sqldata[]="CREATE TABLE `tbl_maillist_mail` (
-  `id` varchar(32) NOT NULL default '',
-  `body` longtext NOT NULL,
-  `subject` varchar(255) NOT NULL default '',
-  `sender` varchar(255) NOT NULL default '',
-  `userId` varchar(50) default NULL,
-  `fileid` varchar(255) default NULL,
-  `updated` timestamp NOT NULL,
-  PRIMARY KEY  (`id`)
-) TYPE=InnoDB COMMENT='mail table';
-";
-?>
+
+// Table Name
+$tablename = 'tbl_maillist_mailarchive';
+
+//Options line for comments, encoding and character set
+$options = array('comment' => 'Mailing list temp table', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+
+// Fields
+$fields = array(
+	'id' => array(
+		'type' => 'text',
+		'length' => 32
+		),
+	'userid' => array(
+		'type' => 'text',
+		'length' => 50,
+		),
+	'body' => array(
+		'type' => 'clob',
+		),
+	'subject' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+	'sender' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+	'fileid' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+);
+
+//create other indexes here...
+
+$name = 'userid';
+
+$indexes = array(
+                'fields' => array(
+                	'userid' => array(),
+                )
+);
+?>	
