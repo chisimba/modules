@@ -1,7 +1,7 @@
 <?php
 
 // Table Name
-$tablename = 'tbl_maillist_mailarchive';
+$tablename = 'tbl_maillist_mail';
 
 //Options line for comments, encoding and character set
 $options = array('comment' => 'Mailing list temp table', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
