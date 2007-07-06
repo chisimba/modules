@@ -15,17 +15,22 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 class maillist extends controller
 {
 
+//declare properties 
+public $objLanguage;
+public $objConfig;
+public $objUser;
+
     /**
     * @var string $action The action parameter from the querystring
     */
-    var $action;
+    public $action;
 
     /**
     * Standard constructor method
     * @param void
     * @return void
     */
-    function init()
+    public function init()
     {
         //Retrieve the action parameter from the querystring
         $this->action = $this->getParam('action', Null);
@@ -50,9 +55,9 @@ class maillist extends controller
     * @param void
     * @return void
     */
-    function dispatch()
+    public function dispatch($action=null)
     {
-        switch ($this->action) {
+        switch ($this->$action) {
             //null case performs a validity check, if it passes it goes to getmail
             //case null:
             case null:
@@ -270,7 +275,7 @@ class maillist extends controller
      * @param void
      * @return false
      */
-    function requiresLogin()
+    public function requiresLogin()
     {
         return FALSE;
     }
@@ -284,7 +289,7 @@ class maillist extends controller
      * @param mixed $sender - the message originator
      * @return void
      */
-    function email($subs,$file,$body,$subject,$sender,$list,$uid)
+    public function email($subs,$file,$body,$subject,$sender,$list,$uid)
     {
         $head = $this->objLanguage->languageText("mod_maillist_on") . " " . date('r') . " " . $sender . " " . $this->objLanguage->languageText("mod_maillist_wrote") . ": ";
         $head .= "<br><br>";
