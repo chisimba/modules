@@ -146,7 +146,8 @@ if(empty($insarr))
          
         for($i = 0; $i < count($questions); $i ++){
                 $deleteArray= array('action' => 'delete_question','delete_id' => $questions[$i]['puid']);
-                $deleteIcon=$objIcon->getDeleteIconWithConfirm('', $deleteArray,'feedback','Are you sure you want to delete this question?');
+                $deleteIcon=$objIcon->getDeleteIconWithConfirm('', $deleteArray,'feedback','Are you sure you want to delete this question?
+');
                // $editLink = $objIcon->getEditIcon($editUrl);
                 $tableRow  = array(($i + 1),$questions[$i]['fb_question'], $deleteIcon, $editLink);
                 $table->addRow($tableRow, ($i + 1));
@@ -207,23 +208,24 @@ if(empty($insarr))
 		    // with the word save
             $objElement->setValue(' SAVE ');
 		    //Add the comment element to the form
-		    $objForm_save_questions->addToForm($objElement->show());	
+		    $btnStr = $objElement->show();	
 
-            
    
             $objElement = new button('cancel');
 		    // Set the button type to submit
             $objElement->setToSubmit();
 		    // with the word save
             $objElement->setValue(' CANCEL ');
-		    $objForm_save_questions->addToForm($objElement->show());	
+		    $btnStr .= '&nbsp;'.$objElement->show();	
+            $objForm_save_questions->addToForm($btnStr);
+
             $objFbFeaturebox = $this->getObject('featurebox', 'navigation');
             $mod_pane =  $objFbFeaturebox->show("Please enter your question in the text area below and click 'SAVE' to save",$objForm_save_questions->show());
             $tabBox->addTab(array('name'=> "Edit Questions",'content' =>$mod_pane));
         }
         else {
             $objFbFeaturebox = $this->getObject('featurebox', 'navigation');
-            $edit_pane =  $objFbFeaturebox->show('Use this Pane to modify or add questions',$table->show().$objForm_add_questions->show());
+            $edit_pane =  $objFbFeaturebox->show('Modify or add questions',$table->show().$objForm_add_questions->show());
             //echo $edit_pane;
 		    $tabBox->addTab(array('name'=> "Edit Questions",'content' =>$edit_pane));
         }	
@@ -344,7 +346,7 @@ $objViewForm->addToForm("<br/>");
 $objViewForm->addToForm($objSearhButton->show());
 
 $objFbFeaturebox = $this->getObject('featurebox', 'navigation');
-$view_question_pane =  $objFbFeaturebox->show('Use this Pane to modify or add questions',$results_tables.$objViewForm->show());
+$view_question_pane =  $objFbFeaturebox->show('Select a date on the popup calendar to view feedback comments',$results_tables.$objViewForm->show());
 $tabBox->addTab(array('name'=> $objLanguage->languageText("mod_feedback_View_Feed_Back_Comments", "feedback"),'content' =>$view_question_pane));
 
 //-----------------------------------------------------------------------------------------------------------------
