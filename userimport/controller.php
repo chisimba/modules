@@ -208,7 +208,9 @@ class userimport extends controller
         }
         if ($location!=''){
             $this->result=$this->objUserImport->batchImport($location,$method);
-            $batch=$this->objUserBatch->addBatch($this->userId,$this->contextCode,$this->result['student'],$method,$this->result['batchCode']);
+            if (isset($this->result['student'])){
+                $batch=$this->objUserBatch->addBatch($this->userId,$this->contextCode,$this->result['student'],$method,$this->result['batchCode']);
+            }
         }
     }
 

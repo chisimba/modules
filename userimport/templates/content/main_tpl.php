@@ -7,7 +7,7 @@
     print "<div align='center'>";
     
     // If data has just been added, we make a table to display it.
-    if ($this->result!=''){
+    if ( ($this->result!='') && isset($this->result['student']) ){
         
         // Basic table setup
         $objTable=&$this->newObject('htmltable','htmlelements');
