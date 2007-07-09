@@ -33,8 +33,8 @@ class dbFaqCategories extends dbTable
 		//$sql = "SELECT id, question, answer FROM tbl_faq";
 		//return $this->getArray($sql);
 		return $this->getAll(
-            "WHERE contextId='" . $contextId . "'
-            ORDER BY categoryId");
+            "WHERE contextid='" . $contextId . "'
+            ORDER BY categoryid");
 	}
 
 	/**
@@ -47,18 +47,73 @@ class dbFaqCategories extends dbTable
 	{
 		$sql = "SELECT * FROM tbl_faq_categories 
 		WHERE contextId = '" . $contextId . "' 
-		AND id='" . $categoryId . "' LIMIT 1";
-        
-        $results = $this->getArray($sql);
-        
-        if (count($results) == 0) {
-            return NULL;
-        } else {
-            return $results[0];
-        }
-    }
-    
-    /**
+		AND categoryId='" . $categoryId . "'";
+		return $this->getArray($sql);
+		//return $this->getRow("id", $id);
+	}
+
+	/**
+	* Return a single record from the id
+	* @param string $id The ID
+	* @return array The category
+	*/	
+	function listSingleId($id)
+	{
+		$sql = "SELECT * FROM tbl_faq_categories 
+		WHERE id = '" . $id . "'";
+		return $this->getArray($sql);
+		//return $this->getRow("id", $id);
+	}
+
+	/**
+	* Insert a record
+	* @param string $contextId The context ID
+	* @param string $categoryId The category ID
+	* @param string $userId The user ID
+	* @param string $dateLastUpdated Date last updated
+	*/
+	function insertSingle($contextId, $categoryId, $userId, $dateLastUpdated)
+	{
+		$this->insert(array(
+			'contextid' => $contextId, 
+			'categoryid' => $categoryId,
+			'userid' => $userId,
+			'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
+			));
+		return;	
+	}
+	/**
+	* Update a record
+	* @param string $id ID
+	* @param string $categoryId The category
+	* @param string $userId The user ID
+	* @param string $dateLastUpdated Date last updated
+	*/
+	function updateSingle($id, $categoryId, $userId, $dateLastUpdated)
+	{
+		$this->update("id", $id, 
+			array(
+        		'categoryid' => $categoryId,
+				'userid' => $userId,
+				'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
+			)
+		);
+	}
+	
+	/**
+	* Delete a record
+	* @param string $id ID
+	*/
+	function deleteSingle($id)
+	{
+		$this->delete("id", $id);
+	}
+
+
+
+///from FAQ
+
+  /**
 	* Return a single record
 	* @param string $contextId The context ID
 	* @param string $categoryId The category ID
@@ -76,23 +131,7 @@ class dbFaqCategories extends dbTable
         }
 	}
 
-	/**
-	* Insert a record
-	* @param string $contextId The context ID
-	* @param string $categoryId The category ID
-	* @param string $userId The user ID
-	* @param string $dateLastUpdated Date last updated
-	*/
-	function insertSingle($contextId, $categoryId, $userId, $dateLastUpdated)
-	{
-		$this->insert(array(
-			'contextId' => $contextId, 
-			'categoryId' => $categoryId,
-			'userId' => $userId,
-			'dateLastUpdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
-			
-		));
-		return;	
-	}//
+
 }
+
 ?>

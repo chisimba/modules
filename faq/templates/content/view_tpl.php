@@ -34,26 +34,35 @@
 	}
 
     // Add an entry if not displaying "All Categories".
-	if (($categoryId != "All Categories") && ($isAdmin || $isLecturer)) {
-        // Add an entry.
-    	    $addLink = "<a href=\"" .
-    	    $this->uri(array(
-                'module'=>'faq',
-    		'action'=>'add',
-    		'category'=>$categoryId))
-    	    . "\">";
-            $icon = $this->getObject('geticon','htmlelements');
-            $icon->setIcon('add');
-            $icon->alt = "Add";
-            $icon->align=false;
-            $addLink .= $icon->show();
-            //echo "&nbsp;".$objLanguage->languageText("faq_addnewentry");
-            $addLink .= "</a>";
+//	if ($categoryId != "All Categories") {
+       if ($isAdmin || $isLecturer) {
+
+		
+            // Add an entry.
+    		$addLink = "<a href=\"" .
+    	               $this->uri(array(
+    		    		'module'=>'faq',
+    		   			'action'=>'add',
+    					'category'=>$categoryId
+    		))
+    		. "\">";
+    		$icon = $this->getObject('geticon','htmlelements');
+    		$icon->setIcon('add');
+    		$icon->alt = "Add";
+    		$icon->align=false;
+    		$addLink .= $icon->show();
+    		//echo "&nbsp;".$objLanguage->languageText("faq_addnewentry");
+    		$addLink .= "</a>";
 
         } else {
+			
             $addLink = NULL;
         }
-	
+/**
+	} else {
+        $addLink = NULL;
+    }
+**/
 	echo "<h1>" .
 		$objLanguage->languageText("phrase_faq") .
 		//" : " .
@@ -151,7 +160,7 @@
             		'category'=>$categoryId,
             		'id'=>$element["id"]
             	)),
-                $objLanguage->languageText('faq_suredelete','faq'));
+                $objLanguage->languageText('faq_suredelete'));
             echo $objConfirm->show();
         }
 ?>
@@ -182,7 +191,7 @@
     // Show link to manage categories and edit categories if user is admin or lecturer
     if ($isAdmin || $isLecturer) {
         // Create manage category link
-        $manageCategoriesLink = new link ($this->uri(NULL, 'faqadmin'));
+        $manageCategoriesLink = new link ($this->uri(array('action'=>'managecategories'),'faq'));
         $manageCategoriesLink->link = $objLanguage->languageText("faq_managecategories","faq");
         // Create edit category link
         //$editCategoryLink = new link ($this->uri(array('action'=>'edit','id'=>$categoryId), 'faqadmin'));

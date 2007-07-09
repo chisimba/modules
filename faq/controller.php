@@ -8,7 +8,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 * Controller class for FAQ module
-* @author Jeremy O'Connor
+* @author Jeremy O'Connor , remade by Stelio Macumbe
 * @copyright 2004 University of the Western Cape
 * $Id$
 */
@@ -124,12 +124,40 @@ class faq extends controller
             case "deleteconfirm":
                 return $this->deleteConfirm();
             // Default : view entries
+            
+
+   // Add an entry
+            case "addcategory": 
+                $this->addCategory();
+                return "add_category_tpl.php";
+            // Add Confirm
+            case "addcategoryconfirm":
+                $this->addCategoryConfirm();
+                break;
+            // Edit an entry
+            case "editcategory":
+                $this->editCategory();
+                return "edit_category_tpl.php";
+            // Edit Confirm
+            case "editcategoryconfirm":
+                $this->editCategoryConfirm();
+                break;
+            // Delete an entry
+            case "deletecategoryconfirm":
+                $this->deleteCategoryConfirm();
+                break;
+            case "managecategories":
+              		$categories =  $this->objDbFaqCategories->listAll($this->contextId);
+   								$this->setVarByRef('categories', $categories);
+   								return "main_tpl.php";
+   								break;
+ //************************************************************************************************/
             case "view":
             default:
                 return $this->view();
         } // switch
 
-        //return "faq_tpl.php";
+ 
     }
 
     /**
@@ -261,6 +289,83 @@ class faq extends controller
      {
          return $this->getObject($name, 'htmlelements');
      }
+     
+     
+   
+     	 
+     	 
+     	  /**
+    * Add a FAQ category.
+    */
+    public function addCategory()
+    {
+    }
+
+    /**
+    * Confirm add.
+    */
+    public function addCategoryConfirm()
+    {
+        $this->categoryId = $_POST["category"];
+        // Insert the category into the database
+        $this->objDbFaqCategories->insertSingle(
+            $this->contextId, 
+            $this->categoryId, 
+            $this->objUser->userName(),
+            mktime()
+        );
+        return $this->nextAction(NULL);
+    }
+    
+    /**
+    * Edit a FAQ entry.
+    */
+    public function editCategory()
+    {
+        $id = $this->getParam('id', null);
+        $list = $this->objDbFaqCategories->listSingleId($id);
+        $this->setVarByRef('list', $list);
+    }
+
+    /**
+    * Confirm edit.
+    */
+    public function editCategoryConfirm()
+    {
+        $id = $this->getParam('id', null);
+        $categoryId = $_POST["category"];
+        // Update the record in the database
+        $this->objDbFaqCategories->updateSingle(
+            $id, 
+            $categoryId, 
+            $this->objUser->userId(),
+            mktime()
+        );
+        return $this->nextAction(NULL);
+    }
+
+    /**
+    * Confirm delete.
+    */
+    public function deleteCategoryConfirm()
+    {
+        $id = $this->getParam('id', null);
+        // Delete the record from the database
+        $this->objDbFaqCategories->deleteSingle($id); 
+	 $this->objDbFaqEntries->delete("categoryid",$id);
+        return $this->nextAction(NULL);
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 }
 ?>
