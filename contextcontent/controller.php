@@ -41,6 +41,7 @@ class contextcontent extends controller
             
             $this->objMenuTools =& $this->getObject('tools', 'toolbar');
             $this->objConfig =& $this->getObject('altconfig', 'config');
+		$this->setVar('pageSuppressXML',TRUE);
         }
         catch(customException $e) {
             //oops, something not there - bail out
