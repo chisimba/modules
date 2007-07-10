@@ -99,8 +99,11 @@ if (trim($page['headerscripts']) != '') {
 
 echo $topTable->show();
 
-$objWashout = $this->getObject('washout', 'utilities');
-echo $objWashout->parseText($page['pagecontent']);
+$tab = $this->getObject('tabpane','htmlelements');
+$tab->addTab(array('name'=>$page['menutitle'],'url'=>'http://localhost','content'=>$page['pagecontent']));
+echo $tab->show();
+//$objWashout = $this->getObject('washout', 'utilities');
+//echo $objWashout->parseText($page['pagecontent']);
 
 
 echo '<hr />';
