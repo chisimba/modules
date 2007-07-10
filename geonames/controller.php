@@ -121,8 +121,11 @@ class geonames extends controller
 					echo "The file $filename is not writable";
 				}
 				break;
+            case 'search':
+                return 'search.php';
 
         }
     }
+
 }
 ?>

@@ -59,6 +59,14 @@ $fields = array(
 		'type' => 'text',
 		'length' => 80,
 		),
+	'admin1name' => array(
+		'type' => 'text',
+		'length' => 255,
+		),
+	'admin2name' => array(
+		'type' => 'text',
+		'length' => 255,
+		),
 	'population' => array(
 		'type' => 'text',
 		'length' => 80,

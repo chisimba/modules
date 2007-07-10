@@ -26,7 +26,7 @@ class geoops extends object
         $fileadd = $this->newObject('htmltable', 'htmlelements');
         $fileadd->cellpadding = 3;
 
-        //file textfield
+        //file textfield$this->loadClass('label', 'htmlelements')
         $fileadd->startRow();
         $filelabel = new label($this->objLanguage->languageText('mod_geonames_file', 'geonames') .':', 'input_file');
         
@@ -84,5 +84,27 @@ class geoops extends object
 		fclose($handle);
 		return $arr;
 		
-	}	
+	}
+    
+    public function searchForm()
+    {
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('button', 'htmlelements');
+        $this->loadClass('form', 'htmlelements');
+        
+        $form = new form ('search', $this->uri(array('action'=>'search')));
+
+        $label = new label ($this->objLanguage->languageText('phrase_searchfor', 'geonames', 'Search for').': ', 'input_location');
+
+        $location = $this->getParam('location');
+
+        $locationInput = new textinput ('location', $location);
+        $button = new button ('dosearch', 'Go');
+        $button->setToSubmit();
+
+        $form->addToForm($label->show().$locationInput->show().' '.$button->show());
+
+        return $form->show();
+    }
 }

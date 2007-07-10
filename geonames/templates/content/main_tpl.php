@@ -6,7 +6,7 @@ $objFeatureBox = $this->newObject('featurebox', 'navigation');
 // Set columns to 3
 $cssLayout->setNumColumns(3);
 $leftMenu = NULL;
-$rightSideColumn = NULL;
+$rightSideColumn = '<h2>Search:</h2>'.$this->objGeoOps->searchForm();
 $leftCol = NULL;
 $middleColumn = NULL;
 
