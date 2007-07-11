@@ -1026,7 +1026,7 @@ class dbsections extends dbTable
 
         	//set the properties that we want to use in our index
         	//id for the index and optimization
-        	$document->addField(Zend_Search_Lucene_Field::UnStored('docid', $data['id']));
+        	$document->addField(Zend_Search_Lucene_Field::Text('docid', $data['id']));
         	//date
         	$document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['creation']));
         	//url
@@ -1042,7 +1042,7 @@ class dbsections extends dbTable
         	//document body
         	//NOTE: this is not actually put into the index, so as to keep the index nice and small
         	//      only a reference is inserted to the index.
-        	$document->addField(Zend_Search_Lucene_Field::UnStored('contents', $data['body']));
+        	$document->addField(Zend_Search_Lucene_Field::Text('contents', $data['body']));
         	//what else do we need here???
         	//add the document to the index
         	$index->addDocument($document);
@@ -1085,7 +1085,7 @@ class dbsections extends dbTable
 
         	//set the properties that we want to use in our index
         	//id for the index and optimization
-        	$document->addField(Zend_Search_Lucene_Field::UnStored('docid', $data['id']));
+        	$document->addField(Zend_Search_Lucene_Field::Text('docid', $data['id']));
         	//date
         	$document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['created']));
         	//url
@@ -1101,7 +1101,7 @@ class dbsections extends dbTable
         	//document body
         	//NOTE: this is not actually put into the index, so as to keep the index nice and small
         	//      only a reference is inserted to the index.
-        	$document->addField(Zend_Search_Lucene_Field::UnStored('contents', $data['body']));
+        	$document->addField(Zend_Search_Lucene_Field::Text('contents', $data['body']));
         	//what else do we need here???
         	//add the document to the index
         	$index->addDocument($document);
