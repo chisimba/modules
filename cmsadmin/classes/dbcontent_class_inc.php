@@ -292,6 +292,7 @@ class dbcontent extends dbTable
             }
 
             return $this->update('id', $id, $newArr);
+            $this->luceneReIndex($newArr);
         }
 
         /**
@@ -872,11 +873,15 @@ class dbcontent extends dbTable
            
         	//set the properties that we want to use in our index
         	//id for the index and optimization
-        	$document->addField(Zend_Search_Lucene_Field::UnStored('docid', $data['id']));
+        	$document->addField(Zend_Search_Lucene_Field::Text('docid', $data['id']));
         	//date
         	$document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['created']));
         	//url
-        	$document->addField(Zend_Search_Lucene_Field::UnIndexed('url', $this->uri(array('module' => 'cms', 'action' => 'showfulltext', 'id' => $data['id'], 'sectionid'=> $data['sectionid']))));
+        	$document->addField(Zend_Search_Lucene_Field::UnIndexed('url', $this->uri(array
+        															('module' => 'cms', 
+        															'action' => 'showfulltext', 
+        															'id' => $data['id'],
+        															'sectionid'=> $data['sectionid']))));
         	//createdBy
         	$document->addField(Zend_Search_Lucene_Field::Text('createdBy', $this->objUser->fullName($data['created_by'])));
         	//document teaser
@@ -931,7 +936,7 @@ class dbcontent extends dbTable
 
         	//set the properties that we want to use in our index
         	//id for the index and optimization
-        	$document->addField(Zend_Search_Lucene_Field::UnStored('docid', $data['id']));
+        	$document->addField(Zend_Search_Lucene_Field::Text('docid', $data['id']));
         	//date
         	$document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['created']));
         	//url
