@@ -1,30 +1,123 @@
 <?php
+
+/**
+ * Blog UI elements file
+ * 
+ * This file controls the blog UI elements. It wil allow users to configure the look of their blog
+ * 
+ * PHP version 5
+ * 
+ * This program is free software; you can redistribute it and/or modify 
+ * it under the terms of the GNU General Public License as published by 
+ * the Free Software Foundation; either version 2 of the License, or 
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the 
+ * Free Software Foundation, Inc., 
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * 
+ * @category  Chisimba
+ * @package   blog
+ * @author    Paul Scott <pscott@uwc.ac.za>
+ * @copyright 2007 Paul Scott
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   CVS: $Id$
+ * @link      http://avoir.uwc.ac.za
+ * @see       References to other sections (if any)...
+ */
+
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
 
+
 /**
- * Class to handle blog UI elements
- *
- * This object can be used elsewhere in the system to render certain aspects of the interface
- *
- * @author Paul Scott
- * @copyright GNU/GPL, AVOIR
- * @package blog
- * @access public
+ * class to control blog ui elements
+ * 
+ * This class controls the blog UI elements. It wil allow users to configure the look of their blog
+ * 
+ * @category  Chisimba
+ * @package   blog
+ * @author    Paul Scott <pscott@uwc.ac.za>
+ * @copyright 2007 Paul Scott
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   CVS: $Id$
+ * @link      http://avoir.uwc.ac.za
+ * @see       References to other sections (if any)...
  */
 class blogui extends object
 {
+
+    /**
+     * Blog operations object
+     * @var    object
+     * @access public
+     */
     public $objblogOps;
+
+    /**
+     * left Column layout
+     * @var    object
+     * @access public 
+     */
     public $leftCol;
+
+    /**
+     * Right column layout
+     * @var    object
+     * @access public 
+     */
     public $rightCol;
+
+    /**
+     * middle column layout
+     * @var    object
+     * @access public 
+     */
     public $middleCol;
+
+    /**
+     * Template header
+     * @var    object
+     * @access public 
+     */
     public $tplHeader;
+
+    /**
+     * CSS Layout
+     * @var    object
+     * @access public
+     */
     public $cssLayout;
+
+    /**
+     * Left user menu
+     * @var    object
+     * @access public 
+     */
     public $leftMenu;
+
+    /**
+     * user object
+     * @var    object
+     * @access public
+     */
     public $objUser;
+
+    /**
+     * Standard init function
+     * 
+     * Initialises and constructs the object via the framework
+     * 
+     * @return void  
+     * @access public
+     */
     public function init() 
     {
         // load up the blogops class
@@ -45,9 +138,27 @@ class blogui extends object
         // middle column
         $this->middleCol = NULL;
     }
+
+    /**
+     * reads config
+     * 
+     * Loads up and reads the config for a particular user to get the layout sequence
+     * 
+     * @return void  
+     * @access public
+     */
     public function myblog() 
     {
     }
+
+    /**
+     * three col layout
+     * 
+     * Creates a 3 column css layout
+     * 
+     * @return object CSS layout template header
+     * @access public 
+     */
     public function threeCols() 
     {
         // Set columns to 3
@@ -55,6 +166,16 @@ class blogui extends object
         $this->tplHeader = $this->cssLayout;
         return $this->tplHeader;
     }
+
+    /**
+     * Left blocks
+     * 
+     * Blocks that will show up in the left hand column
+     * 
+     * @param  integer $userid The User id
+     * @return string  Return string
+     * @access public 
+     */
     public function leftBlocks($userid) 
     {
         $leftMenu = $this->newObject('usermenu', 'toolbar');
@@ -81,6 +202,17 @@ class blogui extends object
         $leftCol.= $this->objblogOps->showPages($userid, TRUE);
         return $leftCol;
     }
+
+    /**
+     * Right side blocks
+     * 
+     * CSS layout for the right hand side blocks
+     * 
+     * @param  unknown $userid The user id
+     * @param  unknown $cats   categories
+     * @return string  string of blocks
+     * @access public 
+     */
     public function rightBlocks($userid, $cats = NULL) 
     {
         $rightSideColumn = NULL;

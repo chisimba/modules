@@ -1,19 +1,40 @@
 <?php
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run']) {
+if (!
+/**
+ * Description for $GLOBALS
+ * @global unknown $GLOBALS['kewl_entry_point_run']
+ * @name   $kewl_entry_point_run
+ */
+$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
+
+/**
+ * Short description for class
+ * 
+ * Long description (if any) ...
+ * 
+ * @category  Chisimba
+ * @package   blog
+ * @author    Administrative User <pscott@uwc.ac.za>
+ * @copyright 2007 Administrative User
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   CVS: $Id$
+ * @link      http://avoir.uwc.ac.za
+ * @see       References to other sections (if any)...
+ */
 class blog extends controller
 {
     /**
      * Controller class for the blog module that extends the base controller
      *
-     * @author Paul Scott <pscott@uwc.ac.za>
+     * @author    Paul Scott <pscott@uwc.ac.za>
      * @copyright 2007 AVOIR
-     * @package blog
-     * @category chisimba
-     * @license GPL
+     * @package   blog
+     * @category  chisimba
+     * @license   GPL
      */
     /**
      * User object
@@ -136,7 +157,19 @@ class blog extends controller
      * @var object
      */
     public $objProxy;
+
+    /**
+     * Description for public
+     * @var    unknown
+     * @access public 
+     */
     public $showfullname;
+
+    /**
+     * Description for public
+     * @var    unknown
+     * @access public 
+     */
     public $googleBlogPing;
     /**
      * Constructor method to instantiate objects and get variables
@@ -203,7 +236,7 @@ class blog extends controller
     /**
      * Method to process actions to be taken from the querystring
      *
-     * @param string $action String indicating action to be taken
+     * @param  string $action String indicating action to be taken
      * @return string template
      */
     public function dispatch($action = Null) 
@@ -1800,8 +1833,8 @@ class blog extends controller
         /**
          * Ovveride the login object in the parent class
          *
-         * @param void
-         * @return bool
+         * @param  void  
+         * @return bool  
          * @access public
          */
         public function requiresLogin() 

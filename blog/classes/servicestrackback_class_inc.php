@@ -13,15 +13,15 @@
  * the PHP License and are unable to obtain it through the web, please
  * send a note to license@php.net so we can mail you a copy immediately.
  *
- * @category   Webservices
- * @package    Trackback
- * @author     Tobias Schlitt <toby@php.net>
- * @author     Paul Scott - bug fixes
- * @copyright  2005-2006 The PHP Group
- * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id$
- * @link       http://pear.php.net/package/Services_Trackback
- * @since      File available since Release 0.1.0
+ * @category  Webservices
+ * @package   Trackback
+ * @author    Tobias Schlitt <toby@php.net>
+ * @author    Paul Scott - bug fixes
+ * @copyright 2005-2006 The PHP Group
+ * @license   http://www.php.net/license/3_0.txt PHP License 3.0
+ * @version   CVS: $Id$
+ * @link      http://pear.php.net/package/Services_Trackback
+ * @since     File available since Release 0.1.0
  */
 // {{{ require_once
 
@@ -54,15 +54,15 @@ define('SERVICES_TRACKBACK_STRICTNESS_HIGH', 3);
  * Trackback
  * A generic class to send/receive trackbacks.
  *
- * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @category   Webservices
- * @package    Trackback
- * @author     Tobias Schlitt <toby@php.net>
- * @copyright  2005-2006 The PHP Group
- * @version    Release: @package_version@
- * @link       http://pear.php.net/package/Services_Trackback
- * @since      0.1.0
- * @access     public
+ * @license   http://www.php.net/license/3_0.txt PHP License 3.0
+ * @category  Webservices
+ * @package   Trackback
+ * @author    Tobias Schlitt <toby@php.net>
+ * @copyright 2005-2006 The PHP Group
+ * @version   Release: @package_version@
+ * @link      http://pear.php.net/package/Services_Trackback
+ * @since     0.1.0
+ * @access    public
  */
 class servicestrackback extends object
 {
@@ -71,8 +71,8 @@ class servicestrackback extends object
     /**
      * The necessary trackback data.
      *
-     * @var array
-     * @since 0.1.0
+     * @var    array    
+     * @since  0.1.0
      * @access protected
      */
     public $_data = array(
@@ -91,9 +91,9 @@ class servicestrackback extends object
     /**
      * Options to influence Services_Trackback.
      *
-     * @see Services_Trackback::create()
-     * @since 0.4.0
-     * @var array
+     * @see    Services_Trackback::create()
+     * @since  0.4.0
+     * @var    array    
      * @access protected
      */
     public $_options = array(
@@ -111,7 +111,20 @@ class servicestrackback extends object
     );
     // }}}
     // {{{ var $_spamChecks
+
+
+    /**
+     * Description for public
+     * @var    array 
+     * @access public
+     */
     public $_spamChecks = array();
+
+    /**
+     * Description for public
+     * @var    object
+     * @access public
+     */
     public $objProxy;
     // }}}
     // {{{ Services_Trackback()
@@ -120,9 +133,9 @@ class servicestrackback extends object
      * Constructor
      * Creates a new Trackback object. Private because of factory use.
      *
-     * @since 0.1.0
+     * @since  0.1.0
      * @access protected
-     * @return void
+     * @return void     
      */
     public function init() 
     {
@@ -139,33 +152,33 @@ class servicestrackback extends object
      * might be necessary for calling other methods afterwards. See the specific methods for
      * further info on which data is required.
      *
-     * @since 0.2.0
+     * @since  0.2.0
      * @static
-     * @access public
-     * @param array $data Data for the trackback, which is obligatory:
-     *      'id'                The ID of the trackback target.
-     *  Data which is optional (for construction, not for specific methods):
-     *      'title'             string  Title of the trackback sending/receiving blog entry.
-     *      'excerpt'           string  Abstract of the trackback sending/receiving blog entry.
-     *      'blog_name'         string  Name of the trackback sending/receiving weblog.
-     *      'url'               string  URL of the trackback sending/receiving blog entry.
-     *      'trackback_url'     string  URL to send trackbacks to.
-     *      'extra'             array   Content of $_SERVER, captured while doing Services_Trackback::receive().
-     * @param array $options Options to set for this trackback. Valid options:
-     *      'strictness':       int     The default strictness to use in @see Services_Trackback::autodiscover().
-     *      'timeout':          int     The default timeout for network operations in seconds.
-     *      'fetchlines':       int     The max number of lines to fetch over the network.
-     *      'httprequest'       array   The options utilized by HTTP_Request are stored here.
-     *                                  The following options are the most commonly used for HTTP_Request in
-     *                                  Services_Trackback. All other options are supported too,
-     *                                  @see HTTP_Request::HTTP_Request() for more detailed documentation.
-     *                                  Some options for HTTP_Request are overwritten through the global settings of
-     *                                  Services_Trackback (such as timeout).
-     *          'timeout':          float   THE TIMEOUT SETTING IS OVERWRITTEN BY THE GLOBAL Services_Trackback SETTING.
-     *          'allowRedirects':   bool    Wether to follow HTTP redirects or not.
-     *          'maxRedirects':     int     Maximum number of redirects.
-     *          'useragent':        string  The user agent to use for HTTP requests.
-     *
+     * @access public                    
+     * @param  array                      $data    Data for the trackback, which is obligatory:
+     *                                             'id'                The ID of the trackback target.
+     *                                             Data which is optional (for construction, not for specific methods):
+     *                                             'title'             string  Title of the trackback sending/receiving blog entry.
+     *                                             'excerpt'           string  Abstract of the trackback sending/receiving blog entry.
+     *                                             'blog_name'         string  Name of the trackback sending/receiving weblog.
+     *                                             'url'               string  URL of the trackback sending/receiving blog entry.
+     *                                             'trackback_url'     string  URL to send trackbacks to.
+     *                                             'extra'             array   Content of $_SERVER, captured while doing Services_Trackback::receive().
+     * @param  array                      $options Options to set for this trackback. Valid options:
+     *                                             'strictness':       int     The default strictness to use in @see Services_Trackback::autodiscover().
+     *                                             'timeout':          int     The default timeout for network operations in seconds.
+     *                                             'fetchlines':       int     The max number of lines to fetch over the network.
+     *                                             'httprequest'       array   The options utilized by HTTP_Request are stored here.
+     *                                             The following options are the most commonly used for HTTP_Request in
+     *                                             Services_Trackback. All other options are supported too,
+     * @see    HTTP_Request::HTTP_Request() for more detailed documentation.
+     *         Some options for HTTP_Request are overwritten through the global settings of
+     *         Services_Trackback (such as timeout).
+     *         'timeout':          float   THE TIMEOUT SETTING IS OVERWRITTEN BY THE GLOBAL Services_Trackback SETTING.
+     *         'allowRedirects':   bool    Wether to follow HTTP redirects or not.
+     *         'maxRedirects':     int     Maximum number of redirects.
+     *         'useragent':        string  The user agent to use for HTTP requests.
+     *         
      * @return object(Services_Trackback) The newly created Trackback.
      */
     function &create($data, $options = null) 
@@ -191,12 +204,12 @@ class servicestrackback extends object
      * setOptions
      * Set options for the trackback.
      *
-     * @since 0.4.0
+     * @since  0.4.0
      * @access public
-     * @see Services_Trackback::create()
-     * @see Services_Trackback::getOptions()
-     * @param array $options Pairs of 'option' => 'value' as described at @see Services_Trackback::create().
-     * @return mixed Bool true on success, otherwise PEAR_Error.
+     * @see    Services_Trackback::create()
+     * @see    Services_Trackback::getOptions()
+     * @param  array  $options Pairs of 'option' => 'value' as described at @see Services_Trackback::create().
+     * @return mixed  Bool true on success, otherwise PEAR_Error.
      */
     function setOptions($options) 
     {
@@ -246,11 +259,11 @@ class servicestrackback extends object
      * getOptions
      * Get the currently set option set.
      *
-     * @since 0.4.0
+     * @since  0.4.0
      * @access public
-     * @see Services_Trackback::setOptions()
-     * @see Services_Trackback::create()
-     * @return array The currently active options.
+     * @see    Services_Trackback::setOptions()
+     * @see    Services_Trackback::create()
+     * @return array  The currently active options.
      */
     function getOptions() 
     {
@@ -263,9 +276,9 @@ class servicestrackback extends object
      * autodiscover
      * Checks a given URL for trackback autodiscovery code.
      *
-     * @since 0.2.0
+     * @since  0.2.0
      * @access public
-     * @return bool True on success, otherwise PEAR_Error.
+     * @return bool   True on success, otherwise PEAR_Error.
      */
     function autodiscover() 
     {
@@ -329,10 +342,10 @@ class servicestrackback extends object
      * Services_Trackback::send() requires PEAR::HTTP_Request. The options for the HTTP_Request
      * object are stored in the global options array using the key 'http_request'.
      *
-     * @since 0.3.0
+     * @since  0.3.0
      * @access public
-     * @param string $data Additional data to complete the trackback.
-     * @return mixed True on success, otherwise PEAR_Error.
+     * @param  string $data Additional data to complete the trackback.
+     * @return mixed  True on success, otherwise PEAR_Error.
      */
     function send($data = null) 
     {
@@ -424,9 +437,9 @@ class servicestrackback extends object
      *              'title'
      *              'url'
      *              'trackback_url'
-     * @since 0.1.0
+     * @since  0.1.0
      * @access public
-     * @param bool $comments Whether to include HTML comments around the RDF using <!-- -->
+     * @param  bool   $comments Whether to include HTML comments around the RDF using <!-- -->
      * @return string RDF code
      */
     function getAutodiscoveryCode($comments = true) 
@@ -467,7 +480,7 @@ EOD;
      * operation:
      *      'id'
      *
-     * @since 0.1.0
+     * @since  0.1.0
      * @access public
      * @return object Services_Trackback
      */
@@ -507,7 +520,7 @@ EOD;
      * getResponseSuccess
      * Returns an XML response for a successful trackback.
      *
-     * @since 0.1.0
+     * @since  0.1.0
      * @access public
      * @static
      * @return string The XML code
@@ -529,11 +542,11 @@ EOD;
      * getResponseError
      * Returns an XML response for a trackback error.
      *
-     * @since 0.1.0
+     * @since  0.1.0
      * @access public
-     * @param int $code The error code
-     * @param string $message The error message
-     * @return void
+     * @param  int    $code    The error code
+     * @param  string $message The error message
+     * @return void  
      */
     function getResponseError($message, $code) 
     {
@@ -560,14 +573,14 @@ EOD;
      * addSpamCheck
      * Add a spam check module to the trackback.
      *
-     * @since 0.5.0
-     * @access public
-     * @see Services_Trackback::removeSpamCheck()
-     * @see Services_Trackback::checkSpam()
-     * @param object(Services_Trackback_SpamCheck) $spamCheck The spam check module to add.
-     * @param int $priority A priority value for the spam check. Lower priority indices are processed earlier.
-     *                      If no priority level is set, 0 is assumed.
-     * @return mixed Added SpamCheck module instance on success, otherwise PEAR_Error.
+     * @since  0.5.0
+     * @access public                              
+     * @see    Services_Trackback::removeSpamCheck()
+     * @see    Services_Trackback::checkSpam()
+     * @param  object(Services_Trackback_SpamCheck) $spamCheck The spam check module to add.
+     * @param  int                                  $priority  A priority value for the spam check. Lower priority indices are processed earlier.
+     *                                                         If no priority level is set, 0 is assumed.
+     * @return mixed                                Added SpamCheck module instance on success, otherwise PEAR_Error.
      */
     function &addSpamCheck(&$spamCheck, $priority = 0) 
     {
@@ -584,16 +597,16 @@ EOD;
      * createSpamCheck
      * Create and add a spam check module to the trackback.
      *
-     * @since 0.5.0
+     * @since  0.5.0
      * @access public
-     * @see Services_Trackback::addSpamCheck()
-     * @see Services_Trackback::removeSpamCheck()
-     * @see Services_Trackback::checkSpam()
-     * @param string $spamCheckType Name of the spamcheck module to create and add.
-     * @param array $options Options for the spamcheckmodule.
-     * @param int $priority A priority value for the spam check. Lower priority indices are processed earlier.
-     *                      If no priority level is set, 0 is assumed.
-     * @return mixed Instance of the created SpamCheck module or PEAR_Error.
+     * @see    Services_Trackback::addSpamCheck()
+     * @see    Services_Trackback::removeSpamCheck()
+     * @see    Services_Trackback::checkSpam()
+     * @param  string $spamCheckType Name of the spamcheck module to create and add.
+     * @param  array  $options       Options for the spamcheckmodule.
+     * @param  int    $priority      A priority value for the spam check. Lower priority indices are processed earlier.
+     *                               If no priority level is set, 0 is assumed.
+     * @return mixed  Instance of the created SpamCheck module or PEAR_Error.
      */
     function &createSpamCheck($spamCheckType, $options = array() , $priority = 0) 
     {
@@ -625,12 +638,12 @@ EOD;
      * removeSpamCheck
      * Remove a spam check module from the trackback.
      *
-     * @since 0.5.0
-     * @access public
-     * @see Services_Trackback::addSpamCheck()
-     * @see Services_Trackback::checkSpam()
-     * @param object(Services_Trackback_SpamCheck) The spam check module to remove.
-     * @return bool True on success, otherwise PEAR_Error.
+     * @since  0.5.0
+     * @access public                              
+     * @see    Services_Trackback::addSpamCheck()
+     * @see    Services_Trackback::checkSpam()
+     * @param  object(Services_Trackback_SpamCheck) The spam check module to remove.
+     * @return bool                                 True on success, otherwise PEAR_Error.
      */
     function removeSpamCheck(&$spamCheck) 
     {
@@ -653,13 +666,13 @@ EOD;
      * such as DNSBL, SURBL, Word BL,... The sources to check are defined using
      * Services_Trackback_SpamCheck modules.
      *
-     * @since 0.5.0
+     * @since  0.5.0
      * @access public
-     * @see Services_Trackback::addSpamCheck()
-     * @see Services_Trackback::removeSpamCheck()
-     * @param bool $continouseCheck Wether to check all spam protection modules or
-     *                              quit checking if one modules returns a positive result.
-     * @return bool True, if one of the sources
+     * @see    Services_Trackback::addSpamCheck()
+     * @see    Services_Trackback::removeSpamCheck()
+     * @param  bool   $continouseCheck Wether to check all spam protection modules or
+     *                                 quit checking if one modules returns a positive result.
+     * @return bool   True, if one of the sources
      */
     function checkSpam($continouse = false) 
     {
@@ -686,10 +699,10 @@ EOD;
      * Get data from the trackback. Returns the value of a given
      * key or PEAR_Error.
      *
-     * @since 0.2.0
+     * @since  0.2.0
      * @access public
-     * @param string $key The key to fetch a value for.
-     * @return mixed A string value or a PEAR_Error on failure.
+     * @param  string $key The key to fetch a value for.
+     * @return mixed  A string value or a PEAR_Error on failure.
      */
     function get($key) 
     {
@@ -703,11 +716,11 @@ EOD;
      * Set data of the trackback. Saves the value of a given
      * key , returning true on success, PEAR_Error on faulure.
      *
-     * @since 0.2.0
+     * @since  0.2.0
      * @access public
-     * @param string $key The key to set a value for.
-     * @param string $val The value for the key.
-     * @return mixed Boolean true on success or a PEAR_Error on failure.
+     * @param  string $key The key to set a value for.
+     * @param  string $val The value for the key.
+     * @return mixed  Boolean true on success or a PEAR_Error on failure.
      */
     function set($key, $val) 
     {
@@ -720,10 +733,10 @@ EOD;
     /**
      * Create a Trackback from a $data array.
      *
-     * @since 0.2.0
+     * @since  0.2.0
      * @access protected
-     * @param array $data The data array (@see Services_Trackback::create()).
-     * @return mixed True on success, otherwise PEAR_Error.
+     * @param  array     $data The data array (@see Services_Trackback::create()).
+     * @return mixed     True on success, otherwise PEAR_Error.
      */
     function _fromArray($data) 
     {
@@ -743,10 +756,10 @@ EOD;
      * _getContent
      * Receive the content from a specific URL.
      *
-     * @since 0.4.0
+     * @since  0.4.0
      * @access protected
-     * @param string $url The URL to download data from.
-     * @return string The content.
+     * @param  string    $url The URL to download data from.
+     * @return string    The content.
      */
     function _getContent($url) 
     {
@@ -768,11 +781,11 @@ EOD;
      * _getEncodedData
      * Receives a number of data from the internal data store, encoded for XML usage.
      *
-     * @since 0.1.0
+     * @since  0.1.0
      * @access protected
-     * @param array $keys Data keys to receive
-     * @param array $data Optionally the data to check (default is the object data).
-     * @return void
+     * @param  array     $keys Data keys to receive
+     * @param  array     $data Optionally the data to check (default is the object data).
+     * @return void     
      */
     function _getEncodedData($keys, $data = null) 
     {
@@ -791,11 +804,11 @@ EOD;
      * _getDecodedData
      * Receives a number of data from the internal data store.
      *
-     * @since 0.1.0
+     * @since  0.1.0
      * @access protected
-     * @param array $keys Data keys to receive
-     * @param array $data Optionally the data to check (default is the object data).
-     * @return void
+     * @param  array     $keys Data keys to receive
+     * @param  array     $data Optionally the data to check (default is the object data).
+     * @return void     
      */
     function _getDecodedData($keys, $data = null) 
     {
@@ -814,11 +827,11 @@ EOD;
      * _checkData
      * Checks a given array of keys for the validity of their data.
      *
-     * @since 0.1.0
+     * @since  0.1.0
      * @access protected
-     * @param array $keys Data keys to check.
-     * @param array $data Optionally the data to check (default is the object data).
-     * @return void
+     * @param  array     $keys Data keys to check.
+     * @param  array     $data Optionally the data to check (default is the object data).
+     * @return void     
      */
     function _checkData($keys, $data = null) 
     {
@@ -841,13 +854,13 @@ EOD;
      * This little method checks if 2 URLs (the URL to trackback against the trackback
      * identifier found in the autodiscovery code) are equal.
      *
-     * @see Services_Trackback::autodiscover()
-     * @since 0.2.0
+     * @see    Services_Trackback::autodiscover()
+     * @since  0.2.0
      * @access protected
-     * @param string $url1 The first URL.
-     * @param string $url2 The second URL.
-     * @param constant $strictness How strict to check URLs. Use one of SERVICES_TRACKBACK_STRICTNESS_* constants.
-     * @return mixed True on success, otherwise PEAR_Error.
+     * @param  string    $url1       The first URL.
+     * @param  string    $url2       The second URL.
+     * @param  constant  $strictness How strict to check URLs. Use one of SERVICES_TRACKBACK_STRICTNESS_* constants.
+     * @return mixed     True on success, otherwise PEAR_Error.
      */
     function _checkURLs($url1, $url2, $strictness) 
     {
@@ -888,10 +901,10 @@ EOD;
     /**
      * Interpret the returned XML code, when sending a trackback.
      *
-     * @see Services_Trackback::send()
-     * @since 0.3.0
+     * @see    Services_Trackback::send()
+     * @since  0.3.0
      * @access protected
-     * @return void Mixed true on success, otherwise PEAR_Error.
+     * @return void      Mixed true on success, otherwise PEAR_Error.
      */
     function _interpretTrackbackResponse($response) 
     {
@@ -913,8 +926,8 @@ EOD;
     /**
      * Overloading
      *
-     * @since 0.1.0
-     * @access public
+     * @since      0.1.0
+     * @access     public
      * @deprecated
      */
     /*

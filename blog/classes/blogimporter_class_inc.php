@@ -1,6 +1,12 @@
 <?php
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run']) {
+if (!
+/**
+ * Description for $GLOBALS
+ * @global unknown $GLOBALS['kewl_entry_point_run']
+ * @name   $kewl_entry_point_run
+ */
+$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
@@ -13,10 +19,10 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * Please note that due to the way that this class acts, it is only necessary to supply a username/userid to
  * the function calls in order to get an Associative array of values back to be returned.
  *
- * @author Paul Scott
+ * @author    Paul Scott
  * @copyright AVOIR GNU/GPL
- * @package blog
- * @access public
+ * @package   blog
+ * @access    public
  */
 class blogimporter extends object
 {
@@ -48,8 +54,8 @@ class blogimporter extends object
      * Standard init function for the object and controller class
      *
      * @access public
-     * @param void
-     * @return void
+     * @param  void  
+     * @return void  
      */
     public function init() 
     {
@@ -60,9 +66,9 @@ class blogimporter extends object
      * Pseudo constructor method. We have not yet used the standard init() function here, or extended dbTable, as we are not really
      * interested in connecting to the local db with this object.
      *
-     * @param The name of the server to connect to (predefined) $server
+     * @param  The     name of the server to connect to (predefined) $server
      * @return string, set DSN
-     * @access public
+     * @access public 
      */
     public function setup($server) 
     {
@@ -111,8 +117,8 @@ class blogimporter extends object
     /**
      * Build and instantiate the database object for the remote
      *
-     * @param void
-     * @return object
+     * @param  void   
+     * @return object 
      * @access private
      */
     public function _dbObject() 
@@ -138,10 +144,10 @@ class blogimporter extends object
     /**
      * Method to query an arbitrarary remote table
      *
-     * @param string $table
-     * @param string $filter can be full SQL Query
+     * @param  string    $table 
+     * @param  string    $filter can be full SQL Query
      * @return resultset
-     * @access public
+     * @access public   
      */
     public function queryTable($table, $filter) 
     {
@@ -153,8 +159,8 @@ class blogimporter extends object
     /**
      * Method to get the blog contents per user (username) into an array
      *
-     * @param string $username
-     * @return array
+     * @param  string $username
+     * @return array 
      * @access public
      */
     public function importBlog($username) 
@@ -202,7 +208,7 @@ class blogimporter extends object
     /**
      * Method to get the blog contents from a site
      *
-     * @return array
+     * @return array 
      * @access public
      */
     public function importAllBlogs() 

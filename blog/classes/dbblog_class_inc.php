@@ -1,6 +1,12 @@
 <?php
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run']) {
+if (!
+/**
+ * Description for $GLOBALS
+ * @global unknown $GLOBALS['kewl_entry_point_run']
+ * @name   $kewl_entry_point_run
+ */
+$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
@@ -11,12 +17,12 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * This is a database model class for the blog module. All database transaactions will go through
  * this class. This class is derived from the top level dbTable superclass in the framework core.
  *
- * @author Paul Scott
+ * @author     Paul Scott
  * @filesource
- * @copyright AVOIR
- * @package blog
- * @category chisimba
- * @access public
+ * @copyright  AVOIR
+ * @package    blog
+ * @category   chisimba
+ * @access     public
  */
 class dbblog extends dbTable
 {
@@ -24,8 +30,8 @@ class dbblog extends dbTable
      * Standard init function - Class Constructor
      *
      * @access public
-     * @param void
-     * @return void
+     * @param  void  
+     * @return void  
      */
     public function init() 
     {
@@ -36,15 +42,25 @@ class dbblog extends dbTable
     /**
      * Method to get a list of the users categories as defined by the user
      *
-     * @param integer $userid
+     * @param  integer           $userid
      * @return arrayunknown_type
-     * @access public
+     * @access public           
      */
     public function getAllCats($userid) 
     {
         $this->_changeTable('tbl_blog_cats');
         return $this->getAll(" where userid = '$userid'");
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $catid Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function deleteCat($catid) 
     {
         $this->_changeTable('tbl_blog_cats');
@@ -53,8 +69,8 @@ class dbblog extends dbTable
     /**
      * Method to grab the top level parent categories per user id
      *
-     * @param integer $userid
-     * @return array
+     * @param  integer $userid
+     * @return array  
      */
     public function getParentCats($userid) 
     {
@@ -64,8 +80,8 @@ class dbblog extends dbTable
     /**
      * Grab the child categories as a userl, according to the parent category
      *
-     * @param integer $userid
-     * @param string $cat
+     * @param  integer $userid
+     * @param  string  $cat   
      * @return unknown
      */
     public function getChildCats($userid, $cat) 
@@ -90,8 +106,8 @@ class dbblog extends dbTable
     /**
      * Method to create a merged array of the parent and child categories per user id
      *
-     * @param integer $userid
-     * @return array
+     * @param  integer $userid
+     * @return array  
      */
     public function getCatsTree($userid) 
     {
@@ -114,8 +130,8 @@ class dbblog extends dbTable
     /**
      * Method to set a category
      *
-     * @param integer $userid
-     * @param array $cats
+     * @param  integer $userid
+     * @param  array   $cats  
      * @return boolean
      */
     public function setCats($userid, $cats = array() , $mode = NULL) 
@@ -132,7 +148,7 @@ class dbblog extends dbTable
     /**
      * Method to map the child id of a category to a nice name
      *
-     * @param mixed $childId
+     * @param  mixed $childId
      * @return array
      */
     public function mapKid2Parent($childId) 
@@ -144,7 +160,7 @@ class dbblog extends dbTable
     /**
      * Method to count the number of posts in a category
      *
-     * @param string $cat
+     * @param  string  $cat
      * @return integer
      */
     public function catCount($cat) 
@@ -161,9 +177,9 @@ class dbblog extends dbTable
     /**
      * Method to get a list of the users link categories as defined by the user
      *
-     * @param integer $userid
-     * @return array
-     * @access public
+     * @param  integer $userid
+     * @return array  
+     * @access public 
      */
     public function getAllLinkCats($userid) 
     {
@@ -173,9 +189,9 @@ class dbblog extends dbTable
     /**
      * Get the links per category
      *
-     * @param integer $userid
-     * @param string $cat
-     * @return mixed
+     * @param  integer $userid
+     * @param  string  $cat   
+     * @return mixed  
      */
     public function getLinksCats($userid, $cat) 
     {
@@ -185,8 +201,8 @@ class dbblog extends dbTable
     /**
      * Add a category to the links section
      *
-     * @param integer $userid
-     * @param array $linkCats
+     * @param  integer $userid  
+     * @param  array   $linkCats
      * @return boolean
      */
     public function setLinkCats($userid, $linkCats = array()) 
@@ -201,8 +217,8 @@ class dbblog extends dbTable
     /**
      * Method to add a link to a category
      *
-     * @param integer $userid
-     * @param array $linkarr
+     * @param  integer $userid 
+     * @param  array   $linkarr
      * @return boolean
      */
     public function setLink($userid, $linkarr) 
@@ -217,7 +233,7 @@ class dbblog extends dbTable
     /**
      * Method to grab a cat name by the id
      *
-     * @param string $catid
+     * @param  string $catid
      * @return string
      */
     public function getCatById($catid) 
@@ -239,15 +255,25 @@ class dbblog extends dbTable
     /**
      * Method to get all the posts in a category (published posts)
      *
-     * @param integer $userid
-     * @param mixed $catid
-     * @return array
+     * @param  integer $userid
+     * @param  mixed   $catid 
+     * @return array  
      */
     public function getAbsAllPosts($userid) 
     {
         $this->_changeTable('tbl_blog_posts');
         return $this->getAll("WHERE userid = '$userid' ORDER BY post_ts DESC");
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $userid Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function getAbsAllPostsWithSiteBlogs($userid) 
     {
         $this->_changeTable('tbl_blog_posts');
@@ -256,9 +282,9 @@ class dbblog extends dbTable
     /**
      * Method to get all the posts in a category (published posts as well as drafts)
      *
-     * @param integer $userid
-     * @param mixed $catid
-     * @return array
+     * @param  integer $userid
+     * @param  mixed   $catid 
+     * @return array  
      */
     public function getAbsAllPostsNoDrafts($userid) 
     {
@@ -268,9 +294,9 @@ class dbblog extends dbTable
     /**
      * Method to get all the posts in a category (published posts ONLY)
      *
-     * @param integer $userid
-     * @param mixed $catid
-     * @return array
+     * @param  integer $userid
+     * @param  mixed   $catid 
+     * @return array  
      */
     public function getAllPosts($userid, $catid) 
     {
@@ -284,9 +310,9 @@ class dbblog extends dbTable
     /**
      * Method to get all the posts made within a month
      *
-     * @param mixed $startdate
-     * @param string $userid
-     * @return array
+     * @param  mixed  $startdate
+     * @param  string $userid   
+     * @return array 
      */
     public function getPostsMonthly($startdate, $userid) 
     {
@@ -303,6 +329,17 @@ class dbblog extends dbTable
         $ret = $this->getAll($filter);
         return $ret;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $startdate Parameter description (if any) ...
+     * @param  unknown $userid    Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function getMonthPostCount($startdate, $userid) 
     {
         $this->_changeTable('tbl_blog_posts');
@@ -317,6 +354,16 @@ class dbblog extends dbTable
         $ret = $this->getRecordCount($filter);
         return $ret;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $postid Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function getPostByPostID($postid) 
     {
         $this->_changeTable('tbl_blog_posts');
@@ -326,7 +373,7 @@ class dbblog extends dbTable
     /**
      * Method to delete a post
      *
-     * @param mixed $id
+     * @param  mixed   $id
      * @return boolean
      */
     public function deletePost($id) 
@@ -366,7 +413,7 @@ class dbblog extends dbTable
     /**
      * Method to get a post by its ID
      *
-     * @param mixed $id
+     * @param  mixed $id
      * @return array
      */
     public function getPostById($id) 
@@ -377,9 +424,9 @@ class dbblog extends dbTable
     /**
      * Method to get all the posts within a category
      *
-     * @param integer $userid
-     * @param mixed $catid
-     * @return array
+     * @param  integer $userid
+     * @param  mixed   $catid 
+     * @return array  
      */
     public function getPostsFromCat($userid, $catid) 
     {
@@ -389,8 +436,8 @@ class dbblog extends dbTable
     /**
      * Method to get the latest post of a user
      *
-     * @param integer $userid
-     * @return array
+     * @param  integer $userid
+     * @return array  
      */
     public function getLatestPost($userid) 
     {
@@ -407,8 +454,8 @@ class dbblog extends dbTable
     /**
      * Method to get the sticky posts of a user
      *
-     * @param integer $userid
-     * @return array
+     * @param  integer $userid
+     * @return array  
      */
     public function getStickyPosts($userid) 
     {
@@ -421,8 +468,8 @@ class dbblog extends dbTable
      * Method to get the latest posts
      *
      * @author Megan Watson
-     * @param integer $userid
-     * @return array
+     * @param  integer $userid
+     * @return array  
      */
     public function getLastPosts($num = 10, $userid = FALSE) 
     {
@@ -440,7 +487,7 @@ class dbblog extends dbTable
     /**
      * Method to return a random blog
      *
-     * @param void
+     * @param  void 
      * @return mixed
      */
     public function getRandBlog() 
@@ -462,10 +509,10 @@ class dbblog extends dbTable
     /**
      * Method to insert a post to your posts table
      *
-     * @param integer $userid
-     * @param array $postarr
-     * @param string $mode
-     * @return array
+     * @param  integer $userid 
+     * @param  array   $postarr
+     * @param  string  $mode   
+     * @return array  
      */
     public function insertPost($userid, $postarr, $mode = NULL) 
     {
@@ -598,8 +645,8 @@ class dbblog extends dbTable
     /**
      * Method to get the User blogs DISTINCT query
      *
-     * @param mixed $column
-     * @param mixed $table
+     * @param  mixed $column
+     * @param  mixed $table 
      * @return array
      */
     public function getUBlogs($column, $table) 
@@ -607,6 +654,15 @@ class dbblog extends dbTable
         $this->_changeTable('tbl_blog_posts');
         return $this->getArray("SELECT DISTINCT $column from $table");
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function checkValidUser() 
     {
         $this->_changeTable('tbl_users');
@@ -616,8 +672,8 @@ class dbblog extends dbTable
     /**
      * Method to insert trackback from remote to table
      *
-     * @param array $data
-     * @return bool
+     * @param  array $data
+     * @return bool 
      */
     public function setTrackback($data) 
     {
@@ -643,7 +699,7 @@ class dbblog extends dbTable
     /**
      * Method to get the count of trackbacks associated with a particular post
      *
-     * @param post id string $pid
+     * @param  post    id string $pid
      * @return integer
      */
     public function getTrackbacksPerPost($pid) 
@@ -655,8 +711,8 @@ class dbblog extends dbTable
     /**
      * Method to get the actual trackback text per post
      *
-     * @param postid string $pid
-     * @return array
+     * @param  postid string $pid
+     * @return array 
      */
     public function grabTrackbacks($pid) 
     {
@@ -667,8 +723,8 @@ class dbblog extends dbTable
     /**
      * Method to get all of the tags associated with a particular post
      *
-     * @param string $postid
-     * @return array
+     * @param  string $postid
+     * @return array 
      */
     public function getPostTags($postid) 
     {
@@ -678,9 +734,9 @@ class dbblog extends dbTable
     /**
      * Insert a set of tags into the database associated with the post
      *
-     * @param array $tagarray
-     * @param string $userid
-     * @param String $postid
+     * @param array  $tagarray
+     * @param string $userid  
+     * @param String $postid  
      */
     public function insertTags($tagarray, $userid, $postid) 
     {
@@ -701,8 +757,8 @@ class dbblog extends dbTable
     /**
      * Method to remove all the tags associated with a post
      *
-     * @param string $postid
-     * @return void
+     * @param  string $postid
+     * @return void  
      */
     public function removeAllTags($postid) 
     {
@@ -712,8 +768,8 @@ class dbblog extends dbTable
     /**
      * Method to retrieve the tags associated with a userid
      *
-     * @param string $userid
-     * @return array
+     * @param  string $userid
+     * @return array 
      */
     public function getTagsByUser($userid) 
     {
@@ -723,8 +779,8 @@ class dbblog extends dbTable
     /**
      * Method to get a tag weight by counting the tags
      *
-     * @param string $tag
-     * @param string $userid
+     * @param  string  $tag   
+     * @param  string  $userid
      * @return integer
      */
     public function getTagWeight($tag, $userid) 
@@ -736,9 +792,9 @@ class dbblog extends dbTable
     /**
      * Method to return an array of posts associated with a tag
      *
-     * @param string $userid
-     * @param string $tag
-     * @return array
+     * @param  string $userid
+     * @param  string $tag   
+     * @return array 
      */
     public function getAllPostsByTag($userid, $tag) 
     {
@@ -761,11 +817,11 @@ class dbblog extends dbTable
     /**
      * Method to add a RSS feed to the database
      *
-     * @param string $userid
-     * @param string $name
-     * @param string $desc
-     * @param string $url
-     * @return bool
+     * @param  string $userid
+     * @param  string $name  
+     * @param  string $desc  
+     * @param  string $url   
+     * @return bool  
      */
     public function addRss($rssarr, $mode = NULL) 
     {
@@ -778,31 +834,92 @@ class dbblog extends dbTable
             return FALSE;
         }
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $userid Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function getUserRss($userid) 
     {
         $this->_changeTable("tbl_blog_userrss");
         return $this->getAll("WHERE userid = '$userid'");
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $id Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function getRssById($id) 
     {
         $this->_changeTable("tbl_blog_userrss");
         return $this->getAll("WHERE id = '$id'");
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $id Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function delRss($id) 
     {
         $this->_changeTable("tbl_blog_userrss");
         return $this->delete('id', $id, "tbl_blog_userrss");
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $rssarr Parameter description (if any) ...
+     * @param  unknown $id     Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function updateRss($rssarr, $id) 
     {
         $this->_changeTable("tbl_blog_userrss");
         return $this->update('id', $id, $rssarr);
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $profile Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function saveProfile($profile) 
     {
         $this->_changeTable("tbl_blog_profile");
         return $this->insert($profile);
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $userid Parameter description (if any) ...
+     * @return mixed   Return description (if any) ...
+     * @access public 
+     */
     public function checkProfile($userid) 
     {
         $this->_changeTable("tbl_blog_profile");
@@ -814,11 +931,31 @@ class dbblog extends dbTable
             return $ret[0];
         }
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  array  $profile Parameter description (if any) ...
+     * @return mixed  Return description (if any) ...
+     * @access public
+     */
     public function updateProfile($profile) 
     {
         $this->_changeTable("tbl_blog_profile");
         return $this->update('id', $profile['id'], $profile);
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  array  $data Parameter description (if any) ...
+     * @return void  
+     * @access public
+     */
     public function luceneIndex($data) 
     {
         //print_r($data); die();
@@ -872,6 +1009,16 @@ class dbblog extends dbTable
         //$index->optimize();
         
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  array  $data Parameter description (if any) ...
+     * @return void  
+     * @access public
+     */
     public function luceneReIndex($data) 
     {
         //var_dump($data);
@@ -932,77 +1079,229 @@ class dbblog extends dbTable
         //$index->optimize();
         
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $userid Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function getUserLinks($userid) 
     {
         $this->_changeTable('tbl_blog_links');
         return $this->getAll("WHERE userid = '$userid'");
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $userid Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function getUserLinksonly($userid) 
     {
         $this->_changeTable('tbl_blog_links');
         return $this->getAll("WHERE userid = '$userid' AND link_type='bloglink'");
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $userid Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function getUserbroll($userid) 
     {
         $this->_changeTable('tbl_blog_links');
         return $this->getAll("WHERE userid = '$userid' AND link_type='blogroll'");
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $id     Parameter description (if any) ...
+     * @param  unknown $userid Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function getUserLink($id, $userid) 
     {
         $this->_changeTable('tbl_blog_links');
         return $this->getAll("WHERE id = '$id' AND userid = '$userid'");
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $insarr Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function insertUserLink($insarr) 
     {
         $this->_changeTable('tbl_blog_links');
         return $this->insert($insarr, 'tbl_blog_links');
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $id     Parameter description (if any) ...
+     * @param  unknown $insarr Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function updateUserLink($id, $insarr) 
     {
         $this->_changeTable('tbl_blog_links');
         return $this->update('id', $id, $insarr, 'tbl_blog_links');
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $id Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function deleteBlink($id) 
     {
         $this->_changeTable('tbl_blog_links');
         return $this->delete('id', $id, 'tbl_blog_links');
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $pagearr Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function savepage($pagearr) 
     {
         $this->_changeTable('tbl_blog_pages');
         return $this->insert($pagearr, 'tbl_blog_pages');
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $id      Parameter description (if any) ...
+     * @param  unknown $pagearr Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function updatePage($id, $pagearr) 
     {
         $this->_changeTable('tbl_blog_pages');
         return $this->update('id', $id, $pagearr, 'tbl_blog_pages');
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $id Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function deletePage($id) 
     {
         $this->_changeTable('tbl_blog_pages');
         return $this->delete('id', $id, 'tbl_blog_pages');
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $userid Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function getPages($userid) 
     {
         $this->_changeTable('tbl_blog_pages');
         return $this->getAll("WHERE userid = '$userid'");
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $id Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function getPageById($id) 
     {
         $this->_changeTable('tbl_blog_pages');
         return $this->getAll("WHERE id = '$id'");
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $term Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function quickSearch($term) 
     {
         $this->_changeTable('tbl_blog_posts');
         $ret = $this->getAll("WHERE post_content LIKE '%%$term%%' OR post_title LIKE '%%$term%%' OR post_excerpt LIKE '%%$term%%'");
         return $ret;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function getLists() 
     {
         $this->_changeTable('tbl_blog_lists');
         return $this->getAll();
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $list_identifier Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function getListInfo($list_identifier) 
     {
         $this->_changeTable('tbl_blog_lists');
@@ -1011,7 +1310,7 @@ class dbblog extends dbTable
     /**
      * Method to dynamically switch tables
      *
-     * @param string $table
+     * @param  string  $table
      * @return boolean
      * @access private
      */

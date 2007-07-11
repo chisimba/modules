@@ -1,6 +1,12 @@
 <?php
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run']) {
+if (!
+/**
+ * Description for $GLOBALS
+ * @global unknown $GLOBALS['kewl_entry_point_run']
+ * @name   $kewl_entry_point_run
+ */
+$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
@@ -9,21 +15,39 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * Class to handle blog elements
  * This object can be used elsewhere in the system to render certain aspects of the interface
  *
- * @author Paul Scott
+ * @author    Paul Scott
  * @copyright GNU/GPL, AVOIR
- * @package blog
- * @access public
+ * @package   blog
+ * @access    public
  */
 class blogops extends object
 {
+
+    /**
+     * Description for public
+     * @var    mixed 
+     * @access public
+     */
     public $objConfig;
+
+    /**
+     * Description for public
+     * @var    boolean
+     * @access public 
+     */
     public $mail2blog = TRUE;
+
+    /**
+     * Description for public
+     * @var    string
+     * @access public
+     */
     public $showfullname;
     /**
      * Standard init function called by the constructor call of Object
      *
-     * @param void
-     * @return void
+     * @param  void  
+     * @return void  
      * @access public
      */
     public function init() 
@@ -53,6 +77,15 @@ class blogops extends object
         //}
         
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @return string Return description (if any) ...
+     * @access public
+     */
     public function showKML() 
     {
         $kml = $this->getObject('kmlgen', 'simplemap');
@@ -86,6 +119,17 @@ class blogops extends object
             return $str;
         }
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $userid     Parameter description (if any) ...
+     * @param  boolean $featurebox Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function showBroll($userid, $featurebox = FALSE) 
     {
         $this->loadClass('href', 'htmlelements');
@@ -107,6 +151,17 @@ class blogops extends object
             return $str;
         }
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  boolean $featurebox Parameter description (if any) ...
+     * @param  array   $ldata      Parameter description (if any) ...
+     * @return mixed   Return description (if any) ...
+     * @access public 
+     */
     public function editBlinks($featurebox = FALSE, $ldata = NULL) 
     {
         $this->loadClass('href', 'htmlelements');
@@ -257,9 +312,9 @@ class blogops extends object
     /**
      * Method to look up geonames database for lat lon cords of a certain place as a string
      *
-     * @param array $params
-     * @param integer $limit
-     * @return string
+     * @param  array   $params
+     * @param  integer $limit 
+     * @return string 
      */
     public function findGeoTag($params = array() , $limit = '10') 
     {
@@ -291,9 +346,9 @@ class blogops extends object
     /**
      * Method to return a timeline object of a specific users blog posts
      *
-     * @param array $posts
-     * @param integer $userid
-     * @return array
+     * @param  array   $posts 
+     * @param  integer $userid
+     * @return array  
      */
     public function myBlogTimeline($posts, $userid) 
     {
@@ -326,10 +381,10 @@ class blogops extends object
     /**
      * Method to parse the timeline URI data
      *
-     * @param integer $int
-     * @param integer $fdate
-     * @param string $timeline
-     * @return mixed
+     * @param  integer $int     
+     * @param  integer $fdate   
+     * @param  string  $timeline
+     * @return mixed  
      */
     public function parseTimeline($int, $fdate, $timeline) 
     {
@@ -359,7 +414,7 @@ class blogops extends object
     /**
      * Method to create the form used in the geoTag block
      *
-     * @param void
+     * @param  void  
      * @return string
      */
     public function geoTagForm() 
@@ -463,7 +518,7 @@ class blogops extends object
     /**
      * Method to display the login box for prelogin blog operations
      *
-     * @param bool $featurebox
+     * @param  bool   $featurebox
      * @return string
      */
     public function loginBox($featurebox = FALSE) 
@@ -480,8 +535,8 @@ class blogops extends object
     /**
      * Method to output a rss feeds box
      *
-     * @param string $url
-     * @param string $name
+     * @param  string $url 
+     * @param  string $name
      * @return string
      */
     public function rssBox($url, $name) 
@@ -502,6 +557,18 @@ class blogops extends object
         $content.= "</ul>\n";
         return $objFeatureBox->show($head, $content);
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $rssurl Parameter description (if any) ...
+     * @param  string  $name   Parameter description (if any) ...
+     * @param  unknown $feedid Parameter description (if any) ...
+     * @return mixed   Return description (if any) ...
+     * @access public 
+     */
     public function rssRefresh($rssurl, $name, $feedid) 
     {
         //echo $rssurl; die();
@@ -584,6 +651,17 @@ class blogops extends object
         }
         return $objFeatureBox->show($head, $content);
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  boolean $featurebox Parameter description (if any) ...
+     * @param  array   $rdata      Parameter description (if any) ...
+     * @return mixed   Return description (if any) ...
+     * @access public 
+     */
     public function rssEditor($featurebox = FALSE, $rdata = NULL) 
     {
         //print_r($rdata);
@@ -706,7 +784,7 @@ class blogops extends object
      * Method to display a link to all the blogs on the system
      * Setting $featurebox = TRUE will display the link in a block style featurebox
      *
-     * @param bool $featurebox
+     * @param  bool   $featurebox
      * @return string
      */
     public function showBlogsLink($featurebox = FALSE) 
@@ -745,8 +823,8 @@ class blogops extends object
      * Method to build and display the categories menu
      * Setting the optional featurebox parameter to true will display the categories in a featurebox block
      *
-     * @param array $cats
-     * @param bool $featurebox
+     * @param  array  $cats      
+     * @param  bool   $featurebox
      * @return string
      */
     public function showCatsMenu($cats, $featurebox = FALSE, $userid = NULL) 
@@ -834,8 +912,8 @@ class blogops extends object
     /**
      * Method to display a link categories box
      *
-     * @param array $linkcats
-     * @param bool $featurebox
+     * @param  array  $linkcats  
+     * @param  bool   $featurebox
      * @return string
      */
     public function showLinkCats($linkcats, $featurebox = FALSE) 
@@ -871,7 +949,7 @@ class blogops extends object
     /**
      * Method to create a form to import the blog data from a remote
      *
-     * @param bool $featurebox
+     * @param  bool   $featurebox
      * @return string
      */
     public function showImportForm($featurebox = TRUE) 
@@ -932,8 +1010,8 @@ class blogops extends object
     /**
      * Method to show a mail setup form to set the DSN for mail2blog
      *
-     * @param bool $featurebox
-     * @param array $dsnarr
+     * @param  bool   $featurebox
+     * @param  array  $dsnarr    
      * @return string
      */
     public function showMailSetup($featurebox = TRUE, $dsnarr = NULL) 
@@ -1034,7 +1112,7 @@ class blogops extends object
     /**
      * Method to display the link to blog admin on post login
      *
-     * @param bool $featurebox
+     * @param  bool   $featurebox
      * @return string
      */
     public function showAdminSection($featurebox = FALSE, $blogadmin = FALSE, $showOrHide = 'none') 
@@ -1176,7 +1254,7 @@ class blogops extends object
     /**
      * Method to display the posts per user
      *
-     * @param array $posts
+     * @param  array  $posts
      * @return string
      */
     public function showPosts($posts, $showsticky = FALSE) 
@@ -1545,9 +1623,9 @@ class blogops extends object
     /**
      * Method to build and create the feeds options box
      *
-     * @param integer $userid
-     * @param bool $featurebox
-     * @return string
+     * @param      integer $userid    
+     * @param      bool    $featurebox
+     * @return     string 
      * @deprecated - old method
      */
     public function showFeeds($userid, $featurebox = FALSE, $showOrHide = 'none') 
@@ -1652,7 +1730,7 @@ class blogops extends object
      * Method to quickly add a category to the default category (parent = 0)
      * Can take a comma delimited list as an input arg
      *
-     * @param bool $featurebox
+     * @param  bool   $featurebox
      * @return string
      */
     public function quickCats($featurebox = FALSE) 
@@ -1682,9 +1760,9 @@ class blogops extends object
     /**
      * Method to insert the quick add categories to the db
      *
-     * @param string $list
-     * @param integer $userid
-     * @return void
+     * @param  string  $list  
+     * @param  integer $userid
+     * @return void   
      */
     public function quickCatAdd($list = NULL, $userid) 
     {
@@ -1704,9 +1782,9 @@ class blogops extends object
     /**
      * Method to quick add a post to the posts table
      *
-     * @param integer $userid
-     * @param array $postarr
-     * @param string $mode
+     * @param integer $userid 
+     * @param array   $postarr
+     * @param string  $mode   
      */
     public function quickPostAdd($userid, $postarr, $mode = NULL) 
     {
@@ -1727,7 +1805,7 @@ class blogops extends object
     /**
      * Method to scrub grubby html
      *
-     * @param string $document
+     * @param  string $document
      * @return string
      */
     function html2txt($document, $scrub = TRUE) 
@@ -1767,8 +1845,8 @@ class blogops extends object
     /**
      * Method to build and display the full scale category editor
      *
-     * @param integer $userid
-     * @return string
+     * @param  integer $userid
+     * @return string 
      */
     public function categoryEditor($userid) 
     {
@@ -1882,6 +1960,18 @@ class blogops extends object
         $catform = $catform->show();
         return $ctable . "<br />" . $catform;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  array   $catarr Parameter description (if any) ...
+     * @param  unknown $userid Parameter description (if any) ...
+     * @param  unknown $catid  Parameter description (if any) ...
+     * @return object  Return description (if any) ...
+     * @access public 
+     */
     public function catedit($catarr, $userid, $catid) 
     {
         $this->loadClass('label', 'htmlelements');
@@ -1948,8 +2038,8 @@ class blogops extends object
     /**
      * Method to display the posts editor in its entirety
      *
-     * @param integer $userid
-     * @param integer $editid
+     * @param  integer $userid
+     * @param  integer $editid
      * @return boolean
      */
     public function postEditor($userid, $editid = NULL) 
@@ -2150,8 +2240,8 @@ class blogops extends object
     /**
      * Method to get the archiveed posts array for manipulation
      *
-     * @param string $userid
-     * @return array
+     * @param  string  $userid
+     * @return array  
      * @access private
      */
     private function _archiveArr($userid) 
@@ -2189,8 +2279,8 @@ class blogops extends object
     /**
      * Method to produce the archived posts box
      *
-     * @param string $userid
-     * @param objetc $featurebox
+     * @param  string $userid    
+     * @param  objetc $featurebox
      * @return string
      */
     public function archiveBox($userid, $featurebox = FALSE, $showOrHide = 'none') 
@@ -2240,8 +2330,8 @@ class blogops extends object
     /**
      * Method to edit and manage posts
      *
-     * @param integer $userid
-     * @return string
+     * @param  integer $userid
+     * @return string 
      */
     public function managePosts($userid, $month = NULL, $year = NULL) 
     {
@@ -2337,9 +2427,9 @@ class blogops extends object
     /**
      * Method to add a quick post as a blocklet
      *
-     * @param integer $userid
-     * @param bool $featurebox
-     * @return mixed
+     * @param  integer $userid    
+     * @param  bool    $featurebox
+     * @return mixed  
      */
     public function quickPost($userid, $featurebox = FALSE) 
     {
@@ -2393,10 +2483,10 @@ class blogops extends object
      * Method to display the last ten posts as a block
      *
      * @author Megan Watson
-     * @access public
-     * @param integer $num The number of posts to display. Default = 10
-     * @param bool $featurebox Return the posts as a string or formatted in a featurebox. Default = false, return as a string
-     * @return string html
+     * @access public 
+     * @param  integer $num        The number of posts to display. Default = 10
+     * @param  bool    $featurebox Return the posts as a string or formatted in a featurebox. Default = false, return as a string
+     * @return string  html
      */
     public function showLastTenPosts($num = 10, $featurebox = FALSE) 
     {
@@ -2438,7 +2528,7 @@ class blogops extends object
     /**
      * Methid to build a table of all available bloggers on the system
      *
-     * @param array $rec
+     * @param  array  $rec
      * @return string
      */
     public function buildBloggertable($rec) 
@@ -2479,7 +2569,7 @@ class blogops extends object
     /**
      * Date manipulation method for getting posts by month/date
      *
-     * @param mixed selected date $sel_date
+     * @param  mixed selected date $sel_date
      * @return array
      */
     public function retDates($sel_date = NULL) 
@@ -2516,8 +2606,8 @@ class blogops extends object
      * Method to parse the DSN
      *
      * @access public
-     * @param string $dsn
-     * @return void
+     * @param  string $dsn
+     * @return void  
      */
     public function parseDSN($dsn) 
     {
@@ -2576,7 +2666,7 @@ class blogops extends object
     /**
      * Method to retrieve the mail dsn from the config.xml file
      *
-     * @param void
+     * @param  void  
      * @return string
      */
     public function getMailDSN() 
@@ -2594,8 +2684,8 @@ class blogops extends object
     /**
      * Method to build a tag cloud from blog entry tags
      *
-     * @param string $userid
-     * @return array
+     * @param  string $userid
+     * @return array 
      */
     public function blogTagCloud($userid, $showOrHide = 'none') 
     {
@@ -2635,7 +2725,7 @@ class blogops extends object
     /**
      * Method to show the trackbacks in the trackback table to the user on a singleview post display
      *
-     * @param string $pid
+     * @param  string $pid
      * @return string
      */
     public function showTrackbacks($pid) 
@@ -2693,7 +2783,7 @@ class blogops extends object
     /**
      * Method to build the form to send a trackback to another blog
      *
-     * @param array $postinfo
+     * @param  array  $postinfo
      * @return string
      */
     public function sendTrackbackForm($postinfo) 
@@ -2786,6 +2876,16 @@ class blogops extends object
         $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_sendtb", "blog") , $stbform);
         return $ret;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  array   $m2fdata Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function sendMail2FriendForm($m2fdata) 
     {
         $this->objUser = $this->getObject('user', 'security');
@@ -2857,6 +2957,17 @@ class blogops extends object
         $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_sendmail2friend", "blog") , $mform);
         return $ret;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $userid  Parameter description (if any) ...
+     * @param  array   $profile Parameter description (if any) ...
+     * @return object  Return description (if any) ...
+     * @access public 
+     */
     public function profileEditor($userid, $profile = NULL) 
     {
         //print_r($profile);
@@ -2934,6 +3045,16 @@ class blogops extends object
         //return $ret;
         
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  string $userid Parameter description (if any) ...
+     * @return mixed  Return description (if any) ...
+     * @access public
+     */
     public function showProfile($userid) 
     {
         $objFeatureBox = $this->getObject("featurebox", "navigation");
@@ -2980,6 +3101,16 @@ class blogops extends object
             return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewprofile", "blog") , $tllink->show() . "<br />" . $viewmyblog->show());
         }
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  string $userid Parameter description (if any) ...
+     * @return mixed  Return description (if any) ...
+     * @access public
+     */
     public function showFullProfile($userid) 
     {
         if ($this->showfullname == 'FALSE') {
@@ -3032,6 +3163,17 @@ class blogops extends object
             return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog") . " " . $pname, $userimg . "<br />" . $tllink->show() . "<br />" . $viewmyblog->show());
         }
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $userid  Parameter description (if any) ...
+     * @param  array   $profile Parameter description (if any) ...
+     * @return mixed   Return description (if any) ...
+     * @access public 
+     */
     public function displayProfile($userid, $profile) 
     {
         $objFeatureBox = $this->getObject("featurebox", "navigation");
@@ -3073,6 +3215,19 @@ class blogops extends object
         }
         return $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_profileof", "blog") . " " . $namer, $content);
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $userid     Parameter description (if any) ...
+     * @param  array   $check      Parameter description (if any) ...
+     * @param  array   $page       Parameter description (if any) ...
+     * @param  boolean $featurebox Parameter description (if any) ...
+     * @return mixed   Return description (if any) ...
+     * @access public 
+     */
     public function pageEditor($userid, $check = NULL, $page = NULL, $featurebox = FALSE) 
     {
         //start a form object
@@ -3182,6 +3337,17 @@ class blogops extends object
         //return $pform;
         
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $userid     Parameter description (if any) ...
+     * @param  boolean $featurebox Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function showPages($userid, $featurebox = FALSE) 
     {
         $this->loadClass('href', 'htmlelements');
@@ -3207,6 +3373,15 @@ class blogops extends object
             return $str;
         }
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @return void  
+     * @access public
+     */
     public function mail2blog() 
     {
         //grab the DSN from the config file
@@ -3447,6 +3622,15 @@ class blogops extends object
             customException::cleanUp();
         }
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @return void  
+     * @access public
+     */
     public function listmail2blog() 
     {
         //grab the DSN from the config file
@@ -3687,6 +3871,16 @@ class blogops extends object
             customException::cleanUp();
         }
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $userid Parameter description (if any) ...
+     * @return void   
+     * @access public 
+     */
     public function pingGoogle($userid) 
     {
         $objBk = $this->getObject('background', 'utilities');
@@ -3745,11 +3939,31 @@ class blogops extends object
                 break;
         }
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $term Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function quickSearch($term) 
     {
         $ret = $this->objDbBlog->quickSearch($term);
         return $ret;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  boolean $featurebox Parameter description (if any) ...
+     * @return mixed   Return description (if any) ...
+     * @access public 
+     */
     public function searchBox($featurebox = TRUE) 
     {
         $this->loadClass('textinput', 'htmlelements');
@@ -3773,6 +3987,16 @@ class blogops extends object
             return $ret;
         }
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  array  $searchres Parameter description (if any) ...
+     * @return string Return description (if any) ...
+     * @access public
+     */
     public function displaySearchResults($searchres) 
     {
         $res = NULL;
@@ -3812,6 +4036,17 @@ class blogops extends object
         }
         return $res;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $o_file Parameter description (if any) ...
+     * @param  number  $t_ht   Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public 
+     */
     public function makeThumbnail($o_file, $t_ht = 150) 
     {
         $image_info = getImageSize($o_file); // see EXIF for faster way
