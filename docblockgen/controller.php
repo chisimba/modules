@@ -4,6 +4,8 @@ if (!$GLOBALS['kewl_entry_point_run'])
 {
 	die("You cannot view this page directly");
 }
+
+ini_set("max_execution_time", -1);
 // end security check
 
 /**
