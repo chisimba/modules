@@ -182,7 +182,7 @@ class utils extends object
 
 		$leftSideColumn .= $objBlocks->showBlock('latestpodcast', 'podcast');
 
-		//$leftSideColumn .= $objBlocks->showBlock('chat', 'chat');
+		$leftSideColumn .= $objBlocks->showBlock('contextchat', 'messaging');
 		/*
 		$leftSideColumn .= $objBlocks->showBlock('loginstats', 'context');
 		//Add guestbook block
@@ -293,11 +293,7 @@ class utils extends object
 	     $rightSideColumn = "";
 	     $objBlocks = $this->newObject('blocks', 'blocks');
 	     
-	    // Add postlogin stories
-        if($this->_objModules->checkIfRegistered('stories')){
-            $objStories = $this->getObject('sitestories','stories');
-            $rightSideColumn .= $objStories->fetchCategory('postlogin');
-        }
+	    
 	     
 		//Add the getting help block
 		$rightSideColumn .= $objBlocks->showBlock('dictionary', 'dictionary');
@@ -320,6 +316,20 @@ class utils extends object
 		return $rightSideColumn;
 	  } 
 	  
+	  
+	  public function getStories()
+	  {
+			// Add postlogin stories
+	        if($this->_objModules->checkIfRegistered('stories')){
+	            $objStories = $this->getObject('sitestories','stories');
+	            return $objStories->fetchCategory('postlogin');
+	        }	
+			else 
+			{
+				return '';
+			}
+			  
+		}
 	  
 	  /**
 	   * Method to get the Lectures for a course

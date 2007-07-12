@@ -49,7 +49,7 @@ class contextpostlogin extends controller
 	            $this->setVar('contextList', $this->_objUtils->getContextList());
 	            $this->setVar('otherCourses', $this->_objUtils->getOtherContextList($this->_objUtils->getContextList(),$filter));
 	            $this->setVar('filter', $this->_objUtils->getFilterList($this->_objUtils->getContextList()));
-                $Stories = $this->_objUtils->getRightContent();
+                $Stories = $this->_objUtils->getStories();
                 $this->setVar('Stories', $Stories);
 	            return 'main_tpl.php';
 	      }
