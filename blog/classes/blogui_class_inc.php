@@ -109,6 +109,12 @@ class blogui extends object
      * @access public
      */
     public $objUser;
+    
+    /**
+     * YAML object
+     * @var object YAML
+     */
+    public $objYaml;
 
     /**
      * Standard init function
@@ -137,6 +143,10 @@ class blogui extends object
         $this->rightCol = NULL;
         // middle column
         $this->middleCol = NULL;
+        //YAML configs
+        $this->objYaml = $this->getObject('yaml', 'utilities');
+        $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objUser = $this->getObject('user', 'security');
     }
 
     /**
@@ -149,6 +159,7 @@ class blogui extends object
      */
     public function myblog() 
     {
+    	
     }
 
     /**
@@ -176,30 +187,98 @@ class blogui extends object
      * @return string  Return string
      * @access public 
      */
-    public function leftBlocks($userid) 
+    public function leftBlocks($userid, $cats = NULL) 
     {
-        $leftMenu = $this->newObject('usermenu', 'toolbar');
+    	$config = $this->doConfig($userid);
+    	if(isset($config[0]['leftblocks']))
+    	{
+    		$config = $config[0]['leftblocks'];
+    	}
+    	else {
+    		$config = array();
+    		return NULL;
+    	}
+    	
+    	$leftMenu = $this->newObject('usermenu', 'toolbar');
         // init the variable
         $leftCol = NULL;
         // get all the left column blocks
         if ($this->objUser->isLoggedIn()) {
             $guestid = $this->objUser->userId();
             if ($guestid == $userid) {
-                $leftCol.= $leftMenu->show();
-                $leftCol.= $this->objblogOps->showProfile($userid);
+            	if(in_array('usermenu', $config))
+            	{
+                	$leftCol.= $leftMenu->show();
+            	}
+            	if(in_array('profiles', $config))
+            	{
+                	$leftCol.= $this->objblogOps->showProfile($userid);
+            	}
             } else {
-                $leftCol.= $this->objblogOps->showFullProfile($userid);
+            	if(in_array('profiles', $config))
+            	{
+                	$leftCol.= $this->objblogOps->showFullProfile($userid);
+            	}
             }
-            $leftCol.= $this->objblogOps->showAdminSection(TRUE);
+            if(in_array('adminsection', $config))
+            {
+            	$leftCol.= $this->objblogOps->showAdminSection(TRUE);
+            }
+            if(in_array('quickcats', $config))
+            {
+            	$leftCol.= $this->objblogOps->quickCats(TRUE);
+            }
+            if(in_array('quickpost', $config))
+            {
+            	$leftCol .= $this->objblogOps->quickPost($userid, TRUE);
+            }
         } else {
-            $leftCol = $this->objblogOps->loginBox(TRUE);
-            $leftCol.= $this->objblogOps->showFullProfile($userid);
+        	if(in_array('loginbox', $config))
+        	{
+        		$leftCol.= $this->objblogOps->loginBox(TRUE);
+        	}
+        	if(in_array('profiles', $config))
+        	{
+        		$leftCol.= $this->objblogOps->showFullProfile($userid);
+        	}
         }
-        //show the feeds section
-        $leftCol.= $this->objblogOps->showFeeds($userid, TRUE);
-        $leftCol.= $this->objblogOps->showBlinks($userid, TRUE);
-        $leftCol.= $this->objblogOps->showBroll($userid, TRUE);
-        $leftCol.= $this->objblogOps->showPages($userid, TRUE);
+        if(in_array('feeds', $config))
+        {
+        	$leftCol.= $this->objblogOps->showFeeds($userid, TRUE);
+        }
+        if(in_array('bloglinks', $config))
+        {
+        	$leftCol.= $this->objblogOps->showBlinks($userid, TRUE);
+        }
+        if(in_array('blogroll', $config))
+        {
+        	$leftCol.= $this->objblogOps->showBroll($userid, TRUE);
+        }
+        if(in_array('blogpages', $config))
+        {
+        	$leftCol.= $this->objblogOps->showPages($userid, TRUE);
+        }
+        if(in_array('blogslink', $config))
+        {
+        	$leftCol.= $this->objblogOps->showBlogsLink(TRUE);
+        }
+        if(in_array('archivebox', $config))
+        {
+        	$leftCol.= $this->objblogOps->archiveBox($userid, TRUE);
+        }   
+        if(in_array('blogtagcloud', $config))
+        {
+        	$leftCol.= $this->objblogOps->blogTagCloud($userid);
+        }        
+        if(in_array('catsmenu', $config))
+        {
+        	$leftCol.= $this->objblogOps->showCatsMenu($cats, TRUE, $userid);
+        }
+        if(in_array('searchbox', $config))
+        {
+        	$leftCol.= $this->objblogOps->searchBox();
+        }
+             
         return $leftCol;
     }
 
@@ -215,18 +294,147 @@ class blogui extends object
      */
     public function rightBlocks($userid, $cats = NULL) 
     {
-        $rightSideColumn = NULL;
-        $rightSideColumn.= $this->objblogOps->showBlogsLink(TRUE);
-        $rightSideColumn.= $this->objblogOps->archiveBox($userid, TRUE);
-        $rightSideColumn.= $this->objblogOps->blogTagCloud($userid);
-        $rightSideColumn.= $this->objblogOps->showCatsMenu($cats, TRUE, $userid);
-        $rightSideColumn.= $this->objblogOps->searchBox();
+    	$config = $this->doConfig($userid);
+    	if(isset($config[0]['rightblocks']))
+    	{
+    		$config = $config[0]['rightblocks'];
+    	}
+    	else {
+    		$config = array();
+    		return NULL;
+    	}
+    	
+    	$leftMenu = $this->newObject('usermenu', 'toolbar');
+        // init the variable
+        $rightCol = NULL;
+        // get all the left column blocks
         if ($this->objUser->isLoggedIn()) {
-            $rightSideColumn.= $this->objblogOps->quickCats(TRUE);
-            //$rightSideColumn .= $this->objblogOps->quickPost($userid, TRUE);
-            
+            $guestid = $this->objUser->userId();
+            if ($guestid == $userid) {
+            	if(in_array('usermenu', $config))
+            	{
+                	$rightCol.= $leftMenu->show();
+            	}
+            	if(in_array('profiles', $config))
+            	{
+                	$rightCol.= $this->objblogOps->showProfile($userid);
+            	}
+            } else {
+            	if(in_array('profiles', $config))
+            	{
+                	$rightCol.= $this->objblogOps->showFullProfile($userid);
+            	}
+            }
+            if(in_array('adminsection', $config))
+            {
+            	$rightCol.= $this->objblogOps->showAdminSection(TRUE);
+            }
+            if(in_array('quickcats', $config))
+            {
+            	$rightCol.= $this->objblogOps->quickCats(TRUE);
+            }
+            if(in_array('quickpost', $config))
+            {
+            	$rightCol .= $this->objblogOps->quickPost($userid, TRUE);
+            }
+        } else {
+        	if(in_array('loginbox', $config))
+        	{
+        		$rightCol.= $this->objblogOps->loginBox(TRUE);
+        	}
+        	if(in_array('profiles', $config))
+        	{
+        		$rightCol.= $this->objblogOps->showFullProfile($userid);
+        	}
         }
-        return $rightSideColumn;
+        if(in_array('feeds', $config))
+        {
+        	$rightCol.= $this->objblogOps->showFeeds($userid, TRUE);
+        }
+        if(in_array('bloglinks', $config))
+        {
+        	$rightCol.= $this->objblogOps->showBlinks($userid, TRUE);
+        }
+        if(in_array('blogroll', $config))
+        {
+        	$rightCol.= $this->objblogOps->showBroll($userid, TRUE);
+        }
+        if(in_array('blogpages', $config))
+        {
+        	$rightCol.= $this->objblogOps->showPages($userid, TRUE);
+        }
+        if(in_array('blogslink', $config))
+        {
+        	$rightCol.= $this->objblogOps->showBlogsLink(TRUE);
+        }
+        if(in_array('archivebox', $config))
+        {
+        	$rightCol.= $this->objblogOps->archiveBox($userid, TRUE);
+        }   
+        if(in_array('blogtagcloud', $config))
+        {
+        	$rightCol.= $this->objblogOps->blogTagCloud($userid);
+        }        
+        if(in_array('catsmenu', $config))
+        {
+        	$rightCol.= $this->objblogOps->showCatsMenu($cats, TRUE, $userid);
+        }
+        if(in_array('searchbox', $config))
+        {
+        	$rightCol.= $this->objblogOps->searchBox();
+        }
+             
+        return $rightCol;
+    }
+    
+    public function doConfig($userid)
+    {
+    	// read the YAML config to see what this user wants
+    	$yamlfile = $this->objConfig->getcontentBasePath().'users/'.$userid.'/blogconfig.yaml';
+    	$conf = $this->objYaml->parseYaml($yamlfile);
+    	if(empty($conf))
+    	{
+    		// load defaults
+    		$defaults[] = array('leftblocks' => array(
+    							'usermenu', 
+    							'profiles', 
+    							'adminsection', 
+    							'loginbox', 
+    							'feeds', 
+    							'bloglinks', 
+    							'blogroll', 
+    							'blogpages'
+    							), 
+    						  'rightblocks' => array(
+    							'blogslink',
+    							'archivebox',
+    							'blogtagcloud',
+    							'catsmenu',
+    							'searchbox',
+    							'quickcats',
+    							'quickpost',
+    							),
+    						);
+    		
+    		// write the defaults to the file
+    		$yaml = $this->objYaml->saveYaml($defaults);
+    		$filename = $yamlfile;
+    		if (!$handle = fopen($filename, 'wb')) 
+    		{
+         		throw new customException($this->objLanguage->languageText("mod_blog_nowriteyamlfile", "blog"));
+         		exit;
+    		}
+			if (fwrite($handle, $yaml) === FALSE) {
+        		throw new customException($this->objLanguage->languageText("mod_blog_nowriteyamlfile", "blog"));
+        		exit;
+    		}
+    		fclose($handle);
+    		
+    		return $this->objYaml->parseYaml($yaml);
+    	}
+    	else {
+    		return $conf;
+    	}
     }
 }
 ?>

@@ -178,6 +178,13 @@ class blog extends controller
      * @return string
      * @access public
      */
+    /**
+     * YAML object
+     *
+     * @var object
+     */
+    public $objYaml;
+    
     public function init() 
     {
         try {
@@ -225,6 +232,8 @@ class blog extends controller
             $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             //$this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             $this->showfullname = $this->objSysConfig->getValue('show_fullname', 'blog');
+            //load up the YAML config object
+            $this->objYaml = $this->getObject('yaml', 'utilities');
         }
         catch(customException $e) {
             //oops, something not there - bail out
