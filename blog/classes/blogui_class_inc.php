@@ -189,7 +189,11 @@ class blogui extends object
      */
     public function leftBlocks($userid, $cats = NULL) 
     {
-    	$config = $this->doConfig($userid);
+    	$this->config = $this->doConfig($userid);
+    	$leftMenu = $this->newObject('usermenu', 'toolbar');
+    	// init the variable
+        $leftCol = NULL;
+    	$config = $this->config;
     	if(isset($config[0]['leftblocks']))
     	{
     		$config = $config[0]['leftblocks'];
@@ -198,87 +202,74 @@ class blogui extends object
     		$config = array();
     		return NULL;
     	}
-    	
-    	$leftMenu = $this->newObject('usermenu', 'toolbar');
-        // init the variable
-        $leftCol = NULL;
-        // get all the left column blocks
-        if ($this->objUser->isLoggedIn()) {
-            $guestid = $this->objUser->userId();
-            if ($guestid == $userid) {
-            	if(in_array('usermenu', $config))
-            	{
-                	$leftCol.= $leftMenu->show();
-            	}
-            	if(in_array('profiles', $config))
-            	{
-                	$leftCol.= $this->objblogOps->showProfile($userid);
-            	}
-            } else {
-            	if(in_array('profiles', $config))
-            	{
-                	$leftCol.= $this->objblogOps->showFullProfile($userid);
-            	}
-            }
-            if(in_array('adminsection', $config))
-            {
-            	$leftCol.= $this->objblogOps->showAdminSection(TRUE);
-            }
-            if(in_array('quickcats', $config))
-            {
-            	$leftCol.= $this->objblogOps->quickCats(TRUE);
-            }
-            if(in_array('quickpost', $config))
-            {
-            	$leftCol .= $this->objblogOps->quickPost($userid, TRUE);
-            }
-        } else {
-        	if(in_array('loginbox', $config))
-        	{
-        		$leftCol.= $this->objblogOps->loginBox(TRUE);
-        	}
-        	if(in_array('profiles', $config))
-        	{
-        		$leftCol.= $this->objblogOps->showFullProfile($userid);
-        	}
-        }
-        if(in_array('feeds', $config))
-        {
-        	$leftCol.= $this->objblogOps->showFeeds($userid, TRUE);
-        }
-        if(in_array('bloglinks', $config))
-        {
-        	$leftCol.= $this->objblogOps->showBlinks($userid, TRUE);
-        }
-        if(in_array('blogroll', $config))
-        {
-        	$leftCol.= $this->objblogOps->showBroll($userid, TRUE);
-        }
-        if(in_array('blogpages', $config))
-        {
-        	$leftCol.= $this->objblogOps->showPages($userid, TRUE);
-        }
-        if(in_array('blogslink', $config))
-        {
-        	$leftCol.= $this->objblogOps->showBlogsLink(TRUE);
-        }
-        if(in_array('archivebox', $config))
-        {
-        	$leftCol.= $this->objblogOps->archiveBox($userid, TRUE);
-        }   
-        if(in_array('blogtagcloud', $config))
-        {
-        	$leftCol.= $this->objblogOps->blogTagCloud($userid);
-        }        
-        if(in_array('catsmenu', $config))
-        {
-        	$leftCol.= $this->objblogOps->showCatsMenu($cats, TRUE, $userid);
-        }
-        if(in_array('searchbox', $config))
-        {
-        	$leftCol.= $this->objblogOps->searchBox();
-        }
-             
+    	foreach($config as $plugins)
+    	{
+    		//echo $plugins."<br />";
+    		switch ($plugins) {
+    			case 'usermenu':
+    				if ($this->objUser->isLoggedIn()) {
+        			    	$leftCol.= $leftMenu->show();
+            		}
+    				break;
+    			case 'profiles':
+    				if ($this->objUser->isLoggedIn()) {
+    					$guestid = $this->objUser->userId();
+            			if ($guestid == $userid) {
+            					$leftCol.= $this->objblogOps->showProfile($userid);
+            				}
+    				} else {
+            					$leftCol.= $this->objblogOps->showFullProfile($userid);
+            				}
+    				break;
+    			case 'adminsection':
+    				if ($this->objUser->isLoggedIn()) {
+    					$leftCol.= $this->objblogOps->showAdminSection(TRUE);
+    				}
+    				break;
+    			case 'quickcats':
+    				if ($this->objUser->isLoggedIn()) {
+    					$leftCol.= $this->objblogOps->quickCats(TRUE);
+    				}
+    				break;
+    			case 'quickpost':
+    				if ($this->objUser->isLoggedIn()) {
+    					$leftCol.= $this->objblogOps->quickPost($userid, TRUE);
+    				}
+    				break;
+    			case 'loginbox':
+    				if (!$this->objUser->isLoggedIn()) {
+    					$leftCol.= $this->objblogOps->loginBox(TRUE);
+    				}
+    				break;
+    			case 'feeds':
+    				$leftCol.= $this->objblogOps->showFeeds($userid, TRUE);
+    				break;
+    			case 'bloglinks':
+    				$leftCol.= $this->objblogOps->showBlinks($userid, TRUE);
+    				break;
+    			case 'blogroll':
+    				$leftCol.= $this->objblogOps->showBroll($userid, TRUE);
+    				break;
+    			case 'blogpages':
+    				$leftCol.= $this->objblogOps->showPages($userid, TRUE);
+    				break;
+    			case 'blogslink':
+    				$leftCol.= $this->objblogOps->showBlogsLink(TRUE);
+    				break;
+    			case 'archivebox':
+    				$leftCol.= $this->objblogOps->archiveBox($userid, TRUE);
+    				break;
+    			case 'blogtagcloud':
+    				$leftCol.= $this->objblogOps->blogTagCloud($userid);
+    				break;
+    			case 'catsmenu':
+    				$leftCol.= $this->objblogOps->showCatsMenu($cats, TRUE, $userid);
+    				break;
+    			case 'searchbox':
+    				$leftCol.= $this->objblogOps->searchBox();
+    				break;
+    		}
+    	}    
         return $leftCol;
     }
 
@@ -294,7 +285,8 @@ class blogui extends object
      */
     public function rightBlocks($userid, $cats = NULL) 
     {
-    	$config = $this->doConfig($userid);
+    	$config = NULL;
+    	$config = $this->config;
     	if(isset($config[0]['rightblocks']))
     	{
     		$config = $config[0]['rightblocks'];
@@ -307,6 +299,76 @@ class blogui extends object
     	$leftMenu = $this->newObject('usermenu', 'toolbar');
         // init the variable
         $rightCol = NULL;
+        
+        foreach($config as $plugins)
+    	{
+    		//echo $plugins."<br />";
+    		switch ($plugins) {
+    			case 'usermenu':
+    				if ($this->objUser->isLoggedIn()) {
+        			    	$rightCol.= $leftMenu->show();
+            		}
+    				break;
+    			case 'profiles':
+    				if ($this->objUser->isLoggedIn()) {
+    					$guestid = $this->objUser->userId();
+            			if ($guestid == $userid) {
+            					$rightCol.= $this->objblogOps->showProfile($userid);
+            				}
+    				} else {
+            					$rightCol.= $this->objblogOps->showFullProfile($userid);
+            				}
+    				break;
+    			case 'adminsection':
+    				if ($this->objUser->isLoggedIn()) {
+    					$rightCol.= $this->objblogOps->showAdminSection(TRUE);
+    				}
+    				break;
+    			case 'quickcats':
+    				if ($this->objUser->isLoggedIn()) {
+    					$rightCol.= $this->objblogOps->quickCats(TRUE);
+    				}
+    				break;
+    			case 'quickpost':
+    				if ($this->objUser->isLoggedIn()) {
+    					$rightCol.= $this->objblogOps->quickPost($userid, TRUE);
+    				}
+    				break;
+    			case 'loginbox':
+    				if (!$this->objUser->isLoggedIn()) {
+    					$rightCol.= $this->objblogOps->loginBox(TRUE);
+    				}
+    				break;
+    			case 'feeds':
+    				$rightCol.= $this->objblogOps->showFeeds($userid, TRUE);
+    				break;
+    			case 'bloglinks':
+    				$rightCol.= $this->objblogOps->showBlinks($userid, TRUE);
+    				break;
+    			case 'blogroll':
+    				$rightCol.= $this->objblogOps->showBroll($userid, TRUE);
+    				break;
+    			case 'blogpages':
+    				$rightCol.= $this->objblogOps->showPages($userid, TRUE);
+    				break;
+    			case 'blogslink':
+    				$rightCol.= $this->objblogOps->showBlogsLink(TRUE);
+    				break;
+    			case 'archivebox':
+    				$rightCol.= $this->objblogOps->archiveBox($userid, TRUE);
+    				break;
+    			case 'blogtagcloud':
+    				$rightCol.= $this->objblogOps->blogTagCloud($userid);
+    				break;
+    			case 'catsmenu':
+    				$rightCol.= $this->objblogOps->showCatsMenu($cats, TRUE, $userid);
+    				break;
+    			case 'searchbox':
+    				$rightCol.= $this->objblogOps->searchBox();
+    				break;
+    		}
+    	}    
+    	/*
         // get all the left column blocks
         if ($this->objUser->isLoggedIn()) {
             $guestid = $this->objUser->userId();
@@ -383,12 +445,13 @@ class blogui extends object
         {
         	$rightCol.= $this->objblogOps->searchBox();
         }
-             
+          */   
         return $rightCol;
     }
     
     public function doConfig($userid)
     {
+    	$conf = NULL;
     	// read the YAML config to see what this user wants
     	$yamlfile = $this->objConfig->getcontentBasePath().'users/'.$userid.'/blogconfig.yaml';
     	$conf = $this->objYaml->parseYaml($yamlfile);
