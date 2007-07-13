@@ -589,7 +589,7 @@ class dbwiki extends dbTable
     public function deletePage($name)
     {
         $this->_setPages();
-        $this->getPagesByName($name);
+        $data = $this->getPagesByName($name);
         foreach($data as $line){
             $this->update('id', $line['id'], array(
                 'page_status' => 6,
@@ -667,8 +667,8 @@ class dbwiki extends dbTable
         }
 
         $pageToReinstate = $this->getPage($name, $version);
-        $temp = array_pop($pageToRestore);
-        $temp = array_shift($pageToRestore);
+        $temp = array_pop($pageToReinstate);
+        $temp = array_shift($pageToReinstate);
         $pageToReinstate['wiki_id'] = $this->wikiId;
         $pageToReinstate['page_version'] = $this->getVersion($name);
         $pageToReinstate['version_comment'] = $reinstateLabel;
