@@ -2,7 +2,7 @@
 <updates>
 	<update>
 		<table>tbl_contextcontent_order</table>
-		<version>0.6</version>
+		<version>1.0</version>
 		<description>Added a field for navigation visibility</description>
 		<data>
 			<add>
@@ -14,7 +14,7 @@
 	</update>
 	<update>
 		<table>tbl_contextcontent_order</table>
-		<version>0.5</version>
+		<version>1.0</version>
 		<description>Added a field for navigation manipulation</description>
 		<data>
 			<add>
