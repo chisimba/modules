@@ -142,7 +142,7 @@ class db_contextcontent_order extends dbtable
     */
     public function getContextPages($context, $chapter='')
     {
-        $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.parentid, tbl_contextcontent_pages.menutitle, lft, rght, tbl_contextcontent_order.bookmark, tbl_contextcontent_order.isbookmark FROM tbl_contextcontent_order 
+        $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.parentid, tbl_contextcontent_pages.menutitle, lft, rght, tbl_contextcontent_order.bookmark, tbl_contextcontent_order.isbookmarked FROM tbl_contextcontent_order 
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
         INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id) 
         WHERE tbl_contextcontent_order.contextcode= \''.$context.'\'  ';
@@ -233,7 +233,7 @@ class db_contextcontent_order extends dbtable
             $node =& new treenode ($nodeDetails);
             $nodeArray[$treeItem['id']] =& $node;
             
-		if($treeItem['isbookmark'] == 'Y'){
+		if($treeItem['isbookmarked'] == 'Y'){
             if ($treeItem['parentid'] == 'root') {
                 $treeMenu->addItem($node);
             } else {
@@ -276,7 +276,7 @@ class db_contextcontent_order extends dbtable
             $node =& new treenode ($nodeDetails);
             $nodeArray[$treeItem['id']] =& $node;
             
-		if($treeItem['isbookmark'] == 'Y'){
+		if($treeItem['isbookmarked'] == 'Y'){
             if ($treeItem['parentid'] == 'root') {
                 $treeMenu->addItem($node);
             } else {
@@ -321,7 +321,7 @@ class db_contextcontent_order extends dbtable
             $node =& new treenode ($nodeDetails);
             $nodeArray[$treeItem['id']] =& $node;
             //var_dump($treeItem);die;
-		if($treeItem['isbookmark'] == 'Y'){
+		if($treeItem['isbookmarked'] == 'Y'){
             if ($treeItem['parentid'] == 'root') {
                 	$rootnode->addItem($node);
             } else {
@@ -385,7 +385,7 @@ class db_contextcontent_order extends dbtable
                 'creatorid' => $this->objUser->userId(),
                 'datecreated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
 		'bookmark' => $bookmark,
-		'isbookmark' => $isBookmark
+		'isbookmarked' => $isBookmark
             ));
         
         // Extra Step to Prevent Null Values
@@ -876,7 +876,7 @@ class db_contextcontent_order extends dbtable
 				}
 				
 				// Add to Menu
-				if($treeItem['isbookmark'] == 'Y')
+				if($treeItem['isbookmarked'] == 'Y')
 					$treeMenu->addItem($node);
 			}
 			
@@ -961,7 +961,7 @@ class db_contextcontent_order extends dbtable
 	
 	function getPages($chapter, $contextCode, $where='', $order='lft')
 	{
-	$sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.chapterid, tbl_contextcontent_order.parentid, tbl_contextcontent_pages.menutitle, lft, rght, tbl_contextcontent_pages.id as pageid, tbl_contextcontent_order.titleid, tbl_contextcontent_order.bookmark, tbl_contextcontent_order.isbookmark
+	$sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.chapterid, tbl_contextcontent_order.parentid, tbl_contextcontent_pages.menutitle, lft, rght, tbl_contextcontent_pages.id as pageid, tbl_contextcontent_order.titleid, tbl_contextcontent_order.bookmark, tbl_contextcontent_order.isbookmarked
         FROM tbl_contextcontent_order 
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
         INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id AND original=\'Y\') 

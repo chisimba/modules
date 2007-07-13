@@ -74,7 +74,7 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32,
 		),
-    'isbookmark' => array(
+    'isbookmarked' => array(
 		'type' => 'text',
 		'length' => 32,
 		)
