@@ -67,6 +67,7 @@ if ($this->isValid('movepageup')) {
 
 
 $table = $this->newObject('htmltable', 'htmlelements');
+$table->border='1';
 $table->startRow();
 $table->addCell($prevPage, '33%', 'top');
 $table->addCell($middle, '33%', 'top', 'center');
@@ -74,6 +75,7 @@ $table->addCell($nextPage, '33%', 'top', 'right');
 $table->endRow();
 
 $topTable = $this->newObject('htmltable', 'htmlelements');
+$topTable->border='1';
 $topTable->startRow();
 $topTable->addCell($prevPage, '50%', 'top');
 $topTable->addCell($nextPage, '50%', 'top', 'right');
@@ -99,11 +101,11 @@ if (trim($page['headerscripts']) != '') {
 
 echo $topTable->show();
 
-$tab = $this->getObject('tabpane','htmlelements');
-$tab->addTab(array('name'=>$page['menutitle'],'url'=>'http://localhost','content'=>$page['pagecontent']));
-echo $tab->show();
-//$objWashout = $this->getObject('washout', 'utilities');
-//echo $objWashout->parseText($page['pagecontent']);
+//$tab = $this->getObject('tabpane','htmlelements');
+//$tab->addTab(array('name'=>$page['menutitle'],'url'=>'http://localhost','content'=>$page['pagecontent']));
+//echo $tab->show();
+$objWashout = $this->getObject('washout', 'utilities');
+echo $objWashout->parseText($page['pagecontent']);
 
 
 echo '<hr />';
