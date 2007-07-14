@@ -277,10 +277,12 @@ class simplebuildmap extends object
     	$incompat = $this->objLanguage->languageText("mod_simplemap_incompatible", "simplemap");
 		//Valid types are G_NORMAL_MAP, G_SATELLITE_MAP, G_HYBRID_MAP
 		$gMapType = $this->getParam("maptype", NULL);
-		if ($gMapType !== NULL) {
-			$gMapType = ",{mapTypes:[" . $gMapType . "]}";
+		if ($gMapType !== "" && $gMapType !==NULL) {
+			$gMapType = $gMapType;
+            //die($gMapType);
+		} else {
+		    $gMapType = "G_NORMAL_MAP";
 		}
-		
     	$ret .="
             <script type=\"text/javascript\">\n
     		//<![CDATA[\n
@@ -290,17 +292,17 @@ class simplebuildmap extends object
 		      // Each instance of the function preserves the contents of a different instance\n
 		      // of the \"marker\" and \"html\" variables which will be needed later when the event triggers. \n   
 		      function createMarker(point,html) {\n
-		        var marker = new GMarker(point);\
+		        var marker = new GMarker(point);\n
 		        GEvent.addListener(marker, \"click\", function() {\n
 		          marker.openInfoWindowHtml(html);\n
 		        });\n
 		        return marker;\n
 		      }
 		      // Display the map, with some controls and set the initial location 
-		      var map = new GMap2(document.getElementById(\"map\")$gMapType);
-		      $this->getZoomControl()
+		      var map = new GMap2(document.getElementById(\"map\"));
+		      //$this->getZoomControl()
 		      map.addControl(new GMapTypeControl());
-		      map.setCenter(new GLatLng($lat,$long),$mag);
+		      map.setCenter(new GLatLng($lat,$long),$mag,$gMapType);
       
 			  [[SMAP_INSERT_HERE]]
    
@@ -333,10 +335,11 @@ class simplebuildmap extends object
     	$incompat = $this->objLanguage->languageText("mod_simplemap_incompatible", "simplemap");
 		//Valid types are G_NORMAL_MAP, G_SATELLITE_MAP, G_HYBRID_MAP
 		$gMapType = $this->getParam("maptype", NULL);
-		if ($gMapType !== NULL) {
-			$gMapType = ",{mapTypes:[" . $gMapType . "]}";
-		}
-		
+		if ($gMapType !== "" && $gMapType !==NULL) {
+			$gMapType = $gMapType;
+        } else {
+            $gMapType = "G_NORMAL_MAP";
+        }
     	$ret .="
             <script type=\"text/javascript\">
     		//<![CDATA[
@@ -348,9 +351,9 @@ class simplebuildmap extends object
 			var geoXml = new GGeoXml(\"$this->smap\");
 			function load() {
   			    if (GBrowserIsCompatible()) {
-				    map = new GMap2(document.getElementById(\"map\")$gMapType);
-				    $this->getZoomControl()
-	    		 	map.setCenter(new GLatLng($lat,$long),$mag); 
+				    map = new GMap2(document.getElementById(\"map\"));
+				    //$this->getZoomControl()
+	    		 	map.setCenter(new GLatLng($lat,$long),$mag,$gMapType); 
 				    map.addControl(new GLargeMapControl());
 				    map.addOverlay(geoXml);
 			    } else {
@@ -394,7 +397,7 @@ class simplebuildmap extends object
     			$ret = "map.addControl(new GLargeMapControl());";
     			break;
     		default:
-    			$ret = "";
+    			$ret = NULL;
     	}
     	return $ret; 
     }
