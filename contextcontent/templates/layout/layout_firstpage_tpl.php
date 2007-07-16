@@ -1,9 +1,11 @@
 <?php
 
+
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
+
 $content = '<fieldset>
 <legend>Search for: </legend>
 <form id="form1" name="form1" method="post" action="">
@@ -31,8 +33,21 @@ foreach ($chapters as $chapter)
 
 $content .= '</ol>';
 
-$cssLayout->setLeftColumnContent($content);
+$objDBContext = $this->getObject('dbcontext', 'context');
+
+if($objDBContext->isInContext())
+{
+    $objContextUtils = & $this->getObject('utilities','context');
+    $cm = $objContextUtils->getHiddenContextMenu('eventscalendar','show');
+} else {
+    $cm = '';
+}
+
+$cssLayout->setLeftColumnContent($content.$cm);
+
 $cssLayout->setMiddleColumnContent($this->getContent());
+
 echo $cssLayout->show();
+
 
 ?>
