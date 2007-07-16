@@ -609,7 +609,17 @@ class foafops extends object
             );
         }
     }
-    /**
+   
+
+
+   
+ 
+
+
+
+
+
+ /**
      * Method to create the friends featurebox
      *
      * @param object $pals
@@ -697,7 +707,11 @@ class foafops extends object
             $pftype
         );
     }
-    /**
+
+
+
+
+ /**
      * Method to add a form to add an organization
      *
      * @param void
@@ -769,5 +783,89 @@ class foafops extends object
             return $myOrgRemForm->show();
         }
     }
+
+
+
+
+ /**
+     * Method to create a form for adding funders
+     *
+     * @param void
+     * @return string
+     */
+    public function addFunderForm() 
+    {
+        $funderForm = new form('funderform', $this->uri(array(
+            'action' => 'updatefunders'
+        )));
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->setLegend($this->objLanguage->languageText('mod_foaf_addfunder', 'foaf'));
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cellpadding = 5;
+        //$table->startRow();
+       // $labelname = new label($this->objLanguage->languageText('mod_foaf_fundername', 'foaf') .':', 'input_fname');
+       // $fname = new textinput('fname');
+        //$table->addCell($labelname->show() , 150, NULL, 'right'); //label
+        //$table->addCell($fname->show()); 
+        //$table->endRow();
+        $table->startRow();
+        $labelpage = new label($this->objLanguage->languageText('mod_foaf_funderpage', 'foaf') .':', 'input_fpage');
+        $funderpage = new textinput('fpage');
+        $table->addCell($labelpage->show() , 150, NULL, 'right'); //label
+        $table->addCell($funderpage->show()); //input box
+        $table->endRow();
+        $fieldset->addContent($table->show());
+        $funderForm->addToForm($fieldset->show());
+        $this->objButton = &new button('addfunder');
+        $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_addfunder', 'foaf'));
+        $this->objButton->setToSubmit();
+        $funderForm->addToForm($this->objButton->show());
+        return $funderForm->show();
+    }
+    /**
+     * Method to create a form for removing funders
+     *
+     * @param void
+     * @return string
+     */
+    public function remFunderForm() 
+    {
+        $removeFunderForm = new form('removefunder', $this->uri(array(
+            'action' => 'updatefunders'
+        )));
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->setLegend($this->objLanguage->languageText('mod_foaf_remfunder', 'foaf'));
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cellpadding = 5;
+        //remove dropdown
+        $remarray = $this->dbFoaf->getFunders();
+       
+		
+
+			if (isset($remarray)) {
+		            if(!empty($remarray))
+				{
+
+					$remDrop = new dropdown('removefuns');
+            			foreach($remarray as $removal) {
+                			$remDrop->addOption($removal['id'], $removal['funderurl']);
+            			}
+         		   
+			    $table->startRow();
+           		    $table->addCell($remDrop->show());
+            	    $table->endRow();
+            	    $fieldset->addContent($table->show());
+            	    $removeFunderForm ->addToForm($fieldset->show());
+                      $this->objButton = &new button('update_funsrem'); 
+                      $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_remfunder', 'foaf'));
+                      $this->objButton->setToSubmit();
+                      $removeFunderForm ->addToForm($this->objButton->show());
+                      return $removeFunderForm ->show();
+       			 } 
+			}
+    }
+
+
+
 }
 ?>

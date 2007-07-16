@@ -255,4 +255,56 @@ class foafui extends object {
 		$myorgs.= $myorgFbox;
 		return $myorgs;
 	}
+
+
+
+
+public function foafFunders($tcont)
+	{
+		$myfunders = $this->objFoafOps->remFunderForm() . $this->objFoafOps->addFunderForm();
+		//build the featureboxen for the funders
+
+		if (!array_key_exists('fundedby', $tcont->foaf)) {
+		  $tcont->foaf['fundedby'] = array();
+		}
+		if (!isset($tcont->foaf['fundedby'])) {
+			$tcont->foaf['fundedby'] = array();
+		}
+		
+	if(!empty($tcont->foaf['fundedby']))
+	{
+		$myfunFbox = NULL;
+		$myfunbox = NULL;
+       	$link = NULL;
+
+          
+		
+
+		$objFeatureBox = $this->newObject('featurebox', 'navigation');
+		$tablefuns = $this->newObject('htmltable', 'htmlelements');
+		$tablefuns->cellpadding = 5;
+
+		foreach($tcont->foaf['fundedby'] as $funder) {
+			
+  				$page = new href(htmlentities($funder) , htmlentities($funder));
+    				$link = $page->show();					
+				$tablefuns->startRow();
+				$tablefuns->addCell("<em>".$funder."</em>");
+				$tablefuns->addCell($link);
+				$tablefuns->endRow();
+			
+		}
+
+		$myfunbox.= $tablefuns->show() ."<br />";
+		$myfunFbox.= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_funders', 'foaf'), $myfunbox) ."<br />";
+
+		$myfunders.= $myfunFbox;
+		
+	 }	
+		return $myfunders;
+	}
+
+
+
+
 }

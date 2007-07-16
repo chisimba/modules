@@ -226,6 +226,28 @@ class foaf extends controller
 
 				$this->nextAction('createfoaf',array('message' => $message));
 
+
+			case 'updatefunders':
+				$fname = $this->getParam('fname');
+				$furl = $this->getParam('fpage');
+				$removefuns = $this->getParam('removefuns');
+
+				if(isset($fname) && isset($furl))
+				{
+					$this->dbFoaf->insertFunder($furl);
+				}
+
+				if(isset($removefuns))
+				{
+					$this->dbFoaf->removeFunder($removefuns);
+				}
+				$message = 'update';
+				$this->setVarByRef('message', $message);
+
+				$this->nextAction('createfoaf',array('message' => $message));
+
+
+
 		}
 	}
 }

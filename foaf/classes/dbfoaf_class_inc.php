@@ -204,7 +204,85 @@ class dbfoaf extends dbtable
         $this->_changeTable('tbl_foaf_organization');
         return $this->delete('id', $orgid);
     }
-    /**
+  
+
+
+//Ehb-added-begin
+
+
+  /**
+     * Method to get the funders associated to a user
+     * 
+     *
+     * @param string userId => the userId for the funders
+     * @return array => the funders related to this userId
+     */
+
+     public function getFunders()
+     {
+          $this->_changeTable('tbl_foaf_fundedby');
+	    $sql = "WHERE userid='".$this->objUser->userId()."'";									
+	    return $this->getAll($sql);
+	}
+	   
+	
+	/**
+     * Method to insert a funder
+     * 
+     *
+     * @param string userId => the userId for the funders
+     * @return array => the funders related to this userId
+     */
+
+	/**
+	public function insertFunder($name, $url) 
+      {
+        $this->_changeTable('tbl_foaf_fundedby');
+
+        $values = array(
+            'userid' => $this->objUser->userId(),
+            'funderurl' => $url,
+		'name' => $name
+        );
+        return $this->insert($values);
+      }
+
+	**/
+	
+
+	public function insertFunder($url) 
+      {
+        $this->_changeTable('tbl_foaf_fundedby');
+
+        $values = array(
+            'userid' => $this->objUser->userId(),
+            'funderurl' => $url		
+        );
+        return $this->insert($values);
+      }
+
+
+
+
+
+
+
+	/**
+	   *Method for removing funders
+	   *@param string funderId => id of the funder to be removed
+	**/
+				
+
+	  public function removeFunder($funderId) 
+    {
+        $this->_changeTable('tbl_foaf_fundedby');
+        return $this->delete('id', $funderId);
+    }
+
+
+//Ehb-added-end
+
+  /**
      * Method to change database tables
      *
      * @param string $table

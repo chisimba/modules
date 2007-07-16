@@ -62,9 +62,12 @@ $pane->addTab(array(
     'name' => $myorganizations,
     'content' => $this->objUi->foafOrgs($tcont)
 ));
+
+
+
 $pane->addTab(array(
     'name' => $myfunders,
-    'content' => 'tbl_foaf_funders'
+    'content' => $this->objUi->foafFunders($tcont)
 ));
 $pane->addTab(array(
     'name' => $myinterests,
