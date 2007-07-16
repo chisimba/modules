@@ -300,7 +300,7 @@ class simplebuildmap extends object
 		      }
 		      // Display the map, with some controls and set the initial location 
 		      var map = new GMap2(document.getElementById(\"map\"));
-		      //$this->getZoomControl()
+		      //{$this->getZoomControl()}
 		      map.addControl(new GMapTypeControl());
 		      map.setCenter(new GLatLng($lat,$long),$mag,$gMapType);
       
