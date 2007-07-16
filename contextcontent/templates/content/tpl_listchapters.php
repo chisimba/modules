@@ -71,6 +71,8 @@ $dropdown = new dropdown('id');
 
 $chapterList = '<div id="allchapters">';
 
+//print_r($chapters);
+
 foreach ($chapters as $chapter)
 {
     $showChapter = TRUE;

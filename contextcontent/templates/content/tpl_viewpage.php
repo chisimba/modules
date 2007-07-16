@@ -67,7 +67,7 @@ if ($this->isValid('movepageup')) {
 
 
 $table = $this->newObject('htmltable', 'htmlelements');
-$table->border='1';
+//$table->border='1';
 $table->startRow();
 $table->addCell($prevPage, '33%', 'top');
 $table->addCell($middle, '33%', 'top', 'center');
@@ -75,7 +75,7 @@ $table->addCell($nextPage, '33%', 'top', 'right');
 $table->endRow();
 
 $topTable = $this->newObject('htmltable', 'htmlelements');
-$topTable->border='1';
+//$topTable->border='1';
 $topTable->startRow();
 $topTable->addCell($prevPage, '50%', 'top');
 $topTable->addCell($nextPage, '50%', 'top', 'right');
@@ -104,6 +104,17 @@ echo $topTable->show();
 //$tab = $this->getObject('tabpane','htmlelements');
 //$tab->addTab(array('name'=>$page['menutitle'],'url'=>'http://localhost','content'=>$page['pagecontent']));
 //echo $tab->show();
+
+
+echo '<div style="float: right; background-color: lightyellow; padding: 5px; border: 1px solid #000; margin-top: 10px;">'; 
+echo '<h5><a href="javascript:togglePageOptions();">Page Options...</a></h5>';
+echo '<div id="pageoptions" style="display:none">';
+echo 'Edit Page<br />';
+echo 'Delete Page<br />';
+
+echo '<div id="bookmarkOptions"><a href="javascript:changeBookmark(\'on\');">Bookmark Page</a></div>';
+echo '</div>';
+echo '</div>';
 $objWashout = $this->getObject('washout', 'utilities');
 echo $objWashout->parseText($page['pagecontent']);
 
@@ -142,3 +153,29 @@ if (count($chapters) > 0) {
 
 
 ?>
+<script type="text/javascript">
+//<![CDATA[
+
+function togglePageOptions()
+{
+    Effect.toggle('pageoptions', 'slide');
+    window.setInterval("adjustLayout();", 200);
+
+}
+
+function changeBookmark (type) {
+	var url = 'index.php';
+	var pars = 'module=contextcontent&action=changebookmark&id=<?php echo $page['id']; ?>&type='+type;
+	var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onComplete: showBookmarkResponse} );
+}
+
+function showBookmarkResponse (originalRequest) {
+	var newData = originalRequest.responseText;
+    
+    if (newData != '') {
+        $('bookmarkOptions').innerHTML = newData;
+        adjustLayout();
+    }
+}
+//]]>
+</script>
