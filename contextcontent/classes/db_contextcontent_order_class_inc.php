@@ -168,7 +168,7 @@ class db_contextcontent_order extends dbtable
     public function getTree($context, $chapter='', $type='dropdown', $defaultSelected='', $module='contextcontent', $disabledNode='')
     {
         $results = $this->getContextPages($context, $chapter);
-        //var_dump($results);die;
+        
         if ($defaultSelected != '') {
             $this->defaultSelected = $this->getRow('id', $defaultSelected);
             
@@ -233,7 +233,7 @@ class db_contextcontent_order extends dbtable
             $node =& new treenode ($nodeDetails);
             $nodeArray[$treeItem['id']] =& $node;
             
-		if($treeItem['isbookmarked'] == 'Y'){
+		//if($treeItem['isbookmarked'] == 'Y'){
             if ($treeItem['parentid'] == 'root') {
                 $treeMenu->addItem($node);
             } else {
@@ -242,7 +242,7 @@ class db_contextcontent_order extends dbtable
                 }
 	}
             }
-        }
+        //}
         
         $tree = &new htmllist($treeMenu, array('topMostListClass'=>'htmlliststyle'));
         
@@ -276,7 +276,7 @@ class db_contextcontent_order extends dbtable
             $node =& new treenode ($nodeDetails);
             $nodeArray[$treeItem['id']] =& $node;
             
-		if($treeItem['isbookmarked'] == 'Y'){
+		//if($treeItem['isbookmarked'] == 'Y'){
             if ($treeItem['parentid'] == 'root') {
                 $treeMenu->addItem($node);
             } else {
@@ -285,7 +285,7 @@ class db_contextcontent_order extends dbtable
                 }
 }
             }
-        }
+        //}
         
         $tree = &new htmllist($treeMenu, array('inputName'=>'parentnode', 'id'=>'input_parentnode'));
         
@@ -321,16 +321,16 @@ class db_contextcontent_order extends dbtable
             $node =& new treenode ($nodeDetails);
             $nodeArray[$treeItem['id']] =& $node;
             //var_dump($treeItem);die;
-		if($treeItem['isbookmarked'] == 'Y'){
+		//if($treeItem['isbookmarked'] == 'Y'){
             if ($treeItem['parentid'] == 'root') {
                 	$rootnode->addItem($node);
             } else {
                 if (array_key_exists($treeItem['parentid'], $nodeArray)) {
                     $nodeArray[$treeItem['parentid']]->addItem($node);
                 }
-}
             }
         }
+        //}
         
         $treeMenu->addItem($rootnode);
         
@@ -876,7 +876,7 @@ class db_contextcontent_order extends dbtable
 				}
 				
 				// Add to Menu
-				if($treeItem['isbookmarked'] == 'Y')
+				//if($treeItem['isbookmarked'] == 'Y')
 					$treeMenu->addItem($node);
 			}
 			
