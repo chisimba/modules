@@ -352,7 +352,7 @@ class simplebuildmap extends object
 			function load() {
   			    if (GBrowserIsCompatible()) {
 				    map = new GMap2(document.getElementById(\"map\"));
-				    //$this->getZoomControl()
+				    //{$this->getZoomControl()}
 	    		 	map.setCenter(new GLatLng($lat,$long),$mag,$gMapType); 
 				    map.addControl(new GLargeMapControl());
 				    map.addOverlay(geoXml);
@@ -392,7 +392,11 @@ class simplebuildmap extends object
     */
     function getZoomControl()
     {
-    	switch ($this->mapControlType) {
+    	if (!isset($this->mapControlType)) {
+            $this->mapControlType = '';
+        }
+        
+        switch ($this->mapControlType) {
     		case "large":
     			$ret = "map.addControl(new GLargeMapControl());";
     			break;
