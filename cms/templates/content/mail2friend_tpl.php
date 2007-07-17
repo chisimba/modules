@@ -13,7 +13,7 @@ $icon_mail->setIcon('email', 'png', 'icons/cms/');
 // Cancel	 		
 $url = 'javascript:history.back();';
 $linkText = ucwords($this->objLanguage->languageText('word_cancel'));
-$iconList = $objIconCancel->getTextIcon($url, 'cancel', $linkText, TRUE, 'gif');
+$iconList = $objIconCancel->getTextIcon($url, 'cancel', $linkText, 'gif', 'icons/cms/');
 			 		
 $leftMenu = NULL;
 
