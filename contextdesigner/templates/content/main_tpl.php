@@ -14,7 +14,8 @@ $objFeatureBox = & $this->newObject('featurebox', 'navigation');
 $inpButton =  $this->newObject('button','htmlelements');
 
 //the heading
-$objH->str = 'Course Designer';
+$objH->str = ucwords($this->_objLanguage->code2Txt("mod_contextdesigner_toolbarname",'contextdesigner',array('context'=>'Course')));
+$objH->type = 1;
 
 echo $objH->show();//'the generated list of links will show here';
 

@@ -2,6 +2,7 @@
 $this->loadClass('checkbox' , 'htmlelements');
 $this->loadClass('button' , 'htmlelements');
 $this->loadClass('dropdown' , 'htmlelements');
+$this->loadClass('textinput' , 'htmlelements');
 
 $objH = & $this->newObject('htmlheading', 'htmlelements');
 $objButton2 = new button();
@@ -36,7 +37,7 @@ if($links)
     $objTable->endHeaderRow();
     $rowcount = 0;
     $i=1;
-	var_dump($links);
+//	var_dump($links);
     foreach ($links as $link)
     {
         $oddOrEven = ($rowcount == 0) ? "even" : "odd";
@@ -47,8 +48,8 @@ if($links)
         $objCheckBox->name = 'selecteditems[]';
         $objCheckBox->cssClass = 'f-checkbox';
         
-        $objInput = & $this->newObject('textinput', 'htmlelements');
-        $objInput->name = $link['itemid'];
+        $objInput = new textinput($link['itemid']);//& $this->newObject('textinput', 'htmlelements');
+        //$objInput->name = $link['itemid'];
         $objInput->value = '';
         $objInput->fldType = 'hidden';
         

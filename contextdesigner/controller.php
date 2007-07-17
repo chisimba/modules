@@ -26,12 +26,12 @@ class contextdesigner extends controller
        // $this->_objContextUtils =  $this->newObject('utilities','context');
         $this->_objLanguage= & $this->getObject('language', 'language');
         $this->_objDBContext= & $this->getObject('dbcontext','context');
-        $this->_objContextAdminUtils = & $this->getObject('utils','contextadmin');
+        //$this->_objContextAdminUtils = & $this->getObject('utils','contextadmin');
         $this->_objDBContextDesigner = & $this->getObject('dbcontextdesigner','contextdesigner');
 //        $this->_objUser= & $this->newObject('user','security');
         $this->_objDBContextModules = &$this->getObject('dbcontextmodules','context');
-        $this->_objUtils = &  $this->newObject('utilities', 'contextdesigner');
-        $this->_objModule = & $this->getObject('modules', 'modulecatalogue');
+        $this->_objUtils =   $this->getObject('utilities', 'contextdesigner');
+        $this->_objModule =  $this->getObject('modules', 'modulecatalogue');
         
     }
     
@@ -63,7 +63,8 @@ class contextdesigner extends controller
                 
             case 'saveadd':
                 $this->_objDBContextDesigner->addLinks($this->_objDBContext->getContextCode());
-                return $this->nextAction(null);
+               
+				return $this->nextAction(null);
                 
             case 'changeaccess':
                 $this->_objDBContextDesigner->updateAccess($this->getParam('id'), ucwords(($this->getParam('value'))));

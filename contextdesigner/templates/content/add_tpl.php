@@ -31,7 +31,7 @@ foreach ($modules as $module)
 {
     $modInfo = $this->_objModule->getModuleInfo($module['moduleid']);
     
-    $objDropDown->addOption($module['moduleid'], $modInfo['name'] );    
+    $objDropDown->addOption($module['moduleid'], ucwords($modInfo['name']) );    
 }
 
 
@@ -41,6 +41,6 @@ $objForm->addToForm($objButton2);
 $objForm->addToForm($objButton);
 
 
-echo $objFeatureBox->show('Step 1 : Select Module', $objForm->show());
+echo $objFeatureBox->show('Step 1 : Select a Plugin', $objForm->show());
 
 ?>

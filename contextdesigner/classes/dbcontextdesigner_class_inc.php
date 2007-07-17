@@ -67,7 +67,7 @@ class dbcontextdesigner extends dbTable
                     'access' => 'Published',
                     'params' => $params
                 );
-                //var_dump($fields);
+                var_dump($fields);
                
                 if(!$this->checkExist($contextCode, $params, $moduleId))
                 {

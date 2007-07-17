@@ -24,7 +24,7 @@ class utilities extends object
     public function init()
     {
 //        $this->_objLanguage=& $this->newObject('language', 'language');
-          $this->_objDBContext=& $this->getObject('dbcontext','context');
+          $this->_objDBContext= $this->getObject('dbcontext','context');
           $this->_objIcon=& $this->getObject('geticon','htmlelements');
           $this->objLink = & $this->newObject('link', 'htmlelements');
 //        $this->_objUser= & $this->newObject('user','security');

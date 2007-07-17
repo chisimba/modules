@@ -23,6 +23,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 255
 		),
+	'params' => array(
+		'type' => 'text',
+		'length' => 255
+		),
    	'moduleid' => array(
 		'type' => 'text',
 		'length' => 255,
@@ -38,7 +42,7 @@ $fields = array(
 		),    
     'status' => array(
         	'type' => 'text',
-	'length' => 32,
+		'length' => 32,
         	'notnull' => TRUE
         	),
     'access' => array(

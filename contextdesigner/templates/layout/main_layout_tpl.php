@@ -16,11 +16,13 @@ $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 
 // Set the Content of middle column
 
+$objU = $this->getObject('utils', 'contextadmin');
+    $cssLayout->setLeftColumnContent( $objU->getLeftContent());
 
-    $cssLayout->setLeftColumnContent( $this->_objContextAdminUtils->getLeftContent());
 
 
-$cssLayout->setRightColumnContent( $this->_objContextAdminUtils->getRightContent());
+
+$cssLayout->setRightColumnContent($objU->getRightContent());
 $cssLayout->setMiddleColumnContent($this->getContent());
 
 
