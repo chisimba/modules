@@ -14,39 +14,6 @@
         </data>
     </update>
 	
-	<update>
-        <table>tbl_eventscalendar_sharedevents</table>
-        <version>1.1</version>
-        <description>added new ctable</description>
-        <data>
-            <add>
-                <name>id</name>
-                <type>text</type>
-                <length>32</length>
-                <default>notnull</default>
-            </add>
-            <add>
-                <name>eventid</name>
-                <type>text</type>
-                <length>32</length>
-                <default>notnull</default>
-            </add>
-
-            <add>
-                <name>catid</name>
-                <type>text</type>
-                <length>32</length>
-                <default>notnull</default>
-            </add>
-
-            <add>
-                <name>sharedwithid</name>
-                <type>text</type>
-                <length>32</length>
-                <default>notnull</default>
-            </add>
-
-        </data>
-    </update>
+	
 	
 </updates>
