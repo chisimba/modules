@@ -11,9 +11,9 @@ $objSideBar = $this->newObject('usermenu', 'toolbar');
 //$cssLayout->setNumColumns(3);
 $icon_mail->setIcon('email', 'png', 'icons/cms/');
 // Cancel	 		
-$url = "javascript:history.back();";
+$url = 'javascript:history.back();';
 $linkText = ucwords($this->objLanguage->languageText('word_cancel'));
-$iconList = $objIconCancel->getTextIcon($url, 'cancel', $linkText, TRUE, 'gif', 'icons/cms/');
+$iconList = $objIconCancel->getTextIcon($url, 'cancel', $linkText, TRUE, 'gif');
 			 		
 $leftMenu = NULL;
 
