@@ -223,8 +223,15 @@ print '<center>'.$str.'</center>';
  $objIcon->setIcon('add');
     $link->href = $this->uri(array('action' => 'addevent', 'catid' => $catId ,'type' => $calType));
     $link->link = 'Add an Event '.$objIcon->show();
-    
+
+
 
 echo '<span class="icon">'.$link->show().'</span>';
+
+$link->href = $this->uri(array('action' => 'merge'));
+$link->link = 'Merge My Calendar and '.$this->_objDBContext->getTitle();
+
+echo ' <span>'.$link->show().' </span>';
 ?>
+
 

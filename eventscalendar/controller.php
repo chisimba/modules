@@ -21,14 +21,14 @@ class eventscalendar extends controller
     public function init()
     {
         
-        $this->_objDBEventsCalendar = & $this->newObject('dbeventscalendar', 'eventscalendar');
-        $this->_objCalendarBiulder = & $this->newObject('calendarbiulder', 'eventscalendar');
-        $this->_objDBCategories = & $this->newObject('dbeventscalendarcategories', 'eventscalendar');
-        $this->_objDBContext = & $this->newObject('dbcontext', 'context');
-        $this->_objUser = & $this->newObject('user', 'security');
-        $this->_objUtils = & $this->newObject('utils');
-        $this->objLanguage = & $this->newObject('language','language');
-        $this->_objContextModules = & $this->newObject('dbcontextmodules', 'context');
+        $this->_objDBEventsCalendar =  $this->getObject('dbeventscalendar', 'eventscalendar');
+        $this->_objCalendarBiulder =  $this->getObject('calendarbiulder', 'eventscalendar');
+        $this->_objDBCategories =  $this->getObject('dbeventscalendarcategories', 'eventscalendar');
+        $this->_objDBContext =  $this->getObject('dbcontext', 'context');
+        $this->_objUser =  $this->getObject('user', 'security');
+        $this->_objUtils =  $this->getObject('utils');
+        $this->objLanguage =  $this->getObject('language','language');
+        $this->_objContextModules =  $this->getObject('dbcontextmodules', 'context');
         
         //create an entry for this context that your are in if it doesnt exists
         if($this->_objDBContext->isInContext() && !$this->_objDBCategories->typeExist('context', $this->_objDBContext->getContextCode()))
@@ -115,7 +115,7 @@ class eventscalendar extends controller
                 } else {//die($this->getParam('catid'));
                      $this->_objDBEventsCalendar->addEvent($this->getParam('catid'));
                 }
-                
+              
                 return $this->nextAction(null);
                 
             //categories
@@ -137,8 +137,9 @@ class eventscalendar extends controller
                 return $this->nextAction('categories');
                 
              case 'merge';
-                $this->_objDBEventsCalendar->mergeEvents();
-                return $this->nextAction(null);
+                $this->_objUtils->mergeCalendars();
+                
+				return $this->nextAction(null);
         }
     }
     

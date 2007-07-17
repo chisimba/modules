@@ -1,29 +1,40 @@
 <?php
+
+// Load HTML Elements
+			//$this->loadClass('form', 'htmlelements');
+			$this->loadClass('textinput', 'htmlelements');
+			$this->loadClass('button', 'htmlelements');
+			$this->loadClass('dropdown', 'htmlelements');
+			$this->loadClass('htmlheading', 'htmlelements');
+			$this->loadClass('checkbox', 'htmlelements');
+			$this->loadClass('link', 'htmlelements');
+			$this->loadClass('radio', 'htmlelements');
+			
 //For this recipe I need a form
-$objForm = & $this->newObject('form', 'htmlelements');
+$objForm = $this->newObject('form', 'htmlelements');// new form('frmone');
 //and a editor
 $objEditor = & $this->newObject('htmlarea', 'htmlelements');
 //maybe a h1 heading
 $objH1 = & $this->newObject('htmlheading', 'htmlelements');
 //a  text field
-$objTextField = & $this->newObject('textinput', 'htmlelements');
+$objTextField = new textinput('title');
 //the categories dropdown
-$objCatDropdown = & $this->newObject('dropdown', 'htmlelements');
+//$objCatDropdown = new dropdown('eventtype');
 //i need a date 
 $objDatePicker =  & $this->newObject('datepicker', 'htmlelements');
 //a start time 
-$startTime =  & $this->newObject('textinput', 'htmlelements');
+//$startTime =  & $this->newObject('textinput', 'htmlelements');
 // an end time
-$endTime =  & $this->newObject('textinput', 'htmlelements');
+//$endTime =  & $this->newObject('textinput', 'htmlelements');
 //location
-$location =  & $this->newObject('textinput', 'htmlelements');
+//$location =  new textinput('location');
 //a button
-$button =  & $this->newObject('button', 'htmlelements');
-$button2 =  & $this->newObject('button', 'htmlelements');
+$button =  new button();//& $this->newObject('button', 'htmlelements');
+$button2 = new button();// & $this->newObject('button', 'htmlelements');
 //$objFeatureBox
-$objFeatureBox = & $this->newObject('featurebox', 'navigation');
+$objFeatureBox =  $this->getObject('featurebox', 'navigation');
 //dropdown
-$objDropDown = & $this->newObject('dropdown', 'htmlelements');
+//$objDropDown = new dropdown('eventtype');
 
 
 $mode = $this->getParam('mode');
@@ -34,9 +45,9 @@ if($mode == 'edit')
     $objTextField->value = $eventLine['title'];
     $objEditor->value = stripslashes($eventLine['description']);
     $objDatePicker->value = $eventLine['event_date'];
-    $startTime->value = $eventLine['start_time'];
-    $endTime->value = $eventLine['end_time'];
-    $location->value =$eventLine['location'];
+    //$startTime->value = $eventLine['start_time'];
+    //$endTime->value = $eventLine['end_time'];
+    //$location->value =$eventLine['location'];
     $heading = 'Edit Event';
     
 } else {
@@ -60,7 +71,7 @@ if($mode == 'edit')
 //$objForm->action = $this->uri(array('action' => 'saveevent', 'catid' => $this->getParam('catid')));
 
 //the title field
-$objTextField->name = 'title';
+
 $objTextField->label = 'Title';
 $objTextField->size = 70;
 
@@ -75,6 +86,7 @@ $objDatePicker->name = 'start_date';
 $objDatePicker->label = 'Date';
 
 //the editor
+
 $objEditor->name = 'description';
 $objEditor->label = 'Details';
 
@@ -119,13 +131,13 @@ if($this->_objDBContext->isInContext())
         $objDropDown->name = 'eventtype';
         $objDropDown->label = 'Event Type';
         $objDropDown->extra = ' style="width:200px" ';
-        $objDropDown->addOption($contextCode,'Context: '.$this->_objDBContext->getMenuText());
-        $objDropDown->addOption($this->_objUser->userId(),'Personal');
+        //$objDropDown->addOption($contextCode,'Context: '.$this->_objDBContext->getMenuText());
+        //$objDropDown->addOption($this->_objUser->userId(),'Personal');
         if($this->_objUser->isAdmin())
         {
-            $objDropDown->addOption('site1','Site');
+           // $objDropDown->addOption('site1','Site');
         }
-        $objForm->addToForm($objDropDown);
+        //$objForm->addToForm($objDropDown);
     }
 } else {
 	    $catId = $this->_objDBCategories->getCatId('user',$this->_objUser->userId());

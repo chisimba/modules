@@ -105,5 +105,49 @@ class utils extends object
        $arr = $this->getAll('WHERE contextcode = "'.$contextCode.'" ');
        return $arr;
    }
+   
+   /**
+   * Method to merge a user's calendar
+   * with a context calendar events
+   *
+   */
+   public function mergeCalendars()
+   {
+
+		try{
+		 	$objDBCats = $this->getObject('dbeventscalendarcategories', 'eventscalendar');
+		 	$objDBEvents = $this->getObject('dbeventscalendar', 'eventscalendar');
+		 	$objDBContext = $this->getObject('dbcontext', 'context');
+		 	$objShares = $this->getObject('dbeventscalendar_sharedevents', 'eventscalendar');
+		 	$objUser = $this->getObject('user', 'security');
+		 	
+		 	
+			//get the context calendar events
+			$arrCats = $objDBCats->getCategories('context', $objDBContext->getContextCode());
+			
+			//
+			$arrUserCat = $objDBCats->getCategories('user', $objUser->userId());
+			$events = $objDBEvents->getEventsByCategory($arrCats[0]['id']);
+		
+			foreach($events as $event)
+			{
+				$objShares->addShare($event['id'], $arrCats[0]['id'], $arrUserCat[0]['id'] );			
+			}
+			
+			
+			//add them to the user's events
+//			$this->_objUser->userId();
+			
+				
+		}
+		catch (Exception $e){
+       		echo 'Caught exception: ',  $e->getMessage();
+        	exit();
+        }
+
+
+	
+   }
+	
 }
 ?>

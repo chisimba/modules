@@ -111,6 +111,8 @@ class dbeventscalendar extends dbTable
             //print $catId;
             $arrTypeEvents = $this->getAll("WHERE catid='".$catId."'");
 
+			
+
             $events = array();
             
             if($yr == 0 )
@@ -134,7 +136,7 @@ class dbeventscalendar extends dbTable
             
             
             //get the events for the user for the given month and year
-          //  var_dump($arrTypeEvents);
+         
             foreach($arrTypeEvents as $arrTypeEvent)
             {
                 $tempRow = $this->getRow('id', $arrTypeEvent['id']);   
@@ -143,7 +145,21 @@ class dbeventscalendar extends dbTable
                     $events[] = $tempRow;
                 }
             }
-            //var_dump($events);
+            
+            $objShares = $this->getObject('dbeventscalendar_sharedevents', 'eventscalendar');
+            $sharedEvents = $objShares->getEventsBySharedId($catId);
+            
+            
+            //the shared events
+            foreach($sharedEvents as $sharedEvent)
+            {
+				$tempRow = $this->getRow('id', $sharedEvent['eventid']);   
+                if($tempRow['event_date'] > $startOfMonth && $tempRow['event_date'] < $endOfMonth)
+                {
+                    $events[] = $tempRow;
+                }
+			}
+          
             
             if($events)
             {
@@ -174,7 +190,7 @@ class dbeventscalendar extends dbTable
             $description = $this->getParam('description');
             $start_time = $this->getParam('start_time');
             $end_time = $this->getParam('end_time');
-           // $catid = $this->getParam('catid');
+          
             $start_date = $this->getParam('start_date');
             $location = $this->getParam('location');
             
@@ -195,9 +211,7 @@ class dbeventscalendar extends dbTable
            	
             
             $id =  $this->insert($fields);
-            
-           // $this->_objDBLookup->add($type, $typeId, $id);
-            
+          
             return $id;
         }
         catch (customException $e)
