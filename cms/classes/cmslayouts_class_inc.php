@@ -152,11 +152,7 @@ class cmslayouts extends object
 
         // Load header parameters
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('tree.js', 'cmsadmin'));
-        $css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("tree.css", 'cmsadmin').'" />';
-        $this->appendArrayVar('headerParams', $css);
-        //Set to automatically render htmllist into tree menu
-        $this->appendArrayVar('bodyOnLoad', 'autoInit_trees()');
-        
+              
         $objLayer = new layer();
         $objLayer->str = $objFeatureBox->show($head, $objTreeMenu->getCMSTree($currentNode));
         $objLayer->id = 'cmsnavigation';
@@ -260,7 +256,7 @@ class cmslayouts extends object
         return $str;
     }
 
-        /**
+    /**
          * Method to get the Front Page Content
          * in a ordered way. It should also conform to the
          * section template for the section that this page is in
@@ -268,104 +264,113 @@ class cmslayouts extends object
          * @return string The content to be displayed on the front page
          * @access public
          */
-        public function getFrontPageContent($displayId=NULL)
-        {   
-            $lbRead = $this->objLanguage->languageText('phrase_readmore');
-            $lbWritten = $this->objLanguage->languageText('phrase_writtenby');
-            $arrFrontPages = $this->_objFrontPage->getFrontPages(TRUE);
+    public function getFrontPageContent($displayId=NULL)
+    {
+    	$lbRead = $this->objLanguage->languageText('phrase_readmore');
+    	$lbWritten = $this->objLanguage->languageText('phrase_writtenby');
+    	$arrFrontPages = $this->_objFrontPage->getFrontPages(TRUE);
 
-            $str = '';
-            //set a counter for the records .. display on the first 2  the rest will be dsiplayed as links
-            $cnt = 0 ;
+    	$str = '';
+    	//set a counter for the records .. display on the first 2  the rest will be dsiplayed as links
+    	$cnt = 0 ;
 
-            $numPages = count($arrFrontPages);
-            // If only 1 page is on the front - display the full page
-            if($numPages == 1){
-                $page = $this->_objContent->getContentPage($arrFrontPages[0]['content_id']);
+    	$numPages = count($arrFrontPages);
+    	// If only 1 page is on the front - display the full page
+    	if($numPages == 1){
+    		$page = $this->_objContent->getContentPage($arrFrontPages[0]['content_id']);
 
-                // Page heading - hide if set
-                if(isset($page['hide_title']) && $page['hide_title'] == 1){
-                    $pageStr = '';
-                }else{
-                    $this->objHead->type = '2';
-                    $this->objHead->str = htmlentities($page['title']);
-                    $pageStr = $this->objHead->show();
-                
-                    $pageStr .= '<p><span class="date">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
-                            
-                    if(isset($page['created']) && !empty($page['created'])){
-                        $pageStr .= '<span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
-                    }
-                    $pageStr .= '</p>';
-                    $pageStr .= stripslashes($page['introtext']);
-                    $pageStr .= '<p />';
-                }
-                $pageStr .= $page['body'];
-                
-                return $this->objRound->show($pageStr);
-            }
+    		// Page heading - hide if set
+    		if(isset($page['hide_title']) && $page['hide_title'] == 1){
+    			$pageStr = '';
+    		}else{
+    			$this->objHead->type = '2';
+    			$this->objHead->str = htmlentities($page['title']);
+    			$pageStr = $this->objHead->show();
 
-            // Display the selected page above the others
-            if(!empty($displayId) && !empty($arrFrontPages)) {
-                foreach ($arrFrontPages as $frontPage) {
-                    if($displayId == $frontPage['content_id']){
-                        $str .= $this->showBody();
-                        break;
-                    }
-                }
-            }
+    			$pageStr .= '<p><span class="date">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
 
-            // Display the introductions of all front pages
-            if (!empty($arrFrontPages)) {
-                foreach ($arrFrontPages as $frontPage) {
-                    //get the page content
-                    $page = $this->_objContent->getContentPage($frontPage['content_id']);
-                    
-                    // Check it's not the page displayed at the top.
-                    if(!empty($displayId) && $displayId == $frontPage['content_id']){
-                        // do nothing
-                    }else{
-                        $pageStr = '';
-                        $cnt++;
-                        
-                        // Page heading - hide if set
-                        if(isset($page['hide_title']) && $page['hide_title'] == 1){
-                            $pageStr = '';
-                        }else{
-                            $this->objHead->type = '2';
-                            $this->objHead->str = htmlentities($page['title']);
-                            
-                            $pageStr = $this->objHead->show();
-                        }
-                        
-                        // Read more link
-                        $moreLink = $this->uri(array('displayId' => $frontPage['content_id'], 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
-                        //array('action' => 'showfulltext', 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
-                        $readMoreLink = new link($moreLink);
-                        $readMoreLink->link = $lbRead.'...';
-                        $readMoreLink->title = $page['title'];
-                        $readMoreLink->cssClass = 'morelink';
-                        
-                        // Display the page title and introduction
-                        $pageStr .= '<p><span class="date">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
-                        if(isset($page['created']) && !empty($page['created'])){
-                            $pageStr .= '<span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
-                        }
-                        $pageStr .= '</p>';
-                        $pageStr .= stripslashes($page['introtext']).'<br />'.$readMoreLink->show();
-                        $pageStr .= '<p />';
-                        
-                        if(isset($page['modified']) && !empty($page['modified'])){
-                            $pageStr .= '<p> <span class="date">Last updated : '.$this->objDate->formatDate($page['modified']).'</span></p>';
-                        }
-                       
-                        $str .= $this->objRound->show($pageStr);
-                    }
-                }
-            }
+    			if(isset($page['created']) && !empty($page['created'])){
+    				$pageStr .= '<span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
+    			}
+    			$pageStr .= '</p>';
+    			$pageStr .= stripslashes($page['introtext']);
+    			$pageStr .= '<p />';
+    		}
+    		$pageStr .= $page['body'];
+    		$objLayer = new layer();
+    		$objLayer->str = $pageStr;
+    		$objLayer->id = 'content';
 
-            return $str;
-        }
+    		return $objLayer->show();
+
+    	}
+
+    	// Display the selected page above the others
+    	if(!empty($displayId) && !empty($arrFrontPages)) {
+    		foreach ($arrFrontPages as $frontPage) {
+    			if($displayId == $frontPage['content_id']){
+    				$str .= $this->showBody();
+    				break;
+    			}
+    		}
+    	}
+
+    	// Display the introductions of all front pages
+    	if (!empty($arrFrontPages)) {
+    		foreach ($arrFrontPages as $frontPage) {
+    			//get the page content
+    			$page = $this->_objContent->getContentPage($frontPage['content_id']);
+
+    			// Check it's not the page displayed at the top.
+    			if(!empty($displayId) && $displayId == $frontPage['content_id']){
+    				// do nothing
+    			}else{
+    				$pageStr = '';
+    				$cnt++;
+
+    				// Page heading - hide if set
+    				if(isset($page['hide_title']) && $page['hide_title'] == 1){
+    					$pageStr = '';
+    				}else{
+    					$this->objHead->type = '2';
+    					$this->objHead->str = htmlentities($page['title']);
+
+    					$pageStr = $this->objHead->show();
+    				}
+
+    				// Read more link
+    				$moreLink = $this->uri(array('displayId' => $frontPage['content_id'], 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
+    				//array('action' => 'showfulltext', 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
+    				$readMoreLink = new link($moreLink);
+    				$readMoreLink->link = $lbRead.'...';
+    				$readMoreLink->title = $page['title'];
+    				$readMoreLink->cssClass = 'morelink';
+
+    				// Display the page title and introduction
+    				$pageStr .= '<p><span class="date">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
+    				if(isset($page['created']) && !empty($page['created'])){
+    					$pageStr .= '<span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
+    				}
+    				$pageStr .= '</p>';
+    				$pageStr .= stripslashes($page['introtext']).'<br />'.$readMoreLink->show();
+    				$pageStr .= '<p />';
+
+    				if(isset($page['modified']) && !empty($page['modified'])){
+    					$pageStr .= '<p> <span class="date">Last updated : '.$this->objDate->formatDate($page['modified']).'</span></p>';
+    				}
+
+    				$str .= $pageStr;
+    			}
+    		}
+    	}
+
+    	$objLayer = new layer();
+    	$objLayer->str = $str;
+    	$objLayer->id = 'content';
+
+    	return $objLayer->show();
+
+    }
 
     
         /**
@@ -490,7 +495,12 @@ class cmslayouts extends object
             }
             
             $returnStr .= '<p>'.$strBody.'</p><p>'.$str.'</p>';
-            return $returnStr;
+            $objLayer = new layer();
+        	$objLayer->str = $returnStr;
+        	$objLayer->id = 'content';
+        
+        	return $objLayer->show();
+            
         }
 
         /**
@@ -526,9 +536,9 @@ class cmslayouts extends object
             
             //Check if section intro should be displayed and act accordingly
             if($showIntro && !empty($description)) {
-              $headStr .= $description;
+              $headStr .= '<br />'.$description.'<hr />';
             }
-            $str .= $this->objRound->show($headStr);
+            $str .= $headStr;
 
             switch ($orderType) {
             case 'pagedate_asc':
@@ -591,8 +601,12 @@ class cmslayouts extends object
                     $str .= $pageStr;
                 }
             }
-
-            return $str;
+			$objLayer = new layer();
+        	$objLayer->str = $str;
+        	$objLayer->id = 'content';
+        
+        	return $objLayer->show();
+           
         }
 
         /**
@@ -690,7 +704,11 @@ class cmslayouts extends object
                 $str = substr($str, 0, strlen($str) - 3);
             }
 
-            return $introStr.'<p />'.$topStr.'<p>'.$str.'</p>';
+            $objLayer = new layer();
+        	$objLayer->str = $introStr.'<p />'.$topStr.'<p>'.$str.'</p>';
+        	$objLayer->id = 'content';
+        
+        	return $objLayer->show();
         }
 
         /**
@@ -783,7 +801,13 @@ class cmslayouts extends object
             		 $introStr .= '<p><span>'.$description.'</span>';
                      $introStr .= '<br /></p>';
             }
-            return $this->objRound->show($introStr).$str;
+         
+            $objLayer = new layer();
+        	$objLayer->str = $introStr.'<p>'.$str.'</p>';
+        	$objLayer->id = 'content';
+        
+        	return $objLayer->show();
+            
         }
         
         /**
@@ -873,9 +897,10 @@ class cmslayouts extends object
             $pdfimg = $pdficon->show();
 			$pdflink = null;
             $pdflink = new href($pdfurl, $pdfimg, NULL);
-			
+			$this->objHead->str = $page['title'];
+            $this->objHead->type = 2;
 			$tblh->startRow();
-            $tblh->addCell($page['title']);
+            $tblh->addCell($this->objHead->show());
             $tblh->addCell($pdflink->show() . $mtflink->show(),null,null,'center'); //pdf icon
             $tblh->endRow();
             
@@ -890,12 +915,15 @@ class cmslayouts extends object
             //parse for mathml as well
             $page['body'] = $objMath->parseAll($page['body']);
             $strBody .= stripslashes($page['body']);
-
+			
              $strBody .= '<hr /><p />';
-             
+             $objLayer = new layer();
+        	$objLayer->str = $tblh->show().$strBody ."<p /><center>".$tblnl->show() ."</center>";
+        	$objLayer->id = 'content';
+        
+        	return $objLayer->show();
                          
-            return $objFeatureBox->showContent($tblh->show(),$strBody ."<p /><center>".$tblnl->show() ."</center>");
-          
+                     
           
         }
         
@@ -1288,6 +1316,44 @@ class cmslayouts extends object
       
             return $rssform . $ftable->show();
 
+    }
+    
+    /** 
+     * Function addCommentForm
+     *
+     */
+    public function addCommentForm($postid, $userid, $captcha = FALSE, $comment = NULL, $useremail = NULL) 
+    {
+        $this->objComApi = $this->getObject('commentapi', 'cmscomments');
+        return $this->objComApi->commentAddForm($postid, 'cms', 'tbl_cms_content', $userid, TRUE, TRUE, FALSE, $captcha, $comment, $useremail);
+    }
+    /**
+     *
+     */
+    public function setComments($post, $icon = TRUE) 
+    {
+        //COMMENTS
+        if ($icon == TRUE) {
+            $objLink = new link($this->uri(array(
+                'action' => 'viewsingle',
+                'postid' => $post['id'],
+                'userid' => $post['userid']
+            ) , 'blog'));
+            $comment_icon = $this->newObject('geticon', 'htmlelements');
+            $comment_icon->setIcon('comment');
+            $lblView = $this->objLanguage->languageText("mod_blog_addcomment", "blog");
+            $comment_icon->alt = $lblView;
+            $comment_icon->align = false;
+            $objLink->link = $comment_icon->show();
+            return $objLink->show();
+        } else {
+            $objLink = new href($this->uri(array(
+                'action' => 'viewsingle',
+                'postid' => $post['id'],
+                'userid' => $post['userid']
+            )) , $this->objLanguage->languageText("mod_blog_comments", "blog") , NULL);
+            return $objLink->show();
+        }
     }
         
 }
