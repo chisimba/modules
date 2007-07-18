@@ -214,18 +214,21 @@ class cms extends controller
         				//go and fetch the page in question from the db
         				$data = $this->_objContent->getContentPage($this->getParam('id'));
         				//create the pdf and send it out
-        				$header = $data['title'];
-        				$body = $data['body'];
+        				
+        				$header = stripslashes($data['title']);
+        				
+        				$body = stripslashes($data['body']);
+        				
         				$pagedate = $data['created'];
         							
         				//put it all together
         				//get the pdfmaker classes
         				$objPdf = $this->getObject('fpdfwrapper','pdfmaker');
         				
-        				$text = $header . "  " . $pagedate . "\r\n" . strip_tags($body);
+        				$text = $header . "  " . $pagedate . "\r\n" . html_entity_decode(strip_tags($body));
         				$objPdf->simplePdf($text);
         				break;
-            	
+        		            	
             		default:
             			$method = $this->_getMethod();
             			break;
@@ -263,6 +266,7 @@ class cms extends controller
 			if($sectionId != '') {
 			    $section = $this->_objSections->getSection($sectionId);
 			    $siteTitle = $section['title'];
+			    
 			} else {
 			    $siteTitle = '';
 			}
