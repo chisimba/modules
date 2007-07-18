@@ -33,9 +33,13 @@ class modulelinks_rubric extends object
     { 
     		$bigArr = array();
         
-         $rubrics = $this->objRubrict->listAll($contextCode);	
-			foreach ( $rubrics as $rubric)
-      	 {
+         $rubrics = $this->objRubric->listAll($contextCode);	
+		
+		if(count($rubrics) > 0)
+		{
+			
+			 foreach ( $rubrics as $rubric)
+	      	 {
               $newArr = array();    
               $newArr['menutext'] = $rubric['title'];
               $newArr['description'] = '';
@@ -44,7 +48,10 @@ class modulelinks_rubric extends object
               $newArr['params'] = array('action' => 'viewtable','id'=>$worksheet['id']);
               $bigArr[] = $newArr;
         	}
-       	return $bigArr;
+       		return $bigArr;
+       	} else {
+			return FALSE;
+		}
     }
     
 }

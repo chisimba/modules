@@ -43,7 +43,9 @@ class modulelinks_assignment extends object
        
        	$assignments = $this->objAssignment->getAssignment($contextCode);	   
           $bigArr = array();
-
+		
+		if(count($assignments) > 1)
+		{
           foreach ($assignments as $assignment)
           {
                 $newArr = array();    
@@ -56,6 +58,9 @@ class modulelinks_assignment extends object
           }
           
           return $bigArr;
+        } else {
+			return FALSE;
+		}
          
     }
     
