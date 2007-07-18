@@ -38,20 +38,32 @@ class modulelinks_readinglist extends object
      */
     public function getContextLinks($contextCode)
     { 
+      	$objReading = $this->getObject('dbreadinglist', 'readinglist');
+      	$objDBContext = $this->getObject('dbcontext', 'context');
+	    $read = $objReading->listAll($objDBContext->getContextCode());
+        
       
-      $read = $this->objLanguage->languageText('mod_readinglist_readinglist', 'readinglist');
-                
-        $adminArr = array();
-        $adminArr['menutext'] = $read;
-        $adminArr['description'] = $read;
-        $adminArr['itemid'] = '';
-        $adminArr['moduleid'] = 'readinglist';
-        $adminArr['params'] = array();
-        
-        $returnArr = array();
-        $returnArr[] = $adminArr;
-        
-        return $returnArr;
+	       $bigArr = array();
+         
+         if(count($read) > 0)
+         {
+         
+          foreach ($read as $r)
+          {
+                $newArr = array();    
+              $newArr['menutext'] = $r['title'];
+              $newArr['description'] = $r['publisher'];
+              $newArr['itemid'] = $r['id'];
+              $newArr['moduleid'] = 'readinglist';
+              $newArr['params'] = array('id' => $r['id'],'action' => 'additionals');
+              $bigArr[] = $newArr;
+          }
+          
+          return $bigArr;
+          } else {
+			return false;
+		}
+	        
           
     }
     
