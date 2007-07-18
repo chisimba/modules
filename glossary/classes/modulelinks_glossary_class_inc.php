@@ -47,7 +47,7 @@ class modulelinks_glossary extends object
           {
                 $newArr = array();    
               $newArr['menutext'] = $glossary['term'];
-              $newArr['description'] = '';
+              $newArr['description'] = $glossary['definition'];
               $newArr['itemid'] = $glossary['item_id'];
               $newArr['moduleid'] = 'glossary';
               $newArr['params'] = array('id'=>$glossary['item_id'],'action' => 'viewbyletter');

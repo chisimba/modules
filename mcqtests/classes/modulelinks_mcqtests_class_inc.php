@@ -47,7 +47,7 @@ class modulelinks_mcqtests extends object
     {
         $bigArr = array();
 
-        $tests = $this->$objTests->getTests($contextCode);
+        $tests = $this->objTests->getTests($contextCode);
 
         foreach ($tests as $test)
         {
