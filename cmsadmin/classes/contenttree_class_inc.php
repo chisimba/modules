@@ -72,7 +72,7 @@ class contenttree extends object
         * @return string
         * @access public
         */
-        public function show($currentNode = null, $admin, $module = 'cms', $sectionAction = 'showsection', $contentAction = 'showcontent')
+        public function show($currentNode, $admin, $module = 'cms', $sectionAction = 'showsection', $contentAction = 'showcontent')
         {
             $html = $this->buildTree($currentNode, $admin, $module, $sectionAction, $contentAction);
             return $html;
@@ -85,15 +85,12 @@ class contenttree extends object
          * @return string
          * @access public
          */
-        public function buildTree($currentNode = null, $admin, $module = 'cms', $sectionAction = 'showsection', $contentAction = 'showcontent')
+        public function buildTree($currentNode, $admin, $module = 'cms', $sectionAction = 'showsection', $contentAction = 'showcontent')
         {
             //check if there are any root nodes
 				
             if ($this->getChildNodeCount(0) > 0) {
-            	$objLink = new link($this->uri('', $module));
-                $objLink->link = $this->objLanguage->languageText('word_home');
-                $html = $objLink->show();
-                $html .= '<div id="productsandservices" class="yuimenu">
+            	$html = '<div id="productsandservices" class="yuimenu">
                 		 <div class="bd">
                 		 <ul class="first-of-type">';
                 //start the tree building
