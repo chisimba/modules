@@ -1,9 +1,9 @@
 <?php
 /**
-* Assignment admin class extends controller
+* Assignment class extends controller
 * @author Megan Watson
 * @copyright (c) 2004 UWC
-* @package assignmentadmin
+* @package assignment
 * @version 1
 * @filesource
 */
@@ -18,14 +18,14 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * Forms part of formative assessment
  * @author Megan Watson
  * @copyright (c) 2004 UWC
- * @package assignmentadmin
+ * @package assignment
  * @version 1
  */
 
-class assignmentadmin extends controller
+class assignment extends controller
 {
+    public $contextcode;
 
-    public $contextCode;
     /**
     * Initialise objects used in the module.
     */
@@ -33,13 +33,13 @@ class assignmentadmin extends controller
     {
         // Check if the module is registered and redirect if not.
         // Check if the assignment module is registered and can be linked to.
-        /*$this->objModules =& $this->newObject('modulesadmin','modulelist');
-        if(!$this->objModules->checkIfRegistered('Assignment Management', 'assignmentadmin')){
+        /*$this->objModules =& $this->newObject('modules','modulecatalogue');
+        if(!$this->objModules->checkIfRegistered('Assignments', 'assignment')){
             return $this->nextAction('notregistered',array('modname'=>'assignment'), 'redirect');
-        }
-	*/
+        }*/
+	
         $this->test = FALSE;
-        /*if($this->objModules->checkIfRegistered('Online Tests','testadmin')){
+	/*if($this->objModules->checkIfRegistered('Online Tests','test')){
             $this->test = TRUE;
         }
 	*/
@@ -58,32 +58,35 @@ class assignmentadmin extends controller
             $this->rubric = TRUE;
         }
 	*/
-        $this->dbAssignment =& $this->getObject('dbassignment', 'assignment');
-        $this->dbSubmit =& $this->getObject('dbassignmentsubmit', 'assignment');
+        $this->dbAssignment =& $this->getObject('dbassignment','assignment');
+        $this->dbSubmit =& $this->getObject('dbassignmentsubmit','assignment');
 
-        if($this->essay){
+        /*if($this->essay){
             $this->dbEssayTopics =& $this->newObject('dbessay_topics','essay');
             $this->dbEssays =& $this->newObject('dbessays','essay');
             $this->dbEssayBook =& $this->newObject('dbessay_book','essay');
         }
+	*/
         if($this->ws){
             $this->dbWorksheet =& $this->newObject('dbworksheet','worksheet');
             $this->dbWorksheetResults =& $this->newObject('dbworksheetresults','worksheet');
         }
-        if($this->test){
+        /*if($this->test){
             $this->dbTestAdmin =& $this->newObject('dbtestadmin','testadmin');
             $this->dbTestResults =& $this->newObject('dbresults','testadmin');
         }
+	*/
         $this->objDate =& $this->newObject('dateandtime','utilities');
         $this->objLanguage =& $this->newObject('language','language');
         $this->objUser =& $this->newObject('user','security');
         //$this->objGroups =& $this->newObject('groupAdminModel','groupadmin');
         $this->objContext =& $this->newObject('dbcontext','context');
+		$this->dbassignmentsubmit = $this->getObject('dbassignmentsubmit');
+        // Get an instance of the filestore object and change the tables to essay specific tables
+       $this->objFile= $this->newObject('upload','filemanager');
+       // $this->objFile->changeTables('tbl_assignment_filestore','tbl_assignment_blob');
+		$this->objFileRegister =& $this->getObject('registerfileusage', 'filemanager');
 
-        // Get an instance of the filestore object and change the tables to assignment specific tables
-        /*$this->objFile=& $this->getObject('fileupload','filestore');
-        $this->objFile->changeTables('tbl_assignment_filestore','tbl_assignment_blob');
-	*/
         $this->userId = $this->objUser->userId();
 
         if($this->objContext->isInContext()){
@@ -98,7 +101,7 @@ class assignmentadmin extends controller
             //Log this module call
             $this->objLog->log();
         }*/
-    }	
+    }
 
     /**
     * The standard dispatch method for the module.
@@ -109,154 +112,192 @@ class assignmentadmin extends controller
     public function dispatch($action)
     {
         switch($action){
-            // display template to add or edit an assignment
-            case 'edit':
-            case 'add':
-                return $this->addAssign($action);
-
-            // delete an assignment
-            case 'delete':
-                return $this->deleteAssign();
-
-            // save new or edited assignment
-            case 'saveassign':
-                $postSave = $this->getParam('save');
-                if($postSave == $this->objLanguage->languageText('word_cancel')){
-                    return $this->nextAction('');
-                }
-                $this->saveAssign();
-                $message = $this->objLanguage->languageText('mod_assignmentadmin_saveassignconfirm','assignmentadmin');
-                $this->setSession('confirm', $message);
-                return $this->nextAction('viewbyletter', array('confirm'=>'yes'));
-
-            // change the editor for the question
-            case 'changeeditor':
-                $editor = $this->getParam('editor');
-                $id = $this->saveAssign();
-                return $this->nextAction('edit', array('id'=>$id, 'editor'=>$editor));
-
             // view the assignment
             case 'view':
-                return $this->viewAssign();
+                $var = $this->getParam('var', FALSE);
+                return $this->viewAssign($var);
 
-            // mark the submitted assignments
-            case 'mark':
-                $postSave = $this->getParam('save');
-                if($postSave){
-                    if($postSave == $this->objLanguage->languageText('word_exit')){
-                        return $this->nextAction('');
-                    }
+            // insert the submitted assignment in the database
+            case 'submit':
+                $postSave = $this->getParam('save', '');
+                if($postSave == $this->objLanguage->languageText('word_exit')){
+                    return $this->nextAction('');
                 }
-                return $this->listAssign();
+                return $this->submitAssign();
+
+            // change the editor for the assignment
+            case 'changeeditor':
+                $id = $this->getParam('id', '');
+                $editor = $this->getParam('editor');
+                $this->saveAssign();
+                return $this->nextAction('view', array('id'=>$id, 'editor'=>$editor, 'var'=>TRUE));
 
             // download an assignment
             case 'download':
                 $this->setPageTemplate('download_page_tpl.php');
                 return 'download_tpl.php';
 
-            // display template to mark an uploaded assignment
-            case 'upload':
-                return $this->markAssign();
-
-            // display template to mark an online assignment
-            case 'online':
-                return $this->markOnlineAssign();
-
-            case 'uploadsubmit':
-                $postSave = $this->getParam('save');
-                if($postSave == $this->objLanguage->languageText('word_exit')){
-                    return $this->nextAction('mark',array('id'=>$this->getParam('id')));
+            case 'showcomment':
+                return $this->showComment();
+                
+         	case 'upload';
+         		$id = $this->getParam('id');
+         		$this->setVarByRef('id',$id);
+         		return 'upload_tpl.php';
+         	break;
+         	
+         	case 'uploadsubmit':
+                // get topic id
+                $id=$this->getParam('id');
+                // get booking id
+                //$book=$this->getParam('book');
+                $msg = '';
+                $postSubmit = $this->getParam('submit');
+				
+                // exit upload form
+                if($postSubmit==$this->objLanguage->languageText('word_exit')){
+                    return $this->nextAction('');
                 }
-                return $this->saveMark();
 
-            // Display search results
-            case 'viewbyletter':
-                return $this->showResults();
+                // upload essay and return to form
+                if($postSubmit==$this->objLanguage->languageText('mod_assignment_upload', 'assignment')){
+
+                    // change the file name to fullname_studentId
+                    $studentid = $this->userId;
+                    //$name = $this->user;
+    
+                    // upload file to database
+					$arrayfiledetails = $this->objFile->uploadFile('file');
+		
+					if ($arrayfiledetails['success']){				
+                    	// save file id and submit date to database
+                    	$fields=array(
+                    		'userid'=>$studentid,
+                    		'assignmentid'=>$id,
+                    		'updated'=>date('Y-m-d H:i:s'),
+                    		'studentfileid'=>$arrayfiledetails['fileid'],
+                    		'datesubmitted'=>date('Y-m-d H:i:s')
+                        );
+                    	$this->dbassignmentsubmit->addSubmit($fields);
+						$this->objFileRegister->registerUse($arrayfiledetails['fileid'], 'assignment', 'tbl_assignment_submit', $id, 'studentfileid', $this->contextcode, '', TRUE);	
+                    	// display success message
+                    	$msg = $this->objLanguage->languageText('mod_assignment_confirmupload','assignment');
+                    	$this->setVarByRef('msg',$msg);
+                    }
+                }
+                return $this->studentHome();
+            break;
 
             default:
-
-
-                return $this->assignHome();
+                return $this->studentHome();
         }
     }
 
     /**
-    * Method to display the lecturers home page for assignments.
-    * @return The template for the lecturers home page.
+    * Method to display the Students home page.
+    * @return The template for the students home page.
     */
-    public function assignHome()
+    public function studentHome()
     {
-        return 'assignment_tpl.php';
-    }
+        // Get students assignments: worksheets, booked essays
+        $wsData = array(); $essay = array(); $topic = array(); $essayData = array();
+        $assignData = array(); $testData = array();
 
-    /**
-    * Method to display the template for adding or editing an assignment.
-    * @param string $mode Add or Edit.
-    * @return The template for adding or editing an assignment.
-    */
-    public function addAssign($mode)
-    {
-        $data = array();
-        if($mode == 'edit'){
-            $id = $this->getParam('id');
-            $data = $this->dbAssignment->getAssignment($this->contextCode, "id='$id'");
+        if($this->ws){
+            $wsData = $this->dbWorksheet->getWorksheetsInContext($this->contextCode);
+            if(!empty($wsData)){
+                foreach($wsData as $key=>$line){
+                    $result = $this->dbWorksheetResults->getResults(NULL, "worksheet_id='"
+                            .$line['id']."' AND userid='".$this->userId."'");
+                    $wsData[$key]['mark'] = $result[0]['mark'];
+                    $wsData[$key]['completed'] = $result[0]['completed'];
+                }
+            }
         }
-        $this->setVarByRef('data', $data);
-        return 'assignment_add_tpl.php';
-    }
+        if($this->essay){
+            // get topic list for the context
+            $topicFilter = "context='".$this->contextCode."'";
+            $topicFields = 'id, name, closing_date, userid';
+            $topics = $this->dbEssayTopics->getTopic(NULL, $topicFields, $topicFilter);
 
-    /**
-    * Method to delete an assignment.
-    * @return The next action: default.
-    */
-    public function deleteAssign()
-    {
-        $this->dbAssignment->deleteAssignment($this->getParam('id'));
-        return $this->nextAction('viewbyletter');
-    }
+            // check booked topics and get booked essays
+            if(!empty($topics)){
+                $i = 0;
+                foreach($topics as $item){
+                    $bookFilter = "where studentid='".$this->userId."' and topicid='".$item['id']."'";
+                    $booking = $this->dbEssayBook->getBooking($bookFilter);
+                    if(!empty($booking)){
+                        $essay = $this->dbEssays->getEssay($booking[0]['essayid'], 'topic');
+                        $booking[0]['essayName'] = $essay[0]['topic'];
+                        $booking[0]['topicName'] = $item['name'];
+                        $booking[0]['closing_date'] = $item['closing_date'];
+                        $booking[0]['lecturer'] = $item['userid'];
+                        $essayData[] = $booking[0];
+                    }else{
+                        $i++;
+                    }
+                }
+                if($i > 0){
+                    $essayData[]['unassigned'] = $i;
+                }
+            }
+        }
+        if($this->test){
+            $filter =
+            $testData = $this->dbTestAdmin->getTests($this->contextCode);
+            if(!empty($testData)){
+                foreach($testData as $key=>$line){
+                    $result = $this->dbTestResults->getResult($this->userId, $line['id']);
+                    if(!empty($result)){
+                        $testData[$key]['mark'] = $result[0]['mark'];
+                    }else{
+                        $testData[$key]['mark'] = 'none';
+                    }
+                }
+            }
+        }
+        $assignData = $this->dbAssignment->getAssignment($this->contextCode);
 
-    /**
-    * Method to save a new assignment or update an existing assignment.
-    * @return The next action: default.
-    */
-    public function saveAssign()
-    {
-        $id = $this->getParam('id', NULL);
+ 
+        if(!empty($assignData)){
+            foreach($assignData as $key=>$val){
+                $submitData = $this->dbSubmit->getSubmit("assignmentid='".$val['id']."' AND
+                userid='".$this->objUser->userId()."'", 'id AS submitid, mark AS studentmark, datesubmitted, fileid');
 
-        $fields = array();
-        $fields['name'] = $this->getParam('name', '');
-        $fields['format'] = $this->getParam('format', '');
-        $fields['resubmit'] = $this->getParam('resubmit', '');
-        $fields['mark'] = $this->getParam('mark', '');
-        $fields['percentage'] = $this->getParam('percentage', '');
-        $fields['closing_date'] = $this->getParam('date', '');
-        $fields['description'] = $this->getParam('description', '');
+		if(!($submitData === FALSE)){
+                	$assignData[$key] = array_merge($val, $submitData[0]);
+		}
+            }
+        }
+        $msg = $this->getParam('confirm');
+        if(!empty($msg)){
+            $this->setVarByRef('msg',$msg);
+        }
 
-        $fields['userId'] = $this->userId;
-        $fields['context'] = $this->contextCode;
-        $fields['last_modified'] = date('Y-m-d H:i',time());
-	
-        $id = $this->dbAssignment->addAssignment($fields, $id);
-	
-        return $id;
+        $this->setVarByRef('essayData', $essayData);
+        $this->setVarByRef('wsData', $wsData);
+        $this->setVarByRef('testData', $testData);
+        $this->setVarByRef('assignData', $assignData);
+        return 'assignment_student_tpl.php';
     }
 
     /**
     * Method to display the assignment.
+    * @param bool $var Allows the assignment to be resubmitted.
     * @return The template for displaying the assignment.
     */
-    public function viewAssign()
+    public function viewAssign($var = FALSE)
     {
         $id = $this->getParam('id');
         $data = $this->dbAssignment->getAssignment($this->contextCode, "id='$id'");
 
-        if($data[0]['resubmit']){
-            $submit = $this->dbSubmit->getSubmit("assignmentId='$id' AND userId='"
-            .$this->objUser->userId()."'", 'id, online, studentfileId');
+        if($data[0]['resubmit'] || $var){
+            $submit = $this->dbSubmit->getSubmit("assignmentid='$id' AND userid='"
+            .$this->objUser->userId()."'", 'id, online, fileId');
             if(!empty($submit)){
                 $data[0]['online'] = $submit[0]['online'];
-                $data[0]['studentfileId'] = $submit[0]['studentfileId'];
-                $data[0]['submitId'] = $submit[0]['id'];
+                $data[0]['fileid'] = $submit[0]['fileid'];
+                $data[0]['submitid'] = $submit[0]['id'];
             }
         }
 
@@ -265,231 +306,52 @@ class assignmentadmin extends controller
     }
 
     /**
-    * Method to list the assignments submitted by students.
-    * @return The template for displaying the list of submissions.
+    * Method to display a lecturers comment in a pop-up window
     */
-    public function listAssign()
+    public function showComment()
     {
         $id = $this->getParam('id');
-        $assign = $this->dbAssignment->getAssignment($this->contextCode,"id='$id'");
-        $data = $this->dbSubmit->getSubmit("assignmentId = '$id'");
-
-        $this->setVarByRef('assign', $assign[0]);
-        $this->setVarByRef('data', $data);
-        return 'assignment_list_tpl.php';
+        $name = $this->getParam('name');
+        $comment = $this->dbSubmit->getSubmit("id='$id'",'comment');
+        $comment[0]['name'] = $name;
+        $this->setVarByRef('data',$comment);
+        return 'assignment_comment_tpl.php';
     }
 
     /**
-    * Method to display the template for marking an assignment.
-    * Lecturers can upload the marked assignment and enter a mark and comment for it.
-    * @return The template for marking assignments.
+    * Method to save a students submitted assignment in the database
     */
-    public function markAssign()
+    public function saveAssign()
     {
-        $data = $this->dbSubmit->getSubmit("id='".$this->getParam('submitId')."'");
-        $file = $this->dbSubmit->getFileName($data[0]['userId'],$data[0]['studentfileId']);
-        $data[0]['fileName'] = $file;
-        $data[0]['assignmentId'] = $this->getParam('id');
-        $data[0]['assignment'] = $this->getParam('assignment');
-
-        $confirm = $this->getParam('confirm');
-        if(!empty($confirm)){
-            $this->setVarByRef('msg',$confirm);
-        }
-        $this->setVarByRef('data',$data);
-        $this->setVar('online',FALSE);
-        return 'assignment_mark_tpl.php';
-    }
-
-    /**
-    * Method to display the template for marking an online assignment.
-    * Lecturers can mark the assignment and enter a mark and comment for it.
-    * @return The template for marking assignments.
-    */
-    public function markOnlineAssign()
-    {
-        $data = $this->dbSubmit->getSubmit("id='".$this->getParam('submitId')."'");
-        $data[0]['assignmentId'] = $this->getParam('id');
-        $data[0]['assignment'] = $this->getParam('assignment');
-        $this->setVarByRef('data',$data);
-        $this->setVar('online',TRUE);
-        return 'assignment_mark_tpl.php';
-    }
-
-    /**
-    * Method to save the marked assignment.
-    * The lecturers mark and comment are saved to the relevant assignment
-    * @return The next action: mark
-    */
-    public function saveMark()
-    {
-        $id = $this->getParam('id', '');
         $fields = array();
+        $fields['assignmentid'] = $this->getParam('id', '');
+        $fields['userid'] = $this->userId;
+        $fields['datesubmitted'] = date('Y-m-d H:i', time());
 
-        // save mark and comment
-        $fields['mark'] = $this->getParam('mark', '');
-        $fields['commentinfo'] = $this->getParam('comment', '');
-        
-        $this->dbSubmit->updateSubmit($this->getParam('submitId', ''), $fields);
-        $action = 'mark';
-        $params = array('id'=>$this->getParam('id'));
-
-        $postSave = $this->getParam('save');
-        if($postSave ==$this->objLanguage->languageText('mod_assignmentadmin_upload','assignmentadmin')){
-            // upload marked assignment - overwrite students submission
-            $fileId = $this->getParam('fileId', '');
-            $fileid = $this->objFile->uploadFile($_FILES['file'],'file',$fileId);
-            $action = 'upload';
-            $params['assignment'] = $this->getParam('assignment', '');
-            $params['submitId'] = $this->getParam('submitId', '');
-            if(!empty($fileid)){
-                $msg = $this->objLanguage->languageText('mod_assignmentadmin_confirmupload','assignmentadmin');
-                $params['confirm'] = $msg;
-            }
+        $postFormat = $this->getParam('format');
+        if($postFormat && isset($_FILES['file'])){
+            $fileId = $this->getParam('fileid', NULL);
+	    	$fileId = $this->objFile->uploadFile($_FILES['file'],'file',$fileId);
+            $fields['fileid'] = $fileId;
+        }else{
+            $fields['online'] = $this->getParam('text', '');
         }
-        return $this->nextAction($action,$params);
+
+        $postSubmitId = $this->getParam('submitid', NULL);
+        $id = $this->dbSubmit->addSubmit($fields, $postSubmitId);
+        return $id;
     }
 
     /**
-    * Method to display the results from a search.
-    * @return The template for the lecturers home page.
+    * Method to save a students submitted assignment in the database
     */
-    public function showResults()
+    public function submitAssign()
     {
-        $title = $this->objLanguage->languageText('mod_assignmentadmin_listallassignments','assignmentadmin');
-        $start = $this->objLanguage->languageText('mod_assignmentadmin_startingwith','assignmentadmin');
-        $contain = $this->objLanguage->languageText('mod_assignmentadmin_containing','assignmentadmin');
-
-        $letter = $this->getParam('letter');
-        $searchby = 'all';
-        $searchField = $this->getParam('searchField', '');
-
-        if (!empty($searchField)) {
-            $searchby = $this->getParam('searchby', '');
-            $index = '%'.$searchField;
-            $title .= ' '.$contain.' "'.$searchField.'"';
-        } else {
-            if ($letter == 'listall' or $letter == '') {
-                $index = '';
-            } else {
-                $index = $letter;
-                $title .= ' '.$start.' "'.$letter.'"';
-            }
+        $id = $this->saveAssign();
+        if(!($id === FALSE)){
+            $msg = $this->objLanguage->languageText('mod_assignment_confirmsubmit','assignment');
         }
-        $data=array();
-        if($searchby == 'assignment' || $searchby == 'all'){
-            $assign = $this->dbAssignment->search('name', $index,$this->contextCode);
-            if(!empty($assign)){
-                $assign[0]['type']='assignmentadmin';
-                $data=$assign;
-            }
-        }
-        if($this->test){
-            if($searchby == 'test' || $searchby == 'all'){
-                $tests = $this->dbTestAdmin->search('name', $index, $this->contextCode);
-                if(!empty($tests)){
-                    $tests[0]['type']='testadmin';
-                    $data = array_merge($data, $tests);
-                }
-            }
-        }
-        if($this->essay){
-            if($searchby == 'essay' || $searchby == 'all'){
-                $filter = "name LIKE '$index%' AND context='".$this->contextCode."'";
-                $essays = $this->dbEssayTopics->getTopic(NULL, NULL, $filter);
-                if(!empty($essays)){
-                    $essays[0]['type']='essayadmin';
-                    $data = array_merge($data, $essays);
-                }
-            }
-        }
-        if($this->ws){
-            if($searchby == 'worksheet' || $searchby == 'all'){
-                $worksheets = $this->dbWorksheet->search('name',$index, $this->contextCode);
-                if(!empty($worksheets)){
-                    $worksheets[0]['type']='worksheetadmin';
-                    $data = array_merge($data, $worksheets);
-                }
-            }
-        }
-
-        $this->setVarByRef('data', $data);
-        $this->setVarByRef('title', $title);
-
-        // Check for a confirmation message
-        $confirm = $this->getParam('confirm');
-
-        if($confirm == 'yes'){
-            $message = $this->getSession('confirm');
-            $this->unsetSession('confirm');
-            $this->setVarByRef('message', $message);
-        }
-
-        return 'assignment_tpl.php';
-    }
-
-    /**
-    * Method to search all assignments in the database.
-    * @return The interface for searching assignments.
-    */
-    public function putSearch()
-    {
-        // Set up html elements
-        $objRadio =& $this->newObject('radio','htmlelements');
-        $objButton =& $this->newObject('button','htmlelements');
-        $objForm =& $this->newObject('form','htmlelements');
-        $objAlphabet =& $this->newObject('alphabet', 'navigation');
-        //$objText =& $this->newObject('textinput','htmlelements');
-        $this->loadClass('textinput','htmlelements');
-
-        // Set up language items
-        $searchLabel=$this->objLanguage->languageText('word_search');
-        $listLabel=$this->objLanguage->languageText('mod_assignmentadmin_listall','assignmentadmin');
-        $allLabel=$this->objLanguage->languageText('mod_assignmentadmin_all','assignmentadmin');
-        $testLabel=$this->objLanguage->languageText('mod_testadmin_tests','assignmentadmin');
-        $essayLabel=$this->objLanguage->languageText('mod_essayadmin_essays','assignmentadmin');
-        $wsLabel=$this->objLanguage->languageText('mod_worksheetadmin_worksheets','assignmentadmin');
-        $assignLabel=$this->objLanguage->languageText('mod_assignmentadmin_assignments','assignmentadmin');
-        $otherLabel = $this->objLanguage->languageText('mod_assignmentadmin_other','assignmentadmin');
-
-        // search button and input
-        $objButton->button('search', $searchLabel);
-        $objButton->setToSubmit();
-        $searchbtn = $objButton->show();
-
-        $objText =  new textinput('searchField');
-        $objText->size = "20";
-        $search = $objText->show() . '&nbsp;&nbsp;&nbsp;' . $searchbtn;
-
-        // set up search in radio buttons
-        $objRadio->radio('searchby');
-        if($this->test){
-            $objRadio->addOption('test', $testLabel);
-        }
-        if($this->ws){
-            $objRadio->addOption('worksheet', $wsLabel);
-        }
-        if($this->essay){
-            $objRadio->addOption('essay', $essayLabel);
-        }
-        $objRadio->addOption('assignment', $otherLabel);
-        $objRadio->addOption('all',$allLabel);
-        $objRadio->setSelected('all');
-        $objRadio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
-        $search .= '<p>'.$objRadio->show().'</p>';
-
-        $objForm->form('search', $this->uri(array('action' => 'viewbyletter')));
-        $objForm->addToForm($search);
-        $str = $objForm->show();
-
-        // set up linked alphabet
-        $linkarray = array('action' => 'viewbyletter', 'letter' => 'LETTER');
-        $url = $this->uri($linkarray, 'assignmentadmin');
-
-        $alpha = $objAlphabet->putAlpha($url, TRUE, $listLabel);
-        $str .= '<p>'.$alpha.'</p>';
-
-        return $str;
+        return $this->nextAction('',array('confirm'=>$msg));
     }
 
     /**
@@ -501,6 +363,6 @@ class assignmentadmin extends controller
     {
         $ret = $this->objDate->formatDate($date);
         return $ret;
-    }
+	}
 }// end class assignment
 ?>
