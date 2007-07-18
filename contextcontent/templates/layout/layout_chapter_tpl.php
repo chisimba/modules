@@ -100,6 +100,17 @@ if (isset($currentChapter)) {
     
     $left .= '<p>'.$returnLink->show().'</p>';
     
+    $objDBContext = $this->getObject('dbcontext', 'context');
+
+	if($objDBContext->isInContext())
+	{
+	    $objContextUtils = & $this->getObject('utilities','context');
+	    $left .= $objContextUtils->getHiddenContextMenu('eventscalendar','show');
+	}	
+	//add the blog block
+	$objBlocks =  $this->getObject('blocks', 'blocks');
+	$left .= $objBlocks->showBlock('latest', 'blog');
+    
     $cssLayout = $this->newObject('csslayout', 'htmlelements');
     $cssLayout->setLeftColumnContent($left);
     $cssLayout->setMiddleColumnContent($this->getContent());
