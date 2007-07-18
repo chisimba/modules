@@ -49,18 +49,23 @@ class modulelinks_mcqtests extends object
 
         $tests = $this->objTests->getTests($contextCode);
 
-        foreach ($tests as $test)
-        {
-
-            $testArray = array();
-            $testArray['menutext'] = $test['name'];
-            $testArray['description'] = $test['description'];
-            $testArray['itemid'] = $test['id'];
-            $testArray['moduleid'] = 'mcqtests';
-            $testArray['params'] = array('action' => 'view','id' => $test['id']);
-            $bigArr[] = $testArray;
-        }
-        return $bigArr;
+		if(count($tests) > 0)
+         {
+	        foreach ($tests as $test)
+	        {
+	
+	            $testArray = array();
+	            $testArray['menutext'] = $test['name'];
+	            $testArray['description'] = $test['description'];
+	            $testArray['itemid'] = $test['id'];
+	            $testArray['moduleid'] = 'mcqtests';
+	            $testArray['params'] = array('action' => 'view','id' => $test['id']);
+	            $bigArr[] = $testArray;
+	        }
+	        return $bigArr;
+	    } else {
+			return FALSE;
+		}
     }
 }
 ?>
