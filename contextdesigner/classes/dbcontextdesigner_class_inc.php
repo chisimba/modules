@@ -54,9 +54,7 @@ class dbcontextdesigner extends dbTable
                 $description = $selectedItemsArr[2];
                 $linkid = $selectedItemsArr[0];
                 $params = $this->getParam($linkid);//print  $selectedItemsArr[1];
-              //  print_r($selectedItemsArr);
-              //  print_r($row);
-//                print($params);
+             
                 $fields = array(
                     'contextcode' => $contextCode,
                     'moduleid' => $moduleId,
@@ -67,13 +65,17 @@ class dbcontextdesigner extends dbTable
                     'access' => 'Published',
                     'params' => $params
                 );
-                var_dump($fields);
+                //var_dump($fields);
                
-                if(!$this->checkExist($contextCode, $params, $moduleId))
+                /*if(!$this->checkExist($contextCode, $params, $moduleId))
                 {
                     $this->insert($fields);                    
                    //die('done');
-                } 
+                } else {
+					print $contextCode.'----------'. $params.'------------'. $moduleId.'<Br>';
+				}
+				*/
+				 $this->insert($fields);             
             
             }
             
@@ -156,6 +158,8 @@ class dbcontextdesigner extends dbTable
     
     /**
      * Method to get the last order position
+     * @return integer
+     * @access public 
      */
     public function getLastOrderPosition($contextCode)
     {
@@ -167,7 +171,8 @@ class dbcontextdesigner extends dbTable
     /**
      * Method to check if a record exists
      * 
-     * 
+     * @return integer
+     * @return boolean
      */
     public function checkExist($contextCode, $params, $moduleid)
     {

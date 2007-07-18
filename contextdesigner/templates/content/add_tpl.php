@@ -28,10 +28,14 @@ $objButton2->setOnClick('javascript:document.location = \''.$this->uri(null).'\'
 
 $objDropDown->name = 'moduleid';
 foreach ($modules as $module)
-{
-    $modInfo = $this->_objModule->getModuleInfo($module['moduleid']);
+{//var_dump($this->_objUtils->getModuleLinks($module['moduleid']));
+ 	if($this->_objUtils->getModuleLinks($module['moduleid']))
+ 	{
+		$modInfo = $this->_objModule->getModuleInfo($module['moduleid']);
     
-    $objDropDown->addOption($module['moduleid'], ucwords($modInfo['name']) );    
+    	$objDropDown->addOption($module['moduleid'], ucwords($modInfo['name']) );    	
+	}
+    
 }
 
 
@@ -39,8 +43,10 @@ $objForm->addToForm('Select a Module');
 $objForm->addToForm($objDropDown);
 $objForm->addToForm($objButton2);
 $objForm->addToForm($objButton);
+$objForm->addToForm('<br/><span class="subdued">Only plugins with links will be displayed</span>');
 
 
 echo $objFeatureBox->show('Step 1 : Select a Plugin', $objForm->show());
+
 
 ?>

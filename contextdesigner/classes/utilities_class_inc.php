@@ -76,6 +76,19 @@ class utilities extends object
     }
     
     /**
+    * Method to check if a plugin has links available
+    * for the context designer to consume
+    *
+    * @return boolean
+    * @access public 
+    * @param string $moduleId
+    */
+    public function hasLinks($moduleId)
+    {
+		
+	}
+    
+    /**
      * Method to returnn the up and down arrow icons for a link record
      * so that the order can be changed appropriately
      * 
