@@ -228,10 +228,11 @@ $frm_select->id = 'select';
 $frm_select->addToForm($table->show());
 $frm_select->addToForm($txt_task->show());
 //print out the page
-$middleColumnContent = "";
+$middleColumnContent = "<hr />";
 $middleColumnContent .= $filterTable;
 $middleColumnContent .= $frm_select->show();
 $middleColumnContent .= '&nbsp;'.'<br/>';
+$middleColumnContent .= "<hr />";
 $middleColumnContent .= $objViewAllLink->show().'&nbsp;';//'/'.'&nbsp;'.$objAddSectionLink->show();
 
 echo $middleColumnContent;

@@ -1,6 +1,36 @@
 <?php
-//Developer identify yourself and please commebt your code - inserted by Derek 2006 12 16
+$script ='
+<script type="text/javascript">
+//<![CDATA[
+YAHOO.example.onMenuReady = function() {
 
+                // Instantiate and render the menu
+
+                var oMenu = new YAHOO.widget.Menu(
+                                    "productsandservices", 
+                                    {
+                                        position:"static", 
+                                        hidedelay:750, 
+                                        lazyload:true 
+                                    }
+                                );
+
+                oMenu.render();
+
+            };
+
+
+            // Initialize and render the menu when it is available in the DOM
+
+            YAHOO.util.Event.onContentReady("productsandservices", YAHOO.example.onMenuReady);
+
+
+
+
+
+//]]>
+</script>
+';
 
 
 $objFeatureBox = $this->newObject('featurebox', 'navigation');
@@ -14,15 +44,15 @@ $objLanguage = $this->newObject('language', 'language');
 $objArticleBox = $this->newObject('articlebox', 'cmsadmin');
 $objDbBlocks = $this->newObject('dbblocks', 'cmsadmin');
 //Insert script for generating tree menu
-///$js = $this->getJavascriptFile('tree.js', 'cmsadmin');
-//$this->appendArrayVar('headerParams', $js);
-//Include tree menu css script
-//$css = '<link rel="stylesheet" type="text/css" media="all" href="chisimba_modules/cmsadmin/resources/tree.css" />';
-//$this->appendArrayVar('headerParams', $css);
-//Set to automatically render htmllist into tree menu
-//$this->appendArrayVar('bodyOnLoad', 'autoInit_trees()');
-//$this->appendArrayVar('headerParams', $this->getJavascriptFile('coolmenu.js', 'cmsadmin'));
+$this->appendArrayVar('headerParams', $this->getJavascriptFile('yahoo/yahoo.js', 'yahoolib'));
+$this->appendArrayVar('headerParams', $this->getJavascriptFile('event/event.js', 'yahoolib'));
+$this->appendArrayVar('headerParams', $this->getJavascriptFile('dom/dom.js', 'yahoolib'));
+$this->appendArrayVar('headerParams', $this->getJavascriptFile('container/container.js', 'yahoolib'));
+$this->appendArrayVar('headerParams', $this->getJavascriptFile('menu/menu.js', 'yahoolib'));
+$this->appendArrayVar('headerParams',$script);
 
+$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("menu/assets/menu.css", 'yahoolib').'" />';
+$this->appendArrayVar('headerParams', $css);
 
 /*****************LEFT SIDE ***************************************/
 

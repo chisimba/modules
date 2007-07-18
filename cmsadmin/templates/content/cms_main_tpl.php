@@ -1,5 +1,4 @@
 <?php
-
 //Template to view the different admin functions
 $tbl = $this->newObject('htmltable', 'htmlelements');
 $tbl->cellpadding = 3;
@@ -29,7 +28,7 @@ $objLayer->border = '; clear:both; margin:0px; padding:0px;';
 $headShow = $objLayer->show();
 
 echo $objRound->show($header.$headShow);//$tbl->show());
-
+echo '<hr />';
 echo  $cpanel;
 
 ?>

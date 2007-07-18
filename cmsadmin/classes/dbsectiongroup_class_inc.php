@@ -75,34 +75,7 @@ class dbsectiongroup extends dbTable
             exit();
         }
         return '';
-        /*
-		try {
-
-            if ($noPermissions != TRUE) {
-                $sql = "SELECT tbl_cms_sections.id, tbl_cms_sections.rootid, tbl_cms_sections.parentid, tbl_cms_sections.title, tbl_cms_sections.menutext, tbl_cms_sections.description, "
-                      . "tbl_cms_sections.published, tbl_cms_sections.showdate, tbl_cms_sections.showintroduction, tbl_cms_sections.numpagedisplay, tbl_cms_sections.checked_out, "
-                      . "tbl_cms_sections.checked_out_time, tbl_cms_sections.ordering, tbl_cms_sections.ordertype, tbl_cms_sections.access, tbl_cms_sections.params, "
-                      . "tbl_cms_sections.layout, tbl_cms_sections.link, tbl_cms_sections.nodelevel, tbl_cms_sectiongroup.group_id FROM "
-                      . "(tbl_cms_sections LEFT OUTER JOIN tbl_cms_sectiongroup ON tbl_cms_sections.id = tbl_cms_sectiongroup.section_id)"
-                      ." WHERE parentid = '".$parentId."' ORDER BY tbl_cms_sections.ordering";
-            } else {
-                $userId = $this->objUser->userId();
-                $userPKId = $this->objUser->PKid($userId);
-
-                $sql = "SELECT tbl_cms_sections.id, tbl_cms_sections.rootid, tbl_cms_sections.parentid, tbl_cms_sections.title, tbl_cms_sections.menutext, tbl_cms_sections.description, "
-                      . "tbl_cms_sections.published, tbl_cms_sections.showdate, tbl_cms_sections.showintroduction, tbl_cms_sections.numpagedisplay, tbl_cms_sections.checked_out, "
-                      . "tbl_cms_sections.checked_out_time, tbl_cms_sections.ordering, tbl_cms_sections.ordertype, tbl_cms_sections.access, tbl_cms_sections.params, "
-                      . "tbl_cms_sections.layout, tbl_cms_sections.link, tbl_cms_sections.nodelevel, tbl_cms_sectiongroup.group_id FROM "
-                      . "(tbl_cms_sections INNER JOIN tbl_cms_sectiongroup ON tbl_cms_sections.id = tbl_cms_sectiongroup.section_id"
-                      ." INNER JOIN tbl_groupadmin_groupuser ON tbl_cms_sectiongroup.group_id = tbl_groupadmin_groupuser.group_id)"
-                      ." WHERE parentid = '".$parentId."' AND user_id = '".$userPKId."' ORDER BY tbl_cms_sections.ordering";
-            }
-			return $this->query($sql);
-		} catch(customException $e) {
-            echo customException::cleanUp();
-            die();
-        }
-        */
+        
     }
 
     /**
@@ -165,38 +138,7 @@ class dbsectiongroup extends dbTable
 	       exit();
 	   }
 	   return '';
-	   /*
-		try {
-            if (($noPermissions) || ($this->objUser->isAdmin())) {
-                $sql = "SELECT tbl_cms_sections.id, tbl_cms_sections.rootid, tbl_cms_sections.parentid, tbl_cms_sections.title, tbl_cms_sections.menutext, tbl_cms_sections.description, "
-                      . "tbl_cms_sections.published, tbl_cms_sections.showdate, tbl_cms_sections.showintroduction, tbl_cms_sections.numpagedisplay, tbl_cms_sections.checked_out, "
-                      . "tbl_cms_sections.checked_out_time, tbl_cms_sections.ordering, tbl_cms_sections.ordertype, tbl_cms_sections.access, tbl_cms_sections.params, "
-                      . "tbl_cms_sections.layout, tbl_cms_sections.link, tbl_cms_sections.nodelevel, tbl_cms_sectiongroup.group_id FROM "
-                      . "(tbl_cms_sections LEFT OUTER JOIN tbl_cms_sectiongroup ON tbl_cms_sections.id = tbl_cms_sectiongroup.section_id)"
-                      ." WHERE tbl_cms_sections.id = '".$id."'";
-            } else {
-                $userId = $this->objUser->userId();
-                $userPKId = $this->objUser->PKid($userId);
-
-                $sql = "SELECT tbl_cms_sections.id, tbl_cms_sections.rootid, tbl_cms_sections.parentid, tbl_cms_sections.title, tbl_cms_sections.menutext, tbl_cms_sections.description, "
-                      . "tbl_cms_sections.published, tbl_cms_sections.showdate, tbl_cms_sections.showintroduction, tbl_cms_sections.numpagedisplay, tbl_cms_sections.checked_out, "
-                      . "tbl_cms_sections.checked_out_time, tbl_cms_sections.ordering, tbl_cms_sections.ordertype, tbl_cms_sections.access, tbl_cms_sections.params, "
-                      . "tbl_cms_sections.layout, tbl_cms_sections.link, tbl_cms_sections.nodelevel, tbl_cms_sectiongroup.group_id FROM "
-                      . "(tbl_cms_sections INNER JOIN tbl_cms_sectiongroup ON tbl_cms_sections.id = tbl_cms_sectiongroup.section_id"
-                      ." INNER JOIN tbl_groupadmin_groupuser ON tbl_cms_sectiongroup.group_id = tbl_groupadmin_groupuser.group_id)"
-                      ." WHERE tbl_cms_sections.id = '".$id."' AND user_id = '".$userPKId."'";
-            }
-			$result = $this->query($sql);
-            if (count($result) > 0) {
-                return $result[0];
-            } else {
-                return $result;
-            }
-		} catch(customException $e) {
-            echo customException::cleanUp();
-            die();
-        }
-        */
+	   
 	}
 
 

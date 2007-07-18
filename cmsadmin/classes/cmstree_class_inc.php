@@ -89,10 +89,12 @@ class cmstree extends object
         {
             //check if there are any root nodes
             if ($this->getChildNodeCount('0') > 0) {
-                $html = '<ul class="tree">';
+                $html = '<div id="productsandservices" class="yuimenu">
+                		 <div class="bd">
+                		 <ul class="first-of-type">';
                 //start the tree building
                 $html .= $this->buildLevel('0', $currentNode, $admin);
-                $html .= '</ul>';
+                $html .= '</ul></div></div>';
             } else {
                 $html = '';
             }
@@ -127,7 +129,7 @@ class cmstree extends object
                         } else {
 
                             $nodeUri = $this->uri(array('action'=>'showsection', 'id'=>$node['id'], 'sectionid'=>$node['id']), 'cms');
-                            $htmlLevel .= '<li class="sectionfolder"><a href="'.$nodeUri.'">'.htmlentities($node['menutext']).'</a><ul>';
+                            $htmlLevel .= '<li class="yuimenuitem first-of-type"><a href="'.$nodeUri.'">'.htmlentities($node['menutext']).'</a><ul>';
                             $htmlLevel .= $htmlChildren;
                             $htmlLevel .= '</ul></li>';
                         }
@@ -252,7 +254,7 @@ class cmstree extends object
 		{
 			//$menu = $this->getTree('cmsadmin', FALSE);
 			 $this->_objTree = & $this->newObject('contenttree', 'cmsadmin');
-			return $this->_objTree->show($current,TRUE,'cmsadmin','viewsection','viewcontent');
+			return $this->_objTree->show($current,TRUE,'cmsadmin','viewsection','addcontent');
 		}
 		
 		/**

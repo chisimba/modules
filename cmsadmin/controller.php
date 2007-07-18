@@ -158,7 +158,7 @@ class cmsadmin extends controller
                 $objLog = $this->getObject('logactivity', 'logger');
                 $objLog->log();
             
-		   } catch (Exception $e){
+		   } catch (customException $e){
        		    throw customException($e->getMessage());
         	    exit();
            }	    

@@ -545,6 +545,10 @@ class cmsutils extends object
                     $url = "javascript:if(checkSelect('select','input_arrayList[]')==false){alert('{$alertText}');}else{submitbutton('select','publish');}";
 			 		$linkText = $this->objLanguage->languageText('word_publish');
 			 		$iconList = $icon_publish->getTextIcon($url, 'publish', $linkText, 'png', 'icons/cms/');
+			 		// New - add
+			 		$url = $this->uri(array('action' => 'addsection'), 'cmsadmin');
+			 		$linkText = $this->objLanguage->languageText('word_new');
+			 		$iconList .= $icon_publish->getTextIcon($url, 'new', $linkText, 'gif', 'icons/cms/');
 			 		
 			 		// Unpublish
 			 		$alertText = $this->objLanguage->languageText('mod_cmsadmin_selectunpublishlist', 'cmsadmin');
@@ -558,10 +562,6 @@ class cmsutils extends object
 			 		$iconList .= $icon_publish->getTextIcon($url, 'copy', $linkText, 'gif', 'icons/cms/');
 			 		*/
 			 		
-			 		// New - add
-			 		$url = $this->uri(array('action' => 'addsection'), 'cmsadmin');
-			 		$linkText = $this->objLanguage->languageText('word_new');
-			 		$iconList .= $icon_publish->getTextIcon($url, 'new', $linkText, 'gif', 'icons/cms/');
 			 		
 			 		// Cancel	 		
 			 		$url = "javascript:history.back();";

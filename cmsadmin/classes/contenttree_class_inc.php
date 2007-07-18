@@ -72,7 +72,7 @@ class contenttree extends object
         * @return string
         * @access public
         */
-        public function show($currentNode = null, $admin = FALSE, $module = 'cms', $sectionAction = 'showsection', $contentAction = 'showcontent')
+        public function show($currentNode = null, $admin, $module = 'cms', $sectionAction = 'showsection', $contentAction = 'showcontent')
         {
             $html = $this->buildTree($currentNode, $admin, $module, $sectionAction, $contentAction);
             return $html;
@@ -85,18 +85,20 @@ class contenttree extends object
          * @return string
          * @access public
          */
-        public function buildTree($currentNode = null, $admin = FALSE, $module = 'cms', $sectionAction = 'showsection', $contentAction = 'showcontent')
+        public function buildTree($currentNode = null, $admin, $module = 'cms', $sectionAction = 'showsection', $contentAction = 'showcontent')
         {
             //check if there are any root nodes
 				
-            if ($this->getChildNodeCount('0') > 0) {
-                $objLink = new link($this->uri('', $module));
+            if ($this->getChildNodeCount(0) > 0) {
+            	$objLink = new link($this->uri('', $module));
                 $objLink->link = $this->objLanguage->languageText('word_home');
                 $html = $objLink->show();
-                $html .= '<ul class="tree">';
+                $html .= '<div id="productsandservices" class="yuimenu">
+                		 <div class="bd">
+                		 <ul class="first-of-type">';
                 //start the tree building
-                $html .= $this->buildLevel('0', $currentNode, $admin, $module, $sectionAction, $contentAction);
-                $html .= '</ul>';
+                $html .= $this->buildLevel(0, $currentNode, $admin, $module, $sectionAction, $contentAction);
+                $html .= '</ul></div></div><!-- end: tree div -->';
             } else {
                 $html = '';
             }
@@ -115,18 +117,15 @@ class contenttree extends object
         {
             //gets all the child nodes of id
             $nodes = $this->getChildNodes($parentId, $admin);
-            
+        
             //get the list of nodes that need to stay open for the currently selected node
-            //$openNodes = $this->getOpenNodes($currentNode);
-            //echo '<pre>'; print_r($nodes); 
-            //echo '</pre>';
-            
+                    
             if (!empty($nodes)) {
 
                 $htmlLevel = '';
                 foreach($nodes as $node) {
-                    $htmlChildren = '';
-                    $htmlChildren .= $this->addContent($node['id'], $module, $contentAction, $admin);
+                    $item = '';
+                  
 
                     if (!empty($sectionAction)) {
                         $nodeUri = $this->uri(array('action' => $sectionAction, 'id' => $node['id'], 'sectionid' => $node['id']), $module);
@@ -134,66 +133,19 @@ class contenttree extends object
                     } else {
                         $link = htmlentities($node['title']);
                     }
-
-                    // if node has further child nodes, recursively call buildLevel
-                    if ($this->getChildNodeCount($node['id']) > 0) {
-                        $htmlChildren .= $this->buildLevel($node['id'], $currentNode, $admin, $module, $sectionAction, $contentAction);
-                    }
-                    
-                    // if no content or child nodes with content, then suppress the node, else build it
-                    if(!empty($htmlChildren) || $admin){
-                        $class = 'closed';
-                        if($node['id'] == $currentNode){
-                            $class = '';
-                        }
-                        $htmlLevel .= "<li class='{$class}'>".$link;
-                        $htmlLevel .= '<ul>'.$htmlChildren.'</ul></li>';
-                    }
-
-/*
-                        //if no content or child nodes with content, then suppress the node, else build it
-                        if (($htmlChildren == '') && ($admin == FALSE)) {
-                            $htmlLevel = '';
-                        } else {
-                            $class = 'closed';
-                            if($node['id'] == $currentNode){
-                                $class = '';
-                            }
-                            $htmlLevel .= "<li class='{$class}'>".$link;
-                            /*
-                            if (in_array($node['id'], $openNodes)) {
-                                $htmlLevel .= '<li>'.$link.'<ul>';
-                            } else {
-                                $htmlLevel .= '<li class="closed">'.$link.'<ul>';
-                            }
-                            *
-
-                            if(!empty($htmlChildren)){
-                                $htmlLevel .= '<ul>'.$htmlChildren.'</ul>';
-                            }
-                            $htmlLevel .= '</li>';
-                        }
-                    } else {
-                        //if node has no child nodes, then just get content nodes
-
-                        if ($this->getNodeContentCount($node['id']) > 0) {
-                            $class = 'closed';
-                            if($node['id'] == $currentNode){
-                                $class = '';
-                            }
-                            $htmlLevel .= "<li class='{$class}'>".$link.'<ul>';
-                            /*
-                            if (in_array($node['id'], $openNodes)) {
-                                $htmlLevel .= '<li>'.$link.'<ul>';
-                            } else {
-                                $htmlLevel .= '<li class="closed">'.$link.'<ul>';
-                            }
-                            *
-
-                            $htmlLevel .= $htmlChildren.'</ul></li>';
-                        }
+                     // if node has further child nodes, recursively call buildLevel
+                    if ($this->getChildNodes($node['id'], $admin)) {
+                    	$htmlLevel .= "<li class='yuimenuitem first-of-type'>".$link;
+                    	$item = $this->addContent($node['id'], $module, $contentAction, $admin);
+                    	$htmlLevel .= $item.'</li>' ;
                         
-                    }*/
+                        $this->buildLevel($node['id'], $currentNode, $admin, $module, $sectionAction, $contentAction);
+                    }else{
+                    	  $htmlLevel .= "<li class='yuimenuitem first-of-type'>".$link;
+                    	  $item .= $this->addContent($node['id'], $module, $contentAction, $admin);
+                    	  $htmlLevel .= $item.'</li>' ;
+                    }
+                                       
                 }
 
                 return $htmlLevel;
@@ -238,12 +190,16 @@ class contenttree extends object
          * @return string
          * @access public
          */
-        public function addContent($id, $module, $action = '', $admin = FALSE)
-        {
+        public function addContent($id, $module, $action, $admin = FALSE)
+        {       	
+            
             $contentNodes = $this->getContent($id, $admin);
 
             $htmlContent = '';
             if (!empty($contentNodes)) {
+            	$htmlContent =  '<div id="'.htmlentities($contentNodes[0]['title']).'" class="yuimenu">';
+            	$htmlContent .=		'<div class="bd">';
+		        $htmlContent .=		'<ul>';	
                 foreach($contentNodes as $contentNode) {
                     if (!empty($action)) {
                         $url = $this->uri(array('action' => $action, 'id' => $contentNode['id'], 'sectionid' => $contentNode['sectionid']), $module);
@@ -251,11 +207,68 @@ class contenttree extends object
                     } else {
                         $link = htmlentities($contentNode['title']);
                     }
-                    $htmlContent .= '<li>'.$link.'</li>';
+                    $htmlContent .='<li class="yuimenuitem">'.$link.'</li>';
                 }
-                return $htmlContent;
+                 if ($this->getChildNodes($id, $admin)) {
+		         
+                 	$htmlContent .= $this->addChildren($id, $module, $action, $admin);
+		          }
+                return $htmlContent .'</ul></div></div>';
             }
             return '';
+        }
+        
+        /**
+         * Method to get add all content for a particular child node
+         * @param string $id The id of the section node
+         * @return string
+         * @access public
+         */
+        public function addChildren($id, $module, $action, $admin = FALSE)
+        {
+        	 //gets all the child nodes of id
+            $nodes = $this->getChildNodes($id, $admin);
+            $htmlContent = '';
+        	foreach($nodes as $node) {
+                  
+                    if (!empty($action)) {
+                        $nodeUri = $this->uri(array('action' => $action, 'id' => $node['id'], 'sectionid' => $node['id']), $module);
+                        $link = '<a href="'.$nodeUri.'">'.htmlentities($node['title']).'</a>';
+                    } else {
+                        $link = htmlentities($node['title']);
+                    }
+
+                   	$htmlContent .= "<li class='yuimenuitem'>".$link;
+                        	                        
+                    $contentNodes = $this->getContent($id, $admin);
+			           
+		            if (!empty($contentNodes)) {
+		            	$htmlContent .='<div id="'.htmlentities($contentNodes[0]['title']).'" class="yuimenu">';
+		            	$htmlContent .=	'<div class="bd">';
+		            	$htmlContent .=	'<ul class="first-of-type">';		
+			             foreach($contentNodes as $contentNode) {
+			                    if (!empty($action)) {
+			                        $url = $this->uri(array('action' => $action, 'id' => $contentNode['id'], 'sectionid' => $contentNode['sectionid']), $module);
+			                        $link = '<a href="'.$url.'">'.htmlentities($contentNode['title']).'</a>';
+			                    } else {
+			                        $link = htmlentities($contentNode['title']);
+			                    }
+			                    $htmlContent .='<li class="yuimenuitem">'.$link.'</li>';
+			                }
+		               
+		                $htmlContent .='</ul>';
+		                $htmlContent .='</div>';
+		                $htmlContent .='</div>';
+		                $htmlContent .='</li>';
+		               
+		                
+		            }
+                  
+
+                }
+                       
+           
+            return $htmlContent;
         }
 
         /**
@@ -288,7 +301,7 @@ class contenttree extends object
          */
         public function getContent($sectionId, $admin)
         {
-            $published = !$admin;
+            $published = $admin;
             return $this->_objContent->getPagesInSection($sectionId, $published);
         }
 
