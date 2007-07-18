@@ -46,11 +46,12 @@ class modulelinks_assignment extends object
 		
 		if(count($assignments) > 1)
 		{
+		 //var_dump($assignments);
           foreach ($assignments as $assignment)
           {
                 $newArr = array();    
-              $newArr['menutext'] = $assignment['userid'];
-              $newArr['description'] = '';
+              $newArr['menutext'] = $assignment['name'];
+              $newArr['description'] =$assignment['description'];
               $newArr['itemid'] = $assignment['id'];
               $newArr['moduleid'] = 'assignment';
               $newArr['params'] = array('id'=>$assignment['id'],'action' => 'view');

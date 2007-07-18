@@ -42,10 +42,10 @@ class modulelinks_rubric extends object
 	      	 {
               $newArr = array();    
               $newArr['menutext'] = $rubric['title'];
-              $newArr['description'] = '';
+              $newArr['description'] = $rubric['description'];
               $newArr['itemid'] = $rubric['id'];
               $newArr['moduleid'] = 'rubric';
-              $newArr['params'] = array('action' => 'viewtable','id'=>$worksheet['id']);
+              $newArr['params'] = array('action' => 'viewtable','id'=>$rubric['id']);
               $bigArr[] = $newArr;
         	}
        		return $bigArr;
