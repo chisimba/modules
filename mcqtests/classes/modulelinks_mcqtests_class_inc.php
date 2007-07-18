@@ -49,7 +49,7 @@ class modulelinks_mcqtests extends object
 
         $tests = $this->objTests->getTests($contextCode);
 
-		if(count($tests) > 0)
+		if($tests)
          {
 	        foreach ($tests as $test)
 	        {
