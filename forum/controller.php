@@ -184,7 +184,7 @@ class forum extends controller
     public function dispatch($action=Null)
     {
         $this->setLayoutTemplate('forum_layout.php');
-        $this->setVar('pageSuppressXML', TRUE);
+        //$this->setVar('pageSuppressXML', TRUE);
         
         switch ($action)
         {
