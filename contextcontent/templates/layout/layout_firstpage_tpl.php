@@ -43,7 +43,11 @@ if($objDBContext->isInContext())
     $cm = '';
 }
 
-$cssLayout->setLeftColumnContent($content.$cm);
+//add the blog block
+$objBlocks =  $this->getObject('blocks', 'blocks');
+$blog = $objBlocks->showBlock('latest', 'blog');
+
+$cssLayout->setLeftColumnContent($content.$cm.$blog);
 
 $cssLayout->setMiddleColumnContent($this->getContent());
 
