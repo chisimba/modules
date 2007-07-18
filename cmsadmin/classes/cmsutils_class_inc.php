@@ -1005,7 +1005,7 @@ class cmsutils extends object
             $lbOrange = $this->objLanguage->languageText('mod_cmsadmin_sectionsetnotvisible', 'cmsadmin');
             $lbWhite = $this->objLanguage->languageText('mod_cmsadmin_sectionnocontent', 'cmsadmin');
             $lbGreen = $this->objLanguage->languageText('mod_cmsadmin_sectionparentnotvisible', 'cmsadmin');
-            
+           
             //Instantiate cms tree object
             $objCmsTree =$this->newObject('cmstree', 'cmsadmin');
             $objFeatureBox = $this->newObject('featurebox', 'navigation');
@@ -1040,23 +1040,12 @@ class cmsutils extends object
             
             $nav = '';
             $objCMSTree = $this->getObject('cmstree');
-            /*
-            if($this->_objDBContext->isInContext() && $this->objModule->checkIfRegistered('context', 'context'))
-            {
-                $objContextUtils = & $this->getObject('utilities','context');
-                $nav = $objContextUtils->getHiddenContextMenu('cms','none','show');
-            } else {
-    		*/	
-    
-                //Add links to the output layer
-                $currentNode = $this->getParam('sectionid');
-                $nav = $objFeatureBox->show($this->objLanguage->languageText('word_sections'),$objCMSTree->getCMSAdminTree($currentNode));
-            //}
-                
-                //$nav .= '<br/>';
-			// $nav .= $createSectionLink;
-            // $nav .= '<br/>'.'&nbsp;'.'<br/>';
-            //$nav .= $frontpageManagerLink;
+           
+            //Add links to the output layer
+            $currentNode = $this->getParam('sectionid');
+            
+            $nav = $objCMSTree->getCMSAdminTree($currentNode);
+            
             $nav .= '<br/>'.'&nbsp;'.'<br />';
             //$nav .= $viewCmsLink.'<br /><br />';
 			$nav .= $objFeatureBox->showContent('Navigation Links',
