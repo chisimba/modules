@@ -9,7 +9,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 }
 
 
-class modulelinks_worksheet extends object
+class modulelinks_comment extends object
 {
 
     public function init()
