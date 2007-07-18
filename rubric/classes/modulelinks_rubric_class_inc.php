@@ -45,7 +45,7 @@ class modulelinks_rubric extends object
               $newArr['description'] = $rubric['description'];
               $newArr['itemid'] = $rubric['id'];
               $newArr['moduleid'] = 'rubric';
-              $newArr['params'] = array('action' => 'viewtable','id'=>$rubric['id']);
+              $newArr['params'] = array('action' => 'viewtable','tableid'=>$rubric['id']);
               $bigArr[] = $newArr;
         	}
        		return $bigArr;
