@@ -42,7 +42,7 @@ class dbcontextdesigner extends dbTable
     {
         try 
         {
-            //print_r($this->getParam('selecteditems'));
+            
             foreach($this->getParam('selecteditems') as $row)
             {
                 $selectedItemsArr = split('===',$row);    
@@ -65,16 +65,7 @@ class dbcontextdesigner extends dbTable
                     'access' => 'Published',
                     'params' => $params
                 );
-                //var_dump($fields);
-               
-                /*if(!$this->checkExist($contextCode, $params, $moduleId))
-                {
-                    $this->insert($fields);                    
-                   //die('done');
-                } else {
-					print $contextCode.'----------'. $params.'------------'. $moduleId.'<Br>';
-				}
-				*/
+                
 				 $this->insert($fields);             
             
             }
@@ -139,15 +130,13 @@ class dbcontextdesigner extends dbTable
     public function reOrder()
     {
         $recordsArr = $this->getParam('reorder');
-        //print_r($recordsArr);die;
+       
         $all = $this->getAllLinks();
-        //print_r ($recordsArr);
-        //print_r($all);
+       
         $i=0;
         foreach ($all as $record)
         {
-            
-           // print_r($line);
+          
             $this->update('id',$record['id'],array('linkorder' => $recordsArr[$i]));
             $i++;
         }
