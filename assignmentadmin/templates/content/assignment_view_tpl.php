@@ -17,8 +17,11 @@ $objHead =& $this->newObject('htmlheading','htmlelements');
 $objLayer =& $this->newObject('layer','htmlelements');
 $objLayer1 =& $this->newObject('layer','htmlelements');
 $objForm =& $this->newObject('form','htmlelements');
-$objInput =& $this->newObject('textinput','htmlelements');
-$objText =& $this->newObject('textarea','htmlelements');
+//$objInput =& $this->newObject('textinput','htmlelements');
+
+$this->loadClass('textinput','htmlelements');
+//$objText =& $this->newObject('textarea','htmlelements');
+$this->loadClass('textarea','htmlelements');
 $objButton =& $this->newObject('button','htmlelements');
 $objLink =& $this->newObject('link','htmlelements');
 

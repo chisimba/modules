@@ -11,8 +11,11 @@
 $this->setLayoutTemplate('assignmentadmin_layout_tpl.php');
 
 // set up html elements
-$objInput =& $this->newObject('textinput','htmlelements');
-$objText =& $this->newObject('textarea','htmlelements');
+//$objInput =& $this->newObject('textinput','htmlelements');
+ $this->loadClass('textinput','htmlelements');
+//$objText =&
+
+ $this->loadClass('textarea','htmlelements');
 $objRadio =& $this->newObject('radio','htmlelements');
 $objButton =& $this->newObject('button','htmlelements');
 $objIcon =& $this->newObject('geticon','htmlelements');
@@ -21,7 +24,7 @@ $objLabel =& $this->newObject('label','htmlelements');
 $objLayer =& $this->newObject('layer','htmlelements');
 $objForm =& $this->newObject('form','htmlelements');
 $objTable =& $this->newObject('htmltable','htmlelements');
-$objDrop =& $this->newObject('dropdown','htmlelements');
+$this->loadClass('dropdown','htmlelements');
 
 // set up language items
 $head1 = $this->objLanguage->languageText('mod_assignmentadmin_createassignment','assignmentadmin');

@@ -174,6 +174,8 @@ class assignmentadmin extends controller
                 return $this->showResults();
 
             default:
+
+
                 return $this->assignHome();
         }
     }
@@ -437,7 +439,8 @@ class assignmentadmin extends controller
         $objButton =& $this->newObject('button','htmlelements');
         $objForm =& $this->newObject('form','htmlelements');
         $objAlphabet =& $this->newObject('alphabet', 'navigation');
-        $objText =& $this->newObject('textinput','htmlelements');
+        //$objText =& $this->newObject('textinput','htmlelements');
+        $this->loadClass('textinput','htmlelements');
 
         // Set up language items
         $searchLabel=$this->objLanguage->languageText('word_search');
@@ -454,7 +457,7 @@ class assignmentadmin extends controller
         $objButton->setToSubmit();
         $searchbtn = $objButton->show();
 
-        $objText->textinput('searchField');
+        $objText =  new textinput('searchField');
         $objText->size = "20";
         $search = $objText->show() . '&nbsp;&nbsp;&nbsp;' . $searchbtn;
 
