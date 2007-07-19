@@ -72,6 +72,10 @@ class realtime extends controller
 	public $realtimeControllerURL;
         
         public $presentationsURL;
+
+        public $moduleRootPath;
+
+        public $objAltConfig;
 	/**
 	 * Constructor method to instantiate objects and get variables
 	 */
@@ -80,7 +84,9 @@ class realtime extends controller
 		//Get configuration class
 		$this->objConfig =& $this->getObject('config','config');
 		
-		//Get language class
+	        $this->objAltConfig =& $this->getObject('altconfig','config');
+		
+	        //Get language class
 		$this->objLanguage =& $this->getObject('language', 'language');
 		
 		//Get the activity logger class
@@ -115,6 +121,7 @@ class realtime extends controller
 		$location = "http://" . $_SERVER['HTTP_HOST'];
 		$this->whiteboardURL = $location . $this->getResourceUri('whiteboard', 'realtime');
 		$this->presentationsURL = $location . $this->getResourceUri('presentations', 'realtime');
+                $this->moduleRootPath=$this->objAltConfig->getModulePath();
 $this->voiceURL = $location . $this->getResourceUri('voice', 'realtime');
 		$this->realtimeControllerURL = $location . "/chisimba_framework/app/index.php?module=realtime";
 	}
@@ -141,6 +148,7 @@ $this->voiceURL = $location . $this->getResourceUri('voice', 'realtime');
 			case 'whiteboard' :
 				return "realtime-whiteboard_tpl.php";
 			case 'presentations' :
+                                 $this->generateJnlp();
 				return "realtime-presentations_tpl.php";
 			case 'requesttoken' :
 				return $this->requestToken($this->userId, $this->userLevel, $this->contextCode);
@@ -168,6 +176,82 @@ $this->voiceURL = $location . $this->getResourceUri('voice', 'realtime');
 
 	}
 
+/**
+ * Function to generate jnlp file for webstart 
+ */
+
+function generateJnlp(){
+
+//first, the one for presenter
+$fp = fopen($this->moduleRootPath."realtime/resources/presentations/Presenter.jnlp", "w") or die("Couldn't create new file");
+fwrite($fp, "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+fwrite($fp, "\n<jnlp spec=\"1.0+\"      codebase=\"". $this->presentationsURL."\"      href=\"Presenter.jnlp\">");
+fwrite($fp, "\n<information>");
+fwrite($fp, "\n<title>Chisimba Presentations</title>");
+fwrite($fp, "\n <vendor>AVOIR</vendor>");
+fwrite($fp, "\n <description>Chisimba OO realtime presentations</description>");
+fwrite($fp, "\n <homepage href=\"http://avoir.uwc.ac.za\"/>");
+fwrite($fp, "\n<description kind=\"short\">Chisimba OO Presentations</description>");
+fwrite($fp, "\n </information>");
+fwrite($fp, "\n <application-desc main-class=\"avoir.realtime.presentations.client.presenter.MainClass\">");
+fwrite($fp, "\n	<argument>http://".$_SERVER['HTTP_HOST']."</argument>");
+fwrite($fp, "\n	<argument>1962</argument>");
+fwrite($fp, "\n</application>");
+fwrite($fp, "\n <resources>");
+fwrite($fp, "\n <jar href=\"presentations-client.jar\"/>");
+fwrite($fp, "\n <j2se version=\"1.5+\"");
+fwrite($fp, "\nhref=\"http://java.sun.com/products/autodl/j2se\" initial-heap-size=\"128m\" max-heap-size=\"512m\"/>");
+fwrite($fp, "\n <extension name=\"jgoodies\" href=\"jgoodies.jnlp\"/>");
+fwrite($fp, "\n <security>");
+fwrite($fp, "\n<all-permissions/>");
+fwrite($fp, "\n </security>");
+fwrite($fp, "\n<application-desc main-class=\"avoir.realtime.presentations.client.presenter.MainClass\"/>");
+fwrite($fp, "\n</jnlp>");
+fclose($fp); 
+
+//audience
+$fp = fopen($this->moduleRootPath."realtime/resources/presentations/Audience.jnlp", "w") or die("Couldn't create new file");
+fwrite($fp, "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+fwrite($fp, "\n<jnlp spec=\"1.0+\"      codebase=\"". $this->presentationsURL."\"      href=\"Audience.jnlp\">");
+fwrite($fp, "\n<information>");
+fwrite($fp, "\n<title>Chisimba Presentations</title>");
+fwrite($fp, "\n <vendor>AVOIR</vendor>");
+fwrite($fp, "\n <description>Chisimba OO realtime presentations</description>");
+fwrite($fp, "\n <homepage href=\"http://avoir.uwc.ac.za\"/>");
+fwrite($fp, "\n<description kind=\"short\">Chisimba OO Presentations</description>");
+fwrite($fp, "\n </information>");
+fwrite($fp, "\n <application-desc main-class=\"avoir.realtime.presentations.client.ClientViewer\">");
+fwrite($fp, "\n	<argument>http://".$_SERVER['HTTP_HOST']."</argument>");
+fwrite($fp, "\n	<argument>1962</argument>");
+fwrite($fp, "\n</application>");
+fwrite($fp, "\n <resources>");
+fwrite($fp, "\n <jar href=\"presentations-client.jar\"/>");
+fwrite($fp, "\n <j2se version=\"1.5+\"");
+fwrite($fp, "\nhref=\"http://java.sun.com/products/autodl/j2se\" initial-heap-size=\"128m\" max-heap-size=\"512m\"/>");
+fwrite($fp, "\n <extension name=\"jgoodies\" href=\"jgoodies.jnlp\"/>");
+fwrite($fp, "\n <security>");
+fwrite($fp, "\n<all-permissions/>");
+fwrite($fp, "\n </security>");
+fwrite($fp, "\n<application-desc main-class=\"avoir.realtime.presentations.client.ClientViewer\"/>");
+fwrite($fp, "\n</jnlp>");
+fclose($fp); 
+
+//for jgoodies
+$fp = fopen($this->moduleRootPath."realtime/resources/presentations/jgoodies.jnlp", "w") or die("Couldn't create new file");
+fwrite($fp, "\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+fwrite($fp, "\n<jnlp spec=\"1.0+\" codebase=\"". $this->presentationsURL."\" href=\"jgoodies.jnlp\">");
+fwrite($fp, "\n  <information>");
+fwrite($fp, "\n      <title>JGoodies</title>");
+fwrite($fp, "\n      <vendor>JGoodies</vendor>");
+fwrite($fp, "\n   </information>");
+fwrite($fp, "\n   <resources>");
+fwrite($fp, "\n        <jar href=\"forms-1.1.0.jar\"/> ");  
+fwrite($fp, "\n   </resources>");
+fwrite($fp, "\n   <component-desc/>");
+fwrite($fp, "\n</jnlp>");
+
+fclose($fp); 
+}
     /**
      * Informs the server that a user is requesting a voice token, assigns token to User if the token is
      * available.
