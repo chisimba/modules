@@ -26,6 +26,12 @@ class dbmessaging extends dbTable
     public $objContext;
 
     /**
+    * @var object $objModules: The modules class in the modulecatalogue module
+    * @access public
+    */
+    public $objModules;
+
+    /**
     * @var object $objWorkgroup: The dbworkgroup class in the workgroup module
     * @access public
     */
@@ -55,9 +61,11 @@ class dbmessaging extends dbTable
         
         // system classes
         $this->objUser = $this->getObject('user', 'security');
+        $this->objModules = $this->getObject('modules', 'modulecatalogue');        
         $this->objContext = $this->getObject('dbcontext', 'context');
-        $this->objWorkgroup = $this->getObject('dbworkgroup', 'workgroup');
-        
+        if($this->objModules->checkIfRegistered('workgroup')){
+            $this->objWorkgroup = $this->getObject('dbworkgroup', 'workgroup');
+        }
         // global variables
         $this->userId = $this->objUser->userId();
     }
