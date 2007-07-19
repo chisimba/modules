@@ -19,7 +19,7 @@ if($this->objUser->isLoggedIn() == FALSE)
 }
 else {
 	$this->objComApi = $this->getObject('commentapi');
-	$output = $this->objComApi->commentAddForm('init_56', 'blog', 'tbl_blog_posts', TRUE, TRUE, TRUE);
+	$output = $this->objComApi->commentAddForm('init_56', 'cms', 'tbl_cms_content', TRUE, TRUE, TRUE);
 }
 
 //$middleColumn .= "<h1><em><center>" . $errmsg . "</center></em></h1>";

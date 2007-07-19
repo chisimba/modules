@@ -8,18 +8,18 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 /**
 *
-* Controller class for blogcomments module. The blogcomment module allows
-* the associating of blog style comments with any table in the database. It
-* is used, for example, with the blog module.
+* Controller class for cmscomments module. The cmscomment module allows
+* the associating of cms style comments with any table in the database. It
+* is used, for example, with the cms module.
 *
-* @author Paul Scott
-* @package blogcomments
+* @author Prince Mbekwa,Paul Scott
+* @package cmscomments
 * @version $Id$
 * @copyright 2006 GNU GPL AVOIR
 * @access public
 * @filesource
 */
-class blogcomments extends controller
+class cmscomments extends controller
 {
     /**
     *
@@ -55,7 +55,7 @@ class blogcomments extends controller
   public  function init()
     {
     	try {
-    		$this->objDbcomm = $this->getObject('dbblogcomments');
+    		$this->objDbcomm = $this->getObject('dbcmscomments');
     		$this->objComm = $this->getObject('commentapi');
         	//Retrieve the action parameter from the querystring
         	$this->action = $this->getParam('action', Null);
@@ -84,7 +84,7 @@ class blogcomments extends controller
         $action = $this->getParam('action');
     	switch ($action) {
             case null:
-            	$this->setVarByRef('errmsg', $this->objLanguage->languageText("mod_blogcomments_phrase_noaction", "blogcomments"));
+            	$this->setVarByRef('errmsg', $this->objLanguage->languageText("mod_cmscomments_phrase_noaction", "cmscomments"));
             	return 'noaction_tpl.php';
             	break;
             case 'add':
@@ -111,7 +111,7 @@ class blogcomments extends controller
             	}
             	$addinfo['useremail'] = $this->getParam('email');
             	$addinfo['postuserid'] = $this->getParam('userid');
-            	$addinfo['postid'] = $this->getParam('postid');
+            	$addinfo['postid'] = $this->getParam('id');
             	$addinfo['table'] = $this->getParam('table');
             	$addinfo['mod'] = $this->getParam('mod');
             	$addinfo['aurl'] = $this->getParam('url');
@@ -126,7 +126,7 @@ class blogcomments extends controller
           			{
           				//get a timeoutmessage and display it...
           				$tmsg = $this->getObject('timeoutmessage', 'htmlelements');
-          				$tmsg->setMessage = $this->objLanguage->languageText("mod_blogcomments_badcaptcha", "blogcomments");
+          				$tmsg->setMessage = $this->objLanguage->languageText("mod_cmscomments_badcaptcha", "cmscomments");
           				$msg = $tmsg->show();
           				$this->setVarByRef('msg', $msg);
           				$this->nextAction('viewsingle',array('postid' => $addinfo['postid'], 'userid' => $this->objUser->userId(), 'comment' => $addinfo['comment'], 'useremail' => $addinfo['useremail']), $addinfo['mod']);
@@ -147,7 +147,7 @@ class blogcomments extends controller
             case 'deletecomment':
             	$commentid = $this->getParam('commentid');
             	$postid = $this->getParam('postid');
-            	$module = 'blog';
+            	$module = 'cms';
             	$this->objDbcomm->deletecomment($commentid);
             	
             	$this->nextAction('viewsingle',array('postid' => $postid), $module);

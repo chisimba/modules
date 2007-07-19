@@ -87,7 +87,7 @@ class commentapi extends object
 			exit;
 		}
 		$required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
-		$cform = new form('commentadd', $this->uri(array('module' => 'blogcomments', 'action' => 'addtodb', 'table' => $table, 'mod' => $module, 'postid' => $postid, 'userid' => $postuserid)));
+		$cform = new form('commentadd', $this->uri(array('module' => 'cmscomments', 'action' => 'addtodb', 'table' => $table, 'mod' => $module, 'postid' => $postid, 'userid' => $postuserid)));
 		$cfieldset = $this->getObject('fieldset', 'htmlelements');
 		//$cfieldset->setLegend($this->objLanguage->languageText('mod_blogcomments_addcomment', 'blogcomments'));
 		$ctbl = $this->newObject('htmltable', 'htmlelements');
@@ -96,7 +96,7 @@ class commentapi extends object
 		//start the inputs
 		//textinput for author url
 		$url = new textinput('url');
-		$urllabel = new label($this->objLanguage->languageText("mod_blogcomments_url", "blogcomments") . ':', 'comm_input_url');
+		$urllabel = new label($this->objLanguage->languageText("mod_cmscomments_url", "cmscomments") . ':', 'comm_input_url');
 		$ctbl->startRow();
 		$ctbl->addCell($urllabel->show());
 		$ctbl->endRow();
@@ -114,7 +114,7 @@ class commentapi extends object
 		{
 			$email->setValue($useremail);
 		}
-		$emaillabel = new label($this->objLanguage->languageText("mod_blogcomments_email", "blogcomments") . ':', 'input_email');
+		$emaillabel = new label($this->objLanguage->languageText("mod_cmscomments_email", "cmscomments") . ':', 'input_email');
 		$ctbl->startRow();
 		$ctbl->addCell($emaillabel->show().$required);
 		$ctbl->endRow();
@@ -123,7 +123,7 @@ class commentapi extends object
 		$ctbl->endRow();
 
 		//textarea for the comment
-		$commlabel = new label($this->objLanguage->languageText('mod_blogcomments_Comment', 'blogcomments') .':', 'input_comminput');
+		$commlabel = new label($this->objLanguage->languageText('mod_cmscomments_Comment', 'cmscomments') .':', 'input_comminput');
 		$ctbl->startRow();
 		$ctbl->addCell($commlabel->show());
 		$ctbl->endRow();
@@ -157,11 +157,11 @@ class commentapi extends object
 		{
 			$objCat = $this->getObject('dbcommenttype', 'commenttypeadmin');
         	$tar = $objCat->getAll();
-			$ddlabel = new label($this->objLanguage->languageText('mod_blogcomments_commenttype', 'blogcomments') .':', 'input_comtypeinput');
+			$ddlabel = new label($this->objLanguage->languageText('mod_cmscomments_commenttype', 'cmscomments') .':', 'input_comtypeinput');
         	$ctype = $this->newObject("dropdown", "htmlelements");
         	$ctype->name = 'type';
         	$ctype->SetId('input_type');
-        	$ctype->addOption("", $this->objLanguage->languageText("mod_blogcomments_selecttype",'blogcomments'));
+        	$ctype->addOption("", $this->objLanguage->languageText("mod_cmscomments_selecttype",'cmscomments'));
         	$ctype->addFromDB($tar, 'title', 'type');
 			$ctbl->startRow();
 			$ctbl->addCell($ddlabel->show());
@@ -178,8 +178,8 @@ class commentapi extends object
 			$ctbl->addCell(stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')).'<br /><div id="captchaDiv">'.$objCaptcha->show().'</div>'.$captcha->show().$required.'  <a href="javascript:redraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>');
 			$ctbl->endRow();
 			//$cform->addRule('comment', $this->objLanguage->languageText("mod_blogcomments_commentval",'blogcomments'), 'required');
-			$cform->addRule('email', $this->objLanguage->languageText("mod_blogcomments_emailval",'blogcomments'), 'required');
-			$cform->addRule('request_captcha', $this->objLanguage->languageText("mod_blogcomments_captchaval",'blogcomments'), 'required');
+			$cform->addRule('email', $this->objLanguage->languageText("mod_cmscomments_emailval",'cmscomments'), 'required');
+			$cform->addRule('request_captcha', $this->objLanguage->languageText("mod_cmscomments_captchaval",'cmscomments'), 'required');
 		}
 
  		//end off the form and add the buttons
@@ -194,7 +194,7 @@ class commentapi extends object
 		if($featurebox == TRUE)
 		{
 			$objFeaturebox = $this->getObject('featurebox', 'navigation');
-			return $objFeaturebox->showContent($this->objLanguage->languageText("mod_blogcomments_formhead", "blogcomments"), $cform->show());
+			return $objFeaturebox->showContent($this->objLanguage->languageText("mod_cmscomments_formhead", "cmscomments"), $cform->show());
 		}
 		else {
 			return $cform->show();
@@ -214,14 +214,14 @@ class commentapi extends object
 		$post = $post[0];
 		//print_r($post);
 		$washer = $this->getObject('washout', 'utilities');
-		$this->objDbComm = $this->getObject('dbblogcomments');
+		$this->objDbComm = $this->getObject('dbcmscomments');
 		$objFeatureBox = $this->newObject('featurebox', 'navigation');
 		$comms = $this->objDbComm->grabComments($pid);
 		//loop through the trackbacks and build a featurebox to show em
 		if(empty($comms))
 		{
 			//shouldn't happen except on permalinks....?
-			return $objFeatureBox->showComment($this->objLanguage->languageText("mod_blogcomments_comment4post", "blogcomments"), "<em>".$this->objLanguage->languageText("mod_blogcomments_nocomments", "blogcomments")."</em>");
+			return $objFeatureBox->showComment($this->objLanguage->languageText("mod_cmscomments_comment4post", "cmscomments"), "<em>".$this->objLanguage->languageText("mod_cmscomments_nocomments", "cmscomments")."</em>");
 		}
 
 		$commtext = NULL;
@@ -270,11 +270,11 @@ class commentapi extends object
 				//var_dump($script);
 				$this->objIcon = $this->getObject('geticon', 'htmlelements');
 				$delIcon = $this->objIcon->getDeleteIconWithConfirm($comm['id'], array(
-                    'module' => 'blogcomments',
+                    'module' => 'cmscomments',
                     'action' => 'deletecomment',
                     'commentid' => $comm['id'],
                     'postid' => $pid
-                ) , 'blogcomments');
+                ) , 'cmscomments');
                 //$delic = $delIcon->show();
                 
 				$fboxcontent = $script."<br /><br />".$delIcon; //stripslashes($comm['comment_content']); // . "<br /><br />" . $delIcon;
@@ -301,15 +301,15 @@ class commentapi extends object
                 $edIcon = $this->objIcon->getEditIcon($this->uri(array(
                     'action' => 'updatecomment',
                     'id' => $comm['id'],
-                    'module' => 'blogcomments'
+                    'module' => 'cmscomments'
                 )));
                 //$editic = $edIcon->show();
                 $delIcon = $this->objIcon->getDeleteIconWithConfirm($comm['id'], array(
-                    'module' => 'blogcomments',
+                    'module' => 'cmscomments',
                     'action' => 'deletecomment',
                     'commentid' => $comm['id'],
                     'postid' => $pid
-                ) , 'blogcomments');
+                ) , 'cmscomments');
                 //$delic = $delIcon->show();
                 
 				$fboxcontent = $script."<br /><br />".$delIcon; //stripslashes($comm['comment_content']); // . "<br /><br />" . $delIcon;
@@ -390,7 +390,7 @@ class commentapi extends object
 	 */
 	public function getCount($pid)
 	{
-		$this->objDbComm = $this->getObject('dbblogcomments');
+		$this->objDbComm = $this->getObject('dbcmscomments');
 		return $this->objDbComm->commentCount($pid);
 	}
 	
