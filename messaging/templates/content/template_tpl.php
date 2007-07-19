@@ -20,10 +20,6 @@ if(!$GLOBALS['kewl_entry_point_run']){
 //$this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
 //$this->objScriptaculous->show();
 
-// add messaging module js library
-$headerParams = $this->getJavascriptFile('messaging.js', 'messaging');
-$this->appendArrayVar('headerParams', $headerParams);
-
 // select all checkbox js library
 $headerParams = $this->getJavascriptFile('selectall.js', 'htmlelements');
 $this->appendArrayVar('headerParams', $headerParams);
@@ -34,6 +30,10 @@ $this->appendArrayVar('headerParams', $headerParams);
 
 // set up layout
 if($mode == 'iframe'){
+    // add messaging module js library
+    $headerParams = $this->getJavascriptFile('messaging.js', 'messaging');
+    $this->appendArrayVar('headerParams', $headerParams);
+
     $this->setVar('pageSuppressBanner', TRUE);
     $this->setVar('pageSuppressContainer', TRUE);
     $this->setVar('pageSuppressSearch', TRUE);
@@ -41,6 +41,10 @@ if($mode == 'iframe'){
     $this->setVar('suppressFooter', TRUE);
     $this->setVar('bodyParams', 'onload="javascript:jsHideLoading();"');
 }elseif($mode == 'popup'){
+    // add messaging module js library
+    $headerParams = $this->getJavascriptFile('messaging.js', 'messaging');
+    $this->appendArrayVar('headerParams', $headerParams);
+
     // add x js library (cross browser library)
     $headerParams = $this->getJavascriptFile('x.js', 'htmlelements');
     $this->appendArrayVar('headerParams', $headerParams);
@@ -51,12 +55,20 @@ if($mode == 'iframe'){
     $this->setVar('pageSuppressToolbar', TRUE);
     $this->setVar('suppressFooter', TRUE);
 }elseif($mode == 'textroom'){
+    // add messaging module js library
+    $headerParams = $this->getJavascriptFile('messaging.js', 'messaging');
+    $this->appendArrayVar('headerParams', $headerParams);
+
     $this->setVar('pageSuppressSearch', TRUE);
     $this->setVar('pageSuppressToolbar', TRUE);
     $this->setVar('footerStr', '');
     $this->setLayoutTemplate('room_text_only_tpl.php');
     $this->setVar('bodyParams', 'onload="javascript:jsOnloadChat(\'standard\');" onunload="clearTimeout(chatTimer);"');
 }elseif($mode == 'room'){
+    // add messaging module js library
+    $headerParams = $this->getJavascriptFile('messaging.js', 'messaging');
+    $this->appendArrayVar('headerParams', $headerParams);
+
     $this->setVar('pageSuppressSearch', TRUE);
     $this->setVar('pageSuppressToolbar', TRUE);
     $this->setVar('footerStr', '');
