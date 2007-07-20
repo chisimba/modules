@@ -82,7 +82,7 @@ if(is_array($linkList) && $linkList > 0)
             $objLink->link = $objIcon->show();
         }
         $published =  $objLink->show();
-        print $link['linkorder'];
+        
         //order        
         $order = $this->_objUtils->getOrderIcons($link['id'], $link['linkorder']);
         
