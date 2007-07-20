@@ -272,8 +272,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
                         $cellClass = '<font class="error">';
                     }else{
                         $objDrop = &new dropdown($x);
-                        $objDrop -> addOption(NULL, '&nbsp;&nbsp;' . '-' . '&nbsp;&nbsp;');
-                        $objDrop -> extra = 'width="100px;"';
+                        $objDrop -> addOption(NULL, '-');
+                        //$objDrop -> extra = 'width="100px;"';
                         for($xx = 1; $xx <= pow($size, 2); $xx++){
                             $objDrop -> addOption($xx, $xx);
                         }
@@ -286,7 +286,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                         $number = $objDrop -> show();
                     }
                     $numStr = $cellClass . "<b>" . $number . "</b>" . "</font>";
-                    $objTable -> addCell($numStr, '30', '', 'center', $class, '');
+                    $objTable -> addCell($numStr, '10%', '', 'center', $class, '');
                     $x = $x + 1;
                }
             }
