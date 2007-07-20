@@ -255,7 +255,7 @@ class dbcontextdesigner extends dbTable
         $lowerRecord = $this->getRow('id', $id);
      
         $position = intval($lowerRecord['linkorder']) - 1;
-        $upperRecord = $this->getAll("'WHERE contextcode='".$this->_contextCode."' AND linkorder= ". $position );
+        $upperRecord = $this->getAll("WHERE contextcode='".$this->_contextCode."' AND linkorder= ". $position );
         
         if(count($upperRecord[0]) > 0)
         {

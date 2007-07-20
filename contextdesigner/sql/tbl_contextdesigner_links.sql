@@ -37,20 +37,23 @@ $fields = array(
 		'length' => 255,
         	'notnull' => TRUE
 		),
-    'datecreated' => array(
+    	'datecreated' => array(
 		'type' => 'date'
 		),    
-    'status' => array(
+ 	'updated' => array(
+		'type' => 'date'
+		), 
+    	'status' => array(
         	'type' => 'text',
 		'length' => 32,
         	'notnull' => TRUE
         	),
-    'access' => array(
+    	'access' => array(
         	'type' => 'text',
 	'length' => 32,
         	'notnull' => TRUE
         	),
-    'linkorder' => array(
+    	'linkorder' => array(
         	'type' => 'integer',		
         	)
     
