@@ -38,7 +38,7 @@ class utilities extends object
          $this->upArrow =  $this->_objIcon->show();
                
          $this->_objDBContextDesigner = & $this->getObject('dbcontextdesigner','contextdesigner');
-         $this->maxOrder = $this->_objDBContextDesigner->getLastOrderPosition( $this->_objDBContext->getContextCode()) - 1;
+         $this->maxOrder = $this->_objDBContextDesigner->getLastOrderPosition( $this->_objDBContext->getContextCode()) ;
        //  print  $this->maxOrder;
     }
     
