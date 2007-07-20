@@ -2,7 +2,6 @@
 ?>
 <br/>
 <p>
-$link='<a href="popo">popo</a>';
 Welcome to the realtime tools. Select a link below to load and run a specific tool:
 </p>
 <ul>
