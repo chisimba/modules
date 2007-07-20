@@ -73,7 +73,7 @@ if (count($podcasts) == 0) {
         
         $content .= $table->show();
         
-        $downloadLink = new link ($podcast['path']);
+        $downloadLink = new link ($this->objConfig->getcontentPath().$podcast['path']);
         $downloadLink->link = htmlentities($podcast['filename']);
         
         $this->objPop=&new windowpop;
