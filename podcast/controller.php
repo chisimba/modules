@@ -353,7 +353,7 @@ class podcast extends controller
             $this->setVar('content', '&nbsp;');
             $this->appendArrayVar('bodyOnLoad', 'window.close();');
         } else {
-            $objSoundPlayer = $this->getObject('buildplayer', 'soundplayer');
+            $objSoundPlayer = $this->getObject('buildsoundplayer', 'files');
             $objSoundPlayer->setSoundFile(str_replace('&', '&amp;', $this->objConfig->getsiteRoot().$objFile->getFilePath($podcast['fileid'])));
             $this->setVarByRef('content', $objSoundPlayer->show());
         }
