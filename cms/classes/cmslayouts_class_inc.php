@@ -154,7 +154,7 @@ class cmslayouts extends object
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('tree.js', 'cmsadmin'));
               
         $objLayer = new layer();
-        $objLayer->str = $objFeatureBox->show($head, $objTreeMenu->getCMSTree($currentNode));
+        $objLayer->str = $objTreeMenu->getCMSTree($currentNode);
         $objLayer->id = 'cmsnavigation';
         
         return $objLayer->show();
@@ -299,7 +299,7 @@ class cmslayouts extends object
     		$pageStr .= $page['body'];
     		$objLayer = new layer();
     		$objLayer->str = $pageStr;
-    		$objLayer->id = 'content';
+    		$objLayer->id = 'cmscontent';
 
     		return $objLayer->show();
 
@@ -366,7 +366,7 @@ class cmslayouts extends object
 
     	$objLayer = new layer();
     	$objLayer->str = $str;
-    	$objLayer->id = 'content';
+    	$objLayer->id = 'cmscontent';
 
     	return $objLayer->show();
 
@@ -497,7 +497,7 @@ class cmslayouts extends object
             $returnStr .= '<p>'.$strBody.'</p><p>'.$str.'</p>';
             $objLayer = new layer();
         	$objLayer->str = $returnStr;
-        	$objLayer->id = 'content';
+        	$objLayer->id = 'cmscontent';
         
         	return $objLayer->show();
             
@@ -603,7 +603,7 @@ class cmslayouts extends object
             }
 			$objLayer = new layer();
         	$objLayer->str = $str;
-        	$objLayer->id = 'content';
+        	$objLayer->id = 'cmscontent';
         
         	return $objLayer->show();
            
@@ -706,7 +706,7 @@ class cmslayouts extends object
 
             $objLayer = new layer();
         	$objLayer->str = $introStr.'<p />'.$topStr.'<p>'.$str.'</p>';
-        	$objLayer->id = 'content';
+        	$objLayer->id = 'cmscontent';
         
         	return $objLayer->show();
         }
@@ -804,7 +804,7 @@ class cmslayouts extends object
          
             $objLayer = new layer();
         	$objLayer->str = $introStr.'<p>'.$str.'</p>';
-        	$objLayer->id = 'content';
+        	$objLayer->id = 'cmscontent';
         
         	return $objLayer->show();
             
@@ -919,7 +919,7 @@ class cmslayouts extends object
              $strBody .= '<hr /><p />';
              $objLayer = new layer();
         	$objLayer->str = $tblh->show().$strBody ."<p /><center>".$tblnl->show() ."</center>";
-        	$objLayer->id = 'content';
+        	$objLayer->id = 'cmscontent';
         
         	return $objLayer->show();
                          
