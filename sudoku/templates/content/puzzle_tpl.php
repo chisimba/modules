@@ -248,8 +248,9 @@ if(!$GLOBALS['kewl_entry_point_run']){
     // set up form elements
     // set up table
     $objTable = &new htmltable();
-    $objTable -> cellspacing='2';
+    //$objTable -> cellspacing='2';
     $objTable -> cellpadding='2';
+    $objTable -> border = '3';
     $x = 0;
     for($i = 1; $i <= $size; $i++){ // loop for rows in a block
         for($ii = 1; $ii <= $size; $ii++){ //loop for rows
