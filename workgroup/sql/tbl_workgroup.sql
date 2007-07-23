@@ -19,15 +19,20 @@ $fields = array(
 		'type' => 'text',
 		'length' => 100
 		),
-	'creator_id' => array(
+	'creatorid' => array(
 		'type' => 'text',
 		'length' => 32
 		),
-	'updated' => array(
-		'type' => 'date',
-		'notnull' => 1,
-		'default' => '0000-00-00 00:00:00'
-		)
+	'datecreated' => array(
+		'type' => 'date'
+		),
+	'modifierid' => array(
+		'type' => 'text',
+		'length' => 32
+		),
+	'datemodified' => array(
+		'type' => 'date'
+	)
 );
 
 ?>

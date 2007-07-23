@@ -3,11 +3,21 @@
 // Load Classes needed
 $this->loadClass('link', 'htmlelements');
 
+$objIcon = $this->newObject('geticon', 'htmlelements');
+
+$objIcon->setIcon('add');
+$objIcon->align = 'top';
+$objIcon->alt = 'Add User';
+$objIcon->title = 'Add User';
+
+$link = new link($this->uri(array('action'=>'create'),'workgroupadmin'));
+$link->link = $objIcon->show();
+
 // Display the heading.    
 $pageTitle = $this->newObject('htmlheading','htmlelements');
 $pageTitle->type=1;
 $pageTitle->align='left';
-$pageTitle->str=ucwords($objLanguage->code2Txt("mod_workgroup_heading",'workgroup'));
+$pageTitle->str=ucwords($objLanguage->code2Txt("mod_workgroup_heading",'workgroup')).' '.$link->show();
 echo $pageTitle->show();
 
 $tblclass=$this->newObject('htmltable','htmlelements');
