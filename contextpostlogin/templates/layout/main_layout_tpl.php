@@ -5,7 +5,7 @@
 
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 
-  $cssLayout->setNumColumns(2);
+  $cssLayout->setNumColumns(3);
 
 // Set the Content of middle column
 
@@ -13,7 +13,7 @@ $cssLayout =& $this->newObject('csslayout', 'htmlelements');
     $cssLayout->setLeftColumnContent($this->_objUtils->getLeftContent());
 
 
-//$cssLayout->setRightColumnContent($this->_objUtils->getRightContent());
+$cssLayout->setRightColumnContent($this->_objUtils->getRightContent());
 $cssLayout->setMiddleColumnContent($this->getContent());
 
 
