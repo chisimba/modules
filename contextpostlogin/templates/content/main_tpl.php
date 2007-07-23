@@ -173,7 +173,7 @@ $tabBox->addTab(array('name'=> $this->_objLanguage->code2Txt('phrase_mycourses')
 $tabBox->addTab(array('name'=> $this->_objLanguage->code2Txt('phrase_othercourses'),'content' => $other));
 echo $tabBox->show();
 echo "<br /><br />";
-echo $Stories;
+//echo $Stories;
 
 
 ?>
