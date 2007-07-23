@@ -4,7 +4,7 @@
     * Displays data and links
     */
     
-    $objConfirm = &$this->newObject('confirm','utilities'); 
+    $objConfirm = $this->newObject('confirm','utilities'); 
     
     print "<div align='center'>";
     
@@ -14,7 +14,7 @@
         $contextId=$this->result['courseCode'];
         
         // Basic table setup
-        $objTable=&$this->newObject('htmltable','htmlelements');
+        $objTable=$this->newObject('htmltable','htmlelements');
         $objTable->attributes=" align='center' border='0'";
         $objTable->width='50%';
         $objTable->cellspacing='2';
@@ -22,7 +22,7 @@
         $objTable->alternate_row_colors=TRUE;
         
         // Adding a heading
-        $objHeading=&$this->newObject('htmlheading','htmlelements');
+        $objHeading=$this->newObject('htmlheading','htmlelements');
         $heading=str_replace('[BATCH]',$batchId,$this->objLanguage->languageText("mod_userimport_show",'userimport'));
         $heading=str_replace('[COURSE]',$contextId,$heading);
         $objHeading->str=$heading;
@@ -45,7 +45,7 @@
     
     
         // Basic table setup
-        $objTable=&$this->newObject('htmltable','htmlelements');
+        $objTable=$this->newObject('htmltable','htmlelements');
         $objTable->attributes=" align='center' border='0'";
         $objTable->width='50%';
         $objTable->cellspacing='2';

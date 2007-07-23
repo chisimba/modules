@@ -10,7 +10,7 @@
     if ( ($this->result!='') && isset($this->result['student']) ){
         
         // Basic table setup
-        $objTable=&$this->newObject('htmltable','htmlelements');
+        $objTable=$this->newObject('htmltable','htmlelements');
         $objTable->attributes=" align='center' border='0'";
         $objTable->width='50%';
         $objTable->cellspacing='2';
@@ -18,7 +18,7 @@
         $objTable->alternate_row_colors=TRUE;
         
         // Adding a heading
-        $objHeading=&$this->newObject('htmlheading','htmlelements');
+        $objHeading=$this->newObject('htmlheading','htmlelements');
         $objHeading->str=$this->objLanguage->languageText("mod_userimport_message3",'userimport');
         $objHeading->type=3;
         print $objHeading->show();
@@ -89,7 +89,7 @@
     $form->addToForm($objElement2);
 
     //Heading
-    $objHeading=&$this->newObject('htmlheading','htmlelements');
+    $objHeading=$this->newObject('htmlheading','htmlelements');
     $objHeading->str=$this->objLanguage->languageText("mod_userimport_message1",'userimport');
     $objHeading->type=3;
     $strCenter=$objHeading->show();
@@ -103,7 +103,7 @@
     // Now a table will be shown of existing "batches", if there are any this user can work on.
 
     //Heading
-    $objHeading=&$this->newObject('htmlheading','htmlelements');
+    $objHeading=$this->newObject('htmlheading','htmlelements');
     $contextword=$this->objLanguage->languageText('mod_context_context','userimport');
     $objHeading->str=$this->objLanguage->code2Txt('mod_userimport_showlist','userimport');
     $objHeading->type=3;
@@ -116,10 +116,10 @@
         // print the heading
         print $objHeading->show();
         // Get a link to the "confirm" object
-        $objConfirm = &$this->newObject('confirm','utilities');
+        $objConfirm = $this->newObject('confirm','utilities');
         
         // Basic table setup
-        $objTable=&$this->newObject('htmltable','htmlelements');
+        $objTable=$this->newObject('htmltable','htmlelements');
         $objTable->attributes=" align='center' border='0'";
         $objTable->width='50%';
         $objTable->cellspacing='2';

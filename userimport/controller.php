@@ -34,24 +34,24 @@ class userimport extends controller
     public function init()
     {
         // The user and useradmin objects
-        $this->objUser=& $this->getObject('user', 'security');
-        $this->objUserAdmin=& $this->getObject('sqlusers', 'security');
+        $this->objUser= $this->getObject('user', 'security');
+        $this->objUserAdmin= $this->getObject('sqlusers', 'security');
 
         // The config object
         //$this->objConfig=& $this->getObject('altconfig','config');
-        $this->objConfig=& $this->getObject('dbsysconfig','sysconfig');
+        $this->objConfig= $this->getObject('dbsysconfig','sysconfig');
         
         // The classes specific to this module
-        $this->objUserImport=& $this->getObject('importuserdata', 'userimport');
-        $this->objUserBatch=& $this->getObject('dbuserimport', 'userimport');
+        $this->objUserImport= $this->getObject('importuserdata', 'userimport');
+        $this->objUserBatch= $this->getObject('dbuserimport', 'userimport');
         
         // The language object
-        $this->objLanguage= & $this->getObject('language','language');
+        $this->objLanguage=  $this->getObject('language','language');
         
         // The context and group objects used here to determine which context
         // the session is in, and whether the user has rights there.
-        $this->objDBContext=&$this->getObject('dbcontext','context');
-        $this->objGroups=&$this->getObject('groupadminmodel','groupadmin');
+        $this->objDBContext=$this->getObject('dbcontext','context');
+        $this->objGroups=$this->getObject('groupadminmodel','groupadmin');
         
         // The properties are assigned values:
         // The user's primary key id is needed for looking up group membership.
@@ -149,7 +149,7 @@ class userimport extends controller
             $this->remoteImport($this->getParam('faculty'),$this->getParam('program'),$this->getParam('classmodule'));
             return 'remoteimport_tpl.php';
         case 'remotexml':
-            $objRemoteImport=&$this->getObject('remoteimport','userimport');
+            $objRemoteImport=$this->getObject('remoteimport','userimport');
             $this->objUserBatch->exportName=$this->getParam('classmodule');
             $this->objUserBatch->export=$objRemoteImport->XMLexport($this->getParam('classmodule'));
             $this->setPageTemplate('export_page_tpl.php');
@@ -158,7 +158,7 @@ class userimport extends controller
         // Case to import users from remote database - stores them as XML to use the standard method
             $classmodule=$this->getParam('classmodule',NULL);
             if ($classmodule!=NULL){
-                $objRemoteImport=&$this->getObject('remoteimport','userimport');
+                $objRemoteImport=$this->getObject('remoteimport','userimport');
                 $filename=$objRemoteImport->writeXML($classmodule);
                 $this->uploadData('XML',$filename);
                 unlink($filename);
@@ -216,24 +216,28 @@ class userimport extends controller
 
     function remoteImport($faculty,$program,$module)
     {
-        $objRemoteImport=&$this->getObject('remoteimport','userimport');
+        $objRemoteImport=$this->getObject('remoteimport','userimport');
         if ($module!=''){
             $classlist=$objRemoteImport->getClassList($module);
             $this->setVar('classlist',$classlist);
             $this->setVar('remoteCode',$module);
-            $classNameData=array($objRemoteImport->getModuleName($module));
-            $this->setVar('remoteDesc',$classNameData[0]['desc']);
+            $classNameData=$objRemoteImport->getModuleName($module);
+            $classNameData=(array)$classNameData[0];
+            $this->setVar('remoteDesc',$classNameData['desc']);
         }
         if ($program!=''){
             $modulelist=$objRemoteImport->getModules($program);
-            $progNameData=array($objRemoteImport->getProgramName($program));
-            $this->setVar('remoteProg',$progNameData[0]['desc']);
+            $progNameData= $objRemoteImport->getProgramName($program);
+            $progNameData=(array) $progNameData[0];
+            $this->setVar('remoteProg',$progNameData['desc']);
             $this->setVar('modules',$modulelist);
         }
         if ($faculty!=''){
             $programlist=$objRemoteImport->getProgrammes($faculty);
-            $facNameData=array($objRemoteImport->getFacultyName($faculty));
-            $this->setVar('remoteFac',$facNameData[0]['desc']);
+            $facNameData=$objRemoteImport->getFacultyName($faculty);
+            $facNameData=$objRemoteImport->getFacultyName($faculty);
+            $facNameData=(array) $facNameData[0];
+            $this->setVar('remoteFac',$facNameData['desc']);
             $this->setVar('programs',$programlist);
         }
         

@@ -20,7 +20,7 @@ if (isset($faculties)){
         $objForm1->addToForm($objFacultyDrop->show());
         $objForm1->addToForm($objButton->show());
         if (isset($remoteFac)){
-            $objForm1->addToForm("&nbsp;<br /><b>".$this->objLanguage->LanguageText('mod_userimport_facselec','userimport')."&nbsp;".$remoteFac."</b>");
+            $objForm1->addToForm("\n&nbsp;<br /><b>".$this->objLanguage->LanguageText('mod_userimport_facselec','userimport')."&nbsp;".htmlspecialchars($remoteFac)."</b>\n");
         }
         print $this->objLanguage->LanguageText('mod_userimport_selectfaculty','userimport');
         print $objForm1->show()."\n"; 
@@ -44,7 +44,7 @@ if (isset($programs)){
         $hidden= new textinput('faculty',$this->getParam('faculty',NULL),'hidden');
         $objForm2->addToForm($hidden->show());
         if (isset($remoteProg)){
-            $objForm2->addToForm("&nbsp;<br /><b>".$this->objLanguage->LanguageText('mod_userimport_progselec','userimport')."&nbsp;".$remoteProg."</b>");
+            $objForm2->addToForm("\n&nbsp;<br /><b>".$this->objLanguage->LanguageText('mod_userimport_progselec','userimport')."&nbsp;".htmlspecialchars($remoteProg)."</b>\n");
         }
         print $this->objLanguage->LanguageText('mod_userimport_selectprogram','userimport');
         print $objForm2->show()."\n";
@@ -101,7 +101,7 @@ if (isset($remoteCode)){
         $objTable->endHeaderRow();
         $objTable->arrayToTable($classlist);
         if (isset($remoteDesc)){
-            $objTable->caption="<b>".$this->objLanguage->LanguageText('mod_userimport_modselec','userimport')."&nbsp;$remoteDesc</b>";    
+            $objTable->caption='<b>'.$this->objLanguage->LanguageText('mod_userimport_modselec','userimport').'&nbsp;'.htmlspecialchars($remoteDesc).'</b>';    
         }
         print $objTable->show()."\n";
         print "<a href='$xmldump'>".$linkButton1->show()."</a>";

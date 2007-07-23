@@ -18,8 +18,8 @@ class remoteimport extends object
         // set exec time to 5 mins
         ini_set("max_execution_time",300);
         // Config and language objects
-        $this->objConfig=&$this->getObject('dbsysconfig','sysconfig');
-        $this->objLanguage=&$this->getObject('language','language');
+        $this->objConfig=$this->getObject('dbsysconfig','sysconfig');
+        $this->objLanguage=$this->getObject('language','language');
         $soapserver=$this->objConfig->getValue('remotedata','userimport');
         //if ($soapserver==NULL){
         //    $soapserver="http://172.16.65.134/webservice/userimport.php?wsdl";
@@ -55,7 +55,7 @@ class remoteimport extends object
         if (is_array($result)){
             return $result;
         } else {
-            $objXML=&$this->getObject('xmlserial','utilities');
+            $objXML=$this->getObject('xmlserial','utilities');
             return $objXML->readXML($result,FALSE);
         }            
     }
@@ -86,7 +86,7 @@ class remoteimport extends object
         if (is_array($result)){
             return $result;
         } else {
-            $objXML=&$this->getObject('xmlserial','utilities');
+            $objXML=$this->getObject('xmlserial','utilities');
             return $objXML->readXML($result,FALSE);
         }            
     }

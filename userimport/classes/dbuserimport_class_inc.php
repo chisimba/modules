@@ -31,9 +31,9 @@ class dbuserimport extends dbTable
     function init() 
     {
         parent::init('tbl_importusers');
-        $this->objUser=&$this->getObject('user','security');
-        $this->objUserAdmin=&$this->getObject('sqlusers','security');
-        $this->objConfig=&$this->getObject('altconfig','config');
+        $this->objUser=$this->getObject('user','security');
+        $this->objUserAdmin=$this->getObject('sqlusers','security');
+        $this->objConfig=$this->getObject('altconfig','config');
         
     }
 
@@ -48,7 +48,7 @@ class dbuserimport extends dbTable
     */
     function addBatch($adminId,$courseCode,$newInfo,$importMethod,$batchCode='auto')
     {
-        $this->objContextGroups=&$this->getObject('managegroups','contextgroups');
+        $this->objContextGroups=$this->getObject('managegroups','contextgroups');
         $now=date('Y-m-d');
         if ($batchCode=='auto'){
             $batchCode=$importMethod.date('Ymdhis').rand(10,99);
@@ -81,8 +81,8 @@ class dbuserimport extends dbTable
     */
     function deleteBatch($batchCode)
     {
-        $this->objContextGroups=&$this->getObject('managegroups','contextgroups');
-        $this->objAdminGroups=&$this->getObject('groupadminmodel','groupadmin');
+        $this->objContextGroups=$this->getObject('managegroups','contextgroups');
+        $this->objAdminGroups=$this->getObject('groupadminmodel','groupadmin');
         $sql="where batchId='$batchCode'";
         $list=$this->getAll($sql);
         $groupId=NULL;
@@ -215,7 +215,7 @@ class dbuserimport extends dbTable
         
         // Call the XML class and put the output in the class variable.
         // This code is not used at the moment - there is a return before it.
-        $this->objSerialXML=&$this->getObject('xmlserial','utilities');
+        $this->objSerialXML=$this->getObject('xmlserial','utilities');
         $this->export=$this->objSerialXML->writeXML($dataArray);
     }
 
@@ -227,7 +227,7 @@ class dbuserimport extends dbTable
     */
     function exportClassXML($contextCode,$role='Students')
     {
-        $this->objContextGroups=&$this->getObject('managegroups','contextgroups');
+        $this->objContextGroups=$this->getObject('managegroups','contextgroups');
         $this->export='';
         // Getting the data via a call to the groupmanagement classes
         $fields=array("tbl_users.userId AS userId", "username", "PASSWORD as cryptpassword", "firstname",
@@ -268,7 +268,7 @@ class dbuserimport extends dbTable
     */
     function addToUserGroup($users,$groupName)
     {
-        $objGroup=&$this->getObject('groupadminmodel','groupadmin');
+        $objGroup=$this->getObject('groupadminmodel','groupadmin');
         $groupId=$objGroup->getLeafId(array($groupName));
         foreach($users as $line)
         {

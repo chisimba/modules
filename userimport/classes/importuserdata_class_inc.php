@@ -25,10 +25,10 @@ class importuserdata extends object
         $this->fieldcount=count($this->userfields);
 
         // Create or get instances of the user, sqlusers and passwords classes
-        $this->objConfig=&$this->getObject('altconfig','config');
-        $this->objUser=&$this->getObject('user','security');
-        $this->objUserAdmin=&$this->getObject('sqlusers','security');
-        $this->objPassword=&$this->getObject('passwords','useradmin');
+        $this->objConfig=$this->getObject('altconfig','config');
+        $this->objUser=$this->getObject('user','security');
+        $this->objUserAdmin=$this->getObject('sqlusers','security');
+        $this->objPassword=$this->getObject('passwords','useradmin');
     }
 
     /**
@@ -77,7 +77,7 @@ class importuserdata extends object
         // Open the file
         //$fp=fopen($file,'r');
 
-        $objXML=&$this->getObject('xmlserial','utilities');
+        $objXML=$this->getObject('xmlserial','utilities');
         $info=$objXML->readXML($file,TRUE);
         
         // Here we check for a bug - the XML class returns the
