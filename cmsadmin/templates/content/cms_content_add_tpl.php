@@ -36,12 +36,9 @@ YAHOO.namespace("example.container");
 					// Validate the entries in the form to require that both first and last name are entered
 					YAHOO.example.container.dialog1.validate = function() {
 						var data = this.getData();
-						if (data.firstname == "" || data.lastname == "") {
-							alert("Please enter your first and last names.");
-							return false;
-						} else {
+						
 							return true;
-						}
+						
 					};
 
 					// Wire up the success and failure handlers
