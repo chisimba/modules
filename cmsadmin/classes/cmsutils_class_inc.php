@@ -959,9 +959,20 @@ class cmsutils extends object
         		$tbl_meta->addCell("<input type=\"button\" class=\"button\" value=\"{$this->objLanguage->languageText('mod_cmsadmin_add_section_button','cmsadmin')}\" onclick=\"f=document.getElementById('form_addfrm');f.keyword.value=document.getElementById('form_addfrm').parent.options[document.getElementById('form_addfrm').parent.selectedIndex].text+', '+f.title.value+f.keyword.value;\" />");
         	}
         	
-        	
+        	if (isset($arrContent['body'])) {
+        		$bodyInputValue = stripslashes($arrContent['body']);
+        	}else{
+        		$bodyInputValue = null;
+        	}
+        	$bodyInput = $this->newObject('htmlarea', 'htmlelements');
+            $bodyInput->init('body', $bodyInputValue);
+            $bodyInput->setContent($bodyInputValue);
+            $bodyInput->setDefaultToolBarSet();
+            $bodyInput->height = '400px';
+            //$bodyInput->width = '50%';
         	$tbl_meta->endRow();
         	//Add items to tabs
+        	$tabs->addTab(array('name'=>"{$this->objLanguage->languageText('mod_cmsadmin_maintext', 'cmsadmin')}",'','content' => $bodyInput->show()),'winclassic-tab-style-sheet');
         	$tabs->addTab(array('name'=>"{$this->objLanguage->languageText('mod_cmsadmin_basic','cmsadmin')}",'','content' => $tbl_basic->show()),'winclassic-tab-style-sheet');
         	$tabs->addTab(array('name'=>"{$this->objLanguage->languageText('mod_cmsadmin_advanced','cmsadmin')}",'','content' => $tbl_advanced->show()),'winclassic-tab-style-sheet');
         	$tabs->addTab(array('name'=>"{$this->objLanguage->languageText('mod_cmsadmin_meta','cmsadmin')}",'','content' => $tbl_meta->show()),'winclassic-tab-style-sheet');
@@ -2272,13 +2283,17 @@ class cmsutils extends object
             $table->addCell('<div id="introdiv"><br />'.$h3->show().$introInput->show().'</div>','','left','left');
             $table->endRow();
             //add the main body
+            $table2 = new htmltable();
+            $table2->startRow();
+            
+            if (!$editmode) {
+            	$table2->addCell($this->getConfigTabs(),null,'top','right');
+            }else{
+            	$table2->addCell($this->getConfigTabs($arrContent),null,'top','right');
+            }
+            $table2->endRow();
             // Content Area
-            $bodyInput = $this->newObject('htmlarea', 'htmlelements');
-            $bodyInput->init('body', $bodyInputValue);
-            $bodyInput->setContent($bodyInputValue);
-            $bodyInput->setDefaultToolBarSet();
-            $bodyInput->height = '400px';
-            $bodyInput->width = '50%';
+           
             //Header for main body
             $h3->str = $this->objLanguage->languageText('mod_cmsadmin_maintext', 'cmsadmin');
             $h3->type = 3;
@@ -2286,7 +2301,8 @@ class cmsutils extends object
 			$txt_action = new textinput('action',$action,'hidden');
 			$table->startRow();
             $table->addCell($h3->show(),null,'center','left');
-            $table->addCell($bodyInput->show(),null,'top','left'); 
+            $table->addCell($table2->show(),null,'top','left'); 
+            //$table->addCell(,null,'bottom','center');
 			$table->endRow();         		
 			//Lets do the CC Licence
 			 $objModulesInfo = $this->getObject('modules', 'modulecatalogue');
@@ -2320,18 +2336,10 @@ class cmsutils extends object
                               
 
             //body
-            $dialogForm = new form();
-            $table2 = new htmltable();
-            $table2->startRow();
+           // $dialogForm = new form();
             
-            if (!$editmode) {
-            	$table2->addCell($this->getConfigTabs(),'30%','top','right');
-            }else{
-            	$table2->addCell($this->getConfigTabs($arrContent),'30%','top','right');
-            }
-            $table2->endRow();
               
-            $dialogForm->addToForm($table2->show());
+           // $dialogForm->addToForm($table2->show());
             //add page header for the body
 			         
 			$display = $objForm->show(); 	
