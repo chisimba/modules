@@ -106,7 +106,7 @@ foreach ($buddies as $buddy) {
 	//echo 'this it'.$imPopup->popIM();
     //$objIcon->setIcon('im');
     // echo $objIcon->show();
-    //----------------------------------------
+    //-------------------------Acquim Matuli added this code---------------
     $imPopup = $this->getObject('chatdisplay', 'messaging');
     $objIcon = $this->newObject('geticon', 'htmlelements');
     $objIcon->setIcon('instantmessaging', 'gif', 'icons/modules');
@@ -125,7 +125,7 @@ foreach ($buddies as $buddy) {
     $objPopup->set('top', '100');
     $objPopup->set('scrollbars', 'no');
     $im = '&nbsp;'.$objPopup->show();
-    //------------------------------------------
+    //---------------------------End---------------
     
     $objTableClass->addCell($im, '', 'top', 'center', $class); 
     // Show email icon
