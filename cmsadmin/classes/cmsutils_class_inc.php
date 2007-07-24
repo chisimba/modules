@@ -2121,21 +2121,11 @@ class cmsutils extends object
             $published = new checkbox('published');
             $frontPage = new checkbox('frontpage');
 			$frontPage->value = 1;
-
-
-
-
-
-            if ($toggleShowHideIntro) {
-                /*$this->appendArrayVar('headerParams', '
-				<style type="text/css">
-				div#introdiv {display: none; }
-				span#introrequiredtext {display: none; }
-				</style>
-                ');*/
-
-                $this->appendArrayVar('headerParams', '
+            // Hide the Introtext part
+            $this->appendArrayVar('headerParams', '
 				<script type="text/javascript">
+				//<![CDATA[
+
 				function toggleIntroRequired()
 				{
 					if (document.forms[\'addfrm\'].frontpage.checked == true)
@@ -2150,22 +2140,14 @@ class cmsutils extends object
 					}
 				
 				}
+				//]]>
 				</script>');
-				$this->appendArrayVar('bodyOnLoad', 'toggleIntroRequired();');
-                $frontPage->extra = 'onchange="toggleIntroRequired();"';
-            } else {
-                $this->appendArrayVar('headerParams', '
-				<style type="text/css">
-				span#introrequiredtext {display: none; }
-				</style>');
-            }
+			$this->appendArrayVar('bodyOnLoad', 'toggleIntroRequired();');
+            $frontPage->extra = 'onchange="toggleIntroRequired();"';
+            
 
-            //$objOrdering =$this->newObject('textinput', 'htmlelements');
             $objOrdering = new textinput();
-
-
             $objCCLicence = $this->newObject('licensechooser', 'creativecommons');
-
             $is_front = FALSE;
             if ($contentId == NULL) {
                 $action = 'createcontent';
@@ -2220,12 +2202,17 @@ class cmsutils extends object
                 }
             }
            
-            $table = new htmltable();
+            $table = new htmlTable();
+            $table->width = "100%";
+            $table->cellspacing = "0";
+            $table->cellpadding = "0";
+            $table->border = "0";
+            $table->attributes = "align ='center'";
 			$this->loadClass('textinput', 'htmlelements');
             // Title Input
             $titleInput = new textinput ('title', $titleInputValue);
             $titleInput->cssId = 'input_title'; 
-            $titleInput->extra = ' style="width: 50%"';
+            $titleInput->extra = ' style="width: 25%"';
             
             $table->startRow();
             $table->addCell($this->objLanguage->languageText('word_title').': ', 150);
@@ -2267,79 +2254,86 @@ class cmsutils extends object
             $table->addCell($this->objLanguage->languageText('mod_cmsadmin_showonfrontpage', 'cmsadmin').': ');
             $table->addCell($frontPage->show().'<span id="introrequiredtext" class="warning">'.$this->objLanguage->languageText('mod_cmsadmin_pleaseenterintrotext', 'cmsadmin').'</span>');
             $table->endRow();
-
-            $objForm->addToForm($table->show());
-            //$objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
-
-
-            $h3 = $this->newObject('htmlheading', 'htmlelements');
-            $h3->str = $this->objLanguage->languageText('word_introduction').' ('.$this->objLanguage->languageText('word_required').')';
-            $h3->type = 3;
-			
-			// Introduction Area
+            
+            // Introduction Area
             $introInput = $this->newObject('htmlarea', 'htmlelements');
             $introInput->init('intro', $introInputValue);
             $introInput->setContent($introInputValue);
             $introInput->setBasicToolBar();
             $introInput->height = '200px';
-            $introInput->width = '100%';
-			
-            //intro input
-            $objForm->addToForm('<div id="introdiv">');
-            $objForm->addToForm('<br />'.$h3->show());
-            $objForm->addToForm($introInput->show());
-            $objForm->addToForm('</div>');
-
+            $introInput->width = '50%';
+            
+            $h3 = $this->newObject('htmlheading', 'htmlelements');
+            $h3->str = $this->objLanguage->languageText('word_introduction').' ('.$this->objLanguage->languageText('word_required').')';
+            $h3->type = 3;
+            //add hidden text input
+            $table->startRow();
+            $table->addCell(NULL);
+            $table->addCell('<div id="introdiv"><br />'.$h3->show().$introInput->show().'</div>','','left','left');
+            $table->endRow();
+            //add the main body
             // Content Area
             $bodyInput = $this->newObject('htmlarea', 'htmlelements');
             $bodyInput->init('body', $bodyInputValue);
             $bodyInput->setContent($bodyInputValue);
             $bodyInput->setDefaultToolBarSet();
             $bodyInput->height = '400px';
-            $bodyInput->width = '100%';
+            $bodyInput->width = '50%';
+            //Header for main body
+            $h3->str = $this->objLanguage->languageText('mod_cmsadmin_maintext', 'cmsadmin');
+            $h3->type = 3;
+            //Pass action
+			$txt_action = new textinput('action',$action,'hidden');
+			$table->startRow();
+            $table->addCell($h3->show(),null,'center','left');
+            $table->addCell($bodyInput->show(),null,'top','left'); 
+			$table->endRow();         		
+			//Lets do the CC Licence
+			 $objModulesInfo = $this->getObject('modules', 'modulecatalogue');
+			
+            //cc licence input
+            if ($objModulesInfo->checkIfRegistered('creativecommons')) {
+                $h3->str = $this->objLanguage->languageText('word_licence');
+                $h3->type = 3;
+                if (!$editmode) {
+                	$table->startRow();
+            		$table->addCell($h3->show(),null,'center','left');
+            		$table->addCell($objCCLicence->show(),null,'top','left'); 
+					$table->endRow();
+                }else{
+                	$table->startRow();
+            		$table->addCell($h3->show(),null,'center','left');
+            		$table->addCell($objCCLicence->show(),null,'top','left'); 
+					$table->endRow();
+                }
+                
+               
+            } 
+			
+			
+            //Add validation for title            
+            $errTitle = $this->objLanguage->languageText('mod_cmsadmin_entertitle', 'cmsadmin');
+            $objForm->addRule('title', $errTitle, 'required');
+            $objForm->addToForm($table->show());
+            //add action
+            $objForm->addToForm($txt_action);
+                              
 
             //body
+            $dialogForm = new form();
             $table2 = new htmltable();
             $table2->startRow();
-            $table2->addCell($bodyInput->show(),'70%','top','left');
+            
             if (!$editmode) {
             	$table2->addCell($this->getConfigTabs(),'30%','top','right');
             }else{
             	$table2->addCell($this->getConfigTabs($arrContent),'30%','top','right');
             }
             $table2->endRow();
-            
-            $h3->str = $this->objLanguage->languageText('mod_cmsadmin_maintext', 'cmsadmin');
-            $h3->type = 3;
-            $objForm->addToForm('<br />'.$h3->show());
-            $objForm->addToForm($table2->show());
-
-            $objModulesInfo =& $this->getObject('modules', 'modulecatalogue');
-			//Pass action
-			$txt_action = new textinput('action',$action,'hidden');
-			$objForm->addToForm($txt_action);
-
-            //cc licence input
-            if ($objModulesInfo->checkIfRegistered('creativecommons')) {
-                $h3->str = $this->objLanguage->languageText('word_licence');
-                $h3->type = 3;
-                $objForm->addToForm('<br />'.$h3->show());
-                $objForm->addToForm($objCCLicence->show());
-            } else {
-                $creativecommons = new hiddeninput('creativecommons', '');
-                $objForm->addToForm($creativecommons->show());
-            }
-            //create heading
-            //$h3->str = $this->objLanguage->languageText('mod_cmsadmin_contentitem', 'cmsadmin').':'.'&nbsp;'.$this->objLanguage->languageText('word_new');
-
-            // Submit Button
-            $button = new button('submitform', $this->objLanguage->languageText('word_save'));
-            $button->setToSubmit();
-            $objForm->addToForm('<p><br />'.$button->show().'</p>');
-            
-            $errTitle = $this->objLanguage->languageText('mod_cmsadmin_entertitle', 'cmsadmin');
-            $objForm->addRule('title', $errTitle, 'required');
-			
+              
+            $dialogForm->addToForm($table2->show());
+            //add page header for the body
+			         
 			$display = $objForm->show(); 	
             return $display;
         }
