@@ -53,6 +53,7 @@ $tableHd[] = $objLanguage->languageText('mod_buddies_action', 'buddies');
 $objTableClass->addHeader($tableHd, "heading");
 $index = 0;
 $rowcount = 0;
+
 foreach ($buddies as $buddy) {
     $rowcount++;
     $buddyId = $buddy['buddyid'];
@@ -100,11 +101,32 @@ foreach ($buddies as $buddy) {
     $name = $objUser->fullname($buddyId);
     $objTableClass->addCell($name, '', '', '', $class); 
     // Show instant messaging icon
-	/*
-	$imPopup =& $this->getObject('popup','instantmessaging');
-	$imPopup->setup($buddyId, null, $objLanguage->languageText('phrase_sendinstantmessage'));
-	*/
-	$im = '&nbsp;';//$imPopup->show(); 
+	//$imPopup =& $this->getObject('popup', 'messaging');
+	//$imPopup->setup($buddyId, null, $objLanguage->languageText('phrase_sendinstantmessage'));
+	//echo 'this it'.$imPopup->popIM();
+    //$objIcon->setIcon('im');
+    // echo $objIcon->show();
+    //----------------------------------------
+    $imPopup = $this->getObject('chatdisplay', 'messaging');
+    $objIcon = $this->newObject('geticon', 'htmlelements');
+    $objIcon->setIcon('instantmessaging', 'gif', 'icons/modules');
+    $this->objIcon->title = $imTitleLabel;
+    $imIcon = $objIcon->show();
+    // popup link to ban users
+    $objPopup = new windowpop();
+    //$objPopup->title = $imTitleLabel;
+    $objPopup->set('location',$this->uri(array(
+        'action' => 'im',
+         ), 'messaging'));
+    $objPopup->set('linktext', $imIcon);
+    $objPopup->set('width', '500');
+    $objPopup->set('height', '400');
+    $objPopup->set('left', '100');
+    $objPopup->set('top', '100');
+    $objPopup->set('scrollbars', 'no');
+    $im = '&nbsp;'.$objPopup->show();
+    //------------------------------------------
+    
     $objTableClass->addCell($im, '', 'top', 'center', $class); 
     // Show email icon
     $userEmail = $this->objUser->email($buddyId);

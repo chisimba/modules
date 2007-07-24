@@ -66,6 +66,7 @@ foreach ($allUsers as $user) {
     $objTableClass->addCell($makeBuddy, '', '', 'center', $class);
     $index++;
 } 
+
 // Create link back to my buddies template
 $objBackLink = &$this->getObject('link', 'htmlelements');
 $objBackLink->link($this->uri(array('module' => 'buddies')));
