@@ -5,6 +5,10 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	die("You cannot view this page directly");
 }
 // end security check
+
+define("BY_URL", 0);
+define("BY_ID", 1);
+
 /**
 *
 * Class for manipulating YouTube API generated XML
@@ -56,6 +60,7 @@ class youtubetpl extends object
         $i = 0;
         $count = 0;
         $this->loadClass('htmltable', 'htmlelements');
+        $outerTable = new htmltable();
         $table = new htmltable();
         $table->startRow();
         $table->width=399;
@@ -66,6 +71,17 @@ class youtubetpl extends object
         $perPage = $this->getParam('hitsperpage', 24);
         $objLink = new link();
         $objImage = new image();
+        $videoId = $this->getParam('videoid', 0);
+        if ($videoId === 0) {
+            $displayVideoUrl = $apiXml->video_list->video[0]->url;
+            $vidPlayer = $this->getVideoPlayer($displayVideoUrl, BY_URL);
+        } else {
+            $vidPlayer = $this->getVideoPlayer($videoId, BY_ID);
+        }
+        $objYtFilter = $this->getObject('parse4youtube', 'filters');
+        
+        
+        
         foreach($apiXml->video_list->video as $video) {
             //Keep the title short to not break the layout
             $title = htmlentities(substr($video->title, 0, 15)) . '...';
@@ -74,7 +90,22 @@ class youtubetpl extends object
             //The thumbnaiil image for the current video
             $objImage->src = $video->thumbnail_url;
             //Set up the link URL
-            $objLink->href = htmlentities($video->url);
+            $videoUrl = $video->url;
+            $videoId = $objYtFilter->getVideoCode($videoUrl);
+            
+            $ytMethod = $this->getParam('ytmethod', 'by_tag');
+            $ytIdentifier = $this->getParam('identifier', 'digitalfreedom');
+            $action=$this->getParam('action', 'view');
+            $arUri = array(
+              'ytmethod'=>$ytMethod,
+              'identifier'=>$ytIdentifier,
+              'page'=>$this->getParam('page', 1),
+              'action'=>$action,
+              'videoid'=>$videoId);
+            $objLink->href = $this->uri($arUri, 'youtube');
+            ////////////working there
+            
+            //$objLink->href = htmlentities($video->url);
             //Make the link the image
             $objLink->link = $objImage->show();
             //Add the linked image to a table cell
@@ -101,8 +132,7 @@ class youtubetpl extends object
         $str = $table->show();
         //Clean up the table memory
         unset($table);
-
-        
+        //Count the number of pages        
         if ($total > $perPage) {
             $pages = round($total/$perPage, 0);
         } else {
@@ -124,7 +154,11 @@ class youtubetpl extends object
         $navTable->endRow();
         $navBar = $navTable->show();
         $str = $navBar . $str . $navBar;
-        return $str;
+        $outerTable->startRow();
+        $outerTable->addCell($str);
+        $outerTable->addCell($vidPlayer);
+        $outerTable->endRow();
+        return $outerTable->show();
     }
     
     /**
@@ -235,13 +269,48 @@ class youtubetpl extends object
         return $objForm->show();
     }
     
-    private function buildMouseOver($shortTxt, $longTxt, $numId)
+    
+   public function showMethod()
+   {
+        //Get the method to use and default to by_tag
+        $ytMethod = $this->getParam('ytmethod', 'by_tag');
+        //Get the tag or user or other identifier and default to digitalfreedom
+        $ytIdentifier = $this->getParam('identifier', 'digitalfreedom');
+        switch ($ytMethod) {
+                case "by_tag":
+                    $ret = $this->objLanguage->languageText("mod_youtube_bytag", "youtube")
+                      . ": " . $ytIdentifier;
+                    break;
+                    
+                case "by_user":
+                    $ret = $this->objLanguage->languageText("mod_youtube_byuser", "youtube")
+                      . ": " . $ytIdentifier;
+                    break;
+                    
+                case "by_playlist":
+                    $ret = $this->objLanguage->languageText("mod_youtube_bypl", "youtube")
+                      . ": " . $ytIdentifier;
+                    break;
+                    
+                default:
+                    $ret = $this->objLanguage->languageText("mod_youtube_unknownmethod", "youtube")
+                      . ": " . $ytMethod;
+                    break;
+        }
+       return $ret;
+   } 
+    
+    public function getVideoPlayer($key, $mode)
     {
-        $divTag = "<div id=\"youtube_" . $numId . "\" "
-                . " style=\"display: none;\">"
-                . $longTxt . "</div>";
-        $anchorEffect = "<a href=\"javascript:Effect.Combo('youtube_$numId');\">$shortTxt</a>";
+        $objYtFilter = $this->getObject('parse4youtube', 'filters');
+        if ($mode==BY_URL) {
+            $videoId = $objYtFilter->getVideoCode($key);
+        } else {
+            $videoId = $key;
+        }
+        return $objYtFilter->getVideoObject($videoId);
     }
+    
     
 }
 ?>

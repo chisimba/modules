@@ -9,7 +9,10 @@ $cssLayout->setNumColumns(2);
 $vw = $this->getObject('youtubetpl','youtube');
 $tagForm = $vw->getTagSearchBox();
 $userForm = $vw->getUserSearchBox();
-$leftSideColumn=$tagForm . "<br />" . $userForm;
+$ytMethod = $vw->showMethod();
+
+$leftSideColumn=$tagForm . "<br />" 
+  . $userForm . $ytMethod;
 $cssLayout->setLeftColumnContent($leftSideColumn);
 
 // Add Right Column
