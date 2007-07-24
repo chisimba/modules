@@ -877,11 +877,11 @@ class dbcontent extends dbTable
         	//date
         	$document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['created']));
         	//url
-        	$document->addField(Zend_Search_Lucene_Field::UnIndexed('url', $this->uri(array
+        	$document->addField(Zend_Search_Lucene_Field::UnIndexed('url', htmlentities($this->uri(array
         															('module' => 'cms', 
         															'action' => 'showfulltext', 
         															'id' => $data['id'],
-        															'sectionid'=> $data['sectionid']))));
+        															'sectionid'=> $data['sectionid'])))));
         	//createdBy
         	$document->addField(Zend_Search_Lucene_Field::Text('createdBy', $this->objUser->fullName($data['created_by'])));
         	//document teaser
@@ -940,7 +940,7 @@ class dbcontent extends dbTable
         	//date
         	$document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['created']));
         	//url
-        	$document->addField(Zend_Search_Lucene_Field::UnIndexed('url', $this->uri(array('module' => 'cms', 'action' => 'showfulltext', 'id' => $data['id'], 'sectionid'=> $data['sectionid']))));
+        	$document->addField(Zend_Search_Lucene_Field::UnIndexed('url', htmlentities($this->uri(array('module' => 'cms', 'action' => 'showfulltext', 'id' => $data['id'], 'sectionid'=> $data['sectionid'])))));
         	//createdBy
         	$document->addField(Zend_Search_Lucene_Field::Text('createdBy', $this->objUser->fullName($this->objUser->userId())));
         	//document teaser
