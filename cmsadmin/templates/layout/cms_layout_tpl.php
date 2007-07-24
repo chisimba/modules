@@ -37,6 +37,11 @@ $css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getRes
 $css .= '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("reset/reset.css", 'yahoolib').'" />';
 $css .= '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("container/assets/container.css", 'yahoolib').'" />';
 $css .= '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("menu/assets/menu.css", 'yahoolib').'" />';
+$this->appendArrayVar('headerParams', $this->getJavascriptFile('yahoo/yahoo.js', 'yahoolib'));
+$this->appendArrayVar('headerParams', $this->getJavascriptFile('event/event.js', 'yahoolib'));
+$this->appendArrayVar('headerParams', $this->getJavascriptFile('dom/dom.js', 'yahoolib'));
+$this->appendArrayVar('headerParams', $this->getJavascriptFile('dragdrop/dragdrop.js', 'yahoolib'));
+$this->appendArrayVar('headerParams', $this->getJavascriptFile('container/container.js', 'yahoolib'));
 $this->appendArrayVar('headerParams', $this->getJavascriptFile('menu/menu.js', 'yahoolib'));
 $this->appendArrayVar('headerParams', $css);
 $this->appendArrayVar('headerParams',$script);
