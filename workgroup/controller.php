@@ -30,8 +30,8 @@ class workgroup extends controller
         $this->objUser =& $this->getObject('user', 'security');
         $this->objFile =& $this->getObject('dbfile', 'filemanager');
         $this->objLanguage =& $this->getObject('language','language');
-		$this->objDbWorkgroup =& $this->getObject('dbworkgroup'); 
-		$this->objDbWorkgroupUsers =& $this->getObject('dbworkgroupusers'); 
+		$this->objDbWorkgroup =& $this->getObject('dbworkgroup', 'workgroup'); 
+		$this->objDbWorkgroupUsers =& $this->getObject('dbworkgroupusers', 'workgroup'); 
         //$this->objHelp=& $this->getObject('helplink','help');
         //$this->objHelp->rootModule="helloworld";
         //Get the activity logger class
@@ -135,8 +135,10 @@ class workgroup extends controller
             $isContextLecturer = $objContextCondition->isContextMember('Lecturers');
             if ($isContextLecturer) {
                 $workgroups = $this->objDbWorkgroup->getAll($contextCode);
+               // var_dump($workgroups);
             } else {
                 $workgroups = $this->objDbWorkgroup->getAllForUser($contextCode, $this->objUser->userId());
+               // var_dump($workgroups);
             }
             $this->setVarByRef('workgroups',$workgroups);
             return "prelogin_tpl.php";

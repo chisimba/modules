@@ -15,6 +15,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
+	'contextcode' => array(
+		'type' => 'text',
+		'length' => 255
+		),
 	'userid' => array(
 		'type' => 'text',
 		'length' => 25

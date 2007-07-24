@@ -164,7 +164,7 @@ class dbWorkgroup extends dbTable
 		return $this->insert(array(
 			'contextcode'=>$contextCode, 
 			'description'=>$description,
-			'creator_id'=>$this->userId,
+			'creatorid'=>$this->userId,
 		));
 	}
 
