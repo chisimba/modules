@@ -150,8 +150,36 @@ class cmslayouts extends object
 
         $head = $this->objLanguage->languageText("mod_cms_navigation", "cms");
 
-        // Load header parameters
-        $this->appendArrayVar('headerParams', $this->getJavascriptFile('tree.js', 'cmsadmin'));
+        $script ='	<script type="text/javascript">
+					//<![CDATA[
+					YAHOO.example.onMenuReady = function() {
+					// Instantiate and render the menu
+					var oMenu = new YAHOO.widget.Menu(
+					            "productsandservices", 
+					             {
+					                position:"static", 
+					                hidedelay:750, 
+					               lazyload:true 
+					              }
+					              );
+					
+					                oMenu.render();
+					              };
+					// Initialize and render the menu when it is available in the DOM
+					YAHOO.util.Event.onContentReady("productsandservices", YAHOO.example.onMenuReady);
+					//]]>
+					</script>
+					';
+
+		//Insert script for generating tree menu
+		$this->appendArrayVar('headerParams', $this->getJavascriptFile('yahoo/yahoo.js', 'yahoolib'));
+		$this->appendArrayVar('headerParams', $this->getJavascriptFile('event/event.js', 'yahoolib'));
+		$this->appendArrayVar('headerParams', $this->getJavascriptFile('dom/dom.js', 'yahoolib'));
+		$this->appendArrayVar('headerParams', $this->getJavascriptFile('container/container.js', 'yahoolib'));
+		$this->appendArrayVar('headerParams', $this->getJavascriptFile('menu/menu.js', 'yahoolib'));
+		$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("menu/assets/menu.css", 'yahoolib').'" />';
+		$this->appendArrayVar('headerParams', $css);
+		$this->appendArrayVar('headerParams',$script);
               
         $objLayer = new layer();
         $objLayer->str = $objTreeMenu->getCMSTree($currentNode);
