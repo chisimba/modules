@@ -71,17 +71,17 @@ class youtubetpl extends object
         $perPage = $this->getParam('hitsperpage', 24);
         $objLink = new link();
         $objImage = new image();
-        $videoId = $this->getParam('videoid', 0);
-        if ($videoId === 0) {
+        $videoId = $this->getParam('videoid', 'none');
+        //Get the video player so we can play the first or chosen video
+        $this->objYtFilter = $this->getObject('parse4youtube', 'filters');
+        if ($videoId == 'none') {
             $displayVideoUrl = $apiXml->video_list->video[0]->url;
-            $vidPlayer = $this->getVideoPlayer($displayVideoUrl, BY_URL);
-        } else {
-            $vidPlayer = $this->getVideoPlayer($videoId, BY_ID);
+            $videoId = $this->objYtFilter->getVideoCode($displayVideoUrl);
         }
-        $objYtFilter = $this->getObject('parse4youtube', 'filters');
-        
-        
-        
+        $vidPlayer = $this->getVideoPlayer($videoId);
+        $vidPlayer .= "<br />" . $this->objLanguage->languageText("mod_youtube_chifilter", "youtube")
+          . "<br />" . $this->getFilterLink($this->getYahooUrl($videoId));
+        //Loop and insert the thumbnails with links 
         foreach($apiXml->video_list->video as $video) {
             //Keep the title short to not break the layout
             $title = htmlentities(substr($video->title, 0, 15)) . '...';
@@ -91,7 +91,7 @@ class youtubetpl extends object
             $objImage->src = $video->thumbnail_url;
             //Set up the link URL
             $videoUrl = $video->url;
-            $videoId = $objYtFilter->getVideoCode($videoUrl);
+            $videoId = $this->objYtFilter->getVideoCode($videoUrl);
             
             $ytMethod = $this->getParam('ytmethod', 'by_tag');
             $ytIdentifier = $this->getParam('identifier', 'digitalfreedom');
@@ -228,7 +228,7 @@ class youtubetpl extends object
     */
     private function getFilterLink($url)
     {
-        return "\[YOUTUBE\]$url\[/YOUTUBE\]";
+        return '[YOUTUBE]' . $url . '[/YOUTUBE]';
     }
     
     public function getTagSearchBox()
@@ -300,17 +300,16 @@ class youtubetpl extends object
        return $ret;
    } 
     
-    public function getVideoPlayer($key, $mode)
+    public function getVideoPlayer($videoId)
     {
-        $objYtFilter = $this->getObject('parse4youtube', 'filters');
-        if ($mode==BY_URL) {
-            $videoId = $objYtFilter->getVideoCode($key);
-        } else {
-            $videoId = $key;
-        }
-        return $objYtFilter->getVideoObject($videoId);
+        //$this->objYtFilter = $this->getObject('parse4youtube', 'filters');
+        return $this->objYtFilter->getVideoObject($videoId);
     }
     
+    public function getYahooUrl(&$videoId)
+    {
+        return "http://www.youtube.com/watch?v=" . $videoId;
+    }
     
 }
 ?>
