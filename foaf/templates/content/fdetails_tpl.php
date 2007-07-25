@@ -1,4 +1,5 @@
 <?php
+//var_dump($foafAr);
 //var_dump($tcont);
 $dbFoaf = $this->getObject('dbfoaf');
 $this->setLayoutTemplate('flayout_tpl.php');
@@ -21,11 +22,14 @@ $leftSideColumn = '';
 $leftSideColumn = $userMenu->show();
 $middleColumn = NULL;
 //echo $msg;
+
+$objmsg->timeout = 20000;
 if ($msg == 'update') {
     $objmsg->message = $this->objLanguage->languageText('mod_foaf_recupdated', 'foaf');
     echo $objmsg->show();
 } else {
-    $msg = NULL;
+    $objmsg->message = $msg;	
+    echo $objmsg->show();
 }
 $rightSideColumn = NULL;
 $header = new htmlheading();
@@ -44,10 +48,12 @@ $myinterests = $this->objLanguage->languageText('mod_foaf_myinterests', 'foaf');
 $mydepictions = $this->objLanguage->languageText('mod_foaf_mydepictions', 'foaf');
 $mypages = $this->objLanguage->languageText('mod_foaf_mypages', 'foaf');
 $myaccounts = $this->objLanguage->languageText('mod_foaf_myaccounts', 'foaf');
+$accountTypes = $this->objLanguage->languageText('mod_foaf_accounttypes', 'foaf');
 $invite = $this->objLanguage->languageText('mod_foaf_invite', 'foaf');
 $query = $this->objLanguage->languageText('mod_foaf_query', 'foaf');
 $visualise = $this->objLanguage->languageText('mod_foaf_visualize', 'foaf');
 $surprise = $this->objLanguage->languageText('mod_foaf_surprise', 'foaf');
+$foafLinks = $this->objLanguage->languageText('mod_foaf_foaflinks', 'foaf');
 $game = ''; //"<object width='550' height='400'><param name='movie' value='http://www.zipperfish.com/mediabase/cache/1456-184-blobs.swf' /><embed src='http://www.zipperfish.com/mediabase/cache/1456-184-blobs.swf' type='application/x-shockwave-flash' width='550' height='400'></embed></object>";
 //start the tabbedpane
 $pane->addTab(array(
@@ -71,23 +77,33 @@ $pane->addTab(array(
 ));
 $pane->addTab(array(
     'name' => $myinterests,
-    'content' => 'tbl_foaf_interests'
+    'content' => $this->objUi->foafInterests($tcont)
 ));
 $pane->addTab(array(
     'name' => $mydepictions,
-    'content' => 'tbl_foaf_depictions'
+    'content' => $this->objUi->foafDepictions($tcont)
+
 ));
 $pane->addTab(array(
     'name' => $mypages,
-    'content' => 'tbl_foaf_pages'
+    'content' => $this->objUi->foafPages($tcont)
 ));
 $pane->addTab(array(
     'name' => $myaccounts,
-    'content' => 'tbl_foaf_accounts'
+    'content' =>  $this->objUi->foafAccounts($tcont)
 ));
+
+if($this->objUser->isAdmin())
+{
+	$pane->addTab(array(
+    	'name' => $accountTypes,
+    	'content' =>  $this->objUi->foafAccountTypes()
+	));
+}
+
 $pane->addTab(array(
     'name' => $invite,
-    'content' => 'Invittaion'
+    'content' => 'Invitation'
 ));
 $pane->addTab(array(
     'name' => $query,
@@ -97,6 +113,13 @@ $pane->addTab(array(
     'name' => $visualise,
     'content' => 'Visulalise the Network'
 ));
+
+
+$pane->addTab(array(
+    'name' => $foafLinks,
+    'content' => $this->objUi->foafLinks()
+));
+
 //$pane->addTab(array('name'=>$surprise,'content' => $game));
 echo $pane->show();
 ?>
