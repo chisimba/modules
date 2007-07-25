@@ -451,7 +451,7 @@ class foafparser extends object
             }
             foreach($account_service_homepages->triples as $account_service_homepage) {
                 if ($account_service_homepage->subj->uri == $holds_account->obj->uri) {
-                    $accounts[$account_service_homepage->subj->uri]['accountservicehompage'] = $account_service_homepage->obj->uri;
+                    $accounts[$account_service_homepage->subj->uri]['accountservicehomepage'] = $account_service_homepage->obj->uri;
                 }
             }
             foreach($rdf_types->triples as $rdf_type) {
@@ -802,10 +802,19 @@ class foafparser extends object
     public function toObject()
     {
         $val = 'foaf';
+	$dcs = array();
         $foaf_object = new stdClass();
-        foreach($this->foaf_data as $key => $value) {
-            $foaf_object->$val = $value;
-        }
+	$foaf_object->$val = array();
+	$foaf_object->$val = $this->foaf_data[0];
+	
+
+	if(!isset($this->foaf_data["dc"]))
+	{
+		$this->foaf_data["dc"] = array();
+	}
+	array_push($foaf_object->$val,$this->foaf_data["dc"]);
+
+  	 
         return $foaf_object;
     }
     /**

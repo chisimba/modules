@@ -201,6 +201,8 @@ class foafops extends object
             //Get all the pages that we are interested in...
             //A page is a document about the thing
             $this->_getpages($userId);
+            //accounts from foaf useraccounts table
+            $this->_getAccounts($userId);
             //interests from interests table
             $this->_getInterests($userId);
             //get the people we know...
@@ -239,7 +241,7 @@ class foafops extends object
         if (!isset($userId)) {
             $userId = $this->objUser->userId();
         }
-        $iarr = $this->dbFoaf->getRecordSet($userId, 'tbl_foaf_interests');
+        $iarr = $this->dbFoaf->getRecordSet($userId, 'tbl_foaf_interests', " ORDER BY interesturl ");
         if (empty($iarr)) {
             $interests = array();
         } else {
@@ -263,7 +265,7 @@ class foafops extends object
         if (!isset($userId)) {
             $userId = $this->objUser->userId();
         }
-        $funarr = $this->dbFoaf->getRecordSet($userId, 'tbl_foaf_fundedby');
+        $funarr = $this->dbFoaf->getRecordSet($userId, 'tbl_foaf_fundedby' , " ORDER BY funderurl ");
         if (empty($funarr)) {
             $funds = array();
         } else {
@@ -287,7 +289,7 @@ class foafops extends object
         if (!isset($userId)) {
             $userId = $this->objUser->userId();
         }
-        $darr = $this->dbFoaf->getRecordSet($userId, 'tbl_foaf_depiction');
+        $darr = $this->dbFoaf->getRecordSet($userId, 'tbl_foaf_depiction' ," ORDER BY depictionurl ");
         if (empty($darr)) {
             $deps = array();
         } else {
@@ -311,7 +313,7 @@ class foafops extends object
         if (!isset($userId)) {
             $userId = $this->objUser->userId();
         }
-        $oarr = $this->dbFoaf->getRecordSet($userId, 'tbl_foaf_organization');
+        $oarr = $this->dbFoaf->getRecordSet($userId, 'tbl_foaf_organization', " ORDER BY name ");
         if (empty($oarr)) {
             $orgs = array();
         } else {
@@ -341,7 +343,7 @@ class foafops extends object
         if (!isset($userId)) {
             $userId = $this->objUser->userId();
         }
-        $parr = $this->dbFoaf->getRecordSet($userId, 'tbl_foaf_pages');
+        $parr = $this->dbFoaf->getRecordSet($userId, 'tbl_foaf_pages' ," ORDER BY title ");
         if (empty($parr)) {
             $pages = array();
         } else {
@@ -357,6 +359,57 @@ class foafops extends object
             }
         }
     }
+
+
+
+    /**
+     * Method to get the FOAF:holdsAccount associated with your or a friends profile
+     *
+     * @param integer $userId
+     * @param bool $friend
+     */
+    private function _getAccounts($userId, $friend = FALSE) 
+    {
+        if (!isset($userId)) {
+            $userId = $this->objUser->userId();
+        }
+        $accounts = $this->dbFoaf->getRecordSet($userId, 'tbl_foaf_useraccounts'," ORDER BY accountName ");
+	
+	if(!isset($accounts))
+	{
+	   $accounts = array();
+	} else {
+	   if(!empty($accounts))
+	   {
+             foreach($accounts as $account)
+	     {		
+		switch($account['type']) {
+		   case 'onlineChatAccount':
+		   $this->objFoaf->addOnlineChatAccount($account['accountname'], $account['accountservicehomepage']);
+		   break;
+		 
+		   case 'onlineEcommerceAccount':
+		   $this->objFoaf->addOnlineEcommerceAccount($account['accountname'], $account['accountservicehomepage']);
+		   break;
+		 
+		   case 'onlineGamingAccount':
+		   $this->objFoaf->addOnlineChatAccount($account['accountname'], $account['accountservicehomepage']);
+		   break;
+
+		   default:
+		   case 'onlineAccount':
+		   $this->objFoaf->addOnlineChatAccount($account['accountname'], $account['accountservicehomepage'] , $account['url']);
+		   break;
+	         }
+            }
+         }
+	}
+
+        
+    }
+
+
+
     /**
      * Method to get all your friends
      *
@@ -744,6 +797,15 @@ class foafops extends object
         $this->objButtono->setValue($this->objLanguage->languageText('mod_foaf_addorg', 'foaf'));
         $this->objButtono->setToSubmit();
         $myOrgForm->addToForm($this->objButtono->show());
+
+
+	//Form validation
+	$myOrgForm->addRule($oname->name,$this->objLanguage->languageText('mod_foaf_alertinvalid', 'foaf').' '.$this->objLanguage->languageText('mod_foaf_oname', 'foaf') , 'required');
+
+	
+	$myOrgForm->addRule($ohomepage->name,$this->objLanguage->languageText('mod_foaf_alertinvalid', 'foaf').' '.$this->objLanguage->languageText('mod_foaf_ohomepage', 'foaf') , 'required');
+
+
         return $myOrgForm->show();
     }
     /**
@@ -798,6 +860,7 @@ class foafops extends object
         $funderForm = new form('funderform', $this->uri(array(
             'action' => 'updatefunders'
         )));
+
         $fieldset = $this->newObject('fieldset', 'htmlelements');
         $fieldset->setLegend($this->objLanguage->languageText('mod_foaf_addfunder', 'foaf'));
         $table = $this->newObject('htmltable', 'htmlelements');
@@ -810,9 +873,9 @@ class foafops extends object
         //$table->endRow();
         $table->startRow();
         $labelpage = new label($this->objLanguage->languageText('mod_foaf_funderpage', 'foaf') .':', 'input_fpage');
-        $funderpage = new textinput('fpage');
+        $funderPage = new textinput('fpage');
         $table->addCell($labelpage->show() , 150, NULL, 'right'); //label
-        $table->addCell($funderpage->show()); //input box
+        $table->addCell($funderPage->show()); //input box
         $table->endRow();
         $fieldset->addContent($table->show());
         $funderForm->addToForm($fieldset->show());
@@ -820,6 +883,10 @@ class foafops extends object
         $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_addfunder', 'foaf'));
         $this->objButton->setToSubmit();
         $funderForm->addToForm($this->objButton->show());
+	
+	//Form validation
+	$funderForm->addRule($funderPage->name,$this->objLanguage->languageText('mod_foaf_alertinvalid', 'foaf').' '.$this->objLanguage->languageText('mod_foaf_funderpage', 'foaf') , 'required');
+	
         return $funderForm->show();
     }
     /**
@@ -840,7 +907,10 @@ class foafops extends object
         //remove dropdown
         $remarray = $this->dbFoaf->getFunders();
        
-		
+		/**
+		  *If there are no funders for this user
+		  *do not show remove funders box
+		**/	
 
 			if (isset($remarray)) {
 		            if(!empty($remarray))
@@ -865,6 +935,608 @@ class foafops extends object
 			}
     }
 
+
+/**
+     * Method to create a form for adding interests
+     *
+     * @param void
+     * @return string
+     */
+    public function addInterestForm() 
+    {
+        $intForm = new form('interestform', $this->uri(array(
+            'action' => 'updateinterests'
+        )));
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->setLegend($this->objLanguage->languageText('mod_foaf_addinterest', 'foaf'));
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cellpadding = 5;
+        //$table->startRow();
+       // $labelname = new label($this->objLanguage->languageText('mod_foaf_interestname', 'foaf') .':', 'input_iname');
+       // $iname = new textinput('iname');
+        //$table->addCell($labelname->show() , 150, NULL, 'right'); //label
+        //$table->addCell($iname->show()); 
+        //$table->endRow();
+        $table->startRow();
+        $labelpage = new label($this->objLanguage->languageText('mod_foaf_interestpage', 'foaf') .':', 'input_ipage');
+        $intPage = new textinput('ipage');
+        $table->addCell($labelpage->show() , 150, NULL, 'right'); //label
+        $table->addCell($intPage->show()); 
+        $table->endRow();
+        $fieldset->addContent($table->show());
+        $intForm->addToForm($fieldset->show());
+        $this->objButton = &new button('addinterest');
+        $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_addinterest', 'foaf'));
+        $this->objButton->setToSubmit();
+        $intForm->addToForm($this->objButton->show());
+
+	//Form validation
+	$intForm->addRule($intPage->name,$this->objLanguage->languageText('mod_foaf_alertinvalid', 'foaf').' '.$this->objLanguage->languageText('mod_foaf_interestpage', 'foaf') , 'required');
+
+        return $intForm->show();
+    }
+    /**
+     * Method to create a form for removing interests
+     *
+     * @param void
+     * @return string
+     */
+    public function remInterestForm() 
+    {
+        $removeInterestForm = new form('removeinterest', $this->uri(array(
+            'action' => 'updateinterests'
+        )));
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->setLegend($this->objLanguage->languageText('mod_foaf_reminterest', 'foaf'));
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cellpadding = 5;
+        //remove dropdown
+        $remarray = $this->dbFoaf->getInterests();
+       
+		/**
+		  *If there are no interests for this user
+		  *do not show remove interests dropdown
+		**/	
+
+			if (isset($remarray)) {
+		            if(!empty($remarray))
+				{
+
+					$remDrop = new dropdown('removeint');
+            			foreach($remarray as $removal) {
+                			$remDrop->addOption($removal['id'], $removal['interesturl']);
+            			}
+         		   
+		      $table->startRow();
+           	      $table->addCell($remDrop->show());
+            	      $table->endRow();
+            	      $fieldset->addContent($table->show());
+            	      $removeInterestForm ->addToForm($fieldset->show());
+                      $this->objButton = &new button('update_intrem'); 
+                      $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_reminterest', 'foaf'));
+                      $this->objButton->setToSubmit();
+                      $removeInterestForm ->addToForm($this->objButton->show());
+                      return $removeInterestForm ->show();
+       			 } 
+			}
+    }
+
+
+
+
+
+/**
+     * Method to create a form for adding depictions
+     *
+     * @param void
+     * @return string
+     */
+    public function addDepictionForm() 
+    {
+        $depForm = new form('depictionform', $this->uri(array(
+            'action' => 'updatedeps'
+        )));
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->setLegend($this->objLanguage->languageText('mod_foaf_adddepiction', 'foaf'));
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cellpadding = 5;
+        $table->startRow();
+        $labelpage = new label($this->objLanguage->languageText('mod_foaf_depictionpage', 'foaf') .':', 'input_dpage');
+        $depPage = new textinput('dpage');
+        $table->addCell($labelpage->show() , 150, NULL, 'right'); //label
+        $table->addCell($depPage->show()); 
+        $table->endRow();
+        $fieldset->addContent($table->show());
+        $depForm->addToForm($fieldset->show());
+        $this->objButton = &new button('adddep');
+        $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_adddepiction', 'foaf'));
+        $this->objButton->setToSubmit();
+        $depForm->addToForm($this->objButton->show());
+
+	//Form validation
+	$depForm->addRule($depPage->name,$this->objLanguage->languageText('mod_foaf_alertinvalid', 'foaf').' '.$this->objLanguage->languageText('mod_foaf_depictionpage', 'foaf') , 'required');
+
+        return $depForm->show();
+    }
+    /**
+     * Method to create a form for removing depictions
+     *
+     * @param void
+     * @return string
+     */
+    public function remDepictionForm() 
+    {
+        $removeDepictionForm = new form('removedepiction', $this->uri(array(
+            'action' => 'updatedeps'
+        )));
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->setLegend($this->objLanguage->languageText('mod_foaf_remdepiction', 'foaf'));
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cellpadding = 5;
+        //remove dropdown
+        $remarray = $this->dbFoaf->getDepictions();
+       
+		/**
+		  *If there are no depictions for this user
+		  *do not show remove depictions dropdown
+		**/	
+
+			if (isset($remarray)) {
+		            if(!empty($remarray))
+				{
+
+					$remDrop = new dropdown('removedep');
+            			foreach($remarray as $removal) {
+                			$remDrop->addOption($removal['id'], $removal['depictionurl']);
+            			}
+         		   
+			    $table->startRow();
+           		    $table->addCell($remDrop->show());
+            	    $table->endRow();
+            	    $fieldset->addContent($table->show());
+            	    $removeDepictionForm ->addToForm($fieldset->show());
+                      $this->objButton = &new button('update_deprem'); 
+                      $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_remdepiction', 'foaf'));
+                      $this->objButton->setToSubmit();
+                      $removeDepictionForm ->addToForm($this->objButton->show());
+                      return $removeDepictionForm ->show();
+       			 } 
+			}
+    }
+
+
+
+
+//pages
+
+
+ /**
+     * Method to add a form to add a page
+     *
+     * @param void
+     * @return string
+     */
+    public function addPageForm() 
+    {
+        $myPageForm = new form('mypageform', $this->uri(array(
+            'action' => 'updatepages'
+        )));
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->setLegend($this->objLanguage->languageText('mod_foaf_addpage', 'foaf'));
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cellpadding = 5;
+
+        $table->startRow();
+        $labeluri = new label($this->objLanguage->languageText('mod_foaf_page', 'foaf') .':', 'input_docuri');
+        $docUri = new textinput('docuri');
+        $table->addCell($labeluri->show() , 150, NULL, 'right'); //label
+        $table->addCell($docUri->show()); //input box
+        $table->endRow();
+
+        $table->startRow();
+        $labeltitle = new label($this->objLanguage->languageText('mod_foaf_title', 'foaf') .':', 'input_title');
+        $title = new textinput('title');
+        $table->addCell($labeltitle->show() , 150, NULL, 'right'); //label
+        $table->addCell($title->show()); //input box
+        $table->endRow();
+
+	$table->startRow();
+        $labeldescription = new label($this->objLanguage->languageText('mod_foaf_pdescription', 'foaf') .':', 'input_description');
+        $description = new textinput('description');
+        $table->addCell($labeldescription->show() , 150, NULL, 'right'); //label
+        $table->addCell($description->show()); //input box
+        $table->endRow();
+
+        $fieldset->addContent($table->show());
+        $myPageForm->addToForm($fieldset->show());
+        $this->objButton = &new button('addpage');
+        $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_addpage', 'foaf'));
+        $this->objButton->setToSubmit();
+        $myPageForm->addToForm($this->objButton->show());
+
+	//Form validation
+	$myPageForm->addRule($docUri->name,$this->objLanguage->languageText('mod_foaf_alertinvalid', 'foaf').' '.$this->objLanguage->languageText('mod_foaf_page', 'foaf') , 'required');
+
+
+	$myPageForm->addRule($title->name,$this->objLanguage->languageText('mod_foaf_alertinvalid', 'foaf').' '.$this->objLanguage->languageText('mod_foaf_title', 'foaf') , 'required');
+
+        return $myPageForm->show();
+    }
+    /**
+     * Method to create a form for removing pages
+     *
+     * @param void
+     * @return string
+     */
+    public function remPageForm() 
+    {
+        $removeForm = new form('removepageform', $this->uri(array(
+            'action' => 'updatepages'
+        )));
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->setLegend($this->objLanguage->languageText('mod_foaf_rempage', 'foaf'));
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cellpadding = 5;
+        //remove dropdown
+        $remarray = $this->dbFoaf->getPgs();
+        
+
+
+	if (isset($remarray)) {
+		if(!empty($remarray))
+		 {
+		      //add in a dropdown to add/remove users as friends
+                     $remDrop = new dropdown('removepage');
+                     foreach($remarray as $removal) {
+                     $remDrop->addOption($removal['id'], $removal['title']);
+                     }
+                    //delete
+                    $table->startRow();
+                    $table->addCell($remDrop->show());
+                    $table->endRow();
+                    $fieldset->addContent($table->show());
+                    $removeForm->addToForm($fieldset->show());
+                    $this->objButton = &new button('update_pagerem'); 
+                    $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_rempage', 'foaf'));
+                    $this->objButton->setToSubmit();
+                    $removeForm->addToForm($this->objButton->show());
+	          }	  
+
+
+	}
+
+		 return $removeForm->show();			
+
+         
+        
+    }
+
+//accounts
+
+
+
+ /**
+     * Method to add a form for adding accounts
+     *
+     * @param void
+     * @return string
+     */
+    public function addAccountForm() 
+    {
+        $myAccountForm = new form('myAccountform', $this->uri(array(
+            'action' => 'updateaccounts'
+        )));
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->setLegend($this->objLanguage->languageText('mod_foaf_addaccount', 'foaf'));
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cellpadding = 5;
+
+        $labelName = new label($this->objLanguage->languageText('mod_foaf_account', 'foaf') .':', 'input_accountname');
+        $accountName = new textinput('accountname');
+
+        $table->startRow();
+        $table->addCell($labelName->show() , 150, NULL, 'right'); //label
+        $table->addCell($accountName->show()); //input box
+        $table->endRow();
+
+        $table->startRow();
+        $labelHome = new label($this->objLanguage->languageText('mod_foaf_homepage', 'foaf') .':', 'input_servhomepage');
+        $home = new textinput('servhomepage');
+        $table->addCell($labelHome->show() , 150, NULL, 'right'); //label
+        $table->addCell($home->show()); //input box
+        $table->endRow();
+
+
+	$accountTypes = $this->dbFoaf->getAccountTypes();
+	
+	$table->startRow();
+        $labelType = new label($this->objLanguage->languageText('mod_foaf_type', 'foaf') .':', 'input_type');
+        $type = new dropdown('type');
+	foreach($accountTypes as $accountType)
+	{
+	     $type->addOption($accountType['type'], $accountType['type']);
+	}	
+        $table->addCell($labelType->show() , 150, NULL, 'right'); //label
+        $table->addCell($type->show()); //input box
+        $table->endRow();
+
+
+        $table->startRow();
+        $labelUri = new label($this->objLanguage->languageText('mod_foaf_url', 'foaf') . $this->objLanguage->languageText('mod_foaf_onlineonly','foaf') .':', 'input_typeuri');
+        $uri = new textinput('typeuri');
+        $table->addCell($labelUri->show() , 150, NULL, 'right'); //label
+        $table->addCell($uri->show()); //input box
+        $table->endRow();
+
+
+        $fieldset->addContent($table->show());
+        $myAccountForm->addToForm($fieldset->show());
+        $this->objButton = &new button('addaccount');
+        $this->objButton->setValue($this->objLanguage->languageText('word_add'));
+        $this->objButton->setToSubmit();
+        $myAccountForm->addToForm($this->objButton->show());
+
+	//Form validation
+	$myAccountForm->addRule($accountName->name,$this->objLanguage->languageText('mod_foaf_alertinvalid', 'foaf').' '.$this->objLanguage->languageText('mod_foaf_account', 'foaf') , 'required');
+
+	
+	$myAccountForm->addRule($home->name,$this->objLanguage->languageText('mod_foaf_alertinvalid', 'foaf').' '.$this->objLanguage->languageText('mod_foaf_homepage', 'foaf') , 'required');
+
+
+        return $myAccountForm->show();
+    }
+    /**
+     * Method to create a form for removing accounts
+     *
+     * @param void
+     * @return string
+     */
+    public function remAccountForm() 
+    {
+        $removeForm = new form('removeaccountform', $this->uri(array(
+            'action' => 'updateaccounts'
+        )));
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->setLegend($this->objLanguage->languageText('mod_foaf_remaccount', 'foaf'));
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cellpadding = 5;
+        //remove dropdown
+        $remarray = $this->dbFoaf->getAccounts();        
+
+
+	if (isset($remarray)) {
+		if(!empty($remarray))
+		 {
+		      //add in a dropdown to add/remove users as friends
+                     $remDrop = new dropdown('removedaccount');
+                     foreach($remarray as $key=>$removal) {
+	                   $remDrop->addOption($removal['id'], $removal['accountname'], 'title="'.$removal['accountservicehomepage'].'"');	
+                     }
+                    
+
+                    $table->startRow();
+                    $table->addCell($remDrop->show());
+                    $table->endRow();
+                    $fieldset->addContent($table->show());
+                    $removeForm->addToForm($fieldset->show());
+                    $this->objButton = &new button('update_accountrem'); 
+                    $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_remove', 'foaf'));
+                    $this->objButton->setToSubmit();
+                    $removeForm->addToForm($this->objButton->show());
+	          }	  
+
+
+	}
+
+		 return $removeForm->show();			
+
+         
+        
+    }
+ /**
+     * Method to create a form for adding account types
+     *
+     * @param void
+     * @return string
+     */
+
+   public function addAccountTypeForm()
+   {	
+	$form = new form('addtypeform', $this->uri(array(
+            'action' => 'updateaccounttypes'
+        )));   	
+
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->setLegend($this->objLanguage->languageText('mod_foaf_addaccounttype', 'foaf'));
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cellpadding = 1;
+	
+	$labelType = new label($this->objLanguage->languageText('mod_foaf_type', 'foaf') .':', 'input_accounttype');
+        
+        $accountTypes = $this->dbFoaf->getAccountTypes();
+
+	$type = new textinput('accounttype');
+
+
+	$this->objButton = new button('addtype');
+
+	$table->startRow();
+	$table->addCell($labelType->show() , 150, NULL, 'right');
+	$table->addCell($type->show());
+	$table->endRow();
+
+	
+	$fieldset->addContent($table->show());
+
+	$this->objButton->setToSubmit();
+	$this->objButton->setValue($this->objLanguage->languageText('word_add'));
+	
+	$form->addToForm($fieldset->show());
+	$form->addToForm($this->objButton->show());
+
+	//Form validation
+	$form->addRule($type->name,$this->objLanguage->languageText('mod_foaf_alertinvalid', 'foaf').' '.$this->objLanguage->languageText('mod_foaf_type', 'foaf') , 'required');
+
+
+	return $form->show();
+  }	
+
+
+ /**
+     * Method to create a form for removing account types
+     *
+     * @param void
+     * @return string
+     */
+
+   public function remAccountTypeForm()
+   {	
+	$form = new form('remtypeform', $this->uri(array(
+            'action' => 'updateaccounttypes'
+        )));   	
+
+
+	$remarray = $this->dbFoaf->getAccountTypes();
+
+	if (isset($remarray)) {
+	   if(!empty($remarray))
+	   {
+            $remDrop = new dropdown('remtype');
+            foreach($remarray as $key=>$removal)
+	    {
+	    	
+            $remDrop->addOption($removal['id'], $removal['type']);
+            }
+
+             $fieldset = $this->newObject('fieldset', 'htmlelements');
+    	     $fieldset->setLegend($this->objLanguage->languageText('mod_foaf_remaccounttype', 'foaf'));
+             $table = $this->newObject('htmltable', 'htmlelements');
+             $table->cellpadding = 1;
+	     $labelType = new label($this->objLanguage->languageText('mod_foaf_type', 'foaf') .':', 'input_remtype');
+
+
+	     $this->objButton = new button('removetype');
+
+	    $table->startRow();
+	    $table->addCell($labelType->show() , 150, NULL, 'right');
+	    $table->addCell($remDrop->show());
+	    $table->endRow();
+
+	
+	   $fieldset->addContent($table->show());
+
+	   $this->objButton->setToSubmit();
+	   $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_remove','foaf'));
+	
+	   $form->addToForm($fieldset->show());
+	   $form->addToForm($this->objButton->show());
+
+	 return $form->show();
+	}
+     }
+  }	
+
+   
+
+
+
+//links
+
+ /**
+     * Method to create a form for adding links
+     *
+     * @param void
+     * @return string
+     */
+    public function addLinkForm() 
+    {
+        $linkForm = new form('linkform', $this->uri(array(
+            'action' => 'updatelinks'
+        )));
+
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->setLegend($this->objLanguage->languageText('mod_foaf_addlink', 'foaf'));
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cellpadding = 5;
+
+        $labelUrl = new label($this->objLanguage->languageText('mod_foaf_url', 'foaf') .':', 'input_linkurl');
+        $linkUrl = new textinput('linkurl');
+	$labelTitle = new label($this->objLanguage->languageText('mod_foaf_title', 'foaf') .':', 'input_linktitle');
+        $linkTitle = new textinput('linktitle');
+	$labelDescription = new label($this->objLanguage->languageText('mod_foaf_description', 'foaf') .':', 'input_linkdesc');
+        $linkDescription = new textinput('linkdesc');
+        $table->startRow();        
+	$table->addCell($labelTitle->show() , 150, NULL, 'right'); //label
+        $table->addCell($linkTitle->show()); //input box
+        $table->endRow();
+
+        $table->startRow();
+        $table->addCell($labelUrl->show() , 150, NULL, 'right'); //label
+        $table->addCell($linkUrl->show()); //input box
+        $table->endRow();
+
+        $table->startRow();
+        $table->addCell($labelDescription->show() , 150, NULL, 'right'); //label
+        $table->addCell($linkDescription->show()); //input box
+        $table->endRow();
+
+        $fieldset->addContent($table->show());
+        $linkForm->addToForm($fieldset->show());
+        $this->objButton = &new button('addlink');
+        $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_addlink', 'foaf'));
+        $this->objButton->setToSubmit();
+        $linkForm->addToForm($this->objButton->show());
+	
+	//Form validation
+	$linkForm->addRule($linkUrl->name,$this->objLanguage->languageText('mod_foaf_alertinvalid', 'foaf').' '.$this->objLanguage->languageText('mod_foaf_url', 'foaf') , 'required');
+	
+        return $linkForm->show();
+    }
+    /**
+     * Method to create a form for removing links
+     *
+     * @param void
+     * @return string
+     */
+    public function remLinkForm() 
+    {
+        $removelinkForm = new form('removelink', $this->uri(array(
+            'action' => 'updatelinks'
+        )));
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->setLegend($this->objLanguage->languageText('mod_foaf_remlink', 'foaf'));
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cellpadding = 5;
+        //remove dropdown
+        $remarray = $this->dbFoaf->getlinks();
+       
+		/**
+		  *If there are no links for this user
+		  *do not show remove links box
+		**/	
+
+			if (isset($remarray)) {
+		            if(!empty($remarray))
+				{
+
+					$remDrop = new dropdown('removelinks');
+            			foreach($remarray as $removal) {
+                			$remDrop->addOption($removal['id'], $removal['url']);
+            			}
+         		   
+			    $table->startRow();
+           		    $table->addCell($remDrop->show());
+            	    $table->endRow();
+            	    $fieldset->addContent($table->show());
+            	    $removelinkForm ->addToForm($fieldset->show());
+                      $this->objButton = &new button('update_linksrem'); 
+                      $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_remlink', 'foaf'));
+                      $this->objButton->setToSubmit();
+                      $removelinkForm ->addToForm($this->objButton->show());
+                      return $removelinkForm ->show();
+       			 } 
+			}
+    }
 
 
 }

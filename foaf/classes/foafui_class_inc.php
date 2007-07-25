@@ -29,6 +29,8 @@ class foafui extends object {
 			$this->objFoafParser = $this->getObject('foafparser');
 			//load up the foaf factory class
 			$this->objFoafOps = $this->getObject('foafops');
+			$this->objUser = $this->getObject('user', 'security');
+			$this->dbFoaf = $this->getObject('dbfoaf', 'foaf');
 		}
 		catch (customException $e)
 		{
@@ -221,6 +223,7 @@ class foafui extends object {
 	{
 		$myorgs = $this->objFoafOps->orgaRemForm() . $this->objFoafOps->orgaAddForm();
 		//build the featureboxen for the orgs
+		
 		if (!array_key_exists('knows', $tcont->foaf)) {
 			$tcont->foaf['knows'] = array();
 		}
@@ -259,7 +262,9 @@ class foafui extends object {
 
 
 
-public function foafFunders($tcont)
+
+
+	public function foafFunders($tcont)
 	{
 		$myfunders = $this->objFoafOps->remFunderForm() . $this->objFoafOps->addFunderForm();
 		//build the featureboxen for the funders
@@ -307,4 +312,344 @@ public function foafFunders($tcont)
 
 
 
+
+
+
+
+
+
+
+
+	public function foafInterests($tcont)
+	{
+		$myints = $this->objFoafOps->remInterestForm() . $this->objFoafOps->addInterestForm();
+		//build the featureboxen for user interests
+
+		if (!array_key_exists('interest', $tcont->foaf)) {
+		  $tcont->foaf['interest'] = array();
+		}
+		if (!isset($tcont->foaf['interest'])) {
+			$tcont->foaf['interest'] = array();
+		}
+		
+	if(!empty($tcont->foaf['interest']))
+	{
+		$myintFbox = NULL;
+		$myintbox = NULL;
+       	$link = NULL;
+
+          
+		
+
+		$objFeatureBox = $this->newObject('featurebox', 'navigation');
+		$table = $this->newObject('htmltable', 'htmlelements');
+		$table->cellpadding = 5;
+
+		foreach($tcont->foaf['interest'] as $interest) {
+			
+  				$page = new href(htmlentities($interest) , htmlentities($interest));
+    				$link = $page->show();					
+				$table->startRow();
+				$table->addCell("<em>".$interest."</em>");
+				$table->addCell($link);
+				$table->endRow();
+			
+		}
+
+		$myintbox.= $table->show() ."<br />";
+		$myintFbox.= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_interests', 'foaf'), $myintbox) ."<br />";
+
+		$myints.= $myintFbox;
+		
+	 }	
+		return $myints;
+	}
+
+
+
+
+
+
+
+	public function foafDepictions($tcont)
+	{
+		$mydeps = $this->objFoafOps->remDepictionForm() . $this->objFoafOps->addDepictionForm();
+		//build the featureboxen for user depictions
+
+		if (!array_key_exists('depiction', $tcont->foaf)) {
+		  $tcont->foaf['depiction'] = array();
+		}
+		if (!isset($tcont->foaf['depiction'])) {
+			$tcont->foaf['depiction'] = array();
+		}
+		
+	if(!empty($tcont->foaf['depiction']))
+	{
+		$mydepFbox = NULL;
+		$mydepbox = NULL;
+       	$link = NULL;
+
+          
+		
+
+		$objFeatureBox = $this->newObject('featurebox', 'navigation');
+		$table = $this->newObject('htmltable', 'htmlelements');
+		$table->cellpadding = 5;
+
+		foreach($tcont->foaf['depiction'] as $depiction) {
+			
+  				$page = new href(htmlentities($depiction) , htmlentities($depiction));
+    				$link = $page->show();					
+				$table->startRow();
+				$table->addCell("<em>".$depiction."</em>");
+				$table->addCell($link);
+				$table->endRow();
+			
+		}
+
+		$mydepbox.= $table->show() ."<br />";
+		$mydepFbox.= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_depictions', 'foaf'), $mydepbox) ."<br />";
+
+		$mydeps.= $mydepFbox;
+		
+	 }	
+		return $mydeps;
+	}
+
+
+
+//pages
+
+
+
+	public function foafPages($tcont)
+	{
+		$mypages = $this->objFoafOps->remPageForm() . $this->objFoafOps->addPageForm();
+		//build the featureboxen for user pages
+
+		if (!array_key_exists('page', $tcont->foaf)) {
+		  $tcont->foaf['page'] = array();
+		}
+		if (!isset($tcont->foaf['page'])) {
+			$tcont->foaf['page'] = array();
+		}
+
+
+		
+		if (!array_key_exists('title', $tcont->foaf[0])) {
+		  $tcont->foaf[0]['title'] = array();
+		}
+		if (!isset($tcont->foaf[0]['title'])) {
+			$tcont->foaf[0]['title'] = array();
+		}
+
+		
+		if (!array_key_exists('description', $tcont->foaf[0])) {
+		  $tcont->foaf[0]['description'] = array();
+		}
+		if (!isset($tcont->foaf[0]['description'])) {
+			$tcont->foaf[0]['description'] = array();
+		}
+
+
+		
+		
+	if(!empty($tcont->foaf['page']))
+	{
+		$mypageFbox = NULL;
+		$mypagebox = NULL;
+       		
+
+
+		
+		//builds pages feature box
+
+		$objFeatureBox = $this->newObject('featurebox', 'navigation');
+		$table = $this->newObject('htmltable', 'htmlelements');
+		$table->cellpadding = 5;
+		$table->cellspacing = 5;
+		$table->startHeaderRow();
+		$table->addHeaderCell($this->objLanguage->languageText('mod_foaf_title', 'foaf'), NULL, 'top' , 'center');
+		$table->addHeaderCell($this->objLanguage->languageText('mod_foaf_page', 'foaf'), NULL, 'top' , 'center');
+		$table->addHeaderCell($this->objLanguage->languageText('mod_foaf_description', 'foaf'), NULL, 'top' , 'center');
+		$table->endHeaderRow();
+		
+		foreach($tcont->foaf['page'] as $pg)
+ 		{
+			$pageTitle = NULL;
+			$pageDescription = NULL;
+			$link = NULL;	
+
+			if(array_key_exists($pg, $tcont->foaf[0]['title']))
+			{
+				$pageTitle = "".$tcont->foaf[0]['title'][$pg];
+			} else {
+				$pageTitle = "<em>".$this->objLanguage->languageText('mod_foaf_notitle', 'foaf')."</em>";
+			}
+         	
+
+		
+			if(array_key_exists($pg, $tcont->foaf[0]['description']))
+			{
+				$pageDescription = "". $tcont->foaf[0]['description'][$pg];
+			} else {
+				$pageDescription = "<em>".$this->objLanguage->languageText('mod_foaf_nodescription', 'foaf')."</em>";
+			}
+         	
+  				$page = new href(htmlentities($pg) , htmlentities($pg));
+    				$link = $page->show();					
+				$table->startRow();
+				$table->addCell($pageTitle);
+				$table->addCell("<em>".$link."</em>");
+				$table->addCell($pageDescription);
+				$table->endRow();
+			
+		}
+
+		$mypagebox.= $table->show() ."<br />";
+		$mypageFbox.= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_pages', 'foaf'), $mypagebox) ."<br />";
+
+		$mypages.= $mypageFbox;
+		
+	 }	
+		return $mypages;
+	}
+
+//accounts
+
+
+
+	public function foafAccounts($tcont)
+	{
+		$myaccounts = $this->objFoafOps->remAccountForm() . $this->objFoafOps->addAccountForm();
+		//build the featureboxen for user accounts
+
+		if (!array_key_exists('holdsaccount', $tcont->foaf)) {
+		  $tcont->foaf['holdsaccount'] = array();
+		}
+		if (!isset($tcont->foaf['holdsaccount'])) {
+			$tcont->foaf['holdsaccount'] = array();
+		}
+
+
+		
+		
+		
+	if(!empty($tcont->foaf['holdsaccount']))
+	{
+		$myaccountFbox = NULL;
+		$myaccountbox = NULL;
+       		
+
+
+		
+		//builds accountss feature box
+
+		$objFeatureBox = $this->newObject('featurebox', 'navigation');
+		$table = $this->newObject('htmltable', 'htmlelements');
+		$table->cellpadding = 5;
+		$table->cellspacing = 5;
+		$table->startHeaderRow();
+		$table->addHeaderCell($this->objLanguage->languageText('mod_foaf_account', 'foaf'));
+		$table->addHeaderCell($this->objLanguage->languageText('mod_foaf_servicehomepage', 'foaf'));
+		$table->addHeaderCell($this->objLanguage->languageText('mod_foaf_type', 'foaf'));
+		$table->endHeaderRow();
+		
+		foreach($tcont->foaf['holdsaccount'] as $account)
+ 		{
+			$accountName = NULL;
+			$serviceHomepage = NULL;
+			$type = NULL;		
+			$link = NULL;	
+
+			
+         	
+  				$page = new href(htmlentities($account['accountservicehomepage']) , htmlentities($account['accountservicehomepage']));
+    				$link = $page->show();					
+				$table->startRow();
+				$table->addCell($account['accountname']);
+				$table->addCell("<em>".$link."</em>");
+				$table->addCell($account['type']);
+				$table->endRow();
+			
+		}
+
+		$myaccountbox.= $table->show() ."<br />";
+		$myaccountFbox.= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_accounts', 'foaf'), $myaccountbox) ."<br />";
+
+		$myaccounts.= $myaccountFbox;
+		
+	 }	
+		return $myaccounts;
+	}
+
+
+
+
+
+
+	public function foafAccountTypes()
+	{
+		 return $this->objFoafOps->addAccountTypeForm() . $this->objFoafOps->remAccountTypeForm();
+		 
+	}
+
+//links
+
+
+
+	public function foafLinks()
+	{
+	$mylinks = $this->objFoafOps->remLinkForm() . $this->objFoafOps->addLinkForm();
+	//build the featureboxen for the links
+	$links = $this->dbFoaf->getLinks();
+
+	if(!isset($links))
+	{	
+	    $links = array();
+	}
+		
+	if(!empty($links))
+	{
+		$mylinkFbox = NULL;
+		$mylinkbox = NULL;
+      	 	$link = NULL;
+
+          
+		
+
+		$objFeatureBox = $this->newObject('featurebox', 'navigation');
+		$tablelinks = $this->newObject('htmltable', 'htmlelements');
+		$tablelinks->cellpadding = 5;
+		$tablelinks->cellspacing = 2;
+		$tablelinks->startHeaderRow();
+		$tablelinks->addHeaderCell($this->objLanguage->languageText('mod_foaf_title', 'foaf'), NULL, 'top' , 'center');
+		$tablelinks->addHeaderCell($this->objLanguage->languageText('mod_foaf_url', 'foaf'), NULL, 'top' , 'center');
+		$tablelinks->addHeaderCell($this->objLanguage->languageText('mod_foaf_description', 'foaf'), NULL, 'top' , 'center');
+		$tablelinks->endHeaderRow();
+		
+
+		foreach($links as $lnk) {
+			
+  				$page = new href(htmlentities($lnk['url']) , htmlentities($lnk['url']));
+    				$link = $page->show();					
+				$tablelinks->startRow();
+				$tablelinks->addCell($lnk['title']);
+				$tablelinks->addCell("<em>".$link."</em>");
+				$tablelinks->addCell($lnk['description']);
+				$tablelinks->endRow();
+			
+		}
+
+		$mylinkbox.= $tablelinks->show() ."<br />";
+		$mylinkFbox.= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_links', 'foaf'), $mylinkbox) ."<br />";
+
+		$mylinks.= $mylinkFbox;
+		
+	 }	
+		return $mylinks;
+	}
+
 }
+
+?>

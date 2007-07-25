@@ -14,6 +14,18 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * @package foaf
  * @category foaf
  */
+
+
+
+/**
+*NOTE:
+*In the removeXXXX methods the following lines are found
+*$sql = "DELETE FROM tbl_foaf_xxxx WHERE xxxx IS NULL";
+*       $this->getArray($sql);			
+*This happens because there was a bug that added new rows in the table
+*everytime I delete an entry.
+*
+*/
 class dbfoaf extends dbtable
 {
     /**
@@ -64,10 +76,14 @@ class dbfoaf extends dbtable
      * @param integer $userId
      * @return array
      */
-    public function getRecordSet($userId, $table) 
+    public function getRecordSet($userId, $table , $filter = null) 
     {
         $this->_changeTable($table);
         $sql = "WHERE userid = $userId";
+	if($filter != null)
+	{
+	  $sql.= $filter;
+	}
         return $this->getAll($sql);
     }
     /**
@@ -202,12 +218,15 @@ class dbfoaf extends dbtable
     public function removeOrg($orgid) 
     {
         $this->_changeTable('tbl_foaf_organization');
+	 $sql = "DELETE FROM tbl_foaf_organization WHERE homepage IS NULL";
+        $this->getArray($sql);			
         return $this->delete('id', $orgid);
+        
     }
   
 
 
-//Ehb-added-begin
+
 
 
   /**
@@ -221,8 +240,9 @@ class dbfoaf extends dbtable
      public function getFunders()
      {
           $this->_changeTable('tbl_foaf_fundedby');
-	    $sql = "WHERE userid='".$this->objUser->userId()."'";									
-	    return $this->getAll($sql);
+      	   $sql = "WHERE userid='".$this->objUser->userId()."'";									
+	 
+          return $this->getAll($sql);
 	}
 	   
 	
@@ -234,20 +254,7 @@ class dbfoaf extends dbtable
      * @return array => the funders related to this userId
      */
 
-	/**
-	public function insertFunder($name, $url) 
-      {
-        $this->_changeTable('tbl_foaf_fundedby');
 
-        $values = array(
-            'userid' => $this->objUser->userId(),
-            'funderurl' => $url,
-		'name' => $name
-        );
-        return $this->insert($values);
-      }
-
-	**/
 	
 
 	public function insertFunder($url) 
@@ -276,11 +283,446 @@ class dbfoaf extends dbtable
 	  public function removeFunder($funderId) 
     {
         $this->_changeTable('tbl_foaf_fundedby');
-        return $this->delete('id', $funderId);
+        $this->delete('id', $funderId);
+	  $sql = "DELETE FROM tbl_foaf_fundedby WHERE funderurl is NULL";
+        $this->getArray($sql);			
     }
 
 
-//Ehb-added-end
+
+//interests
+
+/**
+     * Method to get the interests associated to a user
+     * 
+     *
+     * @param string userId => the userId for the funders
+     * @return array => the interests related to this userId
+     */
+
+     public function getInterests()
+     {
+           $this->_changeTable('tbl_foaf_interests');
+           $sql = "WHERE userid='".$this->objUser->userId()."'"." ORDER BY interesturl ";									
+	    return $this->getAll($sql);
+	}
+	   
+	
+	/**
+     * Method to insert a interest
+     * 
+     *
+     * @param string userId => the userId for the funders
+     * @return array => the interests related to this userId
+     */
+
+	
+	
+
+	public function insertInterest($url) 
+      {
+        $this->_changeTable('tbl_foaf_interests');
+
+        $values = array(
+            'userid' => $this->objUser->userId(),
+            'interesturl' => $url		
+        );
+        return $this->insert($values);
+      }
+
+
+
+
+
+	/**
+	   *Method for removing interests
+	   *@param string interestId => id of the funder to be removed
+	**/
+				
+
+	  public function removeInterest($interestId) 
+    {
+         $this->_changeTable('tbl_foaf_interests');
+         $this->delete('id', $interestId);
+	  $sql = "DELETE FROM tbl_foaf_interests WHERE interesturl is NULL";
+         $this->getArray($sql);			
+     
+    }
+
+
+//depictions
+
+
+/**
+     * Method to get the depictions associated to a user
+     * 
+     *
+     * @param string userId => the userId for the funders
+     * @return array => the depictions related to this userId
+     */
+
+     public function getDepictions()
+     {
+          $this->_changeTable('tbl_foaf_depiction');
+	   $sql = "WHERE userid='".$this->objUser->userId()."'";									
+	   return $this->getAll($sql);
+	}
+
+
+/**
+     * Method to insert a depiction
+     * 
+     *
+     * @param string userId => the userId of the user
+     * @return array => the depictions urls related to this userId
+     */
+
+	
+	
+
+	public function insertDepiction($url) 
+      {
+        $this->_changeTable('tbl_foaf_depiction');
+
+        $values = array(
+            'userid' => $this->objUser->userId(),
+            'depictionurl' => $url		
+        );
+        return $this->insert($values);
+      }
+
+
+
+
+
+
+
+	/**
+	   *Method for removing depiction
+	   *@param string depictionId => id of the depiction to be removed
+	**/
+				
+
+	  public function removeDepiction($depictionId) 
+    {
+         $this->_changeTable('tbl_foaf_depiction');
+         $this->delete('id', $depictionId);
+	  $sql = "DELETE FROM tbl_foaf_depiction WHERE depictionurl is NULL";
+         $this->getArray($sql);			
+
+    }
+
+
+
+//pages
+
+
+/**
+     * Method to get the pages associated to a user
+     * 
+     *
+     * 
+     * @return array => the pages related to this userId
+     */
+
+     public function getPgs()
+     {
+          $this->_changeTable('tbl_foaf_pages');
+	   $sql = "WHERE userid='".$this->objUser->userId()."'"." ORDER BY title ";									
+	   return $this->getAll($sql);
+	}
+
+
+/**
+     * Method to insert a page
+     * 
+     *
+     * @param string userId => the userId of the user
+     * @return array => the page uri related to this userId
+     */
+
+	
+	
+
+	public function insertPage($document_uri, $title, $description) 
+      {
+        $this->_changeTable('tbl_foaf_pages');
+
+        $values = array(
+            'userid' => $this->objUser->userId(),
+            'page' => $document_uri,
+             'title' => $title,
+		'description' => $description
+        );
+        return $this->insert($values);
+      }
+
+
+
+
+
+
+
+	/**
+	   *Method for removing pages
+	   *@param string pageId => id of the page to be removed
+	**/
+				
+
+	  public function removePage($pageId) 
+    {
+         $this->_changeTable('tbl_foaf_pages');
+         $this->delete('id', $pageId);
+	  $sql = "DELETE FROM tbl_foaf_pages WHERE page IS NULL";
+         $this->getArray($sql);			
+
+    }
+
+//Accounts
+
+
+/**
+     * Method to get the accounts 
+     * 
+     *
+     * @param void
+     * @return array => the types of accounts in the database
+     */
+
+     public function getAccountTypes()
+     {
+        $this->_changeTable('tbl_foaf_accounts');
+	$accountTypes = $this->getAll();
+	$sql = "ORDER BY type ";
+	//There must be the very basic FOAF account type in the database
+	if(!isset($accountTypes) || empty($accountTypes))
+	{
+
+	   $this->insertAccountType("onlineAccount");			
+	   $this->insertAccountType("onlineChatAccount", "http://xmlns.com/foaf/0.1/OnlineChatAccount");
+	   $this->insertAccountType("onlineEcommerceAccount", "http://xmlns.com/foaf/0.1/OnlineEcommerceAccount");
+           $this->insertAccountType("onlineGamingAccount", "http://xmlns.com/foaf/0.1/OnlineGamingAccount");
+
+	}	
+
+
+	  								
+	   return $this->getAll($sql);
+	}
+
+
+/**
+     * Method to insert an account
+     * 
+     *@param string $type=> The type of account e.g (onlineGamingAccount,onlineChatAccount ...)
+     * @param string $url=> The url that provides the type of account specification
+     * @return array 
+     */
+
+	
+	
+
+	public function insertAccountType($type) 
+      {
+        $this->_changeTable('tbl_foaf_accounts');
+
+        $values = array(
+            'type' => $type
+        );
+        return $this->insert($values);
+      }
+
+
+
+
+
+
+
+	/**
+	   *Method for removing accounts
+	   *@param string accountId => id of the account to be removed
+	**/
+				
+
+	  public function removeAccountType($accountId) 
+    {
+         $this->_changeTable('tbl_foaf_accounts');
+         $this->delete('id', $accountId);
+         $sql = "DELETE FROM tbl_foaf_accounts WHERE type IS NULL";
+         $this->getArray($sql);			
+
+    }
+
+
+//user accounts
+
+
+/**
+     * Method to get user accounts 
+     * 
+     *
+     * @param void
+     * @return array => the accounts in the database
+     */
+
+     public function getAccounts()
+     {
+        $this->_changeTable('tbl_foaf_useraccounts');
+        $sql = "WHERE userid='".$this->objUser->userId()."'"." ORDER BY accountName ";									
+	   return $this->getAll($sql);
+	}
+
+
+/**
+     * Method to insert an account
+     * 
+     *@param string $accountName=> The user name provided for the account
+     * @param string $accountServiceHomepage=>Indicates a homepage of the service provide for this online account. 
+     *@param string $type=> The type of account e.g (onlineGamingAccount,onlineChatAccount ...)
+     * @return array 
+     */
+
+	
+	
+
+	public function insertAccount($accountName, $accountServiceHomepage , $accountType , $url = null) 
+        {
+        $this->_changeTable('tbl_foaf_useraccounts');
+
+        $values = array(
+	    'userid'=>$this->objUser->userId(),
+	    'accountName'=>$accountName,
+	    'accountServiceHomepage'=>$accountServiceHomepage,		
+            'type' => $accountType,
+	    'url'=>$url	
+        );
+        return $this->insert($values);
+       }
+
+
+
+
+
+
+
+	/**
+	   *Method for removing accounts
+	   *@param string accountId => id of the account to be removed
+	**/
+				
+
+	  public function removeAccount($accountId) 
+    {
+         $this->_changeTable('tbl_foaf_useraccounts');
+         $this->delete('id', $accountId);
+         $sql = "DELETE FROM tbl_foaf_accounts WHERE type IS NULL";
+         $this->getArray($sql);			
+
+    }
+
+
+
+
+
+
+
+//links
+
+
+/**
+     * Method to get all the FOAF related links
+     * 
+     *
+     * @param void
+     * @return array => the FOAF links in the database
+     */
+
+     public function getLinks()
+     {
+        $this->_changeTable('tbl_foaf_links');
+        $sql = " ORDER BY title ";									
+	 
+	return $this->getAll($sql);
+	}
+
+
+/**
+     * Method to insert a link
+     * 
+     *@param string $title=> A descriptive and easy to remember (recommended) name for the link
+     * @param string $url=>Indicates the link URL
+     *@param string $description=> A sort descripton about the link 
+     * @return array => The FOAF links in the database
+     */
+
+	
+	
+
+	public function insertLink($title, $url , $description = NULL) 
+        {
+        $this->_changeTable('tbl_foaf_links');
+
+        $values = array(
+	    'title'=>$title,
+	    'url'=>$url,
+	    'description'=>$description,		
+        );
+        return $this->insert($values);
+       }
+
+
+
+
+
+
+
+	/**
+	   *Method for removing links
+	   *@param string linkId => id of the link to be removed
+	**/
+				
+
+	  public function removeLink($linkId) 
+    {
+         $this->_changeTable('tbl_foaf_links');
+         $this->delete('id', $linkId);
+         $sql = "DELETE FROM tbl_foaf_links WHERE url IS NULL";
+         $this->getArray($sql);			
+
+    }
+
+
+	/**
+	   *Method for tracking repeated entries
+	   *@param string $field => the field to check for duplication
+	   *@param string $value => the value to be looked for
+	   *@param string $table => the table for looking for repeated values
+	   *@return  TRUE|FALSE => TRUE if it finds a repeated entry otherwise FALSE
+	**/
+				
+
+	  public function isRepeated($field, $value , $table) 
+   	 {
+	   
+           parent::init($table);
+	   $sql = "WHERE userid='".$this->objUser->userId()."'"." AND ".$field."='".$value."'";
+
+	   $results = $this->getAll($sql);
+	   
+	   if(!isset($results) || empty($results))
+	   {
+	      return false;
+	   } else {
+	     return true;
+	 }
+     	   	
+     }   
+
+	
+
+
+
+
 
   /**
      * Method to change database tables
