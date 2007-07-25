@@ -151,6 +151,7 @@ class foaf extends controller
 				$this->objFoafOps->myFoaf($this->objUser->userId());
 				$this->objFoafOps->writeFoaf();
 				$midcontent = $this->objFoafOps->foaf2Object($this->objUser->userId());
+			
 				$this->setVarByRef('tcont', $midcontent);
 				$this->setVarByRef('msg', $message);
 
@@ -225,16 +226,29 @@ class foaf extends controller
 				$this->setVarByRef('message', $message);
 
 				$this->nextAction('createfoaf',array('message' => $message));
-
+				break;
 
 			case 'updatefunders':
-				$fname = $this->getParam('fname');
 				$furl = $this->getParam('fpage');
 				$removefuns = $this->getParam('removefuns');
+				$exists = NULL;
 
-				if(isset($fname) && isset($furl))
+				if(isset($furl))
 				{
-					$this->dbFoaf->insertFunder($furl);
+					
+					
+                                    $exists = $this->dbFoaf->isRepeated('funderurl' , strtolower($furl) , 'tbl_foaf_fundedby');
+				    if($exists)
+				    {
+				    			
+				      $message = $this->objLanguage->code2Txt('mod_foaf_alertexists' , 'foaf' ,array('VALUE' =>$furl,'FIELD' =>$this->objLanguage->LanguageText('mod_foaf_funderpage','foaf')));	
+				      $this->setVarByRef('message', $message);
+				      $this->nextAction(NULL,array('message' =>$message));
+				      break;
+				     }	
+	
+
+				    $this->dbFoaf->insertFunder(strtolower($furl));
 				}
 
 				if(isset($removefuns))
@@ -245,6 +259,236 @@ class foaf extends controller
 				$this->setVarByRef('message', $message);
 
 				$this->nextAction('createfoaf',array('message' => $message));
+				break;				
+
+			case 'updateinterests':
+				$iurl = $this->getParam('ipage');
+				$removeint = $this->getParam('removeint');
+				$exists = NULL;
+
+				if(isset($iurl))
+				{
+					
+                                    $exists = $this->dbFoaf->isRepeated('interesturl' , strtolower($iurl) , 'tbl_foaf_interests');
+				    if($exists)
+				    {
+				    			
+				      $message = $this->objLanguage->code2Txt('mod_foaf_alertexists' , 'foaf' ,array('VALUE' =>$iurl,'FIELD' =>$this->objLanguage->LanguageText('mod_foaf_interestpage','foaf')));	
+				      $this->setVarByRef('message', $message);
+				      $this->nextAction(NULL,array('message' =>$message));
+				      break;
+				     }	
+				     $this->dbFoaf->insertInterest(strtolower($iurl));			    	
+					
+				}
+
+				if(isset($removeint))
+				{
+					$this->dbFoaf->removeInterest($removeint);
+				}
+				$message = 'update';
+				$this->setVarByRef('message', $message);
+
+				$this->nextAction('createfoaf',array('message' => $message));
+				break;
+
+			case 'updatedeps':
+				//$iname = $this->getParam('iname');
+				$durl = $this->getParam('dpage');
+				$removedep = $this->getParam('removedep');
+				$exists = NULL;
+
+
+				if(isset($durl))
+				{
+
+					
+                                    $exists = $this->dbFoaf->isRepeated('depictionurl' , strtolower($durl) , 'tbl_foaf_depiction');
+				    if($exists)
+				    {
+				    			
+				      $message = $this->objLanguage->code2Txt('mod_foaf_alertexists' , 'foaf' ,array('VALUE' =>$durl,'FIELD' =>$this->objLanguage->languageText('mod_foaf_depictionpage','foaf')));	
+				      $this->setVarByRef('message', $message);
+				      $this->nextAction(NULL,array('message' =>$message));
+				      break;
+				     }	
+	
+					$this->dbFoaf->insertDepiction(strtolower($durl));
+				}
+
+				if(isset($removedep))
+				{
+					$this->dbFoaf->removeDepiction($removedep);
+				}
+				$message = 'update';
+				$this->setVarByRef('message', $message);
+
+				$this->nextAction('createfoaf',array('message' => $message));
+				break;
+
+
+			case 'updatepages':
+
+				$docUri = $this->getParam('docuri');
+				$title = $this->getParam('title','Default title');
+				$description = $this->getParam('description');
+				$removepage = $this->getParam('removepage');
+				$exists = NULL;
+
+				if(isset($docUri))
+				{
+					
+				    	
+				    $exists = $this->dbFoaf->isRepeated('page' , strtolower($docUri) , 'tbl_foaf_pages');
+				    if($exists)
+				    {
+				    			
+				      $message = $this->objLanguage->code2Txt('mod_foaf_alertexists' , 'foaf' ,array('VALUE' =>$docUri,'FIELD' => $this->objLanguage->languageText('mod_foaf_page','foaf')));	
+				      $this->setVarByRef('message', $message);
+				      $this->nextAction(NULL,array('message' =>$message));
+				      break;
+				     }	
+
+				    	
+				    $exists = $this->dbFoaf->isRepeated('title' , $title , 'tbl_foaf_pages');
+				    if($exists)
+				    {
+				    			
+				      $message = $this->objLanguage->code2Txt('mod_foaf_alertexists' , 'foaf' ,array('VALUE' =>$title,'FIELD' => 'title'));	
+				      $this->setVarByRef('message', $message);
+				      $this->nextAction(NULL,array('message' =>$message));
+				      break;
+				     		
+				      } 		
+				      $this->dbFoaf->insertPage(strtolower($docUri),$title,$description);         
+			               
+				}
+
+				if(isset($removepage))
+				{
+					$this->dbFoaf->removePage($removepage);
+				}
+				$message = 'update';
+				$this->setVarByRef('message', $message);
+
+				$this->nextAction('createfoaf',array('message' => $message));
+				break;
+
+			case 'updateaccounttypes':
+				$accountType = $this->getParam('accounttype');
+				$remType = $this->getParam('remtype');
+				$exists = NULL;
+
+				if(isset($accountType))
+				{
+  	
+				    $exists = $this->dbFoaf->valueExists('type' , $accountType , 'tbl_foaf_accounts');
+				    $this->setVarByRef('exists',$exists);	
+				    if($exists)
+				    {
+				    			
+				      $message = $this->objLanguage->code2Txt('mod_foaf_alertexists' , 'foaf' ,array('VALUE' =>$accountType,'FIELD' => $this->objLanguage->languageText('mod_foaf_type','foaf')));	
+				      $this->setVarByRef('message', $message);
+				      $this->nextAction(NULL,array('message' =>$message));
+				      break;
+				     }	
+
+
+				$this->dbFoaf->insertAccountType($accountType);
+				}
+
+				if(isset($remType))
+				{
+					$this->dbFoaf->removeAccountType($remType);
+				}
+				$message = 'update';
+				$this->setVarByRef('message', $message);
+
+				$this->nextAction('createfoaf',array('message' => $message));
+				break;
+
+
+
+			case 'updateaccounts':
+				$accountName = $this->getParam('accountname');
+				$servHomepage = $this->getParam('servhomepage');
+				$type = $this->getParam('type');
+				$typeUri = $this->getParam('typeuri');
+				$removedAccount = $this->getParam('removedaccount');
+				$exists = NULL;
+
+				if(isset($accountName))
+				{
+
+				    $exists = $this->dbFoaf->isRepeated('accountName' , $accountName , 'tbl_foaf_useraccounts');
+				    if($exists)
+				    {
+				    			
+				      $message = $this->objLanguage->code2Txt('mod_foaf_alertexists' , 'foaf' ,array('VALUE' =>$accountName,'FIELD' => $this->objLanguage->languageText('mod_foaf_account','foaf')));	
+				      $this->setVarByRef('message', $message);
+				      $this->nextAction(NULL,array('message' =>$message));
+				      break;
+				     }	
+
+
+				 if($type == "onlineAccount") {		
+				    $this->dbFoaf->insertAccount($accountName, $servHomepage , $type , strtolower($typeUri));	
+				 } else {
+				    $this->dbFoaf->insertAccount($accountName, $servHomepage , $type);	
+				 }
+				}		
+			           
+			
+				 
+				if(isset($removedAccount))
+				{
+					$this->dbFoaf->removeAccount($removedAccount);
+				}
+				$message = 'update';
+				$this->setVarByRef('message', $message);
+
+				$this->nextAction('createfoaf',array('message' => $message));
+				break;
+
+
+			case 'updatelinks':
+				$title = $this->getParam('linktitle');
+				$description = $this->getParam('linkdesc');
+				$url = $this->getParam('linkurl');
+				$removeLinks = $this->getParam('removelinks');
+				$exists = NULL;
+
+				if(isset($url))
+				{
+					
+					
+                                    $exists = $this->dbFoaf->valueExists('url' , strtolower($url) , 'tbl_foaf_links');
+				    if($exists)
+				    {
+				    			
+				      $message = $this->objLanguage->code2Txt('mod_foaf_alertexists' , 'foaf' ,array('VALUE' =>$url,'FIELD' =>$this->objLanguage->LanguageText('mod_foaf_url','foaf')));	
+				      $this->setVarByRef('message', $message);
+				      $this->nextAction(NULL,array('message' =>$message));
+				      break;
+				     }	
+	
+
+				    $this->dbFoaf->insertLink($title, strtolower($url) , $description);
+				}
+
+				if(isset($removeLinks))
+				{
+					$this->dbFoaf->removeLink($removeLinks);
+				}
+				$message = 'update';
+				$this->setVarByRef('message', $message);
+
+				$this->nextAction('createfoaf',array('message' => $message));
+				break;				
+
+
+
+
 
 
 
