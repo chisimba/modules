@@ -5,10 +5,6 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	die("You cannot view this page directly");
 }
 // end security check
-
-define("BY_URL", 0);
-define("BY_ID", 1);
-
 /**
 *
 * Class for manipulating YouTube API generated XML
@@ -22,7 +18,6 @@ define("BY_ID", 1);
 */
 class youtubetpl extends object 
 {
-    
     /**
      * 
     * @var $objLanguage String object property for holding the 
@@ -53,6 +48,9 @@ class youtubetpl extends object
     * with next and previous links. The videos are formatted
     * into a table.
     * 
+    * @param string object $apiXml The XML object returned by the 
+    * Youtube API call
+    * 
     */
     public function showVideos(& $apiXml)
     {
@@ -61,6 +59,7 @@ class youtubetpl extends object
         $count = 0;
         $this->loadClass('htmltable', 'htmlelements');
         $outerTable = new htmltable();
+        $outerTable->width=800;
         $table = new htmltable();
         $table->startRow();
         $table->width=399;
@@ -80,7 +79,7 @@ class youtubetpl extends object
         }
         $vidPlayer = $this->getVideoPlayer($videoId);
         $vidPlayer .= "<br />" . $this->objLanguage->languageText("mod_youtube_chifilter", "youtube")
-          . "<br />" . $this->getFilterLink($this->getYahooUrl($videoId));
+          . "<br />" . $this->getTextBox($this->getFilterLink($this->getYahooUrl($videoId)));
         //Loop and insert the thumbnails with links 
         foreach($apiXml->video_list->video as $video) {
             //Keep the title short to not break the layout
@@ -164,7 +163,11 @@ class youtubetpl extends object
     /**
     * 
     * Method to get and format the Next page link
+    * 
+    * @param integer $page The page we are on currently
+    * @param integer $pages The number of pages
     * @return string The formatted next page link 
+    * 
     */
     private function getNextPageLink(&$page, &$pages)
     {
@@ -224,6 +227,8 @@ class youtubetpl extends object
     * 
     * Method to return a Filter plugin link for 
     * Chisimba from a Youtube video URL
+    * 
+    * @param string $url A valid Youtube video URL
     *  
     */
     private function getFilterLink($url)
@@ -231,6 +236,12 @@ class youtubetpl extends object
         return '[YOUTUBE]' . $url . '[/YOUTUBE]';
     }
     
+    /**
+    * 
+    * A method to return a search by tag searchbox
+    * @return string A form containing the search box and a submit button
+    * 
+    */
     public function getTagSearchBox()
     {
         $this->loadClass('form','htmlelements');
@@ -250,6 +261,37 @@ class youtubetpl extends object
         return $objForm->show();
     }
     
+    /**
+    * 
+    * A method to return a search by playlist searchbox
+    * @return string A form containing the search box and a submit button
+    * 
+    */
+    public function getPlSearchBox()
+    {
+        $this->loadClass('form','htmlelements');
+        $objForm = new form('vidpl');
+        $objForm->setAction($this->uri(array('ytmethod'=>'by_playlist'),'youtube'));
+        $this->loadClass('textinput','htmlelements');
+        $identifier = new textinput('identifier');
+        $objForm->setDisplayType(1);
+        $objForm->addToForm($this->objLanguage->languageText("mod_youtube_dispbypl", "youtube") . "<br />");
+        $objForm->addToForm($identifier);
+        $this->loadClass('button','htmlelements');
+        $btn = $this->objLanguage->languageText("mod_youtube_showvideos", "youtube");
+        $objButton=new button('byplbtn');
+        $objButton->setToSubmit();
+        $objButton->setValue($btn);
+        $objForm->addToForm($objButton->show());
+        return $objForm->show();
+    }
+
+    /**
+    * 
+    * A method to return a search by user searchbox
+    * @return string A form containing the search box and a submit button
+    * 
+    */    
     public function getUserSearchBox()
     {
         $this->loadClass('form','htmlelements');
@@ -269,7 +311,14 @@ class youtubetpl extends object
         return $objForm->show();
     }
     
-    
+   /**
+   * 
+   * A method to show on the left panel the method that is
+   * currently being called (by tag, by user, etc.)
+   * 
+   * @return string The text formatted for display in the left panel
+   * 
+   */
    public function showMethod()
    {
         //Get the method to use and default to by_tag
@@ -281,35 +330,66 @@ class youtubetpl extends object
                     $ret = $this->objLanguage->languageText("mod_youtube_bytag", "youtube")
                       . ": " . $ytIdentifier;
                     break;
-                    
                 case "by_user":
                     $ret = $this->objLanguage->languageText("mod_youtube_byuser", "youtube")
                       . ": " . $ytIdentifier;
                     break;
-                    
                 case "by_playlist":
                     $ret = $this->objLanguage->languageText("mod_youtube_bypl", "youtube")
                       . ": " . $ytIdentifier;
                     break;
-                    
                 default:
                     $ret = $this->objLanguage->languageText("mod_youtube_unknownmethod", "youtube")
                       . ": " . $ytMethod;
                     break;
         }
        return $ret;
-   } 
+    } 
     
+    /**
+    * 
+    * Method to use the parse4youtube filter class to return
+    * a Youtube video player to play the video identified by
+    * $videoId
+    * 
+    * @param sting $videoId The videoid of the youtube video to play
+    * 
+    */
     public function getVideoPlayer($videoId)
     {
         //$this->objYtFilter = $this->getObject('parse4youtube', 'filters');
         return $this->objYtFilter->getVideoObject($videoId);
     }
     
+    /**
+    * 
+    * Method to convert a videoId into a full Yahoo video URL. It
+    * is mainly used to generate the Chsisimba filter link from the
+    * videoId of the currently playing video.
+    * 
+    * @param string $videoId The id of the video
+    * @return string The formatted URL
+    * 
+    */
     public function getYahooUrl(&$videoId)
     {
         return "http://www.youtube.com/watch?v=" . $videoId;
     }
     
+    /**
+    *
+    * A method to return a simple text box, with content, as used for the
+    * Chisimba Youtube filter link
+    * 
+    * @param string $contents The text to put into the box
+    * @return string The formatted text box with content
+    *  
+    */
+    public function getTextBox($contents)
+    {   
+        $this->loadClass('textinput','htmlelements');
+        $boxywoxy = new textinput('ytbox', $contents, NULL, 70);
+        return $boxywoxy->show();
+    }
 }
 ?>

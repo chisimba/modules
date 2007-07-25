@@ -202,7 +202,7 @@ class youtubeapi extends object
                     break;
                     
                 case "by_playlist":
-                    $callStr = $this->videosListByTag($ytIdentifier);
+                    $callStr = $this->videosListByPlaylist($ytIdentifier);
                     break;
                     
                 default:

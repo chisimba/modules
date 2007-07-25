@@ -20,18 +20,18 @@ class youtube extends controller
     * user object
     * @access private
     */
-    private $objUser;
+    public $objUser;
     /**
     * @var $objLanguage String object property for holding the 
     * language object
     */
-    private $objLanguage;
+    public $objLanguage;
     /**
     * @var $objLog String object property for holding the 
     * logger object for logging user activity
     * @access private
     */
-    private $objLog;
+    public $objLog;
     /**
     * @var $objYouTube String object property for holding the 
     * youtubeapi object
