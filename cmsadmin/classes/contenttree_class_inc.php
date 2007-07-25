@@ -238,7 +238,7 @@ class contenttree extends object
                    	$htmlContent .= "<li class='yuimenuitem'>".$link;
                         	                        
                     $contentNodes = $this->getContent($node['id'], $admin);
-			           var_dump($contentNodes);
+			         
 		            if (!empty($contentNodes)) {
 		            	$htmlContent .='<div id="'.htmlentities($contentNodes[0]['title']).'" class="yuimenu">';
 		            	$htmlContent .=	'<div class="bd">';
