@@ -116,5 +116,22 @@ class dbimages extends dbTable
 		$images = $this->getAll("WHERE albumId = '.$albumId.'");
 		return count($images);
 	}
+	
+	
+	 /**
+	  * Method to get a random photo for the 
+	  * block
+	  *
+	  * @return string
+	  * @access public
+	  */
+	  public function getRandomPhoto()
+	  {
+	   	 $objAlbum = & $this->getObject('dbalbum', 'photogallery');
+	   	 $albums = $objAlbum->getAll("WHERE no_pics > 1 AND is_shared=1 ORDER BY rand() LIMIT 1 ");
+		 $rec = $this->getAll("WHERE album_id='".$albums[0]['id']."' ORDER BY rand() LIMIT 1 ");
+		 return $rec[0];
+		 
+	  }
 }
 ?>

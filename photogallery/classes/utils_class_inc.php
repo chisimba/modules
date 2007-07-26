@@ -29,9 +29,9 @@ class utils extends object
        $this->_objConfig = & $this->getObject('altconfig','config');
        $this->_objDBAlbum = & $this->getObject('dbalbum', 'photogallery');
        $this->_objDBImages = & $this->getObject('dbimages', 'photogallery');
-       $this->galFolder = $this->_objConfig->getcontentBasePath().'photogallery';
-       $this->_objTags = $this->getObject('dbtags', 'tagging');
-        $this->_objFileMan = & $this->getObject('dbfile','filemanager');
+       $this->galFolder = & $this->_objConfig->getcontentBasePath().'photogallery';
+       $this->_objTags = & $this->getObject('dbtags', 'tagging');
+       $this->_objFileMan = & $this->getObject('dbfile','filemanager');
     }
 
     /**
@@ -325,7 +325,7 @@ class utils extends object
 			
 			return $objTagCloud->biuldAll();
 		} else {
-			return "No Popular Tags Available";
+			return  $this->objLanguage->languageText("mod_photogallery_nopoptags", "photogallery");
 		}
 		
 	
