@@ -33,6 +33,7 @@ class dbtags extends dbTable
 	public function init()
 	{
 		$this->objLanguage = $this->getObject("language", "language");
+		parent::init('tbl_tags');
 
 	}
 	
@@ -102,6 +103,7 @@ class dbtags extends dbTable
 		$this->_changeTable("tbl_tags");
 		return $this->getAll("WHERE userid = '$userid' and meta_key = 'tag'");
 	}
+	
 
 	/**
 	 * Method to get a tag weight by counting the tags
@@ -145,6 +147,19 @@ class dbtags extends dbTable
 		}
 		return TRUE;
 	}
+	
+	/** 
+	* Method to get the tags by Module distinctly
+	* @param string $module
+	* @return array
+	*/
+	public function getTagsByModule($module)
+	{
+		$sql = "SELECT DISTINCT meta_value FROM tbl_tags WHERE module='".$module."' and meta_key='tag'";
+		
+		return $this->getArray($sql);	
+	}
+	
 	
 	/**
 	 * Method to dynamically switch tables
