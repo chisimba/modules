@@ -105,7 +105,7 @@ class blogxmlrpc extends object
     	$publish = $param->scalarval();
     	if($publish)
     	{
-    		$published = 1;
+    		$published = 0;
     	}
     	else {
     		$published = 1;

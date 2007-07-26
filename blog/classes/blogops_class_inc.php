@@ -1311,7 +1311,7 @@ class blogops extends object
                         'postid' => $post['id'],
                         'userid' => $post['userid']
                     )) , stripslashes($post['post_title']) , NULL);
-                    $head = $headLink->show() . "<br />" . $dt."<br />".'<script src="http://digg.com/tools/diggthis.js" type="text/javascript"></script>';
+                    $head = $headLink->show() . "<br />" . $dt."<br />"; //.'<script src="http://digg.com/tools/diggthis.js" type="text/javascript"></script>';
                 }
                 //dump in the post content and voila! you have it...
                 //build the post content plus comment count and stats???
