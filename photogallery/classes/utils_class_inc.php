@@ -312,18 +312,21 @@ class utils extends object
 		
 		$tags = $this->_objTags->getTagsByModule('photogallery');
 		
-		
-		foreach ($tags as $tag)
+		if (count($tags) > 0 )
 		{
-		 	$weight = $this->_objTags->getRecordCount("WHERE meta_value='".$tag['meta_value']."'");
-		// print $weight.' - '.$tag['meta_value'].'<br>';
-		 	$uri = $this->uri(array('action' => 'popular', 'meta_value' => $tag['meta_value']));
-		 	
-			$objTagCloud->addElement($tag['meta_value'],$uri  , $weight, time());
+			foreach ($tags as $tag)
+			{
+			 	$weight = $this->_objTags->getRecordCount("WHERE meta_value='".$tag['meta_value']."'");
+			// print $weight.' - '.$tag['meta_value'].'<br>';
+			 	$uri = $this->uri(array('action' => 'popular', 'meta_value' => $tag['meta_value']));
+			 	
+				$objTagCloud->addElement($tag['meta_value'],$uri  , $weight, time());
+			}
+			
+			return $objTagCloud->biuldAll();
+		} else {
+			return "No Popular Tags Available";
 		}
-		
-		return $objTagCloud->biuldAll();
-
 		
 	
   }
