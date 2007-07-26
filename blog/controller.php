@@ -1815,6 +1815,8 @@ class blog extends controller
                 $this->setVarByRef('page', $page);
                 $this->setVar('pageSuppressXML', TRUE);
                 return 'pageview_tpl.php';
+                break;
+                
             case 'deletepage':
                 $pageid = $this->getParam('id');
                 $this->objDbBlog->deletePage($pageid);
@@ -1835,6 +1837,13 @@ class blog extends controller
                 echo $this->objblogOps->showLastTenPosts();
                 //$this->setVar('pageSuppressHeader', TRUE);
                 //return 'gadget_tpl.php';
+                
+            case 'api':
+            	$this->requiresLogin(FALSE);
+            	$objApi = $this->getObject('blogxmlrpc');
+            	$objApi->serve();
+       
+            	break;
                 
             } //action
             

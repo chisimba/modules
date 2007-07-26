@@ -514,6 +514,26 @@ class dbblog extends dbTable
      * @param  string  $mode   
      * @return array  
      */
+    public function insertPostAPI($userid, $insarr) 
+    {
+        $this->_changeTable("tbl_blog_posts");
+        
+        $insarr['post_content'] = str_ireplace("<br />", " <br /> ", $insarr['post_content']);
+        $insarr['id'] = $this->insert($insarr, 'tbl_blog_posts');
+        //$this->luceneIndex($insarr);
+        return $insarr['id'];
+    }
+    
+    
+    
+    /**
+     * Method to insert a post to your posts table
+     *
+     * @param  integer $userid 
+     * @param  array   $postarr
+     * @param  string  $mode   
+     * @return array  
+     */
     public function insertPost($userid, $postarr, $mode = NULL) 
     {
         $this->_changeTable("tbl_blog_posts");
