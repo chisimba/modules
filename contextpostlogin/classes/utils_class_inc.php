@@ -184,7 +184,7 @@ class utils extends object
 
 		$leftSideColumn .= $objBlocks->showBlock('contextchat', 'messaging');
 
-		$leftSideColumn .= $objBlocks->showBlock('randomphoto', 'photogallery');
+	
 		/*
 		$leftSideColumn .= $objBlocks->showBlock('loginstats', 'context');
 		//Add guestbook block
@@ -312,7 +312,7 @@ class utils extends object
 		//Put a wikipedia search
 		$rightSideColumn .= $objBlocks->showBlock('wikipedia', 'websearch');
 		//Put a dictionary lookup
-		
+			$rightSideColumn .= $objBlocks->showBlock('randomphoto', 'photogallery');
 		
 		
 		return $rightSideColumn;
