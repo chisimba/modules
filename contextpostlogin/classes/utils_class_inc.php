@@ -61,9 +61,9 @@ class utils extends object
 	  {
 	  	 try
 	  	 {
-		  	$objGroups = & $this->newObject('managegroups', 'contextgroups');
+		  	$objGroups = & $this->getObject('managegroups', 'contextgroups');
 		  	$contextCodes = $objGroups->usercontextcodes($this->_objUser->userId());
-		  	$objMM = & $this->newObject('mmutils', 'mediamanager');
+		  	$objMM = & $this->getObject('mmutils', 'mediamanager');
 		  	
 		  	$arr = array();
 		  	foreach ($contextCodes as $code)
@@ -93,7 +93,7 @@ class utils extends object
 	  {
 	  	try{
 		  	//$objGroups = & $this->newObject('managegroups', 'contextgroups');
-		    $objMM = $this->newObject('mmutils', 'mediamanager');
+		    $objMM = $this->getObject('mmutils', 'mediamanager');
 		  	$arr = array();
 		  	if($filter)
 		  	{
@@ -160,7 +160,7 @@ class utils extends object
 	  public function getLeftContent()
 	  {
 	  	//Put a block to test the blocks module
-		$objBlocks = & $this->newObject('blocks', 'blocks');
+		$objBlocks = & $this->getObject('blocks', 'blocks');
 		//$userMenu  = &$this->newObject('postloginmenu','toolbar');
 		$leftSideColumn = $this->getUserPic();//$userMenu->show();;
 		//Add loginhistory block
@@ -183,6 +183,8 @@ class utils extends object
 		$leftSideColumn .= $objBlocks->showBlock('latestpodcast', 'podcast');
 
 		$leftSideColumn .= $objBlocks->showBlock('contextchat', 'messaging');
+
+		$leftSideColumn .= $objBlocks->showBlock('randomphoto', 'photogallery');
 		/*
 		$leftSideColumn .= $objBlocks->showBlock('loginstats', 'context');
 		//Add guestbook block
@@ -208,7 +210,7 @@ class utils extends object
 	  	$objGoups = $this->getObject('groupusersdb', 'groupadmin');
 	  	$groupsArr = $objGoups->getUserGroups($this->_objUser->userId());
 	  	//var_dump($groupsArr);
-	  	$objBox = & $this->newObjecT('featurebox', 'navigation');
+	  	$objBox = & $this->newObject('featurebox', 'navigation');
 	  	$str = '<p align="center"><img src="'.$objUserPic->userpicture($this->_objUser->userId() ).'" alt="'.$this->_objUser->fullName().'" /></p>';
 	  	$str .= $this->getUserRole();
 	  	
@@ -383,5 +385,7 @@ class utils extends object
 	  	}
 	  	
 	  }
+	  
+	 
 }	
 ?>
