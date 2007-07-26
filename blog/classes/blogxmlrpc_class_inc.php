@@ -135,8 +135,70 @@ class blogxmlrpc extends object
 		return new XML_RPC_Response($val);
 	}
 	
-	public function metaWeblogEditPost()
+	public function metaWeblogEditPost($params)
 	{
+		$param = $params->getParam(0);
+		if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+    	}
+    	$appkey = $param->scalarval();
+    	
+    	$param = $params->getParam(1);
+		if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+    	}
+    	$blogid = $param->scalarval();
+    	
+    	$param = $params->getParam(2);
+		if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+    	}
+    	$username = $param->scalarval();
+    	
+    	$param = $params->getParam(3);
+		if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+    	}
+    	$pass = $param->scalarval();
+    	
+    	$param = $params->getParam(4);
+		if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+    	}
+    	$content = $param->scalarval();
+    	
+    	$param = $params->getParam(5);
+		if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+    	}
+    	$publish = $param->scalarval();
+    	if($publish)
+    	{
+    		$published = 0;
+    	}
+    	else {
+    		$published = 1;
+    	}
+    	
+    	$userid = $this->objUser->getUserId($username);
+    	//insert to the db now and return the generated id as a string
+    	$postarray = array(
+                'userid' => $userid,
+                'post_date' => date('r') ,
+                'post_content' => addslashes($content) , 
+                'post_title' => $this->objLanguage->languageText("mod_blog_word_apipost", "blog") ,
+                'post_category' => '0',
+                'post_excerpt' => '',
+                'post_status' => $published,
+                'comment_status' => 'on',
+                'post_modified' => date('r'),
+                'comment_count' => '0',
+                'post_ts' => time() ,
+                'post_lic' => '',
+                'stickypost' => '0',
+                'showpdf' => '1'
+            );
+    	$ret = $this->objDbBlog->updatePostAPI($blogid, $postarray);
 		$val = new XML_RPC_Value(TRUE, 'boolean');
    		return new XML_RPC_Response($val);
 	}

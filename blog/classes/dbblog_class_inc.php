@@ -524,6 +524,12 @@ class dbblog extends dbTable
         return $insarr['id'];
     }
     
+    public function updatePostAPI($blogid, $postarr)
+    {
+    	$this->_changeTable("tbl_blog_posts");
+    	$this->update('id', $blogid, $postarr, 'tbl_blog_posts');
+    	return TRUE;
+    }
     
     
     /**
