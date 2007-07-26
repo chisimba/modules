@@ -103,6 +103,13 @@ class blogxmlrpc extends object
             log_debug($param);
     	}
     	$publish = $param->scalarval();
+    	if($publish)
+    	{
+    		$published = 1;
+    	}
+    	else {
+    		$published = 1;
+    	}
     	
     	$userid = $this->objUser->getUserId($username);
     	
