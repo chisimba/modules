@@ -69,7 +69,7 @@ class block_randomphoto extends object
     {
         $this->objLanguage = &$this->getObject('language', 'language');
         $this->_objFileMan = & $this->getObject('dbfile','filemanager');       
-        $this->title = $this->objLanguage->languageText("mod_photogallery_block_random", "blog");
+        $this->title = $this->objLanguage->languageText("mod_photogallery_block_random", "photogallery");
     }
     /**
      * Standard block show method. It builds the output based
@@ -90,7 +90,7 @@ class block_randomphoto extends object
 		$filename = $this->_objFileMan->getFileName($image['file_id']); 
  		$path = $objThumbnail->getThumbnail($image['file_id'],$filename);
  		$bigPath = $this->_objFileMan->getFilePath($image['file_id']);
-	 	$link->href = $this->uri(array('action' => 'viewimage', 'albumid' => $this->getParam('albumid'),'imageid' => $image['id']));
+	 	$link->href = $this->uri(array('action' => 'viewimage', 'albumid' => $image['album_id'],'imageid' => $image['id']));
 	 	$link->link = '<img title="'.$image['title'].'" src="'.$path.'" alt="'.$image['title'].'"  />';
 	 	$link->extra = ' rel="lightbox" ';
 		$str.=$link->show().'</div></div>';
