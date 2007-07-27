@@ -1,4 +1,11 @@
 <?php
+/**
+ * The Dialog component is an extension of Panel that is meant to emulate the behavior of an dialog window using a floating, draggable HTML element. 
+ * Dialog provides an interface for easily gathering information from the user without leaving the underlying page context. 
+ * The information gathered is collected via a standard HTML form; 
+ * Dialog supports the submission of form data through XMLHttpRequest, through a normal form submission, or through a manual script-based response 
+ * (where the script reads and responds to the form values and the form is never actually submitted to the server).
+*/
 $script ='
 <script type="text/javascript">
 //<![CDATA[
@@ -98,21 +105,20 @@ echo $display;
 // Show Form
 
 echo $addEditForm;
-$button = new button();
-$button->setId("show");
-$button->setValue($this->objLanguage->languageText('mod_cmsadmin_pageblocks', 'cmsadmin'));
+
+//Get blocks icon
+$objIcon->setIcon('modules/blocks');
+$objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addremoveblocks', 'cmsadmin');
+$blockIcon = $objIcon->show();
+ // set up link to view contact details in a popup window
+ $objBlocksLink = new link('#');
+ $objBlocksLink->cssId = "show";
+ $objBlocksLink->link = $blockIcon;
+
  $showDialog = '<div>
- 			'.$button->show().'
+ 			'.$objBlocksLink->show().'
 			</div>';
  echo $showDialog;
-/**
- * The Dialog component is an extension of Panel that is meant to emulate the behavior of an dialog window using a floating, draggable HTML element. 
- * Dialog provides an interface for easily gathering information from the user without leaving the underlying page context. 
- * The information gathered is collected via a standard HTML form; 
- * Dialog supports the submission of form data through XMLHttpRequest, through a normal form submission, or through a manual script-based response 
- * (where the script reads and responds to the form values and the form is never actually submitted to the server).
-*/
-			
 			
 //Instantiating a Dialog
 if ($id != '') {
