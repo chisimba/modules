@@ -260,7 +260,7 @@ class youtubetpl extends object
         if ($page < $pages) {
             $nextPage = $page+1;
             $ytMethod = $this->getParam('ytmethod', 'by_tag');
-            $ytIdentifier = $this->getParam('ytidentifier','digitalfreedom');
+            $ytIdentifier = $this->getParam('ytidentifier',$this->ytIdentifier);
             $action=$this->getParam('ytaction', 'view');
             $arUri = $this->extractQueryString();
             $arUri['ytmethod'] = $ytMethod;
@@ -298,7 +298,7 @@ class youtubetpl extends object
         if ($page > 1) {
             $prevPage = $page-1;
             $ytMethod = $this->getParam('ytmethod', 'by_tag');
-            $ytIdentifier = $this->getParam('ytidentifier', 'digitalfreedom');
+            $ytIdentifier = $this->getParam('ytidentifier', $this->ytIdentifier);
             $action=$this->getParam('ytaction', 'view');
             $arUri = $this->extractQueryString();
             $arUri['ytmethod'] = $ytMethod;
