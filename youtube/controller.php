@@ -70,7 +70,7 @@ class youtube extends controller
     public function dispatch()
     {
         //Get action from query string and set default to view
-        $action=$this->getParam('action', 'view');
+        $action=$this->getParam('ytaction', 'view');
         /*
         * Convert the action into a method (alternative to 
         * using case selections)

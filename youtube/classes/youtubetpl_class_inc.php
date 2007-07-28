@@ -19,13 +19,29 @@ if (!$GLOBALS['kewl_entry_point_run'])
 class youtubetpl extends object 
 {
     /**
-     * 
+    * 
     * @var $objLanguage String object property for holding the 
     * language object
     * @access private
     * 
     */
     private $objLanguage;
+    /**
+    * 
+    * @var integer $cols the number of columns of thumbnails  
+    * 
+    * @access private
+    * 
+    */
+    private $cols;
+    /**
+    * 
+    * @var string $ytIdentifier The value of the identifier for the XML  
+    * 
+    * @access private
+    * 
+    */
+    private $ytIdentifier;
     
     /**
     *
@@ -40,6 +56,37 @@ class youtubetpl extends object
         //  in more than one funciton
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('image', 'htmlelements');
+        $this->cols=3;
+        $this->hitsPerPage=24;
+    }
+    
+    /**
+    *
+    * Method to access properties in this class
+    * 
+    * @param string $item The property whose value is being requested
+    * @return string The value of the propery being looked up
+    * @access public
+    *
+    */
+    public function get($item) {
+        return $this->$item;
+    }
+    
+    /**
+    *
+    * Method to set properties in this class
+    * 
+    * @param string $key The property whose value is being set
+    * @param string $value The value of the property being set
+    * @return boolean TRUE It always returns true
+    * @access public
+    *
+    */
+    public function set($key, $value)
+    {
+        $this->$key = $value;
+        return TRUE;
     }
     
     /**
@@ -54,110 +101,147 @@ class youtubetpl extends object
     */
     public function showVideos(& $apiXml)
     {
-        // loop through each video in the list and display it
-        $i = 0;
-        $count = 0;
-        $this->loadClass('htmltable', 'htmlelements');
-        $outerTable = new htmltable();
-        $outerTable->width=800;
-        $table = new htmltable();
-        $table->startRow();
-        $table->width=399;
-        $str="";
-        //Get the total number of videos
-        $total = $apiXml->video_list->total;
-        //Get the number of hits per page
-        $perPage = $this->getParam('hitsperpage', 24);
-        $objLink = new link();
-        $objImage = new image();
-        $videoId = $this->getParam('videoid', 'none');
-        //Get the video player so we can play the first or chosen video
-        $this->objYtFilter = $this->getObject('parse4youtube', 'filters');
-        if ($videoId == 'none') {
-            $displayVideoUrl = $apiXml->video_list->video[0]->url;
-            $videoId = $this->objYtFilter->getVideoCode($displayVideoUrl);
-        }
-        $vidPlayer = $this->getVideoPlayer($videoId);
-        $vidPlayer .= "<br />" . $this->objLanguage->languageText("mod_youtube_chifilter", "youtube")
-          . "<br />" . $this->getTextBox($this->getFilterLink($this->getYahooUrl($videoId)));
-        //Loop and insert the thumbnails with links 
-        foreach($apiXml->video_list->video as $video) {
-            //Keep the title short to not break the layout
-            $title = htmlentities(substr($video->title, 0, 15)) . '...';
-            //Add the link to a filter
-            //$title .= $this->getFilterLink($video->url);
-            //The thumbnaiil image for the current video
-            $objImage->src = $video->thumbnail_url;
-            //Set up the link URL
-            $videoUrl = $video->url;
-            $videoId = $this->objYtFilter->getVideoCode($videoUrl);
-            
-            $ytMethod = $this->getParam('ytmethod', 'by_tag');
-            $ytIdentifier = $this->getParam('identifier', 'digitalfreedom');
-            $action=$this->getParam('action', 'view');
-            $arUri = array(
-              'ytmethod'=>$ytMethod,
-              'identifier'=>$ytIdentifier,
-              'page'=>$this->getParam('page', 1),
-              'action'=>$action,
-              'videoid'=>$videoId);
-            $objLink->href = $this->uri($arUri, 'youtube');
-            ////////////working there
-            
-            //$objLink->href = htmlentities($video->url);
-            //Make the link the image
-            $objLink->link = $objImage->show();
-            //Add the linked image to a table cell
-            $table->addCell($objLink->show() . "<br />" . $title, "130");
-            //Using two counters, one to keep track of rows, and one to track the totals
-            $i++;
-            $count++;
-            $flag=FALSE;
-            // only 3 videos per row
-            if ($i == 3) {
-                $i = 0;
-                $table->endRow();
-                //echo $count . "----" . $perPage . "<br />";
-                if ($count != $perPage) {
-                    $table->startRow();
-                }
-                $flag=TRUE;
-            }
-        }
-        //If we have not closed the row then close it
-        if ($flag==FALSE) {
-            $table->endRow();
-        }
-        $str = $table->show();
-        //Clean up the table memory
-        unset($table);
-        //Count the number of pages        
-        if ($total > $perPage) {
-            $pages = round($total/$perPage, 0);
+        $isInvalid = $this->catchError($apiXml);
+        if (!$isInvalid) {
+            return $isInvalid;
         } else {
-            $pages = 1;
+            //loop through each video in the list and display it
+            $i = 0;
+            $count = 0;
+            $this->loadClass('htmltable', 'htmlelements');
+            $outerTable = new htmltable();
+            //The table width is the width of the thumbnails (130) times the number of columns
+            $vidTableWidth = 130 * $this->cols;
+            //The outer table width is the width of the thumbnails + 400 for the display
+            $outerTable->width=$vidTableWidth + 400;
+            //Start the table for the thumbnails
+            $table = new htmltable();
+            $table->startRow();
+            //Set the table width depending on the number of columns
+            $table->width = $vidTableWidth;
+            $str="";
+            //Get the total number of videos
+            $total = $apiXml->video_list->total;
+            //Get the number of hits per page
+            $perPage = $this->getParam('hitsperpage', $this->hitsPerPage);
+            $objLink = new link();
+            $objImage = new image();
+            //Get the videoid, defaulting to none
+            $videoId = $this->getParam('videoid', 'none');
+            //Get the video player so we can play the first or chosen video
+            $this->objYtFilter = $this->getObject('parse4youtube', 'filters');
+            if ($videoId == 'none') {
+                $displayVideoUrl = $apiXml->video_list->video[0]->url;
+                $videoId = $this->objYtFilter->getVideoCode($displayVideoUrl);
+            }
+            $vidPlayer = $this->getVideoPlayer($videoId);
+            $vidPlayer .= "<br />" . $this->objLanguage->languageText("mod_youtube_chifilter", "youtube")
+              . "<br />" . $this->getTextBox($this->getFilterLink($this->getYahooUrl($videoId)));
+            //Use the tooltips for displaying description
+            $tooltipHelp = $this->getObject('tooltip','htmlelements');
+            //Loop and insert the thumbnails with links 
+            foreach($apiXml->video_list->video as $video) {
+                $title = $video->title;
+                //Keep the title short to not break the layout but use tooltip
+                $tooltipHelp->setCaption(htmlentities(substr($title, 0, 15)) . '...');
+                $title = htmlentities($title);
+                $tooltipHelp->setText($title);
+                //Add the link to a filter
+                //$title .= $this->getFilterLink($video->url);
+                //The thumbnaiil image for the current video
+                $objImage->src = $video->thumbnail_url;
+                //Set up the link URL
+                $videoUrl = $video->url;
+                $videoId = $this->objYtFilter->getVideoCode($videoUrl);
+                $ytMethod = $this->getParam('ytmethod', 'by_tag');
+                $ytIdentifier = $this->getParam('ytidentifier', $this->ytIdentifier);
+                $action=$this->getParam('ytaction', 'view');
+                $objLink->href = $this->getViewUrl($ytMethod, $ytIdentifier, $action, $videoId, $perpage);
+                //$objLink->href = htmlentities($video->url);
+                //Make the link the image
+                $objLink->link = $objImage->show();
+                //Add the linked image to a table cell
+                $tipHelp = $tooltipHelp->show();
+                $table->addCell($objLink->show() . "<br />" . $tipHelp, "130");
+                //Using two counters, one to keep track of rows, and one to track the totals
+                $i++;
+                $count++;
+                $flag=FALSE;
+                // only cols videos per row (default value=3)
+                if ($i == $this->cols) {
+                    $i = 0;
+                    $table->endRow();
+                    //echo $count . "----" . $perPage . "<br />";
+                    if ($count != $perPage) {
+                        $table->startRow();
+                    }
+                    $flag=TRUE;
+                }
+            }
+            //If we have not closed the row then close it
+            if ($flag==FALSE) {
+                $table->endRow();
+            }
+            $str = $table->show();
+            //Clean up the table memory
+            unset($table);
+            //Count the number of pages        
+            if ($total > $perPage) {
+                $pages = round($total/$perPage, 0);
+            } else {
+                $pages = 1;
+            }
+            $page = $this->getParam('ytpage', 1);
+            $nextPage = $this->getNextPageLink($page, $pages);
+            $prevPage = $this->getPrevPageLink($page, $pages);
+            $arRep=array(
+              'PAGE'=>$page,
+              'PAGES'=>$pages);
+            $pageOf = $this->objLanguage->code2Txt("mod_youtube_pageofpages", "youtube", $arRep);
+            $navTable = new htmltable();
+            $navTable->width = $vidTableWidth;
+            $navTable->startRow();
+            $navTable->addCell($prevPage);
+            $navTable->addCell($pageOf);
+            $navTable->addCell($nextPage, NULL, "top", "right");
+            $navTable->endRow();
+            $navBar = $navTable->show();
+            $str = $navBar . $str . $navBar;
+            $outerTable->startRow();
+            $outerTable->addCell($str);
+            $outerTable->addCell($vidPlayer);
+            $outerTable->endRow();
+            $outerTable->cellspacing=3;
+            return $outerTable->show();            
         }
-        $page = $this->getParam('page', 1);
-        $nextPage = $this->getNextPageLink($page, $pages);
-        $prevPage = $this->getPrevPageLink($page, $pages);
-        $arRep=array(
-          'PAGE'=>$page,
-          'PAGES'=>$pages);
-        $pageOf = $this->objLanguage->code2Txt("mod_youtube_pageofpages", "youtube", $arRep);
-        $navTable = new htmltable();
-        $navTable->width = 399;
-        $navTable->startRow();
-        $navTable->addCell($prevPage);
-        $navTable->addCell($pageOf);
-        $navTable->addCell($nextPage, NULL, "top", "right");
-        $navTable->endRow();
-        $navBar = $navTable->show();
-        $str = $navBar . $str . $navBar;
-        $outerTable->startRow();
-        $outerTable->addCell($str);
-        $outerTable->addCell($vidPlayer);
-        $outerTable->endRow();
-        return $outerTable->show();
+        
+
+    }
+    
+    /**
+    * 
+    * Method to create the view URL to use with the thumbnails to make a link
+    * to the video
+    * 
+    * @param string $ytMethod The method to call (e.g. by_tag, by_user)
+    * @param string $ytIdentifier The value of the item to return (e.g. digitalfreedom, derekkeats)
+    * @param string $action The action for the youtube module to perform
+    * @param string $videoId The id of the video to play
+    * @param string $perpage The number of hits per page
+    * @return The URL for viewing the video under the thumbnail
+    *  
+    */
+    function getViewUrl(&$ytMethod, &$ytIdentifier, &$action, &$videoId, &$perpage)
+    {
+         $arUri = $this->extractQueryString();
+         $arUri['ytmethod'] = $ytMethod;
+         $arUri['ytidentifier'] = $ytIdentifier;
+         $arUri['ytpage'] = $this->getParam('ytpage', 1);
+         $arUri['ytaction'] = $action;
+         $arUri['videoid'] = $videoId;
+         $arUri['hitsperpage'] = $perpage;
+         $curModule = $this->getParam('module', 'youtube');
+         return $this->uri($arUri, $curModule);
     }
     
     /**
@@ -171,24 +255,30 @@ class youtubetpl extends object
     */
     private function getNextPageLink(&$page, &$pages)
     {
+        
+        $objIcon = $this->newObject('geticon', 'htmlelements');
         if ($page < $pages) {
             $nextPage = $page+1;
             $ytMethod = $this->getParam('ytmethod', 'by_tag');
-            $ytIdentifier = $this->getParam('identifier', 'digitalfreedom');
-            $action=$this->getParam('action', 'view');
-            $arUri = array(
-              'ytmethod'=>$ytMethod,
-              'identifier'=>$ytIdentifier,
-              'page'=>$nextPage,
-              'action'=>$action);
+            $ytIdentifier = $this->getParam('ytidentifier','digitalfreedom');
+            $action=$this->getParam('ytaction', 'view');
+            $arUri = $this->extractQueryString();
+            $arUri['ytmethod'] = $ytMethod;
+            $arUri['ytidentifier'] = $ytIdentifier;
+            $arUri['ytpage'] = $nextPage;
+            $arUri['ytaction'] = $action;
             //Use the module we are in so any module can have a page of vids
             $curModule = $this->getParam('module', 'youtube');
             $objLink = new link();
             $objLink->href = $this->uri($arUri, $curModule);
-            $objLink->link = $this->objLanguage->languageText("mod_youtube_nextpage", "youtube");
+            $objIcon->setIcon('next');
+            $objIcon->title = $this->objLanguage->languageText("mod_youtube_nextpage", "youtube");
+            $objLink->link = $objIcon->show();
             return $objLink->show();
         } else {
-            return $this->objLanguage->languageText("mod_youtube_onlastpage", "youtube");
+            $objIcon->setIcon('next_grey');
+            $objIcon->title = $this->objLanguage->languageText("mod_youtube_onlastpage", "youtube");
+            return $objIcon->show();
         }
     }
     
@@ -204,23 +294,59 @@ class youtubetpl extends object
     private function getPrevPageLink(&$page, &$pages)
     {
         $prevPage = $page-1;
+        $objIcon = $this->newObject('geticon', 'htmlelements');
         if ($page > 1) {
             $prevPage = $page-1;
             $ytMethod = $this->getParam('ytmethod', 'by_tag');
-            $ytIdentifier = $this->getParam('identifier', 'digitalfreedom');
-            $action=$this->getParam('action', 'view');
-            $arUri = array(
-              'ytmethod'=>$ytMethod,
-              'identifier'=>$ytIdentifier,
-              'page'=>$prevPage,
-              'action'=>$action);
+            $ytIdentifier = $this->getParam('ytidentifier', 'digitalfreedom');
+            $action=$this->getParam('ytaction', 'view');
+            $arUri = $this->extractQueryString();
+            $arUri['ytmethod'] = $ytMethod;
+            $arUri['ytidentifier'] = $ytIdentifier;
+            $arUri['ytpage'] = $prevPage;
+            $arUri['ytaction'] = $action;
             $objLink = new link();
-            $objLink->href = $this->uri($arUri, 'youtube');
-            $objLink->link = $this->objLanguage->languageText("mod_youtube_prevpage", "youtube");
+            $curModule = $this->getParam('module', 'youtube');
+            $objLink->href = $this->uri($arUri, $curModule);
+            $objIcon->setIcon('prev');
+            $objIcon->title = $this->objLanguage->languageText("mod_youtube_prevpage", "youtube");
+            $objLink->link = $objIcon->show();
             return $objLink->show();
         } else {
-            return $this->objLanguage->languageText("mod_youtube_onfirstpage", "youtube");
+            $objIcon->setIcon('prev_grey');
+            $objIcon->title = $this->objLanguage->languageText("mod_youtube_onfirstpage", "youtube");
+            return $objIcon->show();
         }
+    }
+    
+    /**
+     * 
+     * A method to extract the querystring into an array of keys and values
+     * to use to rebuild the navigation so that the navigation stays within
+     * the current module and page. It excludes ones that are built up in the
+     * view class (this class).
+     * 
+     * @return string array An array of keys and values from the querystring
+     * 
+     */
+    function extractQueryString()
+    {
+        //Extract the querystring into a string
+        $qs = $_SERVER['QUERY_STRING'];
+        //Create an array of excluded parameters
+        $arExcluded = array('ytpage', 'hitsperpage', 'ytidentifier', 'ytcols', 'ytaction', 'module', 'videoid');
+        //Extract the querystring into its own array
+        $qsArray = explode("&", $qs);
+        $arRet = array();
+        foreach($qsArray as $entry) {
+            $tmpAr = explode("=", $entry);
+            $key = $tmpAr[0];
+            $value = $tmpAr[1];
+            if (!in_array($key, $arExcluded)) {
+                $arRet[$key] = $value;
+            }
+        }
+        return $arRet;
     }
     
     /**
@@ -248,7 +374,7 @@ class youtubetpl extends object
         $objForm = new form('vidtag');
         $objForm->setAction($this->uri(array('ytmethod'=>'by_tag'),'youtube'));
         $this->loadClass('textinput','htmlelements');
-        $identifier = new textinput('identifier');
+        $identifier = new textinput('ytidentifier');
         $objForm->setDisplayType(1);
         $objForm->addToForm($this->objLanguage->languageText("mod_youtube_dispbytag", "youtube") . "<br />");
         $objForm->addToForm($identifier);
@@ -273,7 +399,7 @@ class youtubetpl extends object
         $objForm = new form('vidpl');
         $objForm->setAction($this->uri(array('ytmethod'=>'by_playlist'),'youtube'));
         $this->loadClass('textinput','htmlelements');
-        $identifier = new textinput('identifier');
+        $identifier = new textinput('ytidentifier');
         $objForm->setDisplayType(1);
         $objForm->addToForm($this->objLanguage->languageText("mod_youtube_dispbypl", "youtube") . "<br />");
         $objForm->addToForm($identifier);
@@ -298,7 +424,7 @@ class youtubetpl extends object
         $objForm = new form('viduser');
         $objForm->setAction($this->uri(array('ytmethod'=>'by_user'),'youtube'));
         $this->loadClass('textinput','htmlelements');
-        $identifier = new textinput('identifier');
+        $identifier = new textinput('ytidentifier');
         $objForm->setDisplayType(1);
         $objForm->addToForm($this->objLanguage->languageText("mod_youtube_dispbyuser", "youtube") . "<br />");
         $objForm->addToForm($identifier);
@@ -324,7 +450,7 @@ class youtubetpl extends object
         //Get the method to use and default to by_tag
         $ytMethod = $this->getParam('ytmethod', 'by_tag');
         //Get the tag or user or other identifier and default to digitalfreedom
-        $ytIdentifier = $this->getParam('identifier', 'digitalfreedom');
+        $ytIdentifier = $this->getParam('ytidentifier', 'digitalfreedom');
         switch ($ytMethod) {
                 case "by_tag":
                     $ret = $this->objLanguage->languageText("mod_youtube_bytag", "youtube")
@@ -390,6 +516,33 @@ class youtubetpl extends object
         $this->loadClass('textinput','htmlelements');
         $boxywoxy = new textinput('ytbox', $contents, NULL, 70);
         return $boxywoxy->show();
+    }
+    
+    
+    //WORKING HERE
+    /**
+    * 
+    * If it works, it returns <ut_response status="ok"> so we just need 
+    * to check that to see if there was an error. A full error looks like
+    *   <ut_response status="fail">
+    *     <error>
+    *       <code>8</code>
+    *           <description>Bad or unknown dev_id specified.</description>
+    *     </error>
+    *    </ut_response> 
+    * 
+    */
+    public function catchError(& $apiXml) 
+    {
+        //return TRUE;
+        $success = $apiXml['status'];
+        if ($success == 'ok') {
+            return TRUE;                   
+        } else {
+            $erCode = $apiXml->ut_response->error->code;
+            $erDesc = $apiXml->ut_response->error->description;
+            return $erDesc . "($erCode)";
+        }
     }
 }
 ?>

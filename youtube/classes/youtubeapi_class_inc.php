@@ -49,7 +49,6 @@ class youtubeapi extends object
     *  
     */    
     private $apiXmlRpcBase;
-    private $byTag; /////////used?
     /**
     *
     * Property to store the Youtube API key, which is
@@ -111,6 +110,9 @@ class youtubeapi extends object
     *  
     */
     public $perPage;
+    
+    public $ytIdentifier;
+    public $ytMethod;
     /**
     *
     * Standard init method used here to set values of 
@@ -127,10 +129,11 @@ class youtubeapi extends object
         $this->apiXmlRpcBase = 'api2_xmlrpc?';
         //Get the apiKey
         $this->apiKey="DP44qovp8v8";
-        
-
-
-        $this->page = $this->getParam('page', 1);
+        //Set the default method
+        $this->ytMethod = "by_tag";
+        //set the default identifier
+        $this->ytIdentifier = "digitalfreedom";
+        $this->page = $this->getParam('ytpage', 1);
         $this->hitsPerPage = $this->getParam('hitsperpage', 24);
         
     }
@@ -146,11 +149,11 @@ class youtubeapi extends object
     * @access public
     * 
     */
-    public function initPages($page = 1, $hitsPerPage = 25)
+   /* public function initPages($page = 1, $hitsPerPage = 24)
     {
         $this->page=$page;
         $this->hitsPerPage = $hitsPerPage;
-    }
+    }*/
 
     /**
     *
@@ -189,16 +192,15 @@ class youtubeapi extends object
     public function setupCall()
     {
         //Get the method to use and default to by_tag
-        $ytMethod = $this->getParam('ytmethod', 'by_tag');
+        $ytMethod = $this->getParam('ytmethod', $this->ytMethod);
         //Get the tag or user or other identifier and default to digitalfreedom
-        $ytIdentifier = $this->getParam('identifier', 'digitalfreedom');
+        $ytIdentifier = $this->getParam('ytidentifier', $this->ytIdentifier);
         switch ($ytMethod) {
                 case "by_tag":
                     $callStr = $this->videosListByTag($ytIdentifier);
                     break;
-                    
                 case "by_user":
-                    $callStr = $this->videosListByTag($ytIdentifier);
+                    $callStr = $this->videosListByUser($ytIdentifier);
                     break;
                     
                 case "by_playlist":
@@ -309,5 +311,6 @@ class youtubeapi extends object
         unset($apiRet);
         return $apiXml;
     }
+
 }
 ?>
