@@ -292,6 +292,25 @@ class youtubeapi extends object
     
     /**
     * 
+    * Method to look up the details of a video by the videoId using the
+    * method outlined below:
+    * api2_rest?method=youtube.videos.get_details&dev_id=dev_id&video_id=video_id
+    * 
+    * @param 
+    *  
+    */
+    public function getVideoDetailsByVideoId($videoId)
+    {
+        $ret = $this->apiUrl
+          . $this->apiRestBase 
+          . "method=youtube.videos.get_details"
+          . "&dev_id=" . $this->apiKey
+          . "&video_id=" . $videoId;
+        return $ret;
+    }
+    
+    /**
+    * 
     * Method to make the api call and return the XML object
     * It uses the Chisimba Curl class so that it works with 
     * proxy servers as configured in the Chisimba system

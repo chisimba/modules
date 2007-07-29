@@ -135,9 +135,22 @@ class youtubetpl extends object
                 $displayVideoUrl = $apiXml->video_list->video[0]->url;
                 $videoId = $this->objYtFilter->getVideoCode($displayVideoUrl);
             }
-            $vidPlayer = $this->getVideoPlayer($videoId);
-            $vidPlayer .= "<br />" . $this->objLanguage->languageText("mod_youtube_chifilter", "youtube")
+            $vidPlayer = $this->getVideoPlayer($videoId) . "<br />";
+            //Add the tabbed boxes
+            $tab1 = $this->objLanguage->languageText("mod_youtube_chifilter", "youtube")
               . "<br />" . $this->getTextBox($this->getFilterLink($this->getYahooUrl($videoId)));
+            $objDetails = $this->getObject('videodetails','youtube');
+            $objDetails->set('videoId', $videoId);
+            $tab2 = $objDetails->show();
+            $tab3 = "stuff for tab 3";
+            
+            
+            $multiTab  = $this->newObject('multitabbedbox','htmlelements');
+            $multiTab->width ='400px';
+            $multiTab->height = '360px';
+            $multiTab->addTab(array('name'=>$this->objLanguage->languageText("mod_youtube_filtercode",'youtube'),'content' => $tab1,'default' => TRUE));
+            $multiTab->addTab(array('name'=>$this->objLanguage->languageText("mod_youtube_filterdesc",'youtube'),'content' => $tab2,'default' => FALSE));
+            $vidPlayer .=  $multiTab->show();
             //Use the tooltips for displaying description
             $tooltipHelp = $this->getObject('tooltip','htmlelements');
             //Loop and insert the thumbnails with links 
@@ -219,6 +232,12 @@ class youtubetpl extends object
 
     }
     
+    public function getVideoInfo($videoId)
+    {
+        
+    }
+    
+    
     /**
     * 
     * Method to create the view URL to use with the thumbnails to make a link
@@ -232,7 +251,7 @@ class youtubetpl extends object
     * @return The URL for viewing the video under the thumbnail
     *  
     */
-    function getViewUrl(&$ytMethod, &$ytIdentifier, &$action, &$videoId, &$perpage)
+    private function getViewUrl(&$ytMethod, &$ytIdentifier, &$action, &$videoId, &$perpage)
     {
          $arUri = $this->extractQueryString();
          $arUri['ytmethod'] = $ytMethod;
@@ -517,14 +536,7 @@ class youtubetpl extends object
         $this->loadClass('textinput','htmlelements');
         $boxywoxy = new textinput('ytbox', $contents, NULL, 70);
         return $boxywoxy->show();
-    }
-    
-    public function makeTabbed()
-    {
-        $this->loadClass('multitabbedbox','htmlelements');
-        
-    }
-    
+    }  
     
     //WORKING HERE
     /**
