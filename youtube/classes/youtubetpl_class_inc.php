@@ -58,6 +58,7 @@ class youtubetpl extends object
         $this->loadClass('image', 'htmlelements');
         $this->cols=3;
         $this->hitsPerPage=24;
+        $this->ytIdentifier = "digitalfreedom";
     }
     
     /**
@@ -516,6 +517,12 @@ class youtubetpl extends object
         $this->loadClass('textinput','htmlelements');
         $boxywoxy = new textinput('ytbox', $contents, NULL, 70);
         return $boxywoxy->show();
+    }
+    
+    public function makeTabbed()
+    {
+        $this->loadClass('multitabbedbox','htmlelements');
+        
     }
     
     
