@@ -600,7 +600,12 @@ class foafui extends object {
 
 	public function foafLinks()
 	{
-	$mylinks = $this->objFoafOps->remLinkForm() . $this->objFoafOps->addLinkForm();
+	
+	$mylinks = " ";
+	if($this->objUser->isAdmin())
+	{
+		$mylinks = $this->objFoafOps->remLinkForm() . $this->objFoafOps->addLinkForm();
+	}
 	//build the featureboxen for the links
 	$links = $this->dbFoaf->getLinks();
 

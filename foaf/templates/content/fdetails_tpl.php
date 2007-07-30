@@ -114,13 +114,12 @@ $pane->addTab(array(
     'content' => 'Visulalise the Network'
 ));
 
-if($this->objUser->isAdmin())
-{
+
 $pane->addTab(array(
     'name' => $foafLinks,
     'content' => $this->objUi->foafLinks()
 ));
-}
+
 //$pane->addTab(array('name'=>$surprise,'content' => $game));
 echo $pane->show();
 ?>
