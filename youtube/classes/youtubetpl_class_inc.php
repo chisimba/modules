@@ -141,15 +141,17 @@ class youtubetpl extends object
               . "<br />" . $this->getTextBox($this->getFilterLink($this->getYahooUrl($videoId)));
             $objDetails = $this->getObject('videodetails','youtube');
             $objDetails->set('videoId', $videoId);
-            $tab2 = $objDetails->show();
-            $tab3 = "stuff for tab 3";
+            $tab2 = $objDetails->showDetails();
             
+            $objAuthor = $this->getObject('authordetails','youtube');
+            $objAuthor->set('author', $objDetails->author);
+            $tab3 = $objAuthor->showDetails();
             
-            //$multiTab  = $this->newObject('multitabbedbox','htmlelements');
             $multiTab  = $this->newObject('tabcontent','htmlelements');
             $multiTab->width ='400px';
             $multiTab->addTab($this->objLanguage->languageText("mod_youtube_filtercode",'youtube'), $tab1, FALSE, '360px');
             $multiTab->addTab($this->objLanguage->languageText("mod_youtube_filterdesc",'youtube'), $tab2, FALSE, '360px');
+            $multiTab->addTab($this->objLanguage->languageText("mod_youtube_author",'youtube'), $tab3, FALSE, '360px');
             $vidPlayer .=  $multiTab->show();
             //Use the tooltips for displaying description
             $tooltipHelp = $this->getObject('tooltip','htmlelements');
@@ -536,7 +538,9 @@ class youtubetpl extends object
         $this->loadClass('textinput','htmlelements');
         $boxywoxy = new textinput('ytbox', $contents, NULL, 70);
         return $boxywoxy->show();
-    }  
+    }
+    
+
     
     //WORKING HERE
     /**

@@ -9,7 +9,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 *
 * Class for helping in manipulating YouTube API generated XML. Its main
 * purpose is to call back to the api class from inside the template class
-* to get and format the video details.
+* to get and format the author details for a given video.
 *
 * @author Derek Keats
 * @category Chisimba
@@ -18,7 +18,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * @licence GNU/GPL
 *
 */
-class videodetails extends object 
+class authordetails extends object 
 {
 
     
@@ -31,7 +31,7 @@ class videodetails extends object
     {
         //Instantiate the youtubeapi class
         $this->objYouTube = $this->getObject('youtubeapi', 'youtube');
-        $this->videoId=NULL;
+        $this->author=NULL;
     }
     
     /**
@@ -76,10 +76,10 @@ class videodetails extends object
     public function showDetails()
     {
         //Get the video data
-        if ($this->videoId==NULL) {
+        if ($this->author==NULL) {
             return " ";
         } else {
-            $callCode = $this->objYouTube->getVideoDetailsByVideoId($this->videoId);
+            $callCode = $this->objYouTube->getVideoDetailsByAuthor($this->author);
             $apiXml = $this->objYouTube->show($callCode);
             return $this->getFormatted($apiXml);
         }
@@ -95,48 +95,59 @@ class videodetails extends object
     */
     private function getFormatted(&$apiXml)
     {
-        $this->author = htmlentities($apiXml->video_details->author);
-        $this->title = htmlentities($apiXml->video_details->title);
-        $this->description = htmlentities($apiXml->video_details->description);
-        $this->tags =  $apiXml->video_details->tags;
-        $this->avgRating = $apiXml->video_details->rating_avg;
-        $this->ratingCount = $apiXml->video_details->rating_count;
-        $this->updated = $apiXml->video_details->update_time;
-        $this->comments = $apiXml->video_details->comment_count;
-        $this->uploaded = $apiXml->video_details->upload_time;
-        $this->lengthSecs = $apiXml->video_details->length_seconds;
-        $views =  $apiXml->video_details->view_count;
-        
+  /*<user_profile>
+    <first_name>Bob</first_name>
+    <last_name>Jones</last_name>
+    <about_me>This is my profile</about_me>
+    <age>29</age>
+    <video_upload_count>7</video_upload_count>
+    <video_watch_count>16</video_watch_count>
+    <homepage>http://www.myhomepage.com/</homepage>
+    <hometown>Los Angeles, CA</hometown>
+    <gender>m</gender> <!-- m or f -->
+    <occupations>Abstract Artist</occupations>
+    <companies>YouTube</companies>
+    <city>San Francisco, CA</city>
+    <country>US</country>
+    <books>Learning Python</books>
+    <hobbies>YouTube, YouTube, YouTube</hobbies>
+    <movies>Star Wars Original Trilogy</movies>
+    <relationship>taken</relationship> <!-- single, taken, or open -->
+    <friend_count>5</friend_count>
+    <favorite_video_count>15</favorite_video_count>
+    <currently_on>false</currently_on>
+</user_profile>*/
+        $this->firstname = htmlentities($apiXml->user_profile->first_name);
+        $this->lastname = htmlentities($apiXml->user_profile->last_name);
+        $this->about = htmlentities($apiXml->user_profile->about_me);
+        $this->age = htmlentities($apiXml->user_profile->age);
+        $this->videosUploaded = htmlentities($apiXml->user_profile->video_upload_count);
+        $hpage = htmlentities($apiXml->user_profile->homepage);
+        $this->homepage = "<a href=\"" .
+          $hpage . "\">" . $hpage . "</a>";
+        $this->online = htmlentities($apiXml->user_profile->currently_on);
         $this->objLanguage = $this->getObject('language', 'language');
-        
         $table = new htmltable();
         $table->cellspacing = 4;
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_youtube_author', 'youtube'));
-        $table->addCell($this->author);
+        $table->addCell($this->firstname . " " . $this->lastname);
         $table->endRow();
-        
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_youtube_title', 'youtube'));
-        $table->addCell($this->title);
+        $table->addCell($this->objLanguage->languageText('mod_youtube_aboutauthor', 'youtube'));
+        $table->addCell($this->about);
         $table->endRow();
-
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_youtube_description', 'youtube'));
-        $table->addCell($this->description);
+        $table->addCell($this->objLanguage->languageText('mod_youtube_authage', 'youtube'));
+        $table->addCell($this->age);
         $table->endRow();
-        
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_youtube_tags', 'youtube'));
-        $table->addCell($this->tags);
+        $table->addCell($this->objLanguage->languageText('mod_youtube_authhomepage', 'youtube'));
+        $table->addCell($this->homepage);
         $table->endRow();
 
         return $table->show();
     }
-    
-    public function tagsToArray(&$tags)
-    {
-        return explode(" ", $tags);
-    }
+
 }
 ?>

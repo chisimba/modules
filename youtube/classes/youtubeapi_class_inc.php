@@ -311,6 +311,25 @@ class youtubeapi extends object
     
     /**
     * 
+    * Method to look up the details of a video author by the author using the
+    * method outlined below:
+    * api2_rest?method=youtube.users.get_profile&dev_id=dev_id&user=user
+    * 
+    * @param string $author The author to look up
+    *  
+    */
+    public function getVideoDetailsByAuthor($author)
+    {
+        $ret = $this->apiUrl
+          . $this->apiRestBase 
+          . "method=youtube.users.get_profile"
+          . "&dev_id=" . $this->apiKey
+          . "&user=" . $author;
+        return $ret;
+    }
+    
+    /**
+    * 
     * Method to make the api call and return the XML object
     * It uses the Chisimba Curl class so that it works with 
     * proxy servers as configured in the Chisimba system
