@@ -231,8 +231,6 @@ if (empty($files)) {
     $middleColumnContent .= '<div class="noRecordsMessage" >'.$this->objLanguage->languageText('mod_cmsadmin_nopagesonfrontpage', 'cmsadmin').'</div>';
 }
 
-echo $middleColumnContent;
-
 echo '<br />';
 echo '<h2>'.$this->objLanguage->languageText('mod_cmsadmin_frontpageblocks', 'cmsadmin', 'Front Page Blocks').'</h2>';
 
