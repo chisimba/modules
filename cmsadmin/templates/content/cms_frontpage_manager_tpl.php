@@ -227,19 +227,15 @@ if (empty($files)) {
 
 echo $middleColumnContent;
 
+if (empty($files)) {
+    $middleColumnContent .= '<div class="noRecordsMessage" >'.$this->objLanguage->languageText('mod_cmsadmin_nopagesonfrontpage', 'cmsadmin').'</div>';
+}
+
+echo $middleColumnContent;
+
 echo '<br />';
-$button = new button();
-$button->setId("show");
-$button->setValue($this->objLanguage->languageText('mod_cmsadmin_frontpageblocks', 'cmsadmin', 'Front Page Blocks'));
- $showDialog = '<div>
- 			'.$button->show().'
-			</div>';
- echo $showDialog;
-  	 $h3->str =	$this->objLanguage->languageText('mod_cmsadmin_frontpageblocks', 'cmsadmin', 'Front Page Blocks');
-	 $h3->type = 3;
-	 $dialog1 = '<div id="dialog1">';
-     $dialog1 .= '<div class="hd">'.$h3->show().'</div>';
-     $dialog1 .= '<div class="bd">'.$this->_objUtils->showFrontBlocksForm().'</div></div>';
-     echo  $dialog1;
+echo '<h2>'.$this->objLanguage->languageText('mod_cmsadmin_frontpageblocks', 'cmsadmin', 'Front Page Blocks').'</h2>';
+
+echo $this->_objUtils->showFrontBlocksForm();
 
 ?>
