@@ -134,6 +134,15 @@ class videodetails extends object
         return $table->show();
     }
     
+    /**
+    *
+    * Method to convert space delimited tags into an array
+    * @param string $tags A string of space delimited tags
+    * 
+    * @return string array An array of tags
+    * @access public 
+    * 
+    */
     public function tagsToArray(&$tags)
     {
         return explode(" ", $tags);

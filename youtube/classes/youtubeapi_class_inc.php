@@ -138,23 +138,7 @@ class youtubeapi extends object
         
     }
     
-    /**
-    * 
-    * Provides a method for classes using this object to set
-    * the starting page and number of hits per page, or to restore
-    * the default values of 1,25.
-    * 
-    * @param int $page the starting page
-    * @param int $hitsPerPage the numbe of videos to display in a page
-    * @access public
-    * 
-    */
-   /* public function initPages($page = 1, $hitsPerPage = 24)
-    {
-        $this->page=$page;
-        $this->hitsPerPage = $hitsPerPage;
-    }*/
-
+ 
     /**
     *
     * Method to access properties in this class
@@ -185,7 +169,7 @@ class youtubeapi extends object
     * 
     * Setup method for apiCall
     * 
-    * @retrun string $callStr The URL call to the Youtube API
+    * @return string $callStr The URL call to the Youtube API
     * @access public
     * 
     */
@@ -214,6 +198,14 @@ class youtubeapi extends object
         return $callStr;
     }
     
+    /**
+    * 
+    * A method to return the API call as a URL for the API method
+    * 
+    * @return string The URL for the api call
+    * @access public
+    *  
+    */
     public function getCall()
     {
         return $this->apiUrl 
@@ -296,7 +288,9 @@ class youtubeapi extends object
     * method outlined below:
     * api2_rest?method=youtube.videos.get_details&dev_id=dev_id&video_id=video_id
     * 
-    * @param 
+    * @param string $videoId The ID of the video of which we want the details
+    * @return String $ret The api call to get the video information 
+    * @access public
     *  
     */
     public function getVideoDetailsByVideoId($videoId)
@@ -316,6 +310,8 @@ class youtubeapi extends object
     * api2_rest?method=youtube.users.get_profile&dev_id=dev_id&user=user
     * 
     * @param string $author The author to look up
+    * @return String $ret The api call to get the author details
+    * @access public
     *  
     */
     public function getVideoDetailsByAuthor($author)
@@ -337,6 +333,7 @@ class youtubeapi extends object
     * 
     * @param string $callStr the URL formatted call string for the 
     * Youtube API
+    * @return string object $apiXml The XML returned by simplexml_load_string
     * @access public
     *  
     */

@@ -95,28 +95,6 @@ class authordetails extends object
     */
     private function getFormatted(&$apiXml)
     {
-  /*<user_profile>
-    <first_name>Bob</first_name>
-    <last_name>Jones</last_name>
-    <about_me>This is my profile</about_me>
-    <age>29</age>
-    <video_upload_count>7</video_upload_count>
-    <video_watch_count>16</video_watch_count>
-    <homepage>http://www.myhomepage.com/</homepage>
-    <hometown>Los Angeles, CA</hometown>
-    <gender>m</gender> <!-- m or f -->
-    <occupations>Abstract Artist</occupations>
-    <companies>YouTube</companies>
-    <city>San Francisco, CA</city>
-    <country>US</country>
-    <books>Learning Python</books>
-    <hobbies>YouTube, YouTube, YouTube</hobbies>
-    <movies>Star Wars Original Trilogy</movies>
-    <relationship>taken</relationship> <!-- single, taken, or open -->
-    <friend_count>5</friend_count>
-    <favorite_video_count>15</favorite_video_count>
-    <currently_on>false</currently_on>
-</user_profile>*/
         $this->firstname = htmlentities($apiXml->user_profile->first_name);
         $this->lastname = htmlentities($apiXml->user_profile->last_name);
         $this->about = htmlentities($apiXml->user_profile->about_me);

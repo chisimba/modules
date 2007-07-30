@@ -232,13 +232,7 @@ class youtubetpl extends object
         }
         
 
-    }
-    
-    public function getVideoInfo($videoId)
-    {
-        
-    }
-    
+    }  
     
     /**
     * 
