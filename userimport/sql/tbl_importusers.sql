@@ -10,7 +10,7 @@ $fields = array(
     'userId' => array('type'=>'text','length'=>25),
     'adminId' => array('type'=>'text','length'=>25),
     'contextCode' => array('type'=>'text','length'=>255),
-    'creationDate' => array('type'=>'text','length'=>8), 
+    'creationDate' => array('type'=>'text','length'=>25), 
     'importMethod' => array('type'=>'text','length'=>32),
     'batchId' => array('type'=>'text','length'=>255),
     'r' => array('type'=>'text','length'=>32)
