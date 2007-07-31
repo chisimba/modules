@@ -154,7 +154,7 @@ class importuserdata extends object
         $username=$line['username'];
         $surname=$line['surname'];
         $firstname=$line['firstname'];
-        $email=$line['emailaddress'];
+        $email=$line['emailAddress'];
         
 
         // Now some checks - some of the fields could be blank,
