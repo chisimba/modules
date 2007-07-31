@@ -184,8 +184,7 @@ class foafops extends object
             /**
              * @todo check out the accounts bit, they need a service homepage as well as a username
              */
-            $this->objFoaf->addOnlineAccount('Paul', 'http://freenode.info', 'http://xmlns.com/foaf/0.1/OnlineChatAccount');
-            $this->objFoaf->addOnlineGamingAccount('Paul_S', 'http://www.there.com');
+       
             $this->objFoaf->addWorkplaceHomepage($workhomepage);
             $this->objFoaf->addSchoolHomepage($schoolhomepage);
             $this->objFoaf->addLogo($logo);
