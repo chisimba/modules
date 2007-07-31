@@ -1,6 +1,12 @@
 <?php
 $mode = $this->getParam("mode", NULL);
 if ($mode == "plain") {
+    $this->appendArrayVar('headerParams',
+'
+<style type="text/css">
+body { margin: 0; padding: 0;)
+</style>
+');
     echo $str;
 } else {
 	//Create an instance of the css layout class
