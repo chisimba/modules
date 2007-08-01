@@ -83,6 +83,7 @@ class etdtools extends object
         }
         
         $str = $this->getBrowseMenu();
+        $str .= $this->getLogin();
         return $str;
     }
     
@@ -98,7 +99,6 @@ class etdtools extends object
             return $this->rightContent;
         }
         
-        $str = $this->getLogin();
         return $str;
     }
     
@@ -134,7 +134,7 @@ class etdtools extends object
     */
     private function getLogin()
     {
-        $str = $this->objBlocks->showBlock('login', 'security', '','','', FALSE);
+        $str = $this->objBlocks->showBlock('login', 'security', '','','', TRUE, 'none');
         return $str;
     }
     

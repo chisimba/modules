@@ -113,5 +113,39 @@ class etdresource extends object
         }
         return $str;
     }
+    
+    /**
+    * Method to display the citation in one of a given number of formats
+    *
+    * @access public
+    * @return string html
+    */
+    public function showCitation()
+    {
+        $this->loadClass('tabbedbox', 'htmlelements');
+        $this->loadClass('dropdown', 'htmlelements');
+        
+        $lbCitation = $this->objLanguage->languageText('phrase_displaycitation');
+        $lbSelect = $this->objLanguage->languageText('phrase_displaycitation');
+        
+        $formStr = $lbSelect.': <br />';
+        
+        $objDrop = new dropdown('format');
+        $objDrop->addOption(' ', ' -- ');
+        $objDrop->addOption('demo', 'demo');
+        $objDrop->setSelected(' ');
+        $formStr .= $objDrop->show();
+        
+        $objForm = new form('citation', $this->uri(''));
+        $objForm->addToForm($formStr);
+        $str = $objForm->show();
+        
+        $objTab = new tabbedbox();
+        $objTab->extra = 'style="background-color: #FCFAF2; padding: 2px;"';
+        $objTab->addTabLabel($lbCitation);
+        $objTab->addBoxContent($str);
+        
+        return $objTab->show();
+    }
 }
 ?>

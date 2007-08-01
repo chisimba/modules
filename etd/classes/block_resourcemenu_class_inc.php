@@ -20,8 +20,9 @@ class block_resourcemenu extends object
     */
     public function init()
     {
-        $this->objLanguage =& $this->getObject('language','language');
-        $this->dbStats =& $this->getObject('dbstatistics','etd');
+        $this->objLanguage = $this->getObject('language','language');
+        $this->dbStats = $this->getObject('dbstatistics','etd');
+        $this->etdResources = $this->getObject('etdresource','etd');
         
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
@@ -78,6 +79,8 @@ class block_resourcemenu extends object
         $str .= $objForm->show();
         
         $str .= $this->dbStats->showResourceStats($resourceId);
+        
+        //$str .= $this->etdResources->showCitation();
         
 	    return $str;
     }

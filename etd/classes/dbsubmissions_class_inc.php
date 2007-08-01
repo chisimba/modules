@@ -262,6 +262,30 @@ class dbsubmissions extends dbtable
     }
 
     /**
+    * Method to get a list of identifiers / urls for all the given resources
+    *
+    * @access public
+    */
+    function getResourceUrls()
+    {
+        $sql = 'SELECT dc.dc_identifier, extra.dateCreated, extra.dateModified FROM '.$this->table.' AS submit, ';
+        
+        if($this->metaType == 'qualified'){
+            $sql .= "{$this->qualifiedTable} AS extra, ";
+        }else{
+            $sql .= "{$this->thesisTable} AS extra, ";
+        }
+            
+        $sql .= "{$this->dcTable} AS dc ";
+        $sql .= "WHERE dc.id = extra.dcMetaId AND submit.id = extra.submitId ";
+        $sql .= "AND submissionType = '{$this->subType}' AND status = 'archived' ";
+            
+        $data = $this->getArray($sql);
+
+        return $data;
+    }
+    
+    /**
     * Method to get the xml files for a submission
     *
     * @access private

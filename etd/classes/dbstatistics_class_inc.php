@@ -125,6 +125,22 @@ class dbStatistics extends dbTable
     }
     
     /**
+    * Method to get the statistics by country
+    *
+    * @access private
+    * @param string $type
+    * @return array $data
+    */    
+    private function getCountryStats($type)
+    {
+        $sql = "SELECT count(*) as cnt, countrycode FROM {$this->table}";
+        $sql .= " WHERE hittype = '$type' GROUP BY countrycode";
+
+        $data = $this->getArray($sql);
+        return $data;
+    }
+    
+    /**
     * Method to return all the countries represented by visitors to the site with the number of visits per country.
     *
     * @access private
@@ -221,6 +237,7 @@ class dbStatistics extends dbTable
         $lbStats = $this->objLanguage->languageText('word_statistics');
         $lbHits = $this->objLanguage->languageText('mod_etd_thisresourcehasbeenvisited', 'etd');
         $lbDownloads = $this->objLanguage->languageText('mod_etd_thisresourcehasbeendownloaded', 'etd');
+        $lnViewMonth = $this->objLanguage->languageText('mod_etd_viewbymonth', 'etd');
         $lbTimes = strtolower($this->objLanguage->languageText('word_times'));
         $lbTime = strtolower($this->objLanguage->languageText('word_time'));
         
@@ -354,10 +371,15 @@ class dbStatistics extends dbTable
         $lbTotalHits = $this->objLanguage->languageText('mod_etd_totalvisitstoresources', 'etd');
         $lbAveRes = $this->objLanguage->languageText('mod_etd_avevisitsperresource', 'etd');
         $lbAveDown = $this->objLanguage->languageText('mod_etd_avedownloadsperresource', 'etd');
+        $lnView = $this->objLanguage->languageText('mod_etd_viewbycountry', 'etd');
         $lbMonth = $this->objLanguage->languageText('word_month');
         $lbVisits = $this->objLanguage->languageText('word_visits');
         $lbDownloads = $this->objLanguage->languageText('word_downloads');
         $lbUploads = $this->objLanguage->languageText('phrase_newsubmissions');
+        
+        $objLink = new link($this->uri(array('action' => 'viewstats', 'view' => 'country')));
+        $objLink->link = $lnView;
+        $str = '<p>'.$objLink->show().'</p>';
         
         $objTable = new htmltable();
         $objTable->cellpadding = 5;
@@ -371,7 +393,7 @@ class dbStatistics extends dbTable
         
         $objTable->addRow(array($lbTotalDownloads.': '.$downloadsCount, $lbAveDown.': '.$aveResourceDownloads));
         
-        $str = $objTable->show();
+        $str .= $objTable->show();
         $str .= '<br /><br />';
         
         $hitArr = array();
@@ -434,14 +456,131 @@ class dbStatistics extends dbTable
         
         return $objTab->show();
     }
+    
+    /**
+    * Method to generate the statistics by country for the resources
+    *
+    * @access private
+    * @return string html
+    */
+    private function getStatsByCountry()
+    {
+        $resVisitsCount = $this->getStatistic('visit');
+        $downloadsCount = $this->getStatistic('download');
+        $resourceCount = $this->etdDbSubmissions->getCount();
+        
+        $countryVisit = $this->getCountryStats('visit');
+        $countryDownload = $this->getCountryStats('download');
+        $countryUpload = $this->getCountryStats('upload');
+        
+        $aveResourceVisits = 0;
+        $aveResourceDownloads = 0;
+        if($resourceCount > 0){
+            $aveResourceVisits = round($resVisitsCount/$resourceCount,0);
+            $aveResourceDownloads = round($downloadsCount/$resourceCount,0);
+        }
+                
+        $hdResource = $this->objLanguage->languageText('phrase_resourcestats');
+        $lbTotalResource = $this->objLanguage->languageText('mod_etd_totalresourcesavailable', 'etd');
+        $lbTotalDownloads = $this->objLanguage->languageText('mod_etd_totalresourcesdownloaded', 'etd');
+        $lbTotalHits = $this->objLanguage->languageText('mod_etd_totalvisitstoresources', 'etd');
+        $lbAveRes = $this->objLanguage->languageText('mod_etd_avevisitsperresource', 'etd');
+        $lbAveDown = $this->objLanguage->languageText('mod_etd_avedownloadsperresource', 'etd');
+        $lnView = $this->objLanguage->languageText('mod_etd_viewbymonth', 'etd');
+        $lbMonth = $this->objLanguage->languageText('word_month');
+        $lbCountry = $this->objLanguage->languageText('word_country');
+        $lbVisits = $this->objLanguage->languageText('word_visits');
+        $lbDownloads = $this->objLanguage->languageText('word_downloads');
+        $lbUploads = $this->objLanguage->languageText('phrase_newsubmissions');
+        
+        $objLink = new link($this->uri(array('action' => 'viewstats')));
+        $objLink->link = $lnView;
+        $str = '<p>'.$objLink->show().'</p>';
+        
+        $objTable = new htmltable();
+        $objTable->cellpadding = 5;
+        
+        $objTable->addRow(array($lbTotalResource.': '.$resourceCount));
+        
+        $objTable->startRow();
+        $objTable->addCell($lbTotalHits.': '.$resVisitsCount, '40%');
+        $objTable->addCell($lbAveRes.': '.$aveResourceVisits);
+        $objTable->endRow();
+        
+        $objTable->addRow(array($lbTotalDownloads.': '.$downloadsCount, $lbAveDown.': '.$aveResourceDownloads));
+        
+        $str .= $objTable->show();
+        $str .= '<br /><br />';
+        
+        $hitArr = array();
+        if(!empty($countryVisit)){
+            foreach($countryVisit as $item){
+                $hitArr[$item['countrycode']]['visit'] = $item['cnt'];
+            }
+        }
+        if(!empty($countryDownload)){
+            foreach($countryDownload as $item){
+                $hitArr[$item['countrycode']]['download'] = $item['cnt'];
+            }
+        }
+        if(!empty($countryUpload)){
+            foreach($countryUpload as $item){
+                $hitArr[$item['countrycode']]['upload'] = $item['cnt'];
+            }
+        }
+        
+        $objTable = new htmltable();
+        $objTable->cellpadding = 5;
+        $objTable->width = '50%';
+        $objTable->border = '1';
+        $objTable->addHeader(array($lbCountry, $lbVisits, $lbDownloads, $lbUploads));
+        
+        if(!empty($hitArr)){
+            foreach($hitArr as $key => $item){
+                $country = $this->objIpCountry->getCountryName($key);
+                $visits = 0; $downloads = 0; $uploads = 0;
+                
+                if(isset($item['visit'])){
+                    $visits = $item['visit'];
+                }
+                if(isset($item['download'])){
+                    $downloads = $item['download'];
+                }
+                if(isset($item['upload'])){
+                    $uploads = $item['upload'];
+                }
+                
+                $objTable->startRow();
+                $objTable->addCell($country, '50%');
+                $objTable->addCell($visits, '25%', '', 'center');
+                $objTable->addCell($downloads, '25%', '', 'center');
+                $objTable->addCell($uploads, '25%', '', 'center');
+                $objTable->endRow();
+            }
+        }
+        $this->objLayer->init();
+        $this->objLayer->width = '80%';
+        $this->objLayer->align = 'center';
+        $this->objLayer->str = $objTable->show();
+        $str .= $this->objLayer->show();
+        $str .= '<br />';
+        
+        $objTab = new tabbedbox();
+        $objTab->extra = 'style="background-color: #FCFAF2; padding: 5px;"';
+        $objTab->addTabLabel($hdResource);
+        $objTab->addBoxContent($str);
+        
+        return $objTab->show();
+    }
 
     /**
     * Method to display the statistics for the whole site
     *
     * @access public
+    * @param string $view View by country / by month
     * @return string html
     */
-    public function showAll()
+    public function showAll($view = '')
     {
         $head = $this->objLanguage->languageText('word_statistics');
         
@@ -451,7 +590,11 @@ class dbStatistics extends dbTable
         
         $layerStr = $this->getSiteStats();
         $layerStr .= '<p>'.$this->getUserStats().'</p>';
-        $layerStr .= '<p>'.$this->getStatsByResource().'</p>';
+        if($view == 'country'){
+            $layerStr .= '<p>'.$this->getStatsByCountry().'</p>';
+        }else{
+            $layerStr .= '<p>'.$this->getStatsByResource().'</p>';
+        }
         
         $this->objLayer->init();
         $this->objLayer->str = $layerStr;

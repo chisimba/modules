@@ -776,7 +776,24 @@ class management extends object
         $this->xmlMetadata->deleteXML('etd_'.$submitId);
         // Change submission status
         $this->dbSubmissions->changeApproval($submitId, $this->userId, 6, 'archived', 'public');
+        
+        // write resource to the xml map
+        $this->writeToMap($url1);
         return TRUE;
+    }
+
+    /**
+    * Method to add a newly archived resource to the xml sitemap for google.
+    *
+    * @access protected
+    * @param string $url The url to the resource
+    */
+    private function writeToMap($url)
+    {
+        $objMap = $this->getObject('etdmap', 'etd');
+        $objMap->readMap();
+        $objMap->addUrl($url, date('Y-m-d H:i:s'));
+        $objMap->writeMap();
     }
 
     /**
@@ -991,8 +1008,8 @@ class management extends object
         $str .= $this->objFeatureBox->show($lbDocument, $docStr);
 
         // Display the citation list
-        $embargoStr = $this->showEmbargo();
-        $str .= $this->objFeatureBox->show($lbEmbargo, $embargoStr);
+        //$embargoStr = $this->showEmbargo();
+        //$str .= $this->objFeatureBox->show($lbEmbargo, $embargoStr);
 
         // Display the citation list
         $citationStr = $this->showCitationList($docMode);
