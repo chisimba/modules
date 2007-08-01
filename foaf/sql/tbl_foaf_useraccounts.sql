@@ -15,11 +15,11 @@ $fields = array(
 		'type' => 'text',
 		'length' => 255,
 		),
-	'accountName' => array(
+	'accountname' => array(
 		'type' => 'text',
 		'length' => 255,
 		),
-	'accountServiceHomepage' => array(
+	'accountservicehomepage' => array(
 		'type' => 'text',
 		'length' => 255,
 		),
