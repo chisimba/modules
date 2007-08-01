@@ -155,6 +155,7 @@ class etd extends controller
 
             /* *** Functions for browsing the repository *** */
 
+            // browse by faculty
             case 'viewfaculty':
                 $faculty = $this->getParam('id');
                 if(!empty($faculty)){
@@ -175,7 +176,7 @@ class etd extends controller
                 $objTitle->setBrowseType('title');
                 $this->setVar('num', 3);
                 $this->setVarByRef('browseType', $objTitle);
-                $this->setVarByRef('pageTitle', $faculty);
+                $this->setVarByRef('pageContentTitle', $faculty);
                 return 'browse_tpl.php';
                 
 
@@ -204,6 +205,7 @@ class etd extends controller
                 return 'browse_tpl.php';
             */
 
+            // browse by department
             case 'viewdepartment':
                 $department = $this->getParam('id');
                 if(!empty($department)){
@@ -224,7 +226,7 @@ class etd extends controller
                 $objTitle->setBrowseType('title');
                 $this->setVar('num', 3);
                 $this->setVarByRef('browseType', $objTitle);
-                $this->setVarByRef('pageTitle', $department);
+                $this->setVarByRef('pageContentTitle', $department);
                 return 'browse_tpl.php';
                 
 
@@ -236,6 +238,40 @@ class etd extends controller
                 $this->setVarByRef('search', $display);
                 return 'search_tpl.php';
 
+            // browse by degrees
+            case 'viewdegrees':
+                $degree = $this->getParam('id');
+                if(!empty($degree)){
+                    $this->setSession('degree', $degree);
+                }
+                $degree = $this->getSession('degree');
+            
+                $this->unsetSession('resource');
+                // set a session to use when returning from a resource or from emailing a resource.
+                $session = array();
+                $session['searchForLetter'] = $this->getParam('searchForLetter');
+                $session['displayLimit'] = $this->getParam('displayLimit');
+                $session['displayStart'] = $this->getParam('displayStart');
+                $session['action'] = 'viewdegrees';
+                $this->setSession('return', $session);
+
+                $objTitle = $this->getObject('viewdegrees', 'etd');
+                $objTitle->setBrowseType('title');
+                $this->setVar('num', 3);
+                $this->setVarByRef('browseType', $objTitle);
+                $this->setVarByRef('pageContentTitle', $degree);
+                return 'browse_tpl.php';
+                
+
+            case 'browsedegrees':
+                $this->unsetSession('resource');
+                $this->unsetSession('degree');
+                $objDegree = $this->getObject('viewdegrees', 'etd');
+                $display = $objDegree->listDegrees();
+                $this->setVarByRef('search', $display);
+                return 'search_tpl.php';
+
+            // general browsing
             case 'browseauthor':
                 $this->unsetSession('resource');
                 // set a session to use when returning from a resource or from emailing a resource.
@@ -403,10 +439,20 @@ class etd extends controller
                 return $this->nextAction('');
                 break;
 
+            /* *** Site map actions *** */
+                            
+            // Function to create a sitemap using resources currently stored on the system
+            case 'createmap':
+                $objMap = $this->getObject('etdmap', 'etd');
+                $objMap->createMap();
+                echo '<p><font size=3><b>Map created</b></font></p>';
+                break;
+
             /* *** Additional Functionality *** */
 
             case 'viewstats':
-                $display = $this->dbStats->showAll();
+                $view = $this->getParam('view');
+                $display = $this->dbStats->showAll($view);
                 $this->setVarByRef('search', $display);
                 return 'search_tpl.php';
                 
@@ -565,6 +611,8 @@ class etd extends controller
             case 'browsefaculty':
             case 'browseauthor':
             case 'browsetitle':
+            case 'browsedegrees';
+            case 'viewdegrees';
             case 'search':
             case 'advsearch':
             case 'printsearch':

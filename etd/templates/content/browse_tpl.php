@@ -23,8 +23,8 @@ $objViewBrowse->setAccess(FALSE);
 $objViewBrowse->useSortTable();
 
 
-if(isset($pageTitle) && !empty($pageTitle)){
-    $objViewBrowse->setPageTitle($pageTitle);
+if(isset($pageContentTitle) && !empty($pageContentTitle)){
+    $objViewBrowse->setPageTitle($pageContentTitle);
 }
 
 // Show
