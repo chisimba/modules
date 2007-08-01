@@ -12,7 +12,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * This is a database model class for the karma module. All database transaactions will go through
  * this class. This class is derived from the top level dbTable superclass in the framework core.
  *
- * @author Paul Scott
+ * @author Brent van Rensburg
  * @filesource
  * @copyright AVOIR
  * @package tagging
@@ -33,7 +33,8 @@ class dbkarma extends dbTable
 	public function init()
 	{
 		$this->objLanguage = $this->getObject("language", "language");
-
+		//Set the table in the parent class
+		parent::init('tbl_karmapoints');
 	}
 	
 	/**
@@ -41,20 +42,20 @@ class dbkarma extends dbTable
 	 * 
 	 * @param string $userid
 	 * @param integer $points
+	 * @param string $contribution
 	 */
-	public function addPoints($userid, $points)
+	public function addPoints($userid, $contribution, $points)
 	{
 		$this->_changeTable('tbl_karmapoints');
 		// check first that the userid exists
-		$check = $this->getAll("WHERE userid = '$userid'");
+		$check = $this->getAll("WHERE userid = '$userid' AND contribution = '$contribution'");
 		if(empty($check))
 		{
-			return $this->insert(array('points' => $points, 'userid' => $userid), 'tbl_karmapoints');
+			return $this->insert(array('points' => $points, 'userid' => $userid, 'contribution' => $contribution), 'tbl_karmapoints');
 		}
 		else {
 			$points = $check[0]['points'] + $points;
-			echo $points;
-			return $this->update('id', $check[0]['id'], array('points' => $points, 'userid' => $userid), 'tbl_karmapoints');
+			return $this->update('id', $check[0]['id'], array('points' => $points, 'userid' => $userid, 'contribution' => $contribution), 'tbl_karmapoints');
 		}
 	}
 	
@@ -78,5 +79,31 @@ class dbkarma extends dbTable
 			return FALSE;
 		}
 	}
+
+
+	/**
+	 * Method to return all the usernames of users for the dropdown list
+	 *
+	 */
+	public function getNames()
+	{
+		$this->_changeTable('tbl_karmapoints');
+		$sql = "SELECT DISTINCT userid FROM tbl_karmapoints";
+		return $this->getArray($sql);
+    	}
+
+
+	/**
+	 * Method to users to the table
+	 *
+	 * @param string $userid
+	 * @param string $contribution
+	 */
+	public function getContribution($userid, $contribution)
+	{
+		$this->_changeTable('tbl_karmapoints');
+		$sql = "WHERE contribution ='$contribution' AND userid ='$userid'";
+		return $this->getAll($sql);
+    	}
 }
 ?>

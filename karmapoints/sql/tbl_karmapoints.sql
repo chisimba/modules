@@ -15,10 +15,14 @@ $fields = array(
 		'type' => 'text',
 		'length' => 50,
 		),
-	'points' => array(
+	'contribution' => array(
 		'type' => 'text',
 		'length' => 255,
 		),
+	'points' => array(
+		'type' => 'integer',
+		'length' => 4,
+		)
 	);
 
 //create other indexes here...
