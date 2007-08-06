@@ -1,5 +1,5 @@
 <?php
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 // Set columns to 3
 
 $middleColumn = NULL;

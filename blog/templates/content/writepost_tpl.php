@@ -1,6 +1,6 @@
 <?php
 //write post template
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 $middleColumn = NULL;
 //get the posts editor
 $middleColumn = $this->objblogOps->postEditor($userid, NULL);

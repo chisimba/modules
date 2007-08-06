@@ -29,7 +29,7 @@ if (isset($comment) && isset($useremail)) {
     $comment = NULL;
     $useremail = NULL;
 }
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 //show all the posts
 $middleColumn.= ($this->objblogOps->showPosts($posts, TRUE));
 $middleColumn.= $this->objComments->showComments($postid);

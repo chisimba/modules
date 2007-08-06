@@ -1,5 +1,5 @@
 <?php
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 //$leftMenu = &$this->newObject('usermenu', 'toolbar');
 //$rightSideColumn = NULL; //$this->objLanguage->languageText('mod_blog_instructions', 'blog');
 $middleColumn = NULL;

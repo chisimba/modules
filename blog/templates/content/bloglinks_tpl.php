@@ -1,6 +1,6 @@
 <?php
 //links add/edit template
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 $middleColumn = NULL;
 $userid = $this->objUser->userId();
 $objUi = $this->getObject('blogui');

@@ -1,7 +1,7 @@
 <?php
 //mail2friend template
 $userid = $m2fdata['bloggerid'];
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 $objUi = $this->getObject('blogui');
 // left hand blocks
 $leftCol = $objUi->leftBlocks($userid);

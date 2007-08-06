@@ -1,7 +1,7 @@
 <?php
 //$this->loadClass('layer', 'htmlelements');
 //archive template
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 $objUi = $this->getObject('blogui');
 $middleColumn = NULL;
 // left hand blocks

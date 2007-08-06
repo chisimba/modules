@@ -1,5 +1,5 @@
 <?php
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 $objFeatureBox = $this->newObject('featurebox', 'navigation');
 $middleColumn = NULL;
 $objUi = $this->getObject('blogui');

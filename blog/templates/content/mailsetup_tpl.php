@@ -5,7 +5,7 @@ $objUi = $this->getObject('blogui');
 $leftCol = $objUi->leftBlocks($userid);
 // right side blocks
 $rightSideColumn = $objUi->rightBlocks($userid, NULL);
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 if($leftCol == NULL || $rightSideColumn == NULL)
 {
 	$cssLayout->setNumColumns(2);

@@ -1,6 +1,6 @@
 <?php
 //tburl template
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 $middleColumn = NULL;
 //load up a featurebox and display it nicely
 $objFeatureBox = $this->getObject('featurebox', 'navigation');

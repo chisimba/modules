@@ -1,6 +1,6 @@
 <?php
 //profile view template
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 $middleColumn = NULL;
 if (!$this->objUser->isLoggedIn()) {
     if (isset($vprofile)) {

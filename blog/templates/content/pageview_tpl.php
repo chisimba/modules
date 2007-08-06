@@ -1,6 +1,6 @@
 <?php
 //tburl template
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 
 // parse with the washout class
 $washer = $this->getObject('washout', 'utilities');

@@ -1,6 +1,6 @@
 <?php
 //no blogs available for show...so we redirect to the login page again...
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 $objSideBar = $this->newObject('sidebar', 'navigation');
 $middleColumn = NULL;
 $objUi = $this->getObject('blogui');

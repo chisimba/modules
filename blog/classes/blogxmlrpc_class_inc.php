@@ -38,7 +38,7 @@ class blogxmlrpc extends object
                 		  
                 		  'blogger.getPost' => array('function' => array($this, 'bloggerGetPost'),
    											      'signature' => array(
-                         											array('struct', 'string', 'string', 'string'),
+                         											array('struct', 'string', 'string', 'string', 'string'),
                      											 ),
                 								  'docstring' => 'get post'),
                 		  
@@ -59,6 +59,18 @@ class blogxmlrpc extends object
                 		   						   					array('array', 'string', 'string', 'string'),
                 		   						   					),
                 		   						   'docstring' => 'get user blogs'),
+                		   						   
+                		   'blogger.getUserInfo' => array('function' => array($this, 'bloggerGetUserInfo'),
+                		   						   'signature' => array(
+                		   						   					array('struct', 'string', 'string', 'string'),
+                		   						   					),
+                		   						   'docstring' => 'get user info'),
+                		   						   
+                		   'blogger.deletePost' => array('function' => array($this, 'bloggerDeletePost'),
+                		   						   'signature' => array(
+                		   						   					array('boolean', 'string', 'string', 'string', 'string', 'boolean'),
+                		   						   					),
+                		   						   'docstring' => 'delete a post'),
                 		   						   
                 		   						   
                 		   // metaweblog section
@@ -97,6 +109,12 @@ class blogxmlrpc extends object
                 		   						   					array('array', 'string', 'string', 'string'),
                 		   						   					),
                 		   						   'docstring' => 'get user blogs'),
+                		   						   
+                		  'metaWeblog.deletePost' => array('function' => array($this, 'metaWeblogDeletePost'),
+                		   						   'signature' => array(
+                		   						   					array('boolean', 'string', 'string', 'string', 'string', 'boolean'),
+                		   						   					),
+                		   						   'docstring' => 'delete a post'),
                 		   						   
    					), 1, 0);
    					
@@ -242,13 +260,42 @@ class blogxmlrpc extends object
    		return new XML_RPC_Response($val);
 	}
 	
-	public function bloggerGetPost()
+	public function bloggerGetPost($params)
 	{
-		$myStruct = new XML_RPC_Value(array(
-    		"title" => new XML_RPC_Value("Tom"),
-    		"link" => new XML_RPC_Value("http://www.google.com", "string"),
-    		"description" => new XML_RPC_Value("a blog test entry", "base64")), "struct");
-    	return new XML_RPC_Response($myStruct);
+		$param = $params->getParam(0);
+		if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+    	}
+    	$appkey = $param->scalarval();
+    	
+    	$param = $params->getParam(1);
+		if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+    	}
+    	$blogid = $param->scalarval();
+    	
+    	$param = $params->getParam(2);
+		if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+    	}
+    	$username = $param->scalarval();
+    	
+    	$param = $params->getParam(3);
+		if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+    	}
+    	$pass = $param->scalarval();
+    	
+    	//go get the post
+    	$post = $this->objDbBlog->getPostById($blogid);
+    	$post = $post[0];
+    	//log_debug($post);
+		$postStruct = new XML_RPC_Value(array(
+    		"content" => new XML_RPC_Value($post['post_content'], "base64"),
+    		"userid" => new XML_RPC_Value($post['userid'], "string"),
+    		"postid" => new XML_RPC_Value($post['id'], "string"),
+    		"dateCreated" => new XML_RPC_Value($post['post_date'], "string")), "struct");
+    	return new XML_RPC_Response($postStruct);
 	}
 	
 	public function bloggerGetRecentPosts($params)
@@ -298,6 +345,46 @@ class blogxmlrpc extends object
     	$ret = new XML_RPC_Value($arrofStructs, "array");
     	return new XML_RPC_Response($ret);
 	}
+	
+	public function bloggerGetUserInfo($params)
+	{
+		$param = $params->getParam(0);
+		if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+    	}
+    	$appkey = $param->scalarval();
+    	
+    	$param = $params->getParam(1);
+		if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+    	}
+    	$username = $param->scalarval();
+    	
+    	$param = $params->getParam(2);
+		if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+    	}
+    	$pass = $param->scalarval();
+    	
+    	$userid = $this->objUser->getUserId($username);
+    	$email = $this->objUser->email($userid);
+    	$firstname = $this->objUser->getFirstname($userid);
+    	//we are using the username as the nickname here...
+    	$url = $this->uri(array('action' => 'randblog', 'userid' => $userid), 'blog');
+    	$lastname = $this->objUser->getSurname($userid);
+    	
+    	//return a struct of members about the user
+    	$userStruct = new XML_RPC_Value(array(
+    		"userid" => new XML_RPC_Value($userid, 'string'),
+    		"email" => new XML_RPC_Value($email, "string"),
+    		"firstname" => new XML_RPC_Value($firstname, "string"),
+    		"nickname" => new XML_RPC_Value($username, "string"),
+    		"url" => new XML_RPC_Value($url, "string"),
+    		"lastname" => new XML_RPC_Value($lastname, "string"),
+    		), "struct");
+    	return new XML_RPC_Response($userStruct);	
+        
+	}
 
 	public function bloggerGetCategories()
 	{
@@ -345,7 +432,42 @@ class blogxmlrpc extends object
     	return new XML_RPC_Response($arrofStructs);
 	}
 	
-	
+	public function bloggerDeletePost($params)
+	{
+		$param = $params->getParam(0);
+		if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+    	}
+    	$appkey = $param->scalarval();
+    	
+    	$param = $params->getParam(1);
+		if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+    	}
+    	$postid = $param->scalarval();
+    	
+    	$param = $params->getParam(2);
+		if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+    	}
+    	$username = $param->scalarval();
+    	
+    	$param = $params->getParam(3);
+		if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+    	}
+    	$pass = $param->scalarval();
+    	
+    	$param = $params->getParam(4);
+		if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+    	}
+    	$publish = $param->scalarval();
+    	
+    	$this->objDbBlog->deletePost($blogid);
+		$val = new XML_RPC_Value(TRUE, 'boolean');
+		return new XML_RPC_Response($val);
+	}
 	
 	/**
 	 * Metaweblog section - functions
@@ -434,6 +556,19 @@ class blogxmlrpc extends object
         //log_debug($postarray);
     	$ret = $this->objDbBlog->insertPostAPI($userid, $postarray);
 		$val = new XML_RPC_Value($ret, 'string');
+		return new XML_RPC_Response($val);
+	}
+	
+	public function metaWeblogDeletePost($params)
+	{
+		$val = new XML_RPC_Value(TRUE, 'boolean');
+		return new XML_RPC_Response($val);
+	}
+	
+	public function metaWeblogGetCategories($params)
+	{
+		log_debug("getting metaweblog categories!");
+		$val = new XML_RPC_Value('a returned string', 'string');
 		return new XML_RPC_Response($val);
 	}
 	

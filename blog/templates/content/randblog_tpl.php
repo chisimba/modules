@@ -1,7 +1,7 @@
 <?php
 // random blog template
 $this->loadClass('href', 'htmlelements');
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 $objUi = $this->getObject('blogui');
 $middleColumn = NULL;
 //check for sticky posts

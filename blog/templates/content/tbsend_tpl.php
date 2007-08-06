@@ -1,6 +1,6 @@
 <?php
 //tbsend template
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 $userid = $this->objUser->userId();
 $objUi = $this->getObject('blogui');
 // left hand blocks

@@ -1,6 +1,6 @@
 <?php
 //search results template
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 $middleColumn = NULL;
 $objUi = $this->getObject('blogui');
 // left hand blocks

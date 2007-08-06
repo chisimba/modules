@@ -1,7 +1,7 @@
 <?php
 $this->loadClass('href', 'htmlelements');
 $tt = $this->newObject('domtt', 'htmlelements');
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 $objSideBar = $this->newObject('usermenu', 'toolbar');
 $objFeatureBox = $this->newObject('featurebox', 'navigation');
 // Set columns to 3

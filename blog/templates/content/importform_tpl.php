@@ -1,6 +1,6 @@
 <?php
 $userid = $this->objUser->userId();
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 $objUi = $this->getObject('blogui');
 // left hand blocks
 $leftCol = $objUi->leftBlocks($userid);
