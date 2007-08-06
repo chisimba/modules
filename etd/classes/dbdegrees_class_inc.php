@@ -34,7 +34,7 @@ class dbDegrees extends dbTable
     /**
     * Method to add a new degree or faculty.
     *
-    * @access private
+    * @access public
     * @return void
     */
     public function addItem($name, $type, $id = NULL)
@@ -57,9 +57,67 @@ class dbDegrees extends dbTable
     }
     
     /**
-    * Method to get all degrees / faculties
+    * Method to get all a degree / faculty
+    *
+    * @access public
+    * @param string $id The row id
+    * @param string $name The new degree / faculty name
+    * @param string $type The type - degree / faculty / etc
+    * @return string The degree / faculty
+    */
+    public function updateDB($id, $name, $type)
+    {
+        $dbThesis = $this->getObject('dbthesis', 'etd');
+        
+        if(isset($id) && !empty($id)){
+            $oldName = $this->getItem($id);
+            $fields = array();
+            
+            switch($type){
+                case 'degree':
+                    $fields['thesis_degree_level'] = $name;
+                    $search = 'thesis_degree_name';
+                    break;
+                    
+                case 'department':
+                    $search = 'thesis_degree_discipline';
+                    break;
+                    
+                case 'faculty':
+                    $search = 'thesis_degree_faculty';
+                    break;
+            }
+            $fields[$search] = $name;
+            
+            $dbThesis->replaceElement($search, $oldName, $fields);
+            
+        }else{
+            return FALSE;
+        }
+    }
+    
+    /**
+    * Method to get all a degree / faculty
     *
     * @access private
+    * @param string $id The row id
+    * @return string The degree / faculty
+    */
+    private function getItem($id)
+    {
+        $sql = "SELECT name FROM {$this->table} WHERE id = '{$id}'";
+        $data = $this->getArray($sql);
+        
+        if(!empty($data)){
+            return $data[0]['name'];
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to get all degrees / faculties
+    *
+    * @access public
     * @return array The list of degrees / faculties
     */
     public function getList($type = 'faculty')

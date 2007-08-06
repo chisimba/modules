@@ -141,6 +141,21 @@ class dbThesis extends dbtable
     }
 
     /**
+    * Method to replace a set of elements where the item has changed 
+    * eg The name of a degree has been changed and needs to be updated
+    *
+    * @access public
+    * @param string $search The field / column to search in
+    * @param string $searchTerm The item to search on (or be replaced)
+    * @param array $fields The field name and replacement item
+    * @return void
+    */
+    public function replaceElement($search, $searchTerm, $fields)
+    {   
+        $this->update($search, $searchTerm, $fields);
+    }
+    
+    /**
     * Method to get resource metadata
     *
     * @access public

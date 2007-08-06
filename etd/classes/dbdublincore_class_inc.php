@@ -37,7 +37,7 @@ class dbDublinCore extends object
 
         $this->objUser = $this->getObject('user', 'security');
     }
-
+/*
     function patch()
     {
         $sql = "SELECT dc.id, dc.url, th.datecreated, th.updated FROM {$this->dcTable} AS dc, $this->thesisTable AS th 
@@ -63,6 +63,7 @@ class dbDublinCore extends object
             }
         }
     }
+*/
 
     /**
     * Method to insert the metadata extracted from xml into the dublincore table.

@@ -415,6 +415,14 @@ class etd extends controller
                 }
                 return $this->nextAction('showconfig', array('mode' => $nextmode));
                 break;
+                
+            case 'showfaq':
+                $mode = $this->getParam('mode');
+                break;
+                
+            case 'savefaq':
+                $mode = $this->getParam('mode');
+                break;
 
             /* *** Functions for students submissions *** */
 
@@ -487,11 +495,13 @@ class etd extends controller
                         $itemLink = $this->uri(array('action' => 'viewtitle', 'id' => $item['metaid']));// todo: build up item link $item['dc_identifier'];
                         $itemLink = html_entity_decode($itemLink);
                	        $this->objFeeder->addItem($itemTitle, $itemLink, $itemDescription, $link, $itemAuthor);
+               	        
+               	        echo "<p>{$itemTitle}<br />{$itemDescription}</p>";
                     }
                 }
 
-                $feed = $this->objFeeder->output();
-                echo $feed;
+                //$feed = $this->objFeeder->output();
+                //echo $feed;
                 break;
                 
             case 'metalib':

@@ -551,6 +551,21 @@ class configure extends object
     }
     
     /**
+    * Method to display a link to editing the faq
+    *
+    * @access private
+    * @return string html
+    */
+    private function editFaq()
+    {
+        $lbFaq = $this->objLanguage->languageText('phrase_editfaq');
+        
+        $objLink = new link($this->uri(array('action' => 'showfaq', 'mode' => 'update')));
+        $objLink->link = $lbFaq;
+        return '<p>'.$objLink->show().'</p>';
+    }
+    
+    /**
     * Method to display the configurable parameters - institution information, copyright, embargoes, approval settings
     *
     * @access private
@@ -563,6 +578,7 @@ class configure extends object
         $lbFaculty = $this->objLanguage->languageText('phrase_facultyinformation');
         $lbSubmission = $this->objLanguage->languageText('phrase_submissionprocess');
         $lbIntro = $this->objLanguage->languageText('phrase_editintroduction');
+        $lbFaq = $this->objLanguage->languageText('phrase_editfaq');
         
         $this->objHead->str = $head;
         $this->objHead->type = 1;
@@ -579,6 +595,9 @@ class configure extends object
         
         // Submission process
         $str .= $this->objFeatureBox->show($lbIntro, $this->editIntro());//$userMode, $data));
+        
+        // Submission process
+        //$str .= $this->objFeatureBox->show($lbFaq, $this->editFaq());
         
         $str .= '<br />';
         return $str;
@@ -631,6 +650,9 @@ class configure extends object
                 $type = $this->getParam('type');
                 $id = $this->getParam('id');
                 $this->unsetSession('update_id');
+                if(isset($id) && !empty($id)){
+                    $this->dbDegrees->updateDB($id, $name, $type);
+                }
                 $this->dbDegrees->addItem($name, $type, $id);
                 return TRUE;
                 break;
