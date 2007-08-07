@@ -156,6 +156,25 @@ class db_contextcontent_order extends dbtable
         return $this->getArray($sql);
     }
     
+	public function getBookmarkedPages($context, $chapter='', $defaultSelected='', $module='contextcontent')
+	{
+		$results = $this->getContextPages($context, $chapter);
+		
+		$str = '<ul>';
+		foreach($results as $page)
+		{
+			if($page['isbookmarked'] == 'Y')
+			{
+				$link = new link($this->uri(array('action'=>'viewpage', 'id'=>$page['id'])));
+				$link->link = $page['menutitle'];
+				$str .= '<li>'.$link->show().'</li>';
+			}
+		}
+		$str .= '</ul>';
+
+		return $str;
+	}
+
     /**
     * Method to get a content page
     * @param string $pageId Record Id of the Page

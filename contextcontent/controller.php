@@ -383,7 +383,7 @@ class contextcontent extends controller
         $result = $this->objContextChapters->addChapterToContext($chapterId, $this->contextCode, $visibility);
 
         
-
+//echo $title.' '.$intro.' '.$visibility.' '.$chapterId.' '.$result;
         if ($result == FALSE) {
 
             return $this->nextAction(NULL, array('error'=>'couldnotcreatechapter'));
@@ -1549,53 +1549,38 @@ class contextcontent extends controller
     */
 
     private function changeNavigation($type, $pageId='')
-
     {
-
         
-
         $page = $this->objContentOrder->getPage($pageId, $this->contextCode);
-
         
-
         if ($page == FALSE) {
-
             echo ''; // Return Nothing - AJAX won't do anything
-
         } else {
-
             if ($type == 'twolevel') {
-
                 $this->setSession('navigationType', 'twolevel');
-
                 echo $this->objContentOrder->getTwoLevelNav($this->contextCode, $page['chapterid'], $pageId);
-
-                echo '<p><a href="javascript:changeNav(\'tree\');">View as Tree...</a></p>';
-
+                echo '<p><a href="javascript:changeNav(\'tree\');">View as Tree...</a>';
+                echo '<br /><a href="javascript:changeNav(\'bookmarks\');">View Bookmarked Pages</a></p>';
                 
-
                 
-
             } else if ($type == 'tree') {
-
                 $this->setSession('navigationType', 'tree');
-
                 echo $this->objContentOrder->getTree($this->contextCode, $page['chapterid'], 'htmllist', $pageId, 'contextcontent');
-
-                echo '<p><a href="javascript:changeNav(\'twolevel\');">View as Index ...</a></p>';
-
+                echo '<p><a href="javascript:changeNav(\'twolevel\');">View as Index ...</a><br /><a href="javascript:changeNav(\'bookmarks\');">View Bookmarked Pages</a></p>';
                 
-
                 
-
+            } else if ($type == 'bookmarks') {
+                $this->setSession('navigationType', 'bookmarks');
+                
+                echo $this->objContentOrder->getBookmarkedPages($this->contextCode, $page['chapterid'], $pageId, 'contextcontent');
+                
+                echo '<p><a href="javascript:changeNav(\'twolevel\');">View as Index ...</a><br /><a href="javascript:changeNav(\'tree\');">View as Tree...</a></p>';
+                
+                
             } else {
-
                 echo ''; // Unknown Type - Return Nothing - AJAX won't do anything
-
             }
-
         }
-
     }
 
     
