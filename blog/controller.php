@@ -376,7 +376,7 @@ class blog extends controller
                     $userid = $posts[0]['userid'];
                 }
                 //get the post with comments and trackbacks and display it.
-                $this->setVarByRef('addinfo', $addinfo);
+                //$this->setVarByRef('addinfo', $addinfo);
                 $this->setVarByRef('postid', $postid);
                 $this->setVarByRef('posts', $posts);
                 $this->setVarByRef('userid', $userid);
