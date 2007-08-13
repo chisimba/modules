@@ -283,7 +283,7 @@ class contextcontent extends controller
 
     {
 
-        $this->objContentOrder->checkPagesNotInChapter($this->contextCode);
+        //$this->objContentOrder->checkPagesNotInChapter($this->contextCode);
 
         
 
@@ -1604,6 +1604,12 @@ class contextcontent extends controller
     {
         echo '<pre>';
         print_r($_SESSION);
+        
+        echo $this->contextCode;
+        
+        echo '<hr />';
+        
+        echo $this->objContextChapters->getNumContextChapters($this->contextCode);
     }
 
 
