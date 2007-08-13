@@ -1609,9 +1609,15 @@ class contextcontent extends controller
         
         echo '<hr />';
         
+        echo $this->objContextChapters->getContextChaptersSQL($this->contextCode);
+        
+        echo '<hr />';
+        
         echo $this->objContextChapters->getNumContextChapters($this->contextCode);
         
-        print_r($this->objContextChapters->getContextChapters($this->contextCode));
+        $results = $this->objContextChapters->getContextChapters($this->contextCode);
+        
+        print_r($results);
     }
 
 

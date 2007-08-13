@@ -29,11 +29,17 @@ class db_contextcontent_contextchapter extends dbtable
     
     public function getContextChapters($context)
     {
+        
+        return $this->getArray($this->getContextChaptersSQL($context));
+    }
+    
+    public function getContextChaptersSQL($context)
+    {
         $sql = 'SELECT tbl_contextcontent_chaptercontext.visibility, tbl_contextcontent_chaptercontent. *, tbl_contextcontent_chaptercontext.id as contextchapterid 
 FROM tbl_contextcontent_chaptercontext, tbl_contextcontent_chaptercontent
 WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chaptercontext.chapterid) AND tbl_contextcontent_chaptercontext.contextcode=\''.$context.'\' ORDER BY tbl_contextcontent_chaptercontext.chapterorder';
         
-        return $this->getArray($sql);
+        return $sql;
     }
     
     
