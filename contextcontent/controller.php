@@ -253,6 +253,9 @@ class contextcontent extends controller
             case 'movetochapter':
 
                 return $this->moveToChapter($this->getParam('id'), $this->getParam('chapter'));
+            case 'sessions':
+
+                return $this->sessions();
 
             default:
 
@@ -1595,6 +1598,12 @@ class contextcontent extends controller
 
         return $this->nextAction('viewpage', array('id'=>$pageId, 'message'=>$result));
 
+    }
+    
+    private function sessions()
+    {
+        echo '<pre>';
+        print_r($_SESSION);
     }
 
 
