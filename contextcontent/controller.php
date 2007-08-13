@@ -1603,13 +1603,15 @@ class contextcontent extends controller
     private function sessions()
     {
         echo '<pre>';
-        print_r($_SESSION);
+        //print_r($_SESSION);
         
         echo $this->contextCode;
         
         echo '<hr />';
         
         echo $this->objContextChapters->getNumContextChapters($this->contextCode);
+        
+        print_($this->objContextChapters->getContextChapters($this->contextCode));
     }
 
 
