@@ -30,7 +30,7 @@ class db_contextcontent_contextchapter extends dbtable
     public function getContextChapters($context)
     {
         
-        return $this->getArray($this->getContextChaptersSQL($context));
+        return $this->query($this->getContextChaptersSQL($context));
     }
     
     public function getContextChaptersSQL($context)
