@@ -8,6 +8,7 @@
     /**
     *
     * Constructor for the module controller
+    * @access public
     *
     */
     public function init()
@@ -39,6 +40,7 @@
     * output.
     *
     * @access public
+    * @return string The template determined by the method
     *
     */
     public function dispatch()
@@ -76,6 +78,7 @@
     * into an array and passes it to a main_tpl content template.
     *
     * @access private
+    * @return string The main template main_tpl.php
     *
     */
     private function _view()
@@ -97,6 +100,7 @@
     * edit and returns the edit template.
     *
     * @access private
+    * @return string The edit form template editform_tpl.php
     *
     */
     private function _edit()
@@ -114,7 +118,9 @@
     *
     * Method corresponding to the add action. It sets the mode to
     * add and returns the edit content template.
+    *
     * @access private
+    * @return string The edit form template editform_tpl.php
     *
     */
     private function _add()

@@ -11,6 +11,7 @@ hold an instance of the user object.
     /**
     *
     * @param string object $objUser A property to hold an instance of the user object
+    * @access public
     *
     */
     public $objUser;

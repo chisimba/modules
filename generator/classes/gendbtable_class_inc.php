@@ -67,6 +67,8 @@ class gendbtable extends abgenerator implements ifgenerator
         $this->moduledescription();
         //Insert the copyright
         $this->copyright();
+        //Insert the email address of the suthor
+        $this->email();
         //Insert the database table
         $this->databasetable();
         //Insert the database class info
