@@ -1611,7 +1611,7 @@ class contextcontent extends controller
         
         echo $this->objContextChapters->getNumContextChapters($this->contextCode);
         
-        print_($this->objContextChapters->getContextChapters($this->contextCode));
+        print_r($this->objContextChapters->getContextChapters($this->contextCode));
     }
 
 
