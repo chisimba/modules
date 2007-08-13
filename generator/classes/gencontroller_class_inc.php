@@ -76,6 +76,8 @@ class gencontroller extends abgenerator implements ifgenerator
         $this->moduledescription();
         //Insert the copyright
         $this->copyright();
+        //Insert the author's email
+        $this->email();
         //Insert the database class
         $dbTableClass=$this->getSession('databaseclass');
         if ($dbTableClass == NULL || $dbTableClass == "") {

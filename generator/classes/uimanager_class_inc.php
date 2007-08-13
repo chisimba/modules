@@ -117,7 +117,7 @@ class uimanager extends object
         $myTable->attributes="align=\"center\"";
         //Add the form title as the header
 		// Add the heading to the content
-		$objH =& $this->getObject('htmlheading', 'htmlelements');
+		$objH = $this->getObject('htmlheading', 'htmlelements');
 		//Heading <h3>
 		$objH->type=3;
 		$objH->str=$this->formXml->form[0]->title;
@@ -274,8 +274,9 @@ class uimanager extends object
         //Get an instance of the schema generator
 		$objSchema = $this->getObject('getschema');
 		$ar = $objSchema->listDbTables();
-		$objDropDown = $this->getObject('dropdown', 'htmlelements');
-		$objDropDown->name='tablename';
+        $this->loadClass('dropdown', 'htmlelements');
+		$objDropDown = new dropdown('tablename');
+		//$objDropDown->name=;
 		$objDropDown->cssId = 'input_tablename';
 		foreach ($ar as $entry) {
 		    $objDropDown->addOption($entry, $entry);

@@ -221,6 +221,24 @@ abstract class abgenerator extends object
         //Insert the copyright
         $this->classCode = str_replace('{COPYRIGHT}', $copyRight, $this->classCode);
     }
+    
+    /**
+    * 
+    * Method to return the email address of the author and 
+    * insert it into the code of the class being built in place of 
+    * the {EMAIL} parsecode
+    *  
+    * @access Private
+    * 
+    */
+    public function email()
+    {
+        //Get the module sopyright from parameter
+        $emailAddy = $this->objUser->email();
+        //Insert the copyright
+        $this->classCode = str_replace('{EMAIL}', $emailAddy, $this->classCode);
+    }
+    
             
     /**
     * 

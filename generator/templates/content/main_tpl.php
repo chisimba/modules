@@ -1,6 +1,6 @@
 <?php
 // Create an instance of the css layout class
-$cssLayout = & $this->newObject('csslayout', 'htmlelements');
+$cssLayout =  $this->newObject('csslayout', 'htmlelements');
 // Set columns to 3
 $cssLayout->setNumColumns(3);
 //Create the wizzard links object
@@ -10,7 +10,7 @@ $objWiz = $this->getObject('wizlinks');
 $leftSideColumn = $objWiz->putStandardLeftTxt();
 
 // Add the heading to the content
-$objH =& $this->getObject('htmlheading', 'htmlelements');
+$objH = $this->getObject('htmlheading', 'htmlelements');
 
 $middleColumn = "";
 
