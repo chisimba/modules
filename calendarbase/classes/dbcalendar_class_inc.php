@@ -66,7 +66,7 @@ class dbcalendar extends dbTable
         $this->loadClass('link', 'htmlelements');
         $this->objDateFunctions =& $this->getObject('datefunctions');
         $this->objCalendar =& $this->getObject('calendargenerator');
-        $this->objSimpleCal =& $this->getObject('datetime','utilities');
+        $this->objSimpleCal =& $this->getObject('dateandtime','utilities');
         // Load Language Class
         $this->objLanguage = &$this->getObject('language', 'language');
 

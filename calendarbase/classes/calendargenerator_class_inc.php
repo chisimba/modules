@@ -73,7 +73,7 @@ class calendargenerator extends object
     */
     public function init()
     {
-        $this->objSimpleCal =& $this->getObject('datetime','utilities');
+        $this->objSimpleCal =& $this->getObject('dateandtime','utilities');
         $this->objDateFunctions =& $this->getObject('datefunctions');
         $this->month = date('m');
         $this->year = date('Y');
