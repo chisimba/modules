@@ -2502,7 +2502,7 @@ class blogops extends object
                     'postid' => $item['id'],
                     'userid' => $item['userid']
                 ));
-                $link = new href($linkuri, $item['post_title']);
+                $link = new href($linkuri, stripslashes($item['post_title']));
                 $str.= '<p>';
                 $str.= '<b>' . $link->show() . '</b><br />';
                 if ($this->showfullname == 'FALSE') {
