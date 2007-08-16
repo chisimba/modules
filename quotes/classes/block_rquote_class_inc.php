@@ -45,7 +45,7 @@ class block_rquote extends object
     public function show()
 	{  try{
             $ar = $this->objDbquotes->getRandom();
-            return $ar['quote'] . "<br />&nbsp;&nbsp;--" . $ar['whosaidit'];
+            return stripslashes($ar['quote']) . "<br />&nbsp;&nbsp;--" . stripslashes($ar['whosaidit']);
         }
        catch (customException $e)
         {
