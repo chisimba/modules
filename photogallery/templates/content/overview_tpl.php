@@ -42,10 +42,11 @@ foreach($tencomments as $tencomment)
 	
 }
 
+if(!isset($stats))
+{
+	$stats = NULL;
+}
       
 echo '<div id="main">'.$str.'</ul></div>'.$stats.'</div>';      
 
 ?>
-
-  
-  
