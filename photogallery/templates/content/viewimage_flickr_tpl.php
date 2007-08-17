@@ -62,8 +62,9 @@ $this->setVar('pageTitle', 'Photo Gallery - '.$albums['title'].' - '.$image['tit
 
 $form->addToForm('<h3>Add a comment</h3>'.$table->show());
 $form->addToForm($commentField->show().'<br/>'.$button->show());
-//print '<pre>';
-//var_dump($comments);
+/*
+print '<pre>';
+var_dump($comments);
 if(count($comments['comment']) > 0)
 {
  	$strComment = '<h3>Comments ('.count($comments['comment']).')</h3>';
@@ -74,7 +75,10 @@ if(count($comments['comment']) > 0)
 		$strComment .= date("l, j F Y , g:i A", $comment['datecreate']).'</div>	</div>';
 		
 	}
+} else {
+	$strComment = '';
 }
+*/
 $link->extra = '';
 $link->href = $this->uri(null,'photogallery');
 $link->link = 'Photo Gallery';
