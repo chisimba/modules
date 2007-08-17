@@ -1,5 +1,5 @@
 <?php
-$str = '';
+
 $link = $this->getObject('link','htmlelements');
 $objThumbnail = & $this->getObject('thumbnails','filemanager');
 
@@ -17,7 +17,7 @@ print $head;
 
 if(count($images) > 0)
 {
-	
+	$str = '';
 	foreach($images as $image)
 	{
 		$str.='<div class="image"><div class="imagethumb">';

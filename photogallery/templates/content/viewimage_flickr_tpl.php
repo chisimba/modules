@@ -119,7 +119,7 @@ print $head;
 
 echo $str;
 echo $desc;
-echo $strComment;
-echo $form->show().'</div></div>';
+//echo $strComment;
+echo /*$form->show().*/'</div></div>';
 
 ?>
