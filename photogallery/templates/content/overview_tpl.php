@@ -48,6 +48,6 @@ foreach($tencomments as $tencomment)
 
 
       
-echo '<div id="main">'.$str.'</ul></div>'.$stats.'</div>';      
+echo '<div id="main">'.$str.'</ul></div></div>';      
 
 ?>
