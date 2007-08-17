@@ -1,4 +1,8 @@
 <?php
+if(!isset($stats))
+{
+	$stats = '';
+}
 
 $h = $this->getObject('htmlheading','htmlelements');
 $link = $this->getObject('link','htmlelements');
@@ -42,10 +46,7 @@ foreach($tencomments as $tencomment)
 	
 }
 
-if(!isset($stats))
-{
-	$stats = NULL;
-}
+
       
 echo '<div id="main">'.$str.'</ul></div>'.$stats.'</div>';      
 
