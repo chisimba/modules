@@ -9,7 +9,7 @@ $this->loadClass('dropdown','htmlelements');
 $this->loadClass('button','htmlelements');
 $h = $this->getObject('htmlheading','htmlelements');
 $form = $this->getObject('form', 'htmlelements');
-
+$str = '';
 
 $scripts = '<script type="text/javascript" src="'.$this->_objConfig->getModuleURI().'photogallery/resources/lightbox/js/prototype.js"></script>
 <script type="text/javascript" src="'.$this->_objConfig->getModuleURI().'photogallery/resources/lightbox/js/scriptaculous.js?load=effects"></script>

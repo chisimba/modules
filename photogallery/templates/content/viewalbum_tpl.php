@@ -1,5 +1,5 @@
 <?php
-$str = NULL;
+$str = '';
 $link = $this->getObject('link','htmlelements');
 $objThumbnail = & $this->getObject('thumbnails','filemanager');
 
