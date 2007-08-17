@@ -1,5 +1,5 @@
 <?php
-
+$list = NULL;
 $h1 = $this->getObject('htmlheading', 'htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $this->loadClass('dropdown','htmlelements');
@@ -42,6 +42,11 @@ foreach ($albumbsArr as $album)
  	$i++;
 	$list .="'".$album['title']."'";
 	$list = ($i < $cnt && $cnt!=1) ? $list.', ': $list;
+}
+
+if(!isset($list))
+{
+	$list = NULL;
 }
 
 $str = "<script type=\"text/javascript\">
@@ -103,11 +108,4 @@ $form->addToForm($bigString);
 
 echo '<div id="main">'.$form->show().'</div>';
 
-?>
-
- 
-         
-
-          
-          
-            
+?>     

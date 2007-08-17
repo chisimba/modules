@@ -1,4 +1,5 @@
 <?php
+$flickrTables = NULL;
 $this->loadClass('htmltable','htmlelements');
 $link = $this->getObject('link','htmlelements');
 $icon = $this->getObject('geticon', 'htmlelements');

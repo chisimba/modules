@@ -263,7 +263,7 @@ class photogallery extends controller
       	$this->_objFlickr->setProxy($arrProxy['proxyserver'], $arrProxy['proxyport']);
       	
        
-        $this->_objFlickr->enableCache("db",KEWL_DB_DSN);
+        //$this->_objFlickr->enableCache("db",KEWL_DB_DSN);
         $this->_objDBFlickrUsernames = $this->getObject('dbflickrusernames' , 'photogallery');
         
 

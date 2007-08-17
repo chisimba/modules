@@ -16,6 +16,10 @@ if(isset($taggedImages))
 {
 	$tagged .= $taggedImages;
 }
+if(!isset($tagged))
+{
+	$tagged = NULL;
+}
 
 $link->href = $this->uri(array('action'=>'front'),'photogallery');
 $link->link = 'Photo Gallery';

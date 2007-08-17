@@ -160,7 +160,10 @@ if(count($albums) > 0 && $this->_objUser->isLoggedIn() && $this->getParam('mode'
 				
 		
 		}
-		
+		if(!isset($bigStr))
+		{
+			$bigStr = NULL;
+		}
 		echo $bigStr.'</div>';
 		//print '<pre>';
 		//var_dump($flickralbums);
