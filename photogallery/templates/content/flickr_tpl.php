@@ -12,7 +12,7 @@ $form->displayType = 2;
 
 $cnt =0 ;
 $str = '';
-
+$list ='';
 
 //$table->cssId = "edittable";
 //$table->width = '50%';

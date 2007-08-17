@@ -390,7 +390,7 @@ class utils extends object
 		$images = $this->_objDBImages->getAll("WHERE is_shared=0 ORDER BY no_views DESC LIMIT 8");
 		$objThumbnail = & $this->getObject('thumbnails','filemanager');
 		$link = $this->getObject('link','htmlelements');
-		
+		$str = '';
 		if(count($images) > 0)
 		{
 			

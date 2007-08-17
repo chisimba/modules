@@ -7,7 +7,8 @@ $objH = $this->getObject('htmlheading', 'htmlelements');
 //		<h2>my photos | shared photos</h2>
 //	</div>';
 	//var_dump($albums);
-
+$str = '';
+$index = '';
 if($this->_objUser->isLoggedIn())
 {
  	if($this->getParam('mode') != 'shared')
@@ -35,12 +36,14 @@ echo '<div id="main2"><div id="gallerytitle">'.$objH->show().'</div>';
 
 if(count($albums) > 0 && $this->_objUser->isLoggedIn() && $this->getParam('mode') != 'shared')
 {
+	$str = '';
 	
 	foreach($albums as $album)
 	{
 	 	$str .= '<div class="album">';
 	 	
-	 	$filename = $this->_objFileMan->getFileName($album['file_id']); 
+	 	$filename = $this->_objFileMan->getFileName($album['thumbnail']); 
+	 	echo $filename;
  		$path = $objThumbnail->getThumbnail($album['thumbnail'],$filename);
  	
 	 	$link->href = $this->uri(array('action' => 'viewalbum', 'albumid' => $album['id']));
@@ -72,7 +75,7 @@ if(count($albums) > 0 && $this->_objUser->isLoggedIn() && $this->getParam('mode'
 				$str .= '<div class="album">
 							';
 			 	
-			 	$filename = $this->_objFileMan->getFileName($sharedAlbum['file_id']); 
+			 	$filename = $this->_objFileMan->getFileName($sharedAlbum['thumbnail']); 
 		 		$path = $objThumbnail->getThumbnail($sharedAlbum['thumbnail'],$filename);
 		 	
 			 	$link->href = $this->uri(array('action' => 'viewalbum', 'albumid' => $sharedAlbum['id']));

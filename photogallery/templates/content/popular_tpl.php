@@ -1,5 +1,5 @@
 <?php
-
+$str = '';
 $link = $this->getObject('link','htmlelements');
 
 $popTags ='<div style="padding: 10px; margin-left:5px; border: solid 2px #eee; width:550px; background: #f5f5f5;">
@@ -41,4 +41,3 @@ echo ' <div id="main2" style="align:center;">
 
 
 ?>
-
