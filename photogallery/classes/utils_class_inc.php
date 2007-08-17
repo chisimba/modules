@@ -225,6 +225,11 @@ class utils extends object
   	public function getImageNav($imageId)
   	{
   	 	$link = $this->getObject('link' , 'htmlelements');
+  	 	$objThumbnail = & $this->getObject('thumbnails','filemanager');
+  	 
+  	 	$objDomTT = $this->getObject('domtt','htmlelements');
+  	 	$objDomTT->putScripts();
+  	 	
   	 	$nextStr = '';
   	 	$prevStr = '';
   	 	$image = $this->_objDBImages->getRow('id', $imageId);
@@ -236,9 +241,18 @@ class utils extends object
 			
 			$link->href = $this->uri(array('action' => 'viewimage', 'albumid' => $image['album_id'] , 'imageid' => $prevImage[0]['id']));
 			$link->link = '&laquo; prev';
-			$link->extra = 'title="Previous Image"';
+			$link->extra = 'onmouseover="domTT_activate(this, event, \'content\', document.getElementById(\'previousimage\'));"';
 			
 			$prevStr .= $link->show().'</div>';
+			
+			
+			$filename = $this->_objFileMan->getFileName($prevImage[0]['file_id']); 
+ 			$path = $objThumbnail->getThumbnail($prevImage[0]['file_id'],$filename);
+			$prevStr .= '<div  style="display: none">
+							<div id="previousimage" >		
+								<img src="'.$path.'" />
+							</div>
+						</div>';
 
 		}
 		
@@ -255,9 +269,18 @@ class utils extends object
 			
 				$link->href = $this->uri(array('action' => 'viewimage', 'albumid' => $image['album_id'] , 'imageid' => $nextImage[0]['id']));
 				$link->link = 'next &raquo;';
-				$link->extra = 'title="Next Image"';
+				$link->extra = 'onmouseover="domTT_activate(this, event, \'content\', document.getElementById(\'nextimage\'));"';
 				
 				$nextStr .= $link->show().'</div>';
+				
+				
+				$filename = $this->_objFileMan->getFileName($nextImage[0]['file_id']); 
+ 				$path = $objThumbnail->getThumbnail($nextImage[0]['file_id'],$filename);
+				$nextStr .= '<div  style="display: none">
+							<div id="nextimage" >		
+								<img src="'.$path.'" />
+							</div>
+						</div>';
 			}
 		}
 	
