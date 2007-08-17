@@ -14,7 +14,7 @@ $icon = $this->getObject('geticon', 'htmlelements');
 $h1 = $this->getObject('htmlheading','htmlelements');
 $form = $this->getObject('form', 'htmlelements');
 
-
+$str = '';
 $h1->type = 2;
 $h1->str = 'Sort Album ';
 $str .= $h1->show();

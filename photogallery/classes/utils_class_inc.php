@@ -278,7 +278,7 @@ class utils extends object
    * @return string
    */
    public function getTagLIst($imageId)
-   {
+   {	$tagsStr = '';
 		$link = $this->getObject('link', 'htmlelements');
 		$tagsArr = $this->_objTags->getPostTags($imageId, 'photogallery');
 		if(count($tagsArr) > 0 )

@@ -81,4 +81,17 @@ class dbflickrusernames extends dbTable
 		//var_dump($bigSet);die;
 		return $bigSet;
 	}
+	
+	/**
+	* Method to delete
+	* a flickr username
+	* 
+	* @param string $username
+	* @return boolean
+	*/
+	public function deleteUsername($username)
+	{
+		
+		return $this->delete('flickr_usernames',$username);
+	}
 }

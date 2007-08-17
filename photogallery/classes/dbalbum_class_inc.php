@@ -143,6 +143,7 @@ class dbalbum extends dbTable
 	
 	/**
 	* Method to reorder the ablums
+	* @access public
 	* 
 	*/
 	public function reOrderAlbums()
@@ -154,8 +155,9 @@ class dbalbum extends dbTable
 		
 		foreach($newOrder  as $arr)
 		{
-		 	$cnt++;		
-			//$this->update('id', $albums[$arr-1]['id'], array('position' => $cnt));
+		 	$cnt++;	
+			// print $arr;	
+			$this->update('id', $albums[$arr-1]['id'], array('position' => $cnt));
 		}
 	}
 }

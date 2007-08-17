@@ -208,6 +208,11 @@ class photogallery extends controller
 			//flickr	
         	case 'flickr':
         		$this->initFlickr();
+        		if($this->getParam('msg') != '')
+        		{
+					$this->setVar('msg',$this->getParam('msg'));	
+				}
+        		
         		$this->setVar('usernames', $this->_objDBFlickrUsernames->getUsernames());
         		return 'flickr_tpl.php';
         	case 'validateflickusername':
@@ -215,10 +220,11 @@ class photogallery extends controller
         		if($this->_objFlickr->people_findByUsername($this->getParam('username')) == FALSE)
         		{  
 				 	 $msg = 'The username you added was invalid';
+				 	 
 				} else {
 	     			 $this->_objDBFlickrUsernames->addUsername();					
 				}
-				return $this->nextAction('flickr');
+				return $this->nextAction('flickr',array('msg' => $msg));
 				
 			case 'addtags':
 				$uri = $this->uri(array('action' => 'viewalbum', 'albumid' => $this->getParam('albumid')));					
@@ -242,8 +248,9 @@ class photogallery extends controller
 					$this->setVar('taggedImages', $this->_objUtils->getTaggedImages($this->getParam('meta_value')));
 				}
 				return 'popular_tpl.php';
-			case 'viewtag':
-				
+			case 'deleteflickrusername':
+         		$this->_objDBFlickrUsernames->deleteUsername($this->getParam('flickrusername'));
+				return $this->nextAction('flickr');
 				
 				
         }
