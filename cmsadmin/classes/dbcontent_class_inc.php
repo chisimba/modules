@@ -392,7 +392,7 @@ class dbcontent extends dbTable
             $pageBlocks = $this->_objBlocks->getBlocksForPage($id);
             if(!empty($pageBlocks)) {
                 foreach($pageBlocks as $pb) {
-                    $this->_objBlocks->deleteBlock($pb['pageid'], $pb['blockid']);
+                    $this->_objBlocks->deleteBlockById($pb['cb_id']);
                 }
             }
             
@@ -512,6 +512,7 @@ class dbcontent extends dbTable
         public function resetSection($sectionId)
         {   
             $arrContent = $this->getAll("WHERE sectionid = '$sectionId'");
+            $result = '';
             
             if(!empty($arrContent)){
                 foreach ($arrContent as $page) {
@@ -537,6 +538,7 @@ class dbcontent extends dbTable
         public function unarchiveSection($sectionId)
         {   
             $arrContent = $this->getAll("WHERE sectionid = '$sectionId'");
+            $result = '';
             
             if(!empty($arrContent)){
                 $order = 1;
@@ -850,20 +852,23 @@ class dbcontent extends dbTable
 	 */
 	public function luceneIndex($data)
         {
-        	//print_r($data); die();
         	$this->objConfig = $this->getObject('altconfig', 'config');
         	$this->objUser = $this->getObject('user', 'security');
         	$indexPath = $this->objConfig->getcontentBasePath();
-        	if(file_exists($indexPath.'chisimbaIndex/segments'))
-        	{
-        		chmod($indexPath.'chisimbaIndex', 0777);
+        	
+        	// check directory exists
+        	if(!is_dir($indexPath.'chisimbaIndex')){
+        	    // no then create it.
+        	    mkdir($indexPath.'chisimbaIndex');
+        	    chmod($indexPath.'chisimbaIndex', 0755);
+        	}
+        	if(file_exists($indexPath.'chisimbaIndex/segments')){
+        		chmod($indexPath.'chisimbaIndex', 0755);
         		//we build onto the previous index
         		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex');
-        	}
-        	else {
+        	} else {
         		//instantiate the lucene engine and create a new index
-        		mkdir($indexPath.'chisimbaIndex');
-        		chmod($indexPath.'chisimbaIndex', 0777);
+        		chmod($indexPath.'chisimbaIndex', 0755);
         		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex', true);
         	}
         	//hook up the document parser

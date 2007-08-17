@@ -184,6 +184,18 @@ class dbblocks extends dbTable
                 return $this->delete('id', $id);
             }
         }
+        
+        /**
+        * Method to delete a block using the row id
+        *
+        * @access public
+        * @param string $id The row id of the block
+        * @return void
+        */
+        public function deleteBlockById($id)
+        {
+            $this->delete('id', $id);
+        }
 
         /**
          * Method to get all blocks attached to a page
@@ -196,7 +208,7 @@ class dbblocks extends dbTable
         {
             $left = (isset($left) && !empty($left)) ? $left : 0;
             
-            $sql = "SELECT cb.*, mb.moduleid, mb.blockname 
+            $sql = "SELECT cb.*, cb.id as cb_id, mb.moduleid, mb.blockname 
                 FROM tbl_cms_blocks AS cb, tbl_module_blocks AS mb
                 WHERE (cb.blockid = mb.id) AND frontpage_block = 0 
                 AND leftside_blocks = '{$left}' AND (pageid = '{$pageId}'";

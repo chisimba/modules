@@ -128,9 +128,11 @@ Method to make the unused blocks draggable. Also sets up drop zone
 */
 function bl_setupAddBlocks()
 {
+    if(document.getElementsByClassName('addblocks')){
     var addblocks = document.getElementsByClassName('addblocks');
     for (var i = 0; i < addblocks.length; i++) {
     	new Draggable(addblocks[i].id, {ghosting:false, revert:true, zindex:2000});	
+    }
     }
     Droppables.add('dropzone', {onDrop:bl_addBlock, accept:'addblocks'});
     Droppables.add('leftzone', {onDrop:bl_addLeftBlock, accept:'addblocks'});
@@ -142,16 +144,20 @@ Method to make the used blocks draggable. Also sets up drop zone
 function bl_setupDeleteBlocks()
 {   
     /* right blocks */
+    if(document.getElementsByClassName('usedblock')){
     var deleteblocks = document.getElementsByClassName('usedblock');
     for (var i = 0; i < deleteblocks.length; i++) {
     	new Draggable(deleteblocks[i].id, {ghosting:false, revert:true, zindex:20})	
     }
+    }
     Droppables.add('deletezone', {onDrop:bl_removeBlock, accept:'usedblock'});
     
     /* left blocks */
+    if(document.getElementsByClassName('leftblocks')){
     var leftblocks = document.getElementsByClassName('leftblocks');
     for (var i = 0; i < leftblocks.length; i++) {
     	new Draggable(leftblocks[i].id, {ghosting:false, revert:true, zindex:2000});	
+    }
     }
     Droppables.add('deletezone', {onDrop:bl_removeLeftBlock, accept:'leftblocks'});
    
