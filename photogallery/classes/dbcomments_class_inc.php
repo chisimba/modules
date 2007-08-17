@@ -108,7 +108,7 @@ class dbcomments extends dbTable
 	  public function getTenRecentComments()
 	  {
 		
-	  		return $this->getAll("WHERE user_id='".$this->_objUser->userId()."'  ORDER BY id DESC LIMIT 0,10");
+	  		return $this->getAll("WHERE user_id='".$this->_objUser->userId()."'  ORDER BY id DESC LIMIT 10");
 	   
 		
 	  }
