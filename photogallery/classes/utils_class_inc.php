@@ -225,7 +225,8 @@ class utils extends object
   	public function getImageNav($imageId)
   	{
   	 	$link = $this->getObject('link' , 'htmlelements');
-  	 	
+  	 	$nextStr = '';
+  	 	$prevStr = '';
   	 	$image = $this->_objDBImages->getRow('id', $imageId);
   	 	if($image['position'] > 1)
   	 	{
@@ -248,13 +249,16 @@ class utils extends object
 			
 			$sql = "WHERE album_id='".$image['album_id']."' AND position = ".(intval($image['position'])+1);
   	 	 	$nextImage = $this->_objDBImages->getAll($sql);	
-			$nextStr = '<div class="imgnext">';
-		
-			$link->href = $this->uri(array('action' => 'viewimage', 'albumid' => $image['album_id'] , 'imageid' => $nextImage[0]['id']));
-			$link->link = 'next &raquo;';
-			$link->extra = 'title="Next Image"';
+  	 	 	if (array_key_exists(0, $nextImage))  	 	 	
+  	 	 	{
+				$nextStr = '<div class="imgnext">';
 			
-			$nextStr .= $link->show().'</div>';
+				$link->href = $this->uri(array('action' => 'viewimage', 'albumid' => $image['album_id'] , 'imageid' => $nextImage[0]['id']));
+				$link->link = 'next &raquo;';
+				$link->extra = 'title="Next Image"';
+				
+				$nextStr .= $link->show().'</div>';
+			}
 		}
 	
   	 	$nav = 
@@ -341,6 +345,7 @@ class utils extends object
   {
    		$objTag = $this->getObject('dbtags', 'tagging');
    		$taggedList = $objTag->getAll("WHERE meta_value='".$tag."' AND module='photogallery'");
+   		$str = '';
    	//	print '<pre>';
    		
    	//	var_dump()

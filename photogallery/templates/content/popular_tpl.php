@@ -14,7 +14,7 @@ $images =$imagelist;
 
 if(isset($taggedImages))
 {
-	$tagged .= $taggedImages;
+	$tagged = $taggedImages;
 }
 if(!isset($tagged))
 {

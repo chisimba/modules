@@ -33,7 +33,10 @@ $objH->type = 2;
 
 echo '<div id="main2"><div id="gallerytitle">'.$objH->show().'</div>';
 
-
+if(!isset($albums))
+{
+	$albums = '';
+}
 if(count($albums) > 0 && $this->_objUser->isLoggedIn() && $this->getParam('mode') != 'shared')
 {
 	$str = '';
@@ -43,7 +46,7 @@ if(count($albums) > 0 && $this->_objUser->isLoggedIn() && $this->getParam('mode'
 	 	$str .= '<div class="album">';
 	 	
 	 	$filename = $this->_objFileMan->getFileName($album['thumbnail']); 
-	 	echo $filename;
+	 	
  		$path = $objThumbnail->getThumbnail($album['thumbnail'],$filename);
  	
 	 	$link->href = $this->uri(array('action' => 'viewalbum', 'albumid' => $album['id']));

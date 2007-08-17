@@ -9,7 +9,7 @@ $this->loadClass('dropdown','htmlelements');
 $this->loadClass('button','htmlelements');
 $h = $this->getObject('htmlheading','htmlelements');
 $form = $this->getObject('form', 'htmlelements');
-
+$strComment = '';
 
 
 $scripts = '<script type="text/javascript" src="'.$this->_objConfig->getModuleURI().'photogallery/resources/lightbox/js/prototype.js"></script>
@@ -23,7 +23,7 @@ $str = '<div id="image">';
 $filename = $this->_objFileMan->getFileName($image['file_id']); 
 $path = $objThumbnail->getThumbnail($image['file_id'],$filename);
 $bigPath = $this->_objFileMan->getFilePath($image['file_id']);
- 		
+ 	
 $link->href = $bigPath;
 $link->link = '<img title="'.$image['title'].'" src="'.$bigPath.'" alt="'.$image['title'].'" width="595" height="446" />';
 $link->extra = ' rel="lightbox" ';
