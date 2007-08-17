@@ -35,7 +35,7 @@ class photogallery extends controller
         $this->_objDBComments = & $this->getObject('dbcomments','photogallery');
         $this->_objConfig = $this->getObject('altconfig', 'config');
       	$this->_objTags = $this->getObject('dbtags', 'tagging');
-      	
+      	$this->_objDBFlickrUsernames = $this->getObject('dbflickrusernames', 'photogallery');
       	
       	
     }
@@ -249,7 +249,7 @@ class photogallery extends controller
 				}
 				return 'popular_tpl.php';
 			case 'deleteflickrusername':
-         		$this->_objDBFlickrUsernames->deleteUsername($this->getParam('flickrusername'));
+         		$this->_objDBFlickrUsernames->deleteUsername($this->getParam('username'));
 				return $this->nextAction('flickr');
 				
 				

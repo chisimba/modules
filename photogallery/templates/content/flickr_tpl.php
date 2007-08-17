@@ -53,7 +53,7 @@ if(count($usernames) > 0)
 		$table->addCell('');
 		$table->addCell('');
 		$table->addCell('');
-		$table->addCell($icon->getDeleteIconWithConfirm($username['flickr_username'],array('action' => 'deleteflickruser', 'username' => $username['flickr_username']),'photogallery'),null,'center');
+		$table->addCell($icon->getDeleteIconWithConfirm($username['flickr_username'],array('action' => 'deleteflickrusername', 'username' => $username['flickr_username']),'photogallery'),null,'center');
 		
 		$table->endRow();
 	}
@@ -63,11 +63,10 @@ if(count($usernames) > 0)
 	//$list = 'No Flickr usernames available';
 }
 echo '<div id="main"><h2><img src="http://l.yimg.com/www.flickr.com/images/flickr_logo_gamma.gif.v1.5.7"> Flickr Usernames</h2>';
-echo '<span class="warning>dddddddddd"'.$msg.'</span>';
+if(isset($msg))
+{
+	echo '<span class="warning>"'.$msg.'</span>';
+}
 echo '<div class="box" style="padding: 15px;">'.$form->show().$list.'</div>';
-//if(isset($msg))
-//{
-	
-//}
 echo '</div>'
 ?>

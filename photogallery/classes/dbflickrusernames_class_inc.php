@@ -91,7 +91,7 @@ class dbflickrusernames extends dbTable
 	*/
 	public function deleteUsername($username)
 	{
-		
-		return $this->delete('flickr_usernames',$username);
+	
+		return $this->delete('flickr_username',$username);
 	}
 }
