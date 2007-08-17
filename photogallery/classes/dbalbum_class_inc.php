@@ -155,7 +155,7 @@ class dbalbum extends dbTable
 		foreach($newOrder  as $arr)
 		{
 		 	$cnt++;		
-			$this->update('id', $albums[$arr-1]['id'], array('position' => $cnt));
+			//$this->update('id', $albums[$arr-1]['id'], array('position' => $cnt));
 		}
 	}
 }
