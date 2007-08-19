@@ -55,7 +55,7 @@ class dbStatistics extends dbTable
     
     /**
     * Method to 'patch' the statistics table - update all the new submissions
-    */
+    *
     public function patchStats()
     {
         // Get all the new submissions - date and submitId
@@ -78,6 +78,7 @@ class dbStatistics extends dbTable
             }
         }
     }
+    */
     
     /**
     * Method to add a new statistic.

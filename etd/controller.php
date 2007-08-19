@@ -559,11 +559,12 @@ class etd extends controller
                 $this->etdTools->setLeftBlocks(FALSE, TRUE, FALSE);
                 return 'search_tpl.php';
                 break;
-                
+            /*    
             case 'patchstats':
                 $this->dbStats->patchStats();
                 echo 'Done.';
                 break;
+            */
 
             default:
                 $this->dbStats->recordHit();
