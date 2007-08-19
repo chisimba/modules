@@ -75,6 +75,11 @@ class block_etdlinks extends object
 		$objLink->link = $stats;
 		$list = '<p>'.$objLink->show().'</p>';
 		
+        // Statistics page link
+		$objLink = new link($this->uri(array('action' => 'viewfaq')));
+		$objLink->link = $stats;
+		$list = '<p>'.$objLink->show().'</p>';
+
 		// Check for a current submission - only submit one document at a time.
 		if(isset($this->access) && in_array('student', $this->access)){
     		$check = $this->checkSubmissions();
