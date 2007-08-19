@@ -159,12 +159,11 @@ class cmstree extends object
         public function addContent($id)
         {
             $contentNodes = $this->getContent($id);
-
             if (count($contentNodes)) {
                 $htmlContent = '';
                 foreach($contentNodes as $contentNode) {
                     $contentUri = $this->uri(array('action'=>'showcontent', 'id'=>$contentNode['id'], 'sectionid'=>$contentNode['sectionid']), 'cms');
-                    $htmlContent .= '<li><a href="'.$contentUri.'">'.htmlentities($contentNode['title']).'</a></li>';
+                    $htmlContent .= '<li><a href="'.$contentUri.'">'.html_entity_decode($contentNode['title']).'</a></li>';
                 }
                 return $htmlContent;
             } else {

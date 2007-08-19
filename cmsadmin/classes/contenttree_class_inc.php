@@ -187,7 +187,7 @@ class contenttree extends object
          * @return string
          * @access public
          */
-        public function addContent($id, $module, $action, $admin = FALSE)
+     public function addContent($id, $module, $action, $admin = FALSE)
         {       	
             
             $contentNodes = $this->getContent($id, $admin);
@@ -200,9 +200,9 @@ class contenttree extends object
                 foreach($contentNodes as $contentNode) {
                     if (!empty($action)) {
                         $url = $this->uri(array('action' => $action, 'id' => $contentNode['id'], 'sectionid' => $contentNode['sectionid']), $module);
-                        $link = '<a href="'.$url.'">'.htmlentities($contentNode['title']).'</a>';
+                        $link = '<a href="'.$url.'">'.$contentNode['title'].'</a>';
                     } else {
-                        $link = htmlentities($contentNode['title']);
+                        $link = $contentNode['title'];
                     }
                     $htmlContent .='<li class="yuimenuitem">'.$link.'</li>';
                 }
@@ -230,25 +230,25 @@ class contenttree extends object
                   
                     if (!empty($action)) {
                         $nodeUri = $this->uri(array('action' => $action, 'id' => $node['id'], 'sectionid' => $node['id']), $module);
-                        $link = '<a href="'.$nodeUri.'">'.htmlentities($node['title']).'</a>';
+                        $link = '<a href="'.$nodeUri.'">'.$node['title'].'</a>';
                     } else {
                         $link = htmlentities($node['title']);
                     }
 
-                   	$htmlContent .= "<li class='yuimenuitem'>".$link . "</li>";
+                   	$htmlContent .= "<li class='yuimenuitem'>".$link;
                         	                        
                     $contentNodes = $this->getContent($node['id'], $admin);
 			         
 		            if (!empty($contentNodes)) {
-		            	$htmlContent .='<div id="'.htmlentities($contentNodes[0]['title']).'" class="yuimenu">';
+		            	$htmlContent .='<div id="'.$contentNodes[0]['title'].'" class="yuimenu">';
 		            	$htmlContent .=	'<div class="bd">';
 		            	$htmlContent .=	'<ul class="first-of-type">';		
 			             foreach($contentNodes as $contentNode) {
 			                    if (!empty($action)) {
 			                        $url = $this->uri(array('action' => $action, 'id' => $contentNode['id'], 'sectionid' => $contentNode['sectionid']), $module);
-			                        $link = '<a href="'.$url.'">'.htmlentities($contentNode['title']).'</a>';
+			                        $link = '<a href="'.$url.'">'.$contentNode['title'].'</a>';
 			                    } else {
-			                        $link = htmlentities($contentNode['title']);
+			                        $link = $contentNode['title'];
 			                    }
 			                    $htmlContent .='<li class="yuimenuitem">'.$link.'</li>';
 			                }
@@ -256,7 +256,7 @@ class contenttree extends object
 		                $htmlContent .='</ul>';
 		                $htmlContent .='</div>';
 		                $htmlContent .='</div>';
-		                //$htmlContent .='</li>';
+		                $htmlContent .='</li>';
 		               
 		                
 		            }
@@ -267,6 +267,7 @@ class contenttree extends object
            
             return $htmlContent;
         }
+
 
         /**
          * Method to get all child nodes for a particular node

@@ -191,7 +191,7 @@ class dbcontent extends dbTable
             $hide_title = $this->getParam('hide_title','0');
 
             $newArr = array(
-                          'title' => $title ,
+                          'title' => htmlentities($title) ,
                           'sectionid' => $sectionid,
                           'introtext' => addslashes($introText),
                           'body' => addslashes($fullText),
