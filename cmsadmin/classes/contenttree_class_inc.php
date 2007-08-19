@@ -235,7 +235,7 @@ class contenttree extends object
                         $link = htmlentities($node['title']);
                     }
 
-                   	$htmlContent .= "<li class='yuimenuitem'>".$link;
+                   	$htmlContent .= "<li class='yuimenuitem'>".$link . "</li>";
                         	                        
                     $contentNodes = $this->getContent($node['id'], $admin);
 			         
@@ -256,7 +256,7 @@ class contenttree extends object
 		                $htmlContent .='</ul>';
 		                $htmlContent .='</div>';
 		                $htmlContent .='</div>';
-		                $htmlContent .='</li>';
+		                //$htmlContent .='</li>';
 		               
 		                
 		            }
