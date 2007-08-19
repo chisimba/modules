@@ -609,8 +609,8 @@ class submit extends object
         $str .= $this->objFeatureBox->show($lbDocument, $docStr);
 
         // Display the embargo request
-        $embargoStr = $this->showEmbargo();
-        $str .= $this->objFeatureBox->show($lbEmbargo, $embargoStr);
+        //$embargoStr = $this->showEmbargo();
+        //$str .= $this->objFeatureBox->show($lbEmbargo, $embargoStr);
 
         // Display the form for submitting to supervisor for approval
         $submitStr = $this->showSubmit();
@@ -628,11 +628,12 @@ class submit extends object
     private function showDocument()
     {
         // set php.ini to 250MB
-        ini_set('post_max_size', '250M');
-        ini_set('upload_max_filesize', '250M');
+        //ini_set('post_max_size', '250M');
+        //ini_set('upload_max_filesize', '250M');
             
         $submitId = $this->getSession('submitId');
         $data = $this->files->getFile($submitId);
+        $filePath = isset($data[0]['filepath']) ? $data[0]['filepath'] : '';
         $hidden = '';
 
         $lbFileSize = $this->objLanguage->languageText('phrase_filesize');
@@ -642,6 +643,7 @@ class submit extends object
         $lbDownload = $this->objLanguage->languageText('phrase_downloaddocument');
         $lbUpload = $this->objLanguage->languageText('phrase_selectdocument');
         $btnUpload = $this->objLanguage->languageText('phrase_uploaddocument');
+        $hdUpload = $this->objLanguage->languageText('phrase_uploaddocuments');
         $btnReplace = $this->objLanguage->languageText('phrase_replacedocument');
         $lbDocHidden = $this->objLanguage->languageText('mod_etd_documentavailonrequestonly', 'etd');
         $btnSet = $this->objLanguage->languageText('mod_etd_setasavailable', 'etd');
@@ -656,83 +658,108 @@ class submit extends object
         $typeExcel = $this->objLanguage->languageText('word_excel');
         $typeText = $this->objLanguage->languageText('phrase_plaintext');
 
-        $objTable = new htmltable();
-
         if(!empty($data)){
-            $btnUpload = $btnReplace;
+            $objTable = new htmltable();
+            $objTable->cellpadding = '5';
+            $objTable->cellspacing = '2';
+            
+            $hdArr = array();
+            $hdArr[] = $lbFileName;
+            $hdArr[] = $lbType;
+            $hdArr[] = $lbFileSize;
+            $hdArr[] = $lbDate;
+            $hdArr[] = '';
+            
+            $objTable->addHeader($hdArr);
+            
+            $class = 'even';
+            foreach($data as $item){
+                $class = ($class == 'odd') ? 'even' : 'odd';
+                
+                // format size
+                $size = $item['filesize'];
+                if($size < 1000){
+                    $formSize = $size.'&nbsp;'.$lbBytes; // bytes
+                }else if($size > 1000000){
+                    $formSize = round($size/1000000,2).'&nbsp;'.$lbMb; // megabytes
+                }else{
+                    $formSize = round($size/1000).'&nbsp;'.$lbKb; // kilobytes
+                }
 
-            $objTable->startRow();
-            $objTable->addCell($lbFileName.': ', '20%');
-            $objTable->addCell($data[0]['filename']);
-            $objTable->endRow();
-
-            // format size
-            $size = $data[0]['filesize'];
-            if($size < 1000){
-                $formSize = $size.'&nbsp;'.$lbBytes; // bytes
-            }else if($size > 1000000){
-                $formSize = round($size/1000000,2).'&nbsp;'.$lbMb; // megabytes
-            }else{
-                $formSize = round($size/1000).'&nbsp;'.$lbKb; // kilobytes
-            }
-            $objTable->addRow(array($lbFileSize.': ', $formSize));
-
-            // format type
-            $format = $data[0]['mimetype'];
-            if(strpos($format, 'pdf')){
-                $format = $typePDF;
-            }else if(strpos($format, 'msword')){
-                $format = $typeWord;
-            }else if(strpos($format, 'excel')){
-                $format = $typeExcel;
-            }else if(!(strpos($format, 'text/plain')===FALSE)){
-                $format = $typeText;
-            }
-            $objTable->addRow(array($lbType.': ', $format));
-
-            // date
-            if(!empty($data[0]['updated'])){
-                $date = $this->objDate->formatDate($data[0]['updated']);
-            }else{
-                $date = $this->objDate->formatDate($data[0]['datecreated']);
-            }
-            $objTable->addRow(array($lbDate.': ', $date));
-
-            // download
-            $url = $data[0]['filepath'].$data[0]['storedname'];
-            $this->objIcon->setIcon('fulltext');
-            $this->objIcon->title = $lbDownload;
-
-            $objLink = new link($url);
-            $objLink->link = $this->objIcon->show();
-            $objTable->addRow(array($lbDownload.': ', $objLink->show()));
-
-            $objTable->addRow(array('&nbsp;'));
+                // format type
+                $format = $item['mimetype'];
+                if(strpos($format, 'pdf')){
+                    $format = $typePDF;
+                }else if(strpos($format, 'msword')){
+                    $format = $typeWord;
+                }else if(strpos($format, 'excel')){
+                    $format = $typeExcel;
+                }else if(!(strpos($format, 'text/plain')===FALSE)){
+                    $format = $typeText;
+                }
+    
+                // date
+                if(!empty($item['updated'])){
+                    $date = $this->objDate->formatDate($item['updated']);
+                }else{
+                    $date = $this->objDate->formatDate($item['datecreated']);
+                }
+    
+                // download
+                $url = $filePath.$item['storedname'];
+                $this->objIcon->setIcon('fulltext');
+                $this->objIcon->title = $lbDownload;
+    
+                $objLink = new link($url);
+                $objLink->link = $this->objIcon->show();
+                $lnDownload = $objLink->show();
+    
+                $rowArr = array();
+                $rowArr[] = $item['filename'];
+                $rowArr[] = $format;
+                $rowArr[] = $formSize;
+                $rowArr[] = $date;
+                $rowArr[] = $lnDownload;
+                
+                $objTable->addRow($rowArr, $class);
+                
+                
 
             // hidden fields
             $objInput = new textinput('id', $data[0]['id'], 'hidden');
             $hidden = $objInput->show();
+            
+            }
+            $objTable->addRow(array('&nbsp;'));
+            $str = $objTable->show();
         }
-        $objInput = new textinput('submitId', $submitId, 'hidden');
-        $hidden .= $objInput->show();
 
-        // Section to upload a new / replace an existing document
+
+
+        // Create the form for uploading documents
+        $objTable = new htmltable();
+        $objTable->cellpadding = '5';
+        $objTable->cellspacing = '2';
+        
         $objLabel = new label($lbUpload.': ', 'input_fileupload');
         $objInput = new textinput('fileupload', '', 'file', 60);
-
         $objTable->addRow(array($objLabel->show(), $objInput->show()));
 
         $objButton = new button('save', $btnUpload);
         $objButton->setToSubmit();
         $objTable->addRow(array('', $objButton->show()));
-
+        
+        $objInput = new textinput('submitId', $submitId, 'hidden');
+        $hidden = $objInput->show();
+        
         $objForm = new form('upload', $this->uri(array('action' => 'savesubmit', 'mode' => 'uploaddoc', 'nextmode' => 'showresource')));
         $objForm->extra = "enctype='multipart/form-data'";
         $objForm->addToForm($objTable->show());
         $objForm->addToForm($hidden);
 
-        $str = $objForm->show();
-
+        $objTab = new tabbedbox();
+        $str .= $objTab->buildTabbedBox($hdUpload, $objForm->show());
+        
         return $str;
     }
 
@@ -916,8 +943,8 @@ class submit extends object
                 $result = $this->files->uploadFile($submitId);
                 
                 // restore php.ini settings
-                ini_restore('post_max_size');
-                ini_restore('upload_max_filesize');
+                //ini_restore('post_max_size');
+                //ini_restore('upload_max_filesize');
                 return $result;
                 break;
 

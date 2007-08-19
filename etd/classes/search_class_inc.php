@@ -215,7 +215,7 @@ class search extends object
 //        $objTab->addBoxContent($objForm->show());
 //        return $objTab->show();
         
-        return $this->objRound->show('<h3>'.$hdFind.'</h3>'.$objForm->show());
+        return $this->objFeatureBox->showContent($hdFind, $objForm->show()); //$this->objRound->show(
 //        return $this->objFeatureBox->show($hdFind, $objForm->show());
     }
 
@@ -278,8 +278,8 @@ class search extends object
 //        $this->objTab->addBoxContent();
 //        return $this->objTab->show();
 
-//        return $this->objFeatureBox->show($hdSearch, $objForm->show());
-        return $this->objRound->show('<h3>'.$hdSearch.'</h3>'.$objForm->show());
+        return $this->objFeatureBox->showContent($hdSearch, $objForm->show());
+//        return $this->objRound->show('<h3>'.$hdSearch.'</h3>'.$objForm->show());
     }
 
     /**

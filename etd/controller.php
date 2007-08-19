@@ -90,6 +90,9 @@ class etd extends controller
         $this->unsetSession('resourceId');
         $pgTitle = $this->objLanguage->languageText('mod_etd_name', 'etd');
         $this->setVar('pageTitle', $pgTitle);
+        
+        $footerStr = $this->dbIntro->showFooter();
+        $this->setVarByRef('footerStr', $footerStr);
 
         switch($action){
 
@@ -416,14 +419,6 @@ class etd extends controller
                 return $this->nextAction('showconfig', array('mode' => $nextmode));
                 break;
                 
-            case 'showfaq':
-                $mode = $this->getParam('mode');
-                break;
-                
-            case 'savefaq':
-                $mode = $this->getParam('mode');
-                break;
-
             /* *** Functions for students submissions *** */
 
             case 'submit':
@@ -462,6 +457,28 @@ class etd extends controller
                 $view = $this->getParam('view');
                 $display = $this->dbStats->showAll($view);
                 $this->setVarByRef('search', $display);
+                return 'search_tpl.php';
+                
+            case 'printstats':
+                $view = $this->getParam('view');
+                $display = $this->dbStats->showAll($view);
+                $this->setVarByRef('search', $display);
+                return 'print_tpl.php';
+                
+            case 'emailstats':
+                $view = $this->getParam('view');
+                $display = $this->dbStats->showAll($view);
+                
+                $head = $this->objLanguage->languageText('mod_etd_emailstatistics', 'etd');
+                $subject = $this->objLanguage->languageText('mod_etd_etdstatistics', 'etd');
+                $message = $this->objLanguage->languageText('mod_etd_statisticsattached', 'etd');
+                
+                $this->emailResults->setHeading($head);
+                $this->emailResults->setSubject($subject, FALSE);
+                $this->emailResults->setMessage($message);
+                $this->emailResults->setEmailBody($display);
+                $email = $this->emailResults->showEmail();
+                $this->setVarByRef('search', $email);
                 return 'search_tpl.php';
                 
             case 'showrss':
@@ -541,6 +558,11 @@ class etd extends controller
                 $this->setVarByRef('search', $search);
                 $this->etdTools->setLeftBlocks(FALSE, TRUE, FALSE);
                 return 'search_tpl.php';
+                break;
+                
+            case 'patchstats':
+                $this->dbStats->patchStats();
+                echo 'Done.';
                 break;
 
             default:
@@ -629,6 +651,8 @@ class etd extends controller
             case 'emailsearch':
             case 'sendemail':
             case 'viewstats':
+            case 'printstats':
+            case 'emailstats':
             case 'showrss':
             case 'rss':
             case 'metalib';

@@ -156,6 +156,23 @@ class dbThesis extends dbtable
     }
     
     /**
+    * Method to get resource title
+    *
+    * @access public
+    * @param string $id The table row to fetch
+    * @return array The resource
+    */
+    public function getTitle($submitid)
+    {
+        $sql = "SELECT dc.id AS dcId, thesis.id AS thesisId, thesis.*, dc.* ";
+        $sql .= "FROM {$this->table} AS thesis, {$this->dcTable} AS dc ";
+        $sql .= "WHERE dc.id = thesis.dcMetaId AND thesis.id = '$id'";
+        
+        $data = $this->getArray($sql);
+        return $data[0];
+    }
+
+    /**
     * Method to get resource metadata
     *
     * @access public
@@ -182,6 +199,7 @@ class dbThesis extends dbtable
     */
     public function getData($limit = 10, $start = NULL, $joinId = NULL)
     {
+        
         $sqlNorm = "SELECT dc.{$this->col1Field} as col1, dc.{$this->col2Field} as col2, dc.{$this->col3Field} as col3, thesis.id as id ";
         $sqlFound = "SELECT COUNT(*) AS count ";
         
@@ -195,8 +213,38 @@ class dbThesis extends dbtable
         $sqlLimit .= $limit ? "LIMIT $limit " : NULL;
         $sqlLimit .= $start ? "OFFSET $start " : NULL;
         
+        
+        /* Testing *
+        
+        $sql = "FROM {$this->table} AS thesis, {$this->submitTable} AS submit, {$this->dcTable} AS dc ";
+        
+        $sql .= "WHERE submit.id = thesis.submitid AND dc.id = thesis.dcmetaid ";
+        $sql .= "AND submit.submissiontype = '{$this->subType}' AND submit.status = 'archived' ";
+        
+        
+        $sqlNorm = "SELECT dc.{$this->col1Field} as col1, dc.{$this->col2Field} as col2, dc.{$this->col3Field} as col3, thesis.id as id, ";
+        
+        //$sqlNorm .= " LTRIM((SELECT dc.dc_title {$sql} AND LOWER(dc.dc_title) LIKE 'a %'), 2) AS sort ";
+        
+        
+        $sqlNorm .= " LTRIM((SELECT dc.dc_title {$sql} AND LOWER(dc.dc_title) LIKE 'a %'), 2) as sort ";
+        
+        $sqlFound = "SELECT COUNT(*) AS count ";
+        
+        
+        
+        $sqlLimit = "ORDER BY LOWER((SELECT dc.dc_title {$sql} AND LOWER(dc.dc_title) LIKE 'a %')) "; //{$this->col1Field}) ";
+        
+        $sqlLimit .= $limit ? "LIMIT $limit " : NULL;
+        $sqlLimit .= $start ? "OFFSET $start " : NULL;
+        
+        /* End testing */
+        
         // Get result set
+        
         $data = $this->getArray($sqlNorm.$sql.$sqlLimit);
+        
+        //echo '<pre>'; print_r($data);
         
         // Get number of results
         $data2 = $this->getArray($sqlFound.$sql);

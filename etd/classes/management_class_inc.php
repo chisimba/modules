@@ -41,6 +41,7 @@ class management extends object
             $this->dbThesis = $this->getObject('dbthesis', 'etd');
             $this->dbThesis->setSubmitType('etd');
     
+            $this->dbStats = $this->getObject('dbstatistics', 'etd');
             $this->dbEmbargo = $this->getObject('dbembargo', 'etd');
             $this->dbDegrees = $this->getObject('dbdegrees', 'etd');
             $this->dbCitations = $this->getObject('dbcitations', 'etd');
@@ -1343,6 +1344,7 @@ class management extends object
             case 'approve':
                 $submitId = $this->getSession('submitId');
                 $this->approveResource($submitId);
+                $this->dbStats->recordUpload($submitId);
                 break;
                                 
             case 'approvemetadata':

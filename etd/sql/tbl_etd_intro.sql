@@ -10,7 +10,11 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
-	'introduction' => array(
+    'content_type' => array(
+        'type' => 'text',
+        'length' => 50
+        ),
+	'content_text' => array(
 		'type' => 'clob'
 		),
 	'language' => array(

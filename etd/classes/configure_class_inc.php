@@ -87,7 +87,7 @@ class configure extends object
         
         $introData = $this->dbIntro->getIntro();
         if(!empty($introData)){
-            $introduction = $introData['introduction'];
+            $introduction = $introData['content_text'];
         }else{
             $introduction = $this->objLanguage->languageText('mod_etd_welcomeintro', 'etd');
         }
@@ -111,11 +111,11 @@ class configure extends object
             $editorStr .= $objInput->show();
         }
         
-        $objForm = new form('saveintro', $this->uri(array('action' => 'saveconfig', 'mode' => 'saveintro')));
+        $objForm = new form('saveintro', $this->uri(array('action' => 'saveconfig', 'mode' => 'saveintro', 'nextmode' => 'showintro')));
         $objForm->addToForm($editorStr);
         
         // Preview the intro
-        $editShow = '<p>'.$this->dbIntro->parseIntro($introduction).'</p>';
+        $editShow = $this->dbIntro->parseIntro($introduction);
         
         // Display
         $objTable = new htmltable();
@@ -124,6 +124,104 @@ class configure extends object
         $objTable->addCell($objForm->show());
         $objTable->addCell('', '3%');
         $objTable->addCell($editShow, '50%');
+        $objTable->endRow();
+        
+        $str = '<p>'.$objTable->show().'</p>';
+        return $str;
+    }
+    
+    /**
+    * Method to display an interface for editing the footer text
+    *
+    * @access private
+    * @return string html
+    */
+    function editFooter()
+    {
+        $btnSave = $this->objLanguage->languageText('word_save');
+        
+        $data = $this->dbIntro->getContent('footer');
+        
+        $footer = ''; $editorStr = '';
+        if(!empty($data)){
+            $footer = $data['content_text'];
+        }
+        
+        // Form for updating the intro
+        $this->objEditor->init('footer', $footer, '10', '50');
+        $this->objEditor->width = '400px';
+        $this->objEditor->height = '400px';
+        //$this->objEditor->setBasicToolBar(); 
+        $editorStr = $this->objEditor->showFCKEditor();
+        
+        $objButton = new button('save', $btnSave);
+        $objButton->setToSubmit();
+        $editorStr .= '<p>'.$objButton->show().'</p>';
+        
+        if(isset($data['id']) && !empty($data['id'])){
+            $objInput = new textinput('id', $data['id'], 'hidden');
+            $editorStr .= $objInput->show();
+        }
+        
+        $objForm = new form('saveintro', $this->uri(array('action' => 'saveconfig', 'mode' => 'savefooter', 'nextmode' => 'showfooter')));
+        $objForm->addToForm($editorStr);
+                
+        // Display
+        $objTable = new htmltable();
+        $objTable->cellspacing = '2';
+        $objTable->startRow();
+        $objTable->addCell($objForm->show());
+        $objTable->addCell('', '3%');
+        $objTable->addCell($footer, '50%');
+        $objTable->endRow();
+        
+        $str = '<p>'.$objTable->show().'</p>';
+        return $str;
+    }
+    
+    /**
+    * Method to display an interface for editing the FAQ
+    *
+    * @access private
+    * @return string html
+    */
+    function editFaq()
+    {
+        $btnSave = $this->objLanguage->languageText('word_save');
+        
+        $data = $this->dbIntro->getContent('faq');
+        
+        $faq = ''; $editorStr = '';
+        if(!empty($data)){
+            $faq = $data['content_text'];
+        }
+        
+        // Form for updating the intro
+        $this->objEditor->init('faq', $faq, '10', '50');
+        $this->objEditor->width = '400px';
+        $this->objEditor->height = '600px';
+        //$this->objEditor->setBasicToolBar(); 
+        $editorStr = $this->objEditor->showFCKEditor();
+        
+        $objButton = new button('save', $btnSave);
+        $objButton->setToSubmit();
+        $editorStr .= '<p>'.$objButton->show().'</p>';
+        
+        if(isset($data['id']) && !empty($data['id'])){
+            $objInput = new textinput('id', $data['id'], 'hidden');
+            $editorStr .= $objInput->show();
+        }
+        
+        $objForm = new form('saveintro', $this->uri(array('action' => 'saveconfig', 'mode' => 'savefaq', 'nextmode' => 'showfaq')));
+        $objForm->addToForm($editorStr);
+                
+        // Display
+        $objTable = new htmltable();
+        $objTable->cellspacing = '2';
+        $objTable->startRow();
+        $objTable->addCell($objForm->show());
+        $objTable->addCell('', '3%');
+        $objTable->addCell($faq, '50%');
         $objTable->endRow();
         
         $str = '<p>'.$objTable->show().'</p>';
@@ -554,15 +652,37 @@ class configure extends object
     * Method to display a link to editing the faq
     *
     * @access private
+    * @param bool $back Indicator for displaying the link back to configuration
     * @return string html
     */
-    private function editFaq()
+    private function updateContent($back = FALSE)
     {
-        $lbFaq = $this->objLanguage->languageText('phrase_editfaq');
+        $lbFaq = $this->objLanguage->languageText('phrase_frequentlyaskedquestions');
+        $lbFooter = $this->objLanguage->languageText('phrase_footercontent');
+        $lbIntro = $this->objLanguage->languageText('word_introduction');
+        $lbConfig = $this->objLanguage->languageText('phrase_configuresystem');
         
-        $objLink = new link($this->uri(array('action' => 'showfaq', 'mode' => 'update')));
+        $objLink = new link($this->uri(array('action' => 'showconfig', 'mode' => 'showfaq')));
         $objLink->link = $lbFaq;
-        return '<p>'.$objLink->show().'</p>';
+        $str = '<p><ul><li>'.$objLink->show().'</li>';
+        
+        $objLink = new link($this->uri(array('action' => 'showconfig', 'mode' => 'showintro')));
+        $objLink->link = $lbIntro;
+        $str .= '<li style="padding-top:5px;">'.$objLink->show().'</li>';
+        
+        $objLink = new link($this->uri(array('action' => 'showconfig', 'mode' => 'showfooter')));
+        $objLink->link = $lbFooter;
+        $str .= '<li style="padding-top:5px;">'.$objLink->show().'</li>';
+        
+        if($back){
+            $objLink = new link($this->uri(array('action' => 'showconfig')));
+            $objLink->link = $lbConfig;
+            $str .= '<li style="padding-top:5px;">'.$objLink->show().'</li>';
+        }
+        
+        $str .= '</ul></p>';
+        
+        return $str;
     }
     
     /**
@@ -578,7 +698,7 @@ class configure extends object
         $lbFaculty = $this->objLanguage->languageText('phrase_facultyinformation');
         $lbSubmission = $this->objLanguage->languageText('phrase_submissionprocess');
         $lbIntro = $this->objLanguage->languageText('phrase_editintroduction');
-        $lbFaq = $this->objLanguage->languageText('phrase_editfaq');
+        $lbContent = $this->objLanguage->languageText('phrase_updatecontent');
         
         $this->objHead->str = $head;
         $this->objHead->type = 1;
@@ -593,11 +713,11 @@ class configure extends object
         // Submission process
         $str .= $this->objFeatureBox->show($lbSubmission, $this->getSubmissionProcess($userMode, $data));
         
-        // Submission process
-        $str .= $this->objFeatureBox->show($lbIntro, $this->editIntro());//$userMode, $data));
+        // Introduction
+        //$str .= $this->objFeatureBox->show($lbIntro, $this->editIntro());//$userMode, $data));
         
-        // Submission process
-        //$str .= $this->objFeatureBox->show($lbFaq, $this->editFaq());
+        // Content editing
+        $str .= $this->objFeatureBox->show($lbContent, $this->updateContent());
         
         $str .= '<br />';
         return $str;
@@ -743,13 +863,46 @@ class configure extends object
                 }
                 break;
                 
-            /* *** Edit introduction *** */
+            /* *** Content *** */
+            
+            case 'showintro':
+                $lbIntro = $this->objLanguage->languageText('phrase_editintroduction');
+                $lbContent = $this->objLanguage->languageText('phrase_updatecontent');
+                $str = $this->objFeatureBox->show($lbContent, $this->updateContent(TRUE));
+                $str .= $this->objFeatureBox->show($lbIntro, $this->editIntro());
+                return $str;
             
             case 'saveintro':
                 $id = $this->getParam('id');
                 $this->dbIntro->addIntro($this->userId, $id);
                 break;
                 
+            case 'showfooter':
+                $lbFooter = $this->objLanguage->languageText('phrase_editfooter');
+                $lbContent = $this->objLanguage->languageText('phrase_updatecontent');
+                $str = $this->objFeatureBox->show($lbContent, $this->updateContent(TRUE));
+                $str .= $this->objFeatureBox->show($lbFooter, $this->editFooter());
+                return $str;
+                
+            case 'savefooter':
+                $id = $this->getParam('id');
+                $footer = $this->getParam('footer');
+                $this->dbIntro->addContent($footer, 'footer', $this->userId, $id);
+                break;
+                
+            case 'showfaq':
+                $lbFaq = $this->objLanguage->languageText('phrase_editfaq');
+                $lbContent = $this->objLanguage->languageText('phrase_updatecontent');
+                $str = $this->objFeatureBox->show($lbContent, $this->updateContent(TRUE));
+                $str .= $this->objFeatureBox->show($lbFaq, $this->editFaq());
+                return $str;
+                
+            case 'savefaq':
+                $id = $this->getParam('id');
+                $faq = $this->getParam('faq');
+                $this->dbIntro->addContent($faq, 'faq', $this->userId, $id);
+                break;
+
             default:
                 $this->unsetSession('config_type');
                 $this->unsetSession('config_group');

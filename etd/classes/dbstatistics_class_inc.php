@@ -35,8 +35,9 @@ class dbStatistics extends dbTable
         $this->objIpCountry = $this->getObject('iptocountry', 'utilities');
         $this->objDate = $this->getObject('dateandtime', 'utilities');
         
-        $this->objHead = $this->newObject('htmlheading', 'htmlelements');
-        $this->objLayer = $this->newObject('layer', 'htmlelements');
+        $this->loadClass('htmlheading', 'htmlelements');
+        $this->loadClass('layer', 'htmlelements');
+        $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
         
         $this->loadClass('htmltable', 'htmlelements');
         $this->loadClass('tabbedbox', 'htmlelements');
@@ -53,6 +54,32 @@ class dbStatistics extends dbTable
     }
     
     /**
+    * Method to 'patch' the statistics table - update all the new submissions
+    */
+    public function patchStats()
+    {
+        // Get all the new submissions - date and submitId
+        $sql = "SELECT t.submitid, d.enterdate FROM tbl_etd_metadata_thesis t, tbl_dublincoremetadata d
+            WHERE d.id = t.dcmetaid";
+        $data = $this->getArray($sql);
+        
+        // Insert into the stats table
+        if(!empty($data)){
+            foreach($data as $item){
+                $fields = array();
+                $fields['submitid'] = $item['submitid'];
+                $fields['hittype'] = 'upload';
+                $fields['ipaddress'] = '172.16.70.241';
+                $fields['countrycode'] = 'ZA';
+                $fields['creatorid'] = '8027070305';
+                $fields['datecreated'] = $item['enterdate'];
+                
+                $this->insert($fields);
+            }
+        }
+    }
+    
+    /**
     * Method to add a new statistic.
     * Type = hit to the site, view on a resource, download of a resource
     *
@@ -62,10 +89,10 @@ class dbStatistics extends dbTable
     * @return
     */
     private function addStatistic($type = 'hit', $submitId = NULL)
-    {    
+    {   
         $ip = $_SERVER['REMOTE_ADDR'];
         $code = $this->objIpCountry->getCountryByIP($ip);
-        
+                 
         $fields = array();
         $fields['submitid'] = $submitId;
         $fields['hittype'] = $type;
@@ -101,6 +128,29 @@ class dbStatistics extends dbTable
     }
     
     /**
+    * Method to get the most downloaded and most viewed statistics
+    *
+    * @access private
+    * @return array $data
+    */
+    private function getMostViewed()
+    {
+        $sql = "SELECT count(s.submitid) AS count, s.submitid, s.hittype, d.dc_title 
+            FROM {$this->table} s, tbl_etd_metadata_thesis t, tbl_dublincoremetadata d
+            WHERE s.hittype='visit' AND s.submitid = t.id AND t.dcmetaid = d.id GROUP BY s.submitid, s.hittype, d.dc_title ORDER BY count DESC LIMIT 5";
+        
+        $data = $this->getArray($sql);
+        
+        $sql2 = "SELECT count(s.submitid) AS count, s.submitid, s.hittype, d.dc_title 
+            FROM {$this->table} s, tbl_etd_metadata_thesis t, tbl_dublincoremetadata d
+            WHERE s.hittype='download' AND s.submitid = t.id AND t.dcmetaid = d.id GROUP BY s.submitid, s.hittype, d.dc_title ORDER BY count DESC LIMIT 5";
+        
+        $data2 = $this->getArray($sql2);
+        
+        return array('visit' => $data, 'download' => $data2);
+    }
+    
+    /**
     * Method to get the statistics by month
     *
     * @access private
@@ -110,13 +160,31 @@ class dbStatistics extends dbTable
     private function getStatsByMonth($type)
     {
         $year = date('Y');
-//        $sql = "SELECT count(*) as cnt, MONTH(datecreated) as month FROM {$this->table}";
-//        $sql .= " WHERE YEAR(datecreated) = '$year' AND hittype = '$type' GROUP BY MONTH(datecreated)";
-//        $sql = "SELECT count(*) as cnt, to_char(datecreated, 'MM') as month FROM {$this->table}";
-//        $sql .= " WHERE to_char(datecreated, 'YY') = '$year' AND hittype = '$type' GROUP BY to_char(datecreated, 'MM')";
         
         $sql = "SELECT count(*) as cnt, EXTRACT(MONTH FROM datecreated) as month FROM {$this->table}";
-        $sql .= " WHERE EXTRACT(YEAR FROM datecreated) = '$year' AND hittype = '$type' GROUP BY EXTRACT(MONTH FROM datecreated)";
+        $sql .= " WHERE EXTRACT(YEAR FROM datecreated) = '$year' AND hittype = '$type' 
+            GROUP BY EXTRACT(MONTH FROM datecreated) ORDER BY EXTRACT(MONTH FROM datecreated)";
+
+        
+        $data = $this->getArray($sql);
+        
+        return $data;
+    }
+    
+    /**
+    * Method to get the statistics by month
+    *
+    * @access private
+    * @param string $type
+    * @return array $data
+    */    
+    private function getStatsByMonthCountry($type)
+    {
+        $year = date('Y');
+        
+        $sql = "SELECT count(*) as cnt, EXTRACT(MONTH FROM datecreated) as month, countrycode FROM {$this->table}";
+        $sql .= " WHERE EXTRACT(YEAR FROM datecreated) = '$year' AND hittype = '$type' 
+            GROUP BY EXTRACT(MONTH FROM datecreated), countrycode ORDER BY EXTRACT(MONTH FROM datecreated)";
 
         
         $data = $this->getArray($sql);
@@ -287,9 +355,10 @@ class dbStatistics extends dbTable
         $str .= '<p>'.$lbTotalLogins.': '.$totalLogins.'</p>';
         $str .= '<p>'.$lbUserCountries.': '.$countryCount.'</p>';
         
-        $this->objLayer->str = $countries;
-        $this->objLayer->padding = '0px; padding-left: 10px';
-        $str .= $this->objLayer->show();
+        $objLayer = new layer();
+        $objLayer->str = $countries;
+        $objLayer->padding = '0px; padding-left: 10px';
+        $str .= $objLayer->show();
         
         $objTab = new tabbedbox();
         $objTab->extra = 'style="background-color: #FCFAF2; padding: 5px;"';
@@ -331,9 +400,10 @@ class dbStatistics extends dbTable
         
         $str .= '<p>'.$lbCountries.': '.$i.'</p>';
         
-        $this->objLayer->str = $flags;
-        $this->objLayer->padding = '5px; padding-left: 10px';
-        $str .= $this->objLayer->show();
+        $objLayer = new layer();
+        $objLayer->str = $flags;
+        $objLayer->padding = '5px; padding-left: 10px';
+        $str .= $objLayer->show();
                 
         $objTab = new tabbedbox();
         $objTab->extra = 'style="background-color: #FCFAF2; padding: 5px;"';
@@ -344,19 +414,90 @@ class dbStatistics extends dbTable
     }
     
     /**
-    * Method to generate the statistics by resource
+    * Method to display the most viewed and most downloaded resources
     *
     * @access private
     * @return string html
     */
-    private function getStatsByResource()
+    private function showMostViewed()
     {
+        $data = $this->getMostViewed();
+        
+        // Configure the data for display.
+        $row = array();
+        if(!empty($data)){
+            foreach($data as $key => $item){
+                $i = 0;
+                foreach($item as $val){
+                    $row[$i][$key]['id'] = $val['submitid'];
+                    $row[$i++][$key]['title'] = $val['dc_title'];
+                }
+            }
+        }
+        
+        $hdViewed = $this->objLanguage->languageText('mod_etd_mostviewedresources', 'etd');
+        $hdDownload = $this->objLanguage->languageText('mod_etd_mostdownloadedresources', 'etd');
+        
+        $objTable = new htmltable();
+        $objTable->width = '80%';
+        $objTable->border = '1';
+        $objTable->cellpadding = '5';
+        
+        $hdArr = array();
+        $hdArr[] = $hdViewed;
+        $hdArr[] = $hdDownload;
+        
+        $objTable->addHeader($hdArr);
+        
+        
+        // Display the data
+        if(!empty($row)){
+            $class = 'even';
+            foreach($row as $item){
+                $class = ($class == 'odd') ? 'even' : 'odd';
+                
+                $lnVisit = ''; $lnDownload = '';
+                // Create link to view the resource
+                if(isset($item['visit']['title'])){
+                    $objLink = new link($this->uri(array('action' => 'viewtitle', 'id' => $item['visit']['id'])));
+                    $objLink->link = $item['visit']['title'];
+                    $lnVisit = $objLink->show();
+                }
+                
+                if(isset($item['download']['title'])){
+                    $objLink = new link($this->uri(array('action' => 'viewtitle', 'id' => $item['download']['id'])));
+                    $objLink->link = $item['download']['title'];
+                    $lnDownload = $objLink->show();
+                }
+                
+                $rowArr = array();
+                $rowArr[] = $lnVisit;
+                $rowArr[] = $lnDownload;
+                
+                $objTable->addRow($rowArr, $class);
+            }
+        }
+        
+        return '<div align="center">'.$objTable->show().'</div>';
+    }
+    
+    /**
+    * Method to generate the statistics by resource
+    *
+    * @access private
+    * @param bool $breakdown True if monthly statistics should be broken down by country
+    * @return string html
+    */
+    private function getStatsByResource($breakdown = FALSE)
+    {  
         $resVisitsCount = $this->getStatistic('visit');
         $downloadsCount = $this->getStatistic('download');
         $resourceCount = $this->etdDbSubmissions->getCount();
-        $monthVisit = $this->getStatsByMonth('visit');
-        $monthDownload = $this->getStatsByMonth('download');
-        $monthUpload = $this->getStatsByMonth('upload');
+        
+        // Get stats by month & country
+        $monthVisit = $this->getStatsByMonthCountry('visit');
+        $monthDownload = $this->getStatsByMonthCountry('download');
+        $monthUpload = $this->getStatsByMonthCountry('upload');
         
         $aveResourceVisits = 0;
         $aveResourceDownloads = 0;
@@ -372,15 +513,14 @@ class dbStatistics extends dbTable
         $lbAveRes = $this->objLanguage->languageText('mod_etd_avevisitsperresource', 'etd');
         $lbAveDown = $this->objLanguage->languageText('mod_etd_avedownloadsperresource', 'etd');
         $lnView = $this->objLanguage->languageText('mod_etd_viewbycountry', 'etd');
+        $lnView2 = $this->objLanguage->languageText('mod_etd_viewbymonth', 'etd');
         $lbMonth = $this->objLanguage->languageText('word_month');
+        $lbCountry = $this->objLanguage->languageText('word_country');
         $lbVisits = $this->objLanguage->languageText('word_visits');
         $lbDownloads = $this->objLanguage->languageText('word_downloads');
         $lbUploads = $this->objLanguage->languageText('phrase_newsubmissions');
-        
-        $objLink = new link($this->uri(array('action' => 'viewstats', 'view' => 'country')));
-        $objLink->link = $lnView;
-        $str = '<p>'.$objLink->show().'</p>';
-        
+        $lnBreak = $this->objLanguage->languageText('phrase_breakdownbycountry');
+                
         $objTable = new htmltable();
         $objTable->cellpadding = 5;
         
@@ -393,60 +533,125 @@ class dbStatistics extends dbTable
         
         $objTable->addRow(array($lbTotalDownloads.': '.$downloadsCount, $lbAveDown.': '.$aveResourceDownloads));
         
-        $str .= $objTable->show();
+        $str = $objTable->show();
         $str .= '<br /><br />';
         
+        $str .= $this->showMostViewed();
+        $str .= '<br /><br />';
+        
+        // Organise stats into an array for easy display
         $hitArr = array();
         if(!empty($monthVisit)){
             foreach($monthVisit as $item){
-                $hitArr[$item['month']]['visit'] = $item['cnt'];
+                $hitArr[$item['month']]['visit'] = isset($hitArr[$item['month']]['visit']) ? $hitArr[$item['month']]['visit']+$item['cnt'] : $item['cnt'];
+                $mntArr[$item['month']][$item['countrycode']]['visit'] = $item['cnt'];
             }
         }
         if(!empty($monthDownload)){
             foreach($monthDownload as $item){
-                $hitArr[$item['month']]['download'] = $item['cnt'];
+                $hitArr[$item['month']]['download'] = isset($hitArr[$item['month']]['download']) ? $hitArr[$item['month']]['download']+$item['cnt'] : $item['cnt'];
+                $mntArr[$item['month']][$item['countrycode']]['download'] = $item['cnt'];
             }
         }
         if(!empty($monthUpload)){
             foreach($monthUpload as $item){
-                $hitArr[$item['month']]['upload'] = $item['cnt'];
+                $hitArr[$item['month']]['upload'] = isset($hitArr[$item['month']]['upload']) ? $hitArr[$item['month']]['upload']+$item['cnt'] : $item['cnt'];
+                $mntArr[$item['month']][$item['countrycode']]['upload'] = $item['cnt'];
             }
         }
         
+        // links to view by country or breakdown by country
+        $objLink = new link($this->uri(array('action' => 'viewstats', 'view' => 'country')));
+        $objLink->link = $lnView;
+        $str .= '<p>'.$objLink->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
+        
+        if($breakdown){
+            $objLink = new link($this->uri(array('action' => 'viewstats')));
+            $objLink->link = $lnView2;
+        }else{
+            $objLink = new link($this->uri(array('action' => 'viewstats', 'break' => TRUE)));
+            $objLink->link = $lnBreak;
+        }
+            $str .= $objLink->show().'</p>';
+
+
+        // Display stats
         $objTable = new htmltable();
         $objTable->cellpadding = 5;
-        $objTable->width = '50%';
+        $objTable->width = '80%';
         $objTable->border = '1';
-        $objTable->addHeader(array($lbMonth, $lbVisits, $lbDownloads, $lbUploads));
         
-        if(!empty($hitArr)){
-            foreach($hitArr as $key => $item){
-                $month = $this->objDate->monthFull($key);
-                $visits = 0; $downloads = 0; $uploads = 0;
-                
-                if(isset($item['visit'])){
-                    $visits = $item['visit'];
+        // Check if stats should be broken down by country
+        if($breakdown){
+            // Breakdown by country
+            $objTable->addHeader(array($lbMonth, $lbCountry, $lbVisits, $lbDownloads, $lbUploads));
+            if(!empty($mntArr)){
+                ksort($mntArr);
+                foreach($mntArr as $key => $val){
+                    $month = $this->objDate->monthFull($key);
+                    ksort($val);
+                    $rows = count($val) + 1;
+                    
+                    $objTable->startRow();
+                    $objTable->addCell($month, '25%', '', '', '', "rowspan='{$rows}'");
+                    $objTable->endRow();
+                        
+                    foreach($val as $key2 => $item){
+                        $country = $this->objIpCountry->getCountryName($key2);
+                        $visits = 0; $downloads = 0; $uploads = 0;
+                        
+                        if(isset($item['visit'])){
+                            $visits = $item['visit'];
+                        }
+                        if(isset($item['download'])){
+                            $downloads = $item['download'];
+                        }
+                        if(isset($item['upload'])){
+                            $uploads = $item['upload'];
+                        }
+                        
+                        $objTable->startRow();
+                        $objTable->addCell($country, '30%');
+                        $objTable->addCell($visits, '15%', '', 'center');
+                        $objTable->addCell($downloads, '15%', '', 'center');
+                        $objTable->addCell($uploads, '15%', '', 'center');
+                        $objTable->endRow();
+                    }
                 }
-                if(isset($item['download'])){
-                    $downloads = $item['download'];
+            }
+        }else{
+            $objTable->addHeader(array($lbMonth, $lbVisits, $lbDownloads, $lbUploads));
+            if(!empty($hitArr)){
+                ksort($hitArr);
+                foreach($hitArr as $key => $item){
+                    $month = $this->objDate->monthFull($key);
+                    $visits = 0; $downloads = 0; $uploads = 0;
+                    
+                    if(isset($item['visit'])){
+                        $visits = $item['visit'];
+                    }
+                    if(isset($item['download'])){
+                        $downloads = $item['download'];
+                    }
+                    if(isset($item['upload'])){
+                        $uploads = $item['upload'];
+                    }
+                    
+                    $objTable->startRow();
+                    $objTable->addCell($month, '50%');
+                    $objTable->addCell($visits, '25%', '', 'center');
+                    $objTable->addCell($downloads, '25%', '', 'center');
+                    $objTable->addCell($uploads, '25%', '', 'center');
+                    $objTable->endRow();
                 }
-                if(isset($item['upload'])){
-                    $uploads = $item['upload'];
-                }
-                
-                $objTable->startRow();
-                $objTable->addCell($month, '50%');
-                $objTable->addCell($visits, '25%', '', 'center');
-                $objTable->addCell($downloads, '25%', '', 'center');
-                $objTable->addCell($uploads, '25%', '', 'center');
-                $objTable->endRow();
             }
         }
-        $this->objLayer->init();
-        $this->objLayer->width = '80%';
-        $this->objLayer->align = 'center';
-        $this->objLayer->str = $objTable->show();
-        $str .= $this->objLayer->show();
+        
+        $objLayer = new layer();
+        $objLayer->width = '100%';
+        $objLayer->align = 'center';
+        $objLayer->str = $objTable->show();
+        $str .= $objLayer->show();
         $str .= '<br />';
         
         $objTab = new tabbedbox();
@@ -461,17 +666,22 @@ class dbStatistics extends dbTable
     * Method to generate the statistics by country for the resources
     *
     * @access private
+    * @param bool $breakdown True if monthly statistics should be broken down by country
     * @return string html
     */
-    private function getStatsByCountry()
+    private function getStatsByCountry($breakdown)
     {
         $resVisitsCount = $this->getStatistic('visit');
         $downloadsCount = $this->getStatistic('download');
         $resourceCount = $this->etdDbSubmissions->getCount();
         
-        $countryVisit = $this->getCountryStats('visit');
+        /*$countryVisit = $this->getCountryStats('visit');
         $countryDownload = $this->getCountryStats('download');
         $countryUpload = $this->getCountryStats('upload');
+        */
+        $countryVisit = $this->getStatsByMonthCountry('visit');
+        $countryDownload = $this->getStatsByMonthCountry('download');
+        $countryUpload = $this->getStatsByMonthCountry('upload');
         
         $aveResourceVisits = 0;
         $aveResourceDownloads = 0;
@@ -487,15 +697,13 @@ class dbStatistics extends dbTable
         $lbAveRes = $this->objLanguage->languageText('mod_etd_avevisitsperresource', 'etd');
         $lbAveDown = $this->objLanguage->languageText('mod_etd_avedownloadsperresource', 'etd');
         $lnView = $this->objLanguage->languageText('mod_etd_viewbymonth', 'etd');
+        $lnView2 = $this->objLanguage->languageText('mod_etd_viewbycountry', 'etd');
         $lbMonth = $this->objLanguage->languageText('word_month');
         $lbCountry = $this->objLanguage->languageText('word_country');
         $lbVisits = $this->objLanguage->languageText('word_visits');
         $lbDownloads = $this->objLanguage->languageText('word_downloads');
         $lbUploads = $this->objLanguage->languageText('phrase_newsubmissions');
-        
-        $objLink = new link($this->uri(array('action' => 'viewstats')));
-        $objLink->link = $lnView;
-        $str = '<p>'.$objLink->show().'</p>';
+        $lnBreak = $this->objLanguage->languageText('phrase_breakdownbymonth');
         
         $objTable = new htmltable();
         $objTable->cellpadding = 5;
@@ -509,60 +717,121 @@ class dbStatistics extends dbTable
         
         $objTable->addRow(array($lbTotalDownloads.': '.$downloadsCount, $lbAveDown.': '.$aveResourceDownloads));
         
-        $str .= $objTable->show();
+        $str = $objTable->show();
         $str .= '<br /><br />';
         
         $hitArr = array();
+        $mntArr = array();
         if(!empty($countryVisit)){
             foreach($countryVisit as $item){
-                $hitArr[$item['countrycode']]['visit'] = $item['cnt'];
+                $hitArr[$item['countrycode']]['visit'] = isset($hitArr[$item['countrycode']]['visit']) ? $hitArr[$item['countrycode']]['visit']+$item['cnt'] : $item['cnt'];
+                $cntArr[$item['countrycode']][$item['month']]['visit'] = $item['cnt'];
             }
         }
         if(!empty($countryDownload)){
             foreach($countryDownload as $item){
-                $hitArr[$item['countrycode']]['download'] = $item['cnt'];
+                $hitArr[$item['countrycode']]['download'] = isset($hitArr[$item['countrycode']]['download']) ? $hitArr[$item['countrycode']]['download']+$item['cnt'] : $item['cnt'];
+                $cntArr[$item['countrycode']][$item['month']]['download'] = $item['cnt'];
             }
         }
         if(!empty($countryUpload)){
             foreach($countryUpload as $item){
-                $hitArr[$item['countrycode']]['upload'] = $item['cnt'];
+                $hitArr[$item['countrycode']]['upload'] = isset($hitArr[$item['countrycode']]['upload']) ? $hitArr[$item['countrycode']]['upload']+$item['cnt'] : $item['cnt'];
+                $cntArr[$item['countrycode']][$item['month']]['upload'] = $item['cnt'];
             }
         }
+        
+        // Links to view by month / breakdown by month
+        $objLink = new link($this->uri(array('action' => 'viewstats')));
+        $objLink->link = $lnView;
+        $str .= '<p>'.$objLink->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
+        
+        if($breakdown){
+            $objLink = new link($this->uri(array('action' => 'viewstats', 'view' => 'country')));
+            $objLink->link = $lnView2;
+        }else{
+            $objLink = new link($this->uri(array('action' => 'viewstats', 'view' => 'country', 'break' => TRUE)));
+            $objLink->link = $lnBreak;
+        }
+        $str .= $objLink->show().'</p>';
         
         $objTable = new htmltable();
         $objTable->cellpadding = 5;
-        $objTable->width = '50%';
+        $objTable->width = '80%';
         $objTable->border = '1';
-        $objTable->addHeader(array($lbCountry, $lbVisits, $lbDownloads, $lbUploads));
         
-        if(!empty($hitArr)){
-            foreach($hitArr as $key => $item){
-                $country = $this->objIpCountry->getCountryName($key);
-                $visits = 0; $downloads = 0; $uploads = 0;
-                
-                if(isset($item['visit'])){
-                    $visits = $item['visit'];
+        
+
+        if($breakdown){
+            if(!empty($cntArr)){
+                $objTable->addHeader(array($lbCountry, $lbMonth, $lbVisits, $lbDownloads, $lbUploads));
+                ksort($cntArr);
+                foreach($cntArr as $key => $val){
+                    $country = $this->objIpCountry->getCountryName($key);
+                    ksort($val);
+                    $rows = count($val) + 1;
+                    
+                    $objTable->startRow();
+                    $objTable->addCell($country, '25%', '', '', '', "rowspan='{$rows}'");
+                    $objTable->endRow();
+                        
+                    foreach($val as $key2 => $item){
+                        $month = $this->objDate->monthFull($key2);
+                        $visits = 0; $downloads = 0; $uploads = 0;
+                        
+                        if(isset($item['visit'])){
+                            $visits = $item['visit'];
+                        }
+                        if(isset($item['download'])){
+                            $downloads = $item['download'];
+                        }
+                        if(isset($item['upload'])){
+                            $uploads = $item['upload'];
+                        }
+                        
+                        $objTable->startRow();
+                        $objTable->addCell($month, '30%');
+                        $objTable->addCell($visits, '15%', '', 'center');
+                        $objTable->addCell($downloads, '15%', '', 'center');
+                        $objTable->addCell($uploads, '15%', '', 'center');
+                        $objTable->endRow();
+                        
+                        $month = '';
+                    }
                 }
-                if(isset($item['download'])){
-                    $downloads = $item['download'];
+            }
+        }else{
+            if(!empty($hitArr)){
+                $objTable->addHeader(array($lbCountry, $lbVisits, $lbDownloads, $lbUploads));
+                foreach($hitArr as $key => $item){
+                    $country = $this->objIpCountry->getCountryName($key);
+                    $visits = 0; $downloads = 0; $uploads = 0;
+                    
+                    if(isset($item['visit'])){
+                        $visits = $item['visit'];
+                    }
+                    if(isset($item['download'])){
+                        $downloads = $item['download'];
+                    }
+                    if(isset($item['upload'])){
+                        $uploads = $item['upload'];
+                    }
+                    
+                    $objTable->startRow();
+                    $objTable->addCell($country, '50%');
+                    $objTable->addCell($visits, '25%', '', 'center');
+                    $objTable->addCell($downloads, '25%', '', 'center');
+                    $objTable->addCell($uploads, '25%', '', 'center');
+                    $objTable->endRow();
                 }
-                if(isset($item['upload'])){
-                    $uploads = $item['upload'];
-                }
-                
-                $objTable->startRow();
-                $objTable->addCell($country, '50%');
-                $objTable->addCell($visits, '25%', '', 'center');
-                $objTable->addCell($downloads, '25%', '', 'center');
-                $objTable->addCell($uploads, '25%', '', 'center');
-                $objTable->endRow();
             }
         }
-        $this->objLayer->init();
-        $this->objLayer->width = '80%';
-        $this->objLayer->align = 'center';
-        $this->objLayer->str = $objTable->show();
-        $str .= $this->objLayer->show();
+                
+        $objLayer = new layer();
+        $objLayer->width = '100%';
+        $objLayer->align = 'center';
+        $objLayer->str = $objTable->show();
+        $str .= $objLayer->show();
         $str .= '<br />';
         
         $objTab = new tabbedbox();
@@ -571,6 +840,42 @@ class dbStatistics extends dbTable
         $objTab->addBoxContent($str);
         
         return $objTab->show();
+    }
+
+    /**
+    * Method to display print and email buttons
+    *
+    * @access private
+    * @return string html
+    */
+    private function getButtons($view, $break = FALSE)
+    {
+        $lbPrint = $this->objLanguage->languageText('phrase_printfriendly');
+        $lbEmail = $this->objLanguage->languageText('word_email');
+        
+        // Print friendly page
+        $url = $this->uri(array('action' => 'printstats', 'view' => $view, 'break' => $break));
+            
+        $onclick = "javascript:window.open('" .$url."', 'resource', 'left=100, top=100, width=500, height=400, scrollbars=1, fullscreen=no, toolbar=yes, menubar=yes, resizable=yes')";
+        $objButton = new button('print', $lbPrint);
+        $objButton->setOnClick($onclick);
+            
+        $formStr = $objButton->show().'&nbsp;&nbsp;&nbsp;';
+        
+        // Email resource
+        $url = $this->uri(array('action' => 'emailstats', 'view' => $view, 'break' => $break));
+            
+        $objButton = new button('email', $lbEmail);
+        $objButton->setToSubmit();
+            
+        $formStr .= $objButton->show();
+            
+        $objForm = new form('emailstats', $url);
+        $objForm->addToForm($formStr);
+            
+        $str = $objForm->show();
+        
+        return $str;
     }
 
     /**
@@ -584,23 +889,24 @@ class dbStatistics extends dbTable
     {
         $head = $this->objLanguage->languageText('word_statistics');
         
-        $this->objHead->str = $head;
-        $this->objHead->type = 1;
-        $str = $this->objHead->show();
+        $objHead = new htmlheading();
+        $objHead->str = $head;
+        $objHead->type = 1;
+        $str = $objHead->show();
         
-        $layerStr = $this->getSiteStats();
-        $layerStr .= '<p>'.$this->getUserStats().'</p>';
+        $break = $this->getParam('break');
         if($view == 'country'){
-            $layerStr .= '<p>'.$this->getStatsByCountry().'</p>';
+            $layerStr = '<p>'.$this->getStatsByCountry($break).'</p>';
         }else{
-            $layerStr .= '<p>'.$this->getStatsByResource().'</p>';
+            $layerStr = '<p>'.$this->getStatsByResource($break).'</p>';
         }
+        $layerStr .= '<p>'.$this->getSiteStats().'</p>';
+        $layerStr .= '<p>'.$this->getUserStats().'</p>';
         
-        $this->objLayer->init();
-        $this->objLayer->str = $layerStr;
-        $str .= $this->objLayer->show();
+        // Print / email
+        $layerStr .= '<p>'.$this->getButtons($view, $break).'</p>';
         
-        return $str;
+        return $this->objFeatureBox->showContent($head, $layerStr);
     }
 }
 ?>

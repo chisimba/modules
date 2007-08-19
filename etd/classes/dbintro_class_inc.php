@@ -21,6 +21,8 @@ class dbIntro extends dbtable
 {
     /**
     * Constructor method
+    *
+    * @access public
     */
     public function init()
     {
@@ -40,12 +42,13 @@ class dbIntro extends dbtable
     {
         $fields = array();
         $fields['language'] = $this->getParam('language', 'en');
-        $fields['introduction'] = $this->getParam('introduction');
+        $fields['content_text'] = $this->getParam('introduction');
         $fields['updated'] = $this->now();
         if(!empty($id)){
             $fields['modifierid'] = $userId;
             $id = $this->update('id', $id, $fields);
         }else{
+            $fields['content_type'] = 'introduction';
             $fields['creatorid'] = $userId;
             $fields['datecreated'] = $this->now();
             $id = $this->insert($fields);
@@ -54,14 +57,46 @@ class dbIntro extends dbtable
     }
 
     /**
+    * Method to insert a new piece of content into the database.
+    *
+    * @access public
+    * @param string $content The content to insert / update
+    * @param string $type The content type - intro, footer, etc
+    * @param string $userId The user Id for the creator.
+    * @param string $id The row id of the entry
+    * @return string The row id
+    */
+    public function addContent($content, $type, $userId, $id)
+    {
+        $fields = array();
+        $fields['content_text'] = $content;
+        $fields['updated'] = $this->now();
+        if(!empty($id)){
+            $fields['modifierid'] = $userId;
+            $id = $this->update('id', $id, $fields);
+        }else{
+            $fields['content_type'] = $type;
+            $fields['creatorid'] = $userId;
+            $fields['datecreated'] = $this->now();
+            $id = $this->insert($fields);
+        }
+        if($type == 'footer'){
+            $this->setSession('footerStr', $content);
+        }
+        return $id;
+    }
+
+    /**
     * Method to get the introduction by language.
+    *
+    * @access public
     * @param string $lang The language given.
     */
-    function getIntro($lang = 'en')
+    public function getIntro($lang = 'en')
     {
-        $sql = 'SELECT * FROM '.$this->table;
+        $sql = "SELECT * FROM {$this->table} WHERE content_type = 'introduction'";
         if(!empty($lang)){
-            $sql .= " WHERE language = '$lang'";
+            $sql .= " AND language = '$lang' ";
         }
         $data = $this->getArray($sql);
         
@@ -77,17 +112,41 @@ class dbIntro extends dbtable
     }
     
     /**
+    * Method to get the content by type
+    *
+    * @access public
+    * @param string $type
+    * @return array $data The content data
+    */
+    public function getContent($type = 'footer', $lang = NULL)
+    {
+        $sql = "SELECT * FROM {$this->table}
+            WHERE content_type = '$type'";
+            
+        if(!empty($lang)){
+            $sql .= " AND language = '$lang' ";
+        }
+        
+        $data = $this->getArray($sql);
+        
+        if(!empty($data)){
+            return $data[0];
+        }
+        return '';
+    }
+    
+    /**
     * Method to get the introduction text. Parsed.
     *
     * @access public
     * @return string
     */
-    function getParsedIntro()
+    public function getParsedIntro()
     {
         $lang = ''; $text = '';
         $data = $this->getIntro($lang);
-        if(isset($data['introduction'])){
-            $text = $data['introduction'];
+        if(isset($data['content_text'])){
+            $text = $data['content_text'];
         }
         return $this->parseIntro($text);
     }
@@ -99,7 +158,7 @@ class dbIntro extends dbtable
     * @param string $text The text to be parsed
     * @return string
     */
-    function parseIntro($text = '')
+    public function parseIntro($text = '')
     {
         $objConfig = $this->getObject('altconfig', 'config');
         $institution = $objConfig->getinstitutionName();
@@ -117,10 +176,31 @@ class dbIntro extends dbtable
 
     /**
     * Method to delete an introduction entry.
+    *
+    * @access public
+    * @param string $id The row id of the entry
     */
-    function deleteIntro($id)
+    public function deleteIntro($id)
     {
         $this->delete('id', $id);
+    }
+    
+    /**
+    * Method to display the footer and store the string in session 
+    *
+    * @access public
+    * @return string The footer content
+    */
+    public function showFooter()
+    {
+        $footer = $this->getSession('footerStr');
+        
+        if(isset($footer) && !empty($footer)){
+            return $footer;
+        }
+        $footer = $this->getContent('footer');
+        $this->setSession('footerStr', $footer['content_text']);
+        return $footer['content_text'];
     }
 }
 ?>
