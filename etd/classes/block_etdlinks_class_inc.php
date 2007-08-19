@@ -66,6 +66,7 @@ class block_etdlinks extends object
     public function show()
     {   
         $stats = $this->objLanguage->languageText('phrase_viewstatistics');
+        $faq = $this->objLanguage->languageText('word_faq');
         $submit = $this->objLanguage->languageText('phrase_newsubmission');
         $submit2 = $this->objLanguage->languageText('phrase_continuesubmission');
         $rss = $this->objLanguage->languageText('word_rss2');
@@ -77,8 +78,8 @@ class block_etdlinks extends object
 		
         // Statistics page link
 		$objLink = new link($this->uri(array('action' => 'viewfaq')));
-		$objLink->link = $stats;
-		$list = '<p>'.$objLink->show().'</p>';
+		$objLink->link = $faq;
+		$list .= '<p>'.$objLink->show().'</p>';
 
 		// Check for a current submission - only submit one document at a time.
 		if(isset($this->access) && in_array('student', $this->access)){

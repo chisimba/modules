@@ -559,6 +559,13 @@ class etd extends controller
                 $this->etdTools->setLeftBlocks(FALSE, TRUE, FALSE);
                 return 'search_tpl.php';
                 break;
+                
+            case 'viewfaq':
+                $display = $this->dbIntro->showFaq();
+                $this->setVarByRef('search', $display);
+                return 'search_tpl.php';
+                break;
+                
             /*    
             case 'patchstats':
                 $this->dbStats->patchStats();

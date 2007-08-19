@@ -202,5 +202,17 @@ class dbIntro extends dbtable
         $this->setSession('footerStr', $footer['content_text']);
         return $footer['content_text'];
     }
+    
+    /**
+    * Method to display the faq
+    *
+    * @access public
+    * @return string The faq content
+    */
+    public function showFaq()
+    {
+        $faq = $this->getContent('faq');
+        return $faq['content_text'];
+    }
 }
 ?>
