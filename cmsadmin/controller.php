@@ -175,7 +175,7 @@ class cmsadmin extends controller
         {
                 $action = $this->getParam('action');
                 $this->setLayoutTemplate('cms_layout_tpl.php');
-
+				$this->setVar('pageSuppressXML',TRUE);
                 switch ($action) {
 
                 default:
@@ -921,43 +921,7 @@ class cmsadmin extends controller
 
             return $this->_objUtils->getNav();
         }
-        /**
-        * Ajax Function to display/hide applicable options based on display type
-        *
-        * @access public
-        * @param string $sectionType Type of Section to base options on
-        * @return string The ajax response
-        * @deprecated
-        *
-        public function processSection($sectionType)
-        {
-            $objResponse = new xajaxResponse();
-
-            if ($sectionType == 'page') {
-                $objResponse->addAssign('pagenumlabel','style.display', 'none');
-                $objResponse->addAssign('pagenumcol','style.display', 'none');
-                $objResponse->addAssign('dateshowlabel','style.display', 'none');
-                $objResponse->addAssign('dateshowcol','style.display', 'none');
-            } else {
-                $objResponse->addAssign('pagenumlabel','style.display', 'block');
-                $objResponse->addAssign('pagenumcol','style.display', 'block');
-                $objResponse->addAssign('dateshowlabel','style.display', 'block');
-                $objResponse->addAssign('dateshowcol','style.display', 'block');
-            }
-
-            if ($sectionType == 'summaries' || $sectionType == 'list') {
-                $objResponse->addAssign('showintrolabel','style.display', 'block');
-                $objResponse->addAssign('showintrocol','style.display', 'block');
-            } else {
-                $objResponse->addAssign('showintrolabel','style.display', 'none');
-                $objResponse->addAssign('showintrocol','style.display', 'none');
-            }
-            
-            $objResponse->addScript('adjustLayout();');
-
-            return $objResponse->getXML();
-        }
-        
+                
          /**
          * fuction to process publish or unpublish in sections
          *
