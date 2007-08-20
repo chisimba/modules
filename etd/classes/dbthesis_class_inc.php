@@ -199,41 +199,20 @@ class dbThesis extends dbtable
     */
     public function getData($limit = 10, $start = NULL, $joinId = NULL)
     {
-        
-        $sqlNorm = "SELECT dc.{$this->col1Field} as col1, dc.{$this->col2Field} as col2, dc.{$this->col3Field} as col3, thesis.id as id ";
-        $sqlFound = "SELECT COUNT(*) AS count ";
-        
-        $sql = "FROM {$this->table} AS thesis, {$this->submitTable} AS submit, {$this->dcTable} AS dc ";
-        
-        $sql .= "WHERE submit.id = thesis.submitid AND dc.id = thesis.dcmetaid ";
-        $sql .= "AND submit.submissiontype = '{$this->subType}' AND submit.status = 'archived' ";
-        
-        $sqlLimit = "ORDER BY LOWER({$this->col1Field}) ";
-        
-        $sqlLimit .= $limit ? "LIMIT $limit " : NULL;
-        $sqlLimit .= $start ? "OFFSET $start " : NULL;
-        
-        
-        /* Testing *
-        
-        $sql = "FROM {$this->table} AS thesis, {$this->submitTable} AS submit, {$this->dcTable} AS dc ";
-        
-        $sql .= "WHERE submit.id = thesis.submitid AND dc.id = thesis.dcmetaid ";
-        $sql .= "AND submit.submissiontype = '{$this->subType}' AND submit.status = 'archived' ";
-        
-        
         $sqlNorm = "SELECT dc.{$this->col1Field} as col1, dc.{$this->col2Field} as col2, dc.{$this->col3Field} as col3, thesis.id as id, ";
         
-        //$sqlNorm .= " LTRIM((SELECT dc.dc_title {$sql} AND LOWER(dc.dc_title) LIKE 'a %'), 2) AS sort ";
+        // Remove "A " and "The " and "'n " and " for sorting
+        $sqlNorm .= " REPLACE(REPLACE(REPLACE(REPLACE(LOWER({$this->col1Field}), 'a ', ''), 'the ', ''), '\'n ', ''), '\"', '') as sort ";
         
-        
-        $sqlNorm .= " LTRIM((SELECT dc.dc_title {$sql} AND LOWER(dc.dc_title) LIKE 'a %'), 2) as sort ";
         
         $sqlFound = "SELECT COUNT(*) AS count ";
         
+        $sql = "FROM {$this->table} AS thesis, {$this->submitTable} AS submit, {$this->dcTable} AS dc ";
         
+        $sql .= "WHERE submit.id = thesis.submitid AND dc.id = thesis.dcmetaid ";
+        $sql .= "AND submit.submissiontype = '{$this->subType}' AND submit.status = 'archived' ";        
         
-        $sqlLimit = "ORDER BY LOWER((SELECT dc.dc_title {$sql} AND LOWER(dc.dc_title) LIKE 'a %')) "; //{$this->col1Field}) ";
+        $sqlLimit = "ORDER BY sort "; //{$this->col1Field}) ";
         
         $sqlLimit .= $limit ? "LIMIT $limit " : NULL;
         $sqlLimit .= $start ? "OFFSET $start " : NULL;
@@ -267,7 +246,11 @@ class dbThesis extends dbtable
     public function getByLetter($letter = 'a', $limit = 10, $start = NULL, $joinId = NULL)
     {
         $letter = strtolower($letter);
-        $sqlNorm = "SELECT dc.{$this->col1Field} as col1, dc.{$this->col2Field} as col2, dc.{$this->col3Field} as col3, thesis.id as id ";
+        $sqlNorm = "SELECT dc.{$this->col1Field} as col1, dc.{$this->col2Field} as col2, dc.{$this->col3Field} as col3, thesis.id as id, ";
+        
+        // Remove "A " and "The " and "'n " and " for sorting
+        $sqlNorm .= " REPLACE(REPLACE(REPLACE(REPLACE(LOWER({$this->col1Field}), 'a ', ''), 'the ', ''), '\'n ', ''), '\"', '') as sort ";
+        
         $sqlFound = "SELECT COUNT(*) AS count ";
         
         $sql = "FROM {$this->table} AS thesis, {$this->submitTable} AS submit, {$this->dcTable} AS dc ";
@@ -289,7 +272,7 @@ class dbThesis extends dbtable
         $sql .= " OR LOWER({$this->col1Field}) LIKE '\'n $letter%' ";
         $sql .= " OR LOWER({$this->col1Field}) LIKE '\"$letter%' ) ";
         
-        $sqlLimit = "ORDER BY LOWER({$this->col1Field}) ";
+        $sqlLimit = "ORDER BY sort "; //LOWER({$this->col1Field}) ";
         
         $sqlLimit .= $limit ? "LIMIT $limit " : NULL;
         $sqlLimit .= $start ? "OFFSET $start " : NULL;
@@ -378,13 +361,14 @@ class dbThesis extends dbtable
     function search($filter, $limit = NULL, $start = 0)
     {
         $sqlNorm = 'SELECT thesis.id AS id, dc.dc_creator AS col2, dc.dc_title AS col1, dc.dc_date AS col3 ';
+        
         $sqlCount = 'SELECT COUNT(*) AS count ';
         
         $sql = "FROM {$this->table} AS thesis, {$this->dcTable} AS dc, {$this->submitTable} AS submit ";
         $sql .= "WHERE thesis.dcmetaid = dc.id AND thesis.submitid = submit.id ";
         $sql .= "AND submit.submissiontype = '{$this->subType}' AND ({$filter}) ";
         
-        $sqlLimit = "ORDER BY dc_date ";
+        $sqlLimit = "ORDER BY dc_date DESC ";
         $sqlLimit .= $limit ? " LIMIT $limit OFFSET $start" : '';
         
         $data = $this->getArray($sqlNorm.$sql.$sqlLimit);
@@ -450,107 +434,6 @@ class dbThesis extends dbtable
         
         $this->setSession('sql', $filter); 
         return array($data, $count);
-    }
-
-
-
-/* *** functions below have not been ported *** */
-
-    /**
-    * Method to get etd metadata
-    */
-    function getSubmitMetadata($submitId)
-    {
-        $sql = 'SELECT dc.id AS dcId, thesis.id AS thesisId, thesis.*, dc.* FROM '.$this->table.' AS thesis ';
-        $sql .= 'LEFT JOIN '.$this->dcTable.' AS dc ON dc.id = thesis.dcMetaId ';
-        $sql .= "WHERE thesis.submitId = '$submitId'";
-
-        $data = $this->getArray($sql);
-        return $data[0];
-    }
-
-    /**
-    * Method to update the thesis metadata.
-    */
-    function updateMetaData($id)
-    {
-        $degree = $this->getParam('degree', NULL);
-        $dept = $this->getParam('department', NULL);
-        $grant = $this->getParam('grantor');
-
-        $fields = array();
-        if(!is_null($degree)){
-            $fields['thesis_degree_name'] = $degree;
-            $fields['thesis_degree_level'] = $degree;
-        }
-        if(!is_null($dept)){
-            $fields['thesis_degree_discipline'] = $dept;
-        }
-        if(!is_null($grant)){
-            $fields['thesis_degree_grantor'] = $grant;
-        }
-
-        $this->update('id', $id, $fields);
-        return $id;
-    }
-
-    /**
-    * Method to get a list of submissions in a collection.
-    */
-    function getMetaInCollection($collectId)
-    {
-        
-        //SELECT dc.dc_title, dc.dc_creator, thesis.thesis_degree_name FROM tbl_etd_metadata_thesis as thesis, tbl_dublincoremetadata as dc, tbl_etd_submissions as sub WHERE sub.id = 'init_3724_1161983558'
-        
-        $sql = 'SELECT dc_title, dc_creator, dc_subject, thesis.submitId ';
-        $sql .= 'FROM '.$this->table.' AS thesis ';
-        $sql .= 'LEFT JOIN '.$this->bridgeTable.' AS bridge ON bridge.submissionId = thesis.submitId ';
-        $sql .= 'LEFT JOIN '.$this->dcTable.' AS dc ON dc.id = thesis.submitId ';
-        $sql .= "WHERE bridge.collectionId = '$collectId'";
-        
-        
-        $data = $this->getArray($sql);
-
-        if(!empty($data)){
-            return $data;
-        }
-        return FALSE;
-    }
-
-    /**
-    * Method to get metadata records using search data.
-    * @param string $search The search data to use.
-    * @param string $limit The number of metadata records to return. Default = 10 results.
-    * @param string $start The metadata record for the result set to start from. Default = Null, return from the start.
-    */
-    function getBySearch($search, $limit = 10, $start = NULL, $joinId = NULL)
-    {
-        $sql = "SELECT DISTINCT dc.{$this->col1Field} as col1, dc.{$this->col2Field} as col2, dc.{$this->col3Field} as col3, thesis.id";
-        $sql .= ' FROM '.$this->table.' AS thesis ';
-        $sqljoin = 'LEFT JOIN '.$this->submitTable.' AS submit ON submit.id = thesis.submitId ';
-        $sqljoin .= 'LEFT JOIN '.$this->dcTable.' AS dc ON dc.id = thesis.dcMetaId ';
-
-        $join = ''; $joinFilter = '';
-        if(isset($joinId) && !empty($joinId)){
-            $join = ' LEFT JOIN '.$this->bridgeTable.' AS bridge ON bridge.submissionId = thesis.submitId';
-            $joinFilter = " AND bridge.collectionId = '$joinId'";
-        }
-
-        $filter = " WHERE submissionType = '{$this->subType}' AND (";
-        $filter .= "LOWER({$this->col1Field}) LIKE '%$search%' ";
-        $filter .= " AND status = 'archived' ";
-        $filter .= $joinFilter.')';
-
-        $orderBy = " ORDER by LOWER({$this->col1Field})";
-        $sqlLimit = $limit ? " LIMIT $limit" : NULL;
-        $sqlLimit.= $start ? " OFFSET $start" : NULL;
-        $results = $this->getArray( $sql.$sqljoin.$join.$filter.$orderBy.$sqlLimit );
-
-        // Get bounds
-        $sqlFound = "SELECT DISTINCT COUNT(*) as found FROM ".$this->table.' AS thesis ';
-        $row = $this->getArray( $sqlFound.$sqljoin.$join.$filter );
-        $this->recordsFound = $row[0]['found'];
-        return $results;
     }
 }
 ?>
