@@ -13,14 +13,14 @@
 $this->setLayoutTemplate('assignmentadmin_layout_tpl.php');
 
 // set up html elements
-$objTable  =& $this->newObject('htmltable','htmlelements');
-$objLayer  =& $this->newObject('layer','htmlelements');
-$objInput  =& $this->newObject('textinput','htmlelements');
-$objDrop  =& $this->newObject('dropdown','htmlelements');
-$objText  =& $this->newObject('textarea','htmlelements');
-$objButton  =& $this->newObject('button','htmlelements');
-$objForm  =& $this->newObject('form','htmlelements');
-$objTimeOut =& $this->newObject('timeoutMessage','htmlelements');
+$this->loadClass('htmltable','htmlelements');
+$this->loadClass('layer','htmlelements');
+$this->loadClass('textinput','htmlelements');
+$this->loadClass('dropdown','htmlelements');
+$this->loadClass('textarea','htmlelements');
+$this->loadClass('button','htmlelements');
+$this->loadClass('form','htmlelements');
+$objTimeOut = $this->newObject('timeoutMessage','htmlelements');
 
 // set up language items
 $assignmenthead = $this->objLanguage->languageText('mod_assignmentadmin_assignment','assignmentadmin');
@@ -52,13 +52,14 @@ echo $javascript;
 $this->setVarByRef('heading',$head);
 $str = '';
 // Display name of student and name of file
+$objTable = new htmltable();
 $objTable->width = '99%';
 $objTable->cellpadding = 4;
 $objTable->startRow();
 $objTable->addCell('<b>'.$wordstudent.':</b>&nbsp;&nbsp;&nbsp;&nbsp;'
 .$this->objUser->fullname($data[0]['userid']),'50%','','');
 if(!$online){
-    $objTable->addCell('<b>'.$fileLabel.':</b>&nbsp;&nbsp;&nbsp;&nbsp;'.$data[0]['fileName'],'50%','','');
+    //$objTable->addCell('<b>'.$fileLabel.':</b>&nbsp;&nbsp;&nbsp;&nbsp;'.$data[0]['filename'],'50%','','');
 }
 $objTable->endRow();
 
@@ -66,14 +67,15 @@ $assignLabel = '<b>'.$assignmenthead.':</b>&nbsp;&nbsp;&nbsp;'.$data[0]['assignm
 $objTable->addRow(array($assignLabel));
 $objTable->addRow(array('&nbsp;'));
 
+$objLayer = new layer();
 $objLayer->str = $objTable->show();
 $str = $objLayer->show();
 
 //Download button 
-$this->objButton = new button('submit',$btndownload);
+$objButton = new button('submit',$btndownload);
 $returnUrl = $this->uri(array('action' => 'download','fileid'=>$data[0]['studentfileid']));
-$this->objButton->setOnClick("window.location='$returnUrl'");
-$btn1=$this->objButton->show();
+$objButton->setOnClick("window.location='$returnUrl'");
+$btn1=$objButton->show();
 
 
 $str .= $btn1.'<br /><br />';
@@ -90,7 +92,7 @@ if(!$online){
 
     $str .=  $objInput->show().'<p>';
 
-    $objInput = new textinput('fileId',$data[0]['fileId']);
+    $objInput = new textinput('fileId',$data[0]['lecturerfileid']);
     $objInput->fldType = 'hidden';
     $str .=  $objInput->show();		
     $objButton = new button('save',$btnupload);
@@ -126,7 +128,7 @@ $objInput = new textinput('submitId',$data[0]['id']);
 $objInput->fldType = 'hidden';
 $str .=  $objInput->show();
 
-$objInput = new textinput('id',$data[0]['assignmentId']);
+$objInput = new textinput('id',$data[0]['assignmentid']);
 $objInput->fldType = 'hidden';
 $str .=  $objInput->show();
 
@@ -152,6 +154,7 @@ $objForm->addToForm($str);
 $objForm->addRule('mark', $errMark, 'required');
 
 /************************* display page ******************************/
+$objLayer = new layer();
 $objLayer->str = $objForm->show();
 $objLayer->align = 'center';
 
@@ -163,7 +166,7 @@ $objForm = new form('exit', $this->uri(array('action' =>'uploadsubmit')));
 $objInput = new textinput('save', $btnexit);
 $objInput->fldType = 'hidden';
 $objForm->addToForm($objInput->show());
-$objInput = new textinput('id',$data[0]['assignmentId']);
+$objInput = new textinput('id',$data[0]['assignmentid']);
 $objInput->fldType = 'hidden';
 $objForm->addToForm($objInput->show());
 echo $objForm->show();

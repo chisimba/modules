@@ -12,18 +12,9 @@
 $this->setLayoutTemplate('assignmentadmin_layout_tpl.php');
 
 // set up html elements
-$objTable =& $this->newObject('htmltable','htmlelements');
-$objHead =& $this->newObject('htmlheading','htmlelements');
-$objLayer =& $this->newObject('layer','htmlelements');
-$objLayer1 =& $this->newObject('layer','htmlelements');
-$objForm =& $this->newObject('form','htmlelements');
-//$objInput =& $this->newObject('textinput','htmlelements');
-
-$this->loadClass('textinput','htmlelements');
-//$objText =& $this->newObject('textarea','htmlelements');
-$this->loadClass('textarea','htmlelements');
-$objButton =& $this->newObject('button','htmlelements');
-$objLink =& $this->newObject('link','htmlelements');
+$this->loadClass('htmltable','htmlelements');
+$this->loadClass('layer','htmlelements');
+$this->loadClass('link','htmlelements');
 
 // set up language items
 $assignmentLabel = $this->objLanguage->languageText('mod_assignmentadmin_assignment','assignmentadmin');
@@ -45,6 +36,7 @@ $percentLabel = $this->objLanguage->languageText('mod_assignmentadmin_percentyrm
 $this->setVarByRef('heading', $heading);
 
 $str = '';
+$objTable = new htmltable();
 $objTable->cellpadding=5;
 $objTable->width='99%';
 
@@ -78,15 +70,17 @@ if(!empty($data)){
     $objTable->addCell($data[0]['description'],'','','','','colspan="2"');
     $objTable->endRow();
 
+    $objLayer = new layer();
     $objLayer->cssClass = 'odd';
     $objLayer->str = $objTable->show();
 
     $str = $objLayer->show();
 
-    $objLink->link($this->uri(''));
+    $objLink = new link($this->uri(''));
     $objLink->link = $exitLabel;
     $layerStr = '<p>'.$objLink->show().'</p>';
 
+    $objLayer1 = new layer();
     $objLayer1->str = $layerStr;
     $objLayer1->align = 'center';
     $str .= $objLayer1->show();

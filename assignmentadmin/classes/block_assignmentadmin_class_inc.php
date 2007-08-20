@@ -22,17 +22,17 @@ class block_assignmentadmin extends object
     */
     public function init()
     {
-        $this->objLanguage =& $this->getObject('language', 'language');
+        $this->objLanguage = $this->getObject('language', 'language');
         $this->title = $this->objLanguage->languageText('mod_assignmentadmin_name', 'assignmentadmin');
 
-        $this->objSubmit =& $this->getObject('dbassignmentsubmit', 'assignment');
+        $this->objSubmit = $this->getObject('dbassignmentsubmit', 'assignment');
         $objDbContext = &$this->getObject('dbcontext', 'context');
 
         $this->contextCode = $objDbContext->getContextCode();
 
-        $this->objTable =& $this->newObject('htmltable', 'htmlelements');
-        $this->objIcon =& $this->newObject('geticon', 'htmlelements');
+        $this->loadClass('htmltable', 'htmlelements');
         $this->loadClass('link', 'htmlelements');
+        $this->objIcon = $this->newObject('geticon', 'htmlelements');
     }
 
     /**
@@ -65,21 +65,22 @@ class block_assignmentadmin extends object
                 $hd = array();
                 $hd[] = $hdAssign;
                 $hd[] = $hdMarked.' / '.$hdSubmitted;
-                $this->objTable->cellpadding = 2;
-                $this->objTable->cellspacing = 2;
-                $this->objTable->addHeader($hd);
+                $objTable = new htmltable();
+                $objTable->cellpadding = 2;
+                $objTable->cellspacing = 2;
+                $objTable->addHeader($hd);
 
                 foreach($assigns as $item){
                     if($item['marked'] < $item['submitted']){
                         $class = (($i++ % 2) == 0) ? 'odd':'even';
                         $num = $item['marked'].' / '.$item['submitted'];
-                        $this->objTable->startRow();
-                        $this->objTable->addCell($item['name'], '', '', '', $class);
-                        $this->objTable->addCell($num, '', '', 'center', $class);
-                        $this->objTable->endRow();
+                        $objTable->startRow();
+                        $objTable->addCell($item['name'], '', '', '', $class);
+                        $objTable->addCell($num, '', '', 'center', $class);
+                        $objTable->endRow();
                     }
                 }
-                return $this->objTable->show();
+                return $objTable->show();
             }
         }
         return '';

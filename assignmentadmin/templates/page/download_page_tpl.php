@@ -1,4 +1,4 @@
-<?php
+= <?php
 /*
 * Download page for essay.
 * @package essay
@@ -9,9 +9,9 @@
 * @author James Scoble, Abdurahim Shariff
 */
 
-		$this->objFiles =& $this->getObject('dbfile','filemanager');
-		$this->objConfig =& $this->getObject('altconfig', 'config');
-		$this->objCleanUrl =& $this->getObject('cleanurl','filemanager');
+		$this->objFiles = $this->getObject('dbfile','filemanager');
+		$this->objConfig = $this->getObject('altconfig', 'config');
+		$this->objCleanUrl = $this->getObject('cleanurl','filemanager');
 		
 		$fileId=$this->getParam('fileid');
         $file = $this->objFiles->getFileInfo($fileId);

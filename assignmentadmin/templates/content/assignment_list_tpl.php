@@ -13,12 +13,11 @@
 $this->setLayoutTemplate('assignmentadmin_layout_tpl.php');
 
 // set up html elements
-$objTable = $this->newObject('htmltable','htmlelements');
-$objTable2 = $this->newObject('htmltable','htmlelements');
-$objLayer = $this->newObject('layer','htmlelements');
-$objLink = $this->newObject('link','htmlelements');
+$this->loadClass('htmltable','htmlelements');
+$this->loadClass('layer','htmlelements');
+$this->loadClass('link','htmlelements');
 $objIcon = $this->newObject('geticon','htmlelements');
-$objPop =& $this->newObject('windowpop','htmlelements');
+$objPop = $this->newObject('windowpop','htmlelements');
 
 // Set up language items
 $assignment = $this->objLanguage->languageText('mod_assignmentadmin_name','assignmentadmin');
@@ -46,6 +45,7 @@ $tableHd[] = $markLabel;
 $tableHd[] = $submitLabel;
 $tableHd[] = '&nbsp;';
 
+$objTable = new htmltable();
 $objTable->cellspacing = 2;
 $objTable->cellpadding = 5;
 $objTable->addHeader($tableHd,'heading');
@@ -70,19 +70,19 @@ foreach($data as $item){
     if($assign['format']){
         // if upload
         $objIcon->setIcon('download');
-        $objLink->link($this->uri(array('action'=>'download', 'fileid'=>$item['fileid'])));
+        $objLink = new link($this->uri(array('action'=>'download', 'fileid'=>$item['studentfileid'])));
         $objLink->link = $objIcon->show();
         $icons = $objLink->show();
 
         $objIcon->setIcon('submit2');
-        $objLink->link($this->uri(array('action'=>'upload',  'submitId'=>$item['id'],
+        $objLink = new link($this->uri(array('action'=>'upload',  'submitId'=>$item['id'],
         'id'=>$assign['id'], 'assignment'=>$assign['name'])));
         $objLink->link = $objIcon->show();
         $icons .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$objLink->show();
     }else{
         // if online
         $objIcon->setIcon('comment');
-        $objLink->link($this->uri(array('action'=>'online', 'submitId'=>$item['id'],
+        $objLink = new link($this->uri(array('action'=>'online', 'submitId'=>$item['id'],
         'id'=>$assign['id'], 'assignment'=>$assign['name'])));
         $objLink->link = $objIcon->show();
         $icons = $objLink->show();
@@ -111,10 +111,11 @@ if($this->rubric){
 }
 
 // assignment home
-$objLink->link($this->uri(array('action'=>'viewbyletter','letter'=>'listall')));
+$objLink = new link($this->uri(array('action'=>'viewbyletter','letter'=>'listall')));
 $objLink->link = $assignment;
 $link = $objLink->show();
 
+$objLayer = new layer();
 $objLayer->align = 'center';
 $objLayer->str = $link;
 

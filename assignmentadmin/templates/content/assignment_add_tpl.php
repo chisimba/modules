@@ -10,21 +10,18 @@
 */
 $this->setLayoutTemplate('assignmentadmin_layout_tpl.php');
 
-// set up html elements
-//$objInput =& $this->newObject('textinput','htmlelements');
- $this->loadClass('textinput','htmlelements');
-//$objText =&
-
- $this->loadClass('textarea','htmlelements');
-$objRadio =& $this->newObject('radio','htmlelements');
-$objButton =& $this->newObject('button','htmlelements');
-$objIcon =& $this->newObject('geticon','htmlelements');
-$objLink =& $this->newObject('link','htmlelements');
-$objLabel =& $this->newObject('label','htmlelements');
-$objLayer =& $this->newObject('layer','htmlelements');
-$objForm =& $this->newObject('form','htmlelements');
-$objTable =& $this->newObject('htmltable','htmlelements');
+// set up html elements 
+$this->loadClass('textinput','htmlelements');
+$this->loadClass('textarea','htmlelements');
+$this->loadClass('radio','htmlelements');
+$this->loadClass('button','htmlelements');
+$this->loadClass('link','htmlelements');
+$this->loadClass('label','htmlelements');
+$this->loadClass('layer','htmlelements');
+$this->loadClass('form','htmlelements');
+$this->loadClass('htmltable','htmlelements');
 $this->loadClass('dropdown','htmlelements');
+$objIcon = $this->newObject('geticon','htmlelements');
 
 // set up language items
 $head1 = $this->objLanguage->languageText('mod_assignmentadmin_createassignment','assignmentadmin');
@@ -95,6 +92,7 @@ if(!empty($data)){
 
 $this->setVarByRef('heading', $heading);
 
+$objTable = new htmltable();
 $objTable->cellpadding=5;
 $objTable->cellspacing=2;
 $objTable->width='99%';
@@ -242,6 +240,7 @@ $objForm->addRule('mark', $errMarkReq, 'required');
 $objForm->addRule('mark', $errMark, 'numeric');
 $objForm->addToForm($objTable->show());
 
+$objLayer = new layer();
 $objLayer->str = $objForm->show();
 $objLayer->cssClass = 'odd';
 

@@ -14,11 +14,11 @@ $this->setLayoutTemplate('assignmentadmin_layout_tpl.php');
 
 // Set up html elements
 $this->loadClass('htmltable','htmlelements');
-$objHead =& $this->newObject('htmlheading','htmlelements');
-$objLink =& $this->newObject('link','htmlelements');
-$objIcon =& $this->newObject('geticon','htmlelements');
-$objConfirm =& $this->newObject('confirm','utilities');
-$objMsg =& $this->newObject('timeoutmessage', 'htmlelements');
+$this->loadClass('htmlheading','htmlelements');
+$this->loadClass('link','htmlelements');
+$objIcon = $this->newObject('geticon','htmlelements');
+$objConfirm = $this->newObject('confirm','utilities');
+$objMsg = $this->newObject('timeoutmessage', 'htmlelements');
 
 // Set up language items
 $assignmentsLabel = $this->objLanguage->languageText('mod_assignmentadmin_assignments','assignmentadmin');
@@ -103,7 +103,7 @@ if(!empty($data)){
             }
 
             // Link to view module
-            $objLink->link($this->uri(array('action'=>'view', 'mod'=>'back', 'id'=>$line['id']), $module));
+            $objLink = new link($this->uri(array('action'=>'view', 'mod'=>'back', 'id'=>$line['id']), $module));
             $objLink->link = $line['name'];
             $objLink->title = $viewLabel.' '.ucwords($typeLabel).' '.$line['name'];
             $link = $objLink->show();
@@ -119,7 +119,7 @@ if(!empty($data)){
             if($line['closing_date'] < date('Y-m-d H:i', time())){
                 $objIcon->setIcon('comment');
                 $objIcon->title = $markLabel.' '.ucwords($typeLabel);
-                $objLink->link($this->uri(array('action'=>'mark', 'id'=>$line['id']),$module));
+                $objLink = new link($this->uri(array('action'=>'mark', 'id'=>$line['id']),$module));
                 $objLink->link = $objIcon->show();
                 $icons .= $objLink->show();
             }
@@ -168,6 +168,7 @@ if($this->essay){
     $objLink->title = $openLabel.' '.$essayLabel;
     $essayLink = $objLink->show(); // icon
 
+    $objLink = new link($this->uri(array(''),'essayadmin'));
     $objLink->link = $essayLabel; // link text
     $essayLink .= '&nbsp;&nbsp;'.$objLink->show();
 
@@ -258,6 +259,7 @@ $objTable2->endRow();
 echo $objTable2->show();
 
 // Display Page
+$objHead = new htmlheading();
 $objHead->str = $searchLabel;
 $objHead->type = 3;
 echo $objHead->show();
@@ -272,6 +274,7 @@ if(isset($message) && !empty($message)){
 }
 
 if(isset($title)){
+    $objHead = new htmlheading();
     $objHead->str = $title;
     $objHead->type = 4;
     echo $objHead->show();
