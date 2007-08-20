@@ -200,7 +200,7 @@ class cms extends controller
             //Get action from query string and set default to view
             //  and assign the action to a property of this object
             $this->action=$this->getParam('action', 'home');
-            // $this->setVar('pageSuppressXML', TRUE);
+            $this->setVar('pageSuppressXML', TRUE);
             /*
             * Convert the action into a method (alternative to
             * using case selections)
