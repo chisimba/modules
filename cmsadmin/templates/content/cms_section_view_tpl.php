@@ -39,7 +39,7 @@ $isRegistered = $this->objModule->checkIfRegistered('blocks');
 
 if (isset($section)) {
     $sectionId = $section['id'];
-    $title = $section['title'];
+    $title = html_entity_decode($section['title']);
     $menuText = $section['menutext'];
     $layout = $section['layout'];
     $published = $section['published'];
@@ -112,8 +112,8 @@ if (isset($subSections)) {
         $class = (($i++ % 2) == 0) ? 'odd' : 'even';
         //Get sub sec data
         $subSecId = $subsec['id'];
-        $subSecTitle = htmlentities($subsec['title']);
-        $subSecMenuText = htmlentities($subsec['menutext']);
+        $subSecTitle = $subsec['title'];
+        $subSecMenuText = $subsec['menutext'];
         $subSecPublished = $subsec['published'];
         $subSecLayout = $this->_objLayouts->getLayout($subsec['layout']);
         $subSecLayoutName = $subSecLayout['name'];
@@ -180,7 +180,7 @@ if (!empty($pages)) {
         //Get page data
         $pageId = $page['page_id'];
         $ordering = $page['co_order'];
-        $pageTitle = htmlentities($page['title']);
+        $pageTitle = html_entity_decode($page['title']);
         $articleDate = $page['modified'];
         $pagePublished = $page['published'];
 

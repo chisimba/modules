@@ -8,12 +8,16 @@ YAHOO.example.onMenuReady = function() {
 
                 // Instantiate and render the menu
 
-                var oMenu = new YAHOO.widget.Menu(
+              var oMenu = new YAHOO.widget.Menu(
                                     "productsandservices", 
                                     {
                                         position:"static", 
                                         hidedelay:750, 
-                                        lazyload:true 
+                                        lazyload:true, 
+                                        effect:{ 
+                                            effect:YAHOO.widget.ContainerEffect.FADE,
+                                            duration:0.25
+                                        } 
                                     }
                                 );
 
@@ -41,6 +45,7 @@ $this->appendArrayVar('headerParams', $this->getJavascriptFile('yahoo/yahoo.js',
 $this->appendArrayVar('headerParams', $this->getJavascriptFile('event/event.js', 'yahoolib'));
 $this->appendArrayVar('headerParams', $this->getJavascriptFile('dom/dom.js', 'yahoolib'));
 $this->appendArrayVar('headerParams', $this->getJavascriptFile('dragdrop/dragdrop.js', 'yahoolib'));
+$this->appendArrayVar('headerParams', $this->getJavascriptFile('animation/animation.js', 'yahoolib'));
 $this->appendArrayVar('headerParams', $this->getJavascriptFile('container/container.js', 'yahoolib'));
 $this->appendArrayVar('headerParams', $this->getJavascriptFile('menu/menu.js', 'yahoolib'));
 $this->appendArrayVar('headerParams', $css);

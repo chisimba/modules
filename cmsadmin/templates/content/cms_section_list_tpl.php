@@ -189,7 +189,7 @@ if (is_array($arrSections)) {
 	    $tableRow = array();
 	    $tableRow[] = $objCheck->show();
 	    $tableRow[] = $viewSectionLink;
-	    $tableRow[] = $section['title'];
+	    $tableRow[] = html_entity_decode($section['title']);
 	    $tableRow[] = $this->_objContent->getNumberOfPagesInSection($section['id']);
 	    $tableRow[] = $this->_objLayouts->getLayoutDescription($section['layout']);
 	    $tableRow[] = $this->_objSections->getOrderingLink($section['id']);//$this->_objSections->getPageOrderType($section['ordertype']);

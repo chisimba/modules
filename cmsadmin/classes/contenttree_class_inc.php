@@ -126,9 +126,9 @@ class contenttree extends object
 
                     if (!empty($sectionAction)) {
                         $nodeUri = $this->uri(array('action' => $sectionAction, 'id' => $node['id'], 'sectionid' => $node['id']), $module);
-                        $link = '<a href="'.$nodeUri.'">'.htmlentities($node['title']).'</a>';
+                        $link = '<a href="'.$nodeUri.'">'.$node['title'].'</a>';
                     } else {
-                        $link = htmlentities($node['title']);
+                        $link = $node['title'];
                     }
                      // if node has further child nodes, recursively call buildLevel
                     if ($this->getChildNodes($node['id'], $admin)) {
@@ -194,7 +194,7 @@ class contenttree extends object
 
             $htmlContent = '';
             if (!empty($contentNodes)) {
-            	$htmlContent =  '<div id="'.htmlentities($contentNodes[0]['title']).'" class="yuimenu">';
+            	$htmlContent =  '<div id="'.$contentNodes[0]['title'].'" class="yuimenu">';
             	$htmlContent .=		'<div class="bd">';
 		        $htmlContent .=		'<ul>';	
                 foreach($contentNodes as $contentNode) {
@@ -205,6 +205,7 @@ class contenttree extends object
                         $link = $contentNode['title'];
                     }
                     $htmlContent .='<li class="yuimenuitem">'.$link.'</li>';
+                   
                 }
                  if ($this->getChildNodes($id, $admin)) {
 		         
@@ -232,7 +233,7 @@ class contenttree extends object
                         $nodeUri = $this->uri(array('action' => $action, 'id' => $node['id'], 'sectionid' => $node['id']), $module);
                         $link = '<a href="'.$nodeUri.'">'.$node['title'].'</a>';
                     } else {
-                        $link = htmlentities($node['title']);
+                        $link = $node['title'];
                     }
 
                    	$htmlContent .= "<li class='yuimenuitem'>".$link;
@@ -252,7 +253,36 @@ class contenttree extends object
 			                    }
 			                    $htmlContent .='<li class="yuimenuitem">'.$link.'</li>';
 			                }
-		               
+		                if ($this->getChildNodes($node['id'], $admin)) {
+		                	 $sibling = $this->getChildNodes($node['id'], $admin);
+		                	 
+                 			foreach($sibling as $ctNodes) {
+			                     if (!empty($action)) {
+                        			$nodeUri = $this->uri(array('action' => $action, 'id' => $ctNodes['id'], 'sectionid' => $ctNodes['id']), $module);
+                        			$link = '<a href="'.$nodeUri.'">'.$ctNodes['title'].'</a>';
+                    			} else {
+                        			$link = $ctNodes['title'];
+                    			}
+                   				$htmlContent .= "<li class='yuimenuitem'>".$link;
+		           				$cNodes = $this->getContent($ctNodes['id'], $admin);
+		           				$htmlContent .='<div id="'.$cNodes[0]['title'].'" class="yuimenu">';
+		            			$htmlContent .=	'<div class="bd">';
+		            			$htmlContent .=	'<ul class="first-of-type">';	
+                   				foreach ($cNodes as $value) {
+                   					if (!empty($action)) {
+			                        	$url = $this->uri(array('action' => $action, 'id' => $value['id'], 'sectionid' => $value['sectionid']), $module);
+			                        	$link = '<a href="'.$url.'">'.$value['title'].'</a>';
+			                    	} else {
+			                        	$link = $value['title'];
+			                    	}
+			                    	$htmlContent .='<li class="yuimenuitem">'.$link.'</li>';
+                   				}
+                 				$htmlContent .='</ul>';
+		                		$htmlContent .='</div>';
+		                		$htmlContent .='</div>';
+		                		$htmlContent .='</li>';
+			                }
+		          		}
 		                $htmlContent .='</ul>';
 		                $htmlContent .='</div>';
 		                $htmlContent .='</div>';

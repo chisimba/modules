@@ -2475,7 +2475,7 @@ class cmsutils extends object
     		{
     			$item['link'] = NULL;
     		}
-    		@$content .= "<li><a href=\"" . htmlentities($item['link']) . "\">" . htmlentities($item['title']) . "</a></li>\n";
+    		@$content .= "<li><a href=\"" . $item['link'] . "\">" . $item['title'] . "</a></li>\n";
     	}
     	$content .=  "</ul>\n";
     	return $objFeatureBox->show($head, $content);
@@ -2640,7 +2640,7 @@ class cmsutils extends object
         $orderingInput = new hiddeninput('ordering', $page['ordering']);
         $parentInput = new hiddeninput('parent', $page['sectionid']);
         $creativeCommonsInput = new hiddeninput('creativecommons', $page['post_lic']);
-        $introInput = new hiddeninput('intro', htmlentities($page['introtext']));
+        $introInput = new hiddeninput('intro', $page['introtext']);
 
         $titleInput->value = $page['title'];
 
