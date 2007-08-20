@@ -312,7 +312,7 @@ class cmslayouts extends object
     			$pageStr = '';
     		}else{
     			$this->objHead->type = '2';
-    			$this->objHead->str = htmlentities($page['title']);
+    			$this->objHead->str = $page['title'];
     			$pageStr = $this->objHead->show();
 
     			$pageStr .= '<p><span class="date">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
@@ -361,7 +361,7 @@ class cmslayouts extends object
     					$pageStr = '';
     				}else{
     					$this->objHead->type = '2';
-    					$this->objHead->str = htmlentities($page['title']);
+    					$this->objHead->str = $page['title'];
 
     					$pageStr = $this->objHead->show();
     				}
@@ -504,7 +504,7 @@ class cmslayouts extends object
                         if(isset($page['hide_title']) && $page['hide_title'] == 1){
                             $strBody = '';
                         }else{
-                            $this->objHead->str = htmlentities($page['title']);
+                            $this->objHead->str = $page['title'];
                             $this->objHead->type = 2;
                             $strBody = $this->objHead->show();
                         }
@@ -600,7 +600,7 @@ class cmslayouts extends object
                         $pageStr = '';
                     }else{
                         $this->objHead->type = '4';
-                        $this->objHead->str = htmlentities($page['title']);
+                        $this->objHead->str = $page['title'];
                         $pageStr .= $this->objHead->show();
                        
                         $pageStr .= '<p>';
@@ -710,7 +710,7 @@ class cmslayouts extends object
                             $pageStr = '';
                         }else{
                             $this->objHead->type = 2;
-                            $this->objHead->str = htmlentities($page['title']);
+                            $this->objHead->str = $page['title'];
                             $pageStr = $this->objHead->show();
                         }
                         $pageStr .= stripslashes($page['body']);
@@ -871,7 +871,7 @@ class cmslayouts extends object
                     'id' => $page['id']
                 ));
                 $bmurl = urlencode($bmurl);
-                $bmlink = "http://www.addthis.com/bookmark.php?pub=&amp;url=".$bmurl."&amp;title=".urlencode(addslashes(htmlentities($page['title'])));
+                $bmlink = "http://www.addthis.com/bookmark.php?pub=&amp;url=".$bmurl."&amp;title=".urlencode(addslashes($page['title']));
                 $bmtext = '<img src="http://www.addme.com/images/button1-bm.gif" width="125" height="16" border="0" alt="'.$this->objLanguage->languageText("mod_cms_bookmarkarticle", "cms").'"/>';
                 $bookmark = new href($bmlink, $bmtext, NULL);
                 //do the cc licence part
