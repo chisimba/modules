@@ -82,11 +82,11 @@ class block_randomphoto extends object
 		$objThumbnail = & $this->getObject('thumbnails','filemanager');
         
         $image = $objPhoto->getRandomPhoto();
-        $css .= '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('style/default.css','photogallery').'" />';
+        $css = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('style/default.css','photogallery').'" />';
 		
 		$this->appendArrayVar('headerParams',$css);
 		
-		$str.='<div class="image"><div class="imagethumb">';
+		$str='<div class="image"><div class="imagethumb">';
 		$filename = $this->_objFileMan->getFileName($image['file_id']); 
  		$path = $objThumbnail->getThumbnail($image['file_id'],$filename);
  		$bigPath = $this->_objFileMan->getFilePath($image['file_id']);
