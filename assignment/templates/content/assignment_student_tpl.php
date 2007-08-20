@@ -14,14 +14,11 @@
 $this->setLayoutTemplate('assignment_layout_tpl.php');
 
 // Set up html elements
-$objTable =& $this->newObject('htmltable','htmlelements');
-$objTable1 =& $this->newObject('htmltable','htmlelements');
-$objTable2 =& $this->newObject('htmltable','htmlelements');
-$objTable3 =& $this->newObject('htmltable','htmlelements');
-$objHead =& $this->newObject('htmlheading','htmlelements');
-$objLink =& $this->newObject('link','htmlelements');
-$objIcon =& $this->newObject('geticon','htmlelements');
-$objTimeOut =& $this->newObject('timeoutMessage','htmlelements');
+$this->loadClass('htmltable','htmlelements');
+$this->loadClass('htmlheading','htmlelements');
+$this->loadClass('link','htmlelements');
+$objIcon = $this->newObject('geticon','htmlelements');
+$objTimeOut = $this->newObject('timeoutMessage','htmlelements');
 
 $repWords = array('authors'=>'lecturers');
 
@@ -60,7 +57,7 @@ $rightLinks = '';
 if($this->essay){
     $objIcon->setIcon('modules/essay');
     $objIcon->title = $openLabel.' '.$essayLabel;
-    $objLink->link($this->uri(array(''),'essay'));
+    $objLink = new link($this->uri(array(''),'essay'));
     $objLink->link = $objIcon->show();
     $objLink->title = $bookLabel;
     $essayLink = '<br />'.$objLink->show();
@@ -71,7 +68,7 @@ if($this->essay){
 if($this->ws){
     $objIcon->setIcon('modules/worksheet');
     $objIcon->title = $openLabel.' '.$worksheetLabel;
-    $objLink->link($this->uri(array(''),'worksheet'));
+    $objLink = new link($this->uri(array(''),'worksheet'));
     $objLink->link = $objIcon->show();
     $objLink->title = $openLabel.' '.$worksheetLabel;
     $wsLink = '<p/>'.$objLink->show();
@@ -82,7 +79,7 @@ if($this->ws){
 if($this->test){
     $objIcon->setIcon('modules/test');
     $objIcon->title = $openLabel.' '.$testLabel;
-    $objLink->link($this->uri(array(''),'test'));
+    $objLink = new link($this->uri(array(''),'test'));
     $objLink->link = $objIcon->show();
     $objLink->title = $openLabel.' '.$testLabel;
     $testLink = '<p/>'.$objLink->show();
@@ -110,7 +107,7 @@ if($this->rubric){
     }
 }
 
-$objTable->init();
+$objTable = new htmltable();
 
 $objTable->startRow();
 $objTable->addCell($leftLinks, '50%');
@@ -128,6 +125,7 @@ if(isset($msg)){
 }
 
 if($this->essay){
+    $objHead = new htmlheading();
     $objHead->str=$essayHead;
     $objHead->type=3;
 
@@ -167,7 +165,7 @@ if($this->essay){
                     $objIcon->setIcon('comment_view');
                     $objIcon->title=$commentLabel;
                     $objIcon->extra="onclick=\"javascript:window.open('" .$this->uri(array('action'=>'showcomment','book'=>$line['id'],'essay'=>$line['essayName']),'essay')."', 'essaycomment', 'width=400, height=200, scrollbars=1')\" ";
-                    $objLink->link('#');
+                    $objLink = new link('#');
                     $objLink->link = $objIcon->show();
                     $status .= $markLabel.' = '.$line['mark'].'%&nbsp;'.$objLink->show();
                 }else if($line['submitdate'] > 0){
@@ -204,6 +202,7 @@ if($this->essay){
 }
 
 if($this->ws){
+    $objHead = new htmlheading();
     $objHead->str=$wsHead;
     $objHead->type=3;
 
@@ -216,6 +215,7 @@ if($this->ws){
     $tableHd[] = $dueLabel;
     $tableHd[] = $statusLabel;
 
+    $objTable1 = new htmltable();
     $objTable1->addHeader($tableHd,'heading');
 
     // List worksheets in a table
@@ -268,6 +268,7 @@ if($this->ws){
 }
 
 if($this->test){
+    $objHead = new htmlheading();
     $objHead->str = $testLabel;
     $objHead->type = 3;
 
@@ -280,6 +281,7 @@ if($this->test){
     $tableHd[] = $dueLabel;
     $tableHd[] = $statusLabel;
 
+    $objTable3 = new htmltable();
     $objTable3->addHeader($tableHd, 'heading');
 
     $objTable3->cellpadding=2;
@@ -333,6 +335,7 @@ if($this->test){
     echo $objTable3->show();
 }
 
+$objHead = new htmlheading();
 $objHead->str=$assignmentsLabel;
 $objHead->type=3;
 
@@ -346,6 +349,8 @@ $tableHd[] = $lecturerLabel;
 $tableHd[] = $dueLabel;
 $tableHd[] = $statusLabel;
 
+$objTable2 = new htmltable();
+ 
 $objTable2->addHeader($tableHd,'heading');
 
 // List worksheets in a table
@@ -366,7 +371,7 @@ if(!empty($assignData)){
             $objIcon->extra="onclick=\"javascript:window.open('" .$this->uri(array(
             'action'=>'showcomment', 'id'=>$line['submitid'], 'name'=>$line['name']))
             ."', 'assignmentcomment', 'width=400, height=200, scrollbars=1')\" ";
-            $objLink->link('#');
+            $objLink = new link('#');
             $objLink->link = $objIcon->show();
             $status = $markLabel.' = '.$line['studentMark'].'%&nbsp;'.$objLink->show();
 
@@ -375,7 +380,7 @@ if(!empty($assignData)){
                 $objIcon->setIcon('download');
                 $objIcon->title=$downloadLabel;
                 $objIcon->extra='';
-                $objLink->link($this->uri(array('action'=>'download','fileid'=>$line['fileid'])));
+                $objLink = new link($this->uri(array('action'=>'download','fileid'=>$line['fileid'])));
                 $objLink->link = $objIcon->show();
                 $status .= '&nbsp;'.$objLink->show();
             }
@@ -398,18 +403,18 @@ if(!empty($assignData)){
         if($noLink){
             $name = $line['name'];
         }else{
-            $objLink->link($this->uri(array('action'=>'view', 'id'=>$line['id'])));
+            $objLink = new link($this->uri(array('action'=>'view', 'id'=>$line['id'])));
             $objLink->title = $viewLabel.' '.$line['name'];
             $objLink->link = $line['name'];
             $name = $objLink->show();
         }
 
         // Truncate the description if more than 100 characters
-        if(strlen($line['description'])>100){
-            $description = substr($line['description'],0,100).'...';
-        }else{
+        //if(strlen($line['description'])>100){
+        //    $description = substr($line['description'],0,100).'...';
+        //}else{
             $description = $line['description'];
-        }
+        //}
 
         // Display whether the assignment is online or uploadable
         if($line['format']){

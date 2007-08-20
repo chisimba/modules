@@ -33,7 +33,7 @@ class assignment extends controller
     {
         // Check if the module is registered and redirect if not.
         // Check if the assignment module is registered and can be linked to.
-        /*$this->objModules =& $this->newObject('modules','modulecatalogue');
+        /*$this->objModules = $this->getObject('modules','modulecatalogue');
         if(!$this->objModules->checkIfRegistered('Assignments', 'assignment')){
             return $this->nextAction('notregistered',array('modname'=>'assignment'), 'redirect');
         }*/
@@ -58,34 +58,35 @@ class assignment extends controller
             $this->rubric = TRUE;
         }
 	*/
-        $this->dbAssignment =& $this->getObject('dbassignment','assignment');
-        $this->dbSubmit =& $this->getObject('dbassignmentsubmit','assignment');
+        $this->dbAssignment = $this->getObject('dbassignment','assignment');
+        $this->dbSubmit = $this->getObject('dbassignmentsubmit','assignment');
 
         /*if($this->essay){
-            $this->dbEssayTopics =& $this->newObject('dbessay_topics','essay');
-            $this->dbEssays =& $this->newObject('dbessays','essay');
-            $this->dbEssayBook =& $this->newObject('dbessay_book','essay');
+            $this->dbEssayTopics = $this->getObject('dbessay_topics','essay');
+            $this->dbEssays = $this->getObject('dbessays','essay');
+            $this->dbEssayBook = $this->getObject('dbessay_book','essay');
         }
 	*/
         if($this->ws){
-            $this->dbWorksheet =& $this->newObject('dbworksheet','worksheet');
-            $this->dbWorksheetResults =& $this->newObject('dbworksheetresults','worksheet');
+            $this->dbWorksheet = $this->getObject('dbworksheet','worksheet');
+            $this->dbWorksheetResults = $this->getObject('dbworksheetresults','worksheet');
         }
         /*if($this->test){
-            $this->dbTestAdmin =& $this->newObject('dbtestadmin','testadmin');
-            $this->dbTestResults =& $this->newObject('dbresults','testadmin');
+            $this->dbTestAdmin = $this->getObject('dbtestadmin','testadmin');
+            $this->dbTestResults = $this->getObject('dbresults','testadmin');
         }
 	*/
-        $this->objDate =& $this->newObject('dateandtime','utilities');
-        $this->objLanguage =& $this->newObject('language','language');
-        $this->objUser =& $this->newObject('user','security');
-        //$this->objGroups =& $this->newObject('groupAdminModel','groupadmin');
-        $this->objContext =& $this->newObject('dbcontext','context');
+        $this->objDate = $this->getObject('dateandtime','utilities');
+        $this->objLanguage = $this->getObject('language','language');
+        $this->objUser = $this->getObject('user','security');
+        //$this->objGroups = $this->getObject('groupAdminModel','groupadmin');
+        $this->objContext = $this->getObject('dbcontext','context');
 		$this->dbassignmentsubmit = $this->getObject('dbassignmentsubmit');
         // Get an instance of the filestore object and change the tables to essay specific tables
-       $this->objFile= $this->newObject('upload','filemanager');
+       $this->objFile= $this->getObject('upload','filemanager');
        // $this->objFile->changeTables('tbl_assignment_filestore','tbl_assignment_blob');
-		$this->objFileRegister =& $this->getObject('registerfileusage', 'filemanager');
+		$this->objFileRegister = $this->getObject('registerfileusage', 'filemanager');
+		$this->objCleaner = $this->getObject('htmlcleaner', 'utilities');
 
         $this->userId = $this->objUser->userId();
 
@@ -97,7 +98,7 @@ class assignment extends controller
         // Log this call if registered
         /*if(!$this->objModules->checkIfRegistered('logger', 'logger')){
             //Get the activity logger class
-            $this->objLog=$this->newObject('logactivity', 'logger');
+            $this->objLog=$this->getObject('logactivity', 'logger');
             //Log this module call
             $this->objLog->log();
         }*/
@@ -262,7 +263,7 @@ class assignment extends controller
         if(!empty($assignData)){
             foreach($assignData as $key=>$val){
                 $submitData = $this->dbSubmit->getSubmit("assignmentid='".$val['id']."' AND
-                userid='".$this->objUser->userId()."'", 'id AS submitid, mark AS studentmark, datesubmitted, fileid');
+                userid='".$this->objUser->userId()."'", 'id AS submitid, mark AS studentmark, datesubmitted, studentfileid');
 
 		if(!($submitData === FALSE)){
                 	$assignData[$key] = array_merge($val, $submitData[0]);
@@ -334,7 +335,9 @@ class assignment extends controller
 	    	$fileId = $this->objFile->uploadFile($_FILES['file'],'file',$fileId);
             $fields['fileid'] = $fileId;
         }else{
-            $fields['online'] = $this->getParam('text', '');
+            $text = $this->getParam('text', '');
+            $text = $this->objCleaner->cleanHtml($text);
+            $fields['online'] = $text;
         }
 
         $postSubmitId = $this->getParam('submitid', NULL);

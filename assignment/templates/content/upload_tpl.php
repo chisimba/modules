@@ -13,8 +13,7 @@ $this->setLayoutTemplate('assignment_layout_tpl.php');
 
 // set up html elements
 $this->loadclass('htmltable','htmlelements');
-$objLayer = $this->newObject('layer','htmlelements');
-$objInput = $this->newObject('textinput','htmlelements');
+$this->loadclass('textinput','htmlelements');
 $objConfirm = $this->newObject('timeoutmessage','htmlelements');
 
 // set up language items

@@ -24,7 +24,7 @@ class modulelinks_assignment extends object
 
     public function init()
     {
-    	$this->objAssignment =& $this->getObject('dbassignment', 'assignment');
+    	$this->objAssignment = $this->getObject('dbassignment', 'assignment');
     }
     
     public function show()
