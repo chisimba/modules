@@ -1,16 +1,17 @@
 <?php
 /**
-* search class extends object
+* Class to create the advanced search form and to retrieve the search results from the database
+*
 * @package etd
 * @filesource
 */
 
 /**
-* search class
+* Class to create the advanced search form and to retrieve the search results from the database
+*
 * @author Megan Watson
-* @copyright (c) 2006 UWC
+* @copyright (c) 2006 University of the Western Cape
 * @version 0.2
-* @modified Megan Watson 2006 10 25 Ported to chisimba
 */
 
 class search extends object
@@ -79,6 +80,27 @@ class search extends object
     * @var $crossRef The operators for cross referencing the search criteria
     */
     public $crossRef =  array();
+    
+    /**
+    * The list of degrees for populating the dropdown select
+    * @var array $degreeList 
+    * @access private
+    */
+    private $degreeList = '';
+    
+    /**
+    * The list of faculties for populating the dropdown select
+    * @var array $facultyList 
+    * @access private
+    */
+    private $facultyList = '';
+    
+    /**
+    * The list of departments for populating the dropdown select
+    * @var array $departmentList 
+    * @access private
+    */
+    private $departmentList = '';
     
     /**
     * Constructor method
@@ -228,6 +250,7 @@ class search extends object
     */
     private function specificSearch($module)
     {
+        $this->showJavascript();
         $hdSearch = $this->objLanguage->languageText('phrase_searchby');
         $lbStart = $this->objLanguage->languageText('phrase_startdate');
         $lbEnd = $this->objLanguage->languageText('phrase_enddate');
@@ -237,16 +260,26 @@ class search extends object
         $this->objTable->row_attributes = " height='35'";
 
         $objInput = new textinput('box1', '', NULL, '57');
+        $objInput->setId('inputbox1');
         $objInput->extra = "autocomplete='off'";
-        $this->objTable->addRow(array('', $this->getCriteria(1), $objInput->show()));
+        $inputBox = $objInput->show();
+        $inputBox .= $this->getDegreeList(1).$this->getFacultyList(1).$this->getDepartmentList(1);
+        
+        $this->objTable->addRow(array('', $this->getCriteria(1), $inputBox));
 
         $objInput = new textinput('box2', '', NULL, '57');
+        $objInput->setId('inputbox2');
         $objInput->extra = "autocomplete='off'";
-        $this->objTable->addRow(array($this->getCrossRef(1), $this->getCriteria(2), $objInput->show()));
+        $inputBox2 = $objInput->show();
+        $inputBox2 .= $this->getDegreeList(2).$this->getFacultyList(2).$this->getDepartmentList(2);
+        $this->objTable->addRow(array($this->getCrossRef(1), $this->getCriteria(2), $inputBox2));
 
         $objInput = new textinput('box3', '', NULL, '57');
+        $objInput->setId('inputbox3');
         $objInput->extra = "autocomplete='off'";
-        $this->objTable->addRow(array($this->getCrossRef(2), $this->getCriteria(3), $objInput->show()));
+        $inputBox3 = $objInput->show();
+        $inputBox3 .= $this->getDegreeList(3).$this->getFacultyList(3).$this->getDepartmentList(3);
+        $this->objTable->addRow(array($this->getCrossRef(2), $this->getCriteria(3), $inputBox3));
 
         // date search
         $this->objTable->startRow();
@@ -283,7 +316,7 @@ class search extends object
     }
 
     /**
-    * Method to get the dropdown for 
+    * Method to get the dropdown for displaying the number of results limit
     *
     * @access private
     * @return string html
@@ -311,6 +344,147 @@ class search extends object
 
         return $dispStr;
     }
+    
+    /**
+    * Method to display the javascript for displaying the select box or input box according to the search criteria selected.
+    *
+    * @access private
+    * @return void
+    */
+    private function showJavascript()
+    {
+        $javascript = "<script type=\"text/javascript\">
+        
+                function changeInput(drop){
+                    var el1 = 'inputbox'+drop;
+                    var el2 = 'degreebox'+drop;
+                    var el3 = 'departmentbox'+drop;
+                    var el4 = 'facultybox'+drop;
+                    var el = document.getElementById('criteria'+drop).value;
+                    
+                    a = $(el1);
+                    b = $(el2);
+                    c = $(el3);
+                    d = $(el4);
+                    
+                    a.hide();
+                    b.hide();
+                    c.hide();
+                    d.hide();
+                    
+                    switch(el){
+                        case 'thesis_degree_name':
+                            b.show();
+                            break;
+                        case 'thesis_degree_discipline':
+                            c.show();
+                            break;
+                        case 'thesis_degree_faculty':
+                            d.show();
+                            break;
+                        default:
+                            a.show();
+                    }
+                    
+                }
+        
+            </script>";
+            
+            $this->appendArrayVar('headerParams', $javascript);
+    }
+    
+    /**
+    * Method to create a drop down of the list of degrees
+    *
+    * @access private
+    * @return string html
+    */
+    private function getDegreeList($num = 1)
+    {            
+        // get degree list
+        $objDegrees = $this->getObject('dbdegrees', 'etd');
+        
+        // Use global variable containing degree list - else get from DB
+        if(empty($this->degreeList)){
+            $list = $objDegrees->getList('degree');
+            $this->degreeList = $list;
+        }else{
+            $list = $this->degreeList;
+        }
+        
+        $objDrop = new dropdown('box'.$num);
+        $objDrop->setId('degreebox'.$num);
+        $objDrop->extra = "style='display: none;'";
+        if(!empty($list)){
+            foreach($list as $item){
+                $objDrop->addOption(htmlentities($item['name']), htmlentities($item['name']));
+            }
+        }
+        
+        return $objDrop->show();
+    }
+    
+    /**
+    * Method to create a drop down of the list of faculties
+    *
+    * @access private
+    * @return string html
+    */
+    private function getFacultyList($num = 1)
+    {            
+        // get degree list
+        $objDegrees = $this->getObject('dbdegrees', 'etd');
+        
+        // Use global variable containing degree list - else get from DB
+        if(empty($this->facultyList)){
+            $list = $objDegrees->getList('faculty');
+            $this->facultyList = $list;
+        }else{
+            $list = $this->facultyList;
+        }
+        
+        $objDrop = new dropdown('box'.$num);
+        $objDrop->setId('facultybox'.$num);
+        $objDrop->extra = "style='display: none;'";
+        if(!empty($list)){
+            foreach($list as $item){
+                $objDrop->addOption(htmlentities($item['name']), htmlentities($item['name']));
+            }
+        }
+        
+        return $objDrop->show();
+    }
+    
+    /**
+    * Method to create a drop down of the list of departments
+    *
+    * @access private
+    * @return string html
+    */
+    private function getDepartmentList($num = 1)
+    {            
+        // get degree list
+        $objDegrees = $this->getObject('dbdegrees', 'etd');
+        
+        // Use global variable containing degree list - else get from DB
+        if(empty($this->departmentList)){
+            $list = $objDegrees->getList('department');
+            $this->departmentList = $list;
+        }else{
+            $list = $this->departmentList;
+        }
+        
+        $objDrop = new dropdown('box'.$num);
+        $objDrop->setId('departmentbox'.$num);
+        $objDrop->extra = "style='display: none;'";
+        if(!empty($list)){
+            foreach($list as $item){
+                $objDrop->addOption(htmlentities($item['name']), htmlentities($item['name']));
+            }
+        }
+        
+        return $objDrop->show();
+    }
 
     /**
     * Method to create the drop down containing the search criteria (Author/title/etc).
@@ -320,12 +494,15 @@ class search extends object
     * @return string html
     */
     private function getCriteria($i = 1)
-    {
+    {   
         $objDrop = new dropdown("criteria[$i]");
+        $objDrop->setId('criteria'.$i);
         foreach($this->searchCriteria as $item){
             $objDrop->addOption($item['value'], $item['label']);
         }
+        $objDrop->extra = "onchange=\"javascript: changeInput('{$i}');\"";
         return $objDrop->show();
+        
     }
 
     /**

@@ -659,6 +659,7 @@ class etd extends controller
             case 'emailsearch':
             case 'sendemail':
             case 'viewstats':
+            case 'viewfaq':
             case 'printstats':
             case 'emailstats':
             case 'showrss':

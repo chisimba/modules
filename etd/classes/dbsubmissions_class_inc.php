@@ -82,10 +82,11 @@ class dbsubmissions extends dbtable
     * @param string $userId The user Id for the modifier.
     * @return string $id
     */
-    public function editSubmission($userId, $id = NULL, $status = 'assembly')
+    public function editSubmission($userId, $id = NULL, $status = 'assembly', $level = 0)
     {
         $fields = array();
         $fields['status'] = $status;
+        $fields['approvalLevel'] = $level;
 
         if(!empty($id)){
             $fields['modifierid'] = $userId;

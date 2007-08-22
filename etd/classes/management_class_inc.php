@@ -711,7 +711,7 @@ class management extends object
     private function saveNewResource($submitId = NULL)
     {
         // Update the submissions table to show who modified it and when
-        $submitId = $this->dbSubmissions->editSubmission($this->userId, $submitId, 'metadata');
+        $submitId = $this->dbSubmissions->editSubmission($this->userId, $submitId, 'metadata', 5);
 
         // Save the dublincore metadata
         $dublin = array();
@@ -1391,10 +1391,6 @@ class management extends object
                 $id = $this->getParam('id');
                 $result = $this->files->uploadFile($submitId, $id);
                 $this->setSession('resourceMsg', $result);
-                
-                // restore php.ini settings
-                //ini_restore('post_max_size');
-                //ini_restore('upload_max_filesize');
                 break;
                 
             case 'updatecitation':
@@ -1428,6 +1424,7 @@ class management extends object
                 // Get submissions by the users groups
                 if(in_array('manager', $this->access)){
                     $list[] = '5';
+                    $list[] = '4';
                 }
                 if(in_array('editor', $this->access)){
                     $list[] = '4';
