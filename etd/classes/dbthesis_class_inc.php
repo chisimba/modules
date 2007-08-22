@@ -181,11 +181,19 @@ class dbThesis extends dbtable
     */
     public function getMetadata($id)
     {
-        $sql = "SELECT dc.id AS dcId, thesis.id AS thesisId, thesis.*, dc.* ";
+        $this->embTable = 'tbl_etd_embargos';
+        
+        $sql = "SELECT dc.id AS dcId, thesis.id AS thesisId, thesis.*, dc.*, ";
+        
+            $sql .= "(SELECT periodend FROM {$this->embTable} em, {$this->table} th 
+                    WHERE submissionid = th.submitid AND th.id = '$id') AS embargo ";
+            
+            
         $sql .= "FROM {$this->table} AS thesis, {$this->dcTable} AS dc ";
         $sql .= "WHERE dc.id = thesis.dcMetaId AND thesis.id = '$id'";
         
         $data = $this->getArray($sql);
+        
         return $data[0];
     }
 

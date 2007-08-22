@@ -40,12 +40,13 @@ class dbEmbargo extends dbtable
     * @param string $id The id the embargo if it is being edited.
     */
     public function saveEmbargoRequest($submitId, $id = NULL)
-    {        
+    {
         $request = $this->getParam('reason');
         $period = $this->getParam('period');
 
         $fields = array();
         $fields['request'] = $request;
+        $fields['reason'] = $request;
         $fields['period'] = $period;
         $fields['updated'] = date('Y-m-d H:i:s');
 
@@ -55,7 +56,7 @@ class dbEmbargo extends dbtable
             $this->update('id', $id, $fields);
         }else{
             $fields['submissionid'] = $submitId;
-            $fields['granted'] = 'pending';
+            $fields['granted'] = 'yes';
             $fields['creatorid'] = $this->objUser->userId();
             $fields['datecreated'] = date('Y-m-d H:i:s');
             $id = $this->insert($fields);
@@ -121,6 +122,65 @@ class dbEmbargo extends dbtable
             $id = $this->insert($fields);
         }
         return $id;
+    }
+    
+    /**
+    * Method to set the start and end dates on an embargo
+    *
+    * @param string $submitId
+    * @access public
+    * @return void
+    */
+    public function setEmbargoDates($submitId)
+    {
+        // get embargo - to check if the embargo exists and set the period of embargo
+        $data = $this->getEmbargoRequest($submitId);
+        if(!empty($data)){
+            $id = $data['id'];
+            $period = $data['period'];
+            
+            $year = date('Y');
+            $month = date('m');
+            $day = date('d');
+            
+            if($period == 12){
+                // add 1 year
+                $year = $year + 1;
+            }else{
+                // add x months
+                $month = $month + $period;
+                if($month > 12){
+                    $year = date('Y') + 1;
+                    $month = $month - 12;
+                }
+            }
+            $end = date('Y-m-d', mktime(0, 0, 0, $month, $day, $year));
+            
+            // Update the DB
+            $fields = array();
+            $fields['periodstart'] = date('Y-m-d');
+            $fields['periodend'] = $end;
+            $fields['granted'] = 'yes';
+            $fields['updated'] = date('Y-m-d H:i:s');
+            $fields['modifierid'] = $this->objUser->userId();
+            $fields['datemodified'] = date('Y-m-d H:i:s');
+            $this->update('id', $id, $fields);
+            
+            return TRUE;
+        }
+        return FALSE;
+    }
+
+    /**
+    * Method to remove an embargo request.
+    */
+    public function removeEmbargoIfExists($submitId)
+    {
+        $data = $this->getEmbargoRequest($submitId);
+        if(!empty($data)){
+            $id = $data['id'];
+            $this->delete('id', $id);
+        }
     }
 
     /**

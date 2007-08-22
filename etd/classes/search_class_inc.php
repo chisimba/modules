@@ -197,10 +197,11 @@ class search extends object
     */
     private function generalSearch($module)
     {
+        $boldArr = array('bold' => '<b>', 'closebold' => '</b>');
         $hdFind = $this->objLanguage->languageText('phrase_findresults');
-        $lbAll = $this->objLanguage->languageText('mod_etd_containingallwords', 'etd');
-        $lbSome = $this->objLanguage->languageText('mod_etd_containingsomewords', 'etd');
-        $lbPhrase = $this->objLanguage->languageText('mod_etd_containingthephrase', 'etd');
+        $lbAll = $this->objLanguage->code2Txt('mod_etd_containingallwords', 'etd', $boldArr);
+        $lbSome = $this->objLanguage->code2Txt('mod_etd_containingsomewords', 'etd', $boldArr);
+        $lbPhrase = $this->objLanguage->code2Txt('mod_etd_containingthephrase', 'etd', $boldArr);
 
         $this->objTable->init();
         $this->objTable->cellpadding = '4';
@@ -362,6 +363,11 @@ class search extends object
                     var el4 = 'facultybox'+drop;
                     var el = document.getElementById('criteria'+drop).value;
                     
+                    document.getElementById('inputbox'+drop).name = 'input'+drop;
+                    document.getElementById('degreebox'+drop).name = 'degree'+drop;
+                    document.getElementById('departmentbox'+drop).name = 'depart'+drop;
+                    document.getElementById('facultybox'+drop).name = 'fac'+drop;
+                    
                     a = $(el1);
                     b = $(el2);
                     c = $(el3);
@@ -374,18 +380,21 @@ class search extends object
                     
                     switch(el){
                         case 'thesis_degree_name':
+                            document.getElementById('degreebox'+drop).name = 'box'+drop;
                             b.show();
                             break;
                         case 'thesis_degree_discipline':
+                            document.getElementById('departmentbox'+drop).name = 'box'+drop;
                             c.show();
                             break;
                         case 'thesis_degree_faculty':
+                            document.getElementById('facultybox'+drop).name = 'box'+drop;
                             d.show();
                             break;
                         default:
+                            document.getElementById('inputbox'+drop).name = 'box'+drop;
                             a.show();
                     }
-                    
                 }
         
             </script>";
@@ -412,7 +421,7 @@ class search extends object
             $list = $this->degreeList;
         }
         
-        $objDrop = new dropdown('box'.$num);
+        $objDrop = new dropdown('degbox'.$num);
         $objDrop->setId('degreebox'.$num);
         $objDrop->extra = "style='display: none;'";
         if(!empty($list)){
@@ -443,7 +452,7 @@ class search extends object
             $list = $this->facultyList;
         }
         
-        $objDrop = new dropdown('box'.$num);
+        $objDrop = new dropdown('facbox'.$num);
         $objDrop->setId('facultybox'.$num);
         $objDrop->extra = "style='display: none;'";
         if(!empty($list)){
@@ -474,7 +483,7 @@ class search extends object
             $list = $this->departmentList;
         }
         
-        $objDrop = new dropdown('box'.$num);
+        $objDrop = new dropdown('depbox'.$num);
         $objDrop->setId('departmentbox'.$num);
         $objDrop->extra = "style='display: none;'";
         if(!empty($list)){

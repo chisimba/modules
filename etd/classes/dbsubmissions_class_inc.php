@@ -183,7 +183,8 @@ class dbsubmissions extends dbtable
                 if(!empty($critSql)){
                     $critSql .= ' OR ';
                 }
-                $critSql .= "{$item['field']} {$item['compare']} '{$item['value']}'";
+                $value = strtolower($item['value']);
+                $critSql .= "LOWER({$item['field']}) {$item['compare']} '{$value}'";
             }
             $sql .= " AND ($critSql) ";
         }

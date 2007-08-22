@@ -43,6 +43,7 @@ $lbDocType = $this->objLanguage->languageText('phrase_documenttype');
 $lbYear = $this->objLanguage->languageText('word_year');
 $lbFulltext = $this->objLanguage->languageText('mod_etd_downloadfulltext', 'etd');
 $lbCitation = $this->objLanguage->languageText('phrase_citationlist');
+$lbEmbargo = $this->objLanguage->languageText('mod_etd_fulltextembargoeduntil', 'etd');
 
 $resourceStr = ''; $listStr = ''; $tableStr = ''; $downloadStr = ''; $altDownloadStr = '';
 if(!empty($resource)){
@@ -67,21 +68,42 @@ if(!empty($resource)){
     $resourceStr .= '<p style="padding-left: 10px;">'.$resource['dc_description'].'</p>';
     $resourceStr .= '<hr />';
     
-    // Download the full text
-    $fileData = $this->etdFiles->getFile($resource['submitid']);
-    if(!empty($fileData)){
-        $url = $fileData[0]['filepath'].$fileData[0]['storedname'];
-        $objIcon->setIcon('fulltext');
-        $objIcon->title = $lbFulltext;
-        $objLink = new link($url);
-        $objLink->extra = 'onclick="javascript:var url = \'index.php\';var pars = \'module=etd&amp;action=registerdownload\';var regDownload = new Ajax.Request(url, {method: \'post\', parameters: pars});"';            
-        $objLink->link = $objIcon->show();
+    // Check the embargo date against the current date
+    $isEmbargoed = FALSE;
+    if(!empty($resource['embargo'])){
+        $now = time(); $end = time();
+        $emDate = $resource['embargo'];
+        $params = explode('-', $emDate);
+        if(!empty($params)){
+            $end = mktime(0,0,0, $params[1], $params[2], $params[0]);
+        }
+        if($end > $now){
+            $isEmbargoed = TRUE;
+        }
+    }
+    
+    // Download the full text - if not under embargo
+    if(!empty($resource['embargo']) && $isEmbargoed){
+        $objDate = $this->getObject('dateandtime', 'utilities');
+        $embargo = $objDate->formatDate($resource['embargo']);
         
-        $downloadStr = '<p><b>'.$lbFulltext.':</b> &nbsp; '.$objLink->show().'</p>';
-        $downloadStr .= '<hr />';
-        
-        $altDownloadStr = '<p><b>'.$lbFulltext.':</b> &nbsp; '.$this->objConfig->getsiteRoot().$url.'</p>';
-        $altDownloadStr .= '<hr />';
+        $downloadStr = $lbEmbargo.'&nbsp;'.$embargo.'.<hr />';
+    }else{
+        $fileData = $this->etdFiles->getFile($resource['submitid']);
+        if(!empty($fileData)){
+            $url = $fileData[0]['filepath'].$fileData[0]['storedname'];
+            $objIcon->setIcon('fulltext');
+            $objIcon->title = $lbFulltext;
+            $objLink = new link($url);
+            $objLink->extra = 'onclick="javascript:var url = \'index.php\';var pars = \'module=etd&amp;action=registerdownload\';var regDownload = new Ajax.Request(url, {method: \'post\', parameters: pars});"';            
+            $objLink->link = $objIcon->show();
+            
+            $downloadStr = '<p><b>'.$lbFulltext.':</b> &nbsp; '.$objLink->show().'</p>';
+            $downloadStr .= '<hr />';
+            
+            $altDownloadStr = '<p><b>'.$lbFulltext.':</b> &nbsp; '.$this->objConfig->getsiteRoot().$url.'</p>';
+            $altDownloadStr .= '<hr />';
+        }
     }
         
     $objTable = new htmltable();

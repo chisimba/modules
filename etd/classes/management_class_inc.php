@@ -711,7 +711,7 @@ class management extends object
     private function saveNewResource($submitId = NULL)
     {
         // Update the submissions table to show who modified it and when
-        $submitId = $this->dbSubmissions->editSubmission($this->userId, $submitId, 'metadata', 5);
+        $submitId = $this->dbSubmissions->editSubmission($this->userId, $submitId, 'metadata', 4);
 
         // Save the dublincore metadata
         $dublin = array();
@@ -767,6 +767,9 @@ class management extends object
         // Save metadata to database.
         $meta = $this->dbDublinCore->moveXmlToDb($xmlData, $submitId);
         
+        // Check embargo & set start and end periods
+        $this->dbEmbargo->setEmbargoDates($submitId);
+        
         // Create Url to resource, save to metadata - dc_identifier, url
         $url = $this->uri(array('action' => 'viewtitle', 'id' => $meta['thesisId']));
         $url1 = html_entity_decode($url);
@@ -817,6 +820,9 @@ class management extends object
         $thesisId = $this->getParam('thesisId');
         $this->dbThesis->deleteMetadata($thesisId);
 
+        // delete embargo
+        $this->dbEmbargo->removeEmbargoIfExists($submitId);
+
         // delete submission
         $this->dbSubmissions->deleteSubmission($submitId);
 
@@ -837,6 +843,9 @@ class management extends object
 
         // delete metadata in xml file
         $this->xmlMetadata->deleteXML('etd_'.$submitId);
+
+        // delete embargo
+        $this->dbEmbargo->removeEmbargoIfExists($submitId);
 
         // delete submission
         $this->dbSubmissions->deleteSubmission($submitId);
@@ -898,7 +907,7 @@ class management extends object
         $lbPass = $this->objLanguage->languageText('mod_etd_passresource', 'etd');
         $lbCitation = $this->objLanguage->languageText('phrase_citationlist');
         $lbEdit = $this->objLanguage->languageText('phrase_editmetadata');
-        $lbEmbargo = $this->objLanguage->languageText('phrase_embargorequest');
+        $lbEmbargo = $this->objLanguage->languageText('phrase_embargoresource');
 
         $icons = '&nbsp;&nbsp;';
         
@@ -1009,8 +1018,8 @@ class management extends object
         $str .= $this->objFeatureBox->show($lbDocument, $docStr);
 
         // Display the citation list
-        //$embargoStr = $this->showEmbargo();
-        //$str .= $this->objFeatureBox->show($lbEmbargo, $embargoStr);
+        $embargoStr = $this->showEmbargo();
+        $str .= $this->objFeatureBox->show($lbEmbargo, $embargoStr);
 
         // Display the citation list
         $citationStr = $this->showCitationList($docMode);
@@ -1171,48 +1180,49 @@ class management extends object
     * @return string html
     */
     private function showEmbargo()
-    {
+    {   
         $submitId = $this->getSession('submitId');
         $data = $this->dbEmbargo->getEmbargoRequest($submitId);
         $str = '';
+           
+        $lbPeriod = $this->objLanguage->languageText('word_duration');
+        $months = $this->objLanguage->languageText('word_months');
+        $lbReason = $this->objLanguage->languageText('mod_etd_reasonforembargo', 'etd');
+        $btnSave = $this->objLanguage->languageText('word_save');
+        $btnDelete = $this->objLanguage->languageText('word_delete');    
         
-        if(!empty($data)){
-            $requested = TRUE;
-            $reason = $data['request'];
-            $period = $data['period'];
-            $id = $data['id'];
-        
-            $lbPeriod = $this->objLanguage->languageText('word_period');
-            $lbReason = $this->objLanguage->languageText('mod_etd_reasonforapprovedeny', 'etd');
-            $months = $this->objLanguage->languageText('word_months');
-            $btnRequest = $this->objLanguage->languageText('phrase_approverequest');
-            $btnDelete = $this->objLanguage->languageText('phrase_denyrequest');    
-        
-            $str = '<p class="warning">'.$reason.'</p>';
-            $str .= "<p>$lbPeriod: $period $months</p>";
-        
-            $objLabel = new label($lbReason, 'input_reason');
-            $objText = new textarea('reason');
-            $formStr = '<p>'.$objLabel->show().': <br />'.$objText->show().'</p>';
-        
-            $objButton = new button('approve', $btnRequest);
-            $objButton->setToSubmit();
-            $formStr .= '<p>'.$objButton->show();
-            
-            $objButton = new button('deny', $btnDelete);
-            $objButton->setToSubmit();
-            $formStr .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$objButton->show();
-            
-            $objInput = new textinput('id', $id, 'hidden');
-            $formStr .= $objInput->show();
-                
-            $formStr .= '</p>';
-            
-            $objForm = new form('request', $this->uri(array('action' => 'savesubmissions', 'mode' => 'embargo', 'nextmode' => 'shownewresource', 'save' => 'save')));
-            $objForm->addToForm($formStr);
-            $str .= '<p>'.$objForm->show().'</p>';
+        $period = isset($data['period']) ? $data['period'] : '12';
+        $objLabel = new label($lbPeriod, 'input_period');
+        $objDrop = new dropdown('period');
+        for($i = 3; $i <= 12; $i += 3){
+            $objDrop->addoption($i, $i.' '.$months);
         }
-
+        $objDrop->setSelected($period);
+        $formStr = '<p>'.$objLabel->show().'&nbsp;&nbsp;'.$objDrop->show().'</p>';
+        
+        $reason = isset($data['reason']) ? $data['reason'] : '';
+        $objLabel = new label($lbReason, 'input_reason');
+        $objText = new textarea('reason', $reason);
+        $formStr .= '<p>'.$objLabel->show().': <br />'.$objText->show().'</p>';
+                
+        $objButton = new button('save', $btnSave);
+        $objButton->setToSubmit();
+        $formStr .= '<p>'.$objButton->show();
+            
+        $objButton = new button('delete', $btnDelete);
+        $objButton->setToSubmit();
+        $formStr .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$objButton->show();
+        
+        $id = isset($data['id']) ? $data['id'] : '';
+        $objInput = new textinput('id', $id, 'hidden');
+        $formStr .= $objInput->show();
+                
+        $formStr .= '</p>';
+            
+        $objForm = new form('request', $this->uri(array('action' => 'savesubmissions', 'mode' => 'embargo', 'nextmode' => 'shownewresource', 'save' => 'save')));
+        $objForm->addToForm($formStr);
+        $str = $objForm->show();
+                
         return $str;
     }
 
@@ -1338,7 +1348,20 @@ class management extends object
                 break;
                 
             case 'embargo':
-                //$this->dbEmbargo
+                $id = $this->getParam('id');
+                $submitId = $this->getSession('submitId');
+                $save = $this->getParam('save');
+                $delete = $this->getParam('delete');
+                
+                // check if save selected
+                if(isset($save) && !empty($save)){
+                    $this->dbEmbargo->saveEmbargoRequest($submitId, $id);
+                }
+                
+                // check if delete selected
+                if(isset($delete) && !empty($delete)){
+                    $this->dbEmbargo->removeEmbargo($id);
+                }
                 break;
                 
             case 'approve':
