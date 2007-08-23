@@ -568,7 +568,7 @@ class dbfoaf extends dbtable
      public function getAccounts()
      {
         $this->_changeTable('tbl_foaf_useraccounts');
-        $sql = "WHERE userid='".$this->objUser->userId()."'"." ORDER BY accountName ";									
+        $sql = "WHERE userid='".$this->objUser->userId()."'"." ORDER BY accountname ";									
 	   return $this->getAll($sql);
 	}
 
