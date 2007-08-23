@@ -7,9 +7,17 @@ echo "</applet> ";
 */
 
 // set up html elements
+$this->objLanguage =& $this->getObject('language','language');
+$tab =& $this->newObject('tabbedbox', 'htmlelements');
+$tabcontent =& $this->newObject('tabcontent', 'htmlelements');
+$tab1 =& $this->newObject('tabbedbox', 'htmlelements');
+$tabcontent1 =& $this->newObject('tabcontent', 'htmlelements');
 $objHead=$this->newObject('htmlheading','htmlelements');
-
 $table = $this->newObject('htmltable', 'htmlelements');
+$objAppletTable = $this->newObject('htmltable', 'htmlelements');
+$objWebStartTable = $this->newObject('htmltable', 'htmlelements');
+
+$table->cellpadding = 5;
 $table->cellpadding = 5;
 
 // Create an instance of the css layout class
@@ -17,10 +25,20 @@ $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
 $cssLayout->setNumColumns(2);
 
 /**************** set up display page ********************/
-$str1= 'Realtime Presentations';
-$str2= 'Using this module, you can present <a href="www.openoffice.org/"> Open Office 2.0</a> or later Presentations synchronously in realtime';
-$str3='<a href="'.$this->presentationsURL.'/Presenter.jnlp">Presenter Studio</a> is used to start a presentation.'; 
-$str4='<a href="'.$this->presentationsURL.'/Audience.jnlp">Join Active Presentation</a>  sessions started by others.';
+$str1= $this->objLanguage->languageText('mod_realtime_presentationtitle', 'realtime');
+$oo="<a href='".$this->objLanguage->languageText('mod_realtime_openoffice', 'realtime')."'>".$this->objLanguage->languageText('mod_realtime_openofficetext', 'realtime')."</a>";
+$str2= $this->objLanguage->languageText('mod_realtime_str2a', 'realtime').$oo.$this->objLanguage->languageText('mod_realtime_str2b', 'realtime');
+
+//create links to the Applet presentations
+$this->objLink->link($this->uri(array('action'=>'presenter_applet')));
+$this->objLink->link=$this->objLanguage->languageText('mod_realtime_presenterstudio', 'realtime');
+$str3=$this->objLink->show()." ".$this->objLanguage->languageText('mod_realtime_startpresentation', 'realtime');
+
+$this->objLink->link($this->uri(array('action'=>'audience_applet')));
+$this->objLink->link=$this->objLanguage->languageText('mod_realtime_joinpresentation', 'realtime');
+$str4=$this->objLink->show()." ".$this->objLanguage->languageText('mod_realtime_joinpresentation', 'realtime');
+$webstartstr3='<a href="'.$this->presentationsURL.'/Presenter.jnlp">'.$this->objLanguage->languageText('mod_realtime_presenterstudio', 'realtime').'</a>  '.$this->objLanguage->languageText('mod_realtime_startpresentation', 'realtime'); 
+$webstartstr4='<a href="'.$this->presentationsURL.'/Audience.jnlp">'.$this->objLanguage->languageText('mod_realtime_joinpresentation', 'realtime').'</a>  '.$this->objLanguage->languageText('mod_realtime_joinpresentation', 'realtime');
 
 $objHead->type=2;
 $objHead->str=$str1;
@@ -31,16 +49,47 @@ $leftSideColumn = $str2;
 $cssLayout->setLeftColumnContent($leftSideColumn);
 $rightSideColumn = "<div align=\"left\">" . $objHead->show() . "</div>";
 
+//set contents of the table in the Applet version tab
+$objAppletTable->startRow();
+$objAppletTable->addCell($str3);
+$objAppletTable->endRow();
 
+$objAppletTable->startRow();
+$objAppletTable->addCell($str4);
+$objAppletTable->endRow();
 
-$table->startRow();
-$table->addCell($str3);
-$table->endRow();
+//set contents of the table on the java web start version tab
+$objWebStartTable->startRow();
+$objWebStartTable->addCell($webstartstr3);
+$objWebStartTable->endRow();
 
-$table->startRow();
-$table->addCell($str4);
-$table->endRow();
+$objWebStartTable->startRow();
+$objWebStartTable->addCell($webstartstr4);
+$objWebStartTable->endRow();
 
+$tables = array($objAppletTable, $objWebStartTable);
+
+$modules = array('applet','webstart');
+foreach($modules as $category){      
+        	
+	$tab->tabbedbox();
+        $tab->addTabLabel($this->objLanguage->languageText('mod_realtime_'.$category,'realtime'));
+	if($category == 'applet'){
+		$tb = $objAppletTable;
+	}
+	else{
+		$tb = $objWebStartTable;
+	}
+        $tab->addBoxContent($tb->show());
+        $tabcontent->addTab($this->objLanguage->languageText('mod_realtime_'.$category,'realtime'),$tab->show());
+ }    
+$tabcontent->width = '90%';
+	
+	
+	$table->startRow();
+	$table->addCell($tabcontent->show());
+	
+	$table->endRow();
 
 //Add the table to the centered layer
 $rightSideColumn .= $table->show();
@@ -53,12 +102,4 @@ $cssLayout->setMiddleColumnContent($rightSideColumn);
 
 //Output the content to the page
 echo $cssLayout->show();
-
-
-//echo $objHead2->show();
-//echo $objHead3->show();
-//echo $objHead4->show();
-
-
-
 ?>
