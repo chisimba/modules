@@ -595,7 +595,7 @@ class foafops extends object
         $table3->endRow();
         $fieldset3->addContent($table3->show());
         $myFriendsAddForm->addToForm($fieldset3->show());
-        $this->objButton3 = &new button('update_addfriends'); //$this->objLanguage->languageText('mod_foaf_update_friends', 'foaf'));
+        $this->objButton3 = new button('update_addfriends'); //$this->objLanguage->languageText('mod_foaf_update_friends', 'foaf'));
         $this->objButton3->setValue($this->objLanguage->languageText('mod_foaf_butaddfriends', 'foaf'));
         $this->objButton3->setToSubmit();
         $myFriendsAddForm->addToForm($this->objButton3->show());
@@ -634,7 +634,7 @@ class foafops extends object
             $table4->endRow();
             $fieldset4->addContent($table4->show());
             $myFriendsRemForm->addToForm($fieldset4->show());
-            $this->objButton4 = &new button('update_remfriends'); //$this->objLanguage->languageText('mod_foaf_update_friends', 'foaf'));
+            $this->objButton4 = new button('update_remfriends'); //$this->objLanguage->languageText('mod_foaf_update_friends', 'foaf'));
             $this->objButton4->setValue($this->objLanguage->languageText('mod_foaf_butremfriends', 'foaf'));
             $this->objButton4->setToSubmit();
             $myFriendsRemForm->addToForm($this->objButton4->show());
@@ -792,7 +792,7 @@ class foafops extends object
         $tableo->endRow();
         $fieldseto->addContent($tableo->show());
         $myOrgForm->addToForm($fieldseto->show());
-        $this->objButtono = &new button('addorg');
+        $this->objButtono = new button('addorg');
         $this->objButtono->setValue($this->objLanguage->languageText('mod_foaf_addorg', 'foaf'));
         $this->objButtono->setToSubmit();
         $myOrgForm->addToForm($this->objButtono->show());
@@ -837,7 +837,7 @@ class foafops extends object
             $tableor->endRow();
             $fieldsetor->addContent($tableor->show());
             $myOrgRemForm->addToForm($fieldsetor->show());
-            $this->objButtonor = &new button('update_orgsrem'); //$this->objLanguage->languageText('mod_foaf_update_friends', 'foaf'));
+            $this->objButtonor = new button('update_orgsrem'); //$this->objLanguage->languageText('mod_foaf_update_friends', 'foaf'));
             $this->objButtonor->setValue($this->objLanguage->languageText('mod_foaf_butremorgs', 'foaf'));
             $this->objButtonor->setToSubmit();
             $myOrgRemForm->addToForm($this->objButtonor->show());
@@ -878,7 +878,7 @@ class foafops extends object
         $table->endRow();
         $fieldset->addContent($table->show());
         $funderForm->addToForm($fieldset->show());
-        $this->objButton = &new button('addfunder');
+        $this->objButton = new button('addfunder');
         $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_addfunder', 'foaf'));
         $this->objButton->setToSubmit();
         $funderForm->addToForm($this->objButton->show());
@@ -925,7 +925,7 @@ class foafops extends object
             	    $table->endRow();
             	    $fieldset->addContent($table->show());
             	    $removeFunderForm ->addToForm($fieldset->show());
-                      $this->objButton = &new button('update_funsrem'); 
+                      $this->objButton = new button('update_funsrem'); 
                       $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_remfunder', 'foaf'));
                       $this->objButton->setToSubmit();
                       $removeFunderForm ->addToForm($this->objButton->show());
@@ -964,7 +964,7 @@ class foafops extends object
         $table->endRow();
         $fieldset->addContent($table->show());
         $intForm->addToForm($fieldset->show());
-        $this->objButton = &new button('addinterest');
+        $this->objButton = new button('addinterest');
         $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_addinterest', 'foaf'));
         $this->objButton->setToSubmit();
         $intForm->addToForm($this->objButton->show());
@@ -1011,7 +1011,7 @@ class foafops extends object
             	      $table->endRow();
             	      $fieldset->addContent($table->show());
             	      $removeInterestForm ->addToForm($fieldset->show());
-                      $this->objButton = &new button('update_intrem'); 
+                      $this->objButton = new button('update_intrem'); 
                       $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_reminterest', 'foaf'));
                       $this->objButton->setToSubmit();
                       $removeInterestForm ->addToForm($this->objButton->show());
@@ -1047,7 +1047,7 @@ class foafops extends object
         $table->endRow();
         $fieldset->addContent($table->show());
         $depForm->addToForm($fieldset->show());
-        $this->objButton = &new button('adddep');
+        $this->objButton = new button('adddep');
         $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_adddepiction', 'foaf'));
         $this->objButton->setToSubmit();
         $depForm->addToForm($this->objButton->show());
@@ -1094,7 +1094,7 @@ class foafops extends object
             	    $table->endRow();
             	    $fieldset->addContent($table->show());
             	    $removeDepictionForm ->addToForm($fieldset->show());
-                      $this->objButton = &new button('update_deprem'); 
+                      $this->objButton = new button('update_deprem'); 
                       $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_remdepiction', 'foaf'));
                       $this->objButton->setToSubmit();
                       $removeDepictionForm ->addToForm($this->objButton->show());
@@ -1148,7 +1148,7 @@ class foafops extends object
 
         $fieldset->addContent($table->show());
         $myPageForm->addToForm($fieldset->show());
-        $this->objButton = &new button('addpage');
+        $this->objButton = new button('addpage');
         $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_addpage', 'foaf'));
         $this->objButton->setToSubmit();
         $myPageForm->addToForm($this->objButton->show());
@@ -1195,7 +1195,7 @@ class foafops extends object
                     $table->endRow();
                     $fieldset->addContent($table->show());
                     $removeForm->addToForm($fieldset->show());
-                    $this->objButton = &new button('update_pagerem'); 
+                    $this->objButton = new button('update_pagerem'); 
                     $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_rempage', 'foaf'));
                     $this->objButton->setToSubmit();
                     $removeForm->addToForm($this->objButton->show());
@@ -1270,7 +1270,7 @@ class foafops extends object
 
         $fieldset->addContent($table->show());
         $myAccountForm->addToForm($fieldset->show());
-        $this->objButton = &new button('addaccount');
+        $this->objButton = new button('addaccount');
         $this->objButton->setValue($this->objLanguage->languageText('word_add'));
         $this->objButton->setToSubmit();
         $myAccountForm->addToForm($this->objButton->show());
@@ -1318,7 +1318,7 @@ class foafops extends object
                     $table->endRow();
                     $fieldset->addContent($table->show());
                     $removeForm->addToForm($fieldset->show());
-                    $this->objButton = &new button('update_accountrem'); 
+                    $this->objButton = new button('update_accountrem'); 
                     $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_remove', 'foaf'));
                     $this->objButton->setToSubmit();
                     $removeForm->addToForm($this->objButton->show());
@@ -1481,7 +1481,7 @@ class foafops extends object
 
         $fieldset->addContent($table->show());
         $linkForm->addToForm($fieldset->show());
-        $this->objButton = &new button('addlink');
+        $this->objButton = new button('addlink');
         $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_addlink', 'foaf'));
         $this->objButton->setToSubmit();
         $linkForm->addToForm($this->objButton->show());
@@ -1523,12 +1523,12 @@ class foafops extends object
                 			$remDrop->addOption($removal['id'], $removal['url']);
             			}
          		   
-			    $table->startRow();
-           		    $table->addCell($remDrop->show());
-            	    $table->endRow();
-            	    $fieldset->addContent($table->show());
-            	    $removelinkForm ->addToForm($fieldset->show());
-                      $this->objButton = &new button('update_linksrem'); 
+		      $table->startRow();
+           	      $table->addCell($remDrop->show());
+            	      $table->endRow();
+            	      $fieldset->addContent($table->show());
+            	      $removelinkForm ->addToForm($fieldset->show());
+                      $this->objButton = new button('update_linksrem'); 
                       $this->objButton->setValue($this->objLanguage->languageText('mod_foaf_remlink', 'foaf'));
                       $this->objButton->setToSubmit();
                       $removelinkForm ->addToForm($this->objButton->show());
@@ -1537,6 +1537,49 @@ class foafops extends object
 			}
     }
 
+//search
+///The "s" in front of each field name stands for search
+	public function searchForm()
+	{
+	   $searchForm = new form('searchform', $this->uri(array(
+            'action' => 'search'
+        )));
+	$fields = array("name","firstname","surname","title","mbox","homepage","weblog","phone","jabberid","geekcode","theme",
+"workplacehomepage","schoolhomepage","logo","img");
+
+
+        $table = $this->newObject('htmltable', 'htmlelements');
+       	$table->cellpadding = 5;
+	$table->cellspacing = 2;
+	$dropdown = new dropdown('schfield');
+
+	
+	foreach($fields as $field)
+	{
+	  $dropdown->addOption($field , $field);
+	
+	}
+
+	  $table->startRow();
+	  $label = new label($this->objLanguage->languageText('word_search').':', 'input_schfield');
+          $textInput = new textinput('schvalue');   
+	  $table->addCell($label->show());
+	  $table->addCell($dropdown->show());	 
+	  $table->addCell($textInput->show());	 
+	  $table->endRow();
+	
+
+         $this->objButton = new button('searchfoaf_btn'); 
+         $this->objButton->setValue($this->objLanguage->languageText('word_search'));
+         $this->objButton->setToSubmit();
+         $searchForm ->addToForm($table->show());
+         $searchForm ->addToForm($this->objButton->show());
+         return $searchForm ->show();
+
+
+
+
+	}
 
 }
 ?>

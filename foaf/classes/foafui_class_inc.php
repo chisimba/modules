@@ -655,6 +655,18 @@ class foafui extends object {
 		return $mylinks;
 	}
 
+
+//search
+public function foafSearch()
+{
+
+
+return $this->objFoafOps->searchForm();
+}
+
+
+
+
 }
 
 ?>

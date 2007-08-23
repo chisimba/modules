@@ -7,6 +7,8 @@ define('FOAF_PERSON', 1);
 define('FOAF_GROUP', 2);
 define('FOAF_ORGANIZATION', 3);
 define('FOAF_AGENT', 4);
+define("RDFAPI_INCLUDE_DIR", "/var/www/chisimba_modules/foaf/lib/rdfapi-php/api/");
+
 /**
  * FOAF Parser
  *
@@ -926,5 +928,134 @@ class foafparser extends object
         $table.= '</table>';
         return $table;
     }
+
+/*
+public function queryFoaf($path , $foafFile , $predicate = NULL , $object = NULL)
+{
+
+  require_once(RDFAPI_INCLUDE_DIR . "RdfAPI.php");
+  require_once(RDFAPI_INCLUDE_DIR . "syntax/RdfParser.php");
+
+  $parser = new RdfParser();
+  $model = $parser->generateModel($path.$foafFile);  
+  $foafns = "http://xmlns.com/foaf/0.1/";
+  echo "<br /> Function object >".$object."<br />";
+  echo "Function predicate >".$predicate."<br />";
+  if($object != 'all')
+  {	
+   switch ($predicate)
+   {
+    case 'name':
+    case 'firstname':
+    case 'surname':
+    case 'title':
+    case 'phone':
+    case 'jabberid':
+    case 'geekcode':
+    case 'mbox':
+
+    $object = new Literal($object);
+    break;
+
+    default:
+    $object = new Resource($path.$object);
+
+    break;
+
+   }
+  } else {
+     $object = NULL;
+  }
+
+  $predicate = new Resource($foafns.$predicate); 
+  $matches = $model->find(NULL , $predicate , $object);
+  $it = $matches->getStatementIterator();
+
+  while ($it->hasNext()) {
+  $statement = $it->next();
+  echo "<p>";
+  echo "Subject: " . $statement->getLabelSubject() . "<br />";
+  echo "Predicate: " . $statement->getLabelPredicate() . "<br />";
+  echo "Object: " . $statement->getLabelObject();
+  echo "</p>";
+
+  echo "This ".$predicate." belongs to ".$this->foafPeople($model ,  $statement->getLabelSubject());
+}
+return  $matches;
+
+}*/
+
+
+public function queryFoaf($path , $foafFile , $predicate = NULL , $object = NULL , $results = NULL , $noresults = NULL)
+{
+
+  require_once(RDFAPI_INCLUDE_DIR . "RdfAPI.php");
+  require_once(RDFAPI_INCLUDE_DIR . "syntax/RdfParser.php");
+
+  $parser = new RdfParser();
+  $model = $parser->generateModel($path.$foafFile);  
+  $foafns = "http://xmlns.com/foaf/0.1/";
+  $matches = NULL;
+  //echo "<br /> Function object >".$object."<br />";
+//  echo "Function predicate >".$predicate."<br />";
+ 
+  if($object != 'all')
+  {	
+    $matches = $model->findRegEx(NULL , '/http:\/\/xmlns.com\/foaf\/0.1\/'.$predicate.'$/' , '/'.$object.'$/i');   
+    
+  } else {
+     $matches = $model->findRegEx(NULL , '/http:\/\/xmlns.com\/foaf\/0.1\/'.$predicate.'$/' , '/$/');
+  }
+
+  $it = $matches->getStatementIterator();
+
+
+  while ($it->hasNext()) {
+   $statement = $it->next();
+   echo "<p>";
+   echo "Subject: " . $statement->getLabelSubject() . "<br />";
+   echo "Predicate: " . $statement->getLabelPredicate() . "<br />";
+   echo "Object: " . $statement->getLabelObject();
+   echo "</p>";
+
+  echo "This ".$predicate." belongs to ".$this->getFoafName($model ,  $statement->getLabelSubject());
+
+  }
+
+  return  $matches;
+ 
+
+
+}
+
+
+ public function getFoafName($model , $person)
+ {
+
+
+     $matches = $model->findRegex('/'.$person.'$/i', '/http:\/\/xmlns.com\/foaf\/0.1\/name$/', NULL );
+     $it = $matches->getStatementIterator(); 
+
+     while ($it->hasNext()) {
+      $statement = $it->next();
+
+      //echo $person." name is ".$statement->getLabelObject();    
+
+      return  $statement->getLabelObject();
+
+  }   
+ 
+
+
+
+
+
+
+ }
+
+
+
+
+
 }
 ?>

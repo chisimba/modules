@@ -144,7 +144,10 @@ class foaf extends controller
 		switch ($action) {
 			default:
 			case 'createfoaf':
-				$message = $this->getParam('message');
+				 $message = $this->getParam('message');
+				 $schField = $this->getParam('schField');
+				 $schValue = $this->getParam('schValue');
+				 $content = $this->getParam('content');
 				//create the basic foaf profile from tbl_users
 				$this->objFoafOps->newPerson($this->objUser->userId());
 				//add in other details if they exist
@@ -154,7 +157,11 @@ class foaf extends controller
 			
 				$this->setVarByRef('tcont', $midcontent);
 				$this->setVarByRef('msg', $message);
-
+				$this->setVarByRef('predicate', $schField);
+				$this->setVarByRef('object', $schValue);
+				$this->setVarByRef('content', $content);
+				$foafFile =   $this->objConfig->getContentBasePath() . "users/" . $this->objUser->userId() . "/" . $this->objUser->userId() . ".rdf";
+				$this->setVarByRef('foafFile' , $foafFile);
 				return 'fdetails_tpl.php';
 				break;
 
@@ -162,6 +169,7 @@ class foaf extends controller
 				$this->objFoafParser->setup();
 				$path = $this->objConfig->getContentBasePath() . "users/" . $this->objUser->userId() . "/" . $this->objUser->userId() . ".rdf";
 				$fp = $this->objFoafParser->parseFromUri($path);
+
 
 				echo $this->objFoafParser->toHtml($this->objFoafParser->foaf_data);
 				break;
@@ -205,7 +213,8 @@ class foaf extends controller
 					$this->dbFoaf->removeFriend(array('userid' => $myid, 'fuserid' => $remid));
 				}
 				$message = 'update';
-				$this->nextAction('createfoaf',array('message' => $message));
+				$exists ='existence';
+
 				break;
 
 			case 'updateorgs':
@@ -383,7 +392,7 @@ class foaf extends controller
 				{
   	
 				    $exists = $this->dbFoaf->valueExists('type' , $accountType , 'tbl_foaf_accounts');
-				    $this->setVarByRef('exists',$exists);	
+
 				    if($exists)
 				    {
 				    			
@@ -484,7 +493,28 @@ class foaf extends controller
 				$this->setVarByRef('message', $message);
 
 				$this->nextAction('createfoaf',array('message' => $message));
-				break;				
+				break;	
+
+
+			case 'search':	
+
+			$schField = $this->getParam('schfield');
+			$schValue = $this->getParam('schvalue');
+			$message = 'bulldozzer';
+
+			if(!isset($schValue) || empty($schValue))
+			{
+			      $schValue = 'all';
+			}
+
+			$this->nextAction(NULL , array('message' => $message , 'schField' => $schField , 'schValue' =>$schValue));
+			break;	
+			
+			case 'fields':
+			$content = $this->getParam('content');
+			$this->nextAction(NULL , array('content' =>$content));			
+			break;
+		
 
 
 
