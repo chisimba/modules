@@ -76,11 +76,14 @@ class realtime extends controller
         public $moduleRootPath;
 
         public $objAltConfig;
+
+        public $objLink;
 	/**
 	 * Constructor method to instantiate objects and get variables
 	 */
 	function init()
 	{
+		$this->objLink=& $this->newObject('link', 'htmlelements');
 		//Get configuration class
 		$this->objConfig =& $this->getObject('config','config');
 		
@@ -122,7 +125,7 @@ class realtime extends controller
 		$this->whiteboardURL = $location . $this->getResourceUri('whiteboard', 'realtime');
 		$this->presentationsURL = $location . $this->getResourceUri('presentations', 'realtime');
                 $this->moduleRootPath=$this->objAltConfig->getModulePath();
-$this->voiceURL = $location . $this->getResourceUri('voice', 'realtime');
+                $this->voiceURL = $location . $this->getResourceUri('voice', 'realtime');
 		$this->realtimeControllerURL = $location . "/chisimba_framework/app/index.php?module=realtime";
 	}
 
@@ -145,6 +148,10 @@ $this->voiceURL = $location . $this->getResourceUri('voice', 'realtime');
 			case 'voice' :
 				return $this->showVoiceApplet($this->contextCode);
 
+	                case 'audience_applet' :
+				return "realtime-presentations-audience-applet_tpl.php";
+			 case 'presenter_applet' :
+				return "realtime-presentations-presenter-applet_tpl.php";
 			case 'whiteboard' :
 				return "realtime-whiteboard_tpl.php";
 			case 'presentations' :
