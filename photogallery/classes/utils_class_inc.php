@@ -293,6 +293,23 @@ class utils extends object
 		return $nav;
 		
 	}
+	
+	/**
+	* Method tp generate Flickr photos 
+	* navigation
+	*
+	* @return string
+	* @param object $objFlick
+	*/
+	public function getFlickrImageNav($objFlickr)
+	{
+	 	$imageId = $this->getParam('imageid');
+		$arrImages = $objFlickr->photosets_getPhotos($this->getParam('albumid'));
+		
+		
+		
+		return '';
+	}
   	
    /**
    * Method to get a list of tags for 

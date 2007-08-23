@@ -111,14 +111,17 @@ if(count($albums) > 0 && $this->_objUser->isLoggedIn() && $this->getParam('mode'
 		}
 		
 		$str = '';
+		
 		if(count($flickralbums) > 0 )
 		{
 			
-			foreach($flickralbums as $userAlbums)
+			foreach($flickralbums as $userAlbums)			
 			{
-			 	if(count($userAlbums['sets'][0]['photoset']) > 0)
+				$sets = $this->_objFlickr->photosets_getList();
+				//print "<pre>"; var_dump($sets);
+			 	if(count($sets['photoset']) > 0)
 			 	{
-					foreach ($userAlbums['sets'][0]['photoset'] as $sharedAlbum)
+					foreach ($sets['photoset'] as $sharedAlbum)
 					{	
 					   
 					   	

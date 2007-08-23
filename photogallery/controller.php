@@ -23,16 +23,16 @@ class photogallery extends controller
     {
 
 
-        $this->_objDBContext = & $this->getObject('dbcontext', 'context');
-        $this->_objUser = & $this->getObject('user', 'security');
-        $this->_objUtils = & $this->getObject('utils');
-        $this->objLanguage = & $this->getObject('language','language');
-        $this->_objConfig = & $this->getObject('altconfig','config');
+        $this->_objDBContext =  $this->getObject('dbcontext', 'context');
+        $this->_objUser =  $this->getObject('user', 'security');
+        $this->_objUtils =  $this->getObject('utils');
+        $this->objLanguage =  $this->getObject('language','language');
+        $this->_objConfig = $this->getObject('altconfig','config');
         $this->_objContextModules = & $this->getObject('dbcontextmodules', 'context');
-        $this->_objDBAlbum = & $this->getObject('dbalbum', 'photogallery');
-        $this->_objDBImage = & $this->getObject('dbimages', 'photogallery');
-        $this->_objFileMan = & $this->getObject('dbfile','filemanager');
-        $this->_objDBComments = & $this->getObject('dbcomments','photogallery');
+        $this->_objDBAlbum =  $this->getObject('dbalbum', 'photogallery');
+        $this->_objDBImage =  $this->getObject('dbimages', 'photogallery');
+        $this->_objFileMan =  $this->getObject('dbfile','filemanager');
+        $this->_objDBComments =  $this->getObject('dbcomments','photogallery');
         $this->_objConfig = $this->getObject('altconfig', 'config');
       	$this->_objTags = $this->getObject('dbtags', 'tagging');
       	$this->_objDBFlickrUsernames = $this->getObject('dbflickrusernames', 'photogallery');
@@ -77,9 +77,14 @@ class photogallery extends controller
 				{
 					$this->setVar('albums',$this->_objDBAlbum->getUserAlbums());
             	}
-            	$this->initFlickr();
+            	
             	$this->setVar('sharedalbums',$this->_objDBAlbum->getSharedAlbums());
-            	$this->setVar('flickralbums', $this->_objDBFlickrUsernames->getFlickrSharedAlbums());
+            	if($this->getParam('mode') == 'shared')
+            	{
+					$this->initFlickr();
+					$this->setVar('flickralbums', $this->_objDBFlickrUsernames->getFlickrSharedAlbums());
+				}
+				
             	$this->setVar('pageTitle', 'Photo Gallery');
             	return 'front_tpl.php';
             case 'viewalbum':
@@ -87,6 +92,7 @@ class photogallery extends controller
             	{
             	 	$this->initFlickr();
             	 	$this->setVar('images', $this->_objFlickr->photosets_getPhotos($this->getParam('albumid')));
+            	 	$this->setVar('nav',$this->_objUtils->getFlickrImageNav($this->_objFlickr));
 					return 'viewalbum_flickr_tpl.php';
 				}
             	$this->_objDBAlbum->incrementHitCount($this->getParam('albumid'));
@@ -131,8 +137,8 @@ class photogallery extends controller
 				return $this->nextAction('comments');
 			case 'addflickrcomment':
 				$this->initFlickr();
-				var_dump($this->_objFlickr->photos_comments_addComment($this->getParam('imageid'), $this->getParam('comment')));die;
-				return $this->nextAction('viewimage', array('albumid' => $this->getParam('albumid'), 'imageid' => $this->getParam('imageid')));
+				$this->_objFlickr->photos_comments_addComment($this->getParam('imageid'), $this->getParam('comment'));
+				return $this->nextAction('viewimage', array('albumid' => $this->getParam('albumid'), 'imageid' => $this->getParam('imageid'), 'mode' => 'flickr'));
 			
 		
          
@@ -223,6 +229,7 @@ class photogallery extends controller
 				 	 
 				} else {
 	     			 $this->_objDBFlickrUsernames->addUsername();					
+	     			 $msg = '';
 				}
 				return $this->nextAction('flickr',array('msg' => $msg));
 				
@@ -262,13 +269,13 @@ class photogallery extends controller
     */
     public function  initFlickr()
     {
-      	$this->_objFlickr = new phpFlickr("710e95b3b34ad8669fe36534a8343773");
+      	$this->_objFlickr = new phpFlickr("710e95b3b34ad8669fe36534a8343773", "d01ff0f7a912a1e3");
       
 		//setup the proxy to get the flickr images
       	$objProxy = $this->getObject('proxy','utilities');
       	$arrProxy = $objProxy->getProxy();
       	$this->_objFlickr->setProxy($arrProxy['proxyserver'], $arrProxy['proxyport']);
-      	
+      	$this->_objFlickr->enableCache("fs", $this->_objConfig->getContentBasePath()."phpFlickrCache");
        
         //$this->_objFlickr->enableCache("db",KEWL_DB_DSN);
         $this->_objDBFlickrUsernames = $this->getObject('dbflickrusernames' , 'photogallery');

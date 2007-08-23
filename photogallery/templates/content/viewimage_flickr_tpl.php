@@ -10,6 +10,9 @@ $this->loadClass('button','htmlelements');
 $h = $this->getObject('htmlheading','htmlelements');
 $form = $this->getObject('form', 'htmlelements');
 $str = '';
+$nav = '';
+$strComment = '';
+
 
 $scripts = '<script type="text/javascript" src="'.$this->_objConfig->getModuleURI().'photogallery/resources/lightbox/js/prototype.js"></script>
 <script type="text/javascript" src="'.$this->_objConfig->getModuleURI().'photogallery/resources/lightbox/js/scriptaculous.js?load=effects"></script>
@@ -29,7 +32,7 @@ $str.=$link->show().'</div>';
 //var_dump($this->_objFlickr->photos_getSizes($this->getParam('imageid')));
 //var_dump($image);
 
-$form->action = $this->uri(array('action' => 'addflickrcomment', 'imageid' => $this->getParam('imageid'), 'albumid' => $this->getParam('albumid')));
+$form->action = $this->uri(array('mode' => 'flickr', 'action' => 'addflickrcomment', 'imageid' => $this->getParam('imageid'), 'albumid' => $this->getParam('albumid')));
 
 $name = new textinput('name');
 $form->addRule('name','Please suppy a name!', 'required');
@@ -60,25 +63,31 @@ $button->setToSubmit();
 
 $this->setVar('pageTitle', 'Photo Gallery - '.$albums['title'].' - '.$image['title']);
 
-$form->addToForm('<h3>Add a comment</h3>'.$table->show());
+$form->addToForm('<h3>Add a comment</h3>'/*.$table->show()*/);
 $form->addToForm($commentField->show().'<br/>'.$button->show());
-/*
-print '<pre>';
-var_dump($comments);
-if(count($comments['comment']) > 0)
+
+//print '<pre>';
+//var_dump($comments);
+if (array_key_exists('comment', $comments)) 
 {
- 	$strComment = '<h3>Comments ('.count($comments['comment']).')</h3>';
-	foreach($comments['comment'] as $comment)
+	
+	
+	if(count($comments['comment']) > 0)
 	{
-		$strComment .= '<div class="comment"><div class="commentmeta"><span class="commentauthor">'.$comment['authorname'].'</span> says:'; 
-		$strComment .=	'</div>	<div class="commentbody">'.$comment['_content'].'</div><div class="commentdate">';
-		$strComment .= date("l, j F Y , g:i A", $comment['datecreate']).'</div>	</div>';
+	 	$strComment = '<h3>Comments ('.count($comments['comment']).')</h3>';
+		foreach($comments['comment'] as $comment)
+		{
+			$strComment .= '<div class="comment"><div class="commentmeta"><span class="commentauthor">'.$comment['authorname'].'</span> says:'; 
+			$strComment .=	'</div>	<div class="commentbody">'.$comment['_content'].'</div><div class="commentdate">';
+			$strComment .= date("l, j F Y , g:i A", $comment['datecreate']).'</div>	</div>';
+			
+		}
 		
+	
+	} else {
+		$strComment = '';
 	}
-} else {
-	$strComment = '';
 }
-*/
 $link->extra = '';
 $link->href = $this->uri(null,'photogallery');
 $link->link = 'Photo Gallery';
@@ -87,6 +96,8 @@ $galLink = $link->show();
 $link->href = $this->uri(array('action' => 'viewalbum', 'albumid' =>$this->getParam('albumid') ),'photogallery');
 $link->link = $albums['title'];
 $albumLink = $link->show();
+
+echo $nav;
 
 $arrNav = $this->_objFlickr->photos_getContext($image['id']);
 
@@ -123,7 +134,7 @@ print $head;
 
 echo $str;
 echo $desc;
-//echo $strComment;
-echo /*$form->show().*/'</div></div>';
+echo $strComment;
+echo $form->show().'</div></div>';
 
 ?>
