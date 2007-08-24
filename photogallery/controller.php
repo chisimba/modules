@@ -79,7 +79,7 @@ class photogallery extends controller
             	}
             	
             	$this->setVar('sharedalbums',$this->_objDBAlbum->getSharedAlbums());
-            	if($this->getParam('mode') == 'shared')
+            	if(($this->getParam('mode') == 'shared') || ($this->_objUser->isLoggedIn() == FALSE))
             	{
 					$this->initFlickr();
 					$this->setVar('flickralbums', $this->_objDBFlickrUsernames->getFlickrSharedAlbums());
